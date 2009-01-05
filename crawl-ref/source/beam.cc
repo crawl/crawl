@@ -267,7 +267,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.seen          = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
-    pbolt.path_taken.clear();
 
     pbolt.fire();
 
@@ -1539,6 +1538,15 @@ void bolt::initialize_fire()
         }
     }
 
+    // Visible self-targeted beams are always seen, even though they don't
+    // leave a path.
+    if (see_grid(source) && target == source && !invisible())
+        seen = true;
+
+    // Self-targeted beams have a "path" consisting the source position.
+    if (target == source)
+        path_taken.push_back(source);
+
 #if DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
@@ -1875,6 +1883,8 @@ void bolt::affect_cell()
 // This saves some important things before calling fire().
 void bolt::fire()
 {
+    path_taken.clear();
+
     if (is_tracer)
     {
         bolt boltcopy = *this;
@@ -2664,7 +2674,6 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     // Clear misc
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
-    pbolt.path_taken.clear();
 
     // If there's a specifically requested foe_ratio, honour it.
     if (!pbolt.foe_ratio)
