@@ -634,7 +634,8 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                            && pbolt.name[0] != '0'
                            && !pbolt.is_enchantment();
 
-    const bool targeted = flags & SPFLAG_TARGETING_MASK;
+    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
+                       && (pbolt.target != monster->pos() || visible_beam);
 
     if (targeted)
     {
