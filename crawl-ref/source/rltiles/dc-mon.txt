@@ -6,14 +6,14 @@ dc-misc/error MONS_PROGRAM_BUG
 ### Animals
 %sdir dc-mon/animals
 
-## Insects
-giant_cockroach MONS_GIANT_COCKROACH /*'a'*/
-giant_ant MONS_GIANT_ANT /*'a'*/
-soldier_ant MONS_SOLDIER_ANT /*'a'*/
+## Insects ('a')
+giant_cockroach MONS_GIANT_COCKROACH
+giant_ant MONS_GIANT_ANT
+soldier_ant MONS_SOLDIER_ANT
 
-## Batty monsters
-giant_bat MONS_GIANT_BAT /*'b'*/
-butterfly MONS_BUTTERFLY /*'b'*/
+## Batty monsters ('b')
+giant_bat MONS_GIANT_BAT
+butterfly MONS_BUTTERFLY
 butterfly1
 butterfly2
 butterfly3
@@ -21,110 +21,115 @@ butterfly4
 butterfly5
 butterfly6
 
-## Hounds
-jackal MONS_JACKAL /*'h'*/
-hound MONS_HOUND /*'h'*/
-warg MONS_WARG /*'h'*/
-war_dog MONS_WAR_DOG /*'h'*/
-wolf MONS_WOLF /*'h'*/
-hell_hound MONS_HELL_HOUND /*'h'*/
-hog MONS_HOG /*'h'*/
-hell_hog MONS_HELL_HOG /*'h'*/
+## Hounds ('h')
+jackal MONS_JACKAL
+hound MONS_HOUND
+warg MONS_WARG
+war_dog MONS_WAR_DOG
+wolf MONS_WOLF
+hell_hound MONS_HELL_HOUND
+hog MONS_HOG
+hell_hog MONS_HELL_HOG
 
-bumblebee MONS_BUMBLEBEE /*'k'*/
-killer_bee MONS_KILLER_BEE /*'k'*/
+## Bees ('k')
+bumblebee MONS_BUMBLEBEE
+killer_bee MONS_KILLER_BEE
 
-## Lizards
-giant_newt MONS_GIANT_NEWT /*'l'*/
-giant_gecko MONS_GIANT_GECKO /*'l'*/
-giant_iguana MONS_GIANT_IGUANA /*'l'*/
-giant_lizard MONS_GIANT_LIZARD /*'l'*/
-gila_monster MONS_GILA_MONSTER /*'l'*/
-komodo_dragon MONS_KOMODO_DRAGON /*'l'*/
+## Lizards ('l')
+giant_newt MONS_GIANT_NEWT
+giant_gecko MONS_GIANT_GECKO
+giant_iguana MONS_GIANT_IGUANA
+giant_lizard MONS_GIANT_LIZARD
+gila_monster MONS_GILA_MONSTER
+komodo_dragon MONS_KOMODO_DRAGON
 
-## Slugs
-elephant_slug MONS_ELEPHANT_SLUG /*'j'*/
-giant_slug MONS_GIANT_SLUG /*'j'*/
-giant_snail MONS_GIANT_SNAIL /*'j'*/
+## Slugs ('j')
+elephant_slug MONS_ELEPHANT_SLUG
+giant_slug MONS_GIANT_SLUG
+giant_snail MONS_GIANT_SNAIL
 
-## Rodents
-rat MONS_RAT /*'r'*/
-quokka MONS_QUOKKA /*'r'*/
-grey_rat MONS_GREY_RAT /*'r'*/
-green_rat MONS_GREEN_RAT /*'r'*/
-orange_rat MONS_ORANGE_RAT /*'r'*/
+## Rodents ('r')
+rat MONS_RAT
+quokka MONS_QUOKKA
+grey_rat MONS_GREY_RAT
+green_rat MONS_GREEN_RAT
+orange_rat MONS_ORANGE_RAT
 
-## Spiders
-giant_centipede MONS_GIANT_CENTIPEDE /*'s'*/
-giant_mite MONS_GIANT_MITE /*'s'*/
-scorpion MONS_SCORPION /*'s'*/
-wolf_spider MONS_WOLF_SPIDER /*'s'*/
-trapdoor_spider MONS_TRAPDOOR_SPIDER /*'s'*/
-redback MONS_REDBACK /*'s'*/
+## Spiders ('s')
+giant_centipede MONS_GIANT_CENTIPEDE
+giant_mite MONS_GIANT_MITE
+scorpion MONS_SCORPION
+wolf_spider MONS_WOLF_SPIDER
+trapdoor_spider MONS_TRAPDOOR_SPIDER
+redback MONS_REDBACK
 
-## Worms and larvae
-killer_bee_larva MONS_ANT_LARVA /*'w'*/
-killer_bee_larva MONS_KILLER_BEE_LARVA /*'w'*/
-worm MONS_WORM /*'w'*/
-swamp_worm MONS_SWAMP_WORM /*'w'*/
-spiny_worm MONS_SPINY_WORM /*'w'*/
-lava_worm MONS_LAVA_WORM /*'w'*/
-brain_worm MONS_BRAIN_WORM /*'w'*/
-rock_worm MONS_ROCK_WORM /*'w' currently unused*/
+## Worms and larvae ('w')
+killer_bee_larva MONS_ANT_LARVA
+killer_bee_larva MONS_KILLER_BEE_LARVA
+worm MONS_WORM
+swamp_worm MONS_SWAMP_WORM
+spiny_worm MONS_SPINY_WORM
+lava_worm MONS_LAVA_WORM
+brain_worm MONS_BRAIN_WORM
+rock_worm MONS_ROCK_WORM
 
-## Flying insects
-yellow_wasp MONS_YELLOW_WASP /*'y'*/
-giant_blowfly MONS_GIANT_BLOWFLY /*'y'*/
-giant_mosquito MONS_GIANT_MOSQUITO /*'y'*/
-red_wasp MONS_RED_WASP /*'y'*/
-moth_of_wrath MONS_MOTH_OF_WRATH /*'y'*/
+## Flying insects ('y')
+yellow_wasp MONS_YELLOW_WASP
+giant_blowfly MONS_GIANT_BLOWFLY
+giant_mosquito MONS_GIANT_MOSQUITO
+red_wasp MONS_RED_WASP
+moth_of_wrath MONS_MOTH_OF_WRATH
 
-## Aquatics
-big_fish MONS_BIG_FISH /*';'*/
-giant_goldfish MONS_GIANT_GOLDFISH /*';'*/
-electrical_eel MONS_ELECTRICAL_EEL /*';'*/
-lava_fish MONS_LAVA_FISH /*';'*/
-shark MONS_SHARK /*';'*/
+## Aquatics (';')
+big_fish MONS_BIG_FISH
+giant_goldfish MONS_GIANT_GOLDFISH
+electrical_eel MONS_ELECTRICAL_EEL
+lava_fish MONS_LAVA_FISH
+shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
 
-## Beetles
-giant_beetle MONS_GIANT_BEETLE /*'B'*/
-boring_beetle MONS_BORING_BEETLE /*'B'*/
-boulder_beetle MONS_BOULDER_BEETLE /*'B'*/
+## Beetles ('B')
+giant_beetle MONS_GIANT_BEETLE
+boring_beetle MONS_BORING_BEETLE
+boulder_beetle MONS_BOULDER_BEETLE
 
-## Frogs
+## Frogs ('F')
 %sdir dc-mon/unique
 %rim 0
 prince_ribbit MONS_PRINCE_RIBBIT
 %rim 1
 %sdir dc-mon/animals
-giant_frog MONS_GIANT_FROG /*'F'*/
-giant_brown_frog MONS_GIANT_BROWN_FROG /*'F'*/
+giant_frog MONS_GIANT_FROG
+giant_brown_frog MONS_GIANT_BROWN_FROG
 %rim 0
-blink_frog MONS_BLINK_FROG /*'F'*/
+blink_frog MONS_BLINK_FROG
 %rim 1
-spiny_frog MONS_SPINY_FROG /*'F'*/
+spiny_frog MONS_SPINY_FROG
 
-queen_ant MONS_QUEEN_ANT /*'Q'*/
-queen_bee MONS_QUEEN_BEE /*'Q'*/
+## Queen insects ('Q')
+queen_ant MONS_QUEEN_ANT
+queen_bee MONS_QUEEN_BEE
 
-small_snake MONS_SMALL_SNAKE /*'S'*/
-snake MONS_SNAKE /*'S'*/
-black_snake MONS_BLACK_SNAKE /*'S'*/
-brown_snake MONS_BROWN_SNAKE /*'S'*/
-grey_snake MONS_GREY_SNAKE /*'S'*/
-lava_snake MONS_LAVA_SNAKE /*'S'*/
-yellow_snake MONS_YELLOW_SNAKE /*'S'*/
-salamander MONS_SALAMANDER /*'S'*/
+## Snakes ('S')
+small_snake MONS_SMALL_SNAKE
+snake MONS_SNAKE
+black_snake MONS_BLACK_SNAKE
+brown_snake MONS_BROWN_SNAKE
+grey_snake MONS_GREY_SNAKE
+lava_snake MONS_LAVA_SNAKE
+yellow_snake MONS_YELLOW_SNAKE
+salamander MONS_SALAMANDER
 
-bear MONS_BEAR /*'U'*/
-black_bear MONS_BLACK_BEAR /*'U'*/
-grizzly_bear MONS_GRIZZLY_BEAR /*'U'*/
-polar_bear MONS_POLAR_BEAR /*'U'*/
+## Bears ('U')
+bear MONS_BEAR
+black_bear MONS_BLACK_BEAR
+grizzly_bear MONS_GRIZZLY_BEAR
+polar_bear MONS_POLAR_BEAR
 
-sheep MONS_SHEEP /*'Y'*/
-yak MONS_YAK /*'Y'*/
-death_yak MONS_DEATH_YAK /*'Y'*/
+## Cattle ('Y')
+sheep MONS_SHEEP
+yak MONS_YAK
+death_yak MONS_DEATH_YAK
 
 ### Elemental monsters
 %sdir dc-mon
@@ -144,363 +149,397 @@ orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 %rim 1
 
 ### Demonic monsters
-## Arch demons
+## Arch demons ('&')
 %sdir dc-mon/unique
-asmodeus MONS_ASMODEUS /*'&'*/
-cerebov MONS_CEREBOV /*'&'*/
-dispater MONS_DISPATER /*'&'*/
-ereshkigal MONS_ERESHKIGAL /*'&'*/
-geryon MONS_GERYON /*'&'*/
-gloorx_vloq MONS_GLOORX_VLOQ /*'&'*/
-lom_lobon MONS_LOM_LOBON /*'&'*/
-mnoleg MONS_MNOLEG /*'&'*/
+asmodeus MONS_ASMODEUS
+cerebov MONS_CEREBOV
+dispater MONS_DISPATER
+ereshkigal MONS_ERESHKIGAL
+geryon MONS_GERYON
+gloorx_vloq MONS_GLOORX_VLOQ
+lom_lobon MONS_LOM_LOBON
+mnoleg MONS_MNOLEG
 
 ## Demons 1-5
 %sdir dc-mon/demons
-balrug MONS_BALRUG /*'1'*/
-blue_death MONS_BLUE_DEATH /*'1'*/
-cacodemon MONS_CACODEMON /*'1'*/
-executioner MONS_EXECUTIONER /*'1'*/
-fiend MONS_FIEND /*'1'*/
-green_death MONS_GREEN_DEATH /*'1'*/
-ice_fiend MONS_ICE_FIEND /*'1'*/
-pit_fiend MONS_PIT_FIEND /*'1'*/
-shadow_fiend MONS_SHADOW_FIEND /*'1'*/
-ice_devil MONS_ICE_DEVIL /*'2'*/
-lorocyproca MONS_LOROCYPROCA /*'2'*/
-reaper MONS_REAPER /*'2'*/
-soul_eater MONS_SOUL_EATER /*'2'*/
-sun_demon MONS_SUN_DEMON /*'2'*/
-blue_devil MONS_BLUE_DEVIL /*'3'*/
-demonic_crawler MONS_DEMONIC_CRAWLER /*'3'*/
-hellion MONS_HELLION /*'3'*/
-hellwing MONS_HELLWING /*'3'*/
-iron_devil MONS_IRON_DEVIL /*'3'*/
-neqoxec MONS_NEQOXEC /*'3'*/
-orange_demon MONS_ORANGE_DEMON /*'3'*/
-shadow_demon MONS_SHADOW_DEMON /*'3'*/
-tormentor MONS_TORMENTOR /*'3'*/
-ynoxinul MONS_YNOXINUL /*'3'*/
-chaos_spawn MONS_CHAOS_SPAWN /*'3'*/
-beast MONS_BEAST /*'4'*/
-hairy_devil MONS_HAIRY_DEVIL /*'4'*/
-red_devil MONS_RED_DEVIL /*'4'*/
-rotting_devil MONS_ROTTING_DEVIL /*'4'*/
-smoke_demon MONS_SMOKE_DEMON /*'4'*/
-imp MONS_IMP /*'5'*/
-quasit MONS_QUASIT /*'5'*/
-lemure MONS_LEMURE /*'5'*/
-manes MONS_MANES /*'5'*/
-midge MONS_MIDGE /*'5'*/
-shadow_imp MONS_SHADOW_IMP /*'5'*/
-ufetubus MONS_UFETUBUS /*'5'*/
-white_imp MONS_WHITE_IMP /*'5'*/
+
+# type '1' demons
+balrug MONS_BALRUG
+blue_death MONS_BLUE_DEATH
+cacodemon MONS_CACODEMON
+executioner MONS_EXECUTIONER
+fiend MONS_FIEND
+green_death MONS_GREEN_DEATH
+ice_fiend MONS_ICE_FIEND
+pit_fiend MONS_PIT_FIEND
+shadow_fiend MONS_SHADOW_FIEND
+
+# type '2' demons
+ice_devil MONS_ICE_DEVIL
+lorocyproca MONS_LOROCYPROCA
+reaper MONS_REAPER
+soul_eater MONS_SOUL_EATER
+sun_demon MONS_SUN_DEMON
+
+# type '3' demons
+blue_devil MONS_BLUE_DEVIL
+chaos_spawn MONS_CHAOS_SPAWN
+demonic_crawler MONS_DEMONIC_CRAWLER
+hellion MONS_HELLION
+hellwing MONS_HELLWING
+iron_devil MONS_IRON_DEVIL
+neqoxec MONS_NEQOXEC
+orange_demon MONS_ORANGE_DEMON
+shadow_demon MONS_SHADOW_DEMON
+tormentor MONS_TORMENTOR
+ynoxinul MONS_YNOXINUL
+
+# type '4' demons
+beast MONS_BEAST
+hairy_devil MONS_HAIRY_DEVIL
+red_devil MONS_RED_DEVIL
+rotting_devil MONS_ROTTING_DEVIL
+smoke_demon MONS_SMOKE_DEMON
+
+# type '5' demons
+imp MONS_IMP
+quasit MONS_QUASIT
+lemure MONS_LEMURE
+manes MONS_MANES
+midge MONS_MIDGE
+shadow_imp MONS_SHADOW_IMP
+ufetubus MONS_UFETUBUS
+white_imp MONS_WHITE_IMP
 
 efreet MONS_EFREET /*'E'*/
 
-rakshasa MONS_RAKSHASA /*'R'*/
-rakshasa MONS_RAKSHASA_FAKE /*'R'*/
+## Rakshasa ('R')
+rakshasa MONS_RAKSHASA
+rakshasa MONS_RAKSHASA_FAKE
 
-## Abominations
-abomination_large MONS_ABOMINATION_LARGE /*'X'*/
+## Abominations ('X')
+abomination_large MONS_ABOMINATION_LARGE
 abomination_large1
 abomination_large2
 abomination_large3
 abomination_large4
 abomination_large5
 abomination_large6
-tentacled_monstrosity MONS_TENTACLED_MONSTROSITY /*'X'*/
+tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 
-ugly_thing MONS_UGLY_THING /*'u'*/
-very_ugly_thing MONS_VERY_UGLY_THING /*'u'*/
+## Ugly things ('u')
+ugly_thing MONS_UGLY_THING
+very_ugly_thing MONS_VERY_UGLY_THING
 
-unseen_horror MONS_UNSEEN_HORROR /*'x'*/
-abomination_small MONS_ABOMINATION_SMALL /*'x'*/
+## Small abominations ('x')
+unseen_horror MONS_UNSEEN_HORROR
+abomination_small MONS_ABOMINATION_SMALL
 
-## Golems
+## Golems ('8')
 %sdir dc-mon
-clay_golem MONS_CLAY_GOLEM /*'8'*/
-crystal_golem MONS_CRYSTAL_GOLEM /*'8'*/
+clay_golem MONS_CLAY_GOLEM
+crystal_golem MONS_CRYSTAL_GOLEM
 %rim 0
-electric_golem MONS_ELECTRIC_GOLEM /*'8'*/
+electric_golem MONS_ELECTRIC_GOLEM
 %rim 1
-iron_golem MONS_IRON_GOLEM /*'8'*/
-stone_golem MONS_STONE_GOLEM /*'8'*/
-toenail_golem MONS_TOENAIL_GOLEM /*'8'*/
-wood_golem MONS_WOOD_GOLEM /*'8'*/
+iron_golem MONS_IRON_GOLEM
+stone_golem MONS_STONE_GOLEM
+toenail_golem MONS_TOENAIL_GOLEM
+wood_golem MONS_WOOD_GOLEM
 
-## Statues
-ice_statue ICE_STATUE /*'8'*/
-silver_statue SILVER_STATUE /*'8'*/
-orange_crystal_statue ORANGE_CRYSTAL_STATUE /*'8'*/
+## Statues (also '8')
+ice_statue ICE_STATUE
+silver_statue SILVER_STATUE
+orange_crystal_statue ORANGE_CRYSTAL_STATUE
 
-## Gargoyles
-gargoyle MONS_GARGOYLE /*'9'*/
-metal_gargoyle MONS_METAL_GARGOYLE /*'9'*/
-molten_gargoyle MONS_MOLTEN_GARGOYLE /*'9'*/
+## Gargoyles ('9')
+gargoyle MONS_GARGOYLE
+metal_gargoyle MONS_METAL_GARGOYLE
+molten_gargoyle MONS_MOLTEN_GARGOYLE
 
-## Humans
-human MONS_HUMAN /*'@'*/
-hell_knight MONS_HELL_KNIGHT /*'@'*/
-necromancer MONS_NECROMANCER /*'@'*/
-wizard MONS_WIZARD /*'@'*/
-vault_guard MONS_VAULT_GUARD /*'@'*/
-shapeshifter MONS_SHAPESHIFTER /*'@'*/
-glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER /*'@'*/
-killer_klown MONS_KILLER_KLOWN /*'@'*/
-
+## Humans ('@')
 %sdir dc-mon/unique
-## Unique human, in alphabetical order
-agnes MONS_AGNES /*'@'*/
-donald MONS_DONALD /*'@'*/
-duane MONS_DUANE /*'@'*/
-edmund MONS_EDMUND /*'@'*/
-erica MONS_ERICA /*'@'*/
-frances MONS_FRANCES /*'@'*/
-francis MONS_FRANCIS /*'@'*/
+# Unique humans, in alphabetical order
+agnes MONS_AGNES
+donald MONS_DONALD
+duane MONS_DUANE
+edmund MONS_EDMUND
+erica MONS_ERICA
+frances MONS_FRANCES
+francis MONS_FRANCIS
 frederick MONS_FREDERICK
-harold MONS_HAROLD /*'@'*/
-jessica MONS_JESSICA /*'@'*/
-joseph MONS_JOSEPH /*'@'*/
-josephine MONS_JOSEPHINE /*'@'*/
-jozef MONS_JOZEF /*'@'*/
-louise MONS_LOUISE /*'@'*/
-margery MONS_MARGERY /*'@'*/
-maud MONS_MAUD /*'@'*/
-michael MONS_MICHAEL /*'@'*/
-norbert MONS_NORBERT /*'@'*/
-norris MONS_NORRIS /*'@'*/
-psyche MONS_PSYCHE /*'@'*/
-rupert MONS_RUPERT /*'@'*/
-sigmund MONS_SIGMUND /*'@'*/
-terence MONS_TERENCE /*'@'*/
-wayne MONS_WAYNE /*'@'*/
+harold MONS_HAROLD
+jessica MONS_JESSICA
+joseph MONS_JOSEPH
+josephine MONS_JOSEPHINE
+jozef MONS_JOZEF
+louise MONS_LOUISE
+margery MONS_MARGERY
+maud MONS_MAUD
+michael MONS_MICHAEL
+norbert MONS_NORBERT
+norris MONS_NORRIS
+psyche MONS_PSYCHE
+rupert MONS_RUPERT
+sigmund MONS_SIGMUND
+terence MONS_TERENCE
+wayne MONS_WAYNE
 %sdir dc-mon
 
-##Angels
-angel MONS_ANGEL /*'A'*/
-daeva MONS_DAEVA /*'A'*/
+human MONS_HUMAN
+hell_knight MONS_HELL_KNIGHT
+necromancer MONS_NECROMANCER
+wizard MONS_WIZARD
+vault_guard MONS_VAULT_GUARD
+shapeshifter MONS_SHAPESHIFTER
+glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
+killer_klown MONS_KILLER_KLOWN
 
-## Giants
+## Angels ('A')
+angel MONS_ANGEL
+daeva MONS_DAEVA
+
+## Giants ('C')
 %sdir dc-mon/unique
-antaeus MONS_ANTAEUS /*'C'*/
+antaeus MONS_ANTAEUS
 polyphemus MONS_POLYPHEMUS
 %sdir dc-mon
-hill_giant MONS_HILL_GIANT /*'C'*/
-ettin MONS_ETTIN /*'C'*/
-cyclops MONS_CYCLOPS /*'C'*/
-fire_giant MONS_FIRE_GIANT /*'C'*/
-frost_giant MONS_FROST_GIANT /*'C'*/
-stone_giant MONS_STONE_GIANT /*'C'*/
-titan MONS_TITAN /*'C'*/
+hill_giant MONS_HILL_GIANT
+ettin MONS_ETTIN
+cyclops MONS_CYCLOPS
+fire_giant MONS_FIRE_GIANT
+frost_giant MONS_FROST_GIANT
+stone_giant MONS_STONE_GIANT
+titan MONS_TITAN
 
-## drakes
-swamp_drake MONS_SWAMP_DRAKE /*'d'*/
-firedrake MONS_FIREDRAKE /*'d'*/
-lindwurm MONS_LINDWURM /*'d'*/
-death_drake MONS_DEATH_DRAKE /*'d'*/
+## Drakes (also 'l')
+swamp_drake MONS_SWAMP_DRAKE
+firedrake MONS_FIREDRAKE
+lindwurm MONS_LINDWURM
+death_drake MONS_DEATH_DRAKE
 
-## Dragons
+## Dragons ('D')
 %sdir dc-mon/unique
-xtahua MONS_XTAHUA /*'D'*/
+xtahua MONS_XTAHUA
 %sdir dc-mon
-wyvern MONS_WYVERN /*'D'*/
-dragon MONS_DRAGON /*'D'*/
-hydra1 MONS_HYDRA /*'D'*/
+wyvern MONS_WYVERN
+dragon MONS_DRAGON
+hydra1 MONS_HYDRA
 hydra2
 hydra3
 hydra4
 hydra5
 hydra5
 hydra5
-ice_dragon MONS_ICE_DRAGON /*'D'*/
-steam_dragon MONS_STEAM_DRAGON /*'D'*/
-swamp_dragon MONS_SWAMP_DRAGON /*'D'*/
-mottled_dragon MONS_MOTTLED_DRAGON /*'D'*/
-quicksilver_dragon MONS_QUICKSILVER_DRAGON /*'D'*/
-iron_dragon MONS_IRON_DRAGON /*'D'*/
-storm_dragon MONS_STORM_DRAGON /*'D'*/
-golden_dragon MONS_GOLDEN_DRAGON /*'D'*/
-shadow_dragon MONS_SHADOW_DRAGON /*'D'*/
-skeletal_dragon MONS_SKELETAL_DRAGON /*'D'*/
-serpent_of_hell MONS_SERPENT_OF_HELL /*'D'*/
+ice_dragon MONS_ICE_DRAGON
+steam_dragon MONS_STEAM_DRAGON
+swamp_dragon MONS_SWAMP_DRAGON
+mottled_dragon MONS_MOTTLED_DRAGON
+quicksilver_dragon MONS_QUICKSILVER_DRAGON
+iron_dragon MONS_IRON_DRAGON
+storm_dragon MONS_STORM_DRAGON
+golden_dragon MONS_GOLDEN_DRAGON
+shadow_dragon MONS_SHADOW_DRAGON
+skeletal_dragon MONS_SKELETAL_DRAGON
+serpent_of_hell MONS_SERPENT_OF_HELL
 
-## Eyes
-giant_spore MONS_GIANT_SPORE /*'G'*/
-giant_eyeball MONS_GIANT_EYEBALL /*'G'*/
-eye_of_draining MONS_EYE_OF_DRAINING /*'G'*/
-giant_orange_brain MONS_GIANT_ORANGE_BRAIN /*'G'*/
-great_orb_of_eyes MONS_GREAT_ORB_OF_EYES /*'G'*/
-shining_eye MONS_SHINING_EYE /*'G'*/
-eye_of_devastation MONS_EYE_OF_DEVASTATION /*'G'*/
+## Eyes ('G')
+giant_spore MONS_GIANT_SPORE
+giant_eyeball MONS_GIANT_EYEBALL
+eye_of_draining MONS_EYE_OF_DRAINING
+giant_orange_brain MONS_GIANT_ORANGE_BRAIN
+great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
+shining_eye MONS_SHINING_EYE
+eye_of_devastation MONS_EYE_OF_DEVASTATION
 
-## Hybrids
-hippogriff MONS_HIPPOGRIFF /*'H'*/
-manticore MONS_MANTICORE /*'H'*/
-griffon MONS_GRIFFON /*'H'*/
-sphinx MONS_SPHINX /*'H'*/
-harpy MONS_HARPY /*'H'*/
+## Hybrids ('H')
+hippogriff MONS_HIPPOGRIFF
+manticore MONS_MANTICORE
+griffon MONS_GRIFFON
+sphinx MONS_SPHINX
+harpy MONS_HARPY
 
 ## Ice beast only
 ice_beast MONS_ICE_BEAST /*'I'*/
 
-## Jellies
-ooze MONS_OOZE /*'J'*/
-jelly MONS_JELLY /*'J'*/
-slime_creature MONS_SLIME_CREATURE /*'J'*/
-pulsating_lump MONS_PULSATING_LUMP /*'J'*/
-giant_amoeba MONS_GIANT_AMOEBA /*'J'*/
-brown_ooze MONS_BROWN_OOZE /*'J'*/
-azure_jelly MONS_AZURE_JELLY /*'J'*/
-death_ooze MONS_DEATH_OOZE /*'J'*/
-acid_blob MONS_ACID_BLOB /*'J'*/
-royal_jelly MONS_ROYAL_JELLY /*'J'*/
-
-## Kobolds
-kobold MONS_KOBOLD /*'K'*/
-big_kobold MONS_BIG_KOBOLD /*'K'*/
-kobold_demonologist MONS_KOBOLD_DEMONOLOGIST /*'K'*/
-
-## Liches
+## Jellies ('J')
 %sdir dc-mon/unique
-boris MONS_BORIS /*'L'*/
+royal_jelly MONS_ROYAL_JELLY
 %sdir dc-mon
-lich MONS_LICH /*'L'*/
-ancient_lich MONS_ANCIENT_LICH /*'L'*/
+ooze MONS_OOZE
+jelly MONS_JELLY
+slime_creature MONS_SLIME_CREATURE
+pulsating_lump MONS_PULSATING_LUMP
+giant_amoeba MONS_GIANT_AMOEBA
+brown_ooze MONS_BROWN_OOZE
+azure_jelly MONS_AZURE_JELLY
+death_ooze MONS_DEATH_OOZE
+acid_blob MONS_ACID_BLOB
 
-## Mummies
-mummy MONS_MUMMY /*'M'*/
-guardian_mummy MONS_GUARDIAN_MUMMY /*'M'*/
-greater_mummy MONS_GREATER_MUMMY /*'M'*/
-mummy_priest MONS_MUMMY_PRIEST /*'M'*/
+## Kobolds ('K')
+kobold MONS_KOBOLD
+big_kobold MONS_BIG_KOBOLD
+kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
-## Nagas
-naga MONS_NAGA /*'N'*/
-guardian_naga MONS_GUARDIAN_NAGA /*'N'*/
-naga_mage MONS_NAGA_MAGE /*'N'*/
-naga_warrior MONS_NAGA_WARRIOR /*'N'*/
-greater_naga MONS_GREATER_NAGA /*'N'*/
-
+## Liches ('L')
 %sdir dc-mon/unique
-erolcha MONS_EROLCHA /*'O'*/
+boris MONS_BORIS
 %sdir dc-mon
-ogre MONS_OGRE /*'O'*/
-two_headed_ogre MONS_TWO_HEADED_OGRE /*'O'*/
-ogre_mage MONS_OGRE_MAGE /*'O'*/
+lich MONS_LICH
+ancient_lich MONS_ANCIENT_LICH
 
-plant MONS_PLANT /*'P'*/
-oklob_plant MONS_OKLOB_PLANT /*'P'*/
+## Mummies ('M')
+mummy MONS_MUMMY
+guardian_mummy MONS_GUARDIAN_MUMMY
+greater_mummy MONS_GREATER_MUMMY
+mummy_priest MONS_MUMMY_PRIEST
 
+## Nagas ('N')
+naga MONS_NAGA
+guardian_naga MONS_GUARDIAN_NAGA
+naga_mage MONS_NAGA_MAGE
+naga_warrior MONS_NAGA_WARRIOR
+greater_naga MONS_GREATER_NAGA
+
+## Ogres ('O')
 %sdir dc-mon/unique
-snorg MONS_SNORG /*'T'*/
+erolcha MONS_EROLCHA
 %sdir dc-mon
-troll MONS_TROLL /*'T'*/
-rock_troll MONS_ROCK_TROLL /*'T'*/
-iron_troll MONS_IRON_TROLL /*'T'*/
-deep_troll MONS_DEEP_TROLL /*'T'*/
+ogre MONS_OGRE
+two_headed_ogre MONS_TWO_HEADED_OGRE
+ogre_mage MONS_OGRE_MAGE
 
-vampire MONS_VAMPIRE /*'V'*/
-vampire_knight MONS_VAMPIRE_KNIGHT /*'V'*/
-vampire_mage MONS_VAMPIRE_MAGE /*'V'*/
+## Plants ('P')
+plant MONS_PLANT
+oklob_plant MONS_OKLOB_PLANT
 
-wight MONS_WIGHT /*'W'*/
-wraith MONS_WRAITH /*'W'*/
-shadow_wraith MONS_SHADOW_WRAITH /*'W'*/
-freezing_wraith MONS_FREEZING_WRAITH /*'W'*/
-spectral_warrior MONS_SPECTRAL_WARRIOR /*'W'*/
-spectral_thing MONS_SPECTRAL_THING /*'W'*/
+## Trolls ('T')
+%sdir dc-mon/unique
+snorg MONS_SNORG
+%sdir dc-mon
+troll MONS_TROLL
+rock_troll MONS_ROCK_TROLL
+iron_troll MONS_IRON_TROLL
+deep_troll MONS_DEEP_TROLL
+
+## Vampires ('V')
+vampire MONS_VAMPIRE
+vampire_knight MONS_VAMPIRE_KNIGHT
+vampire_mage MONS_VAMPIRE_MAGE
+
+## Wraiths ('W')
+wight MONS_WIGHT
+wraith MONS_WRAITH
+shadow_wraith MONS_SHADOW_WRAITH
+freezing_wraith MONS_FREEZING_WRAITH
+spectral_warrior MONS_SPECTRAL_WARRIOR
+spectral_thing MONS_SPECTRAL_THING
 
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 
-zombie_large MONS_ZOMBIE_LARGE /*'Z'*/
-skeleton_large MONS_SKELETON_LARGE /*'Z'*/
-simulacrum_large MONS_SIMULACRUM_LARGE /*'Z'*/
+## Large zombified monsters ('Z')
+zombie_large MONS_ZOMBIE_LARGE
+skeleton_large MONS_SKELETON_LARGE
+simulacrum_large MONS_SIMULACRUM_LARGE
 
-centaur MONS_CENTAUR /*'c'*/
+## Centaurs ('c')
+centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
-centaur_warrior MONS_CENTAUR_WARRIOR /*'c'*/
+centaur_warrior MONS_CENTAUR_WARRIOR
 centaur_warrior-melee MONS_CENTAUR_WARRIOR_MELEE
-yaktaur MONS_YAKTAUR /*'c'*/
+yaktaur MONS_YAKTAUR
 yaktaur-melee MONS_YAKTAUR_MELEE
-yaktaur_captain MONS_YAKTAUR_CAPTAIN /*'c'*/
+yaktaur_captain MONS_YAKTAUR_CAPTAIN
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 
-elf MONS_ELF /*'e'*/
-deep_elf_fighter MONS_DEEP_ELF_FIGHTER /*'e'*/
-deep_elf_soldier MONS_DEEP_ELF_SOLDIER /*'e'*/
-deep_elf_knight MONS_DEEP_ELF_KNIGHT /*'e'*/
-deep_elf_mage MONS_DEEP_ELF_MAGE /*'e'*/
-deep_elf_sorcerer MONS_DEEP_ELF_SORCERER /*'e'*/
-deep_elf_conjurer MONS_DEEP_ELF_CONJURER /*'e'*/
-deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE /*'e'*/
-deep_elf_demonologist MONS_DEEP_ELF_DEMONOLOGIST /*'e'*/
-deep_elf_summoner MONS_DEEP_ELF_SUMMONER /*'e'*/
-deep_elf_annihilator MONS_DEEP_ELF_ANNIHILATOR /*'e'*/
-deep_elf_priest MONS_DEEP_ELF_PRIEST /*'e'*/
-deep_elf_high_priest MONS_DEEP_ELF_HIGH_PRIEST /*'e'*/
+## Elves ('e')
+elf MONS_ELF
+deep_elf_fighter MONS_DEEP_ELF_FIGHTER
+deep_elf_soldier MONS_DEEP_ELF_SOLDIER
+deep_elf_knight MONS_DEEP_ELF_KNIGHT
+deep_elf_mage MONS_DEEP_ELF_MAGE
+deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
+deep_elf_conjurer MONS_DEEP_ELF_CONJURER
+deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE
+deep_elf_demonologist MONS_DEEP_ELF_DEMONOLOGIST
+deep_elf_summoner MONS_DEEP_ELF_SUMMONER
+deep_elf_annihilator MONS_DEEP_ELF_ANNIHILATOR
+deep_elf_priest MONS_DEEP_ELF_PRIEST
+deep_elf_high_priest MONS_DEEP_ELF_HIGH_PRIEST
 deep_elf_blademaster MONS_DEEP_ELF_BLADEMASTER
 deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 
-fungus MONS_FUNGUS /*'f'*/
-wandering_mushroom MONS_WANDERING_MUSHROOM /*'f'*/
+## Fungi ('f')
+fungus MONS_FUNGUS
+wandering_mushroom MONS_WANDERING_MUSHROOM
+
+## Goblins ('g')
+%sdir dc-mon/unique
+ijyb MONS_IJYB
+%sdir dc-mon
+goblin MONS_GOBLIN
+hobgoblin MONS_HOBGOBLIN
+gnoll MONS_GNOLL
+boggart MONS_BOGGART
+
+## Merfolk ('m')
+%sdir dc-mon/unique
+ilsuiw MONS_ILSUIW
+ilsuiw_water MONS_ILSUIW_WATER
+%sdir dc-mon
+merfolk_fighter MONS_MERFOLK_FIGHTER
+merfolk_fighter_water MONS_MERFOLK_FIGHTER_WATER
+mermaid MONS_MERMAID
+mermaid_water MONS_MERMAID_WATER
+siren MONS_SIREN
+siren_water MONS_SIREN_WATER
+
+## Rotting monsters ('n')
+necrophage MONS_NECROPHAGE
+ghoul MONS_GHOUL
+rotting_hulk MONS_ROTTING_HULK
 
 %sdir dc-mon/unique
-ijyb MONS_IJYB /*'g'*/
+blork_the_orc MONS_BLORK_THE_ORC
+urug MONS_URUG
 %sdir dc-mon
-goblin MONS_GOBLIN /*'g'*/
-hobgoblin MONS_HOBGOBLIN /*'g'*/
-gnoll MONS_GNOLL /*'g'*/
-boggart MONS_BOGGART /*'g'*/
+orc MONS_ORC
+orc_wizard MONS_ORC_WIZARD
+orc_priest MONS_ORC_PRIEST
+orc_warrior MONS_ORC_WARRIOR
+orc_knight MONS_ORC_KNIGHT
+orc_warlord MONS_ORC_WARLORD
+orc_sorcerer MONS_ORC_SORCERER
+orc_high_priest MONS_ORC_HIGH_PRIEST
 
-merfolk_fighter MONS_MERFOLK_FIGHTER /*'m'*/
-merfolk_fighter_water MONS_MERFOLK_FIGHTER_WATER
-mermaid MONS_MERMAID /*'m'*/
-mermaid_water MONS_MERMAID_WATER
-siren MONS_SIREN /*'m'*/
-siren_water MONS_SIREN_WATER
+## Ghosts ('p')
+%rim 0
+shadow MONS_SHADOW /*' '*/
+insubstantial_wisp MONS_INSUBSTANTIAL_WISP
+phantom MONS_PHANTOM
+ghost MONS_PLAYER_GHOST
+%rim 1
+flayed_ghost MONS_FLAYED_GHOST
+hungry_ghost MONS_HUNGRY_GHOST
 
 minotaur MONS_MINOTAUR /*'t'*/
 
-ghoul MONS_GHOUL /*'n'*/
-necrophage MONS_NECROPHAGE /*'n'*/
-rotting_hulk MONS_ROTTING_HULK /*'n'*/
-
-%sdir dc-mon/unique
-blork_the_orc MONS_BLORK_THE_ORC /*'o'*/
-urug MONS_URUG /*'o'*/
-%sdir dc-mon
-orc MONS_ORC /*'o'*/
-orc_wizard MONS_ORC_WIZARD /*'o'*/
-orc_priest MONS_ORC_PRIEST /*'o'*/
-orc_warrior MONS_ORC_WARRIOR /*'o'*/
-orc_knight MONS_ORC_KNIGHT /*'o'*/
-orc_warlord MONS_ORC_WARLORD /*'o'*/
-orc_sorcerer MONS_ORC_SORCERER /*'o'*/
-orc_high_priest MONS_ORC_HIGH_PRIEST /*'o'*/
-
+## Small zombified monsters ('z')
+zombie_small MONS_ZOMBIE_SMALL
+skeleton_small MONS_SKELETON_SMALL
+simulacrum_small MONS_SIMULACRUM_SMALL
+skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
-shadow MONS_SHADOW /*' '*/
-insubstantial_wisp MONS_INSUBSTANTIAL_WISP /*'p'*/
-phantom MONS_PHANTOM /*'p'*/
-ghost MONS_PLAYER_GHOST /*'p'*/
-%rim 1
-flayed_ghost MONS_FLAYED_GHOST /*'p'*/
-hungry_ghost MONS_HUNGRY_GHOST /*'p'*/
-
-zombie_small MONS_ZOMBIE_SMALL /*'z'*/
-skeleton_small MONS_SKELETON_SMALL /*'z'*/
-simulacrum_small MONS_SIMULACRUM_SMALL /*'z'*/
-skeletal_warrior MONS_SKELETAL_WARRIOR /*'z'*/
-%rim 0
-flaming_corpse MONS_FLAMING_CORPSE /*'z'*/
+flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
 %sdir dc-mon/unique
 murray MONS_MURRAY
 %sdir dc-mon
-curse_skull MONS_CURSE_SKULL /*'z'*/
-curse_toe MONS_CURSE_TOE /*'z'*/
-flying_skull MONS_FLYING_SKULL /*'z'*/
+curse_skull MONS_CURSE_SKULL
+curse_toe MONS_CURSE_TOE
+flying_skull MONS_FLYING_SKULL
 
+## Draconians ('d')
 %sdir dc-mon/unique
 tiamat MONS_TIAMAT
 %sdir dc-mon/draco
@@ -513,13 +552,13 @@ draco-base-pale
 draco-base-purple
 draco-base-red
 draco-base-white
-draco-job-ann DRACO_ANNIHILATOR
-draco-job-call DRACO_CALLER
-draco-job-kn DRACO_KNIGHT
+draco-job-annihilator DRACO_ANNIHILATOR
+draco-job-caller DRACO_CALLER
+draco-job-knight DRACO_KNIGHT
 draco-job-monk DRACO_MONK
-draco-job-scor DRACO_SCORCHER
-draco-job-shif DRACO_SHIFTER
-draco-job-zea DRACO_ZEALOT
+draco-job-scorcher DRACO_SCORCHER
+draco-job-shifter DRACO_SHIFTER
+draco-job-zealot DRACO_ZEALOT
 
 %sdir dc-mon
 test_spawner MONS_TEST_SPAWNER

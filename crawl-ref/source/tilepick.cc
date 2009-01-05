@@ -916,19 +916,22 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_MURRAY:
         return TILEP_MONS_MURRAY;
     case MONS_ROXANNE:
-        return TILEP_ORANGE_CRYSTAL_STATUE; // TODO enne
+        return TILEP_ICE_STATUE; // TODO enne
     case MONS_SONJA:
         return TILEP_MONS_KOBOLD; // TODO enne
     case MONS_AZRAEL:
         return TILEP_MONS_EFREET; // TODO enne
     case MONS_ILSUIW:
-        return TILEP_MONS_MERMAID; // TODO enne
+        if (in_water)
+            return TILEP_MONS_ILSUIW_WATER;
+        else
+            return TILEP_MONS_ILSUIW;
     case MONS_PRINCE_RIBBIT:
         return TILEP_MONS_PRINCE_RIBBIT;
     case MONS_NERGALLE:
         return TILEP_MONS_ORC_SORCERER; // TODO enne
     case MONS_SAINT_ROKA:
-        return TILEP_MONS_ORC_PRIEST; // TODO enne
+        return TILEP_MONS_ORC_WARLORD; // TODO enne
 
     // human uniques ('@')
     case MONS_TERENCE:
