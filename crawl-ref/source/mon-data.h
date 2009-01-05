@@ -1463,7 +1463,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BRAIN_WORM, 'w', LIGHTMAGENTA, "brain worm",
-    M_SPELLCASTER | M_EVIL,
+    M_SPELLCASTER | M_EVIL | M_NO_SKELETON,
     MR_NO_FLAGS,
     150, 10, MONS_WORM, MONS_BRAIN_WORM, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1474,7 +1474,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SWAMP_WORM, 'w', BROWN, "swamp worm",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_NO_FLAGS,
     350, 10, MONS_WORM, MONS_SWAMP_WORM, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1485,7 +1485,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SPINY_WORM, 'w', LIGHTGREEN, "spiny worm",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON | MR_RES_ACID,
     1300, 13, MONS_WORM, MONS_SPINY_WORM, MH_NATURAL, -3,
     { {AT_STING, AF_ACID, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
