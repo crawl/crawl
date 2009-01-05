@@ -623,7 +623,7 @@ bool invalid_monster_class(int mclass)
     return (mclass < 0
             || mclass >= NUM_MONSTERS
             || mon_entry[mclass] == -1
-            || mon_entry[mclass] == MONS_PROGRAM_BUG);
+            || mon_entry[mclass] == mon_entry[MONS_PROGRAM_BUG]);
 }
 
 bool invalid_monster_index(int i)
