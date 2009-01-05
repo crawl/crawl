@@ -4450,24 +4450,24 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
     for (y = 0; y < crawl_view.viewsz.y; y++)
         for (x = 0; x < crawl_view.viewsz.x; x++)
         {
-            const int gx = view2gridX(x + crawl_view.viewp.x);
-            const int gy = view2gridY(y + crawl_view.viewp.y);
+            const coord_def ep = coord_def(x, y) + crawl_view.viewp
+                                 + coord_def(cx, cy) - crawl_view.vgrdc;
+            const coord_def gc = view2grid(ep);
 
             unsigned char wall_flv    = 0;
             unsigned char floor_flv   = 0;
             unsigned char special_flv = 0;
-            const bool in_bounds = (map_bounds(gx, gy));
+            const bool in_bounds = (map_bounds(gc));
 
             if (in_bounds)
             {
-                wall_flv    = env.tile_flv[gx][gy].wall;
-                floor_flv   = env.tile_flv[gx][gy].floor;
-                special_flv = env.tile_flv[gx][gy].special;
+                wall_flv    = env.tile_flv[gc.x][gc.y].wall;
+                floor_flv   = env.tile_flv[gc.x][gc.y].floor;
+                special_flv = env.tile_flv[gc.x][gc.y].special;
             }
 
             _finalize_tile(&tileb[count+1], wall_flv, floor_flv, special_flv);
 
-            const coord_def gc(gx, gy);
             if (is_excluded(gc))
             {
                 if (is_exclude_root(gc))
@@ -4497,7 +4497,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 if (print_blood && is_bloodcovered(gc))
                     tileb[count+1] |= TILE_FLAG_BLOOD;
 
-                if (is_sanctuary(coord_def(gx, gy)))
+                if (is_sanctuary(gc))
                     tileb[count+1] |= TILE_FLAG_SANCTUARY;
             }
 
