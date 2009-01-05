@@ -1561,7 +1561,7 @@ _Ilsuiw_rare_
 
 VISUAL:@The_monster@ gazes at @foe@ @hypnot_or_seductively@.
 
-@The_monster@ sings, "To sleep, to sleep ... mayhap to drown."
+@The_monster@ sings, "To sleep, to sleep... mayhap to drown."
 
 @The_monster@ says @to_foe@, "It's lovely beneath the waves -- you'll see!"
 
