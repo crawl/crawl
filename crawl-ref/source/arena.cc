@@ -54,11 +54,13 @@ namespace arena
     int trials_done = 0;
     int team_a_wins = 0;
 
-    bool allow_summons   = true;
-    bool allow_zero_xp   = false;
-    bool allow_immobile  = true;
-    bool name_monsters   = false;
-    bool random_uniques  = false;
+    bool allow_summons       = true;
+    bool allow_chain_summons = true;
+    bool allow_zero_xp       = false;
+    bool allow_immobile      = true;
+    bool name_monsters       = false;
+    bool random_uniques      = false;
+    bool real_summons        = false;
 
     std::vector<int> uniques_list;
 
@@ -74,6 +76,17 @@ namespace arena
     int message_pos = 0;
     level_id place(BRANCH_MAIN_DUNGEON, 20);
 
+    void zap_summons(monsters* mons)
+    {
+        monster_spells &spells(mons->spells);
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
+            spell_type sp = spells[i];
+            if (spell_typematch(sp, SPTYP_SUMMONING))
+                spells[i] = SPELL_NO_SPELL;
+        }
+    }
+
     void adjust_monsters()
     {
         if (!allow_summons)
@@ -83,14 +96,7 @@ namespace arena
                 monsters *mons(&menv[m]);
                 if (!mons->alive())
                     continue;
-
-                monster_spells &spells(mons->spells);
-                for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-                {
-                    spell_type sp = spells[i];
-                    if (spell_typematch(sp, SPTYP_SUMMONING))
-                        spells[i] = SPELL_NO_SPELL;
-                }
+                zap_summons(mons);
             }
         }
 
@@ -250,9 +256,12 @@ namespace arena
         Options.arena_force_ai =
             strip_bool_tag(spec, "force_ai", Options.arena_force_ai);
 
-        allow_summons  = !strip_tag(spec, "no_summons");
-        allow_immobile = !strip_tag(spec, "no_immobile");
-        allow_zero_xp  =  strip_tag(spec, "allow_zero_xp");
+        allow_chain_summons = !strip_tag(spec, "no_chain_summons");
+
+        allow_summons    = !strip_tag(spec, "no_summons");
+        allow_immobile   = !strip_tag(spec, "no_immobile");
+        allow_zero_xp    =  strip_tag(spec, "allow_zero_xp");
+        real_summons     =  strip_tag(spec, "real_summons");
 
         cycle_random   = strip_tag(spec, "cycle_random");
         name_monsters  = strip_tag(spec, "names");
@@ -749,6 +758,23 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
 {
     if (arena::name_monsters && !monster->is_named())
         monster->mname = make_name(random_int(), false);
+
+    if (monster->is_summoned())
+    {
+        // Real summons drop corpses and items.
+        if (arena::real_summons)
+        {
+            monster->del_ench(ENCH_ABJ, true, false);
+            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+            {
+                short it = monster->inv[i];
+                if (it != NON_ITEM)
+                    mitm[it].flags &= ~ISFLAG_SUMMONED;
+            }
+        }
+        if (!arena::allow_chain_summons)
+            arena::zap_summons(monster);
+    }
 }
 
 void arena_monster_died(monsters *monster, killer_type killer,
