@@ -1922,7 +1922,7 @@ static void _do_god_gift(bool prayed_for)
             break;
 
         case GOD_YREDELEMNUL:
-            if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(5))
+            if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4))
             {
                 // The maximum threshold occurs at 120 piety, or
                 // piety_breakpoint(5).
