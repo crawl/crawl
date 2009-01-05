@@ -4845,7 +4845,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             return (false);
         }
 
-        if (mons_friendly(this))
+        if (mons_friendly(this) && !crawl_state.arena)
         {
             // Never pick up gold or misc. items, it'd only annoy the player.
             if (itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
