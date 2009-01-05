@@ -1535,7 +1535,8 @@ static void _input()
     }
 
     // Stop autoclearing more now that we have control back.
-    reset_more_autoclear();
+    if (!you_are_delayed())
+        reset_more_autoclear();
 
     if (need_to_autopickup())
         autopickup();

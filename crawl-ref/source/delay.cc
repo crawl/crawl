@@ -334,6 +334,8 @@ void stop_delay( bool stop_stair_travel )
     if (you.delay_queue.empty())
         return;
 
+    reset_more_autoclear();
+
     ASSERT(!crawl_state.arena);
 
     delay_queue_item delay = you.delay_queue.front();
