@@ -364,7 +364,7 @@ bool mons_speaks(const monsters *monster)
 {
     ASSERT(!invalid_monster_class(monster->type));
 
-    // Monsters always talk on death, even if invisible/silenced/etc
+    // Monsters always talk on death, even if invisible/silenced/etc.
     int duration = -1;
     const bool force_speak = !monster->alive()
         || !(monster->flags & MF_BANISHED)

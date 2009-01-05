@@ -996,8 +996,8 @@ void monster_die(monsters *monster, killer_type killer,
     if (invalid_monster(monster))
         return;
 
-    // If a monster was banished to the abyss and then killed there,
-    // then it's death wasn't a banishment.
+    // If a monster was banished to the Abyss and then killed there,
+    // then its death wasn't a banishment.
     if (you.level_type == LEVEL_ABYSS)
         monster->flags &= ~MF_BANISHED;
 
