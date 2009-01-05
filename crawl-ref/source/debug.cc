@@ -4930,12 +4930,6 @@ void wizard_make_monster_summoned(monsters* mon)
         return;
     }
 
-    if (mons_is_unique(mon->type))
-    {
-        mpr("Can't make unique monsters summoned.");
-        return;
-    }
-
     int dur = _debug_prompt_for_int("What summon longevity (1 to 6)? ", true);
 
     if (dur < 1 || dur > 6)
