@@ -783,7 +783,7 @@ namespace arena
         {
             if (Options.arena_dump_msgs || Options.arena_list_eq)
                 fprintf(file, "========================================\n");
-            fprintf(file, "%d-%d", team_a_wins, 
+            fprintf(file, "%d-%d", team_a_wins,
                     trials_done - team_a_wins - ties);
             if (ties > 0)
                 fprintf(file, "-%d", ties);

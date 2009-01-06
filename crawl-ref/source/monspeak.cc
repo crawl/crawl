@@ -169,7 +169,7 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
     std::string msg;
     for (int tries = 0; tries < 10; tries++)
     {
-        msg = 
+        msg =
             __try_exact_string(prefixes, key, ignore_hostile, ignore_related,
                                ignore_religion, ignore_silenced);
 
@@ -283,7 +283,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
     std::string msg;
     for (int tries = 0; tries < 10; tries++)
     {
-        msg = 
+        msg =
             __get_speak_string(prefixes, key, monster, no_player, no_foe,
                                no_foe_name, no_god);
 
@@ -470,7 +470,7 @@ bool mons_speaks(const monsters *monster)
     {
         if (monster->god == GOD_BEOGH)
             prefixes.push_back("beogh");
-        else 
+        else
             prefixes.push_back("unbeliever");
     }
     else
