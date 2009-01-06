@@ -1981,7 +1981,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     // (Uniques don't get this, because their names are proper nouns.)
     if (!mons_is_unique(mon.type))
     {
-        const bool use_your = !crawl_state.arena && mons_friendly(&mon);
+        const bool use_your = mons_friendly(&mon);
         switch (desc)
         {
         case DESC_CAP_THE:
@@ -2450,6 +2450,14 @@ mon_attitude_type monsters::temp_attitude() const
 
 bool mons_friendly(const monsters *m)
 {
+    if (crawl_state.arena)
+        return (false);
+
+    return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
+}
+
+bool mons_friendly_real(const monsters *m)
+{
     return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
 }
 
@@ -2474,6 +2482,11 @@ bool mons_wont_attack(const monsters *m)
     return (mons_friendly(m) || mons_good_neutral(m));
 }
 
+bool mons_wont_attack_real(const monsters *m)
+{
+    return (mons_friendly_real(m) || mons_good_neutral(m));
+}
+
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL);
@@ -2481,7 +2494,7 @@ bool mons_att_wont_attack(mon_attitude_type fr)
 
 mon_attitude_type mons_attitude(const monsters *m)
 {
-    if (mons_friendly(m))
+    if (mons_friendly_real(m))
         return ATT_FRIENDLY;
     else if (mons_good_neutral(m))
         return ATT_GOOD_NEUTRAL;
@@ -4845,7 +4858,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             return (false);
         }
 
-        if (mons_friendly(this) && !crawl_state.arena)
+        if (mons_friendly(this))
         {
             // Never pick up gold or misc. items, it'd only annoy the player.
             if (itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
@@ -7097,7 +7110,7 @@ void monsters::scale_hp(int num, int den)
 
 kill_category monsters::kill_alignment() const
 {
-    return (mons_friendly(this)? KC_FRIENDLY : KC_OTHER);
+    return (mons_friendly_real(this)? KC_FRIENDLY : KC_OTHER);
 }
 
 bool monsters::sicken(int amount)
@@ -7958,7 +7971,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 {
     std::string msg = in_msg;
 
-    const actor*    foe   = (!crawl_state.arena && mons_wont_attack(monster)
+    const actor*    foe   = (mons_wont_attack(monster)
                              && invalid_monster_index(monster->foe)) ?
                             &you : monster->get_foe();
     const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?

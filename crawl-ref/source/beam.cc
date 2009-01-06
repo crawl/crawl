@@ -113,7 +113,7 @@ kill_category bolt::whose_kill() const
         if (!invalid_monster_index(beam_source))
         {
             const monsters *mon = &menv[beam_source];
-            if (mons_friendly(mon))
+            if (mons_friendly_real(mon))
                 return (KC_FRIENDLY);
         }
     }
@@ -2034,7 +2034,7 @@ void bolt::do_fire()
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
         const monsters *mon = &menv[beam_source];
-        if (foe_info.hurt > 0 && !mons_wont_attack(mon)
+        if (foe_info.hurt > 0 && !mons_wont_attack(mon) && !crawl_state.arena
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
             you.pet_target = beam_source;

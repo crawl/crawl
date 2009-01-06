@@ -1020,7 +1020,7 @@ int tileidx_monster(const monsters *mons, bool detected)
     if (mons->has_ench(ENCH_POISON))
         ch |= TILE_FLAG_POISON;
 
-    if (mons_friendly(mons))
+    if (mons_friendly_real(mons))
         ch |= TILE_FLAG_PET;
     else if (mons_neutral(mons))
         ch |= TILE_FLAG_NEUTRAL;
@@ -4385,7 +4385,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     if (foreground)
     {
         env.tile_fg[ep.x-1][ep.y-1] = t;
-        if (menv[idx].is_named() && !mons_friendly(&menv[idx])
+        if (menv[idx].is_named() && !mons_friendly_real(&menv[idx])
             && menv[idx].type != MONS_PANDEMONIUM_DEMON)
         {
             if (menv[idx].type == MONS_PLAYER_GHOST)

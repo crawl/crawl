@@ -1119,7 +1119,7 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
     else if (f == MF_MONS_HOSTILE && mgrd[gx][gy] != NON_MONSTER)
     {
         const int grid = mgrd[gx][gy];
-        if (mons_friendly(&menv[grid]))
+        if (mons_friendly_real(&menv[grid]))
             f = MF_MONS_FRIENDLY;
         else if (mons_neutral(&menv[grid]))
             f = MF_MONS_NEUTRAL;

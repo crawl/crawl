@@ -37,6 +37,7 @@ REVISION("$Rev$");
 #include "spells3.h"
 #include "spl-mis.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -589,7 +590,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (!you_know)
                 this->hide();
 
-            if (mons_wont_attack(m))
+            if (mons_wont_attack(m) || crawl_state.arena)
             {
                 MiscastEffect( m, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                                3, "the power of Zot" );

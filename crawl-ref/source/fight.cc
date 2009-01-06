@@ -4195,7 +4195,8 @@ void melee_attack::mons_do_napalm()
             napalm_player(random2avg(7, 3) + 1);
         else
         {
-            napalm_monster(def, mons_friendly(atk) ? KC_FRIENDLY : KC_OTHER,
+            napalm_monster(def, mons_friendly_real(atk) ? KC_FRIENDLY
+                                                        : KC_OTHER,
                            std::min(4, 1 + random2(atk->hit_dice) / 2));
         }
     }

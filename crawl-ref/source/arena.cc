@@ -106,7 +106,7 @@ namespace arena
             if (!mon->alive())
                 continue;
 
-            const bool friendly = mons_friendly(mon);
+            const bool friendly = mons_friendly_real(mon);
             // Set target to the opposite faction's home base.
             mon->target = friendly ? place_b : place_a;
         }
@@ -570,6 +570,7 @@ namespace arena
                 delay(Options.arena_delay);
                 mesclr();
                 dump_messages();
+                ASSERT(you.pet_target == MHITNOT);
             }
             viewwindow(true, false);
         }

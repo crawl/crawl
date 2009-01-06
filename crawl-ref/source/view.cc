@@ -828,7 +828,7 @@ int get_mons_colour(const monsters *mons)
     if (mons->has_ench(ENCH_BERSERK))
         col = RED;
 
-    if (mons_friendly(mons))
+    if (mons_friendly_real(mons))
     {
         col |= COLFLAG_FRIENDLY_MONSTER;
     }
@@ -917,7 +917,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
 
 void beogh_follower_convert(monsters *monster, bool orc_hit)
 {
-    if (you.species != SP_HILL_ORC)
+    if (you.species != SP_HILL_ORC || crawl_state.arena)
         return;
 
     // For followers of Beogh, decide whether orcs will join you.
@@ -3960,7 +3960,13 @@ bool mon_enemies_around(const monsters *monster)
     if (monster->foe != MHITNOT && monster->foe != MHITYOU)
         return (true);
 
-    if (mons_wont_attack(monster))
+    if (crawl_state.arena)
+    {
+        // If the arena-mode code in _handle_behaviour() hasn't set a foe then
+        // we don't have one.
+        return (false);
+    }
+    else if (mons_wont_attack(monster))
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.

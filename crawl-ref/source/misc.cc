@@ -3093,6 +3093,8 @@ std::string your_hand(bool plural)
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                         bool beam_target)
 {
+    ASSERT(!crawl_state.arena);
+
     if (you.confused() || !you.can_see(mon))
         return (false);
 

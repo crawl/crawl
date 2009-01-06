@@ -897,9 +897,9 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     msg = replace_all(msg, "@beam@", beam_name);
 
     const msg_channel_type chan =
-        (unseen                 ? MSGCH_SOUND :
-         mons_friendly(monster) ? MSGCH_FRIEND_SPELL :
-                                  MSGCH_MONSTER_SPELL);
+        (unseen                      ? MSGCH_SOUND :
+         mons_friendly_real(monster) ? MSGCH_FRIEND_SPELL :
+                                       MSGCH_MONSTER_SPELL);
 
     if (silent)
     {
@@ -2285,8 +2285,11 @@ static int _monster_abjure_square(const coord_def &pos,
         return (0);
 
     monsters *target = &menv[mindex];
-    if (!target->alive() || ((bool)wont_attack == mons_wont_attack(target)))
+    if (!target->alive()
+        || ((bool)wont_attack == mons_wont_attack_real(target)))
+    {
         return (0);
+    }
 
     int duration;
 
@@ -2367,7 +2370,7 @@ static int _apply_radius_around_square( const coord_def &c, int radius,
 
 static int _monster_abjuration(const monsters *caster, bool actual)
 {
-    const bool wont_attack = mons_wont_attack(caster);
+    const bool wont_attack = mons_wont_attack_real(caster);
     int maffected = 0;
 
     if (actual)
@@ -2510,8 +2513,8 @@ bool orc_battle_cry(monsters *chief)
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
-                        mons_friendly(chief) ? MSGCH_MONSTER_ENCHANT
-                                             : MSGCH_FRIEND_ENCHANT;
+                        mons_friendly_real(chief) ? MSGCH_MONSTER_ENCHANT
+                                                  : MSGCH_FRIEND_ENCHANT;
 
             if (!seen_affected.empty())
             {
@@ -2548,7 +2551,7 @@ bool orc_battle_cry(monsters *chief)
 
 static bool _make_monster_angry(const monsters *mon, monsters *targ)
 {
-    if (mons_friendly(mon) != mons_friendly(targ))
+    if (mons_friendly_real(mon) != mons_friendly_real(targ))
         return (false);
 
     // targ is guaranteed to have a foe (needs_berserk checks this).

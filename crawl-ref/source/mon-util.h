@@ -738,10 +738,12 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
  * *********************************************************************** */
 size_type mons_size(const monsters *m);
 bool mons_friendly(const monsters *m);
+bool mons_friendly_real(const monsters *m);
 bool mons_neutral(const monsters *m);
 bool mons_good_neutral(const monsters *m);
 bool mons_is_pacified(const monsters *m);
 bool mons_wont_attack(const monsters *m);
+bool mons_wont_attack_real(const monsters *m);
 bool mons_att_wont_attack(mon_attitude_type fr);
 mon_attitude_type mons_attitude(const monsters *m);
 

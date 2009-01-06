@@ -1046,15 +1046,10 @@ void monster_die(monsters *monster, killer_type killer,
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
 
     // Take note!
-    if (!mons_reset)
-    {
-        if (MONST_INTERESTING(monster))
-        {
-            take_note(Note(NOTE_KILL_MONSTER,
-                           monster->type, mons_friendly(monster),
-                           monster->name(DESC_NOCAP_A, true).c_str()));
-        }
-    }
+    if (!mons_reset && !crawl_state.arena && MONST_INTERESTING(monster))
+        take_note(Note(NOTE_KILL_MONSTER,
+                       monster->type, mons_friendly(monster),
+                       monster->name(DESC_NOCAP_A, true).c_str()));
 
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
@@ -1571,8 +1566,6 @@ void monster_die(monsters *monster, killer_type killer,
     // Make sure Boris has a foe to address
     if (monster->foe == MHITNOT)
     {
-        // Hostile monsters outside of the arena always have you as a
-        // foe.
         if (!mons_wont_attack(monster) && !crawl_state.arena)
             monster->foe = MHITYOU;
         else if (!invalid_monster_index(killer_index))
@@ -2400,7 +2393,7 @@ void behaviour_event(monsters *mon, int event, int src,
     beh_type old_behaviour = mon->behaviour;
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
-    bool wontAttack       = mons_wont_attack(mon);
+    bool wontAttack       = mons_wont_attack_real(mon);
     bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
@@ -2408,7 +2401,7 @@ void behaviour_event(monsters *mon, int event, int src,
     if (src == MHITYOU)
         sourceWontAttack = true;
     else if (src != MHITNOT)
-        sourceWontAttack = mons_wont_attack( &menv[src] );
+        sourceWontAttack = mons_wont_attack_real( &menv[src] );
 
     switch (event)
     {
@@ -3644,8 +3637,8 @@ static void _handle_behaviour(monsters *mon)
     bool changed = true;
     bool isFriendly = mons_friendly(mon);
     bool isNeutral  = mons_neutral(mon);
-    bool wontAttack = mons_wont_attack(mon);
-    bool proxPlayer = mons_near(mon);
+    bool wontAttack = mons_wont_attack_real(mon);
+    bool proxPlayer = mons_near(mon) && !crawl_state.arena;
     bool trans_wall_block = trans_wall_blocking(mon->pos());
 
 #ifdef WIZARD
@@ -3771,7 +3764,7 @@ static void _handle_behaviour(monsters *mon)
     // Friendly and good neutral monsters do not attack other friendly
     // and good neutral monsters.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && wontAttack && mons_wont_attack(&menv[mon->foe]))
+        && wontAttack && mons_wont_attack_real(&menv[mon->foe]))
     {
         mon->foe = MHITNOT;
     }
@@ -4173,7 +4166,7 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
 // Choose nearest monster as a foe.  (Used for berserking monsters.)
 void _set_nearest_monster_foe(monsters *mon)
 {
-    const bool friendly = mons_friendly(mon);
+    const bool friendly = mons_friendly_real(mon);
     const bool neutral  = mons_neutral(mon);
 
     std::vector<coord_def> d;
@@ -4286,7 +4279,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
         snprintf( buff, sizeof(buff), "%s%s", monster->name(descrip).c_str(),
                   event );
 
-        if (channel == MSGCH_PLAIN && mons_wont_attack(monster))
+        if (channel == MSGCH_PLAIN && mons_wont_attack_real(monster))
             channel = MSGCH_FRIEND_ACTION;
 
         mpr( buff, channel, param );
@@ -4376,7 +4369,7 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
 
         // Hostile monsters of normal intelligence only move aside for
         // monsters of the same type.
-        if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack(mon)
+        if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack_real(mon)
             && mons_genus(mon->type) != mons_genus((&menv[mgrd(pos[i])])->type))
         {
             continue;
@@ -4470,7 +4463,8 @@ static void _handle_movement(monsters *monster)
     {
         delta = monster->target - monster->pos();
 
-        if (crawl_state.arena && Options.arena_force_ai)
+        if (crawl_state.arena && Options.arena_force_ai
+            && !mons_is_stationary(monster))
         {
             const bool ranged =
                 mons_has_ranged_attack(monster)
@@ -4644,7 +4638,7 @@ static void _handle_movement(monsters *monster)
                                        coord_def(-mmov.x, 0),
                                        coord_def(-mmov.x, 1))
                     || mons_intel(monster) >= I_NORMAL
-                       && !mons_wont_attack(monster)
+                       && !mons_wont_attack_real(monster)
                        && _ranged_allied_monster_in_dir(monster,
                                                         coord_def(-mmov.x, 0))))
             {
@@ -4662,7 +4656,7 @@ static void _handle_movement(monsters *monster)
                                        coord_def(0, -mmov.y),
                                        coord_def(1, -mmov.y))
                     || mons_intel(monster) >= I_NORMAL
-                       && !mons_wont_attack(monster)
+                       && !mons_wont_attack_real(monster)
                        && _ranged_allied_monster_in_dir(monster,
                                                         coord_def(0, -mmov.y))))
             {
@@ -4681,7 +4675,7 @@ static void _handle_movement(monsters *monster)
                                            coord_def(-mmov.x, 0),
                                            coord_def(-mmov.x, 1))
                         || mons_intel(monster) >= I_NORMAL
-                           && !mons_wont_attack(monster)
+                           && !mons_wont_attack_real(monster)
                            && _ranged_allied_monster_in_dir(monster,
                                                 coord_def(-mmov.x, -mmov.y))))
                 {
@@ -4693,7 +4687,7 @@ static void _handle_movement(monsters *monster)
                                            coord_def(0, -mmov.x),
                                            coord_def(1, -mmov.x))
                          || mons_intel(monster) >= I_NORMAL
-                            && !mons_wont_attack(monster)
+                            && !mons_wont_attack_real(monster)
                             && _ranged_allied_monster_in_dir(monster,
                                                 coord_def(-mmov.x, -mmov.y))))
             {
@@ -6536,7 +6530,7 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
 
     // A friendly or good-neutral monster moving past a fleeing hostile
     // or neutral monster, or vice versa.
-    if (mons_wont_attack(mover) == mons_wont_attack(moved)
+    if (mons_wont_attack_real(mover) == mons_wont_attack_real(moved)
         || mons_is_fleeing(mover) == mons_is_fleeing(moved))
     {
         return (false);
@@ -6828,8 +6822,7 @@ static void _handle_monster_move(int i, monsters *monster)
             // Same for friendlies if friendly_pickup is set to "none".
             if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
                 && (!mons_friendly(monster)
-                    || you.friendly_pickup > FRIENDLY_PICKUP_NONE
-                    || crawl_state.arena))
+                    || you.friendly_pickup > FRIENDLY_PICKUP_NONE))
             {
                 if (_handle_pickup(monster))
                 {
@@ -6964,9 +6957,11 @@ static void _handle_monster_move(int i, monsters *monster)
             // hitting their foes.
             && !monster->has_ench(ENCH_BERSERK))
         {
+            const bool friendly_or_near =
+                mons_friendly(monster) || mons_near(monster, monster->foe);
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
-            if (mons_friendly(monster) || mons_near(monster, monster->foe))
+            if (friendly_or_near || monster->type == MONS_TEST_SPAWNER)
             {
                 // [ds] Special abilities shouldn't overwhelm spellcasting
                 // in monsters that have both. This aims to give them both
@@ -6980,7 +6975,10 @@ static void _handle_monster_move(int i, monsters *monster)
                     DEBUG_ENERGY_USE("spell or special");
                     continue;
                 }
+            }
 
+            if (friendly_or_near)
+            {
                 if (_handle_potion(monster, beem))
                 {
                     DEBUG_ENERGY_USE("_handle_potion()");
@@ -7049,6 +7047,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
             if (monster->pos() + mmov == you.pos())
             {
+                ASSERT(!crawl_state.arena);
                 bool isFriendly = mons_friendly(monster);
                 bool attacked   = false;
 
@@ -7642,8 +7641,8 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
     }
 
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
-    // handle accordingly.
-    if (mons_wont_attack(monster))
+    // handle accordingly.  In the arena Zot traps affect all monsters.
+    if (mons_wont_attack(monster) || crawl_state.arena)
     {
         return (mechanical ? mons_flies(monster)
                            : !trap.is_known(monster) || trap.type != TRAP_ZOT);

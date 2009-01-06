@@ -1976,7 +1976,7 @@ static void _set_friendly_foes(bool allow_patrol = false)
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *mon(&menv[i]);
-        if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon))
+        if (!mon->alive() || !mons_near(mon) || !mons_friendly_real(mon))
             continue;
 
         mon->foe = (allow_patrol && mon->is_patrolling() ? MHITNOT
@@ -1989,7 +1989,7 @@ static void _set_allies_patrol_point(bool clear = false)
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *mon(&menv[i]);
-        if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon))
+        if (!mon->alive() || !mons_near(mon) || !mons_friendly_real(mon))
             continue;
 
         mon->patrol_point = (clear ? coord_def(0, 0) : mon->pos());
