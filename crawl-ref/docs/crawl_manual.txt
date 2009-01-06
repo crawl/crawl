@@ -2640,6 +2640,7 @@ Touch           Your hands are glowing, and any monster you touch might
                 become confused.
 Blade           You are bonded with your blade, so it strikes more
                 accurately.
+-MR             You are vulnerable to magic.
 
 There are several more enchantment messages for various spells. The
 description of the spell causing the enchantment will explain these.
