@@ -4251,14 +4251,14 @@ void MiscastEffect::_fire(int severity)
 
 void MiscastEffect::_ice(int severity)
 {
-    const dungeon_feature_type feat = grd(you.pos());
+    const dungeon_feature_type feat = grd(target->pos());
 
     const bool frostable_feat =
         (feat == DNGN_FLOOR || grid_altar_god(feat) != GOD_NO_GOD
          || grid_is_staircase(feat) || grid_is_water(feat));
 
     const std::string feat_name = (feat == DNGN_FLOOR ? "the " : "") +
-        feature_description(you.pos(), false, DESC_NOCAP_THE);
+        feature_description(target->pos(), false, DESC_NOCAP_THE);
 
     int num;
     switch (severity)
@@ -4399,7 +4399,7 @@ void MiscastEffect::_ice(int severity)
 
 static bool _on_floor(actor* target)
 {
-    return (!you.airborne() && grd(you.pos()) == DNGN_FLOOR);
+    return (!target->airborne() && grd(target->pos()) == DNGN_FLOOR);
 }
 
 void MiscastEffect::_earth(int severity)
