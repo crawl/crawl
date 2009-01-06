@@ -4725,6 +4725,10 @@ void melee_attack::mons_perform_attack_rounds()
 
             if (miscast_target == attacker)
                 do_miscast();
+
+            // Miscast might haved killed the attacker.
+            if (!attacker->alive())
+                break;
         }
 
         item_def *weap = atk->mslot_item(MSLOT_WEAPON);
