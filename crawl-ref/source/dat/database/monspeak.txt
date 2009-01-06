@@ -1391,7 +1391,7 @@ _Eustachio_common_
 
 @The_monster@ utters an oath, "I will die for my friends!"
 
-@The_monster@ growls, "To hell with you honour-less miscreant!"
+@The_monster@ growls, "To hell with you, honour-less miscreant!"
 
 @The_monster@ asks, "How can you live without manners, virtues and honour?"
 %%%%
@@ -2288,9 +2288,9 @@ _Roxanne_medium_
 
 @The_monster@ sighs and says, "It wouldn't be so bad were it not for the bird droppings."
 %%%%
-millenia_or_aeons
+millennia_or_aeons
 
-millenia
+millennia
 
 aeons
 %%%%
@@ -2300,10 +2300,9 @@ _Roxanne_rare_
 
 @The_monster@ prays for a Stone to Flesh spell.
 
-@The_monster@ wonders, "Maybe oil would work?  Probably not."
+@The_monster@ wonders, "Maybe oil would work? Probably not."
 
-@The_monster@ states @to_foe@, "You'll be worm food in some minutes, I'll endure
-@millenia_or_aeons@."
+@The_monster@ states @to_foe@, "You'll be worm food in some minutes, I'll endure @millennia_or_aeons@."
 
 @The_monster@ says @to_foe@, "A mighty warrior you might be, a mason you are not!"
 
