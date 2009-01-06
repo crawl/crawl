@@ -5549,7 +5549,9 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         _yred_souls_disappear();
 
     const int type = mon->type;
-    const std::string name = apostrophise(mon->name(DESC_CAP_THE));
+    const std::string name =
+        player_monster_visible(mon) ? apostrophise(mon->name(DESC_CAP_THE))
+                                    : "Its";
     const std::string name_plain = mon->name(DESC_PLAIN);
     bool twisted = false;
 
