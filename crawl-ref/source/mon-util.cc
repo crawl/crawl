@@ -8269,10 +8269,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     else
         msg = replace_all(msg, "@says@", sound_list[s_type]);
 
-    // The proper possessive for a word ending in an "s" is to
-    // put an apostrophe after the "s": "Chris" -> "Chris'",
-    // not "Chris" -> "Chris's".  Stupid English language...
-    msg = replace_all(msg, "s's", "s'");
+    msg = apostrophise_fixup(msg);
 
     return (msg);
 }

@@ -3969,8 +3969,10 @@ static void _handle_behaviour(monsters *mon)
                 mon->target = menv[mon->foe].pos();
             }
 
-            // Smart monsters, plants or nonliving monsters cannot flee.
+            // Smart monsters, zombified monsters other than spectral
+            // things, plants, and nonliving monsters cannot flee.
             if (isHurt && !isSmart && isMobile
+                && (!mons_is_zombified(mon) || mon->type == MONS_SPECTRAL_THING)
                 && mons_class_holiness(mon->type) != MH_PLANT
                 && mons_class_holiness(mon->type) != MH_NONLIVING)
             {
@@ -4269,15 +4271,14 @@ bool simple_monster_message(const monsters *monster, const char *event,
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
             || player_monster_visible(monster) || crawl_state.arena))
     {
-        char buff[INFO_SIZE];
-
-        snprintf(buff, sizeof(buff), "%s%s", monster->name(descrip).c_str(),
-                 event);
+        std::string msg = monster->name(descrip);
+        msg += event;
+        msg = apostrophise_fixup(msg);
 
         if (channel == MSGCH_PLAIN && mons_wont_attack_real(monster))
             channel = MSGCH_FRIEND_ACTION;
 
-        mpr(buff, channel, param);
+        mpr(msg.c_str(), channel, param);
         return (true);
     }
 

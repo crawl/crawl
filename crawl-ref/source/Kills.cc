@@ -356,7 +356,16 @@ std::string apostrophise(const std::string &name)
         return (name);
 
     const char lastc = name[name.length() - 1];
-    return (name + (lastc == 's' || lastc == 'x' ? "'" : "'s"));
+    return (name + (lastc == 's' ? "'" : "'s"));
+}
+
+std::string apostrophise_fixup(const std::string &msg)
+{
+    if (msg.empty())
+        return (msg);
+
+    // XXX: This is rather hackish.
+    return (replace_all(msg, "s's", "s'"));
 }
 
 // For monster names ending with these suffixes, we pluralise directly without

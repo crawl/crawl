@@ -6798,6 +6798,7 @@ void simple_god_message(const char *event, god_type which_deity)
 {
     std::string msg = god_name(which_deity);
     msg += event;
+    msg = apostrophise_fixup(msg);
     god_speaks(which_deity, msg.c_str());
 }
 

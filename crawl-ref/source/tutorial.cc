@@ -28,6 +28,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "Kills.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
@@ -2418,8 +2419,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             && you.hunger_state >= HS_SATIATED)
         {
             text << "\nAlso, with "
-                 << god_name(you.religion)
-                 << "'s support you can use your Berserk ability (<w>a</w>) "
+                 << apostrophise(god_name(you.religion))
+                 << " support you can use your Berserk ability (<w>a</w>) "
                     "to temporarily gain more hitpoints and greater "
                     "strength. ";
         }
