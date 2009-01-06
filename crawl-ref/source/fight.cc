@@ -3819,6 +3819,8 @@ bool melee_attack::mons_self_destructs()
     if (atk->type == MONS_GIANT_SPORE || atk->type == MONS_BALL_LIGHTNING)
     {
         atk->hit_points = -1;
+        // Do the explosion right now.
+        monster_die(atk, KILL_MON, atk->mindex());
         return (true);
     }
     return (false);

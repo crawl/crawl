@@ -528,7 +528,7 @@ namespace arena
                 faction_a.won = false;
                 faction_b.won = false;
             }
-            return true;
+            return (true);
         }
 
         // Sync up our book-keeping with the actual state, and report
@@ -939,35 +939,37 @@ void arena_monster_died(monsters *monster, killer_type killer,
     else if (monster->attitude == ATT_HOSTILE)
         arena::faction_b.active_members--;
 
-    if (arena::faction_a.active_members > 0
-        && arena::faction_b.active_members <= 0)
-    {
-        arena::faction_a.won = true;
-        return;
-    }
-    else if (arena::faction_b.active_members > 0
-             && arena::faction_a.active_members <= 0)
-    {
-        arena::faction_b.won = true;
-        return;
-    }
+    const monsters* atk =
+        (invalid_monster_index(killer_index) || menv[killer_index].type == -1)
+        ? NULL : &menv[killer_index];
 
-    // Was the death caused by the suicide attack of a gas spore or
-    // ball lightning which was the final member of its faction?
-    if (arena::faction_a.active_members <= 0
-        && arena::faction_b.active_members <= 0
-        && !invalid_monster_index(killer_index)
-        && menv[killer_index].type != -1)
+    if (atk && atk->alive())
     {
-        const monsters* atk = &menv[killer_index];
-
-        if (monster->attitude != atk->attitude && mons_self_destructs(atk))
+        if (arena::faction_a.active_members > 0
+            && arena::faction_b.active_members <= 0)
         {
-            if (atk->attitude == ATT_FRIENDLY)
-                arena::faction_a.won = true;
-            else if (atk->attitude == ATT_HOSTILE)
-                arena::faction_b.won = true;
+            arena::faction_a.won = true;
         }
+        else if (arena::faction_b.active_members > 0
+                 && arena::faction_a.active_members <= 0)
+        {
+            arena::faction_b.won = true;
+        }
+    }
+    // If all monsters are dead and the last one to die is a giant spore
+    // or ball lightning then that monster's faction is the winner,
+    // since self destruction is their purpose.  But if a trap causes
+    // the spore to explode and that kills everything it's a tie since
+    // it counts as the trap killing everyone.
+    else if (arena::faction_a.active_members <= 0
+             && arena::faction_b.active_members <= 0
+             && mons_self_destructs(monster)
+             && MON_KILL(killer))
+    {
+        if (monster->attitude == ATT_FRIENDLY)
+            arena::faction_a.won = true;
+        else if (monster->attitude == ATT_HOSTILE)
+            arena::faction_b.won = true;
     }
 }
 

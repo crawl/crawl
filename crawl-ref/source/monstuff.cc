@@ -1004,9 +1004,6 @@ void monster_die(monsters *monster, killer_type killer,
     if (!silent && _monster_avoided_death(monster, killer, killer_index))
         return;
 
-    if (crawl_state.arena)
-        arena_monster_died(monster, killer, killer_index, silent);
-
     mons_clear_trapping_net(monster);
 
     // Update list of monsters beholding player.
@@ -1155,6 +1152,9 @@ void monster_die(monsters *monster, killer_type killer,
                 killer = KILL_RESET;
         }
     }
+
+    if (crawl_state.arena)
+        arena_monster_died(monster, killer, killer_index, silent);
 
     bool death_message = !silent && !did_death_message && mons_near(monster)
                          && (player_monster_visible(monster)
