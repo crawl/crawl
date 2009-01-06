@@ -8480,8 +8480,9 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
             return (false);
         }
     }
+
     return (false);
-}                               // end monster_descriptor()
+}
 
 bool message_current_target()
 {
