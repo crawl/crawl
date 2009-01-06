@@ -3975,7 +3975,7 @@ static void _handle_behaviour(monsters *mon)
                 mon->target = menv[mon->foe].pos();
             }
 
-            // Stupid monsters, plants or nonliving monsters cannot flee.
+            // Smart monsters, plants or nonliving monsters cannot flee.
             if (isHurt && !isSmart && isMobile
                 && mons_class_holiness(mon->type) != MH_PLANT
                 && mons_class_holiness(mon->type) != MH_NONLIVING)
