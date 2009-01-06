@@ -1098,17 +1098,21 @@ _Azrael_common_
 
 @The_monster@ howls in rage.
 
-@The_monster@ screams @at_foe@, "No! No! YES! No!"
-
 @The_monster@ screams @at_foe@, "Burn! Burn! All of it must BURN!"
 
 VISUAL:@The_monster@ blows smoke rings.
+
+VISUAL: @The_monster@'s eyes look fiery.
+
+VISUAL: @The_monster@ is momentarily hid by a cloud of flames.
 %%%%
 _Azrael_rare_
 
 @The_monster@ grins and asks @foe,@ "Are you @adj_flammable@?"
 
 @The_monster@ says @to_foe@, "We're having tasty @foe_genus@ kabobs tonight!"
+
+@The_monster@ screams @at_foe@, "No! No! YES! No!"
 
 VISUAL:@The_monster@ whirls about in circles.
 ## END Azrael ##
@@ -1382,6 +1386,14 @@ _Eustachio_common_
 @The_monster@ says @to_foe@, "Summoning is fun!"
 
 @The_monster@ says @to_foe@, "My allies will avenge me."
+
+@The_monster@ screams, "This atrocity can only be purified with blood!"
+
+@The_monster@ utters an oath, "I will die for my friends!"
+
+@The_monster@ growls, "To hell with you honour-less miscreant!"
+
+@The_monster@ asks, "How can you live without manners, virtues and honour?"
 %%%%
 _Eustachio_rare_
 
@@ -1570,6 +1582,10 @@ VISUAL:@The_monster@ gazes at @foe@ @hypnot_or_seductively@.
 @The_monster@ says @to_foe@, "It's lovely beneath the waves -- you'll see!"
 
 @The_monster@ asks @foe,@ "Do you dare to walk upon the beach?"
+
+@The_monster@ says @to_foe@, "Catch me, touch me, love me, feed me!"
+
+@The_monster@ innocently whispers @to_foe@, "Don't trust the tales, trust me!"
 %%%%
 hypnot_or_seductively
 
@@ -2259,6 +2275,8 @@ _Roxanne_common_
 
 @The_monster@ wails, "NOOOO!"
 
+@The_monster@ says @to_foe@, "Come nearer, honey, I don't have a heart of stone."
+
 w:20
 __NONE
 %%%%
@@ -2268,7 +2286,13 @@ _Roxanne_medium_
 
 @The_monster@ asks @foe,@ "Say, could you scratch my back for me?"
 
-@The_monster@ sighs and says @to_foe@, "It wouldn't be so bad were it not for the bird droppings."
+@The_monster@ sighs and says, "It wouldn't be so bad were it not for the bird droppings."
+%%%%
+millenia_or_aeons
+
+millenia
+
+aeons
 %%%%
 _Roxanne_rare_
 
@@ -2276,7 +2300,12 @@ _Roxanne_rare_
 
 @The_monster@ prays for a Stone to Flesh spell.
 
-@The_monster@ wonders @to_foe@, "Maybe oil would work?  Probably not."
+@The_monster@ wonders, "Maybe oil would work?  Probably not."
+
+@The_monster@ states @to_foe@, "You'll be worm food in some minutes, I'll endure
+@millenia_or_aeons@."
+
+@The_monster@ says @to_foe@, "A mighty warrior you might be, a mason you are not!"
 
 @The_monster@ says @to_foe@, "They said I was crazy for my new spells... Turns out they were right."
 ## END Roxanne ##
@@ -2325,6 +2354,8 @@ w:5
 w:1
 @The_monster@ shouts @at_foe@, "There can only be one messiah: ME!"
 
+w:1
+@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!" 
 ## END Saint Roka ##
 %%%%
 # Mad old wizard
