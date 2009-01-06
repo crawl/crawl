@@ -1557,7 +1557,7 @@ int update_monster_pane()
     get_monster_pane_info(mons);
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
 
-    // Count how many groups of monsters there are
+    // Count how many groups of monsters there are.
     unsigned int lines_needed = mons.size();
     for (unsigned int i = 1; i < mons.size(); i++)
         if (!monster_pane_info::less_than(mons[i-1], mons[i]))
@@ -1569,7 +1569,7 @@ int update_monster_pane()
         full_info = false;
 
         // Use type names rather than full names ("small zombie" vs
-        // "rat zombie") in order to take up less lines.
+        // "rat zombie") in order to take up fewer lines.
         for (unsigned int i = 0; i < mons.size(); i++)
             mons[i].m_fullname = false;
 
