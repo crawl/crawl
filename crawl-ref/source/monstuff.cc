@@ -986,8 +986,10 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
         simple_monster_message(monster, (prefix + msg).c_str());
 
     if (cloud != CLOUD_NONE)
+    {
         place_cloud(cloud, monster->pos(), 1 + random2(3),
                     monster->kill_alignment());
+    }
 }
 
 void monster_die(monsters *monster, killer_type killer,

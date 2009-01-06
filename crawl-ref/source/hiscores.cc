@@ -762,9 +762,10 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         auxkilldata = aux;
 
     // for death by monster
-    if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM
-         || death_type == KILLED_BY_SPORE
-         || death_type == KILLED_BY_REFLECTION)
+    if ((death_type == KILLED_BY_MONSTER
+            || death_type == KILLED_BY_BEAM
+            || death_type == KILLED_BY_SPORE
+            || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
     {

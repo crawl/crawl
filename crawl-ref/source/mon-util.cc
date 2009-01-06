@@ -8212,7 +8212,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                           _replace_god_name(god, true, false));
         msg = replace_all(msg, "@God_is@", _replace_god_name(god, true, true));
 
-        // No verb needed,
+        // No verb needed.
         msg = replace_all(msg, "@foe_god@",
                           _replace_god_name(god, false, false));
         msg = replace_all(msg, "@foe_god@",
@@ -8267,16 +8267,14 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@says@", "buggily says");
     }
     else
-    {
         msg = replace_all(msg, "@says@", sound_list[s_type]);
-    }
 
     // The proper possessive for a word ending in an "s" is to
     // put an apostrophe after the "s": "Chris" -> "Chris'",
     // not "Chris" -> "Chris's".  Stupid English language...
     msg = replace_all(msg, "s's", "s'");
 
-    return msg;
+    return (msg);
 }
 
 static mon_body_shape _get_ghost_shape(const monsters *mon)
