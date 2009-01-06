@@ -358,7 +358,7 @@ bool tile::load(const std::string &filename)
                 m_pixels[dest].r = pal->colors[index].r;
                 m_pixels[dest].g = pal->colors[index].g;
                 m_pixels[dest].b = pal->colors[index].b;
-                m_pixels[dest].a = 255;
+                m_pixels[dest].a = (index != img->format->colorkey ? 255 : 0);
                 dest++;
             }
         }

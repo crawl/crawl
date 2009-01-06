@@ -146,7 +146,7 @@ bool GenericTexture::load_texture(const char *filename,
                 pixels[dest*4    ] = pal->colors[index].r;
                 pixels[dest*4 + 1] = pal->colors[index].g;
                 pixels[dest*4 + 2] = pal->colors[index].b;
-                pixels[dest*4 + 3] = 255;
+                pixels[dest*4 + 3] = (index != img->format->colorkey ? 255 : 0);
                 dest++;
             }
             while (x++ < new_width)
