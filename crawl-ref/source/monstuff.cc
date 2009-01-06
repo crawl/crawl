@@ -6804,12 +6804,6 @@ static void _handle_monster_move(int i, monsters *monster)
             continue;
         }
 
-        if (mons_is_zombified(monster)
-            && monster->type != MONS_SPECTRAL_THING)
-        {
-            monster->max_hit_points = monster->hit_points;
-        }
-
         if (igrd(monster->pos()) != NON_ITEM
             && (mons_itemuse(monster) == MONUSE_WEAPONS_ARMOUR
                 || mons_itemuse(monster) == MONUSE_EATS_ITEMS))
@@ -8461,6 +8455,8 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
 
     if (which_descriptor == MDSC_NOMSG_WOUNDS)
     {
+        // Zombified monsters other than spectral things don't show
+        // wounds.
         if (mons_class_is_zombified(which_class)
             && which_class != MONS_SPECTRAL_THING)
         {

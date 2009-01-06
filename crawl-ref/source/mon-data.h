@@ -1578,7 +1578,7 @@ static monsterentry mondata[] = {
 // or else are chosen randomly
 {
     MONS_ZOMBIE_SMALL, 'z', BROWN, "small zombie",
-    M_EVIL,
+    M_EVIL | M_NO_REGEN,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 6, MONS_ZOMBIE_SMALL, MONS_ZOMBIE_SMALL, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1589,7 +1589,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SKELETON_SMALL, 'z', LIGHTGREY, "small skeleton",
-    M_EVIL,
+    M_EVIL | M_NO_REGEN,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 10, MONS_SKELETON_SMALL, MONS_SKELETON_SMALL, MH_UNDEAD, -1,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1600,7 +1600,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SIMULACRUM_SMALL, 'z', EC_ICE, "small simulacrum",
-    M_EVIL,
+    M_EVIL | M_NO_REGEN,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_SMALL, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2902,7 +2902,7 @@ static monsterentry mondata[] = {
 // or else are chosen randomly
 {
     MONS_ZOMBIE_LARGE, 'Z', BROWN, "large zombie",
-    M_EVIL,
+    M_EVIL | M_NO_REGEN,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 6, MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2913,7 +2913,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SKELETON_LARGE, 'Z', LIGHTGREY, "large skeleton",
-    M_EVIL,
+    M_EVIL | M_NO_REGEN,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 10, MONS_SKELETON_SMALL, MONS_SKELETON_LARGE, MH_UNDEAD, -1,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2924,7 +2924,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SIMULACRUM_LARGE, 'Z', EC_ICE, "large simulacrum",
-    M_EVIL,
+    M_EVIL | M_NO_REGEN,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
