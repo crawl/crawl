@@ -1463,7 +1463,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BRAIN_WORM, 'w', LIGHTMAGENTA, "brain worm",
-    M_SPELLCASTER | M_EVIL | M_NO_SKELETON,
+    M_NO_SKELETON | M_SPELLCASTER | M_EVIL,
     MR_NO_FLAGS,
     150, 10, MONS_WORM, MONS_BRAIN_WORM, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2854,7 +2854,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ORB_GUARDIAN, 'X', MAGENTA, "Orb Guardian",
-    M_FIGHTER | M_NO_SKELETON | M_SEE_INVIS,
+    M_NO_SKELETON | M_FIGHTER | M_SEE_INVIS,
     MR_NO_FLAGS,
     0, 20, MONS_ORB_GUARDIAN, MONS_ORB_GUARDIAN, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
