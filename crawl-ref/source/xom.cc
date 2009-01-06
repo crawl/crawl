@@ -196,7 +196,7 @@ void xom_tick()
     }
 
     // ...but he gets bored...
-    if (one_chance_in(2))
+    if (coinflip())
         you.gift_timeout--;
 
     newfavour = describe_xom_favour();
@@ -205,7 +205,7 @@ void xom_tick()
         char buf[8192];
         strcpy(buf, "Your title is now: ");
         strcat(buf, newfavour);
-        god_speaks( you.religion, buf );
+        god_speaks(you.religion, buf);
     }
 
     if (you.gift_timeout == 1)
