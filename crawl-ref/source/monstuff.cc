@@ -4262,27 +4262,27 @@ bool simple_monster_message(const monsters *monster, const char *event,
                             description_level_type descrip)
 {
 
-    if ((mons_near( monster ) || crawl_state.arena)
+    if ((mons_near(monster) || crawl_state.arena)
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
             || player_monster_visible(monster) || crawl_state.arena))
     {
         char buff[INFO_SIZE];
 
-        snprintf( buff, sizeof(buff), "%s%s", monster->name(descrip).c_str(),
-                  event );
+        snprintf(buff, sizeof(buff), "%s%s", monster->name(descrip).c_str(),
+                 event);
 
         if (channel == MSGCH_PLAIN && mons_wont_attack_real(monster))
             channel = MSGCH_FRIEND_ACTION;
 
-        mpr( buff, channel, param );
+        mpr(buff, channel, param);
         return (true);
     }
 
     return (false);
-}                               // end simple_monster_message()
+}
 
-// Altars as well as branch entrances are considered interesting
-// for some monster types.
+// Altars as well as branch entrances are considered interesting for
+// some monster types.
 static bool _mon_on_interesting_grid(monsters *mon)
 {
     // Patrolling shouldn't happen all the time.

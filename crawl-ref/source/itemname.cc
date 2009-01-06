@@ -155,11 +155,11 @@ std::string item_def::name(description_level_type descrip,
     {
         switch (descrip)
         {
-        case DESC_CAP_THE: buff << "The "; break;
-        case DESC_NOCAP_THE: buff << "the "; break;
-        case DESC_CAP_YOUR: buff << "Your "; break;
+        case DESC_CAP_THE:    buff << "The "; break;
+        case DESC_NOCAP_THE:  buff << "the "; break;
+        case DESC_CAP_YOUR:   buff << "Your "; break;
         case DESC_NOCAP_YOUR: buff << "your "; break;
-        case DESC_NOCAP_ITS: buff << "its "; break;
+        case DESC_NOCAP_ITS:  buff << "its "; break;
         case DESC_CAP_A:
         case DESC_NOCAP_A:
         case DESC_INVENTORY_EQUIP:
@@ -182,18 +182,18 @@ std::string item_def::name(description_level_type descrip,
     {
         switch (descrip)
         {
-        case DESC_CAP_THE:   buff << "The "; break;
-        case DESC_NOCAP_THE: buff << "the "; break;
-        case DESC_CAP_A: buff << (startvowel ? "An " : "A "); break;
+        case DESC_CAP_THE:    buff << "The "; break;
+        case DESC_NOCAP_THE:  buff << "the "; break;
+        case DESC_CAP_A:      buff << (startvowel ? "An " : "A "); break;
 
-        case DESC_CAP_YOUR: buff << "Your "; break;
+        case DESC_CAP_YOUR:   buff << "Your "; break;
         case DESC_NOCAP_YOUR: buff << "your "; break;
-        case DESC_NOCAP_ITS: buff << "its "; break;
+        case DESC_NOCAP_ITS:  buff << "its "; break;
 
         case DESC_NOCAP_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
-            buff << (startvowel ? "an " : "a "); break;
+                              buff << (startvowel ? "an " : "a "); break;
 
         case DESC_PLAIN:
         default:
