@@ -2959,9 +2959,7 @@ void MiscastEffect::_conjuration(int severity)
         case 5:
             you_msg      = "Strange energies run through your body.";
             mon_msg_seen = "@The_monster@ glows " + weird_glowing_colour() +
-                           "for a moment.";
-
-            // Monster messages needed.
+                           " for a moment.";
             break;
         case 6:
             you_msg = "Your skin tingles.";
@@ -3116,7 +3114,7 @@ void MiscastEffect::_enchantment(int severity)
         case 5:
             you_msg      = "Strange energies run through your body.";
             mon_msg_seen = "@The_monster@ glows " + weird_glowing_colour() +
-                           "for a moment.";
+                           " for a moment.";
             break;
         case 6:
             you_msg = "Your skin tingles.";
@@ -3242,7 +3240,7 @@ void MiscastEffect::_translocation(int severity)
         case 5:
             you_msg      = "Strange energies run through your body.";
             mon_msg_seen = "@The_monster@ glows " + weird_glowing_colour() +
-                           "for a moment.";
+                           " for a moment.";
             break;
         case 6:
             you_msg = "Your skin tingles.";
@@ -3414,7 +3412,7 @@ void MiscastEffect::_summoning(int severity)
         case 5:
             you_msg      = "Strange energies run through your body.";
             mon_msg_seen = "@The_monster@ glows " + weird_glowing_colour() +
-                           "for a moment.";
+                           " for a moment.";
             break;
         case 6:
             you_msg      = "The world appears momentarily distorted.";
@@ -3754,7 +3752,7 @@ void MiscastEffect::_necromancy(int severity)
         case 5:
             you_msg      = "Strange energies run through your body.";
             mon_msg_seen = "@The_monster@ glows " + weird_glowing_colour() +
-                           "for a moment.";
+                           " for a moment.";
             break;
         case 6:
             you_msg = "You shiver with cold.";
@@ -3970,7 +3968,7 @@ void MiscastEffect::_transmigration(int severity)
         case 5:
             you_msg      = "Strange energies run through your body.";
             mon_msg_seen = "@The_monster@ glows " + weird_glowing_colour() +
-                           "for a moment.";
+                           " for a moment.";
             break;
         case 6:
             you_msg = "Your skin tingles.";
