@@ -5405,7 +5405,7 @@ bool bolt::nice_to(const monsters *mon) const
 //
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
-bolt::bolt() : range(-2), type('*'),
+bolt::bolt() : range(-1), type('*'),
                colour(BLACK),
                flavour(BEAM_MAGIC), real_flavour(BEAM_MAGIC), drop_item(false),
                item(NULL), source(), target(), damage(0,0),
