@@ -1650,9 +1650,11 @@ void zap_los_monsters()
         mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str() );
 #endif
-        // Mark as summoned so its items will also be discarded.
-        mon->mark_summoned(1, true);
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        // Do a hard reset so the monster's items will be discarded.
+        mon->flags |= MF_HARD_RESET;
+        // Do a silent, wizard-mode monster_die() just to be extra sure the
+        // player sees nothings.
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
 }
 
