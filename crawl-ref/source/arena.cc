@@ -37,17 +37,17 @@ namespace arena
         mons_list   members;
         bool        friendly;
         int         active_members;
-        bool        suicide_attack;
+        bool        won;
 
         faction(bool fr) : members(), friendly(fr), active_members(0),
-                           suicide_attack(false) { }
+                           won(false) { }
 
         void place_at(const coord_def &pos);
 
         void reset()
         {
             active_members = 0;
-            suicide_attack = false;
+            won            = false;
         }
 
         void clear()
@@ -465,6 +465,20 @@ namespace arena
         int orig_a = faction_a.active_members;
         int orig_b = faction_b.active_members;
 
+        if (orig_a < 0)
+        {
+            mpr("Book-keeping says faction_a has negative active members.",
+                MSGCH_ERROR);
+            more();
+        }
+
+        if (orig_b < 0)
+        {
+            mpr("Book-keeping says faction_b has negative active members.",
+                MSGCH_ERROR);
+            more();
+        }
+
         faction_a.active_members = 0;
         faction_b.active_members = 0;
 
@@ -485,16 +499,40 @@ namespace arena
         {
             mpr("Book-keeping error in faction member count.", MSGCH_ERROR);
             more();
+
+            if (faction_a.active_members > 0
+                && faction_b.active_members <= 0)
+            {
+                faction_a.won = true;
+                faction_b.won = false;
+            }
+            else if (faction_b.active_members > 0
+                     && faction_a.active_members <= 0)
+            {
+                faction_b.won = true;
+                faction_a.won = false;
+            }
         }
-    }
+    } // count_foes()
 
     // Returns true as long as at least one member of each faction is alive.
     bool fight_is_on()
     {
         if (faction_a.active_members > 0 && faction_b.active_members > 0)
+        {
+            if (faction_a.won || faction_b.won)
+            {
+                mpr("Both factions alive but one delcared the winner.",
+                    MSGCH_ERROR);
+                more();
+                faction_a.won = false;
+                faction_b.won = false;
+            }
             return true;
+        }
 
-        // Sync up our book-keeping with the actual state.
+        // Sync up our book-keeping with the actual state, and report
+        // any inconsistencies.
         count_foes();
 
         return (faction_a.active_members > 0 && faction_b.active_members > 0);
@@ -572,6 +610,7 @@ namespace arena
         mesclr(true);
         {
             cursor_control coff(false);
+            int turns = 0;
             while (fight_is_on())
             {
                 if (kbhit())
@@ -585,6 +624,10 @@ namespace arena
                         return;
                     }
                 }
+
+                // Check the consistency of our book-keeping every 100 turns.
+                if ((turns++ % 100) == 0)
+                    count_foes();
 
                 viewwindow(true, false);
                 unwind_var<coord_def> pos(you.position);
@@ -607,19 +650,58 @@ namespace arena
 
         trials_done++;
 
-        bool team_a_won = false;
-        bool was_tied   = false;
-        if (faction_a.active_members > 0 || faction_a.suicide_attack)
+        // We bother with all this to properly deal ties, and with ball
+        // lightning or giant spores winning the fight via suicide.
+        // The sanity checking is probably just paranoia.
+        bool was_tied = false;
+        if (!faction_a.won && !faction_b.won)
         {
+            if (faction_a.active_members > 0)
+            {
+                mpr("Tie declared, but faction_a won.", MSGCH_ERROR);
+                more();
+                team_a_wins++;
+                faction_a.won = true;
+            }
+            else if (faction_b.active_members > 0)
+            {
+                mpr("Tie declared, but faction_b won.", MSGCH_ERROR);
+                more();
+                faction_b.won = true;
+            }
+            else
+            {
+                ties++;
+                was_tied = true;
+            }
+        }
+        else if (faction_a.won && faction_b.won)
+        {
+            faction_a.won = false;
+            faction_b.won = false;
+
+            mpr("*BOTH* factions won?!", MSGCH_ERROR);
+            if (faction_a.active_members > 0)
+            {
+                mpr("Faction_a real winner.", MSGCH_ERROR);
+                team_a_wins++;
+                faction_a.won = true;
+            }
+            else if (faction_b.active_members > 0)
+            {
+                mpr("Faction_b real winner.", MSGCH_ERROR);
+                faction_b.won = true;
+            }
+            else
+            {
+                mpr("Both sides dead.", MSGCH_ERROR);
+                ties++;
+                was_tied = true;
+            }
+            more();
+        }
+        else if (faction_a.won)
             team_a_wins++;
-            team_a_won = true;
-        }
-        else if (faction_a.active_members == faction_b.active_members
-                 && !faction_b.suicide_attack)
-        {
-            ties++;
-            was_tied = true;
-        }
 
         show_fight_banner(true);
 
@@ -636,7 +718,8 @@ namespace arena
             mprf(msg.c_str());
         else
             mprf(msg.c_str(),
-                 team_a_won ? faction_a.desc.c_str() : faction_b.desc.c_str());
+                 faction_a.won ? faction_a.desc.c_str()
+                               : faction_b.desc.c_str());
         dump_messages();
     }
 
@@ -856,6 +939,19 @@ void arena_monster_died(monsters *monster, killer_type killer,
     else if (monster->attitude == ATT_HOSTILE)
         arena::faction_b.active_members--;
 
+    if (arena::faction_a.active_members > 0
+        && arena::faction_b.active_members <= 0)
+    {
+        arena::faction_a.won = true;
+        return;
+    }
+    else if (arena::faction_b.active_members > 0
+             && arena::faction_a.active_members <= 0)
+    {
+        arena::faction_b.won = true;
+        return;
+    }
+
     // Was the death caused by the suicide attack of a gas spore or
     // ball lightning which was the final member of its faction?
     if (arena::faction_a.active_members <= 0
@@ -868,9 +964,9 @@ void arena_monster_died(monsters *monster, killer_type killer,
         if (monster->attitude != atk->attitude && mons_self_destructs(atk))
         {
             if (atk->attitude == ATT_FRIENDLY)
-                arena::faction_a.suicide_attack = true;
+                arena::faction_a.won = true;
             else if (atk->attitude == ATT_HOSTILE)
-                arena::faction_b.suicide_attack = true;
+                arena::faction_b.won = true;
         }
     }
 }
