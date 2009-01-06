@@ -34,15 +34,25 @@ namespace arena
     struct faction
     {
         std::string desc;
-        mons_list members;
-        bool friendly;
+        mons_list   members;
+        bool        friendly;
+        int         active_members;
+        bool        suicide_attack;
 
-        faction(bool fr) : members(), friendly(fr) { }
+        faction(bool fr) : members(), friendly(fr), active_members(0),
+                           suicide_attack(false) { }
 
         void place_at(const coord_def &pos);
 
+        void reset()
+        {
+            active_members = 0;
+            suicide_attack = false;
+        }
+
         void clear()
         {
+            reset();
             members.clear();
         }
     };
@@ -53,6 +63,7 @@ namespace arena
 
     int trials_done = 0;
     int team_a_wins = 0;
+    int ties        = 0;
 
     bool allow_summons       = true;
     bool allow_chain_summons = true;
@@ -332,6 +343,8 @@ namespace arena
     void setup_monsters()
         throw (std::string)
     {
+        faction_a.reset();
+        faction_b.reset();
 
         unwind_var< FixedVector<bool, NUM_MONSTERS> >
             uniq(you.unique_creatures);
@@ -376,7 +389,7 @@ namespace arena
         cgotoxy(1, line++, GOTO_STAT);
         textcolor(YELLOW);
         center_print(crawl_view.hudsz.x, faction_b.desc,
-                     total_trials ? trials_done - team_a_wins : -1);
+                     total_trials ? trials_done - team_a_wins - ties : -1);
 
         if (total_trials > 1 && trials_done < total_trials)
         {
@@ -439,25 +452,52 @@ namespace arena
         setup_others();
     }
 
-    // Returns true as long as at least one member of each faction is alive.
-    bool fight_is_on()
+    // Temporarily unset craw_state.arena to force a --more-- to happen.
+    void more()
     {
-        bool found_friend = false;
-        bool found_enemy = false;
+        unwind_bool state(crawl_state.arena, false);
+
+        ::more();
+    }
+
+    void count_foes()
+    {
+        int orig_a = faction_a.active_members;
+        int orig_b = faction_b.active_members;
+
+        faction_a.active_members = 0;
+        faction_b.active_members = 0;
+
         for (int i = 0; i < MAX_MONSTERS; ++i)
         {
             const monsters *mons(&menv[i]);
             if (mons->alive())
             {
                 if (mons->attitude == ATT_FRIENDLY)
-                    found_friend = true;
+                    faction_a.active_members++;
                 else if (mons->attitude == ATT_HOSTILE)
-                    found_enemy = true;
-                if (found_friend && found_enemy)
-                    return (true);
+                    faction_b.active_members++;
             }
         }
-        return (false);
+
+        if (orig_a != faction_a.active_members
+            || orig_b != faction_b.active_members)
+        {
+            mpr("Book-keeping error in faction member count.", MSGCH_ERROR);
+            more();
+        }
+    }
+
+    // Returns true as long as at least one member of each faction is alive.
+    bool fight_is_on()
+    {
+        if (faction_a.active_members > 0 && faction_b.active_members > 0)
+            return true;
+
+        // Sync up our book-keeping with the actual state.
+        count_foes();
+
+        return (faction_a.active_members > 0 && faction_b.active_members > 0);
     }
 
     void report_foes()
@@ -494,18 +534,6 @@ namespace arena
             }
         }
     }
-
-    bool friendlies_win()
-    {
-        for (int i = 0; i < MAX_MONSTERS; ++i)
-        {
-            monsters *mons(&menv[i]);
-            if (mons->alive())
-                return (mons->attitude == ATT_FRIENDLY);
-        }
-        return (false);
-    }
-
 
     void dump_messages()
     {
@@ -577,23 +605,38 @@ namespace arena
 
         mesclr();
 
-        const bool team_a_won = friendlies_win();
-
         trials_done++;
 
-        if (team_a_won)
+        bool team_a_won = false;
+        bool was_tied   = false;
+        if (faction_a.active_members > 0 || faction_a.suicide_attack)
+        {
             team_a_wins++;
+            team_a_won = true;
+        }
+        else if (faction_a.active_members == faction_b.active_members
+                 && !faction_b.suicide_attack)
+        {
+            ties++;
+            was_tied = true;
+        }
 
         show_fight_banner(true);
 
-        const char *msg;
-        if (Options.arena_dump_msgs || Options.arena_list_eq)
-            msg = "---------- Winner: %s! ----------";
+        std::string msg;
+        if (was_tied)
+            msg = "Tie";
         else
             msg = "Winner: %s!";
 
-        mprf(msg,
-             team_a_won ? faction_a.desc.c_str() : faction_b.desc.c_str());
+        if (Options.arena_dump_msgs || Options.arena_list_eq)
+            msg = "---------- " + msg + " ----------";
+
+        if (was_tied)
+            mprf(msg.c_str());
+        else
+            mprf(msg.c_str(),
+                 team_a_won ? faction_a.desc.c_str() : faction_b.desc.c_str());
         dump_messages();
     }
 
@@ -657,7 +700,11 @@ namespace arena
         {
             if (Options.arena_dump_msgs || Options.arena_list_eq)
                 fprintf(file, "========================================\n");
-            fprintf(file, "%d-%d\n", team_a_wins, trials_done - team_a_wins);
+            fprintf(file, "%d-%d", team_a_wins, 
+                    trials_done - team_a_wins - ties);
+            if (ties > 0)
+                fprintf(file, "-%d", ties);
+            fprintf(file, "\n");
         }
     }
 
@@ -693,9 +740,10 @@ namespace arena
 
         if (total_trials > 0)
         {
-            mprf("Final score: %s (%d); %s (%d)",
+            mprf("Final score: %s (%d); %s (%d) [%d ties]",
                  faction_a.desc.c_str(), team_a_wins,
-                 faction_b.desc.c_str(), trials_done - team_a_wins);
+                 faction_b.desc.c_str(), trials_done - team_a_wins - ties,
+                 ties);
         }
         delay(Options.arena_delay * 5);
 
@@ -757,6 +805,11 @@ bool arena_veto_random_monster(monster_type type)
 void arena_placed_monster(monsters *monster, const mgen_data &mg,
                           bool first_band_member)
 {
+    if (monster->attitude == ATT_FRIENDLY)
+        arena::faction_a.active_members++;
+    else if (monster->attitude == ATT_HOSTILE)
+        arena::faction_b.active_members++;
+
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
     {
         short it = monster->inv[i];
@@ -798,6 +851,28 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
 void arena_monster_died(monsters *monster, killer_type killer,
                         int killer_index, bool silent)
 {
+    if (monster->attitude == ATT_FRIENDLY)
+        arena::faction_a.active_members--;
+    else if (monster->attitude == ATT_HOSTILE)
+        arena::faction_b.active_members--;
+
+    // Was the death caused by the suicide attack of a gas spore or
+    // ball lightning which was the final member of its faction?
+    if (arena::faction_a.active_members <= 0
+        && arena::faction_b.active_members <= 0
+        && !invalid_monster_index(killer_index)
+        && menv[killer_index].type != -1)
+    {
+        const monsters* atk = &menv[killer_index];
+
+        if (monster->attitude != atk->attitude && mons_self_destructs(atk))
+        {
+            if (atk->attitude == ATT_FRIENDLY)
+                arena::faction_a.suicide_attack = true;
+            else if (atk->attitude == ATT_HOSTILE)
+                arena::faction_b.suicide_attack = true;
+        }
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////
