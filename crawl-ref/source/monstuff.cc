@@ -3684,7 +3684,7 @@ static void _handle_behaviour(monsters *mon)
 
     if (mons_wall_shielded(mon) && grid_is_solid(mon->pos()))
     {
-        // Monster is safe, so it's behaviour can be simplified to fleeing.
+        // Monster is safe, so its behaviour can be simplified to fleeing.
         if (mon->behaviour == BEH_CORNERED || mon->behaviour == BEH_PANIC
             || isScared)
         {
