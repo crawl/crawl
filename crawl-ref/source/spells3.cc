@@ -830,15 +830,8 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
     {
         const int monnum = item.orig_monnum - 1;
 
-        if (mons_is_unique(monnum))
-        {
-            menv[monster].mname = origin_monster_name(item);
-
-            // Special case for Blork the orc: shorten his name to "Blork"
-            // to avoid mentions of "Blork the orc the orc skeleton".
-            if (monnum == MONS_BLORK_THE_ORC)
-                menv[monster].mname = "Blork";
-        }
+        name_zombified_unique(&menv[monster], monnum,
+                              origin_monster_name(item));
 
         _equip_undead(a, corps, monster, monnum);
 

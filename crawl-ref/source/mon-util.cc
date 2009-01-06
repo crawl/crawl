@@ -977,6 +977,19 @@ bool mons_enslaved_soul(const monsters *mon)
         || mons_enslaved_intact_soul(mon));
 }
 
+void name_zombified_unique(monsters *mon, int mc, const std::string mon_name)
+{
+    if (mons_is_unique(mc))
+    {
+        mon->mname = mon_name;
+
+        // Special case for Blork the orc: shorten his name to "Blork"
+        // to avoid mentions of e.g "Blork the orc the orc zombie".
+        if (mc == MONS_BLORK_THE_ORC)
+            mon->mname = "Blork";
+    }
+}
+
 int downscale_zombie_damage(int damage)
 {
     // These are cumulative, of course: {dlb}

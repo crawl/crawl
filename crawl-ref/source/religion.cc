@@ -5586,16 +5586,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     mon->colour = EC_UNHOLY;
     mon->flags |= MF_ENSLAVED_SOUL;
 
-    if (mons_is_unique(type))
-    {
-        mon->mname = name_plain;
-
-        // Special case for Blork the orc: shorten his name to "Blork"
-        // to avoid mentions of "Blork the orc the spectral orc" or
-        // "Blork the orc the small abomination".
-        if (type == MONS_BLORK_THE_ORC)
-            mon->mname = "Blork";
-    }
+    name_zombified_unique(mon, type, name_plain);
 
     // Wow, permanent enslaving!
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;

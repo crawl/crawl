@@ -1323,16 +1323,8 @@ void monster_die(monsters *monster, killer_type killer,
                         if (death_message)
                             mpr("A glowing mist starts to gather...");
 
-                        if (mons_is_unique(monster->type))
-                        {
-                            menv[spectre].mname = monster->name(DESC_PLAIN);
-
-                            // Special case for Blork the orc: shorten
-                            // his name to "Blork" to avoid mentions of
-                            // "Blork the orc the spectral orc".
-                            if (monster->type == MONS_BLORK_THE_ORC)
-                                menv[spectre].mname = "Blork";
-                        }
+                        name_zombified_unique(&menv[spectre], monster->type,
+                                              monster->name(DESC_PLAIN));
                     }
                 }
             }
