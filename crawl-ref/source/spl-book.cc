@@ -32,6 +32,7 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "items.h"
 #include "it_use3.h"
+#include "Kills.h"
 #include "message.h"
 #include "player.h"
 #include "randart.h"
@@ -1950,9 +1951,9 @@ bool make_book_level_randart(item_def &book, int level, int num_spells)
     std::string name = "\"";
 
     if (god != GOD_NO_GOD)
-        name += god_name(god, false) + "'s ";
+        name += apostrophise(god_name(god, false)) + " ";
     else if (one_chance_in(3))
-        name += make_name(random_int(), false) + "'s ";
+        name += apostrophise(make_name(random_int(), false)) + " ";
     else
         has_owner = false;
 
@@ -2410,7 +2411,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         need_quotes = false;
 
     if (need_quotes)
-        name = '"' + name + "'s ";
+        name = "\"" + apostrophise(name) + " ";
 
     name += getRandNameString("book_noun");
     name += " of ";

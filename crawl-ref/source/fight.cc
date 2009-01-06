@@ -471,12 +471,7 @@ std::string melee_attack::wep_name(description_level_type desc,
     }
 
     if (possessive)
-    {
-        name = atk_name(desc);
-        name += "'s ";
-        // Proper English-language possessive.
-        name = replace_all(name, "s's ", "s' ");
-    }
+        name = apostrophise(atk_name(desc));
 
     name += weapon->name(desc, false, false, false, false, ignore_flags);
 

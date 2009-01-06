@@ -986,8 +986,8 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
         simple_monster_message(monster, (prefix + msg).c_str());
 
     if (cloud != CLOUD_NONE)
-        place_cloud( cloud, monster->pos(), 1 + random2(3),
-                     monster->kill_alignment() );
+        place_cloud(cloud, monster->pos(), 1 + random2(3),
+                    monster->kill_alignment());
 }
 
 void monster_die(monsters *monster, killer_type killer,
@@ -4258,7 +4258,8 @@ monsters *choose_random_monster_on_level(int weight,
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. -- bwr
 bool simple_monster_message(const monsters *monster, const char *event,
-                            msg_channel_type channel, int param,
+                            msg_channel_type channel,
+                            int param,
                             description_level_type descrip)
 {
 

@@ -1084,18 +1084,18 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 #ifdef MULTIUSER
             if (uid > 0)
             {
-                struct passwd *pw_entry = getpwuid( uid );
+                struct passwd *pw_entry = getpwuid(uid);
                 if (pw_entry)
                 {
-                    strncpy( username, pw_entry->pw_name, sizeof(username) );
-                    strncat( username, "'s", sizeof(username) );
-                    username[0] = toupper( username[0] );
+                    strncpy(username, pw_entry->pw_name, sizeof(username));
+                    username[0] = toupper(username[0]);
+                    strncat(username, "'s", sizeof(username));
                 }
             }
 #endif
-            snprintf( scratch, INFO_SIZE, "%s game lasted %s (%ld turns).",
-                      username, make_time_string(real_time).c_str(),
-                      num_turns );
+            snprintf(scratch, INFO_SIZE, "%s game lasted %s (%ld turns).",
+                     username, make_time_string(real_time).c_str(),
+                     num_turns);
 
             line += scratch;
             line += _hiscore_newline_string();

@@ -17,6 +17,7 @@ REVISION("$Rev$");
 #include "effects.h"
 #include "it_use2.h"
 #include "items.h"
+#include "Kills.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -641,9 +642,7 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
 
         description_level_type desc = mons_friendly(mon) ? DESC_CAP_YOUR :
                                                            DESC_CAP_THE;
-        std::string msg = mon->name(desc);
-        msg += "'s ";
-        msg = replace_all(msg, "s's", "s'"); // Proper possessive.
+        std::string msg = apostrophise(mon->name(desc));
 
         msg += item.name(DESC_PLAIN, false, false, false);
 

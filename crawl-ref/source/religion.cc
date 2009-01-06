@@ -41,6 +41,7 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
+#include "Kills.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"
@@ -5548,7 +5549,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         _yred_souls_disappear();
 
     const int type = mon->type;
-    const std::string name_cap_the = mon->name(DESC_CAP_THE);
+    const std::string name = apostrophise(mon->name(DESC_CAP_THE));
     const std::string name_plain = mon->name(DESC_PLAIN);
     bool twisted = false;
 
@@ -5557,7 +5558,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     if (!quiet)
     {
-        mprf("%s's soul %s.", name_cap_the.c_str(),
+        mprf("%s soul %s.", name.c_str(),
              twisted ? "becomes twisted" : "remains intact");
     }
 
@@ -5597,7 +5598,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     if (!quiet)
     {
-        mprf("%s's soul %s.", name_cap_the.c_str(),
+        mprf("%s soul %s.", name.c_str(),
              !force_hostile ? "is now yours" : "fights you");
     }
 }
