@@ -1161,7 +1161,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             }
             else
             {
-                // note that this uses full (not random2limit(foo,40))
+                // Note that this uses full (not random2limit(foo,40))
                 // player_evasion.
                 int trap_hit = (20 + (you.your_level*2)) * random2(200) / 100;
                 int your_dodge = player_evasion() + random2(you.dex) / 3
@@ -1207,7 +1207,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
             // Check whether to poison.
             if (poison)
-                poison = (hit && x_chance_in_y(50 - (3*monster->ac)/2, 100));
+                poison = (x_chance_in_y(50 - (3*monster->ac)/2, 100));
 
             if (see_grid(act.pos()))
             {
@@ -1215,15 +1215,18 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                      shot.name(DESC_CAP_A).c_str(),
                      hit ? "hits" : "misses",
                      monster->name(DESC_NOCAP_THE).c_str(),
-                     (damage_taken == 0
-                      && !poison) ? ", but does no damage" : "");
+                     (hit && damage_taken == 0
+                         && !poison) ? ", but does no damage" : "");
             }
 
-            if (poison)
-                poison_monster(monster, KC_OTHER);
-
             // Apply damage.
-            monster->hurt(NULL, damage_taken);
+            if (hit)
+            {
+                if (poison)
+                    poison_monster(monster, KC_OTHER);
+
+                monster->hurt(NULL, damage_taken);
+            }
         }
 
         // Drop the item (sometimes.)
