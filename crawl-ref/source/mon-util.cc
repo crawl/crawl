@@ -977,7 +977,7 @@ bool mons_enslaved_soul(const monsters *mon)
         || mons_enslaved_intact_soul(mon));
 }
 
-void name_zombified_unique(monsters *mon, int mc, const std::string mon_name)
+bool name_zombified_unique(monsters *mon, int mc, const std::string mon_name)
 {
     if (mons_is_unique(mc))
     {
@@ -987,7 +987,11 @@ void name_zombified_unique(monsters *mon, int mc, const std::string mon_name)
         // to avoid mentions of e.g "Blork the orc the orc zombie".
         if (mc == MONS_BLORK_THE_ORC)
             mon->mname = "Blork";
+
+        return (true);
     }
+
+    return (false);
 }
 
 int downscale_zombie_damage(int damage)
