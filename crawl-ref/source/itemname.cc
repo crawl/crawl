@@ -83,6 +83,10 @@ std::string item_def::name(description_level_type descrip,
                            bool quantity_words,
                            unsigned long ignore_flags) const
 {
+    if (crawl_state.arena)
+        ignore_flags |= ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_CURSE
+                      | ISFLAG_COSMETIC_MASK;
+
     if (descrip == DESC_NONE)
         return ("");
 
@@ -1726,7 +1730,7 @@ id_arr& get_typeid_array()
 void set_ident_type( item_def &item, item_type_id_state_type setting,
                      bool force )
 {
-    if (is_artefact(item))
+    if (is_artefact(item) || crawl_state.arena)
         return;
 
     item_type_id_state_type old_setting = get_ident_type(item);

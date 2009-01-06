@@ -757,6 +757,23 @@ bool arena_veto_random_monster(monster_type type)
 void arena_placed_monster(monsters *monster, const mgen_data &mg,
                           bool first_band_member)
 {
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        short it = monster->inv[i];
+        if (it != NON_ITEM)
+        {
+            item_def &item(mitm[it]);
+            item.flags |= ISFLAG_IDENT_MASK;
+
+            // Don't leak info on wands or potions.
+            if (item.base_type == OBJ_WANDS
+                || item.base_type == OBJ_POTIONS)
+            {
+                item.colour = random_colour();
+            }
+        }
+    }
+
     if (arena::name_monsters && !monster->is_named())
         monster->mname = make_name(random_int(), false);
 
