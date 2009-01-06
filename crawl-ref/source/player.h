@@ -276,10 +276,10 @@ int slaying_bonus(char which_affected);
  *              spells3
  * *********************************************************************** */
 int player_see_invis(bool calc_unid = true);
-bool player_monster_visible( const monsters *mon );
+bool player_monster_visible(const monsters *mon);
 
-bool player_mesmerised_by( const monsters *mon );
-void update_beholders( const monsters *mon, bool force = false);
+bool player_mesmerised_by(const monsters *mon);
+void update_beholders(const monsters *mon, bool force = false);
 void check_beholders();
 
 /* ***********************************************************************

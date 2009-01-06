@@ -2653,9 +2653,10 @@ int player_see_invis(bool calc_unid)
 }
 
 // This does NOT do line of sight!  It checks the monster's visibility
-// with repect to the players perception, but doesn't do walls or range...
-// to find if the square the monster is in los see mons_near().
-bool player_monster_visible( const monsters *mon )
+// with respect to the players perception, but doesn't do walls or
+// range.  To find if the square the monster is in is in LOS, see
+// mons_near().
+bool player_monster_visible(const monsters *mon)
 {
     if (mons_is_submerged(mon)
         || mon->invisible() && !player_see_invis())
@@ -2667,7 +2668,7 @@ bool player_monster_visible( const monsters *mon )
 }
 
 // Returns true if player is mesmerised by a given monster.
-bool player_mesmerised_by( const monsters *mon )
+bool player_mesmerised_by(const monsters *mon)
 {
     if (!you.duration[DUR_MESMERISED])
         return (false);
