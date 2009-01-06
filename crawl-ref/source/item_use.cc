@@ -2786,33 +2786,45 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, item.plus, false, item);
-        if (item.plus != 0 && !artefact)
-            ident = ID_KNOWN_TYPE;
-        learn_pluses = true;
+        if (item.plus)
+        {
+            modify_stat(STAT_STRENGTH, item.plus, false, item);
 
-        if (Options.autoinscribe_randarts && is_random_artefact(item))
-            add_autoinscription( item, randart_auto_inscription(item));
+            if (artefact)
+                fake_rap = RAP_STRENGTH;
+            else
+                ident = ID_KNOWN_TYPE;
+
+           learn_pluses = true;
+        }
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, item.plus, false, item);
-        if (item.plus != 0 && !artefact)
-            ident = ID_KNOWN_TYPE;
-        learn_pluses = true;
+        if (item.plus)
+        {
+            modify_stat(STAT_DEXTERITY, item.plus, false, item);
 
-        if (Options.autoinscribe_randarts && is_random_artefact(item))
-            add_autoinscription( item, randart_auto_inscription(item));
+            if (artefact)
+                fake_rap = RAP_DEXTERITY;
+            else
+                ident = ID_KNOWN_TYPE;
+
+           learn_pluses = true;
+        }
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, item.plus, false, item);
-        if (item.plus != 0 && !artefact)
-            ident = ID_KNOWN_TYPE;
-        learn_pluses = true;
+        if (item.plus)
+        {
+            modify_stat(STAT_INTELLIGENCE, item.plus, false, item);
 
-        if (Options.autoinscribe_randarts && is_random_artefact(item))
-            add_autoinscription( item, randart_auto_inscription(item));
+            if (artefact)
+                fake_rap = RAP_INTELLIGENCE;
+            else
+                ident = ID_KNOWN_TYPE;
+
+           learn_pluses = true;
+        }
         break;
 
     case RING_MAGICAL_POWER:
@@ -2874,7 +2886,7 @@ void jewellery_wear_effects(item_def &item)
     }
 
     // Artefacts have completely different appearance than base types
-    // so we don't allow them to make the base types known
+    // so we don't allow them to make the base types known.
     if (artefact)
     {
         use_randart(item);
@@ -4813,6 +4825,9 @@ void use_randart(item_def &item, bool unmeld)
 
     if (proprt[RAP_NOISES])
         you.special_wield = SPWLD_NOISE;
+
+    if (!alreadyknown && Options.autoinscribe_randarts)
+        add_autoinscription(item, randart_auto_inscription(item));
 
     if (!alreadyknown && dangerous)
     {

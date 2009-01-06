@@ -2443,6 +2443,16 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
     return (NULL);
 }
 
+int item_on_floor(const item_def &item, const coord_def& where)
+{
+    // Check if the item is on the floor and reachable.
+    for (int link = igrd(where); link != NON_ITEM; link = mitm[link].link)
+        if (&mitm[link] == &item)
+            return (link);
+
+    return (NON_ITEM);
+}
+
 static bool _find_subtype_by_name(item_def &item,
                                   object_class_type base_type, int ntypes,
                                   const std::string &name)

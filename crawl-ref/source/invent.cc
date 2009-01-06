@@ -1151,9 +1151,11 @@ std::vector<SelItem> prompt_invent_items(
     }
 
     if (ret != PROMPT_ABORT)
+    {
         items.push_back(
             SelItem( ret, count,
                      ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : NULL ) );
+    }
     return items;
 }
 

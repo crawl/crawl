@@ -2622,13 +2622,8 @@ static const std::string _item_prefix(const item_def &item, bool temp,
         }
         // intentional fall-through
     case OBJ_FOOD:
-        if ((item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
-            && (is_good_god(you.religion) && is_player_same_species(item.plus)
-                || you.religion == GOD_ZIN
-                   && mons_class_intel(item.plus) >= I_NORMAL))
-        {
+        if (is_forbidden_food(item))
             prefixes.push_back("evil_eating");
-        }
 
         if (is_inedible(item))
             prefixes.push_back("inedible");

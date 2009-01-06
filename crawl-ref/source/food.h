@@ -85,17 +85,21 @@ bool is_contaminated(const item_def &food);
 bool causes_rot(const item_def &food);
 bool is_inedible(const item_def &item);
 bool is_preferred_food(const item_def &food);
+bool is_forbidden_food(const item_def &food);
 
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool reqid = false, bool check_hunger = true);
 
 void eat_floor_item(int item_link);
 
-int eat_from_floor();
+int eat_from_floor(bool skip_chunks = true);
+bool eat_from_inventory();
+bool eat_chunks();
 
-void eat_from_inventory(int which_inventory_slot);
+bool food_change(bool suppress_message = false);
+void eat_inventory_item(int which_inventory_slot);
 
-bool prompt_eat_from_inventory(int slot = -1);
+bool prompt_eat_inventory_item(int slot = -1);
 
 void chunk_nutrition_message(int nutrition);
 

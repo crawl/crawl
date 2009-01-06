@@ -177,7 +177,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
         {
             item_def& amu(you.inv[you.equip[EQ_AMULET]]);
-            if (!is_artefact(amu))
+            if (!is_artefact(amu) && !item_type_known(amu))
             {
                 set_ident_type(amu.base_type, amu.sub_type, ID_KNOWN_TYPE);
                 set_ident_flags(amu, ISFLAG_KNOW_PROPERTIES);

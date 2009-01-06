@@ -686,6 +686,8 @@ void game_options::reset_options()
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     list_rotten            = true;
+    prefer_safe_chunks     = true;
+    easy_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
@@ -2081,6 +2083,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
     else BOOL_OPTION(list_rotten);
+    else BOOL_OPTION(prefer_safe_chunks);
+    else BOOL_OPTION(easy_eat_chunks);
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS

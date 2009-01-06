@@ -1059,18 +1059,18 @@ int player_regen(void)
     {
         switch (you.hunger_state)
         {
-         case HS_STARVING:
+        case HS_STARVING:
             return (0); // No regeneration for starving vampires!
-         case HS_NEAR_STARVING:
-         case HS_VERY_HUNGRY:
-         case HS_HUNGRY:
+        case HS_NEAR_STARVING:
+        case HS_VERY_HUNGRY:
+        case HS_HUNGRY:
             return (rr / 2);
-         case HS_SATIATED:
+        case HS_SATIATED:
             return (rr);
-         case HS_FULL:
-         case HS_VERY_FULL:
+        case HS_FULL:
+        case HS_VERY_FULL:
             return (rr + 10);
-         case HS_ENGORGED:
+        case HS_ENGORGED:
             return (rr + 20);
         }
     }

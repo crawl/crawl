@@ -652,6 +652,40 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         you.redraw_hit_points = true;
         break;
 
+    case CONTROL('H'):
+        mpr( "Set hunger state to s(T)arving, (N)ear starving, (H)ungry, (S)atiated, (F)ull or (E)ngorged?", MSGCH_PROMPT );
+        tmp = tolower(getch());
+
+        // Values taken from food.cc.
+        switch (tmp)
+        {
+        case 't':
+            you.hunger = 500;
+            break;
+        case 'n':
+            you.hunger = 1200;
+            break;
+        case 'h':
+            you.hunger = 2400;
+            break;
+        case 's':
+            you.hunger = 5000;
+            break;
+        case 'f':
+            you.hunger = 8000;
+            break;
+        case 'e':
+            you.hunger = 12000;
+            break;
+        default:
+            canned_msg( MSG_OK );
+            break;
+        }
+        food_change();
+        if (you.species == SP_GHOUL && you.hunger_state >= HS_SATIATED)
+            mpr("Ghouls can never be full or above!");
+        break;
+
     case 'b':
         // wizards can always blink, with no restrictions or
         // magical contamination.

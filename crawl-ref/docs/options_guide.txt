@@ -58,8 +58,8 @@ The contents of this text are:
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
                 allow_self_target, easy_butcher, always_confirm_butcher, 
-                prompt_for_swap, easy_quit_item_prompts, easy_exit_menu, 
-                sort_menus
+                prefer_safe_chunks, easy_eat_chunks, prompt_for_swap, 
+                easy_quit_item_prompts, easy_exit_menu, sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, delay_message_clear,
@@ -1002,6 +1002,23 @@ always_confirm_butcher = false
         false, butchering will proceed automatically if there is exactly 
         one corpse on the square. If there are multiple corpses on a 
         square, you will always be prompted, regardless of this option.
+
+prefer_safe_chunks = true
+        If eat.lua has been sourced, the (e)at command will prompt for
+        all chunks on the floor and in your inventory, sorted by age.
+        If this option is set to true, clean chunks will be offered
+        before contaminated ones even if the latter are older.
+        Poisonous, mutagenic, rot-inducing, and chunks forbidden by 
+        your religion will always be offered last.
+
+easy_eat_chunks = false
+        If this is set to true then when using the (e)at command, the 
+        game will automatically determine the oldest chunk that is safe 
+        to eat, and eat it without prompting.
+        If prefer_safe_chunks is set to false you will be prompted if
+        the oldest chunk happens to be contaminated, and you will always
+        be prompted for harmful chunks.
+        Note that this option is ignored for each of the undead races.
 
 prompt_for_swap = true
         If both this and easy_butcher are true, then if an auto-switch

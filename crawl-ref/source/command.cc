@@ -98,8 +98,7 @@ static const char *features[] = {
 
 static std::string _get_version_information(void)
 {
-    std::string result  = "This is <w>";
-                result += CRAWL " " VERSION "</w> (";
+    std::string result  = "This is <w>" CRAWL " " VERSION "</w> (";
 #ifdef BUILD_REVISION
                 result += "r" + number_to_string(svn_revision()) + ", ";
 #endif
@@ -154,7 +153,7 @@ static std::string _get_version_changes(void)
         help = buf;
 
         // Give up if you encounter an older version.
-        if (help.find("Stone Soup 0.3.4") != std::string::npos)
+        if (help.find("Stone Soup 0.4") != std::string::npos)
             break;
 
         if (help.find("Highlights") != std::string::npos)
@@ -2315,6 +2314,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>c</w>      : card effect\n"
                        "<w>Ctrl-G</w> : save ghost (bones file)\n"
                        "<w>h</w>/<w>H</w>    : heal yourself (super-Heal)\n"
+                       "<w>Ctrl-H</w> : set hunger state\n"
                        "<w>X</w>      : make Xom do something now\n"
                        "<w>z</w>/<w>Z</w>    : cast spell by number/name\n"
                        "\n"

@@ -1947,6 +1947,8 @@ public:
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
     bool        list_rotten;     // list slots for rotting corpses/chunks
+    bool        prefer_safe_chunks; // prefer clean chunks to contaminated ones
+    bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
 

@@ -1127,8 +1127,6 @@ static int l_item_drop(lua_State *ls)
     return (1);
 }
 
-static int item_on_floor(const item_def &item, const coord_def& where);
-
 static item_def *dmx_get_item(lua_State *ls, int ndx, int subndx)
 {
     if (lua_istable(ls, ndx))
@@ -1615,9 +1613,7 @@ void luaopen_item(lua_State *ls)
 }
 
 /////////////////////////////////////////////////////////////////////
-// Food information. Some of this information is spoily (such as whether
-// a given chunk is poisonous), but that can't be helped.
-//
+// Food information.
 
 static int food_do_eat(lua_State *ls)
 {
@@ -1628,13 +1624,23 @@ static int food_do_eat(lua_State *ls)
     return (1);
 }
 
+static int food_prompt_eat_chunks(lua_State *ls)
+{
+    int eaten = 0;
+    if (!you.turn_is_over)
+        eaten = eat_chunks();
+
+    lua_pushboolean(ls, (eaten != 0));
+    return (1);
+}
+
 static int food_prompt_floor(lua_State *ls)
 {
     int eaten = 0;
     if (!you.turn_is_over)
     {
         eaten = eat_from_floor();
-        if ( eaten == 1 )
+        if (eaten == 1)
             burden_change();
     }
     lua_pushboolean(ls, (eaten != 0));
@@ -1645,7 +1651,16 @@ static int food_prompt_inventory(lua_State *ls)
 {
     bool eaten = false;
     if (!you.turn_is_over)
-        eaten = prompt_eat_from_inventory();
+        eaten = eat_from_inventory();
+    lua_pushboolean(ls, eaten);
+    return (1);
+}
+
+static int food_prompt_inventory_menu(lua_State *ls)
+{
+    bool eaten = false;
+    if (!you.turn_is_over)
+        eaten = prompt_eat_inventory_item();
     lua_pushboolean(ls, eaten);
     return (1);
 }
@@ -1667,30 +1682,16 @@ static int food_can_eat(lua_State *ls)
     return (1);
 }
 
-static int item_on_floor(const item_def &item, const coord_def& where)
-{
-    // Check if the item is on the floor and reachable
-    for (int link = igrd(where); link != NON_ITEM; link = mitm[link].link)
-    {
-        if (&mitm[link] == &item)
-            return (link);
-    }
-    return (NON_ITEM);
-}
-
 static bool eat_item(const item_def &item)
 {
     if (in_inventory(item))
     {
-        eat_from_inventory(item.link);
-        burden_change();
-        you.turn_is_over = true;
-
+        eat_inventory_item(item.link);
         return (true);
     }
     else
     {
-        int ilink =  item_on_floor(item, you.pos());
+        int ilink = item_on_floor(item, you.pos());
 
         if (ilink != NON_ITEM)
         {
@@ -1733,6 +1734,20 @@ static int food_rotting(lua_State *ls)
     return (1);
 }
 
+static int food_dangerous(lua_State *ls)
+{
+    LUA_ITEM(item, 1);
+
+    bool dangerous = false;
+    if (item)
+    {
+        dangerous = (is_poisonous(*item) || is_mutagenic(*item)
+                     || causes_rot(*item) || is_forbidden_food(*item));
+    }
+    lua_pushboolean(ls, dangerous);
+    return (1);
+}
+
 static int food_ischunk(lua_State *ls)
 {
     LUA_ITEM(item, 1);
@@ -1744,13 +1759,16 @@ static int food_ischunk(lua_State *ls)
 
 static const struct luaL_reg food_lib[] =
 {
-    { "do_eat",           food_do_eat },
-    { "prompt_floor",     food_prompt_floor },
-    { "prompt_inventory", food_prompt_inventory },
-    { "can_eat",          food_can_eat },
-    { "eat",              food_eat },
-    { "rotting",          food_rotting },
-    { "ischunk",          food_ischunk },
+    { "do_eat",            food_do_eat },
+    { "prompt_eat_chunks", food_prompt_eat_chunks },
+    { "prompt_floor",      food_prompt_floor },
+    { "prompt_inventory",  food_prompt_inventory },
+    { "prompt_inv_menu",   food_prompt_inventory_menu },
+    { "can_eat",           food_can_eat },
+    { "eat",               food_eat },
+    { "rotting",           food_rotting },
+    { "dangerous",         food_dangerous },
+    { "ischunk",           food_ischunk },
     { NULL, NULL },
 };
 
@@ -2395,7 +2413,7 @@ static option_handler handlers[] =
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },
     { "menu_colour_prefix_class", &Options.menu_colour_prefix_class,
-                                  option_hboolean },
+                                  option_hboolean }
 };
 
 static const option_handler *get_handler(const char *optname)
@@ -2403,7 +2421,7 @@ static const option_handler *get_handler(const char *optname)
     if (optname)
     {
         for (int i = 0, count = sizeof(handlers) / sizeof(*handlers);
-                i < count; ++i)
+             i < count; ++i)
         {
             if (!strcmp(handlers[i].option, optname))
                 return &handlers[i];

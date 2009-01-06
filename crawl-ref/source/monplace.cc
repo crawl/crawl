@@ -1121,6 +1121,8 @@ static int _place_monster_aux(const mgen_data &mg,
     menv[id].attitude  = ATT_HOSTILE;
     menv[id].behaviour = mg.behaviour;
 
+    // Statues cannot sleep (nor wander but it means they are a bit
+    // more aware of the player than they'd be otherwise).
     if (mons_is_statue(mg.cls))
         menv[id].behaviour = BEH_WANDER;
 
