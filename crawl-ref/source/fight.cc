@@ -4646,7 +4646,7 @@ void melee_attack::mons_perform_attack_rounds()
                 mprf("%s", special_damage_message.c_str());
 
             // Defender banished, bail before chaos_killed_defender() is
-            // killed since the defender is still alive in the Abyss.
+            // called since the defender is still alive in the Abyss.
             if (!defender->alive())
             {
                 if (chaos_attack && attacker->alive())
@@ -4739,7 +4739,7 @@ void melee_attack::mons_perform_attack_rounds()
     if (def_copy)
         delete def_copy;
 
-    // Inivislbe monster might have interrupted butchering.
+    // Invisible monster might have interrupted butchering.
     if (was_delayed && defender->atype() == ACT_PLAYER && perceived_attack
         && !attacker_visible)
     {
