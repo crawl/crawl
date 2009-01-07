@@ -3831,7 +3831,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         return (false);
 
     // Monsters can't use fixed artefacts
-    if (is_fixed_artefact(item))
+    if (is_fixed_artefact(item) && !crawl_state.arena)
         return (false);
 
     // Wimpy monsters (e.g. kobold, goblin) can't use halberds etc.
