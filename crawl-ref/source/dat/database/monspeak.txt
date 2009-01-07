@@ -1406,7 +1406,7 @@ VISUAL:@The_monster@ twirls his moustache.
 
 SPELL:@The_monster@ calls on the powers of Hell!
 
-@The_monster@ brags, "I can call spirits from the vastly deeps."
+@The_monster@ brags, "I can call spirits from the vast deeps."
 ## END Eustachio ##
 %%%%
 # A mercenary guarding the dungeon
