@@ -876,7 +876,7 @@ bool animate_remains(const coord_def &a, corpse_type class_allowed,
                     if (was_butchering)
                         mpr("The corpse you are butchering rises to attack!");
 
-                    if (is_terrain_seen(a))
+                    if (see_grid(a))
                         mpr("The dead are walking!");
                 }
 
@@ -948,7 +948,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                 {
                     number_raised++;
 
-                    if (see_grid(env.show, you.pos(), a))
+                    if (see_grid(a))
                          number_seen++;
 
                     if (was_butchering)
