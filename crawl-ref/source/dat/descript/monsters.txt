@@ -185,6 +185,13 @@ Louise
 
 An unusually heavily armoured spellcaster.
 %%%%
+Lernaean hydra
+
+An ancient nameless serpent-like water beast that possesses numerous heads. 
+The poets mention more heads than vase-painters can paint, poisonous venom
+coming out of its eyes, and that this hydra is a guardian of an entrance to
+the Underworld.  What of this is true, you do not know.
+%%%%
 Margery
 
 A lithe spellcaster.
@@ -208,6 +215,10 @@ A demonic skull rolling along the dungeon floor.
 Nergalle
 
 A withered sorceress, exceptionally ugly even by orc standards.
+%%%%
+Nessos
+
+A Black Centaur with a malicious look in the eyes.
 %%%%
 Norbert
 

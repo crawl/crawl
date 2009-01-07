@@ -1763,6 +1763,10 @@ void define_monster(monsters &mons)
         monnumber = random_range(4, 8);
         break;
 
+    case MONS_LERNAEAN_HYDRA:
+        monnumber = 27;
+        break;
+
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_SOLDIER:
@@ -2058,9 +2062,12 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     // Done here to cover cases of undead versions of hydras.
-    if (nametype == MONS_HYDRA
+    if (mons_species(nametype) == MONS_HYDRA
         && mon.number > 0 && desc != DESC_DBNAME)
     {
+        if (nametype == MONS_LERNAEAN_HYDRA)
+            result += "the ";
+
         if (mon.number < 11)
         {
             result += (mon.number ==  1) ? "one"   :
@@ -2083,8 +2090,13 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += "-headed ";
     }
 
-    // Add the base name.
-    result += get_monster_data(nametype)->name;
+    if (nametype == MONS_LERNAEAN_HYDRA)
+        result += "Lernaean hydra";
+    else
+    {
+        // Add the base name.
+        result += get_monster_data(nametype)->name;
+    }
 
     // Add suffixes.
     switch (mon.type)
@@ -3144,8 +3156,11 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_genus(mon_type) == MONS_MERMAID || mon_type == MONS_HARPY)
+    if (mons_genus(mon_type) == MONS_MERMAID || mon_type == MONS_HARPY
+        || mon_type == MONS_SPHINX)
+    {
         gender = GENDER_FEMALE;
+    }
     else if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST)
     {
         switch (mon_type)
@@ -3169,6 +3184,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
             gender = GENDER_FEMALE;
             break;
         case MONS_ROYAL_JELLY:
+        case MONS_LERNAEAN_HYDRA:
             gender = GENDER_NEUTER;
             break;
         default:
@@ -6025,7 +6041,7 @@ void monsters::load_spells(mon_spellbook_type book)
 
 bool monsters::has_hydra_multi_attack() const
 {
-    return (type == MONS_HYDRA
+    return (mons_species() == MONS_HYDRA
             || mons_is_zombified(this) && base_monster == MONS_HYDRA);
 }
 

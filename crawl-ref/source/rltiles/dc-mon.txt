@@ -321,6 +321,7 @@ death_drake MONS_DEATH_DRAKE
 ## Dragons ('D')
 %sdir dc-mon/unique
 xtahua MONS_XTAHUA
+lernaean_hydra MONS_LERNAEAN_HYDRA
 %sdir dc-mon
 wyvern MONS_WYVERN
 dragon MONS_DRAGON
@@ -443,6 +444,9 @@ skeleton_large MONS_SKELETON_LARGE
 simulacrum_large MONS_SIMULACRUM_LARGE
 
 ## Centaurs ('c')
+%sdir dc-mon/unique
+nessos MONS_NESSOS
+%sdir dc-mon
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
 centaur_warrior MONS_CENTAUR_WARRIOR

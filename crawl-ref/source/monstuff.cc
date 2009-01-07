@@ -1948,6 +1948,11 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
             name   = "shaped Royal Jelly";
             flags |= MF_NAME_SUFFIX;
         }
+        else if (monster->type == MONS_LERNAEAN_HYDRA)
+        {
+            name   = "shaped Lernaean hydra";
+            flags |= MF_NAME_SUFFIX;
+        }
 
         // "Blork the orc" and similar.
         const size_t the_pos = name.find(" the ");
@@ -8464,6 +8469,7 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
         case MONS_TROLL:
         case MONS_HYDRA:
         case MONS_KILLER_KLOWN:
+        case MONS_LERNAEAN_HYDRA:
             return (true);
         default:
             return (false);

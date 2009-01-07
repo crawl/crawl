@@ -3076,12 +3076,16 @@ bool melee_attack::chop_hydra_head( int dam,
             // Only living hydras get to regenerate heads.
             if (defender->holiness() == MH_NATURAL)
             {
+                unsigned int limit = 20;
+                if (def->type == MONS_LERNAEAN_HYDRA)
+                    limit = 27;
+
                 if (wpn_brand == SPWPN_FLAMING)
                 {
                     if (defender_visible)
                         mpr( "The flame cauterises the wound!" );
                 }
-                else if (def->number < 19)
+                else if (def->number < limit - 1)
                 {
                     simple_monster_message( def, " grows two more!" );
                     def->number += 2;

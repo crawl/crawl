@@ -1982,6 +1982,11 @@ _Nergalle_rare_
 @The_monster@ blows @possessive@ nose.
 ## END Nergalle ##
 %%%%
+# evil centaur, needs speech!
+Nessos
+
+__NONE
+%%%%
 # A skilled warrior looking for some fame.  More kills = more fame.
 Norbert
 

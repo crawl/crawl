@@ -3226,6 +3226,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
 // Doesn't include Polyphemus or Ilsuiw (only appear in the Shoals),
 // Murray (Hell), or Tiamat (Zot).
+// NOTE: The Lernaean hydra should *never* be randomly generated.
 static monster_type _choose_unique_by_depth(int step)
 {
     int ret;
@@ -3241,7 +3242,7 @@ static monster_type _choose_unique_by_depth(int step)
         break;
     case 2: // depth <= 9
         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
-                            MONS_EROLCHA, MONS_PRINCE_RIBBIT, -1);
+                            MONS_EROLCHA, MONS_PRINCE_RIBBIT, MONS_NESSOS, -1);
         break;
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,

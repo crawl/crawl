@@ -932,6 +932,10 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ORC_SORCERER; // TODO enne
     case MONS_SAINT_ROKA:
         return TILEP_MONS_ORC_WARLORD; // TODO enne
+    case MONS_NESSOS:
+        return TILEP_MONS_NESSOS;
+    case MONS_LERNAEAN_HYDRA:
+        return TILEP_MONS_LERNAEAN_HYDRA;
 
     // human uniques ('@')
     case MONS_TERENCE:

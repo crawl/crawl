@@ -3427,6 +3427,16 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             item.sub_type = WPN_LONGBOW;
         break;
 
+    case MONS_NESSOS:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_LONGBOW;
+        item.colour    = DARKGREY;
+        force_item     = true;
+        item.plus     += 1 + random2(3);
+        item.plus2    += 1 + random2(3);
+        break;
+
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
         item_race      = MAKE_ITEM_NO_RACE;
@@ -3752,6 +3762,8 @@ static void _give_ammo(monsters *mon, int level,
         // Master archers get double ammo - archery is their only attack.
         if (mon->type == MONS_DEEP_ELF_MASTER_ARCHER)
             mitm[thing_created].quantity *= 2;
+        else if (mon->type == MONS_NESSOS)
+            mitm[thing_created].special = SPMSL_POISONED;
 
         _give_monster_item(mon, thing_created);
     }
@@ -4185,6 +4197,13 @@ void give_armour(monsters *mon, int level)
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type = ARM_LEATHER_ARMOUR;
+        break;
+
+    case MONS_NESSOS:
+        item_race = MAKE_ITEM_NO_RACE;
+        mitm[bp].base_type = OBJ_ARMOUR;
+        mitm[bp].sub_type = ARM_CENTAUR_BARDING;
+        force_colour = DARKGRAY;
         break;
 
     default:

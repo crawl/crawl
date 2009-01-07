@@ -2001,9 +2001,11 @@ enum monster_type                      // (int) menv[].type
     MONS_PRINCE_RIBBIT,                // 455
     MONS_NERGALLE,
     MONS_SAINT_ROKA,
+    MONS_NESSOS,
+    MONS_LERNAEAN_HYDRA,
 
     // Testing monsters
-    MONS_TEST_SPAWNER,
+    MONS_TEST_SPAWNER,                 // 460
 
     NUM_MONSTERS,                      // used for polymorph
     RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
