@@ -709,6 +709,10 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
             return;
         }
 
+        // Don't equip the undead with holy items.
+        if (is_holy_item(item))
+            continue;
+
         mon_inv_type mslot;
 
         switch (item.base_type)
