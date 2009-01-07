@@ -5060,7 +5060,13 @@ void bolt::refine_for_explosion()
         name       = "ice storm";
         type       = dchar_glyph(DCHAR_FIRED_ZAP);
         colour     = WHITE;
-        ex_size          = 2 + (random2( ench_power ) > 75);
+        ex_size    = 2 + (random2(ench_power) > 75);
+    }
+
+    if (name == "stinking cloud")
+    {
+        seeMsg     = "The beam expands into a vile cloud!";
+        hearMsg    = "You hear a gentle \'poof\'.";
     }
 
     if (name == "ball of vapour")
@@ -5420,7 +5426,7 @@ bolt::bolt() : range(-2), type('*'),
                ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
                beam_source(MHITNOT), name(), short_name(), is_beam(false),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
-               aux_source(), affects_nothing(false), affects_items(false),
+               aux_source(), affects_nothing(false), affects_items(true),
                effect_known(true), draw_delay(15), obvious_effect(false),
                seen(false), path_taken(), range_used(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),

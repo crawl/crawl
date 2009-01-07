@@ -580,6 +580,7 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU;
     beem.is_beam     = false;
+    beem.is_explosion = true;
     beem.aux_source.clear();
 
     // Don't bother tracing if you're targetting yourself.
