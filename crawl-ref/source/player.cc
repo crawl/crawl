@@ -4283,6 +4283,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
     case AMU_CONTROLLED_FLIGHT:
         return (you.duration[DUR_CONTROLLED_FLIGHT]
                 || player_genus(GENPC_DRACONIAN)
+                || (you.species == SP_KENKU && you.experience_level >= 5)
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
     case AMU_CLARITY:
