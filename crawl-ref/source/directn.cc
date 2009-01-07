@@ -1524,7 +1524,7 @@ void direction(dist& moves, targeting_type restricts,
                 mesclr(true);   // Maybe not completely necessary.
 
             bool in_range = (range < 0
-                             || grid_distance(moves.target, you.pos()) < range);
+                             || grid_distance(moves.target,you.pos()) <= range);
             terse_describe_square(moves.target, in_range);
         }
 
