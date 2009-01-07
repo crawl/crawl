@@ -560,10 +560,8 @@ static std::string _describe_monsters(const counted_monster_list &list)
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
-void cast_toxic_radiance(void)
+void cast_toxic_radiance()
 {
-    struct monsters *monster;
-
     mpr("You radiate a sickly green light!");
 
     you.flash_colour = GREEN;
@@ -584,12 +582,11 @@ void cast_toxic_radiance(void)
 
     counted_monster_list affected_monsters;
     // determine which monsters are hit by the radiance: {dlb}
-    for (int toxy = 0; toxy < MAX_MONSTERS; toxy++)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        monster = &menv[toxy];
+        monsters* const monster = &menv[i];
 
-        if (monster->type != -1 && mons_near(monster)
-            && !monster->submerged())
+        if (monster->alive() && mons_near(monster) && !monster->submerged())
         {
             // Monsters affected by corona are still invisible in that
             // radiation passes through them without affecting them. Therefore,
@@ -663,7 +660,7 @@ void cast_refrigeration(int pow)
     for (int i = 0; i < MAX_MONSTERS; i++)
     {
         const monsters* const monster = &menv[i];
-        if (monster->alive() && mons_near(monster))
+        if (monster->alive() && you.can_see(monster))
             _record_monster_by_name(affected_monsters, monster);
     }
 
