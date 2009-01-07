@@ -1209,7 +1209,7 @@ WARN:Your equipment suddenly seems to weigh more.
 
 __YOU_RESIST
 
-WARN:Suddenly you are surrounded with a pale green light.
+WARN:Suddenly you are surrounded with a pale green light. @player_only@
 
 WARN:You have a terrible headache.
 
