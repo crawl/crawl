@@ -2106,8 +2106,8 @@ int tileidx_item(const item_def &item)
     case OBJ_BOOKS:
         if (is_random_artefact(item))
         {
-            // TODO enne - need artefact book tiles...
-            special = special % 70;
+            int offset = special % tile_main_count(TILE_BOOK_RANDART_OFFSET);
+            return TILE_BOOK_RANDART_OFFSET + offset;
         }
 
         switch (special % 10)
