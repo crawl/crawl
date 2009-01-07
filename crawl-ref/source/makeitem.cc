@@ -4201,9 +4201,9 @@ void give_armour(monsters *mon, int level)
 
     case MONS_NESSOS:
         item_race = MAKE_ITEM_NO_RACE;
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_CENTAUR_BARDING;
-        force_colour = DARKGRAY;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_CENTAUR_BARDING;
+        force_colour = DARKGREY;
         break;
 
     default:
