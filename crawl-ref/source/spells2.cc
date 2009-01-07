@@ -690,6 +690,9 @@ void cast_refrigeration(int pow)
     for (int i = 0; i < MAX_MONSTERS; i++)
     {
         monsters* const monster = &menv[i];
+        // Note that we *do* hurt monsters which you can't see
+        // (submerged, invisible) even though you get no information
+        // about it.
         if (monster->alive() && mons_near(monster))
         {
             // Calculate damage and apply.
