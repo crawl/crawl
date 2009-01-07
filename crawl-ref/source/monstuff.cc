@@ -366,11 +366,8 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
 
 static void _place_monster_corpse(const monsters *monster, bool silent)
 {
-    int o = get_item_slot();
-    if (o == NON_ITEM)
-        return;
-
-    const int corpse_class = fill_out_corpse(monster, mitm[o]);
+    item_def corpse;
+    const int corpse_class = fill_out_corpse(monster, corpse);
 
     // Don't place a corpse?  If a zombified monster is somehow capable
     // of leaving a corpse then always place it.
@@ -380,10 +377,15 @@ static void _place_monster_corpse(const monsters *monster, bool silent)
 
     if (grid_destroys_items(grd(monster->pos())))
     {
-        item_was_destroyed(mitm[o]);
-        mitm[o].base_type = OBJ_UNASSIGNED;
+        item_was_destroyed(corpse);
         return;
     }
+
+    int o = get_item_slot();
+    if (o == NON_ITEM)
+        return;
+    mitm[o] = corpse;
+
     origin_set_monster(mitm[o], monster);
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack).
@@ -1632,6 +1634,21 @@ void monster_die(monsters *monster, killer_type killer,
     const coord_def mwhere = monster->pos();
     if (drop_items)
         monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
+    else
+    {
+        // Destroy the items belonging to MF_HARD_RESET monsters so they
+        // don't clutter up mitm[]
+        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        {
+            int item = monster->inv[i];
+
+            if (item != NON_ITEM)
+            {
+                destroy_item(item);
+                monster->inv[i] = NON_ITEM;
+            }
+        }
+    }
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.

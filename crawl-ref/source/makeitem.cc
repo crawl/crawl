@@ -3023,13 +3023,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                            bool melee_only = false,
                                            bool give_aux_melee = true)
 {
-    const int bp = get_item_slot();
     bool force_item = false;
 
-    if (bp == NON_ITEM)
-        return (MAKE_ITEM_RANDOM_RACE);
-
-    item_def &item = mitm[bp];
+    item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
 
     item.base_type = OBJ_UNASSIGNED;
@@ -3672,9 +3668,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     if (item.base_type == OBJ_UNASSIGNED)
         return (item_race);
 
-    item.pos.reset();
-    item.link = NON_ITEM;
-
     if (!force_item && mons_is_unique( mon->type ))
     {
         if (x_chance_in_y(10 + mon->hit_dice, 100))
@@ -3690,11 +3683,16 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     // force_item is set... otherwise we're just going to take the
     // base and subtypes and create a new item. -- bwr
     const int thing_created =
-        ((force_item) ? bp : items( 0, xitc, xitt, true,
-                                    level, item_race) );
+        ((force_item) ? get_item_slot() : items( 0, xitc, xitt, true,
+                                                 level, item_race) );
 
     if (thing_created == NON_ITEM)
         return (item_race);
+
+    // Copy temporary item into the item array if were forcing it, since
+    // items() won't have done it for us.
+    if (force_item)
+        mitm[thing_created] = item;
 
     item_def &i = mitm[thing_created];
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
@@ -3973,23 +3971,21 @@ void give_shield(monsters *mon, int level)
 
 void give_armour(monsters *mon, int level)
 {
-    const int bp = get_item_slot();
-    if (bp == NON_ITEM)
-        return;
-
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
 
     int force_colour = 0; //mv: important !!! Items with force_colour = 0
                          //are colored defaultly after following
                          //switch. Others will get force_colour.
 
+    item_def item;
+
     switch (mon->type)
     {
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
         item_race = MAKE_ITEM_ELVEN;
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_LEATHER_ARMOUR;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_LEATHER_ARMOUR;
         break;
 
     case MONS_DEEP_ELF_ANNIHILATOR:
@@ -4025,7 +4021,7 @@ void give_armour(monsters *mon, int level)
     case MONS_TERENCE:
         if (x_chance_in_y(2, 5))
         {
-            mitm[bp].base_type = OBJ_ARMOUR;
+            item.base_type = OBJ_ARMOUR;
 
             switch (random2(8))
             {
@@ -4033,17 +4029,17 @@ void give_armour(monsters *mon, int level)
             case 1:
             case 2:
             case 3:
-                mitm[bp].sub_type = ARM_LEATHER_ARMOUR;
+                item.sub_type = ARM_LEATHER_ARMOUR;
                 break;
             case 4:
             case 5:
-                mitm[bp].sub_type = ARM_RING_MAIL;
+                item.sub_type = ARM_RING_MAIL;
                 break;
             case 6:
-                mitm[bp].sub_type = ARM_SCALE_MAIL;
+                item.sub_type = ARM_SCALE_MAIL;
                 break;
             case 7:
-                mitm[bp].sub_type = ARM_CHAIN_MAIL;
+                item.sub_type = ARM_CHAIN_MAIL;
                 break;
             }
         }
@@ -4056,8 +4052,8 @@ void give_armour(monsters *mon, int level)
     case MONS_RUPERT:
     case MONS_URUG:
     case MONS_WAYNE:
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_LEATHER_ARMOUR + random2(4);
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_LEATHER_ARMOUR + random2(4);
         break;
 
     case MONS_ORC_WARLORD:
@@ -4078,16 +4074,16 @@ void give_armour(monsters *mon, int level)
     case MONS_MAUD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAULT_GUARD:
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_CHAIN_MAIL + random2(4);
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_CHAIN_MAIL + random2(4);
         break;
 
     case MONS_ANGEL:
     case MONS_SIGMUND:
     case MONS_WIGHT:
         item_race = MAKE_ITEM_NO_RACE;
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_ROBE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_ROBE;
         force_colour = WHITE; //mv: always white
         break;
 
@@ -4102,8 +4098,8 @@ void give_armour(monsters *mon, int level)
                             mon->type == MONS_YAKTAUR              ?  300
                          /* mon->type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
         {
-            mitm[bp].base_type = OBJ_ARMOUR;
-            mitm[bp].sub_type  = ARM_CENTAUR_BARDING;
+            item.base_type = OBJ_ARMOUR;
+            item.sub_type  = ARM_CENTAUR_BARDING;
         }
         else
             return;
@@ -4119,13 +4115,13 @@ void give_armour(monsters *mon, int level)
                             mon->type == MONS_NAGA_MAGE    ?  200
                                                            :  100 ))
         {
-            mitm[bp].base_type = OBJ_ARMOUR;
-            mitm[bp].sub_type  = ARM_NAGA_BARDING;
+            item.base_type = OBJ_ARMOUR;
+            item.sub_type  = ARM_NAGA_BARDING;
         }
         else if (mon->type == MONS_GREATER_NAGA || one_chance_in(3))
         {
-            mitm[bp].base_type = OBJ_ARMOUR;
-            mitm[bp].sub_type  = ARM_ROBE;
+            item.base_type = OBJ_ARMOUR;
+            item.sub_type  = ARM_ROBE;
         }
         else
             return;
@@ -4154,22 +4150,22 @@ void give_armour(monsters *mon, int level)
     case MONS_WIZARD:
     case MONS_ILSUIW:
         item_race = MAKE_ITEM_NO_RACE;
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_ROBE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_ROBE;
         break;
 
     case MONS_TIAMAT:
         item_race = MAKE_ITEM_NO_RACE;
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_GOLD_DRAGON_ARMOUR;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_GOLD_DRAGON_ARMOUR;
         break;
 
     case MONS_ORC_WIZARD:
     case MONS_BLORK_THE_ORC:
     case MONS_NERGALLE:
         item_race = MAKE_ITEM_ORCISH;
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_ROBE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_ROBE;
         break;
 
     case MONS_BORIS:
@@ -4180,23 +4176,23 @@ void give_armour(monsters *mon, int level)
     case MONS_FRANCIS:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_ROBE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_ROBE;
         force_colour = DARKGREY; //mv: always darkgrey
         break;
 
     case MONS_EUSTACHIO:
         item_race = MAKE_ITEM_NO_RACE;
-        mitm[bp].base_type = OBJ_ARMOUR;
-        mitm[bp].sub_type = ARM_LEATHER_ARMOUR;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_LEATHER_ARMOUR;
         break;
 
     default:
         return;
     }
 
-    const object_class_type xitc = mitm[bp].base_type;
-    const int xitt = mitm[bp].sub_type;
+    const object_class_type xitc = item.base_type;
+    const int xitt = item.sub_type;
 
     if (mons_is_unique( mon->type ) && level != MAKE_GOOD_ITEM)
     {
