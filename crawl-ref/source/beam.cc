@@ -268,7 +268,15 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
 
+    // Save range before overriding it
+    const int old_range = pbolt.range;
+    if (range)
+        pbolt.range = range;
+
     pbolt.fire();
+
+    if (range)
+        pbolt.range = old_range;
 
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.

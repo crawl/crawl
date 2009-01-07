@@ -1055,6 +1055,26 @@ static bool _activate_talent(const talent& tal)
     return (success);
 }
 
+int _calc_breath_ability_range(ability_type ability)
+{
+    // Following monster draconian abilities.
+    switch (ability)
+    {
+    case ABIL_BREATHE_FIRE:         return 6;
+    case ABIL_BREATHE_FROST:        return 6;
+    case ABIL_BREATHE_POISON:       return 7;
+    case ABIL_BREATHE_LIGHTNING:    return 8;
+    case ABIL_SPIT_ACID:            return 8;
+    case ABIL_BREATHE_POWER:        return 8;
+    case ABIL_BREATHE_STICKY_FLAME: return 5;
+    case ABIL_BREATHE_STEAM:        return 7;
+    default:
+        ASSERT("Bad breath type!");
+        break;
+    }
+    return (-2);
+}
+
 static bool _do_ability(const ability_def& abil)
 {
     int power;
@@ -1087,11 +1107,17 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_DELAYED_FIREBALL:
-        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY))
-            return (false);
+        {
+            // Note: power level of ball calculated at release -- bwr
+            const int pow = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
+            const int fake_range = spell_range(SPELL_FIREBALL, pow, false);
 
-        // Note: power level of ball calculated at release -- bwr
-        fireball(calc_spell_power( SPELL_DELAYED_FIREBALL, true ), beam);
+            if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY, fake_range))
+                return (false);
+
+            beam.range = spell_range(SPELL_FIREBALL, pow, true);
+            fireball(pow, beam);
+        }
 
         // only one allowed since this is instantaneous -- bwr
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
@@ -1108,6 +1134,7 @@ static bool _do_ability(const ability_def& abil)
         const int pow = you.experience_level
                         + player_mutation_level(MUT_SPIT_POISON) * 5
                         + (you.species == SP_NAGA) * 10;
+        beam.range = 6;         // following Venom Bolt
 
         if (!spell_direction(abild, beam)
             || !player_tracer(ZAP_SPIT_POISON, pow, beam))
@@ -1117,7 +1144,6 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             zapping(ZAP_SPIT_POISON, pow, beam);
-
             you.duration[DUR_BREATH_WEAPON] = 3 + random2(5);
         }
         break;
@@ -1169,14 +1195,17 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
-        if (you.duration[DUR_BREATH_WEAPON]
-            && abil.ability != ABIL_SPIT_ACID)
+        if (you.duration[DUR_BREATH_WEAPON] && abil.ability != ABIL_SPIT_ACID)
         {
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
         }
-        else if (!spell_direction(abild, beam))
-            return (false);
+        else
+        {
+            beam.range = _calc_breath_ability_range(abil.ability);
+            if (!spell_direction(abild, beam, DIR_NONE, TARG_ENEMY, beam.range))
+                return (false);
+        }
 
         switch (abil.ability)
         {
@@ -1351,6 +1380,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CONTROL_DEMON:
+        beam.range = LOS_RADIUS;
         if (!spell_direction(abild, beam)
             || !zapping(ZAP_CONTROL_DEMON, you.experience_level * 5, beam,
                         true))
@@ -1376,7 +1406,9 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_THROW_FLAME:
     case ABIL_THROW_FROST:
-        if (!spell_direction(abild, beam))
+        // Taking ranges from the equivalent spells.
+        beam.range = (abil.ability == ABIL_THROW_FLAME ? 7 : 8);
+        if (!spell_direction(abild, beam, DIR_NONE, TARG_ENEMY, beam.range))
             return (false);
 
         if (!zapping((abil.ability == ABIL_THROW_FLAME ? ZAP_FLAME : ZAP_FROST),
@@ -1387,7 +1419,9 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_BOLT_OF_DRAINING:
-        if (!spell_direction(abild, beam))
+        // Taking range from Bolt of Draining.
+        beam.range = 6;
+        if (!spell_direction(abild, beam, DIR_NONE, TARG_ENEMY, beam.range))
             return (false);
 
         if (!zapping(ZAP_NEGATIVE_ENERGY, you.experience_level * 6, beam, true))
@@ -1469,7 +1503,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-        if (!spell_direction(spd, beam))
+        beam.range = 8;
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY, beam.range))
             return (false);
 
         if (!zapping(ZAP_CLEANSING_FLAME, 20 + you.skills[SK_INVOCATIONS] * 6,
@@ -1493,7 +1528,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_KIKU_ENSLAVE_UNDEAD:
     {
         god_acting gdact;
-
+        beam.range = 8;
         if (!spell_direction(spd, beam))
             return (false);
 
@@ -1545,7 +1580,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     {
         god_acting gdact;
-
+        beam.range = 8;
         if (!spell_direction(spd, beam))
             return (false);
 
@@ -1577,7 +1612,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        if (!spell_direction(spd, beam))
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY, 8))
             return (false);
 
         power = you.skills[SK_INVOCATIONS]
@@ -1591,11 +1626,11 @@ static bool _do_ability(const ability_def& abil)
 
         switch (random2(5))
         {
-        case 0: zapping( ZAP_FLAME,        power,     beam ); break;
-        case 1: zapping( ZAP_PAIN,         power,     beam ); break;
-        case 2: zapping( ZAP_STONE_ARROW,  power,     beam ); break;
-        case 3: zapping( ZAP_ELECTRICITY,  power,     beam ); break;
-        case 4: zapping( ZAP_BREATHE_ACID, power / 2, beam ); break;
+        case 0: beam.range =  7; zapping(ZAP_FLAME, power, beam); break;
+        case 1: beam.range =  8; zapping(ZAP_PAIN,  power, beam); break;
+        case 2: beam.range =  5; zapping(ZAP_STONE_ARROW, power, beam); break;
+        case 3: beam.range = 13; zapping(ZAP_ELECTRICITY, power, beam); break;
+        case 4: beam.range = 8; zapping(ZAP_BREATHE_ACID, power/2, beam); break;
         }
 
         exercise(SK_INVOCATIONS, 1);
@@ -1620,15 +1655,19 @@ static bool _do_ability(const ability_def& abil)
         if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 20))
             return (false);
 
-        switch (random2(7))
         {
-        case 0: zapping( ZAP_FIRE,               power, beam ); break;
-        case 1: zapping( ZAP_FIREBALL,           power, beam ); break;
-        case 2: zapping( ZAP_LIGHTNING,          power, beam ); break;
-        case 3: zapping( ZAP_NEGATIVE_ENERGY,    power, beam ); break;
-        case 4: zapping( ZAP_STICKY_FLAME,       power, beam ); break;
-        case 5: zapping( ZAP_IRON_BOLT,          power, beam ); break;
-        case 6: zapping( ZAP_ORB_OF_ELECTRICITY, power, beam ); break;
+            zap_type ztype = ZAP_DEBUGGING_RAY;
+            switch (random2(7))
+            {
+            case 0: beam.range = 6;  ztype = ZAP_FIRE;               break;
+            case 1: beam.range = 6;  ztype = ZAP_FIREBALL;           break;
+            case 2: beam.range = 10; ztype = ZAP_LIGHTNING;          break;
+            case 3: beam.range = 5;  ztype = ZAP_STICKY_FLAME;       break;
+            case 4: beam.range = 5;  ztype = ZAP_IRON_BOLT;          break;
+            case 5: beam.range = 6;  ztype = ZAP_NEGATIVE_ENERGY;    break;
+            case 6: beam.range = 20; ztype = ZAP_ORB_OF_ELECTRICITY; break;
+            }
+            zapping(ztype, power, beam);
         }
 
         exercise(SK_INVOCATIONS, 3 + random2(5));
@@ -1734,6 +1773,7 @@ static bool _do_ability(const ability_def& abil)
             mpr("You cannot banish yourself!");
             return (false);
         }
+        beam.range = 8;
         if (!zapping(ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
                      true))
         {
