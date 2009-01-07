@@ -959,6 +959,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
             }
         }
     }
+
     if (actual && number_seen > 0)
         mpr("The dead are walking!");
 
