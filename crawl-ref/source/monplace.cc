@@ -1003,6 +1003,12 @@ static int _place_monster_aux(const mgen_data &mg,
 
     ASSERT(mgrd(fpos) == NON_MONSTER);
 
+    if (crawl_state.arena)
+    {
+        if (arena_veto_place_monster(mg, first_band_member, fpos))
+            return (-1);
+    }
+
     // Now, actually create the monster. (Wheeee!)
     menv[id].type         = mg.cls;
     menv[id].base_monster = mg.base_type;
@@ -2041,6 +2047,9 @@ static int _ood_limit()
 
 void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 {
+    if (crawl_state.arena)
+        return;
+
     bool interesting = false;
 
     // Unique monsters are always intersting

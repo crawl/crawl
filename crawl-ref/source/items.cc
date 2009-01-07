@@ -26,6 +26,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "arena.h"
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
@@ -60,6 +61,7 @@ REVISION("$Rev$");
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "stash.h"
 #include "tiles.h"
@@ -323,6 +325,9 @@ int get_item_slot( int reserve )
 {
     ASSERT( reserve >= 0 );
 
+    if (crawl_state.arena)
+        reserve = 0;
+
     int item = NON_ITEM;
 
     for (item = 0; item < (MAX_ITEMS - reserve); item++)
@@ -331,7 +336,16 @@ int get_item_slot( int reserve )
 
     if (item >= MAX_ITEMS - reserve)
     {
-        item = (reserve <= 10) ? _cull_items() : NON_ITEM;
+        if (crawl_state.arena)
+        {
+            item = arena_cull_items();
+            // If arena_cull_items() can't free up any space then
+            // _cull_items() won't be able to either, so give up.
+            if (item == NON_ITEM)
+                return (NON_ITEM);
+        }
+        else
+            item = (reserve <= 10) ? _cull_items() : NON_ITEM;
 
         if (item == NON_ITEM)
             return (NON_ITEM);

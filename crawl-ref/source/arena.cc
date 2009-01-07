@@ -16,7 +16,9 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "monstuff.h"
 #include "monplace.h"
+#include "mstuff2.h"
 #include "output.h"
+#include "randart.h"
 #include "skills2.h"
 #include "spl-util.h"
 #include "state.h"
@@ -69,11 +71,16 @@ namespace arena
     bool allow_chain_summons = true;
     bool allow_zero_xp       = false;
     bool allow_immobile      = true;
+    bool allow_bands         = true;
     bool name_monsters       = false;
     bool random_uniques      = false;
     bool real_summons        = false;
+    bool do_move_spawners    = false;
 
     std::vector<int> uniques_list;
+    std::vector<int> spawner_list;
+
+    bool banned_glyphs[256];
 
     std::string arena_type = "";
     faction faction_a(true);
@@ -189,6 +196,8 @@ namespace arena
 
     void setup_level()
     {
+        spawner_list.clear();
+
         if (place.is_valid())
         {
             you.level_type    = place.level_type;
@@ -271,8 +280,10 @@ namespace arena
 
         allow_summons    = !strip_tag(spec, "no_summons");
         allow_immobile   = !strip_tag(spec, "no_immobile");
+        allow_bands      = !strip_tag(spec, "no_bands");
         allow_zero_xp    =  strip_tag(spec, "allow_zero_xp");
         real_summons     =  strip_tag(spec, "real_summons");
+        do_move_spawners =  strip_tag(spec, "move_spawners");
 
         cycle_random   = strip_tag(spec, "cycle_random");
         name_monsters  = strip_tag(spec, "names");
@@ -311,6 +322,10 @@ namespace arena
                 throw (std::string("Can't set arena place to a portal "
                                    "vault."));
         }
+
+        std::string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
+        for (unsigned int i = 0; i < glyphs.size(); i++)
+            banned_glyphs[(int)glyphs[i]] = true;
 
         std::vector<std::string> factions = split_string(" v ", spec);
 
@@ -513,7 +528,7 @@ namespace arena
                 faction_a.won = false;
             }
         }
-    } // count_foes()
+    }
 
     // Returns true as long as at least one member of each faction is alive.
     bool fight_is_on()
@@ -593,6 +608,7 @@ namespace arena
             switch(chan)
             {
                 case MSGCH_ERROR: prefix = "ERROR: "; break;
+                case MSGCH_WARN: prefix = "WARN: "; break;
                 case MSGCH_DIAGNOSTICS: prefix = "DIAG: "; break;
                 case MSGCH_SOUND: prefix = "SOUND: "; break;
 
@@ -602,6 +618,24 @@ namespace arena
             msg = prefix + msg;
 
             fprintf(file, "%s\n", msg.c_str());
+        }
+    }
+
+    // Move test spawners to a new position every turn to scatter each
+    // faction all over the arena.
+    void move_spawners()
+    {
+        if (!do_move_spawners)
+            return;
+
+        for (unsigned int i = 0; i < spawner_list.size(); i++)
+        {
+            monsters* mon = &menv[spawner_list[i]];
+
+            if (!mon->alive() || mon->type != MONS_TEST_SPAWNER)
+                continue;
+
+            monster_teleport(mon, true, true);
         }
     }
 
@@ -625,6 +659,10 @@ namespace arena
                     }
                 }
 
+#ifdef DEBUG_DIAGNOSTICS
+                mprf("---- Turn #%d ----", turns);
+#endif
+
                 // Check the consistency of our book-keeping every 100 turns.
                 if ((turns++ % 100) == 0)
                     count_foes();
@@ -638,6 +676,7 @@ namespace arena
                 you.hunger = 10999;
                 //report_foes();
                 world_reacts();
+                move_spawners();
                 delay(Options.arena_delay);
                 mesclr();
                 dump_messages();
@@ -847,6 +886,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
         monster_type type = (monster_type) uniques[random2(uniques.size())];
         you.unique_creatures[type] = false;
+
         return (type);
     }
 
@@ -881,9 +921,19 @@ bool arena_veto_random_monster(monster_type type)
         return (true);
     if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
         return (true);
+    if (arena::banned_glyphs[mons_char(type)])
+        return (true);
 
     return (false);
 }
+
+bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
+                              const coord_def& pos)
+{
+    return (!arena::allow_bands && !first_band_member
+            || arena::banned_glyphs[mons_char(mg.cls)]);
+}
+
 
 void arena_placed_monster(monsters *monster, const mgen_data &mg,
                           bool first_band_member)
@@ -892,6 +942,13 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
         arena::faction_a.active_members++;
     else if (monster->attitude == ATT_HOSTILE)
         arena::faction_b.active_members++;
+
+    if (monster->type == MONS_TEST_SPAWNER)
+        arena::spawner_list.push_back(monster->mindex());
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf("%s enters the arena!", monster->name(DESC_CAP_A).c_str());
+#endif
 
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
     {
@@ -939,39 +996,212 @@ void arena_monster_died(monsters *monster, killer_type killer,
     else if (monster->attitude == ATT_HOSTILE)
         arena::faction_b.active_members--;
 
-    const monsters* atk =
-        (invalid_monster_index(killer_index) || menv[killer_index].type == -1)
-        ? NULL : &menv[killer_index];
-
-    if (atk && atk->alive())
+    if (arena::faction_a.active_members > 0
+        && arena::faction_b.active_members <= 0)
     {
-        if (arena::faction_a.active_members > 0
-            && arena::faction_b.active_members <= 0)
-        {
-            arena::faction_a.won = true;
-        }
-        else if (arena::faction_b.active_members > 0
-                 && arena::faction_a.active_members <= 0)
-        {
-            arena::faction_b.won = true;
-        }
+        arena::faction_a.won = true;
     }
-    // If all monsters are dead and the last one to die is a giant spore
-    // or ball lightning then that monster's faction is the winner,
-    // since self destruction is their purpose.  But if a trap causes
-    // the spore to explode and that kills everything it's a tie since
-    // it counts as the trap killing everyone.
-    else if (arena::faction_a.active_members <= 0
-             && arena::faction_b.active_members <= 0
-             && mons_self_destructs(monster)
-             && MON_KILL(killer))
+    else if (arena::faction_b.active_members > 0
+             && arena::faction_a.active_members <= 0)
     {
-        if (monster->attitude == ATT_FRIENDLY)
-            arena::faction_a.won = true;
-        else if (monster->attitude == ATT_HOSTILE)
-            arena::faction_b.won = true;
+        arena::faction_b.won = true;
+    }
+    // Everyone is dead.  Is it a tie, or something else?
+    else if (arena::faction_a.active_members <= 0
+             && arena::faction_b.active_members <= 0)
+    {
+        if (monster->flags & MF_HARD_RESET && !MON_KILL(killer))
+        {
+            end(1, false, "Last arena monster was dismissed.");
+        }
+        // If all monsters are dead and the last one to die is a giant spore
+        // or ball lightning then that monster's faction is the winner,
+        // since self destruction is their purpose.  But if a trap causes
+        // the spore to explode and that kills everything it's a tie since
+        // it counts as the trap killing everyone.
+        else if (mons_self_destructs(monster) && MON_KILL(killer))
+        {
+            if (monster->attitude == ATT_FRIENDLY)
+                arena::faction_a.won = true;
+            else if (monster->attitude == ATT_HOSTILE)
+                arena::faction_b.won = true;
+        }
     }
 }
+
+static bool _sort_corpses(int a, int b)
+{
+    return (mitm[a].special < mitm[b].special);
+}
+
+#define DESTROY_ITEM(i) \
+{ \
+    destroy_item(i, true); \
+    cull_count++; \
+    if (first_avail == NON_ITEM) \
+        first_avail = i; \
+}
+
+int arena_cull_items()
+{
+    // Try to cull 15% of items.
+    const int cull_target = MAX_ITEMS * 15 / 100;
+
+    int cull_count      = 0;
+
+    std::vector<int> artefacts;
+    std::vector<int> egos;
+    std::vector<int> ammo;
+    std::vector<int> wands;
+    std::vector<int> potions;
+    std::vector<int> scrolls;
+    std::vector<int> corpses;
+
+    int first_avail = NON_ITEM;
+
+#ifdef DEBUG_DIAGNOSTICS
+    int non_floor_items = 0;
+#endif
+
+    for (int i = 0; i < MAX_ITEMS; i++)
+    {
+        // All items in mitm[] are valid when we're called.
+        const item_def &item(mitm[i]);
+
+#ifdef DEBUG_DIAGNOSTICS
+        if (!is_valid_item(item))
+        {
+            mprf("Invalid item in arena_cull_items()!!", MSGCH_ERROR);
+            non_floor_items++;
+            continue;
+        }
+#endif
+
+        // We want floor items.
+        if (!in_bounds(item.pos))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            if (item.pos == coord_def(-1, -1))
+                mprf("Player item in arena_cull_items()!!", MSGCH_ERROR);
+            non_floor_items++;
+#endif
+            continue;
+        }
+
+        bool cull = false;
+        switch(item.base_type)
+        {
+        case OBJ_WEAPONS:
+        case OBJ_ARMOUR:
+            if (is_artefact(item))
+                artefacts.push_back(i);
+            else if (item.special != 0)
+                egos.push_back(i);
+            else
+                // Always cull boring equipment.
+                cull = true;
+            break;
+
+        case OBJ_MISSILES:
+            if (item.sub_type == MI_JAVELIN
+                || item.sub_type == MI_THROWING_NET)
+            {
+                ammo.push_back(i);
+            }
+            else
+                // Arrows/needles/etc on the floor are just clutter.
+                cull = true;
+            break;
+
+        case OBJ_WANDS:
+            if (item.plus == 0)
+                // Get rid of empty wands.
+                cull = true;
+            else
+                wands.push_back(i);
+            break;
+
+        case OBJ_SCROLLS:
+            scrolls.push_back(i);
+            break;
+
+        case OBJ_POTIONS:
+            potions.push_back(i);
+            break;
+
+        case OBJ_CORPSES:
+            if (item.sub_type == CORPSE_SKELETON)
+                // If it's rotted away into a skeleton then there's no one
+                // around who can uses corpses.
+                cull = true;
+            else
+                corpses.push_back(i);
+            break;
+
+        default:
+            // Get rid of everything else.
+            cull = true;
+        } // switch(item.base_type)
+
+        if (cull)
+            DESTROY_ITEM(i);
+    } // for (int i = 0; i < MAX_ITEMS; i++)
+
+    if (cull_count >= cull_target)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Arena culled %d misc items, done.",
+                                 cull_count);
+#endif
+        return (first_avail);
+    }
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (cull_count > 0)
+        mprf(MSGCH_DIAGNOSTICS, "Arena culled %d misc items.", cull_count);
+#endif
+
+    // Get rid of oldest corpses first.
+    std::sort(corpses.begin(), corpses.end(), _sort_corpses);
+
+    std::vector<int>* lists[] = {&corpses, &ammo, &egos, &potions,
+                                 &scrolls, &wands, &artefacts, NULL};
+
+#ifdef DEBUG_DIAGNOSTICS
+    const char* list_names[] = {"corpses", "ammo", "egos", "potions",
+                                "scrolls", "wands", "artefacts"};
+#endif
+
+    for (int i = 0; lists[i] != NULL; i++)
+    {
+        std::vector<int>* vec = lists[i];
+
+        for (unsigned int j = 0; j < vec->size(); j++)
+        {
+            DESTROY_ITEM((*vec)[j]);
+            if (cull_count >= cull_target)
+            {
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS, "Arena culled %d %s, done.", j + 1,
+                     list_names[i]);
+#endif
+                return (first_avail);
+            }
+        } // for (unsigned int j = 0; j < vec->size(); j++)
+#ifdef DEBUG_DIAGNOSTICS
+        if (vec->size() > 0)
+            mprf(MSGCH_DIAGNOSTICS, "Arena culled %d %s.", vec->size(),
+                 list_names[i]);
+#endif
+    } // for (int i = 0; lists[i] != NULL; i++)
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Arena only culled %d of a desired %d items.",
+         cull_count, cull_target);
+#endif // DEBUG_DIAGNOSTICS
+
+    return (first_avail);
+} // arena_cull_items
 
 /////////////////////////////////////////////////////////////////////////////
 
