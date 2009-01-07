@@ -1653,7 +1653,7 @@ void zap_los_monsters()
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
-        // player sees nothings.
+        // player sees nothing.
         monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
 }
