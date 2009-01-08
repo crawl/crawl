@@ -8642,7 +8642,7 @@ void seen_monster(monsters *monster)
 // the monster was moved.
 //
 //---------------------------------------------------------------
-bool shift_monster( monsters *mon, coord_def p )
+bool shift_monster(monsters *mon, coord_def p)
 {
     coord_def result;
 
