@@ -316,8 +316,8 @@ void follower::restore_mons_items(monsters &m)
 
             item_def &it = mitm[islot];
             it = items[i];
-            it.pos.reset();
-            it.link = NON_ITEM;
+            it.pos.set(-2, -2);
+            it.link = NON_ITEM + 1 + m.mindex();
         }
     }
 }

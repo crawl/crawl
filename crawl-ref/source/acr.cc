@@ -1165,7 +1165,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         for (int i = 0; i < MAX_ITEMS; i++)
         {
             item_def &item(mitm[i]);
-            if (!is_valid_item(item) || item.pos.x == 0 || item.pos.y == 0)
+            if (!is_valid_item(item) || held_by_monster(item))
                 continue;
 
             if (item.link != NON_ITEM)

@@ -1767,11 +1767,11 @@ void marshallItem(writer &th, const item_def &item)
     marshallShort(th, item.pos.y);
     marshallLong(th, item.flags);
 
-    marshallShort(th, item.link);                //  unused
-    if (item.pos.x == -1 && item.pos.y == -1)
-        marshallShort(th, -1); // unused
-    else
+    marshallShort(th, item.link);
+    if (item.pos.x >= 0 && item.pos.y >= 0)
         marshallShort(th, igrd(item.pos));  //  unused
+    else
+        marshallShort(th, -1); // unused
 
     marshallByte(th, item.slot);
 
@@ -1794,8 +1794,8 @@ void unmarshallItem(reader &th, item_def &item)
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
     item.flags       = (unsigned long) unmarshallLong(th);
+    item.link        = unmarshallShort(th);
 
-    unmarshallShort(th);  // mitm[].link -- unused
     unmarshallShort(th);  // igrd[item.x][item.y] -- unused
 
     item.slot        = unmarshallByte(th);

@@ -813,11 +813,8 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
         if (mon->inv[mslot] != NON_ITEM)
             return;
 
-        unlink_item(objl);
-        mon->inv[mslot] = objl;
-
-        if (mslot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
-            mon->equip(item, mslot, 0);
+        unwind_var<int> save_speedinc(mon->speed_increment);
+        mon->pickup_item(mitm[objl], false, true);
     } // while
 }
 

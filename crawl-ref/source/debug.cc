@@ -2117,7 +2117,7 @@ void debug_item_scan( void )
     {
         for (int y = 0; y < GYM; y++)
         {
-            // These are unlinked monster inventory items -- skip them:
+            // Unlinked temporary items.
             if (x == 0 && y == 0)
                 continue;
 
@@ -2162,8 +2162,21 @@ void debug_item_scan( void )
 
         strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
 
-        // Don't check (-1,-1) player items or (0,0) monster items
-        if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
+        const monsters* mon = holding_monster(mitm[i]); 
+
+        // Don't check (-1,-1) player items or (-2, -2) monstert items
+        // (except to make sure that the monster is alive).
+        if (mitm[i].pos.origin())
+        {
+            mpr( "Unlinked temporary item:", MSGCH_ERROR );
+            _dump_item( name, i, mitm[i] );
+        }
+        else if (mon != NULL && !mon->type == -1)
+        {
+            mpr( "Unlinked item held by dead monster:", MSGCH_ERROR );
+            _dump_item( name, i, mitm[i] );
+        }
+        else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
         {
             mpr( "Unlinked item:", MSGCH_ERROR );
             _dump_item( name, i, mitm[i] );
@@ -2381,7 +2394,8 @@ void debug_mons_scan()
 
             _announce_level_prob(warned);
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
-                 m->name(DESC_PLAIN, true).c_str(), m->pos().x, m->pos().y);
+                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->pos().x, m->pos().y);
             warned = true;
             for (int j = 0; j < MAX_MONSTERS; ++j)
             {
@@ -2397,17 +2411,79 @@ void debug_mons_scan()
                 {
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s",
                          m->pos().x, m->pos().y,
-                         m2->name(DESC_PLAIN, true).c_str());
+                         m2->full_name(DESC_PLAIN, true).c_str());
                 }
                 else if (m2->type != -1)
                 {
                     mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s",
                          m->pos().x, m->pos().y,
-                         m2->name(DESC_PLAIN, true).c_str());
+                         m2->full_name(DESC_PLAIN, true).c_str());
                 }
             }
-        }
-    }
+        } // if (mgrd(m->pos()) != i)
+
+        for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+        {
+            const int idx = m->inv[j];
+            if (idx == NON_ITEM)
+                continue;
+
+            item_def &item(mitm[idx]);
+
+            if (!is_valid_item(item))
+            {
+                _announce_level_prob(warned);
+                warned = true;
+                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
+                                 "slot %d.",
+                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->pos().x, m->pos().y, j);
+                continue;
+            }
+
+            const monsters* holder = holding_monster(item);
+
+            if (holder == NULL)
+            {
+                _announce_level_prob(warned);
+                warned = true;
+                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding non-monster "
+                                 "item.",
+                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->pos().x, m->pos().y);
+                _dump_item( item.name(DESC_PLAIN, false, true).c_str(),
+                            idx, item );
+                continue;
+            }
+
+            if (holder != m)
+            {
+                _announce_level_prob(warned);
+                warned = true;
+                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding item %s, but "
+                                 "item think's it's held by monster %s "
+                                 "(%d, %d)",
+                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->pos().x, m->pos().y,
+                     holder->full_name(DESC_PLAIN, true).c_str(),
+                     holder->pos().x, holder->pos().y);
+
+                bool found = false;
+                for (int k = 0; k < NUM_MONSTER_SLOTS; k++)
+                {
+                    if (holder->inv[k] == idx)
+                    {
+                        mpr("Other monster thinks it's holding the item, too.",
+                            MSGCH_WARN);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    mpr("Other monster isn't holding it, though.", MSGCH_WARN);
+            } // if (holder != m)
+        } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+    } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
     // No problems?
     if (!warned)
@@ -4797,7 +4873,6 @@ void wizard_give_monster_item(monsters *mon)
     }
 
     int index = get_item_slot(10);
-
     if (index == NON_ITEM)
     {
         mpr("Too many items on level, bailing.");
@@ -4805,36 +4880,44 @@ void wizard_give_monster_item(monsters *mon)
     }
 
     // Move monster's old item to player's inventory as last step.
-    int old_eq = NON_ITEM;
+    int  old_eq     = NON_ITEM;
+    bool unequipped = false;
     if (mon->inv[mon_slot] != NON_ITEM)
     {
         old_eq = mon->inv[mon_slot];
-
         // Alternative weapons don't get (un)wielded unless the monster
         // can wield two weapons.
         if (mon_slot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
+        {
             mon->unequip(*(mon->mslot_item(mon_slot)), mon_slot, 1, true);
+            unequipped = true;
+        }
+        mon->inv[mon_slot] = NON_ITEM;
     }
 
-    item_def &new_item = mitm[index];
-    new_item      = item;
-    new_item.link = NON_ITEM;
-    new_item.pos.reset();
+    mitm[index] = item;
 
-    mon->inv[mon_slot] = index;
-
-    // Alternative weapons don't get (un)wielded unless the monster
-    // can wield two weapons.
-    if (mon_slot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
-        mon->equip(new_item, mon_slot, 1);
+    unwind_var<int> save_speedinc(mon->speed_increment);
+    if (!mon->pickup_item(mitm[index], false, true))
+    {
+        mpr("Monster wouldn't take item.");
+        if (old_eq != NON_ITEM)
+        {
+            mon->inv[mon_slot] = old_eq;
+            if (unequipped)
+                mon->equip(mitm[old_eq], mon_slot, 1);
+        }
+        mitm[index].clear();
+        return;
+    }
 
     // Item is gone from player's inventory
     dec_inv_item_quantity(player_slot, item.quantity);
 
-    if ((mon->flags & MF_HARD_RESET) && !(new_item.flags & ISFLAG_SUMMONED))
+    if ((mon->flags & MF_HARD_RESET) && !(item.flags & ISFLAG_SUMMONED))
        mprf(MSGCH_WARN, "WARNING: Monster has MF_HARD_RESET and all its "
             "items will disappear when it does.");
-    else if ((new_item.flags & ISFLAG_SUMMONED) && !mon->is_summoned())
+    else if ((item.flags & ISFLAG_SUMMONED) && !mon->is_summoned())
        mprf(MSGCH_WARN, "WARNING: Item is summoned and will disappear when "
             "the monster does.");
 
@@ -4846,6 +4929,8 @@ void wizard_give_monster_item(monsters *mon)
            mprf(MSGCH_WARN, "WARNING: Item is summoned and shouldn't really "
                 "be anywhere but in the inventory of a summoned monster.");
 
+        mitm[old_eq].pos.reset();
+        mitm[old_eq].link = NON_ITEM;
         move_item_to_player(old_eq, mitm[old_eq].quantity);
     }
 }

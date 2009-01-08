@@ -220,6 +220,11 @@ struct coord_def
     {
         return origin();
     }
+
+    bool equals(const int xi, const int yi) const
+    {
+        return (xi == x && yi == y);
+    }
 };
 
 class actor

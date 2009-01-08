@@ -4188,8 +4188,65 @@ void monsters::pickup_message(const item_def &item, int near)
     }
 }
 
+bool held_by_monster(const item_def &item)
+{
+    return (item.pos.equals(-2, -2)
+            && !invalid_monster_index(item.link - NON_ITEM - 1));
+}
+
+monsters* holding_monster(const item_def &item)
+{
+    if (!item.pos.equals(-2, -2))
+        return (NULL);
+    const int midx = item.link - NON_ITEM - 1;
+    if (invalid_monster_index(midx))
+        return (NULL);
+
+    return (&menv[midx]);
+}
+
 bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 {
+    ASSERT(is_valid_item(item));
+
+    const monsters *other_mon = holding_monster(item);
+
+    if (other_mon != NULL)
+    {
+        if (other_mon == this)
+        {
+            if (inv[slot] == item.index())
+            {
+                mprf(MSGCH_DIAGNOSTICS, "Monster %s already holding item %s.",
+                     name(DESC_PLAIN, true).c_str(),
+                     item.name(DESC_PLAIN, false, true).c_str());
+                return (false);
+            }
+            else
+            {
+                mprf(MSGCH_DIAGNOSTICS, "Items %s thinks it's alread held by "
+                                        "monster %s.",
+                     item.name(DESC_PLAIN, false, true).c_str(),
+                     name(DESC_PLAIN, true).c_str());
+            }
+        }
+        else if (other_mon->type == -1)
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Item %s, held by dead monster, being "
+                                    "picked up by monster %s.",
+                 item.name(DESC_PLAIN, false, true).c_str(),
+                 name(DESC_PLAIN, true).c_str());
+        }
+        else
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Item %s, held by monster %s, being "
+                                    "picked up by monster %s.",
+                 item.name(DESC_PLAIN, false, true).c_str(),
+                 other_mon->name(DESC_PLAIN, true).c_str(),
+                 name(DESC_PLAIN, true).c_str());
+        }
+    }
+
     // If a monster chooses a two-handed weapon as main weapon, it will
     // first have to drop any shield it might wear.
     // (Monsters will always favour damage over protection.)
@@ -4227,7 +4284,11 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 
     const int item_index = item.index();
     unlink_item(item_index);
+
     inv[slot] = item_index;
+
+    item.pos.set(-2, -2);
+    item.link = NON_ITEM + 1 + mindex();
 
     pickup_message(item, near);
     equip(item, slot, near);
@@ -4271,6 +4332,7 @@ bool monsters::drop_item(int eslot, int near)
                  item.quantity > 1 ? "them" : "it");
 
         item_was_destroyed(item, mindex());
+        destroy_item(item_index);
     }
     else if (!move_item_to_grid(&item_index, pos()))
     {

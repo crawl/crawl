@@ -2897,11 +2897,12 @@ static void _give_monster_item(monsters *mon, int thing,
                                bool (monsters::*pickupfn)(item_def&, int) = NULL)
 {
     item_def &mthing = mitm[thing];
+    ASSERT(is_valid_item(mthing));
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
-         mon->name(DESC_PLAIN).c_str());
+         mon->name(DESC_PLAIN, true).c_str());
 #endif
 
     mthing.pos.reset();
@@ -2922,9 +2923,11 @@ static void _give_monster_item(monsters *mon, int thing,
         mprf(MSGCH_DIAGNOSTICS, "Destroying %s because %s doesn't want it!",
              mthing.name(DESC_PLAIN).c_str(), mon->name(DESC_PLAIN).c_str());
 #endif
-        destroy_item(thing);
+        destroy_item(thing, true);
         return;
     }
+    ASSERT(is_valid_item(mthing));
+    ASSERT(holding_monster(mthing) == mon);
 
     if (!force_item || mthing.colour == BLACK)
         item_colour( mthing );

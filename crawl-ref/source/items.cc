@@ -110,13 +110,18 @@ void link_items(void)
     igrd.init(NON_ITEM);
 
     // Link all items on the grid, plus shop inventory,
-    // but DON'T link the huge pile of monster items at (0,0).
+    // but DON'T link the huge pile of monster items at (-2,-2).
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
-        if (!is_valid_item(mitm[i]) || mitm[i].pos.origin())
+        // Don't mess with monster held items, since the index of the holding
+        // monster is stored in the link field.
+        if (held_by_monster(mitm[i]))
+            continue;
+
+        if (!is_valid_item(mitm[i]))
         {
-            // Item is not assigned, or is monster item.  Ignore.
+            // Item is not assigned.  Ignore.
             mitm[i].link = NON_ITEM;
             continue;
         }
@@ -365,37 +370,39 @@ void unlink_item( int dest )
     if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
         return;
 
-    if (mitm[dest].pos.origin())
+    monsters* monster = holding_monster(mitm[dest]);
+
+    if (monster != NULL)
     {
-        // (0,0) is where the monster items are (and they're unlinked by igrd),
-        // although it also contains items that are not linked in yet.
-        //
-        // Check if a monster has it:
-        for (int c = 0; c < MAX_MONSTERS; c++)
+        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         {
-            monsters *monster = &menv[c];
-
-            if (monster->type == -1)
-                continue;
-
-            for (int cy = 0; cy < NUM_MONSTER_SLOTS; cy++)
+            if (monster->inv[i] == dest)
             {
-                if (monster->inv[cy] == dest)
-                {
-                    monster->inv[cy] = NON_ITEM;
+                monster->inv[i] = NON_ITEM;
 
-                    mitm[dest].pos.reset();
-                    mitm[dest].link = NON_ITEM;
-                    return;
-                }
+                mitm[dest].pos.reset();
+                mitm[dest].link = NON_ITEM;
+                return;
             }
         }
-
-        // Always return because this item might just be temporary.
+        mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
+                          "it isn't in the monster's inventory.",
+             mitm[dest].name(DESC_PLAIN, false, true).c_str(),
+             monster->name(DESC_PLAIN, true).c_str());
+        // Don't return so the debugging code can take a look at it.
+    }
+    // Unlinking a newly created item, or a a temporary one, or an item in
+    // the player's inventory.
+    else if (mitm[dest].pos.origin() || mitm[dest].pos.equals(-1, -1))
+    {
+        mitm[dest].pos.reset();
+        mitm[dest].link = NON_ITEM;
         return;
     }
     else
     {
+        ASSERT(in_bounds(mitm[dest].pos));
+
         // Linked item on map:
         //
         // Use the items (x,y) to access the list (igrd[x][y]) where
@@ -1629,8 +1636,11 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     }
 
     coord_def p = mitm[obj].pos;
-    dungeon_events.fire_position_event(
-        dgn_event(DET_ITEM_PICKUP, p, 0, obj, -1), p);
+    // If moving an item directly from a monster to the player without the
+    // item having been on the grid, then it really isn't a position event.
+    if (in_bounds(p))
+        dungeon_events.fire_position_event(
+            dgn_event(DET_ITEM_PICKUP, p, 0, obj, -1), p);
 
     item_def &item = you.inv[freeslot];
     // Copy item.

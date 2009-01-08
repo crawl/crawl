@@ -1087,8 +1087,11 @@ static void _fixup_misplaced_items()
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         item_def& item(mitm[i]);
-        if (!is_valid_item(item) || (item.pos.x == 0))
+        if (!is_valid_item(item) || (item.pos.x == 0)
+            || held_by_monster(item))
+        {
             continue;
+        }
 
         if (in_bounds(item.pos))
         {
@@ -5598,7 +5601,10 @@ void place_spec_shop( int level_number,
             if (orb != NON_ITEM && _need_varied_selection(env.shop[i].type))
             {
                 if (!one_chance_in(stocked[mitm[orb].sub_type] + 1))
+                {
+                    mitm[orb].clear();
                     orb = NON_ITEM; // try again
+                }
             }
 
             if (orb != NON_ITEM
@@ -5612,10 +5618,7 @@ void place_spec_shop( int level_number,
 
             // Reset object and try again.
             if (orb != NON_ITEM)
-            {
-                mitm[orb].base_type = OBJ_UNASSIGNED;
-                mitm[orb].quantity = 0;
-            }
+                mitm[orb].clear();
         }
 
         if (orb == NON_ITEM)

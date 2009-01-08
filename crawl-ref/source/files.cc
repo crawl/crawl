@@ -804,26 +804,6 @@ bool travel_load_map( branch_type branch, int absdepth )
     return (true);
 }
 
-static void _sanity_test_monster_inventory()
-{
-    // Sanity forcing of monster inventory items (required?)
-    for (int i = 0; i < MAX_MONSTERS; i++)
-    {
-        if (menv[i].type == -1)
-            continue;
-
-        for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-        {
-            if (menv[i].inv[j] == NON_ITEM)
-                continue;
-
-            // items carried by monsters shouldn't be linked
-            if (mitm[menv[i].inv[j]].link != NON_ITEM)
-                mitm[menv[i].inv[j]].link = NON_ITEM;
-        }
-    }
-}
-
 static void _place_player_on_stair(level_area_type old_level_type,
                                    branch_type old_branch,
                                    int stair_taken)
@@ -1255,8 +1235,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 #endif
 
     _redraw_all();
-
-    _sanity_test_monster_inventory();
 
     if (load_mode != LOAD_VISITOR)
         dungeon_events.fire_event(DET_ENTERING_LEVEL);

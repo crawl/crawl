@@ -1718,6 +1718,11 @@ bool cast_tukimas_dance(int pow, god_type god,
 
     if (i == NON_ITEM)
         success = false;
+    else
+        // Copy item now so that mitm[i] is occupied and doesn't get picked
+        // by get_item_slot() when giving the dancing weapon it's item
+        // during create_monster().
+        mitm[i] = you.inv[wpn];
 
     int monster;
 
@@ -1736,7 +1741,10 @@ bool cast_tukimas_dance(int pow, god_type god,
                           0, god));
 
         if (monster == -1)
+        {
+            mitm[i].clear();
             success = false;
+        }
     }
 
     if (!success)
@@ -1760,8 +1768,8 @@ bool cast_tukimas_dance(int pow, god_type god,
     // Copy the unwielded item.
     mitm[i] = you.inv[wpn];
     mitm[i].quantity = 1;
-    mitm[i].pos.reset();
-    mitm[i].link = NON_ITEM;
+    mitm[i].pos.set(-2, -2);
+    mitm[i].link = NON_ITEM + 1 + monster;
 
     // Mark the weapon as thrown, so that we'll autograb it when the
     // tango's done.
