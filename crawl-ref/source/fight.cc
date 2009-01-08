@@ -4676,9 +4676,9 @@ void melee_attack::mons_perform_attack_rounds()
             }
 
             // Yredelemnul's injury mirroring can kill the attacker.
-            // Also, bail if the monster is attacking itself without a weapon
-            // since intrinsic monster attack flavours aren't applied for
-            // self attacks.
+            // Also, bail if the monster is attacking itself without a
+            // weapon, since intrinsic monster attack flavours aren't
+            // applied for self-attacks.
             if (!attacker->alive() || (attacker == defender && !weapon))
             {
                 if (miscast_target == defender)
