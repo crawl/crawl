@@ -875,7 +875,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
 
     case OSEL_RECHARGE:
-        return (item_is_rechargeable(i, true));
+        return (item_is_rechargeable(i, true, true));
 
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));

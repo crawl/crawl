@@ -1327,17 +1327,24 @@ bool check_armour_shape( const item_def &item, bool quiet )
     return (true);
 }
 
-// If known is true, only returns true for *known* weapons of electrocution,
-// and returns false for wands/rods known to be fully charged.
-bool item_is_rechargeable(const item_def &it, bool known)
+// Returns whether a wand or rod can be charged, or a weapon of electrocution
+// enchanted.
+// If unknown is true, wands with unknown charges and weapons with unknown
+// brand will also return true.
+// If hide_charged is true, wands known to be full will return false.
+// (This distinction is necessary because even full wands/rods give a message.)
+bool item_is_rechargeable(const item_def &it, bool unknown, bool hide_charged)
 {
     // These are obvious...
     if (it.base_type == OBJ_WANDS)
     {
+        if (unknown && !hide_charged)
+            return (true);
+
         // Don't offer wands already maximally charged.
-        if (known && (it.plus2 == ZAPCOUNT_MAX_CHARGED
-                      || item_ident(it, ISFLAG_KNOW_PLUSES)
-                         && it.plus >= 3 * wand_charge_value(it.sub_type)))
+        if (it.plus2 == ZAPCOUNT_MAX_CHARGED
+            || item_ident(it, ISFLAG_KNOW_PLUSES)
+               && it.plus >= 3 * wand_charge_value(it.sub_type))
         {
             return (false);
         }
@@ -1345,20 +1352,34 @@ bool item_is_rechargeable(const item_def &it, bool known)
     }
     else if (item_is_rod(it))
     {
-        if (known && item_ident(it, ISFLAG_KNOW_PLUSES))
+        if (unknown && !hide_charged)
+            return (true);
+
+        if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
             return (it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
                     || it.plus < it.plus2);
         }
         return (true);
     }
+    else if (it.base_type == OBJ_WEAPONS)
+    {
+        if (unknown && !item_type_known(it)) // Could be electrocution.
+            return (true);
 
-    // ...but electric weapons can also be charged.
-    return (it.base_type == OBJ_WEAPONS
-            && !is_random_artefact(it)
-            && !is_fixed_artefact(it)
+        // Weapons of electrocution can get +1 to-dam this way.
+        if (!is_artefact(it)
             && get_weapon_brand(it) == SPWPN_ELECTROCUTION
-            && (!known || item_type_known(it)));
+            && item_type_known(it)
+            && (unknown && !item_ident(it, ISFLAG_KNOW_PLUSES )
+                || item_ident(it, ISFLAG_KNOW_PLUSES )
+                   && it.plus2 < MAX_WPN_ENCHANT))
+        {
+            return (true);
+        }
+    }
+
+    return (false);
 }
 
 // Max. charges are 3 times this value.

@@ -1875,99 +1875,115 @@ bool acquirement(object_class_type class_wanted, int agent,
 
 bool recharge_wand(int item_slot)
 {
-    if (item_slot == -1)
+    do
     {
-        item_slot = prompt_invent_item( "Charge which item?", MT_INVLIST,
-                                        OSEL_RECHARGE, true, true, false );
-    }
-
-    if (prompt_failed(item_slot))
-        return (false);
-
-    item_def &wand = you.inv[ item_slot ];
-
-    // Weapons of electrocution can be "charged", i.e. gain +1 damage.
-    if (wand.base_type == OBJ_WEAPONS
-        && get_weapon_brand(wand) == SPWPN_ELECTROCUTION)
-    {
-        // Might fail because of already high enchantment.
-        if (enchant_weapon( ENCHANT_TO_DAM, false, wand ))
+        if (item_slot == -1)
         {
-            you.wield_change = true;
-
-            if (!item_ident(wand, ISFLAG_KNOW_TYPE))
-                set_ident_flags(wand, ISFLAG_KNOW_TYPE);
-
-            return (true);
+            item_slot = prompt_invent_item( "Charge which item?", MT_INVLIST,
+                                            OSEL_RECHARGE, true, true, false );
         }
-        return (false);
-    }
-
-    if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
-        return (false);
-
-    int charge_gain = 0;
-    if (wand.base_type == OBJ_WANDS)
-    {
-        charge_gain = wand_charge_value(wand.sub_type);
-
-        // Reinitialize zap counts.
-        wand.plus2 = ZAPCOUNT_RECHARGED;
-
-        const int new_charges =
-            std::max<int>(
-                wand.plus,
-                std::min(charge_gain * 3,
-                         wand.plus +
-                         1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 )));
-
-        const bool charged = (new_charges > wand.plus);
-
-        std::string desc;
-        if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
-        {
-            snprintf(info, INFO_SIZE, " and now has %d charges", new_charges);
-            desc = info;
-        }
-        mprf("%s %s for a moment%s.",
-             wand.name(DESC_CAP_YOUR).c_str(),
-             charged? "glows" : "flickers",
-             desc.c_str());
-
-        wand.plus = new_charges;
-
-        if (!charged)
-            wand.plus2 = ZAPCOUNT_MAX_CHARGED;
-    }
-    else // It's a rod.
-    {
-        bool work = false;
-
-        if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
-        {
-            wand.plus2 += ROD_CHARGE_MULT;
-
-            if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
-                wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-
-            work = true;
-        }
-
-        if (wand.plus < wand.plus2)
-        {
-            wand.plus = wand.plus2;
-            work = true;
-        }
-
-        if (!work)
+        if (prompt_failed(item_slot))
             return (false);
 
-        mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
-    }
+        item_def &wand = you.inv[ item_slot ];
 
-    you.wield_change = true;
-    return (true);
-}                               // end recharge_wand()
+        if (!item_is_rechargeable(wand, true, true))
+        {
+            mpr("Choose an item to recharge, or Esc to abort.");
+            if (Options.auto_list)
+                more();
+
+            // Try again.
+            item_slot = -1;
+            continue;
+        }
+
+        // Weapons of electrocution can be "charged", i.e. gain +1 damage.
+        if (wand.base_type == OBJ_WEAPONS
+            && get_weapon_brand(wand) == SPWPN_ELECTROCUTION)
+        {
+            // Might fail because of already high enchantment.
+            if (enchant_weapon( ENCHANT_TO_DAM, false, wand ))
+            {
+                you.wield_change = true;
+
+                if (!item_ident(wand, ISFLAG_KNOW_TYPE))
+                    set_ident_flags(wand, ISFLAG_KNOW_TYPE);
+
+                return (true);
+            }
+            return (false);
+        }
+
+        if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
+            return (false);
+
+        int charge_gain = 0;
+        if (wand.base_type == OBJ_WANDS)
+        {
+            charge_gain = wand_charge_value(wand.sub_type);
+
+            // Reinitialize zap counts.
+            wand.plus2 = ZAPCOUNT_RECHARGED;
+
+            const int new_charges =
+                std::max<int>(
+                    wand.plus,
+                    std::min(charge_gain * 3,
+                             wand.plus +
+                             1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 )));
+
+            const bool charged = (new_charges > wand.plus);
+
+            std::string desc;
+            if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
+            {
+                snprintf(info, INFO_SIZE, " and now has %d charges", new_charges);
+                desc = info;
+            }
+            mprf("%s %s for a moment%s.",
+                 wand.name(DESC_CAP_YOUR).c_str(),
+                 charged? "glows" : "flickers",
+                 desc.c_str());
+
+            wand.plus = new_charges;
+
+            if (!charged)
+                wand.plus2 = ZAPCOUNT_MAX_CHARGED;
+        }
+        else // It's a rod.
+        {
+            bool work = false;
+
+            if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+            {
+                wand.plus2 += ROD_CHARGE_MULT;
+
+                if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+                    wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+
+                work = true;
+            }
+
+            if (wand.plus < wand.plus2)
+            {
+                wand.plus = wand.plus2;
+                work = true;
+            }
+
+            if (!work)
+                return (false);
+
+            mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
+        }
+
+        you.wield_change = true;
+        return (true);
+    }
+    while (true);
+
+    return (false);
+}
 
 // Sets foe target of friendly monsters.
 // If allow_patrol is true, patrolling monsters get MHITNOT instead.

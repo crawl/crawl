@@ -4167,24 +4167,40 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
 static bool _handle_enchant_armour(int item_slot)
 {
-    if (item_slot == -1)
+    do
     {
-        item_slot = prompt_invent_item("Enchant which item?", MT_INVLIST,
-                                       OSEL_ENCH_ARM, true, true, false);
+        if (item_slot == -1)
+        {
+            item_slot = prompt_invent_item("Enchant which item?", MT_INVLIST,
+                                           OSEL_ENCH_ARM, true, true, false);
+        }
+        if (prompt_failed(item_slot))
+            return (false);
+
+        item_def& arm(you.inv[item_slot]);
+
+        if (!is_enchantable_armour(arm, true, true))
+        {
+            mpr("Choose some type of armour to enchant, or Esc to abort.");
+            if (Options.auto_list)
+                more();
+
+            item_slot = -1;
+            continue;
+        }
+
+        // Okay, we may actually (attempt to) enchant something.
+        int ac_change;
+        bool result = enchant_armour(ac_change, false, arm);
+
+        if (ac_change)
+            you.redraw_armour_class = true;
+
+        return (result);
     }
+    while (true);
 
-    if (prompt_failed(item_slot))
-        return (false);
-
-    item_def& arm(you.inv[item_slot]);
-
-    int ac_change;
-    bool result = enchant_armour(ac_change, false, arm);
-
-    if (ac_change)
-        you.redraw_armour_class = true;
-
-    return (result);
+    return (false);
 }
 
 static void handle_read_book(int item_slot)
@@ -4262,7 +4278,7 @@ static bool _scroll_modify_item(item_def scroll)
         }
         break;
     case SCR_RECHARGING:
-        if (item_is_rechargeable(item))
+        if (item_is_rechargeable(item, true))
         {
             // Might still fail on highly enchanted weapons of electrocution.
             // (If so, already prints the "Nothing happens" message.)
