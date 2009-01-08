@@ -1028,8 +1028,7 @@ void monster_die(monsters *monster, killer_type killer,
                                                 &summon_type);
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
-    const bool gives_xp      = !summoned
-                               && !mons_enslaved_body_and_soul(monster);
+    const bool gives_xp      = !summoned;
 
     const bool drop_items    = !hard_reset;
 
@@ -7513,18 +7512,18 @@ void mons_check_pool(monsters *mons, const coord_def &oldpos,
             {
                 if (grid == DNGN_LAVA)
                 {
-                    simple_monster_message( mons, " is incinerated.",
-                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                    simple_monster_message(mons, " is incinerated.",
+                                           MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
                 else if (mons_genus(mons->type) == MONS_MUMMY)
                 {
-                    simple_monster_message( mons, " falls apart.",
-                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                    simple_monster_message(mons, " falls apart.",
+                                           MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
                 else
                 {
-                    simple_monster_message( mons, " drowns.",
-                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                    simple_monster_message(mons, " drowns.",
+                                           MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
             }
 
