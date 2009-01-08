@@ -2211,7 +2211,8 @@ enum mon_spellbook_type
     MST_SONJA,
     MST_EUSTACHIO,
     MST_ILSUIW,
-    MST_PRINCE_RIBBIT,
+    MST_PRINCE_RIBBIT,                 // 145
+    MST_NESSOS,
     MST_GERYON = 150,
     MST_DISPATER,
     MST_ASMODEUS,

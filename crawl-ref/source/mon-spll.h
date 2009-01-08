@@ -1010,7 +1010,7 @@
 
     { MST_ILSUIW,
       {
-       SPELL_THROW_FROST, // was: SPELL_CONFUSED
+       SPELL_THROW_FROST, // was: SPELL_CONFUSED (jpeg)
        SPELL_SLOW,
        SPELL_INVISIBILITY,
        SPELL_BLINK,
@@ -1027,6 +1027,17 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_NESSOS,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_ANIMATE_DEAD,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
       }
     },
 

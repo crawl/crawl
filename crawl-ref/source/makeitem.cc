@@ -3434,10 +3434,11 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_LONGBOW;
-        item.colour    = DARKGREY;
-        force_item     = true;
+        item.special   = SPWPN_FLAME;
         item.plus     += 1 + random2(3);
         item.plus2    += 1 + random2(3);
+        item.colour    = DARKGREY;
+        force_item     = true;
         break;
 
     case MONS_YAKTAUR:
