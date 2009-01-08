@@ -260,6 +260,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.name         = "great blast of fire";
     beam.ex_size      = 2 + (random2(pow) > 75);
     beam.flavour      = BEAM_LAVA;
+    beam.real_flavour = beam.flavour;
     beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour       = RED;
     beam.beam_source  = source->mindex();
@@ -274,7 +275,6 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.ench_power   = pow;      // used for radius
     beam.hit          = 20 + pow / 10;
     beam.damage       = calc_dice(8, 5 + pow);
-    beam.affects_items = false;
 }
 
 void cast_fire_storm(int pow, bolt &beam)
