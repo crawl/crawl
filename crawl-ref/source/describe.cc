@@ -3185,7 +3185,7 @@ static void _detailed_god_description(god_type which_god)
                          "in sacrifices)."
                          EOL EOL
                          "Nemelex Xobeh gifts various types of decks of cards. "
-                         "Each deck type comes in three power levels: common, "
+                         "Each deck type comes in three power levels: plain, "
                          "ornate, legendary. The latter contain very powerful "
                          "card effects, potentially hazardous. High piety and "
                          "Evocations skill help here, as the power of Nemelex' "
