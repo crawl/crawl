@@ -7493,8 +7493,8 @@ void mons_check_pool(monsters *mons, const coord_def &oldpos,
     {
         const bool message = mons_near(mons);
 
-        // Don't worry about invisibility - you should be able to
-        // see if something has fallen into the lava.
+        // Don't worry about invisibility - you should be able to see if
+        // something has fallen into the lava.
         if (message && (oldpos == mons->pos() || grd(oldpos) != grid))
         {
             mprf("%s falls into the %s!",
