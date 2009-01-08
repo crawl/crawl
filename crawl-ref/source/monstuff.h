@@ -93,7 +93,7 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
                     bool allow_weightless = false);
 
 int place_monster_corpse(const monsters *monster, bool silent,
-                         bool force = true);
+                         bool force = false);
 
 void mons_check_pool(monsters *monster, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
