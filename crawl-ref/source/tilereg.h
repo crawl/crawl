@@ -89,6 +89,7 @@ public:
 protected:
     void recalculate();
     virtual void on_resize() = 0;
+    void set_transform();
 };
 
 class FTFont;
@@ -233,20 +234,9 @@ public:
     ~TileRegion();
 
 protected:
-    void add_quad(TextureID tex, unsigned int idx, int x, int y, int ofs_x = 0, int ofs_y = 0, bool centre = true, int ymax = -1);
-
     ImageManager *m_image;
-
-    struct tile_vert
-    {
-        float pos_x;
-        float pos_y;
-        float tex_x;
-        float tex_y;
-    };
-
-    std::vector<tile_vert> m_verts;
     FTFont *m_tag_font;
+    bool m_dirty;
 };
 
 struct TextTag
@@ -297,12 +287,13 @@ public:
     void clear_overlays();
 
 protected:
-    void draw_background(unsigned int bg, int x, int y);
-    void draw_mcache(mcache_entry *entry, int x, int y);
-    void draw_player(int x, int y);
-    void draw_foreground(unsigned int bg, unsigned int fg, int x, int y);
-    void draw_doll(const dolls_data &doll, int x, int y);
-    void draw_cursor(cursor_type type, unsigned int tile);
+    void pack_background(unsigned int bg, int x, int y);
+    void pack_mcache(mcache_entry *entry, int x, int y);
+    void pack_player(int x, int y);
+    void pack_foreground(unsigned int bg, unsigned int fg, int x, int y);
+    void pack_doll(const dolls_data &doll, int x, int y);
+    void pack_cursor(cursor_type type, unsigned int tile);
+    void pack_buffers();
 
     int get_buffer_index(const coord_def &gc);
     void to_screen_coords(const coord_def &gc, coord_def& pc) const;
@@ -312,6 +303,11 @@ protected:
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];
     std::vector<TextTag> m_tags[TAG_MAX];
+
+    TileBuffer m_buf_dngn;
+    TileBuffer m_buf_doll;
+    TileBuffer m_buf_main;
+    bool m_dirty;
 
     struct tile_overlay
     {
@@ -360,18 +356,18 @@ public:
 
 protected:
     void pack_tile(int x, int y, int idx);
-    void pack_verts();
+    void pack_buffers();
     void add_quad_char(char c, int x, int y, int ox, int oy);
     void place_cursor(const coord_def &cursor);
     unsigned int cursor_index() const;
 
-    int m_base_verts;
     std::vector<InventoryTile> m_items;
     unsigned char *m_flavour;
 
-    coord_def m_cursor;
+    TileBuffer m_buf_dngn;
+    TileBuffer m_buf_main;
 
-    bool m_need_to_pack;
+    coord_def m_cursor;
 };
 
 enum map_colour
@@ -421,12 +417,17 @@ public:
 protected:
     virtual void on_resize();
     void update_offsets();
+    void pack_buffers();
 
     map_colour m_colours[MF_MAX];
     int m_min_gx, m_max_gx, m_min_gy, m_max_gy;
     coord_def m_win_start;
     coord_def m_win_end;
     unsigned char *m_buf;
+
+    ShapeBuffer m_buf_map;
+    LineBuffer m_buf_lines;
+    bool m_dirty;
     bool m_far_view;
 };
 

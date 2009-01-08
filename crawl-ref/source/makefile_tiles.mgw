@@ -249,6 +249,11 @@ profile:	$(GAME_DEPENDS)
 $(OPATH)/%.o: %.cc $(TILEDEFHDRS)
 		${CXX} ${CFLAGS} -o $@ -c $<
 
+# STL is bad in debug.  Always compile this file with optimizations.
+$(OPATH)/tilebuf.o: tilebuf.cc $(TILEDEFHDRS)
+		${CXX} ${CFLAGS} -O2 -o $@ -c $<
+
+
 $(OPATH)/%.o: $(UTIL)%.cc $(TILEDEFHDRS)
 		$(CXX) $(YCFLAGS) -o $@ -c $<
 

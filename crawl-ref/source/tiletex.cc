@@ -142,7 +142,7 @@ bool GenericTexture::load_texture(const char *filename,
             int x;
             for (x = 0; x < img->w; x++)
             {
-                int index = ((unsigned char*)img->pixels)[src++];
+                unsigned int index = ((unsigned char*)img->pixels)[src++];
                 pixels[dest*4    ] = pal->colors[index].r;
                 pixels[dest*4 + 1] = pal->colors[index].g;
                 pixels[dest*4 + 2] = pal->colors[index].b;

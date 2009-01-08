@@ -27,6 +27,7 @@ VColour VColour::transparent(0, 0, 0, 0);
 /////////////////////////////////////////////////////////////////////////////
 // VertBuffer
 
+#if DEBUG
 static bool _valid(int num_verts, int prim)
 {
     switch (prim)
@@ -43,14 +44,15 @@ static bool _valid(int num_verts, int prim)
         return (false);
     }
 }
+#endif
 
 template<>
 void VertBuffer<PTVert>::draw() const
 {
-    if (m_verts.size() == 0)
+    if (size() == 0)
         return;
 
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
     ASSERT(m_tex);
 
     GLState state;
@@ -61,39 +63,39 @@ void VertBuffer<PTVert>::draw() const
     GLStateManager::set(state);
 
     m_tex->bind();
-    glVertexPointer(2, GL_FLOAT, sizeof(PTVert), &m_verts[0].pos_x);
-    glTexCoordPointer(2, GL_FLOAT, sizeof(PTVert), &m_verts[0].tex_x);
-    glDrawArrays(m_prim, 0, m_verts.size());
+    glVertexPointer(2, GL_FLOAT, sizeof(Vert), &(*this)[0].pos_x);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vert), &(*this)[0].tex_x);
+    glDrawArrays(m_prim, 0, size());
 }
 
 template<>
 void VertBuffer<PCVert>::draw() const
 {
-    if (m_verts.size() == 0)
+    if (size() == 0)
         return;
 
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
     ASSERT(!m_tex);
 
     GLState state;
     state.array_vertex = true;
     state.array_colour = true;
     state.blend = true;
-    state.texture = true;
+    state.texture = false;
     GLStateManager::set(state);
 
-    glVertexPointer(2, GL_FLOAT, sizeof(PCVert), &m_verts[0].pos_x);
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(PCVert), &m_verts[0].col);
-    glDrawArrays(m_prim, 0, m_verts.size());
+    glVertexPointer(2, GL_FLOAT, sizeof(Vert), &(*this)[0].pos_x);
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vert), &(*this)[0].col);
+    glDrawArrays(m_prim, 0, size());
 }
 
 template<>
 void VertBuffer<PTCVert>::draw() const
 {
-    if (m_verts.size() == 0)
+    if (size() == 0)
         return;
 
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
     ASSERT(m_tex);
 
     GLState state;
@@ -105,10 +107,10 @@ void VertBuffer<PTCVert>::draw() const
     GLStateManager::set(state);
 
     m_tex->bind();
-    glVertexPointer(2, GL_FLOAT, sizeof(PTCVert), &m_verts[0].pos_x);
-    glTexCoordPointer(2, GL_FLOAT, sizeof(PTCVert), &m_verts[0].tex_x);
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(PTCVert), &m_verts[0].col);
-    glDrawArrays(m_prim, 0, m_verts.size());
+    glVertexPointer(2, GL_FLOAT, sizeof(Vert), &(*this)[0].pos_x);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vert), &(*this)[0].tex_x);
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(Vert), &(*this)[0].col);
+    glDrawArrays(m_prim, 0, size());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -124,13 +126,13 @@ FontBuffer::FontBuffer(FTFont *font) :
 void FontBuffer::add(const formatted_string &fs, float x, float y)
 {
     m_font->store(*this, x, y, fs);
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
 }
 
 void FontBuffer::add(const std::string &s, const VColour &col, float x, float y)
 {
     m_font->store(*this, x, y, s, col);
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -157,47 +159,100 @@ void TileBuffer::add(int idx, float x, float y)
     float tex_ex = inf.ex / fwidth;
     float tex_ey = inf.ey / fheight;
 
+    size_t last = std::vector<Vert>::size();
+    std::vector<Vert>::resize(last + 4);
+
     {
-        PTVert &v = get_next();
+        Vert &v = (*this)[last];
         v.pos_x = pos_sx;
         v.pos_y = pos_sy;
         v.tex_x = tex_sx;
         v.tex_y = tex_sy;
     }
     {
-        PTVert &v = get_next();
+        Vert &v = (*this)[last + 1];
         v.pos_x = pos_sx;
         v.pos_y = pos_ey;
         v.tex_x = tex_sx;
         v.tex_y = tex_ey;
     }
     {
-        PTVert &v = get_next();
+        Vert &v = (*this)[last + 2];
         v.pos_x = pos_ex;
         v.pos_y = pos_ey;
         v.tex_x = tex_ex;
         v.tex_y = tex_ey;
     }
     {
-        PTVert &v = get_next();
+        Vert &v = (*this)[last + 3];
         v.pos_x = pos_ex;
         v.pos_y = pos_sy;
         v.tex_x = tex_ex;
         v.tex_y = tex_sy;
     }
 
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
 }
 
-void TileBuffer::set_tex(const TilesTexture *tex)
+void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int ymax)
 {
-    ASSERT(tex);
-    m_tex = tex;
+    float pos_sx = x;
+    float pos_sy = y;
+    float pos_ex, pos_ey, tex_sx, tex_sy, tex_ex, tex_ey;
+    TilesTexture *tex = (TilesTexture *)m_tex;
+    tex->get_coords(idx, ox, oy, pos_sx, pos_sy, pos_ex, pos_ey,
+                    tex_sx, tex_sy, tex_ex, tex_ey, centre, ymax);
+
+    size_t last = std::vector<Vert>::size();
+    std::vector<Vert>::resize(last + 4);
+
+    {
+        Vert &v = (*this)[last];
+        v.pos_x = pos_sx;
+        v.pos_y = pos_sy;
+        v.tex_x = tex_sx;
+        v.tex_y = tex_sy;
+    }
+
+    {
+        Vert &v = (*this)[last + 1];
+        v.pos_x = pos_sx;
+        v.pos_y = pos_ey;
+        v.tex_x = tex_sx;
+        v.tex_y = tex_ey;
+    }
+
+    {
+        Vert &v = (*this)[last + 2];
+        v.pos_x = pos_ex;
+        v.pos_y = pos_ey;
+        v.tex_x = tex_ex;
+        v.tex_y = tex_ey;
+    }
+
+    {
+        Vert &v = (*this)[last + 3];
+        v.pos_x = pos_ex;
+        v.pos_y = pos_sy;
+        v.tex_x = tex_ex;
+        v.tex_y = tex_sy;
+    }
+}
+
+void TileBuffer::set_tex(const TilesTexture *new_tex)
+{
+    ASSERT(new_tex);
+    m_tex = new_tex;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // ShapeBuffer
 
+// [enne] - GL_POINTS should probably be used here, but there's (apparently)
+// a bug in the OpenGL driver that I'm using and it doesn't respect
+// glPointSize unless GL_SMOOTH_POINTS is on.  GL_SMOOTH_POINTS is
+// *terrible* for performance if it has to fall back on software rendering,
+// so instead we'll just make quads.
 ShapeBuffer::ShapeBuffer() : VertBuffer<PCVert>(NULL, GL_QUADS)
 {
 }
@@ -206,31 +261,31 @@ void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                       const VColour &col)
 {
     {
-        PCVert &v = get_next();
+        Vert &v = get_next();
         v.pos_x = pos_sx;
         v.pos_y = pos_sy;
         v.col = col;
     }
     {
-        PCVert &v = get_next();
+        Vert &v = get_next();
         v.pos_x = pos_sx;
         v.pos_y = pos_ey;
         v.col = col;
     }
     {
-        PCVert &v = get_next();
+        Vert &v = get_next();
         v.pos_x = pos_ex;
         v.pos_y = pos_ey;
         v.col = col;
     }
     {
-        PCVert &v = get_next();
+        Vert &v = get_next();
         v.pos_x = pos_ex;
         v.pos_y = pos_sy;
         v.col = col;
     }
 
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -244,19 +299,19 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                      const VColour &col)
 {
     {
-        PCVert &v = get_next();
+        Vert &v = get_next();
         v.pos_x = pos_sx;
         v.pos_y = pos_sy;
         v.col = col;
     }
     {
-        PCVert &v = get_next();
+        Vert &v = get_next();
         v.pos_x = pos_ex;
         v.pos_y = pos_ey;
         v.col = col;
     }
 
-    ASSERT(_valid(m_verts.size(), m_prim));
+    ASSERT(_valid(size(), m_prim));
 }
 
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,

@@ -50,39 +50,39 @@ int TextRegion::cursor_flag = 0;
 int TextRegion::cursor_x;
 int TextRegion::cursor_y;
 
-const int map_colours[MAX_MAP_COL][3] =
+const VColour map_colours[MAX_MAP_COL] =
 {
-    {  0,   0,   0}, // BLACK
-    {128, 128, 128}, // DKGREY
-    {160, 160, 160}, // MDGREY
-    {192, 192, 192}, // LTGREY
-    {255, 255, 255}, // WHITE
+    VColour(  0,   0,   0, 255), // BLACK
+    VColour(128, 128, 128, 255), // DKGREY
+    VColour(160, 160, 160, 255), // MDGREY
+    VColour(192, 192, 192, 255), // LTGREY
+    VColour(255, 255, 255, 255), // WHITE
 
-    {  0,  64, 255}, // BLUE  (actually cyan-blue)
-    {128, 128, 255}, // LTBLUE
-    {  0,  32, 128}, // DKBLUE (maybe too dark)
+    VColour(  0,  64, 255, 255), // BLUE  (actually cyan-blue)
+    VColour(128, 128, 255, 255), // LTBLUE
+    VColour(  0,  32, 128, 255), // DKBLUE (maybe too dark)
 
-    {  0, 255,   0}, // GREEN
-    {128, 255, 128}, // LTGREEN
-    {  0, 128,   0}, // DKGREEN
+    VColour(  0, 255,   0, 255), // GREEN
+    VColour(128, 255, 128, 255), // LTGREEN
+    VColour(  0, 128,   0, 255), // DKGREEN
 
-    {  0, 255, 255}, // CYAN
-    { 64, 255, 255}, // LTCYAN (maybe too pale)
-    {  0, 128, 128}, // DKCYAN
+    VColour(  0, 255, 255, 255), // CYAN
+    VColour( 64, 255, 255, 255), // LTCYAN (maybe too pale)
+    VColour(  0, 128, 128, 255), // DKCYAN
 
-    {255,   0,   0}, // RED
-    {255, 128, 128}, // LTRED (actually pink)
-    {128,   0,   0}, // DKRED
+    VColour(255,   0,   0, 255), // RED
+    VColour(255, 128, 128, 255), // LTRED (actually pink)
+    VColour(128,   0,   0, 255), // DKRED
 
-    {192,   0, 255}, // MAGENTA (actually blue-magenta)
-    {255, 128, 255}, // LTMAGENTA
-    { 96,   0, 128}, // DKMAGENTA
+    VColour(192,   0, 255, 255), // MAGENTA (actually blue-magenta)
+    VColour(255, 128, 255, 255), // LTMAGENTA
+    VColour( 96,   0, 128, 255), // DKMAGENTA
 
-    {255, 255,   0}, // YELLOW
-    {255, 255,  64}, // LTYELLOW (maybe too pale)
-    {128, 128,   0}, // DKYELLOW
+    VColour(255, 255,   0, 255), // YELLOW
+    VColour(255, 255,  64, 255), // LTYELLOW (maybe too pale)
+    VColour(128, 128,   0, 255), // DKYELLOW
 
-    {165,  91,   0}, // BROWN
+    VColour(165,  91,   0, 255), // BROWN
 };
 
 const int dir_dx[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
@@ -189,6 +189,13 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
     return valid;
 }
 
+void Region::set_transform()
+{
+    glLoadIdentity();
+    glTranslatef(sx + ox, sy + oy, 0);
+    glScalef(dx, dy, 1);
+}
+
 TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y)
 {
     ASSERT(im);
@@ -198,6 +205,7 @@ TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_
     dx = tile_x;
     dy = tile_y;
     m_tag_font = tag_font;
+    m_dirty = true;
 }
 
 TileRegion::~TileRegion()
@@ -208,7 +216,10 @@ DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
                              int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
     m_cx_to_gx(0),
-    m_cy_to_gy(0)
+    m_cy_to_gy(0),
+    m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
+    m_buf_doll(&im->m_textures[TEX_DOLL]),
+    m_buf_main(&im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)
         m_cursor[i] = NO_CURSOR;
@@ -221,6 +232,7 @@ DungeonRegion::~DungeonRegion()
 void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy)
 {
     m_tileb.clear();
+    m_dirty = true;
 
     if (!tileb)
         return;
@@ -237,84 +249,44 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
 
-void TileRegion::add_quad(TextureID tex, unsigned int idx, int x, int y, int ofs_x, int ofs_y, bool centre, int ymax)
-{
-    // Generate quad
-    //
-    // 0 - 3
-    // |   |
-    // 1 - 2
-    //
-    // Data Layout:
-    // float2 (position)
-    // float2 (texcoord)
-
-    float pos_sx = x;
-    float pos_sy = y;
-    float pos_ex, pos_ey, tex_sx, tex_sy, tex_ex, tex_ey;
-    m_image->m_textures[tex].get_coords(idx, ofs_x, ofs_y,
-                                        pos_sx, pos_sy, pos_ex, pos_ey,
-                                        tex_sx, tex_sy, tex_ex, tex_ey,
-                                        centre, ymax);
-
-    tile_vert v;
-    v.pos_x = pos_sx;
-    v.pos_y = pos_sy;
-    v.tex_x = tex_sx;
-    v.tex_y = tex_sy;
-    m_verts.push_back(v);
-
-    v.pos_y = pos_ey;
-    v.tex_y = tex_ey;
-    m_verts.push_back(v);
-
-    v.pos_x = pos_ex;
-    v.tex_x = tex_ex;
-    m_verts.push_back(v);
-
-    v.pos_y = pos_sy;
-    v.tex_y = tex_sy;
-    m_verts.push_back(v);
-}
-
-void DungeonRegion::draw_background(unsigned int bg, int x, int y)
+void DungeonRegion::pack_background(unsigned int bg, int x, int y)
 {
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx >= TILE_DNGN_WAX_WALL)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
-        add_quad(TEX_DUNGEON, flv.floor, x, y);
+        m_buf_dngn.add(flv.floor, x, y);
     }
 
     if (bg & TILE_FLAG_BLOOD)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
         int offset = flv.special % tile_dngn_count(TILE_BLOOD);
-        add_quad(TEX_DUNGEON, TILE_BLOOD + offset, x, y);
+        m_buf_dngn.add(TILE_BLOOD + offset, x, y);
     }
 
-    add_quad(TEX_DUNGEON, bg_idx, x, y);
+    m_buf_dngn.add(bg_idx, x, y);
 
     if (bg & TILE_FLAG_HALO)
-        add_quad(TEX_DUNGEON, TILE_HALO, x, y);
+        m_buf_dngn.add(TILE_HALO, x, y);
 
     if (bg & TILE_FLAG_SANCTUARY && !(bg & TILE_FLAG_UNSEEN))
-        add_quad(TEX_DUNGEON, TILE_SANCTUARY, x, y);
+        m_buf_dngn.add(TILE_SANCTUARY, x, y);
 
     // Apply the travel exclusion under the foreground if the cell is
     // visible.  It will be applied later if the cell is unseen.
     if (bg & TILE_FLAG_EXCL_CTR && !(bg & TILE_FLAG_UNSEEN))
-        add_quad(TEX_DUNGEON, TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
+        m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
     else if (bg & TILE_FLAG_TRAV_EXCL && !(bg & TILE_FLAG_UNSEEN))
-        add_quad(TEX_DUNGEON, TILE_TRAVEL_EXCLUSION_BG, x, y);
+        m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
 
     if (bg & TILE_FLAG_RAY)
-        add_quad(TEX_DUNGEON, TILE_RAY, x, y);
+        m_buf_dngn.add(TILE_RAY, x, y);
     else if (bg & TILE_FLAG_RAY_OOR)
-        add_quad(TEX_DUNGEON, TILE_RAY_OUT_OF_RANGE, x, y);
+        m_buf_dngn.add(TILE_RAY_OUT_OF_RANGE, x, y);
 }
 
-void DungeonRegion::draw_player(int x, int y)
+void DungeonRegion::pack_player(int x, int y)
 {
     dolls_data default_doll;
     dolls_data player_doll;
@@ -438,10 +410,10 @@ void DungeonRegion::draw_player(int x, int y)
     if (result.parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
         result.parts[TILEP_PART_DRCHEAD] = 0;
 
-    draw_doll(result, x, y);
+    pack_doll(result, x, y);
 }
 
-void DungeonRegion::draw_doll(const dolls_data &doll, int x, int y)
+void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
 {
     int p_order[TILEP_PART_MAX] =
     {
@@ -487,17 +459,17 @@ void DungeonRegion::draw_doll(const dolls_data &doll, int x, int y)
             ymax = 18;
         }
 
-        add_quad(TEX_DOLL, doll.parts[p], x, y, 0, 0, true, ymax);
+        m_buf_doll.add(doll.parts[p], x, y, 0, 0, true, ymax);
     }
 }
 
-void DungeonRegion::draw_mcache(mcache_entry *entry, int x, int y)
+void DungeonRegion::pack_mcache(mcache_entry *entry, int x, int y)
 {
     ASSERT(entry);
 
     const dolls_data *doll = entry->doll();
     if (doll)
-        draw_doll(*doll, x, y);
+        pack_doll(*doll, x, y);
 
     tile_draw_info dinfo[3];
     unsigned int draw_info_count = entry->info(&dinfo[0]);
@@ -505,108 +477,108 @@ void DungeonRegion::draw_mcache(mcache_entry *entry, int x, int y)
 
     for (unsigned int i = 0; i < draw_info_count; i++)
     {
-        add_quad(TEX_DOLL, dinfo[i].idx, x, y, dinfo[i].ofs_x, dinfo[i].ofs_y);
+        m_buf_doll.add(dinfo[i].idx, x, y, dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 }
 
-void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, int x, int y)
+void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int y)
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
-        add_quad(TEX_DEFAULT, fg_idx, x, y);
+        m_buf_main.add(fg_idx, x, y);
     }
 
     if (fg_idx && !(fg & TILE_FLAG_FLYING))
     {
         if (bg_idx >= TILE_DNGN_LAVA && bg_idx <= TILE_DNGN_LAVA + 3)
         {
-            add_quad(TEX_DEFAULT, TILE_MASK_LAVA, x, y);
+            m_buf_main.add(TILE_MASK_LAVA, x, y);
         }
         else if (bg_idx >= TILE_DNGN_SHALLOW_WATER
                  && bg_idx <= TILE_DNGN_SHALLOW_WATER + 3)
         {
-            add_quad(TEX_DEFAULT, TILE_MASK_SHALLOW_WATER, x, y);
+            m_buf_main.add(TILE_MASK_SHALLOW_WATER, x, y);
         }
         else if (bg_idx >= TILE_DNGN_SHALLOW_WATER_MURKY
                  && bg_idx <= TILE_DNGN_SHALLOW_WATER_MURKY+ 3)
         {
-            add_quad(TEX_DEFAULT, TILE_MASK_SHALLOW_WATER_MURKY, x, y);
+            m_buf_main.add(TILE_MASK_SHALLOW_WATER_MURKY, x, y);
         }
         else if (bg_idx >= TILE_DNGN_DEEP_WATER
                  && bg_idx <= TILE_DNGN_DEEP_WATER + 3)
         {
-            add_quad(TEX_DEFAULT, TILE_MASK_DEEP_WATER, x, y);
+            m_buf_main.add(TILE_MASK_DEEP_WATER, x, y);
         }
         else if (bg_idx >= TILE_DNGN_DEEP_WATER_MURKY
                  && bg_idx <= TILE_DNGN_DEEP_WATER_MURKY + 3)
         {
-            add_quad(TEX_DEFAULT, TILE_MASK_DEEP_WATER_MURKY, x, y);
+            m_buf_main.add(TILE_MASK_DEEP_WATER_MURKY, x, y);
         }
     }
 
     if (fg & TILE_FLAG_NET)
-        add_quad(TEX_DEFAULT, TILE_TRAP_NET, x, y);
+        m_buf_main.add(TILE_TRAP_NET, x, y);
 
     if (fg & TILE_FLAG_S_UNDER)
-        add_quad(TEX_DEFAULT, TILE_SOMETHING_UNDER, x, y);
+        m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
 
     // Pet mark
     int status_shift = 0;
     if (fg & TILE_FLAG_PET)
     {
-        add_quad(TEX_DEFAULT, TILE_HEART, x, y);
+        m_buf_main.add(TILE_HEART, x, y);
         status_shift += 10;
     }
     else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_NEUTRAL)
     {
-        add_quad(TEX_DEFAULT, TILE_NEUTRAL, x, y);
+        m_buf_main.add(TILE_NEUTRAL, x, y);
         status_shift += 8;
     }
     else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
     {
-        add_quad(TEX_DEFAULT, TILE_STAB_BRAND, x, y);
+        m_buf_main.add(TILE_STAB_BRAND, x, y);
         status_shift += 8;
     }
     else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_MAY_STAB)
     {
-        add_quad(TEX_DEFAULT, TILE_MAY_STAB_BRAND, x, y);
+        m_buf_main.add(TILE_MAY_STAB_BRAND, x, y);
         status_shift += 5;
     }
 
     if (fg & TILE_FLAG_POISON)
     {
-        add_quad(TEX_DEFAULT, TILE_POISON, x, y, -status_shift, 0);
+        m_buf_main.add(TILE_POISON, x, y, -status_shift, 0);
         status_shift += 5;
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)
     {
-        add_quad(TEX_DEFAULT, TILE_ANIMATED_WEAPON, x, y);
+        m_buf_main.add(TILE_ANIMATED_WEAPON, x, y);
     }
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
-        add_quad(TEX_DEFAULT, TILE_MESH, x, y);
+        m_buf_main.add(TILE_MESH, x, y);
 
     if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
-        add_quad(TEX_DEFAULT, TILE_MAGIC_MAP_MESH, x, y);
+        m_buf_main.add(TILE_MAGIC_MAP_MESH, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
     if (bg & TILE_FLAG_NEW_STAIR && status_shift == 0)
-        add_quad(TEX_DEFAULT, TILE_NEW_STAIR, x, y);
+        m_buf_main.add(TILE_NEW_STAIR, x, y);
 
     if (bg & TILE_FLAG_EXCL_CTR && (bg & TILE_FLAG_UNSEEN))
-        add_quad(TEX_DEFAULT, TILE_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
+        m_buf_main.add(TILE_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
     else if (bg & TILE_FLAG_TRAV_EXCL && (bg & TILE_FLAG_UNSEEN))
-        add_quad(TEX_DEFAULT, TILE_TRAVEL_EXCLUSION_FG, x, y);
+        m_buf_main.add(TILE_TRAVEL_EXCLUSION_FG, x, y);
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
     {
-        add_quad(TEX_DEFAULT, TILE_TUTORIAL_CURSOR, x, y);
+        m_buf_main.add(TILE_TUTORIAL_CURSOR, x, y);
     }
     else if (bg & TILE_FLAG_CURSOR)
     {
@@ -616,140 +588,87 @@ void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, int x, int
         if ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
            type = TILE_CURSOR3;
 
-        add_quad(TEX_DEFAULT, type, x, y);
+        m_buf_main.add(type, x, y);
     }
 
     if (fg & TILE_FLAG_MDAM_MASK)
     {
         unsigned int mdam_flag = fg & TILE_FLAG_MDAM_MASK;
         if (mdam_flag == TILE_FLAG_MDAM_LIGHT)
-            add_quad(TEX_DEFAULT, TILE_MDAM_LIGHTLY_DAMAGED, x, y);
+            m_buf_main.add(TILE_MDAM_LIGHTLY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_MOD)
-            add_quad(TEX_DEFAULT, TILE_MDAM_MODERATELY_DAMAGED, x, y);
+            m_buf_main.add(TILE_MDAM_MODERATELY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_HEAVY)
-            add_quad(TEX_DEFAULT, TILE_MDAM_HEAVILY_DAMAGED, x, y);
+            m_buf_main.add(TILE_MDAM_HEAVILY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_SEV)
-            add_quad(TEX_DEFAULT, TILE_MDAM_SEVERELY_DAMAGED, x, y);
+            m_buf_main.add(TILE_MDAM_SEVERELY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_ADEAD)
-            add_quad(TEX_DEFAULT, TILE_MDAM_ALMOST_DEAD, x, y);
+            m_buf_main.add(TILE_MDAM_ALMOST_DEAD, x, y);
     }
 }
 
-void DungeonRegion::draw_cursor(cursor_type type, unsigned int tile)
+void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
 {
     const coord_def &gc = m_cursor[type];
     if (gc == NO_CURSOR || !on_screen(gc))
         return;
 
-    add_quad(TEX_DEFAULT, tile, gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
+    m_buf_main.add(tile, gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
 }
 
-void DungeonRegion::render()
+void DungeonRegion::pack_buffers()
 {
-    if (m_tileb.size() == 0)
+    m_buf_dngn.clear();
+    m_buf_doll.clear();
+    m_buf_main.clear();
+
+    if (m_tileb.empty())
         return;
-
-    glLoadIdentity();
-    glTranslatef(sx + ox, sy + oy, 0);
-    glScalef(dx, dy, 1);
-
-    m_verts.clear();
-    m_verts.reserve(4 * crawl_view.viewsz.x * crawl_view.viewsz.y);
-
-    GLState state;
-    state.array_vertex = true;
-    state.array_texcoord = true;
-    state.blend = true;
-    state.texture = true;
-    GLStateManager::set(state);
 
     int tile = 0;
     for (int y = 0; y < crawl_view.viewsz.y; y++)
         for (int x = 0; x < crawl_view.viewsz.x; x++)
         {
             unsigned int bg = m_tileb[tile + 1];
-            draw_background(bg, x, y);
-
-            tile += 2;
-        }
-
-    if (m_verts.size() > 0)
-    {
-        m_image->m_textures[TEX_DUNGEON].bind();
-        glVertexPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].pos_x);
-        glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
-        glDrawArrays(GL_QUADS, 0, m_verts.size());
-    }
-
-    tile = 0;
-    m_verts.clear();
-
-    for (int y = 0; y < crawl_view.viewsz.y; y++)
-    {
-        for (int x = 0; x < crawl_view.viewsz.x; x++)
-        {
-            unsigned int fg = m_tileb[tile] & TILE_FLAG_MASK;
-            if (fg >= TILEP_MCACHE_START)
-            {
-                mcache_entry *entry = mcache.get(fg);
-                if (entry)
-                    draw_mcache(entry, x, y);
-                else
-                    add_quad(TEX_DOLL, TILEP_MONS_UNKNOWN, x, y);
-            }
-            else if (fg == TILEP_PLAYER)
-            {
-                draw_player(x, y);
-            }
-            else if (fg >= TILE_MAIN_MAX)
-            {
-                add_quad(TEX_DOLL, fg, x, y);
-            }
-
-            tile += 2;
-        }
-    }
-
-    if (m_verts.size() > 0)
-    {
-        m_image->m_textures[TEX_DOLL].bind();
-        glVertexPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].pos_x);
-        glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
-        glDrawArrays(GL_QUADS, 0, m_verts.size());
-    }
-
-    tile = 0;
-    m_verts.clear();
-    for (int y = 0; y < crawl_view.viewsz.y; y++)
-        for (int x = 0; x < crawl_view.viewsz.x; x++)
-        {
             unsigned int fg = m_tileb[tile];
-            unsigned int bg = m_tileb[tile + 1];
-            draw_foreground(bg, fg, x, y);
+            unsigned int fg_idx = fg & TILE_FLAG_MASK;
+
+            pack_background(bg, x, y);
+
+            if (fg_idx >= TILEP_MCACHE_START)
+            {
+                mcache_entry *entry = mcache.get(fg_idx);
+                if (entry)
+                    pack_mcache(entry, x, y);
+                else
+                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y);
+            }
+            else if (fg_idx == TILEP_PLAYER)
+            {
+                pack_player(x, y);
+            }
+            else if (fg_idx >= TILE_MAIN_MAX)
+            {
+                m_buf_doll.add(fg_idx, x, y);
+            }
+
+            pack_foreground(bg, fg, x, y);
+
             tile += 2;
         }
 
-    draw_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
-    draw_cursor(CURSOR_MOUSE, see_grid(m_cursor[CURSOR_MOUSE]) ? TILE_CURSOR
+    pack_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
+    pack_cursor(CURSOR_MOUSE, see_grid(m_cursor[CURSOR_MOUSE]) ? TILE_CURSOR
                                                                : TILE_CURSOR2);
 
     if (m_cursor[CURSOR_TUTORIAL] != NO_CURSOR
         && on_screen(m_cursor[CURSOR_TUTORIAL]))
     {
-        add_quad(TEX_DEFAULT, TILE_TUTORIAL_CURSOR,
+        m_buf_main.add(TILE_TUTORIAL_CURSOR,
                  m_cursor[CURSOR_TUTORIAL].x,
                  m_cursor[CURSOR_TUTORIAL].y);
     }
 
-    if (m_verts.size() > 0)
-    {
-        m_image->m_textures[TEX_DEFAULT].bind();
-        glVertexPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].pos_x);
-        glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
-        glDrawArrays(GL_QUADS, 0, m_verts.size());
-    }
-
-    m_verts.clear();
     for (unsigned int i = 0; i < m_overlays.size(); i++)
     {
         // overlays must be from the main image and must be in LOS.
@@ -762,15 +681,22 @@ void DungeonRegion::render()
 
         int x = m_overlays[i].gc.x - m_cx_to_gx;
         int y = m_overlays[i].gc.y - m_cy_to_gy;
-        add_quad(TEX_DEFAULT, idx, x, y);
+        m_buf_main.add(idx, x, y);
     }
-    if (m_verts.size() > 0)
+}
+
+void DungeonRegion::render()
+{
+    if (m_dirty)
     {
-        m_image->m_textures[TEX_DEFAULT].bind();
-        glVertexPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].pos_x);
-        glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
-        glDrawArrays(GL_QUADS, 0, m_verts.size());
+        pack_buffers();
+        m_dirty = false;
     }
+
+    set_transform();
+    m_buf_dngn.draw();
+    m_buf_doll.draw();
+    m_buf_main.draw();
 
     // Draw text labels
     // TODO enne - add an option for this
@@ -1115,7 +1041,10 @@ bool InventoryTile::empty() const
 
 InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
-    m_flavour(NULL), m_cursor(NO_CURSOR), m_need_to_pack(false)
+    m_flavour(NULL),
+    m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
+    m_buf_main(&im->m_textures[TEX_DEFAULT]),
+    m_cursor(NO_CURSOR)
 {
 }
 
@@ -1127,7 +1056,8 @@ InventoryRegion::~InventoryRegion()
 void InventoryRegion::clear()
 {
     m_items.clear();
-    m_verts.clear();
+    m_buf_dngn.clear();
+    m_buf_main.clear();
 }
 
 void InventoryRegion::on_resize()
@@ -1149,7 +1079,7 @@ void InventoryRegion::update(int num, InventoryTile *items)
     for (int i = 0; i < num; i++)
         m_items.push_back(items[i]);
 
-    m_need_to_pack = true;
+    m_dirty = true;
 }
 
 void InventoryRegion::update_slot(int slot, InventoryTile &desc)
@@ -1162,35 +1092,23 @@ void InventoryRegion::update_slot(int slot, InventoryTile &desc)
 
     m_items[slot] = desc;
 
-    m_need_to_pack = true;
+    m_dirty = true;
 }
 
 void InventoryRegion::render()
 {
-    if (m_need_to_pack)
-        pack_verts();
+    if (m_dirty)
+    {
+        pack_buffers();
+        m_dirty = false;
+    }
 
-    if (m_verts.size() == 0)
+    if (m_buf_dngn.empty() && m_buf_main.empty())
         return;
 
-    glLoadIdentity();
-    glTranslatef(sx + ox, sy + oy, 0);
-    glScalef(dx, dy, 1);
-
-    GLState state;
-    state.array_vertex = true;
-    state.array_texcoord = true;
-    state.blend = true;
-    state.texture = true;
-    GLStateManager::set(state);
-
-    m_image->m_textures[TEX_DUNGEON].bind();
-    glVertexPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].pos_x);
-    glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
-    glDrawArrays(GL_QUADS, 0, m_base_verts);
-
-    m_image->m_textures[TEX_DEFAULT].bind();
-    glDrawArrays(GL_QUADS, m_base_verts, m_verts.size() - m_base_verts);
+    set_transform();
+    m_buf_dngn.draw();
+    m_buf_main.draw();
 
     if (m_cursor != NO_CURSOR)
     {
@@ -1227,13 +1145,13 @@ void InventoryRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
     assert(num >=0 && num <= 9);
     int idx = TILE_NUM0 + num;
 
-    add_quad(TEX_DEFAULT, idx, x, y, ofs_x, ofs_y, false);
+    m_buf_main.add(idx, x, y, ofs_x, ofs_y, false);
 }
 
-void InventoryRegion::pack_verts()
+void InventoryRegion::pack_buffers()
 {
-    m_need_to_pack = false;
-    m_verts.clear();
+    m_buf_dngn.clear();
+    m_buf_main.clear();
 
     // Ensure the cursor has been placed.
     place_cursor(m_cursor);
@@ -1255,16 +1173,13 @@ void InventoryRegion::pack_verts()
             if (item.flag & TILEI_FLAG_FLOOR)
             {
                 int num_floor = tile_dngn_count(env.tile_default.floor);
-                add_quad(TEX_DUNGEON, env.tile_default.floor
+                m_buf_dngn.add(env.tile_default.floor
                          + m_flavour[i] % num_floor, x, y);
             }
             else
-                add_quad(TEX_DUNGEON, TILE_ITEM_SLOT, x, y);
+                m_buf_dngn.add(TILE_ITEM_SLOT, x, y);
         }
     }
-
-    // Make note of how many verts are used by the base
-    m_base_verts = m_verts.size();
 
     i = 0;
     for (int y = 0; y < my; y++)
@@ -1282,25 +1197,25 @@ void InventoryRegion::pack_verts()
             if (item.flag & TILEI_FLAG_EQUIP)
             {
                 if (item.flag & TILEI_FLAG_CURSE)
-                    add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_EQUIP_CURSED, x, y);
+                    m_buf_main.add(TILE_ITEM_SLOT_EQUIP_CURSED, x, y);
                 else
-                    add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_EQUIP, x, y);
+                    m_buf_main.add(TILE_ITEM_SLOT_EQUIP, x, y);
 
                 if (item.flag & TILEI_FLAG_MELDED)
-                    add_quad(TEX_DEFAULT, TILE_MESH, x, y);
+                    m_buf_main.add(TILE_MESH, x, y);
             }
             else if (item.flag & TILEI_FLAG_CURSE)
-                add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_CURSED, x, y);
+                m_buf_main.add(TILE_ITEM_SLOT_CURSED, x, y);
 
             // TODO enne - need better graphic here
             if (item.flag & TILEI_FLAG_SELECT)
-                add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_SELECTED, x, y);
+                m_buf_main.add(TILE_ITEM_SLOT_SELECTED, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                add_quad(TEX_DEFAULT, TILE_CURSOR, x, y);
+                m_buf_main.add(TILE_CURSOR, x, y);
 
             if (item.tile)
-                add_quad(TEX_DEFAULT, item.tile, x, y);
+                m_buf_main.add(item.tile, x, y);
 
             if (item.quantity != -1)
             {
@@ -1335,13 +1250,13 @@ void InventoryRegion::pack_verts()
             }
 
             if (item.special)
-                add_quad(TEX_DEFAULT, item.special, x, y, 0, 0, false);
+                m_buf_main.add(item.special, x, y, 0, 0, false);
 
             if (item.flag & TILEI_FLAG_TRIED)
-                add_quad(TEX_DEFAULT, TILE_TRIED, x, y, 0, TILE_Y / 2, false);
+                m_buf_main.add(TILE_TRIED, x, y, 0, TILE_Y / 2, false);
 
             if (item.flag & TILEI_FLAG_INVALID)
-                add_quad(TEX_DEFAULT, TILE_MESH, x, y);
+                m_buf_main.add(TILE_MESH, x, y);
         }
     }
 }
@@ -1357,7 +1272,7 @@ void InventoryRegion::place_cursor(const coord_def &cursor)
     if (m_cursor != NO_CURSOR && cursor_index() < m_items.size())
     {
         m_items[cursor_index()].flag &= ~TILEI_FLAG_CURSOR;
-        m_need_to_pack = true;
+        m_dirty = true;
     }
 
     m_cursor = cursor;
@@ -1367,7 +1282,7 @@ void InventoryRegion::place_cursor(const coord_def &cursor)
 
     // Add cursor to new location
     m_items[cursor_index()].flag |= TILEI_FLAG_CURSOR;
-    m_need_to_pack = true;
+    m_dirty = true;
 }
 
 int InventoryRegion::handle_mouse(MouseEvent &event)
@@ -1723,6 +1638,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
 MapRegion::MapRegion(int pixsz) :
     m_buf(NULL),
+    m_dirty(true),
     m_far_view(false)
 {
     ASSERT(pixsz > 0);
@@ -1774,33 +1690,10 @@ MapRegion::~MapRegion()
     delete[] m_buf;
 }
 
-struct map_vertex
+void MapRegion::pack_buffers()
 {
-    float x;
-    float y;
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
-};
-
-void MapRegion::render()
-{
-    if (m_min_gx > m_max_gx || m_min_gy > m_max_gy)
-        return;
-
-    // [enne] - GL_POINTS should probably be used here, but there's (apparently)
-    // a bug in the OpenGL driver that I'm using and it doesn't respect
-    // glPointSize unless GL_SMOOTH_POINTS is on.  GL_SMOOTH_POINTS is
-    // *terrible* for performance if it has to fall back on software rendering,
-    // so instead we'll just make quads.
-
-    glLoadIdentity();
-    glTranslatef(sx + ox, sy + oy, 0);
-    glScalef(dx, dx, 1);
-
-    std::vector<map_vertex> verts;
-    verts.reserve(4 * (m_max_gx - m_min_gx + 1) * (m_max_gy - m_min_gy + 1));
+    m_buf_map.clear();
+    m_buf_lines.clear();
 
     for (int x = m_min_gx; x <= m_max_gx; x++)
     {
@@ -1809,75 +1702,39 @@ void MapRegion::render()
             map_feature f = (map_feature)m_buf[x + y * mx];
             map_colour c = m_colours[f];
 
-            int pos_x = x - m_min_gx;
-            int pos_y = y - m_min_gy;
-
-            map_vertex v;
-            v.r = map_colours[c][0];
-            v.g = map_colours[c][1];
-            v.b = map_colours[c][2];
-            v.a = 255;
-
-            v.x = pos_x;
-            v.y = pos_y;
-            verts.push_back(v);
-
-            v.x = pos_x;
-            v.y = pos_y + 1;
-            verts.push_back(v);
-
-            v.x = pos_x + 1;
-            v.y = pos_y + 1;
-            verts.push_back(v);
-
-            v.x = pos_x + 1;
-            v.y = pos_y;
-            verts.push_back(v);
+            float pos_x = x - m_min_gx;
+            float pos_y = y - m_min_gy;
+            m_buf_map.add(pos_x, pos_y, pos_x + 1, pos_y + 1, map_colours[c]);
         }
     }
-
-    GLState state;
-    state.array_vertex = true;
-    state.array_colour = true;
-    GLStateManager::set(state);
-
-    glVertexPointer(2, GL_FLOAT, sizeof(map_vertex), &verts[0].x);
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(map_vertex), &verts[0].r);
-    glDrawArrays(GL_QUADS, 0, verts.size());
-
-    // TODO enne - make sure we're drawing within the map square here...
 
     // Draw window box.
     if (m_win_start.x == -1 && m_win_end.x == -1)
         return;
 
-    verts.clear();
-    glLoadIdentity();
-    glTranslatef(sx + ox, sy + oy, 0);
-
-    map_vertex v;
     int c = (int)Options.tile_window_col;
-    v.r = map_colours[c][0];
-    v.g = map_colours[c][1];
-    v.b = map_colours[c][2];
-    v.a = 255;
+    float pos_sx = (m_win_start.x - m_min_gx);
+    float pos_sy = (m_win_start.y - m_min_gy);
+    float pos_ex = (m_win_end.x - m_min_gx) + 1 / (float)dx;
+    float pos_ey = (m_win_end.y - m_min_gy) + 1 / (float)dy;
 
-    v.x = dx * (m_win_start.x - m_min_gx);
-    v.y = dy * (m_win_start.y - m_min_gy);
-    verts.push_back(v);
+    m_buf_lines.add_square(pos_sx, pos_sy, pos_ex, pos_ey, map_colours[c]);
+}
 
-    v.y = dy * (m_win_end.y - m_min_gy) + 1;
-    verts.push_back(v);
+void MapRegion::render()
+{
+    if (m_min_gx > m_max_gx || m_min_gy > m_max_gy)
+        return;
 
-    v.x = dx * (m_win_end.x - m_min_gx) + 1;
-    verts.push_back(v);
+    if (m_dirty)
+    {
+        pack_buffers();
+        m_dirty = false;
+    }
 
-    v.y = dy * (m_win_start.y - m_min_gy);
-    verts.push_back(v);
-
-    glVertexPointer(2, GL_FLOAT, sizeof(map_vertex), &verts[0].x);
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(map_vertex), &verts[0].r);
-    glDrawArrays(GL_LINE_LOOP, 0, verts.size());
+    set_transform();
+    m_buf_map.draw();
+    m_buf_lines.draw();
 }
 
 void MapRegion::update_offsets()
@@ -1885,6 +1742,7 @@ void MapRegion::update_offsets()
     // adjust offsets to center map
     ox = (wx - dx * (m_max_gx - m_min_gx)) / 2;
     oy = (wy - dy * (m_max_gy - m_min_gy)) / 2;
+    m_dirty = true;
 }
 
 void MapRegion::set(int gx, int gy, map_feature f)
@@ -1908,6 +1766,8 @@ void MapRegion::set_window(const coord_def &start, const coord_def &end)
 {
     m_win_start = start;
     m_win_end = end;
+
+    m_dirty = true;
 }
 
 void MapRegion::clear()
@@ -1926,6 +1786,9 @@ void MapRegion::clear()
 
     if (m_buf)
         memset(m_buf, 0, sizeof(*m_buf) * mx * my);
+
+    m_buf_map.clear();
+    m_buf_lines.clear();
 }
 
 int MapRegion::handle_mouse(MouseEvent &event)
@@ -2645,10 +2508,7 @@ void MenuRegion::render()
     if (m_dirty)
         place_entries();
 
-    glLoadIdentity();
-    glTranslatef(sx + ox, sy + oy, 0);
-    glScalef(dx, dy, 1);
-
+    set_transform();
     m_shape_buf.draw();
     m_line_buf.draw();
     for (int i = 0; i < TEX_MAX; i++)

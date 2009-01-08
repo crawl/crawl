@@ -58,18 +58,19 @@ struct PCVert
 
 // V: vertex data
 template<class V>
-class VertBuffer
+class VertBuffer : public std::vector<V>
 {
 public:
+    typedef V Vert;
+
     VertBuffer(const GenericTexture *tex, int prim);
 
-    void add(const V& vert);
+    // Vertices are fat, so to avoid an extra copy of all the data members,
+    // pre-construct the vertex and return a reference to it.
     V& get_next();
-
     void draw() const;
-    void clear();
+
 protected:
-    std::vector<V> m_verts;
     const GenericTexture *m_tex;
     int m_prim;
 };
@@ -88,7 +89,10 @@ class TileBuffer : public VertBuffer<PTVert>
 {
 public:
     TileBuffer(const TilesTexture *tex = NULL);
+
     void add(int idx, float x, float y);
+    void add(int idx, int x, int y, int ox = 0, int oy = 0, bool centre = true, int ymax = -1);
+
 
     // Note: this could invalidate previous additions if they were
     // from a different texture.
@@ -120,23 +124,11 @@ inline VertBuffer<V>::VertBuffer(const GenericTexture *tex, int prim) :
 }
 
 template<class V>
-inline void VertBuffer<V>::add(const V& vert)
-{
-    m_verts.push_back(vert);
-}
-
-template<class V>
 inline V& VertBuffer<V>::get_next()
 {
-    int last = m_verts.size();
-    m_verts.resize(last + 1);
-    return (m_verts[last]);
-}
-
-template<class V>
-inline void VertBuffer<V>::clear()
-{
-    m_verts.clear();
+    size_t last = std::vector<V>::size();
+    std::vector<V>::resize(last + 1);
+    return ((*this)[last]);
 }
 
 #endif

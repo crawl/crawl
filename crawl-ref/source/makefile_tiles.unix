@@ -321,6 +321,10 @@ profile: $(GAME_DEPENDS)
 %.o: %.cc $(TILEDEFHDRS)
 	${CXX} ${CFLAGS} -c $< -o $@
 
+# STL is bad in debug.  Always compile this file with optimizations.
+tilebuf.o: tilebuf.cc $(TILEDEFHDRS)
+	${CXX} ${CFLAGS} -O2 -c $< -o $@
+
 # [ds] Note we don't use the standard CFLAGS here; that's intentional, most
 # flex/bison combos I've tried don't produce code that passes the warnings
 # test.

@@ -12,8 +12,8 @@
 enum TextureID
 {
     TEX_DUNGEON,
-    TEX_DEFAULT,
     TEX_DOLL,
+    TEX_DEFAULT,
     TEX_MAX
 };
 
@@ -64,20 +64,20 @@ public:
     TilesTexture();
 
     void set_info(int max, tile_info_func *info);
-    inline const tile_info &get_info(int idx);
+    inline const tile_info &get_info(int idx) const;
     inline void get_coords(int idx, int ofs_x, int ofs_y,
                            float &pos_sx, float &pos_sy,
                            float &pos_ex, float &pos_ey,
                            float &tex_sx, float &tex_sy,
                            float &tex_ex, float &tex_ey,
-                           bool centre = true, int ymax = -1);
+                           bool centre = true, int ymax = -1) const;
 
 protected:
     int m_tile_max;
     tile_info_func *m_info_func;
 };
 
-inline const tile_info &TilesTexture::get_info(int idx)
+inline const tile_info &TilesTexture::get_info(int idx) const
 {
     ASSERT(m_info_func);
     return m_info_func(idx);
@@ -88,7 +88,7 @@ inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
                                      float &pos_ex, float &pos_ey,
                                      float &tex_sx, float &tex_sy,
                                      float &tex_ex, float &tex_ey,
-                                     bool centre, int ymax)
+                                     bool centre, int ymax) const
 {
     const tile_info &inf = get_info(idx);
 
