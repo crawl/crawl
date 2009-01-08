@@ -530,24 +530,24 @@ static int _ignite_poison_clouds( coord_def where, int pow, int garbage )
 
     bool did_anything = false;
 
-    const int cloud = env.cgrid(where);
-
-    if (cloud != EMPTY_CLOUD)
+    const int i = env.cgrid(where);
+    if (i != EMPTY_CLOUD)
     {
-        if (env.cloud[ cloud ].type == CLOUD_STINK)
+        cloud_struct& cloud = env.cloud[i];
+        if (cloud.type == CLOUD_STINK)
         {
             did_anything = true;
-            env.cloud[ cloud ].type = CLOUD_FIRE;
+            cloud.type = CLOUD_FIRE;
 
-            env.cloud[ cloud ].decay /= 2;
+            cloud.decay /= 2;
 
-            if (env.cloud[ cloud ].decay < 1)
-                env.cloud[ cloud ].decay = 1;
+            if (cloud.decay < 1)
+                cloud.decay = 1;
         }
-        else if (env.cloud[ cloud ].type == CLOUD_POISON)
+        else if (cloud.type == CLOUD_POISON)
         {
             did_anything = true;
-            env.cloud[ cloud ].type = CLOUD_FIRE;
+            cloud.type = CLOUD_FIRE;
         }
     }
 
@@ -610,93 +610,92 @@ static int _ignite_poison_monsters(coord_def where, int pow, int garbage)
 
 void cast_ignite_poison(int pow)
 {
-    int damage = 0, strength = 0, pcount = 0, acount = 0, totalstrength = 0;
-    char item;
-    bool wasWielding = false;
-
-    // Temp weapon of venom => temp fire brand.
-    const int wpn = you.equip[EQ_WEAPON];
-
-    if (wpn != -1
+    // Poison branding becomes fire branding.
+    if (you.weapon()
         && you.duration[DUR_WEAPON_BRAND]
-        && get_weapon_brand( you.inv[wpn] ) == SPWPN_VENOM)
+        && get_weapon_brand(*you.weapon()) == SPWPN_VENOM)
     {
-        if (set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, SPWPN_FLAMING ))
+        if (set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_FLAMING))
         {
             mprf("%s bursts into flame!",
-                 you.inv[wpn].name(DESC_CAP_YOUR).c_str());
+                 you.weapon()->name(DESC_CAP_YOUR).c_str());
 
             you.wield_change = true;
-            you.duration[DUR_WEAPON_BRAND] += 1 + you.duration[DUR_WEAPON_BRAND] / 2;
+            you.duration[DUR_WEAPON_BRAND] +=
+                1 + you.duration[DUR_WEAPON_BRAND] / 2;
+
             if (you.duration[DUR_WEAPON_BRAND] > 80)
                 you.duration[DUR_WEAPON_BRAND] = 80;
         }
     }
 
-    totalstrength = 0;
+    int totalstrength = 0;
+    int ammo_burnt = 0;
+    int potions_burnt = 0;
+    bool was_wielding = false;
 
-    for (item = 0; item < ENDOFPACK; item++)
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[item].quantity)
+        item_def& item = you.inv[i];
+        if (!is_valid_item(item))
             continue;
 
-        strength = 0;
+        int strength = 0;
 
-        if (you.inv[item].base_type == OBJ_MISSILES)
+        if (item.base_type == OBJ_MISSILES && item.special == SPMSL_POISONED)
         {
-            if (you.inv[item].special == 3)
-            {
-                // Burn poison ammo.
-                strength = you.inv[item].quantity;
-                acount  += you.inv[item].quantity;
-            }
+            // Burn poison ammo.
+            strength = item.quantity;
+            ammo_burnt += item.quantity;
         }
-
-        if (you.inv[item].base_type == OBJ_POTIONS)
+        else if (item.base_type == OBJ_POTIONS)
         {
-            switch (you.inv[item].sub_type)
+            // Burn poisonous potions.
+            switch (item.sub_type)
             {
             case POT_STRONG_POISON:
-                strength += 20 * you.inv[item].quantity;
+                strength = 20 * item.quantity;
                 break;
             case POT_DEGENERATION:
             case POT_POISON:
-                strength += 10 * you.inv[item].quantity;
+                strength = 10 * item.quantity;
                 break;
             default:
                 break;
-            } // end switch
+            }
 
             if (strength)
-                pcount += you.inv[item].quantity;
+                potions_burnt += item.quantity;
         }
 
         if (strength)
         {
-            you.inv[item].quantity = 0;
-            if (item == you.equip[EQ_WEAPON])
+            if (i == you.equip[EQ_WEAPON])
             {
-                you.equip[EQ_WEAPON] = -1;
-                wasWielding = true;
+                unwield_item();
+                was_wielding = true;
             }
+                
+            item_was_destroyed(item);
+            destroy_item(item);
         }
 
         totalstrength += strength;
     }
 
-    if (acount > 0)
+    if (ammo_burnt)
         mpr("Some ammunition you are carrying burns!");
 
-    if (pcount > 0)
+    if (potions_burnt)
     {
         mprf("%s potion%s you are carrying explode%s!",
-             pcount > 1 ? "Some" : "A",
-             pcount > 1 ? "s" : "",
-             pcount > 1 ? "" : "s");
+             potions_burnt > 1 ? "Some" : "A",
+             potions_burnt > 1 ? "s" : "",
+             potions_burnt > 1 ? "" : "s");
     }
 
-    if (wasWielding == true)
-        canned_msg( MSG_EMPTY_HANDED );
+    if (was_wielding)
+        canned_msg(MSG_EMPTY_HANDED);
 
     if (totalstrength)
     {
@@ -707,6 +706,7 @@ void cast_ignite_poison(int pow)
             KC_YOU);
     }
 
+    int damage = 0;
     // Player is poisonous.
     if (player_mutation_level(MUT_SPIT_POISON)
         || player_mutation_level(MUT_STINGER)
@@ -716,25 +716,24 @@ void cast_ignite_poison(int pow)
                 || you.species == SP_KOBOLD             // poisonous corpse
                 || you.species == SP_NAGA)))            // spit poison
     {
-        damage = roll_dice( 3, 5 + pow / 7 );
+        damage = roll_dice(3, 5 + pow / 7);
     }
 
     // Player is poisoned.
-    damage += roll_dice( you.duration[DUR_POISONING], 6 );
+    damage += roll_dice(you.duration[DUR_POISONING], 6);
 
     if (damage)
     {
         const int resist = player_res_fire();
-
         if (resist > 0)
         {
             mpr("You feel like your blood is boiling!");
-            damage = damage / 3;
+            damage /= 3;
         }
         else if (resist < 0)
         {
-            damage *= 3;
             mpr("The poison in your system burns terribly!");
+            damage *= 3;
         }
         else
         {
@@ -753,7 +752,7 @@ void cast_ignite_poison(int pow)
     apply_area_visible(_ignite_poison_clouds, pow);
     apply_area_visible(_ignite_poison_objects, pow);
     apply_area_visible(_ignite_poison_monsters, pow);
-}                               // end cast_ignite_poison()
+}
 
 void cast_silence(int pow)
 {

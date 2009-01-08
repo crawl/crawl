@@ -514,7 +514,6 @@ void destroy_item( item_def &item, bool never_created )
         }
     }
 
-    // Paranoia, shouldn't be needed.
     item.clear();
 }
 
