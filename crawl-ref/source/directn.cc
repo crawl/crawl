@@ -582,24 +582,9 @@ void full_describe_view()
             ++menu_index;
             const char letter = index_to_letter(menu_index);
             const item_def &item = list_items[i];
-/*
-            unsigned glyph_char;
-            unsigned short glyph_col;
-            get_item_glyph( &item, &glyph_char, &glyph_col );
 
-            const std::string col_string = colour_to_str(glyph_col);
-            const std::string prefix = "(<" + col_string + ">"
-                                       + static_cast<char>(glyph_char)
-                                       + "</" + col_string + ">) ";
-
-            const std::string str = prefix +
-                uppercase_first(item.name(DESC_PLAIN));
-*/
             InvEntry *me = new InvEntry(item);
-//            MenuEntry *me = new MenuEntry(str, MEL_ITEM, 1, letter);
-//            me->item = item;
-//            me->data = reinterpret_cast<void*>(
-//                const_cast<item_def*>(&item));
+
 #ifndef USE_TILE
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
@@ -649,6 +634,15 @@ void full_describe_view()
             describe_item( *i );
         }
     }
+
+#ifndef USE_TILE
+    if (!list_items.empty())
+    {
+        // Unset show_glyph for other menus.
+        InvEntry *me = new InvEntry(list_items[0]);
+        me->set_show_glyph(false);
+    }
+#endif
 }
 
 

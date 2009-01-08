@@ -274,7 +274,6 @@ void InvEntry::add_class_hotkeys(const item_def &i)
 }
 
 bool InvEntry::show_prices = false;
-
 void InvEntry::set_show_prices(bool doshow)
 {
     show_prices = doshow;
@@ -291,7 +290,6 @@ InvShowPrices::~InvShowPrices()
 }
 
 bool InvEntry::show_glyph = false;
-
 void InvEntry::set_show_glyph(bool doshow)
 {
     show_glyph = doshow;
