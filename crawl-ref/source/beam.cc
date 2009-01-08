@@ -3897,6 +3897,10 @@ void bolt::affect_player()
             was_affected = true;
         }
     }
+    
+    // Acid.
+    if (flavour == BEAM_ACID)
+        splash_with_acid(5, affects_items);
 
     if (affects_items)
     {
@@ -3911,9 +3915,6 @@ void bolt::affect_player()
         // Potions exploding.
         if (flavour == BEAM_COLD)
             expose_player_to_element(BEAM_COLD, burn_power);
-
-        if (flavour == BEAM_ACID)
-            splash_with_acid(5);
 
         // Spore pops.
         if (in_explosion_phase && flavour == BEAM_SPORE)

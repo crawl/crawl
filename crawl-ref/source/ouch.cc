@@ -66,7 +66,7 @@ REVISION("$Rev$");
 
 
 static void end_game( scorefile_entry &se );
-static void _item_corrode( int itco );
+static void _item_corrode(int slot);
 
 
 // NOTE: DOES NOT check for hellfire!!!
@@ -237,24 +237,20 @@ int check_your_resists(int hurted, beam_type flavour)
     return (hurted);
 }                               // end check_your_resists()
 
-void splash_with_acid( char acid_strength )
+void splash_with_acid(int acid_strength, bool corrode_items)
 {
-    char splc = 0;
-    int  dam = 0;
-
+    int dam = 0;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
 
-    for (splc = EQ_CLOAK; splc <= EQ_BODY_ARMOUR; splc++)
+    for (int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; slot++)
     {
-        if (!player_wearing_slot(splc))
+        if (!player_wearing_slot(slot))
         {
             if (!wearing_cloak || coinflip())
-                dam += roll_dice( 1, acid_strength );
-            continue;
+                dam += roll_dice(1, acid_strength);
         }
-
-        if (x_chance_in_y(acid_strength + 1, 20))
-            _item_corrode( you.equip[splc] );
+        else if (corrode_items && x_chance_in_y(acid_strength + 1, 20))
+            _item_corrode(you.equip[slot]);
     }
 
     if (dam > 0)
@@ -271,11 +267,11 @@ void splash_with_acid( char acid_strength )
             ouch(post_res_dam, NON_MONSTER, KILLED_BY_ACID);
         }
     }
-}                               // end splash_with_acid()
+}
 
-void weapon_acid( char acid_strength )
+void weapon_acid(int acid_strength)
 {
-    char hand_thing = you.equip[EQ_WEAPON];
+    int hand_thing = you.equip[EQ_WEAPON];
 
     if (hand_thing == -1 && you_tran_can_wear(EQ_GLOVES, true))
         hand_thing = you.equip[EQ_GLOVES];
@@ -289,15 +285,17 @@ void weapon_acid( char acid_strength )
         _item_corrode( hand_thing );
 }
 
-void _item_corrode( int itco )
+void _item_corrode(int slot)
 {
-    int chance_corr = 0;        // no idea what its full range is {dlb}
-    bool it_resists = false;    // code simplifier {dlb}
-    bool suppress_msg = false;  // code simplifier {dlb}
-    int how_rusty = ((you.inv[itco].base_type == OBJ_WEAPONS)
-                            ? you.inv[itco].plus2 : you.inv[itco].plus);
+    bool it_resists = false;
+    bool suppress_msg = false;
+    item_def& item = you.inv[slot];
 
-    // Early return for "oRC and cloak/preservation {dlb}.
+    // Artefacts don't corrode.
+    if (is_artefact(item))
+        return;
+
+    // Anti-corrosion items protect against 90% of corrosion.
     if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
     {
 #if DEBUG_DIAGNOSTICS
@@ -306,23 +304,18 @@ void _item_corrode( int itco )
         return;
     }
 
-    // early return for items already pretty d*** rusty {dlb}:
+    int how_rusty = ((item.base_type == OBJ_WEAPONS) ? item.plus2 : item.plus);
+    // Already very rusty.
     if (how_rusty < -5)
         return;
 
-    item_def& item = you.inv[itco];
     // determine possibility of resistance by object type {dlb}:
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if (is_random_artefact( item ))
-        {
-            it_resists = true;
-            suppress_msg = true;
-        }
-        else if ((item.sub_type == ARM_CRYSTAL_PLATE_MAIL
-                    || get_equip_race(item) == ISFLAG_DWARVEN)
-                 && !one_chance_in(5))
+        if ((item.sub_type == ARM_CRYSTAL_PLATE_MAIL
+             || get_equip_race(item) == ISFLAG_DWARVEN)
+            && !one_chance_in(5))
         {
             it_resists = true;
             suppress_msg = false;
@@ -330,53 +323,32 @@ void _item_corrode( int itco )
         break;
 
     case OBJ_WEAPONS:
-        if (is_fixed_artefact(item)
-            || is_random_artefact(item))
-        {
-            it_resists = true;
-            suppress_msg = true;
-        }
-        else if (get_equip_race(item) == ISFLAG_DWARVEN
-                && !one_chance_in(5))
+    case OBJ_MISSILES:
+        if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
         {
             it_resists = true;
             suppress_msg = false;
         }
         break;
 
-    case OBJ_MISSILES:
-        if (get_equip_race(item) == ISFLAG_DWARVEN
-                && !one_chance_in(5))
-        {
-            it_resists = true;
-            suppress_msg = false;
-        }
-        break;
     default:
-        // items which aren't missiles, etc... could happen if we're
-        // e.g. wielding a deck.
+        // Other items can't corrode.
         return;
     }
 
     // determine chance of corrosion {dlb}:
     if (!it_resists)
     {
-        chance_corr = abs( how_rusty );
-
-        // ---------------------------- but it needs to stay this way
-        //                              (as it *was* this way)
+        const int chance = abs(how_rusty);
 
         // The embedded equation may look funny, but it actually works well
         // to generate a pretty probability ramp {6%, 18%, 34%, 58%, 98%}
         // for values [0,4] which closely matches the original, ugly switch.
         // {dlb}
-        if (chance_corr >= 0 && chance_corr <= 4)
-        {
-            it_resists
-               = x_chance_in_y(2 + (4 << chance_corr) + chance_corr * 8, 100);
-        }
+        if (chance >= 0 && chance <= 4)
+            it_resists = x_chance_in_y(2 + (4 << chance) + chance * 8, 100);
         else
-            it_resists = true;  // no idea how often this occurs {dlb}
+            it_resists = true;
 
         // If the checks get this far, you should hear about it. {dlb}
         suppress_msg = false;
@@ -401,9 +373,10 @@ void _item_corrode( int itco )
         else
             item.plus  = how_rusty;
 
-        you.redraw_armour_class = true;     // for armour, rings, etc. {dlb}
+        if (item.base_type == OBJ_ARMOUR)
+            you.redraw_armour_class = true;
 
-        if (you.equip[EQ_WEAPON] == itco)
+        if (you.equip[EQ_WEAPON] == slot)
             you.wield_change = true;
     }
 }
