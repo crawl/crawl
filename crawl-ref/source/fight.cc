@@ -2058,15 +2058,6 @@ void melee_attack::drain_monster()
                 def_name(DESC_NOCAP_THE).c_str());
     }
 
-    if (one_chance_in(5))
-    {
-        def->hit_dice--;
-        def->experience = 0;
-    }
-
-    def->max_hit_points -= 2 + random2(3);
-    def->hurt(attacker, 2 + random2(3), BEAM_NEG, false);
-
     special_damage = 1 + (random2(damage_done) / 2);
     attacker->god_conduct(DID_NECROMANCY, 2);
 }
@@ -4553,6 +4544,10 @@ void melee_attack::mons_perform_attack_rounds()
         mons_set_weapon(attk);
         to_hit = mons_to_hit();
 
+        const bool draining_attack = damage_brand == SPWPN_DRAINING
+                                         || (attk.flavour == AF_DRAIN_XP
+                                             && attacker != defender);
+
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
                                   || (attk.flavour == AF_CHAOS
                                       && attacker != defender);
@@ -4659,6 +4654,18 @@ void melee_attack::mons_perform_attack_rounds()
 
                 do_miscast();
                 break;
+            }
+
+            if (draining_attack && defender->atype() == ACT_MONSTER)
+            {
+                if (one_chance_in(5))
+                {
+                    def->hit_dice--;
+                    def->experience = 0;
+                }
+
+                def->max_hit_points -= 2 + random2(3);
+                def->hurt(attacker, 2 + random2(3), BEAM_NEG, false);
             }
 
             defender->hurt(attacker, damage_done + special_damage);
