@@ -639,7 +639,7 @@ static bool _animatable_remains(const item_def& item)
         && mons_class_can_be_zombified(item.plus));
 }
 
-// Try to equip the zombie/skeleton with the objects it died with.
+// Try to equip the zombie/skeleton/etc. with the objects it died with.
 // This excludes items which were dropped by the player onto the corpse,
 // and corpses which were picked up and moved by the player, so the player
 // can't equip their undead slaves with items of their choice.
@@ -650,15 +650,14 @@ static bool _animatable_remains(const item_def& item)
 // undead can be equipped with the second monster's items if the second
 // monster is either of the same type as the first, or if the second
 // monster wasn't killed by the player or a player's pet.
-static void _equip_undead(const coord_def &a, int corps, int monster,
-                          int monnum)
+void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 {
     monsters* mon = &menv[monster];
 
     if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
         return;
 
-    // If the player picked up and dropped the corpse then all its
+    // If the player picked up and dropped the corpse, then all its
     // original equipment fell off.
     if (mitm[corps].flags & ISFLAG_DROPPED)
         return;
@@ -694,6 +693,8 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
         item_list.push_back(objl);
         objl = mitm[objl].link;
     }
+
+    const bool smart_undead = mons_intel(mon) >= I_NORMAL;
 
     for (int i = item_list.size() - 1; i >= 0; --i)
     {
@@ -732,15 +733,19 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
                         // weren't equipment the monster died with.
                         return;
                     }
+                    else if (smart_undead)
+                        mslot = MSLOT_ALT_WEAPON;
                     else
-                        // The undead are too stupid to switch between
-                        // weapons.
+                    {
+                        // Stupid undead can't switch between weapons.
                         continue;
+                    }
                 }
             }
             else
                 mslot = MSLOT_WEAPON;
             break;
+
         case OBJ_ARMOUR:
             mslot = equip_slot_to_mslot(get_armour_slot(item));
 
@@ -759,11 +764,40 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
             mslot = MSLOT_GOLD;
             break;
 
-        // The undead are too stupid to use these.
+        // Stupid undead can't use wands.
         case OBJ_WANDS:
+            if (smart_undead)
+            {
+                mslot = MSLOT_WAND;
+                break;
+            }
+            continue;
+
+        // Stupid undead can't use scrolls.
         case OBJ_SCROLLS:
+            if (smart_undead)
+            {
+                mslot = MSLOT_SCROLL;
+                break;
+            }
+            continue;
+
+        // Stupid undead can't use potions.
         case OBJ_POTIONS:
+            if (smart_undead)
+            {
+                mslot = MSLOT_POTION;
+                break;
+            }
+            continue;
+
+        // Stupid undead can't use miscellaneous objects.
         case OBJ_MISCELLANY:
+            if (smart_undead)
+            {
+                mslot = MSLOT_MISCELLANY;
+                break;
+            }
             continue;
 
         default:
@@ -803,7 +837,7 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
         static_cast<monster_type>(item.plus);
 
     const int number = (item.props.exists(MONSTER_NUMBER)) ?
-                            item.props[MONSTER_NUMBER].get_short() : 0;
+                           item.props[MONSTER_NUMBER].get_short() : 0;
 
     // Headless hydras cannot be raised, sorry.
     if (zombie_type == MONS_HYDRA && number == 0)
@@ -827,6 +861,7 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
                                       0, 0, a, hitting,
                                       0, god,
                                       zombie_type, number));
+
     if (mon_index != NULL)
         *mon_index = monster;
 
@@ -837,7 +872,7 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
         name_zombified_unique(&menv[monster], monnum,
                               origin_monster_name(item));
 
-        _equip_undead(a, corps, monster, monnum);
+        equip_undead(a, corps, monster, monnum);
 
         destroy_item(corps);
 

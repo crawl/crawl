@@ -295,7 +295,7 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
                 if (mons_friendly(monster) && is_valid_item(mitm[item]))
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
-                move_item_to_grid( &item, monster->pos() );
+                move_item_to_grid(&item, monster->pos());
 
                 if (mark_item_origins && is_valid_item(mitm[item]))
                     origin_set_monster(mitm[item], monster);
@@ -317,7 +317,6 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
 
     int summon_type;
     if (mons_is_summoned(monster, NULL, &summon_type)
-        || mons_enslaved_body_and_soul(monster)
         || (monster->flags & (MF_BANISHED | MF_HARD_RESET)))
     {
         return (-1);
@@ -364,32 +363,36 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
     return (corpse_class);
 }
 
-static void _place_monster_corpse(const monsters *monster, bool silent)
+int place_monster_corpse(const monsters *monster, bool silent,
+                         bool force)
 {
     item_def corpse;
     const int corpse_class = fill_out_corpse(monster, corpse);
 
     // Don't place a corpse?  If a zombified monster is somehow capable
     // of leaving a corpse then always place it.
-    const bool force = mons_class_is_zombified(monster->type);
+    if (mons_class_is_zombified(monster->type))
+        force = true;
+
     if (corpse_class == -1 || (!force && coinflip()))
-        return;
+        return (-1);
 
     if (grid_destroys_items(grd(monster->pos())))
     {
         item_was_destroyed(corpse);
-        return;
+        return (-1);
     }
 
     int o = get_item_slot();
     if (o == NON_ITEM)
-        return;
+        return (-1);
     mitm[o] = corpse;
 
     origin_set_monster(mitm[o], monster);
 
-    // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack).
-    move_item_to_grid( &o, monster->pos() );
+    // Don't care if 'o' is changed, and it shouldn't be (corpses don't
+    // stack).
+    move_item_to_grid(&o, monster->pos());
     if (see_grid(monster->pos()))
     {
         if (force && !silent)
@@ -406,7 +409,9 @@ static void _place_monster_corpse(const monsters *monster, bool silent)
                              && player_res_poison() <= 0);
         tutorial_dissection_reminder(!poison);
     }
-}                               // end place_monster_corpse()
+
+    return (o);
+}
 
 static void _tutorial_inspect_kill()
 {
@@ -1108,8 +1113,7 @@ void monster_die(monsters *monster, killer_type killer,
             silent = true;
         }
 
-        if (monster->type == MONS_FIRE_VORTEX && !wizard
-            && !mons_reset)
+        if (monster->type == MONS_FIRE_VORTEX && !wizard && !mons_reset)
         {
             place_cloud(CLOUD_FIRE, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
@@ -1588,9 +1592,7 @@ void monster_die(monsters *monster, killer_type killer,
     else if (!mons_is_summoned(monster))
     {
         if (mons_genus(monster->type) == MONS_MUMMY)
-        {
             _mummy_curse(monster, killer, killer_index);
-        }
     }
 
     _monster_die_cloud(monster, !mons_reset, silent, summoned, summon_type);
@@ -1599,7 +1601,7 @@ void monster_die(monsters *monster, killer_type killer,
     {
         // Have to add case for disintegration effect here? {dlb}
         if (!summoned)
-            _place_monster_corpse(monster, silent);
+            place_monster_corpse(monster, silent);
     }
 
     if (!mons_reset && !crawl_state.arena)
@@ -2145,7 +2147,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
     {
         coord_def delta(random2(14), random2(14));
 
-        target = origin - coord_def(6,6) + delta;
+        target = origin - coord_def(6, 6) + delta;
 
         // Origin is not 'near'.
         if (target == origin)

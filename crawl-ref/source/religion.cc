@@ -5549,58 +5549,68 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         _yred_souls_disappear();
 
     const int type = mon->type;
-    const std::string name =
+    monster_type soul_type = mons_species(type);
+    const std::string whose =
         player_monster_visible(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                                     : "Its";
-    const std::string name_plain = mon->name(DESC_PLAIN);
-    bool twisted = false;
-
-    if ((allow_fail || mons_unusable_items(mon) > 0) && coinflip())
-        twisted = true;
+    const std::string name = mon->name(DESC_PLAIN);
+    int corps = -1;
+    bool twisted = allow_fail && coinflip();
 
     if (!quiet)
     {
-        mprf("%s soul %s.", name.c_str(),
+        mprf("%s soul %s.", whose.c_str(),
              twisted ? "becomes twisted" : "remains intact");
     }
 
     if (twisted)
     {
-        mon->type = mons_zombie_size(mons_species(type)) == Z_BIG ?
+        mon->type = mons_zombie_size(soul_type) == Z_BIG ?
             MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
-        mon->base_monster = mons_species(mon->type);
+        mon->base_monster = MONS_PROGRAM_BUG;
     }
     else
     {
+        // Drop the monster's corpse, so that it can be properly
+        // re-equipped below.
+        corps = place_monster_corpse(mon, true, true);
+
         mon->type = MONS_SPECTRAL_THING;
-        mon->base_monster = mons_species(type);
+        mon->base_monster = soul_type;
     }
+
+    // Drop the monster's equipment.
+    monster_drop_ething(mon);
 
     define_monster(*mon);
 
-    if (twisted)
-    {
-        // Mark abominations as undead.
-        mon->flags |= MF_HONORARY_UNDEAD;
-
-        monster_drop_ething(mon);
-    }
-
     mon->colour = EC_UNHOLY;
     mon->flags |= MF_ENSLAVED_SOUL;
-
-    name_zombified_unique(mon, type, name_plain);
-
-    // Wow, permanent enslaving!
-    mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     mon->flags |= MF_CREATED_FRIENDLY;
+
+    if (twisted)
+        // Mark abominations as undead.
+        mon->flags |= MF_HONORARY_UNDEAD;
+    else if (corps != -1)
+    {
+        // Re-equip spectral things.
+        equip_undead(mon->pos(), corps, monster_index(mon),
+                     mon->base_monster);
+
+        // Destroy the monster's corpse, as it's no longer needed.
+        destroy_item(corps);
+    }
+
+    name_zombified_unique(mon, type, name);
+
+    mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
 
     mons_make_god_gift(mon, GOD_YREDELEMNUL);
 
     if (!quiet)
     {
-        mprf("%s soul %s.", name.c_str(),
+        mprf("%s soul %s.", whose.c_str(),
              !force_hostile ? "is now yours" : "fights you");
     }
 }

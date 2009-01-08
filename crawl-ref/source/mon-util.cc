@@ -7588,8 +7588,7 @@ bool monsters::can_drink_potion(potion_type ptype) const
         {
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
-            return (holiness() != MH_UNDEAD
-                    && holiness() != MH_NONLIVING
+            return (holiness() != MH_NONLIVING
                     && holiness() != MH_PLANT);
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
