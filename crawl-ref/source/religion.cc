@@ -5557,6 +5557,9 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     int corps = -1;
     bool twisted = allow_fail && coinflip();
 
+    // If the monster's held in a net, get it out.
+    mons_clear_trapping_net(mon);
+
     if (!quiet)
     {
         mprf("%s soul %s.", whose.c_str(),

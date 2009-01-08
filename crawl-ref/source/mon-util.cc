@@ -1456,23 +1456,13 @@ flight_type mons_class_flies(int mc)
 
 flight_type mons_flies(const monsters *mon)
 {
-    if (mon->type == MONS_PANDEMONIUM_DEMON
-        && mon->ghost->fly)
-    {
+    if (mon->type == MONS_PANDEMONIUM_DEMON && mon->ghost->fly)
         return (mon->ghost->fly);
-    }
 
-    flight_type ret = FL_NONE;
+    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                               : mon->type;
 
-    if (mons_is_zombified(mon))
-        ret = mons_class_flies(mon->base_monster);
-
-    // Set flight status this way so that monsters will always have the
-    // best flight status possible.  This is necessary so that monsters
-    // with FL_NONE status when alive get FL_LEVITATE status as spectral
-    // things, and monsters with FL_FLY status when alive retain it as
-    // spectral things.
-    ret = std::max(mons_class_flies(mon->type), ret);
+    flight_type ret = mons_class_flies(montype);
 
     if (ret == FL_NONE && _scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0)
         ret = FL_LEVITATE;
