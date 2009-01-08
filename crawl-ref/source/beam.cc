@@ -5061,7 +5061,7 @@ void bolt::refine_for_explosion()
         name       = "ice storm";
         type       = dchar_glyph(DCHAR_FIRED_ZAP);
         colour     = WHITE;
-        ex_size    = 2 + (random2(ench_power) > 75);
+        ex_size    = is_tracer ? 3 : (2 + (random2(ench_power) > 75));
     }
 
     if (name == "stinking cloud")
