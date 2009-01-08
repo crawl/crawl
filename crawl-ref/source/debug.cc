@@ -2164,7 +2164,7 @@ void debug_item_scan( void )
 
         const monsters* mon = holding_monster(mitm[i]); 
 
-        // Don't check (-1,-1) player items or (-2, -2) monstert items
+        // Don't check (-1,-1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
         if (mitm[i].pos.origin())
         {

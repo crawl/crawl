@@ -1932,9 +1932,9 @@ void process_command( command_type cmd )
 
     switch (cmd)
     {
-    case CMD_OPEN_DOOR_UP_RIGHT:   _open_door(-1, -1); break;
+    case CMD_OPEN_DOOR_UP_RIGHT:   _open_door( 1, -1); break;
     case CMD_OPEN_DOOR_UP:         _open_door( 0, -1); break;
-    case CMD_OPEN_DOOR_UP_LEFT:    _open_door( 1, -1); break;
+    case CMD_OPEN_DOOR_UP_LEFT:    _open_door(-1, -1); break;
     case CMD_OPEN_DOOR_RIGHT:      _open_door( 1,  0); break;
     case CMD_OPEN_DOOR_DOWN_RIGHT: _open_door( 1,  1); break;
     case CMD_OPEN_DOOR_DOWN:       _open_door( 0,  1); break;
