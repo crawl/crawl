@@ -370,7 +370,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
     const int corpse_class = fill_out_corpse(monster, corpse);
 
     // Don't place a corpse?  If a zombified monster is somehow capable
-    // of leaving a corpse then always place it.
+    // of leaving a corpse, then always place it.
     if (mons_class_is_zombified(monster->type))
         force = true;
 
