@@ -6883,7 +6883,7 @@ void player::rot(actor *who, int rotlevel, int immed_rot)
         rot_hp(immed_rot);
 
     if (rotlevel && one_chance_in(4))
-        disease_player( 50 + random2(100) );
+        disease_player(50 + random2(100));
 }
 
 void player::confuse(actor *who, int str)

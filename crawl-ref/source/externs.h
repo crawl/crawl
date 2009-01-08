@@ -334,9 +334,10 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool mutate() = 0;
-    virtual int hurt(const actor *attacker, int amount,
-                     beam_type flavour = BEAM_MISSILE,
-                     bool cleanup_dead = true) = 0;
+    virtual void rot(actor *attacker, int rotlevel, int immed_rot) = 0;
+    virtual int  hurt(const actor *attacker, int amount,
+                      beam_type flavour = BEAM_MISSILE,
+                      bool cleanup_dead = true) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
     virtual void banish(const std::string &who = "") = 0;
     virtual void blink(bool allow_partial_control = true) = 0;
@@ -347,7 +348,6 @@ public:
     virtual void petrify(actor *attacker, int strength) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void rot(actor *attacker, int rotlevel, int immediate_rot) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount, actor* attacker) { }
     virtual void put_to_sleep(int power = 0) { };
@@ -1070,8 +1070,8 @@ public:
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    void rot(actor *agent, int rotlevel, int immed_rot);
     void heal(int amount, bool max_too = false);
+    void rot(actor *attacker, int rotlevel, int immed_rot);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
@@ -1499,7 +1499,7 @@ public:
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    void rot(actor *agent, int rotlevel, int immed_rot);
+    void rot(actor *, int rotlevel, int immed_rot);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);

@@ -5788,6 +5788,39 @@ god_type monsters::deity() const
     return (god);
 }
 
+void monsters::rot(actor *atk, int rotlevel, int immed_rot)
+{
+    if (res_rotting() > 0)
+        return;
+
+    // Apply immediate damage because we can't handle rotting for
+    // monsters yet.
+    const int damage = immed_rot;
+    if (damage > 0)
+    {
+        if (mons_near(this) && player_monster_visible(this))
+        {
+            mprf("%s %s!", name(DESC_CAP_THE).c_str(),
+                 rotlevel == 0 ? "looks less resilient" : "rots");
+        }
+
+        hurt(atk, damage);
+
+        if (alive())
+        {
+            max_hit_points -= immed_rot * 2;
+            if (hit_points > max_hit_points)
+                hit_points = max_hit_points;
+        }
+    }
+
+    if (rotlevel > 0)
+    {
+        add_ench(mon_enchant(ENCH_ROT, std::min(rotlevel, 4),
+                             atk->kill_alignment()));
+    }
+}
+
 int monsters::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
@@ -5828,36 +5861,6 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
     }
 
     return (amount);
-}
-
-void monsters::rot(actor *agent, int rotlevel, int immed_rot)
-{
-    if (res_rotting() > 0)
-        return;
-
-    // Apply immediate damage because we can't handle rotting for monsters yet.
-    const int damage = immed_rot;
-    if (damage > 0)
-    {
-        if (mons_near(this) && player_monster_visible(this))
-        {
-            mprf("%s %s!", name(DESC_CAP_THE).c_str(),
-                 rotlevel == 0? "looks less resilient" : "rots");
-        }
-        hurt(agent, damage);
-        if (alive())
-        {
-            max_hit_points -= immed_rot * 2;
-            if (hit_points > max_hit_points)
-                hit_points = max_hit_points;
-        }
-    }
-
-    if (rotlevel > 0)
-    {
-        add_ench(mon_enchant(ENCH_ROT, std::min(rotlevel, 4),
-                             agent->kill_alignment()));
-    }
 }
 
 void monsters::confuse(actor *atk, int strength)
