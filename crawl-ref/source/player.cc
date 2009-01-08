@@ -6871,18 +6871,15 @@ void player::drain_stat(int stat, int amount, actor* attacker)
         lose_stat(stat, amount, false, "");
 }
 
-void player::rot(actor *who, int rotlevel, int immed_rot)
+void player::rot(actor *who, int amount, int immediate)
 {
-    if (res_rotting() > 0)
+    if (res_rotting() > 0 || amount <= 0)
         return;
 
-    if (rotlevel)
-        rot_player(rotlevel);
+    if (immediate)
+        rot_hp(immediate);
 
-    if (immed_rot)
-        rot_hp(immed_rot);
-
-    if (rotlevel && one_chance_in(4))
+    if (one_chance_in(4))
         disease_player(50 + random2(100));
 }
 

@@ -3884,13 +3884,11 @@ void MiscastEffect::_necromancy(int severity)
                 do_msg();
             }
             else
-            {
                 torment_monsters(target->pos(), 0, TORMENT_GENERIC);
-            }
             break;
 
         case 1:
-            target->rot(act_source, random2avg(7, 2) + 1, 0);
+            target->rot(act_source, random2avg(7, 2) + 1);
             break;
 
         case 2:

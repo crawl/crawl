@@ -334,7 +334,7 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool mutate() = 0;
-    virtual void rot(actor *attacker, int rotlevel, int immed_rot) = 0;
+    virtual void rot(actor *agent, int amount, int immediate = 0) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
                       bool cleanup_dead = true) = 0;
@@ -1071,7 +1071,7 @@ public:
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
     void heal(int amount, bool max_too = false);
-    void rot(actor *attacker, int rotlevel, int immed_rot);
+    void rot(actor *, int amount, int immediate = 0);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
@@ -1499,7 +1499,7 @@ public:
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    void rot(actor *, int rotlevel, int immed_rot);
+    void rot(actor *, int amount, int immediate = 0);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
