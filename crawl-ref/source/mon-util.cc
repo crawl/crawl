@@ -1464,6 +1464,11 @@ flight_type mons_flies(const monsters *mon)
 
     flight_type ret = mons_class_flies(montype);
 
+    // Handle the case where the zombified base monster can't fly, but
+    // the zombified monster can (e.g. spectral things).
+    if (ret == FL_NONE && mons_is_zombified(mon))
+        ret = mons_class_flies(mon->type);
+
     if (ret == FL_NONE && _scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0)
         ret = FL_LEVITATE;
 
