@@ -237,8 +237,10 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
     if (mons_is_insubstantial(mon->type))
     {
         if (mons_near(mon) && player_monster_visible(mon))
+        {
             mprf("The net passes right through %s!",
                  mon->name(DESC_NOCAP_THE).c_str());
+        }
         return;
     }
 
@@ -552,7 +554,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         msg::stream << " onto " << m->name(DESC_NOCAP_THE);
                     msg::stream << "!" << std::endl;
                 }
-                // FIXME: Fake a beam for monster_caught_in_net.
+                // FIXME: Fake a beam for monster_caught_in_net().
                 bolt beam;
                 beam.flavour = BEAM_MISSILE;
                 beam.thrower = KILL_MISC;
