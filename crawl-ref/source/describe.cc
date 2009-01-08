@@ -2883,10 +2883,10 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
 
     std::ostringstream buf;
     buf << final_msg;
-    if (abil != ABIL_NON_ABILITY)
+    const std::string cost = "(" + make_cost_description(abil) + ")";
+    if (cost != "(None)")
     {
         const int spacesleft = 79 - buf.str().length();
-        const std::string cost = "(" + make_cost_description(abil) + ")";
         buf << std::setw(spacesleft) << cost;
     }
     cprintf("%s\n", buf.str().c_str());
