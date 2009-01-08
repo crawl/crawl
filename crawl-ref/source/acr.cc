@@ -606,7 +606,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 'B':
         if (you.level_type != LEVEL_ABYSS)
-            banished( DNGN_ENTER_ABYSS, "wizard command" );
+            banished(DNGN_ENTER_ABYSS, "wizard command");
         else
             down_stairs(you.your_level, DNGN_EXIT_ABYSS);
         break;
@@ -3113,6 +3113,7 @@ void world_reacts()
             env.turns_on_level++;
         update_turn_count();
     }
+
     _check_banished();
 
     _check_shafts();
@@ -3205,6 +3206,7 @@ void world_reacts()
     }
 
     handle_monsters();
+
     _check_banished();
 
     ASSERT(you.time_taken >= 0);

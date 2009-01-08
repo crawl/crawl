@@ -4650,7 +4650,8 @@ void melee_attack::mons_perform_attack_rounds()
                 mprf("%s", special_damage_message.c_str());
 
             // Defender banished.  Bail before chaos_killed_defender()
-            // is called, since the defender is still alive in the Abyss.
+            // is called, since the defender is still alive in the
+            // Abyss.
             if (!defender->alive())
             {
                 if (chaos_attack && attacker->alive())
