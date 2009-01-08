@@ -695,7 +695,8 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
         objl = mitm[objl].link;
     }
 
-    // This handles Yredelemnul's enslaved intact souls.
+    // This handles e.g. spectral things that are Yredelemnul's enslaved
+    // intact souls.
     const bool smart_undead = mons_intel(mon) >= I_NORMAL;
 
     for (int i = item_list.size() - 1; i >= 0; --i)
