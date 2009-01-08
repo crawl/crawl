@@ -808,7 +808,8 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (spell_typematch(spell, SPTYP_HOLY))
         did_god_conduct(DID_HOLY, 10 + spell_difficulty(spell));
 
-    // Self-banishment gets a special exemption - you're there to spread light
+    // Self-banishment gets a special exemption - you're there to spread
+    // light.
     if (_spell_is_unholy(spell) && !you.banished)
         did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
 

@@ -2492,7 +2492,7 @@ int old_player_evasion(void)
         if (ev_change > armour_ev_penalty / 3)
             ev_change = armour_ev_penalty / 3;
 
-        ev += ev_change;        /* remember that it's negative */
+        ev += ev_change;        // remember that it's negative
     }
 
     ev += player_equip( EQ_RINGS_PLUS, RING_EVASION );

@@ -1889,7 +1889,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     if (needs_message && !special_damage_message.empty())
     {
         mprf("%s", special_damage_message.c_str());
-        // Don't do a message-only miscast right after a special damage
+        // Don't do a message-only miscast right after a special damage.
         if (miscast_level == 0)
             miscast_level = -1;
     }
@@ -2163,8 +2163,8 @@ bool melee_attack::distortion_affects_defender()
         else if (defender_visible)
             obvious_effect = true;
 
-        defender->banish( atk ? atk->name(DESC_PLAIN, true)
-                              : attacker->name(DESC_PLAIN) );
+        defender->banish(atk ? atk->name(DESC_PLAIN, true)
+                             : attacker->name(DESC_PLAIN));
         return (true);
     }
 
@@ -2481,7 +2481,7 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
                           item_def &fake_corpse, int &last_item,
                           std::vector<int> items)
 {
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
     {
         const int idx = mon->inv[i];
 
@@ -2528,7 +2528,7 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
         }
         else
         {
-            // Last item which we're sure belonded to the monster.
+            // Last item which we're sure belonged to the monster.
             for (unsigned int i = 0; i < items.size(); i++)
             {
                 if (items[i] == si.link())
@@ -4641,23 +4641,22 @@ void melee_attack::mons_perform_attack_rounds()
             special_damage = 0;
             special_damage_message.clear();
 
-            // Monsters attacking themselves don't get attack flavour, the
-            // message sequences look too weird.
+            // Monsters attacking themselves don't get attack flavour.
+            // The message sequences look too weird.
             if (attacker != defender)
                 mons_apply_attack_flavour(attk);
 
             if (!special_damage_message.empty())
                 mprf("%s", special_damage_message.c_str());
 
-            // Defender banished, bail before chaos_killed_defender() is
-            // called since the defender is still alive in the Abyss.
+            // Defender banished.  Bail before chaos_killed_defender()
+            // is called, since the defender is still alive in the Abyss.
             if (!defender->alive())
             {
                 if (chaos_attack && attacker->alive())
                     chaos_affects_attacker();
 
                 do_miscast();
-
                 break;
             }
 
@@ -4736,7 +4735,7 @@ void melee_attack::mons_perform_attack_rounds()
         if (weap && you.can_see(atk) && weap->cursed()
             && is_range_weapon(*weap))
         {
-            set_ident_flags( *weap, ISFLAG_KNOW_CURSE );
+            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         }
     }
 

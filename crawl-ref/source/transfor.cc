@@ -413,7 +413,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
     if (you.species == SP_MERFOLK && player_is_swimming()
         && which_trans != TRAN_DRAGON)
     {
-        // This might by overkill, but it's okay because obviously
+        // This might be overkill, but it's okay because obviously
         // whatever magical ability that lets them walk on land is
         // removed when they're in water (in this case, their natural
         // form is completely over-riding any other... goes well with

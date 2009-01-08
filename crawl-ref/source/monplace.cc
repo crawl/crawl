@@ -584,7 +584,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     place = level_id::from_packed_place(base);
                     // If lev_mons is set to you.your_level, it was probably
                     // set as a default meaning "the current dungeon depth",
-                    // which for a portal vault using it's own definition
+                    // which for a portal vault using its own definition
                     // of random monsters means "the depth of whatever place
                     // we're using for picking the random monster".
                     if (*lev_mons == you.your_level)

@@ -5416,7 +5416,7 @@ bool bolt::nice_to(const monsters *mon) const
 
 // A constructor for bolt to help guarantee that we start clean (this has
 // caused way too many bugs).  Putting it here since there's no good place to
-// put it, and it doesn't do anything other than initialize it's members.
+// put it, and it doesn't do anything other than initialize its members.
 //
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).

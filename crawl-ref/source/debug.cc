@@ -2461,7 +2461,7 @@ void debug_mons_scan()
                 _announce_level_prob(warned);
                 warned = true;
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) holding item %s, but "
-                                 "item think's it's held by monster %s "
+                                 "item thinks it's held by monster %s "
                                  "(%d, %d)",
                      m->full_name(DESC_PLAIN, true).c_str(),
                      m->pos().x, m->pos().y,
