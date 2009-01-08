@@ -2877,16 +2877,18 @@ extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
                                        const ability_type abil)
 {
-    // If no message or ability then no power.
-    if (!final_msg[0] || abil == ABIL_NON_ABILITY)
+    // If no message then no power.
+    if (final_msg.empty())
         return (false);
 
     std::ostringstream buf;
     buf << final_msg;
-    const int spacesleft = 79 - buf.str().length();
-    const std::string cost = "(" + make_cost_description(abil) + ")";
-    buf << std::setw(spacesleft) << cost;
-
+    if (abil != ABIL_NON_ABILITY)
+    {
+        const int spacesleft = 79 - buf.str().length();
+        const std::string cost = "(" + make_cost_description(abil) + ")";
+        buf << std::setw(spacesleft) << cost;
+    }
     cprintf("%s\n", buf.str().c_str());
 
     return (true);
