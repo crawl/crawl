@@ -639,10 +639,11 @@ static bool _animatable_remains(const item_def& item)
         && mons_class_can_be_zombified(item.plus));
 }
 
-// Try to equip the zombie/skeleton/etc. with the objects it died with.
-// This excludes items which were dropped by the player onto the corpse,
-// and corpses which were picked up and moved by the player, so the player
-// can't equip their undead slaves with items of their choice.
+// Try to equip the skeleton/zombie/spectral thing with the objects it
+// died with.  This excludes items which were dropped by the player onto
+// the corpse, and corpses which were picked up and moved by the player,
+// so the player can't equip their undead slaves with items of their
+// choice.
 //
 // The item selection logic has one problem: if a first monster without
 // any items dies and leaves a corpse, and then a second monster with
@@ -694,6 +695,7 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
         objl = mitm[objl].link;
     }
 
+    // This handles Yredelemnul's enslaved intact souls.
     const bool smart_undead = mons_intel(mon) >= I_NORMAL;
 
     for (int i = item_list.size() - 1; i >= 0; --i)
