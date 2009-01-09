@@ -4289,7 +4289,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            defender->rot(attacker, 2 + random2(3), damage_done > 5);
+            defender->rot(attacker, 2 + random2(3), damage_done > 5 ? 1 : 0);
         break;
 
     case AF_DISEASE:
