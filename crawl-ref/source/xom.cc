@@ -180,15 +180,14 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
 void xom_tick()
 {
     // Xom semi-randomly drifts your piety.
-    int delta;
-    const char *origfavour = describe_xom_favour();
+    const std::string old_xom_favour = describe_xom_favour();
     const bool good = you.piety > (MAX_PIETY / 2);
     int size = abs(you.piety - 100);
-    delta = (x_chance_in_y(511, 1000) ? 1 : -1);
+    int delta = (x_chance_in_y(511, 1000) ? 1 : -1);
     size += delta;
     you.piety = (MAX_PIETY / 2) + (good ? size : -size);
-    const char *newfavour = describe_xom_favour();
-    if (strcmp(origfavour, newfavour))
+    std::string new_xom_favour = describe_xom_favour();
+    if (old_xom_favour != new_xom_favour)
     {
         // Dampen oscillation across announcement boundaries.
         size += delta * 8;
@@ -199,13 +198,11 @@ void xom_tick()
     if (coinflip())
         you.gift_timeout--;
 
-    newfavour = describe_xom_favour();
-
-    if (strcmp(origfavour, newfavour)) {
-        char buf[8192];
-        strcpy(buf, "Your title is now: ");
-        strcat(buf, newfavour);
-        god_speaks(you.religion, buf);
+    new_xom_favour = describe_xom_favour();
+    if (old_xom_favour != new_xom_favour)
+    {
+        const std::string msg = "Your title is now: " + new_xom_favour;
+        god_speaks(you.religion, msg.c_str());
     }
 
     if (you.gift_timeout == 1)
@@ -2053,7 +2050,7 @@ void xom_acts(bool niceness, int sever)
         if (old_xom_favour != new_xom_favour)
         {
             const std::string msg = "Your title is now: " + new_xom_favour;
-            god_speaks( you.religion, msg.c_str() );
+            god_speaks(you.religion, msg.c_str());
         }
     }
 }
