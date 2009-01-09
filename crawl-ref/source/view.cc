@@ -1243,8 +1243,9 @@ void monster_grid(bool do_updates)
                 // If this mprf triggers for you, please note any special
                 // circumstances so we can track down where this is coming
                 // from.
-                mprf(MSGCH_DIAGNOSTICS, "monster (%d) at (%d, %d) was "
-                     "improperly placed.  Updating mgrd.", s,
+                mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
+                     "improperly placed.  Updating mgrd.",
+                     monster->name(DESC_PLAIN, true).c_str(), s,
                      monster->pos().x, monster->pos().y);
 #endif
                 ASSERT(mgrd(monster->pos()) == NON_MONSTER);

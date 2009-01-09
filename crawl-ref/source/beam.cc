@@ -1957,7 +1957,8 @@ void bolt::do_fire()
 
     while (in_bounds(pos()))
     {
-        affect_cell();
+        if (!affects_nothing)
+            affect_cell();
 
         range_used++;
         if (range_used >= range)
@@ -2013,10 +2014,11 @@ void bolt::do_fire()
     }
 
     // The beam has terminated.
-    affect_endpoint();
+    if (!affects_nothing)
+        affect_endpoint();
 
     // Tracers need nothing further.
-    if (is_tracer)
+    if (is_tracer || affects_nothing)
         return;
 
     // Canned msg for enchantments that affected no-one, but only if the
@@ -5485,6 +5487,7 @@ void bolt::setup_retrace()
     std::swap(source, target);
     affects_nothing = true;
     aimed_at_spot   = true;
+    range_used      = 0;
 }
 
 void bolt::set_agent(actor *actor)

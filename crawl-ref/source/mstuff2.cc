@@ -1194,6 +1194,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     pbolt.thrower     = KILL_MON_MISSILE;
     pbolt.item        = &item;
     pbolt.aux_source.clear();
+    pbolt.aimed_at_spot = returning;
 
     const launch_retval projected =
         is_launched(monster, monster->mslot_item(MSLOT_WEAPON),
