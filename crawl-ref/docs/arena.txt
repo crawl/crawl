@@ -1,0 +1,119 @@
+The crawl arena is a special mode during which the player is absent and
+monsters fight each other, useful for both testing/debugging and for
+entertainment.  It can be invoked on the command line like this:
+
+    crawl -arena "kobold v goblin"
+
+Which will cause one kobold to fight one goblin, with crawl shutting down once
+one of them has won.  To make them fight for three rounds you can do:
+
+    crawl -arena "t:3 kobold v goblin"
+
+You can make monsters fight for at most 99 rounds.  You can stop the
+arena simulation early by pressing Escape, 'q' or Control-G (though if
+the arena has lots of monsters it might take a few second before it
+stops).
+
+You can also give each side more than one monster.  For example:
+
+    crawl -arena "rat, giant cockroach v kobold, goblin"
+
+will give team A a rat and a cockroach and team B a kobold and a goblin; a
+victory is declared when all of one team is dead and at lest one member of the
+other team is still alive.
+
+You can also make multiple of a single type of monster (note that the singular
+form of the names are still used):
+
+    crawl -arena "2 kobold v 3 goblin:
+    crawl -arena "2 rat, 3 giant cockroach v 4 kobold, 5 goblin"
+
+You can even have multiple instances of uniques:
+
+    crawl -arena "10 Murray v 11 Boris"
+
+Additionally, you can specify the monsters by a place in the dungeon, in
+which case a random monster appropriate for that place will be chosen.
+For example:
+
+    crawl -arena "2 Lair:10 v 3 Vault:7"
+
+will choose two random monsters from the 10th level of the Lair and pit them
+against three random monsters from the 7th level of the Vaults.
+
+If you want endless hordes of monsters to kill each other forever you can
+use the test spawner, an unkillable monster which does nothing but sit there
+and summon monsters with the Shadow Creatures spell:
+
+    crawl -arena "test spawner v test spawner"
+
+                           Options and parameters
+------------------------------------------------------------------------------
+There are three arena parameters that you can set in your crawl options file:
+
+* arena_delay: The delay in milliseconds between turns within the arena.
+      Can be set to 0 to make the simulation zip along.
+
+* arena_dump_msgs: If set to true causes messages to be dumped to the file
+      arena.result
+
+* arena_dump_msgs_all: If both this and arena_dump_msgs are set to true
+      then diagnostic messages will be dumped as well as other messages.
+
+The are also a number a parameters you can use by putting them in the
+string which specifies the monsters:
+
+    crawl -arena "parameter1 parameter2 parameter3 goblin v kobold"
+
+The parameters include:
+
+* "arena:name" lets you pick the name of the arena to place the monsters
+      in (defaults to "arena:default").  See source/dat/arena.des for
+      a list.
+
+* no_force_ai: The monsters in the arena are somewhat smatter than they are
+      than when they're facing the player.  This parameter removes that
+      extra intelligence.
+
+* names: Causes all non-unique monsters to be given random names.
+
+* no_animate: Prevents corpses from being animated into zombies.
+
+* no_summons: Prevents monsters from summoning more monsters.
+
+* no_chain_summons: Allows the original monsters to summon more monsters,
+      but the *summoned* monsters can't themselves summon any more.
+
+* no_immobile: Prevents immobile monsters from being randomly generated.
+
+* allow_zero_xp: Allows zero xp monsters like plants to be randomly generated,
+      which are forbidden from the arena by default.
+
+* "arena_place:place" sets the place used when determining which monsters the
+      spell Shadow Creatures uses.  So "arena:Lair:5" would make it
+      summon the types of monsters you'd find on the 5th lair of the Lair.
+      (This defaults to the 20th level of the main dungeon).
+
+* real_summons: Summoned monsters are made real as soon as they're placed in
+      the arena, so they can drop corpses and equipment (no_chain_summons
+      still prevents them from summoning more monsters, though).
+
+* move_summons: Moves summoned monsters to a new, random location as soon
+      as they're placed, so they don't end up clustered around the
+      summoner.
+
+* "summon_throttle:N" prevents summoned monsters from being placed if the
+      summoner has N or more allies present.
+
+* cycle_random: If any monster summons monsters with the spell Shadow
+      Creatures spell (including test spawners) then arena cycles through
+      the list of valid monsters, rather than taking rarity into account.
+
+* random_uniques: Any monster using Shadow Creatures will summon uniques.
+
+* "ban_gylphs:ABC" prevents monsters with the listed ASCII glyphs from
+      being placed in the arena.  For instance, "ban_glyphs:&C" prevents
+      demon lords and giants/cyclopses/titans/etc from being placed.
+
+* "delay:N" allows the delay between turns to be specified on the command
+      line instead of in the options file.
