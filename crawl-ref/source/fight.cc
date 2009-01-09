@@ -2552,16 +2552,18 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
 static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
                          item_def &fake_corpse, int last_item)
 {
-    // If the monster dropped a corpse then don't waste it by turning
+    // If the monster dropped a corpse, then don't waste it by turning
     // it into a zombie.
     if (corpse_index != NON_ITEM || !mons_class_can_be_zombified(corpse_class))
         return (false);
 
-    // Good gods won't let their gifts/followers be raised as the undead.
+    // Good gods won't let their gifts/followers be raised as the
+    // undead.
     if (is_good_god(mon->god))
         return (false);
 
-    // First attempt to raise zombie fitted out with all its old equipment.
+    // First attempt to raise zombie fitted out with all its old
+    // equipment.
     int zombie_index = -1;
     int idx = get_item_slot(0);
     if (idx != NON_ITEM && last_item != NON_ITEM)
@@ -2569,8 +2571,8 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         mitm[idx]     = fake_corpse;
         mitm[idx].pos = mon->pos();
 
-        // Insert it in the item stack right after the monster's last item, so
-        // it will be equipped with all the monster's items.
+        // Insert it in the item stack right after the monster's last
+        // item, so it will be equipped with all the monster's items.
         mitm[idx].link       = mitm[last_item].link;
         mitm[last_item].link = idx;
 
@@ -2582,7 +2584,7 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
     if (zombie_index == -1)
     {
         monster_type type = (mons_zombie_size(mon->type) == Z_SMALL) ?
-                            MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
+                                MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
         zombie_index = create_monster(
                            mgen_data(type, mon->behaviour, 0, 0, mon->pos(),
                                      mon->foe, MG_FORCE_PLACE, mon->god,
