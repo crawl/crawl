@@ -229,8 +229,6 @@ WEIGHT:  8
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
-# This doesn't work! error: Too many arguments.
-#: dgn.set_random_mon_list("wolf", "yak", "polar bear", "death yak", "frost giant")
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
 MONS:    frost giant
