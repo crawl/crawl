@@ -3832,8 +3832,7 @@ static monsterentry mondata[] = {
 {
     MONS_ORB_OF_FIRE, '*', RED, "orb of fire",
     M_SPELLCASTER | M_FLIES | M_SEE_INVIS | M_INSUBSTANTIAL | M_GLOWS,
-    mrd(MR_RES_HELLFIRE | MR_RES_POISON, 3)
-        | MR_RES_COLD | MR_RES_ELEC,
+    mrd(MR_RES_HELLFIRE | MR_RES_POISON, 3) | MR_RES_COLD | MR_RES_ELEC,
     0, 10, MONS_ORB_OF_FIRE, MONS_ORB_OF_FIRE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 30, 0, 0, 150 },
