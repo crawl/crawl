@@ -35,7 +35,7 @@ bool cast_fragmentation(int powc, const dist& spd);
 void cast_twist(int powc);
 void cast_far_strike(int powc);
 void cast_swap(int powc);
-int cast_apportation(int powc);
+bool cast_apportation(int powc, const coord_def& where);
 void cast_ignite_poison(int pow);
 void cast_intoxicate(int pow);
 void cast_mass_sleep(int pow);

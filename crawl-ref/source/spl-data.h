@@ -236,12 +236,12 @@
 {
     SPELL_APPORTATION, "Apportation",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_GRID | SPFLAG_NOT_SELF,
      1,
      1000,
      LOS_RADIUS, LOS_RADIUS,
      0,
-     NULL,
+     "Pull items from where?",
      false,
      false
 },

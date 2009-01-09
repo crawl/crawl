@@ -2083,7 +2083,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_APPORTATION:
-        if (cast_apportation(powc) == -1)
+        if (!cast_apportation(powc, beam.target))
             return (SPRET_ABORT);
         break;
 

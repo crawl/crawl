@@ -2221,131 +2221,87 @@ void cast_far_strike(int pow)
         print_wounds(monster);
 }
 
-int cast_apportation(int pow)
+bool cast_apportation(int pow, const coord_def& where)
 {
-    dist beam;
-
-    mpr("Pull items from where?");
-
-    direction( beam, DIR_TARGET, TARG_ANY );
-
-    if (!beam.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
-
-    // it's already here!
-    if (beam.isMe)
-    {
-        mpr( "That's just silly." );
-        return (-1);
-    }
-
-    if (trans_wall_blocking( beam.target ))
-    {
-        mpr("A translucent wall is in the way.");
-        return (0);
-    }
-
-    // Protect the player from destroying the item
-    const dungeon_feature_type grid = grd(you.pos());
-
-    if (grid_destroys_items(grid))
+    // Protect the player from destroying the item.
+    if (grid_destroys_items(grd(you.pos())))
     {
         mpr( "That would be silly while over this terrain!" );
-        return (0);
+        return (false);
     }
 
-    // If this is ever changed to allow moving objects that can't
-    // be seen, it should at least only allow moving from squares
-    // that have been phyisically (and maybe magically) seen and
-    // should probably have a range check as well.  In these cases
-    // the spell should probably be upped to at least two, or three
-    // if magic mapped squares are allowed.  Right now it's okay
-    // at one... it has a few uses, but you still have to get line
-    // of sight to the object first so it will only help a little
-    // with snatching runes or the orb (although it can be quite
-    // useful for getting items out of statue rooms or the abyss). -- bwr
-    if (!see_grid( beam.target ))
+    if (trans_wall_blocking(where))
     {
-        mpr( "You cannot see there!" );
-        return (0);
+        mpr("A translucent wall is in the way.");
+        return (false);
     }
 
     // Let's look at the top item in that square...
-    const int item = igrd(beam.target);
-    if (item == NON_ITEM)
+    const int item_idx = igrd(where);
+    if (item_idx == NON_ITEM)
     {
-        const int  mon = mgrd(beam.target);
-
-        if (mon == NON_MONSTER)
-            mpr( "There are no items there." );
-        else if (mons_is_mimic( menv[ mon ].type ))
+        // Maybe the player *thought* there was something there (a mimic.)
+        const int mon = mgrd(where);
+        if (!invalid_monster_index(mon))
         {
-            mprf("%s twitches.", menv[mon].name(DESC_CAP_THE).c_str());
+            monsters& m = menv[mon];
+            if (mons_is_mimic(m.type) && you.can_see(&m))
+            {
+                mprf("%s twitches.", m.name(DESC_CAP_THE).c_str());
+                // Nothing else gives this message, so identify the mimic.
+                m.flags |= MF_KNOWN_MIMIC;
+                return (true);  // otherwise you get free mimic ID
+            }
         }
-        else
-            mpr( "This spell does not work on creatures." );
 
-        return (0);
+        mpr("There are no items there.");
+        return (false);
     }
+
+    item_def& item = mitm[item_idx];
 
     // Mass of one unit.
-    const int unit_mass = item_mass( mitm[ item ] );
-    // Assume we can pull everything.
-    int max_units = mitm[ item ].quantity;
+    const int unit_mass = item_mass(item);
+    const int max_mass = pow * 30 + random2(pow * 20);
 
-    // Item has mass: might not move all of them.
+    int max_units = item.quantity;
     if (unit_mass > 0)
-    {
-        const int max_mass = pow * 30 + random2( pow * 20 );
-
-        // Most units our power level will allow.
         max_units = max_mass / unit_mass;
-    }
 
     if (max_units <= 0)
     {
-        mpr( "The mass is resisting your pull." );
-        return (0);
+        mpr("The mass is resisting your pull.");
+        return (true);
     }
 
-    int done = 0;
-
-    // Failure should never really happen after all the above checking,
-    // but we'll handle it anyways...
-    if (move_top_item( beam.target, you.pos() ))
+    // We need to modify the item *before* we move it, because
+    // move_top_item() might change the location, or merge
+    // with something at our position.
+    mprf("Yoink! You pull the item%s to yourself.",
+         (item.quantity > 1) ? "s" : "");
+    
+    if (max_units < item.quantity)
     {
-        if (max_units < mitm[ item ].quantity)
-        {
-            mitm[ item ].quantity = max_units;
-            mpr( "You feel that some mass got lost in the cosmic void." );
-        }
-        else
-        {
-            mpr( "Yoink!" );
-            mprf("You pull the item%s to yourself.",
-                 (mitm[ item ].quantity > 1) ? "s" : "" );
-        }
-        done = 1;
-
-        // If we apport a net, free the monster under it.
-        if (mitm[item].base_type == OBJ_MISSILES
-            && mitm[item].sub_type == MI_THROWING_NET
-            && item_is_stationary(mitm[item]))
-        {
-            const int mon = mgrd(beam.target);
-            remove_item_stationary(mitm[item]);
-
-            if (mon != NON_MONSTER)
-                (&menv[mon])->del_ench(ENCH_HELD, true);
-        }
+        item.quantity = max_units;
+        mpr("You feel that some mass got lost in the cosmic void.");
     }
-    else
-        mpr( "The spell fails." );
 
-    return (done);
+    // If we apport a net, free the monster under it.
+    if (item.base_type == OBJ_MISSILES
+        && item.sub_type == MI_THROWING_NET
+        && item_is_stationary(item))
+    {
+        remove_item_stationary(item);
+
+        const int mon = mgrd(where);
+        if (!invalid_monster_index(mon))
+            menv[mon].del_ench(ENCH_HELD, true);
+    }
+
+    // Actually move the item.
+    move_top_item(where, you.pos());
+
+    return (true);
 }
 
 bool wielding_rocks()
