@@ -42,10 +42,13 @@ static inline bool _is_sewers()
 void TileNewLevel(bool first_time)
 {
     tiles.clear_minimap();
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
-            tiles.update_minimap(x, y);
 
+    if (player_in_mini_mappable_area())
+    {
+        for (int y = 0; y < GYM; y++)
+            for (int x = 0; x < GXM; x++)
+                tiles.update_minimap(x, y);
+    }
     if (first_time)
         tile_init_flavour();
 

@@ -39,6 +39,8 @@ struct demon_data
     int wings;
 };
 
+bool player_in_mini_mappable_area();
+
 //*tile1.cc: get data from core part and drives tile drawing codes
 
 //**convert in-game data to tile index

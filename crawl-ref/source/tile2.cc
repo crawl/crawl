@@ -29,6 +29,13 @@ REVISION("$Rev$");
 #include "tiles.h"
 #include "transfor.h"
 
+// In a labyrinth, don't display the minimap.
+bool player_in_mini_mappable_area()
+{
+    return (player_in_mappable_area()
+            && you.level_type != LEVEL_LABYRINTH);
+}
+
 void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 {
     flv.wall    = TILE_WALL_NORMAL;

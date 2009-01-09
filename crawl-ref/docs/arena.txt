@@ -5,7 +5,10 @@ entertainment.  It can be invoked on the command line like this:
     crawl -arena "kobold v goblin"
 
 Which will cause one kobold to fight one goblin, with crawl shutting down once
-one of them has won.  To make them fight for three rounds you can do:
+one of them has won.  To be considered valid, a monster's name has to fully 
+match its definition, e.g. "Blork the orc" rather than simply "Blork".
+
+To make them fight for three rounds you can do:
 
     crawl -arena "t:3 kobold v goblin"
 
@@ -21,6 +24,12 @@ You can also give each side more than one monster.  For example:
 will give team A a rat and a cockroach and team B a kobold and a goblin; a
 victory is declared when all of one team is dead and at lest one member of the
 other team is still alive.
+
+Some monsters have a band (that is, a group of monsters) that will be 
+generated with them during normal play. You can use the suffix "band" to
+make a monster appear with its band (if one exists).  For example:
+
+    crawl -arena "Margery band v Saint Roka band"
 
 You can also make multiple of a single type of monster (note that the singular
 form of the names are still used):

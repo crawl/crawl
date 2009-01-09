@@ -1072,9 +1072,7 @@ void TilesFramework::redraw()
     glScalef(m_viewsc.x, m_viewsc.y, 1.0f);
 
     for (unsigned int i = 0; i < m_layers[m_active_layer].m_regions.size(); i++)
-    {
         m_layers[m_active_layer].m_regions[i]->render();
-    }
 
     // Draw tooltip
     if (!m_tooltip.empty())
@@ -1091,7 +1089,7 @@ void TilesFramework::redraw()
 
 void TilesFramework::update_minimap(int gx, int gy)
 {
-    if (!player_in_mappable_area())
+    if (!player_in_mini_mappable_area())
         return;
 
     int object = env.map[gx][gy].object;
