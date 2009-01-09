@@ -478,12 +478,12 @@ std::string melee_attack::wep_name(description_level_type desc,
     return (name);
 }
 
-bool melee_attack::is_banished(const actor *defn) const
+bool melee_attack::is_banished(const actor *a) const
 {
-    if (!defn)
+    if (!a || a->alive())
         return (false);
 
-    if (defn->atype() == ACT_PLAYER)
+    if (a->atype() == ACT_PLAYER)
         return (you.banished);
     else
         return (def->flags & MF_BANISHED);
@@ -4663,7 +4663,7 @@ void melee_attack::mons_perform_attack_rounds()
             // Defender banished.  Bail before chaos_killed_defender()
             // is called, since the defender is still alive in the
             // Abyss.
-            if (!defender->alive() && is_banished(defender))
+            if (is_banished(defender))
             {
                 if (chaos_attack && attacker->alive())
                     chaos_affects_attacker();
