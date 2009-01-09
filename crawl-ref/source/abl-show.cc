@@ -1892,7 +1892,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        if (your_spells( SPELL_HELLFIRE,
+        if (your_spells(SPELL_HELLFIRE,
                         20 + you.experience_level, false ) == SPRET_ABORT)
             return (false);
 

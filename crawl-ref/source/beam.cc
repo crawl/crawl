@@ -1692,9 +1692,7 @@ void bolt::digging_wall_effect()
         }
     }
     else if (grid_is_wall(feat))
-    {
         finish_beam();
-    }
 }
 
 void bolt::fire_wall_effect()
@@ -3899,7 +3897,7 @@ void bolt::affect_player()
             was_affected = true;
         }
     }
-    
+
     // Acid.
     if (flavour == BEAM_ACID)
         splash_with_acid(5, affects_items);
