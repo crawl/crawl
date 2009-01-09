@@ -855,7 +855,8 @@ int get_mons_colour(const monsters *mons)
             col |= COLFLAG_FEATURE_ITEM;
         }
         else if (Options.heap_brand != CHATTR_NORMAL
-                 && igrd(mons->pos()) != NON_ITEM)
+                 && igrd(mons->pos()) != NON_ITEM
+                 && !crawl_state.arena)
         {
             col |= COLFLAG_ITEM_HEAP;
         }
@@ -1466,7 +1467,7 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
         const unsigned short gcol = env.grid_colours(gp);
         ecol = (grid == DNGN_SHALLOW_WATER) ?
                (gcol != BLACK ? gcol : CYAN) : eitem.colour;
-        if (eitem.link != NON_ITEM)
+        if (eitem.link != NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
         env.show(ep) = _get_item_dngn_code( eitem );
     }

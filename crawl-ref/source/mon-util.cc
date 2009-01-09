@@ -987,6 +987,9 @@ bool name_zombified_unique(monsters *mon, int mc, const std::string mon_name)
         // to avoid mentions of e.g "Blork the orc the orc zombie".
         if (mc == MONS_BLORK_THE_ORC)
             mon->mname = "Blork";
+        // Also for the Lernaean hydra.
+        else if (mc == MONS_LERNAEAN_HYDRA)
+            mon->mname = "Lernaean hydra";
 
         return (true);
     }
@@ -1984,10 +1987,30 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (mon.type == MONS_PLAYER_GHOST)
         return apostrophise(mon.mname) + " ghost";
 
+    // Some monsters might want the name of a different creature.
+    int nametype = mon.type;
+
+    // Tack on other prefixes.
+    switch (mon.type)
+    {
+    case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
+    case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
+    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
+    case MONS_SPECTRAL_THING:
+        nametype = mon.base_monster;
+        break;
+
+    default:
+        break;
+    }
+
     // If the monster has an explicit name, return that, handling it like
-    // a unique's name.
-    if (desc != DESC_BASENAME && !mon.mname.empty())
+    // a unique's name.  Special handling for named hydras.
+    if (desc != DESC_BASENAME && !mon.mname.empty()
+        && mons_genus(nametype) != MONS_HYDRA)
+    {
         return mon.mname;
+    }
 
     std::string result;
 
@@ -1995,7 +2018,8 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     // Start with the prefix.
     // (Uniques don't get this, because their names are proper nouns.)
-    if (!mons_is_unique(mon.type))
+    if (!mons_is_unique(nametype)
+        && (mon.mname.empty() || mons_genus(nametype) == MONS_HYDRA))
     {
         const bool use_your = mons_friendly(&mon);
         switch (desc)
@@ -2007,38 +2031,31 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
             result = (use_your ? "your " : "the ");
             break;
         case DESC_CAP_A:
-            result = "A ";
+            if (mon.mname.empty())
+                result = "A ";
+            else
+                result = "The ";
             break;
         case DESC_NOCAP_A:
-            result = "a ";
+            if (mon.mname.empty())
+                result = "a ";
+            else
+                result = "the ";
             break;
         case DESC_PLAIN:
         default:
             break;
         }
     }
-    else
-    {
-    }
 
     if (arena_submerged)
         result += "submerged ";
-
-    // Some monsters might want the name of a different creature.
-    int nametype = mon.type;
 
     // Tack on other prefixes.
     switch (mon.type)
     {
     case MONS_SPECTRAL_THING:
         result  += "spectral ";
-        nametype = mon.base_monster;
-        break;
-
-    case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
-    case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
-    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-        nametype = mon.base_monster;
         break;
 
     case MONS_DRACONIAN_CALLER:
@@ -2085,13 +2102,13 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += "-headed ";
     }
 
-    if (nametype == MONS_LERNAEAN_HYDRA)
+    if (!mon.mname.empty())
+        result += mon.mname;
+    else if (nametype == MONS_LERNAEAN_HYDRA)
         result += "Lernaean hydra";
     else
-    {
         // Add the base name.
         result += get_monster_data(nametype)->name;
-    }
 
     // Add suffixes.
     switch (mon.type)
@@ -5111,8 +5128,11 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
         desc = DESC_NOCAP_THE;
 
     std::string monnam;
-    if ((flags & MF_NAME_MASK) && (force_vis || you.can_see(this)))
+    if ((flags & MF_NAME_MASK) && (force_vis || you.can_see(this))
+        || crawl_state.arena && mons_class_is_zombified(type))
+    {
         monnam = full_name(desc);
+    }
     else
         monnam = _str_monam(*this, desc, force_vis);
 
@@ -5136,6 +5156,10 @@ std::string monsters::full_name(description_level_type desc,
                                 bool use_comma) const
 {
     std::string title = _str_monam(*this, desc, true);
+
+    const int _type = mons_is_zombified(this) ? base_monster : type;
+    if (mons_genus(_type) == MONS_HYDRA)
+        return (title);
 
     if (has_base_name())
     {

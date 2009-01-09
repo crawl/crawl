@@ -2430,7 +2430,12 @@ int create_monster(mgen_data mg, bool fail_msg)
     }
 
     if (in_bounds(mg.pos))
+    {
         summd = mons_place(mg);
+        // If the arena vetoed the placement then give no fail message.
+        if (crawl_state.arena)
+            fail_msg = false;
+    }
 
     // Determine whether creating a monster is successful (summd != -1) {dlb}:
     // then handle the outcome. {dlb}:
