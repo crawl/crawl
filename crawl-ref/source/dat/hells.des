@@ -9,7 +9,7 @@
 
 default-depth: D:12-26
 
-###################################
+##############################################################################
 # Hellmouth (Lemuel)
 # note that other than the imps, the demons here cannot fly
 NAME:   hellmouth_1
@@ -45,7 +45,7 @@ xxxxxxxxll?.xxxxxxx
 xxxxxxxxl?@xxxxxxxx
 ENDMAP
 
-###################################
+##############################################################################
 # Hellmouth 2 (Lemuel)
 # note that other than the imps, the demons here cannot fly
 NAME:   hellmouth_2
@@ -85,7 +85,7 @@ MAP
 ..........................
 ENDMAP
 
-###################################
+##############################################################################
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
 MONS:   weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
@@ -192,7 +192,7 @@ xxFxxxx1.x1x.1xxx2..=1x
 xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##################################################################
+##############################################################################
 # The Dragons of Dis
 # There is an 8/27 chance all three downstairs will be here.
 #
@@ -253,6 +253,7 @@ ENDMAP
 NAME:   vestibule_of_hell
 PLACE:  Hell
 ORIENT: encompass
+TAGS:   no_rotate
 MARKER: D=feat:enter_dis
 MARKER: G=feat:enter_gehenna
 MARKER: C=feat:enter_cocytus
@@ -331,6 +332,7 @@ NAME:   castle_dis
 PLACE:  Dis:7
 TAGS:   dis
 ORIENT: north
+TAGS:   no_rotate
 LFLAGS: no_tele_control
 MARKER: O = lua:item_pickup_change_flags { \
             level_flags="!no_tele_control", item="iron rune of Zot" \
@@ -386,6 +388,7 @@ ENDMAP
 NAME:   asmodeus
 PLACE:  Geh:7
 ORIENT: encompass
+TAGS:   no_rotate
 LFLAGS: no_tele_control
 MARKER: O = lua:item_pickup_change_flags { \
             level_flags="!no_tele_control", item="obsidian rune of Zot" \
@@ -465,6 +468,7 @@ ENDMAP
 NAME:    antaeus_david_1
 PLACE:   Coc:7
 ORIENT:  encompass
+TAGS:    no_rotate
 LFLAGS:  no_tele_control
 MONS:    Antaeus, Ice Fiend, ice dragon / nothing
 ITEM:    any, any misc, any misc, any misc
@@ -624,6 +628,7 @@ ENDMAP
 NAME:   ereshkigal
 PLACE:  Tar:7
 ORIENT: encompass
+TAGS:   no_rotate
 LFLAGS: no_tele_control
 MARKER: O = lua:item_pickup_change_flags { \
             level_flags="!no_tele_control", item="bone rune of Zot" \

@@ -63,6 +63,7 @@ NAME:     lom_lobon
 TAGS:     lom_lobon
 ORIENT:   north
 FLOORCOL: lightgrey
+TAGS:     no_rotate
 ROCKCOL:  white
 MONS:     patrolling Lom Lobon, giant orange brain, rakshasa, wizard
 MAP

@@ -14,6 +14,7 @@ Contents:  A. Introduction
            J. Feature names
            K. Map statistics
 
+
 A.   Introduction
 =================
 
@@ -38,13 +39,13 @@ use:
  layout.des   - Level layout code that has been moved from dungeon.cc and
                 rewritten in Lua.
  mini.des     - minivaults (no ORIENT line at all)
+ minitomb.des - the minitomb portal vault
  orc.des      - orcish mine entrances, orc only vaults
  pan.des      - vaults of the Pan demon lords, Pan minivaults
  sewer.des    - the sewer portal vault
  temple.des   - Ecumenical Temples, and Temple entrances
  vaults.des   - entrances for the Vaults, and Vaults:8
  zot.des      - vaults for the Zot branch and the maps for Zot:5
-
 
 Kinds of Vaults
 ---------------
@@ -267,7 +268,6 @@ ORIENT:   (float |encompass | north | northwest | ... | southeast)
           generator; float should generally be preferred to other ORIENT:
           settings for new vaults.
 
-
 DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           specifies the range of levels where the vault may be placed
           in the dungeon. E.g.
@@ -381,7 +381,6 @@ CHANCE:   <priority>:<roll> or <roll>
           That is, if you have a set of maps that use CHANCE and are
           tagged chance_xxx, then one map of that set will be used
           when the chance is met.
-
 
 WEIGHT:   (number with 10 being default)
           For entry vaults and any other vaults randomly picked from among
@@ -1310,7 +1309,6 @@ like 40,30,20,10 might be more interesting than 25,25,25,25.
 In order to test a portal vault, you can either use PLACE: D:2 for an
 entry vault, or use the wizard mode command &L for conjuring up the entry.
 
-
 Define a vault to hold the portal itself
 ----------------------------------------
 
@@ -1357,7 +1355,6 @@ This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a
 destination map like so:
 
-
 Define a destination map
 ------------------------
 
@@ -1383,7 +1380,6 @@ Stairs will not work right in portal vaults, do not use them.
 
 You can use multiple maps with the destination tag (generic_portal),
 and the dungeon builder will pick one at random.
-
 
 The MARKER parameters
 ---------------------
@@ -1418,7 +1414,6 @@ You can replace lua:one_way_stair by lua:timed_marker in order to make timed
 portal vaults (which will disappear after some time). bazaar.des and lab.des
 contain examples. For timed portals, you may want to add messages to the file
 dat/clua/lm_tmsg.lua.
-
 
 Using lua functions as shortcuts
 --------------------------------
@@ -1678,7 +1673,6 @@ map's NAME: directive will add the Lua code to the global prelude.
    validate {{
        <code>
    }}
-
 
 Debugging Lua
 -------------

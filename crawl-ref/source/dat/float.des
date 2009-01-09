@@ -46,6 +46,21 @@ MAP
 x
 ENDMAP
 
+################################################################################
+# Elevator
+#
+NAME:    lemuel_elevator
+DEPTH:   D, Vault, Elf, Crypt, Zot, Tar, Dis, Geh, Coc
+ORIENT:  float
+TAGS:    allow_dup
+SUBST:   m:mn
+SHUFFLE: {}, ]}) , [{(
+MAP
+mmmm
+m{}m
+mmmm
+ENDMAP
+
 ##############################################################################
 # Cavepeople
 #
@@ -267,7 +282,7 @@ DEPTH:  D:9-18
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
 SUBST:  1 = 1:50 2 3:5
-MONS:   troll 
+MONS:   troll
 MONS:   rock troll
 MONS:   iron troll
 MAP
@@ -465,7 +480,7 @@ ENDMAP
 # Swampy vault
 #
 NAME:    onia_ninara_012_swampy_vault
-TAGS:    no_pool_fixup no_monster_gen uniq_swamp_vault
+TAGS:    no_pool_fixup no_monster_gen
 DEPTH:   D:16-20, Lair:3-10, Swamp, Snake, Slime
 ORIENT:  float
 SHUFFLE: AB@
@@ -538,68 +553,6 @@ xxxxxxxxxxXXXxxW2xxxxbbxxxxx
 xxxxxxxxxxxxxxxw1Xxxxxbbxxxx
 xxxxxxxxxxxxxXww1Xxxxxxbxxxx
 xxxxxxxxxxxXwwww111@...Xxxxx
-ENDMAP
-
-
-#################################################
-# The Hell Knights are playing the Vault tonight. Rock! \m/ (Shiori)
-#
-NAME:   metal_show
-ORIENT: float
-DEPTH:  Vault:3-
-TAGS:   no_secret_doors no_monster_gen no_item_gen
-COLOUR: M = magenta
-COLOUR: K = magenta
-MARKER: # = lua:fog_machine{\
-            pow_max = 15, delay_min = 100, delay_max = 150, \
-            size = 1, size_buildup_amnt = 10, \
-            size_buildup_time = 1000 }
-KFEAT:  # = fountain_blood
-# the talent:
-: if crawl.one_chance_in(10) then
-NSUBST: M = M / K.
-: else
-SUBST:  M = .
-: end
-KMONS:  K = patrolling hell knight
-KMONS:  M = patrolling Margery
-# the staff-- manager and bartender:
-KMONS:  S = human; robe
-# the bouncers:
-KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
-# the fans:
-SUBST:  F = 011112223334455679.........
-MONS:   human; leather armour|ring mail . knife|club|ankus|whip|nothing
-MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
-# these are Sludge Elves.
-MONS:   ghoul / necrophage / rotting hulk / vampire
-MONS:   wizard / necromancer
-MONS:   big kobold / kobold demonologist
-MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
-        w:2 deep elf priest
-MONS:   Ijyb / Blork the Orc / Urug / Erolcha / Snorg / Terence / Jessica /\
-        Sigmund / Psyche / Michael / Erica / Norbert / Agnes / Maud /\
-        Louise / Rupert / Wayne / Duane / Norris / goblin
-KITEM:  ! = any potion / potion of confusion, \
-            any potion / potion of paralysis, any potion / potion of slowing
-KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
-MAP
-@............... 
-.vvvvvvvvvvvvv..  
-.v!+.MMMM.+S$v... 
-.v!v.KKKK.v$$vF...
-.vvvv#MM#vvvvvFF..
-.v..FFFFFFvFFvFF..
-.v!mFvFFvFvFF+BF..
-.v!mFFFFFFvFFvFF..
-.v!mFFFFFFvFF+BF..
-.v!mFvFFvFvFFvFF..
-.v!mFFFFFFvFF+BF..
-.vSmFFFFFFvFFvFF..
-.vvvvvBBvvvFFvFF..
-.vFFFFFFFFFFFvF..
-.vvvvvvvvvvvvv..
-@...............
 ENDMAP
 
 ##############################################################################

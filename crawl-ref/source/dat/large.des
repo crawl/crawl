@@ -55,7 +55,7 @@ DEPTH:   D:7-27, Lair, Crypt
 MONS:    ice statue / orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
-ITEM:    ring of teleportation / ring of levitation 
+ITEM:    ring of teleportation / ring of levitation
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxwwwxxxxxxxxxxx
@@ -166,11 +166,11 @@ MONS:    hill giant, cyclops
 MONS:    w:50 ogre / w:5 ogre-mage / two-headed ogre
 MONS:    wolf / warg
 SHUFFLE: ae / bB / gG / dD
-SUBST:   ; = .' 
+SUBST:   ; = .'
 SHUFFLE: 'F1/ww2
 SHUFFLE: w2/l3
 SUBST:   C = ?5
-SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x. 
+SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x.
 SUBST:   0 = 4 7 8:20 .:20
 SUBST:   T = .:50 ~
 SUBST:   | : |:30 Z
@@ -213,7 +213,7 @@ NAME:   eino_medium_gnoll_camp
 ORIENT: north
 TAGS:   uniq_gnoll_camp
 WEIGHT: 3
-DEPTH:  3-14
+DEPTH:  D:3-14
 # This chooses between closed+populated and open+deserted variations -
 # the populated version is more fun, the deserted version is easier.
 # Shallow vaults and some deeper ones get the deserted version:
@@ -352,6 +352,7 @@ ENDMAP
 #
 NAME:    River_Lethe
 ORIENT:  encompass
+TAGS:    no_rotate
 DEPTH:   D:16-26
 SUBST:   + = +=
 SUBST:   . = .:100 !:1 6:4
@@ -972,7 +973,7 @@ ENDMAP
 NAME:    box_level_dp
 DEPTH:   D:20-26
 ORIENT:  encompass
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_rotate
 SHUFFLE: zZ
 NSUBST:  A = 1:= / *:b
 NSUBST:  B = 1:= / *:b

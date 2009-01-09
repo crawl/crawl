@@ -6,7 +6,7 @@
 # Crypt minivaults
 
 
-########################
+##############################################################################
 # Dead fish
 NAME: lemuel_dead_fish_pool
 DEPTH: Crypt:*
@@ -29,7 +29,7 @@ ww1111111ww
 ...wwwww...
 ENDMAP
 
-###########################################################
+##############################################################################
 # tombs in the wall
 NAME:  tombwall_bobbens
 TAGS:  allow_dup
@@ -46,7 +46,7 @@ ccc+c+c+c+c+c+c+c+c+ccc
 .......................
 ENDMAP
 
-###########################################################
+##############################################################################
 #	small crypt building
 NAME:   minicrypt_bobbens
 TAGS:   mini_float allow_dup
@@ -68,7 +68,7 @@ c2+.....+2c
 cccc+c+cccc
 ENDMAP
 
-###########################################################
+##############################################################################
 # death oozes - they're sort of like garden slugs
 NAME:   minigarden_bobbens
 TAGS:   allow_dup
@@ -92,7 +92,7 @@ MAP
 ..........
 ENDMAP
 
-###########################################################
+##############################################################################
 # Lich vault
 NAME:  weyrava_lich_vault
 TAGS:  no_monster_gen no_item_gen
@@ -124,7 +124,7 @@ cccccZccc
     c@c
 ENDMAP
 
-###########################################################
+##############################################################################
 # Ghost lake
 NAME:  weyrava_ghost_lake
 DEPTH: Crypt
@@ -170,11 +170,11 @@ ccy1wzzzzzzzzzzzzw1ycc
    ccc@cccc
 ENDMAP
 
-###########################################################
+##############################################################################
 # Vampire temple
 NAME:    weyrava_vampire_temple
 DEPTH:   Crypt
-TAGS:    no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_item_gen no_wall_fixup
 MONS:    col:red fungus
 MONS:    col:lightred fungus
 MONS:    fungus
@@ -214,7 +214,7 @@ ENDMAP
 ##############################################################################
 # Tomb entries
 
-###########################################################
+##############################################################################
 #	simple entrance
 NAME:   tomb_entry_simple_bobbens
 ORIENT: float
@@ -241,7 +241,7 @@ c1.....1c
 cccc.cccc
 ENDMAP
 
-###########################################################
+##############################################################################
 # small pyramid leading to the bigger one
 NAME:   tomb_entry_pyramid_bobbens
 ORIENT: float
@@ -280,7 +280,7 @@ MAP
 ........................
 ENDMAP
 
-###########################################################
+##############################################################################
 # sphere entry
 NAME:   tomb_entry_sphere_bobbens
 ORIENT: float
@@ -308,7 +308,7 @@ MAP
           ccccc
 ENDMAP
 
-###########################################################
+##############################################################################
 # forgotten tomb entrance
 NAME:   tomb_entry_forgotten_bobbens
 ORIENT: float
@@ -328,7 +328,7 @@ cpp..
 c...      
 ENDMAP
 
-###########################################################
+##############################################################################
 # she sells tomb entry shells by the sea shore
 NAME:   tomb_entry_shell_bobbens
 TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate
@@ -357,7 +357,7 @@ ENDMAP
 ##############################################################################
 # Crypt ends
 
-###########################################################
+##############################################################################
 #	churchlike map with customizeable monster sets
 #
 NAME:   church_of_pain_bobbens
@@ -470,7 +470,7 @@ xxxxccc+cccxxxc7+.............+7=;;cccc+cccxxxx
 ENDMAP
 
 
-###########################################################
+##############################################################################
 #	gigantic sort of aquatic base
 #
 NAME:   cryptofortress_bobbens
@@ -581,7 +581,7 @@ vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-###########################################################
+##############################################################################
 #       eye to eye with the evil
 #
 NAME:   david_glass_crypt

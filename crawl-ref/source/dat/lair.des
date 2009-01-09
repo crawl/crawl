@@ -1,11 +1,11 @@
-##############################################################################
+################################################################################
 # lair.des: All maps relating to the Lair system, including entries and end
 #           branch endings for Shoals, Snake Pit, Slime Pit and Swamp.
-##############################################################################
+################################################################################
 
-##############################################################################
+################################################################################
 # Lair entries
-##############################################################################
+################################################################################
 # Dummy Lair entry
 NAME:   lair_0_dummy
 TAGS:   lair_entry dummy
@@ -15,7 +15,7 @@ MAP
 O
 ENDMAP
 
-##############################################################################
+################################################################################
 # Generic Lair entry
 #
 NAME:    david_lair_1
@@ -36,7 +36,7 @@ xx.........xx
 xxxx..@..xxxx
 ENDMAP
 
-##############################################################################
+################################################################################
 # Shrubbed Lair entry
 #
 NAME:   david_lair_2
@@ -56,7 +56,7 @@ xx.''..'...xx
 xxxx..@..xxxx
 ENDMAP
 
-##############################################################################
+################################################################################
 # Lair monsters near stair 
 #
 NAME:    david_lair_3
@@ -82,7 +82,7 @@ MAP
 ....@........
 ENDMAP
 
-########################################################################
+################################################################################
 # Obligatory Oklob Plant Lair Entry Vault,
 #
 NAME:   oklobed_lair
@@ -110,7 +110,7 @@ MAP
 ...xxxxxxx...
 ENDMAP
 
-##############################################################################
+################################################################################
 # A boring Lair entry vault.
 #
 NAME: erik_lair_2
@@ -132,7 +132,7 @@ x?xxxx?xxxxx?x
 xxxxxxxxx?xxxx
 ENDMAP
 
-########################################################################
+################################################################################
 # Welcome to Lair Island. We make great pancakes.
 #
 NAME:   erik_lair_3
@@ -159,7 +159,7 @@ MAP
 ...........?...@......
 ENDMAP
 
-########################################################################
+################################################################################
 # Dragon's Lair, for generous values of Dragon
 #
 NAME:    erik_lair_4
@@ -186,9 +186,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
+################################################################################
 # Orcish Takeover!
-# 
+#
 NAME:   erik_lair_5
 TAGS:   lair_entry
 ORIENT: float
@@ -208,11 +208,11 @@ xx.........xx
 xxxx..@..xxxx
 ENDMAP
 
-##############################################################################
+################################################################################
 # Lair-specific non-entry/ending vaults
-##############################################################################
+################################################################################
 
-##############################################################################
+################################################################################
 # Rats! (Lemuel), special Lair version
 # There another, easier version for the shallow dungeon
 #
@@ -249,7 +249,7 @@ xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxx
              xxxx@xx                   x
 ENDMAP
 
-############################################################################
+################################################################################
 # A comfortable, reclusive cottage for the summer holidays (Eino)
 #
 NAME:    pond_and_an_island_with_a_cottage
@@ -283,8 +283,8 @@ wwwwwwwww...........wwwwwwwwww
          www
 ENDMAP
 
-##########################################
-# a pointless little "vaults" by Lemuel
+################################################################################
+# Pointless little "vaults" by Lemuel
 #
 NAME:   strawberry_fields_big
 ORIENT: float
@@ -367,7 +367,7 @@ NAME:   strawberry_fields_patches_spacepadded
 ORIENT: float
 WEIGHT: 4
 DEPTH:  Lair
-SUBST:  .= d .:50 1:8 2:4 
+SUBST:  .= d .:50 1:8 2:4
 MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
@@ -388,8 +388,8 @@ MAP
      ..
 ENDMAP
 
-#############################################################################
-# plantages
+################################################################################
+# Plantages
 #
 NAME:   fruit_tree_single
 ORIENT: float
@@ -403,13 +403,13 @@ KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 /\
 KFEAT:  a = .
 WEIGHT: 8
 MAP
- ..... 
+ .....
 .......
 ..'''..
 ..'1'..
 ..'''..
 .......
- ..... 
+ .....
 ENDMAP
 
 NAME:   fruit_tree_lots
@@ -418,26 +418,26 @@ DEPTH:  Lair, Snake
 MONS:   plant, fungus
 SUBST:  ' = . 1
 SUBST:  . = .:90 a:10 2:1
-SUBST:  _ = .:90 a:4 
+SUBST:  _ = .:90 a:4
 KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 /\
             strawberry q:2 w:5 / lemon
 KFEAT:  a = .
 WEIGHT: 2
 MAP
-   ________   
-  _........_  
- _.....'...._ 
+   ________
+  _........_
+ _.....'...._
 _..'........._
 _......'..'.._
 _...'........_
 _......'....._
- _..'....'.._ 
-  _........_  
-   ________   
+ _..'....'.._
+  _........_
+   ________
 ENDMAP
 
-##############################################################################
-#	Ice dragon lair with assorted imp pets
+################################################################################
+# Ice dragon lair with assorted imp pets
 #
 NAME:   ice_dragon_lair_bobbens
 DEPTH:  Lair:5-10
@@ -453,26 +453,26 @@ SUBST:  ; = x:2 .:3
 SUBST:  _ = %:1 .:3
 SUBST:  " = G:1 .:3
 MAP
-;;..;..;;;.;;.;;;   
-;;...wwww.;;..ww.;;   
-;..ww'''ww..wwwww;;;; 
+;;..;..;;;.;;.;;;
+;;...wwww.;;..ww.;;
+;..ww'''ww..wwwww;;;;
 ;.ww'???wwwwwwwww;....
 ;.ww'?!??''''''w...ww.
 ;..ww?!!??????'w..www.
 ;;..w?!1?...??'w"www.;
-;;;.w?!!.2?3.?'wwww.; 
-;;;ww??w2.?W.''www.;; 
-;..www'??????'.wwww.;; 
-..wwww''????ww'''ww.;; 
-.wwwwwww...www'_'ww.;  
-..wwwww....www'''w.;;  
-.;www...V..wwwwww.;;  
-;;...........www.;;;  
-;;   ;;;....w..;  
+;;;.w?!!.2?3.?'wwww.;
+;;;ww??w2.?W.''www.;;
+;..www'??????'.wwww.;;
+..wwww''????ww'''ww.;;
+.wwwwwww...www'_'ww.;
+..wwwww....www'''w.;;
+.;www...V..wwwwww.;;
+;;...........www.;;;
+;;   ;;;....w..;
 ENDMAP
 
-##############################################################################
-#	Dragon lair embedded in wall
+################################################################################
+# Dragon lair embedded in wall
 #
 NAME:   dragon_lair_wall_bobbens
 DEPTH:  Lair:5-10
@@ -511,7 +511,7 @@ x?//.././///x??xl/x
 ./........./.......
 ENDMAP
 
-##############################################################################
+################################################################################
 #	Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
@@ -541,15 +541,16 @@ xxxx..;xxx
 xxx....xxx
 ENDMAP
 
-###########################
+################################################################################
 # Stranded yaks
 #
-NAME:  Lemuel_yak_island_a
-DEPTH: Lair
-TAGS:  no_pool_fixup uniq_yak_island
-MONS:  yak / w:5 sheep / w:3 death yak
-SUBST: ; : .wW
-SUBST: . : . W:2
+NAME:   Lemuel_yak_island_a
+DEPTH:  Lair
+TAGS:   no_pool_fixup uniq_yak_island
+WEIGHT: 5
+MONS:   yak / w:5 sheep / w:3 death yak
+SUBST:  ; : .wW
+SUBST:  . : . W:2
 MAP
 ..............
 ...;;wwww;;...
@@ -564,28 +565,44 @@ MAP
 ..............
 ENDMAP
 
-NAME:  Lemuel_yak_island_b
-DEPTH: Swamp, Shoal
-TAGS:  no_pool_fixup uniq_yak_island
-MONS:  yak / w:5 sheep / w:3 death yak
-SUBST: ; = wW
-SUBST: . : . W:2
+NAME:   Lemuel_yak_island_b
+DEPTH:  Swamp, Shoal
+TAGS:   no_pool_fixup uniq_yak_island
+WEIGHT: 5
+MONS:   yak / w:5 sheep / w:3 death yak
+SUBST:  ; = wW
+SUBST:  . : . W:2
 MAP
-   ;;wwww;;   
-  ;wwwwwwww;  
- ;wwww..wwww; 
- ;www.1.1www; 
- www.1>1.1www 
- ;www.1.1www; 
- ;wwww..wwww; 
-  ;wwwwwwww;  
-   ;;wwww;;   
+   ;;wwww;;
+  ;wwwwwwww;
+ ;wwww..wwww;
+ ;www.1.1www;
+ www.1>1.1www
+ ;www.1.1www;
+ ;wwww..wwww;
+  ;wwwwwwww;
+   ;;wwww;;
 ENDMAP
 
+##############################################################################
+# Swamp specific non-ending vaults
+##############################################################################
+
+##############################################################################
+# Snake Pit specific non-ending vaults
+##############################################################################
+
+##############################################################################
+# Shoals specific non-ending vaults
+##############################################################################
+
+##############################################################################
+# Slime Pit specific non-ending vaults
+##############################################################################
 
 ##############################################################################
 # Branch ends: Shoal, Slime Pit, Snake Pit, Swamp
-# Note that the Shoals usually have a randomised end map; predrawn maps 
+# Note that the Shoals usually have a randomised end map; predrawn maps
 # (which need not be encompassing) are sometimes used, though.
 ##############################################################################
 
@@ -704,7 +721,7 @@ wwwwwwwww
 ....wwwww....
 ENDMAP
 
-##############################
+################################################################################
 # Shoal hut with rune inside
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
@@ -723,7 +740,7 @@ xx...xx
 .xxAxx
 ENDMAP
 
-##############################
+################################################################################
 # Shoal hut with no rune inside
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
@@ -742,12 +759,13 @@ xx...xx
 .xxAxx
 ENDMAP
 
-##############################################################################
+################################################################################
 # Slime Pit
 #
 NAME:    slime_pit
 PLACE:   Slime:6
 ORIENT:  encompass
+TAGS:    no_rotate
 MONS:    the royal jelly
 MONS:    acid blob
 MONS:    great orb of eyes / nothing
@@ -755,7 +773,7 @@ SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
 SUBST:   " : " .:3,  " = .c
 NSUBST:  P = O / *|
 KMASK:   | = no_monster_gen
-SHUFFLE: ([{ 
+SHUFFLE: ([{
 LFLAGS:  no_tele_control
 {{
     dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
@@ -838,7 +856,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
-##########################################################################
+################################################################################
 # Snake Pit: the hunt
 #
 NAME:    snake_hunt
@@ -905,7 +923,7 @@ xxxxxxxxxxxxxxxxxxxx!!!...!!!xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx!@!xxxxxxxxxxxxxxxxxx
 ENDMAP
 
-############################################################################
+################################################################################
 # Snake Pit: old level
 #
 NAME:   snake_pit
@@ -957,7 +975,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
-#############################################################################
+################################################################################
 # Swamp:5 standard
 #
 NAME:    swamp
@@ -992,7 +1010,7 @@ MAP
        '
 ENDMAP
 
-#############################################################################
+################################################################################
 # Swamp:5 alternative (dp)
 #
 NAME:    swamp_alternative

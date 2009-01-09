@@ -186,19 +186,19 @@ xxxwxxxccWwWccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxwxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxc<..WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxccc.Www'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxcc.WwW.ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc..WwW..cccccccccccccccccccccccccccccccccx
-xxxxxxc..WwWWWWWWWWWWWWWWWWWWWWWW..444.A.<..44cx
-xxxxxxc..WwW..cccccccccccccccccccccccccccccccccx
-xxxxxxc.'WwW'.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.WWwWW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.WwwwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.WwqwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.WwwwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.'WWW'.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.......cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxcc'WwW'ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.'WwW''cccccccccccccccccccccccccccccccccx
+xxxxxxc''WwWWWWWWWWWWWWWWWWWWWWWW..444.A.<..44cx
+xxxxxxc''WwW''cccccccccccccccccccccccccccccccccx
+xxxxxxc.'WwW''cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.WWwWW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc'WwwwW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc'WwqwW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc'WwwwW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.'WWW''cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc..''''.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxcccc1ccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xefExxxx.122...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xdexxxx.2232.y..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -229,30 +229,30 @@ MONS:     giant frog / nothing w:2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccxxxxxx
-xc.11..........................1111cxxxxxx
-xc1WWW.ccccccccccccccccccccccc1WWW1cxxxxxx
+xc.11---------.................1111cxxxxxx
+xc1WWW-ccccccccccccccccccccccc1WWW1cxxxxxx
 xc1WwWWcxxxxxxxxxxxxxxxxxxxxxc1WwW.cxxxxxx
 xc1WwwWcxxxxxxxxxxxxxxxxxxxxxc.WwW.cxxxxxx
-xc.WwW1cxxxxxccccccccxxxxxxxxc.WwW.cxxxxxx
-xc.WwwWcxxccccwwwwwwccccxxxxxc.WwW.cxxxxxx
-xc.Wwwwccccwwwwwwwwww2.ccxxxxc.WwW.cxxxxxx
-xc.Wwwwccwwwwwwwwwwwwww2ccxxxc.WwW.cxxxxxx
-xc.Wwwwcwwwwwwwwwwwwwwwwwcccxc.WwW.cxxxxxx
-xc.Wwwwwwwwwwwwww.*.wwwwwwwcxc.WwW.cxxxxxx
-xc.WwWwWWWwwwwww.*|*.wwwwwwcxc.WwW.cxxxxxx
-xc.WwWWWwwWwwwwww.d.wwwwwwwccc.WwW.cxxxxxx
-xc.WwWWwwwwWwWwWWwwwwwwwwwwwcc.WwW.cxxxxxx
-xc.WwWWWwwwwWWWwwwwwwwwwwwwccc.WwW.cxxxxxx
-xc.WwWWWwwwwWWwwwwwwwwWwwwccxc.WwW.cxxxxxx
-xc.WwW.WwwwwwwwwwwwwwWwwwccxxc.WwW.cxxxxxx
-xc.WwW.WwwwwwWWwwwwwwwwccccccc.WwW.cxxxxxx
-xc.WwWW..WWWWwwWwWW............Www.cxxxxxx
-xc.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW.cxxxxxx
+xc.WwW1cxxxxxccccccccxxxxxxxxc.WwW-cxxxxxx
+xc.WwwWcxxccccwwwwwwccccxxxxxc-WwW-cxxxxxx
+xc.Wwwwccccwwwwwwwwww2.ccxxxxc-WwW-cxxxxxx
+xc-Wwwwccwwwwwwwwwwwwww2ccxxxc-WwW-cxxxxxx
+xc-Wwwwcwwwwwwwwwwwwwwwwwcccxc-WwW-cxxxxxx
+xc-Wwwwwwwwwwwwww.*.wwwwwwwcxc-WwW-cxxxxxx
+xc-WwWwWWWwwwwww.*|*.wwwwwwcxc-WwW-cxxxxxx
+xc-WwWWWwwWwwwwww.d.wwwwwwwccc-WwW.cxxxxxx
+xc-WwWWwwwwWwWwWWwwwwwwwwwwwcc-WwW.cxxxxxx
+xc-WwWWWwwwwWWWwwwwwwwwwwwwccc.WwW.cxxxxxx
+xc-WwWWWwwwwWWwwwwwwwwWwwwccxc.WwW.cxxxxxx
+xc-WwW.WwwwwwwwwwwwwwWwwwccxxc-WwW.cxxxxxx
+xc.WwW.WwwwwwWWwwwwwwwwccccccc-WwW-cxxxxxx
+xc.WwWW..WWWWwwWwWW.........---Www-cxxxxxx
+xc.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW-cxxxxxx
 xc.WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.cxxxxxx
-xc..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW.cxxxxxx
-xcc............................WwW.cxxxxxx
-xxcccccccccccccccccccccccccccc.WwW.cxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxcccccccc.WwW.cxxxxxx
+xc..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW-cxxxxxx
+xcc........................----WwW-cxxxxxx
+xxcccccccccccccccccccccccccccc-WwW-cxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccccc-WwW-cxxxxxx
 xxxxxxxxxxxxxxxcccccccc.----WWWWwW.ccccxxx
 xxxxxxxxxxxxxxxc.<.A..--W-WWWWWWwwwwwwwwwx
 xxxxxxxxxxxxxxxcccccccc.-..WW-.WWW1cccccxx
@@ -308,7 +308,7 @@ NAME:     sewer_fruit_machine
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SHUFFLE:  QEDS
-SUBST:    Q = 3, E = 4, D : fgh, S = $
+SUBST:    Q = 4, E = 5, D : fgh, S = $
 NSUBST:   f = 1:f / *:'
 NSUBST:   g = 2:g / *:'
 NSUBST:   h = 3:h / *:'
@@ -323,6 +323,8 @@ KFEAT:    ? = W
 KMONS:    ? = giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
 COLOUR:   ? = lightgreen
+# a little more random shallow water
+SUBST:    - = W..
 : sewer_colours(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
@@ -350,26 +352,26 @@ KITEM:    ' = scroll of paper w:50 / scroll of random uselessness w:30 / \
               wizard hat / buckler / pair of gloves w:5 / pair of boots w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWwwwwwwwwwwwxxx
-xwwwwwwwwwww.wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwwwwwxxx
-xwwwwwwwwwwwWwWWWWWWWWWWWWWWWWWWWWWWWWW.WWWWWWWwWwwwwwwwwwwwxxx
+xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwxxx
+xwwwwwwwwwww-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww-wwwwwwwwwwwxxx
+xwwwwwwwwwwwWwWW----WWWWWWWW-W-WWW-W-WW-WW-W-WWwWwwwwwwwwwwwxxx
 xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
 xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxx.1.xxx
-xxxxxxxxxxxxWwWxxxxQQQQxxxDDDDxxxxxxxxWwWxxxxxWwWxxxx1xx....1xx
-xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxxWwW..W..........x
-xxxxxxxxxxxxWwWW.W..............>xxxxxWwWxxxxxWwWWW.1....A...1x
-xxxxxxxxxxxxWwWWW...............>xxxxxWwWxxxxxWwWW..xxxx......x
-xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxxWwWxxxxxxxxx.>xxx
-xxxxxxxxxxxxWwWxxxxEEEExxxSSSSxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
-xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
-xxxx.d..dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx.exxx
-xx.....d.dxxWwWWWWWWWWWWWWWWWWWWWWWWWWWwWxxxxxWwWxxxxxxxx.22exx
-x..2...dxxxxWw.wwwwwwwwwwwwwwwwwwwwwww.wWxxxxxWwWWWWWWWWWW.2.ex
-xx2222xxxxxxWwWWWWWWWWWWWWWWWWWWWWWWWWWwWxxxxxWw.wwwwwwwwWW.2.x
-xxWW2...xxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWWWWWWWWWW.W..x
-xxxxWW....xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx..exx
-xxxxxxW.....WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
-xwwwwwwWWWWwwwWWWWWWWWWWWWWWWWWWWWWWWWW.WWWWWWWwwwwwwwwwwwwwxxx
+xxxxxxxxxxxx-wWxxxxQQQQxxxDDDDxxxxxxxxWwWxxxxx-wWxxxx1xx....1xx
+xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxx-wWxxxxxWwW--W-.........x
+xxxxxxxxxxxx-wWW-W..............<xxxxxWw-xxxxxWwWWW-1....A...1x
+xxxxxxxxxxxx-wWWW--.............<xxxxxWwWxxxxxWwWW-.xxxx......x
+xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxx-wWxxxxxxxxx.<xxx
+xxxxxxxxxxxx-wWxxxxEEEExxxSSSSxxxxxxxx-w-xxxxxWw--xxxxxxxxxxxxx
+xxxxxxxxxxxx-wWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWw-xxxxxxxxxxxxxx
+xxxx.d..dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWxxxxxxxxx.exxx
+xx.....d.dxxWwWWWWWW---WW-W-WW-W-WWWW--wWxxxxxWwWxxxxxxxx-22exx
+x..2...dxxxx-w-wwwwwwwwwwwwwwwwwwwwwww-w-xxxxxWwWWWWWWWWWW-2.ex
+xx2222xxxxxxWwWW-W-WWW-W-W-WWWWW-WWWWWWw-xxxxxWw-wwwwwwwwWW-2.x
+xxWW2..-xxxx-w-xxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWWWWWWWWWW-W..x
+xxxxWW----xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx-.exx
+xxxxxxW-----WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
+xwwwwwwW-WWwwwWWWW-W-W-W-W-WWWW-W-W-W-W-WW---WWwwwwwwwwwwwwwxxx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

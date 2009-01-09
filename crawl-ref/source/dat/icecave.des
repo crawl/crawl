@@ -9,7 +9,7 @@
 #
 # Flavour: white colours, ice monsters, appropriate clouds.
 # The escape is at the start. The player can back away if s/he decides
-# some challenges are much to handle.
+# some challenges are too much to handle. 
 #
 ###############################################################################
 
@@ -229,6 +229,8 @@ WEIGHT:  8
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
+# This doesn't work! error: Too many arguments.
+#: dgn.set_random_mon_list("wolf", "yak", "polar bear", "death yak", "frost giant")
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
 MONS:    frost giant

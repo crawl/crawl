@@ -129,21 +129,6 @@ MAP
 .....
 ENDMAP
 
-###################################
-# elevator
-#
-NAME:    lemuel_elevator
-DEPTH:   D, Vault, Elf, Crypt, Zot, Tar, Dis, Geh, Coc
-ORIENT:  float
-TAGS:    allow_dup
-SUBST:   m:mn
-SHUFFLE: {}, ]}) , [{(
-MAP
-mmmm
-m{}m
-mmmm
-ENDMAP
-
 ##############################################################################
 # Sigmund's army
 # Sigmund has been educating the suppressed masses in guerrilla warfare.
@@ -237,7 +222,7 @@ MAP
 ..???.....?.
 ENDMAP
 
-##################################################################
+################################################################################
 # Necromancer has a house with a fridge (and a nice garden) (Eino)
 #
 NAME:  eino_house_with_fridge
@@ -264,10 +249,10 @@ ENDMAP
 NAME:   eino_small_gnoll_camp_1
 DEPTH:  D:3-10
 WEIGHT: 5
-TAGS:   uniq_gnoll_camp
+TAGS:   uniq_gnoll_camp no_monster_gen patrolling
 MONS:   gnoll
-# "gnoll seargeant" with guaranteed good gear
-MONS:   gnoll ; potion of healing | potion of heal wounds \ 
+# a "gnoll seargeant" with guaranteed good gear
+MONS:   gnoll ; potion of healing | potion of heal wounds \
               . whip ego:reaching |whip good_item no_uniq | \
                 spear ego:reaching | glaive \
               . scale mail | chain mail
@@ -288,9 +273,9 @@ ENDMAP
 NAME:   eino_small_gnoll_camp_2
 DEPTH:  D:3-10
 WEIGHT: 5
-TAGS:   uniq_gnoll_camp
+TAGS:   uniq_gnoll_camp mini_float no_monster_gen patrolling
 MONS:   gnoll
-# "gnoll seargeant" with guaranteed good gear
+# a "gnoll seargeant" with guaranteed good gear
 MONS:   gnoll ; potion of healing | potion of heal wounds \
               . whip ego:reaching |whip good_item no_uniq | \
                 spear ego:reaching | glaive . scale mail | chain mail
@@ -346,13 +331,13 @@ TAGS:  no_pool_fixup no_monster_gen
 SUBST: T = TU
 SUBST: W = w:20 W .:5
 MONS:  ice statue
-MONS:  ice devil w:5 / blue devil w:5 / ice dragon / freezing wraith /\ 
+MONS:  ice devil w:5 / blue devil w:5 / ice dragon / freezing wraith /\
        nothing w:30
 MONS:  white imp / ice beast w:30 / polar bear / nothing w:50
 MONS:  white imp / ice beast w:30 / polar bear / nothing w:50
 KFEAT: 2 = >
 KFEAT: 4 = >
-SUBST: | = ||****%%%% 
+SUBST: | = ||****%%%%
 MAP
 T..................T
 ..WWW..........WWW..
@@ -387,16 +372,16 @@ SHUFFLE: '"
 SUBST:   ' : w .:5
 SUBST:   " = .
 MAP
-   ...........   
-  .............  
- .....'''''..... 
+   ...........
+  .............
+ .....'''''.....
 .....''???''.....
 ....''?????''....
 ....''?????''....
 .....''???''.....
- .....'''''..... 
-  .............  
-   ...........   
+ .....'''''.....
+  .............
+   ...........
 ENDMAP
 
 ################################
@@ -508,15 +493,15 @@ xx...xxx222xxx...xx
        x+++x
 ENDMAP
 
-
 ###############################################
 # My mission is to annoy. -LP
 #
-NAME:  lemuel_jelly_drop_a
-MONS:  jelly
-TAGS:  uniq_jelly_drop
-KFEAT: a = teleport trap
-DEPTH: D:8-27
+NAME:   lemuel_jelly_drop_a
+MONS:   jelly
+TAGS:   uniq_jelly_drop
+WEIGHT: 5
+KFEAT:  a = teleport trap
+DEPTH:  D:8-27
 MAP
 ..............
 ...vvvvvvvv...
@@ -533,34 +518,15 @@ MAP
 ..............
 ENDMAP
 
-NAME:  lemuel_jelly_drop_b
-MONS:  jelly
-TAGS:  uniq_jelly_drop
-KFEAT: a = teleport trap
-DEPTH: Vault
-MAP
-vvvvvvvvvvvv
-vvv......vvv
-vv.vvvvvv.vv
-v1v.....vv.v 
-vvvvvvvv.v.v 
-vav111111vav 
-v.v.vvvvvvvv 
-v.vv.....v1v 
-vv.vvvvvv.vv 
-vvv......vvv 
-vvvvvvvvvvvv 
-ENDMAP
-
-
 ##############################################################
 # Aren't you glad you're a merfolk/a high-level kenku/wearing
 # those boots of levitation?
 #
-NAME:  water_maze_lemuel
-TAGS:  no_pool_fixup uniq_water_maze_lemuel
-ITEM:  ring of teleportation / scroll of teleportation q:3
-DEPTH: D:5-27
+NAME:   water_maze_lemuel
+TAGS:   no_pool_fixup uniq_water_maze_lemuel
+WEIGHT: 5
+ITEM:   ring of teleportation / scroll of teleportation q:3
+DEPTH:  D:5-27
 MAP
    wwwwwwwww
   wwcccccccww
@@ -581,6 +547,7 @@ ENDMAP
 
 NAME:   water_boxes_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
+WEIGHT: 5
 DEPTH:  D:5-27, Swamp
 KMONS:  * = fungus
 KFEAT:  * = *
