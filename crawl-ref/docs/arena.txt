@@ -36,7 +36,7 @@ Additionally, you can specify the monsters by a place in the dungeon, in
 which case a random monster appropriate for that place will be chosen.
 For example:
 
-    crawl -arena "2 Lair:10 v 3 Vault:7"
+    crawl -arena "2 place:Lair:10 v 3 place:Vault:7"
 
 will choose two random monsters from the 10th level of the Lair and pit them
 against three random monsters from the 7th level of the Vaults.
