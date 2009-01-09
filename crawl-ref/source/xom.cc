@@ -2047,13 +2047,14 @@ void xom_acts(bool niceness, int sever)
 
     if (you.religion == GOD_XOM && coinflip())
     {
+        const std::string old_xom_favour = describe_xom_favour();
         you.piety = MAX_PIETY - you.piety;
-
-        char buf[8192];
-        strcpy(buf, "Your title is now: ");
-        const char *newfavour = describe_xom_favour();
-        strcat(buf, newfavour);
-        god_speaks( you.religion, buf );
+        const std::string new_xom_favour = describe_xom_favour();
+        if (old_xom_favour != new_xom_favour)
+        {
+            const std::string msg = "Your title is now: " + new_xom_favour;
+            god_speaks( you.religion, msg.c_str() );
+        }
     }
 }
 
