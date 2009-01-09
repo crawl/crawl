@@ -87,7 +87,7 @@ static bool _player_hurt_monster(monsters& m, int damage)
 static bool _player_hurt_monster(int monster, int damage)
 {
     ASSERT( !invalid_monster_index(monster) );
-    _player_hurt_monster(menv[monster], damage);
+    return _player_hurt_monster(menv[monster], damage);
 }
 
 // Here begin the actual spells:
