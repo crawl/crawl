@@ -1670,7 +1670,6 @@ static int _snake_charm_monsters(coord_def where, int pow, int message)
 
 void cast_snake_charm(int pow)
 {
-    // powc = (you.experience_level * 2) + (you.skills[SK_INVOCATIONS] * 3);
     apply_one_neighbouring_square(_snake_charm_monsters, pow);
 }
 

@@ -26,7 +26,7 @@ REVISION("$Rev$");
 #include "directn.h"
 #include "debug.h"
 #include "delay.h"
-#include "effects.h" // holy word
+#include "effects.h"
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -55,64 +55,60 @@ REVISION("$Rev$");
 
 bool cast_selective_amnesia(bool force)
 {
-    char ep_gain = 0;
-    unsigned char keyin = 0;
-
     if (you.spell_no == 0)
-        mpr("You don't know any spells.");      // re: sif muna {dlb}
-    else
     {
-        // query - conditional ordering is important {dlb}:
-        while (true)
+        mpr("You don't know any spells.");
+        return (false);
+    }
+
+    int keyin = 0;
+
+    // Pick a spell to forget.
+    while (true)
+    {
+        mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+        keyin = get_ch();
+
+        if (keyin == ESCAPE)
+            return (false);
+
+        if (keyin == '?' || keyin == '*')
         {
-            mpr( "Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT );
-
-            keyin = get_ch();
-
-            if (keyin == ESCAPE)
-                return (false);        // early return {dlb}
-
-            if (keyin == '?' || keyin == '*')
-            {
-                // this reassignment is "key" {dlb}
-                keyin = (unsigned char) list_spells(false);
-
-                redraw_screen();
-            }
-
-            if (!isalpha( keyin ))
-                mesclr( true );
-            else
-                break;
+            keyin = list_spells(false);
+            redraw_screen();
         }
 
-        // Actual handling begins here {dlb}:
-        const spell_type spell = get_spell_by_letter( keyin );
-        const int slot  = get_spell_slot_by_letter( keyin );
-
-        if (spell == SPELL_NO_SPELL)
-            mpr( "You don't know that spell." );
+        if (!isalpha(keyin))
+            mesclr(true);
         else
-        {
-            if (!force && you.religion != GOD_SIF_MUNA
-                && random2(you.skills[SK_SPELLCASTING])
-                    < random2(spell_difficulty( spell )))
-            {
-                mpr("Oops! This spell sure is a blunt instrument.");
-                forget_map(20 + random2(50));
-            }
-            else
-            {
-                ep_gain = spell_mana( spell );
-                del_spell_from_memory_by_slot( slot );
+            break;
+    }
 
-                if (ep_gain > 0)
-                {
-                    inc_mp(ep_gain, false);
-                    mpr( "The spell releases its latent energy back to you as "
-                         "it unravels." );
-                }
-            }
+    const spell_type spell = get_spell_by_letter(keyin);
+    const int slot = get_spell_slot_by_letter(keyin);
+
+    if (spell == SPELL_NO_SPELL)
+    {
+        mpr("You don't know that spell.");
+        return (false);
+    }
+
+    if (!force &&
+        random2(you.skills[SK_SPELLCASTING]) < random2(spell_difficulty(spell)))
+    {
+        mpr("Oops! This spell sure is a blunt instrument.");
+        forget_map(20 + random2(50));
+    }
+    else
+    {
+        const int ep_gain = spell_mana(spell);
+        del_spell_from_memory_by_slot(slot);
+
+        if (ep_gain > 0)
+        {
+            inc_mp(ep_gain, false);
+            mpr("The spell releases its latent energy back to you as "
+                "it unravels.");
         }
     }
 
@@ -145,7 +141,6 @@ bool remove_curse(bool suppress_msg)
         }
     }
 
-    // Messaging output. {dlb}:
     if (!suppress_msg)
     {
         if (success)
