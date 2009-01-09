@@ -2867,7 +2867,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     if (target->atype() == ACT_MONSTER && you.penance[god] == 0
         && source != ZOT_TRAP_MISCAST)
     {
-        switch(mon_target->temp_attitude())
+        switch (mon_target->temp_attitude())
         {
             case ATT_FRIENDLY:     data.behaviour = BEH_HOSTILE; break;
             case ATT_HOSTILE:      data.behaviour = BEH_FRIENDLY; break;
@@ -2963,8 +2963,8 @@ void MiscastEffect::_conjuration(int severity)
                            " for a moment.";
             break;
         case 6:
-            you_msg = "Your skin tingles.";
-            // Monster messages needed.
+            you_msg      = "Your skin tingles.";
+            mon_msg_seen = "@The_monster@ twitches.";
             break;
         case 7:
             you_msg      = "Your skin glows momentarily.";
@@ -3118,8 +3118,8 @@ void MiscastEffect::_enchantment(int severity)
                            " for a moment.";
             break;
         case 6:
-            you_msg = "Your skin tingles.";
-            // Monster messages needed.
+            you_msg      = "Your skin tingles.";
+            mon_msg_seen = "@The_monster@ twitches.";
             break;
         case 7:
             you_msg      = "Your skin glows momentarily.";
@@ -3244,8 +3244,8 @@ void MiscastEffect::_translocation(int severity)
                            " for a moment.";
             break;
         case 6:
-            you_msg = "Your skin tingles.";
-            // Monster messages needed.
+            you_msg      = "Your skin tingles.";
+            mon_msg_seen = "@The_monster@ twitches.";
             break;
         case 7:
             you_msg      = "The world appears momentarily distorted!";
@@ -3257,7 +3257,7 @@ void MiscastEffect::_translocation(int severity)
             break;
         case 9:
             you_msg = "You feel uncomfortable.";
-            // Monster messages needed.
+            mon_msg_seen = "@The_monster@ grimaces.";
             break;
         }
         do_msg();
@@ -3970,8 +3970,8 @@ void MiscastEffect::_transmigration(int severity)
                            " for a moment.";
             break;
         case 6:
-            you_msg = "Your skin tingles.";
-            // Monster messages needed.
+            you_msg      = "Your skin tingles.";
+            mon_msg_seen = "@The_monster@ twitches.";
             break;
         case 7:
             you_msg      = "Your skin glows momentarily.";
@@ -4652,9 +4652,17 @@ void MiscastEffect::_air(int severity)
             break;
         case 1:
             if (silenced(you.pos()))
-               all_msg = "The wind whips around you!";
+            {
+               you_msg        = "The wind whips around you!";
+               mon_msg_seen   = "The wind whips around @the_monster@!";
+               mon_msg_unseen = "The wind whips!";
+            }
             else
-               all_msg = "The wind howls around you!";
+            {
+               you_msg        = "The wind howls around you!";
+               mon_msg_seen   = "The wind howls around @the_monster@!";
+               mon_msg_unseen = "The wind howls!";
+            }
             break;
         }
         do_msg();
@@ -4688,7 +4696,7 @@ void MiscastEffect::_air(int severity)
                              "discharges!";
             mon_msg_seen   = "@The_monster@ is caught in an explosion of "
                              "electrical discharges!";
-            mon_msg_unseen = "Electrical discharges explodes from out of "
+            mon_msg_unseen = "Electrical discharges explode from out of "
                              "thin air!";
 
             beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
@@ -4696,7 +4704,7 @@ void MiscastEffect::_air(int severity)
             beam.flavour = BEAM_ELECTRICITY;
             beam.name    = "explosion";
             beam.colour  = LIGHTBLUE;
-            beam.ex_size = one_chance_in(4)?1:2;
+            beam.ex_size = one_chance_in(4) ? 1 : 2;
 
             _explosion();
             break;
