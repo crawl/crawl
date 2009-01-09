@@ -25,6 +25,8 @@ REVISION("$Rev$");
 #include "version.h"
 #include "view.h"
 
+#define DEBUG_DIAGNOSTICS 1
+
 extern void world_reacts();
 
 namespace arena
@@ -67,7 +69,10 @@ namespace arena
     int team_a_wins = 0;
     int ties        = 0;
 
+    int turns       = 0;
+
     bool allow_summons       = true;
+    bool allow_animate       = true;
     bool allow_chain_summons = true;
     bool allow_zero_xp       = false;
     bool allow_immobile      = true;
@@ -75,10 +80,15 @@ namespace arena
     bool name_monsters       = false;
     bool random_uniques      = false;
     bool real_summons        = false;
-    bool do_move_spawners    = false;
+    bool move_summons        = false;
+
+    int  summon_throttle     = INT_MAX;
 
     std::vector<int> uniques_list;
-    std::vector<int> spawner_list;
+    std::vector<int> a_spawners;
+    std::vector<int> b_spawners;
+
+    int item_drop_times[MAX_ITEMS];
 
     bool banned_glyphs[256];
 
@@ -94,27 +104,29 @@ namespace arena
     int message_pos = 0;
     level_id place(BRANCH_MAIN_DUNGEON, 20);
 
-    void zap_summons(monsters* mons)
+    void adjust_spells(monsters* mons, bool no_summons, bool no_animate)
     {
         monster_spells &spells(mons->spells);
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
             spell_type sp = spells[i];
-            if (spell_typematch(sp, SPTYP_SUMMONING))
+            if (no_summons && spell_typematch(sp, SPTYP_SUMMONING))
+                spells[i] = SPELL_NO_SPELL;
+            else if (no_animate && sp == SPELL_ANIMATE_DEAD)
                 spells[i] = SPELL_NO_SPELL;
         }
     }
 
     void adjust_monsters()
     {
-        if (!allow_summons)
+        if (!allow_summons || !allow_animate)
         {
             for (int m = 0; m < MAX_MONSTERS; ++m)
             {
                 monsters *mons(&menv[m]);
                 if (!mons->alive())
                     continue;
-                zap_summons(mons);
+                adjust_spells(mons, !allow_summons, !allow_animate);
             }
         }
 
@@ -196,7 +208,11 @@ namespace arena
 
     void setup_level()
     {
-        spawner_list.clear();
+        turns = 0;
+
+        a_spawners.clear();
+        b_spawners.clear();
+        bzero(item_drop_times, sizeof(item_drop_times));
 
         if (place.is_valid())
         {
@@ -278,12 +294,17 @@ namespace arena
 
         allow_chain_summons = !strip_tag(spec, "no_chain_summons");
 
-        allow_summons    = !strip_tag(spec, "no_summons");
-        allow_immobile   = !strip_tag(spec, "no_immobile");
-        allow_bands      = !strip_tag(spec, "no_bands");
-        allow_zero_xp    =  strip_tag(spec, "allow_zero_xp");
-        real_summons     =  strip_tag(spec, "real_summons");
-        do_move_spawners =  strip_tag(spec, "move_spawners");
+        allow_summons   = !strip_tag(spec, "no_summons");
+        allow_animate   = !strip_tag(spec, "no_animate");
+        allow_immobile  = !strip_tag(spec, "no_immobile");
+        allow_bands     = !strip_tag(spec, "no_bands");
+        allow_zero_xp   =  strip_tag(spec, "allow_zero_xp");
+        real_summons    =  strip_tag(spec, "real_summons");
+        move_summons    =  strip_tag(spec, "move_summons");
+        summon_throttle = strip_number_tag(spec, "summon_throttle:");
+
+        if (summon_throttle <= 0)
+            summon_throttle = INT_MAX;
 
         cycle_random   = strip_tag(spec, "cycle_random");
         name_monsters  = strip_tag(spec, "names");
@@ -621,21 +642,26 @@ namespace arena
         }
     }
 
-    // Move test spawners to a new position every turn to scatter each
-    // faction all over the arena.
-    void move_spawners()
+    // Try to prevent random luck from letting one spawner fill up the
+    // arena with so many monsters that the other spawner can never get
+    // back on even footing.
+    void balance_spawners()
     {
-        if (!do_move_spawners)
+        if (a_spawners.size() == 0 || b_spawners.size() == 0)
             return;
 
-        for (unsigned int i = 0; i < spawner_list.size(); i++)
+        for (unsigned int i = 0; i < a_spawners.size(); i++)
         {
-            monsters* mon = &menv[spawner_list[i]];
+            int idx = a_spawners[i];
+            menv[idx].speed_increment *= faction_b.active_members;
+            menv[idx].speed_increment /= faction_a.active_members;
+        }
 
-            if (!mon->alive() || mon->type != MONS_TEST_SPAWNER)
-                continue;
-
-            monster_teleport(mon, true, true);
+        for (unsigned int i = 0; i < b_spawners.size(); i++)
+        {
+            int idx = b_spawners[i];
+            menv[idx].speed_increment *= faction_a.active_members;
+            menv[idx].speed_increment /= faction_b.active_members;
         }
     }
 
@@ -644,7 +670,6 @@ namespace arena
         mesclr(true);
         {
             cursor_control coff(false);
-            int turns = 0;
             while (fight_is_on())
             {
                 if (kbhit())
@@ -676,7 +701,7 @@ namespace arena
                 you.hunger = 10999;
                 //report_foes();
                 world_reacts();
-                move_spawners();
+                balance_spawners();
                 delay(Options.arena_delay);
                 mesclr();
                 dump_messages();
@@ -930,6 +955,20 @@ bool arena_veto_random_monster(monster_type type)
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
                               const coord_def& pos)
 {
+    if (mg.abjuration_duration > 0)
+    {
+        if (mg.behaviour == BEH_FRIENDLY
+            && arena::faction_a.active_members > arena::summon_throttle)
+        {
+            return (true);
+        }
+        else if (mg.behaviour == BEH_HOSTILE
+                 && arena::faction_b.active_members > arena::summon_throttle)
+        {
+            return (true);
+        }
+        
+    }
     return (!arena::allow_bands && !first_band_member
             || arena::banned_glyphs[mons_char(mg.cls)]);
 }
@@ -944,10 +983,15 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
         arena::faction_b.active_members++;
 
     if (monster->type == MONS_TEST_SPAWNER)
-        arena::spawner_list.push_back(monster->mindex());
+    {
+        if (monster->attitude == ATT_FRIENDLY)
+            arena::a_spawners.push_back(monster->mindex());
+        else if (monster->attitude == ATT_HOSTILE)
+            arena::b_spawners.push_back(monster->mindex());
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf("%s enters the arena!", monster->name(DESC_CAP_A).c_str());
+    mprf("%s enters the arena!", monster->full_name(DESC_CAP_A, true).c_str());
 #endif
 
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
@@ -964,6 +1008,9 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
             {
                 item.colour = random_colour();
             }
+            // Set the "drop" time here in case the monster drops the item
+            // without dying, like being polymorphed.
+            arena::item_drop_times[it] = arena::turns;
         }
     }
 
@@ -983,13 +1030,18 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
                     mitm[it].flags &= ~ISFLAG_SUMMONED;
             }
         }
-        if (!arena::allow_chain_summons)
-            arena::zap_summons(monster);
+
+        if (arena::move_summons)
+            monster_teleport(monster, true, true);
+
+        if (!arena::allow_chain_summons || !arena::allow_animate)
+            arena::adjust_spells(monster, !arena::allow_chain_summons,
+                                 !arena::allow_animate);
     }
 }
 
 void arena_monster_died(monsters *monster, killer_type killer,
-                        int killer_index, bool silent)
+                        int killer_index, bool silent, int corpse)
 {
     if (monster->attitude == ATT_FRIENDLY)
         arena::faction_a.active_members--;
@@ -1027,179 +1079,133 @@ void arena_monster_died(monsters *monster, killer_type killer,
                 arena::faction_b.won = true;
         }
     }
+
+    if (corpse != -1 && corpse != NON_ITEM)
+        arena::item_drop_times[corpse] = arena::turns;
+
+    // Won't be dropping any items.
+    if (monster->flags & MF_HARD_RESET)
+        return;
+
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        int idx = monster->inv[i];
+        if (idx == NON_ITEM)
+            continue;
+
+        if (mitm[idx].flags & ISFLAG_SUMMONED)
+            continue;
+
+        arena::item_drop_times[idx] = arena::turns;
+    }
 }
 
-static bool _sort_corpses(int a, int b)
+static bool _sort_by_age(int a, int b)
 {
-    return (mitm[a].special < mitm[b].special);
+    return (arena::item_drop_times[a] < arena::item_drop_times[b]);
 }
 
 #define DESTROY_ITEM(i) \
 { \
     destroy_item(i, true); \
+    arena::item_drop_times[i] = 0; \
     cull_count++; \
     if (first_avail == NON_ITEM) \
         first_avail = i; \
 }
 
+// Culls the items which have been on the floor the longest, culling the newest
+// items last.  Items which a monster dropped voluntarily or because of
+// being polymorphed, rather than because of dying, are culled earlier than
+// they should be, but it's not like we have to be fair to the arena monsters.
 int arena_cull_items()
 {
-    // Try to cull 15% of items.
-    const int cull_target = MAX_ITEMS * 15 / 100;
-
-    int cull_count      = 0;
-
-    std::vector<int> artefacts;
-    std::vector<int> egos;
-    std::vector<int> ammo;
-    std::vector<int> wands;
-    std::vector<int> potions;
-    std::vector<int> scrolls;
-    std::vector<int> corpses;
+    std::vector<int> items;
 
     int first_avail = NON_ITEM;
-
-#ifdef DEBUG_DIAGNOSTICS
-    int non_floor_items = 0;
-#endif
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         // All items in mitm[] are valid when we're called.
         const item_def &item(mitm[i]);
 
-#ifdef DEBUG_DIAGNOSTICS
-        if (!is_valid_item(item))
-        {
-            mprf("Invalid item in arena_cull_items()!!", MSGCH_ERROR);
-            non_floor_items++;
-            continue;
-        }
-#endif
-
         // We want floor items.
         if (!in_bounds(item.pos))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            if (item.pos == coord_def(-1, -1))
-                mprf("Player item in arena_cull_items()!!", MSGCH_ERROR);
-            non_floor_items++;
-#endif
             continue;
-        }
 
-        bool cull = false;
-        switch(item.base_type)
+        items.push_back(i);
+    }
+
+    // Cull half of items on the floor.
+    const int cull_target = items.size() / 2;
+          int cull_count  = 0;
+
+    std::sort(items.begin(), items.end(), _sort_by_age);
+
+    std::vector<int> ammo;
+
+    for (unsigned int i = 0, end = items.size(); i < end; i++)
+    {
+        const int      idx = items[i];
+        const item_def &item(mitm[idx]);
+
+        // If the drop time is 0 then this is probably thrown ammo.
+        if (arena::item_drop_times[idx] == 0)
         {
-        case OBJ_WEAPONS:
-        case OBJ_ARMOUR:
-            if (is_artefact(item))
-                artefacts.push_back(i);
-            else if (item.special != 0)
-                egos.push_back(i);
-            else
-                // Always cull boring equipment.
-                cull = true;
-            break;
+            // We know it's at least this old.
+            arena::item_drop_times[idx] = arena::turns;
 
-        case OBJ_MISSILES:
-            if (item.sub_type == MI_JAVELIN
-                || item.sub_type == MI_THROWING_NET)
+            // Arrows/needles/etc on the floor is just clutter.
+            if (item.base_type != OBJ_MISSILES
+               || item.sub_type == MI_JAVELIN
+               || item.sub_type == MI_THROWING_NET)
             {
-                ammo.push_back(i);
+                ammo.push_back(idx);
+                continue;
             }
-            else
-                // Arrows/needles/etc on the floor are just clutter.
-                cull = true;
+        }
+        DESTROY_ITEM(idx);
+        if (cull_count >= cull_target)
             break;
-
-        case OBJ_WANDS:
-            if (item.plus == 0)
-                // Get rid of empty wands.
-                cull = true;
-            else
-                wands.push_back(i);
-            break;
-
-        case OBJ_SCROLLS:
-            scrolls.push_back(i);
-            break;
-
-        case OBJ_POTIONS:
-            potions.push_back(i);
-            break;
-
-        case OBJ_CORPSES:
-            if (item.sub_type == CORPSE_SKELETON)
-                // If it's rotted away into a skeleton then there's no one
-                // around who can uses corpses.
-                cull = true;
-            else
-                corpses.push_back(i);
-            break;
-
-        default:
-            // Get rid of everything else.
-            cull = true;
-        } // switch(item.base_type)
-
-        if (cull)
-            DESTROY_ITEM(i);
-    } // for (int i = 0; i < MAX_ITEMS; i++)
+    }
 
     if (cull_count >= cull_target)
     {
 #ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Arena culled %d misc items, done.",
-                                 cull_count);
+        mprf(MSGCH_DIAGNOSTICS, "On turn #%d culled %d items dropped by "
+                                "monsters, done.",
+             arena::turns, cull_count);
 #endif
         return (first_avail);
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    if (cull_count > 0)
-        mprf(MSGCH_DIAGNOSTICS, "Arena culled %d misc items.", cull_count);
+    mprf(MSGCH_DIAGNOSTICS, "On turn #%d culled %d items dropped by "
+                            "monsters, culling some more.",
+         arena::turns, cull_count);
 #endif
 
-    // Get rid of oldest corpses first.
-    std::sort(corpses.begin(), corpses.end(), _sort_corpses);
-
-    std::vector<int>* lists[] = {&corpses, &ammo, &egos, &potions,
-                                 &scrolls, &wands, &artefacts, NULL};
-
-#ifdef DEBUG_DIAGNOSTICS
-    const char* list_names[] = {"corpses", "ammo", "egos", "potions",
-                                "scrolls", "wands", "artefacts"};
-#endif
-
-    for (int i = 0; lists[i] != NULL; i++)
+    const int count1 = cull_count;
+    for (unsigned int i = 0; i < ammo.size(); i++)
     {
-        std::vector<int>* vec = lists[i];
+        DESTROY_ITEM(ammo[i]);
+        if (cull_count >= cull_target)
+            break;
+    }
 
-        for (unsigned int j = 0; j < vec->size(); j++)
-        {
-            DESTROY_ITEM((*vec)[j]);
-            if (cull_count >= cull_target)
-            {
+    if (cull_count >= cull_target)
+    {
 #ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS, "Arena culled %d %s, done.", j + 1,
-                     list_names[i]);
+        mprf(MSGCH_DIAGNOSTICS, "Culled %d (probably) ammo items, done.",
+             cull_count - count1);
 #endif
-                return (first_avail);
-            }
-        } // for (unsigned int j = 0; j < vec->size(); j++)
-#ifdef DEBUG_DIAGNOSTICS
-        if (vec->size() > 0)
-            mprf(MSGCH_DIAGNOSTICS, "Arena culled %d %s.", vec->size(),
-                 list_names[i]);
-#endif
-    } // for (int i = 0; lists[i] != NULL; i++)
+        return (first_avail);
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Arena only culled %d of a desired %d items.",
+    mprf(MSGCH_DIAGNOSTICS, "Culled %d items total, short of target %d.",
          cull_count, cull_target);
-#endif // DEBUG_DIAGNOSTICS
-
+#endif
     return (first_avail);
 } // arena_cull_items
 

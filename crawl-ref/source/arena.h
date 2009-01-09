@@ -23,7 +23,7 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
                           bool first_band_member);
 
 void arena_monster_died(monsters *monster, killer_type killer,
-                        int killer_index, bool silent);
+                        int killer_index, bool silent, int corpse);
 
 int arena_cull_items();
 #endif

@@ -1160,9 +1160,6 @@ void monster_die(monsters *monster, killer_type killer,
         }
     }
 
-    if (crawl_state.arena)
-        arena_monster_died(monster, killer, killer_index, silent);
-
     bool death_message = !silent && !did_death_message && mons_near(monster)
                          && (player_monster_visible(monster)
                              || crawl_state.arena);
@@ -1596,11 +1593,12 @@ void monster_die(monsters *monster, killer_type killer,
 
     _monster_die_cloud(monster, !mons_reset, silent, summoned, summon_type);
 
+    int corpse = -1;
     if (!mons_reset)
     {
         // Have to add case for disintegration effect here? {dlb}
         if (!summoned)
-            place_monster_corpse(monster, silent);
+            corpse = place_monster_corpse(monster, silent);
     }
 
     if (!mons_reset && !crawl_state.arena)
@@ -1632,24 +1630,17 @@ void monster_die(monsters *monster, killer_type killer,
 
     _fire_monster_death_event(monster, killer, killer_index, false);
 
+    if (crawl_state.arena)
+        arena_monster_died(monster, killer, killer_index, silent, corpse);
+
     const coord_def mwhere = monster->pos();
     if (drop_items)
         monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
     else
-    {
         // Destroy the items belonging to MF_HARD_RESET monsters so they
         // don't clutter up mitm[]
-        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-        {
-            int item = monster->inv[i];
+        monster->destroy_inventory();
 
-            if (item != NON_ITEM)
-            {
-                destroy_item(item);
-                monster->inv[i] = NON_ITEM;
-            }
-        }
-    }
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.
@@ -3580,6 +3571,16 @@ static void _arena_set_foe(monsters *mons)
         const monsters *other(&menv[i]);
         if (!other->alive() || mons_aligned(mind, i))
             continue;
+
+        // Don't fight test spawners, since they're only pseduo-monsters
+        // placed to spawn real monsters, plus they're impossible to kill.
+        // But test spawners can fight each other, to give them a target o
+        // spawn against.
+        if (other->type == MONS_TEST_SPAWNER
+            && mons->type != MONS_TEST_SPAWNER)
+        {
+            continue;
+        }
 
         const int distance = grid_distance(mons->pos(), other->pos());
         const bool seen = mons->can_see(other);
