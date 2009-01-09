@@ -170,6 +170,7 @@ public:
 
 private:
     void init_attack();
+    bool is_banished(const actor *) const;
     bool is_water_attack(const actor *, const actor *) const;
     void check_hand_half_bonus_eligible();
     void check_autoberserk();

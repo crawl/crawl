@@ -423,7 +423,7 @@ std::string melee_attack::anon_name(description_level_type desc,
     {
     case DESC_CAP_THE:
     case DESC_CAP_A:
-        return (actor_invisible? "It" : "Something");
+        return (actor_invisible ? "It" : "Something");
     case DESC_CAP_YOUR:
         return ("Its");
     case DESC_NOCAP_YOUR:
@@ -476,6 +476,17 @@ std::string melee_attack::wep_name(description_level_type desc,
     name += weapon->name(desc, false, false, false, false, ignore_flags);
 
     return (name);
+}
+
+bool melee_attack::is_banished(const actor *defn) const
+{
+    if (!defn)
+        return (false);
+
+    if (defn->atype() == ACT_PLAYER)
+        return (you.banished);
+    else
+        return (def->flags & MF_BANISHED);
 }
 
 bool melee_attack::is_water_attack(const actor *attk,
@@ -2057,6 +2068,15 @@ void melee_attack::drain_monster()
                 attacker->conj_verb("drain").c_str(),
                 def_name(DESC_NOCAP_THE).c_str());
     }
+
+    if (one_chance_in(5))
+    {
+        def->hit_dice--;
+        def->experience = 0;
+    }
+
+    def->max_hit_points -= 2 + random2(3);
+    def->hurt(attacker, 2 + random2(3), BEAM_NEG, false);
 
     special_damage = 1 + (random2(damage_done) / 2);
     attacker->god_conduct(DID_NECROMANCY, 2);
@@ -4544,10 +4564,6 @@ void melee_attack::mons_perform_attack_rounds()
         mons_set_weapon(attk);
         to_hit = mons_to_hit();
 
-        const bool draining_attack = damage_brand == SPWPN_DRAINING
-                                         || (attk.flavour == AF_DRAIN_XP
-                                             && attacker != defender);
-
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
                                   || (attk.flavour == AF_CHAOS
                                       && attacker != defender);
@@ -4647,25 +4663,13 @@ void melee_attack::mons_perform_attack_rounds()
             // Defender banished.  Bail before chaos_killed_defender()
             // is called, since the defender is still alive in the
             // Abyss.
-            if (!defender->alive())
+            if (!defender->alive() && is_banished(defender))
             {
                 if (chaos_attack && attacker->alive())
                     chaos_affects_attacker();
 
                 do_miscast();
                 break;
-            }
-
-            if (draining_attack && defender->atype() == ACT_MONSTER)
-            {
-                if (one_chance_in(5))
-                {
-                    def->hit_dice--;
-                    def->experience = 0;
-                }
-
-                def->max_hit_points -= 2 + random2(3);
-                def->hurt(attacker, 2 + random2(3), BEAM_NEG, false);
             }
 
             defender->hurt(attacker, damage_done + special_damage);
