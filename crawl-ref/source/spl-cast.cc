@@ -497,8 +497,12 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
 
     power = stepdown_value( power, 50, 50, 150, 200 );
 
+    const int cap = spell_power_cap(spell);
+    if (cap > 0)
+        power = std::min(power, cap);
+
     return (power);
-}                               // end calc_spell_power()
+}
 
 
 int spell_enhancement( unsigned int typeflags )
@@ -1444,7 +1448,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_TWIST:
-        cast_twist(powc);
+        cast_twist(powc, beam.target);
         break;
 
     case SPELL_AIRSTRIKE:

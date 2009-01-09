@@ -72,11 +72,8 @@ void do_monster_rot(int mon);
 
 // Just to avoid typing this over and over.
 // Returns true if monster died. -- bwr
-inline bool player_hurt_monster(int monster, int damage)
+static bool _player_hurt_monster(monsters& m, int damage)
 {
-    ASSERT( monster != NON_MONSTER );
-    monsters& m = menv[monster];
-
     if (damage > 0)
     {
         m.hurt(&you, damage);
@@ -85,6 +82,12 @@ inline bool player_hurt_monster(int monster, int damage)
     }
 
     return (!m.alive());
+}
+
+static bool _player_hurt_monster(int monster, int damage)
+{
+    ASSERT( !invalid_monster_index(monster) );
+    _player_hurt_monster(menv[monster], damage);
 }
 
 // Here begin the actual spells:
@@ -176,7 +179,7 @@ static int _shatter_monsters(coord_def where, int pow, int garbage)
     int damage = dam_dice.roll() - random2( menv[monster].ac );
 
     if (damage > 0)
-        player_hurt_monster( monster, damage );
+        _player_hurt_monster( monster, damage );
     else
         damage = 0;
 
@@ -595,7 +598,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int garbage)
              dam_dice.num, dam_dice.size, damage );
 #endif
 
-        if (!player_hurt_monster( mon_index, damage ))
+        if (!_player_hurt_monster( mon_index, damage ))
         {
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
@@ -806,7 +809,7 @@ static int _discharge_monsters( coord_def where, int pow, int garbage )
         {
             mprf( "%s is struck by lightning.",
                   menv[mon].name(DESC_CAP_THE).c_str());
-            player_hurt_monster( mon, damage );
+            _player_hurt_monster( mon, damage );
         }
     }
 
@@ -940,7 +943,7 @@ static int _distortion_monsters(coord_def where, int pow, int message)
         return 1;
     }
 
-    player_hurt_monster(monster_attacked, specdam);
+    _player_hurt_monster(monster_attacked, specdam);
 
     return (specdam);
 }
@@ -1640,7 +1643,7 @@ void do_monster_rot(int mon)
                          10, 1, CLOUD_MIASMA, KC_YOU, KILL_YOU_MISSILE);
     }
 
-    player_hurt_monster( mon, damage );
+    _player_hurt_monster( mon, damage );
     return;
 }
 
@@ -1722,7 +1725,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             // fizzle (since we don't actually explode wood golems). -- bwr
             explode         = false;
             beam.damage.num = 2;
-            player_hurt_monster(midx, beam.damage.roll());
+            _player_hurt_monster(midx, beam.damage.roll());
             break;
 
         case MONS_IRON_GOLEM:
@@ -1731,7 +1734,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of metal fragments";
             beam.colour     = CYAN;
             beam.damage.num = 4;
-            if (player_hurt_monster(midx, beam.damage.roll()))
+            if (_player_hurt_monster(midx, beam.damage.roll()))
                 beam.damage.num += 2;
             break;
 
@@ -1744,7 +1747,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
             beam.damage.num = 3;
-            if (player_hurt_monster(midx, beam.damage.roll()))
+            if (_player_hurt_monster(midx, beam.damage.roll()))
                 beam.damage.num++;
             break;
 
@@ -1770,7 +1773,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 if (pow >= 50 && one_chance_in(10))
                     statue_damage = mon->hit_points;
 
-                if (player_hurt_monster(midx, statue_damage))
+                if (_player_hurt_monster(midx, statue_damage))
                     beam.damage.num += 2;
             }
             break;
@@ -1781,7 +1784,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of crystal shards";
             beam.colour     = WHITE;
             beam.damage.num = 4;
-            if (player_hurt_monster(midx, beam.damage.roll()))
+            if (_player_hurt_monster(midx, beam.damage.roll()))
                 beam.damage.num += 2;
             break;
 
@@ -1793,7 +1796,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 beam.colour     = WHITE;
                 beam.damage.num = 2;
                     beam.flavour    = BEAM_ICE;
-                if (player_hurt_monster(midx, beam.damage.roll()))
+                if (_player_hurt_monster(midx, beam.damage.roll()))
                     beam.damage.num++;
                 break;
             }
@@ -1815,7 +1818,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 else
                 {
                       beam.damage.num = 2;
-                      if (player_hurt_monster(midx, beam.damage.roll()))
+                      if (_player_hurt_monster(midx, beam.damage.roll()))
                           beam.damage.num += 2;
                   }
                   goto all_done; // i.e., no "Foo Explodes!"
@@ -1833,7 +1836,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                     beam.name       = "blast of petrified fragments";
                     beam.colour     = mons_class_colour(mon->type);
                     beam.damage.num = petrifying ? 2 : 3;
-                    if (player_hurt_monster(midx, beam.damage.roll()))
+                    if (_player_hurt_monster(midx, beam.damage.roll()))
                         beam.damage.num++;
                     break;
                 }
@@ -1844,7 +1847,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
             // Yes, this spell does lousy damage if the monster
             // isn't susceptible. -- bwr
-            player_hurt_monster(midx, roll_dice(1, 5 + pow / 25));
+            _player_hurt_monster(midx, roll_dice(1, 5 + pow / 25));
             goto do_terrain;
         }
 
@@ -2026,52 +2029,38 @@ bool cast_fragmentation(int pow, const dist& spd)
     return (true);
 }
 
-void cast_twist(int pow)
+bool cast_twist(int pow, const coord_def& where)
 {
-    struct dist targ;
-    struct bolt tmp;    // used, but ignored
-
-    // level one power cap -- bwr
-    if (pow > 25)
-        pow = 25;
-
-    // Get target, using DIR_TARGET for targetting only,
-    // since we don't use fire_beam() for this spell.
-    if (!spell_direction(targ, tmp, DIR_TARGET))
-        return;
-
-    const int mons = mgrd(targ.target);
-
     // Anything there?
-    if (mons == NON_MONSTER || targ.isMe)
+    if (invalid_monster_index(mgrd(where)))
     {
         mpr("There is no monster there!");
-        return;
+        return (false);
     }
 
+    monsters& m = menv[mgrd(where)];
+
     // Monster can magically save vs attack.
-    if (check_mons_resist_magic( &menv[ mons ], pow * 2 ))
+    if (check_mons_resist_magic(&m, pow * 2))
     {
-        simple_monster_message( &menv[mons], mons_immune_magic(&menv[mons]) ?
-                                " is unaffected." : " resists." );
-        return;
+        simple_monster_message(&m, mons_resist_string(&m));
+        return (true);
     }
 
     // Roll the damage... this spell is pretty low on damage, because
     // it can target any monster in LOS (high utility).  This is
     // similar to the damage done by Magic Dart (although, the
     // distribution is much more uniform). -- bwr
-    int damage = 1 + random2( 3 + pow / 5 );
+    const int damage = 1 + random2(3 + pow / 5);
 
     // Inflict the damage.
-    player_hurt_monster( mons, damage );
+    _player_hurt_monster(m, damage);
+
+    return (true);
 }
 
 bool cast_portal_projectile(int pow)
 {
-    if (pow > 50)
-        pow = 50;
-
     dist target;
     int item = get_ammo_to_shoot(-1, target, true);
     if (item == -1)
