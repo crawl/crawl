@@ -5157,13 +5157,14 @@ std::string monsters::full_name(description_level_type desc,
 {
     std::string title = _str_monam(*this, desc, true);
 
+    const unsigned long flag = flags & MF_NAME_MASK;
+
     const int _type = mons_is_zombified(this) ? base_monster : type;
-    if (mons_genus(_type) == MONS_HYDRA)
+    if (mons_genus(_type) == MONS_HYDRA && flag == 0)
         return (title);
 
     if (has_base_name())
     {
-        const unsigned long flag = flags & MF_NAME_MASK;
         if (flag == MF_NAME_SUFFIX)
         {
             title  = base_name(desc, true);
