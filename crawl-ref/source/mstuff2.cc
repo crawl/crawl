@@ -1612,7 +1612,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
                             ? draco_subspecies(mons) : mons->type;
 
-    int real_spell = spell_cast;
+    spell_type real_spell = spell_cast;
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
     {
@@ -1943,6 +1943,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         break;
 
     case SPELL_BLINK:
+    case SPELL_CONTROLLED_BLINK:
         beam.is_beam  = false;
         break;
 
@@ -2222,7 +2223,15 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         break;
 
     default:
-        DEBUGSTR("Unknown spell");
+        if (!is_valid_spell(real_spell))
+            DEBUGSTR("Invalid spell #%d cast by %s", (int) real_spell,
+                     mons->name(DESC_PLAIN, true).c_str());
+
+        DEBUGSTR("Unknown monster spell '%s' cast by %s",
+                 spell_title(real_spell),
+                 mons->name(DESC_PLAIN, true).c_str());
+
+        return (beam);
     }
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
