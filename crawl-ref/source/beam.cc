@@ -1395,7 +1395,6 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_ACID,
             10, BEAM_HELLFIRE,
             10, BEAM_NAPALM,
-            10, BEAM_HELLFROST,
             10, BEAM_SLOW,
             10, BEAM_HASTE,
             10, BEAM_HEALING,
@@ -1574,7 +1573,6 @@ void bolt::apply_beam_conducts()
         switch (flavour)
         {
         case BEAM_HELLFIRE:
-        case BEAM_HELLFROST:
             did_god_conduct(DID_UNHOLY, 2 + random2(3), effect_known);
             break;
         default:
@@ -2348,32 +2346,6 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             }
 
             hurted *= 12;       // hellfire
-            hurted /= 10;
-        }
-        break;
-
-    case BEAM_HELLFROST:
-        resist = mons_res_cold(monster);
-        if (resist > 2)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
-
-            hurted = 0;
-        }
-        else if (resist > 0)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(monster, " partially resists.");
-
-            hurted /= 2;
-        }
-        else if (resist < 0)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(monster, " is frozen!");
-
-            hurted *= 12;       // hellfrost
             hurted /= 10;
         }
         break;
@@ -5580,7 +5552,6 @@ std::string beam_type_name(beam_type type)
     case BEAM_POTION_STEAM:
     case BEAM_STEAM: return("steam");
 
-    case BEAM_HELLFROST: return("hellfrost");
     case BEAM_ENERGY: return("energy");
     case BEAM_HOLY: return("holy power");
     case BEAM_FRAG: return("fragments");

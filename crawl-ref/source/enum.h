@@ -203,63 +203,62 @@ enum beam_type                  // beam[].flavour
     BEAM_HELLFIRE,
     BEAM_NAPALM,
     BEAM_STEAM,                   // 15
-    BEAM_HELLFROST,
     BEAM_ENERGY,
     BEAM_HOLY,
     BEAM_FRAG,
-    BEAM_LAVA,                    // 20
-    BEAM_ICE,
+    BEAM_LAVA,
+    BEAM_ICE,                     // 20
     BEAM_NUKE,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
 
     // Enchantments
-    BEAM_FIRST_ENCHANTMENT = 25,  // 25
-    BEAM_SLOW = BEAM_FIRST_ENCHANTMENT,
-    BEAM_HASTE,
+    BEAM_SLOW,
+    BEAM_FIRST_ENCHANTMENT = BEAM_SLOW,
+    BEAM_HASTE,                   // 25
     BEAM_HEALING,
     BEAM_PARALYSIS,
     BEAM_CONFUSION,
-    BEAM_INVISIBILITY,            // 30
-    BEAM_DIGGING,
+    BEAM_INVISIBILITY,
+    BEAM_DIGGING,                 // 30
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
     BEAM_CHARM,
-    BEAM_BANISH,                  // 35
-    BEAM_DEGENERATE,
+    BEAM_BANISH,
+    BEAM_DEGENERATE,              // 35
     BEAM_ENSLAVE_UNDEAD,
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
-    BEAM_DISPEL_UNDEAD,           // 40
-    BEAM_DISINTEGRATION,
+    BEAM_DISPEL_UNDEAD,
+    BEAM_DISINTEGRATION,          // 40
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
     BEAM_PETRIFY,
-    BEAM_BACKLIGHT,               // 45
-    BEAM_SLEEP,
+    BEAM_BACKLIGHT,
+    BEAM_SLEEP,                   // 45
     BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
 
     // new beams for evaporate
-    BEAM_POTION_STINKING_CLOUD,   // 47
+    BEAM_POTION_STINKING_CLOUD,
     BEAM_POTION_POISON,
     BEAM_POTION_MIASMA,
-    BEAM_POTION_STEAM,            // 50
-    BEAM_POTION_FIRE,
+    BEAM_POTION_STEAM,
+    BEAM_POTION_FIRE,             // 50
     BEAM_POTION_COLD,
     BEAM_POTION_BLACK_SMOKE,
     BEAM_POTION_GREY_SMOKE,
-    BEAM_POTION_BLUE_SMOKE,       // 55
-    BEAM_POTION_PURP_SMOKE,
+    BEAM_POTION_BLUE_SMOKE,
+    BEAM_POTION_PURP_SMOKE,       // 55
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
 
     // For getting the visual effect of a beam.
-    BEAM_VISUAL,                // 58
+    BEAM_VISUAL,                  // 57
 
-    BEAM_TORMENT_DAMAGE,        // Pseudo-beam for damage flavour.
+    BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
-    BEAM_STEAL_FOOD,            // {60} Pseudo-beam for harpies stealing food.
+    BEAM_STEAL_FOOD,              // 59: Pseudo-beam for harpies stealing food.
 
     NUM_BEAMS
 };
@@ -3072,7 +3071,6 @@ enum zap_type
     ZAP_BREATHE_LIGHTNING,
     ZAP_PETRIFY,
     ZAP_ENSLAVE_SOUL,
-    ZAP_HELLFROST,
     ZAP_CHAOS,
     NUM_ZAPS
 };
