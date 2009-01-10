@@ -17,6 +17,8 @@ REVISION("$Rev$");
 #include <queue>
 
 #ifdef UNIX
+extern int unixcurses_get_vi_key(int keyin);
+
 static keycode_type _numpad2vi(keycode_type key)
 {
     if (key >= '1' && key <= '9')
@@ -91,6 +93,8 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     case '7': return 'y';
     case '8': return 'k';
     case '9': return 'u';
+
+    default: return unixcurses_get_vi_key(keyin);
 #else
     case '1': return 'B';
     case '2': return 'J';

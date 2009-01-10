@@ -411,9 +411,90 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     wrefresh(Message_Window);
 }
 
+static void unixcurses_defkeys( void )
+{
+    // keypad 0-9 (only if the "application mode" was successfully initialized)
+    define_key("\033Op", 1000);
+    define_key("\033Oq", 1001);
+    define_key("\033Or", 1002);
+    define_key("\033Os", 1003);
+    define_key("\033Ot", 1004);
+    define_key("\033Ou", 1005);
+    define_key("\033Ov", 1006);
+    define_key("\033Ow", 1007);
+    define_key("\033Ox", 1008);
+    define_key("\033Oy", 1009);
+
+    // non-arrow keypad keys (for macros)
+    define_key("\033OM", 1010); // Enter
+    define_key("\033OP", 1011); // NumLock
+    define_key("\033OQ", 1012); // /
+    define_key("\033OR", 1013); // *
+    define_key("\033OS", 1014); // -
+    define_key("\033Oj", 1015); // *
+    define_key("\033Ok", 1016); // +
+    define_key("\033Ol", 1017); // +
+    define_key("\033Om", 1018); // .
+    define_key("\033On", 1019); // .
+    define_key("\033Oo", 1020); // -
+
+    // variants.  Ugly curses won't allow us to return the same code...
+    define_key("\033[1~", 1031); // Home
+    define_key("\033[4~", 1034); // End
+    define_key("\033[E",  1040); // center arrow
+}
+
+int unixcurses_get_vi_key(int keyin)
+{
+    switch(keyin)
+    {
+    case 1001: return 'b';
+    case 1002: return 'j';
+    case 1003: return 'n';
+    case 1004: return 'h';
+    case 1005: return '5';
+    case 1006: return 'l';
+    case 1007: return 'y';
+    case 1008: return 'k';
+    case 1009: return 'u';
+
+    case 1031: return 'y';
+    case 1034: return 'b';
+    case 1040: return '5';
+
+    case KEY_HOME:	return 'y';
+    case KEY_END:	return 'b';
+    case KEY_DOWN:	return 'j';
+    case KEY_UP:	return 'k';
+    case KEY_LEFT:	return 'h';
+    case KEY_RIGHT:	return 'l';
+    case KEY_NPAGE:	return 'n';
+    case KEY_PPAGE:	return 'u';
+    case KEY_A1:	return 'y';
+    case KEY_A3:	return 'u';
+    case KEY_B2:	return '5';
+    case KEY_C1:	return 'b';
+    case KEY_C3:	return 'n';
+    case KEY_SHOME:	return 'Y';
+    case KEY_SEND:	return 'B';
+    case KEY_SLEFT:	return 'H';
+    case KEY_SRIGHT:	return 'L';
+    }
+    return keyin;
+}
+
+// Certain terminals support vt100 keypad application mode only after some
+// extra goading.
+#define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
+#define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
+
 void unixcurses_startup( void )
 {
     termio_init();
+
+#ifdef CURSES_USE_KEYPAD
+    write(1, KPADAPP, strlen(KPADAPP));
+#endif
 
 #ifdef DGAMELAUNCH
     // Force timezone to UTC.
@@ -461,6 +542,7 @@ void unixcurses_startup( void )
 #endif
 
     meta(stdscr, TRUE);
+    unixcurses_defkeys();
     start_color();
     setup_colour_pairs();
 
@@ -484,6 +566,9 @@ void unixcurses_shutdown()
     endwin();
 
     tcsetattr(0, TCSAFLUSH, &def_term);
+#ifdef CURSES_USE_KEYPAD
+    write(1, KPADCUR, strlen(KPADCUR));
+#endif
 
 #ifdef USE_UNIX_SIGNALS
 #ifdef SIGQUIT
