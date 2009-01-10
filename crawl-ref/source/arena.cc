@@ -611,9 +611,7 @@ namespace arena
         {
             monsters *mons(&menv[i]);
             if (mons->alive())
-            {
                 behaviour_event(mons, ME_DISTURB, MHITNOT, mons->pos());
-            }
         }
     }
 
@@ -722,8 +720,8 @@ namespace arena
 
         trials_done++;
 
-        // We bother with all this to properly deal ties, and with ball
-        // lightning or giant spores winning the fight via suicide.
+        // We bother with all this to properly deal with ties, and with
+        // ball lightning or giant spores winning the fight via suicide.
         // The sanity checking is probably just paranoia.
         bool was_tied = false;
         if (!faction_a.won && !faction_b.won)
@@ -799,9 +797,7 @@ namespace arena
     {
         // Set various options from the arena spec's tags
         try
-        {
             parse_monster_spec();
-        }
         catch (const std::string &error)
         {
             write_error(error);
@@ -828,8 +824,8 @@ namespace arena
             if (i == MONS_PLAYER_GHOST)
                 continue;
 
-            // Skip the royal jelly for now, since if it gets hit by multiple
-            // explosions it can cause an assertion.
+            // Skip the royal jelly for now, since if it gets hit by
+            // multiple explosions it can cause an assertion.
             if (i == MONS_ROYAL_JELLY)
                 continue;
 
@@ -879,9 +875,7 @@ namespace arena
         do
         {
             try
-            {
                 setup_fight();
-            }
             catch (const std::string &error)
             {
                 write_error(error);
@@ -1016,8 +1010,8 @@ void arena_placed_monster(monsters *monster, const mgen_data &mg,
             {
                 item.colour = random_colour();
             }
-            // Set the "drop" time here in case the monster drops the item
-            // without dying, like being polymorphed.
+            // Set the "drop" time here in case the monster drops the
+            // item without dying, like being polymorphed.
             arena::item_drop_times[it] = arena::turns;
         }
     }
@@ -1071,14 +1065,12 @@ void arena_monster_died(monsters *monster, killer_type killer,
              && arena::faction_b.active_members <= 0)
     {
         if (monster->flags & MF_HARD_RESET && !MON_KILL(killer))
-        {
             end(1, false, "Last arena monster was dismissed.");
-        }
-        // If all monsters are dead and the last one to die is a giant spore
-        // or ball lightning then that monster's faction is the winner,
-        // since self destruction is their purpose.  But if a trap causes
-        // the spore to explode and that kills everything it's a tie since
-        // it counts as the trap killing everyone.
+        // If all monsters are dead, and the last one to die is a giant
+        // spore or ball lightning, then that monster's faction is the
+        // winner, since self-destruction is their purpose.  But if a
+        // trap causes the spore to explode, and that kills everything,
+        // it's a tie, since it counts as the trap killing everyone.
         else if (mons_self_destructs(monster) && MON_KILL(killer))
         {
             if (monster->attitude == ATT_FRIENDLY)
@@ -1122,10 +1114,11 @@ static bool _sort_by_age(int a, int b)
         first_avail = i; \
 }
 
-// Culls the items which have been on the floor the longest, culling the newest
-// items last.  Items which a monster dropped voluntarily or because of
-// being polymorphed, rather than because of dying, are culled earlier than
-// they should be, but it's not like we have to be fair to the arena monsters.
+// Culls the items which have been on the floor the longest, culling the
+// newest items last.  Items which a monster dropped voluntarily or
+// because of being polymorphed, rather than because of dying, are
+// culled earlier than they should be, but it's not like we have to be
+// fair to the arena monsters.
 int arena_cull_items()
 {
     std::vector<int> items;

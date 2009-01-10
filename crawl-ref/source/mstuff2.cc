@@ -2751,6 +2751,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
                     pos = p;
             }
         }
+
         if (squares == 0)
             return (NON_MONSTER);
     }
