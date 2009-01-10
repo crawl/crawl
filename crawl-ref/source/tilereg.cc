@@ -967,11 +967,19 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
         else if (delta.x < 0)
             result += (delta.y > 0) ? coord_def(-1, 1) : coord_def(-1, -1);
 
-        m_cursor[type] = result;
+        if (m_cursor[type] != result)
+        {
+            m_dirty = true;
+            m_cursor[type] = result;
+        }
     }
     else
     {
-        m_cursor[type] = gc;
+        if (m_cursor[type] != gc)
+        {
+            m_dirty = true;
+            m_cursor[type] = gc;
+        }
     }
 }
 
