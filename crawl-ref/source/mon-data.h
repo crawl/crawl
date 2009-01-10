@@ -195,7 +195,7 @@ static monsterentry mondata[] = {
 // insects ('a')
 {
     MONS_GIANT_COCKROACH, 'a', BROWN, "giant cockroach",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_NO_FLAGS,
     250, 10, MONS_GIANT_COCKROACH, MONS_GIANT_COCKROACH, MH_NATURAL, -1,
     { {AT_BITE, AF_PLAIN, 2}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -206,7 +206,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GIANT_ANT, 'a', RED, "giant ant",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     700, 10, MONS_GIANT_ANT, MONS_GIANT_ANT, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -217,7 +217,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SOLDIER_ANT, 'a', LIGHTGREY, "soldier ant",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     900, 10, MONS_GIANT_ANT, MONS_SOLDIER_ANT, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_NASTY, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -240,7 +240,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BUTTERFLY, 'b', BLACK, "butterfly",
-    M_FLIES | M_CONFUSED,
+    M_NO_SKELETON | M_FLIES | M_CONFUSED,
     MR_VUL_POISON | MR_RES_ASPHYX,
     150, 10, MONS_BUTTERFLY, MONS_BUTTERFLY, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -842,7 +842,7 @@ static monsterentry mondata[] = {
 // killer bees 'k'
 {
     MONS_KILLER_BEE, 'k', YELLOW, "killer bee",
-    M_FLIES,
+    M_NO_SKELETON | M_FLIES,
     MR_VUL_POISON,
     150, 11, MONS_KILLER_BEE, MONS_KILLER_BEE, MH_NATURAL, -3,
     { {AT_STING, AF_POISON, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -853,7 +853,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BUMBLEBEE, 'k', RED, "bumblebee",
-    M_FLIES,
+    M_NO_SKELETON | M_FLIES,
     MR_VUL_POISON,
     300, 10, MONS_KILLER_BEE, MONS_BUMBLEBEE, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1260,7 +1260,7 @@ static monsterentry mondata[] = {
 // spiders and scorpions ('s')
 {
     MONS_GIANT_MITE, 's', LIGHTRED, "giant mite",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     350, 10, MONS_GIANT_MITE, MONS_GIANT_MITE, MH_NATURAL, -1,
     { {AT_BITE, AF_POISON, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1271,7 +1271,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GIANT_CENTIPEDE, 's', GREEN, "giant centipede",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     350, 10, MONS_GIANT_CENTIPEDE, MONS_GIANT_CENTIPEDE, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_NASTY, 2}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1282,7 +1282,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SCORPION, 's', LIGHTGREY, "scorpion",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     500, 10, MONS_SCORPION, MONS_SCORPION, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_MEDIUM, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1293,7 +1293,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WOLF_SPIDER, 's', BROWN, "wolf spider",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     800, 10, MONS_WOLF_SPIDER, MONS_WOLF_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1304,7 +1304,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_TRAPDOOR_SPIDER, 's', BROWN, "trapdoor spider",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     800, 10, MONS_TRAPDOOR_SPIDER, MONS_TRAPDOOR_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1315,7 +1315,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_REDBACK, 's', RED, "redback",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     1000, 14, MONS_WOLF_SPIDER, MONS_REDBACK, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_STRONG, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1520,7 +1520,7 @@ static monsterentry mondata[] = {
 // flying insects ('y')
 {
     MONS_YELLOW_WASP, 'y', YELLOW, "yellow wasp",
-    M_FLIES,
+    M_NO_SKELETON | M_FLIES,
     MR_VUL_POISON,
     220, 12, MONS_YELLOW_WASP, MONS_YELLOW_WASP, MH_NATURAL, -3,
     { {AT_STING, AF_PARALYSE, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1531,7 +1531,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GIANT_MOSQUITO, 'y', WHITE, "giant mosquito",
-    M_FLIES | M_BLOOD_SCENT,
+    M_NO_SKELETON | M_FLIES | M_BLOOD_SCENT,
     MR_VUL_POISON,
     100, 10, MONS_GIANT_MOSQUITO, MONS_GIANT_MOSQUITO, MH_NATURAL, -3,
     { {AT_BITE, AF_DISEASE, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1542,7 +1542,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GIANT_BLOWFLY, 'y', LIGHTGREY, "giant blowfly",
-    M_FLIES | M_BATTY,
+    M_NO_SKELETON | M_FLIES | M_BATTY,
     MR_VUL_POISON,
     200, 10, MONS_GIANT_BLOWFLY, MONS_GIANT_BLOWFLY, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1553,7 +1553,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_RED_WASP, 'y', RED, "red wasp",
-    M_FLIES,
+    M_NO_SKELETON | M_FLIES,
     MR_VUL_POISON,
     400, 14, MONS_YELLOW_WASP, MONS_RED_WASP, MH_NATURAL, -3,
     { {AT_STING, AF_PARALYSE, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1564,7 +1564,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MOTH_OF_WRATH, 'y', BROWN, "moth of wrath",
-    M_FLIES | M_SPECIAL_ABILITY,
+    M_NO_SKELETON | M_FLIES | M_SPECIAL_ABILITY,
     MR_NO_FLAGS,
     0, 10, MONS_MOTH_OF_WRATH, MONS_MOTH_OF_WRATH, MH_NATURAL, -3,
     { {AT_BITE, AF_RAGE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1696,7 +1696,7 @@ static monsterentry mondata[] = {
 // beetles ('B')
 {
     MONS_GIANT_BEETLE, 'B', BLUE, "giant beetle",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     1000, 10, MONS_GIANT_BEETLE, MONS_GIANT_BEETLE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1707,7 +1707,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BOULDER_BEETLE, 'B', LIGHTGREY, "boulder beetle",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_VUL_POISON,
     2500, 10, MONS_GIANT_BEETLE, MONS_BOULDER_BEETLE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1718,7 +1718,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BORING_BEETLE, 'B', BROWN, "boring beetle",
-    M_BURROWS,
+    M_NO_SKELETON | M_BURROWS,
     MR_VUL_POISON,
     1300, 10, MONS_GIANT_BEETLE, MONS_BORING_BEETLE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2503,7 +2503,7 @@ static monsterentry mondata[] = {
 // queen insects ('Q')
 {
     MONS_QUEEN_BEE, 'Q', YELLOW, "queen bee",
-    M_FLIES,
+    M_NO_SKELETON | M_FLIES,
     MR_VUL_POISON,
     200, 14, MONS_KILLER_BEE, MONS_QUEEN_BEE, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_NASTY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2514,7 +2514,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_QUEEN_ANT, 'Q', LIGHTGREY, "queen ant",
-    M_NO_FLAGS,
+    M_NO_SKELETON | M_NO_FLAGS,
     MR_VUL_POISON,
     1200, 10, MONS_GIANT_ANT, MONS_QUEEN_ANT, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_NASTY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
