@@ -413,6 +413,7 @@ void message_out(int which_line, int color, const char *s, int firstcol,
 
 static void unixcurses_defkeys( void )
 {
+#ifdef NCURSES_VERSION
     // keypad 0-9 (only if the "application mode" was successfully initialized)
     define_key("\033Op", 1000);
     define_key("\033Oq", 1001);
@@ -442,6 +443,7 @@ static void unixcurses_defkeys( void )
     define_key("\033[1~", 1031); // Home
     define_key("\033[4~", 1034); // End
     define_key("\033[E",  1040); // center arrow
+#endif
 }
 
 int unixcurses_get_vi_key(int keyin)
