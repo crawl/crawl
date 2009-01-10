@@ -1075,11 +1075,13 @@ void DungeonRegion::add_overlay(const coord_def &gc, int idx)
     over.idx = idx;
 
     m_overlays.push_back(over);
+    m_dirty = true;
 }
 
 void DungeonRegion::clear_overlays()
 {
     m_overlays.clear();
+    m_dirty = true;
 }
 
 InventoryTile::InventoryTile()
