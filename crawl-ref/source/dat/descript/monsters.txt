@@ -34,9 +34,7 @@ A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
 Blork the Orc
 
-A particularly fat and ugly orc.  He seems to have scavenged 
-a pair of rainbow-colored suspenders from somewhere.  They're
-not helping.
+A particularly fat and ugly orc.  He seems to have scavenged a pair of rainbow-colored suspenders from somewhere.  They're not helping.
 %%%%
 Blue Death
 
@@ -140,10 +138,7 @@ An evil human bounty hunter.
 %%%%
 harpy
 
-Harpies have roamed these coasts as long as seafarers can remember. They
-strike fear in the hearts of all sentient beings but not for their stings
-or claws. It is their way to steal food of the unwary causing many a men
-to starve to death.
+Harpies have roamed these coasts as long as seafarers can remember.  They strike fear in the hearts of all sentient beings but not for their stings or claws.  It is their way to steal food from the unwary, causing many a man to starve to death.
 %%%%
 Ijyb
 
@@ -151,7 +146,7 @@ A small and twisted goblin, wearing some ugly blue rags.
 %%%%
 Ilsuiw
 
-A cunning merfolk water-witch, who uses her beauty and spellcraft to draw unwitting adventurers to their death.
+A cunning merfolk water-witch, who uses her beauty and spellcraft to draw unwitting adventurers to their deaths.
 %%%%
 Jessica
 
@@ -175,7 +170,7 @@ A comical figure full of life and laughter.  It looks very happy to see you... b
 %%%%
 Lom Lobon
 
-An ancient and strangely serene demon. It regards you coldly from the huge glowing eye in the centre of its forehead.
+An ancient and strangely serene demon.  It regards you coldly from the huge glowing eye in the centre of its forehead.
 %%%%
 Lorocyproca
 
@@ -187,10 +182,7 @@ An unusually heavily armoured spellcaster.
 %%%%
 Lernaean hydra
 
-An ancient nameless serpent-like water beast that possesses numerous heads. 
-The poets mention more heads than vase-painters can paint, poisonous venom
-coming out of its eyes, and that this hydra is a guardian of an entrance to
-the Underworld.  What of this is true, you do not know.
+An ancient nameless serpent-like water beast that possesses numerous heads.  The poets mention more heads than vase-painters can paint, poisonous venom coming out of its eyes, and that this hydra is a guardian of an entrance to the Underworld.  What of this is true, you do not know.
 %%%%
 Margery
 
@@ -321,7 +313,7 @@ A lump of sickly green flesh, dripping with lethal acid.
 %%%%
 air elemental
 
-A spirit drawn from the elemental plane of air. It exists in this world as a swirling vortex of air, often dissipating and reforming.
+A spirit drawn from the elemental plane of air.  It exists in this world as a swirling vortex of air, often dissipating and reforming.
 %%%%
 ancient lich
 
@@ -373,7 +365,7 @@ A weird-looking frog, constantly blinking in and out of reality.
 %%%%
 blue devil
 
-A strange and nasty blue thing. It looks cold.
+A strange and nasty blue thing.  It looks cold.
 %%%%
 boggart
 
@@ -405,8 +397,7 @@ A very large and fat hairy bee.
 %%%%
 butterfly
 
-A large multicoloured butterfly with beautifully patterned wings, fluttering
-incongruously through the darkness of the cave.
+A large multicoloured butterfly with beautifully patterned wings, fluttering incongruously through the darkness of the cave.
 %%%%
 centaur
 
@@ -459,15 +450,11 @@ A larger and beefier relative of the common dungeon yak. Its little red eyes gle
 %%%%
 deep elf annihilator
 
-This deep elf exults in conjured mayhem and destruction. Hated by most 
-passersby with a passion, both for the power and the precision of the 
-destructional magic.
+This deep elf exults in conjured mayhem and destruction.  Hated by most passersby with a passion, both for the power and the precision of its destructive magic.
 %%%%
 deep elf blademaster
 
-Once in a very great while, there is a deep elf that scorns magic and
-devotes herself to the study of the sword. This is such a champion of
-the deep elves, wielding two blades with lethal grace.
+Once in a very great while, there is a deep elf that scorns magic and devotes herself to the study of the sword.  This is such a champion of the deep elves, wielding two blades with lethal grace.
 %%%%
 deep elf conjurer
 
@@ -479,8 +466,7 @@ This deep elf is surrounded by a shimmering aura of negative energy.
 %%%%
 deep elf demonologist
 
-A master of demonology, this deep elf is marked heavily by long years of 
-contact with unnatural demonic forces.
+A master of demonology, this deep elf is marked heavily by long years of contact with unnatural demonic forces.
 %%%%
 deep elf fighter
 
@@ -500,25 +486,19 @@ This is a deep elf wizard, learned in the ways of subtle magic.
 %%%%
 deep elf master archer
 
-This legendary deep elf archer has devoted her whole life to the
-pursuit of archery, dismissing magic as a frivolous distraction.
+This legendary deep elf archer has devoted her whole life to the pursuit of archery, dismissing magic as a frivolous distraction.
 %%%%
 deep elf priest
 
-This deep elf is a servant of an ancient dark god. Deep elves are extremely 
-hostile towards any alien outside their tribe, including deep elves from 
-elsewhere. No one ever made success in understanding the religious standings
-of these elves.
+This deep elf is a servant of an ancient dark god.  Deep elves are extremely hostile towards any alien outside their tribe, including deep elves from elsewhere.  No one has ever succeeded in understanding the religious standings of these elves.
 %%%%
 deep elf soldier
 
-While not a natural habitat for most elven-kind, the deep elves managed to 
-settle in this dreary cave. This is a common soldier of the deep elves.
+While not a natural habitat for most elven-kind, the deep elves managed to settle in this dreary cave.  This is a common soldier of the deep elves.
 %%%%
 deep elf sorcerer
 
-Most of these mighty spellcasters draw power from the very Hells, but even 
-those who don't possess lethal arcane abilities.
+Most of these mighty spellcasters draw power from the very Hells, but even those who don't possess lethal arcane abilities.
 %%%%
 deep elf summoner
 
@@ -611,7 +591,7 @@ These hovering horrors are especially loathed by wizards.
 %%%%
 fiend
 
-One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
+One of the most fearsome denizens of any Hell.  A huge and powerful demon wreathed in hellfire, with great scaly wings.
 %%%%
 fire elemental
 
@@ -631,7 +611,7 @@ A small dragon, puffing clouds of smoke.
 %%%%
 flaming corpse
 
-The remains of an adventurer who was burned to death, covered in unquenchable fire. It now rushes madly through the dungeon seeking others to ignite.
+The remains of an adventurer who was burned to death, covered in unquenchable fire.  It now rushes madly through the dungeon seeking others to ignite.
 %%%%
 flayed ghost
 
@@ -803,7 +783,7 @@ An ancient warrior, embalmed and cursed to walk in undeath for eternity.
 %%%%
 hairy devil
 
-A small humanoid demon covered in brown hair. Watch out - it may have fleas!
+A small humanoid demon covered in brown hair.  Watch out - it may have fleas!
 %%%%
 hell hound
 
@@ -811,8 +791,7 @@ A huge black dog, with glowing red eyes and smoke pouring from its fanged mouth.
 %%%%
 hell knight
 
-A heavily armoured warrior, in league with the powers of Hell, usually
-accompanied by other unsavoury beings of his ilk.
+A heavily armoured warrior, in league with the powers of Hell, usually accompanied by other unsavoury beings of his ilk.
 %%%%
 hell-hog
 
@@ -880,8 +859,7 @@ An imposing statue carved in glistening ice. Freezing vapours swirl about it.
 %%%%
 imp
 
-A small, ugly minor demon.  Its fanged maw seems locked in a permanent
-malign grin, and its horns protrude obscenely from its scaly pate.
+A small, ugly minor demon.  Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
 %%%%
 insubstantial wisp
 
@@ -889,9 +867,7 @@ A thin wisp of floating gas.
 %%%%
 iron devil
 
-A hideous humanoid figure with metal skin. While it lacks magical
-attacks and is slow of foot, it makes up for these failings with brute
-strength.
+A hideous humanoid figure with metal skin.  While it lacks magical attacks and is slow of foot, it makes up for these failings with brute strength.
 %%%%
 iron dragon
 
@@ -911,8 +887,7 @@ A small, dog-like scavenger. Packs of these creatures roam the underworld, searc
 %%%%
 jelly
 
-A pulsating mass of acidic protoplasm. It can and will eat almost 
-anything, and grows a little each time...
+A pulsating mass of acidic protoplasm. It can and will eat almost anything, and grows a little each time...
 %%%%
 jellyfish
 
@@ -928,10 +903,7 @@ A small, powerless larva of a killer bee.
 %%%%
 kobold
 
-No one knows where kobolds originated.  Some say they were the creation
-of an ancient demon-god, while others think they are household spirits
-gone bad.  Kobolds look like small, greyish creatures with canine heads.
-Whatever their origin, this one is not happy to see you.
+No one knows where kobolds originated.  Some say they were the creation of an ancient demon-god, while others think they are household spirits gone bad.  Kobolds look like small, greyish creatures with canine heads.  Whatever their origin, this one is not happy to see you.
 %%%%
 kobold demonologist
 
@@ -939,9 +911,7 @@ A kobold who has learned to summon and direct demons.
 %%%%
 komodo dragon
 
-An enormous monitor lizard. It's more than capable of preying on large
-animals. Bits of fetid and rotting flesh from its last few meals are
-stuck in its teeth.
+An enormous monitor lizard. It's more than capable of preying on large animals.  Bits of fetid and rotting flesh from its last few meals are stuck in its teeth.
 %%%%
 large abomination
 
@@ -1069,8 +1039,7 @@ A vile undead creation of the most unholy necromancy, these creatures are made f
 %%%%
 neqoxec
 
-A weirdly shaped demon, pulsing and shifting with mutagenic energies,
-its belly distended with the devoured brains of its victims.
+A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
 %%%%
 ogre
 
@@ -1090,7 +1059,7 @@ A disgusting glob of grey sludge.
 %%%%
 orange crystal statue
 
-An intricately carved statue of glittering orange crystal. Its eyes fix on yours with a piercing gaze.
+An intricately carved statue of glittering orange crystal.  Its eyes fix on yours with a piercing gaze.
 
 It looks brittle.
 %%%%
@@ -1164,8 +1133,7 @@ A large and very strong bear covered in glistening white fur.
 %%%%
 program bug
 
-A ravenous and incredibly buggy monster. Please report its existence
-to the DevTeam.
+A ravenous and incredibly buggy monster.  Please report its existence to the DevTeam.
 %%%%
 pulsating lump
 
@@ -1201,7 +1169,7 @@ A demon in the form of a tiger who comes to the material world in search of powe
 %%%%
 rat
 
-Wherever there are men, there are rats -- rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
+Wherever there are men, there are rats - rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
 %%%%
 reaper
 
@@ -1209,7 +1177,7 @@ A skeletal form wielding a giant scythe.
 %%%%
 red devil
 
-The Red Devil is slightly shorter than a human, but muscular and covered in spikes and horns. Two short wings sprout from its shoulders.
+A muscular demon covered in spikes and horns.  Two short wings sprout from its shoulders.
 %%%%
 red draconian
 
@@ -1221,7 +1189,7 @@ A huge red wasp with a viciously barbed stinger.
 %%%%
 redback
 
-A vicious black spider with a splash of red on its swollen abdomen. Its mandibles drip with lethal poison.
+A vicious black spider with a splash of red on its swollen abdomen.  Its mandibles drip with lethal poison.
 %%%%
 rock worm
 
@@ -1229,7 +1197,7 @@ A large worm which moves through rock as if it were air.
 %%%%
 rock troll
 
-An enormous and very nasty-looking humanoid creature. Its rocky hide seems to heal almost instantaneously from most wounds.
+An enormous and very nasty-looking humanoid creature.  Its rocky hide seems to heal almost instantaneously from most wounds.
 %%%%
 rotting devil
 
@@ -1499,8 +1467,7 @@ A huge animated wood statue.
 %%%%
 worm
 
-A giant worm, glistening with slime, with unusually large teeth.
-You find yourself surprised that a worm should have teeth at all.
+A giant worm, glistening with slime, with unusually large teeth.  You find yourself surprised that a worm should have teeth at all.
 %%%%
 wraith
 
