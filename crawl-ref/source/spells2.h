@@ -27,12 +27,7 @@ bool brand_weapon(brand_type which_brand, int power);
  * *********************************************************************** */
 bool burn_freeze(int pow, beam_type flavour, int targetmon);
 
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-int corpse_rot(int pow);
+void corpse_rot();
 
 
 struct dist;

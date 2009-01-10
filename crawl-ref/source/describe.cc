@@ -2590,6 +2590,48 @@ static std::string _describe_draconian(const monsters *mon)
     return (description);
 }
 
+// Return a string of the form "She is resistant to fire."
+static std::string _resistance_description(const char* pronoun,
+                                           int level, const char* attackname)
+{
+    const char* modifiers[] = {
+        "susceptible",          // -1
+        "resistant",            // +1
+        "very resistant",       // +2
+        "extremely resistant"   // +3
+    };
+    std::string result;
+
+    if (level != 0)
+    {
+        const int offset = (level < 0) ? 0 : std::min(level, 3);
+
+        result = pronoun;
+        result += " is ";
+        result += modifiers[offset];
+        result += " to ";
+        result += attackname;
+        result += ".$";
+    }
+    return result;
+}
+
+static std::string _monster_resists_string(const monsters& mon)
+{
+    const mon_resist_def resist = get_mons_resists(&mon);
+    const char* pronoun = mons_pronoun(static_cast<monster_type>(mon.type),
+                                       PRONOUN_CAP, true);
+    std::string result;
+    // Not shown: hellfire, asphyxiation, sticky flames.
+    result += _resistance_description(pronoun, resist.elec,   "electricity");
+    result += _resistance_description(pronoun, resist.poison, "poison");
+    result += _resistance_description(pronoun, resist.fire,   "fire");
+    result += _resistance_description(pronoun, resist.steam,  "steam");
+    result += _resistance_description(pronoun, resist.cold,   "cold");
+    result += _resistance_description(pronoun, resist.acid,   "acid");
+    return result;
+}
+    
 //---------------------------------------------------------------
 //
 // describe_monsters
@@ -2728,6 +2770,10 @@ void describe_monsters(const monsters& mons)
     default:
         break;
     }
+
+    // Don't leak or duplicate resistance information for ghosts/demons.
+    if (mons.type != MONS_PANDEMONIUM_DEMON && mons.type != MONS_PLAYER_GHOST)
+        body << _monster_resists_string(mons);
 
     if (!mons_can_use_stairs(&mons))
     {

@@ -78,9 +78,6 @@ int detect_traps( int pow )
 
 int detect_items( int pow )
 {
-    if (pow > 50)
-        pow = 50;
-
     int items_found = 0;
     const int map_radius  = 8 + random2(8) + pow;
 
@@ -191,9 +188,6 @@ int detect_creatures( int pow, bool telepathic )
     if (!telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
-    if (pow > 50)
-        pow = 50;
-
     int creatures_found  = 0;
     const int map_radius = 8 + random2(8) + pow;
 
@@ -224,10 +218,8 @@ int detect_creatures( int pow, bool telepathic )
     return (creatures_found);
 }
 
-int corpse_rot(int pow)
+void corpse_rot()
 {
-    UNUSED(pow);
-
     for (radius_iterator ri(you.pos(), 6); ri; ++ri)
     {
         if (see_grid_no_trans(*ri) && !is_sanctuary(*ri)
@@ -256,8 +248,6 @@ int corpse_rot(int pow)
         mpr("You smell decay.");
 
     // Should make zombies decay into skeletons?
-
-    return (0);
 }
 
 bool brand_weapon(brand_type which_brand, int power)

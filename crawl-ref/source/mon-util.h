@@ -451,6 +451,7 @@ habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(int p_monsterid);
+mon_resist_def get_mons_resists(const monsters *mon);
 
 // last updated 10jun2000 {dlb}
 /* ***********************************************************************
