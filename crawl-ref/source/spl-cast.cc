@@ -1921,7 +1921,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_LEVITATION:
-        potion_effect( POT_LEVITATION, powc );
+        potion_effect(POT_LEVITATION, powc);
         break;
 
     case SPELL_FLY:
@@ -2781,7 +2781,7 @@ void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
         return;
     }
 
-    switch(pot_eff)
+    switch (pot_eff)
     {
         case POT_LEVITATION:
             // There's no levitation enchantment for monsters, and,
@@ -3202,13 +3202,12 @@ void MiscastEffect::_enchantment(int severity)
             break;
         case 2:
             mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19,3);
+            you.magic_contamination += random2avg(19, 3);
             break;
         case 3:
             do
                 curse_an_item(false);
             while (!one_chance_in(3));
-
             mpr("You sense an overwhelmingly malignant aura!");
             break;
         }
@@ -3372,7 +3371,7 @@ void MiscastEffect::_translocation(int severity)
             break;
         case 3:
             mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19,3);
+            you.magic_contamination += random2avg(19, 3);
             break;
         }
         break;
@@ -3808,7 +3807,7 @@ void MiscastEffect::_necromancy(int severity)
                 if (target->atype() == ACT_PLAYER)
                     you.rotting++;
                 else
-                    mon_target->add_ench( mon_enchant(ENCH_ROT, 1, kc) );
+                    mon_target->add_ench(mon_enchant(ENCH_ROT, 1, kc));
             }
             else if (you.species == SP_MUMMY)
             {
@@ -4031,7 +4030,7 @@ void MiscastEffect::_transmigration(int severity)
             break;
         case 3:
             mpr("You feel saturated with unharnessed energies!");
-            you.magic_contamination += random2avg(19,3);
+            you.magic_contamination += random2avg(19, 3);
             break;
         }
         break;
@@ -4044,8 +4043,15 @@ void MiscastEffect::_transmigration(int severity)
         {
         case 0:
             you_msg = "Your body is flooded with distortional energies!";
-            if (_ouch(3 + random2avg(18, 2)) && target->atype() == ACT_PLAYER)
-                you.magic_contamination += random2avg(35, 3);
+            mon_msg = "@The_monster@'s body is flooded with distortional "
+                      "energies!";
+            if (_ouch(3 + random2avg(18, 2)) && target->alive())
+            {
+                if (target->atype() == ACT_PLAYER)
+                    you.magic_contamination += random2avg(35, 3);
+                else
+                    mon_target->add_ench(mon_enchant(ENCH_BACKLIGHT, 40, kc));
+            }
             break;
 
         case 1:
@@ -4241,7 +4247,6 @@ void MiscastEffect::_fire(int severity)
                 mon_target->add_ench(mon_enchant(ENCH_STICKY_FLAME,
                     std::min(4, 1 + random2(mon_target->hit_dice) / 2), kc));
             }
-
             break;
         }
         }
@@ -4806,7 +4811,7 @@ void MiscastEffect::_poison(int severity)
             {
                 you_msg = "You feel very sick.";
                 // Monster messages needed.
-                target->poison( act_source, 3 + random2avg(9, 2) );
+                target->poison(act_source, 3 + random2avg(9, 2));
             }
             do_msg();
             break;
