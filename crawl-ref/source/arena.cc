@@ -566,7 +566,7 @@ namespace arena
         {
             if (faction_a.won || faction_b.won)
             {
-                mpr("Both factions alive but one delcared the winner.",
+                mpr("Both factions alive but one declared the winner.",
                     MSGCH_ERROR);
                 more();
                 faction_a.won = false;
