@@ -612,6 +612,8 @@ bool tile_list_processor::write_data()
             lcname.c_str());
         fprintf(fp, "bool tile_%s_index(const char *str, unsigned int &idx);\n",
             lcname.c_str());
+        fprintf(fp, "bool tile_%s_equal(unsigned int tile, unsigned int idx);\n",
+            lcname.c_str());
 
         if (m_categories.size() > 0)
         {
@@ -791,13 +793,20 @@ bool tile_list_processor::write_data()
             "        {\n"
             "            idx = %s_map_pairs[half].second;\n"
             "            return true;\n"
-            "        }\n"
-            "\n"
+            "        }\n" "\n"
             "    } while (first <= last);\n"
             "\n"
             "    return false;\n"
             "}\n",
             lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str());
+
+        fprintf(fp,
+            "bool tile_%s_equal(unsigned int tile, unsigned int idx)\n"
+            "{\n"
+            "    assert(tile >= %s && tile < %s);\n"
+            "    return (idx >= tile && idx < tile + tile_%s_count(tile));\n"
+            "}\n\n",
+            lcname.c_str(), m_start_value.c_str(), max.c_str(), lcname.c_str());
     }
 
     delete[] part_min;

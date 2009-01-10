@@ -493,30 +493,16 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
 
     if (fg_idx && !(fg & TILE_FLAG_FLYING))
     {
-        if (bg_idx >= TILE_DNGN_LAVA && bg_idx <= TILE_DNGN_LAVA + 3)
-        {
+        if (tile_dngn_equal(TILE_DNGN_LAVA, bg_idx))
             m_buf_main.add(TILE_MASK_LAVA, x, y);
-        }
-        else if (bg_idx >= TILE_DNGN_SHALLOW_WATER
-                 && bg_idx <= TILE_DNGN_SHALLOW_WATER + 3)
-        {
+        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER, bg_idx))
             m_buf_main.add(TILE_MASK_SHALLOW_WATER, x, y);
-        }
-        else if (bg_idx >= TILE_DNGN_SHALLOW_WATER_MURKY
-                 && bg_idx <= TILE_DNGN_SHALLOW_WATER_MURKY+ 3)
-        {
+        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY, bg_idx))
             m_buf_main.add(TILE_MASK_SHALLOW_WATER_MURKY, x, y);
-        }
-        else if (bg_idx >= TILE_DNGN_DEEP_WATER
-                 && bg_idx <= TILE_DNGN_DEEP_WATER + 3)
-        {
+        else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER, bg_idx))
             m_buf_main.add(TILE_MASK_DEEP_WATER, x, y);
-        }
-        else if (bg_idx >= TILE_DNGN_DEEP_WATER_MURKY
-                 && bg_idx <= TILE_DNGN_DEEP_WATER_MURKY + 3)
-        {
+        else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER_MURKY, bg_idx))
             m_buf_main.add(TILE_MASK_DEEP_WATER_MURKY, x, y);
-        }
     }
 
     if (fg & TILE_FLAG_NET)
