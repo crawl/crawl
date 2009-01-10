@@ -2034,10 +2034,16 @@ bool cast_twist(int pow, const coord_def& where)
     if (invalid_monster_index(mgrd(where)))
     {
         mpr("There is no monster there!");
-        return (false);
+        // This counts as a real cast, in order not to leak invisible
+        // monster locations, and to allow victory-dancing.
+        return (true);
     }
 
     monsters& m = menv[mgrd(where)];
+
+    // Identify mimics, if necessary.
+    if (mons_is_mimic(m.type))
+        m.flags |= MF_KNOWN_MIMIC;
 
     // Monster can magically save vs attack.
     if (check_mons_resist_magic(&m, pow * 2))
@@ -2054,6 +2060,9 @@ bool cast_twist(int pow, const coord_def& where)
 
     // Inflict the damage.
     _player_hurt_monster(m, damage);
+
+    if (mons_is_mimic(m.type))
+        mimic_alert(&m);
 
     return (true);
 }

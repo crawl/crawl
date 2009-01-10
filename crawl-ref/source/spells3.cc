@@ -184,43 +184,44 @@ bool detect_curse(bool suppress_msg)
     return (success);
 }
 
-int cast_smiting(int power, dist &beam)
+bool cast_smiting(int power, const coord_def& where)
 {
-    bool success = false;
-
-    if (mgrd(beam.target) == NON_MONSTER || beam.isMe)
-        canned_msg(MSG_SPELL_FIZZLES);
-    else
+    if (invalid_monster_index(mgrd(where)))
     {
-        monsters *monster = &menv[mgrd(beam.target)];
+        mpr("There's nothing there!");
+        // Counts as a real cast, due to victory-dancing and
+        // invisible/submerged monsters.
+        return (true);
+    }
 
-        god_conduct_trigger conducts[3];
-        disable_attack_conducts(conducts);
+    monsters& m = menv[mgrd(where)];
 
-        success = !stop_attack_prompt(monster, false, false);
+    god_conduct_trigger conducts[3];
+    disable_attack_conducts(conducts);
 
-        if (success)
-        {
-            set_attack_conducts(conducts, monster);
+    const bool success = !stop_attack_prompt(&m, false, false);
 
-            mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
+    if (success)
+    {
+        set_attack_conducts(conducts, &m);
 
-            behaviour_event(monster, ME_ANNOY, MHITYOU);
-            if (mons_is_mimic(monster->type))
-                mimic_alert(monster);
-        }
+        mprf("You smite %s!", m.name(DESC_NOCAP_THE).c_str());
 
-        enable_attack_conducts(conducts);
+        behaviour_event(&m, ME_ANNOY, MHITYOU);
+        if (mons_is_mimic(m.type))
+            mimic_alert(&m);
+    }
 
-        if (success)
-        {
-            // Maxes out at around 40 damage at 27 Invocations, which is
-            // plenty in my book (the old max damage was around 70,
-            // which seems excessive).
-            monster->hurt(&you, 7 + (random2(power) * 33 / 191));
-            if (monster->alive())
-                print_wounds(monster);
-        }
+    enable_attack_conducts(conducts);
+
+    if (success)
+    {
+        // Maxes out at around 40 damage at 27 Invocations, which is
+        // plenty in my book (the old max damage was around 70,
+        // which seems excessive).
+        m.hurt(&you, 7 + (random2(power) * 33 / 191));
+        if (m.alive())
+            print_wounds(&m);
     }
 
     return (success);

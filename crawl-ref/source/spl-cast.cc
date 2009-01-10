@@ -1444,7 +1444,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     // LOS spells
     case SPELL_SMITING:
-        cast_smiting(powc, spd);
+        if (!cast_smiting(powc, beam.target))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_TWIST:
