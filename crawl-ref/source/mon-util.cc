@@ -310,7 +310,7 @@ mon_resist_def get_mons_resists(const monsters *mon)
 monsters *monster_at(const coord_def &pos)
 {
     const int mindex = mgrd(pos);
-    return (mindex != NON_MONSTER? &menv[mindex] : NULL);
+    return (mindex != NON_MONSTER ? &menv[mindex] : NULL);
 }
 
 int mons_piety(const monsters *mon)

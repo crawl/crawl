@@ -2657,8 +2657,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happnes)
 
 bool MiscastEffect::_ouch(int dam, beam_type flavour)
 {
-    // Delay do_msg() until after avoid_lethal()
-
+    // Delay do_msg() until after avoid_lethal().
     if (target->atype() == ACT_MONSTER)
     {
         do_msg(true);
@@ -2668,6 +2667,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         beem.flavour = flavour;
         dam = mons_adjust_flavoured(mon_target, beem, dam, true);
         mon_target->hurt(NULL, dam, BEAM_MISSILE, false);
+
         if (!mon_target->alive())
             monster_die(mon_target, kt, kill_source);
     }
@@ -2695,7 +2695,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
             else
                 method = KILLED_BY_DIVINE_WRATH;
         }
-        else if (source >= 0 && source < NON_MONSTER)
+        else if (!invalid_monster_index(source))
             method = KILLED_BY_MONSTER;
         else
             method = KILLED_BY_SOMETHING;
@@ -2703,6 +2703,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         bool see_source = mon_source ? you.can_see(mon_source) : false;
         ouch(dam, kill_source, method, cause.c_str(), see_source);
     }
+
     return (true);
 }
 
@@ -3316,15 +3317,15 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_seen   = "Space warps around @the_monster!";
             mon_msg_unseen = "A piece of empty space twists and writhes.";
 
-            if (!_ouch(5 + random2avg(9, 2)))
-                return;
+            if (_ouch(5 + random2avg(9, 2)))
+            {
+                if (one_chance_in(3))
+                    target->teleport(true);
+                else
+                    target->blink(false);
 
-            if (one_chance_in(3))
-                target->teleport(true);
-            else
-                target->blink(false);
-
-            _potion_effect(POT_CONFUSION, 40);
+                _potion_effect(POT_CONFUSION, 40);
+            }
             break;
         case 5:
         {
@@ -3363,11 +3364,11 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_seen   = "Space warps crazily around @the_monster@!";
             mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
 
-            if (!_ouch(9 + random2avg(17, 2)))
-                return;
-
-            you_teleport_now( true );
-            potion_effect(POT_CONFUSION, 60);
+            if (_ouch(9 + random2avg(17, 2)))
+            {
+                target->teleport(true);
+                _potion_effect(POT_CONFUSION, 60);
+            }
             break;
         case 2:
             send_abyss();
@@ -4048,7 +4049,6 @@ void MiscastEffect::_transmigration(int severity)
         {
         case 0:
             you_msg = "Your body is flooded with distortional energies!";
-
             if (_ouch(3 + random2avg(18, 2)) && target->atype() == ACT_PLAYER)
                 you.magic_contamination += random2avg(35, 3);
             break;

@@ -813,7 +813,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     ASSERT(!crawl_state.arena);
 
     ait_hp_loss hpl(dam, death_type);
-    interrupt_activity( AI_HP_LOSS, &hpl );
+    interrupt_activity(AI_HP_LOSS, &hpl);
 
     if (dam > 0)
         you.check_awaken(500);
