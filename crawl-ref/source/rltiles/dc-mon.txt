@@ -366,6 +366,7 @@ ice_beast MONS_ICE_BEAST /*'I'*/
 ## Jellies ('J')
 %sdir dc-mon/unique
 royal_jelly MONS_ROYAL_JELLY
+dissolution MONS_DISSOLUTION
 %sdir dc-mon
 ooze MONS_OOZE
 jelly MONS_JELLY

@@ -3262,7 +3262,7 @@ static monster_type _choose_unique_by_depth(int step)
                             MONS_HAROLD, MONS_NORBERT, MONS_JOZEF, MONS_AGNES,
                             MONS_MAUD, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
                             MONS_AZRAEL, MONS_EUSTACHIO, MONS_NERGALLE,
-                            MONS_SONJA, MONS_NESSOS, -1);
+                            MONS_SONJA, MONS_NESSOS, MONS_DISSOLUTION, -1);
         break;
     case 6: // depth > 19
     default:
@@ -3270,7 +3270,7 @@ static monster_type _choose_unique_by_depth(int step)
                             MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_XTAHUA,
                             MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY,
                             MONS_BORIS, MONS_ROXANNE, MONS_NERGALLE,
-                            MONS_SAINT_ROKA, -1);
+                            MONS_SAINT_ROKA, MONS_DISSOLUTION, -1);
     }
 
     return static_cast<monster_type>(ret);
@@ -3278,6 +3278,15 @@ static monster_type _choose_unique_by_depth(int step)
 
 static monster_type _pick_unique(int lev)
 {
+    if (player_in_branch(BRANCH_SLIME_PITS))
+    {
+        // Only allow Dissolution in the Slime Pits.
+        if (player_branch_depth() > 1 && one_chance_in(3))
+            return MONS_DISSOLUTION;
+
+        return MONS_PROGRAM_BUG;
+    }
+
     // First, pick generic unique depending on depth.
     int which_unique =
         ((lev <=  3) ? _choose_unique_by_depth(0) :
@@ -3328,19 +3337,20 @@ static int _place_uniques(int level_number, char level_type)
 
     while (one_chance_in(3))
     {
-        monster_type which_unique = MONS_PROGRAM_BUG;   //     30 in total
+        monster_type which_unique = MONS_PROGRAM_BUG;
 
         while (which_unique == MONS_PROGRAM_BUG
                || you.unique_creatures[which_unique])
         {
+            which_unique = _pick_unique(level_number);
+
             // Sometimes, we just quit if a unique is already placed.
-            if (which_unique != MONS_PROGRAM_BUG && !one_chance_in(3))
+            if (which_unique == MONS_PROGRAM_BUG
+                || you.unique_creatures[which_unique] && !one_chance_in(3))
             {
                 which_unique = MONS_PROGRAM_BUG;
                 break;
             }
-
-            which_unique = _pick_unique(level_number);
         }
 
         // Usually, we'll have quit after a few tries. Make sure we have

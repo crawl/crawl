@@ -138,13 +138,12 @@ goblin CORPSE_GOBLIN /* g */
 hobgoblin CORPSE_HOBGOBLIN /* g */
 
 %sdir dc-mon/animals
+jackal CORPSE_JACKAL /* h */
 hog CORPSE_HOG /* h */
 hound CORPSE_HOUND /* h */
 warg CORPSE_WARG /* h */
 war_dog CORPSE_WAR_DOG /* h */
 wolf CORPSE_WOLF /* h */
-
-jackal CORPSE_JACKAL /* j */
 
 %back dc-misc/blood_green
 bumblebee CORPSE_BUMBLEBEE /* k */

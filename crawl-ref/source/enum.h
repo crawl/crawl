@@ -2003,9 +2003,10 @@ enum monster_type                      // (int) menv[].type
     MONS_SAINT_ROKA,
     MONS_NESSOS,
     MONS_LERNAEAN_HYDRA,
+    MONS_DISSOLUTION,                  // 460
 
     // Testing monsters
-    MONS_TEST_SPAWNER,                 // 460
+    MONS_TEST_SPAWNER,
 
     NUM_MONSTERS,                      // used for polymorph
     RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}

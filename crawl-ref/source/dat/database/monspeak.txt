@@ -1281,6 +1281,22 @@ Boris unsummoned
 @The_monster@ says, "You can't fire me, I quit!"
 ## END Boris ##
 %%%%
+# a sentient jelly
+Dissolution
+
+@The_monster@ gurgles.
+
+@The_monster@ gurgles loudly.
+
+@The_monster@ emits a sizzling noise.
+
+@The_monster@ jiggles.
+
+@The_monster@ says, "Join with me for eternity!"
+
+@The_monster@ says, "Become one with my sorrow!"
+## END Dissolution ##
+%%%%
 # An adventurer hating competition
 Donald
 

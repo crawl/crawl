@@ -207,7 +207,7 @@ Branch branches[] = {
       DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
       "Slime Pits", "the Pits of Slime", "Slime",
       NULL,
-      false, false, GREEN, LIGHTGREEN,
+      false, true, GREEN, LIGHTGREEN,
       mons_pitslime_rare, mons_pitslime_level,
       NULL, NULL, NULL, NULL,
       5, 'M', false, true },

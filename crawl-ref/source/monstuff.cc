@@ -4474,7 +4474,7 @@ static void _handle_movement(monsters *monster)
     }
 
     // some calculations
-    if (monster->type == MONS_BORING_BEETLE && monster->foe == MHITYOU)
+    if (mons_class_flag(monster->type, M_BURROWS) && monster->foe == MHITYOU)
     {
         // Boring beetles always move in a straight line in your direction.
         delta = you.pos() - monster->pos();
@@ -7783,7 +7783,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         (curr_cloud_num == EMPTY_CLOUD) ? CLOUD_NONE
                                         : env.cloud[curr_cloud_num].type;
 
-    if (monster->type == MONS_BORING_BEETLE
+    if (mons_class_flag(monster->type, M_BURROWS)
         && (target_grid == DNGN_ROCK_WALL
             || target_grid == DNGN_CLEAR_ROCK_WALL))
     {
@@ -8180,7 +8180,7 @@ forget_it:
     // ------------------------------------------------------------------
 
     // Take care of beetle burrowing.
-    if (monster->type == MONS_BORING_BEETLE)
+    if (mons_class_flag(monster->type, M_BURROWS))
     {
         const dungeon_feature_type feat = grd(monster->pos() + mmov);
         if ((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
@@ -8190,7 +8190,13 @@ forget_it:
             set_terrain_changed(monster->pos() + mmov);
 
             if (!silenced(you.pos()))
-                mpr("You hear a grinding noise.", MSGCH_SOUND);
+            {
+                // Message depends on whether caused by boring beetle or
+                // acid (Dissolution).
+                mpr((monster->type == MONS_BORING_BEETLE) ?
+                    "You hear a grinding noise." :
+                    "You hear a sizzling sound.", MSGCH_SOUND);
+            }
         }
     }
 
@@ -8472,6 +8478,7 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
         case MONS_HYDRA:
         case MONS_KILLER_KLOWN:
         case MONS_LERNAEAN_HYDRA:
+        case MONS_DISSOLUTION:
             return (true);
         default:
             return (false);
