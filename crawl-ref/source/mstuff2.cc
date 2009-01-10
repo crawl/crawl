@@ -1173,6 +1173,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type : 0;
 
     mon_inv_type slot = get_mon_equip_slot(monster, mitm[hand_used]);
+    ASSERT(slot != NUM_MONSTER_SLOTS);
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
 

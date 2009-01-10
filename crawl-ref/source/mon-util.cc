@@ -4518,11 +4518,18 @@ static int _q_adj_damage(int damage, int qty)
 
 bool monsters::pickup_throwable_weapon(item_def &item, int near)
 {
+    const mon_inv_type slot = item_to_mslot(item);
+    // If it's a meele weapon then pickup_melee_weapon() already rejected
+    // it, even though it can also be thrown.
+    if (slot == MSLOT_WEAPON)
+        return (false);
+    ASSERT(slot == MSLOT_MISSILE);
+
     // If occupied, don't pick up a throwable weapons if it would just
     // stack with an existing one. (Upgrading is possible.)
-    if (mslot_item(MSLOT_MISSILE)
+    if (mslot_item(slot)
         && (mons_is_wandering(this) || mons_friendly(this) && foe == MHITYOU)
-        && pickup(item, MSLOT_MISSILE, near, true))
+        && pickup(item, slot, near, true))
     {
         return (true);
     }
@@ -4535,9 +4542,9 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
                           mitm[exist_missile].quantity)
             < _q_adj_damage(mons_thrown_weapon_damage(&item), item.quantity)))
     {
-        if (inv[MSLOT_MISSILE] != NON_ITEM && !drop_item(MSLOT_MISSILE, near))
+        if (inv[slot] != NON_ITEM && !drop_item(slot, near))
             return (false);
-        return pickup(item, MSLOT_MISSILE, near);
+        return pickup(item, slot, near);
     }
     return (false);
 }
