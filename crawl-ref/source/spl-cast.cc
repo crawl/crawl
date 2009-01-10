@@ -4049,8 +4049,6 @@ void MiscastEffect::_transmigration(int severity)
             {
                 if (target->atype() == ACT_PLAYER)
                     you.magic_contamination += random2avg(35, 3);
-                else
-                    mon_target->add_ench(mon_enchant(ENCH_BACKLIGHT, 40, kc));
             }
             break;
 
