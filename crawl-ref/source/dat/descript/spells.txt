@@ -85,7 +85,7 @@ This spell hurls a sizzling bolt of molten rock.
 %%%%
 Bone Shards
 
-This spell uses the bones of a skeleton (or similar materials: the rigid exoskeleton of an insect, for example) to dispense a lethal spray of slicing fragments, allowing its caster to dispense with conjurations in favour of necromancy alone to provide a low-level yet very powerful offensive spell. The use of a large and heavy skeleton (by wielding it) amplifies this spell's effect. 
+This spell uses the bones of a skeleton to dispense a lethal spray of slicing fragments, allowing its caster to dispense with conjurations in favour of necromancy alone to provide a low-level yet very powerful offensive spell.  The use of a large and heavy skeleton (by wielding it) amplifies this spell's effect.
 %%%%
 Borgnjor's Revivification
 
