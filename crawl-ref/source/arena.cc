@@ -797,7 +797,9 @@ namespace arena
     {
         // Set various options from the arena spec's tags
         try
+        {
             parse_monster_spec();
+        }
         catch (const std::string &error)
         {
             write_error(error);
@@ -875,7 +877,9 @@ namespace arena
         do
         {
             try
+            {
                 setup_fight();
+            }
             catch (const std::string &error)
             {
                 write_error(error);
