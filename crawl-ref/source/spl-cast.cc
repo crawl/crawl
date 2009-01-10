@@ -3287,7 +3287,7 @@ void MiscastEffect::_translocation(int severity)
             you_msg        = "Space bends around you!";
             mon_msg_seen   = "Space bends around @the_monster@!";
             mon_msg_unseen = "A piece of empty space twists and distorts.";
-            if (_ouch(4 + random2avg(7, 2)))
+            if (_ouch(4 + random2avg(7, 2)) && target->alive())
                 target->blink(false);
             break;
         case 5:
@@ -3316,14 +3316,12 @@ void MiscastEffect::_translocation(int severity)
             you_msg        = "Space warps around you!";
             mon_msg_seen   = "Space warps around @the_monster!";
             mon_msg_unseen = "A piece of empty space twists and writhes.";
-
-            if (_ouch(5 + random2avg(9, 2)))
+            if (_ouch(5 + random2avg(9, 2)) && target->alive())
             {
                 if (one_chance_in(3))
                     target->teleport(true);
                 else
                     target->blink(false);
-
                 _potion_effect(POT_CONFUSION, 40);
             }
             break;
@@ -3363,8 +3361,7 @@ void MiscastEffect::_translocation(int severity)
             you_msg        = "Space warps crazily around you!";
             mon_msg_seen   = "Space warps crazily around @the_monster@!";
             mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
-
-            if (_ouch(9 + random2avg(17, 2)))
+            if (_ouch(9 + random2avg(17, 2)) && target->alive())
             {
                 target->teleport(true);
                 _potion_effect(POT_CONFUSION, 60);
@@ -3787,9 +3784,7 @@ void MiscastEffect::_necromancy(int severity)
         case 0:
             // Monster messages needed.
             if (target->res_torment())
-            {
                 you_msg = "You feel weird for a moment.";
-            }
             else
             {
                 you_msg = "Pain shoots through your body!";
@@ -4171,7 +4166,6 @@ void MiscastEffect::_fire(int severity)
         case 1:
             you_msg      = "Flames sear your flesh.";
             mon_msg_seen = "Flames sear @the_monster@.";
-
             if (target->res_fire() < 0)
             {
                 if (!_ouch(2 + random2avg(13, 2)))
@@ -4179,8 +4173,8 @@ void MiscastEffect::_fire(int severity)
             }
             else
                 do_msg();
-            target->expose_to_element(BEAM_FIRE, 3);
-
+            if (target->alive())
+                target->expose_to_element(BEAM_FIRE, 3);
             break;
         }
         break;
@@ -4192,8 +4186,7 @@ void MiscastEffect::_fire(int severity)
             you_msg        = "You are blasted with fire.";
             mon_msg_seen   = "@The_monster@ is blasted with fire.";
             mon_msg_unseen = "A flame briefly burns in thin air.";
-
-            if (_ouch(5 + random2avg(29, 2), BEAM_FIRE))
+            if (_ouch(5 + random2avg(29, 2), BEAM_FIRE) && target->alive())
                 target->expose_to_element(BEAM_FIRE, 5);
             break;
 
@@ -4220,8 +4213,7 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen   = "@The_monster@ is blasted with searing flames!";
             mon_msg_unseen = "A large flame burns hotly for a moment in the "
                              "thin air.";
-
-            if (_ouch(9 + random2avg(33, 2), BEAM_FIRE))
+            if (_ouch(9 + random2avg(33, 2), BEAM_FIRE) && target->alive())
                 target->expose_to_element(BEAM_FIRE, 10);
             break;
         case 1:
@@ -4341,7 +4333,6 @@ void MiscastEffect::_ice(int severity)
         case 1:
             you_msg      = "You are covered in a thin layer of ice.";
             mon_msg_seen = "@The_monster@ is covered in a thin layer of ice.";
-
             if (target->res_cold() < 0)
             {
                 if (!_ouch(4 + random2avg(5, 2)))
@@ -4349,7 +4340,8 @@ void MiscastEffect::_ice(int severity)
             }
             else
                 do_msg();
-            target->expose_to_element(BEAM_COLD, 2);
+            if (target->alive())
+                target->expose_to_element(BEAM_COLD, 2);
             break;
         }
         break;
@@ -4360,8 +4352,7 @@ void MiscastEffect::_ice(int severity)
         case 0:
             you_msg = "Heat is drained from your body.";
             // Monster messages needed.
-
-            if (_ouch(5 + random2(6) + random2(7), BEAM_COLD))
+            if (_ouch(5 + random2(6) + random2(7), BEAM_COLD) && target->alive())
                 target->expose_to_element(BEAM_COLD, 4);
             break;
 
@@ -4387,8 +4378,7 @@ void MiscastEffect::_ice(int severity)
         case 0:
             you_msg      = "You are blasted with ice!";
             mon_msg_seen = "@The_monster@ is blasted with ice!";
-
-            if (_ouch(9 + random2avg(23, 2), BEAM_ICE))
+            if (_ouch(9 + random2avg(23, 2), BEAM_ICE) && target->alive())
                 target->expose_to_element(BEAM_COLD, 9);
             break;
         case 1:
@@ -4520,7 +4510,7 @@ void MiscastEffect::_earth(int severity)
                 mon_msg_unseen = "Rocks fall out of nowhere!";
                 break;
             }
-            _ouch(random2avg(13,2) + 10 - random2(1 + target->armour_class()));
+            _ouch(random2avg(13, 2) + 10 - random2(1 + target->armour_class()));
             break;
         }
         break;
