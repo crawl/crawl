@@ -1551,10 +1551,6 @@ void bolt::initialize_fire()
     if (see_grid(source) && target == source && !invisible())
         seen = true;
 
-    // Self-targeted beams have a "path" consisting the source position.
-    if (target == source)
-        path_taken.push_back(source);
-
 #if DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
@@ -1958,6 +1954,8 @@ void bolt::do_fire()
 
     while (in_bounds(pos()))
     {
+        path_taken.push_back(pos());
+
         if (!affects_nothing)
             affect_cell();
 
@@ -1973,8 +1971,6 @@ void bolt::do_fire()
 
         ASSERT(!grid_is_solid(grd(pos()))
                || (is_tracer && affects_wall(grd(pos()))));
-
-        path_taken.push_back(pos());
 
         const bool was_seen = seen;
         if (!was_seen && range > 0 && !invisible() && see_grid(pos()))
