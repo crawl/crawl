@@ -975,7 +975,7 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
         {
             return (true);
         }
-        
+
     }
     return (!arena::allow_bands && !first_band_member
             || arena::banned_glyphs[mons_char(mg.cls)]);

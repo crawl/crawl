@@ -4397,7 +4397,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         env.tile_fg[ep.x-1][ep.y-1] = t;
         const monsters *mon = &menv[idx];
 
-        if (!player_monster_visible(mon) 
+        if (!player_monster_visible(mon)
             || mons_is_lurking(mon)
             || (mons_is_mimic(mon->type) && !mons_is_known_mimic(mon))
             || mons_class_flag(mon->type, M_NO_EXP_GAIN))

@@ -2162,7 +2162,7 @@ void debug_item_scan( void )
 
         strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
 
-        const monsters* mon = holding_monster(mitm[i]); 
+        const monsters* mon = holding_monster(mitm[i]);
 
         // Don't check (-1,-1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).

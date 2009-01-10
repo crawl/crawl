@@ -678,7 +678,7 @@ void cast_ignite_poison(int pow)
                 unwield_item();
                 was_wielding = true;
             }
-                
+
             item_was_destroyed(item);
             destroy_item(item);
         }
@@ -2276,7 +2276,7 @@ bool cast_apportation(int pow, const coord_def& where)
     // with something at our position.
     mprf("Yoink! You pull the item%s to yourself.",
          (item.quantity > 1) ? "s" : "");
-    
+
     if (max_units < item.quantity)
     {
         item.quantity = max_units;
