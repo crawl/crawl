@@ -188,7 +188,7 @@ ENDMAP
 #
 NAME:   lemuel_jelly_drop_b
 MONS:   jelly
-TAGS:   uniq_jelly_drop
+TAGS:   uniq_jelly_drop no_wall_fixup
 WEIGHT: 5
 KFEAT:  a = teleport trap
 DEPTH:  Vault
@@ -212,7 +212,7 @@ ENDMAP
 NAME:   metal_show
 ORIENT: float
 DEPTH:  Vault:3-
-TAGS:   no_secret_doors no_monster_gen no_item_gen
+TAGS:   no_secret_doors no_monster_gen no_item_gen no_wall_fixup
 COLOUR: M = magenta
 COLOUR: K = magenta
 MARKER: # = lua:fog_machine{\

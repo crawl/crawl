@@ -68,6 +68,14 @@ function sewer_colours(e)
 end
 }}
 
+# A standard random monster list for Sewer. Use:
+# : sewer_random_monster_list(_G)
+{{
+function sewer_random_monster_list(e)
+  e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
+                         ooze / worm / snake / giant mosquito w:15")
+end
+}}
 
 # Basic sewer entries ##########################################
 default-depth: D:3-6
@@ -153,6 +161,7 @@ SUBST:    X=c, C=x, V=x, v=x, *=x
 SUBST:    ' = .W
 SUBST:    ? = .x
 : sewer_colours(_G)
+: sewer_random_monster_list(_G)
 # some fresh water for the kobolds
 KFEAT:    Y = deep_water
 KFEAT:    y = shallow_water
@@ -220,6 +229,7 @@ ORIENT:   encompass
 WEIGHT:   30
 SUBST:    - = W..
 : sewer_colours(_G)
+: sewer_random_monster_list(_G)
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
 MONS:     giant newt / small snake w:5 / \
@@ -268,6 +278,7 @@ NAME:     sewer_lizard
 TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
 : sewer_colours(_G)
+: sewer_random_monster_list(_G)
 MONS:     giant lizard
 ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     giant bat / giant mosquito w:2
@@ -326,6 +337,7 @@ COLOUR:   ? = lightgreen
 # a little more random shallow water
 SUBST:    - = W..
 : sewer_colours(_G)
+: sewer_random_monster_list(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
 MONS:     giant bat / giant mosquito w:2 / nothing w:2
