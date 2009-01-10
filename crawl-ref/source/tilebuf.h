@@ -90,7 +90,7 @@ class TileBuffer : public VertBuffer<PTVert>
 public:
     TileBuffer(const TilesTexture *tex = NULL);
 
-    void add(int idx, float x, float y);
+    void add_unscaled(int idx, float x, float y);
     void add(int idx, int x, int y, int ox = 0, int oy = 0, bool centre = true, int ymax = -1);
 
 

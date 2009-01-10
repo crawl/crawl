@@ -2490,7 +2490,8 @@ void MenuRegion::place_entries()
                     // a dungeon tile over a monster tile.
                     int tile = m_entries[i].tiles[t].tile;
                     TextureID tex = m_entries[i].tiles[t].tex;
-                    m_tile_buf[tex].add(tile, m_entries[i].sx, m_entries[i].sy);
+                    m_tile_buf[tex].add_unscaled(tile, m_entries[i].sx,
+                                                 m_entries[i].sy);
                 }
             }
             else

@@ -142,7 +142,7 @@ TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer<PTVert>(t, GL_QUADS)
 {
 }
 
-void TileBuffer::add(int idx, float x, float y)
+void TileBuffer::add_unscaled(int idx, float x, float y)
 {
     const tile_info &inf = ((TilesTexture*)m_tex)->get_info(idx);
 
