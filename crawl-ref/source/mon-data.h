@@ -105,8 +105,8 @@
    intel explanation:
    - How smart it is: I_PLANT < I_INSECT < I_ANIMAL < I_NORMAL < I_HIGH.
    So far, differences here have little effects except for monster's chance
-   of seeing you if stealthy and rudimentary trap handling;
-   really stupid monsters will walk through clouds
+   of seeing you if stealthy and rudimentary trap handling; really stupid
+   monsters will walk through clouds.
 
    speed
    - Increases the store of energy that the monster uses for doing things.
