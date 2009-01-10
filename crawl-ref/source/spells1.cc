@@ -1229,7 +1229,17 @@ void extension(int pow)
 
     if (contamination)
         contaminate_player( contamination, true );
-}                               // end extension()
+}
+
+static void _increase_duration(duration_type dur, int amount, int cap,
+                               const char* msg)
+{
+    if (msg)
+        mpr(msg);
+    you.duration[dur] += amount;
+    if (you.duration[dur] > cap)
+        you.duration[dur] = cap;
+}
 
 void ice_armour(int pow, bool extending)
 {
@@ -1261,16 +1271,12 @@ void ice_armour(int pow, bool extending)
         you.redraw_armour_class = true;
     }
 
-    you.duration[DUR_ICY_ARMOUR] += 20 + random2(pow) + random2(pow);
-
-    if (you.duration[DUR_ICY_ARMOUR] > 50)
-        you.duration[DUR_ICY_ARMOUR] = 50;
-}                               // end ice_armour()
+    _increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
+                       NULL);
+}
 
 void stone_scales(int pow)
 {
-    int dur_change = 0;
-
     if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
     {
         mpr("The spell conflicts with another spell still in effect.");
@@ -1290,45 +1296,29 @@ void stone_scales(int pow)
         you.redraw_armour_class = true;
     }
 
-    dur_change = 20 + random2(pow) + random2(pow);
-
-    if (dur_change + you.duration[DUR_STONEMAIL] >= 100)
-        you.duration[DUR_STONEMAIL] = 100;
-    else
-        you.duration[DUR_STONEMAIL] += dur_change;
-
+    _increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
+                       NULL);
     burden_change();
-}                               // end stone_scales()
+}
 
 void missile_prot(int pow)
 {
-    mpr("You feel protected from missiles.");
-
-    you.duration[DUR_REPEL_MISSILES] += 8 + roll_dice( 2, pow );
-
-    if (you.duration[DUR_REPEL_MISSILES] > 100)
-        you.duration[DUR_REPEL_MISSILES] = 100;
+    _increase_duration(DUR_REPEL_MISSILES, 8 + roll_dice( 2, pow ), 100,
+                       "You feel protected from missiles.");
 }
 
 void deflection(int pow)
 {
-    mpr("You feel very safe from missiles.");
-
-    you.duration[DUR_DEFLECT_MISSILES] += 15 + random2(pow);
-
-    if (you.duration[DUR_DEFLECT_MISSILES] > 100)
-        you.duration[DUR_DEFLECT_MISSILES] = 100;
+    _increase_duration(DUR_DEFLECT_MISSILES, 15 + random2(pow), 100,
+                       "You feel very safe from missiles.");
 }
 
 void cast_regen(int pow)
 {
-    //if (pow > 150) pow = 150;
     mpr("Your skin crawls.");
 
-    you.duration[DUR_REGENERATION] += 5 + roll_dice( 2, pow / 3 + 1 );
-
-    if (you.duration[DUR_REGENERATION] > 100)
-        you.duration[DUR_REGENERATION] = 100;
+    _increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
+                       "Your skin crawls.");
 }
 
 void cast_berserk(void)
@@ -1352,35 +1342,24 @@ void cast_swiftness(int power)
         return;
     }
 
-    // Reduced the duration:  -- bwr
-    // dur_incr = random2(power) + random2(power) + 20;
-    dur_incr = 20 + random2( power );
-
     // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
     // you're levitating, for instance.
-    mpr("You feel quick.");
-
-    if (dur_incr + you.duration[DUR_SWIFTNESS] > 100)
-        you.duration[DUR_SWIFTNESS] = 100;
-    else
-        you.duration[DUR_SWIFTNESS] += dur_incr;
+    _increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
+                       "You feel quick.");
 }
 
 void cast_fly(int power)
 {
     const int dur_change = 25 + random2(power) + random2(power);
-
     const bool was_levitating = player_is_airborne();
 
-    if (you.duration[DUR_LEVITATION] + dur_change > 100)
+    you.duration[DUR_LEVITATION] += dur_change;
+    if (you.duration[DUR_LEVITATION] > 100)
         you.duration[DUR_LEVITATION] = 100;
-    else
-        you.duration[DUR_LEVITATION] += dur_change;
 
-    if (you.duration[DUR_CONTROLLED_FLIGHT] + dur_change > 100)
+    you.duration[DUR_CONTROLLED_FLIGHT] += dur_change;
+    if (you.duration[DUR_CONTROLLED_FLIGHT] > 100)
         you.duration[DUR_CONTROLLED_FLIGHT] = 100;
-    else
-        you.duration[DUR_CONTROLLED_FLIGHT] += dur_change;
 
     burden_change();
 
@@ -1397,49 +1376,27 @@ void cast_fly(int power)
 
 void cast_insulation(int power)
 {
-    int dur_incr = 10 + random2(power);
-
-    mpr("You feel insulated.");
-
-    if (dur_incr + you.duration[DUR_INSULATION] > 100)
-        you.duration[DUR_INSULATION] = 100;
-    else
-        you.duration[DUR_INSULATION] += dur_incr;
+    _increase_duration(DUR_INSULATION, 10 + random2(power), 100,
+                       "You feel insulated.");
 }
 
 void cast_resist_poison(int power)
 {
-    int dur_incr = 10 + random2(power);
-
-    mpr("You feel resistant to poison.");
-
-    if (dur_incr + you.duration[DUR_RESIST_POISON] > 100)
-        you.duration[DUR_RESIST_POISON] = 100;
-    else
-        you.duration[DUR_RESIST_POISON] += dur_incr;
+    _increase_duration(DUR_RESIST_POISON, 10 + random2(power), 100,
+                       "You feel resistant to poison.");
 }
 
 void cast_teleport_control(int power)
 {
-    int dur_incr = 10 + random2(power);
-
-    mpr("You feel in control.");
-
-    if (dur_incr + you.duration[DUR_CONTROL_TELEPORT] >= 50)
-        you.duration[DUR_CONTROL_TELEPORT] = 50;
-    else
-        you.duration[DUR_CONTROL_TELEPORT] += dur_incr;
+    _increase_duration(DUR_CONTROLLED_FLIGHT, 10 + random2(power), 50,
+                       "You feel in control.");
 }
 
 void cast_ring_of_flames(int power)
 {
-    you.duration[DUR_FIRE_SHIELD] += 5 + (power / 10) + (random2(power) / 5);
-
-    if (you.duration[DUR_FIRE_SHIELD] > 50)
-        you.duration[DUR_FIRE_SHIELD] = 50;
-
-    mpr("The air around you leaps into flame!");
-
+    _increase_duration(DUR_FIRE_SHIELD, 
+                       5 + (power / 10) + (random2(power) / 5), 50,
+                       "The air around you leaps into flame!");
     manage_fire_shield();
 }
 
@@ -1449,10 +1406,7 @@ void cast_confusing_touch(int power)
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << std::endl;
 
-    you.duration[DUR_CONFUSING_TOUCH] += 5 + (random2(power) / 5);
-
-    if (you.duration[DUR_CONFUSING_TOUCH] > 50)
-        you.duration[DUR_CONFUSING_TOUCH] = 50;
+    _increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5), 50, NULL);
 
 }
 
@@ -1474,11 +1428,7 @@ bool cast_sure_blade(int power)
         else if (you.duration[DUR_SURE_BLADE] < 25)
             mpr("Your bond becomes stronger.");
 
-        you.duration[DUR_SURE_BLADE] += 8 + (random2(power) / 10);
-
-        if (you.duration[DUR_SURE_BLADE] > 25)
-            you.duration[DUR_SURE_BLADE] = 25;
-
+        _increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10), 25, NULL);
         success = true;
     }
 
