@@ -1837,9 +1837,6 @@ void bolt::hit_wall()
 
 void bolt::affect_cell()
 {
-    if (affects_nothing)
-        return;
-
     // Shooting through clouds affects accuracy.
     if (env.cgrid(pos()) != EMPTY_CLOUD)
         hit = std::max(hit - 2, 0);
