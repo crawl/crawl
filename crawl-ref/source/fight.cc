@@ -2221,7 +2221,7 @@ void melee_attack::chaos_affects_defender()
     int miscast_chance = 10;
 
     if (is_shifter)
-        // Already a shifter
+        // Already a shifter.
         shifter_chance = 0;
 
     // A chaos self-attack increased the chance of certain effects,
