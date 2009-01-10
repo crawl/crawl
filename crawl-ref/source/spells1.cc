@@ -862,6 +862,13 @@ void remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
+static bool _kill_duration(duration_type dur)
+{
+    const bool rc = (you.duration[dur] > 0);
+    you.duration[dur] = 0;
+    return (rc);
+}
+
 bool cast_vitalisation()
 {
     bool success = false;
@@ -891,32 +898,16 @@ bool cast_vitalisation()
                 }
                 break;
             case 2:
-                if (you.duration[DUR_CONF])
-                {
-                    success = true;
-                    you.duration[DUR_CONF] = 0;
-                }
+                success = _kill_duration(DUR_CONF);
                 break;
             case 3:
-                if (you.duration[DUR_PARALYSIS])
-                {
-                    success = true;
-                    you.duration[DUR_PARALYSIS] = 0;
-                }
+                success = _kill_duration(DUR_PARALYSIS);
                 break;
             case 4:
-                if (you.duration[DUR_POISONING])
-                {
-                    success = true;
-                    you.duration[DUR_POISONING] = 0;
-                }
+                success = _kill_duration(DUR_POISONING);
                 break;
             case 5:
-                if (you.duration[DUR_PETRIFIED])
-                {
-                    success = true;
-                    you.duration[DUR_PETRIFIED] = 0;
-                }
+                success = _kill_duration(DUR_PETRIFIED);
                 break;
             }
         }
@@ -924,39 +915,13 @@ bool cast_vitalisation()
     }
     // Restore stats.
     else if (you.strength < you.max_strength
-        || you.intel < you.max_intel
-        || you.dex < you.max_dex)
+             || you.intel < you.max_intel
+             || you.dex < you.max_dex)
     {
         type = 1;
-
-        do
-        {
-            switch (random2(3))
-            {
-            case 0:
-                if (you.strength < you.max_strength)
-                {
-                    success = true;
-                    restore_stat(STAT_STRENGTH, 0, true);
-                }
-                break;
-            case 1:
-                if (you.intel < you.max_intel)
-                {
-                    success = true;
-                    restore_stat(STAT_INTELLIGENCE, 0, true);
-                }
-                break;
-            case 2:
-                if (you.dex < you.max_dex)
-                {
-                    success = true;
-                    restore_stat(STAT_DEXTERITY, 0, true);
-                }
-                break;
-            }
-        }
-        while (!success);
+        while (!restore_stat(STAT_RANDOM, 0, true))
+            ;
+        success = true;
     }
     else
     {
@@ -995,9 +960,7 @@ bool cast_vitalisation()
 
 bool cast_revivification(int pow)
 {
-    int loopy = 0;              // general purpose loop variable {dlb}
     bool success = false;
-    int loss = 0;
 
     if (you.hp == you.hp_max)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1007,8 +970,8 @@ bool cast_revivification(int pow)
     {
         mpr("Your body is healed in an amazingly painful way.");
 
-        loss = 2;
-        for (loopy = 0; loopy < 9; loopy++)
+        int loss = 2;
+        for (int i = 0; i < 9; ++i)
             if (x_chance_in_y(8, pow))
                 loss++;
 
