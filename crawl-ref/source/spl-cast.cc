@@ -135,7 +135,7 @@ static void _surge_power(spell_type spell)
              (enhanced < 0) ? "numb sensation."
                             : "surge of power!");
     }
-}                               // end surge_power()
+}
 
 static std::string _spell_base_description(spell_type spell)
 {
