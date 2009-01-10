@@ -2582,26 +2582,26 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
     };
 
     const char* weapon_brands[] = {
-        "flaming",
+        "flaming",        // 1
         "freezing",
         "holy_wrath",
         "electrocution",
-        "orc_slaying",
-        "dragon_slaying"
+        "orc_slaying",    // 5
+        "dragon_slaying",
         "venom",
         "protection",
         "draining",
-        "speed",
+        "speed",          // 10
         "vorpal",
         "flame",
         "frost",
         "vampiricism",
-        "pain",
+        "pain",           // 15
         "distortion",
         "reaching",
         "returning",
         "chaos",
-        "confuse",
+        "confuse",        // 20
         NULL
     };
 
