@@ -720,6 +720,11 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     // We have a message.
     /////////////////////
 
+    const bool gestured = msg.find("Gesture") != std::string::npos
+                       || msg.find(" gesture") != std::string::npos
+                       || msg.find("Point") != std::string::npos
+                       || msg.find(" point") != std::string::npos;
+
     bolt tracer = pbolt;
     if (targeted)
     {
@@ -740,6 +745,15 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         target = "you";
     else if (pbolt.target == monster->pos())
         target = monster->pronoun(PRONOUN_REFLEXIVE);
+    // Monsters should only use targeted spells while foe == MHITNOT
+    // if they're targeting themselves.
+    else if (monster->foe == MHITNOT && !monster->confused())
+        target = "NONEXISTANT FOE";
+    else if (!invalid_monster_index(monster->foe)
+             && menv[monster->foe].type == -1)
+    {
+        target = "DEAD FOE";
+    }
     else if (in_bounds(pbolt.target) && see_grid(pbolt.target))
     {
         int midx = mgrd(pbolt.target);
@@ -782,10 +796,6 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
             }
         }
 
-        const bool gestured = msg.find("Gesture") != std::string::npos
-                           || msg.find(" gesture") != std::string::npos
-                           || msg.find("Point") != std::string::npos
-                           || msg.find(" point") != std::string::npos;
         const bool visible_path      = visible_beam || gestured;
               bool mons_targ_aligned = false;
 
@@ -866,14 +876,42 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 }
             }
         } // for (unsigned int i = 0; i < path.size(); i++)
-        // If the monster gestures to create an invisible beam then
-        // assume that anything close to the beam is the intended target.
-        // Also, if the monster gestures to create a visible beam but it
-        // misses still say that the monster gestured "at" the target,
-        // rather than "past".
-        if (gestured || target == "nothing")
-            targ_prep = "at";
     } // if (target == "nothing" && targeted)
+
+    const actor*    foe   = monster->get_foe();
+    const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
+                            dynamic_cast<const monsters*>(foe) : NULL;
+
+    // If we still can't find what appears to be the target, and the
+    // monster isn't just throwing the spell in a random direction,
+    // we should be able to tell what the monster was aiming for if
+    // we can see the monster's foe and the beam (or the beam path
+    // implied by gesturing).  But only if the beam didn't actually hit
+    // anything (but if it did hit something, why didn't that monster
+    // show up in the beam's path?)
+    if (targeted && target == "nothing" && foe != NULL
+        && (tracer.foe_info.count + tracer.friend_info.count) == 0
+        && (you.can_see(foe) || foe == &you) && !monster->confused()
+        && (visible_beam || gestured))
+    {
+        if (foe == &you)
+            target = "you";
+        else
+            target = m_foe->name(DESC_NOCAP_THE);
+
+        if (pbolt.aimed_at_spot)
+            targ_prep = "next to";
+        else
+            targ_prep = "past";
+    }
+
+    // If the monster gestures to create an invisible beam then
+    // assume that anything close to the beam is the intended target.
+    // Also, if the monster gestures to create a visible beam but it
+    // misses still say that the monster gestured "at" the target,
+    // rather than "past".
+    if (gestured || target == "nothing")
+        targ_prep = "at";
 
     msg = replace_all(msg, "@at@",     targ_prep);
     msg = replace_all(msg, "@target@", target);
