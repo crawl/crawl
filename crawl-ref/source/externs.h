@@ -2196,6 +2196,7 @@ public:
     int         tile_window_height;
     int         tile_map_pixels;
     int         tile_tooltip_ms;
+    tag_pref    tile_tag_pref;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;

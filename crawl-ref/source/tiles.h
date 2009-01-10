@@ -108,6 +108,9 @@ void tile_floor_halo(dungeon_feature_type target, int tile);
 void tile_set_force_redraw_tiles(bool redraw);
 void tile_set_force_redraw_inv(bool redraw);
 
+tag_pref string2tag_pref(const char *opt);
+const char *tag_pref2string(tag_pref pref);
+
 /**************************************/
 /* tile2.cc  image manipulation       */
 /**************************************/

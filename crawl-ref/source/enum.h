@@ -3104,6 +3104,31 @@ enum screen_mode
     SCREENMODE_FULL   = 1,
     SCREENMODE_AUTO   = 2
 };
+
+enum cursor_type
+{
+    CURSOR_MOUSE,
+    CURSOR_TUTORIAL,
+    CURSOR_MAX
+};
+
+// Ordering of tags is important: higher values cover up lower ones.
+enum text_tag_type
+{
+    TAG_NAMED_MONSTER = 0,
+    TAG_TUTORIAL      = 1,
+    TAG_CELL_DESC     = 2,
+    TAG_MAX
+};
+
+enum tag_pref
+{
+    TAGPREF_NONE,     // never display text tags
+    TAGPREF_TUTORIAL, // display text tags on "new" monsters
+    TAGPREF_NAMED,    // display text tags on named monsters (incl. friendlies)
+    TAGPREF_ENEMY,    // display text tags on enemy named monsters
+    TAGPREF_MAX
+};
 #endif
 
 #ifdef WIZARD

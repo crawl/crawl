@@ -245,21 +245,6 @@ struct TextTag
     coord_def gc;
 };
 
-enum cursor_type
-{
-    CURSOR_MOUSE,
-    CURSOR_TUTORIAL,
-    CURSOR_MAX
-};
-
-enum text_tag_type
-{
-    TAG_NAMED_MONSTER,
-    TAG_TUTORIAL,
-    TAG_CELL_DESC,
-    TAG_MAX
-};
-
 class DungeonRegion : public TileRegion
 {
 public:

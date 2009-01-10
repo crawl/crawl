@@ -229,6 +229,20 @@ void KillMaster::add_kill_info(std::string &killtext,
     }
 }
 
+long KillMaster::num_kills(const monsters *mon, kill_category cat) const
+{
+    return categorized_kills[cat].num_kills(mon);
+}
+
+long KillMaster::num_kills(const monsters *mon) const
+{
+    long total = 0;
+    for (int cat = 0; cat < KC_NCATEGORIES; cat++)
+        total += categorized_kills[cat].num_kills(mon);
+
+    return total;
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 bool Kills::empty() const
@@ -342,6 +356,22 @@ void Kills::record_ghost_kill(const struct monsters *mon)
 {
     kill_ghost ghostk(mon);
     ghosts.push_back(ghostk);
+}
+
+int Kills::num_kills(const monsters *mon) const
+{
+    kill_monster_desc desc(mon);
+    kill_map::const_iterator iter = kills.find(desc);
+    int total = (iter == kills.end() ? 0 : iter->second.kills);
+
+    if (desc.modifier == kill_monster_desc::M_SHAPESHIFTER)
+    {
+        desc.modifier = kill_monster_desc::M_NORMAL;
+        iter = kills.find(desc);
+        total += (iter == kills.end() ? 0 : iter->second.kills);
+    }
+
+    return total;
 }
 
 kill_def::kill_def(const struct monsters *mon) : kills(0), exp(0)

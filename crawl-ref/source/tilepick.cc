@@ -17,6 +17,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
+#include "Kills.h"
 #include "macro.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -4394,20 +4395,46 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     if (foreground)
     {
         env.tile_fg[ep.x-1][ep.y-1] = t;
-        if (menv[idx].is_named() && !mons_friendly_real(&menv[idx])
-            && menv[idx].type != MONS_PANDEMONIUM_DEMON)
+        const monsters *mon = &menv[idx];
+
+        if (!player_monster_visible(mon) 
+            || mons_is_lurking(mon)
+            || (mons_is_mimic(mon->type) && !mons_is_known_mimic(mon))
+            || mons_class_flag(mon->type, M_NO_EXP_GAIN))
         {
-            if (menv[idx].type == MONS_PLAYER_GHOST)
-            {
-                // Beautification hack.  "Foo's ghost" is a little bit
-                // verbose as a tag.  "Foo" on its own should be sufficient.
-                tiles.add_text_tag(TAG_NAMED_MONSTER, menv[idx].mname, gc);
-            }
-            else
-            {
-                tiles.add_text_tag(TAG_NAMED_MONSTER,
-                                   menv[idx].name(DESC_CAP_A), gc);
-            }
+            return;
+        }
+
+        const tag_pref pref = Options.tile_tag_pref;
+        if (pref == TAGPREF_NONE)
+            return;
+        else if (pref == TAGPREF_TUTORIAL)
+        {
+            const long kills = you.kills->num_kills(mon);
+            const int limit = 3;
+
+            if (!mon->is_named() && kills > limit)
+                return;
+        }
+        else if (!mon->is_named())
+            return;
+
+        if (pref != TAGPREF_NAMED && mons_friendly_real(mon))
+            return;
+
+        // HACK.  Names cover up pan demons in a weird way.
+        if (mon->type == MONS_PANDEMONIUM_DEMON)
+            return;
+
+        if (mon->type == MONS_PLAYER_GHOST)
+        {
+            // Beautification hack.  "Foo's ghost" is a little bit
+            // verbose as a tag.  "Foo" on its own should be sufficient.
+            tiles.add_text_tag(TAG_NAMED_MONSTER, mon->mname, gc);
+        }
+        else
+        {
+            tiles.add_text_tag(TAG_NAMED_MONSTER, mon->name(DESC_PLAIN), gc);
         }
     }
     else
@@ -4515,6 +4542,25 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 
             count += 2;
         }
+}
+
+static FixedVector<const char*, TAGPREF_MAX>
+    tag_prefs("none", "tutorial", "named", "enemy");
+
+tag_pref string2tag_pref(const char *opt)
+{
+    for (int i = 0; i < TAGPREF_MAX; i++)
+    {
+        if (!stricmp(opt, tag_prefs[i]))
+            return ((tag_pref)i);
+    }
+
+    return TAGPREF_ENEMY;
+}
+
+const char *tag_pref2string(tag_pref pref)
+{
+    return tag_prefs[pref];
 }
 
 #endif

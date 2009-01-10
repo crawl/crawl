@@ -31,6 +31,8 @@
 
 # tile_tooltip_ms = 1000
 
+# tile_tag_pref = enemy
+
 ### Note: setting window, map, or font sizes to '0' implies auto-sizing.
 
 # tile_window_width = 1024

@@ -145,6 +145,7 @@ public:
     void load(reader&);
 
     long get_kills(std::vector<kill_exp> &v) const;
+    int num_kills(const monsters *mon) const;
 private:
     typedef std::map<kill_monster_desc,
                      kill_def,
@@ -169,6 +170,11 @@ public:
     bool empty() const;
     void save(writer&) const;
     void load(reader&);
+
+    // Number of kills, by category.
+    long num_kills(const monsters *mon, kill_category cat) const;
+    // Number of kills, any category.
+    long num_kills(const monsters *mon) const;
 
     std::string kill_info() const;
 private:

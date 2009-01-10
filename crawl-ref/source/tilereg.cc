@@ -685,6 +685,15 @@ void DungeonRegion::pack_buffers()
     }
 }
 
+struct tag_def
+{
+    tag_def() { text = NULL; left = right = 0; }
+
+    const char* text;
+    char left, right;
+    char type;
+};
+
 void DungeonRegion::render()
 {
     if (m_dirty)
@@ -698,24 +707,65 @@ void DungeonRegion::render()
     m_buf_doll.draw();
     m_buf_main.draw();
 
-    // Draw text labels
-    // TODO enne - add an option for this
-    // TODO enne - be more intelligent about not covering stuff up
-    for (unsigned int t = 0; t < TAG_MAX; t++)
+    FixedArray<tag_def, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tag_show;
+
+    int total_tags = 0;
+
+    for (int t = TAG_MAX - 1; t >= 0; t--)
     {
         for (unsigned int i = 0; i < m_tags[t].size(); i++)
         {
-            if (!on_screen(m_tags[t][i].gc))
+            if (!crawl_view.in_grid_los(m_tags[t][i].gc))
                 continue;
 
+            const coord_def ep = grid2show(m_tags[t][i].gc);
+
+            if (tag_show(ep).text)
+                continue;
+
+            const char *str = m_tags[t][i].tag.c_str();
+
+            int width = m_tag_font->string_width(str);
+            tag_def &def = tag_show(ep);
+
+            const int buffer = 2;
+
+            def.left = -width / 2 - buffer;
+            def.right = width / 2 + buffer;
+            def.text = str;
+            def.type = t;
+
+            total_tags++;
+        }
+
+        if (total_tags)
+            break;
+    }
+
+    if (!total_tags)
+        return;
+
+    // Draw text tags.
+    // TODO enne - be more intelligent about not covering stuff up
+    for (int y = 0; y < ENV_SHOW_DIAMETER; y++)
+    {
+        for (int x = 0; x < ENV_SHOW_DIAMETER; x++)
+        {
+            coord_def ep(x, y);
+            tag_def &def = tag_show(ep);
+
+            if (!def.text)
+                continue;
+
+            const coord_def gc = show2grid(ep);
             coord_def pc;
-            to_screen_coords(m_tags[t][i].gc, pc);
+            to_screen_coords(gc, pc);
             // center this coord, which is at the top left of gc's cell
             pc.x += dx / 2;
 
             const coord_def min_pos(sx, sy);
             const coord_def max_pos(ex, ey);
-            m_tag_font->render_string(pc.x, pc.y, m_tags[t][i].tag.c_str(),
+            m_tag_font->render_string(pc.x, pc.y, def.text,
                                       min_pos, max_pos, WHITE, false);
         }
     }

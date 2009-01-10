@@ -241,6 +241,11 @@ inline coord_def grid2show(const coord_def &pos)
     return (view2show(grid2view(pos)));
 }
 
+inline coord_def show2grid(const coord_def &pos)
+{
+    return (view2grid(show2view(pos)));
+}
+
 extern const struct coord_def Compass[8];
 
 #endif

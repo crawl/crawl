@@ -112,6 +112,7 @@ void init_tutorial_options()
     //        Unfortunately I can't think of a remotely non-hacky way
     //        to do this.
     strncpy(Options.tile_show_items, "!?/%=([)x}+\\_.", 18);
+    Options.tile_tag_pref = TAGPREF_TUTORIAL;
 #endif
 }
 
