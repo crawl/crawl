@@ -220,7 +220,7 @@ namespace arena
 
         a_spawners.clear();
         b_spawners.clear();
-        bzero(item_drop_times, sizeof(item_drop_times));
+        memset(item_drop_times, 0, sizeof(item_drop_times));
 
         if (place.is_valid())
         {
