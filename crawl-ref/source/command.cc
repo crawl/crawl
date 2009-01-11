@@ -1292,12 +1292,11 @@ static bool _do_description(std::string key, std::string type,
         monster_type mon_num = get_monster_by_name(key, true);
         if (mon_num != MONS_PROGRAM_BUG)
         {
+            monsters mon;
+            mon.type = mon_num;
+
             if (mons_genus(mon_num) == MONS_DRACONIAN)
             {
-                monsters mon;
-
-                mon.type = mon_num;
-
                 switch (mon_num)
                 {
                 case MONS_BLACK_DRACONIAN:
@@ -1314,29 +1313,13 @@ static bool _do_description(std::string key, std::string type,
                     mon.base_monster = MONS_PROGRAM_BUG;
                     break;
                 }
-
-                const monsters m = mon;
-                describe_monsters(m);
-                return (false);
             }
+            else
+                mon.base_monster = MONS_PROGRAM_BUG;
 
-            std::string symbol = "";
-            symbol += get_monster_data(mon_num)->showchar;
-            if (isupper(symbol[0]))
-                symbol = "cap-" + symbol;
-
-            std::string symbol_prefix = "__";
-            symbol_prefix += symbol;
-            symbol_prefix += "_prefix";
-            prefix = getLongDescription(symbol_prefix);
-            quote += getQuoteString(symbol_prefix);
-
-            std::string symbol_suffix = "__";
-            symbol_suffix += symbol;
-            symbol_suffix += "_suffix";
-            suffix += getLongDescription(symbol_suffix);
-            suffix += getLongDescription(symbol_suffix + "_lookup");
-            quote += getQuoteString(symbol_suffix);
+            const monsters m = mon;
+            describe_monsters(m);
+            return (false);
         }
         else
         {
@@ -1642,11 +1625,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         footer += regex;
         footer += "'.  To see non-exact matches, press space.";
 
-        if (!_do_description(regex, type, footer))
-        {
-            DEBUGSTR("do_description() returned false for exact_match");
-            return (false);
-        }
+        _do_description(regex, type, footer);
 
         if (getch() != ' ')
             return (false);

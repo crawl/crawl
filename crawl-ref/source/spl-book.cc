@@ -487,7 +487,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_BLINK,
      SPELL_LEVITATION,
      SPELL_INTOXICATE,
-     SPELL_NO_SPELL,  //jmf: SPELL_ERINGYAS_SURPRISING_BOUQUET, when finished
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 

@@ -2423,19 +2423,6 @@
 },
 
 {
-    SPELL_ERINGYAS_SURPRISING_BOUQUET, "Eringya's Surprising Bouquet",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_NONE,
-     4,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_GRID,

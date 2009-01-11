@@ -2790,50 +2790,49 @@ enum spell_type
     SPELL_BEND,
     SPELL_BACKLIGHT,
     SPELL_INTOXICATE,   // confusion but only "smart" creatures
-    SPELL_EVAPORATE,    // turn a potion into a cloud 190
-    SPELL_ERINGYAS_SURPRISING_BOUQUET, // turn sticks into herbivore food
+    SPELL_EVAPORATE,    // 190, turn a potion into a cloud
     SPELL_FRAGMENTATION,               // replacement for "orb of frag"
     SPELL_AIR_WALK,                    // "dematerialise" (air/transmigration)
     SPELL_SANDBLAST,     // mini-frag; can use stones for material comp
     SPELL_ROTTING,       // evil god power or necromantic transmigration
-    SPELL_MAXWELLS_SILVER_HAMMER,      // vorpal-brand maces etc.
+    SPELL_MAXWELLS_SILVER_HAMMER,      // 195, vorpal-brand maces etc.
     SPELL_CONDENSATION_SHIELD,         // "shield" of icy vapour
     SPELL_SEMI_CONTROLLED_BLINK,       //jmf: to test effect
     SPELL_STONESKIN,
-    SPELL_SIMULACRUM,                  //  200
-    SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_SIMULACRUM,
+    SPELL_CONJURE_BALL_LIGHTNING,      //  200
     SPELL_CHAIN_LIGHTNING,
     SPELL_EXCRUCIATING_WOUNDS,
     SPELL_PORTAL_PROJECTILE,
-    SPELL_SUMMON_UGLY_THING,           //  205
-    SPELL_PETRIFY,
+    SPELL_SUMMON_UGLY_THING,
+    SPELL_PETRIFY,                     //  205
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST,
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
-    SPELL_FAKE_RAKSHASA_SUMMON,        //  210
-    SPELL_STEAM_BALL,
+    SPELL_FAKE_RAKSHASA_SUMMON,
+    SPELL_STEAM_BALL,                  //  210
     SPELL_SUMMON_UFETUBUS,
     SPELL_SUMMON_BEAST,
     SPELL_ENERGY_BOLT,
-    SPELL_POISON_SPLASH,               //  215
-    SPELL_SUMMON_UNDEAD,
+    SPELL_POISON_SPLASH,
+    SPELL_SUMMON_UNDEAD,               //  215
     SPELL_CANTRIP,
     SPELL_QUICKSILVER_BOLT,
     SPELL_METAL_SPLINTERS,
-    SPELL_MIASMA,                      //  220
-    SPELL_SUMMON_DRAKES,
+    SPELL_MIASMA,
+    SPELL_SUMMON_DRAKES,               //  220
     SPELL_BLINK_OTHER,
     SPELL_SUMMON_MUSHROOMS,
     SPELL_ACID_SPLASH,
-    SPELL_STICKY_FLAME_SPLASH,         // 225
-    SPELL_FIRE_BREATH,
+    SPELL_STICKY_FLAME_SPLASH,
+    SPELL_FIRE_BREATH,                 // 225
     SPELL_COLD_BREATH,
     SPELL_DRACONIAN_BREATH,
     SPELL_WATER_ELEMENTALS,
 
-    NUM_SPELLS
+    NUM_SPELLS                         // 229
 };
 
 enum slot_select_mode
