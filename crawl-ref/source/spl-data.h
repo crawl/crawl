@@ -2128,8 +2128,8 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
-     25,
-     1, 2,
+     40,                           // cap for range; damage cap is at 25
+     1, 4,
      0,
      NULL,
      false,
