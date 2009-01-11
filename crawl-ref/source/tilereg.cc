@@ -786,6 +786,32 @@ static int _adjacent_cmd(const coord_def &gc, const MouseEvent &event)
     return 0;
 }
 
+static int _click_travel(const coord_def &gc, MouseEvent &event)
+{
+    if (!in_bounds(gc))
+        return 0;
+
+    int cmd = _adjacent_cmd(gc, event);
+    if (cmd)
+        return cmd;
+
+    if (i_feel_safe())
+    {
+        start_travel(gc);
+        return CK_MOUSE_CMD;
+    }
+
+    // If not safe, then take one step towards the click.
+    travel_pathfind tp;
+    tp.set_src_dst(you.pos(), gc);
+    const coord_def dest = tp.pathfind(RMODE_TRAVEL);
+
+    if (!dest.x && !dest.y)
+        return 0;
+
+    return _adjacent_cmd(dest, event);
+}
+
 int DungeonRegion::handle_mouse(MouseEvent &event)
 {
     tiles.clear_text_tags(TAG_CELL_DESC);
@@ -878,28 +904,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.button != MouseEvent::LEFT)
         return 0;
 
-    if (!in_bounds(gc))
-        return 0;
-
-    int cmd = _adjacent_cmd(gc, event);
-    if (cmd)
-        return cmd;
-
-    if (i_feel_safe())
-    {
-        start_travel(gc);
-        return CK_MOUSE_CMD;
-    }
-
-    // If not safe, then take one step towards the click.
-    travel_pathfind tp;
-    tp.set_src_dst(you.pos(), gc);
-    const coord_def dest = tp.pathfind(RMODE_TRAVEL);
-
-    if (!dest.x && !dest.y)
-        return 0;
-
-    return _adjacent_cmd(dest, event);
+    return _click_travel(gc, event);
 }
 
 void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def &pc) const
@@ -1899,10 +1904,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
     case MouseEvent::PRESS:
         if (event.button == MouseEvent::LEFT)
         {
-            if (!in_bounds(gc))
-                return 0;
-
-            start_travel(gc);
+            return _click_travel(gc, event);
         }
         else if (event.button == MouseEvent::RIGHT)
         {
