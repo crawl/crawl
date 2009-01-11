@@ -1328,8 +1328,6 @@ void cast_berserk(void)
 
 void cast_swiftness(int power)
 {
-    int dur_incr = 0;
-
     if (player_in_water())
     {
         mpr("The water foams!");
