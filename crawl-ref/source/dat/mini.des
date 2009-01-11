@@ -1659,11 +1659,11 @@ ENDMAP
 ##############################################################################
 # A room of rats, twice
 #
-NAME: rats_and_rats_again
-TAGS: mini_float
+NAME:  rats_and_rats_again
+TAGS:  mini_float
 DEPTH: D:8-14
-MONS: shadow imp
-MONS: rat w:40 / grey rat w:40 / green rat w:12 / orange rat w:1 / nothing
+MONS:  shadow imp
+MONS:  rat w:40 / grey rat w:40 / green rat w:12 / orange rat w:1 / nothing
 MAP
 ...........
 .xxx+++xxx.
@@ -1676,4 +1676,94 @@ MAP
 .x2222222x.
 .xxxxxxxxx.
 ...........
+ENDMAP
+
+
+################################################################################
+# Some earlyish demon minivaults by Eino. 
+# The difficulty of most low-tier demons is severely inflated by the time the
+# player gets to meet them. Here (using default depth)they aspire to be both
+# challenging and flavourful.
+
+### Red devils (4) can use weapons and armour.
+
+NAME:    armed_red_devil_minivault
+TAGS:    patrolling mini_float
+KMASK:   l = no_monster_gen
+SHUFFLE: 1234
+MONS:    red devil; spear | trident . ring mail | scale mail
+MONS:    red devil; hand axe | war axe . buckler | nothing . leather armour | \
+         ring mail
+MONS:    red devil; flail | demon whip . ring mail | scale mail
+MONS:    red devil; falchion | sabre . shield | buckler | nothing . \
+         leather armour | ring mail
+MAP
+...........
+.ll.v.v.ll.
+.l..v.v..l.
+...vv.vv...
+.vvv1.2vvv.
+...........
+.vvv3.4vvv.
+...vv.vv...
+.l..v.v..l.
+.ll.v.v.ll.
+...........
+ENDMAP
+
+### A rotting devil (4) & necrophages.
+#
+NAME:  rotting_minivault
+TAGS:  patrolling mini_float
+MONS:  rotting devil
+MONS:  necrophage
+MAP
+...........
+.cccc+cccc.
+.c2c...c2c.
+.c..1.1..c.
+.c2c...c2c.
+.cccc+cccc.
+...........
+ENDMAP
+
+### Demonic crawlers (3) and beetles.
+#
+NAME:  crawler_minivault
+TAGS:  patrolling mini_float
+MONS:  demonic crawler
+MONS:  giant beetle / boulder beetle w:8 / demonic crawler w:2 / \
+       nothing
+MAP
+..........
+.m.mmmmmm.
+.mx.x.x.m.
+.m.x2x2xm.
+.mx2x1x.m.
+.m.x1x2xm.
+.mx2x2x.m.
+.m.x.x.xm.
+.mmmmmm.m.
+..........
+ENDMAP
+
+### Hairy devils (4) and bears.
+#
+NAME: hairy_minivault
+TAGS: patrolling
+MONS: hairy devil / nothing w:20
+MONS: black bear w:20 / grizzly bear / nothing w:20
+MAP
+xxxxxxxxxxxxx
+@.....xxxxxxx
+xxxxx..xxxxxx
+xxxxxx.xxxxxx
+xx1.x...x.1xx
+x12.2...2.21x
+x12.2...2.21x
+xx1.x...x.1xx
+xxxxxx.xxxxxx
+xxxxxx..xxxxx
+xxxxxxx.....@
+xxxxxxxxxxxxx
 ENDMAP

@@ -28,8 +28,8 @@ A:goal
 
 To survive and to win, obviously. For this you need to find the fabled
 Orb of Zot deep down in the dungeon and bring it back to the surface.
-However, to enter the realm of Zot, you'll first need to collect a couple
-of runes. If you're new to the game you really shouldn't worry about this,
+However, to enter the realm of Zot, you'll first need to collect three
+runes. If you're new to the game you really shouldn't worry about this,
 though. Just try to delve as deeply as possible and have fun exploring the
 many side branches in Crawl.
 %%%%
@@ -104,12 +104,11 @@ Note that wizard mode games will never appear on the highscore list.
 
 Many players reckon long-time use of wizard mode to be detrimental to your
 playing skills. On the other hand, we are thankful for bug reports using
-wizard mode for reproducing and exploring bugs 
+wizard mode for reproducing and exploring bugs.
 %%%%
 Q:weapons
 
-I've got a broad axe of Foo and a randart long sword of Bar. How can I tell 
-which one is better?
+I've got two cool weapons. How can I tell which one is better?
 %%%%
 A:weapons
 
@@ -150,8 +149,7 @@ hungry, but a high Intelligence will lessen this effect.
 %%%%
 Q:ghosts
 
-I keep getting murdered by my own ghosts. Is there an option to deactivate
-them?
+I keep getting murdered by my own ghosts. Can I deactivate them?
 %%%%
 A:ghosts
 
@@ -167,7 +165,6 @@ spellcaster who's learned Dispel Undead.
 Q:abyss
 
 I've somehow ended up in a place called "Abyss". How do I get out of here?
-(SPOILERS)
 %%%%
 A:abyss
 
@@ -175,7 +172,7 @@ If you are in the Abyss for the first time, chances of getting out are
 slim. Still, here are a few general hints:
 * You need to find a gateway leading out of the Abyss. These are rare!
 * Don't stick around to fight, move as much as possible!
-* The Abyss wraps around, so try to avoid going straight into one direction.
+* The Abyss wraps around, so avoid going straight into one direction.
 * If you have it, use defensive equipment (weapon of protection etc.).
 * Use teleportation to hopefully end up in a completely new part of the Abyss.
 * Teleportation might take much longer to kick in than in the Dungeon.
@@ -296,7 +293,7 @@ Please submit it to the Patches tracker on Sourceforge. Keep in mind that
 without previous discussions, we may not be able to use the patch, or it
 might need heavy modification. In general, it is safer to first file your
 suggestions under Feature Requests and wait for people to become
-enthousiastic and give feedback before you submit a patch. If you want,
+enthusiastic and give feedback before you submit a patch. If you want,
 you can also write a patch that implements an existing FR or fixes a bug.
 %%%%
 Q:help
