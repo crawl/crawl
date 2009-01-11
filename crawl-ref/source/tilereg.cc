@@ -1783,7 +1783,7 @@ void MapRegion::render()
     m_buf_lines.draw();
 }
 
-void MapRegion::update_offsets()
+void MapRegion::recenter()
 {
     // adjust offsets to center map
     ox = (wx - dx * (m_max_gx - m_min_gx)) / 2;
@@ -1805,7 +1805,38 @@ void MapRegion::set(int gx, int gy, map_feature f)
     m_min_gy = std::min(m_min_gy, gy);
     m_max_gy = std::max(m_max_gy, gy);
 
-    update_offsets();
+    recenter();
+}
+
+void MapRegion::update_bounds()
+{
+    int min_gx = m_min_gx;
+    int max_gx = m_max_gx;
+    int min_gy = m_min_gy;
+    int max_gy = m_max_gy;
+
+    m_min_gx = GXM;
+    m_max_gx = 0;
+    m_min_gy = GYM;
+    m_max_gy = 0;
+
+    for (int x = min_gx; x <= max_gx; x++)
+    {
+        for (int y = min_gy; y <= max_gy; y++)
+        {
+            map_feature f = (map_feature)m_buf[x + y * mx];
+            if (f == MF_UNSEEN)
+                continue;
+
+            m_min_gx = std::min(m_min_gx, x);
+            m_max_gx = std::max(m_max_gx, x);
+            m_min_gy = std::min(m_min_gy, y);
+            m_max_gy = std::max(m_max_gy, y);
+        }
+    }
+
+    recenter();
+    m_dirty = true;
 }
 
 void MapRegion::set_window(const coord_def &start, const coord_def &end)
@@ -1828,7 +1859,7 @@ void MapRegion::clear()
     m_win_end.x = -1;
     m_win_end.y = -1;
 
-    update_offsets();
+    recenter();
 
     if (m_buf)
         memset(m_buf, 0, sizeof(*m_buf) * mx * my);

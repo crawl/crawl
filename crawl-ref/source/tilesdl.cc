@@ -1089,7 +1089,7 @@ void TilesFramework::redraw()
 
 void TilesFramework::update_minimap(int gx, int gy)
 {
-    if (!player_in_mini_mappable_area())
+    if (!player_in_mappable_area())
         return;
 
     int object = env.map[gx][gy].object;
@@ -1148,6 +1148,11 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
 void TilesFramework::clear_minimap()
 {
     m_region_map->clear();
+}
+
+void TilesFramework::update_minimap_bounds()
+{
+    m_region_map->update_bounds();
 }
 
 static void _fill_item_info(InventoryTile &desc, const item_def &item)

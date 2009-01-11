@@ -2926,6 +2926,10 @@ void forget_map(unsigned char chance_forgotten, bool force)
 #endif
         }
     }
+
+#ifdef USE_TILE
+    tiles.update_minimap_bounds();
+#endif
 }
 
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,

@@ -398,10 +398,11 @@ public:
     void init_colours();
     void set(int gx, int gy, map_feature f);
     void set_window(const coord_def &start, const coord_def &end);
+    void update_bounds();
 
 protected:
     virtual void on_resize();
-    void update_offsets();
+    void recenter();
     void pack_buffers();
 
     map_colour m_colours[MF_MAX];
