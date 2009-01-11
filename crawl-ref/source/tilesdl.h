@@ -92,6 +92,7 @@ public:
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
+    void calculate_default_options();
     void clrscr();
 
     void message_out(int which_line, int colour, const char *s, int firstcol, bool newline);
@@ -161,7 +162,7 @@ protected:
     StatRegion *m_region_stat;
     MessageRegion *m_region_msg;
     MapRegion *m_region_map;
-    InventoryRegion *m_region_self_inv;
+    InventoryRegion *m_region_inv;
 
     // Full-screen CRT layer
     CRTRegion *m_region_crt;
@@ -178,6 +179,7 @@ protected:
     int m_tip_font;
 
     void do_layout();
+    bool layout_statcol(bool message_overlay, bool show_gold_turns);
 
     ImageManager m_image;
 

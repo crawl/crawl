@@ -46,9 +46,7 @@ REVISION("$Rev$");
 #include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
-#ifdef USE_TILE
 #include "tiles.h"
-#endif
 #include "travel.h"
 #include "view.h"
 
@@ -867,12 +865,14 @@ void print_stats(void)
     {
         cgotoxy(1,8 + yhack, GOTO_STAT);
         textcolor(Options.status_caption_colour);
-        cprintf("Exp Pool: ");
-        textcolor(HUD_VALUE_COLOUR);
 #if DEBUG_DIAGNOSTICS
+        cprintf("XP: ");
+        textcolor(HUD_VALUE_COLOUR);
         cprintf("%d/%d (%d) ",
                 you.skill_cost_level, you.exp_available, you.experience);
 #else
+        cprintf("Exp Pool: ");
+        textcolor(HUD_VALUE_COLOUR);
         cprintf("%-6d", you.exp_available);
 #endif
         you.redraw_experience = false;

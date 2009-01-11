@@ -4015,6 +4015,10 @@ static bool _initialise(void)
     init_monster_symbols();
 #endif
 
+#ifdef USE_TILE
+    tiles.resize();
+#endif
+
     draw_border();
     new_level();
     update_turn_count();
