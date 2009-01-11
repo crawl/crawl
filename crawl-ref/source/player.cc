@@ -655,9 +655,15 @@ bool you_tran_can_wear(const item_def &item)
         return you_tran_can_wear(jewellery_is_amulet(item) ? EQ_AMULET
                                                            : EQ_LEFT_RING);
     case OBJ_ARMOUR:
-        if (item.sub_type == ARM_CAP)
+        if (item.sub_type == ARM_NAGA_BARDING)
+            return (you.species == SP_NAGA && you_tran_can_wear(EQ_BOOTS));
+        else if (item.sub_type == ARM_CENTAUR_BARDING)
+            return (you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS));
+
+        if (item.sub_type == ARM_CAP || item.sub_type == ARM_WIZARD_HAT)
         {
             const int transform = you.attribute[ATTR_TRANSFORMATION];
+            // All but these transformations can wear hats/caps.
             return (transform != TRAN_BAT && transform != TRAN_AIR);
         }
         return you_tran_can_wear(get_armour_slot(item), true);

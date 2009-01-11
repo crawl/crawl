@@ -177,8 +177,11 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
                 break;
 
             case EQ_BOOTS:
-                if (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS])
+                if (you.inv[arm].sub_type == ARM_BOOTS // i.e. not barding
+                    && (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]))
+                {
                     force_remove = true;
+                }
                 break;
 
             case EQ_SHIELD:

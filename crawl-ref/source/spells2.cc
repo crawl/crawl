@@ -791,7 +791,7 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
-        if (mons_res_negative_energy(monster))
+        if (mons_res_negative_energy(monster) || mons_is_summoned(monster))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);

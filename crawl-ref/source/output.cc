@@ -1728,11 +1728,12 @@ static void _print_overview_screen_equip(column_composer& cols,
         {
             const int item_idx    = you.equip[e_order[i]];
             const item_def& item  = you.inv[item_idx];
+            const bool not_melded = player_wearing_slot(e_order[i]);
 
             // Colour melded equipment dark grey.
             const char* colname   =
-                player_wearing_slot(e_order[i]) ?
-                    colour_to_str(item.colour).c_str() : "darkgrey";
+                not_melded ? colour_to_str(item.colour).c_str()
+                           : "darkgrey";
 
             const char equip_char = index_to_letter(item_idx);
 
@@ -1741,7 +1742,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      slot,
                      equip_char,
                      colname,
-                     !player_wearing_slot(e_order[i]) ? "melded " : "",
+                     not_melded ? "" : "melded ",
                      item.name(DESC_PLAIN, true).substr(0,42).c_str(),
                      colname);
             equip_chars.push_back(equip_char);

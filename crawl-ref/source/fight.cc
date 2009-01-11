@@ -1847,6 +1847,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
              && you.equip[EQ_WEAPON] != -1)
     {
         if (defender->holiness() == MH_NATURAL
+            && !mons_is_summoned(def)
             && damage_done > 0
             && you.hp < you.hp_max
             && !one_chance_in(5))

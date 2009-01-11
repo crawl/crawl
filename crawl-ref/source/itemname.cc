@@ -232,8 +232,11 @@ std::string item_def::name(description_level_type descrip,
         ASSERT( this->link != -1 );
         equipped = true;
 
-        if (!you_tran_can_wear(*this) && you.equip[EQ_WEAPON] != this->link)
+        if (!you_tran_can_wear(*this) && you.equip[EQ_WEAPON] != this->link
+            && this->link != you.m_quiver->get_fire_item())
+        {
             buff << " (melded)";
+        }
         else if (this->link == you.equip[EQ_WEAPON])
         {
             if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
