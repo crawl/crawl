@@ -670,6 +670,7 @@ metal_green
 ############papyrus 1
 cloth BOOK_PAPYRUS
 # randarts
+%sdir item/book/artefact
 wrinkled BOOK_RANDART_OFFSET
 vellum
 velvet
@@ -677,6 +678,7 @@ thick
 buckle
 bookmark
 thin
+
 #####################OBJ_STAVES
 %sdir item/staff
 staff00 STAFF_OFFSET /*curved*/

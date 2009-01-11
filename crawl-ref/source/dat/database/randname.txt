@@ -1063,7 +1063,7 @@ the Glacier
 
 the Frostbite
 %%%%
-Transmigration
+Transmutation
 
 Transmigration
 
@@ -1268,7 +1268,7 @@ Congealing
 
 Frigorific
 %%%%
-Transmigration adj
+Transmutation adj
 
 Shifting
 

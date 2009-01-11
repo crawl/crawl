@@ -131,7 +131,7 @@ private:
     void _divination_you(int severity);
     void _divination_mon(int severity);
     void _necromancy(int severity);
-    void _transmigration(int severity);
+    void _transmutation(int severity);
     void _fire(int severity);
     void _ice(int severity);
     void _earth(int severity);

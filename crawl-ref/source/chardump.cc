@@ -911,7 +911,7 @@ static void _sdump_spells(dump_params &par)
         SPTYP_DIVINATION,
         SPTYP_TRANSLOCATION,
         SPTYP_SUMMONING,
-        SPTYP_TRANSMIGRATION,
+        SPTYP_TRANSMUTATION,
         SPTYP_NECROMANCY,
         0
     };

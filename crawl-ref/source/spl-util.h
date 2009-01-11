@@ -20,7 +20,7 @@ enum spschool_flag_type
   SPTYP_ENCHANTMENT    = 1<<1,
   SPTYP_FIRE           = 1<<2,
   SPTYP_ICE            = 1<<3,
-  SPTYP_TRANSMIGRATION = 1<<4,
+  SPTYP_TRANSMUTATION  = 1<<4,
   SPTYP_NECROMANCY     = 1<<5,
   SPTYP_SUMMONING      = 1<<6,
   SPTYP_DIVINATION     = 1<<7,

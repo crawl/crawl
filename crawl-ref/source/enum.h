@@ -2544,7 +2544,7 @@ enum skill_type
     SK_SUMMONINGS,
     SK_NECROMANCY,
     SK_TRANSLOCATIONS,                 //   30
-    SK_TRANSMIGRATION,
+    SK_TRANSMUTATION,
     SK_DIVINATIONS,
     SK_FIRE_MAGIC,
     SK_ICE_MAGIC,
@@ -2792,9 +2792,9 @@ enum spell_type
     SPELL_INTOXICATE,   // confusion but only "smart" creatures
     SPELL_EVAPORATE,    // 190, turn a potion into a cloud
     SPELL_FRAGMENTATION,               // replacement for "orb of frag"
-    SPELL_AIR_WALK,                    // "dematerialise" (air/transmigration)
+    SPELL_AIR_WALK,                    // "dematerialise" (air/transmutation)
     SPELL_SANDBLAST,     // mini-frag; can use stones for material comp
-    SPELL_ROTTING,       // evil god power or necromantic transmigration
+    SPELL_ROTTING,       // evil god power or necromantic transmutation
     SPELL_MAXWELLS_SILVER_HAMMER,      // 195, vorpal-brand maces etc.
     SPELL_CONDENSATION_SHIELD,         // "shield" of icy vapour
     SPELL_SEMI_CONTROLLED_BLINK,       //jmf: to test effect

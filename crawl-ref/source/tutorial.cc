@@ -1071,7 +1071,7 @@ void tut_gained_new_skill(int skill)
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
     case SK_TRANSLOCATIONS:
-    case SK_TRANSMIGRATION:
+    case SK_TRANSMUTATION:
     case SK_DIVINATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:

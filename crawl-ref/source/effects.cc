@@ -1245,7 +1245,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                         type_wanted = BOOK_WARP;
                     break;
 
-                case SK_TRANSMIGRATION:
+                case SK_TRANSMUTATION:
                     if (!you.had_book[BOOK_CHANGES])
                         type_wanted = BOOK_CHANGES;
                     else if (!you.had_book[BOOK_TRANSFIGURATIONS])

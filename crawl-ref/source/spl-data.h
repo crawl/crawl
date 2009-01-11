@@ -26,7 +26,7 @@
    migrations in that the latter cause a permanent alteration in something
    which persists even after the magic has faded, while the effects of the
    former last only so long as the magic does. Sometimes enchantments may take
-   advantage of the more powerful aspects of transmigration to induce some
+   advantage of the more powerful aspects of transmutation to induce some
    kind of radical change (eg polymorph).
    Some enchantments would also fall under the description of 'meta-magic'
    spells, like Selective Amnesia and Remove Curse (and if I ever implement
@@ -53,7 +53,7 @@
    Especially because having a fire specialisation basically removes any chance
    of ever using ice spells effectively, and vice versa.
 
-   Transmigration
+   Transmutation
    See enchantments.
 
    Necromancy
@@ -313,7 +313,7 @@
 
 {
     SPELL_DIG, "Dig",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
      200,
@@ -378,7 +378,7 @@
 
 {
     SPELL_POLYMORPH_OTHER, "Polymorph Other",
-     SPTYP_TRANSMIGRATION,  // removed enchantment, wasn't needed -- bwr
+     SPTYP_TRANSMUTATION,  // removed enchantment, wasn't needed -- bwr
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
      200,
@@ -1344,7 +1344,7 @@
 
 {
     SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
-     SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
+     SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      1,
      50,
@@ -1422,7 +1422,7 @@
 
 {
     SPELL_CIGOTUVIS_DEGENERATION, "Cigotuvi's Degeneration",
-     SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
+     SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
      200,
@@ -1813,7 +1813,7 @@
 
 {
     SPELL_ALTER_SELF, "Alter Self",
-     SPTYP_TRANSMIGRATION,
+     SPTYP_TRANSMUTATION,
      SPFLAG_NONE,
      7,
      0,
@@ -1878,7 +1878,7 @@
 
 {
     SPELL_SPIDER_FORM, "Spider Form",
-     SPTYP_TRANSMIGRATION | SPTYP_POISON,
+     SPTYP_TRANSMUTATION | SPTYP_POISON,
      SPFLAG_HELPFUL,
      3,
      200,
@@ -1891,7 +1891,7 @@
 
 {
     SPELL_DISRUPT, "Disrupt",
-     SPTYP_TRANSMIGRATION,
+     SPTYP_TRANSMUTATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE | SPFLAG_DEVEL,
      1,
      25,
@@ -1904,7 +1904,7 @@
 
 {
     SPELL_DISINTEGRATE, "Disintegrate",
-     SPTYP_TRANSMIGRATION,
+     SPTYP_TRANSMUTATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CARD,
      6,
      200,
@@ -1917,7 +1917,7 @@
 
 {
     SPELL_BLADE_HANDS, "Blade Hands",
-     SPTYP_TRANSMIGRATION,
+     SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,  // only removes weapon, so I raised this from 4 -- bwr
      200,
@@ -1930,7 +1930,7 @@
 
 {
     SPELL_STATUE_FORM, "Statue Form",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_HELPFUL,
      6,
      200,
@@ -1943,7 +1943,7 @@
 
 {
     SPELL_ICE_FORM, "Ice Form",
-     SPTYP_ICE | SPTYP_TRANSMIGRATION,
+     SPTYP_ICE | SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL,
      4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
      200,
@@ -1956,7 +1956,7 @@
 
 {
     SPELL_DRAGON_FORM, "Dragon Form",
-     SPTYP_FIRE | SPTYP_TRANSMIGRATION,
+     SPTYP_FIRE | SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL,
      8,
      200,
@@ -1969,7 +1969,7 @@
 
 {
     SPELL_NECROMUTATION, "Necromutation",
-     SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
+     SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_HELPFUL,
      8,
      200,
@@ -2138,7 +2138,7 @@
 
 {
     SPELL_PASSWALL, "Passwall",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_ESCAPE,
      3,
      200,
@@ -2151,7 +2151,7 @@
 
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
-     SPTYP_FIRE | SPTYP_TRANSMIGRATION,
+     SPTYP_FIRE | SPTYP_TRANSMUTATION,
      SPFLAG_AREA | SPFLAG_BATTLE,
      6,
      200,
@@ -2164,7 +2164,7 @@
 
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
-     SPTYP_TRANSMIGRATION | SPTYP_SUMMONING,
+     SPTYP_TRANSMUTATION | SPTYP_SUMMONING,
      SPFLAG_BATTLE,
      2,
      200,
@@ -2333,7 +2333,7 @@
 
 {
     SPELL_SHATTER, "Shatter",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_AREA,
      9,
      200,
@@ -2398,7 +2398,7 @@
 
 {
     SPELL_INTOXICATE, "Alistair's Intoxication",
-     SPTYP_TRANSMIGRATION | SPTYP_POISON,
+     SPTYP_TRANSMUTATION | SPTYP_POISON,
      SPFLAG_NONE,
      4,
      0,
@@ -2411,7 +2411,7 @@
 
 {
     SPELL_EVAPORATE, "Evaporate",
-     SPTYP_FIRE | SPTYP_TRANSMIGRATION,
+     SPTYP_FIRE | SPTYP_TRANSMUTATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
@@ -2424,7 +2424,7 @@
 
 {
     SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_GRID,
      5,
      200,
@@ -2437,7 +2437,7 @@
 
 {
     SPELL_AIR_WALK, "Air Walk",
-     SPTYP_TRANSMIGRATION | SPTYP_AIR,
+     SPTYP_TRANSMUTATION | SPTYP_AIR,
      SPFLAG_HELPFUL,
      9,
      200,
@@ -2450,7 +2450,7 @@
 
 {
     SPELL_SANDBLAST, "Sandblast",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      50,
@@ -2463,7 +2463,7 @@
 
 {
     SPELL_ROTTING, "Rotting",
-     SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
+     SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_AREA,
      5,
      200,
@@ -2476,7 +2476,7 @@
 
 {
     SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
-     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
@@ -2489,7 +2489,7 @@
 
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
-     SPTYP_ICE | SPTYP_TRANSMIGRATION,
+     SPTYP_ICE | SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL,
      4,
      200,
@@ -2515,7 +2515,7 @@
 
 {
     SPELL_STONESKIN, "Stoneskin",
-     SPTYP_EARTH | SPTYP_TRANSMIGRATION, // was ench -- bwr
+     SPTYP_EARTH | SPTYP_TRANSMUTATION, // was ench -- bwr
      SPFLAG_HELPFUL,
      2,
      200,

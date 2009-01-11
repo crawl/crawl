@@ -23,7 +23,7 @@ Sth - Stealth                LBl - Long Blades           Enc - Enchantments
 Stb - Stabbing               Axs - Axes                  Sum - Summonings
 Shd - Shields                M&F - Maces & Flails        Nec - Necromancy
 T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
-                             Stv - Staves                Trm - Transmigration
+                             Stv - Staves                Trm - Transmutation
 Inv - Invocations            U C - Unarmed Combat        Div - Divinations
 Evo - Evocations
                              Thr - Throwing              Fir - Fire Magic

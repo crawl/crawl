@@ -766,7 +766,7 @@ const char* spelltype_short_name( int which_spelltype )
         return ("Fire");
     case SPTYP_ICE:
         return ("Ice");
-    case SPTYP_TRANSMIGRATION:
+    case SPTYP_TRANSMUTATION:
         return ("Tmgr");
     case SPTYP_NECROMANCY:
         return ("Necr");
@@ -803,8 +803,8 @@ const char* spelltype_long_name( int which_spelltype )
         return ("Fire");
     case SPTYP_ICE:
         return ("Ice");
-    case SPTYP_TRANSMIGRATION:
-        return ("Transmigration");
+    case SPTYP_TRANSMUTATION:
+        return ("Transmutation");
     case SPTYP_NECROMANCY:
         return ("Necromancy");
     case SPTYP_HOLY:
@@ -840,8 +840,8 @@ const char *spelltype_name(unsigned int which_spelltype)
         return ("Fire");
     case SPTYP_ICE:
         return ("Ice");
-    case SPTYP_TRANSMIGRATION:
-        return ("Transmigration");
+    case SPTYP_TRANSMUTATION:
+        return ("Transmutation");
     case SPTYP_NECROMANCY:
         return ("Necromancy");
     case SPTYP_HOLY:
@@ -871,7 +871,7 @@ int spell_type2skill(unsigned int spelltype)
     case SPTYP_ENCHANTMENT:    return (SK_ENCHANTMENTS);
     case SPTYP_FIRE:           return (SK_FIRE_MAGIC);
     case SPTYP_ICE:            return (SK_ICE_MAGIC);
-    case SPTYP_TRANSMIGRATION: return (SK_TRANSMIGRATION);
+    case SPTYP_TRANSMUTATION: return (SK_TRANSMUTATION);
     case SPTYP_NECROMANCY:     return (SK_NECROMANCY);
     case SPTYP_SUMMONING:      return (SK_SUMMONINGS);
     case SPTYP_DIVINATION:     return (SK_DIVINATIONS);
@@ -898,7 +898,7 @@ int spell_skill2type(unsigned int skill)
     case SK_ENCHANTMENTS:   return (SPTYP_ENCHANTMENT);
     case SK_FIRE_MAGIC:     return (SPTYP_FIRE);
     case SK_ICE_MAGIC:      return (SPTYP_ICE);
-    case SK_TRANSMIGRATION: return (SPTYP_TRANSMIGRATION);
+    case SK_TRANSMUTATION: return (SPTYP_TRANSMUTATION);
     case SK_NECROMANCY:     return (SPTYP_NECROMANCY);
     case SK_SUMMONINGS:     return (SPTYP_SUMMONING);
     case SK_DIVINATIONS:    return (SPTYP_DIVINATION);
