@@ -13,11 +13,13 @@ REVISION("$Rev$");
 #include "arena.h"
 #include "chardump.h"
 #include "cio.h"
+#include "command.h"
 #include "dungeon.h"
 #include "initfile.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
 #include "libutil.h"
+#include "macro.h"
 #include "maps.h"
 #include "message.h"
 #include "mon-pick.h"
@@ -671,6 +673,44 @@ namespace arena
         }
     }
 
+    void handle_keypress(int ch)
+    {
+        if (ch == ESCAPE || tolower(ch) == 'q' || ch == CONTROL('G'))
+        {
+            contest_canceled = true;
+            mpr("Canceled contest at user request");
+            return;
+        }
+
+        const command_type cmd = key_to_command(ch, KC_DEFAULT);
+
+        // We only allow a short list of commands to be used in the arena.
+        switch(cmd)
+        {
+        case CMD_LOOK_AROUND:
+        case CMD_SUSPEND_GAME:
+        case CMD_REPLAY_MESSAGES:
+            break;
+
+        default:
+            return;
+        }
+
+        if (file != NULL)
+            fflush(file);
+
+        cursor_control coff(true);
+
+        unwind_bool  ar     (crawl_state.arena,           false);
+        unwind_bool  ar_susp(crawl_state.arena_suspended, true);
+
+        unwind_var<coord_def> pos(you.position);
+        coord_def yplace(dgn_find_feature_marker(DNGN_ESCAPE_HATCH_UP));
+        you.moveto(yplace);
+
+        process_command(cmd);
+    }
+
     void do_fight()
     {
         mesclr(true);
@@ -681,13 +721,10 @@ namespace arena
                 if (kbhit())
                 {
                     const int ch = getch();
-                    if (ch == ESCAPE || tolower(ch) == 'q' ||
-                        ch == CONTROL('G'))
-                    {
-                        contest_canceled = true;
-                        mpr("Canceled contest at user request");
+                    handle_keypress(ch);
+                    ASSERT(crawl_state.arena && !crawl_state.arena_suspended);
+                    if (contest_canceled)
                         return;
-                    }
                 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1218,6 +1255,13 @@ int arena_cull_items()
 
 void run_arena()
 {
+    ASSERT(!crawl_state.arena_suspended);
+
+#ifdef WIZARD
+    // The playe has wizard powers for the duration of the arena.
+    unwind_bool wiz(you.wizard, true);
+#endif
+
     arena::global_setup();
     arena::simulate();
     arena::global_shutdown();

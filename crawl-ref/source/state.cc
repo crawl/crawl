@@ -27,13 +27,13 @@ game_state::game_state()
     : mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), io_inited(false), need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
-      map_stat_gen(false), arena(false), unicode_ok(false), glyph2strfn(NULL),
-      multibyte_strlen(NULL), terminal_resize_handler(NULL),
-      terminal_resize_check(NULL), doing_prev_cmd_again(false),
-      prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD), cmd_repeat_count(0),
-      cmd_repeat_goal(0), prev_repetition_turn(0),
-      cmd_repeat_started_unsafe(false), input_line_curr(0),
-      level_annotation_shown(false)
+      map_stat_gen(false), arena(false), arena_suspended(false),
+      unicode_ok(false), glyph2strfn(NULL), multibyte_strlen(NULL),
+      terminal_resize_handler(NULL), terminal_resize_check(NULL),
+      doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
+      repeat_cmd(CMD_NO_CMD), cmd_repeat_count(0), cmd_repeat_goal(0),
+      prev_repetition_turn(0), cmd_repeat_started_unsafe(false),
+      input_line_curr(0), level_annotation_shown(false)
 {
     reset_cmd_repeat();
     reset_cmd_again();

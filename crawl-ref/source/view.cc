@@ -2823,7 +2823,7 @@ void losight(env_show_grid &sh,
     // clear out sh
     sh.init(0);
 
-    if (crawl_state.arena)
+    if (crawl_state.arena || crawl_state.arena_suspended)
     {
         for (int y = -ENV_SHOW_OFFSET; y <= ENV_SHOW_OFFSET; ++y)
             for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
@@ -3307,7 +3307,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
                 buffer2[bufcount2 + 1] = colour;
                 buffer2[bufcount2] = env.map(c).glyph();
 
-                if (c == you.pos())
+                if (c == you.pos() && !crawl_state.arena_suspended)
                 {
                     // [dshaligram] Draw the @ symbol on the level-map. It's no
                     // longer saved into the env.map, so we need to draw it
@@ -3933,7 +3933,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
 
     if (foe == MHITYOU)
     {
-        if (crawl_state.arena)
+        if (crawl_state.arena || crawl_state.arena_suspended)
             return (true);
 
         if ( grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS )
@@ -4001,7 +4001,8 @@ bool see_grid( const env_show_grid &show,
 // Answers the question: "Is a grid within character's line of sight?"
 bool see_grid( const coord_def &p )
 {
-    return (crawl_state.arena && crawl_view.in_grid_los(p))
+    return ((crawl_state.arena || crawl_state.arena_suspended)
+            && crawl_view.in_grid_los(p))
         || see_grid(env.show, you.pos(), p);
 }
 
@@ -5098,7 +5099,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
     int count_x, count_y;
 
-    if (!crawl_state.arena)
+    if (!crawl_state.arena && !crawl_state.arena_suspended)
     {
         // Must be done first.
         losight(env.show, grd, you.pos());
@@ -5222,7 +5223,8 @@ void viewwindow(bool draw_it, bool do_updates)
                     tileb[bufcount + 1] = bg | tile_unseen_flag(gc);
 #endif
                 }
-                else if (gc == you.pos() && !crawl_state.arena)
+                else if (gc == you.pos() && !crawl_state.arena
+                         && !crawl_state.arena_suspended)
                 {
                     int             object = env.show(ep);
                     unsigned short  colour = env.show_col(ep);

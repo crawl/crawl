@@ -1448,6 +1448,8 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target);
             force_redraw = true;
+            if (crawl_state.arena_suspended)
+                need_beam_redraw = true;
             break;
 
         case CMD_TARGET_ALL_DESCRIBE:
@@ -3069,7 +3071,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     bool cloud_described = false;
     bool item_described = false;
 
-    if (where == you.pos())
+    if (where == you.pos() && !crawl_state.arena_suspended)
         mpr("You.", MSGCH_EXAMINE_FILTER);
 
     if (mgrd(where) != NON_MONSTER)

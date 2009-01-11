@@ -43,6 +43,8 @@ struct game_state
     bool map_stat_gen;      // Set if we're generating stats on maps.
 
     bool arena;             // Set if we're in arena mode.
+    bool arena_suspended;   // Set if the arena has been temporarily
+                            // suspended.
 
     bool unicode_ok;        // Is unicode support available?
 

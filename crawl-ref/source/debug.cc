@@ -4999,7 +4999,15 @@ void wizard_move_player_or_monster(const coord_def& where)
     int mid = mgrd(where);
 
     if (mid == NON_MONSTER)
+    {
+        if (crawl_state.arena_suspended)
+        {
+            mpr("You can't move yourself into the arena.");
+            more();
+            return;
+        }
         _move_player(where);
+    }
     else
         _move_monster(where, mid);
 

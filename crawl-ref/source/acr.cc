@@ -1768,6 +1768,8 @@ static bool _marker_vetoes_stair()
 static void _go_downstairs();
 static void _go_upstairs()
 {
+    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+
     const dungeon_feature_type ygrd = grd(you.pos());
 
     if (_stairs_check_mesmerised())
@@ -1812,6 +1814,8 @@ static void _go_upstairs()
 
 static void _go_downstairs()
 {
+    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+
     bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
                   && grd(you.pos()) != DNGN_UNDISCOVERED_TRAP);
 
@@ -2260,8 +2264,11 @@ void process_command( command_type cmd )
 
         struct dist lmove;   // Will be initialized by direction().
         direction(lmove, DIR_TARGET, TARG_ANY, -1, true);
-        if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
+        if (lmove.isValid && lmove.isTarget && !lmove.isCancel
+            && !crawl_state.arena_suspended)
+        {
             start_travel( lmove.target );
+        }
         break;
     }
 
@@ -3512,6 +3519,8 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 // to be opened (eg if you type ctrl + dir).
 static void _open_door(coord_def move, bool check_confused)
 {
+    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
     {
         mpr("You can't open doors in your present form.");
@@ -4115,6 +4124,8 @@ static void _move_player(int move_x, int move_y)
 
 static void _move_player(coord_def move)
 {
+    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;

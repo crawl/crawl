@@ -63,6 +63,22 @@ and summon monsters with the Shadow Creatures spell:
     crawl -arena "test spawner v test spawner"
 
 
+                                   Commands
+------------------------------------------------------------------------------
+There are a very limited number of command you can issue to the arena:
+
+* You can stop the arena simulation early by pressing Escape, 'q' or
+  Control-G.
+
+* You can look at the message history like in a normal game (Control-P).
+
+* You can look around the arena like in a normal game ('x').
+
+* You can suspended the arena like in a normal game (Control-Z).
+
+If the arena has lots of monsters it might take a few second before it
+responds.
+
                            Options and parameters
 ------------------------------------------------------------------------------
 There are four arena parameters that you can set in your crawl options file:
