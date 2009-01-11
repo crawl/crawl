@@ -291,6 +291,8 @@ unsigned long exp_needed(int lev);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
+int get_expiration_threshold(duration_type dur);
+bool dur_expiring(duration_type dur);
 void display_char_status(void);
 
 

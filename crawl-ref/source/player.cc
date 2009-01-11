@@ -3767,26 +3767,97 @@ static const char * _get_rotting_how()
     return("");
 }
 
+// Returns the medium duration value which is usually announced by a special
+// message ("XY is about to time out") or a change of colour in the
+// status display.
+// Note that these values cannot be relied on when playing since there are
+// random decrements precisely to avoid this.
+int get_expiration_threshold(duration_type dur)
+{
+    switch (dur)
+    {
+    case DUR_REPEL_UNDEAD:
+        return 4;
+
+    case DUR_FIRE_SHIELD:
+    case DUR_SILENCE: // no message
+        return 5;
+
+    case DUR_DEFLECT_MISSILES:
+    case DUR_REPEL_MISSILES:
+    case DUR_REGENERATION:
+    case DUR_INSULATION:
+    case DUR_STONEMAIL:
+    case DUR_SWIFTNESS:
+    case DUR_INVIS:
+    case DUR_HASTE:
+    // The following are not shown in the status lines.
+    case DUR_ICY_ARMOUR:
+    case DUR_FORESCRY:
+    case DUR_CONTROL_TELEPORT:
+    case DUR_DEATH_CHANNEL:
+        return 6;
+
+    case DUR_LEVITATION:
+    case DUR_TRANSFORMATION: // not on status
+    case DUR_DEATHS_DOOR:    // not on status
+        return 10;
+
+    // These get no messages when they "flicker".
+    case DUR_SAGE:
+    case DUR_BARGAIN:
+        return 15;
+
+    case DUR_CONFUSING_TOUCH:
+        return 20;
+
+    default:
+        return 0;
+    }
+}
+
+// Is a given duration about to expire?
+bool dur_expiring(duration_type dur)
+{
+    const int value = you.duration[dur];
+    if (value <= 0)
+        return (false);
+
+    return (value <= get_expiration_threshold(dur));
+}
+
+static void _output_expiring_message(duration_type dur, const char* msg)
+{
+    if (you.duration[dur])
+    {
+        const bool expires = dur_expiring(dur);
+        mprf("%s%s", expires ? "Expiring: " : "", msg);
+    }
+}
+
 void display_char_status()
 {
     if (you.is_undead == US_SEMI_UNDEAD && you.hunger_state == HS_ENGORGED)
-        mpr( "You feel almost alive." );
+        mpr("You feel almost alive.");
     else if (you.is_undead)
-        mpr( "You are undead." );
+        mpr("You are undead.");
     else if (you.duration[DUR_DEATHS_DOOR])
-        mpr( "You are standing in death's doorway." );
+    {
+        _output_expiring_message(DUR_DEATHS_DOOR,
+                                 "You are standing in death's doorway.");
+    }
     else
-        mpr( "You are alive." );
+        mpr("You are alive.");
 
     if (you.haloed())
     {
         const int halo_size = halo_radius();
         if (halo_size > 6)
-            mpr( "You are illuminated by a large divine halo." );
+            mpr("You are illuminated by a large divine halo.");
         else if (halo_size > 3)
-            mpr( "You are illuminated by a divine halo." );
+            mpr("You are illuminated by a divine halo.");
         else
-            mpr( "You are illuminated by a small divine halo." );
+            mpr("You are illuminated by a small divine halo.");
     }
 
     if (you.species == SP_VAMPIRE)
@@ -3846,36 +3917,51 @@ void display_char_status()
         }
     }
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    if (you.duration[DUR_TRANSFORMATION] > 0)
     {
-    case TRAN_SPIDER:
-        mpr( "You are in spider-form." );
-        break;
-    case TRAN_BAT:
-        mprf( "You are in %sbat-form.",
-              you.species == SP_VAMPIRE ? "vampire " : "" );
-        break;
-    case TRAN_BLADE_HANDS:
-        mpr( "You have blades for hands." );
-        break;
-    case TRAN_STATUE:
-        mpr( "You are a statue." );
-        break;
-    case TRAN_ICE_BEAST:
-        mpr( "You are an ice creature." );
-        break;
-    case TRAN_DRAGON:
-        mpr( "You are in dragon-form." );
-        break;
-    case TRAN_LICH:
-        mpr( "You are in lich-form." );
-        break;
-    case TRAN_SERPENT_OF_HELL:
-        mpr( "You are a huge demonic serpent." );
-        break;
-    case TRAN_AIR:
-        mpr( "You are a cloud of diffuse gas." );
-        break;
+        std::string text = "";
+
+        if ((you.species != SP_VAMPIRE
+                || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+            && dur_expiring(DUR_TRANSFORMATION))
+        {
+            text = "Expiring: ";
+        }
+
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_SPIDER:
+            text += "You are in spider-form.";
+            break;
+        case TRAN_BAT:
+            text += "You are in ";
+            if (you.species == SP_VAMPIRE)
+                text += "vampire ";
+            text += "bat-form.";
+            break;
+        case TRAN_BLADE_HANDS:
+            text += "You have blades for hands.";
+            break;
+        case TRAN_STATUE:
+            text += "You are a statue.";
+            break;
+        case TRAN_ICE_BEAST:
+            text += "You are an ice creature.";
+            break;
+        case TRAN_DRAGON:
+            text += "You are in dragon-form.";
+            break;
+        case TRAN_LICH:
+            text += "You are in lich-form.";
+            break;
+        case TRAN_SERPENT_OF_HELL:
+            text += "You are a huge demonic serpent.";
+            break;
+        case TRAN_AIR:
+            text += "You are a cloud of diffuse gas.";
+            break;
+        }
+        mpr(text.c_str());
     }
 
     if (you.burden_state == BS_ENCUMBERED)
@@ -3891,31 +3977,39 @@ void display_char_status()
     }
 
     if (you.duration[DUR_SAGE])
-        mprf("You are studying %s.", skill_name(you.sage_bonus_skill));
+    {
+        std::string msg  = "You are studying ";
+                    msg += skill_name(you.sage_bonus_skill);
+                    msg += ".";
+        _output_expiring_message(DUR_SAGE, msg.c_str());
+    }
+
+    _output_expiring_message(DUR_BARGAIN, "You get a bargain in shops.");
 
     if (you.duration[DUR_BREATH_WEAPON])
         mpr("You are short of breath.");
 
-    if (you.duration[DUR_REPEL_UNDEAD])
-        mpr("You have a holy aura protecting you from undead.");
+    _output_expiring_message(DUR_REPEL_UNDEAD,
+                            "You have a holy aura protecting you from undead.");
 
     if (you.duration[DUR_LIQUID_FLAMES])
         mpr("You are covered in liquid flames.");
 
     if (you.duration[DUR_FIRE_SHIELD])
     {
-        mpr("You are surrounded by a ring of flames.");
-        mpr("You are immune to clouds of flame.");
+        _output_expiring_message(DUR_FIRE_SHIELD,
+                                 "You are surrounded by a ring of flames.");
+        _output_expiring_message(DUR_FIRE_SHIELD,
+                                 "You are immune to clouds of flame.");
     }
 
-    if (you.duration[DUR_ICY_ARMOUR])
-        mpr("You are protected by an icy shield.");
+    _output_expiring_message(DUR_ICY_ARMOUR,
+                             "You are protected by an icy shield.");
 
-    if (you.duration[DUR_REPEL_MISSILES])
-        mpr("You are protected from missiles.");
+    _output_expiring_message(DUR_REPEL_MISSILES,
+                             "You are protected from missiles.");
 
-    if (you.duration[DUR_DEFLECT_MISSILES])
-        mpr("You deflect missiles.");
+    _output_expiring_message(DUR_DEFLECT_MISSILES, "You deflect missiles.");
 
     if (you.duration[DUR_PRAYER])
         mpr("You are praying.");
@@ -3929,20 +4023,17 @@ void display_char_status()
     if (you.duration[DUR_REGENERATION]
         && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING))
     {
-        if (you.disease)
-            mpr("You are recuperating from your illness.");
-        else
-            mpr("You are regenerating.");
+        _output_expiring_message(DUR_REGENERATION,
+                                 you.disease ? "recuperating from your illness"
+                                             : "regenerating");
     }
 
-    if (you.duration[DUR_SWIFTNESS])
-        mpr("You can move swiftly.");
+    _output_expiring_message(DUR_SWIFTNESS, "You can move swiftly.");
 
-    if (you.duration[DUR_INSULATION])
-        mpr("You are insulated.");
+    _output_expiring_message(DUR_INSULATION, "You are insulated.");
 
-    if (you.duration[DUR_STONEMAIL])
-        mpr("You are covered in scales of stone.");
+    _output_expiring_message(DUR_STONEMAIL,
+                             "You are covered in scales of stone.");
 
     if (you.duration[DUR_CONTROLLED_FLIGHT])
         mpr("You can control your flight.");
@@ -3950,17 +4041,14 @@ void display_char_status()
     if (you.duration[DUR_TELEPORT])
         mpr("You are about to teleport.");
 
-    if (you.duration[DUR_CONTROL_TELEPORT])
-        mpr("You can control teleportation.");
+    _output_expiring_message(DUR_CONTROL_TELEPORT,
+                             "You can control teleportation.");
 
-    if (you.duration[DUR_DEATH_CHANNEL])
-        mpr("You are channeling the dead.");
+    _output_expiring_message(DUR_DEATH_CHANNEL, "You are channeling the dead.");
 
-    if (you.duration[DUR_FORESCRY])     //jmf: added 19mar2000
-        mpr("You are forewarned.");
+    _output_expiring_message(DUR_FORESCRY, "You are forewarned.");
 
-    if (you.duration[DUR_SILENCE])      //jmf: added 27mar2000
-        mpr("You radiate silence.");
+    _output_expiring_message(DUR_SILENCE, "You radiate silence.");
 
     if (you.duration[DUR_STONESKIN])
         mpr("Your skin is tough as stone.");
@@ -3968,8 +4056,7 @@ void display_char_status()
     if (you.duration[DUR_SEE_INVISIBLE])
         mpr("You can see invisible.");
 
-    if (you.duration[DUR_INVIS])
-        mpr("You are invisible.");
+    _output_expiring_message(DUR_INVIS, "You are invisible.");
 
     if (you.confused())
         mpr("You are confused.");
@@ -3994,7 +4081,7 @@ void display_char_status()
     else if (you.duration[DUR_SLOW])
         mpr("Your actions are slowed.");
     else if (you.duration[DUR_HASTE])
-        mpr("Your actions are hasted.");
+        _output_expiring_message(DUR_HASTE, "Your actions are hasted.");
 
     if (you.duration[DUR_MIGHT])
         mpr("You are mighty.");
@@ -4009,7 +4096,14 @@ void display_char_status()
         mpr("You are possessed by a berserker rage.");
 
     if (player_is_airborne())
-        mpr("You are hovering above the floor.");
+    {
+        const bool expires = dur_expiring(DUR_LEVITATION)
+                             && !you.permanent_flight();
+
+        mprf(expires ? MSGCH_WARN : MSGCH_PLAIN,
+             "%sYou are hovering above the floor.",
+             expires ? "Expiring: " : "");
+    }
 
     if (you.attribute[ATTR_HELD])
         mpr("You are held in a net.");
