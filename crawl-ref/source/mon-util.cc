@@ -977,24 +977,37 @@ bool mons_enslaved_soul(const monsters *mon)
         || mons_enslaved_intact_soul(mon));
 }
 
-bool name_zombified_unique(monsters *mon, int mc, const std::string mon_name)
+bool name_zombie(monsters *mon, int mc, const std::string mon_name)
 {
-    if (mons_is_unique(mc))
-    {
-        mon->mname = mon_name;
+    mon->mname = mon_name;
 
-        // Special case for Blork the orc: shorten his name to "Blork"
-        // to avoid mentions of e.g "Blork the orc the orc zombie".
-        if (mc == MONS_BLORK_THE_ORC)
-            mon->mname = "Blork";
-        // Also for the Lernaean hydra.
-        else if (mc == MONS_LERNAEAN_HYDRA)
-            mon->mname = "Lernaean hydra";
+    // Special case for Blork the orc: shorten his name to "Blork"
+    // to avoid mentions of e.g "Blork the orc the orc zombie".
+    if (mc == MONS_BLORK_THE_ORC)
+        mon->mname = "Blork";
+    // Also for the Lernaean hydra.
+    else if (mc == MONS_LERNAEAN_HYDRA)
+        mon->mname = "Lernaean hydra";
 
-        return (true);
-    }
+    if (starts_with(mon->mname, "shaped "))
+        mon->flags |= MF_NAME_SUFFIX;
 
-    return (false);
+    return (true);
+}
+
+bool name_zombie(monsters *mon, const monsters* orig)
+{
+    if (!mons_is_unique(orig->type) && orig->mname.empty())
+        return (false);
+
+    std::string name;
+
+    if (!orig->mname.empty())
+        name = orig->mname;
+    else
+        name = mons_type_name(orig->type, DESC_PLAIN);
+
+    return name_zombie(mon, orig->type, name);
 }
 
 int downscale_zombie_damage(int damage)

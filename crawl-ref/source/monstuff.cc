@@ -360,6 +360,12 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
     if (corpse.colour == BLACK)
         corpse.colour = monster->colour;
 
+    if (!monster->mname.empty())
+        corpse.props[CORPSE_NAME_KEY] = monster->mname;
+    else if (mons_is_unique(monster->type))
+        corpse.props[CORPSE_NAME_KEY] = mons_type_name(monster->type,
+                                                       DESC_PLAIN);
+
     return (corpse_class);
 }
 
@@ -1327,8 +1333,7 @@ void monster_die(monsters *monster, killer_type killer,
                         if (death_message)
                             mpr("A glowing mist starts to gather...");
 
-                        name_zombified_unique(&menv[spectre], monster->type,
-                                              monster->name(DESC_PLAIN));
+                        name_zombie(&menv[spectre], monster);
                     }
                 }
             }

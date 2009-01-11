@@ -644,7 +644,8 @@ bool mons_enslaved_body_and_soul(const monsters *mon);
 bool mons_enslaved_twisted_soul(const monsters *mon);
 bool mons_enslaved_intact_soul(const monsters *mon);
 bool mons_enslaved_soul(const monsters *mon);
-bool name_zombified_unique(monsters *mon, int mc, const std::string mon_name);
+bool name_zombie(monsters *mon, int mc, const std::string mon_name);
+bool name_zombie(monsters *mon, const monsters* orig);
 
 
 // last updated 12may2000 {dlb}

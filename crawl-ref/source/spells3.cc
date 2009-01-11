@@ -865,8 +865,8 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
     {
         const int monnum = item.orig_monnum - 1;
 
-        name_zombified_unique(&menv[monster], monnum,
-                              origin_monster_name(item));
+        if (is_named_corpse(item))
+            name_zombie(&menv[monster], monnum, get_corpse_name(item));
 
         equip_undead(a, corps, monster, monnum);
 

@@ -5553,7 +5553,6 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     const std::string whose =
         player_monster_visible(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                                     : "Its";
-    const std::string name = mon->name(DESC_PLAIN);
     int corps = -1;
     bool twisted = allow_fail && coinflip();
 
@@ -5585,6 +5584,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     // Drop the monster's equipment.
     monster_drop_ething(mon);
 
+    const monsters orig = *mon;
     define_monster(*mon);
 
     mon->colour = EC_UNHOLY;
@@ -5604,7 +5604,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         destroy_item(corps);
     }
 
-    name_zombified_unique(mon, type, name);
+    name_zombie(mon, &orig);
 
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);

@@ -12,6 +12,8 @@
 
 #include "externs.h"
 
+#define CORPSE_NAME_KEY "corpse_name_key"
+
 struct item_types_pair
 {
     object_class_type base_type;
@@ -145,5 +147,8 @@ std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
  * called from: newgame
  * *********************************************************************** */
 const char* wand_type_name(int wandtype);
+
+bool        is_named_corpse(const item_def &corpse);
+std::string get_corpse_name(const item_def &corpse);
 
 #endif

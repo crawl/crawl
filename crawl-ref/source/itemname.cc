@@ -124,6 +124,29 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
+    if (base_type == OBJ_CORPSES && is_named_corpse(*this)
+        && !starts_with(get_corpse_name(*this), "shaped "))
+    {
+        switch (descrip)
+        {
+        case DESC_CAP_A:
+        case DESC_CAP_YOUR:
+            descrip = DESC_CAP_THE;
+            break;
+
+        case DESC_NOCAP_A:
+        case DESC_NOCAP_YOUR:
+        case DESC_NOCAP_ITS:
+        case DESC_INVENTORY_EQUIP:
+        case DESC_INVENTORY:
+            descrip = DESC_NOCAP_THE;
+            break;
+
+        default:
+            break;
+        }
+    }
+
     if (this->base_type == OBJ_ORBS
         || (ident || item_type_known( *this ))
             && (this->base_type == OBJ_MISCELLANY
@@ -1566,11 +1589,20 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_CORPSES:
+    {
         if (food_is_rotten(*this) && !dbname)
             buff << "rotting ";
 
-        if (!dbname)
+        const std::string _name  = get_corpse_name(*this);
+        const bool        shaped = starts_with(_name, "shaped ");
+
+        if (!dbname && !starts_with(_name, "the "))
+        {
             buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
+
+            if (!_name.empty() && shaped)
+                buff << _name << ' ';
+        }
 
         if (item_typ == CORPSE_BODY)
             buff << "corpse";
@@ -1578,7 +1610,11 @@ std::string item_def::name_aux( description_level_type desc,
             buff << "skeleton";
         else
             buff << "corpse bug";
+
+        if (!_name.empty() && !shaped)
+            buff << " of " << _name;
         break;
+    }
 
     default:
         buff << "!";
@@ -2866,4 +2902,21 @@ std::vector<std::string> item_name_list_for_glyph(unsigned glyph)
 
     std::vector<std::string> empty;
     return empty;
+}
+
+bool is_named_corpse(const item_def &corpse)
+{
+    ASSERT(corpse.base_type == OBJ_CORPSES);
+
+    return (corpse.props.exists(CORPSE_NAME_KEY));
+}
+
+std::string get_corpse_name(const item_def &corpse)
+{
+    ASSERT(corpse.base_type == OBJ_CORPSES);
+
+    if (!corpse.props.exists(CORPSE_NAME_KEY))
+        return ("");
+
+    return (corpse.props[CORPSE_NAME_KEY].get_string());
 }
