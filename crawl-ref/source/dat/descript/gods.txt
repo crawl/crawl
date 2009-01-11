@@ -102,7 +102,7 @@ Makhleb offers followers various means to inflict immense damage, and to call in
 %%%%
 Sif Muna powers
 
-Followers of Sif Muna can channel magical energy when they need it the most, and they gain a power to forget any spell at will, so as to learn new ones. Sif Muna protects spellcasters against the negative effects of miscasting a spell. Over time, followers will get any spellbook to be found in the realm.
+Followers of Sif Muna can channel magical energy when they need it the most, and they gain a power to forget any spell at will, so as to learn new ones. Sif Muna protects spellcasters against the negative effects of miscasting a spell. Over time, followers will get spellbooks containing all spells to be found in the realm.
 %%%%
 Trog powers
 

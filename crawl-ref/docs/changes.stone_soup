@@ -8,11 +8,12 @@ Breaks saves compatibility.
 
 0.5 Highlights
 --------------
+* Several new uniques and other monsters.
 * Several great new portal vaults.
 * Cooler labyrinths.
-* Several new uniques and other monsters. 
-* Artefact spellbooks.
+* Much more useful monster descriptions.
 * Much more convenient tiles version.
+* Arena mode for inter-monster fights.
 
 Levels
 ------
@@ -32,6 +33,7 @@ Monsters
 * Disallow zombified monsters' use of stairs.
 * New monsters: trapdoor spider, rock worm, flaming corpse, chaos spawn.
 * Several cool new uniques.
+* Monster descriptions now list resistances and some other attributes.
 * Polymorphed uniques retain their spells and speech.
 * Reintroduce chance of orc wizards and priests in orc bands.
 * Monsters of the same type will now attempt to surround the player.
@@ -70,7 +72,6 @@ Interface
 * Purchases and donations are now noted.
 * The database search now also prints armour base AC/EV and weapon plusses.
 * Add spells and books to book/spell descriptions when searching the database.
-* Item descriptions generally are a much more useful now.
 * Allow wishing for specific fixed and randarts in wizard mode ('o' command).
 * Add food item based hunger descriptions to spells.
 
@@ -81,6 +82,7 @@ Items
 * Make missile enchantment decrease chance of item destruction.
 * Freezing weapons can now slow cold-blooded monsters.
 * The staff of channeling now trains Evocations.
+* Item descriptions now mention enchantment/charging limits.
 * Randarts now get their known properties autoinscribed.
 * Randarts are now noted as identified even if the plusses are still unknown.
 * Eliminate RAP_ANGRY and RAP_BERSERK for missile weapons.
@@ -116,8 +118,9 @@ Gods
 * Move Divine Robustness from Zin to Elyvilon, replacing Incredible Healing.
 * Make Zin's retribution-summoned plagues permanent.
 * Allow Trog to accept kills of demons.
+* Sif Muna no longer gifts Kiku/Vehumet specific books.
 * Vehumet accepts undead killing for you.
-* Disallow shapeshifters in orc form from becoming Beoghites' followers.
+* Disallow shapeshifters in orc form to become Beoghites' followers.
 
 Tiles
 -----
@@ -135,12 +138,14 @@ Miscellaneous
 * Added arena mode to watch monsters fighting other monsters.
 * Poison Weapon is now a level 2 spell.
 * Extension will now also extend temporary weapon brands.
+* Butchered corpses now leave skeletons.
 * Lua errors now report the line numbers of the actual code.
 * Flying can now be cancelled.
 * Petrify is now an Enchantment/Earth spell.
 * Lee's Rapid Deconstruction deals great damage to petrified monsters.
-* Rewrite and clean up (among others) beam and trap code.
+* Rewrite and clean up of (among others) beam and trap code.
 * Increased Silence range from 6+0 to 6+1.
+* Store code revision in save files for easier bug tracking.
 * Many useful new wizard commands.
 
 
