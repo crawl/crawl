@@ -3230,6 +3230,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 // Doesn't include Polyphemus or Ilsuiw (only appear in the Shoals),
 // Murray (Hell), or Tiamat (Zot).
 // NOTE: The Lernaean hydra should *never* be randomly generated.
+//       The Royal jelly likewise is only placed via Slime end vault.
 static monster_type _choose_unique_by_depth(int step)
 {
     int ret;
