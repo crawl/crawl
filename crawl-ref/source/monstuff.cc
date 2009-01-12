@@ -6230,13 +6230,12 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     spellOK = true;
 
                     if (ms_direct_nasty(spell_cast)
-                             && mons_aligned(monster_index(monster),
-                                             monster->foe))
+                        && mons_aligned(monster_index(monster),
+                                        monster->foe))
                     {
                         spellOK = false;
                     }
-                    else if (monster->foe == MHITYOU
-                            || monster->foe == MHITNOT)
+                    else if (monster->foe == MHITYOU || monster->foe == MHITNOT)
                     {
                         // XXX: Note the crude hack so that monsters can
                         // use ME_ALERT to target (we should really have
@@ -6312,7 +6311,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             monster->hit_points = -1;
 
         // FINALLY! determine primary spell effects {dlb}:
-        if (spell_cast == SPELL_BLINK)
+        if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
         {
             // Why only cast blink if nearby? {dlb}
             if (monsterNearby)
