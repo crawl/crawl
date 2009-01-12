@@ -2002,11 +2002,11 @@ Artificers:
 -----------
 Artificers are attuned to gadgets, mechanics, and magic elicited from 
 arcane items as opposed to casting magic themselves.  As a consequence, 
-they enter the Dungeon with an assortment of wands. Artificers are 
-skilled at evoking magical items, finding Traps and Doors, have some 
-prior experience with scrolls of recharging, and understand the basics 
-of melee combat. Dwarves, Gnomes, and Spriggans are renowned for their 
-skill in artifice.
+they enter the Dungeon with an assortment of wands or a rod of 
+striking. Artificers are skilled at evoking magical items, finding 
+Traps and Doors, have some prior experience with scrolls of recharging, 
+and understand the basics of melee combat. Dwarves, Gnomes, and 
+Spriggans are renowned for their skill in artifice.
 
 Wanderers:
 ----------

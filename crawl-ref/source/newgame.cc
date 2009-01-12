@@ -2879,7 +2879,8 @@ static void _give_basic_knowledge(job_type which_job)
         break;
 
     case JOB_ARTIFICER:
-        set_ident_type( OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE );
+        if (!item_is_rod(you.inv[2]))
+            set_ident_type( OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE );
         break;
 
     default:
@@ -4209,7 +4210,8 @@ static bool _choose_wand()
 
     const wand_type startwand[5] = { WAND_ENSLAVEMENT, WAND_CONFUSION,
                                      WAND_MAGIC_DARTS, WAND_FROST, WAND_FLAME };
-    const int num_choices = 5;
+    _make_rod(you.inv[2], STAFF_STRIKING);
+    const int num_choices = 6;
 
     int keyin = 0;
     if (!Options.random_pick)
@@ -4217,7 +4219,7 @@ static bool _choose_wand()
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of wands:  "
+        cprintf(EOL "You have a choice of tools:" EOL
                     "(Press %% for a list of aptitudes)" EOL);
 
         for (int i = 0; i < num_choices; i++)
@@ -4225,7 +4227,13 @@ static bool _choose_wand()
             textcolor(LIGHTGREY);
 
             const char letter = 'a' + i;
-            cprintf("%c - %s" EOL, letter, wand_type_name(startwand[i]));
+            if (i == num_choices - 1)
+            {
+                cprintf("%c - %s" EOL, letter,
+                        you.inv[2].name(DESC_QUALNAME, false).c_str());
+            }
+            else
+                cprintf("%c - %s" EOL, letter, wand_type_name(startwand[i]));
         }
 
         textcolor(BROWN);
@@ -4238,7 +4246,7 @@ static bool _choose_wand()
         do
         {
             textcolor( CYAN );
-            cprintf(EOL "Which wand? ");
+            cprintf(EOL "Which wand or rod? ");
             textcolor( LIGHTGREY );
 
             keyin = c_getch();
@@ -4272,25 +4280,18 @@ static bool _choose_wand()
         keyin += 'a';
     }
 
-    const wand_type choice = startwand[keyin - 'a'];
-    int nCharges;
-    switch (choice)
+    if (keyin - 'a' == num_choices - 1)
     {
-    case WAND_MAGIC_DARTS:
-    case WAND_ENSLAVEMENT:
-        nCharges = 6;
-        break;
-    case WAND_FROST:
-    case WAND_FLAME:
-        nCharges = 7;
-        break;
-    default:
-        nCharges = 8;
-        break;
+        // Choose the rod; we're all done.
+        return (true);
     }
 
-    _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice, -1, 1,
-                          nCharges, 0);
+    // 1 wand of random effects and one chosen lesser wand
+    const wand_type choice = startwand[keyin - 'a'];
+    int nCharges = 15;
+    _newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS, -1, 1,
+                       nCharges, 0);
+    _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice, -1, 1, nCharges, 0);
 
     return (true);
 }
@@ -5125,16 +5126,13 @@ bool _give_items_skills()
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                               8 + roll_dice( 2, 8 ), 1);
 
+        // Spriggans used to get a rod striking, but now anyone can get
+        // one when playing an Artificer this is no longer necessary. (jpeg)
         if (you.species == SP_SPRIGGAN)
-        {
             you.inv[0].sub_type = WPN_DAGGER;
-            _make_rod(you.inv[3], STAFF_STRIKING);
-            you.skills[SK_EVOCATIONS] = 1;
-        }
-        else
-            you.skills[SK_DARTS] = 1;
 
         you.skills[SK_SHORT_BLADES] = 1;
+        you.skills[SK_DARTS]        = 1;
         you.skills[SK_ENCHANTMENTS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
@@ -5416,11 +5414,9 @@ bool _give_items_skills()
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                               ARM_LEATHER_ARMOUR, ARM_ROBE);
-        // 1 wand of random effects and one chosen lesser wand
-        _newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS, -1, 1,
-                6, 0);
-        // Choice of lesser wands: confusion (8), enslavement (8),
-        // slowing (8), magic dart (6), frost (7), flame (7)
+        // Choice of lesser wands, 15 charges plus wand of random effects:
+        // confusion, enslavement, slowing, magic dart, frost, flame; OR a rod
+        // of striking and no random effects.
         if (!_choose_wand())
             return (false);
 
@@ -5435,9 +5431,9 @@ bool _give_items_skills()
         // Skills
         you.skills[SK_EVOCATIONS] = 4;
         you.skills[SK_TRAPS_DOORS] = 3;
-        //you.skills[SK_CROSSBOWS] = 2;
         you.skills[SK_DODGING] = 2;
         you.skills[SK_FIGHTING] = 1;
+        you.skills[SK_STEALTH] = 1;
         break;
 
     default:

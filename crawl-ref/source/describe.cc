@@ -2720,7 +2720,7 @@ static std::string _monster_stat_description(const monsters& mon)
         result += " is ";
         result += comma_separated_line(all_resists.begin(),
                                        all_resists.end(),
-                                       ", and ", ", ");
+                                       "; and ", "; ");
         result += ".$";
     }
 
