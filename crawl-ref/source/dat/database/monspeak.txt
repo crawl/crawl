@@ -1281,8 +1281,16 @@ Boris unsummoned
 @The_monster@ says, "You can't fire me, I quit!"
 ## END Boris ##
 %%%%
-# a sentient jelly
+# a sentient jelly who used to be human a long time ago
 Dissolution
+
+@dissolution_common@
+
+w:5
+@dissolution_speech@
+%%%%
+# Dissolution non-speech
+dissolution_common
 
 @The_monster@ gurgles.
 
@@ -1292,9 +1300,28 @@ Dissolution
 
 @The_monster@ jiggles.
 
+@The_monster@ wobbles.
+%%%%
+dissolution_speech
+
 @The_monster@ says, "Join with me for eternity!"
 
 @The_monster@ says, "Become one with my sorrow!"
+
+@The_monster@ says, "Slime for the Slime God!"
+
+@The_monster@ says, "Acid is thicker than water."
+
+@dissolution_rare@
+%%%%
+dissolution_rare
+
+@The_monster@ says, "We come from slime, we turn to slime."
+
+@The_monster@ says, "Resolve to dissolve!"
+
+w:2
+@The_monster@ says, "There is a problem solver and it's name is Dissolver!"
 ## END Dissolution ##
 %%%%
 # An adventurer hating competition

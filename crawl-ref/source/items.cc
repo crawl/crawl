@@ -10,9 +10,7 @@
 REVISION("$Rev$");
 
 #include "items.h"
-//#ifdef USE_TILE
- #include "cio.h"
-//#endif
+#include "cio.h"
 #include "clua.h"
 
 #include <string.h>
