@@ -1689,9 +1689,9 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     beam.is_beam      = false;
     beam.is_explosion = false;
 
-    beam.range = spell_range(spell_cast, power, true);
-    if (beam.range == -1)
-        beam.range = 0;         // spells targeted at self, usually
+    // Sandblast is different, and gets range updated later
+    if (spell_cast != SPELL_SANDBLAST)
+        beam.range = spell_range(spell_cast, power, true);
 
     const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
                             ? draco_subspecies(mons) : mons->type;
@@ -1772,6 +1772,15 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.damage   = dice_def( 3, 5 + (power / 40) );
         beam.hit      = 25 + power / 40;
         beam.flavour  = BEAM_COLD;
+        break;
+
+    case SPELL_SANDBLAST:
+        beam.colour   = BROWN;
+        beam.name     = "rocky blast";
+        beam.damage   = dice_def( 3, 5 + (power / 40) );
+        beam.hit      = 20 + power / 40;
+        beam.flavour  = BEAM_FRAG;
+        beam.range    = 2;      // spell_range() is wrong here
         break;
 
     case SPELL_DISPEL_UNDEAD:
