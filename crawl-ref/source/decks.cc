@@ -1368,6 +1368,14 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
     {
         monsters& mon(*mon_to_swap);
         const coord_def newpos = mon.pos();
+
+        // Be nice: no swapping into uninhabitable environments.
+        if (!you.is_habitable(newpos) || !mon.is_habitable(you.pos()))
+        {
+            mpr("You spin around.");
+            return;
+        }
+
         bool mon_caught = mons_is_caught(&mon);
         bool you_caught = you.attribute[ATTR_HELD];
 
@@ -1387,6 +1395,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
         }
 
         // Move you to its previous location.
+        // FIXME: this should also handle merfolk swimming, etc.
         you.moveto(newpos);
 
         if (mon_caught)
