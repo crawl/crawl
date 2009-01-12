@@ -2531,7 +2531,7 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
             }
 
             // If it's a hydra the number of heads must match.
-            if ((int) mon->number != si->props[MONSTER_NUMBER].get_long())
+            if ((short) mon->number != si->props[MONSTER_NUMBER].get_short())
                 break;
 
             // Got it!
