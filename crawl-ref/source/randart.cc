@@ -95,7 +95,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     if (type_bad && !name_check_only)
     {
         ASSERT(!"God attempting to gift invalid type of item.");
-        mprf(MSGCH_ERROR, "%s attempting to gift invalid type of item.");
+        mprf(MSGCH_ERROR, "%s attempting to gift invalid type of item.",
+             god_name(which_god).c_str());
         // Prevent infinite loop in make_item_randart()
         return (true);
     }
@@ -276,7 +277,7 @@ static std::string _replace_name_parts(const std::string name_in,
             {
                 which_god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
             }
-            while (!_god_fits_artefact(which_god, item), true);
+            while (!_god_fits_artefact(which_god, item, true));
         }
 
         name = replace_all(name, "@god_name@", god_name(which_god, false));
