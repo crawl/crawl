@@ -1271,7 +1271,8 @@ void pickup()
 #endif
             }
 
-            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g')
+            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'
+                || keyin == CK_MOUSE_CLICK)
             {
                 _pickup_menu(o);
                 break;

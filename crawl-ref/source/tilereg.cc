@@ -816,18 +816,26 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 {
     tiles.clear_text_tags(TAG_CELL_DESC);
 
+    if (!inside(event.px, event.py))
+        return 0;
+
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         || mouse_control::current_mode() == MOUSE_MODE_MACRO
         || mouse_control::current_mode() == MOUSE_MODE_MORE)
     {
-        return 0;
+        if (event.event == MouseEvent::PRESS
+            && event.button == MouseEvent::LEFT)
+        {
+            return CK_MOUSE_CLICK;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     int cx;
     int cy;
-
-    if (!inside(event.px, event.py))
-        return 0;
 
     bool on_map = mouse_pos(event.px, event.py, cx, cy);
 
@@ -2206,15 +2214,14 @@ int MessageRegion::handle_mouse(MouseEvent &event)
     // TODO enne - mouse scrolling here should mouse scroll up through
     // the message history in the message pane, without going to the CRT.
 
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return 0;
-
     if (!inside(event.px, event.py))
         return 0;
 
     if (event.event != MouseEvent::PRESS || event.button != MouseEvent::LEFT)
         return 0;
 
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+        return CK_MOUSE_CLICK;
 
     return CONTROL('P');
 }
