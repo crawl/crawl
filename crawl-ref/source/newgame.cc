@@ -5126,8 +5126,9 @@ bool _give_items_skills()
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                               8 + roll_dice( 2, 8 ), 1);
 
-        // Spriggans used to get a rod striking, but now anyone can get
-        // one when playing an Artificer this is no longer necessary. (jpeg)
+        // Spriggans used to get a rod of striking, but now that anyone
+        // can get one when playing an Artificer, this is no longer
+        // necessary. (jpeg)
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
 
