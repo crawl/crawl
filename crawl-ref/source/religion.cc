@@ -1952,7 +1952,7 @@ static void _do_god_gift(bool prayed_for)
                 int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
                 _yred_random_servants(threshold);
 
-                _delayed_monster_done("grants you @an@ undead servant@s@!",
+                _delayed_monster_done(" grants you @an@ undead servant@s@!",
                                       "", _delayed_gift_callback);
             }
             break;
@@ -7152,8 +7152,8 @@ static void _place_delayed_monsters()
             }
             else
             {
-                msg = replace_all(msg, "@a@", "");
-                msg = replace_all(msg, "@an@", "");
+                msg = replace_all(msg, " @a@", "");
+                msg = replace_all(msg, " @an@", "");
             }
 
             if (placed > 1)
