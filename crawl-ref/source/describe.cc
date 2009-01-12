@@ -2987,6 +2987,13 @@ void describe_monsters(const monsters& mons)
              << " is incapable of using stairs.$";
     }
 
+    if (mons_is_summoned(&mons))
+    {
+        body << "$" << "This monster has been summoned, and is thus only "
+                       "temporary. Killing it yields no experience, nutrition "
+                       "or items.$";
+    }
+
     std::string symbol_suffix = "__";
     symbol_suffix += symbol;
     symbol_suffix += "_suffix";
