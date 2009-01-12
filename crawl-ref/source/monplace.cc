@@ -2427,6 +2427,32 @@ int create_monster(mgen_data mg, bool fail_msg)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
         mg.pos = find_newmons_square(montype, mg.pos);
+        // Gods other than Xom will try to avoid placing their monsters
+        // directly in harm's way.
+        if (mg.god != GOD_NO_GOD && mg.god != GOD_XOM)
+        {
+            monsters dummy;
+            dummy.type         = mg.cls;
+            dummy.base_monster = mg.base_type;
+            dummy.god          = mg.god;
+
+            int tries = 0;
+            while (tries++ < 50
+                   && mons_avoids_cloud(&dummy, env.cgrid(mg.pos), NULL, true))
+            {
+                mg.pos = find_newmons_square(montype, mg.pos);
+            }
+            const int cloud_num = env.cgrid(mg.pos);
+            // Don't place friendly god gift in a damaging cloud created by
+            // you if that would anger the god.
+            if (mons_avoids_cloud(&dummy, cloud_num, NULL, true)
+                && mg.behaviour == BEH_FRIENDLY
+                && god_hates_attacking_friend(you.religion, &dummy)
+                && YOU_KILL(env.cloud[cloud_num].killer))
+            {
+                return (-1);
+            }
+        }
     }
 
     if (in_bounds(mg.pos))

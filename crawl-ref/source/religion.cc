@@ -382,6 +382,14 @@ static bool _make_god_gifts_hostile(bool level_only = true);
 static void _print_sacrifice_message(god_type, const item_def &,
                                      piety_gain_t, bool = false);
 
+typedef void (*delayed_callback)(const mgen_data &mg, int &midx, int placed);
+
+static void _delayed_monster(const mgen_data &mg,
+                             delayed_callback callback = NULL);
+static void _delayed_monster_done(std::string success, std::string failure,
+                                  delayed_callback callback = NULL);
+static void _place_delayed_monsters();
+
 /////////////////////////////////////////////////////////////////////
 // god_conduct_trigger
 
@@ -935,22 +943,26 @@ static int _yred_random_servants(int threshold, bool force_hostile = false)
     if (mon == MONS_FLYING_SKULL)
         how_many = 2 + random2(4);
 
-    int count = 0;
+    mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                 0, 0, you.pos(), !force_hostile ? you.pet_target : MHITYOU,
+                 0, GOD_YREDELEMNUL);
 
-    for (int i = 0; i < how_many; ++i)
+    int created = 0;
+    if (force_hostile)
     {
-        if (create_monster(
-                mgen_data(mon,
-                          !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                          0, 0, you.pos(),
-                          !force_hostile ? you.pet_target : MHITYOU,
-                          0, GOD_YREDELEMNUL)) != -1)
+        for (int i = 0; i < how_many; ++i)
         {
-            count++;
+            if (create_monster(mg) != -1)
+                created++;
         }
     }
+    else
+    {
+        for (int i = 0; i < how_many; ++i)
+            _delayed_monster(mg);
+    }
 
-    return (count);
+    return (created);
 }
 
 static bool _okawaru_random_servant()
@@ -971,16 +983,9 @@ static bool _okawaru_random_servant()
            (temp_rand < 95) ? MONS_HILL_GIANT         //  5%
                             : MONS_TITAN);            //  5%
 
-    bool success = false;
-
-    if (create_monster(
-            mgen_data::hostile_at(mon,
-                you.pos(), 0, 0, true, GOD_OKAWARU)) != -1)
-    {
-        success = true;
-    }
-
-    return (success);
+    return (create_monster(
+                    mgen_data::hostile_at(mon,
+                        you.pos(), 0, 0, true, GOD_OKAWARU)) != -1);
 }
 
 static const item_def* _find_missile_launcher(int skill)
@@ -1502,12 +1507,34 @@ static bool _tso_blessing_friendliness(monsters* mon)
                                    base_increase + random2(base_increase));
 }
 
+static void _beogh_reinf_callback(const mgen_data &mg, int &midx, int placed)
+{
+    ASSERT(mg.god == GOD_BEOGH);
+
+    // Beogh tries a second time to place reinforcements.
+    if (midx == -1)
+        midx = create_monster(mg);
+
+    if (midx == -1)
+        return;
+
+    monsters* mon = &menv[midx];
+
+    mon->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+    bool high_level = (mon->type == MONS_ORC_PRIEST
+                       || mon->type == MONS_ORC_WARRIOR
+                       || mon->type == MONS_ORC_KNIGHT);
+
+    // For high level orcs, there's a chance of being named.
+    if (high_level && one_chance_in(5))
+        give_monster_proper_name(mon);
+}
+
 // If you don't currently have any followers, send a small band to help
 // you out.
-static bool _beogh_blessing_reinforcement()
+static void _beogh_blessing_reinforcement()
 {
-    bool success = false;
-
     // Possible reinforcement.
     const monster_type followers[] = {
         MONS_ORC, MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
@@ -1533,25 +1560,11 @@ static bool _beogh_blessing_reinforcement()
         else
             follower_type = RANDOM_ELEMENT(followers);
 
-        int monster =
-            create_monster(
-                mgen_data(follower_type, BEH_FRIENDLY, 0, 0,
-                          you.pos(), you.pet_target, 0, GOD_BEOGH));
-
-        if (monster != -1)
-        {
-            monsters *mon = &menv[monster];
-            mon->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-            // For high level orcs, there's a chance of being named.
-            if (high_level && one_chance_in(5))
-                give_monster_proper_name(mon);
-
-            success = true;
-        }
+        _delayed_monster(
+            mgen_data(follower_type, BEH_FRIENDLY, 0, 0,
+                      you.pos(), you.pet_target, 0, GOD_BEOGH),
+            _beogh_reinf_callback);
     }
-
-    return (success);
 }
 
 static bool _beogh_blessing_priesthood(monsters* mon)
@@ -1625,20 +1638,18 @@ bool bless_follower(monsters *follower,
                 {
                     // If no follower was found, attempt to send
                     // reinforcement.
-                    bool reinforced = _beogh_blessing_reinforcement();
+                    _beogh_blessing_reinforcement();
 
-                    if (!reinforced || coinflip())
-                    {
-                        // Try again, or possibly send more reinforcement.
-                        if (_beogh_blessing_reinforcement())
-                            reinforced = true;
-                    }
+                    // Possibly send more reinforcement.
+                    if (coinflip())
+                        _beogh_blessing_reinforcement();
 
-                    if (!reinforced)
-                        return (false);
+                    _delayed_monster_done("Beogh blesses you with "
+                                         "reinforcements.", "");
 
-                    result = "reinforcement";
-                    goto blessing_done;
+                    // Return true, even though the reinforcements might
+                    // not be placed.
+                    return (true);
                 }
             }
         }
@@ -1832,6 +1843,18 @@ blessing_done:
     return (true);
 }
 
+static void _delayed_gift_callback(const mgen_data &mg, int &midx,
+                                   int placed)
+{
+    if (placed <= 0)
+        return;
+
+    more();
+    _inc_gift_timeout(4 + random2avg(7, 2));
+    you.num_gifts[you.religion]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+}
+
 static void _do_god_gift(bool prayed_for)
 {
     ASSERT(you.religion != GOD_NO_GOD);
@@ -1927,18 +1950,10 @@ static void _do_god_gift(bool prayed_for)
             {
                 // The maximum threshold occurs at piety_breakpoint(5).
                 int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
-                int how_many = _yred_random_servants(threshold);
+                _yred_random_servants(threshold);
 
-                if (how_many > 0)
-                {
-                    simple_god_message(
-                        how_many > 1 ? " grants you several undead servants!"
-                                     : " grants you an undead servant!");
-                    more();
-                    _inc_gift_timeout(4 + random2avg(7, 2));
-                    you.num_gifts[you.religion]++;
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
-                }
+                _delayed_monster_done("grants you @an@ undead servant@s@!",
+                                      "", _delayed_gift_callback);
             }
             break;
 
@@ -3112,11 +3127,22 @@ static FixedVector<bool, NUM_MONSTERS> _first_attack_was_friendly;
 
 void religion_turn_start()
 {
+    if (you.turn_is_over)
+        religion_turn_end();
+
     _first_attack_conduct.init(true);
     _first_attack_was_unchivalric.init(false);
     _first_attack_was_friendly.init(false);
     crawl_state.clear_god_acting();
 }
+
+void religion_turn_end()
+{
+    ASSERT(you.turn_is_over);
+    _place_delayed_monsters();
+}
+
+#define NEW_GIFT_FLAGS (MF_JUST_SUMMONED | MF_GOD_GIFT)
 
 void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
                          bool known)
@@ -3125,7 +3151,14 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
 
     if (mons_friendly(mon))
     {
-        if(_first_attack_conduct[midx]
+        if ((mon->flags & NEW_GIFT_FLAGS) == NEW_GIFT_FLAGS)
+        {
+            mprf(MSGCH_ERROR, "Newly created friendly god gift '%s' was hurt "
+                 "by you, shouldn't be possible; please file a bug report.",
+                 mon->name(DESC_PLAIN, true).c_str());
+            _first_attack_was_friendly[midx] = true;
+        }
+        else if(_first_attack_conduct[midx]
            || _first_attack_was_friendly[midx])
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
@@ -4769,6 +4802,9 @@ bool divine_retribution( god_type god )
         return (false);
     }
 
+    if (you.turn_is_over)
+        religion_turn_end();
+
     god_acting gdact(god, true);
 
     bool do_more    = true;
@@ -4824,6 +4860,9 @@ bool divine_retribution( god_type god )
     // Just the thought of retribution mollifies the god by at least a
     // point...the punishment might have reduced penance further.
     dec_penance(god, 1 + random2(3));
+
+    if (you.turn_is_over)
+        religion_turn_end();
 
     return (did_retrib);
 }
@@ -6024,6 +6063,11 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
     if (!fr || fr->kill_alignment() != KC_FRIENDLY)
         return (false);
 
+    return god_hates_attacking_friend(god, fr->mons_species());
+}
+
+bool god_hates_attacking_friend(god_type god, int species)
+{
     switch (god)
     {
         case GOD_ZIN:
@@ -6032,7 +6076,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
         case GOD_OKAWARU:
             return (true);
         case GOD_BEOGH: // added penance to avoid killings for loot
-            return (mons_species(fr->id()) == MONS_ORC);
+            return (species == MONS_ORC);
 
         default:
             return (false);
@@ -6680,6 +6724,9 @@ static bool _need_free_piety()
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
+    if (you.turn_is_over)
+        religion_turn_end();
+
     if (one_chance_in(100))
     {
         // Choose a god randomly from those to whom we owe penance.
@@ -6804,6 +6851,9 @@ void handle_god_time()
             DEBUGSTR("Bad god, no bishop!");
         }
     }
+
+    if (you.turn_is_over)
+        religion_turn_end();
 }
 
 // yet another wrapper for mpr() {dlb}:
@@ -7031,3 +7081,116 @@ int get_tension(god_type god)
 
     return std::max(0, tension);
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// Stuff for placing god gift monsters after the player's turn has ended.
+/////////////////////////////////////////////////////////////////////////////
+
+static std::vector<mgen_data>       _delayed_data;
+static std::deque<delayed_callback> _delayed_callbacks;
+static std::deque<unsigned int>     _delayed_done_trigger_pos;
+static std::deque<delayed_callback> _delayed_done_callbacks;
+static std::deque<std::string>      _delayed_success;
+static std::deque<std::string>      _delayed_failure;
+
+static void _delayed_monster(const mgen_data &mg, delayed_callback callback)
+{
+    _delayed_data.push_back(mg);
+    _delayed_callbacks.push_back(callback);
+}
+
+static void _delayed_monster_done(std::string success, std::string failure,
+                                  delayed_callback callback)
+{
+    const unsigned int size = _delayed_data.size();
+    ASSERT(size > 0);
+
+    _delayed_done_trigger_pos.push_back(size - 1);
+    _delayed_success.push_back(success);
+    _delayed_failure.push_back(failure);
+    _delayed_done_callbacks.push_back(callback);
+}
+
+static void _place_delayed_monsters()
+{
+    int      placed   = 0;
+    god_type prev_god = GOD_NO_GOD;
+    for (unsigned int i = 0; i < _delayed_data.size(); i++)
+    {
+        mgen_data &mg          = _delayed_data[i];
+        delayed_callback cback = _delayed_callbacks[i];
+
+        if (prev_god != mg.god)
+        {
+            placed   = 0;
+            prev_god = mg.god;
+        }
+
+        int midx = create_monster(mg);
+
+        if (cback)
+            (*cback)(mg, midx, placed);
+
+        if (midx != -1)
+            placed++;
+
+        if (_delayed_done_trigger_pos.size() > 0
+            && _delayed_done_trigger_pos[0] == i)
+        {
+            cback = _delayed_done_callbacks[0];
+
+            std::string msg;
+            if (placed > 0)
+                msg = _delayed_success[0];
+            else
+                msg = _delayed_failure[0];
+
+            if (placed == 1)
+            {
+                msg = replace_all(msg, "@a@", "a");
+                msg = replace_all(msg, "@an@", "an");
+            }
+            else
+            {
+                msg = replace_all(msg, "@a@", "");
+                msg = replace_all(msg, "@an@", "");
+            }
+
+            if (placed > 1)
+                msg = replace_all(msg, "@s@", "s");
+            else
+                msg = replace_all(msg, "@s@", "");
+
+            prev_god = GOD_NO_GOD;
+            _delayed_done_trigger_pos.pop_front();
+            _delayed_success.pop_front();
+            _delayed_failure.pop_front();
+            _delayed_done_callbacks.pop_front();
+
+            if (msg == "")
+            {
+                if (cback)
+                    (*cback)(mg, midx, placed);
+                continue;
+            }
+
+            // Fake it coming from simple_god_message().
+            if (msg[0] == ' ' || msg[0] == '\'')
+                msg = god_name(mg.god) + msg;
+
+            msg = apostrophise_fixup(msg);
+            trim_string(msg);
+
+            god_speaks(mg.god, msg.c_str());
+
+            if (cback)
+                (*cback)(mg, midx, placed);
+        }
+    }
+
+    _delayed_data.clear();
+    _delayed_callbacks.clear();
+    _delayed_done_trigger_pos.clear();
+    _delayed_success.clear();
+    _delayed_failure.clear();
+} // _place_delayed_monsters()

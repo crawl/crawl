@@ -213,4 +213,13 @@ int mons_thrown_weapon_damage(const item_def *weap);
 
 int mons_natural_regen_rate(monsters *monster);
 
+bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
+                       bool placement = false,
+                       bool extra_careful = false);
+
+// Like the above, but prevents monsters from moving into cloud if it
+// would anger the player's god, and also allows a monster to move from
+// one damaging cloud to another.
+bool mons_avoids_cloud(const monsters *monster, int cloud_num,
+                       cloud_type *cl_type = NULL, bool placement = false);
 #endif

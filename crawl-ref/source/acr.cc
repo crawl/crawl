@@ -1197,6 +1197,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
         break;
     }
+    // Force the placement of any delayed monster gifts.
+    you.turn_is_over = true;
+    religion_turn_end();
+
     you.turn_is_over = false;
 }
 
@@ -3108,6 +3112,9 @@ static void _check_sanctuary()
 
 void world_reacts()
 {
+    if (!crawl_state.arena)
+        religion_turn_end();
+
     crawl_state.clear_god_acting();
 
 #ifdef USE_TILE
