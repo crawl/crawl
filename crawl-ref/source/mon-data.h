@@ -4464,7 +4464,7 @@ static monsterentry mondata[] = {
 {
     MONS_GERYON, '&', GREEN, "Geryon",
     M_UNIQUE | M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_EVIL | M_FLIES
-        | M_SPEAKS,
+        | M_SPEAKS | M_SPELL_NO_SILENT,
     MR_NO_FLAGS,
     0, 15, MONS_GERYON, MONS_GERYON, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
