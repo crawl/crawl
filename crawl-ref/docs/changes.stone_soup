@@ -1,3 +1,10 @@
+Stone Soup 0.4.5 (20090114)
+---------------------------
+
+* Fixed infinite loop when attempting to create randarts named after gods.
+* Fixed re-do command (`) wasting a turn.
+* Fixed corpses not appearing in Tiles inventory.
+
 Stone Soup 0.4.4 (20081220)
 ---------------------------
 
