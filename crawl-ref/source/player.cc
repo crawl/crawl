@@ -7143,6 +7143,24 @@ bool player::can_safely_mutate() const
                && you.hunger_state == HS_ENGORGED);
 }
 
+bool player::can_bleed() const
+{
+    if (you.is_undead && (you.species != SP_VAMPIRE
+                          || you.hunger_state <= HS_SATIATED))
+    {
+        return (false);
+    }
+    
+    const int tran = you.attribute[ATTR_TRANSFORMATION];
+    if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
+        || tran == TRAN_AIR || tran == TRAN_LICH
+        || tran == TRAN_SPIDER) // Monster spiders don't bleed either.
+    {
+        return (false);
+    }
+    return (true);
+}
+
 bool player::mutate()
 {
     ASSERT(!crawl_state.arena);

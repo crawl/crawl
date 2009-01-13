@@ -2254,7 +2254,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         // god wouldn't like to be hurt.
         if (mons_is_holy(monster)
             || you.religion == GOD_SHINING_ONE
-               && is_unchivalric_attack(&you, monster, monster)
+               && is_unchivalric_attack(&you, monster)
             || is_good_god(you.religion)
                && (is_follower(monster) || mons_neutral(monster)))
         {

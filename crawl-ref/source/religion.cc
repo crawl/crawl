@@ -3170,7 +3170,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
     else if (mons_neutral(mon))
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
-    if (is_unchivalric_attack(&you, mon, mon)
+    if (is_unchivalric_attack(&you, mon)
         && (_first_attack_conduct[midx]
             || _first_attack_was_unchivalric[midx]))
     {

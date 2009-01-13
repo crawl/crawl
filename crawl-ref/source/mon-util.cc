@@ -7483,6 +7483,11 @@ bool monsters::can_safely_mutate() const
     return (can_mutate());
 }
 
+bool monsters::can_bleed() const
+{
+    return (mons_has_blood(type));
+}
+
 bool monsters::mutate()
 {
     if (!can_mutate())

@@ -333,6 +333,7 @@ public:
     virtual void go_berserk(bool intentional) = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
+    virtual bool can_bleed() const = 0;
     virtual bool mutate() = 0;
     virtual void rot(actor *agent, int amount, int immediate = 0) = 0;
     virtual int  hurt(const actor *attacker, int amount,
@@ -1053,6 +1054,7 @@ public:
     void go_berserk(bool intentional);
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_bleed() const;
     bool mutate();
     void banish(const std::string &who = "");
     void blink(bool allow_partial_control = true);
@@ -1447,6 +1449,7 @@ public:
     void go_berserk(bool intentional);
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_bleed() const;
     bool mutate();
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);

@@ -1102,31 +1102,6 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     dec_inv_item_quantity(obj, amount);
 }
 
-// Checks whether the player or a monster is capable of bleeding.
-bool victim_can_bleed(int montype)
-{
-    if (montype == -1) // player
-    {
-        if (you.is_undead && (you.species != SP_VAMPIRE
-                              || you.hunger_state <= HS_SATIATED))
-        {
-            return (false);
-        }
-
-        int tran = you.attribute[ATTR_TRANSFORMATION];
-        if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
-            || tran == TRAN_AIR || tran == TRAN_LICH
-            || tran == TRAN_SPIDER) // Monster spiders don't bleed either.
-        {
-            return (false);
-        }
-        return (true);
-    }
-
-    // Now check monsters.
-    return (mons_has_blood(montype));
-}
-
 static bool allow_bleeding_on_square(const coord_def& where)
 {
     // No bleeding onto sanctuary ground, please.
@@ -1197,9 +1172,16 @@ void bleed_onto_floor(const coord_def& where, int montype,
                       int damage, bool spatter, bool smell_alert)
 {
     ASSERT(in_bounds(where));
-    if (!victim_can_bleed(montype))
+    if (montype == -1 && !you.can_bleed())
         return;
-
+    if (montype != -1)
+    {
+        monsters m;
+        m.type = montype;
+        if (!m.can_bleed())
+            return;
+    }
+    
     _maybe_bloodify_square(where, damage, spatter, smell_alert);
 }
 
@@ -3106,7 +3088,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     const bool wontAttack    = mons_wont_attack(mon);
     const bool isFriendly    = mons_friendly(mon);
     const bool isNeutral     = mons_neutral(mon);
-    const bool isUnchivalric = is_unchivalric_attack(&you, mon, mon);
+    const bool isUnchivalric = is_unchivalric_attack(&you, mon);
     const bool isHoly        = mons_is_holy(mon);
 
     if (isFriendly)

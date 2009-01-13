@@ -81,17 +81,22 @@ int calc_your_to_hit( bool random_factor );
 int calc_heavy_armour_penalty( bool random_factor );
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
-                                              const actor *defender,
-                                              const monsters *def);
+                                              const actor *defender);
 
 class melee_attack
 {
 public:
-    // At the moment this only covers players fighting monsters
     actor     *attacker, *defender;
 
-    // If attacker and/or defender are monsters, these are set.
-    monsters  *atk, *def;
+    monsters* attacker_as_monster()
+    {
+        return dynamic_cast<monsters*>(attacker);
+    }
+
+    monsters* defender_as_monster()
+    {
+        return dynamic_cast<monsters*>(defender);
+    }
 
     bool      cancel_attack;
     bool      did_hit, perceived_attack, obvious_effect;
@@ -176,7 +181,7 @@ private:
     void check_autoberserk();
     void check_special_wield_effects();
     void emit_nodmg_hit_message();
-    void identify_mimic(monsters *mon);
+    void identify_mimic(actor *mon);
 
     std::string debug_damage_number();
     std::string special_attack_punctuation();
