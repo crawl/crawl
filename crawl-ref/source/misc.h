@@ -116,8 +116,8 @@ std::string your_hand(bool plural);
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                         bool beam_target);
 
-bool is_orckind(const actor *act, const monsters *mon);
+bool is_orckind(const actor *act);
 
-bool is_dragonkind(const actor *act, const monsters *mon);
+bool is_dragonkind(const actor *act);
 
 #endif

@@ -2201,7 +2201,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     // FIXME: This effect is not yet implemented for player draconians
     // or characters in dragon form breathing at monsters wielding a
     // weapon with this brand.
-    if (is_dragonkind(mons, mons))
+    if (is_dragonkind(mons))
     {
         if (actor *foe = mons->get_foe())
         {

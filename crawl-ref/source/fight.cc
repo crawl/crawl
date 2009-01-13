@@ -2814,7 +2814,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ORC_SLAYING:
-        if (is_orckind(defender, def))
+        if (is_orckind(defender))
         {
             special_damage = 1 + random2(3*damage_done/2);
             if (defender_visible)
@@ -2830,7 +2830,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_DRAGON_SLAYING:
-        if (is_dragonkind(defender, def))
+        if (is_dragonkind(defender))
         {
             special_damage = 1 + random2(3*damage_done/2);
             if (defender_visible)

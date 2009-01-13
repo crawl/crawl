@@ -3154,22 +3154,25 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     return (retval);
 }
 
-bool is_orckind(const actor *act, const monsters *mon)
+bool is_orckind(const actor *act)
 {
     if (mons_genus(act->mons_species()) == MONS_ORC)
         return (true);
 
-    if (act->atype() == ACT_MONSTER
-        && mons_is_zombified(mon)
-        && mons_genus(mon->base_monster) == MONS_ORC)
+    if (act->atype() == ACT_MONSTER)
     {
-        return (true);
+        const monsters* mon = dynamic_cast<const monsters*>(act);
+        if (mons_is_zombified(mon)
+            && mons_genus(mon->base_monster) == MONS_ORC)
+        {
+            return (true);
+        }
     }
 
     return (false);
 }
 
-bool is_dragonkind(const actor *act, const monsters *mon)
+bool is_dragonkind(const actor *act)
 {
     if (mons_genus(act->mons_species()) == MONS_DRAGON
         || mons_genus(act->mons_species()) == MONS_DRACONIAN)
@@ -3183,6 +3186,7 @@ bool is_dragonkind(const actor *act, const monsters *mon)
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL);
     }
     // else the actor is a monster
+    const monsters* mon = dynamic_cast<const monsters*>(act);
 
     if (mon->type == MONS_SERPENT_OF_HELL)
         return (true);

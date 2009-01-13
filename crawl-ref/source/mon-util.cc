@@ -3905,11 +3905,11 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         const int brand = get_weapon_brand(item);
 
         // Draconians won't use dragon slaying weapons.
-        if (brand == SPWPN_DRAGON_SLAYING && is_dragonkind(this, this))
+        if (brand == SPWPN_DRAGON_SLAYING && is_dragonkind(this))
             return (false);
 
         // Orcs won't use orc slaying weapons.
-        if (brand == SPWPN_ORC_SLAYING && is_orckind(this, this))
+        if (brand == SPWPN_ORC_SLAYING && is_orckind(this))
             return (false);
 
         // Demonic/undead monsters won't use holy weapons.
