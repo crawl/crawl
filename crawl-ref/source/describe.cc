@@ -2611,62 +2611,32 @@ static const char* _get_resist_name(mon_resist_flags res_type)
     }
 }
 
-static int _get_resist_level(const mon_resist_def resist,
-                             mon_resist_flags res_type)
-{
-    switch (res_type)
-    {
-    case MR_RES_ELEC:
-        return resist.elec;
-    case MR_RES_POISON:
-        return resist.poison;
-    case MR_RES_FIRE:
-        return resist.fire;
-    case MR_RES_STEAM:
-        return resist.steam;
-    case MR_RES_COLD:
-        return resist.cold;
-    case MR_RES_ACID:
-        return resist.acid;
-    default:
-        return (0);
-    }
-}
-
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static std::string _monster_stat_description(const monsters& mon)
 {
-    const char* modifiers[] = {
-        "susceptible",          // -1
-        "resistant",            // +1
-        "very resistant",       // +2
-        "extremely resistant"   // +3
-    };
-
     const mon_resist_def resist = get_mons_resists(&mon);
-    std::vector<mon_resist_flags> resists;
-    resists.push_back(MR_RES_ELEC);
-    resists.push_back(MR_RES_POISON);
-    resists.push_back(MR_RES_FIRE);
-    resists.push_back(MR_RES_STEAM);
-    resists.push_back(MR_RES_COLD);
-    resists.push_back(MR_RES_ACID);
+    const mon_resist_flags resists[] = {
+        MR_RES_ELEC,  MR_RES_POISON, MR_RES_FIRE,
+        MR_RES_STEAM, MR_RES_COLD,   MR_RES_ACID
+    };
 
     std::vector<std::string> extreme_resists;
     std::vector<std::string> high_resists;
     std::vector<std::string> base_resists;
     std::vector<std::string> suscept;
-    for (unsigned int i = 0; i < resists.size(); ++i)
+
+    for (unsigned int i = 0; i < ARRAYSZ(resists); ++i)
     {
-        int level = _get_resist_level(resist, resists[i]);
-        const char* attackname = _get_resist_name(resists[i]);
+        int level = resist.get_resist_level(resists[i]);
         if (level != 0)
         {
-            const int offset = (level < 0) ? 0 : std::min(level, 3);
-            switch (offset)
+            const char* attackname = _get_resist_name(resists[i]);
+            level = std::max(level, -1);
+            level = std::min(level,  3);
+            switch (level)
             {
-                case 0:
+                case -1:
                     suscept.push_back(attackname);
                     break;
                 case 1:
@@ -2682,164 +2652,88 @@ static std::string _monster_stat_description(const monsters& mon)
         }
     }
 
-    std::string result = "";
     const char* pronoun = mons_pronoun(static_cast<monster_type>(mon.type),
                                        PRONOUN_CAP, true);
 
-    std::vector<std::string> all_resists;
+    std::vector<std::string> resist_descriptions;
     if (!extreme_resists.empty())
     {
-        result  = modifiers[3];
-        result += " to ";
-        result += comma_separated_line(extreme_resists.begin(),
-                                       extreme_resists.end(),
-                                       " and ", ", ");
-        all_resists.push_back(result);
+        const std::string tmp = "extremely resistant to "
+            + comma_separated_line(extreme_resists.begin(),
+                                   extreme_resists.end());
+        resist_descriptions.push_back(tmp);
     }
     if (!high_resists.empty())
     {
-        result  = modifiers[2];
-        result += " to ";
-        result += comma_separated_line(high_resists.begin(),
-                                       high_resists.end(),
-                                       " and ", ", ");
-        all_resists.push_back(result);
+        const std::string tmp = "very resistant to "
+            + comma_separated_line(high_resists.begin(), high_resists.end());
+        resist_descriptions.push_back(tmp);
     }
     if (!base_resists.empty())
     {
-        result  = modifiers[1];
-        result += " to ";
-        result += comma_separated_line(base_resists.begin(),
-                                       base_resists.end(),
-                                       " and ", ", ");
-        all_resists.push_back(result);
+        const std::string tmp = "resistant to "
+            + comma_separated_line(base_resists.begin(), base_resists.end());
+        resist_descriptions.push_back(tmp);
     }
-    if (!all_resists.empty())
+
+    std::ostringstream result;
+
+    if (!resist_descriptions.empty())
     {
-        result  = pronoun;
-        result += " is ";
-        result += comma_separated_line(all_resists.begin(),
-                                       all_resists.end(),
-                                       "; and ", "; ");
-        result += ".$";
+        result << pronoun << " is "
+               << comma_separated_line(resist_descriptions.begin(),
+                                       resist_descriptions.end(),
+                                       "; and ", "; ")
+               << ".$";
     }
 
     // Is monster susceptible to anything? (On a new line.)
     if (!suscept.empty())
     {
-        result += pronoun;
-        result += " is ";
-        result += modifiers[0];
-        result += " to ";
-        result += comma_separated_line(suscept.begin(),
-                                       suscept.end(),
-                                       " and ", ", ");
-        result += ".$";
+        result << pronoun << " is susceptible to "
+               << comma_separated_line(suscept.begin(), suscept.end())
+               << ".$";
     }
 
     // Magic resistance at MAG_IMMUNE.
     if (mons_immune_magic(&mon))
-    {
-        result += pronoun;
-        result += " is immune to magical enchantments.$";
-    }
+        result << pronoun << " is immune to magical enchantments.$";
 
     // Seeing/sensing invisible.
     if (mons_class_flag(mon.type, M_SEE_INVIS))
-    {
-        result += pronoun;
-        result += " can see invisible.$";
-    }
+        result << pronoun << " can see invisible.$";
     else if (mons_class_flag(mon.type, M_SENSE_INVIS))
-    {
-        result += pronoun;
-        result += " can sense the presence of invisible creatures.$";
-    }
+        result << pronoun << " can sense the presence of invisible creatures.$";
 
     // Unusual monster speed.
     const int speed = mons_speed(mon.type);
-    if (speed < 10 || speed > 10)
+    if (speed != 10)
     {
-        result += pronoun;
-        result += " is ";
+        result << pronoun << " is ";
         if (speed < 7)
-            result += "very slow";
+            result << "very slow";
         else if (speed < 10)
-            result += "slow";
+            result << "slow";
         else if (speed > 20)
-            result += "extremely fast";
+            result << "extremely fast";
         else if (speed > 15)
-            result += "very fast";
+            result << "very fast";
         else if (speed > 10)
-            result += "fast";
-        result += ".$";
+            result << "fast";
+        result << ".$";
     }
 
     // Can the monster fly/levitate?
     const flight_type fly = mons_class_flies(mon.type);
     if (fly != FL_NONE)
     {
-        result += pronoun;
-        result += " can ";
-        result += (fly == FL_FLY ? "fly" : "levitate");
-        result += ".$";
+        result << pronoun << " can "
+               << (fly == FL_FLY ? "fly" : "levitate") << ".$";
     }
 
-    return result;
+    return result.str();
 }
 
-/*
-// Return a string of the form "She is resistant to fire."
-static std::string _resistance_description(const char* pronoun,
-                                           int level, const char* attackname)
-{
-    const char* modifiers[] = {
-        "susceptible",          // -1
-        "resistant",            // +1
-        "very resistant",       // +2
-        "extremely resistant"   // +3
-    };
-    std::string result;
-
-    if (level != 0)
-    {
-        const int offset = (level < 0) ? 0 : std::min(level, 3);
-
-        result = pronoun;
-        result += " is ";
-        result += modifiers[offset];
-        result += " to ";
-        result += attackname;
-        result += ".$";
-    }
-    return result;
-}
-
-static std::string _monster_resists_string(const monsters& mon)
-{
-    const mon_resist_def resist = get_mons_resists(&mon);
-    const char* pronoun = mons_pronoun(static_cast<monster_type>(mon.type),
-                                       PRONOUN_CAP, true);
-
-    std::string result;
-    // Not shown: hellfire, asphyxiation, sticky flames.
-    result += _resistance_description(pronoun, resist.elec,   "electricity");
-    result += _resistance_description(pronoun, resist.poison, "poison");
-    result += _resistance_description(pronoun, resist.fire,   "fire");
-    result += _resistance_description(pronoun, resist.steam,  "steam");
-    result += _resistance_description(pronoun, resist.cold,   "cold");
-    result += _resistance_description(pronoun, resist.acid,   "acid");
-    return result;
-}
-*/
-
-//---------------------------------------------------------------
-//
-// describe_monsters
-//
-// Contains sketchy descriptions of every monster in the game.
-//
-//---------------------------------------------------------------
 void describe_monsters(const monsters& mons)
 {
     // For undetected mimics describe mimicked item instead.

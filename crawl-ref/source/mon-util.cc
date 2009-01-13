@@ -307,6 +307,27 @@ mon_resist_def get_mons_resists(const monsters *mon)
     return (resists);
 }
 
+short mon_resist_def::get_resist_level(mon_resist_flags res_type) const
+{
+    switch (res_type)
+    {
+    case MR_RES_ELEC:
+        return elec;
+    case MR_RES_POISON:
+        return poison;
+    case MR_RES_FIRE:
+        return fire;
+    case MR_RES_STEAM:
+        return steam;
+    case MR_RES_COLD:
+        return cold;
+    case MR_RES_ACID:
+        return acid;
+    default:
+        return (0);
+    }
+}
+
 monsters *monster_at(const coord_def &pos)
 {
     const int mindex = mgrd(pos);

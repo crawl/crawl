@@ -386,6 +386,8 @@ struct mon_resist_def
     mon_resist_def operator | (const mon_resist_def &other) const;
     const mon_resist_def &operator |= (const mon_resist_def &other);
 
+    short get_resist_level(mon_resist_flags res_type) const;
+
 private:
     short get_default_res_level(int resist, short level) const;
 };
