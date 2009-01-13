@@ -1258,7 +1258,7 @@ void wizard_create_spec_object()
         if (mons_weight(mon) <= 0)
         {
             if (!yesno("That monster doesn't leave corpses; make one "
-                       "anyways?"))
+                       "anyway?"))
             {
                 return;
             }
@@ -1266,7 +1266,7 @@ void wizard_create_spec_object()
 
         if (mon >= MONS_DRACONIAN_CALLER && mon <= MONS_DRACONIAN_SCORCHER)
         {
-            mpr("You can't make a draconian corpse by it's job.");
+            mpr("You can't make a draconian corpse by its job.");
             mon = MONS_DRACONIAN;
         }
 
@@ -2184,7 +2184,7 @@ void debug_item_scan( void )
 
         const monsters* mon = holding_monster(mitm[i]);
 
-        // Don't check (-1,-1) player items or (-2, -2) monster items
+        // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
         if (mitm[i].pos.origin())
         {
