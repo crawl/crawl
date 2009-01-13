@@ -1876,8 +1876,11 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 
     // These effects apply only to monsters that are still alive:
 
+    // Returns true if a head was cut off *and* the wound was cauterized,
+    // in which case the cauterization was the ego effect, so don't burn
+    // the hydra some more.
     if (decapitate_hydra(damage_done))
-        return (true);
+        return (!defender->alive());
 
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
@@ -3028,7 +3031,7 @@ bool melee_attack::apply_damage_brand()
     return (ret);
 }
 
-// Returns true if a head got lopped off.
+// Returns true if the attack cut off a head *and* cauterized it.
 bool melee_attack::chop_hydra_head( int dam,
                                     int dam_type,
                                     int wpn_brand )
@@ -3098,6 +3101,7 @@ bool melee_attack::chop_hydra_head( int dam,
                 {
                     if (defender_visible)
                         mpr( "The flame cauterises the wound!" );
+                    return (true);
                 }
                 else if (def->number < limit - 1)
                 {
@@ -3107,8 +3111,6 @@ bool melee_attack::chop_hydra_head( int dam,
                 }
             }
         }
-
-        return (true);
     }
 
     return (false);
