@@ -521,10 +521,8 @@ static std::string _randart_descrip( const item_def &item )
             if (propdescs[i].is_graded_resist)
             {
                 int idx = proprt[propdescs[i].property] + 3;
-                if (idx < 0)
-                    idx = 0;
-                if (idx > 6)
-                    idx = 6;
+                idx = std::min(idx, 6);
+                idx = std::max(idx, 0);
 
                 const char* prefixes[] = {
                     "It makes you extremely vulnerable to ",

@@ -142,7 +142,7 @@ public:
 
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
-    std::string get_short_name();
+    std::string get_short_name() const;
 
     // Assume that all saving throws are failed, actually apply
     // the enchantment.
@@ -273,10 +273,9 @@ void fire_tracer( const monsters *monster, struct bolt &pbolt,
                   bool explode_only = false );
 bool check_line_of_sight( const coord_def& source, const coord_def& target );
 void mimic_alert( monsters *mimic );
-bool zapping( zap_type ztype, int power, struct bolt &pbolt,
-              bool needs_tracer = false, std::string msg = "" );
-bool player_tracer( zap_type ztype, int power, struct bolt &pbolt,
-                    int range = 0 );
+bool zapping(zap_type ztype, int power, bolt &pbolt,
+             bool needs_tracer = false, const char* msg = NULL);
+bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
 
 std::string beam_type_name(beam_type type);
 

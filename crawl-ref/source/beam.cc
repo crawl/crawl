@@ -69,10 +69,7 @@ REVISION("$Rev$");
 static void _ench_animation(int flavour, const monsters *mon = NULL,
                             bool force = false);
 static void _zappy(zap_type z_type, int power, bolt &pbolt);
-
 static beam_type _chaos_beam_flavour();
-
-static std::set<std::string> beam_message_cache;
 
 tracer_info::tracer_info()
 {
@@ -175,53 +172,30 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
     zap_animation( element_colour( elem ), mon, force );
 }
 
-static void _beam_set_default_values(bolt &beam, int power)
-{
-    beam.hit            = 0;                 // default for "0" beams (I think)
-    beam.damage         = dice_def( 1, 0 );  // default for "0" beams (I think)
-    beam.type           = 0;                 // default for "0" beams
-    beam.flavour        = BEAM_MAGIC;        // default for "0" beams
-    beam.real_flavour   = BEAM_MAGIC;        // default for "0" beams
-    beam.ench_power     = power;
-    beam.obvious_effect = false;
-    beam.is_beam        = false;             // default for all beams.
-    beam.is_tracer      = false;             // default for all player beams
-    beam.thrower        = KILL_YOU_MISSILE;  // missile from player
-    beam.reflections    = 0;                 // no reflections yet
-    beam.bounces        = 0;                 // no bounces yet
-    beam.seen           = false;             // not seen yet
-    beam.aux_source.clear();                 // additional source info, unused
-}
-
 // If needs_tracer is true, we need to check the beam path for friendly
-// monsters for *player beams* only! If allies are found, the player is
-// prompted to stop or continue.
-bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
-             std::string msg)
+// monsters.
+bool zapping(zap_type ztype, int power, bolt &pbolt,
+             bool needs_tracer, const char* msg)
 {
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power );
 #endif
 
-    _beam_set_default_values(pbolt, power);
+    pbolt.thrower = KILL_YOU_MISSILE;
 
-    // For player bolts, check whether tracer goes through friendlies.
+    // Check whether tracer goes through friendlies.
     // NOTE: Whenever zapping() is called with a randomized value for power
     // (or effect), player_tracer should be called directly with the highest
     // power possible respecting current skill, experience level, etc.
-
-    if (needs_tracer && pbolt.thrower == KILL_YOU_MISSILE
-        && !player_tracer(ztype, power, pbolt))
-    {
+    if (needs_tracer && !player_tracer(ztype, power, pbolt))
         return (false);
-    }
 
     // Fill in the bolt structure.
-    _zappy( ztype, power, pbolt );
+    _zappy(ztype, power, pbolt);
 
-    if (!msg.empty())
-        mpr(msg.c_str());
+    if (msg)
+        mpr(msg);
 
     if (ztype == ZAP_LIGHTNING)
         noisy(25, you.pos(), "You hear a mighty clap of thunder!");
@@ -244,8 +218,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     if (you.confused())
         return (true);
 
-    // FIXME: can this be removed?
-    _beam_set_default_values(pbolt, power);
     _zappy(ztype, power, pbolt);
     pbolt.name = "unimportant";
 
@@ -1304,8 +1276,7 @@ const zap_info zap_data[] = {
 };
 
 
-// Need to see zapping() for default values not set within this function {dlb}
-static void _zappy( zap_type z_type, int power, bolt &pbolt )
+static void _zappy(zap_type z_type, int power, bolt &pbolt)
 {
     const zap_info* zinfo = NULL;
 
@@ -1360,7 +1331,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
 
     // One special case
     if (z_type == ZAP_ICE_STORM)
-        pbolt.ench_power     = power;              // used for radius
+        pbolt.ench_power = power; // used for radius
 }
 
 // Affect monster in wall unless it can shield itself using the wall.
@@ -1736,7 +1707,10 @@ void bolt::nuke_wall_effect()
         || feat == DNGN_WAX_WALL
         || feat == DNGN_CLEAR_ROCK_WALL)
     {
-        // FIXME: Blood *does* transfer to the floor here?
+        // Blood does not transfer onto floor.
+        if (is_bloodcovered(pos()))
+            env.map(pos()).property &= ~(FPROP_BLOODY);
+
         grd(pos()) = DNGN_FLOOR;
         if (player_can_hear(pos()))
         {
@@ -1900,6 +1874,7 @@ void bolt::fire()
         colour = boltcopy.colour;
         flavour = boltcopy.flavour;
         real_flavour = boltcopy.real_flavour;
+        seen = boltcopy.seen;
     }
     else
         do_fire();
@@ -5118,6 +5093,7 @@ static sweep_type _radial_sweep(int r)
 
 #define MAX_EXPLOSION_RADIUS 9
 
+// Returns true if we saw something happening.
 bool bolt::explode(bool show_more, bool hole_in_the_middle)
 {
     ASSERT(!in_explosion_phase);
@@ -5194,6 +5170,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         for (viter cci = ci->begin(); cci != ci->end(); ++cci)
         {
             const coord_def delta = *cci;
+
             if (delta.origin() && hole_in_the_middle)
                 continue;
 
@@ -5274,15 +5251,14 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 
     const dungeon_feature_type dngn_feat = grd(loc);
 
-    // Check to see if we're blocked by something specifically, we're
-    // blocked by WALLS.  Not statues, idols, etc.  Special case:
-    // Explosion originates from rock/statue (e.g. Lee's rapid
-    // deconstruction) - in this case, ignore solid cells at the
-    // center of the explosion.
+    // Check to see if we're blocked by a wall.
     if (grid_is_wall(dngn_feat)
         || dngn_feat == DNGN_SECRET_DOOR
         || dngn_feat == DNGN_CLOSED_DOOR)
     {
+        // Special case: explosion originates from rock/statue
+        // (e.g. Lee's Rapid Deconstruction) - in this case, ignore
+        // solid cells at the center of the explosion.
         if (stop_at_walls && !(delta.origin() && affects_wall(dngn_feat)))
             return;
     }
@@ -5469,7 +5445,7 @@ void bolt::set_agent(actor *actor)
     else
     {
         thrower = KILL_MON_MISSILE;
-        beam_source = monster_index(dynamic_cast<monsters*>(actor));
+        beam_source = actor->mindex();
     }
 }
 
@@ -5478,7 +5454,7 @@ actor* bolt::agent() const
     if (YOU_KILL(this->thrower))
         return (&you);
     else if (!invalid_monster_index(beam_source))
-        return (&menv[this->beam_source]);
+        return (&menv[beam_source]);
     else
         return (NULL);
 }
@@ -5489,7 +5465,7 @@ bool bolt::is_enchantment() const
             && this->flavour <= BEAM_LAST_ENCHANTMENT);
 }
 
-std::string bolt::get_short_name()
+std::string bolt::get_short_name() const
 {
     if (!short_name.empty())
         return (short_name);
@@ -5500,7 +5476,7 @@ std::string bolt::get_short_name()
                           | ISFLAG_RACIAL_MASK);
 
     if (real_flavour == BEAM_RANDOM || real_flavour == BEAM_CHAOS)
-        flavour = real_flavour;
+        return beam_type_name(real_flavour);
 
     if (flavour == BEAM_FIRE && name == "sticky fire")
         return ("sticky fire");
