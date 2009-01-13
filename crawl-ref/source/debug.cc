@@ -1255,15 +1255,35 @@ void wizard_create_spec_object()
             return;
         }
 
-        mitm[thing_created].base_type   = OBJ_CORPSES;
-        mitm[thing_created].sub_type    = CORPSE_BODY;
-        mitm[thing_created].plus        = mon;
-        mitm[thing_created].plus2       = 0;
-        mitm[thing_created].special     = 210;
-        mitm[thing_created].colour      = mons_class_colour(mon);;
-        mitm[thing_created].quantity    = 1;
-        mitm[thing_created].flags       = 0;
-        mitm[thing_created].orig_monnum = mon + 1;
+        if (mons_weight(mon) <= 0)
+        {
+            if (!yesno("That monster doesn't leave corpses; make one "
+                       "anyways?"))
+            {
+                return;
+            }
+        }
+
+        if (mon >= MONS_DRACONIAN_CALLER && mon <= MONS_DRACONIAN_SCORCHER)
+        {
+            mpr("You can't make a draconian corpse by it's job.");
+            mon = MONS_DRACONIAN;
+        }
+
+        monsters dummy;
+        dummy.type = mon;
+
+        if (mons_genus(mon) == MONS_HYDRA)
+        {
+            dummy.number = _debug_prompt_for_int("How many heads?", false);
+        }
+
+        if (fill_out_corpse(&dummy, mitm[thing_created], true) == -1)
+        {
+            mpr("Failed to create corpse.");
+            mitm[thing_created].clear();
+            return;
+        }
     }
     else
     {
