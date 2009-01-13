@@ -335,7 +335,12 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
     }
 
     if (corpse_class == MONS_DRACONIAN)
-        corpse_class = draco_subspecies(monster);
+    {
+        if (monster->type == MONS_TIAMAT)
+            corpse_class = MONS_DRACONIAN;
+        else
+            corpse_class = draco_subspecies(monster);
+    }
 
     if (monster->has_ench(ENCH_SHAPESHIFTER))
         corpse_class = MONS_SHAPESHIFTER;
