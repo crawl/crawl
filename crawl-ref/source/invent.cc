@@ -359,6 +359,29 @@ void InvMenu::set_title(const std::string &s)
     set_title(new InvTitle(this, stitle, title_annotate));
 }
 
+static bool _has_tran_unwearable_armour(bool &melded)
+{
+    bool unwearable = false;
+         melded     = false;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (is_valid_item(item) && item.base_type == OBJ_ARMOUR
+            && !you_tran_can_wear(item))
+        {
+            unwearable = true;
+            if (item_is_equipped(item))
+            {
+                melded = true;
+                return (true);
+            }
+        }
+    }
+    return (unwearable);
+}
+
 static std::string _no_selectables_message(int item_selector)
 {
     switch (item_selector)
@@ -369,7 +392,19 @@ static std::string _no_selectables_message(int item_selector)
     case OBJ_WEAPONS:
         return("You aren't carrying any weapons.");
     case OBJ_ARMOUR:
-        return("You aren't carrying any armour.");
+    {
+        bool melded = false;
+        if (_has_tran_unwearable_armour(melded))
+        {
+            if (melded)
+                return ("Your armour is currently melded into you.");
+            else
+                return("You aren't carrying any armour you can wear in your "
+                       "current form.");
+        }
+        else
+            return("You aren't carrying any armour.");
+    }
     case OSEL_UNIDENT:
         return("You don't have any unidentified items.");
     case OSEL_MEMORISE:
