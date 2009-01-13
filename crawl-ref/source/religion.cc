@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "database.h"
 #include "debug.h"
 #include "decks.h"
+#include "delay.h"
 #include "describe.h"
 #include "effects.h"
 #include "fight.h"
@@ -3127,7 +3128,7 @@ static FixedVector<bool, NUM_MONSTERS> _first_attack_was_friendly;
 
 void religion_turn_start()
 {
-    if (you.turn_is_over)
+    if (you.turn_is_over || you_are_delayed())
         religion_turn_end();
 
     _first_attack_conduct.init(true);
@@ -3138,7 +3139,7 @@ void religion_turn_start()
 
 void religion_turn_end()
 {
-    ASSERT(you.turn_is_over);
+    ASSERT(you.turn_is_over || you_are_delayed());
     _place_delayed_monsters();
 }
 
@@ -3151,7 +3152,8 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
 
     if (mons_friendly(mon))
     {
-        if ((mon->flags & NEW_GIFT_FLAGS) == NEW_GIFT_FLAGS)
+        if ((mon->flags & NEW_GIFT_FLAGS) == NEW_GIFT_FLAGS
+            && mon->god != GOD_XOM)
         {
             mprf(MSGCH_ERROR, "Newly created friendly god gift '%s' was hurt "
                  "by you, shouldn't be possible; please file a bug report.",
@@ -4802,9 +4804,6 @@ bool divine_retribution( god_type god )
         return (false);
     }
 
-    if (you.turn_is_over)
-        religion_turn_end();
-
     god_acting gdact(god, true);
 
     bool do_more    = true;
@@ -4860,9 +4859,6 @@ bool divine_retribution( god_type god )
     // Just the thought of retribution mollifies the god by at least a
     // point...the punishment might have reduced penance further.
     dec_penance(god, 1 + random2(3));
-
-    if (you.turn_is_over)
-        religion_turn_end();
 
     return (did_retrib);
 }
@@ -6724,7 +6720,7 @@ static bool _need_free_piety()
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
-    if (you.turn_is_over)
+    if (you.turn_is_over || you_are_delayed())
         religion_turn_end();
 
     if (one_chance_in(100))
@@ -6852,7 +6848,7 @@ void handle_god_time()
         }
     }
 
-    if (you.turn_is_over)
+    if (you.turn_is_over || you_are_delayed())
         religion_turn_end();
 }
 
