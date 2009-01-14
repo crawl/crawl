@@ -130,6 +130,13 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 // care of by calling wield_effects().    {gdl}
 void weapon_switch(int targ)
 {
+    if (you.equip[EQ_WEAPON] != -1
+        && !check_old_item_warning(you.inv[you.equip[EQ_WEAPON]],
+                                   OPER_WIELD))
+    {
+        return;
+    }
+
     if (targ == -1) // Unarmed Combat.
     {
         // Already unarmed?
@@ -319,7 +326,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
         mprf("Switching to %s.",
              butchering_tool == -1 ? "unarmed" : "a butchering implement");
 
-        if (!wield_weapon(true, butchering_tool, false))
+        if (!wield_weapon(true, butchering_tool, false, true))
             return (false);
     }
 

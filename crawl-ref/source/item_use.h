@@ -134,7 +134,8 @@ bool can_wield(item_def *weapon, bool say_why = false,
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool wield_weapon(bool auto_wield, int slot = -1, bool show_we_messages = true);
+bool wield_weapon(bool auto_wield, int slot = -1, bool show_we_messages = true,
+                  bool force = false);
 
 
 // last updated 12may2000 {dlb}

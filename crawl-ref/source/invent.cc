@@ -1237,10 +1237,10 @@ bool has_warning_inscription(const item_def& item,
     return (false);
 }
 
-// checks if current item (to be removed) has a warning inscription
-// and prompts the user for confirmation
-static bool _check_old_item_warning( const item_def& item,
-                                    operation_types oper )
+// Checks if current item (to be removed) has a warning inscription
+// and prompts the user for confirmation.
+bool check_old_item_warning( const item_def& item,
+                             operation_types oper )
 {
     item_def old_item;
     std::string prompt;
@@ -1347,7 +1347,7 @@ bool check_warning_inscriptions( const item_def& item,
             // Don't ask if item already worn.
             int equip = you.equip[get_armour_slot(item)];
             if (equip != -1 && item.link == equip)
-                return (_check_old_item_warning(item, oper));
+                return (check_old_item_warning(item, oper));
         }
         else if (oper == OPER_PUTON)
         {
@@ -1362,23 +1362,24 @@ bool check_warning_inscriptions( const item_def& item,
             {
                 equip = you.equip[EQ_LEFT_RING];
                 if (equip != -1 && item.link == equip)
-                    return (_check_old_item_warning(item, oper));
-                // or maybe the other ring?
+                    return (check_old_item_warning(item, oper));
+
+                // Or maybe the other ring?
                 equip = you.equip[EQ_RIGHT_RING];
             }
 
             if (equip != -1 && item.link == equip)
-                return (_check_old_item_warning(item, oper));
+                return (check_old_item_warning(item, oper));
         }
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += item.name(DESC_INVENTORY);
         prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
-                && _check_old_item_warning(item, oper));
+                && check_old_item_warning(item, oper));
     }
     else
-        return (_check_old_item_warning(item, oper));
+        return (check_old_item_warning(item, oper));
 }
 
 // This function prompts the user for an item, handles the '?' and '*'

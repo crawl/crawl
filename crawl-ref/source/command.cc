@@ -2134,8 +2134,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>Ctrl-T</w> : change ally pickup behaviour\n",
             true, true, _cmdhelp_textfilter);
 
-    cols.add_formatted(
-            1,
+    std::string interact =
             "<h>Item Interaction (inventory):\n"
             "<w>i</w> : show Inventory list\n"
             "<w>]</w> : show inventory of equipped items\n"
@@ -2143,7 +2142,11 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>f</w> : Fire next appropriate item\n"
             "<w>F</w> : select an item and Fire it\n"
             "<w>(</w> : cycle current ammunition\n"
-            "<w>e</w> : Eat food (but tries floor first)\n"
+            "<w>e</w> : ";
+
+    interact += (you.species == SP_VAMPIRE ? "Drain corpses" : "Eat food");
+    interact +=
+            " (tries floor first)\n"
             "<w>q</w> : Quaff a potion\n"
             "<w>Z</w> : Zap a wand\n"
             "<w>r</w> : Read a scroll or book\n"
@@ -2153,6 +2156,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>v</w> : eVoke power of wielded item\n"
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
             "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n",
+
+    cols.add_formatted(
+            1, interact,
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(

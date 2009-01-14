@@ -219,7 +219,10 @@ static bool _valid_weapon_swap(const item_def &item)
     return (false);
 }
 
-bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
+// If force is true, don't check weapon inscriptions.
+// (Assuming the player was already prompted for that.)
+bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
+                  bool force)
 {
     if (inv_count() < 1)
     {
@@ -318,8 +321,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         return (false);
 
     // For non-auto_wield cases checked above.
-    if (auto_wield && !check_warning_inscriptions(new_wpn, OPER_WIELD))
+    if (auto_wield && !force
+        && !check_warning_inscriptions(new_wpn, OPER_WIELD))
+    {
         return (false);
+    }
 
     // Wield the weapon.
     if (!safe_to_remove_or_wear(new_wpn, false))

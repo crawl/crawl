@@ -3861,14 +3861,28 @@ bool ely_destroy_weapons()
             gain_piety(1);
         }
 
-        // Elyvilon doesn't care about item sacrifices at altars, so
-        // I'm stealing _Sacrifice_Messages.
-        _print_sacrifice_message(GOD_ELYVILON, item, pgain);
-        if (is_evil_weapon)
+        if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
         {
-            // Print this is addition to the above!
-            simple_god_message(" welcomes the destruction of this evil weapon.",
-                               GOD_ELYVILON);
+            // Weapons blessed by TSO don't get destroyed but are instead
+            // returned whence they came. (jpeg)
+//            _print_sacrifice_message(GOD_SHINING_ONE, item, pgain);
+            simple_god_message(
+                make_stringf(" %sreclaims %s.",
+                             pgain == PIETY_SOME ? "gladly " : "",
+                             item.name(DESC_NOCAP_THE).c_str()).c_str(),
+                GOD_SHINING_ONE);
+        }
+        else
+        {
+            // Elyvilon doesn't care about item sacrifices at altars, so
+            // I'm stealing _Sacrifice_Messages.
+            _print_sacrifice_message(GOD_ELYVILON, item, pgain);
+            if (is_evil_weapon)
+            {
+                // Print this is addition to the above!
+                simple_god_message(" welcomes the destruction of this evil "
+                                   "weapon.", GOD_ELYVILON);
+            }
         }
 
         destroy_item(si.link());
@@ -4173,8 +4187,10 @@ static bool _zin_retribution()
             if (success)
                 god_speaks(god, "You feel Zin's eyes turn towards you...");
             else
+            {
                 simple_god_message("'s eyes are elsewhere at the moment.",
                                    god);
+            }
         }
         else
         {

@@ -221,6 +221,7 @@ bool in_inventory(const item_def &i);
 
 std::string item_class_name(int type, bool terse = false);
 
+bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
 bool has_warning_inscription(const item_def& item, operation_types oper);
 

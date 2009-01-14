@@ -3228,7 +3228,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 }
 
 // Doesn't include Polyphemus or Ilsuiw (only appear in the Shoals),
-// Murray (Hell), or Tiamat (Zot).
+// Dissolution (Slime), Murray (Hell), or Tiamat (Zot).
 // NOTE: The Lernaean hydra should *never* be randomly generated.
 //       The Royal jelly likewise is only placed via Slime end vault.
 static monster_type _choose_unique_by_depth(int step)
@@ -3263,7 +3263,7 @@ static monster_type _choose_unique_by_depth(int step)
                             MONS_HAROLD, MONS_NORBERT, MONS_JOZEF, MONS_AGNES,
                             MONS_MAUD, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
                             MONS_AZRAEL, MONS_EUSTACHIO, MONS_NERGALLE,
-                            MONS_SONJA, MONS_NESSOS, MONS_DISSOLUTION, -1);
+                            MONS_SONJA, MONS_NESSOS, -1);
         break;
     case 6: // depth > 19
     default:
@@ -3271,7 +3271,7 @@ static monster_type _choose_unique_by_depth(int step)
                             MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_XTAHUA,
                             MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY,
                             MONS_BORIS, MONS_ROXANNE, MONS_NERGALLE,
-                            MONS_SAINT_ROKA, MONS_DISSOLUTION, -1);
+                            MONS_SAINT_ROKA, -1);
     }
 
     return static_cast<monster_type>(ret);
