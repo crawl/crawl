@@ -62,6 +62,7 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "tiles.h"
 #include "transfor.h"
+#include "traps.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -1669,6 +1670,461 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
     return (element != 0);
 }
 
+static int _item_to_skill_level(const item_def *item)
+{
+    skill_type type = range_skill(*item);
+
+    if (type == SK_DARTS || type == SK_SLINGS)
+        return (you.skills[type] + you.skills[SK_THROWING]);
+
+    return (2 * you.skills[type]);
+}
+
+static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
+{
+    if (!victim->alive() || victim->res_poison())
+        return (false);
+
+    if (beam.is_tracer)
+        return (true);
+
+    int levels = 0;
+
+    actor* agent = beam.agent();
+
+    if (agent->atype() == ACT_MONSTER)
+    {
+        if (dmg > 0 || beam.ench_power == AUTOMATIC_HIT
+                       && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
+        {
+            levels = 1 + random2(3);
+        }
+    }
+    else
+    {
+        if (beam.ench_power == AUTOMATIC_HIT
+            && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
+        {
+            levels = 2;
+        }
+        else if (random2(dmg) > random2(victim->armour_class()))
+            levels = 1;
+
+        int num_success = 0;
+        if (YOU_KILL(beam.thrower))
+        {
+            const int skill_level = _item_to_skill_level(beam.item);
+            if (x_chance_in_y(skill_level + 25, 50))
+                num_success++;
+            if (x_chance_in_y(skill_level, 50))
+                num_success++;
+        }
+        else
+            num_success = 1;
+
+        if (num_success == 0)
+            return (false);
+        else
+        {
+            if (num_success == 2)
+                levels++;
+        }
+    }
+
+    if (levels <= 0)
+        return (false);
+
+    victim->poison(agent, levels);
+
+    return (true);
+}
+
+static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
+                                    int &used)
+{
+    if (beam.aimed_at_feet)
+        return (false);
+
+    used = 0;
+ 
+    if (!beam.is_tracer && you.can_see(victim))
+        mprf("The %s passes through %s!", beam.name.c_str(),
+             victim->name(DESC_NOCAP_THE).c_str());
+
+    return (true);
+}
+
+static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
+                                   std::string &dmg_msg)
+{
+    bool shifter;
+
+    if (victim->atype() == ACT_MONSTER)
+    {
+        monsters* mon = dynamic_cast<monsters*>(victim);
+        shifter = mons_is_shapeshifter(mon);
+    }
+    else
+        shifter = transform_changed_physiology();
+
+    mon_holy_type holiness = victim->holiness();
+
+    if (shifter || holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+    {
+        dmg *= 2;
+
+        if (!beam.is_tracer && you.can_see(victim))
+           dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
+    }
+
+    return (false);
+}
+
+static bool _shadow_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
+{
+    if (beam.is_tracer || victim->alive() || corpse == -1
+        || corpse == NON_ITEM)
+    {
+        return (false);
+    }
+
+    actor*   agent = beam.agent();
+    beh_type beh;
+    unsigned short hitting;
+
+    if (agent->atype() == ACT_PLAYER)
+    {
+        hitting = you.pet_target;
+        beh     = BEH_FRIENDLY;
+    }
+    else
+    {
+        monsters *mon = dynamic_cast<monsters*>(agent);
+
+        beh = SAME_ATTITUDE(mon);
+
+        // Get a new foe for the zombie to target.
+        behaviour_event(mon, ME_EVAL);
+        hitting = mon->foe;
+    }
+
+    int midx = NON_MONSTER;
+    if (!animate_remains(victim->pos(), CORPSE_BODY, beh, hitting,
+                         GOD_NO_GOD, true, true, &midx))
+    {
+        return (false);
+    }
+
+    monsters *zomb = &menv[midx];
+
+    if (you.can_see(victim))
+        mprf("%s turns into a zombie!", victim->name(DESC_CAP_THE).c_str());
+    else if (you.can_see(zomb))
+        mprf("%s appears out of thin air!", zomb->name(DESC_CAP_THE).c_str());
+
+    return (true);             
+}
+
+static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
+                                  int corpse)
+{
+    const actor* agent = beam.agent();
+
+    if (!victim->alive() || victim == agent)
+        return (false);
+
+    if (beam.is_tracer)
+        return (true);
+
+    const bool was_seen = you.can_see(victim);
+    const bool no_sanct = victim->kill_alignment() == KC_OTHER;
+
+    coord_def pos, pos2;
+
+    int tries = 0;
+    do
+    {
+        if (!random_near_space(victim->pos(), pos, false, true, no_sanct))
+            return (false);
+    } while (!victim->is_habitable(pos) && tries++ < 100);
+
+    if (!victim->is_habitable(pos))
+        return (false);
+
+    tries = 0;
+    do
+    {
+        random_near_space(victim->pos(), pos2, false, true, no_sanct);
+    } while (!victim->is_habitable(pos2) && tries++ < 100);
+
+    if (!victim->is_habitable(pos2))
+        return (false);
+
+    // Pick the square further away from the agent.
+    const coord_def from = agent->pos();
+    if (in_bounds(pos2)
+        && grid_distance(pos2, from) > grid_distance(pos, from))
+    {
+        pos = pos2;
+    }
+
+    if (pos == victim->pos())
+        return (false);
+
+    const coord_def oldpos = victim->pos();
+
+    if (victim->atype() == ACT_PLAYER)
+    {
+        clear_trapping_net();
+        victim->moveto(pos);
+        mpr("You blink!");
+    }
+    else
+    {
+        monsters *mon = dynamic_cast<monsters*>(victim);
+
+        mons_clear_trapping_net(mon);
+        mon->check_redraw(oldpos);
+        mon->move_to_pos(pos);
+        mon->apply_location_effects(pos);
+        mon->check_redraw(pos);
+
+        const bool        seen = you.can_see(mon);
+        const std::string name = mon->name(DESC_CAP_THE);
+        if (was_seen && seen)
+            mprf("%s blinks!", name.c_str());
+        else if (was_seen && !seen)
+            mprf("%s vanishes!", name.c_str());
+        else if (!was_seen && seen)
+            mprf("%s appears from out of thin air!", name.c_str());
+    }
+
+    return (true);
+}
+
+void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
+                        std::string &ammo_name, bool &returning)
+{
+    dungeon_char_type zapsym = DCHAR_SPACE;
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
+    case OBJ_MISSILES:   zapsym = DCHAR_FIRED_MISSILE; break;
+    case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
+    case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
+    case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
+    case OBJ_UNKNOWN_I:  zapsym = DCHAR_FIRED_BURST;   break;
+    case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
+    case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
+    case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
+    case OBJ_UNKNOWN_II: zapsym = DCHAR_FIRED_ZAP;     break;
+    case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
+    case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
+    default: break;
+    }
+
+    beam.type = dchar_glyph(zapsym);
+
+    returning = get_weapon_brand(item) == SPWPN_RETURNING
+                || get_ammo_brand(item) == SPMSL_RETURNING;
+
+    if (agent->atype() == ACT_PLAYER)
+    {
+        beam.attitude      = ATT_FRIENDLY;
+        beam.beam_source   = NON_MONSTER;
+        beam.smart_monster = true;
+        beam.thrower       = KILL_YOU_MISSILE;
+    }
+    else
+    {
+        const monsters *mon = dynamic_cast<const monsters*>(agent);
+
+        beam.attitude      = mons_attitude(mon);
+        beam.beam_source   = mon->mindex();
+        beam.smart_monster = (mons_intel(mon) >= I_NORMAL);
+        beam.thrower       = KILL_MON_MISSILE;
+    }
+
+    beam.item     = &item;
+    beam.source   = agent->pos();
+    beam.colour   = item.colour;
+    beam.flavour  = BEAM_MISSILE;
+    beam.is_beam  = false;
+    beam.aux_source.clear();
+
+    beam.can_see_invis = agent->can_see_invisible();
+
+    item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
+    if (launcher && !item.launched_by(*launcher))
+        launcher = NULL;
+
+    int bow_brand = SPWPN_NORMAL;
+    if (launcher != NULL)
+        bow_brand = get_weapon_brand(*launcher);
+
+    int  ammo_brand = get_ammo_brand(item);
+    bool poisoned   = ammo_brand == SPMSL_POISONED;
+
+    if (bow_brand == SPWPN_VENOM && ammo_brand != SPMSL_CURARE)
+    {
+        if (ammo_brand == SPMSL_NORMAL)
+            item.special = SPMSL_POISONED;
+
+        poisoned = true;
+    }
+
+    const bool exploding = ammo_brand == SPMSL_EXPLODING;
+    const bool penetrating = !exploding
+        && (bow_brand  == SPWPN_PENETRATION
+            || ammo_brand == SPMSL_PENETRATION);
+    const bool silver = ammo_brand == SPMSL_SILVER;
+    const bool disperses = ammo_brand == SPMSL_DISPERSAL;
+    const bool shadow = bow_brand  == SPWPN_SHADOW
+                        || ammo_brand == SPMSL_SHADOW;
+
+    ASSERT(!exploding || !is_artefact(item));
+
+    beam.name = item.name(DESC_PLAIN, false, false, false);
+
+    // Print type of item as influenced by launcher.
+    item_def ammo = item;
+
+    // The chief advantage here is the extra damage this does
+    // against susceptible creatures.
+
+    // Note: weapons & ammo of eg fire are not cumulative
+    // ammo of fire and weapons of frost don't work together,
+    // and vice versa.
+
+    // Note that bow_brand is known since the bow is equipped.
+
+    // Chaos overides flame and frost/ice.
+    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+    {
+        // Chaos can't be poisoned, since that might conflict with
+        // the random healing effect or overlap with the random
+        // poisoning effect.
+        poisoned = false;
+        if (item.special == SPWPN_VENOM || item.special == SPMSL_CURARE)
+            item.special = SPMSL_NORMAL;
+
+        beam.effect_known = false;
+
+        beam.flavour = BEAM_CHAOS;
+        beam.name    = "chaos";
+        beam.colour  = EC_RANDOM;
+
+        ammo.special = SPMSL_CHAOS;
+    }
+    else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
+             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
+    {
+        beam.flavour = BEAM_FIRE;
+        beam.name    = "flame";
+        beam.colour  = RED;
+
+        ammo.special = SPMSL_FLAME;
+    }
+    else if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
+             && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
+    {
+        beam.flavour = BEAM_COLD;
+        beam.name    = "frost";
+        beam.colour  = WHITE;
+
+        ammo.special = SPMSL_ICE;
+    }
+
+    ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
+
+    ammo_name = ammo.name(DESC_PLAIN);
+
+    if (silver)
+        beam.damage_funcs.push_back(_silver_damages_victim);
+    if (poisoned)
+        beam.hit_funcs.push_back(_poison_hit_victim);
+    if (penetrating)
+        beam.range_funcs.push_back(_item_penetrates_victim);
+    if (shadow)
+        beam.hit_funcs.push_back(_shadow_hit_victim);
+    if (disperses)
+        beam.hit_funcs.push_back(_dispersal_hit_victim);
+
+    if (shadow && ammo.special != SPMSL_SHADOW)
+    {
+        beam.name = "shadowy " + beam.name;
+        ammo_name = "shadowy " + ammo_name;
+    }
+
+    if (disperses && ammo.special != SPMSL_DISPERSAL)
+    {
+        beam.name = "dispersing " + beam.name;
+        ammo_name = "dispersing " + ammo_name;
+    }
+
+    if (poisoned && ammo.special != SPMSL_POISONED)
+    {
+        beam.name = "poison "   + beam.name;
+        ammo_name = "poisoned " + ammo_name;
+    }
+
+    if (penetrating && ammo.special != SPMSL_PENETRATION)
+    {
+        beam.name = "penetrating " + beam.name;
+        ammo_name = "penetrating " + ammo_name;
+    }
+
+    if (silver && ammo.special != SPMSL_SILVER)
+    {
+        beam.name = "silvery " + beam.name;
+        ammo_name = "silvery " + ammo_name;
+    }
+
+    // Do this here so that we get all the name mods except for a
+    // redundant "exploding".
+    if (exploding)
+    {
+         bolt *expl = new bolt(beam);
+
+         expl->is_explosion = true;
+         expl->damage       = dice_def(2, 5);
+         expl->ex_size      = 1;
+
+         if (beam.flavour == BEAM_MISSILE)
+         {
+             expl->flavour = BEAM_FRAG;
+             expl->name   += " fragments";
+
+             const std::string short_name =
+                 ammo.name(DESC_PLAIN, false, false, false, false,
+                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
+                           | ISFLAG_RACIAL_MASK);
+
+             expl->name = replace_all(expl->name, ammo.name(DESC_PLAIN),
+                                      short_name);
+         }
+
+         beam.special_explosion = expl;
+    }
+
+    if (exploding && ammo.special != SPMSL_EXPLODING)
+    {
+        beam.name = "exploding " + beam.name;
+        ammo_name = "exploding " + ammo_name;
+    }
+
+    if (beam.flavour != BEAM_MISSILE)
+    {
+        returning = false;
+
+        beam.type = dchar_glyph(DCHAR_FIRED_BOLT);
+        beam.name = "bolt of " + beam.name;
+    }
+
+    if (!is_artefact(item))
+        ammo_name = article_a(ammo_name, true);
+}
+
 // XXX This is a bit too generous, as it lets the player determine
 // that the bolt of fire he just shot from a flaming bow is actually
 // a poison arrow. Hopefully this isn't too abusable.
@@ -1681,6 +2137,10 @@ static bool determines_ammo_brand(int bow_brand, int ammo_brand)
     if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_POISONED)
         return (false);
     if (bow_brand == SPWPN_CHAOS && ammo_brand == SPMSL_CHAOS)
+        return (false);
+    if (bow_brand == SPWPN_PENETRATION && ammo_brand == SPMSL_PENETRATION)
+        return (false);
+    if (bow_brand == SPWPN_SHADOW && ammo_brand == SPMSL_SHADOW)
         return (false);
 
     return (true);
@@ -1798,9 +2258,18 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.set_target(thr);
 
     item_def& thrown = you.inv[throw_2];
+    ASSERT(is_valid_item(thrown));
+
+    // Making a copy of the item: changed only for venom launchers.
+    item_def item = thrown;
+    item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+
+    std::string ammo_name;
+    setup_missile_beam(&you, pbolt, item, ammo_name, returning);
 
     // Did we know the ammo's brand before throwing it?
-    const bool ammon_brand_known = item_type_known(thrown);
+    const bool ammo_brand_known = item_type_known(thrown);
 
     // Get the ammo/weapon type.  Convenience.
     const object_class_type wepClass = thrown.base_type;
@@ -1808,18 +2277,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // Figure out if we're thrown or launched.
     const launch_retval projected = is_launched(&you, you.weapon(), thrown);
-
-    // Hack the quantity to 1 while getting the name.
-    const int old_quantity = thrown.quantity;
-    thrown.quantity = 1;
-    pbolt.name     = thrown.name(DESC_PLAIN, false, false, false);
-    thrown.quantity = old_quantity;
-
-    pbolt.thrower  = KILL_YOU_MISSILE;
-    pbolt.source   = you.pos();
-    pbolt.colour   = thrown.colour;
-    pbolt.flavour  = BEAM_MISSILE;
-    pbolt.aux_source.clear();
 
     // Determine range.
     int max_range = 0;
@@ -1855,15 +2312,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     range = std::min(range, LOS_RADIUS);
     max_range = std::min(max_range, LOS_RADIUS);
 
-    pbolt.is_beam       = false;
-    pbolt.beam_source   = 0;
-    pbolt.can_see_invis = player_see_invis();
-    pbolt.smart_monster = true;
-    pbolt.attitude      = ATT_FRIENDLY;
-    pbolt.is_tracer     = true;
-
     // For the tracer, use max_range. For the actual shot, use range.
-    pbolt.range         = max_range;
+    pbolt.range = max_range;
 
     // Don't do the tracing when using Portaled Projectile, or when confused.
     if (!teleport && !you.confused())
@@ -1872,6 +2322,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.foe_info.reset();
         pbolt.friend_info.reset();
         pbolt.foe_ratio = 100;
+        pbolt.is_tracer = true;
 
         pbolt.fire();
 
@@ -1881,9 +2332,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             canned_msg(MSG_OK);
             you.turn_is_over = false;
+            if (pbolt.special_explosion != NULL)
+                delete pbolt.special_explosion;
             return (false);
         }
     }
+    pbolt.is_tracer = false;
 
     // Use real range for firing.
     pbolt.range = range;
@@ -1896,16 +2350,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         canned_msg(MSG_EMPTY_HANDED);
     }
 
-    // Making a copy of the item: changed only for venom launchers.
-    item_def item = thrown;
-    item.quantity = 1;
-    item.slot     = index_to_letter(item.link);
-
-    pbolt.item = &item;
-
     // Now start real firing!
     origin_set_unknown(item);
-    std::string ammo_name;
 
     if (is_blood_potion(item) && thrown.quantity > 1)
     {
@@ -1926,26 +2372,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // want to use tx, ty to make the missile fly to map edge.
     if (!teleport)
         pbolt.set_target(thr);
-
-    dungeon_char_type zapsym = DCHAR_SPACE;
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
-    case OBJ_MISSILES:   zapsym = DCHAR_FIRED_MISSILE; break;
-    case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
-    case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
-    case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
-    case OBJ_UNKNOWN_I:  zapsym = DCHAR_FIRED_BURST;   break;
-    case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
-    case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
-    case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
-    case OBJ_UNKNOWN_II: zapsym = DCHAR_FIRED_ZAP;     break;
-    case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
-    case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
-    default: break;
-    }
-
-    pbolt.type = dchar_glyph(zapsym);
 
     // Get the launcher class, type.  Convenience.
     if (!you.weapon())
@@ -1972,7 +2398,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         bow_brand = get_weapon_brand(*you.weapon());
 
     const int ammo_brand = get_ammo_brand( item );
-    bool poisoned = (ammo_brand == SPMSL_POISONED);
 
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (projected == LRET_LAUNCHED)
@@ -2196,14 +2621,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             dice_mult = dice_mult * 130 / 100;
         }
 
-        // Special cases for flame, frost, poison, etc.
-        // check for venom brand.
-        if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)
-        {
-            // Poison brand the ammo.
-            set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
-            pbolt.name = item.name(DESC_PLAIN);
-        }
+        if (ammo_brand == SPMSL_STEEL)
+            dice_mult = dice_mult * 150 / 100;
 
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
@@ -2236,8 +2655,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // CALCULATIONS FOR THROWN WEAPONS
     if (projected == LRET_THROWN)
     {
-        returning = (!teleport && (get_weapon_brand(item) == SPWPN_RETURNING
-                                   || get_ammo_brand(item) == SPMSL_RETURNING));
+        returning = returning && !teleport;
 
         if (returning && !one_chance_in(1 + skill_bump(SK_THROWING)))
             did_return = true;
@@ -2399,72 +2817,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
-    // The chief advantage here is the extra damage this does
-    // against susceptible creatures.
-
-    // Note: weapons & ammo of eg fire are not cumulative
-    // ammo of fire and weapons of frost don't work together,
-    // and vice versa.
-
-    // Note that bow_brand is known since the bow is equipped.
-
-    // Chaos overides flame and frost/ice.
-    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
-    {
-        // Chaos can't be poisoned, since that might conflict with
-        // the random healing effect or overlap with the random
-        // poisoning effect.
-        poisoned = false;
-
+    if (pbolt.flavour != BEAM_MISSILE)
         // [dshaligram] Branded arrows are much stronger.
         dice_mult = (dice_mult * 150) / 100;
-
-        pbolt.effect_known = false;
-
-        pbolt.flavour = BEAM_CHAOS;
-        pbolt.name    = "bolt of chaos";
-
-        pbolt.colour  = EC_RANDOM;
-        pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.thrower = KILL_YOU_MISSILE;
-        pbolt.aux_source.clear();
-    }
-    else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
-    {
-        // [dshaligram] Branded arrows are much stronger.
-        dice_mult = (dice_mult * 150) / 100;
-
-        pbolt.flavour = BEAM_FIRE;
-        pbolt.name    = "bolt of ";
-
-        if (poisoned)
-            pbolt.name += "poison ";
-
-        pbolt.name += "flame";
-        pbolt.colour  = RED;
-        pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.thrower = KILL_YOU_MISSILE;
-        pbolt.aux_source.clear();
-    }
-    else if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
-             && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
-    {
-        // [dshaligram] Branded arrows are much stronger.
-        dice_mult = (dice_mult * 150) / 100;
-
-        pbolt.flavour = BEAM_COLD;
-        pbolt.name    = "bolt of ";
-
-        if (poisoned)
-            pbolt.name += "poison ";
-
-        pbolt.name   += "frost";
-        pbolt.colour  = WHITE;
-        pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.thrower = KILL_YOU_MISSILE;
-        pbolt.aux_source.clear();
-    }
 
     // Dexterity bonus, and possible skill increase for silly throwing.
     if (projected)
@@ -2540,34 +2895,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
               pbolt.hit, pbolt.damage.num, pbolt.damage.size );
 #endif
 
-    // Print type of item as influenced by launcher.
-    item_def ammo = item;
-    if (ammo.base_type == OBJ_MISSILES)
-    {
-        if (pbolt.flavour == BEAM_CHAOS)
-        {
-            ammo.special = SPMSL_CHAOS;
-        }
-        else if (pbolt.flavour == BEAM_FIRE)
-        {
-            if (ammo.special != SPMSL_FLAME)
-                ammo.special = SPMSL_FLAME;
-        }
-        else if (pbolt.flavour == BEAM_COLD)
-        {
-            if (ammo.special != SPMSL_ICE)
-                ammo.special = SPMSL_ICE;
-        }
-        else
-        {
-            if (ammo.special != SPMSL_NORMAL && ammo.special != SPMSL_POISONED)
-                ammo.special = SPMSL_NORMAL;
-        }
-    }
-
-    if (ammo_name.empty())
-        ammo_name = ammo.name(DESC_NOCAP_A);
-
     // Create message.
     mprf( "%s %s%s %s.",
           teleport  ? "Magically, you" : "You",
@@ -2610,7 +2937,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
     {
         did_god_conduct(DID_CHAOS, 2 + random2(3),
-                        bow_brand == SPWPN_CHAOS || ammon_brand_known);
+                        bow_brand == SPWPN_CHAOS || ammo_brand_known);
+    }
+
+    if (ammo_brand ==  SPMSL_SHADOW || bow_brand == SPWPN_SHADOW)
+    {
+        did_god_conduct(DID_NECROMANCY, 2,
+                        bow_brand == SPWPN_SHADOW || ammo_brand_known);
     }
 
     if (did_return)
@@ -2655,6 +2988,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     you.turn_is_over = true;
 
+    if (pbolt.special_explosion != NULL)
+        delete pbolt.special_explosion;
+
     return (hit);
 }
 
@@ -2665,14 +3001,21 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
 
     int chance = 0;
 
+    std::string name = item->name(DESC_PLAIN, false, true, false);
+
+    // Exploding missiles are always destroyed.
+    if (name.find("explod") != std::string::npos)
+        return (true);
+
     if (item->base_type == OBJ_MISSILES)
     {
+        int brand = get_ammo_brand(*item);
         // [dshaligram] Removed influence of Throwing on ammo preservation.
         // The effect is nigh impossible to perceive.
         switch (item->sub_type)
         {
         case MI_NEEDLE:
-            chance = (get_ammo_brand(*item) == SPMSL_CURARE ? 3 : 6);
+            chance = (brand == SPMSL_CURARE ? 3 : 6);
             break;
         case MI_SLING_BULLET:
         case MI_STONE:   chance =  4; break;
@@ -2687,6 +3030,8 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
             chance = 25;
             break;
         }
+        if (brand == SPMSL_STEEL)
+            chance *= 10;
     }
 
     // Enchanted projectiles get an extra shot at avoiding

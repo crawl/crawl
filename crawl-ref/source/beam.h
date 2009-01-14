@@ -46,7 +46,18 @@ struct tracer_info
 
     tracer_info();
     void reset();
+
+    const tracer_info &operator += (const tracer_info &other);
 };
+
+struct bolt;
+
+typedef bool (*range_used_func)(const bolt& beam, const actor* victim,
+                                int &used);
+typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
+                                 std::string &dmg_msg);
+typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg,
+                              int corpse);
 
 struct bolt
 {
@@ -81,6 +92,15 @@ struct bolt
     bool        effect_known;          // did we _know_ this would happen?
 
     int         draw_delay;            // delay used when drawing beam.
+
+    bolt*       special_explosion;     // For exploding with a different
+                                       // flavour/damage/etc than the beam
+                                       // itself.
+
+    // Various callbacks.
+    std::vector<range_used_func>  range_funcs;
+    std::vector<beam_damage_func> damage_funcs;
+    std::vector<beam_hit_func>    hit_funcs;
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
@@ -173,7 +193,7 @@ private:
     bool found_player() const;
 
     int beam_source_as_target() const;
-    int range_used_on_hit() const;
+    int range_used_on_hit(const actor* victim) const;
 
     std::string zapper() const;
 
@@ -181,6 +201,10 @@ private:
     void emit_message(msg_channel_type chan, const char* msg);
     void step();
     void hit_wall();
+
+    bool apply_hit_funcs(actor* victim, int dmg, int corpse = -1);
+    bool apply_dmg_funcs(actor* victim, int &dmg,
+                         std::vector<std::string> &messages);
 
     // Functions which handle actually affecting things. They all
     // operate on the beam's current position (i.e., whatever pos()
@@ -209,7 +233,8 @@ public:
     void update_hurt_or_helped(monsters *mon);
     bool attempt_block(monsters* mon);
     void handle_stop_attack_prompt(monsters* mon);
-    bool determine_damage(monsters* mon, int& preac, int& postac, int& final);
+    bool determine_damage(monsters* mon, int& preac, int& postac, int& final,
+                          std::vector<std::string> &messages);
     void monster_post_hit(monsters* mon, int dmg);
     bool misses_player();
 

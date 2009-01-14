@@ -2566,8 +2566,16 @@ int item_mass( const item_def &item )
         break;
 
     case OBJ_MISSILES:
+    {
         unit_mass = Missile_prop[ Missile_index[item.sub_type] ].mass;
+        int brand = get_ammo_brand(item);
+
+        if (brand == SPMSL_SILVER)
+            unit_mass *= 2;
+        else if(brand == SPMSL_STEEL)
+            unit_mass *= 3;
         break;
+    }
 
     case OBJ_FOOD:
         unit_mass = Food_prop[ Food_index[item.sub_type] ].mass;

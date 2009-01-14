@@ -86,8 +86,8 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
    * called from: bang - beam - effects - fight - misc - monstuff - mstuff2 -
    *              spells1 - spells2 - spells3 - spells4
    * *********************************************************************** */
-void monster_die(monsters *monster, killer_type killer,
-                 int killer_index, bool silent = false, bool wizard = false);
+int monster_die(monsters *monster, killer_type killer,
+                int killer_index, bool silent = false, bool wizard = false);
 
 int fill_out_corpse(const monsters* monster, item_def& corpse,
                     bool allow_weightless = false);

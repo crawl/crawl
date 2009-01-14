@@ -1204,8 +1204,9 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 
 bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 {
-    bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING
-                      || get_ammo_brand(mitm[hand_used]) == SPMSL_RETURNING);
+    std::string ammo_name;
+
+    bool returning = false;
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -1238,15 +1239,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     if (mons_friendly(monster))
         item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
+    setup_missile_beam(monster, pbolt, item, ammo_name, returning);
+
     // FIXME we should actually determine a sensible range here
-    pbolt.range       = LOS_RADIUS;
-    pbolt.beam_source = monster_index(monster);
-    pbolt.type        = dchar_glyph(DCHAR_FIRED_MISSILE);
-    pbolt.colour      = item.colour;
-    pbolt.flavour     = BEAM_MISSILE;
-    pbolt.thrower     = KILL_MON_MISSILE;
-    pbolt.item        = &item;
-    pbolt.aux_source.clear();
+    pbolt.range         = LOS_RADIUS;
     pbolt.aimed_at_spot = returning;
 
     const launch_retval projected =
@@ -1317,7 +1313,6 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
           int  bow_brand  = SPWPN_NORMAL;
     const int  ammo_brand = get_ammo_brand(item);
-          bool poison     = (ammo_brand == SPMSL_POISONED);
 
     if (projected == LRET_LAUNCHED)
     {
@@ -1398,6 +1393,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         if (bow_brand == SPWPN_VORPAL)
             diceMult = diceMult * 130 / 100;
 
+        // As do steel ammo.
+        if (ammo_brand == SPMSL_STEEL)
+            diceMult = diceMult * 150 / 100;
+
         // Note: we already have throw_energy taken off.  -- bwr
         int speed_delta = 0;
         if (lnchType == WPN_CROSSBOW)
@@ -1426,55 +1425,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     }
 
     // Chaos overides flame and frost
-    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+    if (pbolt.flavour != BEAM_MISSILE)
     {
-        // Chaos can't be poisoned, since that might conflict with
-        // the random healing effect or overlap with the random
-        // poisoning effect.
-        poison = false;
-
         baseHit    += 2;
         exDamBonus += 6;
-
-        pbolt.flavour  = BEAM_CHAOS;
-        pbolt.name     = "bolt of chaos";
-
-        pbolt.colour    = EC_RANDOM;
-        pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
-    }
-    // WEAPON or AMMO of FIRE
-    else if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_ICE
-            || ammo_brand == SPMSL_FLAME && bow_brand != SPWPN_FROST)
-    {
-        baseHit += 2;
-        exDamBonus += 6;
-
-        pbolt.flavour  = BEAM_FIRE;
-        pbolt.name     = "bolt of ";
-
-        if (poison)
-            pbolt.name += "poison ";
-
-        pbolt.name     += "flame";
-        pbolt.colour    = RED;
-        pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
-    }
-    // WEAPON or AMMO of FROST
-    else if (bow_brand == SPWPN_FROST && ammo_brand != SPMSL_FLAME
-             || ammo_brand == SPMSL_ICE && bow_brand != SPWPN_FLAME)
-    {
-        baseHit += 2;
-        exDamBonus += 6;
-
-        pbolt.flavour   = BEAM_COLD;
-        pbolt.name      = "bolt of ";
-
-        if (poison)
-            pbolt.name += "poison ";
-
-        pbolt.name     += "frost";
-        pbolt.colour    = WHITE;
-        pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
     }
 
     // monster intelligence bonus
@@ -1582,8 +1536,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     pbolt.fire();
 
     // The item can be destroyed before returning.
-    if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target,
-                                                       true, pbolt.beam_source))
+    if (really_returns && thrown_object_destroyed(&item, pbolt.target, true))
     {
         really_returns = false;
     }
@@ -1612,33 +1565,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     else if (dec_mitm_item_quantity(hand_used, 1))
         monster->inv[returning ? slot : MSLOT_MISSILE] = NON_ITEM;
 
+    if (pbolt.special_explosion != NULL)
+        delete pbolt.special_explosion;
+
     return (true);
-}
-
-bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
-                                   bool returning, int midx )
-{
-    ASSERT( item != NULL );
-
-    bool destroyed = (item->base_type == OBJ_MISSILES
-                      && item->sub_type != MI_THROWING_NET && coinflip());
-    bool hostile_grid = grid_destroys_items(grd(where));
-
-    // Non-returning items thrown into item-destroying grids are always
-    // destroyed.  Returning items are only destroyed if they would have
-    // been randomly destroyed anyway.
-    if (returning && !destroyed)
-        hostile_grid = false;
-
-    // Summoned items go poof if they're not returning.
-    if (hostile_grid || !returning && (item->flags & ISFLAG_SUMMONED))
-    {
-        // No destruction sound here.  Too much message spam otherwise.
-        item_was_destroyed(*item, midx);
-        destroyed = true;
-    }
-
-    return destroyed;
 }
 
 static void _scale_draconian_breath(bolt& beam, int drac_type)

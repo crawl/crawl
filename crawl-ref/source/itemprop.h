@@ -12,6 +12,8 @@
 
 #include "externs.h"
 
+struct bolt;
+
 enum armour_type
 {
     ARM_ROBE,                    //    0
@@ -99,6 +101,8 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
 
     SPWPN_CHAOS,
     SPWPN_CONFUSE,                     //   20
+    SPWPN_PENETRATION,
+    SPWPN_SHADOW,
     SPWPN_RANDART_I = 25,              //   25
     SPWPN_RANDART_II,
     SPWPN_RANDART_III,
@@ -351,13 +355,19 @@ enum special_missile_type // to separate from weapons in general {dlb}
 {
     SPMSL_FORBID_BRAND = -1,           //   -1
     SPMSL_NORMAL,                      //    0
-    SPMSL_FLAME,                       //    1
-    SPMSL_ICE,                         //    2
-    SPMSL_POISONED,                    //    3
-    SPMSL_POISONED_II,                 //    4 - unused
+    SPMSL_FLAME,
+    SPMSL_ICE,
+    SPMSL_POISONED,
+    SPMSL_POISONED_II,                 //    unused
     SPMSL_CURARE,                      //    5
-    SPMSL_RETURNING,                   //    6
-    SPMSL_CHAOS                        //    7
+    SPMSL_RETURNING,
+    SPMSL_CHAOS,
+    SPMSL_PENETRATION,
+    SPMSL_SHADOW,
+    SPMSL_DISPERSAL,                   //   10
+    SPMSL_EXPLODING,
+    SPMSL_STEEL,
+    SPMSL_SILVER
 };
 
 enum special_ring_type // jewellery mitm[].special values

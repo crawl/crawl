@@ -22,8 +22,6 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast);
 void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast);
 bool mons_throw(monsters *monster, bolt &pbolt, int hand_used);
-bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
-                                   bool returning, int midx );
 void setup_generic_throw(monsters *monster, bolt &pbolt);
 void mons_trap(monsters *monster);
 bool monster_random_space(const monsters *monster, coord_def& target,

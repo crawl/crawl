@@ -1010,11 +1010,11 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
     }
 }
 
-void monster_die(monsters *monster, killer_type killer,
-                 int killer_index, bool silent, bool wizard)
+int monster_die(monsters *monster, killer_type killer,
+                int killer_index, bool silent, bool wizard)
 {
     if (invalid_monster(monster))
-        return;
+        return (-1);
 
     // If a monster was banished to the Abyss and then killed there,
     // then its death wasn't a banishment.
@@ -1022,7 +1022,7 @@ void monster_die(monsters *monster, killer_type killer,
         monster->flags &= ~MF_BANISHED;
 
     if (!silent && _monster_avoided_death(monster, killer, killer_index))
-        return;
+        return (-1);
 
     mons_clear_trapping_net(monster);
 
@@ -1659,6 +1659,8 @@ void monster_die(monsters *monster, killer_type killer,
         view_update_at(mwhere);
         update_screen();
     }
+
+    return (corpse);
 }
 
 void monster_cleanup(monsters *monster)

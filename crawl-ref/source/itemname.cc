@@ -346,6 +346,8 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     // ranged weapon brands
     case SPWPN_FLAME: return ((terse) ? " (flame)" : " of flame");
     case SPWPN_FROST: return ((terse) ? " (frost)" : " of frost");
+    case SPWPN_PENETRATION: return ((terse) ? " (penet)" : " of penetration");
+    case SPWPN_SHADOW: return ((terse) ? " (shadow)" : " of shadows");
 
     // both ranged and non-ranged
     case SPWPN_CHAOS: return ((terse) ? " (chaos)" : " of chaos");
@@ -1105,11 +1107,28 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (know_brand)
         {
-            if (brand == SPMSL_POISONED)
+            switch (brand)
+            {
+            case SPMSL_POISONED:
                 buff << ((terse) ? "poison " : "poisoned ");
-
-            if (brand == SPMSL_CURARE)
+                break;
+            case SPMSL_CURARE:
                 buff << ((terse) ? "curare " : "curare-tipped ");
+                break;
+            case SPMSL_EXPLODING:
+                buff << ((terse) ? "explode " : "exploding ");
+                break;
+            case SPMSL_STEEL:
+                buff << "steel ";
+                break;
+            case SPMSL_SILVER:
+                buff << "silver ";
+                break;
+
+            default:
+                break;
+            }
+
         }
 
         if (know_pluses)
@@ -1136,6 +1155,9 @@ std::string item_def::name_aux( description_level_type desc,
             case SPMSL_NORMAL:
             case SPMSL_POISONED:
             case SPMSL_CURARE:
+            case SPMSL_EXPLODING:
+            case SPMSL_STEEL:
+            case SPMSL_SILVER:
                 break;
             case SPMSL_RETURNING:
                 buff << ((terse) ? " (return)" : " of returning");
@@ -1143,6 +1165,16 @@ std::string item_def::name_aux( description_level_type desc,
             case SPMSL_CHAOS:
                 buff << ((terse) ? " (chaos)" : " of chaos");
                 break;
+            case SPMSL_PENETRATION:
+                buff << ((terse) ? " (penet)" : " of penetration");
+                break;
+            case SPMSL_SHADOW:
+                buff << ((terse) ? " (shadow)" : " of shadows");
+                break;
+            case SPMSL_DISPERSAL:
+                buff << ((terse) ? " (disperse)" : " of dispersal");
+                break;
+
             default:
                 buff << " (buggy)";
             }

@@ -82,6 +82,11 @@ void tracer_info::reset()
     dont_stop = false;
 }
 
+const tracer_info& tracer_info::operator+=(const tracer_info &other)
+{
+    return (*this);
+}
+
 bool bolt::is_blockable() const
 {
     // BEAM_ELECTRICITY is added here because chain lighting is not
@@ -1445,6 +1450,15 @@ void bolt::initialize_fire()
     in_explosion_phase = false;
     use_target_as_pos  = false;
 
+    if (special_explosion != NULL)
+    {
+        ASSERT(!is_explosion);
+        ASSERT(special_explosion->is_explosion);
+        ASSERT(special_explosion->special_explosion == NULL);
+        special_explosion->in_explosion_phase = false;
+        special_explosion->use_target_as_pos  = false;
+    }
+
     if (chose_ray)
     {
         ASSERT(in_bounds(ray.pos()));
@@ -1854,27 +1868,70 @@ void bolt::affect_cell()
         affect_ground();
 }
 
+bool bolt::apply_hit_funcs(actor* victim, int dmg, int corpse)
+{
+    bool affected = false;
+    for (unsigned int i = 0; i < hit_funcs.size(); i++)
+        affected = (*hit_funcs[i])(*this, victim, dmg, corpse) || affected;
+    return (affected);
+}
+
+bool bolt::apply_dmg_funcs(actor* victim, int &dmg,
+                           std::vector<std::string> &messages)
+{
+    for (unsigned int i = 0; i < damage_funcs.size(); i++)
+    {
+        std::string dmg_msg;
+
+        if ( (*damage_funcs[i])(*this, victim, dmg, dmg_msg) )
+            return (false);
+        if (!dmg_msg.empty())
+            messages.push_back(dmg_msg);
+    }
+    return (true);
+}
+
+static void _undo_tracer(bolt &orig, bolt &copy)
+{
+    // FIXME: we should have a better idea of what gets changed!
+    orig.target        = copy.target;
+    orig.source        = copy.source;
+    orig.aimed_at_spot = copy.aimed_at_spot;
+    orig.range_used    = copy.range_used;
+    orig.auto_hit      = copy.auto_hit;
+    orig.ray           = copy.ray;
+    orig.colour        = copy.colour;
+    orig.flavour       = copy.flavour;
+    orig.real_flavour  = copy.real_flavour;
+    orig.seen          = copy.seen;
+}
+
 // This saves some important things before calling fire().
 void bolt::fire()
 {
     path_taken.clear();
 
+    if (special_explosion)
+        special_explosion->is_tracer = is_tracer;
+
     if (is_tracer)
     {
         bolt boltcopy = *this;
+        if (special_explosion != NULL)
+            boltcopy.special_explosion = new bolt(*special_explosion);
+
         do_fire();
 
-        // FIXME: we should have a better idea of what gets changed!
-        target = boltcopy.target;
-        source = boltcopy.source;
-        aimed_at_spot = boltcopy.aimed_at_spot;
-        range_used = boltcopy.range_used;
-        auto_hit = boltcopy.auto_hit;
-        ray = boltcopy.ray;
-        colour = boltcopy.colour;
-        flavour = boltcopy.flavour;
-        real_flavour = boltcopy.real_flavour;
-        seen = boltcopy.seen;
+        if (special_explosion != NULL)
+        {
+            seen = seen || special_explosion->seen;
+            foe_info    += special_explosion->foe_info;
+            friend_info += special_explosion->friend_info;
+            _undo_tracer(*special_explosion, *boltcopy.special_explosion);
+            delete boltcopy.special_explosion;
+        }
+
+        _undo_tracer(*this, boltcopy);
     }
     else
         do_fire();
@@ -2761,6 +2818,13 @@ static int _potion_beam_flavour_to_colour(beam_type flavour)
 
 void bolt::affect_endpoint()
 {
+    if (special_explosion)
+    {
+        special_explosion->refine_for_explosion();
+        special_explosion->target = pos();
+        special_explosion->explode();
+    }
+
     // Leave an object, if applicable.
     if (drop_item && item)
         drop_object();
@@ -2768,6 +2832,7 @@ void bolt::affect_endpoint()
     if (is_explosion)
     {
         refine_for_explosion();
+        target = pos();
         explode();
         return;
     }
@@ -2782,6 +2847,8 @@ void bolt::affect_endpoint()
         || name == "great blast of cold"
         || name == "ball of vapour")
     {
+        target = pos();
+        refine_for_explosion();
         explode();
     }
 
@@ -2838,9 +2905,7 @@ void bolt::drop_object()
         return;
     }
 
-    if (YOU_KILL(thrower) && !thrown_object_destroyed(item, pos(), false)
-        || MON_KILL(thrower)
-           && !mons_thrown_object_destroyed(item, pos(), false, beam_source))
+    if (!thrown_object_destroyed(item, pos(), false))
     {
         if (item->sub_type == MI_THROWING_NET)
         {
@@ -3337,7 +3402,18 @@ void bolt::tracer_affect_player()
             foe_info.power += you.experience_level;
         }
     }
-    range_used += range_used_on_hit();
+
+    std::vector<std::string> messages;
+    int dummy = 0;
+
+    apply_dmg_funcs(&you, dummy, messages);
+
+    for (unsigned int i = 0; i < messages.size(); i++)
+        mpr(messages[i].c_str(), MSGCH_WARN);
+
+    range_used += range_used_on_hit(&you);
+
+    apply_hit_funcs(&you, 0);
 }
 
 bool bolt::misses_player()
@@ -3460,7 +3536,7 @@ void bolt::affect_player_enchantment()
         if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
             xom_is_stimulated(255);
 
-        range_used += range_used_on_hit();
+        range_used += range_used_on_hit(&you);
         return;
     }
 
@@ -3693,7 +3769,9 @@ void bolt::affect_player_enchantment()
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
-    range_used += range_used_on_hit();
+    range_used += range_used_on_hit(&you);
+
+    apply_hit_funcs(&you, 0);
 }
 
 
@@ -3740,6 +3818,9 @@ void bolt::affect_player()
 #if DEBUG_DIAGNOSTICS
     int roll = hurted;
 #endif
+
+    std::vector<std::string> messages;
+    apply_dmg_funcs(&you, hurted, messages);
 
     int armour_damage_reduction = random2( 1 + player_AC() );
     if (flavour == BEAM_ELECTRICITY)
@@ -3805,20 +3886,12 @@ void bolt::affect_player()
     // handling of missiles
     if (item && item->base_type == OBJ_MISSILES)
     {
+        // SPMSL_POISONED handled via callback _poison_hit_victim() in
+        // item_use.cc
         if (item->sub_type == MI_THROWING_NET)
         {
             player_caught_in_net();
             was_affected = true;
-        }
-        else if (item->special == SPMSL_POISONED)
-        {
-            if (!player_res_poison()
-                && (hurted || ench_power == AUTOMATIC_HIT
-                              && x_chance_in_y(90 - 3 * player_AC(), 100)))
-            {
-                poison_player(1 + random2(3));
-                was_affected = true;
-            }
         }
         else if (item->special == SPMSL_CURARE)
         {
@@ -3868,6 +3941,8 @@ void bolt::affect_player()
     mprf(MSGCH_DIAGNOSTICS, "Damage: %d", hurted );
 #endif
 
+    was_affected = apply_hit_funcs(&you, hurted) || was_affected;
+
     if (hurted > 0 || old_hp < you.hp || was_affected)
     {
         if (mons_att_wont_attack(attitude))
@@ -3889,9 +3964,15 @@ void bolt::affect_player()
             foe_info.hurt++;
     }
 
+    if (hurted > 0)
+    {
+        for (unsigned int i = 0; i < messages.size(); i++)
+            mpr(messages[i].c_str(), MSGCH_WARN);
+    }
+
     internal_ouch(hurted);
 
-    range_used += range_used_on_hit();
+    range_used += range_used_on_hit(&you);
 }
 
 int bolt::beam_source_as_target() const
@@ -3899,27 +3980,6 @@ int bolt::beam_source_as_target() const
     return (MON_KILL(thrower)     ? beam_source :
             thrower == KILL_MISC  ? MHITNOT
                                   : MHITYOU);
-}
-
-static int _name_to_skill_level(const std::string& name)
-{
-    skill_type type = SK_THROWING;
-
-    if (name.find("dart") != std::string::npos)
-        type = SK_DARTS;
-    else if (name.find("needle") != std::string::npos)
-        type = SK_DARTS;
-    else if (name.find("bolt") != std::string::npos)
-        type = SK_CROSSBOWS;
-    else if (name.find("arrow") != std::string::npos)
-        type = SK_BOWS;
-    else if (name.find("stone") != std::string::npos)
-        type = SK_SLINGS;
-
-    if (type == SK_DARTS || type == SK_SLINGS)
-        return (you.skills[type] + you.skills[SK_THROWING]);
-
-    return (2 * you.skills[type]);
 }
 
 void bolt::update_hurt_or_helped(monsters *mon)
@@ -3953,11 +4013,15 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 {
     handle_stop_attack_prompt(mon);
     if (!beam_cancelled)
-        range_used += range_used_on_hit();
+    {
+        range_used += range_used_on_hit(mon);
+        apply_hit_funcs(mon, 0);
+    }
 }
 
 // Return false if we should skip handling this monster.
-bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final)
+bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
+                            std::vector<std::string>& messages)
 {
     // preac: damage before AC modifier
     // postac: damage after AC modifier
@@ -3969,6 +4033,9 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final)
         preac = (damage.num * (damage.size + 1)) / 2;
     else
         preac = damage.roll();
+
+    if (!apply_dmg_funcs(mon, preac, messages))
+        return (false);
 
     // Submerged monsters get some perks.
     if (mon->submerged())
@@ -4035,8 +4102,9 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
 
 void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
 {
+    std::vector<std::string> messages;
     int preac, post, final;
-    if ( !determine_damage(mon, preac, post, final) )
+    if ( !determine_damage(mon, preac, post, final, messages) )
         return;
 
     // Maybe the user wants to cancel at this point.
@@ -4058,10 +4126,14 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
             foe_info.power += 2 * final * mons_power(mon->type) / preac;
         else
             friend_info.power += 2 * final * mons_power(mon->type) / preac;
+
+        for (unsigned int i = 0; i < messages.size(); i++)
+            mpr(messages[i].c_str(), MSGCH_MONSTER_DAMAGE);
     }
 
     // Either way, we could hit this monster, so update range used.
-    range_used += range_used_on_hit();
+    range_used += range_used_on_hit(mon);
+    apply_hit_funcs(mon, final);
 }
 
 void bolt::tracer_affect_monster(monsters* mon)
@@ -4075,7 +4147,10 @@ void bolt::tracer_affect_monster(monsters* mon)
 
     // Ignore self-detonating monsters.
     if (mons_self_destructs(mon))
+    {
+        apply_hit_funcs(mon, 0);
         return;
+    }
 
     // Update friend or foe encountered.
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
@@ -4166,7 +4241,8 @@ void bolt::enchantment_affect_monster(monsters* mon)
             beogh_follower_convert(mon, true);
     }
 
-    range_used += range_used_on_hit();
+    range_used += range_used_on_hit(mon);
+    apply_hit_funcs(mon, 0);
 }
 
 void bolt::monster_post_hit(monsters* mon, int dmg)
@@ -4191,38 +4267,9 @@ void bolt::monster_post_hit(monsters* mon, int dmg)
     // Handle missile effects.
     if (item && item->base_type == OBJ_MISSILES)
     {
-        if (item->special == SPMSL_POISONED)
-        {
-            int num_levels = 0;
-            // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
-            if (ench_power == AUTOMATIC_HIT
-                && x_chance_in_y(90 - 3 * mon->ac, 100))
-            {
-                num_levels = 2;
-            }
-            else if (random2(dmg) - random2(mon->ac) > 0)
-                num_levels = 1;
-
-            int num_success = 0;
-            if (YOU_KILL(thrower))
-            {
-                const int skill_level = _name_to_skill_level(name);
-                if (x_chance_in_y(skill_level + 25, 50))
-                    num_success++;
-                if (x_chance_in_y(skill_level, 50))
-                    num_success++;
-            }
-            else
-                num_success = 1;
-
-            if (num_success)
-            {
-                if (num_success == 2)
-                    num_levels++;
-                poison_monster(mon, whose_kill(), num_levels);
-            }
-        }
-        else if (item->special == SPMSL_CURARE)
+        // SPMSL_POISONED handled via callback _poison_hit_victim() in
+        // item_use.cc
+        if (item->special == SPMSL_CURARE)
         {
             if (ench_power == AUTOMATIC_HIT
                 && curare_hits_monster(agent(), mon, whose_kill(), 2)
@@ -4308,6 +4355,7 @@ bool bolt::handle_statue_disintegration(monsters* mon)
         obvious_effect = true;
         update_hurt_or_helped(mon);
         mon->hurt(agent(), INSTANT_DEATH);
+        apply_hit_funcs(mon, INSTANT_DEATH);
         // Stop here.
         finish_beam();
     }
@@ -4318,17 +4366,26 @@ void bolt::affect_monster(monsters* mon)
 {
     // Don't hit dead monsters.
     if (!mon->alive())
+    {
+        apply_hit_funcs(mon, 0);
         return;
+    }
 
     // First some special cases.
 
     // Digging doesn't affect monsters (should it harm earth elementals?)
     if (flavour == BEAM_DIGGING)
+    {
+        apply_hit_funcs(mon, 0);
         return;
+    }
 
     // Fire storm creates these, so we'll avoid affecting them
     if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
+    {
+        apply_hit_funcs(mon, 0);
         return;
+    }
 
     // Handle tracers separately.
     if (is_tracer)
@@ -4341,6 +4398,7 @@ void bolt::affect_monster(monsters* mon)
     if (flavour == BEAM_VISUAL)
     {
         behaviour_event( mon, ME_DISTURB, beam_source, source );
+        apply_hit_funcs(mon, 0);
         return;
     }
 
@@ -4362,8 +4420,9 @@ void bolt::affect_monster(monsters* mon)
 
     // We need to know how much the monster _would_ be hurt by this,
     // before we decide if it actually hits.
+    std::vector<std::string> messages;
     int preac, postac, final;
-    if ( !determine_damage(mon, preac, postac, final) )
+    if ( !determine_damage(mon, preac, postac, final, messages) )
         return;
 
 #if DEBUG_DIAGNOSTICS
@@ -4466,6 +4525,12 @@ void bolt::affect_monster(monsters* mon)
         monster_caught_in_net(mon, *this);
     }
 
+    if (final > 0)
+    {
+        for (unsigned int i = 0; i < messages.size(); i++)
+            mpr(messages[i].c_str(), MSGCH_MONSTER_DAMAGE);
+    }
+
     // Apply flavoured specials.
     mons_adjust_flavoured(mon, *this, postac, true);
 
@@ -4484,12 +4549,24 @@ void bolt::affect_monster(monsters* mon)
     // Now hurt monster.
     mon->hurt(agent(), final, flavour, false);
 
+    int      corpse = -1;
+    monsters orig   = *mon;
+
     if (mon->alive())
         monster_post_hit(mon, final);
     else
-        monster_die(mon, thrower, beam_source_as_target());
+        corpse = monster_die(mon, thrower, beam_source_as_target());
 
-    range_used += range_used_on_hit();
+    // Give the callbacks a dead-but-valid monster object.
+    if (mon->type == -1)
+    {
+        orig.hit_points = -1;
+        mon = &orig;
+    }
+
+    range_used += range_used_on_hit(mon);
+
+    apply_hit_funcs(mon, final, corpse);
 }
 
 bool bolt::has_saving_throw() const
@@ -4893,36 +4970,43 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
 
 // Extra range used on hit.
-int bolt::range_used_on_hit() const
+int bolt::range_used_on_hit(const actor* victim) const
 {
+    int used = 0;
+
     // Non-beams can only affect one thing (player/monster).
     if (!is_beam)
-        return (BEAM_STOP);
-
-    if (is_enchantment())
-        return (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
-
+        used = BEAM_STOP;
+    else if (is_enchantment())
+        used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
     // Hellfire stops for nobody!
-    if (name == "hellfire")
-        return (0);
-
+    else if (name == "hellfire")
+        used = 0;
     // Generic explosion.
-    if (is_explosion || is_big_cloud)
-        return (BEAM_STOP);
-
+    else if (is_explosion || is_big_cloud)
+        used = BEAM_STOP;
     // Plant spit.
-    if (flavour == BEAM_ACID)
-        return (BEAM_STOP);
-
+    else if (flavour == BEAM_ACID)
+        used = BEAM_STOP;
     // Lava doesn't go far, but it goes through most stuff.
-    if (flavour == BEAM_LAVA)
-        return (1);
-
+    else if (flavour == BEAM_LAVA)
+        used = 1;
     // Lightning goes through things.
-    if (flavour == BEAM_ELECTRICITY)
-        return (0);
+    else if (flavour == BEAM_ELECTRICITY)
+        used = 0;
+    else
+        used = 2;
 
-    return (2);
+    if (in_explosion_phase)
+        return (used);
+
+    for (unsigned int i = 0; i < range_funcs.size(); i++)
+    {
+        if ( (*range_funcs[i])(*this, victim, used) )
+            break;
+    }
+
+    return (used);
 }
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -4930,13 +5014,31 @@ int bolt::range_used_on_hit() const
 // immolation) bypass this function.
 void bolt::refine_for_explosion()
 {
-    ex_size = 1;
+    ASSERT(!special_explosion);
+
     const char *seeMsg  = NULL;
     const char *hearMsg = NULL;
+
+    if (ex_size == 0)
+        ex_size = 1;
 
     // Assume that the player can see/hear the explosion, or
     // gets burned by it anyway.  :)
     msg_generated = true;
+
+    // tmp needed so that what c_str() points to doesn't go out of scope
+    // before the function ends.
+    std::string tmp;
+    if (item != NULL)
+    {
+        tmp  = "The " + item->name(DESC_PLAIN, false, false, false)
+               + " explodes!";
+
+        seeMsg  = tmp.c_str();
+        hearMsg = "You hear an explosion.";
+
+        type    = dchar_glyph(DCHAR_FIRED_BURST);
+    }
 
     if (name == "hellfire")
     {
@@ -5096,6 +5198,7 @@ static sweep_type _radial_sweep(int r)
 // Returns true if we saw something happening.
 bool bolt::explode(bool show_more, bool hole_in_the_middle)
 {
+    ASSERT(!special_explosion);
     ASSERT(!in_explosion_phase);
     ASSERT(ex_size > 0);
 
@@ -5372,9 +5475,10 @@ bolt::bolt() : range(-2), type('*'),
                beam_source(MHITNOT), name(), short_name(), is_beam(false),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), affects_items(true),
-               effect_known(true), draw_delay(15), obvious_effect(false),
-               seen(false), path_taken(), range_used(0), is_tracer(false),
-               aimed_at_feet(false), msg_generated(false),
+               effect_known(true), draw_delay(15), special_explosion(NULL),
+               range_funcs(), damage_funcs(), hit_funcs(),
+               obvious_effect(false), seen(false), path_taken(), range_used(0),
+               is_tracer(false), aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false), dont_stop_player(false),
