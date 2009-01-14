@@ -2646,9 +2646,13 @@ static void _debug_acquirement_stats(FILE *ostat)
     int total_quant  = 0;
     int max_plus     = -127;
     int total_plus   = 0;
+    int num_arts     = 0;
 
     int subtype_quants[256];
+    int ego_quants[SPWPN_RANDART_I];
+
     memset(subtype_quants, 0, sizeof(subtype_quants));
+    memset(ego_quants, 0, sizeof(ego_quants));
 
     for (int i = 0; i < num_itrs; i++)
     {
@@ -2678,6 +2682,14 @@ static void _debug_acquirement_stats(FILE *ostat)
         max_plus    = std::max(max_plus, item.plus + item.plus2);
         total_plus += item.plus + item.plus2;
 
+        if (is_artefact(item))
+            num_arts++;
+
+        if (type == OBJ_WEAPONS)
+            ego_quants[get_weapon_brand(item)]++;
+        else if (type == OBJ_ARMOUR)
+            ego_quants[get_armour_ego_type(item)]++;
+
         destroy_item(item_index, true);
 
         int curr_percent = acq_calls * 100 / num_itrs;
@@ -2698,17 +2710,88 @@ static void _debug_acquirement_stats(FILE *ostat)
     fprintf(ostat, "acquirement called %d times, total quantity = %d\n\n",
             acq_calls, total_quant);
 
+    fprintf(ostat, "%5.2f%% artefacts.\n",
+            100.0 * (float) num_arts / (float) acq_calls);
+
     if (type == OBJ_WEAPONS)
     {
         fprintf(ostat, "Maximum combined pluses: %d\n", max_plus);
         fprintf(ostat, "Average combined pluses: %5.2f\n\n",
                 (float) total_plus / (float) acq_calls);
+
+        fprintf(ostat, "Egos (including artefacts):\n");
+
+        const char* names[] = {
+            "normal",
+            "flaming",
+            "freezing",
+            "holy wrath",
+            "electrocution",
+            "orc slaying",
+            "dragon slaying",
+            "venom",
+            "protection",
+            "draning",
+            "speed",
+            "vorpal",
+            "flame",
+            "frost",
+            "vampiricism",
+            "pain",
+            "distortion",
+            "reaching",
+            "returning",
+            "chaos",
+            "confusion",
+        };
+
+        for (int i = 0; i <= SPWPN_CONFUSE; i++)
+        {
+           if (ego_quants[i] > 0)
+               fprintf(ostat, "%14s: %5.2f\n", names[i],
+                       100.0 * (float) ego_quants[i] / (float) acq_calls);
+        }
+        fprintf(ostat, "\n\n");
     }
     else if (type == OBJ_ARMOUR)
     {
         fprintf(ostat, "Maximum plus: %d\n", max_plus);
         fprintf(ostat, "Average plus: %5.2f\n\n",
                 (float) total_plus / (float) acq_calls);
+
+        fprintf(ostat, "Egos (excluding artefacts):\n");
+
+        const char* names[] = {
+            "normal",
+            "running",
+            "fire resistance",
+            "cold resistance",
+            "poison resistance",
+            "see invis",
+            "darkness",
+            "strength",
+            "dexterity",
+            "intelligence",
+            "ponderous",
+            "levitation",
+            "magic reistance",
+            "protection",
+            "stealth",
+            "resistance",
+            "positive energy",
+            "archmagi",
+            "preservation",
+            "reflection"
+         };
+
+        const int non_art = acq_calls - num_arts;
+        for (int i = 0; i <= SPARM_REFLECTION; i++)
+        {
+           if (ego_quants[i] > 0)
+               fprintf(ostat, "%17s: %5.2f\n", names[i],
+                       100.0 * (float) ego_quants[i] / (float) non_art);
+        }
+        fprintf(ostat, "\n\n");
     }
 
     item_def item;
