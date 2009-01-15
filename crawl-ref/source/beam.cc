@@ -84,6 +84,13 @@ void tracer_info::reset()
 
 const tracer_info& tracer_info::operator+=(const tracer_info &other)
 {
+    count  += other.count;
+    power  += other.power;
+    hurt   += other.hurt;
+    helped += other.helped;
+
+    dont_stop = dont_stop || other.dont_stop;
+
     return (*this);
 }
 
