@@ -3128,7 +3128,7 @@ static FixedVector<bool, NUM_MONSTERS> _first_attack_was_friendly;
 
 void religion_turn_start()
 {
-    if (you.turn_is_over || you_are_delayed())
+    if (you.turn_is_over || you_are_delayed() || you.cannot_act())
         religion_turn_end();
 
     _first_attack_conduct.init(true);
@@ -3139,7 +3139,7 @@ void religion_turn_start()
 
 void religion_turn_end()
 {
-    ASSERT(you.turn_is_over || you_are_delayed());
+    ASSERT(you.turn_is_over || you_are_delayed() || you.cannot_act());
     _place_delayed_monsters();
 }
 
@@ -6743,9 +6743,6 @@ static bool _need_free_piety()
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
-    if (you.turn_is_over || you_are_delayed())
-        religion_turn_end();
-
     if (one_chance_in(100))
     {
         // Choose a god randomly from those to whom we owe penance.
@@ -6870,9 +6867,6 @@ void handle_god_time()
             DEBUGSTR("Bad god, no bishop!");
         }
     }
-
-    if (you.turn_is_over || you_are_delayed())
-        religion_turn_end();
 }
 
 // yet another wrapper for mpr() {dlb}:
