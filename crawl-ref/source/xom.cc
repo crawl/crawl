@@ -773,6 +773,7 @@ static bool _xom_confuse_monsters(int sever)
         if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
                                           KC_FRIENDLY, random2(sever))))
         {
+            // Only give this message once.
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
 
@@ -883,6 +884,239 @@ static bool _xom_send_allies(int sever)
     return (rc);
 }
 
+static bool _xom_send_one_ally(int sever)
+{
+    bool rc = false;
+        
+    const monster_type mon = _xom_random_demon(sever);
+    const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
+
+    // If we have a non-demon, Xom got it someplace else, so use
+    // different messages below.
+    bool different = !is_demonic;
+
+    beh_type beha = BEH_FRIENDLY;
+    unsigned short hitting = you.pet_target;
+
+    // There's a chance that a non-demon may be hostile.
+    if (different && one_chance_in(4))
+    {
+        beha = BEH_HOSTILE;
+        hitting = MHITYOU;
+    }
+
+    const int summons =
+        create_monster(
+            mgen_data(mon, beha,
+                      6, MON_SUMM_AID,
+                      you.pos(), hitting,
+                      MG_FORCE_BEH, GOD_XOM));
+
+    if (summons != -1)
+    {
+        if (different)
+            god_speaks(GOD_XOM, _get_xom_speech("single holy summon").c_str());
+        else
+            god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
+
+        player_angers_monster(&menv[summons]);
+
+        rc = true;
+    }
+    return (rc);
+}
+
+static bool _xom_good_polymorph_nearby_monster()
+{
+    bool rc = false;
+    if (there_are_monsters_nearby(false, false))
+    {
+        monsters *mon = choose_random_nearby_monster(0,
+                                                     _choose_mutatable_monster);
+        if (mon)
+        {
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("good monster polymorph").c_str());
+
+            bool made_shifter = false;
+
+            if (one_chance_in(8) && !mons_is_shapeshifter(mon))
+            {
+                mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
+                                               : ENCH_SHAPESHIFTER);
+                made_shifter = true;
+            }
+
+            monster_polymorph(mon, RANDOM_MONSTER,
+                              mons_wont_attack(mon) ? PPT_MORE : PPT_LESS,
+                              made_shifter);
+
+            rc = true;
+        }
+    }
+    return (rc);
+}
+
+// Blink every monster on this level and the player.
+static bool _xom_rearrange_pieces(int sever)
+{
+    bool rc = false;
+
+    // Every now and then, Xom also confuses them all.
+    const bool confusem = one_chance_in(10);
+
+    // Not just every monster in sight - oh no.  Every monster on
+    // this level!
+    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters* monster = &menv[i];
+
+        if (!monster->alive())
+            continue;
+
+        if (monster_blink(monster))
+        {
+            // Only give a message once.
+            if (!rc)
+                god_speaks(GOD_XOM,
+                           _get_xom_speech("rearrange the pieces").c_str());
+
+            if (confusem)
+            {
+                if (mons_class_is_confusable(monster->type)
+                    && monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                                                     KC_FRIENDLY,
+                                                     random2(sever))))
+                {
+                    simple_monster_message(monster, " looks rather confused.");
+                }
+            }
+            rc = true;
+        }
+    }
+
+    // If Xom blinked at least one monster, blink the player,
+    // too, and then consider this act done.
+    if (rc)
+        random_blink(false);
+
+    return (rc);
+}
+
+static bool _xom_give_good_mutation()
+{
+    bool rc = false;
+
+    if (you.can_safely_mutate()
+        && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("good mutations").c_str());
+
+        mpr("Your body is suffused with distortional energy.");
+
+        set_hp(1 + random2(you.hp), false);
+        deflate_hp(you.hp_max / 2, true);
+
+        bool failMsg = true;
+
+        for (int i = random2(4); i >= 0; --i)
+        {
+            if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, true, false,
+                       false, true))
+            {
+                rc = true;
+            }
+            else
+                failMsg = false;
+        }
+    }
+    return (rc);
+}
+
+static bool _xom_send_major_ally(int sever)
+{
+    bool rc = false;
+    const monster_type mon = _xom_random_demon(sever);
+    const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
+
+    beh_type beha = BEH_FRIENDLY;
+    unsigned short hitting = you.pet_target;
+
+    // There's a chance that a non-demon may be hostile.
+    if (!is_demonic && one_chance_in(4))
+    {
+        beha = BEH_HOSTILE;
+        hitting = MHITYOU;
+    }
+
+    const int summons =
+        create_monster(
+            mgen_data(_xom_random_demon(sever, one_chance_in(8)), beha,
+                      0, 0, you.pos(), hitting,
+                      MG_FORCE_BEH, GOD_XOM));
+
+    if (summons != -1)
+    {
+        if (is_demonic)
+        {
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("single major demon summon").c_str());
+        }
+        else
+        {
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("single major holy summon").c_str());
+        }
+
+        player_angers_monster(&menv[summons]);
+        rc = true;
+    }
+
+    return (rc);
+}
+
+static bool _xom_throw_divine_lightning()
+{
+    if (!player_in_a_dangerous_place())
+        return (false);
+
+    if (you.hp <= random2(201))
+        you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
+
+    god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
+
+    bolt beam;
+    beam.beam_source  = NON_MONSTER;
+    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.damage       = dice_def(3, 30);
+    beam.flavour      = BEAM_ELECTRICITY;
+    beam.target       = you.pos();
+    beam.name         = "blast of lightning";
+    beam.colour       = LIGHTCYAN;
+    beam.thrower      = KILL_MISC;
+    beam.aux_source   = "Xom's lightning strike";
+    beam.ex_size      = 2;
+    beam.is_tracer    = false;
+    beam.is_explosion = true;
+    beam.explode();
+
+    if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
+    {
+        mpr("Your divine protection wanes.");
+        you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
+    }
+
+    // Don't accidentally kill the player when doing a good act.
+    if (you.escaped_death_cause == KILLED_BY_WILD_MAGIC
+        && you.escaped_death_aux == "Xom's lightning strike")
+    {
+        you.hp = 1;
+        you.reset_escaped_death();
+    }
+
+    return true;
+}
+
 // The nicer stuff.  Note: these things are not necessarily nice.
 static bool _xom_is_good(int sever, int tension)
 {
@@ -899,9 +1133,7 @@ static bool _xom_is_good(int sever, int tension)
 
     // Don't make the player berserk if there's no danger.
     if (tension > 0 && x_chance_in_y(2, sever))
-    {
         done = _xom_do_potion();
-    }
     else if (x_chance_in_y(3, sever))
     {
         _xom_makes_you_cast_random_spell(sever);
@@ -913,129 +1145,24 @@ static bool _xom_is_good(int sever, int tension)
     }
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(5, sever))
-    {
         done = _xom_send_allies(sever);
-    }
     else if (x_chance_in_y(6, sever))
     {
         _xom_gives_item(sever);
-
         done = true;
     }
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(7, sever))
-    {
-        monster_type mon = _xom_random_demon(sever);
-        const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
-
-        // If we have a non-demon, Xom got it someplace else, so use
-        // different messages below.
-        bool different = !is_demonic;
-
-        beh_type beha = BEH_FRIENDLY;
-        unsigned short hitting = you.pet_target;
-
-        // There's a chance that a non-demon may be hostile.
-        if (different && one_chance_in(4))
-        {
-            beha = BEH_HOSTILE;
-            hitting = MHITYOU;
-        }
-
-        const int summons =
-            create_monster(
-                mgen_data(mon, beha,
-                    6, MON_SUMM_AID,
-                    you.pos(), hitting,
-                    MG_FORCE_BEH, GOD_XOM));
-
-        if (summons != -1)
-        {
-            if (different)
-                god_speaks(GOD_XOM, _get_xom_speech("single holy summon").c_str());
-            else
-                god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
-
-            player_angers_monster(&menv[summons]);
-
-            done = true;
-        }
-    }
+        done = _xom_send_one_ally(sever);
     else if (x_chance_in_y(8, sever))
-    {
-        if (there_are_monsters_nearby(false, false))
-        {
-            monsters *mon =
-                choose_random_nearby_monster(0, _choose_mutatable_monster);
-
-            if (mon)
-            {
-                god_speaks(GOD_XOM,
-                           _get_xom_speech("good monster polymorph").c_str());
-
-                bool made_shifter = false;
-
-                if (one_chance_in(8) && !mons_is_shapeshifter(mon))
-                {
-                    mon->add_ench(one_chance_in(3) ?
-                        ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
-                    made_shifter = true;
-                }
-
-                monster_polymorph(mon, RANDOM_MONSTER,
-                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, made_shifter);
-
-                done = true;
-            }
-        }
-    }
+        done = _xom_good_polymorph_nearby_monster();
     else if (x_chance_in_y(9, sever))
     {
         _xom_gives_item(sever);
-
         done = true;
     }
     else if (x_chance_in_y(10, sever) && (you.level_type != LEVEL_ABYSS))
-    {
-        // Rearrange the pieces - blink every monster on this level and
-        // the player.
-
-        // Every now and then, Xom also confuses them all.
-        const bool confusem = one_chance_in(10);
-
-        // Not just every monster in sight - oh no.  Every monster on
-        // this level!
-        for (unsigned i = 0; i < MAX_MONSTERS; ++i)
-        {
-            monsters* monster = &menv[i];
-
-            if (!monster->alive())
-                continue;
-
-            if (monster_blink(monster))
-            {
-                if (!done)
-                    god_speaks(GOD_XOM, _get_xom_speech("rearrange the pieces").c_str());
-
-                if (confusem)
-                {
-                    if (mons_class_is_confusable(monster->type)
-                        && monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                                             KC_FRIENDLY, random2(sever))))
-                    {
-                        simple_monster_message(monster,
-                            " looks rather confused.");
-                    }
-                }
-                done = true;
-            }
-
-            // If he blinked at least one monster, blink the player,
-            // too, and then consider this act done.
-            if (done)
-                random_blink(false);
-        }
-    }
+        done = _xom_rearrange_pieces(sever);
     else if (x_chance_in_y(11, sever) && (you.level_type != LEVEL_ABYSS))
     {
         // The Xom teleportation train takes you on instant teleportation to
@@ -1050,7 +1177,6 @@ static bool _xom_is_good(int sever, int tension)
                 break;
         }
         while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
-
         done = true;
     }
     else if (x_chance_in_y(12, sever))
@@ -1059,115 +1185,18 @@ static bool _xom_is_good(int sever, int tension)
         if (vitrify_area(random2avg(sever / 2, 3) + 1))
         {
             god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
-
             done = true;
         }
     }
     else if (x_chance_in_y(13, sever) && x_chance_in_y(16, how_mutated()))
     {
-        if (you.can_safely_mutate()
-            && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
-        {
-            god_speaks(GOD_XOM, _get_xom_speech("good mutations").c_str());
-
-            mpr("Your body is suffused with distortional energy.");
-
-            set_hp(1 + random2(you.hp), false);
-            deflate_hp(you.hp_max / 2, true);
-
-            bool failMsg = true;
-
-            for (int i = random2(4); i >= 0; --i)
-            {
-                if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, true, false,
-                           false, true))
-                {
-                    done = true;
-                }
-                else
-                    failMsg = false;
-            }
-        }
+        done = _xom_give_good_mutation();
     }
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(14, sever))
-    {
-        monster_type mon = _xom_random_demon(sever);
-        const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
-
-        // If we have a non-demon, Xom got it someplace else, so use
-        // different messages below.
-        bool different = !is_demonic;
-
-        beh_type beha = BEH_FRIENDLY;
-        unsigned short hitting = you.pet_target;
-
-        // There's a chance that a non-demon may be hostile.
-        if (different && one_chance_in(4))
-        {
-            beha = BEH_HOSTILE;
-            hitting = MHITYOU;
-        }
-
-        const int summons =
-            create_monster(
-                mgen_data(_xom_random_demon(sever, one_chance_in(8)), beha,
-                    0, 0, you.pos(), hitting,
-                    MG_FORCE_BEH, GOD_XOM));
-
-        if (summons != -1)
-        {
-            if (different)
-                god_speaks(GOD_XOM, _get_xom_speech("single major holy summon").c_str());
-            else
-                god_speaks(GOD_XOM, _get_xom_speech("single major demon summon").c_str());
-
-            player_angers_monster(&menv[summons]);
-
-            done = true;
-        }
-    }
+        done = _xom_send_major_ally(sever);
     else if (x_chance_in_y(15, sever))
-    {
-        if (player_in_a_dangerous_place())
-        {
-            if (you.hp <= random2(201))
-                you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-
-            god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
-
-            bolt beam;
-            beam.beam_source  = NON_MONSTER;
-            beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage       = dice_def(3, 30);
-            beam.flavour      = BEAM_ELECTRICITY;
-            beam.target       = you.pos();
-            beam.name         = "blast of lightning";
-            beam.colour       = LIGHTCYAN;
-            beam.thrower      = KILL_MISC;
-            beam.aux_source   = "Xom's lightning strike";
-            beam.ex_size      = 2;
-            beam.is_tracer    = false;
-            beam.is_explosion = true;
-            beam.explode();
-
-            if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-            {
-                mpr("Your divine protection wanes.");
-                you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
-            }
-
-            // Don't accidentally kill the player when doing a good act.
-            if (you.escaped_death_cause == KILLED_BY_WILD_MAGIC
-                && you.escaped_death_aux == "Xom's lightning strike")
-            {
-                you.hp = 1;
-                you.reset_escaped_death();
-            }
-
-            done = true;
-        }
-    }
+        done = _xom_throw_divine_lightning();
 
     return (done);
 }
