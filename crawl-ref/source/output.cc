@@ -1391,6 +1391,22 @@ void monster_pane_info::to_string( int count, std::string& desc,
         break;
     }
 
+    // Evilness of attacking
+    switch (m_attitude)
+    {
+    case ATT_NEUTRAL:
+    case ATT_HOSTILE:
+        if (count == 1 && you.religion == GOD_SHINING_ONE
+            && !tso_unchivalric_attack_safe_monster(m_mon)
+            && is_unchivalric_attack(&you, m_mon))
+        {
+            desc_color = MAGENTA;
+        }
+        break;
+    default:
+        break;
+    }
+
     desc = out.str();
 }
 

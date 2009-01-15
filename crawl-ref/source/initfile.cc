@@ -638,7 +638,7 @@ void game_options::reset_options()
     scroll_margin_x  = 2;
     scroll_margin_y  = 2;
 
-    verbose_monster_pane = false;
+    verbose_monster_pane = true;
 
     autopickup_on = true;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;

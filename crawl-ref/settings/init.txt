@@ -155,7 +155,7 @@ trap_item_brand    = reverse
 # scroll_margin_y  = 2
 # scroll_margin    = 2
 #
-# verbose_monster_pane = true
+# verbose_monster_pane = false
 
 ##### 4-g	Travel and Exploration #################
 #
