@@ -728,6 +728,161 @@ static bool _player_is_dead()
             || you.did_escape_death());
 }
 
+static bool _xom_do_potion()
+{
+    bool rc = false;
+    potion_type pot =
+        static_cast<potion_type>(
+            random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED,
+                          POT_MIGHT, POT_INVISIBILITY, POT_BERSERK_RAGE,
+                          POT_EXPERIENCE, -1));
+
+    if (pot == POT_EXPERIENCE && !one_chance_in(6))
+        pot = POT_BERSERK_RAGE;
+
+    if (pot != POT_BERSERK_RAGE || you.can_go_berserk(false))
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
+
+        if (pot == POT_BERSERK_RAGE)
+            you.berserk_penalty = NO_BERSERK_PENALTY;
+
+        potion_effect(pot, 150);
+
+        rc = true;
+    }
+    return (rc);
+}
+
+static bool _xom_confuse_monsters(int sever)
+{
+    bool rc = false;
+    monsters *monster;
+    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monster = &menv[i];
+
+        if (monster->type == -1 || !mons_near(monster)
+            || mons_wont_attack(monster)
+            || !mons_class_is_confusable(monster->type)
+            || one_chance_in(20))
+        {
+            continue;
+        }
+
+        if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                                          KC_FRIENDLY, random2(sever))))
+        {
+            if (!rc)
+                god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
+
+            simple_monster_message(monster, " looks rather confused.");
+            rc = true;
+        }
+    }
+    return (rc);
+}
+
+
+static bool _xom_send_allies(int sever)
+{
+    bool rc = false;
+    const int numdemons =
+        std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
+    int numdifferent = 0;
+
+    // If we have a mix of demons and non-demons, there's a chance
+    // that one or both of the factions may be hostile.
+    int hostiletype = random_choose_weighted(3, 0,  // both friendly
+                                             4, 1,  // one hostile
+                                             4, 2,  // other hostile
+                                             1, 3,  // both hostile
+                                             0);
+
+    std::vector<bool> is_demonic(numdemons, false);
+    std::vector<int> summons(numdemons);
+
+    int num_actually_summoned = 0;
+
+    for (int i = 0; i < numdemons; ++i)
+    {
+        monster_type monster = _xom_random_demon(sever);
+
+        summons[i] =
+            create_monster(
+                mgen_data(monster, BEH_FRIENDLY,
+                          3, MON_SUMM_AID,
+                          you.pos(), you.pet_target,
+                          MG_FORCE_BEH, GOD_XOM));
+
+        if (summons[i] != -1)
+        {
+            num_actually_summoned++;
+            is_demonic[i] = (mons_class_holiness(monster) == MH_DEMONIC);
+
+            // If it's not a demon, Xom got it someplace else, so use
+            // different messages below.
+            if (!is_demonic[i])
+                numdifferent++;
+        }
+    }
+
+    if (num_actually_summoned)
+    {
+        const bool only_holy = (numdifferent == num_actually_summoned);
+        const bool only_demonic = (numdifferent == 0);
+
+        if (only_holy)
+        {
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("multiple holy summons").c_str());
+        }
+        else if (only_demonic)
+        {
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("multiple summons").c_str());
+        }
+        else
+        {
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("multiple mixed summons").c_str());
+        }
+
+        // If we have only non-demons, there's a chance that they
+        // may be hostile.
+        if (only_holy && one_chance_in(4))
+            hostiletype = 2;
+        // If we have only demons, they'll always be friendly.
+        else if (only_demonic)
+            hostiletype = 0;
+
+        for (int i = 0; i < numdemons; ++i)
+        {
+            if (summons[i] == -1)
+                continue;
+
+            monsters *mon = &menv[summons[i]];
+
+            if (hostiletype != 0)
+            {
+                // Mark factions hostile as appropriate.
+                if (hostiletype == 3
+                    || (is_demonic[i] && hostiletype == 1)
+                    || (!is_demonic[i] && hostiletype == 2))
+                {
+                    mon->attitude = ATT_HOSTILE;
+                    behaviour_event(mon, ME_ALERT, MHITYOU);
+                }
+            }
+
+            player_angers_monster(mon);
+        }
+
+        rc = true;
+    }
+    return (rc);
+}
+
 // The nicer stuff.  Note: these things are not necessarily nice.
 static bool _xom_is_good(int sever, int tension)
 {
@@ -745,139 +900,21 @@ static bool _xom_is_good(int sever, int tension)
     // Don't make the player berserk if there's no danger.
     if (tension > 0 && x_chance_in_y(2, sever))
     {
-        potion_type pot =
-            static_cast<potion_type>(
-                random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED,
-                              POT_MIGHT, POT_INVISIBILITY, POT_BERSERK_RAGE,
-                              POT_EXPERIENCE, -1));
-
-        if (pot == POT_EXPERIENCE && !one_chance_in(6))
-            pot = POT_BERSERK_RAGE;
-
-        if (pot != POT_BERSERK_RAGE || you.can_go_berserk(false))
-        {
-            god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
-
-            if (pot == POT_BERSERK_RAGE)
-                you.berserk_penalty = NO_BERSERK_PENALTY;
-
-            potion_effect(pot, 150);
-
-            done = true;
-        }
+        done = _xom_do_potion();
     }
     else if (x_chance_in_y(3, sever))
     {
         _xom_makes_you_cast_random_spell(sever);
-
         done = true;
     }
     else if (x_chance_in_y(4, sever))
     {
-        monsters *monster;
-        for (unsigned i = 0; i < MAX_MONSTERS; ++i)
-        {
-            monster = &menv[i];
-
-            if (monster->type == -1 || !mons_near(monster)
-                || mons_wont_attack(monster)
-                || !mons_class_is_confusable(monster->type)
-                || one_chance_in(20))
-            {
-                continue;
-            }
-
-            if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever))))
-            {
-                if (!done)
-                    god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
-
-                simple_monster_message(monster, " looks rather confused.");
-                done = true;
-            }
-        }
+        done = _xom_confuse_monsters(sever);
     }
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(5, sever))
     {
-        // FIXME: Can we clean up this ugliness, please?
-        const int numdemons =
-            std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
-        int numdifferent = 0;
-
-        // If we have a mix of demons and non-demons, there's a chance
-        // that one or both of the factions may be hostile.
-        int hostiletype = random_choose_weighted(3, 0,  // both friendly
-                                                 4, 1,  // one hostile
-                                                 4, 2,  // other hostile
-                                                 1, 3,  // both hostile
-                                                 0);
-
-        std::vector<bool> is_demonic(numdemons);
-        std::vector<int> summons(numdemons);
-
-        bool success = false;
-
-        for (int i = 0; i < numdemons; ++i)
-        {
-            monster_type monster = _xom_random_demon(sever);
-
-            is_demonic[i] = (mons_class_holiness(monster) == MH_DEMONIC);
-
-            // If it's not a demon, Xom got it someplace else, so use
-            // different messages below.
-            if (!is_demonic[i])
-                numdifferent++;
-
-            summons[i] =
-                create_monster(
-                    mgen_data(monster, BEH_FRIENDLY,
-                        3, MON_SUMM_AID,
-                        you.pos(), you.pet_target,
-                        MG_FORCE_BEH, GOD_XOM));
-
-            if (summons[i] != -1)
-                success = true;
-        }
-
-        if (success)
-        {
-            if (numdifferent == numdemons)
-                god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons").c_str());
-            else if (numdifferent > 0)
-                god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons").c_str());
-            else
-                god_speaks(GOD_XOM, _get_xom_speech("multiple summons").c_str());
-
-            // If we have only non-demons, there's a chance that they
-            // may be hostile.
-            if (numdifferent == numdemons && one_chance_in(4))
-                hostiletype = 2;
-            // If we have only demons, they'll always be friendly.
-            else if (numdifferent == 0)
-                hostiletype = 0;
-
-            for (int i = 0; i < numdemons; ++i)
-            {
-                monsters *mon = &menv[summons[i]];
-
-                if (hostiletype != 0)
-                {
-                    // Mark factions hostile as appropriate.
-                    if (hostiletype == 3
-                        || (is_demonic[i] && hostiletype == 1)
-                        || (!is_demonic[i] && hostiletype == 2))
-                    {
-                        mon->attitude = ATT_HOSTILE;
-                        behaviour_event(mon, ME_ALERT, MHITYOU);
-                    }
-                }
-
-                player_angers_monster(mon);
-            }
-
-            done = true;
-        }
+        done = _xom_send_allies(sever);
     }
     else if (x_chance_in_y(6, sever))
     {
