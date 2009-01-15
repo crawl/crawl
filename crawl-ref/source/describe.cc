@@ -1021,6 +1021,16 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 description += "A skilled user can throw it in such a way "
                     "that it will return to its owner.";
                 break;
+            case SPWPN_PENETRATION:
+                description += "Ammo fired by it will pass through the "
+                    "targets it hits, potentially hitting all targets in "
+                    "its path until it reaches maximum range.";
+                break;
+            case SPWPN_SHADOW:
+                description += "If ammo fired by it kills a monster, "
+                    "causing it to leave a corpse, the corpse will be "
+                    "animated as a zombie friendly to the one who fired it.";
+                break;
             }
         }
 
@@ -1174,14 +1184,25 @@ static std::string _describe_ammo( const item_def &item )
         }
     }
 
-    bool can_launch    = has_launcher(item);
-    bool can_throw     = is_throwable(&you, item, true);
-    bool need_new_line = true;
+    bool can_launch       = has_launcher(item);
+    bool can_throw        = is_throwable(&you, item, true);
+    bool need_new_line    = true;
+    bool always_destryoed = false;
 
     if (item.special && item_type_known(item))
     {
         description += "$$";
         std::string bolt_name;
+
+        std::string threw_or_fired;
+        if (can_throw)
+        {
+            threw_or_fired += "threw";
+            if (can_launch)
+                threw_or_fired += " or ";
+        }
+        if (can_launch)
+            threw_or_fired += "fired";
 
         switch (item.special)
         {
@@ -1211,6 +1232,8 @@ static std::string _describe_ammo( const item_def &item )
             description += "it turns into a bolt of ";
             description += bolt_name;
             description += ".";
+
+            always_destryoed = true;
             break;
         case SPMSL_POISONED:
         case SPMSL_POISONED_II:
@@ -1222,6 +1245,37 @@ static std::string _describe_ammo( const item_def &item )
         case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
+            break;
+        case SPMSL_SHADOW:
+            description += "If it kills a monster, causing it to leave a "
+                "corpse, the corpse will be animated as a zombie friendly "
+                "to the one who " + threw_or_fired + " it.";
+            break;
+        case SPMSL_PENETRATION:
+            description += "It will pass through any targets it hits, "
+                "potentially hitting all targets in its path until it "
+                "reaches maximum range.";
+            break;
+        case SPMSL_DISPERSAL:
+            description += "Any target it hits will blink, with a "
+                "tendancy towards blinking further away from the one who "
+                + threw_or_fired + " it.";
+            break;
+        case SPMSL_EXPLODING:
+            description += "It will explode into fragemnets upon hitting "
+                "a target, hitting an obstruction, or reaching the end of "
+                "its range.";
+            always_destryoed = true;
+            break;
+        case SPMSL_STEEL:
+            description += "Compared to normal ammo it does 50% more damage, "
+                "is destroyed only 1/10th upon impact, and weighs "
+                "three times as much.";
+            break;
+        case SPMSL_SILVER:
+            description += "Compared to normal ammo it does twice as much "
+                "damage to the undead, demons and shapeshifters, and "
+                "weighs twice as much.";
             break;
         }
 
@@ -1258,7 +1312,10 @@ static std::string _describe_ammo( const item_def &item )
         }
     }
 
-    append_missile_info(description);
+    if (always_destryoed)
+        description += "$It will always be destroyed upon impact.";
+    else
+        append_missile_info(description);
 
     if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus >= MAX_WPN_ENCHANT)
         description += "$It is maximally enchanted.";

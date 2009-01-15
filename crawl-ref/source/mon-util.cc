@@ -4049,6 +4049,16 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
             mpr("It is briefly surrounded by a scintillating aura of "
                 "random colours.");
             break;
+        case SPWPN_PENETRATION:
+            mprf("%s %s briefly pass through it before %s manages to get a "
+                 "firm grip on it.",
+                 pronoun(PRONOUN_CAP_POSSESSIVE).c_str(),
+                 hand_name(true).c_str(),
+                 pronoun(PRONOUN_NOCAP).c_str());
+            break;
+        case SPWPN_SHADOW:
+            mpr("It is briefly surrounded by shifting shadows.");
+            break;
 
         default:
             // A ranged weapon without special message is known to be unbranded.

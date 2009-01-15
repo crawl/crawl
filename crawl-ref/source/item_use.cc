@@ -650,6 +650,16 @@ void wield_effects(int item_wield_2, bool showMsgs)
                         "of random colours.");
                     break;
 
+                case SPWPN_PENETRATION:
+                    mprf("Your %s briefly pass through it before you manage "
+                         "to get a firm grip on it.",
+                         you.hand_name(true).c_str());
+                    break;
+
+                case SPWPN_SHADOW:
+                    mpr("It is briefly surrounded by shifting shadows.");
+                    break;
+
                 case SPWPN_SINGING_SWORD:
                     if (!was_known)
                     {
@@ -2109,6 +2119,7 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
              expl->name = replace_all(expl->name, ammo.name(DESC_PLAIN),
                                       short_name);
          }
+         expl->name = "explosion of " + expl->name;
 
          beam.special_explosion = expl;
     }
