@@ -1698,7 +1698,7 @@ static int _item_to_skill_level(const item_def *item)
 
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 {
-    if (!victim->alive() || victim->res_poison())
+    if (!victim->alive() || victim->res_poison() > 0)
         return (false);
 
     if (beam.is_tracer)
