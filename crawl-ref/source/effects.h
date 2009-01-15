@@ -114,6 +114,8 @@ int torment_monsters(coord_def where, int pow, int caster);
 
 void immolation(int caster, bool known = false);
 
+void cleansing_flame(int pow, int caster);
+
 // called from: debug
 void change_labyrinth(bool msg = false);
 

@@ -1503,15 +1503,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-        beam.range = 8;
-        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY, beam.range))
-            return (false);
-
-        if (!zapping(ZAP_CLEANSING_FLAME, 20 + you.skills[SK_INVOCATIONS] * 6,
-                     beam, true))
-        {
-            return (false);
-        }
+        cleansing_flame(10 + (you.skills[SK_INVOCATIONS] * 7) / 6,
+                        CLEANSING_FLAME_INVOCATION);
         exercise(SK_INVOCATIONS, 3 + random2(6));
         break;
 

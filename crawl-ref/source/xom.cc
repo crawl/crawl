@@ -1086,18 +1086,20 @@ static bool _xom_throw_divine_lightning()
     god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
 
     bolt beam;
-    beam.beam_source  = NON_MONSTER;
+
+    beam.flavour      = BEAM_ELECTRICITY;
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(3, 30);
-    beam.flavour      = BEAM_ELECTRICITY;
     beam.target       = you.pos();
     beam.name         = "blast of lightning";
     beam.colour       = LIGHTCYAN;
     beam.thrower      = KILL_MISC;
+    beam.beam_source  = NON_MONSTER;
     beam.aux_source   = "Xom's lightning strike";
     beam.ex_size      = 2;
     beam.is_tracer    = false;
     beam.is_explosion = true;
+
     beam.explode();
 
     if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])

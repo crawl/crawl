@@ -1352,8 +1352,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_FLAME_OF_CLEANSING:
-        if (!zapping(ZAP_CLEANSING_FLAME, powc, beam, true))
-            return (SPRET_ABORT);
+        cleansing_flame(powc, CLEANSING_FLAME_SPELL);
         break;
 
     case SPELL_HOLY_WORD:

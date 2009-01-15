@@ -399,8 +399,16 @@ enum char_set_type
     CSET_ASCII,         // flat 7-bit ASCII
     CSET_IBM,           // 8-bit ANSI/Code Page 437
     CSET_DEC,           // 8-bit DEC, 0xE0-0xFF shifted for line drawing chars
-    CSET_UNICODE,       // Unicode.
+    CSET_UNICODE,       // Unicode
     NUM_CSET
+};
+
+enum cleansing_flame_source_type
+{
+    CLEANSING_FLAME_GENERIC    = -1,
+    CLEANSING_FLAME_SPELL      = -2, // SPELL_FLAME_OF_CLEANSING
+    CLEANSING_FLAME_INVOCATION = -3, // ABIL_TSO_CLEANSING_FLAME
+    CLEANSING_FLAME_TSO        = -4  // TSO effect
 };
 
 enum cloud_type
@@ -1324,7 +1332,7 @@ enum holy_word_source_type
     HOLY_WORD_SCROLL      = -2,
     HOLY_WORD_SPELL       = -3,  // SPELL_HOLY_WORD
     HOLY_WORD_ZIN         = -4,  // Zin effect
-    HOLY_WORD_SHINING_ONE = -5   // TSO effect
+    HOLY_WORD_TSO         = -5   // TSO effect
 };
 
 enum hunger_state                  // you.hunger_state
@@ -1343,7 +1351,7 @@ enum immolation_source_type
 {
     IMMOLATION_GENERIC = -1,
     IMMOLATION_SCROLL  = -2,
-    IMMOLATION_SPELL   = -3
+    IMMOLATION_SPELL   = -3  // effect when fixing fire brand
 };
 
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status
@@ -3032,7 +3040,6 @@ enum zap_type
     ZAP_PAIN,
     ZAP_STICKY_FLAME,
     ZAP_DISPEL_UNDEAD,
-    ZAP_CLEANSING_FLAME,
     ZAP_BONE_SHARDS,
     ZAP_BANISHMENT,
     ZAP_DEGENERATION,

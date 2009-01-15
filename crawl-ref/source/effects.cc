@@ -87,12 +87,10 @@ int holy_word_player(int pow, int caster)
             aux = "Zin's holy word";
             break;
 
-        case HOLY_WORD_SHINING_ONE:
-            aux = "The Shining One's holy word";
+        case HOLY_WORD_TSO:
+            aux = "the Shining One's holy word";
             break;
         }
-
-        caster = HOLY_WORD_GENERIC;
     }
 
     ouch(hploss, caster,
@@ -208,8 +206,6 @@ int torment_player(int pow, int caster)
             aux = "Xom's torment";
             break;
         }
-
-        caster = TORMENT_GENERIC;
     }
 
     ouch(hploss, caster, (caster != TORMENT_GENERIC) ? KILLED_BY_MONSTER
@@ -275,8 +271,6 @@ void immolation(int caster, bool known)
     const char *aux = "immolation";
 
     bolt beam;
-    // The scroll of immolation doesn't affect items.
-    beam.affects_items = (caster != IMMOLATION_SCROLL);
 
     if (caster < 0)
     {
@@ -290,22 +284,58 @@ void immolation(int caster, bool known)
             aux = "a fiery explosion";
             break;
         }
-
-        caster = IMMOLATION_GENERIC;
     }
 
-    beam.flavour      = BEAM_FIRE;
+    beam.flavour       = BEAM_FIRE;
+    beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.damage        = dice_def(3, 10);
+    beam.target        = you.pos();
+    beam.name          = "fiery explosion";
+    beam.colour        = RED;
+    beam.beam_source   = NON_MONSTER;
+    beam.thrower       = (caster == IMMOLATION_GENERIC) ? KILL_MISC : KILL_YOU;
+    beam.aux_source    = aux;
+    beam.ex_size       = 2;
+    beam.is_tracer     = false;
+    beam.is_explosion  = true;
+    beam.effect_known  = known;
+    beam.affects_items = (caster != IMMOLATION_SCROLL);
+
+    beam.explode();
+}
+
+void cleansing_flame(int pow, int caster)
+{
+    ASSERT(!crawl_state.arena);
+
+    const char *aux = "cleansing flame";
+
+    bolt beam;
+
+    if (caster < 0)
+    {
+        switch (caster)
+        {
+        case CLEANSING_FLAME_TSO:
+            aux = "the Shining One's cleansing flame";
+            break;
+        }
+    }
+
+    beam.flavour      = BEAM_HOLY;
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.damage       = dice_def(3, 10);
+    beam.damage       = dice_def(2, pow);
     beam.target       = you.pos();
-    beam.name         = "fiery explosion";
-    beam.colour       = RED;
-    beam.thrower      = (caster == IMMOLATION_GENERIC) ? KILL_MISC : KILL_YOU;
+    beam.name         = "golden flame";
+    beam.colour       = YELLOW;
+    beam.thrower      = (caster == CLEANSING_FLAME_GENERIC
+                            || caster == CLEANSING_FLAME_TSO) ? KILL_MISC
+                                                              : KILL_YOU;
+    beam.beam_source  = NON_MONSTER;
     beam.aux_source   = aux;
     beam.ex_size      = 2;
     beam.is_tracer    = false;
     beam.is_explosion = true;
-    beam.effect_known = known;
 
     beam.explode();
 }

@@ -735,23 +735,6 @@ const zap_info zap_data[] = {
         false
     },
 
-
-    {
-        ZAP_CLEANSING_FLAME,
-        "golden flame",
-        200,
-        new calcdice_calculator<2, 20, 2, 3>,
-        new tohit_calculator<150>,
-        YELLOW,
-        false,
-        BEAM_HOLY,
-        DCHAR_FIRED_ZAP,
-        true,
-        true,
-        true
-    },
-
-
     {
         ZAP_BONE_SHARDS,
         "spray of bone shards",
@@ -786,7 +769,6 @@ const zap_info zap_data[] = {
         false
     },
 
-
     {
         ZAP_DEGENERATION,
         "0",
@@ -802,7 +784,6 @@ const zap_info zap_data[] = {
         false
     },
 
-
     {
         ZAP_STING,
         "sting",
@@ -817,7 +798,6 @@ const zap_info zap_data[] = {
         false,
         false
     },
-
 
     {
         ZAP_HELLFIRE,
@@ -1286,7 +1266,6 @@ const zap_info zap_data[] = {
         false
     }
 };
-
 
 static void _zappy(zap_type z_type, int power, bolt &pbolt)
 {
@@ -3811,8 +3790,8 @@ void bolt::affect_player()
         return;
 
     const bool engulfs = (is_explosion || is_big_cloud);
-    mprf( "The %s %s you!",
-          name.c_str(), (engulfs) ? "engulfs" : "hits" );
+    mprf("The %s %s you!",
+         name.c_str(), engulfs ? "engulfs" : "hits");
 
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)
@@ -3866,14 +3845,14 @@ void bolt::affect_player()
     if (!engulfs
         && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
     {
-        int blood = hurted/2; // assumes DVORP_PIERCING, factor: 0.5
+        int blood = hurted / 2; // assumes DVORP_PIERCING, factor: 0.5
         if (blood > you.hp)
             blood = you.hp;
 
         bleed_onto_floor(you.pos(), -1, blood, true);
     }
 
-    hurted = check_your_resists( hurted, flavour );
+    hurted = check_your_resists(hurted, flavour);
 
     if (flavour == BEAM_MIASMA && hurted > 0)
     {
@@ -4505,7 +4484,7 @@ void bolt::affect_monster(monsters* mon)
     {
         mprf("The %s %s %s.",
              name.c_str(),
-             engulfs? "engulfs" : "hits",
+             engulfs ? "engulfs" : "hits",
              player_monster_visible(mon) ?
                  mon->name(DESC_NOCAP_THE).c_str() : "something");
 
@@ -5051,16 +5030,6 @@ void bolt::refine_for_explosion()
 
         type    = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_HELLFIRE;
-    }
-
-    if (name == "golden flame")
-    {
-        seeMsg  = "The flame explodes!";
-        hearMsg = "You feel a deep, resonant explosion.";
-
-        type    = dchar_glyph(DCHAR_FIRED_BURST);
-        flavour = BEAM_HOLY;
-        ex_size = 2;
     }
 
     if (name == "fireball")

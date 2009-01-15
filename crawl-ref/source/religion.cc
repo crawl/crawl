@@ -5547,20 +5547,8 @@ static void _tso_blasts_cleansing_flame(const char *message)
         simple_god_message(" blasts you with cleansing flame!",
                            GOD_SHINING_ONE);
 
-        bolt beam;
-        beam.beam_source  = NON_MONSTER;
-        beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = calc_dice(2, 20 + (you.experience_level * 7) / 3);
-        beam.flavour      = BEAM_HOLY;
-        beam.target       = you.pos();
-        beam.name         = "golden flame";
-        beam.colour       = YELLOW;
-        beam.thrower      = KILL_MISC;
-        beam.aux_source   = "the Shining One's cleansing flame";
-        beam.ex_size      = 2;
-        beam.is_tracer    = false;
-        beam.is_explosion = true;
-        beam.explode();
+        cleansing_flame(20 + (you.experience_level * 7) / 3,
+                        CLEANSING_FLAME_TSO);
     }
 }
 
@@ -5977,7 +5965,7 @@ static bool _bless_weapon( god_type god, brand_type brand, int colour )
 
         if ( god == GOD_SHINING_ONE )
         {
-            holy_word(100, HOLY_WORD_SHINING_ONE, you.pos(), true);
+            holy_word(100, HOLY_WORD_TSO, you.pos(), true);
 
             // Un-bloodify surrounding squares.
             for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
@@ -7206,4 +7194,4 @@ static void _place_delayed_monsters()
     _delayed_done_trigger_pos.clear();
     _delayed_success.clear();
     _delayed_failure.clear();
-} // _place_delayed_monsters()
+}
