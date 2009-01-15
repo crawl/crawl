@@ -98,7 +98,9 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
 
 const char *describe_xom_favour()
 {
-    if (you.gift_timeout < 1)
+    if (you.religion != GOD_XOM)
+        return ("A very buggy toy of Xom.");
+    else if (you.gift_timeout < 1)
         return "A BORING thing.";
     else
         return (you.piety > 180) ? "A beloved toy of Xom." :
@@ -128,8 +130,14 @@ static std::string _get_xom_speech(const std::string key)
 
 bool xom_is_nice()
 {
-    // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
-    return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2));
+    if (you.penance[GOD_XOM])
+        return (false);
+
+    if (you.religion == GOD_XOM)
+        // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
+        return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2));
+    else
+        return coinflip();
 }
 
 static void _xom_is_stimulated(int maxinterestingness,
