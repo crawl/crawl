@@ -270,7 +270,6 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
                          int owner_id)
 {
     const bool hostile_grid = grid_destroys_items(grd(monster->pos()));
-    const int midx = (int) monster_index(monster);
 
     bool destroyed = false;
 
@@ -285,7 +284,7 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
                 testbits(mitm[item].flags, ISFLAG_SUMMONED);
             if (hostile_grid || summoned_item)
             {
-                item_was_destroyed(mitm[item], midx);
+                item_was_destroyed(mitm[item], monster->mindex());
                 destroy_item( item );
                 if (!summoned_item)
                     destroyed = true;

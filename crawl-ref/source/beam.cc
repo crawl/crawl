@@ -4005,11 +4005,8 @@ void bolt::update_hurt_or_helped(monsters *mon)
             friend_info.hurt++;
 
             // Harmful beam from this monster rebounded and hit the monster.
-            if (!is_tracer
-                && static_cast<int>(monster_index(mon)) == beam_source)
-            {
+            if (!is_tracer && mon->mindex() == beam_source)
                 xom_is_stimulated(128);
-            }
         }
         else if (nice_to(mon))
             friend_info.helped++;

@@ -800,21 +800,20 @@ static bool _xom_is_good(int sever, int tension)
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(5, sever))
     {
-        // XXX: Can we clean up this ugliness, please?
+        // FIXME: Can we clean up this ugliness, please?
         const int numdemons =
             std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
         int numdifferent = 0;
 
         // If we have a mix of demons and non-demons, there's a chance
         // that one or both of the factions may be hostile.
-        int hostile = random2(12);
-        int hostiletype =
-            (hostile <  3) ? 0 :                  //  1/4: both are friendly
-            (hostile < 11) ? (coinflip() ? 1 : 2) //  2/3: one is hostile
-                           : 3;                   // 1/12: both are hostile
+        int hostiletype = random_choose_weighted(3, 0,  // both friendly
+                                                 4, 1,  // one hostile
+                                                 4, 2,  // other hostile
+                                                 1, 3); // both hostile
 
-        bool *is_demonic = new bool[numdemons];
-        int *summons = new int[numdemons];
+        std::vector<bool> is_demonic(numdemons);
+        std::vector<int> summons(numdemons);
 
         bool success = false;
 
@@ -859,7 +858,7 @@ static bool _xom_is_good(int sever, int tension)
 
             for (int i = 0; i < numdemons; ++i)
             {
-                monsters *mon = &menv[i];
+                monsters *mon = &menv[summons[i]];
 
                 if (hostiletype != 0)
                 {
@@ -878,9 +877,6 @@ static bool _xom_is_good(int sever, int tension)
 
             done = true;
         }
-
-        delete[] is_demonic;
-        delete[] summons;
     }
     else if (x_chance_in_y(6, sever))
     {
