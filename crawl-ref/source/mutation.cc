@@ -1218,15 +1218,23 @@ formatted_string describe_mutations()
         break;
 
     case SP_VAMPIRE:
+        have_any = true;
         if (you.hunger_state == HS_STARVING)
             result += "<green>You do not heal.</green>" EOL;
+        else if (you.hunger_state == HS_ENGORGED)
+            result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
         else if (you.hunger_state <= HS_HUNGRY)
             result += "<green>You heal slowly.</green>" EOL;
         else if (you.hunger_state >= HS_FULL)
             result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
-        else if (you.hunger_state == HS_ENGORGED)
-            result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
-        have_any = true;
+        else
+            have_any = false;
+
+        if (you.experience_level >= 6)
+        {
+            result += "You can bottle blood from corpses with 'c'." EOL;
+            have_any = true;
+        }
         break;
 
     default:
@@ -1257,17 +1265,17 @@ formatted_string describe_mutations()
 
     textcolor(LIGHTGREY);
 
-    // first add (non-removable) inborn abilities and demon powers
+    // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        // mutation is actually a demonic power
+        // Mutation is actually a demonic power.
         if (you.mutation[i] != 0 && you.demon_pow[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
 
             have_any = true;
 
-            // these are already handled above:
+            // These are already handled above:
             if (you.species == SP_NAGA
                 && (i == MUT_BREATHE_POISON || i == MUT_FAST
                     || i == MUT_DEFORMED))
@@ -1288,13 +1296,13 @@ formatted_string describe_mutations()
                 fully_inactive = _mutation_is_fully_inactive(mut_type);
 
             const char* colourname = "";
-            if ( you.species == SP_DEMONSPAWN )
+            if (you.species == SP_DEMONSPAWN)
             {
                 if (fully_inactive)
                     colourname = "darkgrey";
                 else if (!fully_active)
                     colourname = "yellow";
-                else if ( you.demon_pow[i] < you.mutation[i] )
+                else if (you.demon_pow[i] < you.mutation[i])
                     colourname = "lightred";
                 else
                     colourname = "red";
@@ -1305,7 +1313,7 @@ formatted_string describe_mutations()
                     colourname = "darkgrey";
                 else if (!fully_active)
                     colourname = "blue";
-                else if ( you.demon_pow[i] < you.mutation[i] )
+                else if (you.demon_pow[i] < you.mutation[i])
                     colourname = "cyan";
                 else
                     colourname = "lightblue";

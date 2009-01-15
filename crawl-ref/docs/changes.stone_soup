@@ -18,7 +18,7 @@ Breaks saves compatibility.
 Levels
 ------
 * New portal vaults (Sewer, Ice Cave, Minitomb), and many new vaults.
-* Labyrinths are now mappable (map rot!) and from time to time change shape.
+* Self-changing labyrinths (mappable but subject to map rot).
 * Teleporting within a labyrinth always sends you away from the exit.
 * The Orcish Mines are now completely interconnected via the branch bottom.
 * Ghosts may no longer appear in the Ecumenic Temple.
@@ -113,6 +113,7 @@ Gods
 ----
 * Greatly improved Yredelemnul.
 * Nerfed TSO/Beogh blessings of followers.
+* Xom is much more interesting.
 * Reduce damage dealt by Cleansing Flame.
 * Killing a holy being is now sometimes avenged by TSO.
 * Move Divine Robustness from Zin to Elyvilon, replacing Incredible Healing.

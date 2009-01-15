@@ -2584,12 +2584,21 @@ static void _prep_input()
 }
 
 // Decrement a single duration. Print the message if the duration runs out.
+// At midpoint (defined by get_expiration_threshold() in player.cc)
+// print midmsg and decrease duration by midloss (a randomized amount so as
+// to make it impossible to know the exact remaining duration for sure).
+// NOTE: The maximum possible midloss should be greater than midpoint,
+//       otherwise the duration may end in the same turn the warning
+//       message is printed which would be a bit late.
 static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
-                                  int midpoint = -1, int midloss = 0,
-                                  const char* midmsg = NULL,
-                                  msg_channel_type chan = MSGCH_DURATION )
+                                  int midloss = 0, const char* midmsg = NULL,
+                                  msg_channel_type chan = MSGCH_DURATION)
 {
+    if (you.duration[dur] < 1)
+        return (false);
+
     bool rc = false;
+    const int midpoint = get_expiration_threshold(dur);
 
     if (you.duration[dur] > 1)
     {
@@ -2602,7 +2611,11 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
             you.duration[dur] -= midloss;
         }
     }
-    else if (you.duration[dur] == 1)
+
+    // In case midloss caused the duration to end prematurely.
+    // (This really shouldn't happen, else the whole point of the
+    //  "begins to time out" message is lost!)
+    if (you.duration[dur] <= 1)
     {
         if (endmsg)
             mpr(endmsg, chan);
@@ -2643,9 +2656,7 @@ static void _decrement_durations()
     dec_napalm_player();
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR,
-                              "Your icy armour evaporates.",
-                              get_expiration_threshold(DUR_ICY_ARMOUR),
-                              coinflip(),
+                              "Your icy armour evaporates.", coinflip(),
                               "Your icy armour starts to melt."))
     {
         you.redraw_armour_class = true;
@@ -2656,19 +2667,16 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_REPEL_MISSILES,
                           "You feel less protected from missiles.",
-                          get_expiration_threshold(DUR_REPEL_MISSILES),
                           coinflip(),
                           "Your repel missiles spell is about to expire...");
 
     _decrement_a_duration(DUR_DEFLECT_MISSILES,
                           "You feel less protected from missiles.",
-                          get_expiration_threshold(DUR_DEFLECT_MISSILES),
                           coinflip(),
                           "Your deflect missiles spell is about to expire...");
 
     _decrement_a_duration(DUR_REGENERATION,
                           "Your skin stops crawling.",
-                          get_expiration_threshold(DUR_REGENERATION),
                           coinflip(),
                           "Your skin is crawling a little less now.");
 
@@ -2748,9 +2756,7 @@ static void _decrement_durations()
         || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
         || you.duration[DUR_TRANSFORMATION] <= 5)
     {
-        if ( _decrement_a_duration(DUR_TRANSFORMATION, NULL,
-                                   get_expiration_threshold(DUR_TRANSFORMATION),
-                                   random2(3),
+        if ( _decrement_a_duration(DUR_TRANSFORMATION, NULL, random2(3),
                                    "Your transformation is almost over.") )
         {
             untransform();
@@ -2760,25 +2766,20 @@ static void _decrement_durations()
 
     // Must come after transformation duration.
     _decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
-                          -1, 0, NULL, MSGCH_RECOVERY);
+                          0, NULL, MSGCH_RECOVERY);
 
     _decrement_a_duration(DUR_REPEL_UNDEAD,
-                          "Your holy aura fades away.",
-                          get_expiration_threshold(DUR_REPEL_UNDEAD),
-                          random2(3),
+                          "Your holy aura fades away.", random2(3),
                           "Your holy aura is starting to fade.");
     _decrement_a_duration(DUR_SWIFTNESS,
-                          "You feel sluggish.",
-                          get_expiration_threshold(DUR_SWIFTNESS), coinflip(),
+                          "You feel sluggish.", coinflip(),
                           "You start to feel a little slower.");
     _decrement_a_duration(DUR_INSULATION,
-                          "You feel conductive.",
-                          get_expiration_threshold(DUR_INSULATION), coinflip(),
+                          "You feel conductive.", coinflip(),
                           "You start to feel a little less insulated.");
 
     if (_decrement_a_duration(DUR_STONEMAIL,
                               "Your scaly stone armour disappears.",
-                              get_expiration_threshold(DUR_STONEMAIL),
                               coinflip(),
                               "Your scaly stone armour is starting "
                               "to flake away."))
@@ -2789,7 +2790,6 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_FORESCRY,
                               "You feel firmly rooted in the present.",
-                              get_expiration_threshold(DUR_FORESCRY),
                               coinflip(),
                               "Your vision of the future begins to falter."))
     {
@@ -2799,8 +2799,6 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis())
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
 
-    _decrement_a_duration(DUR_SEE_INVISIBLE); // jmf: cute message
-                                              // handled elsewhere
     _decrement_a_duration(DUR_TELEPATHY, "You feel less empathic.");
 
     if (_decrement_a_duration(DUR_CONDENSATION_SHIELD))
@@ -2829,14 +2827,12 @@ static void _decrement_durations()
     }
 
     _decrement_a_duration(DUR_CONTROL_TELEPORT,
-                          "You feel uncertain.",
-                          get_expiration_threshold(DUR_CONTROL_TELEPORT),
-                          coinflip(), "You start to feel a little uncertain.");
+                          "You feel uncertain.", coinflip(),
+                          "You start to feel a little uncertain.");
 
     if (_decrement_a_duration(DUR_DEATH_CHANNEL,
-                              "Your unholy channel expires.",
-                              get_expiration_threshold(DUR_DEATH_CHANNEL),
-                              coinflip(), "Your unholy channel is weakening."))
+                              "Your unholy channel expires.", coinflip(),
+                              "Your unholy channel is weakening."))
     {
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     }
@@ -2849,8 +2845,7 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SLAYING, "You feel less lethal.");
 
     _decrement_a_duration(DUR_INVIS, "You flicker back into view.",
-                          get_expiration_threshold(DUR_INVIS), coinflip(),
-                          "You flicker for a moment.");
+                          coinflip(), "You flicker for a moment.");
 
     _decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, "You feel less confused.");
@@ -2878,7 +2873,7 @@ static void _decrement_durations()
                           "The bond with your blade fades away." );
 
     if ( _decrement_a_duration(DUR_MESMERISED, "You break out of your daze.",
-                               -1, 0, NULL, MSGCH_RECOVERY ))
+                               0, NULL, MSGCH_RECOVERY ))
     {
         you.mesmerised_by.clear();
     }
@@ -2988,7 +2983,6 @@ static void _decrement_durations()
     {
         if (_decrement_a_duration(DUR_LEVITATION,
                                   "You float gracefully downwards.",
-                                  get_expiration_threshold(DUR_LEVITATION),
                                   random2(6),
                                   "You are starting to lose your buoyancy!"))
         {
@@ -3058,7 +3052,6 @@ static void _decrement_durations()
         else
             _decrement_a_duration(DUR_DEATHS_DOOR,
                                   "Your life is in your own hands again!",
-                                  get_expiration_threshold(DUR_DEATHS_DOOR),
                                   random2(6),
                                   "Your time is quickly running out!");
     }

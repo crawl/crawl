@@ -409,6 +409,15 @@ size_type player::transform_size(int psize) const
     }
 }
 
+static void _transformation_expiration_warning()
+{
+    if (you.duration[DUR_TRANSFORMATION]
+            <= get_expiration_threshold(DUR_TRANSFORMATION))
+    {
+        mpr("You have a feeling this form won't last long.");
+    }
+}
+
 // Transforms you into the specified form. If quiet is true, fails silently
 // (if it fails).
 bool transform(int pow, transformation_type which_trans, bool quiet)
@@ -507,6 +516,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         you.symbol = 's';
         you.colour = BROWN;
+
+        _transformation_expiration_warning();
         return (true);
 
     case TRAN_BAT:
@@ -535,7 +546,10 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
        you.symbol = 'b';
        you.colour = (you.species == SP_VAMPIRE ? DARKGREY : LIGHTGREY);
-       return (true);
+
+        if (you.species != SP_VAMPIRE)
+            _transformation_expiration_warning();
+        return (true);
 
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1
         if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
@@ -562,6 +576,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         you.symbol = 'I';
         you.colour = WHITE;
+
+        _transformation_expiration_warning();
         return (true);
 
     case TRAN_BLADE_HANDS:
@@ -580,6 +596,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         if (you.duration[ DUR_TRANSFORMATION ] > 100)
             you.duration[ DUR_TRANSFORMATION ] = 100;
+
+        _transformation_expiration_warning();
         return (true);
 
     case TRAN_STATUE: // also AC +20, ev -5, elec +1, pois +1, neg +1, slow
@@ -616,6 +634,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         you.symbol = '8';
         you.colour = LIGHTGREY;
+
+        _transformation_expiration_warning();
         return (true);
 
     case TRAN_DRAGON:  // also AC +10, ev -3, cold -1, fire +2, pois +1, flight
@@ -657,6 +677,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
             if (net != NON_ITEM)
                 destroy_item(net);
         }
+
+        _transformation_expiration_warning();
         return (true);
 
     case TRAN_LICH:
@@ -714,6 +736,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         you.is_undead = US_UNDEAD;
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
         set_redraw_status( REDRAW_HUNGER );
+
+        _transformation_expiration_warning();
         return (true);
 
     case TRAN_AIR:
@@ -751,6 +775,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
             if (net != NON_ITEM)
                 remove_item_stationary(mitm[net]);
         }
+
+        _transformation_expiration_warning();
         return (true);
 
     case TRAN_SERPENT_OF_HELL:
@@ -778,7 +804,10 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         you.symbol = 'S';
         you.colour = RED;
+
+        _transformation_expiration_warning();
         return (true);
+
     case TRAN_NONE:
     case NUM_TRANSFORMATIONS:
         break;

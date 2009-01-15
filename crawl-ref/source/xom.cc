@@ -771,16 +771,21 @@ static bool _xom_is_good(int sever, int tension)
         {
             monster = &menv[i];
 
-            if (monster->type == -1 || !mons_near(monster) || mons_wont_attack(monster) || one_chance_in(20))
+            if (monster->type == -1 || !mons_near(monster)
+                || mons_wont_attack(monster)
+                || !mons_class_is_confusable(monster->type)
+                || one_chance_in(20))
+            {
                 continue;
+            }
 
             if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever))))
             {
                 if (!done)
                     god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
+
+                simple_monster_message(monster, " looks rather confused.");
                 done = true;
-                if (player_monster_visible( monster ))
-                    simple_monster_message(monster, " looks rather confused.");
             }
         }
     }
@@ -970,16 +975,17 @@ static bool _xom_is_good(int sever, int tension)
                 if (!done)
                     god_speaks(GOD_XOM, _get_xom_speech("rearrange the pieces").c_str());
 
-                done = true;
-
                 if (confusem)
                 {
-                    if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever))))
+                    if (mons_class_is_confusable(monster->type)
+                        && monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                                             KC_FRIENDLY, random2(sever))))
                     {
-                        if (player_monster_visible(monster))
-                            simple_monster_message(monster, " looks rather confused.");
+                        simple_monster_message(monster,
+                            " looks rather confused.");
                     }
                 }
+                done = true;
             }
 
             // If he blinked at least one monster, blink the player,
@@ -991,7 +997,7 @@ static bool _xom_is_good(int sever, int tension)
     else if (x_chance_in_y(11, sever) && (you.level_type != LEVEL_ABYSS))
     {
         // The Xom teleportation train takes you on instant teleportation to
-        // a few random areas, stopping randomly but mostly likely in an area
+        // a few random areas, stopping randomly but most likely in an area
         // that is not dangerous to you.
         god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
         do
@@ -1722,12 +1728,18 @@ static bool _xom_is_bad(int sever, int tension)
                     {
                         monster = &menv[i];
 
-                        if (monster->type == -1 || !mons_near(monster) || one_chance_in(20))
+                        if (monster->type == -1 || !mons_near(monster)
+                            || !mons_class_is_confusable(monster->type)
+                            || one_chance_in(20))
+                        {
                             continue;
+                        }
 
-                        if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever)))) {
-                            if (player_monster_visible(monster))
-                                simple_monster_message(monster, " looks rather confused.");
+                        if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                                              KC_FRIENDLY, random2(sever))))
+                        {
+                            simple_monster_message(monster,
+                                " looks rather confused.");
                         }
                     }
                 }
