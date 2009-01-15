@@ -831,15 +831,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         || mouse_control::current_mode() == MOUSE_MODE_MACRO
         || mouse_control::current_mode() == MOUSE_MODE_MORE)
     {
-        if (event.event == MouseEvent::PRESS
-            && event.button == MouseEvent::LEFT)
-        {
-            return CK_MOUSE_CLICK;
-        }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 
     int cx;
@@ -2229,7 +2221,7 @@ int MessageRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return CK_MOUSE_CLICK;
+        return 0;
 
     return CONTROL('P');
 }

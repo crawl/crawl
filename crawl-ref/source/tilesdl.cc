@@ -615,7 +615,7 @@ int TilesFramework::handle_mouse(MouseEvent &event)
         && event.button == MouseEvent::LEFT
         && event.event == MouseEvent::PRESS)
     {
-        return '\r';
+        return CK_MOUSE_CLICK;
     }
 
     // TODO enne - in what cases should the buttons be returned?

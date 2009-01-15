@@ -756,7 +756,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
     {
         if (Options.force_more_message[i].is_filtered( channel, imsg ))
         {
-            more();
+            more(true);
             New_Message_Count = 0;
             // One more() is quite enough, thank you!
             break;
@@ -884,7 +884,7 @@ void formatted_message_history(const std::string &st_nocolor,
         {
             if (Options.force_more_message[f].is_filtered(channel, st_nocolor))
             {
-                more();
+                more(true);
                 New_Message_Count = 0;
                 // One more() is quite enough, thank you!
                 break;
@@ -928,7 +928,7 @@ void reset_more_autoclear()
     autoclear_more = false;
 }
 
-void more(void)
+void more(bool user_forced)
 {
 #ifdef DEBUG_DIAGNOSTICS
     if (you.running)
@@ -976,7 +976,8 @@ void more(void)
         }
         while (keypress != ' ' && keypress != '\r' && keypress != '\n'
                && keypress != ESCAPE && keypress != -1
-               && keypress != CK_MOUSE_CLICK);
+               && (user_forced || keypress != CK_MOUSE_CLICK));
+
         if (keypress == ESCAPE)
             autoclear_more = true;
     }

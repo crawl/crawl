@@ -31,7 +31,7 @@ void mesclr( bool force = false );
  *              item_use - items - message - misc - ouch - player -
  *              religion - spell - spells - spells2 - spells3
  * *********************************************************************** */
-void more(void);
+void more(bool user_forced = false);
 
 
 class formatted_string;
