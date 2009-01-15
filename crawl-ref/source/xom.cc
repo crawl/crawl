@@ -810,7 +810,8 @@ static bool _xom_is_good(int sever, int tension)
         int hostiletype = random_choose_weighted(3, 0,  // both friendly
                                                  4, 1,  // one hostile
                                                  4, 2,  // other hostile
-                                                 1, 3); // both hostile
+                                                 1, 3,  // both hostile
+                                                 0);
 
         std::vector<bool> is_demonic(numdemons);
         std::vector<int> summons(numdemons);
