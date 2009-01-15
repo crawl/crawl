@@ -134,6 +134,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     // single calculation permissible {dlb}
     bool monsterNearby = mons_near(monster);
 
+    // Make sure the "comes into view" type messages are displayed before
+    // the spell is cast.
+    if (monsterNearby && !(monster->flags & MF_WAS_IN_VIEW))
+        fire_monster_alerts();
+
     int sumcount = 0;
     int sumcount2;
     int duration = 0;

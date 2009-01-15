@@ -119,6 +119,10 @@ You hear a spitting sound.
 # Individual monsters
 ########################################################################
 %%%%
+brain worm cast
+
+@The_monster@'s bulging head throbs.
+%%%%
 Geryon cast
 
 @The_monster@ winds a great silver horn.
