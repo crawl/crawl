@@ -1295,7 +1295,7 @@ static std::string _verbose_info(const monsters* m)
             return(" (fleeing)");
         if (mons_is_sleeping(m))
             return(" (sleeping)");
-        if (mons_is_wandering(m))
+        if (mons_is_wandering(m) && !mons_is_batty(m))
             return(" (wandering)");
         if (m->foe == MHITNOT && !mons_is_batty(m) && !mons_neutral(m)
             && !mons_friendly(m))
