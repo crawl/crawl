@@ -547,7 +547,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (mons_genus(type) == MONS_DRACONIAN)
             type = draco_subspecies(monster);
 
-        switch(type)
+        switch (type)
         {
         case MONS_MOTTLED_DRACONIAN:
             real_spell = SPELL_STICKY_FLAME_SPLASH;
@@ -923,17 +923,11 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     std::string beam_name;
     if (!targeted)
-    {
         beam_name = "NON TARGETED BEAM";
-    }
     else if (pbolt.name.empty())
-    {
         beam_name = "INVALID BEAM";
-    }
     else if (!tracer.seen)
-    {
         beam_name = "UNSEEN BEAM";
-    }
     else
         beam_name = pbolt.get_short_name();
 
