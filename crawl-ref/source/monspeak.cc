@@ -728,6 +728,14 @@ bool mons_speaks(const monsters *monster)
 void mons_speaks_msg(const monsters *monster, const std::string &msg,
                      const msg_channel_type def_chan, const bool silence)
 {
+    if (!mons_near(monster))
+        return;
+
+    // Make sure the "comes into view" type messages are displayed before
+    // the monster speaks.
+    if (player_monster_visible(monster) && !(monster->flags & MF_WAS_IN_VIEW))
+        fire_monster_alerts();
+
     // We have a speech string, now parse and act on it.
     std::string _msg = do_mon_str_replacements(msg, monster);
 
