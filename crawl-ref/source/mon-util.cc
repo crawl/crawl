@@ -4321,7 +4321,8 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 
     if (inv[slot] != NON_ITEM)
     {
-        if (items_stack(item, mitm[inv[slot]], force_merge))
+        item_def &dest(mitm[inv[slot]]);
+        if (items_stack(item, dest, force_merge))
         {
             dungeon_events.fire_position_event(
                 dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
@@ -4330,6 +4331,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 
             pickup_message(item, near);
             inc_mitm_item_quantity( inv[slot], item.quantity );
+            merge_item_stacks(item, dest);
             destroy_item(item.index());
             equip(item, slot, near);
             lose_pickup_energy();

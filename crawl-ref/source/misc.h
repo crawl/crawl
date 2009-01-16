@@ -33,9 +33,7 @@ void maybe_coagulate_blood_potions_floor( int obj );
 bool maybe_coagulate_blood_potions_inv( item_def &blood );
 long remove_oldest_blood_potion( item_def &stack );
 void remove_newest_blood_potion( item_def &stack, int quant = -1 );
-void drop_blood_potions_stack( item_def &stack, int quant,
-                               const coord_def& p = you.pos() );
-void pick_up_blood_potions_stack( item_def &stack, int quant );
+void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant);
 
 bool can_bottle_blood_from_corpse( int mons_type );
 int num_blood_potions_from_corpse( int mons_class, int chunk_type = -1 );

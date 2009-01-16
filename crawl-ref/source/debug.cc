@@ -1580,7 +1580,24 @@ bool get_item_by_name(item_def *item, char* specs,
     case OBJ_POTIONS:
         item->quantity = 12;
         if (is_blood_potion(*item))
-            init_stack_blood_potions(*item);
+        {
+            const char* prompt;
+            if (item->sub_type == POT_BLOOD)
+                prompt = "# turns away from coagulation? "
+                         "[ENTER for fully fresh] ";
+            else
+                prompt = "# turns away from rotting? "
+                         "[ENTER for fully fresh] ";
+            int age =
+                _debug_prompt_for_int(prompt, false);
+
+            if (age <= 0)
+                age = -1;
+            else if (item->sub_type == POT_BLOOD)
+                age += 500;
+
+            init_stack_blood_potions(*item, age);
+        }
         break;
 
     case OBJ_FOOD:
@@ -4985,7 +5002,8 @@ void wizard_give_monster_item(monsters *mon)
     // Move monster's old item to player's inventory as last step.
     int  old_eq     = NON_ITEM;
     bool unequipped = false;
-    if (mon->inv[mon_slot] != NON_ITEM)
+    if (mon->inv[mon_slot] != NON_ITEM
+        && !items_stack(item, mitm[mon->inv[mon_slot]]))
     {
         old_eq = mon->inv[mon_slot];
         // Alternative weapons don't get (un)wielded unless the monster

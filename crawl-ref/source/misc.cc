@@ -315,38 +315,44 @@ void maybe_coagulate_blood_potions_floor(int obj)
     // Coagulated blood cannot coagulate any further...
     ASSERT(blood.sub_type == POT_BLOOD);
 
-    // Now that coagulating is necessary, check square for !coagulated blood.
-    ASSERT(blood.pos.x >= 0 && blood.pos.y >= 0);
-    for (int o = igrd[blood.pos.x][blood.pos.y]; o != NON_ITEM; o = mitm[o].link)
+    if (!held_by_monster(blood))
     {
-        if (mitm[o].base_type == OBJ_POTIONS
-            && mitm[o].sub_type == POT_BLOOD_COAGULATED)
+        // Now that coagulating is necessary, check square for
+        // !coagulated blood.
+        ASSERT(blood.pos.x >= 0 && blood.pos.y >= 0);
+        for (int o = igrd[blood.pos.x][blood.pos.y]; o != NON_ITEM;
+             o = mitm[o].link)
         {
-            // Merge with existing stack.
-            CrawlHashTable &props2 = mitm[o].props;
-            if (!props2.exists("timer"))
-                init_stack_blood_potions(mitm[o], mitm[o].special);
-
-            ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"].get_vector();
-            ASSERT(timer2.size() == mitm[o].quantity);
-
-            // Update timer -> push(pop).
-            long val;
-            while (!age_timer.empty())
+            if (mitm[o].base_type == OBJ_POTIONS
+                && mitm[o].sub_type == POT_BLOOD_COAGULATED)
             {
-                val = age_timer[age_timer.size() - 1];
-                age_timer.pop_back();
-                timer2.push_back(val);
+                // Merge with existing stack.
+                CrawlHashTable &props2 = mitm[o].props;
+                if (!props2.exists("timer"))
+                    init_stack_blood_potions(mitm[o], mitm[o].special);
+
+                ASSERT(props2.exists("timer"));
+                CrawlVector &timer2 = props2["timer"].get_vector();
+                ASSERT(timer2.size() == mitm[o].quantity);
+
+                // Update timer -> push(pop).
+                long val;
+                while (!age_timer.empty())
+                {
+                    val = age_timer[age_timer.size() - 1];
+                    age_timer.pop_back();
+                    timer2.push_back(val);
+                }
+                _long_sort(timer2);
+                inc_mitm_item_quantity(o, coag_count);
+                ASSERT(timer2.size() == mitm[o].quantity);
+                dec_mitm_item_quantity(obj, rot_count + coag_count);
+                return;
             }
-            _long_sort(timer2);
-            inc_mitm_item_quantity(o, coag_count);
-            ASSERT(timer2.size() == mitm[o].quantity);
-            dec_mitm_item_quantity(obj, rot_count + coag_count);
-            return;
         }
     }
-    // If we got here, nothing was found!
+    // If we got here, nothing was found! (Or it's in a monster's
+    // inventory).
 
     // Entire stack is gone, rotted or coagulated.
     // -> Change potions to coagulated type.
@@ -398,10 +404,13 @@ void maybe_coagulate_blood_potions_floor(int obj)
         age_timer.pop_back();
         timer_new.push_back(val);
     }
-
     ASSERT(timer_new.size() == coag_count);
     props_new.assert_validity();
-    move_item_to_grid(&o, blood.pos);
+
+    if (held_by_monster(blood))
+        move_item_to_grid(&o, holding_monster(blood)->pos());
+    else
+        move_item_to_grid(&o, blood.pos);
 
     dec_mitm_item_quantity(obj, rot_count + coag_count);
     ASSERT(timer.size() == blood.quantity);
@@ -807,102 +816,36 @@ void remove_newest_blood_potion(item_def &stack, int quant)
     _long_sort(timer);
 }
 
-// Called from copy_item_to_grid.
-// NOTE: Quantities are set afterwards, so don't ASSERT for those.
-void drop_blood_potions_stack(item_def &stack, int quant, const coord_def& p)
+void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
 {
-    if (!is_valid_item(stack))
+    if (!is_valid_item(source) || !is_valid_item(dest))
         return;
 
-    ASSERT(quant > 0 && quant <= stack.quantity);
-    ASSERT(is_blood_potion(stack));
+    ASSERT(quant > 0 && quant <= source.quantity);
+    ASSERT(is_blood_potion(source) && is_blood_potion(dest));
 
-    CrawlHashTable &props = stack.props;
+    CrawlHashTable &props = source.props;
     if (!props.exists("timer"))
-        init_stack_blood_potions(stack, stack.special);
+        init_stack_blood_potions(source, source.special);
     ASSERT(props.exists("timer"));
     CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
 
-    // First check whether we can merge with an existing stack on the floor.
-    int o = igrd[p.x][p.y];
-    while (o != NON_ITEM)
+    CrawlHashTable &props2 = dest.props;
+    if (!props2.exists("timer"))
+        init_stack_blood_potions(dest, dest.special);
+    ASSERT(props2.exists("timer"));
+    CrawlVector &timer2 = props2["timer"].get_vector();
+
+    // Update timer -> push(pop).
+    for (int i = 0; i < quant; i++)
     {
-        if (mitm[o].base_type == OBJ_POTIONS
-            && mitm[o].sub_type == stack.sub_type)
-        {
-            CrawlHashTable &props2 = mitm[o].props;
-            if (!props2.exists("timer"))
-                init_stack_blood_potions(mitm[o], mitm[o].special);
-            ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"].get_vector();
-
-            // Update timer -> push(pop).
-            for (int i = 0; i < quant; i++)
-            {
-                timer2.push_back(timer[timer.size() - 1].get_long());
-                timer.pop_back();
-            }
-
-            // Re-sort timer.
-            _long_sort(timer2);
-            return;
-        }
-        o = mitm[o].link;
-    }
-
-    // If we got here nothing was found.
-    // Stuff could have been destroyed or offered, either case we'll
-    // have to reduce the timer vector anyway.
-    while (!timer.empty() && quant-- > 0)
+        timer2.push_back(timer[timer.size() - 1].get_long());
         timer.pop_back();
-}
-
-// Called from move_item_to_player.
-// Quantities are set afterwards, so don't ASSERT for those.
-void pick_up_blood_potions_stack(item_def &stack, int quant)
-{
-    ASSERT(quant > 0 && quant <= stack.quantity);
-    if (!is_valid_item(stack))
-        return;
-
-    ASSERT(is_blood_potion(stack));
-
-    CrawlHashTable &props = stack.props;
-    if (!props.exists("timer"))
-        init_stack_blood_potions(stack, stack.special);
-    ASSERT(props.exists("timer"));
-    CrawlVector &timer = props["timer"].get_vector();
-    ASSERT(!timer.empty());
-
-    // First check whether we can merge with an existing stack in inventory.
-    for (int m = 0; m < ENDOFPACK; m++)
-    {
-        if (!is_valid_item(you.inv[m]))
-            continue;
-
-        if (you.inv[m].base_type == OBJ_POTIONS
-            && you.inv[m].sub_type == stack.sub_type)
-        {
-            CrawlHashTable &props2 = you.inv[m].props;
-            if (!props2.exists("timer"))
-                init_stack_blood_potions(you.inv[m], you.inv[m].special);
-            ASSERT(props2.exists("timer"));
-            CrawlVector &timer2 = props2["timer"].get_vector();
-
-            // Update timer -> push(pop).
-            for (int i = 0; i < quant; i++)
-            {
-                timer2.push_back(timer[timer.size() - 1].get_long());
-                timer.pop_back();
-            }
-
-            // Re-sort timer.
-            _long_sort(timer2);
-            return;
-        }
     }
-    // If we got here nothing was found. Huh?
+
+    // Re-sort timer.
+    _long_sort(timer2);
 }
 
 // Deliberately don't check for rottenness here, so this check

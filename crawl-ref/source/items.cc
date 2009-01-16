@@ -1408,6 +1408,17 @@ bool items_stack( const item_def &item1, const item_def &item2,
     return items_similar(item1, item2);
 }
 
+void merge_item_stacks(item_def &source, item_def &dest, int quant)
+{
+    if (quant == -1)
+        quant = source.quantity;
+
+    ASSERT(quant > 0 && quant <= source.quantity);
+
+    if (is_blood_potion(source) && is_blood_potion(dest))
+       merge_blood_potion_stacks(source, dest, quant);
+}
+
 static int _userdef_find_free_slot(const item_def &i)
 {
 #ifdef CLUA_BINDINGS
@@ -1599,8 +1610,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
                                       "god gift", "");
                 }
 
-                if (is_blood_potion(mitm[obj]))
-                    pick_up_blood_potions_stack(mitm[obj], quant_got);
+                merge_item_stacks(mitm[obj], you.inv[m], quant_got);
 
                 inc_inv_item_quantity( m, quant_got );
                 dec_mitm_item_quantity( obj, quant_got );
@@ -1745,6 +1755,7 @@ bool move_item_to_grid( int *const obj, const coord_def& p )
                 // Add quantity to item already here, and dispose
                 // of obj, while returning the found item. -- bwr
                 inc_mitm_item_quantity( si->index(), item.quantity );
+                merge_item_stacks(item, *si);
                 destroy_item( ob );
                 ob = si->index();
                 return (true);
@@ -1837,12 +1848,8 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
             if (items_stack( item, *si ))
             {
                 inc_mitm_item_quantity( si->index(), quant_drop );
-
-                if (is_blood_potion(item))
-                {
-                    item_def help = item;
-                    drop_blood_potions_stack(help, quant_drop, p);
-                }
+                item_def copy = item;
+                merge_item_stacks(copy, *si, quant_drop);
 
                 // If the items on the floor already have a nonzero slot,
                 // leave it as such, otherwise set the slot.
