@@ -27,8 +27,7 @@ bool arena_veto_random_monster(monster_type type);
 
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
                               const coord_def& pos);
-void arena_placed_monster(monsters *monster, const mgen_data &mg,
-                          bool first_band_member);
+void arena_placed_monster(monsters *monster);
 
 void arena_monster_died(monsters *monster, killer_type killer,
                         int killer_index, bool silent, int corpse);

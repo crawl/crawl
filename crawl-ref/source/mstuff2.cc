@@ -18,6 +18,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "arena.h"
 #include "beam.h"
 #include "database.h"
 #include "debug.h"
@@ -2628,6 +2629,9 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
         seen_monster(&mon);
         viewwindow(true, false);
     }
+
+    if (crawl_state.arena)
+        arena_placed_monster(&mon);
 
     return (midx);
 }

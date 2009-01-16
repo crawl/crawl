@@ -1172,7 +1172,7 @@ static int _place_monster_aux(const mgen_data &mg,
         seen_monster(&menv[id]);
 
     if (crawl_state.arena)
-        arena_placed_monster(&menv[id], mg, first_band_member);
+        arena_placed_monster(&menv[id]);
 
     return (id);
 }

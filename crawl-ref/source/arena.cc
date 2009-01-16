@@ -1016,9 +1016,7 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
             || arena::banned_glyphs[mons_char(mg.cls)]);
 }
 
-
-void arena_placed_monster(monsters *monster, const mgen_data &mg,
-                          bool first_band_member)
+void arena_placed_monster(monsters *monster)
 {
     if (monster->attitude == ATT_FRIENDLY)
         arena::faction_a.active_members++;
