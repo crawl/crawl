@@ -1633,7 +1633,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
     {
-        switch(drac_type)
+        switch (drac_type)
         {
         case MONS_BLACK_DRACONIAN:
             real_spell = SPELL_LIGHTNING_BOLT;
@@ -1668,7 +1668,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
             break;
 
         case MONS_PLAYER_GHOST:
-            // Handled later
+            // Handled later.
             break;
 
         default:
@@ -1679,7 +1679,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     beam.type = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
-    
+
     // FIXME: this should use the zap_data[] struct from beam.cc!
     switch (real_spell)
     {
