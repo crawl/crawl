@@ -467,7 +467,6 @@ std::string get_god_powers(god_type which_god)
 
 std::string get_god_likes(god_type which_god, bool verbose)
 {
-    // Return early for the special cases.
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return "";
 
@@ -3624,6 +3623,9 @@ bool good_god_dislikes_item_handling(const item_def &item)
 
 bool god_dislikes_item_handling(const item_def &item)
 {
+    if (you.religion == GOD_XOM)
+        return (false);
+
     switch (you.religion)
     {
     case GOD_ZIN:
