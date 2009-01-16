@@ -2061,6 +2061,8 @@ public:
     bool        classic_item_colours;   // Use old-style item colours
     bool        item_colour;    // Colour items on level map
 
+    unsigned    evil_colour; // Colour for things player's god dissapproves
+
     unsigned    detected_monster_colour;    // Colour of detected monsters
     unsigned    detected_item_colour;       // Colour of detected items
     unsigned    status_caption_colour;      // Colour of captions in HUD.

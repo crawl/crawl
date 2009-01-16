@@ -1400,7 +1400,7 @@ void monster_pane_info::to_string( int count, std::string& desc,
             && !tso_unchivalric_attack_safe_monster(m_mon)
             && is_unchivalric_attack(&you, m_mon))
         {
-            desc_color = MAGENTA;
+            desc_color = Options.evil_colour;
         }
         break;
     default:

@@ -1505,6 +1505,8 @@ void game_options::read_options(InitLineInput &il, bool runscript,
 #endif
 
     Options.explore_stop |= Options.explore_stop_prompt;
+
+    evil_colour = str_to_colour(variables["evil"]);    
 }
 
 void game_options::fixup_options()
@@ -1518,6 +1520,9 @@ void game_options::fixup_options()
 
     if (!check_dir("Morgue directory", morgue_dir))
         end(1);
+
+    if (evil_colour == BLACK)
+        evil_colour = MAGENTA;
 }
 
 static int _str_to_killcategory(const std::string &s)
