@@ -4857,11 +4857,15 @@ void read_scroll(int slot)
         break;
 
     case SCR_SUMMONING:
-        if (create_monster(
-                mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                          0, 0, you.pos(), you.pet_target)) != -1)
+    {
+        const int monster = create_monster(
+                                mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
+                                          0, 0, you.pos(), you.pet_target,
+                                          MG_FORCE_BEH));
+        if (monster != -1)
         {
             mpr("A horrible Thing appears!");
+            player_angers_monster(&menv[monster]);
         }
         else
         {
@@ -4869,6 +4873,7 @@ void read_scroll(int slot)
             id_the_scroll = false;
         }
         break;
+    }
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
