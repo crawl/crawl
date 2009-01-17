@@ -4533,7 +4533,7 @@ void MiscastEffect::_earth(int severity)
                              "shrapnel!";
             mon_msg_seen   = "@The_monster@ is caught in an explosion of "
                              "flying shrapnel!";
-            mon_msg_unseen = "Flying shrapnel explodes from the thin air!";
+            mon_msg_unseen = "Flying shrapnel explodes from thin air!";
             beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 15 );
             beam.flavour = BEAM_FRAG;
@@ -4567,7 +4567,8 @@ void MiscastEffect::_air(int severity)
             break;
         case 1:
             you_msg      = "You feel momentarily weightless.";
-            mon_msg_seen = "@The_monster@ hovers in midair for a moment.";
+            mon_msg_seen = "@The_monster@ bobs up to the ceiling for a "
+                           "moment.";
             break;
         case 2:
             you_msg      = "Wisps of vapour drift from your @hands@.";
