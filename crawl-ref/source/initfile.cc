@@ -1506,7 +1506,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
 
     Options.explore_stop |= Options.explore_stop_prompt;
 
-    evil_colour = str_to_colour(variables["evil"]);    
+    evil_colour = str_to_colour(variables["evil"]);
 }
 
 void game_options::fixup_options()

@@ -137,7 +137,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     // Make sure the "comes into view" type messages are displayed before
     // the spell is cast.
-    if (monsterNearby && player_monster_visible(monster) 
+    if (monsterNearby && player_monster_visible(monster)
         && !(monster->flags & MF_WAS_IN_VIEW))
     {
         fire_monster_alerts();
@@ -2118,7 +2118,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
         return (beam);
     }
-    
+
     if (beam.is_enchantment())
     {
         beam.type = dchar_glyph(DCHAR_SPACE);

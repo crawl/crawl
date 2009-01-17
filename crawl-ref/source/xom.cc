@@ -887,7 +887,7 @@ static bool _xom_send_allies(int sever)
 static bool _xom_send_one_ally(int sever)
 {
     bool rc = false;
-        
+
     const monster_type mon = _xom_random_demon(sever);
     const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 

@@ -970,7 +970,7 @@ void TilesFramework::do_layout()
     }
 
     // If show_gold_turns isn't turned on, try turning it on if there's room.
-    if (!Options.show_gold_turns) 
+    if (!Options.show_gold_turns)
     {
         if (layout_statcol(message_overlay, true))
             Options.show_gold_turns = true;

@@ -1124,7 +1124,7 @@ void bleed_onto_floor(const coord_def& where, int montype,
         if (!m.can_bleed())
             return;
     }
-    
+
     _maybe_bloodify_square(where, damage, spatter, smell_alert);
 }
 

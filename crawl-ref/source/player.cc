@@ -7150,7 +7150,7 @@ bool player::can_bleed() const
     {
         return (false);
     }
-    
+
     const int tran = you.attribute[ATTR_TRANSFORMATION];
     if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
         || tran == TRAN_AIR || tran == TRAN_LICH

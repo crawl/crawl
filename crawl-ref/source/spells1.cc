@@ -1392,7 +1392,7 @@ void cast_teleport_control(int power)
 
 void cast_ring_of_flames(int power)
 {
-    _increase_duration(DUR_FIRE_SHIELD, 
+    _increase_duration(DUR_FIRE_SHIELD,
                        5 + (power / 10) + (random2(power) / 5), 50,
                        "The air around you leaps into flame!");
     manage_fire_shield();
