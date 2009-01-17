@@ -2438,10 +2438,15 @@ int create_monster(mgen_data mg, bool fail_msg)
 
             int tries = 0;
             while (tries++ < 50
-                   && mons_avoids_cloud(&dummy, env.cgrid(mg.pos), NULL, true))
+                   && (!in_bounds(mg.pos)
+                       || mons_avoids_cloud(&dummy, env.cgrid(mg.pos),
+                                            NULL, true)))
             {
                 mg.pos = find_newmons_square(montype, mg.pos);
             }
+            if (!in_bounds(mg.pos))
+                return (-1);
+
             const int cloud_num = env.cgrid(mg.pos);
             // Don't place friendly god gift in a damaging cloud created by
             // you if that would anger the god.
