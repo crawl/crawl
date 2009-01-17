@@ -2214,29 +2214,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (!doFlavouredEffects)
                 return (hurted);
 
-            simple_monster_message(monster, " is drained.");
+            monster->drain_exp(pbolt.agent());
             pbolt.obvious_effect = true;
 
             if (YOU_KILL(pbolt.thrower))
-            {
-                did_god_conduct(DID_NECROMANCY, 2 + random2(3),
-                                pbolt.effect_known);
-            }
-
-            if (one_chance_in(5))
-            {
-                monster->hit_dice--;
-                monster->experience = 0;
-            }
-
-            monster->max_hit_points -= 2 + random2(3);
-            monster->hit_points     -= 2 + random2(3);
-
-            if (monster->hit_points >= monster->max_hit_points)
-                monster->hit_points = monster->max_hit_points;
-
-            if (monster->hit_dice < 1)
-                monster->hit_points = 0;
+                did_god_conduct(DID_NECROMANCY, 2, pbolt.effect_known);
         }                       // end else
         break;
 
@@ -4050,7 +4032,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
 
     postac = std::max(postac, 0);
 
-    // Don't do side effects (beam might miss or be a tracer.)
+    // Don't do side effects (beam might miss or be a tracer).
     final = mons_adjust_flavoured(mon, *this, preac, false);
 
     return true;

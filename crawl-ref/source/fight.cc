@@ -2066,9 +2066,6 @@ void melee_attack::drain_player()
 
     special_damage = random2(damage_done) /
                          (2 + defender->res_negative_energy()) + 1;
-
-    // Noop for monsters, but what the heck.
-    attacker->god_conduct(DID_NECROMANCY, 2);
 }
 
 void melee_attack::drain_monster()
