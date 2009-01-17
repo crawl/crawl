@@ -5876,8 +5876,11 @@ god_type monsters::deity() const
 
 void monsters::drain_exp(actor *agent)
 {
-    if (res_negative_energy())
+    if (res_negative_energy() > 0)
         return;
+
+    if (mons_near(this) && player_monster_visible(this))
+        mprf("%s is drained!", name(DESC_CAP_THE).c_str());
 
     if (one_chance_in(5))
     {
