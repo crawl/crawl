@@ -200,7 +200,8 @@ struct mgen_data
           flags(monflags), god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0)
     {
-        ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6));
+        ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
+               || mt == MONS_BALL_LIGHTNING);
     }
 
     bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }
