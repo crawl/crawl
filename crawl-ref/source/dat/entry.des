@@ -1074,7 +1074,6 @@ ENDMAP
 ##############################################################################
 # By the pond
 NAME:   david_entry_009
-WEIGHT: 1000000
 TAGS:   entry no_monster_gen no_pool_fixup
 ORIENT: float
 SUBST:  0 = 0 .
