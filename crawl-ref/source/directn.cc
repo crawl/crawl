@@ -536,9 +536,14 @@ void full_describe_view()
             prefix += ">) ";
 
             // Get damage level.
-            std::string wound_str;
-            mon_dam_level_type dam_level;
-            mons_get_damage_level(list_mons[i], wound_str, dam_level);
+            std::string damage_desc;
+
+            mon_dam_level_type damage_level;
+            mons_get_damage_level(list_mons[i], damage_desc, damage_level);
+
+            // If no messages about wounds, don't display damage level either.
+            if (monster_descriptor(list_mons[i]->type, MDSC_NOMSG_WOUNDS))
+                damage_level = MDAM_OKAY;
 
             std::vector<formatted_string> fss;
             std::string str = get_monster_desc(list_mons[i], true, DESC_CAP_A,
@@ -546,8 +551,8 @@ void full_describe_view()
             if (player_mesmerised_by(list_mons[i]))
                 str += ", keeping you mesmerised";
 
-            if (dam_level != MDAM_OKAY)
-                str += ", " + wound_str;
+            if (damage_level != MDAM_OKAY)
+                str += ", " + damage_desc;
 
             // Wraparound if the description is longer than allowed.
             linebreak_string2(str, get_number_of_cols() - 8);

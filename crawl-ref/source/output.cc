@@ -1483,10 +1483,12 @@ static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
             // Print an "icon" representing damage level.
             const monsters *mon = mons[start].m_mon;
             std::string damage_desc;
+
             mon_dam_level_type damage_level;
-            if (!monster_descriptor(mon->type, MDSC_NOMSG_WOUNDS))
-                mons_get_damage_level(mon, damage_desc, damage_level);
-            else
+            mons_get_damage_level(mon, damage_desc, damage_level);
+
+            // If no messages about wounds, don't display damage level either.
+            if (monster_descriptor(mon->type, MDSC_NOMSG_WOUNDS))
                 damage_level = MDAM_OKAY;
 
             int dam_color;
