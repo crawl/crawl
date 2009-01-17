@@ -2062,7 +2062,8 @@ void melee_attack::drain_defender()
 
 void melee_attack::drain_player()
 {
-    drain_exp();
+    defender->drain_exp(attacker);
+
     special_damage = random2(damage_done) /
                          (2 + defender->res_negative_energy()) + 1;
 
@@ -2085,16 +2086,10 @@ void melee_attack::drain_monster()
                 def_name(DESC_NOCAP_THE).c_str());
     }
 
-    if (one_chance_in(5))
-    {
-        defender_as_monster()->hit_dice--;
-        defender_as_monster()->experience = 0;
-    }
-
-    defender_as_monster()->max_hit_points -= 2 + random2(3);
-    defender->hurt(attacker, 2 + random2(3), BEAM_NEG, false);
+    defender->drain_exp(attacker);
 
     special_damage = 1 + (random2(damage_done) / 2);
+
     attacker->god_conduct(DID_NECROMANCY, 2);
 }
 

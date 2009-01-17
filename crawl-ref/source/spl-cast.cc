@@ -3843,16 +3843,20 @@ void MiscastEffect::_necromancy(int severity)
         }
 
         case 1:
-            if (target->atype() == ACT_PLAYER && !player_prot_life()
-                && one_chance_in(3))
+            you_msg      = "You are engulfed in negative energy!";
+            mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
+
+            if (lethality_margin == 0 || you.experience > 0
+                || !avoid_lethal(you.hp))
             {
-                if (lethality_margin == 0 || you.experience > 0
-                    || !avoid_lethal(you.hp))
+                if (!target->res_negative_energy() && one_chance_in(3))
                 {
-                    drain_exp();
+                    target->drain_exp(act_source);
+                    break;
                 }
-                break;
-            }               // otherwise it just flows through...
+            }
+
+            // If draining failed, just flow through...
 
         case 2:
             // Monster messages needed.
@@ -3872,8 +3876,8 @@ void MiscastEffect::_necromancy(int severity)
         break;
 
     case 3:         // even nastier
-        // Don't use two last cases for monsters.
-        switch (random2(target->atype() == ACT_PLAYER ? 6 : 4))
+        // Don't use last case for monsters.
+        switch (random2(target->atype() == ACT_PLAYER ? 6 : 5))
         {
         case 0:
             if (target->holiness() == MH_UNDEAD)
@@ -3911,24 +3915,26 @@ void MiscastEffect::_necromancy(int severity)
             break;
 
         case 4:
-            if (lethality_margin > 0 && you.experience == 0
-                && avoid_lethal(you.hp))
+            you_msg      = "You are engulfed in negative energy!";
+            mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
+
+            if (lethality_margin == 0 || you.experience > 0
+                || !avoid_lethal(you.hp))
             {
-                return;
+                if (!target->res_negative_energy())
+                {
+                    target->drain_exp(act_source);
+                    break;
+                }
             }
 
-            mpr("You are engulfed in negative energy!");
-
-            if (!player_prot_life())
-            {
-                drain_exp();
+            // If draining failed, just flow through if it's the player...
+            if (target->atype() == ACT_MONSTER)
                 break;
-            }               // otherwise it just flows through...
 
         case 5:
             _lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
             break;
-
         }
         break;
     }

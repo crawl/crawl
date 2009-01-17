@@ -6963,7 +6963,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     return (amount);
 }
 
-void player::drain_stat(int stat, int amount, actor* attacker)
+void player::drain_stat(int stat, int amount, actor *attacker)
 {
     if (attacker == NULL)
         lose_stat(stat, amount, false, "");
@@ -6985,6 +6985,11 @@ void player::rot(actor *who, int amount, int immediate)
 
     if (one_chance_in(4))
         disease_player(50 + random2(100));
+}
+
+void player::drain_exp(actor *who)
+{
+    ::drain_exp();
 }
 
 void player::confuse(actor *who, int str)
@@ -7025,7 +7030,7 @@ void player::petrify(actor *who, int str)
 
 void player::slow_down(actor *foe, int str)
 {
-    ::slow_player( str );
+    ::slow_player(str);
 }
 
 int player::has_claws(bool allow_tran) const

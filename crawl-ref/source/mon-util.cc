@@ -5874,6 +5874,22 @@ god_type monsters::deity() const
     return (god);
 }
 
+void monsters::drain_exp(actor *agent)
+{
+    if (res_negative_energy())
+        return;
+
+    if (one_chance_in(5))
+    {
+        hit_dice--;
+        experience = 0;
+    }
+
+    max_hit_points -= 2 + random2(3);
+
+    hurt(agent, 2 + random2(3), BEAM_NEG);
+}
+
 void monsters::rot(actor *agent, int amount, int immediate)
 {
     if (res_rotting() > 0 || amount <= 0)
@@ -7138,7 +7154,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         {
             // We don't have a reasonable agent to give.
             // Don't clean up the monster in order to credit properly.
-            this->hurt(NULL, dam, BEAM_POISON, false);
+            hurt(NULL, dam, BEAM_POISON, false);
 
 #if DEBUG_DIAGNOSTICS
             // For debugging, we don't have this silent.
@@ -7162,7 +7178,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     {
         if (hit_points > 1 && one_chance_in(3))
         {
-            this->hurt(NULL, 1); // nonlethal so we don't care about agent
+            hurt(NULL, 1); // nonlethal so we don't care about agent
             if (hit_points < max_hit_points && coinflip())
                 --max_hit_points;
         }
@@ -7182,7 +7198,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             simple_monster_message(this, " burns!");
             // We don't have a reasonable agent to give.
             // Don't clean up the monster in order to credit properly.
-            this->hurt(NULL, dam, BEAM_NAPALM, false);
+            hurt(NULL, dam, BEAM_NAPALM, false);
 
 #if DEBUG_DIAGNOSTICS
             mprf( MSGCH_DIAGNOSTICS, "sticky flame damage: %d", dam );
