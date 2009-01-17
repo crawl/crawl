@@ -6285,8 +6285,8 @@ void offer_items()
         }
 
         you.duration[DUR_PIETY_POOL] += donation;
-        if (you.duration[DUR_PIETY_POOL] > 32767)
-            you.duration[DUR_PIETY_POOL] = 32767;
+        if (you.duration[DUR_PIETY_POOL] > 32000)
+            you.duration[DUR_PIETY_POOL] = 32000;
 
         const int estimated_piety =
             std::min(MAX_PENANCE + MAX_PIETY,
