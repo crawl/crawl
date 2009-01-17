@@ -4595,24 +4595,36 @@ static bool _beogh_retribution()
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
             // Now create monster.
-            int mons =
+            int midx =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
                         you.pos(), 0, 0, true, god));
 
             // Hand item information over to monster.
-            if (mons != -1)
+            if (midx != -1)
             {
+                monsters *mon = &menv[midx];
+
                 // Destroy the old weapon.
                 // Arguably we should use destroy_item() here.
-                mitm[menv[mons].inv[MSLOT_WEAPON]].clear();
+                mitm[mon->inv[MSLOT_WEAPON]].clear();
+                mon->inv[MSLOT_WEAPON] = NON_ITEM;
 
-                menv[mons].inv[MSLOT_WEAPON] = slot;
-                num_created++;
+                unwind_var<int> save_speedinc(mon->speed_increment);
+                if (mon->pickup_item(mitm[slot], false, true))
+                {
+                    num_created++;
 
-                // 50% chance of weapon disappearing on "death".
-                if (coinflip())
-                    menv[mons].flags |= MF_HARD_RESET;
+                    // 50% chance of weapon disappearing on "death".
+                    if (coinflip())
+                        mon->flags |= MF_HARD_RESET;
+                }
+                else
+                {
+                    // It wouldn't pick up the weapon.
+                    monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+                    mitm[slot].clear();
+                }
             }
             else // Didn't work out! Delete item.
                 mitm[slot].clear();
