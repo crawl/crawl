@@ -3568,6 +3568,7 @@ void melee_attack::player_stab_check()
         break;
 
     case UCAT_HELD_IN_NET:
+    case UCAT_PETRIFYING:
     case UCAT_PARALYSED:
         stab_attempt = true;
         stab_bonus   = 1;
