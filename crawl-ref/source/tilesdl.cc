@@ -678,7 +678,7 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
         tile_event.button = MouseEvent::SCROLL_DOWN;
         break;
     default:
-        ASSERT(!"Unhandled button");
+        // Unhandled button.
         tile_event.button = MouseEvent::NONE;
         break;
     }
