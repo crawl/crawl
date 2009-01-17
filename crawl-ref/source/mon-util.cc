@@ -4948,12 +4948,17 @@ bool monsters::pickup_potion(item_def &item, int near)
         return (false);
     }
 
-    return pickup(item, MSLOT_POTION, near);
+    // Holy monsters and worshippers of good gods won't pick up unholy
+    // potions.
+    if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
+        return (false);
+
+    return (pickup(item, MSLOT_POTION, near));
 }
 
 bool monsters::pickup_gold(item_def &item, int near)
 {
-    return pickup(item, MSLOT_GOLD, near);
+    return (pickup(item, MSLOT_GOLD, near));
 }
 
 bool monsters::eat_corpse(item_def &item, int near)
