@@ -814,7 +814,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
     }
 
     return (false);
-}                               // end transform()
+}
 
 bool transform_can_butcher_barehanded(transformation_type tt)
 {
@@ -969,7 +969,7 @@ void untransform(void)
     calc_hp();
 
     handle_interrupted_swap(true, false, true);
-}                               // end untransform()
+}
 
 // XXX: This whole system is a mess as it still relies on special
 // cases to handle a large number of things (see wear_armour()) -- bwr
