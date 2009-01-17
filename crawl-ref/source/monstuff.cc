@@ -5776,10 +5776,13 @@ static bool _handle_scroll(monsters *monster)
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
                           0, 0, monster->pos(), monster->foe, MG_FORCE_BEH));
             read  = true;
-            if (mon != -1 && you.can_see(&menv[mon]))
+            if (mon != -1)
             {
-                mprf("%s appears!", menv[mon].name(DESC_CAP_A).c_str());
-                ident = ID_KNOWN_TYPE;
+                if (you.can_see(&menv[mon]))
+                {
+                    mprf("%s appears!", menv[mon].name(DESC_CAP_A).c_str());
+                    ident = ID_KNOWN_TYPE;
+                }
                 player_angers_monster(&menv[mon]);
             }
             else if (you.can_see(monster))
