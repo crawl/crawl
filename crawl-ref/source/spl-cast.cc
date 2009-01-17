@@ -4567,8 +4567,7 @@ void MiscastEffect::_air(int severity)
             break;
         case 1:
             you_msg      = "You feel momentarily weightless.";
-            mon_msg_seen = "@The_monster@ bobs up to the ceiling for a "
-                           "moment.";
+            mon_msg_seen = "@The_monster@ bobs in the air for a moment."
             break;
         case 2:
             you_msg      = "Wisps of vapour drift from your @hands@.";
