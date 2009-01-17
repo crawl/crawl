@@ -544,7 +544,7 @@ static bool _is_butcher_delay(int delay)
 }
 
 void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
-                             bool untransform)
+                             bool transform)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
         || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act())
