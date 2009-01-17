@@ -1386,7 +1386,7 @@ void cast_resist_poison(int power)
 
 void cast_teleport_control(int power)
 {
-    _increase_duration(DUR_CONTROLLED_FLIGHT, 10 + random2(power), 50,
+    _increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50,
                        "You feel in control.");
 }
 
