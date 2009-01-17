@@ -3892,11 +3892,11 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
     if (type == MONS_DANCING_WEAPON)
         return (false);
 
-    // Monsters can't use fixed artefacts
+    // Monsters can't use fixed artefacts.
     if (is_fixed_artefact(item) && !crawl_state.arena)
         return (false);
 
-    // Wimpy monsters (e.g. kobold, goblin) can't use halberds etc.
+    // Wimpy monsters (e.g. kobold, goblin) can't use halberds, etc.
     if (!check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
         return (false);
 
@@ -4883,13 +4883,13 @@ bool monsters::pickup_wand(item_def &item, int near)
     if (hit_dice >= 14)
         return (false);
 
-    // This is the only type based restriction I can think of:
-    // Holy monsters won't pick up draining items.
-    if (mons_holiness(this) == MH_HOLY && item.sub_type == WAND_DRAINING)
+    // Holy monsters and worshippers of good gods won't pick up unholy
+    // wands.
+    if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
         return (false);
 
-    // If you already have a charged wand, don't bother.
-    // Otherwise, replace with a charged one.
+    // If you already have a charged wand, don't bother.  Otherwise,
+    // replace with a charged one.
     if (item_def *wand = mslot_item(MSLOT_WAND))
     {
         if (wand->plus > 0)
@@ -4910,7 +4910,13 @@ bool monsters::pickup_scroll(item_def &item, int near)
     {
         return (false);
     }
-    return pickup(item, MSLOT_SCROLL, near);
+
+    // Holy monsters and worshippers of good gods won't pick up unholy
+    // scrolls.
+    if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
+        return (false);
+
+    return (pickup(item, MSLOT_SCROLL, near));
 }
 
 bool monsters::pickup_potion(item_def &item, int near)
@@ -4934,8 +4940,8 @@ bool monsters::pickup_potion(item_def &item, int near)
         break;
     case POT_SPEED:
     case POT_INVISIBILITY:
-        // If there are any item using monsters that are permanently invisible
-        // this might have to be restricted.
+        // If there are any item using monsters that are permanently
+        // invisible, this might have to be restricted.
         break;
     default:
         return (false);
@@ -4991,11 +4997,12 @@ bool monsters::pickup_misc(item_def &item, int near)
     if (item.sub_type == MISC_RUNE_OF_ZOT)
         return (false);
 
-    // Holy monsters won't pick up unholy misc. items.
-    if (mons_holiness(this) == MH_HOLY && is_evil_item(item))
+    // Holy monsters and worshippers of good gods won't pick up unholy
+    // miscellaneous items.
+    if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
         return (false);
 
-    return pickup(item, MSLOT_MISCELLANY, near);
+    return (pickup(item, MSLOT_MISCELLANY, near));
 }
 
 // Jellies are handled elsewhere, in _handle_pickup() in monstuff.cc.
