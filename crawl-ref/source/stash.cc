@@ -141,7 +141,8 @@ std::vector<item_def> item_list_in_stash( coord_def pos )
     if (ls)
     {
         Stash *s = ls->find_stash(pos.x, pos.y);
-        ret = s->get_items();
+        if (s)
+            ret = s->get_items();
     }
 
     return ret;
