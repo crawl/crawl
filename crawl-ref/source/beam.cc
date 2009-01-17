@@ -1843,7 +1843,7 @@ void bolt::affect_cell()
     // We don't want to hit a monster in a wall square twice.
     const bool still_wall = (was_solid && old_pos == pos());
     if (!still_wall && !invalid_monster_index(mgrd(pos())))
-        affect_monster( &menv[mgrd(pos())] );
+        affect_monster(&menv[mgrd(pos())]);
 
     // If the player can ever walk through walls, this will
     // need special-casing too.
@@ -3754,8 +3754,8 @@ void bolt::affect_player()
         return;
     }
 
-    // Trigger an interrupt, so travel will stop on misses
-    // which generate smoke.
+    // Trigger an interrupt, so travel will stop on misses which
+    // generate smoke.
     if (!YOU_KILL(thrower))
         interrupt_activity(AI_MONSTER_ATTACKS);
 
@@ -4035,7 +4035,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     // Don't do side effects (beam might miss or be a tracer).
     final = mons_adjust_flavoured(mon, *this, preac, false);
 
-    return true;
+    return (true);
 }
 
 void bolt::handle_stop_attack_prompt(monsters* mon)
@@ -5366,7 +5366,7 @@ bool bolt::nasty_to(const monsters *mon) const
     if (flavour == BEAM_DIGGING)
         return (false);
 
-    // Positive effects
+    // Positive effects.
     if (nice_to(mon))
         return (false);
 
@@ -5390,7 +5390,7 @@ bool bolt::nasty_to(const monsters *mon) const
     if (flavour == BEAM_DISPEL_UNDEAD || flavour == BEAM_ENSLAVE_UNDEAD)
         return (mons_holiness(mon) == MH_UNDEAD);
 
-    // pain/agony
+    // pain / agony
     if (flavour == BEAM_PAIN)
         return (!mons_res_negative_energy(mon));
 
