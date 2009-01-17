@@ -4054,6 +4054,8 @@ static bool _initialise(void)
 
 #ifdef USE_TILE
     tiles.initialise_items();
+    // Must re-run as the feature table wasn't initialized yet.
+    TileNewLevel(newc);
 #endif
 
     set_cursor_enabled(false);
