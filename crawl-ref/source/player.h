@@ -149,7 +149,8 @@ int player_magical_power( void );
 /* ***********************************************************************
  * called from: fight - misc - ouch - spells
  * *********************************************************************** */
-int player_prot_life(bool calc_unid = true, bool temp = true);
+int player_prot_life(bool calc_unid = true, bool temp = true,
+                     bool items = true);
 
 
 /* ***********************************************************************

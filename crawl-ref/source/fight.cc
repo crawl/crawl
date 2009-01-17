@@ -219,7 +219,7 @@ int calc_heavy_armour_penalty( bool random_factor )
     }
 
     // Heavy armour modifiers for PARM_EVASION.
-    if (you.equip[EQ_BODY_ARMOUR] != -1)
+    if (player_wearing_slot(EQ_BODY_ARMOUR))
     {
         const int ev_pen = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
                                      PARM_EVASION );
@@ -233,15 +233,15 @@ int calc_heavy_armour_penalty( bool random_factor )
 
     // ??? what is the reasoning behind this ??? {dlb}
     // My guess is that its supposed to encourage monk-style play -- bwr
-    if (!ur_armed)
+    if (!ur_armed && heavy_armour)
     {
         if (random_factor)
         {
             heavy_armour *= (coinflip() ? 3 : 2);
         }
-        // (2+3)/2
         else
         {
+            // avg. value: (2+3)/2
             heavy_armour *= 5;
             heavy_armour /= 2;
         }

@@ -543,7 +543,8 @@ static bool _is_butcher_delay(int delay)
             || delay == DELAY_OFFER_CORPSE);
 }
 
-void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
+void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
+                             bool untransform)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
         || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act())
@@ -560,7 +561,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
     const bool       prompt = Options.prompt_for_swap && !safe;
     const delay_type delay  = current_delay_action();
 
-    const char* prompt_str = "Switch back from butchering tool?";
+    const char* prompt_str  = transform ? "Switch back to main weapon?"
+                                        : "Switch back from butchering tool?";
 
     // If we're going to prompt then update the window so the player can
     // see what the monsters are.

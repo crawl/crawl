@@ -1812,7 +1812,7 @@ int player_energy()
 
 // If temp is set to false, temporary sources of resistance won't be
 // counted.
-int player_prot_life(bool calc_unid, bool temp)
+int player_prot_life(bool calc_unid, bool temp, bool items)
 {
     int pl = 0;
 
@@ -1863,17 +1863,20 @@ int player_prot_life(bool calc_unid, bool temp)
         }
     }
 
-    if (wearing_amulet(AMU_WARDING, calc_unid))
-        pl++;
+    if (items)
+    {
+        if (wearing_amulet(AMU_WARDING, calc_unid))
+            pl++;
 
-    // rings
-    pl += player_equip(EQ_RINGS, RING_LIFE_PROTECTION, calc_unid);
+        // rings
+        pl += player_equip(EQ_RINGS, RING_LIFE_PROTECTION, calc_unid);
 
-    // armour (checks body armour only)
-    pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
+        // armour (checks body armour only)
+        pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
-    // randart wpns
-    pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
+        // randart wpns
+        pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
+    }
 
     // undead/demonic power
     pl += player_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE);
@@ -2284,10 +2287,11 @@ bool is_light_armour( const item_def &item )
 
 bool player_light_armour(bool with_skill)
 {
-    const int arm = you.equip[EQ_BODY_ARMOUR];
-
-    if (arm == -1)
+    if (!player_wearing_slot(EQ_BODY_ARMOUR))
         return (true);
+
+    // We're wearing some kind of body armour and it's not melded.
+    const int arm = you.equip[EQ_BODY_ARMOUR];
 
     if (with_skill
         && property(you.inv[arm], PARM_EVASION) + you.skills[SK_ARMOUR]/3 >= 0)

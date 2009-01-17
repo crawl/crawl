@@ -2545,6 +2545,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return (false);
 
+        // Potentially useful.
         if (is_artefact(item))
             return (false);
 
@@ -2560,12 +2561,17 @@ bool is_useless_item(const item_def &item, bool temp)
                     || you.religion == GOD_TROG);
 
         case RING_LIFE_PROTECTION:
+            return (player_prot_life(false, temp, false) == 3);
+
         case RING_HUNGER:
-        case RING_REGENERATION:
         case RING_SUSTENANCE:
-            return (you.is_undead
-                    && (you.species != SP_VAMPIRE
-                        || temp && you.hunger_state == HS_STARVING));
+            return (you.species == SP_MUMMY
+                    || temp && you.species == SP_VAMPIRE
+                       && you.hunger_state == HS_STARVING);
+
+        case RING_REGENERATION:
+            return (temp && you.species == SP_VAMPIRE
+                    && you.hunger_state == HS_STARVING);
 
         case RING_SEE_INVISIBLE:
             return (player_mutation_level(MUT_ACUTE_VISION));

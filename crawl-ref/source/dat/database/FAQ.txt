@@ -28,10 +28,13 @@ A:goal
 
 To survive and to win, obviously. For this you need to find the fabled
 Orb of Zot deep down in the dungeon and bring it back to the surface.
-However, to enter the realm of Zot, you'll first need to collect three
-runes. If you're new to the game you really shouldn't worry about this,
-though. Just try to delve as deeply as possible and have fun exploring the
-many side branches in Crawl.
+To enter the realm of Zot, you'll first need to collect three runes to be 
+found in various branches of the dungeon.
+
+However, if you're new to the game you really shouldn't worry about this.
+Just try to delve as deeply as possible and have fun exploring the many 
+side branches in Crawl with various characters of different species,
+skill sets, and religion.
 %%%%
 Q:drop
 
@@ -39,10 +42,10 @@ How can I drop/pick up only part of a stack?
 %%%%
 A:drop
 
-Press 'd' (or ','), followed by a number (the amount), and finally the
+Press 'd' (or ','/'g'), followed by a number (the amount), and finally the
 item's letter. For pickup, this is only possible when choosing items from
-a menu. Stacks that are selected only in part are marked with '#' rather
-than '+'.
+a menu, i.e. ',,' or 'gg'. 
+Stacks that are selected only in part are marked with '#' rather than '+'.
 %%%%
 Q:downstairs
 
@@ -127,10 +130,10 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-The easiest gods to play are probably Trog (for Berserkers), Sif Muna (for
-mages), Beogh (for orcs) and Xom (for general fun). When you reach the
-Temple for the first time be sure to read all gods' descriptions and take
-your time in deciding which way to go.
+The easiest gods to play are probably Trog (for pure fighters), Sif Muna 
+(for spellcasters), Beogh (for orcs) and Xom (for general fun). 
+When you reach the Temple for the first time be sure to read all gods' 
+descriptions and take your time in deciding which way to go.
 %%%%
 Q:starving
 
@@ -254,7 +257,7 @@ No, you can't. All of the devteam members submitted a number of code
 intensive patches and/or took over responsibility over an important side 
 project before joining. Once you've become indispensible to the team and we 
 start wondering how we ever got along without you, we _may_ ask you to join 
-you, but don't hold your breath.
+us, but don't hold your breath.
 
 Please submit your ideas to the Feature Requests tracker of Sourceforge. If
 they catch the interest of at least one coder, chances are they'll make it 
@@ -279,9 +282,10 @@ down to three reasons:
 * We just don't think it's interesting enough to ever be implemented.
 
 Please don't let this stop you from bringing up more suggestions. Already the
-next one might be one generating heavy interest and excitement. Do try to be
-specific in your suggestions. If you cannot even explain the basics of your
-idea, why should we bother to flesh it out, let alone code it?
+next one might generate heavy interest and excitement, and end up in the 
+game. However, do try to be specific in your suggestions. If you cannot even 
+explain the basics of your idea, why should we bother to flesh it out, let 
+alone code it?
 %%%%
 Q:patch
 

@@ -968,7 +968,7 @@ void untransform(void)
     }
     calc_hp();
 
-    handle_interrupted_swap(true);
+    handle_interrupted_swap(true, false, true);
 }                               // end untransform()
 
 // XXX: This whole system is a mess as it still relies on special
