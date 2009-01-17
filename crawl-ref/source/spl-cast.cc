@@ -3757,8 +3757,8 @@ void MiscastEffect::_necromancy(int severity)
                            " for a moment.";
             break;
         case 6:
-            you_msg = "You shiver with cold.";
-            // Monster messages needed.
+            you_msg      = "You shiver with cold.";
+            mon_msg_seen = "@The_monster@ shivers with cold.";
             break;
         case 7:
             you_msg = "You sense a malignant aura.";
@@ -3893,8 +3893,9 @@ void MiscastEffect::_necromancy(int severity)
         case 2:
             if (_create_monster(MONS_SOUL_EATER, 4, true))
             {
-                // Monster messages needed.
-                you_msg = "Something reaches out for you...";
+                you_msg        = "Something reaches out for you...";
+                mon_msg_seen   = "Something reaches out for @the_monster@...";
+                mon_msg_unseen = "Something reaches out from thin air...";
             }
             do_msg();
             break;
@@ -3902,8 +3903,9 @@ void MiscastEffect::_necromancy(int severity)
         case 3:
             if (_create_monster(MONS_REAPER, 4, true))
             {
-                // Monster messages needed.
-                you_msg = "Death has come for you...";
+                you_msg        = "Death has come for you...";
+                mon_msg_seen   = "Death has come for @the_monster@...";
+                mon_msg_unseen = "Death appears from thin air...";
             }
             do_msg();
             break;
@@ -4270,8 +4272,8 @@ void MiscastEffect::_ice(int severity)
         switch (random2(num))
         {
         case 0:
-            you_msg = "You shiver with cold.";
-            // Monster messages needed.
+            you_msg      = "You shiver with cold.";
+            mon_msg_seen = "@The_monster@ shivers with cold.";
             break;
         case 1:
             you_msg = "A chill runs through your body.";
@@ -4558,8 +4560,8 @@ void MiscastEffect::_air(int severity)
             // Monster messages needed.
             break;
         case 1:
-            you_msg = "You feel momentarily weightless.";
-            // Monster messages needed.
+            you_msg      = "You feel momentarily weightless.";
+            mon_msg_seen = "@The_monster@ hovers in midair for a moment.";
             break;
         case 2:
             you_msg      = "Wisps of vapour drift from your @hands@.";
@@ -4599,8 +4601,9 @@ void MiscastEffect::_air(int severity)
             break;
         }
         case 6:
-            you_msg = "You are blasted with air!";
-            // Monster messages needed.
+            you_msg        = "You are blasted with air!";
+            mon_msg_seen   = "@The_monster@ is blasted with air!";
+            mon_msg_unseen = "The air gusts!";
             break;
         case 7:
             if (neither_end_silenced())
