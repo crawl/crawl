@@ -34,7 +34,7 @@ found in various branches of the dungeon.
 However, if you're new to the game you really shouldn't worry about this.
 Just try to delve as deeply as possible and have fun exploring the many 
 side branches in Crawl with various characters of different species,
-skill sets, and religion.
+skill sets, and religions.
 %%%%
 Q:drop
 
