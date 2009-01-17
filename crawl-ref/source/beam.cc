@@ -1889,7 +1889,6 @@ static void _undo_tracer(bolt &orig, bolt &copy)
     orig.colour        = copy.colour;
     orig.flavour       = copy.flavour;
     orig.real_flavour  = copy.real_flavour;
-    orig.seen          = copy.seen;
 }
 
 // This saves some important things before calling fire().
