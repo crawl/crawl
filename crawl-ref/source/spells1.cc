@@ -838,7 +838,7 @@ bool cast_divine_vigour()
         const int old_hp_max = you.hp_max;
         you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
         you.duration[DUR_DIVINE_VIGOUR]
-            = 35 + (you.skills[SK_INVOCATIONS]*5)/3;
+            = 40 + (you.skills[SK_INVOCATIONS]*5)/2;
         calc_hp();
         inc_hp(you.hp_max - old_hp_max, false);
 
@@ -937,7 +937,7 @@ bool cast_vitalisation()
             const int stamina_amt = 3;
             you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
             you.duration[DUR_DIVINE_STAMINA]
-                = 35 + (you.skills[SK_INVOCATIONS]*5)/3;
+                = 40 + (you.skills[SK_INVOCATIONS]*5)/2;
 
             modify_stat(STAT_STRENGTH, stamina_amt, true, "");
             modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
