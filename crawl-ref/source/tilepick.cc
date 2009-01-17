@@ -3981,56 +3981,61 @@ void tile_clear_flavour()
 // set them to a random instance of the default floor and wall tileset.
 void tile_init_flavour()
 {
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
+    for (rectangle_iterator ri(1); ri; ++ri)
+        tile_init_flavour(*ri);
+}
+
+void tile_init_flavour(const coord_def &gc)
+{
+    if (!in_bounds(gc))
+        return;
+
+    int wall_rnd = random2(tile_dngn_count(env.tile_default.wall));
+    int floor_rnd = random2(tile_dngn_count(env.tile_default.floor));
+
+    if (!env.tile_flv(gc).floor)
+        env.tile_flv(gc).floor = env.tile_default.floor + floor_rnd;
+    if (!env.tile_flv(gc).wall)
+        env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
+
+    if (grd(gc) == DNGN_CLOSED_DOOR || grd(gc) == DNGN_OPEN_DOOR)
+    {
+        // Check for horizontal gates.
+
+        const coord_def left(gc.x - 1, gc.y);
+        const coord_def right(gc.x + 1, gc.y);
+
+        bool door_left  = (grd(left) == grd(gc));
+        bool door_right = (grd(right) == grd(gc));
+
+        if (door_left || door_right)
         {
-            int max_wall_flavor = tile_dngn_count(env.tile_default.wall) - 1;
-            int max_floor_flavor = tile_dngn_count(env.tile_default.floor) - 1;
-            int wall_rnd = random_range(0, max_wall_flavor);
-            int floor_rnd = random_range(0, max_floor_flavor);
+            int target;
+            if (door_left && door_right)
+                target = TILE_DNGN_GATE_CLOSED_MIDDLE;
+            else if (door_left)
+                target = TILE_DNGN_GATE_CLOSED_RIGHT;
+            else
+                target = TILE_DNGN_GATE_CLOSED_LEFT;
 
-            if (!env.tile_flv[x][y].floor)
-                env.tile_flv[x][y].floor = env.tile_default.floor + floor_rnd;
-            if (!env.tile_flv[x][y].wall)
-                env.tile_flv[x][y].wall = env.tile_default.wall + wall_rnd;
-
-            if (grd[x][y] == DNGN_CLOSED_DOOR || grd[x][y] == DNGN_OPEN_DOOR)
-            {
-                // Check for horizontal gates.
-
-                bool door_left  = (x > 0 && grd[x-1][y] == grd[x][y]);
-                bool door_right = (x < GXM - 1 && grd[x+1][y] == grd[x][y]);
-
-                if (door_left || door_right)
-                {
-                    int target;
-                    if (door_left && door_right)
-                        target = TILE_DNGN_GATE_CLOSED_MIDDLE;
-                    else if (door_left)
-                        target = TILE_DNGN_GATE_CLOSED_RIGHT;
-                    else
-                        target = TILE_DNGN_GATE_CLOSED_LEFT;
-
-                    // NOTE: This requires that closed gates and open gates
-                    // are positioned in the tile set relative to their
-                    // door counterpart.
-                    env.tile_flv[x][y].special =
-                        target - TILE_DNGN_CLOSED_DOOR;
-                }
-                else
-                {
-                    env.tile_flv[x][y].special = 0;
-                }
-            }
-            else if (grd[x][y] == DNGN_SECRET_DOOR)
-            {
-                env.tile_flv[x][y].special = 0;
-            }
-            else if (!env.tile_flv[x][y].special)
-            {
-                env.tile_flv[x][y].special = random2(256);
-            }
+            // NOTE: This requires that closed gates and open gates
+            // are positioned in the tile set relative to their
+            // door counterpart.
+            env.tile_flv(gc).special = target - TILE_DNGN_CLOSED_DOOR;
         }
+        else
+        {
+            env.tile_flv(gc).special = 0;
+        }
+    }
+    else if (grd(gc) == DNGN_SECRET_DOOR)
+    {
+        env.tile_flv(gc).special = 0;
+    }
+    else if (!env.tile_flv(gc).special)
+    {
+        env.tile_flv(gc).special = random2(256);
+    }
 }
 
 static bool _adjacent_target(dungeon_feature_type target, int x, int y)

@@ -8307,6 +8307,9 @@ void vault_placement::apply_grid()
 
             const dungeon_feature_type oldgrid = grd(*ri);
             _vault_grid( *this, feat, *ri );
+#ifdef USE_TILE
+            tile_init_flavour(*ri);
+#endif
             if (!Generating_Level)
             {
                 // Have to link items each square at a time, or

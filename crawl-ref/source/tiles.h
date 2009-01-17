@@ -100,6 +100,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv);
 void tile_clear_flavour();
 // Initialize per-cell types of walls and floors using defaults.
 void tile_init_flavour();
+void tile_init_flavour(const coord_def &gc);
 
 void tile_floor_halo(dungeon_feature_type target, int tile);
 
