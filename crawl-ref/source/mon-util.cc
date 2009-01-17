@@ -4883,7 +4883,7 @@ bool monsters::pickup_wand(item_def &item, int near)
     if (hit_dice >= 14)
         return (false);
 
-    // Holy monsters and worshippers of good gods won't pick up unholy
+    // Holy monsters and worshippers of good gods won't pick up evil
     // wands.
     if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
         return (false);
@@ -4911,7 +4911,7 @@ bool monsters::pickup_scroll(item_def &item, int near)
         return (false);
     }
 
-    // Holy monsters and worshippers of good gods won't pick up unholy
+    // Holy monsters and worshippers of good gods won't pick up evil
     // scrolls.
     if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
         return (false);
@@ -4921,7 +4921,8 @@ bool monsters::pickup_scroll(item_def &item, int near)
 
 bool monsters::pickup_potion(item_def &item, int near)
 {
-    // Only allow monsters to pick up potions if they can actually use them.
+    // Only allow monsters to pick up potions if they can actually use
+    // them.
     switch (item.sub_type)
     {
     case POT_HEALING:
@@ -4997,7 +4998,7 @@ bool monsters::pickup_misc(item_def &item, int near)
     if (item.sub_type == MISC_RUNE_OF_ZOT)
         return (false);
 
-    // Holy monsters and worshippers of good gods won't pick up unholy
+    // Holy monsters and worshippers of good gods won't pick up evil
     // miscellaneous items.
     if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
         return (false);
