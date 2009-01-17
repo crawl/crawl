@@ -2444,6 +2444,7 @@ void behaviour_event(monsters *mon, int event, int src,
             if (mon->is_patrolling())
                 break;
 
+            ASSERT(!src_pos.origin());
             mon->target = src_pos;
         }
         break;
@@ -2502,8 +2503,9 @@ void behaviour_event(monsters *mon, int event, int src,
         if (mon->foe == MHITNOT)
             mon->foe = src;
 
-        if (src_pos != coord_def()
-            && (mon->foe == MHITNOT || mons_is_wandering(mon)))
+        if (!src_pos.origin()
+            && (mon->foe == MHITNOT || mon->foe == src
+                || mons_is_wandering(mon)))
         {
             if (mon->is_patrolling())
                 break;
@@ -3641,11 +3643,13 @@ static void _arena_set_foe(monsters *mons)
     }
     else
     {
-        mons->foe = MHITNOT;
+        mons->foe       = MHITNOT;
         mons->behaviour = BEH_WANDER;
-        if (mons->behaviour == BEH_WANDER)
-            _check_wander_target(mons);
     }
+    if (mons->behaviour == BEH_WANDER)
+        _check_wander_target(mons);
+
+    ASSERT(mons->foe == MHITNOT || !mons->target.origin());
 }
 
 //---------------------------------------------------------------
