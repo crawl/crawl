@@ -286,7 +286,7 @@ static bool _in_a_shop( int shopidx )
         if (!total_cost)
         {
             snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
-                      you.gold == 1 ? "" : "s" );
+                      you.gold > 1 ? "s" : "" );
 
             textcolor(YELLOW);
         }
@@ -295,9 +295,9 @@ static bool _in_a_shop( int shopidx )
             snprintf( info, INFO_SIZE, "You now have %d gold piece%s. "
                             "You are short %d gold piece%s for the purchase.",
                       you.gold,
-                      you.gold == 1 ? "" : "s",
+                      you.gold > 1 ? "s" : "",
                       total_cost - you.gold,
-                      (total_cost - you.gold == 1) ? "" : "s" );
+                      (total_cost - you.gold > 1) ? "s" : "" );
 
             textcolor(LIGHTRED);
         }
@@ -306,9 +306,9 @@ static bool _in_a_shop( int shopidx )
             snprintf( info, INFO_SIZE, "You now have %d gold piece%s. "
                       "After the purchase, you will have %d gold piece%s.",
                       you.gold,
-                      you.gold == 1 ? "" : "s",
+                      you.gold > 1 ? "s" : "",
                       you.gold - total_cost,
-                      (you.gold - total_cost == 1) ? "" : "s" );
+                      (you.gold - total_cost > 1) ? "s" : "" );
 
             textcolor(YELLOW);
         }
