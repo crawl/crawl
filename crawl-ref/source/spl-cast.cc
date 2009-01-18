@@ -2343,7 +2343,7 @@ void MiscastEffect::init()
         act_source   = &you;
         source_known = true;
     }
-    else if (kill_source >= 0 && kill_source < NON_MONSTER)
+    else if (!invalid_monster_index(kill_source))
     {
         mon_source = &menv[kill_source];
         act_source = mon_source;
