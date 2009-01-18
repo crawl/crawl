@@ -1067,9 +1067,15 @@ int TilesFramework::get_number_of_lines()
 
 int TilesFramework::get_number_of_cols()
 {
-    // TODO enne - do we need to differentiate the number of columns
-    // in the message window and the number of columns on the CRT?
-    return m_region_crt->mx;
+    switch (m_active_layer)
+    {
+    default:
+        return 0;
+    case LAYER_NORMAL:
+        return m_region_msg->mx;
+    case LAYER_CRT:
+        return m_region_crt->mx;
+    }
 }
 
 void TilesFramework::cgotoxy(int x, int y, int region)
