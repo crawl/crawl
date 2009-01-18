@@ -1521,6 +1521,13 @@ void bolt::initialize_fire()
     if (see_grid(source) && target == source && !invisible())
         seen = true;
 
+    // Scale draw_delay to match change in arena_delay.
+    if (crawl_state.arena && !is_tracer)
+    {
+        draw_delay *= Options.arena_delay;
+        draw_delay /= 600;
+    }
+
 #if DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
