@@ -238,6 +238,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.can_see_invis  = player_see_invis();
     pbolt.smart_monster  = true;
     pbolt.attitude       = ATT_FRIENDLY;
+    pbolt.thrower        = KILL_YOU_MISSILE;
 
     // Init tracer variables.
     pbolt.friend_info.reset();
