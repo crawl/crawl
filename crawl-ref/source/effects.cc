@@ -3240,12 +3240,11 @@ void handle_time(long time_delta)
                                              * (you.is_undead ? 4 : 2) / 4);
                 beam.target       = you.pos();
                 beam.name         = "magical storm";
-                beam.colour       = BLACK;
-                beam.thrower      = KILL_MISC;
                 beam.beam_source  = NON_MONSTER;
                 beam.aux_source   = "a magical explosion";
-                beam.ex_size      = std::min(9, you.magic_contamination / 15);
-                beam.ench_power   = (you.magic_contamination * 5);
+                beam.ex_size      = std::max(1, std::min(9,
+                                        you.magic_contamination / 15));
+                beam.ench_power   = you.magic_contamination * 5;
                 beam.is_explosion = true;
 
                 beam.explode();
