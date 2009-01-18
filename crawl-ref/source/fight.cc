@@ -2050,10 +2050,13 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
 
 void melee_attack::drain_defender()
 {
-    if (defender->atype() == ACT_MONSTER && one_chance_in(3))
-        return;
-
     const int rn = defender->res_negative_energy();
+
+    if (defender->atype() == ACT_MONSTER
+        && (rn > 0 || one_chance_in(3)))
+    {
+        return;
+    }
 
     if (defender->drain_exp(attacker))
     {
@@ -2875,7 +2878,7 @@ bool melee_attack::apply_damage_brand()
         }
 
         if (defender->holiness() != MH_NATURAL || !weapon
-            || defender->res_negative_energy()
+            || defender->res_negative_energy() > 0
             || damage_done < 1 || attacker->stat_hp() == attacker->stat_maxhp()
             || one_chance_in(5))
         {
@@ -2924,8 +2927,10 @@ bool melee_attack::apply_damage_brand()
         break;
     }
     case SPWPN_PAIN:
-        if (!defender->res_negative_energy()
-            && x_chance_in_y(attacker->skill(SK_NECROMANCY) + 1, 8))
+        if (defender->res_negative_energy() > 0)
+            break;
+
+        if (x_chance_in_y(attacker->skill(SK_NECROMANCY) + 1, 8))
         {
             if (defender_visible)
             {
@@ -2936,6 +2941,7 @@ bool melee_attack::apply_damage_brand()
             }
             special_damage += random2( 1 + attacker->skill(SK_NECROMANCY) );
         }
+
         attacker->god_conduct(DID_NECROMANCY, 4);
         break;
 
@@ -3229,7 +3235,7 @@ void melee_attack::player_apply_staff_damage()
     }
 
     case STAFF_DEATH:
-        if (defender->res_negative_energy())
+        if (defender->res_negative_energy() > 0)
             break;
 
         if (x_chance_in_y(you.skills[SK_NECROMANCY] + 1, 8))
