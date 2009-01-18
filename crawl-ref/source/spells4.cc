@@ -1693,7 +1693,6 @@ bool cast_fragmentation(int pow, const dist& spd)
 
     beam.flavour     = BEAM_FRAG;
     beam.type        = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.colour      = BLACK;
     beam.beam_source = MHITYOU;
     beam.thrower     = KILL_YOU;
     beam.ex_size     = 1;
