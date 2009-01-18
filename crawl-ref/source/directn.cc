@@ -2891,7 +2891,7 @@ static void _describe_monster(const monsters *mon)
         }
         // hostile with target != you
         else if (!mons_friendly(mon) && !mons_neutral(mon)
-            && mon->foe != MHITYOU)
+                 && mon->foe != MHITYOU && !crawl_state.arena_suspended)
         {
             // special case: batty monsters get set to BEH_WANDER as
             // part of their special behaviour.
@@ -2926,20 +2926,30 @@ static void _describe_monster(const monsters *mon)
         && !mons_is_confused(mon)
         && (mons_see_invis(mon) || mons_sense_invis(mon)))
     {
-        if (you.invisible() && mon->foe == MHITYOU && !mons_is_fleeing(mon))
+        const actor* foe = mon->get_foe();
+        if (foe && foe->invisible() && !mons_is_fleeing(mon))
         {
-            if (mons_see_invis(mon))
+            if (!you.can_see(foe))
             {
-                mprf(MSGCH_EXAMINE, "%s is watching you carefully.",
+                mprf(MSGCH_EXAMINE, "%s is looking at something unseen.",
                      mon->pronoun(PRONOUN_CAP).c_str());
+            }
+            else if (mons_see_invis(mon))
+            {
+                mprf(MSGCH_EXAMINE, "%s is watching %s carefully.",
+                     mon->pronoun(PRONOUN_CAP).c_str(),
+                     foe->name(DESC_NOCAP_THE).c_str());
             }
             else
             {
-                mprf(MSGCH_EXAMINE, "%s is looking in your general direction.",
-                     mon->pronoun(PRONOUN_CAP).c_str());
+                std::string name = foe->atype() == ACT_PLAYER
+                                 ? "your" : (foe->name(DESC_NOCAP_THE) + "'s");
+                mprf(MSGCH_EXAMINE, "%s is looking in %s general direction.",
+                     mon->pronoun(PRONOUN_CAP).c_str(),
+                     name.c_str());
             }
         }
-        else if (mon->foe == MHITNOT || mons_is_fleeing(mon))
+        else if (!foe || mons_is_fleeing(mon))
         {
             mprf(MSGCH_EXAMINE, "%s seems to be peering into the shadows.",
                  mon->pronoun(PRONOUN_CAP).c_str());
