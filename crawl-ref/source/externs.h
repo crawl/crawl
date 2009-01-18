@@ -821,7 +821,7 @@ public:
   char class_name[30];
   int time_taken;
 
-  char shield_blocks;         // number of shield blocks since last action
+  int shield_blocks;         // number of shield blocks since last action
 
   FixedVector< item_def, ENDOFPACK > inv;
 
