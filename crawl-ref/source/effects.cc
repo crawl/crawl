@@ -1500,8 +1500,9 @@ static void _do_book_acquirement(item_def &book, int agent)
     int choice = random_choose_weighted(
             55, BOOK_RANDART_THEME,
             24, book.sub_type,
-            level == -1 ? 0 : 12, BOOK_RANDART_LEVEL,
-       agent == GOD_XOM ? 0 : 6, BOOK_MANUAL, // too useful for Xom
+            level == -1      ? 0 :
+       agent == GOD_SIF_MUNA ? 6 : 3, BOOK_RANDART_LEVEL,
+       agent == GOD_XOM      ? 0 : 6, BOOK_MANUAL, // too useful for Xom
             0);
 
     // No changes.
