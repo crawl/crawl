@@ -3704,7 +3704,7 @@ static void _handle_behaviour(monsters *mon)
     {
         if (Options.arena_force_ai)
         {
-            if (!mon->get_foe() || one_chance_in(3))
+            if (!mon->get_foe() || mon->target.origin() || one_chance_in(3))
                 mon->foe = MHITNOT;
             if (mon->foe == MHITNOT || mon->foe == MHITYOU)
                 _arena_set_foe(mon);

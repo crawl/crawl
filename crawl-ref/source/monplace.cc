@@ -2203,14 +2203,7 @@ int mons_place(mgen_data mg)
             player_angers_monster(creation);
 
         if (crawl_state.arena)
-        {
-            if (mg.foe == MHITNOT)
-                behaviour_event(creation, ME_EVAL);
-            else
-                // Make summoned being aware of foe's presense.
-                behaviour_event(creation, ME_ALERT, mg.foe,
-                                menv[mg.foe].pos());
-        }
+            behaviour_event(creation, ME_EVAL);
         else
             // Make summoned being aware of player's presence.
             behaviour_event(creation, ME_ALERT, MHITYOU);
