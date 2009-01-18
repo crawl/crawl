@@ -5803,12 +5803,13 @@ int monsters::res_cleansing_flame() const
     if (mons_is_evil(this))
         return (-1);
 
-    if (mons_is_holy(this)
-           || is_good_god(this->god)
+    if (is_good_god(god)
+           || mons_is_holy(this)
+           || mons_neutral(this)
            || you.religion == GOD_SHINING_ONE
                && is_unchivalric_attack(&you, this)
            || is_good_god(you.religion)
-               && (is_follower(this) || mons_neutral(this)))
+               && is_follower(this))
     {
         return (1);
     }
