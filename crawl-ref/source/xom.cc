@@ -464,20 +464,12 @@ static bool _xom_gives_item(int power)
     // and nature is not very Xomlike...
     if (x_chance_in_y(power, 256))
     {
-        // Random-type acquirement.
-        const int r = random2(7);
-        const object_class_type objtype = (r == 0) ? OBJ_WEAPONS :
-                                          (r == 1) ? OBJ_ARMOUR :
-                                          (r == 2) ? OBJ_JEWELLERY :
-                                          (r == 3) ? OBJ_BOOKS :
-                                          (r == 4) ? OBJ_STAVES :
-                                          (r == 5) ? OBJ_FOOD :
-                                          (r == 6) ? OBJ_MISCELLANY
-                                                   : OBJ_GOLD;
-
+        const object_class_type types[] = {
+            OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
+            OBJ_STAVES,  OBJ_FOOD,   OBJ_MISCELLANY, OBJ_GOLD
+        };
         god_acting gdact(GOD_XOM);
-
-        _xom_acquirement(objtype);
+        _xom_acquirement(RANDOM_ELEMENT(types));
     }
     else
     {
@@ -728,6 +720,14 @@ static bool _player_is_dead()
             || you.did_escape_death());
 }
 
+static bool _xom_feels_nasty()
+{
+    // Xom will only directly kill you with a bad effect if you're under
+    // penance from him, or if he's bored.
+    return (you.penance[GOD_XOM]
+            || (you.religion == GOD_XOM && you.gift_timeout == 0));
+}
+
 static bool _xom_do_potion()
 {
     bool rc = false;
@@ -926,7 +926,7 @@ static bool _xom_send_one_ally(int sever)
     return (rc);
 }
 
-static bool _xom_good_polymorph_nearby_monster()
+static bool _xom_polymorph_nearby_monster(bool helpful)
 {
     bool rc = false;
     if (there_are_monsters_nearby(false, false))
@@ -935,8 +935,9 @@ static bool _xom_good_polymorph_nearby_monster()
                                                      _choose_mutatable_monster);
         if (mon)
         {
-            god_speaks(GOD_XOM,
-                       _get_xom_speech("good monster polymorph").c_str());
+            const char* lookup = (helpful ? "good monster polymorph"
+                                          : "bad monster polymorph");
+            god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
             bool made_shifter = false;
 
@@ -947,8 +948,9 @@ static bool _xom_good_polymorph_nearby_monster()
                 made_shifter = true;
             }
 
+            const bool powerup = !(mons_wont_attack(mon) ^ helpful);
             monster_polymorph(mon, RANDOM_MONSTER,
-                              mons_wont_attack(mon) ? PPT_MORE : PPT_LESS,
+                              powerup ? PPT_MORE : PPT_LESS,
                               made_shifter);
 
             rc = true;
@@ -1003,14 +1005,15 @@ static bool _xom_rearrange_pieces(int sever)
     return (rc);
 }
 
-static bool _xom_give_good_mutation()
+static bool _xom_give_mutation(bool good)
 {
     bool rc = false;
 
     if (you.can_safely_mutate()
         && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
     {
-        god_speaks(GOD_XOM, _get_xom_speech("good mutations").c_str());
+        const char* lookup = (good ? "good mutations" : "random mutations");
+        god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
         mpr("Your body is suffused with distortional energy.");
 
@@ -1021,8 +1024,9 @@ static bool _xom_give_good_mutation()
 
         for (int i = random2(4); i >= 0; --i)
         {
-            if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, true, false,
-                       false, true))
+            if (mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
+                       failMsg, false, true, false, false,
+                       good || !_xom_feels_nasty()))
             {
                 rc = true;
             }
@@ -1156,7 +1160,7 @@ static bool _xom_is_good(int sever, int tension)
     else if (tension > 0 && x_chance_in_y(7, sever))
         done = _xom_send_one_ally(sever);
     else if (x_chance_in_y(8, sever))
-        done = _xom_good_polymorph_nearby_monster();
+        done = _xom_polymorph_nearby_monster(true);
     else if (x_chance_in_y(9, sever))
     {
         _xom_gives_item(sever);
@@ -1191,7 +1195,7 @@ static bool _xom_is_good(int sever, int tension)
     }
     else if (x_chance_in_y(13, sever) && x_chance_in_y(16, how_mutated()))
     {
-        done = _xom_give_good_mutation();
+        done = _xom_give_mutation(true);
     }
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(14, sever))
@@ -1220,10 +1224,9 @@ static item_def* _tran_get_eq(equipment_type eq)
 }
 
 // Which types of dungeon features are in view?
-static void _get_in_view(bool in_view[])
+static void _get_in_view(FixedVector<bool, NUM_REAL_FEATURES>& in_view)
 {
-    for (int i = 0; i < NUM_REAL_FEATURES; i++)
-        in_view[i] = false;
+    in_view.init(false);
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         in_view[grd(*ri)] = true;
@@ -1249,9 +1252,9 @@ static void _xom_zero_miscast()
     messages.push_back("Nothing appears to happen... Ominous!");
 
     ///////////////////////////////////
-    // Dungeon feature dependant stuff.
+    // Dungeon feature dependent stuff.
 
-    bool in_view[NUM_REAL_FEATURES];
+    FixedVector<bool, NUM_REAL_FEATURES> in_view;
     _get_in_view(in_view);
 
     if (in_view[DNGN_LAVA])
@@ -1501,7 +1504,7 @@ static void _xom_zero_miscast()
         messages.push_back(name + " briefly " + verb + ".");
     }
 
-    if (priority.size() > 0 && coinflip())
+    if (!priority.empty() && coinflip())
         mpr(priority[random2(priority.size())].c_str());
     else
         mpr(messages[random2(messages.size())].c_str());
@@ -1615,14 +1618,183 @@ static void _xom_miscast(const int max_level, const bool nasty)
                   lethality_margin, hand_str, can_plural);
 }
 
+static bool _xom_lose_stats()
+{
+    stat_type stat = STAT_RANDOM;
+    int       max  = 3;
+
+    // Don't kill the player unless Xom is being nasty.
+    if (!_xom_feels_nasty())
+    {
+        // Make sure not to lower strength so much that the player
+        // will die once might wears off.
+        char      vals[3] =
+            {you.strength - (you.duration[DUR_MIGHT] ? 5 : 0),
+             you.dex, you.intel};
+        stat_type types[3] = {STAT_STRENGTH, STAT_DEXTERITY,
+                              STAT_INTELLIGENCE};
+        int tries = 0;
+        do {
+            int idx = random2(3);
+            stat = types[idx];
+            max  = std::min(3, vals[idx] - 1);
+        } while (max < 2 && (++tries < 30));
+
+        if (tries >= 30)
+            return (false);
+    }
+
+    god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
+    lose_stat(stat, 1 + random2(max), true, "the vengeance of Xom" );
+    return (true);
+}
+
+static bool _xom_chaos_upgrade_nearby_monster()
+{
+    bool rc = false;
+
+    monsters *mon = choose_random_nearby_monster(0, _choose_chaos_upgrade);
+
+    if (!mon)
+        return (false);
+
+    god_speaks(GOD_XOM, _get_xom_speech("chaos upgrade").c_str());
+
+    mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON, MSLOT_MISSILE};
+
+    for (int i = 0; i < 3 && !rc; ++i)
+    {
+        item_def* const item = mon->mslot_item(slots[i]);
+        if (item && _is_chaos_upgradeable(*item, mon))
+        {
+            _do_chaos_upgrade(*item, mon);
+            rc = true;
+        }
+    }
+    ASSERT(rc);
+
+    // Wake the monster up.
+    behaviour_event(mon, ME_ALERT, MHITYOU);
+
+    return (rc);
+}
+
+static bool _xom_player_confusion_effect(int sever)
+{
+    bool rc = false;
+
+    // Looks like this will *always* succeed?
+    if (confuse_player(random2(sever)+1, false))
+    {
+        // FIXME: Message order is a bit off here.
+        god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
+        rc = true;
+
+        // Sometimes Xom gets carried away and starts confusing
+        // other creatures too.
+        if (coinflip())
+        {
+            for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+            {
+                monsters* const monster = &menv[i];
+
+                if (!monster->alive()
+                    || !mons_near(monster)
+                    || !mons_class_is_confusable(monster->type)
+                    || one_chance_in(20))
+                {
+                    continue;
+                }
+
+                if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                                                  KC_FRIENDLY, random2(sever))))
+                {
+                    simple_monster_message(monster,
+                                           " looks rather confused.");
+                }
+            }
+        }
+    }
+    return (rc);
+}
+
+static bool _xom_draining_torment_effect(int sever)
+{
+    const std::string speech = _get_xom_speech("draining or torment");
+    const bool nasty = _xom_feels_nasty();
+    bool rc = false;
+
+    if (one_chance_in(4))
+    {
+        // XP drain effect (25%).
+        if (player_prot_life() < 3 && (nasty || you.experience > 0))
+        {
+            god_speaks(GOD_XOM, speech.c_str());
+
+            drain_exp();
+            if (random2(sever) > 3 && (nasty || you.experience > 0))
+                drain_exp();
+            if (random2(sever) > 3 && (nasty || you.experience > 0))
+                drain_exp();
+
+            rc = true;
+        }
+    }
+    else
+    {
+        // Torment effect (75%).
+        if (!player_res_torment())
+        {
+            god_speaks(GOD_XOM, speech.c_str());
+            torment_player(0, TORMENT_XOM);
+            rc = true;
+        }
+    }
+    return (rc);
+}
+
+static bool _xom_summon_hostiles(int sever)
+{
+    bool rc = false;
+    const std::string speech = _get_xom_speech("hostile monster");
+
+    // Nasty, but fun.
+    if (one_chance_in(4))
+    {
+        god_speaks(GOD_XOM, speech.c_str());
+        cast_tukimas_dance(100, GOD_XOM, true);
+        // FIXME: We should probably only do this if the spell
+        // succeeded.
+        rc = true;
+    }
+    else
+    {
+        // XXX: Can we clean up this ugliness, please?
+        const int numdemons =
+            std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
+
+        for (int i = 0; i < numdemons; ++i)
+        {
+            if (create_monster(
+                    mgen_data::hostile_at(
+                        _xom_random_demon(sever),
+                        you.pos(), 4, 0, true, GOD_XOM,
+                        MON_SUMM_WRATH)) != -1)
+            {
+                rc = true;
+            }
+        }
+
+        if (rc)
+            god_speaks(GOD_XOM, speech.c_str());
+    }
+    return (rc);
+}
+
 static bool _xom_is_bad(int sever, int tension)
 {
     bool done = false;
-
-    // Xom will only directly kill you with a bad effect if you're under
-    // penance from him, or if he's bored.
-    const bool nasty = you.penance[GOD_XOM]
-                       || (you.religion == GOD_XOM && you.gift_timeout == 0);
+    bool nasty = _xom_feels_nasty();
 
     god_acting gdact(GOD_XOM);
 
@@ -1644,39 +1816,7 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(5, sever))
         {
-            stat_type stat = STAT_RANDOM;
-            int       max  = 3;
-
-            // Don't kill the player unless Xom is being nasty.
-            if (!nasty)
-            {
-                // Make sure not to lower strength so much that the player
-                // will die once might wears off.
-                char      vals[3] =
-                    {you.strength - (you.duration[DUR_MIGHT] ? 5 : 0),
-                     you.dex, you.intel};
-                stat_type types[3] = {STAT_STRENGTH, STAT_DEXTERITY,
-                                      STAT_INTELLIGENCE};
-
-                int count = 0;
-                for (int i = 0; i < 3; ++i)
-                {
-                    int val = vals[i];
-
-                    if (val > 1 && one_chance_in(++count))
-                    {
-                        stat = types[i];
-                        max  = val - 1;
-                    }
-                }
-                if (count == 0)
-                    continue;
-            }
-
-            god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
-            lose_stat(stat, 1 + random2(max), true, "the vengeance of Xom" );
-
-            done = true;
+            done = _xom_lose_stats();
         }
         else if (x_chance_in_y(6, sever))
         {
@@ -1688,7 +1828,8 @@ static bool _xom_is_bad(int sever, int tension)
             // The Xom teleportation train takes you on instant
             // teleportation to a few random areas, stopping if either
             // an area is dangerous to you or randomly.
-            god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("teleportation journey").c_str());
             do
             {
                 you_teleport_now(false);
@@ -1700,194 +1841,28 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(8, sever))
         {
-            monsters *mon =
-                choose_random_nearby_monster(0, _choose_chaos_upgrade);
-
-            if (!mon)
-                continue;
-
-            god_speaks(GOD_XOM, _get_xom_speech("chaos upgrade").c_str());
-
-            mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON,
-                                    MSLOT_MISSILE};
-
-            for (int i = 0; i < 3; ++i)
-            {
-                int idx = mon->inv[slots[i]];
-                if (idx == NON_ITEM)
-                    continue;
-
-                item_def &item(mitm[idx]);
-                if (!_is_chaos_upgradeable(item, mon))
-                    continue;
-
-                _do_chaos_upgrade(item, mon);
-                done = true;
-                break;
-            }
-            ASSERT(done);
-
-            // Wake the monster up.
-            behaviour_event(mon, ME_ALERT, MHITYOU);
+            done = _xom_chaos_upgrade_nearby_monster();
         }
         else if (x_chance_in_y(9, sever))
         {
-            if (you.can_safely_mutate()
-                && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
-            {
-                god_speaks(GOD_XOM, _get_xom_speech("random mutations").c_str());
-
-                mpr("Your body is suffused with distortional energy.");
-
-                set_hp(1 + random2(you.hp), false);
-                deflate_hp(you.hp_max / 2, true);
-
-                bool failMsg = true;
-
-                for (int i = random2(4); i >= 0; --i)
-                {
-                    if (mutate(RANDOM_XOM_MUTATION, failMsg, false, true,
-                               false, false, !nasty))
-                    {
-                        done = true;
-                    }
-                    else
-                        failMsg = false;
-                }
-            }
+            done = _xom_give_mutation(false);
         }
         else if (x_chance_in_y(10, sever))
         {
-            if (there_are_monsters_nearby(false, false))
-            {
-                monsters *mon =
-                    choose_random_nearby_monster(0, _choose_mutatable_monster);
-
-                if (mon)
-                {
-                    god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph").c_str());
-
-                    bool made_shifter = false;
-
-                    if (one_chance_in(8) && !mons_is_shapeshifter(mon))
-                    {
-                        mon->add_ench(one_chance_in(3) ?
-                            ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
-                        made_shifter = true;
-                    }
-
-                    monster_polymorph(mon, RANDOM_MONSTER,
-                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE, made_shifter);
-
-                    done = true;
-                }
-            }
+            done = _xom_polymorph_nearby_monster(false);
         }
         // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(11, sever))
         {
-            std::string speech = _get_xom_speech("confusion");
-            if (confuse_player(random2(sever)+1, false))
-            {
-                done = true;
-
-                // Sometimes Xom gets carried away and starts confusing
-                // other creatures too.
-                if (coinflip())
-                {
-                    monsters* monster;
-                    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
-                    {
-                        monster = &menv[i];
-
-                        if (monster->type == -1 || !mons_near(monster)
-                            || !mons_class_is_confusable(monster->type)
-                            || one_chance_in(20))
-                        {
-                            continue;
-                        }
-
-                        if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                                              KC_FRIENDLY, random2(sever))))
-                        {
-                            simple_monster_message(monster,
-                                " looks rather confused.");
-                        }
-                    }
-                }
-            }
+            done = _xom_player_confusion_effect(sever);
         }
         else if (x_chance_in_y(12, sever))
         {
-            std::string speech = _get_xom_speech("draining or torment");
-
-            if (one_chance_in(4))
-            {
-                if (player_prot_life() < 3 && (nasty || you.experience > 0))
-                {
-                    god_speaks(GOD_XOM, speech.c_str());
-
-                    drain_exp();
-                    if (random2(sever) > 3 && (nasty || you.experience > 0))
-                        drain_exp();
-                    if (random2(sever) > 3 && (nasty || you.experience > 0))
-                        drain_exp();
-
-                    done = true;
-                }
-            }
-            else
-            {
-                if (!player_res_torment())
-                {
-                    god_speaks(GOD_XOM, speech.c_str());
-
-                    torment_player(0, TORMENT_XOM);
-
-                    done = true;
-                }
-            }
+            done = _xom_draining_torment_effect(sever);
         }
         else if (x_chance_in_y(13, sever))
         {
-            std::string speech = _get_xom_speech("hostile monster");
-
-            // Nasty, but fun.
-            if (one_chance_in(4))
-            {
-                god_speaks(GOD_XOM, speech.c_str());
-
-                cast_tukimas_dance(100, GOD_XOM, true);
-
-                done = true;
-            }
-            else
-            {
-                // XXX: Can we clean up this ugliness, please?
-                const int numdemons =
-                    std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
-
-                bool success = false;
-
-                for (int i = 0; i < numdemons; ++i)
-                {
-                    if (create_monster(
-                            mgen_data::hostile_at(
-                                _xom_random_demon(sever),
-                                you.pos(), 4, 0, true, GOD_XOM,
-                                MON_SUMM_WRATH)) != -1)
-                    {
-                        success = true;
-                    }
-                }
-
-                if (success)
-                {
-                    god_speaks(GOD_XOM, speech.c_str());
-
-                    done = true;
-                }
-            }
+            done = _xom_summon_hostiles(sever);
         }
         else if (x_chance_in_y(14, sever))
         {
@@ -1899,9 +1874,7 @@ static bool _xom_is_bad(int sever, int tension)
             if (you.level_type != LEVEL_ABYSS)
             {
                 god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
-
                 banished(DNGN_ENTER_ABYSS, "Xom");
-
                 done = true;
             }
         }
