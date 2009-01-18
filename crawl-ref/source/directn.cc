@@ -1336,7 +1336,13 @@ void direction(dist& moves, targeting_type restricts,
 
             {
                 monsters &m = menv[mid];
-                switch (m.attitude)
+                mon_attitude_type att = m.attitude;
+
+                // During arena mode, skip directly from friendly to hostile.
+                if (crawl_state.arena_suspended && att == ATT_FRIENDLY)
+                    att = ATT_NEUTRAL;
+
+                switch (att)
                 {
                  case ATT_FRIENDLY:
                      m.attitude = ATT_GOOD_NEUTRAL;
