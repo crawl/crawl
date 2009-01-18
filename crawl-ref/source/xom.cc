@@ -641,6 +641,8 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
                                                            DESC_CAP_THE;
         std::string msg = apostrophise(mon->name(desc));
 
+        msg += " ";
+
         msg += item.name(DESC_PLAIN, false, false, false);
 
         msg += " is briefly surrounded by a scintillating aura of "
