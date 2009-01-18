@@ -5795,7 +5795,7 @@ int monsters::res_sticky_flame() const
     return (mons_res_sticky_flame(this));
 }
 
-int monsters::res_cleansing_flame() const
+int monsters::res_cleansing_flame(const actor *attacker) const
 {
     if (mons_is_unholy(this))
         return (-2);
@@ -5806,8 +5806,7 @@ int monsters::res_cleansing_flame() const
     if (is_good_god(god)
            || mons_is_holy(this)
            || mons_neutral(this)
-           || you.religion == GOD_SHINING_ONE
-               && is_unchivalric_attack(&you, this)
+           || is_unchivalric_attack(attacker, this)
            || is_good_god(you.religion)
                && is_follower(this))
     {

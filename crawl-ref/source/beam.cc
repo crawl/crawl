@@ -2249,12 +2249,14 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HOLY:
+    {
         // Cleansing flame.
-        if (monster->res_cleansing_flame() > 0)
+        const int rcf = monster->res_cleansing_flame(pbolt.agent());
+        if (rcf > 0)
             hurted = 0;
-        else if (monster->res_cleansing_flame() == 0)
+        else if (rcf == 0)
             hurted /= 2;
-        else if (monster->res_cleansing_flame() < -1)
+        else if (rcf < -1)
             hurted = (hurted * 3) / 2;
 
         if (doFlavouredEffects)
@@ -2264,6 +2266,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                                                : " writhes in agony!");
         }
         break;
+    }
 
     case BEAM_ICE:
         // ice - about 50% of damage is cold, other 50% is impact and
@@ -3196,7 +3199,7 @@ bool bolt::is_harmless(const monsters *mon) const
         return (true);
 
     case BEAM_HOLY:
-        return (mon->res_cleansing_flame() > 0);
+        return (mon->res_cleansing_flame(agent()) > 0);
 
     case BEAM_STEAM:
         return (mons_res_steam(mon) >= 3);

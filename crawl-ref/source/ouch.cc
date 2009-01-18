@@ -218,24 +218,27 @@ int check_your_resists(int hurted, beam_type flavour)
         break;
 
     case BEAM_HOLY:
+    {
         // Cleansing flame.
-        if (you.res_cleansing_flame() > 0)
+        const int rcf = you.res_cleansing_flame(NULL);
+        if (rcf > 0)
             hurted = 0;
-        else if (you.res_cleansing_flame() == 0)
+        else if (rcf == 0)
             hurted /= 2;
-        else if (you.res_cleansing_flame() < -1)
+        else if (rcf < -1)
             hurted = (hurted * 3) / 2;
 
         if (hurted == 0)
             canned_msg(MSG_YOU_RESIST);
         break;
+    }
 
     default:
         break;
     }                           // end switch
 
     return (hurted);
-}                               // end check_your_resists()
+}
 
 void splash_with_acid(int acid_strength, bool corrode_items)
 {

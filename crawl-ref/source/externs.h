@@ -386,7 +386,7 @@ public:
     virtual int res_asphyx() const = 0;
     virtual int res_poison() const = 0;
     virtual int res_sticky_flame() const = 0;
-    virtual int res_cleansing_flame() const = 0;
+    virtual int res_cleansing_flame(const actor *attacker) const = 0;
     virtual int res_negative_energy() const = 0;
     virtual int res_rotting() const = 0;
     virtual int res_torment() const = 0;
@@ -1094,7 +1094,7 @@ public:
     int res_asphyx() const;
     int res_poison() const;
     int res_sticky_flame() const;
-    int res_cleansing_flame() const;
+    int res_cleansing_flame(const actor *) const;
     int res_negative_energy() const;
     int res_rotting() const;
     int res_torment() const;
@@ -1469,7 +1469,7 @@ public:
     int res_asphyx() const;
     int res_poison() const;
     int res_sticky_flame() const;
-    int res_cleansing_flame() const;
+    int res_cleansing_flame(const actor *) const;
     int res_negative_energy() const;
     int res_rotting() const;
     int res_torment() const;

@@ -6827,7 +6827,7 @@ int player::res_sticky_flame() const
     return (player_res_sticky_flame());
 }
 
-int player::res_cleansing_flame() const
+int player::res_cleansing_flame(const actor *attacker) const
 {
     if (player_is_unholy())
         return (-2);
