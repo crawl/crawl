@@ -2268,7 +2268,7 @@ void melee_attack::chaos_affects_defender()
     beam.flavour = BEAM_NONE;
 
     int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
-    switch(static_cast<chaos_type>(choice))
+    switch (static_cast<chaos_type>(choice))
     {
     case CHAOS_CLONE:
     {
@@ -2380,11 +2380,7 @@ void melee_attack::chaos_affects_defender()
         beam.type         = 0;
         beam.range        = 0;
         beam.colour       = BLACK;
-        beam.is_beam      = false;
-        beam.is_explosion = false;
-        beam.is_big_cloud = false;
         beam.effect_known = false;
-        beam.drop_item    = false;
 
         if (weapon && you.can_see(attacker))
         {

@@ -1675,7 +1675,6 @@ void cast_snake_charm(int pow)
 
 bool cast_fragmentation(int pow, const dist& spd)
 {
-    bolt beam;
     int debris = 0;
     bool explode = false;
     bool hole = true;
@@ -1685,10 +1684,13 @@ bool cast_fragmentation(int pow, const dist& spd)
     if ( !find_ray(you.pos(), spd.target, false, ray) )
     {
         mpr("There's a wall in the way!");
-        return false;
+        return (false);
     }
 
     //FIXME: If (player typed '>' to attack floor) goto do_terrain;
+
+    bolt beam;
+
     beam.flavour     = BEAM_FRAG;
     beam.type        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour      = BLACK;
