@@ -2052,7 +2052,7 @@ void melee_attack::drain_defender()
 {
     const int rn = defender->res_negative_energy();
 
-    if (defender->atype() == ACT_MONSTER && (rn > 0 || one_chance_in(3)))
+    if (defender->atype() == ACT_MONSTER || one_chance_in(3))
         return;
 
     if (defender->drain_exp(attacker))
@@ -2874,8 +2874,10 @@ bool melee_attack::apply_damage_brand()
             break;
         }
 
+        if (x_chance_in_y(defender->res_negative_energy(), 3))
+            break;
+
         if (defender->holiness() != MH_NATURAL || !weapon
-            || defender->res_negative_energy() > 0
             || damage_done < 1 || attacker->stat_hp() == attacker->stat_maxhp()
             || one_chance_in(5))
         {
