@@ -4800,7 +4800,7 @@ void MiscastEffect::_poison(int severity)
             {
                 you_msg = "You feel sick.";
                 // Monster messages needed.
-                target->poison( act_source, 2 + random2(3) );
+                target->poison(act_source, 2 + random2(3));
             }
             do_msg();
             break;
@@ -4857,7 +4857,7 @@ void MiscastEffect::_poison(int severity)
             {
                 you_msg = "You feel incredibly sick.";
                 // Monster messages needed.
-                target->poison( act_source, 10 + random2avg(19, 2) );
+                target->poison(act_source, 10 + random2avg(19, 2));
             }
             do_msg();
             break;
