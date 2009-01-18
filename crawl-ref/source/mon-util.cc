@@ -5795,6 +5795,27 @@ int monsters::res_sticky_flame() const
     return (mons_res_sticky_flame(this));
 }
 
+int monsters::res_cleansing_flame() const
+{
+    if (mons_is_unholy(this))
+        return (-2);
+
+    if (mons_is_evil(this))
+        return (-1);
+
+    if (mons_is_holy(this)
+           || is_good_god(this->god)
+           || you.religion == GOD_SHINING_ONE
+               && is_unchivalric_attack(&you, this)
+           || is_good_god(you.religion)
+               && (is_follower(this) || mons_neutral(this)))
+    {
+        return (1);
+    }
+
+    return (0);
+}
+
 int monsters::res_negative_energy() const
 {
     return (mons_res_negative_energy(this));

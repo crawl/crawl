@@ -218,12 +218,13 @@ int check_your_resists(int hurted, beam_type flavour)
         break;
 
     case BEAM_HOLY:
-        if (is_good_god(you.religion))
+        // Cleansing flame.
+        if (you.res_cleansing_flame() > 0)
             hurted = 0;
-        else if (player_is_unholy())
-            hurted = (hurted * 3) / 2;
-        else if (!is_evil_god(you.religion))
+        else if (you.res_cleansing_flame() == 0)
             hurted /= 2;
+        else if (you.res_cleansing_flame() < -1)
+            hurted = (hurted * 3) / 2;
 
         if (hurted == 0)
             canned_msg(MSG_YOU_RESIST);

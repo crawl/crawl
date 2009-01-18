@@ -6829,6 +6829,20 @@ int player::res_sticky_flame() const
     return (player_res_sticky_flame());
 }
 
+int player::res_cleansing_flame() const
+{
+    if (player_is_unholy())
+        return (-2);
+
+    if (is_evil_god(you.religion))
+        return (-1);
+
+    if (is_good_god(you.religion))
+        return (1);
+
+    return (0);
+}
+
 int player::res_negative_energy() const
 {
     return (player_prot_life());

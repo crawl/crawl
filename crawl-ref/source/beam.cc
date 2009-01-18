@@ -1789,7 +1789,7 @@ void bolt::hit_wall()
     {
         // Affect a creature in the wall, if any.
         if (!invalid_monster_index(mgrd(pos())))
-            affect_monster( &menv[mgrd(pos())] );
+            affect_monster(&menv[mgrd(pos())]);
 
         // Regress for explosions: blow up in an open grid (if regressing
         // makes any sense).  Also regress when dropping items.
@@ -2248,21 +2248,14 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         break;
 
-    case BEAM_HOLY:             // flame of cleansing
-        // Cleansing flame doesn't hurt holy monsters or monsters your
-        // god wouldn't like to be hurt.
-        if (mons_is_holy(monster)
-            || you.religion == GOD_SHINING_ONE
-               && is_unchivalric_attack(&you, monster)
-            || is_good_god(you.religion)
-               && (is_follower(monster) || mons_neutral(monster)))
-        {
+    case BEAM_HOLY:
+        // Cleansing flame.
+        if (monster->res_cleansing_flame() > 0)
             hurted = 0;
-        }
-        else if (mons_is_unholy(monster))
-            hurted = (hurted * 3) / 2;
-        else if (!mons_is_evil(monster))
+        else if (monster->res_cleansing_flame() == 0)
             hurted /= 2;
+        else if (monster->res_cleansing_flame() < -1)
+            hurted = (hurted * 3) / 2;
 
         if (doFlavouredEffects)
         {
@@ -3202,11 +3195,8 @@ bool bolt::is_harmless(const monsters *mon) const
     case BEAM_DIGGING:
         return (true);
 
-    // Cleansing flame doesn't affect player's followers.
     case BEAM_HOLY:
-        return (mons_is_holy(mon)
-                || is_good_god(you.religion)
-                   && (is_follower(mon) || mons_neutral(mon)));
+        return (mon->res_cleansing_flame() > 0);
 
     case BEAM_STEAM:
         return (mons_res_steam(mon) >= 3);
@@ -4060,7 +4050,6 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
         }
     }
 }
-
 
 void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
 {
