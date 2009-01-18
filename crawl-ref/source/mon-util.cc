@@ -7492,7 +7492,7 @@ bool monsters::invisible() const
 bool monsters::visible_to(const actor *looker) const
 {
     if (this == looker)
-        return (!invisible() || can_see_invisible());
+        return (true);
 
     if (looker->atype() == ACT_PLAYER)
         return player_monster_visible(this);

@@ -7124,7 +7124,7 @@ bool player::invisible() const
 bool player::visible_to(const actor *looker) const
 {
     if (this == looker)
-        return (!invisible() || can_see_invisible());
+        return (true);
 
     const monsters* mon = dynamic_cast<const monsters*>(looker);
     return mons_player_visible(mon);
