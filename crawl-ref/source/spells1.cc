@@ -266,7 +266,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.beam_source  = source->mindex();
     // XXX: Should this be KILL_MON_MISSILE?
     beam.thrower      =
-        source->atype() == ACT_PLAYER? KILL_YOU_MISSILE : KILL_MON;
+        source->atype() == ACT_PLAYER ? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
     beam.obvious_effect = false;
     beam.is_beam      = false;

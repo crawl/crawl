@@ -1689,15 +1689,15 @@ bool cast_fragmentation(int pow, const dist& spd)
     }
 
     //FIXME: If (player typed '>' to attack floor) goto do_terrain;
+    beam.flavour     = BEAM_FRAG;
+    beam.type        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour      = BLACK;
     beam.beam_source = MHITYOU;
     beam.thrower     = KILL_YOU;
-    beam.ex_size     = 1;              // default
-    beam.type        = '#';
-    beam.colour      = 0;
+    beam.ex_size     = 1;
     beam.source      = you.pos();
-    beam.flavour     = BEAM_FRAG;
     beam.hit         = AUTOMATIC_HIT;
-    beam.is_tracer   = false;
+
     beam.set_target(spd);
     beam.aux_source.clear();
 

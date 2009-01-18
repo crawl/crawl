@@ -1097,7 +1097,6 @@ static bool _xom_throw_divine_lightning()
     beam.beam_source  = NON_MONSTER;
     beam.aux_source   = "Xom's lightning strike";
     beam.ex_size      = 2;
-    beam.is_tracer    = false;
     beam.is_explosion = true;
 
     beam.explode();

@@ -912,30 +912,31 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     if (type == MONS_GIANT_SPORE)
     {
         beam.flavour = BEAM_SPORE;
+        beam.damage  = dice_def(3, 15);
         beam.name    = "explosion of spores";
         beam.colour  = LIGHTGREY;
-        beam.damage  = dice_def( 3, 15 );
         beam.ex_size = 2;
-        msg = "The giant spore explodes!";
-        sanct_msg = "By Zin's power, the giant spore's explosion is contained.";
+        msg          = "The giant spore explodes!";
+        sanct_msg    = "By Zin's power, the giant spore's explosion is "
+                       "contained.";
     }
     else if (type == MONS_BALL_LIGHTNING)
     {
         beam.flavour = BEAM_ELECTRICITY;
+        beam.damage  = dice_def(3, 20);
         beam.name    = "blast of lightning";
         beam.colour  = LIGHTCYAN;
-        beam.damage  = dice_def( 3, 20 );
         beam.ex_size = coinflip() ? 3 : 2;
-        msg = "The ball lightning explodes!";
-        sanct_msg = "By Zin's power, the ball lightning's explosion "
-                    "is contained.";
+        msg          = "The ball lightning explodes!";
+        sanct_msg    = "By Zin's power, the ball lightning's explosion "
+                       "is contained.";
     }
     else
     {
         msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
                                         << static_cast<int>(type)
                                         << std::endl;
-        return false;
+        return (false);
     }
 
     bool saw = false;

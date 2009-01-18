@@ -300,7 +300,6 @@ void immolation(int caster, bool known)
     beam.thrower       = (caster == IMMOLATION_GENERIC) ? KILL_MISC : KILL_YOU;
     beam.aux_source    = aux;
     beam.ex_size       = 2;
-    beam.is_tracer     = false;
     beam.is_explosion  = true;
     beam.effect_known  = known;
     beam.affects_items = (caster != IMMOLATION_SCROLL);
@@ -338,7 +337,6 @@ void cleansing_flame(int pow, int caster)
     beam.beam_source  = NON_MONSTER;
     beam.aux_source   = aux;
     beam.ex_size      = 2;
-    beam.is_tracer    = false;
     beam.is_explosion = true;
 
     beam.explode();
@@ -3228,29 +3226,28 @@ void handle_time(long time_delta)
                 "of wild energies!", MSGCH_WARN);
 
             // For particularly violent releases, make a little boom.
+            // Undead enjoy extra contamination explosion damage because
+            // the magical contamination has a harder time dissipating
+            // through non-living flesh. :-)
             if (you.magic_contamination >= 10 && coinflip())
             {
-                bolt boom;
-                boom.type     = dchar_glyph(DCHAR_FIRED_BURST);
-                boom.colour   = BLACK;
-                boom.flavour  = BEAM_RANDOM;
-                boom.target   = you.pos();
-                // Undead enjoy extra contamination explosion damage because
-                // the magical contamination has a harder time dissipating
-                // through non-living flesh. :-)
-                boom.damage = dice_def(3, you.magic_contamination
-                                           * (you.is_undead ? 4 : 2) / 4);
-                boom.thrower      = KILL_MISC;
-                boom.aux_source   = "a magical explosion";
-                boom.beam_source  = NON_MONSTER;
-                boom.is_beam      = false;
-                boom.is_tracer    = false;
-                boom.is_explosion = true;
-                boom.name = "magical storm";
+                bolt beam;
 
-                boom.ench_power = (you.magic_contamination * 5);
-                boom.ex_size = std::min(9, you.magic_contamination / 15);
-                boom.explode();
+                beam.flavour      = BEAM_RANDOM;
+                beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+                beam.damage       = dice_def(3, you.magic_contamination
+                                             * (you.is_undead ? 4 : 2) / 4);
+                beam.target       = you.pos();
+                beam.name         = "magical storm";
+                beam.colour       = BLACK;
+                beam.thrower      = KILL_MISC;
+                beam.beam_source  = NON_MONSTER;
+                beam.aux_source   = "a magical explosion";
+                beam.ex_size      = std::min(9, you.magic_contamination / 15);
+                beam.ench_power   = (you.magic_contamination * 5);
+                beam.is_explosion = true;
+
+                beam.explode();
             }
 
             // we want to warp the player, not do good stuff!

@@ -2421,7 +2421,6 @@ void MiscastEffect::init()
         target->hand_name(true, &can_plural_hand);
 
     // Explosion stuff.
-    beam.is_beam      = false;
     beam.is_explosion = true;
 
     if (cause.empty())
@@ -3036,14 +3035,13 @@ void MiscastEffect::_conjuration(int severity)
         case 1:
             you_msg        = "You are caught in a violent explosion!";
             mon_msg_seen   = "@The_monster@ is caught in a violent explosion!";
-            mon_msg_unseen = "A violent explosion happens from "
-                             "out of thin air!";
+            mon_msg_unseen = "A violent explosion happens from out of thin "
+                             "air!";
 
-            beam.damage  = dice_def( 3, 12 );
-            beam.flavour = BEAM_MISSILE; // unsure about this
-            // BEAM_EXPLOSION instead? {dlb}
-            beam.name   = "explosion";
-            beam.colour = random_colour();
+            beam.flavour = BEAM_MISSILE;
+            beam.damage  = dice_def(3, 12);
+            beam.name    = "explosion";
+            beam.colour  = random_colour();
 
             _explosion();
             break;
@@ -3062,10 +3060,9 @@ void MiscastEffect::_conjuration(int severity)
         case 1:
             all_msg = "There is a sudden explosion of magical energy!";
 
+            beam.flavour = BEAM_MISSILE;
             beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage  = dice_def( 3, 20 );
-            beam.flavour = BEAM_MISSILE; // unsure about this
-            // BEAM_EXPLOSION instead? {dlb}
+            beam.damage  = dice_def(3, 20);
             beam.name    = "explosion";
             beam.colour  = random_colour();
             beam.ex_size = coinflip() ? 1 : 2;
@@ -4213,11 +4210,12 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen   = "@The_monster@ is caught in a fiery explosion!";
             mon_msg_unseen = "Fire explodes from out of thin air!";
 
-            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage  = dice_def( 3, 14 );
             beam.flavour = BEAM_FIRE;
+            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage  = dice_def(3, 14);
             beam.name    = "explosion";
             beam.colour  = RED;
+
             _explosion();
             break;
         }
@@ -4237,12 +4235,13 @@ void MiscastEffect::_fire(int severity)
         case 1:
             all_msg = "There is a sudden and violent explosion of flames!";
 
-            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage  = dice_def( 3, 20 );
             beam.flavour = BEAM_FIRE;
+            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage  = dice_def(3, 20);
             beam.name    = "fireball";
             beam.colour  = RED;
-            beam.ex_size = coinflip()?1:2;
+            beam.ex_size = coinflip() ? 1 : 2;
+
             _explosion();
             break;
 
@@ -4379,11 +4378,12 @@ void MiscastEffect::_ice(int severity)
                              "ice and frost!";
             mon_msg_unseen = "Ice and frost explode from out of thin air!";
 
-            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage  = dice_def( 3, 11 );
             beam.flavour = BEAM_COLD;
+            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage  = dice_def(3, 11);
             beam.name    = "explosion";
             beam.colour  = WHITE;
+
             _explosion();
             break;
         }
@@ -4541,11 +4541,12 @@ void MiscastEffect::_earth(int severity)
             mon_msg_seen   = "@The_monster@ is caught in an explosion of "
                              "flying shrapnel!";
             mon_msg_unseen = "Flying shrapnel explodes from thin air!";
-            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage = dice_def( 3, 15 );
+
             beam.flavour = BEAM_FRAG;
-            beam.name = "explosion";
-            beam.colour = CYAN;
+            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage  = dice_def(3, 15);
+            beam.name    = "explosion";
+            beam.colour  = CYAN;
 
             if (one_chance_in(5))
                 beam.colour = BROWN;
@@ -4711,9 +4712,9 @@ void MiscastEffect::_air(int severity)
             mon_msg_unseen = "Electrical discharges explode from out of "
                              "thin air!";
 
-            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage  = dice_def( 3, 8 );
             beam.flavour = BEAM_ELECTRICITY;
+            beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage  = dice_def(3, 8);
             beam.name    = "explosion";
             beam.colour  = LIGHTBLUE;
             beam.ex_size = one_chance_in(4) ? 1 : 2;

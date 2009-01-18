@@ -5418,7 +5418,7 @@ bool bolt::nice_to(const monsters *mon) const
 bolt::bolt() : range(-2), type('*'),
                colour(BLACK),
                flavour(BEAM_MAGIC), real_flavour(BEAM_MAGIC), drop_item(false),
-               item(NULL), source(), target(), damage(0,0),
+               item(NULL), source(), target(), damage(0, 0),
                ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
                beam_source(MHITNOT), name(), short_name(), is_beam(false),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
