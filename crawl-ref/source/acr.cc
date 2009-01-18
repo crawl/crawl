@@ -1568,8 +1568,9 @@ static void _input()
 
     if (you.cannot_act())
     {
-        crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
-                                      "repetition.");
+        if (crawl_state.repeat_cmd != CMD_WIZARD)
+            crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
+                                          "repetition.");
 
         world_reacts();
         return;

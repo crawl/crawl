@@ -1097,6 +1097,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
 
+    const bool normal_cast = crawl_state.prev_cmd == CMD_CAST_SPELL
+                          && god == GOD_NO_GOD;
+
     // Make some noise if it's actually the player casting.
     if (god == GOD_NO_GOD)
         noisy( spell_noise(spell), you.pos() );
@@ -1403,7 +1406,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_DELAYED_FIREBALL:
-        crawl_state.cant_cmd_repeat("You can't repeat delayed fireball.");
+        if (normal_cast)
+            crawl_state.cant_cmd_repeat("You can't repeat delayed fireball.");
         // This spell has two main advantages over Fireball:
         //
         // (1) The release is instantaneous, so monsters will not
@@ -1559,7 +1563,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_TUKIMAS_DANCE:
         // Temporarily turn a wielded weapon into a dancing weapon.
-        crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
+        if (normal_cast)
+            crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
         cast_tukimas_dance(powc, god);
         break;
 
@@ -1877,7 +1882,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         // Trying is already enough, even if it fails.
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
 
-        crawl_state.cant_cmd_repeat("You can't repeat Alter Self.");
+        if (normal_cast)
+            crawl_state.cant_cmd_repeat("You can't repeat Alter Self.");
         if (!enough_hp( you.hp_max / 2, true ))
         {
             mpr( "Your body is in too poor a condition "
@@ -2091,7 +2097,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SWAP:
-        crawl_state.cant_cmd_repeat("You can't swap.");
+        if (normal_cast)
+            crawl_state.cant_cmd_repeat("You can't swap.");
         cast_swap(powc);
         break;
 
@@ -2100,7 +2107,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_PORTAL:
-        crawl_state.cant_cmd_repeat("You can't repeat create portal.");
+        if (normal_cast)
+            crawl_state.cant_cmd_repeat("You can't repeat create portal.");
         if (portal() == -1)
             return (SPRET_ABORT);
         break;

@@ -2994,6 +2994,9 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
 
 void level_change(bool skip_attribute_increase)
 {
+    const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD
+                      || crawl_state.repeat_cmd == CMD_WIZARD;
+
     // necessary for the time being, as level_change() is called
     // directly sometimes {dlb}
     you.redraw_experience = true;
@@ -3003,14 +3006,9 @@ void level_change(bool skip_attribute_increase)
     {
         bool skip_more = false;
 
-        if (!skip_attribute_increase)
+        if (!skip_attribute_increase && !wiz_cmd)
         {
-            if (crawl_state.is_replaying_keys()
-                || crawl_state.is_repeating_cmd())
-            {
-                crawl_state.cancel_cmd_repeat();
-                crawl_state.cancel_cmd_again();
-            }
+            crawl_state.cancel_cmd_all();
 
             if (is_processing_macro())
                 flush_input_buffer(FLUSH_ABORT_MACRO);
