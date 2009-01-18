@@ -61,6 +61,8 @@ int Next_Message = 0;                                 // end of messages
 int Message_Line = 0;                // line of next (previous?) message
 int New_Message_Count = 0;
 
+static FILE* _msg_dump_file = NULL;
+
 static bool suppress_messages = false;
 static void base_mpr(const char *inf, msg_channel_type channel, int param,
                      unsigned char colour);
@@ -417,6 +419,12 @@ void mprf( const char *format, ... )
 
 void mpr(const char *inf, msg_channel_type channel, int param)
 {
+    if (_msg_dump_file != NULL)
+        fprintf(_msg_dump_file, "%s\n", inf);
+
+    if (crawl_state.game_crashed)
+        return;
+
     if (crawl_state.arena)
     {
         switch(channel)
@@ -1275,3 +1283,8 @@ void replay_messages(void)
 
     return;
 }                               // end replay_messages()
+
+void set_msg_dump_file(FILE* file)
+{
+    _msg_dump_file = file;
+}

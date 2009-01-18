@@ -127,5 +127,6 @@ namespace msg
 
 std::ostream& operator<<(std::ostream& os, const msg::setparam& sp);
 
+void set_msg_dump_file(FILE* file);
 
 #endif

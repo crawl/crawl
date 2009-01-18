@@ -20,6 +20,8 @@ DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
 EXTRA_INCLUDES := -DUSE_TILE -DCLUA_BINDINGS
+# To get stack trace symbols.
+LDFLAGS = -rdynamic
 
 # Change this to y if you want to use Unicode glyphs in the map, and you have
 # libncursesw available.

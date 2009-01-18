@@ -11,6 +11,7 @@
 
 #include "enum.h"
 #include <vector>
+#include <stdio.h>
 
 struct god_act_state
 {
@@ -27,6 +28,8 @@ public:
 // Track various aspects of Crawl game state.
 struct game_state
 {
+    bool game_crashed;      // The game crashed and is now in the process of
+                            // dumping crash info.
     bool mouse_enabled;     // True if mouse input is currently relevant.
 
     bool waiting_for_command; // True when the game is waiting for a command.
@@ -116,6 +119,8 @@ public:
     void     clear_god_acting();
 
     std::vector<god_act_state> other_gods_acting() const;
+
+    void dump(FILE* file);
 };
 
 extern game_state crawl_state;

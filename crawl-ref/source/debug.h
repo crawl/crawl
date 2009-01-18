@@ -144,4 +144,5 @@ bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted,
                       bool create_for_real = false);
 
+void do_crash_dump();
 #endif

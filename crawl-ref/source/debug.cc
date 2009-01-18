@@ -44,11 +44,7 @@ REVISION("$Rev$");
 #include "files.h"
 #include "food.h"
 #include "ghost.h"
-
-#ifdef DEBUG_DIAGNOSTICS
 #include "initfile.h"
-#endif
-
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
@@ -5504,6 +5500,85 @@ void debug_miscast( int target_index )
     delete miscast;
 }
 #endif
+
+void do_crash_dump()
+{
+    std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
+                       !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
+                                                   : "");
+
+    if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
+        dir += FILE_SEPARATOR;
+
+    char name[180];
+
+    sprintf(name, "%scrash-%s-%d.txt", dir.c_str(),
+            you.your_name, (int) time(NULL));
+
+    FILE* file = fopen(name, "w");
+
+    if (file == NULL)
+    {
+        fprintf(stderr, "\r\nUnable to open file '%s' for writing: %s\r\n",
+                name, strerror(errno));
+        file = stderr;
+    }
+    else
+        fprintf(stderr, "\r\nWriting crash info to %s\r\n", name);
+
+    set_msg_dump_file(file);
+
+    // First get the immediate cause of the crash and the stack trace,
+    // since that's most important and later attempts to get more information
+    // might themselves cause crashes.
+    dump_crash_info(file);
+    // Ignore the top five stack frames, since the first three involve
+    // signal handling and the last two are do_crash_dump() and
+    // write_stack_trace().
+    write_stack_trace(file, 5);
+
+    if (Generating_Level)
+    {
+        fprintf(file, "\nCrashed while generating level.\r\n");
+        fprintf(file, "your_level = %d, level_type = %d, type_name = %s\r\n",
+                you.your_level, you.level_type, you.level_type_name.c_str());
+
+        extern std::string dgn_Build_Method;
+        extern bool river_level, lake_level, many_pools_level;
+
+        fprintf(file, "dgn_Build_Method = %s\r\n", dgn_Build_Method.c_str());
+        fprintf(file, "dgn_Layout_Type  = %s\r\n", dgn_Layout_Type.c_str());
+
+        extern bool river_level, lake_level, many_pools_level;
+
+        if (river_level)
+            fprintf(file, "river level\r\n");
+        if (lake_level)
+            fprintf(file, "lake level\r\n");
+        if (many_pools_level)
+            fprintf(file, "many pools level\r\n");
+
+        fprintf(file, "\r\n");
+    }
+
+    // Dumping the crawl state is least likely to cause another crash,
+    // so do that next.
+    crawl_state.dump(file);
+
+    // Next item and monster scans.  Any messages will be sent straight to
+    // the file because of set_msg_dump_file()
+#if DEBUG_ITEM_SCAN
+    debug_item_scan();
+#endif
+#if DEBUG_MONS_SCAN
+    debug_mons_scan();
+#endif
+
+    set_msg_dump_file(NULL);
+
+    if (file != stderr)
+        fclose(file);
+}
 
 #ifdef DEBUG_DIAGNOSTICS
 

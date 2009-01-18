@@ -19,12 +19,13 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
+#include "religion.h"
 #include "state.h"
 #include "tutorial.h"
 #include "view.h"
 
 game_state::game_state()
-    : mouse_enabled(false), waiting_for_command(false),
+    : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), io_inited(false), need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
       map_stat_gen(false), arena(false), arena_suspended(false),
@@ -371,4 +372,77 @@ std::vector<god_act_state> game_state::other_gods_acting() const
 {
     ASSERT(is_god_acting());
     return god_act_stack;
+}
+
+void game_state::dump(FILE* file)
+{
+    fprintf(file, "\r\nGame state:\r\n\r\n");
+
+    fprintf(file, "mouse_enabled: %d, waiting_for_command: %d "
+                  "terminal_resized: %d\r\n",
+            mouse_enabled, waiting_for_command, terminal_resized);
+    fprintf(file, "io_inited: %d, need_save: %d, saving_game: %d, "
+                  "updating_scores: %d\r\n:",
+            io_inited, need_save, saving_game, updating_scores);
+    fprintf(file, "seen_hups: %d, map_stat_gen: %d, arena: %d, "
+                  "arena_suspended: %d, unicode_ok: %d\r\n",
+            seen_hups, map_stat_gen, arena, arena_suspended, unicode_ok);
+
+    fprintf(file, "\r\n");
+
+    if (!startup_errors.empty())
+    {
+        fprintf(file, "Startup errors:\r\n");
+        for (unsigned int i = 0; i < startup_errors.size(); i++)
+            fprintf(file, "%s\n", startup_errors[i].c_str());
+        fprintf(file, "\r\n");
+    }
+
+    fprintf(file, "prev_cmd = %s\r\n", command_to_name(prev_cmd).c_str());
+
+    if (doing_prev_cmd_again)
+    {
+        fprintf(file, "Doing prev_cmd again with keys: ");
+        for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
+            fprintf(file, "%d, ", prev_cmd_keys[i]);
+        fprintf(file, "\r\n");
+        fprintf(file, "As ASCII keys: ");
+        for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
+            fprintf(file, "%c", (char) prev_cmd_keys[i]);
+        fprintf(file, "\r\n\r\n");
+    }
+    fprintf(file, "repeat_cmd = %s\r\n", command_to_name(repeat_cmd).c_str());
+
+    if (cmd_repeat_count > 0 || cmd_repeat_goal > 0)
+    {
+        fprintf(file, "Doing command repitition: \r\n");
+        fprintf(file, "cmd_repeat_start:%d, cmd_repeat_count: %d, "
+                      "cmd_repeat_goal:%d\r\nprev_cmd_repeat_goal: %d\r\n",
+                cmd_repeat_start, cmd_repeat_count, cmd_repeat_goal, 
+                prev_cmd_repeat_goal);
+        fprintf(file, "Keys being repeated: ");
+        for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
+            fprintf(file, "%d, ", repeat_cmd_keys[i]);
+        fprintf(file, "\r\n");
+        fprintf(file, "As ASCII keys: ");
+        for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
+            fprintf(file, "%c", (char) repeat_cmd_keys[i]);
+        fprintf(file, "\r\n\r\n");
+    }
+
+    if (god_act.which_god != GOD_NO_GOD || god_act.depth != 0)
+    {
+        fprintf(file, "God %s currently acting with depth %d\r\n\r\n",
+                god_name(god_act.which_god).c_str(), god_act.depth);
+    }
+
+    if (god_act_stack.size() != 0)
+    {
+        fprintf(file, "Other gods acting: \r\n");
+        for (unsigned int i = 0; i < god_act_stack.size(); i++)
+            fprintf(file, "God %s with depth %d\r\n",
+                    god_name(god_act_stack[i].which_god).c_str(),
+                    god_act_stack[i].depth);
+        fprintf(file, "\r\n");
+    }
 }

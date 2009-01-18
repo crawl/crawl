@@ -12,6 +12,7 @@
 #define __LIBDOS_H__
 
 #include <conio.h>
+#include <stdio.h>
 
 typedef unsigned char screen_buffer_t;
 
@@ -43,5 +44,9 @@ inline void put_colour_ch(int colour, unsigned ch)
     textattr(colour);
     putwch(ch);
 }
+
+void init_crash_handler();
+void dump_crash_info(FILE* file);
+void write_stack_trace(FILE* file, int ignore_count);
 
 #endif

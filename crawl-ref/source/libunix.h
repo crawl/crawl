@@ -22,6 +22,8 @@ typedef unsigned int screen_buffer_t;
 typedef unsigned short screen_buffer_t;
 #endif
 
+#include <stdio.h>
+
 char getche(void);
 
 void message_out(int mline, int colour, const char *str, int firstcol = 0,
@@ -65,6 +67,10 @@ inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return (false); }
 
 void set_mouse_enabled(bool enabled);
+
+void init_crash_handler();
+void dump_crash_info(FILE* file);
+void write_stack_trace(FILE* file, int ignore_count);
 
 #ifndef _LIBUNIX_IMPLEMENTATION
 /* Some stuff from curses, to remove compiling warnings.. */

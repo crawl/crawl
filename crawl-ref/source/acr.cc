@@ -196,6 +196,8 @@ int main( int argc, char *argv[] )
 {
     _compile_time_asserts();  // Just to quiet "unused static function" warning.
 
+    init_crash_handler();
+
     // Hardcoded initial keybindings.
     init_keybindings();
 

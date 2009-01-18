@@ -16,6 +16,8 @@ CXX = g++
 DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
+# To get stack trace symbols.
+LDFLAGS = -rdynamic
 
 # Change this to y (case-sensitive!) if you want to use Unicode glyphs
 # in the map, and you have libncursesw available.

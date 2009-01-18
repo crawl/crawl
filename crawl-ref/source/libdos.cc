@@ -139,4 +139,16 @@ void putwch(unsigned c)
     putch(static_cast<char>(c));
 }
 
+void init_crash_handler()
+{
+}
+
+void dump_crash_info(FILE* file)
+{
+}
+
+void write_stack_trace(FILE* file, int ignore_count)
+{
+}
+
 #endif /* #if defined(DOS) */
