@@ -376,73 +376,74 @@ std::vector<god_act_state> game_state::other_gods_acting() const
 
 void game_state::dump(FILE* file)
 {
-    fprintf(file, "\r\nGame state:\r\n\r\n");
+    fprintf(file, EOL "Game state:" EOL EOL);
 
     fprintf(file, "mouse_enabled: %d, waiting_for_command: %d "
-                  "terminal_resized: %d\r\n",
+                  "terminal_resized: %d" EOL,
             mouse_enabled, waiting_for_command, terminal_resized);
     fprintf(file, "io_inited: %d, need_save: %d, saving_game: %d, "
-                  "updating_scores: %d\r\n:",
+                  "updating_scores: %d:" EOL,
             io_inited, need_save, saving_game, updating_scores);
     fprintf(file, "seen_hups: %d, map_stat_gen: %d, arena: %d, "
-                  "arena_suspended: %d, unicode_ok: %d\r\n",
+                  "arena_suspended: %d, unicode_ok: %d" EOL,
             seen_hups, map_stat_gen, arena, arena_suspended, unicode_ok);
 
-    fprintf(file, "\r\n");
+    fprintf(file, EOL);
 
     if (!startup_errors.empty())
     {
-        fprintf(file, "Startup errors:\r\n");
+        fprintf(file, "Startup errors:" EOL);
         for (unsigned int i = 0; i < startup_errors.size(); i++)
-            fprintf(file, "%s\n", startup_errors[i].c_str());
-        fprintf(file, "\r\n");
+            fprintf(file, "%s" EOL, startup_errors[i].c_str());
+        fprintf(file, EOL);
     }
 
-    fprintf(file, "prev_cmd = %s\r\n", command_to_name(prev_cmd).c_str());
+    fprintf(file, "prev_cmd = %s" EOL, command_to_name(prev_cmd).c_str());
 
     if (doing_prev_cmd_again)
     {
         fprintf(file, "Doing prev_cmd again with keys: ");
         for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
             fprintf(file, "%d, ", prev_cmd_keys[i]);
-        fprintf(file, "\r\n");
+        fprintf(file, EOL);
         fprintf(file, "As ASCII keys: ");
         for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
             fprintf(file, "%c", (char) prev_cmd_keys[i]);
-        fprintf(file, "\r\n\r\n");
+        fprintf(file, EOL EOL);
     }
-    fprintf(file, "repeat_cmd = %s\r\n", command_to_name(repeat_cmd).c_str());
+    fprintf(file, "repeat_cmd = %s" EOL, command_to_name(repeat_cmd).c_str());
 
     if (cmd_repeat_count > 0 || cmd_repeat_goal > 0)
     {
-        fprintf(file, "Doing command repitition: \r\n");
+        fprintf(file, "Doing command repitition:" EOL);
         fprintf(file, "cmd_repeat_start:%d, cmd_repeat_count: %d, "
-                      "cmd_repeat_goal:%d\r\nprev_cmd_repeat_goal: %d\r\n",
+                      "cmd_repeat_goal:%d" EOL
+                      "prev_cmd_repeat_goal: %d" EOL,
                 cmd_repeat_start, cmd_repeat_count, cmd_repeat_goal, 
                 prev_cmd_repeat_goal);
         fprintf(file, "Keys being repeated: ");
         for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
             fprintf(file, "%d, ", repeat_cmd_keys[i]);
-        fprintf(file, "\r\n");
+        fprintf(file, EOL);
         fprintf(file, "As ASCII keys: ");
         for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
             fprintf(file, "%c", (char) repeat_cmd_keys[i]);
-        fprintf(file, "\r\n\r\n");
+        fprintf(file, EOL EOL);
     }
 
     if (god_act.which_god != GOD_NO_GOD || god_act.depth != 0)
     {
-        fprintf(file, "God %s currently acting with depth %d\r\n\r\n",
+        fprintf(file, "God %s currently acting with depth %d" EOL EOL,
                 god_name(god_act.which_god).c_str(), god_act.depth);
     }
 
     if (god_act_stack.size() != 0)
     {
-        fprintf(file, "Other gods acting: \r\n");
+        fprintf(file, "Other gods acting:" EOL);
         for (unsigned int i = 0; i < god_act_stack.size(); i++)
-            fprintf(file, "God %s with depth %d\r\n",
+            fprintf(file, "God %s with depth %d" EOL,
                     god_name(god_act_stack[i].which_god).c_str(),
                     god_act_stack[i].depth);
-        fprintf(file, "\r\n");
+        fprintf(file, EOL);
     }
 }

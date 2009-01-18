@@ -1151,7 +1151,7 @@ static void _crash_signal_handler(int sig_num)
 {
     if (crawl_state.game_crashed)
     {
-        fprintf(stderr, "Recursive crash.\n");
+        fprintf(stderr, "Recursive crash." EOL);
 
         std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
                            !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
@@ -1179,6 +1179,10 @@ static void _crash_signal_handler(int sig_num)
 
     _crash_signal            = sig_num;
     crawl_state.game_crashed = true;
+
+    // In case the crash dumper is unable to open a file and has to dump
+    // to stderr.
+    unixcurses_shutdown();
 
     do_crash_dump();
 
@@ -1240,7 +1244,7 @@ void dump_crash_info(FILE* file)
     if (name == NULL)
         name = "INVALID";
 
-    fprintf(file, "Crash caused by signal #%d: %s\r\n", _crash_signal,
+    fprintf(file, "Crash caused by signal #%d: %s" EOL, _crash_signal,
             name);
 }
 
@@ -1258,8 +1262,8 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     if (symbols == NULL)
     {
-        fprintf(stderr, "Out of memroy.\r\n");
-        fprintf(file,   "Out of memory.\r\n");
+        fprintf(stderr, "Out of memroy." EOL);
+        fprintf(file,   "Out of memory." EOL);
 
         // backtrace_symbols_fd() can print out the stack trace even if
         // malloc() can't find any free memory.
@@ -1269,7 +1273,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     for (int i = ignore_count; i < num_frames; i++)
     {
-        fprintf(file, "%s\r\n", symbols[i]);
+        fprintf(file, "%s" EOL, symbols[i]);
     }
 
     free(symbols);
@@ -1277,7 +1281,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 #else // ifdef __GLIBC__
 void write_stack_trace(FILE* file, int ignore_count)
 {
-    const char* msg = "Unable to get stack trace on this platform.\n";
+    const char* msg = "Unable to get stack trace on this platform." EOL;
     fprintf(stderr, msg);
     fprintf(file, msg);
 }

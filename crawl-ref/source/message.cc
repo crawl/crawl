@@ -1010,7 +1010,15 @@ std::string get_last_messages(int mcount)
     bool full_buffer = (Store_Message[NUM_STORED_MESSAGES - 1].text.empty());
     int initial = Next_Message - mcount;
     if (initial < 0 || initial > NUM_STORED_MESSAGES)
-        initial = full_buffer ? initial + NUM_STORED_MESSAGES : 0;
+    {
+        if (full_buffer)
+        {
+            initial = (initial + NUM_STORED_MESSAGES) % NUM_STORED_MESSAGES;
+            initial++;
+        }
+        else
+            initial = 0;
+    }
 
     std::string text;
     int count = 0;

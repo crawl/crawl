@@ -5519,12 +5519,12 @@ void do_crash_dump()
 
     if (file == NULL)
     {
-        fprintf(stderr, "\r\nUnable to open file '%s' for writing: %s\r\n",
+        fprintf(stderr, EOL "Unable to open file '%s' for writing: %s" EOL,
                 name, strerror(errno));
         file = stderr;
     }
     else
-        fprintf(stderr, "\r\nWriting crash info to %s\r\n", name);
+        fprintf(stderr, EOL "nWriting crash info to %s" EOL, name);
 
     set_msg_dump_file(file);
 
@@ -5539,31 +5539,41 @@ void do_crash_dump()
 
     if (Generating_Level)
     {
-        fprintf(file, "\nCrashed while generating level.\r\n");
-        fprintf(file, "your_level = %d, level_type = %d, type_name = %s\r\n",
+        fprintf(file, EOL "Crashed while generating level." EOL);
+        fprintf(file, "your_level = %d, level_type = %d, type_name = %s" EOL,
                 you.your_level, you.level_type, you.level_type_name.c_str());
 
         extern std::string dgn_Build_Method;
         extern bool river_level, lake_level, many_pools_level;
 
-        fprintf(file, "dgn_Build_Method = %s\r\n", dgn_Build_Method.c_str());
-        fprintf(file, "dgn_Layout_Type  = %s\r\n", dgn_Layout_Type.c_str());
+        fprintf(file, "dgn_Build_Method = %s" EOL, dgn_Build_Method.c_str());
+        fprintf(file, "dgn_Layout_Type  = %s" EOL, dgn_Layout_Type.c_str());
 
         extern bool river_level, lake_level, many_pools_level;
 
         if (river_level)
-            fprintf(file, "river level\r\n");
+            fprintf(file, "river level" EOL);
         if (lake_level)
-            fprintf(file, "lake level\r\n");
+            fprintf(file, "lake level" EOL);
         if (many_pools_level)
-            fprintf(file, "many pools level\r\n");
+            fprintf(file, "many pools level" EOL);
 
-        fprintf(file, "\r\n");
+        fprintf(file, EOL);
     }
 
     // Dumping the crawl state is least likely to cause another crash,
     // so do that next.
     crawl_state.dump(file);
+
+    // Dump current messages.
+    if (file != stderr)
+    {
+        fprintf(file, EOL "Messages:" EOL);
+        fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+        std::string messages = get_last_messages(NUM_STORED_MESSAGES);
+        fprintf(file, messages.c_str());
+        fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
+    }
 
     // Next item and monster scans.  Any messages will be sent straight to
     // the file because of set_msg_dump_file()
