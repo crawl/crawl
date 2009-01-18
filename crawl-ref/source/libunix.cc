@@ -1145,12 +1145,17 @@ extern "C" {
 /////////////////////////////////////////////////////////////////////////////
 // Code for printing out debugging info on a crash.
 ////////////////////////////////////////////////////////////////////////////
-static int _crash_signal = 0;
+static int _crash_signal    = 0;
+static int _recursion_depth = 0;
 
 static void _crash_signal_handler(int sig_num)
 {
     if (crawl_state.game_crashed)
     {
+        if (_recursion_depth > 0)
+            return;
+        _recursion_depth++;
+
         fprintf(stderr, "Recursive crash." EOL);
 
         std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
