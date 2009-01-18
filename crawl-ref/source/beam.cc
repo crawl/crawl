@@ -5153,7 +5153,14 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     ASSERT(!in_explosion_phase);
     ASSERT(ex_size > 0);
 
-    flavour = real_flavour;
+    // explode() can be called manually without setting real_flavour.
+    // FIXME: The entire flavour/real_flavour thing needs some
+    // rewriting!
+    if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
+        flavour = real_flavour;
+    else
+        real_flavour = flavour;
+
     const int r = std::min(ex_size, MAX_EXPLOSION_RADIUS);
     in_explosion_phase = true;
 
