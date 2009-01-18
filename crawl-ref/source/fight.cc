@@ -2050,10 +2050,11 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
 
 void melee_attack::drain_defender()
 {
-    const int rn = defender->res_negative_energy();
-
     if (defender->atype() == ACT_MONSTER || one_chance_in(3))
         return;
+
+    special_damage = 1 + random2(damage_done)
+                         / (2 + defender->res_negative_energy());
 
     if (defender->drain_exp(attacker))
     {
@@ -2062,8 +2063,6 @@ void melee_attack::drain_defender()
 
         attacker->god_conduct(DID_NECROMANCY, 2);
     }
-
-    special_damage = 1 + random2(damage_done) / (2 + rn);
 }
 
 bool melee_attack::distortion_affects_defender()
