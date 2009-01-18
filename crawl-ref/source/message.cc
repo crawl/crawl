@@ -909,6 +909,9 @@ bool any_messages(void)
 
 void mesclr( bool force )
 {
+    if (crawl_state.game_crashed)
+        return;
+
     New_Message_Count = 0;
 
     // If no messages, return.
@@ -938,6 +941,9 @@ void reset_more_autoclear()
 
 void more(bool user_forced)
 {
+    if (crawl_state.game_crashed)
+        return;
+
 #ifdef DEBUG_DIAGNOSTICS
     if (you.running)
     {
