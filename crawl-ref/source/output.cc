@@ -855,7 +855,7 @@ void print_stats(void)
         yhack = 1;
         cgotoxy(1+6, 8, GOTO_STAT);
         textcolor(HUD_VALUE_COLOUR);
-        cprintf("%d", you.gold);
+        cprintf("%-6d", you.gold);
     }
 
     if (you.redraw_experience)
