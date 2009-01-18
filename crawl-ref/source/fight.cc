@@ -2052,11 +2052,8 @@ void melee_attack::drain_defender()
 {
     const int rn = defender->res_negative_energy();
 
-    if (defender->atype() == ACT_MONSTER
-        && (rn > 0 || one_chance_in(3)))
-    {
+    if (defender->atype() == ACT_MONSTER && (rn > 0 || one_chance_in(3)))
         return;
-    }
 
     if (defender->drain_exp(attacker))
     {
