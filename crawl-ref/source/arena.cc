@@ -863,11 +863,6 @@ namespace arena
             if (i == MONS_PLAYER_GHOST)
                 continue;
 
-            // Skip the royal jelly for now, since if it gets hit by
-            // multiple explosions it can cause an assertion.
-            if (i == MONS_ROYAL_JELLY)
-                continue;
-
             if (mons_is_unique(i)
                 && !arena_veto_random_monster( (monster_type) i))
             {

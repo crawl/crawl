@@ -957,6 +957,12 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // its own explosion. (GDL)
     mgrd(monster->pos()) = NON_MONSTER;
 
+    // The explosion might cause a monster to be placed where the spore
+    // used to be, so make sure that mgrd() doesn't get cleared a second
+    // time (causing the new monster to become floating) when
+    // monster->reset() is called.
+    monster->pos().reset();
+
     // Exploding kills the monster a bit earlier than normal.
     monster->hit_points = -16;
     if (saw)
