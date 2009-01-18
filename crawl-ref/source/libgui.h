@@ -12,6 +12,8 @@
 #define LIBGUI_H
 #ifdef USE_TILE
 
+#include <stdio.h>
+
 #include "defines.h"
 
 typedef unsigned int screen_buffer_t;
@@ -70,6 +72,10 @@ char *strlwr(char *str);
 int itoa(int value, char *strptr, int radix);
 int stricmp(const char *str1, const char *str2);
 #endif
+
+void init_crash_handler();
+void dump_crash_info(FILE* file);
+void write_stack_trace(FILE* file, int ignore_count);
 
 #endif // USE_TILE
 #endif // LIBGUI_H
