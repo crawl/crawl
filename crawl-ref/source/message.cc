@@ -478,7 +478,7 @@ void mpr(const char *inf, msg_channel_type channel, int param)
 
     char mbuf[400];
     size_t i = 0;
-    const int stepsize = get_number_of_cols() - 1;
+    const int stepsize  = get_number_of_cols() - 1;
     const size_t msglen = strlen(inf);
     const int lookback_size = (stepsize < 12 ? 0 : 12);
 

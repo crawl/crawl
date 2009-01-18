@@ -2505,7 +2505,12 @@ void process_command( command_type cmd )
         {
             // Kind of a hacky way to get quiver to change.
             you.m_quiver->on_item_fired(you.inv[next], true);
+
+            if (next == cur)
+                mpr("No other missiles available. Use F to throw any item.");
         }
+        else if (cur == -1)
+            mpr("No missiles available. Use F to throw any item.");
         break;
     }
 

@@ -533,14 +533,18 @@ bool mons_speaks(const monsters *monster)
     else
     {
         if (!monster->mname.empty() && _polyd_can_speak(monster))
+        {
             msg = _get_speak_string(prefixes, monster->name(DESC_PLAIN),
                                     monster, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
+        }
 
         if (msg.empty())
+        {
             msg = _get_speak_string(prefixes, monster->base_name(DESC_PLAIN),
                                     monster, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
+        }
     }
 
     // The exact name brought no results, try monster genus.
@@ -636,9 +640,11 @@ bool mons_speaks(const monsters *monster)
     }
 
     if (msg.empty() || msg == "__NEXT")
+    {
         msg = _get_speak_string(prefixes, get_mon_shape_str(shape), monster,
                                 no_player, no_foe, no_foe_name, no_god,
                                 unseen);
+    }
 
     if (msg == "__NONE")
     {
@@ -751,7 +757,7 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr
-        // [jpeg] Added MSGCH_TALK_VISUAL for silent "chatter"
+        // [jpeg] Added MSGCH_TALK_VISUAL for silent "chatter".
         msg_channel_type msg_type = def_chan;
 
         std::string param = "";
@@ -791,7 +797,7 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
                 line = line.substr(pos + 1);
         }
 
-        // except for VISUAL none of the above influence these
+        // Except for VISUAL none of the above influence these.
         if (line == "__YOU_RESIST" && (!silence || param == "VISUAL"))
         {
             canned_msg( MSG_YOU_RESIST );

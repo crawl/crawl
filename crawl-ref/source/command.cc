@@ -2161,15 +2161,22 @@ static void _add_formatted_keyhelp(column_composer &cols)
             1, interact,
             true, true, _cmdhelp_textfilter);
 
-    cols.add_formatted(
-            1,
+    interact =
             "<h>Item Interaction (floor):\n"
             "<w>,</w> : pick up items (also <w>g</w>) \n"
             "    (press twice for pick up menu) \n"
             "<w>d</w> : Drop an item\n"
             "<w>d#</w>: Drop exact number of items \n"
-            "<w>c</w> : Chop up a corpse \n"
-            "<w>e</w> : Eat food from floor \n",
+            "<w>c</w> : Chop up a corpse ";
+
+    if (you.species == SP_VAMPIRE && you.experience >= 6)
+        interact += "or bottle its blood ";
+
+    interact +=
+            "\n<w>e</w> : Eat food from floor \n";
+
+    cols.add_formatted(
+            1, interact,
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
