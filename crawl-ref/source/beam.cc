@@ -5348,7 +5348,11 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 // straightforward.
 bool bolt::nasty_to(const monsters *mon) const
 {
-    // Take care of non-enchantments.
+    // Cleansing flame.
+    if (flavour == BEAM_HOLY)
+        return (mon->res_cleansing_flame(agent()) <= 0);
+
+    // Take care of other non-enchantments.
     if (!is_enchantment())
         return (true);
 
