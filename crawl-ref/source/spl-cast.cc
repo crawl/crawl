@@ -2333,7 +2333,7 @@ void MiscastEffect::init()
             kill_source = monster_index(mon_source);
         }
         else
-            kill_source  = NON_MONSTER;
+            kill_source = NON_MONSTER;
     }
 
     if (kill_source == NON_MONSTER)
