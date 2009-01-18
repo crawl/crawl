@@ -2627,6 +2627,10 @@ static int _find_transtravel_stair( const level_id &cur,
         if (_is_excluded( stair, li.get_excludes() ))
             return (-1);
 
+        // Can we even travel to this square?
+        if (!is_travelsafe_square(target.pos.x, target.pos.y, true))
+            return (-1);
+
         // If there's no target position on the target level, or we're on the
         // target, we're home.
         if (target.pos.x == -1 || target.pos == stair)
