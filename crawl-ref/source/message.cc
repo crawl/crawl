@@ -1013,8 +1013,8 @@ std::string get_last_messages(int mcount)
     {
         if (full_buffer)
         {
-            initial = (initial + NUM_STORED_MESSAGES) % NUM_STORED_MESSAGES;
             initial++;
+            initial = (initial + NUM_STORED_MESSAGES) % NUM_STORED_MESSAGES;
         }
         else
             initial = 0;
