@@ -71,7 +71,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
 
 void lose_level(void);
-void drain_exp(bool announce_full = true);
+bool drain_exp(bool announce_full = true);
 
 bool expose_items_to_element(beam_type flavour, const coord_def& where,
                              int strength = 0);

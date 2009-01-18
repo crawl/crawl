@@ -2050,34 +2050,20 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
 
 void melee_attack::drain_defender()
 {
-    // What to do, they're different...
-    if (defender->atype() == ACT_PLAYER)
-    {
-        drain_player();
-        obvious_effect = true;
-    }
-    else
-        drain_monster();
-}
-
-void melee_attack::drain_player()
-{
-    defender->drain_exp(attacker);
-
-    special_damage = random2(damage_done) /
-                         (2 + defender->res_negative_energy()) + 1;
-}
-
-void melee_attack::drain_monster()
-{
-    if (defender->res_negative_energy() > 0 || one_chance_in(3))
+    if (defender->atype() == ACT_MONSTER && one_chance_in(3))
         return;
 
-    defender->drain_exp(attacker);
+    const int rn = defender->res_negative_energy();
 
-    special_damage = 1 + (random2(damage_done) / 2);
+    if (defender->drain_exp(attacker))
+    {
+        if (defender->atype() == ACT_PLAYER)
+            obvious_effect = true;
 
-    attacker->god_conduct(DID_NECROMANCY, 2);
+        attacker->god_conduct(DID_NECROMANCY, 2);
+    }
+
+    special_damage = 1 + random2(damage_done) / (2 + rn);
 }
 
 bool melee_attack::distortion_affects_defender()

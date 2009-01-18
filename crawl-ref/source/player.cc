@@ -7007,9 +7007,9 @@ void player::rot(actor *who, int amount, int immediate)
         disease_player(50 + random2(100));
 }
 
-void player::drain_exp(actor *who)
+bool player::drain_exp(actor *who)
 {
-    ::drain_exp();
+    return (::drain_exp());
 }
 
 void player::confuse(actor *who, int str)

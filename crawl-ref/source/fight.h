@@ -201,8 +201,6 @@ private:
                                      const char *verb);
     int fire_res_apply_cerebov_downgrade(int res);
     void drain_defender();
-    void drain_player();
-    void drain_monster();
     void check_defender_train_armour();
     void check_defender_train_dodging();
     void splash_defender_with_acid(int strength);

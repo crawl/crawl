@@ -636,7 +636,7 @@ void lose_level()
     xom_is_stimulated(255);
 }
 
-void drain_exp(bool announce_full)
+bool drain_exp(bool announce_full)
 {
     const int protection = player_prot_life();
 
@@ -644,20 +644,23 @@ void drain_exp(bool announce_full)
     {
         if (announce_full)
             canned_msg(MSG_YOU_RESIST);
-        return;
+
+        return (false);
     }
 
     if (you.experience == 0)
     {
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
+
         // Return in case death was escaped via wizard mode.
-        return;
+        return (true);
     }
 
     if (you.experience_level == 1)
     {
         you.experience = 0;
-        return;
+
+        return (true);
     }
 
     unsigned long total_exp = exp_needed(you.experience_level + 2)
@@ -708,7 +711,11 @@ void drain_exp(bool announce_full)
 
         if (you.experience < exp_needed(you.experience_level + 1))
             lose_level();
+
+        return (true);
     }
+
+    return (false);
 }
 
 static void _xom_checks_damage(kill_method_type death_type,

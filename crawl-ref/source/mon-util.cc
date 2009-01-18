@@ -5895,10 +5895,10 @@ god_type monsters::deity() const
     return (god);
 }
 
-void monsters::drain_exp(actor *agent)
+bool monsters::drain_exp(actor *agent)
 {
-    if (res_negative_energy() > 0)
-        return;
+    if (x_chance_in_y(res_negative_energy(), 3))
+        return (false);
 
     if (mons_near(this) && player_monster_visible(this))
         mprf("%s is drained!", name(DESC_CAP_THE).c_str());
@@ -5912,6 +5912,8 @@ void monsters::drain_exp(actor *agent)
     max_hit_points -= 2 + random2(3);
 
     hurt(agent, 2 + random2(3), BEAM_NEG);
+
+    return (true);
 }
 
 void monsters::rot(actor *agent, int amount, int immediate)
