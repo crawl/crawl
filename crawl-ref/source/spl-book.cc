@@ -1391,8 +1391,7 @@ bool learn_spell(int book)
         return (false);
     }
 
-    if ((you.is_undead || you.species == SP_DEMONSPAWN)
-        && spell_typematch(specspell, SPTYP_HOLY))
+    if (player_is_unholy() && spell_typematch(specspell, SPTYP_HOLY))
     {
         mpr("You can't use this type of magic!");
         return (false);

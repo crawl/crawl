@@ -882,7 +882,7 @@ static bool _mons_was_seen_this_turn(const monsters *mons)
 
 static void _good_god_follower_attitude_change(monsters *monster)
 {
-    if (you.is_undead || you.species == SP_DEMONSPAWN)
+    if (player_is_unholy())
         return;
 
     // For followers of good gods, decide whether holy beings will be

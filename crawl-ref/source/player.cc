@@ -6342,11 +6342,8 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     if (!ignore_brand)
     {
-        if (is_holy_item(item)
-            && (you.is_undead || you.species == SP_DEMONSPAWN))
-        {
+        if (player_is_unholy() && is_holy_item(item))
             return (false);
-        }
     }
 
 #if 0
@@ -6762,6 +6759,13 @@ mon_holy_type player::holiness() const
         return (MH_DEMONIC);
 
     return (MH_NATURAL);
+}
+
+bool player_is_unholy()
+{
+    const mon_holy_type holiness = you.holiness();
+
+    return (holiness == MH_UNDEAD || holiness == MH_DEMONIC);
 }
 
 // Output active level of player mutation.

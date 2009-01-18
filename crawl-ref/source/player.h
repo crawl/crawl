@@ -177,6 +177,7 @@ bool player_can_smell();
 bool player_can_swim();
 bool player_likes_water(bool permanently = false);
 
+bool player_is_unholy();
 int player_mutation_level(mutation_type mut);
 
 /* ***********************************************************************

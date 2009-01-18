@@ -63,7 +63,7 @@ REVISION("$Rev$");
 
 int holy_word_player(int pow, int caster)
 {
-    if (!you.is_undead && you.species != SP_DEMONSPAWN)
+    if (!player_is_unholy())
         return 0;
 
     int hploss = std::max(0, you.hp / 2 - 1);

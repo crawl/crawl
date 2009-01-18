@@ -144,8 +144,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if ((you.is_undead || you.species == SP_DEMONSPAWN)
-        && is_holy_item(*weapon))
+    if (player_is_unholy() && is_holy_item(*weapon))
     {
         if (say_reason)
         {

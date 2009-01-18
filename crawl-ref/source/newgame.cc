@@ -4434,7 +4434,7 @@ bool _give_items_skills()
         you.piety = 45;
 
         // Set gods.
-        if (you.species == SP_MUMMY || you.species == SP_DEMONSPAWN
+        if (you.species == SP_DEMONSPAWN || you.species == SP_MUMMY
             || you.species == SP_GHOUL || you.species == SP_VAMPIRE)
         {
             you.religion = GOD_YREDELEMNUL;

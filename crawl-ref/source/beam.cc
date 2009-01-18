@@ -2270,7 +2270,6 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                                    hurted == 0 ? " appears unharmed."
                                                : " writhes in agony!");
         }
-
         break;
 
     case BEAM_ICE:
@@ -3254,7 +3253,6 @@ bool bolt::harmless_to_player() const
     case BEAM_INVISIBILITY:
         return (true);
 
-    // Cleansing flame doesn't affect player's followers.
     case BEAM_HOLY:
         return (is_good_god(you.religion));
 
@@ -4361,7 +4359,7 @@ void bolt::affect_monster(monsters* mon)
     // Visual - wake monsters.
     if (flavour == BEAM_VISUAL)
     {
-        behaviour_event( mon, ME_DISTURB, beam_source, source );
+        behaviour_event(mon, ME_DISTURB, beam_source, source);
         apply_hit_funcs(mon, 0);
         return;
     }
@@ -4386,7 +4384,7 @@ void bolt::affect_monster(monsters* mon)
     // before we decide if it actually hits.
     std::vector<std::string> messages;
     int preac, postac, final;
-    if ( !determine_damage(mon, preac, postac, final, messages) )
+    if (!determine_damage(mon, preac, postac, final, messages))
         return;
 
 #if DEBUG_DIAGNOSTICS

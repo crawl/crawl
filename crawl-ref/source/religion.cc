@@ -6426,8 +6426,7 @@ void god_pitch(god_type which_god)
     // return, or not allow worshippers from other religions.  -- bwr
 
     // Gods can be racist...
-    const bool you_evil = (you.is_undead || you.species == SP_DEMONSPAWN);
-    if (you_evil && is_good_god(which_god)
+    if (player_is_unholy() && is_good_god(which_god)
         || which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
     {
         you.turn_is_over = false;
