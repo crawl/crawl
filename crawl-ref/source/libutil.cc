@@ -334,7 +334,8 @@ std::string pluralise(const std::string &name,
         // Fungus, ufetubus, for instance.
         return name.substr(0, name.length() - 2) + "i";
     }
-    else if (ends_with(name, "larva") || ends_with(name, "amoeba"))
+    else if (ends_with(name, "larva") || ends_with(name, "amoeba")
+          || ends_with(name, "antenna"))
     {
         // Giant amoebae sounds a little weird, to tell the truth.
         return name + "e";
