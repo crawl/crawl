@@ -5980,10 +5980,7 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
         else if (agent->atype() == ACT_PLAYER)
             monster_die(this, KILL_YOU, NON_MONSTER);
         else
-        {
-            monster_die(this, KILL_MON,
-                        monster_index(dynamic_cast<const monsters*>(agent)));
-        }
+            monster_die(this, KILL_MON, agent->mindex());
     }
 
     return (amount);
@@ -7503,6 +7500,7 @@ bool monsters::visible_to(const actor *looker) const
     else
     {
         const monsters* mon = dynamic_cast<const monsters*>(looker);
+
         return mons_monster_visible(mon, this);
     }
 }

@@ -342,8 +342,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
     else
     {
         beam.thrower     = KILL_MON;
-        beam.beam_source =
-            monster_index(dynamic_cast<const monsters*>(attacker));
+        beam.beam_source = attacker->mindex();
     }
 
     beam.explode();
@@ -391,8 +390,7 @@ void cleansing_flame(int pow, int caster, coord_def where,
     else
     {
         beam.thrower     = KILL_MON;
-        beam.beam_source =
-            monster_index(dynamic_cast<const monsters*>(attacker));
+        beam.beam_source = attacker->mindex();
     }
 
     beam.explode();
