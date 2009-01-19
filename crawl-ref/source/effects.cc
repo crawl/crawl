@@ -122,7 +122,7 @@ int holy_word_monsters(coord_def where, int pow, int caster)
 
     monsters *monster = &menv[mon];
 
-    if (!monster->alive() || mons_res_holy_energy(monster) > 0)
+    if (!monster->alive() || monster->res_holy_energy(&you) > 0)
         return retval;
 
     const int hploss = roll_dice(2, 15) + (random2(pow) / 3);
