@@ -3853,7 +3853,7 @@ void MiscastEffect::_necromancy(int severity)
             if (lethality_margin == 0 || you.experience > 0
                 || !avoid_lethal(you.hp))
             {
-                if (target->res_negative_energy() < 3 && one_chance_in(3))
+                if (one_chance_in(3))
                 {
                     target->drain_exp(act_source);
                     break;
@@ -3925,11 +3925,8 @@ void MiscastEffect::_necromancy(int severity)
             if (lethality_margin == 0 || you.experience > 0
                 || !avoid_lethal(you.hp))
             {
-                if (target->res_negative_energy() < 3)
-                {
-                    target->drain_exp(act_source);
-                    break;
-                }
+                target->drain_exp(act_source);
+                break;
             }
 
             // If draining failed, just flow through if it's the player...
