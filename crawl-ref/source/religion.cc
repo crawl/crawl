@@ -4321,7 +4321,7 @@ static bool _elyvilon_retribution()
 
     case 2: // mostly flavour messages
         MiscastEffect(&you, -god, SPTYP_POISON, one_chance_in(3) ? 1 : 0,
-                       "the displeasure of Elyvilon");
+                      "the displeasure of Elyvilon");
         break;
 
     case 3:
