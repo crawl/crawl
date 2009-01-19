@@ -332,8 +332,8 @@ int mons_rare_abyss(int mcls)
         return 50;
 
     case MONS_SKELETON_LARGE:
-    case MONS_SKELETAL_WARRIOR:
     case MONS_SKELETON_SMALL:
+    case MONS_SKELETAL_WARRIOR:
         return 40;
 
     case MONS_ZOMBIE_LARGE:
@@ -493,12 +493,12 @@ bool mons_pan(int mcls)
     case MONS_FLYING_SKULL:
     case MONS_FREEZING_WRAITH:
     case MONS_HUNGRY_GHOST:
-    case MONS_SKELETON_LARGE:
     case MONS_LICH:
     case MONS_MUMMY:
     case MONS_NECROPHAGE:
     case MONS_PHANTOM:
     case MONS_SHADOW:
+    case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
     case MONS_SPECTRAL_WARRIOR:
     case MONS_VAMPIRE:
