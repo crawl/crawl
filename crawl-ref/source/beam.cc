@@ -2209,7 +2209,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_NEG:
-        if (mons_res_negative_energy(monster))
+        if (mons_res_negative_energy(monster) > 0)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
