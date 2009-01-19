@@ -2925,7 +2925,7 @@ bool melee_attack::apply_damage_brand()
         break;
     }
     case SPWPN_PAIN:
-        if (defender->res_negative_energy() > 0)
+        if (defender->res_negative_energy())
             break;
 
         if (x_chance_in_y(attacker->skill(SK_NECROMANCY) + 1, 8))
@@ -3233,7 +3233,7 @@ void melee_attack::player_apply_staff_damage()
     }
 
     case STAFF_DEATH:
-        if (defender->res_negative_energy() > 0)
+        if (defender->res_negative_energy())
             break;
 
         if (x_chance_in_y(you.skills[SK_NECROMANCY] + 1, 8))
