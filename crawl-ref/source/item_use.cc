@@ -5040,7 +5040,7 @@ void read_scroll(int slot)
         }
 
         const bool success = holy_word(pow, HOLY_WORD_SCROLL, you.pos(),
-                                       !item_type_known(scroll));
+                                       !item_type_known(scroll), &you);
 
         if (!success)
         {

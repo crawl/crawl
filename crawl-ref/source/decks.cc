@@ -1716,9 +1716,8 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     stair_draw_count++;
 }
 
-static int _drain_monsters(coord_def where, int pow, int garbage)
+static int _drain_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
     if (where == you.pos())
         drain_exp();
     else

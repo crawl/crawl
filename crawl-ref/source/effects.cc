@@ -61,12 +61,18 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
-int holy_word_player(int pow, int caster)
+int holy_word_player(int pow, int caster, actor *attacker)
 {
     if (!player_is_unholy())
         return 0;
 
-    int hploss = std::max(0, you.hp / 2 - 1);
+    int hploss;
+
+    // Holy word won't kill its user.
+    if (attacker != &you)
+        hploss = roll_dice(2, 15) + (random2(pow) / 3);
+    else
+        hploss = std::max(0, you.hp / 2 - 1);
 
     if (!hploss)
         return 0;
@@ -103,7 +109,8 @@ int holy_word_player(int pow, int caster)
     return 1;
 }
 
-int holy_word_monsters(coord_def where, int pow, int caster)
+int holy_word_monsters(coord_def where, int pow, int caster,
+                       actor *attacker)
 {
     int retval = 0;
 
@@ -112,7 +119,7 @@ int holy_word_monsters(coord_def where, int pow, int caster)
 
     // Is the player in this cell?
     if (where == you.pos())
-        retval = holy_word_player(pow, caster);
+        retval = holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
     const int mon = mgrd(where);
@@ -122,35 +129,56 @@ int holy_word_monsters(coord_def where, int pow, int caster)
 
     monsters *monster = &menv[mon];
 
-    if (!monster->alive() || monster->res_holy_energy(&you) > 0)
+    if (!monster->alive() || !mons_is_unholy(monster))
         return retval;
 
-    const int hploss = roll_dice(2, 15) + (random2(pow) / 3);
-    retval = 1;
+    int hploss;
 
-    // Currently, holy word annoys the monsters it affects because it
-    // can kill them, and because hostile monsters don't use it.
-    behaviour_event(monster, ME_ANNOY, MHITYOU);
-    simple_monster_message(monster, " convulses!");
-    monster->hurt(&you, hploss);
+    // Holy word won't kill its user.
+    if (attacker != monster)
+        hploss = roll_dice(2, 15) + (random2(pow) / 3);
+    else
+        hploss = std::max(0, monster->hit_points / 2 - 1);
 
-    if (monster->alive())
+    if (hploss)
+        simple_monster_message(monster, " convulses!");
+
+    monster->hurt(attacker, hploss);
+
+    if (hploss)
     {
-        if (monster->speed_increment >= 25)
-            monster->speed_increment -= 20;
+        retval = 1;
 
-        monster->add_ench(ENCH_FEAR);
+        // Holy word won't annoy, slow, or frighten its user.
+        if (monster->alive() && attacker != monster)
+        {
+            // Currently, holy word annoys the monsters it affects
+            // because it can kill them, and because hostile monsters
+            // don't use it.
+            behaviour_event(monster, ME_ANNOY, MHITYOU);
+
+            if (monster->speed_increment >= 25)
+                monster->speed_increment -= 20;
+
+            monster->add_ench(ENCH_FEAR);
+        }
     }
 
     return retval;
 }
 
-int holy_word(int pow, int caster, const coord_def& where, bool silent)
+int holy_word(int pow, int caster, const coord_def& where, bool silent,
+              actor *attacker)
 {
-    if (!silent)
-        mpr("You speak a Word of immense power!");
+    if (!silent && attacker)
+    {
+        mprf("%s %s a Word of immense power!",
+             attacker->name(DESC_CAP_THE).c_str(),
+             attacker->conj_verb("speak").c_str());
+    }
 
-    return apply_area_within_radius(holy_word_monsters, where, pow, 8, caster);
+    return apply_area_within_radius(holy_word_monsters, where, pow, 8, caster,
+                                    attacker);
 }
 
 int torment_player(int pow, int caster)
@@ -221,7 +249,7 @@ int torment_player(int pow, int caster)
 // maximum power of 1000, high level monsters and characters would save
 // too often.  (GDL)
 
-int torment_monsters(coord_def where, int pow, int caster)
+int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
 {
     UNUSED(pow);
 
@@ -232,7 +260,7 @@ int torment_monsters(coord_def where, int pow, int caster)
         retval = torment_player(0, caster);
 
     // Is a monster in this cell?
-    int mon = mgrd(where);
+    const int mon = mgrd(where);
 
     if (mon == NON_MONSTER)
         return retval;
@@ -244,18 +272,15 @@ int torment_monsters(coord_def where, int pow, int caster)
 
     int hploss = std::max(0, monster->hit_points / 2 - 1);
 
+    if (hploss)
+        simple_monster_message(monster, " convulses!");
+
     // Currently, torment doesn't annoy the monsters it affects because
     // it can't kill them, and because hostile monsters use it.
     monster->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
 
     if (hploss)
-    {
         retval = 1;
-        if (!monster->alive())
-            return retval;
-    }
-
-    simple_monster_message(monster, " convulses!");
 
     return retval;
 }

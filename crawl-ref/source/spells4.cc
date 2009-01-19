@@ -66,7 +66,6 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
 static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype);
-static int _quadrant_blink(coord_def where, int pow, int garbage);
 
 void do_monster_rot(int mon);
 
@@ -91,10 +90,8 @@ static bool _player_hurt_monster(int monster, int damage)
 }
 
 // Here begin the actual spells:
-static int _shatter_monsters(coord_def where, int pow, int garbage)
+static int _shatter_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
-
     dice_def   dam_dice( 0, 5 + pow / 3 );  // number of dice set below
     const int  monster = mgrd(where);
 
@@ -186,10 +183,9 @@ static int _shatter_monsters(coord_def where, int pow, int garbage)
     return (damage);
 }
 
-static int _shatter_items(coord_def where, int pow, int garbage)
+static int _shatter_items(coord_def where, int pow, int, actor *)
 {
     UNUSED( pow );
-    UNUSED( garbage );
 
     int broke_stuff = 0;
 
@@ -213,10 +209,8 @@ static int _shatter_items(coord_def where, int pow, int garbage)
     return 0;
 }
 
-static int _shatter_walls(coord_def where, int pow, int garbage)
+static int _shatter_walls(coord_def where, int pow, int, actor *)
 {
-    UNUSED(garbage);
-
     int chance = 0;
 
     // if not in-bounds then we can't really shatter it -- bwr
@@ -388,9 +382,8 @@ void cast_detect_secret_doors(int pow)
     mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
 }
 
-static int _sleep_monsters(coord_def where, int pow, int garbage)
+static int _sleep_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
     const int mnstr = mgrd(where);
 
     if (mnstr == NON_MONSTER)
@@ -447,9 +440,8 @@ static bool _is_domesticated_animal(int type)
     return (false);
 }
 
-static int _tame_beast_monsters(coord_def where, int pow, int garbage)
+static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
     const int which_mons = mgrd(where);
 
     if (which_mons == NON_MONSTER)
@@ -488,10 +480,9 @@ void cast_tame_beasts(int pow)
     apply_area_visible(_tame_beast_monsters, pow);
 }
 
-static int _ignite_poison_objects(coord_def where, int pow, int garbage)
+static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
 {
     UNUSED( pow );
-    UNUSED( garbage );
 
     int strength = 0;
 
@@ -526,10 +517,9 @@ static int _ignite_poison_objects(coord_def where, int pow, int garbage)
     return (strength);
 }
 
-static int _ignite_poison_clouds( coord_def where, int pow, int garbage )
+static int _ignite_poison_clouds( coord_def where, int pow, int, actor *)
 {
     UNUSED( pow );
-    UNUSED( garbage );
 
     bool did_anything = false;
 
@@ -557,10 +547,8 @@ static int _ignite_poison_clouds( coord_def where, int pow, int garbage )
     return did_anything;
 }
 
-static int _ignite_poison_monsters(coord_def where, int pow, int garbage)
+static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
-
     bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
 
@@ -777,10 +765,8 @@ void cast_silence(int pow)
     }
 }
 
-static int _discharge_monsters( coord_def where, int pow, int garbage )
+static int _discharge_monsters( coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
-
     const int mon = mgrd(where);
     int damage = 0;
 
@@ -864,7 +850,7 @@ void cast_discharge( int pow )
 // NB: this must be checked against the same effects
 // in fight.cc for all forms of attack !!! {dlb}
 // This function should be currently unused (the effect is too powerful).
-static int _distortion_monsters(coord_def where, int pow, int message)
+static int _distortion_monsters(coord_def where, int pow, int, actor *)
 {
     if (pow > 100)
         pow = 100;
@@ -937,9 +923,9 @@ static int _distortion_monsters(coord_def where, int pow, int message)
         defender->banish();
         return 1;
     }
-    else if (message)
+    else
     {
-        mpr("Nothing seems to happen.");
+        canned_msg(MSG_NOTHING_HAPPENS);
         return 1;
     }
 
@@ -956,10 +942,8 @@ void cast_bend(int pow)
 // Really this is just applying the best of Band/Warp weapon/Warp field
 // into a spell that gives the "make monsters go away" benefit without
 // the insane damage potential.  -- bwr
-int disperse_monsters(coord_def where, int pow, int message)
+int disperse_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( message );
-
     const int monster_attacked = mgrd(where);
 
     if (monster_attacked == NON_MONSTER)
@@ -997,16 +981,12 @@ int disperse_monsters(coord_def where, int pow, int message)
 
 void cast_dispersal(int pow)
 {
-    if (apply_area_around_square( disperse_monsters, you.pos(), pow ) == 0)
-    {
-        mpr( "The air shimmers briefly around you." );
-    }
+    if (apply_area_around_square(disperse_monsters, you.pos(), pow) == 0)
+        mpr("The air shimmers briefly around you.");
 }
 
-static int _spell_swap_func(coord_def where, int pow, int message)
+static int _spell_swap_func(coord_def where, int pow, int, actor *)
 {
-    UNUSED( message );
-
     int monster_attacked = mgrd(where);
 
     if (monster_attacked == NON_MONSTER)
@@ -1041,7 +1021,7 @@ static int _spell_swap_func(coord_def where, int pow, int message)
 
 void cast_swap(int pow)
 {
-    apply_one_neighbouring_square( _spell_swap_func, pow );
+    apply_one_neighbouring_square(_spell_swap_func, pow);
 }
 
 static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype)
@@ -1081,10 +1061,8 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
-static int _passwall(coord_def where, int pow, int garbage)
+static int _passwall(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
-
     int howdeep = 0;
     bool done = false;
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
@@ -1160,17 +1138,16 @@ static int _passwall(coord_def where, int pow, int garbage)
     start_delay( DELAY_PASSWALL, 1 + howdeep, n.x, n.y );
 
     return 1;
-}                               // end passwall()
+}
 
 void cast_passwall(int pow)
 {
     apply_one_neighbouring_square(_passwall, pow);
 }
 
-static int _intoxicate_monsters(coord_def where, int pow, int garbage)
+static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     UNUSED( pow );
-    UNUSED( garbage );
 
     int mon = mgrd(where);
 
@@ -1536,11 +1513,9 @@ void cast_fulsome_distillation( int powc )
         mpr( "Unfortunately, you can't carry it right now!" );
 }
 
-static int _rot_living(coord_def where, int pow, int message)
+static int _rot_living(coord_def where, int pow, int, actor *)
 {
-    UNUSED( message );
-
-    int mon = mgrd(where);
+    const int mon = mgrd(where);
     int ench;
 
     if (mon == NON_MONSTER)
@@ -1560,11 +1535,9 @@ static int _rot_living(coord_def where, int pow, int message)
     return 1;
 }
 
-static int _rot_undead(coord_def where, int pow, int garbage)
+static int _rot_undead(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
-
-    int mon = mgrd(where);
+    const int mon = mgrd(where);
     int ench;
 
     if (mon == NON_MONSTER)
@@ -1618,10 +1591,8 @@ static int _rot_undead(coord_def where, int pow, int garbage)
     return 1;
 }
 
-static int _rot_corpses(coord_def where, int pow, int garbage)
+static int _rot_corpses(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
-
     return _make_a_rot_cloud(where, pow, CLOUD_MIASMA);
 }
 
@@ -1647,11 +1618,9 @@ void do_monster_rot(int mon)
     return;
 }
 
-static int _snake_charm_monsters(coord_def where, int pow, int message)
+static int _snake_charm_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED( message );
-
-    int mon = mgrd(where);
+    const int mon = mgrd(where);
 
     if (mon == NON_MONSTER
         || one_chance_in(4)
@@ -2394,10 +2363,8 @@ void cast_divine_shield()
     you.redraw_armour_class = true;
 }
 
-static int _quadrant_blink(coord_def where, int pow, int garbage)
+static int _quadrant_blink(coord_def where, int pow, int, actor *)
 {
-    UNUSED( garbage );
-
     if (where == you.pos())
         return (0);
 

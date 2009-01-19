@@ -1358,7 +1358,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_HOLY_WORD:
-        holy_word(100, HOLY_WORD_SPELL, you.pos(), true);
+        holy_word(100, HOLY_WORD_SPELL, you.pos(), true, &you);
         break;
 
     case SPELL_REPEL_UNDEAD:

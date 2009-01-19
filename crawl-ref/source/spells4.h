@@ -19,7 +19,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage);
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                         cloud_type ctype, kill_category,
                         killer_type killer = KILL_NONE);
-int disperse_monsters(coord_def where, int pow, int message);
+int disperse_monsters(coord_def where, int pow);
 
 void cast_bend(int pow);
 void remove_condensation_shield();

@@ -2408,7 +2408,7 @@ static int _find_ability_slot( ability_type which_ability )
 
 ////////////////////////////////////////////////////////////////////////////
 
-static int _lugonu_warp_monster(coord_def where, int pow, int)
+static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
 {
     if (!in_bounds(where) || mgrd(where) == NON_MONSTER)
         return (0);

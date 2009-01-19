@@ -467,25 +467,27 @@ const char *spell_title(spell_type spell)
 
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
-int apply_area_visible( cell_func cf, int power, bool pass_through_trans)
+int apply_area_visible(cell_func cf, int power,
+                       bool pass_through_trans, actor *agent)
 {
     int rv = 0;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        if ( pass_through_trans || see_grid_no_trans(*ri) )
-            rv += cf(*ri, power, 0);
+        if (pass_through_trans || see_grid_no_trans(*ri))
+            rv += cf(*ri, power, 0, agent);
 
     return (rv);
 }
 
 // Applies the effect to all nine squares around/including the target.
 // Returns summation of return values from passed in function.
-int apply_area_square( cell_func cf, const coord_def& where, int power )
+int apply_area_square(cell_func cf, const coord_def& where, int power,
+                      actor *agent)
 {
     int rv = 0;
 
     for (adjacent_iterator ai(where, false); ai; ++ai)
-        rv += cf(*ai, power, 0);
+        rv += cf(*ai, power, 0, agent);
 
     return (rv);
 }
@@ -493,20 +495,22 @@ int apply_area_square( cell_func cf, const coord_def& where, int power )
 
 // Applies the effect to the eight squares beside the target.
 // Returns summation of return values from passed in function.
-int apply_area_around_square( cell_func cf, const coord_def& where, int power)
+int apply_area_around_square(cell_func cf, const coord_def& where, int power,
+                             actor *agent)
 {
     int rv = 0;
 
     for (adjacent_iterator ai(where, true); ai; ++ai)
-        rv += cf(*ai, power, 0);
+        rv += cf(*ai, power, 0, agent);
 
     return (rv);
 }
 
-// Effect up to max_targs monsters around a point, chosen randomly
-// Return varies with the function called;  return values will be added up.
-int apply_random_around_square( cell_func cf, const coord_def& where,
-                                bool exclude_center, int power, int max_targs )
+// Affect up to max_targs monsters around a point, chosen randomly.
+// Return varies with the function called; return values will be added up.
+int apply_random_around_square(cell_func cf, const coord_def& where,
+                               bool exclude_center, int power, int max_targs,
+                               actor *agent)
 {
     int rv = 0;
 
@@ -514,10 +518,10 @@ int apply_random_around_square( cell_func cf, const coord_def& where,
         return 0;
 
     if (max_targs >= 9 && !exclude_center)
-        return (apply_area_square( cf, where, power ));
+        return (apply_area_square(cf, where, power, agent));
 
     if (max_targs >= 8 && exclude_center)
-        return (apply_area_around_square( cf, where, power ));
+        return (apply_area_around_square(cf, where, power, agent));
 
     coord_def targs[8];
 
@@ -600,11 +604,11 @@ int apply_random_around_square( cell_func cf, const coord_def& where,
         // slot -- but we don't care about them).
         if (count <= max_targs)
         {
-            targs[ count - 1 ] = *ai;
+            targs[count - 1] = *ai;
         }
         else if (x_chance_in_y(max_targs, count))
         {
-            const int pick = random2( max_targs );
+            const int pick = random2(max_targs);
             targs[ pick ] = *ai;
         }
     }
@@ -618,8 +622,8 @@ int apply_random_around_square( cell_func cf, const coord_def& where,
         // balance the called function. -- bwr
         for (int i = 0; i < targs_found; i++)
         {
-            ASSERT( !targs[i].origin() );
-            rv += cf( targs[i], power, 0 );
+            ASSERT(!targs[i].origin());
+            rv += cf(targs[i], power, 0, agent);
         }
     }
 
@@ -627,12 +631,12 @@ int apply_random_around_square( cell_func cf, const coord_def& where,
 }
 
 // Apply func to one square of player's choice beside the player.
-int apply_one_neighbouring_square(cell_func cf, int power)
+int apply_one_neighbouring_square(cell_func cf, int power, actor *agent)
 {
     dist bmove;
 
     mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_ENEMY );
+    direction(bmove, DIR_DIR, TARG_ENEMY);
 
     if (!bmove.isValid)
     {
@@ -640,7 +644,7 @@ int apply_one_neighbouring_square(cell_func cf, int power)
         return (-1);
     }
 
-    int rv = cf(you.pos() + bmove.delta, power, 1);
+    int rv = cf(you.pos() + bmove.delta, power, 1, agent);
 
     if (rv == 0)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -648,14 +652,15 @@ int apply_one_neighbouring_square(cell_func cf, int power)
     return (rv);
 }
 
-int apply_area_within_radius( cell_func cf, const coord_def& where,
-                              int pow, int radius, int ctype )
+int apply_area_within_radius(cell_func cf, const coord_def& where,
+                             int pow, int radius, int ctype,
+                             actor *agent)
 {
 
     int rv = 0;
 
-    for ( radius_iterator ri(where, radius, false, false); ri; ++ri )
-        rv += cf(*ri, pow, ctype);
+    for (radius_iterator ri(where, radius, false, false); ri; ++ri)
+        rv += cf(*ri, pow, ctype, agent);
 
     return (rv);
 }

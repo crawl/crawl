@@ -81,10 +81,8 @@ static bool _recite_mons_useless(const monsters *mon)
 }
 
 // Power is maximum 50.
-static int _recite_to_monsters(coord_def where, int pow, int unused)
+static int _recite_to_monsters(coord_def where, int pow, int, actor *)
 {
-    UNUSED(unused);
-
     const int mon = mgrd(where);
     if (mon == NON_MONSTER)
         return (0);

@@ -266,48 +266,48 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     // No unchivalric attacks on monsters that cannot fight (e.g.
     // plants) or monsters the attacker can't see (either due to
     // invisibility or being behind opaque clouds).
-    if (!defender->cannot_fight() && attacker->can_see(defender))
+    if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
+        return (unchivalric);
+
+    // Distracted (but not batty); this only applies to players.
+    if (attacker && attacker->atype() == ACT_PLAYER && def->foe != MHITYOU
+        && !mons_is_batty(def))
     {
-        // Distracted (but not batty); this only applies to players.
-        if (attacker->atype() == ACT_PLAYER && def->foe != MHITYOU
-            && !mons_is_batty(def))
-        {
-            unchivalric = UCAT_DISTRACTED;
-        }
-
-        // confused (but not perma-confused)
-        if (def->has_ench(ENCH_CONFUSION)
-            && !mons_class_flag(def->type, M_CONFUSED))
-        {
-            unchivalric = UCAT_CONFUSED;
-        }
-
-        // fleeing
-        if (mons_is_fleeing(def))
-            unchivalric = UCAT_FLEEING;
-
-        // invisible
-        if (!attacker->visible_to(defender))
-            unchivalric = UCAT_INVISIBLE;
-
-        // held in a net
-        if (mons_is_caught(def))
-            unchivalric = UCAT_HELD_IN_NET;
-
-        // petrifying
-        if (mons_is_petrifying(def))
-            unchivalric = UCAT_PETRIFYING;
-
-        // paralysed
-        if (def->cannot_act())
-            unchivalric = UCAT_PARALYSED;
-
-        // sleeping
-        if (mons_is_sleeping(def))
-            unchivalric = UCAT_SLEEPING;
+        unchivalric = UCAT_DISTRACTED;
     }
 
-    return unchivalric;
+    // confused (but not perma-confused)
+    if (def->has_ench(ENCH_CONFUSION)
+        && !mons_class_flag(def->type, M_CONFUSED))
+    {
+        unchivalric = UCAT_CONFUSED;
+    }
+
+    // fleeing
+    if (mons_is_fleeing(def))
+        unchivalric = UCAT_FLEEING;
+
+    // invisible
+    if (attacker && !attacker->visible_to(defender))
+        unchivalric = UCAT_INVISIBLE;
+
+    // held in a net
+    if (mons_is_caught(def))
+        unchivalric = UCAT_HELD_IN_NET;
+
+    // petrifying
+    if (mons_is_petrifying(def))
+        unchivalric = UCAT_PETRIFYING;
+
+    // paralysed
+    if (def->cannot_act())
+        unchivalric = UCAT_PARALYSED;
+
+    // sleeping
+    if (mons_is_sleeping(def))
+        unchivalric = UCAT_SLEEPING;
+
+    return (unchivalric);
 }
 
 //////////////////////////////////////////////////////////////////////////

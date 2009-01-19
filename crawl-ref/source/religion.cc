@@ -5972,7 +5972,7 @@ static bool _bless_weapon( god_type god, brand_type brand, int colour )
         take_note(Note(NOTE_GOD_GIFT, you.religion));
 
         you.flash_colour = colour;
-        viewwindow( true, false );
+        viewwindow(true, false);
 
         mprf( MSGCH_GOD, "Your weapon shines brightly!" );
         simple_god_message( " booms: Use this gift wisely!" );
@@ -5980,14 +5980,15 @@ static bool _bless_weapon( god_type god, brand_type brand, int colour )
         if ( god == GOD_SHINING_ONE )
         {
             holy_word(100, HOLY_WORD_TSO, you.pos(), true);
+#ifndef USE_TILE
+            delay(1000);
+#endif
 
             // Un-bloodify surrounding squares.
             for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
                 if (is_bloodcovered(*ri))
                     env.map(*ri).property &= ~(FPROP_BLOODY);
         }
-
-        delay(1000);
 
         return (true);
     }

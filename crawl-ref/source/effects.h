@@ -96,10 +96,12 @@ void yell(bool force = false);
 /* ***********************************************************************
  * called from: item_use - spell
  * *********************************************************************** */
-int holy_word(int pow, int caster, const coord_def& where, bool silent);
+int holy_word(int pow, int caster, const coord_def& where, bool silent = false,
+              actor *attacker = NULL);
 
-int holy_word_player(int pow, int caster);
-int holy_word_monsters(coord_def where, int pow, int caster);
+int holy_word_player(int pow, int caster, actor *attacker = NULL);
+int holy_word_monsters(coord_def where, int pow, int caster,
+                       actor *attacker = NULL);
 
 
 // last updated 12may2000 {dlb}
@@ -110,7 +112,8 @@ int holy_word_monsters(coord_def where, int pow, int caster);
 int torment(int caster, const coord_def& where);
 
 int torment_player(int pow, int caster);
-int torment_monsters(coord_def where, int pow, int caster);
+int torment_monsters(coord_def where, int pow, int caster,
+                     actor *attacker = NULL);
 
 void immolation(int caster, bool known = false);
 
