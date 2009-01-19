@@ -5893,12 +5893,12 @@ god_type monsters::deity() const
     return (god);
 }
 
-bool monsters::drain_exp(actor *agent)
+bool monsters::drain_exp(actor *agent, bool quiet)
 {
     if (x_chance_in_y(res_negative_energy(), 3))
         return (false);
 
-    if (mons_near(this) && player_monster_visible(this))
+    if (!quiet && mons_near(this) && player_monster_visible(this))
         mprf("%s is drained!", name(DESC_CAP_THE).c_str());
 
     hurt(agent, 2 + random2(3), BEAM_NEG);
@@ -6354,7 +6354,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_SUBMERGED:
         // XXX: What if the monster was invisible before submerging?
-        if (mons_near(this) && !quiet)
+        if (!quiet && mons_near(this))
         {
             if (type == MONS_AIR_ELEMENTAL)
             {

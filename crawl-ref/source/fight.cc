@@ -2056,10 +2056,19 @@ void melee_attack::drain_defender()
     special_damage = 1 + random2(damage_done)
                          / (2 + defender->res_negative_energy());
 
-    if (defender->drain_exp(attacker))
+    if (defender->drain_exp(attacker, true))
     {
         if (defender->atype() == ACT_PLAYER)
             obvious_effect = true;
+        else if (defender_visible)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s %s %s!",
+                    atk_name(DESC_CAP_THE).c_str(),
+                    attacker->conj_verb("drain").c_str(),
+                    def_name(DESC_NOCAP_THE).c_str());
+        }
 
         attacker->god_conduct(DID_NECROMANCY, 2);
     }

@@ -7007,7 +7007,7 @@ void player::rot(actor *who, int amount, int immediate)
         disease_player(50 + random2(100));
 }
 
-bool player::drain_exp(actor *who)
+bool player::drain_exp(actor *who, bool quiet)
 {
     return (::drain_exp());
 }
