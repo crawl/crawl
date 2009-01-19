@@ -329,7 +329,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.effect_known  = known;
     beam.affects_items = (caster != IMMOLATION_SCROLL);
 
-    if (caster == IMMOLATION_GENERIC || attacker == NULL)
+    if (caster == IMMOLATION_GENERIC)
     {
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
