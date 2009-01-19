@@ -332,7 +332,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
     const monsters *atk = (attacker->atype() == ACT_PLAYER ? NULL :
                            dynamic_cast<const monsters*>(attacker));
 
-    if (caster == IMMOLATION_GENERIC)
+    if (caster == IMMOLATION_GENERIC || attacker == NULL)
     {
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
@@ -383,7 +383,8 @@ void cleansing_flame(int pow, int caster, coord_def where,
     const monsters *atk = (attacker->atype() == ACT_PLAYER ? NULL :
                            dynamic_cast<const monsters*>(attacker));
 
-    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
+    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO
+        || attacker == NULL)
     {
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
