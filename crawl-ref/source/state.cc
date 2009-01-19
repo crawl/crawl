@@ -419,7 +419,7 @@ void game_state::dump(FILE* file)
         fprintf(file, "cmd_repeat_start:%d, cmd_repeat_count: %d, "
                       "cmd_repeat_goal:%d" EOL
                       "prev_cmd_repeat_goal: %d" EOL,
-                cmd_repeat_start, cmd_repeat_count, cmd_repeat_goal, 
+                cmd_repeat_start, cmd_repeat_count, cmd_repeat_goal,
                 prev_cmd_repeat_goal);
         fprintf(file, "Keys being repeated: ");
         for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
