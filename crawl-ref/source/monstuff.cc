@@ -4885,17 +4885,6 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
                                careful_friendly));
 }
 
-// Make sure the "comes into view" type messages are displayed before
-// special/nearby abilites are used.
-void _flush_monster_alerts(const monsters* mons)
-{
-    if (!(mons->flags & MF_WAS_IN_VIEW) && player_monster_visible(mons)
-        && you_are_delayed())
-    {
-        fire_monster_alerts();
-    }
-}
-
 //---------------------------------------------------------------
 //
 // handle_nearby_ability
@@ -4977,12 +4966,9 @@ static void _handle_nearby_ability(monsters *monster)
             && !_is_player_or_mon_sanct(monster))
         {
             if (you.can_see(monster) && you.can_see(foe))
-            {
-                _flush_monster_alerts(monster);
                 mprf("%s stares at %s.",
                      monster->name(DESC_CAP_THE).c_str(),
                      foe->name(DESC_NOCAP_THE).c_str());
-            }
 
             // Subtly different from old paralysis behaviour, but
             // it'll do.
@@ -4998,7 +4984,6 @@ static void _handle_nearby_ability(monsters *monster)
             && !mons_is_pacified(monster)
             && !_is_player_or_mon_sanct(monster))
         {
-            _flush_monster_alerts(monster);
             simple_monster_message(monster, " stares at you.");
 
             dec_mp(5 + random2avg(13, 3));
@@ -5120,8 +5105,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     {
         return (false);
     }
-
-    _flush_monster_alerts(monster);
 
     const msg_channel_type spl = (mons_friendly(monster) ? MSGCH_FRIEND_SPELL
                                                          : MSGCH_MONSTER_SPELL);
@@ -8722,6 +8705,10 @@ void seen_monster(monsters *monster)
     // set an exclusion.
     if (need_auto_exclude(monster) && !is_exclude_root(monster->pos()))
         toggle_exclude(monster->pos());
+
+    // Monster was viewed this turn
+    monster->flags |= MF_WAS_IN_VIEW;
+    monster->seen_context.clear();
 
     if (monster->flags & MF_SEEN)
         return;

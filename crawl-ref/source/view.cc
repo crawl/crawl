@@ -872,14 +872,6 @@ int get_mons_colour(const monsters *mons)
     return (col);
 }
 
-static std::set<const monsters*> monsters_seen_this_turn;
-
-static bool _mons_was_seen_this_turn(const monsters *mons)
-{
-    return (monsters_seen_this_turn.find(mons) !=
-            monsters_seen_this_turn.end());
-}
-
 static void _good_god_follower_attitude_change(monsters *monster)
 {
     if (player_is_unholy())
@@ -958,6 +950,12 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
 
 static void _handle_seen_interrupt(monsters* monster)
 {
+    if (mons_is_mimic(monster->type)
+        && !mons_is_known_mimic(monster))
+    {
+        return;
+    }
+
     activity_interrupt_data aid(monster);
     if (!monster->seen_context.empty())
         aid.context = monster->seen_context;
@@ -967,15 +965,12 @@ static void _handle_seen_interrupt(monsters* monster)
         aid.context = "newly seen";
 
     if (!mons_is_safe(monster)
-        && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
-        && !mons_is_mimic( monster->type ))
+        && !mons_class_flag(monster->type, M_NO_EXP_GAIN))
     {
         interrupt_activity( AI_SEE_MONSTER, aid );
+        monster->seen_context.clear();
     }
     seen_monster( monster );
-
-    // Monster was viewed this turn
-    monster->flags |= MF_WAS_IN_VIEW;
 }
 
 void handle_monster_shouts(monsters* monster, bool force)
@@ -1083,7 +1078,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     // and if no such entry exists then looks simply for "name".
     if (you.can_see(monster))
         suffix = " seen";
-     else
+    else
         suffix = " unseen";
 
     msg = getShoutString(key, suffix);
@@ -1226,13 +1221,14 @@ void monster_grid(bool do_updates)
 
         if (monster->alive() && mons_near(monster))
         {
+            if (mons_player_visible(monster))
+                _handle_seen_interrupt(monster);
+
             if (do_updates && (mons_is_sleeping(monster)
                                || mons_is_wandering(monster))
                 && check_awaken(monster))
             {
                 behaviour_event(monster, ME_ALERT, MHITYOU);
-                if (you.can_see(monster))
-                    _handle_seen_interrupt(monster);
                 handle_monster_shouts(monster);
             }
 
@@ -1261,22 +1257,13 @@ void monster_grid(bool do_updates)
             tile_place_monster(monster->pos().x, monster->pos().y, s, true);
 #endif
 
-            if (player_monster_visible(monster)
-                && !mons_is_submerged(monster)
-                && !mons_friendly(monster)
-                && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
-                && !mons_is_mimic(monster->type))
-            {
-                monsters_seen_this_turn.insert(monster);
-            }
-
             _good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
         }
     }
 }
 
-void fire_monster_alerts()
+void update_monsters_in_view()
 {
     unsigned int num_hostile = 0;
 
@@ -1284,29 +1271,23 @@ void fire_monster_alerts()
     {
         monsters *monster = &menv[s];
 
-        if (monster->alive() && mons_near(monster))
-        {
-            if ((player_monster_visible(monster)
-                   || _mons_was_seen_this_turn(monster))
-                && !mons_is_submerged( monster ))
-            {
-                _handle_seen_interrupt(monster);
+        if (!monster->alive())
+            continue;
 
-                if (monster->attitude == ATT_HOSTILE)
-                    num_hostile++;
-            }
-            else
-            {
-                // Monster was not viewed this turn
-                monster->flags &= ~MF_WAS_IN_VIEW;
-            }
-        }
-        else
+        monster->flags &= ~MF_WAS_IN_VIEW;
+
+        if (mons_near(monster))
         {
-            // Monster was not viewed this turn
-            monster->flags &= ~MF_WAS_IN_VIEW;
+            if (monster->attitude == ATT_HOSTILE)
+                num_hostile++;
+
+            if (player_monster_visible(monster)
+                && (!mons_is_mimic(monster->type)
+                    || mons_is_known_mimic(monster)))
+            {
+                seen_monster(monster);
+            }
         }
-        monster->seen_context.clear();
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever
@@ -1323,8 +1304,6 @@ void fire_monster_alerts()
 
         xom_is_stimulated(16 * num_hostile);
     }
-
-    monsters_seen_this_turn.clear();
 }
 
 bool check_awaken(monsters* monster)

@@ -1521,7 +1521,7 @@ static void _input()
     you.turn_is_over = false;
     _prep_input();
 
-    fire_monster_alerts();
+    update_monsters_in_view();
 
     const bool player_feels_safe = i_feel_safe();
 
