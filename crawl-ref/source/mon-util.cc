@@ -5901,15 +5901,19 @@ bool monsters::drain_exp(actor *agent)
     if (mons_near(this) && player_monster_visible(this))
         mprf("%s is drained!", name(DESC_CAP_THE).c_str());
 
-    if (one_chance_in(5))
-    {
-        hit_dice--;
-        experience = 0;
-    }
-
-    max_hit_points -= 2 + random2(3);
-
     hurt(agent, 2 + random2(3), BEAM_NEG);
+
+    if (alive())
+    {
+        if (one_chance_in(5))
+        {
+            hit_dice--;
+            experience = 0;
+        }
+
+        max_hit_points -= 2 + random2(3);
+        hit_points = std::min(max_hit_points, hit_points);
+    }
 
     return (true);
 }
@@ -5934,8 +5938,7 @@ void monsters::rot(actor *agent, int amount, int immediate)
         if (alive())
         {
             max_hit_points -= immediate * 2;
-            if (hit_points > max_hit_points)
-                hit_points = max_hit_points;
+            hit_points = std::min(max_hit_points, hit_points);
         }
     }
 
