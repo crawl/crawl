@@ -1404,14 +1404,9 @@ int mons_res_negative_energy(const monsters *mon)
 {
     const mon_holy_type holiness = mons_holiness(mon);
 
-    if (mons_is_unholy(mon)
-        || holiness == MH_NONLIVING
-        || holiness == MH_PLANT
+    if (holiness != MH_NATURAL
         || mon->type == MONS_SHADOW_DRAGON
-        || mon->type == MONS_DEATH_DRAKE
-           // TSO protects his warriors' life force
-        || mon->type == MONS_ANGEL
-        || mon->type == MONS_DAEVA)
+        || mon->type == MONS_DEATH_DRAKE)
     {
         return (3);  // to match the value for players
     }

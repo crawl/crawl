@@ -2952,7 +2952,7 @@ bool melee_attack::apply_damage_brand()
         emit_nodmg_hit_message();
 
         const int hdcheck =
-            (defender->holiness() == MH_NATURAL? random2(30) : random2(22));
+            (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
         if (mons_class_is_confusable(defender->id())
             && hdcheck >= defender->get_experience_level())
