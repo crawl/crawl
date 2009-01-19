@@ -237,7 +237,6 @@ bool mons_abyss(int mcls)
     case MONS_IRON_DEVIL:
     case MONS_IRON_GOLEM:
     case MONS_JELLY:
-    case MONS_SKELETON_LARGE:
     case MONS_LEMURE:
     case MONS_LICH:
     case MONS_LOROCYPROCA:
@@ -262,6 +261,7 @@ bool mons_abyss(int mcls)
     case MONS_SHINING_EYE:
     case MONS_SKELETAL_DRAGON:
     case MONS_SKELETAL_WARRIOR:
+    case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
     case MONS_SMOKE_DEMON:
     case MONS_SOUL_EATER:
