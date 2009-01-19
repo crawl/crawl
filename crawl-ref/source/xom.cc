@@ -1240,7 +1240,7 @@ static void _xom_zero_miscast()
     std::vector<std::string> priority;
 
     std::vector<int> inv_items;
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
         const item_def &item(you.inv[i]);
         if (is_valid_item(item) && !item_is_equipped(item)
@@ -1636,11 +1636,13 @@ static bool _xom_lose_stats()
         stat_type types[3] = {STAT_STRENGTH, STAT_DEXTERITY,
                               STAT_INTELLIGENCE};
         int tries = 0;
-        do {
+        do
+        {
             int idx = random2(3);
             stat = types[idx];
             max  = std::min(3, vals[idx] - 1);
-        } while (max < 2 && (++tries < 30));
+        }
+        while (max < 2 && (++tries < 30));
 
         if (tries >= 30)
             return (false);
@@ -1885,7 +1887,7 @@ static bool _xom_is_bad(int sever, int tension)
     return (done);
 }
 
-static char* _stat_ptrs[3]  = {&you.strength, &you.intel, &you.dex};
+static char* _stat_ptrs[3] = {&you.strength, &you.intel, &you.dex};
 
 static void _handle_accidental_death(const int orig_hp,
     const char orig_stats[],
@@ -1906,7 +1908,7 @@ static void _handle_accidental_death(const int orig_hp,
 
     const dungeon_feature_type feat = grd(you.pos());
 
-    switch(you.escaped_death_cause)
+    switch (you.escaped_death_cause)
     {
         case NUM_KILLBY:
         case KILLED_BY_LEAVING:
@@ -1962,9 +1964,9 @@ static void _handle_accidental_death(const int orig_hp,
         while (you.dex <= 0 && you.mutation[bad] > orig_mutation[bad])
             delete_mutation(bad, true, true);
     }
-    while(you.dex <= 0
-          && you.mutation[MUT_FLEXIBLE_WEAK] <
-                 orig_mutation[MUT_FLEXIBLE_WEAK])
+    while (you.dex <= 0
+           && you.mutation[MUT_FLEXIBLE_WEAK] <
+                  orig_mutation[MUT_FLEXIBLE_WEAK])
     {
         mutate(MUT_FLEXIBLE_WEAK, true, true, true);
     }
@@ -1982,8 +1984,8 @@ static void _handle_accidental_death(const int orig_hp,
         mutate(MUT_STRONG_STIFF, true, true, true);
     }
 
-    mutation_type bad_muts[3]  = { MUT_WEAK, MUT_DOPEY, MUT_CLUMSY };
-    mutation_type good_muts[3] = { MUT_STRONG, MUT_CLEVER, MUT_AGILE };
+    mutation_type bad_muts[3]  = {MUT_WEAK, MUT_DOPEY, MUT_CLUMSY};
+    mutation_type good_muts[3] = {MUT_STRONG, MUT_CLEVER, MUT_AGILE};
 
     for (int i = 0; i < 3; ++i)
     {
