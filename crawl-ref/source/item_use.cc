@@ -1898,11 +1898,13 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     {
         monsters *mon = dynamic_cast<monsters*>(victim);
 
+        if (!(mon->flags & MF_WAS_IN_VIEW))
+            mon->seen_context = "thin air";
+
         mons_clear_trapping_net(mon);
-        mon->check_redraw(oldpos);
         mon->move_to_pos(pos);
-        mon->apply_location_effects(pos);
-        mon->check_redraw(pos);
+        mon->apply_location_effects(oldpos);
+        mon->check_redraw(oldpos);
 
         const bool        seen = you.can_see(mon);
         const std::string name = mon->name(DESC_CAP_THE);
@@ -1910,8 +1912,6 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
             mprf("%s blinks!", name.c_str());
         else if (was_seen && !seen)
             mprf("%s vanishes!", name.c_str());
-        else if (!was_seen && seen)
-            mprf("%s appears from out of thin air!", name.c_str());
     }
 
     return (true);

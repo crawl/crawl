@@ -2111,14 +2111,14 @@ bool monster_blink(monsters *monster)
     if (near == monster->pos())
         return (false);
 
+    if (!(monster->flags & MF_WAS_IN_VIEW))
+        monster->seen_context = "thin air";
+
     mons_clear_trapping_net(monster);
 
     const coord_def oldplace = monster->pos();
     if (!monster->move_to_pos(near))
         return (false);
-
-    if (player_monster_visible(monster) && mons_near(monster))
-        seen_monster(monster);
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);
@@ -7521,6 +7521,7 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
 
     mon->check_redraw(c);
     mon->apply_location_effects(c);
+    m2->check_redraw(c);
     m2->apply_location_effects(n);
 
     return (false);
