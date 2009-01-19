@@ -3015,12 +3015,12 @@ void MiscastEffect::_conjuration(int severity)
             mon_msg_unseen = "Smoke appears from out of nowhere!";
 
             do_msg();
-            big_cloud( CLOUD_GREY_SMOKE, kc, kt, target->pos(),
-                       20, 7 + random2(7) );
+            big_cloud(CLOUD_GREY_SMOKE, kc, kt, target->pos(), 20,
+                      7 + random2(7));
             break;
         case 1:
-            you_msg = "A wave of violent energy washes through your body!";
-            // Monster messages needed.
+            you_msg      = "A wave of violent energy washes through your body!";
+            mon_msg_seen = "@The_monster@ lurches violently!";
             _ouch(6 + random2avg(7, 2));
             break;
         }
@@ -3030,8 +3030,8 @@ void MiscastEffect::_conjuration(int severity)
         switch (random2(2))
         {
         case 0:
-            you_msg = "Energy rips through your body!";
-            // Monster messages needed.
+            you_msg      = "Energy rips through your body!";
+            mon_msg_seen = "@The_monster@ jerks violently!";
             _ouch(9 + random2avg(17, 2));
             break;
         case 1:
@@ -3763,8 +3763,8 @@ void MiscastEffect::_necromancy(int severity)
                            " for a moment.";
             break;
         case 6:
-            you_msg = "You shiver with cold.";
-            // Monster messages needed.
+            you_msg      = "You shiver with cold.";
+            mon_msg_seen = "@The_monster@ shivers with cold.";
             break;
         case 7:
             you_msg = "You sense a malignant aura.";
@@ -3775,8 +3775,8 @@ void MiscastEffect::_necromancy(int severity)
             // care of elsewhere.
             break;
         case 9:
-            you_msg = "You feel very uncomfortable.";
-            // Monster messages needed.
+            you_msg      = "You feel very uncomfortable.";
+            mon_msg_seen = "@The_monster@ grimaces horribly.";
             break;
         }
         do_msg();
@@ -4173,8 +4173,8 @@ void MiscastEffect::_fire(int severity)
             mon_msg_unseen = "Smoke appears out of nowhere!";
 
             do_msg();
-            big_cloud( random_smoke_type(), kc, kt,
-                       target->pos(), 20, 7 + random2(7) );
+            big_cloud(random_smoke_type(), kc, kt, target->pos(), 20,
+                      7 + random2(7));
             break;
 
         case 1:
@@ -4403,8 +4403,7 @@ void MiscastEffect::_ice(int severity)
                              "@hands@!";
 
             do_msg();
-            big_cloud(CLOUD_COLD, kc, kt,
-                      target->pos(), 20, 8 + random2(4));
+            big_cloud(CLOUD_COLD, kc, kt, target->pos(), 20, 8 + random2(4));
             break;
         }
         break;
@@ -4431,13 +4430,16 @@ void MiscastEffect::_earth(int severity)
             // Monster messages needed.
             break;
         case 1:
-            you_msg      = "You are showered with tiny particles of grit.";
-            mon_msg_seen = "@The_monster@ is showered with tiny particles "
-                           "of grit.";
+            you_msg        = "You are showered with tiny particles of grit.";
+            mon_msg_seen   = "@The_monster@ is showered with tiny particles "
+                             "of grit.";
+            mon_msg_unseen = "Tiny particles of grit hang in the air for a "
+                             "moment.";
             break;
         case 2:
-            you_msg      = "Sand pours from your @hands@.";
-            mon_msg_seen = "Sand pours from @the_monster@'s @hands@.";
+            you_msg        = "Sand pours from your @hands@.";
+            mon_msg_seen   = "Sand pours from @the_monster@'s @hands@.";
+            mon_msg_unseen = "Sand pours from out of thin air.";
             break;
         case 3:
             you_msg = "You feel a surge of energy from the ground.";
