@@ -615,7 +615,7 @@ A small dragon, puffing clouds of smoke.
 %%%%
 flaming corpse
 
-The remains of an adventurer who was burned to death, covered in unquenchable fire.  It now rushes madly through the dungeon seeking others to ignite.
+The remains of an adventurer who was burned to death, covered in unquenchable fire.  It now rushes madly through the dungeon, seeking others to ignite.
 %%%%
 flayed ghost
 
