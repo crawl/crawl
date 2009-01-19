@@ -2259,12 +2259,12 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
     case BEAM_HOLY:
     {
         // Cleansing flame.
-        const int rcf = monster->res_cleansing_flame(pbolt.agent());
-        if (rcf > 0)
+        const int rhe = monster->res_holy_energy(pbolt.agent());
+        if (rhe > 0)
             hurted = 0;
-        else if (rcf == 0)
+        else if (rhe == 0)
             hurted /= 2;
-        else if (rcf < -1)
+        else if (rhe < -1)
             hurted = (hurted * 3) / 2;
 
         if (doFlavouredEffects)
@@ -3207,7 +3207,7 @@ bool bolt::is_harmless(const monsters *mon) const
         return (true);
 
     case BEAM_HOLY:
-        return (mon->res_cleansing_flame(agent()) > 0);
+        return (mon->res_holy_energy(agent()) > 0);
 
     case BEAM_STEAM:
         return (mons_res_steam(mon) >= 3);
@@ -5365,7 +5365,7 @@ bool bolt::nasty_to(const monsters *mon) const
 {
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
-        return (mon->res_cleansing_flame(agent()) <= 0);
+        return (mon->res_holy_energy(agent()) <= 0);
 
     // Take care of other non-enchantments.
     if (!is_enchantment())
@@ -5596,7 +5596,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_STEAM: return("steam");
 
     case BEAM_ENERGY: return("energy");
-    case BEAM_HOLY: return("holy power");
+    case BEAM_HOLY: return("holy energy");
     case BEAM_FRAG: return("fragments");
     case BEAM_LAVA: return("magma");
     case BEAM_ICE: return("ice");

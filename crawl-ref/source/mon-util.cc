@@ -5793,7 +5793,7 @@ int monsters::res_sticky_flame() const
     return (mons_res_sticky_flame(this));
 }
 
-int monsters::res_cleansing_flame(const actor *attacker) const
+int monsters::res_holy_energy(const actor *attacker) const
 {
     if (mons_is_unholy(this))
         return (-2);

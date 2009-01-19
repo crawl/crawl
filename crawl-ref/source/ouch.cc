@@ -220,12 +220,12 @@ int check_your_resists(int hurted, beam_type flavour)
     case BEAM_HOLY:
     {
         // Cleansing flame.
-        const int rcf = you.res_cleansing_flame(NULL);
-        if (rcf > 0)
+        const int rhe = you.res_holy_energy(NULL);
+        if (rhe > 0)
             hurted = 0;
-        else if (rcf == 0)
+        else if (rhe == 0)
             hurted /= 2;
-        else if (rcf < -1)
+        else if (rhe < -1)
             hurted = (hurted * 3) / 2;
 
         if (hurted == 0)

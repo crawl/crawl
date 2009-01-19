@@ -2048,6 +2048,14 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
     return (res);
 }
 
+bool melee_attack::defender_is_unholy()
+{
+    if (defender->atype() == ACT_PLAYER)
+        return (player_is_unholy());
+    else
+        return (mons_is_unholy(defender_as_monster()));
+}
+
 void melee_attack::drain_defender()
 {
     if (defender->atype() == ACT_MONSTER && one_chance_in(3))
@@ -2768,11 +2776,8 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_HOLY_WRATH:
-        if (defender->holiness() == MH_UNDEAD
-            || defender->holiness() == MH_DEMONIC)
-        {
+        if (defender_is_unholy())
             special_damage = 1 + (random2(damage_done * 15) / 10);
-        }
 
         if (special_damage && defender_visible)
         {
