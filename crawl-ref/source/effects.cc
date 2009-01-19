@@ -329,9 +329,6 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.effect_known  = known;
     beam.affects_items = (caster != IMMOLATION_SCROLL);
 
-    const monsters *atk = (attacker->atype() == ACT_PLAYER ? NULL :
-                           dynamic_cast<const monsters*>(attacker));
-
     if (caster == IMMOLATION_GENERIC || attacker == NULL)
     {
         beam.thrower     = KILL_MISC;
@@ -345,7 +342,8 @@ void immolation(int pow, int caster, coord_def where, bool known,
     else
     {
         beam.thrower     = KILL_MON;
-        beam.beam_source = monster_index(atk);
+        beam.beam_source =
+            monster_index(dynamic_cast<const monsters*>(attacker));
     }
 
     beam.explode();
@@ -380,11 +378,7 @@ void cleansing_flame(int pow, int caster, coord_def where,
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
-    const monsters *atk = (attacker->atype() == ACT_PLAYER ? NULL :
-                           dynamic_cast<const monsters*>(attacker));
-
-    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO
-        || attacker == NULL)
+    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
     {
         beam.thrower     = KILL_MISC;
         beam.beam_source = NON_MONSTER;
@@ -397,7 +391,8 @@ void cleansing_flame(int pow, int caster, coord_def where,
     else
     {
         beam.thrower     = KILL_MON;
-        beam.beam_source = monster_index(atk);
+        beam.beam_source =
+            monster_index(dynamic_cast<const monsters*>(attacker));
     }
 
     beam.explode();
