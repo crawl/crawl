@@ -75,8 +75,13 @@ int holy_word_player(int pow, int caster)
 
     const char *aux = "holy word";
 
-    if (caster < 0)
+    kill_method_type type = KILLED_BY_MONSTER;
+    if (invalid_monster_index(caster))
     {
+        type = KILLED_BY_SOMETHING;
+        if (crawl_state.is_god_acting())
+            type = KILLED_BY_DIVINE_WRATH;
+
         switch (caster)
         {
         case HOLY_WORD_SCROLL:
@@ -93,10 +98,7 @@ int holy_word_player(int pow, int caster)
         }
     }
 
-    ouch(hploss, caster,
-         (caster != HOLY_WORD_GENERIC) ? KILLED_BY_MONSTER
-                                       : KILLED_BY_SOMETHING,
-         aux);
+    ouch(hploss, caster, type, aux);
 
     return 1;
 }
