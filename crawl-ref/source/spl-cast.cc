@@ -2379,6 +2379,8 @@ void MiscastEffect::init()
                || source == MISC_UNKNOWN_MISCAST
                || (source < 0 && -source < NUM_GODS));
 
+        act_source = target;
+
         kc = KC_OTHER;
         kt = KILL_MISC;
 
