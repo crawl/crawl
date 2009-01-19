@@ -1230,7 +1230,9 @@ void monster_grid(bool do_updates)
                                || mons_is_wandering(monster))
                 && check_awaken(monster))
             {
-                behaviour_event( monster, ME_ALERT, MHITYOU );
+                behaviour_event(monster, ME_ALERT, MHITYOU);
+                if (you.can_see(monster))
+                    _handle_seen_interrupt(monster);
                 handle_monster_shouts(monster);
             }
 
