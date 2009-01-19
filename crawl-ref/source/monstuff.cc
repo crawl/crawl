@@ -1039,8 +1039,8 @@ int monster_die(monsters *monster, killer_type killer,
     if (mons_near(monster) || wizard)
         remove_auto_exclude(monster);
 
-          int summon_type    = 0;
-          int duration       = 0;
+          int  summon_type   = 0;
+          int  duration      = 0;
     const bool summoned      = mons_is_summoned(monster, &duration,
                                                 &summon_type);
     const int monster_killed = monster_index(monster);
@@ -1050,6 +1050,8 @@ int monster_die(monsters *monster, killer_type killer,
     const bool drop_items    = !hard_reset;
 
     const bool mons_reset( killer == KILL_RESET || killer == KILL_DISMISSED );
+
+    const bool submerged     = monster->submerged();
 
     bool in_transit          = false;
 
@@ -1129,7 +1131,8 @@ int monster_die(monsters *monster, killer_type killer,
             silent = true;
         }
 
-        if (monster->type == MONS_FIRE_VORTEX && !wizard && !mons_reset)
+        if (monster->type == MONS_FIRE_VORTEX && !wizard && !mons_reset
+            && !submerged)
         {
             place_cloud(CLOUD_FIRE, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
@@ -1148,7 +1151,7 @@ int monster_die(monsters *monster, killer_type killer,
             silent = true;
         }
 
-        if (!wizard && !mons_reset)
+        if (!wizard && !mons_reset && !submerged)
             place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
 
@@ -1607,7 +1610,9 @@ int monster_die(monsters *monster, killer_type killer,
             _mummy_curse(monster, killer, killer_index);
     }
 
-    _monster_die_cloud(monster, !mons_reset, silent, summoned, summon_type);
+    if (!wizard && !submerged)
+        _monster_die_cloud(monster, !mons_reset, silent, summoned,
+                           summon_type);
 
     int corpse = -1;
     if (!mons_reset)
