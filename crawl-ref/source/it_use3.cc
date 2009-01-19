@@ -885,21 +885,7 @@ void tome_of_power(int slot)
             dec_inv_item_quantity( slot, 1 );
         }
 
-        bolt beam;
-
-        beam.flavour       = BEAM_FIRE;
-        beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage        = dice_def(3, 15);
-        beam.target        = you.pos();
-        beam.name          = "fiery explosion";
-        beam.colour        = RED;
-        beam.beam_source   = NON_MONSTER;
-        beam.thrower       = KILL_YOU;
-        beam.aux_source    = "an exploding Tome of Destruction";
-        beam.ex_size       = 2;
-        beam.is_explosion  = true;
-
-        beam.explode();
+        immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
 
         xom_is_stimulated(255);
     }

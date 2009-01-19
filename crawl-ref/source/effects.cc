@@ -290,7 +290,8 @@ int torment(int caster, const coord_def& where)
     return apply_area_within_radius(torment_monsters, where, 0, 8, caster);
 }
 
-void immolation(int caster, bool known)
+void immolation(int pow, int caster, coord_def where, bool known,
+                actor *attacker)
 {
     ASSERT(!crawl_state.arena);
 
@@ -309,27 +310,49 @@ void immolation(int caster, bool known)
         case IMMOLATION_SPELL:
             aux = "a fiery explosion";
             break;
+
+        case IMMOLATION_TOME:
+            aux = "an exploding Tome of Destruction";
+            break;
         }
     }
 
     beam.flavour       = BEAM_FIRE;
     beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.damage        = dice_def(3, 10);
-    beam.target        = you.pos();
+    beam.damage        = dice_def(3, pow);
+    beam.target        = where;
     beam.name          = "fiery explosion";
     beam.colour        = RED;
-    beam.beam_source   = NON_MONSTER;
-    beam.thrower       = (caster == IMMOLATION_GENERIC) ? KILL_MISC : KILL_YOU;
     beam.aux_source    = aux;
     beam.ex_size       = 2;
     beam.is_explosion  = true;
     beam.effect_known  = known;
     beam.affects_items = (caster != IMMOLATION_SCROLL);
 
+    const monsters *atk = (attacker->atype() == ACT_PLAYER ? NULL :
+                           dynamic_cast<const monsters*>(attacker));
+
+    if (caster == IMMOLATION_GENERIC)
+    {
+        beam.thrower     = KILL_MISC;
+        beam.beam_source = NON_MONSTER;
+    }
+    else if (attacker == NULL)
+    {
+        beam.thrower     = KILL_YOU;
+        beam.beam_source = NON_MONSTER;
+    }
+    else
+    {
+        beam.thrower     = KILL_MON;
+        beam.beam_source = monster_index(atk);
+    }
+
     beam.explode();
 }
 
-void cleansing_flame(int pow, int caster)
+void cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker)
 {
     ASSERT(!crawl_state.arena);
 
@@ -353,13 +376,28 @@ void cleansing_flame(int pow, int caster)
     beam.target       = you.pos();
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
-    beam.thrower      = (caster == CLEANSING_FLAME_GENERIC
-                            || caster == CLEANSING_FLAME_TSO) ? KILL_MISC
-                                                              : KILL_YOU;
-    beam.beam_source  = NON_MONSTER;
     beam.aux_source   = aux;
     beam.ex_size      = 2;
     beam.is_explosion = true;
+
+    const monsters *atk = (attacker->atype() == ACT_PLAYER ? NULL :
+                           dynamic_cast<const monsters*>(attacker));
+
+    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
+    {
+        beam.thrower     = KILL_MISC;
+        beam.beam_source = NON_MONSTER;
+    }
+    else if (attacker == NULL)
+    {
+        beam.thrower     = KILL_YOU;
+        beam.beam_source = NON_MONSTER;
+    }
+    else
+    {
+        beam.thrower     = KILL_MON;
+        beam.beam_source = monster_index(atk);
+    }
 
     beam.explode();
 }

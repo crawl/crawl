@@ -5562,7 +5562,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
                            GOD_SHINING_ONE);
 
         cleansing_flame(20 + (you.experience_level * 7) / 3,
-                        CLEANSING_FLAME_TSO);
+                        CLEANSING_FLAME_TSO, you.pos());
     }
 }
 

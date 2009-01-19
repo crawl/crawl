@@ -1504,7 +1504,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TSO_CLEANSING_FLAME:
         cleansing_flame(10 + (you.skills[SK_INVOCATIONS] * 7) / 6,
-                        CLEANSING_FLAME_INVOCATION);
+                        CLEANSING_FLAME_INVOCATION, you.pos(), &you);
         exercise(SK_INVOCATIONS, 3 + random2(6));
         break;
 

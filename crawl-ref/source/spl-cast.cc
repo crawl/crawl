@@ -1354,7 +1354,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_FLAME_OF_CLEANSING:
-        cleansing_flame(powc, CLEANSING_FLAME_SPELL);
+        cleansing_flame(powc, CLEANSING_FLAME_SPELL, you.pos(), &you);
         break;
 
     case SPELL_HOLY_WORD:

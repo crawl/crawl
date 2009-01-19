@@ -115,9 +115,11 @@ int torment_player(int pow, int caster);
 int torment_monsters(coord_def where, int pow, int caster,
                      actor *attacker = NULL);
 
-void immolation(int caster, bool known = false);
+void immolation(int pow, int caster, coord_def where, bool known = false,
+                actor *attacker = NULL);
 
-void cleansing_flame(int pow, int caster);
+void cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker = NULL);
 
 // called from: debug
 void change_labyrinth(bool msg = false);

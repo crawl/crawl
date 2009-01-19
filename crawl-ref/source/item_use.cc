@@ -4290,7 +4290,7 @@ static bool _vorpalise_weapon()
 
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        immolation(IMMOLATION_SPELL);
+        immolation(10, IMMOLATION_SPELL, you.pos(), true, &you);
         break;
 
     case SPWPN_FREEZING:
@@ -4908,7 +4908,7 @@ void read_scroll(int slot)
         set_ident_type(scroll, ID_KNOWN_TYPE);
         dec_inv_item_quantity(item_slot, 1);
 
-        immolation(IMMOLATION_SCROLL, alreadyknown);
+        immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);
         break;
     }
 
