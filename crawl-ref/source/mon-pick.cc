@@ -201,6 +201,7 @@ bool mons_abyss(int mcls)
     case MONS_BLUE_DEVIL:
     case MONS_BRAIN_WORM:
     case MONS_CACODEMON:
+    case MONS_CHAOS_SPAWN:
     case MONS_CLAY_GOLEM:
     case MONS_CRYSTAL_GOLEM:
     case MONS_DAEVA:
@@ -377,6 +378,7 @@ int mons_rare_abyss(int mcls)
     case MONS_BLUE_DEATH:
     case MONS_BLUE_DEVIL:
     case MONS_CACODEMON:
+    case MONS_CHAOS_SPAWN:
     case MONS_DEMONIC_CRAWLER:
     case MONS_EXECUTIONER:
     case MONS_GREEN_DEATH:
