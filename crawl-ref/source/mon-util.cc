@@ -1396,8 +1396,13 @@ int mons_res_cold(const monsters *mon)
 
 int mons_res_miasma(const monsters *mon)
 {
-    return (mons_holiness(mon) != MH_NATURAL
-            || mon->type == MONS_DEATH_DRAKE ? 3 : 0);
+    if (mons_holiness(mon) != MH_NATURAL
+        || mon->type == MONS_DEATH_DRAKE)
+    {
+        return (3);
+    }
+
+    return (0);
 }
 
 int mons_res_negative_energy(const monsters *mon)
