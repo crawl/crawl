@@ -1076,7 +1076,11 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
-    if (you.can_see(monster))
+    // We don't use "you.can_see(monster)" here since that would return
+    // false for submerged monsters, but submerged monsters will be forced
+    // to surface before they shout, thus removing that source of
+    // non-visibility.
+    if (mons_near(monster) && (!monster->invisible() || player_see_invis()))
         suffix = " seen";
     else
         suffix = " unseen";
@@ -1131,7 +1135,6 @@ void handle_monster_shouts(monsters* monster, bool force)
     }
     else
     {
-        msg = do_mon_str_replacements(msg, monster, s_type);
         msg_channel_type channel = MSGCH_TALK;
 
         std::string param = "";
@@ -1166,6 +1169,7 @@ void handle_monster_shouts(monsters* monster, bool force)
             }
         }
 
+        msg = do_mon_str_replacements(msg, monster, s_type);
         msg::streams(channel) << msg << std::endl;
     }
 
@@ -1221,7 +1225,7 @@ void monster_grid(bool do_updates)
 
         if (monster->alive() && mons_near(monster))
         {
-            if (mons_player_visible(monster))
+            if (player_monster_visible(monster))
                 _handle_seen_interrupt(monster);
 
             if (do_updates && (mons_is_sleeping(monster)
