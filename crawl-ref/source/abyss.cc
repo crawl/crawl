@@ -391,6 +391,7 @@ static void _abyss_lose_monster(monsters &mons)
     if (mons.needs_transit())
         mons.set_transit( level_id(LEVEL_ABYSS) );
 
+    mons.destroy_inventory();
     mons.reset();
 }
 
