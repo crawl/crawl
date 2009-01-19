@@ -1402,9 +1402,7 @@ int mons_res_miasma(const monsters *mon)
 
 int mons_res_negative_energy(const monsters *mon)
 {
-    const mon_holy_type holiness = mons_holiness(mon);
-
-    if (holiness != MH_NATURAL
+    if (mons_holiness(mon) != MH_NATURAL
         || mon->type == MONS_SHADOW_DRAGON
         || mon->type == MONS_DEATH_DRAKE)
     {
