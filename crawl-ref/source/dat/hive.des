@@ -47,7 +47,7 @@ MONS: nothing / killer bee / killer bee larva
 MONS: queen bee
 ORIENT: float
 MAP
-1111..@.     
+1111..@.
 1211....
 1111....
 ............1
@@ -305,7 +305,7 @@ MAP
 ENDMAP
 
 NAME:    lemuel_Hive_Zombies
-DEPTH:   Hive:1-3
+DEPTH:   Hive:1
 ORIENT:  float
 TAGS:    no_monster_gen
 MONS:    killer bee zombie / weight:2 killer bee larva zombie
@@ -390,33 +390,34 @@ MAP
 .11WwwXwXwwW11.
 ..11WwwXwwW11..
 ...11WwwwW11...
- ...1111111... 
-  ....111....  
+ ...1111111...
+  ....111....
 ENDMAP
 
-NAME:   lemuel_wasp_nest
-DEPTH:  Hive:2-3
-MONS:   yellow wasp / weight:2 red wasp
-WEIGHT: 1
-SUBST:  1=1 .:15
-SUBST:  ?=a.
-MAP
-     a?@?a
-     a?.?a
-  aaaaa.aaaaa
- aa111a.a111aa
-aa111aa.aa111aa
-a111aaa.aaa111a
-a?1.??a.a??.1?a
-aa?...a.a...?aa
- aaa?.....?aaa
-   aaa?.?aaa
-     aa.aa
-      a.a
-      a.a
-      a*a
-      aaa
-ENDMAP
+# Cannot use this now the two middle Hive levels have been chopped. (jpeg)
+#NAME:   lemuel_wasp_nest
+#DEPTH:  Hive:2-3
+#MONS:   yellow wasp / weight:2 red wasp
+#WEIGHT: 1
+#SUBST:  1=1 .:15
+#SUBST:  ?=a.
+#MAP
+#     a?@?a
+#     a?.?a
+#  aaaaa.aaaaa
+# aa111a.a111aa
+#aa111aa.aa111aa
+#a111aaa.aaa111a
+#a?1.??a.a??.1?a
+#aa?...a.a...?aa
+# aaa?.....?aaa
+#   aaa?.?aaa
+#     aa.aa
+#      a.a
+#      a.a
+#      a*a
+#      aaa
+#ENDMAP
 
 NAME:   lemuel_hive_grid_a
 DEPTH:  Hive:*
@@ -469,10 +470,10 @@ ENDMAP
 ##############################################################################
 
 ############################################################################
-# Hive:4 beehive
+# Hive:2 beehive
 #
 NAME:   beehive
-PLACE:  Hive:4
+PLACE:  Hive:2
 ORIENT: encompass
 MONS:   queen bee, killer bee, killer bee larva, plant, yellow wasp
 MONS:   random, random

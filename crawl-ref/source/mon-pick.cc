@@ -1958,7 +1958,7 @@ int mons_hive_level(int mcls)
         break;
 
     case MONS_KILLER_BEE_LARVA:
-        mlev += 2;
+        mlev++;
         break;
 
     default:
