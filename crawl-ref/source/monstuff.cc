@@ -6796,6 +6796,10 @@ static void _handle_monster_move(int i, monsters *monster)
         if (!monster->alive())
             break;
 
+        // If the monster is about to do something then its last seen_context
+        // is out of date.
+        monster->seen_context.clear();
+
 #if DEBUG_MONS_SCAN
         if (!monster_was_floating
             && mgrd(monster->pos()) != monster->mindex())

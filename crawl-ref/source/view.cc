@@ -968,7 +968,6 @@ static void _handle_seen_interrupt(monsters* monster)
         && !mons_class_flag(monster->type, M_NO_EXP_GAIN))
     {
         interrupt_activity( AI_SEE_MONSTER, aid );
-        monster->seen_context.clear();
     }
     seen_monster( monster );
 }
@@ -1279,6 +1278,10 @@ void update_monsters_in_view()
             continue;
 
         monster->flags &= ~MF_WAS_IN_VIEW;
+
+        // If the monster hasn't been seen by the time that the player
+        // gets control back then seen_context is out of date.
+        monster->seen_context.clear();
 
         if (mons_near(monster))
         {
