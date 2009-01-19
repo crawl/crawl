@@ -1279,8 +1279,8 @@ void TilesFramework::update_inventory()
     int max_pack_row = (ENDOFPACK-1) / mx + 1;
     int max_pack_items = max_pack_row * mx;
 
-    bool shown[ENDOFPACK];
-    memset(shown, 0, sizeof(shown));
+    bool inv_shown[ENDOFPACK];
+    memset(inv_shown, 0, sizeof(inv_shown));
 
     int num_ground = 0;
     for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
@@ -1315,7 +1315,7 @@ void TilesFramework::update_inventory()
             if ((int)inv.size() >= max_pack_items)
                 break;
 
-            if (shown[i]
+            if (inv_shown[i]
                 || !is_valid_item(you.inv[i])
                 || you.inv[i].quantity == 0
                 || (!show_any && you.inv[i].base_type != type))
@@ -1338,7 +1338,7 @@ void TilesFramework::update_inventory()
                 }
             }
 
-            shown[i] = true;
+            inv_shown[i] = true;
             inv.push_back(desc);
         }
     }
@@ -1391,6 +1391,8 @@ void TilesFramework::update_inventory()
     }
 
     // Then, as many ground items as we can fit.
+    bool ground_shown[MAX_ITEMS];
+    memset(ground_shown, 0, sizeof(ground_shown));
     for (unsigned int c = 0; c <= show_types_len; c++)
     {
         if ((int)inv.size() >= mx * my)
@@ -1412,12 +1414,13 @@ void TilesFramework::update_inventory()
             if ((int)inv.size() >= mx * my)
                 break;
 
-            if (!show_any && mitm[i].base_type != type)
+            if (ground_shown[i] || !show_any && mitm[i].base_type != type)
                 continue;
 
             InventoryTile desc;
             _fill_item_info(desc, mitm[i]);
             desc.idx = i;
+            ground_shown[i] = true;
 
             inv.push_back(desc);
         }
