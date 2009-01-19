@@ -2050,7 +2050,7 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
 
 void melee_attack::drain_defender()
 {
-    if (defender->atype() == ACT_MONSTER || one_chance_in(3))
+    if (defender->atype() == ACT_MONSTER && one_chance_in(3))
         return;
 
     special_damage = 1 + random2(damage_done)
