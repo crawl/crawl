@@ -400,9 +400,10 @@ void game_state::dec_mon_acting(monsters* mon)
 
     mon_act = NULL;
 
-    if (mon_act_stack.size() > 0)
+    const unsigned int size = mon_act_stack.size();
+    if (size > 0)
     {
-        mon_act = *(mon_act_stack.end());
+        mon_act = mon_act_stack[size - 1];
         ASSERT(!invalid_monster(mon_act));
         mon_act_stack.pop_back();
     }
