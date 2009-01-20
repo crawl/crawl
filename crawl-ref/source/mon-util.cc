@@ -554,10 +554,10 @@ bool mons_is_native_in_branch(const monsters *monster,
     switch (branch)
     {
     case BRANCH_ELVEN_HALLS:
-        return (mons_species(monster->type) == MONS_ELF);
+        return (mons_genus(monster->type) == MONS_ELF);
 
     case BRANCH_ORCISH_MINES:
-        return (mons_species(monster->type) == MONS_ORC);
+        return (mons_genus(monster->type) == MONS_ORC);
 
     case BRANCH_SHOALS:
         return (mons_species(monster->type) == MONS_CYCLOPS
@@ -566,18 +566,23 @@ bool mons_is_native_in_branch(const monsters *monster,
                 || monster->type == MONS_HARPY);
 
     case BRANCH_SLIME_PITS:
-        return (mons_species(monster->type) == MONS_JELLY);
+        return (mons_genus(monster->type) == MONS_JELLY);
 
     case BRANCH_SNAKE_PIT:
-        return (mons_species(monster->type) == MONS_NAGA
-                || mons_species(monster->type) == MONS_SNAKE);
+        return (mons_genus(monster->type) == MONS_NAGA
+                || mons_genus(monster->type) == MONS_SNAKE);
 
     case BRANCH_HALL_OF_ZOT:
-        return (mons_species(monster->type) == MONS_DRACONIAN
-                || monster->type == MONS_ORB_GUARDIAN);
+        return (mons_genus(monster->type) == MONS_DRACONIAN
+                || monster->type == MONS_ORB_GUARDIAN
+                || monster->type == MONS_ORB_OF_FIRE
+                || monster->type == MONS_DEATH_COB);
+
+    case BRANCH_CRYPT:
+        return (mons_holiness(monster) == MH_UNDEAD);
 
     case BRANCH_TOMB:
-        return (mons_species(monster->type) == MONS_MUMMY);
+        return (mons_genus(monster->type) == MONS_MUMMY);
 
     case BRANCH_HIVE:
         return (monster->type == MONS_KILLER_BEE_LARVA
@@ -7606,6 +7611,24 @@ void monsters::apply_location_effects(const coord_def &oldpos)
 
         if (type == MONS_TRAPDOOR_SPIDER)
             behaviour_event(this, ME_EVAL);
+    }
+
+    unsigned long &prop = env.map(pos()).property;
+
+    if (prop & FPROP_BLOODY)
+    {
+        monster_type genus = mons_genus(type);
+
+        if (genus == MONS_JELLY || genus == MONS_GIANT_SLUG)
+        {
+            prop &= ~FPROP_BLOODY;
+            if (see_grid(pos()) && !visible_to(&you))
+            {
+               std::string desc = 
+                   feature_description(pos(), false, DESC_NOCAP_THE, false);
+               mprf("The bloodstain on %s disappears!", desc.c_str());
+            }
+        }
     }
 }
 
