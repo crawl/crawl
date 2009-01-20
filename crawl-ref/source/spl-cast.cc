@@ -3112,8 +3112,9 @@ void MiscastEffect::_enchantment(int severity)
                            " energy!";
             break;
         case 2:
-            you_msg = "Multicolored lights dance before your eyes!";
-            // Monster messages needed.
+            you_msg        = "Multicolored lights dance before your eyes!";
+            mon_msg_seen   = "Multicolored lights dance around @the_monster@!";
+            mon_msg_unseen = "Multicolored lights dance in the air!";
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";
@@ -3650,8 +3651,8 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(3))
         {
         case 0:
-            mpr( forget_spell() ? "You have forgotten a spell!"
-                                : "You get a splitting headache." );
+            mpr(forget_spell() ? "You have forgotten a spell!"
+                               : "You get a splitting headache.");
             break;
         case 1:
             mpr("You feel completely lost.");
@@ -3796,8 +3797,8 @@ void MiscastEffect::_necromancy(int severity)
             }
             break;
         case 1:
-            you_msg = "You feel horribly lethargic.";
-            // Monster messages needed.
+            you_msg      = "You feel horribly lethargic.";
+            mon_msg_seen = "@The_monster@ looks incredibly listless.";
             _potion_effect(POT_SLOWING, 15);
             break;
         case 2:
@@ -3962,8 +3963,9 @@ void MiscastEffect::_transmutation(int severity)
             mon_msg_unseen = "The thin air crackles with energy!";
             break;
         case 2:
-            you_msg = "Multicolored lights dance before your eyes!";
-            // Monster messages needed.
+            you_msg        = "Multicolored lights dance before your eyes!";
+            mon_msg_seen   = "Multicolored lights dance around @the_monster@!";
+            mon_msg_unseen = "Multicolored lights dance in the air!";
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";
@@ -4459,12 +4461,13 @@ void MiscastEffect::_earth(int severity)
             // Monster messages needed.
             break;
         case 6:
-            you_msg = "You feel momentarily lethargic.";
-            // Monster messages needed.
+            you_msg      = "You feel momentarily lethargic.";
+            mon_msg_seen = "@The_monster@ looks momentarily listless.";
             break;
         case 7:
-            you_msg = "Motes of dust swirl before your eyes.";
-            // Monster messages needed.
+            you_msg        = "Motes of dust swirl before your eyes.";
+            mon_msg_seen   = "Motes of dust swirl around @the_monster@.";
+            mon_msg_unseen = "Motes of dust swirl around in the air.";
             break;
         case 8:
             // Set nothing; canned_msg(MSG_NOTHING_HAPPENS) will be taken
