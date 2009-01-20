@@ -238,14 +238,14 @@ std::string channel_to_str( int channel )
 
 static int _str_to_book( const std::string& str )
 {
-    if (str == "fire" || str == "flame")
-        return SBT_FIRE;
+    if (str == "flame" || str == "fire")
+        return (SBT_FIRE);
     if (str == "cold" || str == "ice")
-        return SBT_COLD;
+        return (SBT_COLD);
     if (str == "summ" || str == "summoning")
-        return SBT_SUMM;
+        return (SBT_SUMM);
     if (str == "random")
-        return SBT_RANDOM;
+        return (SBT_RANDOM);
 
     return (SBT_NO_SELECTION);
 }
@@ -1286,7 +1286,7 @@ static void write_newgame_options(FILE *f)
                 lowercase_string(god_name(Options.prev_pr)).c_str());
     }
 
-    if (Options.prev_book != SBT_NO_SELECTION )
+    if (Options.prev_book != SBT_NO_SELECTION)
     {
         fprintf(f, "book = %s\n",
                 Options.prev_book == SBT_FIRE ? "fire" :

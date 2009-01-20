@@ -81,7 +81,6 @@ static char_choice_restriction _class_allowed(species_type speci,
 static bool _is_good_combination( species_type spc, job_type cls,
                                   bool good = false);
 static bool _validate_player_name(bool verbose);
-static bool _choose_weapon(void);
 static void _enter_player_name(bool blankOK);
 static void _give_basic_knowledge(job_type which_job);
 static void _give_basic_spells(job_type which_job);
@@ -2358,7 +2357,7 @@ static bool _choose_weapon()
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
 
-        if (Options.prev_weapon == WPN_RANDOM || prevmatch)
+        if (prevmatch || Options.prev_weapon == WPN_RANDOM)
         {
             cprintf("; Enter - %s",
                     Options.prev_weapon == WPN_RANDOM  ? "Random" :
