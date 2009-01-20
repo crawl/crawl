@@ -1732,6 +1732,8 @@ void mark_items_non_pickup_at(const coord_def &pos)
 // calling code that "obj" is possibly modified.
 bool move_item_to_grid( int *const obj, const coord_def& p )
 {
+    ASSERT(in_bounds(p));
+
     int& ob(*obj);
     // Must be a valid reference to a valid object.
     if (ob == NON_ITEM || !is_valid_item( mitm[ob] ))
@@ -1832,6 +1834,8 @@ void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
 bool copy_item_to_grid( const item_def &item, const coord_def& p,
                         int quant_drop, bool mark_dropped )
 {
+    ASSERT(in_bounds(p));
+
     if (quant_drop == 0)
         return (false);
 
