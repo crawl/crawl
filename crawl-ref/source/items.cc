@@ -399,7 +399,7 @@ void unlink_item( int dest )
     }
     else
     {
-        ASSERT(in_bounds(mitm[dest].pos));
+        ASSERT(in_bounds(mitm[dest].pos) || is_shop_item(mitm[dest]));
 
         // Linked item on map:
         //

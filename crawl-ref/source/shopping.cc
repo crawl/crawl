@@ -1794,3 +1794,8 @@ std::string shop_name(const coord_def& where)
     return (sh_name);
 }
 
+bool is_shop_item(const item_def &item)
+{
+    return (item.pos.x == 0 && item.pos.y >= 5
+            && item.pos.y < (MAX_SHOPS + 5));
+}

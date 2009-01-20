@@ -27,4 +27,5 @@ std::string shop_name(const coord_def& where, bool add_stop);
 
 bool shoptype_identifies_stock(shop_type type);
 
+bool is_shop_item(const item_def &item);
 #endif
