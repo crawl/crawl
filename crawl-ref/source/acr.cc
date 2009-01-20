@@ -494,7 +494,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case '$':
         you.gold += 1000;
-        you.redraw_gold = true;
         if (!Options.show_gold_turns)
             mprf("You now have %d gold.", you.gold);
         break;
@@ -4006,7 +4005,6 @@ static bool _initialise(void)
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
     you.redraw_experience   = true;
-    you.redraw_gold         = true;
     you.redraw_quiver       = true;
     you.wield_change        = true;
 

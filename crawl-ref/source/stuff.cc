@@ -796,7 +796,6 @@ void redraw_screen(void)
     you.redraw_dexterity    = true;
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
-    you.redraw_gold         = true;
     you.redraw_experience   = true;
     you.wield_change        = true;
     you.redraw_quiver       = true;

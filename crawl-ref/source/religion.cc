@@ -6277,7 +6277,6 @@ void offer_items()
         you.attribute[ATTR_DONATIONS] += donation_cost;
 
         you.gold -= donation_cost;
-        you.redraw_gold = true;
 
         if (donation < 1)
         {

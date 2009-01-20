@@ -806,8 +806,6 @@ public:
   bool redraw_dexterity;
   bool redraw_experience;
   bool redraw_armour_class;
-
-  bool redraw_gold;
   bool redraw_evasion;
 
   unsigned char flash_colour;
