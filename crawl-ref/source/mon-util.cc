@@ -7583,9 +7583,6 @@ void monsters::check_redraw(const coord_def &old) const
             view_update_at(pos());
         if (see_old)
             view_update_at(old);
-        // Force "comes into view" message to be given.
-        if (see_new && !see_old)
-            viewwindow(false, false);
         update_screen();
     }
 }

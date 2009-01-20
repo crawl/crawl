@@ -1517,10 +1517,10 @@ static void _input()
         return;
     }
 
+    update_monsters_in_view();
+
     you.turn_is_over = false;
     _prep_input();
-
-    update_monsters_in_view();
 
     const bool player_feels_safe = i_feel_safe();
 
@@ -3113,6 +3113,8 @@ static void _check_sanctuary()
 
 void world_reacts()
 {
+    you.turn_is_over = true;
+
     if (!crawl_state.arena)
         religion_turn_end();
 

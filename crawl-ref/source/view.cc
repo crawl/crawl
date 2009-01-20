@@ -1224,9 +1224,6 @@ void monster_grid(bool do_updates)
 
         if (monster->alive() && mons_near(monster))
         {
-            if (player_monster_visible(monster))
-                _handle_seen_interrupt(monster);
-
             if (do_updates && (mons_is_sleeping(monster)
                                || mons_is_wandering(monster))
                 && check_awaken(monster))
@@ -1277,12 +1274,6 @@ void update_monsters_in_view()
         if (!monster->alive())
             continue;
 
-        monster->flags &= ~MF_WAS_IN_VIEW;
-
-        // If the monster hasn't been seen by the time that the player
-        // gets control back then seen_context is out of date.
-        monster->seen_context.clear();
-
         if (mons_near(monster))
         {
             if (monster->attitude == ATT_HOSTILE)
@@ -1292,9 +1283,20 @@ void update_monsters_in_view()
                 && (!mons_is_mimic(monster->type)
                     || mons_is_known_mimic(monster)))
             {
+                if (!(monster->flags & MF_WAS_IN_VIEW) && you.turn_is_over)
+                    _handle_seen_interrupt(monster);
+
                 seen_monster(monster);
             }
+            else
+                monster->flags &= ~MF_WAS_IN_VIEW;
         }
+        else
+            monster->flags &= ~MF_WAS_IN_VIEW;
+
+        // If the monster hasn't been seen by the time that the player
+        // gets control back then seen_context is out of date.
+        monster->seen_context.clear();
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever

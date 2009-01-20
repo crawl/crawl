@@ -417,6 +417,8 @@ void mprf( const char *format, ... )
     va_end( argp );
 }
 
+static bool _updating_view = false;
+
 void mpr(const char *inf, msg_channel_type channel, int param)
 {
     if (_msg_dump_file != NULL)
@@ -457,6 +459,16 @@ void mpr(const char *inf, msg_channel_type channel, int param)
         if (channel == MSGCH_ERROR)
             fprintf(stderr, "%s\n", inf);
         return;
+    }
+
+    // Flush out any "comes into view" monster announcements before the
+    // monster has a chance to give any other messages.
+    if (!_updating_view && you.turn_is_over
+        && (you_are_delayed() || crawl_state.is_repeating_cmd()))
+    {
+        _updating_view = true;
+        update_monsters_in_view();
+        _updating_view = false;
     }
 
     if (channel == MSGCH_GOD && param == 0)

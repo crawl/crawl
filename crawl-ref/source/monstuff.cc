@@ -4912,10 +4912,19 @@ static void _handle_nearby_ability(monsters *monster)
 
 #define MON_SPEAK_CHANCE 21
 
-    if ((mons_class_flag(monster->type, M_SPEAKS)
-         || !monster->mname.empty())
-        && (!mons_is_wandering(monster) || monster->attitude == ATT_NEUTRAL)
-        && one_chance_in(MON_SPEAK_CHANCE))
+    if (monster->is_patrolling() || mons_is_wandering(monster)
+        || monster->attitude == ATT_NEUTRAL)
+    {
+        // Very fast wandering/patrolling monsters might, in one monster turn,
+        // move into the player's LOS and then back out (or the player
+        // might move into their LOS and the monster move back out before
+        // the player's view has a chance to update) so prevent them
+        // from speaking.
+        ;
+    }
+    else if ((mons_class_flag(monster->type, M_SPEAKS)
+              || !monster->mname.empty())
+             && one_chance_in(MON_SPEAK_CHANCE))
     {
         mons_speaks(monster);
     }
