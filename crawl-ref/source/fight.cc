@@ -2082,6 +2082,21 @@ void melee_attack::drain_defender()
     }
 }
 
+void melee_attack::rot_defender(int amount, int immediate)
+{
+    if (defender->rot(attacker, amount, immediate, true))
+    {
+        if (defender->atype() == ACT_MONSTER && defender_visible)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s %s!",
+                    def_name(DESC_CAP_THE).c_str(),
+                    amount > 0 ? "rots" : "looks less resilient");
+        }
+    }
+}
+
 bool melee_attack::distortion_affects_defender()
 {
     //jmf: blink frogs *like* distortion
@@ -4298,7 +4313,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            defender->rot(attacker, 2 + random2(3), damage_done > 5 ? 1 : 0);
+            rot_defender(2 + random2(3), damage_done > 5 ? 1 : 0);
         break;
 
     case AF_DISEASE:
@@ -4401,7 +4416,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             {
                 if (defender->atype() == ACT_PLAYER)
                     mprf("You feel less resilient.");
-                defender->rot(attacker, 0, coinflip() ? 2 : 1);
+                rot_defender(0, coinflip() ? 2 : 1);
             }
         }
         break;

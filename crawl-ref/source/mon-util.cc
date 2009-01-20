@@ -5924,22 +5924,23 @@ bool monsters::drain_exp(actor *agent, bool quiet)
     return (true);
 }
 
-void monsters::rot(actor *agent, int amount, int immediate)
+bool monsters::rot(actor *agent, int amount, int immediate, bool quiet)
 {
     if (res_rotting() > 0 || amount <= 0)
-        return;
+        return (false);
+
+    if (!quiet && mons_near(this) && player_monster_visible(this))
+    {
+        mprf("%s %s!", name(DESC_CAP_THE).c_str(),
+             amount > 0 ? "rots" : "looks less resilient");
+    }
 
     // Apply immediate damage because we can't handle rotting for
     // monsters yet.
     if (immediate > 0)
     {
-        if (mons_near(this) && player_monster_visible(this))
-        {
-            mprf("%s %s!", name(DESC_CAP_THE).c_str(),
-                 amount > 0 ? "rots" : "looks less resilient");
-        }
-
-        hurt(agent, immediate);
+        // If quiet, don't clean up the monster in order to credit properly.
+        hurt(agent, immediate, BEAM_MISSILE, !quiet);
 
         if (alive())
         {
@@ -5950,6 +5951,8 @@ void monsters::rot(actor *agent, int amount, int immediate)
 
     add_ench(mon_enchant(ENCH_ROT, std::min(amount, 4),
                          agent->kill_alignment()));
+
+    return (true);
 }
 
 int monsters::hurt(const actor *agent, int amount, beam_type flavour,
