@@ -4293,16 +4293,17 @@ void MiscastEffect::_ice(int severity)
             // Monster messages needed.
             break;
         case 2:
-            you_msg      = "Wisps of condensation drift from your @hands@.";
-            mon_msg_seen = "Wisps of condensation drift from @the_monster@'s "
-                           "@hands@.";
+            you_msg        = "Wisps of condensation drift from your @hands@.";
+            mon_msg_seen   = "Wisps of condensation drift from @the_monster@'s "
+                             "@hands@.";
+            mon_msg_unseen = "Wisps of condensation drift in the air.";
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";
             // Monster messages needed.
             break;
         case 4:
-            you_msg = "Your @hands@ feel@hand_conj@ numb with cold.";
+            you_msg      = "Your @hands@ feel@hand_conj@ numb with cold.";
             // Monster messages needed.
             break;
         case 5:
@@ -4575,7 +4576,7 @@ void MiscastEffect::_air(int severity)
         {
         case 0:
             you_msg = "Ouch! You gave yourself an electric shock.";
-            // Monster messages needed.
+            mon_msg = "Ouch! You gave yourself an electric shock.";
             break;
         case 1:
             you_msg      = "You feel momentarily weightless.";
@@ -4867,7 +4868,8 @@ void MiscastEffect::_poison(int severity)
             break;
         case 1:
             you_msg        = "Venomous gasses pour from your @hands@!";
-            mon_msg_seen   = "Venomous gasses pour from @the_monster@'s @hands@!";
+            mon_msg_seen   = "Venomous gasses pour from @the_monster@'s "
+                             "@hands@!";
             mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
 
             do_msg();
