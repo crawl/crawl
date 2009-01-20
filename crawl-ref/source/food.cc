@@ -1380,7 +1380,7 @@ bool eat_from_inventory()
 
     int unusable_corpse = 0;
     int inedible_food = 0;
-    item_def *wonteat;
+    item_def *wonteat = NULL;
     bool found_valid = false;
 
     std::vector<item_def *> food_items;

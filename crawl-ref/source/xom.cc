@@ -1415,7 +1415,7 @@ static void _xom_zero_miscast()
     if (_tran_get_eq(EQ_CLOAK) != NULL)
         messages.push_back("Your cloak billows in an unfelt wind.");
 
-    if (item = _tran_get_eq(EQ_HELMET))
+    if ((item = _tran_get_eq(EQ_HELMET)))
     {
         std::string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
@@ -1438,7 +1438,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (item = _tran_get_eq(EQ_SHIELD))
+    if ((item = _tran_get_eq(EQ_SHIELD)))
     {
         std::string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
@@ -1447,7 +1447,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (item = _tran_get_eq(EQ_BODY_ARMOUR))
+    if ((item = _tran_get_eq(EQ_BODY_ARMOUR)))
     {
         std::string str;
         std::string name = item->name(DESC_BASENAME, false, false, false);

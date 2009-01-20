@@ -2242,6 +2242,7 @@ MiscastEffect::MiscastEffect(actor* _target, int _source, spell_type _spell,
     unsigned int schools = get_spell_disciplines(_spell);
     ASSERT(schools != SPTYP_NONE);
     ASSERT(!(schools & SPTYP_HOLY));
+    UNUSED(schools);
 
     init();
     do_miscast();

@@ -7373,7 +7373,7 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         }                       // end "for bp, for i"
 
     // Is one of them a special room?
-    const map_def *sroom;
+    const map_def *sroom = NULL;
 
 #ifdef DEBUG_SPECIAL_ROOMS
     if ((sroom = random_map_for_tag("special_room", true)) != NULL)
