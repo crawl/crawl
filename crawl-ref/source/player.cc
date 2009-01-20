@@ -7000,6 +7000,8 @@ void player::rot(actor *who, int amount, int immediate)
     if (res_rotting() > 0 || amount <= 0)
         return;
 
+    rot_player(amount);
+
     if (immediate > 0)
         rot_hp(immediate);
 
