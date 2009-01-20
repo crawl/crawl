@@ -1129,6 +1129,10 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else
     {
+        // Record position now, in case it's a monster and dies (thus
+        // resetting its position) before the ammo can be droped.
+        const coord_def apos = act.pos();
+
         item_def shot = this->generate_trap_item();
         bool poison = (this->type == TRAP_NEEDLE);
         int damage_taken =
@@ -1233,7 +1237,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
         // Drop the item (sometimes.)
         if (coinflip())
-            copy_item_to_grid(shot, act.pos());
+            copy_item_to_grid(shot, apos);
 
         this->ammo_qty--;
     }
