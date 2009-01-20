@@ -247,7 +247,7 @@ static int _str_to_book( const std::string& str )
     if (str == "random")
         return SBT_RANDOM;
 
-    return SBT_NO_SELECTION;
+    return (SBT_NO_SELECTION);
 }
 
 static int _str_to_weapon( const std::string &str )
@@ -272,7 +272,7 @@ static int _str_to_weapon( const std::string &str )
     return (WPN_UNKNOWN);
 }
 
-std::string weapon_to_str( int weapon )
+static std::string _weapon_to_str( int weapon )
 {
     switch (weapon)
     {
@@ -1263,7 +1263,7 @@ static void write_newgame_options(FILE *f)
         fprintf(f, "class = %c\n", Options.prev_cls);
 
     if (Options.prev_weapon != WPN_UNKNOWN)
-        fprintf(f, "weapon = %s\n", weapon_to_str(Options.prev_weapon).c_str());
+        fprintf(f, "weapon = %s\n", _weapon_to_str(Options.prev_weapon).c_str());
 
     if (Options.prev_ck != GOD_NO_GOD)
     {

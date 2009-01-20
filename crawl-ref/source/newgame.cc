@@ -2028,9 +2028,11 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
 
     if (Options.prev_book)
     {
-        const int opt_prev_book = _start_to_book(firstbook, Options.prev_book);
-        if (opt_prev_book == NUM_BOOKS && Options.prev_book != SBT_RANDOM)
+        if (_start_to_book(firstbook, Options.prev_book) == NUM_BOOKS
+            && Options.prev_book != SBT_RANDOM)
+        {
             Options.prev_book = SBT_NO_SELECTION;
+        }
     }
 
     if (!Options.random_pick && Options.book != SBT_RANDOM)
@@ -4246,7 +4248,7 @@ static bool _choose_wand()
         do
         {
             textcolor( CYAN );
-            cprintf(EOL "Which wand or rod? ");
+            cprintf(EOL "Which tool? ");
             textcolor( LIGHTGREY );
 
             keyin = c_getch();
