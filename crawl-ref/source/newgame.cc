@@ -2965,7 +2965,7 @@ static void _opening_screen(void)
     std::string msg =
         "<yellow>Hello, welcome to " CRAWL " " VERSION "!</yellow>" EOL
         "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-        "2002-2008 Crawl DevTeam" EOL
+        "2002-2009 Crawl DevTeam" EOL
         "Please consult crawl_manual.txt for instructions and legal details."
         "</brown>" EOL;
 
