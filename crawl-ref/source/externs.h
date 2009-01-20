@@ -1983,6 +1983,7 @@ public:
                                          // selection screen
     int         weapon;          // auto-choose weapon for character
     int         book;            // auto-choose book for character
+    int         wand;            // auto-choose wand for character
     int         chaos_knight;    // choice of god for Chaos Knights (Xom/Makleb)
     int         death_knight;    // choice of god/necromancy for Death Knights
     god_type    priest;          // choice of god for priests (Zin/Yred)
@@ -2223,6 +2224,7 @@ public:
     god_type    prev_pr;
     int         prev_weapon;
     int         prev_book;
+    int         prev_wand;
     bool        prev_randpick;
 
     ///////////////////////////////////////////////////////////////////////

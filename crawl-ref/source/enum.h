@@ -762,6 +762,18 @@ enum startup_book_type
     SBT_RANDOM
 };
 
+enum startup_wand_type
+{
+    SWT_NO_SELECTION = 0,
+    SWT_ENSLAVEMENT,
+    SWT_CONFUSION,
+    SWT_MAGIC_DARTS,
+    SWT_FROST,
+    SWT_FLAME,
+    SWT_STRIKING, // actually a rod
+    SWT_RANDOM
+};
+
 // When adding new delays, update their names in delay.cc, or bad things will
 // happen.
 enum delay_type

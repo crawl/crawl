@@ -240,7 +240,7 @@ static int _str_to_book( const std::string& str )
 {
     if (str == "flame" || str == "fire")
         return (SBT_FIRE);
-    if (str == "cold" || str == "ice")
+    if (str == "frost" || str == "cold" || str == "ice")
         return (SBT_COLD);
     if (str == "summ" || str == "summoning")
         return (SBT_SUMM);
@@ -291,6 +291,48 @@ static std::string _weapon_to_str( int weapon )
     case WPN_UNARMED:
         return "claws";
     case WPN_RANDOM:
+    default:
+        return "random";
+    }
+}
+
+static int _str_to_wand( const std::string& str )
+{
+    if (str == "enslavement")
+        return (SWT_ENSLAVEMENT);
+    if (str == "confusion")
+        return (SWT_CONFUSION);
+    if (str == "magic darts" || str == "magicdarts")
+        return (SWT_MAGIC_DARTS);
+    if (str == "frost" || str == "cold" || str == "ice")
+        return (SWT_FROST);
+    if (str == "flame" || str == "fire")
+        return (SWT_FLAME);
+    if (str == "striking")
+        return (SWT_STRIKING);
+    if (str == "random")
+        return (SWT_RANDOM);
+
+    return (SWT_NO_SELECTION);
+}
+
+static std::string _wand_to_str( int weapon )
+{
+    switch (weapon)
+    {
+    case SWT_ENSLAVEMENT:
+        return "enslavement";
+    case SWT_CONFUSION:
+        return "confusion";
+    case SWT_MAGIC_DARTS:
+        return "magic darts";
+    case SWT_FROST:
+        return "frost";
+    case SWT_FLAME:
+        return "flame";
+    case SWT_STRIKING:
+        return "striking";
+    case SWT_RANDOM:
     default:
         return "random";
     }
@@ -465,6 +507,7 @@ void game_options::reset_startup_options()
     cls                    = 0;
     weapon                 = WPN_UNKNOWN;
     book                   = SBT_NO_SELECTION;
+    wand                   = SWT_NO_SELECTION;
     random_pick            = false;
     good_random            = true;
     chaos_knight           = GOD_NO_GOD;
@@ -655,6 +698,7 @@ void game_options::reset_options()
     prev_pr       = GOD_NO_GOD;
     prev_weapon   = WPN_UNKNOWN;
     prev_book     = SBT_NO_SELECTION;
+    prev_wand     = SWT_NO_SELECTION;
     prev_randpick = false;
     remember_name = true;
 
@@ -1243,6 +1287,7 @@ void read_startup_prefs()
     Options.prev_cls      = temp.cls;
     Options.prev_race     = temp.race;
     Options.prev_book     = temp.book;
+    Options.prev_wand     = temp.wand;
     Options.prev_name     = temp.player_name;
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
@@ -1294,6 +1339,9 @@ static void write_newgame_options(FILE *f)
                 Options.prev_book == SBT_SUMM ? "summ" :
                 "random");
     }
+
+    if (Options.prev_wand != SWT_NO_SELECTION)
+        fprintf(f, "wand = %s\n", _wand_to_str(Options.prev_wand).c_str());
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
@@ -2182,6 +2230,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // Choose this book for classes that get choice.
         book = _str_to_book( field );
+    }
+    else if (key == "wand")
+    {
+        // Choose this wand for classes that get choice.
+        wand = _str_to_wand( field );
     }
     else if (key == "chaos_knight")
     {

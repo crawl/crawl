@@ -105,6 +105,7 @@ static bool ng_random;
 static int  ng_ck, ng_dk;
 static int  ng_weapon;
 static int  ng_book;
+static int  ng_wand;
 static god_type ng_pr;
 
 // March 2008: change order of species and jobs on character selection
@@ -442,6 +443,7 @@ static void _reset_newgame_options(void)
     ng_pr     = GOD_NO_GOD;
     ng_weapon = WPN_UNKNOWN;
     ng_book   = SBT_NO_SELECTION;
+    ng_wand   = SWT_NO_SELECTION;
 }
 
 static void _save_newgame_options(void)
@@ -456,6 +458,7 @@ static void _save_newgame_options(void)
     Options.prev_pr         = ng_pr;
     Options.prev_weapon     = ng_weapon;
     Options.prev_book       = ng_book;
+    Options.prev_wand       = ng_wand;
 
     write_newgame_options_file();
 }
@@ -469,6 +472,7 @@ static void _set_startup_options(void)
     Options.priest       = Options.prev_pr;
     Options.weapon       = Options.prev_weapon;
     Options.book         = Options.prev_book;
+    Options.wand         = Options.prev_wand;
 }
 
 static bool _prev_startup_options_set(void)
@@ -1896,7 +1900,7 @@ static int _start_to_book(int firstbook, int booktype)
             return (BOOK_MINOR_MAGIC_III);
 
         default:
-            return (NUM_BOOKS);
+            return (-1);
         }
 
     case BOOK_CONJURATIONS_I:
@@ -1909,11 +1913,11 @@ static int _start_to_book(int firstbook, int booktype)
             return (BOOK_CONJURATIONS_II);
 
         default:
-            return (NUM_BOOKS);
+            return (-1);
         }
 
     default:
-        return (NUM_BOOKS);
+        return (-1);
     }
 }
 
@@ -2017,7 +2021,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     if (Options.book)
     {
         const int opt_book = _start_to_book(firstbook, Options.book);
-        if (opt_book != NUM_BOOKS)
+        if (opt_book != -1)
         {
             book.sub_type = opt_book;
             ng_book = Options.book;
@@ -2027,7 +2031,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
 
     if (Options.prev_book)
     {
-        if (_start_to_book(firstbook, Options.prev_book) == NUM_BOOKS
+        if (_start_to_book(firstbook, Options.prev_book) == -1
             && Options.prev_book != SBT_RANDOM)
         {
             Options.prev_book = SBT_NO_SELECTION;
@@ -4205,6 +4209,74 @@ bool _needs_butchering_tool()
     return (true);
 }
 
+static startup_wand_type _wand_to_start(int wand, bool is_rod)
+{
+    if (!is_rod)
+    {
+        switch (wand)
+        {
+        case WAND_ENSLAVEMENT:
+            return (SWT_ENSLAVEMENT);
+
+        case WAND_CONFUSION:
+            return (SWT_CONFUSION);
+
+        case WAND_MAGIC_DARTS:
+            return (SWT_MAGIC_DARTS);
+
+        case WAND_FROST:
+            return (SWT_FROST);
+
+        case WAND_FLAME:
+            return (SWT_FLAME);
+
+        default:
+            return (SWT_NO_SELECTION);
+        }
+    }
+    else
+    {
+        switch (wand)
+        {
+        case STAFF_STRIKING:
+            return (SWT_STRIKING);
+
+        default:
+            return (SWT_NO_SELECTION);
+        }
+    }
+}
+
+static int _start_to_wand(int wandtype, bool& is_rod)
+{
+    is_rod = false;
+
+    switch (wandtype)
+    {
+    case SWT_ENSLAVEMENT:
+        return (WAND_ENSLAVEMENT);
+
+    case SWT_CONFUSION:
+        return (WAND_CONFUSION);
+
+    case SWT_MAGIC_DARTS:
+        return (WAND_MAGIC_DARTS);
+
+    case SWT_FROST:
+        return (WAND_FROST);
+
+    case SWT_FLAME:
+        return (WAND_FLAME);
+
+    case SWT_STRIKING:
+        is_rod = true;
+        return (STAFF_STRIKING);
+
+    default:
+        return (-1);
+    }
+}
+
 static bool _choose_wand()
 {
     // Wand-choosing interface for Artificers -- Greenberg/Bane
@@ -4215,7 +4287,28 @@ static bool _choose_wand()
     const int num_choices = 6;
 
     int keyin = 0;
-    if (!Options.random_pick)
+    int wandtype;
+    bool is_rod;
+    if (Options.wand)
+    {
+        if (_start_to_wand(Options.wand, is_rod) != -1)
+        {
+            keyin = 'a' + Options.wand;
+            ng_wand = Options.wand;
+            goto wand_done;
+        }
+    }
+
+    if (Options.prev_wand)
+    {
+        if (_start_to_wand(Options.prev_wand, is_rod) == -1
+            && Options.prev_wand != SWT_RANDOM)
+        {
+            Options.prev_wand = SWT_NO_SELECTION;
+        }
+    }
+
+    if (!Options.random_pick && Options.wand != SWT_RANDOM)
     {
         _print_character_info();
 
@@ -4223,6 +4316,7 @@ static bool _choose_wand()
         cprintf(EOL "You have a choice of tools:" EOL
                     "(Press %% for a list of aptitudes)" EOL);
 
+        bool prevmatch = false;
         for (int i = 0; i < num_choices; i++)
         {
             textcolor(LIGHTGREY);
@@ -4232,16 +4326,40 @@ static bool _choose_wand()
             {
                 cprintf("%c - %s" EOL, letter,
                         you.inv[2].name(DESC_QUALNAME, false).c_str());
+                wandtype = you.inv[2].sub_type;
+                is_rod = true;
             }
             else
+            {
                 cprintf("%c - %s" EOL, letter, wand_type_name(startwand[i]));
+                wandtype = startwand[i];
+                is_rod = false;
+            }
+
+            if (Options.prev_wand == _wand_to_start(wandtype, is_rod))
+                prevmatch = true;
         }
+
+        if (!prevmatch && Options.prev_wand != SWT_RANDOM)
+            Options.prev_wand = SWT_NO_SELECTION;
 
         textcolor(BROWN);
         cprintf(EOL "* - Random choice; "
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
 
+        if (prevmatch || Options.prev_wand == SWT_RANDOM)
+        {
+            cprintf("; Enter - %s",
+                    Options.prev_wand == SWT_ENSLAVEMENT ? "Enslavement" :
+                    Options.prev_wand == SWT_CONFUSION   ? "Confusion"   :
+                    Options.prev_wand == SWT_MAGIC_DARTS ? "Magic Darts" :
+                    Options.prev_wand == SWT_FROST       ? "Frost"       :
+                    Options.prev_wand == SWT_FLAME       ? "Flame"       :
+                    Options.prev_wand == SWT_STRIKING    ? "Striking"    :
+                    Options.prev_wand == SWT_RANDOM      ? "Random"
+                                                         : "Buggy Tool");
+        }
         cprintf(EOL);
 
         do
@@ -4264,6 +4382,33 @@ static bool _choose_wand()
                 return (false);
             case '\r':
             case '\n':
+                if (Options.prev_wand != SWT_NO_SELECTION)
+                {
+                    if (Options.prev_wand == SWT_RANDOM)
+                        keyin = '*';
+                    else
+                    {
+                        for (int i = 0; i < num_choices; ++i)
+                        {
+                            if (i == num_choices - 1)
+                            {
+                                wandtype = you.inv[2].sub_type;
+                                is_rod = true;
+                            }
+                            else
+                            {
+                                wandtype = startwand[i];
+                                is_rod = false;
+                            }
+
+                            if (Options.prev_wand ==
+                                _wand_to_start(wandtype, is_rod))
+                            {
+                                 keyin = 'a' + i;
+                            }
+                        }
+                    }
+                }
                 break;
             case '%':
                 list_commands('%');
@@ -4275,12 +4420,18 @@ static bool _choose_wand()
         while (keyin != '*'  && (keyin < 'a' || keyin >= ('a' + num_choices)));
     }
 
-    if (Options.random_pick || keyin == '*')
+    if (Options.random_pick || Options.wand == SWT_RANDOM || keyin == '*')
     {
+        Options.wand = WPN_RANDOM;
+        ng_wand = SWT_RANDOM;
+
         keyin = random2(num_choices);
         keyin += 'a';
     }
+    else
+        ng_wand = keyin - 'a' + 1;
 
+wand_done:
     if (keyin - 'a' == num_choices - 1)
     {
         // Choose the rod; we're all done.
