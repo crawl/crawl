@@ -395,7 +395,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_wasp_nest
-DEPTH:  Hive:2-3
+DEPTH:  Hive:*
 MONS:   yellow wasp / weight:2 red wasp
 WEIGHT: 1
 SUBST:  1=1 .:15
