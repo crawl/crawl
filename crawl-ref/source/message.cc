@@ -463,11 +463,10 @@ void mpr(const char *inf, msg_channel_type channel, int param)
 
     // Flush out any "comes into view" monster announcements before the
     // monster has a chance to give any other messages.
-    if (!_updating_view && you.turn_is_over
-        && (you_are_delayed() || crawl_state.is_repeating_cmd()))
+    if (!_updating_view)
     {
         _updating_view = true;
-        update_monsters_in_view();
+        flush_comes_into_view();
         _updating_view = false;
     }
 

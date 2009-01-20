@@ -1499,6 +1499,8 @@ static void _center_cursor()
 //
 static void _input()
 {
+    crawl_state.clear_mon_acting();
+
     religion_turn_start();
     check_beholders();
 
@@ -3113,12 +3115,14 @@ static void _check_sanctuary()
 
 void world_reacts()
 {
-    you.turn_is_over = true;
+    crawl_state.clear_mon_acting();
 
     if (!crawl_state.arena)
+    {
+        you.turn_is_over = true;
         religion_turn_end();
-
-    crawl_state.clear_god_acting();
+        crawl_state.clear_god_acting();
+    }
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_TUTORIAL);

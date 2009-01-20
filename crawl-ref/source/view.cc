@@ -972,6 +972,25 @@ static void _handle_seen_interrupt(monsters* monster)
     seen_monster( monster );
 }
 
+void flush_comes_into_view()
+{
+    if (!you.turn_is_over
+        || (!you_are_delayed() && !crawl_state.is_repeating_cmd()))
+    {
+        return;
+    }
+
+    monsters* mon = crawl_state.which_mon_acting();
+
+    if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
+        || !you.can_see(mon))
+    {
+        return;
+    }
+
+    _handle_seen_interrupt(mon);
+}
+
 void handle_monster_shouts(monsters* monster, bool force)
 {
     if (!force && (!you.turn_is_over
@@ -997,6 +1016,8 @@ void handle_monster_shouts(monsters* monster, bool force)
     {
         return;
     }
+
+    mon_acting mact(monster);
 
     std::string default_msg_key = "";
 

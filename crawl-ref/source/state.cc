@@ -374,6 +374,61 @@ std::vector<god_act_state> game_state::other_gods_acting() const
     return god_act_stack;
 }
 
+bool game_state::is_mon_acting() const
+{
+    return (mon_act != NULL);
+}
+
+monsters* game_state::which_mon_acting() const
+{
+    return (mon_act);
+}
+
+void game_state::inc_mon_acting(monsters* mon)
+{
+    ASSERT(!invalid_monster(mon));
+
+    if (mon_act != NULL)
+        mon_act_stack.push_back(mon_act);
+
+    mon_act = mon;
+}
+
+void game_state::dec_mon_acting(monsters* mon)
+{
+    ASSERT(mon_act == mon);
+
+    mon_act = NULL;
+
+    if (mon_act_stack.size() > 0)
+    {
+        mon_act = *(mon_act_stack.end());
+        ASSERT(!invalid_monster(mon_act));
+        mon_act_stack.pop_back();
+    }
+}
+
+void game_state::clear_mon_acting()
+{
+    mon_act = NULL;
+    mon_act_stack.clear();
+}
+
+void game_state::mon_gone(monsters* mon)
+{
+    for (unsigned int i = 0, size = mon_act_stack.size(); i < size; i++)
+    {
+        if (mon_act_stack[i] == mon)
+        {
+            mon_act_stack.erase(mon_act_stack.begin() + i);
+            i--;
+        }
+    }
+
+    if (mon_act == mon)
+        dec_mon_acting(mon);
+}
+
 void game_state::dump(FILE* file)
 {
     fprintf(file, EOL "Game state:" EOL EOL);

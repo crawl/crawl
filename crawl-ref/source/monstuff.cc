@@ -1030,6 +1030,8 @@ int monster_die(monsters *monster, killer_type killer,
     if (!silent && _monster_avoided_death(monster, killer, killer_index))
         return (-1);
 
+    crawl_state.inc_mon_acting(monster);
+
     mons_clear_trapping_net(monster);
 
     // Update list of monsters beholding player.
@@ -1662,6 +1664,7 @@ int monster_die(monsters *monster, killer_type killer,
         // don't clutter up mitm[]
         monster->destroy_inventory();
 
+    crawl_state.dec_mon_acting(monster);
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.
@@ -1676,6 +1679,8 @@ int monster_die(monsters *monster, killer_type killer,
 
 void monster_cleanup(monsters *monster)
 {
+    crawl_state.mon_gone(monster);
+
     unsigned int monster_killed = monster_index(monster);
     monster->reset();
 
@@ -6738,6 +6743,8 @@ static void _handle_monster_move(int i, monsters *monster)
         monster->flags &= ~MF_JUST_SUMMONED;
         return;
     }
+
+    mon_acting mact(monster);
 
     _monster_add_energy(monster);
 

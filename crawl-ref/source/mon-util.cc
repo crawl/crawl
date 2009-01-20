@@ -7907,6 +7907,8 @@ void monsters::react_to_damage(int damage, beam_type flavour)
     if (type == MONS_ROYAL_JELLY && flavour != BEAM_TORMENT_DAMAGE && alive()
         && damage > 8 && x_chance_in_y(damage, 50))
     {
+        mon_acting mact(this);
+
         const int tospawn =
             1 + random2avg(1 + std::min((damage - 8) / 8, 5), 2);
 #ifdef DEBUG_DIAGNOSTICS

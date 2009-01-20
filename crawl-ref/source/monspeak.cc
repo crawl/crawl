@@ -737,6 +737,8 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
     if (!mons_near(monster))
         return;
 
+    mon_acting mact(const_cast<monsters*>(monster));
+
     // We have a speech string, now parse and act on it.
     std::string _msg = do_mon_str_replacements(msg, monster);
 

@@ -252,6 +252,7 @@ void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
 #endif
 void viewwindow(bool draw_it, bool do_updates);
 void update_monsters_in_view();
+void flush_comes_into_view();
 
 struct ray_def;
 bool find_ray( const coord_def& source, const coord_def& target,
