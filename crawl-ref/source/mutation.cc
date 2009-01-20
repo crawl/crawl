@@ -1319,9 +1319,9 @@ formatted_string describe_mutations()
                     colourname = "lightblue";
             }
 
-            result += '<';
+            result += "<"';
             result += colourname;
-            result += '>';
+            result += ">";
             if (fully_inactive)
                 result += "(";
 
@@ -1347,7 +1347,7 @@ formatted_string describe_mutations()
                 result += ")";
             result += "</";
             result += colourname;
-            result += '>';
+            result += ">";
             result += EOL;
 
             // Gourmand is *not* identical to being saprovorous, therefore...
