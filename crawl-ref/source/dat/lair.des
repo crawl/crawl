@@ -596,6 +596,95 @@ ENDMAP
 # Shoals specific non-ending vaults
 ##############################################################################
 
+ 
+###########################
+# Shoal Ruins - nothing special, just some flavor (Enne)
+# Appear rarely.
+#
+NAME:   overgrown_hall
+DEPTH:  Shoal
+WEIGHT: 2
+MONS:   plant, fungus
+MONS:   cyclops / stone giant w:2
+SUBST:  x = x:20 .
+SUBST:  G = G:40 .
+SUBST:  . = .:90 1:19 x:1
+SUBST:  1 = 1 2:1
+MAP
+xxxxxxxxxxx
+x.........x
+x.G.G.G.G.x
++....3....+
+x.G.G.G.G.x
+x.........x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   overgrown_tower
+DEPTH:  Shoal
+WEIGHT: 2
+MONS:   plant, fungus
+SUBST:  + = x +
+SUBST:  x = x:60 . '
+SUBST:  ' = ' 1:5
+SUBST:  . = . 2:1
+SUBST:  ' = .
+MAP
+ ''''''''' 
+'''xx+xx'''
+''xx...xx''
+'xx.....xx'
+'x.......x'
+'x...<...x'
+'x.......x'
+'xx.....xx'
+''xx...xx''
+'''xxxxx'''
+ ''''''''' 
+ENDMAP
+
+NAME:   overgrown_statue
+DEPTH:  Shoal
+WEIGHT: 1
+MONS:   plant
+MONS:   ice statue / orange crystal statue / silver statue
+SUBST:  . = 1:1 .:30
+SUBST:  p = 1:2 .
+SUBST:  P = 1:20 .
+SUBST:  G = G 2
+MAP
+  ........  
+ .......... 
+....ppp.....
+...ppppp....
+..ppPPPpp...
+..ppPGPpp...
+..ppPPPpp...
+...ppppp....
+....ppp.....
+ .......... 
+  ........  
+ENDMAP
+
+NAME:   shoals_oasis
+DEPTH:  Shoal
+WEIGHT: 1
+MONS:   plant
+SUBST:  . = 1:1 .
+SUBST:  W = W .
+SUBST:  w = W w
+SUBST:  _ = w
+MAP
+  ...  
+ ..W.. 
+..WwW..
+.Ww_wW.
+..WwW..
+ ..W.. 
+  ...  
+ENDMAP
+
+
 ##############################################################################
 # Slime Pit specific non-ending vaults
 ##############################################################################
