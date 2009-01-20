@@ -1220,7 +1220,7 @@ static int dgn_load_des_file(lua_State *ls)
     return (0);
 }
 
-static int dgn_floorcol(lua_State *ls)
+static int dgn_lfloorcol(lua_State *ls)
 {
     MAP(ls, 1, map);
 
@@ -1253,7 +1253,7 @@ static int dgn_floorcol(lua_State *ls)
     PLUARET(string, colour_to_str(map->floor_colour).c_str());
 }
 
-static int dgn_rockcol(lua_State *ls)
+static int dgn_lrockcol(lua_State *ls)
 {
     MAP(ls, 1, map);
 
@@ -2848,7 +2848,7 @@ LUAFN(dgn_lev_rocktile)
 #endif
 }
 
-LUAFN(dgn_rocktile)
+LUAFN(dgn_lrocktile)
 {
     MAP(ls, 1, map);
 
@@ -2864,7 +2864,7 @@ LUAFN(dgn_rocktile)
 #endif
 }
 
-LUAFN(dgn_floortile)
+LUAFN(dgn_lfloortile)
 {
     MAP(ls, 1, map);
 
@@ -2908,6 +2908,28 @@ LUAFN(dgn_change_floor_tile)
 #endif
 }
 
+LUAFN(dgn_ftile)
+{
+#ifdef USE_TILE
+    return dgn_map_add_transform(ls,
+                                 &map_lines::add_floortile,
+                                 &map_lines::clear_floortiles);
+#else
+    return 0;
+#endif
+}
+
+LUAFN(dgn_rtile)
+{
+#ifdef USE_TILE
+    return dgn_map_add_transform(ls,
+                                 &map_lines::add_rocktile,
+                                 &map_lines::clear_rocktiles);
+#else
+    return 0;
+#endif
+}
+
 LUAFN(dgn_debug_dump_map)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
@@ -2936,8 +2958,8 @@ static const struct luaL_reg dgn_lib[] =
     { "subst", dgn_subst },
     { "nsubst", dgn_nsubst },
     { "colour", dgn_colour },
-    { "floorcol", dgn_floorcol},
-    { "rockcol", dgn_rockcol},
+    { "lfloorcol", dgn_lfloorcol},
+    { "lrockcol", dgn_lrockcol},
     { "subst_remove", dgn_subst_remove },
     { "map", dgn_map },
     { "mons", dgn_mons },
@@ -3049,8 +3071,10 @@ static const struct luaL_reg dgn_lib[] =
 
     { "get_special_room_info", dgn_get_special_room_info },
 
-    { "rocktile", dgn_rocktile },
-    { "floortile", dgn_floortile },
+    { "lrocktile", dgn_lrocktile },
+    { "lfloortile", dgn_lfloortile },
+    { "rtile", dgn_rtile },
+    { "ftile", dgn_ftile },
     { "change_rock_tile", dgn_change_rock_tile },
     { "change_floor_tile", dgn_change_floor_tile },
     { "lev_floortile", dgn_lev_floortile },

@@ -303,6 +303,7 @@ SUBST:  w:wl
 SUBST:  *:*$
 : end
 COLOUR: ? = brown
+FTILE:  ? = floor_hive
 SUBST:  ? = .
 SUBST:  X = c =:1
 SUBST:  ~ = ~:2 .

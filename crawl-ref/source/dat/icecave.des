@@ -78,10 +78,10 @@ dgn.set_lt_callback("ice_cave", "ice_cave_feat_descs")
 function ice_cave_colours(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
-  e.rockcol("white")
-  e.floorcol("blue")
-  e.rocktile("wall_ice")
-  e.floortile("floor_ice")
+  e.lrockcol("white")
+  e.lfloorcol("blue")
+  e.lrocktile("wall_ice")
+  e.lfloortile("floor_ice")
 end
 }}
 

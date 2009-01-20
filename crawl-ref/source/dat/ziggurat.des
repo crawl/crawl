@@ -21,6 +21,7 @@ ENDMAP
 NAME:   enter_ziggurat_a
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
+FTILE:  ; = floor_hall
 SUBST:  ' = .
 SUBST:  ; = .
 : ziggurat_portal(_G)
@@ -40,6 +41,7 @@ SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
 COLOUR:  ' = cyan
+FTILE:  ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
 SUBST:   '=. , ;=. , _=.
 : ziggurat_portal(_G)
 MAP
@@ -101,6 +103,7 @@ NAME:   enter_ziggurat_a_teaser
 WEIGHT: 1
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
+FTILE:  ; = floor_hall
 SUBST:  ' = .
 SUBST:  ; = .
 : ziggurat_portal(_G)

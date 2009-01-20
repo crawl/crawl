@@ -111,7 +111,9 @@ public:
         TT_SUBST,
         TT_NSUBST,
         TT_MARKER,
-        TT_COLOUR
+        TT_COLOUR,
+        TT_ROCKTILE,
+        TT_FLOORTILE
     };
 
 public:
@@ -162,7 +164,11 @@ public:
 };
 
 typedef std::pair<int, int> map_weighted_colour;
-typedef std::vector<map_weighted_colour> map_colour_list;
+class map_colour_list : public std::vector<map_weighted_colour>
+{
+public:
+    bool parse(const std::string &s, int weight);
+};
 class colour_spec : public map_transformer
 {
 public:
@@ -182,6 +188,38 @@ public:
     int fixed_colour;
     map_colour_list colours;
 };
+
+#ifdef USE_TILE
+typedef std::pair<int, int> map_weighted_tile;
+class map_tile_list : public std::vector<map_weighted_colour>
+{
+public:
+    bool parse(const std::string &s, int weight);
+};
+class tile_spec : public map_transformer
+{
+public:
+    tile_spec(int _key, bool _fix, bool _floor, const map_tile_list &_tiles)
+        : key(_key), fix(_fix), chose_fixed(false), floor(_floor),
+          fixed_tile(0), tiles(_tiles)
+    {
+    }
+
+    std::string apply_transform(map_lines &map);
+    transform_type type() const { return (floor ? TT_FLOORTILE : TT_ROCKTILE); }
+    std::string describe() const;
+
+    int get_tile();
+
+public:
+    int key;
+    bool fix;
+    bool chose_fixed;
+    bool floor;
+    int fixed_tile;
+    map_tile_list tiles;
+};
+#endif
 
 class shuffle_spec : public map_transformer
 {
@@ -250,6 +288,13 @@ public:
     void clear_markers();
     void clear_colours();
 
+#ifdef USE_TILE
+    std::string add_floortile(const std::string &s);
+    std::string add_rocktile(const std::string &s);
+    void clear_rocktiles();
+    void clear_floortiles();
+#endif
+
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
     coord_def find_first_glyph(const std::string &glyphs) const;
@@ -284,7 +329,7 @@ public:
                                const lua_datum &fn);
 
     void apply_markers(const coord_def &pos);
-    void apply_colours(const coord_def &pos);
+    void apply_grid_overlay(const coord_def &pos);
     void apply_overlays(const coord_def &pos);
 
     const std::vector<std::string> &get_lines() const;
@@ -312,6 +357,9 @@ private:
     void subst(subst_spec &);
     void nsubst(nsubst_spec &);
     void overlay_colours(colour_spec &);
+#ifdef USE_TILE
+    void overlay_tiles(tile_spec &);
+#endif
     void check_borders();
     void clear_transforms(map_transformer::transform_type);
     std::string shuffle(std::string s);
@@ -326,20 +374,32 @@ private:
                      subst_spec &spec);
     std::string parse_glyph_replacements(std::string s,
                                          glyph_replacements_t &gly);
-    std::string parse_weighted_colours(const std::string &cspec,
-                                       map_colour_list &colours) const;
+    template<class T>
+    std::string parse_weighted_str(const std::string &cspec, T &list);
+#ifdef USE_TILE
+    std::string add_tile(const std::string &sub, bool is_floor);
+#endif
 
     friend class subst_spec;
     friend class nsubst_spec;
     friend class shuffle_spec;
     friend class map_marker_spec;
     friend class colour_spec;
+    friend class tile_spec;
 
 private:
     std::vector<map_transformer *> transforms;
     std::vector<map_marker *> markers;
     std::vector<std::string> lines;
-    std::auto_ptr< Matrix<int> > colour_overlay;
+    struct overlay_def
+    {
+        overlay_def() : colour(0), rocktile(0), floortile(0) {}
+        int colour;
+        int rocktile;
+        int floortile;
+    };
+    typedef Matrix<overlay_def> overlay_matrix;
+    std::auto_ptr<overlay_matrix> overlay;
 
     int map_width;
     bool solid_north, solid_east, solid_south, solid_west;

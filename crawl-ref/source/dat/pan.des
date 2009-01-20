@@ -16,12 +16,12 @@
 ###########################################################################
 # mnoleg.
 #
-NAME:     mnoleg
-TAGS:     mnoleg
-ORIENT:   northeast
-FLOORCOL: yellow
-ROCKCOL:  red
-MONS:     patrolling Mnoleg, neqoxec
+NAME:      mnoleg
+TAGS:      mnoleg
+ORIENT:    northeast
+LFLOORCOL: yellow
+LROCKCOL:  red
+MONS:      patrolling Mnoleg, neqoxec
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -59,13 +59,13 @@ ENDMAP
 #######################################################################
 # lom_lobon
 #
-NAME:     lom_lobon
-TAGS:     lom_lobon
-ORIENT:   north
-FLOORCOL: lightgrey
-TAGS:     no_rotate
-ROCKCOL:  white
-MONS:     patrolling Lom Lobon, giant orange brain, rakshasa, wizard
+NAME:      lom_lobon
+TAGS:      lom_lobon
+ORIENT:    north
+LFLOORCOL: lightgrey
+TAGS:      no_rotate
+LROCKCOL:  white
+MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -103,12 +103,12 @@ ENDMAP
 #############################################################################
 # cerebov
 #
-NAME:     cerebov
-TAGS:     cerebov
-ORIENT:   northeast
-FLOORCOL: red
-ROCKCOL:  red
-MONS:     patrolling Cerebov, Balrug, Pit Fiend
+NAME:      cerebov
+TAGS:      cerebov
+ORIENT:    northeast
+LFLOORCOL: red
+LROCKCOL:  red
+MONS:      patrolling Cerebov, Balrug, Pit Fiend
 #
 # you might not want to teleport too much on this level - unless you can
 # reliably teleport away again.
@@ -150,12 +150,12 @@ ENDMAP
 ##############################################################################
 # Gloorx Vloq
 #
-NAME:     gloorx_vloq
-TAGS:     gloorx_vloq
-ORIENT:   southwest
-FLOORCOL: darkgrey
-ROCKCOL:  darkgrey
-MONS:     patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
+NAME:      gloorx_vloq
+TAGS:      gloorx_vloq
+ORIENT:    southwest
+LFLOORCOL: darkgrey
+LROCKCOL:  darkgrey
+MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
 MAP
 xxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
 xxxx..............................x

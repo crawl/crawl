@@ -234,7 +234,7 @@ ENDMAP
 # will arrive on a random square.
 #
 # You can force a particular colour for the rock walls or floor using
-# ROCKCOL and FLOORCOL directives.
+# LROCKCOL and LFLOORCOL directives.
 #
 
 ########################################
@@ -327,7 +327,7 @@ ITEM:    any book / good_item any book, any staff
 SUBST:   d=.d, e=.e, f=.f
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: floorcol(colour)
+: lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -362,7 +362,7 @@ ITEM:    any wand, ring of levitation
 SHUFFLE: leAB/wdBA
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: floorcol(colour)
+: lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -417,7 +417,7 @@ KFEAT:   Z = stone_arch
 SHUFFLE: lw
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: floorcol(colour)
+: lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -459,7 +459,7 @@ SUBST:   a=T, z=V
 SHUFFLE: lw
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: floorcol(colour)
+: lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -780,7 +780,7 @@ KFEAT:   F = scroll shop / distillery shop
 : bazaar_message(_G)
 # special cases for blue floor
 : local colour = random_bazaar_colour()
-: floorcol(colour)
+: lfloorcol(colour)
 : if colour == "blue" then
 SUBST:   w = W
 : end
@@ -902,7 +902,7 @@ SUBST:   z = ., Z = w
 SHUFFLE: wl, ABCD
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: floorcol(colour)
+: lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else

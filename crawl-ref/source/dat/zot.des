@@ -285,17 +285,17 @@ ENDMAP
 ##############################################################################
 # hall_of_Zot_5
 
-NAME:     hall_of_Zot
-PLACE:    Zot:5
-ORIENT:   north
-LFLAGS:   no_tele_control
-MARKER:   Z = lua:item_pickup_change_flags { \
-              level_flags="!no_tele_control", item="Orb of Zot" \
-          }
-FLOORCOL: magenta
-ROCKCOL:  lightmagenta
-FLOORTILE:floor_tomb
-ROCKTILE: wall_zot_magenta
+NAME:       hall_of_Zot
+PLACE:      Zot:5
+ORIENT:     north
+LFLAGS:     no_tele_control
+MARKER:     Z = lua:item_pickup_change_flags { \
+                level_flags="!no_tele_control", item="Orb of Zot" \
+            }
+LFLOORCOL:  magenta
+LROCKCOL:   lightmagenta
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_magenta
 
 #traps
 SUBST:    C = c:1000 =
@@ -365,50 +365,50 @@ ENDMAP
 ################################################################
 # For colouring the walls and floors of the first four levels
 
-NAME:     hall_of_Zot_1
-PLACE:    Zot:1
-TAGS:     transparent
-ORIENT:   float
-FLOORCOL: lightgrey
-ROCKCOL:  lightgrey
-FLOORTILE:floor_tomb
-ROCKTILE: wall_zot_gray
+NAME:       hall_of_Zot_1
+PLACE:      Zot:1
+TAGS:       transparent
+ORIENT:     float
+LFLOORCOL:  lightgrey
+LROCKCOL:   lightgrey
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_gray
 MAP
 .
 ENDMAP
 
-NAME:     hall_of_Zot_2
-PLACE:    Zot:2
-TAGS:     transparent
-ORIENT:   float
-FLOORCOL: lightgrey
-ROCKCOL:  blue
-FLOORTILE:floor_tomb
-ROCKTILE: wall_zot_blue
+NAME:       hall_of_Zot_2
+PLACE:      Zot:2
+TAGS:       transparent
+ORIENT:     float
+LFLOORCOL:  lightgrey
+LROCKCOL:   blue
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_blue
 MAP
 .
 ENDMAP
 
-NAME:     hall_of_Zot_3
-PLACE:    Zot:3
-TAGS:     transparent
-ORIENT:   float
-FLOORCOL: blue
-ROCKCOL:  lightblue
-FLOORTILE:floor_tomb
-ROCKTILE: wall_zot_cyan
+NAME:       hall_of_Zot_3
+PLACE:      Zot:3
+TAGS:       transparent
+ORIENT:     float
+LFLOORCOL:  blue
+LROCKCOL:   lightblue
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_cyan
 MAP
 .
 ENDMAP
 
-NAME:     hall_of_Zot_4
-PLACE:    Zot:4
-TAGS:     transparent
-ORIENT:   float
-FLOORCOL: lightblue
-ROCKCOL:  magenta
-FLOORTILE:floor_tomb
-ROCKTILE: wall_zot_blue
+NAME:       hall_of_Zot_4
+PLACE:      Zot:4
+TAGS:       transparent
+ORIENT:     float
+LFLOORCOL:  lightblue
+LROCKCOL:   magenta
+LFLOORTILE: floor_tomb
+LROCKTILE:  wall_zot_blue
 MAP
 .
 ENDMAP

@@ -348,6 +348,7 @@ NAME:   lemuel_blue_sif_altar
 DEPTH:  D:2-18, Elf, Vault
 TAGS:   no_monster_gen mini_float
 COLOUR: . = blue
+FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
 KFEAT:  C = altar_sif_muna
 MAP
 xxxxxxxxxxxxxx

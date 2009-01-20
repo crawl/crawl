@@ -34,12 +34,6 @@ REVISION("$Rev$");
 #include "travel.h"
 #include "view.h"
 
-static inline bool _is_sewers()
-{
-    return (you.level_type == LEVEL_PORTAL_VAULT
-            && you.level_type_name == "sewer");
-}
-
 void TileNewLevel(bool first_time)
 {
     tiles.clear_minimap();
@@ -2353,7 +2347,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
     case DNGN_DEEP_WATER:
-        if (_is_sewers() || env.grid_colours[gx][gy] == GREEN
+        if (env.grid_colours[gx][gy] == GREEN
             || env.grid_colours[gx][gy] == LIGHTGREEN)
         {
             return TILE_DNGN_DEEP_WATER_MURKY;
@@ -2362,7 +2356,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_SHALLOW_WATER:
     {
         int t = TILE_DNGN_SHALLOW_WATER;
-        if (_is_sewers() || env.grid_colours[gx][gy] == GREEN
+        if (env.grid_colours[gx][gy] == GREEN
             || env.grid_colours[gx][gy] == LIGHTGREEN)
         {
             t = TILE_DNGN_SHALLOW_WATER_MURKY;
@@ -3968,13 +3962,12 @@ int jitter(SpecialIdx i)
 
 void tile_clear_flavour()
 {
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
-        {
-            env.tile_flv[x][y].floor = 0;
-            env.tile_flv[x][y].wall = 0;
-            env.tile_flv[x][y].special = 0;
-        }
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        env.tile_flv(*ri).floor = 0;
+        env.tile_flv(*ri).wall = 0;
+        env.tile_flv(*ri).special = 0;
+    }
 }
 
 // For floors and walls that have not already been set to a particular tile,
@@ -3990,14 +3983,19 @@ void tile_init_flavour(const coord_def &gc)
     if (!in_bounds(gc))
         return;
 
-    int wall_rnd = random2(tile_dngn_count(env.tile_default.wall));
-    int floor_rnd = random2(tile_dngn_count(env.tile_default.floor));
-
     if (!env.tile_flv(gc).floor)
+    {
+        int floor_rnd = random2(tile_dngn_count(env.tile_default.floor));
         env.tile_flv(gc).floor = env.tile_default.floor + floor_rnd;
-    if (!env.tile_flv(gc).wall)
-        env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
+    }
 
+    if (!env.tile_flv(gc).wall)
+    {
+        int wall_rnd = random2(tile_dngn_count(env.tile_default.wall));
+        env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
+    }
+
+    
     if (grd(gc) == DNGN_CLOSED_DOOR || grd(gc) == DNGN_OPEN_DOOR)
     {
         // Check for horizontal gates.

@@ -55,7 +55,7 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
-%token <i>      FLOORCOL ROCKCOL FLOORTILE ROCKTILE
+%token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE
 
 %token <i>      COMMA COLON PERC INTEGER CHARACTER
 
@@ -161,10 +161,12 @@ metaline        : place
                 | subst
                 | nsubst
                 | colour
-                | floorcol
-                | rockcol
-                | floortile
-                | rocktile
+                | lfloorcol
+                | lrockcol
+                | lfloortile
+                | lrocktile
+                | ftile
+                | rtile
                 | shuffle
                 | tags
                 | lflags
@@ -356,41 +358,74 @@ marker          : MARKER STRING
 colour          : COLOUR colour_specifiers { }
                 ;
 
-floorcol        : FLOORCOL { }
-                | FLOORCOL STRING
+lfloorcol       : LFLOORCOL { }
+                | LFLOORCOL STRING
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("floorcol(\"%s\")",
+                        make_stringf("lfloorcol(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
-rockcol         : ROCKCOL { }
-                | ROCKCOL STRING
+lrockcol        : LROCKCOL { }
+                | LROCKCOL STRING
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("rockcol(\"%s\")",
+                        make_stringf("lrockcol(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
-floortile       : FLOORTILE { }
-                | FLOORTILE STRING
+lfloortile      : LFLOORTILE { }
+                | LFLOORTILE STRING
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("floortile(\"%s\")",
+                        make_stringf("lfloortile(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
-rocktile        : ROCKTILE { }
-                | ROCKTILE STRING
+lrocktile       : LROCKTILE { }
+                | LROCKTILE STRING
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("rocktile(\"%s\")",
+                        make_stringf("lrocktile(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
+
+
+ftile           : FTILE ftile_specifiers
+                ;
+
+ftile_specifiers: ftile_specifier
+                | ftile_specifiers COMMA ftile_specifier
+                ;
+
+ftile_specifier : ITEM_INFO
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("ftile(\"%s\")",
+                            quote_lua_string($1).c_str()));
+                }
+                ;
+
+rtile           : RTILE rtile_specifiers
+                ;
+
+rtile_specifiers: rtile_specifier
+                | rtile_specifiers COMMA rtile_specifier 
+                ;
+
+rtile_specifier : ITEM_INFO
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("rtile(\"%s\")",
+                            quote_lua_string($1).c_str()));
+                }
+                ;
 
 colour_specifiers : colour_specifier  { }
                   | colour_specifiers COMMA colour_specifier { }

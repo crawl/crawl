@@ -333,7 +333,7 @@ map_transformer::~map_transformer()
 // map_lines
 
 map_lines::map_lines()
-    : transforms(), markers(), lines(), colour_overlay(),
+    : transforms(), markers(), lines(), overlay(),
       map_width(0), solid_north(false), solid_east(false),
       solid_south(false), solid_west(false), solid_checked(false)
 {
@@ -372,7 +372,7 @@ void map_lines::init_from(const map_lines &map)
     // Transforms and markers have to be regenerated, they will not be copied.
     clear_transforms();
     clear_markers();
-    colour_overlay.reset(NULL);
+    overlay.reset(NULL);
     lines         = map.lines;
     map_width     = map.map_width;
     solid_north   = map.solid_north;
@@ -436,24 +436,39 @@ void map_lines::apply_markers(const coord_def &c)
     markers.clear();
 }
 
-void map_lines::apply_colours(const coord_def &c)
+void map_lines::apply_grid_overlay(const coord_def &c)
 {
-    if (!colour_overlay.get())
+    if (!overlay.get())
         return;
-    const Matrix<int> &overlay = *colour_overlay;
     for (int y = height() - 1; y >= 0; --y)
         for (int x = width() - 1; x >= 0; --x)
         {
-            const int colour = overlay(x, y);
+            coord_def gc(c.x + x, c.y + y);
+
+            const int colour = (*overlay)(x, y).colour;
             if (colour)
-                dgn_set_grid_colour_at(c + coord_def(x, y), colour);
+                dgn_set_grid_colour_at(gc, colour);
+#ifdef USE_TILE
+            const int floor = (*overlay)(x, y).floortile;
+            if (floor)
+            {
+                int offset = random2(tile_dngn_count(floor));
+                env.tile_flv(gc).floor = floor + offset;
+            }
+            const int rock = (*overlay)(x, y).rocktile;
+            if (rock)
+            {
+                int offset = random2(tile_dngn_count(rock));
+                env.tile_flv(gc).wall = rock + offset;
+            }
+#endif
         }
 }
 
 void map_lines::apply_overlays(const coord_def &c)
 {
     apply_markers(c);
-    apply_colours(c);
+    apply_grid_overlay(c);
 }
 
 const std::vector<std::string> &map_lines::get_lines() const
@@ -533,39 +548,48 @@ std::string map_lines::parse_glyph_replacements(std::string s,
     return ("");
 }
 
-std::string map_lines::parse_weighted_colours(const std::string &cspec,
-                                              map_colour_list &colours) const
+template<class T>
+std::string map_lines::parse_weighted_str(const std::string &spec, T &list)
 {
-    std::vector<std::string> cspeclist = split_string("/", cspec);
-    for (int i = 0, vsize = cspeclist.size(); i < vsize; ++i)
+    std::vector<std::string> speclist = split_string("/", spec);
+    for (int i = 0, vsize = speclist.size(); i < vsize; ++i)
     {
-        std::string col = cspeclist[i];
-        lowercase(col);
+        std::string val = speclist[i];
+        lowercase(val);
 
-        int weight = find_weight(col);
+        int weight = find_weight(val);
         if (weight == TAG_UNFOUND)
         {
             weight = 10;
             // :number suffix?
-            std::string::size_type cpos = col.find(':');
+            std::string::size_type cpos = val.find(':');
             if (cpos != std::string::npos)
             {
-                weight = atoi(col.substr(cpos + 1).c_str());
+                weight = atoi(val.substr(cpos + 1).c_str());
                 if (weight <= 0)
                     weight = 10;
-                col.erase(cpos);
-                trim_string(col);
+                val.erase(cpos);
+                trim_string(val);
             }
         }
 
-        const int colour = col == "none"? BLACK : str_to_colour(col, -1);
-        if (colour != -1)
-            colours.push_back(map_weighted_colour(colour, weight));
-        else
-            return make_stringf("bad colour spec: '%s' in '%s'",
-                                col.c_str(), cspec.c_str());
+        if (!list.parse(val, weight))
+        {
+            return make_stringf("bad spec: '%s' in '%s'",
+                                val.c_str(), spec.c_str());
+        }
     }
     return ("");
+}
+
+bool map_colour_list::parse(const std::string &col, int weight)
+{
+    const int colour = col == "none" ? BLACK : str_to_colour(col, -1);
+    if (colour == -1)
+        return false;
+
+    push_back(map_weighted_colour(colour, weight));
+    return true;
 }
 
 std::string map_lines::add_colour(const std::string &sub)
@@ -584,7 +608,7 @@ std::string map_lines::add_colour(const std::string &sub)
         return (err);
 
     map_colour_list colours;
-    err = parse_weighted_colours(substitute, colours);
+    err = parse_weighted_str<map_colour_list>(substitute, colours);
     if (!err.empty())
         return (err);
 
@@ -752,6 +776,18 @@ void map_lines::clear_colours()
     clear_transforms(map_transformer::TT_COLOUR);
 }
 
+#ifdef USE_TILE
+void map_lines::clear_rocktiles()
+{
+    clear_transforms(map_transformer::TT_ROCKTILE);
+}
+
+void map_lines::clear_floortiles()
+{
+    clear_transforms(map_transformer::TT_FLOORTILE);
+}
+#endif
+
 void map_lines::clear_shuffles()
 {
     clear_transforms(map_transformer::TT_SHUFFLE);
@@ -847,7 +883,7 @@ void map_lines::clear()
     clear_transforms();
     clear_markers();
     lines.clear();
-    colour_overlay.reset(NULL);
+    overlay.reset(NULL);
     map_width = 0;
     solid_checked = false;
 }
@@ -867,19 +903,40 @@ void map_lines::subst(subst_spec &spec)
 
 void map_lines::overlay_colours(colour_spec &spec)
 {
-    if (!colour_overlay.get())
-        colour_overlay.reset( new Matrix<int>(width(), height(), BLACK) );
+    if (!overlay.get())
+        overlay.reset(new overlay_matrix(width(), height()));
 
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
     {
         std::string::size_type pos = 0;
         while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
         {
-            (*colour_overlay)(pos, y) = spec.get_colour();
+            (*overlay)(pos, y).colour = spec.get_colour();
             ++pos;
         }
     }
 }
+
+#ifdef USE_TILE
+void map_lines::overlay_tiles(tile_spec &spec)
+{
+    if (!overlay.get())
+        overlay.reset(new overlay_matrix(width(), height()));
+
+    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
+    {
+        std::string::size_type pos = 0;
+        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+        {
+            if (spec.floor)
+                (*overlay)(pos, y).floortile = spec.get_tile();
+            else
+                (*overlay)(pos, y).rocktile = spec.get_tile();
+            ++pos;
+        }
+    }
+}
+#endif
 
 void map_lines::nsubst(nsubst_spec &spec)
 {
@@ -1019,14 +1076,14 @@ void map_lines::rotate(bool clockwise)
         newlines.push_back(line);
     }
 
-    if (colour_overlay.get())
+    if (overlay.get())
     {
-        std::auto_ptr< Matrix<int> > new_overlay(
-            new Matrix<int>( lines.size(), map_width ) );
+        std::auto_ptr<overlay_matrix> new_overlay(
+            new overlay_matrix( lines.size(), map_width ) );
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
             for (int j = ys, x = 0; j != ye; j += yi, ++x)
-                (*new_overlay)(x, y) = (*colour_overlay)(i, j);
-        colour_overlay = new_overlay;
+                (*new_overlay)(x, y) = (*overlay)(i, j);
+        overlay = new_overlay;
     }
 
     map_width = lines.size();
@@ -1089,12 +1146,12 @@ void map_lines::vmirror()
         lines[vsize - 1 - i] = temp;
     }
 
-    if (colour_overlay.get())
+    if (overlay.get())
     {
         for (int i = 0; i < midpoint; ++i)
             for (int j = 0, wide = width(); j < wide; ++j)
-                std::swap( (*colour_overlay)(j, i),
-                           (*colour_overlay)(j, vsize - 1 - i) );
+                std::swap( (*overlay)(j, i),
+                           (*overlay)(j, vsize - 1 - i) );
     }
 
     vmirror_markers();
@@ -1115,12 +1172,12 @@ void map_lines::hmirror()
         }
     }
 
-    if (colour_overlay.get())
+    if (overlay.get())
     {
         for (int i = 0, vsize = lines.size(); i < vsize; ++i)
             for (int j = 0; j < midpoint; ++j)
-                std::swap( (*colour_overlay)(j, i),
-                           (*colour_overlay)(map_width - 1 - j, i) );
+                std::swap( (*overlay)(j, i),
+                           (*overlay)(map_width - 1 - j, i) );
     }
 
     hmirror_markers();
@@ -1182,6 +1239,86 @@ coord_def map_lines::find_first_glyph(const std::string &glyphs) const
     }
     return coord_def(-1, -1);
 }
+
+#ifdef USE_TILE
+bool map_tile_list::parse(const std::string &s, int weight)
+{
+    unsigned int idx = 0;
+    if (s != "none" && !tile_dngn_index(s.c_str(), idx))
+        return false;
+
+    push_back(map_weighted_tile((int)idx, weight));
+    return true;
+}
+
+std::string map_lines::add_tile(const std::string &sub, bool is_floor)
+{
+    std::string s = trimmed_string(sub);
+
+    if (s.empty())
+        return ("");
+
+    int sep = 0;
+    std::string key;
+    std::string substitute;
+
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
+    if (!err.empty())
+        return (err);
+
+    map_tile_list list;
+    err = parse_weighted_str<map_tile_list>(substitute, list);
+    if (!err.empty())
+        return (err);
+
+    transforms.push_back(new tile_spec(key[0], sep == ':', is_floor, list));
+    return ("");
+}
+
+std::string map_lines::add_rocktile(const std::string &sub)
+{
+    return add_tile(sub, false);
+}
+
+std::string map_lines::add_floortile(const std::string &sub)
+{
+    return add_tile(sub, true);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// tile_spec
+
+std::string tile_spec::apply_transform(map_lines &map)
+{
+    map.overlay_tiles(*this);
+    return ("");
+}
+
+std::string tile_spec::describe() const
+{
+    return ("");
+}
+
+int tile_spec::get_tile()
+{
+    if (chose_fixed)
+        return fixed_tile;
+
+    int chosen = 0;
+    int cweight = 0;
+    for (int i = 0, size = tiles.size(); i < size; ++i)
+        if (x_chance_in_y(tiles[i].second, cweight += tiles[i].second))
+            chosen = tiles[i].first;
+
+    if (fix)
+    {
+        chose_fixed = true;
+        fixed_tile = chosen;
+    }
+    return (chosen);
+}
+
+#endif
 
 ///////////////////////////////////////////////
 // dlua_set_map

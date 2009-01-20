@@ -245,10 +245,12 @@ BFLAGS:             { CBEGIN(ARGUMENT); return BFLAGS; }
 SUBST:              { CBEGIN(ITEM_LIST); return SUBST; }
 NSUBST:             { CBEGIN(ITEM_LIST); return NSUBST; }
 COLOUR:             { CBEGIN(ITEM_LIST); return COLOUR; }
-FLOORCOL:           { CBEGIN(ARGUMENT); return FLOORCOL; }
-ROCKCOL:            { CBEGIN(ARGUMENT); return ROCKCOL; }
-FLOORTILE:          { CBEGIN(ARGUMENT); return FLOORTILE; }
-ROCKTILE:           { CBEGIN(ARGUMENT); return ROCKTILE; }
+LFLOORCOL:          { CBEGIN(ARGUMENT); return LFLOORCOL; }
+LROCKCOL:           { CBEGIN(ARGUMENT); return LROCKCOL; }
+LFLOORTILE:         { CBEGIN(ARGUMENT); return LFLOORTILE; }
+LROCKTILE:          { CBEGIN(ARGUMENT); return LROCKTILE; }
+FTILE:              { CBEGIN(ITEM_LIST); return FTILE; }
+RTILE:              { CBEGIN(ITEM_LIST); return RTILE; }
 MONS:               { CBEGIN(MNAME); return MONS; }
 ITEM:               { CBEGIN(ITEM_LIST); return ITEM; }
 MARKER:             { CBEGIN(ARGUMENT); return MARKER; }

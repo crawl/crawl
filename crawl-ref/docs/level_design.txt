@@ -509,23 +509,23 @@ BFLAGS:   Persistent, changeable per-*branch* flags which affect game
                               they've been (like in the Abyss)
           * no_magic_map    - which prevents magic mapping from working.
 
-FLOORCOL: blue
-          FLOORCOL: allows you to set the floor colour for the level the
+LFLOORCOL: blue
+          LFLOORCOL: allows you to set the floor colour for the level the
           vault appears in. Should only be used for bazaars and other
           portal vaults.
 
-ROCKCOL:  yellow
-          ROCKCOL: allows you to set the colour of rock walls for the level
+LROCKCOL: yellow
+          LROCKCOL: allows you to set the colour of rock walls for the level
           the vault appears in. Should only be used for bazaars and other
           portal vaults.
 
-FLOORTILE: (tile name string, e.g. "floor_tomb")
-          Like FLOORCOL, this overrides the default floor tiles used for
+LFLOORTILE: (tile name string, e.g. "floor_tomb")
+          Like LFLOORCOL, this overrides the default floor tiles used for
           this level. If the tile specified has variations, those will be
           used automatically.
 
-ROCKTILE: (tile name string, e.g. "wall_hive")
-          Same as FLOORTILE, but for rock walls.
+LROCKTILE: (tile name string, e.g. "wall_hive")
+          Same as LFLOORTILE, but for rock walls.
 
 ITEM:     (list of items, separated by comma)
           These are used to help place specified items at specific places
@@ -685,6 +685,30 @@ COLOUR:   . = green / blue:5 / red / none
           COLOUR: should be used very sparingly, and only for features
           where it won't cause confusion (i.e.: never re-colour features
           like lava or traps unless you really know what you do!)
+
+          If you apply COLOUR to a glyph and then apply a SUBST,
+          the COLOUR will transfer to the resulting transformed glyph.
+
+FTILE:    . = floor_grass:20 / floor_dirt / none
+          Similar to COLOUR, FTILE allows you to attach explicit floor
+          tiles to any glyph.  In non-tiles builds, this does nothing.
+          If the tile specified has variations, those will be used
+          automatically.  Only tiles from the dungeon image can be used.
+
+          This will not (necessarily) replace the feature tile itself,
+          only the floor.  If you set the FTILE on a fountain glyph,
+          then the fountain will still appear normally, but the floor
+          underneath it will be the tile that was specified.
+
+          If a feature that normally covers the floor (e.g. rock walls) is
+          destroyed, this floor tile will be used in place of the normal floor.
+          Thus, it can be useful even for non-floor features.
+
+          Like COLOUR, this should be used sparingly.
+
+RTILE:    x = wall_hive:15 / wall_lair / none
+          Identical to FTILE, but for rock walls.  Not useful for anything
+          but the rock wall feature.
 
 SHUFFLE:  def, 12/3?
           This allows you to randomly permute glyphs on the map. There are

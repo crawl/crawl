@@ -59,12 +59,12 @@ end
 function sewer_colours(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = darkgrey")
-  e.rockcol("darkgrey")
-  e.floorcol("lightgrey")
+  e.lrockcol("darkgrey")
+  e.lfloorcol("lightgrey")
   e.colour("w = green")
   e.colour("W = lightgreen")
-  e.rocktile("wall_slime")
-  e.floortile("floor_slime")
+  e.lrocktile("wall_slime")
+  e.lfloortile("floor_slime")
 end
 }}
 

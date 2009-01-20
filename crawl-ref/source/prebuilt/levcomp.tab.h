@@ -65,20 +65,22 @@
      WELCOME = 281,
      LFLAGS = 282,
      BFLAGS = 283,
-     FLOORCOL = 284,
-     ROCKCOL = 285,
-     FLOORTILE = 286,
-     ROCKTILE = 287,
-     COMMA = 288,
-     COLON = 289,
-     PERC = 290,
-     INTEGER = 291,
-     CHARACTER = 292,
-     STRING = 293,
-     MAP_LINE = 294,
-     MONSTER_NAME = 295,
-     ITEM_INFO = 296,
-     LUA_LINE = 297
+     LFLOORCOL = 284,
+     LROCKCOL = 285,
+     LFLOORTILE = 286,
+     LROCKTILE = 287,
+     FTILE = 288,
+     RTILE = 289,
+     COMMA = 290,
+     COLON = 291,
+     PERC = 292,
+     INTEGER = 293,
+     CHARACTER = 294,
+     STRING = 295,
+     MAP_LINE = 296,
+     MONSTER_NAME = 297,
+     ITEM_INFO = 298,
+     LUA_LINE = 299
    };
 #endif
 /* Tokens.  */
@@ -108,20 +110,22 @@
 #define WELCOME 281
 #define LFLAGS 282
 #define BFLAGS 283
-#define FLOORCOL 284
-#define ROCKCOL 285
-#define FLOORTILE 286
-#define ROCKTILE 287
-#define COMMA 288
-#define COLON 289
-#define PERC 290
-#define INTEGER 291
-#define CHARACTER 292
-#define STRING 293
-#define MAP_LINE 294
-#define MONSTER_NAME 295
-#define ITEM_INFO 296
-#define LUA_LINE 297
+#define LFLOORCOL 284
+#define LROCKCOL 285
+#define LFLOORTILE 286
+#define LROCKTILE 287
+#define FTILE 288
+#define RTILE 289
+#define COMMA 290
+#define COLON 291
+#define PERC 292
+#define INTEGER 293
+#define CHARACTER 294
+#define STRING 295
+#define MAP_LINE 296
+#define MONSTER_NAME 297
+#define ITEM_INFO 298
+#define LUA_LINE 299
 
 
 
@@ -135,7 +139,7 @@ typedef union YYSTYPE
     raw_range range;
 }
 /* Line 1529 of yacc.c.  */
-#line 139 "levcomp.tab.h"
+#line 143 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

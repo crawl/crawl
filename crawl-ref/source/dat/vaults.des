@@ -215,6 +215,7 @@ DEPTH:  Vault:3-
 TAGS:   no_secret_doors no_monster_gen no_item_gen no_wall_fixup
 COLOUR: M = magenta
 COLOUR: K = magenta
+FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
 MARKER: # = lua:fog_machine{\
             pow_max = 15, delay_min = 100, delay_max = 150, \
             size = 1, size_buildup_amnt = 10, \

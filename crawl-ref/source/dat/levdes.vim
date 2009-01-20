@@ -51,7 +51,7 @@ syn region desNsubst start=/^NSUBST:\s*/ end=/$/ contains=desNsubstDec,desSubstA
 
 syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMapFrag keepend
 
-syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT: ITEM: KFEAT: KMONS: KITEM: COLOUR: KMASK: MARKER: LFLAGS: BFLAGS: ROCKCOL: FLOORCOL:
+syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT: ITEM: KFEAT: KMONS: KITEM: COLOUR: KMASK: MARKER: LFLAGS: BFLAGS: LROCKCOL: LFLOORCOL: LFLOORTILE: LROCKTILE: FTILE: RTILE:
 syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float
 syn keyword desOrientation no_hmirror no_vmirror no_rotate
 syn keyword desOrientation entry pan lab bazaar allow_dup dummy mini_float minotaur

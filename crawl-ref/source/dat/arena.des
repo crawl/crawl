@@ -22,10 +22,10 @@ function randomise_colours(e)
         "floor_nerves", "floor_dirt"
     }
 
-    e.rockcol(util.random_from(colours))
-    e.floorcol(util.random_from(colours))
-    e.rocktile(util.random_from(walls))
-    e.floortile(util.random_from(floors))
+    e.lrockcol(util.random_from(colours))
+    e.lfloorcol(util.random_from(colours))
+    e.lrocktile(util.random_from(walls))
+    e.lfloortile(util.random_from(floors))
 end
 }}
 
