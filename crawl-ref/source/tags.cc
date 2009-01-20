@@ -2120,6 +2120,18 @@ static void tag_read_level_items(reader &th, char minorVersion)
     const int item_count = unmarshallShort(th);
     for (int i = 0; i < item_count; ++i)
         unmarshallItem(th, mitm[i]);
+
+#if DEBUG_ITEM_SCAN
+    // There's no way to fix this, even with wizard commands, so get
+    // rid of it when restoring the game.
+    for (int i = 0; i < MAX_ITEMS; i++)
+    {
+        item_def &item(mitm[i]);
+
+        if (item.pos.origin())
+            item.clear();
+    }
+#endif
 }
 
 static void unmarshall_monster(reader &th, monsters &m)
