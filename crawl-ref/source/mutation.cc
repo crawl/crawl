@@ -1319,7 +1319,7 @@ formatted_string describe_mutations()
                     colourname = "lightblue";
             }
 
-            result += "<"';
+            result += "<";
             result += colourname;
             result += ">";
             if (fully_inactive)
