@@ -7000,13 +7000,14 @@ void player::rot(actor *who, int amount, int immediate)
     if (res_rotting() > 0 || amount <= 0)
         return;
 
-    rot_player(amount);
-
     if (immediate > 0)
         rot_hp(immediate);
 
-    if (one_chance_in(4))
-        disease_player(50 + random2(100));
+    if (rot_player(amount))
+    {
+        if (one_chance_in(4))
+            disease_player(50 + random2(100));
+    }
 }
 
 bool player::drain_exp(actor *who, bool quiet)
