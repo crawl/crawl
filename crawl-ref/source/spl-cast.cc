@@ -3113,9 +3113,9 @@ void MiscastEffect::_enchantment(int severity)
                            " energy!";
             break;
         case 2:
-            you_msg        = "Multicolored lights dance before your eyes!";
-            mon_msg_seen   = "Multicolored lights dance around @the_monster@!";
-            mon_msg_unseen = "Multicolored lights dance in the air!";
+            you_msg        = "Multicoloured lights dance before your eyes!";
+            mon_msg_seen   = "Multicoloured lights dance around @the_monster@!";
+            mon_msg_unseen = "Multicoloured lights dance in the air!";
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";
@@ -3964,9 +3964,9 @@ void MiscastEffect::_transmutation(int severity)
             mon_msg_unseen = "The thin air crackles with energy!";
             break;
         case 2:
-            you_msg        = "Multicolored lights dance before your eyes!";
-            mon_msg_seen   = "Multicolored lights dance around @the_monster@!";
-            mon_msg_unseen = "Multicolored lights dance in the air!";
+            you_msg        = "Multicoloured lights dance before your eyes!";
+            mon_msg_seen   = "Multicoloured lights dance around @the_monster@!";
+            mon_msg_unseen = "Multicoloured lights dance in the air!";
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";

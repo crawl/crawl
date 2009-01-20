@@ -2237,13 +2237,13 @@ void melee_attack::chaos_affects_defender()
         if (see_grid(defender->pos()))
         {
             if (defender->atype() == ACT_PLAYER)
-                mpr("You give off a flash of multi-coloured light!");
+                mpr("You give off a flash of multicoloured light!");
             else if (you.can_see(defender))
                 simple_monster_message(defender_as_monster(),
                                        " gives off a flash of "
-                                       "multi-coloured light!");
+                                       "multicoloured light!");
             else
-                mpr("There is a flash of multi-coloured light!");
+                mpr("There is a flash of multicoloured light!");
         }
     }
 
