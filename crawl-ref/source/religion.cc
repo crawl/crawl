@@ -3357,7 +3357,7 @@ void gain_piety(int pgn)
         if ((you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
             && you.num_gifts[you.religion] == 0)
         {
-            simple_god_message( " will now bless your weapon at an altar...once.");
+            simple_god_message( " will now bless your weapon at an altar... once.");
         }
 
         // When you gain piety of more than 160, you get another chance
@@ -4398,7 +4398,7 @@ static bool _kikubaaqudgha_retribution()
         if (success)
             simple_god_message(" unleashes Death upon you!", god);
         else
-            god_speaks(god, "Death has been delayed...for now.");
+            god_speaks(god, "Death has been delayed... for now.");
     }
     else
     {
@@ -6185,7 +6185,7 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
                  you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
         }
-        // Nemelex piety gain is fairly fast...at least
+        // Nemelex piety gain is fairly fast... at least
         // when you have low piety.
         if (item.base_type == OBJ_CORPSES && one_chance_in(2 + you.piety/50)
             || x_chance_in_y(value/2 + 1, 30 + you.piety/2))
