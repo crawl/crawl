@@ -3907,7 +3907,7 @@ void MiscastEffect::_necromancy(int severity)
             {
                 you_msg      = "Something just walked over your grave. No, "
                                "really!";
-                mon_msg_seen = "@The_monster@ seems frightened for a moment."
+                mon_msg_seen = "@The_monster@ seems frightened for a moment.";
                 do_msg();
             }
             else
