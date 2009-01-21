@@ -988,6 +988,15 @@ int _setup_evaporate_cast()
     return rc;
 }
 
+static bool _can_cast_detect()
+{
+    if (!testbits(env.level_flags, LFLAG_NO_MAGIC_MAP))
+        return true;
+
+    mprf("You feel disoriented.");
+    return false;
+}
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
@@ -2019,21 +2028,27 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_DETECT_SECRET_DOORS:
-        cast_detect_secret_doors(powc);
+        if (_can_cast_detect())
+            cast_detect_secret_doors(powc);
         break;
 
     case SPELL_DETECT_TRAPS:
-        mprf("You detect %s", (detect_traps(powc) > 0) ? "traps!"
-                                                       : "nothing.");
+        if (_can_cast_detect())
+            mprf("You detect %s", (detect_traps(powc) > 0) ? "traps!"
+                                                           : "nothing.");
         break;
 
     case SPELL_DETECT_ITEMS:
-        mprf("You detect %s", (detect_items(powc) > 0) ? "items!"
-                                                       : "nothing.");
+        if (_can_cast_detect())
+            mprf("You detect %s", (detect_items(powc) > 0) ? "items!"
+                                                           : "nothing.");
         break;
 
     case SPELL_DETECT_CREATURES:
     {
+        if (!_can_cast_detect())
+            break;
+
         const int prev_detected = count_detected_mons();
         const int num_creatures = detect_creatures(powc);
 
