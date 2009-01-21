@@ -4964,6 +4964,9 @@ bool monsters::eat_corpse(item_def &item, int near)
     if (!mons_eats_corpses(this))
         return (false);
 
+    if (item.sub_type != CORPSE_BODY)
+        return (false);
+
     hit_points += 1 + random2(mons_weight(item.plus)) / 100;
 
     // Limited growth factor here -- should 77 really be the cap? {dlb}:
@@ -5080,7 +5083,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     case OBJ_ARMOUR:
         return pickup_armour(item, near, force);
     case OBJ_CORPSES:
-        return eat_corpse(item, near);
+        return eat_corpse(item, near || force);
     case OBJ_MISCELLANY:
         return pickup_misc(item, near);
     case OBJ_GOLD:
