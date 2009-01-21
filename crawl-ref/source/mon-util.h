@@ -777,6 +777,7 @@ bool mons_is_evil_or_unholy(const monsters *mon);
 bool mons_is_icy(int mc);
 bool mons_is_skeletal(int mc);
 bool mons_has_lifeforce(const monsters *mon);
+bool mons_eats_corpses(const monsters *m);
 monster_type mons_genus(int mc);
 monster_type mons_species(int mc);
 

@@ -4965,6 +4965,13 @@ void wizard_give_monster_item(monsters *mon)
     case OBJ_MISCELLANY:
         mon_slot = MSLOT_MISCELLANY;
         break;
+    case OBJ_CORPSES:
+        if (!mons_eats_corpses(mon))
+        {
+            mpr("That type of monster doesn't eat corpses.");
+            return;
+        }
+        break;
     default:
         mpr("You can't give that type of item to a monster.");
         return;
@@ -4972,6 +4979,7 @@ void wizard_give_monster_item(monsters *mon)
 
     // Shouldn't we be using MONUSE_MAGIC_ITEMS?
     if (item_use == MONUSE_STARTING_EQUIPMENT
+        && item.base_type != OBJ_CORPSES
         && !mons_is_unique( mon->type ))
     {
         switch(mon_slot)
@@ -4998,7 +5006,8 @@ void wizard_give_monster_item(monsters *mon)
     // Move monster's old item to player's inventory as last step.
     int  old_eq     = NON_ITEM;
     bool unequipped = false;
-    if (mon->inv[mon_slot] != NON_ITEM
+    if (item.base_type != OBJ_CORPSES
+        && mon->inv[mon_slot] != NON_ITEM
         && !items_stack(item, mitm[mon->inv[mon_slot]]))
     {
         old_eq = mon->inv[mon_slot];
