@@ -459,7 +459,7 @@ mon_resist_def get_mons_resists(const monsters *mon);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void init_monsters( FixedVector<unsigned short, 1000>& colour );
+void init_monsters();
 void init_monster_symbols();
 
 monsters *monster_at(const coord_def &pos);

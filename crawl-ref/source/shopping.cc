@@ -463,7 +463,8 @@ static bool _in_a_shop( int shopidx )
             }
 
             item_def& item = mitm[stock[ft]];
-            const int gp_value = _shop_get_item_value(item, shop.greed, id_stock);
+            const int gp_value = _shop_get_item_value(item, shop.greed,
+                                                      id_stock);
 
             selected[ft] = !selected[ft];
             if (selected[ft])

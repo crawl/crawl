@@ -232,24 +232,19 @@ monster_type get_monster_by_name(std::string name, bool exact)
     return (mon);
 }
 
-void init_monsters(FixedVector < unsigned short, 1000 > &colour)
+void init_monsters()
 {
-    unsigned int x;             // must be unsigned to match size_t {dlb}
-
-    for (x = 0; x < MONDATASIZE; x++)
-        colour[mondata[x].mc] = mondata[x].colour;
-
     // First, fill static array with dummy values. {dlb}
     mon_entry.init(-1);
 
     // Next, fill static array with location of entry in mondata[]. {dlb}:
-    for (x = 0; x < MONDATASIZE; x++)
-        mon_entry[mondata[x].mc] = x;
+    for (unsigned int i = 0; i < MONDATASIZE; ++i)
+        mon_entry[mondata[i].mc] = i;
 
     // Finally, monsters yet with dummy entries point to TTTSNB(tm). {dlb}:
-    for (x = 0; x < NUM_MONSTERS; x++)
-        if (mon_entry[x] == -1)
-            mon_entry[x] = mon_entry[MONS_PROGRAM_BUG];
+    for (unsigned int i = 0; i < NUM_MONSTERS; ++i)
+        if (mon_entry[i] == -1)
+            mon_entry[i] = mon_entry[MONS_PROGRAM_BUG];
 
     init_monster_symbols();
 }

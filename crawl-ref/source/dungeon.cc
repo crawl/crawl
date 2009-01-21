@@ -1673,7 +1673,10 @@ void dgn_set_colours_from_monsters()
             env.floor_colour = LIGHTGREY;
     }
     else
-        env.floor_colour = _fix_black_colour((char)mcolour[env.mons_alloc[9]]);
+    {
+        env.floor_colour =
+            _fix_black_colour(mons_class_colour(env.mons_alloc[9]));
+    }
 
     if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_PROGRAM_BUG
         || env.mons_alloc[8] >= NUM_MONSTERS)
@@ -1682,7 +1685,10 @@ void dgn_set_colours_from_monsters()
             env.rock_colour = BROWN;
     }
     else
-        env.rock_colour = _fix_black_colour((char)mcolour[env.mons_alloc[8]]);
+    {
+        env.rock_colour =
+            _fix_black_colour(mons_class_colour(env.mons_alloc[8]));
+    }
 }
 
 static void _dgn_set_floor_colours()

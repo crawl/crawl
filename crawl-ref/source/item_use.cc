@@ -1969,7 +1969,7 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.can_see_invis = agent->can_see_invisible();
 
-    item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
+    const item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
     if (launcher && !item.launched_by(*launcher))
         launcher = NULL;
 

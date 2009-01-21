@@ -63,11 +63,6 @@ protected:
 
 extern char info[INFO_SIZE];         // defined in acr.cc {dlb}
 
-extern unsigned char show_green;     // defined in view.cc {dlb}
-
-// defined in mon-util.cc -- w/o this screen redraws *really* slow {dlb}
-extern FixedVector<unsigned short, 1000> mcolour;
-
 const int kNameLen = 30;
 #ifdef SHORT_FILE_NAMES
     const int kFileNameLen = 6;
