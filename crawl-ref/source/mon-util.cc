@@ -7150,6 +7150,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // and are more likely to surface.  -- bwr
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
+        else if (hit_points <= max_hit_points / 2)
+            break;
         else if (type == MONS_TRAPDOOR_SPIDER)
         {
             // This should probably never happen.
@@ -7157,8 +7159,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 del_ench(ENCH_SUBMERGED);
             break;
         }
-        else if (hit_points <= max_hit_points / 2)
-            break;
         else if (((type == MONS_ELECTRICAL_EEL || type == MONS_LAVA_SNAKE)
                   && (one_chance_in(50) || (mons_near(this)
                                             && hit_points == max_hit_points
@@ -7588,6 +7588,9 @@ void monsters::check_redraw(const coord_def &old) const
             view_update_at(old);
         update_screen();
     }
+    if (see_old && !see_new && player_monster_visible(this))
+        mprf(MSGCH_DIAGNOSTICS, "%s moved out of LOS.",
+             name(DESC_PLAIN, true).c_str());
 }
 
 void monsters::apply_location_effects(const coord_def &oldpos)
