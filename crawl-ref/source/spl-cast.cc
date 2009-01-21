@@ -3803,12 +3803,16 @@ void MiscastEffect::_necromancy(int severity)
         switch (random2(3))
         {
         case 0:
-            // Monster messages needed.
             if (target->res_torment())
-                you_msg = "You feel weird for a moment.";
+            {
+                you_msg      = "You feel weird for a moment.";
+                mon_msg_seen = "@The_monster@ has an odd expression for a "
+                               "moment.";
+            }
             else
             {
-                you_msg = "Pain shoots through your body!";
+                you_msg      = "Pain shoots through your body!";
+                mon_msg_seen = "@The_monster@ convulses with pain!";
                 _ouch(5 + random2avg(15, 2));
             }
             break;
@@ -3883,17 +3887,20 @@ void MiscastEffect::_necromancy(int severity)
             // If draining failed, just flow through...
 
         case 2:
-            // Monster messages needed.
             if (target->res_torment())
             {
-                you_msg = "You feel weird for a moment.";
+                you_msg      = "You feel weird for a moment.";
+                mon_msg_seen = "@The_monster@ has an odd expression for a "
+                               "moment.";
                 do_msg();
             }
             else
             {
-                you_msg = "You convulse helplessly as pain tears through "
-                          "your body!";
+                you_msg      = "You convulse helplessly as pain tears through "
+                               "your body!";
+                mon_msg_seen = "@The_monster@ convulses helplessly with pain!";
                 _ouch(15 + random2avg(23, 2));
+                do_msg();
             }
             break;
         }
