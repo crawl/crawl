@@ -2632,7 +2632,7 @@ int player_shield_class(void)   //jmf: changes for new spell
         base_shield += you.attribute[ATTR_DIVINE_SHIELD];
 
     return (base_shield);
-}                               // end player_shield_class()
+}
 
 int player_see_invis(bool calc_unid)
 {
@@ -6693,7 +6693,7 @@ int player::shield_bonus() const
     }
     else
     {
-        // Condensation shield is guided by the mind.
+        // Magical and divine shields are governed by the mind.
         stat = intel / 2;
     }
 

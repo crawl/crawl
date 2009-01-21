@@ -146,13 +146,12 @@ std::string trap_def::name(description_level_type desc) const
 
 bool trap_def::is_known(const actor* act) const
 {
+    bool rc = false;
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
     if (act == NULL || act->atype() == ACT_PLAYER)
-        return (player_knows);
-
-    bool rc = false;
-    if (act->atype() == ACT_MONSTER)
+        rc = player_knows;
+    else if (act->atype() == ACT_MONSTER)
     {
         const monsters* monster = dynamic_cast<const monsters*>(act);
         const int intel = mons_intel(monster);
@@ -170,7 +169,7 @@ bool trap_def::is_known(const actor* act) const
                   || mons_wont_attack(monster) && player_knows
                   || intel >= I_HIGH && one_chance_in(3)));
     }
-    return rc;
+    return (rc);
 }
 
 
@@ -1130,15 +1129,18 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     else
     {
         // Record position now, in case it's a monster and dies (thus
-        // resetting its position) before the ammo can be droped.
+        // resetting its position) before the ammo can be dropped.
         const coord_def apos = act.pos();
 
         item_def shot = this->generate_trap_item();
-        bool poison = (this->type == TRAP_NEEDLE);
+        bool poison = (this->type == TRAP_NEEDLE
+                       && !act.res_poison()
+                       && x_chance_in_y(50 - (3*act.armour_class()) / 2, 100));
+
         int damage_taken =
-            this->shot_damage(act) - random2(act.armour_class()+1);
-        if (damage_taken < 0)
-            damage_taken = 0;
+            std::max(this->shot_damage(act) - random2(act.armour_class()+1),0);
+
+        int trap_hit = (20 + (you.your_level*2)) * random2(200) / 100;
 
         if (act.atype() == ACT_PLAYER)
         {
@@ -1155,12 +1157,15 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
             // Check for shield blocking.
             // Exercise only if the trap was unknown (to prevent scumming.)
-            if (!was_known && you.shield() && one_chance_in(3))
+            if (!was_known && player_shield_class() && coinflip())
                 exercise(SK_SHIELDS, 1);
 
-            if (random2(20 + 5 * you.shield_blocks * you.shield_blocks)
-                < player_shield_class())
+            const int con_block = random2(20 + you.shield_block_penalty());
+            const int pro_block = you.shield_bonus();
+            if (pro_block >= con_block)
             {
+                // Note that we don't call shield_block_succeeded()
+                // because that can exercise Shields skill.
                 you.shield_blocks++;
                 msg += "hits your shield.";
                 mpr(msg.c_str());
@@ -1169,9 +1174,9 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             {
                 // Note that this uses full (not random2limit(foo,40))
                 // player_evasion.
-                int trap_hit = (20 + (you.your_level*2)) * random2(200) / 100;
-                int your_dodge = player_evasion() + random2(you.dex) / 3
-                    - 2 + (you.duration[DUR_REPEL_MISSILES] * 10);
+                int your_dodge = you.melee_evasion(NULL) - 2
+                    + (random2(you.dex) / 3)
+                    + (you.duration[DUR_REPEL_MISSILES] * 10);
 
                 // Check if it got past dodging. Deflect Missiles provides
                 // immunity to such traps.
@@ -1183,11 +1188,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                     mpr(msg.c_str());
 
                     // Needle traps can poison.
-                    if (poison && !player_res_poison()
-                        && x_chance_in_y(50 - (3*player_AC()) / 2, 100))
-                    {
-                        poison_player(1 + random2(3));
-                    }
+                    if (poison)
+                        you.poison(NULL, 1 + random2(3));
 
                     ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP,
                          shot.name(DESC_PLAIN).c_str());
@@ -1205,22 +1207,15 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         }
         else if (act.atype() == ACT_MONSTER)
         {
-            monsters* monster = dynamic_cast<monsters *>(&act);
-
             // Determine whether projectile hits.
-            bool hit = (((20+(you.your_level*2))*random2(200))/100
-                        >= monster->ev);
-
-            // Check whether to poison.
-            if (poison)
-                poison = (x_chance_in_y(50 - (3*monster->ac)/2, 100));
+            bool hit = (trap_hit >= act.melee_evasion(NULL));
 
             if (see_grid(act.pos()))
             {
                 mprf("%s %s %s%s!",
                      shot.name(DESC_CAP_A).c_str(),
                      hit ? "hits" : "misses",
-                     monster->name(DESC_NOCAP_THE).c_str(),
+                     act.name(DESC_NOCAP_THE).c_str(),
                      (hit && damage_taken == 0
                          && !poison) ? ", but does no damage" : "");
             }
@@ -1229,9 +1224,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             if (hit)
             {
                 if (poison)
-                    poison_monster(monster, KC_OTHER);
-
-                monster->hurt(NULL, damage_taken);
+                    act.poison(NULL, 1 + random2(3));
+                act.hurt(NULL, damage_taken);
             }
         }
 

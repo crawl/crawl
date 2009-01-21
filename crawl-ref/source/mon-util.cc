@@ -5863,7 +5863,7 @@ void monsters::poison(actor *agent, int amount)
     if (!(amount /= 2))
         amount = 1;
 
-    poison_monster(this, agent->kill_alignment(), amount);
+    poison_monster(this, agent ? agent->kill_alignment() : KC_OTHER, amount);
 }
 
 int monsters::skill(skill_type sk, bool) const
