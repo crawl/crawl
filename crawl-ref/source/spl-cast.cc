@@ -3905,8 +3905,9 @@ void MiscastEffect::_necromancy(int severity)
         case 0:
             if (target->holiness() == MH_UNDEAD)
             {
-                // Monster messages needed.
-                you_msg = "Something just walked over your grave. No, really!";
+                you_msg      = "Something just walked over your grave. No, "
+                               "really!";
+                mon_msg_seen = "@The_monster@ seems frightened for a moment."
                 do_msg();
             }
             else
