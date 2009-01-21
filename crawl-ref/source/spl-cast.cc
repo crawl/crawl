@@ -993,7 +993,7 @@ static bool _can_cast_detect()
     if (!testbits(env.level_flags, LFLAG_NO_MAGIC_MAP))
         return true;
 
-    mprf("You feel disoriented.");
+    mpr("You feel momentarily disoriented.");
     return false;
 }
 
