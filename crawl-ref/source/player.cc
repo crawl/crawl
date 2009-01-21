@@ -7214,13 +7214,12 @@ bool player::is_icy() const
     return (attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST);
 }
 
-void player::moveto(const coord_def &c)
+void player::base_moveto(const coord_def &c)
 {
     ASSERT(!crawl_state.arena);
 
     const bool real_move = (c != pos());
     position = c;
-    crawl_view.set_player_at(c);
 
     if (real_move)
     {
@@ -7231,6 +7230,18 @@ void player::moveto(const coord_def &c)
         // recalculated for the next monster that tries to reach us.
         you.lava_in_sight = you.water_in_sight = -1;
     }
+}
+
+void player::moveto(const coord_def &c)
+{
+    crawl_view.set_player_at(c);
+    base_moveto(c);
+}
+
+void player::shiftto(const coord_def &c)
+{
+    crawl_view.shift_player_to(c);
+    base_moveto(c);
 }
 
 void player::reset_prev_move()

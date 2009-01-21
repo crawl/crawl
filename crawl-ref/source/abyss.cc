@@ -507,7 +507,7 @@ void area_shift(void)
             delete_cloud( i );
     }
 
-    you.moveto(abyss_center);
+    you.shiftto(abyss_center);
 
     _generate_area(coord_def(MAPGEN_BORDER, MAPGEN_BORDER),
                    coord_def(GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER), true);

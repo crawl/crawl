@@ -978,6 +978,8 @@ public:
 
     // Low-level move the player. Use this instead of changing pos directly.
     void moveto(const coord_def &c);
+    // Move the player during an abyss shift.
+    void shiftto(const coord_def &c);
 
     void reset_prev_move();
 
@@ -1153,6 +1155,8 @@ public:
 
     bool did_escape_death() const;
     void reset_escaped_death();
+protected:
+    void base_moveto(const coord_def &c);
 };
 
 extern player you;
