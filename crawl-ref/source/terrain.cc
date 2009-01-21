@@ -858,9 +858,9 @@ static bool _ok_dest_grid(const actor* orig_actor,
     actor* dest_actor = NULL;
 
     if (dest_pos == you.pos())
-        dest_actor = dynamic_cast<actor*>(&you);
+        dest_actor = &you;
     else if (mgrd(dest_pos) != NON_MONSTER)
-        dest_actor = dynamic_cast<actor*>(&menv[mgrd(dest_pos)]);
+        dest_actor = &menv[mgrd(dest_pos)];
 
     if (orig_actor && !orig_actor->is_habitable_feat(dest_feat))
         return (false);
@@ -879,9 +879,9 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     actor* orig_actor = NULL;
 
     if (src == you.pos())
-        orig_actor = dynamic_cast<actor*>(&you);
+        orig_actor = &you;
     else if (mgrd(src) != NON_MONSTER)
-        orig_actor = dynamic_cast<actor*>(&menv[mgrd(src)]);
+        orig_actor = &menv[mgrd(src)];
 
     if (in_bounds(prefered_dest)
         && _ok_dest_grid(orig_actor, orig_feat, prefered_dest))
