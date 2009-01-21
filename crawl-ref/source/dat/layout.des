@@ -147,11 +147,11 @@ TAGS:    layout allow_dup
     local oblique = 10 + crawl.random2(20)
 
     dgn.fill_area(0, 0, gxm - 1, gym - 1, "rock_wall")
-    dgn.octa_room(1, 1, gxm - 2, gym - 2, oblique, "floor")
+    dgn.octa_room(10, 10, gxm - 10, gym - 10, oblique, "floor")
 
     local smear = crawl.coinflip()
     if smear then
-        local iterations = 100 + crawl.random2(400)
+        local iterations = 100 + crawl.random2(500 - oblique * 12)
         dgn.smear_feature(iterations, false, wall, 0, 0, gxm - 1, gym - 1)
     end
 
