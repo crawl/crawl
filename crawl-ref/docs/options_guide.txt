@@ -993,7 +993,9 @@ allow_self_target = (yes | no | prompt)
         When set to 'yes', you are a valid target. When set to 'no',
         you cannot target yourself with such spells. When set to
         'prompt' (the default), you will be required to confirm
-        self-targeting.
+        self-targeting. This option has no effect on area-effect
+        spells, such as Mephitic Cloud or Evaporate, where you
+        are always a valid target.
 
 easy_butcher = true
         If true, auto-switch to an appropriate uncursed weapon for 
