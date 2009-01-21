@@ -749,7 +749,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     // Monsters should only use targeted spells while foe == MHITNOT
     // if they're targeting themselves.
     else if (monster->foe == MHITNOT && !monster->confused())
-        target = "NONEXISTANT FOE";
+        target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(monster->foe)
              && menv[monster->foe].type == -1)
     {
@@ -826,8 +826,8 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 // in the path.
                 else if (target == "nothing")
                 {
-                    target            = "you";
                     targ_prep         = "at";
+                    target            = "you";
                     mons_targ_aligned = true;
                 }
             }
