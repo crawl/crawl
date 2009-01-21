@@ -2505,17 +2505,6 @@ void behaviour_event(monsters *mon, int event, int src,
         if (mons_friendly(mon) && mon->is_patrolling())
             break;
 
-        if (mon->is_patrolling())
-            mprf(MSGCH_DIAGNOSTICS, "ME_ALERT: %s patrolling",
-                 mon->name(DESC_PLAIN, true).c_str());
-
-        if (mon->travel_target != MTRAV_NONE
-            || mon->travel_path.size() > 0)
-        {
-            mprf(MSGCH_DIAGNOSTICS, "ME_ALERT: %s travelling",
-                 mon->name(DESC_PLAIN, true).c_str());
-        }
-
         if (mons_is_sleeping(mon) && mons_near(mon))
             remove_auto_exclude(mon, true);
 
