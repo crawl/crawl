@@ -3892,7 +3892,6 @@ void MiscastEffect::_necromancy(int severity)
                 you_msg      = "You feel weird for a moment.";
                 mon_msg_seen = "@The_monster@ has an odd expression for a "
                                "moment.";
-                do_msg();
             }
             else
             {
@@ -3900,8 +3899,8 @@ void MiscastEffect::_necromancy(int severity)
                                "your body!";
                 mon_msg_seen = "@The_monster@ convulses helplessly with pain!";
                 _ouch(15 + random2avg(23, 2));
-                do_msg();
             }
+            do_msg();
             break;
         }
         break;
