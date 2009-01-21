@@ -124,6 +124,8 @@ static void _BreakStrToDebugger(const char *mesg)
 //
 //---------------------------------------------------------------
 #if DEBUG
+static std::string _assert_msg;
+
 void AssertFailed(const char *expr, const char *file, int line)
 {
     char mesg[512];
@@ -135,6 +137,8 @@ void AssertFailed(const char *expr, const char *file, int line)
 
     sprintf(mesg, "ASSERT(%s) in '%s' at line %d failed.", expr, fileName,
             line);
+
+    _assert_msg = mesg;
 
     _BreakStrToDebugger(mesg);
 }
@@ -5536,6 +5540,11 @@ void do_crash_dump()
         fprintf(stderr, EOL "nWriting crash info to %s" EOL, name);
 
     set_msg_dump_file(file);
+
+#if DEBUG
+    if (!_assert_msg.empty())
+        fprintf(file, "%s" EOL EOL, _assert_msg.c_str());
+#endif
 
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information
