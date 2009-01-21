@@ -4866,7 +4866,7 @@ void wizard_give_monster_item(monsters *mon)
     item_def     &item = you.inv[player_slot];
     mon_inv_type mon_slot;
 
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
         // Let wizard specify which slot to put weapon into via
