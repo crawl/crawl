@@ -343,7 +343,7 @@ public:
     // public methods
     void set_range(int r);
     coord_def next_pos(const coord_def &p) const;
-    bool init_pathfind(monsters *mon, coord_def dest,
+    bool init_pathfind(const monsters *mon, coord_def dest,
                        bool diag = true, bool msg = false,
                        bool pass_unmapped = false);
     bool init_pathfind(coord_def src, coord_def dest,
@@ -366,7 +366,7 @@ protected:
 
 
     // The monster trying to find a path.
-    monsters *mons;
+    const monsters *mons;
 
     // Our destination, and the current position we're looking at.
     coord_def start, target, pos;

@@ -2553,8 +2553,6 @@ bool go_berserk(bool intentional)
 // assumed that this is the case.
 static bool _mons_has_path_to_player(const monsters *mon)
 {
-    int m = monster_index(mon);
-
     // Don't consider sleeping monsters safe, in case the player would
     // rather retreat and try another path for maximum stabbing chances.
     if (mons_is_sleeping(mon))
@@ -2575,11 +2573,11 @@ static bool _mons_has_path_to_player(const monsters *mon)
     if (range > 0)
         mp.set_range(range);
 
-    if (mp.init_pathfind(&menv[m], you.pos(), true, false, true))
+    if (mp.init_pathfind(mon, you.pos(), true, false, true))
         return (true);
 
     // Now we know the monster cannot possibly reach the player.
-    menv[m].travel_target = MTRAV_KNOWN_UNREACHABLE;
+    mon->travel_target = MTRAV_KNOWN_UNREACHABLE;
 
     return (false);
 }

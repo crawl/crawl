@@ -2335,7 +2335,7 @@ void MiscastEffect::init()
     if (target->atype() == ACT_MONSTER)
     {
         mon_target   = dynamic_cast<monsters*>(target);
-        target_known = you.can_see(mon_target);
+        target_known = you.can_see(target);
     }
     else
         target_known = true;
@@ -2346,7 +2346,7 @@ void MiscastEffect::init()
         if (target->atype() == ACT_MONSTER)
         {
             mon_source  = dynamic_cast<monsters*>(target);
-            kill_source = monster_index(mon_source);
+            kill_source = target->mindex();
         }
         else
             kill_source = NON_MONSTER;

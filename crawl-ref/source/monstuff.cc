@@ -1567,7 +1567,7 @@ int monster_die(monsters *monster, killer_type killer,
             in_transit = true;
             monster->destroy_inventory();
             // Make monster stop patrolling and/or travelling.
-            monster->patrol_point = coord_def(0, 0);
+            monster->patrol_point.reset();
             monster->travel_path.clear();
             monster->travel_target = MTRAV_NONE;
             break;

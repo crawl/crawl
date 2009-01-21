@@ -2716,8 +2716,8 @@ coord_def monster_pathfind::next_pos(const coord_def &c) const
 
 // The main method in the monster_pathfind class.
 // Returns true if a path was found, else false.
-bool monster_pathfind::init_pathfind(monsters *mon, coord_def dest, bool diag,
-                                     bool msg, bool pass_unmapped)
+bool monster_pathfind::init_pathfind(const monsters *mon, coord_def dest,
+                                     bool diag, bool msg, bool pass_unmapped)
 {
     mons   = mon;
 

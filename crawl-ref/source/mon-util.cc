@@ -3389,7 +3389,7 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 monsters::monsters()
     : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
       ac(0), ev(0), speed(0), speed_increment(0),
-      target(0,0), patrol_point(0, 0), travel_target(MTRAV_NONE),
+      target(), patrol_point(), travel_target(MTRAV_NONE),
       inv(NON_ITEM), spells(), attitude(ATT_HOSTILE), behaviour(BEH_WANDER),
       foe(MHITYOU), enchantments(), flags(0L), experience(0), number(0),
       colour(BLACK), foe_memory(0), shield_blocks(0), god(GOD_NO_GOD), ghost(),
@@ -7543,9 +7543,7 @@ bool monsters::can_see(const actor *targ) const
     if (targ->atype() == ACT_PLAYER)
         return mons_near(this);
 
-    const monsters* mon = dynamic_cast<const monsters*>(targ);
-
-    return mon_see_grid(mon->pos());
+    return mon_see_grid(targ->pos());
 }
 
 bool monsters::can_mutate() const
