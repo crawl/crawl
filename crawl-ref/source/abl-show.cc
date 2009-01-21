@@ -1116,7 +1116,8 @@ static bool _do_ability(const ability_def& abil)
                 return (false);
 
             beam.range = spell_range(SPELL_FIREBALL, pow, true);
-            fireball(pow, beam);
+            if (!fireball(pow, beam))
+                return (false);
         }
 
         // only one allowed since this is instantaneous -- bwr

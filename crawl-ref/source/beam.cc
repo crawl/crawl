@@ -181,7 +181,7 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
                         || flavour == BEAM_BLINK)    ? EC_WARP
                                                      : EC_ENCHANT;
 
-    zap_animation( element_colour( elem ), mon, force );
+    zap_animation(element_colour(elem), mon, force);
 }
 
 // If needs_tracer is true, we need to check the beam path for friendly
@@ -2907,6 +2907,11 @@ bool bolt::found_player() const
 
 void bolt::affect_ground()
 {
+    // Explosions only have an effect during their explosion phase.
+    // Special cases can be handled here.
+    if (is_explosion && !in_explosion_phase)
+        return;
+
     if (is_tracer)
         return;
 
@@ -3743,6 +3748,11 @@ void bolt::affect_player_enchantment()
 
 void bolt::affect_player()
 {
+    // Explosions only have an effect during their explosion phase.
+    // Special cases can be handled here.
+    if (is_explosion && !in_explosion_phase)
+        return;
+
     // Digging -- don't care.
     if (flavour == BEAM_DIGGING)
         return;
@@ -4326,6 +4336,11 @@ bool bolt::handle_statue_disintegration(monsters* mon)
 
 void bolt::affect_monster(monsters* mon)
 {
+    // Explosions only have an effect during their explosion phase.
+    // Special cases can be handled here.
+    if (is_explosion && !in_explosion_phase)
+        return;
+
     // Don't hit dead monsters.
     if (!mon->alive())
     {

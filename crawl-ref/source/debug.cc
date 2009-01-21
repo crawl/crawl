@@ -5571,7 +5571,7 @@ void do_crash_dump()
         fprintf(file, EOL "Messages:" EOL);
         fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
         std::string messages = get_last_messages(NUM_STORED_MESSAGES);
-        fprintf(file, messages.c_str());
+        fprintf(file, "%s", messages.c_str());
         fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
     }
 
