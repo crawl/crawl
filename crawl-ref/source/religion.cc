@@ -5613,8 +5613,8 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     const std::string whose =
         player_monster_visible(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                                     : "Its";
+    const bool twisted = coinflip();
     int corps = -1;
-    bool twisted = coinflip();
 
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
