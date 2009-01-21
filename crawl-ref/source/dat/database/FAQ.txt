@@ -156,7 +156,7 @@ I keep getting murdered by my own ghosts. Can I deactivate them?
 %%%%
 A:ghosts
 
-No, there isn't. On the plus side, once a ghost has been loaded onto a 
+No, you can't. On the plus side, once a ghost has been loaded onto a 
 level, it won't be loaded again - unless you happen to die on that level. 
 Keep in mind that you don't absolutely have to fight every monster you meet, 
 and with ghosts it's even easier: they cannot leave the level they were 
