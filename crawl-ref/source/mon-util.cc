@@ -7594,9 +7594,6 @@ void monsters::check_redraw(const coord_def &old) const
             view_update_at(old);
         update_screen();
     }
-    if (see_old && !see_new && player_monster_visible(this))
-        mprf(MSGCH_DIAGNOSTICS, "%s moved out of LOS.",
-             name(DESC_PLAIN, true).c_str());
 }
 
 void monsters::apply_location_effects(const coord_def &oldpos)
