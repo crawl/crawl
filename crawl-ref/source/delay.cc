@@ -1801,6 +1801,10 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                 else
                     text += " appears from thin air!";
             }
+            // The monster surfaced and submerged in the same turn without
+            // doing anything else.
+            else if (at.context == "surfaced")
+                text += "surfaces briefly.";
             else if (at.context == "surfaces")
                 text += " surfaces.";
             else if (at.context.find("bursts forth") != std::string::npos)

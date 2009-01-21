@@ -6360,7 +6360,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_SUBMERGED:
         // XXX: What if the monster was invisible before submerging?
-        if (!quiet && mons_near(this))
+        if (!quiet && you.can_see(this))
         {
             if (type == MONS_AIR_ELEMENTAL)
             {
@@ -6371,6 +6371,16 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             {
                 mprf("%s hides itself under the floor.",
                      name(DESC_CAP_A, true).c_str() );
+            }
+            else if (seen_context == "surfaces"
+                     || seen_context == "bursts forth"
+                     || seen_context == "emerges")
+            {
+                // The monster surfaced and submerged in the same turn without
+                // doing anything else.
+                interrupt_activity(AI_SEE_MONSTER,
+                                   activity_interrupt_data(this,
+                                                           "surfaced"));
             }
             else if (crawl_state.arena)
                 mprf("%s submerges.", name(DESC_CAP_A, true).c_str() );
@@ -6732,11 +6742,6 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = "bursts forth";
                 else
                     seen_context = "surfaces";
-
-                // and fire activity interrupts
-                interrupt_activity(AI_SEE_MONSTER,
-                                   activity_interrupt_data(this,
-                                                           seen_context));
             }
             else if (!quiet)
             {

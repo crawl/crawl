@@ -2505,6 +2505,17 @@ void behaviour_event(monsters *mon, int event, int src,
         if (mons_friendly(mon) && mon->is_patrolling())
             break;
 
+        if (mon->is_patrolling())
+            mprf(MSGCH_DIAGNOSTICS, "ME_ALERT: %s patrolling",
+                 mon->name(DESC_PLAIN, true).c_str());
+
+        if (mon->travel_target != MTRAV_NONE
+            || mon->travel_path.size() > 0)
+        {
+            mprf(MSGCH_DIAGNOSTICS, "ME_ALERT: %s travelling",
+                 mon->name(DESC_PLAIN, true).c_str());
+        }
+
         if (mons_is_sleeping(mon) && mons_near(mon))
             remove_auto_exclude(mon, true);
 
@@ -6817,10 +6828,6 @@ static void _handle_monster_move(int i, monsters *monster)
         if (!monster->alive())
             break;
 
-        // If the monster is about to do something then its last seen_context
-        // is out of date.
-        monster->seen_context.clear();
-
 #if DEBUG_MONS_SCAN
         if (!monster_was_floating
             && mgrd(monster->pos()) != monster->mindex())
@@ -7549,6 +7556,11 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     m2->check_redraw(c);
     m2->apply_location_effects(n);
 
+
+    // The seen context no longer applies if the monster is moving normally.
+    mon->seen_context.clear();
+    m2->seen_context.clear();
+
     return (false);
 }
 
@@ -7578,6 +7590,9 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
         monsters_fight( monster_index(monster), mgrd(f) );
         return (true);
     }
+
+    // The seen context no longer applies if the monster is moving normally.
+    monster->seen_context.clear();
 
     // This appears to be the real one, ie where the movement occurs:
     _swim_or_move_energy(monster);
