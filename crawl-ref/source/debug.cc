@@ -5028,6 +5028,10 @@ void wizard_give_monster_item(monsters *mon)
 
     mitm[index] = item;
 
+    if (item.base_type == OBJ_CORPSES)
+        // In case corpse gets skeletonized.
+        move_item_to_grid(&index, mon->pos());
+
     unwind_var<int> save_speedinc(mon->speed_increment);
     if (!mon->pickup_item(mitm[index], false, true))
     {
@@ -5038,6 +5042,8 @@ void wizard_give_monster_item(monsters *mon)
             if (unequipped)
                 mon->equip(mitm[old_eq], mon_slot, 1);
         }
+        unlink_item(index);
+        // In case corpse gets skeletonized.
         mitm[index].clear();
         return;
     }
