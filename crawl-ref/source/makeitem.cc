@@ -73,7 +73,7 @@ static int _newwave_weapon_colour(const item_def &item)
     if ( is_random_artefact(item) && (!item_runed || heav_runed) )
         return _exciting_colour();
 
-    if (is_range_weapon( item ))
+    if (is_range_weapon(item))
     {
         switch (range_skill(item))
         {
@@ -123,6 +123,7 @@ static int _newwave_weapon_colour(const item_def &item)
             break;
         }
     }
+
     return (item_colour);
 }
 
@@ -130,7 +131,7 @@ static int _classic_weapon_colour(const item_def &item)
 {
     int item_colour = BLACK;
 
-    if (is_range_weapon( item ))
+    if (is_range_weapon(item))
         item_colour = BROWN;
     else
     {
