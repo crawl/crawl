@@ -572,11 +572,11 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
 
     int val;
 
-    switch(which_stat)
+    switch (which_stat)
     {
-        case STAT_STRENGTH: val = you.strength; break;
-        case STAT_INTELLIGENCE: val = you.intel; break;
-        case STAT_DEXTERITY: val = you.dex; break;
+        case STAT_STRENGTH:     val = you.strength; break;
+        case STAT_INTELLIGENCE: val = you.intel;    break;
+        case STAT_DEXTERITY:    val = you.dex;      break;
 
         default: DEBUGSTR("Invalid stat type."); return (false);
     }
@@ -2402,7 +2402,7 @@ void MiscastEffect::_air(int severity)
         {
         case 0:
             you_msg = "Ouch! You gave yourself an electric shock.";
-            mon_msg = "Ouch! You gave yourself an electric shock.";
+            // Monster messages needed.
             break;
         case 1:
             you_msg      = "You feel momentarily weightless.";
