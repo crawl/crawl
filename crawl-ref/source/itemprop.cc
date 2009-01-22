@@ -698,10 +698,10 @@ void set_equip_race( item_def &item, unsigned long flags )
 
     case OBJ_ARMOUR:
         // not hides, dragon armour, crystal plate, or barding
-        if (item.sub_type >= ARM_DRAGON_HIDE
-            && item.sub_type <= ARM_SWAMP_DRAGON_ARMOUR
-            && item.sub_type != ARM_CENTAUR_BARDING
-            && item.sub_type != ARM_NAGA_BARDING)
+        if ((item.sub_type >= ARM_DRAGON_HIDE
+                && item.sub_type <= ARM_SWAMP_DRAGON_ARMOUR)
+            || item.sub_type == ARM_CENTAUR_BARDING
+            || item.sub_type == ARM_NAGA_BARDING)
         {
             return;
         }
