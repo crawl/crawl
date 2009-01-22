@@ -44,8 +44,7 @@ w:45
 orc high priest name
 
 @orc priest name@
-
-%%%
+%%%%
 orc priest name
 
 # Watch out! :p
