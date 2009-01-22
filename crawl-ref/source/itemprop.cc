@@ -681,20 +681,8 @@ void set_equip_race( item_def &item, unsigned long flags )
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (item.sub_type == WPN_GIANT_CLUB
-            || item.sub_type == WPN_GIANT_SPIKED_CLUB
-            || item.sub_type == WPN_ANKUS
-            || item.sub_type == WPN_KATANA
-            || item.sub_type == WPN_LAJATANG
-            || item.sub_type == WPN_SLING
-            || item.sub_type == WPN_KNIFE
-            || item.sub_type == WPN_QUARTERSTAFF
-            || item.sub_type == WPN_SCYTHE
-            || is_demonic(item)
-            || is_blessed_blade(item))
-        {
+        if (item.sub_type > WPN_MAX_RACIAL)
             return;
-        }
         break;
 
     case OBJ_ARMOUR:
@@ -720,24 +708,24 @@ void set_equip_race( item_def &item, unsigned long flags )
         case OBJ_WEAPONS:
             if ((weapon_skill(item) == SK_MACES_FLAILS
                     && item.sub_type != WPN_WHIP)
-                || weapon_skill(item) == SK_AXES
-                || (weapon_skill(item) == SK_POLEARMS
-                    && item.sub_type != WPN_SPEAR
-                    && item.sub_type != WPN_TRIDENT)
                 || (weapon_skill(item) == SK_LONG_BLADES
                     && item.sub_type != WPN_FALCHION
                     && item.sub_type != WPN_LONG_SWORD
                     && item.sub_type != WPN_SCIMITAR)
+                || weapon_skill(item) == SK_AXES
+                || (weapon_skill(item) == SK_POLEARMS
+                    && item.sub_type != WPN_SPEAR
+                    && item.sub_type != WPN_TRIDENT)
                 || item.sub_type == WPN_CROSSBOW)
             {
                 return;
             }
             break;
         case OBJ_ARMOUR:
-            if (is_hard_helmet(item)
-                || item.sub_type == ARM_SPLINT_MAIL
+            if (item.sub_type == ARM_SPLINT_MAIL
                 || item.sub_type == ARM_BANDED_MAIL
-                || item.sub_type == ARM_PLATE_MAIL)
+                || item.sub_type == ARM_PLATE_MAIL
+                || is_hard_helmet(item))
             {
                 return;
             }
@@ -755,25 +743,25 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if (weapon_skill(item) == SK_POLEARMS
+            if (item.sub_type == WPN_WHIP
+                || item.sub_type == WPN_CLUB
+                || item.sub_type == WPN_QUICK_BLADE
                 || (weapon_skill(item) == SK_LONG_BLADES
                     && item.sub_type != WPN_FALCHION
                     && item.sub_type != WPN_LONG_SWORD)
-                || item.sub_type == WPN_QUICK_BLADE
-                || item.sub_type == WPN_CLUB
-                || item.sub_type == WPN_WHIP
+                || weapon_skill(item) == SK_POLEARMS
                 || item.sub_type == WPN_BLOWGUN
+                || item.sub_type == WPN_HAND_CROSSBOW
                 || item.sub_type == WPN_BOW
-                || item.sub_type == WPN_LONGBOW
-                || item.sub_type == WPN_HAND_CROSSBOW)
+                || item.sub_type == WPN_LONGBOW)
             {
                 return;
             }
             break;
         case OBJ_ARMOUR:
-            if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item)
-                || item.sub_type == ARM_ROBE
-                || item.sub_type == ARM_LEATHER_ARMOUR)
+            if (item.sub_type == ARM_ROBE
+                || item.sub_type == ARM_LEATHER_ARMOUR
+                || get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
             {
                 return;
             }
@@ -795,14 +783,9 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if (weapon_skill(item) == SK_LONG_BLADES
-                   && item.sub_type != WPN_FALCHION
-                   && item.sub_type != WPN_LONG_SWORD
-                   && item.sub_type != WPN_SCIMITAR
-                   && item.sub_type != WPN_GREAT_SWORD
-                || item.sub_type == WPN_QUICK_BLADE
-                || item.sub_type == WPN_LONGBOW
-                || item.sub_type == WPN_HAND_CROSSBOW)
+            if (item.sub_type == WPN_QUICK_BLADE
+                || item.sub_type == WPN_HAND_CROSSBOW
+                || item.sub_type == WPN_LONGBOW)
                 return;
             break;
         case OBJ_ARMOUR:

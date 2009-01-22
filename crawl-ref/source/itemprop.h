@@ -440,65 +440,76 @@ enum stave_type
 
 enum weapon_type
 {
-// Base weapons
-    WPN_CLUB,                          //    0
+    WPN_WHIP,                          //    0
+    WPN_CLUB,
+    WPN_HAMMER,
     WPN_MACE,
     WPN_FLAIL,
-    WPN_DAGGER,
-    WPN_MORNINGSTAR,
-    WPN_SHORT_SWORD,                   //    5
-    WPN_LONG_SWORD,
-    WPN_GREAT_SWORD,
-    WPN_SCIMITAR,
-    WPN_HAND_AXE,
-    WPN_BATTLEAXE,                     //   10
-    WPN_SPEAR,
-    WPN_HALBERD,
-    WPN_SLING,
-    WPN_BOW,
-    WPN_CROSSBOW,                      //   15
-    WPN_HAND_CROSSBOW,
-    WPN_GLAIVE,
-    WPN_QUARTERSTAFF,
-// these three not created ordinarily
-    WPN_SCYTHE,
-    WPN_GIANT_CLUB,                    //   20
-    WPN_GIANT_SPIKED_CLUB,
-// "rare" weapons - some have special cases and are uncommon
-    WPN_EVENINGSTAR,
-    WPN_QUICK_BLADE,
-    WPN_KATANA,
-    WPN_EXECUTIONERS_AXE,              //   25
-    WPN_DOUBLE_SWORD,
-    WPN_TRIPLE_SWORD,
-    WPN_HAMMER,
-    WPN_ANKUS,
-    WPN_WHIP,                          //   30
-    WPN_SABRE,
-    WPN_DEMON_BLADE,
-    WPN_DEMON_WHIP,
-    WPN_DEMON_TRIDENT,
-    WPN_BROAD_AXE,                     //   35
-// base items (continued)
-    WPN_WAR_AXE,
-    WPN_TRIDENT,
+    WPN_MORNINGSTAR,                   //    5
     WPN_SPIKED_FLAIL,
+    WPN_EVENINGSTAR,
+    WPN_DIRE_FLAIL,
     WPN_GREAT_MACE,
-    WPN_DIRE_FLAIL,                    //   40
-    WPN_KNIFE,
-    WPN_BLOWGUN,
+
+    WPN_DAGGER,                        //   10
+    WPN_QUICK_BLADE,
+    WPN_SHORT_SWORD,
+    WPN_SABRE,
+
     WPN_FALCHION,
-    WPN_LONGBOW,
-    WPN_LAJATANG,                      //   45
+    WPN_LONG_SWORD,                    //   15
+    WPN_SCIMITAR,
+    WPN_GREAT_SWORD,
+
+    WPN_HAND_AXE,
+    WPN_WAR_AXE,
+    WPN_BROAD_AXE,                     //   20
+    WPN_BATTLEAXE,
+    WPN_EXECUTIONERS_AXE,
+
+    WPN_SPEAR,
+    WPN_TRIDENT,
+    WPN_HALBERD,                       //   25
+    WPN_GLAIVE,
     WPN_BARDICHE,
-    WPN_MAX_NONBLESSED = WPN_BARDICHE,
+
+    WPN_BLOWGUN,
+    WPN_HAND_CROSSBOW,
+    WPN_CROSSBOW,                      //   30
+    WPN_BOW,
+    WPN_LONGBOW,
+    WPN_MAX_RACIAL = WPN_LONGBOW,
+
+    WPN_ANKUS,
+    WPN_DEMON_WHIP,
+    WPN_GIANT_CLUB,                    //   35
+    WPN_GIANT_SPIKED_CLUB,
+
+    WPN_KNIFE,
+
+    WPN_KATANA,
+    WPN_DEMON_BLADE,
+    WPN_DOUBLE_SWORD,                  //   40
+    WPN_TRIPLE_SWORD,
+
+    WPN_DEMON_TRIDENT,
+    WPN_SCYTHE,
+
+    WPN_QUARTERSTAFF,
+    WPN_LAJATANG,                      //   45
+
+    WPN_SLING,
+
+    WPN_MAX_NONBLESSED = WPN_SLING,
+
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
-    WPN_BLESSED_KATANA,                //   50
+    WPN_BLESSED_GREAT_SWORD,           //   50
+
+    WPN_BLESSED_KATANA,
     WPN_BLESSED_EUDEMON_BLADE,
     WPN_BLESSED_DOUBLE_SWORD,
-    WPN_BLESSED_GREAT_SWORD,
     WPN_BLESSED_TRIPLE_SWORD,
 
     NUM_WEAPONS,                       //   55 - must be last regular member {dlb}
