@@ -3127,7 +3127,7 @@ static FixedVector<bool, NUM_MONSTERS> _first_attack_was_friendly;
 
 void religion_turn_start()
 {
-    if (you.turn_is_over || you_are_delayed() || you.cannot_act())
+    if (you.turn_is_over)
         religion_turn_end();
 
     _first_attack_conduct.init(true);
@@ -3138,7 +3138,7 @@ void religion_turn_start()
 
 void religion_turn_end()
 {
-    ASSERT(you.turn_is_over || you_are_delayed() || you.cannot_act());
+    ASSERT(you.turn_is_over);
     _place_delayed_monsters();
 }
 
