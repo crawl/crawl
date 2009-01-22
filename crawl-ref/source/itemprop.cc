@@ -697,24 +697,13 @@ void set_equip_race( item_def &item, unsigned long flags )
         break;
 
     case OBJ_ARMOUR:
-        // not hides, dragon armour, crystal plate, or barding
-        if ((item.sub_type >= ARM_DRAGON_HIDE
-                && item.sub_type <= ARM_SWAMP_DRAGON_ARMOUR)
-            || item.sub_type == ARM_CENTAUR_BARDING
-            || item.sub_type == ARM_NAGA_BARDING)
-        {
+        if (item.sub_type > ARM_MAX_RACIAL)
             return;
-        }
         break;
 
     case OBJ_MISSILES:
-        if (item.sub_type == MI_STONE
-            || item.sub_type == MI_LARGE_ROCK
-            || item.sub_type == MI_SLING_BULLET
-            || item.sub_type == MI_THROWING_NET)
-        {
+        if (item.sub_type > MI_MAX_RACIAL)
             return;
-        }
         break;
 
     default:

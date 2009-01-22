@@ -119,7 +119,8 @@ void get_mimic_item( const monsters *mimic, item_def &item )
     {
     case MONS_WEAPON_MIMIC:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = (59*mimic->pos().x + 79*mimic->pos().y) % NUM_WEAPONS;
+        item.sub_type = (59 * mimic->pos().x + 79 * mimic->pos().y)
+                            % (WPN_MAX_NONBLESSED + 1);
 
         prop %= 100;
 
@@ -139,7 +140,8 @@ void get_mimic_item( const monsters *mimic, item_def &item )
 
     case MONS_ARMOUR_MIMIC:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = (59*mimic->pos().x + 79*mimic->pos().y) % NUM_ARMOURS;
+        item.sub_type = (59 * mimic->pos().x + 79 * mimic->pos().y)
+                            % NUM_ARMOURS;
 
         prop %= 100;
 
