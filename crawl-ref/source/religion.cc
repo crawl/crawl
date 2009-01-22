@@ -5248,7 +5248,7 @@ static bool _yred_undead_slaves_on_level_abandon_you()
                  static_cast<int>(you.where_are_you));
 #endif
 
-            yred_make_enslaved_soul(monster, true, true, false);
+            yred_make_enslaved_soul(monster, true, true, true);
 
             success = true;
         }
@@ -5342,7 +5342,7 @@ static bool _yred_slaves_abandon_you()
 
 
                 if (_is_yred_enslaved_body_and_soul(monster))
-                    yred_make_enslaved_soul(monster, true, true, false);
+                    yred_make_enslaved_soul(monster, true, true, true);
                 else
                 {
                     monster->attitude = ATT_HOSTILE;
@@ -5603,9 +5603,9 @@ static bool _tso_holy_revenge()
 }
 
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
-                             bool quiet, bool allow_fail)
+                             bool quiet, bool unlimited)
 {
-    if (allow_fail)
+    if (!unlimited)
         _yred_souls_disappear();
 
     const int type = mon->type;
