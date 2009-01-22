@@ -4749,6 +4749,60 @@ static void _handle_movement(monsters *monster)
             }
         }
     }
+
+    // Now quit if we can't move.
+    if (mmov.origin())
+        return;
+
+    // Try to stay in sight of the player if we're moving toward's him/her,
+    // in order to avoid the monster coming into view, shouting, and then
+    // taking a step in a path to the player which temporarily takes it out of
+    // view, which can lead to the player getting "comes into view" and
+    // shout messages with no monster in view.
+
+    // Doesn't matter for arena mode.
+    if (crawl_state.arena)
+        return;
+
+    // If the player can't see us it doesn't matter.
+    if (!(monster->flags & MF_WAS_IN_VIEW))
+        return;
+
+    // Only monsters seeking the player will shout.
+    if (!mons_is_seeking(monster) || monster->foe != MHITYOU)
+        return;
+
+    const coord_def old_pos  = monster->pos();
+    const int       old_dist = grid_distance(you.pos(), old_pos);
+
+    // We're not moving towards the player.
+    if (grid_distance(you.pos(), old_pos + mmov) >= old_dist)
+        return;
+
+    // We're already staying in the player's LOS.
+    if (see_grid(old_pos + mmov))
+        return;
+
+    // Try to find a move that brings us closer to the player while keeping us
+    // in view.
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+        {
+            if (i == 0 && j == 0)
+                continue;
+
+            if (!good_move[i][j])
+                continue;
+
+            delta.set(i - 1, j - 1);
+            coord_def tmp = old_pos + delta;
+
+            if (grid_distance(you.pos(), tmp) < old_dist && see_grid(tmp))
+            {
+                mmov = delta;
+                break;
+            }
+        }
 }
 
 static void _make_mons_stop_fleeing(monsters *mon)
