@@ -990,7 +990,7 @@ int _setup_evaporate_cast()
 
 static bool _can_cast_detect()
 {
-    if (!testbits(env.level_flags, LFLAG_NO_MAGIC_MAP))
+    if (player_in_mappable_area())
         return true;
 
     mpr("You feel momentarily disoriented.");
@@ -1132,8 +1132,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         }
 
         const int spfail_chance = spell_fail(spell);
-        // Divination mappings backfire in Labyrinths.
-        if (you.level_type == LEVEL_LABYRINTH
+        // Divination mappings backfire in Labyrinths and the Abyss.
+        if (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
             && testbits(flags, SPFLAG_MAPPING))
         {
             mprf(MSGCH_WARN,
