@@ -423,6 +423,7 @@ void game_state::mon_gone(monsters* mon)
         {
             mon_act_stack.erase(mon_act_stack.begin() + i);
             i--;
+            size--;
         }
     }
 
@@ -501,5 +502,19 @@ void game_state::dump(FILE* file)
                     god_name(god_act_stack[i].which_god).c_str(),
                     god_act_stack[i].depth);
         fprintf(file, EOL);
+    }
+
+    if (mon_act != NULL)
+    {
+        fprintf(file, "Monster '%s' currently acting" EOL EOL,
+                mon_act->name(DESC_PLAIN, true).c_str());
+    }
+
+    if (mon_act_stack.size() != 0)
+    {
+        fprintf(file, "Others monsters acting:" EOL);
+        for (unsigned int i = 0; i < mon_act_stack.size(); i++)
+            fprintf(file, "Monster '%s'" EOL,
+                    mon_act_stack[i]->name(DESC_PLAIN, true).c_str());
     }
 }

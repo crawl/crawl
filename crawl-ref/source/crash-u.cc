@@ -132,7 +132,7 @@ void dump_crash_info(FILE* file)
     if (name == NULL)
         name = "INVALID";
 
-    fprintf(file, "Crash caused by signal #%d: %s" EOL, _crash_signal,
+    fprintf(file, "Crash caused by signal #%d: %s" EOL EOL, _crash_signal,
             name);
 }
 

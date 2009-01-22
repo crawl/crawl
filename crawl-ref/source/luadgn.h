@@ -89,6 +89,8 @@ inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
     *de = udata;
 }
 
+void print_dlua_stack();
+
 //////////////////////////////////////////////////////////////////////////
 
 #endif

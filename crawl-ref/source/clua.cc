@@ -3205,7 +3205,7 @@ void print_clua_stack(void)
     int              i = 0;
     lua_State       *L = clua.state();
 
-    fprintf(stderr, "\n");
+    fprintf(stderr, EOL);
     while (lua_getstack(L, i++, &dbg) == 1)
     {
         lua_getinfo(L, "lnuS", &dbg);
@@ -3216,11 +3216,9 @@ void print_clua_stack(void)
         else
             file++;
 
-        // Have to use "\r\n" instead of just "\n" here, for some
-        // reason.
-        fprintf(stderr, "%s, function %s, line %d\r\n", file,
+        fprintf(stderr, "%s, function %s, line %d" EOL, file,
                 dbg.name, dbg.currentline);
     }
 
-    fprintf(stderr, "\n");
+    fprintf(stderr, EOL);
 }

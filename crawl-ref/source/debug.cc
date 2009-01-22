@@ -5544,7 +5544,17 @@ void do_crash_dump()
         file = stderr;
     }
     else
-        fprintf(stderr, EOL "nWriting crash info to %s" EOL, name);
+    {
+        fprintf(stderr, EOL "Writing crash info to %s" EOL, name);
+
+        // Merge stderr into file, so that the lua stack dumping functions
+        // (and anything else that uses stderr) will send everything to
+        // the output file.
+        dup2(fileno(file), fileno(stderr));
+
+        // Unbuffer the output file stream, to match with stderr.
+        setvbuf(file, NULL, _IONBF, 0);
+    }
 
     set_msg_dump_file(file);
 
@@ -5557,10 +5567,7 @@ void do_crash_dump()
     // since that's most important and later attempts to get more information
     // might themselves cause crashes.
     dump_crash_info(file);
-    // Ignore the top five stack frames, since the first three involve
-    // signal handling and the last two are do_crash_dump() and
-    // write_stack_trace().
-    write_stack_trace(file, 5);
+    write_stack_trace(file, 0);
 
     if (Generating_Level)
     {
@@ -5586,7 +5593,14 @@ void do_crash_dump()
         fprintf(file, EOL);
     }
 
-    // Dumping the crawl state is least likely to cause another crash,
+    // Dumping the Lua stacks isn't that likely to crash.
+    fprintf(file, "clua stack:" EOL);
+    print_clua_stack();
+
+    fprintf(file, "dlua stack:" EOL);
+    print_dlua_stack();
+
+    // Dumping the crawl state is next least likely to cause another crash,
     // so do that next.
     crawl_state.dump(file);
 

@@ -319,6 +319,8 @@ void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
                              int (*gcfn)(lua_State *ls) = NULL);
 
+void print_clua_stack();
+
 #define MAP_METATABLE "dgn.mtmap"
 #define DEVENT_METATABLE "dgn.devent"
 #define MAPMARK_METATABLE "dgn.mapmark"
