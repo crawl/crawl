@@ -816,6 +816,28 @@ static void _yred_mirrors_injury(int dam, int death_source)
     }
 }
 
+static void _wizard_restore_life()
+{
+    if (you.hp <= 0)
+        set_hp(you.hp_max, false);
+    if (you.strength <= 0)
+    {
+        you.strength        = you.max_strength;
+        you.redraw_strength = true;
+    }
+    if (you.dex <= 0)
+    {
+        you.dex              = you.max_dex;
+        you.redraw_dexterity = true;
+        you.redraw_evasion   = true;
+    }
+    if (you.intel <= 0)
+    {
+        you.intel               = you.max_intel;
+        you.redraw_intelligence = true;
+    }
+}
+
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux, bool see_source)
@@ -880,11 +902,11 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             {
                 damage_desc = scorefile_entry(dam, death_source,
                                               death_type, aux, true)
-                              .death_description(scorefile_entry::DDV_TERSE);
+                    .death_description(scorefile_entry::DDV_TERSE);
             }
 
             take_note(
-                Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
+                      Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
 
             _yred_mirrors_injury(dam, death_source);
 
@@ -951,7 +973,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             {
                 take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
-                set_hp(you.hp_max, false);
+                _wizard_restore_life();
                 return;
             }
 #else  // !def USE_OPTIONAL_WIZARD_DEATH
@@ -960,7 +982,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
                             death_desc.c_str()), true);
-            set_hp(you.hp_max, false);
+            _wizard_restore_life();
             return;
 #endif  // USE_OPTIONAL_WIZARD_DEATH
         }
