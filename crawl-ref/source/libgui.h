@@ -73,9 +73,5 @@ int itoa(int value, char *strptr, int radix);
 int stricmp(const char *str1, const char *str2);
 #endif
 
-void init_crash_handler();
-void dump_crash_info(FILE* file);
-void write_stack_trace(FILE* file, int ignore_count);
-
 #endif // USE_TILE
 #endif // LIBGUI_H

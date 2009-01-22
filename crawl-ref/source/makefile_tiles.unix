@@ -10,7 +10,7 @@ GAME = crawl
 # it will make a variable called OBJECTS that contains all the libraries
 include makefile.obj
 
-OBJECTS += libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
+OBJECTS += libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o crash-u.o
 
 SDL_CFLAGS := $(shell sdl-config --cflags)
 SDL_LDFLAGS := $(shell sdl-config --libs) -lSDLmain

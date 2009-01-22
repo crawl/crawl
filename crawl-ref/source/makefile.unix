@@ -10,7 +10,7 @@ GAME = crawl
 # it will make a variable called OBJECTS that contains all the libraries
 include makefile.obj
 
-OBJECTS += libunix.o
+OBJECTS += libunix.o crash-u.o
 
 CXX = g++
 DELETE = rm -f

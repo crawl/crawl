@@ -417,16 +417,4 @@ int stricmp(const char *str1, const char *str2)
     return (strcmp(str1, str2));
 }
 
-void init_crash_handler()
-{
-}
-
-void dump_crash_info(FILE* file)
-{
-}
-
-void write_stack_trace(FILE* file, int ignore_count)
-{
-}
-
 #endif // #ifdef UNIX

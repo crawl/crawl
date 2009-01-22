@@ -1147,16 +1147,4 @@ int ftruncate(int fp, int size)
 
 #endif /* #if _MSC_VER */
 
-void init_crash_handler()
-{
-}
-
-void dump_crash_info(FILE* file)
-{
-}
-
-void write_stack_trace(FILE* file, int ignore_count)
-{
-}
-
 #endif /* #if defined(WIN32CONSOLE) */

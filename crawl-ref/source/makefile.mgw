@@ -55,7 +55,7 @@ CFOTHERS := -fsigned-char \
 CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS  := $(INCLUDES) $(CFOTHERS)
 
-OBJECTS := $(OBJECTS) libw32c.o
+OBJECTS := $(OBJECTS) libw32c.o crash-w.o
 
 LDFLAGS =
 

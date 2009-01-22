@@ -80,7 +80,7 @@ CFOTHERS := -fsigned-char \
 CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS) $(SDL_CFLAGS)
 YCFLAGS  := $(INCLUDES) $(CFOTHERS)
 
-OBJECTS := $(OBJECTS) libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
+OBJECTS := $(OBJECTS) libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o crash-w.o
 
 LDFLAGS =
 

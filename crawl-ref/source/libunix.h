@@ -68,10 +68,6 @@ inline bool is_smart_cursor_enabled() { return (false); }
 
 void set_mouse_enabled(bool enabled);
 
-void init_crash_handler();
-void dump_crash_info(FILE* file);
-void write_stack_trace(FILE* file, int ignore_count);
-
 #ifndef _LIBUNIX_IMPLEMENTATION
 /* Some stuff from curses, to remove compiling warnings.. */
 extern "C"

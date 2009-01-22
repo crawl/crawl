@@ -51,6 +51,7 @@ REVISION("$Rev$");
 #include "cloud.h"
 #include "clua.h"
 #include "command.h"
+#include "crash.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"

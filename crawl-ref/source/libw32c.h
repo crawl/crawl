@@ -61,8 +61,4 @@ inline void put_colour_ch(int colour, unsigned ch)
     putwch(ch);
 }
 
-void init_crash_handler();
-void dump_crash_info(FILE* file);
-void write_stack_trace(FILE* file, int ignore_count);
-
 #endif

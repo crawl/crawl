@@ -48,7 +48,7 @@ CFOTHERS := -D$(OS_TYPE) $(EXTRA_FLAGS) -fsigned-char -fstrict-aliasing \
 CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS  := $(INCLUDES) $(CFOTHERS)
 
-OBJECTS += libdos.o
+OBJECTS += libdos.o crash-d.o
 
 LDFLAGS =
 
