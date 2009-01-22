@@ -5625,6 +5625,8 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
              twisted ? "becomes twisted" : "remains intact");
     }
 
+    const monsters orig = *mon;
+
     if (twisted)
     {
         mon->type = mons_zombie_size(soul_type) == Z_BIG ?
@@ -5644,7 +5646,6 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     // Drop the monster's equipment.
     monster_drop_ething(mon);
 
-    const monsters orig = *mon;
     define_monster(*mon);
 
     mon->colour = EC_UNHOLY;
