@@ -48,12 +48,12 @@ static bool _got_distortion_roll(const int item_level)
 
 static int _exciting_colour()
 {
-    switch(random2(4))
+    switch (random2(4))
     {
-        case 0: return YELLOW;
-        case 1: return LIGHTGREEN;
-        case 2: return LIGHTRED;
-        case 3: return LIGHTMAGENTA;
+        case 0:  return YELLOW;
+        case 1:  return LIGHTGREEN;
+        case 2:  return LIGHTRED;
+        case 3:  return LIGHTMAGENTA;
         default: return MAGENTA;
     }
 }

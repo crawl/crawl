@@ -989,8 +989,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (sub_type >= ARM_LEATHER_ARMOUR
                && sub_type <= ARM_PLATE_MAIL
-            || sub_type >= ARM_GLOVES
-               && sub_type <= ARM_BUCKLER
+            || sub_type == ARM_GLOVES
+            || sub_type == ARM_BOOTS
+            || sub_type == ARM_BUCKLER
             || sub_type == ARM_CRYSTAL_PLATE_MAIL
             || is_hard_helmet(item))
         {

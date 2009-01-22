@@ -126,15 +126,15 @@ void get_mimic_item( const monsters *mimic, item_def &item )
         if (prop < 20)
             make_item_randart(item);
         else if (prop < 50)
-            set_equip_desc( item, ISFLAG_GLOWING );
+            set_equip_desc(item, ISFLAG_GLOWING);
         else if (prop < 80)
-            set_equip_desc( item, ISFLAG_RUNED );
+            set_equip_desc(item, ISFLAG_RUNED);
         else if (prop < 85)
-            set_equip_race( item, ISFLAG_ORCISH );
+            set_equip_race(item, ISFLAG_ORCISH);
         else if (prop < 90)
-            set_equip_race( item, ISFLAG_DWARVEN );
+            set_equip_race(item, ISFLAG_DWARVEN);
         else if (prop < 95)
-            set_equip_race( item, ISFLAG_ELVEN );
+            set_equip_race(item, ISFLAG_ELVEN);
         break;
 
     case MONS_ARMOUR_MIMIC:
@@ -176,7 +176,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
         break;
     }
 
-    item_colour( item ); // also sets special vals for scrolls/potions
+    item_colour(item); // also sets special vals for scrolls/potions
 }
 
 // Sets the colour of a mimic to match its description... should be called
