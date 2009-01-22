@@ -1666,6 +1666,13 @@ int monster_die(monsters *monster, killer_type killer,
         // don't clutter up mitm[]
         monster->destroy_inventory();
 
+    if (!silent && !wizard && !(monster->flags & MF_KNOWN_MIMIC)
+        && mons_is_shapeshifter(monster))
+    {
+        simple_monster_message(monster, "'s shape twists and changes "
+                               "as it dies; that was a shifter!");
+    }
+
     crawl_state.dec_mon_acting(monster);
     monster_cleanup(monster);
 
@@ -1902,17 +1909,19 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (!_valid_morph(monster, targetc))
         return simple_monster_message(monster, " looks momentarily different.");
 
+    const bool just_summoned = monster->flags & MF_JUST_SUMMONED;
+
+    // Messaging.  If the monster was just now summoned it's being
+    // polymorphed as it's being placed, so the player doesn't see it.
+    bool can_see = you.can_see(monster) && !just_summoned;
+
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
-    if (player_monster_visible(monster) && mons_near(monster)
-        && MONST_INTERESTING(monster))
+    if (can_see && MONST_INTERESTING(monster))
     {
         take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
                        monster->name(DESC_CAP_A, true).c_str()));
     }
-
-    // Messaging.
-    bool can_see = you.can_see(monster);
 
     if (monster->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
         str_polymon = " grows a second head!";
@@ -1937,7 +1946,8 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
             str_polymon += "!";
         }
     }
-    bool player_messaged = simple_monster_message(monster, str_polymon.c_str());
+    bool player_messaged = can_see
+                       && simple_monster_message(monster, str_polymon.c_str());
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
@@ -1953,7 +1963,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     unsigned long flags =
         monster->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER
-                           | MF_HONORARY_UNDEAD);
+                           | MF_HONORARY_UNDEAD | MF_KNOWN_MIMIC);
 
     std::string name;
 
@@ -2018,7 +2028,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (mons_class_flag(monster->type, M_INVIS))
         monster->add_ench(ENCH_INVIS);
 
-    if (!player_messaged && you.can_see(monster))
+    if (!player_messaged && !just_summoned && you.can_see(monster))
     {
         mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
         player_messaged = true;
@@ -2040,7 +2050,13 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     // If new monster is visible to player, then we've seen it.
     if (player_monster_visible(monster) && mons_near(monster))
+    {
         seen_monster(monster);
+        // If the player saw both the begining and end results of a shifter
+        // changing then he/seh knows it must be a shifter.
+        if (can_see && shifter.ench != ENCH_NONE)
+            monster->flags |= MF_KNOWN_MIMIC;
+    }
 
     if (old_mon_caught)
         check_net_will_hold_monster(monster);

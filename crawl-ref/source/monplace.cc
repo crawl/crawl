@@ -1097,6 +1097,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     menv[id].flags |= MF_JUST_SUMMONED;
 
+    // Don't leave shifters in their starting shape.
+    if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
+        monster_polymorph(&menv[id], RANDOM_MONSTER);
+
     // dur should always be 1-6 for monsters that can be abjured.
     const bool summoned = mg.abjuration_duration >= 1
                        && mg.abjuration_duration <= 6;
