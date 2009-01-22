@@ -1817,6 +1817,18 @@ static const char* _get_fixedart_name(const item_def &item)
     return (item_type_known(item) ? "Unnamed Artefact" : "buggy fixedart");
 }
 
+int get_fixedart_num( const char *name )
+{
+    for (unsigned int i = 0; i < ARRAYSZ(fixedarts); ++i)
+    {
+        std::string art = fixedarts[i].name;
+        lowercase(art);
+        if (replace_all(art, " ", "_") == name)
+            return fixedarts[i].which;
+    }
+    return SPWPN_NORMAL;
+}
+
 // which == 0 (default) gives random fixed artefact.
 // Returns true if successful.
 bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )

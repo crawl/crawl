@@ -408,8 +408,10 @@ private:
 
 enum item_spec_type
 {
-    ISPEC_GOOD   = -2,
-    ISPEC_SUPERB = -3
+    ISPEC_GOOD    = -2,
+    ISPEC_SUPERB  = -3,
+    ISPEC_DAMAGED = -4,
+    ISPEC_BAD     = -5
 };
 
 struct item_spec

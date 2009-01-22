@@ -4381,6 +4381,10 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         bool adjust_type = true;
         switch (spec.level)
         {
+        case ISPEC_DAMAGED:
+        case ISPEC_BAD:
+            level = spec.level;
+            break;
         case ISPEC_GOOD:
             level = 5 + level * 2;
             break;

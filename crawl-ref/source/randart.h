@@ -124,4 +124,9 @@ void randart_set_properties( item_def             &item,
 void randart_set_property( item_def          &item,
                            randart_prop_type  prop,
                            int                val );
+
+/* ***********************************************************************
+ * called from: mapdef
+ * *********************************************************************** */
+int get_fixedart_num( const char *name );
 #endif

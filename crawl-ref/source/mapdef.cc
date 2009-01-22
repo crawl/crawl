@@ -33,6 +33,7 @@ REVISION("$Rev$");
 #include "monplace.h"
 #include "mon-util.h"
 #include "place.h"
+#include "randart.h"
 #include "stuff.h"
 #include "tags.h"
 
@@ -2843,6 +2844,8 @@ item_spec item_list::parse_single_spec(std::string s)
         return (result);
     }
 
+    std::string fixed_str = strip_tag_prefix(s, "fixed:");
+
     if (strip_tag(s, "good_item"))
         result.level = MAKE_GOOD_ITEM;
     else
@@ -2850,7 +2853,8 @@ item_spec item_list::parse_single_spec(std::string s)
         int number = strip_number_tag(s, "level:");
         if (number != TAG_UNFOUND)
         {
-            if (number <= 0 && number != ISPEC_GOOD && number != ISPEC_SUPERB)
+            if (number <= 0 && number != ISPEC_GOOD && number != ISPEC_SUPERB
+                && number != ISPEC_DAMAGED && number != ISPEC_BAD)
             {
                 error = make_stringf("Bad item level: %d", number);
                 return (result);
@@ -2858,6 +2862,17 @@ item_spec item_list::parse_single_spec(std::string s)
 
             result.level = number;
         }
+    }
+
+    if (s.find("damaged ") == 0)
+    {
+        result.level = ISPEC_DAMAGED;
+        s = s.substr(8);
+    }
+    if (s.find("cursed ") == 0)
+    {
+        result.level = ISPEC_BAD; // damaged + cursed, actually
+        s = s.substr(7);
     }
 
     if (strip_tag(s, "no_uniq"))
@@ -2932,7 +2947,21 @@ item_spec item_list::parse_single_spec(std::string s)
     error.clear();
     parse_raw_name(s, result);
 
-    if (!error.empty() || ego_str.empty())
+    if (!error.empty())
+        return (result);
+
+    if (!fixed_str.empty())
+    {
+        result.ego = get_fixedart_num(fixed_str.c_str());
+        if (result.ego == SPWPN_NORMAL)
+        {
+            error = make_stringf("Unknown fixed art: %s", fixed_str.c_str());
+            return result;
+        }
+        return result;
+    }
+
+    if (ego_str.empty())
         return (result);
 
     if (result.base_type != OBJ_WEAPONS

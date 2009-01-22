@@ -1531,7 +1531,22 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     _weapon_add_racial_modifiers(item);
 
-    if ((force_good || is_demonic(item) || forced_ego
+    if (item_level < 0)
+    {
+        // thoroughly damaged, could had been good once
+        if (!no_brand && (forced_ego || one_chance_in(4)))
+        {
+            // brand is set as for "good" items
+            set_item_ego_type(item, OBJ_WEAPONS,
+                              _determine_weapon_brand(item, 2+2*you.your_level));
+        }
+        item.plus  -= 1+random2(3);
+        item.plus2 -= 1+random2(3);
+
+        if (item_level == -5)
+            do_curse_item(item);
+    }
+    else if ((force_good || is_demonic(item) || forced_ego
             || x_chance_in_y(51 + item_level, 200))
         // Nobody would bother enchanting a mundane club.
         && item.sub_type != WPN_CLUB
@@ -2076,7 +2091,21 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (no_ego)
         item.special = SPARM_NORMAL;
 
-    if (force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
+    if (item_level < 0)
+    {
+        // thoroughly damaged, could had been good once
+        if (!no_ego && (forced_ego || one_chance_in(4)))
+        {
+            // brand is set as for "good" items
+            set_item_ego_type(item, OBJ_ARMOUR,
+                _determine_armour_ego(item, item.sub_type, 2+2*you.your_level));
+        }
+        item.plus  -= 1+random2(3);
+
+        if (item_level == -5)
+            do_curse_item(item);
+    }
+    else if (force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
         || x_chance_in_y(51 + item_level, 250))
     {
         // Make a good item...
@@ -2745,6 +2774,18 @@ int items( int allow_uniques,       // not just true-false,
     }
 
     item.quantity = 1;          // generally the case
+
+    if (force_ego >= SPWPN_START_FIXEDARTS && force_ego <= SPWPN_END_FIXEDARTS)
+    {
+        if (get_unique_item_status(OBJ_WEAPONS, force_ego) == UNIQ_NOT_EXISTS)
+        {
+            make_item_fixed_artefact(mitm[p], false, force_ego);
+            return p;
+        }
+        // the base item otherwise
+        item.special = SPWPN_NORMAL;
+        force_ego = 0;
+    }
 
     // Determine sub_type accordingly. {dlb}
     switch (item.base_type)

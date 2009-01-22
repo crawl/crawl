@@ -561,6 +561,8 @@ ITEM:     (list of items, separated by comma)
             "good_item").  If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the
             vault's level number).
+          * "damaged" sets the item plusses to -1..-4.
+          * "cursed" gets a curse plus plusses as in "damaged".
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item."
           * "any book", "any misc" etc. gives a random item of that class.
@@ -580,6 +582,9 @@ ITEM:     (list of items, separated by comma)
             trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
             will result in an error.  Trying to give an ego to something which
             can't accept an ego will also result in an error.
+          * "fixed:item_name" will make a given fixedart by a given name,
+            like "long sword fixed:singing_sword".  If the unique already
+            exists, the base item will be given instead.
 
             WARNING: While checks are done to make sure that an armour ego
             isn't given to a weapon, a weapon ego to a missile, and so on, and
@@ -587,9 +592,9 @@ ITEM:     (list of items, separated by comma)
             missiles, no other checking is done.  Thus it is possible to create
             a demonic weapon of holy wrath or a helmet of running.
 
-          Limitations: You can't specify curse status, specificy pluses or
-          number of charges, force a randart or give fixedarts.  You also
-          can't lay down corpses, skeletons, or chunks.
+          Limitations: You can't specify specific pluses or number of charges
+          or force a randart.  You also can't lay down corpses, skeletons, or
+          chunks.
 
 MONS:     (list of monsters)
           These are used to help place specific monsters at specific places
