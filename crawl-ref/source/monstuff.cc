@@ -4777,12 +4777,14 @@ static void _handle_movement(monsters *monster)
     if (crawl_state.arena)
         return;
 
-    // If the player can't see us it doesn't matter.
-    if (!(monster->flags & MF_WAS_IN_VIEW))
+    // Did we just shout?
+    if (monster->seen_context != "just shouted")
         return;
 
-    // Only monsters seeking the player will shout.
-    if (!mons_is_seeking(monster) || monster->foe != MHITYOU)
+    monster->seen_context.clear();
+
+    // If the player can't see us it doesn't matter.
+    if (!(monster->flags & MF_WAS_IN_VIEW))
         return;
 
     const coord_def old_pos  = monster->pos();
@@ -4798,6 +4800,7 @@ static void _handle_movement(monsters *monster)
 
     // Try to find a move that brings us closer to the player while keeping us
     // in view.
+    int matches = 0;
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
         {
@@ -4812,7 +4815,8 @@ static void _handle_movement(monsters *monster)
 
             if (grid_distance(you.pos(), tmp) < old_dist && see_grid(tmp))
             {
-                mmov = delta;
+                if (one_chance_in(++matches))
+                    mmov = delta;
                 break;
             }
         }
