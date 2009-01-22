@@ -1748,11 +1748,11 @@ void MiscastEffect::_necromancy(int severity)
         case 4:
             you_msg      = "You are engulfed in negative energy!";
             mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
-            do_msg();
 
             if (lethality_margin == 0 || you.experience > 0
                 || !avoid_lethal(you.hp))
             {
+                do_msg();
                 target->drain_exp(act_source);
                 break;
             }
