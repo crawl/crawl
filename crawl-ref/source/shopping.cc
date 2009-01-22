@@ -944,14 +944,14 @@ unsigned int item_value( item_def item, bool ident )
         switch (item.sub_type)
         {
         case MI_DART:
-        case MI_LARGE_ROCK:
         case MI_STONE:
+        case MI_LARGE_ROCK:
         case MI_NONE:
             valued++;
             break;
+        case MI_NEEDLE:
         case MI_ARROW:
         case MI_BOLT:
-        case MI_NEEDLE:
             valued += 2;
             break;
         case MI_JAVELIN:
