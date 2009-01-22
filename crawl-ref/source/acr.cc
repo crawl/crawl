@@ -641,7 +641,15 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             you.duration[DUR_MESMERISED] = 0;
             you.mesmerised_by.clear();
         }
-        inc_hp( 10, true );
+        // If we're repeating &H then do the HP increase all at once.
+        tmp = 10;
+        if (crawl_state.cmd_repeat_goal > 0)
+        {
+            tmp *= crawl_state.cmd_repeat_goal;
+            crawl_state.cancel_cmd_repeat();
+        }
+
+        inc_hp( tmp, true );
        // intentional fall-through
     case 'h':
         you.rotting = 0;
