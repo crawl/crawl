@@ -3270,14 +3270,14 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_DEEP_ELF_MAGE:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_SUMMONER:
+        item_race = MAKE_ITEM_ELVEN;
+        // deliberate fall-through
+
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_CALLER:
     {
-        if (mons_genus(mon->type) != MONS_DRACONIAN)
-            item_race = MAKE_ITEM_ELVEN;
-
         item.base_type = OBJ_WEAPONS;
 
         const int temp_rand = random2(6);
@@ -3354,9 +3354,10 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             break;
         }
         // deliberate fall-through
+
     case MONS_URUG:
         item_race = MAKE_ITEM_ORCISH;
-        // fall through
+        // deliberate fall-through
 
     case MONS_NORBERT:
     case MONS_JOZEF:
@@ -4062,6 +4063,7 @@ void give_armour(monsters *mon, int level)
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_ELVEN;
         // deliberate fall through {dlb}
+
     case MONS_IJYB:
     case MONS_ORC:
     case MONS_ORC_HIGH_PRIEST:
@@ -4070,6 +4072,7 @@ void give_armour(monsters *mon, int level)
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
+
     case MONS_ERICA:
     case MONS_HAROLD:
     case MONS_JOSEPH:
@@ -4106,10 +4109,13 @@ void give_armour(monsters *mon, int level)
             return;
         break;
 
+    case MONS_URUG:
+        item_race = MAKE_ITEM_ORCISH;
+        // deliberate fall through {dlb}
+
     case MONS_DUANE:
     case MONS_EDMUND:
     case MONS_RUPERT:
-    case MONS_URUG:
     case MONS_WAYNE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = ARM_LEATHER_ARMOUR + random2(4);
@@ -4121,11 +4127,12 @@ void give_armour(monsters *mon, int level)
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         // deliberate fall through
+
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARRIOR:
-        if (item_race == MAKE_ITEM_RANDOM_RACE)
-            item_race = MAKE_ITEM_ORCISH;
+        item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
+
     case MONS_FREDERICK:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
