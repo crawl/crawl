@@ -1287,9 +1287,13 @@ bool melee_attack::player_apply_aux_unarmed()
     }
 
     if (defender_as_monster()->hit_points < 1)
+    {
         _monster_die(defender_as_monster(), KILL_YOU, NON_MONSTER);
 
-    return (!defender->alive());
+        return (true);
+    }
+
+    return (false);
 }
 
 std::string melee_attack::debug_damage_number()
