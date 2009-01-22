@@ -718,32 +718,22 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+        {
+            const bool weapon = mon->inv[MSLOT_WEAPON] != NON_ITEM;
+            const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;
+
+            if ((weapon && !alt_weapon) || (!weapon && alt_weapon))
             {
-                if (mons_wields_two_weapons(mon))
-                    mslot = MSLOT_ALT_WEAPON;
+                // Stupid undead can't switch between weapons.
+                if (mons_wields_two_weapons(mon) || smart_undead)
+                    mslot = !weapon ? MSLOT_WEAPON : MSLOT_ALT_WEAPON;
                 else
-                {
-                    if (is_range_weapon(mitm[mon->inv[MSLOT_WEAPON]])
-                        == is_range_weapon(item))
-                    {
-                        // Two different items going into the same
-                        // slot indicate that this and further items
-                        // weren't equipment the monster died with.
-                        return;
-                    }
-                    else if (smart_undead)
-                        mslot = MSLOT_ALT_WEAPON;
-                    else
-                    {
-                        // Stupid undead can't switch between weapons.
-                        continue;
-                    }
-                }
+                    continue;
             }
             else
                 mslot = MSLOT_WEAPON;
             break;
+        }
 
         case OBJ_ARMOUR:
             mslot = equip_slot_to_mslot(get_armour_slot(item));
