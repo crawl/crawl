@@ -1909,11 +1909,8 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (!_valid_morph(monster, targetc))
         return simple_monster_message(monster, " looks momentarily different.");
 
-    const bool just_summoned = monster->flags & MF_JUST_SUMMONED;
-
-    // Messaging.  If the monster was just now summoned it's being
-    // polymorphed as it's being placed, so the player doesn't see it.
-    bool can_see = you.can_see(monster) && !just_summoned;
+    // Messaging.
+    bool can_see = you.can_see(monster);
 
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
@@ -2028,7 +2025,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (mons_class_flag(monster->type, M_INVIS))
         monster->add_ench(ENCH_INVIS);
 
-    if (!player_messaged && !just_summoned && you.can_see(monster))
+    if (!player_messaged && you.can_see(monster))
     {
         mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
         player_messaged = true;

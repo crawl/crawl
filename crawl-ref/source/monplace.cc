@@ -20,6 +20,7 @@ REVISION("$Rev$");
 #include "ghost.h"
 #include "lev-pand.h"
 #include "makeitem.h"
+#include "message.h"
 #include "monstuff.h"
 #include "mon-pick.h"
 #include "mon-util.h"
@@ -1099,7 +1100,14 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Don't leave shifters in their starting shape.
     if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
+    {
+        no_messages nm;
         monster_polymorph(&menv[id], RANDOM_MONSTER);
+
+        // It's not actually a known shapeshifter if it happened to be
+        // placed in LOS of the player.
+        menv[id].flags &= ~MF_KNOWN_MIMIC;
+    }
 
     // dur should always be 1-6 for monsters that can be abjured.
     const bool summoned = mg.abjuration_duration >= 1
