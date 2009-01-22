@@ -8,17 +8,26 @@
 : require("clua/ziggurat.lua")
 
 ### Entry vaults to ziggurats##########################################
-default-depth: D:21-27, Zot, Pan
+#
+# Chances for Ziggurat portals are as follows:
+# among D:3-20   -- 0.5%
+# among D:21-27  -- 5%
+# in a Pan level -- 8%
 
-NAME: enter_the_ziggurat
+# Dummy for the trowel card
+NAME:   enter_the_ziggurat
 TAGS:   trowel_portal
-WEIGHT: 1
 : ziggurat_portal(_G)
 MAP
 O
 ENDMAP
 
+### Deep entry vaults to ziggurats ############################################
+default-depth: D:21-27
+
 NAME:   enter_ziggurat_a
+CHANCE: 5%
+TAGS:   chance_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -36,7 +45,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-TAGS:    no_pool_fixup
+CHANCE: 5%
+TAGS:    chance_zig no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
@@ -57,6 +67,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
+CHANCE:  5%
+TAGS:    chance_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -77,6 +89,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_d
+CHANCE:  5%
+TAGS:    chance_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -96,11 +110,12 @@ MAP
     ...
 ENDMAP
 
-### Shallow entry vaults to ziggurats##########################################
+### Shallow entry vaults to ziggurats #########################################
 default-depth: D:3-20
 
-NAME:   enter_ziggurat_a_teaser
-WEIGHT: 1
+NAME:   enter_shallow_ziggurat_a
+CHANCE: 50
+TAGS:   chance_shallow_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -117,8 +132,9 @@ MAP
 .......
 ENDMAP
 
-NAME:    enter_ziggurat_c_teaser
-WEIGHT:  1
+NAME:    enter_shallow_ziggurat_c
+CHANCE:  50
+TAGS:    chance_shallow_zig
 MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
@@ -133,8 +149,9 @@ MAP
     ...
 ENDMAP
 
-NAME:    enter_ziggurat_d_teaser
-WEIGHT:  1
+NAME:    enter_shallow_ziggurat_d
+CHANCE:  50
+TAGS:    chance_shallow_zig 
 MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
@@ -144,6 +161,94 @@ MAP
  ..n.1.n..
 ..nn.O.nn..
  ..n.1.n..
+  .nnnnn.
+   ..n..
+    ...
+ENDMAP
+
+### Pan entry vaults to ziggurats #############################################
+default-depth: Pan
+
+NAME:   enter_ziggurat_pan_a
+CHANCE: 8%
+TAGS:   chance_pan_zig
+COLOUR: ; : cyan / lightblue
+COLOUR: ' = blue
+FTILE:  ; = floor_hall
+SUBST:  ' = .
+SUBST:  ; = .
+: ziggurat_portal(_G)
+MAP
+.......
+.;;;;;.
+.;''';.
+.;'O';.
+.;''';.
+.;;;;;.
+.......
+ENDMAP
+
+NAME:    enter_ziggurat_pan_b
+CHANCE:  8%
+TAGS:    chance_pan_zig no_pool_fixup
+SHUFFLE: wW' / l;_
+COLOUR:  ; = red
+COLOUR:  _ : blue / lightred
+COLOUR:  ' = cyan
+FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
+SUBST:   '=. , ;=. , _=.
+: ziggurat_portal(_G)
+MAP
+   ..'..   
+  ..'W'..  
+ ..'WwW'.. 
+..'WwwwW'..
+.'WwwOwwW'.
+..'WwwwW'..
+ ..'WwW'.. 
+  ..'W'..  
+   ..'..
+ENDMAP
+
+NAME:    enter_ziggurat_pan_c
+CHANCE:  8%
+TAGS:    chance_pan_zig
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+SHUFFLE: 123
+SUBST:   1=1, 2=22.
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..m..
+  ..mmm..
+ ..mm1mm..
+..mm1O1nn..
+ ..mm1mm..
+  ..mmm..
+   ..m..
+    ...
+ENDMAP
+
+NAME:    enter_ziggurat_pan_d
+CHANCE:  8%
+TAGS:    chance_pan_zig
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+SHUFFLE: 123
+SUBST:   1=1.., 2=2., 3=33.
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..n..
+  .nnnnn.
+ ..n111n..
+..nn1O1nn..
+ ..n111n..
   .nnnnn.
    ..n..
     ...
