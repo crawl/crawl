@@ -831,6 +831,7 @@ unsigned int item_value( item_def item, bool ident )
             case SPWPN_FROST:
             case SPWPN_HOLY_WRATH:
             case SPWPN_REACHING:
+            case SPWPN_RETURNING:
                 valued *= 50;
                 break;
 
@@ -940,16 +941,6 @@ unsigned int item_value( item_def item, bool ident )
         break;
 
     case OBJ_MISSILES:          // ammunition
-        if (item_ident( item, ISFLAG_KNOW_PLUSES ))
-        {
-            // assume not cursed (can they be anyway?)
-            if (item.plus < 0)
-                valued -= 11150;
-
-            if (item.plus >= 0)
-                valued += (item.plus * 2);
-        }
-
         switch (item.sub_type)
         {
         case MI_DART:
@@ -972,6 +963,67 @@ unsigned int item_value( item_def item, bool ident )
         default:
             valued += 5;
             break;
+        }
+
+        if (item_type_known(item))
+        {
+            switch (get_ammo_brand( item ))
+            {
+            case SPMSL_NORMAL:
+            default:
+                valued *= 10;
+                break;
+
+            case SPMSL_RETURNING:
+                valued *= 50;
+                break;
+
+            case SPMSL_CHAOS:
+                valued *= 40;
+                break;
+
+            case SPMSL_CURARE:
+                valued *= 30;
+                break;
+
+            case SPMSL_FLAME:
+            case SPMSL_FROST:
+                valued *= 25;
+                break;
+
+            case SPMSL_POISONED:
+                valued *= 23;
+                break;
+            }
+
+            valued /= 10;
+        }
+
+        if (get_equip_race(item) == ISFLAG_ELVEN
+            || get_equip_race(item) == ISFLAG_DWARVEN)
+        {
+            valued *= 12;
+            valued /= 10;
+        }
+
+        if (get_equip_race(item) == ISFLAG_ORCISH)
+        {
+            valued *= 8;
+            valued /= 10;
+        }
+
+        if (item_ident( item, ISFLAG_KNOW_PLUSES ))
+        {
+            if (item.plus >= 0)
+                valued += (item.plus * 2);
+
+            if (item.plus < 0)
+            {
+                valued += item.plus * item.plus * item.plus;
+
+                if (valued < 1)
+                    valued = 1;
+            }
         }
         break;
 
@@ -1407,6 +1459,7 @@ unsigned int item_value( item_def item, bool ident )
                 break;
             case SCR_TORMENT:
             case SCR_HOLY_WORD:
+            case SCR_VULNERABILITY:
                 valued += 75;
                 break;
             case SCR_ENCHANT_WEAPON_II:
