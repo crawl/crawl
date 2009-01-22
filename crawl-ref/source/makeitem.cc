@@ -1677,7 +1677,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         if (temp_rand < 60)
             rc = SPMSL_FLAME;
         else if (temp_rand < 120)
-            rc = SPMSL_ICE;
+            rc = SPMSL_FROST;
         else if (temp_rand < 150)
             rc = SPMSL_POISONED;
         else

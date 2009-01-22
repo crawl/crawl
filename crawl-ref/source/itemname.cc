@@ -1149,8 +1149,8 @@ std::string item_def::name_aux( description_level_type desc,
             case SPMSL_FLAME:
                 buff << ((terse) ? " (flame)" : " of flame");
                 break;
-            case SPMSL_ICE:
-                buff << ((terse) ? " (ice)" : " of ice");
+            case SPMSL_FROST:
+                buff << ((terse) ? " (frost)" : " of frost");
                 break;
             case SPMSL_NORMAL:
             case SPMSL_POISONED:

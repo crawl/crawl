@@ -1187,7 +1187,7 @@ static std::string _describe_ammo( const item_def &item )
     bool can_launch       = has_launcher(item);
     bool can_throw        = is_throwable(&you, item, true);
     bool need_new_line    = true;
-    bool always_destryoed = false;
+    bool always_destroyed = false;
 
     if (item.special && item_type_known(item))
     {
@@ -1209,9 +1209,9 @@ static std::string _describe_ammo( const item_def &item )
         case SPMSL_FLAME:
             bolt_name = "flame";
             // Intentional fall-through
-        case SPMSL_ICE:
+        case SPMSL_FROST:
             if (bolt_name.empty())
-                bolt_name = "ice";
+                bolt_name = "frost";
             // Intentional fall-through
         case SPMSL_CHAOS:
             if (bolt_name.empty())
@@ -1233,7 +1233,7 @@ static std::string _describe_ammo( const item_def &item )
             description += bolt_name;
             description += ".";
 
-            always_destryoed = true;
+            always_destroyed = true;
             break;
         case SPMSL_POISONED:
         case SPMSL_POISONED_II:
@@ -1265,7 +1265,7 @@ static std::string _describe_ammo( const item_def &item )
             description += "It will explode into fragemnets upon hitting "
                 "a target, hitting an obstruction, or reaching the end of "
                 "its range.";
-            always_destryoed = true;
+            always_destroyed = true;
             break;
         case SPMSL_STEEL:
             description += "Compared to normal ammo it does 50% more damage, "
@@ -1312,7 +1312,7 @@ static std::string _describe_ammo( const item_def &item )
         }
     }
 
-    if (always_destryoed)
+    if (always_destroyed)
         description += "$It will always be destroyed upon impact.";
     else
         append_missile_info(description);

@@ -169,7 +169,7 @@ i-draining BRAND_DRAINING
 i-speed BRAND_SPEED
 i-vorpal BRAND_VORPAL
 i-flaming BRAND_FLAME
-i-freezing BRAND_ICE
+i-freezing BRAND_FROST
 i-vampiricism BRAND_VAMPIRICISM
 i-pain BRAND_PAIN
 i-distortion BRAND_DISTORTION

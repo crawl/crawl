@@ -1234,8 +1234,8 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
             case SPMSL_FLAME:
                 desc.special = TILE_BRAND_FLAME;
                 break;
-            case SPMSL_ICE:
-                desc.special = TILE_BRAND_ICE;
+            case SPMSL_FROST:
+                desc.special = TILE_BRAND_FROST;
                 break;
             case SPMSL_POISONED:
                 desc.special = TILE_BRAND_POISONED;

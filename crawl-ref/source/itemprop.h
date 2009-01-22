@@ -370,7 +370,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_FORBID_BRAND = -1,           //   -1
     SPMSL_NORMAL,                      //    0
     SPMSL_FLAME,
-    SPMSL_ICE,
+    SPMSL_FROST,
     SPMSL_POISONED,
     SPMSL_POISONED_II,                 //    unused
     SPMSL_CURARE,                      //    5

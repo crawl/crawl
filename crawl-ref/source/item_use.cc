@@ -1679,7 +1679,7 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
         return (true);
 
     int element = (launcher_brand == SPWPN_FROST
-                   + ammo_brand == SPMSL_ICE
+                   + ammo_brand == SPMSL_FROST
                    - launcher_brand == SPWPN_FLAME
                    - ammo_brand == SPMSL_FLAME);
 
@@ -2033,7 +2033,7 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo.special = SPMSL_CHAOS;
     }
     else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
+             && ammo_brand != SPMSL_FROST && bow_brand != SPWPN_FROST)
     {
         beam.flavour = BEAM_FIRE;
         beam.name    = "flame";
@@ -2041,14 +2041,14 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
         ammo.special = SPMSL_FLAME;
     }
-    else if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
+    else if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_FROST)
              && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
     {
         beam.flavour = BEAM_COLD;
         beam.name    = "frost";
         beam.colour  = WHITE;
 
-        ammo.special = SPMSL_ICE;
+        ammo.special = SPMSL_FROST;
     }
 
     ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
@@ -2149,7 +2149,7 @@ static bool determines_ammo_brand(int bow_brand, int ammo_brand)
 {
     if (bow_brand == SPWPN_FLAME && ammo_brand == SPMSL_FLAME)
         return (false);
-    if (bow_brand == SPWPN_FROST && ammo_brand == SPMSL_ICE)
+    if (bow_brand == SPWPN_FROST && ammo_brand == SPMSL_FROST)
         return (false);
     if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_POISONED)
         return (false);
