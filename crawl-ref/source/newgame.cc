@@ -1077,6 +1077,55 @@ undead_state_type get_undead_state(const species_type sp)
     }
 }
 
+// For items that get a random colour, give them a more thematic one.
+static void _apply_job_colour(item_def &item)
+{
+    if (!Options.classic_item_colours)
+        return;
+    
+    if (item.base_type != OBJ_ARMOUR)
+        return;
+
+    switch (item.sub_type)
+    {
+    case ARM_CLOAK:
+    case ARM_ROBE:
+    case ARM_NAGA_BARDING:
+    case ARM_CENTAUR_BARDING:
+    case ARM_CAP:
+    case ARM_WIZARD_HAT:
+        break;
+    default:
+        return;
+    }
+
+    switch (you.char_class)
+    {
+    case JOB_THIEF:
+    case JOB_NECROMANCER:
+    case JOB_ASSASSIN:
+        item.colour = DARKGREY;
+        break;
+    case JOB_FIRE_ELEMENTALIST:
+        item.colour = RED;
+        break;
+    case JOB_ICE_ELEMENTALIST:
+        item.colour = BLUE;
+        break;
+    case JOB_AIR_ELEMENTALIST:
+        item.colour = LIGHTBLUE;
+        break;
+    case JOB_EARTH_ELEMENTALIST:
+        item.colour = BROWN;
+        break;
+    case JOB_VENOM_MAGE:
+        item.colour = MAGENTA;
+        break;
+    default:
+        break;
+    }
+}
+
 bool new_game(void)
 {
     clrscr();
@@ -1256,7 +1305,8 @@ game_start:
             you.inv[i].pos.set(-1, -1);
             you.inv[i].link = i;
             you.inv[i].slot = index_to_letter(you.inv[i].link);
-            item_colour( you.inv[i] );  // set correct special and colour
+            item_colour(you.inv[i]);  // set correct special and colour
+            _apply_job_colour(you.inv[i]);
         }
 
     // Apply autoinscribe rules to inventory.
