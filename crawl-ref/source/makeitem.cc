@@ -2060,11 +2060,9 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             item.sub_type = ARM_NAGA_BARDING;
         else if (one_chance_in(7))
             item.sub_type = ARM_CENTAUR_BARDING;
-        else
-            set_equip_race(item, _determine_armour_race(item, item_race));
     }
-    else
-        set_equip_race(item, _determine_armour_race(item, item_race));
+
+    set_equip_race(item, _determine_armour_race(item, item_race));
 
     // Dwarven armour is high-quality.
     if (get_equip_race(item) == ISFLAG_DWARVEN && coinflip())
@@ -3130,7 +3128,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_EDMUND:
     case MONS_DUANE:
         item_race = MAKE_ITEM_NO_RACE;
-
         if (!one_chance_in(5))
         {
             item.base_type = OBJ_WEAPONS;
@@ -3254,6 +3251,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_BLORK_THE_ORC:
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through {dlb}
+
     case MONS_DANCING_WEAPON:   // give_level may have been adjusted above
     case MONS_FRANCES:
     case MONS_FRANCIS:
@@ -3300,6 +3298,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         // deliberate fall-through
+
     case MONS_ORC_KNIGHT:
         item_race = MAKE_ITEM_ORCISH;
         // Occasionally get crossbows.
@@ -3412,6 +3411,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             break;
         }
         // intentionally fall through
+
     case MONS_MERMAID:
         if (one_chance_in(3))
         {
@@ -3575,6 +3575,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_NERGALLE:
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through, I guess {dlb}
+
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
@@ -3671,7 +3672,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
     }
 
-    default: break;
+    default:
+        break;
     }
 
     // Nagas don't get racial stuff.
@@ -4108,7 +4110,6 @@ void give_armour(monsters *mon, int level)
     case MONS_CENTAUR_WARRIOR:
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
-        item_race = MAKE_ITEM_NO_RACE;
         if ( one_chance_in( mon->type == MONS_CENTAUR              ? 1000 :
                             mon->type == MONS_CENTAUR_WARRIOR      ?  500 :
                             mon->type == MONS_YAKTAUR              ?  300
@@ -4125,7 +4126,6 @@ void give_armour(monsters *mon, int level)
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
-        item_race = MAKE_ITEM_NO_RACE;
         if ( one_chance_in( mon->type == MONS_NAGA         ?  800 :
                             mon->type == MONS_NAGA_WARRIOR ?  300 :
                             mon->type == MONS_NAGA_MAGE    ?  200
@@ -4136,6 +4136,7 @@ void give_armour(monsters *mon, int level)
         }
         else if (mon->type == MONS_GREATER_NAGA || one_chance_in(3))
         {
+            item_race = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_ROBE;
         }
