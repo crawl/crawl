@@ -726,7 +726,12 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
                 mslot = !weapon ? MSLOT_WEAPON : MSLOT_ALT_WEAPON;
             else
                 mslot = MSLOT_WEAPON;
-            break;
+
+            // Stupid undead can't use ranged weapons.
+            if (smart_undead || !is_range_weapon(item))
+                break;
+
+            continue;
         }
 
         case OBJ_ARMOUR:
@@ -739,9 +744,14 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
                 return;
             break;
 
+        // Stupid undead can't use missiles.
         case OBJ_MISSILES:
-            mslot = MSLOT_MISSILE;
-            break;
+            if (smart_undead)
+            {
+                mslot = MSLOT_MISSILE;
+                break;
+            }
+            continue;
 
         case OBJ_GOLD:
             mslot = MSLOT_GOLD;
