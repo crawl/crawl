@@ -723,13 +723,7 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
             const bool alt_weapon = mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM;
 
             if ((weapon && !alt_weapon) || (!weapon && alt_weapon))
-            {
-                // Stupid undead can't switch between weapons.
-                if (mons_wields_two_weapons(mon) || smart_undead)
-                    mslot = !weapon ? MSLOT_WEAPON : MSLOT_ALT_WEAPON;
-                else
-                    continue;
-            }
+                mslot = !weapon ? MSLOT_WEAPON : MSLOT_ALT_WEAPON;
             else
                 mslot = MSLOT_WEAPON;
             break;
