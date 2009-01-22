@@ -79,9 +79,6 @@ private:
     kill_category kc;
     killer_type   kt;
 
-    monsters* mon_target;
-    monsters* mon_source;
-
     nothing_happens_when_type nothing_happens_when;
 
     int lethality_margin;
@@ -111,6 +108,16 @@ private:
 private:
     void init();
     std::string get_default_cause();
+
+    monsters* target_as_monster()
+    {
+        return dynamic_cast<monsters*>(target);
+    }
+
+    monsters* source_as_monster()
+    {
+        return dynamic_cast<monsters*>(act_source);
+    }
 
     bool neither_end_silenced();
 

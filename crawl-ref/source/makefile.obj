@@ -72,6 +72,7 @@ spells2.o \
 spells3.o \
 spells4.o \
 spl-book.o \
+spl-mis.o \
 spl-cast.o \
 spl-util.o \
 sqldbm.o \
