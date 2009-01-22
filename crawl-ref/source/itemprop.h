@@ -24,20 +24,29 @@ enum armour_type
     ARM_SPLINT_MAIL,             //    5
     ARM_BANDED_MAIL,
     ARM_PLATE_MAIL,
+
     ARM_CLOAK,
+
     ARM_CAP,
     ARM_WIZARD_HAT,              //   10
     ARM_HELMET,
+
     ARM_GLOVES,
+
     ARM_BOOTS,
+
     ARM_BUCKLER,
     ARM_SHIELD,                  //   15
     ARM_LARGE_SHIELD,
     ARM_MAX_RACIAL = ARM_LARGE_SHIELD,
+
     ARM_CRYSTAL_PLATE_MAIL,
+
     ARM_ANIMAL_SKIN,
+
     ARM_TROLL_HIDE,
     ARM_TROLL_LEATHER_ARMOUR,    //   20
+
     ARM_DRAGON_HIDE,
     ARM_DRAGON_ARMOUR,
     ARM_ICE_DRAGON_HIDE,
@@ -52,6 +61,7 @@ enum armour_type
     ARM_GOLD_DRAGON_ARMOUR,
     ARM_SWAMP_DRAGON_HIDE,
     ARM_SWAMP_DRAGON_ARMOUR,
+
     ARM_CENTAUR_BARDING,         //   35
     ARM_NAGA_BARDING,
 
@@ -261,10 +271,12 @@ enum missile_type
     MI_BOLT,
     MI_JAVELIN,
     MI_MAX_RACIAL = MI_JAVELIN,
+
     MI_STONE,                          //    5
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
+
     NUM_MISSILES,                      //    9
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
