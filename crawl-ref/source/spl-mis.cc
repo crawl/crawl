@@ -1671,13 +1671,13 @@ void MiscastEffect::_necromancy(int severity)
         case 1:
             you_msg      = "You are engulfed in negative energy!";
             mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
-            do_msg();
 
             if (lethality_margin == 0 || you.experience > 0
                 || !avoid_lethal(you.hp))
             {
                 if (one_chance_in(3))
                 {
+                    do_msg();
                     target->drain_exp(act_source);
                     break;
                 }
@@ -1699,7 +1699,8 @@ void MiscastEffect::_necromancy(int severity)
                 mon_msg_seen = "@The_monster@ convulses helplessly with pain!";
                 _ouch(15 + random2avg(23, 2));
             }
-            do_msg();
+            if (!did_msg)
+                do_msg();
             break;
         }
         break;
