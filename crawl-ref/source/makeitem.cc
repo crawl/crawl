@@ -3892,7 +3892,8 @@ static void _give_ammo(monsters *mon, int level,
         case MONS_HILL_GIANT:
             if (!one_chance_in(20))
                 break;
-            // fall through
+            // deliberate fall-through
+
         case MONS_HAROLD: // bounty hunters
         case MONS_JOZEF:  // up to 5 nets
             if (mons_summoned)
