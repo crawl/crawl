@@ -6465,8 +6465,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
     }
 
-    // Zombies are always too stupid to do this.
-    if (mons_itemuse(monster) < MONUSE_OPEN_DOORS)
+    if (mons_itemuse(monster) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
     const bool archer = mons_class_flag(monster->type, M_ARCHER);
@@ -6551,7 +6550,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     }
 
     return (false);
-}                               // end handle_throw()
+}
 
 static bool _handle_monster_spell(monsters *monster, bolt &beem)
 {
