@@ -872,23 +872,27 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
     return (false);
 }
 
-bool animate_remains(const coord_def &a, corpse_type class_allowed,
-                     beh_type beha, unsigned short hitting,
-                     god_type god, bool actual,
-                     bool quiet, int* mon_index)
+int animate_remains(const coord_def &a, corpse_type class_allowed,
+                    beh_type beha, unsigned short hitting,
+                    god_type god, bool actual,
+                    bool quiet, int* mon_index)
 {
     if (is_sanctuary(a))
-        return (false);
+        return (0);
 
+    int number_found = 0;
     bool success = false;
 
     // Search all the items on the ground for a corpse.
     for (stack_iterator si(a); si; ++si)
     {
-        if (_animatable_remains(*si)
-            && (class_allowed == CORPSE_BODY
-                || si->sub_type == CORPSE_SKELETON))
+        if (class_allowed == CORPSE_BODY || si->sub_type == CORPSE_SKELETON)
         {
+            number_found++;
+
+            if (!_animatable_remains(*si))
+                continue;
+
             const bool was_butchering = is_being_butchered(*si);
 
             success = _raise_remains(a, si.link(), beha, hitting, god, actual,
@@ -913,7 +917,13 @@ bool animate_remains(const coord_def &a, corpse_type class_allowed,
         }
     }
 
-    return (success);
+    if (number_found == 0)
+        return (-1);
+
+    if (!success)
+        return (0);
+
+    return (1);
 }
 
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
@@ -969,7 +979,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                 const bool was_butchering = is_being_butchered(*si, false);
 
                 if (animate_remains(a, CORPSE_BODY, beha, hitting, god,
-                                    actual, true))
+                                    actual, true) > 0)
                 {
                     number_raised++;
 

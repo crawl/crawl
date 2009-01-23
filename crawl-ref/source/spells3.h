@@ -51,10 +51,10 @@ bool cast_shadow_creatures(god_type god = GOD_NO_GOD);
 bool cast_summon_horrible_things(int pow, god_type god = GOD_NO_GOD);
 
 void equip_undead(const coord_def &a, int corps, int monster, int monnum);
-bool animate_remains(const coord_def &a, corpse_type class_allowed,
-                     beh_type beha, unsigned short hitting,
-                     god_type god = GOD_NO_GOD, bool actual = true,
-                     bool quiet = false, int* mon_index = NULL);
+int animate_remains(const coord_def &a, corpse_type class_allowed,
+                    beh_type beha, unsigned short hitting,
+                    god_type god = GOD_NO_GOD, bool actual = true,
+                    bool quiet = false, int* mon_index = NULL);
 
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                  god_type god = GOD_NO_GOD, bool actual = true);
