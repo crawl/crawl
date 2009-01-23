@@ -625,10 +625,11 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     // Else, create new stack in inventory.
     int freeslot = find_free_slot(blood);
-    if (freeslot >= 0 && freeslot < ENDOFPACK
-        && !is_valid_item(you.inv[freeslot]))
+    if (freeslot >= 0 && freeslot < ENDOFPACK)
     {
         item_def &item   = you.inv[freeslot];
+        item.clear();
+
         item.link        = freeslot;
         item.slot        = index_to_letter(item.link);
         item.base_type   = OBJ_POTIONS;
@@ -637,8 +638,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         item.plus        = 0;
         item.plus2       = 0;
         item.special     = 0;
-        item.flags       = 0;
-        item.inscription = "";
+        item.flags       = (ISFLAG_KNOW_TYPE & ISFLAG_BEEN_IN_INV);
         item.pos.set(-1, -1);
         item_colour(item);
 
@@ -720,7 +720,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     mitm[o].plus      = 0;
     mitm[o].plus2     = 0;
     mitm[o].special   = 0;
-    mitm[o].flags     = ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    mitm[o].flags     = (ISFLAG_KNOW_TYPE & ISFLAG_BEEN_IN_INV);
     item_colour(mitm[o]);
 
     CrawlHashTable &props_new = mitm[o].props;
