@@ -351,7 +351,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
         }
     }
     // If we got here, nothing was found! (Or it's in a monster's
-    // inventory).
+    // inventory.)
 
     // Entire stack is gone, rotted or coagulated.
     // -> Change potions to coagulated type.
