@@ -1782,6 +1782,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         }
         else
         {
+            ASSERT(mon->seen_context != "just seen");
             // If the monster is in the auto_exclude list, automatically
             // set an exclusion.
             if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
@@ -1842,6 +1843,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             print_formatted_paragraph(text,
                                       get_number_of_cols(),
                                       MSGCH_WARN);
+            const_cast<monsters*>(mon)->seen_context = "just seen";
         }
 
         if (Options.tutorial_left)

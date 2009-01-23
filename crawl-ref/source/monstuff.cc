@@ -4777,8 +4777,8 @@ static void _handle_movement(monsters *monster)
     if (crawl_state.arena)
         return;
 
-    // Did we just shout?
-    if (monster->seen_context != "just shouted")
+    // Did we just come into view?
+    if (monster->seen_context != "just seen")
         return;
 
     monster->seen_context.clear();
@@ -8810,7 +8810,6 @@ void seen_monster(monsters *monster)
 
     // Monster was viewed this turn
     monster->flags |= MF_WAS_IN_VIEW;
-    monster->seen_context.clear();
 
     if (monster->flags & MF_SEEN)
         return;

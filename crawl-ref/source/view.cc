@@ -1196,8 +1196,6 @@ void handle_monster_shouts(monsters* monster, bool force)
     const int noise_level = get_shout_noise_level(s_type);
     if (noise_level > 0)
         noisy(noise_level, monster->pos());
-
-    monster->seen_context = "just shouted";
 }
 
 #ifdef WIZARD
