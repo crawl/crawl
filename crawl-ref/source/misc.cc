@@ -181,18 +181,17 @@ void turn_corpse_into_chunks(item_def &item)
 
 void turn_corpse_into_skeleton_and_chunks(item_def &item)
 {
-    if (mons_skeleton(item.plus))
-    {
-        int o = get_item_slot();
-        if (o != NON_ITEM)
-        {
-            item_def skel = item;
-            turn_corpse_into_skeleton(skel);
-            copy_item_to_grid(skel, you.pos());
-        }
-    }
+    item_def chunks = item;
 
-    turn_corpse_into_chunks(item);
+    if (mons_skeleton(item.plus))
+        turn_corpse_into_skeleton(item);
+
+    int o = get_item_slot();
+    if (o != NON_ITEM)
+    {
+        turn_corpse_into_chunks(chunks);
+        copy_item_to_grid(chunks, you.pos());
+    }
 }
 
 // Initialize blood potions with a vector of timers.
@@ -916,18 +915,17 @@ void turn_corpse_into_blood_potions(item_def &item)
 
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
 {
-    if (mons_skeleton(item.plus))
-    {
-        int o = get_item_slot();
-        if (o != NON_ITEM)
-        {
-            item_def skel = item;
-            turn_corpse_into_skeleton(skel);
-            copy_item_to_grid(skel, you.pos());
-        }
-    }
+    item_def blood_potions = item;
 
-    turn_corpse_into_blood_potions(item);
+    if (mons_skeleton(item.plus))
+        turn_corpse_into_skeleton(item);
+
+    int o = get_item_slot();
+    if (o != NON_ITEM)
+    {
+        turn_corpse_into_blood_potions(blood_potions);
+        copy_item_to_grid(blood_potions, you.pos());
+    }
 }
 
 // A variation of the mummy curse:
