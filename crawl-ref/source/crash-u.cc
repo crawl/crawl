@@ -13,7 +13,7 @@ REVISION("$Rev$");
 #include <signal.h>
 #endif
 
-#if defined(__GLIBC__) || defined(__APPLE__)
+#ifdef __GLIBC__
 #include <execinfo.h>
 #endif
 
@@ -136,7 +136,7 @@ void dump_crash_info(FILE* file)
             name);
 }
 
-#if defined(__GLIBC__) || defined(__APPLE__)
+#ifdef __GLIBC__
 // NOTE: This should work on OS X, according to
 // http://developer.apple.com/DOCUMENTATION/DARWIN/Reference/ManPages/man3/backtrace_symbols.3.html
 
@@ -166,7 +166,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     free(symbols);
 }
-#else // if defined(__GLIBC__) || defined(__APPLE__)
+#else // ifdef __GLIBC__
 void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform." EOL;
