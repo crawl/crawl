@@ -5563,6 +5563,17 @@ void do_crash_dump()
         fprintf(file, "%s" EOL EOL, _assert_msg.c_str());
 #endif
 
+    fprintf(file, "Revision: %d" EOL, svn_revision());
+    fprintf(file, "Version: %s" EOL, CRAWL " " VERSION);
+#if defined(UNIX)
+    fprintf(file, "Platform: unix" EOL);
+#endif
+#ifdef USE_TILE
+    fprintf(file, "Tiles: yes" EOL EOL);
+#else
+    fprintf(file, "Tiles: no" EOL EOL);
+#endif
+
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information
     // might themselves cause crashes.
