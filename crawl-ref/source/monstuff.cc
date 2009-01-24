@@ -565,14 +565,15 @@ static bool _is_pet_kill(killer_type killer, int i)
             && (me.who == KC_YOU || me.who == KC_FRIENDLY));
 }
 
-// Elyvilon will occasionally (5% chance) protect the life of
-// one of your allies.
+// Elyvilon will occasionally (5% chance) protect the life of one of
+// your allies.
 static bool _ely_protects_ally(monsters *monster)
 {
-    ASSERT(you.religion == GOD_ELYVILON);
+    if (you.religion != GOD_ELYVILON)
+        return (false);
 
     if (mons_holiness(monster) != MH_NATURAL
-         && mons_holiness(monster) != MH_HOLY
+            && mons_holiness(monster) != MH_HOLY
         || !mons_friendly(monster)
         || !mons_near(monster)
         || !player_monster_visible(monster) // for simplicity
@@ -582,10 +583,11 @@ static bool _ely_protects_ally(monsters *monster)
     }
 
     monster->hit_points = 1;
-    snprintf(info, INFO_SIZE, " protects %s%s from harm!%s",
-             mons_is_unique(monster->type) ? "" : "your ",
-             monster->name(DESC_PLAIN).c_str(),
-             coinflip() ? "" : "  You feel responsible.");
+
+    snprintf(info, INFO_SIZE, " protects %s from harm!%s",
+             monster->name(DESC_NOCAP_THE).c_str(),
+             coinflip() ? "" : " You feel responsible.");
+
     simple_god_message(info);
     lose_piety(1);
 
@@ -596,7 +598,9 @@ static bool _ely_protects_ally(monsters *monster)
 // be killed by you or one of your friends.
 static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
 {
-    ASSERT(you.religion != GOD_ELYVILON);
+    if (you.religion == GOD_ELYVILON)
+        return (false);
+
     god_type god = GOD_ELYVILON;
 
     if (!you.penance[god] || !god_hates_your_god(god))
@@ -643,6 +647,19 @@ static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
     return (true);
 }
 
+static bool _yred_enslaves_soul(monsters *monster, killer_type killer)
+{
+    if (you.religion == GOD_YREDELEMNUL && mons_enslaved_body_and_soul(monster)
+        && mons_near(monster) && killer != KILL_RESET
+        && killer != KILL_DISMISSED)
+    {
+        yred_make_enslaved_soul(monster, player_under_penance());
+        return (true);
+    }
+
+    return (false);
+}
+
 static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
 {
     if (monster->hit_points < -25
@@ -654,10 +671,13 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
     }
 
     // Elyvilon specials
-    if (you.religion == GOD_ELYVILON && _ely_protects_ally(monster))
+    if (_ely_protects_ally(monster))
+        return (true);
+    if (_ely_heals_monster(monster, killer, i))
         return (true);
 
-    if (you.religion != GOD_ELYVILON && _ely_heals_monster(monster, killer, i))
+    // Yredelemnul special
+    if (_yred_enslaves_soul(monster, killer))
         return (true);
 
     // Beogh special
@@ -699,15 +719,6 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
             beogh_convert_orc(monster, true, MON_KILL(killer));
             return (true);
         }
-    }
-
-    // Yredelemnul special
-    if (you.religion == GOD_YREDELEMNUL && mons_enslaved_body_and_soul(monster)
-        && mons_near(monster) && killer != KILL_RESET
-        && killer != KILL_DISMISSED)
-    {
-        yred_make_enslaved_soul(monster, player_under_penance());
-        return (true);
     }
 
     return (false);
@@ -7688,7 +7699,7 @@ void mons_check_pool(monsters *mons, const coord_def &oldpos,
     {
         const bool message = mons_near(mons);
 
-        // Don't worry about invisibility - you should be able to see if
+        // Don't worry about invisibility.  You should be able to see if
         // something has fallen into the lava.
         if (message && (oldpos == mons->pos() || grd(oldpos) != grid))
         {
@@ -7700,8 +7711,8 @@ void mons_check_pool(monsters *mons, const coord_def &oldpos,
         if (grid == DNGN_LAVA && mons_res_fire(mons) >= 2)
             grid = DNGN_DEEP_WATER;
 
-        // Even fire resistant monsters perish in lava, but inanimate monsters
-        // can survive deep water.
+        // Even fire resistant monsters perish in lava, but inanimate
+        // monsters can survive deep water.
         if (grid == DNGN_LAVA || mons->can_drown())
         {
             if (message)

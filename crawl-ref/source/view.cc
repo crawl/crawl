@@ -894,7 +894,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
             int wpn = you.equip[EQ_WEAPON];
             if (wpn != -1
                 && you.inv[wpn].base_type == OBJ_WEAPONS
-                && is_evil_item( you.inv[wpn] )
+                && is_evil_item(you.inv[wpn])
                 && coinflip()) // 50% chance of conversion failing
             {
                 msg::stream << monster->name(DESC_CAP_THE)
@@ -928,13 +928,13 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
 
         const int hd = monster->hit_dice;
 
-        if (you.piety >= piety_breakpoint(2) && !player_under_penance() &&
-            random2(you.piety / 15) + random2(4 + you.experience_level / 3)
-              > random2(hd) + hd + random2(5))
+        if (you.piety >= piety_breakpoint(2) && !player_under_penance()
+            && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
+                 > random2(hd) + hd + random2(5))
         {
             if (you.weapon()
                 && you.weapon()->base_type == OBJ_WEAPONS
-                && get_weapon_brand( *you.weapon() ) == SPWPN_ORC_SLAYING
+                && get_weapon_brand(*you.weapon()) == SPWPN_ORC_SLAYING
                 && coinflip()) // 50% chance of conversion failing
             {
                 msg::stream << monster->name(DESC_CAP_THE)

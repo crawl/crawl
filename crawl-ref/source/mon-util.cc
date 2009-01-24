@@ -1970,7 +1970,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return ("");
 
     const bool arena_submerged = crawl_state.arena && !force_seen
-                              && mons_is_submerged(&mon);
+                                     && mons_is_submerged(&mon);
 
     // Handle non-visible case first.
     if (!force_seen && !player_monster_visible(&mon)
@@ -3243,7 +3243,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     if (!visible)
         gender = GENDER_NEUTER;
 
-    switch(variant)
+    switch (variant)
     {
         case PRONOUN_CAP:
             return ((gender == 0) ? "It" :
@@ -3538,8 +3538,8 @@ bool monsters::floundering() const
 {
     const dungeon_feature_type grid = grd(pos());
     return (grid_is_water(grid)
-            // Can't use monster_habitable_grid because that'll return true
-            // for non-water monsters in shallow water.
+            // Can't use monster_habitable_grid() because that'll return
+            // true for non-water monsters in shallow water.
             && mons_primary_habitat(this) != HT_WATER
             && !mons_amphibious(this)
             && !mons_flies(this)

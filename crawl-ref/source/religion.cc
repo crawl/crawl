@@ -1810,24 +1810,14 @@ bool bless_follower(monsters *follower,
 
 blessing_done:
 
-    bool see_follower = false;
-
     std::string whom = "";
     if (!follower)
         whom = "you";
     else
     {
         if (mons_near(follower) && player_monster_visible(follower))
-            see_follower = true;
-
-        if (see_follower)
-        {
-            if (follower->is_named())
-                whom = follower->name(DESC_PLAIN);
-            else
-                whom = "your " + follower->name(DESC_PLAIN);
-        }
-        else // cannot see who was blessed
+            whom = follower->name(DESC_NOCAP_THE);
+        else
             whom = "a follower";
     }
 
