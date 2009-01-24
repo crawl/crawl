@@ -2200,6 +2200,10 @@ std::string _status_mut_abilities()
                                                 "repel undead"));
     }
 
+    // TODO: Differentiate between mermaids and sirens!
+    if (you.duration[DUR_MESMERISED])
+        status.push_back("mesmerised");
+
     if (you.duration[DUR_LIQUID_FLAMES])
         status.push_back("liquid flames");
 
