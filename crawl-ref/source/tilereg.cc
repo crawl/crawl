@@ -1919,7 +1919,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
             m_far_view = true;
             tiles.load_dungeon(gc);
         }
-        return CK_MOUSE_CMD;
+        return 0;
     case MouseEvent::RELEASE:
         if ((event.button == MouseEvent::RIGHT) && m_far_view)
         {
