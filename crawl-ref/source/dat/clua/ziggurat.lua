@@ -340,7 +340,7 @@ local dgn_passable = dgn.passable_excluding("closed_door")
 
 local function ziggurat_create_monsters(p, mfn)
   local depth = zig_depth()
-  local hd_pool = depth * (depth + 8) + depth*depth*depth
+  local hd_pool = depth * (depth + 8)
 -- (was depth * (depth + 8) before and too easy)
 
   local nth = 1
