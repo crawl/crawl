@@ -7694,7 +7694,7 @@ void mons_check_pool(monsters *mons, const coord_def &oldpos,
         {
             mprf("%s falls into the %s!",
                  mons->name(DESC_CAP_THE).c_str(),
-                 (grid == DNGN_LAVA ? "lava" : "water"));
+                 grid == DNGN_LAVA ? "lava" : "water");
         }
 
         if (grid == DNGN_LAVA && mons_res_fire(mons) >= 2)
