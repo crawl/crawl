@@ -1491,6 +1491,9 @@ flight_type mons_class_flies(int mc)
 
 flight_type mons_flies(const monsters *mon)
 {
+    if (mons_enslaved_twisted_soul(mon))
+        return (FL_LEVITATE);
+
     if (mon->type == MONS_PANDEMONIUM_DEMON && mon->ghost->fly)
         return (mon->ghost->fly);
 
