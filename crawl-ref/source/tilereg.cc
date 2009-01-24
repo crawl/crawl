@@ -2335,7 +2335,10 @@ CRTRegion::CRTRegion(FTFont *font) : TextRegion(font)
 
 int CRTRegion::handle_mouse(MouseEvent &event)
 {
-    return 0;
+    if (event.event != MouseEvent::PRESS || event.button != MouseEvent::LEFT)
+        return 0;
+
+    return CK_MOUSE_CLICK;
 }
 
 MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
