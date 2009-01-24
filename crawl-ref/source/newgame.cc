@@ -906,8 +906,11 @@ static void _reassess_starting_skills()
 {
     for (int i = 0; i < NUM_SKILLS; i++)
     {
-        if (!you.skills[i])
+        if (you.skills[i] == 0
+            && (you.species != SP_VAMPIRE || i != SK_UNARMED_COMBAT))
+        {
             continue;
+        }
 
         // Grant the amount of skill points required for a human.
         const int points = skill_exp_needed( you.skills[i] );
@@ -926,10 +929,18 @@ static void _reassess_starting_skills()
         }
 
         // Spellcasters should always have Spellcasting skill.
-        if (i == SK_SPELLCASTING && you.skills[i] == 0)
+        if (i == SK_SPELLCASTING && you.skills[i] < 1)
         {
             you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
             you.skills[i] = 1;
+        }
+
+        // Vampires should always have Unarmed Combat skill.
+        if (you.species == SP_VAMPIRE && i == SK_UNARMED_COMBAT
+            && you.skills[i] < 2)
+        {
+            you.skill_points[i] = (skill_exp_needed(2) * sp_diff) / 100;
+            you.skills[i] = 2;
         }
     }
 }
@@ -5642,10 +5653,6 @@ bool _give_items_skills()
     default:
         break;
     }
-
-    // Vampires always start with unarmed combat skill.
-    if (you.species == SP_VAMPIRE && you.skills[SK_UNARMED_COMBAT] < 2)
-        you.skills[SK_UNARMED_COMBAT] = 2;
 
     if (weap_skill)
     {
