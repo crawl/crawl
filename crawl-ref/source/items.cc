@@ -2328,7 +2328,7 @@ bool item_needs_autopickup(const item_def &item)
     if (item_is_stationary(item))
         return (false);
 
-    if (strstr(item.inscription.c_str(), "=g") != 0)
+    if (item.inscription.find("=g") != std::string::npos)
         return (true);
 
     if ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)

@@ -3618,10 +3618,7 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
         // wandering monsters at least appear to have some sort of
         // attention span.  -- bwr
         if (need_target)
-        {
-            mon->target.set(10 + random2(X_BOUND_2 - 10),
-                            10 + random2(Y_BOUND_2 - 10));
-        }
+            mon->target = random_in_bounds();
     }
 }
 
@@ -3752,8 +3749,7 @@ static void _handle_behaviour(monsters *mon)
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
-        mon->target.set(10 + random2(X_BOUND_2 - 10),
-                        10 + random2(Y_BOUND_2 - 10));
+        mon->target = random_in_bounds();
         return;
     }
 
@@ -4050,8 +4046,7 @@ static void _handle_behaviour(monsters *mon)
                 // Sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
-                    mon->target.set(10 + random2(X_BOUND_2 - 10),
-                                    10 + random2(Y_BOUND_2 - 10));
+                    mon->target = random_in_bounds();
                     mon->foe = MHITNOT;
                     new_beh  = BEH_WANDER;
                 }
@@ -4106,9 +4101,8 @@ static void _handle_behaviour(monsters *mon)
                     {
                         mon->travel_target = MTRAV_NONE;
                         patrolling = false;
-                        mon->patrol_point = coord_def(0, 0);
-                        mon->target.set(10 + random2(X_BOUND_2 - 10),
-                                        10 + random2(Y_BOUND_2 - 10));
+                        mon->patrol_point.reset();
+                        mon->target = random_in_bounds();
                     }
                 }
 
