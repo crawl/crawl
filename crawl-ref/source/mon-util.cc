@@ -3587,6 +3587,18 @@ bool monsters::is_habitable_feat(dungeon_feature_type actual_grid) const
 
 bool monsters::can_drown() const
 {
+    // Presumeably a shark in lava or a lavafish in deep water could
+    // drown, but that should never happen, so this simple check should
+    // be enough.
+    switch (mons_primary_habitat(this))
+    {
+    case HT_WATER:
+    case HT_LAVA:
+        return (false);
+    default:
+        break;
+    }
+
     // Mummies can fall apart in water or be incinerated in lava.
     // Ghouls, vampires, and demons can drown in water or lava.  Others
     // just "sink like a rock", to never be seen again.
