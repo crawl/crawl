@@ -1726,7 +1726,7 @@ int exper_value(const monsters *monster)
         x_val = 15000;
 
     return (x_val);
-}                               // end exper_value()
+}
 
 void mons_load_spells( monsters *mon, mon_spellbook_type book )
 {
@@ -1936,7 +1936,7 @@ void define_monster(monsters &mons)
     // Reset monster enchantments.
     mons.enchantments.clear();
     mons.ench_countdown = 0;
-}                               // end define_monster()
+}
 
 static const char *drac_colour_names[] = {
     "black", "mottled", "yellow", "green", "purple",

@@ -7747,7 +7747,7 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
     }
 }
 
-// Randomize potential damage.
+// Randomise potential damage.
 static int _estimated_trap_damage(trap_type trap)
 {
     switch (trap)
