@@ -7704,9 +7704,9 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
         // something has fallen into the lava.
         if (message && (oldpos == monster->pos() || grd(oldpos) != grid))
         {
-            simple_monster_message(monster,
-                make_stringf(" falls into the %s!",
-                             grid == DNGN_LAVA ? "lava" : "water").c_str());
+            mprf("%s falls into the %s!",
+                 monster->name(DESC_CAP_THE).c_str(),
+                 grid == DNGN_LAVA ? "lava" : "water");
         }
 
         if (grid == DNGN_LAVA && mons_res_fire(monster) >= 2)
