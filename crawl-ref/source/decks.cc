@@ -195,7 +195,7 @@ int cards_in_deck(const item_def &deck)
     const CrawlHashTable &props = deck.props;
     ASSERT(props.exists("cards"));
 
-    return static_cast<unsigned long>(props["cards"].get_vector().size());
+    return (props["cards"].get_vector().size());
 }
 
 static void _shuffle_deck(item_def &deck)
@@ -1813,8 +1813,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     }
 
     snprintf(info, INFO_SIZE, "You have drawn %s.  Aim where? ",
-                              card_name(card));
-
+             card_name(card));
 
     bolt beam;
     beam.range = LOS_RADIUS;

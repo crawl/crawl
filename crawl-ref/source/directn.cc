@@ -684,11 +684,11 @@ static void _fill_monster_list(bool full_info)
 
     // Get the unique entries.
     mlist.clear();
-    int start = 0, end = 1;
-    while (start < (int) temp.size())
+    unsigned int start = 0, end = 1;
+    while (start < temp.size())
     {
         mlist.push_back(temp[start]);
-        for (end = start + 1; end < (int) temp.size(); ++end)
+        for (end = start + 1; end < temp.size(); ++end)
         {
             if (monster_pane_info::less_than(temp[start], temp[end],
                                              full_info))

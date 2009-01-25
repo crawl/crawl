@@ -432,8 +432,7 @@ static const char *kill_method_names[] =
 
 const char *kill_method_name(kill_method_type kmt)
 {
-    ASSERT(NUM_KILLBY ==
-           (int) sizeof(kill_method_names) / sizeof(*kill_method_names));
+    ASSERT(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
     if (kmt == NUM_KILLBY)
         return ("");
@@ -443,8 +442,7 @@ const char *kill_method_name(kill_method_type kmt)
 
 kill_method_type str_to_kill_method(const std::string &s)
 {
-    ASSERT(NUM_KILLBY ==
-           (int) sizeof(kill_method_names) / sizeof(*kill_method_names));
+    ASSERT(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
     for (int i = 0; i < NUM_KILLBY; ++i)
     {

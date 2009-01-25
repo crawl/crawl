@@ -973,7 +973,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             NUM_RUNE_TYPES
         };
 
-        item.plus = static_cast<int>(types[keyin - 'a']);
+        item.plus = types[keyin - 'a'];
 
         return;
     }
@@ -1109,9 +1109,8 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         }
     }
 
-    int              base   = static_cast<int>(DECK_RARITY_COMMON);
-    deck_rarity_type rarity =
-        static_cast<deck_rarity_type>(base + rarity_val);
+    const deck_rarity_type rarity =
+        static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
     item.special = rarity;
 
     int num = _debug_prompt_for_int("How many cards? ", false);
@@ -5298,7 +5297,7 @@ void debug_pathfind(int mid)
     if (success)
     {
         std::vector<coord_def> path = mp.backtrack();
-        std::string path_str = "";
+        std::string path_str;
         mpr("Here's the shortest path: ");
         for (unsigned int i = 0; i < path.size(); i++)
         {

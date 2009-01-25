@@ -2118,16 +2118,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
         if (mon.number < 11)
         {
-            result += (mon.number ==  1) ? "one"   :
-                      (mon.number ==  2) ? "two"   :
-                      (mon.number ==  3) ? "three" :
-                      (mon.number ==  4) ? "four"  :
-                      (mon.number ==  5) ? "five"  :
-                      (mon.number ==  6) ? "six"   :
-                      (mon.number ==  7) ? "seven" :
-                      (mon.number ==  8) ? "eight" :
-                      (mon.number ==  9) ? "nine"
-                                         : "ten";
+            const char* cardinals[] = {"one", "two", "three", "four", "five",
+                                       "six", "seven", "eight", "nine", "ten"};
+            result += cardinals[mon.number - 1];
         }
         else
         {

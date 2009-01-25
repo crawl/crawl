@@ -77,7 +77,7 @@ static std::string _purchase_keys(const std::string &s)
 
     std::string list = "<w>" + s.substr(0, 1);
     char last = s[0];
-    for (int i = 1; i < (int) s.length(); ++i)
+    for (unsigned int i = 1; i < s.length(); ++i)
     {
         if (s[i] == s[i - 1] + 1)
             continue;
@@ -121,14 +121,10 @@ static void _list_shop_keys(const std::string &purchasable)
 static std::vector<int> _shop_get_stock(int shopidx)
 {
     std::vector<int> result;
-
-    int itty = igrd[0][5 + shopidx];
-
-    while ( itty != NON_ITEM )
-    {
-        result.push_back( itty );
-        itty = mitm[itty].link;
-    }
+    // Shop items are heaped up at this cell.
+    const coord_def stack_location(0, 5 + shopidx);
+    for (stack_iterator si(stack_location); si; ++si)
+        result.push_back(si.link());
     return result;
 }
 
@@ -157,8 +153,8 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
     std::string purchasable;
     for (unsigned int i = 0; i < stock.size(); ++i)
     {
-        const int gp_value = _shop_get_item_value(mitm[stock[i]], shop.greed,
-                                                  id);
+        const item_def& item = mitm[stock[i]];
+        const int gp_value = _shop_get_item_value(item, shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
         cgotoxy(1, i+1, GOTO_CRT);
@@ -193,8 +189,8 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
         if (Options.menu_colour_shops)
         {
             // Colour stock according to menu colours.
-            const std::string colprf = menu_colour_item_prefix(mitm[stock[i]]);
-            const int col = menu_colour(mitm[stock[i]].name(DESC_NOCAP_A),
+            const std::string colprf = menu_colour_item_prefix(item);
+            const int col = menu_colour(item.name(DESC_NOCAP_A),
                                         colprf, "shop");
             textcolor(col != -1 ? col : LIGHTGREY);
         }
@@ -202,11 +198,10 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
         cprintf("%-56s%5d gold",
-                mitm[stock[i]].name(DESC_NOCAP_A, false, id).substr(0, 56).
-                    c_str(),
+                item.name(DESC_NOCAP_A, false, id).substr(0, 56).c_str(),
                 gp_value);
 
-        si.add_item(mitm[stock[i]], gp_value);
+        si.add_item(item, gp_value);
     }
     textcolor(LIGHTGREY);
 
@@ -252,14 +247,13 @@ static bool _in_a_shop( int shopidx )
         StashTrack.get_shop(shop.pos).reset();
 
         std::vector<int> stock = _shop_get_stock(shopidx);
-        for (unsigned int k = 0; k < stock.size(); k++)
+
+        // Autoinscribe randarts in the shop.
+        for (unsigned int i = 0; i < stock.size(); i++)
         {
-            if (Options.autoinscribe_randarts
-                && is_random_artefact(mitm[stock[k]]))
-            {
-                mitm[stock[k]].inscription =
-                    randart_auto_inscription(mitm[stock[k]]);
-            }
+            item_def& item = mitm[stock[i]];
+            if (Options.autoinscribe_randarts && is_random_artefact(item))
+                item.inscription = randart_auto_inscription(item);
         }
 
         // Deselect all.
@@ -342,7 +336,8 @@ static bool _in_a_shop( int shopidx )
             // Do purchase.
             if (total_cost > you.gold)
             {
-                _shop_print("I'm sorry, you don't seem to have enough money.", 1);
+                _shop_print("I'm sorry, you don't seem to have enough money.",
+                            1);
                 _shop_more();
             }
             else if (!total_cost)
@@ -1773,15 +1768,13 @@ shop_struct *get_shop(const coord_def& where)
     if (grd(where) != DNGN_ENTER_SHOP)
         return (NULL);
 
-    // Find shop.
-    for (int shoppy = 0; shoppy < MAX_SHOPS; shoppy ++)
+    // Check all shops for one at the correct position.
+    for (int i = 0; i < MAX_SHOPS; i ++)
     {
-        // Find shop index plus a little bit of paranoia.
-        if (env.shop[shoppy].pos == where
-            && env.shop[shoppy].type != SHOP_UNASSIGNED)
-        {
-            return (&env.shop[shoppy]);
-        }
+        shop_struct& shop = env.shop[i];
+        // A little bit of paranoia.
+        if (shop.pos == where && shop.type != SHOP_UNASSIGNED)
+            return (&shop);
     }
     return (NULL);
 }
@@ -1838,11 +1831,10 @@ std::string shop_name(const coord_def& where)
     if (shop_type != SHOP_GENERAL
         && shop_type != SHOP_GENERAL_ANTIQUE && shop_type != SHOP_DISTILLERY)
     {
-        int temp = where.x + where.y % 4;
-        sh_name += (temp == 0) ? " Shoppe" :
-                   (temp == 1) ? " Boutique" :
-                   (temp == 2) ? " Emporium"
-                               : " Shop";
+        const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
+        const int temp = where.x + where.y % 4;
+        sh_name += ' ';
+        sh_name += suffixnames[temp];
     }
 
     return (sh_name);
