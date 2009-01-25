@@ -215,7 +215,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         return (true);
     }
 
-    // If command repitition is being used to immitate the rest command,
+    // If command repetition is being used to imitate the rest command,
     // then everything interrupts it.
     if (crawl_state.repeat_cmd == CMD_MOVE_NOWHERE
         || crawl_state.repeat_cmd == CMD_SEARCH)
@@ -472,7 +472,7 @@ void game_state::dump(FILE* file)
 
     if (cmd_repeat_count > 0 || cmd_repeat_goal > 0)
     {
-        fprintf(file, "Doing command repitition:" EOL);
+        fprintf(file, "Doing command repetition:" EOL);
         fprintf(file, "cmd_repeat_start:%d, cmd_repeat_count: %d, "
                       "cmd_repeat_goal:%d" EOL
                       "prev_cmd_repeat_goal: %d" EOL,

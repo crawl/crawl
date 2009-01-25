@@ -1740,14 +1740,6 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
     {
-        // No recursive interruptions from messages (AI_MESSAGE)
-        _block_interruptions(true);
-        if (ai == AI_FULL_HP)
-            mpr("HP restored.");
-        else
-            mpr("Magic restored.");
-        _block_interruptions(false);
-
         if (Options.rest_wait_both && curr == DELAY_REST
             && (you.magic_points < you.max_magic_points
                 || you.hp < you.hp_max))
@@ -1919,6 +1911,14 @@ bool interrupt_activity( activity_interrupt_type ai,
 
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
+
+    // No recursive interruptions from messages (AI_MESSAGE)
+    _block_interruptions(true);
+    if (ai == AI_FULL_HP)
+        mpr("HP restored.");
+    else if (ai == AI_FULL_MP)
+        mpr("Magic restored.");
+    _block_interruptions(false);
 
     if (_should_stop_activity(item, ai, at))
     {
