@@ -1235,7 +1235,6 @@ int mons_res_elec(const monsters *mon)
 bool mons_res_asphyx(const monsters *mon)
 {
     const mon_holy_type holiness = mons_holiness(mon);
-
     return (mons_is_unholy(mon)
             || holiness == MH_NONLIVING
             || holiness == MH_PLANT
@@ -3581,14 +3580,14 @@ bool monsters::is_habitable_feat(dungeon_feature_type actual_grid) const
 
 bool monsters::can_drown() const
 {
-    // Mummies can fall apart in water; ghouls, vampires, and demons can
-    // drown in water/lava.
-    // Other undead just "sink like a rock", to be never seen again.
+    // Mummies can fall apart in water or be incinerated in lava.
+    // Ghouls, vampires, and demons can drown in water or lava.  Others
+    // just "sink like a rock", to never be seen again.
     return (!mons_res_asphyx(this)
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE
-            || holiness() == MH_DEMONIC);
+            || mons_holiness(this) == MH_DEMONIC);
 }
 
 size_type monsters::body_size(int /* psize */, bool /* base */) const
@@ -5835,9 +5834,13 @@ int monsters::res_rotting() const
 
 int monsters::res_torment() const
 {
-    mon_holy_type holy = mons_holiness(this);
-    if (holy == MH_UNDEAD || holy == MH_DEMONIC || holy == MH_NONLIVING)
+    const mon_holy_type holy = mons_holiness(this);
+    if (holy == MH_UNDEAD
+        || holy == MH_DEMONIC
+        || holy == MH_NONLIVING)
+    {
         return (1);
+    }
 
     return (0);
 }
