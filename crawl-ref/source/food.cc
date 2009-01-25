@@ -734,21 +734,6 @@ void lua_push_inv_items(lua_State *ls = NULL)
     }
 }
 
-static bool _userdef_eat_food()
-{
-#ifdef CLUA_BINDINGS
-    lua_push_floor_items(clua.state());
-    lua_push_inv_items();
-    bool ret = clua.callfn("c_eat", 2, 0);
-    if (!ret && clua.error.length())
-        mpr(clua.error.c_str());
-
-    return (ret);
-#else
-    return (false);
-#endif
-}
-
 bool prompt_eat_inventory_item(int slot)
 {
     if (inv_count() < 1)
@@ -816,7 +801,7 @@ bool prompt_eat_inventory_item(int slot)
 }
 
 // [ds] Returns true if something was eaten.
-bool eat_food(bool run_hook, int slot)
+bool eat_food(int slot)
 {
     if (you.is_undead == US_UNDEAD)
     {
@@ -833,18 +818,25 @@ bool eat_food(bool run_hook, int slot)
         return (false);
     }
 
-    // If user hook ran, we don't know whether something
-    // was eaten or not...
-    if (run_hook && _userdef_eat_food())
-        return (false);
-
-    if (igrd(you.pos()) != NON_ITEM && slot == -1)
+    int result;
+    // Skip the prompts if we already know what we're eating.
+    if (slot == -1)
     {
-        const int res = eat_from_floor(false);
-        if (res == 1)
-            return (true);
-        if (res == -1)
-            return (false);
+        result = prompt_eat_chunks();
+        if (result == 1 || result == -1)
+            return (result > 0);
+
+        if (result != -2) // else skip ahead to inventory
+        {
+            if (igrd(you.pos()) != NON_ITEM)
+            {
+                result = eat_from_floor(true);
+                if (result == 1)
+                    return (true);
+                if (result == -1)
+                    return (false);
+            }
+        }
     }
 
     return (prompt_eat_inventory_item(slot));
@@ -1505,11 +1497,13 @@ bool eat_from_inventory()
     return (false);
 }
 
-bool eat_chunks()
+// Returns -1 for cancel, 1 for eaten, 0 for not eaten,
+//         -2 for skip to inventory.
+int prompt_eat_chunks()
 {
     // Herbivores cannot eat chunks.
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
-        return (false);
+        return (0);
 
     bool found_valid = false;
     std::vector<item_def *> chunks;
@@ -1587,7 +1581,7 @@ bool eat_chunks()
             }
             else
             {
-                mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
+                mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
                      (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
                      ((item->quantity > 1) ? "one of " : ""),
                      item_name.c_str());
@@ -1599,7 +1593,11 @@ bool eat_chunks()
             case ESCAPE:
             case 'q':
                 canned_msg(MSG_OK);
-                return (false);
+                return (-1);
+            case 'i':
+            case '?':
+                // Skip ahead to the inventory.
+                return (-2);
             case 'e':
             case 'y':
                 if (can_ingest(item->base_type, item->sub_type, false))
@@ -1616,7 +1614,7 @@ bool eat_chunks()
                     if (in_inventory(*item))
                     {
                         eat_inventory_item(item->link);
-                        return (true);
+                        return (1);
                     }
                     else
                     {
@@ -1625,9 +1623,9 @@ bool eat_chunks()
                         if (ilink != NON_ITEM)
                         {
                             eat_floor_item(ilink);
-                            return (true);
+                            return (1);
                         }
-                        return (false);
+                        return (0);
                     }
                 }
                 break;
@@ -1638,7 +1636,7 @@ bool eat_chunks()
         }
     }
 
-    return (false);
+    return (0);
 }
 
 static const char *_chunk_flavour_phrase(bool likes_chunks)

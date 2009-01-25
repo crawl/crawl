@@ -5385,7 +5385,7 @@ void tile_item_use(int idx)
             // intentional fall-through for Vampires
         case OBJ_FOOD:
             if (check_warning_inscriptions(item, OPER_EAT))
-                eat_food(false, idx);
+                eat_food(idx);
             return;
 
         case OBJ_BOOKS:
