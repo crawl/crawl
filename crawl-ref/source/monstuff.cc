@@ -7686,50 +7686,50 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     return (true);
 }
 
-void mons_check_pool(monsters *mons, const coord_def &oldpos,
+void mons_check_pool(monsters *monster, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
     // Levitating/flying monsters don't make contact with the terrain.
-    if (mons->airborne())
+    if (monster->airborne())
         return;
 
-    dungeon_feature_type grid = grd(mons->pos());
+    dungeon_feature_type grid = grd(monster->pos());
     if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
-        && !monster_habitable_grid(mons, grid))
+        && !monster_habitable_grid(monster, grid))
     {
-        const bool message = mons_near(mons);
+        const bool message = mons_near(monster);
 
         // Don't worry about invisibility.  You should be able to see if
         // something has fallen into the lava.
-        if (message && (oldpos == mons->pos() || grd(oldpos) != grid))
+        if (message && (oldpos == monster->pos() || grd(oldpos) != grid))
         {
-            mprf("%s falls into the %s!",
-                 mons->name(DESC_CAP_THE).c_str(),
-                 grid == DNGN_LAVA ? "lava" : "water");
+            simple_monster_message(monster,
+                make_stringf(" falls into the %s!",
+                             grid == DNGN_LAVA ? "lava" : "water").c_str());
         }
 
-        if (grid == DNGN_LAVA && mons_res_fire(mons) >= 2)
+        if (grid == DNGN_LAVA && mons_res_fire(monster) >= 2)
             grid = DNGN_DEEP_WATER;
 
         // Even fire resistant monsters perish in lava, but inanimate
         // monsters can survive deep water.
-        if (grid == DNGN_LAVA || mons->can_drown())
+        if (grid == DNGN_LAVA || monster->can_drown())
         {
             if (message)
             {
                 if (grid == DNGN_LAVA)
                 {
-                    simple_monster_message(mons, " is incinerated.",
+                    simple_monster_message(monster, " is incinerated.",
                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
-                else if (mons_genus(mons->type) == MONS_MUMMY)
+                else if (mons_genus(monster->type) == MONS_MUMMY)
                 {
-                    simple_monster_message(mons, " falls apart.",
+                    simple_monster_message(monster, " falls apart.",
                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
                 else
                 {
-                    simple_monster_message(mons, " drowns.",
+                    simple_monster_message(monster, " drowns.",
                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
             }
@@ -7738,10 +7738,10 @@ void mons_check_pool(monsters *mons, const coord_def &oldpos,
             {
                 // Self-kill.
                 killer  = KILL_MON;
-                killnum = monster_index(mons);
+                killnum = monster_index(monster);
             }
 
-            monster_die(mons, killer, killnum, true);
+            monster_die(monster, killer, killnum, true);
         }
     }
 }
