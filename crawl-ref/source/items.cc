@@ -821,6 +821,7 @@ static void _pickup_menu(int item_link)
                     item_link = mitm[j].link;
 
                 int num_to_take = selected[i].quantity;
+                const bool take_all = (num_to_take == mitm[j].quantity);
                 unsigned long oldflags = mitm[j].flags;
                 mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
                 int result = move_item_to_player( j, num_to_take );
@@ -840,7 +841,14 @@ static void _pickup_menu(int item_link)
                         mitm[j].flags = oldflags;
                 }
                 else
+                {
                     n_did_pickup++;
+                    // If we deliberately chose to take only part of a
+                    // pile, we consider the rest to have been
+                    // "dropped."
+                    if (!take_all && is_valid_item(mitm[j]))
+                        mitm[j].flags |= ISFLAG_DROPPED;
+                }
             }
         }
 
