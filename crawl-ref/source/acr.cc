@@ -4273,7 +4273,7 @@ static void _move_player(coord_def move)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
-        if (!move_player_to_grid(targ, true, false, swap, swap))
+        if (!move_player_to_grid(targ, true, false, false, swap))
             return;
 
         if (swap)
