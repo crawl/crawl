@@ -670,17 +670,17 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
         return (false);
     }
 
-    // Elyvilon specials
+    // Elyvilon specials.
     if (_ely_protects_ally(monster))
         return (true);
     if (_ely_heals_monster(monster, killer, i))
         return (true);
 
-    // Yredelemnul special
+    // Yredelemnul special.
     if (_yred_enslaves_soul(monster, killer))
         return (true);
 
-    // Beogh special
+    // Beogh special.
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
         && !mons_is_summoned(monster) && !mons_is_shapeshifter(monster)
