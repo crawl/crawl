@@ -7742,7 +7742,10 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
                 killnum = monster_index(monster);
             }
 
-            monster_die(monster, killer, killnum, true);
+            // Yredelemnul special, redux: It's the only one that can
+            // work on drowned monsters.
+            if (!_yred_enslaves_soul(monster, killer))
+                monster_die(monster, killer, killnum, true);
         }
     }
 }
