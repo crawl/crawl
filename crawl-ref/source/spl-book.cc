@@ -1947,14 +1947,16 @@ bool make_book_level_randart(item_def &book, int level, int num_spells)
         spell_vec[i] = (long) chosen_spells[i];
 
     bool has_owner = true;
-    std::string name = "\"";
-
+    std::string name = "";
     if (god != GOD_NO_GOD)
         name += apostrophise(god_name(god, false)) + " ";
     else if (one_chance_in(3))
         name += apostrophise(make_name(random_int(), false)) + " ";
     else
         has_owner = false;
+
+    // None of these books need a definite article prepended.
+    book.props["is_named"].get_bool() = true;
 
     std::string lookup;
     if (level <= 3)
@@ -1980,7 +1982,6 @@ bool make_book_level_randart(item_def &book, int level, int num_spells)
         bookname = getRandNameString("book");
 
     name += bookname;
-    name += '"';
 
     set_randart_name(book, name);
 
@@ -2399,21 +2400,24 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     std::string name;
 
-    bool need_quotes = true;
+    const bool god_gift = (god != GOD_NO_GOD);
+    bool has_owner = true;
     if (!owner.empty())
         name = owner;
-    else if (god != GOD_NO_GOD)
+    else if (god_gift && !one_chance_in(4))
         name = god_name(god, false);
-    else if (one_chance_in(5)) // Occasionally, use a random name.
+    else if (god_gift || one_chance_in(5)) // Occasionally, use a random name.
         name = make_name(random_int(), false);
     else
-        need_quotes = false;
+        has_owner = false;
 
-    if (need_quotes)
-        name = "\"" + apostrophise(name) + " ";
+    if (has_owner)
+    {
+        book.props["is_named"].get_bool() = true;
+        name = apostrophise(name) + " ";
+    }
 
-    name += getRandNameString("book_noun");
-    name += " of ";
+    name += getRandNameString("book_name") + " ";
 
     // For the actual name there's a 50% chance of getting something like
     //  Flames and Displacement (Fire/Translocation), else
@@ -2465,9 +2469,6 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         name += bookname;
     }
 
-    if (need_quotes)
-        name += '"';
-
     set_randart_name(book, name);
 
     book.plus  = disc1;
@@ -2492,5 +2493,6 @@ bool book_has_title(const item_def &book)
     if (!is_artefact(book))
         return (false);
 
-    return (get_artefact_name(book)[0] == '"');
+    return (book.props.exists("is_named")
+            && book.props["is_named"].get_bool() == true);
 }

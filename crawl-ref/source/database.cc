@@ -77,6 +77,7 @@ static TextDB AllDBs[] =
             "database/rand_wpn.txt", // mostly weapons
             "database/rand_arm.txt", // mostly armour
             "database/rand_all.txt", // jewellery and general
+            "database/randbook.txt", // artefact books
             // This doesn't really belong here, but they *are* god gifts...
             "database/monname.txt",  // orcish names for Beogh to choose from
             NULL),
