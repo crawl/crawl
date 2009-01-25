@@ -3752,8 +3752,8 @@ static void _handle_behaviour(monsters *mon)
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
-        mon->target.set( 10 + random2(X_BOUND_2 - 10),
-                         10 + random2(Y_BOUND_2 - 10) );
+        mon->target.set(10 + random2(X_BOUND_2 - 10),
+                        10 + random2(Y_BOUND_2 - 10));
         return;
     }
 
