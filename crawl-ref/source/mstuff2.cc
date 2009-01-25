@@ -1436,10 +1436,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
     if (!pbolt.name.empty() && projected == LRET_LAUNCHED)
-    {
-        msg += "a ";
-        msg += pbolt.name;
-    }
+        msg += article_a(pbolt.name);
     else
     {
         // build shoot message
