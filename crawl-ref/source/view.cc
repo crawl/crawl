@@ -1668,7 +1668,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
             // If the noise came from the character, any nearby monster
             // will be jumping on top of them.
             if (where == you.pos())
-                behaviour_event( monster, ME_ALERT, MHITYOU );
+                behaviour_event( monster, ME_ALERT, MHITYOU, you.pos() );
             else if (mermaid && mons_primary_habitat(monster) == HT_WATER
                      && !mons_friendly(monster))
             {

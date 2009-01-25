@@ -78,6 +78,9 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
 static bool _monster_move(monsters *monster);
 static spell_type _map_wand_to_mspell(int wand_type);
 
+static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
+                          bool potentially_blocking);
+
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
 
@@ -2555,6 +2558,17 @@ void behaviour_event(monsters *mon, int event, int src,
                 break;
 
             mon->target = src_pos;
+
+            // XXX: Should this be done in _handle_behaviour()?
+            if (src == MHITYOU && src_pos == you.pos()
+                && !see_grid(mon->pos()))
+            {
+                const dungeon_feature_type can_move =
+                    (mons_amphibious(mon)) ? DNGN_DEEP_WATER
+                                           : DNGN_SHALLOW_WATER;
+
+                _try_pathfind(mon, can_move, true);
+            }
         }
         break;
 
