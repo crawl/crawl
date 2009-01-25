@@ -1968,8 +1968,10 @@ monster_type draconian_colour_by_name(const std::string &name)
 static std::string _str_monam(const monsters& mon, description_level_type desc,
                               bool force_seen)
 {
-    if (desc == DESC_NONE)
-        return ("");
+    if (mon.type == -1)
+        return ("DEAD MONSTER");
+    else if (invalid_monster_class(mon.type) && mon.type != MONS_PROGRAM_BUG)
+        return make_stringf("INVALID MONSTER (#%d)", mon.type);
 
     const bool arena_submerged = crawl_state.arena && !force_seen
                                      && mons_is_submerged(&mon);
@@ -2141,8 +2143,13 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     else if (nametype == MONS_LERNAEAN_HYDRA)
         result += "Lernaean hydra";
     else
+    {
         // Add the base name.
-        result += get_monster_data(nametype)->name;
+        if (invalid_monster_class(nametype) && nametype != MONS_PROGRAM_BUG)
+            result += make_stringf("INVALID MONSTER (#%d)", nametype);
+        else
+            result += get_monster_data(nametype)->name;
+    }
 
     // Add suffixes.
     switch (mon.type)
@@ -5185,8 +5192,8 @@ bool monsters::has_base_name() const
 
 std::string monsters::name(description_level_type desc, bool force_vis) const
 {
-    if (type == -1)
-        return ("INVALID MONSTER");
+    if (desc == DESC_NONE)
+        return ("");
 
     const bool possessive =
         (desc == DESC_NOCAP_YOUR || desc == DESC_NOCAP_ITS);
@@ -5209,6 +5216,9 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
 std::string monsters::base_name(description_level_type desc, bool force_vis)
     const
 {
+    if (desc == DESC_NONE)
+        return ("");
+
     if (ghost.get() || mons_is_unique(type))
         return (name(desc, force_vis));
     else
@@ -5222,6 +5232,9 @@ std::string monsters::base_name(description_level_type desc, bool force_vis)
 std::string monsters::full_name(description_level_type desc,
                                 bool use_comma) const
 {
+    if (desc == DESC_NONE)
+        return ("");
+
     std::string title = _str_monam(*this, desc, true);
 
     const unsigned long flag = flags & MF_NAME_MASK;
