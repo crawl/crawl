@@ -5630,6 +5630,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     // Drop the monster's equipment.
     monster_drop_ething(mon);
 
+    // Recreate the monster as an abomination or spectral thing.
     define_monster(*mon);
 
     mon->colour = EC_UNHOLY;
