@@ -5609,12 +5609,6 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
-    if (!quiet)
-    {
-        mprf("%s soul %s.", whose.c_str(),
-             twisted ? "becomes twisted" : "remains intact");
-    }
-
     const monsters orig = *mon;
 
     if (twisted)
@@ -5664,8 +5658,9 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     if (!quiet)
     {
-        mprf("%s soul %s.", whose.c_str(),
-             !force_hostile ? "is now yours" : "fights you");
+        mprf("%s soul %s, and %s.", whose.c_str(),
+             twisted        ? "becomes twisted" : "remains intact",
+             !force_hostile ? "is now yours"    : "fights you");
     }
 }
 
