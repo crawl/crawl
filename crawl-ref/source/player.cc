@@ -2668,11 +2668,13 @@ int player_see_invis(bool calc_unid)
 // mons_near().
 bool player_monster_visible(const monsters *mon)
 {
-    if (mons_is_submerged(mon)
-        || mon->invisible() && !player_see_invis())
-    {
+    if (!player_see_invis() && mon->invisible())
         return (false);
-    }
+
+    // Treat monsters who are submerged due to drowning as visible, so
+    // we get proper messages when they die.
+    if (mons_is_submerged(mon) && !mon->can_drown())
+        return (false);
 
     return (true);
 }
