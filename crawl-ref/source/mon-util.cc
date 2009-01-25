@@ -3883,6 +3883,31 @@ mon_inv_type equip_slot_to_mslot(equipment_type eq)
     }
 }
 
+mon_inv_type item_to_mslot(const item_def &item)
+{
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+		return MSLOT_WEAPON;
+    case OBJ_MISSILES:
+		return MSLOT_MISSILE;
+    case OBJ_ARMOUR:
+        return equip_slot_to_mslot(get_armour_slot(item));
+    case OBJ_WANDS:
+		return MSLOT_WAND;
+    case OBJ_SCROLLS:
+		return MSLOT_SCROLL;
+    case OBJ_POTIONS:
+		return MSLOT_POTION;
+    case OBJ_MISCELLANY:
+		return MSLOT_MISCELLANY;
+    case OBJ_GOLD:
+		return MSLOT_GOLD;
+    default:
+		return NUM_MONSTER_SLOTS;
+    }
+}
+
 bool monsters::pickup_armour(item_def &item, int near, bool force)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);

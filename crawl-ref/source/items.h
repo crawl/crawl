@@ -121,7 +121,8 @@ bool pickup_single_item(int link, int qty);
 
 bool drop_item( int item_dropped, int quant_drop, bool try_offer = false );
 
-int get_equip_slot(const item_def *item);
+int          get_equip_slot(const item_def *item);
+mon_inv_type get_mon_equip_slot(const monsters* mon, const item_def &item);
 
 void origin_set(int x, int y);
 void origin_set_monster(item_def &item, const monsters *monster);

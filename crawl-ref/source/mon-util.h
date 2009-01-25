@@ -747,5 +747,6 @@ std::string get_mon_shape_str(const mon_body_shape shape);
 bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
+mon_inv_type item_to_mslot(const item_def &item);
 
 #endif
