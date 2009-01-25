@@ -1406,6 +1406,7 @@ bool check_awaken(monsters* monster)
 
     // You didn't wake the monster!
     if (player_light_armour(true)
+        && you.can_see(monster) // to avoid leaking information
         && you.burden_state == BS_UNENCUMBERED
         && you.special_wield != SPWLD_SHADOW
         && !mons_wont_attack(monster)

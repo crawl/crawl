@@ -871,7 +871,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     else
     {
         // Mummies committing suicide don't cause a death curse.
-        if (index == static_cast<int>(monster_index(monster)))
+        if (index == monster->mindex())
            return;
         target = &menv[index];
     }
@@ -4220,7 +4220,7 @@ static void _handle_behaviour(monsters *mon)
         if (mon->behaviour == BEH_FLEE)
         {
             // Monster is safe, so stay put.
-            mon->target.set(mon->pos().x, mon->pos().y);
+            mon->target = mon->pos();
             mon->foe = MHITNOT;
         }
     }
