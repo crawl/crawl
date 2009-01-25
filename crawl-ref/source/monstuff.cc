@@ -681,14 +681,14 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
         return (true);
 
     // Beogh special
-    bool convert = false;
-
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
         && !mons_is_summoned(monster) && !mons_is_shapeshifter(monster)
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && mons_near(monster))
     {
+        bool convert = false;
+
         if (YOU_KILL(killer))
             convert = true;
         else if (MON_KILL(killer) && !invalid_monster_index(i))
@@ -697,27 +697,28 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
             if (is_follower(mon) && !one_chance_in(3))
                 convert = true;
         }
-    }
 
-    // Orcs may convert to Beogh under threat of death, either from you
-    // or, less often, your followers.  In both cases, the checks are
-    // made against your stats.  You're the potential messiah, after all.
-    if (convert)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
-             "your xl: %d",
-             monster->name(DESC_PLAIN).c_str(),
-             monster->hit_dice,
-             you.experience_level);
-#endif
-        if (random2(you.piety) >= piety_breakpoint(0)
-            && random2(you.experience_level) >= random2(monster->hit_dice)
-            // Bias beaten-up-conversion towards the stronger orcs.
-            && random2(monster->hit_dice) > 2)
+        // Orcs may convert to Beogh under threat of death, either from
+        // you or, less often, your followers.  In both cases, the
+        // checks are made against your stats.  You're the potential
+        // messiah, after all.
+        if (convert)
         {
-            beogh_convert_orc(monster, true, MON_KILL(killer));
-            return (true);
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
+                 "your xl: %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 monster->hit_dice,
+                 you.experience_level);
+#endif
+            if (random2(you.piety) >= piety_breakpoint(0)
+                && random2(you.experience_level) >= random2(monster->hit_dice)
+                // Bias beaten-up-conversion towards the stronger orcs.
+                && random2(monster->hit_dice) > 2)
+            {
+                beogh_convert_orc(monster, true, MON_KILL(killer));
+                return (true);
+            }
         }
     }
 
