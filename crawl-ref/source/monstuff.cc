@@ -7608,7 +7608,7 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
 
     if (mons_is_sleeping(m2))
     {
-        if (one_chance_in(2))
+        if (coinflip())
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS,
@@ -7642,7 +7642,6 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     mon->apply_location_effects(c);
     m2->check_redraw(c);
     m2->apply_location_effects(n);
-
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context.clear();
