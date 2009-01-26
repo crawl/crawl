@@ -1031,8 +1031,8 @@ easy_eat_gourmand = false
         of the Gourmand, then religion-safe contaminated chunks will be eaten
         without prompting.  If prefer_safe_chunks is true then this will
         only be done if you have no safe chunks to eat, but if it's
-        false then you'll auto-eat fresher contaminated chunks before
-        older safe chunks.
+        false then you'll auto-eat older contaminated chunks before
+        fresher safe chunks.
 
 easy_eat_contaminated = false
         Like easy_eat_gourmand, but always in effect, not just when you're
