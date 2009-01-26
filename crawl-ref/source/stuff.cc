@@ -1225,7 +1225,7 @@ int distance( int x, int y, int x2, int y2 )
     const int dy = y - y2;
 
     return ((dx * dx) + (dy * dy));
-}                               // end distance()
+}
 
 bool adjacent( const coord_def& p1, const coord_def& p2 )
 {
