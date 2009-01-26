@@ -1557,6 +1557,11 @@ int prompt_eat_chunks()
         chunks.push_back(item);
     }
 
+    const bool easy_eat = Options.easy_eat_chunks && !you.is_undead;
+    const bool easy_contam = easy_eat
+        && (Options.easy_eat_gourmand && wearing_amulet(AMU_THE_GOURMAND)
+            || Options.easy_eat_contaminated);
+
     if (found_valid)
     {
         std::sort(chunks.begin(), chunks.end(), compare_by_freshness());
@@ -1568,17 +1573,18 @@ int prompt_eat_chunks()
                                                             DESC_NOCAP_A,
                                                             MSGCH_PROMPT);
 
+            const bool contam = is_contaminated(*item);
+            const bool bad    = _is_bad_food(*item);
             // Excempt undead from auto-eating since:
             //  * Mummies don't eat.
             //  * Vampire feeding takes a lot more time than eating a chunk
             //    and may have unintended consequences.
             //  * Ghouls may want to wait until chunks become rotten.
-            if (Options.easy_eat_chunks && !you.is_undead
-                && !_is_bad_food(*item) && !is_contaminated(*item))
-            {
+            if (easy_eat && !bad && !contam)
                 // If this chunk is safe to eat, just do so without prompting.
                 autoeat = true;
-            }
+            else if (easy_contam && contam && !bad)
+                autoeat = true;
             else
             {
                 mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",

@@ -58,7 +58,8 @@ The contents of this text are:
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
                 allow_self_target, easy_butcher, always_confirm_butcher, 
-                prefer_safe_chunks, easy_eat_chunks, prompt_for_swap, 
+                prefer_safe_chunks, easy_eat_chunks, easy_eat_gourmand,
+                easy_eat_contaminated, prompt_for_swap, 
                 easy_quit_item_prompts, easy_exit_menu, sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
@@ -1024,6 +1025,18 @@ easy_eat_chunks = false
         the oldest chunk happens to be contaminated, and you will always
         be prompted for harmful chunks.
         Note that this option is ignored for each of the undead races.
+
+easy_eat_gourmand = false
+        If both this and easy_eat_chunks are true, and you're wearing an Amulet
+        of the Gourmand, then religion-safe contaminated chunks will be eaten
+        without prompting.  If prefer_safe_chunks is true then this will
+        only be done if you have no safe chunks to eat, but if it's
+        false then you'll auto-eat fresher contaminated chunks before
+        older safe chunks.
+
+easy_eat_contaminated = false
+        Like easy_eat_gourmand, but always in effect, not just when you're
+        wearing an Amulet of the Gourmand.
 
 prompt_for_swap = true
         If both this and easy_butcher are true, then if an auto-switch
