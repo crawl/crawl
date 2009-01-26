@@ -3288,7 +3288,7 @@ const char *divine_title[NUM_GODS][8] =
      "%s of Prey",         "Rampant",               "Wild %s",                  "Bane of Scribes"},
 
     //  Nemelex Xobeh -- alluding to Tarot and cards
-    {"Unlucky %s",         "The Pannier",           "The Charlatan",            "The Fortune-Teller",
+    {"Unlucky %s",         "The Pannier",           "The Jester",               "The Fortune-Teller",
      "The Soothsayer",     "The Magus",             "The Cardsharp",            "Hand of Fortune"},
 
     //  Elyvilon
