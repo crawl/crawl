@@ -3135,7 +3135,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_SLING;
-            item_race = MAKE_ITEM_NO_RACE;
             break;
         }
         // deliberate fall through {dlb}
@@ -3158,7 +3157,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (coinflip())
         {
             force_item  = true;
-            item_race   = MAKE_ITEM_NO_RACE;
             item.plus  += 1 + random2(3);
             item.plus2 += 1 + random2(3);
 
@@ -3394,7 +3392,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_POLYPHEMUS:
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
-        item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_MISSILES;
         item.sub_type = MI_LARGE_ROCK;
         break;
@@ -3418,13 +3415,11 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         // intentional fall-through...
 
     case MONS_SIGMUND:
-        item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_SCYTHE;
         break;
 
     case MONS_BALRUG:
-        item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_DEMON_WHIP;
         break;
@@ -3444,7 +3439,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_EROLCHA:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-
         item.sub_type = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
                                           : WPN_GIANT_CLUB);
 
@@ -3598,6 +3592,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     }
     case MONS_FIRE_GIANT:
         force_item = true;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_GREAT_SWORD;
         item.plus      = 0;
@@ -3613,6 +3608,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_FROST_GIANT:
         force_item = true;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_BATTLEAXE;
         item.plus      = 0;
