@@ -7140,7 +7140,6 @@ static void _handle_monster_move(int i, monsters *monster)
                 const coord_def s = monster->pos() + mmov;
                 if (s.x < 0 || s.x >= GXM)
                     mmov.x = 0;
-
                 if (s.y < 0 || s.y >= GYM)
                     mmov.y = 0;
 
