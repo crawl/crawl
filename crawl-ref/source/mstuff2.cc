@@ -22,6 +22,7 @@ REVISION("$Rev$");
 #include "beam.h"
 #include "database.h"
 #include "debug.h"
+#include "delay.h"
 #include "effects.h"
 #include "item_use.h"
 #include "itemname.h"
@@ -1163,8 +1164,14 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         if (was_seen)
             simple_monster_message(monster, " reappears nearby!");
         else
-            simple_monster_message(monster, " appears out of thin air!",
-                                   MSGCH_PLAIN, 0, DESC_CAP_A);
+        {
+            // Even if it doesn't interrupt an activity (the player isn't
+            // delayed, the monster isn't hostile) we still want to give
+            // a message.
+            activity_interrupt_data ai(monster, "thin air");
+            if (!interrupt_activity(AI_SEE_MONSTER, ai))
+                simple_monster_message(monster, " appears out of thin air!");
+        }
     }
 
     if (player_monster_visible(monster) && now_visible)
