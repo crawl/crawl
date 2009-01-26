@@ -152,9 +152,8 @@ int yesnoquit( const char* str, bool safe = true, int safeanswer = 0,
                bool allow_all = false, bool clear_after = true,
                char alt_yes = 'Y', char alt_yes2 = 'Y' );
 
-
-bool in_bounds( int x, int y );
-bool map_bounds( int x, int y );
+bool in_bounds(int x, int y);
+bool map_bounds(int x, int y);
 coord_def random_in_bounds();
 
 inline bool in_bounds(const coord_def &p)

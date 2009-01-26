@@ -3120,7 +3120,7 @@ static int _find_feature(int feature, int curs_x, int curs_y,
     int matchcount = 0;
 
     // Find the first occurrence of feature 'feature', spiralling around (x,y)
-    int maxradius = GXM > GYM? GXM : GYM;
+    int maxradius = GXM > GYM ? GXM : GYM;
     for (int radius = 1; radius < maxradius; ++radius)
         for (int axis = -2; axis < 2; ++axis)
         {

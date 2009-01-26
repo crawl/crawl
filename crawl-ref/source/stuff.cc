@@ -1244,7 +1244,7 @@ bool player_can_hear(const coord_def& p)
 }
 
 // Returns true if inside the area the player can move and dig (ie exclusive).
-bool in_bounds( int x, int y )
+bool in_bounds(int x, int y)
 {
     return (x > X_BOUND_1 && x < X_BOUND_2
             && y > Y_BOUND_1 && y < Y_BOUND_2);
@@ -1253,7 +1253,7 @@ bool in_bounds( int x, int y )
 // Returns true if inside the area the player can map (ie inclusive).
 // Note that terrain features should be in_bounds() leaving an outer
 // ring of rock to frame the level.
-bool map_bounds( int x, int y )
+bool map_bounds(int x, int y)
 {
     return (x >= X_BOUND_1 && x <= X_BOUND_2
             && y >= Y_BOUND_1 && y <= Y_BOUND_2);
@@ -1261,22 +1261,22 @@ bool map_bounds( int x, int y )
 
 coord_def random_in_bounds()
 {
-    return coord_def( random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1),
-                      random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1) );
+    return coord_def(random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1),
+                     random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1));
 }
 
 // Returns a random location in (x_pos, y_pos)... the grid will be
 // DNGN_FLOOR if clear, and NON_MONSTER if empty.  Exclusive tells
 // if we're using in_bounds() or map_bounds() restriction.
-void random_in_bounds( int &x_pos, int &y_pos, int terr,
-                       bool empty, bool excl )
+void random_in_bounds(int &x_pos, int &y_pos, int terr,
+                      bool empty, bool excl)
 {
     bool done = false;
 
     do
     {
-        x_pos = X_BOUND_1 + random2( X_WIDTH - 2 * excl ) + 1 * excl;
-        y_pos = Y_BOUND_1 + random2( Y_WIDTH - 2 * excl ) + 1 * excl;
+        x_pos = X_BOUND_1 + random2(X_WIDTH - 2 * excl) + 1 * excl;
+        y_pos = Y_BOUND_1 + random2(Y_WIDTH - 2 * excl) + 1 * excl;
 
         if (terr == DNGN_RANDOM)
             done = true;
@@ -1287,7 +1287,7 @@ void random_in_bounds( int &x_pos, int &y_pos, int terr,
             done = true;
         else if (empty
                  && mgrd[x_pos][y_pos] != NON_MONSTER
-                 && (coord_def(x_pos,y_pos) != you.pos()))
+                 && (coord_def(x_pos, y_pos) != you.pos()))
         {
             done = true;
         }
@@ -1298,7 +1298,7 @@ void random_in_bounds( int &x_pos, int &y_pos, int terr,
 unsigned char random_colour(void)
 {
     return (1 + random2(15));
-}                               // end random_colour()
+}
 
 unsigned char random_uncommon_colour()
 {

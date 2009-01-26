@@ -1066,20 +1066,16 @@ bool monster_random_space(const monsters *monster, coord_def& target,
     int tries = 0;
     while (tries++ < 1000)
     {
-
         if (crawl_state.arena)
         {
             const coord_def &ul = crawl_view.glos1; // Upper left
             const coord_def &lr = crawl_view.glos2; // Lower right
 
-            target.x = ul.x + random2(lr.x - ul.x);
-            target.y = ul.y + random2(lr.y - ul.y);
+            target = coord_def(random_range(ul.x, lr.x - 1),
+                               random_range(ul.y, lr.y - 1));
         }
         else
-        {
-            target.x = 10 + random2(GXM - 20);
-            target.y = 10 + random2(GYM - 20);
-        }
+            target = random_in_bounds();
 
         // Don't land on top of another monster.
         if (mgrd(target) != NON_MONSTER || target == you.pos())
