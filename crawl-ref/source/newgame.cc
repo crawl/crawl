@@ -157,7 +157,7 @@ static species_type new_species_order[] = {
 
 static species_type _random_draconian_species()
 {
-    const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN;
+    const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN + 1;
     return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
 }
 
