@@ -1418,7 +1418,7 @@ bool check_awaken(monsters* monster)
     }
 
     return (false);
-}                               // end check_awaken()
+}
 
 static void _set_show_backup( int ex, int ey )
 {
