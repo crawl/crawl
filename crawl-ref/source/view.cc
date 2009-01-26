@@ -3080,7 +3080,7 @@ static bool _is_feature_fudged(int feature, const coord_def& where)
 
     if (feature == '<')
     {
-        switch(grid)
+        switch (grid)
         {
         case DNGN_EXIT_HELL:
         case DNGN_EXIT_PORTAL_VAULT:
