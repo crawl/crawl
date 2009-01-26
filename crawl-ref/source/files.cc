@@ -1377,7 +1377,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     return just_created_level;
-}                               // end load()
+}
 
 void _save_level(int level_saved, level_area_type old_ltype,
                  branch_type where_were_you)
