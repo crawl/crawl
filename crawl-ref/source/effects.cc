@@ -2684,13 +2684,13 @@ void change_labyrinth(bool msg)
     std::vector<coord_def> targets;
 
     // Try 10 times for an area that is little mapped.
-    for (int tries = 10; tries > 0; tries--)
+    for (int tries = 10; tries > 0; --tries)
     {
         targets.clear();
 
         int x = random_range(LABYRINTH_BORDER, GXM - LABYRINTH_BORDER - size);
         int y = random_range(LABYRINTH_BORDER, GYM - LABYRINTH_BORDER - size);
-        c1 = coord_def(x,y);
+        c1 = coord_def(x, y);
         c2 = coord_def(x + size, y + size);
 
         int count_known = 0;
