@@ -3493,7 +3493,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         }
         else
         {
-            // monster will be sleeping after we move it
+            // The monster will be sleeping after we move it.
             mon->behaviour = BEH_SLEEP;
         }
     }
@@ -3507,7 +3507,8 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         {
             mon->behaviour = BEH_FLEE;
 
-            // If the monster is on the target square, fleeing won't work.
+            // If the monster is on the target square, fleeing won't
+            // work.
             if (mon->pos() == mon->target)
             {
                 if (you.pos() != mon->pos())
@@ -3517,14 +3518,15 @@ static void _catchup_monster_moves(monsters *mon, int turns)
                 }
                 else
                 {
-                    // Randomize the target so we have a direction to flee.
+                    // Randomise the target so we have a direction to
+                    // flee.
                     mon->target.x += (random2(3) - 1);
                     mon->target.y += (random2(3) - 1);
                 }
             }
 
 #if DEBUG_DIAGNOSTICS
-            mpr( "backing off...", MSGCH_DIAGNOSTICS );
+            mpr("backing off...", MSGCH_DIAGNOSTICS);
 #endif
         }
         else
@@ -3532,7 +3534,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
             shift_monster(mon, mon->pos());
 
 #if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "shifted to (%d,%d)",
+            mprf(MSGCH_DIAGNOSTICS, "shifted to (%d, %d)",
                  mon->pos().x, mon->pos().y);
 #endif
             return;
@@ -3540,8 +3542,9 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     }
 
     coord_def pos(mon->pos());
+
     // dirt simple movement:
-    for (int i = 0; i < moves; i++)
+    for (int i = 0; i < moves; ++i)
     {
         coord_def inc(mon->target - pos);
         inc = coord_def(sgn(inc.x), sgn(inc.y));
