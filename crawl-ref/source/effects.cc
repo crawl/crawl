@@ -3501,7 +3501,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     {
         // If we're doing short time movement and the monster has a
         // ranged attack (missile or spell), then the monster will
-        // flee to gain distance if its "too close", else it will
+        // flee to gain distance if it's "too close", else it will
         // just shift its position rather than charge the player. -- bwr
         if (grid_distance(mon->pos(), mon->target) < 3)
         {
