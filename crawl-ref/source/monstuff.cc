@@ -4602,9 +4602,9 @@ static void _handle_movement(monsters *monster)
 
     // Bounds check: don't let fleeing monsters try to run off the map.
     const coord_def s = monster->target + mmov;
-    if (s.x < 0 || s.x >= GXM)
+    if (!map_bounds_x(s.x))
         mmov.x = 0;
-    if (s.y < 0 || s.y >= GYM)
+    if (!map_bounds_y(s.y))
         mmov.y = 0;
 
     // Now quit if we can't move.
@@ -7147,9 +7147,9 @@ static void _handle_monster_move(int i, monsters *monster)
                 // Bounds check: don't let confused monsters try to run
                 // off the map.
                 const coord_def s = monster->pos() + mmov;
-                if (s.x < 0 || s.x >= GXM)
+                if (!map_bounds_x(s.x))
                     mmov.x = 0;
-                if (s.y < 0 || s.y >= GYM)
+                if (!map_bounds_y(s.y))
                     mmov.y = 0;
 
                 if (!monster->can_pass_through(monster->pos() + mmov))
