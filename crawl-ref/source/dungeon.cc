@@ -2015,9 +2015,9 @@ static void _prepare_shoals(int level_number)
 
     // LAVA is a placeholder for cells which will become shallow water
     // at the end of the current iteration.
-    // WATER_STUCK is a placeholder for last iteration's generated water.
+    // WATER_RESERVED is a placeholder for last iteration's generated water.
     _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
-                     DNGN_SHALLOW_WATER, DNGN_WATER_STUCK);
+                     DNGN_SHALLOW_WATER, DNGN_WATER_RESERVED);
 
     for (int iteration = 0; iteration < 6; ++iteration)
     {
@@ -2025,16 +2025,16 @@ static void _prepare_shoals(int level_number)
             for (int y = margin; y < GYM - margin; ++y)
                 if (grd[x][y] == DNGN_DEEP_WATER)
                 {
-                    int badness = count_neighbours(x, y, DNGN_WATER_STUCK);
+                    int badness = count_neighbours(x, y, DNGN_WATER_RESERVED);
                     if (random2(badness) >= 2 && coinflip())
                         grd[x][y] = DNGN_LAVA;
                 }
 
         _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
-                         DNGN_LAVA, DNGN_WATER_STUCK);
+                         DNGN_LAVA, DNGN_WATER_RESERVED);
     }
     _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
-                     DNGN_WATER_STUCK, DNGN_SHALLOW_WATER);
+                     DNGN_WATER_RESERVED, DNGN_SHALLOW_WATER);
 
     // Put important things back.
     _restore_critical_features(lfl);

@@ -208,7 +208,9 @@ bool grid_is_trap(dungeon_feature_type grid, bool undiscovered_too)
 
 bool grid_is_water(dungeon_feature_type grid)
 {
-    return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
+    return (grid == DNGN_SHALLOW_WATER
+            || grid == DNGN_DEEP_WATER
+            || grid == DNGN_WATER_RESERVED);
 }
 
 bool grid_is_watery(dungeon_feature_type grid)
