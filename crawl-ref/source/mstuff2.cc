@@ -2021,7 +2021,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.damage   = dice_def( 3, 2 + power / 25 );
         beam.colour   = GREEN;
         // FIXME: Players don't get the poison effect, only monsters
-        // do. This should be changed (probably by changing monsters.)
+        // do. This should be changed (probably by changing monsters).
         beam.flavour  = BEAM_POISON;
         beam.hit      = 14 + power / 30;
         beam.is_beam  = true;
