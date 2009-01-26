@@ -7251,8 +7251,7 @@ static void _handle_monster_move(int i, monsters *monster)
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target.set(10 + random2(X_BOUND_2 - 10),
-                                            10 + random2(Y_BOUND_2 - 10));
+                        mon->target = random_in_bounds();
                         // monster->speed_increment -= monster->speed;
                     }
 
@@ -7279,8 +7278,7 @@ static void _handle_monster_move(int i, monsters *monster)
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target.set(10 + random2(X_BOUND_2 - 10),
-                                            10 + random2(Y_BOUND_2 - 10));
+                        mon->target = random_in_bounds();
                     }
                     DEBUG_ENERGY_USE("monster_attack()");
                 }
