@@ -117,8 +117,7 @@ static int _bow_offset(const monsters *mon)
 
 static int _tileidx_monster_base(const monsters *mon, bool detected)
 {
-    int grid = grd(mon->pos());
-    bool in_water = grid_is_water(grid);
+    bool in_water = grid_is_water(grd(mon->pos()));
 
     int type = mon->type;
 
@@ -856,6 +855,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_TOENAIL_GOLEM;
     case MONS_ELECTRIC_GOLEM:
         return TILEP_MONS_ELECTRIC_GOLEM;
+
     // statues (also '8')
     case MONS_ICE_STATUE:
         return TILEP_ICE_STATUE;

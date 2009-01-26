@@ -1060,7 +1060,7 @@ std::string grid_preposition(dungeon_feature_type grid, bool active,
             else
                 return "inside";
         }
-        else if (!airborne && grid_can_be_drowned_in(grid))
+        else if (!airborne && (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER))
         {
             if (active)
                 return "around";
