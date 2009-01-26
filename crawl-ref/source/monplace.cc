@@ -77,8 +77,6 @@ static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
 bool grid_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid)
 {
-    // XXX What in Xom's name is DNGN_WATER_STUCK? It looks like an artificial
-    // device to slow down fiery monsters flying over water.
     if (grid_wanted == DNGN_FLOOR)
     {
         return (actual_grid >= DNGN_FLOOR
@@ -764,7 +762,8 @@ int place_monster(mgen_data mg, bool force_pos)
         // For some cases disallow monsters on stairs.
         if (mons_class_is_stationary(mg.cls)
             || (pval == 2 // Stairs occupied by player.
-                && (mons_speed(mg.cls) == 0 || grd(mg.pos) == DNGN_LAVA
+                && (mons_speed(mg.cls) == 0
+                    || grd(mg.pos) == DNGN_LAVA
                     || grd(mg.pos) == DNGN_DEEP_WATER)))
         {
             mg.proximity = PROX_AWAY_FROM_PLAYER;

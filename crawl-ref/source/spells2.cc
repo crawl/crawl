@@ -1400,9 +1400,7 @@ bool cast_summon_elemental(int pow, god_type god,
     {
         mon = MONS_FIRE_ELEMENTAL;
     }
-    else if ((grd(targ) == DNGN_DEEP_WATER
-                || grd(targ) == DNGN_SHALLOW_WATER
-                || grd(targ) == DNGN_FOUNTAIN_BLUE)
+    else if (grid_is_watery(grd(targ))
              && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
     {
         mon = MONS_WATER_ELEMENTAL;

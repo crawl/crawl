@@ -536,8 +536,10 @@ static bool _is_reseedable(int x, int y)
         return (true);
 
     int grid = grd[x][y];
-    return (grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER
-            || grid == DNGN_LAVA || is_trap(x, y) || _is_monster_blocked(x, y));
+    return (grid_is_water(grid)
+               || grid == DNGN_LAVA
+               || is_trap(x, y)
+               || _is_monster_blocked(x, y));
 }
 
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
@@ -702,9 +704,9 @@ void initialise_travel()
 int get_feature_type(const std::string &feature)
 {
     if (feature.find("deep water") != std::string::npos)
-        return DNGN_DEEP_WATER;
+        return (DNGN_DEEP_WATER);
     if (feature.find("shallow water") != std::string::npos)
-        return DNGN_SHALLOW_WATER;
+        return (DNGN_SHALLOW_WATER);
     return -1;
 }
 
@@ -1794,8 +1796,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
             if (dc != start
                 && (feature != DNGN_FLOOR
-                       && feature != DNGN_SHALLOW_WATER
-                       && feature != DNGN_DEEP_WATER
+                       && grid_is_water(feature)
                        && feature != DNGN_LAVA
                     || is_waypoint(dc)
                     || is_stash(ls, dc.x, dc.y)))

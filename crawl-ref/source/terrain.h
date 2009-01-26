@@ -43,11 +43,11 @@ std::string stair_climb_verb(dungeon_feature_type grid);
 
 bool grid_is_water(dungeon_feature_type grid);
 bool grid_is_watery(dungeon_feature_type grid);
-god_type grid_altar_god( dungeon_feature_type grid );
-dungeon_feature_type altar_for_god( god_type god );
-bool grid_is_branch_stairs( dungeon_feature_type grid );
+god_type grid_altar_god(dungeon_feature_type grid);
+dungeon_feature_type altar_for_god(god_type god);
+bool grid_is_branch_stairs(dungeon_feature_type grid);
 void find_connected_identical(coord_def d, dungeon_feature_type ft,
-                               std::set<coord_def>& out);
+                              std::set<coord_def>& out);
 void find_connected_range(coord_def d, dungeon_feature_type ft_min,
                           dungeon_feature_type ft_max,
                           std::set<coord_def>& out);

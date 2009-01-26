@@ -375,7 +375,7 @@ bool is_grid_dangerous(int grid)
 {
     return (!player_is_airborne()
             && (grid == DNGN_LAVA
-                || (grid == DNGN_DEEP_WATER && !player_likes_water()) ));
+                || (grid == DNGN_DEEP_WATER && !player_likes_water())));
 }
 
 bool player_in_mappable_area( void )
@@ -2671,19 +2671,19 @@ bool player_monster_visible(const monsters *mon)
     if (!player_see_invis() && mon->invisible())
         return (false);
 
-    // Treat monsters who are submerged due to drowning as visible, so
-    // we get proper messages when they die.
     if (!mons_is_submerged(mon))
         return (true);
 
     const dungeon_feature_type feat = grd(mon->pos());
 
-    // Monsters can only drown in lava or water, so monsters that are
-    // "submerged" in other features (air elementals in air, trapdoor
-    // spiders in the floor) are exempt from this check.
-    if (feat < DNGN_LAVA || feat > DNGN_WATER_STUCK)
+    // Treat monsters who are submerged due to drowning as visible, so
+    // we get proper messages when they die.  Monsters can only drown in
+    // lava or deep water, so monsters that are "submerged" in other
+    // features (air elementals in air, trapdoor spiders in the floor)
+    // are exempt from this check.
+    if (feat != DNGN_LAVA && feat != DNGN_DEEP_WATER)
         return (false);
-        
+
     return (mon->can_drown());
 }
 

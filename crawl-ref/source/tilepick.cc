@@ -118,7 +118,7 @@ static int _bow_offset(const monsters *mon)
 static int _tileidx_monster_base(const monsters *mon, bool detected)
 {
     int grid = grd(mon->pos());
-    bool in_water = (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
+    bool in_water = grid_is_water(grid);
 
     int type = mon->type;
 

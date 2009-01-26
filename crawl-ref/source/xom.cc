@@ -1262,7 +1262,7 @@ static void _xom_zero_miscast()
     if (in_view[DNGN_LAVA])
         messages.push_back("The lava spits out sparks!");
 
-    if (in_view[DNGN_DEEP_WATER] || in_view[DNGN_SHALLOW_WATER])
+    if (in_view[DNGN_SHALLOW_WATER] || in_view[DNGN_DEEP_WATER])
     {
         messages.push_back("The water briefly bubbles.");
         messages.push_back("The water briefly swirls.");
@@ -1342,11 +1342,11 @@ static void _xom_zero_miscast()
                            + " seems to fall away from under you!");
             vec->push_back(feat_name
                            + " seems to rush up at you!");
-            if (feat == DNGN_DEEP_WATER || feat == DNGN_SHALLOW_WATER)
+            if (grid_is_water(feat))
                 priority.push_back("Something invisible splashes into the "
                                    "water beneath you!");
         }
-        else if (feat == DNGN_DEEP_WATER || feat == DNGN_SHALLOW_WATER)
+        else if (grid_is_water(feat))
         {
             priority.push_back("The water briefly recedes away from you.");
             priority.push_back("Something invisible splashes into the water "

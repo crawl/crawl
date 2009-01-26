@@ -8353,7 +8353,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
             msg = replace_all(msg, "@surface@", "lava");
-        else if (feat == DNGN_DEEP_WATER || feat == DNGN_SHALLOW_WATER)
+        else if (grid_is_water(feat))
             msg = replace_all(msg, "@surface@", "water");
         else if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
             msg = replace_all(msg, "@surface@", "altar");

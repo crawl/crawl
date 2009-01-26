@@ -7965,13 +7965,15 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     if (!inside_level_bounds(targ))
         return (false);
 
-    // Non-friendly and non-good neutral monsters won't enter sanctuaries.
+    // Non-friendly and non-good neutral monsters won't enter
+    // sanctuaries.
     if (!mons_wont_attack(monster)
         && is_sanctuary(targ)
         && !is_sanctuary(monster->pos()))
     {
         return (false);
     }
+
     // Inside a sanctuary don't attack anything!
     if (is_sanctuary(monster->pos())
         && (targ == you.pos() || mgrd(targ) != NON_MONSTER))
@@ -8007,12 +8009,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false);
     }
     else if (!monster->can_pass_through_feat(target_grid)
-             || no_water && target_grid >= DNGN_DEEP_WATER
-                && target_grid <= DNGN_WATER_STUCK)
+             || no_water && grid_is_water(target_grid))
     {
         return (false);
     }
-    else if (!_habitat_okay( monster, target_grid ))
+    else if (!_habitat_okay(monster, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
@@ -8038,7 +8039,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         return (false);
     }
 
-    // Fire elementals avoid water and cold
+    // Fire elementals avoid water and cold.
     if (monster->type == MONS_FIRE_ELEMENTAL
         && (grid_is_watery(target_grid)
             || targ_cloud_type == CLOUD_COLD))

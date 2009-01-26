@@ -2259,6 +2259,7 @@ void describe_floor()
     std::string prefix = "There is ";
     std::string feat;
     std::string suffix = " here.";
+
     switch (grid)
     {
     case DNGN_FLOOR:
@@ -2281,12 +2282,9 @@ void describe_floor()
     msg_channel_type channel = MSGCH_EXAMINE;
 
     // Water is not terribly important if you don't mind it.
-    if ((grd(you.pos()) == DNGN_DEEP_WATER
-            || grd(you.pos()) == DNGN_SHALLOW_WATER)
-        && player_likes_water())
-    {
+    if (grid_is_water(grid) && player_likes_water())
         channel = MSGCH_EXAMINE_FILTER;
-    }
+
     mpr((prefix + feat + suffix).c_str(), channel);
     if (grid == DNGN_ENTER_LABYRINTH && you.is_undead != US_UNDEAD)
         mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
@@ -3247,11 +3245,11 @@ static void _describe_cell(const coord_def& where, bool in_range)
         msg_channel_type channel = MSGCH_EXAMINE;
         if (feat == DNGN_FLOOR
             || feat == DNGN_FLOOR_SPECIAL
-            || feat == DNGN_SHALLOW_WATER
-            || feat == DNGN_DEEP_WATER)
+            || grid_is_water(feat))
         {
             channel = MSGCH_EXAMINE_FILTER;
         }
+
         mpr(feature_desc.c_str(), channel);
     }
 #endif
