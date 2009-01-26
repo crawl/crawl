@@ -91,6 +91,10 @@ static const coord_def mon_compass[8] = {
 
 static bool immobile_monster[MAX_MONSTERS];
 
+// A probably needles optimization: convert the C string "just seen" to
+// a C++ string just once, instead of twice every time a monster moves.
+static const std::string _just_seen("just seen");
+
 #define FAR_AWAY    1000000         // used in monster_move()
 
 #define ENERGY_SUBMERGE(entry) (std::max(entry->energy_usage.swim / 2, 1))
@@ -4798,7 +4802,7 @@ static void _handle_movement(monsters *monster)
         return;
 
     // Did we just come into view?
-    if (monster->seen_context != "just seen")
+    if (monster->seen_context != _just_seen)
         return;
 
     monster->seen_context.clear();
@@ -4812,7 +4816,11 @@ static void _handle_movement(monsters *monster)
 
     // We're not moving towards the player.
     if (grid_distance(you.pos(), old_pos + mmov) >= old_dist)
+    {
+        // Give a message if we move back out of view.
+        monster->seen_context = _just_seen;
         return;
+    }
 
     // We're already staying in the player's LOS.
     if (see_grid(old_pos + mmov))
@@ -4840,6 +4848,11 @@ static void _handle_movement(monsters *monster)
                 break;
             }
         }
+
+    // The only way to get closer to the player is to step out of view;
+    // give a message so they player isn't confused about it being
+    // announced coming into view but not being seen.
+    monster->seen_context = _just_seen;
 }
 
 static void _make_mons_stop_fleeing(monsters *mon)
@@ -7668,6 +7681,12 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
         monsters_fight( monster_index(monster), mgrd(f) );
         return (true);
     }
+
+    // The monster gave a "comes into view" message and then immediately
+    // moved back out of view, leaing the player nothing to see, so give
+    // this message to avoid confusion.
+    if (monster->seen_context == _just_seen && !see_grid(f))
+        simple_monster_message(monster, " moves out of view.");
 
     // The seen context no longer applies if the monster is moving normally.
     monster->seen_context.clear();
