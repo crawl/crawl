@@ -3366,12 +3366,9 @@ bool is_holy_item(const item_def& item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-
-        retval = (item_brand == SPWPN_HOLY_WRATH || is_blessed_blade(item));
+        retval = (is_blessed_blade(item)
+                  || get_weapon_brand(item) == SPWPN_HOLY_WRATH);
         break;
-        }
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_HOLY_WORD);
         break;
@@ -5945,7 +5942,7 @@ static bool _bless_weapon( god_type god, brand_type brand, int colour )
         {
             convert2good(weap);
 
-            if (is_convertible(weap))
+            if (is_blessed_blade_convertible(weap))
             {
                 origin_acquired(weap, GOD_SHINING_ONE);
                 make_item_blessed_blade(weap);
@@ -6046,7 +6043,7 @@ static void _altar_prayer()
 
         if (wpn != -1
             && (get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH
-                || is_convertible(you.inv[wpn])))
+                || is_blessed_blade_convertible(you.inv[wpn])))
         {
             _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW);
         }

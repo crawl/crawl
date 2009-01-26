@@ -1709,7 +1709,7 @@ bool is_blessed_blade(const item_def &item)
     return (false);
 }
 
-bool is_convertible(const item_def &item)
+bool is_blessed_blade_convertible(const item_def &item)
 {
     return (!is_artefact(item)
         && (item.base_type == OBJ_WEAPONS
@@ -1787,6 +1787,52 @@ bool convert2good(item_def &item, bool allow_blessed)
 
     if (is_blessed_blade(item))
         item.flags &= ~ISFLAG_RACIAL_MASK;
+
+    return (true);
+}
+
+bool convert2bad(item_def &item)
+{
+    if (item.base_type != OBJ_WEAPONS)
+        return (false);
+
+    switch (item.sub_type)
+    {
+    default:
+        return (false);
+
+    case WPN_BLESSED_FALCHION:
+        item.sub_type = WPN_FALCHION;
+        break;
+
+    case WPN_BLESSED_LONG_SWORD:
+        item.sub_type = WPN_LONG_SWORD;
+        break;
+
+    case WPN_BLESSED_SCIMITAR:
+        item.sub_type = WPN_SCIMITAR;
+        break;
+
+    case WPN_BLESSED_EUDEMON_BLADE:
+        item.sub_type = WPN_DEMON_BLADE;
+        break;
+
+    case WPN_BLESSED_KATANA:
+        item.sub_type = WPN_KATANA;
+        break;
+
+    case WPN_BLESSED_DOUBLE_SWORD:
+        item.sub_type = WPN_DOUBLE_SWORD;
+        break;
+
+    case WPN_BLESSED_GREAT_SWORD:
+        item.sub_type = WPN_GREAT_SWORD;
+        break;
+
+    case WPN_BLESSED_TRIPLE_SWORD:
+        item.sub_type = WPN_TRIPLE_SWORD;
+        break;
+    }
 
     return (true);
 }

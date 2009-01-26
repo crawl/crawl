@@ -2949,10 +2949,14 @@ static void _give_monster_item(monsters *mon, int thing,
     mthing.link = NON_ITEM;
     unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
-    if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH
-        && mons_is_unholy(mon))
+    if (mons_is_unholy(mon)
+        && (is_blessed_blade(mthing)
+            || get_weapon_brand(mthing) == SPWPN_HOLY_WRATH))
     {
-        set_item_ego_type( mthing, OBJ_WEAPONS, SPWPN_NORMAL );
+        if (is_blessed_blade(mthing))
+            convert2bad(mthing);
+        if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH)
+            set_item_ego_type(mthing, OBJ_WEAPONS, SPWPN_NORMAL);
     }
 
     unwind_var<int> save_speedinc(mon->speed_increment);
@@ -2970,7 +2974,7 @@ static void _give_monster_item(monsters *mon, int thing,
     ASSERT(holding_monster(mthing) == mon);
 
     if (!force_item || mthing.colour == BLACK)
-        item_colour( mthing );
+        item_colour(mthing);
 }
 
 static void _give_scroll(monsters *mon, int level)
@@ -3060,7 +3064,8 @@ static void _give_potion(monsters *mon, int level)
             return;
 
         mitm[thing_created].flags = 0;
-        _give_monster_item(mon, thing_created);
+        _give_monster_item(mon, thing_created, false,
+                           &monsters::pickup_potion);
     }
 }
 
