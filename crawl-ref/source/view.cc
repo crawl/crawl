@@ -2943,9 +2943,7 @@ bool is_feature(int feature, const coord_def& where)
     if (!env.map(where).object && !see_grid(where))
         return (false);
 
-    // 'grid' can fit in an unsigned char, but making this a short shuts up
-    // warnings about out-of-range case values.
-    short grid = grd(where);
+    dungeon_feature_type grid = grd(where);
 
     switch (feature)
     {
