@@ -206,7 +206,7 @@ inline bool testbits(unsigned long flags, unsigned long test)
 
 template <typename Z> inline Z sgn(Z x)
 {
-    return (x < 0? -1 : (x > 0? 1 : 0));
+    return (x < 0 ? -1 : (x > 0 ? 1 : 0));
 }
 
 bool is_trap_square(dungeon_feature_type grid);

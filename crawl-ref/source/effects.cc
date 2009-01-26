@@ -3461,10 +3461,10 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     const int moves = (range > 50) ? 50 : range;
 
     // const bool short_time = (range >= 5 + random2(10));
-    const bool long_time = (range >= (500 + roll_dice( 2, 500 )));
+    const bool long_time = (range >= (500 + roll_dice(2, 500)));
 
-    const bool ranged_attack = (mons_has_ranged_spell( mon, true )
-                                || mons_has_ranged_attack( mon ));
+    const bool ranged_attack = (mons_has_ranged_spell(mon, true)
+                                || mons_has_ranged_attack(mon));
 
 #if DEBUG_DIAGNOSTICS
     // probably too annoying even for DEBUG_DIAGNOSTICS
@@ -3529,7 +3529,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         }
         else
         {
-            shift_monster( mon, mon->pos() );
+            shift_monster(mon, mon->pos());
 
 #if DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "shifted to (%d,%d)",
@@ -3551,7 +3551,6 @@ static void _catchup_monster_moves(monsters *mon, int turns)
 
         if (pos.x + inc.x < 0 || pos.x + inc.x >= GXM)
             inc.x = 0;
-
         if (pos.y + inc.y < 0 || pos.y + inc.y >= GYM)
             inc.y = 0;
 
@@ -3574,7 +3573,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         shift_monster(mon, mon->pos());
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->pos().x, mon->pos().y );
+    mprf(MSGCH_DIAGNOSTICS, "moved to (%d, %d)", mon->pos().x, mon->pos().y);
 #endif
 }
 
