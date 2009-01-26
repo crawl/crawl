@@ -535,7 +535,7 @@ static bool _is_reseedable(int x, int y)
     if (is_excluded(coord_def(x, y)))
         return (true);
 
-    int grid = grd[x][y];
+    dungeon_feature_type grid = grd[x][y];
     return (grid_is_water(grid)
                || grid == DNGN_LAVA
                || is_trap(x, y)
@@ -1792,7 +1792,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         if (features && !ignore_hostile)
         {
-            const int feature = grd(dc);
+            dungeon_feature_type feature = grd(dc);
 
             if (dc != start
                 && (feature != DNGN_FLOOR
