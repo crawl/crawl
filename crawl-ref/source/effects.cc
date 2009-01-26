@@ -731,25 +731,26 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
 void direct_effect(monsters *source, spell_type spell,
                    bolt &pbolt, actor *defender)
 {
-    const bool mons_defender = defender->atype() == ACT_MONSTER;
-    monsters *mdef = mons_defender? dynamic_cast<monsters*>(defender) : NULL;
+    monsters *def =
+        (defender->atype() == ACT_MONSTER) ? dynamic_cast<monsters*>(defender)
+                                           : NULL;
 
-    if (mdef)
+    if (def)
     {
         // annoy the target
-        behaviour_event(mdef, ME_ANNOY, monster_index(source));
+        behaviour_event(def, ME_ANNOY, monster_index(source));
     }
 
-
     int damage_taken = 0;
+
     switch (spell)
     {
     case SPELL_SMITING:
-        if (mons_defender)
-            simple_monster_message(dynamic_cast<monsters*>(defender),
-                                   " is smitten.");
+        if (def)
+            simple_monster_message(def, " is smitten.");
         else
-            mpr( "Something smites you!" );
+            mpr("Something smites you!");
+
         pbolt.name       = "smiting";
         pbolt.flavour    = BEAM_MISSILE;
         pbolt.aux_source = "by divine providence";
@@ -757,7 +758,7 @@ void direct_effect(monsters *source, spell_type spell,
         break;
 
     case SPELL_BRAIN_FEED:
-        if (!mons_defender)
+        if (!def)
         {
             // lose_stat() must come last {dlb}
             if (one_chance_in(3)
@@ -778,8 +779,8 @@ void direct_effect(monsters *source, spell_type spell,
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
     {
-        if (mdef)
-            mdef->hurt(source, damage_taken);
+        if (def)
+            def->hurt(source, damage_taken);
         else
             ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM,
                  pbolt.aux_source.c_str());
