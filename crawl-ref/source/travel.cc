@@ -1796,7 +1796,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
             if (dc != start
                 && (feature != DNGN_FLOOR
-                       && grid_is_water(feature)
+                       && !grid_is_water(feature)
                        && feature != DNGN_LAVA
                     || is_waypoint(dc)
                     || is_stash(ls, dc.x, dc.y)))
