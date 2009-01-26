@@ -127,6 +127,8 @@ Magic
 
 Theurgy
 
+Thaumaturgy
+
 Casting
 
 Wizardry
