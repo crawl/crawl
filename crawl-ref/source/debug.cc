@@ -2162,6 +2162,19 @@ void debug_item_scan( void )
             // and for items which have bad coordinates (can't find their stack)
             for (int obj = igrd[x][y]; obj != NON_ITEM; obj = mitm[obj].link)
             {
+                if (obj < 0 || obj > MAX_ITEMS)
+                {
+                    if (igrd[x][y] == obj)
+                        mprf(MSGCH_ERROR, "Igrd has invalid item index %d "
+                                          "at (%d, %d)",
+                             obj, x, y);
+                    else
+                        mprf(MSGCH_ERROR, "Item in stack at (%d, %d) has ",
+                                          "invalid link %d",
+                             x, y, obj);
+                    break;
+                }
+
                 // Check for invalid (zero quantity) items that are linked in.
                 if (!is_valid_item( mitm[obj] ))
                 {
@@ -2218,8 +2231,12 @@ void debug_item_scan( void )
             mpr( "Unlinked item:", MSGCH_ERROR );
             _dump_item( name, i, mitm[i] );
 
-            mprf("igrd(%d,%d) = %d",
-                 mitm[i].pos.x, mitm[i].pos.y, igrd( mitm[i].pos ));
+            if (!in_bounds(mitm[i].pos))
+                mprf(MSGCH_ERROR, "Item position (%d, %d) is out of bounds",
+                     mitm[i].pos.x, mitm[i].pos.y);
+            else
+                mprf("igrd(%d,%d) = %d",
+                     mitm[i].pos.x, mitm[i].pos.y, igrd( mitm[i].pos ));
 
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; j++)
@@ -2386,6 +2403,14 @@ void debug_mons_scan()
             if (mons == NON_MONSTER)
                 continue;
 
+            if (invalid_monster_index(mons))
+            {
+                mprf(MSGCH_ERROR, "mgrd at (%d, %d) has invalid monster "
+                                  "index %d",
+                     x, y, mons);
+                continue;
+            }
+
             const monsters *m = &menv[mons];
             const coord_def pos(x, y);
             if (m->pos() != pos)
@@ -2424,15 +2449,22 @@ void debug_mons_scan()
         if (!m->alive())
             continue;
 
-        if (mgrd(m->pos()) != i)
+        coord_def pos = m->pos();
+
+        if (!in_bounds(pos))
+            mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
+                              "midx = %d",
+                 m->full_name(DESC_PLAIN, true).c_str(),
+                 pos.x, pos.y, i);
+        else if (mgrd(pos) != i)
         {
             floating_mons.push_back(i);
             is_floating[i] = true;
 
             _announce_level_prob(warned);
-            mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
+            mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d), midx = %d",
                  m->full_name(DESC_PLAIN, true).c_str(),
-                 m->pos().x, m->pos().y);
+                 pos.x, pos.y, i);
             warned = true;
             for (int j = 0; j < MAX_MONSTERS; ++j)
             {
@@ -2444,17 +2476,17 @@ void debug_mons_scan()
                 if (m2->pos() != m->pos())
                     continue;
 
+                std::string full = m2->full_name(DESC_PLAIN, true);
                 if (m2->alive())
                 {
-                    mprf(MSGCH_WARN, "Also at (%d, %d): %s",
-                         m->pos().x, m->pos().y,
-                         m2->full_name(DESC_PLAIN, true).c_str());
+                    mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
+                         pos.x, pos.y, full.c_str(), j);
                 }
                 else if (m2->type != -1)
                 {
-                    mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s",
-                         m->pos().x, m->pos().y,
-                         m2->full_name(DESC_PLAIN, true).c_str());
+                    mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s,"
+                                     "midx = %d",
+                         pos.x, pos.y, full.c_str(), j);
                 }
             }
         } // if (mgrd(m->pos()) != i)
@@ -2465,6 +2497,14 @@ void debug_mons_scan()
             if (idx == NON_ITEM)
                 continue;
 
+            if (idx < 0 || idx > MAX_ITEMS)
+            {
+                mprf(MSGCH_ERROR, "Monster %s (%d, %d) has invalid item "
+                                  "index %d in slot %d.",
+                     m->full_name(DESC_PLAIN, true).c_str(),
+                     pos.x, pos.y, idx, j);
+                continue;
+            }
             item_def &item(mitm[idx]);
 
             if (!is_valid_item(item))
@@ -2472,9 +2512,9 @@ void debug_mons_scan()
                 _announce_level_prob(warned);
                 warned = true;
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
-                                 "slot %d.",
+                                 "slot %d (midx = %d)",
                      m->full_name(DESC_PLAIN, true).c_str(),
-                     m->pos().x, m->pos().y, j);
+                     pos.x, pos.y, j, i);
                 continue;
             }
 
@@ -2485,9 +2525,9 @@ void debug_mons_scan()
                 _announce_level_prob(warned);
                 warned = true;
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) holding non-monster "
-                                 "item.",
+                                 "item (midx = %d)",
                      m->full_name(DESC_PLAIN, true).c_str(),
-                     m->pos().x, m->pos().y);
+                     pos.x, pos.y, i);
                 _dump_item( item.name(DESC_PLAIN, false, true).c_str(),
                             idx, item );
                 continue;
@@ -2497,13 +2537,13 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding item %s, but "
-                                 "item thinks it's held by monster %s "
-                                 "(%d, %d)",
+                mprf(MSGCH_WARN, "Monster %s (%d, %d) [midx = %d] holding "
+                                 "item %s, but item thinks it's held by "
+                                 "monster %s (%d, %d) [midx = %d]",
                      m->full_name(DESC_PLAIN, true).c_str(),
-                     m->pos().x, m->pos().y,
+                     m->pos().x, m->pos().y, i,
                      holder->full_name(DESC_PLAIN, true).c_str(),
-                     holder->pos().x, holder->pos().y);
+                     holder->pos().x, holder->pos().y, holder->mindex());
 
                 bool found = false;
                 for (int k = 0; k < NUM_MONSTER_SLOTS; k++)
