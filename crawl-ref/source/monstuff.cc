@@ -8146,7 +8146,7 @@ static bool _monster_move(monsters *monster)
 
     if (monster->type == MONS_TRAPDOOR_SPIDER)
     {
-        if(mons_is_submerged(monster))
+        if (mons_is_submerged(monster))
            return (false);
 
         // Trapdoor spiders hide if they can't see their target.
