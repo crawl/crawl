@@ -4534,8 +4534,9 @@ static void _handle_movement(monsters *monster)
              && monster->target == env.sanctuary_pos)
     {
         // Once outside there's a chance they'll regain their courage.
-        // Nonliving and berserking monsters always stop imediately,
-        // since they're only being forced out rather than actually scared.
+        // Nonliving and berserking monsters always stop immediately,
+        // since they're only being forced out rather than actually
+        // scared.
         if (monster->holiness() == MH_NONLIVING
             || monster->has_ench(ENCH_BERSERK)
             || random2(5) > 2)
@@ -4544,10 +4545,11 @@ static void _handle_movement(monsters *monster)
         }
     }
 
-    // some calculations
+    // Some calculations.
     if (mons_class_flag(monster->type, M_BURROWS) && monster->foe == MHITYOU)
     {
-        // Boring beetles always move in a straight line in your direction.
+        // Boring beetles always move in a straight line in your
+        // direction.
         delta = you.pos() - monster->pos();
     }
     else
@@ -4561,8 +4563,8 @@ static void _handle_movement(monsters *monster)
                 mons_has_ranged_attack(monster)
                 || mons_has_ranged_spell(monster);
 
-            // Smiters are happy if they have clear visibility through glass,
-            // but other monsters must go around.
+            // Smiters are happy if they have clear visibility through
+            // glass, but other monsters must go around.
             const bool glass_ok = mons_has_smite_attack(monster);
 
             // Monsters in the arena are smarter than the norm and
@@ -4589,8 +4591,8 @@ static void _handle_movement(monsters *monster)
         mmov *= -1;
     }
 
-    // Don't allow monsters to enter a sanctuary
-    // or attack you inside a sanctuary even if you're right next to them.
+    // Don't allow monsters to enter a sanctuary or attack you inside a
+    // sanctuary, even if you're right next to them.
     if (is_sanctuary(monster->pos() + mmov)
         && (!is_sanctuary(monster->pos())
             || monster->pos() + mmov == you.pos()))
@@ -4612,8 +4614,9 @@ static void _handle_movement(monsters *monster)
     if (delta.rdist() > 3)
     {
         // Reproduced here is some semi-legacy code that makes monsters
-        // move somewhat randomly along oblique paths.  It is an exceedingly
-        // good idea, given crawl's unique line of sight properties.
+        // move somewhat randomly along oblique paths.  It is an
+        // exceedingly good idea, given crawl's unique line of sight
+        // properties.
         //
         // Added a check so that oblique movement paths aren't used when
         // close to the target square. -- bwr
@@ -4703,11 +4706,13 @@ static void _handle_movement(monsters *monster)
         }
     }
 
-    // If the monster is moving in your direction, whether to attack or protect
-    // you, or towards a monster it intends to attack, check whether we first
-    // need to take a step to the side to make sure the reinforcement can
-    // follow through.
-    // First, check whether the monster is smart enough to even consider this.
+    // If the monster is moving in your direction, whether to attack or
+    // protect you, or towards a monster it intends to attack, check
+    // whether we first need to take a step to the side to make sure the
+    // reinforcement can follow through.
+
+    // First, check whether the monster is smart enough to even consider
+    // this.
     if ((newpos == you.pos()
          || mgrd(newpos) != NON_MONSTER && monster->foe == mgrd(newpos))
         && mons_intel(monster) >= I_ANIMAL
@@ -4716,11 +4721,14 @@ static void _handle_movement(monsters *monster)
     {
         // If the monster is moving parallel to the x or y axis, check
         // whether
+        //
         // a) the neighbouring grids are blocked
         // b) there are other unblocked grids adjacent to the target
         // c) there's at least one allied monster waiting behind us.
-        // (For really smart monsters, also check whether there's a monster
-        //  farther back in the corridor that has some kind of ranged attack.)
+        //
+        // (For really smart monsters, also check whether there's a
+        // monster farther back in the corridor that has some kind of
+        // ranged attack.)
         if (mmov.y == 0)
         {
             if (!good_move[1][0] && !good_move[1][2]
@@ -4791,11 +4799,12 @@ static void _handle_movement(monsters *monster)
     if (mmov.origin())
         return;
 
-    // Try to stay in sight of the player if we're moving toward's him/her,
-    // in order to avoid the monster coming into view, shouting, and then
-    // taking a step in a path to the player which temporarily takes it out of
-    // view, which can lead to the player getting "comes into view" and
-    // shout messages with no monster in view.
+    // Try to stay in sight of the player if we're moving towards
+    // him/her, in order to avoid the monster coming into view,
+    // shouting, and then taking a step in a path to the player which
+    // temporarily takes it out of view, which can lead to the player
+    // getting "comes into view" and shout messages with no monster in
+    // view.
 
     // Doesn't matter for arena mode.
     if (crawl_state.arena)
@@ -4807,7 +4816,7 @@ static void _handle_movement(monsters *monster)
 
     monster->seen_context.clear();
 
-    // If the player can't see us it doesn't matter.
+    // If the player can't see us, it doesn't matter.
     if (!(monster->flags & MF_WAS_IN_VIEW))
         return;
 
@@ -4826,8 +4835,8 @@ static void _handle_movement(monsters *monster)
     if (see_grid(old_pos + mmov))
         return;
 
-    // Try to find a move that brings us closer to the player while keeping us
-    // in view.
+    // Try to find a move that brings us closer to the player while
+    // keeping us in view.
     int matches = 0;
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
@@ -4850,8 +4859,8 @@ static void _handle_movement(monsters *monster)
         }
 
     // The only way to get closer to the player is to step out of view;
-    // give a message so they player isn't confused about it being
-    // announced coming into view but not being seen.
+    // give a message so they player isn't confused about its being
+    // announced as coming into view but not being seen.
     monster->seen_context = _just_seen;
 }
 
