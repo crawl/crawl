@@ -924,21 +924,21 @@ static int _yred_random_servants(int threshold, bool force_hostile = false)
     int temp_rand = random2(std::min(100, threshold));
 
     // undead
-    mon = ((temp_rand < 25) ? MONS_WRAITH :           // 25%
-           (temp_rand < 35) ? MONS_WIGHT :            // 10%
-           (temp_rand < 44) ? MONS_FLYING_SKULL :     //  9%
-           (temp_rand < 52) ? MONS_SPECTRAL_WARRIOR : //  8%
-           (temp_rand < 59) ? MONS_ROTTING_HULK :     //  7%
-           (temp_rand < 65) ? MONS_SKELETAL_WARRIOR : //  6%
-           (temp_rand < 70) ? MONS_FREEZING_WRAITH :  //  5%
-           (temp_rand < 75) ? MONS_FLAMING_CORPSE :   //  5%
-           (temp_rand < 80) ? MONS_GHOUL :            //  5%
-           (temp_rand < 85) ? MONS_MUMMY :            //  5%
-           (temp_rand < 89) ? MONS_VAMPIRE :          //  4%
-           (temp_rand < 93) ? MONS_HUNGRY_GHOST :     //  4%
-           (temp_rand < 96) ? MONS_FLAYED_GHOST :     //  3%
-           (temp_rand < 98) ? MONS_SKELETAL_DRAGON    //  2%
-                            : MONS_DEATH_COB);        //  2%
+    mon = ((temp_rand < 15) ? MONS_WRAITH :           // 15%
+           (temp_rand < 30) ? MONS_WIGHT :            // 15%
+           (temp_rand < 40) ? MONS_FLYING_SKULL :     // 10%
+           (temp_rand < 49) ? MONS_SPECTRAL_WARRIOR : //  9%
+           (temp_rand < 57) ? MONS_ROTTING_HULK :     //  8%
+           (temp_rand < 64) ? MONS_SKELETAL_WARRIOR : //  7%
+           (temp_rand < 70) ? MONS_FREEZING_WRAITH :  //  6%
+           (temp_rand < 76) ? MONS_FLAMING_CORPSE :   //  6%
+           (temp_rand < 81) ? MONS_GHOUL :            //  5%
+           (temp_rand < 86) ? MONS_MUMMY :            //  5%
+           (temp_rand < 90) ? MONS_VAMPIRE :          //  4%
+           (temp_rand < 94) ? MONS_HUNGRY_GHOST :     //  4%
+           (temp_rand < 97) ? MONS_FLAYED_GHOST :     //  3%
+           (temp_rand < 99) ? MONS_SKELETAL_DRAGON    //  2%
+                            : MONS_DEATH_COB);        //  1%
 
     if (mon == MONS_FLYING_SKULL)
         how_many = 2 + random2(4);
