@@ -3461,7 +3461,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     const int moves = (range > 50) ? 50 : range;
 
     // const bool short_time = (range >= 5 + random2(10));
-    const bool long_time  = (range >= (500 + roll_dice( 2, 500 )));
+    const bool long_time = (range >= (500 + roll_dice( 2, 500 )));
 
     const bool ranged_attack = (mons_has_ranged_spell( mon, true )
                                 || mons_has_ranged_attack( mon ));
@@ -3489,7 +3489,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         {
             mon->behaviour = BEH_WANDER;
             mon->foe = MHITNOT;
-            mon->target.set(10 + random2(GXM - 10), 10 + random2(GYM - 10));
+            mon->target = random_in_bounds();
         }
         else
         {
@@ -3563,13 +3563,15 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         if (grid_is_solid(feat)
             || mgrd(next) != NON_MONSTER
             || !monster_habitable_grid(mon, feat))
+        {
             break;
+        }
 
         pos = next;
     }
 
-    if (!shift_monster( mon, pos ))
-        shift_monster( mon, mon->pos() );
+    if (!shift_monster(mon, pos))
+        shift_monster(mon, mon->pos());
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->pos().x, mon->pos().y );

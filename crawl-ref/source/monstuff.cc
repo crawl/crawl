@@ -4600,11 +4600,11 @@ static void _handle_movement(monsters *monster)
         mmov.reset();
     }
 
-    // Bounds check: don't let fleeing monsters try to run off the map.
+    // Bounds check: don't let fleeing monsters try to run off the grid.
     const coord_def s = monster->target + mmov;
-    if (!map_bounds_x(s.x))
+    if (!in_bounds_x(s.x))
         mmov.x = 0;
-    if (!map_bounds_y(s.y))
+    if (!in_bounds_y(s.y))
         mmov.y = 0;
 
     // Now quit if we can't move.
@@ -7145,11 +7145,11 @@ static void _handle_monster_move(int i, monsters *monster)
                     mmov.reset();
 
                 // Bounds check: don't let confused monsters try to run
-                // off the map.
+                // off the grid.
                 const coord_def s = monster->pos() + mmov;
-                if (!map_bounds_x(s.x))
+                if (!in_bounds_x(s.x))
                     mmov.x = 0;
-                if (!map_bounds_y(s.y))
+                if (!in_bounds_y(s.y))
                     mmov.y = 0;
 
                 if (!monster->can_pass_through(monster->pos() + mmov))
