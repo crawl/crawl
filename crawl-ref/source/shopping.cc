@@ -1832,7 +1832,7 @@ std::string shop_name(const coord_def& where)
         && shop_type != SHOP_GENERAL_ANTIQUE && shop_type != SHOP_DISTILLERY)
     {
         const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
-        const int temp = where.x + where.y % 4;
+        const int temp = (where.x + where.y) % 4;
         sh_name += ' ';
         sh_name += suffixnames[temp];
     }
