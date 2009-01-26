@@ -803,7 +803,7 @@ void random_uselessness(int scroll_slot)
         break;
 
     case 1:
-        mpr("The scroll reassembles itself in your hand!");
+        mpr("The scroll reassembles itself in your hands!");
         inc_inv_item_quantity(scroll_slot, 1);
         break;
 
@@ -837,7 +837,7 @@ void random_uselessness(int scroll_slot)
     case 5:
         temp_rand = random2(3);
         mprf("Your %s",
-             (temp_rand == 0) ? "ears itch."   :
+             (temp_rand == 0) ? "ears itch!" :
              (temp_rand == 1) ? "brain hurts!"
                               : "nose twitches suddenly!");
         break;
