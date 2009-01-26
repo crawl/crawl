@@ -1621,7 +1621,7 @@ int monster_die(monsters *monster, killer_type killer,
 
         // Now that Boris is dead, he's a valid target for monster
         // creation again. -- bwr
-        you.unique_creatures[ monster->type ] = false;
+        you.unique_creatures[monster->type] = false;
     }
     else if (!mons_is_summoned(monster))
     {
@@ -5021,8 +5021,8 @@ static void _handle_nearby_ability(monsters *monster)
         ;
     }
     else if ((mons_class_flag(monster->type, M_SPEAKS)
-              || !monster->mname.empty())
-             && one_chance_in(MON_SPEAK_CHANCE))
+                    || !monster->mname.empty())
+                && one_chance_in(MON_SPEAK_CHANCE))
     {
         mons_speaks(monster);
     }
