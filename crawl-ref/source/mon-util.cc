@@ -4938,22 +4938,13 @@ bool monsters::pickup_potion(item_def &item, int near)
 {
     // Only allow monsters to pick up potions if they can actually use
     // them.
-    switch (item.sub_type)
+    const potion_type ptype = static_cast<potion_type>(item.sub_type);
+
+    if (!this->can_drink_potion(ptype))
+        return (false);
+
+    switch (ptype)
     {
-    case POT_HEALING:
-    case POT_HEAL_WOUNDS:
-        if (mons_holiness(this) == MH_UNDEAD
-            || mons_holiness(this) == MH_NONLIVING
-            || mons_holiness(this) == MH_PLANT)
-        {
-            return (false);
-        }
-        break;
-    case POT_BLOOD:
-    case POT_BLOOD_COAGULATED:
-        if (::mons_species(this->type) != MONS_VAMPIRE)
-            return (false);
-        break;
     case POT_SPEED:
     case POT_INVISIBILITY:
         // If there are any item using monsters that are permanently
@@ -7864,8 +7855,8 @@ bool monsters::should_drink_potion(potion_type ptype) const
     case POT_SPEED:
         return (!has_ench(ENCH_HASTE));
     case POT_INVISIBILITY:
-        // We're being nice: friendlies won't go invisible
-        // if the player won't be able to see them.
+        // We're being nice: friendlies won't go invisible if the player
+        // won't be able to see them.
         return (!has_ench(ENCH_INVIS)
                 && (player_see_invis(false) || !mons_friendly(this)));
     default:

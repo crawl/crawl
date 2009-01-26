@@ -2994,7 +2994,7 @@ static void _give_scroll(monsters *mon, int level)
             return;
         }
     }
-    else if (mons_is_unique( mon->type ) && one_chance_in(3))
+    else if (mons_is_unique(mon->type) && one_chance_in(3))
         thing_created = items(0, OBJ_SCROLLS, OBJ_RANDOM, true, level, 0);
 
     if (thing_created == NON_ITEM)
@@ -3007,10 +3007,11 @@ static void _give_scroll(monsters *mon, int level)
 static void _give_wand(monsters *mon, int level)
 {
     //mv - give wand
-    if (mons_is_unique( mon->type ) && one_chance_in(5))
+    if (mons_is_unique(mon->type) && one_chance_in(5))
     {
         const int thing_created =
             items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
+
         if (thing_created == NON_ITEM)
             return;
 
@@ -3018,7 +3019,7 @@ static void _give_wand(monsters *mon, int level)
         if (mon->hit_dice < 5)
         {
             // Technically these wands will be undercharged, but it
-            // doesn't really matter
+            // doesn't really matter.
             if (mitm[thing_created].sub_type == WAND_FIRE)
                 mitm[thing_created].sub_type = WAND_FLAME;
             if (mitm[thing_created].sub_type == WAND_COLD)
@@ -3038,7 +3039,7 @@ static void _give_wand(monsters *mon, int level)
 static void _give_potion(monsters *mon, int level)
 {
     //mv - give potion
-    if (mons_species( mon->type ) == MONS_VAMPIRE && one_chance_in(5))
+    if (mons_species(mon->type) == MONS_VAMPIRE && one_chance_in(5))
     {
         // This handles initialization of stack timer.
         const int thing_created =
@@ -3050,10 +3051,11 @@ static void _give_potion(monsters *mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if (mons_is_unique( mon->type ) && one_chance_in(3))
+    else if (mons_is_unique(mon->type) && one_chance_in(3))
     {
         const int thing_created =
             items(0, OBJ_POTIONS, OBJ_RANDOM, true, level, 0);
+
         if (thing_created == NON_ITEM)
             return;
 
@@ -3928,6 +3930,7 @@ static void _give_ammo(monsters *mon, int level,
             }
 
             w.quantity = qty;
+
             _give_monster_item(mon, thing_created, false,
                                &monsters::pickup_throwable_weapon);
         }
