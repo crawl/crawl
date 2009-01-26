@@ -2673,10 +2673,18 @@ bool player_monster_visible(const monsters *mon)
 
     // Treat monsters who are submerged due to drowning as visible, so
     // we get proper messages when they die.
-    if (mons_is_submerged(mon) && !mon->can_drown())
-        return (false);
+    if (!mons_is_submerged(mon))
+        return (true);
 
-    return (true);
+    const dungeon_feature_type feat = grd(mon->pos());
+
+    // Monsters can only drown in lava or water, so monsters that are
+    // "submerged" in other features (air elementals in air, trapdoor
+    // spiders in the floor) are exempt from this check.
+    if (feat < DNGN_LAVA || feat > DNGN_WATER_STUCK)
+        return (false);
+        
+    return (mon->can_drown());
 }
 
 // Returns true if player is mesmerised by a given monster.
