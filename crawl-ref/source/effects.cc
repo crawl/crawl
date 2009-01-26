@@ -3518,10 +3518,20 @@ static void _catchup_monster_moves(monsters *mon, int turns)
                 }
                 else
                 {
+                    coord_def mshift(random2(3) - 1, random2(3) - 1);
+
+                    // Bounds check: don't let fleeing monsters try to
+                    // run off the grid.
+                    const coord_def s = mon->target + mshift;
+                    if (!in_bounds_x(s.x))
+                        mshift.x = 0;
+                    if (!in_bounds_y(s.y))
+                        mshift.y = 0;
+
                     // Randomise the target so we have a direction to
                     // flee.
-                    mon->target.x += (random2(3) - 1);
-                    mon->target.y += (random2(3) - 1);
+                    mon->target.x += mshift.x;
+                    mon->target.y += mshift.y;
                 }
             }
 
@@ -3543,7 +3553,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
 
     coord_def pos(mon->pos());
 
-    // dirt simple movement:
+    // Dirt simple movement.
     for (int i = 0; i < moves; ++i)
     {
         coord_def inc(mon->target - pos);
@@ -3552,9 +3562,12 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         if (mons_is_fleeing(mon))
             inc *= -1;
 
-        if (pos.x + inc.x < 0 || pos.x + inc.x >= GXM)
+        // Bounds check: don't let shifting monsters try to run off the
+        // grid.
+        const coord_def s = pos + inc;
+        if (!in_bounds_x(s.x))
             inc.x = 0;
-        if (pos.y + inc.y < 0 || pos.y + inc.y >= GYM)
+        if (!in_bounds_y(s.y))
             inc.y = 0;
 
         if (inc.origin())
