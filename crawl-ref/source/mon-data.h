@@ -1632,7 +1632,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FLAMING_CORPSE, 'z', LIGHTRED, "flaming corpse",
+    MONS_FLAMING_CORPSE, 'z', RED, "flaming corpse",
     M_SENSE_INVIS | M_EVIL | M_GLOWS,
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_RES_STICKY_FLAME,
     0, 17, MONS_FLAMING_CORPSE, MONS_FLAMING_CORPSE, MH_UNDEAD, -4,
