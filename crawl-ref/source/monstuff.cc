@@ -4311,9 +4311,9 @@ monsters *choose_random_monster_on_level(int weight,
 {
     monsters *chosen = NULL;
 
-    // A radius_iterator with radius == max(GXM,GYM) will sweep the whole
-    // level.
-    radius_iterator ri(you.pos(), near_by ? 9 : std::max(GXM,GYM),
+    // A radius_iterator with radius == max(GXM, GYM) will sweep the
+    // whole level.
+    radius_iterator ri(you.pos(), near_by ? 9 : std::max(GXM, GYM),
                        true, in_sight);
 
     for ( ; ri; ++ri )
@@ -7030,7 +7030,7 @@ static void _handle_monster_move(int i, monsters *monster)
             continue;
         }
 
-        // Harpyes may eat food/corpses on the ground.
+        // Harpies may eat food/corpses on the ground.
         if (monster->type == MONS_HARPY && !mons_is_fleeing(monster)
             && (mons_wont_attack(monster)
                 || (monster->pos() - you.pos()).rdist() > 1)
