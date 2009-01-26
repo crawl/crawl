@@ -1973,7 +1973,7 @@ of elemental magic: air, fire, earth, or ice.
 
 Venom Mages:
 ------------
-Venom mages specialise in poison magic, which is extremely useful in
+Venom Mages specialise in poison magic, which is extremely useful in
 the shallower levels of the dungeon where few creatures are immune to
 it. Poison is especially effective when used against insects, damaging
 their tracheae quite effectively.
