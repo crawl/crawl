@@ -91,7 +91,7 @@ static const coord_def mon_compass[8] = {
 
 static bool immobile_monster[MAX_MONSTERS];
 
-// A probably needles optimization: convert the C string "just seen" to
+// A probably needless optimization: convert the C string "just seen" to
 // a C++ string just once, instead of twice every time a monster moves.
 static const std::string _just_seen("just seen");
 
