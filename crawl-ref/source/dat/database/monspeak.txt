@@ -3121,7 +3121,7 @@ _hostile_orc_beogh_believer_speech_common_
 
 @The_monster@ @shouts@ @at_foe@, "Die, @orc_heathen@!"
 
-@The_monster@ @shouts@, "Die, @player_name@, for besmirching Beogh's name!"
+@The_monster@ @shouts@, "Die, @foe_name@, for besmirching Beogh's name!"
 
 VISUAL:@The_monster@ grimaces.
 %%%%
@@ -3137,7 +3137,7 @@ _hostile_orc_beogh_believer_speech_rare_
 
 @The_monster@ laughs @at_foe@, "You, our saviour!?"
 
-@The_monster@ @shouts@ @at_foe@, "Orcs!  @foe_name@ is lying!"
+@The_monster@ @shouts@ @at_foe@, "Orcs! @foe_name@ is lying!"
 
 @The_monster@ @orc_says_to_foe@, "For a messiah, you look rather @orc_pathetic@."
 
