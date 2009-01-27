@@ -2837,7 +2837,7 @@ w:1
 @The_monster@ says @to_foe@, "Thou must remain pure in the battle against evil."
 
 w:1
-@The_monster@ says @to_foe@, "May @player_god@ always shine on thee, @player_name@!"
+@The_monster@ says @to_foe@, "May @player_god@ always shine on thee, @foe_name@!"
 
 w:1
 @The_monster@ says @to_foe@, "@player_god@ be with thee, mortal!"
