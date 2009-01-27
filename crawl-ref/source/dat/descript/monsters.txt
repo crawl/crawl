@@ -1169,7 +1169,7 @@ A small marsupial.  Don't call it a rat.
 %%%%
 rakshasa
 
-A demon in the form of a tiger who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, and are simultaneously intelligent and cruel.
+A demon in the form of a tiger who comes to the material world in search of power and knowledge.  Rakshasas are experts in the art of illusion, and are simultaneously intelligent and cruel.
 %%%%
 rat
 
