@@ -90,9 +90,6 @@ std::string item_def::name(description_level_type descrip,
     if (descrip == DESC_NONE)
         return ("");
 
-    const bool is_artefact = (is_fixed_artefact( *this )
-                              || (is_random_artefact( *this )));
-
     std::ostringstream buff;
 
     const std::string auxname = this->name_aux(descrip, terse, ident,
@@ -151,7 +148,7 @@ std::string item_def::name(description_level_type descrip,
         || (ident || item_type_known( *this ))
             && (this->base_type == OBJ_MISCELLANY
                    && this->sub_type == MISC_HORN_OF_GERYON
-                || is_artefact))
+                || is_artefact(*this)))
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)

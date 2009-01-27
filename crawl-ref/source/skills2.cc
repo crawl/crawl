@@ -2253,7 +2253,17 @@ void wield_warning(bool newWeapon)
     if (effective_stat_bonus() > -4)
         return;
 
-    std::string msg = (newWeapon ? "this " : "your ") + wep.name(DESC_BASENAME);
+    std::string msg;
+    
+    // We know if it's an artefact because we just wielded
+    // it, so no information leak.
+    if (is_artefact(wep))
+        msg = "the";
+    else if (newWeapon)
+        msg = "this";
+    else
+        msg = "your";
+    msg += " " + wep.name(DESC_BASENAME);
     const char* mstr = msg.c_str();
 
     if (you.strength < you.dex)
