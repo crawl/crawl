@@ -2140,6 +2140,8 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     if (!is_artefact(item))
         ammo_name = article_a(ammo_name, true);
+    else
+        ammo_name = "the " + ammo_name;
 }
 
 // XXX This is a bit too generous, as it lets the player determine
