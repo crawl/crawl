@@ -5488,11 +5488,18 @@ static bool _beogh_idol_revenge()
     return (false);
 }
 
-static void _print_good_god_neutral_holy_being_speech(const std::string key,
-                                                      monsters *mon,
-                                                      msg_channel_type channel)
+static void _print_good_god_holy_being_speech(bool neutral,
+                                              const std::string key,
+                                              monsters *mon,
+                                              msg_channel_type channel)
 {
-    std::string msg = getSpeakString("good_god_neutral_holy_being_" + key);
+    std::string full_key = "good_god_";
+    if (!neutral)
+        full_key += "non";
+    full_key += "neutral_holy_being_";
+    full_key += key;
+
+    std::string msg = getSpeakString(full_key);
 
     if (!msg.empty())
     {
@@ -5509,12 +5516,12 @@ void good_god_holy_attitude_change(monsters *holy)
 
     if (player_monster_visible(holy)) // show reaction
     {
-        _print_good_god_neutral_holy_being_speech("reaction", holy,
-                                                  MSGCH_FRIEND_ENCHANT);
+        _print_good_god_holy_being_speech(true, "reaction", holy,
+                                          MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3))
-            _print_good_god_neutral_holy_being_speech("speech", holy,
-                                                      MSGCH_TALK);
+            _print_good_god_holy_being_speech(true, "speech", holy,
+                                              MSGCH_TALK);
     }
 
     holy->attitude = ATT_GOOD_NEUTRAL;
@@ -5525,6 +5532,21 @@ void good_god_holy_attitude_change(monsters *holy)
 
     // Avoid immobile "followers".
     behaviour_event(holy, ME_ALERT, MHITNOT);
+}
+
+void good_god_holy_fail_attitude_change(monsters *holy)
+{
+    ASSERT(mons_is_holy(holy));
+
+    if (player_monster_visible(holy)) // show reaction
+    {
+        _print_good_god_holy_being_speech(false, "reaction", holy,
+                                          MSGCH_FRIEND_ENCHANT);
+
+        if (!one_chance_in(3))
+            _print_good_god_holy_being_speech(false, "speech", holy,
+                                              MSGCH_TALK);
+    }
 }
 
 static void _tso_blasts_cleansing_flame(const char *message)

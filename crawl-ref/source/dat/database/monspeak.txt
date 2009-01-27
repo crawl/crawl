@@ -2883,6 +2883,22 @@ good_god_neutral_holy_being_speech
 
 @The_monster@ says @to_foe@, "Carry on, mortal."
 %%%%
+good_god_nonneutral_holy_being_reaction
+
+@The_monster@ ignores your imperfect holy aura.
+
+@The_monster@ frowns, and retains its fighting stance.
+
+@The_monster@ refuses to salute you.
+%%%%
+good_god_nonneutral_holy_being_speech
+
+@The_monster@ shouts @at_foe@, "Seek the light more diligently, mortal!"
+
+@The_monster@ says @to_foe@, "Thou art not yet worthy, servant of @player_god@."
+
+@The_monster@ says @to_foe@, "I sense wickedness within thee, mortal!"
+%%%%
 #############################################################
 # evil monsters may also have some choicy things to say...
 #############################################################
