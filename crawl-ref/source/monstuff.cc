@@ -4639,7 +4639,7 @@ static void _handle_movement(monsters *monster)
             const int targ_x = monster->pos().x + count_x - 1;
             const int targ_y = monster->pos().y + count_y - 1;
 
-            // Bounds check - don't consider moving out of grid!
+            // Bounds check: don't consider moving out of grid!
             if (!in_bounds(targ_x, targ_y))
             {
                 good_move[count_x][count_y] = false;
@@ -7989,7 +7989,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 {
     const coord_def targ = monster->pos() + delta;
 
-    // Bounds check - don't consider moving out of grid!
+    // Bounds check: don't consider moving out of grid!
     if (!in_bounds(targ))
         return (false);
 
@@ -8220,7 +8220,7 @@ static bool _monster_move(monsters *monster)
             const int targ_x = monster->pos().x + count_x - 1;
             const int targ_y = monster->pos().y + count_y - 1;
 
-            // Bounds check - don't consider moving out of grid!
+            // Bounds check: don't consider moving out of grid!
             if (!in_bounds(targ_x, targ_y))
             {
                 good_move[count_x][count_y] = false;
