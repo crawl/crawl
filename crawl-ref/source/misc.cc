@@ -1201,7 +1201,6 @@ static void _spatter_neighbours(int cx, int cy, int chance)
 
 void generate_random_blood_spatter_on_level()
 {
-    int cx, cy;
     int startprob;
 
     // startprob is used to initialize the chance for neighbours being
@@ -1229,13 +1228,12 @@ void generate_random_blood_spatter_on_level()
 
     for (int i = 0; i < max_cluster; i++)
     {
-        cx = 10 + random2(GXM - 10);
-        cy = 10 + random2(GYM - 10);
+        coord_def c = random_in_bounds();
         startprob = min_prob + random2(max_prob);
 
-        if (allow_bleeding_on_square(cx, cy))
-            env.map[cx][cy].property = FPROP_BLOODY;
-        _spatter_neighbours(cx, cy, startprob);
+        if (allow_bleeding_on_square(c.x, c.y))
+            env.map[c.x][c.y].property = FPROP_BLOODY;
+        _spatter_neighbours(c.x, c.y, startprob);
     }
 }
 

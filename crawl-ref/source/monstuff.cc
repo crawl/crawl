@@ -2555,8 +2555,9 @@ static void _handle_behaviour(monsters *mon)
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
-        mon->target_x = 10 + random2(GXM - 10);
-        mon->target_y = 10 + random2(GYM - 10);
+        const coord_def mtarget = random_in_bounds();
+        mon->target_x = mtarget.x;
+        mon->target_y = mtarget.y;
         return;
     }
 
@@ -3028,8 +3029,9 @@ static void _handle_behaviour(monsters *mon)
                 // Sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
-                    mon->target_x = 10 + random2(GXM - 10);
-                    mon->target_y = 10 + random2(GYM - 10);
+                    const coord_def mtarget = random_in_bounds();
+                    mon->target_x = mtarget.x;
+                    mon->target_y = mtarget.y;
                     mon->foe = MHITNOT;
                     new_beh  = BEH_WANDER;
                 }
@@ -3086,8 +3088,9 @@ static void _handle_behaviour(monsters *mon)
                         mon->travel_target = MTRAV_NONE;
                         patrolling = false;
                         mon->patrol_point = coord_def(0, 0);
-                        mon->target_x = 10 + random2(GXM - 10);
-                        mon->target_y = 10 + random2(GYM - 10);
+                        const coord_def mtarget = random_in_bounds();
+                        mon->target_x = mtarget.x;
+                        mon->target_y = mtarget.y;
                     }
                 }
 
@@ -3348,8 +3351,9 @@ static void _handle_behaviour(monsters *mon)
 
                 if (need_target)
                 {
-                    mon->target_x = 10 + random2(GXM - 10);
-                    mon->target_y = 10 + random2(GYM - 10);
+                    const coord_def mtarget = random_in_bounds();
+                    mon->target_x = mtarget.x;
+                    mon->target_y = mtarget.y;
                 }
             }
 
@@ -3739,11 +3743,10 @@ static void _handle_movement(monsters *monster)
         mmov_y = 0;
     }
 
-    // Bounds check: don't let fleeing monsters try to run off the map.
-    if (monster->target_x + mmov_x < 0 || monster->target_x + mmov_x >= GXM)
+    // Bounds check: don't let fleeing monsters try to run off the grid.
+    if (!in_bounds_x(monster->target_x + mmov_x))
         mmov_x = 0;
-
-    if (monster->target_y + mmov_y < 0 || monster->target_y + mmov_y >= GYM)
+    if (!in_bounds_y(monster->target_y + mmov_y))
         mmov_y = 0;
 
     // now quit if we can't move
@@ -6031,11 +6034,10 @@ static void _handle_monster_move(int i, monsters *monster)
                     mmov_x = mmov_y = 0;
 
                 // Bounds check: don't let confused monsters try to run
-                // off the map.
-                if (monster->x + mmov_x < 0 || monster->x + mmov_x >= GXM)
+                // off the grid.
+                if (!in_bounds_x(monster->x + mmov_x))
                     mmov_x = 0;
-
-                if (monster->y + mmov_y < 0 || monster->y + mmov_y >= GYM)
+                if (!in_bounds_y(monster->y + mmov_y))
                     mmov_y = 0;
 
                 if (!monster->can_pass_through(monster->x + mmov_x,
@@ -6155,8 +6157,9 @@ static void _handle_monster_move(int i, monsters *monster)
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target_x = 10 + random2(GXM - 10);
-                        monster->target_y = 10 + random2(GYM - 10);
+                        const coord_def mtarget = random_in_bounds();
+                        monster->target_x = mtarget.x;
+                        monster->target_y = mtarget.y;
                         // monster->speed_increment -= monster->speed;
                     }
 
@@ -6184,8 +6187,9 @@ static void _handle_monster_move(int i, monsters *monster)
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target_x = 10 + random2(GXM - 10);
-                        monster->target_y = 10 + random2(GYM - 10);
+                        const coord_def mtarget = random_in_bounds();
+                        monster->target_x = mtarget.x;
+                        monster->target_y = mtarget.y;
                     }
                     DEBUG_ENERGY_USE("monster_attack()");
                 }
@@ -6890,8 +6894,8 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     const int targ_x = monster->x + count_x;
     const int targ_y = monster->y + count_y;
 
-    // Bounds check - don't consider moving out of grid!
-    if (!inside_level_bounds(targ_x, targ_y))
+    // Bounds check: don't consider moving out of grid!
+    if (!in_bounds(targ_x, targ_y))
         return (false);
 
     // Non-friendly and non-good neutral monsters won't enter sanctuaries.
@@ -7192,8 +7196,8 @@ static bool _monster_move(monsters *monster)
              const int targ_x = monster->x + count_x - 1;
              const int targ_y = monster->y + count_y - 1;
 
-             // Bounds check - don't consider moving out of grid!
-             if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
+             // Bounds check: don't consider moving out of grid!
+             if (!in_bounds(targ_x, targ_y))
              {
                  good_move[count_x][count_y] = false;
                  continue;

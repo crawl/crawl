@@ -2778,8 +2778,9 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         {
             mon->behaviour = BEH_WANDER;
             mon->foe = MHITNOT;
-            mon->target_x = 10 + random2( GXM - 10 );
-            mon->target_y = 10 + random2( GYM - 10 );
+            const coord_def mtarget = random_in_bounds();
+            mon->target_x = mtarget.x;
+            mon->target_y = mtarget.y;
         }
         else
         {
@@ -2808,9 +2809,20 @@ static void _catchup_monster_moves(monsters *mon, int turns)
                 }
                 else
                 {
-                    // Randomize the target so we have a direction to flee.
-                    mon->target_x += (random2(3) - 1);
-                    mon->target_y += (random2(3) - 1);
+                    int mshift_x = random2(3) - 1;
+                    int mshift_y = random2(3) - 1;
+
+                    // Bounds check: don't let fleeing monsters try to
+                    // run off the grid.
+                    if (!in_bounds_x(mon->target_x + mshift_x))
+                        mshift_x = 0;
+                    if (!in_bounds_y(mon->target_y + mshift_y))
+                        mshift_y = 0;
+
+                    // Randomise the target so we have a direction to
+                    // flee.
+                    mon->target_x += mshift_x;
+                    mon->target_y += mshift_y;
                 }
             }
 
@@ -2839,10 +2851,11 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         if (mons_is_fleeing(mon))
             inc *= -1;
 
-        if (pos.x + inc.x < 0 || pos.x + inc.x >= GXM)
+        // Bounds check: don't let shifting monsters try to run off the
+        // grid.
+        if (!in_bounds_x(pos.x + inc.x))
             inc.x = 0;
-
-        if (pos.y + inc.y < 0 || pos.y + inc.y >= GYM)
+        if (!in_bounds_y(pos.y + inc.y))
             inc.y = 0;
 
         if (inc.origin())
