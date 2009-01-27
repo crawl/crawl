@@ -879,7 +879,7 @@ int get_mons_colour(const monsters *mons)
 
 static void _good_god_follower_attitude_change(monsters *monster)
 {
-    if (player_is_unholy())
+    if (player_is_unholy() || crawl_state.arena)
         return;
 
     // For followers of good gods, decide whether holy beings will be
