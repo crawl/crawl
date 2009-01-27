@@ -796,7 +796,9 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (idonly)
         return;
 
-    if (!_spell_is_utility_spell(spell))
+    // If you are casting while a god is acting, then don't do conducts.
+    // (Presumably Xom is forcing you to cast a spell.)
+    if (!_spell_is_utility_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell));
 
     if (spell_typematch(spell, SPTYP_HOLY))
@@ -804,15 +806,20 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
 
     // Self-banishment gets a special exemption - you're there to spread
     // light.
-    if (_spell_is_unholy(spell) && !you.banished)
+    if (_spell_is_unholy(spell)
+        && !you.banished
+        && !crawl_state.is_god_acting())
+    {
         did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
+    }
 
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start -- bwr
     if (spell_typematch(spell, SPTYP_FIRE))
         expose_player_to_element(BEAM_FIRE, 0);
 
-    if (spell_typematch(spell, SPTYP_NECROMANCY))
+    if (spell_typematch(spell, SPTYP_NECROMANCY)
+        && !crawl_state.is_god_acting())
     {
         did_god_conduct(DID_NECROMANCY, 10 + spell_difficulty(spell));
 
