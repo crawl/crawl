@@ -1746,6 +1746,9 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_POLYMORPH_OTHER:
         beam.flavour  = BEAM_POLYMORPH;
         beam.is_beam  = true;
+        // Be careful with this one.
+        // Having allies mutate you is infuriating.
+        beam.foe_ratio = 1000;
         break;
 
     case SPELL_VENOM_BOLT:
