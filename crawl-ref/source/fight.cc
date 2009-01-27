@@ -3660,20 +3660,17 @@ int melee_attack::player_unarmed_speed()
 {
     int unarmed_delay = 10;
 
+    // Not even bats can attack faster than this.
     min_delay = 5;
 
     // Unarmed speed.
     if (you.burden_state == BS_UNENCUMBERED
         && one_chance_in(heavy_armour_penalty + 1))
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-            unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 3;
-        else
-            unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 5;
-
-        // This shouldn't happen anyway... sanity.
-        if (unarmed_delay < min_delay)
-            unarmed_delay = min_delay;
+        const bool is_bat = (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+        unarmed_delay =
+            std::max(10 - you.skills[SK_UNARMED_COMBAT] / (is_bat ? 3 : 5),
+                     min_delay);
     }
 
     return (unarmed_delay);
