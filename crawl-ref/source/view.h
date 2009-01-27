@@ -150,6 +150,9 @@ const feature_def &get_feature_def(dungeon_feature_type feat);
 
 void set_envmap_obj( const coord_def& where, int object );
 unsigned get_envmap_char(int x, int y);
+inline unsigned get_envmap_char(const coord_def& c) {
+    return get_envmap_char(c.x, c.y);
+}
 bool inside_level_bounds(int x, int y);
 bool inside_level_bounds(const coord_def &p);
 int get_envmap_obj(int x, int y);

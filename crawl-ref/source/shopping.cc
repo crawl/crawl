@@ -1801,7 +1801,7 @@ std::string shop_name(const coord_def& where)
         return ("Buggy Shop");
     }
 
-    int shop_type = cshop->type;
+    const shop_type type = cshop->type;
 
     unsigned long seed = static_cast<unsigned long>( cshop->keeper_name[0] )
         | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 8)
@@ -1809,27 +1809,28 @@ std::string shop_name(const coord_def& where)
 
     std::string sh_name = apostrophise(make_name(seed, false)) + " ";
 
-    if (shop_type == SHOP_WEAPON_ANTIQUE || shop_type == SHOP_ARMOUR_ANTIQUE)
+    if (type == SHOP_WEAPON_ANTIQUE || type == SHOP_ARMOUR_ANTIQUE)
         sh_name += "Antique ";
 
     sh_name +=
-        (shop_type == SHOP_WEAPON
-         || shop_type == SHOP_WEAPON_ANTIQUE) ? "Weapon" :
-        (shop_type == SHOP_ARMOUR
-         || shop_type == SHOP_ARMOUR_ANTIQUE) ? "Armour" :
+        (type == SHOP_WEAPON
+         || type == SHOP_WEAPON_ANTIQUE) ? "Weapon" :
+        (type == SHOP_ARMOUR
+         || type == SHOP_ARMOUR_ANTIQUE) ? "Armour" :
 
-        (shop_type == SHOP_JEWELLERY)         ? "Jewellery" :
-        (shop_type == SHOP_WAND)              ? "Magical Wand" :
-        (shop_type == SHOP_BOOK)              ? "Book" :
-        (shop_type == SHOP_FOOD)              ? "Food" :
-        (shop_type == SHOP_SCROLL)            ? "Magic Scroll" :
-        (shop_type == SHOP_GENERAL_ANTIQUE)   ? "Assorted Antiques" :
-        (shop_type == SHOP_DISTILLERY)        ? "Distillery" :
-        (shop_type == SHOP_GENERAL)           ? "General Store"
-                                              : "Bug";
+        (type == SHOP_JEWELLERY)         ? "Jewellery" :
+        (type == SHOP_WAND)              ? "Magical Wand" :
+        (type == SHOP_BOOK)              ? "Book" :
+        (type == SHOP_FOOD)              ? "Food" :
+        (type == SHOP_SCROLL)            ? "Magic Scroll" :
+        (type == SHOP_GENERAL_ANTIQUE)   ? "Assorted Antiques" :
+        (type == SHOP_DISTILLERY)        ? "Distillery" :
+        (type == SHOP_GENERAL)           ? "General Store"
+                                         : "Bug";
 
-    if (shop_type != SHOP_GENERAL
-        && shop_type != SHOP_GENERAL_ANTIQUE && shop_type != SHOP_DISTILLERY)
+    if (type != SHOP_GENERAL
+        && type != SHOP_GENERAL_ANTIQUE
+        && type != SHOP_DISTILLERY)
     {
         const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
         const int temp = (where.x + where.y) % 4;
@@ -1842,6 +1843,5 @@ std::string shop_name(const coord_def& where)
 
 bool is_shop_item(const item_def &item)
 {
-    return (item.pos.x == 0 && item.pos.y >= 5
-            && item.pos.y < (MAX_SHOPS + 5));
+    return (item.pos.x == 0 && item.pos.y >= 5 && item.pos.y < (MAX_SHOPS + 5));
 }
