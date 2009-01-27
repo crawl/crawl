@@ -1113,8 +1113,10 @@ void bleed_onto_floor(const coord_def& where, int montype,
                       int damage, bool spatter, bool smell_alert)
 {
     ASSERT(in_bounds(where));
+
     if (montype == -1 && !you.can_bleed())
         return;
+
     if (montype != -1)
     {
         monsters m;
@@ -1166,6 +1168,7 @@ void generate_random_blood_spatter_on_level()
 
     int min_prob = 1;
     int max_prob = 4;
+
     if (max_cluster < 10)
         max_prob--;
     else if (max_cluster > 12)
@@ -1178,6 +1181,7 @@ void generate_random_blood_spatter_on_level()
 
         if (allow_bleeding_on_square(c))
             env.map(c).property |= FPROP_BLOODY;
+
         _spatter_neighbours(c, startprob);
     }
 }
