@@ -5700,7 +5700,7 @@ void crawl_view_geometry::shift_player_to(const coord_def &c)
     last_player_pos = c;
 
     set_player_at(c);
-    
+
     ASSERT(crawl_view.vgrdc == offset + c);
     ASSERT(last_player_pos == c);
 }

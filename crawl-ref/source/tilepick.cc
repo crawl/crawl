@@ -3995,7 +3995,6 @@ void tile_init_flavour(const coord_def &gc)
         env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
     }
 
-    
     if (grd(gc) == DNGN_CLOSED_DOOR || grd(gc) == DNGN_OPEN_DOOR)
     {
         // Check for horizontal gates.

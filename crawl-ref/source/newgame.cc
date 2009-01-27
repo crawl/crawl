@@ -1093,7 +1093,7 @@ static void _apply_job_colour(item_def &item)
 {
     if (!Options.classic_item_colours)
         return;
-    
+
     if (item.base_type != OBJ_ARMOUR)
         return;
 

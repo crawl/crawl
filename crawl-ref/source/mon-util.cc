@@ -7643,7 +7643,7 @@ void monsters::apply_location_effects(const coord_def &oldpos)
             prop &= ~FPROP_BLOODY;
             if (see_grid(pos()) && !visible_to(&you))
             {
-               std::string desc = 
+               std::string desc =
                    feature_description(pos(), false, DESC_NOCAP_THE, false);
                mprf("The bloodstain on %s disappears!", desc.c_str());
             }
