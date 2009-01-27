@@ -77,7 +77,10 @@ static bool _player_hurt_monster(monsters& m, int damage)
     {
         m.hurt(&you, damage);
         if (m.alive())
+        {
             print_wounds(&m);
+            behaviour_event(&m, ME_WHACK, MHITYOU);
+        }
     }
 
     return (!m.alive());
