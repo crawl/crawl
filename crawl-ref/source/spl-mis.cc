@@ -1133,7 +1133,7 @@ void MiscastEffect::_translocation(int severity)
         case 3:
         case 4:
             you_msg        = "Space warps around you!";
-            mon_msg_seen   = "Space warps around @the_monster!";
+            mon_msg_seen   = "Space warps around @the_monster@!";
             mon_msg_unseen = "A piece of empty space twists and writhes.";
             if (_ouch(5 + random2avg(9, 2)) && target->alive())
             {
