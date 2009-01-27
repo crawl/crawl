@@ -1171,11 +1171,9 @@ void generate_random_blood_spatter_on_level()
     else if (max_cluster > 12)
         min_prob++;
 
-    for (int i = 0; i < max_cluster; i++)
+    for (int i = 0; i < max_cluster; ++i)
     {
-        coord_def c;
-        c.x = 10 + random2(GXM - 10);
-        c.y = 10 + random2(GYM - 10);
+        coord_def c = random_in_bounds();
         startprob = min_prob + random2(max_prob);
 
         if (allow_bleeding_on_square(c))
