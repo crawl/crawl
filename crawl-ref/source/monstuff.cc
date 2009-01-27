@@ -574,7 +574,7 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
 // your allies.
-static bool _ely_protects_ally(monsters *monster)
+static bool _ely_protect_ally(monsters *monster)
 {
     if (you.religion != GOD_ELYVILON)
         return (false);
@@ -603,7 +603,7 @@ static bool _ely_protects_ally(monsters *monster)
 
 // Elyvilon retribution effect: Heal hostile monsters that were about to
 // be killed by you or one of your friends.
-static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
+static bool _ely_heal_monster(monsters *monster, killer_type killer, int i)
 {
     if (you.religion == GOD_ELYVILON)
         return (false);
@@ -654,7 +654,7 @@ static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
     return (true);
 }
 
-static bool _yred_enslaves_soul(monsters *monster, killer_type killer)
+static bool _yred_enslave_soul(monsters *monster, killer_type killer)
 {
     if (you.religion == GOD_YREDELEMNUL && mons_enslaved_body_and_soul(monster)
         && mons_near(monster) && killer != KILL_RESET
@@ -667,27 +667,9 @@ static bool _yred_enslaves_soul(monsters *monster, killer_type killer)
     return (false);
 }
 
-static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
+static bool _beogh_forcibly_convert_orc(monsters *monster, killer_type killer,
+                                        int i)
 {
-    if (monster->hit_points < -25
-        || monster->hit_points < -monster->max_hit_points
-        || monster->max_hit_points <= 0
-        || monster->hit_dice < 1)
-    {
-        return (false);
-    }
-
-    // Elyvilon specials.
-    if (_ely_protects_ally(monster))
-        return (true);
-    if (_ely_heals_monster(monster, killer, i))
-        return (true);
-
-    // Yredelemnul special.
-    if (_yred_enslaves_soul(monster, killer))
-        return (true);
-
-    // Beogh special.
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
         && !mons_is_summoned(monster) && !mons_is_shapeshifter(monster)
@@ -728,6 +710,33 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
             }
         }
     }
+
+    return (false);
+}
+
+static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
+{
+    if (monster->hit_points < -25
+        || monster->hit_points < -monster->max_hit_points
+        || monster->max_hit_points <= 0
+        || monster->hit_dice < 1)
+    {
+        return (false);
+    }
+
+    // Elyvilon specials.
+    if (_ely_protect_ally(monster))
+        return (true);
+    if (_ely_heal_monster(monster, killer, i))
+        return (true);
+
+    // Yredelemnul special.
+    if (_yred_enslave_soul(monster, killer))
+        return (true);
+
+    // Beogh special.
+    if (_beogh_forcibly_convert_orc(monster, killer, i))
+        return (true);
 
     return (false);
 }
@@ -7776,7 +7785,7 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
 
             // Yredelemnul special, redux: It's the only one that can
             // work on drowned monsters.
-            if (!_yred_enslaves_soul(monster, killer))
+            if (!_yred_enslave_soul(monster, killer))
                 monster_die(monster, killer, killnum, true);
         }
     }
