@@ -576,6 +576,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mitm[islot].special   = 0;
             mitm[islot].flags     = 0;
             mitm[islot].quantity  = 1;
+            item_colour(mitm[islot]);
 
             set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
             move_item_to_grid( &islot, you.pos() );
