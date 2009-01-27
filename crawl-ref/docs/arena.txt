@@ -93,7 +93,8 @@ There are four arena parameters that you can set in your crawl options file:
       then diagnostic messages will be dumped as well as other messages.
       Defaults to false.
 
-* arena_list_eq: (?) Defaults to false.
+* arena_list_eq:  Dump to the file arena.result the equipment of the
+      monsters placed at the begining of each round.
 
 
 The are also a number a parameters you can use by putting them in the
@@ -155,3 +156,6 @@ The parameters include:
 
 * "delay:N" allows the delay between turns to be specified on the command
       line instead of in the options file.
+
+* miscasts: Every turn each monster (besides test spawners) will have a
+      random miscast happen to it.
