@@ -7988,8 +7988,9 @@ static bool _mon_can_move_to_pos(const monsters *monster,
                                  const coord_def& delta, bool just_check)
 {
     const coord_def targ = monster->pos() + delta;
+
     // Bounds check - don't consider moving out of grid!
-    if (!inside_level_bounds(targ))
+    if (!in_bounds(targ))
         return (false);
 
     // Non-friendly and non-good neutral monsters won't enter
