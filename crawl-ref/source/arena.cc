@@ -1036,9 +1036,15 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
 void arena_placed_monster(monsters *monster)
 {
     if (monster->attitude == ATT_FRIENDLY)
+    {
         arena::faction_a.active_members++;
+        arena::faction_b.won = false;
+    }
     else if (monster->attitude == ATT_HOSTILE)
+    {
         arena::faction_b.active_members++;
+        arena::faction_a.won = false;
+    }
 
     if (monster->type == MONS_TEST_SPAWNER)
     {
