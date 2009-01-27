@@ -5619,6 +5619,8 @@ void do_crash_dump()
     dump_crash_info(file);
     write_stack_trace(file, 0);
 
+    fprintf(file, EOL);
+
     if (Generating_Level)
     {
         fprintf(file, EOL "Crashed while generating level." EOL);
