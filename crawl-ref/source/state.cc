@@ -13,14 +13,18 @@ REVISION("$Rev$");
 
 #include "delay.h"
 #include "directn.h"
+#include "items.h"
 #include "macro.h"
 #include "menu.h" // For print_formatted_paragraph()
 #include "message.h"
+#include "monstuff.h"
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
 #include "religion.h"
+#include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
 #include "tutorial.h"
 #include "view.h"
 
@@ -431,11 +435,213 @@ void game_state::mon_gone(monsters* mon)
         dec_mon_acting(mon);
 }
 
+static std::string _coord_str(const coord_def &pos)
+{
+    return make_stringf("(%d, %d)%s", pos.x, pos.y,
+                        !in_bounds(pos) ? " <OoB>" : "");
+}
+
+static std::string _dump_mon_short(monsters* mon)
+{
+    const int midx = monster_index(mon);
+    if (invalid_monster_index(midx))
+        return make_stringf("Invalid monster index %d", midx);
+
+    std::string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
+    out += make_stringf("%s [midx = %d]", _coord_str(mon->pos()).c_str(),
+                        midx);
+
+    return (out);
+}
+
+static void _dump_mon_full(FILE* file, monsters* mon, bool recurse)
+{
+    const int midx = monster_index(mon);
+    if (invalid_monster_index(midx) || invalid_monster_class(mon->type))
+        return;
+
+    fprintf(file, "<<<<<<<<<" EOL);
+
+    fprintf(file, "Name: %s" EOL, mon->name(DESC_PLAIN, true).c_str());
+    fprintf(file, "Base name: %s" EOL,
+            mon->base_name(DESC_PLAIN, true).c_str());
+    fprintf(file, "Full name: %s" EOL EOL,
+            mon->full_name(DESC_PLAIN, true).c_str());
+
+    if (in_bounds(mon->pos()))
+    {
+        std::string feat = 
+            raw_feature_description(grd(mon->pos()), NUM_TRAPS, true);
+        fprintf(file, "On/in/over feature: %s" EOL EOL, feat.c_str());
+    }
+
+    fprintf(file, "Foe: ");
+    if (mon->foe == MHITNOT)
+        fprintf(file, "none");
+    else if (mon->foe == MHITYOU)
+        fprintf(file, "player");
+    else if (invalid_monster_index(mon->foe))
+        fprintf(file, "invalid monster index %d", mon->foe);
+    else if (mon->foe == midx)
+        fprintf(file, "self");
+    else
+        fprintf(file, "%s", _dump_mon_short(&menv[mon->foe]).c_str());
+
+    fprintf(file, EOL);
+
+    fprintf(file, "Target: ");
+    if (mon->target.origin())
+        fprintf(file, "none" EOL);
+    else
+        fprintf(file, "%s" EOL, _coord_str(mon->target).c_str());
+
+    int target = MHITNOT;
+    fprintf(file, "At target: ");
+    if (mon->target.origin())
+        fprintf(file, "N/A");
+    else if (mon->target == you.pos())
+    {
+        fprintf(file, "player");
+        target = MHITYOU;
+    }
+    else if (mon->target == mon->pos())
+    {
+        fprintf(file, "self");
+        target = midx;
+    }
+    else if (in_bounds(mon->target))
+    {
+       target = mgrd(mon->target);
+
+       if (target == NON_MONSTER)
+           fprintf(file, "nothing");
+       else if (target == midx)
+           fprintf(file, "improperly linked self");
+       else if (target == mon->foe)
+           fprintf(file, "same as foe");
+       else if (invalid_monster_index(target))
+           fprintf(file, "invalid monster index %d", target);
+       else
+           fprintf(file, "%s", _dump_mon_short(&menv[target]).c_str());
+    }
+    else
+        fprintf(file, "<OoB>");
+
+    fprintf(file, EOL);
+
+    if (mon->is_patrolling())
+        fprintf(file, "Patrolling: %s" EOL EOL,
+                _coord_str(mon->patrol_point).c_str());
+
+    if (mon->travel_target != MTRAV_NONE)
+    {
+        fprintf(file, EOL "Travelling:" EOL);
+        fprintf(file, "    travel_target      = %d" EOL, mon->travel_target);
+        fprintf(file, "    travel_path.size() = %lu" EOL,
+                (long unsigned int) mon->travel_path.size());
+        if (mon->travel_path.size() > 0)
+        {
+            fprintf(file, "    next travel step: %s" EOL,
+                    _coord_str(mon->travel_path.back()).c_str());
+            fprintf(file, "    last travel step: %s" EOL,
+                    _coord_str(mon->travel_path.front()).c_str());
+        }
+    }
+    fprintf(file, EOL);
+
+    fprintf(file, "Inventory:" EOL);
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int idx = mon->inv[i];
+
+        if (idx == NON_ITEM)
+            continue;
+
+        fprintf(file, "    slot #%d: ", i);
+
+        if (idx < 0 || idx > MAX_ITEMS)
+        {
+            fprintf(file, "invalid item index %d" EOL, idx);
+            continue;
+        }
+        const item_def &item(mitm[idx]);
+
+        if (!is_valid_item(item))
+        {
+            fprintf(file, "invalid item" EOL);
+            continue;
+        }
+
+        fprintf(file, "%s", item.name(DESC_PLAIN, false, true).c_str());
+
+        if (!held_by_monster(item))
+            fprintf(file, " [not held by monster, pos = %s]",
+                    _coord_str(item.pos).c_str());
+        else if (holding_monster(item) != mon)
+            fprintf(file, " [held by other monster: %s]",
+                    _dump_mon_short(holding_monster(item)).c_str());
+
+        fprintf(file, EOL);
+    }
+    fprintf(file, EOL);
+
+    if (mons_class_flag(mon->type, M_SPELLCASTER))
+    {
+        fprintf(file, "Spells:" EOL);
+
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        {
+            spell_type spell = mon->spells[i];
+
+            if (spell == SPELL_NO_SPELL)
+                continue;
+
+            fprintf(file, "    slot #%d: ", i);
+            if (!is_valid_spell(spell))
+                fprintf(file, "Invalid spell #%d" EOL, (int) spell);
+            else
+                fprintf(file, "%s" EOL, spell_title(spell));
+        }
+        fprintf(file, EOL);
+    }
+
+    fprintf(file, "attitude: %d, behaviour: %d, number: %d, flags: 0x%lx" EOL,
+            mon->attitude, mon->behaviour, mon->number, mon->flags);
+
+    fprintf(file, "colour: %d, foe_memory: %d, shield_blocks:%d, "
+                  "experience: %lu" EOL,
+            mon->colour, mon->foe_memory, mon->shield_blocks,
+            mon->experience);
+
+    fprintf(file, "god: %s, seen_context: %s" EOL,
+            god_name(mon->god).c_str(), mon->seen_context.c_str());
+
+    fprintf(file, ">>>>>>>>>" EOL EOL);
+
+    if (!recurse)
+        return;
+
+    if (!invalid_monster_index(mon->foe) && mon->foe != midx
+        && !invalid_monster_class(menv[mon->foe].type))
+    {
+        fprintf(file, "Foe:" EOL);
+        _dump_mon_full(file, &menv[mon->foe], false);
+    }
+
+    if (!invalid_monster_index(target) && target != midx
+        && target != mon->foe
+        && !invalid_monster_class(menv[target].type))
+    {
+        fprintf(file, "Target:" EOL);
+        _dump_mon_full(file, &menv[target], false);
+    }
+}
+
 void game_state::dump(FILE* file)
 {
     fprintf(file, EOL "Game state:" EOL EOL);
 
-    fprintf(file, "mouse_enabled: %d, waiting_for_command: %d "
+    fprintf(file, "mouse_enabled: %d, waiting_for_command: %d, "
                   "terminal_resized: %d" EOL,
             mouse_enabled, waiting_for_command, terminal_resized);
     fprintf(file, "io_inited: %d, need_save: %d, saving_game: %d, "
@@ -485,8 +691,10 @@ void game_state::dump(FILE* file)
         fprintf(file, "As ASCII keys: ");
         for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
             fprintf(file, "%c", (char) repeat_cmd_keys[i]);
-        fprintf(file, EOL EOL);
+        fprintf(file, EOL);
     }
+
+    fprintf(file, EOL);
 
     if (god_act.which_god != GOD_NO_GOD || god_act.depth != 0)
     {
@@ -501,20 +709,21 @@ void game_state::dump(FILE* file)
             fprintf(file, "God %s with depth %d" EOL,
                     god_name(god_act_stack[i].which_god).c_str(),
                     god_act_stack[i].depth);
-        fprintf(file, EOL);
+        fprintf(file, EOL EOL);
     }
 
     if (mon_act != NULL)
     {
-        fprintf(file, "Monster '%s' currently acting" EOL EOL,
-                mon_act->name(DESC_PLAIN, true).c_str());
+        fprintf(file, "%s currently acting:" EOL EOL,
+                _dump_mon_short(mon_act).c_str());
+        _dump_mon_full(file, mon_act, true);
     }
 
     if (mon_act_stack.size() != 0)
     {
         fprintf(file, "Others monsters acting:" EOL);
         for (unsigned int i = 0; i < mon_act_stack.size(); i++)
-            fprintf(file, "Monster '%s'" EOL,
-                    mon_act_stack[i]->name(DESC_PLAIN, true).c_str());
+            fprintf(file, "    %s" EOL,
+                    _dump_mon_short(mon_act_stack[i]).c_str());
     }
 }
