@@ -1799,6 +1799,9 @@ static bool _jelly_divide(monsters *parent)
             mpr("You hear a squelching noise.", MSGCH_SOUND);
     }
 
+    if (crawl_state.arena)
+        arena_placed_monster(child);
+
     return (true);
 }                               // end jelly_divide()
 
