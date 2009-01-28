@@ -4232,7 +4232,7 @@ static bool _holy_beings_on_level_attitude_change()
             // neutral and hostile holy beings good neutral.
             if (is_good_god(you.religion) && !mons_wont_attack(monster))
             {
-                if (!testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
+                if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
                 {
                     monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
