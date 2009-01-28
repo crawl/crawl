@@ -5654,7 +5654,7 @@ void do_crash_dump()
 
     // Dumping the crawl state is next least likely to cause another crash,
     // so do that next.
-    crawl_state.dump(file);
+    crawl_state.dump();
 
     // Dump current messages.
     if (file != stderr)
@@ -5680,6 +5680,209 @@ void do_crash_dump()
     if (file != stderr)
         fclose(file);
 }
+
+std::string debug_coord_str(const coord_def &pos)
+{
+    return make_stringf("(%d, %d)%s", pos.x, pos.y,
+                        !in_bounds(pos) ? " <OoB>" : "");
+}
+
+std::string debug_mon_str(const monsters* mon)
+{
+    const int midx = monster_index(mon);
+    if (invalid_monster_index(midx))
+        return make_stringf("Invalid monster index %d", midx);
+
+    std::string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
+    out += make_stringf("%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
+                        midx);
+
+    return (out);
+}
+
+void debug_dump_mon(const monsters* mon, bool recurse)
+{
+    const int midx = monster_index(mon);
+    if (invalid_monster_index(midx) || invalid_monster_class(mon->type))
+        return;
+
+    fprintf(stderr, "<<<<<<<<<" EOL);
+
+    fprintf(stderr, "Name: %s" EOL, mon->name(DESC_PLAIN, true).c_str());
+    fprintf(stderr, "Base name: %s" EOL,
+            mon->base_name(DESC_PLAIN, true).c_str());
+    fprintf(stderr, "Full name: %s" EOL EOL,
+            mon->full_name(DESC_PLAIN, true).c_str());
+
+    if (in_bounds(mon->pos()))
+    {
+        std::string feat = 
+            raw_feature_description(grd(mon->pos()), NUM_TRAPS, true);
+        fprintf(stderr, "On/in/over feature: %s" EOL EOL, feat.c_str());
+    }
+
+    fprintf(stderr, "Foe: ");
+    if (mon->foe == MHITNOT)
+        fprintf(stderr, "none");
+    else if (mon->foe == MHITYOU)
+        fprintf(stderr, "player");
+    else if (invalid_monster_index(mon->foe))
+        fprintf(stderr, "invalid monster index %d", mon->foe);
+    else if (mon->foe == midx)
+        fprintf(stderr, "self");
+    else
+        fprintf(stderr, "%s", debug_mon_str(&menv[mon->foe]).c_str());
+
+    fprintf(stderr, EOL);
+
+    fprintf(stderr, "Target: ");
+    if (mon->target.origin())
+        fprintf(stderr, "none" EOL);
+    else
+        fprintf(stderr, "%s" EOL, debug_coord_str(mon->target).c_str());
+
+    int target = MHITNOT;
+    fprintf(stderr, "At target: ");
+    if (mon->target.origin())
+        fprintf(stderr, "N/A");
+    else if (mon->target == you.pos())
+    {
+        fprintf(stderr, "player");
+        target = MHITYOU;
+    }
+    else if (mon->target == mon->pos())
+    {
+        fprintf(stderr, "self");
+        target = midx;
+    }
+    else if (in_bounds(mon->target))
+    {
+       target = mgrd(mon->target);
+
+       if (target == NON_MONSTER)
+           fprintf(stderr, "nothing");
+       else if (target == midx)
+           fprintf(stderr, "improperly linked self");
+       else if (target == mon->foe)
+           fprintf(stderr, "same as foe");
+       else if (invalid_monster_index(target))
+           fprintf(stderr, "invalid monster index %d", target);
+       else
+           fprintf(stderr, "%s", debug_mon_str(&menv[target]).c_str());
+    }
+    else
+        fprintf(stderr, "<OoB>");
+
+    fprintf(stderr, EOL);
+
+    if (mon->is_patrolling())
+        fprintf(stderr, "Patrolling: %s" EOL EOL,
+                debug_coord_str(mon->patrol_point).c_str());
+
+    if (mon->travel_target != MTRAV_NONE)
+    {
+        fprintf(stderr, EOL "Travelling:" EOL);
+        fprintf(stderr, "    travel_target      = %d" EOL, mon->travel_target);
+        fprintf(stderr, "    travel_path.size() = %lu" EOL,
+                (long unsigned int) mon->travel_path.size());
+        if (mon->travel_path.size() > 0)
+        {
+            fprintf(stderr, "    next travel step: %s" EOL,
+                    debug_coord_str(mon->travel_path.back()).c_str());
+            fprintf(stderr, "    last travel step: %s" EOL,
+                    debug_coord_str(mon->travel_path.front()).c_str());
+        }
+    }
+    fprintf(stderr, EOL);
+
+    fprintf(stderr, "Inventory:" EOL);
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int idx = mon->inv[i];
+
+        if (idx == NON_ITEM)
+            continue;
+
+        fprintf(stderr, "    slot #%d: ", i);
+
+        if (idx < 0 || idx > MAX_ITEMS)
+        {
+            fprintf(stderr, "invalid item index %d" EOL, idx);
+            continue;
+        }
+        const item_def &item(mitm[idx]);
+
+        if (!is_valid_item(item))
+        {
+            fprintf(stderr, "invalid item" EOL);
+            continue;
+        }
+
+        fprintf(stderr, "%s", item.name(DESC_PLAIN, false, true).c_str());
+
+        if (!held_by_monster(item))
+            fprintf(stderr, " [not held by monster, pos = %s]",
+                    debug_coord_str(item.pos).c_str());
+        else if (holding_monster(item) != mon)
+            fprintf(stderr, " [held by other monster: %s]",
+                    debug_mon_str(holding_monster(item)).c_str());
+
+        fprintf(stderr, EOL);
+    }
+    fprintf(stderr, EOL);
+
+    if (mons_class_flag(mon->type, M_SPELLCASTER))
+    {
+        fprintf(stderr, "Spells:" EOL);
+
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        {
+            spell_type spell = mon->spells[i];
+
+            if (spell == SPELL_NO_SPELL)
+                continue;
+
+            fprintf(stderr, "    slot #%d: ", i);
+            if (!is_valid_spell(spell))
+                fprintf(stderr, "Invalid spell #%d" EOL, (int) spell);
+            else
+                fprintf(stderr, "%s" EOL, spell_title(spell));
+        }
+        fprintf(stderr, EOL);
+    }
+
+    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%lx" EOL,
+            mon->attitude, mon->behaviour, mon->number, mon->flags);
+
+    fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "
+                  "experience: %lu" EOL,
+            mon->colour, mon->foe_memory, mon->shield_blocks,
+            mon->experience);
+
+    fprintf(stderr, "god: %s, seen_context: %s" EOL,
+            god_name(mon->god).c_str(), mon->seen_context.c_str());
+
+    fprintf(stderr, ">>>>>>>>>" EOL EOL);
+
+    if (!recurse)
+        return;
+
+    if (!invalid_monster_index(mon->foe) && mon->foe != midx
+        && !invalid_monster_class(menv[mon->foe].type))
+    {
+        fprintf(stderr, "Foe:" EOL);
+        debug_dump_mon(&menv[mon->foe], false);
+    }
+
+    if (!invalid_monster_index(target) && target != midx
+        && target != mon->foe
+        && !invalid_monster_class(menv[target].type))
+    {
+        fprintf(stderr, "Target:" EOL);
+        debug_dump_mon(&menv[target], false);
+    }
+}
+
 
 #ifdef DEBUG_DIAGNOSTICS
 

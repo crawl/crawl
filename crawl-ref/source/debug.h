@@ -145,4 +145,9 @@ bool get_item_by_name(item_def *item, char* specs,
                       bool create_for_real = false);
 
 void do_crash_dump();
+
+std::string debug_coord_str(const coord_def &pos);
+std::string debug_mon_str(const monsters* mon);
+void        debug_dump_mon(const monsters* mon, bool recurse);
+
 #endif

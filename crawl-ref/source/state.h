@@ -11,7 +11,6 @@
 
 #include "enum.h"
 #include <vector>
-#include <stdio.h>
 
 class monsters;
 class mon_acting;
@@ -133,7 +132,7 @@ public:
     void      clear_mon_acting();
     void      mon_gone(monsters* mon);
 
-    void dump(FILE* file);
+    void dump();
 
     friend class mon_acting;
 };
