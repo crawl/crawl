@@ -844,6 +844,10 @@ VISUAL:@The_monster@ flies around in tight circles.
 
 @The_monster@ hisses menacingly.
 %%%%
+'j'
+
+VISUAL:@The_monster@ briefly extends @possessive@ eye-stalks.
+%%%%
 'r'
 
 VISUAL:@The_monster@ twitches @possessive@ whiskers.
@@ -2718,6 +2722,10 @@ VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
 @The_monster@ says @to_foe@, "Come and play with me!"
 ## END Killer Klown ##
+%%%%
+moth of wrath
+
+VISUAL:@The_monster@ angrily waves @possessive@ antennae.
 %%%%
 # The moth of wrath doesn't buzz like the other 'y' monsters, what
 # with it being a moth.

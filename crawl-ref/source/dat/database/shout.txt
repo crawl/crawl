@@ -275,6 +275,10 @@ Wanderer player ghost
 
 @The_monster@ turns @possessive@ gaze towards you.
 %%%%
+'j'
+
+@The_monster@ swivels @possessive@ eye-stalks towards you.
+%%%%
 'cap-J'
 
 @The_monster@ quivers.
@@ -286,7 +290,7 @@ Wanderer player ghost
 # other 'G' monsters.
 giant spore
 
-__NONE
+@The_monster@ waves @possessive@ rhizomes.
 %%%%
 # Shadow imps and white imps copy imps.
 imp
@@ -295,6 +299,10 @@ imp
 @__SHOUT@
 
 @The_monster@ @says@, "@imp_taunt@"
+%%%%
+moth of wrath
+
+@The_monster@'s fur bristles in rage as it notices you.
 %%%%
 shadow imp
 
