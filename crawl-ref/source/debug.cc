@@ -59,6 +59,7 @@ REVISION("$Rev$");
 
 #include "makeitem.h"
 #include "mapdef.h"
+#include "mapmark.h"
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
@@ -5587,6 +5588,7 @@ static void _dump_level_info(FILE* file)
     }
 }
 
+
 static void _dump_player(FILE *file)
 {
     // Only dump player info during arena mode if the player is likely
@@ -5843,6 +5845,146 @@ static void _dump_player(FILE *file)
     fprintf(file, "}}}}}}}}}}}" EOL EOL);
 }
 
+static void _debug_marker_scan()
+{
+    std::vector<map_marker*> markers = env.markers.get_all();
+
+    for (unsigned int i = 0; i < markers.size(); i++)
+    {
+        map_marker* marker = markers[i];
+
+        if (marker == NULL)
+        {
+            mprf(MSGCH_ERROR, "Marker #%d is NULL", i);
+            continue;
+        }
+
+        map_marker_type type = marker->get_type();
+
+        if (type < MAT_FEATURE || type >= NUM_MAP_MARKER_TYPES)
+            mprf(MSGCH_ERROR, "Makrer #%d at (%d, %d) has invalid type %d",
+                 i, marker->pos.x, marker->pos.y, (int) type);
+
+        if (!in_bounds(marker->pos))
+        {
+            mprf(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) out of bounds",
+                 i, (int) type, marker->pos.x, marker->pos.y);
+            continue;
+        }
+
+        bool found = false;
+        std::vector<map_marker*> at_pos
+            = env.markers.get_markers_at(marker->pos);
+
+        for (unsigned int j = 0; j < at_pos.size(); j++)
+        {
+            map_marker* tmp = at_pos[i];
+
+            if (tmp == NULL)
+                continue;
+
+            if (tmp == marker)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            mprf(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) unlinked",
+                 i, (int) type, marker->pos.x, marker->pos.y);
+    }
+
+    for (int x = MAPGEN_BORDER; x < (GXM - MAPGEN_BORDER - 1); x++)
+        for (int y = MAPGEN_BORDER; y < (GYM - MAPGEN_BORDER - 1); y++)
+        {
+            coord_def pos(x, y);
+
+            std::vector<map_marker*> at_pos
+                = env.markers.get_markers_at(pos);
+
+            for (unsigned int i = 0; i < at_pos.size(); i++)
+            {
+                map_marker *marker = at_pos[i];
+
+                if (marker == NULL)
+                {
+                    mprf(MSGCH_ERROR, "Marker #%d at (%d, %d) NULL",
+                         i, x, y);
+                    continue;
+                }
+                if (marker->pos != pos)
+                {
+                    mprf(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) "
+                                      "thinks it's at (%d, %d)",
+                         i, (int) marker->get_type(), x, y,
+                         marker->pos.x, marker->pos.y);
+                    if (!in_bounds(marker->pos))
+                        mpr("Further, it thinks it's out of bounds.",
+                            MSGCH_ERROR);
+                }
+            }
+        }
+} // _debug_marker_scan()
+
+static void _debug_dump_markers()
+{
+    std::vector<map_marker*> markers = env.markers.get_all();
+
+    for (unsigned int i = 0; i < markers.size(); i++)
+    {
+        map_marker* marker = markers[i];
+
+        if (marker == NULL || marker->get_type() == MAT_LUA_MARKER)
+            continue;
+
+        mprf(MSGCH_DIAGNOSTICS, "Marker %d at (%d, %d): %s",
+             i, marker->pos.x, marker->pos.y,
+             marker->debug_describe().c_str());
+    }
+} // _debug_dump_markers()
+
+static void _debug_dump_lua_markers()
+{
+    std::vector<map_marker*> markers = env.markers.get_all();
+
+    for (unsigned int i = 0; i < markers.size(); i++)
+    {
+        map_marker* marker = markers[i];
+
+        if (marker == NULL || marker->get_type() != MAT_LUA_MARKER)
+            continue;
+
+        map_lua_marker* lua_marker = dynamic_cast<map_lua_marker*>(marker);
+
+        std::string result = lua_marker->debug_to_string();
+
+        if (result.size() > 0 && result[result.size() - 1] == '\n')
+            result = result.substr(0, result.size() - 1);
+
+        mprf(MSGCH_DIAGNOSTICS, "Lua marker %d at (%d, %d):",
+             i, marker->pos.x, marker->pos.y);
+        mprf(MSGCH_DIAGNOSTICS, "{{{{");
+        mprf(MSGCH_DIAGNOSTICS, result.c_str());
+        mprf(MSGCH_DIAGNOSTICS, "}}}}");
+    }
+}
+
+static void _debug_dump_lua_persist()
+{
+    lua_stack_cleaner cln(dlua);
+
+    std::string result;
+    if (!dlua.callfn("persist_to_string", 0, 1))
+        result = make_stringf("error (persist_to_string): %s",
+                              dlua.error.c_str());
+    else if (lua_isstring(dlua, -1))
+        result = lua_tostring(dlua, -1);
+    else
+        result = "persist_to_string() returned nothing";
+
+    mprf(MSGCH_DIAGNOSTICS, "%s", result.c_str());
+}
+
 void do_crash_dump()
 {
     std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
@@ -5908,6 +6050,14 @@ void do_crash_dump()
     // generation info if the crash happened during level generation.
     _dump_level_info(file);
 
+    // Dumping information on marker inconsistancy is unlikely to crash,
+    // as is dumping the descriptions of non-Lua markers.
+    fprintf(file, "Markers:" EOL);
+    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+    _debug_marker_scan();
+    _debug_dump_markers();
+    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
+
     // Dumping current messages is unlikely to crash.
     if (file != stderr)
     {
@@ -5933,12 +6083,24 @@ void do_crash_dump()
 #endif
 
     // If anything has screwed up the Lua runtime stacks then trying to
-    // print those stacks will likely crash, so do this last.
+    // print those stacks will likely crash, so do this after the others.
     fprintf(file, "clua stack:" EOL);
     print_clua_stack();
 
     fprintf(file, "dlua stack:" EOL);
     print_dlua_stack();
+
+    // Lastly try to dump the Lua persistant data and the contents of the Lua
+    // markers, since actually running Lua code has the greatest chance of
+    // crashing.
+    fprintf(file, "Lua persistant data:" EOL);
+    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+    _debug_dump_lua_persist();
+    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL EOL);
+    fprintf(file, "Lua marker contents:" EOL);
+    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+    _debug_dump_lua_markers();
+    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
 
     set_msg_dump_file(NULL);
 

@@ -407,6 +407,25 @@ std::string map_lua_marker::property(const std::string &pname) const
     return (result);
 }
 
+std::string map_lua_marker::debug_to_string() const
+{
+    lua_stack_cleaner cln(dlua);
+
+    if (!get_table())
+        return ("Unable to get table for lua marker.");
+
+    if (!dlua.callfn("table_to_string", 1, 1))
+        return make_stringf("error (table_to_string): %s",
+                            dlua.error.c_str());
+
+    std::string result;
+    if (lua_isstring(dlua, -1))
+        result = lua_tostring(dlua, -1);
+    else
+        result = "table_to_string() returned nothing";
+    return (result);
+}
+
 map_marker *map_lua_marker::parse(
     const std::string &s, const std::string &ctx) throw (std::string)
 {

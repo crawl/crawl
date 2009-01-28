@@ -124,6 +124,8 @@ public:
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)
         throw (std::string);
+
+    std::string debug_to_string() const;
 private:
     bool initialised;
     std::auto_ptr<lua_datum> marker_table;

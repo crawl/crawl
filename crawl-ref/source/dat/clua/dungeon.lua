@@ -356,3 +356,8 @@ function portal_next(e, next)
     e.lua_marker(feat, portal_stair_dst(next))
   end
 end
+
+-- Turn persistant data into a human readable string
+function persist_to_string()
+    return table_to_string(dgn.persist)
+end
