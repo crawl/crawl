@@ -3,7 +3,7 @@
 -- Property markers.
 ------------------------------------------------------------------------------
 
-PropertiesDescriptor = { }
+PropertiesDescriptor = { CLASS = "PropertiesDescriptor" }
 PropertiesDescriptor.__index = PropertiesDescriptor
 
 function PropertiesDescriptor:new(properties)

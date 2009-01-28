@@ -4,6 +4,7 @@
 ------------------------------------------------------------------------------
 
 OneWayStair = util.subclass(PortalDescriptor)
+OneWayStair.CLASS = "OneWayStair"
 
 function OneWayStair:activate(marker)
   local ev = dgn.dgn_event_type('player_climb')

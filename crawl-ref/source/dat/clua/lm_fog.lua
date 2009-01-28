@@ -50,7 +50,7 @@
 --     are cleared when the player leaves a level.
 ------------------------------------------------------------------------------
 
-FogMachine = { }
+FogMachine = { CLASS = "FogMachine" }
 FogMachine.__index = FogMachine
 
 function FogMachine:_new()

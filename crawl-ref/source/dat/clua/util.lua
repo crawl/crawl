@@ -230,7 +230,7 @@ end
 
 ----------------------------------------------------------
 
-util.Timer = { }
+util.Timer = { CLASS = "Timer" }
 util.Timer.__index = util.Timer
 
 function util.Timer:new(pars)
@@ -259,6 +259,12 @@ function table_to_string(table, depth)
   local indent = string.rep(" ", depth * 4)
 
   local str = ""
+
+  local meta = getmetatable(table)
+
+  if meta and meta.CLASS then
+    str = str .. indent .. "CLASS: " .. meta.CLASS .. "\n"
+  end
 
   for key, value in pairs(table) do
     str = str .. indent .. key .. ": "

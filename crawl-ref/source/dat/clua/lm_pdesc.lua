@@ -3,7 +3,7 @@
 -- Portal descriptor markers.
 ------------------------------------------------------------------------------
 
-PortalDescriptor = { }
+PortalDescriptor = { CLASS = "PortalDescriptor" }
 PortalDescriptor.__index = PortalDescriptor
 
 function PortalDescriptor:new(properties)

@@ -6,6 +6,7 @@
 require("clua/lm_1way.lua")
 
 TollStair = util.subclass(OneWayStair)
+TollStair.CLASS = "TollStair"
 
 function TollStair:new(props)
   local toll = self.super.new(self, props)

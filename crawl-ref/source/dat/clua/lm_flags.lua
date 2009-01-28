@@ -55,7 +55,7 @@
 --         "the Orb of Zot" or "a golden rune of Zot").
 --------------------------------------------------------------------------
  
-ChangeFlags = { }
+ChangeFlags = { CLASS = "ChangeFlags" }
 ChangeFlags.__index = ChangeFlags
 
 function ChangeFlags:_new()

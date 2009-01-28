@@ -3,7 +3,7 @@
 -- Messaging for timed Lua markers.
 ------------------------------------------------------------------------------
 
-TimedMessaging = { }
+TimedMessaging = { CLASS = "TimedMessaging" }
 TimedMessaging.__index = TimedMessaging
 
 function TimedMessaging:new(m, nocheck)

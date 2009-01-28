@@ -7,6 +7,7 @@ require('clua/lm_tmsg.lua')
 require('clua/lm_1way.lua')
 
 TimedMarker = util.subclass(OneWayStair)
+TimedMarker.CLASS = "TimedMarker"
 
 function TimedMarker:new(props)
   props = props or { }
