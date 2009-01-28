@@ -3751,7 +3751,11 @@ void bolt::affect_player()
     // Explosions only have an effect during their explosion phase.
     // Special cases can be handled here.
     if (is_explosion && !in_explosion_phase)
+    {
+        // Trigger the explosion.
+        finish_beam();
         return;
+    }
 
     // Digging -- don't care.
     if (flavour == BEAM_DIGGING)
@@ -4117,6 +4121,13 @@ void bolt::tracer_affect_monster(monsters* mon)
         return;
     }
 
+    // Trigger explosion on exploding beams.
+    if (is_explosion && !in_explosion_phase)
+    {
+        finish_beam();
+        return;
+    }
+
     // Ignore self-detonating monsters.
     if (mons_self_destructs(mon))
     {
@@ -4336,11 +4347,6 @@ bool bolt::handle_statue_disintegration(monsters* mon)
 
 void bolt::affect_monster(monsters* mon)
 {
-    // Explosions only have an effect during their explosion phase.
-    // Special cases can be handled here.
-    if (is_explosion && !in_explosion_phase)
-        return;
-
     // Don't hit dead monsters.
     if (!mon->alive())
     {
@@ -4394,6 +4400,15 @@ void bolt::affect_monster(monsters* mon)
 
     if (mon->submerged() && !aimed_at_spot)
         return;                 // passes overhead
+
+    if (is_explosion && !in_explosion_phase)
+    {
+        // It hit a monster, so the beam should terminate.
+        // Don't actually affect the monster; the explosion
+        // will take care of that.
+        finish_beam();
+        return;
+    }
 
     // We need to know how much the monster _would_ be hurt by this,
     // before we decide if it actually hits.
