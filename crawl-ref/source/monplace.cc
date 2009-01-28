@@ -87,6 +87,15 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     if (grid_wanted >= DNGN_ROCK_WALL
         && grid_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
     {
+        // A monster can only move through or inhabit permanent rock if that's
+        // exactly what it's asking for.
+        if (actual_grid == DNGN_PERMAROCK_WALL
+            || actual_grid == DNGN_CLEAR_PERMAROCK_WALL)
+        {
+            return (grid_wanted == DNGN_PERMAROCK_WALL
+                    || grid_wanted == DNGN_CLEAR_PERMAROCK_WALL);
+        }
+
         return (actual_grid >= DNGN_ROCK_WALL
                 && actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
     }
