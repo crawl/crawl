@@ -1279,8 +1279,17 @@ bool map_bounds(int x, int y)
 
 coord_def random_in_bounds()
 {
-    return coord_def(random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1),
-                     random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1));
+    if (crawl_state.arena)
+    {
+        const coord_def &ul = crawl_view.glos1; // Upper left
+        const coord_def &lr = crawl_view.glos2; // Lower right
+
+        return coord_def(random_range(ul.x, lr.x - 1),
+                         random_range(ul.y, lr.y - 1));
+    }
+    else
+        return coord_def(random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1),
+                         random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1));
 }
 
 // Returns a random location in (x_pos, y_pos)... the grid will be
