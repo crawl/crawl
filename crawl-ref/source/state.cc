@@ -447,6 +447,11 @@ void game_state::dump()
 
     fprintf(stderr, EOL);
 
+    // Arena mode can change behavior of the rest of the code and/or lead
+    // to asserts.
+    unwind_bool _arena(arena, false);
+    unwind_bool _arena_suspended(arena_suspended, false);
+
     if (!startup_errors.empty())
     {
         fprintf(stderr, "Startup errors:" EOL);
