@@ -258,23 +258,38 @@ function table_to_string(table, depth)
 
   local indent = string.rep(" ", depth * 4)
 
+  if type(table) ~= "table" then
+    return indent .. "['" .. type(table) .. "', not a table]"
+  end
+
   local str = ""
 
   local meta = getmetatable(table)
 
   if meta and meta.CLASS then
-    str = str .. indent .. "CLASS: " .. meta.CLASS .. "\n"
+    str = str .. indent .. "CLASS: "
+    if type (meta.CLASS) == "string" then
+      str = str .. meta.CLASS .. "\n"
+    else
+      str = str .. "[type " .. type(meta.CLASS) .. "]\n"
+    end
   end
 
   for key, value in pairs(table) do
-    str = str .. indent .. key .. ": "
-
-    if type(value) == "table" then
-      str = str .. "\n" .. table_to_string(value, depth + 1)
-    elseif type(value) == "function" then
-      str = str .. "function"
+    local typ = type(key)
+    if typ == "string" or typ == "number" then
+      str = str .. indent .. key .. ": "
     else
+      str = str .. indent .. "[type " .. typ .. "]: "
+    end
+
+    typ = type(value)
+    if typ == "table" then
+      str = str .. "\n" .. table_to_string(value, depth + 1)
+    elseif typ == "number" or typ == "string" or typ == "boolen" then
       str = str .. value
+    else
+      str = str .. "[type " .. typ .. "]"
     end
     str = str .. "\n"
   end
