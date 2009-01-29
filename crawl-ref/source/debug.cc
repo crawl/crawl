@@ -5943,7 +5943,7 @@ static void _debug_dump_markers()
     }
 } // _debug_dump_markers()
 
-static void _debug_dump_lua_markers()
+static void _debug_dump_lua_markers(FILE *file)
 {
     std::vector<map_marker*> markers = env.markers.get_all();
 
@@ -5961,15 +5961,15 @@ static void _debug_dump_lua_markers()
         if (result.size() > 0 && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
 
-        mprf(MSGCH_DIAGNOSTICS, "Lua marker %d at (%d, %d):",
-             i, marker->pos.x, marker->pos.y);
-        mprf(MSGCH_DIAGNOSTICS, "{{{{");
-        mprf(MSGCH_DIAGNOSTICS, result.c_str());
-        mprf(MSGCH_DIAGNOSTICS, "}}}}");
+        fprintf(file, "Lua marker %d at (%d, %d):\n",
+                i, marker->pos.x, marker->pos.y);
+        fprintf(file, "{{{{\n");
+        fprintf(file, result.c_str());
+        fprintf(file, "}}}}\n");
     }
 }
 
-static void _debug_dump_lua_persist()
+static void _debug_dump_lua_persist(FILE* file)
 {
     lua_stack_cleaner cln(dlua);
 
@@ -5982,7 +5982,7 @@ static void _debug_dump_lua_persist()
     else
         result = "persist_to_string() returned nothing";
 
-    mprf(MSGCH_DIAGNOSTICS, "%s", result.c_str());
+    fprintf(file, result.c_str());
 }
 
 void do_crash_dump()
@@ -6095,11 +6095,11 @@ void do_crash_dump()
     // crashing.
     fprintf(file, "Lua persistant data:" EOL);
     fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
-    _debug_dump_lua_persist();
+    _debug_dump_lua_persist(file);
     fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL EOL);
     fprintf(file, "Lua marker contents:" EOL);
     fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
-    _debug_dump_lua_markers();
+    _debug_dump_lua_markers(file);
     fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
 
     set_msg_dump_file(NULL);
