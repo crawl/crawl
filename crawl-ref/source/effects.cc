@@ -1566,16 +1566,24 @@ static void _do_book_acquirement(item_def &book, int agent)
 
     book.sub_type = choice;
 
+    // Acquired randart books have a chance of being named after the player.
+    std::string owner = "";
+    if (agent == AQ_SCROLL && one_chance_in(10)
+        || agent == AQ_CARD_GENIE && one_chance_in(5))
+    {
+        owner = you.your_name;
+    }
+
     switch (choice)
     {
     case BOOK_RANDART_THEME:
-        make_book_theme_randart(book, 0, 0, 7, 22);
+        make_book_theme_randart(book, 0, 0, 7, 22, SPELL_NO_SPELL, owner);
         break;
 
     case BOOK_RANDART_LEVEL:
     {
         int num_spells = 7 - (level + 1) / 2 + random_range(1, 2);
-        make_book_level_randart(book, level, num_spells);
+        make_book_level_randart(book, level, num_spells, owner);
         break;
     }
 

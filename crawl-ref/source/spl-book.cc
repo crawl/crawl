@@ -1803,7 +1803,8 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
 }
 
 
-bool make_book_level_randart(item_def &book, int level, int num_spells)
+bool make_book_level_randart(item_def &book, int level, int num_spells,
+                             std::string owner)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1815,6 +1816,9 @@ bool make_book_level_randart(item_def &book, int level, int num_spells)
 
     if (!is_random_artefact(book))
     {
+        if (!owner.empty())
+            book.props["owner"].get_string() = owner;
+
         // Stuff parameters into book.plus and book.plus2, then call
         // make_item_randart(), which will call us back.
         if (level == -1)
@@ -1838,9 +1842,12 @@ bool make_book_level_randart(item_def &book, int level, int num_spells)
     }
 
     // Being called from make_item_randart()
-
     ASSERT(book.sub_type == BOOK_RANDART_LEVEL);
     ASSERT(level == -1 && num_spells == -1);
+
+    // Re-read owner, if applicable.
+    if (owner.empty() && book.props.exists("owner"))
+        owner = book.props["owner"].get_string();
 
     level = book.plus;
     ASSERT(level > 0 && level <= 9);
@@ -1948,12 +1955,17 @@ bool make_book_level_randart(item_def &book, int level, int num_spells)
 
     bool has_owner = true;
     std::string name = "";
-    if (god != GOD_NO_GOD)
-        name += apostrophise(god_name(god, false)) + " ";
+    if (!owner.empty())
+        name = owner;
+    else if (god != GOD_NO_GOD)
+        name = god_name(god, false);
     else if (one_chance_in(3))
-        name += apostrophise(make_name(random_int(), false)) + " ";
+        name = make_name(random_int(), false);
     else
         has_owner = false;
+
+    if (has_owner)
+        name = apostrophise(name) + " ";
 
     // None of these books need a definite article prepended.
     book.props["is_named"].get_bool() = true;
@@ -2387,9 +2399,15 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2,
                                  incl_spell);
 
+    int highest_level = 0;
     // Finally fill the spell vector.
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
         spell_vec[i] = (long) chosen_spells[i];
+        if (spell_difficulty(chosen_spells[i]) > highest_level)
+            highest_level = spell_difficulty(chosen_spells[i]);
+    }
+
 
     // ... and change disc1 and disc2 accordingly.
     disc1 = 1 << max1;
@@ -2398,24 +2416,69 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     else
         disc2 = 1 << max2;
 
-    std::string name;
-
-    const bool god_gift = (god != GOD_NO_GOD);
-    bool has_owner = true;
-    if (!owner.empty())
-        name = owner;
-    else if (god_gift && !one_chance_in(4))
-        name = god_name(god, false);
-    else if (god_gift || one_chance_in(5)) // Occasionally, use a random name.
-        name = make_name(random_int(), false);
-    else
-        has_owner = false;
-
-    if (has_owner)
+    // If the owner hasn't been set already use
+    // a) the god's name for god gifts (only applies to Sif Muna and Xom),
+    // b) a name depending on the spell disciplines, for pure books
+    // c) a random name (all god gifts not named earlier)
+    // d) an applicable god's name
+    // ... else leave it unnamed (around 56% chance for non-god gifts)
+    if (owner.empty())
     {
-        book.props["is_named"].get_bool() = true;
-        name = apostrophise(name) + " ";
+        const bool god_gift = (god != GOD_NO_GOD);
+        if (god_gift && !one_chance_in(4))
+            owner = god_name(god, false);
+        else if (disc1 == disc2
+                 && (god_gift && one_chance_in(3) || one_chance_in(5)))
+        {
+            std::string lookup = spelltype_long_name(disc1);
+            if (highest_level >= 6)
+                owner = getRandNameString("high-level " + lookup + " owner");
+
+            if (owner.empty() || owner == "__NONE")
+                owner = getRandNameString(lookup + " owner");
+
+            if (owner == "__NONE")
+                owner = "";
+        }
+
+        if (owner.empty())
+        {
+            if (god_gift || one_chance_in(5)) // Use a random name.
+                owner = make_name(random_int(), false);
+            else if (!god_gift && one_chance_in(8))
+            {
+                god = GOD_SIF_MUNA;
+                switch (disc1)
+                {
+                case SPTYP_NECROMANCY:
+                    if (disc1 == disc2 && !one_chance_in(6))
+                        god = GOD_KIKUBAAQUDGHA;
+                    break;
+                case SPTYP_SUMMONING:
+                case SPTYP_CONJURATION:
+                    if ((disc2 == SPTYP_SUMMONING || disc2 == SPTYP_CONJURATION)
+                        && !one_chance_in(4))
+                    {
+                        god = GOD_VEHUMET;
+                    }
+                    break;
+                default:
+                    break;
+                }
+                owner = god_name(god, false);
+            }
+        }
     }
+
+    std::string name = "";
+
+    if (!owner.empty())
+    {
+        name = apostrophise(owner) + " ";
+        book.props["is_named"].get_bool() = true;
+    }
+    else
+        book.props["is_named"].get_bool() = false;
 
     name += getRandNameString("book_name") + " ";
 
@@ -2425,8 +2488,8 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     std::string type_name;
     if (disc1 != disc2 && coinflip())
     {
-        std::string search = spelltype_long_name(disc2);
-        type_name = getRandNameString(search + " adj");
+        std::string lookup = spelltype_long_name(disc2);
+        type_name = getRandNameString(lookup + " adj");
     }
 
     if (type_name.empty())

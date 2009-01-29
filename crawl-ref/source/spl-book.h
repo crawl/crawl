@@ -70,7 +70,7 @@ int count_staff_spells(const item_def &item, bool need_id);
 int rod_shield_leakage();
 
 bool make_book_level_randart(item_def &book, int level = -1,
-                             int num_spells = -1);
+                             int num_spells = -1, std::string owner = "");
 bool make_book_theme_randart(item_def &book,
                              int disc1 = 0, int disc2 = 0,
                              int num_spells = -1, int max_levels = -1,

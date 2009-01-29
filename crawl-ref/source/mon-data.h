@@ -4078,6 +4078,7 @@ static monsterentry mondata[] = {
 },
 
 {
+    // Gets a random spellbook between MST_WIZARD_I and MST_WIZARD_V.
     MONS_EROLCHA, 'O', LIGHTBLUE, "Erolcha",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD
         | M_EVIL | M_SPEAKS,

@@ -129,7 +129,11 @@ Theurgy
 
 Thaumaturgy
 
+w:5
 Casting
+
+w:5
+Spellcasting
 
 Wizardry
 
@@ -140,6 +144,8 @@ Witchcraft
 Witchery
 
 Spellcraft
+
+Spell Weaving
 
 w:5
 Secret Knowledge
@@ -433,6 +439,12 @@ Displacement
 Dislocation
 
 Orientation
+
+the Traveller
+
+the Compass
+
+the Voyage
 %%%%
 Poison
 
@@ -645,4 +657,171 @@ Feathery
 Cloudy
 
 Gliding
+%%%%
+# potential previous owners of books
+# __NONE is parsed to the empty string
+Conjuration owner
+
+Lee
+
+Lehudib
+
+Iskenderun
+
+Erolcha
+
+Louise
+
+Boris
+
+Nergalle
+
+Josephine
+
+Frederick
+%%%%
+high-level Conjuration owner
+
+Asmodeus
+
+Ereshkigal
+
+Dispater
+
+Cerebov
+
+Lom Lobon
+
+w:30
+@Conjuration owner@
+%%%%
+Enchantment owner
+
+Ilsuiw
+
+Rupert
+
+Norris
+
+__NONE
+%%%%
+Summoning owner
+
+__NONE
+%%%%
+high-level Summoning owner
+
+Asmodeus
+
+Dispater
+
+Mnoleg
+
+@Summoning owner@
+%%%%
+Fire owner
+
+Azrael
+
+Margery
+
+__NONE
+%%%%
+high-level Fire owner
+
+Asmodeus
+
+Cerebov
+
+w:20
+@Fire owner@
+%%%%
+Ice owner
+
+w:5
+Ozocubu
+
+__NONE
+%%%%
+Transmutation owner
+
+Cigotuvi
+
+Roxanne
+
+__NONE
+%%%%
+Necromancy owner
+
+Borgnjor
+
+Cigotuvi
+
+Boris
+
+Francis
+
+Frances
+
+Murray
+
+Nergalle
+%%%%
+high-level Necromancy owner
+
+Ereshkigal
+
+Gloorx Vloq
+
+w:40
+@Necromancy owner@
+%%%%
+Divination owner
+
+__NONE
+%%%%
+Translocation owner
+
+__NONE
+%%%%
+high-level Translocation owner
+
+Lom Lobon
+
+@Translocation owner@
+%%%%
+Poison owner
+
+Olgreb
+
+Alistair
+
+__NONE
+%%%%
+high-level Poison owner
+
+Gloorx Vloq
+
+@Poison owner@
+%%%%
+Earth owner
+
+Lehudib
+
+Lee
+
+Roxanne
+
+__NONE
+%%%%
+high-level Earth owner
+
+Dispater
+
+w:30
+@Earth owner@
+%%%%
+Air owner
+
+__NONE
 %%%%
