@@ -2919,8 +2919,8 @@ void losight(env_show_grid &sh,
                     const int realx = xmult * compressed_ray_x[rayidx];
                     const int realy = ymult * compressed_ray_y[rayidx];
                     // update shadow map
-                    if (x_p + realx >= 0 && x_p + realx < 80
-                        && y_p + realy >= 0 && y_p + realy < 70
+                    if (x_p + realx >= 0 && x_p + realx < GXM
+                        && y_p + realy >= 0 && y_p + realy < GYM
                         && realx * realx + realy * realy <= los_radius_squared)
                     {
                         sh[sh_xo+realx][sh_yo+realy] = gr[x_p+realx][y_p+realy];

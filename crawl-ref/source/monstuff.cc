@@ -2111,54 +2111,49 @@ static coord_def _random_monster_nearby_habitable_space(const monsters& mon,
 
     coord_def target;
     int tries;
+
+    for (tries = 0; tries < 150; ++tries)
     {
-        // Save LOS, because we're going to clobber it with monster LOS.
-        unwind_var<env_show_grid> visible_grid(env.show);
+        const coord_def delta(random2(13) - 6, random2(13) - 6);
 
-        // Do the clobbering.
-        losight(env.show, grd, mon.pos(), true);
+        // Check that we don't get something too close to the
+        // starting point.
+        if (delta.origin())
+            continue;
 
-        for (tries = 0; tries < 150; ++tries)
+        if (delta.rdist() == 1 && !allow_adjacent)
+            continue;
+
+        // Update target.
+        target = delta + mon.pos();
+
+        // Check that the target is valid and survivable.
+        if (!in_bounds(target))
+            continue;
+
+        if (!monster_habitable_grid(&mon, grd(target)))
+            continue;
+
+        if (respect_sanctuary && is_sanctuary(target))
+            continue;
+
+        if (target == you.pos())
+            continue;
+
+        // Check that we didn't go through clear walls.
+        if (num_feats_between(mon.pos(), target,
+                              DNGN_CLEAR_ROCK_WALL,
+                              DNGN_CLEAR_PERMAROCK_WALL,
+                              true, true) > 0)
         {
-            const coord_def delta(random2(14), random2(14));
-
-            // Check that we don't get something too close to the
-            // starting point.
-            if (delta.origin())
-                continue;
-
-            if (delta.rdist() == 1 && !allow_adjacent)
-                continue;
-
-            // Update target.
-            target = delta + mon.pos();
-
-            // Check that the target is valid and survivable.
-            if (!in_bounds(target))
-                continue;
-
-            if (!monster_habitable_grid(&mon, grd(target)))
-                continue;
-
-            if (respect_sanctuary && is_sanctuary(target))
-                continue;
-
-            // Check that we didn't go through clear walls.
-            if (num_feats_between(target, mon.pos(),
-                                  DNGN_CLEAR_ROCK_WALL,
-                                  DNGN_CLEAR_PERMAROCK_WALL,
-                                  true, true) > 0)
-            {
-                continue;
-            }
-
-            // Note that this uses the clobbered LOS!
-            if (respect_los && !see_grid(target))
-                continue;
-
-            // Survived everything, break out (with a good value of target.)
-            break;
+            continue;
         }
+
+        if (respect_los && !mon.mon_see_grid(target))
+            continue;
+
+        // Survived everything, break out (with a good value of target.)
+        break;
     }
 
     if (tries == 150)
@@ -2197,7 +2192,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
 {
     // This might involve ray tracing (via num_feats_between()), so
     // cache results to avoid duplicating ray traces.
-    FixedArray<bool, 14, 14> tried;
+    FixedArray<bool, 13, 13> tried;
     tried.init(false);
 
     // Is the monster on the other side of a transparent wall?
@@ -2216,7 +2211,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
     int tries = 0;
     while (tries++ < 150)
     {
-        coord_def delta(random2(14), random2(14));
+        coord_def delta(random2(13), random2(13));
 
         target = origin - coord_def(6, 6) + delta;
 
