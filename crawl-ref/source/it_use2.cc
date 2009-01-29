@@ -302,20 +302,21 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;                  // I'll let this slip past robe of archmagi
 
     case POT_MAGIC:
-    {
-        mpr( "You feel magical!" );
-        int new_value = 5 + random2avg(19, 2);
+        // Restore all MP
+        you.magic_points = you.max_magic_points;
 
-        // increase intrinsic MP points
-        if (you.magic_points + new_value > you.max_magic_points)
+        // Sometimes boost max 
+        if (one_chance_in(3))
         {
-            new_value = (you.max_magic_points - you.magic_points)
-                + (you.magic_points + new_value - you.max_magic_points)/4 + 1;
+            mpr("You feel extremely magical!");
+            inc_mp(1, true);
         }
-
-        inc_mp( new_value, true );
+        else
+        {
+            mpr("You feel magical!");
+        }
         break;
-    }
+
     case POT_RESTORE_ABILITIES:
     {
         bool nothing_happens = true;
