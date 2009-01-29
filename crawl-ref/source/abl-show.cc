@@ -1436,7 +1436,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        potion_effect( POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5 );
+        potion_effect(POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5);
         contaminate_player( 1 + random2(3), true );
         exercise( SK_EVOCATIONS, 1 );
         break;
@@ -1447,7 +1447,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        potion_effect( POT_LEVITATION, 2 * you.skills[SK_EVOCATIONS] + 30 );
+        potion_effect(POT_LEVITATION, 2 * you.skills[SK_EVOCATIONS] + 30);
         exercise( SK_EVOCATIONS, 1 );
         break;
 
@@ -1601,12 +1601,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_OKAWARU_MIGHT:
-        potion_effect( POT_MIGHT, you.skills[SK_INVOCATIONS] * 8 );
+        potion_effect(POT_MIGHT, you.skills[SK_INVOCATIONS] * 8);
         exercise(SK_INVOCATIONS, 1 + random2(3));
         break;
 
     case ABIL_OKAWARU_HASTE:
-        potion_effect( POT_SPEED, you.skills[SK_INVOCATIONS] * 8 );
+        potion_effect(POT_SPEED, you.skills[SK_INVOCATIONS] * 8);
         exercise(SK_INVOCATIONS, 3 + random2(7));
         break;
 

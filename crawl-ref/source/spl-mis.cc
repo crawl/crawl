@@ -594,7 +594,7 @@ void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
 {
     if (target->atype() == ACT_PLAYER)
     {
-        potion_effect(static_cast<potion_type>(pot_eff), pot_pow, false);
+        potion_effect(static_cast<potion_type>(pot_eff), pot_pow, false, false);
         return;
     }
 

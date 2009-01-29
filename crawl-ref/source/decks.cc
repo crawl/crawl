@@ -1839,9 +1839,9 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     if (power_level == 0)
     {
         if (coinflip())
-            potion_effect( POT_HEAL_WOUNDS, 40 ); // power doesn't matter
+            potion_effect(POT_HEAL_WOUNDS, 40); // power doesn't matter
         else
-            cast_regen( random2(power / 4) );
+            cast_regen(random2(power / 4));
     }
     else if (power_level == 1)
     {
@@ -2572,9 +2572,7 @@ static void _genie_card(int power, deck_rarity_type rarity)
     {
         mpr("A genie takes form and thunders: "
             "\"You disturbed me, fool!\"");
-        // Use 41, not 40, to tell potion_effect() that this isn't a
-        // real potion.
-        potion_effect( coinflip() ? POT_DEGENERATION : POT_DECAY, 41 );
+        potion_effect(coinflip() ? POT_DEGENERATION : POT_DECAY, 40);
     }
 }
 

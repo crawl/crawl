@@ -1926,31 +1926,19 @@ void wizard_make_object_randart()
         return;
     }
 
-    int j;
-    // Set j == equipment slot of chosen item, remove old randart benefits.
-    for (j = 0; j < NUM_EQUIP; j++)
-    {
-        if (you.equip[j] == i)
-        {
-            if (j == EQ_WEAPON)
-                you.wield_change = true;
-
-            if (is_random_artefact( item ))
-                unuse_randart( i );
-            break;
-        }
-    }
+    if (you.weapon() == &item)
+        you.wield_change = true;
 
     if (is_random_artefact(item))
     {
         if (!yesno("Is already a randart; wipe and re-use?"))
         {
-            canned_msg( MSG_OK );
-            // If equipped, re-apply benefits.
-            if (j != NUM_EQUIP)
-                use_randart( i );
+            canned_msg(MSG_OK);
             return;
         }
+
+        if (item_is_equipped(item))
+            unuse_randart(item);
 
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;
@@ -1960,7 +1948,7 @@ void wizard_make_object_randart()
     mpr("Fake item as gift from which god (ENTER to leave alone): ",
         MSGCH_PROMPT);
     char name[80];
-    if (!cancelable_get_line( name, sizeof( name ) ) && name[0])
+    if (!cancelable_get_line(name, sizeof( name )) && name[0])
     {
         god_type god = string_to_god(name, false);
         if (god == GOD_NO_GOD)
@@ -1980,7 +1968,7 @@ void wizard_make_object_randart()
             return;
         }
     }
-    else if (!make_item_randart( item ))
+    else if (!make_item_randart(item))
     {
         mpr("Failed to turn item into randart.");
         return;
@@ -1993,10 +1981,10 @@ void wizard_make_object_randart()
     }
 
     // If equipped, apply new randart benefits.
-    if (j != NUM_EQUIP)
-        use_randart( i );
+    if (item_is_equipped(item))
+        use_randart(item);
 
-    mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
+    mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 #endif
 
@@ -5964,7 +5952,7 @@ static void _debug_dump_lua_markers(FILE *file)
         fprintf(file, "Lua marker %d at (%d, %d):\n",
                 i, marker->pos.x, marker->pos.y);
         fprintf(file, "{{{{\n");
-        fprintf(file, result.c_str());
+        fprintf(file, "%s", result.c_str());
         fprintf(file, "}}}}\n");
     }
 }
@@ -5982,7 +5970,7 @@ static void _debug_dump_lua_persist(FILE* file)
     else
         result = "persist_to_string() returned nothing";
 
-    fprintf(file, result.c_str());
+    fprintf(file, "%s", result.c_str());
 }
 
 void do_crash_dump()

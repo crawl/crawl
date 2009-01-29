@@ -12,29 +12,13 @@
 
 #include "externs.h"
 
-
-/* ***********************************************************************
- * called from: ability - beam - decks - item_use - misc - religion -
- *              spell - spells - spells1
- * *********************************************************************** */
-bool potion_effect(potion_type pot_eff, int pow, bool was_known = true);
-
-/* ***********************************************************************
- * called from: item_use
- * *********************************************************************** */
-void unuse_randart(unsigned char unw);
+// drank_it should be true for real potion effects (as opposed
+// to abilities which duplicate such effects.)
+bool potion_effect(potion_type pot_eff, int pow,
+                   bool drank_it = false, bool was_known = true);
 
 void unuse_randart(const item_def &item);
-
-/* ***********************************************************************
- * called from: item_use - transfor
- * *********************************************************************** */
-void unwear_armour(char unw);
-
-
-/* ***********************************************************************
- * called from: decks - it_use3 - item_use - items - spells3 - transfor
- * *********************************************************************** */
+void unwear_armour(int slot);
 bool unwield_item(bool showMsgs = true);
 
 #endif

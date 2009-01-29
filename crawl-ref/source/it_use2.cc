@@ -38,16 +38,15 @@ REVISION("$Rev$");
 #include "xom.h"
 
 // From an actual potion, pow == 40 -- bwr
-bool potion_effect( potion_type pot_eff, int pow, bool was_known )
+bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
 
-    if (pow > 150)
-        pow = 150;
+    pow = std::min(pow, 150);
 
     const int factor = (you.species == SP_VAMPIRE
-                        && you.hunger_state < HS_SATIATED && pow == 40 ? 2
-                                                                       : 1);
+                        && you.hunger_state < HS_SATIATED
+                        && drank_it ? 2 : 1);
 
     switch (pot_eff)
     {
@@ -263,7 +262,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;
 
     case POT_DEGENERATION:
-        if (pow == 40)
+        if (drank_it)
             mpr("There was something very wrong with that liquid!");
 
         if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
@@ -385,12 +384,11 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
     }
 
     return (effect);
-}                               // end potion_effect()
+}
 
 bool unwield_item(bool showMsgs)
 {
-    const int unw = you.equip[EQ_WEAPON];
-    if (unw == -1)
+    if (!you.weapon())
         return (false);
 
     if (you.duration[DUR_BERSERKER])
@@ -399,15 +397,15 @@ bool unwield_item(bool showMsgs)
         return (false);
     }
 
-    if (!safe_to_remove_or_wear(you.inv[unw], true))
+    item_def& item = *you.weapon();
+
+    if (!safe_to_remove_or_wear(item, true))
         return (false);
 
     you.equip[EQ_WEAPON] = -1;
     you.special_wield    = SPWLD_NONE;
     you.wield_change     = true;
     you.m_quiver->on_weapon_changed();
-
-    item_def &item(you.inv[unw]);
 
     if (item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_LANTERN_OF_SHADOWS )
@@ -449,7 +447,7 @@ bool unwield_item(bool showMsgs)
         const int brand = get_weapon_brand( item );
 
         if (is_random_artefact( item ))
-            unuse_randart(unw);
+            unuse_randart(item);
 
         if (brand != SPWPN_NORMAL)
         {
@@ -519,8 +517,7 @@ bool unwield_item(bool showMsgs)
             }
         }
     }
-
-    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
+    else if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
     {
         calc_mp();
         mpr("You feel your mana capacity decrease.");
@@ -529,15 +526,15 @@ bool unwield_item(bool showMsgs)
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
     return (true);
-}                               // end unwield_item()
+}
 
 // This does *not* call ev_mod!
-void unwear_armour(char unw)
+void unwear_armour(int slot)
 {
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 
-    item_def &item(you.inv[unw]);
+    item_def &item(you.inv[slot]);
 
     switch (get_armour_ego_type( item ))
     {
@@ -618,13 +615,8 @@ void unwear_armour(char unw)
         break;
     }
 
-    if (is_random_artefact( you.inv[unw] ))
-        unuse_randart(unw);
-}
-
-void unuse_randart(unsigned char unw)
-{
-    unuse_randart( you.inv[unw] );
+    if (is_random_artefact(item))
+        unuse_randart(item);
 }
 
 void unuse_randart(const item_def &item)

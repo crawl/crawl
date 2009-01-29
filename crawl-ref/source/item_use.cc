@@ -4022,10 +4022,8 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot], true);
 }
 
-void drink( int slot )
+void drink(int slot)
 {
-    int item_slot;
-
     if (you.is_undead == US_UNDEAD)
     {
         mpr("You can't drink.");
@@ -4060,36 +4058,34 @@ void drink( int slot )
        return;
     }
 
-    if (slot != -1)
-        item_slot = slot;
-    else
+    if (slot == -1)
     {
-        item_slot = prompt_invent_item("Drink which item?",
-                                       MT_INVLIST, OBJ_POTIONS,
-                                       true, true, true, 0, -1, NULL,
-                                       OPER_QUAFF);
+        slot = prompt_invent_item("Drink which item?",
+                                  MT_INVLIST, OBJ_POTIONS,
+                                  true, true, true, 0, -1, NULL,
+                                  OPER_QUAFF);
+        if (prompt_failed(slot))
+            return;
     }
 
-    if (prompt_failed(item_slot))
-        return;
+    item_def& potion = you.inv[slot];
 
-    if (you.inv[item_slot].base_type != OBJ_POTIONS)
+    if (potion.base_type != OBJ_POTIONS)
     {
         mpr("You can't drink that!");
         return;
     }
 
-    const bool alreadyknown = item_type_known(you.inv[item_slot]);
+    const bool alreadyknown = item_type_known(potion);
 
     if (alreadyknown && you.hunger_state == HS_ENGORGED
-        && (is_blood_potion(you.inv[item_slot])
-            || you.inv[item_slot].sub_type == POT_PORRIDGE))
+        && (is_blood_potion(potion) || potion.sub_type == POT_PORRIDGE))
     {
         mpr("You are much too full right now.");
         return;
     }
 
-    if (alreadyknown && you.inv[item_slot].sub_type == POT_BERSERK_RAGE
+    if (alreadyknown && potion.sub_type == POT_BERSERK_RAGE
         && !berserk_check_wielded_weapon())
     {
         return;
@@ -4101,17 +4097,18 @@ void drink( int slot )
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
 
-    if (potion_effect(static_cast<potion_type>(you.inv[item_slot].sub_type),
-                      40, alreadyknown))
+    // Identify item and type.
+    if (potion_effect(static_cast<potion_type>(potion.sub_type),
+                      40, true, alreadyknown))
     {
-        set_ident_flags(you.inv[item_slot], ISFLAG_IDENT_MASK);
-
-        set_ident_type( you.inv[item_slot], ID_KNOWN_TYPE );
+        set_ident_flags(potion, ISFLAG_IDENT_MASK);
+        set_ident_type(potion, ID_KNOWN_TYPE);
     }
     else
     {
-        set_ident_type( you.inv[item_slot], ID_TRIED_TYPE );
+        set_ident_type(potion, ID_TRIED_TYPE);
     }
+
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you drink an unknown potion and there is
@@ -4119,12 +4116,13 @@ void drink( int slot )
         xom_is_stimulated(255);
     }
 
-    if (is_blood_potion(you.inv[item_slot]))
+    if (is_blood_potion(potion))
     {
         // Always drink oldest potion.
-        remove_oldest_blood_potion(you.inv[item_slot]);
+        remove_oldest_blood_potion(potion);
     }
-    dec_inv_item_quantity( item_slot, 1 );
+
+    dec_inv_item_quantity(slot, 1);
     you.turn_is_over = true;
 
     if (you.species != SP_VAMPIRE)
@@ -4203,7 +4201,7 @@ bool _drink_fountain()
 
     // Good gods do not punish for bad random effects. However, they do
     // punish drinking from a fountain of blood.
-    potion_effect(fountain_effect, 100, feat != DNGN_FOUNTAIN_SPARKLING);
+    potion_effect(fountain_effect, 100, true, feat != DNGN_FOUNTAIN_SPARKLING);
 
     bool gone_dry = false;
     if (feat == DNGN_FOUNTAIN_BLUE)
