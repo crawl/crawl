@@ -872,6 +872,8 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
     return (false);
 }
 
+// Note that quiet will *not* suppress the message about a corpse
+// you are butchering being animated.
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     god_type god, bool actual,
@@ -900,14 +902,12 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 
             if (actual && success)
             {
-                if (!quiet)
-                {
-                    if (was_butchering)
-                        mpr("The corpse you are butchering rises to attack!");
+                // ignores quiet
+                if (was_butchering)
+                    mpr("The corpse you are butchering rises to attack!");
 
-                    if (see_grid(a))
-                        mpr("The dead are walking!");
-                }
+                if (!quiet && see_grid(a))
+                    mpr("The dead are walking!");
 
                 if (was_butchering)
                     xom_is_stimulated(255);
@@ -931,67 +931,29 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 {
     UNUSED(pow);
 
-    static env_show_grid losgrid;
-
-    const coord_def c(caster->pos());
-
-    int minx = c.x - 6;
-    int maxx = c.x + 7;
-    int miny = c.y - 6;
-    int maxy = c.y + 7;
-    int xinc = 1;
-    int yinc = 1;
+    // Use an alternate LOS grid, based on the caster's LOS.
+    env_show_grid losgrid;
+    if (caster->atype() != ACT_PLAYER)
+        losight(losgrid, grd, caster->pos(), true);
 
     int number_raised = 0;
     int number_seen   = 0;
 
-    if (coinflip())
+    radius_iterator ri(caster->pos(), 6, true, true, false,
+                       caster->atype() == ACT_PLAYER ? &env.no_trans_show
+                                                     : &losgrid);
+
+    // Sweep all squares in LOS.
+    for (; ri; ++ri)
     {
-        minx = c.x + 6;
-        maxx = c.x - 7;
-        xinc = -1;
-    }
-
-    if (coinflip())
-    {
-        miny = c.y + 6;
-        maxy = c.y - 7;
-        yinc = -1;
-    }
-
-    if (caster != &you)
-        losight(losgrid, grd, c, true);
-
-    env_show_grid &los(caster == &you? env.no_trans_show : losgrid);
-
-    coord_def a;
-    for (a.x = minx; a.x != maxx; a.x += xinc)
-    {
-        for (a.y = miny; a.y != maxy; a.y += yinc)
+        // This will produce a message if the corpse you are butchering
+        // is raised.
+        if (animate_remains(*ri, CORPSE_BODY, beha, hitting, god,
+                            actual, true) > 0)
         {
-            if (!in_bounds(a) || !see_grid(los, c, a))
-                continue;
-
-            // Search all the items on the ground for a corpse.  Only
-            // one of a stack will be raised.
-            for (stack_iterator si(a); si; ++si)
-            {
-                const bool was_butchering = is_being_butchered(*si, false);
-
-                if (animate_remains(a, CORPSE_BODY, beha, hitting, god,
-                                    actual, true) > 0)
-                {
-                    number_raised++;
-
-                    if (see_grid(a))
-                         number_seen++;
-
-                    if (was_butchering)
-                        mpr("The corpse you are butchering rises to attack!");
-
-                    break;
-                }
-            }
+            number_raised++;
+            if (see_grid(*ri))
+                number_seen++;
         }
     }
 
@@ -1018,28 +980,25 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 // reforming the original monster out of ice anyways.
 bool cast_simulacrum(int pow, god_type god)
 {
-    int how_many_max = std::min(8, 4 + random2(pow) / 20);
+    bool rc = false;
+    const item_def* weapon = you.weapon();
 
-    const int chunk = you.equip[EQ_WEAPON];
-
-    if (chunk != -1
-        && is_valid_item(you.inv[chunk])
-        && (you.inv[chunk].base_type == OBJ_CORPSES
-            || (you.inv[chunk].base_type == OBJ_FOOD
-                && you.inv[chunk].sub_type == FOOD_CHUNK)))
+    if (weapon
+        && (weapon->base_type == OBJ_CORPSES
+            || (weapon->base_type == OBJ_FOOD
+                && weapon->sub_type == FOOD_CHUNK)))
     {
-        const monster_type mon =
-            static_cast<monster_type>(you.inv[chunk].plus);
+        const monster_type mon = static_cast<monster_type>(weapon->plus);
 
         // Can't create more than the available chunks.
-        if (you.inv[chunk].quantity < how_many_max)
-            how_many_max = you.inv[chunk].quantity;
+        int how_many = std::min(8, 4 + random2(pow) / 20);
+        how_many = std::min<int>(how_many, weapon->quantity);
 
-        dec_inv_item_quantity(chunk, how_many_max);
+        dec_inv_item_quantity(you.equip[EQ_WEAPON], how_many);
 
         int count = 0;
 
-        for (int i = 0; i < how_many_max; ++i)
+        for (int i = 0; i < how_many; ++i)
         {
             if (create_monster(
                     mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
@@ -1056,16 +1015,18 @@ bool cast_simulacrum(int pow, god_type god)
             mprf("%s icy figure%s form%s before you!",
                 count > 1 ? "Some" : "An", count > 1 ? "s" : "",
                 count > 1 ? "" : "s");
-            return (true);
+            rc = true;
         }
-
-        mpr("You feel cold for a second.");
-        return (false);
+        else
+            mpr("You feel cold for a second.");
+    }
+    else
+    {
+        mpr("You need to wield a piece of raw flesh for this spell to be "
+            "effective!");
     }
 
-    mpr("You need to wield a piece of raw flesh for this spell to be "
-        "effective!");
-    return (false);
+    return (rc);
 }
 
 bool cast_twisted_resurrection(int pow, god_type god)

@@ -525,20 +525,16 @@ void stop_delay( bool stop_stair_travel )
         update_turn_count();
 }
 
-void stop_butcher_delay()
-{
-    if (current_delay_action() == DELAY_BUTCHER
-        || current_delay_action() == DELAY_BOTTLE_BLOOD
-        || current_delay_action() == DELAY_OFFER_CORPSE)
-    {
-        stop_delay();
-    }
-}
-
 static bool _is_butcher_delay(int delay)
 {
     return (delay == DELAY_BUTCHER || delay == DELAY_BOTTLE_BLOOD
             || delay == DELAY_OFFER_CORPSE);
+}
+
+void stop_butcher_delay()
+{
+    if (_is_butcher_delay(current_delay_action()))
+        stop_delay();
 }
 
 void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,

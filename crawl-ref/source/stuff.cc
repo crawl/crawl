@@ -183,12 +183,13 @@ rectangle_iterator rectangle_iterator::operator++( int dummy )
     return (copy);
 }
 
-radius_iterator::radius_iterator( const coord_def& _center, int _radius,
-                                  bool _roguelike_metric, bool _require_los,
-                                  bool _exclude_center )
+radius_iterator::radius_iterator(const coord_def& _center, int _radius,
+                                 bool _roguelike_metric, bool _require_los,
+                                 bool _exclude_center,
+                                 const env_show_grid* _losgrid)
     : center(_center), radius(_radius), roguelike_metric(_roguelike_metric),
       require_los(_require_los), exclude_center(_exclude_center),
-      iter_done(false)
+      losgrid(_losgrid), iter_done(false)
 {
     reset();
 }
@@ -258,8 +259,13 @@ bool radius_iterator::on_valid_square() const
         return (false);
     if (!roguelike_metric && (location - center).abs() > radius*radius)
         return (false);
-    if (require_los && !see_grid(location))
-        return (false);
+    if (require_los)
+    {
+        if (!losgrid && !see_grid(location))
+            return (false);
+        if (losgrid && !see_grid(*losgrid, center, location))
+            return (false);
+    }
     if (exclude_center && location == center)
         return (false);
 

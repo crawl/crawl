@@ -90,7 +90,8 @@ public:
     radius_iterator( const coord_def& center, int radius,
                      bool roguelike_metric = true,
                      bool require_los = true,
-                     bool exclude_center = false );
+                     bool exclude_center = false,
+                     const env_show_grid* losgrid = NULL );
     bool done() const;
     void reset();
     operator bool() const { return !done(); }
@@ -109,6 +110,7 @@ private:
     coord_def location, center;
     int radius;
     bool roguelike_metric, require_los, exclude_center;
+    const env_show_grid* losgrid;
     bool iter_done;
 };
 
