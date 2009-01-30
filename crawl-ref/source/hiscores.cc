@@ -1024,7 +1024,7 @@ void scorefile_entry::init()
 
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;
-    final_max_max_hp = you.hp_max + player_rotted();
+    final_max_max_hp = get_real_hp(true, true);
 
     str   = std::max(you.strength - stat_modifier(STAT_STRENGTH), 1);
     intel = std::max(you.intel - stat_modifier(STAT_INTELLIGENCE), 1);
