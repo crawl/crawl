@@ -507,7 +507,7 @@ void stop_delay( bool stop_stair_travel )
          if (stop_stair_travel)
          {
 #ifdef DEBUG_DIAGNOSTICS
-             mpr("Stop ascending/descending stairs.");
+             mpr("Stop ascending/descending stairs.", MSGCH_DIAGNOSTICS);
 #endif
              _pop_delay();
          }
@@ -1924,7 +1924,8 @@ bool interrupt_activity( activity_interrupt_type ai,
             return (false);
 
         was_monst = _monster_warning(ai, at, item.type) || was_monst;
-        stop_delay();
+        // Teleport stops stair delays.
+        stop_delay(ai == AI_TELEPORT);
         if (was_monst)
             handle_interrupted_swap(false, true);
 
@@ -1950,7 +1951,7 @@ bool interrupt_activity( activity_interrupt_type ai,
                         _monster_warning(ai, at, you.delay_queue[j].type)
                         || was_monst;
 
-                    stop_delay();
+                    stop_delay(ai == AI_TELEPORT);
                     if (was_monst)
                         handle_interrupted_swap(false, true);
                     return (true);
