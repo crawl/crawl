@@ -1895,6 +1895,9 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     // Returns true if a head was cut off *and* the wound was cauterized,
     // in which case the cauterization was the ego effect, so don't burn
     // the hydra some more.
+    //
+    // Also returns true if the hydra's last head was cut off, in which
+    // case nothing more should be done to the last hydra.
     if (decapitate_hydra(damage_done))
         return (!defender->alive());
 
@@ -3094,6 +3097,8 @@ bool melee_attack::chop_hydra_head( int dam,
                                  defender_as_monster()->hit_points, true);
 
             defender->hurt(attacker, defender_as_monster()->hit_points);
+
+            return (true);
         }
         else
         {
