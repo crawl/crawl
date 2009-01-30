@@ -231,10 +231,6 @@ std::set<std::string> Level_Unique_Tags;
 std::string dgn_Build_Method;
 std::string dgn_Layout_Type;
 
-// Used by debug_mons_scan() when announcing that a just generated level
-// has floating/detached monsters.
-bool river_level, lake_level, many_pools_level;
-
 bool Generating_Level = false;
 
 static int can_create_vault = true;
@@ -310,11 +306,18 @@ bool builder(int level_number, int level_type)
         if (!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
         {
 #if DEBUG_MONS_SCAN
-            // If debug_mons_scan() find a problem while Generating_Level is
+            // If debug_mons_scan() finds a problem while Generating_Level is
             // still true then it will announce that a problem was caused
             // during level generation.
             debug_mons_scan();
 #endif
+
+            if (dgn_Build_Method.size() > 0 && dgn_Build_Method[0] == ' ')
+                dgn_Build_Method = dgn_Build_Method.substr(1);
+
+            env.properties[BUILD_METHOD_KEY] = dgn_Build_Method;
+            env.properties[LAYOUT_TYPE_KEY]  = dgn_Layout_Type;
+            env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
 
             dgn_Layout_Type.clear();
             Level_Unique_Maps.clear();
@@ -895,10 +898,6 @@ void dgn_reset_level()
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
 
-    river_level      = false;
-    lake_level       = false;
-    many_pools_level = false;
-
     can_create_vault = true;
     use_random_maps  = true;
     dgn_check_connectivity = false;
@@ -906,6 +905,11 @@ void dgn_reset_level()
 
     // Forget level properties.
     env.properties.clear();
+
+    // Set up containers for storing some level generation info.
+    env.properties[LEVEL_VAULTS_KEY].new_table(SV_STR);
+    env.properties[TEMP_VAULTS_KEY].new_table(SV_STR);
+    env.properties[LEVEL_EXTRAS_KEY].new_vector(SV_STR);
 
     // Blank level with DNGN_ROCK_WALL.
     grd.init(DNGN_ROCK_WALL);
@@ -1561,15 +1565,12 @@ static void _build_dungeon_level(int level_number, int level_type)
 {
     spec_room sr;
 
-    dgn_Layout_Type = "rooms";
-
     _build_layout_skeleton(level_number, level_type, sr);
 
     if (you.level_type == LEVEL_LABYRINTH
         || you.level_type == LEVEL_PORTAL_VAULT
         || dgn_level_vetoed)
     {
-        dgn_Layout_Type.clear();
         return;
     }
 
@@ -1943,7 +1944,8 @@ static void _prepare_shoals(int level_number)
     // Don't destroy portals, etc.
     const located_feature_list lfl = _save_critical_features();
 
-    dgn_Layout_Type = "shoals";
+    dgn_Build_Method += make_stringf(" shoals [%d]", level_number);
+    dgn_Layout_Type   = "shoals";
 
     // dpeg's algorithm.
     // We could have just used spotty_level() and changed rock to
@@ -2114,7 +2116,8 @@ static void _prepare_shoals(int level_number)
 
 static void _prepare_swamp()
 {
-    dgn_Layout_Type = "swamp";
+    dgn_Build_Method += " swamp";
+    dgn_Layout_Type   = "swamp";
 
     const int margin = 5;
 
@@ -2323,6 +2326,10 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
 
 static void _portal_vault_level(int level_number)
 {
+    dgn_Build_Method += make_stringf(" portal_vault_level [%d]",
+                                     level_number);
+    dgn_Layout_Type   = "portal vault";
+
     // level_type_tag may contain spaces for human readability, but the
     // corresponding vault tag name cannot use spaces, so force spaces to
     // _ when searching for the tag.
@@ -2435,6 +2442,7 @@ static builder_rc_type _builder_by_branch(int level_number)
 
     if (vault)
     {
+        dgn_Build_Method += " random_map_for_place";
         _ensure_vault_placed( _build_vaults(level_number, vault) );
         return BUILD_SKIP;
     }
@@ -2527,6 +2535,7 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 
     if (vault)
     {
+        dgn_Build_Method += " normal_random_map_for_place";
         _ensure_vault_placed( _build_vaults(level_number, vault) );
         return BUILD_SKIP;
     }
@@ -2618,6 +2627,9 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 // Returns 1 if we should skip extras(), otherwise 0.
 static builder_rc_type _builder_basic(int level_number)
 {
+    dgn_Build_Method += make_stringf(" basic [%d]", level_number);
+    dgn_Layout_Type  = "basic";
+
     int temp_rand;
     int doorlevel  = random2(11);
     int corrlength = 2 + random2(14);
@@ -3676,6 +3688,10 @@ static void _special_room(int level_number, spec_room &sr,
 {
     ASSERT(vault);
 
+    std::string extra = make_stringf("special room [%s %d]",
+                                     vault->name.c_str(), level_number);
+    env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
+
     // Overwrites anything: this function better be called early on during
     // creation.
     int room_x1 = 8 + random2(55);
@@ -4232,6 +4248,7 @@ static bool _build_vaults(int level_number, const map_def *vault,
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.
     Level_Vaults.push_back(place);
+    remember_vault_placement(LEVEL_VAULTS_KEY, place);
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
@@ -5273,8 +5290,6 @@ static void _place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
 
 static void _many_pools(dungeon_feature_type pool_type)
 {
-    many_pools_level = true;
-
     if (player_in_branch( BRANCH_COCYTUS ))
         pool_type = DNGN_DEEP_WATER;
     else if (player_in_branch( BRANCH_GEHENNA ))
@@ -5282,6 +5297,10 @@ static void _many_pools(dungeon_feature_type pool_type)
 
     const int num_pools = 20 + random2avg(9, 2);
     int pools = 0;
+
+    std::string extra = make_stringf("many pools [%d %d]", (int) pool_type,
+                                     num_pools);
+    env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
 
     for (int timeout = 0; pools < num_pools && timeout < 30000; ++timeout)
     {
@@ -5714,11 +5733,15 @@ static object_class_type _item_in_shop(unsigned char shop_type)
 
 void spotty_level(bool seeded, int iterations, bool boxy)
 {
-    dgn_Build_Method = "spotty_level";
+    dgn_Build_Method += make_stringf(" spotty_level [%d%s%s]",
+                                     iterations, seeded ? " seeeded" : "",
+                                     boxy ? " boxy" : "");
     if (dgn_Layout_Type == "open" || dgn_Layout_Type == "cross")
         dgn_Layout_Type = "open";
     else if (iterations >= 100)
         dgn_Layout_Type  = "caves";
+    else if (dgn_Layout_Type.empty())
+        dgn_Layout_Type = "spotty";
     else
         dgn_Layout_Type += "_spotty";
 
@@ -5842,8 +5865,8 @@ void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
 
 static void _bigger_room()
 {
-    dgn_Build_Method = "bigger_room";
-    dgn_Layout_Type  = "open";
+    dgn_Build_Method += " bigger_room";
+    dgn_Layout_Type   = "open";
 
     unsigned char i, j;
 
@@ -5878,8 +5901,9 @@ static void _bigger_room()
 // Various plan_xxx functions.
 static void _plan_main(int level_number, int force_plan)
 {
-    dgn_Build_Method = "plan_main";
-    dgn_Layout_Type  = "rooms";
+    dgn_Build_Method += make_stringf(" plan_main [%d%s]", level_number,
+                                     force_plan ? " force_plan" : "");
+    dgn_Layout_Type   = "rooms";
 
     // possible values for do_stairs:
     //  0 - stairs already done
@@ -5925,8 +5949,8 @@ static void _plan_main(int level_number, int force_plan)
 
 static char _plan_1(int level_number)
 {
-    dgn_Build_Method = "plan_1";
-    dgn_Layout_Type  = "open";
+    dgn_Build_Method += make_stringf(" plan_1 [%d]", level_number);
+    dgn_Layout_Type   = "open";
 
     const map_def *vault = find_map_by_name("layout_forbidden_donut");
     ASSERT(vault);
@@ -5939,8 +5963,8 @@ static char _plan_1(int level_number)
 
 static char _plan_2(int level_number)
 {
-    dgn_Build_Method = "plan_2";
-    dgn_Layout_Type  = "cross";
+    dgn_Build_Method += " plan_2";
+    dgn_Layout_Type   = "cross";
 
     const map_def *vault = find_map_by_name("layout_cross");
     ASSERT(vault);
@@ -5953,8 +5977,8 @@ static char _plan_2(int level_number)
 
 static char _plan_3()
 {
-    dgn_Build_Method = "plan_3";
-    dgn_Layout_Type  = "rooms";
+    dgn_Build_Method += " plan_3";
+    dgn_Layout_Type   = "rooms";
 
     // Draws a room, then another and links them together, then another and etc.
     // Of course, this can easily end up looking just like a make_trail level.
@@ -6046,8 +6070,11 @@ static char _plan_3()
 static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                     char forbid_y2, dungeon_feature_type force_wall)
 {
-    dgn_Build_Method = "plan_4";
-    dgn_Layout_Type  = "city";
+    dgn_Build_Method += make_stringf(" plan_4 [%d,%d %d,%d %d]",
+                                     (int) forbid_x1, (int) forbid_y1,
+                                     (int) forbid_x2, (int) forbid_y2,
+                                     (int) force_wall);
+    dgn_Layout_Type   = "city";
 
     int temp_rand;              // req'd for probability checking
 
@@ -6148,8 +6175,8 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
 
 static char _plan_5()
 {
-    dgn_Build_Method = "plan_5";
-    dgn_Layout_Type  = "misc"; // XXX: What type of layout is this?
+    dgn_Build_Method += " plan_5";
+    dgn_Layout_Type   = "misc"; // XXX: What type of layout is this?
 
     unsigned char imax = 5 + random2(20);       // value range of [5,24] {dlb}
 
@@ -6170,8 +6197,8 @@ static char _plan_5()
 // Octagon with pillars in middle.
 static char _plan_6(int level_number)
 {
-    dgn_Build_Method = "plan_6";
-    dgn_Layout_Type  = "open";
+    dgn_Build_Method += make_stringf(" plan_6 [%d]", level_number);
+    dgn_Layout_Type   = "open";
 
     const map_def *vault = find_map_by_name("layout_big_octagon");
     ASSERT(vault);
@@ -6199,7 +6226,8 @@ static char _plan_6(int level_number)
 bool octa_room(spec_room &sr, int oblique_max,
                dungeon_feature_type type_floor)
 {
-    dgn_Build_Method = "octa_room";
+    dgn_Build_Method += make_stringf(" octa_room [%d %d]", oblique_max,
+                                     (int) type_floor);
 
     int x,y;
 
@@ -6354,6 +6382,7 @@ static void _init_minivault_placement(const map_def *vault,
                                       vault_placement &place)
 {
     vault_main(place, vault);
+    remember_vault_placement(LEVEL_VAULTS_KEY, place);
 }
 
 // Checks whether a given grid has at least one neighbour surrounded
@@ -6739,7 +6768,8 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
 
 static void _labyrinth_level(int level_number)
 {
-    dgn_Layout_Type = "labyrinth";
+    dgn_Build_Method += make_stringf(" labyrinth [%d]", level_number);
+    dgn_Layout_Type   = "labyrinth";
 
     dgn_region lab = dgn_region::absolute( LABYRINTH_BORDER,
                                            LABYRINTH_BORDER,
@@ -6970,8 +7000,8 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 
 static void _city_level(int level_number)
 {
-    dgn_Build_Method = "city_level";
-    dgn_Layout_Type  = "city";
+    dgn_Build_Method += make_stringf(" city_level [%d]", level_number);
+    dgn_Layout_Type   = "city";
 
     int temp_rand;          // probability determination {dlb}
     // Remember, can have many wall types in one level.
@@ -7252,6 +7282,9 @@ static void _chequerboard( spec_room &sr, dungeon_feature_type target,
 
 static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
 {
+    dgn_Build_Method += make_stringf(" roguey_level [%d%s]", level_number,
+                                     make_stairs ? " make_stairs" : "");
+
     int bcount_x, bcount_y;
     int cn = 0;
     int i;
@@ -7490,7 +7523,8 @@ static void _build_river( dungeon_feature_type river_type ) //mv
     if (player_in_branch( BRANCH_CRYPT ) || player_in_branch( BRANCH_TOMB ))
         return;
 
-    river_level = true;
+    std::string extra = make_stringf("river [%d]", (int) river_type);
+    env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
 
     // if (one_chance_in(10))
     //     _build_river(river_type);
@@ -7540,7 +7574,8 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
-    lake_level = true;
+    std::string extra = make_stringf("lake [%d]", (int) lake_type);
+    env.properties[LEVEL_EXTRAS_KEY].get_vector().push_back(extra);
 
     // if (one_chance_in (10))
     //     _build_lake(lake_type);
@@ -8335,4 +8370,21 @@ void vault_placement::draw_at(const coord_def &c)
 {
     pos = c;
     apply_grid();
+}
+
+void remember_vault_placement(std::string key, vault_placement &place)
+{
+    CrawlHashTable &table = env.properties[key].get_table();
+
+    std::string name = make_stringf("%s [%d]", place.map.name.c_str(),
+                                    table.size() + 1);
+
+    std::string place_str
+        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d alt: %d rune: %d "
+                       "subst: %d",
+                       place.pos.x, place.pos.y, place.size.x, place.size.y,
+                       place.orient, place.level_number, place.altar_count,
+                       place.num_runes, place.rune_subst);
+
+    table[name] = place_str;
 }

@@ -81,6 +81,11 @@ static bool _place_feature_near( const coord_def &centre,
 // Public for abyss generation.
 void generate_abyss()
 {
+    extern std::string dgn_Build_Method;
+
+    dgn_Build_Method += " abyss";
+    dgn_Layout_Type   = "abyss";
+
 #ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,
          "generate_abyss(); turn_on_level: %d", env.turns_on_level);

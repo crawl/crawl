@@ -22,6 +22,13 @@
 #include <set>
 #include <algorithm>
 
+#define BUILD_METHOD_KEY "build_method_key"
+#define LAYOUT_TYPE_KEY  "layout_type_key"
+#define LEVEL_VAULTS_KEY "level_vaults_key"
+#define TEMP_VAULTS_KEY  "temp_vaults_key"
+#define LEVEL_EXTRAS_KEY "level_extras_key"
+#define LEVEL_ID_KEY     "level_id_key"
+
 enum portal_type
 {
     PORTAL_NONE = 0,
@@ -411,5 +418,5 @@ int count_antifeature_in_box(int x0, int y0, int x1, int y1,
                              dungeon_feature_type feat);
 int count_neighbours(int x, int y, dungeon_feature_type feat);
 
-
+void remember_vault_placement(std::string key, vault_placement &place);
 #endif
