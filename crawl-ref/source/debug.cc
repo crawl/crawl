@@ -52,11 +52,6 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
-
-#ifdef WIZARD
-#include "macro.h"
-#endif
-
 #include "makeitem.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -91,6 +86,13 @@ REVISION("$Rev$");
 #include "travel.h"
 #include "version.h"
 #include "view.h"
+
+#ifdef WIZARD
+#include "macro.h"
+#include "shopping.h"
+#include "xom.h"
+#endif
+
 
 // ========================================================================
 //      Internal Functions
@@ -1910,6 +1912,78 @@ static bool _make_book_randart(item_def &book)
         return make_book_theme_randart(book);
 }
 
+void wizard_value_randart()
+{
+    int i = prompt_invent_item( "Value of which randart?", MT_INVLIST, -1 );
+
+    if (!prompt_failed(i))
+    {
+        if (!is_random_artefact( you.inv[i] ))
+            mpr("That item is not an artefact!");
+        else
+            mprf("randart val: %d", randart_value(you.inv[i]));
+    }
+}
+
+void wizard_create_all_artefacts()
+{
+    // Create all unrandarts. Start at 1; the unrandart at 0 is a dummy.
+    for (int i = 1; i < NO_UNRANDARTS; i++)
+    {
+        int islot = get_item_slot();
+        if (islot == NON_ITEM)
+            break;
+
+        item_def& item = mitm[islot];
+        make_item_unrandart(item, i);
+        item.quantity = 1;
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
+                                        << std::endl;
+        move_item_to_grid(&islot, you.pos());
+    }
+
+    // Create all fixed artefacts.
+    for (int i = SPWPN_START_FIXEDARTS; i < SPWPN_START_NOGEN_FIXEDARTS; i++)
+    {
+        int islot = get_item_slot();
+        if (islot == NON_ITEM)
+            break;
+
+        item_def& item = mitm[islot];
+        if (make_item_fixed_artefact(item, false, i))
+        {
+            item.quantity = 1;
+            item_colour(item);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
+            move_item_to_grid( &islot, you.pos() );
+
+            msg::streams(MSGCH_DIAGNOSTICS) << "Made "
+                                            << item.name(DESC_NOCAP_A)
+                                            << std::endl;
+        }
+    }
+
+    // Create Horn of Geryon
+    int islot = get_item_slot();
+    if (islot != NON_ITEM)
+    {
+        item_def& item = mitm[islot];
+        item.clear();
+        item.base_type = OBJ_MISCELLANY;
+        item.sub_type  = MISC_HORN_OF_GERYON;
+        item.quantity  = 1;
+        item_colour(item);
+
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        move_item_to_grid(&islot, you.pos());
+
+        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
+                                        << std::endl;
+    }
+}
+
 void wizard_make_object_randart()
 {
     int i = prompt_invent_item( "Make an artefact out of which item?",
@@ -1985,6 +2059,440 @@ void wizard_make_object_randart()
         use_randart(item);
 
     mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+}
+
+// Returns whether an item of this type can be cursed.
+static bool _item_type_can_be_cursed(int type)
+{
+    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
+}
+
+void wizard_uncurse_item()
+{
+    const int i = prompt_invent_item("(Un)curse which item?", MT_INVLIST, -1);
+
+    if (!prompt_failed(i))
+    {
+        item_def& item(you.inv[i]);
+
+        if (item_cursed(item))
+            do_uncurse_item(item);
+        else if (_item_type_can_be_cursed(item.base_type))
+            do_curse_item(item);
+        else
+            mpr("That type of item cannot be cursed.");
+    }
+}
+
+void wizard_heal(bool super_heal)
+{
+    if (super_heal)
+    {
+        // Clear more stuff and give a HP boost.
+        you.magic_contamination = 0;
+        you.duration[DUR_LIQUID_FLAMES] = 0;
+        if (you.duration[DUR_MESMERISED])
+        {
+            you.duration[DUR_MESMERISED] = 0;
+            you.mesmerised_by.clear();
+        }
+        // If we're repeating then do the HP increase all at once.
+        int amount = 10;
+        if (crawl_state.cmd_repeat_goal > 0)
+        {
+            amount *= crawl_state.cmd_repeat_goal;
+            crawl_state.cancel_cmd_repeat();
+        }
+
+        inc_hp(amount, true);
+    }
+
+    // Clear most status ailments.
+    you.rotting = 0;
+    you.disease = 0;
+    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_POISONING] = 0;
+    set_hp(abs(you.hp_max), false);
+    set_mp(you.max_magic_points, false);
+    set_hunger(10999, true);
+    you.redraw_hit_points = true;
+}
+
+void wizard_set_hunger_state()
+{
+    mpr( "Set hunger state to s(T)arving, (N)ear starving, "
+         "(H)ungry, (S)atiated, (F)ull or (E)ngorged?", MSGCH_PROMPT );
+    const int c = tolower(getch());
+
+    // Values taken from food.cc.
+    switch (c)
+    {
+    case 't': you.hunger = 500;   break;
+    case 'n': you.hunger = 1200;  break;
+    case 'h': you.hunger = 2400;  break;
+    case 's': you.hunger = 5000;  break;
+    case 'f': you.hunger = 8000;  break;
+    case 'e': you.hunger = 12000; break;
+    default:  canned_msg(MSG_OK); break;
+    }
+    food_change();
+    if (you.species == SP_GHOUL && you.hunger_state >= HS_SATIATED)
+        mpr("Ghouls can never be full or above!");
+}
+
+void wizard_spawn_control()
+{
+    mpr("(c)hange spawn rate or (s)pawn monsters? ", MSGCH_PROMPT);
+    const int c = tolower(getch());
+
+    char specs[256];
+    bool done = false;
+
+    if (c == 'c')
+    {
+        mprf(MSGCH_PROMPT, "Set monster spawn rate to what? (now %d) ",
+             env.spawn_random_rate);
+
+        if (!cancelable_get_line(specs, sizeof(specs)))
+        { 
+            const int rate = atoi(specs);
+            if (rate)
+            {
+                env.spawn_random_rate = rate;
+                done = true;
+            }
+        }
+    }
+    else if (c == 's')
+    {
+        // 50 spots are reserved for non-wandering monsters.
+        int max_spawn = MAX_MONSTERS - 50;
+        for (int i = 0; i < MAX_MONSTERS; i++)
+            if (menv[i].alive())
+                max_spawn--;
+
+        if (max_spawn <= 0)
+        {
+            mpr("Level already filled with monsters, get rid of some "
+                "of them first.", MSGCH_PROMPT);
+            return;
+        }
+
+        mprf(MSGCH_PROMPT, "Spawn how many random monsters (max %d)? ",
+             max_spawn);
+
+        if (!cancelable_get_line(specs, sizeof(specs)))
+        { 
+            const int num = std::min(atoi(specs), max_spawn);
+            if (num > 0)
+            {
+                int curr_rate = env.spawn_random_rate;
+                // Each call to spawn_random_monsters() will spawn one with
+                // the rate at 5 or less.
+                env.spawn_random_rate = 5;
+                
+                for (int i = 0; i < num; i++)
+                    spawn_random_monsters();
+                
+                env.spawn_random_rate = curr_rate;
+                done = true;
+            }
+        }
+    }
+
+    if (!done)
+        canned_msg(MSG_OK);
+}
+
+void wizard_create_portal()
+{
+    mpr("Destination for portal (defaults to 'bazaar')? ", MSGCH_PROMPT);
+    char specs[256];
+    if (cancelable_get_line(specs, sizeof(specs)))
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    std::string dst = specs;
+    dst = trim_string(dst);
+    dst = replace_all(dst, " ", "_");
+
+    if (dst.empty())
+        dst = "bazaar";
+
+    if (!find_map_by_name(dst) && !random_map_for_tag(dst))
+    {
+        mprf("No map named '%s' or tagged '%s'.", dst.c_str(), dst.c_str());
+    }
+    else
+    {
+        map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
+        marker->set_property("dst", dst);
+        marker->set_property("desc", "wizard portal, dest = " + dst);
+        env.markers.add(marker);
+        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PORTAL_VAULT, false);
+    }
+}
+
+void wizard_identify_pack()
+{
+    mpr( "You feel a rush of knowledge." );
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (is_valid_item(item))
+        {
+            set_ident_type(item, ID_KNOWN_TYPE);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
+        }
+    }
+    you.wield_change  = true;
+    you.redraw_quiver = true;
+}
+
+void wizard_unidentify_pack()
+{
+    mpr( "You feel a rush of antiknowledge." );
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (is_valid_item(item))
+        {
+            set_ident_type(item, ID_UNKNOWN_TYPE);
+            unset_ident_flags(item, ISFLAG_IDENT_MASK);
+        }
+    }
+    you.wield_change  = true;
+    you.redraw_quiver = true;
+
+    // Forget things that nearby monsters are carrying, as well.
+    // (For use with the "give monster an item" wizard targetting
+    // command.)
+    for (int i = 0; i < MAX_MONSTERS; i++)
+    {
+        monsters* mon = &menv[i];
+
+        if (mon->alive() && mons_near(mon))
+        {
+            for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+            {
+                if (mon->inv[j] == NON_ITEM)
+                    continue;
+
+                item_def &item = mitm[mon->inv[j]];
+
+                if (!is_valid_item(item))
+                    continue;
+
+                set_ident_type(item, ID_UNKNOWN_TYPE);
+                unset_ident_flags(item, ISFLAG_IDENT_MASK);
+            }
+        }
+    }
+}
+
+void wizard_create_feature_number()
+{
+    char specs[256];
+    int feat_num;
+    mpr("Create which feature (by number)? ", MSGCH_PROMPT);
+
+    if (!cancelable_get_line(specs, sizeof(specs))
+        && (feat_num = atoi(specs)))
+    {
+        dungeon_feature_type feat = static_cast<dungeon_feature_type>(feat_num);
+        dungeon_terrain_changed(you.pos(), feat, false);
+#ifdef USE_TILE
+        env.tile_flv(you.pos()).special = 0;
+#endif
+    }
+    else
+        canned_msg(MSG_OK);
+}
+
+void wizard_create_feature_name()
+{
+    char specs[256];
+    mpr("Create which feature (by name)? ", MSGCH_PROMPT);
+    get_input_line(specs, sizeof specs);
+    if (!cancelable_get_line(specs, sizeof(specs)) && specs[0] != 0)
+    {
+        // Accept both "shallow_water" and "Shallow water"
+        std::string name = lowercase_string(specs);
+        name = replace_all(name, " ", "_");
+
+        dungeon_feature_type feat = dungeon_feature_by_name(name);
+        if (feat == DNGN_UNSEEN) // no exact match
+        {
+            std::vector<std::string> matches = dungeon_feature_matches(name);
+
+            if (matches.empty())
+            {
+                mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
+                     name.c_str());
+                return;
+            }
+
+            // Only one possible match, use that.
+            if (matches.size() == 1)
+            {
+                name = matches[0];
+                feat = dungeon_feature_by_name(name);
+            }
+            // Multiple matches, list them to wizard
+            else
+            {
+                std::string prefix = "No exact match for feature '" +
+                    name +  "', possible matches are: ";
+
+                // Use mpr_comma_separated_list() because the list
+                // might be *LONG*.
+                mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                                         MSGCH_DIAGNOSTICS);
+                return;
+            }
+        }
+
+        mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
+             you.pos().x, you.pos().y, name.c_str(), feat);
+        dungeon_terrain_changed(you.pos(), feat, false);
+#ifdef USE_TILE
+        env.tile_flv(you.pos()).special = 0;
+#endif
+    }
+    else
+        canned_msg(MSG_OK);
+}
+
+void wizard_list_branches()
+{
+    for (int i = 0; i < NUM_BRANCHES; i++)
+    {
+        if (branches[i].startdepth != - 1)
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
+                 i, branches[i].longname, branches[i].startdepth,
+                 branches[branches[i].parent_branch].abbrevname);
+        }
+        else if (i == BRANCH_SWAMP || i == BRANCH_SHOALS)
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
+                 "this game", i, branches[i].longname);
+        }
+    }
+}
+
+void wizard_map_level()
+{
+    if (testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
+        || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE))
+    {
+        if (!yesno("Force level to be mappable?", true, 'n'))
+        {
+            canned_msg( MSG_OK );
+            return;
+        }
+
+        unset_level_flags(LFLAG_NOT_MAPPABLE | LFLAG_NO_MAGIC_MAP);
+        unset_branch_flags(BFLAG_NOT_MAPPABLE | BFLAG_NO_MAGIC_MAP);
+    }
+
+    magic_mapping(1000, 100, true, true);
+}
+
+void wizard_gain_piety()
+{
+    if (you.religion == GOD_NO_GOD)
+    {
+        mpr("You are not religious!");
+        return;
+    }
+    else if (you.religion == GOD_XOM) // increase amusement instead
+    {
+        xom_is_stimulated(50, XM_NORMAL, true);
+        return;
+    }
+
+    const int old_piety   = you.piety;
+    const int old_penance = you.penance[you.religion];
+    if (old_piety >= MAX_PIETY && !old_penance)
+    {
+        mprf("Your piety (%d) is already %s maximum.",
+             old_piety, old_piety == MAX_PIETY ? "at" : "above");
+    }
+
+    // Even at maximum, you can still gain gifts.
+    // Try at least once for maximum, or repeat until something
+    // happens. Rarely, this might result in several gifts during the
+    // same round!
+    do
+    {
+        gain_piety(50);
+    }
+    while (old_piety < MAX_PIETY && old_piety == you.piety
+           && old_penance == you.penance[you.religion]);
+
+    if (old_penance)
+    {
+        mprf("Congratulations, your penance was decreased from %d to %d!",
+             old_penance, you.penance[you.religion]);
+    }
+    else if (you.piety > old_piety)
+    {
+        mprf("Congratulations, your piety went from %d to %d!",
+             old_piety, you.piety);
+    }
+}
+
+void wizard_list_items()
+{
+    bool has_shops = false;
+
+    for (int i = 0; i < MAX_SHOPS; i++)
+        if (env.shop[i].type != SHOP_UNASSIGNED)
+        {
+            has_shops = true;
+            break;
+        }
+
+    if (has_shops)
+    {
+        mpr("Shop items:");
+
+        for (int i = 0; i < MAX_SHOPS; i++)
+            if (env.shop[i].type != SHOP_UNASSIGNED)
+                for (stack_iterator si(coord_def(0, i+5)); si; ++si)
+                    mpr(si->name(DESC_PLAIN, false, false, false).c_str());
+
+        mpr(EOL);
+    }
+
+    mpr("Item stacks (by location and top item):");
+    for (int i = 0; i < MAX_ITEMS; i++)
+    {
+        item_def &item(mitm[i]);
+        if (!is_valid_item(item) || held_by_monster(item))
+            continue;
+
+        if (item.link != NON_ITEM)
+            mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
+                 item.name(DESC_PLAIN, false, false, false).c_str() );
+    }
+
+    mpr(EOL);
+    mpr("Floor items (stacks only show top item):");
+
+    for (int i = 1; i < GXM; i++)
+        for (int j = 1; j < GYM; j++)
+        {
+            int item = igrd[i][j];
+            if (item != NON_ITEM)
+            {
+                mprf("%3d at (%2d,%2d): %s", item, i, j,
+                     mitm[item].name(DESC_PLAIN, false, false, false).c_str());
+            }
+        }
 }
 #endif
 

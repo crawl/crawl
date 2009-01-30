@@ -439,45 +439,75 @@ static void _startup_tutorial()
 }
 
 #ifdef WIZARD
-// Returns whether an item of this type can be cursed.
-static bool _item_type_can_be_cursed( int type)
-{
-    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
-}
-
 static void _do_wizard_command(int wiz_command, bool silent_fail)
 {
     ASSERT(you.wizard);
-    if (!you.wizard)
-        return;
-
-    int tmp;
-    char specs[256];
 
     switch (wiz_command)
     {
     case '?':
     {
-        int key = list_wizard_commands(true);
+        const int key = list_wizard_commands(true);
         _do_wizard_command(key, true);
         return;
     }
 
-    case CONTROL('G'):
-        save_ghost(true);
-        break;
+    case CONTROL('D'): wizard_edit_durations(); break;
+    case CONTROL('F'): debug_fight_statistics(false, true); break;
+    case CONTROL('G'): save_ghost(true); break;
+    case CONTROL('H'): wizard_set_hunger_state(); break;
+    case CONTROL('I'): debug_item_statistics(); break;
+    case CONTROL('X'): wizard_set_xl(); break;
+
+    case 'O': debug_test_explore();                  break;
+    case 'S': wizard_set_skill_level();              break;
+    case 'A': wizard_set_all_skills();               break;
+    case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE);   break;
+    case 'v': wizard_value_randart();                break;
+    case '+': wizard_make_object_randart();          break;
+    case '|': wizard_create_all_artefacts();         break;
+    case 'C': wizard_uncurse_item();                 break;
+    case 'g': wizard_exercise_skill();               break;
+    case 'G': wizard_dismiss_all_monsters();         break;
+    case 'c': wizard_draw_card();                    break;
+    case 'H': wizard_heal(true);                     break;
+    case 'h': wizard_heal(false);                    break;
+    case 'b': blink(1000, true, true);               break;
+    case '~': wizard_interlevel_travel();            break;
+    case '"': debug_list_monsters();                 break;
+    case 't': wizard_tweak_object();                 break;
+    case 'T': debug_make_trap();                     break;
+    case '\\': debug_make_shop();                    break;
+    case 'f': debug_fight_statistics(false);         break;
+    case 'F': debug_fight_statistics(true);          break;
+    case 'm': wizard_create_spec_monster();          break;
+    case 'M': wizard_create_spec_monster_name();     break;
+    case 'R': wizard_spawn_control();                break;
+    case 'r': wizard_change_species();               break;
+    case '>': wizard_place_stairs(true);             break;
+    case '<': wizard_place_stairs(false);            break;
+    case 'P': wizard_create_portal();                break;
+    case 'L': debug_place_map();                     break;
+    case 'i': wizard_identify_pack();                break;
+    case 'I': wizard_unidentify_pack();              break;
+    case 'z': wizard_cast_spec_spell();              break;
+    case 'Z': wizard_cast_spec_spell_name();         break;
+    case '(': wizard_create_feature_number();        break;
+    case ')': wizard_create_feature_name();          break;
+    case '[': demonspawn();                          break;
+    case ':': wizard_list_branches();                break;
+    case '{': wizard_map_level();                    break;
+    case '@': wizard_set_stats();                    break;
+    case '^': wizard_gain_piety();                   break;
+    case '_': wizard_get_religion();                 break;
+    case '\'': wizard_list_items();                  break;
+    case 'd': case 'D': wizard_level_travel(true);   break;
+    case 'u': case 'U': wizard_level_travel(false);  break;
+    case '%': case 'o': wizard_create_spec_object(); break;
 
     case 'x':
         you.experience = 1 + exp_needed( 2 + you.experience_level );
         level_change();
-        break;
-
-    case CONTROL('X'):
-        wizard_set_xl();
-        break;
-
-    case 'O':
-        debug_test_explore();
         break;
 
     case 's':
@@ -485,127 +515,11 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         you.redraw_experience = true;
         break;
 
-    case 'S':
-        wizard_set_skill_level();
-        break;
-
-    case 'A':
-        wizard_set_all_skills();
-        break;
-
     case '$':
         you.gold += 1000;
         if (!Options.show_gold_turns)
             mprf("You now have %d gold.", you.gold);
         break;
-
-    case 'a':
-        acquirement( OBJ_RANDOM, AQ_WIZMODE );
-        break;
-
-    case 'v':
-    {
-        // This command isn't very exciting... feel free to replace.
-        int i = prompt_invent_item( "Value of which item?", MT_INVLIST, -1 );
-
-        if (prompt_failed(i))
-            break;
-        else if (!is_random_artefact( you.inv[i] ))
-            mpr("That item is not an artefact!");
-        else
-            mprf("randart val: %d", randart_value(you.inv[i]));
-
-        break;
-    }
-
-    case '+':
-        wizard_make_object_randart();
-        break;
-
-    case '|':
-        // Create all unrandarts.
-        for (tmp = 1; tmp < NO_UNRANDARTS; tmp++)
-        {
-            int islot = get_item_slot();
-            if (islot == NON_ITEM)
-                break;
-
-            make_item_unrandart( mitm[islot], tmp );
-
-            mitm[ islot ].quantity = 1;
-            set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
-
-            msg::streams(MSGCH_DIAGNOSTICS) << "Made "
-                                            << mitm[islot].name(DESC_NOCAP_A)
-                                            << std::endl;
-
-            move_item_to_grid( &islot, you.pos() );
-        }
-
-        // Create all fixed artefacts.
-        for (tmp = SPWPN_START_FIXEDARTS;
-             tmp < SPWPN_START_NOGEN_FIXEDARTS; tmp++)
-        {
-            int islot = get_item_slot();
-            if (islot == NON_ITEM)
-                break;
-
-            if (make_item_fixed_artefact( mitm[ islot ], false, tmp ))
-            {
-                mitm[ islot ].quantity = 1;
-                item_colour( mitm[ islot ] );
-                set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
-
-                move_item_to_grid( &islot, you.pos() );
-
-                msg::streams(MSGCH_DIAGNOSTICS) <<
-                    "Made " << mitm[islot].name(DESC_NOCAP_A) << std::endl;
-            }
-        }
-
-        // Create Horn of Geryon
-        {
-            int islot = get_item_slot();
-            if (islot == NON_ITEM)
-                break;
-
-            mitm[islot].base_type = OBJ_MISCELLANY;
-            mitm[islot].sub_type  = MISC_HORN_OF_GERYON;
-            mitm[islot].plus      = 0;
-            mitm[islot].plus2     = 0;
-            mitm[islot].special   = 0;
-            mitm[islot].flags     = 0;
-            mitm[islot].quantity  = 1;
-            item_colour(mitm[islot]);
-
-            set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
-            move_item_to_grid( &islot, you.pos() );
-
-            msg::streams(MSGCH_DIAGNOSTICS) << "Made "
-                                            << mitm[islot].name(DESC_NOCAP_A)
-                                            << std::endl;
-        }
-
-        break;
-
-    case 'C':
-    {
-        // This command isn't very exciting but it's useful for debugging.
-        int i = prompt_invent_item( "(Un)curse which item?", MT_INVLIST, -1 );
-
-        if (prompt_failed(i))
-            break;
-
-        item_def& item(you.inv[i]);
-
-        if (item_cursed(item))
-            do_uncurse_item(item);
-        else if (_item_type_can_be_cursed(item.base_type))
-            do_curse_item(item);
-        else
-            mpr("That type of item cannot be cursed.");
-        break;
-    }
 
     case 'B':
         if (you.level_type != LEVEL_ABYSS)
@@ -619,265 +533,29 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             abyss_teleport(true);
         else
             mpr("You can only abyss_teleport() inside the Abyss.");
-
         break;
 
-    case 'g':
-        wizard_exercise_skill();
+    case ']':
+        if (!wizard_add_mutation())
+            mpr( "Failure to give mutation." );
         break;
 
-    case 'G':
-        wizard_dismiss_all_monsters();
+    case '=':
+        mprf( "Cost level: %d  Skill points: %d  Next cost level: %d",
+              you.skill_cost_level, you.total_skill_points,
+              skill_cost_needed( you.skill_cost_level + 1 ) );
         break;
 
-    case 'c':
-        wizard_draw_card();
-        break;
-
-    case 'H': // super-heal
-        you.magic_contamination = 0;
-        you.duration[DUR_LIQUID_FLAMES] = 0;
-        if (you.duration[DUR_MESMERISED])
-        {
-            you.duration[DUR_MESMERISED] = 0;
-            you.mesmerised_by.clear();
-        }
-        // If we're repeating &H then do the HP increase all at once.
-        tmp = 10;
-        if (crawl_state.cmd_repeat_goal > 0)
-        {
-            tmp *= crawl_state.cmd_repeat_goal;
-            crawl_state.cancel_cmd_repeat();
-        }
-
-        inc_hp( tmp, true );
-       // intentional fall-through
-    case 'h':
-        you.rotting = 0;
-        you.disease = 0;
-        you.duration[DUR_CONF] = 0;
-        you.duration[DUR_POISONING] = 0;
-        set_hp( abs(you.hp_max), false );
-        set_mp( you.max_magic_points, false);
-        set_hunger( 10999, true );
-        you.redraw_hit_points = true;
-        break;
-
-    case CONTROL('H'):
-        mpr( "Set hunger state to s(T)arving, (N)ear starving, (H)ungry, (S)atiated, (F)ull or (E)ngorged?", MSGCH_PROMPT );
-        tmp = tolower(getch());
-
-        // Values taken from food.cc.
-        switch (tmp)
-        {
-        case 't':
-            you.hunger = 500;
-            break;
-        case 'n':
-            you.hunger = 1200;
-            break;
-        case 'h':
-            you.hunger = 2400;
-            break;
-        case 's':
-            you.hunger = 5000;
-            break;
-        case 'f':
-            you.hunger = 8000;
-            break;
-        case 'e':
-            you.hunger = 12000;
-            break;
-        default:
-            canned_msg( MSG_OK );
-            break;
-        }
-        food_change();
-        if (you.species == SP_GHOUL && you.hunger_state >= HS_SATIATED)
-            mpr("Ghouls can never be full or above!");
-        break;
-
-    case 'b':
-        // wizards can always blink, with no restrictions or
-        // magical contamination.
-        blink(1000, true, true);
-        break;
-
-    case '~':
-        wizard_interlevel_travel();
-        break;
-
-    case '"':
-        debug_list_monsters();
-        break;
-
-    case 'd':
-    case 'D':
-        wizard_level_travel(true);
-        break;
-
-    case 'u':
-    case 'U':
-        wizard_level_travel(false);
-        break;
-
-    case '%':
-    case 'o':
-        wizard_create_spec_object();
-        break;
-
-    case 't':
-        wizard_tweak_object();
-        break;
-
-    case 'T':
-        debug_make_trap();
-        break;
-
-    case '\\':
-        debug_make_shop();
-        break;
-
-    case CONTROL('F'):
-        debug_fight_statistics(false, true);
-        break;
-
-    case 'f':
-        debug_fight_statistics(false);
-        break;
-
-    case 'F':
-        debug_fight_statistics(true);
-        break;
-
-    case 'm':
-        wizard_create_spec_monster();
-        break;
-
-    case 'M':
-        wizard_create_spec_monster_name();
-        break;
-
-    case 'R':
-        mpr( "(c)hange spawn rate or (s)pawn monsters? ", MSGCH_PROMPT );
-        tmp = tolower(getch());
-
-        if (tmp != 'c' && tmp != 's')
-        {
-            canned_msg( MSG_OK );
-            break;
-        }
-
-        if (tmp == 'c')
-        {
-            sprintf(specs, "Set monster spawn rate to what? (now %d) ",
-                    env.spawn_random_rate);
-            mpr(specs, MSGCH_PROMPT );
-
-            if (cancelable_get_line( specs, sizeof( specs ) )
-                || strlen(specs) == 0)
-            {
-                canned_msg( MSG_OK );
-                break;
-            }
-
-            if (tmp = atoi(specs))
-                env.spawn_random_rate = tmp;
-        }
+    case 'X':
+        if (you.religion == GOD_XOM)
+            xom_acts(abs(you.piety - 100));
         else
-        {
-            // 50 spots are reserved for non-wandering monsters.
-            int max_spawn = MAX_MONSTERS - 50;
-            for (int i = 0; i < MAX_MONSTERS; i++)
-            {
-                if (menv[i].alive())
-                    max_spawn--;
-            }
-
-            if (max_spawn <= 0)
-            {
-                mpr("Level already filled with monsters, get rid of some "
-                    "of them first.", MSGCH_PROMPT);
-                return;
-            }
-
-            sprintf(specs, "Spawn how many random monsters (max %d)? ",
-                    max_spawn);
-            mpr(specs, MSGCH_PROMPT );
-
-            if (cancelable_get_line( specs, sizeof( specs ) )
-                || strlen(specs) == 0)
-            {
-                canned_msg( MSG_OK );
-                break;
-            }
-
-            int num = atoi(specs);
-            if (num <= 0)
-            {
-                canned_msg( MSG_OK );
-                break;
-            }
-            num = std::max(num, max_spawn);
-
-            int curr_rate = env.spawn_random_rate;
-            // Each call to spawn_random_monsters() will spawn one with
-            // the rate at 5 or less.
-            env.spawn_random_rate = 5;
-
-            for (int i = 0; i < num; i++)
-                spawn_random_monsters();
-
-            env.spawn_random_rate = curr_rate;
-        }
-        break;
-
-    case 'r':
-        wizard_change_species();
-        break;
-
-    case '>':
-        wizard_place_stairs(true);
-        break;
-
-    case '<':
-        wizard_place_stairs(false);
+            xom_acts(coinflip(), random_range(0, MAX_PIETY - 100));
         break;
 
     case 'p':
         dungeon_terrain_changed(you.pos(), DNGN_ENTER_PANDEMONIUM, false);
         break;
-
-    case 'P':
-    {
-        mpr( "Destination for portal (defaults to 'bazaar')? ", MSGCH_PROMPT );
-        if (cancelable_get_line( specs, sizeof( specs ) ))
-        {
-            canned_msg( MSG_OK );
-            break;
-        }
-
-        std::string dst = specs;
-        dst = trim_string(dst);
-        dst = replace_all(dst, " ", "_");
-
-        if (dst.empty())
-            dst = "bazaar";
-
-        if (!find_map_by_name(dst) && !random_map_for_tag(dst))
-        {
-            mprf("No map named '%s' or tagged '%s'.",
-                 dst.c_str(), dst.c_str());
-            break;
-        }
-
-        map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
-        marker->set_property("dst", dst);
-        marker->set_property("desc", "wizard portal, dest = " + dst);
-        env.markers.add(marker);
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PORTAL_VAULT, false);
-        break;
-    }
 
     case 'l':
         dungeon_terrain_changed(you.pos(), DNGN_ENTER_LABYRINTH, false);
@@ -890,322 +568,13 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("This only makes sense in a labyrinth!");
         break;
 
-    case 'L':
-        debug_place_map();
-        break;
-
-    case 'i':
-        mpr( "You feel a rush of knowledge." );
-        for (int i = 0; i < ENDOFPACK; i++)
-        {
-            if (is_valid_item( you.inv[i] ))
-            {
-                set_ident_type( you.inv[i], ID_KNOWN_TYPE );
-                set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
-            }
-        }
-        you.wield_change  = true;
-        you.redraw_quiver = true;
-        break;
-
-    case 'I':
-        mpr( "You feel a rush of antiknowledge." );
-        for (int i = 0; i < ENDOFPACK; i++)
-        {
-            if (is_valid_item( you.inv[i] ))
-            {
-                set_ident_type( you.inv[i], ID_UNKNOWN_TYPE );
-                unset_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
-            }
-        }
-        you.wield_change  = true;
-        you.redraw_quiver = true;
-
-        // Forget things that nearby monsters are carrying, as well.
-        // (For use with the "give monster an item" wizard targetting
-        // command.)
-        for (int i = 0; i < MAX_MONSTERS; i++)
-        {
-            monsters* mon = &menv[i];
-
-            if (!invalid_monster(mon) && mons_near(mon))
-            {
-                for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-                {
-                    if (mon->inv[j] == NON_ITEM)
-                        continue;
-
-                    item_def &item = mitm[mon->inv[j]];
-
-                    if (!is_valid_item(item))
-                        continue;
-
-                    set_ident_type( item, ID_UNKNOWN_TYPE );
-                    unset_ident_flags( item, ISFLAG_IDENT_MASK );
-                }
-            }
-        }
-        break;
-
-    case CONTROL('I'):
-        debug_item_statistics();
-        break;
-
-    case 'X':
-        if (you.religion == GOD_XOM)
-            xom_acts(abs(you.piety - 100));
-        else
-            xom_acts(coinflip(), random_range(0, MAX_PIETY - 100));
-        break;
-
-    case 'z':
-        wizard_cast_spec_spell();      // Cast spell by number.
-        break;
-
-    case 'Z':
-        wizard_cast_spec_spell_name(); // Cast spell by name.
-        break;
-
-    case '(':
-        mpr( "Create which feature (by number)? ", MSGCH_PROMPT );
-        get_input_line( specs, sizeof( specs ) );
-
-        if (specs[0] != '\0')
-            if (const int feat_num = atoi(specs))
-            {
-                dungeon_feature_type feat =
-                    static_cast<dungeon_feature_type>( feat_num );
-                dungeon_terrain_changed(you.pos(), feat, false);
-#ifdef USE_TILE
-                env.tile_flv[you.pos().x][you.pos().y].special = 0;
-#endif
-            }
-        break;
-
-    case ')':
-        mpr("Create which feature (by name)? ", MSGCH_PROMPT);
-        get_input_line(specs, sizeof specs);
-        if (*specs)
-        {
-            // Accept both "shallow_water" and "Shallow water"
-            std::string name = lowercase_string(specs);
-            name = replace_all(name, " ", "_");
-
-            dungeon_feature_type feat = dungeon_feature_by_name(name);
-            if (feat == DNGN_UNSEEN)
-            {
-                std::vector<std::string> matches =
-                    dungeon_feature_matches(name);
-
-                if (matches.empty())
-                {
-                    mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
-                         name.c_str());
-                    return;
-                }
-
-                // Only one possible match, use that.
-                if (matches.size() == 1)
-                {
-                    name = matches[0];
-                    feat = dungeon_feature_by_name(name);
-                }
-                // Multiple matches, list them to wizard
-                else
-                {
-                    std::string prefix = "No exact match for feature '" +
-                        name +  "', possible matches are: ";
-
-                    // Use mpr_comma_separated_list() because the list
-                    // might be *LONG*.
-                    mpr_comma_separated_list(prefix, matches, " and ", ", ",
-                                             MSGCH_DIAGNOSTICS);
-                    return;
-                }
-            }
-
-            mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
-                 you.pos().x, you.pos().y, name.c_str(), feat);
-            dungeon_terrain_changed(you.pos(), feat, false);
-#ifdef USE_TILE
-            env.tile_flv[you.pos().x][you.pos().y].special = 0;
-#endif
-        }
-        break;
-
-    case ']':
-        if (!wizard_add_mutation())
-            mpr( "Failure to give mutation." );
-        break;
-
-    case '[':
-        demonspawn();
-        break;
-
-    case ':':
-        for (int i = 0; i < NUM_BRANCHES; i++)
-        {
-            if (branches[i].startdepth != - 1)
-            {
-                mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
-                     i, branches[i].longname, branches[i].startdepth,
-                     branches[branches[i].parent_branch].abbrevname);
-            }
-            else if (i == BRANCH_SWAMP || i == BRANCH_SHOALS)
-            {
-                mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
-                     "this game", i, branches[i].longname);
-            }
-        }
-        break;
-
-    case '{':
-        if (testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
-            || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE))
-        {
-            if (!yesno("Force level to be mappable?", true, 'n'))
-            {
-                canned_msg( MSG_OK );
-                return;
-            }
-
-            unset_level_flags(LFLAG_NOT_MAPPABLE | LFLAG_NO_MAGIC_MAP);
-            unset_branch_flags(BFLAG_NOT_MAPPABLE | BFLAG_NO_MAGIC_MAP);
-        }
-
-        magic_mapping(1000, 100, true, true);
-        break;
-
-    case '@':
-        wizard_set_stats();
-        break;
-
-    case CONTROL('D'):
-        wizard_edit_durations();
-        break;
-
-    case '^':
-        {
-            if (you.religion == GOD_NO_GOD)
-            {
-                mpr("You are not religious!");
-                break;
-            }
-            else if (you.religion == GOD_XOM) // increase amusement instead
-            {
-                xom_is_stimulated(50, XM_NORMAL, true);
-                break;
-            }
-
-            const int old_piety   = you.piety;
-            const int old_penance = you.penance[you.religion];
-            if (old_piety >= MAX_PIETY && !old_penance)
-            {
-                mprf("Your piety (%d) is already %s maximum.",
-                     old_piety, old_piety == MAX_PIETY ? "at" : "above");
-            }
-
-            // Even at maximum, you can still gain gifts.
-            // Try at least once for maximum, or repeat until something
-            // happens. Rarely, this might result in several gifts during the
-            // same round!
-            do
-            {
-               gain_piety(50);
-            }
-            while (old_piety < MAX_PIETY && old_piety == you.piety
-                   && old_penance == you.penance[you.religion]);
-
-            if (old_penance)
-            {
-                mprf("Congratulations, your penance was decreased from %d to %d!",
-                     old_penance, you.penance[you.religion]);
-            }
-            else if (you.piety > old_piety)
-            {
-                mprf("Congratulations, your piety went from %d to %d!",
-                     old_piety, you.piety);
-            }
-        }
-        break;
-
-    case '=':
-        mprf( "Cost level: %d  Skill points: %d  Next cost level: %d",
-              you.skill_cost_level, you.total_skill_points,
-              skill_cost_needed( you.skill_cost_level + 1 ) );
-        break;
-
-    case '_':
-        wizard_get_religion();
-        break;
-
-    case '\'':
-    {
-        bool has_shops = false;
-
-        for (int i = 0; i < MAX_SHOPS; i++)
-            if (env.shop[i].type != SHOP_UNASSIGNED)
-            {
-                has_shops = true;
-                break;
-            }
-
-        if (has_shops)
-        {
-            mpr("Shop items:");
-
-            for (int i = 0; i < MAX_SHOPS; i++)
-                if (env.shop[i].type != SHOP_UNASSIGNED)
-                {
-                    int objl = igrd[0][i + 5];
-
-                    while (objl != NON_ITEM)
-                    {
-                        item_def &item(mitm[objl]);
-                        std::string name = item.name(DESC_PLAIN, false,
-                                                     false, false);
-                        mpr(name.c_str());
-                        objl = item.link;
-                    }
-                }
-
-            mpr(EOL);
-        }
-
-        mpr("Item stacks (by location and top item):");
-        for (int i = 0; i < MAX_ITEMS; i++)
-        {
-            item_def &item(mitm[i]);
-            if (!is_valid_item(item) || held_by_monster(item))
-                continue;
-
-            if (item.link != NON_ITEM)
-                mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
-                 item.name(DESC_PLAIN, false, false, false).c_str() );
-        }
-
-        mpr(EOL);
-        mpr("Floor items (stacks only show top item):");
-
-        for (int i = 1; i < GXM; i++)
-            for (int j = 1; j < GYM; j++)
-            {
-                int item = igrd[i][j];
-                if (item != NON_ITEM)
-                {
-                    mprf("%3d at (%2d,%2d): %s",
-                         item, i, j,
-                         mitm[item].name(DESC_PLAIN, false, false,
-                                         false).c_str() );
-                }
-            }
-
-        break;
-    }
 
     default:
         if (!silent_fail)
-            formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
+        {
+            formatted_mpr(formatted_string::parse_string(
+                              "Not a <magenta>Wizard</magenta> Command."));
+        }
         break;
     }
     // Force the placement of any delayed monster gifts.
