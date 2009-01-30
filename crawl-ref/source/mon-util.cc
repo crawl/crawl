@@ -2717,6 +2717,9 @@ void mons_pacify(monsters *mon)
         mon->flags |= MF_GOT_HALF_XP;
     }
 
+    // Cancel fleeing and such.
+    mon->behaviour = BEH_WANDER;
+
     // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
 }

@@ -2632,6 +2632,10 @@ void behaviour_event(monsters *mon, int event, int src,
         if (!mons_wont_attack(mon) && is_sanctuary(mon->pos()))
             break;
 
+        // Pacified monsters shouldn't change their behaviour.
+        if (mons_is_pacified(mon))
+            break;
+
         // Just set behaviour... foe doesn't change.
         if (!mons_is_cornered(mon))
             simple_monster_message(mon, " turns to fight!");
