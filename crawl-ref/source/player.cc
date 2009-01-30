@@ -5950,19 +5950,7 @@ void player::init()
     sacrifice_value.init(0);
 
     for (int i = 0; i < ENDOFPACK; i++)
-    {
-        inv[i].quantity  = 0;
-        inv[i].base_type = OBJ_WEAPONS;
-        inv[i].sub_type  = WPN_CLUB;
-        inv[i].plus      = 0;
-        inv[i].plus2     = 0;
-        inv[i].special   = 0;
-        inv[i].colour    = 0;
-        set_ident_flags( inv[i], ISFLAG_IDENT_MASK );
-
-        inv[i].pos.set(-1, -1);
-        inv[i].link = i;
-    }
+        inv[i].clear();
 
     duration.init(0);
 
