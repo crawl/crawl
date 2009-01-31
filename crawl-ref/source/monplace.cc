@@ -73,7 +73,7 @@ static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
                               bool force_pos = false);
 
 // Returns whether actual_grid is compatible with grid_wanted for monster
-// movement (or for monster generation, if generation is true).
+// movement and generation.
 bool grid_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid)
 {
@@ -100,8 +100,6 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
                 && actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
     }
 
-    // Restricted fountains during generation, so we don't get monsters
-    // "trapped" in fountains for easy killing.
     return (grid_wanted == actual_grid
             || (grid_wanted == DNGN_DEEP_WATER
                 && (actual_grid == DNGN_SHALLOW_WATER
