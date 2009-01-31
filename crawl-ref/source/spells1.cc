@@ -780,11 +780,13 @@ static int _healing_spell(int healed, const coord_def where = coord_def(0,0))
             good_god_holy_attitude_change(monster);
         else
         {
+            const bool is_summoned = mons_is_summoned(monster);
             simple_monster_message(monster, " turns neutral.");
             mons_pacify(monster);
 
             // Give a small piety return.
-            gain_piety(1 + random2(healed/15));
+            if (!is_summoned)
+                gain_piety(1 + random2(healed/15));
         }
     }
     else if (nothing_happens)
