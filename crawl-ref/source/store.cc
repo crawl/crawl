@@ -25,6 +25,8 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
 {
     ASSERT(other.type >= SV_NONE && other.type < NUM_STORE_VAL_TYPES);
 
+    val.ptr = NULL;
+
     type  = other.type;
     flags = other.flags;
 
@@ -105,68 +107,74 @@ CrawlStoreValue::CrawlStoreValue(const store_flags _flags,
 
 // Conversion constructors
 CrawlStoreValue::CrawlStoreValue(const bool _val)
-    : type(SV_BOOL), flags(0)
+    : type(SV_BOOL), flags(SFLAG_UNSET)
 {
     get_bool() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const char &_val)
-    : type(SV_BYTE), flags(0)
+    : type(SV_BYTE), flags(SFLAG_UNSET)
 {
     get_byte() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const short &_val)
-    : type(SV_SHORT), flags(0)
+    : type(SV_SHORT), flags(SFLAG_UNSET)
 {
     get_short() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const long &_val)
-    : type(SV_LONG), flags(0)
+    : type(SV_LONG), flags(SFLAG_UNSET)
 {
     get_long() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const float &_val)
-    : type(SV_FLOAT), flags(0)
+    : type(SV_FLOAT), flags(SFLAG_UNSET)
 {
     get_float() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const std::string &_val)
-    : type(SV_STR), flags(0)
+    : type(SV_STR), flags(SFLAG_UNSET)
 {
+    val.ptr = NULL;
     get_string() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const char* _val)
-    : type(SV_STR), flags(0)
+    : type(SV_STR), flags(SFLAG_UNSET)
 {
+    val.ptr = NULL;
     get_string() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const coord_def &_val)
-    : type(SV_COORD), flags(0)
+    : type(SV_COORD), flags(SFLAG_UNSET)
 {
+    val.ptr = NULL;
     get_coord() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const item_def &_val)
-    : type(SV_ITEM), flags(0)
+    : type(SV_ITEM), flags(SFLAG_UNSET)
 {
+    val.ptr = NULL;
     get_item() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const CrawlHashTable &_val)
-    : type(SV_HASH), flags(0)
+    : type(SV_HASH), flags(SFLAG_UNSET)
 {
+    val.ptr = NULL;
     get_table() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const CrawlVector &_val)
-    : type(SV_VEC), flags(0)
+    : type(SV_VEC), flags(SFLAG_UNSET)
 {
+    val.ptr = NULL;
     get_vector() = _val;
 }
 
@@ -626,6 +634,8 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
             type    = (x); \
         } \
     } \
+    else \
+        delete (value); \
     flags &= ~SFLAG_UNSET; \
     return *((_type) val.ptr);
 
