@@ -5180,36 +5180,12 @@ void viewwindow(bool draw_it, bool do_updates)
 #endif
 
                 // Print tutorial messages for features in LOS.
-                if (Options.tutorial_left && in_bounds(gc)
-                    && crawl_view.in_grid_los(gc))
+                if (Options.tutorial_left
+                    && in_bounds(gc)
+                    && crawl_view.in_grid_los(gc)
+                    && env.show(ep))
                 {
-                    const int object = env.show(ep);
-                    if (object && Options.tutorial_left)
-                    {
-                        if (grid_is_escape_hatch(grd(gc)))
-                        {
-                            learned_something_new(TUT_SEEN_ESCAPE_HATCH, gc);
-                        }
-                        else if (grid_is_branch_stairs(grd(gc)))
-                            learned_something_new(TUT_SEEN_BRANCH, gc);
-                        else if (is_feature('>', gc))
-                        {
-                            learned_something_new(TUT_SEEN_STAIRS, gc);
-                        }
-                        else if (is_feature('_', gc))
-                            learned_something_new(TUT_SEEN_ALTAR, gc);
-                        else if (grd(gc) == DNGN_CLOSED_DOOR)
-                            learned_something_new(TUT_SEEN_DOOR, gc);
-                        else if (grd(gc) == DNGN_ENTER_SHOP)
-                            learned_something_new(TUT_SEEN_SHOP, gc);
-
-                        if (igrd(gc) != NON_ITEM
-                            && Options.feature_item_brand != CHATTR_NORMAL
-                            && (is_feature('>', gc) || is_feature('<', gc)))
-                        {
-                            learned_something_new(TUT_STAIR_BRAND, gc);
-                        }
-                    }
+                    tutorial_observe_cell(gc);
                 }
 
                 // Order is important here.

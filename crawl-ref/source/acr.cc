@@ -274,10 +274,11 @@ int main( int argc, char *argv[] )
     else
         learned_something_new(TUT_LOAD_SAVED_GAME);
 
+    _prep_input();
+
     // Catch up on any experience levels we did not assign last time. This
     // can happen if Crawl sees SIGHUP while it is waiting for the player
     // to dismiss a level-up prompt.
-    _prep_input();
     level_change();
 
     while (true)
@@ -2492,6 +2493,41 @@ static void _check_sanctuary()
     decrease_sanctuary_radius();
 }
 
+static void _regenerate_hp_and_mp()
+{
+    // XXX: using an int tmp to fix the fact that hit_points_regeneration
+    // is only an unsigned char and is thus likely to overflow. -- bwr
+    int tmp = you.hit_points_regeneration;
+
+    if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
+        tmp += player_regen();
+
+    while (tmp >= 100)
+    {
+        inc_hp(1, false);
+        tmp -= 100;
+    }
+
+    ASSERT( tmp >= 0 && tmp < 100 );
+    you.hit_points_regeneration = static_cast<unsigned char>(tmp);
+
+    // XXX: Doing the same as the above, although overflow isn't an
+    // issue with magic point regeneration, yet. -- bwr
+    tmp = you.magic_points_regeneration;
+
+    if (you.magic_points < you.max_magic_points)
+        tmp += 7 + you.max_magic_points / 2;
+
+    while (tmp >= 100)
+    {
+        inc_mp(1, false);
+        tmp -= 100;
+    }
+
+    ASSERT( tmp >= 0 && tmp < 100 );
+    you.magic_points_regeneration = static_cast<unsigned char>(tmp);
+}
+
 void world_reacts()
 {
     crawl_state.clear_mon_acting();
@@ -2518,9 +2554,7 @@ void world_reacts()
     }
 
     _check_banished();
-
     _check_shafts();
-
     _check_sanctuary();
 
     run_environment_effects();
@@ -2560,41 +2594,10 @@ void world_reacts()
     _decrement_durations();
 
     const int food_use = player_hunger_rate();
-
     if (food_use > 0 && you.hunger >= 40)
-        make_hungry( food_use, true );
+        make_hungry(food_use, true);
 
-    // XXX: using an int tmp to fix the fact that hit_points_regeneration
-    // is only an unsigned char and is thus likely to overflow. -- bwr
-    int tmp = static_cast< int >( you.hit_points_regeneration );
-
-    if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
-        tmp += player_regen();
-
-    while (tmp >= 100)
-    {
-        inc_hp(1, false);
-        tmp -= 100;
-    }
-
-    ASSERT( tmp >= 0 && tmp < 100 );
-    you.hit_points_regeneration = static_cast< unsigned char >( tmp );
-
-    // XXX: Doing the same as the above, although overflow isn't an
-    // issue with magic point regeneration, yet. -- bwr
-    tmp = static_cast< int >( you.magic_points_regeneration );
-
-    if (you.magic_points < you.max_magic_points)
-        tmp += 7 + you.max_magic_points / 2;
-
-    while (tmp >= 100)
-    {
-        inc_mp(1, false);
-        tmp -= 100;
-    }
-
-    ASSERT( tmp >= 0 && tmp < 100 );
-    you.magic_points_regeneration = static_cast< unsigned char >( tmp );
+    _regenerate_hp_and_mp();
 
     // If you're wielding a rod, it'll gradually recharge.
     _recharge_rods();

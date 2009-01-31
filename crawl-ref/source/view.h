@@ -63,30 +63,14 @@ void init_char_table(char_set_type set);
 void init_feature_table();
 void init_monsters_seens();
 
-/* called from: beam - fight */
 void beogh_follower_convert(monsters *monster, bool orc_hit = false);
-
-// last updated 29may2000 {dlb}
-/* ***********************************************************************
- * called from: bang - beam - direct - effects - fight - monstuff -
- *              mstuff2 - spells1 - spells2
- * *********************************************************************** */
 bool mons_near(const monsters *monster, unsigned short foe = MHITYOU);
 bool mon_enemies_around(const monsters *monster);
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - view
- * *********************************************************************** */
 void item(void);
 
 void find_features(const std::vector<coord_def>& features,
         unsigned char feature, std::vector<coord_def> *found);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: direct - monstufff - view
- * *********************************************************************** */
 void losight(env_show_grid &sh, feature_grid &gr,
              const coord_def& center, bool clear_walls_block = false,
              bool ignore_clouds = false);
@@ -96,40 +80,17 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false);
 
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - effects - it_use2 - it_use3 - item_use - spell -
- *              spells - spells3 - spells4
- * *********************************************************************** */
 bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
            bool mermaid = false);
 void blood_smell( int strength, const coord_def& where);
 void handle_monster_shouts(monsters* monster, bool force = false);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - spells3
- * *********************************************************************** */
 void show_map( coord_def &spec_place, bool travel_mode );
-
-// last updated 19jun2000 (gdl)
-/* ***********************************************************************
- * called from: acr view
- * *********************************************************************** */
 void setLOSRadius(int newLR);
-
-// last updated 02apr2001 (gdl)
-/* ***********************************************************************
- * called from: view monstuff
- * *********************************************************************** */
 bool check_awaken(monsters* monster);
-
 int count_detected_mons(void);
-
 void clear_map(bool clear_items = true, bool clear_mons = true);
-
 bool is_feature(int feature, const coord_def& where);
-
 void get_item_glyph(const item_def *item, unsigned *glych,
                     unsigned short *glycol);
 void get_mons_glyph(const monsters *mons, unsigned *glych,

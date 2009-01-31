@@ -44,10 +44,12 @@ void tut_gained_new_skill(int skill);
 void tutorial_first_monster(const monsters& mon);
 void tutorial_first_item(const item_def& item);
 void learned_something_new(tutorial_event_type seen_what,
-                           coord_def gc = coord_def(0,0));
+                           coord_def gc = coord_def());
 formatted_string tut_abilities_info(void);
 void print_tut_skills_info(void);
 void print_tut_skills_description_info(void);
+
+void tutorial_observe_cell(const coord_def& gc);
 
 // Additional information for tutorial players.
 void tutorial_describe_item(const item_def &item);
@@ -58,5 +60,6 @@ bool tutorial_feat_interesting(dungeon_feature_type feat);
 void tutorial_describe_feature(dungeon_feature_type feat);
 bool tutorial_monster_interesting(const monsters *mons);
 void tutorial_describe_monster(const monsters *mons);
+
 
 #endif

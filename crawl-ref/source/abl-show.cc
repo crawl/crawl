@@ -2350,16 +2350,14 @@ static int _is_god_ability(int abil)
     return (GOD_NO_GOD);
 }
 
-void set_god_ability_slots(void)
+void set_god_ability_slots()
 {
     ASSERT(you.religion != GOD_NO_GOD);
-
-    int i;
 
     _set_god_ability_helper(ABIL_RENOUNCE_RELIGION, 'X');
 
     // Clear out other god invocations.
-    for (i = 0; i < 52; i++)
+    for (int i = 0; i < 52; i++)
     {
         const int god = _is_god_ability(you.ability_letter_table[i]);
         if (god != GOD_NO_GOD && god != you.religion)
@@ -2368,7 +2366,7 @@ void set_god_ability_slots(void)
 
     // Finally, add in current god's invocations in traditional slots.
     int num = 0;
-    for (i = 0; i < MAX_GOD_ABILITIES; ++i)
+    for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
         if (god_abilities[you.religion][i] != ABIL_NON_ABILITY)
         {

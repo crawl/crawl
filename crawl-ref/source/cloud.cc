@@ -27,11 +27,10 @@ REVISION("$Rev$");
 #include "terrain.h"
 #include "view.h"
 
-// Returns true if this cloud spreads out as it dissipates.
-static unsigned char _actual_spread_rate(cloud_type type, int spread_rate)
+static int _actual_spread_rate(cloud_type type, int spread_rate)
 {
     if (spread_rate >= 0)
-        return (unsigned char) spread_rate;
+        return spread_rate;
 
     switch (type)
     {
@@ -67,17 +66,18 @@ static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
                         unsigned char spread_rate )
 {
-    ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
-
+    ASSERT( env.cloud[cloud].type == CLOUD_NONE );
     ASSERT(_killer_whose_match(whose, killer));
 
-    env.cloud[ cloud ].type        = type;
-    env.cloud[ cloud ].decay       = decay;
-    env.cloud[ cloud ].pos         = p;
-    env.cloud[ cloud ].whose       = whose;
-    env.cloud[ cloud ].killer      = killer;
-    env.cloud[ cloud ].spread_rate = spread_rate;
-    env.cgrid(p)                   = cloud;
+    cloud_struct& c = env.cloud[cloud];
+
+    c.type        = type;
+    c.decay       = decay;
+    c.pos         = p;
+    c.whose       = whose;
+    c.killer      = killer;
+    c.spread_rate = spread_rate;
+    env.cgrid(p)  = cloud;
     env.cloud_no++;
 }
 
@@ -131,8 +131,9 @@ static int _spread_cloud(const cloud_struct &cloud)
     return (extra_decay);
 }
 
-static void _dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
+static void _dissipate_cloud(int cloudidx, int dissipate)
 {
+    cloud_struct &cloud = env.cloud[cloudidx];
     // Apply calculated rate to the actual cloud.
     cloud.decay -= dissipate;
 
@@ -144,54 +145,46 @@ static void _dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
 
     // Check for total dissipation and handle accordingly.
     if (cloud.decay < 1)
-        delete_cloud( cc );
+        delete_cloud(cloudidx);
 }
 
-void manage_clouds(void)
+void manage_clouds()
 {
-    // Amount which cloud dissipates - must be unsigned! {dlb}
-    unsigned int dissipate = 0;
-
-    for (unsigned char cc = 0; cc < MAX_CLOUDS; cc++)
+    for (int i = 0; i < MAX_CLOUDS; ++i)
     {
-        if (env.cloud[cc].type == CLOUD_NONE)   // No cloud -> next iteration.
+        cloud_struct& cloud = env.cloud[i];
+
+        if (cloud.type == CLOUD_NONE)
             continue;
 
-        dissipate = you.time_taken;
+        int dissipate = you.time_taken;
 
-        // water -> flaming clouds:
-        // lava -> freezing clouds:
-        if (env.cloud[cc].type == CLOUD_FIRE
-            && grd(env.cloud[cc].pos) == DNGN_DEEP_WATER)
-        {
+        // Fire clouds dissipate faster over water,
+        // cold clouds dissipate faster over lava.
+        if (cloud.type == CLOUD_FIRE && grd(cloud.pos) == DNGN_DEEP_WATER)
             dissipate *= 4;
-        }
-        else if (env.cloud[cc].type == CLOUD_COLD
-                 && grd(env.cloud[cc].pos) == DNGN_LAVA)
-        {
+        else if (cloud.type == CLOUD_COLD && grd(cloud.pos) == DNGN_LAVA)
             dissipate *= 4;
-        }
 
-        expose_items_to_element(cloud2beam(env.cloud[cc].type),
-                                env.cloud[cc].pos, 2);
+        expose_items_to_element(cloud2beam(cloud.type), cloud.pos, 2);
 
-        _dissipate_cloud(cc, env.cloud[cc], dissipate);
+        _dissipate_cloud(i, dissipate);
     }
 }
 
 void delete_cloud( int cloud )
 {
-    if (env.cloud[ cloud ].type != CLOUD_NONE)
+    cloud_struct& c = env.cloud[cloud];
+    if (c.type != CLOUD_NONE)
     {
-        const coord_def cloud_pos = env.cloud[ cloud ].pos;
+        c.type        = CLOUD_NONE;
+        c.decay       = 0;
+        c.whose       = KC_OTHER;
+        c.killer      = KILL_NONE;
+        c.spread_rate = 0;
 
-        env.cloud[ cloud ].type         = CLOUD_NONE;
-        env.cloud[ cloud ].decay        = 0;
-        env.cloud[ cloud ].pos.reset();
-        env.cloud[ cloud ].whose        = KC_OTHER;
-        env.cloud[ cloud ].killer       = KILL_NONE;
-        env.cloud[ cloud ].spread_rate  = 0;
-        env.cgrid(cloud_pos)            = EMPTY_CLOUD;
+        env.cgrid(c.pos) = EMPTY_CLOUD;
+        c.pos.reset();
         env.cloud_no--;
     }
 }
@@ -243,10 +236,8 @@ void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
 int steam_cloud_damage(const cloud_struct &cloud)
 {
     int decay = cloud.decay;
-    if (decay > 60)
-        decay = 60;
-    else if (decay < 10)
-        decay = 10;
+    decay = std::min(decay, 60);
+    decay = std::max(decay, 10);
 
     // Damage in range 3 - 16.
     return ((decay * 13 + 20) / 50);
@@ -284,49 +275,47 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     int cl_new = -1;
 
     const int target_cgrid = env.cgrid(ctarget);
-
-    // that is, another cloud already there {dlb}
     if (target_cgrid != EMPTY_CLOUD)
     {
-        if (env.cloud[ target_cgrid ].type >= CLOUD_GREY_SMOKE
-                && env.cloud[ target_cgrid ].type <= CLOUD_STEAM
-            || env.cloud[ target_cgrid ].type == CLOUD_STINK
-            || env.cloud[ target_cgrid ].type == CLOUD_BLACK_SMOKE
-            || env.cloud[ target_cgrid ].type == CLOUD_MIST
-            || env.cloud[ target_cgrid ].decay <= 20)     //soon gone
+        // There's already a cloud here. See if we can overwrite it.
+        cloud_struct& old_cloud = env.cloud[target_cgrid];
+        if (old_cloud.type >= CLOUD_GREY_SMOKE && old_cloud.type <= CLOUD_STEAM
+            || old_cloud.type == CLOUD_STINK
+            || old_cloud.type == CLOUD_BLACK_SMOKE
+            || old_cloud.type == CLOUD_MIST
+            || old_cloud.decay <= 20) // soon gone
         {
-            cl_new = env.cgrid(ctarget);
-            delete_cloud( env.cgrid(ctarget) );
+            // Delete this cloud and replace it.
+            cl_new = target_cgrid;
+            delete_cloud(target_cgrid);
         }
-        else
-        {
+        else                    // Guess not.
             return;
-        }
     }
 
-    unsigned char spread_rate = _actual_spread_rate( cl_type, _spread_rate );
+    const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
 
     // Too many clouds.
     if (env.cloud_no >= MAX_CLOUDS)
     {
         // Default to random in case there's no low quality clouds.
-        int cl_del = random2( MAX_CLOUDS );
+        int cl_del = random2(MAX_CLOUDS);
 
         for (int ci = 0; ci < MAX_CLOUDS; ci++)
         {
-            if (env.cloud[ ci ].type >= CLOUD_GREY_SMOKE
-                    && env.cloud[ ci ].type <= CLOUD_STEAM
-                || env.cloud[ ci ].type == CLOUD_STINK
-                || env.cloud[ ci ].type == CLOUD_BLACK_SMOKE
-                || env.cloud[ ci ].type == CLOUD_MIST
-                || env.cloud[ ci ].decay <= 20)     //soon gone
+            cloud_struct& cloud = env.cloud[ci];
+            if (cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
+                || cloud.type == CLOUD_STINK
+                || cloud.type == CLOUD_BLACK_SMOKE
+                || cloud.type == CLOUD_MIST
+                || cloud.decay <= 20) // soon gone
             {
                 cl_del = ci;
                 break;
             }
         }
 
-        delete_cloud( cl_del );
+        delete_cloud(cl_del);
         cl_new = cl_del;
     }
 

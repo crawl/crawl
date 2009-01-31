@@ -3950,3 +3950,26 @@ void tutorial_describe_monster(const monsters *mons)
     linebreak_string2(broken, _get_tutorial_cols());
     formatted_string::parse_block(broken, false).display();
 }
+
+void tutorial_observe_cell(const coord_def& gc)
+{
+    if (grid_is_escape_hatch(grd(gc)))
+        learned_something_new(TUT_SEEN_ESCAPE_HATCH, gc);
+    else if (grid_is_branch_stairs(grd(gc)))
+        learned_something_new(TUT_SEEN_BRANCH, gc);
+    else if (is_feature('>', gc))
+        learned_something_new(TUT_SEEN_STAIRS, gc);
+    else if (is_feature('_', gc))
+        learned_something_new(TUT_SEEN_ALTAR, gc);
+    else if (grd(gc) == DNGN_CLOSED_DOOR)
+        learned_something_new(TUT_SEEN_DOOR, gc);
+    else if (grd(gc) == DNGN_ENTER_SHOP)
+        learned_something_new(TUT_SEEN_SHOP, gc);
+
+    if (igrd(gc) != NON_ITEM
+        && Options.feature_item_brand != CHATTR_NORMAL
+        && (is_feature('>', gc) || is_feature('<', gc)))
+    {
+        learned_something_new(TUT_STAIR_BRAND, gc);
+    }
+}
