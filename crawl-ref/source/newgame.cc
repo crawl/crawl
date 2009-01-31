@@ -1311,7 +1311,9 @@ game_start:
             you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
 
             // Identify all items in pack.
-            set_ident_type( you.inv[i], ID_KNOWN_TYPE );
+            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+
             // link properly
             you.inv[i].pos.set(-1, -1);
             you.inv[i].link = i;
@@ -2061,17 +2063,21 @@ static char_choice_restriction _book_restriction(startup_book_type booktype)
     }
 }
 
-static bool _choose_book( item_def& book, int firstbook, int numbooks )
+static bool _choose_book( int slot, int firstbook, int numbooks )
 {
-    int keyin = 0;
     clrscr();
+
+    item_def &book(you.inv[slot]);
     book.base_type = OBJ_BOOKS;
+    book.sub_type  = firstbook;
     book.quantity  = 1;
     book.plus      = 0;
+    book.plus2     = 0;
     book.special   = 1;
 
     // Assume a choice of no more than three books, and that all book
     // choices are contiguous.
+    ASSERT(numbooks >= 1 && numbooks <= 3);
     char_choice_restriction book_restrictions[3];
     for (int i = 0; i < numbooks; i++)
     {
@@ -2099,6 +2105,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         }
     }
 
+    int keyin = 0;
     if (!Options.random_pick && Options.book != SBT_RANDOM)
     {
         _print_character_info();
@@ -2116,7 +2123,8 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
             else
                 textcolor(DARKGREY);
 
-            cprintf("%c - %s" EOL, 'a' + i, book.name(DESC_PLAIN).c_str());
+            cprintf("%c - %s" EOL, 'a' + i,
+                    book.name(DESC_PLAIN, false, true).c_str());
         }
 
         textcolor(BROWN);
@@ -2162,14 +2170,14 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                     else
                     {
                         keyin = 'a'
-                              + _start_to_book(firstbook, Options.prev_book)
-                              - firstbook;
+                                + _start_to_book(firstbook, Options.prev_book)
+                                - firstbook;
                     }
                 }
                 break;
             case '%':
                 list_commands('%');
-                return _choose_book(book, firstbook, numbooks);
+                return _choose_book(slot, firstbook, numbooks);
             default:
                 break;
             }
@@ -4386,7 +4394,7 @@ static bool _choose_wand()
             if (i == num_choices - 1)
             {
                 cprintf("%c - %s" EOL, letter,
-                        you.inv[2].name(DESC_QUALNAME, false).c_str());
+                        you.inv[2].name(DESC_QUALNAME, false, true).c_str());
                 wandtype = you.inv[2].sub_type;
                 is_rod = true;
             }
@@ -5246,7 +5254,7 @@ bool _give_items_skills()
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                               ARM_ROBE);
 
-        if (!_choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
+        if (!_choose_book(2, BOOK_CONJURATIONS_I, 2 ))
             return (false);
 
         you.skills[SK_FIGHTING]     = 2;
@@ -5287,7 +5295,7 @@ bool _give_items_skills()
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
 
-        if (!_choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
+        if (!_choose_book(2, BOOK_MINOR_MAGIC_I, 3 ))
             return (false);
 
         you.skills[SK_DODGING] = 2;
@@ -5317,7 +5325,7 @@ bool _give_items_skills()
     case JOB_CONJURER:
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        if (!_choose_book( you.inv[1], BOOK_CONJURATIONS_I, 2 ))
+        if (!_choose_book(1, BOOK_CONJURATIONS_I, 2 ))
             return (false);
 
         you.skills[SK_CONJURATIONS] = 4;

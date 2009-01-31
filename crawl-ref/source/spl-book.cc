@@ -1157,18 +1157,18 @@ void mark_had_book(int booktype)
 
     you.had_book[booktype] = true;
 
-    if ( booktype == BOOK_MINOR_MAGIC_I
-         || booktype == BOOK_MINOR_MAGIC_II
-         || booktype == BOOK_MINOR_MAGIC_III)
+    if (booktype == BOOK_MINOR_MAGIC_I
+        || booktype == BOOK_MINOR_MAGIC_II
+        || booktype == BOOK_MINOR_MAGIC_III)
     {
-        you.had_book[BOOK_MINOR_MAGIC_I] = true;
-        you.had_book[BOOK_MINOR_MAGIC_II] = true;
+        you.had_book[BOOK_MINOR_MAGIC_I]   = true;
+        you.had_book[BOOK_MINOR_MAGIC_II]  = true;
         you.had_book[BOOK_MINOR_MAGIC_III] = true;
     }
     else if (booktype == BOOK_CONJURATIONS_I
              || booktype == BOOK_CONJURATIONS_II)
     {
-        you.had_book[BOOK_CONJURATIONS_I] = true;
+        you.had_book[BOOK_CONJURATIONS_I]  = true;
         you.had_book[BOOK_CONJURATIONS_II] = true;
     }
 }

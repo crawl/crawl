@@ -84,8 +84,10 @@ std::string item_def::name(description_level_type descrip,
                            unsigned long ignore_flags) const
 {
     if (crawl_state.arena)
+    {
         ignore_flags |= ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_CURSE
-                      | ISFLAG_COSMETIC_MASK;
+                        | ISFLAG_COSMETIC_MASK;
+    }
 
     if (descrip == DESC_NONE)
         return ("");

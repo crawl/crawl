@@ -320,7 +320,7 @@ enum book_type
 
     BOOK_RANDART_LEVEL,                     // 46
     BOOK_RANDART_THEME,
-    BOOK_CARD_EFFECT,
+    BOOK_CARD_EFFECT,    // not implemented
 
     MAX_MEMORISABLE_BOOK = BOOK_CARD_EFFECT,
 
