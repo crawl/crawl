@@ -2154,7 +2154,7 @@ void wizard_spawn_control()
              env.spawn_random_rate);
 
         if (!cancelable_get_line(specs, sizeof(specs)))
-        { 
+        {
             const int rate = atoi(specs);
             if (rate)
             {
@@ -2182,7 +2182,7 @@ void wizard_spawn_control()
              max_spawn);
 
         if (!cancelable_get_line(specs, sizeof(specs)))
-        { 
+        {
             const int num = std::min(atoi(specs), max_spawn);
             if (num > 0)
             {
@@ -2190,10 +2190,10 @@ void wizard_spawn_control()
                 // Each call to spawn_random_monsters() will spawn one with
                 // the rate at 5 or less.
                 env.spawn_random_rate = 5;
-                
+
                 for (int i = 0; i < num; i++)
                     spawn_random_monsters();
-                
+
                 env.spawn_random_rate = curr_rate;
                 done = true;
             }
@@ -2315,7 +2315,6 @@ void wizard_create_feature_name()
 {
     char specs[256];
     mpr("Create which feature (by name)? ", MSGCH_PROMPT);
-    get_input_line(specs, sizeof specs);
     if (!cancelable_get_line(specs, sizeof(specs)) && specs[0] != 0)
     {
         // Accept both "shallow_water" and "Shallow water"
@@ -6685,7 +6684,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
 
     if (in_bounds(mon->pos()))
     {
-        std::string feat = 
+        std::string feat =
             raw_feature_description(grd(mon->pos()), NUM_TRAPS, true);
         fprintf(stderr, "On/in/over feature: %s" EOL EOL, feat.c_str());
     }

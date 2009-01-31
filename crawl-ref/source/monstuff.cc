@@ -5156,6 +5156,7 @@ static void _handle_nearby_ability(monsters *monster)
     }
 }
 
+// Returns true if you resist the siren's call.
 static bool _siren_movement_effect(const monsters *monster)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you_resist_magic(70));
@@ -5174,7 +5175,8 @@ static bool _siren_movement_effect(const monsters *monster)
 
         const coord_def newpos = you.pos() + dir;
 
-        if (!in_bounds(newpos) || is_grid_dangerous(grd(newpos)))
+        if (!in_bounds(newpos) || is_grid_dangerous(grd(newpos))
+            || !you.can_pass_through_feat(grd(newpos)))
         {
             do_resist = true;
         }
