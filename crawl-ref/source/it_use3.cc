@@ -453,14 +453,14 @@ bool evoke_wielded()
         canned_msg( MSG_TOO_BERSERK );
         return (false);
     }
-    else if (wield == -1)
+    else if (!you.weapon())
     {
         mpr("You aren't wielding anything!");
         crawl_state.zero_turns_taken();
         return (false);
     }
 
-    item_def& wpn = you.inv[wield];
+    item_def& wpn = *you.weapon();
     bool unevokable = false;
 
     // Check inscriptions.
@@ -480,7 +480,7 @@ bool evoke_wielded()
             else
                 return (false);
         }
-        else if (is_fixed_artefact( wpn ))
+        else if (is_fixed_artefact(wpn))
         {
             switch (wpn.special)
             {

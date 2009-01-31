@@ -218,18 +218,12 @@ static int _targeting_cmd_to_feature( command_type command )
 {
     switch ( command )
     {
-    case CMD_TARGET_FIND_TRAP:
-        return '^';
-    case CMD_TARGET_FIND_PORTAL:
-        return '\\';
-    case CMD_TARGET_FIND_ALTAR:
-        return  '_';
-    case CMD_TARGET_FIND_UPSTAIR:
-        return '<';
-    case CMD_TARGET_FIND_DOWNSTAIR:
-        return '>';
-    default:
-        return 0;
+    case CMD_TARGET_FIND_TRAP:      return '^';
+    case CMD_TARGET_FIND_PORTAL:    return '\\';
+    case CMD_TARGET_FIND_ALTAR:     return  '_';
+    case CMD_TARGET_FIND_UPSTAIR:   return '<';
+    case CMD_TARGET_FIND_DOWNSTAIR: return '>';
+    default:                        return 0;
     }
 }
 
