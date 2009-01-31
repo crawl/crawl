@@ -1695,11 +1695,14 @@ int monster_die(monsters *monster, killer_type killer,
     if (drop_items)
         monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
     else
+    {
         // Destroy the items belonging to MF_HARD_RESET monsters so they
         // don't clutter up mitm[]
         monster->destroy_inventory();
+    }
 
-    if (!silent && !wizard && !(monster->flags & MF_KNOWN_MIMIC)
+    if (!silent && !wizard && !mons_reset
+        && !(monster->flags & MF_KNOWN_MIMIC)
         && mons_is_shapeshifter(monster))
     {
         simple_monster_message(monster, "'s shape twists and changes "
