@@ -1317,8 +1317,6 @@ void deflection(int pow)
 
 void cast_regen(int pow)
 {
-    mpr("Your skin crawls.");
-
     _increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
                        "Your skin crawls.");
 }
