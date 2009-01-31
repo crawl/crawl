@@ -727,12 +727,15 @@ bool is_branch_stair(const coord_def& pos)
     return (next.branch != curr.branch);
 }
 
+// Returns true if the given dungeon feature is a stair, i.e., a level
+// exit.
 bool is_stair(dungeon_feature_type gridc)
 {
     return (is_travelable_stair(gridc) || is_gate(gridc));
 }
 
-// Returns true if the given dungeon feature can be considered a stair.
+// Returns true if the given dungeon feature is a travelable stair, i.e.,
+// it's a level exit with a consistent endpoint.
 bool is_travelable_stair(dungeon_feature_type gridc)
 {
     switch (gridc)
@@ -798,6 +801,13 @@ bool is_gate(dungeon_feature_type gridc)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
+    case DNGN_ENTER_ZOT:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_ENTER_HELL:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_TARTARUS:
         return (true);
     default:
         return (false);

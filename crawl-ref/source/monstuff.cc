@@ -2961,7 +2961,9 @@ static void _mons_indicate_level_exit(const monsters *mon)
     const dungeon_feature_type gridc = grd(mon->pos());
 
     // All types of stairs.
-    if (is_travelable_stair(gridc))
+    if (is_gate(gridc))
+        simple_monster_message(mon, " passes through the gate.");
+    else if (is_travelable_stair(gridc))
     {
         command_type dir = grid_stair_direction(gridc);
         simple_monster_message(mon,
@@ -2970,8 +2972,6 @@ static void _mons_indicate_level_exit(const monsters *mon)
                 dir == CMD_GO_DOWNSTAIRS ? "goes down"
                                          : "takes").c_str());
     }
-    else if (is_gate(gridc))
-        simple_monster_message(mon, " passes through the gate.");
 }
 
 void make_mons_leave_level(monsters *mon)
