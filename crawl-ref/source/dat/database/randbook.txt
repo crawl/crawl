@@ -22,9 +22,10 @@
 #
 #   @book_name@ @<primary school>@
 #
-# Fixed level books are categorized into "easy" (level 1-3),
-# "moderate" (level 4-6) and "difficult" (level 7-9), a keyword that is
-# used as a prefix for "level book".
+# Fixed level books are categorized into "starting" (level 1),
+# "easy" (level 2-4), "moderate" (level 4-6) and "difficult" (level 7-9),
+# a keyword that is used as a prefix for "level book".
+# @level@ is parsed to the word describing the spell level.
 #
 # See the explanation in the main file, randname.txt, for more general
 # information on randart naming.
@@ -58,6 +59,8 @@ Handbook
 Incunabulum
 
 Papyrus
+
+Catalogue
 %%%%
 book_noun_on
 
@@ -145,7 +148,7 @@ Witchery
 
 Spellcraft
 
-Spell Weaving
+Spellweaving
 
 w:5
 Secret Knowledge
@@ -156,44 +159,74 @@ Rites and Rhymes
 w:5
 Hermeneutics
 %%%%
-# level 1-3
+beginners
+
+Beginners
+
+w:5
+Neophytes
+
+w:5
+Novices
+
+w:3
+Rookies
+
+w:2
+Absolute Beginners
+
+w:1
+Dummies
+%%%%
+# level 1
+starting level book
+
+@the_book_magic@ for @beginners@
+
+w:2
+@the_book_magic@ 101
+
+A Beginning Course on @the_book_magic@
+
+@the_book_magic@, Part One
+
+An Introduction to @the_book_magic@
+
+w:2
+An Initiation to @the_book_magic@
+
+First Steps in @the_book_magic@
+%%%%
+# level 2-4
 easy level book
 
 A Primer on @the_book_magic@
 
 @the_book_magic@ in Simple Steps
 
-Early Guide to @the_book_magic@
+An Early Guide to @the_book_magic@
 
-@the_book_magic@ for Beginners
-
-Foundations of @book_magic@
-
-Introduction to @the_book_magic@
+The Foundations of @book_magic@
 
 Easy @book_magic@
 
-Beginning Course on @the_book_magic@
+@the_book_magic@, Part @level@
 
-w:5
-@the_book_magic@ 101
+@the_book_magic@ Continued
 
 w:1
 @book_magic@, and How To Use It
-
-w:1
-@the_book_magic@ for Dummies
 %%%%
 # level 4-6
 moderate level book
 
 Advanced Steps in @the_book_magic@
 
-Advanced Guide to @the_book_magic@
+The Advanced Guide to @the_book_magic@
 
 Further Steps in @the_book_magic@
 
-@the_book_magic@, Part Two
+@the_book_magic@, Part @level@
 
 Advanced @book_magic@
 
@@ -201,7 +234,7 @@ Sophisticated @book_magic@
 
 Further Progress in @book_magic@
 
-Second Course in @book_magic@
+The Second Course in @book_magic@
 
 w:1
 Improving Your @book_magic@
@@ -234,27 +267,27 @@ Boris
 w:1
 Sif Muna
 %%%%
-# level 7-9, books in the form of "XYZ's <bookname>"
-difficult level book owner
-
-Thorough Guide to @the_book_magic@
-
-Last Secrets of @the_book_magic@
-
-Arcane Secrets of @book_magic@
-
-Intricacies of @the_book_magic@
-
-@book_name@ Greatest Risks and Utility
-
-w:1
-Mastering @book_magic@
-%%%%
 last_or_lost
 
 Last
 
 Lost
+%%%%
+# level 7-9, books in the form of "XYZ's <bookname>"
+difficult level book owner
+
+A Thorough Guide to @the_book_magic@
+
+The @last_or_lost@ Secrets of @the_book_magic@
+
+The Arcane Secrets of @book_magic@
+
+The Intricacies of @the_book_magic@
+
+The @book_noun@ of Greatest Risks and Utility
+
+w:1
+Mastering @book_magic@
 %%%%
 # level 7-9, books without being named after their owner/author
 difficult level book
@@ -262,10 +295,10 @@ difficult level book
 w:50
 @difficult level book owner@
 
-@last_or_lost@ @book_noun@ of @the_powerful_caster@
+The @last_or_lost@ @book_noun@ of @the_powerful_caster@
 
 w:1
-Testament of @the_powerful_caster@
+The Testament of @the_powerful_caster@
 %%%%
 # synonyms for predominant spell schools
 # variants starting with the definite article will get "the" prepended

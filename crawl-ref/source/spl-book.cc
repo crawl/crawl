@@ -1959,6 +1959,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         name = owner;
     else if (god != GOD_NO_GOD)
         name = god_name(god, false);
+    else if (one_chance_in(30))
+        name = god_name(GOD_SIF_MUNA, false);
     else if (one_chance_in(3))
         name = make_name(random_int(), false);
     else
@@ -1971,7 +1973,9 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     book.props["is_named"].get_bool() = true;
 
     std::string lookup;
-    if (level <= 3)
+    if (level == 1)
+        lookup = "starting";
+    else if (level <= 3 || level == 4 && coinflip())
         lookup = "easy";
     else if (level <= 6)
         lookup = "moderate";
@@ -1990,8 +1994,38 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         bookname = getRandNameString(lookup);
 
     bookname = uppercase_first(bookname);
+    if (has_owner)
+    {
+        if (bookname.substr(0, 4) == "The ")
+            bookname = bookname.substr(4);
+        else if (bookname.substr(0, 2) == "A ")
+            bookname = bookname.substr(2);
+        else if (bookname.substr(0, 3) == "An ")
+            bookname = bookname.substr(3);
+    }
+
     if (bookname.empty())
         bookname = getRandNameString("book");
+
+    if (bookname.find("@level@", 0) != std::string::npos)
+    {
+        std::string number;
+        switch (level)
+        {
+        case 1: number = "One"; break;
+        case 2: number = "Two"; break;
+        case 3: number = "Three"; break;
+        case 4: number = "Four"; break;
+        case 5: number = "Five"; break;
+        case 6: number = "Six"; break;
+        case 7: number = "Seven"; break;
+        case 8: number = "Eight"; break;
+        case 9: number = "Nine"; break;
+        default:
+            number = ""; break;
+        }
+        bookname = replace_all(bookname, "@level@", number);
+    }
 
     name += bookname;
 
@@ -2399,16 +2433,6 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2,
                                  incl_spell);
 
-    int highest_level = 0;
-    // Finally fill the spell vector.
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
-    {
-        spell_vec[i] = (long) chosen_spells[i];
-        if (spell_difficulty(chosen_spells[i]) > highest_level)
-            highest_level = spell_difficulty(chosen_spells[i]);
-    }
-
-
     // ... and change disc1 and disc2 accordingly.
     disc1 = 1 << max1;
     if (max1 == max2)
@@ -2416,22 +2440,43 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     else
         disc2 = 1 << max2;
 
+    int highest_level = 0;
+    bool all_spells_disc1 = true;
+
+    // Finally fill the spell vector.
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
+        spell_vec[i] = (long) chosen_spells[i];
+        if (spell_difficulty(chosen_spells[i]) > highest_level)
+            highest_level = spell_difficulty(chosen_spells[i]);
+
+        if (all_spells_disc1 && is_valid_spell(chosen_spells[i])
+            && !spell_typematch( chosen_spells[i], disc1 ))
+        {
+            all_spells_disc1 = false;
+        }
+    }
+
+    // Every spell in the book is of school disc1.
+    if (disc1 == disc2)
+        all_spells_disc1 = true;
+
     // If the owner hasn't been set already use
     // a) the god's name for god gifts (only applies to Sif Muna and Xom),
     // b) a name depending on the spell disciplines, for pure books
     // c) a random name (all god gifts not named earlier)
     // d) an applicable god's name
-    // ... else leave it unnamed (around 56% chance for non-god gifts)
+    // ... else leave it unnamed (around 57% chance for non-god gifts)
     if (owner.empty())
     {
         const bool god_gift = (god != GOD_NO_GOD);
         if (god_gift && !one_chance_in(4))
             owner = god_name(god, false);
-        else if (disc1 == disc2
+        else if (all_spells_disc1
                  && (god_gift && one_chance_in(3) || one_chance_in(5)))
         {
             std::string lookup = spelltype_long_name(disc1);
-            if (highest_level >= 6)
+            if (highest_level >= 6 + random2(3))
                 owner = getRandNameString("high-level " + lookup + " owner");
 
             if (owner.empty() || owner == "__NONE")
@@ -2445,19 +2490,19 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         {
             if (god_gift || one_chance_in(5)) // Use a random name.
                 owner = make_name(random_int(), false);
-            else if (!god_gift && one_chance_in(8))
+            else if (!god_gift && one_chance_in(9))
             {
                 god = GOD_SIF_MUNA;
                 switch (disc1)
                 {
                 case SPTYP_NECROMANCY:
-                    if (disc1 == disc2 && !one_chance_in(6))
+                    if (all_spells_disc1 && !one_chance_in(6))
                         god = GOD_KIKUBAAQUDGHA;
                     break;
                 case SPTYP_SUMMONING:
                 case SPTYP_CONJURATION:
-                    if ((disc2 == SPTYP_SUMMONING || disc2 == SPTYP_CONJURATION)
-                        && !one_chance_in(4))
+                    if ((all_spells_disc1 || disc2 == SPTYP_SUMMONING
+                         || disc2 == SPTYP_CONJURATION) && !one_chance_in(4))
                     {
                         god = GOD_VEHUMET;
                     }
@@ -2482,11 +2527,11 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     name += getRandNameString("book_name") + " ";
 
-    // For the actual name there's a 50% chance of getting something like
-    //  Flames and Displacement (Fire/Translocation), else
-    //  Fiery Translocation
+    // For the actual name there's a 66% chance of getting something like
+    //  <book> of the Fiery Traveller (Translocation/Fire), else
+    //  <book> of Displacement and Flames.
     std::string type_name;
-    if (disc1 != disc2 && coinflip())
+    if (disc1 != disc2 && !one_chance_in(3))
     {
         std::string lookup = spelltype_long_name(disc2);
         type_name = getRandNameString(lookup + " adj");
