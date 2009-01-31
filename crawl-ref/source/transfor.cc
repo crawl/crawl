@@ -92,10 +92,11 @@ static void _init_equipment_removal(std::set<equipment_type> &rem_stuff,
     }
 }
 
-bool remove_equipment(std::set<equipment_type> removed, bool meld)
+static bool _remove_equipment(const std::set<equipment_type>& removed,
+                              bool meld = true)
 {
-    if (removed.find(EQ_WEAPON) != removed.end()
-        && you.equip[EQ_WEAPON] != -1)
+    // Weapons first.
+    if (removed.find(EQ_WEAPON) != removed.end() && you.weapon())
     {
         const int wpn = you.equip[EQ_WEAPON];
         unwield_item();
@@ -111,27 +112,21 @@ bool remove_equipment(std::set<equipment_type> removed, bool meld)
         if (e == EQ_WEAPON || you.equip[e] == -1)
             continue;
 
-        if (meld)
-        {
-            mprf("%s melds into your body.",
-                 you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
-        }
+        item_def& equip = you.inv[you.equip[e]];
 
-        if (e == EQ_LEFT_RING || e == EQ_RIGHT_RING || e == EQ_AMULET)
-        {
-            item_def &ring = you.inv[you.equip[e]];
-            jewellery_remove_effects(ring);
-        }
+        if (meld)
+            mprf("%s melds into your body.", equip.name(DESC_CAP_YOUR).c_str());
+
+        // Note that your weapon is handled specially, so base_type
+        // tells us what we need to know.
+        if (equip.base_type == OBJ_JEWELLERY)
+            jewellery_remove_effects(equip, false);
         else // armour
-        {
             unwear_armour( you.equip[e] );
-        }
 
         if (!meld)
         {
-            mprf("%s falls away!",
-                 you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
-
+            mprf("%s falls away!", equip.name(DESC_CAP_YOUR).c_str());
             you.equip[e] = -1;
         }
     }
@@ -139,7 +134,7 @@ bool remove_equipment(std::set<equipment_type> removed, bool meld)
     return (true);
 }
 
-static bool _unmeld_equipment(std::set<equipment_type> melded)
+static bool _unmeld_equipment(const std::set<equipment_type>& melded)
 {
     // Unmeld items in order.
     std::set<equipment_type>::const_iterator iter;
@@ -149,14 +144,12 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
         if (e == EQ_WEAPON || you.equip[e] == -1)
             continue;
 
-        if (e == EQ_LEFT_RING || e == EQ_RIGHT_RING || e == EQ_AMULET)
-        {
-            item_def &ring = you.inv[you.equip[e]];
-            jewellery_wear_effects(ring);
-        }
+        item_def& equip = you.inv[you.equip[e]];
+
+        if (equip.base_type == OBJ_JEWELLERY)
+            jewellery_wear_effects(equip);
         else // armour
         {
-            int arm = you.equip[e];
             bool force_remove = false;
 
             // In case the player was mutated during the transformation,
@@ -164,11 +157,8 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
             switch (e)
             {
             case EQ_HELMET:
-                if (you.mutation[MUT_HORNS]
-                    && is_hard_helmet(you.inv[arm]))
-                {
+                if (you.mutation[MUT_HORNS] && is_hard_helmet(equip))
                     force_remove = true;
-                }
                 break;
 
             case EQ_GLOVES:
@@ -177,7 +167,7 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
                 break;
 
             case EQ_BOOTS:
-                if (you.inv[arm].sub_type == ARM_BOOTS // i.e. not barding
+                if (equip.sub_type == ARM_BOOTS // i.e. not barding
                     && (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]))
                 {
                     force_remove = true;
@@ -188,8 +178,8 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
                 // If you switched weapons during the transformation, make
                 // sure you can still wear your shield.
                 // (This is only possible with Statue Form.)
-                if (you.equip[EQ_WEAPON] != -1
-                    && is_shield_incompatible(*you.weapon(), &you.inv[arm]))
+                if (you.weapon()
+                    && is_shield_incompatible(*you.weapon(), &equip))
                 {
                     force_remove = true;
                 }
@@ -202,11 +192,11 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
             if (force_remove)
             {
                 mprf("%s is pushed off your body!",
-                     you.inv[arm].name(DESC_CAP_YOUR).c_str());
+                     equip.name(DESC_CAP_YOUR).c_str());
                 you.equip[e] = -1;
             }
             else
-                armour_wear_effects( arm );
+                armour_wear_effects(you.equip[e]);
         }
     }
 
@@ -224,7 +214,7 @@ bool remove_one_equip(equipment_type eq, bool meld)
 {
     std::set<equipment_type> r;
     r.insert(eq);
-    return remove_equipment(r, meld);
+    return _remove_equipment(r, meld);
 }
 
 static bool _tran_may_meld_cursed(int transformation)
@@ -437,7 +427,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
     }
 
     // This must occur before the untransform() and the is_undead check.
-    if (you.attribute[ATTR_TRANSFORMATION] == (unsigned long) which_trans)
+    if (you.attribute[ATTR_TRANSFORMATION]
+        == static_cast<unsigned>(which_trans))
     {
         if (you.duration[DUR_TRANSFORMATION] < 100)
         {
@@ -503,7 +494,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
             return (false);
 
         mpr("You turn into a venomous arachnid creature.");
-        remove_equipment(rem_stuff);
+        _remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_SPIDER;
         you.duration[DUR_TRANSFORMATION] = 10 + random2(pow) + random2(pow);
@@ -530,7 +521,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         mprf("You turn into a %sbat.",
              you.species == SP_VAMPIRE ? "vampire " : "");
 
-        remove_equipment( rem_stuff );
+        _remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_BAT;
         you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
@@ -561,7 +552,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         mpr("You turn into a creature of crystalline ice.");
 
-        remove_equipment( rem_stuff );
+        _remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_ICE_BEAST;
         you.duration[DUR_TRANSFORMATION] = 30 + random2(pow) + random2(pow);
@@ -589,7 +580,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
             return (false);
 
         mpr("Your hands turn into razor-sharp scythe blades.");
-        remove_equipment( rem_stuff );
+        _remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_BLADE_HANDS;
         you.duration[DUR_TRANSFORMATION] = 10 + random2(pow);
@@ -604,7 +595,8 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
-        if (check_transformation_stat_loss(rem_stuff, quiet, 0, 2)) // Dex loss = 2
+        // Lose 2 dex
+        if (check_transformation_stat_loss(rem_stuff, quiet, 0, 2))
             return (false);
 
         if (you.species == SP_GNOME && coinflip())
@@ -615,7 +607,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
             mpr("You turn into a living statue of rough stone.");
 
         // Too stiff to make use of shields, gloves, or armour -- bwr
-        remove_equipment( rem_stuff );
+        _remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_STATUE;
         you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
@@ -654,7 +646,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         else
             mpr("You turn into a fearsome dragon!");
 
-        remove_equipment(rem_stuff);
+        _remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_DRAGON;
         you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
@@ -711,7 +703,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         mpr("Your body is suffused with negative energy!");
 
-        remove_equipment(rem_stuff);
+        _remove_equipment(rem_stuff);
 
         // undead cannot regenerate -- bwr
         if (you.duration[DUR_REGENERATION])
@@ -752,7 +744,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         // pois +1, spec_earth -1
         mpr("You feel diffuse...");
 
-        remove_equipment(rem_stuff);
+        _remove_equipment(rem_stuff);
 
         drop_everything();
 
@@ -790,7 +782,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         // also AC +10, ev -5, fire +2, pois +1, life +2, slow
         mpr("You transform into a huge demonic serpent!");
 
-        remove_equipment(rem_stuff);
+        _remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_SERPENT_OF_HELL;
         you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
@@ -1035,18 +1027,16 @@ void extra_hp(int amount_extra) // must also set in calc_hp
     you.hp /= 10;
 
     deflate_hp(you.hp_max, false);
-}                               // end extra_hp()
+}
 
 void drop_everything(void)
 {
-    int i = 0;
-
     if (inv_count() < 1)
         return;
 
     mpr( "You find yourself unable to carry your possessions!" );
 
-    for (i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; i++)
     {
         if (is_valid_item( you.inv[i] ))
         {

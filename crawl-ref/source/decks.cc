@@ -1845,12 +1845,12 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     }
     else if (power_level == 1)
     {
-        you.hp = you.hp_max;
+        set_hp(you.hp_max, false);
         you.magic_points = 0;
     }
     else if (power_level >= 2)
     {
-        you.hp = you.hp_max;
+        set_hp(you.hp_max, false);
         you.magic_points = you.max_magic_points;
     }
     you.redraw_hit_points = true;

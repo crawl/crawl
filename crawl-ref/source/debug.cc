@@ -2112,7 +2112,7 @@ void wizard_heal(bool super_heal)
     you.disease = 0;
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_POISONING] = 0;
-    set_hp(abs(you.hp_max), false);
+    set_hp(you.hp_max, false);
     set_mp(you.max_magic_points, false);
     set_hunger(10999, true);
     you.redraw_hit_points = true;
