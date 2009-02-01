@@ -40,46 +40,19 @@ enum unchivalric_attack_type
 
 struct mon_attack_def;
 
-// added Sept 18, 2000 -- bwr
-/* ***********************************************************************
- * called from: item_use.cc
- * *********************************************************************** */
 int effective_stat_bonus( int wepType = -1 );
 
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
-// added Sept 18, 2000 -- bwr
-/* ***********************************************************************
- * called from: describe.cc
- * *********************************************************************** */
 int weapon_str_weight( object_class_type wpn_class, int wpn_type );
-
-
-// last updated: 08jun2000 {dlb}
-/* ***********************************************************************
- * called from: acr - it_use3
- * *********************************************************************** */
 bool you_attack(int monster_attacked, bool unarmed_attacks);
-
-
-// last updated: 08jun2000 {dlb}
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
-bool monster_attack(int monster_attacking, bool allow_unarmed = true);
-
-
-// last updated: 08jun2000 {dlb}
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
-bool monsters_fight(int monster_attacking, int monster_attacked,
+bool monster_attack(monsters* attacker, bool allow_unarmed = true);
+bool monsters_fight(monsters* attacker, monsters* attacked,
                     bool allow_unarmed = true);
 
-int calc_your_to_hit( bool random_factor );
-
-int calc_heavy_armour_penalty( bool random_factor );
+int calc_your_to_hit(bool random_factor);
+int calc_heavy_armour_penalty(bool random_factor);
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender);

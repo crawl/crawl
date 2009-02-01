@@ -4966,11 +4966,9 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
 }
 
 // A monster attacking the player.
-bool monster_attack(int monster_attacking, bool allow_unarmed)
+bool monster_attack(monsters* attacker, bool allow_unarmed)
 {
     ASSERT(!crawl_state.arena);
-
-    monsters *attacker = &menv[monster_attacking];
 
     // Friendly and good neutral monsters won't attack unless confused.
     if (mons_wont_attack(attacker) && !mons_is_confused(attacker))
@@ -4986,12 +4984,9 @@ bool monster_attack(int monster_attacking, bool allow_unarmed)
 }
 
 // Two monsters fighting each other.
-bool monsters_fight(int monster_attacking, int monster_attacked,
+bool monsters_fight(monsters* attacker, monsters* defender,
                     bool allow_unarmed)
 {
-    monsters *attacker = &menv[monster_attacking];
-    monsters *defender = &menv[monster_attacked];
-
     melee_attack attk(attacker, defender, allow_unarmed);
     return attk.attack();
 }

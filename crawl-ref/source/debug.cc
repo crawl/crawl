@@ -4189,7 +4189,7 @@ static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
     for (long i = 0; i < Options.fsim_rounds; ++i)
     {
         you.hp = you.hp_max = 5000;
-        monster_attack(mi);
+        monster_attack(&menv[mi]);
         const int damage = you.hp_max - you.hp;
         if (damage)
             hits++;

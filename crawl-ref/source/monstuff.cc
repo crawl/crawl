@@ -2185,6 +2185,24 @@ bool monster_blink(monsters *monster)
     return (true);
 }
 
+static void _set_random_target(monsters* mon)
+{
+    mon->target = random_in_bounds(); // If we don't find anything better
+    for (int tries = 0; tries < 150; ++tries)
+    {
+        coord_def delta = coord_def(random2(13), random2(13)) - coord_def(6,6);
+        if (delta.origin())
+            continue;
+
+        const coord_def newtarget = delta + mon->pos();
+        if (!in_bounds(newtarget))
+            continue;
+
+        mon->target = newtarget;
+        break;
+    }
+}
+
 // allow_adjacent:  allow target to be adjacent to origin.
 // restrict_LOS:    restrict target to be within PLAYER line of sight.
 bool random_near_space(const coord_def& origin, coord_def& target,
@@ -3641,7 +3659,7 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
         // wandering monsters at least appear to have some sort of
         // attention span.  -- bwr
         if (need_target)
-            mon->target = random_in_bounds();
+            _set_random_target(mon);
     }
 }
 
@@ -3772,7 +3790,7 @@ static void _handle_behaviour(monsters *mon)
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
-        mon->target = random_in_bounds();
+        _set_random_target(mon);
         return;
     }
 
@@ -4069,7 +4087,7 @@ static void _handle_behaviour(monsters *mon)
                 // Sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
-                    mon->target = random_in_bounds();
+                    _set_random_target(mon);
                     mon->foe = MHITNOT;
                     new_beh  = BEH_WANDER;
                 }
@@ -4125,7 +4143,7 @@ static void _handle_behaviour(monsters *mon)
                         mon->travel_target = MTRAV_NONE;
                         patrolling = false;
                         mon->patrol_point.reset();
-                        mon->target = random_in_bounds();
+                        _set_random_target(mon);
                     }
                 }
 
@@ -5832,19 +5850,20 @@ static bool _handle_reaching(monsters *monster)
                 && grid_distance(monster->pos(), you.pos()) == 2)
             {
                 ret = true;
-                monster_attack(monster_index(monster), false);
+                monster_attack(monster, false);
             }
         }
         else if (monster->foe != MHITNOT)
         {
-            coord_def foepos = menv[monster->foe].pos();
+            monsters& mfoe = menv[monster->foe];
+            coord_def foepos = mfoe.pos();
             // Same comments as to invisibility as above.
             if (monster->target == foepos
                 && monster->mon_see_grid(foepos, true)
                 && grid_distance(monster->pos(), foepos) == 2)
             {
                 ret = true;
-                monsters_fight(monster_index(monster), monster->foe, false);
+                monsters_fight(monster, &mfoe, false);
             }
         }
     }
@@ -6779,11 +6798,8 @@ static void _monster_regenerate(monsters *monster)
     }
 }
 
-static bool _swap_monsters(const int mover_idx, const int moved_idx)
+static bool _swap_monsters(monsters* mover, monsters* moved)
 {
-    monsters* mover = &menv[mover_idx];
-    monsters* moved = &menv[moved_idx];
-
     // Can't swap with a stationary monster.
     if (mons_is_stationary(moved))
         return (false);
@@ -6829,11 +6845,10 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
     const coord_def moved_pos = moved->pos();
 
     mover->pos() = moved_pos;
-
     moved->pos() = mover_pos;
 
-    mgrd(mover->pos()) = mover_idx;
-    mgrd(moved->pos()) = moved_idx;
+    mgrd(mover->pos()) = mover->mindex();
+    mgrd(moved->pos()) = moved->mindex();
 
     if (you.can_see(mover) && you.can_see(moved))
     {
@@ -6864,10 +6879,9 @@ static void _swim_or_move_energy(monsters *mon)
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
 
-static void _handle_monster_move(int i, monsters *monster)
+static void _handle_monster_move(monsters *monster)
 {
     bool brkk = false;
-    FixedArray <unsigned int, 19, 19> show;
 
     monster->hit_points = std::min(monster->max_hit_points,
                                    monster->hit_points);
@@ -7028,9 +7042,8 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (monster->type == MONS_TIAMAT && one_chance_in(3))
         {
-            int cols[] = { RED, WHITE, DARKGREY, GREEN, MAGENTA };
-            int newcol = cols[random2(sizeof(cols) / sizeof(cols[0]))];
-            monster->colour = newcol;
+            const int cols[] = { RED, WHITE, DARKGREY, GREEN, MAGENTA };
+            monster->colour = RANDOM_ELEMENT(cols);
         }
 
         _monster_regenerate(monster);
@@ -7063,7 +7076,7 @@ static void _handle_monster_move(int i, monsters *monster)
         // Harpies may eat food/corpses on the ground.
         if (monster->type == MONS_HARPY && !mons_is_fleeing(monster)
             && (mons_wont_attack(monster)
-                || (monster->pos() - you.pos()).rdist() > 1)
+                || (grid_distance(monster->pos(), you.pos()) > 1))
             && (mons_is_wandering(monster) && one_chance_in(3)
                 || one_chance_in(5))
             && expose_items_to_element(BEAM_STEAL_FOOD, monster->pos(), 10))
@@ -7149,39 +7162,21 @@ static void _handle_monster_move(int i, monsters *monster)
             {
                 std::vector<coord_def> moves;
 
+                mmov.reset();
                 int pfound = 0;
-                for (int yi = -1; yi <= 1; ++yi)
-                    for (int xi = -1; xi <= 1; ++xi)
-                    {
-                        coord_def c = monster->pos() + coord_def(xi, yi);
-                        if (in_bounds(c) && monster->can_pass_through(c)
-                            && one_chance_in(++pfound))
-                        {
-                            mmov.x = xi;
-                            mmov.y = yi;
-                        }
-                    }
+                for (adjacent_iterator ai(monster->pos(), false); ai; ++ai)
+                    if (monster->can_pass_through(*ai))
+                        if (one_chance_in(++pfound))
+                            mmov = *ai - monster->pos();
 
-                if (x_chance_in_y(2, 2 + pfound))
-                    mmov.reset();
-
-                // Bounds check: don't let confused monsters try to run
-                // off the grid.
-                const coord_def s = monster->pos() + mmov;
-                if (!in_bounds_x(s.x))
-                    mmov.x = 0;
-                if (!in_bounds_y(s.y))
-                    mmov.y = 0;
-
-                if (!monster->can_pass_through(monster->pos() + mmov))
-                    mmov.reset();
-
-                int enemy = mgrd(monster->pos() + mmov);
-                if (enemy != NON_MONSTER
-                    && !is_sanctuary(monster->pos())
-                    && !mmov.origin())
+                // OK, mmov determined.
+                const coord_def newcell = mmov + monster->pos();
+                monsters* enemy = monster_at(newcell);
+                if (enemy
+                    && newcell != monster->pos()
+                    && !is_sanctuary(monster->pos()))
                 {
-                    if (monsters_fight(i, enemy))
+                    if (monsters_fight(monster, enemy))
                     {
                         brkk = true;
                         mmov.reset();
@@ -7193,8 +7188,8 @@ static void _handle_monster_move(int i, monsters *monster)
                         // Instead run away!
                         if (monster->add_ench(mon_enchant(ENCH_FEAR)))
                         {
-                            behaviour_event(monster, ME_SCARE, MHITNOT,
-                                            monster->pos() + mmov);
+                            behaviour_event(monster, ME_SCARE,
+                                            MHITNOT, newcell);
                         }
                         break;
                     }
@@ -7276,24 +7271,24 @@ static void _handle_monster_move(int i, monsters *monster)
         if (!mons_is_caught(monster))
         {
             // See if we move into (and fight) an unfriendly monster.
-            int targmon = mgrd(monster->pos() + mmov);
-            if (targmon != NON_MONSTER
-                && targmon != i
-                && !mons_aligned(i, targmon))
+            monsters* targ = monster_at(monster->pos() + mmov);
+            if (targ
+                && targ != monster
+                && !mons_aligned(monster->mindex(), targ->mindex()))
             {
                 // Maybe they can swap places?
-                if (_swap_monsters(i, targmon))
+                if (_swap_monsters(monster, targ))
                 {
                     _swim_or_move_energy(monster);
                     continue;
                 }
                 // Figure out if they fight.
-                else if (monsters_fight(i, targmon))
+                else if (monsters_fight(monster, targ))
                 {
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target = random_in_bounds();
+                        _set_random_target(monster);
                         // monster->speed_increment -= monster->speed;
                     }
 
@@ -7309,24 +7304,17 @@ static void _handle_monster_move(int i, monsters *monster)
             if (monster->pos() + mmov == you.pos())
             {
                 ASSERT(!crawl_state.arena);
-                bool isFriendly = mons_friendly(monster);
-                bool attacked   = false;
 
-                if (!isFriendly)
+                if (!mons_friendly(monster))
                 {
-                    monster_attack(i);
-                    attacked = true;
+                    monster_attack(monster);
 
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target = random_in_bounds();
+                        _set_random_target(monster);
                     }
                     DEBUG_ENERGY_USE("monster_attack()");
-                }
-
-                if (attacked)
-                {
                     mmov.reset();
                     continue;
                 }
@@ -7381,7 +7369,7 @@ void handle_monsters()
 
         const coord_def oldpos = monster->pos();
 
-        _handle_monster_move(i, monster);
+        _handle_monster_move(monster);
 
         if (!invalid_monster(monster) && monster->pos() != oldpos)
             immobile_monster[i] = true;
@@ -7693,21 +7681,14 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
 
     if (f == you.pos())
     {
-        monster_attack( monster_index(monster) );
+        monster_attack(monster);
         return (true);
     }
 
-    // XXX Is this necessary? Isn't it handled by the next case?
-    if (f == monster->pos())
+    // This includes the case where the monster attacks itself.
+    if (monsters* def = monster_at(f))
     {
-        const int mx = monster_index(monster);
-        monsters_fight( mx, mx );
-        return (true);
-    }
-
-    if (mgrd(f) != NON_MONSTER)
-    {
-        monsters_fight( monster_index(monster), mgrd(f) );
+        monsters_fight(monster, def);
         return (true);
     }
 
@@ -8456,7 +8437,7 @@ forget_it:
         // Check for attacking player.
         if (monster->pos() + mmov == you.pos())
         {
-            ret    = monster_attack( monster_index(monster) );
+            ret = monster_attack(monster);
             mmov.reset();
         }
 
@@ -8490,14 +8471,13 @@ forget_it:
         }
 
         // Check for attacking another monster.
-        int targmon = mgrd(monster->pos() + mmov);
-        if (targmon != NON_MONSTER)
+        if (monsters* targ = monster_at(monster->pos() + mmov))
         {
-            if (mons_aligned(monster_index(monster), targmon))
+            if (mons_aligned(monster->mindex(), targ->mindex()))
                 ret = _monster_swaps_places(monster, mmov);
             else
             {
-                monsters_fight(monster_index(monster), targmon);
+                monsters_fight(monster, targ);
                 ret = true;
             }
 
