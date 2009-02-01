@@ -6540,26 +6540,20 @@ void do_crash_dump()
     sprintf(name, "%scrash-%s-%d.txt", dir.c_str(),
             you.your_name, (int) time(NULL));
 
-    FILE* file = fopen(name, "w");
+    fprintf(stderr, EOL "Writing crash info to %s" EOL, name);
+    errno = 0;
+    FILE* file = freopen(name, "w+", stderr);
 
-    if (file == NULL)
+    if (file == NULL || errno != 0)
     {
-        fprintf(stderr, EOL "Unable to open file '%s' for writing: %s" EOL,
+        fprintf(stdout, EOL "Unable to open file '%s' for writing: %s" EOL,
                 name, strerror(errno));
-        file = stderr;
+        file = stdout;
     }
-    else
-    {
-        fprintf(stderr, EOL "Writing crash info to %s" EOL, name);
 
-        // Merge stderr into file, so that the lua stack dumping functions
-        // (and anything else that uses stderr) will send everything to
-        // the output file.
-        dup2(fileno(file), fileno(stderr));
-
-        // Unbuffer the output file stream, to match with stderr.
-        setvbuf(file, NULL, _IONBF, 0);
-    }
+    // Unbuffer the file, since if we recursively crash buffered lines
+    // won't make it to the file.
+    setvbuf(file, NULL, _IONBF, 0);
 
     set_msg_dump_file(file);
 
