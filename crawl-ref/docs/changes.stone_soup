@@ -21,7 +21,7 @@ Levels
 * Self-changing labyrinths (mappable but subject to map rot).
 * Teleporting within a labyrinth always sends you away from the exit.
 * The Orcish Mines are now completely interconnected via the branch bottom.
-* Ghosts may no longer appear in the Ecumenic Temple.
+* Ghosts may no longer appear in the Ecumenical Temple.
 * Traps now remember how much ammunition they have.
 * Branch descriptions now mention depth and whether they contain a rune.
 * Fixed KMONS not accepting comma-separated list of alternative monsters.
@@ -167,7 +167,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed explosive tracers leaking information about invisible monsters.
 * Fixed real/fake rakshasa identity being leaked in descriptions.
 * Fixed =f inscription preventing wielding of stones.
-* Fixed Spriggans being capable to wield staves while wearing a shield.
+* Fixed Spriggans being capable of wielding staves while wearing a shield.
 * Fixed monsters being created with both a shield and wielding a two-hander.
 * Fixed off-by-1 error when selecting starting weapon.
 * Fixed bats being capable of opening/closing doors.
