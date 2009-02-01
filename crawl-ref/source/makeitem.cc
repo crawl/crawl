@@ -2497,8 +2497,8 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     {
         // Same relative weights as acquirement
         int choice = random_choose_weighted(
-            55, BOOK_RANDART_THEME,
-             3, BOOK_RANDART_LEVEL,
+            58, BOOK_RANDART_THEME,
+             2, BOOK_RANDART_LEVEL, // 1/30
              0);
 
         item.sub_type = choice;

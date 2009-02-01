@@ -21,6 +21,7 @@ Levels
 * Self-changing labyrinths (mappable but subject to map rot).
 * Teleporting within a labyrinth always sends you away from the exit.
 * The Orcish Mines are now completely interconnected via the branch bottom.
+* Shortened Hive to two levels.
 * Ghosts may no longer appear in the Ecumenical Temple.
 * Traps now remember how much ammunition they have.
 * Branch descriptions now mention depth and whether they contain a rune.
@@ -137,6 +138,7 @@ Miscellaneous
 -------------
 * Greatly reduced ranges (both player and monster), now mostly capped by LOS.
 * Added arena mode to watch monsters fighting other monsters.
+* Crashes now leave highly informative crash dumps.
 * Poison Weapon is now a level 2 spell.
 * Extension will now also extend temporary weapon brands.
 * Butchered corpses now leave skeletons.
@@ -149,6 +151,14 @@ Miscellaneous
 * Store code revision in save files for easier bug tracking.
 * Many useful new wizard commands.
 
+
+Stone Soup 0.4.5 (20090114)
+---------------------------
+
+* Fixed infinite loop when attempting to create randarts named after gods.
+* Fixed re-do command (`) wasting a turn.
+* Fixed Swap card not checking for terrain.
+* Fixed corpses not appearing in Tiles inventory.
 
 Stone Soup 0.4.4 (20081220)
 ---------------------------
@@ -292,7 +302,7 @@ Breaks saves and bones compatibility.
 
 Interface
 ---------
-* Overhauled key settings of a number of commands. 
+* Overhauled key settings of a number of commands.
   (See settings/034_commands.txt or press ?v while playing.)
 * Added monster list for monsters in line of sight (ASCII only).
 * Improved religion, skills, ability interface. (Commands are ^!, m?, and a!.)
@@ -618,7 +628,7 @@ Levels
 * Monster generation rate in the Vestibule drops with time spent in
   the Vestibule.
 * Fixed sealed rooms being generated in the Vaults.
-  
+
 Interface
 ---------
 * [1772497] runrest_ignore_monster can be used to ignore distant mosters
@@ -688,7 +698,7 @@ Stone Soup 0.2.5 (20070512)
 
 Stone Soup 0.2.4 (20070408)
 ---------------------------
-* Fixed another instance of monsters inheriting enchantments from other 
+* Fixed another instance of monsters inheriting enchantments from other
   monsters.
 * Fixed detect creatures and items not working.
 * Fixed hydra decapitation not being credited correctly.
@@ -833,7 +843,7 @@ Stone Soup 0.1.7 (20061231)
 ---------------------------
 * Fixed missing cursor in controlled-teleport screen.
 * Fixed semi-controlled blink.
-* Fixed the Shining One and Zin being angered by the deaths of their minions 
+* Fixed the Shining One and Zin being angered by the deaths of their minions
   in combat.
 * Fixed friendlies being angered by bolts that they are immune to.
 * Fixed notes not noting zombies correctly.
@@ -923,11 +933,11 @@ Stone Soup 0.1.3 (20061116)
 * Fixed undead decomposing from mutation only if wearing an amulet of resist
   mutation.
 * [1593318] Rearranged skills display for ranged combat and unarmed combat.
-* [1593089] Escape can be used to break out of sequential pickup prompt in 
+* [1593089] Escape can be used to break out of sequential pickup prompt in
   addition to 'q'.
 * Curare-tipped needles are more fragile than ordinary needles.
 * [1592629] \ now shows item identification knowledge in shops.
-* [1592521] Fixed the invisibility check for tracer beams to produce nicer 
+* [1592521] Fixed the invisibility check for tracer beams to produce nicer
   results.
 * Fixed beta 26 bug: Glow contamination has an extremely severe mutation rate.
 * [1591152] Fixed macros being able to infinite loop.
@@ -968,7 +978,7 @@ Stone Soup 0.1.3 (20061116)
 * [1586069] Fixed player yellow draconians not having a BWpn delay.
 * [1585811] Fixed inability to generate fixedarts.
 * [1585793] Increased frequency of altars and mini-temples.
-* Fixed multidrop not remembering previously selected items that were 
+* Fixed multidrop not remembering previously selected items that were
   not dropped.
 * Okawaru is less eager to shower missiles on the player.
 * Slightly upped MR for draconians and death drakes.
@@ -1002,18 +1012,18 @@ Stone Soup 0.1.3 (20061116)
 * Accept g as an alternative key to go into the pickup menu.
 * Superior submerge behaviour for monsters in fountains.
 * Fixed acquirement giving bad items (specifically with barding.)
-* [1571334] Fixed clumsy titles: "Master of Thousand Battles", 
+* [1571334] Fixed clumsy titles: "Master of Thousand Battles",
   "Master of Arcane".
 * Lochaber axes now get correct combat messages.
 * [1563548] Escape dumps you out of both menu and prompt.
-* [1571278] Horn of Geryon monsters are defined as MF_CREATED_FRIENDLY and thus 
+* [1571278] Horn of Geryon monsters are defined as MF_CREATED_FRIENDLY and thus
   give no benefits when dying.
 * [1571276] Altar cards don't look for a better spot.
 * Import of (most of) 4.1's view code.
 * Spriggans are told that they are fast.
 * [1567636] Made the Orcish Mines entrance message more informative.
 * [1568413] Conjurers and wizards get to choose their starting spellbook.
-* [1567640] Uniques with less than 5 hit dice can't get top-tier wands in their 
+* [1567640] Uniques with less than 5 hit dice can't get top-tier wands in their
   starting inventory.
 * [1563668] Travel respects easy_open.
 * Added a better go-to-hell message when attempting to cast Swiftness in water.
@@ -1045,7 +1055,7 @@ Stone Soup 0.1.2 (20060927)
 Stone Soup 0.1.1 (20060926)
 ---------------------------
 * The Inscriptions patch joins the party (minus keybindings changes).
-* Applied Matthew Cline's additions to the Inscriptions patch: more notes on 
+* Applied Matthew Cline's additions to the Inscriptions patch: more notes on
   monsters, auto-notes based on messages, etc.
 * Jewellery names now note uncursed status correctly (if rather verbosely)
 * Curare-tipped needles are rarer.
@@ -1061,7 +1071,7 @@ Stone Soup 0.1.1 (20060926)
 * Fixed broken keypad handling in level-map on DOS.
 * Fixed jelly pits appearing at low levels.
 * Added % command to show resists and other useful statistics.
-* Fixed bad flaming/freezing brands on missile launchers (reported by 
+* Fixed bad flaming/freezing brands on missile launchers (reported by
   Rubinstein).
 * Miscast effect explosions now always hit
 * Fixed fireballs (and other explosions) being blocked by shields.
@@ -1076,7 +1086,7 @@ Stone Soup 0.1.1 (20060926)
 * Stuff dropped in lava/deep water will now sleep with the fishes. Er, be
   destroyed.
 * Autoprayer will not pray at altars.
-* Water elementals can now move around as intended and can be summoned on blue 
+* Water elementals can now move around as intended and can be summoned on blue
   fountains.
 * Vorpal launchers do a little more damage.
 * Fixed monsters not benefiting from vorpal launchers.
@@ -1096,7 +1106,7 @@ Stone Soup 0.1.1 (20060926)
 * Yellow wasps are less lethal.
 * Items can be inscribed with =k to ignore them. Ignorance is rather powerful.
 * Trolls cannot use claws for butchery when transformed.
-* Putting on rings no longer prompts for left/right finger, rings always go 
+* Putting on rings no longer prompts for left/right finger, rings always go
   onto left finger first if both fingers are available.
 * 'v' now also displays launcher stats.
 * Fixed bug with monsters trying to use blink as a beam spell when out of player
@@ -1104,7 +1114,7 @@ Stone Soup 0.1.1 (20060926)
 * 'A' screen now notes speed of centaurs and nagas.
 * \ command display is now much tidier.
 * Fixed horns mutation interaction with headgear.
-* Summoner ghosts get regular summon small mammals, not vampire small mammal 
+* Summoner ghosts get regular summon small mammals, not vampire small mammal
   summon.
 * Added death drake description.
 
