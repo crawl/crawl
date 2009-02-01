@@ -700,7 +700,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     return (false);
 }
 
-static int _healing_spell(int healed, const coord_def where = coord_def(0,0))
+static int _healing_spell(int healed, const coord_def where = coord_def())
 {
     ASSERT(healed >= 1);
 
@@ -722,10 +722,7 @@ static int _healing_spell(int healed, const coord_def where = coord_def(0,0))
     }
 
     if (!spd.isValid)
-    {
-        canned_msg(MSG_OK);
         return (0);
-    }
 
     if (spd.target == you.pos())
     {
