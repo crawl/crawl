@@ -6573,7 +6573,14 @@ bool player::can_go_berserk(bool verbose) const
     {
         if (verbose)
             mpr("You're too exhausted to go berserk.");
+        // or else they won't notice -- no message here
+        return (false);
+    }
 
+    if (you.duration[DUR_MESMERISED])
+    {
+        if (verbose)
+            mpr("You are too mesmerised to rage.");
         // or else they won't notice -- no message here
         return (false);
     }

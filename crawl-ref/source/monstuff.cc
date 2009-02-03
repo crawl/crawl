@@ -5680,11 +5680,14 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             || mons_is_fleeing(monster)
             || mons_is_pacified(monster)
             || mons_friendly(monster)
-            || silenced(monster->pos())
-            || silenced(you.pos()))
+            || !player_can_hear(monster->pos()))
         {
             break;
         }
+
+        // Don't even try on berserkers. Mermaids know their limits.
+        if (you.duration[DUR_BERSERKER])
+            break;
 
         // Reduce probability because of spamminess.
         if (you.species == SP_MERFOLK && !one_chance_in(4))
