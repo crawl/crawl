@@ -2090,8 +2090,10 @@ There are a number of individual weapon skills for missile weapons:
 
 Throwing is the skill for all things hurled without a launcher: axes,
 spears, stones, nets, etc. The other skills refer to various types of
-missiles shot with a launcher. Since stones can be thrown without 
-launchers to good effect, these skills crosstrain:
+missiles shot with a launcher. An exception to this are needles: these
+are launched using blowguns, an action which uses and trains the 
+Throwing skill. Since stones can be thrown without launchers to good
+effect, these skills crosstrain:
 
      *  Throwing and Slings
 
