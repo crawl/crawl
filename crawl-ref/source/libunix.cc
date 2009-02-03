@@ -451,33 +451,24 @@ int unixcurses_get_vi_key(int keyin)
 {
     switch(keyin)
     {
-    case 1001: return 'b';
-    case 1002: return 'j';
-    case 1003: return 'n';
-    case 1004: return 'h';
-    case 1005: return '5';
-    case 1006: return 'l';
-    case 1007: return 'y';
-    case 1008: return 'k';
-    case 1009: return 'u';
+    // 1001..1009: passed without change
+    case 1031: return 1007;
+    case 1034: return 1001;
+    case 1040: return 1005;
 
-    case 1031: return 'y';
-    case 1034: return 'b';
-    case 1040: return '5';
-
-    case KEY_HOME:	return 'y';
-    case KEY_END:	return 'b';
-    case KEY_DOWN:	return 'j';
-    case KEY_UP:	return 'k';
-    case KEY_LEFT:	return 'h';
-    case KEY_RIGHT:	return 'l';
-    case KEY_NPAGE:	return 'n';
-    case KEY_PPAGE:	return 'u';
-    case KEY_A1:	return 'y';
-    case KEY_A3:	return 'u';
-    case KEY_B2:	return '5';
-    case KEY_C1:	return 'b';
-    case KEY_C3:	return 'n';
+    case KEY_HOME:	return 1007;
+    case KEY_END:	return 1001;
+    case KEY_DOWN:	return 1002;
+    case KEY_UP:	return 1008;
+    case KEY_LEFT:	return 1004;
+    case KEY_RIGHT:	return 1006;
+    case KEY_NPAGE:	return 1003;
+    case KEY_PPAGE:	return 1009;
+    case KEY_A1:	return 1007;
+    case KEY_A3:	return 1009;
+    case KEY_B2:	return 1005;
+    case KEY_C1:	return 1001;
+    case KEY_C3:	return 1003;
     case KEY_SHOME:	return 'Y';
     case KEY_SEND:	return 'B';
     case KEY_SLEFT:	return 'H';
