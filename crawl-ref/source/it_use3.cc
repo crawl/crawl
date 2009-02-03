@@ -227,8 +227,7 @@ void special_wielded()
         if (x_chance_in_y(player_spec_death() + 1, 8))
         {
             create_monster(
-                mgen_data(MONS_SHADOW, BEH_FRIENDLY,
-                          2, 0, you.pos(), you.pet_target));
+                mgen_data(MONS_SHADOW, BEH_FRIENDLY, 2, 0, you.pos(), MHITYOU));
             did_god_conduct(DID_NECROMANCY, 1);
         }
         break;
@@ -718,8 +717,7 @@ static bool efreet_flask(void)
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       0, 0, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
-                      MG_FORCE_BEH));
+                      MHITYOU, MG_FORCE_BEH));
 
     if (monster != -1)
     {
@@ -986,17 +984,13 @@ static bool box_of_beasts()
         while (player_will_anger_monster(beasty));
 
         beh_type beha = BEH_FRIENDLY;
-        unsigned short hitting = you.pet_target;
 
         if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
-        {
             beha = BEH_HOSTILE;
-            hitting = MHITYOU;
-        }
 
         if (create_monster(
                 mgen_data(beasty, beha, 2 + random2(4), 0,
-                          you.pos(), hitting)) != -1)
+                          you.pos(), MHITYOU)) != -1)
         {
             success = true;
 

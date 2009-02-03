@@ -6538,7 +6538,7 @@ void player::attacking(actor *other)
     {
         const monsters *mon = dynamic_cast<monsters*>(other);
         if (!mons_friendly(mon) && !mons_neutral(mon))
-            pet_target = monster_index(mon);
+            pet_target = mon->mindex();
     }
 
     if (player_mutation_level(MUT_BERSERK)

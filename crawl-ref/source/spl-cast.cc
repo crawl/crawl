@@ -1606,7 +1606,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         mpr("You attempt to give life to the dead...");
 
         if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
-                            you.pet_target, god) < 0)
+                            MHITYOU, god) < 0)
         {
             mpr("There is no skeleton here to animate!");
         }
@@ -1615,7 +1615,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_ANIMATE_DEAD:
         mpr("You call on the dead to walk for you...");
 
-        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target, god);
+        animate_dead(&you, powc + 1, BEH_FRIENDLY, MHITYOU, god);
         break;
 
     case SPELL_SIMULACRUM:

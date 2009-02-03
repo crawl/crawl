@@ -1810,7 +1810,7 @@ static bool _shadow_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 
     if (agent->atype() == ACT_PLAYER)
     {
-        hitting = you.pet_target;
+        hitting = MHITYOU;
         beh     = BEH_FRIENDLY;
     }
     else
@@ -4857,7 +4857,7 @@ void read_scroll(int slot)
     {
         const int monster = create_monster(
                                 mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                                          0, 0, you.pos(), you.pet_target,
+                                          0, 0, you.pos(), MHITYOU,
                                           MG_FORCE_BEH));
         if (monster != -1)
         {

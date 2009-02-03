@@ -815,7 +815,7 @@ static bool _xom_send_allies(int sever)
             create_monster(
                 mgen_data(monster, BEH_FRIENDLY,
                           3, MON_SUMM_AID,
-                          you.pos(), you.pet_target,
+                          you.pos(), MHITYOU,
                           MG_FORCE_BEH, GOD_XOM));
 
         if (summons[i] != -1)
@@ -898,20 +898,16 @@ static bool _xom_send_one_ally(int sever)
     bool different = !is_demonic;
 
     beh_type beha = BEH_FRIENDLY;
-    unsigned short hitting = you.pet_target;
 
     // There's a chance that a non-demon may be hostile.
     if (different && one_chance_in(4))
-    {
         beha = BEH_HOSTILE;
-        hitting = MHITYOU;
-    }
 
     const int summons =
         create_monster(
             mgen_data(mon, beha,
                       6, MON_SUMM_AID,
-                      you.pos(), hitting,
+                      you.pos(), MHITYOU,
                       MG_FORCE_BEH, GOD_XOM));
 
     if (summons != -1)
@@ -1046,20 +1042,15 @@ static bool _xom_send_major_ally(int sever)
     const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
     beh_type beha = BEH_FRIENDLY;
-    unsigned short hitting = you.pet_target;
 
     // There's a chance that a non-demon may be hostile.
     if (!is_demonic && one_chance_in(4))
-    {
         beha = BEH_HOSTILE;
-        hitting = MHITYOU;
-    }
 
     const int summons =
         create_monster(
             mgen_data(_xom_random_demon(sever, one_chance_in(8)), beha,
-                      0, 0, you.pos(), hitting,
-                      MG_FORCE_BEH, GOD_XOM));
+                      0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM));
 
     if (summons != -1)
     {

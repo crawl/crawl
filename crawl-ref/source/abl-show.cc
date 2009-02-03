@@ -1376,8 +1376,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_RAISE_DEAD:
-        animate_dead(&you, you.experience_level * 5, BEH_FRIENDLY,
-                     you.pet_target);
+        animate_dead(&you, you.experience_level * 5, BEH_FRIENDLY, MHITYOU);
         break;
 
     case ABIL_CONTROL_DEMON:
@@ -1551,7 +1550,7 @@ static bool _do_ability(const ability_def& abil)
         mpr("You attempt to give life to the dead...");
 
         if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
-                            you.pet_target, GOD_YREDELEMNUL) < 0)
+                            MHITYOU, GOD_YREDELEMNUL) < 0)
         {
             mpr("There are no remains here to animate!");
         }
@@ -1567,7 +1566,7 @@ static bool _do_ability(const ability_def& abil)
         mpr("You call on the dead to walk for you...");
 
         animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
-                     you.pet_target, GOD_YREDELEMNUL);
+                     MHITYOU, GOD_YREDELEMNUL);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 

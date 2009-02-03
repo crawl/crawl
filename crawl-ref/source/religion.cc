@@ -944,8 +944,7 @@ static int _yred_random_servants(int threshold, bool force_hostile = false)
         how_many = 2 + random2(4);
 
     mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 0, 0, you.pos(), !force_hostile ? you.pet_target : MHITYOU,
-                 0, GOD_YREDELEMNUL);
+                 0, 0, you.pos(), MHITYOU, 0, GOD_YREDELEMNUL);
 
     int created = 0;
     if (force_hostile)
@@ -1562,7 +1561,7 @@ static void _beogh_blessing_reinforcement()
 
         _delayed_monster(
             mgen_data(follower_type, BEH_FRIENDLY, 0, 0,
-                      you.pos(), you.pet_target, 0, GOD_BEOGH),
+                      you.pos(), MHITYOU, 0, GOD_BEOGH),
             _beogh_reinf_callback);
     }
 }
