@@ -456,7 +456,7 @@ This spell envenoms missile ammunition held by the caster.
 %%%%
 Poison Arrow
 
-This spell hurls a magical arrow of the most vile and noxious toxin. No living thing is completely immune to its effects. 
+This spell hurls a magical arrow coated with the most vile and noxious toxin. No living thing is completely immune to its effects, and even the undead will take damage from the physical component of the spell.
 %%%%
 Poison Weapon
 
