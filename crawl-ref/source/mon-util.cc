@@ -67,9 +67,6 @@ struct mon_spellbook
 
 mon_display monster_symbols[NUM_MONSTERS];
 
-// Really important extern -- screen redraws suck w/o it! {dlb}
-FixedVector < unsigned short, 1000 > mcolour;
-
 static bool initialized_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
