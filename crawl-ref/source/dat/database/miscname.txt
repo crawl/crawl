@@ -167,7 +167,7 @@ pepper
 
 salt
 
-womething weird
+something weird
 
 sulphur
 
