@@ -4376,7 +4376,7 @@ bool monsters::drop_item(int eslot, int near)
     if (item_index == NON_ITEM)
         return (true);
 
-    item_def &item(mitm[item_index]);
+    item_def* pitem = &mitm[item_index];
 
     // Unequip equipped items before dropping them; unequip() prevents
     // cursed items from being removed.
@@ -4384,44 +4384,48 @@ bool monsters::drop_item(int eslot, int near)
     if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
-        if (!unequip(item, eslot, near))
+        if (!unequip(*pitem, eslot, near))
             return (false);
         was_unequipped = true;
     }
 
     bool on_floor = true;
 
-    if (item.flags & ISFLAG_SUMMONED)
+    if (pitem->flags & ISFLAG_SUMMONED)
     {
         on_floor = false;
 
         if (need_message(near))
             mprf("%s %s as %s drops %s!",
-                 item.name(DESC_CAP_THE).c_str(),
-                 summoned_poof_msg(this, item).c_str(),
+                 pitem->name(DESC_CAP_THE).c_str(),
+                 summoned_poof_msg(this, *pitem).c_str(),
                  name(DESC_NOCAP_THE).c_str(),
-                 item.quantity > 1 ? "them" : "it");
+                 pitem->quantity > 1 ? "them" : "it");
 
-        item_was_destroyed(item, mindex());
+        item_was_destroyed(*pitem, mindex());
         destroy_item(item_index);
     }
     else if (!move_item_to_grid(&item_index, pos()))
     {
         // Re-equip item if we somehow failed to drop it.
         if (was_unequipped)
-            equip(item, eslot, near);
+            equip(*pitem, eslot, near);
 
         return (false);
     }
 
+    // move_item_to_grid could change item_index, so
+    // update pitem.
+    pitem = &mitm[item_index];
+
     if (on_floor)
     {
         if (mons_friendly(this))
-            item.flags |= ISFLAG_DROPPED_BY_ALLY;
+            pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
 
         if (need_message(near))
             mprf("%s drops %s.", name(DESC_CAP_THE).c_str(),
-                 item.name(DESC_NOCAP_A).c_str());
+                 pitem->name(DESC_NOCAP_A).c_str());
 
         dungeon_feature_type feat = grd(pos());
         if (grid_destroys_items(feat))
@@ -4429,7 +4433,7 @@ bool monsters::drop_item(int eslot, int near)
             if ( player_can_hear(pos()) )
                 mprf(MSGCH_SOUND, grid_item_destruction_message(feat));
 
-            item_was_destroyed(item, mindex());
+            item_was_destroyed(*pitem, mindex());
             unlink_item(item_index);
         }
     }
