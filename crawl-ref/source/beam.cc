@@ -3988,6 +3988,18 @@ void bolt::update_hurt_or_helped(monsters *mon)
 
 void bolt::tracer_enchantment_affect_monster(monsters* mon)
 {
+    // Update friend or foe encountered.
+    if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+    {
+        foe_info.count++;
+        foe_info.power += mons_power(mon->type);
+    }
+    else
+    {
+        friend_info.count++;
+        friend_info.power += mons_power(mon->type);
+    }
+        
     handle_stop_attack_prompt(mon);
     if (!beam_cancelled)
     {
@@ -4099,9 +4111,15 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
 
         // Counting foes is only important for monster tracers.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+        {
             foe_info.power += 2 * final * mons_power(mon->type) / preac;
+            foe_info.count++;
+        }
         else
+        {
             friend_info.power += 2 * final * mons_power(mon->type) / preac;
+            friend_info.count++;
+        }
 
         for (unsigned int i = 0; i < messages.size(); i++)
             mpr(messages[i].c_str(), MSGCH_MONSTER_DAMAGE);
@@ -4133,18 +4151,6 @@ void bolt::tracer_affect_monster(monsters* mon)
     {
         apply_hit_funcs(mon, 0);
         return;
-    }
-
-    // Update friend or foe encountered.
-    if (!mons_atts_aligned(attitude, mons_attitude(mon)))
-    {
-        foe_info.count++;
-        foe_info.power += mons_power(mon->type);
-    }
-    else
-    {
-        friend_info.count++;
-        friend_info.power += mons_power(mon->type);
     }
 
     if (is_enchantment())

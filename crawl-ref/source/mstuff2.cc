@@ -1586,6 +1586,30 @@ static void _scale_draconian_breath(bolt& beam, int drac_type)
     beam.damage.size = scaling * beam.damage.size / 100;
 }
 
+static spell_type _draco_type_to_breath(int drac_type)
+{
+    switch (drac_type)
+    {
+    case MONS_BLACK_DRACONIAN:   return SPELL_LIGHTNING_BOLT;
+    case MONS_MOTTLED_DRACONIAN: return SPELL_STICKY_FLAME_SPLASH;
+    case MONS_YELLOW_DRACONIAN:  return SPELL_ACID_SPLASH;
+    case MONS_GREEN_DRACONIAN:   return SPELL_POISONOUS_CLOUD;
+    case MONS_PURPLE_DRACONIAN:  return SPELL_ISKENDERUNS_MYSTIC_BLAST;
+    case MONS_RED_DRACONIAN:     return SPELL_FIRE_BREATH;
+    case MONS_WHITE_DRACONIAN:   return SPELL_COLD_BREATH;
+    case MONS_PALE_DRACONIAN:    return SPELL_STEAM_BALL;
+
+    // Handled later.
+    case MONS_PLAYER_GHOST:      return SPELL_DRACONIAN_BREATH;
+
+    default:
+        DEBUGSTR("Invalid monster using draconian breath spell");
+        break;
+    }
+
+    return (SPELL_DRACONIAN_BREATH);
+}
+
 
 bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 {
@@ -1615,50 +1639,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     spell_type real_spell = spell_cast;
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
-    {
-        switch (drac_type)
-        {
-        case MONS_BLACK_DRACONIAN:
-            real_spell = SPELL_LIGHTNING_BOLT;
-            break;
-
-        case MONS_MOTTLED_DRACONIAN:
-            real_spell = SPELL_STICKY_FLAME_SPLASH;
-            break;
-
-        case MONS_YELLOW_DRACONIAN:
-            real_spell = SPELL_ACID_SPLASH;
-            break;
-
-        case MONS_GREEN_DRACONIAN:
-            real_spell = SPELL_POISONOUS_CLOUD;
-            break;
-
-        case MONS_PURPLE_DRACONIAN:
-            real_spell = SPELL_ISKENDERUNS_MYSTIC_BLAST;
-            break;
-
-        case MONS_RED_DRACONIAN:
-            real_spell = SPELL_FIRE_BREATH;
-            break;
-
-        case MONS_WHITE_DRACONIAN:
-            real_spell = SPELL_COLD_BREATH;
-            break;
-
-        case MONS_PALE_DRACONIAN:
-            real_spell = SPELL_STEAM_BALL;
-            break;
-
-        case MONS_PLAYER_GHOST:
-            // Handled later.
-            break;
-
-        default:
-            DEBUGSTR("Invalid monster using draconian breath spell");
-            break;
-        }
-    }
+        real_spell = _draco_type_to_breath(drac_type);
 
     beam.type = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
@@ -1834,6 +1815,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.damage   = dice_def( 3, 7 + power / 10 );
         beam.hit      = 40;
         beam.flavour  = BEAM_FIRE;
+        beam.foe_ratio = 60;
         beam.is_explosion = true;
         break;
 
