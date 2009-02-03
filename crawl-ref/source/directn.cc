@@ -2729,45 +2729,34 @@ static std::string _describe_mons_enchantment(const monsters &mons,
         return "";
     }
 
+    if (ench.ench == ENCH_HASTE && mons.has_ench(ENCH_SLOW))
+        return "";
+
+    if (ench.ench == ENCH_SLOW && mons.has_ench(ENCH_HASTE))
+        return "";
+
     if (ench.ench == ENCH_PETRIFIED && mons.has_ench(ENCH_PETRIFYING))
         return "";
 
     switch (ench.ench)
     {
-    case ENCH_POISON:
-        return "poisoned";
-    case ENCH_SICK:
-        return "sick";
-    case ENCH_ROT:
-        return "rotting away"; //jmf: "covered in sores"?
-    case ENCH_BACKLIGHT:
-        return "softly glowing";
-    case ENCH_SLOW:
-        return "moving slowly";
-    case ENCH_BERSERK:
-        return "berserk";
-    case ENCH_BATTLE_FRENZY:
-        return "consumed by blood-lust";
-    case ENCH_HASTE:
-        return "moving very quickly";
-    case ENCH_CONFUSION:
-        return "bewildered and confused";
-    case ENCH_INVIS:
-        return "slightly transparent";
-    case ENCH_CHARM:
-        return "in your thrall";
-    case ENCH_STICKY_FLAME:
-        return "covered in liquid flames";
-    case ENCH_HELD:
-        return "entangled in a net";
-    case ENCH_PETRIFIED:
-        return "petrified";
-    case ENCH_PETRIFYING:
-        return "slowly petrifying";
-    case ENCH_LOWERED_MR:
-        return "susceptible to magic";
-    default:
-        return "";
+    case ENCH_POISON:        return "poisoned";
+    case ENCH_SICK:          return "sick";
+    case ENCH_ROT:           return "rotting away"; //jmf: "covered in sores"?
+    case ENCH_BACKLIGHT:     return "softly glowing";
+    case ENCH_SLOW:          return "moving slowly";
+    case ENCH_BERSERK:       return "berserk";
+    case ENCH_BATTLE_FRENZY: return "consumed by blood-lust";
+    case ENCH_HASTE:         return "moving very quickly";
+    case ENCH_CONFUSION:     return "bewildered and confused";
+    case ENCH_INVIS:         return "slightly transparent";
+    case ENCH_CHARM:         return "in your thrall";
+    case ENCH_STICKY_FLAME:  return "covered in liquid flames";
+    case ENCH_HELD:          return "entangled in a net";
+    case ENCH_PETRIFIED:     return "petrified";
+    case ENCH_PETRIFYING:    return "slowly petrifying";
+    case ENCH_LOWERED_MR:    return "susceptible to magic";
+    default:                 return "";
     }
 }
 
