@@ -1560,7 +1560,7 @@ int linebreak_string2( std::string& s, int maxcol )
 std::string get_linebreak_string(const std::string& s, int maxcol)
 {
     std::string r = s;
-    linebreak_string2(r, maxcol );
+    linebreak_string2(r, maxcol);
     return r;
 }
 

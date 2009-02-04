@@ -1085,7 +1085,7 @@ bool deck_triple_draw()
         card_type     card = _draw_top_card(deck, false, _flags);
 
         draws.push_back(card);
-        flags.push_back(_flags | CFLAG_SEEN | CFLAG_MARKED);
+        flags.push_back(_flags);
     }
 
     mpr("You draw... (choose one card)");
@@ -1109,8 +1109,21 @@ bool deck_triple_draw()
 
     // Note how many cards were removed from the deck.
     deck.plus2 += num_to_draw;
+
+    // Don't forget to update the number of marked ones, too.
+    // But don't reduce the number of non-brownie draws.
+    char num_marked_left = deck.props["num_marked"].get_byte();
     for (int i = 0; i < num_to_draw; ++i)
+    {
         _remember_drawn_card(deck, draws[i], false);
+        if (flags[i] & CFLAG_MARKED)
+        {
+            ASSERT(num_marked_left > 0);
+            --num_marked_left;
+        }
+    }
+    deck.props["num_marked"] = num_marked_left;
+    
     you.wield_change = true;
 
     // Make deck disappear *before* the card effect, since we
@@ -1126,7 +1139,8 @@ bool deck_triple_draw()
     }
 
     // Note that card_effect() might cause you to unwield the deck.
-    card_effect(draws[selected], rarity, flags[selected], false);
+    card_effect(draws[selected], rarity,
+                flags[selected] | CFLAG_SEEN | CFLAG_MARKED, false);
 
     return (true);
 }
