@@ -3968,7 +3968,7 @@ bool mon_enemies_around(const monsters *monster)
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return (mons_near(monster) && !i_feel_safe());
+        return (mons_near(monster) && there_are_monsters_nearby(true));
     }
     else
     {

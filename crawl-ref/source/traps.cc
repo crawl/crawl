@@ -911,8 +911,8 @@ static int damage_or_escape_net(int hold)
     if (x_chance_in_y(player_evasion(), 20))
         escape++;
 
-    // Monsters around you add urgency.
-    if (!i_feel_safe())
+    // Dangerous monsters around you add urgency.
+    if (there_are_monsters_nearby(true))
     {
         damage++;
         escape++;
