@@ -507,8 +507,8 @@ protected:
 
 int linebreak_string( std::string& s, int wrapcol, int maxcol );
 int linebreak_string2( std::string& s, int maxcol );
-void print_formatted_paragraph( std::string &s, int maxcol,
-                                msg_channel_type channel = MSGCH_PLAIN);
+void print_formatted_paragraph(std::string &s,
+                               msg_channel_type channel = MSGCH_PLAIN);
 std::string get_linebreak_string(const std::string& s, int maxcol);
 
 #endif

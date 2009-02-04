@@ -1566,9 +1566,12 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
 
 // Takes a (possibly tagged) string, breaks it into lines and
 // prints it into the given message channel.
-void print_formatted_paragraph(std::string &s, int maxcol,
-                               msg_channel_type channel)
+void print_formatted_paragraph(std::string &s, msg_channel_type channel)
 {
+    int maxcol = get_number_of_cols();
+    if (Options.delay_message_clear)
+        --maxcol;
+
     linebreak_string2(s,maxcol);
     std::string text;
 

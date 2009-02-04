@@ -197,7 +197,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         {
             std::string text = get_monster_desc(mon, false);
             text += " comes into view.";
-            print_formatted_paragraph(text, get_number_of_cols(), MSGCH_WARN);
+            print_formatted_paragraph(text, MSGCH_WARN);
         }
 
         if (Options.tutorial_left)

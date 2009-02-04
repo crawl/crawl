@@ -1828,9 +1828,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                 text += " " + mon->pronoun(PRONOUN_CAP)
                         + " is" + mweap + ".";
             }
-            print_formatted_paragraph(text,
-                                      get_number_of_cols(),
-                                      MSGCH_WARN);
+            print_formatted_paragraph(text, MSGCH_WARN);
             const_cast<monsters*>(mon)->seen_context = "just seen";
         }
 

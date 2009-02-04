@@ -2853,9 +2853,8 @@ std::string _mon_enchantments_string(const monsters* mon)
 static void _describe_monster(const monsters *mon)
 {
     // First print type and equipment.
-    const int numcols = get_number_of_cols();
     std::string text = get_monster_desc(mon) + ".";
-    print_formatted_paragraph(text, numcols);
+    print_formatted_paragraph(text);
 
     if (player_mesmerised_by(mon))
         mpr("You are mesmerised by her song.", MSGCH_EXAMINE);
@@ -2956,7 +2955,7 @@ static void _describe_monster(const monsters *mon)
 
     text = _mon_enchantments_string(mon);
     if (!text.empty())
-        print_formatted_paragraph(text, numcols);
+        print_formatted_paragraph(text);
 }
 
 // This method is called in two cases:
@@ -3122,7 +3121,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
             msg = "(Press <w>v</w> for more information.)";
 #endif
-            print_formatted_paragraph(msg, get_number_of_cols());
+            print_formatted_paragraph(msg);
         }
     }
 
@@ -3202,7 +3201,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
 #endif
-        print_formatted_paragraph(feature_desc, get_number_of_cols());
+        print_formatted_paragraph(feature_desc);
     }
     else
     {
