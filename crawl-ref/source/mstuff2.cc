@@ -1990,13 +1990,13 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_MEPHITIC_CLOUD:          // swamp drake, player ghost
         beam.name     = "foul vapour";
-        beam.damage   = dice_def( 3, 2 + power / 25 );
+        beam.damage   = dice_def(1,0);
         beam.colour   = GREEN;
-        // FIXME: Players don't get the poison effect, only monsters
-        // do. This should be changed (probably by changing monsters).
-        beam.flavour  = BEAM_POISON;
+        // Well, it works, even if the name isn't quite intuitive.
+        beam.flavour  = BEAM_POTION_STINKING_CLOUD;
         beam.hit      = 14 + power / 30;
-        beam.is_beam  = true;
+        beam.ench_power = power; // probably meaningless
+        beam.is_explosion = true;
         beam.is_big_cloud = true;
         break;
 

@@ -2814,8 +2814,7 @@ void bolt::affect_endpoint()
     // They don't explode in tracers: why not?
     if  (name == "orb of electricity"
         || name == "metal orb"
-        || name == "great blast of cold"
-        || name == "ball of vapour")
+        || name == "great blast of cold")
     {
         target = pos();
         refine_for_explosion();
@@ -2827,9 +2826,9 @@ void bolt::affect_endpoint()
 
     if (name == "foul vapour")
     {
-        const cloud_type cl_type = (flavour == BEAM_MIASMA) ? CLOUD_MIASMA
-                                                            : CLOUD_STINK;
-        big_cloud(cl_type, whose_kill(), killer(), pos(), 0, 9);
+        // death drake; swamp drakes handled earlier
+        ASSERT(flavour == BEAM_MIASMA);
+        big_cloud(CLOUD_MIASMA, whose_kill(), killer(), pos(), 0, 9);
     }
 
     if (name == "freezing blast")
@@ -2841,17 +2840,7 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    if (is_explosion
-        || is_big_cloud
-        || aimed_at_spot
-        || name == "blast of poison"
-        || name == "foul vapour"
-        || name == "ball of vapour")
-    {
-        return (true);
-    }
-
-    return (false);
+    return (is_explosion || is_big_cloud || aimed_at_spot);
 }
 
 void bolt::drop_object()
@@ -5103,7 +5092,7 @@ void bolt::refine_for_explosion()
         hearMsg    = "You hear a gentle \'poof\'.";
     }
 
-    if (name == "ball of vapour")
+    if (name == "foul vapour")
     {
         seeMsg     = "The ball expands into a vile cloud!";
         hearMsg    = "You hear a gentle \'poof\'.";
