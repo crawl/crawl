@@ -111,7 +111,8 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_ENEMY,
-                      int range = LOS_RADIUS,
+                      // pbolt.range if applicable, otherwise LOS_RADIUS
+                      int range = 0,
                       bool needs_path = true, bool may_target_monster = true,
                       bool may_target_self = false, const char *prompt = NULL,
                       bool cancel_at_self = false );

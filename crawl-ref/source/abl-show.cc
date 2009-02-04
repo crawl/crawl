@@ -1204,7 +1204,7 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             beam.range = _calc_breath_ability_range(abil.ability);
-            if (!spell_direction(abild, beam, DIR_NONE, TARG_ENEMY, beam.range))
+            if (!spell_direction(abild, beam))
                 return (false);
         }
 
@@ -1408,7 +1408,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_THROW_FROST:
         // Taking ranges from the equivalent spells.
         beam.range = (abil.ability == ABIL_THROW_FLAME ? 7 : 8);
-        if (!spell_direction(abild, beam, DIR_NONE, TARG_ENEMY, beam.range))
+        if (!spell_direction(abild, beam))
             return (false);
 
         if (!zapping((abil.ability == ABIL_THROW_FLAME ? ZAP_FLAME : ZAP_FROST),
@@ -1421,7 +1421,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BOLT_OF_DRAINING:
         // Taking range from Bolt of Draining.
         beam.range = 6;
-        if (!spell_direction(abild, beam, DIR_NONE, TARG_ENEMY, beam.range))
+        if (!spell_direction(abild, beam))
             return (false);
 
         if (!zapping(ZAP_NEGATIVE_ENERGY, you.experience_level * 6, beam, true))
@@ -1521,7 +1521,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_KIKU_ENSLAVE_UNDEAD:
     {
         god_acting gdact;
-        beam.range = 8;
+        beam.range = LOS_RADIUS;
         if (!spell_direction(spd, beam))
             return (false);
 
@@ -1578,7 +1578,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     {
         god_acting gdact;
-        beam.range = 8;
+        beam.range = LOS_RADIUS;
         if (!spell_direction(spd, beam))
             return (false);
 
@@ -1610,7 +1610,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY, 8))
+        if (!spell_direction(spd, beam))
             return (false);
 
         power = you.skills[SK_INVOCATIONS]
@@ -1763,7 +1763,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_BANISH:
-        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY))
+        beam.range = LOS_RADIUS;
+        if (!spell_direction(spd, beam))
             return (false);
 
         if (beam.target == you.pos())
@@ -1771,7 +1772,6 @@ static bool _do_ability(const ability_def& abil)
             mpr("You cannot banish yourself!");
             return (false);
         }
-        beam.range = 8;
         if (!zapping(ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
                      true))
         {

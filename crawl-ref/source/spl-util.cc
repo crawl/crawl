@@ -742,6 +742,9 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     if (restrict != DIR_DIR)
         message_current_target();
 
+    if (range < 1)
+        range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
+
     direction( spelld, restrict, mode, range, false, needs_path,
                may_target_monster, may_target_self, prompt, NULL,
                cancel_at_self );
