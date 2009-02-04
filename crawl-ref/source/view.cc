@@ -767,63 +767,59 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
 int count_detected_mons()
 {
     int count = 0;
-    for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-        for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-        {
-            // Don't expose new dug out areas:
-            // Note: assumptions are being made here about how
-            // terrain can change (eg it used to be solid, and
-            // thus monster/item free).
-            if (is_terrain_changed(x, y))
-                continue;
-
-            if (is_envmap_detected_mons(x, y))
-                count++;
-        }
+    for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
+    {
+        // Don't expose new dug out areas:
+        // Note: assumptions are being made here about how
+        // terrain can change (eg it used to be solid, and
+        // thus monster/item free).
+        if (is_terrain_changed(*ri))
+            continue;
+        
+        if (is_envmap_detected_mons(*ri))
+            count++;
+    }
 
     return (count);
 }
 
 void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 {
-    for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-        for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-        {
-            // FIXME convert to using p everywhere.
-            const coord_def p(x,y);
-            // Don't expose new dug out areas:
-            // Note: assumptions are being made here about how
-            // terrain can change (eg it used to be solid, and
-            // thus monster/item free).
+    for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
+    {
+        const coord_def p = *ri;
+        // Don't expose new dug out areas:
+        // Note: assumptions are being made here about how
+        // terrain can change (eg it used to be solid, and
+        // thus monster/item free).
 
-            // This reasoning doesn't make sense when it comes to *clearing*
-            // the map! (jpeg)
+        // This reasoning doesn't make sense when it comes to *clearing*
+        // the map! (jpeg)
 
-            unsigned envc = get_envmap_char(x, y);
-            if (!envc)
-                continue;
+        if (get_envmap_char(p) == 0)
+            continue;
 
-            if (is_envmap_item(x, y))
-                continue;
+        if (is_envmap_item(p))
+            continue;
 
-            if (!clear_detected_items && is_envmap_detected_item(x, y))
-                continue;
+        if (!clear_detected_items && is_envmap_detected_item(p))
+            continue;
 
-            if (!clear_detected_monsters && is_envmap_detected_mons(x, y))
-                continue;
+        if (!clear_detected_monsters && is_envmap_detected_mons(p))
+            continue;
 
-            set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
-            set_envmap_detected_mons(x, y, false);
-            set_envmap_detected_item(x, y, false);
+        set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
+        set_envmap_detected_mons(p, false);
+        set_envmap_detected_item(p, false);
 
 #ifdef USE_TILE
-            set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
-            env.tile_bk_fg[x][y] = 0;
-            env.tile_bk_bg[x][y] = is_terrain_known(p) ?
-                tile_idx_unseen_terrain(x, y, grd[x][y]) :
-                tileidx_feature(DNGN_UNSEEN, x, y);
+        set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
+        env.tile_bk_fg(p) = 0;
+        env.tile_bk_bg(p) = is_terrain_known(p) ?
+            tile_idx_unseen_terrain(p.x, p.y, grd(p)) :
+            tileidx_feature(DNGN_UNSEEN, p.x, p.y);
 #endif
-        }
+    }
 }
 
 int get_mons_colour(const monsters *mons)

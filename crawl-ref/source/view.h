@@ -135,6 +135,10 @@ bool is_sanctuary( const coord_def& p );
 bool is_bloodcovered( const coord_def& p );
 
 bool is_envmap_detected_item(int x, int y);
+inline bool is_envmap_detected_item(const coord_def& c) {
+    return is_envmap_detected_item(c.x, c.y);
+}
+
 bool is_envmap_detected_mons(int x, int y);
 inline bool is_envmap_detected_mons(const coord_def& c) {
     return is_envmap_detected_mons(c.x, c.y);

@@ -82,10 +82,10 @@ int tile_unseen_flag(const coord_def& gc)
 {
     if (!map_bounds(gc))
         return TILE_FLAG_UNSEEN;
-    else if (is_terrain_known(gc.x,gc.y)
-                && !is_terrain_seen(gc.x,gc.y)
-             || is_envmap_detected_item(gc.x,gc.y)
-             || is_envmap_detected_mons(gc.x,gc.y))
+    else if (is_terrain_known(gc)
+                && !is_terrain_seen(gc)
+             || is_envmap_detected_item(gc)
+             || is_envmap_detected_mons(gc))
     {
         return TILE_FLAG_MM_UNSEEN;
     }
