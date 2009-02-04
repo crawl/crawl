@@ -396,7 +396,7 @@ void MiscastEffect::do_miscast()
         xom_is_stimulated(severity * 50);
 }
 
-void MiscastEffect::do_msg(bool suppress_nothing_happnes)
+void MiscastEffect::do_msg(bool suppress_nothing_happens)
 {
     ASSERT(!did_msg);
 
@@ -431,7 +431,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happnes)
 
     if (msg.empty())
     {
-        if (!suppress_nothing_happnes
+        if (!suppress_nothing_happens
             && (nothing_happens_when == NH_ALWAYS
                 || (nothing_happens_when == NH_DEFAULT && source_known
                     && target_known)))
@@ -1921,10 +1921,12 @@ void MiscastEffect::_transmutation(int severity)
             if (target->atype() == ACT_PLAYER)
             {
                 you_msg = "Your body is distorted in a weirdly horrible way!";
-                const bool failMsg = !give_bad_mutation(true, false,
-                                                        lethality_margin > 0);
+                // We don't need messages when the mutation fails,
+                // because we give our own (which is justified anyway as
+                // you take damage.)
+                give_bad_mutation(false, false, lethality_margin > 0);
                 if (coinflip())
-                    give_bad_mutation(failMsg, false, lethality_margin > 0);
+                    give_bad_mutation(false, false, lethality_margin > 0);
             }
             _ouch(5 + random2avg(23, 2));
             break;
