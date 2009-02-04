@@ -37,11 +37,6 @@ std::string skill_title(
 std::string player_title( void );
 
 
-// last_updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - chardump - effects - files - player - skills -
- *              skills2 - stuff
- * *********************************************************************** */
 skill_type best_skill(int min_skill, int max_skill, int excl_skill = -1);
 
 void init_skill_order( void );

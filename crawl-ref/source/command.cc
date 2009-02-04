@@ -1213,7 +1213,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 
     item.base_type = OBJ_STAVES;
     int book;
-    for (int i = STAFF_SMITING; i < NUM_STAVES; i++)
+    for (int i = STAFF_FIRST_ROD; i < NUM_STAVES; i++)
     {
         item.sub_type = i;
         book = item.book_number();

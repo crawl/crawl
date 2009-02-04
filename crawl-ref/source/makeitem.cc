@@ -2521,8 +2521,7 @@ static void _generate_staff_item(item_def& item, int force_type)
         item.sub_type = force_type;
     else
     {
-        // assumption: STAFF_SMITING is the first rod
-        item.sub_type = random2(STAFF_SMITING);
+        item.sub_type = random2(STAFF_FIRST_ROD);
 
         // rods are rare (10% of all staves)
         if (one_chance_in(10))

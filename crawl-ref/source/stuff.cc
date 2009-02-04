@@ -1720,7 +1720,7 @@ int integer_sqrt(int value)
 
 int random_rod_subtype()
 {
-    return STAFF_SMITING + random2(NUM_STAVES - STAFF_SMITING);
+    return STAFF_FIRST_ROD + random2(NUM_STAVES - STAFF_FIRST_ROD);
 }
 
 int dice_def::roll() const

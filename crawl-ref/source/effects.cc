@@ -863,655 +863,630 @@ static armour_type _random_nonbody_armour_type()
     return (at);
 }
 
+const int max_has_value = 100;
+typedef FixedVector<int, max_has_value> has_vector;
+
+static armour_type _acquirement_armour_subtype()
+{
+    // Increasing the representation of the non-body armour
+    // slots here to make up for the fact that there's one
+    // one type of item for most of them. -- bwr
+    //
+    // NUM_ARMOURS is body armour and handled below
+    armour_type result = (coinflip()) ? NUM_ARMOURS
+                                      : _random_nonbody_armour_type();
+
+    // Some species specific fitting problems.
+    // FIXME: switch to the cleaner logic in can_wear_armour()
+    switch (you.species)
+    {
+    case SP_OGRE:
+    case SP_TROLL:
+    case SP_RED_DRACONIAN:
+    case SP_WHITE_DRACONIAN:
+    case SP_GREEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
+    case SP_GREY_DRACONIAN:
+    case SP_BLACK_DRACONIAN:
+    case SP_PURPLE_DRACONIAN:
+    case SP_MOTTLED_DRACONIAN:
+    case SP_PALE_DRACONIAN:
+    case SP_BASE_DRACONIAN:
+    case SP_SPRIGGAN:
+        if (result == ARM_GLOVES
+            || result == ARM_BOOTS
+            || result == ARM_CENTAUR_BARDING
+            || result == ARM_NAGA_BARDING)
+        {
+            result = ARM_ROBE;  // no heavy armour
+        }
+        else if (result == ARM_SHIELD)
+        {
+            if (you.species == SP_SPRIGGAN)
+                result = ARM_BUCKLER;
+            else if (coinflip()) // giant races: 50/50 shield/large shield
+                result = ARM_LARGE_SHIELD;
+        }
+        else if (result == NUM_ARMOURS)
+        {
+            result = ARM_ROBE;  // no heavy armour, see below
+        }
+        break;
+
+    case SP_NAGA:
+        if (result == ARM_BOOTS || result == ARM_CENTAUR_BARDING)
+            result = ARM_NAGA_BARDING;
+        break;
+
+    case SP_CENTAUR:
+        if (result == ARM_BOOTS || result == ARM_NAGA_BARDING)
+            result = ARM_CENTAUR_BARDING;
+        break;
+
+    default:
+        if (result == ARM_CENTAUR_BARDING || result == ARM_NAGA_BARDING)
+            result = ARM_BOOTS;
+        break;
+    }
+
+    // Mutation specific problems (horns allow caps).
+    if (result == ARM_BOOTS && !player_has_feet()
+        || result == ARM_GLOVES && you.has_claws(false) >= 3)
+    {
+        result = NUM_ARMOURS;
+    }
+
+    // Do this here, before acquirement()'s call to can_wear_armour(),
+    // so that caps will be just as common as helmets for those
+    // that can't wear helmets.
+    // We check for the mutation directly to avoid acquirement fiddles
+    // with vampires.
+    if (result == ARM_HELMET
+        && (!you_can_wear(EQ_HELMET) || you.mutation[MUT_HORNS]))
+    {
+        result = coinflip()? ARM_CAP : ARM_WIZARD_HAT;
+    }
+
+    // Now we'll randomly pick a body armour (light only in the
+    // case of ARM_ROBE).  Unlike before, now we're only giving
+    // out the finished products here, never the hides.  -- bwr
+    if (result == NUM_ARMOURS || result == ARM_ROBE)
+    {
+        // start with normal base armour
+        if (result == ARM_ROBE)
+            result = coinflip() ? ARM_ROBE : ARM_ANIMAL_SKIN;
+        else
+        {
+            result = static_cast<armour_type>(ARM_ROBE + random2(8));
+
+            if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
+                result = ARM_CRYSTAL_PLATE_MAIL;
+
+            if (one_chance_in(10))
+                result = ARM_ANIMAL_SKIN;
+        }
+
+        // everyone can wear things made from hides
+        if (one_chance_in(20))
+        {
+            result = static_cast<armour_type>(
+                random_choose_weighted(20, ARM_TROLL_LEATHER_ARMOUR,
+                                       20, ARM_STEAM_DRAGON_ARMOUR,
+                                       15, ARM_MOTTLED_DRAGON_ARMOUR,
+                                       15, ARM_SWAMP_DRAGON_ARMOUR,
+                                       10, ARM_DRAGON_ARMOUR,
+                                       10, ARM_ICE_DRAGON_ARMOUR,
+                                        5, ARM_STORM_DRAGON_ARMOUR,
+                                        5, ARM_GOLD_DRAGON_ARMOUR,
+                                        0));
+        }
+    }
+
+    return (result);
+}
+
+// Write results into arguments.
+void _acquirement_determine_food(int& type_wanted, int& quantity,
+                                 const has_vector& already_has)
+{
+    // food is a little less predictable now -- bwr
+    if (you.species == SP_GHOUL)
+        type_wanted = one_chance_in(10) ? FOOD_ROYAL_JELLY : FOOD_CHUNK;
+    else if (you.species == SP_VAMPIRE)
+    {
+        // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
+        // but it's easier to just give them a potion of blood
+        // class type is set elsewhere
+        type_wanted = POT_BLOOD;
+        quantity = 2 + random2(4);
+    }
+    else
+    {
+        // Meat is better than bread (except for herbivores), and
+        // by choosing it as the default we don't have to worry
+        // about special cases for carnivorous races (e.g. kobolds)
+        type_wanted = FOOD_MEAT_RATION;
+
+        if (player_mutation_level(MUT_HERBIVOROUS))
+            type_wanted = FOOD_BREAD_RATION;
+
+        // If we have some regular rations, then we're probably more
+        // interested in faster foods (especially royal jelly)...
+        // otherwise the regular rations should be a good enough offer.
+        if (already_has[FOOD_MEAT_RATION]
+            + already_has[FOOD_BREAD_RATION] >= 2 || coinflip())
+        {
+            type_wanted = one_chance_in(5) ? FOOD_HONEYCOMB
+                : FOOD_ROYAL_JELLY;
+        }
+    }
+
+    quantity = 3 + random2(5);
+
+    // giving more of the lower food value items
+    if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
+    {
+        quantity += random2avg(10, 2);
+    }
+}
+
+static int _acquirement_weapon_subtype()
+{
+    // Asking for a weapon is biased towards your skills.
+    // First pick a skill, weighting towards those you have.
+    int count = 0;
+    int skill = SK_FIGHTING;
+
+    for (int i = SK_SHORT_BLADES; i <= SK_DARTS; i++)
+    {
+        if (i == SK_UNUSED_1)
+            continue;
+
+        // Adding a small constant allows for the occasional
+        // weapon in an untrained skill.
+
+        const int weight = you.skills[i] + 1;
+        count += weight;
+
+        if (x_chance_in_y(weight, count))
+            skill = i;
+    }
+
+
+    // Now choose a subtype which uses that skill.
+    int result = OBJ_RANDOM;
+    count = 0;
+    item_def item_considered;
+    item_considered.base_type = OBJ_WEAPONS;
+    for (int i = 0; i < NUM_WEAPONS; ++i)
+    {
+        item_considered.sub_type = i;
+
+        const int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
+
+        if (!acqweight)
+            continue;
+
+        int wskill = range_skill(OBJ_WEAPONS, i);
+        if (wskill == SK_THROWING)
+            wskill = weapon_skill(OBJ_WEAPONS, i);
+
+        if (wskill == skill && x_chance_in_y(acqweight, count += acqweight))
+            result = i;
+    }
+    return (result);
+}
+
+static bool _have_item_with_types(object_class_type basetype, int subtype)
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        const item_def& item = you.inv[i];
+        if (is_valid_item(item)
+            && item.base_type == basetype && item.sub_type == subtype)
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
+static missile_type _acquirement_missile_subtype()
+{
+    int count = 0;
+    int skill = SK_THROWING;
+
+    for (int i = SK_SLINGS; i <= SK_DARTS; i++)
+    {
+        if (you.skills[i])
+        {
+            count += you.skills[i];
+            if (x_chance_in_y(you.skills[i], count))
+                skill = i;
+        }
+    }
+
+    missile_type result = MI_DART;
+
+    switch (skill)
+    {
+    case SK_SLINGS: result = MI_STONE; break;
+    case SK_BOWS:   result = MI_ARROW; break;
+
+    case SK_CROSSBOWS:
+        // Assuming that crossbow in inventory means that they
+        // want bolts for it (not darts for a hand crossbow)...
+        // perhaps we should check for both and compare ammo
+        // amounts on hand?
+        result = (_have_item_with_types(OBJ_WEAPONS, WPN_CROSSBOW) ? MI_BOLT
+                                                                   : MI_DART);
+        break;
+
+    case SK_DARTS:
+        // Assuming that blowgun in inventory means that they
+        // may want needles for it (but darts might also be
+        // wanted).  Maybe expand this... see above comment.
+        result =
+            (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN) && coinflip())
+            ? MI_NEEDLE : MI_DART;
+        break;
+
+    default:
+        break;
+    }
+    return (result);
+}
+
+static int _acquirement_jewellery_subtype()
+{
+    int result = 0;
+
+    // Try ten times to give something the player hasn't seen.
+    for (int i = 0; i < 10; i++)
+    {
+        // 1/3 amulets, 2/3 rings.
+        if (one_chance_in(3))
+        {
+            result = AMU_FIRST_AMULET
+                + random2(NUM_JEWELLERY - AMU_FIRST_AMULET);
+        }
+        else
+        {
+            result = random2(NUM_RINGS);
+        }
+
+        // If we haven't seen this yet, we're done.
+        if (get_ident_type(OBJ_JEWELLERY, result) == ID_UNKNOWN_TYPE)
+            break;
+    }
+
+    return (result);
+}
+
+static int _choose_first_unseen_book(int first, ...)
+{
+    va_list args;
+    va_start(args, first);
+
+    if (first == NUM_BOOKS || !you.had_book[first])
+    {
+        va_end(args);
+        return (first);
+    }
+
+    int nargs = 100;
+
+    while (nargs-- > 0)
+    {
+        const int another = va_arg(args, int);
+        if (another == NUM_BOOKS || !you.had_book[another])
+        {
+            va_end(args);
+            return (another);
+        }
+    }
+
+    ASSERT(nargs > 0);
+
+    va_end(args);
+    return (NUM_BOOKS);
+}
+
+
+
+static int _acquirement_book_subtype()
+{
+    int result = NUM_BOOKS;
+
+    skill_type best_spell_skill = SK_NONE;
+    // Do two iterations: one with the best spell skill, one with
+    // the second-best.
+    for (int i = 0; i < 2; ++i)
+    {
+        // FIXME: Assumes that SK_POISON_MAGIC is the last spell skill.
+        best_spell_skill = best_skill(SK_SPELLCASTING, SK_POISON_MAGIC,
+                                      best_spell_skill);
+        switch (best_spell_skill)
+        {
+        default:
+        case SK_SPELLCASTING:
+            if (you.skills[SK_SPELLCASTING] <= 3
+                && !you.had_book[BOOK_CANTRIPS])
+            {
+                // Handful of level one spells, very useful for the
+                // new spellcaster who's asking for a book -- bwr
+                result = BOOK_CANTRIPS;
+            }
+            else
+            {
+                result = _choose_first_unseen_book(BOOK_MINOR_MAGIC_I,
+                                                   BOOK_WIZARDRY,
+                                                   BOOK_CONTROL,
+                                                   BOOK_POWER,
+                                                   NUM_BOOKS);
+                if (result == BOOK_MINOR_MAGIC_I)
+                    result += random2(3);
+            }
+            break;
+
+        case SK_POISON_MAGIC:
+            result = _choose_first_unseen_book(BOOK_YOUNG_POISONERS,
+                                               BOOK_ENVENOMATIONS,
+                                               NUM_BOOKS);
+            break;
+
+        case SK_EARTH_MAGIC:
+            result = _choose_first_unseen_book(BOOK_GEOMANCY, BOOK_EARTH,
+                                               NUM_BOOKS);
+            break;
+
+        case SK_AIR_MAGIC:
+            result = _choose_first_unseen_book(BOOK_AIR, BOOK_SKY, NUM_BOOKS);
+            break;
+
+        case SK_ICE_MAGIC:
+            result = _choose_first_unseen_book(BOOK_FROST, BOOK_ICE, NUM_BOOKS);
+            break;
+
+        case SK_FIRE_MAGIC:
+            result = _choose_first_unseen_book(BOOK_FLAMES, BOOK_FIRE,
+                                               NUM_BOOKS);
+            break;
+
+        case SK_SUMMONINGS:
+            // Don't give Demonology, that's a Vehumet special.
+            result = _choose_first_unseen_book(BOOK_CALLINGS, BOOK_SUMMONINGS,
+                                               NUM_BOOKS);
+            break;
+
+        case SK_ENCHANTMENTS:
+        {
+            skill_type best_any = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+
+            // So many enchantment books!  I really can't feel
+            // guilty at all for dividing out the fighting
+            // books and forcing the player to raise a fighting
+            // skill (or enchantments in the case of Crusaders)
+            // to get the remaining books... enchantments are
+            // much too good (most spells, lots of books here,
+            // id wand charges, gives magic resistance),
+            // something will eventually have to be done.  -- bwr
+            if (best_any >= SK_FIGHTING && best_any <= SK_STAVES)
+            {
+                // Fighter mages get the fighting enchantment books
+                result = _choose_first_unseen_book(BOOK_WAR_CHANTS, BOOK_TUKIMA,
+                                                   NUM_BOOKS);
+            }
+            else
+            {
+                result = _choose_first_unseen_book(BOOK_CHARMS, BOOK_HINDERANCE,
+                                                   BOOK_ENCHANTMENTS,
+                                                   NUM_BOOKS);
+            }
+            break;
+        }
+
+        case SK_CONJURATIONS:
+            // Don't give Annihilations, that's a Vehumet special.
+            result = _choose_first_unseen_book(BOOK_CONJURATIONS_I,
+                                               BOOK_TEMPESTS, NUM_BOOKS);
+            if (result == BOOK_CONJURATIONS_I)
+                result = give_first_conjuration_book();
+            break;
+
+        case SK_NECROMANCY:
+            // Don't give the Necromicon, that's a Kikubaaqudgha special.
+            result = _choose_first_unseen_book(BOOK_NECROMANCY, BOOK_DEATH,
+                                               BOOK_UNLIFE, NUM_BOOKS);
+            break;
+
+        case SK_TRANSLOCATIONS:
+            result = _choose_first_unseen_book(BOOK_SPATIAL_TRANSLOCATIONS,
+                                               BOOK_WARP, NUM_BOOKS);
+            break;
+
+        case SK_TRANSMUTATION:
+            result = _choose_first_unseen_book(BOOK_CHARMS,
+                                               BOOK_TRANSFIGURATIONS,
+                                               BOOK_MUTATIONS,
+                                               NUM_BOOKS);
+            break;
+
+        case SK_DIVINATIONS:
+            result = _choose_first_unseen_book(BOOK_SURVEYANCES,
+                                               BOOK_DIVINATIONS,
+                                               NUM_BOOKS);
+            break;
+        }
+
+        // If we succeeded the first time around, don't do another try.
+        if (result != NUM_BOOKS)
+            break;
+    }
+
+    // If we don't have a book, try and get a new one.
+    if (result == NUM_BOOKS)
+    {
+        do
+        {
+            result = random2(NUM_NORMAL_BOOKS);
+            if (one_chance_in(500))
+                break;
+        }
+        while (you.had_book[result]);
+    }
+
+    // If the book is invalid, find any valid one.
+    while (result == BOOK_HEALING)
+        result = random2(NUM_NORMAL_BOOKS);
+
+    return result;
+}
+
+static int _acquirement_staff_subtype(const has_vector& already_has)
+{
+    int result = random2(STAFF_FIRST_ROD);
+
+    // Elemental preferences -- bwr
+    if (result == STAFF_FIRE || result == STAFF_COLD)
+    {
+        if (you.skills[SK_FIRE_MAGIC] > you.skills[SK_ICE_MAGIC])
+            result = STAFF_FIRE;
+        if (you.skills[SK_FIRE_MAGIC] < you.skills[SK_ICE_MAGIC])
+            result = STAFF_COLD;
+    }
+    else if (result == STAFF_AIR || result == STAFF_EARTH)
+    {
+        if (you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
+            result = STAFF_AIR;
+        if (you.skills[SK_AIR_MAGIC] < you.skills[SK_EARTH_MAGIC])
+            result = STAFF_EARTH;
+    }
+
+    skill_type best_spell_skill = best_skill(SK_SPELLCASTING, NUM_SKILLS - 1);
+
+#define TRY_GIVE(x) { if (!already_has[x]) result = x; }
+    // If we're going to give out an enhancer staff,
+    // we should at least bias things towards the
+    // best spell skill. -- bwr
+    switch (best_spell_skill)
+    {
+    case SK_FIRE_MAGIC:   TRY_GIVE(STAFF_FIRE);        break;
+    case SK_ICE_MAGIC:    TRY_GIVE(STAFF_COLD);        break;
+    case SK_AIR_MAGIC:    TRY_GIVE(STAFF_AIR);         break;
+    case SK_EARTH_MAGIC:  TRY_GIVE(STAFF_EARTH);       break;
+    case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
+    case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
+    case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
+    case SK_ENCHANTMENTS: TRY_GIVE(STAFF_ENCHANTMENT); break;
+    case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
+#undef TRY_GIVE
+
+    case SK_EVOCATIONS:
+        if (!one_chance_in(4))
+            result = random_rod_subtype();
+        break;
+
+    default: // Invocations and leftover spell schools.
+        switch (random2(5))
+        {
+        case 0: result = STAFF_WIZARDRY;   break;
+        case 1: result = STAFF_POWER;      break;
+        case 2: result = STAFF_ENERGY;     break;
+        case 3: result = STAFF_CHANNELING; break;
+        case 4: break;          // keep the original random staff
+        }
+        break;
+    }
+
+    int spell_skills = 0;
+    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
+        spell_skills += you.skills[i];
+
+    // Increased chance of getting a rod for new or
+    // non-spellcasters.  -- bwr
+    if (one_chance_in(20)
+        || (spell_skills <= 1               // short on spells
+            && result < STAFF_FIRST_ROD
+            && !one_chance_in(4)))
+    {
+        result = coinflip() ? STAFF_STRIKING : random_rod_subtype();
+    }
+
+    return (result);
+}
+
+static int _acquirement_misc_subtype()
+{
+    int result = NUM_MISCELLANY;
+    do
+    {
+        result = random2(NUM_MISCELLANY);
+    }
+    while (result == MISC_HORN_OF_GERYON
+           || result == MISC_RUNE_OF_ZOT
+           || result == MISC_CRYSTAL_BALL_OF_FIXATION
+           || result == MISC_EMPTY_EBONY_CASKET
+           || result == MISC_DECK_OF_PUNISHMENT);
+
+    return (result);
+}
+
 static int _find_acquirement_subtype(object_class_type class_wanted,
                                      int &quantity)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
     int type_wanted = OBJ_RANDOM;
-    int iteration = 0;
 
-    const int max_has_value = 100;
-    FixedVector< int, max_has_value > already_has;
-
-    skill_type best_spell = SK_NONE;
-    skill_type best_any   = SK_NONE;
-
+    // Write down what the player is carrying.
+    has_vector already_has;
     already_has.init(0);
-
-    int spell_skills = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-        spell_skills += you.skills[i];
-
-    for (int acqc = 0; acqc < ENDOFPACK; acqc++)
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (is_valid_item( you.inv[acqc] )
-            && you.inv[acqc].base_type == class_wanted)
+        const item_def& item = you.inv[i];
+        if (is_valid_item(item) && item.base_type == class_wanted)
         {
-            ASSERT( you.inv[acqc].sub_type < max_has_value );
-            already_has[you.inv[acqc].sub_type] += you.inv[acqc].quantity;
+            ASSERT(item.sub_type < max_has_value);
+            already_has[item.sub_type] += item.quantity;
         }
     }
 
-    if (class_wanted == OBJ_FOOD)
+    bool try_again = (class_wanted == OBJ_JEWELLERY
+                      || class_wanted == OBJ_BOOKS
+                      || class_wanted == OBJ_STAVES
+                      || class_wanted == OBJ_MISCELLANY);
+    do
     {
-        // food is a little less predictable now -- bwr
-
-        if (you.species == SP_GHOUL)
+        switch (class_wanted)
         {
-            type_wanted = one_chance_in(10) ? FOOD_ROYAL_JELLY
-                                            : FOOD_CHUNK;
-        }
-        else if (you.species == SP_VAMPIRE)
-        {
-            // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
-            // but it's easier to just give them a potion of blood
-            // class type is set elsewhere
-            type_wanted = POT_BLOOD;
-            quantity = 2 + random2(4);
-        }
-        else
-        {
-            // Meat is better than bread (except for herbivores), and
-            // by choosing it as the default we don't have to worry
-            // about special cases for carnivorous races (e.g. kobolds)
-            type_wanted = FOOD_MEAT_RATION;
-
-            if (player_mutation_level(MUT_HERBIVOROUS))
-                type_wanted = FOOD_BREAD_RATION;
-
-            // If we have some regular rations, then we're probably more
-            // interested in faster foods (especially royal jelly)...
-            // otherwise the regular rations should be a good enough offer.
-            if (already_has[FOOD_MEAT_RATION]
-                    + already_has[FOOD_BREAD_RATION] >= 2 || coinflip())
-            {
-                type_wanted = one_chance_in(5) ? FOOD_HONEYCOMB
-                                               : FOOD_ROYAL_JELLY;
-            }
-        }
-
-        quantity = 3 + random2(5);
-
-        // giving more of the lower food value items
-        if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
-        {
-            quantity += random2avg(10, 2);
-        }
-    }
-    else if (class_wanted == OBJ_WEAPONS)
-    {
-        // Now asking for a weapon is biased towards your skills,
-        // although launchers are right out for now. -- bwr
-        int count = 0;
-        int skill = SK_FIGHTING;
-
-        for (int i = SK_SHORT_BLADES; i <= SK_DARTS; i++)
-        {
-            if (i == SK_UNUSED_1)
-                continue;
-
-            // Adding a small constant allows for the occasional
-            // weapon in an untrained skill.
-
-            const int weight = you.skills[i] + 1;
-            count += weight;
-
-            if (x_chance_in_y(weight, count))
-                skill = i;
-        }
-
-        count = 0;
-
-        item_def item_considered;
-        item_considered.base_type = OBJ_WEAPONS;
-        for (int i = 0; i < NUM_WEAPONS; ++i)
-        {
-            item_considered.sub_type = i;
-
-            const int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
-
-            if (!acqweight)
-                continue;
-
-            int wskill = range_skill(OBJ_WEAPONS, i);
-            if (wskill == SK_THROWING)
-                wskill = weapon_skill(OBJ_WEAPONS, i);
-
-            if (wskill == skill && x_chance_in_y(acqweight, count += acqweight))
-                type_wanted = i;
-        }
-    }
-    else if (class_wanted == OBJ_MISSILES)
-    {
-        int count = 0;
-        int skill = SK_THROWING;
-
-        for (int i = SK_SLINGS; i <= SK_DARTS; i++)
-        {
-            if (you.skills[i])
-            {
-                count += you.skills[i];
-                if (x_chance_in_y(you.skills[i], count))
-                    skill = i;
-            }
-        }
-
-        switch (skill)
-        {
-        case SK_SLINGS:
-            type_wanted = MI_STONE;
+        case OBJ_FOOD:
+            // set type_wanted and quantity
+            _acquirement_determine_food(type_wanted, quantity, already_has);
             break;
 
-        case SK_BOWS:
-            type_wanted = MI_ARROW;
+        case OBJ_WEAPONS:  type_wanted = _acquirement_weapon_subtype();  break;
+        case OBJ_MISSILES: type_wanted = _acquirement_missile_subtype(); break;
+        case OBJ_ARMOUR:   type_wanted = _acquirement_armour_subtype();  break;
+        case OBJ_BOOKS:    type_wanted = _acquirement_book_subtype();    break;
+        case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype();  break;
+        case OBJ_STAVES: type_wanted = _acquirement_staff_subtype(already_has);
+            break;
+        case OBJ_JEWELLERY: type_wanted = _acquirement_jewellery_subtype();
             break;
 
-        case SK_CROSSBOWS:
-            type_wanted = MI_DART;
-            for (int i = 0; i < ENDOFPACK; i++)
-            {
-                // Assuming that crossbow in inventory means that they
-                // want bolts for it (not darts for a hand crossbow)...
-                // perhaps we should check for both and compare ammo
-                // amounts on hand?
-                if (is_valid_item( you.inv[i] )
-                    && you.inv[i].base_type == OBJ_WEAPONS
-                    && you.inv[i].sub_type == WPN_CROSSBOW)
-                {
-                    type_wanted = MI_BOLT;
-                    break;
-                }
-            }
-            break;
-
-        case SK_DARTS:
-            type_wanted = MI_DART;
-            for (int i = 0; i < ENDOFPACK; i++)
-            {
-                if (is_valid_item( you.inv[i] )
-                    && you.inv[i].base_type == OBJ_WEAPONS
-                    && you.inv[i].sub_type == WPN_BLOWGUN)
-                {
-                    // Assuming that blowgun in inventory means that they
-                    // may want needles for it (but darts might also be
-                    // wanted).  Maybe expand this... see above comment.
-                    if (coinflip())
-                        type_wanted = MI_NEEDLE;
-                    break;
-                }
-            }
-            break;
-
-        default:
-            type_wanted = MI_DART;
-            break;
+        default: break;         // gold
         }
-    }
-    else if (class_wanted == OBJ_ARMOUR)
-    {
-        // Increasing the representation of the non-body armour
-        // slots here to make up for the fact that there's one
-        // one type of item for most of them. -- bwr
-        //
-        // OBJ_RANDOM is body armour and handled below
-        type_wanted = (coinflip())? OBJ_RANDOM :
-            static_cast<int>(_random_nonbody_armour_type());
-
-        // Some species specific fitting problems.
-        switch (you.species)
+        
+        if (try_again)
         {
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_RED_DRACONIAN:
-        case SP_WHITE_DRACONIAN:
-        case SP_GREEN_DRACONIAN:
-        case SP_YELLOW_DRACONIAN:
-        case SP_GREY_DRACONIAN:
-        case SP_BLACK_DRACONIAN:
-        case SP_PURPLE_DRACONIAN:
-        case SP_MOTTLED_DRACONIAN:
-        case SP_PALE_DRACONIAN:
-        case SP_BASE_DRACONIAN:
-        case SP_SPRIGGAN:
-            if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS
-                || type_wanted == ARM_CENTAUR_BARDING
-                || type_wanted == ARM_NAGA_BARDING)
-            {
-                type_wanted = ARM_ROBE;  // no heavy armour
-            }
-            else if (type_wanted == ARM_SHIELD)
-            {
-                if (you.species == SP_SPRIGGAN)
-                    type_wanted = ARM_BUCKLER;
-                else if (coinflip()) // giant races: 50/50 shield/large shield
-                    type_wanted = ARM_LARGE_SHIELD;
-            }
-            else if (type_wanted == OBJ_RANDOM)
-            {
-                type_wanted = ARM_ROBE;  // no heavy armour, see below
-            }
-            break;
-
-        case SP_NAGA:
-            if (type_wanted == ARM_BOOTS || type_wanted == ARM_CENTAUR_BARDING)
-                type_wanted = ARM_NAGA_BARDING;
-            break;
-
-        case SP_CENTAUR:
-            if (type_wanted == ARM_BOOTS || type_wanted == ARM_NAGA_BARDING)
-                type_wanted = ARM_CENTAUR_BARDING;
-            break;
-
-        default:
-            if (type_wanted == ARM_CENTAUR_BARDING
-                || type_wanted == ARM_NAGA_BARDING)
-            {
-                type_wanted = ARM_BOOTS;
-            }
-            break;
+            ASSERT(type_wanted < max_has_value);
+            if (!already_has[type_wanted])
+                try_again = false;
+            if (one_chance_in(200))
+                try_again = false;
         }
-
-        // Mutation specific problems (horns allow caps).
-        if (type_wanted == ARM_BOOTS && !player_has_feet()
-            || type_wanted == ARM_GLOVES && you.has_claws(false) >= 3)
-        {
-            type_wanted = OBJ_RANDOM;
-        }
-
-        // Do this here, before acquirement()'s call to can_wear_armour(),
-        // so that caps will be just as common as helmets for those
-        // that can't wear helmets.
-        // We check for the mutation directly to avoid acquirement fiddles
-        // with vampires.
-        if (type_wanted == ARM_HELMET
-            && (!you_can_wear(EQ_HELMET) || you.mutation[MUT_HORNS]))
-        {
-            type_wanted = coinflip()? ARM_CAP : ARM_WIZARD_HAT;
-        }
-
-        // Now we'll randomly pick a body armour (light only in the
-        // case of ARM_ROBE).  Unlike before, now we're only giving
-        // out the finished products here, never the hides.  -- bwr
-        if (type_wanted == OBJ_RANDOM || type_wanted == ARM_ROBE)
-        {
-            // start with normal base armour
-            if (type_wanted == ARM_ROBE)
-                type_wanted = coinflip() ? ARM_ROBE : ARM_ANIMAL_SKIN;
-            else
-            {
-                type_wanted = ARM_ROBE + random2(8);
-
-                if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
-                    type_wanted = ARM_CRYSTAL_PLATE_MAIL;
-
-                if (one_chance_in(10))
-                    type_wanted = ARM_ANIMAL_SKIN;
-            }
-
-            // everyone can wear things made from hides
-            if (one_chance_in(20))
-            {
-                int rnd = random2(20);
-
-                type_wanted = (rnd <  4) ? ARM_TROLL_LEATHER_ARMOUR  :  // 20%
-                              (rnd <  8) ? ARM_STEAM_DRAGON_ARMOUR   :  // 20%
-                              (rnd < 11) ? ARM_MOTTLED_DRAGON_ARMOUR :  // 15%
-                              (rnd < 14) ? ARM_SWAMP_DRAGON_ARMOUR   :  // 15%
-                              (rnd < 16) ? ARM_DRAGON_ARMOUR         :  // 10%
-                              (rnd < 18) ? ARM_ICE_DRAGON_ARMOUR     :  // 10%
-                              (rnd < 19) ? ARM_STORM_DRAGON_ARMOUR      //  5%
-                                         : ARM_GOLD_DRAGON_ARMOUR;      //  5%
-            }
-        }
-    }
-    else if (class_wanted != OBJ_GOLD)
-    {
-        do
-        {
-            unsigned char i;
-
-            switch (class_wanted)
-            {
-            case OBJ_JEWELLERY:
-                // Try for a base type the player hasn't identified
-                for (i = 0; i < 10; i++)
-                {
-                    type_wanted = random2(24);
-
-                    if (one_chance_in(3))
-                        type_wanted = AMU_RAGE + random2(10);
-
-                    if (get_ident_type(OBJ_JEWELLERY, type_wanted) ==
-                        ID_UNKNOWN_TYPE)
-                    {
-                        break;
-                    }
-                }
-                break;
-
-            case OBJ_BOOKS:
-                // Remember, put rarer books higher in the list.
-                iteration = 1;
-                type_wanted = NUM_BOOKS;
-
-                best_spell = best_skill( SK_SPELLCASTING, (NUM_SKILLS - 1),
-                                         best_spell );
-
-              which_book:
-#if DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "acquirement: iteration = %d, best_spell = %d",
-                     iteration, best_spell );
-#endif
-
-                switch (best_spell)
-                {
-                default:
-                case SK_SPELLCASTING:
-                    if (you.skills[SK_SPELLCASTING] <= 3
-                        && !you.had_book[BOOK_CANTRIPS])
-                    {
-                        // Handful of level one spells, very useful for the
-                        // new spellcaster who's asking for a book -- bwr
-                        type_wanted = BOOK_CANTRIPS;
-                    }
-                    else if (!you.had_book[BOOK_MINOR_MAGIC_I])
-                        type_wanted = BOOK_MINOR_MAGIC_I + random2(3);
-                    else if (!you.had_book[BOOK_WIZARDRY])
-                        type_wanted = BOOK_WIZARDRY;
-                    else if (!you.had_book[BOOK_CONTROL])
-                        type_wanted = BOOK_CONTROL;
-                    else if (!you.had_book[BOOK_POWER])
-                        type_wanted = BOOK_POWER;
-                    break;
-
-                case SK_POISON_MAGIC:
-                    if (!you.had_book[BOOK_YOUNG_POISONERS])
-                        type_wanted = BOOK_YOUNG_POISONERS;
-                    else if (!you.had_book[BOOK_ENVENOMATIONS])
-                        type_wanted = BOOK_ENVENOMATIONS;
-                    break;
-
-                case SK_EARTH_MAGIC:
-                    if (!you.had_book[BOOK_GEOMANCY])
-                        type_wanted = BOOK_GEOMANCY;
-                    else if (!you.had_book[BOOK_EARTH])
-                        type_wanted = BOOK_EARTH;
-                    break;
-
-                case SK_AIR_MAGIC:
-                    // removed the book of clouds... all the other elements
-                    // (and most other spell skills) only get two.
-                    if (!you.had_book[BOOK_AIR])
-                        type_wanted = BOOK_AIR;
-                    else if (!you.had_book[BOOK_SKY])
-                        type_wanted = BOOK_SKY;
-                    break;
-
-                case SK_ICE_MAGIC:
-                    if (!you.had_book[BOOK_FROST])
-                        type_wanted = BOOK_FROST;
-                    else if (!you.had_book[BOOK_ICE])
-                        type_wanted = BOOK_ICE;
-                    break;
-
-                case SK_FIRE_MAGIC:
-                    if (!you.had_book[BOOK_FLAMES])
-                        type_wanted = BOOK_FLAMES;
-                    else if (!you.had_book[BOOK_FIRE])
-                        type_wanted = BOOK_FIRE;
-                    break;
-
-                case SK_SUMMONINGS:
-                    if (!you.had_book[BOOK_CALLINGS])
-                        type_wanted = BOOK_CALLINGS;
-                    else if (!you.had_book[BOOK_SUMMONINGS])
-                        type_wanted = BOOK_SUMMONINGS;
-
-                    // now a Vehumet special -- bwr
-                    // else if (!you.had_book[BOOK_DEMONOLOGY])
-                    //     type_wanted = BOOK_DEMONOLOGY;
-                    break;
-
-                case SK_ENCHANTMENTS:
-                    best_any = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
-
-                    // So many enchantment books!  I really can't feel
-                    // guilty at all for dividing out the fighting
-                    // books and forcing the player to raise a fighting
-                    // skill (or enchantments in the case of Crusaders)
-                    // to get the remaining books... enchantments are
-                    // much too good (most spells, lots of books here,
-                    // id wand charges, gives magic resistance),
-                    // something will eventually have to be done.  -- bwr
-                    if (best_any >= SK_FIGHTING && best_any <= SK_STAVES)
-                    {
-                        // Fighter mages get the fighting enchantment books
-                        if (!you.had_book[BOOK_WAR_CHANTS])
-                            type_wanted = BOOK_WAR_CHANTS;
-                        else if (!you.had_book[BOOK_TUKIMA])
-                            type_wanted = BOOK_TUKIMA;
-                    }
-                    else if (!you.had_book[BOOK_CHARMS])
-                        type_wanted = BOOK_CHARMS;
-                    else if (!you.had_book[BOOK_HINDERANCE])
-                        type_wanted = BOOK_HINDERANCE;
-                    else if (!you.had_book[BOOK_ENCHANTMENTS])
-                        type_wanted = BOOK_ENCHANTMENTS;
-                    break;
-
-                case SK_CONJURATIONS:
-                    if (!you.had_book[BOOK_CONJURATIONS_I])
-                        type_wanted = give_first_conjuration_book();
-                    else if (!you.had_book[BOOK_TEMPESTS])
-                        type_wanted = BOOK_TEMPESTS;
-
-                    // now a Vehumet special -- bwr
-                    // else if (!you.had_book[BOOK_ANNIHILATIONS])
-                    //     type_wanted = BOOK_ANNIHILATIONS;
-                    break;
-
-                case SK_NECROMANCY:
-                    if (!you.had_book[BOOK_NECROMANCY])
-                        type_wanted = BOOK_NECROMANCY;
-                    else if (!you.had_book[BOOK_DEATH])
-                        type_wanted = BOOK_DEATH;
-                    else if (!you.had_book[BOOK_UNLIFE])
-                        type_wanted = BOOK_UNLIFE;
-
-                    // now a Kikubaaqudgha special -- bwr
-                    // else if (!you.had_book[BOOK_NECRONOMICON])
-                    //    type_wanted = BOOK_NECRONOMICON;
-                    break;
-
-                case SK_TRANSLOCATIONS:
-                    if (!you.had_book[BOOK_SPATIAL_TRANSLOCATIONS])
-                        type_wanted = BOOK_SPATIAL_TRANSLOCATIONS;
-                    else if (!you.had_book[BOOK_WARP])
-                        type_wanted = BOOK_WARP;
-                    break;
-
-                case SK_TRANSMUTATION:
-                    if (!you.had_book[BOOK_CHANGES])
-                        type_wanted = BOOK_CHANGES;
-                    else if (!you.had_book[BOOK_TRANSFIGURATIONS])
-                        type_wanted = BOOK_TRANSFIGURATIONS;
-                    else if (!you.had_book[BOOK_MUTATIONS])
-                        type_wanted = BOOK_MUTATIONS;
-                    break;
-
-                case SK_DIVINATIONS:    //jmf: added 24mar2000
-                    if (!you.had_book[BOOK_SURVEYANCES])
-                        type_wanted = BOOK_SURVEYANCES;
-                    else if (!you.had_book[BOOK_DIVINATIONS])
-                        type_wanted = BOOK_DIVINATIONS;
-                    break;
-                }
-/*
-                if (type_wanted == 99 && glof == best_skill(SK_SPELLCASTING, (NUM_SKILLS - 1), 99))
-*/
-                if (type_wanted == NUM_BOOKS && iteration == 1)
-                {
-                    best_spell = best_skill( SK_SPELLCASTING, NUM_SKILLS - 1,
-                                             best_skill(SK_SPELLCASTING,
-                                                        NUM_SKILLS - 1, 99) );
-                    iteration++;
-                    goto which_book;
-                }
-
-                // If we don't have a book, try and get a new one.
-                if (type_wanted > MAX_FIXED_BOOK)
-                {
-                    do
-                    {
-                        type_wanted = random2(NUM_NORMAL_BOOKS);
-                        if (one_chance_in(500))
-                            break;
-                    }
-                    while (you.had_book[type_wanted]);
-                }
-
-                // If the book is invalid find any valid one.
-                while (type_wanted == BOOK_HEALING)
-                    type_wanted = random2(NUM_NORMAL_BOOKS);
-                break;
-
-            case OBJ_STAVES:
-                type_wanted = random2(13);
-
-                if (type_wanted >= 10)
-                    type_wanted = STAFF_AIR + type_wanted - 10;
-
-                // Elemental preferences -- bwr
-                if (type_wanted == STAFF_FIRE || type_wanted == STAFF_COLD)
-                {
-                    if (you.skills[SK_FIRE_MAGIC] > you.skills[SK_ICE_MAGIC])
-                        type_wanted = STAFF_FIRE;
-                    else if (you.skills[SK_FIRE_MAGIC] != you.skills[SK_ICE_MAGIC])
-                        type_wanted = STAFF_COLD;
-                }
-                else if (type_wanted == STAFF_AIR || type_wanted == STAFF_EARTH)
-                {
-                    if (you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
-                        type_wanted = STAFF_AIR;
-                    else if (you.skills[SK_AIR_MAGIC] != you.skills[SK_EARTH_MAGIC])
-                        type_wanted = STAFF_EARTH;
-                }
-
-                best_spell = best_skill( SK_SPELLCASTING, (NUM_SKILLS-1), 99 );
-
-                // If we're going to give out an enhancer staff,
-                // we should at least bias things towards the
-                // best spell skill. -- bwr
-                switch (best_spell)
-                {
-                case SK_FIRE_MAGIC:
-                    if (!already_has[STAFF_FIRE])
-                        type_wanted = STAFF_FIRE;
-                    break;
-
-                case SK_ICE_MAGIC:
-                    if (!already_has[STAFF_COLD])
-                        type_wanted = STAFF_COLD;
-                    break;
-
-                case SK_AIR_MAGIC:
-                    if (!already_has[STAFF_AIR])
-                        type_wanted = STAFF_AIR;
-                    break;
-
-                case SK_EARTH_MAGIC:
-                    if (!already_has[STAFF_EARTH])
-                        type_wanted = STAFF_EARTH;
-                    break;
-
-                case SK_POISON_MAGIC:
-                    if (!already_has[STAFF_POISON])
-                        type_wanted = STAFF_POISON;
-                    break;
-
-                case SK_NECROMANCY:
-                    if (!already_has[STAFF_DEATH])
-                        type_wanted = STAFF_DEATH;
-                    break;
-
-                case SK_CONJURATIONS:
-                    if (!already_has[STAFF_CONJURATION])
-                        type_wanted = STAFF_CONJURATION;
-                    break;
-
-                case SK_ENCHANTMENTS:
-                    if (!already_has[STAFF_ENCHANTMENT])
-                        type_wanted = STAFF_ENCHANTMENT;
-                    break;
-
-                case SK_SUMMONINGS:
-                    if (!already_has[STAFF_SUMMONING])
-                        type_wanted = STAFF_SUMMONING;
-                    break;
-
-                case SK_EVOCATIONS:
-                    if (!one_chance_in(4))
-                        type_wanted = random_rod_subtype();
-                    break;
-
-                default: // Invocations and leftover spell schools.
-                    switch (random2(5))
-                    {
-                    case 0:
-                        type_wanted = STAFF_WIZARDRY;
-                        break;
-
-                    case 1:
-                        type_wanted = STAFF_POWER;
-                        break;
-
-                    case 2:
-                        type_wanted = STAFF_ENERGY;
-                        break;
-
-                    case 3:
-                        type_wanted = STAFF_CHANNELING;
-                        break;
-
-                    case 4:
-                        break;
-                    }
-                    break;
-                }
-
-                // Increased chance of getting a rod for new or
-                // non-spellcasters.  -- bwr
-                if (one_chance_in(20)
-                    || (spell_skills <= 1               // short on spells
-                        && type_wanted < STAFF_SMITING
-                        && !one_chance_in(4)))
-                {
-                    type_wanted = coinflip() ? STAFF_STRIKING :
-                        random_rod_subtype();
-                }
-                break;
-
-            case OBJ_MISCELLANY:
-                do
-                {
-                    type_wanted = random2(NUM_MISCELLANY);
-                }
-                while (type_wanted == MISC_HORN_OF_GERYON
-                       || type_wanted == MISC_RUNE_OF_ZOT
-                       || type_wanted == MISC_CRYSTAL_BALL_OF_FIXATION
-                       || type_wanted == MISC_EMPTY_EBONY_CASKET
-                       || type_wanted == MISC_DECK_OF_PUNISHMENT);
-                break;
-            default:
-                break;
-            }
-
-            ASSERT( type_wanted < max_has_value );
-        }
-        while (already_has[type_wanted] && !one_chance_in(200));
-    }
+    } while (try_again);
 
     return (type_wanted);
 }
@@ -1818,9 +1793,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             {
             case RING_SLAYING:
                 // Make sure plus to damage is >= 1.
-                thing.plus2 = abs( thing.plus2 );
-                if (thing.plus2 == 0)
-                    thing.plus2 = 1;
+                thing.plus2 = std::max(abs(thing.plus2), 1);
                 // fall through...
 
             case RING_PROTECTION:
@@ -1829,16 +1802,14 @@ bool acquirement(object_class_type class_wanted, int agent,
             case RING_DEXTERITY:
             case RING_EVASION:
                 // Make sure plus is >= 1.
-                thing.plus = abs( thing.plus );
-                if (thing.plus == 0)
-                    thing.plus = 1;
+                thing.plus = std::max(abs(thing.plus), 1);
                 break;
 
             case RING_HUNGER:
             case AMU_INACCURACY:
                 // These are the only truly bad pieces of jewellery.
                 if (!one_chance_in(9))
-                    make_item_randart( thing );
+                    make_item_randart(thing);
                 break;
 
             default:
@@ -1858,13 +1829,12 @@ bool acquirement(object_class_type class_wanted, int agent,
             case SP_GHOUL:
             case SP_VAMPIRE:
                 {
-                    int brand = get_weapon_brand( thing );
+                    int brand = get_weapon_brand(thing);
                     if (brand == SPWPN_HOLY_WRATH)
                     {
-                        if (!is_random_artefact( thing ))
+                        if (!is_random_artefact(thing))
                         {
-                            set_item_ego_type( thing,
-                                               OBJ_WEAPONS, SPWPN_VORPAL );
+                            set_item_ego_type(thing, OBJ_WEAPONS, SPWPN_VORPAL);
                         }
                         else
                         {
@@ -1872,7 +1842,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                             for (; brand == SPWPN_HOLY_WRATH;
                                   brand = get_weapon_brand(thing))
                             {
-                                make_item_randart( thing );
+                                make_item_randart(thing);
                             }
                         }
                     }

@@ -2212,7 +2212,7 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 //
 bool item_is_rod( const item_def &item )
 {
-    return (item.base_type == OBJ_STAVES && item.sub_type >= STAFF_SMITING);
+    return (item.base_type == OBJ_STAVES && item.sub_type >= STAFF_FIRST_ROD);
 }
 
 bool item_is_staff( const item_def &item )

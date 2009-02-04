@@ -424,7 +424,8 @@ enum stave_type
     STAFF_EARTH,
     STAFF_CHANNELING,           // 12
     // rods
-    STAFF_SMITING,              // must be first rod!
+    STAFF_FIRST_ROD,
+    STAFF_SMITING = STAFF_FIRST_ROD,
     STAFF_SPELL_SUMMONING,
     STAFF_DESTRUCTION_I,
     STAFF_DESTRUCTION_II,
