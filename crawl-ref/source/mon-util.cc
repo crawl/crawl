@@ -2724,6 +2724,24 @@ bool mons_should_fire(struct bolt &beam)
          beam.friend_info.count, beam.friend_info.power,
          beam.foe_ratio, beam.smart_monster ? "yes" : "no");
 #endif
+
+    // Friendly monsters shouldn't be targetting you: this will happen
+    // often because the default behaviour for charmed monsters is to
+    // have you as a target. While foe_ratio will handle this, we
+    // don't want a situation where a friendly dragon breathes through
+    // you to hit other creatures...it should target the other
+    // creatures, and coincidentally hit you.
+    //
+    // FIXME: this can cause problems with reflection, bounces, etc.
+    // It would be better to have the monster fire logic never reach
+    // this point for friendlies.
+    if (!invalid_monster_index(beam.beam_source))
+    {
+        monsters& m = menv[beam.beam_source];
+        if (m.alive() && mons_friendly(&m) && beam.target == you.pos())
+            return (false);
+    }
+
     // Use of foeRatio:
     // The higher this number, the more monsters will _avoid_ collateral
     // damage to their friends.

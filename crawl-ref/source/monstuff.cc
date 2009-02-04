@@ -5267,8 +5267,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 {
     bool used = false;
 
-    FixedArray < unsigned int, 19, 19 > show;
-
     const monster_type mclass = (mons_genus( monster->type ) == MONS_DRACONIAN)
                                   ? draco_subspecies( monster )
                                   : static_cast<monster_type>( monster->type );
