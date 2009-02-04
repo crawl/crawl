@@ -7162,8 +7162,6 @@ static void _handle_monster_move(monsters *monster)
                 || monster->type == MONS_AIR_ELEMENTAL
                    && mons_is_submerged(monster))
             {
-                std::vector<coord_def> moves;
-
                 mmov.reset();
                 int pfound = 0;
                 for (adjacent_iterator ai(monster->pos(), false); ai; ++ai)

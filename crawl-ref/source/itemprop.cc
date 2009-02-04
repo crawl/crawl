@@ -2383,7 +2383,7 @@ int property( const item_def &item, int prop_type )
 }
 
 // Returns true if item is evokable.
-bool gives_ability( const item_def &item )
+bool gives_ability(const item_def &item)
 {
     if (!item_type_known(item))
         return (false);
@@ -2394,7 +2394,7 @@ bool gives_ability( const item_def &item )
     {
         // unwielded weapon
         item_def *weap = you.slot_item(EQ_WEAPON);
-        if (!weap || (*weap).slot != item.slot)
+        if (!weap || weap->slot != item.slot)
             return (false);
         break;
     }
@@ -2405,8 +2405,8 @@ bool gives_ability( const item_def &item )
             // unworn ring
             item_def *lring = you.slot_item(EQ_LEFT_RING);
             item_def *rring = you.slot_item(EQ_RIGHT_RING);
-            if ((!lring || (*lring).slot != item.slot)
-                && (!rring || (*rring).slot != item.slot))
+            if ((!lring || lring->slot != item.slot)
+                && (!rring || rring->slot != item.slot))
             {
                 return (false);
             }
@@ -2422,7 +2422,7 @@ bool gives_ability( const item_def &item )
         {
             // unworn amulet
             item_def *amul = you.slot_item(EQ_AMULET);
-            if (!amul || (*amul).slot != item.slot)
+            if (!amul || amul->slot != item.slot)
                 return (false);
 
             if (item.sub_type == AMU_RAGE)
@@ -2438,7 +2438,7 @@ bool gives_ability( const item_def &item )
 
         // unworn armour
         item_def *arm = you.slot_item(eq);
-        if (!arm || (*arm).slot != item.slot)
+        if (!arm || arm->slot != item.slot)
             return (false);
         break;
     }
@@ -2458,7 +2458,7 @@ bool gives_ability( const item_def &item )
 }
 
 // Returns true if the item confers an intrinsic that is shown on the % screen.
-bool gives_resistance( const item_def &item )
+bool gives_resistance(const item_def &item)
 {
     if (!item_type_known(item))
         return (false);
@@ -2469,19 +2469,19 @@ bool gives_resistance( const item_def &item )
     {
         // unwielded weapon
         item_def *weap = you.slot_item(EQ_WEAPON);
-        if (!weap || (*weap).slot != item.slot)
+        if (!weap || weap->slot != item.slot)
             return (false);
         break;
     }
     case OBJ_JEWELLERY:
     {
-        if (item.sub_type < NUM_RINGS)
+        if (!jewellery_is_amulet(item))
         {
             // unworn ring
-            item_def *lring = you.slot_item(EQ_LEFT_RING);
-            item_def *rring = you.slot_item(EQ_RIGHT_RING);
-            if ((!lring || (*lring).slot != item.slot)
-                && (!rring || (*rring).slot != item.slot))
+            const item_def *lring = you.slot_item(EQ_LEFT_RING);
+            const item_def *rring = you.slot_item(EQ_RIGHT_RING);
+            if ((!lring || lring->slot != item.slot)
+                && (!rring || rring->slot != item.slot))
             {
                 return (false);
             }
@@ -2499,8 +2499,8 @@ bool gives_resistance( const item_def &item )
         else
         {
             // unworn amulet
-            item_def *amul = you.slot_item(EQ_AMULET);
-            if (!amul || (*amul).slot != item.slot)
+            const item_def *amul = you.slot_item(EQ_AMULET);
+            if (!amul || amul->slot != item.slot)
                 return (false);
 
             if (item.sub_type != AMU_RAGE && item.sub_type != AMU_INACCURACY)
@@ -2516,11 +2516,11 @@ bool gives_resistance( const item_def &item )
 
         // unworn armour
         item_def *arm = you.slot_item(eq);
-        if (!arm || (*arm).slot != item.slot)
+        if (!arm || arm->slot != item.slot)
             return (false);
         break;
 
-        const int ego = get_armour_ego_type( item );
+        const int ego = get_armour_ego_type(item);
         if (ego >= SPARM_FIRE_RESISTANCE && ego <= SPARM_SEE_INVISIBLE
             || ego == SPARM_RESISTANCE || ego == SPARM_POSITIVE_ENERGY)
         {
@@ -2531,7 +2531,7 @@ bool gives_resistance( const item_def &item )
     {
         // unwielded staff
         item_def *weap = you.slot_item(EQ_WEAPON);
-        if (!weap || (*weap).slot != item.slot)
+        if (!weap || weap->slot != item.slot)
             return (false);
 
         if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON

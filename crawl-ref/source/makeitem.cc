@@ -4322,9 +4322,9 @@ jewellery_type get_random_ring_type()
     const jewellery_type j = _get_raw_random_ring_type();
     // Adjusted distribution here -- bwr
     if ((j == RING_INVISIBILITY
-            || j == RING_REGENERATION
-            || j == RING_TELEPORT_CONTROL
-            || j == RING_SLAYING)
+         || j == RING_REGENERATION
+         || j == RING_TELEPORT_CONTROL
+         || j == RING_SLAYING)
         && !one_chance_in(3))
     {
         return _get_raw_random_ring_type();
@@ -4356,6 +4356,8 @@ armour_type get_random_armour_type(int item_level)
             armtype = ARM_ANIMAL_SKIN;
     }
 
+    // FIXME! This makes assumptions about the order of subtypes, and
+    // the assumptions are wrong!
     if (x_chance_in_y(11 + item_level, 60))
         armtype = random2(ARM_SHIELD); // body armour of some kind
 
@@ -4374,26 +4376,21 @@ armour_type get_random_armour_type(int item_level)
     // secondary armours:
     if (one_chance_in(5))
     {
-        // same chance each
-        switch (random2(5))
-        {
-        case 0: armtype = ARM_SHIELD; break;
-        case 1: armtype = ARM_CLOAK;  break;
-        case 2: armtype = ARM_HELMET; break;
-        case 3: armtype = ARM_GLOVES; break;
-        case 4: armtype = ARM_BOOTS;  break;
-        }
+        const armour_type secarmours[] = { ARM_SHIELD, ARM_CLOAK, ARM_HELMET,
+                                           ARM_GLOVES, ARM_BOOTS };
+        armtype = RANDOM_ELEMENT(secarmours);
 
         if (armtype == ARM_HELMET && one_chance_in(3))
         {
-            armtype = ARM_HELMET + random2(3);
+            const armour_type hats[] = { ARM_CAP, ARM_WIZARD_HAT, ARM_HELMET };
+            armtype = RANDOM_ELEMENT(hats);
         }
-        else if (armtype == ARM_SHIELD)            // 33.3%
+        else if (armtype == ARM_SHIELD)
         {
-            if (coinflip())
-                armtype = ARM_BUCKLER;             // 50.0%
-            else if (one_chance_in(3))
-                armtype = ARM_LARGE_SHIELD;        // 16.7%
+            armtype = random_choose_weighted(333, ARM_SHIELD,
+                                             500, ARM_BUCKLER,
+                                             167, ARM_LARGE_SHIELD,
+                                             0);
         }
     }
 

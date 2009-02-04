@@ -1145,15 +1145,8 @@ static int _acquirement_jewellery_subtype()
     for (int i = 0; i < 10; i++)
     {
         // 1/3 amulets, 2/3 rings.
-        if (one_chance_in(3))
-        {
-            result = AMU_FIRST_AMULET
-                + random2(NUM_JEWELLERY - AMU_FIRST_AMULET);
-        }
-        else
-        {
-            result = random2(NUM_RINGS);
-        }
+        result = (one_chance_in(3) ? get_random_amulet_type()
+                                   : get_random_ring_type());
 
         // If we haven't seen this yet, we're done.
         if (get_ident_type(OBJ_JEWELLERY, result) == ID_UNKNOWN_TYPE)
