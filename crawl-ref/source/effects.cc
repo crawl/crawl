@@ -947,9 +947,10 @@ static armour_type _acquirement_armour_subtype()
         result = coinflip()? ARM_CAP : ARM_WIZARD_HAT;
     }
 
-    // Now we'll randomly pick a body armour (light only in the
-    // case of ARM_ROBE).  Unlike before, now we're only giving
-    // out the finished products here, never the hides.  -- bwr
+    // Now we'll randomly pick a body armour up to plate mail (light
+    // only in the case of robes or animal skins).  Unlike before, now
+    // we're only giving out the finished products here, never the
+    // hides.  -- bwr
     if (result == NUM_ARMOURS || result == ARM_ROBE)
     {
         // start with normal base armour
