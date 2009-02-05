@@ -4122,7 +4122,7 @@ void give_armour(monsters *mon, int level)
     case MONS_RUPERT:
     case MONS_WAYNE:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_LEATHER_ARMOUR + random2(4);
+        item.sub_type = ARM_LEATHER_ARMOUR + random2(4); // up to chain mail
         break;
 
     case MONS_ORC_WARLORD:
@@ -4145,7 +4145,7 @@ void give_armour(monsters *mon, int level)
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAULT_GUARD:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_CHAIN_MAIL + random2(4);
+        item.sub_type = ARM_CHAIN_MAIL + random2(4); // up to plate mail
         break;
 
     case MONS_ANGEL:
@@ -4347,20 +4347,13 @@ armour_type get_random_body_armour_type(int item_level)
 // FIXME: Need to clean up this mess.
 armour_type get_random_armour_type(int item_level)
 {
-    // Default (lowest-level) armours.
-    const armour_type defarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                       ARM_RING_MAIL };
-
-    int armtype = RANDOM_ELEMENT(defarmours);
+    // Default (lowest-level) armours, up to ring mail.
+    int armtype = ARM_ROBE + random2(3);
 
     if (x_chance_in_y(11 + item_level, 35))
     {
-        // Low-level armours.
-        const armour_type lowarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL };
-
-        armtype = RANDOM_ELEMENT(lowarmours);
+        // Low-level armours, up to chain mail.
+        armtype = ARM_ROBE + random2(5);
 
         if (one_chance_in(4))
             armtype = ARM_ANIMAL_SKIN;
@@ -4368,13 +4361,8 @@ armour_type get_random_armour_type(int item_level)
 
     if (x_chance_in_y(11 + item_level, 60))
     {
-        // Medium-level armours.
-        const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
-                                           ARM_BANDED_MAIL, ARM_PLATE_MAIL };
-
-        armtype = RANDOM_ELEMENT(medarmours);
+        // Medium-level armours, up to plate mail.
+        armtype = ARM_ROBE + random2(8);
     }
 
     if (one_chance_in(20) && x_chance_in_y(11 + item_level, 400))
