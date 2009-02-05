@@ -4347,42 +4347,83 @@ armour_type get_random_body_armour_type(int item_level)
 // FIXME: Need to clean up this mess.
 armour_type get_random_armour_type(int item_level)
 {
-    int armtype = random2(3);
+    // Default (lowest-level) armours.
+    const armour_type defarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                       ARM_RING_MAIL };
+
+    int armtype = RANDOM_ELEMENT(defarmours);
 
     if (x_chance_in_y(11 + item_level, 35))
     {
-        armtype = random2(5);
+        // Low-level armours.
+        const armour_type lowarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
+                                           ARM_CHAIN_MAIL };
+
+        armtype = RANDOM_ELEMENT(lowarmours);
+
         if (one_chance_in(4))
             armtype = ARM_ANIMAL_SKIN;
     }
 
-    // FIXME! This makes assumptions about the order of subtypes, and
-    // the assumptions are wrong!
     if (x_chance_in_y(11 + item_level, 60))
-        armtype = random2(ARM_SHIELD); // body armour of some kind
+    {
+        // Medium-level armours.
+        const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
+                                           ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
+                                           ARM_BANDED_MAIL, ARM_PLATE_MAIL };
+
+        armtype = RANDOM_ELEMENT(medarmours);
+    }
 
     if (one_chance_in(20) && x_chance_in_y(11 + item_level, 400))
-        armtype = ARM_DRAGON_HIDE + random2(7); // (ice) dragon/troll/crystal
+    {
+        // High-level armours, including troll and some dragon armours.
+        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_MAIL,
+                                          ARM_TROLL_HIDE,
+                                          ARM_TROLL_LEATHER_ARMOUR,
+                                          ARM_DRAGON_HIDE, ARM_DRAGON_ARMOUR,
+                                          ARM_ICE_DRAGON_HIDE,
+                                          ARM_ICE_DRAGON_ARMOUR };
+
+        armtype = RANDOM_ELEMENT(hiarmours);
+    }
 
     if (one_chance_in(20) && x_chance_in_y(11 + item_level, 500))
     {
-        // Other dragon hides/armour or animal skin.
-        armtype = ARM_STEAM_DRAGON_HIDE + random2(11);
+        // Animal skins and high-level armours, including the rest of
+        // the dragon armours.
+        const armour_type morehiarmours[] = { ARM_ANIMAL_SKIN,
+                                              ARM_STEAM_DRAGON_HIDE,
+                                              ARM_STEAM_DRAGON_ARMOUR,
+                                              ARM_MOTTLED_DRAGON_HIDE,
+                                              ARM_MOTTLED_DRAGON_ARMOUR,
+                                              ARM_STORM_DRAGON_HIDE,
+                                              ARM_STORM_DRAGON_ARMOUR,
+                                              ARM_GOLD_DRAGON_HIDE,
+                                              ARM_GOLD_DRAGON_ARMOUR,
+                                              ARM_SWAMP_DRAGON_HIDE,
+                                              ARM_SWAMP_DRAGON_ARMOUR };
+
+        armtype = RANDOM_ELEMENT(morehiarmours);
 
         if (armtype == ARM_ANIMAL_SKIN && one_chance_in(20))
             armtype = ARM_CRYSTAL_PLATE_MAIL;
     }
 
-    // secondary armours:
+    // Secondary armours.
     if (one_chance_in(5))
     {
         const armour_type secarmours[] = { ARM_SHIELD, ARM_CLOAK, ARM_HELMET,
                                            ARM_GLOVES, ARM_BOOTS };
+
         armtype = RANDOM_ELEMENT(secarmours);
 
         if (armtype == ARM_HELMET && one_chance_in(3))
         {
             const armour_type hats[] = { ARM_CAP, ARM_WIZARD_HAT, ARM_HELMET };
+
             armtype = RANDOM_ELEMENT(hats);
         }
         else if (armtype == ARM_SHIELD)
