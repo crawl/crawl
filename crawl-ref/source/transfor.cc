@@ -1007,7 +1007,7 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
     }
 
     return (true);
-}                               // end can_equip()
+}
 
 // raw comparison of an item, must use check_armour_shape for full version
 bool transform_can_equip_type( int eq_slot )
@@ -1044,9 +1044,7 @@ void drop_everything(void)
             you.inv[i].quantity = 0;
         }
     }
-
-    return;
-}                               // end drop_everything()
+}
 
 // Used to mark transformations which override species/mutation intrinsics.
 // If phys_scales is true then we're checking to see if the form keeps
