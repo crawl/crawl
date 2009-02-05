@@ -1123,7 +1123,7 @@ bool deck_triple_draw()
         }
     }
     deck.props["num_marked"] = num_marked_left;
-    
+
     you.wield_change = true;
 
     // Make deck disappear *before* the card effect, since we

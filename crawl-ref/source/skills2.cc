@@ -2254,7 +2254,7 @@ void wield_warning(bool newWeapon)
         return;
 
     std::string msg;
-    
+
     // We know if it's an artefact because we just wielded
     // it, so no information leak.
     if (is_artefact(wep))

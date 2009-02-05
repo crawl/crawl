@@ -3988,7 +3988,7 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
         friend_info.count++;
         friend_info.power += mons_power(mon->type);
     }
-        
+
     handle_stop_attack_prompt(mon);
     if (!beam_cancelled)
     {

@@ -304,7 +304,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         // Restore all MP
         you.magic_points = you.max_magic_points;
 
-        // Sometimes boost max 
+        // Sometimes boost max
         if (one_chance_in(3))
         {
             mpr("You feel extremely magical!");

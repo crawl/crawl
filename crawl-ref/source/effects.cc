@@ -1476,7 +1476,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
         default: break;         // gold
         }
-        
+
         if (try_again)
         {
             ASSERT(type_wanted < max_has_value);

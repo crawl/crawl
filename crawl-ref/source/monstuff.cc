@@ -7207,7 +7207,7 @@ static void _handle_monster_move(monsters *monster)
             && !monster->has_ench(ENCH_BERSERK))
         {
             bolt beem;
-            
+
             beem.source      = monster->pos();
             beem.target      = monster->target;
             beem.beam_source = monster->mindex();

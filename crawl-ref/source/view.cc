@@ -775,7 +775,7 @@ int count_detected_mons()
         // thus monster/item free).
         if (is_terrain_changed(*ri))
             continue;
-        
+
         if (is_envmap_detected_mons(*ri))
             count++;
     }
