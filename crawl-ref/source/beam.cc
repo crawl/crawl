@@ -3551,7 +3551,6 @@ void bolt::affect_player_enchantment()
         }
         else
             canned_msg( MSG_NOTHING_HAPPENS );
-
         break;
 
     case BEAM_SLOW:
