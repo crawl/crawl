@@ -450,27 +450,26 @@ static void _describe_monster(const monsters *mon);
 // TODO: Allow sorting of items lists.
 void full_describe_view()
 {
-    const coord_def start = view2grid(coord_def(1,1));
-    const coord_def end = start + crawl_view.viewsz - coord_def(1,1);
-
     std::vector<const monsters*> list_mons;
     std::vector<item_def> list_items;
 
-    // Iterate over viewport and grab all items known (or thought)
-    // to be in the stashes in view.
-    for (rectangle_iterator ri(start, end); ri; ++ri)
+    // Grab all items known (or thought) to be in the stashes in view.
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        if (!in_bounds(*ri) || !see_grid(*ri))
-            continue;
-
         const int oid = igrd(*ri);
-
         if (oid == NON_ITEM)
             continue;
 
         std::vector<item_def> items = item_list_in_stash(*ri);
+
+#ifdef DEBUG_DIAGNOSTICS
         if (items.empty())
-            continue;
+        {
+            mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
+                 mitm[oid].name(DESC_PLAIN).c_str());
+            more();
+        }
+#endif
 
         list_items.insert(list_items.end(), items.begin(), items.end());
     }

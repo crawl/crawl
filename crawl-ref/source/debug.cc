@@ -78,6 +78,7 @@ REVISION("$Rev$");
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -1327,8 +1328,13 @@ void wizard_create_spec_object()
         // orig_monnum is used in corpses for things like the Animate
         // Dead spell, so leave it alone.
         if (class_wanted != OBJ_CORPSES)
-            origin_acquired( mitm[thing_created], AQ_WIZMODE );
-        canned_msg( MSG_SOMETHING_APPEARS );
+            origin_acquired(mitm[thing_created], AQ_WIZMODE);
+        canned_msg(MSG_SOMETHING_APPEARS);
+
+        // Tell the stash tracker.
+        StashTrack.update_visible_stashes(
+            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
+                                              : StashTracker::ST_PASSIVE);
     }
 }
 
