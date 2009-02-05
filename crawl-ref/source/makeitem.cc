@@ -4115,25 +4115,11 @@ void give_armour(monsters *mon, int level)
         {
             item.base_type = OBJ_ARMOUR;
 
-            switch (random2(8))
-            {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                item.sub_type = ARM_LEATHER_ARMOUR;
-                break;
-            case 4:
-            case 5:
-                item.sub_type = ARM_RING_MAIL;
-                break;
-            case 6:
-                item.sub_type = ARM_SCALE_MAIL;
-                break;
-            case 7:
-                item.sub_type = ARM_CHAIN_MAIL;
-                break;
-            }
+            const int temp_rand = random2(8);
+            item.sub_type = ((temp_rand  < 4) ? ARM_LEATHER_ARMOUR :
+                             (temp_rand  < 6) ? ARM_RING_MAIL :
+                             (temp_rand == 6) ? ARM_SCALE_MAIL
+                                              : ARM_CHAIN_MAIL);
         }
         else
             return;
