@@ -2068,11 +2068,19 @@ std::string get_item_description( const item_def &item, bool verbose,
                 "recharges automatically by channeling mana from its "
                 "wielder.";
 
-            const int max_charges = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-            if (item_ident(item, ISFLAG_KNOW_PLUSES)
-                && item.plus2 >= max_charges && item.plus >= item.plus2)
+            const int max_charges = MAX_ROD_CHARGE;
+            if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                description << "$It is fully charged.";
+                const int num_charges = item.plus2 / ROD_CHARGE_MULT;
+                if (max_charges > num_charges)
+                {
+                    description << "$It can currently hold " << num_charges
+                                << " charges. It can be magically recharged "
+                                << "to contain up to " << max_charges
+                                << " charges.";
+                }
+                else
+                    description << "$It is fully charged.";
             }
             else
             {
