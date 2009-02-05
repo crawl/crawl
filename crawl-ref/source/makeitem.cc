@@ -3151,8 +3151,32 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_WIGHT:
     case MONS_NORRIS:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = (one_chance_in(6) ? WPN_WAR_AXE + random2(4)
-                                          : WPN_MACE + random2(12));
+
+        if (one_chance_in(6))
+        {
+            const int temp_rand = random2(4);
+            item.sub_type = ((temp_rand == 0) ? WPN_SPIKED_FLAIL :
+                             (temp_rand == 1) ? WPN_GREAT_MACE :
+                             (temp_rand == 2) ? WPN_WAR_AXE
+                                              : WPN_TRIDENT);
+        }
+        else
+        {
+            const int temp_rand = random2(12);
+            item.sub_type = ((temp_rand ==  0) ? WPN_MACE :
+                             (temp_rand ==  1) ? WPN_FLAIL :
+                             (temp_rand ==  2) ? WPN_MORNINGSTAR :
+                             (temp_rand ==  3) ? WPN_DAGGER :
+                             (temp_rand ==  4) ? WPN_SHORT_SWORD :
+                             (temp_rand ==  5) ? WPN_LONG_SWORD :
+                             (temp_rand ==  6) ? WPN_SCIMITAR :
+                             (temp_rand ==  7) ? WPN_GREAT_SWORD :
+                             (temp_rand ==  8) ? WPN_HAND_AXE :
+                             (temp_rand ==  9) ? WPN_BATTLEAXE :
+                             (temp_rand == 10) ? WPN_SPEAR
+                                               : WPN_HALBERD);
+        }
+
         if (coinflip())
         {
             force_item  = true;
@@ -3544,7 +3568,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     {
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_LONG_SWORD + random2(3);
+        item.sub_type = (one_chance_in(3) ? WPN_LONG_SWORD :
+                         coinflip()       ? WPN_SCIMITAR
+                                          : WPN_GREAT_SWORD);
 
         if (one_chance_in(7))
             item.sub_type = WPN_HALBERD;
@@ -3652,7 +3678,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         force_item = true;
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = coinflip()? WPN_DAGGER : WPN_SHORT_SWORD;
+        item.sub_type = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
         {
             const int temp_rand = random2(5);
             set_item_ego_type( item, OBJ_WEAPONS,

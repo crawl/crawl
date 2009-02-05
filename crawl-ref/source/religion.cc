@@ -4555,8 +4555,23 @@ static bool _beogh_retribution()
 
         for (int i = 0; i < num_to_create; ++i)
         {
+            const int temp_rand = random2(13);
+            int wpn_type = ((temp_rand ==  0) ? WPN_CLUB :
+                            (temp_rand ==  1) ? WPN_MACE :
+                            (temp_rand ==  2) ? WPN_FLAIL :
+                            (temp_rand ==  3) ? WPN_MORNINGSTAR :
+                            (temp_rand ==  4) ? WPN_DAGGER :
+                            (temp_rand ==  5) ? WPN_SHORT_SWORD :
+                            (temp_rand ==  6) ? WPN_LONG_SWORD :
+                            (temp_rand ==  7) ? WPN_SCIMITAR :
+                            (temp_rand ==  8) ? WPN_GREAT_SWORD :
+                            (temp_rand ==  9) ? WPN_HAND_AXE :
+                            (temp_rand == 10) ? WPN_BATTLEAXE :
+                            (temp_rand == 11) ? WPN_SPEAR
+                                              : WPN_HALBERD);
+
             // Create item.
-            int slot = items(0, OBJ_WEAPONS, WPN_CLUB + random2(13),
+            int slot = items(0, OBJ_WEAPONS, wpn_type,
                              true, you.experience_level,
                              am_orc ? MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH,
                              0, 0, GOD_BEOGH);
