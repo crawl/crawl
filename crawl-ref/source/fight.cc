@@ -2338,8 +2338,7 @@ void melee_attack::chaos_affects_defender()
         defender_as_monster()->add_ench(one_chance_in(3) ?
             ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
         // Immediately polymorph monster, just to make the effect obvious.
-        monster_polymorph(defender_as_monster(),
-                          RANDOM_MONSTER, PPT_SAME, true);
+        monster_polymorph(defender_as_monster(), RANDOM_MONSTER);
         break;
 
     case CHAOS_MISCAST:

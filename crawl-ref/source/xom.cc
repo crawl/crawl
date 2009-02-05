@@ -937,19 +937,15 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
                                           : "bad monster polymorph");
             god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
-            bool made_shifter = false;
-
             if (one_chance_in(8) && !mons_is_shapeshifter(mon))
             {
                 mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
                                                : ENCH_SHAPESHIFTER);
-                made_shifter = true;
             }
 
             const bool powerup = !(mons_wont_attack(mon) ^ helpful);
             monster_polymorph(mon, RANDOM_MONSTER,
-                              powerup ? PPT_MORE : PPT_LESS,
-                              made_shifter);
+                              powerup ? PPT_MORE : PPT_LESS);
 
             rc = true;
         }
