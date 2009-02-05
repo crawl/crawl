@@ -131,42 +131,40 @@ static species_type old_species_order[] = {
     SP_MERFOLK,       SP_VAMPIRE
 };
 
-// Fantasy staples and humanoid creatures come first, then dimunitive and
+// Fantasy staples and humanoid creatures come first, then diminutive and
 // stealthy creatures, then monstrous creatures, then planetouched and after
 // all living creatures finally the undead. (MM)
 static species_type new_species_order[] = {
     // comparatively human-like looks
-    SP_HUMAN,       SP_HIGH_ELF,
-    SP_GREY_ELF,    SP_DEEP_ELF,
-    SP_SLUDGE_ELF,  SP_MOUNTAIN_DWARF,
-    SP_HILL_ORC,    SP_MERFOLK,
+    SP_HUMAN,         SP_HIGH_ELF,
+    SP_GREY_ELF,      SP_DEEP_ELF,
+    SP_SLUDGE_ELF,    SP_MOUNTAIN_DWARF,
+    SP_HILL_ORC,      SP_MERFOLK,
     // small species
-    SP_HALFLING,    SP_GNOME,
-    SP_KOBOLD,      SP_SPRIGGAN,
-    // significantly different body type than human
-    SP_NAGA,        SP_CENTAUR,
-    SP_OGRE,        SP_TROLL,
-    SP_MINOTAUR,    SP_KENKU,
+    SP_HALFLING,      SP_GNOME,
+    SP_KOBOLD,        SP_SPRIGGAN,
+    // significantly different body type from human
+    SP_NAGA,          SP_CENTAUR,
+    SP_OGRE,          SP_TROLL,
+    SP_MINOTAUR,      SP_KENKU,
     SP_RED_DRACONIAN,
     // celestial species
-    SP_DEMIGOD,     SP_DEMONSPAWN,
+    SP_DEMIGOD,       SP_DEMONSPAWN,
     // undead species
-    SP_MUMMY,       SP_GHOUL,
+    SP_MUMMY,         SP_GHOUL,
     SP_VAMPIRE
 };
 
 static species_type _random_draconian_species()
 {
-    const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN + 1;
+    const int num_drac = SP_BASE_DRACONIAN - SP_RED_DRACONIAN;
     return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
 }
 
 static species_type _get_species(const int index)
 {
     if (index < 0 || (unsigned int) index >= ARRAYSZ(old_species_order))
-    {
         return (SP_UNKNOWN);
-    }
 
     return (Options.use_old_selection_order ? old_species_order[index]
                                             : new_species_order[index]);
@@ -220,7 +218,7 @@ static job_type new_jobs_order[] = {
 static job_type _get_class(const int index)
 {
     if (index < 0 || (unsigned int) index >= ARRAYSZ(old_jobs_order))
-       return JOB_UNKNOWN;
+       return (JOB_UNKNOWN);
 
     return (Options.use_old_selection_order? old_jobs_order[index]
                                            : new_jobs_order[index]);
@@ -247,7 +245,7 @@ int get_species_index_by_abbrev( const char *abbrev )
         if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[sp][0] )
             && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[sp][1] ))
         {
-            return i;
+            return (i);
         }
     }
 

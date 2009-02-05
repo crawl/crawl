@@ -1496,13 +1496,12 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_DISMISSED                     // only on new game startup
 };
 
-// This should be in order from the worst flight status to the best.
-// See mons_flies().
 enum flight_type
 {
     FL_NONE = 0,
-    FL_LEVITATE,
-    FL_FLY
+    FL_LEVITATE,                       // doesn't require physical effort
+    FL_FLY                             // wings, etc... paralysis == fall
+
 };
 
 enum level_area_type                   // you.level_type
@@ -2069,13 +2068,6 @@ enum mon_attitude_type
     ATT_NEUTRAL,                       // neutral
     ATT_GOOD_NEUTRAL,                  // neutral, but won't attack friendlies
     ATT_FRIENDLY                       // created friendly (or tamed?)
-};
-
-enum mon_flight_type
-{
-    FLY_NOT,
-    FLY_POWERED,                        // wings, etc... paralysis == fall
-    FLY_LEVITATION                      // doesn't require physical effort
 };
 
 // These are now saved in an unsigned long in the monsters struct.

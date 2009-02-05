@@ -4084,7 +4084,7 @@ void display_char_status()
     if (you.duration[DUR_PETRIFIED])
         mpr("You are petrified.");
     if (you.duration[DUR_SLEEP])
-        mpr("You are asleep." );
+        mpr("You are asleep.");
 
     if (you.duration[DUR_EXHAUSTED])
         mpr("You are exhausted.");
