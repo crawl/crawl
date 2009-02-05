@@ -958,7 +958,12 @@ static armour_type _acquirement_armour_subtype()
             result = coinflip() ? ARM_ROBE : ARM_ANIMAL_SKIN;
         else
         {
-            result = static_cast<armour_type>(ARM_ROBE + random2(8));
+            const armour_type armours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                            ARM_RING_MAIL, ARM_SCALE_MAIL,
+                                            ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
+                                            ARM_BANDED_MAIL, ARM_PLATE_MAIL };
+
+            result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
 
             if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
                 result = ARM_CRYSTAL_PLATE_MAIL;
