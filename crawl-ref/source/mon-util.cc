@@ -1388,7 +1388,7 @@ int mons_res_miasma(const monsters *mon)
     if (mons_holiness(mon) != MH_NATURAL
         || mon->type == MONS_DEATH_DRAKE)
     {
-        return (3);
+        return (1);
     }
 
     return (0);
@@ -1400,7 +1400,7 @@ int mons_res_negative_energy(const monsters *mon)
         || mon->type == MONS_SHADOW_DRAGON
         || mon->type == MONS_DEATH_DRAKE)
     {
-        return (3);  // to match the value for players
+        return (3);
     }
 
     int u = 0;
