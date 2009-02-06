@@ -2736,8 +2736,7 @@ size_type item_size( const item_def &item )
         break;
 
     case OBJ_CORPSES:
-        // FIXME
-        // size = mons_size( item.plus, PSIZE_BODY );
+        // FIXME: This should depend on the original monster's size!
         size = SIZE_SMALL;
         break;
 

@@ -2501,11 +2501,6 @@ int mons_base_damage_brand(const monsters *m)
     return (SPWPN_NORMAL);
 }
 
-size_type mons_size(const monsters *m)
-{
-    return m->body_size();
-}
-
 mon_attitude_type monsters::temp_attitude() const
 {
     if (has_ench(ENCH_CHARM))
@@ -3923,7 +3918,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         return (false);
 
     // Wimpy monsters (e.g. kobold, goblin) can't use halberds, etc.
-    if (!check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
+    if (!check_weapon_wieldable_size(item, body_size()))
         return (false);
 
     if (!ignore_brand)
@@ -4339,7 +4334,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
     // (Monsters will always favour damage over protection.)
     if ((slot == MSLOT_WEAPON || slot == MSLOT_ALT_WEAPON)
         && inv[MSLOT_SHIELD] != NON_ITEM
-        && hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO)
+        && hands_reqd(item, body_size()) == HANDS_TWO)
     {
         if (!drop_item(MSLOT_SHIELD, near))
             return (false);
@@ -4351,10 +4346,10 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
     {
         const item_def* wpn = mslot_item(MSLOT_WEAPON);
         const item_def* alt = mslot_item(MSLOT_ALT_WEAPON);
-        if (wpn && hands_reqd(*wpn, body_size(PSIZE_BODY)) == HANDS_TWO)
+        if (wpn && hands_reqd(*wpn, body_size()) == HANDS_TWO)
             return false;
 
-        if (alt && hands_reqd(*alt, body_size(PSIZE_BODY)) == HANDS_TWO)
+        if (alt && hands_reqd(*alt, body_size()) == HANDS_TWO)
             return false;
     }
 
@@ -4654,7 +4649,7 @@ bool monsters::wants_weapon(const item_def &weap) const
     // Monsters capable of dual-wielding will always prefer two weapons
     // to a single two-handed one, however strong.
     if (mons_wields_two_weapons(this)
-        && hands_reqd(weap, body_size(PSIZE_BODY)) == HANDS_TWO)
+        && hands_reqd(weap, body_size()) == HANDS_TWO)
     {
         return (false);
     }
@@ -4684,14 +4679,14 @@ bool monsters::wants_armour(const item_def &item) const
     if (is_shield(item)
         && (mons_wields_two_weapons(this)
             || mslot_item(MSLOT_WEAPON)
-               && hands_reqd(*mslot_item(MSLOT_WEAPON), body_size(PSIZE_BODY))
+               && hands_reqd(*mslot_item(MSLOT_WEAPON), body_size())
                       == HANDS_TWO))
     {
         return (false);
     }
 
     // Returns whether this armour is the monster's size.
-    return (check_armour_size(item, mons_size(this)));
+    return (check_armour_size(item, body_size()));
 }
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq)

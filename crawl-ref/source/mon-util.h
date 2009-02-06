@@ -740,7 +740,6 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 /* ***********************************************************************
  * called from: monstuff acr
  * *********************************************************************** */
-size_type mons_size(const monsters *m);
 bool mons_friendly(const monsters *m);
 bool mons_friendly_real(const monsters *m);
 bool mons_neutral(const monsters *m);
