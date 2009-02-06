@@ -776,7 +776,7 @@ static void _write_tagged_file( FILE *outf, int fileType,
     // all other tags
     for (int i = 1; i < NUM_TAGS; i++)
         if (tags[i] == 1)
-            tag_write((tag_type)i, outf);
+            tag_write(static_cast<tag_type>(i), outf);
 }
 
 bool travel_load_map( branch_type branch, int absdepth )

@@ -655,40 +655,22 @@ void tag_write(tag_type tagID, FILE* outf)
     writer th(&buf);
     switch(tagID)
     {
-        case TAG_YOU:
-            tag_construct_you(th);
-            break;
-        case TAG_YOU_ITEMS:
-            tag_construct_you_items(th);
-            break;
-        case TAG_YOU_DUNGEON:
-            tag_construct_you_dungeon(th);
-            break;
-        case TAG_LEVEL:
-            tag_construct_level(th);
-            break;
-        case TAG_LEVEL_ITEMS:
-            tag_construct_level_items(th);
-            break;
-        case TAG_LEVEL_MONSTERS:
-            tag_construct_level_monsters(th);
-            break;
-        case TAG_LEVEL_TILES:
-            tag_construct_level_tiles(th);
-            break;
-        case TAG_LEVEL_ATTITUDE:
-            tag_construct_level_attitude(th);
-            break;
-        case TAG_GHOST:
-            tag_construct_ghost(th);
-            break;
-        case TAG_LOST_MONSTERS:
-            tag_construct_lost_monsters(th);
-            tag_construct_lost_items(th);
-            break;
-        default:
-            // I don't know how to make that!
-            break;
+    case TAG_YOU:            tag_construct_you(th);            break;
+    case TAG_YOU_ITEMS:      tag_construct_you_items(th);      break;
+    case TAG_YOU_DUNGEON:    tag_construct_you_dungeon(th);    break;
+    case TAG_LEVEL:          tag_construct_level(th);          break;
+    case TAG_LEVEL_ITEMS:    tag_construct_level_items(th);    break;
+    case TAG_LEVEL_MONSTERS: tag_construct_level_monsters(th); break;
+    case TAG_LEVEL_TILES:    tag_construct_level_tiles(th);    break;
+    case TAG_LEVEL_ATTITUDE: tag_construct_level_attitude(th); break;
+    case TAG_GHOST:          tag_construct_ghost(th);          break;
+    case TAG_LOST_MONSTERS:
+        tag_construct_lost_monsters(th);
+        tag_construct_lost_items(th);
+        break;
+    default:
+        // I don't know how to make that!
+        break;
     }
 
     // make sure there is some data to write!
@@ -720,9 +702,11 @@ tag_type tag_read(FILE *fp, char minorVersion)
     {
         reader tmp(fp);
         tag_id = unmarshallShort(tmp);
-        if (tag_id < 0) return TAG_NO_TAG;
+        if (tag_id < 0)
+            return TAG_NO_TAG;
         const long data_size = unmarshallLong(tmp);
-        if (data_size < 0) return TAG_NO_TAG;
+        if (data_size < 0)
+            return TAG_NO_TAG;
 
         // Fetch data in one go
         buf.resize(data_size);
@@ -736,44 +720,26 @@ tag_type tag_read(FILE *fp, char minorVersion)
     reader th(buf);
     switch (tag_id)
     {
-        case TAG_YOU:
-            tag_read_you(th, minorVersion);
-            break;
-        case TAG_YOU_ITEMS:
-            tag_read_you_items(th, minorVersion);
-            break;
-        case TAG_YOU_DUNGEON:
-            tag_read_you_dungeon(th);
-            break;
-        case TAG_LEVEL:
-            tag_read_level(th, minorVersion);
-            break;
-        case TAG_LEVEL_ITEMS:
-            tag_read_level_items(th, minorVersion);
-            break;
-        case TAG_LEVEL_MONSTERS:
-            tag_read_level_monsters(th, minorVersion);
-            break;
-        case TAG_LEVEL_ATTITUDE:
-            tag_read_level_attitude(th);
-            break;
-        case TAG_LEVEL_TILES:
-            tag_read_level_tiles(th);
-            break;
-        case TAG_GHOST:
-            tag_read_ghost(th, minorVersion);
-            break;
-        case TAG_LOST_MONSTERS:
-            tag_read_lost_monsters(th, minorVersion);
-            tag_read_lost_items(th, minorVersion);
-            break;
-        default:
-            // I don't know how to read that!
-            ASSERT(false);
-            return TAG_NO_TAG;
+    case TAG_YOU:            tag_read_you(th, minorVersion);            break;
+    case TAG_YOU_ITEMS:      tag_read_you_items(th, minorVersion);      break;
+    case TAG_YOU_DUNGEON:    tag_read_you_dungeon(th);                  break;
+    case TAG_LEVEL:          tag_read_level(th, minorVersion);          break;
+    case TAG_LEVEL_ITEMS:    tag_read_level_items(th, minorVersion);    break;
+    case TAG_LEVEL_MONSTERS: tag_read_level_monsters(th, minorVersion); break;
+    case TAG_LEVEL_ATTITUDE: tag_read_level_attitude(th);               break;
+    case TAG_LEVEL_TILES:    tag_read_level_tiles(th);                  break;
+    case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
+    case TAG_LOST_MONSTERS:
+        tag_read_lost_monsters(th, minorVersion);
+        tag_read_lost_items(th, minorVersion);
+        break;
+    default:
+        // I don't know how to read that!
+        ASSERT(false);
+        return TAG_NO_TAG;
     }
 
-    return (tag_type)tag_id;
+    return static_cast<tag_type>(tag_id);
 }
 
 
@@ -1009,7 +975,8 @@ static void tag_construct_you(writer &th)
     if (you.real_time != -1)
     {
         const time_t now = time(NULL);
-        you.real_time += (now - you.start_time);
+        you.real_time += std::min<time_t>(now - you.start_time,
+                                          IDLE_TIME_CLAMP);
 
         // Reset start_time now that real_time is being saved out...
         // this may just be a level save.
