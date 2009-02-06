@@ -387,7 +387,7 @@ bool mons_speaks(const monsters *monster)
        // should stay silent, but only if the player can see them, so as
        // to not have to deal with cases of speaking monsters which the
        // player can't see.
-       if (unseen && !confused);
+       if (unseen && !confused)
            return (false);
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
