@@ -209,7 +209,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 2 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 14, 240,  9,
-        SK_MACES_FLAILS, HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 10 },
     { WPN_GREAT_MACE,        "great mace",         16, -4, 18, 270,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
@@ -330,10 +330,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 
     // Staves
     { WPN_QUARTERSTAFF,      "quarterstaff",        7,  6, 12, 180,  7,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE, MI_NONE, false,
+        SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",           14, -3, 14, 200,  3,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE, MI_NONE, false,
+        SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
 
     // Range weapons
@@ -2026,7 +2026,15 @@ bool check_weapon_wieldable_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
 
-    return (fit_weapon_wieldable_size( item, size ) == 0);
+    int fit = fit_weapon_wieldable_size( item, size );
+
+    // Adjust fit for size.
+    if (size < SIZE_MEDIUM && fit > 0)
+        fit--;
+    else if (size > SIZE_MEDIUM && fit < 0)
+        fit++;
+
+    return (fit == 0);
 }
 
 // Note that this function is used to check validity of equipment
