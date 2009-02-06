@@ -1008,6 +1008,7 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
         }
     }
     update_screen();
+    textattr(WHITE);
 }
 
 void update_screen()
