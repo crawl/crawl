@@ -981,7 +981,7 @@ void free_self_from_net()
         if (you.duration[DUR_BERSERKER])
             damage *= 2;
 
-        // Medium sized characters are at disadvantage and sometimes
+        // Medium sized characters are at a disadvantage and sometimes
         // get a bonus.
         if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
             damage += coinflip();
@@ -1030,7 +1030,7 @@ void free_self_from_net()
         if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
             escape++;
 
-        // Medium sized characters are at disadvantage and sometimes
+        // Medium sized characters are at a disadvantage and sometimes
         // get a bonus.
         if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
             escape += coinflip();

@@ -4347,10 +4347,9 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
         const item_def* wpn = mslot_item(MSLOT_WEAPON);
         const item_def* alt = mslot_item(MSLOT_ALT_WEAPON);
         if (wpn && hands_reqd(*wpn, body_size()) == HANDS_TWO)
-            return false;
-
+            return (false);
         if (alt && hands_reqd(*alt, body_size()) == HANDS_TWO)
-            return false;
+            return (false);
     }
 
     if (inv[slot] != NON_ITEM)

@@ -6129,7 +6129,7 @@ int player::body_weight() const
         return 0;
 
     int weight = 0;
-    switch(body_size(PSIZE_BODY))
+    switch (body_size(PSIZE_BODY))
     {
     case SIZE_TINY:
         weight = 150;
@@ -6344,7 +6344,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     }
 
 #if 0
-    if (!ignore_transform  && !transform_can_equip_type( EQ_WEAPON ))
+    if (!ignore_transform && !transform_can_equip_type(EQ_WEAPON))
         return (false);
 #endif
 
