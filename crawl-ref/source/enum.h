@@ -2507,14 +2507,14 @@ enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()
 // These are often addressed relative to each other (esp. delta SIZE_MEDIUM).
 enum size_type
 {
-    SIZE_TINY,              // rat/bat
-    SIZE_LITTLE,            // spriggan
-    SIZE_SMALL,             // halfling/kobold/gnome
-    SIZE_MEDIUM,            // human/elf/dwarf
-    SIZE_LARGE,             // troll/ogre/centaur/naga
-    SIZE_BIG,               // large quadrupeds
-    SIZE_GIANT,             // giant
-    SIZE_HUGE,              // dragon
+    SIZE_TINY,              // rats/bats
+    SIZE_LITTLE,            // spriggans
+    SIZE_SMALL,             // halflings/kobolds/gnomes
+    SIZE_MEDIUM,            // humans/elves/dwarves
+    SIZE_LARGE,             // trolls/ogres
+    SIZE_BIG,               // large quadrupeds/centaurs/nagas
+    SIZE_GIANT,             // giants
+    SIZE_HUGE,              // dragons
     NUM_SIZE_LEVELS,
     SIZE_CHARACTER          // transformations that don't change size
 };
