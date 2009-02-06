@@ -1465,6 +1465,32 @@ Instead of the MARKER and KFEAT lines introduced above you now just use
   :generic_portal(_G)
 and the resulting portal glyphs will even be magenta!
 
+Defining a random monster set
+-----------------------------
+
+Portal vaults require a defined random monster set to make the Shadow
+Creatures spell work. This is done by calling dgn.set_random_mon_list()
+manually. Here's an example from ice_cave_small_02 in icecave.des:
+  : dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
+You can use "nothing" to have the spell fail sometimes.
+
+If you are using the same random monster list in several destination maps,
+you can define a lua block and call it from the destination map definition.
+This example is from sewer.des:
+
+{{
+function sewer_random_monster_list(e)
+  e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
+                         ooze / worm / snake / giant mosquito w:15")
+end
+}}
+
+You can then use this line in the map definition to execute the lua block:
+  : sewer_random_monster_list(_G)
+
+You can also set env.spawn_random_rate() to have monsters generated from the 
+list during play.
+
 
 I.    Lua reference
 ===================
