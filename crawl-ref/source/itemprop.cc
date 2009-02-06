@@ -2029,9 +2029,9 @@ bool check_weapon_wieldable_size( const item_def &item, size_type size )
     int fit = fit_weapon_wieldable_size( item, size );
 
     // Adjust fit for size.
-    if (size < SIZE_MEDIUM && fit > 0)
+    if (size < SIZE_SMALL && fit > 0)
         fit--;
-    else if (size > SIZE_MEDIUM && fit < 0)
+    else if (size > SIZE_LARGE && fit < 0)
         fit++;
 
     return (fit == 0);
