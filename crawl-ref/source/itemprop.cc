@@ -330,10 +330,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 
     // Staves
     { WPN_QUARTERSTAFF,      "quarterstaff",        7,  6, 12, 180,  7,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
+        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",           14, -3, 14, 200,  3,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
+        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
     // Range weapons
