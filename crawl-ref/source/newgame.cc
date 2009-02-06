@@ -5077,14 +5077,9 @@ bool _give_items_skills()
         {
             _print_character_info();
 
-            textcolor( CYAN );
+            textcolor(CYAN);
             cprintf(EOL "From where do you draw your power?" EOL);
-
-            if (_necromancy_okay())
-                textcolor(LIGHTGREY);
-            else
-                textcolor(DARKGREY);
-
+            textcolor(_necromancy_okay() ? LIGHTGREY : DARKGREY);
             cprintf("a - Necromantic magic" EOL);
 
             // Yredelemnul is an okay choice for everyone.
@@ -5191,7 +5186,6 @@ bool _give_items_skills()
             you.piety = 28;
             you.inv[0].plus  = 1 + random2(2);
             you.inv[0].plus2 = 3 - you.inv[0].plus;
-            you.inv[2].quantity = 0;
             you.skills[SK_INVOCATIONS] = 3;
             break;
         }

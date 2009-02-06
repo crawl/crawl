@@ -1083,7 +1083,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 break;
             }
 
-            const int str_weight = weapon_str_weight(item.base_type, item.sub_type);
+            const int str_weight = weapon_str_weight(item.base_type,
+                                                     item.sub_type);
 
             if (str_weight >= 8)
                 description += ", and it is best used by the strong";

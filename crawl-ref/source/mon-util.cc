@@ -4345,6 +4345,19 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
             return (false);
     }
 
+    // Similarly, monsters won't pick up shields if they're
+    // wielding (or alt-wielding) a two-handed weapon.
+    if (slot == MSLOT_SHIELD)
+    {
+        const item_def* wpn = mslot_item(MSLOT_WEAPON);
+        const item_def* alt = mslot_item(MSLOT_ALT_WEAPON);
+        if (wpn && hands_reqd(*wpn, body_size(PSIZE_BODY)) == HANDS_TWO)
+            return false;
+
+        if (alt && hands_reqd(*alt, body_size(PSIZE_BODY)) == HANDS_TWO)
+            return false;
+    }
+
     if (inv[slot] != NON_ITEM)
     {
         item_def &dest(mitm[inv[slot]]);
