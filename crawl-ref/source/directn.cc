@@ -460,18 +460,26 @@ void full_describe_view()
         if (oid == NON_ITEM)
             continue;
 
-        std::vector<item_def> items = item_list_in_stash(*ri);
+        if (StashTracker::is_level_untrackable())
+        {
+            // On levels with no stashtracker, you can still see the top
+            // item.
+            list_items.push_back(mitm[oid]);
+        }
+        else
+        {
+            const std::vector<item_def> items = item_list_in_stash(*ri);
 
 #ifdef DEBUG_DIAGNOSTICS
-        if (items.empty())
-        {
-            mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
-                 mitm[oid].name(DESC_PLAIN).c_str());
-            more();
-        }
+            if (items.empty())
+            {
+                mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
+                     mitm[oid].name(DESC_PLAIN).c_str());
+                more();
+            }
 #endif
-
-        list_items.insert(list_items.end(), items.begin(), items.end());
+            list_items.insert(list_items.end(), items.begin(), items.end());
+        }
     }
 
     // Get monsters via the monster_pane_info, sorted by difficulty.

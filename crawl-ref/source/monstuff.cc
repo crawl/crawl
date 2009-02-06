@@ -7081,11 +7081,7 @@ static void _handle_monster_move(monsters *monster)
                 || one_chance_in(5))
             && expose_items_to_element(BEAM_STEAL_FOOD, monster->pos(), 10))
         {
-            if (mons_near(monster) && player_monster_visible(monster))
-            {
-                simple_monster_message(monster,
-                                       " eats something on the ground.");
-            }
+            simple_monster_message(monster, " eats something on the ground.");
             monster->speed_increment -= non_move_energy;
             continue;
         }

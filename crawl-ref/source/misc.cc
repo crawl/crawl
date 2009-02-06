@@ -2079,7 +2079,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             switch (NUMBER_OF_RUNES_NEEDED)
             {
             case 1:
-                mpr("You need one more Rune to enter this place.");
+                mpr("You need a Rune to enter this place.");
                 break;
 
             default:
