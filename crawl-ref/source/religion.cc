@@ -6232,10 +6232,10 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     {
         const int item_orig = item.orig_monnum - 1;
 
-        if (item_orig == MONS_SAINT_ROKA
-            || (item_orig == MONS_ORC_HIGH_PRIEST && !one_chance_in(4))
-            || (item_orig == MONS_ORC_PRIEST && coinflip())
-            || one_chance_in(4))
+        if ((item_orig == MONS_SAINT_ROKA && x_chance_in_y(7, 10))
+            || (item_orig == MONS_ORC_HIGH_PRIEST && coinflip())
+            || (item_orig == MONS_ORC_PRIEST && x_chance_in_y(3, 10))
+            || one_chance_in(10))
         {
             gain_piety(1);
             relative_piety_gain = PIETY_SOME;
