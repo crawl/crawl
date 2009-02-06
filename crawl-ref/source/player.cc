@@ -87,8 +87,8 @@ std::string pronoun_you(description_level_type desc)
     }
 }
 
-/* Contains functions which return various player state vars,
-   and other stuff related to the player. */
+// Contains functions which return various player state vars, and other
+// stuff related to the player.
 
 static void _attribute_increase();
 
@@ -784,7 +784,7 @@ bool player_weapon_wielded()
 
     if (!check_weapon_wieldable_size( you.inv[wpn], player_size() ))
         return (false);
-     */
+    */
 
     return (true);
 }
@@ -1296,14 +1296,14 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
     if (items)
     {
-        /* rings of fire resistance/fire */
+        // rings of fire resistance/fire
         rf += player_equip( EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid );
         rf += player_equip( EQ_RINGS, RING_FIRE, calc_unid );
 
-        /* rings of ice */
+        // rings of ice
         rf -= player_equip( EQ_RINGS, RING_ICE, calc_unid );
 
-        /* Staves */
+        // Staves
         rf += player_equip( EQ_STAFF, STAFF_FIRE, calc_unid );
 
         // body armour:
@@ -1656,7 +1656,7 @@ int player_spec_death()
 {
     int sd = 0;
 
-    /* Staves */
+    // Staves
     sd += player_equip( EQ_STAFF, STAFF_DEATH );
 
     // body armour:
@@ -1719,7 +1719,7 @@ int player_spec_earth()
 {
     int se = 0;
 
-    /* Staves */
+    // Staves
     se += player_equip( EQ_STAFF, STAFF_EARTH );
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
@@ -1732,7 +1732,7 @@ int player_spec_air()
 {
     int sa = 0;
 
-    /* Staves */
+    // Staves
     sa += player_equip( EQ_STAFF, STAFF_AIR );
 
     //jmf: this was too good
@@ -1745,7 +1745,7 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    /* Staves */
+    // Staves
     sc += player_equip( EQ_STAFF, STAFF_CONJURATION );
 
     // armour of the Archmagi
@@ -1759,7 +1759,7 @@ int player_spec_ench()
 {
     int se = 0;
 
-    /* Staves */
+    // Staves
     se += player_equip( EQ_STAFF, STAFF_ENCHANTMENT );
 
     // armour of the Archmagi
@@ -1773,7 +1773,7 @@ int player_spec_summ()
 {
     int ss = 0;
 
-    /* Staves */
+    // Staves
     ss += player_equip( EQ_STAFF, STAFF_SUMMONING );
 
     // armour of the Archmagi
@@ -1787,7 +1787,7 @@ int player_spec_poison()
 {
     int sp = 0;
 
-    /* Staves */
+    // Staves
     sp += player_equip( EQ_STAFF, STAFF_POISON );
 
     if (you.weapon()
@@ -1952,7 +1952,7 @@ int player_movement_speed(void)
         if (you.duration[DUR_SWIFTNESS] > 0 && !player_in_water())
             mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
 
-        /* Mutations: -2, -3, -4, unless innate and shapechanged */
+        // Mutations: -2, -3, -4, unless innate and shapechanged.
         if (player_mutation_level(MUT_FAST) > 0
             && (!you.demon_pow[MUT_FAST] || !player_is_shapechanged()) )
         {
@@ -2583,10 +2583,10 @@ int player_mag_abil(bool is_weighted)
 
     ma += 3 * player_equip( EQ_RINGS, RING_WIZARDRY );
 
-    /* Staves */
+    // Staves
     ma += 4 * player_equip( EQ_STAFF, STAFF_WIZARDRY );
 
-    /* armour of the Archmagi (checks body armour only) */
+    // armour of the Archmagi (checks body armour only)
     ma += 2 * player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI );
 
     return ((is_weighted) ? ((ma * you.intel) / 10) : ma);
@@ -2640,7 +2640,7 @@ int player_see_invis(bool calc_unid)
 
     si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
 
-    /* armour: (checks head armour only) */
+    // armour: (checks head armour only)
     si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
 
     if (player_mutation_level(MUT_ACUTE_VISION) > 0)
@@ -2650,7 +2650,7 @@ int player_see_invis(bool calc_unid)
     if (you.duration[DUR_SEE_INVISIBLE] > 0)
         si++;
 
-    /* randart wpns */
+    // randart wpns
     int artefacts = scan_randarts(RAP_EYESIGHT, calc_unid);
 
     if (artefacts > 0)
@@ -4628,8 +4628,9 @@ bool items_give_ability(const int slot, randart_prop_type abil)
     return (false);
 }                               // end items_give_ability()
 
-/* Checks each equip slot for a randart, and adds up all of those with
-   a given property. Slow if any randarts are worn, so avoid where possible. */
+// Checks each equip slot for a randart, and adds up all of those with
+// a given property. Slow if any randarts are worn, so avoid where
+// possible.
 int scan_randarts(randart_prop_type which_property, bool calc_unid)
 {
     int retval = 0;
