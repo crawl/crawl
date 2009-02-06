@@ -132,14 +132,14 @@
     MONUSE_MAGIC_ITEMS is currently never used anywhere.
 
    size:
-     SIZE_TINY,              // rat/bat
-     SIZE_LITTLE,            // spriggan
-     SIZE_SMALL,             // halfling/kobold/gnome
-     SIZE_MEDIUM,            // human/elf/dwarf
-     SIZE_LARGE,             // troll/ogre/centaur/naga
-     SIZE_BIG,               // large quadrupeds
-     SIZE_GIANT,             // giant
-     SIZE_HUGE,              // dragon
+     SIZE_TINY,              // rats/bats
+     SIZE_LITTLE,            // spriggans
+     SIZE_SMALL,             // halflings/kobolds/gnomes
+     SIZE_MEDIUM,            // humans/elves/dwarves
+     SIZE_LARGE,             // trolls/ogres
+     SIZE_BIG,               // large quadrupeds/centaurs/nagas
+     SIZE_GIANT,             // giants
+     SIZE_HUGE,              // dragons
 
  */
 
