@@ -1082,7 +1082,7 @@ void MiscastEffect::_translocation(int severity)
             break;
         case 9:
             you_msg = "You feel uncomfortable.";
-            mon_msg_seen = "@The_monster@ grimaces.";
+            mon_msg_seen = "@The_monster@ scowls.";
             break;
         }
         do_msg();
@@ -1591,7 +1591,7 @@ void MiscastEffect::_necromancy(int severity)
             break;
         case 9:
             you_msg      = "You feel very uncomfortable.";
-            mon_msg_seen = "@The_monster@ grimaces horribly.";
+            mon_msg_seen = "@The_monster@ scowls horribly.";
             break;
         }
         do_msg();
