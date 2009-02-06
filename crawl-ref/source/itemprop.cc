@@ -2026,6 +2026,10 @@ bool check_weapon_wieldable_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
 
+    // Staves are currently wieldable for everyone just to be nice.
+    if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
+        return (true);
+
     int fit = fit_weapon_wieldable_size( item, size );
 
     // Adjust fit for size.

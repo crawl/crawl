@@ -136,7 +136,6 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     // Small species wielding large weapons...
     if (player_size(PSIZE_BODY) < SIZE_MEDIUM
-        && weapon_skill(*weapon) != SK_STAVES
         && !check_weapon_wieldable_size(*weapon, player_size(PSIZE_BODY)))
     {
         SAY(mpr("That's too large for you to wield."));
