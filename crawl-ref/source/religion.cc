@@ -108,21 +108,21 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Zin
     {
-         " <>barely glow%</> and disappear%.",
-         " <>glow% silver</> and disappear%.",
-         " <>glow% blindingly silver</> and disappear%.",
+        " <>barely glow%</> and disappear%.",
+        " <>glow% silver</> and disappear%.",
+        " <>glow% blindingly silver</> and disappear%.",
     },
     // TSO
     {
-         " faintly glow% and disappear%.",
-         " glow% a golden colour and disappear%.",
-         " glow% a brilliant golden colour and disappear%.",
+        " faintly glow% and disappear%.",
+        " glow% a golden colour and disappear%.",
+        " glow% a brilliant golden colour and disappear%.",
     },
     // Kikubaaqudgha
     {
-         " slowly rot% away.",
-         " rot% away.",
-         " rot% away in an instant.",
+        " slowly rot% away.",
+        " rot% away.",
+        " rot% away in an instant.",
     },
     // Yredelemnul
     {
@@ -138,39 +138,39 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Vehumet
     {
-         " fade% into nothingness.",
-         " burn% into nothingness.",
-         " explode% into nothingness.",
+        " fade% into nothingness.",
+        " burn% into nothingness.",
+        " explode% into nothingness.",
     },
     // Okawaru
     {
-         " slowly burn% to ash.",
-         " & consumed by flame.",
-         " & consumed in a burst of flame.",
+        " slowly burn% to ash.",
+        " & consumed by flame.",
+        " & consumed in a burst of flame.",
     },
     // Makhleb
     {
-         " disappear% without a sign.",
-         " flare% red and disappear%.",
-         " flare% blood-red and disappear%.",
+        " disappear% without a sign.",
+        " flare% red and disappear%.",
+        " flare% blood-red and disappear%.",
     },
     // Sif Muna
     {
-         " & gone without a glow.",
-         " glow% faintly for a moment, and & gone.",
-         " glow% for a moment, and & gone.",
+        " & gone without a glow.",
+        " glow% faintly for a moment, and & gone.",
+        " glow% for a moment, and & gone.",
     },
     // Trog
     {
-         " & slowly consumed by flames.",
-         " & consumed in a column of flame.",
-         " & consumed in a roaring column of flame.",
+        " & slowly consumed by flames.",
+        " & consumed in a column of flame.",
+        " & consumed in a roaring column of flame.",
     },
     // Nemelex
     {
-         " disappear% without a glow.",
-         " glow% slightly and disappear%.",
-         " glow% with a rainbow of weird colours and disappear%.",
+        " disappear% without a glow.",
+        " glow% slightly and disappear%.",
+        " glow% with a rainbow of weird colours and disappear%.",
     },
     // Elyvilon (no sacrifices, but used for weapon destruction)
     {
@@ -180,15 +180,15 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Lugonu
     {
-         " & disappears into the void.",
-         " & consumed by the void.",
-         " & voraciously consumed by the void.",
+        " & disappears into the void.",
+        " & consumed by the void.",
+        " & voraciously consumed by the void.",
     },
     // Beogh
     {
-         " slowly crumble% into the ground.",
-         " crumble% into the ground.",
-         " disintegrate% into the ground.",
+        " slowly crumble% into the ground.",
+        " crumble% into the ground.",
+        " disintegrate% into the ground.",
     }
 };
 
@@ -6215,7 +6215,7 @@ static void _give_sac_group_feedback(int which)
 
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.) Does not modify the actual item in any way.
-static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
+static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
     // item_value() multiplies by quantity
@@ -6229,12 +6229,24 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
         break;
 
     case GOD_BEOGH:
-        if (x_chance_in_y(7, 10))
+    {
+        const int item_orig = item.orig_monnum - 1;
+
+        if (coinflip() || mons_class_flag(item_orig, M_PRIEST))
         {
-            gain_piety(1);
-            relative_piety_gain = PIETY_SOME;
+            if (item_orig == MONS_SAINT_ROKA)
+            {
+                gain_piety(2);
+                relative_piety_gain = PIETY_LOTS;
+            }
+            else
+            {
+                gain_piety(1);
+                relative_piety_gain = PIETY_SOME;
+            }
         }
         break;
+    }
 
     case GOD_NEMELEX_XOBEH:
         if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
@@ -6418,7 +6430,7 @@ void offer_items()
             }
         }
 
-        piety_gain_t relative_piety_gain = PIETY_NONE;
+        piety_gain_t relative_gain = PIETY_NONE;
 
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d",
@@ -6432,14 +6444,14 @@ void offer_items()
             // Update piety gain if necessary.
             if (gain != PIETY_NONE)
             {
-                if (relative_piety_gain == PIETY_NONE)
-                    relative_piety_gain = gain;
+                if (relative_gain == PIETY_NONE)
+                    relative_gain = gain;
                 else            // some + some = lots
-                    relative_piety_gain = PIETY_LOTS;
+                    relative_gain = PIETY_LOTS;
             }
         }
 
-        _print_sacrifice_message(you.religion, mitm[i], relative_piety_gain);
+        _print_sacrifice_message(you.religion, mitm[i], relative_gain);
         item_was_destroyed(mitm[i]);
         destroy_item(i);
         i = next;
