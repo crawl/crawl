@@ -2413,9 +2413,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
 bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
                        int *m_succumbed, int *m_attempted )
 {
-    int i;                      // loop variable {dlb}
     bool msg_generated = false;
-    monsters *monster;
 
     if (m_succumbed)
         *m_succumbed = 0;
@@ -2424,16 +2422,18 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
 
     viewwindow(false, false);
 
-    if (pow > 200)
-        pow = 200;
+    pow = std::min(pow, 200);
 
     const kill_category kc = (origin == MHITYOU ? KC_YOU : KC_OTHER);
 
-    for (i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < MAX_MONSTERS; i++)
     {
-        monster = &menv[i];
+        monsters* const monster = &menv[i];
 
-        if (monster->type == -1 || !mons_near(monster))
+        if (!monster->alive())
+            continue;
+
+        if (!mons_near(monster))
             continue;
 
         if (monster->has_ench(wh_enchant))
@@ -2450,35 +2450,23 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
             if (m_succumbed)
                 ++*m_succumbed;
 
-            if (player_monster_visible( monster ))
-            {
-                // turn message on
-                msg_generated = true;
-                switch (wh_enchant)
-                {
-                case ENCH_FEAR:
-                    simple_monster_message(monster,
-                                           " looks frightened!");
-                    break;
-                case ENCH_CONFUSION:
-                    simple_monster_message(monster,
-                                           " looks rather confused.");
-                    break;
-                case ENCH_CHARM:
-                    simple_monster_message(monster,
-                                           " submits to your will.");
-                    break;
-                default:
-                    // oops, I guess not!
-                    msg_generated = false;
-                }
+            // Do messaging.
+            const char* msg;
+            switch (wh_enchant)
+            { 
+            case ENCH_FEAR:      msg = " looks frightened!";      break;
+            case ENCH_CONFUSION: msg = " looks rather confused."; break;
+            case ENCH_CHARM:     msg = " submits to your will.";  break;
+            default:             msg = NULL;                      break;
             }
+            if (msg)
+                msg_generated = simple_monster_message(monster, msg);
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
-                behaviour_event( monster, ME_SCARE, origin );
+                behaviour_event(monster, ME_SCARE, origin);
         }
-    }                           // end "for i"
+    }
 
     if (!msg_generated)
         canned_msg(MSG_NOTHING_HAPPENS);

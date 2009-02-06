@@ -80,6 +80,9 @@ public:
     bool      attacker_visible, defender_visible;
     bool      attacker_invisible, defender_invisible;
 
+    // What was the monster's attitude when the attack began?
+    mon_attitude_type defender_starting_attitude;
+
     bool      unarmed_ok;
     int       attack_number;
 
