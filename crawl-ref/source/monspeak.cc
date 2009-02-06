@@ -441,10 +441,10 @@ bool mons_speaks(const monsters *monster)
         prefixes.push_back("confused");
 
     const actor*    foe   = (!crawl_state.arena && mons_wont_attack(monster)
-                             && invalid_monster_index(monster->foe)) ?
-                            &you : monster->get_foe();
+                                && invalid_monster_index(monster->foe)) ?
+                                    &you : monster->get_foe();
     const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
-                            dynamic_cast<const monsters*>(foe) : NULL;
+                                dynamic_cast<const monsters*>(foe) : NULL;
 
     // animals only look at the current player form, smart monsters at the
     // actual player genus
@@ -516,7 +516,7 @@ bool mons_speaks(const monsters *monster)
 
     std::string msg;
 
-    // First, try its exact name
+    // First, try its exact name.
     if (monster->type == MONS_PLAYER_GHOST)
     {
         // Player ghosts are treated differently.
@@ -524,8 +524,8 @@ bool mons_speaks(const monsters *monster)
     }
     else if (monster->type == MONS_PANDEMONIUM_DEMON)
     {
-        // Pandemonium demons have randomly generated names,
-        // so use "pandemonium lord" instead.
+        // Pandemonium demons have randomly generated names, so use
+        // "pandemonium lord" instead.
         msg = _get_speak_string(prefixes, "pandemonium lord", monster,
                                 no_player, no_foe, no_foe_name, no_god,
                                 unseen);
@@ -570,7 +570,7 @@ bool mons_speaks(const monsters *monster)
     }
 
     // Now that we're not dealing with a specific monster name, include
-    // whether or not it can move in the prefix
+    // whether or not it can move in the prefix.
     if (mons_is_stationary(monster))
         prefixes.insert(prefixes.begin(), "stationary");
 
@@ -655,13 +655,12 @@ bool mons_speaks(const monsters *monster)
     }
 
     // If we failed to get a message with a winged or tailed humanoid,
-    // or a naga or centaur, try moving closer to plain humanoid
+    // or a naga or centaur, try moving closer to plain humanoid.
     if ((msg.empty() || msg == "__NEXT") && shape > MON_SHAPE_HUMANOID
         && shape <= MON_SHAPE_NAGA)
     {
-        // If a humanoid monster has both wings and a tail, try
-        // removing one and then the other to see if we get any
-        // results.
+        // If a humanoid monster has both wings and a tail, try removing
+        // one and then the other to see if we get any results.
         if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
         {
             shape = MON_SHAPE_HUMANOID_TAILED;
@@ -669,7 +668,7 @@ bool mons_speaks(const monsters *monster)
                                     monster, no_player, no_foe, no_foe_name,
                                     no_god, unseen);
 
-            // Only be silent if both tailed and winged return __NONE
+            // Only be silent if both tailed and winged return __NONE.
             if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
             {
                 shape = MON_SHAPE_HUMANOID_WINGED;
@@ -729,7 +728,7 @@ bool mons_speaks(const monsters *monster)
 
     mons_speaks_msg(monster, msg, MSGCH_TALK, silence);
     return (true);
-}                               // end mons_speaks = end of routine
+}
 
 void mons_speaks_msg(const monsters *monster, const std::string &msg,
                      const msg_channel_type def_chan, const bool silence)
@@ -744,7 +743,7 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
 
     std::vector<std::string> lines = split_string("\n", _msg);
 
-    for (int i = 0, size = lines.size(); i < size; i++)
+    for (int i = 0, size = lines.size(); i < size; ++i)
     {
         std::string line = lines[i];
 
@@ -794,7 +793,7 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
                 line = line.substr(pos + 1);
         }
 
-        // Except for VISUAL none of the above influence these.
+        // Except for VISUAL, none of the above influence these.
         if (line == "__YOU_RESIST" && (!silence || param == "VISUAL"))
         {
             canned_msg( MSG_YOU_RESIST );
