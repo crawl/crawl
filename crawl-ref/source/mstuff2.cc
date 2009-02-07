@@ -97,7 +97,8 @@ static monster_type _pick_undead_summon()
 
 static void _do_high_level_summon(monsters *monster, bool monsterNearby,
                                   spell_type spell_cast,
-                                  monster_type (*mpicker)(), int nsummons)
+                                  monster_type (*mpicker)(), int nsummons,
+                                  god_type god)
 {
     if (_mons_abjured(monster, monsterNearby))
         return;
@@ -113,7 +114,8 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
 
         create_monster(
             mgen_data(which_mons, SAME_ATTITUDE(monster),
-                      duration, spell_cast, monster->pos(), monster->foe));
+                      duration, spell_cast, monster->pos(), monster->foe, 0,
+                      god));
     }
 }
 
@@ -385,12 +387,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_WRAITHS:
         _do_high_level_summon(monster, monsterNearby, spell_cast,
-                              _pick_random_wraith, random_range(3, 6));
+                              _pick_random_wraith, random_range(3, 6), god);
         return;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
         _do_high_level_summon(monster, monsterNearby, spell_cast,
-                              _pick_horrible_thing, random_range(3, 5));
+                              _pick_horrible_thing, random_range(3, 5), god);
         return;
 
     case SPELL_CONJURE_BALL_LIGHTNING:
@@ -409,7 +411,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         _do_high_level_summon(monster, monsterNearby, spell_cast,
                               _pick_undead_summon,
                               2 + random2(2)
-                                + random2(monster->hit_dice / 4 + 1));
+                                + random2(monster->hit_dice / 4 + 1), god);
         return;
 
     case SPELL_SYMBOL_OF_TORMENT:
