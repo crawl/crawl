@@ -6470,7 +6470,7 @@ void offer_items()
         if (you.religion == GOD_SHINING_ONE)
             simple_god_message(" only cares about evil items!");
         else if (you.religion == GOD_BEOGH)
-            simple_god_message(" only cares about dead orcs!");
+            simple_god_message(" only cares about orc corpses!");
         else if (you.religion == GOD_NEMELEX_XOBEH)
             simple_god_message(" expects you to use your decks, not offer them!");
     }
