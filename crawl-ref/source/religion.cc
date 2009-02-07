@@ -529,7 +529,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_BEOGH:
         snprintf(info, INFO_SIZE, "you bless dead orcs%s",
-                 verbose ? " (by standing over their remains and <w>p</w>raying)" : "");
+                 verbose ? " (by standing over their corpses and <w>p</w>raying)" : "");
 
         likes.push_back(info);
         break;
@@ -6175,6 +6175,7 @@ static bool _god_likes_item(god_type god, const item_def& item)
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
+                   && item.sub_type == CORPSE_BODY
                    && mons_species(item.plus) == MONS_ORC);
 
     case GOD_NEMELEX_XOBEH:
