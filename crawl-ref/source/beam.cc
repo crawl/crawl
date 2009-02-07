@@ -2453,7 +2453,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
             // Do messaging.
             const char* msg;
             switch (wh_enchant)
-            { 
+            {
             case ENCH_FEAR:      msg = " looks frightened!";      break;
             case ENCH_CONFUSION: msg = " looks rather confused."; break;
             case ENCH_CHARM:     msg = " submits to your will.";  break;
