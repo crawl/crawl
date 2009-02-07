@@ -584,10 +584,7 @@ bool mons_is_native_in_branch(const monsters *monster,
 
 bool mons_is_chaotic(const monsters *mon)
 {
-    if (mons_is_shapeshifter(mon))
-        return (true);
-
-    if (mon->has_spell(SPELL_POLYMORPH_OTHER))
+    if (mons_is_shapeshifter(mon) || mon->has_spell(SPELL_POLYMORPH_OTHER))
         return (true);
 
     const int attk_flavour = mons_attack_spec(mon, 0).flavour;
@@ -3939,12 +3936,16 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 
         // Holy monsters and monsters that are gifts of good gods won't
         // use evil weapons.
-        if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
+        if ((mons_is_holy(this) || is_good_god(god))
+            && is_evil_item(item))
+        {
             return (false);
+        }
 
-        // Holy monsters that aren't gifts of Xom and monsters that are
-        // gifts of good gods won't use chaotic weapons.
-        if (((mons_is_holy(this) && this->god != GOD_XOM) || is_good_god(god))
+        // Holy monsters that aren't gifts of chaotic gods and monsters
+        // that are gifts of good gods won't use chaotic weapons.
+        if (((mons_is_holy(this) && !is_chaotic_god(this->god))
+                || is_good_god(god))
             && is_chaotic_item(item))
         {
             return (false);
@@ -5834,11 +5835,11 @@ int monsters::res_sticky_flame() const
 
 int monsters::res_holy_energy(const actor *attacker) const
 {
-    if (mons_is_unholy(this))
-        return (-2);
-
     if (mons_is_evil(this))
         return (-1);
+
+    if (mons_is_unholy(this))
+        return (-2);
 
     if (is_good_god(god)
            || mons_is_holy(this)

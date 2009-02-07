@@ -1240,7 +1240,7 @@ int monster_die(monsters *monster, killer_type killer,
                                 && (killer_index == ANON_FRIENDLY_MONSTER
                                     || !invalid_monster_index(killer_index)));
 
-                if ( passive )
+                if (passive)
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          monster->name(DESC_CAP_THE).c_str(),
@@ -1292,6 +1292,7 @@ int monster_die(monsters *monster, killer_type killer,
                                     monster->hit_dice, true, monster);
                 }
 
+                // Zin hates chaotic beings.
                 if (mons_is_chaotic(monster))
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,

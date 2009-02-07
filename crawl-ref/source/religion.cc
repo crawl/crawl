@@ -829,7 +829,8 @@ void dec_penance(god_type god, int val)
                  you.redraw_armour_class = true;
 
             // When you've worked through all your penance, you get
-            // another chance to make hostile holy beings good neutral.
+            // another chance to make hostile holy beings that worship a
+            // good god good neutral.
             if (is_good_god(you.religion))
                 _holy_beings_attitude_change();
         }
@@ -3350,7 +3351,8 @@ void gain_piety(int pgn)
             }
 
             // When you gain a piety level, you get another chance to
-            // make hostile holy beings good neutral.
+            // make hostile holy beings that worship a good god good
+            // neutral.
             if (is_good_god(you.religion))
                 _holy_beings_attitude_change();
         }
@@ -3358,7 +3360,7 @@ void gain_piety(int pgn)
 
     if (you.religion == GOD_BEOGH)
     {
-        // every piety level change also affects AC from orcish gear
+        // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
     }
 
@@ -3371,7 +3373,8 @@ void gain_piety(int pgn)
         }
 
         // When you gain piety of more than 160, you get another chance
-        // to make hostile holy beings good neutral.
+        // to make hostile holy beings that worship a good god good
+        // neutral.
         if (is_good_god(you.religion))
             _holy_beings_attitude_change();
     }
@@ -4944,7 +4947,8 @@ static bool _holy_beings_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && mons_is_holy(monster))
+            && mons_is_holy(monster)
+            && is_good_god(monster->god))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Holy attitude changing: %s on level %d, branch %d",
@@ -4954,7 +4958,8 @@ static bool _holy_beings_on_level_attitude_change()
 #endif
 
             // If you worship a good god, you get another chance to make
-            // neutral and hostile holy beings good neutral.
+            // neutral and hostile holy beings that worship a good god
+            // good neutral.
             if (is_good_god(you.religion) && !mons_wont_attack(monster))
             {
                 if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
@@ -4965,7 +4970,8 @@ static bool _holy_beings_on_level_attitude_change()
                 }
             }
             // If you don't worship a good god, you make all friendly
-            // and good neutral holy beings hostile.
+            // and good neutral holy beings that worship a good god
+            // hostile.
             else if (!is_good_god(you.religion) && mons_wont_attack(monster))
             {
                 monster->attitude = ATT_HOSTILE;
@@ -5558,7 +5564,7 @@ static void _print_good_god_holy_being_speech(bool neutral,
 }
 
 // Holy monsters may turn good neutral when encountering followers of
-// the good gods.
+// the good gods, and be made worshippers of TSO if necessary.
 void good_god_holy_attitude_change(monsters *holy)
 {
     ASSERT(mons_is_holy(holy));
@@ -5578,6 +5584,10 @@ void good_god_holy_attitude_change(monsters *holy)
     // The monster is not really *created* neutral, but should it become
     // hostile later on, it won't count as a good kill.
     holy->flags |= MF_WAS_NEUTRAL;
+
+    // If the holy being was previously worshipping a different god,
+    // make it worship TSO.
+    holy->god = GOD_SHINING_ONE;
 
     // Avoid immobile "followers".
     behaviour_event(holy, ME_ALERT, MHITNOT);
@@ -5746,6 +5756,8 @@ static void _print_converted_orc_speech(const std::string key,
     }
 }
 
+// Orcs may turn friendly when encountering followers of Beogh, and be
+// made gifts of Beogh.
 void beogh_convert_orc(monsters *orc, bool emergency,
                        bool converted_by_follower)
 {
@@ -5785,8 +5797,9 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_CREATED_FRIENDLY;
 
-    // Prevent assertion if the orc was previously worshipping a different
-    // god rather than already worhsipping Beogh or being an athiest.
+    // Prevent assertion if the orc was previously worshipping a
+    // different god, rather than already worshipping Beogh or being an
+    // atheist.
     orc->god = GOD_NO_GOD;
 
     mons_make_god_gift(orc, GOD_BEOGH);
@@ -5975,7 +5988,7 @@ void excommunication(god_type new_god)
     }
 
     // When you start worshipping a non-good god, or no god, you make
-    // all non-hostile holy beings hostile.
+    // all non-hostile holy beings that worship a good god hostile.
     if (!is_good_god(new_god) && _holy_beings_attitude_change())
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
 
