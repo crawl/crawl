@@ -1540,7 +1540,7 @@ static void _beogh_reinf_callback(const mgen_data &mg, int &midx, int placed)
 
 // If you don't currently have any followers, send a small band to help
 // you out.
-static void _beogh_blessing_reinforcement()
+static void _beogh_blessing_reinforcements()
 {
     // Possible reinforcement.
     const monster_type followers[] = {
@@ -1644,12 +1644,12 @@ bool bless_follower(monsters *follower,
                 if (!follower)
                 {
                     // If no follower was found, attempt to send
-                    // reinforcement.
-                    _beogh_blessing_reinforcement();
+                    // reinforcements.
+                    _beogh_blessing_reinforcements();
 
-                    // Possibly send more reinforcement.
+                    // Possibly send more reinforcements.
                     if (coinflip())
-                        _beogh_blessing_reinforcement();
+                        _beogh_blessing_reinforcements();
 
                     _delayed_monster_done("Beogh blesses you with "
                                          "reinforcements.", "");
