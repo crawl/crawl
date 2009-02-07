@@ -6262,7 +6262,7 @@ static void _dump_player(FILE *file)
         if (!is_valid_spell(spell))
         {
             fprintf(file, "    spell slot #%d: invalid spell #%d" EOL,
-                    i, (int) spell);
+                    (int)i, (int)spell);
             continue;
         }
 
@@ -6270,13 +6270,13 @@ static void _dump_player(FILE *file)
 
         if (flags & SPFLAG_MONSTER)
             fprintf(file, "    spell slot #%d: monster only spell %s" EOL,
-                    i, spell_title(spell));
+                    (int)i, spell_title(spell));
         else if (flags & SPFLAG_TESTING)
             fprintf(file, "    spell slot #%d: testing spell %s" EOL,
-                    i, spell_title(spell));
+                    (int)i, spell_title(spell));
         else if (count_bits(get_spell_disciplines(spell)) == 0)
             fprintf(file, "    spell slot #%d: school-less spell %s" EOL,
-                    i, spell_title(spell));
+                    (int)i, spell_title(spell));
     }
     fprintf(file, EOL);
 
