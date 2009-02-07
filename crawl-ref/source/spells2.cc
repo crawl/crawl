@@ -1744,7 +1744,8 @@ bool cast_tukimas_dance(int pow, god_type god,
         return (false);
     }
 
-    // We are successful.  Unwield the weapon, removing any wield effects.
+    // We are successful.  Unwield the weapon, removing any wield
+    // effects.
     unwield_item();
 
     // Copy the unwielded item.
