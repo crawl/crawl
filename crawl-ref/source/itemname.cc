@@ -1588,8 +1588,10 @@ std::string item_def::name_aux( description_level_type desc,
         if (!know_type)
         {
             if (!basename)
-            buff << staff_secondary_string(this->special / 4)
-                 << staff_primary_string(this->special % 4);
+            {
+                buff << staff_secondary_string(this->special / 4)
+                     << staff_primary_string(this->special % 4);
+            }
 
             buff << (item_is_rod( *this ) ? "rod" : "staff");
         }
@@ -1597,17 +1599,8 @@ std::string item_def::name_aux( description_level_type desc,
         {
             buff << (item_is_rod( *this ) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
-
-            if (item_is_rod(*this) && know_pluses
-                && !basename && !qualname && !dbname)
-            {
-                buff << " (" << (this->plus / ROD_CHARGE_MULT)
-                     << "/" << (this->plus2 / ROD_CHARGE_MULT)
-                     << ")";
-            }
         }
         break;
-
 
     // rearranged 15 Apr 2000 {dlb}:
     case OBJ_ORBS:
@@ -1658,7 +1651,7 @@ std::string item_def::name_aux( description_level_type desc,
     if (need_plural && this->quantity > 1 && !basename && !qualname)
         buff.str( pluralise(buff.str()) );
 
-    // Disambiguation
+    // Disambiguation.
     if (!terse && !basename && !dbname && know_type &&
         !is_random_artefact( *this ))
     {
@@ -1704,6 +1697,15 @@ std::string item_def::name_aux( description_level_type desc,
         default:
             break;
         }
+    }
+
+    // Rod charges.
+    if (item_is_rod(*this) && know_type && know_pluses
+        && !basename && !qualname && !dbname)
+    {
+        buff << " (" << (this->plus / ROD_CHARGE_MULT)
+             << "/"  << (this->plus2 / ROD_CHARGE_MULT)
+             << ")";
     }
 
     // debugging output -- oops, I probably block it above ... dang! {dlb}
