@@ -768,7 +768,7 @@ void cast_silence(int pow)
     }
 }
 
-static int _discharge_monsters( coord_def where, int pow, int, actor *)
+static int _discharge_monsters(coord_def where, int pow, int, actor *)
 {
     const int mon = mgrd(where);
     int damage = 0;
@@ -778,10 +778,10 @@ static int _discharge_monsters( coord_def where, int pow, int, actor *)
 
     if (where == you.pos())
     {
-        mpr( "You are struck by lightning." );
-        damage = 3 + random2( 5 + pow / 10 );
+        mpr("You are struck by lightning.");
+        damage = 3 + random2(5 + pow / 10);
         damage = check_your_resists( damage, BEAM_ELECTRICITY );
-        if ( player_is_airborne() )
+        if (player_is_airborne())
             damage /= 2;
         ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC);
     }
@@ -796,9 +796,9 @@ static int _discharge_monsters( coord_def where, int pow, int, actor *)
 
         if (damage)
         {
-            mprf( "%s is struck by lightning.",
-                  menv[mon].name(DESC_CAP_THE).c_str());
-            _player_hurt_monster( mon, damage );
+            mprf("%s is struck by lightning.",
+                 menv[mon].name(DESC_CAP_THE).c_str());
+            _player_hurt_monster(mon, damage);
         }
     }
 
@@ -806,31 +806,31 @@ static int _discharge_monsters( coord_def where, int pow, int, actor *)
     // Low power slight chance added for low power characters -- bwr
     if ((pow >= 10 && !one_chance_in(3)) || (pow >= 3 && one_chance_in(10)))
     {
-        mpr( "The lightning arcs!" );
+        mpr("The lightning arcs!");
         pow /= (coinflip() ? 2 : 3);
-        damage += apply_random_around_square( _discharge_monsters, where,
-                                              true, pow, 1 );
+        damage += apply_random_around_square(_discharge_monsters, where,
+                                             true, pow, 1);
     }
     else if (damage > 0)
     {
         // Only printed if we did damage, so that the messages in
         // cast_discharge() are clean. -- bwr
-        mpr( "The lightning grounds out." );
+        mpr("The lightning grounds out.");
     }
 
     return (damage);
 }
 
-void cast_discharge( int pow )
+void cast_discharge(int pow)
 {
-    int num_targs = 1 + random2( 1 + pow / 25 );
+    int num_targs = 1 + random2(1 + pow / 25);
     int dam;
 
-    dam = apply_random_around_square( _discharge_monsters, you.pos(),
-                                      true, pow, num_targs );
+    dam = apply_random_around_square(_discharge_monsters, you.pos(),
+                                     true, pow, num_targs);
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Arcs: %d Damage: %d", num_targs, dam );
+    mprf(MSGCH_DIAGNOSTICS, "Arcs: %d Damage: %d", num_targs, dam);
 #endif
 
     if (dam == 0)
@@ -871,7 +871,7 @@ static int _distortion_monsters(coord_def where, int pow, int, actor *)
                            "cast bend on self" );
         }
 
-        return 1;
+        return (1);
     }
 
     int monster_attacked = mgrd(where);
