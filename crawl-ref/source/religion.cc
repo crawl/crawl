@@ -528,8 +528,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_BEOGH:
-        snprintf(info, INFO_SIZE, "you sacrifice fresh orc corpses%s",
-                 verbose ? " (by standing over them and <w>p</w>raying)" : "");
+        snprintf(info, INFO_SIZE, "you bless newly dead orcs%s",
+                 verbose ? " (by standing over their corpses and <w>p</w>raying)" : "");
 
         likes.push_back(info);
         break;
@@ -6471,7 +6471,7 @@ void offer_items()
         if (you.religion == GOD_SHINING_ONE)
             simple_god_message(" only cares about evil items!");
         else if (you.religion == GOD_BEOGH)
-            simple_god_message(" only cares for newly dead orcs!");
+            simple_god_message(" only cares about newly dead orcs!");
         else if (you.religion == GOD_NEMELEX_XOBEH)
             simple_god_message(" expects you to use your decks, not offer them!");
     }
