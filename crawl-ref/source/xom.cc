@@ -501,8 +501,7 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (item.flags & ISFLAG_SUMMONED)
         return (false);
 
-    // Don't know how to downgrade blessed blades to normal blades.
-    // Can be justified as good gods protecting blessed blades.
+    // Blessed blades are protected, being gifts from good gods.
     if (is_blessed_blade(item))
         return (false);
 
@@ -571,12 +570,12 @@ static bool _choose_chaos_upgrade(const monsters* mon)
     // God gifts from good gods will be protected by their god from
     // being given chaos weapons, while other gods won't mind the help
     // in their servants killing the player.
-    if (mon->god != GOD_NO_GOD && is_good_god(mon->god))
+    if (is_good_god(mon->god))
        return (false);
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.
-    if (mons_genus(mon->type) == MONS_ORC)
+    if (mons_species(mon->type) == MONS_ORC)
         return (false);
 
     mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON, MSLOT_MISSILE};
@@ -657,12 +656,14 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
     if (is_random_artefact(item))
     {
         randart_set_property(item, RAP_BRAND, brand);
+
         if (seen)
             randart_wpn_learn_prop(item, RAP_BRAND);
     }
     else
     {
         item.special = brand;
+
         if (seen)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
