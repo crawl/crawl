@@ -2670,11 +2670,8 @@ static const std::string _item_prefix(const item_def &item, bool temp,
             prefixes.push_back("unidentified");
     }
 
-    if (good_god_dislikes_item_handling(item)
-        || god_dislikes_item_handling(item))
-    {
+    if (good_god_hates_item_handling(item) || god_hates_item_handling(item))
         prefixes.push_back("evil_item");
-    }
 
     if (is_emergency_item(item))
         prefixes.push_back("emergency_item");

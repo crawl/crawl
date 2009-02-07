@@ -3597,9 +3597,9 @@ bool is_chaotic_spellbook(const item_def& item)
     return (is_spellbook_type(item, false, is_chaotic_spell));
 }
 
-bool god_dislikes_spellbook(const item_def& item)
+bool god_hates_spellbook(const item_def& item)
 {
-    return (is_spellbook_type(item, false, god_dislikes_spell_type));
+    return (is_spellbook_type(item, false, god_hates_spell_type));
 }
 
 bool is_holy_rod(const item_def& item)
@@ -3617,22 +3617,19 @@ bool is_chaotic_rod(const item_def& item)
     return (is_spellbook_type(item, true, is_chaotic_spell));
 }
 
-bool god_dislikes_rod(const item_def& item)
+bool god_hates_rod(const item_def& item)
 {
-    return (is_spellbook_type(item, true, god_dislikes_spell_type));
+    return (is_spellbook_type(item, true, god_hates_spell_type));
 }
 
-bool good_god_dislikes_item_handling(const item_def &item)
+bool good_god_hates_item_handling(const item_def &item)
 {
     return (is_good_god(you.religion) && is_evil_item(item)
             && (is_demonic(item) || item_type_known(item)));
 }
 
-bool god_dislikes_item_handling(const item_def &item)
+bool god_hates_item_handling(const item_def &item)
 {
-    if (you.religion == GOD_XOM)
-        return (false);
-
     switch (you.religion)
     {
     case GOD_ZIN:
@@ -3692,18 +3689,17 @@ bool god_dislikes_item_handling(const item_def &item)
         break;
     }
 
-    if (god_dislikes_spellbook(item) || god_dislikes_rod(item))
+    if (god_hates_spellbook(item) || god_hates_rod(item))
         return (true);
 
     return (false);
 }
 
-bool god_dislikes_spell_type(spell_type spell, god_type god)
+bool god_hates_spell_type(spell_type spell, god_type god)
 {
     if (is_good_god(god) && is_evil_spell(spell))
         return (true);
 
-    unsigned int flags       = get_spell_flags(spell);
     unsigned int disciplines = get_spell_disciplines(spell);
 
     switch (god)
@@ -3714,16 +3710,39 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         break;
 
     case GOD_SHINING_ONE:
-        // TSO dislikes using poison, but is fine with curing it, resisting
-        // it or destroying it.
-        if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON_I
+        // TSO hates using poison, but is fine with curing it, resisting
+        // it, or destroying it.
+        if ((disciplines & SPTYP_POISON)     && spell != SPELL_CURE_POISON_I
             && spell != SPELL_CURE_POISON_II && spell != SPELL_RESIST_POISON
             && spell != SPELL_IGNITE_POISON)
         {
             return (true);
         }
 
-        // He probably also wouldn't like spells which would put enemies
+    case GOD_YREDELEMNUL:
+        if (is_holy_spell(spell))
+            return (true);
+        break;
+
+    default:
+        break;
+    }
+
+    return (false);
+}
+
+bool god_dislikes_spell_type(spell_type spell, god_type god)
+{
+    if (god_hates_spell_type(spell, god))
+        return (true);
+
+    unsigned int flags       = get_spell_flags(spell);
+    unsigned int disciplines = get_spell_disciplines(spell);
+
+    switch (god)
+    {
+    case GOD_SHINING_ONE:
+        // TSO probably wouldn't like spells which would put enemies
         // into a state where attacking them would be unchivalrous.
         if (spell == SPELL_CAUSE_FEAR || spell == SPELL_PARALYSE
             || spell == SPELL_CONFUSE || spell == SPELL_MASS_CONFUSION
@@ -3731,11 +3750,6 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         {
             return (true);
         }
-        break;
-
-    case GOD_YREDELEMNUL:
-        if (is_holy_spell(spell))
-            return (true);
         break;
 
     case GOD_XOM:

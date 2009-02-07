@@ -121,13 +121,14 @@ bool is_spellbook_type(const item_def& item, bool book_or_rod,
 bool is_holy_spellbook(const item_def& item);
 bool is_evil_spellbook(const item_def& item);
 bool is_chaotic_spellbook(const item_def& item);
-bool god_dislikes_spellbook(const item_def& item);
+bool god_hates_spellbook(const item_def& item);
 bool is_holy_rod(const item_def& item);
 bool is_evil_rod(const item_def& item);
 bool is_chaotic_rod(const item_def& item);
-bool god_dislikes_rod(const item_def& item);
-bool good_god_dislikes_item_handling(const item_def &item);
-bool god_dislikes_item_handling(const item_def &item);
+bool god_hates_rod(const item_def& item);
+bool good_god_hates_item_handling(const item_def &item);
+bool god_hates_item_handling(const item_def &item);
+bool god_hates_spell_type(spell_type spell, god_type god = you.religion);
 
 // NOTE: As of now, these two functions only say if a god won't give a
 // spell/school when giving a gift.

@@ -2037,8 +2037,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 static bool _get_weighted_discs(bool completely_random, god_type god,
                                 int &disc1, int &disc2)
 {
-    // Eliminate disciplines that the god disapproves of or from which
-    // all spells are discarded.
+    // Eliminate disciplines that the god dislikes or from which all
+    // spells are discarded.
     std::vector<int> ok_discs;
     std::vector<int> skills;
     for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
