@@ -1881,9 +1881,9 @@ static void _handle_accidental_death(const int orig_hp,
     const char orig_stats[],
     const FixedVector<unsigned char, NUM_MUTATIONS> &orig_mutation)
 {
-    // Did ouch() return early because the player died from the Xom effect
-    // even though neither is the player under penance nor is Xom bored?
-
+    // Did ouch() return early because the player died from the Xom
+    // effect, even though neither is the player under penance nor is
+    // Xom bored?
     if (!you.did_escape_death()
         && you.escaped_death_aux.empty()
         && !_player_is_dead())
