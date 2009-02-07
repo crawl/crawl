@@ -829,8 +829,7 @@ void dec_penance(god_type god, int val)
                  you.redraw_armour_class = true;
 
             // When you've worked through all your penance, you get
-            // another chance to make hostile holy beings that worship a
-            // good god good neutral.
+            // another chance to make hostile holy beings good neutral.
             if (is_good_god(you.religion))
                 _holy_beings_attitude_change();
         }
@@ -3351,8 +3350,7 @@ void gain_piety(int pgn)
             }
 
             // When you gain a piety level, you get another chance to
-            // make hostile holy beings that worship a good god good
-            // neutral.
+            // make hostile holy beings good neutral.
             if (is_good_god(you.religion))
                 _holy_beings_attitude_change();
         }
@@ -3373,8 +3371,7 @@ void gain_piety(int pgn)
         }
 
         // When you gain piety of more than 160, you get another chance
-        // to make hostile holy beings that worship a good god good
-        // neutral.
+        // to make hostile holy beings good neutral.
         if (is_good_god(you.religion))
             _holy_beings_attitude_change();
     }
@@ -4947,8 +4944,7 @@ static bool _holy_beings_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && mons_is_holy(monster)
-            && is_good_god(monster->god))
+            && mons_is_holy(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Holy attitude changing: %s on level %d, branch %d",
@@ -4958,8 +4954,7 @@ static bool _holy_beings_on_level_attitude_change()
 #endif
 
             // If you worship a good god, you get another chance to make
-            // neutral and hostile holy beings that worship a good god
-            // good neutral.
+            // neutral and hostile holy beings good neutral.
             if (is_good_god(you.religion) && !mons_wont_attack(monster))
             {
                 if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
@@ -4972,7 +4967,8 @@ static bool _holy_beings_on_level_attitude_change()
             // If you don't worship a good god, you make all friendly
             // and good neutral holy beings that worship a good god
             // hostile.
-            else if (!is_good_god(you.religion) && mons_wont_attack(monster))
+            else if (!is_good_god(you.religion) && mons_wont_attack(monster)
+                && is_good_god(monster->god))
             {
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
