@@ -110,8 +110,8 @@ either on Crypt:2 or Crypt:3.
 %%%%
 Hell
 
-The hallway to the four hells is guarded by Geryon. Heros who prove their
-worth in the vestibule and blow Geryon's horn, may explore the different
+The hallway to the four hells is guarded by Geryon. Heroes who prove their
+worth in the vestibule and blow Geryon's horn may explore the different
 regions of Hell: Dis, Gehenna, Cocytus and Tartarus.
 
 Portals to the Vestibule of Hell are found abundantly in the deeper parts
@@ -151,15 +151,15 @@ Pan
 
 Pandemonium, colloquially known as Pan, is an infinite realm of pain and 
 suffering. Pan contains four special runes, as well as generic ones, in 
-addition to lots of loot. All these treasures are guarded by demons and
-cruel Pan lords. Many a hero, confusing confidence with megalomania, died
-unsuspectingly in the barrage of torment and hellfire.
+addition to lots of loot. All these treasures are guarded by demons and 
+cruel Pan lords. Many a hero, confusing confidence with megalomania, has 
+died unsuspectingly in the barrage of torment and hellfire.
 %%%%
 Abyss
 
-The Abyss is a truly bizarre place, everchanging and twisted. It is filled
-by all sorts of monsters, mostly of demonic nature, whose common aim is to
-feast on intruders. It is also the garbage dump for many sorcerors, who 
+The Abyss is a truly bizarre place, everchanging and twisted. It is filled 
+with all sorts of monsters, mostly of demonic nature, whose common aim is 
+to feast on intruders. It is also the garbage dump for many sorcerers, who 
 delight in sending would-be champions like you to these proving grounds of 
 madness. Reportedly, there is some structure to the chaos, as Lugonu seems 
 to concoct schemes around this place and its denizens.
