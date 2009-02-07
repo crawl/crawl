@@ -1088,8 +1088,8 @@ static bool _do_ability(const ability_def& abil)
     {
     case ABIL_MUMMY_RESTORATION:
     {
-        mpr( "You infuse your body with magical energy." );
-        bool did_restore = restore_stat( STAT_ALL, 0, false );
+        mpr("You infuse your body with magical energy.");
+        bool did_restore = restore_stat(STAT_ALL, 0, false);
 
         const int oldhpmax = you.hp_max;
         unrot_hp( 100 );
