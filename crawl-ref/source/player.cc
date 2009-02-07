@@ -3885,14 +3885,14 @@ void display_char_status()
                 attrib.push_back("significantly resist cold");
                 attrib.push_back("strongly resist negative energy");
                 attrib.push_back("resist torment");
-                attrib.push_back("do not heal!");
+                attrib.push_back("do not heal.");
                 break;
             case HS_NEAR_STARVING:
                 attrib.push_back("resist poison");
                 attrib.push_back("significantly resist cold");
                 attrib.push_back("strongly resist negative energy");
                 attrib.push_back("have an extremely slow metabolism");
-                attrib.push_back("heal slowly!");
+                attrib.push_back("heal slowly.");
                 break;
             case HS_HUNGRY:
             case HS_VERY_HUNGRY:
@@ -3903,7 +3903,7 @@ void display_char_status()
                     attrib.push_back("have a slow metabolism");
                 else
                     attrib.push_back("have a very slow metabolism");
-                attrib.push_back("heal slowly!");
+                attrib.push_back("heal slowly.");
                 break;
             case HS_SATIATED:
                 attrib.push_back("resist negative energy.");
