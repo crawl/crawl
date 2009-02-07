@@ -51,7 +51,7 @@ REVISION("$Rev$");
 #include "view.h"
 
 // Color for captions like 'Health:', 'Str:', etc.
-#define HUD_CAPTION_COLOR Options.status_caption_colour
+#define HUD_CAPTION_COLOUR Options.status_caption_colour
 
 // Colour for values, which come after captions.
 static const short HUD_VALUE_COLOUR = LIGHTGREY;
@@ -312,6 +312,13 @@ static void _print_stats_hp(int x, int y)
 
     // Calculate colour
     short hp_colour = HUD_VALUE_COLOUR;
+
+    const bool boosted = you.duration[DUR_DIVINE_VIGOUR]
+                             || you.duration[DUR_BERSERKER];
+
+    if (boosted)
+        hp_colour = LIGHTBLUE;
+    else
     {
         const int hp_percent =
             (you.hp * 100) / (max_max_hp ? max_max_hp : you.hp);
@@ -324,14 +331,17 @@ static void _print_stats_hp(int x, int y)
     // 01234567890123456789
     // Health: xxx/yyy (zzz)
     cgotoxy(x, y, GOTO_STAT);
-    textcolor(HUD_CAPTION_COLOR);
+    textcolor(HUD_CAPTION_COLOUR);
     cprintf(max_max_hp != you.hp_max ? "HP: " : "Health: ");
     textcolor(hp_colour);
     cprintf( "%d", you.hp );
-    textcolor(HUD_VALUE_COLOUR);
+    if (!boosted)
+        textcolor(HUD_VALUE_COLOUR);
     cprintf( "/%d", you.hp_max );
     if (max_max_hp != you.hp_max)
         cprintf( " (%d)", max_max_hp );
+    if (boosted)
+        textcolor(HUD_VALUE_COLOUR);
 
     int col = wherex() - crawl_view.hudp.x;
     for (int i = 18-col; i > 0; i--)
@@ -954,7 +964,7 @@ void print_stats_level()
     if (Options.show_gold_turns)
         ypos++;
     cgotoxy(19, ypos, GOTO_STAT);
-    textcolor(HUD_CAPTION_COLOR);
+    textcolor(HUD_CAPTION_COLOUR);
     cprintf("Place: ");
 
     textcolor(HUD_VALUE_COLOUR);
@@ -1019,7 +1029,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
 
 void draw_border(void)
 {
-    textcolor( HUD_CAPTION_COLOR );
+    textcolor(HUD_CAPTION_COLOUR);
     clrscr();
     redraw_skill( you.your_name, player_title() );
 
@@ -1866,12 +1876,31 @@ static std::vector<formatted_string> _get_overview_stats()
     // 4 columns
     column_composer cols1(4, 18, 28, 40);
 
+    const bool boosted = you.duration[DUR_DIVINE_VIGOUR]
+                             || you.duration[DUR_BERSERKER];
+
     if (!player_rotted())
-        snprintf(buf, sizeof buf, "HP %3d/%d", you.hp, you.hp_max);
+    {
+        if (boosted)
+        {
+            snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d</lightblue>",
+                     you.hp, you.hp_max);
+        }
+        else
+            snprintf(buf, sizeof buf, "HP %3d/%d", you.hp, you.hp_max);
+    }
     else
     {
-        snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
-                 you.hp, you.hp_max, get_real_hp(true, true) );
+        if (boosted)
+        {
+            snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d (%d)</lightblue>",
+                     you.hp, you.hp_max, get_real_hp(true, true));
+        }
+        else
+        {
+            snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
+                     you.hp, you.hp_max, get_real_hp(true, true));
+        }
     }
     cols1.add_formatted(0, buf, false);
 
