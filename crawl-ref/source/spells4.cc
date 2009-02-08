@@ -75,15 +75,21 @@ static bool _player_hurt_monster(monsters& m, int damage)
 {
     if (damage > 0)
     {
-        m.hurt(&you, damage);
+        m.hurt(&you, damage, BEAM_MISSILE, false);
+
         if (m.alive())
         {
             print_wounds(&m);
             behaviour_event(&m, ME_WHACK, MHITYOU);
         }
+        else
+        {
+            monster_die(&m, KILL_YOU, NON_MONSTER);
+            return (true);
+        }
     }
 
-    return (!m.alive());
+    return (false);
 }
 
 static bool _player_hurt_monster(int monster, int damage)
@@ -2167,7 +2173,8 @@ void cast_far_strike(int pow)
     damage *= dammod;
     damage /= 78;
 
-    monsters *monster = &menv[ mgrd(targ.target) ];
+    const int midx = mgrd(targ.target);
+    monsters *monster = &menv[midx];
 
     // Apply monster's AC.
     if (monster->ac > 0)
@@ -2186,9 +2193,7 @@ void cast_far_strike(int pow)
     }
 
     // Inflict the damage.
-    monster->hurt(&you, damage);
-    if (monster->alive())
-        print_wounds(monster);
+    _player_hurt_monster(midx, damage);
 }
 
 bool cast_apportation(int pow, const coord_def& where)
