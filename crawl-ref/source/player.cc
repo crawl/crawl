@@ -412,9 +412,9 @@ bool player_likes_water(bool permanently)
     return (player_can_swim() || (!permanently && beogh_water_walk()));
 }
 
-bool player_is_swimming(void)
+bool player_is_swimming()
 {
-    return you.swimming();
+    return (you.swimming());
 }
 
 bool player_under_penance(void)
@@ -1287,6 +1287,11 @@ int player_res_magic(void)
 bool player_can_smell()
 {
     return (you.species != SP_MUMMY);
+}
+
+bool player_likes_chunks()
+{
+    return (you.omnivorous() || player_mutation_level(MUT_CARNIVOROUS) > 0);
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -4415,7 +4420,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
 
 bool wearing_amulet(jewellery_type amulet, bool calc_unid)
 {
-    if ( extrinsic_amulet_effect(amulet) )
+    if (extrinsic_amulet_effect(amulet))
         return (true);
 
     if (you.equip[EQ_AMULET] == -1)

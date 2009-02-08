@@ -102,6 +102,7 @@ void eat_inventory_item(int which_inventory_slot);
 bool prompt_eat_inventory_item(int slot = -1);
 
 void chunk_nutrition_message(int nutrition);
+int apply_herbivore_nutrition_effects(int nutrition);
 
 void vampire_nutrition_per_turn(const item_def &corpse, int feeding = 0);
 

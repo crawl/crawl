@@ -80,39 +80,43 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         break;
 
-  case POT_BLOOD:
-  case POT_BLOOD_COAGULATED:
+      case POT_BLOOD:
+      case POT_BLOOD_COAGULATED:
         if (you.species == SP_VAMPIRE)
         {
             // No healing anymore! (jpeg)
-
             int value = 800;
             if (pot_eff == POT_BLOOD)
             {
                 mpr("Yummy - fresh blood!");
                 value += 200;
             }
-            else // coagulated
+            else // Coagulated.
                 mpr("This tastes delicious!");
 
             lessen_hunger(value, true);
         }
         else
         {
-            if (you.omnivorous() || player_mutation_level(MUT_CARNIVOROUS))
+            const bool ur_herbivorous =
+                player_mutation_level(MUT_HERBIVOROUS) == 3;
+
+            int nutrition = apply_herbivore_nutrition_effects(200);
+
+            if (!ur_herbivorous && player_likes_chunks())
             {
                 // Likes it.
                 mpr("This tastes like blood.");
-                lessen_hunger(200, true);
+                lessen_hunger(nutrition, true);
             }
             else
             {
                 mpr("Blech - this tastes like blood!");
-                if (!player_mutation_level(MUT_HERBIVOROUS) && one_chance_in(3))
-                    lessen_hunger(100, true);
+                if (!ur_herbivorous && one_chance_in(3))
+                    lessen_hunger(nutrition, true);
                 else
                 {
-                    disease_player( 50 + random2(100) );
+                    disease_player(50 + random2(100));
                     xom_is_stimulated(32);
                 }
             }
@@ -126,7 +130,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_MIGHT:
     {
-        const bool were_mighty = (you.duration[DUR_MIGHT] > 0);
+        const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");

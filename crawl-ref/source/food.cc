@@ -1678,7 +1678,7 @@ void chunk_nutrition_message(int nutrition)
         mpr("That was not very filling.");
 }
 
-static int _apply_herbivore_chunk_effects(int nutrition)
+int apply_herbivore_nutrition_effects(int nutrition)
 {
     int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
@@ -1688,6 +1688,12 @@ static int _apply_herbivore_chunk_effects(int nutrition)
     return (nutrition);
 }
 
+static int _apply_gourmand_nutrition_effects(int nutrition, int gourmand)
+{
+    return (nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
+                      / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE));
+}
+
 static int _chunk_nutrition(bool likes_chunks)
 {
     int nutrition = CHUNK_BASE_NUTRITION;
@@ -1695,15 +1701,14 @@ static int _chunk_nutrition(bool likes_chunks)
     if (likes_chunks || you.hunger_state < HS_SATIATED)
     {
         return (likes_chunks ? nutrition
-                             : _apply_herbivore_chunk_effects(nutrition));
+                             : apply_herbivore_nutrition_effects(nutrition));
     }
 
     const int gourmand =
-        wearing_amulet(AMU_THE_GOURMAND)? you.duration[DUR_GOURMAND] : 0;
+        wearing_amulet(AMU_THE_GOURMAND) ? you.duration[DUR_GOURMAND] : 0;
 
-    int effective_nutrition =
-           nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
-                     / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
+    const int effective_nutrition =
+        _apply_gourmand_nutrition_effects(nutrition, gourmand);
 
 #ifdef DEBUG_DIAGNOSTICS
     const int epercent = effective_nutrition * 100 / nutrition;
@@ -1712,7 +1717,7 @@ static int _chunk_nutrition(bool likes_chunks)
                 gourmand, nutrition, effective_nutrition, epercent);
 #endif
 
-    return (_apply_herbivore_chunk_effects(effective_nutrition));
+    return (apply_herbivore_nutrition_effects(effective_nutrition));
 }
 
 static void _say_chunk_flavour(bool likes_chunks)
@@ -1725,8 +1730,7 @@ static void _say_chunk_flavour(bool likes_chunks)
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                        int mon_intel)
 {
-    bool likes_chunks = (you.omnivorous()
-                         || player_mutation_level(MUT_CARNIVOROUS));
+    bool likes_chunks = player_likes_chunks();
     int nutrition     = _chunk_nutrition(likes_chunks);
     int hp_amt        = 0;
     bool suppress_msg = false; // do we display the chunk nutrition message?
@@ -2400,12 +2404,14 @@ bool is_inedible(const item_def &item)
     {
         return (true);
     }
+
     if (item.base_type == OBJ_CORPSES
         && (item.sub_type == CORPSE_SKELETON
             || you.species == SP_VAMPIRE && !mons_has_blood(item.plus)))
     {
         return (true);
     }
+
     return (false);
 }
 // As we want to avoid autocolouring the entire food selection, this should
@@ -2471,8 +2477,8 @@ bool is_forbidden_food(const item_def &food)
     return (false);
 }
 
-bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
-                bool check_hunger)
+bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
+                bool reqid, bool check_hunger)
 {
     bool survey_says = false;
 
@@ -2508,16 +2514,15 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         return (false);
     }
 
-    bool ur_carnivorous = (player_mutation_level(MUT_CARNIVOROUS) == 3);
+    bool ur_carnivorous = player_mutation_level(MUT_CARNIVOROUS) == 3;
 
-    bool ur_herbivorous = (player_mutation_level(MUT_HERBIVOROUS) == 3);
+    bool ur_herbivorous = player_mutation_level(MUT_HERBIVOROUS) == 3;
 
     // ur_chunkslover not defined in terms of ur_carnivorous because
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
-    bool ur_chunkslover = (
-                (check_hunger ? you.hunger_state < HS_SATIATED : true)
-                           || you.omnivorous()
-                           || player_mutation_level(MUT_CARNIVOROUS));
+    bool ur_chunkslover = ((check_hunger ? you.hunger_state < HS_SATIATED
+                                         : true)
+                              || player_likes_chunks());
 
     switch (what_isit)
     {
@@ -2530,7 +2535,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
              return (false);
         }
 
-        int vorous = _player_likes_food_type(kindof_thing);
+        const int vorous = _player_likes_food_type(kindof_thing);
         if (vorous > 0) // Herbivorous food.
         {
             if (ur_carnivorous)
@@ -2566,13 +2571,14 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
                     {
                         // For artefact amulets, this will tell you its name
                         // and subtype. Other properties may still be hidden.
-                        set_ident_flags( you.inv[ amulet], ISFLAG_KNOW_TYPE);
-                        set_ident_type( OBJ_JEWELLERY, AMU_THE_GOURMAND,
-                                        ID_KNOWN_TYPE );
+                        set_ident_flags(you.inv[amulet], ISFLAG_KNOW_TYPE);
+                        set_ident_type(OBJ_JEWELLERY, AMU_THE_GOURMAND,
+                                       ID_KNOWN_TYPE);
                         mpr(you.inv[amulet].name(DESC_INVENTORY, false).c_str());
                     }
                     return (true);
                 }
+
                 if (!suppress_msg)
                     mpr("You aren't quite hungry enough to eat that!");
                 return (false);

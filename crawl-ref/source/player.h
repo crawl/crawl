@@ -174,6 +174,7 @@ bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 
 bool player_can_smell();
+bool player_likes_chunks();
 bool player_can_swim();
 bool player_likes_water(bool permanently = false);
 
