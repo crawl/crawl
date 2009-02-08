@@ -143,25 +143,30 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     if (hploss)
         simple_monster_message(monster, " convulses!");
 
-    monster->hurt(attacker, hploss);
+    monster->hurt(attacker, hploss, BEAM_MISSILE, false);
 
     if (hploss)
     {
         retval = 1;
 
-        // Holy word won't annoy, slow, or frighten its user.
-        if (monster->alive() && attacker != monster)
+        if (monster->alive())
         {
-            // Currently, holy word annoys the monsters it affects
-            // because it can kill them, and because hostile monsters
-            // don't use it.
-            behaviour_event(monster, ME_ANNOY, MHITYOU);
+            // Holy word won't annoy, slow, or frighten its user.
+            if (attacker != monster)
+            {
+                // Currently, holy word annoys the monsters it affects
+                // because it can kill them, and because hostile
+                // monsters don't use it.
+                behaviour_event(monster, ME_ANNOY, MHITYOU);
 
-            if (monster->speed_increment >= 25)
-                monster->speed_increment -= 20;
+                if (monster->speed_increment >= 25)
+                    monster->speed_increment -= 20;
 
-            monster->add_ench(ENCH_FEAR);
+                monster->add_ench(ENCH_FEAR);
+            }
         }
+        else
+            monster->hurt(attacker, INSTANT_DEATH);
     }
 
     return (retval);
