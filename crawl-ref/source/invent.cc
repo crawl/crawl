@@ -1373,7 +1373,8 @@ bool check_warning_inscriptions( const item_def& item,
         }
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
-        prompt += item.name(DESC_INVENTORY);
+        prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
+                                      : item.name(DESC_NOCAP_A));
         prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
                 && check_old_item_warning(item, oper));

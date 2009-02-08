@@ -1302,6 +1302,9 @@ int eat_from_floor(bool skip_chunks)
                 return -1;
             case 'e':
             case 'y':
+                if (!check_warning_inscriptions(*item, OPER_EAT))
+                    break;
+                    
                 if (can_ingest(item->base_type, item->sub_type, false))
                 {
                     int ilink = item_on_floor(*item, you.pos());
