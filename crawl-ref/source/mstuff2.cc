@@ -1539,6 +1539,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         really_returns = false;
 
     pbolt.drop_item = !really_returns;
+
+    // Redraw the screen before firing, in case the monster just
+    // came into view and the screen hasn't been updated yet.
+    viewwindow(true, false);
     pbolt.fire();
 
     // The item can be destroyed before returning.
