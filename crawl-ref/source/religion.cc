@@ -3995,12 +3995,8 @@ bool trog_burn_spellbooks()
                 continue;
             }
 
-            int durat = 4 + count + random2(rarity/2);
-
-            if (durat > 23)
-                durat = 23;
-
-            place_cloud(CLOUD_FIRE, *ri, durat, KC_YOU);
+            const int duration = std::min(4 + count + random2(rarity/2), 23);
+            place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
 
             mpr(count == 1 ? "The book bursts into flames."
                            : "The books burst into flames.", MSGCH_GOD);

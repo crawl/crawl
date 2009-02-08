@@ -761,9 +761,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER
-            || death_type == KILLED_BY_BEAM
-            || death_type == KILLED_BY_SPORE
-            || death_type == KILLED_BY_REFLECTION)
+         || death_type == KILLED_BY_BEAM
+         || death_type == KILLED_BY_SPORE
+         || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
     {
@@ -823,7 +823,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     else
     {
         mon_num = 0;
-        death_source_name[0] = 0;
+        death_source_name.clear();
     }
 
     if (death_type == KILLED_BY_WEAKNESS
@@ -840,19 +840,19 @@ void scorefile_entry::reset()
     // simple init
     version.clear();
     points               = -1;
-    name[0]              = 0;
+    name.clear();
     uid                  = 0;
     race                 = 0;
     cls                  = 0;
     lvl                  = 0;
-    race_class_name[0]   = 0;
+    race_class_name.clear();
     best_skill           = 0;
     best_skill_lvl       = 0;
     death_type           = KILLED_BY_SOMETHING;
     death_source         = NON_MONSTER;
     mon_num              = 0;
-    death_source_name[0] = 0;
-    auxkilldata[0]       = 0;
+    death_source_name.clear();
+    auxkilldata.clear();
     dlvl                 = 0;
     level_type           = LEVEL_DUNGEON;
     branch               = BRANCH_MAIN_DUNGEON;
@@ -1016,7 +1016,7 @@ void scorefile_entry::init()
     race = you.species;
     cls  = you.char_class;
 
-    race_class_name[0] = 0;
+    race_class_name.clear();
 
     lvl            = you.experience_level;
     best_skill     = ::best_skill( SK_FIGHTING, NUM_SKILLS - 1, 99 );
@@ -1708,8 +1708,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
     case KILLED_BY_PETRIFICATION:
         desc += terse? "petrified" : "Turned to stone";
         break;
-
-    /* case 26 */
 
     case KILLED_BY_SOMETHING:
         if (!auxkilldata.empty())
