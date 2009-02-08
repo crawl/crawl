@@ -1892,15 +1892,17 @@ bool item_names( const item_def *it1,
            < it2->name(DESC_PLAIN, false, false, false);
 }
 
-void check_item_knowledge()
+bool check_item_knowledge(bool quiet)
 {
     std::vector<const item_def*> items;
+    bool rc = true;
 
     const object_class_type idx_to_objtype[5] = { OBJ_WANDS, OBJ_SCROLLS,
                                                   OBJ_JEWELLERY, OBJ_POTIONS,
                                                   OBJ_STAVES };
     const int idx_to_maxtype[5] = { NUM_WANDS, NUM_SCROLLS,
                                     NUM_JEWELLERY, NUM_POTIONS, NUM_STAVES };
+
 
     for (int i = 0; i < 5; i++)
     {
@@ -1922,9 +1924,14 @@ void check_item_knowledge()
     }
 
     if (items.empty())
-        mpr("You don't recognise anything yet!");
+    {
+        rc = false;
+        if (!quiet)
+            mpr("You don't recognise anything yet!");
+    }
     else
     {
+        rc = true;
         std::sort(items.begin(), items.end(), item_names);
         InvMenu menu;
         menu.set_title("You recognise:");
@@ -1937,7 +1944,9 @@ void check_item_knowledge()
               iter != items.end(); ++iter )
             delete *iter;
     }
-}                               // end check_item_knowledge()
+
+    return (rc);
+}
 
 
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts

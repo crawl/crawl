@@ -74,22 +74,11 @@ enum potion_description_qualifier_type
 };
 
 bool is_vowel( const char chr );
-
-/* ***********************************************************************
- * called from: debug - describe - dungeon - fight - files - item_use -
- *              monstuff - mstuff2 - players - spells0
- * *********************************************************************** */
 int property( const item_def &item, int prop_type );
 
-/* ***********************************************************************
- * called from: describe
- * *********************************************************************** */
 const char* racial_description_string(const item_def& item, bool terse = false);
 
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void check_item_knowledge();
+bool check_item_knowledge(bool quiet);
 
 std::string quant_name( const item_def &item, int quant,
                         description_level_type des, bool terse = false );
