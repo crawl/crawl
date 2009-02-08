@@ -22,6 +22,7 @@ REVISION("$Rev$");
   #include <float.h>
 #endif
 
+#include <errno.h>
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>

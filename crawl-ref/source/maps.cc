@@ -14,7 +14,6 @@ REVISION("$Rev$");
 
 #include <cstring>
 #include <cstdlib>
-#include <errno.h>
 #include <algorithm>
 
 #if !_MSC_VER

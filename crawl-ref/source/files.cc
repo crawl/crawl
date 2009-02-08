@@ -14,6 +14,7 @@ REVISION("$Rev$");
 #include "monplace.h"
 #include "version.h"
 
+#include <errno.h>
 #include <string.h>
 #include <string>
 #include <stdlib.h>

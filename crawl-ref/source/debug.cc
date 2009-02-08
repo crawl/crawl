@@ -19,10 +19,7 @@ REVISION("$Rev$");
 #include <time.h>
 #include <ctype.h>
 #include <algorithm>
-
-#ifdef UNIX
 #include <errno.h>
-#endif
 
 #ifdef DOS
 #include <conio.h>
@@ -3588,9 +3585,7 @@ void debug_item_statistics( void )
 
     if (!ostat)
     {
-#ifndef DOS
         mprf(MSGCH_ERROR, "Can't write items.stat: %s", strerror(errno));
-#endif
         return;
     }
 
@@ -4475,12 +4470,7 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     FILE *ostat = fopen("fight.stat", "a");
     if (!ostat)
     {
-        // I'm not sure what header provides errno on djgpp,
-        // and it's insufficiently important for a wizmode-only
-        // feature.
-#ifndef DOS
         mprf(MSGCH_ERROR, "Can't write fight.stat: %s", strerror(errno));
-#endif
         return (false);
     }
 

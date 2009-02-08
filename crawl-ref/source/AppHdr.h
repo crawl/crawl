@@ -427,7 +427,6 @@
 // some files needed for file locking
 #include <unistd.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
