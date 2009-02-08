@@ -7105,10 +7105,13 @@ static void _handle_monster_move(monsters *monster)
             }
         }
 
-        if (mons_is_lurking(monster) || mons_is_submerged(monster))
+        // Lurking monsters only stop lurking if their target is right
+        // next to them, otherwise they just sit there.
+        // However, if the monster is involuntarily submerged but
+        // still alive (e.g., nonbreathing which had water poured
+        // on top of it), this doesn't apply.
+        if (mons_is_lurking(monster) || monster->has_ench(ENCH_SUBMERGED))
         {
-            // Lurking monsters only stop lurking if their target is right
-            // next to them, otherwise they just sit there.
             if (monster->foe != MHITNOT
                 && grid_distance(monster->target, monster->pos()) <= 1)
             {
@@ -8069,12 +8072,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false); // blocks square
         }
 
-        const int thismonster = monster_index(monster),
+        const int thismonster = monster->mindex(),
                   targmonster = mgrd(targ);
 
-        if (mons_aligned(thismonster, targmonster)
-            && targmonster != MHITNOT
-            && targmonster != MHITYOU
+        if (!invalid_monster_index(targmonster)
+            && mons_aligned(thismonster, targmonster)
             && !_mons_can_displace(monster, &menv[targmonster]))
         {
             return (false);

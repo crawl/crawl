@@ -507,9 +507,8 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 
 static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
-    const int mindex = mgrd(pos);
-    if (mindex != NON_MONSTER)
-        menv[mindex].apply_location_effects(pos);
+    if (monsters* m = monster_at(pos))
+        m->apply_location_effects(pos);
 }
 
 // Clear blood off of terrain that shouldn't have it.  Also clear
