@@ -2721,10 +2721,17 @@ void demonspawn()
                 howm = 1;
             }
 
-            if (you.skills[SK_UNARMED_COMBAT] > 5 && one_chance_in(14))
+            if (you.skills[SK_UNARMED_COMBAT] > 5)
             {
-                whichm = MUT_DRAIN_LIFE;
-                howm = 1;
+                // Drain Life only works if you're unarmed, so only
+                // give it if unarmed is your best attacking skill.
+                skill_type wpn_skill = best_skill(SK_SHORT_BLADES, SK_STAVES);
+                if ((you.skills[SK_UNARMED_COMBAT] > you.skills[wpn_skill])
+                    && one_chance_in(14))
+                {
+                    whichm = MUT_DRAIN_LIFE;
+                    howm = 1;
+                }
             }
         }
 
