@@ -3161,7 +3161,7 @@ static void _rot_inventory_food(long time_delta)
 // This function is called about every 20 turns.
 void handle_time(long time_delta)
 {
-    // Update all of the corpses, food chunks and potions of blood on
+    // Update all of the corpses, food chunks, and potions of blood on
     // the floor.
     update_corpses(time_delta);
 
