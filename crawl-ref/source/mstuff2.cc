@@ -538,6 +538,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     }
     }
 
+    // If a monster just came into view and immediately cast a spell,
+    // we need to refresh the screen before drawing the beam.
+    viewwindow(true, false);
     if (spell_is_direct_explosion(spell_cast))
     {
         const actor *foe = monster->get_foe();
