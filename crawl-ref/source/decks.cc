@@ -1744,26 +1744,8 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
 
         monsters& mon = menv[mnstr];
 
-        if (mons_res_negative_energy(&mon))
+        if (!mon.drain_exp(&you, false, pow / 50))
             simple_monster_message(&mon, " is unaffected.");
-        else
-        {
-            simple_monster_message(&mon, " is drained!");
-
-            mon.hurt(&you, 2 + random2(50), BEAM_NEG);
-
-            if (mon.alive())
-            {
-                if (x_chance_in_y(pow / 60, 20))
-                {
-                    mon.hit_dice--;
-                    mon.experience = 0;
-                }
-
-                mon.max_hit_points -= 2 + random2(pow/50);
-                mon.hit_points = std::min(mon.max_hit_points, mon.hit_points);
-            }
-        }
     }
 
     return (1);

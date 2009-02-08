@@ -7019,7 +7019,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return (true);
 }
 
-bool player::drain_exp(actor *who, bool quiet)
+bool player::drain_exp(actor *who, bool quiet, int pow)
 {
     return (::drain_exp());
 }

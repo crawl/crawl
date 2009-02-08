@@ -330,7 +330,7 @@ public:
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed() const = 0;
     virtual bool mutate() = 0;
-    virtual bool drain_exp(actor *agent, bool quiet = false) = 0;
+    virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 3) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,
                      bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
@@ -1071,7 +1071,7 @@ public:
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
     void heal(int amount, bool max_too = false);
-    bool drain_exp(actor *, bool quiet = false);
+    bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
@@ -1505,7 +1505,7 @@ public:
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    bool drain_exp(actor *, bool quiet = false);
+    bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
