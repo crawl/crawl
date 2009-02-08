@@ -2152,23 +2152,28 @@ void init_skill_order( void )
 int calc_hp(bool real_hp)
 {
     int hitp = get_real_hp(!real_hp, false);
+
     you.hp_max = hitp;
-    deflate_hp(you.hp_max, false);
+
+    deflate_hp( you.hp_max, false );
+
     return (hitp);
-}
+}                               // end calc_hp()
 
 int calc_mp(bool real_mp)
 {
-    // base_magic_points2 accounts for species
-    int enp = (you.base_magic_points2 - 5000);
+    int enp;
 
-    // You get 1 bonus MP for each of the first five levels of Spellcasting.
-    int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4
-        + std::min<int>(you.skills[SK_SPELLCASTING], 5);
+    // base_magic_points2 accounts for species and magic potions
+    enp = (you.base_magic_points2 - 5000);
 
+    int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
     int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
 
-    enp += std::max(spell_extra, invoc_extra);
+    if (spell_extra > invoc_extra)
+        enp += spell_extra;
+    else
+        enp += invoc_extra;
 
     you.max_magic_points = stepdown_value( enp, 9, 18, 45, 100 );
 
@@ -2202,7 +2207,7 @@ int calc_mp(bool real_mp)
     you.redraw_magic_points = true;
 
     return (you.max_magic_points);
-}
+}                               // end calc_mp()
 
 unsigned int skill_exp_needed(int lev)
 {
