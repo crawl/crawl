@@ -301,19 +301,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;                  // I'll let this slip past robe of archmagi
 
     case POT_MAGIC:
-        // Restore all MP
-        you.magic_points = you.max_magic_points;
-
-        // Sometimes boost max
-        if (one_chance_in(3))
-        {
-            mpr("You feel extremely magical!");
-            inc_mp(1, true);
-        }
-        else
-        {
-            mpr("You feel magical!");
-        }
+        inc_mp((10 + random2avg(28, 3)), false);
+        mpr("Magic courses through your body.");
         break;
 
     case POT_RESTORE_ABILITIES:

@@ -2783,55 +2783,54 @@ static void _jobs_stat_init(job_type which_job)
     int i = 0;   // intelligence mod
     int d = 0;   // dexterity mod
     int hp = 0;  // HP base
-    int mp = 0;  // MP base
 
     // Note:  Wanderers are correct, they're a challenging class. -- bwr
     switch (which_job)
     {
-    case JOB_FIGHTER:           s =  7; i =  0; d =  3; hp = 15; mp = 0; break;
-    case JOB_BERSERKER:         s =  7; i = -1; d =  4; hp = 15; mp = 0; break;
-    case JOB_GLADIATOR:         s =  6; i =  0; d =  4; hp = 14; mp = 0; break;
-    case JOB_PALADIN:           s =  6; i =  2; d =  2; hp = 14; mp = 0; break;
+    case JOB_FIGHTER:           s =  7; i =  0; d =  3; hp = 15; break;
+    case JOB_BERSERKER:         s =  7; i = -1; d =  4; hp = 15; break;
+    case JOB_GLADIATOR:         s =  6; i =  0; d =  4; hp = 14; break;
+    case JOB_PALADIN:           s =  6; i =  2; d =  2; hp = 14; break;
 
-    case JOB_CRUSADER:          s =  4; i =  3; d =  3; hp = 13; mp = 1; break;
-    case JOB_DEATH_KNIGHT:      s =  4; i =  3; d =  3; hp = 13; mp = 1; break;
-    case JOB_CHAOS_KNIGHT:      s =  4; i =  3; d =  3; hp = 13; mp = 1; break;
+    case JOB_CRUSADER:          s =  4; i =  3; d =  3; hp = 13; break;
+    case JOB_DEATH_KNIGHT:      s =  4; i =  3; d =  3; hp = 13; break;
+    case JOB_CHAOS_KNIGHT:      s =  4; i =  3; d =  3; hp = 13; break;
 
-    case JOB_REAVER:            s =  4; i =  4; d =  2; hp = 13; mp = 1; break;
-    case JOB_HEALER:            s =  4; i =  4; d =  2; hp = 13; mp = 1; break;
-    case JOB_PRIEST:            s =  4; i =  4; d =  2; hp = 12; mp = 1; break;
+    case JOB_REAVER:            s =  4; i =  4; d =  2; hp = 13; break;
+    case JOB_HEALER:            s =  4; i =  4; d =  2; hp = 13; break;
+    case JOB_PRIEST:            s =  4; i =  4; d =  2; hp = 12; break;
 
-    case JOB_ASSASSIN:          s =  2; i =  2; d =  6; hp = 12; mp = 0; break;
-    case JOB_THIEF:             s =  3; i =  2; d =  5; hp = 13; mp = 0; break;
-    case JOB_STALKER:           s =  2; i =  3; d =  5; hp = 12; mp = 1; break;
+    case JOB_ASSASSIN:          s =  2; i =  2; d =  6; hp = 12; break;
+    case JOB_THIEF:             s =  3; i =  2; d =  5; hp = 13; break;
+    case JOB_STALKER:           s =  2; i =  3; d =  5; hp = 12; break;
 
-    case JOB_HUNTER:            s =  3; i =  3; d =  4; hp = 13; mp = 0; break;
-    case JOB_WARPER:            s =  3; i =  4; d =  3; hp = 12; mp = 1; break;
+    case JOB_HUNTER:            s =  3; i =  3; d =  4; hp = 13; break;
+    case JOB_WARPER:            s =  3; i =  4; d =  3; hp = 12; break;
 
-    case JOB_MONK:              s =  2; i =  2; d =  6; hp = 13; mp = 0; break;
-    case JOB_TRANSMUTER:        s =  2; i =  4; d =  4; hp = 12; mp = 1; break;
+    case JOB_MONK:              s =  2; i =  2; d =  6; hp = 13; break;
+    case JOB_TRANSMUTER:        s =  2; i =  4; d =  4; hp = 12; break;
 
-    case JOB_WIZARD:            s = -1; i =  8; d =  3; hp =  8; mp = 5; break;
-    case JOB_CONJURER:          s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_ENCHANTER:         s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_FIRE_ELEMENTALIST: s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_ICE_ELEMENTALIST:  s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_AIR_ELEMENTALIST:  s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_EARTH_ELEMENTALIST:s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_SUMMONER:          s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_VENOM_MAGE:        s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_NECROMANCER:       s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
+    case JOB_WIZARD:            s = -1; i =  8; d =  3; hp =  8; break;
+    case JOB_CONJURER:          s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_ENCHANTER:         s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_FIRE_ELEMENTALIST: s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_ICE_ELEMENTALIST:  s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_AIR_ELEMENTALIST:  s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_EARTH_ELEMENTALIST:s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_SUMMONER:          s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_VENOM_MAGE:        s =  0; i =  6; d =  4; hp = 10; break;
+    case JOB_NECROMANCER:       s =  0; i =  6; d =  4; hp = 10; break;
 
-    case JOB_WANDERER:          s =  2; i =  2; d =  2; hp = 11; mp = 1; break;
+    case JOB_WANDERER:          s =  2; i =  2; d =  2; hp = 11; break;
 
-    case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; mp = 0; break;
-    default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
+    case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; break;
+    default:                    s =  0; i =  0; d =  0; hp = 10; break;
     }
 
     modify_all_stats( s, i, d );
 
-    set_hp( hp, true );
-    set_mp( mp, true );
+    set_hp(hp, true);
+    set_mp(0, true);
 }
 
 void give_basic_mutations(species_type speci)

@@ -1338,8 +1338,6 @@ unsigned int item_value( item_def item, bool ident )
                 valued += 150;
                 break;
             case POT_MAGIC:
-                valued += 120;
-                break;
             case POT_RESISTANCE:
                 valued += 70;
                 break;

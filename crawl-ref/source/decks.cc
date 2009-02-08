@@ -2031,7 +2031,13 @@ static void _potion_card(int power, deck_rarity_type rarity)
         pot = (coinflip() ? POT_CURE_MUTATION : POT_MUTATION);
 
     if (power_level >= 2 && one_chance_in(5))
-        pot = POT_MAGIC;
+    {
+        // +1 to a random stat.
+        const potion_type gain_stat_pots[] = {
+            POT_GAIN_STRENGTH, POT_GAIN_DEXTERITY, POT_GAIN_INTELLIGENCE
+        };
+        pot = RANDOM_ELEMENT(gain_stat_pots);
+    }
 
     potion_effect(pot, random2(power/4));
 }
