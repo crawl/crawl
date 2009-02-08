@@ -103,6 +103,40 @@ xxxxxx   xxxxxxxrrx       xxwxxxxxxxxvxx
          xxRxxxxxxx       xxWxx
 ENDMAP
 
+##############################################################################
+# Old Forge (castamir)
+#
+NAME:    old_forge
+DEPTH:   D:4-12
+ORIENT:  float
+KITEM:   ? = long sword fixed:singing_sword, damaged short sword, \
+             damaged long sword, damaged hand axe
+KITEM:   ! = any good_item weapon, damaged short sword, \
+             damaged long sword, damaged hand axe
+MONS:    fungus, plant
+MONS:    giant mite, scorpion
+MONS:    rat / grey rat, green rat / orange rat
+MONS:    giant bat
+SUBST:   c:cccvvb , b=cc.
+SUBST:   1 : 1112
+SUBST:   1=1. , 2=2.... , 3=3. , 4=4. , 5=5. , 6=6.
+SUBST:   ':.x''' , '=.x , .=........17
+MAP
+              xxxxxxxxxxxxxxxx
+             xxx11'cccccccxxxx
+            xxx'...c..?v3cx1xx
+           xx111.3.c&'.v3c14xx
+           x111'.......&&c4xxx
+           xxx3.11..1xxccc.44x
+             xxx.1.1113x..'xxx
+              xxx'&..11.'xxx
+               x1xxx'..xxx
+               xxx xx'.'xx
+                    xxx44xxxx
+                      xx'.44xx
+                       xxxx.'x
+                          xx@x
+ENDMAP
 
 ##############################################################################
 # Sometimes You Just Gotta Run
