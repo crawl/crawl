@@ -1057,7 +1057,7 @@ std::string item_def::name_aux( description_level_type desc,
             buff << " ";
         }
 
-        if (is_artefact( *this ) && !dbname)
+        if (is_artefact(*this) && !dbname)
         {
             buff << get_artefact_name(*this);
             break;
@@ -1199,7 +1199,7 @@ std::string item_def::name_aux( description_level_type desc,
             buff << "pair of ";
 
         // When asking for the base item name, randartism is ignored.
-        if (is_random_artefact( *this ) && !basename && !dbname)
+        if (is_random_artefact(*this) && !basename && !dbname)
         {
             buff << get_artefact_name(*this);
             break;
@@ -1439,14 +1439,14 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (know_curse)
         {
-            if (item_cursed( *this ))
+            if (item_cursed(*this))
                 buff << "cursed ";
             else if (Options.show_uncursed && !terse
                      && (!is_randart || !know_type)
                      && (!ring_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
                      // no need to belabour the obvious.
-                     && get_equip_slot( this ) == -1)
+                     && get_equip_slot(this) == -1)
             {
                 buff << "uncursed ";
             }
@@ -1593,11 +1593,11 @@ std::string item_def::name_aux( description_level_type desc,
                      << staff_primary_string(this->special % 4);
             }
 
-            buff << (item_is_rod( *this ) ? "rod" : "staff");
+            buff << (item_is_rod(*this) ? "rod" : "staff");
         }
         else
         {
-            buff << (item_is_rod( *this ) ? "rod" : "staff")
+            buff << (item_is_rod(*this) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
         }
         break;
@@ -1649,11 +1649,11 @@ std::string item_def::name_aux( description_level_type desc,
 
     // One plural to rule them all.
     if (need_plural && this->quantity > 1 && !basename && !qualname)
-        buff.str( pluralise(buff.str()) );
+        buff.str(pluralise(buff.str()));
 
     // Disambiguation.
     if (!terse && !basename && !dbname && know_type &&
-        !is_random_artefact( *this ))
+        !is_random_artefact(*this))
     {
         switch (this->base_type)
         {
@@ -1694,6 +1694,8 @@ std::string item_def::name_aux( description_level_type desc,
                 buff << " [ice]";
                 break;
             }
+            break;
+
         default:
             break;
         }
