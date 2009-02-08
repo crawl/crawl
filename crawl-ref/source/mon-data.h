@@ -125,11 +125,11 @@
      MONUSE_WEAPONS_ARMOUR,
      MONUSE_MAGIC_ITEMS
 
-    From MONUSE_STARTING_EQUIPMENT on, monsters are capable of handling items.
-    Contrary to what one might expect MONUSE_WEAPONS_ARMOUR also means a
-    monster is capable of using wands and will also pick them up, something
-    that those with MONUSE_STARTING_EQUIPMENT won't do.
-    MONUSE_MAGIC_ITEMS is currently never used anywhere.
+    From MONUSE_STARTING_EQUIPMENT on, monsters are capable of handling
+    items.  Contrary to what one might expect, MONUSE_WEAPONS_ARMOUR
+    also means a monster is capable of using wands and will also pick
+    them up, something that those with MONUSE_STARTING_EQUIPMENT won't
+    do.  MONUSE_MAGIC_ITEMS is currently never used anywhere.
 
    size:
      SIZE_TINY,              // rats/bats
