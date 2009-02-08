@@ -84,10 +84,10 @@
    corpse_thingy
    - err, bad name. Describes effects of eating corpses.
      CE_NOCORPSE,        leaves no corpse (mass == 0)
-     CE_CLEAN,           can be healthily eaten by non-Ghoul characters
+     CE_CLEAN,           can be healthily eaten by non-Ghouls
      CE_CONTAMINATED,    occasionally causes sickness
      CE_POISONOUS,       hazardous to characters without poison resistance
-     CE_HCL,             causes rotting in non-Ghoul characters
+     CE_HCL,             causes rotting in non-Ghouls
      CE_MUTAGEN_RANDOM,  mutagenic
      CE_MUTAGEN_GOOD,  // may be worth implementing {dlb}
      CE_MUTAGEN_BAD,   // may be worth implementing {dlb}
