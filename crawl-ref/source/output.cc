@@ -1518,7 +1518,10 @@ static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
             cprintf(" ");
             textbackground(dam_color);
             textcolor(dam_color);
-            // Temporary, to diagnose 1933260
+            // FIXME: On Windows, printing a blank space here
+            // doesn't give us the correct colours. So use and
+            // underscore instead. Is this a bug with our interface
+            // or with Windows?
             cprintf("_");
             textbackground(BLACK);
             textcolor(LIGHTGREY);
