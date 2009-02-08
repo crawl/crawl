@@ -1687,21 +1687,20 @@ void up_stairs(dungeon_feature_type force_stair,
     if (!player_is_airborne()
         && you.confused()
         && old_level_type == LEVEL_DUNGEON
-        && stair_find >= DNGN_STONE_STAIRS_UP_I
-        && stair_find <= DNGN_STONE_STAIRS_UP_III
-        && random2(100) > you.dex)
+        && !grid_is_escape_hatch(stair_find)
+        && coinflip())
     {
-        mpr("In your confused state, you trip and fall back down the stairs.");
+        const char* fall_where = "down the stairs";
+        if (!grid_is_staircase(stair_find))
+            fall_where = "through the gate";
 
-        ouch(roll_dice(3 + you.burden_state, 5), NON_MONSTER,
-             KILLED_BY_FALLING_DOWN_STAIRS);
-
+        mprf("In your confused state, you trip and fall back %s.", fall_where);
+        ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
         you.turn_is_over = true;
         return;
     }
 
-    if (you.burden_state == BS_OVERLOADED
-        && !grid_is_escape_hatch(stair_find))
+    if (you.burden_state == BS_OVERLOADED && !grid_is_escape_hatch(stair_find))
     {
         mpr("You are carrying too much to climb upwards.");
         you.turn_is_over = true;
@@ -2173,20 +2172,16 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         && you.confused()
         && !grid_is_escape_hatch(stair_find)
         && force_stair != DNGN_ENTER_ABYSS
-        && random2(100) > you.dex)
+        && coinflip())
     {
-        std::string fall_where = "down the stairs";
-
+        const char* fall_where = "down the stairs";
         if (!grid_is_staircase(stair_find))
             fall_where = "through the gate";
 
-        mprf("In your confused state, you trip and fall %s.",
-             fall_where.c_str());
-
-        // Nastier than when climbing stairs, but you'll aways get to
-        // your destination. -- bwr
-        ouch(roll_dice(6 + you.burden_state, 10), NON_MONSTER,
-             KILLED_BY_FALLING_DOWN_STAIRS);
+        mprf("In your confused state, you trip and fall %s.", fall_where);
+        // Note that this only does damage; it doesn't cancel the level
+        // transition.
+        ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
     }
 
     dungeon_feature_type stair_taken = stair_find;
