@@ -16,17 +16,9 @@
 
 struct bolt;
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 bool cast_sure_blade(int power);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
-int cast_healing(int pow, const coord_def& where = coord_def(0,0));
+int cast_healing(int pow, bool divine_ability = false,
+                 const coord_def& where = coord_def(0,0));
 
 void remove_divine_vigour();
 bool cast_divine_vigour();

@@ -700,7 +700,9 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     return (false);
 }
 
-static int _healing_spell(int healed, const coord_def where = coord_def())
+// Returns: 1 -- success, 0 -- failure, -1 -- cancel
+static int _healing_spell(int healed, bool divine_ability,
+                          const coord_def& where)
 {
     ASSERT(healed >= 1);
 
@@ -722,7 +724,7 @@ static int _healing_spell(int healed, const coord_def where = coord_def())
     }
 
     if (!spd.isValid)
-        return (0);
+        return (-1);
 
     if (spd.target == you.pos())
     {
@@ -731,26 +733,28 @@ static int _healing_spell(int healed, const coord_def where = coord_def())
         return (1);
     }
 
-    const int mgr = mgrd(spd.target);
-
-    if (mgr == NON_MONSTER)
+    monsters* monster = monster_at(spd.target);
+    if (!monster)
     {
         mpr("There isn't anything there!");
-        return (-1);
+        // This isn't a cancel, to avoid leaking invisible monster
+        // locations.
+        return (0);
     }
 
-    monsters *monster = &menv[mgr];
-
-    // Don't heal a monster you can't pacify.
-    if (you.religion == GOD_ELYVILON && !_can_pacify_monster(monster, healed))
+    // Don't divinely heal a monster you can't pacify.
+    if (divine_ability
+        && you.religion == GOD_ELYVILON
+        && !_can_pacify_monster(monster, healed))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (-1);
+        return (0);
     }
 
-    bool nothing_happens = true;
+    bool did_something = false;
     if (heal_monster(monster, healed, false))
     {
+        did_something = true;
         mprf("You heal %s.", monster->name(DESC_NOCAP_THE).c_str());
 
         if (monster->hit_points == monster->max_hit_points)
@@ -760,17 +764,16 @@ static int _healing_spell(int healed, const coord_def where = coord_def())
 
         if (you.religion == GOD_ELYVILON && !_mons_hostile(monster))
         {
-            simple_god_message(" appreciates the healing of a fellow creature.");
+            simple_god_message(" appreciates the healing "
+                               "of a fellow creature.");
             if (one_chance_in(8))
                 gain_piety(1);
-            return (1);
         }
-
-        nothing_happens = false;
     }
 
     if (you.religion == GOD_ELYVILON && _mons_hostile(monster))
     {
+        did_something = true;
         simple_god_message(" supports your offer of peace.");
 
         if (mons_is_holy(monster))
@@ -786,34 +789,18 @@ static int _healing_spell(int healed, const coord_def where = coord_def())
                 gain_piety(1 + random2(healed/15));
         }
     }
-    else if (nothing_happens)
+
+    if (!did_something)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (1);
+    return (did_something ? 1 : 0);
 }
 
-#if 0
-char cast_lesser_healing( int pow )
-{
-    return _healing_spell(5 + random2avg(7, 2));
-}
-
-char cast_greater_healing( int pow )
-{
-    return _healing_spell(15 + random2avg(29, 2));
-}
-
-char cast_greatest_healing( int pow )
-{
-    return _healing_spell(50 + random2avg(49, 2));
-}
-#endif
-
-int cast_healing(int pow, const coord_def& where)
+// Returns: 1 -- success, 0 -- failure, -1 -- cancel
+int cast_healing(int pow, bool divine_ability, const coord_def& where)
 {
     pow = std::min(50, pow);
-
-    return (_healing_spell(pow + roll_dice(2, pow) - 2, where));
+    return (_healing_spell(pow + roll_dice(2, pow) - 2, divine_ability, where));
 }
 
 void remove_divine_vigour()

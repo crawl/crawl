@@ -1715,7 +1715,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_LESSER_HEALING:
-        if (!cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6)))
+        if (cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6), true) < 0)
             return (false);
 
         exercise(SK_INVOCATIONS, 1);
@@ -1727,7 +1727,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_GREATER_HEALING:
-        if (!cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3)))
+        if (cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3), true) < 0)
             return (false);
 
         exercise(SK_INVOCATIONS, 3 + random2(5));

@@ -915,7 +915,7 @@ const zap_info zap_data[] = {
         false,
         BEAM_MMISSILE,
         DCHAR_FIRED_DEBUG,
-        true,
+        false,
         false,
         false
     },
@@ -4843,7 +4843,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
     case BEAM_HEALING:
         if (YOU_KILL(thrower))
         {
-            if (cast_healing(5 + damage.roll(), mon->pos()) > 0)
+            if (cast_healing(5 + damage.roll(), false, mon->pos()) > 0)
                 obvious_effect = true;
             msg_generated = true; // to avoid duplicate "nothing happens"
         }
