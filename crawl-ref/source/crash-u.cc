@@ -150,7 +150,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     if (symbols == NULL)
     {
-        fprintf(stderr, "Out of memroy." EOL);
+        fprintf(stderr, "Out of memory." EOL);
         fprintf(file,   "Out of memory." EOL);
 
         // backtrace_symbols_fd() can print out the stack trace even if

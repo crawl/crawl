@@ -14,6 +14,19 @@
 #include "enum.h"
 #include "libgui.h"
 #include "ray.h"
+#include "state.h"
+
+class range_view_annotator : public crawl_exit_hook
+{
+public:
+    range_view_annotator(int range);
+    virtual ~range_view_annotator();
+    virtual void restore_state();
+private:
+    bool do_anything;
+    FixedArray<int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> orig_colours;
+    int orig_mon_colours[MAX_MONSTERS];
+};
 
 class crawl_view_buffer
 {
@@ -28,11 +41,6 @@ private:
     screen_buffer_t *buffer;
 };
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - debug - effects - it_use3 - item_use - spells1 -
- *              spells2 - spells3 - spells4
- * *********************************************************************** */
 struct crawl_view_geometry
 {
 public:

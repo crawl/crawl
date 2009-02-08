@@ -335,6 +335,12 @@ static void handle_hangup(int)
     crawl_state.saving_game = true;
     if (crawl_state.need_save)
     {
+        // Clean up all the hooks.
+        for (unsigned i = 0; i < crawl_state.exit_hooks.size(); ++i)
+            crawl_state.exit_hooks[i]->restore_state();
+
+        crawl_state.exit_hooks.clear();
+
         // save_game(true) also exits, saving us the trouble of doing so.
         save_game(true);
     }

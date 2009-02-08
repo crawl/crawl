@@ -15,6 +15,14 @@
 class monsters;
 class mon_acting;
 
+class crawl_exit_hook
+{
+public:
+    crawl_exit_hook();
+    virtual ~crawl_exit_hook();
+    virtual void restore_state() = 0;
+};
+
 struct god_act_state
 {
 public:
@@ -75,6 +83,9 @@ struct game_state
 
     std::vector<std::string> input_line_strs;
     unsigned int             input_line_curr;
+
+    // Hooks to call if get shut down unexpectedly.
+    std::vector<crawl_exit_hook*> exit_hooks;
 
     bool level_annotation_shown;
 

@@ -1679,6 +1679,7 @@ private:
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 typedef FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
     env_show_grid;
+class crawl_exit_hook;
 
 struct crawl_environment
 {
@@ -1728,7 +1729,7 @@ public:
     map_markers                              markers;
 
     // Place to associate arbitrary data with a particular level.
-    // Sort of like player::atribute
+    // Sort of like player::attribute
     CrawlHashTable properties;
 
     // Rate at which random monsters spawn, with lower numbers making

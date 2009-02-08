@@ -20,7 +20,7 @@ REVISION("$Rev$");
 #include <algorithm>
 
 #ifdef DOS
- #include <conio.h>
+#include <conio.h>
 #endif
 
 #include "externs.h"
@@ -718,14 +718,25 @@ static int _mlist_letter_to_index(char idx)
 }
 #endif
 
-class range_view_annotator
+crawl_exit_hook::crawl_exit_hook()
 {
-public:
-    range_view_annotator(int range) {
-        do_anything = (range >= 0);
-        if (range < 0)
-            return;
+    crawl_state.exit_hooks.push_back(this);
+}
 
+crawl_exit_hook::~crawl_exit_hook()
+{
+    crawl_state.exit_hooks.erase(std::remove(crawl_state.exit_hooks.begin(),
+                                             crawl_state.exit_hooks.end(),
+                                             this),
+                                 crawl_state.exit_hooks.end());
+}
+
+range_view_annotator::range_view_annotator(int range)
+{
+    do_anything = (range >= 0);
+
+    if (do_anything)
+    {
         // Save and replace grid colours. -1 means unchanged.
         orig_colours.init(-1);
         const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
@@ -757,38 +768,39 @@ public:
         // Repaint.
         viewwindow(true, false);
     }
+}
 
-    ~range_view_annotator() {
+range_view_annotator::~range_view_annotator()
+{
+    restore_state();
+    viewwindow(true, false);
+}
 
-        if (!do_anything)
-            return;
+void range_view_annotator::restore_state()
+{
+    if (!do_anything)
+        return;
 
-        // Restore grid colours.
-        coord_def c;
-        const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
-        for ( c.x = 0; c.x < ENV_SHOW_DIAMETER; ++c.x )
+    // Restore grid colours.
+    coord_def c;
+    const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
+    for ( c.x = 0; c.x < ENV_SHOW_DIAMETER; ++c.x )
+    {
+        for ( c.y = 0; c.y < ENV_SHOW_DIAMETER; ++c.y )
         {
-            for ( c.y = 0; c.y < ENV_SHOW_DIAMETER; ++c.y )
-            {
-                const int old_colour = orig_colours(c);
-                if ( old_colour != -1 )
-                    env.grid_colours(you.pos() + c - offset) = old_colour;
-            }
+            const int old_colour = orig_colours(c);
+            if ( old_colour != -1 )
+                env.grid_colours(you.pos() + c - offset) = old_colour;
         }
-
-        // Restore monster colours.
-        for (int i = 0; i < MAX_MONSTERS; ++i)
-            if (orig_mon_colours[i] != -1)
-                menv[i].colour = orig_mon_colours[i];
-
-        // Repaint.
-        viewwindow(true, false);
     }
-private:
-    bool do_anything;
-    FixedArray<int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> orig_colours;
-    int orig_mon_colours[MAX_MONSTERS];
-};
+
+    // Restore monster colours.
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+        if (orig_mon_colours[i] != -1)
+            menv[i].colour = orig_mon_colours[i];
+
+    do_anything = false;
+}
 
 bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
               bool may_target_self, bool cancel_at_self)
