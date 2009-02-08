@@ -64,7 +64,7 @@ REVISION("$Rev$");
 int holy_word_player(int pow, int caster, actor *attacker)
 {
     if (!player_is_unholy())
-        return 0;
+        return (0);
 
     int hploss;
 
@@ -75,7 +75,7 @@ int holy_word_player(int pow, int caster, actor *attacker)
         hploss = roll_dice(2, 15) + (random2(pow) / 3);
 
     if (!hploss)
-        return 0;
+        return (0);
 
     mpr("You are blasted by holy energy!");
 
@@ -106,7 +106,7 @@ int holy_word_player(int pow, int caster, actor *attacker)
 
     ouch(hploss, caster, type, aux);
 
-    return 1;
+    return (1);
 }
 
 int holy_word_monsters(coord_def where, int pow, int caster,
@@ -125,12 +125,12 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     const int mon = mgrd(where);
 
     if (mon == NON_MONSTER)
-        return retval;
+        return (retval);
 
     monsters *monster = &menv[mon];
 
     if (!monster->alive() || !mons_is_unholy(monster))
-        return retval;
+        return (retval);
 
     int hploss;
 
@@ -164,7 +164,7 @@ int holy_word_monsters(coord_def where, int pow, int caster,
         }
     }
 
-    return retval;
+    return (retval);
 }
 
 int holy_word(int pow, int caster, const coord_def& where, bool silent,
@@ -177,8 +177,8 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent,
              attacker->conj_verb("speak").c_str());
     }
 
-    return apply_area_within_radius(holy_word_monsters, where, pow, 8, caster,
-                                    attacker);
+    return (apply_area_within_radius(holy_word_monsters, where, pow, 8, caster,
+                                     attacker));
 }
 
 int torment_player(int pow, int caster)
@@ -201,7 +201,7 @@ int torment_player(int pow, int caster)
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");
-        return 0;
+        return (0);
     }
 
     mpr("Your body is wracked with pain!");
@@ -241,7 +241,7 @@ int torment_player(int pow, int caster)
 
     ouch(hploss, caster, type, aux);
 
-    return 1;
+    return (1);
 }
 
 // torment_monsters() is called with power 0 because torment is
@@ -263,12 +263,12 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
     const int mon = mgrd(where);
 
     if (mon == NON_MONSTER)
-        return retval;
+        return (retval);
 
     monsters *monster = &menv[mon];
 
     if (!monster->alive() || mons_res_negative_energy(monster) == 3)
-        return retval;
+        return (retval);
 
     int hploss = std::max(0, monster->hit_points / 2 - 1);
 
@@ -282,12 +282,12 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
     if (hploss)
         retval = 1;
 
-    return retval;
+    return (retval);
 }
 
 int torment(int caster, const coord_def& where)
 {
-    return apply_area_within_radius(torment_monsters, where, 0, 8, caster);
+    return (apply_area_within_radius(torment_monsters, where, 0, 8, caster));
 }
 
 void immolation(int pow, int caster, coord_def where, bool known,

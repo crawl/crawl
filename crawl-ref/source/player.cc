@@ -5247,7 +5247,7 @@ bool confuse_player(int amount, bool resistable)
     return (true);
 }
 
-bool curare_hits_player(int agent, int amount)
+bool curare_hits_player(int death_source, int amount)
 {
     ASSERT(!crawl_state.arena);
 
@@ -5268,7 +5268,8 @@ bool curare_hits_player(int agent, int amount)
         if (hurted)
         {
             mpr("You have difficulty breathing.");
-            ouch(hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea");
+            ouch(hurted, death_source, KILLED_BY_CURARE,
+                 "curare-induced apnoea");
         }
 
         potion_effect(POT_SLOWING, 2 + random2(4 + amount));

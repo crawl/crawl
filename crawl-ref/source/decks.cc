@@ -1740,7 +1740,7 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
     {
         const int mnstr = mgrd(where);
         if (mnstr == NON_MONSTER)
-            return 0;
+            return (0);
 
         monsters& mon = menv[mnstr];
 
@@ -1748,7 +1748,7 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
             simple_monster_message(&mon, " is unaffected.");
         else
         {
-            simple_monster_message(&mon, " is drained.");
+            simple_monster_message(&mon, " is drained!");
 
             if (x_chance_in_y(pow / 60, 20))
             {
@@ -1760,7 +1760,8 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
             mon.hurt(&you, 2 + random2(50), BEAM_NEG);
         }
     }
-    return 1;
+
+    return (1);
 }
 
 static void _mass_drain(int pow)

@@ -421,7 +421,7 @@ void contaminate_player(int change, bool controlled = false,
 
 bool confuse_player(int amount, bool resistable = true);
 
-bool curare_hits_player(int agent, int degree);
+bool curare_hits_player(int death_source, int amount);
 bool poison_player(int amount, bool force = false);
 void dec_poison_player();
 void reduce_poison_player(int amount);

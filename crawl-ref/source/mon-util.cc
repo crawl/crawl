@@ -7949,7 +7949,7 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
 void monsters::react_to_damage(int damage, beam_type flavour)
 {
     // The royal jelly objects to taking damage and will SULK. :-)
-    if (type == MONS_ROYAL_JELLY && flavour != BEAM_TORMENT_DAMAGE && alive()
+    if (alive() && type == MONS_ROYAL_JELLY && flavour != BEAM_TORMENT_DAMAGE
         && damage > 8 && x_chance_in_y(damage, 50))
     {
         mon_acting mact(this);
