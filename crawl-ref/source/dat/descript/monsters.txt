@@ -494,7 +494,7 @@ This legendary deep elf archer has devoted her whole life to the pursuit of arch
 %%%%
 deep elf priest
 
-This deep elf is a servant of an ancient dark god.  Deep elves are extremely hostile towards any alien outside their tribe, including deep elves from elsewhere.  No one has ever succeeded in understanding the religious standings of these elves.
+This deep elf is a servant of an ancient dark god.  Deep elves are extremely hostile towards any alien outside their tribe, including deep elves from elsewhere.  The religious standings of these elves remain a mystery.
 %%%%
 deep elf soldier
 
