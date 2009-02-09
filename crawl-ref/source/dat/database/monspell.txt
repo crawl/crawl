@@ -212,7 +212,7 @@ priest cast
 %%%%
 unseen priest cast targeted
 
-You hear some @something@ call down the wrath of @God@ upon @target@.
+You hear @something@ call down the wrath of @God@ upon @target@.
 
 You hear @something@ mumble some strange prayers to @God@ against @target@.
 
