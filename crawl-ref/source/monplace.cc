@@ -1066,10 +1066,10 @@ static int _place_monster_aux(const mgen_data &mg,
     // Xom in the Abyss.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
     {
-        if (mg.level_type == LEVEL_ABYSS && one_chance_in(7))
-            menv[id].god = GOD_XOM;
-        else
+        if (mg.level_type != LEVEL_ABYSS || x_chance_in_y(6, 7))
             menv[id].god = GOD_SHINING_ONE;
+        else
+            menv[id].god = GOD_XOM;
     }
 
     // If the caller requested a specific colour for this monster,
