@@ -120,9 +120,9 @@ void describe_stash(int x, int y)
         Stash *s = ls->find_stash(x, y);
         if (s)
         {
-            std::string desc = "[Stash: "
-                               + s->description() + "]";
-            mpr(desc.c_str(), MSGCH_EXAMINE_FILTER);
+            const std::string desc = s->description();
+            if (!desc.empty())
+                mprf(MSGCH_EXAMINE_FILTER, "[Stash: %s]", desc.c_str());
         }
     }
 }
