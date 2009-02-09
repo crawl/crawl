@@ -837,8 +837,8 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         viewwindow(true, false);
     }
 
-    set_terrain_changed(pos1.x, pos1.y);
-    set_terrain_changed(pos2.x, pos2.y);
+    set_terrain_changed(pos1);
+    set_terrain_changed(pos2);
 
     if (announce)
         _announce_swap(pos1, pos2);

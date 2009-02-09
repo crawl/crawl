@@ -551,29 +551,31 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
     if (!ignore_terrain_knowledge && !is_terrain_known(x, y))
         return (false);
 
-    const dungeon_feature_type grid = grd[x][y];
+    const bool seen = see_grid(x,y);
+    const int grid = (seen ? grd[x][y] : get_envmap_obj(x,y));
 
-    // Special-case secret doors so that we don't run into awkwardness when
-    // a monster opens a secret door without the hero seeing it, but the travel
-    // code paths through the secret door because it looks at the actual grid,
-    // rather than the env overmap.
-    if ((grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
-        && is_terrain_changed(x, y))
+    // FIXME: this compares to the *real* monster at the square,
+    // even if the one we've seen is different.
+    if (!ignore_hostile
+        && (seen || grid > DNGN_START_OF_MONSTERS)
+        && _is_monster_blocked(x, y))
     {
-        const int c = get_envmap_obj(x, y);
-        const int secret_door = grid_secret_door_appearance(coord_def(x, y));
-        return (c != secret_door);
-    }
-
-    if (!ignore_hostile && _is_monster_blocked(x, y))
         return (false);
+    }
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
-    if (ignore_hostile && _is_reseedable(x, y))
+    if (ignore_hostile
+        && (seen || grid < NUM_REAL_FEATURES)
+        && _is_reseedable(x, y))
+    {
+        return (true);
+    }
+
+    if (grid >= NUM_REAL_FEATURES)
         return (true);
 
-    return (is_traversable(grid)
+    return (is_traversable(static_cast<dungeon_feature_type>(grid))
 #ifdef CLUA_BINDINGS
                 || (is_trap(x, y)
                     && clua.callbooleanfn(false, "ch_cross_trap",

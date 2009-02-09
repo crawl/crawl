@@ -808,12 +808,12 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!clear_detected_monsters && is_envmap_detected_mons(p))
             continue;
 
-        set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
+        set_envmap_obj(p, is_terrain_known(p)? grd(p) : DNGN_UNSEEN);
         set_envmap_detected_mons(p, false);
         set_envmap_detected_item(p, false);
 
 #ifdef USE_TILE
-        set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
+        set_envmap_obj(p, is_terrain_known(p)? grd(p) : DNGN_UNSEEN);
         env.tile_bk_fg(p) = 0;
         env.tile_bk_bg(p) = is_terrain_known(p) ?
             tile_idx_unseen_terrain(p.x, p.y, grd(p)) :
@@ -3252,13 +3252,8 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
     int bufcount2 = 0;
     screen_buffer_t buffer2[GYM * GXM * 2];
 
-    int num_lines = _get_number_of_lines_levelmap();
-    if (num_lines > GYM)
-        num_lines = GYM;
-
-    int num_cols = get_number_of_cols();
-    if (num_cols > GXM)
-        num_cols = GXM;
+    const int num_lines = std::min(_get_number_of_lines_levelmap(), GYM);
+    const int num_cols  = std::min(get_number_of_cols(),            GXM);
 
     cursor_control cs(false);
 
