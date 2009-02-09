@@ -2206,9 +2206,10 @@ static int _monster_abjure_square(const coord_def &pos,
 #endif
 
     mon_enchant abj = target->get_ench(ENCH_ABJ);
-    if (!target->lose_ench_duration(abj, pow) && !shielded)
+    if (!target->lose_ench_duration(abj, pow))
     {
-        simple_monster_message(target, " shudders.");
+        if (!shielded)
+            simple_monster_message(target, " shudders.");
         return (1);
     }
 
