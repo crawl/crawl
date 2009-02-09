@@ -677,12 +677,10 @@ static int _is_near_stairs(coord_def &p)
     return (result);
 }
 
-/*
- * Checks if the monster is ok to place at mg_pos. If force_location
- * is true, then we'll be less rigorous in our checks, in particular
- * allowing land monsters to be placed in shallow water and water
- * creatures in fountains.
- */
+// Checks if the monster is ok to place at mg_pos. If force_location
+// is true, then we'll be less rigorous in our checks, in particular
+// allowing land monsters to be placed in shallow water and water
+// creatures in fountains.
 static bool _valid_monster_location(const mgen_data &mg,
                                     const coord_def &mg_pos)
 {
