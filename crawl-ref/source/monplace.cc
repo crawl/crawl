@@ -1068,7 +1068,7 @@ static int _place_monster_aux(const mgen_data &mg,
     // Xom in the Abyss.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
     {
-        if (mg.level_type == LEVEL_ABYSS && one_chance_in(16))
+        if (mg.level_type == LEVEL_ABYSS && one_chance_in(7))
             menv[id].god = GOD_XOM;
         else
             menv[id].god = GOD_SHINING_ONE;
