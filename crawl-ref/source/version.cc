@@ -21,5 +21,9 @@ check_revision::check_revision(const char *rev_str)
 
 int svn_revision()
 {
+#if BUILD_REVISION
+    return BUILD_REVISION;
+#else
     return check_revision::max_rev;
+#endif
 }

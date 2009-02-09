@@ -36,7 +36,7 @@
 #define VER_QUAL "-svn"
 
 // Undefine for official releases.
-#define BUILD_REVISION
+#define DISPLAY_BUILD_REVISION
 
 // last updated 07august2001 {mv}
 /* ***********************************************************************
