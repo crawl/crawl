@@ -490,11 +490,11 @@ This is a deep elf wizard, learned in the ways of subtle magic.
 %%%%
 deep elf master archer
 
-This legendary deep elf archer has devoted her whole life to the pursuit of archery, dismissing magic as a frivolous distraction.
+This legendary deep elf archer has devoted a lifetime to the pursuit of archery, dismissing magic as a frivolous distraction.
 %%%%
 deep elf priest
 
-This deep elf is a servant of an ancient dark god.  Deep elves are extremely hostile towards any alien outside their tribe, including deep elves from elsewhere.  The religious standings of these elves remain a mystery.
+This deep elf is a servant of an ancient dark god.  Deep elves are extremely hostile towards any alien outside their tribe, including deep elves from elsewhere.  The religious standings of these elves remain mysteries.
 %%%%
 deep elf soldier
 
