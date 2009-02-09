@@ -689,7 +689,13 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
         return (LIGHTGREEN);
 #endif
 
-    const dungeon_feature_type grid_value = grd(p);
+    dungeon_feature_type grid_value = grd(p);
+    if (!see_grid(p))
+    {
+        const int remembered = get_envmap_obj(p);
+        if (remembered < NUM_REAL_FEATURES)
+            grid_value = static_cast<dungeon_feature_type>(remembered);
+    }
 
     unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
 
