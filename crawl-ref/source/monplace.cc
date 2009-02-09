@@ -1047,16 +1047,10 @@ static int _place_monster_aux(const mgen_data &mg,
             menv[id].god = GOD_BEOGH;
             break;
         case MONS_MUMMY:
-            menv[id].god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
-            break;
         case MONS_DRACONIAN:
         case MONS_ELF:
-        {
-            god_type gods[] = {GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL,
-                               GOD_MAKHLEB};
-            menv[id].god = RANDOM_ELEMENT(gods);
+            menv[id].god = GOD_NAMELESS;
             break;
-        }
         default:
             mprf(MSGCH_ERROR, "ERROR: Invalid monster priest '%s'",
                  menv[id].name(DESC_PLAIN, true).c_str());

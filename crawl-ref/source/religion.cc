@@ -2258,6 +2258,7 @@ std::string god_name( god_type which_god, bool long_name )
     {
     case GOD_NO_GOD: return "No God";
     case GOD_RANDOM: return "random";
+    case GOD_NAMELESS: return "nameless";
     case GOD_ZIN:           return (long_name ? "Zin the Law-Giver" : "Zin");
     case GOD_SHINING_ONE:   return "The Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
@@ -6172,7 +6173,7 @@ bool god_likes_items(god_type god)
     case GOD_ZIN: case GOD_SHINING_ONE: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
         return (true);
 
-    case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
+    case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
         mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god) );
     default:
         return (false);
@@ -6993,6 +6994,7 @@ int god_colour(god_type god) // mv - added
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
+    case GOD_NAMELESS:
     default:
         break;
     }

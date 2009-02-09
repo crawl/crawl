@@ -8206,19 +8206,19 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
         maxduration = duration;
 }
 
-// Replaces @foe_god@ and @god_is@ with foe's god name
-// special handling for atheists: use "you"/"You" instead.
+// Replaces @foe_god@ and @god_is@ with foe's god name.
+//
+// Atheists get "You"/"you", and worshippers of nameless gods get "Your
+// god"/"your god".
 static std::string _replace_god_name(god_type god, bool need_verb = false,
                                      bool capital = false)
 {
     std::string result =
-          (god == GOD_NO_GOD ? (capital ? "You" : "you")
-                             : god_name(god, false));
+          ((god == GOD_NO_GOD)    ? (capital ? "You"      : "you") :
+           (god == GOD_NAMELESS)  ? (capital ? "Your god" : "your god")
+                                  : god_name(god, false));
     if (need_verb)
-    {
-        result +=
-          (god == GOD_NO_GOD ? " are" : " is");
-    }
+        result += (god == GOD_NO_GOD) ? " are" : " is";
 
     return (result);
 }
@@ -8496,11 +8496,26 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                           _replace_god_name(god, false, true));
     }
 
-    // The monster's god, not the player's.
+    // The monster's god, not the player's.  Atheists get
+    // "NO GOD"/"NO GOD", and worshippers of nameless gods get
+    // "a god"/"its god".
     if (monster->god == GOD_NO_GOD)
+    {
         msg = replace_all(msg, "@God@", "NO GOD");
+        msg = replace_all(msg, "@possessive_God@", "NO GOD");
+    }
+    else if (monster->god == GOD_NAMELESS)
+    {
+        msg = replace_all(msg, "@God@", "a god");
+        std::string possessive = monster->pronoun(PRONOUN_NOCAP_POSSESSIVE);
+        possessive += " god";
+        msg = replace_all(msg, "@possessive_God@", possessive.c_str());
+    }
     else
+    {
         msg = replace_all(msg, "@God@", god_name(monster->god));
+        msg = replace_all(msg, "@possessive_God@", god_name(monster->god));
+    }
 
     // Replace with species specific insults.
     if (foe != NULL && msg.find("@species_insult_") != std::string::npos)

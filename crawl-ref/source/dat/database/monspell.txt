@@ -159,7 +159,7 @@ sphinx cast
 %%%%
 angel cast targeted
 
-@The_monster@ calls down the wrath of @God@ upon @target@.
+@The_monster@ calls down the wrath of @possessive_God@ upon @target@.
 %%%%
 dragon cast targeted
 
@@ -196,19 +196,19 @@ giant eyeball cast
 %%%%
 priest cast targeted
 
-@The_monster@ calls down the wrath of @God@ upon @target@.
+@The_monster@ calls down the wrath of @possessive_God@ upon @target@.
 
-@The_monster@ mumbles some strange prayers to @God@ against @target@.
+@The_monster@ mumbles some strange prayers to @possessive_God@ against @target@.
 
-@The_monster@ invokes the aid of @God@ against @target@.
+@The_monster@ invokes the aid of @possessive_God@ against @target@.
 %%%%
 priest cast
 
-@The_monster@ prays to @God@.
+@The_monster@ prays to @possessive_God@.
 
-@The_monster@ mumbles some strange prayers to @God@.
+@The_monster@ mumbles some strange prayers to @possessive_God@.
 
-@The_monster@ utters an invocation to @God@.
+@The_monster@ utters an invocation to @possessive_God@.
 %%%%
 unseen priest cast targeted
 

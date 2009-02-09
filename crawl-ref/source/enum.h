@@ -1335,7 +1335,8 @@ enum god_type
     GOD_BEOGH,
     NUM_GODS,                          // always after last god
 
-    GOD_RANDOM  = 100
+    GOD_RANDOM = 100,
+    GOD_NAMELESS = 101                 // for monsters with nameless gods
 };
 
 enum holy_word_source_type

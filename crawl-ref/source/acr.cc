@@ -389,6 +389,7 @@ static void _god_greeting_message( bool game_start )
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
+    case GOD_NAMELESS:
         break;
     }
 }
