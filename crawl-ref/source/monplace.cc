@@ -1064,9 +1064,15 @@ static int _place_monster_aux(const mgen_data &mg,
         if (x_chance_in_y(6, 7))
             menv[id].god = GOD_BEOGH;
     }
-    // Angels and Daevas belong to TSO.
+    // Angels and Daevas belong to TSO, but you may find ones adopted by
+    // Xom in the Abyss.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
-        menv[id].god = GOD_SHINING_ONE;
+    {
+        if (mg.level_type == LEVEL_ABYSS && one_chance_in(16))
+            menv[id].god = GOD_XOM;
+        else
+            menv[id].god = GOD_SHINING_ONE;
+    }
 
     // If the caller requested a specific colour for this monster,
     // apply it now.
