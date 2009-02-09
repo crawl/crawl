@@ -2194,9 +2194,10 @@ static int _monster_abjure_square(const coord_def &pos,
     }
     else if (is_sanctuary(target->pos()))
     {
+        pow = 0;
         mpr("Zin's power protects your fellow warrior from evil magic!",
             MSGCH_GOD);
-        return (0);
+        shielded = true;
     }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2206,9 +2207,12 @@ static int _monster_abjure_square(const coord_def &pos,
 
     mon_enchant abj = target->get_ench(ENCH_ABJ);
     if (!target->lose_ench_duration(abj, pow) && !shielded)
+    {
         simple_monster_message(target, " shudders.");
+        return (1);
+    }
 
-    return (1);
+    return (0);
 }
 
 static int _apply_radius_around_square( const coord_def &c, int radius,
