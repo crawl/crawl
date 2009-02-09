@@ -5673,7 +5673,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     monster_type soul_type = mons_species(type);
     const std::string whose =
         player_monster_visible(mon) ? apostrophise(mon->name(DESC_CAP_THE))
-                                    : "Its";
+                                    : mon->pronoun(PRONOUN_CAP_POSSESSIVE).c_str();
     const bool twisted = coinflip();
     int corps = -1;
 
