@@ -4006,7 +4006,7 @@ bool trog_burn_spellbooks()
 
     if (!totalpiety)
     {
-         mpr("There are no spellbooks in sight to burn!");
+         mpr("You cannot see a spellbook to ignite!");
          return (false);
     }
     else
@@ -4025,17 +4025,16 @@ void lose_piety(int pgn)
     const int old_piety = you.piety;
 
     // Apply hysteresis.
-    {
-        const int old_hysteresis = you.piety_hysteresis;
-        you.piety_hysteresis = (unsigned char)std::min<int>(
-            PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
-        const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
-        pgn -= pgn_borrowed;
+    const int old_hysteresis = you.piety_hysteresis;
+    you.piety_hysteresis = (unsigned char)std::min<int>(
+        PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
+    const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
+    pgn -= pgn_borrowed;
 #if DEBUG_PIETY
-        mprf(MSGCH_DIAGNOSTICS, "Piety decreasing by %d (and %d added to hysteresis)", pgn, pgn_borrowed);
+    mprf(MSGCH_DIAGNOSTICS,
+         "Piety decreasing by %d (and %d added to hysteresis)",
+         pgn, pgn_borrowed);
 #endif
-    }
-
 
     if (you.piety - pgn < 0)
         you.piety = 0;
@@ -4069,7 +4068,8 @@ void lose_piety(int pgn)
                     else
                     {
                         god_speaks(you.religion,
-                                   make_stringf("You can no longer %s.", pmsg).c_str());
+                                   make_stringf("You can no longer %s.",
+                                                pmsg).c_str());
                     }
                 }
 
