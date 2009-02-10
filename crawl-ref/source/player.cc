@@ -160,14 +160,15 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 
                     viewwindow(true, false);
 
-                    mprf( MSGCH_WARN,
-                          "Wait a moment, %s!  Do you really want to step there?",
-                          you.your_name );
+                    mprf(MSGCH_WARN,
+                         "Wait a moment, %s! Do you really want to step there?",
+                         you.your_name);
 
                     if (!you.running.is_any_travel())
                         more();
 
-                    exercise( SK_TRAPS_DOORS, 3 );
+                    exercise(SK_TRAPS_DOORS, 3);
+                    print_stats();
 
                     you.turn_is_over = false;
 
