@@ -1037,7 +1037,7 @@ std::string item_def::name_aux( description_level_type desc,
             // this behaviour, *please* make it so that there is an option
             // that maintains this behaviour. -- bwr
             // Nor for artefacts. Again, the state should be obvious. --jpeg
-            if (item_cursed( *this ))
+            if (item_cursed(*this))
                 buff << "cursed ";
             else if (Options.show_uncursed && !know_pluses
                      && (!know_type || !is_artefact(*this)))
@@ -1068,7 +1068,7 @@ std::string item_def::name_aux( description_level_type desc,
         // term once it's become obsolete. -- bwr
         if (know_cosmetic)
         {
-            switch (get_equip_desc( *this ))
+            switch (get_equip_desc(*this))
             {
             case ISFLAG_RUNED:
                 if (!testbits(ignore_flags, ISFLAG_RUNED))
@@ -1102,7 +1102,7 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_MISSILES:
-        brand = get_ammo_brand( *this );
+        brand = get_ammo_brand(*this);
 
         if (know_brand)
         {
@@ -1183,7 +1183,7 @@ std::string item_def::name_aux( description_level_type desc,
     case OBJ_ARMOUR:
         if (know_curse && !terse)
         {
-            if (item_cursed( *this ))
+            if (item_cursed(*this))
                 buff << "cursed ";
             else if (Options.show_uncursed && !know_pluses)
                 buff << "uncursed ";
@@ -1210,15 +1210,15 @@ std::string item_def::name_aux( description_level_type desc,
         // term once it's become obsolete. -- bwr
         if (know_cosmetic)
         {
-            switch (get_equip_desc( *this ))
+            switch (get_equip_desc(*this))
             {
             case ISFLAG_EMBROIDERED_SHINY:
                 if (testbits(ignore_flags, ISFLAG_EMBROIDERED_SHINY))
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
-                    || get_armour_slot( *this ) == EQ_HELMET
-                       && !is_hard_helmet( *this ))
+                    || get_armour_slot(*this) == EQ_HELMET
+                       && !is_hard_helmet(*this))
                 {
                     buff << "embroidered ";
                 }
@@ -1251,7 +1251,7 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (!basename && !dbname && is_hard_helmet(*this))
         {
-            const short dhelm = get_helmet_desc( *this );
+            const short dhelm = get_helmet_desc(*this);
 
             buff <<
                    ((dhelm == THELM_DESC_PLAIN)    ? "" :
@@ -1295,10 +1295,9 @@ std::string item_def::name_aux( description_level_type desc,
             buff << "wand";
             break;
         }
+
         if (know_type)
-        {
             buff << "wand of " << wand_type_name(item_typ);
-        }
         else
         {
             buff << wand_secondary_string(this->special / 12)
@@ -1327,10 +1326,9 @@ std::string item_def::name_aux( description_level_type desc,
             buff << "potion";
             break;
         }
+
         if (know_type)
-        {
             buff << "potion of " << potion_type_name(item_typ);
-        }
         else
         {
             const int pqual   = PQUAL(this->plus);
@@ -1435,7 +1433,7 @@ std::string item_def::name_aux( description_level_type desc,
             break;
         }
 
-        const bool is_randart = is_random_artefact( *this );
+        const bool is_randart = is_random_artefact(*this);
 
         if (know_curse)
         {
@@ -1545,7 +1543,7 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_BOOKS:
-        if (is_random_artefact( *this ) && !dbname && !basename)
+        if (is_random_artefact(*this) && !dbname && !basename)
         {
             buff << get_artefact_name(*this);
             if (!know_type)
@@ -1652,8 +1650,8 @@ std::string item_def::name_aux( description_level_type desc,
         buff.str(pluralise(buff.str()));
 
     // Disambiguation.
-    if (!terse && !basename && !dbname && know_type &&
-        !is_random_artefact(*this))
+    if (!terse && !basename && !dbname && know_type
+        && !is_random_artefact(*this))
     {
         switch (this->base_type)
         {
@@ -2896,7 +2894,7 @@ void init_item_name_cache()
             item_def       &item(mitm[o]);
             item_types_pair pair = {base_type, sub_type};
 
-            // Make sure item isn't an artifact
+            // Make sure item isn't an artefact.
             item.flags  &= ~ISFLAG_ARTEFACT_MASK;
             item.special = 0;
 
