@@ -5942,7 +5942,7 @@ bool monsters::drain_exp(actor *agent, bool quiet, int pow)
     if (x_chance_in_y(res_negative_energy(), 3))
         return (false);
 
-    if (!quiet && mons_near(this) && player_monster_visible(this))
+    if (!quiet && you.can_see(this))
         mprf("%s is drained!", name(DESC_CAP_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.

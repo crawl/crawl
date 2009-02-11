@@ -2099,7 +2099,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (!hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+            {
+                simple_monster_message(monster,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
+            }
         }
         else if (original > hurted)
         {
@@ -2135,7 +2139,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (!hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+            {
+                simple_monster_message(monster,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
+            }
         }
         else if (original > hurted)
         {
@@ -2156,7 +2164,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (!hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+            {
+                simple_monster_message(monster,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
+            }
         }
         break;
 
@@ -2167,7 +2179,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (!hurted)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+            {
+                simple_monster_message(monster,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
+            }
         }
         break;
 
@@ -2179,7 +2195,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (!hurted && res > 0)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+            {
+                simple_monster_message(monster,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
+            }
         }
         else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
             poison_monster(monster, pbolt.whose_kill());
@@ -2212,29 +2232,31 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (mons_res_negative_energy(monster) == 3)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+                simple_monster_message(monster, " completely resists.");
 
             hurted = 0;
         }
         else
         {
-            // Early out for tracer/no side effects.
+            // Early out if no side effects.
             if (!doFlavouredEffects)
                 return (hurted);
 
+            if (you.can_see(monster))
+                pbolt.obvious_effect = true;
+
             monster->drain_exp(pbolt.agent());
-            pbolt.obvious_effect = true;
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_NECROMANCY, 2, pbolt.effect_known);
-        }                       // end else
+        }
         break;
 
     case BEAM_MIASMA:
         if (mons_res_negative_energy(monster) == 3)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+                simple_monster_message(monster, " completely resists.");
 
             hurted = 0;
         }
@@ -2323,7 +2345,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (resist > 2)
         {
             if (doFlavouredEffects)
-                simple_monster_message(monster, " appears unharmed.");
+            {
+                simple_monster_message(monster,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
+            }
 
             hurted = 0;
         }
@@ -4034,7 +4060,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     postac = std::max(postac, 0);
 
     // Don't do side effects (beam might miss or be a tracer).
-    final = mons_adjust_flavoured(mon, *this, preac, false);
+    final = mons_adjust_flavoured(mon, *this, postac, false);
 
     return (true);
 }
@@ -4455,7 +4481,7 @@ void bolt::affect_monster(monsters* mon)
     if (!engulfs && !test_beam_hit(beam_hit, random2(mon->ev)))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
-        if (player_monster_visible(mon) && mons_near(mon))
+        if (you.can_see(mon))
         {
             msg::stream << "The " << name << " misses "
                         << mon->name(DESC_NOCAP_THE) << '.' << std::endl;

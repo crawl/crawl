@@ -184,11 +184,11 @@ int calc_your_to_hit( bool random_factor )
 // be stochastic; if false, deterministic (e.g. for chardumps.)
 int calc_heavy_armour_penalty( bool random_factor )
 {
-    const bool ur_armed = (you.equip[EQ_WEAPON] != -1);
+    const bool ur_armed = (you.weapon() != NULL);
     int heavy_armour = 0;
 
     // heavy armour modifiers for shield borne
-    if (you.shield())
+    if (player_wearing_slot(EQ_SHIELD))
     {
         switch (you.shield()->sub_type)
         {
