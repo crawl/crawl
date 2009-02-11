@@ -2574,6 +2574,8 @@ static int _quadrant_blink(int x, int y, int pow, int garbage)
     if (!found)
         return(0);
 
+    clear_trapping_net();
+
     you.moveto(tx, ty);
     return 1;
 }
