@@ -2089,31 +2089,37 @@ std::vector<talent> your_talents( bool check_confused )
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
 
-    if (you.species == SP_NAGA)
+    // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
+    // Transformed nagas, or non-nagas, can only get Spit Poison.
+    if (you.species == SP_NAGA
+        && (!transform_changed_physiology()
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER))
     {
         _add_talent(talents, player_mutation_level(MUT_BREATHE_POISON) ?
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
-    else if (player_mutation_level(MUT_SPIT_POISON))
-        _add_talent(talents, ABIL_SPIT_POISON, check_confused );
-
-    if (player_genus(GENPC_DRACONIAN))
+    else if (player_mutation_level(MUT_SPIT_POISON)
+             || player_mutation_level(MUT_BREATHE_POISON))
     {
-        if (you.experience_level >= 7)
-        {
-            const ability_type ability = (
-                (you.species == SP_GREEN_DRACONIAN)  ? ABIL_BREATHE_POISON :
-                (you.species == SP_RED_DRACONIAN)    ? ABIL_BREATHE_FIRE :
-                (you.species == SP_WHITE_DRACONIAN)  ? ABIL_BREATHE_FROST :
-                (you.species == SP_YELLOW_DRACONIAN) ? ABIL_SPIT_ACID :
-                (you.species == SP_BLACK_DRACONIAN)  ? ABIL_BREATHE_LIGHTNING :
-                (you.species == SP_PURPLE_DRACONIAN) ? ABIL_BREATHE_POWER :
-                (you.species == SP_PALE_DRACONIAN)   ? ABIL_BREATHE_STEAM :
-                (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME
-                                                     : ABIL_NON_ABILITY);
-            if (ability != ABIL_NON_ABILITY)
-                _add_talent(talents, ability, check_confused );
-        }
+        _add_talent(talents, ABIL_SPIT_POISON, check_confused);
+    }
+
+    if (player_genus(GENPC_DRACONIAN)
+        && you.experience_level >= 7
+        && !transform_changed_physiology())
+    {
+        const ability_type ability = (
+            (you.species == SP_GREEN_DRACONIAN)  ? ABIL_BREATHE_POISON :
+            (you.species == SP_RED_DRACONIAN)    ? ABIL_BREATHE_FIRE :
+            (you.species == SP_WHITE_DRACONIAN)  ? ABIL_BREATHE_FROST :
+            (you.species == SP_YELLOW_DRACONIAN) ? ABIL_SPIT_ACID :
+            (you.species == SP_BLACK_DRACONIAN)  ? ABIL_BREATHE_LIGHTNING :
+            (you.species == SP_PURPLE_DRACONIAN) ? ABIL_BREATHE_POWER :
+            (you.species == SP_PALE_DRACONIAN)   ? ABIL_BREATHE_STEAM :
+            (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME
+                                                 : ABIL_NON_ABILITY);
+        if (ability != ABIL_NON_ABILITY)
+            _add_talent(talents, ability, check_confused );
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
@@ -2123,7 +2129,7 @@ std::vector<talent> your_talents( bool check_confused )
         _add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }
 
-    if (!player_is_airborne())
+    if (!player_is_airborne() && !transform_changed_physiology())
     {
         // Kenku can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
@@ -2247,7 +2253,6 @@ std::vector<talent> your_talents( bool check_confused )
             _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused );
     }
 
-    // jmf: "upgrade" for draconians -- expensive flight
     // Note: This ability only applies to this counter.
     if (player_equip( EQ_RINGS, RING_LEVITATION )
         || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION )

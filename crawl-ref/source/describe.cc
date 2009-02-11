@@ -595,7 +595,7 @@ const char *trap_name(trap_type trap)
     ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
 
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
-        return trap_names[ static_cast<int>( trap ) ];
+        return trap_names[trap];
     return (NULL);
 }
 

@@ -294,7 +294,8 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
     if (you.duration[DUR_MIGHT])
         prop_str += 5;
 
-    if (prop_str >= you.strength || prop_int >= you.intel
+    if (prop_str >= you.strength
+        || prop_int >= you.intel
         || prop_dex >= you.dex)
     {
         if (!quiet)
@@ -313,41 +314,33 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
         if (you.equip[e] == -1)
             continue;
 
+        const item_def& item = you.inv[you.equip[e]];
+
         // Wielding a stat-boosting non-weapon/non-staff won't hinder
         // transformations.
-        if (e == EQ_WEAPON)
+        if (e == EQ_WEAPON
+            && item.base_type != OBJ_WEAPONS && item.base_type != OBJ_STAVES)
         {
-            const item_def item = you.inv[ you.equip[e] ];
-            if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_STAVES)
-                continue;
+            continue;
         }
 
-        item_def item = you.inv[you.equip[e]];
+        // Currently, the only nonartefacts which have stat-changing
+        // effects are rings.
         if (item.base_type == OBJ_JEWELLERY)
         {
-            if (!item_ident( item, ISFLAG_KNOW_PLUSES ))
+            if (!item_ident(item, ISFLAG_KNOW_PLUSES))
                 continue;
 
             switch (item.sub_type)
             {
-            case RING_STRENGTH:
-                if (item.plus != 0)
-                    prop_str += item.plus;
-                break;
-            case RING_DEXTERITY:
-                if (item.plus != 0)
-                    prop_dex += item.plus;
-                break;
-            case RING_INTELLIGENCE:
-                if (item.plus != 0)
-                    prop_int += item.plus;
-                break;
-            default:
-                break;
+            case RING_STRENGTH:     prop_str += item.plus; break;
+            case RING_DEXTERITY:    prop_dex += item.plus; break;
+            case RING_INTELLIGENCE: prop_int += item.plus; break;
+            default:                                       break;
             }
         }
 
-        if (is_random_artefact( item ))
+        if (is_random_artefact(item))
         {
             prop_str += randart_known_wpn_property(item, RAP_STRENGTH);
             prop_int += randart_known_wpn_property(item, RAP_INTELLIGENCE);
@@ -358,7 +351,8 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
         // out while worn, if at any point in the order of checking this list
         // (which is the same order as when removing items) one of your stats
         // would reach 0, return true.
-        if (prop_str >= you.strength || prop_int >= you.intel
+        if (prop_str >= you.strength
+            || prop_int >= you.intel
             || prop_dex >= you.dex)
         {
             if (!quiet)
@@ -838,8 +832,8 @@ void untransform(void)
                                     default_rem + ARRAYSZ(default_rem));
     _init_equipment_removal(melded, old_form);
 
-    you.attribute[ ATTR_TRANSFORMATION ] = TRAN_NONE;
-    you.duration[ DUR_TRANSFORMATION ] = 0;
+    you.attribute[ATTR_TRANSFORMATION] = TRAN_NONE;
+    you.duration[DUR_TRANSFORMATION] = 0;
 
     int hp_downscale = 10;
 

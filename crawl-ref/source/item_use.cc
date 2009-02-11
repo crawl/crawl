@@ -1475,7 +1475,16 @@ static bool _fire_validate_item(int slot, std::string &err)
 // Returns true if warning is given.
 static bool _fire_warn_if_impossible()
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    // FIXME: merge this into transform_can_equip_slot()
+    const int trans = you.attribute[ATTR_TRANSFORMATION];
+    // If you can't wield it, you can't throw it.
+    if (trans == TRAN_SPIDER
+        || trans == TRAN_BLADE_HANDS
+        || trans == TRAN_ICE_BEAST
+        || trans == TRAN_DRAGON
+        || trans == TRAN_SERPENT_OF_HELL
+        || trans == TRAN_AIR
+        || trans == TRAN_BAT)
     {
         canned_msg(MSG_PRESENT_FORM);
         return (true);

@@ -6635,8 +6635,7 @@ void god_pitch(god_type which_god)
     learned_something_new(TUT_CONVERT);
 }
 
-bool god_hates_your_god(god_type god,
-                        god_type your_god)
+bool god_hates_your_god(god_type god, god_type your_god)
 {
     ASSERT(god != your_god);
 
@@ -6651,8 +6650,7 @@ bool god_hates_your_god(god_type god,
     return (is_evil_god(your_god));
 }
 
-std::string god_hates_your_god_reaction(god_type god,
-                                        god_type your_god)
+std::string god_hates_your_god_reaction(god_type god, god_type your_god)
 {
     if (god_hates_your_god(god, your_god))
     {
@@ -6767,26 +6765,21 @@ static void _god_smites_you(god_type god, const char *message,
     else
     {
         if (death_type == NUM_KILLBY)
+        {
             switch (god)
             {
-                case GOD_BEOGH:
-                    death_type = KILLED_BY_BEOGH_SMITING;
-                    break;
-                case GOD_SHINING_ONE:
-                    death_type = KILLED_BY_TSO_SMITING;
-                    break;
-                default:
-                    death_type = KILLED_BY_DIVINE_WRATH;
-                    break;
+                case GOD_BEOGH:     death_type = KILLED_BY_BEOGH_SMITING; break;
+                case GOD_SHINING_ONE: death_type = KILLED_BY_TSO_SMITING; break;
+                default:            death_type = KILLED_BY_DIVINE_WRATH;  break;
             }
+        }
 
         std::string aux;
 
         if (death_type != KILLED_BY_BEOGH_SMITING
             && death_type != KILLED_BY_TSO_SMITING)
         {
-            aux = "smote by ";
-            aux += god_name(god);
+            aux = "smote by " + god_name(god);
         }
 
         // If there's a message, display it before smiting.
@@ -6814,7 +6807,7 @@ void offer_corpse(int corpse)
 
     // ritual sacrifice can also bloodify the ground
     const int mons_class = mitm[corpse].plus;
-    const int max_chunks = mons_weight( mons_class ) / 150;
+    const int max_chunks = mons_weight(mons_class) / 150;
     bleed_onto_floor(you.pos(), mons_class, max_chunks, true);
     destroy_item(corpse);
 }
@@ -6957,8 +6950,7 @@ void handle_god_time()
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    std::string msg = god_name(which_deity);
-    msg += event;
+    std::string msg = god_name(which_deity) + event;
     msg = apostrophise_fixup(msg);
     god_speaks(which_deity, msg.c_str());
 }
