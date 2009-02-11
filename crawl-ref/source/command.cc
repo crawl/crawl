@@ -1343,7 +1343,8 @@ static bool _do_description(std::string key, std::string type,
                     append_missile_info(desc);
                     desc += "$";
                 }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                else if (type == "spell"
+                         || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
                          || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
                 {
                     if (!_append_books(desc, mitm[thing_created], key))
