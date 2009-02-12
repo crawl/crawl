@@ -16,11 +16,11 @@ Buggy
 %%%%
 Zin
 
-Zin is a God for those focused on inner strength. Followers must remain pure of body and soul, and thus abstain from the use of necromancy and mutations, and from the consumption of corpses of intelligent beings. They may preach to the unenlightened, and can ultimately gain a divine refuge. Zin deeply values selflessness and appreciates long-standing faith. Zin's followers can safely convert to Elyvilon and the Shining One.
+Zin is a God for those focused on inner strength. Followers must remain pure of body and soul, refraining from evil magic, the use of mutations, and the consumption of intelligent beings' flesh. They may preach to the unenlightened, and can ultimately gain a divine refuge. Zin values selflessness and appreciates long-standing faith. Zin's followers can safely convert to Elyvilon and the Shining One.
 %%%%
 The Shining One
 
-The Shining One is a powerful deity on an endless crusade against all evil. Followers and their allies may be granted various blessings upon mercilessly slaying unholy creatures. Worshippers must never use evil magic, and are expected to prove their moral superiority by fighting honourably and also by sacrificing evil items. Long-standing persistence is appreciated. The Shining One does not mind shifting worship to Elyvilon or Zin.
+The Shining One is a powerful deity on an endless crusade against all evil. Followers and their allies may be granted various blessings upon mercilessly slaying evil and unholy creatures. Worshippers must never use evil magic, and are expected to prove their moral superiority by fighting honourably and sacrificing evil items. Long-standing persistence is appreciated. The Shining One does not mind shifting worship to Elyvilon or Zin.
 %%%%
 Kikubaaqudgha
 
@@ -72,11 +72,11 @@ Beogh is the deity worshipped by the cave orcs native to parts of the dungeon. O
 %%%%
 Zin powers
 
-Zin grants followers the ability to preach to the unenlightened masses. With sufficient piety, a starving follower can pray to Zin for nutrition. Later, followers will gain the power to help them purify and strengthen their body, and eventually they can find temporary safety in a divine refuge. As piety grows, followers will be protected from any source of mutations. Apart from that, Zin may occasionally directly intervene to save a follower's life.
+Zin grants followers the ability to preach to the unenlightened masses. With sufficient piety, a starving follower can pray to Zin for nutrition. Later, followers will gain powers to purify and strengthen their bodies, and eventually they can find temporary safety in a divine refuge. As piety grows, followers will be protected from mutations. Apart from that, Zin may occasionally directly intervene to save a follower's life.
 %%%%
 The Shining One powers
 
-Followers will gain use of a divine shield to protect them in battle. Later, they can hurl blasts of cleansing flame that are particularly effective against unholy creatures, and, eventually, they can ask the Shining One to send them help in the form of an Angel or Daeva, both powerful divine beings. The Shining One may occasionally directly intervene to save a follower's life. With growing piety the Shining One will protect a follower's life force.
+Followers will gain use of a divine shield to protect them in battle. Later, they can hurl blasts of cleansing flame that are particularly effective against unholy creatures. Eventually, they can ask the Shining One to send them help in the form of powerful divine beings. The Shining One may occasionally directly intervene to save a follower's life. With growing piety the Shining One will protect a follower's life force.
 %%%%
 Kikubaaqudgha powers
 
