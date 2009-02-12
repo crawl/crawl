@@ -50,6 +50,7 @@ public:
 
     bool inside(int px, int py);
     virtual bool update_tip_text(std::string &tip) { return false; }
+    virtual bool update_alt_text(std::string &alt) { return false; }
     virtual int handle_mouse(MouseEvent &event) = 0;
 
     virtual void render() = 0;
@@ -167,7 +168,10 @@ public:
     virtual int handle_mouse(MouseEvent &event);
     virtual void render();
     virtual bool update_tip_text(std::string &tip);
+
+    std::string &alt_text() { return m_alt_text; }
 protected:
+    std::string m_alt_text;
     bool m_overlay;
 };
 
@@ -256,6 +260,7 @@ public:
     virtual void clear();
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
+    virtual bool update_alt_text(std::string &alt);
     virtual void on_resize();
 
     void load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy);
@@ -338,6 +343,7 @@ public:
     void update(int num, InventoryTile *items);
     void update_slot(int slot, InventoryTile &item);
     virtual bool update_tip_text(std::string &tip);
+    virtual bool update_alt_text(std::string &alt);
 
 protected:
     void pack_tile(int x, int y, int idx);

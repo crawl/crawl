@@ -79,7 +79,7 @@ static void _append_value( std::string & description, int valu, bool plussed )
     description += value_str;
 }
 
-static int _count_desc_lines(const std::string _desc, const int width)
+int count_desc_lines(const std::string _desc, const int width)
 {
    std::string desc = get_linebreak_string(_desc, width);
 
@@ -104,129 +104,30 @@ static int _count_desc_lines(const std::string _desc, const int width)
 // word and such. The character $ is interpreted as a CR.
 //
 //---------------------------------------------------------------
-void print_description(const std::string &d, const std::string title,
-                       const std::string suffix, const std::string prefix,
-                       const std::string footer, const std::string quote)
+
+void print_description(const std::string &body)
 {
-    const unsigned int lineWidth = get_number_of_cols()  - 1;
-    const          int height    = get_number_of_lines();
+    describe_info inf;
+    inf.body << body;
+    print_description(inf);
+}
 
-    std::string desc;
+class default_desc_proc
+{
+public:
+    int width() { return get_number_of_cols() - 1; }
+    int height() { return get_number_of_lines(); }
+    void print(const std::string &str) { cprintf("%s", str.c_str()); }
+    void nextline() { cgotoxy(1, wherey() + 1); }
+};
 
-    if (title.empty())
-       desc = d;
-    else
-    {
-        desc = title + "$$";
-        desc += d;
-    }
-
-    int num_lines = _count_desc_lines(desc, lineWidth) + 1;
-
-    const int suffix_lines = _count_desc_lines(suffix, lineWidth);
-    const int prefix_lines = _count_desc_lines(prefix, lineWidth);
-    const int footer_lines = _count_desc_lines(footer, lineWidth)
-                             + (footer.empty() ? 0 : 1);
-    const int quote_lines  = _count_desc_lines(quote, lineWidth);
-
-    // Prefer the footer over the suffix.
-    if (num_lines + suffix_lines + footer_lines <= height)
-    {
-        desc = desc + suffix;
-        num_lines += suffix_lines;
-    }
-
-    // Prefer the footer over the prefix.
-    if (num_lines + prefix_lines + footer_lines <= height)
-    {
-        desc = prefix + desc;
-        num_lines += prefix_lines;
-    }
-
-    // Prefer the footer over the quote.
-    if (num_lines + footer_lines + quote_lines + 1 <= height)
-    {
-        if (!desc.empty())
-        {
-            desc += "$";
-            num_lines++;
-        }
-        desc = desc + quote;
-        num_lines += quote_lines;
-    }
-
-    if (!footer.empty() && num_lines + footer_lines <= height)
-    {
-        const int bottom_line = std::min(std::max(24, num_lines + 2),
-                                         height - footer_lines + 1);
-        const int newlines = bottom_line - num_lines;
-
-        if (newlines >= 0)
-        {
-            desc.append(newlines, '\n');
-            desc = desc + footer;
-        }
-    }
-
-    std::string::size_type nextLine = std::string::npos;
-    unsigned int  currentPos = 0;
-
+void print_description(const describe_info &inf)
+{
     clrscr();
     textcolor(LIGHTGREY);
 
-    while (currentPos < desc.length())
-    {
-        if (currentPos != 0)
-            cgotoxy(1, wherey() + 1);
-
-        // See if $ sign is within one lineWidth.
-        nextLine = desc.find('$', currentPos);
-
-        if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
-        {
-            cprintf("%s",
-                    (desc.substr(currentPos, nextLine-currentPos)).c_str());
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // Handle real line breaks.  No substitutions necessary, just update
-        // the counts.
-        nextLine = desc.find('\n', currentPos);
-        if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
-        {
-            cprintf("%s",
-                    (desc.substr(currentPos, nextLine-currentPos)).c_str());
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // No newline -- see if rest of string will fit.
-        if (currentPos + lineWidth >= desc.length())
-        {
-            cprintf((desc.substr(currentPos)).c_str());
-            return;
-        }
-
-
-        // Ok, try to truncate at space.
-        nextLine = desc.rfind(' ', currentPos + lineWidth);
-
-        if (nextLine > 0)
-        {
-            cprintf((desc.substr(currentPos, nextLine - currentPos)).c_str());
-            currentPos = nextLine + 1;
-            continue;
-        }
-
-        // Oops.  Just truncate.
-        nextLine = currentPos + lineWidth;
-
-        nextLine = std::min(d.length(), nextLine);
-
-        cprintf((desc.substr(currentPos, nextLine - currentPos)).c_str());
-        currentPos = nextLine;
-    }
+    default_desc_proc proc;    
+    process_description<default_desc_proc>(proc, inf);
 }
 
 const char* jewellery_base_ability_string(int subtype)
@@ -1885,8 +1786,8 @@ std::string get_item_description( const item_def &item, bool verbose,
 
                 std::string quote = getQuoteString(db_name);
 
-                if (_count_desc_lines(db_desc, lineWidth)
-                    + _count_desc_lines(quote, lineWidth) <= height)
+                if (count_desc_lines(db_desc, lineWidth)
+                    + count_desc_lines(quote, lineWidth) <= height)
                 {
                     if (!db_desc.empty())
                         db_desc += "$";
@@ -2107,7 +2008,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     case OBJ_POTIONS:
 #ifdef DEBUG_BLOOD_POTIONS
         // List content of timer vector for blood potions.
-        if (is_blood_potion(item))
+        if (!dump && is_blood_potion(item))
         {
             item_def stack = static_cast<item_def>(item);
             CrawlHashTable &props = stack.props;
@@ -2199,17 +2100,14 @@ static std::string _get_feature_description_wide(int feat)
     return std::string();
 }
 
-void describe_feature_wide(int x, int y)
+void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
-    const coord_def pos(x, y);
     const dungeon_feature_type feat = grd(pos);
-
     std::string desc = feature_description(pos, false, DESC_CAP_A, false);
-    std::string db_name =
-        grd[x][y] == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string db_name = grd(pos) == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
-    desc += ".$$";
+    inf.body << desc << ".$$";
 
     // If we couldn't find a description in the database then see if
     // the feature's base name is different.
@@ -2252,15 +2150,22 @@ void describe_feature_wide(int x, int y)
             db_name = key;
     }
 
-    desc += long_desc;
+    inf.body << long_desc;
 
     // For things which require logic
     if (!custom_desc)
-        desc += _get_feature_description_wide(grd[x][y]);
+        inf.body << _get_feature_description_wide(grd(pos));
 
-    std::string quote = getQuoteString(db_name);
+    inf.quote = getQuoteString(db_name);
+}
 
-    print_description(desc, "", "", "", "", quote);
+void describe_feature_wide(int x, int y)
+{
+    const coord_def pos(x, y);
+
+    describe_info inf;
+    get_feature_desc(pos, inf);
+    print_description(inf);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
@@ -2289,25 +2194,31 @@ void set_feature_desc_long(const std::string &raw_name,
         desc_table[raw_name] = desc;
 }
 
+void get_item_desc(const item_def &item, describe_info &inf)
+{
+    inf.body << get_item_description(item, true, false, Options.tutorial_left);
+}
+
 // Returns true if spells can be shown to player.
 static bool _show_item_description(const item_def &item)
 {
     const unsigned int lineWidth = get_number_of_cols()  - 1;
     const          int height    = get_number_of_lines();
 
-    std::string description = get_item_description( item, 1, false,
-                                                   Options.tutorial_left);
+    describe_info inf;
+    std::string desc = 
+        get_item_description(item, true, false, Options.tutorial_left);
 
-    int num_lines = _count_desc_lines(description, lineWidth) + 1;
+    int num_lines = count_desc_lines(desc, lineWidth) + 1;
 
     // XXX: hack: Leave room for "Inscribe item?" and the blank line above
     // it by removing item quote.  This should really be taken care of
     // by putting the quotes into a separate DB and treating them as
     // a suffix that can be ignored by print_description().
     if (height - num_lines <= 2)
-        description = get_item_description( item, 1, false, true);
+        desc = get_item_description(item, 1, false, true);
 
-    print_description(description);
+    print_description(desc);
     if (Options.tutorial_left)
         tutorial_describe_item(item);
 
@@ -2798,21 +2709,18 @@ static std::string _monster_stat_description(const monsters& mon)
     return result.str();
 }
 
-void describe_monsters(const monsters& mons)
+void get_monster_desc(const monsters& mons, describe_info &inf)
 {
     // For undetected mimics describe mimicked item instead.
     if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
     {
         item_def item;
         get_mimic_item(&mons, item);
-        describe_item(item);
+        get_item_desc(item, inf);
         return;
     }
 
-    std::ostringstream body;
-    std::string title, prefix, suffix, quote;
-
-    title = mons.full_name(DESC_CAP_A, true);
+    inf.title = mons.full_name(DESC_CAP_A, true);
 
     std::string db_name = mons.base_name(DESC_DBNAME);
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
@@ -2820,8 +2728,8 @@ void describe_monsters(const monsters& mons)
 
     // Don't get description for player ghosts.
     if (mons.type != MONS_PLAYER_GHOST)
-        body << getLongDescription(db_name);
-    quote = getQuoteString(db_name);
+        inf.body << getLongDescription(db_name);
+    inf.quote = getQuoteString(db_name);
 
     std::string symbol;
     symbol += get_monster_data(mons.type)->showchar;
@@ -2831,12 +2739,12 @@ void describe_monsters(const monsters& mons)
     std::string symbol_prefix = "__";
     symbol_prefix += symbol;
     symbol_prefix += "_prefix";
-    prefix = getLongDescription(symbol_prefix);
+    inf.prefix = getLongDescription(symbol_prefix);
 
     std::string quote2 = getQuoteString(symbol_prefix);
-    if (!quote.empty() && !quote2.empty())
-        quote += "$";
-    quote += quote2;
+    if (!inf.quote.empty() && !quote2.empty())
+        inf.quote += "$";
+    inf.quote += quote2;
 
     // Except for draconians and player ghosts, I have to admit I find the
     // following special descriptions rather pointless. I certainly can't
@@ -2848,15 +2756,15 @@ void describe_monsters(const monsters& mons)
         if (player_can_smell())
         {
             if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                body << "$It smells great!$";
+                inf.body << "$It smells great!$";
             else
-                body << "$It stinks.$";
+                inf.body << "$It stinks.$";
         }
         break;
 
     case MONS_SWAMP_DRAKE:
         if (player_can_smell())
-            body << "$It smells horrible.$";
+            inf.body << "$It smells horrible.$";
         break;
 
     case MONS_NAGA:
@@ -2865,26 +2773,26 @@ void describe_monsters(const monsters& mons)
     case MONS_GUARDIAN_NAGA:
     case MONS_GREATER_NAGA:
         if (you.species == SP_NAGA)
-            body << "$It is particularly attractive.$";
+            inf.body << "$It is particularly attractive.$";
         else
-            body << "$It is strange and repulsive.$";
+            inf.body << "$It is strange and repulsive.$";
         break;
 
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
         if (you.is_undead == US_ALIVE)
-            body << "$It wants to drink your blood!$";
+            inf.body << "$It wants to drink your blood!$";
         break;
 
     case MONS_REAPER:
         if (you.is_undead == US_ALIVE)
-            body <<  "$It has come for your soul!$";
+            inf.body <<  "$It has come for your soul!$";
         break;
 
     case MONS_ELF:
         // These are only possible from polymorphing or shapeshifting.
-        body << "$This one is remarkably plain looking.$";
+        inf.body << "$This one is remarkably plain looking.$";
         break;
 
     case MONS_DRACONIAN:
@@ -2904,24 +2812,24 @@ void describe_monsters(const monsters& mons)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        body << "$" << _describe_draconian( &mons );
+        inf.body << "$" << _describe_draconian( &mons );
         break;
     }
     case MONS_PLAYER_GHOST:
-        body << "The apparition of " << get_ghost_description(mons) << ".$";
+        inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        body << _describe_demon(mons);
+        inf.body << _describe_demon(mons);
         break;
 
     case MONS_URUG:
         if (player_can_smell())
-            body << "$He smells terrible.$";
+            inf.body << "$He smells terrible.$";
         break;
 
     case MONS_PROGRAM_BUG:
-        body << "If this monster is a \"program bug\", then it's "
+        inf.body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload.  Please report "
                 "monsters who masquerade as program bugs or run around the "
                 "dungeon without a proper description to the authorities.$";
@@ -2935,19 +2843,19 @@ void describe_monsters(const monsters& mons)
     {
         std::string result = _monster_stat_description(mons);
         if (!result.empty())
-            body << "$" << result;
+            inf.body << "$" << result;
     }
 
     if (!mons_can_use_stairs(&mons))
     {
-        body << "$" << mons_pronoun(static_cast<monster_type>(mons.type),
+        inf.body << "$" << mons_pronoun(static_cast<monster_type>(mons.type),
                                     PRONOUN_CAP, true)
              << " is incapable of using stairs.$";
     }
 
     if (mons_is_summoned(&mons))
     {
-        body << "$" << "This monster has been summoned, and is thus only "
+        inf.body << "$" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "
                        "or items.$";
     }
@@ -2955,13 +2863,13 @@ void describe_monsters(const monsters& mons)
     std::string symbol_suffix = "__";
     symbol_suffix += symbol;
     symbol_suffix += "_suffix";
-    suffix += getLongDescription(symbol_suffix);
-    suffix += getLongDescription(symbol_suffix + "_examine");
+    inf.suffix += getLongDescription(symbol_suffix);
+    inf.suffix += getLongDescription(symbol_suffix + "_examine");
 
     quote2 = getQuoteString(symbol_suffix);
-    if (!quote.empty() && !quote2.empty())
-        quote += "$";
-    quote += quote2;
+    if (!inf.quote.empty() && !quote2.empty())
+        inf.quote += "$";
+    inf.quote += quote2;
 
 #if DEBUG_DIAGNOSTICS
     if (mons_class_flag( mons.type, M_SPELLCASTER ))
@@ -2975,14 +2883,14 @@ void describe_monsters(const monsters& mons)
             {
                 if (!found_spell)
                 {
-                    body << "$$Monster Spells:$";
+                    inf.body << "$$Monster Spells:$";
                     found_spell = true;
                 }
 
-                body << "    " << i << ": "
-                     << spell_title(hspell_pass[i])
-                     << " (" << static_cast<int>(hspell_pass[i])
-                     << ")$";
+                inf.body << "    " << i << ": "
+                         << spell_title(hspell_pass[i])
+                         << " (" << static_cast<int>(hspell_pass[i])
+                         << ")$";
             }
         }
     }
@@ -2994,19 +2902,26 @@ void describe_monsters(const monsters& mons)
         {
             if (!has_item)
             {
-                body << "$Monster Inventory:$";
+                inf.body << "$Monster Inventory:$";
                 has_item = true;
             }
-            body << "    " << i << ") "
+            inf.body << "    " << i << ") "
                  << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
         }
     }
 #endif
+}
 
-    print_description(body.str(), title, suffix, prefix, "", quote);
+void describe_monsters(const monsters& mons)
+{
+    describe_info inf;
+    get_monster_desc(mons, inf);
+    print_description(inf);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
+    // TODO enne - this should really move into get_monster_desc
+    // and an additional tutorial string added to describe_info.
     if (Options.tutorial_left)
         tutorial_describe_monster(&mons);
 

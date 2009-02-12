@@ -10,6 +10,7 @@
 #ifndef DIRECT_H
 #define DIRECT_H
 
+#include "describe.h"
 #include "externs.h"
 #include "enum.h"
 #include "libgui.h"
@@ -176,6 +177,8 @@ std::string thing_do_grammar(description_level_type dtype,
 std::string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
 void full_describe_square(const coord_def &c);
+void get_square_desc(const coord_def &c, describe_info &inf);
+
 void describe_floor();
 std::string get_monster_desc(const monsters *mon,
                              bool full_desc = true,

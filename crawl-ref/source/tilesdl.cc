@@ -724,13 +724,33 @@ int TilesFramework::getch_ck()
             ticks = SDL_GetTicks();
 
             if (event.type != SDL_USEREVENT)
+            {
                 tiles.clear_text_tags(TAG_CELL_DESC);
+                m_region_msg->alt_text().clear();
+            }
+
+            // TODO enne - need to find a better time to decide when
+            // to generate a tip or some way to say "yes, but unchanged".
+            if (ticks > m_last_tick_moved)
+            {
+                m_region_msg->alt_text().clear();
+                for (unsigned int i = 0; 
+                    i < m_layers[m_active_layer].m_regions.size(); i++)
+                {
+                    Region *reg = m_layers[m_active_layer].m_regions[i];
+                    if (!reg->inside(m_mouse.x, m_mouse.y))
+                        continue;
+                    if (reg->update_alt_text(m_region_msg->alt_text()))
+                        break;
+                }
+            }
 
             switch (event.type)
             {
             case SDL_KEYDOWN:
                 m_key_mod |= _get_modifiers(event.key.keysym);
                 key = _translate_keysym(event.key.keysym);
+                m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
                 // is moved again.
@@ -919,17 +939,21 @@ void TilesFramework::do_layout()
     if (message_overlay)
     {
         m_region_msg->resize_to_fit(m_region_tile->ex, m_region_msg->ey);
-        crawl_view.msgsz.x = m_region_msg->mx;
-        crawl_view.msgsz.y = m_region_msg->my;
+        m_region_msg->ex = m_region_tile->ex;
     }
     else
     {
-        m_region_msg->resize_to_fit(m_region_msg->wx,
-                                    m_windowsz.y - m_region_msg->sx);
+        m_region_msg->resize_to_fit(m_region_tile->wx,
+                                    m_windowsz.y - m_region_msg->sy);
         int msg_y = std::min(Options.msg_max_height, (int)m_region_msg->my);
         m_region_msg->resize(m_region_msg->mx, msg_y);
+
+        m_region_msg->ex = m_region_tile->ex;
+        m_region_msg->ey = m_windowsz.y;
     }
     m_region_msg->set_overlay(message_overlay);
+    crawl_view.msgsz.x = m_region_msg->mx;
+    crawl_view.msgsz.y = m_region_msg->my;
 
     // Shrink view width if stat window can't fit...
     int stat_col;
@@ -1121,9 +1145,9 @@ void TilesFramework::redraw()
     {
         const coord_def min_pos(0, 0);
         FTFont *font = m_fonts[m_tip_font].font;
+
         font->render_string(m_mouse.x, m_mouse.y - 2, m_tooltip.c_str(),
-                            min_pos, m_windowsz, WHITE, false, 150,
-                            BLUE, 5);
+                            min_pos, m_windowsz, WHITE, false, 220, BLUE, 5);
     }
 
     SDL_GL_SwapBuffers();

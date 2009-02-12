@@ -1052,6 +1052,114 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     return true;
 }
 
+class alt_desc_proc
+{
+public:
+    alt_desc_proc(int _w, int _h) { w = _w; h = _h; }
+
+    int width() { return w; }
+    int height() { return h; }
+    void nextline()
+    {
+        ostr << "\n";
+    }
+    void print(const std::string &str)
+    {
+        ostr << str;
+    }
+
+    static int count_newlines(const std::string &str)
+    {
+        int count = 0;
+        for (size_t i = 0; i < str.size(); i++)
+        {
+            if (str[i] == '\n')
+                count++;
+        }
+        return count;
+    }
+
+    // Remove trailing newlines.
+    static void trim(std::string &str)
+    {
+        int idx = str.size();
+        while (--idx >= 0)
+        {
+            if (str[idx] != '\n')
+                break;
+        }
+        str.resize(idx + 1);
+    }
+
+    // rfind consecutive newlines and truncate.
+    static bool chop(std::string &str)
+    {
+        int loc = -1;
+        for (size_t i = 1; i < str.size(); i++)
+        {
+            if (str[i] == '\n' && str[i-1] == '\n')
+                loc = i;
+        }
+
+        if (loc == -1)
+            return false;
+
+        str.resize(loc);
+        return true;
+    }
+
+    void get_string(std::string &str)
+    {
+        str = replace_all(ostr.str(), "\n\n\n\n", "\n\n");
+        str = replace_all(str, "\n\n\n", "\n\n");
+
+        trim(str);
+        while (count_newlines(str) > h)
+        {
+            if (!chop(str))
+                break;
+        }
+    }
+
+protected:
+    int w;
+    int h;
+    std::ostringstream ostr;
+};
+
+bool DungeonRegion::update_alt_text(std::string &alt)
+{
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+        return false;
+
+    const coord_def &gc = m_cursor[CURSOR_MOUSE];
+
+    if (gc == NO_CURSOR)
+        return false;
+    if (!map_bounds(gc))
+        return false;
+
+    if (!see_grid(gc))
+        return false;
+
+    describe_info inf;
+    get_square_desc(gc, inf);
+
+    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
+    process_description<alt_desc_proc>(proc, inf);
+
+    proc.get_string(alt);
+
+    // Suppress floor description
+    if (alt == "Floor.")
+    {
+        alt.clear();
+        return false;
+    }
+
+    return true;
+}
+
 void DungeonRegion::clear_text_tags(text_tag_type type)
 {
     m_tags[type].clear();
@@ -1192,8 +1300,7 @@ void InventoryRegion::render()
         else
             desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
 
-        m_tag_font->render_string(x, y,
-                                  desc.c_str(),
+        m_tag_font->render_string(x, y, desc.c_str(),
                                   min_pos, max_pos, WHITE, false, 200);
     }
 }
@@ -1689,8 +1796,35 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         {
             tip += "\n[Shift-L-Click] Drop (d)";
         }
-
     }
+
+    return true;
+}
+
+bool InventoryRegion::update_alt_text(std::string &alt)
+{
+    if (m_cursor == NO_CURSOR)
+        return false;
+
+    unsigned int item_idx = cursor_index();
+    if (item_idx >= m_items.size() || m_items[item_idx].empty())
+        return false;
+
+    int idx = m_items[item_idx].idx;
+
+    const item_def *item;
+    if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)
+        item = &mitm[idx];
+    else
+        item = &you.inv[idx];
+
+    describe_info inf;
+    get_item_desc(*item, inf);
+
+    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
+    process_description<alt_desc_proc>(proc, inf);
+
+    proc.get_string(alt);
 
     return true;
 }
@@ -2256,6 +2390,15 @@ void MessageRegion::render()
     unsigned char char_back = 0;
     unsigned char col_back = 0;
 
+    if (!m_overlay && !m_alt_text.empty())
+    {
+        coord_def min_pos(sx, sy);
+        coord_def max_pos(ex, ey);
+        m_font->render_string(sx + ox, sy + oy, m_alt_text.c_str(),
+                              min_pos, max_pos, WHITE, false);
+        return;
+    }
+
     if (this == TextRegion::cursor_region && cursor_x > 0 && cursor_y > 0)
     {
         idx = cursor_x + mx * cursor_y;
@@ -2289,34 +2432,13 @@ void MessageRegion::render()
         if (height > 0)
         {
             height *= m_font->char_height();
-            box_vert verts[4];
-            for (int i = 0; i < 4; i++)
-            {
-                verts[i].r = 100;
-                verts[i].g = 100;
-                verts[i].b = 100;
-                verts[i].a = 100;
-            }
-            verts[0].x = sx;
-            verts[0].y = sy;
-            verts[1].x = sx;
-            verts[1].y = sy + height;
-            verts[2].x = ex;
-            verts[2].y = sy + height;
-            verts[3].x = ex;
-            verts[3].y = sy;
 
             glLoadIdentity();
 
-            GLState state;
-            state.array_vertex = true;
-            state.array_colour = true;
-            state.blend = true;
-            GLStateManager::set(state);
-
-            glVertexPointer(2, GL_FLOAT, sizeof(box_vert), &verts[0].x);
-            glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(box_vert), &verts[0].r);
-            glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert));
+            ShapeBuffer buff;
+            VColour col(100, 100, 100, 100);
+            buff.add(sx, sy, ex, sy + height, col);
+            buff.draw();
         }
     }
 

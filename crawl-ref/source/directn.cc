@@ -1658,8 +1658,38 @@ void terse_describe_square(const coord_def &c, bool in_range)
         _describe_cell(c, in_range);
 }
 
+void get_square_desc(const coord_def &c, describe_info &inf)
+{
+    // NOTE: Keep this function in sync with full_describe_square.
+
+    // Don't give out information for things outside LOS
+    if (!see_grid(c.x, c.y))
+        return;
+
+    const int mid = mgrd(c);
+    const int oid = igrd(c);
+
+    if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
+    {
+        // First priority: monsters.
+        get_monster_desc(menv[mid], inf);
+    }
+    else if (oid != NON_ITEM)
+    {
+        // Second priority: objects.
+        get_item_desc(mitm[oid], inf);
+    }
+    else
+    {
+        // Third priority: features.
+        get_feature_desc(c, inf);
+    }
+}
+
 void full_describe_square(const coord_def &c)
 {
+    // NOTE: Keep this function in sync with get_square_desc.
+
     // Don't give out information for things outside LOS
     if (!see_grid(c.x, c.y))
         return;

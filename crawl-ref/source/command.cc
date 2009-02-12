@@ -1255,10 +1255,9 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 static bool _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
+    describe_info inf;
     std::string desc  = getLongDescription(key);
-    std::string quote = getQuoteString(key);
-
-    std::string prefix, suffix;
+    inf.quote = getQuoteString(key);
 
     int width = std::min(80, get_number_of_cols());
 
@@ -1267,8 +1266,8 @@ static bool _do_description(std::string key, std::string type,
     {
         if (is_good_god(which_god))
         {
-            suffix = "$$" + god_name(which_god) + " won't accept worship from "
-                     "undead or evil beings.";
+            inf.suffix = "$$" + god_name(which_god) +
+                         " won't accept worship from undead or evil beings.";
         }
         std::string help = get_god_powers(which_god);
         if (!help.empty())
@@ -1361,7 +1360,11 @@ static bool _do_description(std::string key, std::string type,
 
     key = uppercase_first(key);
     linebreak_string2(footer, width - 1);
-    print_description(desc, key, suffix, prefix, footer, quote);
+
+    inf.footer = footer;
+    inf.title = key;
+
+    print_description(inf);
     return (true);
 }
 
