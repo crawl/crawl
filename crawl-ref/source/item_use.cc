@@ -1908,7 +1908,6 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         if (!(mon->flags & MF_WAS_IN_VIEW))
             mon->seen_context = "thin air";
 
-        mons_clear_trapping_net(mon);
         mon->move_to_pos(pos);
         mon->apply_location_effects(oldpos);
         mon->check_redraw(oldpos);

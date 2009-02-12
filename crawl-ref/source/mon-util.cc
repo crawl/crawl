@@ -5590,8 +5590,11 @@ int monsters::get_experience_level() const
     return (hit_dice);
 }
 
-void monsters::moveto( const coord_def& c )
+void monsters::moveto(const coord_def& c)
 {
+    if (c != pos() && in_bounds(pos()))
+        mons_clear_trapping_net(this);
+
     position = c;
 }
 
@@ -7684,10 +7687,10 @@ bool monsters::move_to_pos(const coord_def &newpos)
     mgrd(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
-    position = newpos;
+    moveto(newpos);
 
-    // set new monster grid pointer to this monster.
-    mgrd(newpos) = monster_index(this);
+    // Set new monster grid pointer to this monster.
+    mgrd(newpos) = mindex();
 
     return (true);
 }

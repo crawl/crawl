@@ -1143,8 +1143,6 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
     // Pick the monster up.
     mgrd(oldplace) = NON_MONSTER;
 
-    mons_clear_trapping_net(monster);
-
     coord_def newpos;
     if (monster_random_space(monster, newpos, !mons_wont_attack(monster)))
         monster->moveto(newpos);

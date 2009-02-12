@@ -693,13 +693,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const dungeon_feature_type feat2 = grd(pos2);
 
     if (is_notable_terrain(feat1) && !see_grid(pos1)
-        && is_terrain_known(pos1.x, pos1.y))
+        && is_terrain_known(pos1))
     {
         return (false);
     }
 
     if (is_notable_terrain(feat2) && !see_grid(pos2)
-        && is_terrain_known(pos2.x, pos2.y))
+        && is_terrain_known(pos2))
     {
         return (false);
     }
@@ -745,6 +745,8 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         return (false);
     }
 
+    // OK, now we guarantee the move.
+
     (void) move_notable_thing(pos1, temp);
     env.markers.move(pos1, temp);
     dungeon_events.move_listeners(pos1, temp);
@@ -761,17 +763,20 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.markers.move(temp, pos2);
     dungeon_events.move_listeners(temp, pos2);
 
+    // Swap features and colours.
     grd(pos2) = feat1;
     grd(pos1) = feat2;
 
     env.grid_colours(pos1) = col2;
     env.grid_colours(pos2) = col1;
 
+    // Swap traps.
     if (trap1)
         trap1->pos = pos2;
     if (trap2)
         trap2->pos = pos1;
 
+    // Swap shops.
     if (shop1)
         shop1->pos = pos2;
     if (shop2)
@@ -782,35 +787,28 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         _dgn_check_terrain_items(pos1, false);
         _dgn_check_terrain_monsters(pos1);
         _dgn_check_terrain_player(pos1);
-        set_terrain_changed(pos1.x, pos1.y);
+        set_terrain_changed(pos1);
 
         _dgn_check_terrain_items(pos2, false);
         _dgn_check_terrain_monsters(pos2);
         _dgn_check_terrain_player(pos2);
-        set_terrain_changed(pos2.x, pos2.y);
+        set_terrain_changed(pos2);
 
         if (announce)
             _announce_swap(pos1, pos2);
         return (true);
     }
 
-    const int i1 = igrd(pos1);
-    const int i2 = igrd(pos2);
+    // Swap items.
+    for (stack_iterator si(pos1); si; ++si)
+        si->pos = pos1;
 
-    igrd(pos1) = i2;
-    igrd(pos2) = i1;
+    for (stack_iterator si(pos2); si; ++si)
+        si->pos = pos2;
 
-    if (igrd(pos1) != NON_ITEM)
-    {
-        for (stack_iterator si(igrd(pos1)); si; ++si)
-            si->pos = pos1;
-    }
-    if (igrd(pos2) != NON_ITEM)
-    {
-        for (stack_iterator si(igrd(pos2)); si; ++si)
-            si->pos = pos2;
-    }
-
+    // Swap monsters.
+    // Note that trapping nets, etc., move together
+    // with the monster/player, so don't clear them.
     const int m1 = mgrd(pos1);
     const int m2 = mgrd(pos1);
 
@@ -822,6 +820,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (mgrd(pos2) != NON_MONSTER)
         menv[mgrd(pos2)].position = pos2;
 
+    // Swap clouds.
     move_cloud(env.cgrid(pos1), temp);
     move_cloud(env.cgrid(pos2), pos1);
     move_cloud(env.cgrid(temp), pos2);

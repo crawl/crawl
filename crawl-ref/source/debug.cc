@@ -710,20 +710,21 @@ bool _take_portal_vault_stairs( const bool down )
 
     coord_def stair_pos(-1, -1);
 
-    for (int x = 0; x < GXM; x++)
-        for (int y = 0; y < GYM; y++)
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grid_stair_direction(grd(*ri)) == cmd)
         {
-             if (grid_stair_direction(grd[x][y]) == cmd)
-             {
-                stair_pos.set(x, y);
-                break;
-             }
+            stair_pos = *ri;
+            break;
         }
+    }
 
     if (!in_bounds(stair_pos))
         return (false);
 
+    clear_trapping_net();
     you.position = stair_pos;
+
     if (down)
         down_stairs(you.your_level);
     else
@@ -5596,16 +5597,12 @@ static void _move_monster(const coord_def& where, int mid1)
         return;
 
     monsters* mon1 = &menv[mid1];
-    mons_clear_trapping_net(mon1);
 
-    int mid2 = mgrd(moves.target);
+    const int mid2 = mgrd(moves.target);
     monsters* mon2 = NULL;
 
     if (mid2 != NON_MONSTER)
-    {
         mon2 = &menv[mid2];
-        mons_clear_trapping_net(mon2);
-    }
 
     mon1->moveto(moves.target);
     mgrd(moves.target) = mid1;

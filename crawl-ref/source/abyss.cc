@@ -471,7 +471,7 @@ void area_shift(void)
             _abyss_lose_monster( menv[ mgrd(*ri) ] );
     }
 
-    // Shift all monsters & items to new area.
+    // Shift all monsters and items to new area.
     for (radius_iterator ri(you.pos(), 10, true, false); ri; ++ri)
     {
         const coord_def newpos = abyss_center + *ri - you.pos();
@@ -488,10 +488,10 @@ void area_shift(void)
                  ri->x, ri->y, newpos.x, newpos.y);
         }
 #endif
-        move_item_stack_to_grid( *ri, newpos );
+        move_item_stack_to_grid(*ri, newpos);
 
         // Move monster.
-        if ( mgrd(*ri) != NON_MONSTER )
+        if (mgrd(*ri) != NON_MONSTER)
         {
             menv[mgrd(*ri)].moveto(newpos);
             mgrd(newpos) = mgrd(*ri);

@@ -2175,8 +2175,6 @@ bool monster_blink(monsters *monster)
     if (!(monster->flags & MF_WAS_IN_VIEW))
         monster->seen_context = "thin air";
 
-    mons_clear_trapping_net(monster);
-
     const coord_def oldplace = monster->pos();
     if (!monster->move_to_pos(near))
         return (false);
