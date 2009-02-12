@@ -932,6 +932,11 @@ static int _place_monster_aux( const mgen_data &mg,
 
         if (menv[id].inv[MSLOT_WEAPON] != NON_ITEM)
             menv[id].colour = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
+        else
+        {
+            menv[id].reset();
+            return (-1);
+        }
     }
     else if (mons_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
