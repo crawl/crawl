@@ -7591,7 +7591,7 @@ bool monsters::can_see(const actor *targ) const
 
 bool monsters::can_mutate() const
 {
-    return (holiness() == MH_NATURAL);
+    return (holiness() == MH_NATURAL || holiness() == MH_PLANT);
 }
 
 bool monsters::can_safely_mutate() const
