@@ -5968,7 +5968,7 @@ bool monsters::rot(actor *agent, int amount, int immediate, bool quiet)
     if (res_rotting() > 0 || amount <= 0)
         return (false);
 
-    if (!quiet && mons_near(this) && player_monster_visible(this))
+    if (!quiet && you.can_see(this))
     {
         mprf("%s %s!", name(DESC_CAP_THE).c_str(),
              amount > 0 ? "rots" : "looks less resilient");
