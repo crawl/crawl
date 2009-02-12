@@ -166,11 +166,11 @@ grimoires are not to be toyed with.
 book of annihilations
 
 While browsing, you note blood leaking from the pages.  Even an 
-illerate will feel the sheer impact of arcane fury contained in 
-this book.  It is sought after by sorcerors, for it allows the
-gifted and resourceful to command destruction with the ease of a
-twinkle.  Feeble wizards, however, may well meet their doom when
-trying to read this opus.
+illiterate will feel the sheer impact of arcane fury contained in this 
+book. It is sought after by sorcerers, for it allows the gifted and 
+resourceful to command destruction with the ease of a twinkle.  Feeble 
+wizards, however, may well meet their doom when trying to read this 
+opus.
 %%%%
 book of callings
 
@@ -219,12 +219,12 @@ grimoires are not to be toyed with.
 %%%%
 book of demonology
 
-When touching this book, you hear faint screams of tortured souls.  
-Each and every page is about demons, demons of all kinds and sizes,
-and how to unleash them unto this unsuspecting world.  Many wizards
-proved too weak to stand the power of this tome.  You are not sure
-whether you hear the screams of the countless victims, which have
-been eaten, maimed and raped by the demons.  Or do you scream yet?
+When touching this book, you hear faint screams of tortured souls. Each 
+and every page is about demons, demons of all kinds and sizes, and how 
+to unleash them unto this unsuspecting world. Many wizards have proven 
+too weak to stand the power of this tome. You are not sure whether you 
+hear the screams of the countless victims, which have been eaten, 
+maimed, and raped by the demons. Or do you scream yet?
 %%%%
 book of divinations
 
@@ -584,8 +584,8 @@ The opposite of a morningstar.
 %%%%
 executioner's axe
 
-This fearsome weapon is covered in dried blood and crude engravings of
-torture and death, but bears a well-honed blade. The enormous axehead
+This fearsome weapon is covered in dried blood and crude engravings of 
+torture and death, but bears a well-honed blade. The enormous axehead 
 looks quite capable of dismembering any victim who falls afoul of it, 
 and you feel confident that a single stroke would suffice.
 %%%%
@@ -813,10 +813,10 @@ A special armour made for Nagas, to wear over their tails.
 %%%%
 necronomicon
 
-An extremely rare book, powerful and sinister.  Its binding is made 
-from delicate skin of unknown provenience.  Many foolhardy magicians
-tried to study this tome, only to find themselves entangled within
-necromantic forces they could not hope to control.
+An extremely rare book, powerful and sinister. Its binding is made from 
+delicate skin of unknown provenance. Many foolhardy magicians have tried 
+to study this tome, only to find themselves entangled within necromantic 
+forces they could not hope to control.
 %%%%
 needle
 
@@ -828,8 +828,8 @@ A delicious, juicy orange fruit.
 %%%%
 orb of zot
 
-Once you have escaped to the surface with this invaluable artefact,
-your quest is complete.
+Once you have escaped to the surface with this invaluable artefact, your 
+quest is complete.
 %%%%
 pair of boots
 
