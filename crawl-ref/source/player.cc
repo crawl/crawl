@@ -7248,6 +7248,9 @@ void player::base_moveto(const coord_def &c)
 
 void player::moveto(const coord_def &c)
 {
+    if (c != you.pos())
+        clear_trapping_net();
+
     crawl_view.set_player_at(c);
     base_moveto(c);
 }
@@ -7260,7 +7263,7 @@ void player::shiftto(const coord_def &c)
 
 void player::reset_prev_move()
 {
-    prev_move = coord_def(0,0);
+    prev_move.reset();
 }
 
 bool player::asleep() const

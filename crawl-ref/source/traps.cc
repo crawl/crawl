@@ -1064,6 +1064,9 @@ void clear_trapping_net()
     if (!you.attribute[ATTR_HELD])
         return;
 
+    if (!in_bounds(you.pos()))
+        return;
+
     const int net = get_trapping_net(you.pos());
     if (net != NON_ITEM)
         remove_item_stationary(mitm[net]);

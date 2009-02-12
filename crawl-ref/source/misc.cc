@@ -1723,6 +1723,10 @@ void up_stairs(dungeon_feature_type force_stair,
     if (_marker_vetoes_level_change())
         return;
 
+    // Magical level changes (don't exist yet in this direction)
+    // need this.
+    clear_trapping_net();
+
     // Checks are done, the character is committed to moving between levels.
     leaving_level_now();
 
@@ -2096,6 +2100,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     const level_id destination_override(_stair_destination_override());
 
     // All checks are done, the player is on the move now.
+
+    // Magical level changes (Portal, Banishment) need this.
+    clear_trapping_net();
+
     // Fire level-leaving trigger.
     leaving_level_now();
 

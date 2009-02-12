@@ -2421,8 +2421,6 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     if (!found)
         return(0);
 
-    clear_trapping_net();
-
     you.moveto(target);
     return 1;
 }

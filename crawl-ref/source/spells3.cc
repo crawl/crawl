@@ -1323,10 +1323,6 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
 
         if (is_controlled)
         {
-            // no longer held in net
-            if (pos != you.pos())
-                clear_trapping_net();
-
             if (!see_grid(pos))
                 large_change = true;
 
@@ -1390,10 +1386,6 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
                || env.cgrid(newpos) != EMPTY_CLOUD
                || need_distance_check && (newpos - centre).abs() < 34*34);
 
-        // no longer held in net
-        if (newpos != you.pos())
-            clear_trapping_net();
-
         if ( newpos == you.pos() )
             mpr("Your surroundings flicker for a moment.");
         else if ( see_grid(newpos) )
@@ -1404,11 +1396,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             large_change = true;
         }
 
-        you.position = newpos;
-
-        // Necessary to update the view centre.
-        you.moveto(you.pos());
-
+        you.moveto(newpos);
     }
 
     if (large_change)

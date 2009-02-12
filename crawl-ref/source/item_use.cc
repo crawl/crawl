@@ -1898,7 +1898,6 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
 
     if (victim->atype() == ACT_PLAYER)
     {
-        clear_trapping_net();
         victim->moveto(pos);
         mpr("You blink!");
     }

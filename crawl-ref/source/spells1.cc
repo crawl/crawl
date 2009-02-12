@@ -176,9 +176,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         }
         else
         {
-            // No longer held in net.
-            clear_trapping_net();
-
             move_player_to_grid(beam.target, false, true, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -231,9 +228,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     else
     {
         mpr("You blink.");
-
-        // No longer held in net.
-        clear_trapping_net();
 
         success = true;
         you.moveto(target);

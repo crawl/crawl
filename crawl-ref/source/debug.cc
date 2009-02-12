@@ -5581,9 +5581,6 @@ void wizard_give_monster_item(monsters *mon)
 #ifdef WIZARD
 static void _move_player(const coord_def& where)
 {
-    // no longer held in net
-    clear_trapping_net();
-
     if (!you.can_pass_through_feat(grd(where)))
         grd(where) = DNGN_FLOOR;
     move_player_to_grid(where, false, true, true);
