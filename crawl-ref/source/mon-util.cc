@@ -5978,7 +5978,8 @@ bool monsters::rot(actor *agent, int amount, int immediate, bool quiet)
     // monsters yet.
     if (immediate > 0)
     {
-        // If quiet, don't clean up the monster in order to credit properly.
+        // If quiet, don't clean up the monster in order to credit
+        // properly.
         hurt(agent, immediate, BEAM_MISSILE, !quiet);
 
         if (alive())
