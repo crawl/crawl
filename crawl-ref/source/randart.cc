@@ -1003,7 +1003,7 @@ void static _get_randart_properties(const item_def &item,
     // go berserk
     if (!done_powers
         && one_chance_in(10)
-        && (aclass != OBJ_WEAPONS || is_range_weapon(item))
+        && (aclass != OBJ_WEAPONS || !is_range_weapon(item))
         && (aclass != OBJ_JEWELLERY || atype != AMU_RAGE))
     {
         proprt[RAP_BERSERK] = 1;
