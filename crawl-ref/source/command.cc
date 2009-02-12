@@ -1256,8 +1256,9 @@ static bool _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
     describe_info inf;
-    std::string desc  = getLongDescription(key);
     inf.quote = getQuoteString(key);
+
+    std::string desc = getLongDescription(key);
 
     int width = std::min(80, get_number_of_cols());
 
@@ -1357,6 +1358,8 @@ static bool _do_description(std::string key, std::string type,
             }
         }
     }
+
+    inf.body << desc;
 
     key = uppercase_first(key);
     linebreak_string2(footer, width - 1);
