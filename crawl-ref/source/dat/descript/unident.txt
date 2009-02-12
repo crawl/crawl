@@ -13,8 +13,8 @@ A strange lantern made out of ancient bones.
 %%%%
 book
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells. Beware, for some of the more powerful grimoires 
+are not to be toyed with.
 %%%%
 crystal ball
 
