@@ -1107,7 +1107,7 @@ void static _get_randart_properties(const item_def &item,
         && (aclass != OBJ_ARMOUR
             || atype != ARM_BOOTS
             || get_equip_race(item) != ISFLAG_ELVEN)
-        && get_armour_ego_type( item ) != SPARM_STEALTH)
+        && get_armour_ego_type(item) != SPARM_STEALTH)
     {
         power_level++;
         proprt[RAP_STEALTH] = 10 + random2(70);
