@@ -224,7 +224,7 @@ and every page is about demons, demons of all kinds and sizes, and how
 to unleash them unto this unsuspecting world. Many wizards have proven 
 too weak to stand the power of this tome. You are not sure whether you 
 hear the screams of the countless victims, which have been eaten, 
-maimed, and raped by the demons. Or do you scream yet?
+maimed and raped by the demons. Or do you scream yet?
 %%%%
 book of divinations
 
@@ -906,7 +906,7 @@ also repair permanent injuries.
 %%%%
 potion of healing
 
-A blessed fluid which heals some wounds, clears the mind, and cures
+A blessed fluid which heals some wounds, clears the mind and cures
 diseases. If it is used when one is at or near full health, it can
 also slightly repair permanent injuries.
 %%%%

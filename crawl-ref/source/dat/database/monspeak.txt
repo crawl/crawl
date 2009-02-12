@@ -1245,7 +1245,7 @@ _Boris_rare_
 
 @The_monster@ says @to_foe@, "I didn't invite you."
 
-@The_monster@ says @to_foe@, "The world, the flesh, and the devil."
+@The_monster@ says @to_foe@, "The world, the flesh and the devil."
 
 @The_monster@ says "Magic.  You know nothing about it."
 
@@ -1325,7 +1325,7 @@ dissolution_rare
 @The_monster@ says, "Resolve to dissolve!"
 
 w:2
-@The_monster@ says, "There is a problem solver and it's name is Dissolver!"
+@The_monster@ says, "There is a problem solver and its name is Dissolver!"
 ## END Dissolution ##
 %%%%
 # An adventurer hating competition
@@ -1626,7 +1626,7 @@ VISUAL:@The_monster@ gazes at @foe@ @hypnot_or_seductively@.
 
 @The_monster@ sings, "To sleep, to sleep... mayhap to drown."
 
-@The_monster@ says @to_foe@, "It's lovely beneath the waves -- you'll see!"
+@The_monster@ says @to_foe@, "It's lovely beneath the waves - you'll see!"
 
 @The_monster@ asks @foe,@ "Do you dare to walk upon the beach?"
 

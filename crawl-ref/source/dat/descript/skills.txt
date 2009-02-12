@@ -110,7 +110,7 @@ spellcasting and other actions.
 Dodging
 
 Obviously, the Dodging skill will affect your chance of dodging an 
-attack, be it melee, ranged, or magical. You cannot dodge enchantments, 
+attack, be it melee, ranged or magical. You cannot dodge enchantments, 
 sadly. Rather, to resist them, you'll need magic resistance.
 %%%%
 Stealth

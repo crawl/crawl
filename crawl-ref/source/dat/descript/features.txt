@@ -172,7 +172,7 @@ from the insanity of the dungeon.
 A staircase to the Elven Halls
 
 A wide stair down to the murky depths of the halls of the deep elves,
-skilled warriors with blade and bow, and fearsome sorcerers and
+skilled warriors with blades and bows, and fearsome sorcerers and
 magicians.
 %%%%
 A staircase to the Hall of Blades
@@ -191,7 +191,7 @@ treacherous and easy to get trapped in.
 A staircase to the Shoals
 
 Here be the Shoals: exotic underground beaches, salty spray and
-creatures that bite, stab, and maul.
+creatures that bite, stab and maul.
 %%%%
 A staircase to the Slime Pits
 
@@ -206,7 +206,7 @@ Here is the way to the place of the serpent, the lair of the naga.
 %%%%
 A staircase to the Swamp
 
-A stair to a swampy waste land, complete with ooze, muck, flies, and
+A stair to a swampy waste land, complete with ooze, muck, flies and
 large slavering carnivorous monsters.
 %%%%
 A staircase to the Tomb

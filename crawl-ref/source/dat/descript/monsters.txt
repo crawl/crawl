@@ -54,7 +54,7 @@ A violent and wrathful demon, Cerebov appears as a giant human covered in shinin
 %%%%
 Chaos spawn
 
-A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws, and tentacles.
+A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws and tentacles.
 %%%%
 Daeva
 
@@ -775,7 +775,7 @@ A very large grey python.
 %%%%
 griffon
 
-A large creature with the hindquarters of a lion and the wings, head, and talons of a great eagle.
+A large creature with the hindquarters of a lion and the wings, head and talons of a great eagle.
 %%%%
 grizzly bear
 
@@ -815,7 +815,7 @@ Although one of the smaller giant varieties, this hill giant is still big enough
 %%%%
 hippogriff
 
-A large creature with the hindquarters of a horse and the wings, head, and talons of a great eagle.
+A large creature with the hindquarters of a horse and the wings, head and talons of a great eagle.
 %%%%
 hobgoblin
 
@@ -1081,7 +1081,7 @@ A globe of raw primordial fire, capable of impressive pyrotechnics.
 %%%%
 orc
 
-An ugly subterranean race, orcs combine the worst features of humans, pigs, and several other unpleasant creatures.
+An ugly subterranean race, orcs combine the worst features of humans, pigs and several other unpleasant creatures.
 %%%%
 orc high priest
 

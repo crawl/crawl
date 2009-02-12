@@ -5,7 +5,7 @@
 #
 # This file contains a list of names for miscellaneous things.
 # This is currently only used for colours, writing types,
-# smells, and sounds.
+# smells and sounds.
 ######################################################
 %%%%
 # Any word other than "glowing" itself will work here.

@@ -797,7 +797,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     std::string text = god_name(which_god);
                 text += " dislikes it when ";
                 text += comma_separated_line(dislikes.begin(), dislikes.end(),
-                                             ", or ", ", ");
+                                             " or ", ", ");
                 text += ".";
 
     return (text);

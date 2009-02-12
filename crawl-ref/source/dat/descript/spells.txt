@@ -1,7 +1,7 @@
 %%%%
 Abjuration
 
-This spell attempts to send hostile summoned creatures to the place from whence they came, or at least shorten their stay in the caster's locality. 
+This spell attempts to send hostile summoned creatures to the place whence they came, or at least shorten their stay in the caster's locality. 
 %%%%
 Agony
 
@@ -268,7 +268,7 @@ This spell extends the duration of most enchantments affecting the caster.
 %%%%
 Far Strike
 
-This spell allows the caster to transfer the force of a weapon strike to any target the caster can see. This spell will only deliver the impact of the blow; magical side-effects and enchantments cannot be transferred in this way. The force transferred by this spell has little to do with one's skill with weapons, and more to do with personal strength, translocation skill, and magic ability. 
+This spell allows the caster to transfer the force of a weapon strike to any target the caster can see. This spell will only deliver the impact of the blow; magical side-effects and enchantments cannot be transferred in this way. The force transferred by this spell has little to do with one's skill with weapons, and more to do with personal strength, translocation skill and magic ability. 
 %%%%
 Fire Brand
 
@@ -484,7 +484,7 @@ This spell produces a noise emanating from a place of the caster's own choosing.
 %%%%
 Purification
 
-This spell purifies the caster's body, removing poison, disease, and certain malign enchantments. 
+This spell purifies the caster's body, removing poison, disease and certain malign enchantments. 
 %%%%
 Recall
 
@@ -612,7 +612,7 @@ This spell hurls a small bolt of force.
 %%%%
 Sublimation of Blood
 
-This spell converts flesh, blood, and other bodily fluids into magical energy. Casters may focus this spell on their own bodies (which can be dangerous but never directly lethal) or can wield freshly butchered flesh in order to draw power into themselves. 
+This spell converts flesh, blood and other bodily fluids into magical energy. Casters may focus this spell on their own bodies (which can be dangerous but never directly lethal) or can wield freshly butchered flesh in order to draw power into themselves. 
 %%%%
 Summon Butterflies
 

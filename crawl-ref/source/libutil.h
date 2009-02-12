@@ -134,7 +134,7 @@ inline std::string uppercase_first(std::string s)
 
 template <typename Z>
 std::string comma_separated_line(Z start, Z end,
-                                 const std::string &andc = ", and ",
+                                 const std::string &andc = " and ",
                                  const std::string &comma = ", ")
 {
     std::string text;

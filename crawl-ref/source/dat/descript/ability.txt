@@ -127,7 +127,7 @@ Blink to another grid within your line of sight.
 %%%%
 Evoke Berserk Rage
 
-Berserk greatly if temporarily increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items, or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, cannot berserk again, and occasionally even pass out.
+Berserk greatly if temporarily increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, cannot berserk again, and occasionally even pass out.
 %%%%
 Evoke Invisibility
 
@@ -248,7 +248,7 @@ All spellbooks within your line of sight are set on fire. The fire is fueled by 
 %%%%
 Berserk
 
-Berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, or evoke items. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, and cannot berserk again. Unlike other sources of rage, depending on your piety Trog may occasionally prevent you from passing out.
+Berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands or evoke items. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, and cannot berserk again. Unlike other sources of rage, depending on your piety Trog may occasionally prevent you from passing out.
 %%%%
 Trog's Hand
 
@@ -269,7 +269,7 @@ Depending on your Invocations skill, heal a small amount of hitpoints.
 %%%%
 Purification
 
-Purge your body of bad effects such as sickness, poisoning, slowness, confusion, and rotting.
+Purge your body of bad effects such as sickness, poisoning, slowness, confusion and rotting.
 %%%%
 Greater Healing
 

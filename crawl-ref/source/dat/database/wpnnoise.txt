@@ -459,7 +459,7 @@ weapon_chatter
 
 @Your_weapon@ wishes everyone in the dungeon @unpleasant_or_sudden@ @demise_or_death@.
 
-@Your_weapon@ fumes, "Being battered, bent, and broken sure is better than this boredom!"
+@Your_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
 
 @Your_weapon@ yells, "No battle, no fun!"
 
