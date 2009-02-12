@@ -1069,8 +1069,8 @@ static void _explore_find_target_square()
                 inacc.push_back("places");
 
             mprf("Partly explored, can't reach some %s.",
-                 comma_separated_line( inacc.begin(),
-                                       inacc.end()).c_str());
+                 comma_separated_line(inacc.begin(),
+                                      inacc.end()).c_str());
         }
         stop_running();
     }

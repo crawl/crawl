@@ -1166,10 +1166,7 @@ std::string mpr_monster_list(bool past)
     if (describe.size() == 1)
         msg += describe[0];
     else
-    {
-        msg += comma_separated_line(describe.begin(), describe.end(),
-                                    ", and ", ", ");
-    }
+        msg += comma_separated_line(describe.begin(), describe.end());
     msg += ".";
 
     return (msg);

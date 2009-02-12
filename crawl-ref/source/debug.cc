@@ -2350,7 +2350,7 @@ void wizard_create_feature_name()
 
                 // Use mpr_comma_separated_list() because the list
                 // might be *LONG*.
-                mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                mpr_comma_separated_list(prefix, matches, ", and ", ", ",
                                          MSGCH_DIAGNOSTICS);
                 return;
             }
@@ -3073,7 +3073,7 @@ void debug_mons_scan()
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
-                                     " and ", ", ", MSGCH_WARN);
+                                     ", and ", ", ", MSGCH_WARN);
     }
 
     mpr("");
@@ -3094,7 +3094,7 @@ void debug_mons_scan()
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
-                                     " and ", ", ", MSGCH_WARN);
+                                     ", and ", ", ", MSGCH_WARN);
 
         // Don't report on same monster twice.
         if (is_floating[idx])
@@ -3107,7 +3107,7 @@ void debug_mons_scan()
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
-                                     " and ", ", ", MSGCH_WARN);
+                                     ", and ", ", ", MSGCH_WARN);
     }
 
     mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
@@ -3960,7 +3960,7 @@ bool wizard_add_mutation(void)
 
             // Use mpr_comma_separated_list() because the list
             // might be *LONG*.
-            mpr_comma_separated_list(prefix, matches, " and ", ", ",
+            mpr_comma_separated_list(prefix, matches, ", and ", ", ",
                                      MSGCH_DIAGNOSTICS);
         }
 
@@ -4918,7 +4918,7 @@ void wizard_edit_durations( void )
             prefix += buf;
             prefix += "', possible matches are: ";
 
-            mpr_comma_separated_list(prefix, match_names, " and ", ", ",
+            mpr_comma_separated_list(prefix, match_names, ", and ", ", ",
                                      MSGCH_DIAGNOSTICS);
             return;
         }

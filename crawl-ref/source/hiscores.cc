@@ -724,7 +724,7 @@ std::string scorefile_entry::make_oneline(const std::string &ml) const
             trim_string(s);
         }
     }
-    return comma_separated_line(lines.begin(), lines.end(), " ", " ");
+    return (comma_separated_line(lines.begin(), lines.end(), " ", " "));
 }
 
 std::string scorefile_entry::long_kill_message() const

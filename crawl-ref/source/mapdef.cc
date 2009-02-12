@@ -982,7 +982,7 @@ std::string map_lines::block_shuffle(const std::string &s)
 {
     std::vector<std::string> segs = split_string("/", s);
     std::random_shuffle(segs.begin(), segs.end(), random2);
-    return comma_separated_line(segs.begin(), segs.end(), "/", "/");
+    return (comma_separated_line(segs.begin(), segs.end(), "/", "/"));
 }
 
 std::string map_lines::shuffle(std::string s)

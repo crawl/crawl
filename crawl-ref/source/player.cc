@@ -3930,8 +3930,7 @@ void display_char_status()
 
         if (!attrib.empty())
         {
-            msg += comma_separated_line(attrib.begin(), attrib.end(),
-                                        ", and ", ", ");
+            msg += comma_separated_line(attrib.begin(), attrib.end());
             mpr(msg.c_str());
         }
     }

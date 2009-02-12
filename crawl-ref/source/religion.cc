@@ -687,8 +687,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     else
     {
         text += " likes it when ";
-        text += comma_separated_line(likes.begin(), likes.end(),
-                                     ", and ", ", ");
+        text += comma_separated_line(likes.begin(), likes.end());
         text += ".";
 
         if (really_likes.size() > 0)
@@ -698,7 +697,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
             text += " especially likes it when ";
             text += comma_separated_line(really_likes.begin(),
-                                         really_likes.end(), ", and ", ", ");
+                                         really_likes.end());
             text += ".";
         }
     }

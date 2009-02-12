@@ -3658,7 +3658,7 @@ std::string get_skill_description(int skill, bool need_title)
             std::string broken = "For example, you could ";
                         broken += comma_separated_line(unarmed_attacks.begin(),
                                                        unarmed_attacks.end(),
-                                                       " or ", ", ");
+                                                       ", or ", ", ");
                         broken += ".";
             linebreak_string2(broken, 72);
 
