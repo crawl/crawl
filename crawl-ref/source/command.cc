@@ -1468,7 +1468,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     bool doing_gods     = false;
     bool doing_branches = false;
 
-    switch(ch)
+    switch (ch)
     {
     case 'M':
         type       = "monster";
@@ -1510,7 +1510,6 @@ static bool _find_description(bool &again, std::string& error_inout)
         want_regex     = false;
         want_sort      = false;
         doing_branches = true;
-
         break;
 
     default:
