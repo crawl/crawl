@@ -460,7 +460,7 @@ std::string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD)
-        return "";
+        return ("");
 
     std::string result = getLongDescription(god_name(which_god) + " powers");
     return (result);
@@ -469,7 +469,7 @@ std::string get_god_powers(god_type which_god)
 std::string get_god_likes(god_type which_god, bool verbose)
 {
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
-        return "";
+        return ("");
 
     std::string text = god_name(which_god);
     std::vector<std::string> likes;
@@ -710,7 +710,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
-        return "";
+        return ("");
 
     std::vector<std::string> dislikes;
 
@@ -793,7 +793,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     }
 
     if (dislikes.empty())
-        return "";
+        return ("");
 
     std::string text = god_name(which_god);
                 text += " dislikes it when ";
@@ -2297,7 +2297,7 @@ std::string god_name( god_type which_god, bool long_name )
         }
     case NUM_GODS: return "Buggy";
     }
-    return "";
+    return ("");
 }
 
 god_type string_to_god(const char *_name, bool exact)
@@ -6656,17 +6656,17 @@ std::string god_hates_your_god_reaction(god_type god, god_type your_god)
     {
         // Non-good gods always hate your current god.
         if (!is_good_god(god))
-            return "";
+            return ("");
 
         // Zin hates chaotic gods.
         if (god == GOD_ZIN && is_chaotic_god(your_god))
-            return " for chaos";
+            return (" for chaos");
 
         if (is_evil_god(your_god))
-            return " for evil";
+            return (" for evil");
     }
 
-    return "";
+    return ("");
 }
 
 bool god_hates_cannibalism(god_type god)
