@@ -231,6 +231,7 @@ static char god_message_altar_colour( god_type god )
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
+    case GOD_NAMELESS:
         return (YELLOW);
     }
     return (YELLOW);            // for stupid compilers
