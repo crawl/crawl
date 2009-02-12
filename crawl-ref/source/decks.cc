@@ -2645,7 +2645,8 @@ static void _crusade_card(int power, deck_rarity_type rarity)
         for (int i = 0; i < MAX_MONSTERS; ++i)
         {
             monsters* const monster = &menv[i];
-            if (monster->type == -1 || !mons_near(monster)
+            if (!monster->alive()
+                || !mons_near(monster)
                 || mons_friendly(monster)
                 || mons_holiness(monster) != MH_NATURAL
                 || mons_is_unique(monster->type)
@@ -2699,10 +2700,20 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     else
         dct = DEMON_LESSER;
 
-    create_monster(
-        mgen_data(summon_any_demon(dct), BEH_FRIENDLY,
-                  std::min(power / 50, 6), 0,
-                  you.pos(), MHITYOU));
+    // FIXME: The manual testing for message printing is there because
+    // we can't rely on create_monster() to do it for us. This is
+    // because if you are completely surrounded by walls, create_monster()
+    // will never manage to give a position which isn't (-1,-1)
+    // and thus not print the message.
+    // This hack appears later in this file as well.
+    if (create_monster(
+            mgen_data(summon_any_demon(dct), BEH_FRIENDLY,
+                      std::min(power / 50, 6), 0,
+                      you.pos(), MHITYOU),
+            false) == -1)
+    {
+        mpr("You see a puff of smoke.");
+    }
 }
 
 static void _summon_any_monster(int power, deck_rarity_type rarity)
@@ -2751,12 +2762,13 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
     const bool friendly = (power_level > 0 || !one_chance_in(4));
 
-    create_monster(
-        mgen_data(mon_chosen,
-                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                  3, 0,
-                  chosen_spot,
-                  MHITYOU));
+    if (create_monster(mgen_data(mon_chosen,
+                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                 3, 0, chosen_spot, MHITYOU),
+                       false) == -1)
+    {
+        mpr("You see a puff of smoke.");
+    }
 }
 
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
@@ -2768,7 +2780,8 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         create_monster(
             mgen_data(MONS_DANCING_WEAPON,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      power_level + 3, 0, you.pos(), MHITYOU));
+                      power_level + 3, 0, you.pos(), MHITYOU),
+            false);
 
     // Given the abundance of Nemelex decks, not setting hard reset
     // leaves a trail of weapons behind, most of which just get
@@ -2814,6 +2827,10 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         }
         menv[mon].flags |= MF_HARD_RESET;
     }
+    else
+    {
+        mpr("You see a puff of smoke.");
+    }
 }
 
 static void _summon_flying(int power, deck_rarity_type rarity)
@@ -2852,12 +2869,14 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
         MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_SKELETAL_DRAGON
     };
 
-    create_monster(
-        mgen_data(
-            skeltypes[power_level],
-            friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-            std::min(power / 50, 6), 0,
-            you.pos(), MHITYOU));
+    if (create_monster(mgen_data(skeltypes[power_level],
+                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                 std::min(power / 50, 6), 0,
+                                 you.pos(), MHITYOU),
+                       false) == -1)
+    {
+        mpr("You see a puff of smoke.");
+    }
 }
 
 static void _summon_ugly(int power, deck_rarity_type rarity)
@@ -2872,11 +2891,14 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     else
         ugly = MONS_UGLY_THING;
 
-    create_monster(
-        mgen_data(ugly,
-                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                  std::min(power / 50, 6), 0,
-                  you.pos(), MHITYOU));
+    if (create_monster(mgen_data(ugly,
+                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                 std::min(power / 50, 6), 0,
+                                 you.pos(), MHITYOU),
+                       false) == -1)
+    {
+        mpr("You see a puff of smoke.");
+    }
 }
 
 static int _card_power(deck_rarity_type rarity)

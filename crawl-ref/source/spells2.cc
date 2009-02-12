@@ -1702,7 +1702,7 @@ bool cast_tukimas_dance(int pow, god_type god,
         success = false;
     else if (success)
         // Copy item now so that mitm[i] is occupied and doesn't get picked
-        // by get_item_slot() when giving the dancing weapon it's item
+        // by get_item_slot() when giving the dancing weapon its item
         // during create_monster().
         mitm[i] = you.inv[wpn];
 

@@ -2000,7 +2000,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
             use_inscrip = false;
         }
 
-        item_def item = mitm[mon.inv[MSLOT_WEAPON]];
+        const item_def& item = mitm[mon.inv[MSLOT_WEAPON]];
         return item.name(desc, false, false, use_inscrip, false, ignore_flags);
     }
 

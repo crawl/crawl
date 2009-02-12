@@ -1115,12 +1115,23 @@ static int _place_monster_aux(const mgen_data &mg,
     const bool summoned = mg.abjuration_duration >= 1
                        && mg.abjuration_duration <= 6;
 
-    if (mg.cls == MONS_DANCING_WEAPON && mg.number != 1) // ie not from spell
+    if (mg.cls == MONS_DANCING_WEAPON)
     {
         give_item(id, mg.power, summoned);
 
-        if (menv[id].inv[MSLOT_WEAPON] != NON_ITEM)
-            menv[id].colour = mitm[menv[id].inv[MSLOT_WEAPON]].colour;
+        // Dancing swords *always* have a weapon. Fail to
+        // create them otherwise.
+        const item_def* wpn = menv[id].weapon();
+        if (!wpn)
+        {
+            menv[id].destroy_inventory();
+            menv[id].reset();
+            return (-1);
+        }
+        else
+        {
+            menv[id].colour = wpn->colour;
+        }
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
