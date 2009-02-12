@@ -734,7 +734,7 @@ int TilesFramework::getch_ck()
             if (ticks > m_last_tick_moved)
             {
                 m_region_msg->alt_text().clear();
-                for (unsigned int i = 0; 
+                for (unsigned int i = 0;
                     i < m_layers[m_active_layer].m_regions.size(); i++)
                 {
                     Region *reg = m_layers[m_active_layer].m_regions[i];

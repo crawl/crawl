@@ -126,7 +126,7 @@ void print_description(const describe_info &inf)
     clrscr();
     textcolor(LIGHTGREY);
 
-    default_desc_proc proc;    
+    default_desc_proc proc;
     process_description<default_desc_proc>(proc, inf);
 }
 
@@ -2206,7 +2206,7 @@ static bool _show_item_description(const item_def &item)
     const          int height    = get_number_of_lines();
 
     describe_info inf;
-    std::string desc = 
+    std::string desc =
         get_item_description(item, true, false, Options.tutorial_left);
 
     int num_lines = count_desc_lines(desc, lineWidth) + 1;
