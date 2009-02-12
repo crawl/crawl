@@ -1674,7 +1674,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
     }
 
     return (ret);
-}                               // end noisy()
+}
 
 static const char* _player_vampire_smells_blood(int dist)
 {
@@ -3822,12 +3822,9 @@ void show_map( coord_def &spec_place, bool travel_mode )
         curs_y += move_y;
 #endif
     }
+}
 
-    return;
-}                               // end show_map()
-
-
-// Returns true if succeeded.
+// Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force)
 {
