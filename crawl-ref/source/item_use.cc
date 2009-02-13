@@ -3920,9 +3920,7 @@ void zap_wand(int slot)
 
 
     if (you.confused())
-    {
         zap_wand.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
-    }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
