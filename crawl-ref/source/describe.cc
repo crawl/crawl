@@ -3620,36 +3620,36 @@ std::string get_skill_description(int skill, bool need_title)
             || you.species == SP_MERFOLK && player_is_swimming()
             || player_mutation_level( MUT_STINGER ))
         {
-            unarmed_attacks.push_back("slap monsters with your tail");
+            unarmed_attacks.push_back("slap with your tail");
         }
 
         if (player_mutation_level(MUT_FANGS)
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
         {
-            unarmed_attacks.push_back("bite other creatures");
+            unarmed_attacks.push_back("bite with your sharp teeth");
         }
         else if (player_mutation_level(MUT_BEAK))
-            unarmed_attacks.push_back("peck at monsters with your beak");
+            unarmed_attacks.push_back("peck with your beak");
 
         if (player_mutation_level(MUT_HORNS))
-            unarmed_attacks.push_back("do a headbutt attack with your horns");
+            unarmed_attacks.push_back("headbutt with your horns");
         else if (you.species == SP_NAGA)
             unarmed_attacks.push_back("do a headbutt attack");
 
         if (player_mutation_level(MUT_HOOVES))
-            unarmed_attacks.push_back("kick your enemies with your hooves");
+            unarmed_attacks.push_back("kick with your hooves");
         else if (player_mutation_level(MUT_TALONS))
-            unarmed_attacks.push_back("claw at your enemies with your talons");
+            unarmed_attacks.push_back("claw with your talons");
         else if (you.species != SP_NAGA
                  && (you.species != SP_MERFOLK || !player_is_swimming()))
         {
-            unarmed_attacks.push_back("kick your enemies");
+            unarmed_attacks.push_back("deliver a kick");
         }
 
         if (you.equip[EQ_WEAPON] == -1)
-            unarmed_attacks.push_back("punch monsters");
+            unarmed_attacks.push_back("throw a punch");
         else if (you.equip[EQ_SHIELD] == -1)
-            unarmed_attacks.push_back("punch monsters with your free hand");
+            unarmed_attacks.push_back("punch with your free hand");
 
         if (!unarmed_attacks.empty())
         {
