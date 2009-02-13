@@ -2908,7 +2908,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     const int brand = get_weapon_brand(item);
     const bool visibly_branded = (brand != SPWPN_NORMAL);
 
-    // nobody would bother enchanting a mundane club
+    // Nobody would bother enchanting a mundane club.
     if (item.sub_type == WPN_CLUB || item.sub_type == WPN_GIANT_CLUB
         || item.sub_type == WPN_GIANT_SPIKED_CLUB)
     {
