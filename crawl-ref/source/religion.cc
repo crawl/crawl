@@ -5354,10 +5354,9 @@ static bool _yred_slaves_abandon_you()
     {
         for (radius_iterator ri(you.pos(), 9); ri; ++ri)
         {
-            if (mgrd(*ri) == NON_MONSTER)
+            monsters *monster = monster_at(*ri);
+            if (monster == NULL)
                 continue;
-
-            monsters *monster = &menv[mgrd(*ri)];
 
             if (_is_yred_enslaved_body_and_soul(monster)
                 || is_yred_undead_slave(monster))
@@ -5432,10 +5431,9 @@ static bool _beogh_followers_abandon_you()
     {
         for (radius_iterator ri(you.pos(), 9); ri; ++ri)
         {
-            if (mgrd(*ri) == NON_MONSTER)
+            monsters *monster = monster_at(*ri);
+            if (monster == NULL)
                 continue;
-
-            monsters *monster = &menv[mgrd(*ri)];
 
             if (is_orcish_follower(monster))
             {

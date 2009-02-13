@@ -198,9 +198,8 @@ int detect_creatures( int pow, bool telepathic )
 
     for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
     {
-        if (mgrd(*ri) != NON_MONSTER)
+        if (monsters *mon = monster_at(*ri))
         {
-            monsters *mon = &menv[ mgrd(*ri) ];
             creatures_found++;
 
             _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
@@ -758,15 +757,13 @@ void drain_life(int pow)
 
 bool vampiric_drain(int pow, const dist &vmove)
 {
-    int mgr = mgrd(you.pos() + vmove.delta);
+    monsters *monster = monster_at(you.pos() + vmove.delta);
 
-    if (mgr == NON_MONSTER)
+    if (monster == NULL)
     {
         mpr("There isn't anything there!");
         return (false);
     }
-
-    monsters *monster = &menv[mgr];
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
@@ -1350,9 +1347,9 @@ bool cast_summon_elemental(int pow, god_type god,
 
         targ = you.pos() + smove.delta;
 
-        if (mgrd(targ) != NON_MONSTER)
+        if (const monsters *m = monster_at(targ))
         {
-            if (player_monster_visible(&menv[mgrd(targ)]))
+            if (you.can_see(m))
                 mpr("There's something there already!");
             else
             {

@@ -2669,10 +2669,8 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
     // Sweep every visible square within range.
     for (radius_iterator ri(you.pos(), range); ri; ++ri)
     {
-        const unsigned short targ_monst = env.mgrid(*ri);
-        if (targ_monst != NON_MONSTER)
+        if (monsters* mon = monster_at(*ri))
         {
-            monsters *mon = &menv[targ_monst];
             if (mon->alive()
                 && (!require_visible || player_monster_visible(mon))
                 && !mons_is_submerged(mon)
@@ -2682,7 +2680,7 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
             {
                 mons.push_back(mon);
                 if (just_check) // stop once you find one
-                    return mons;
+                    break;
             }
         }
     }
@@ -2908,23 +2906,12 @@ coord_def pick_adjacent_free_square(const coord_def& p)
 {
     int num_ok = 0;
     coord_def result(-1, -1);
-    for ( int ux = p.x-1; ux <= p.x+1; ++ux )
-    {
-        for ( int uy = p.y-1; uy <= p.y+1; ++uy )
-        {
-            if ( ux == p.x && uy == p.y )
-                continue;
 
-            if ( in_bounds(ux, uy)
-                 && grd[ux][uy] == DNGN_FLOOR
-                 && mgrd[ux][uy] == NON_MONSTER )
-            {
-                ++num_ok;
-                if ( one_chance_in(num_ok) )
-                    result.set(ux, uy);
-            }
-        }
-    }
+    for (adjacent_iterator ai(p); ai; ++ai)
+        if (grd(*ai) == DNGN_FLOOR && monster_at(*ai) == NULL)
+            if (one_chance_in(++num_ok))
+                result = *ai;
+
     return result;
 }
 

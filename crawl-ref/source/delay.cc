@@ -83,11 +83,11 @@ static bool _recite_mons_useless(const monsters *mon)
 // Power is maximum 50.
 static int _recite_to_monsters(coord_def where, int pow, int, actor *)
 {
-    const int mon = mgrd(where);
-    if (mon == NON_MONSTER)
-        return (0);
 
-    monsters *mons = &menv[mon];
+    monsters *mons = monster_at(where);
+
+    if (mons == NULL)
+        return (0);
 
     if (_recite_mons_useless(mons))
         return (0);
@@ -676,13 +676,14 @@ int check_recital_audience()
 
     for ( radius_iterator ri(you.pos(), 8); ri; ++ri )
     {
-        if ( mgrd(*ri) == NON_MONSTER )
+        monsters* mons = monster_at(*ri);
+        if (mons == NULL)
             continue;
 
         found_monsters = true;
 
         // Check if audience can listen.
-        if (!_recite_mons_useless( &menv[mgrd(*ri)] ) )
+        if (!_recite_mons_useless(mons))
             return (1);
     }
 
@@ -1139,13 +1140,11 @@ static void _finish_delay(const delay_queue_item &delay)
             }
 
             // Move any monsters out of the way:
-            int mon = mgrd(pass);
-            if (mon != NON_MONSTER)
+            if (monsters* m = monster_at(pass))
             {
-                monsters* m = &menv[mon];
                 // One square, a few squares, anywhere...
                 if (!shift_monster(m) && !monster_blink(m))
-                    monster_teleport( m, true, true );
+                    monster_teleport(m, true, true);
             }
 
             move_player_to_grid(pass, false, true, true);

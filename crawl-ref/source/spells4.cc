@@ -393,33 +393,30 @@ void cast_detect_secret_doors(int pow)
 
 static int _sleep_monsters(coord_def where, int pow, int, actor *)
 {
-    const int mnstr = mgrd(where);
+    monsters *monster = monster_at(where);
+    if (monster == NULL)
+        return (0);
 
-    if (mnstr == NON_MONSTER)
-        return 0;
-
-    monsters& mon = menv[mnstr];
-
-    if (mons_holiness(&mon) != MH_NATURAL)
-        return 0;
-    if (check_mons_resist_magic( &mon, pow ))
-        return 0;
+    if (mons_holiness(monster) != MH_NATURAL)
+        return (0);
+    if (check_mons_resist_magic(monster, pow))
+        return (0);
 
     // Works on friendlies too, so no check for that.
 
     //jmf: Now that sleep == hibernation:
-    const int res = mons_res_cold( &mon );
+    const int res = mons_res_cold(monster);
     if (res > 0 && one_chance_in(std::max(4 - res, 1)))
-        return 0;
-    if (mon.has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
-        return 0;
+        return (0);
+    if (monster->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
+        return (0);
 
-    mon.put_to_sleep();
+    monster->put_to_sleep();
 
-    if (mons_class_flag( mon.type, M_COLD_BLOOD ) && coinflip())
-        mon.add_ench(ENCH_SLOW);
+    if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
+        monster->add_ench(ENCH_SLOW);
 
-    return 1;
+    return (1);
 }
 
 void cast_mass_sleep(int pow)
@@ -451,12 +448,9 @@ static bool _is_domesticated_animal(int type)
 
 static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
 {
-    const int which_mons = mgrd(where);
-
-    if (which_mons == NON_MONSTER)
+    monsters *monster = monster_at(where);
+    if (monster == NULL)
         return 0;
-
-    monsters *monster = &menv[which_mons];
 
     if (!_is_domesticated_animal(monster->type) || mons_friendly(monster)
         || player_will_anger_monster(monster))
@@ -561,13 +555,11 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
     bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
 
-    dice_def  dam_dice( 0, 5 + pow / 7 );  // Dice added below if applicable.
+    dice_def dam_dice(0, 5 + pow/7);  // Dice added below if applicable.
 
-    const int mon_index = mgrd(where);
-    if (mon_index == NON_MONSTER)
+    monsters *mon = monster_at(where);
+    if (mon == NULL)
         return (0);
-
-    struct monsters *const mon = &menv[ mon_index ];
 
     // Monsters which have poison corpses or poisonous attacks.
     if (mons_is_poisoner(mon))
@@ -595,7 +587,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
              dam_dice.num, dam_dice.size, damage );
 #endif
 
-        if (!_player_hurt_monster( mon_index, damage ))
+        if (!_player_hurt_monster(mon->mindex(), damage))
         {
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
@@ -776,7 +768,7 @@ void cast_silence(int pow)
 
 static int _discharge_monsters(coord_def where, int pow, int, actor *)
 {
-    const int mon = mgrd(where);
+    monsters *monster = monster_at(where);
     int damage = 0;
 
     bolt beam;
@@ -791,20 +783,20 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
             damage /= 2;
         ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC);
     }
-    else if (mon == NON_MONSTER)
+    else if (monster == NULL)
         return (0);
-    else if (mons_res_elec(&menv[mon]) > 0 || mons_flies(&menv[mon]))
+    else if (mons_res_elec(monster) > 0 || mons_flies(monster))
         return (0);
     else
     {
-        damage = 3 + random2( 5 + pow / 10 );
-        damage = mons_adjust_flavoured( &menv[mon], beam, damage );
+        damage = 3 + random2(5 + pow/10);
+        damage = mons_adjust_flavoured(monster, beam, damage );
 
         if (damage)
         {
             mprf("%s is struck by lightning.",
-                 menv[mon].name(DESC_CAP_THE).c_str());
-            _player_hurt_monster(mon, damage);
+                 monster->name(DESC_CAP_THE).c_str());
+            _player_hurt_monster(*monster, damage);
         }
     }
 
@@ -880,13 +872,11 @@ static int _distortion_monsters(coord_def where, int pow, int, actor *)
         return (1);
     }
 
-    int monster_attacked = mgrd(where);
-
-    if (monster_attacked == NON_MONSTER)
-        return 0;
+    monsters *defender = monster_at(where);
+    if (defender == NULL)
+        return (0);
 
     int specdam = 0;
-    monsters *defender = &menv[monster_attacked];
 
     if (defender->type == MONS_BLINK_FROG
         || defender->type == MONS_PRINCE_RIBBIT)      // any others resist?
@@ -938,7 +928,7 @@ static int _distortion_monsters(coord_def where, int pow, int, actor *)
         return 1;
     }
 
-    _player_hurt_monster(monster_attacked, specdam);
+    _player_hurt_monster(*defender, specdam);
 
     return (specdam);
 }
@@ -953,12 +943,9 @@ void cast_bend(int pow)
 // the insane damage potential.  -- bwr
 int disperse_monsters(coord_def where, int pow, int, actor *)
 {
-    const int monster_attacked = mgrd(where);
-
-    if (monster_attacked == NON_MONSTER)
+    monsters *defender = monster_at(where);
+    if (defender == NULL)
         return 0;
-
-    monsters *defender = &menv[monster_attacked];
 
     if (defender->type == MONS_BLINK_FROG
         || defender->type == MONS_PRINCE_RIBBIT)
@@ -996,12 +983,9 @@ void cast_dispersal(int pow)
 
 static int _spell_swap_func(coord_def where, int pow, int, actor *)
 {
-    int monster_attacked = mgrd(where);
-
-    if (monster_attacked == NON_MONSTER)
-        return 0;
-
-    monsters *defender = &menv[monster_attacked];
+    monsters *defender = monster_at(where);
+    if (defender == NULL)
+        return (0);
 
     if (defender->type == MONS_BLINK_FROG
         || defender->type == MONS_PRINCE_RIBBIT
@@ -1158,17 +1142,16 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     UNUSED( pow );
 
-    int mon = mgrd(where);
-
-    if (mon == NON_MONSTER
-        || mons_intel(&menv[mon]) < I_NORMAL
-        || mons_holiness(&menv[mon]) != MH_NATURAL
-        || mons_res_poison(&menv[mon]) > 0)
+    monsters *monster = monster_at(where);
+    if (monster == NULL
+        || mons_intel(monster) < I_NORMAL
+        || mons_holiness(monster) != MH_NATURAL
+        || mons_res_poison(monster) > 0)
     {
         return 0;
     }
 
-    menv[mon].add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
+    monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
     return 1;
 }
 
@@ -1191,38 +1174,37 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     UNUSED( pow );
     UNUSED( garbage );
 
-    int mon = mgrd(where);
-
-    if (mon == NON_MONSTER)
+    monsters *monster = monster_at(where);
+    if (monster == NULL)
         return (false);
 
     // Already glowing.
-    if (mons_class_flag(menv[mon].type, M_GLOWS))
+    if (mons_class_flag(monster->type, M_GLOWS))
         return (false);
 
-    mon_enchant bklt = menv[mon].get_ench(ENCH_BACKLIGHT);
+    mon_enchant bklt = monster->get_ench(ENCH_BACKLIGHT);
     const int lvl = bklt.degree;
 
     // This enchantment overrides invisibility (neat).
-    if (menv[mon].has_ench(ENCH_INVIS))
+    if (monster->has_ench(ENCH_INVIS))
     {
-        if (!menv[mon].has_ench(ENCH_BACKLIGHT))
+        if (!monster->has_ench(ENCH_BACKLIGHT))
         {
-            menv[mon].add_ench(
+            monster->add_ench(
                 mon_enchant(ENCH_BACKLIGHT, 1, KC_OTHER, random_range(30, 50)));
-            simple_monster_message( &menv[mon], " is lined in light." );
+            simple_monster_message(monster, " is lined in light.");
         }
         return (true);
     }
 
-    menv[mon].add_ench(mon_enchant(ENCH_BACKLIGHT, 1));
+    monster->add_ench(mon_enchant(ENCH_BACKLIGHT, 1));
 
     if (lvl == 0)
-        simple_monster_message( &menv[mon], " is outlined in light." );
+        simple_monster_message(monster, " is outlined in light.");
     else if (lvl == 4)
-        simple_monster_message( &menv[mon], " glows brighter for a moment." );
+        simple_monster_message(monster, " glows brighter for a moment.");
     else
-        simple_monster_message( &menv[mon], " glows brighter." );
+        simple_monster_message(monster, " glows brighter.");
 
     return (true);
 }
@@ -1524,39 +1506,36 @@ void cast_fulsome_distillation( int powc )
 
 static int _rot_living(coord_def where, int pow, int, actor *)
 {
-    const int mon = mgrd(where);
-    int ench;
+    monsters *monster = monster_at(where);
+    if (monster == NULL)
+        return (0);
 
-    if (mon == NON_MONSTER)
-        return 0;
+    if (mons_holiness(monster) != MH_NATURAL)
+        return (0);
 
-    if (mons_holiness(&menv[mon]) != MH_NATURAL)
-        return 0;
+    if (check_mons_resist_magic(monster, pow))
+        return (0);
 
-    if (check_mons_resist_magic(&menv[mon], pow))
-        return 0;
-
-    ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow)) / 4);
+    int ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow))/4);
     ench = 1 + (ench >= 20) + (ench >= 35) + (ench >= 50);
 
-    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench, KC_YOU) );
+    monster->add_ench(mon_enchant(ENCH_ROT, ench, KC_YOU));
 
-    return 1;
+    return (1);
 }
 
 static int _rot_undead(coord_def where, int pow, int, actor *)
 {
-    const int mon = mgrd(where);
-    int ench;
+    monsters *monster = monster_at(where);
 
-    if (mon == NON_MONSTER)
-        return 0;
+    if (monster == NULL)
+        return (0);
 
-    if (mons_holiness(&menv[mon]) != MH_UNDEAD)
-        return 0;
+    if (mons_holiness(monster) != MH_UNDEAD)
+        return (0);
 
-    if (check_mons_resist_magic(&menv[mon], pow))
-        return 0;
+    if (check_mons_resist_magic(monster, pow))
+        return (0);
 
     // This does not make sense -- player mummies are
     // immune to rotting (or have been) -- so what is
@@ -1569,7 +1548,7 @@ static int _rot_undead(coord_def where, int pow, int, actor *)
     //     insist that monsters get the same treatment as
     //     players, I demand my player mummies get to worship
     //     the evil mummy & orc gods.
-    switch (menv[mon].type)
+    switch (monster->type)
     {
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
@@ -1592,12 +1571,12 @@ static int _rot_undead(coord_def where, int pow, int, actor *)
         return 0;               // Immune (no flesh) or already rotting.
     }
 
-    ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow)) / 4);
+    int ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow))/4);
     ench = 1 + (ench >= 20) + (ench >= 35) + (ench >= 50);
 
-    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench, KC_YOU) );
+    monster->add_ench(mon_enchant(ENCH_ROT, ench, KC_YOU));
 
-    return 1;
+    return (1);
 }
 
 static int _rot_corpses(coord_def where, int pow, int, actor *)
@@ -1624,24 +1603,23 @@ void do_monster_rot(int mon)
     }
 
     _player_hurt_monster( mon, damage );
-    return;
 }
 
 static int _snake_charm_monsters(coord_def where, int pow, int, actor *)
 {
-    const int mon = mgrd(where);
+    monsters* monster = monster_at(where);
 
-    if (mon == NON_MONSTER
+    if (monster == NULL
         || one_chance_in(4)
-        || mons_friendly(&menv[mon])
-        || mons_char(menv[mon].type) != 'S'
-        || check_mons_resist_magic(&menv[mon], pow))
+        || mons_friendly(monster)
+        || mons_char(monster->type) != 'S'
+        || check_mons_resist_magic(monster, pow))
     {
         return 0;
     }
 
-    menv[mon].attitude = ATT_FRIENDLY;
-    mprf("%s sways back and forth.", menv[mon].name(DESC_CAP_THE).c_str());
+    monster->attitude = ATT_FRIENDLY;
+    mprf("%s sways back and forth.", monster->name(DESC_CAP_THE).c_str());
 
     return 1;
 }
@@ -2009,8 +1987,10 @@ bool cast_fragmentation(int pow, const dist& spd)
 
 bool cast_twist(int pow, const coord_def& where)
 {
+    monsters *monster = monster_at(where);
+
     // Anything there?
-    if (invalid_monster_index(mgrd(where)))
+    if (monster == NULL)
     {
         mpr("There is no monster there!");
         // This counts as a real cast, in order not to leak invisible
@@ -2018,16 +1998,14 @@ bool cast_twist(int pow, const coord_def& where)
         return (true);
     }
 
-    monsters& m = menv[mgrd(where)];
-
     // Identify mimics, if necessary.
-    if (mons_is_mimic(m.type))
-        m.flags |= MF_KNOWN_MIMIC;
+    if (mons_is_mimic(monster->type))
+        monster->flags |= MF_KNOWN_MIMIC;
 
     // Monster can magically save vs attack.
-    if (check_mons_resist_magic(&m, pow * 2))
+    if (check_mons_resist_magic(monster, pow * 2))
     {
-        simple_monster_message(&m, mons_resist_string(&m));
+        simple_monster_message(monster, mons_resist_string(monster));
         return (true);
     }
 
@@ -2038,10 +2016,9 @@ bool cast_twist(int pow, const coord_def& where)
     const int damage = 1 + random2(3 + pow / 5);
 
     // Inflict the damage.
-    _player_hurt_monster(m, damage);
-
-    if (mons_is_mimic(m.type))
-        mimic_alert(&m);
+    if (!_player_hurt_monster(*monster, damage))
+        if (mons_is_mimic(monster->type))
+            mimic_alert(monster);
 
     return (true);
 }
@@ -2100,7 +2077,7 @@ void cast_far_strike(int pow)
         return;
 
     // Get the target monster...
-    if (mgrd(targ.target) == NON_MONSTER || targ.isMe)
+    if (monster_at(targ.target) == NULL)
     {
         mpr("There is no monster there!");
         return;
@@ -2173,8 +2150,7 @@ void cast_far_strike(int pow)
     damage *= dammod;
     damage /= 78;
 
-    const int midx = mgrd(targ.target);
-    monsters *monster = &menv[midx];
+    monsters *monster = monster_at(targ.target);
 
     // Apply monster's AC.
     if (monster->ac > 0)
@@ -2193,7 +2169,7 @@ void cast_far_strike(int pow)
     }
 
     // Inflict the damage.
-    _player_hurt_monster(midx, damage);
+    _player_hurt_monster(*monster, damage);
 }
 
 bool cast_apportation(int pow, const coord_def& where)
@@ -2216,15 +2192,13 @@ bool cast_apportation(int pow, const coord_def& where)
     if (item_idx == NON_ITEM)
     {
         // Maybe the player *thought* there was something there (a mimic.)
-        const int mon = mgrd(where);
-        if (!invalid_monster_index(mon))
+        if (monsters* m = monster_at(where))
         {
-            monsters& m = menv[mon];
-            if (mons_is_mimic(m.type) && you.can_see(&m))
+            if (mons_is_mimic(m->type) && you.can_see(m))
             {
-                mprf("%s twitches.", m.name(DESC_CAP_THE).c_str());
+                mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
                 // Nothing else gives this message, so identify the mimic.
-                m.flags |= MF_KNOWN_MIMIC;
+                m->flags |= MF_KNOWN_MIMIC;
                 return (true);  // otherwise you get free mimic ID
             }
         }
@@ -2267,10 +2241,8 @@ bool cast_apportation(int pow, const coord_def& where)
         && item_is_stationary(item))
     {
         remove_item_stationary(item);
-
-        const int mon = mgrd(where);
-        if (!invalid_monster_index(mon))
-            menv[mon].del_ench(ENCH_HELD, true);
+        if (monsters *monster = monster_at(where))
+            monster->del_ench(ENCH_HELD, true);
     }
 
     // Actually move the item.

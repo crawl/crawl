@@ -2960,26 +2960,26 @@ static void _open_door(coord_def move, bool check_confused)
     {
         doorpos = you.pos() + move;
 
-        const int mon = mgrd(doorpos);
+        monsters* mon = monster_at(doorpos);
 
-        if (mon != NON_MONSTER && player_can_hit_monster(&menv[mon]))
+        if (mon && player_can_hit_monster(mon))
         {
-            if (mons_is_caught(&menv[mon]))
+            if (mons_is_caught(mon))
             {
-                std::string prompt  = "Do you want to try to take the net off ";
-                            prompt += (&menv[mon])->name(DESC_NOCAP_THE);
-                            prompt += '?';
+                const std::string prompt =
+                    make_stringf("Do you want to try to take the net off %s?",
+                                 mon->name(DESC_NOCAP_THE).c_str());
 
                 if (yesno(prompt.c_str(), true, 'n'))
                 {
-                    remove_net_from(&menv[mon]);
+                    remove_net_from(mon);
                     return;
                 }
 
             }
 
             you.turn_is_over = true;
-            you_attack(mgrd(doorpos), true);
+            you_attack(mon->mindex(), true);
 
             if (you.berserk_penalty != NO_BERSERK_PENALTY)
                 you.berserk_penalty = 0;
@@ -3172,11 +3172,11 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            if (mgrd(dc) != NON_MONSTER)
+            if (monsters* mon = monster_at(dc))
             {
                 // Need to make sure that turn_is_over is set if creature is
                 // invisible.
-                if (!player_monster_visible(&menv[mgrd(dc)]))
+                if (!player_monster_visible(mon))
                 {
                     mprf("Something is blocking the %sway!", noun);
                     you.turn_is_over = true;
@@ -3575,14 +3575,14 @@ static void _move_player(coord_def move)
 
     const coord_def& targ = you.pos() + move;
     const dungeon_feature_type targ_grid  =  grd(targ);
-    const unsigned short targ_monst = mgrd(targ);
+          monsters*      targ_monst = monster_at(targ);
     const bool           targ_pass  = you.can_pass_through(targ);
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
-    const bool can_swap_places = targ_monst != NON_MONSTER
-                                 && !mons_is_stationary(&menv[targ_monst])
-                                 && (mons_wont_attack(&menv[targ_monst])
+    const bool can_swap_places = targ_monst
+                                 && !mons_is_stationary(targ_monst)
+                                 && (mons_wont_attack(targ_monst)
                                        && !you.confused()
                                      || is_sanctuary(you.pos())
                                         && is_sanctuary(targ));
@@ -3615,13 +3615,11 @@ static void _move_player(coord_def move)
 
     coord_def mon_swap_dest;
 
-    if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
+    if (targ_monst && !mons_is_submerged(targ_monst))
     {
-        monsters *mon = &menv[targ_monst];
-
         if (can_swap_places && !beholder)
         {
-            if (swap_check(mon, mon_swap_dest))
+            if (swap_check(targ_monst, mon_swap_dest))
                 swap = true;
             else
                 moving = false;
@@ -3634,7 +3632,7 @@ static void _move_player(coord_def move)
             // the player to figure out which adjacent wall an invis
             // monster is in "for free".
             you.turn_is_over = true;
-            you_attack( targ_monst, true );
+            you_attack(targ_monst->mindex(), true);
 
             // We don't want to create a penalty if there isn't
             // supposed to be one.
@@ -3653,7 +3651,7 @@ static void _move_player(coord_def move)
             return;
 
         if (swap)
-            swap_places(&menv[targ_monst], mon_swap_dest);
+            swap_places(targ_monst, mon_swap_dest);
 
         you.prev_move = move;
         move.reset();

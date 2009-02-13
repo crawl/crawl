@@ -2159,10 +2159,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     inf.quote = getQuoteString(db_name);
 }
 
-void describe_feature_wide(int x, int y)
+void describe_feature_wide(const coord_def& pos)
 {
-    const coord_def pos(x, y);
-
     describe_info inf;
     get_feature_desc(pos, inf);
     print_description(inf);
@@ -2170,7 +2168,7 @@ void describe_feature_wide(int x, int y)
     mouse_control mc(MOUSE_MODE_MORE);
 
     if (Options.tutorial_left)
-        tutorial_describe_pos(x, y);
+        tutorial_describe_pos(pos.x, pos.y);
 
     if (getch() == 0)
         getch();

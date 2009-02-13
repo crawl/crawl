@@ -270,7 +270,7 @@ bool follower::place(bool near_player)
                     near_player = true;
                 else
                 {
-                    mgrd[where_to_go.x][where_to_go.y] = monster_index(&m);
+                    mgrd(where_to_go) = m.mindex();
                     placed = true;
                 }
             }

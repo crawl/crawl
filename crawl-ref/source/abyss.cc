@@ -21,6 +21,7 @@ REVISION("$Rev$");
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "monplace.h"
 #include "mtransit.h"
 #include "player.h"
@@ -467,8 +468,8 @@ void area_shift(void)
 #endif
         lose_item_stack( *ri );
 
-        if (mgrd(*ri) != NON_MONSTER)
-            _abyss_lose_monster( menv[ mgrd(*ri) ] );
+        if (monsters* m = monster_at(*ri))
+            _abyss_lose_monster(*m);
     }
 
     // Shift all monsters and items to new area.

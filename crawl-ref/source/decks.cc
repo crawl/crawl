@@ -1738,14 +1738,12 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
         drain_exp();
     else
     {
-        const int mnstr = mgrd(where);
-        if (mnstr == NON_MONSTER)
+        monsters* mon = monster_at(where);
+        if (mon == NULL)
             return (0);
 
-        monsters& mon = menv[mnstr];
-
-        if (!mon.drain_exp(&you, false, pow / 50))
-            simple_monster_message(&mon, " is unaffected.");
+        if (mon->drain_exp(&you, false, pow / 50))
+            simple_monster_message(mon, " is unaffected.");
     }
 
     return (1);
@@ -2533,7 +2531,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
         {
             // Do-nothing (effectively): create a cosmetic feature
             const coord_def pos = pick_adjacent_free_square(you.pos());
-            if (pos.x >= 0 && pos.y >= 0)
+            if (in_bounds(pos))
             {
                 const dungeon_feature_type statfeat[] = {
                     DNGN_GRANITE_STATUE, DNGN_ORCISH_IDOL

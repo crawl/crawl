@@ -529,7 +529,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
     for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
-        if (mgrd(*ai) == NON_MONSTER && *ai != you.pos())
+        if (monster_at(*ai) == NULL && *ai != you.pos())
             continue;
 
         // Found target

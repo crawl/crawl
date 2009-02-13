@@ -268,6 +268,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     const coord_def delta = beam.target - you.pos();
     const int x_distance = abs(delta.x);
     const int y_distance = abs(delta.y);
+    monsters* mons = monster_at(beam.target);
 
     if (x_distance > 2 || y_distance > 2)
     {
@@ -279,12 +280,10 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("There's a wall in the way.");
         return (false);
     }
-    else if (mgrd(beam.target) == NON_MONSTER)
+    else if (mons == NULL)
     {
         // Must return true, otherwise you get a free discovery
-        // of invisible monsters. Maybe we shouldn't do practice
-        // here to prevent scumming...but that would just encourage
-        // finding popcorn monsters.
+        // of invisible monsters.
         mpr("You attack empty space.");
         return (true);
     }
@@ -310,7 +309,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             if (x_chance_in_y(5 + (3 * skill), 40))
             {
                 mpr("You reach to attack!");
-                success = you_attack(mgrd(beam.target), false);
+                success = you_attack(mons->mindex(), false);
             }
             else
             {
@@ -321,22 +320,19 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         else
         {
             mpr("You reach to attack!");
-            success = you_attack(mgrd(beam.target), false);
+            success = you_attack(mons->mindex(), false);
         }
 
         if (success)
         {
-            int mid = mgrd(beam.target);
-            if (mid != NON_MONSTER)
-            {
-                monsters *mon = &menv[mgrd(beam.target)];
-                if (mons_is_mimic( mon->type ))
-                    mimic_alert(mon);
-            }
+            // Monster might have died or gone away.
+            if (monsters* m = monster_at(beam.target))
+                if (mons_is_mimic(m->type))
+                    mimic_alert(m);
         }
     }
     else
-        you_attack(mgrd(beam.target), false);
+        you_attack(mons->mindex(), false);
 
     return (true);
 }

@@ -162,8 +162,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         if (wizard_blink && grid_is_solid(grd(beam.target)))
             grd(beam.target) = DNGN_FLOOR;
 
-        if (grid_is_solid(grd(beam.target))
-            || mgrd(beam.target) != NON_MONSTER)
+        if (grid_is_solid(grd(beam.target)) || monster_at(beam.target))
         {
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
@@ -532,9 +531,9 @@ bool conjure_flame(int pow)
 
         const int cloud = env.cgrid(spelld.target);
 
-        if (grid_is_solid(grd(spelld.target)) ||
-            mgrd(spelld.target) != NON_MONSTER ||
-            (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
+        if (grid_is_solid(grd(spelld.target))
+            || monster_at(spelld.target)
+            || (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
         {
             mpr( "There's already something there!" );
             continue;

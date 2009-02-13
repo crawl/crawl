@@ -844,14 +844,12 @@ inline static void _check_interesting_square(int x, int y,
 
     if (ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
     {
-        if (mgrd(pos) != NON_MONSTER)
+        if (const monsters *mons = monster_at(pos))
         {
-            const monsters *mons = &menv[ mgrd(pos) ];
             if (mons_is_mimic(mons->type) && !mons_is_known_mimic(mons))
             {
                 item_def item;
                 get_mimic_item(mons, item);
-
                 ed.found_item(pos, item);
             }
         }
@@ -1416,10 +1414,8 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
     if (ls && ls->needs_visit(c.x, c.y))
         return (true);
 
-    const int m_ind = mgrd(c);
-    if (m_ind != NON_MONSTER)
+    if (const monsters *mons = monster_at(c))
     {
-        const monsters *mons = &menv[ m_ind ];
         if (mons_is_mimic(mons->type)
             && mons_was_seen(mons)
             && !mons_is_known_mimic(mons))
@@ -4028,7 +4024,7 @@ bool runrest::run_grids_changed() const
     if (env.cgrid(you.pos() + pos) != EMPTY_CLOUD)
         return (true);
 
-    if (mgrd(you.pos() + pos) != NON_MONSTER)
+    if (monster_at(you.pos() + pos))
         return (true);
 
     for (int i = 0; i < 3; i++)

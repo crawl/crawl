@@ -5599,10 +5599,7 @@ static void _move_monster(const coord_def& where, int mid1)
     monsters* mon1 = &menv[mid1];
 
     const int mid2 = mgrd(moves.target);
-    monsters* mon2 = NULL;
-
-    if (mid2 != NON_MONSTER)
-        mon2 = &menv[mid2];
+    monsters* mon2 = monster_at(moves.target);
 
     mon1->moveto(moves.target);
     mgrd(moves.target) = mid1;

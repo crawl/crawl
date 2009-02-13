@@ -343,10 +343,9 @@ static bool _tag_follower_at(const coord_def &pos)
     if (!in_bounds(pos) || pos == you.pos())
         return (false);
 
-    if (mgrd(pos) == NON_MONSTER)
+    monsters *fmenv = monster_at(pos);
+    if (fmenv == NULL)
         return (false);
-
-    monsters *fmenv = &menv[mgrd(pos)];
 
     if (fmenv->type == MONS_PLAYER_GHOST
         || !fmenv->alive()
@@ -1657,8 +1656,6 @@ void zap_los_monsters()
         if (g == you.pos())
             continue;
 
-        int imon = mgrd(g);
-
         // At tutorial beginning disallow items in line of sight.
         if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
         {
@@ -1668,12 +1665,11 @@ void zap_los_monsters()
                 destroy_item(item);
         }
 
-        if (imon == NON_MONSTER || imon == MHITYOU)
-            continue;
-
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
-        monsters *mon = &menv[imon];
+        monsters *mon = monster_at(g);
+        if (mon == NULL)
+            continue;
 
         if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
             continue;

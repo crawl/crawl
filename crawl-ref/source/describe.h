@@ -59,11 +59,7 @@ std::string get_item_description( const item_def &item, bool verbose,
  * *********************************************************************** */
 void describe_god( god_type which_god, bool give_title );
 
-// last updated 12 Jun 2008 {jpeg}
-/* ***********************************************************************
- * called from: directn
- * *********************************************************************** */
-void describe_feature_wide(int x, int y);
+void describe_feature_wide(const coord_def& pos);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
 
 // last updated 24 Dec 2008 {mpc}

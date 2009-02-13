@@ -1504,13 +1504,13 @@ void bolt::initialize_fire()
     if (!seen && see_grid(source) && range > 0 && !invisible() )
     {
         seen = true;
-        const int midx = mgrd(source);
+        const monsters* mon = monster_at(source);
 
         if (flavour != BEAM_VISUAL
             && !is_tracer
             && !YOU_KILL(thrower)
             && !crawl_state.is_god_acting()
-            && (midx == NON_MONSTER || !you.can_see(&menv[midx])))
+            && (!mon || !you.can_see(mon)))
         {
             mprf("%s appears from out of thin air!",
                  article_a(name, false).c_str());
@@ -1796,8 +1796,8 @@ void bolt::hit_wall()
     else
     {
         // Affect a creature in the wall, if any.
-        if (!invalid_monster_index(mgrd(pos())))
-            affect_monster(&menv[mgrd(pos())]);
+        if (monsters* m = monster_at(pos()))
+            affect_monster(m);
 
         // Regress for explosions: blow up in an open grid (if regressing
         // makes any sense).  Also regress when dropping items.
@@ -1827,12 +1827,9 @@ void bolt::affect_cell()
     const bool was_solid = grid_is_solid(grd(pos()));
     if (was_solid)
     {
-        const int mid = mgrd(pos());
-
         // Some special casing.
-        if (!invalid_monster_index(mid))
+        if (monsters* mon = monster_at(pos()))
         {
-            monsters* const mon = &menv[mid];
             if (can_affect_wall_monster(mon))
                 affect_monster(mon);
             else
@@ -1850,8 +1847,9 @@ void bolt::affect_cell()
 
     // We don't want to hit a monster in a wall square twice.
     const bool still_wall = (was_solid && old_pos == pos());
-    if (!still_wall && !invalid_monster_index(mgrd(pos())))
-        affect_monster(&menv[mgrd(pos())]);
+    if (!still_wall)
+        if (monsters* m = monster_at(pos()))
+            affect_monster(m);
 
     // If the player can ever walk through walls, this will
     // need special-casing too.
@@ -2882,10 +2880,10 @@ void bolt::drop_object()
     {
         if (item->sub_type == MI_THROWING_NET)
         {
+            monsters* m = monster_at(pos());
             // Player or monster on position is caught in net.
             if (you.pos() == pos() && you.attribute[ATTR_HELD]
-                || mgrd(pos()) != NON_MONSTER &&
-                   mons_is_caught(&menv[mgrd(pos())]))
+                || m && mons_is_caught(m))
             {
                 // If no trapping net found mark this one.
                 if (get_trapping_net(pos(), true) == NON_ITEM)
@@ -3103,7 +3101,7 @@ void bolt::affect_place_explosion_clouds()
 
         place_cloud( CLOUD_FIRE, p, duration, whose_kill(), killer() );
 
-        if (grd(p) == DNGN_FLOOR && mgrd(p) == NON_MONSTER
+        if (grd(p) == DNGN_FLOOR && !monster_at(p)
             && one_chance_in(4))
         {
             const god_type god =
@@ -3325,8 +3323,8 @@ void bolt::reflect()
 
     if (pos() == you.pos())
         reflector = NON_MONSTER;
-    else if (mgrd(pos()) != NON_MONSTER)
-        reflector = mgrd(source);
+    else if (monsters* m = monster_at(pos()))
+        reflector = m->mindex();
     else
     {
         reflector = -1;

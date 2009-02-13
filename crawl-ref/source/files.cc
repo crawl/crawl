@@ -962,10 +962,9 @@ static void _grab_followers()
     // Handle nearby ghosts.
     for (adjacent_iterator ai; ai; ++ai)
     {
-        if (mgrd(*ai) == NON_MONSTER)
+        monsters *fmenv = monster_at(*ai);
+        if (fmenv == NULL)
             continue;
-
-        monsters *fmenv = &menv[mgrd(*ai)];
 
         if (fmenv->type == MONS_PLAYER_GHOST
             && fmenv->hit_points < fmenv->max_hit_points / 2)

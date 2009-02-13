@@ -2418,32 +2418,34 @@ static int _find_ability_slot( ability_type which_ability )
 
 static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
 {
-    if (!in_bounds(where) || mgrd(where) == NON_MONSTER)
+    if (!in_bounds(where))
         return (0);
 
-    monsters &mon = menv[ mgrd(where) ];
+    monsters* mon = monster_at(where);
+    if (mon == NULL)
+        return (0);
 
-    if (!mons_friendly(&mon))
-        behaviour_event( &mon, ME_ANNOY, MHITYOU );
+    if (!mons_friendly(mon))
+        behaviour_event(mon, ME_ANNOY, MHITYOU);
 
-    if (check_mons_resist_magic(&mon, pow * 2))
+    if (check_mons_resist_magic(mon, pow * 2))
     {
         mprf("%s %s.",
-             mon.name(DESC_CAP_THE).c_str(), mons_resist_string(&mon));
+             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
         return (1);
     }
 
     const int damage = 1 + random2(pow / 6);
-    if (mon.type == MONS_BLINK_FROG)
-        mon.heal(damage, false);
-    else if (!check_mons_resist_magic(&mon, pow))
+    if (mon->type == MONS_BLINK_FROG)
+        mon->heal(damage, false);
+    else if (!check_mons_resist_magic(mon, pow))
     {
-        mon.hurt(&you, damage);
-        if (!mon.alive())
+        mon->hurt(&you, damage);
+        if (!mon->alive())
             return (1);
     }
 
-    mon.blink();
+    mon->blink();
 
     return (1);
 }

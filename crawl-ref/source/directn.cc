@@ -263,10 +263,8 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
 #ifdef USE_TILE
     tile_place_ray(pos, in_range);
 #else
-    int mid = mgrd(pos);
-    if (mid != NON_MONSTER)
+    if (const monsters *mons = monster_at(pos))
     {
-        const monsters *mons = &menv[mid];
         if (mons->alive() && player_monster_visible(mons))
         {
             glych  = get_screen_glyph(pos.x, pos.y);
@@ -1057,7 +1055,7 @@ void direction(dist& moves, targeting_type restricts,
         if (skip_iter)
             old_target.x += 500; // hmmm...hack
 
-        int i, mid;
+        int i;
 
 #ifndef USE_TILE
         if (key_command >= CMD_TARGET_CYCLE_MLIST
@@ -1269,11 +1267,11 @@ void direction(dist& moves, targeting_type restricts,
             }
             // intentional fall-through
         case CMD_TARGET_SELECT: // finalize current choice
-            if (!moves.isEndpoint
-                && mgrd(moves.target) != NON_MONSTER
-                && _mon_submerged_in_water(&menv[mgrd(moves.target)]))
+            if (!moves.isEndpoint)
             {
-                moves.isEndpoint = true;
+                const monsters* m = monster_at(moves.target);
+                if (m && _mon_submerged_in_water(m))
+                    moves.isEndpoint = true;
             }
             moves.isValid  = true;
             moves.isTarget = true;
@@ -1282,10 +1280,8 @@ void direction(dist& moves, targeting_type restricts,
             you.prev_grd_targ.reset();
 
             // Maybe we should except just_looking here?
-            mid = mgrd(moves.target);
-
-            if (mid != NON_MONSTER)
-                you.prev_targ = mid;
+            if (const monsters* m = monster_at(moves.target))
+                you.prev_targ = m->mindex();
             else if (moves.target == you.pos())
                 you.prev_targ = MHITYOU;
             else
@@ -1343,13 +1339,13 @@ void direction(dist& moves, targeting_type restricts,
             if (!you.wizard || !in_bounds(moves.target))
                 break;
 
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER) // can put in terrain description here
-                break;
-
             {
-                monsters &m = menv[mid];
-                mon_attitude_type att = m.attitude;
+                monsters* m = monster_at(moves.target);
+
+                if (m == NULL)
+                    break;
+
+                mon_attitude_type att = m->attitude;
 
                 // During arena mode, skip directly from friendly to hostile.
                 if (crawl_state.arena_suspended && att == ATT_FRIENDLY)
@@ -1357,24 +1353,22 @@ void direction(dist& moves, targeting_type restricts,
 
                 switch (att)
                 {
-                 case ATT_FRIENDLY:
-                     m.attitude = ATT_GOOD_NEUTRAL;
-                     m.flags &= ~MF_CREATED_FRIENDLY;
-                     m.flags |= MF_WAS_NEUTRAL;
-                     break;
-                 case ATT_GOOD_NEUTRAL:
-                     m.attitude = ATT_NEUTRAL;
-                     break;
-                 case ATT_NEUTRAL:
-                     m.attitude = ATT_HOSTILE;
-                     m.flags &= ~MF_WAS_NEUTRAL;
-                     break;
-                 case ATT_HOSTILE:
-                     m.attitude = ATT_FRIENDLY;
-                     m.flags |= MF_CREATED_FRIENDLY;
-                     break;
-                 default:
-                     break;
+                case ATT_FRIENDLY:
+                    m->attitude = ATT_GOOD_NEUTRAL;
+                    m->flags &= ~MF_CREATED_FRIENDLY;
+                    m->flags |= MF_WAS_NEUTRAL;
+                    break;
+                case ATT_GOOD_NEUTRAL:
+                    m->attitude = ATT_NEUTRAL;
+                    break;
+                case ATT_NEUTRAL:
+                    m->attitude = ATT_HOSTILE;
+                    m->flags &= ~MF_WAS_NEUTRAL;
+                    break;
+                case ATT_HOSTILE:
+                    m->attitude = ATT_FRIENDLY;
+                    m->flags |= MF_CREATED_FRIENDLY;
+                    break;
                 }
 
                 // To update visual branding of friendlies.  Only
@@ -1387,32 +1381,22 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_WIZARD_BLESS_MONSTER:
             if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER) // can put in terrain description here
-                break;
-
-            wizard_apply_monster_blessing(&menv[mid]);
+            if (monsters* m = monster_at(moves.target))
+                wizard_apply_monster_blessing(m);
             break;
 
         case CMD_TARGET_WIZARD_MAKE_SHOUT:
-            // Maybe we can skip this check...but it can't hurt
             if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER) // can put in terrain description here
-                break;
-
-            debug_make_monster_shout(&menv[mid]);
+            if (monsters* m = monster_at(moves.target))
+                debug_make_monster_shout(m);
             break;
 
         case CMD_TARGET_WIZARD_GIVE_ITEM:
             if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER) // can put in terrain description here
-                break;
-
-            wizard_give_monster_item(&menv[mid]);
+            if (monsters* m = monster_at(moves.target))
+                wizard_give_monster_item(m);
             break;
 
         case CMD_TARGET_WIZARD_MOVE:
@@ -1428,11 +1412,9 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_WIZARD_PATHFIND:
             if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER)
-                break;
 
-            debug_pathfind(mid);
+            if (monsters* m = monster_at(moves.target))
+                debug_pathfind(m->mindex());
             break;
 
         case CMD_TARGET_WIZARD_GAIN_LEVEL:
@@ -1441,31 +1423,24 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_WIZARD_MISCAST:
             if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER && you.pos() != moves.target)
-                break;
-
-            debug_miscast(mid);
+            if (you.pos() == moves.target)
+                debug_miscast(NON_MONSTER);
+            if (monsters* m = monster_at(moves.target))
+                debug_miscast(m->mindex());
             break;
 
         case CMD_TARGET_WIZARD_MAKE_SUMMONED:
             if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER) // can put in terrain description here
-                break;
-
-            wizard_make_monster_summoned(&menv[mid]);
+            if (monsters* m = monster_at(moves.target))
+                wizard_make_monster_summoned(m);
             break;
 
         case CMD_TARGET_WIZARD_POLYMORPH:
             if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd(moves.target);
-            if (mid == NON_MONSTER) // can put in terrain description here
-                break;
-
-            wizard_polymorph_monster(&menv[mid]);
+            if (monsters* m = monster_at(moves.target))
+                wizard_polymorph_monster(m);
             break;
 
 #endif
@@ -1629,9 +1604,9 @@ std::string get_terse_square_desc(const coord_def &gc)
         else
             desc = unseen_desc;
     }
-    else if (mgrd(gc) != NON_MONSTER && you.can_see(&menv[mgrd(gc)]))
+    else if (monster_at(gc) && you.can_see(monster_at(gc)))
     {
-        const monsters &mons = menv[mgrd(gc)];
+        const monsters& mons = *monster_at(gc);
 
         if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
         {
@@ -1663,16 +1638,16 @@ void get_square_desc(const coord_def &c, describe_info &inf)
     // NOTE: Keep this function in sync with full_describe_square.
 
     // Don't give out information for things outside LOS
-    if (!see_grid(c.x, c.y))
+    if (!see_grid(c))
         return;
 
-    const int mid = mgrd(c);
+    const monsters* mons = monster_at(c);
     const int oid = igrd(c);
 
-    if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
+    if (mons && player_monster_visible(mons))
     {
         // First priority: monsters.
-        get_monster_desc(menv[mid], inf);
+        get_monster_desc(*mons, inf);
     }
     else if (oid != NON_ITEM)
     {
@@ -1691,16 +1666,16 @@ void full_describe_square(const coord_def &c)
     // NOTE: Keep this function in sync with get_square_desc.
 
     // Don't give out information for things outside LOS
-    if (!see_grid(c.x, c.y))
+    if (!see_grid(c))
         return;
 
-    const int mid = mgrd(c);
+    const monsters* mons = monster_at(c);
     const int oid = igrd(c);
 
-    if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
+    if (mons && player_monster_visible(mons))
     {
         // First priority: monsters.
-        describe_monsters(menv[mid]);
+        describe_monsters(*mons);
     }
     else if (oid != NON_ITEM)
     {
@@ -1710,7 +1685,7 @@ void full_describe_square(const coord_def &c)
     else
     {
         // Third priority: features.
-        describe_feature_wide(c.x, c.y);
+        describe_feature_wide(c);
     }
 
     redraw_screen();
@@ -1782,7 +1757,7 @@ bool in_los(const coord_def& pos)
     return (in_vlos(grid2view(pos)));
 }
 
-static bool _mons_is_valid_target(monsters *mon, int mode, int range)
+static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
 {
     // Unknown mimics don't count as monsters, either.
     if (mons_is_mimic(mon->type)
@@ -1810,18 +1785,18 @@ static bool _mons_is_valid_target(monsters *mon, int mode, int range)
 static bool _find_mlist( const coord_def& where, int idx, bool need_path,
                          int range = -1)
 {
-    if ((int) mlist.size() <= idx)
+    if (static_cast<int>(mlist.size()) <= idx)
         return (false);
 
     if (!_is_target_in_range(where, range) || !in_los(where))
         return (false);
 
-    const int targ_mon = mgrd(where);
-    if (targ_mon == NON_MONSTER)
+    const monsters* mon = monster_at(where);
+    if (mon == NULL)
         return (false);
 
     int real_idx = 0;
-    for (unsigned int i = 0; i < mlist.size()-1; i++)
+    for (unsigned int i = 0; i+1 < mlist.size(); i++)
     {
         if (real_idx == idx)
         {
@@ -1835,8 +1810,6 @@ static bool _find_mlist( const coord_def& where, int idx, bool need_path,
 
         real_idx++;
    }
-
-    monsters *mon  = &menv[targ_mon];
 
     if (!_mons_is_valid_target(mon, TARG_ANY, range))
         return (false);
@@ -1878,17 +1851,15 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
     if (!_is_target_in_range(where, range))
         return (false);
 
-    const int targ_mon = mgrd(where);
+    const monsters* mon = monster_at(where);
 
     // No monster or outside LOS.
-    if (targ_mon == NON_MONSTER || !in_los(where))
+    if (mon == NULL || !in_los(where))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
     if (need_path && !see_grid_no_trans(where))
         return (false);
-
-    monsters *mon = &menv[targ_mon];
 
     if (!_mons_is_valid_target(mon, mode, range))
         return (false);
@@ -1898,15 +1869,15 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
         return (true);
 
     if (mode == TARG_FRIEND)
-        return (mons_friendly(&menv[targ_mon] ));
+        return (mons_friendly(mon));
 
     ASSERT(mode == TARG_ENEMY);
-    if (mons_friendly(&menv[targ_mon]))
+    if (mons_friendly(mon))
         return (false);
 
     // Don't target zero xp monsters, unless target_zero_exp is set.
     return (Options.target_zero_exp
-            || !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN ));
+            || !mons_class_flag(mon->type, M_NO_EXP_GAIN));
 }
 
 static bool _find_feature( const coord_def& where, int mode,
@@ -1924,11 +1895,11 @@ static bool _find_object(const coord_def& where, int mode,
 {
     // First, check for mimics.
     bool is_mimic = false;
-    const int mons = mgrd(where);
-    if (mons != NON_MONSTER
-        && player_monster_visible( &(menv[mons]) )
-        && mons_is_mimic(menv[mons].type)
-        && !(menv[mons].flags & MF_KNOWN_MIMIC))
+    const monsters* m = monster_at(where);
+    if (m
+        && player_monster_visible(m)
+        && mons_is_mimic(m->type)
+        && !(m->flags & MF_KNOWN_MIMIC))
     {
         is_mimic = true;
     }
@@ -3124,10 +3095,8 @@ static void _describe_cell(const coord_def& where, bool in_range)
     if (where == you.pos() && !crawl_state.arena_suspended)
         mpr("You.", MSGCH_EXAMINE_FILTER);
 
-    if (mgrd(where) != NON_MONSTER)
+    if (const monsters* mon = monster_at(where))
     {
-        const monsters* mon = &menv[mgrd(where)];
-
         if (_mon_submerged_in_water(mon))
         {
             mpr("There is a strange disturbance in the water here.",

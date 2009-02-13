@@ -1313,7 +1313,7 @@ void tutorial_first_monster(const monsters &mon)
 void tutorial_first_item(const item_def &item)
 {
     // Happens if monster is standing on dropped corpse or item.
-    if (mgrd(item.pos) != NON_MONSTER)
+    if (monster_at(item.pos))
         return;
 
     if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]
@@ -1323,7 +1323,7 @@ void tutorial_first_item(const item_def &item)
         // corpse, TUT_SEEN_CARRION is done when a corpse is first seen.
         if (!Options.tut_just_triggered
             && item.base_type == OBJ_CORPSES
-            && mgrd(item.pos) == NON_MONSTER)
+            && monster_at(item.pos) == NULL)
         {
             learned_something_new(TUT_SEEN_CARRION, item.pos);
         }
@@ -1783,7 +1783,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "These ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
-        if (mgrd(gc) != NON_MONSTER)
+        if (monster_at(gc))
             DELAY_EVENT;
 
         object = env.show(e);
@@ -1811,7 +1811,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         // monsters standing on stairs
-        if (mgrd(gc) != NON_MONSTER)
+        if (monster_at(gc))
             DELAY_EVENT;
 
         text << "These ";
@@ -1840,7 +1840,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "This ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
-        if (mgrd(gc) != NON_MONSTER)
+        if (monster_at(gc))
             DELAY_EVENT;
 
         // FIXME: Branch entrance character is not being colored yellow.
@@ -1873,7 +1873,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         return;
 #else
         // Monster or player standing on stairs.
-        if (mgrd(gc) != NON_MONSTER || (you.pos() == gc))
+        if (monster_at(gc) || (you.pos() == gc))
             DELAY_EVENT;
 
         text << "If any items are covering stairs or an escape hatch then "
@@ -2643,11 +2643,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     case TUT_MONSTER_BRAND:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        if (mgrd(gc) != NON_MONSTER)
-        {
-            tiles.add_text_tag(TAG_TUTORIAL, menv[mgrd(gc)].name(DESC_CAP_A),
-                               gc);
-        }
+        if (const monsters *m = monster_at(gc))
+            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
 #endif
         text << "That monster looks a bit unusual. You might wish to examine "
                 "it a bit more closely by "
@@ -2661,11 +2658,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     case TUT_MONSTER_FRIENDLY:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        if (mgrd(gc) != NON_MONSTER)
-        {
-            tiles.add_text_tag(TAG_TUTORIAL, menv[mgrd(gc)].name(DESC_CAP_A),
-                               gc);
-        }
+        if (const monsters *m = monster_at(gc))
+            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
 #endif
         text << "That monster is friendly to you and will attack your "
                 "enemies, though you'll get only half the experience for "
@@ -3812,15 +3806,11 @@ static void _tutorial_describe_disturbance(int x, int y)
 
 static bool _water_is_disturbed(int x, int y)
 {
-    int mon_num = mgrd[x][y];
+    const coord_def c(x,y);
+    const monsters *mon = monster_at(c);
 
-    if (mon_num == NON_MONSTER || grd[x][y] != DNGN_SHALLOW_WATER
-        || !see_grid(x, y))
-    {
+    if (mon == NULL || grd(c) != DNGN_SHALLOW_WATER || !see_grid(c))
         return (false);
-    }
-
-    const monsters *mon = &menv[mon_num];
 
     return (!player_monster_visible(mon) && !mons_flies(mon));
 }

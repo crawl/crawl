@@ -186,7 +186,9 @@ bool detect_curse(bool suppress_msg)
 
 bool cast_smiting(int power, const coord_def& where)
 {
-    if (invalid_monster_index(mgrd(where)))
+    monsters *m = monster_at(where);
+
+    if (m == NULL)
     {
         mpr("There's nothing there!");
         // Counts as a real cast, due to victory-dancing and
@@ -194,22 +196,20 @@ bool cast_smiting(int power, const coord_def& where)
         return (true);
     }
 
-    monsters& m = menv[mgrd(where)];
-
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(&m, false, false);
+    const bool success = !stop_attack_prompt(m, false, false);
 
     if (success)
     {
-        set_attack_conducts(conducts, &m);
+        set_attack_conducts(conducts, m);
 
-        mprf("You smite %s!", m.name(DESC_NOCAP_THE).c_str());
+        mprf("You smite %s!", m->name(DESC_NOCAP_THE).c_str());
 
-        behaviour_event(&m, ME_ANNOY, MHITYOU);
-        if (mons_is_mimic(m.type))
-            mimic_alert(&m);
+        behaviour_event(m, ME_ANNOY, MHITYOU);
+        if (mons_is_mimic(m->type))
+            mimic_alert(m);
     }
 
     enable_attack_conducts(conducts);
@@ -219,9 +219,9 @@ bool cast_smiting(int power, const coord_def& where)
         // Maxes out at around 40 damage at 27 Invocations, which is
         // plenty in my book (the old max damage was around 70,
         // which seems excessive).
-        m.hurt(&you, 7 + (random2(power) * 33 / 191));
-        if (m.alive())
-            print_wounds(&m);
+        m->hurt(&you, 7 + (random2(power) * 33 / 191));
+        if (m->alive())
+            print_wounds(m);
     }
 
     return (success);
@@ -231,12 +231,12 @@ int airstrike(int power, dist &beam)
 {
     bool success = false;
 
-    if (mgrd(beam.target) == NON_MONSTER || beam.isMe)
+    monsters *monster = monster_at(beam.target);
+
+    if (monster == NULL)
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
-        monsters *monster = &menv[mgrd(beam.target)];
-
         god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
@@ -1330,7 +1330,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
 
             if (grd(you.pos()) != DNGN_FLOOR
                     && grd(you.pos()) != DNGN_SHALLOW_WATER
-                || mgrd(you.pos()) != NON_MONSTER
+                || monster_at(you.pos())
                 || env.cgrid(you.pos()) != EMPTY_CLOUD)
             {
                 is_controlled = false;
@@ -1382,7 +1382,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
         }
         while (grd(newpos) != DNGN_FLOOR
                    && grd(newpos) != DNGN_SHALLOW_WATER
-               || mgrd(newpos) != NON_MONSTER
+               || monster_at(newpos)
                || env.cgrid(newpos) != EMPTY_CLOUD
                || need_distance_check && (newpos - centre).abs() < 34*34);
 
@@ -1444,7 +1444,7 @@ bool entomb(int powc)
     for ( adjacent_iterator ai; ai; ++ai )
     {
         // Tile already occupied by monster
-        if (mgrd(*ai) != NON_MONSTER)
+        if (monster_at(*ai))
             continue;
 
         // This is where power comes in.
@@ -1703,11 +1703,8 @@ bool cast_sanctuary(const int power)
         // scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
-        int monster = mgrd(pos);
-        if (monster != NON_MONSTER)
+        if (monsters* mon = monster_at(pos))
         {
-            monsters* mon = &menv[monster];
-
             if (mons_friendly(mon))
             {
                 mon->foe       = MHITYOU;

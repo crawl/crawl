@@ -122,12 +122,9 @@ int holy_word_monsters(coord_def where, int pow, int caster,
         retval = holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
-    const int mon = mgrd(where);
-
-    if (mon == NON_MONSTER)
+    monsters *monster = monster_at(where);
+    if (monster == NULL)
         return (retval);
-
-    monsters *monster = &menv[mon];
 
     if (!monster->alive() || !mons_is_unholy(monster))
         return (retval);
@@ -265,12 +262,9 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
         retval = torment_player(0, caster);
 
     // Is a monster in this cell?
-    const int mon = mgrd(where);
-
-    if (mon == NON_MONSTER)
+    monsters *monster = monster_at(where);
+    if (monster == NULL)
         return (retval);
-
-    monsters *monster = &menv[mon];
 
     if (!monster->alive() || mons_res_negative_energy(monster) == 3)
         return (retval);
@@ -2231,7 +2225,7 @@ void yell(bool force)
         }
 
         mpr("Gang up on whom?", MSGCH_PROMPT);
-        direction( targ, DIR_TARGET, TARG_ENEMY, -1, false, false );
+        direction(targ, DIR_TARGET, TARG_ENEMY, -1, false, false);
 
         if (targ.isCancel)
         {
@@ -2239,14 +2233,22 @@ void yell(bool force)
             return;
         }
 
-        if (!targ.isValid || mgrd(targ.target) == NON_MONSTER
-            || !player_monster_visible(&env.mons[mgrd(targ.target)]))
         {
-            mpr("Yeah, whatever.");
-            return;
-        }
+            bool cancel = !targ.isValid;
+            if (!cancel)
+            {
+                const monsters* m = monster_at(targ.target);
+                cancel = (m == NULL || !you.can_see(m));
+                if (!cancel)
+                    mons_targd = m->mindex();
+            }
 
-        mons_targd = mgrd(targ.target);
+            if (cancel)
+            {
+                mpr("Yeah, whatever.");
+                return;
+            }
+        }
         break;
 
     default:
@@ -2795,7 +2797,7 @@ void change_labyrinth(bool msg)
                 continue;
 
             // We don't want to deal with monsters being shifted around.
-            if (mgrd(p) != NON_MONSTER)
+            if (monster_at(p))
                 continue;
 
             // Do not pick a grid right next to the original wall.
@@ -3555,7 +3557,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         const coord_def next(pos + inc);
         const dungeon_feature_type feat = grd(next);
         if (grid_is_solid(feat)
-            || mgrd(next) != NON_MONSTER
+            || monster_at(next)
             || !monster_habitable_grid(mon, feat))
         {
             break;
