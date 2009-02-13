@@ -1742,7 +1742,7 @@ static int _drain_monsters(coord_def where, int pow, int, actor *)
         if (mon == NULL)
             return (0);
 
-        if (mon->drain_exp(&you, false, pow / 50))
+        if (!mon->drain_exp(&you, false, pow / 50))
             simple_monster_message(mon, " is unaffected.");
     }
 
