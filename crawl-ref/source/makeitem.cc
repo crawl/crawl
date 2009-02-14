@@ -2122,8 +2122,9 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (item_level == -5)
             do_curse_item(item);
     }
-    else if (force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
-        || x_chance_in_y(51 + item_level, 250))
+    else if ((force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
+                    || x_chance_in_y(51 + item_level, 250))
+                && !_item_is_mundane(item))
     {
         // Make a good item...
         item.plus += random2(3);
@@ -4494,16 +4495,15 @@ void item_set_appearance(item_def &item)
         break;
 
     case OBJ_ARMOUR:
-        // if not given a racial type, and special, give shiny/runed/etc desc.
-        if (get_armour_ego_type( item ) != SPARM_NORMAL
+        // If not given a racial type, and special, make shiny/runed/etc.
+        if (get_armour_ego_type(item) != SPARM_NORMAL
             || item.plus != 0 && !one_chance_in(3))
         {
-            const item_status_flag_type descs[] =
-            {
-                ISFLAG_GLOWING, ISFLAG_RUNED, ISFLAG_EMBROIDERED_SHINY
-            };
+            const item_status_flag_type descs[] = { ISFLAG_GLOWING,
+                                                    ISFLAG_RUNED,
+                                                    ISFLAG_EMBROIDERED_SHINY };
 
-            set_equip_desc( item, RANDOM_ELEMENT(descs) );
+            set_equip_desc(item, RANDOM_ELEMENT(descs));
         }
         break;
 
