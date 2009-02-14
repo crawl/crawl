@@ -625,9 +625,9 @@ public:
         *this = item_def();
     }
 private:
-    std::string name_aux( description_level_type desc,
-                          bool terse, bool ident,
-                          unsigned long ignore_flags ) const;
+    std::string name_aux(description_level_type desc,
+                         bool terse, bool ident,
+                         unsigned long ignore_flags) const;
 };
 
 class runrest
