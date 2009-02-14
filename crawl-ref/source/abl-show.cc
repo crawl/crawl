@@ -2104,20 +2104,36 @@ std::vector<talent> your_talents( bool check_confused )
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
     }
 
-    if (player_genus(GENPC_DRACONIAN)
-        && you.experience_level >= 7
-        && !transform_changed_physiology())
+    if (player_genus(GENPC_DRACONIAN) && you.experience_level >= 7)
     {
-        const ability_type ability = (
-            (you.species == SP_GREEN_DRACONIAN)  ? ABIL_BREATHE_POISON :
-            (you.species == SP_RED_DRACONIAN)    ? ABIL_BREATHE_FIRE :
-            (you.species == SP_WHITE_DRACONIAN)  ? ABIL_BREATHE_FROST :
-            (you.species == SP_YELLOW_DRACONIAN) ? ABIL_SPIT_ACID :
-            (you.species == SP_BLACK_DRACONIAN)  ? ABIL_BREATHE_LIGHTNING :
-            (you.species == SP_PURPLE_DRACONIAN) ? ABIL_BREATHE_POWER :
-            (you.species == SP_PALE_DRACONIAN)   ? ABIL_BREATHE_STEAM :
-            (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME
-                                                 : ABIL_NON_ABILITY);
+        ability_type ability = ABIL_NON_ABILITY;
+        switch (you.species)
+        {
+        case SP_GREEN_DRACONIAN:   ability = ABIL_BREATHE_POISON;       break;
+        case SP_RED_DRACONIAN:     ability = ABIL_BREATHE_FIRE;         break;
+        case SP_WHITE_DRACONIAN:   ability = ABIL_BREATHE_FROST;        break;
+        case SP_YELLOW_DRACONIAN:  ability = ABIL_SPIT_ACID;            break;
+        case SP_BLACK_DRACONIAN:   ability = ABIL_BREATHE_LIGHTNING;    break;
+        case SP_PURPLE_DRACONIAN:  ability = ABIL_BREATHE_POWER;        break;
+        case SP_PALE_DRACONIAN:    ability = ABIL_BREATHE_STEAM;        break;
+        case SP_MOTTLED_DRACONIAN: ability = ABIL_BREATHE_STICKY_FLAME; break;
+        default: break;
+        }
+
+        // Draconians don't maintain their original breath weapons
+        // if shapechanged, but green draconians do get spit poison
+        // in spider form.
+        if (transform_changed_physiology())
+        {
+            if (you.species == SP_GREEN_DRACONIAN
+                && you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+            {
+                ability = ABIL_SPIT_POISON; // spit, not breath
+            }
+            else
+                ability = ABIL_NON_ABILITY;
+        }
+
         if (ability != ABIL_NON_ABILITY)
             _add_talent(talents, ability, check_confused );
     }
