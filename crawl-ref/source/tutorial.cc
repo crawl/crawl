@@ -1220,7 +1220,7 @@ void tutorial_first_monster(const monsters &mon)
     // need to highlight monster
     const coord_def gc = mon.pos();
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
-    tiles.add_text_tag(TAG_TUTORIAL, mon.name(DESC_CAP_A), gc);
+    tiles.add_text_tag(TAG_TUTORIAL, &mon);
 
     text += "monster is a ";
     text += mon.name(DESC_PLAIN).c_str();

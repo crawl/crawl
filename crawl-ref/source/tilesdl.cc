@@ -697,9 +697,29 @@ static unsigned int _timer_callback(unsigned int ticks)
     return res;
 }
 
+// Convenience struct for holding mouse location on screen.
+struct cursor_loc
+{
+    cursor_loc() { reset(); }
+    void reset() { reg = NULL; cx = cy = -1; }
+    bool operator==(const cursor_loc &rhs) const
+    {
+        return (rhs.reg == reg 
+                && rhs.cx == cx
+                && rhs.cy == cy
+                && reg);
+    }
+
+    Region *reg;
+    int cx, cy;
+};
+
+
 int TilesFramework::getch_ck()
 {
     SDL_Event event;
+    cursor_loc cur_loc;
+    cursor_loc tip_loc;
 
     int key = 0;
 
@@ -778,6 +798,19 @@ int TilesFramework::getch_ck()
                     mouse_event.held = m_buttons_held;
                     mouse_event.mod = m_key_mod;
                     key = handle_mouse(mouse_event);
+
+                    // find mouse location
+                    for (unsigned int i = 0;
+                        i < m_layers[m_active_layer].m_regions.size(); i++)
+                    {
+                        Region *reg = m_layers[m_active_layer].m_regions[i];
+                        if (reg->mouse_pos(m_mouse.x, m_mouse.y, 
+                                           cur_loc.cx, cur_loc.cy))
+                        {
+                            cur_loc.reg = reg;
+                            break;
+                        }
+                    }
                 }
                 break;
 
@@ -817,11 +850,13 @@ int TilesFramework::getch_ck()
             }
         }
 
-        bool show_tooltip = ((ticks - m_last_tick_moved
-                                > (unsigned int)Options.tile_tooltip_ms)
-                                && ticks > m_last_tick_moved);
+        bool timeout = ((ticks - m_last_tick_moved
+                         > (unsigned int)Options.tile_tooltip_ms)
+                         && ticks > m_last_tick_moved);
+        if (timeout)
+            tip_loc = cur_loc;
 
-        if (show_tooltip)
+        if (tip_loc == cur_loc)
         {
             tiles.clear_text_tags(TAG_CELL_DESC);
             if (m_tooltip.empty())
@@ -840,6 +875,7 @@ int TilesFramework::getch_ck()
         else
         {
             m_tooltip.clear();
+            tip_loc.reset();
         }
 
         if (ticks - last_redraw_tick > ticks_per_redraw)
@@ -1474,6 +1510,26 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
                                   const coord_def &gc)
 {
     m_region_tile->add_text_tag(type, tag, gc);
+}
+
+void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
+{
+    // HACK.  Names cover up pan demons in a weird way.
+    if (mon->type == MONS_PANDEMONIUM_DEMON)
+        return;
+
+    const coord_def &gc = mon->pos();
+
+    if (mon->type == MONS_PLAYER_GHOST)
+    {
+        // Beautification hack.  "Foo's ghost" is a little bit
+        // verbose as a tag.  "Foo" on its own should be sufficient.
+        tiles.add_text_tag(TAG_NAMED_MONSTER, mon->mname, gc);
+    }
+    else
+    {
+        tiles.add_text_tag(TAG_NAMED_MONSTER, mon->name(DESC_PLAIN), gc);
+    }
 }
 
 bool TilesFramework::initialise_items()

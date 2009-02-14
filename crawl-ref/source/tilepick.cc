@@ -4426,16 +4426,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         if (mon->type == MONS_PANDEMONIUM_DEMON)
             return;
 
-        if (mon->type == MONS_PLAYER_GHOST)
-        {
-            // Beautification hack.  "Foo's ghost" is a little bit
-            // verbose as a tag.  "Foo" on its own should be sufficient.
-            tiles.add_text_tag(TAG_NAMED_MONSTER, mon->mname, gc);
-        }
-        else
-        {
-            tiles.add_text_tag(TAG_NAMED_MONSTER, mon->name(DESC_PLAIN), gc);
-        }
+        tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
     }
     else
     {
