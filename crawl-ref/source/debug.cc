@@ -4640,20 +4640,21 @@ void debug_make_trap()
         return;
 
     strlwr(requested_trap);
-    std::vector<int>         matches;
+    std::vector<trap_type>   matches;
     std::vector<std::string> match_names;
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
-        if (strstr(requested_trap,
-                   trap_name(trap_type(t))))
+        const trap_type tr = static_cast<trap_type>(t);
+        const char* tname = trap_name(tr);
+        if (strstr(requested_trap, tname))
         {
-            trap = trap_type(t);
+            trap = tr;
             break;
         }
-        else if (strstr(trap_name(trap_type(t)), requested_trap))
+        else if (strstr(tname, requested_trap))
         {
-            matches.push_back(t);
-            match_names.push_back(trap_name(trap_type(t)));
+            matches.push_back(tr);
+            match_names.push_back(tname);
         }
     }
 
@@ -4666,7 +4667,7 @@ void debug_make_trap()
         }
         // Only one match, use that
         else if (matches.size() == 1)
-            trap = trap_type(matches[0]);
+            trap = matches[0];
         else
         {
             std::string prefix = "No exact match for trap '";

@@ -485,8 +485,7 @@ static void _dgn_register_vault(const map_def &map)
 
 static bool _is_passable_ignore_vault(const coord_def &c)
 {
-    return (is_travelsafe_square(c.x, c.y, false, true)
-            || grd(c) == DNGN_SECRET_DOOR);
+    return (is_travelsafe_square(c, false, true) || grd(c) == DNGN_SECRET_DOOR);
 }
 
 bool dgn_square_is_passable(const coord_def &c)
@@ -497,9 +496,7 @@ bool dgn_square_is_passable(const coord_def &c)
     // default) because vaults may choose to create isolated regions,
     // or otherwise cause connectivity issues even if the map terrain
     // is travel-passable.
-    return (!(dgn_Map_Mask(c) & MMT_OPAQUE)
-            && (is_travelsafe_square(c.x, c.y, false, true)
-                || grd(c) == DNGN_SECRET_DOOR));
+    return (!(dgn_Map_Mask(c) & MMT_OPAQUE) && (_is_passable_ignore_vault(c)));
 }
 
 static inline void _dgn_point_record_stub(const coord_def &) { }

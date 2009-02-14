@@ -35,6 +35,15 @@ REVISION("$Rev$");
 #include "traps.h"
 #include "view.h"
 
+actor* actor_at(const coord_def& c)
+{
+    if (!in_bounds(c))
+        return (NULL);
+    if (c == you.pos())
+        return (&you);
+    return (monster_at(c));
+}
+
 bool grid_is_wall(dungeon_feature_type grid)
 {
     return (grid >= DNGN_MINWALL && grid <= DNGN_MAXWALL);
@@ -549,9 +558,9 @@ void _dgn_check_terrain_player(const coord_def pos)
         // If the monster can't stay submerged in the new terrain and
         // there aren't any adjacent squares where it can stay
         // submerged then move it.
-        const int midx = mgrd(you.pos());
-        if ( midx != NON_MONSTER && !mons_is_submerged( &menv[midx] ) )
-            monster_teleport( &menv[midx], true, false);
+        monsters* mon = monster_at(pos);
+        if (mon && !mons_is_submerged(mon))
+            monster_teleport(mon, true, false);
         move_player_to_grid(pos, false, true, true);
     }
     else
@@ -589,7 +598,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     if (affect_player)
         _dgn_check_terrain_player(pos);
 
-    set_terrain_changed(pos.x, pos.y);
+    set_terrain_changed(pos);
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
@@ -857,12 +866,7 @@ static bool _ok_dest_grid(const actor* orig_actor,
     if (is_notable_terrain(dest_feat))
         return (false);
 
-    actor* dest_actor = NULL;
-
-    if (dest_pos == you.pos())
-        dest_actor = &you;
-    else if (mgrd(dest_pos) != NON_MONSTER)
-        dest_actor = &menv[mgrd(dest_pos)];
+    actor* dest_actor = actor_at(dest_pos);
 
     if (orig_actor && !orig_actor->is_habitable_feat(dest_feat))
         return (false);
@@ -878,12 +882,7 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     ASSERT(in_bounds(src));
 
     const dungeon_feature_type orig_feat = grd(src);
-    actor* orig_actor = NULL;
-
-    if (src == you.pos())
-        orig_actor = &you;
-    else if (mgrd(src) != NON_MONSTER)
-        orig_actor = &menv[mgrd(src)];
+    const actor* orig_actor = actor_at(src);
 
     if (in_bounds(prefered_dest)
         && _ok_dest_grid(orig_actor, orig_feat, prefered_dest))

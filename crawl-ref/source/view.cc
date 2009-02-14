@@ -1247,11 +1247,9 @@ void monster_grid(bool do_updates)
 {
     do_updates = do_updates && !crawl_state.arena;
 
-    monsters *monster = NULL;
-
-    for (int s = 0; s < MAX_MONSTERS; s++)
+    for (int s = 0; s < MAX_MONSTERS; ++s)
     {
-        monster = &menv[s];
+        monsters *monster = &menv[s];
 
         if (monster->alive() && mons_near(monster))
         {

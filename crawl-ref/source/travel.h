@@ -72,7 +72,7 @@ bool is_gate(dungeon_feature_type gridc);
 command_type direction_to_command( char x, char y );
 bool is_resting( void );
 #ifdef CLUA_BINDINGS
-const char *trap_name(int x, int y);
+const char *trap_name(const coord_def &p);
 #endif
 bool is_traversable(dungeon_feature_type grid);
 void explore_pickup_event(int did_pickup, int tried_pickup);
@@ -81,7 +81,7 @@ bool is_excluded(const coord_def &p);
 void find_travel_pos(const coord_def& youpos, char *move_x, char *move_y,
                      std::vector<coord_def>* coords = NULL);
 
-bool is_travelsafe_square(int x, int y, bool ignore_hostile = false,
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false,
                           bool ignore_terrain_knowledge = false);
 
 /* ***********************************************************************

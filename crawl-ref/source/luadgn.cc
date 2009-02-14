@@ -2346,7 +2346,7 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
 static int _dgn_is_passable(lua_State *ls)
 {
     COORDS(c, 1, 2);
-    lua_pushboolean(ls, is_travelsafe_square(c.x, c.y, false, true));
+    lua_pushboolean(ls, is_travelsafe_square(c, false, true));
     return (1);
 }
 

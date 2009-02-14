@@ -199,9 +199,9 @@ bool is_player_seen(int grid_x, int grid_y)
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
 //
-inline bool is_trap(int x, int y)
+inline bool is_trap(const coord_def& c)
 {
-    return grid_is_trap( grd[x][y] );
+    return grid_is_trap(grd(c));
 }
 
 // Returns an estimate for the time needed to cross this feature.
@@ -254,12 +254,12 @@ static void _init_traps()
     traps_inited = true;
 }
 
-const char *trap_name(int x, int y)
+const char *trap_name(const coord_def& c)
 {
     if (!traps_inited)
         _init_traps();
 
-    const int ti = curr_traps[x][y];
+    const int ti = curr_traps[c.x][c.y];
     if (ti != -1)
     {
         int type = env.trap[ti].type;
@@ -509,9 +509,9 @@ void set_exclude(const coord_def &p, int radius)
     }
 }
 
-static bool _is_monster_blocked(int x, int y)
+static bool _is_monster_blocked(const coord_def& c)
 {
-    const monsters *mons = monster_at(coord_def(x, y));
+    const monsters *mons = monster_at(c);
     return (mons
             && player_monster_visible(mons)
             && mons_is_stationary(mons)
@@ -530,36 +530,36 @@ static bool _is_monster_blocked(int x, int y)
  *       colour the level map. It does not affect pathing of actual
  *       travel/explore.
  */
-static bool _is_reseedable(int x, int y)
+static bool _is_reseedable(const coord_def& c)
 {
-    if (is_excluded(coord_def(x, y)))
+    if (is_excluded(c))
         return (true);
 
-    dungeon_feature_type grid = grd[x][y];
+    const dungeon_feature_type grid = grd(c);
     return (grid_is_water(grid)
                || grid == DNGN_LAVA
-               || is_trap(x, y)
-               || _is_monster_blocked(x, y));
+               || is_trap(c)
+               || _is_monster_blocked(c));
 }
 
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
-bool is_travelsafe_square(int x, int y, bool ignore_hostile,
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
                           bool ignore_terrain_knowledge)
 {
-    if (!ignore_terrain_knowledge && !is_terrain_known(x, y))
+    if (!ignore_terrain_knowledge && !is_terrain_known(c))
         return (false);
 
-    const bool seen = see_grid(x,y);
-    const int grid = ((seen || ignore_terrain_knowledge) ? grd[x][y]
-                                                         : get_envmap_obj(x,y));
+    const bool seen = see_grid(c);
+    const int grid = ((seen || ignore_terrain_knowledge) ? grd(c)
+                                                         : get_envmap_obj(c));
 
     // FIXME: this compares to the *real* monster at the square,
     // even if the one we've seen is different.
     if (!ignore_hostile
         && (seen || grid > DNGN_START_OF_MONSTERS)
-        && _is_monster_blocked(x, y))
+        && _is_monster_blocked(c))
     {
         return (false);
     }
@@ -568,7 +568,7 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
     // navigated over if the player is willing to take damage, or levitate.
     if (ignore_hostile
         && (seen || grid < NUM_REAL_FEATURES)
-        && _is_reseedable(x, y))
+        && _is_reseedable(c))
     {
         return (true);
     }
@@ -578,28 +578,24 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
 
     return (is_traversable(static_cast<dungeon_feature_type>(grid))
 #ifdef CLUA_BINDINGS
-                || (is_trap(x, y)
+                || (is_trap(c)
                     && clua.callbooleanfn(false, "ch_cross_trap",
-                                          "s", trap_name(x, y)))
+                                          "s", trap_name(c)))
 #endif
             )
-            && !is_excluded(coord_def(x, y));
+            && !is_excluded(c);
 }
 
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
 // Travel uses this to check if the square the player is about to move to is
 // safe.
-static bool _is_safe_move(int x, int y)
+static bool _is_safe_move(const coord_def& c)
 {
-    int mon = mgrd[x][y];
-    if (mon != NON_MONSTER)
+    if (const monsters *mon = monster_at(c))
     {
         // Stop before wasting energy on plants and fungi.
-        if (player_monster_visible(&menv[mon])
-            && mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
-        {
+        if (you.can_see(mon) && mons_class_flag(mon->type, M_NO_EXP_GAIN))
             return (false);
-        }
 
         // If this is any *other* monster, it'll be visible and
         // a) Friendly, in which case we'll displace it, no problem.
@@ -607,22 +603,22 @@ static bool _is_safe_move(int x, int y)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(x, y)
+    if (is_trap(c)
 #ifdef CLUA_BINDINGS
         && !clua.callbooleanfn(false, "ch_cross_trap",
-                               "s", trap_name(x, y))
+                               "s", trap_name(c))
 #endif
         )
     {
         return (false);
     }
 
-    const int cloud = env.cgrid[x][y];
+    const int cloud = env.cgrid(c);
     if (cloud == EMPTY_CLOUD)
         return (true);
 
     // We can also safely run through smoke.
-    const cloud_type ctype = env.cloud[ cloud ].type;
+    const cloud_type ctype = env.cloud[cloud].type;
     return (!is_damaging_cloud(ctype, true));
 }
 
@@ -1021,7 +1017,7 @@ static void _explore_find_target_square()
                 target += delta;
                 feature = grd(target);
             }
-            while (is_travelsafe_square(target.x, target.y)
+            while (is_travelsafe_square(target)
                    && is_traversable(feature)
                    && feature_traverse_cost(feature) == 1);
 
@@ -1548,10 +1544,10 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
-        && !is_travelsafe_square(start.x, start.y, false)
-        && !is_trap(start.x, start.y))          // player likes pain
+        && !is_travelsafe_square(start, false)
+        && !is_trap(start))          // player likes pain
     {
-        return coord_def(0, 0);
+        return coord_def();
     }
 
     // Nothing to do?
@@ -1687,7 +1683,7 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
         && is_greed_inducing_square(c)
-        && is_travelsafe_square(c.x, c.y, ignore_hostile))
+        && is_travelsafe_square(c, ignore_hostile))
     {
         greedy_place = c;
         greedy_dist  = traveled_distance;
@@ -1752,20 +1748,20 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     if (dc == dest)
     {
         // Hallelujah, we're home!
-        if (_is_safe_move(c.x, c.y))
+        if (_is_safe_move(c))
             next_travel_move = c;
 
         return (true);
     }
-    else if (!is_travelsafe_square(dc.x, dc.y, ignore_hostile))
+    else if (!is_travelsafe_square(dc, ignore_hostile))
     {
         // This point is not okay to travel on, but if this is a
         // trap, we'll want to put it on the feature vector anyway.
-        if (_is_reseedable(dc.x, dc.y)
+        if (_is_reseedable(dc)
             && !point_distance[dc.x][dc.y]
             && dc != start)
         {
-            if (features && (is_trap(dc.x, dc.y) || is_exclude_root(dc)))
+            if (features && (is_trap(dc) || is_exclude_root(dc)))
                 features->push_back(dc);
 
             if (double_flood)
@@ -2954,7 +2950,7 @@ void start_travel(const coord_def& p)
     // Can we even travel to this square?
     if (!in_bounds(p))
         return;
-    if (!is_travelsafe_square(p.x, p.y, true))
+    if (!is_travelsafe_square(p, true))
         return;
 
     you.running.pos = p;

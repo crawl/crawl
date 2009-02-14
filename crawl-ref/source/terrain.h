@@ -14,10 +14,9 @@
 class  actor;
 struct coord_def;
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
+
+actor* actor_at(const coord_def& c);
+
 bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
                        unsigned char terrain );
 
