@@ -72,36 +72,14 @@ LUASRC := util/lua/src
 LUALIB = lua
 LUALIBA = l$(LUALIB).a
 
-DBH_FILE  := /usr/include/db.h
-NDBM_FILE := /usr/include/ndbm.h
-
-HAVE_DBH  := $(shell [ -f $(DBH_FILE) ] && echo y)
-HAVE_NDBM := $(shell [ -f $(NDBM_FILE) -a "`uname`" = "Darwin" ] && echo y)
-
-ifeq ($(strip $(HAVE_DBH)),y)
-ifneq ($(shell grep dbm_open $(DBH_FILE)),)
-SELDBM := -DDB_DBH
-LIBDBM := -ldb
-endif
-endif
-
-ifeq ($(strip $(HAVE_NDBM)),y)
-SELDBM ?= -DDB_NDBM
-ifeq ($(SELDBM),-DDB_NDBM)
-LIBDBM := -ldbm
-endif
-endif
-
 SQLSRC   := util/sqlite
 SQLLIB   := sqlite3
 SQLLIBA  := lib$(SQLLIB).a
 FSQLLIBA := $(SQLSRC)/$(SQLLIBA)
 
-ifeq ($(strip $(LIBDBM)),)
-LIBDBM         := -L$(SQLSRC) -lsqlite3
+LIBDBM         := -L$(SQLSRC) -l$(SQLLIB)
 EXTRA_INCLUDES += -I$(SQLSRC)
 EXTRA_DEPENDS  += $(FSQLLIBA)
-endif
 
 RLTILES = rltiles
 
@@ -145,8 +123,6 @@ endif
 ifneq ($(strip $(DATADIR)),)
 CFOTHERS += '-DDATA_DIR_PATH="$(strip $(DATADIR))"'
 endif
-
-CFOTHERS += $(SELDBM)
 
 CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS) $(SDL_CFLAGS)
 YCFLAGS := $(INCLUDES) $(CFOTHERS)
