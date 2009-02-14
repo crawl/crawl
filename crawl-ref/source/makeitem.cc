@@ -249,8 +249,8 @@ static int _newwave_armour_colour(const item_def &item)
     const bool item_runed = itname.find(" runed ") != std::string::npos;
     const bool heav_runed = itname.find(" heavily ") != std::string::npos;
 
-    if ( is_random_artefact(item) && (!item_runed || heav_runed) )
-        return _exciting_colour();
+    if (is_random_artefact(item) && (!item_runed || heav_runed))
+        return (_exciting_colour());
 
     switch (item.sub_type)
     {
