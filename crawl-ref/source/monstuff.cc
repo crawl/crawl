@@ -542,9 +542,20 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
             need_xp_msg = true;
     }
 
+    // FIXME: Since giant spores get detached from mgrd early
+    // on, we can't tell by this point if they were visible when
+    // they exploded. Rather than bothering to remember this, we
+    // just suppress the message.
+    if (monster->type == MONS_GIANT_SPORE
+        || monster->type == MONS_BALL_LIGHTNING)
+    {
+        need_xp_msg = false;
+    }
+
     // Give a message for monsters dying out of sight.
-    if (need_xp_msg && exp_gain > 0
-        && (!mons_near(monster) || !you.can_see(monster))
+    if (need_xp_msg
+        && exp_gain > 0
+        && !you.can_see(monster)
         && !crawl_state.arena)
     {
         mpr("You feel a bit more experienced.");
