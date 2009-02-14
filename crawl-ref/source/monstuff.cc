@@ -507,9 +507,9 @@ static void _give_monster_experience(monsters *victim,
 }
 
 static void _give_adjusted_experience(monsters *monster, killer_type killer,
-                                     bool pet_kill, int killer_index,
-                                     unsigned int *exp_gain,
-                                     unsigned int *avail_gain)
+                                      bool pet_kill, int killer_index,
+                                      unsigned int *exp_gain,
+                                      unsigned int *avail_gain)
 {
     const int experience = exper_value(monster);
 
@@ -1099,7 +1099,7 @@ int monster_die(monsters *monster, killer_type killer,
 
     const bool drop_items    = !hard_reset;
 
-    const bool mons_reset( killer == KILL_RESET || killer == KILL_DISMISSED );
+    const bool mons_reset(killer == KILL_RESET || killer == KILL_DISMISSED);
 
     const bool submerged     = monster->submerged();
 
