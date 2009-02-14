@@ -2958,11 +2958,8 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (visibly_branded || is_random_artefact(item))
         return (true);
 
-    if (item.plus
-        && (one_chance_in(3) || get_equip_race(item) && one_chance_in(7)))
-    {
+    if (item.plus && !one_chance_in(3))
         return (true);
-    }
 
     return (false);
 }
