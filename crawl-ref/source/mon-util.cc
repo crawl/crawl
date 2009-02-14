@@ -2670,8 +2670,7 @@ bool mons_looks_stabbable(const monsters *m)
 {
     return (mons_behaviour_perceptible(m)
             && !mons_friendly(m)
-            && (mons_is_sleeping(m)
-                || mons_cannot_act(m)));
+            && mons_is_sleeping(m));
 }
 
 bool mons_looks_distracted(const monsters *m)
@@ -2682,7 +2681,8 @@ bool mons_looks_distracted(const monsters *m)
                 || mons_is_confused(m)
                 || mons_is_fleeing(m)
                 || mons_is_caught(m)
-                || mons_is_petrifying(m)));
+                || mons_is_petrifying(m)
+                || mons_cannot_act(m)));
 }
 
 void mons_pacify(monsters *mon)
