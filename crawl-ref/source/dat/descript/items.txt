@@ -1116,7 +1116,8 @@ A cloth robe.
 %%%%
 rod of demonology
 
-This rod contains spells of mayhem and destruction.
+This rod contains spells of summoning, some of which can unleash demons
+unto this unsuspecting world.
 %%%%
 rod of destruction
 
