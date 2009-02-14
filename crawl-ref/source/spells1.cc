@@ -755,9 +755,7 @@ static int _healing_spell(int healed, bool divine_ability,
         else
             print_wounds(monster);
 
-        if (divine_ability
-            && you.religion == GOD_ELYVILON
-            && !_mons_hostile(monster))
+        if (you.religion == GOD_ELYVILON && !_mons_hostile(monster))
         {
             simple_god_message(" appreciates your healing of a fellow "
                                "creature.");
@@ -766,8 +764,8 @@ static int _healing_spell(int healed, bool divine_ability,
         }
     }
 
-    if (divine_ability
-        && you.religion == GOD_ELYVILON
+    if (you.religion == GOD_ELYVILON
+        && _can_pacify_monster(monster, healed)
         && _mons_hostile(monster))
     {
         did_something = true;
