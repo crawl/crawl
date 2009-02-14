@@ -1480,7 +1480,27 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
         }
     }
-    return rc;
+
+    return (rc);
+}
+
+// Is this item something that no one would bother enchanting?
+static bool _item_is_mundane(const item_def& item)
+{
+    bool retval = false;
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        retval = (item.sub_type == WPN_CLUB
+                     || item.sub_type == WPN_GIANT_CLUB
+                     || item.sub_type == WPN_GIANT_SPIKED_CLUB);
+        break;
+    default:
+        break;
+    }
+
+    return (retval);
 }
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
@@ -1488,7 +1508,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int item_race)
 {
     // Determine weapon type.
-    if ( force_type != OBJ_RANDOM )
+    if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
         item.sub_type = _determine_weapon_subtype(item_level);
@@ -1547,11 +1567,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             do_curse_item(item);
     }
     else if ((force_good || is_demonic(item) || forced_ego
-            || x_chance_in_y(51 + item_level, 200))
-        // Nobody would bother enchanting a mundane club.
-        && item.sub_type != WPN_CLUB
-        && item.sub_type != WPN_GIANT_CLUB
-        && item.sub_type != WPN_GIANT_SPIKED_CLUB)
+                    || x_chance_in_y(51 + item_level, 200))
+                && !_item_is_mundane(item))
     {
         // Make a better item (possibly ego)
         if (!no_brand)
@@ -2908,13 +2925,8 @@ static bool _weapon_is_visibly_special(const item_def &item)
     const int brand = get_weapon_brand(item);
     const bool visibly_branded = (brand != SPWPN_NORMAL);
 
-    // Nobody would bother enchanting a mundane club.
-    if (item.sub_type == WPN_CLUB
-        || item.sub_type == WPN_GIANT_CLUB
-        || item.sub_type == WPN_GIANT_SPIKED_CLUB)
-    {
+    if (_item_is_mundane(item))
         return (false);
-    }
 
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return (false);
