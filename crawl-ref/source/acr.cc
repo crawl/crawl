@@ -285,15 +285,8 @@ int main( int argc, char *argv[] )
     while (true)
         _input();
 
-    // Should never reach this stage, right?
-#if defined(USE_TILE)
-    tiles.shutdown();
-#elif defined(UNIX)
-    unixcurses_shutdown();
-#endif
-
     return 0;
-}                               // end main()
+}
 
 static void _show_commandline_options_help()
 {

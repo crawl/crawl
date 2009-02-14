@@ -552,7 +552,8 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
         return (false);
 
     const bool seen = see_grid(x,y);
-    const int grid = (seen ? grd[x][y] : get_envmap_obj(x,y));
+    const int grid = ((seen || ignore_terrain_knowledge) ? grd[x][y]
+                                                         : get_envmap_obj(x,y));
 
     // FIXME: this compares to the *real* monster at the square,
     // even if the one we've seen is different.
