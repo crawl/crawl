@@ -80,7 +80,7 @@ std::string quant_name( const item_def &item, int quant,
 std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident,
                            bool with_inscription,
-                           bool quantity_words,
+                           bool quantity_in_words,
                            unsigned long ignore_flags) const
 {
     if (crawl_state.arena)
@@ -194,7 +194,7 @@ std::string item_def::name(description_level_type descrip,
         if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME
             && descrip != DESC_DBNAME)
         {
-            if (quantity_words)
+            if (quantity_in_words)
                 buff << number_in_words(this->quantity) << " ";
             else
                 buff << this->quantity << " ";
@@ -816,13 +816,13 @@ static const char* book_primary_string(int p)
 {
     switch (p)
     {
-    case 0: return "paperback ";
-    case 1: return "hardcover ";
-    case 2: return "leatherbound ";
-    case 3: return "metal-bound ";
-    case 4: return "papyrus ";
-    case 5: return "";
-    case 6: return "";
+    case 0:  return "paperback ";
+    case 1:  return "hardcover ";
+    case 2:  return "leatherbound ";
+    case 3:  return "metal-bound ";
+    case 4:  return "papyrus ";
+    case 5:  return "";
+    case 6:  return "";
     default: return "buggy ";
     }
 }
@@ -887,16 +887,16 @@ static const char* staff_secondary_string(int p)
 {
     switch (p) // general descriptions
     {
-    case 0: return "crooked ";
-    case 1: return "knobbly ";
-    case 2: return "weird ";
-    case 3: return "gnarled ";
-    case 4: return "thin ";
-    case 5: return "curved ";
-    case 6: return "twisted ";
-    case 7: return "thick ";
-    case 8: return "long ";
-    case 9: return "short ";
+    case 0:  return "crooked ";
+    case 1:  return "knobbly ";
+    case 2:  return "weird ";
+    case 3:  return "gnarled ";
+    case 4:  return "thin ";
+    case 5:  return "curved ";
+    case 6:  return "twisted ";
+    case 7:  return "thick ";
+    case 8:  return "long ";
+    case 9:  return "short ";
     default: return "buggily ";
     }
 }
@@ -905,10 +905,10 @@ static const char* staff_primary_string(int p)
 {
     switch (p) // special attributes
     {
-    case 0: return "glowing ";
-    case 1: return "jewelled ";
-    case 2: return "runed ";
-    case 3: return "smoking ";
+    case 0:  return "glowing ";
+    case 1:  return "jewelled ";
+    case 2:  return "runed ";
+    case 3:  return "smoking ";
     default: return "buggy ";
     }
 }
@@ -917,7 +917,6 @@ static const char* staff_type_name(int stafftype)
 {
     switch (static_cast<stave_type>(stafftype))
     {
-
     // staves
     case STAFF_WIZARDRY:    return "wizardry";
     case STAFF_POWER:       return "power";
@@ -978,9 +977,9 @@ static void output_with_sign(std::ostream& os, int val)
 
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-std::string item_def::name_aux( description_level_type desc,
-                                bool terse, bool ident,
-                                unsigned long ignore_flags) const
+std::string item_def::name_aux(description_level_type desc,
+                               bool terse, bool ident,
+                               unsigned long ignore_flags) const
 {
     // Shortcuts
     const int item_typ   = this->sub_type;
