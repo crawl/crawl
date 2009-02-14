@@ -4260,6 +4260,7 @@ void give_armour(monsters *mon, int level)
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_OGRE_MAGE:
+    case MONS_EROLCHA:
     case MONS_DRACONIAN:
     case MONS_RED_DRACONIAN:
     case MONS_WHITE_DRACONIAN:
