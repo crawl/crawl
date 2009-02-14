@@ -755,16 +755,20 @@ static int _healing_spell(int healed, bool divine_ability,
         else
             print_wounds(monster);
 
-        if (you.religion == GOD_ELYVILON && !_mons_hostile(monster))
+        if (divine_ability
+            && you.religion == GOD_ELYVILON
+            && !_mons_hostile(monster))
         {
-            simple_god_message(" appreciates the healing "
-                               "of a fellow creature.");
+            simple_god_message(" appreciates your healing of a fellow "
+                               "creature.");
             if (one_chance_in(8))
                 gain_piety(1);
         }
     }
 
-    if (you.religion == GOD_ELYVILON && _mons_hostile(monster))
+    if (divine_ability
+        && you.religion == GOD_ELYVILON
+        && _mons_hostile(monster))
     {
         did_something = true;
         simple_god_message(" supports your offer of peace.");
