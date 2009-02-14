@@ -2932,11 +2932,33 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return (false);
 
-
     if (visibly_branded || is_random_artefact(item))
         return (true);
 
     if ((item.plus || item.plus2)
+        && (one_chance_in(3) || get_equip_race(item) && one_chance_in(7)))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
+static bool _armour_is_visibly_special(const item_def &item)
+{
+    const int brand = get_armour_ego_type(item);
+    const bool visibly_branded = (brand != SPARM_NORMAL);
+
+    if (_item_is_mundane(item))
+        return (false);
+
+    if (get_equip_desc(item) != ISFLAG_NO_DESC)
+        return (false);
+
+    if (visibly_branded || is_random_artefact(item))
+        return (true);
+
+    if (item.plus
         && (one_chance_in(3) || get_equip_race(item) && one_chance_in(7)))
     {
         return (true);
@@ -4495,9 +4517,7 @@ void item_set_appearance(item_def &item)
         break;
 
     case OBJ_ARMOUR:
-        // If not given a racial type, and special, make shiny/runed/etc.
-        if (get_armour_ego_type(item) != SPARM_NORMAL
-            || item.plus != 0 && !one_chance_in(3))
+        if (_armour_is_visibly_special(item))
         {
             const item_status_flag_type descs[] = { ISFLAG_GLOWING,
                                                     ISFLAG_RUNED,
