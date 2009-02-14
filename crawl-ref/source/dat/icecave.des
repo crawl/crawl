@@ -450,7 +450,7 @@ MONS:    polar bear simulacrum w:3 generate_awake / \
 MONS:    ice statue
 ITEM:    wand of frost / wand of cold w:5
 ITEM:    ring of ice / staff of cold
-: if crawl.random2(2) == 0 then
+: if crawl.coinflip() then
 ITEM:    manual of ice magic
 ITEM:    nothing
 : else
@@ -592,7 +592,7 @@ TAGS: ice_cave no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # A bit of layout randomization.
-: if crawl.random2(2) == 0 then
+: if crawl.coinflip() then
 SUBST: ' = x
 SUBST: - = .
 SUBST: _ = .
@@ -603,7 +603,7 @@ SUBST: _ = w
 : end
 : ice_cave_colours(_G)
 # Two different populations: undead/demon and natural/giant.
-: if crawl.random2(2) == 0 then
+: if crawl.coinflip() then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
@@ -659,13 +659,13 @@ TAGS:   ice_cave no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # Some layout randomization.
-: if crawl.random2(2) == 0 then
+: if crawl.coinflip() then
 SUBST: '=x , -=.
 : else
 SUBST: '=. , -=x
 : end
 # Two different populations: undead/demon and natural/giant.
-: if crawl.random2(2) == 0 then
+: if crawl.coinflip() then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
@@ -727,13 +727,13 @@ TAGS: ice_cave no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # A bit of layout randomization for the middle part.
-: if crawl.random2(2) == 0 then
+: if crawl.coinflip() then
 SUBST: '=x , -=.
 : else
 SUBST: '=. , -=x
 : end
 # Two different populations: undead/demon and natural/giant.
-: if crawl.random2(2) == 0 then
+: if crawl.coinflip() then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \

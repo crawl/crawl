@@ -217,7 +217,7 @@ DEPTH:  D:3-14
 # This chooses between closed+populated and open+deserted variations -
 # the populated version is more fun, the deserted version is easier.
 # Shallow vaults and some deeper ones get the deserted version:
-: if you.absdepth()<7 or crawl.random2(6)==0 then
+: if you.absdepth()<7 or crawl.one_chance_in(6) then
 SUBST:  T=., A=., a=., M=., m=., H=., h=., F=., f=., S=., s=., B=.
 SUBST:  b=., W=., w=., Z=., z=., G=., D=., d=.
 : end
@@ -997,10 +997,10 @@ KMONS:   z = killer bee
 KMONS:   Z = bumblebee
 KITEM:   z = royal jelly / honeycomb w:20 / nothing w:120
 KITEM:   Z = royal jelly / honeycomb w:20 / nothing w:120
-: if crawl.random2(3) == 0 then
+: if crawl.one_chance_in(3) then
 KMONS:   ! = orc / orc warrior / orc knight / nothing w:30
 KMONS:   & = orc warlord / orc knight / nothing w:20
-: elseif crawl.random2(2) == 0 then
+: elseif crawl.coinflip() then
 KMONS:   ! = yaktaur / nothing
 KMONS:   & = yaktaur captain / nothing
 : else

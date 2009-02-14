@@ -24,27 +24,35 @@ the existing ones and modify them. Currently, the following .des files are in
 use:
 
  altar.des    - minivaults containing altars
+ arena.des    - arenas for the arena mode
  bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
- crypt.des    - Crypt:5, Tomb:1, Tomb:2, Tomb:3
- elf.des      - Elf:7
+ crypt.des    - random vaults for Crypt, the Crypt:5 branch ends, and the
+                predefined maps for Tomb:1, Tomb:2 and Tomb:3
+ didact.des   - lua and vaults for syntax checking - not used in-game
+ dummy.des    - global dummy balancers
+ elf.des      - arrival and random vaults for Elf, and Elf:7 branch ends
  entry.des    - entry vaults (each game - but not tutorial games - uses one of
                 these premade maps for the vicinity of the entrance)
  float.des    - floating vaults
  hells.des    - hell entrances, Geryon's vestibule, Coc:7, Tar:7, Dis:7, Geh:7
- hive.des     - hive entrances, Hive:4
+ hive.des     - hive entrances, random hive vaults, Hive:2
  icecave.des  - the ice cave portal vault
  lab.des      - labyrinths exits and flavour vaults
- lair.des     - lair entrances, Shoals:5, Swamp:5, Snake:5, Slime:6
- large.des    - all regular vaults which have ORIENT:encompass/northwest etc.
- layout.des   - Level layout code that has been moved from dungeon.cc and
+ lair.des     - lair entrances, random vaults for lair proper and sub-branches,
+                and the branch ends: Shoals:5, Swamp:5, Snake:5, Slime:6
+ large.des    - all regular vaults which have ORIENT:encompass/northwest etc
+ layout.des   - level layout code that has been moved from dungeon.cc and
                 rewritten in Lua.
  mini.des     - minivaults (no ORIENT line at all)
  minitomb.des - the minitomb portal vault
  orc.des      - orcish mine entrances, orc only vaults
  pan.des      - vaults of the Pan demon lords, Pan minivaults
+ rooms.des    - special monster rooms, such as orc, kobold and jelly rooms
  sewer.des    - the sewer portal vault
  temple.des   - Ecumenical Temples, and Temple entrances
- vaults.des   - entrances for the Vaults, and Vaults:8
+ vaults.des   - entrances for the Vaults, Vaults-specific vaults, the
+                Hall of Blades, and Vaults:8
+ ziggurat.des - the ziggurat entry vaults, pillars and arenas
  zot.des      - vaults for the Zot branch and the maps for Zot:5
 
 Kinds of Vaults
@@ -1784,7 +1792,8 @@ original_map, glyphs_connected, orig_glyphs_connected, orig_gly_point,
 orig_gly_points, load_des_file, feature_number, feature_name,
 dgn_event_type, register_listener, remove_listener, remove_marker,
 num_matching_markers, feature_desc, feature_desc_at, item_from_index,
-mons_from_index, change_level_flags, change_branch_flags
+mons_from_index, change_level_flags, change_branch_flags,
+set_random_mon_list
 
 
 Lua API - global game state
