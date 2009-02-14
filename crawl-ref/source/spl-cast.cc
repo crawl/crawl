@@ -2091,7 +2091,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_CONJURE_FLAME:
-        if (!conjure_flame(powc))
+        if (!conjure_flame(powc, beam.target))
             return (SPRET_ABORT);
         break;
 

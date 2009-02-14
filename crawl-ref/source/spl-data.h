@@ -301,12 +301,12 @@
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_NONE,
+     SPFLAG_GRID | SPFLAG_NOT_SELF,
      3,
      100,
      4, 4,
      0,
-     NULL,
+     "Where would you like to place the cloud?",
      false,
      false
 },

@@ -488,75 +488,69 @@ void identify(int power, int item_slot)
 }
 
 // Returns whether the spell was actually cast.
-bool conjure_flame(int pow)
+bool conjure_flame(int pow, const coord_def& where)
 {
-    struct dist spelld;
-
-    bool done_first_message = false;
-
-    while (true)
+    // FIXME: this would be better handled by a flag to enforce max range.
+    if (grid_distance(where, you.pos()) > spell_range(SPELL_CONJURE_FLAME,
+                                                      pow, true)
+        || !in_bounds(where))
     {
-        if (done_first_message)
-            mpr("Where would you like to place the cloud?", MSGCH_PROMPT);
-        else
-        {
-            mpr("You cast a flaming cloud spell! But where?", MSGCH_PROMPT);
-            done_first_message = true;
-        }
-
-        direction( spelld, DIR_TARGET, TARG_ENEMY, -1, false, false, false );
-
-        if (!spelld.isValid)
-        {
-            canned_msg(MSG_OK);
-            return (false);
-        }
-
-        if (trans_wall_blocking(spelld.target))
-        {
-            mpr("A translucent wall is in the way.");
-            return (false);
-        }
-        else if (!see_grid(spelld.target))
-        {
-            mpr("You can't see that place!");
-            continue;
-        }
-
-        if (spelld.target == you.pos())
-        {
-            mpr("You can't place the cloud here!");
-            continue;
-        }
-
-        const int cloud = env.cgrid(spelld.target);
-
-        if (grid_is_solid(grd(spelld.target))
-            || monster_at(spelld.target)
-            || (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
-        {
-            mpr( "There's already something there!" );
-            continue;
-        }
-        else if (cloud != EMPTY_CLOUD)
-        {
-            // Reinforce the cloud - but not too much.
-            mpr( "The fire roars with new energy!" );
-            const int extra_dur = 2 + std::min(random2(pow) / 2, 20);
-            env.cloud[cloud].decay += extra_dur * 5;
-            env.cloud[cloud].set_whose(KC_YOU);
-            return (true);
-        }
-
-        break;
+        mpr("That's too far away.");
+        return (false);
     }
 
-    int durat = 5 + (random2(pow) / 2) + (random2(pow) / 2);
+    if (trans_wall_blocking(where))
+    {
+        mpr("A translucent wall is in the way.");
+        return (false);
+    }
 
-    if (durat > 23)
-        durat = 23;
+    if (grid_is_solid(where))
+    {
+        mpr("You can't ignite solid rock!");
+        return (false);
+    }
 
-    place_cloud( CLOUD_FIRE, spelld.target, durat, KC_YOU );
+    const int cloud = env.cgrid(where);
+    
+    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+    {
+        mpr("There's already a cloud there!");
+        return (false);
+    }
+    
+    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
+    monsters *monster = monster_at(where);
+    if (monster)
+    {
+        if (you.can_see(monster))
+        {
+            mpr("You can't place the cloud on a creature.");
+            return (false);
+        }
+        else
+        {
+            // FIXME: maybe should do _paranoid_option_disable() here?
+            mpr("You see a ghostly outline there, and the spell fizzles.");
+            return (true);      // Don't give free detection!
+        }
+    }
+
+    if (cloud != EMPTY_CLOUD)
+    {
+        // Reinforce the cloud - but not too much.
+        // It must be a fire cloud from a previous test.
+        mpr("The fire roars with new energy!");
+        const int extra_dur = 2 + std::min(random2(pow) / 2, 20);
+        env.cloud[cloud].decay += extra_dur * 5;
+        env.cloud[cloud].set_whose(KC_YOU);
+    }
+    else
+    {
+        const int durat = std::min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
+        place_cloud(CLOUD_FIRE, where, durat, KC_YOU);
+    }
+
     return (true);
 }
 
