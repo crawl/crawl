@@ -104,12 +104,16 @@ void init_spell_descs(void)
             end(1, false, "spell #%d, id %d has no name", i, data.id);
 
         if (data.level < 1 || data.level > 9)
+        {
             end(1, false, "spell '%s' has invalid level %d",
                 data.title, data.level);
+        }
 
         if (data.min_range > data.max_range)
+        {
             end(1, false, "spell '%s' has min_range larger than max_range",
                 data.title);
+        }
 
         if (data.flags & SPFLAG_TARGETING_MASK)
         {
@@ -312,14 +316,14 @@ int spell_hunger(spell_type which_spell)
 
     int hunger;
 
-    if ( level < 10 && level > 0 )
+    if (level < 10 && level > 0)
         hunger = basehunger[level-1];
     else
         hunger = (basehunger[0] * level * level) / 4;
 
     hunger -= you.intel * you.skills[SK_SPELLCASTING];
 
-    if ( hunger < 0 )
+    if (hunger < 0)
         hunger = 0;
 
     return hunger;

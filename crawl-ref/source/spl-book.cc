@@ -1729,7 +1729,8 @@ bool is_memorised(spell_type spell)
 static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
                             unsigned int disc1, unsigned int disc2,
                             god_type god, bool avoid_uncastable,
-                            int &god_discard, int &uncastable_discard)
+                            int &god_discard, int &uncastable_discard,
+                            bool avoid_known = false)
 {
     for (int i = 0; i < NUM_SPELLS; i++)
     {
@@ -1741,6 +1742,9 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
         // Only use spells available in books you might find lying about
         // the dungeon.
         if (spell_rarity(spell) == -1)
+            continue;
+
+        if (avoid_known && you.seen_spell[spell])
             continue;
 
         const unsigned int disciplines = get_spell_disciplines(spell);
@@ -1788,18 +1792,22 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
 static void _get_spell_list(std::vector<spell_type> &spell_list,
                             unsigned int disc1, unsigned int disc2,
                             god_type god, bool avoid_uncastable,
-                            int &god_discard, int &uncastable_discard)
+                            int &god_discard, int &uncastable_discard,
+                            bool avoid_known = false)
 {
     _get_spell_list(spell_list, -1, disc1, disc2,
-                    god, avoid_uncastable, god_discard, uncastable_discard);
+                    god, avoid_uncastable, god_discard, uncastable_discard,
+                    avoid_known);
 }
 
 static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
                             god_type god, bool avoid_uncastable,
-                            int &god_discard, int &uncastable_discard)
+                            int &god_discard, int &uncastable_discard,
+                            bool avoid_known = false)
 {
     _get_spell_list(spell_list, level, SPTYP_NONE, SPTYP_NONE,
-                    god, avoid_uncastable, god_discard, uncastable_discard);
+                    god, avoid_uncastable, god_discard, uncastable_discard,
+                    avoid_known);
 }
 
 
@@ -2050,9 +2058,9 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 
         std::vector<spell_type> spell_list;
         _get_spell_list(spell_list, disc, disc, god, !completely_random,
-                        junk1, junk2);
+                        junk1, junk2, true);
 
-        if(spell_list.empty())
+        if (spell_list.empty())
             continue;
 
         ok_discs.push_back(disc);
@@ -2070,48 +2078,39 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     }
 
     int skill_weights[SPTYP_LAST_EXPONENT];
-    int apt_weights[SPTYP_LAST_EXPONENT];
 
     memset(skill_weights, 0, SPTYP_LAST_EXPONENT * sizeof(int));
-    memset(apt_weights,   0, SPTYP_LAST_EXPONENT * sizeof(int));
 
-    if (completely_random)
-    {
-        for (int i = 0; i < num_discs; i++)
-        {
-            skill_weights[i] = 1;
-            apt_weights[i]   = 1;
-        }
-    }
-    else
+    if (!completely_random)
     {
         int total_skills = 0;
         for (int i = 0; i < num_discs; i++)
         {
             int skill = skills[i];
-            skill_weights[i] = you.skills[skill];
-
-            int apt = species_skills(skill, you.species);
-            apt_weights[i] = (int) ( (1.0 / (double) apt) * 1000000.0);
+            skill_weights[i] = you.skills[skill]
+                               * 100 / species_skills(skill, you.species);
 
             total_skills += skill_weights[i];
         }
 
         if (total_skills == 0)
-        {
-            for (int i = 0; i < num_discs; i++)
-                skill_weights[i] = apt_weights[i];
-        }
+            completely_random = true;
+    }
+
+    if (completely_random)
+    {
+        for (int i = 0; i < num_discs; i++)
+            skill_weights[i] = 1;
     }
 
     do
     {
         disc1 = ok_discs[choose_random_weighted(skill_weights,
                                                 skill_weights + num_discs)];
-        disc2 = ok_discs[choose_random_weighted(apt_weights,
-                                                apt_weights + num_discs)];
+        disc2 = ok_discs[choose_random_weighted(skill_weights,
+                                                skill_weights + num_discs)];
     }
-    while(disciplines_conflict(disc1, disc2));
+    while (disciplines_conflict(disc1, disc2));
 
     return (true);
 }
