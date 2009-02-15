@@ -1612,9 +1612,9 @@ static void _do_book_acquirement(item_def &book, int agent)
     {
         choice = random_choose_weighted(
                     60, BOOK_RANDART_THEME,
-                    24, book.sub_type,
+           agent == GOD_SIF_MUNA ? 24 : 34, book.sub_type,
                 level == -1      ? 0 :
-           agent == GOD_SIF_MUNA ? 6 : 1, BOOK_RANDART_LEVEL,
+           agent == GOD_SIF_MUNA ? 3 : 1, BOOK_RANDART_LEVEL,
                     0);
     }
 
@@ -1629,25 +1629,20 @@ static void _do_book_acquirement(item_def &book, int agent)
     switch (choice)
     {
     case BOOK_RANDART_THEME:
-        mpr("Make book themed randart.");
         book.sub_type = choice;
         make_book_theme_randart(book, 0, 0, 7, 22, SPELL_NO_SPELL, owner);
         break;
 
     case BOOK_RANDART_LEVEL:
     {
-        mpr("Make book fixed level randart.");
         book.sub_type = choice;
         int num_spells = 7 - (level + 1) / 2 + random_range(1, 2);
         make_book_level_randart(book, level, num_spells, owner);
         break;
     }
 
-    // Spell discipline manual
     case BOOK_MANUAL:
     {
-        mpr("Make book manual.");
-
         // The Tome of Destruction is rare enough we won't change this.
         if (book.sub_type == BOOK_DESTRUCTION)
             return;
@@ -1696,8 +1691,6 @@ static void _do_book_acquirement(item_def &book, int agent)
 
     default:
     {
-        mpr("Make book normal spellbook.");
-
         // Pick a random spellbook according to unknown spells contained.
         int weights[MAX_NORMAL_BOOK+1];
         for (int bk = 0; bk <= MAX_NORMAL_BOOK; bk++)
