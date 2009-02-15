@@ -1187,157 +1187,6 @@ static int _choose_first_unseen_book(int first, ...)
     return (NUM_BOOKS);
 }
 
-/*
-static int _acquirement_book_subtype()
-{
-    int result = NUM_BOOKS;
-
-    skill_type best_spell_skill = SK_NONE;
-    // Do two iterations: one with the best spell skill, one with
-    // the second-best.
-    for (int i = 0; i < 2; ++i)
-    {
-        // FIXME: Assumes that SK_POISON_MAGIC is the last spell skill.
-        best_spell_skill = best_skill(SK_SPELLCASTING, SK_POISON_MAGIC,
-                                      best_spell_skill);
-        switch (best_spell_skill)
-        {
-        default:
-        case SK_SPELLCASTING:
-            if (you.skills[SK_SPELLCASTING] <= 3
-                && !you.had_book[BOOK_CANTRIPS])
-            {
-                // Handful of level one spells, very useful for the
-                // new spellcaster who's asking for a book -- bwr
-                result = BOOK_CANTRIPS;
-            }
-            else
-            {
-                result = _choose_first_unseen_book(BOOK_MINOR_MAGIC_I,
-                                                   BOOK_WIZARDRY,
-                                                   BOOK_CONTROL,
-                                                   BOOK_POWER,
-                                                   NUM_BOOKS);
-                if (result == BOOK_MINOR_MAGIC_I)
-                    result += random2(3);
-            }
-            break;
-
-        case SK_POISON_MAGIC:
-            result = _choose_first_unseen_book(BOOK_YOUNG_POISONERS,
-                                               BOOK_ENVENOMATIONS,
-                                               NUM_BOOKS);
-            break;
-
-        case SK_EARTH_MAGIC:
-            result = _choose_first_unseen_book(BOOK_GEOMANCY, BOOK_EARTH,
-                                               NUM_BOOKS);
-            break;
-
-        case SK_AIR_MAGIC:
-            result = _choose_first_unseen_book(BOOK_AIR, BOOK_SKY, NUM_BOOKS);
-            break;
-
-        case SK_ICE_MAGIC:
-            result = _choose_first_unseen_book(BOOK_FROST, BOOK_ICE, NUM_BOOKS);
-            break;
-
-        case SK_FIRE_MAGIC:
-            result = _choose_first_unseen_book(BOOK_FLAMES, BOOK_FIRE,
-                                               NUM_BOOKS);
-            break;
-
-        case SK_SUMMONINGS:
-            // Don't give Demonology, that's a Vehumet special.
-            result = _choose_first_unseen_book(BOOK_CALLINGS, BOOK_SUMMONINGS,
-                                               NUM_BOOKS);
-            break;
-
-        case SK_ENCHANTMENTS:
-        {
-            skill_type best_any = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
-
-            // So many enchantment books!  I really can't feel
-            // guilty at all for dividing out the fighting
-            // books and forcing the player to raise a fighting
-            // skill (or enchantments in the case of Crusaders)
-            // to get the remaining books... enchantments are
-            // much too good (most spells, lots of books here,
-            // id wand charges, gives magic resistance),
-            // something will eventually have to be done.  -- bwr
-            if (best_any >= SK_FIGHTING && best_any <= SK_STAVES)
-            {
-                // Fighter mages get the fighting enchantment books
-                result = _choose_first_unseen_book(BOOK_WAR_CHANTS, BOOK_TUKIMA,
-                                                   NUM_BOOKS);
-            }
-            else
-            {
-                result = _choose_first_unseen_book(BOOK_CHARMS, BOOK_HINDERANCE,
-                                                   BOOK_ENCHANTMENTS,
-                                                   NUM_BOOKS);
-            }
-            break;
-        }
-
-        case SK_CONJURATIONS:
-            // Don't give Annihilations, that's a Vehumet special.
-            result = _choose_first_unseen_book(BOOK_CONJURATIONS_I,
-                                               BOOK_TEMPESTS, NUM_BOOKS);
-            if (result == BOOK_CONJURATIONS_I)
-                result = give_first_conjuration_book();
-            break;
-
-        case SK_NECROMANCY:
-            // Don't give the Necromicon, that's a Kikubaaqudgha special.
-            result = _choose_first_unseen_book(BOOK_NECROMANCY, BOOK_DEATH,
-                                               BOOK_UNLIFE, NUM_BOOKS);
-            break;
-
-        case SK_TRANSLOCATIONS:
-            result = _choose_first_unseen_book(BOOK_SPATIAL_TRANSLOCATIONS,
-                                               BOOK_WARP, NUM_BOOKS);
-            break;
-
-        case SK_TRANSMUTATION:
-            result = _choose_first_unseen_book(BOOK_CHARMS,
-                                               BOOK_TRANSFIGURATIONS,
-                                               BOOK_MUTATIONS,
-                                               NUM_BOOKS);
-            break;
-
-        case SK_DIVINATIONS:
-            result = _choose_first_unseen_book(BOOK_SURVEYANCES,
-                                               BOOK_DIVINATIONS,
-                                               NUM_BOOKS);
-            break;
-        }
-
-        // If we succeeded the first time around, don't do another try.
-        if (result != NUM_BOOKS)
-            break;
-    }
-
-    // If we don't have a book, try and get a new one.
-    if (result == NUM_BOOKS)
-    {
-        do
-        {
-            result = random2(NUM_NORMAL_BOOKS);
-            if (one_chance_in(500))
-                break;
-        }
-        while (you.had_book[result]);
-    }
-
-    // If the book is invalid, find any valid one.
-    while (result == BOOK_HEALING)
-        result = random2(NUM_NORMAL_BOOKS);
-
-    return result;
-}
-*/
-
 static int _acquirement_staff_subtype(const has_vector& already_has)
 {
     int result = random2(STAFF_FIRST_ROD);
@@ -1448,9 +1297,9 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
     }
 
     bool try_again = (class_wanted == OBJ_JEWELLERY
-                      || class_wanted == OBJ_BOOKS
                       || class_wanted == OBJ_STAVES
                       || class_wanted == OBJ_MISCELLANY);
+
     do
     {
         switch (class_wanted)
@@ -1468,11 +1317,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             break;
         case OBJ_JEWELLERY: type_wanted = _acquirement_jewellery_subtype();
             break;
-        case OBJ_BOOKS:
-            // type_wanted = _acquirement_book_subtype();    break;
-            return OBJ_RANDOM;
-
-        default: break;         // gold
+        default: break;         // gold, books
         }
 
         if (try_again)
@@ -1483,7 +1328,8 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             if (one_chance_in(200))
                 try_again = false;
         }
-    } while (try_again);
+    }
+    while (try_again);
 
     return (type_wanted);
 }
