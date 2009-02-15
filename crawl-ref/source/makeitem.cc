@@ -1841,12 +1841,12 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
         // Needs to be done after the barding chance else we get randart
         // bardings named Boots of xy.
-        make_item_randart( item );
+        make_item_randart(item);
 
         // Determine enchantment and cursedness.
         if (one_chance_in(5))
         {
-            do_curse_item( item );
+            do_curse_item(item);
             item.plus = -random2(6);
         }
         else
@@ -1860,8 +1860,9 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
                 item.plus -= random2(8);
 
             if (item.plus < 0 && !one_chance_in(3))
-                do_curse_item( item );
+                do_curse_item(item);
         }
+
         return (true);
     }
 
@@ -1887,7 +1888,7 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
         break;
 
     case MAKE_ITEM_RANDOM_RACE:
-        if ( coinflip() )
+        if (coinflip())
             break;
 
         switch (item.sub_type)
@@ -1956,11 +1957,12 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
             if (one_chance_in(5))
                 rc = ISFLAG_ORCISH;
 
-        default:    // skins, hides, crystal plate are always plain
+        default:
             break;
         }
     }
-    return rc;
+
+    return (rc);
 }
 
 static special_armour_type _determine_armour_ego(const item_def& item,
@@ -1997,7 +1999,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     }
 
     case ARM_WIZARD_HAT:
-        if ( coinflip() )
+        if (coinflip())
         {
             rc = (one_chance_in(3) ?
                   SPARM_MAGIC_RESISTANCE : SPARM_INTELLIGENCE);
@@ -2048,7 +2050,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         }
         break;
 
-    default:    // other body armours:
+    default:
         rc = coinflip() ? SPARM_COLD_RESISTANCE : SPARM_FIRE_RESISTANCE;
 
         if (one_chance_in(9))
@@ -2064,9 +2066,9 @@ static special_armour_type _determine_armour_ego(const item_def& item,
             rc = SPARM_PONDEROUSNESS;
         break;
     }
-    return rc;
-}
 
+    return (rc);
+}
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level, int item_race)
@@ -2110,10 +2112,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
     if (item_level < 0)
     {
-        // thoroughly damaged, could had been good once
+        // Thoroughly damaged, could have been good once.
         if (!no_ego && (forced_ego || one_chance_in(4)))
         {
-            // brand is set as for "good" items
+            // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_ARMOUR,
                 _determine_armour_ego(item, item.sub_type, 2+2*you.your_level));
         }
@@ -2153,13 +2155,13 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
     else if (one_chance_in(12))
     {
-        // Make a bad (cursed) item
-        do_curse_item( item );
+        // Make a bad (cursed) item.
+        do_curse_item(item);
 
         if (one_chance_in(5))
             item.plus -= random2(3);
 
-        set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
+        set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
     }
 
     // Make sure you don't get a hide from acquirement (since that
@@ -2168,14 +2170,14 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (force_good)
         hide2armour(item); // What of animal hides? {dlb}
 
-    // skin armours + Crystal PM don't get special enchantments
-    // or species, but can be randarts
+    // Skin armours and crystal plate mail don't get special
+    // enchantments or species, but can be randarts.
     if (armour_is_hide(item, true)
         || item.sub_type == ARM_CRYSTAL_PLATE_MAIL
         || item.sub_type == ARM_ANIMAL_SKIN)
     {
         if (!forced_ego)
-            set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
+            set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
     }
 
     // Don't overenchant items.
@@ -2194,7 +2196,8 @@ static monster_type _choose_random_monster_corpse()
         if (mons_weight(spc) > 0)        // drops a corpse
             return spc;
     }
-    return MONS_RAT;            // if you can't find anything else...
+
+    return (MONS_RAT);          // if you can't find anything else...
 }
 
 static int _random_wand_subtype()
