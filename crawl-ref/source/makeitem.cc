@@ -1494,7 +1494,8 @@ static bool _item_is_mundane(const item_def& item)
     case OBJ_WEAPONS:
         retval = (item.sub_type == WPN_CLUB
                      || item.sub_type == WPN_GIANT_CLUB
-                     || item.sub_type == WPN_GIANT_SPIKED_CLUB);
+                     || item.sub_type == WPN_GIANT_SPIKED_CLUB
+                     || item.sub_type == WPN_KNIFE);
         break;
     default:
         break;
