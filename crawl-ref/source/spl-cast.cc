@@ -1187,7 +1187,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_CRUSH:
     case SPELL_ARC:
         if (!burn_freeze(powc, _spell_to_beam_type(spell),
-                         mgrd(you.pos() + spd.delta)))
+                         monster_at(you.pos() + spd.delta)))
         {
             return (SPRET_ABORT);
         }

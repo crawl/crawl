@@ -735,12 +735,14 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     {
         // If mesmerised, colour the few grids that can be reached anyway
         // lightgrey.
-        if (grd(p) >= DNGN_MINMOVE && mgrd(p) == NON_MONSTER)
+        const monsters *blocker = monster_at(p);
+        const bool seen_blocker = blocker && you.can_see(blocker);
+        if (grd(p) >= DNGN_MINMOVE && !seen_blocker)
         {
             bool blocked_movement = false;
             for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
             {
-                monsters& mon = menv[you.mesmerised_by[i]];
+                const monsters& mon = menv[you.mesmerised_by[i]];
                 const int olddist = grid_distance(you.pos(), mon.pos());
                 const int newdist = grid_distance(p, mon.pos());
 
@@ -764,6 +766,8 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     else if (Options.trap_item_brand
              && grid_is_trap(grid_value) && igrd(p) != NON_ITEM)
     {
+        // FIXME: this uses the real igrd, which the player shouldn't
+        // be aware of.
         tc |= COLFLAG_TRAP_ITEM;
     }
 
@@ -898,10 +902,10 @@ static void _good_god_follower_attitude_change(monsters *monster)
 
         if (x_chance_in_y(you.piety, MAX_PIETY) && !you.penance[you.religion])
         {
-            int wpn = you.equip[EQ_WEAPON];
-            if (wpn != -1
-                && you.inv[wpn].base_type == OBJ_WEAPONS
-                && is_evil_item(you.inv[wpn])
+            const item_def* wpn = you.weapon();
+            if (wpn
+                && wpn->base_type == OBJ_WEAPONS
+                && is_evil_item(*wpn)
                 && coinflip()) // 50% chance of conversion failing
             {
                 msg::stream << monster->name(DESC_CAP_THE)
@@ -960,11 +964,8 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
 
 static void _handle_seen_interrupt(monsters* monster)
 {
-    if (mons_is_mimic(monster->type)
-        && !mons_is_known_mimic(monster))
-    {
+    if (mons_is_mimic(monster->type) && !mons_is_known_mimic(monster))
         return;
-    }
 
     activity_interrupt_data aid(monster);
     if (!monster->seen_context.empty())
@@ -1487,8 +1488,7 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 void item_grid()
 {
     const coord_def c(crawl_view.glosc());
-    for (radius_iterator ri(c, LOS_RADIUS, true, false);
-         ri; ++ri)
+    for (radius_iterator ri(c, LOS_RADIUS, true, false); ri; ++ri)
     {
         if (igrd(*ri) != NON_ITEM)
         {
@@ -1650,7 +1650,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
     {
         monsters* monster = &menv[p];
 
-        if (monster->type < 0)
+        if (!monster->alive())
             continue;
 
         if (distance(monster->pos(), where) <= dist

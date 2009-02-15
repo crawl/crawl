@@ -820,20 +820,17 @@ bool vampiric_drain(int pow, const dist &vmove)
     return (success);
 }
 
-bool burn_freeze(int pow, beam_type flavour, int targetmon)
+bool burn_freeze(int pow, beam_type flavour, monsters *monster)
 {
     pow = std::min(25, pow);
 
-    if (targetmon == NON_MONSTER)
+    if (monster == NULL)
     {
         mpr("There isn't anything close enough!");
         // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible monsters, unless
-        // you know that you see invisible.
-        return (!player_see_invis(false));
+        // order to prevent locating invisible monsters.
+        return (true);
     }
-
-    monsters *monster = &menv[targetmon];
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
@@ -1176,65 +1173,22 @@ bool cast_summon_swarm(int pow, god_type god,
                        bool permanent)
 {
     bool success = false;
-
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    const int dur = !permanent ? std::min(2 + (random2(pow) / 4), 6) : 0;
-
+    const int dur = permanent ? 0 : std::min(2 + (random2(pow) / 4), 6);
     const int how_many = stepdown_value(2 + random2(pow)/10 + random2(pow)/25,
                                         2, 2, 6, 8);
 
     for (int i = 0; i < how_many; ++i)
     {
-        switch (random2(14))
-        {
-        case 0:
-        case 1:
-        case 2:         // prototypical swarming creature {dlb}
-            mon = MONS_KILLER_BEE;
-            break;
-
-        case 3:
-            mon = MONS_SCORPION; // think: "The Arrival" {dlb}
-            break;
-
-        case 4:         //jmf: technically not insects but still cool
-            mon = MONS_WORM;
-            break;              // but worms kinda "swarm" so s'ok {dlb}
-
-        case 5:
-            mon = MONS_GIANT_MOSQUITO;
-            break;              // changed into giant mosquito 12jan2000 {dlb}
-
-        case 6:
-            mon = MONS_GIANT_BEETLE;   // think: scarabs in "The Mummy" {dlb}
-            break;
-
-        case 7:         //jmf: blowfly instead of queen bee
-            mon = MONS_GIANT_BLOWFLY;
-            break;
-
-            // Queen bee added if more than x bees in swarm? {dlb}
-            // The above would require code rewrite - worth it? {dlb}
-
-        case 8:
-            mon = MONS_WOLF_SPIDER;  // think: "Kingdom of the Spiders" {dlb}
-            break;
-
-        case 9:
-            mon = MONS_BUTTERFLY;      // comic relief? {dlb}
-            break;
-
-        case 10:                // change into some kind of snake -- {dlb}
-            mon = MONS_YELLOW_WASP;    // do wasps swarm? {dlb}
-            break;              // think: "Indiana Jones" and snakepit? {dlb}
-
-        default:                // 3 in 14 chance, 12jan2000 {dlb}
-            mon = MONS_GIANT_ANT;
-            break;
-        }
-
-        bool friendly = !force_hostile ? (random2(pow) > 7) : false;
+        const monster_type swarmers[] = {
+            MONS_KILLER_BEE,   MONS_KILLER_BEE,    MONS_KILLER_BEE,
+            MONS_SCORPION,     MONS_WORM,          MONS_GIANT_MOSQUITO,
+            MONS_GIANT_BEETLE, MONS_GIANT_BLOWFLY, MONS_WOLF_SPIDER,
+            MONS_BUTTERFLY,    MONS_YELLOW_WASP,   MONS_GIANT_ANT,
+            MONS_GIANT_ANT,    MONS_GIANT_ANT
+        };
+        
+        const monster_type mon = RANDOM_ELEMENT(swarmers);
+        const bool friendly = force_hostile ? false : (random2(pow) > 7);
 
         if (create_monster(
                 mgen_data(mon,

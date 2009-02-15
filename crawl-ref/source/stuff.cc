@@ -1297,36 +1297,6 @@ coord_def random_in_bounds()
                          random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1));
 }
 
-// Returns a random location in (x_pos, y_pos)... the grid will be
-// DNGN_FLOOR if clear, and NON_MONSTER if empty.  Exclusive tells
-// if we're using in_bounds() or map_bounds() restriction.
-void random_in_bounds(int &x_pos, int &y_pos, int terr,
-                      bool empty, bool excl)
-{
-    bool done = false;
-
-    do
-    {
-        x_pos = X_BOUND_1 + random2(X_WIDTH - 2 * excl) + 1 * excl;
-        y_pos = Y_BOUND_1 + random2(Y_WIDTH - 2 * excl) + 1 * excl;
-
-        if (terr == DNGN_RANDOM)
-            done = true;
-        else if (terr == grd[x_pos][y_pos])
-            done = true;
-        else if (terr == DNGN_DEEP_WATER
-                 && grd[x_pos][y_pos] == DNGN_SHALLOW_WATER)
-            done = true;
-        else if (empty
-                 && mgrd[x_pos][y_pos] != NON_MONSTER
-                 && (coord_def(x_pos, y_pos) != you.pos()))
-        {
-            done = true;
-        }
-    }
-    while (!done);
-}
-
 unsigned char random_colour(void)
 {
     return (1 + random2(15));

@@ -1158,35 +1158,6 @@ static int _acquirement_jewellery_subtype()
     return (result);
 }
 
-static int _choose_first_unseen_book(int first, ...)
-{
-    va_list args;
-    va_start(args, first);
-
-    if (first == NUM_BOOKS || !you.had_book[first])
-    {
-        va_end(args);
-        return (first);
-    }
-
-    int nargs = 100;
-
-    while (nargs-- > 0)
-    {
-        const int another = va_arg(args, int);
-        if (another == NUM_BOOKS || !you.had_book[another])
-        {
-            va_end(args);
-            return (another);
-        }
-    }
-
-    ASSERT(nargs > 0);
-
-    va_end(args);
-    return (NUM_BOOKS);
-}
-
 static int _acquirement_staff_subtype(const has_vector& already_has)
 {
     int result = random2(STAFF_FIRST_ROD);

@@ -14,18 +14,8 @@
 
 struct dist;
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 bool brand_weapon(brand_type which_brand, int power);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-bool burn_freeze(int pow, beam_type flavour, int targetmon);
+bool burn_freeze(int pow, beam_type flavour, monsters *monster);
 
 void corpse_rot();
 
