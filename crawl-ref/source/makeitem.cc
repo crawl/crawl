@@ -838,7 +838,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         rc = RANDOM_ELEMENT(common_subtypes);
     else
     {
-        // pick a weapon based on rarity
+        // Pick a weapon based on rarity.
         while (true)
         {
             const int wpntype = random2(NUM_WEAPONS);
