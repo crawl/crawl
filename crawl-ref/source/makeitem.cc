@@ -2119,7 +2119,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             set_item_ego_type(item, OBJ_ARMOUR,
                 _determine_armour_ego(item, item.sub_type, 2+2*you.your_level));
         }
-        item.plus  -= 1+random2(3);
+
+        item.plus -= 1+random2(3);
 
         if (item_level == -5)
             do_curse_item(item);
@@ -2170,8 +2171,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (force_good)
         hide2armour(item); // What of animal hides? {dlb}
 
-    // Skin armours and crystal plate mail don't get special
-    // enchantments or species, but can be randarts.
+    // Skin armours and crystal plate mail normally don't get egos, but
+    // can be randarts.
     if (armour_is_hide(item, true)
         || item.sub_type == ARM_CRYSTAL_PLATE_MAIL
         || item.sub_type == ARM_ANIMAL_SKIN)
