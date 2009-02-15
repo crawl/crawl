@@ -286,7 +286,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
             else if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
             {
                 if (!stepped)
-                    noisy(SL_SPLASH, you.pos(), "Splash!");
+                    noisy(8, you.pos(), "Splash!");
 
                 you.time_taken *= 13 + random2(8);
                 you.time_taken /= 10;

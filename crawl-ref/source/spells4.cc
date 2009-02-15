@@ -102,15 +102,15 @@ static bool _player_hurt_monster(int monster, int damage)
 static int _shatter_monsters(coord_def where, int pow, int, actor *)
 {
     dice_def   dam_dice( 0, 5 + pow / 3 );  // number of dice set below
-    const int  monster = mgrd(where);
+    monsters *monster = monster_at(where);
 
-    if (monster == NON_MONSTER)
+    if (monster == NULL)
         return (0);
 
     // Removed a lot of silly monsters down here... people, just because
     // it says ice, rock, or iron in the name doesn't mean it's actually
     // made out of the substance. -- bwr
-    switch (menv[monster].type)
+    switch (monster->type)
     {
     case MONS_ICE_BEAST:        // 3/2 damage
     case MONS_SIMULACRUM_SMALL:
@@ -175,17 +175,17 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         break;
 
     default:                    // normal damage
-        if (mons_flies( &menv[monster] ))
+        if (mons_flies(monster))
             dam_dice.num = 1;
         else
             dam_dice.num = 3;
         break;
     }
 
-    int damage = dam_dice.roll() - random2( menv[monster].ac );
+    int damage = dam_dice.roll() - random2(monster->ac);
 
     if (damage > 0)
-        _player_hurt_monster( monster, damage );
+        _player_hurt_monster(*monster, damage);
     else
         damage = 0;
 
@@ -587,7 +587,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
              dam_dice.num, dam_dice.size, damage );
 #endif
 
-        if (!_player_hurt_monster(mon->mindex(), damage))
+        if (!_player_hurt_monster(*mon, damage))
         {
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
@@ -1662,14 +1662,11 @@ bool cast_fragmentation(int pow, const dist& spd)
     beam.damage = dice_def(0, 5 + pow / 10);
 
     const dungeon_feature_type grid = grd(spd.target);
-    const int midx = mgrd(spd.target);
 
-    if (midx != NON_MONSTER)
+    if (monsters *mon = monster_at(spd.target))
     {
-        monsters *mon = &menv[midx];
-
         // Save the monster's name in case it isn't available later.
-        std::string name_cap_the = mon->name(DESC_CAP_THE);
+        const std::string name_cap_the = mon->name(DESC_CAP_THE);
 
         switch (mon->type)
         {
@@ -1681,7 +1678,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             // fizzle (since we don't actually explode wood golems). -- bwr
             explode         = false;
             beam.damage.num = 2;
-            _player_hurt_monster(midx, beam.damage.roll());
+            _player_hurt_monster(*mon, beam.damage.roll());
             break;
 
         case MONS_IRON_GOLEM:
@@ -1690,7 +1687,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of metal fragments";
             beam.colour     = CYAN;
             beam.damage.num = 4;
-            if (_player_hurt_monster(midx, beam.damage.roll()))
+            if (_player_hurt_monster(*mon, beam.damage.roll()))
                 beam.damage.num += 2;
             break;
 
@@ -1703,7 +1700,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
             beam.damage.num = 3;
-            if (_player_hurt_monster(midx, beam.damage.roll()))
+            if (_player_hurt_monster(*mon, beam.damage.roll()))
                 beam.damage.num++;
             break;
 
@@ -1729,7 +1726,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 if (pow >= 50 && one_chance_in(10))
                     statue_damage = mon->hit_points;
 
-                if (_player_hurt_monster(midx, statue_damage))
+                if (_player_hurt_monster(*mon, statue_damage))
                     beam.damage.num += 2;
             }
             break;
@@ -1740,7 +1737,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of crystal shards";
             beam.colour     = WHITE;
             beam.damage.num = 4;
-            if (_player_hurt_monster(midx, beam.damage.roll()))
+            if (_player_hurt_monster(*mon, beam.damage.roll()))
                 beam.damage.num += 2;
             break;
 
@@ -1752,7 +1749,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 beam.colour     = WHITE;
                 beam.damage.num = 2;
                     beam.flavour    = BEAM_ICE;
-                if (_player_hurt_monster(midx, beam.damage.roll()))
+                if (_player_hurt_monster(*mon, beam.damage.roll()))
                     beam.damage.num++;
                 break;
             }
@@ -1774,7 +1771,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 else
                 {
                       beam.damage.num = 2;
-                      if (_player_hurt_monster(midx, beam.damage.roll()))
+                      if (_player_hurt_monster(*mon, beam.damage.roll()))
                           beam.damage.num += 2;
                   }
                   goto all_done; // i.e., no "Foo Explodes!"
@@ -1792,7 +1789,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                     beam.name       = "blast of petrified fragments";
                     beam.colour     = mons_class_colour(mon->type);
                     beam.damage.num = petrifying ? 2 : 3;
-                    if (_player_hurt_monster(midx, beam.damage.roll()))
+                    if (_player_hurt_monster(*mon, beam.damage.roll()))
                         beam.damage.num++;
                     break;
                 }
@@ -1803,7 +1800,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
             // Yes, this spell does lousy damage if the monster
             // isn't susceptible. -- bwr
-            _player_hurt_monster(midx, roll_dice(1, 5 + pow / 25));
+            _player_hurt_monster(*mon, roll_dice(1, 5 + pow / 25));
             goto do_terrain;
         }
 

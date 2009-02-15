@@ -1104,7 +1104,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
                                                    (colour == RED)      ? 1000
                                                                         : 2500);
 
-        menv[monster].hit_dice = MIN(30, menv[monster].hit_dice);
+        menv[monster].hit_dice = std::min(30, menv[monster].hit_dice);
 
         // XXX: No convenient way to get the hit dice size right now.
         menv[monster].hit_points = hit_points(menv[monster].hit_dice, 2, 5);

@@ -1051,9 +1051,8 @@ static std::string _sdump_kills_place_info(PlaceInfo place_info,
     f = TO_PERCENT(place_info.mon_kill_exp_avail,
                    you.global_info.mon_kill_exp_avail);
 
-    g = (float) MAXIMUM(place_info.mon_kill_exp,
-                        place_info.mon_kill_exp_avail) /
-        (float) place_info.levels_seen;
+    g = std::max<float>(place_info.mon_kill_exp, place_info.mon_kill_exp_avail)
+        / place_info.levels_seen;
 
     out =
         make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f |"

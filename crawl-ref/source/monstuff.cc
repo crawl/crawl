@@ -1764,15 +1764,9 @@ static bool _jelly_divide(monsters *parent)
 
     // First, find a suitable spot for the child {dlb}:
     for (adjacent_iterator ai(parent->pos()); ai; ++ai)
-    {
-        if (mgrd(*ai) == NON_MONSTER
-            && parent->can_pass_through(*ai)
-            && (*ai != you.pos()))
-        {
+        if (actor_at(*ai) == NULL && parent->can_pass_through(*ai))
             if ( one_chance_in(++num_spots) )
                 child_spot = *ai;
-        }
-    }
 
     if ( num_spots == 0 )
         return (false);
@@ -2257,8 +2251,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         if (!in_bounds(target)
             || restrict_LOS && !see_grid(target)
             || grd(target) < DNGN_SHALLOW_WATER
-            || mgrd(target) != NON_MONSTER
-            || target == you.pos()
+            || actor_at(target)
             || !allow_adjacent && distance(origin, target) <= 2
             || forbid_sanctuary && is_sanctuary(target))
         {
@@ -2789,7 +2782,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
         // (and if we're not, we couldn't move anyway), and this avoids
         // monsters trying to move onto a grid occupied by a plant or
         // sleeping monster.
-        if (mgrd(*ri) != NON_MONSTER)
+        if (monster_at(*ri))
             continue;
 
         if (patrol_seen)
@@ -2896,15 +2889,14 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
         if (*ri == mon->pos())
             continue;
 
-        if (mgrd(*ri) == NON_MONSTER)
-            continue;
-
         // Don't alert monsters out of sight (e.g. on the other side of
         // a wall).
         if (!mon->mon_see_grid(*ri))
             continue;
 
-        monsters* const m = &menv[mgrd(*ri)];
+        monsters* const m = monster_at(*ri);
+        if (m == NULL)
+            continue;
 
         // Don't restrict smarter monsters as they might find a path
         // a dumber monster wouldn't.
@@ -4285,17 +4277,15 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
         return (true);
     }
 
-    if (mgrd(p) != NON_MONSTER)
+    if (monsters *foe = monster_at(p))
     {
-        monsters *foe = &menv[mgrd(p)];
-
         if (foe != mon
             && mon_can_see_monster(mon, foe)
             && (friendly || !is_sanctuary(p))
             && (mons_friendly(foe) != friendly
                 || (neutral && !mons_neutral(foe))))
         {
-            mon->foe = mgrd(p);
+            mon->foe = foe->mindex();
             return (true);
         }
     }
@@ -4366,9 +4356,8 @@ monsters *choose_random_monster_on_level(int weight,
 
     for ( ; ri; ++ri )
     {
-        if (mgrd(*ri) != NON_MONSTER)
+        if (monsters *mon = monster_at(*ri))
         {
-            monsters *mon = &menv[mgrd(*ri)];
             if (suitable(mon))
             {
                 // FIXME: if the intent is to favour monsters
@@ -4500,21 +4489,22 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
         if (!in_bounds(pos[i]))
             continue;
 
-        if (mgrd(pos[i]) == NON_MONSTER)
+        const monsters *ally = monster_at(pos[i]);
+        if (ally == NULL)
             continue;
 
-        if (mons_is_stationary(&menv[mgrd(pos[i])]))
+        if (mons_is_stationary(ally))
             continue;
 
         // Hostile monsters of normal intelligence only move aside for
         // monsters of the same type.
         if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack_real(mon)
-            && mons_genus(mon->type) != mons_genus((&menv[mgrd(pos[i])])->type))
+            && mons_genus(mon->type) != mons_genus(ally->type))
         {
             continue;
         }
 
-        if (mons_aligned(monster_index(mon), mgrd(pos[i])))
+        if (mons_aligned(mon->mindex(), ally->mindex()))
             return (true);
     }
 
@@ -4535,22 +4525,25 @@ static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
         if (!in_bounds(pos))
             break;
 
-        if (mgrd(pos) == NON_MONSTER)
+        const monsters* ally = monster_at(pos);
+        if (ally == NULL)
             continue;
 
-        if (mons_aligned(monster_index(mon), mgrd(pos)))
+        if (mons_aligned(mon->mindex(), ally->mindex()))
         {
             // Hostile monsters of normal intelligence only move aside for
             // monsters of the same type.
             if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack(mon)
-                && mons_genus(mon->type) != mons_genus((&menv[mgrd(pos)])->type))
+                && mons_genus(mon->type) != mons_genus(ally->type))
             {
                 return (false);
             }
 
-            monsters *m = &menv[mgrd(pos)];
-            if (mons_has_ranged_attack(m) || mons_has_ranged_spell(m, true))
+            if (mons_has_ranged_attack(ally)
+                || mons_has_ranged_spell(ally, true))
+            {
                 return (true);
+            }
         }
         break;
     }
@@ -5215,10 +5208,9 @@ static bool _siren_movement_effect(const monsters *monster)
         else
         {
             bool swapping = false;
-            monsters *mon = NULL;
-            if (mgrd(newpos) != NON_MONSTER)
+            monsters *mon = monster_at(newpos);
+            if (mon)
             {
-                mon = &menv[mgrd(newpos)];
                 if (mons_wont_attack(mon)
                     && !mons_is_stationary(mon)
                     && !mons_cannot_act(mon)
@@ -6671,11 +6663,10 @@ static bool _handle_throw(monsters *monster, bolt & beem)
 
     // Throwing a net at a target that is already caught would be
     // completely useless, so bail out.
+    const actor *act = actor_at(beem.target);
     if (missile->base_type == OBJ_MISSILES
         && missile->sub_type == MI_THROWING_NET
-        && ( beem.target == you.pos() && you.caught()
-             || mgrd(beem.target) != NON_MONSTER
-             && mons_is_caught(&menv[mgrd(beem.target)])))
+        && act && act->caught())
     {
         return (false);
     }
@@ -7978,11 +7969,8 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     }
 
     // Inside a sanctuary don't attack anything!
-    if (is_sanctuary(monster->pos())
-        && (targ == you.pos() || mgrd(targ) != NON_MONSTER))
-    {
+    if (is_sanctuary(monster->pos()) && actor_at(targ))
         return (false);
-    }
 
     const dungeon_feature_type target_grid = grd(targ);
     const habitat_type habitat = mons_primary_habitat(monster);
@@ -8071,7 +8059,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // Smacking another monster is good, if the monsters
     // are aligned differently.
-    if (mgrd(targ) != NON_MONSTER)
+    if (monsters *targmonster = monster_at(targ))
     {
         if (just_check)
         {
@@ -8081,12 +8069,8 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false); // blocks square
         }
 
-        const int thismonster = monster->mindex(),
-                  targmonster = mgrd(targ);
-
-        if (!invalid_monster_index(targmonster)
-            && mons_aligned(thismonster, targmonster)
-            && !_mons_can_displace(monster, &menv[targmonster]))
+        if (mons_aligned(monster->mindex(), targmonster->mindex())
+            && !_mons_can_displace(monster, targmonster))
         {
             return (false);
         }
@@ -8870,10 +8854,7 @@ bool shift_monster(monsters *mon, coord_def p)
         if (grd(*ai) != DNGN_FLOOR)
             continue;
 
-        if (mgrd(*ai) != NON_MONSTER)
-            continue;
-
-        if (*ai == you.pos())
+        if (actor_at(*ai))
             continue;
 
         if (one_chance_in(++count))

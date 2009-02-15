@@ -37,10 +37,10 @@
 #define ENDOFPACK 52
 
 // minimum value for strength required on armour and weapons
-#define STR_REQ_THRESHOLD       10
+const int STR_REQ_THRESHOLD = 10;
 
 // Max ghosts on a level.
-#define MAX_GHOSTS   10
+const int MAX_GHOSTS = 10;
 
 // max size of monter array {dlb}:
 #define MAX_MONSTERS     350
@@ -72,7 +72,7 @@
 // max y-bound for level generation {dlb}
 #define GYM 70
 
-#define INFINITE_DISTANCE       30000
+const int INFINITE_DISTANCE = 30000;
 
 // this is the size of the border around the playing area (see in_bounds())
 #define BOUNDARY_BORDER         1
@@ -112,7 +112,7 @@ const int LABYRINTH_BORDER = 4;
 #define ENV_SHOW_OFFSET (LOS_RADIUS + 1)
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
-#define VIEW_BASE_WIDTH 33
+#define VIEW_BASE_WIDTH 33      // FIXME: never used
 #define VIEW_MIN_WIDTH  17
 #define VIEW_MIN_HEIGHT 17
 #define MSG_MIN_HEIGHT  7
@@ -127,81 +127,46 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_RANDOM_SHOPS  5
 
 // Can be passed to monster_die to indicate that a friendly did the killing.
-#define ANON_FRIENDLY_MONSTER   -1999
+const int ANON_FRIENDLY_MONSTER = -1999;
 
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
 
 // Yes, I know we have 32-bit ints now.
-#define DEBUG_COOKIE            32767
+const int DEBUG_COOKIE = 32767;
 
-#define MAX_SKILL_LEVEL 27
+const int MAX_SKILL_LEVEL = 27;
 
-#define MIN_HIT_MISS_PERCENTAGE  5
+const int MIN_HIT_MISS_PERCENTAGE = 5;
 
 // grids that monsters can see
-#define MONSTER_LOS_RANGE       8
+const int MONSTER_LOS_RANGE = 8;
 
 // Maximum charge level for rods
-#define MAX_ROD_CHARGE                  17
-#define ROD_CHARGE_MULT                 100
+const int MAX_ROD_CHARGE  = 17;
+const int ROD_CHARGE_MULT = 100;
 
-// Should never exceed 255 - durations are saved as single bytes.
-#define GOURMAND_MAX                    200
-#define GOURMAND_NUTRITION_BASE         10
+const int GOURMAND_MAX            = 200;
+const int GOURMAND_NUTRITION_BASE = 10;
 
-#define CHUNK_BASE_NUTRITION            1000
+const int CHUNK_BASE_NUTRITION    = 1000;
 
 // The maximum number of abilities any god can have
 #define MAX_GOD_ABILITIES               5
 
 // This value is used to mark immune levels of MR
-#define MAG_IMMUNE                      5000
+const int MAG_IMMUNE = 5000;
 
 // This is the damage amount used to signal insta-death
-#define INSTANT_DEATH                   -9999
-
-// grids that monsters can see
-#define MONSTER_LOS_RANGE               8
-
-// most items allowed in a shop
-#define MAX_SHOP_ITEMS                  16
-
-// sound level standards
-// mininum is the base, we add mult * radius to it:
-#define SL_EXPLODE_MIN                  10
-#define SL_EXPLODE_MULT                 10
-
-// #define SL_BOW                          3
-#define SL_TRAP_CLICK                   3
-#define SL_HISS                         6
-#define SL_BUZZ                         6
-#define SL_GROWL                        8
-#define SL_MOAN                         8
-#define SL_SPLASH                       8
-#define SL_CREAK                        8
-#define SL_CROAK                        8
-#define SL_BARK                         10
-#define SL_YELL                         10
-#define SL_TRAP_JAM                     12
-#define SL_SHRIEK                       12
-#define SL_ROAR                         15
-#define SL_DIG                          15
-#define SL_NOISY_WEAPON                 20
-#define SL_HORN                         25
-#define SL_NOISE_SCROLL                 30
-#define SL_THUNDER                      30
-#define SL_PROJECTED_NOISE              30
-#define SL_EARTHQUAKE                   30
-#define SL_TRAP_ZOT                     30
+const int INSTANT_DEATH = -9999;
 
 // Maximum enchantment on weapons/armour/secondary armours
 // This is the same as for ammunition.
-#define MAX_WPN_ENCHANT                 9
+const int MAX_WPN_ENCHANT = 9;
 
 // Note: use armour_max_enchant(item) to get the correct limit for item
-#define MAX_ARM_ENCHANT                 8
-#define MAX_SEC_ENCHANT                 2
+const int MAX_ARM_ENCHANT = 8;
+const int MAX_SEC_ENCHANT = 2;
 
 // some shortcuts:
 #define menv   env.mons
@@ -282,9 +247,6 @@ const int LABYRINTH_BORDER = 4;
 #define PCOLOUR(desc) ((desc) % PDC_NCOLOURS)
 #define PQUAL(desc)   ((desc) / PDC_NCOLOURS)
 
-#define MINIMUM( xxx, yyy )     (((xxx) < (yyy)) ? (xxx) : (yyy))
-#define MAXIMUM( xxx, yyy )     (((xxx) > (yyy)) ? (xxx) : (yyy))
-
 // Convert capital letters into mystic numbers representing
 // CTRL sequences.  This is a macro because a lot of the type
 // it wants to be used in case labels.
@@ -292,9 +254,6 @@ const int LABYRINTH_BORDER = 4;
 
 #define ARRAYSZ(x) (sizeof(x) / sizeof(x[0]))
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
-
-#define MIN(x, y) MINIMUM(x, y)
-#define MAX(x,y) (((x) > (y)) ? (x) : (y))
 
 const char * const MONSTER_NUMBER = "monster-number";
 

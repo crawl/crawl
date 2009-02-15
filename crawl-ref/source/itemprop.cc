@@ -2592,7 +2592,7 @@ int item_mass( const item_def &item )
 
             // Truncate to the nearest 5 and reduce the item mass:
             unit_mass -= ((reduc / 5) * 5);
-            unit_mass = MAXIMUM( unit_mass, 5 );
+            unit_mass = std::max(unit_mass, 5);
         }
         break;
 

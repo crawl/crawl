@@ -523,7 +523,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             {
                 pos = random_in_bounds();
 
-                if (mgrd(pos) != NON_MONSTER || pos == you.pos())
+                if (actor_at(pos))
                     continue;
 
                 // Is the grid verboten?
@@ -695,7 +695,7 @@ static bool _valid_monster_location(const mgen_data &mg,
         return (false);
 
     // Occupied?
-    if (mgrd(mg_pos) != NON_MONSTER || mg_pos == you.pos())
+    if (actor_at(mg_pos))
         return (false);
 
     // Is the monster happy where we want to put it?
@@ -733,7 +733,7 @@ int place_monster(mgen_data mg, bool force_pos)
     int id = -1;
 
     // (1) Early out (summoned to occupied grid).
-    if (mg.use_position() && mgrd(mg.pos) != NON_MONSTER)
+    if (mg.use_position() && monster_at(mg.pos))
         return (-1);
 
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
@@ -848,6 +848,14 @@ int place_monster(mgen_data mg, bool force_pos)
                         proxOK = false;
                         break;
                     }
+
+                    // You can't be shoved if you're caught in a net.
+                    if (you.caught())
+                    {
+                        proxOK = false;
+                        break;
+                    }
+
                     shoved = true;
                     coord_def mpos = mg.pos;
                     mg.pos         = you.pos();
@@ -983,7 +991,7 @@ static int _place_monster_aux(const mgen_data &mg,
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
-        && mgrd(mg.pos) == NON_MONSTER && mg.pos != you.pos()
+        && actor_at(mg.pos) == NULL
         && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
     {
         fpos = mg.pos;
@@ -2294,8 +2302,7 @@ public:
                 good_square(dc);
             return (false);
         }
-        if (mgrd(dc) == NON_MONSTER && dc != you.pos()
-            && one_chance_in(++nfound))
+        if (actor_at(dc) == NULL && one_chance_in(++nfound))
         {
             greedy_dist = traveled_distance;
             greedy_place = dc;
@@ -2447,8 +2454,7 @@ int create_monster(mgen_data mg, bool fail_msg)
 
     if (!mg.force_place()
         || !in_bounds(mg.pos)
-        || mgrd(mg.pos) != NON_MONSTER
-        || mg.pos == you.pos()
+        || actor_at(mg.pos)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
         mg.pos = find_newmons_square(montype, mg.pos);
@@ -2516,10 +2522,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
     {
         bool success = false;
 
-        if ( *ri == you.pos() )
-            continue;
-
-        if (mgrd(*ri) != NON_MONSTER)
+        if (actor_at(*ri))
             continue;
 
         // Players won't summon out of LOS, or past transparent walls.

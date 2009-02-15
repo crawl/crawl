@@ -778,14 +778,9 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
     else if (in_bounds(pbolt.target) && see_grid(pbolt.target))
     {
-        int midx = mgrd(pbolt.target);
-        if (midx != NON_MONSTER)
-        {
-            monsters* mtarg = &menv[midx];
-
+        if (monsters* mtarg = monster_at(pbolt.target))
             if (you.can_see(mtarg))
                 target = mtarg->name(DESC_NOCAP_THE);
-        }
     }
 
     // Monster might be aiming past the real target, or maybe some fuzz has
@@ -807,13 +802,12 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                     break;
                 }
 
-                const int midx = mgrd(*ai);
-
-                if (midx != NON_MONSTER && you.can_see(&menv[midx]))
+                const monsters *m = monster_at(*ai);
+                if (m && you.can_see(m))
                 {
                     targ_prep = "next to";
                     if (one_chance_in(count++))
-                        target = menv[midx].name(DESC_NOCAP_THE);
+                        target = m->name(DESC_NOCAP_THE);
                 }
             }
         }
@@ -829,7 +823,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
             if (pos == monster->pos())
                 continue;
 
-            const int midx = mgrd(pos);
+            const monsters *m = monster_at(pos);
             if (pos == you.pos())
             {
                 // Be egotistical and assume that the monster is aiming at
@@ -852,11 +846,10 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                     mons_targ_aligned = true;
                 }
             }
-            else if (visible_path && midx != NON_MONSTER
-                     && you.can_see(&menv[midx]))
+            else if (visible_path && m && you.can_see(m))
             {
-                bool        is_aligned = mons_aligned(midx, monster->mindex());
-                std::string name       = menv[midx].name(DESC_NOCAP_THE);
+                bool is_aligned  = mons_aligned(m->mindex(), monster->mindex());
+                std::string name = m->name(DESC_NOCAP_THE);
 
                 if (target == "nothing")
                 {
@@ -888,12 +881,12 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                         break;
                     }
 
-                    const int midx2 = mgrd(*ai);
-                    if (midx2 != NON_MONSTER && you.can_see(&menv[midx2]))
+                    const monsters *m2 = monster_at(*ai);
+                    if (m2 && you.can_see(m2))
                     {
                         targ_prep = "past";
                         if (one_chance_in(count++))
-                            target = menv[midx2].name(DESC_NOCAP_THE);
+                            target = m2->name(DESC_NOCAP_THE);
                     }
                 }
             }
@@ -1089,7 +1082,7 @@ bool monster_random_space(const monsters *monster, coord_def& target,
         target = random_in_bounds();
 
         // Don't land on top of another monster.
-        if (mgrd(target) != NON_MONSTER || target == you.pos())
+        if (actor_at(target))
             continue;
 
         if (is_sanctuary(target) && forbid_sanctuary)
@@ -2148,11 +2141,10 @@ static int _monster_abjure_square(const coord_def &pos,
                                   int pow, int actual,
                                   int wont_attack)
 {
-    const int mindex = mgrd(pos);
-    if (mindex == NON_MONSTER)
+    monsters *target = monster_at(pos);
+    if (target == NULL)
         return (0);
 
-    monsters *target = &menv[mindex];
     if (!target->alive()
         || ((bool)wont_attack == mons_wont_attack_real(target)))
     {
@@ -2519,7 +2511,8 @@ bool mons_clonable(const monsters* mon, bool needs_adjacent)
         {
             const coord_def p = mon->pos() + Compass[i];
 
-            if (in_bounds(p) && p != you.pos() && mgrd(p) == NON_MONSTER
+            if (in_bounds(p)
+                && !actor_at(p)
                 && monster_habitable_grid(mon, grd(p)))
             {
                 square_found = true;
@@ -2568,7 +2561,8 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
         {
             const coord_def p = orig->pos() + Compass[i];
 
-            if (in_bounds(p) && p != you.pos() && mgrd(p) == NON_MONSTER
+            if (in_bounds(p)
+                && !actor_at(p)
                 && monster_habitable_grid(orig, grd(p)))
             {
                 if (one_chance_in(++squares))
@@ -2580,7 +2574,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
             return (NON_MONSTER);
     }
 
-    ASSERT(mgrd(pos) == NON_MONSTER && you.pos() != pos);
+    ASSERT( !actor_at(pos) );
 
     monsters &mon(menv[midx]);
 

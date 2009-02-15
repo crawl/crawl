@@ -295,14 +295,17 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     // If we're attacking more than a space away...
     if (x_distance > 1 || y_distance > 1)
     {
-        const int x_middle = MAX(beam.target.x, you.pos().x) - (x_distance / 2);
-        const int y_middle = MAX(beam.target.y, you.pos().y) - (y_distance / 2);
+        const int x_middle = std::max(beam.target.x, you.pos().x)
+            - (x_distance / 2);
+        const int y_middle = std::max(beam.target.y, you.pos().y)
+            - (y_distance / 2);
+        const coord_def middle(x_middle, y_middle);
 
         bool success = false;
         // If either the x or the y is the same, we should check for
         // a monster:
         if ((beam.target.x == you.pos().x || beam.target.y == you.pos().y)
-            && mgrd[x_middle][y_middle] != NON_MONSTER)
+            && monster_at(middle))
         {
             const int skill = weapon_skill( wpn.base_type, wpn.sub_type );
 

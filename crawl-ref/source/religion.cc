@@ -11,6 +11,7 @@ REVISION("$Rev$");
 
 #include "religion.h"
 
+#include <algorithm>
 #include <sstream>
 #include <stdlib.h>
 #include <string.h>
@@ -904,7 +905,7 @@ static void _inc_penance(god_type god, int val)
     }
 
     you.penance[god] += val;
-    you.penance[god] = MIN(MAX_PENANCE, you.penance[god]);
+    you.penance[god] = std::min<unsigned char>(MAX_PENANCE, you.penance[god]);
 
     if (god == GOD_BEOGH && _need_water_walking() && !beogh_water_walk())
         fall_into_a_pool( you.pos(), true, grd(you.pos()) );
@@ -3318,7 +3319,7 @@ void gain_piety(int pgn)
     int old_piety = you.piety;
 
     you.piety += pgn;
-    you.piety = MIN(MAX_PIETY, you.piety);
+    you.piety = std::min<int>(MAX_PIETY, you.piety);
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {

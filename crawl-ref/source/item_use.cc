@@ -3452,10 +3452,13 @@ static bool _swap_rings(int ring_slot)
 
 bool puton_item(int item_slot, bool prompt_finger)
 {
+    item_def& item = you.inv[item_slot];
+
     if (item_slot == you.equip[EQ_LEFT_RING]
         || item_slot == you.equip[EQ_RIGHT_RING]
         || item_slot == you.equip[EQ_AMULET])
     {
+        // "Putting on" an equipped item means taking it off.
         return (!remove_ring(item_slot));
     }
 
@@ -3465,87 +3468,88 @@ bool puton_item(int item_slot, bool prompt_finger)
         return (false);
     }
 
-    if (you.inv[item_slot].base_type != OBJ_JEWELLERY)
+    if (item.base_type != OBJ_JEWELLERY)
     {
         mpr("You can only put on jewellery.");
         return (false);
     }
 
-    const bool is_amulet = jewellery_is_amulet( you.inv[item_slot] );
+    const bool lring = (you.slot_item(EQ_LEFT_RING)  != NULL);
+    const bool rring = (you.slot_item(EQ_RIGHT_RING) != NULL);
+    const bool is_amulet = jewellery_is_amulet(item);
 
-    if (!is_amulet)     // ie it's a ring
+    if (!is_amulet)     // i.e. it's a ring
     {
-        if (you.equip[EQ_GLOVES] != -1
-            && item_cursed( you.inv[you.equip[EQ_GLOVES]] ))
+        const item_def* gloves = you.slot_item(EQ_GLOVES);
+        if (gloves && item_cursed(*gloves))
         {
             mpr("You can't take your gloves off to put on a ring!");
             return (false);
         }
 
-        if (you.equip[EQ_LEFT_RING] != -1
-            && you.equip[EQ_RIGHT_RING] != -1)
-        {
+        if (lring && rring)
             return _swap_rings(item_slot);
-        }
     }
-    else if (you.equip[EQ_AMULET] != -1)
+    else if (item_def* amulet = you.slot_item(EQ_AMULET))
     {
-        if (!check_warning_inscriptions(you.inv[you.equip[EQ_AMULET]],
-                                        OPER_REMOVE)
-            || !remove_ring( you.equip[EQ_AMULET], true ))
+        // Remove the previous one.
+        if (!check_warning_inscriptions(*amulet, OPER_REMOVE)
+            || !remove_ring(you.equip[EQ_AMULET], true))
         {
             return (false);
         }
+
+        // Check that the new amulet won't kill us.
+        if (!safe_to_remove_or_wear(item, false))
+            return (false);
 
         // Put on the new amulet.
-        if (!safe_to_remove_or_wear(you.inv[item_slot], false))
-            return (false);
-
         start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
 
         // Assume it's going to succeed.
         return (true);
     }
 
-    // Put on the amulet.
-    if (!safe_to_remove_or_wear(you.inv[item_slot], false))
+    // Check that it won't kill us.
+    if (!safe_to_remove_or_wear(item, false))
         return (false);
 
-    // First ring goes on left hand if we're choosing automatically.
-    int hand_used = 0;
-
-    if (you.equip[EQ_LEFT_RING] != -1)
-        hand_used = 1;
-
-    if (you.equip[EQ_RIGHT_RING] != -1)
-        hand_used = 0;
+    equipment_type hand_used;
 
     if (is_amulet)
-        hand_used = 2;
-    else if (prompt_finger
-                && you.equip[EQ_LEFT_RING] == -1
-                && you.equip[EQ_RIGHT_RING] == -1)
     {
-        mpr("Put on which hand (l or r)?", MSGCH_PROMPT);
+        hand_used = EQ_AMULET;
+    }
+    else
+    {
+        // First ring goes on left hand if we're choosing automatically.
+        hand_used = EQ_LEFT_RING;
 
-        int keyin = get_ch();
-
-        if (keyin == 'l')
-            hand_used = 0;
-        else if (keyin == 'r')
-            hand_used = 1;
-        else if (keyin == ESCAPE)
-            return (false);
-        else
+        if (lring && !rring)
+            hand_used = EQ_RIGHT_RING;
+        else if (rring && !lring)
+            hand_used = EQ_LEFT_RING;
+        else if (prompt_finger) // both free; both busy has been handled
         {
-            mpr("You don't have such a hand!");
-            return (false);
+            mpr("Put on which hand (l or r)?", MSGCH_PROMPT);
+            int keyin = get_ch();
+            switch (keyin)
+            {
+            case 'l': hand_used = EQ_LEFT_RING;  break;
+            case 'r': hand_used = EQ_RIGHT_RING; break;
+            case ESCAPE: return (false);
+            default:
+                mpr("You don't have such a hand!");
+                return (false);
+            }
         }
     }
 
-    you.equip[ EQ_LEFT_RING + hand_used ] = item_slot;
+    // Actually equip the item.
+    you.equip[hand_used] = item_slot;
 
-    jewellery_wear_effects( you.inv[item_slot] );
+    // And calculate the effects.
+    jewellery_wear_effects(item);
 
     // Putting on jewellery is as fast as wielding weapons.
     you.time_taken /= 2;
@@ -4042,12 +4046,10 @@ void drink(int slot)
 
     if (slot == -1)
     {
-        if (grd(you.pos()) >= DNGN_FOUNTAIN_BLUE
-            && grd(you.pos()) <= DNGN_FOUNTAIN_BLOOD)
-        {
+        const dungeon_feature_type feat = grd(you.pos());
+        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_FOUNTAIN_BLOOD)
             if (_drink_fountain())
                 return;
-        }
     }
 
     if (inv_count() == 0)
@@ -4181,29 +4183,30 @@ bool _drink_fountain()
 
         mpr("You drink the sparkling water.");
 
-        const potion_type effects[] =
-            { POT_WATER, POT_DECAY,
-              POT_MUTATION, POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED, POT_MIGHT,
-              POT_DEGENERATION,
-              POT_LEVITATION, POT_POISON, POT_SLOWING,
-              POT_PARALYSIS, POT_CONFUSION, POT_INVISIBILITY,
-              POT_MAGIC, POT_RESTORE_ABILITIES, POT_RESISTANCE,
-              POT_STRONG_POISON, POT_BERSERK_RAGE,
-              POT_GAIN_STRENGTH, POT_GAIN_INTELLIGENCE, POT_GAIN_DEXTERITY };
-
-        const int weights[] = { 467, 48,
-                                40, 40, 40, 40, 40,
-                                32,
-                                27, 27, 27,
-                                27, 27, 27,
-                                20, 20, 20,
-                                20, 20,
-                                4, 4, 4 };
-
-        COMPILE_CHECK(ARRAYSZ(weights) == ARRAYSZ(effects), c1);
-        fountain_effect =
-            effects[choose_random_weighted(weights,
-                                           weights + ARRAYSZ(weights))];
+        fountain_effect = static_cast<potion_type>(
+            random_choose_weighted(467, POT_WATER,
+                                   48,  POT_DECAY,
+                                   40,  POT_MUTATION,
+                                   40,  POT_HEALING,
+                                   40,  POT_HEAL_WOUNDS,
+                                   40,  POT_SPEED,
+                                   40,  POT_MIGHT,
+                                   32,  POT_DEGENERATION,
+                                   27,  POT_LEVITATION,
+                                   27,  POT_POISON,
+                                   27,  POT_SLOWING,
+                                   27,  POT_PARALYSIS,
+                                   27,  POT_CONFUSION,
+                                   27,  POT_INVISIBILITY,
+                                   20,  POT_MAGIC,
+                                   20,  POT_RESTORE_ABILITIES,
+                                   20,  POT_RESISTANCE,
+                                   20,  POT_STRONG_POISON,
+                                   20,  POT_BERSERK_RAGE,
+                                   4,   POT_GAIN_STRENGTH,
+                                   4,   POT_GAIN_INTELLIGENCE,
+                                   4,   POT_GAIN_DEXTERITY,
+                                   0));
     }
 
     if (fountain_effect != POT_WATER && fountain_effect != POT_BLOOD)

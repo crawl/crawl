@@ -11,6 +11,7 @@ REVISION("$Rev$");
 
 #include "skills.h"
 
+#include <algorithm>
 #include <string.h>
 #include <stdlib.h>
 
@@ -285,7 +286,7 @@ static int _exercise2(int exsk)
             return (0);
     }
 
-    int spending_limit = MIN(MAX_SPENDING_LIMIT, you.exp_available);
+    int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
 
     // Handle fractional learning.
     if (skill_change > spending_limit)
@@ -330,20 +331,20 @@ static int _exercise2(int exsk)
         if ((exsk >= SK_FIGHTING && exsk <= SK_STAVES) || exsk == SK_ARMOUR)
         {
             // These skills are easier for the strong.
-            skill_inc *= MAX(5, you.strength);
+            skill_inc *= std::max<int>(5, you.strength);
             skill_inc /= 10;
         }
         else if (exsk >= SK_SLINGS && exsk <= SK_UNARMED_COMBAT)
         {
             // These skills are easier for the dexterous.
             // Note: Armour is handled above.
-            skill_inc *= MAX(5, you.dex);
+            skill_inc *= std::max<int>(5, you.dex);
             skill_inc /= 10;
         }
         else if (exsk >= SK_SPELLCASTING && exsk <= SK_POISON_MAGIC)
         {
             // These skills are easier for the smart.
-            skill_inc *= MAX(5, you.intel);
+            skill_inc *= std::max<int>(5, you.intel);
             skill_inc /= 10;
         }
     }
