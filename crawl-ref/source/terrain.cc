@@ -262,16 +262,16 @@ bool grid_is_branch_stairs(dungeon_feature_type grid)
 void find_connected_identical(coord_def d, dungeon_feature_type ft,
                               std::set<coord_def>& out)
 {
-    if (grd[d.x][d.y] != ft) return;
+    if (grd(d) != ft)
+        return;
 
-    std::string prop = env.markers.property_at(d, MAT_ANY,
-                                               "connected_exclude");
+    std::string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
 
     if (!prop.empty())
     {
         // Even if this square is excluded from being a part of connected
         // cells, add it if it's the starting square.
-        if (out.size() == 0)
+        if (out.empty())
             out.insert(d);
         return;
     }
@@ -290,16 +290,16 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
                           dungeon_feature_type ft_max,
                           std::set<coord_def>& out)
 {
-    if (grd[d.x][d.y] < ft_min || grd[d.x][d.y] > ft_max) return;
+    if (grd(d) < ft_min || grd(d) > ft_max)
+        return;
 
-    std::string prop = env.markers.property_at(d, MAT_ANY,
-                                               "connected_exclude");
+    std::string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
 
     if (!prop.empty())
     {
         // Even if this square is excluded from being a part of connected
         // cells, add it if it's the starting square.
-        if (out.size() == 0)
+        if (out.empty())
             out.insert(d);
         return;
     }
@@ -603,9 +603,9 @@ void dungeon_terrain_changed(const coord_def &pos,
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 {
-    dungeon_feature_type orig_feat = grd(dest_pos);
+    const dungeon_feature_type orig_feat = grd(dest_pos);
 
-    std::string orig_name =
+    const std::string orig_name =
         feature_description(dest_pos, false,
                             see_grid(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
                             false);
@@ -615,22 +615,18 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     std::string orig_actor, dest_actor;
     if (orig_pos == you.pos())
         orig_actor = "you";
-    else if (mgrd(orig_pos) != NON_MONSTER)
+    else if (const monsters *m = monster_at(orig_pos))
     {
-        monsters &mon(menv[mgrd(orig_pos)]);
-
-        if (you.can_see(&mon))
-            orig_actor = mon.name(DESC_NOCAP_THE);
+        if (you.can_see(m))
+            orig_actor = m->name(DESC_NOCAP_THE);
     }
 
     if (dest_pos == you.pos())
         dest_actor = "you";
-    else if (mgrd(dest_pos) != NON_MONSTER)
+    else if (const monsters *m = monster_at(dest_pos))
     {
-        monsters &mon(menv[mgrd(dest_pos)]);
-
-        if (you.can_see(&mon))
-            dest_actor = mon.name(DESC_NOCAP_THE);
+        if (you.can_see(m))
+            dest_actor = m->name(DESC_NOCAP_THE);
     }
 
     std::ostringstream str;

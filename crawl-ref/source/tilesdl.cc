@@ -406,10 +406,10 @@ void TilesFramework::load_dungeon(const coord_def &cen)
             }
             else if (!crawl_view.in_grid_los(gc) || !env.show(ep))
             {
-                fg = env.tile_bk_fg[gc.x][gc.y];
-                bg = env.tile_bk_bg[gc.x][gc.y];
+                fg = env.tile_bk_fg(gc);
+                bg = env.tile_bk_bg(gc);
                 if (!fg && !bg)
-                    tileidx_unseen(fg, bg, get_envmap_char(gc.x, gc.y), gc);
+                    tileidx_unseen(fg, bg, get_envmap_char(gc), gc);
                 bg |=  tile_unseen_flag(gc);
             }
             else
@@ -418,7 +418,7 @@ void TilesFramework::load_dungeon(const coord_def &cen)
                 bg = env.tile_bg[ep.x-1][ep.y-1];
             }
 
-            if (gc.x == cen.x && gc.y == cen.y)
+            if (gc == cen)
                 bg |= TILE_FLAG_CURSOR1;
 
             tb[count++] = fg;

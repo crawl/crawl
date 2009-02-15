@@ -2375,13 +2375,13 @@ static void _deepen_water(const coord_def& center, int radius)
         const coord_def p = *ri;
         if (grd(p) == DNGN_SHALLOW_WATER
             && p != you.pos()
-            && x_chance_in_y(1+count_neighbours(p.x, p.y, DNGN_DEEP_WATER), 8))
+            && x_chance_in_y(1+count_neighbours(p, DNGN_DEEP_WATER), 8))
         {
             dungeon_terrain_changed(p, DNGN_DEEP_WATER);
         }
         if (grd(p) == DNGN_FLOOR
-            && random2(3) < random2(count_neighbours(p.x,p.y,DNGN_DEEP_WATER)
-                               + count_neighbours(p.x,p.y,DNGN_SHALLOW_WATER)))
+            && random2(3) < random2(count_neighbours(p, DNGN_DEEP_WATER)
+                                    + count_neighbours(p, DNGN_SHALLOW_WATER)))
         {
             dungeon_terrain_changed(p, DNGN_SHALLOW_WATER);
         }

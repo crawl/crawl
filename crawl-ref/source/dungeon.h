@@ -417,6 +417,10 @@ inline int count_feature_in_box( const coord_def& p1, const coord_def& p2,
 int count_antifeature_in_box(int x0, int y0, int x1, int y1,
                              dungeon_feature_type feat);
 int count_neighbours(int x, int y, dungeon_feature_type feat);
+inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
+{
+  return count_neighbours(p.x, p.y, feat);
+}
 
 void remember_vault_placement(std::string key, vault_placement &place);
 #endif

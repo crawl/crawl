@@ -224,7 +224,7 @@ bool is_altar(dungeon_feature_type grid)
 
 bool is_altar(const coord_def &c)
 {
-    return is_altar(grd[c.x][c.y]);
+    return is_altar(grd(c));
 }
 
 inline bool is_player_altar(dungeon_feature_type grid)
@@ -236,7 +236,7 @@ inline bool is_player_altar(dungeon_feature_type grid)
 
 inline bool is_player_altar(const coord_def &c)
 {
-    return is_player_altar(grd[c.x][c.y]);
+    return is_player_altar(grd(c));
 }
 
 #ifdef CLUA_BINDINGS
@@ -1031,10 +1031,8 @@ static void _explore_find_target_square()
                 // Auto-explore is only zigzagging if the prefered
                 // target (whereto) and the anti-zigzag target are
                 // close together.
-                if (grid_distance(target.x, target.y,
-                                  whereto.x, whereto.y) <= 5
-                    && distance(target.x, target.y,
-                                whereto.x, whereto.y) <= 34)
+                if (grid_distance(target, whereto) <= 5
+                    && distance(target, whereto) <= 34)
                 {
                     _set_target_square(target);
                     return;
@@ -3064,7 +3062,7 @@ int level_id::absdepth() const
 
 level_id level_id::get_next_level_id(const coord_def &pos)
 {
-    int gridc = grd[pos.x][pos.y];
+    int gridc = grd(pos);
     level_id id = current();
 
     for ( int i = 0; i < NUM_BRANCHES; ++i )

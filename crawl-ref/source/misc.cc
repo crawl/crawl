@@ -306,32 +306,30 @@ void maybe_coagulate_blood_potions_floor(int obj)
         // Now that coagulating is necessary, check square for
         // !coagulated blood.
         ASSERT(blood.pos.x >= 0 && blood.pos.y >= 0);
-        for (int o = igrd[blood.pos.x][blood.pos.y]; o != NON_ITEM;
-             o = mitm[o].link)
+        for (stack_iterator si(blood.pos); si; ++si)
         {
-            if (mitm[o].base_type == OBJ_POTIONS
-                && mitm[o].sub_type == POT_BLOOD_COAGULATED)
+            if (si->base_type == OBJ_POTIONS
+                && si->sub_type == POT_BLOOD_COAGULATED)
             {
                 // Merge with existing stack.
-                CrawlHashTable &props2 = mitm[o].props;
+                CrawlHashTable &props2 = si->props;
                 if (!props2.exists("timer"))
-                    init_stack_blood_potions(mitm[o], mitm[o].special);
+                    init_stack_blood_potions(*si, si->special);
 
                 ASSERT(props2.exists("timer"));
                 CrawlVector &timer2 = props2["timer"].get_vector();
-                ASSERT(timer2.size() == mitm[o].quantity);
+                ASSERT(timer2.size() == si->quantity);
 
                 // Update timer -> push(pop).
-                long val;
                 while (!age_timer.empty())
                 {
-                    val = age_timer[age_timer.size() - 1];
+                    const long val = age_timer.back();
                     age_timer.pop_back();
                     timer2.push_back(val);
                 }
                 _long_sort(timer2);
-                inc_mitm_item_quantity(o, coag_count);
-                ASSERT(timer2.size() == mitm[o].quantity);
+                inc_mitm_item_quantity(si.link(), coag_count);
+                ASSERT(timer2.size() == si->quantity);
                 dec_mitm_item_quantity(obj, rot_count + coag_count);
                 return;
             }

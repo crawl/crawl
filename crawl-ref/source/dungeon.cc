@@ -5061,7 +5061,7 @@ static void _replace_area( const coord_def& p1, const coord_def& p2,
             {
                 set_envmap_obj(*ri, feature);
 #ifdef USE_TILE
-                env.tile_bk_bg[ri->x][ri->y] = feature;
+                env.tile_bk_bg(*ri) = feature;
 #endif
             }
         }
