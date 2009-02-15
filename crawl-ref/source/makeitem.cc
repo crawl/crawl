@@ -1543,9 +1543,9 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     set_equip_race(item, _determine_weapon_race(item, item_race));
 
-    // if we allow acquirement-type items to be orcish, then
-    // there's a good chance that we'll just strip them of
-    // their ego type at the bottom of this function. -- bwr
+    // If we allow acquirement-type items to be orcish, then there's a
+    // good chance that we'll just strip them of their ego type at the
+    // bottom of this function. -- bwr
     if (force_good && !forced_ego && get_equip_race( item ) == ISFLAG_ORCISH)
         set_equip_race( item, ISFLAG_NO_RACE );
 
@@ -1553,10 +1553,10 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     if (item_level < 0)
     {
-        // thoroughly damaged, could had been good once
+        // Thoroughly damaged, could had been good once.
         if (!no_brand && (forced_ego || one_chance_in(4)))
         {
-            // brand is set as for "good" items
+            // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_WEAPONS,
                               _determine_weapon_brand(item, 2+2*you.your_level));
         }
@@ -1570,7 +1570,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                     || x_chance_in_y(51 + item_level, 200))
                 && !_item_is_mundane(item))
     {
-        // Make a better item (possibly ego)
+        // Make a better item (possibly ego).
         if (!no_brand)
         {
             set_item_ego_type(item, OBJ_WEAPONS,
@@ -1586,7 +1586,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
         const int chance = (force_good ? 200 : item_level);
 
-        // odd-looking, but this is how the algorithm compacts {dlb}:
+        // Odd-looking, but this is how the algorithm compacts {dlb}.
         for (int i = 0; i < 4; ++i)
         {
             item.plus += random2(3);
@@ -1595,7 +1595,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                 break;
         }
 
-        // odd-looking, but this is how the algorithm compacts {dlb}:
+        // Odd-looking, but this is how the algorithm compacts {dlb}.
         for (int i = 0; i < 4; ++i)
         {
             item.plus2 += random2(3);
