@@ -2668,21 +2668,20 @@ bool mons_is_known_mimic(const monsters *m)
 
 bool mons_looks_stabbable(const monsters *m)
 {
+    const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
     return (mons_behaviour_perceptible(m)
             && !mons_friendly(m)
-            && mons_is_sleeping(m));
+            && (uat == UCAT_PARALYSED || uat == UCAT_SLEEPING));
 }
 
 bool mons_looks_distracted(const monsters *m)
 {
+    const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
     return (mons_behaviour_perceptible(m)
             && !mons_friendly(m)
-            && (m->foe != MHITYOU && !mons_is_batty(m) && !mons_neutral(m)
-                || mons_is_confused(m)
-                || mons_is_fleeing(m)
-                || mons_is_caught(m)
-                || mons_is_petrifying(m)
-                || mons_cannot_act(m)));
+            && uat != UCAT_NO_ATTACK
+            && uat != UCAT_PARALYSED
+            && uat != UCAT_SLEEPING);
 }
 
 void mons_pacify(monsters *mon)
@@ -5845,11 +5844,10 @@ int monsters::res_holy_energy(const actor *attacker) const
         return (-2);
 
     if (is_good_god(god)
-           || mons_is_holy(this)
-           || mons_neutral(this)
-           || is_unchivalric_attack(attacker, this)
-           || is_good_god(you.religion)
-               && is_follower(this))
+        || mons_is_holy(this)
+        || mons_neutral(this)
+        || is_unchivalric_attack(attacker, this)
+        || is_good_god(you.religion) && is_follower(this))
     {
         return (1);
     }

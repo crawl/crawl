@@ -34,6 +34,7 @@ enum unchivalric_attack_type
     UCAT_INVISIBLE,
     UCAT_HELD_IN_NET,
     UCAT_PETRIFYING,
+    UCAT_PETRIFIED,
     UCAT_PARALYSED,
     UCAT_SLEEPING
 };

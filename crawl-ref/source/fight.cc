@@ -270,21 +270,22 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         return (unchivalric);
 
     // Distracted (but not batty); this only applies to players.
-    if (attacker && attacker->atype() == ACT_PLAYER && def->foe != MHITYOU
-        && !mons_is_batty(def))
+    if (attacker && attacker->atype() == ACT_PLAYER
+        && def && def->foe != MHITYOU && !mons_is_batty(def))
     {
         unchivalric = UCAT_DISTRACTED;
     }
 
     // confused (but not perma-confused)
-    if (def->has_ench(ENCH_CONFUSION)
+    if (def
+        && def->has_ench(ENCH_CONFUSION)
         && !mons_class_flag(def->type, M_CONFUSED))
     {
         unchivalric = UCAT_CONFUSED;
     }
 
     // fleeing
-    if (mons_is_fleeing(def))
+    if (def && mons_is_fleeing(def))
         unchivalric = UCAT_FLEEING;
 
     // invisible
@@ -292,19 +293,23 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         unchivalric = UCAT_INVISIBLE;
 
     // held in a net
-    if (mons_is_caught(def))
+    if (def && mons_is_caught(def))
         unchivalric = UCAT_HELD_IN_NET;
 
     // petrifying
-    if (mons_is_petrifying(def))
+    if (def && mons_is_petrifying(def))
         unchivalric = UCAT_PETRIFYING;
 
+    // petrified
+    if (def && mons_is_petrified(def))
+        unchivalric = UCAT_PETRIFIED;
+
     // paralysed
-    if (def->cannot_act())
+    if (defender->paralysed())
         unchivalric = UCAT_PARALYSED;
 
     // sleeping
-    if (mons_is_sleeping(def))
+    if (defender->asleep())
         unchivalric = UCAT_SLEEPING;
 
     return (unchivalric);
@@ -3561,50 +3566,30 @@ int melee_attack::player_to_hit(bool random_factor)
 
 void melee_attack::player_stab_check()
 {
-    unchivalric_attack_type unchivalric = is_unchivalric_attack(&you, defender);
+    const unchivalric_attack_type uat = is_unchivalric_attack(&you, defender);
+    stab_attempt = (uat != UCAT_NO_ATTACK);
+    const bool roll_needed = (uat != UCAT_SLEEPING && uat != UCAT_PARALYSED);
 
-    bool roll_needed = true;
     int roll = 155;
+    if (uat == UCAT_INVISIBLE && !mons_sense_invis(defender_as_monster()))
+        roll -= 15;
 
-    // This ordering is important!
-    switch (unchivalric)
+    switch (uat)
     {
-    default:
-    case UCAT_NO_ATTACK:
-        stab_attempt = false;
-        stab_bonus   = 0;
-        break;
-
-    case UCAT_DISTRACTED:
-        stab_attempt = true;
-        stab_bonus   = 3;
-        break;
-
-    case UCAT_CONFUSED:
-    case UCAT_FLEEING:
-        stab_attempt = true;
-        stab_bonus   = 2;
-        break;
-
-    case UCAT_INVISIBLE:
-        stab_attempt = true;
-        stab_bonus   = 2;
-        if (!mons_sense_invis(defender_as_monster()))
-            roll -= 15;
-        break;
-
+    case UCAT_NO_ATTACK:  stab_bonus = 0; break;
     case UCAT_HELD_IN_NET:
     case UCAT_PETRIFYING:
-    case UCAT_PARALYSED:
-        stab_attempt = true;
-        stab_bonus   = 1;
-        break;
-
+    case UCAT_PETRIFIED:
     case UCAT_SLEEPING:
-        stab_attempt = true;
-        roll_needed = false;
-        stab_bonus  = 1;
+    case UCAT_PARALYSED:
+        stab_bonus = 1;
         break;
+    case UCAT_INVISIBLE:
+    case UCAT_CONFUSED:
+    case UCAT_FLEEING:
+        stab_bonus = 2;
+        break;
+    case UCAT_DISTRACTED: stab_bonus = 3; break;
     }
 
     // See if we need to roll against dexterity / stabbing.
