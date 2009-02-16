@@ -2331,7 +2331,6 @@ static void _decrement_durations()
         }
 
         make_hungry(700, true);
-
         you.hunger = std::max(50, you.hunger);
 
         calc_hp();
