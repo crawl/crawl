@@ -1827,7 +1827,7 @@ void alert_nearby_monsters(void)
         // alert monsters that aren't sleeping.  For cases where an
         // event should wake up monsters and alert them, I'd suggest
         // calling noisy() before calling this function. -- bwr
-        if (monster->type != -1
+        if (monster->alive()
             && mons_near(monster)
             && !mons_is_sleeping(monster))
         {
@@ -2490,14 +2490,14 @@ static bool _wounded_damaged(int monster_type)
 // 2. Call handle_behaviour to re-evaluate AI state and target x,y
 //
 //---------------------------------------------------------------
-void behaviour_event(monsters *mon, int event, int src,
+void behaviour_event(monsters *mon, mon_event_type event, int src,
                      coord_def src_pos)
 {
     ASSERT(src >= 0 && src <= MHITYOU);
     ASSERT(!crawl_state.arena || src != MHITYOU);
     ASSERT(in_bounds(src_pos) || src_pos.origin());
 
-    beh_type old_behaviour = mon->behaviour;
+    const beh_type old_behaviour = mon->behaviour;
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
     bool wontAttack       = mons_wont_attack_real(mon);
@@ -2509,6 +2509,14 @@ void behaviour_event(monsters *mon, int event, int src,
         sourceWontAttack = true;
     else if (src != MHITNOT)
         sourceWontAttack = mons_wont_attack_real( &menv[src] );
+
+    if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
+    {
+        mon->behaviour = BEH_FLEE;
+        mon->foe = MHITYOU;
+        mon->target = env.sanctuary_pos;
+        return;
+    }
 
     switch (event)
     {
@@ -2566,8 +2574,8 @@ void behaviour_event(monsters *mon, int event, int src,
             }
         }
 
-        // Now set target x, y so that monster can whack
-        // back (once) at an invisible foe.
+        // Now set target so that monster can whack back (once) at an
+        // invisible foe.
         if (event == ME_WHACK)
             setTarget = true;
         break;
@@ -2614,25 +2622,20 @@ void behaviour_event(monsters *mon, int event, int src,
         break;
 
     case ME_SCARE:
-    {
-        const bool flee_sanct = !mons_wont_attack(mon)
-                                && is_sanctuary(mon->pos());
-
-        // Stationary monsters can't flee, even from sanctuary.
+        // Stationary monsters can't flee.
         if (mons_is_stationary(mon))
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;
         }
 
-        // Berserking monsters don't flee, unless it's from sanctuary.
-        if (mon->has_ench(ENCH_BERSERK) && !flee_sanct)
+        // Berserking monsters don't flee.
+        if (mon->has_ench(ENCH_BERSERK))
             break;
 
-        // Neither do plants or nonliving beings, and sanctuary doesn't
-        // affect plants.
+        // Neither do plants or nonliving beings.
         if (mons_class_holiness(mon->type) == MH_PLANT
-            || (mons_class_holiness(mon->type) == MH_NONLIVING && !flee_sanct))
+            || mons_class_holiness(mon->type) == MH_NONLIVING)
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;
@@ -2646,15 +2649,10 @@ void behaviour_event(monsters *mon, int event, int src,
         if (see_grid(mon->pos()))
             learned_something_new(TUT_FLEEING_MONSTER);
         break;
-    }
 
     case ME_CORNERED:
         // Some monsters can't flee.
         if (mon->behaviour != BEH_FLEE && !mon->has_ench(ENCH_FEAR))
-            break;
-
-        // Don't stop fleeing from sanctuary.
-        if (!mons_wont_attack(mon) && is_sanctuary(mon->pos()))
             break;
 
         // Pacified monsters shouldn't change their behaviour.
@@ -2669,7 +2667,6 @@ void behaviour_event(monsters *mon, int event, int src,
         break;
 
     case ME_EVAL:
-    default:
         break;
     }
 
@@ -3797,6 +3794,13 @@ static void _handle_behaviour(monsters *mon)
         return;
     }
 
+    if (mons_is_fleeing_sanctuary(mon)
+        && mons_is_fleeing(mon)
+        && is_sanctuary(you.pos()))
+    {
+        return;
+    }
+
     if (crawl_state.arena)
     {
         if (Options.arena_force_ai)
@@ -4564,15 +4568,14 @@ static void _handle_movement(monsters *monster)
     _maybe_set_patrol_route(monster);
 
     // Monsters will try to flee out of a sanctuary.
-    if (is_sanctuary(monster->pos()) && !mons_friendly(monster)
-        && !mons_is_fleeing(monster)
-        && monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+    if (is_sanctuary(monster->pos())
+        && mons_is_influenced_by_sanctuary(monster)
+        && !mons_is_fleeing_sanctuary(monster))
     {
-        behaviour_event(monster, ME_SCARE, MHITNOT, monster->pos());
+        mons_start_fleeing_from_sanctuary(monster);
     }
-    else if (mons_is_fleeing(monster) && inside_level_bounds(env.sanctuary_pos)
-             && !is_sanctuary(monster->pos())
-             && monster->target == env.sanctuary_pos)
+    else if (mons_is_fleeing_sanctuary(monster)
+             && !is_sanctuary(monster->pos()))
     {
         // Once outside there's a chance they'll regain their courage.
         // Nonliving and berserking monsters always stop immediately,
@@ -4580,9 +4583,9 @@ static void _handle_movement(monsters *monster)
         // scared.
         if (monster->holiness() == MH_NONLIVING
             || monster->has_ench(ENCH_BERSERK)
-            || random2(5) > 2)
+            || x_chance_in_y(2, 5))
         {
-            monster->del_ench(ENCH_FEAR);
+            mons_stop_fleeing_from_sanctuary(monster);
         }
     }
 

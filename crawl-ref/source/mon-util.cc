@@ -2651,6 +2651,20 @@ bool mons_is_lurking(const monsters *m)
     return (m->behaviour == BEH_LURK);
 }
 
+bool mons_is_influenced_by_sanctuary(const monsters *m)
+{
+    return (!mons_wont_attack(m)
+            && mons_holiness(m) != MH_PLANT
+            && !mons_is_stationary(m));
+}
+
+bool mons_is_fleeing_sanctuary(const monsters *m)
+{
+    return (mons_is_influenced_by_sanctuary(m)
+            && inside_level_bounds(env.sanctuary_pos)
+            && (m->flags & MF_FLEEING_FROM_SANCTUARY));
+}
+
 bool mons_is_batty(const monsters *m)
 {
     return mons_class_flag(m->type, M_BATTY);
@@ -2682,6 +2696,21 @@ bool mons_looks_distracted(const monsters *m)
             && uat != UCAT_NO_ATTACK
             && uat != UCAT_PARALYSED
             && uat != UCAT_SLEEPING);
+}
+
+void mons_start_fleeing_from_sanctuary(monsters *monster)
+{
+    monster->flags |= MF_FLEEING_FROM_SANCTUARY;
+    monster->target = env.sanctuary_pos;
+    behaviour_event(monster, ME_SCARE, MHITNOT, env.sanctuary_pos);
+}
+
+void mons_stop_fleeing_from_sanctuary(monsters *monster)
+{
+    const bool had_flag = (monster->flags & MF_FLEEING_FROM_SANCTUARY);
+    monster->flags &= (~MF_FLEEING_FROM_SANCTUARY);
+    if (had_flag)
+        behaviour_event(monster, ME_EVAL, MHITYOU);
 }
 
 void mons_pacify(monsters *mon)

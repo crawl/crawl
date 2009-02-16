@@ -1534,7 +1534,7 @@ static int _inside_circle(const coord_def& where, int radius)
     return (dist);
 }
 
-static void _remove_sanctuary_property(coord_def where)
+static void _remove_sanctuary_property(const coord_def& where)
 {
     env.map(where).property &= ~(FPROP_SANCTUARY_1 | FPROP_SANCTUARY_2);
 }
@@ -1559,15 +1559,22 @@ bool remove_sanctuary(bool did_attack)
         }
     }
 
-//  Do not reset so as to allow monsters to see if their fleeing source
-//  used to be the centre of a sanctuary. (jpeg)
-//    env.sanctuary_pos.x = env.sanctuary_pos.y = -1;
+    env.sanctuary_pos.set(-1, -1);
 
     if (did_attack)
     {
         if (seen_change)
             simple_god_message(" revokes the gift of sanctuary.", GOD_ZIN);
         did_god_conduct(DID_FRIEND_DIED, 3);
+    }
+
+    // Now that the sanctuary is gone, monsters aren't afraid of it
+    // anymore.
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *mon = &menv[i];
+        if (mon->alive())
+            mons_stop_fleeing_from_sanctuary(mon);
     }
 
     if (is_resting())
@@ -1579,7 +1586,7 @@ bool remove_sanctuary(bool did_attack)
 // For the last (radius) counter turns the sanctuary will slowly shrink.
 void decrease_sanctuary_radius()
 {
-    int radius = 5;
+    const int radius = 5;
 
     // For the last (radius-1) turns 33% chance of not decreasing.
     if (env.sanctuary_time < radius && one_chance_in(3))
@@ -1595,30 +1602,20 @@ void decrease_sanctuary_radius()
         stop_running();
     }
 
-    radius = size+1;
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-        {
-            int posx = env.sanctuary_pos.x + x;
-            int posy = env.sanctuary_pos.y + y;
+    for (radius_iterator ri(env.sanctuary_pos, size+1, true, false); ri; ++ri)
+    {
+        int dist = distance(*ri, env.sanctuary_pos);
 
-            if (!inside_level_bounds(posx,posy))
-                continue;
-
-            int dist = distance(posx, posy, env.sanctuary_pos.x,
-                                env.sanctuary_pos.y);
-
-            // If necessary overwrite sanctuary property.
-            if (dist > size*size)
-                _remove_sanctuary_property(coord_def(posx, posy));
-        }
+        // If necessary overwrite sanctuary property.
+        if (dist > size*size)
+            _remove_sanctuary_property(*ri);
+    }
 
     // Special case for time-out of sanctuary.
     if (!size)
     {
-        _remove_sanctuary_property(coord_def(env.sanctuary_pos.x,
-                                             env.sanctuary_pos.y));
-        if (see_grid(coord_def(env.sanctuary_pos.x,env.sanctuary_pos.y)))
+        _remove_sanctuary_property(env.sanctuary_pos);
+        if (see_grid(env.sanctuary_pos))
             mpr("The sanctuary disappears.", MSGCH_DURATION);
     }
 }
@@ -1653,16 +1650,15 @@ bool cast_sanctuary(const int power)
     // radius could also be influenced by Inv
     // and would then have to be stored globally.
     const int radius      = 5;
-    const int pattern     = random2(4);
     int       blood_count = 0;
     int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
     monsters *seen_mon    = NULL;
 
-    for ( radius_iterator ri(you.pos(), radius, false, false); ri; ++ri )
+    for (radius_iterator ri(you.pos(), radius, false, false); ri; ++ri)
     {
-        int dist = _inside_circle(*ri, radius);
+        const int dist = _inside_circle(*ri, radius);
 
         if (dist == -1)
             continue;
@@ -1682,25 +1678,34 @@ bool cast_sanctuary(const int power)
 
         // forming patterns
         const int x = pos.x - you.pos().x, y = pos.y - you.pos().y;
-        if (pattern == 0    // outward rays
-            && (x == 0 || y == 0 || x == y || x == -y)
-            || pattern == 1 // circles
-            && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
-                || dist >= (radius/2-1)*(radius/2-1)
-                && dist <= radius*radius/4)
-            || pattern == 2 // latticed
-            && (x%2 == 0 || y%2 == 0)
-            || pattern == 3 // cross-like
-            && (abs(x)+abs(y) < 5 && x != y && x != -y))
+        bool in_yellow = false;
+        switch (random2(4))
         {
-            env.map(pos).property |= FPROP_SANCTUARY_1; // yellow
+        case 0:                 // outward rays
+            in_yellow = (x == 0 || y == 0 || x == y || x == -y);
+            break;
+        case 1:                 // circles
+            in_yellow = (dist >= (radius-1)*(radius-1)
+                         && dist <= radius*radius
+                         || dist >= (radius/2-1)*(radius/2-1)
+                            && dist <= radius*radius/4);
+            break;
+        case 2:                 // latticed
+            in_yellow = (x%2 == 0 || y%2 == 0);
+            break;
+        case 3:                 // cross-like
+            in_yellow = (abs(x)+abs(y) < 5 && x != y && x != -y);
+            break;
+        default:
+            break;
         }
-        else
-            env.map(pos).property |= FPROP_SANCTUARY_2; // white
+
+        env.map(pos).property |= (in_yellow ? FPROP_SANCTUARY_1
+                                            : FPROP_SANCTUARY_2);
 
         env.map(pos).property &= ~(FPROP_BLOODY);
 
-        // scare all attacking monsters inside sanctuary, and make
+        // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
         if (monsters* mon = monster_at(pos))
@@ -1717,18 +1722,17 @@ bool cast_sanctuary(const int power)
                 if (mons_is_mimic(mon->type))
                 {
                     mimic_alert(mon);
-                    if(you.can_see(mon))
+                    if (you.can_see(mon))
                     {
                         scare_count++;
                         seen_mon = mon;
                     }
                 }
-                else if (mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+                else if (mons_is_influenced_by_sanctuary(mon))
                 {
-                    behaviour_event(mon, ME_SCARE, MHITYOU);
+                    mons_start_fleeing_from_sanctuary(mon);
 
-                    // Check to see that monster is actually fleeing,
-                    // since plants can't flee.
+                    // Check to see that monster is actually fleeing.
                     if (mons_is_fleeing(mon) && you.can_see(mon))
                     {
                         scare_count++;
@@ -1736,7 +1740,7 @@ bool cast_sanctuary(const int power)
                     }
                 }
             }
-        } // if (monster != NON_MONSTER)
+        }
 
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {

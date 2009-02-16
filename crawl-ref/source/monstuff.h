@@ -105,15 +105,9 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
 void monster_cleanup(monsters *monster);
 
 
-/* ***********************************************************************
- * called from: monstuff beam effects fight view
- * *********************************************************************** */
-void behaviour_event(monsters *mon, int event_type, int src = MHITNOT,
-                     coord_def src_pos = coord_def() );
+void behaviour_event(monsters *mon, mon_event_type event_type,
+                     int src = MHITNOT, coord_def src_pos = coord_def());
 
-/* ***********************************************************************
- * called from: fight - it_use3 - spells
- * *********************************************************************** */
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
 

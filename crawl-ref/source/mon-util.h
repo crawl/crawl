@@ -161,7 +161,6 @@ enum mon_event_type
     ME_ANNOY,                           // annoy at range
     ME_ALERT,                           // alert to presence
     ME_WHACK,                           // physical attack
-    ME_SHOT,                            // attack at range
     ME_SCARE,                           // frighten monster
     ME_CORNERED                         // cannot flee
 };
@@ -767,6 +766,8 @@ bool mons_is_panicking(const monsters *m);
 bool mons_is_cornered(const monsters *m);
 bool mons_is_lurking(const monsters *m);
 bool mons_is_batty(const monsters *m);
+bool mons_is_influenced_by_sanctuary(const monsters *m);
+bool mons_is_fleeing_sanctuary(const monsters *m);
 bool mons_was_seen(const monsters *m);
 bool mons_is_known_mimic(const monsters *m);
 bool mons_is_holy(const monsters *mon);
@@ -782,6 +783,9 @@ monster_type mons_species(int mc);
 
 bool mons_looks_stabbable(const monsters *m);
 bool mons_looks_distracted(const monsters *m);
+
+void mons_start_fleeing_from_sanctuary(monsters *monster);
+void mons_stop_fleeing_from_sanctuary(monsters *monster);
 
 bool mons_has_smite_attack(const monsters *monster);
 
