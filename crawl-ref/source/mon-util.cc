@@ -5049,6 +5049,8 @@ bool monsters::eat_corpse(item_def &item, int near)
     else
         destroy_item(item.index());
 
+    lose_pickup_energy();
+
     return (true);
 }
 
