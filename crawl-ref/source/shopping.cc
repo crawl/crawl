@@ -1666,26 +1666,40 @@ unsigned int item_value( item_def item, bool ident )
         valued = 150;
         if (item_type_known(item))
         {
-            int rarity = 0;
+            double rarity = 0;
             if (is_random_artefact(item))
             {
-                // Consider spellbook as rare as its rarest spell.
-                // NOTE: This probably undervalues a book if it contains
-                // lots of rare spells.
+                // Consider spellbook as rare as the average of its
+                // three rarest spells.
+                int rarities[SPELLBOOK_SIZE];
+                int count_valid = 0;
                 for (int i = 0; i < SPELLBOOK_SIZE; i++)
                 {
                     spell_type spell = which_spell_in_book(item, i);
                     if (spell == SPELL_NO_SPELL)
+                    {
+                        rarities[i] = 0;
                         continue;
+                    }
 
-                    if (rarity > spell_rarity(spell))
-                        rarity = spell_rarity(spell);
+                    rarities[i] = spell_rarity(spell);
+                    count_valid++;
                 }
+                ASSERT(count_valid > 0);
+
+                std::sort(rarities, rarities + SPELLBOOK_SIZE);
+                for (int i = SPELLBOOK_SIZE - 1; i >= SPELLBOOK_SIZE - 3; i--)
+                    rarity += rarities[i];
+
+                if (count_valid > 3)
+                    count_valid = 3;
+
+                rarity /= count_valid;
             }
             else
                 rarity = book_rarity(item.sub_type);
 
-            valued += book_rarity(item.sub_type) * 50;
+            valued += rarity * 50;
         }
         break;
 

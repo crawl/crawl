@@ -1431,7 +1431,7 @@ static void _do_book_acquirement(item_def &book, int agent)
                     60, BOOK_RANDART_THEME,
            agent == GOD_SIF_MUNA ? 24 : 34, book.sub_type,
                 level == -1      ? 0 :
-           agent == GOD_SIF_MUNA ? 3 : 1, BOOK_RANDART_LEVEL,
+           agent == GOD_SIF_MUNA ? 4 : 1, BOOK_RANDART_LEVEL,
                     0);
     }
 
@@ -1480,6 +1480,9 @@ static void _do_book_acquirement(item_def &book, int agent)
 
             int w = (skill < 12) ? skill + 3
                                  : 25 - skill;
+
+            if (w < 0)
+                w = 0;
 
             // If we don't know any magic skills, make non-magic skills
             // more likely.
