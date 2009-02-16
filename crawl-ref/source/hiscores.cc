@@ -1423,7 +1423,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         }
 
         // put the damage on the weapon line if there is one
-        if (auxkilldata[0] == 0)
+        if (auxkilldata.empty())
             needs_damage = true;
         break;
 
@@ -1432,7 +1432,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_CLOUD:
-        if (auxkilldata[0] == 0)
+        if (auxkilldata.empty())
             desc += terse? "cloud" : "Engulfed by a cloud";
         else
         {
@@ -1846,7 +1846,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         {
             desc += _hiscore_newline_string();
 
-            if (death_type == KILLED_BY_MONSTER && auxkilldata[0])
+            if (death_type == KILLED_BY_MONSTER && !auxkilldata.empty())
             {
                 if (!semiverbose)
                 {
