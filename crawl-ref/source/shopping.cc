@@ -1687,12 +1687,15 @@ unsigned int item_value( item_def item, bool ident )
                 }
                 ASSERT(count_valid > 0);
 
-                std::sort(rarities, rarities + SPELLBOOK_SIZE);
-                for (int i = SPELLBOOK_SIZE - 1; i >= SPELLBOOK_SIZE - 3; i--)
-                    rarity += rarities[i];
-
                 if (count_valid > 3)
                     count_valid = 3;
+
+                std::sort(rarities, rarities + SPELLBOOK_SIZE);
+                for (int i = SPELLBOOK_SIZE - 1;
+                     i >= SPELLBOOK_SIZE - count_valid; i--)
+                {
+                    rarity += rarities[i];
+                }
 
                 rarity /= count_valid;
             }
