@@ -862,14 +862,14 @@ static void _give_starting_food()
 
 static void _mark_starting_books()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; ++i)
         if (is_valid_item(you.inv[i]) && you.inv[i].base_type == OBJ_BOOKS)
             mark_had_book(you.inv[i]);
 }
 
 static void _racialise_starting_equipment()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (is_valid_item(you.inv[i]))
         {
@@ -1302,7 +1302,7 @@ game_start:
     _reassess_starting_skills();
     calc_total_skill_points();
 
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; ++i)
         if (is_valid_item(you.inv[i]))
         {
             // XXX: Why is this here? Elsewhere it's only ever used for runes.
