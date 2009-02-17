@@ -5398,9 +5398,9 @@ bool _give_items_skills()
         else
             you.skills[SK_UNARMED_COMBAT] += 2;
 
-        you.skills[SK_FIGHTING]       = 1;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_SPELLCASTING]   = 2;
+        you.skills[SK_FIGHTING]      = 1;
+        you.skills[SK_DODGING]       = 2;
+        you.skills[SK_SPELLCASTING]  = 2;
         you.skills[SK_TRANSMUTATION] = 2;
         break;
 
