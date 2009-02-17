@@ -1662,6 +1662,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
     int scrln = 3, scrcol = 1;
     int x;
+    int maxln = scrln;
 
     // Don't want the help line to appear too far down a big window.
     const int bottom_line = std::min(30, get_number_of_lines());
@@ -1693,6 +1694,8 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         if (you.skills[x] > 0)
 #endif
         {
+            maxln = std::max(maxln, scrln);
+
             if (you.practise_skill[x] == 0 || you.skills[x] == 0)
                 textcolor(DARKGREY);
             else
@@ -1752,7 +1755,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
     if (Options.tutorial_left)
     {
-        if (show_description)
+        if (show_description || maxln >= bottom_line - 5)
         {
             cgotoxy(1, bottom_line-2);
             // Doesn't mention the toggle between progress/aptitudes.
