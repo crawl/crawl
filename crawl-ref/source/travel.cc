@@ -516,7 +516,7 @@ static bool _is_monster_blocked(const coord_def& c)
             && player_monster_visible(mons)
             && mons_is_stationary(mons)
             && mons_was_seen(mons)
-            && (!mons_is_mimic(mons->type) || mons_is_known_mimic(mons)));
+            && !mons_is_unknown_mimic(mons));
 }
 
 /*
@@ -843,7 +843,7 @@ inline static void _check_interesting_square(int x, int y,
     {
         if (const monsters *mons = monster_at(pos))
         {
-            if (mons_is_mimic(mons->type) && !mons_is_known_mimic(mons))
+            if (mons_is_unknown_mimic(mons))
             {
                 item_def item;
                 get_mimic_item(mons, item);
@@ -1411,9 +1411,7 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
 
     if (const monsters *mons = monster_at(c))
     {
-        if (mons_is_mimic(mons->type)
-            && mons_was_seen(mons)
-            && !mons_is_known_mimic(mons))
+        if (mons_is_unknown_mimic(mons) && mons_was_seen(mons))
         {
             item_def mimic_item;
             get_mimic_item(mons, mimic_item);

@@ -455,8 +455,7 @@ void full_describe_view()
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         const monsters *mon = monster_at(*ri);
-        const bool unknown_mimic =
-            (mon && mons_is_mimic(mon->type) && !mons_is_known_mimic(mon));
+        const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
         {

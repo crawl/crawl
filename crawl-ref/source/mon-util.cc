@@ -2680,6 +2680,11 @@ bool mons_is_known_mimic(const monsters *m)
     return mons_is_mimic(m->type) && testbits(m->flags, MF_KNOWN_MIMIC);
 }
 
+bool mons_is_unknown_mimic(const monsters *m)
+{
+    return mons_is_mimic(m->type) && !mons_is_known_mimic(m);
+}
+
 bool mons_looks_stabbable(const monsters *m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);

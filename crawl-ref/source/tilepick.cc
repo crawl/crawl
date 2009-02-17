@@ -4356,7 +4356,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         if (!mons_is_known_mimic(mon))
         {
             // if necessary add item brand
-            if (igrd[gx][gy] != NON_ITEM)
+            if (igrd(gc) != NON_ITEM)
             {
                 if (foreground)
                     t |= TILE_FLAG_S_UNDER;
@@ -4371,14 +4371,14 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
                 if (foreground)
                     env.tile_bg[ep.x-1][ep.y-1] |= TILE_FLAG_CURSOR3;
                 else
-                    env.tile_bk_bg[gx][gy] |= TILE_FLAG_CURSOR3;
+                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
             }
         }
     }
     else if (menv[idx].holiness() == MH_PLANT)
     {
         // if necessary add item brand
-        if (igrd[gx][gy] != NON_ITEM)
+        if (igrd(gc) != NON_ITEM)
         {
             if (foreground)
                 t |= TILE_FLAG_S_UNDER;
@@ -4399,7 +4399,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 
         if (!player_monster_visible(mon)
             || mons_is_lurking(mon)
-            || (mons_is_mimic(mon->type) && !mons_is_known_mimic(mon))
+            || mons_is_unknown_mimic(mon)
             || mons_class_flag(mon->type, M_NO_EXP_GAIN))
         {
             return;
@@ -4430,7 +4430,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     }
     else
     {
-        env.tile_bk_fg[gc.x][gc.y] = t0;
+        env.tile_bk_fg(gc) = t0;
     }
 }
 
@@ -4491,9 +4491,9 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 
             if (in_bounds)
             {
-                wall_flv    = env.tile_flv[gc.x][gc.y].wall;
-                floor_flv   = env.tile_flv[gc.x][gc.y].floor;
-                special_flv = env.tile_flv[gc.x][gc.y].special;
+                wall_flv    = env.tile_flv(gc).wall;
+                floor_flv   = env.tile_flv(gc).floor;
+                special_flv = env.tile_flv(gc).special;
             }
 
             _finalize_tile(&tileb[count+1], wall_flv, floor_flv, special_flv);

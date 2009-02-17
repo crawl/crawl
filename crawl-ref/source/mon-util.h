@@ -770,6 +770,7 @@ bool mons_is_influenced_by_sanctuary(const monsters *m);
 bool mons_is_fleeing_sanctuary(const monsters *m);
 bool mons_was_seen(const monsters *m);
 bool mons_is_known_mimic(const monsters *m);
+bool mons_is_unknown_mimic(const monsters *m);
 bool mons_is_holy(const monsters *mon);
 bool mons_is_evil(const monsters *mon);
 bool mons_is_unholy(const monsters *mon);

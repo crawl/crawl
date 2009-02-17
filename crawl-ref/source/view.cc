@@ -964,7 +964,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
 
 static void _handle_seen_interrupt(monsters* monster)
 {
-    if (mons_is_mimic(monster->type) && !mons_is_known_mimic(monster))
+    if (mons_is_unknown_mimic(monster))
         return;
 
     activity_interrupt_data aid(monster);
@@ -1309,9 +1309,14 @@ void update_monsters_in_view()
             if (monster->attitude == ATT_HOSTILE)
                 num_hostile++;
 
-            if (player_monster_visible(monster)
-                && (!mons_is_mimic(monster->type)
-                    || mons_is_known_mimic(monster)))
+            if (mons_is_unknown_mimic(monster))
+            {
+                // For unknown mimics, don't mark as seen,
+                // but do mark it as in view for later messaging.
+                // FIXME: is this correct?
+                monster->flags |= MF_WAS_IN_VIEW;
+            }
+            else if (player_monster_visible(monster))
             {
                 if (!(monster->flags & MF_WAS_IN_VIEW) && you.turn_is_over)
                     _handle_seen_interrupt(monster);
