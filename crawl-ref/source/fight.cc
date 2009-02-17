@@ -865,7 +865,9 @@ bool melee_attack::player_attack()
         }
 
         // Always upset monster regardless of damage.
-        behaviour_event(defender_as_monster(), ME_WHACK, MHITYOU);
+        // However, successful stabs inhibit shouting.
+        behaviour_event(defender_as_monster(), ME_WHACK, MHITYOU,
+                        coord_def(), !stab_attempt);
 
         if (damage_done > 0
             && !defender->is_summoned()

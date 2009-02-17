@@ -2491,7 +2491,7 @@ static bool _wounded_damaged(int monster_type)
 //
 //---------------------------------------------------------------
 void behaviour_event(monsters *mon, mon_event_type event, int src,
-                     coord_def src_pos)
+                     coord_def src_pos, bool allow_shout)
 {
     ASSERT(src >= 0 && src <= MHITYOU);
     ASSERT(!crawl_state.arena || src != MHITYOU);
@@ -2504,6 +2504,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
+    bool was_sleeping     = mons_is_sleeping(mon);
 
     if (src == MHITYOU)
         sourceWontAttack = true;
@@ -2669,6 +2670,10 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     case ME_EVAL:
         break;
     }
+
+    // If it woke up, it might shout.
+    if (was_sleeping && !mons_is_sleeping(mon) && allow_shout)
+        handle_monster_shouts(mon);
 
     if (setTarget)
     {

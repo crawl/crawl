@@ -1004,11 +1004,8 @@ void flush_comes_into_view()
 
 void handle_monster_shouts(monsters* monster, bool force)
 {
-    if (!force && (!you.turn_is_over
-                   || x_chance_in_y(you.skills[SK_STEALTH], 30)))
-    {
+    if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
         return;
-    }
 
     // Friendly or neutral monsters don't shout.
     if (!force && (mons_friendly(monster) || mons_neutral(monster)))
@@ -1259,7 +1256,6 @@ void monster_grid(bool do_updates)
                 && check_awaken(monster))
             {
                 behaviour_event(monster, ME_ALERT, MHITYOU);
-                handle_monster_shouts(monster);
             }
 
             // [enne] - It's possible that mgrd and monster->x/y are out of

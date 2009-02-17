@@ -106,7 +106,8 @@ void monster_cleanup(monsters *monster);
 
 
 void behaviour_event(monsters *mon, mon_event_type event_type,
-                     int src = MHITNOT, coord_def src_pos = coord_def());
+                     int src = MHITNOT, coord_def src_pos = coord_def(),
+                     bool allow_shout = true);
 
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
