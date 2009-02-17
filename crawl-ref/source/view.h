@@ -18,45 +18,45 @@
 // initfile.cc (str_to_colour)!
 enum element_type
 {
-    EC_FIRE = 32,       // fiery colours (must be first and > highest colour)
-    EC_ICE,             // icy colours
-    EC_EARTH,           // earthy colours
-    EC_ELECTRICITY,     // electrical side of air
-    EC_AIR,             // non-electric and general air magic
-    EC_POISON,          // used only for venom mage and stalker stuff
-    EC_WATER,           // used only for the elemental
-    EC_MAGIC,           // general magical effect
-    EC_MUTAGENIC,       // transmute, poly, radiation effects
-    EC_WARP,            // teleportation and anything similar
-    EC_ENCHANT,         // magical enhancements
-    EC_HEAL,            // holy healing (not necromantic stuff)
-    EC_HOLY,            // general "good" god effects
-    EC_DARK,            // darkness
-    EC_DEATH,           // currently only assassin (and equal to EC_NECRO)
-    EC_NECRO,           // necromancy stuff
-    EC_UNHOLY,          // demonology stuff
-    EC_VEHUMET,         // vehumet's odd-ball colours
-    EC_BEOGH,           // Beogh altar colours
-    EC_CRYSTAL,         // colours of crystal
-    EC_BLOOD,           // colours of blood
-    EC_SMOKE,           // colours of smoke
-    EC_SLIME,           // colours of slime
-    EC_JEWEL,           // colourful
-    EC_ELVEN,           // used for colouring elf fabric items
-    EC_DWARVEN,         // used for colouring dwarf fabric items
-    EC_ORCISH,          // used for colouring orc fabric items
-    EC_GILA,            // gila monster colours
-    EC_FLOOR,           // colour of the area's floor
-    EC_ROCK,            // colour of the area's rock
-    EC_STONE,           // colour of the area's stone
-    EC_MIST,            // colour of mist
-    EC_SHIMMER_BLUE,    // shimmering colours of blue.
-    EC_DECAY,           // colour of decay/swamp
-    EC_SILVER,          // colour of silver
-    EC_GOLD,            // colour of gold
-    EC_IRON,            // colour of iron
-    EC_BONE,            // colour of bone
-    EC_RANDOM           // any colour (except BLACK)
+    ETC_FIRE = 32,      // fiery colours (must be first and > highest colour)
+    ETC_ICE,            // icy colours
+    ETC_EARTH,          // earthy colours
+    ETC_ELECTRICITY,    // electrical side of air
+    ETC_AIR,            // non-electric and general air magic
+    ETC_POISON,         // used only for venom mage and stalker stuff
+    ETC_WATER,          // used only for the elemental
+    ETC_MAGIC,          // general magical effect
+    ETC_MUTAGENIC,      // transmute, poly, radiation effects
+    ETC_WARP,           // teleportation and anything similar
+    ETC_ENCHANT,        // magical enhancements
+    ETC_HEAL,           // holy healing (not necromantic stuff)
+    ETC_HOLY,           // general "good" god effects
+    ETC_DARK,           // darkness
+    ETC_DEATH,          // currently only assassin (and equal to ETC_NECRO)
+    ETC_NECRO,          // necromancy stuff
+    ETC_UNHOLY,         // demonology stuff
+    ETC_VEHUMET,        // vehumet's oddball colours
+    ETC_BEOGH,          // Beogh altar colours
+    ETC_CRYSTAL,        // colours of crystal
+    ETC_BLOOD,          // colours of blood
+    ETC_SMOKE,          // colours of smoke
+    ETC_SLIME,          // colours of slime
+    ETC_JEWEL,          // colourful
+    ETC_ELVEN,          // used for colouring elf fabric items
+    ETC_DWARVEN,        // used for colouring dwarf fabric items
+    ETC_ORCISH,         // used for colouring orc fabric items
+    ETC_GILA,           // gila monster colours
+    ETC_FLOOR,          // colour of the area's floor
+    ETC_ROCK,           // colour of the area's rock
+    ETC_STONE,          // colour of the area's stone
+    ETC_MIST,           // colour of mist
+    ETC_SHIMMER_BLUE,   // shimmering colours of blue.
+    ETC_DECAY,          // colour of decay/swamp
+    ETC_SILVER,         // colour of silver
+    ETC_GOLD,           // colour of gold
+    ETC_IRON,           // colour of iron
+    ETC_BONE,           // colour of bone
+    ETC_RANDOM          // any colour (except BLACK)
 };
 
 void init_char_table(char_set_type set);
@@ -101,7 +101,7 @@ int multibyte_strlen(const std::string &s);
 void get_item_symbol(unsigned int object, unsigned *ch,
                      unsigned short *colour);
 
-// Applies EC_ colour substitutions and brands.
+// Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour);
 int get_mons_colour(const monsters *mons);
 

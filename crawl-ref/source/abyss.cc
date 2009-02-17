@@ -936,7 +936,7 @@ bool lugonu_corrupt_level(int power)
 
     mprf(MSGCH_GOD, "Lugonu's Hand of Corruption reaches out!");
 
-    you.flash_colour = EC_MUTAGENIC;
+    you.flash_colour = ETC_MUTAGENIC;
     viewwindow(true, false);
 
     _initialise_level_corrupt_seeds(power);
@@ -957,7 +957,7 @@ bool lugonu_corrupt_level(int power)
     _corrupt_level_features(*abyssal);
     run_corruption_effects(300);
 
-    you.flash_colour = EC_MUTAGENIC;
+    you.flash_colour = ETC_MUTAGENIC;
     viewwindow(true, false);
     // Allow extra time for the flash to linger.
     delay(1000);

@@ -5702,7 +5702,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     // Recreate the monster as an abomination or spectral thing.
     define_monster(*mon);
 
-    mon->colour = EC_UNHOLY;
+    mon->colour = ETC_UNHOLY;
     mon->flags |= MF_ENSLAVED_SOUL;
     mon->flags |= MF_CREATED_FRIENDLY;
 

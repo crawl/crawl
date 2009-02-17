@@ -1603,7 +1603,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SIMULACRUM_SMALL, 'z', EC_ICE, "small simulacrum",
+    MONS_SIMULACRUM_SMALL, 'z', ETC_ICE, "small simulacrum",
     M_EVIL | M_NO_REGEN,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_SMALL, MH_UNDEAD, -1,
@@ -2917,7 +2917,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SIMULACRUM_LARGE, 'Z', EC_ICE, "large simulacrum",
+    MONS_SIMULACRUM_LARGE, 'Z', ETC_ICE, "large simulacrum",
     M_EVIL | M_NO_REGEN,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE, MH_UNDEAD, -1,
@@ -3363,7 +3363,7 @@ static monsterentry mondata[] = {
 
 // middle demons ('3')
 {
-    MONS_HELLION, '3', EC_FIRE, "hellion",
+    MONS_HELLION, '3', ETC_FIRE, "hellion",
     M_SPELLCASTER | M_EVIL | M_GLOWS,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 11, MONS_HELLION, MONS_HELLION, MH_DEMONIC, -7,
@@ -3474,7 +3474,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_CHAOS_SPAWN, '3', EC_RANDOM, "chaos spawn",
+    MONS_CHAOS_SPAWN, '3', ETC_RANDOM, "chaos spawn",
     M_SEE_INVIS | M_EVIL | M_INSUBSTANTIAL,
     MR_RES_STICKY_FLAME,
     0, 12, MONS_CHAOS_SPAWN, MONS_CHAOS_SPAWN, MH_DEMONIC, -7,

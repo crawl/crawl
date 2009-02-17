@@ -1569,11 +1569,11 @@ inline static void _update_cloud_grid(int cloudno)
         break;
 
     case CLOUD_MIST:
-        which_colour = EC_MIST;
+        which_colour = ETC_MIST;
         break;
 
     case CLOUD_CHAOS:
-        which_colour = EC_RANDOM;
+        which_colour = ETC_RANDOM;
         break;
 
     default:
@@ -4160,14 +4160,14 @@ void init_feature_table( void )
         case DNGN_ROCK_WALL:
         case DNGN_PERMAROCK_WALL:
             Feature[i].dchar        = DCHAR_WALL;
-            Feature[i].colour       = EC_ROCK;
+            Feature[i].colour       = ETC_ROCK;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             Feature[i].minimap      = MF_WALL;
             break;
 
         case DNGN_STONE_WALL:
             Feature[i].dchar        = DCHAR_WALL;
-            Feature[i].colour       = EC_STONE;
+            Feature[i].colour       = ETC_STONE;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             Feature[i].minimap      = MF_WALL;
             break;
@@ -4204,7 +4204,7 @@ void init_feature_table( void )
         case DNGN_SECRET_DOOR:
             // Note: get_secret_door_appearance means this probably isn't used.
             Feature[i].dchar        = DCHAR_WALL;
-            Feature[i].colour       = EC_ROCK;
+            Feature[i].colour       = ETC_ROCK;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             Feature[i].minimap      = MF_WALL;
             break;
@@ -4255,7 +4255,7 @@ void init_feature_table( void )
 
         case DNGN_FLOOR:
             Feature[i].dchar        = DCHAR_FLOOR;
-            Feature[i].colour       = EC_FLOOR;
+            Feature[i].colour       = ETC_FLOOR;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
             Feature[i].minimap      = MF_FLOOR;
             break;
@@ -4307,7 +4307,7 @@ void init_feature_table( void )
 
         case DNGN_UNDISCOVERED_TRAP:
             Feature[i].dchar        = DCHAR_FLOOR;
-            Feature[i].colour       = EC_FLOOR;
+            Feature[i].colour       = ETC_FLOOR;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
             Feature[i].minimap      = MF_FLOOR;
             break;
@@ -4343,9 +4343,9 @@ void init_feature_table( void )
 
         case DNGN_EXIT_PORTAL_VAULT:
             Feature[i].dchar       = DCHAR_ARCH;
-            Feature[i].colour      = EC_SHIMMER_BLUE;
+            Feature[i].colour      = ETC_SHIMMER_BLUE;
             Feature[i].map_colour  = LIGHTGREY;
-            Feature[i].seen_colour = EC_SHIMMER_BLUE;
+            Feature[i].seen_colour = ETC_SHIMMER_BLUE;
             Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
@@ -4422,18 +4422,18 @@ void init_feature_table( void )
             break;
 
         case DNGN_ENTER_ABYSS:
-            Feature[i].colour      = EC_RANDOM;
+            Feature[i].colour      = ETC_RANDOM;
             Feature[i].dchar       = DCHAR_ARCH;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
-            Feature[i].seen_colour = EC_RANDOM;
+            Feature[i].seen_colour = ETC_RANDOM;
             Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_EXIT_ABYSS:
-            Feature[i].colour     = EC_RANDOM;
+            Feature[i].colour     = ETC_RANDOM;
             Feature[i].dchar      = DCHAR_ARCH;
-            Feature[i].map_colour = EC_RANDOM;
+            Feature[i].map_colour = ETC_RANDOM;
             Feature[i].minimap    = MF_STAIR_BRANCH;
             break;
 
@@ -4562,29 +4562,29 @@ void init_feature_table( void )
             break;
 
         case DNGN_ALTAR_YREDELEMNUL:
-            Feature[i].colour      = EC_UNHOLY;
+            Feature[i].colour      = ETC_UNHOLY;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
-            Feature[i].seen_colour = EC_UNHOLY;
+            Feature[i].seen_colour = ETC_UNHOLY;
             Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_XOM:
-            Feature[i].colour      = EC_RANDOM;
+            Feature[i].colour      = ETC_RANDOM;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
-            Feature[i].seen_colour = EC_RANDOM;
+            Feature[i].seen_colour = ETC_RANDOM;
             Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_VEHUMET:
-            Feature[i].colour      = EC_VEHUMET;
+            Feature[i].colour      = ETC_VEHUMET;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
-            Feature[i].seen_colour = EC_VEHUMET;
+            Feature[i].seen_colour = ETC_VEHUMET;
             Feature[i].minimap     = MF_FEATURE;
             break;
 
@@ -4598,11 +4598,11 @@ void init_feature_table( void )
             break;
 
         case DNGN_ALTAR_MAKHLEB:
-            Feature[i].colour      = EC_FIRE;
+            Feature[i].colour      = ETC_FIRE;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
-            Feature[i].seen_colour = EC_FIRE;
+            Feature[i].seen_colour = ETC_FIRE;
             Feature[i].minimap     = MF_FEATURE;
             break;
 
@@ -4652,11 +4652,11 @@ void init_feature_table( void )
             break;
 
         case DNGN_ALTAR_BEOGH:
-            Feature[i].colour      = EC_BEOGH;
+            Feature[i].colour      = ETC_BEOGH;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
-            Feature[i].seen_colour = EC_BEOGH;
+            Feature[i].seen_colour = ETC_BEOGH;
             Feature[i].minimap     = MF_FEATURE;
             break;
 

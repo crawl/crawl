@@ -152,7 +152,7 @@ void zap_animation(int colour, const monsters *mon, bool force)
     {
         // Default to whatever colour magic is today.
         if (colour == -1)
-            colour = EC_MAGIC;
+            colour = ETC_MAGIC;
 
 #ifdef USE_TILE
         tiles.add_overlay(p, tileidx_zap(colour));
@@ -170,16 +170,16 @@ void zap_animation(int colour, const monsters *mon, bool force)
 // Special front function for zap_animation to interpret enchantment flavours.
 static void _ench_animation( int flavour, const monsters *mon, bool force )
 {
-    const int elem = (flavour == BEAM_HEALING)       ? EC_HEAL :
-                     (flavour == BEAM_PAIN)          ? EC_UNHOLY :
-                     (flavour == BEAM_DISPEL_UNDEAD) ? EC_HOLY :
-                     (flavour == BEAM_POLYMORPH)     ? EC_MUTAGENIC :
+    const int elem = (flavour == BEAM_HEALING)       ? ETC_HEAL :
+                     (flavour == BEAM_PAIN)          ? ETC_UNHOLY :
+                     (flavour == BEAM_DISPEL_UNDEAD) ? ETC_HOLY :
+                     (flavour == BEAM_POLYMORPH)     ? ETC_MUTAGENIC :
                      (flavour == BEAM_CHAOS
-                        || flavour == BEAM_RANDOM)   ? EC_RANDOM :
+                        || flavour == BEAM_RANDOM)   ? ETC_RANDOM :
                      (flavour == BEAM_TELEPORT
                         || flavour == BEAM_BANISH
-                        || flavour == BEAM_BLINK)    ? EC_WARP
-                                                     : EC_ENCHANT;
+                        || flavour == BEAM_BLINK)    ? ETC_WARP
+                                                     : ETC_ENCHANT;
 
     zap_animation(element_colour(elem), mon, force);
 }

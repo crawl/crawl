@@ -139,7 +139,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "iron", "bone", "random"
     };
 
-    ASSERT(ARRAYSZ(element_cols) == (EC_RANDOM - EC_FIRE) + 1);
+    ASSERT(ARRAYSZ(element_cols) == (ETC_RANDOM - ETC_FIRE) + 1);
 
     for (ret = 0; ret < 16; ++ret)
     {
@@ -165,7 +165,7 @@ int str_to_colour( const std::string &str, int default_colour,
             if (str == element_cols[i])
             {
                 // Ugh.
-                ret = element_type(EC_FIRE + i);
+                ret = element_type(ETC_FIRE + i);
                 break;
             }
         }

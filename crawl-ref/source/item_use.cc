@@ -2033,7 +2033,7 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
         beam.flavour = BEAM_CHAOS;
         beam.name    = "chaos";
-        beam.colour  = EC_RANDOM;
+        beam.colour  = ETC_RANDOM;
 
         ammo.special = SPMSL_CHAOS;
     }

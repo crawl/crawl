@@ -675,7 +675,7 @@ void item_colour( item_def &item )
         break;
 
     case OBJ_ORBS:
-        item.colour = EC_MUTAGENIC;
+        item.colour = ETC_MUTAGENIC;
         break;
 
     case OBJ_MISCELLANY:
@@ -711,43 +711,43 @@ void item_colour( item_def &item )
             switch (item.plus)
             {
             case RUNE_DIS:                      // iron
-                item.colour = EC_IRON;
+                item.colour = ETC_IRON;
                 break;
 
             case RUNE_COCYTUS:                  // icy
-                item.colour = EC_ICE;
+                item.colour = ETC_ICE;
                 break;
 
             case RUNE_TARTARUS:                 // bone
-                item.colour = EC_BONE;
+                item.colour = ETC_BONE;
                 break;
 
             case RUNE_SLIME_PITS:               // slimy
-                item.colour = EC_SLIME;
+                item.colour = ETC_SLIME;
                 break;
 
             case RUNE_SNAKE_PIT:                // serpentine
-                item.colour = EC_POISON;
+                item.colour = ETC_POISON;
                 break;
 
             case RUNE_ELVEN_HALLS:              // elven
-                item.colour = EC_ELVEN;
+                item.colour = ETC_ELVEN;
                 break;
 
             case RUNE_VAULTS:                   // silver
-                item.colour = EC_SILVER;
+                item.colour = ETC_SILVER;
                 break;
 
             case RUNE_TOMB:                     // golden
-                item.colour = EC_GOLD;
+                item.colour = ETC_GOLD;
                 break;
 
             case RUNE_SWAMP:                    // decaying
-                item.colour = EC_DECAY;
+                item.colour = ETC_DECAY;
                 break;
 
             case RUNE_SHOALS:                   // barnacled
-                item.colour = EC_WATER;
+                item.colour = ETC_WATER;
                 break;
 
             // This one is hardly unique, but colour isn't used for
@@ -755,34 +755,34 @@ void item_colour( item_def &item )
             case RUNE_DEMONIC:             // random pandemonium demonlords
             {
                 element_type types[] =
-                    {EC_EARTH, EC_ELECTRICITY, EC_ENCHANT, EC_HEAL,
-                     EC_BLOOD, EC_DEATH, EC_UNHOLY, EC_VEHUMET, EC_BEOGH,
-                     EC_CRYSTAL, EC_SMOKE, EC_DWARVEN, EC_ORCISH, EC_GILA};
+                    {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL,
+                     ETC_BLOOD, ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH,
+                     ETC_CRYSTAL, ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_GILA};
 
                 item.colour = RANDOM_ELEMENT(types);
                 break;
             }
 
             case RUNE_ABYSSAL:             // random in abyss
-                item.colour = EC_RANDOM;
+                item.colour = ETC_RANDOM;
                 break;
 
             case RUNE_MNOLEG:                   // glowing
-                item.colour = EC_MUTAGENIC;
+                item.colour = ETC_MUTAGENIC;
                 break;
 
             case RUNE_LOM_LOBON:                // magical
-                item.colour = EC_MAGIC;
+                item.colour = ETC_MAGIC;
                 break;
 
             case RUNE_CEREBOV:                  // fiery
-                item.colour = EC_FIRE;
+                item.colour = ETC_FIRE;
                 break;
 
             case RUNE_GEHENNA:                  // obsidian
             case RUNE_GLOORX_VLOQ:              // dark
             default:
-                item.colour = EC_DARK;
+                item.colour = ETC_DARK;
                 break;
             }
             break;

@@ -1315,17 +1315,17 @@ unsigned char random_uncommon_colour()
 // returns if a colour is one of the special element colours (ie not regular)
 bool is_element_colour( int col )
 {
-    // striping any COLFLAGS (just in case)
-    return ((col & 0x007f) >= EC_FIRE);
+    // stripping any COLFLAGS (just in case)
+    return ((col & 0x007f) >= ETC_FIRE);
 }
 
 int element_colour( int element, bool no_random )
 {
     // Doing this so that we don't have to do recursion here at all
     // (these were the only cases which had possible double evaluation):
-    if (element == EC_FLOOR)
+    if (element == ETC_FLOOR)
         element = env.floor_colour;
-    else if (element == EC_ROCK)
+    else if (element == ETC_ROCK)
         element = env.rock_colour;
 
     // pass regular colours through for safety.
@@ -1341,112 +1341,112 @@ int element_colour( int element, bool no_random )
 
     switch (element & 0x007f)   // strip COLFLAGs just in case
     {
-    case EC_FIRE:
+    case ETC_FIRE:
         ret = (tmp_rand < 40) ? RED :
               (tmp_rand < 80) ? YELLOW
                               : LIGHTRED;
         break;
 
-    case EC_ICE:
+    case ETC_ICE:
         ret = (tmp_rand < 40) ? LIGHTBLUE :
               (tmp_rand < 80) ? BLUE
                               : WHITE;
         break;
 
-    case EC_EARTH:
+    case ETC_EARTH:
         ret = (tmp_rand < 60) ? BROWN : LIGHTRED;
         break;
 
-    case EC_AIR:
+    case ETC_AIR:
         ret = (tmp_rand < 60) ? LIGHTGREY : WHITE;
         break;
 
-    case EC_ELECTRICITY:
+    case ETC_ELECTRICITY:
         ret = (tmp_rand < 40) ? LIGHTCYAN :
               (tmp_rand < 80) ? LIGHTBLUE
                               : CYAN;
         break;
 
-    case EC_POISON:
+    case ETC_POISON:
         ret = (tmp_rand < 60) ? LIGHTGREEN : GREEN;
         break;
 
-    case EC_WATER:
+    case ETC_WATER:
         ret = (tmp_rand < 60) ? BLUE : CYAN;
         break;
 
-    case EC_MAGIC:
+    case ETC_MAGIC:
         ret = (tmp_rand < 30) ? LIGHTMAGENTA :
               (tmp_rand < 60) ? LIGHTBLUE :
               (tmp_rand < 90) ? MAGENTA
                               : BLUE;
         break;
 
-    case EC_MUTAGENIC:
-    case EC_WARP:
+    case ETC_MUTAGENIC:
+    case ETC_WARP:
         ret = (tmp_rand < 60) ? LIGHTMAGENTA : MAGENTA;
         break;
 
-    case EC_ENCHANT:
+    case ETC_ENCHANT:
         ret = (tmp_rand < 60) ? LIGHTBLUE : BLUE;
         break;
 
-    case EC_HEAL:
+    case ETC_HEAL:
         ret = (tmp_rand < 60) ? LIGHTBLUE : YELLOW;
         break;
 
-    case EC_BLOOD:
+    case ETC_BLOOD:
         ret = (tmp_rand < 60) ? RED : DARKGREY;
         break;
 
-    case EC_DEATH:      // assassin
-    case EC_NECRO:      // necromancer
+    case ETC_DEATH:      // assassin
+    case ETC_NECRO:      // necromancer
         ret = (tmp_rand < 80) ? DARKGREY : MAGENTA;
         break;
 
-    case EC_UNHOLY:     // ie demonology
+    case ETC_UNHOLY:     // ie demonology
         ret = (tmp_rand < 80) ? DARKGREY : RED;
         break;
 
-    case EC_DARK:
+    case ETC_DARK:
         ret = (tmp_rand < 80) ? DARKGREY : LIGHTGREY;
         break;
 
-    case EC_HOLY:
+    case ETC_HOLY:
         ret = (tmp_rand < 60) ? YELLOW : WHITE;
         break;
 
-    case EC_VEHUMET:
+    case ETC_VEHUMET:
         ret = (tmp_rand < 40) ? LIGHTRED :
               (tmp_rand < 80) ? LIGHTMAGENTA
                               : LIGHTBLUE;
         break;
 
-    case EC_BEOGH:
+    case ETC_BEOGH:
         ret = (tmp_rand < 60) ? LIGHTRED // plain Orc colour
                               : BROWN;   // Orcish mines wall/idol colour
         break;
 
-    case EC_CRYSTAL:
+    case ETC_CRYSTAL:
         ret = (tmp_rand < 40) ? LIGHTGREY :
               (tmp_rand < 80) ? GREEN
                               : LIGHTRED;
         break;
 
-    case EC_SLIME:
+    case ETC_SLIME:
         ret = (tmp_rand < 40) ? GREEN :
               (tmp_rand < 80) ? BROWN
                               : LIGHTGREEN;
         break;
 
-    case EC_SMOKE:
+    case ETC_SMOKE:
         ret = (tmp_rand < 30) ? LIGHTGREY :
               (tmp_rand < 60) ? DARKGREY :
               (tmp_rand < 90) ? LIGHTBLUE
                               : MAGENTA;
         break;
 
-    case EC_JEWEL:
+    case ETC_JEWEL:
         ret = (tmp_rand <  12) ? WHITE :
               (tmp_rand <  24) ? YELLOW :
               (tmp_rand <  36) ? LIGHTMAGENTA :
@@ -1459,28 +1459,28 @@ int element_colour( int element, bool no_random )
                                : BLUE;
         break;
 
-    case EC_ELVEN:
+    case ETC_ELVEN:
         ret = (tmp_rand <  40) ? LIGHTGREEN :
               (tmp_rand <  80) ? GREEN :
               (tmp_rand < 100) ? LIGHTBLUE
                                : BLUE;
         break;
 
-    case EC_DWARVEN:
+    case ETC_DWARVEN:
         ret = (tmp_rand <  40) ? BROWN :
               (tmp_rand <  80) ? LIGHTRED :
               (tmp_rand < 100) ? LIGHTGREY
                                : CYAN;
         break;
 
-    case EC_ORCISH:
+    case ETC_ORCISH:
         ret = (tmp_rand <  40) ? DARKGREY :
               (tmp_rand <  80) ? RED :
               (tmp_rand < 100) ? BROWN
                                : MAGENTA;
         break;
 
-    case EC_GILA:
+    case ETC_GILA:
         ret = (tmp_rand <  30) ? LIGHTMAGENTA :
               (tmp_rand <  60) ? MAGENTA :
               (tmp_rand <  90) ? YELLOW :
@@ -1488,49 +1488,49 @@ int element_colour( int element, bool no_random )
                                : RED;
         break;
 
-    case EC_STONE:
+    case ETC_STONE:
         if (player_in_branch( BRANCH_HALL_OF_ZOT ))
             ret = env.rock_colour;
         else
             ret = LIGHTGREY;
         break;
 
-    case EC_MIST:
+    case ETC_MIST:
         ret = tmp_rand < 100? CYAN : BLUE;
         break;
 
-    case EC_SHIMMER_BLUE:
+    case ETC_SHIMMER_BLUE:
         ret = random_choose_weighted(80, BLUE, 20, LIGHTBLUE, 5, CYAN, 0);
         break;
 
-    case EC_DECAY:
+    case ETC_DECAY:
         ret = (tmp_rand < 60) ? BROWN : GREEN;
         break;
 
-    case EC_SILVER:
+    case ETC_SILVER:
         ret = (tmp_rand < 90) ? LIGHTGREY : WHITE;
         break;
 
-    case EC_GOLD:
+    case ETC_GOLD:
         ret = (tmp_rand < 60) ? YELLOW : BROWN;
         break;
 
-    case EC_IRON:
+    case ETC_IRON:
         ret = (tmp_rand < 40) ? CYAN :
               (tmp_rand < 80) ? LIGHTGREY :
                                 DARKGREY;
         break;
 
-    case EC_BONE:
+    case ETC_BONE:
         ret = (tmp_rand < 90) ? WHITE : LIGHTGREY;
         break;
 
-    case EC_RANDOM:
+    case ETC_RANDOM:
         ret = 1 + random2(15);              // always random
         break;
 
-    case EC_FLOOR: // should already be handled
-    case EC_ROCK:  // should already be handled
+    case ETC_FLOOR: // should already be handled
+    case ETC_ROCK:  // should already be handled
     default:
         break;
     }
