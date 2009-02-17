@@ -454,6 +454,17 @@ void full_describe_view()
     // Grab all items known (or thought) to be in the stashes in view.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
+        const monsters *mon = monster_at(*ri);
+        const bool unknown_mimic =
+            (mon && mons_is_mimic(mon->type) && !mons_is_known_mimic(mon));
+
+        if (unknown_mimic)      // It'll be on top.
+        {
+            item_def item;
+            get_mimic_item(mon, item);
+            list_items.push_back(item);
+        }
+
         const int oid = igrd(*ri);
         if (oid == NON_ITEM)
             continue;
@@ -462,7 +473,8 @@ void full_describe_view()
         {
             // On levels with no stashtracker, you can still see the top
             // item.
-            list_items.push_back(mitm[oid]);
+            if (!unknown_mimic)
+                list_items.push_back(mitm[oid]);
         }
         else
         {

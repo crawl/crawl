@@ -114,7 +114,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
     item.quantity  = 1;
     item.plus      = 0;
     item.plus2     = 0;
-    item.pos = mimic->pos();
+    item.pos       = mimic->pos();
     item.link      = NON_ITEM;
 
     int prop = 127 * mimic->pos().x + 269 * mimic->pos().y;
