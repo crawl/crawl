@@ -42,9 +42,14 @@ size_type transform_size(int psize = PSIZE_BODY);
 
 bool transform(int pow, transformation_type which_trans, bool quiet = false);
 
-bool remove_one_equip(equipment_type eq, bool meld = true);
-bool unmeld_one_equip(equipment_type eq);
+void remove_one_equip(equipment_type eq, bool meld = true);
+void unmeld_one_equip(equipment_type eq);
 
 bool transform_changed_physiology( bool phys_scales = false );
+bool transform_allows_wearing_item(const item_def& item,
+                                   transformation_type transform);
+// Check your current transform
+bool transform_allows_wearing_item(const item_def& item);
+bool transform_allows_wielding(transformation_type transform);
 
 #endif
