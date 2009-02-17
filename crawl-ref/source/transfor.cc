@@ -168,7 +168,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
              (unequip ? "falls away!" : "melds into your body."));
 
         _unwear_equipment_slot(e);
-        
+
         if (unequip)
             you.equip[e] = -1;
     }
@@ -182,8 +182,11 @@ bool _mutations_prevent_wearing(const item_def& item)
 
     const equipment_type eqslot = get_armour_slot(item);
 
-    if (you.mutation[MUT_HORNS] && is_hard_helmet(item))
+    if (is_hard_helmet(item)
+        && (you.mutation[MUT_HORNS] || you.mutation[MUT_BEAK]))
+    {
         return (true);
+    }
 
     if (item.sub_type == ARM_BOOTS // barding excepted!
         && (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]))
@@ -207,7 +210,7 @@ static void _rewear_equipment_slot(equipment_type e)
         return;
 
     item_def& item = you.inv[you.equip[e]];
-    
+
     if (item.base_type == OBJ_JEWELLERY)
         jewellery_wear_effects(item);
     else
@@ -510,12 +513,12 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         {
             mpr("The transformation conflicts with an enchantment "
                 "already in effect.");
-        }       
+        }
         return (false);
     }
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
-    
+
     if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
         return (false);
 
