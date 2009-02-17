@@ -1478,16 +1478,16 @@ weapons are very well-crafted and much more durable than the products of
 lesser artisans. Dwarves are particularly dangerous when using dwarven
 weaponry.
 
-Mountain Dwarves, as opposed to the subterranean specimen, come from 
+Mountain Dwarves, as opposed to the subterranean specimen, come from
 cities far above the Dungeon. They are very robust and excellent at hand
-combat, especially favouring axes or bludgeoning weapons, and are good 
+combat, especially favouring axes or bludgeoning weapons, and are good
 at using armour and shields. They are poor at missile combat, the single
 exception being crossbows, those being rather mechanical weapons. Since
 polearms usually are too big for them to wield comfortably, they make
 quite bad weapons for Dwarves.
 
 In general, they are rather resistant to magic than capable of dealing
-with it. However, they are very proficient at earth and fire magics. 
+with it. However, they are very proficient at earth and fire magics.
 Thus, many a Mountain Dwarf started career as an elementalist in one of
 those schools. They advance in levels at a similar rate to Grey and Deep
 Elves.
