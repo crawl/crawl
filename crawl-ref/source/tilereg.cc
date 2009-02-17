@@ -828,6 +828,13 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && event.event == MouseEvent::PRESS
+        && event.button == MouseEvent::LEFT)
+    {
+        return CK_MOUSE_CLICK;
+    }
+
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         || mouse_control::current_mode() == MOUSE_MODE_MACRO
         || mouse_control::current_mode() == MOUSE_MODE_MORE)
     {
