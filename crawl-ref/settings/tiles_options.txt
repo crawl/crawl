@@ -29,7 +29,7 @@
 
 # tile_key_repeat = false
 
-# tile_tooltip_ms = 1000
+# tile_tooltip_ms = 500
 
 # tile_tag_pref = enemy
 

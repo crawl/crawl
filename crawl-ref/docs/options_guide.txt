@@ -1616,7 +1616,7 @@ tile_key_repeat = true
          Whether or not to repeat key presses when they are held down.
          By default, keys will repeat.
 
-tile_tooltip_ms = 1000
+tile_tooltip_ms = 500 
          The number of milliseconds before a tooltip appears when hovering the
          mouse over part of the screen.
 

@@ -925,7 +925,7 @@ void game_options::reset_options()
     tile_window_width = 0;
     tile_window_height = 0;
     tile_map_pixels = 0;
-    tile_tooltip_ms = 1000;
+    tile_tooltip_ms = 500;
     tile_tag_pref = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
 #endif
 
