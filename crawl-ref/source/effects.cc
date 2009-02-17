@@ -3177,13 +3177,13 @@ void handle_time(long time_delta)
         // sufficiently used to beta 26's unkindness that we can use a lower
         // roll.)
         if (is_sanctuary(you.pos())
-            && you.magic_contamination >= 5
+            && you.magic_contamination > 5
             && x_chance_in_y(you.magic_contamination + 1, 25))
         {
             mpr("Your body momentarily shudders from a surge of wild "
                 "energies until Zin's power calms it.", MSGCH_GOD);
         }
-        else if (you.magic_contamination >= 5
+        else if (you.magic_contamination > 5
                  && x_chance_in_y(you.magic_contamination + 1, 25))
         {
             mpr("Your body shudders with the violent release "
@@ -3193,7 +3193,7 @@ void handle_time(long time_delta)
             // Undead enjoy extra contamination explosion damage because
             // the magical contamination has a harder time dissipating
             // through non-living flesh. :-)
-            if (you.magic_contamination >= 10 && coinflip())
+            if (you.magic_contamination > 10 && coinflip())
             {
                 bolt beam;
 
