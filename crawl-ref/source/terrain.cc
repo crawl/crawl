@@ -323,8 +323,9 @@ void get_door_description(int door_size, const char** adjective, const char** no
         "huge "      , "gate",
     };
 
-    const unsigned int idx = std::min(static_cast<unsigned int>(door_size*2),
-                                      ARRAYSZ(descriptions) - 2);
+    int max_idx = static_cast<int>(ARRAYSZ(descriptions) - 2);
+    const unsigned int idx = std::min(door_size*2, max_idx);
+
     *adjective = descriptions[idx];
     *noun = descriptions[idx+1];
 }
