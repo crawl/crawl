@@ -3473,7 +3473,7 @@ void tutorial_inscription_info(bool autoinscribe, std::string prompt)
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool longtext = false;
-    if (!autoinscribe || wherey() <= get_number_of_lines() - 10)
+    if (wherey() <= get_number_of_lines() - (autoinscribe ? 10 : 8))
     {
         text << EOL
          "Inscriptions are a powerful concept of Dungeon Crawl." EOL
