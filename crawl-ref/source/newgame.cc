@@ -2958,8 +2958,6 @@ static void _give_basic_knowledge(job_type which_job)
     default:
         break;
     }
-
-    return;
 }
 
 static void _give_basic_spells(job_type which_job)
