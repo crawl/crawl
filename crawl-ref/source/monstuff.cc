@@ -3837,10 +3837,13 @@ static void _handle_behaviour(monsters *mon)
 
 
     // Validate current target exists.
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && !menv[mon->foe].alive())
+    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
-        mon->foe = MHITNOT;
+        const monsters& foe_monster = menv[mon->foe];
+        if (!foe_monster.alive())
+            mon->foe = MHITNOT;
+        if (mons_friendly(&foe_monster) == isFriendly)
+            mon->foe = MHITNOT;
     }
 
     // Change proxPlayer depending on invisibility and standing
@@ -3927,10 +3930,13 @@ static void _handle_behaviour(monsters *mon)
     }
 
     // Validate current target again.
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && !menv[mon->foe].alive())
+    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
-        mon->foe = MHITNOT;
+        const monsters& foe_monster = menv[mon->foe];
+        if (!foe_monster.alive())
+            mon->foe = MHITNOT;
+        if (mons_friendly(&foe_monster) == isFriendly)
+            mon->foe = MHITNOT;
     }
 
     while (changed)
