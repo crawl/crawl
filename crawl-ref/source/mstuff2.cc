@@ -476,6 +476,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_CANTRIP:
     {
+        // Don't give any message if the monster isn't nearby.
+        // (Otherwise you could get them from halfway across the level.)
+        if (!mons_near(monster))
+            return;
+
         const bool friendly      = mons_friendly(monster);
         const bool buff_only     = !friendly && is_sanctuary(you.pos());
         bool need_friendly_stub  = false;
