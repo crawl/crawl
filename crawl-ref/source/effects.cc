@@ -1322,13 +1322,13 @@ static int _spell_weight(spell_type spell)
             int skill = you.skills[spell_type2skill(disc)]
                         * 100 / species_skills(i, you.species);
 
-            weight += skill;
+            weight += skill + 1;
             count++;
         }
     }
     ASSERT(count > 0);
 
-    int level = spell_difficulty(spell);
+    int level = spell_difficulty(spell) - 1;
 
     return std::max(0, weight/count - 2*level);
 }
@@ -1396,25 +1396,26 @@ static void _do_book_acquirement(item_def &book, int agent)
     // Manuals are too useful for Xom, and useless when gifted from Sif Muna.
     if (agent != GOD_XOM && agent != GOD_SIF_MUNA)
     {
-        int weights[NUM_SKILLS];
         int magic_weights = 0;
         int other_weights = 0;
 
         for (int i = 0; i < NUM_SKILLS; i++)
         {
             if (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING)
-            {
-                weights[i] = 0;
                 continue;
-            }
 
-            weights[i] = you.skills[i]
-                         * 100 / species_skills(i, you.species);
+            int weight = you.skills[i] * 100 / species_skills(i, you.species);
 
+            // Anyone can get Spellcasting 1. Doesn't prove anything.
+            if (i == SK_SPELLCASTING && weight >= 1)
+                weight--;
+
+            // Count magic skills double to bias against manuals
+            // for magic users.
             if (i >= SK_SPELLCASTING && i <= SK_POISON_MAGIC)
-                magic_weights += weights[i];
+                magic_weights += 2*weight;
             else
-                other_weights += weights[i];
+                other_weights += weight;
         }
 
         if (x_chance_in_y(other_weights, magic_weights + other_weights))
@@ -1445,6 +1446,26 @@ static void _do_book_acquirement(item_def &book, int agent)
 
     switch (choice)
     {
+    default:
+    {
+        int total_weights = 0;
+
+        // Pick a random spellbook according to unknown spells contained.
+        int weights[MAX_NORMAL_BOOK+1];
+        for (int bk = 0; bk <= MAX_NORMAL_BOOK; bk++)
+        {
+            weights[bk]    = _book_weight(bk);
+            total_weights += weights[bk];
+        }
+
+        if (total_weights > 0)
+        {
+            book.sub_type = choose_random_weighted(weights,
+                                                   weights + ARRAYSZ(weights));
+            break;
+        }
+        // else intentional fall-through
+    }
     case BOOK_RANDART_THEME:
         book.sub_type = choice;
         make_book_theme_randart(book, 0, 0, 7, 22, SPELL_NO_SPELL, owner);
@@ -1479,10 +1500,7 @@ static void _do_book_acquirement(item_def &book, int agent)
                         * 100 / species_skills(i, you.species);
 
             int w = (skill < 12) ? skill + 3
-                                 : 25 - skill;
-
-            if (w < 0)
-                w = 0;
+                                 : std::max(0, 25 - skill);
 
             // If we don't know any magic skills, make non-magic skills
             // more likely.
@@ -1500,24 +1518,11 @@ static void _do_book_acquirement(item_def &book, int agent)
             return;
         }
 
-        int skill = choose_random_weighted(weights,
-                                           weights + ARRAYSZ(weights));
         book.sub_type = BOOK_MANUAL;
-        book.plus = skill;
+        book.plus     = choose_random_weighted(weights, weights + NUM_SKILLS);
         // Set number of reads possible before it "crumbles to dust".
-        book.plus2 = 3 + random2(15);
+        book.plus2    = 3 + random2(15);
         break;
-    }
-
-    default:
-    {
-        // Pick a random spellbook according to unknown spells contained.
-        int weights[MAX_NORMAL_BOOK+1];
-        for (int bk = 0; bk <= MAX_NORMAL_BOOK; bk++)
-            weights[bk] = _book_weight(bk);
-
-        book.sub_type = choose_random_weighted(weights,
-                                               weights + ARRAYSZ(weights));
     }
     }
 }

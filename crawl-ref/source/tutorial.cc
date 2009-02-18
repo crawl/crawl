@@ -1634,7 +1634,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #endif
                 ". You can eat it by typing <w>e</w>"
 #ifdef USE_TILE
-                " or by clicking on it with your <w>left mouse button</w> "
+                " or by clicking on it with your <w>left mouse button</w>"
 #endif
                 ".";
         break;

@@ -233,10 +233,10 @@ int choose_random_weighted(Iterator beg, const Iterator end)
 
     int totalweight = 0;
     int count = 0, result = 0;
-    while ( beg != end )
+    while (beg != end)
     {
         totalweight += *beg;
-        if ( random2(totalweight) < *beg )
+        if (random2(totalweight) < *beg)
         {
             result = count;
 #if DEBUG
@@ -246,7 +246,9 @@ int choose_random_weighted(Iterator beg, const Iterator end)
         ++count;
         ++beg;
     }
+#if DEBUG
     ASSERT(times_set > 0);
+#endif
     return result;
 }
 

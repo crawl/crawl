@@ -2446,8 +2446,9 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
         spell_vec[i] = (long) chosen_spells[i];
-        if (spell_difficulty(chosen_spells[i]) > highest_level)
-            highest_level = spell_difficulty(chosen_spells[i]);
+        int diff = spell_difficulty(chosen_spells[i]);
+        if (diff > highest_level)
+            highest_level = diff;
 
         if (all_spells_disc1 && is_valid_spell(chosen_spells[i])
             && !spell_typematch( chosen_spells[i], disc1 ))
@@ -2471,18 +2472,40 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         const bool god_gift = (god != GOD_NO_GOD);
         if (god_gift && !one_chance_in(4))
             owner = god_name(god, false);
-        else if (all_spells_disc1
-                 && (god_gift && one_chance_in(3) || one_chance_in(5)))
+        else if (god_gift && one_chance_in(3) || one_chance_in(5))
         {
-            std::string lookup = spelltype_long_name(disc1);
-            if (highest_level >= 6 + random2(3))
-                owner = getRandNameString("high-level " + lookup + " owner");
+            bool highlevel = (highest_level >= 6 + random2(3));
 
-            if (owner.empty() || owner == "__NONE")
-                owner = getRandNameString(lookup + " owner");
+            if (disc1 != disc2)
+            {
+                std::string schools[2];
+                schools[0] = spelltype_long_name(disc1);
+                schools[1] = spelltype_long_name(disc2);
+                std::sort(schools, schools + 2);
+                std::string lookup = schools[0] + " " + schools[1];
 
-            if (owner == "__NONE")
-                owner = "";
+                if (highlevel)
+                    owner = getRandNameString("highlevel " + lookup + " owner");
+
+                if (owner.empty() || owner == "__NONE")
+                    owner = getRandNameString(lookup + " owner");
+
+                if (owner == "__NONE")
+                    owner = "";
+            }
+
+            if (owner.empty() && all_spells_disc1)
+            {
+                std::string lookup = spelltype_long_name(disc1);
+                if (highlevel && disc1 == disc2)
+                    owner = getRandNameString("highlevel " + lookup + " owner");
+
+                if (owner.empty() || owner == "__NONE")
+                    owner = getRandNameString(lookup + " owner");
+
+                if (owner == "__NONE")
+                    owner = "";
+            }
         }
 
         if (owner.empty())
