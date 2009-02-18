@@ -768,8 +768,7 @@ static bool _slime_pit_unlock(bool silent)
     {
         for (int x = 0; x < GXM && !in_los; ++x)
             for (int y = 0; y < GYM; ++y)
-                if (grd[x][y] == DNGN_STONE_WALL
-                    && see_grid(x, y))
+                if (grd[x][y] == DNGN_STONE_WALL && see_grid(x, y))
                 {
                     in_los = true;
                     break;
@@ -777,6 +776,8 @@ static bool _slime_pit_unlock(bool silent)
     }
 
     replace_area_wrapper(DNGN_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
+    // In case it was already vitrified, but then it's less noticeable.
+    replace_area_wrapper(DNGN_CLEAR_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
 
     if (!silent)
     {
