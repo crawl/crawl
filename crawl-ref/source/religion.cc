@@ -251,7 +251,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "go berserk at will",
       "call upon Trog for regeneration",
       "",
-      "call in reinforcement",
+      "call in reinforcements",
       "" },
     // Nemelex
     { "draw cards from decks in your inventory",
@@ -337,7 +337,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "go berserk at will",
       "call upon Trog for regeneration",
       "",
-      "call in reinforcement",
+      "call in reinforcements",
       "" },
     // Nemelex
     { "draw cards from decks in your inventory",
