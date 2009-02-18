@@ -1365,8 +1365,12 @@ void melee_attack::player_announce_hit()
 
 std::string melee_attack::player_why_missed()
 {
-    if ((to_hit + heavy_armour_penalty/2) >= defender->melee_evasion(attacker))
+    if (heavy_armour_penalty > 0
+        && (to_hit + heavy_armour_penalty/2
+            >= defender->melee_evasion(attacker)))
+    {
         return "Your armour prevents you from hitting ";
+    }
     else
         return "You miss ";
 }

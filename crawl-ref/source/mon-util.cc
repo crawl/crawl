@@ -5813,7 +5813,7 @@ int monsters::armour_class() const
 int monsters::melee_evasion(const actor *act) const
 {
     int evasion = ev;
-    if (paralysed() || asleep() || one_chance_in(20))
+    if (paralysed() || asleep())
         evasion = 0;
     else if (caught())
         evasion /= (body_size(PSIZE_BODY) + 2);
