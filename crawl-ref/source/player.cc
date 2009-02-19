@@ -3784,7 +3784,7 @@ static const char * _get_rotting_how()
     if (you.species == SP_GHOUL)
         return (" faster than usual");
 
-    return("");
+    return ("");
 }
 
 // Returns the medium duration value which is usually announced by a special
