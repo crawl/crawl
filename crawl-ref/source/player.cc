@@ -6865,14 +6865,15 @@ int player::res_rotting() const
     if (you.is_undead
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
     {
-        return 1;
+        return (1);
     }
-    return 0;
+
+    return (0);
 }
 
 int player::res_torment() const
 {
-    return player_res_torment();
+    return (player_res_torment());
 }
 
 bool player::confusable() const
