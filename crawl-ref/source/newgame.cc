@@ -5492,17 +5492,14 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
 
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
+                           10 + roll_dice( 2, 10 ));
+
+        // Spriggans used to get a rod of striking, but now that anyone
+        // can get one when playing an Artificer, this is no longer
+        // necessary. (jpeg)
         if (you.species == SP_SPRIGGAN)
-        {
-            _make_rod(you.inv[1], STAFF_STRIKING);
-            you.skills[SK_EVOCATIONS] = 1;
-        }
-        else
-        {
-            you.skills[SK_CROSSBOWS] = 1;
-            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                               10 + roll_dice( 2, 10 ));
-        }
+            you.inv[0].sub_type = WPN_DAGGER;
 
         you.skills[SK_SHORT_BLADES] = 2;
         you.skills[SK_FIGHTING] = 1;
@@ -5512,6 +5509,7 @@ bool _give_items_skills()
         // Increase one of Dodging/Stealth/Stabbing by 1.
         you.skills[SK_DODGING + random2(3)]++;
         you.skills[SK_TRAPS_DOORS] = 2;
+        you.skills[SK_CROSSBOWS] = 1;
         break;
 
     case JOB_ASSASSIN:
