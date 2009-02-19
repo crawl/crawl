@@ -5332,7 +5332,6 @@ bool _give_items_skills()
                               1, 1);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
 
-
         // Gets some darts - this class is difficult to start off with.
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                               8 + roll_dice( 2, 8 ), 1);
