@@ -2699,6 +2699,14 @@ static void _show_message_line(std::string line)
     }
 }
 
+static void _kill_messaging(FILE *mf)
+{
+    if (mf)
+        fclose(mf);
+    SysEnv.have_messages = false;
+    Options.messaging = false;
+}
+
 static void _read_each_message()
 {
     bool say_got_msg = true;
@@ -2707,7 +2715,8 @@ static void _read_each_message()
     {
         mprf(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
-        goto kill_messaging;
+        _kill_messaging(mf);
+        return;
     }
 
     // Read messages, code borrowed from the SIMPLEMAIL patch.
@@ -2717,7 +2726,8 @@ static void _read_each_message()
     {
         mprf(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
-        goto kill_messaging;
+        _kill_messaging(mf);
+        return;
     }
 
     while (fgets(line, sizeof line, mf))
@@ -2744,7 +2754,8 @@ static void _read_each_message()
             mprf(MSGCH_ERROR, "Failed to lock %s: %s",
                  SysEnv.messagefile.c_str(),
                  strerror(errno));
-            goto kill_messaging;
+            _kill_messaging(mf);
+            return;
         }
     }
     if (!lock_file_handle(mf, F_WRLCK))
@@ -2759,13 +2770,6 @@ static void _read_each_message()
     fclose(mf);
 
     SysEnv.have_messages = false;
-    return;
-
-kill_messaging:
-    if (mf)
-        fclose(mf);
-    SysEnv.have_messages = false;
-    Options.messaging = false;
 }
 
 static void _read_messages()
