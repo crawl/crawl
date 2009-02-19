@@ -7322,6 +7322,10 @@ static void _handle_monster_move(monsters *monster)
 
                 if (!mons_friendly(monster))
                 {
+                    // If it steps into you, cancel other targets.
+                    monster->foe = MHITYOU;
+                    monster->target = you.pos();
+
                     monster_attack(monster);
 
                     if (mons_is_batty(monster))
