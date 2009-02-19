@@ -95,8 +95,6 @@ static bool immobile_monster[MAX_MONSTERS];
 // a C++ string just once, instead of twice every time a monster moves.
 static const std::string _just_seen("just seen");
 
-#define FAR_AWAY    1000000         // used in monster_move()
-
 #define ENERGY_SUBMERGE(entry) (std::max(entry->energy_usage.swim / 2, 1))
 
 // This function creates an artificial item to represent a mimic's appearance.
@@ -7382,11 +7380,11 @@ void handle_monsters()
     // them to move again.
     memset(immobile_monster, 0, sizeof immobile_monster);
 
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
 
-        if (monster->type == -1 || immobile_monster[i])
+        if (!monster->alive() || immobile_monster[i])
             continue;
 
         const coord_def oldpos = monster->pos();
@@ -7399,7 +7397,7 @@ void handle_monsters()
         // If the player got banished, discard pending monster actions.
         if (you.banished)
         {
-            // Clear list of mesmerisinging monsters.
+            // Clear list of mesmerising monsters.
             if (you.duration[DUR_MESMERISED])
             {
                 you.mesmerised_by.clear();
@@ -8119,9 +8117,89 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     return (true);
 }
 
+// Uses, and updates the global variable mmov.
+static void _find_good_alternate_move(monsters *monster,
+                                      const FixedArray<bool, 3, 3>& good_move)
+{
+    const int current_distance = distance(monster->pos(), monster->target);
+
+    int dir = -1;
+    for (int i = 0; i < 8; i++)
+    {
+        if (mon_compass[i] == mmov)
+        {
+            dir = i;
+            break;
+        }
+    }
+
+    // Only handle if the original move is to an adjacent square.
+    if (dir == -1)
+        return;
+
+    int dist[2];
+
+    // First 1 away, then 2 (3 is silly).
+    for (int j = 1; j <= 2; j++)
+    {
+        const int FAR_AWAY = 1000000;
+
+        // Try both directions (but randomize which one is first.)
+        const int sdir = coinflip() ? j : -j;
+        const int inc = -2 * j;
+
+        for (int mod = sdir, i = 0; i < 2; mod += inc, i++)
+        {
+            int newdir = (dir + 8 + mod) % 8;
+            if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
+            {
+                dist[i] = distance(monster->pos()+mon_compass[newdir],
+                                   monster->target);
+            }
+            else
+            {
+                dist[i] = (mons_is_fleeing(monster)) ? (-FAR_AWAY)
+                    : FAR_AWAY;
+            }
+        }
+
+        // Now choose.
+        if (dist[0] == dist[1] && abs(dist[0]) == FAR_AWAY)
+            continue;
+
+        // Which one was better? -- depends on FLEEING or not.
+        if (mons_is_fleeing(monster))
+        {
+            if (dist[0] >= dist[1] && dist[0] >= current_distance)
+            {
+                mmov = mon_compass[((dir+8)+sdir)%8];
+                break;
+            }
+            if (dist[1] >= dist[0] && dist[1] >= current_distance)
+            {
+                mmov = mon_compass[((dir+8)-sdir)%8];
+                break;
+            }
+        }
+        else
+        {
+            if (dist[0] <= dist[1] && dist[0] <= current_distance)
+            {
+                mmov = mon_compass[((dir+8)+sdir)%8];
+                break;
+            }
+            if (dist[1] <= dist[0] && dist[1] <= current_distance)
+            {
+                mmov = mon_compass[((dir+8)-sdir)%8];
+                break;
+            }
+        }
+    }
+}
+
 static bool _monster_move(monsters *monster)
 {
-    FixedArray < bool, 3, 3 > good_move;
+    FixedArray<bool, 3, 3> good_move;
     int count_x, count_y, count;
 
     const habitat_type habitat = mons_primary_habitat(monster);
@@ -8179,7 +8257,7 @@ static bool _monster_move(monsters *monster)
 
     if (monster->confused())
     {
-        if (mmov.x || mmov.y || one_chance_in(15))
+        if (!mmov.origin() || one_chance_in(15))
         {
             const coord_def newpos = monster->pos() + mmov;
             if (in_bounds(newpos)
@@ -8192,7 +8270,7 @@ static bool _monster_move(monsters *monster)
         return (false);
     }
 
-    // Let's not even bother with this if mmov.x and mmov.y are zero.
+    // Let's not even bother with this if mmov is zero.
     if (mmov.origin())
         return (false);
 
@@ -8299,92 +8377,7 @@ static bool _monster_move(monsters *monster)
     // gets it closer (farther for fleeing monsters) to its target.
     // If neither does, do nothing.
     if (good_move[mmov.x + 1][mmov.y + 1] == false)
-    {
-        int current_distance = distance(monster->pos(), monster->target);
-
-        int dir = -1;
-
-        for (int i = 0; i < 8; i++)
-        {
-            if (mon_compass[i] == mmov)
-            {
-                dir = i;
-                break;
-            }
-        }
-
-        if (dir < 0)
-            goto forget_it;
-
-        int dist[2];
-
-        // First 1 away, then 2 (3 is silly).
-        for (int j = 1; j <= 2; j++)
-        {
-            int sdir, inc;
-
-            if (coinflip())
-            {
-                sdir = -j;
-                inc = 2*j;
-            }
-            else
-            {
-                sdir = j;
-                inc = -2*j;
-            }
-
-            // Try both directions.
-            for (int mod = sdir, i = 0; i < 2; mod += inc, i++)
-            {
-                int newdir = (dir + 8 + mod) % 8;
-                if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
-                {
-                    dist[i] = distance(monster->pos()+mon_compass[newdir],
-                                       monster->target);
-                }
-                else
-                {
-                    dist[i] = (mons_is_fleeing(monster)) ? (-FAR_AWAY)
-                                                         : FAR_AWAY;
-                }
-            }
-
-            // Now choose.
-            if (dist[0] == dist[1] && abs(dist[0]) == FAR_AWAY)
-                continue;
-
-            // Which one was better? -- depends on FLEEING or not.
-            if (mons_is_fleeing(monster))
-            {
-                if (dist[0] >= dist[1] && dist[0] >= current_distance)
-                {
-                    mmov = mon_compass[((dir+8)+sdir)%8];
-                    break;
-                }
-                if (dist[1] >= dist[0] && dist[1] >= current_distance)
-                {
-                    mmov = mon_compass[((dir+8)-sdir)%8];
-                    break;
-                }
-            }
-            else
-            {
-                if (dist[0] <= dist[1] && dist[0] <= current_distance)
-                {
-                    mmov = mon_compass[((dir+8)+sdir)%8];
-                    break;
-                }
-                if (dist[1] <= dist[0] && dist[1] <= current_distance)
-                {
-                    mmov = mon_compass[((dir+8)-sdir)%8];
-                    break;
-                }
-            }
-        }
-    } // end - try to find good alternate move
-
-forget_it:
+        _find_good_alternate_move(monster, good_move);
 
     // ------------------------------------------------------------------
     // If we haven't found a good move by this point, we're not going to.
@@ -8400,7 +8393,7 @@ forget_it:
             grd(monster->pos() + mmov) = DNGN_FLOOR;
             set_terrain_changed(monster->pos() + mmov);
 
-            if (!silenced(you.pos()))
+            if (player_can_hear(monster->pos() + mmov))
             {
                 // Message depends on whether caused by boring beetle or
                 // acid (Dissolution).
@@ -8412,7 +8405,7 @@ forget_it:
     }
 
     bool ret = false;
-    if (good_move[mmov.x + 1][mmov.y + 1] && !(mmov.x == 0 && mmov.y == 0))
+    if (good_move[mmov.x + 1][mmov.y + 1] && !mmov.origin())
     {
         // Check for attacking player.
         if (monster->pos() + mmov == you.pos())
