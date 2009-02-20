@@ -317,7 +317,7 @@ static void _direction_again(dist& moves, targeting_type restricts,
     moves.isEndpoint    = false;
     moves.choseRay      = false;
 
-    if (you.prev_targ == MHITNOT && you.prev_grd_targ == coord_def(0, 0))
+    if (you.prev_targ == MHITNOT && you.prev_grd_targ.origin())
     {
         moves.isCancel = true;
         crawl_state.cancel_cmd_repeat();
