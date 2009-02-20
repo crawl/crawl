@@ -258,7 +258,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       5, 'C', false, false },
 
-    { BRANCH_TOMB, BRANCH_CRYPT, 3, 5, 0, 0,
+    { BRANCH_TOMB, BRANCH_CRYPT, 3, 5, BFLAG_ISLANDED, 0,
       DNGN_ENTER_TOMB, DNGN_RETURN_FROM_TOMB,
       "Tomb", "the Tomb of the Ancients", "Tomb",
       NULL,
