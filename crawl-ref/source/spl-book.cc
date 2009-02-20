@@ -2440,6 +2440,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         disc2 = 1 << max2;
 
     int highest_level = 0;
+    int lowest_level  = 10;
     bool all_spells_disc1 = true;
 
     // Finally fill the spell vector.
@@ -2449,6 +2450,8 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         int diff = spell_difficulty(chosen_spells[i]);
         if (diff > highest_level)
             highest_level = diff;
+        else if (diff < lowest_level)
+            lowest_level = diff;
 
         if (all_spells_disc1 && is_valid_spell(chosen_spells[i])
             && !spell_typematch( chosen_spells[i], disc1 ))
@@ -2474,7 +2477,8 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
             owner = god_name(god, false);
         else if (god_gift && one_chance_in(3) || one_chance_in(5))
         {
-            bool highlevel = (highest_level >= 6 + random2(3));
+            bool highlevel = (highest_level >= 7 + random2(3)
+                              && lowest_level > 1);
 
             if (disc1 != disc2)
             {

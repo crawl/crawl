@@ -1413,12 +1413,12 @@ static void _do_book_acquirement(item_def &book, int agent)
             // Count magic skills double to bias against manuals
             // for magic users.
             if (i >= SK_SPELLCASTING && i <= SK_POISON_MAGIC)
-                magic_weights += 2*weight;
+                magic_weights += weight;
             else
                 other_weights += weight;
         }
 
-        if (x_chance_in_y(other_weights, magic_weights + other_weights))
+        if (x_chance_in_y(other_weights, 2*magic_weights + other_weights))
         {
             choice = BOOK_MANUAL;
             if (magic_weights > 0)
@@ -1429,17 +1429,15 @@ static void _do_book_acquirement(item_def &book, int agent)
     if (choice == NUM_BOOKS)
     {
         choice = random_choose_weighted(
-                    60, BOOK_RANDART_THEME,
-           agent == GOD_SIF_MUNA ? 24 : 34, book.sub_type,
-                level == -1      ? 0 :
-           agent == GOD_SIF_MUNA ? 4 : 1, BOOK_RANDART_LEVEL,
-                    0);
+                                        30, BOOK_RANDART_THEME,
+           agent == GOD_SIF_MUNA ? 10 : 40, book.sub_type,
+                     level == -1 ?  0 :  1, BOOK_RANDART_LEVEL, 0);
     }
 
     // Acquired randart books have a chance of being named after the player.
     std::string owner = "";
-    if (agent == AQ_SCROLL && one_chance_in(10)
-        || agent == AQ_CARD_GENIE && one_chance_in(5))
+    if (agent == AQ_SCROLL && one_chance_in(12)
+        || agent == AQ_CARD_GENIE && one_chance_in(6))
     {
         owner = you.your_name;
     }
@@ -1467,14 +1465,15 @@ static void _do_book_acquirement(item_def &book, int agent)
         // else intentional fall-through
     }
     case BOOK_RANDART_THEME:
-        book.sub_type = choice;
-        make_book_theme_randart(book, 0, 0, 7, 22, SPELL_NO_SPELL, owner);
+        book.sub_type = BOOK_RANDART_THEME;
+        make_book_theme_randart(book, 0, 0, 5 + coinflip(), 20, SPELL_NO_SPELL,
+                                owner);
         break;
 
     case BOOK_RANDART_LEVEL:
     {
-        book.sub_type = choice;
-        int num_spells = 7 - (level + 1) / 2 + random_range(1, 2);
+        book.sub_type = BOOK_RANDART_LEVEL;
+        int num_spells = 5 - (level + 1) / 2 + random_range(1, 3);
         make_book_level_randart(book, level, num_spells, owner);
         break;
     }
@@ -1490,7 +1489,8 @@ static void _do_book_acquirement(item_def &book, int agent)
 
         for (int i = 0; i < NUM_SKILLS; i++)
         {
-            if (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING)
+            if (i == SK_UNUSED_1
+                || i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING)
             {
                 weights[i] = 0;
                 continue;
@@ -1504,7 +1504,7 @@ static void _do_book_acquirement(item_def &book, int agent)
 
             // If we don't know any magic skills, make non-magic skills
             // more likely.
-            if (!knows_magic && i < SK_SPELLCASTING)
+            if (!knows_magic && (i < SK_SPELLCASTING || i > SK_POISON_MAGIC))
                 w *= 2;
 
             weights[i] = w;

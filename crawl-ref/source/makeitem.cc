@@ -2518,7 +2518,6 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     if (allow_uniques && item_level > 2 && force_type == OBJ_RANDOM
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
-        // Same relative weights as acquirement
         int choice = random_choose_weighted(
             58, BOOK_RANDART_THEME,
              2, BOOK_RANDART_LEVEL, // 1/30
@@ -2528,12 +2527,12 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     }
 
     if (item.sub_type == BOOK_RANDART_THEME)
-        make_book_theme_randart(item, 0, 0, 7, 22);
+        make_book_theme_randart(item, 0, 0, 5 + coinflip(), 20);
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
         int max_level   = std::min( 9, std::max(1, item_level / 3) );
         int spell_level = random_range(1, max_level);
-        int num_spells  = 7 - (spell_level + 1) / 2 + random_range(1, 2);
+        int num_spells  = 5 - (spell_level + 1) / 2 + random_range(1, 3);
         make_book_level_randart(item, spell_level, num_spells);
     }
 }
