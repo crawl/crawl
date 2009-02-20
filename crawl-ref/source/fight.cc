@@ -2628,8 +2628,8 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         mitm[idx].link       = mitm[last_item].link;
         mitm[last_item].link = idx;
 
-        void (animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
-                              mon->foe, mon->god, true, true, &zombie_index));
+        animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
+                        mon->foe, mon->god, true, true, &zombie_index);
     }
 
     // No equipment to get, or couldn't get it for some reason.
