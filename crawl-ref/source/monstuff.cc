@@ -6894,8 +6894,6 @@ static void _swim_or_move_energy(monsters *mon)
 
 static void _handle_monster_move(monsters *monster)
 {
-    bool brkk = false;
-
     monster->hit_points = std::min(monster->max_hit_points,
                                    monster->hit_points);
 
@@ -7169,8 +7167,6 @@ static void _handle_monster_move(monsters *monster)
             // Calculates mmov based on monster target.
             _handle_movement(monster);
 
-            brkk = false;
-
             if (mons_is_confused(monster)
                 || monster->type == MONS_AIR_ELEMENTAL
                    && mons_is_submerged(monster))
@@ -7191,9 +7187,9 @@ static void _handle_monster_move(monsters *monster)
                 {
                     if (monsters_fight(monster, enemy))
                     {
-                        brkk = true;
                         mmov.reset();
                         DEBUG_ENERGY_USE("monsters_fight()");
+                        continue;
                     }
                     else
                     {
@@ -7208,9 +7204,6 @@ static void _handle_monster_move(monsters *monster)
                     }
                 }
             }
-
-            if (brkk)
-                continue;
         }
         _handle_nearby_ability( monster );
 
@@ -7306,13 +7299,10 @@ static void _handle_monster_move(monsters *monster)
                     }
 
                     mmov.reset();
-                    brkk = true;
                     DEBUG_ENERGY_USE("monsters_fight()");
+                    continue;
                 }
             }
-
-            if (brkk)
-                continue;
 
             if (monster->pos() + mmov == you.pos())
             {

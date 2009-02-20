@@ -11,6 +11,7 @@ REVISION("$Rev$");
 
 #include "it_use3.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <string.h>
 
@@ -61,20 +62,17 @@ static bool efreet_flask(void);
 
 void special_wielded()
 {
-    const int wpn = you.equip[EQ_WEAPON];
-    const int old_plus = you.inv[wpn].plus;
-    const int old_plus2 = you.inv[wpn].plus2;
-    const char old_colour = you.inv[wpn].colour;
-    bool makes_noise = false;
+    item_def&  weapon     = *you.weapon();
+    const int  old_plus   = weapon.plus;
+    const int  old_plus2  = weapon.plus2;
+    const char old_colour = weapon.colour;
 
     switch (you.special_wield)
     {
     case SPWLD_SING:
     case SPWLD_NOISE:
     {
-        makes_noise = (one_chance_in(20) && !silenced(you.pos()));
-
-        if (makes_noise)
+        if (!silenced(you.pos()) && one_chance_in(20))
         {
             std::string msg;
 
@@ -150,7 +148,7 @@ void special_wielded()
             // replace weapon references
             msg = replace_all(msg, "@The_weapon@", "The @weapon@");
             msg = replace_all(msg, "@the_weapon@", "the @weapon@");
-            msg = replace_all(msg, "@weapon@", you.inv[wpn].name(DESC_BASENAME));
+            msg = replace_all(msg, "@weapon@", weapon.name(DESC_BASENAME));
             // replace references to player name and god
             msg = replace_all(msg, "@player_name@", you.your_name);
             msg = replace_all(msg, "@player_god@",
@@ -159,7 +157,8 @@ void special_wielded()
 
             mpr(msg.c_str(), channel);
 
-        } // makes_noise
+            noisy(25, you.pos());
+        }
         break;
     }
 
@@ -169,25 +168,25 @@ void special_wielded()
         break;
 
     case SPWLD_VARIABLE:
-        do_uncurse_item( you.inv[wpn] );
+        do_uncurse_item(weapon);
 
-        if (x_chance_in_y(2, 5))     // 40% chance {dlb}
-            you.inv[wpn].plus  += (coinflip() ? +1 : -1);
+        if (x_chance_in_y(2, 5))
+            weapon.plus  += (coinflip() ? +1 : -1);
 
-        if (x_chance_in_y(2, 5))     // 40% chance {dlb}
-            you.inv[wpn].plus2 += (coinflip() ? +1 : -1);
+        if (x_chance_in_y(2, 5))
+            weapon.plus2 += (coinflip() ? +1 : -1);
 
-        if (you.inv[wpn].plus < -4)
-            you.inv[wpn].plus = -4;
-        else if (you.inv[wpn].plus > 16)
-            you.inv[wpn].plus = 16;
+        if (weapon.plus < -4)
+            weapon.plus = -4;
+        else if (weapon.plus > 16)
+            weapon.plus = 16;
 
-        if (you.inv[wpn].plus2 < -4)
-            you.inv[wpn].plus2 = -4;
-        else if (you.inv[wpn].plus2 > 16)
-            you.inv[wpn].plus2 = 16;
+        if (weapon.plus2 < -4)
+            weapon.plus2 = -4;
+        else if (weapon.plus2 > 16)
+            weapon.plus2 = 16;
 
-        you.inv[wpn].colour = random_colour();
+        weapon.colour = random_colour();
         break;
 
     case SPWLD_TORMENT:
@@ -207,20 +206,20 @@ void special_wielded()
         break;
 
     case SPWLD_POWER:
-        you.inv[wpn].plus  = stepdown_value( -4 + (you.hp / 5), 4, 4, 4, 20 );
-        you.inv[wpn].plus2 = you.inv[wpn].plus;
+        weapon.plus  = stepdown_value( -4 + (you.hp / 5), 4, 4, 4, 20 );
+        weapon.plus2 = weapon.plus;
         break;
 
     case SPWLD_OLGREB:
         // Giving Olgreb's staff a little lift since staves of poison have
         // been made better. -- bwr
-        you.inv[wpn].plus  = you.skills[SK_POISON_MAGIC] / 3;
-        you.inv[wpn].plus2 = you.inv[wpn].plus;
+        weapon.plus  = you.skills[SK_POISON_MAGIC] / 3;
+        weapon.plus2 = weapon.plus;
         break;
 
     case SPWLD_WUCAD_MU:
-        you.inv[wpn].plus  = ((you.intel > 25) ? 22 : you.intel - 3);
-        you.inv[wpn].plus2 = ((you.intel > 25) ? 13 : you.intel / 2);
+        weapon.plus  = std::min(you.intel - 3, 22);
+        weapon.plus2 = std::min(you.intel / 2, 13);
         break;
 
     case SPWLD_SHADOW:
@@ -237,16 +236,13 @@ void special_wielded()
         return;
     }
 
-    if (makes_noise)
-        noisy(25, you.pos());
-
-    if (old_plus != you.inv[wpn].plus
-        || old_plus2 != you.inv[wpn].plus2
-        || old_colour != you.inv[wpn].colour)
+    if (old_plus != weapon.plus
+        || old_plus2 != weapon.plus2
+        || old_colour != weapon.colour)
     {
         you.wield_change = true;
     }
-}                               // end special_wielded()
+}
 
 static bool _reaching_weapon_attack(const item_def& wpn)
 {

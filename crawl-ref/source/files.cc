@@ -1540,16 +1540,26 @@ void save_game_state()
         save_game(true);
 }
 
+static std::string _make_ghost_filename()
+{
+    if (you.level_type == LEVEL_PORTAL_VAULT)
+    {
+        std::string suffix = "ptl";
+        return get_savedir_filename("bones", "", suffix, true);
+    }
+    else
+    {
+        return make_filename("bones", you.your_level, you.where_are_you,
+                             you.level_type, true);
+    }
+}
+
 void _load_ghost(void)
 {
     char majorVersion;
     char minorVersion;
 
-    std::string cha_fil = make_filename("bones", you.your_level,
-                                        you.where_are_you,
-                                        you.level_type,
-                                        true );
-
+    const std::string cha_fil = _make_ghost_filename();
     FILE *gfile = fopen(cha_fil.c_str(), "rb");
 
     if (gfile == NULL)
@@ -1896,11 +1906,7 @@ void save_ghost( bool force )
         return;
     }
 
-    std::string cha_fil = make_filename( "bones", you.your_level,
-                                         you.where_are_you,
-                                         you.level_type,
-                                         true );
-
+    const std::string cha_fil = _make_ghost_filename();
     FILE *gfile = fopen(cha_fil.c_str(), "rb");
 
     // Don't overwrite existing bones!
