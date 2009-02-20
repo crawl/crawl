@@ -797,7 +797,7 @@ void annotate_level()
         mpr(get_level_annotation(li).c_str() );
     }
 
-    mpr( "Set level annotation to what? ", MSGCH_PROMPT );
+    mpr( "Set level annotation to what (using ! forces prompt)? ", MSGCH_PROMPT );
 
     char buf[77];
     if (cancelable_get_line( buf, sizeof(buf) ))
