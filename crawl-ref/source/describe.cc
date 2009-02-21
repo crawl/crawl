@@ -1632,7 +1632,7 @@ void append_spells(std::string &desc, const item_def &item)
 
     desc += "$$Spells                             Type                      Level$";
 
-    for (int j = 0; j < 8; j++)
+    for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
         spell_type stype = which_spell_in_book(item, j);
         if (stype == SPELL_NO_SPELL)
@@ -1861,8 +1861,11 @@ std::string get_item_description( const item_def &item, bool verbose,
             description << "$This book is beyond your current level of "
                            "understanding.";
         }
-        else if (!verbose && is_random_artefact( item ))
+        else if (!verbose
+                 && (Options.dump_book_spells || is_random_artefact(item)))
         {
+            mprf("book: %s, option: %s", item.name(DESC_PLAIN).c_str(),
+                 Options.dump_book_spells ? "true" : "false");
             append_spells( desc, item );
             if (desc.empty())
                 need_extra_line = false;

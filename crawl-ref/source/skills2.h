@@ -84,5 +84,6 @@ void show_skills();
  * *********************************************************************** */
 void wield_warning(bool newWeapon = true);
 
+bool is_invalid_skill(int skill);
 
 #endif

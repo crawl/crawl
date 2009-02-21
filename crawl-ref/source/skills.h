@@ -20,5 +20,4 @@ void calc_total_skill_points( void );
  * *********************************************************************** */
 int exercise(int exsk, int deg);
 
-
 #endif

@@ -1980,12 +1980,8 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
                          int species, int str, int dex, int god )
 {
     // paranoia
-    if (best_skill == SK_UNUSED_1
-        || best_skill > SK_UNARMED_COMBAT && best_skill < SK_SPELLCASTING
-        || best_skill >= NUM_SKILLS)
-    {
+    if (is_invalid_skill(best_skill))
         return ("Adventurer");
-    }
 
     if (species == -1)
         species = you.species;
@@ -2072,12 +2068,8 @@ skill_type best_skill( int min_skill, int max_skill, int excl_skill )
 
     for (int i = min_skill; i <= max_skill; i++)    // careful!!!
     {
-        if (i == excl_skill
-            || i == SK_UNUSED_1
-            || i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING)
-        {
+        if (i == excl_skill || is_invalid_skill(i))
             continue;
-        }
 
         if (you.skills[i] > best_skill_level)
         {
@@ -2118,8 +2110,7 @@ void init_skill_order( void )
 {
     for (int i = SK_FIGHTING; i < NUM_SKILLS; i++)
     {
-        if (i == SK_UNUSED_1
-            || (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING))
+        if (is_invalid_skill(i))
         {
             you.skill_order[i] = MAX_SKILL_ORDER;
             continue;
@@ -2132,12 +2123,8 @@ void init_skill_order( void )
 
         for (int j = SK_FIGHTING; j < NUM_SKILLS; j++)
         {
-            if (i == j
-                || j == SK_UNUSED_1
-                || (j > SK_UNARMED_COMBAT && j < SK_SPELLCASTING))
-            {
+            if (i == j || is_invalid_skill(j))
                 continue;
-            }
 
             const int j_diff = species_skills( j, you.species );
             const unsigned int j_points = (you.skill_points[j] * 100) / j_diff;
@@ -2295,4 +2282,15 @@ void wield_warning(bool newWeapon)
                  "%s if you were nimbler.", mstr);
         }
     }
+}
+
+bool is_invalid_skill(int skill)
+{
+    if (skill < 0 || skill == SK_UNUSED_1 || skill >= NUM_SKILLS)
+        return (true);
+
+    if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
+        return (true);
+
+    return (false);
 }

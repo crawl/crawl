@@ -836,6 +836,7 @@ void game_options::reset_options()
     dump_message_count     = 7;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
     dump_item_origin_price = -1;
+    dump_book_spells       = true;
 
     drop_mode              = DM_MULTI;
     pickup_mode            = -1;
@@ -2958,6 +2959,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (dump_item_origin_price < -1)
             dump_item_origin_price = -1;
     }
+    else BOOL_OPTION(dump_book_spells);
     else BOOL_OPTION(level_map_title);
     else BOOL_OPTION(target_zero_exp);
     else BOOL_OPTION(target_oos);

@@ -1832,7 +1832,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         if (level == -1)
         {
             int max_level =
-                completely_random ? 9 : std::min(9, you.get_experience_level());
+                (completely_random ? 9
+                                   : std::min(9, you.get_experience_level()));
 
             level = random_range(1, max_level);
         }
@@ -1921,6 +1922,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     std::vector<bool> spell_used(spell_list.size(), false);
     std::vector<bool> avoid_memorised(spell_list.size(), !completely_random);
+    std::vector<bool> avoid_seen(spell_list.size(), !completely_random);
 
     spell_type chosen_spells[SPELLBOOK_SIZE];
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -1939,9 +1941,16 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
         if (avoid_memorised[spell_pos] && is_memorised(spell))
         {
-           // Only once.
-           avoid_memorised[spell_pos] = false;
-           continue;
+            // Only once.
+            avoid_memorised[spell_pos] = false;
+            continue;
+        }
+
+        if (avoid_seen[spell_pos] && you.seen_spell[spell] && coinflip())
+        {
+            // Only once.
+            avoid_seen[spell_pos] = false;
+            continue;
         }
 
         spell_used[spell_pos]     = true;
@@ -2049,6 +2058,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     // spells are discarded.
     std::vector<int> ok_discs;
     std::vector<int> skills;
+    std::vector<int> spellcount;
     for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
     {
         int disc = 1 << i;
@@ -2058,13 +2068,14 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 
         std::vector<spell_type> spell_list;
         _get_spell_list(spell_list, disc, disc, god, !completely_random,
-                        junk1, junk2, true);
+                        junk1, junk2, !completely_random);
 
         if (spell_list.empty())
             continue;
 
         ok_discs.push_back(disc);
         skills.push_back(spell_type2skill(disc));
+        spellcount.push_back(spell_list.size());
     }
 
     int num_discs = ok_discs.size();
@@ -2086,10 +2097,14 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         int total_skills = 0;
         for (int i = 0; i < num_discs; i++)
         {
-            int skill = skills[i];
-            skill_weights[i] = you.skills[skill]
-                               * 100 / species_skills(skill, you.species);
+            int skill  = skills[i];
+            int weight = you.skills[skill]
+                         * 200 / species_skills(skill, you.species) + 1;
 
+            if (spellcount[i] < 5)
+                weight -= 5 - spellcount[i];
+
+            skill_weights[i] = std::max(0, weight);
             total_skills += skill_weights[i];
         }
 
@@ -2478,7 +2493,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         else if (god_gift && one_chance_in(3) || one_chance_in(5))
         {
             bool highlevel = (highest_level >= 7 + random2(3)
-                              && lowest_level > 1);
+                              && (lowest_level > 1 || coinflip()));
 
             if (disc1 != disc2)
             {

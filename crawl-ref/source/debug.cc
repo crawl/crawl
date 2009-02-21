@@ -204,7 +204,7 @@ static int _debug_prompt_for_skill( const char *prompt )
     for (int i = 0; i < NUM_SKILLS; i++)
     {
         // Avoid the bad values.
-        if (i == SK_UNUSED_1 || (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING))
+        if (is_invalid_skill(i))
             continue;
 
         char sk_name[80];
@@ -3711,11 +3711,8 @@ void wizard_set_all_skills(void)
 
         for (i = SK_FIGHTING; i < NUM_SKILLS; i++)
         {
-            if (i == SK_UNUSED_1
-                || (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING))
-            {
+            if (is_invalid_skill(i))
                 continue;
-            }
 
             const int points = (skill_exp_needed( amount )
                                 * species_skills( i, you.species )) / 100;

@@ -352,8 +352,9 @@ include = tiles_options.txt
 # dump_item_origin_price = -1
 # dump_message_count = 20
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
-# dump_order += turns_by_place, skills,s pells, overview, mutations,
+# dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
+# dump_book_spells = false
 
 ##### 5-b	Notes #################################
 #

@@ -1041,7 +1041,7 @@ static int _acquirement_weapon_subtype()
 
     for (int i = SK_SHORT_BLADES; i <= SK_DARTS; i++)
     {
-        if (i == SK_UNUSED_1)
+        if (is_invalid_skill(i))
             continue;
 
         // Adding a small constant allows for the occasional
@@ -1328,9 +1328,10 @@ static int _spell_weight(spell_type spell)
     }
     ASSERT(count > 0);
 
-    int level = spell_difficulty(spell) - 1;
+    int leveldiff = 5 - spell_difficulty(spell);
 
-    return std::max(0, weight/count - 2*level);
+    return std::max(0, 2 * weight/count + leveldiff);
+
 }
 
 // When randomly picking a book for acquirement, use the sum of the
@@ -1401,7 +1402,7 @@ static void _do_book_acquirement(item_def &book, int agent)
 
         for (int i = 0; i < NUM_SKILLS; i++)
         {
-            if (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING)
+            if (is_invalid_skill(i))
                 continue;
 
             int weight = you.skills[i] * 100 / species_skills(i, you.species);
@@ -1472,9 +1473,9 @@ static void _do_book_acquirement(item_def &book, int agent)
 
     case BOOK_RANDART_LEVEL:
     {
-        book.sub_type = BOOK_RANDART_LEVEL;
-        int num_spells = 5 - (level + 1) / 2 + random_range(1, 3);
-        make_book_level_randart(book, level, num_spells, owner);
+        book.sub_type  = BOOK_RANDART_LEVEL;
+        int max_spells = 5 + level/3;
+        make_book_level_randart(book, level, max_spells, owner);
         break;
     }
 
@@ -1489,8 +1490,7 @@ static void _do_book_acquirement(item_def &book, int agent)
 
         for (int i = 0; i < NUM_SKILLS; i++)
         {
-            if (i == SK_UNUSED_1
-                || i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING)
+            if (is_invalid_skill(i))
             {
                 weights[i] = 0;
                 continue;
