@@ -943,7 +943,7 @@ void direction(dist& moves, targeting_type restricts,
         if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
         {
             const monsters *montarget = &menv[you.prev_targ];
-            if (mons_near(montarget) && player_monster_visible(montarget)
+            if (you.can_see(montarget)
                 && !mons_friendly(montarget) // not made friendly since then
                 && _is_target_in_range(montarget->pos(), range))
             {
@@ -1235,8 +1235,7 @@ void direction(dist& moves, targeting_type restricts,
             {
                 const monsters *montarget = &menv[you.prev_targ];
 
-                if (!mons_near(montarget)
-                    || !player_monster_visible( montarget ))
+                if (!you.can_see(montarget))
                 {
                     mpr("You can't see that creature any more.",
                         MSGCH_EXAMINE_FILTER);

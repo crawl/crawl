@@ -1822,7 +1822,7 @@ blessing_done:
         whom = "you";
     else
     {
-        if (mons_near(follower) && player_monster_visible(follower))
+        if (you.can_see(follower))
             whom = follower->name(DESC_NOCAP_THE);
         else
             whom = "a follower";

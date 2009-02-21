@@ -1201,7 +1201,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     mark_interesting_monst(&menv[id], mg.behaviour);
 
-    if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
+    if (you.can_see(&menv[id]))
         seen_monster(&menv[id]);
 
     if (crawl_state.arena)
@@ -2422,7 +2422,7 @@ bool player_angers_monster(monsters *mon)
         mon->del_ench(ENCH_CHARM);
         behaviour_event(mon, ME_ALERT, MHITYOU);
 
-        if (see_grid(mon->pos()) && player_monster_visible(mon))
+        if (you.can_see(mon))
         {
             std::string aura;
 

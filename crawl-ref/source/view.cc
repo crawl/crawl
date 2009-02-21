@@ -5007,7 +5007,7 @@ void view_update_at(const coord_def &pos)
 void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
                           int fmc_delay)
 {
-    if (mons_near(mon) && player_monster_visible(mon))
+    if (you.can_see(mon))
     {
         unsigned char old_flash_colour = you.flash_colour;
         coord_def c(mon->pos());

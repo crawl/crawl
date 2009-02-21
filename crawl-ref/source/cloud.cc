@@ -413,32 +413,19 @@ beam_type cloud2beam(cloud_type flavour)
     switch (flavour)
     {
     default:
-    case CLOUD_NONE:
-        return BEAM_NONE;
-    case CLOUD_FIRE:
-        return BEAM_FIRE;
-    case CLOUD_STINK:
-        return BEAM_POTION_STINKING_CLOUD;
-    case CLOUD_COLD:
-        return BEAM_COLD;
-    case CLOUD_POISON:
-        return BEAM_POISON;
-    case CLOUD_BLACK_SMOKE:
-        return BEAM_POTION_BLACK_SMOKE;
-    case CLOUD_GREY_SMOKE:
-        return BEAM_POTION_GREY_SMOKE;
-    case CLOUD_BLUE_SMOKE:
-        return BEAM_POTION_BLUE_SMOKE;
-    case CLOUD_PURP_SMOKE:
-        return BEAM_POTION_PURP_SMOKE;
-    case CLOUD_STEAM:
-        return BEAM_STEAM;
-    case CLOUD_MIASMA:
-        return BEAM_MIASMA;
-    case CLOUD_CHAOS:
-        return BEAM_CHAOS;
-    case CLOUD_RANDOM:
-        return BEAM_RANDOM;
+    case CLOUD_NONE:        return BEAM_NONE;
+    case CLOUD_FIRE:        return BEAM_FIRE;
+    case CLOUD_STINK:       return BEAM_POTION_STINKING_CLOUD;
+    case CLOUD_COLD:        return BEAM_COLD;
+    case CLOUD_POISON:      return BEAM_POISON;
+    case CLOUD_BLACK_SMOKE: return BEAM_POTION_BLACK_SMOKE;
+    case CLOUD_GREY_SMOKE:  return BEAM_POTION_GREY_SMOKE;
+    case CLOUD_BLUE_SMOKE:  return BEAM_POTION_BLUE_SMOKE;
+    case CLOUD_PURP_SMOKE:  return BEAM_POTION_PURP_SMOKE;
+    case CLOUD_STEAM:       return BEAM_STEAM;
+    case CLOUD_MIASMA:      return BEAM_MIASMA;
+    case CLOUD_CHAOS:       return BEAM_CHAOS;
+    case CLOUD_RANDOM:      return BEAM_RANDOM;
     }
 }
 

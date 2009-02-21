@@ -678,7 +678,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
     if (cause == NULL || invalid_monster(cause))
         return lose_stat(which_stat, stat_loss, force, NULL, true);
 
-    bool        vis  = mons_near(cause) && player_monster_visible(cause);
+    bool        vis  = you.can_see(cause);
     std::string name = cause->name(DESC_NOCAP_A, true);
 
     if (cause->has_ench(ENCH_SHAPESHIFTER))
@@ -2078,9 +2078,8 @@ void yell(bool force)
         std::string previous;
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
-            monsters *target = &menv[you.prev_targ];
-            if (target->alive() && mons_near(target)
-                && player_monster_visible(target))
+            const monsters *target = &menv[you.prev_targ];
+            if (target->alive() && you.can_see(target))
             {
                 previous = "   p - Attack previous target.";
                 targ_prev = true;

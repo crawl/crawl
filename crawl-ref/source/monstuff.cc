@@ -2091,7 +2091,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     mark_interesting_monst(monster);
 
     // If new monster is visible to player, then we've seen it.
-    if (player_monster_visible(monster) && mons_near(monster))
+    if (you.can_see(monster))
     {
         seen_monster(monster);
         // If the player saw both the begining and end results of a shifter
@@ -3003,7 +3003,7 @@ void make_mons_leave_level(monsters *mon)
 {
     if (mons_is_pacified(mon))
     {
-        if (mons_near(mon) && player_monster_visible(mon))
+        if (you.can_see(mon))
             _mons_indicate_level_exit(mon);
 
         // Pacified monsters leaving the level take their stuff with
@@ -4931,8 +4931,10 @@ static bool _is_player_or_mon_sanct(const monsters* monster)
 }
 
 bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
-                       bool placement, bool extra_careful)
+                       bool placement)
 {
+    bool extra_careful = placement;
+
     if (placement)
         extra_careful = true;
 
@@ -5016,9 +5018,8 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
     return (true);
 }
 
-// Like the above, but prevents monsters from moving into cloud if it
-// would anger the player's god, and also allows a monster to move from
-// one damaging cloud to another, even if they're of different types.
+// Like the above, but allow a monster to move from one damaging cloud
+// to another, even if they're of different types.
 bool mons_avoids_cloud(const monsters *monster, int cloud_num,
                        cloud_type *cl_type, bool placement)
 {
@@ -5035,12 +5036,8 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
     if (cl_type != NULL)
         *cl_type = cloud.type;
 
-    const bool careful_friendly
-        = YOU_KILL(cloud.killer) && mons_friendly(monster)
-       && god_hates_attacking_friend(you.religion, monster);
-
     // Is the target cloud okay?
-    if (!mons_avoids_cloud(monster, cloud.type, placement, careful_friendly))
+    if (!mons_avoids_cloud(monster, cloud.type, placement))
         return (false);
 
     // If we're already in a cloud that we'd want to avoid then moving
@@ -5055,13 +5052,7 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
 
     const cloud_struct &our_cloud = env.cloud[our_cloud_num];
 
-    // Don't move monster from a cloud that won't anger their god to one
-    // that will.
-    if (!YOU_KILL(our_cloud.killer) && careful_friendly)
-        return (true);
-
-    return (!mons_avoids_cloud(monster, our_cloud.type, true,
-                               careful_friendly));
+    return (!mons_avoids_cloud(monster, our_cloud.type, true));
 }
 
 //---------------------------------------------------------------
@@ -5886,11 +5877,8 @@ static bool _handle_reaching(monsters *monster)
     }
 
     // Player saw the item reach.
-    if (ret && !is_artefact(mitm[wpn]) && mons_near(monster)
-        && player_monster_visible(monster))
-    {
+    if (ret && !is_artefact(mitm[wpn]) && you.can_see(monster))
         set_ident_flags(mitm[wpn], ISFLAG_KNOW_TYPE);
-    }
 
     return ret;
 }
@@ -5917,8 +5905,7 @@ static bool _handle_scroll(monsters *monster)
 
     bool                    read        = false;
     item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
-    bool                    was_visible =
-        mons_near(monster) && player_monster_visible(monster);
+    bool                    was_visible = you.can_see(monster);
 
     // Notice how few cases are actually accounted for here {dlb}:
     const int scroll_type = mitm[monster->inv[MSLOT_SCROLL]].sub_type;
@@ -6013,7 +6000,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 
     bool niceWand    = false;
     bool zap         = false;
-    bool was_visible = (mons_near(monster) && player_monster_visible(monster));
+    bool was_visible = you.can_see(monster);
 
     item_def &wand(mitm[monster->inv[MSLOT_WAND]]);
 
@@ -8190,7 +8177,6 @@ static void _find_good_alternate_move(monsters *monster,
 static bool _monster_move(monsters *monster)
 {
     FixedArray<bool, 3, 3> good_move;
-    int count_x, count_y, count;
 
     const habitat_type habitat = mons_primary_habitat(monster);
     bool deep_water_available = false;
@@ -8226,7 +8212,7 @@ static bool _monster_move(monsters *monster)
         int noise_level = get_shout_noise_level(mons_shouts(monster->type));
         if (noise_level > 0)
         {
-            if (mons_near(monster) && player_monster_visible(monster))
+            if (you.can_see(monster))
             {
                 if (one_chance_in(10))
                 {
@@ -8264,8 +8250,8 @@ static bool _monster_move(monsters *monster)
     if (mmov.origin())
         return (false);
 
-    for (count_x = 0; count_x < 3; count_x++)
-        for (count_y = 0; count_y < 3; count_y++)
+    for (int count_x = 0; count_x < 3; count_x++)
+        for (int count_y = 0; count_y < 3; count_y++)
         {
             const int targ_x = monster->pos().x + count_x - 1;
             const int targ_y = monster->pos().y + count_y - 1;
@@ -8342,21 +8328,19 @@ static bool _monster_move(monsters *monster)
         && (one_chance_in(3)
             || monster->hit_points <= (monster->max_hit_points * 3) / 4))
     {
-        count = 0;
+        int count = 0;
 
-        for (count_x = 0; count_x < 3; count_x++)
-            for (count_y = 0; count_y < 3; count_y++)
+        for (int cx = 0; cx < 3; cx++)
+            for (int cy = 0; cy < 3; cy++)
             {
-                if (good_move[count_x][count_y]
-                    && grd[monster->pos().x + count_x - 1][monster->pos().y + count_y - 1]
+                if (good_move[cx][cy]
+                    && grd[monster->pos().x + cx - 1][monster->pos().y + cy - 1]
                             == DNGN_DEEP_WATER)
                 {
-                    count++;
-
-                    if (one_chance_in( count ))
+                    if (one_chance_in(++count))
                     {
-                        mmov.x = count_x - 1;
-                        mmov.y = count_y - 1;
+                        mmov.x = cx - 1;
+                        mmov.y = cy - 1;
                     }
                 }
             }
@@ -8496,7 +8480,10 @@ static void _mons_in_cloud(monsters *monster)
     switch (cloud.type)
     {
     case CLOUD_DEBUGGING:
-        end(1, false, "Fatal error: monster steps on nonexistent cloud!");
+        mprf(MSGCH_ERROR,
+             "Monster %s stepped on a nonexistent cloud at (%d,%d)",
+             monster->name(DESC_PLAIN, true).c_str(),
+             monster->pos().x, monster->pos().y);
         return;
 
     case CLOUD_FIRE:
@@ -8632,7 +8619,7 @@ static void _mons_in_cloud(monsters *monster)
     }
 }
 
-bool monster_descriptor(int which_class, unsigned char which_descriptor)
+bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
 {
     if (which_descriptor == MDSC_LEAVES_HIDE)
     {
@@ -8708,20 +8695,18 @@ bool message_current_target()
         if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
             return (false);
 
-        const monsters *montarget = &menv[you.prev_targ];
-        return (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU
-                && mons_near(montarget) && player_monster_visible(montarget));
+        return (you.can_see(&menv[you.prev_targ]));
     }
 
     if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
     {
         const monsters *montarget = &menv[you.prev_targ];
 
-        if (mons_near(montarget) && player_monster_visible(montarget))
+        if (you.can_see(montarget))
         {
-            mprf( MSGCH_PROMPT, "Current target: %s "
-                  "(use p or f to fire at it again.)",
-                  montarget->name(DESC_PLAIN).c_str() );
+            mprf(MSGCH_PROMPT, "Current target: %s "
+                 "(use p or f to fire at it again.)",
+                 montarget->name(DESC_PLAIN).c_str());
             return (true);
         }
 
@@ -8777,40 +8762,23 @@ static spell_type _map_wand_to_mspell(int wand_type)
 {
     switch (wand_type)
     {
-    case WAND_FLAME:
-        return SPELL_THROW_FLAME;
-    case WAND_FROST:
-        return SPELL_THROW_FROST;
-    case WAND_SLOWING:
-        return SPELL_SLOW;
-    case WAND_HASTING:
-        return SPELL_HASTE;
-    case WAND_MAGIC_DARTS:
-        return SPELL_MAGIC_DART;
-    case WAND_HEALING:
-        return SPELL_LESSER_HEALING;
-    case WAND_PARALYSIS:
-        return SPELL_PARALYSE;
-    case WAND_FIRE:
-        return SPELL_BOLT_OF_FIRE;
-    case WAND_COLD:
-        return SPELL_BOLT_OF_COLD;
-    case WAND_CONFUSION:
-        return SPELL_CONFUSE;
-    case WAND_INVISIBILITY:
-        return SPELL_INVISIBILITY;
-    case WAND_TELEPORTATION:
-        return SPELL_TELEPORT_OTHER;
-    case WAND_LIGHTNING:
-        return SPELL_LIGHTNING_BOLT;
-    case WAND_DRAINING:
-        return SPELL_BOLT_OF_DRAINING;
-    case WAND_DISINTEGRATION:
-        return SPELL_DISINTEGRATE;
-    case WAND_POLYMORPH_OTHER:
-        return SPELL_POLYMORPH_OTHER;
-    default:
-        return SPELL_NO_SPELL;
+    case WAND_FLAME:           return SPELL_THROW_FLAME;
+    case WAND_FROST:           return SPELL_THROW_FROST;
+    case WAND_SLOWING:         return SPELL_SLOW;
+    case WAND_HASTING:         return SPELL_HASTE;
+    case WAND_MAGIC_DARTS:     return SPELL_MAGIC_DART;
+    case WAND_HEALING:         return SPELL_LESSER_HEALING;
+    case WAND_PARALYSIS:       return SPELL_PARALYSE;
+    case WAND_FIRE:            return SPELL_BOLT_OF_FIRE;
+    case WAND_COLD:            return SPELL_BOLT_OF_COLD;
+    case WAND_CONFUSION:       return SPELL_CONFUSE;
+    case WAND_INVISIBILITY:    return SPELL_INVISIBILITY;
+    case WAND_TELEPORTATION:   return SPELL_TELEPORT_OTHER;
+    case WAND_LIGHTNING:       return SPELL_LIGHTNING_BOLT;
+    case WAND_DRAINING:        return SPELL_BOLT_OF_DRAINING;
+    case WAND_DISINTEGRATION:  return SPELL_DISINTEGRATE;
+    case WAND_POLYMORPH_OTHER: return SPELL_POLYMORPH_OTHER;
+    default:                   return SPELL_NO_SPELL;
     }
 }
 
@@ -8870,10 +8838,9 @@ bool shift_monster(monsters *mon, coord_def p)
 
     if (count > 0)
     {
-        const int mon_index = mgrd(mon->pos());
         mgrd(mon->pos()) = NON_MONSTER;
-        mgrd(result) = mon_index;
         mon->moveto(result);
+        mgrd(result) = mon->mindex();
     }
 
     return (count > 0);

@@ -157,35 +157,14 @@ monsters *choose_random_monster_on_level(
     bool in_sight = true, bool near_by = false,
     bool prefer_named = false, bool prefer_priest = false);
 
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 bool swap_places(monsters *monster);
 bool swap_places(monsters *monster, const coord_def &loc);
 bool swap_check(monsters *monster, coord_def &loc, bool quiet = false);
 
 
-/* ***********************************************************************
- * called from: bang - beam - direct - fight - spells1 - spells2 - spells3
- * *********************************************************************** */
 void print_wounds(const monsters *monster);
-
-
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void handle_monsters(void);
-
-
-/* ***********************************************************************
- * called from: misc
- * *********************************************************************** */
-bool monster_descriptor(int which_class, unsigned char which_descriptor);
-
-
-/* ***********************************************************************
- * called from: direct - item_use - spells1
- * *********************************************************************** */
+bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 bool message_current_target(void);
 
 unsigned int monster_index(const monsters *monster);
@@ -209,12 +188,10 @@ int mons_thrown_weapon_damage(const item_def *weap);
 int mons_natural_regen_rate(monsters *monster);
 
 bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
-                       bool placement = false,
-                       bool extra_careful = false);
+                       bool placement = false);
 
-// Like the above, but prevents monsters from moving into cloud if it
-// would anger the player's god, and also allows a monster to move from
-// one damaging cloud to another.
+// Like the above, but allow a monster to move from one damaging cloud
+// to another.
 bool mons_avoids_cloud(const monsters *monster, int cloud_num,
                        cloud_type *cl_type = NULL, bool placement = false);
 #endif

@@ -4758,7 +4758,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
         return;
     }
 
-    bool        vis  = mons_near(cause) && player_monster_visible(cause);
+    bool        vis  = you.can_see(cause);
     std::string name = cause->name(DESC_NOCAP_A, true);
 
     if (cause->has_ench(ENCH_SHAPESHIFTER))

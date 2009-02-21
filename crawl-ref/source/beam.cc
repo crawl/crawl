@@ -2719,7 +2719,7 @@ void mimic_alert(monsters *mimic)
         return;
 
     bool should_id = !testbits(mimic->flags, MF_KNOWN_MIMIC)
-                     && player_monster_visible(mimic) && mons_near(mimic);
+        && you.can_see(mimic);
 
     // If we got here, we at least got a resists message, if not
     // a full wounds printing. Thus, might as well id the mimic.

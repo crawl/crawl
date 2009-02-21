@@ -235,7 +235,7 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
 
     if (mons_is_insubstantial(mon->type))
     {
-        if (mons_near(mon) && player_monster_visible(mon))
+        if (you.can_see(mon))
         {
             mprf("The net passes right through %s!",
                  mon->name(DESC_NOCAP_THE).c_str());

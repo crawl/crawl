@@ -1130,8 +1130,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         return;
     }
 
-    bool was_seen = player_monster_visible(monster) && mons_near(monster)
-                    && !mons_is_lurking(monster);
+    bool was_seen = you.can_see(monster) && !mons_is_lurking(monster);
 
     if (!silent)
         simple_monster_message(monster, " disappears!");
@@ -2449,7 +2448,7 @@ static bool _make_monster_angry(const monsters *mon, monsters *targ)
     if (victim.distance_from(targ->pos()) > victim.distance_from(mon->pos()))
         return (false);
 
-    if (mons_near(mon) && player_monster_visible(mon))
+    if (you.can_see(mon))
     {
         mprf("%s goads %s on!", mon->name(DESC_CAP_THE).c_str(),
              targ->name(DESC_NOCAP_THE).c_str());

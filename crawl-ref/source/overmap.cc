@@ -109,18 +109,13 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
 
 static dungeon_feature_type portal_to_feature(portal_type p)
 {
-    switch ( p )
+    switch (p)
     {
-    case PORTAL_LABYRINTH:
-        return DNGN_ENTER_LABYRINTH;
-    case PORTAL_HELL:
-        return DNGN_ENTER_HELL;
-    case PORTAL_ABYSS:
-        return DNGN_ENTER_ABYSS;
-    case PORTAL_PANDEMONIUM:
-        return DNGN_ENTER_PANDEMONIUM;
-    default:
-        return DNGN_FLOOR;
+    case PORTAL_LABYRINTH:   return DNGN_ENTER_LABYRINTH;
+    case PORTAL_HELL:        return DNGN_ENTER_HELL;
+    case PORTAL_ABYSS:       return DNGN_ENTER_ABYSS;
+    case PORTAL_PANDEMONIUM: return DNGN_ENTER_PANDEMONIUM;
+    default:                 return DNGN_FLOOR;
     }
 }
 
@@ -128,16 +123,11 @@ static const char* portaltype_to_string(portal_type p)
 {
     switch ( p )
     {
-    case PORTAL_LABYRINTH:
-        return "<cyan>Labyrinth:</cyan>";
-    case PORTAL_HELL:
-        return "<red>Hell:</red>";
-    case PORTAL_ABYSS:
-        return "<magenta>Abyss:</magenta>";
-    case PORTAL_PANDEMONIUM:
-        return "<blue>Pan:</blue>";
-    default:
-        return "<lightred>Buggy:</lightred>";
+    case PORTAL_LABYRINTH:   return "<cyan>Labyrinth:</cyan>";
+    case PORTAL_HELL:        return "<red>Hell:</red>";
+    case PORTAL_ABYSS:       return "<magenta>Abyss:</magenta>";
+    case PORTAL_PANDEMONIUM: return "<blue>Pan:</blue>";
+    default:                 return "<lightred>Buggy:</lightred>";
     }
 }
 
@@ -145,32 +135,19 @@ static std::string shoptype_to_string(shop_type s)
 {
     switch ( s )
     {
-    case SHOP_WEAPON:
-        return "(";
-    case SHOP_WEAPON_ANTIQUE:
-        return "<yellow>(</yellow>";
-    case SHOP_ARMOUR:
-        return "[";
-    case SHOP_ARMOUR_ANTIQUE:
-        return "<yellow>[</yellow>";
-    case SHOP_GENERAL:
-        return "*";
-    case SHOP_GENERAL_ANTIQUE:
-        return "<yellow>*</yellow>";
-    case SHOP_JEWELLERY:
-        return "=";
-    case SHOP_WAND:
-        return "/";
-    case SHOP_BOOK:
-        return "+";
-    case SHOP_FOOD:
-        return "%";
-    case SHOP_DISTILLERY:
-        return "!";
-    case SHOP_SCROLL:
-        return "?";
-    default:
-        return "x";
+    case SHOP_WEAPON:          return "(";
+    case SHOP_WEAPON_ANTIQUE:  return "<yellow>(</yellow>";
+    case SHOP_ARMOUR:          return "[";
+    case SHOP_ARMOUR_ANTIQUE:  return "<yellow>[</yellow>";
+    case SHOP_GENERAL:         return "*";
+    case SHOP_GENERAL_ANTIQUE: return "<yellow>*</yellow>";
+    case SHOP_JEWELLERY:       return "=";
+    case SHOP_WAND:            return "/";
+    case SHOP_BOOK:            return "+";
+    case SHOP_FOOD:            return "%";
+    case SHOP_DISTILLERY:      return "!";
+    case SHOP_SCROLL:          return "?";
+    default:                   return "x";
     }
 }
 
@@ -664,16 +641,11 @@ portal_type feature_to_portal( unsigned char feat )
 {
     switch (feat)
     {
-    case DNGN_ENTER_LABYRINTH:
-        return PORTAL_LABYRINTH;
-    case DNGN_ENTER_HELL:
-        return PORTAL_HELL;
-    case DNGN_ENTER_ABYSS:
-        return PORTAL_ABYSS;
-    case DNGN_ENTER_PANDEMONIUM:
-        return PORTAL_PANDEMONIUM;
-    default:
-        return PORTAL_NONE;
+    case DNGN_ENTER_LABYRINTH:   return PORTAL_LABYRINTH;
+    case DNGN_ENTER_HELL:        return PORTAL_HELL;
+    case DNGN_ENTER_ABYSS:       return PORTAL_ABYSS;
+    case DNGN_ENTER_PANDEMONIUM: return PORTAL_PANDEMONIUM;
+    default:                     return PORTAL_NONE;
     }
 }
 
@@ -729,8 +701,7 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
 
 ////////////////////////////////////////////////////////////////////////
 
-void set_level_annotation(std::string str,
-                          level_id li)
+void set_level_annotation(std::string str, level_id li)
 {
     if (str.empty())
     {
@@ -756,8 +727,7 @@ std::string get_level_annotation(level_id li)
     return (i->second);
 }
 
-bool level_annotation_has(std::string find,
-                          level_id li)
+bool level_annotation_has(std::string find, level_id li)
 {
     std::string str = get_level_annotation(li);
 
@@ -791,19 +761,20 @@ void annotate_level()
             li = li2;
     }
 
-    if (get_level_annotation(li).length() > 0)
+    if (!get_level_annotation(li).empty())
     {
         mpr("Current level annotation is:", MSGCH_PROMPT);
         mpr(get_level_annotation(li).c_str() );
     }
 
-    mpr( "Set level annotation to what (using ! forces prompt)? ", MSGCH_PROMPT );
+    mpr("Set level annotation to what (using ! forces prompt)? ",
+        MSGCH_PROMPT);
 
     char buf[77];
     if (cancelable_get_line( buf, sizeof(buf) ))
         return;
 
-    if (strlen(buf) == 0)
+    if (buf[0] == 0)
     {
         if (get_level_annotation(li).length() > 0)
         {

@@ -7424,8 +7424,7 @@ bool monsters::sicken(int amount)
     if (holiness() != MH_NATURAL || (amount /= 2) < 1)
         return (false);
 
-    if (!has_ench(ENCH_SICK)
-        && mons_near(this) && player_monster_visible(this))
+    if (!has_ench(ENCH_SICK) && you.can_see(this))
     {
         // Yes, could be confused with poisoning.
         mprf("%s looks sick.", name(DESC_CAP_THE).c_str());
