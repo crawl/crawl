@@ -1864,8 +1864,6 @@ std::string get_item_description( const item_def &item, bool verbose,
         else if (!verbose
                  && (Options.dump_book_spells || is_random_artefact(item)))
         {
-            mprf("book: %s, option: %s", item.name(DESC_PLAIN).c_str(),
-                 Options.dump_book_spells ? "true" : "false");
             append_spells( desc, item );
             if (desc.empty())
                 need_extra_line = false;
