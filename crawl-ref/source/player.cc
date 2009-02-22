@@ -1294,7 +1294,7 @@ bool player_can_smell()
 
 bool player_likes_chunks(bool permanently)
 {
-    return (player_mutation_level(MUT_GOURMAND)
+    return (player_mutation_level(MUT_GOURMAND) > 0
             || player_mutation_level(MUT_CARNIVOROUS) > 0
             || (!permanently && you.duration[DUR_GOURMAND] > 0));
 }
@@ -4399,8 +4399,8 @@ int player_mental_clarity(bool calc_unid, bool items)
     return ((ret > 3) ? 3 : ret);
 }
 
-// Returns whether the player has the effect of the amulet
-// from a non-amulet source.
+// Returns whether the player has the effect of the amulet from a
+// non-amulet source.
 bool extrinsic_amulet_effect(jewellery_type amulet)
 {
     switch (amulet)
@@ -4416,8 +4416,10 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
     case AMU_RESIST_CORROSION:
     case AMU_CONSERVATION:
         return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0);
+    case AMU_THE_GOURMAND:
+        return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
-        return false;
+        return (false);
     }
 }
 
