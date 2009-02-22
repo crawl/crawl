@@ -1504,7 +1504,7 @@ bool eat_from_inventory()
 //         -2 for skip to inventory.
 int prompt_eat_chunks()
 {
-    // Herbivores cannot eat chunks.
+    // Full herbivores cannot eat chunks.
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
         return (0);
 
@@ -2629,7 +2629,11 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                         mpr("Urks, you're a herbivore!");
                     return (false);
                 }
-                return (true);
+                else
+                {
+                    _check_amu_the_gourmand(reqid);
+                    return (true);
+                }
             case POT_WATER:
                 if (you.species == SP_VAMPIRE)
                 {
@@ -2652,7 +2656,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                     return (false);
                 }
              default:
-                _check_amu_the_gourmand(reqid);
                 return (true);
         }
 

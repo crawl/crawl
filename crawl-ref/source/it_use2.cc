@@ -116,6 +116,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                     lessen_hunger(nutrition, true);
                 else
                 {
+                    // Full herbivores always become ill from blood.
                     disease_player(50 + random2(100));
                     xom_is_stimulated(32);
                 }
