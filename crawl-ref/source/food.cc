@@ -1567,7 +1567,7 @@ int prompt_eat_chunks()
 
     const bool easy_eat = Options.easy_eat_chunks && !you.is_undead;
     const bool easy_contam = easy_eat
-        && (Options.easy_eat_gourmand && you.duration[DUR_GOURMAND] > 0
+        && (Options.easy_eat_gourmand && wearing_amulet(AMU_THE_GOURMAND)
             || Options.easy_eat_contaminated);
 
     if (found_valid)
@@ -1712,7 +1712,8 @@ static int _chunk_nutrition(bool likes_chunks)
                              : apply_herbivore_nutrition_effects(nutrition));
     }
 
-    const int gourmand = you.duration[DUR_GOURMAND];
+    const int gourmand =
+        wearing_amulet(AMU_THE_GOURMAND) ? you.duration[DUR_GOURMAND] : 0;
     const int effective_nutrition =
         _apply_gourmand_nutrition_effects(nutrition, gourmand);
 
@@ -2754,7 +2755,8 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
     // contaminated meat as though it were "clean" meat - level 3
     // saprovores get rotting meat effect from clean chunks, since they
     // love rotting meat.
-    if (x_chance_in_y(you.duration[DUR_GOURMAND], GOURMAND_MAX))
+    if (wearing_amulet(AMU_THE_GOURMAND)
+        && x_chance_in_y(you.duration[DUR_GOURMAND], GOURMAND_MAX))
     {
         if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
