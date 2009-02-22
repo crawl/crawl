@@ -3813,6 +3813,7 @@ static const char *mutation_type_names[] =
     "blue marks",
     "green marks",
     "saprovorous",
+    "gourmand",
     "shaggy fur",
     "high mp",
     "low mp",
