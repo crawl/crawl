@@ -208,5 +208,5 @@ enum
     TILE_Y = 32
 };
 
-#endif // USE_TILES
+#endif
 #endif

@@ -6548,7 +6548,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     coord_def target_square;
     int       okay_squares = 0;
 
-    for ( adjacent_iterator ai; ai; ++ai )
+    for (adjacent_iterator ai; ai; ++ai)
         if (mgrd(*ai) == NON_MONSTER && *ai != you.pos()
             && monster_can_submerge(mon, grd(*ai))
             && one_chance_in(++okay_squares))

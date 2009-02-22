@@ -5117,6 +5117,7 @@ static void _handle_nearby_ability(monsters *monster)
     // Okay then, don't speak.
 
     if (monster_can_submerge(monster, grd(monster->pos()))
+        && !monster->caught()             // No submerging while caught.
         && !player_mesmerised_by(monster) // No submerging if player entranced.
         && !mons_is_lurking(monster)  // Handled elsewhere.
         && monster->wants_submerge())
@@ -7061,6 +7062,7 @@ static void _handle_monster_move(monsters *monster)
         // Submerging monsters will hide from clouds.
         if (avoid_cloud
             && monster_can_submerge(monster, grd(monster->pos()))
+            && !monster->caught()
             && !monster->submerged())
         {
             monster->add_ench(ENCH_SUBMERGED);
@@ -8186,18 +8188,15 @@ static bool _monster_move(monsters *monster)
         if (mons_is_submerged(monster))
            return (false);
 
-        // Trapdoor spiders hide if they can't see their target.
-        bool can_see;
-
-        if (monster->foe == MHITNOT)
-            can_see = false;
-        else if (monster->foe == MHITYOU)
-            can_see = monster->can_see(&you);
-        else
-            can_see = monster->can_see(&menv[monster->foe]);
+        // Trapdoor spiders hide if they can't see their foe.
+        // (Note that friendly trapdoor spiders will thus hide even
+        // if they can see you.)
+        const actor *foe = monster->get_foe();
+        const bool can_see = foe && monster->can_see(foe);
 
         if (monster_can_submerge(monster, grd(monster->pos()))
             && !can_see && !mons_is_confused(monster)
+            && !monster->caught()
             && !monster->has_ench(ENCH_BERSERK))
         {
             monster->add_ench(ENCH_SUBMERGED);
