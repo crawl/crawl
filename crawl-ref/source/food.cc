@@ -2630,7 +2630,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                         mpr("Urks, you're a herbivore!");
                     return (false);
                 }
-                if (you.species != SP_VAMPIRE)
+                if (!player_likes_chunks())
                     _check_amu_the_gourmand(false);
                 return (true);
             case POT_WATER:
