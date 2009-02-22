@@ -1870,10 +1870,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_CYCLE_QUIVER_FORWARD:
+    case CMD_CYCLE_QUIVER_BACKWARD:
     {
-        int cur;
-        you.m_quiver->get_desired_item(NULL, &cur);
-        const int next = get_next_fire_item(cur, +1);
+        int dir = (cmd == CMD_CYCLE_QUIVER_FORWARD ? +1 : -1);
+        int cur = you.m_quiver->get_fire_item();
+        const int next = get_next_fire_item(cur, dir);
 #ifdef DEBUG_QUIVER
         mprf(MSGCH_DIAGNOSTICS, "next slot: %d, item: %s", next,
              next == -1 ? "none" : you.inv[next].name(DESC_PLAIN).c_str());

@@ -1223,6 +1223,11 @@ bool takeoff_armour(int item)
     return (true);
 }
 
+bool item_is_quivered(const item_def &item)
+{
+    return (item.link == you.m_quiver->get_fire_item());
+}
+
 int get_next_fire_item(int current, int direction)
 {
     std::vector<int> fire_order;

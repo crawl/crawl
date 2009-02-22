@@ -28,6 +28,7 @@ REVISION("$Rev$");
 #include "describe.h"
 #include "food.h"
 #include "initfile.h"
+#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
@@ -764,12 +765,12 @@ unsigned char InvMenu::getkey() const
 
 //////////////////////////////////////////////////////////////////////////////
 
-bool in_inventory( const item_def &i )
+bool in_inventory(const item_def &i)
 {
     return i.pos.x == -1 && i.pos.y == -1;
 }
 
-unsigned char get_invent( int invent_type )
+unsigned char get_invent(int invent_type)
 {
     unsigned char select;
 
@@ -781,8 +782,8 @@ unsigned char get_invent( int invent_type )
         if (isalpha(select))
         {
             const int invidx = letter_to_index(select);
-            if ( is_valid_item(you.inv[invidx]) )
-               describe_item( you.inv[invidx], true );
+            if (is_valid_item(you.inv[invidx]))
+                describe_item( you.inv[invidx], true );
         }
         else
             break;
@@ -921,13 +922,17 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (is_deck(i));
 
     case OSEL_EQUIP:
+    {
+        if (item_is_quivered(i))
+            return (true);
+
         for (int eq = 0; eq < NUM_EQUIP; eq++)
         {
              if (you.equip[eq] == i.link)
                  return (true);
         }
         return (false);
-
+    }
     default:
         return (false);
     }
