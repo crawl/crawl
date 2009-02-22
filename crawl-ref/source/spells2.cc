@@ -1040,7 +1040,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int dur = std::min(3 + random2(pow) / 20, 5);
-    int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMUTATION]) / 4;
+    int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMUTATIONS]) / 4;
     const bool friendly = (!item_cursed(wpn));
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
@@ -1186,7 +1186,7 @@ bool cast_summon_swarm(int pow, god_type god,
             MONS_BUTTERFLY,    MONS_YELLOW_WASP,   MONS_GIANT_ANT,
             MONS_GIANT_ANT,    MONS_GIANT_ANT
         };
-        
+
         const monster_type mon = RANDOM_ELEMENT(swarmers);
         const bool friendly = force_hostile ? false : (random2(pow) > 7);
 

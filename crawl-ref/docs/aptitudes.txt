@@ -8,7 +8,7 @@ is good at which tasks) can be obtained in two other, less sophisticated ways:
 - look which combinations of race and class are recommended (lightgrey).
 
 If you consider figuring out such things yourself to be fun, stop reading now.
-Otherwise, just go ahead. The lower a value, the better the aptitude. 100 is 
+Otherwise, just go ahead. The lower a value, the better the aptitude. 100 is
 the Human standard. Please note that many things affect how quick a character
 will actually learn a skill. Thus the numbers below are good enough for
 comparisons among races, but not necessarily among skills.
@@ -23,7 +23,7 @@ Sth - Stealth                LBl - Long Blades           Enc - Enchantments
 Stb - Stabbing               Axs - Axes                  Sum - Summonings
 Shd - Shields                M&F - Maces & Flails        Nec - Necromancy
 T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
-                             Stv - Staves                Trm - Transmutation
+                             Stv - Staves                Trm - Transmutations
 Inv - Invocations            U C - Unarmed Combat        Div - Divinations
 Evo - Evocations
                              Thr - Throwing              Fir - Fire Magic

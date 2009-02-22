@@ -2888,7 +2888,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_KENKU:
-        you.mutation[MUT_BEAK] = 1;
+        you.mutation[MUT_BEAK]   = 1;
         you.mutation[MUT_TALONS] = 1;
         break;
     case SP_TROLL:
@@ -3553,7 +3553,7 @@ static void _create_wanderer( void )
           SK_INVOCATIONS, SK_EVOCATIONS };
 
     const skill_type all_skills[] =
-        { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATION,
+        { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
           SK_DIVINATIONS, SK_POISON_MAGIC,
           SK_SLINGS, SK_BOWS, SK_CROSSBOWS,
           SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS,
@@ -5398,10 +5398,10 @@ bool _give_items_skills()
         else
             you.skills[SK_UNARMED_COMBAT] += 2;
 
-        you.skills[SK_FIGHTING]      = 1;
-        you.skills[SK_DODGING]       = 2;
-        you.skills[SK_SPELLCASTING]  = 2;
-        you.skills[SK_TRANSMUTATION] = 2;
+        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_SPELLCASTING]   = 2;
+        you.skills[SK_TRANSMUTATIONS] = 2;
         break;
 
     case JOB_FIRE_ELEMENTALIST:
@@ -5448,7 +5448,7 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
 
-        you.skills[SK_TRANSMUTATION] = 1;
+        you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
         you.skills[SK_SPELLCASTING]   = 1;
         you.skills[SK_DODGING]        = 2;

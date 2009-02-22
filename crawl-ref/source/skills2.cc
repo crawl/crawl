@@ -112,7 +112,7 @@ const char *skills[50][6] =
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},     // 30
-    {"Transmutation",  "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
+    {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
     {"Divinations",    "Seer",          "Clairvoyant",     "Diviner",         "Augur",          "Oracle"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist"},
@@ -184,7 +184,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -227,7 +227,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_SUMMONINGS
      130,                       // SK_NECROMANCY
      90,                        // SK_TRANSLOCATIONS
-     90,                        // SK_TRANSMUTATION
+     90,                        // SK_TRANSMUTATIONS
      110,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -270,7 +270,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      90,                        // SK_SUMMONINGS
      130,                       // SK_NECROMANCY
      80,                        // SK_TRANSLOCATIONS
-     80,                        // SK_TRANSMUTATION
+     80,                        // SK_TRANSMUTATIONS
      80,                        // SK_DIVINATIONS
      90,                        // SK_FIRE_MAGIC
      90,                        // SK_ICE_MAGIC
@@ -313,7 +313,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      80,                        // SK_SUMMONINGS
      70,                        // SK_NECROMANCY
      75,                        // SK_TRANSLOCATIONS
-     75,                        // SK_TRANSMUTATION
+     75,                        // SK_TRANSMUTATIONS
      75,                        // SK_DIVINATIONS
      90,                        // SK_FIRE_MAGIC
      90,                        // SK_ICE_MAGIC
@@ -356,7 +356,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      90,                        // SK_SUMMONINGS
      90,                        // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     60,                        // SK_TRANSMUTATION
+     60,                        // SK_TRANSMUTATIONS
      130,                       // SK_DIVINATIONS
      80,                        // SK_FIRE_MAGIC
      80,                        // SK_ICE_MAGIC
@@ -399,7 +399,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_SUMMONINGS
      160,                       // SK_NECROMANCY
      150,                       // SK_TRANSLOCATIONS
-     120,                       // SK_TRANSMUTATION
+     120,                       // SK_TRANSMUTATIONS
      130,                       // SK_DIVINATIONS
      70,                        // SK_FIRE_MAGIC
      130,                       // SK_ICE_MAGIC
@@ -442,7 +442,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_SUMMONINGS
      150,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     150,                       // SK_TRANSMUTATION
+     150,                       // SK_TRANSMUTATIONS
      140,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -485,7 +485,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      150,                       // SK_TRANSLOCATIONS
-     160,                       // SK_TRANSMUTATION
+     160,                       // SK_TRANSMUTATIONS
      160,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -528,7 +528,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      105,                       // SK_SUMMONINGS
      105,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     110,                       // SK_TRANSMUTATION
+     110,                       // SK_TRANSMUTATIONS
      130,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -571,7 +571,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      140,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      140,                       // SK_TRANSLOCATIONS
-     140,                       // SK_TRANSMUTATION
+     140,                       // SK_TRANSMUTATIONS
      140,                       // SK_DIVINATIONS
      140,                       // SK_FIRE_MAGIC
      140,                       // SK_ICE_MAGIC
@@ -614,7 +614,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -657,7 +657,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_SUMMONINGS
      130,                       // SK_NECROMANCY
      130,                       // SK_TRANSLOCATIONS
-     120,                       // SK_TRANSMUTATION
+     120,                       // SK_TRANSMUTATIONS
      120,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -700,7 +700,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      180,                       // SK_SUMMONINGS
      180,                       // SK_NECROMANCY
      180,                       // SK_TRANSLOCATIONS
-     180,                       // SK_TRANSMUTATION
+     180,                       // SK_TRANSMUTATIONS
      180,                       // SK_DIVINATIONS
      180,                       // SK_FIRE_MAGIC
      180,                       // SK_ICE_MAGIC
@@ -743,7 +743,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      160,                       // SK_SUMMONINGS
      150,                       // SK_NECROMANCY
      160,                       // SK_TRANSLOCATIONS
-     160,                       // SK_TRANSMUTATION
+     160,                       // SK_TRANSMUTATIONS
      200,                       // SK_DIVINATIONS
      160,                       // SK_FIRE_MAGIC
      160,                       // SK_ICE_MAGIC
@@ -786,7 +786,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      70,                        // SK_FIRE_MAGIC
      135,                       // SK_ICE_MAGIC
@@ -829,7 +829,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      135,                       // SK_FIRE_MAGIC
      70,                        // SK_ICE_MAGIC
@@ -872,7 +872,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -915,7 +915,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -958,7 +958,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -1001,7 +1001,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -1044,7 +1044,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -1087,7 +1087,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      80,                        // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -1130,7 +1130,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      90,                        // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -1173,7 +1173,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMUTATION
+     100,                       // SK_TRANSMUTATIONS
      100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -1216,7 +1216,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_SUMMONINGS
      120,                       // SK_NECROMANCY
      120,                       // SK_TRANSLOCATIONS
-     120,                       // SK_TRANSMUTATION
+     120,                       // SK_TRANSMUTATIONS
      130,                       // SK_DIVINATIONS
      120,                       // SK_FIRE_MAGIC
      120,                       // SK_ICE_MAGIC
@@ -1259,7 +1259,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_SUMMONINGS
      110,                       // SK_NECROMANCY
      110,                       // SK_TRANSLOCATIONS
-     110,                       // SK_TRANSMUTATION
+     110,                       // SK_TRANSMUTATIONS
      110,                       // SK_DIVINATIONS
      110,                       // SK_FIRE_MAGIC
      110,                       // SK_ICE_MAGIC
@@ -1302,7 +1302,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_SUMMONINGS
      120,                       // SK_NECROMANCY
      50,                        // SK_TRANSLOCATIONS
-     60,                        // SK_TRANSMUTATION
+     60,                        // SK_TRANSMUTATIONS
      70,                        // SK_DIVINATIONS
      140,                       // SK_FIRE_MAGIC
      140,                       // SK_ICE_MAGIC
@@ -1345,7 +1345,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      170,                       // SK_SUMMONINGS
      170,                       // SK_NECROMANCY
      170,                       // SK_TRANSLOCATIONS
-     170,                       // SK_TRANSMUTATION
+     170,                       // SK_TRANSMUTATIONS
      170,                       // SK_DIVINATIONS
      170,                       // SK_FIRE_MAGIC
      170,                       // SK_ICE_MAGIC
@@ -1388,7 +1388,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      90,                        // SK_NECROMANCY
      110,                       // SK_TRANSLOCATIONS
-     110,                       // SK_TRANSMUTATION
+     110,                       // SK_TRANSMUTATIONS
      110,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      110,                       // SK_ICE_MAGIC
@@ -1431,7 +1431,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      120,                       // SK_TRANSLOCATIONS
-     120,                       // SK_TRANSMUTATION
+     120,                       // SK_TRANSMUTATIONS
      120,                       // SK_DIVINATIONS
      150,                       // SK_FIRE_MAGIC
      90,                        // SK_ICE_MAGIC
@@ -1474,7 +1474,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      70,                        // SK_SUMMONINGS
      80,                        // SK_NECROMANCY
      150,                       // SK_TRANSLOCATIONS
-     150,                       // SK_TRANSMUTATION
+     150,                       // SK_TRANSMUTATIONS
      180,                       // SK_DIVINATIONS
      90,                        // SK_FIRE_MAGIC
      120,                       // SK_ICE_MAGIC
@@ -1517,7 +1517,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
      150,                       // SK_NECROMANCY
      140,                       // SK_TRANSLOCATIONS
-     60,                        // SK_TRANSMUTATION
+     60,                        // SK_TRANSMUTATIONS
      80,                        // SK_DIVINATIONS
      160,                       // SK_FIRE_MAGIC
      80,                        // SK_ICE_MAGIC
@@ -1560,7 +1560,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_SUMMONINGS
       90,                       // SK_NECROMANCY
      140,                       // SK_TRANSLOCATIONS
-      90,                       // SK_TRANSMUTATION
+      90,                       // SK_TRANSMUTATIONS
      120,                       // SK_DIVINATIONS
      140,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
@@ -1623,7 +1623,7 @@ static const skill_type skill_display_order[] =
     SK_COLUMN_BREAK,
 
     SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
-    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATION, SK_DIVINATIONS,
+    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS, SK_DIVINATIONS,
     SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
 
     SK_BLANK_LINE,

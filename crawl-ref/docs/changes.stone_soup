@@ -80,6 +80,7 @@ Items
 -----
 * New scroll: ?vulnerability, applying to all creatures in LoS including you.
 * Introduce randart spellbooks with random spell selections.
+* Book acquirements are now more random and may yield manuals.
 * Make missile enchantment decrease chance of item destruction.
 * Freezing weapons can now slow cold-blooded monsters.
 * The staff of channeling now trains Evocations.

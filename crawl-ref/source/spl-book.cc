@@ -2626,7 +2626,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     return (true);
 }
 
-// Give Roxanne a randart spellbook of the disciplines Transmutation/Earth
+// Give Roxanne a randart spellbook of the disciplines Transmutations/Earth
 // that includes Statue Form and is named after her.
 void make_book_Roxanne_special(item_def *book)
 {

@@ -1,6 +1,6 @@
 /*
  *  File:       spells4.cc
- *  Summary:    new spells, focusing on Transmutation, Divination,
+ *  Summary:    new spells, focusing on Transmutations, Divinations,
  *              and other neglected areas of Crawl magic ;^)
  *  Written by: Copyleft Josh Fishman 1999-2000, All Rights Preserved
  *
