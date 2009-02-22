@@ -3819,7 +3819,6 @@ static const char *mutation_type_names[] =
     "low mp",
     "",
     "",
-    "",
 
     // from here on scales
     "red scales",
