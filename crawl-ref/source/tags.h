@@ -61,7 +61,8 @@ enum tag_minor_version
     TAG_MINOR_LUADGN   = 11,     // Allow dungeon Lua to persist data.
     // Bump version past 12.
     TAG_MINOR_SVNREV   = 13,     // Added SVN revision
-    TAG_MINOR_VERSION  = 13      // Current version.  (Keep equal to max.)
+    TAG_MINOR_PORTEXT  = 14,     // Keep track of portal vault extensions.
+    TAG_MINOR_VERSION  = 14      // Current version.  (Keep equal to max.)
 };
 
 

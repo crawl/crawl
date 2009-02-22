@@ -846,6 +846,7 @@ static void tag_construct_you(writer &th)
     marshallString(th, you.level_type_name_abbrev);
     marshallString(th, you.level_type_origin);
     marshallString(th, you.level_type_tag);
+    marshallString(th, you.level_type_ext);
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
     marshallByte(th, you.synch_time);
@@ -1264,6 +1265,9 @@ static void tag_read_you(reader &th, char minorVersion)
         you.level_type_name_abbrev = unmarshallString(th);
         you.level_type_origin      = unmarshallString(th);
         you.level_type_tag         = unmarshallString(th);
+
+        if (minorVersion >= TAG_MINOR_PORTEXT)
+            you.level_type_ext = unmarshallString(th);
     }
 
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );

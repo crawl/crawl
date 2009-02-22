@@ -1330,15 +1330,15 @@ portal vaults in the following steps (no compilation is necessary):
 
 Before going into the details of portal vault creation, some words about
 their uses: Portal vaults are different from branches in that they are
-not guaranteed. Also, there is only one go at a portal vault - if you 
+not guaranteed. Also, there is only one go at a portal vault - if you
 leave, it's gone for good. You can apply special rules to a portal vault,
 like enforcing maprot.
 
-Portal vaults can be particulary thematic, using specialised monster 
+Portal vaults can be particulary thematic, using specialised monster
 sets, fitting loot, coloured dungeon features etc. Avoid death traps; it
 is no fun to enter a vault, being unable to leave and be killed outright.
 In order to provide fun and reduce spoiler effects, randomise. For portal
-vaults, it is desirable to have several different layouts (ideally each 
+vaults, it is desirable to have several different layouts (ideally each
 of the maps has some randomisation on its own). Often, it is a good idea
 to skew the map distribution: e.g. with four destination vaults, weights
 like 40,30,20,10 might be more interesting than 25,25,25,25.
@@ -1387,6 +1387,11 @@ the name shown on the overmap will be the "dstname" parameter, or if
 that isn't present the "dst" paremeter.  It can be set to something else
 with the "overmap" parameter.  A note can be made to accompany the
 portal's position on the overmap with the "overmap_note" parameter.
+
+Bones files for characters killed in the portal vault will normally
+use an extension derived from the first three letters of the 'dst'
+property. You can override this by setting the 'dstext' property to
+your preferred extension.
 
 This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a
@@ -1496,7 +1501,7 @@ end
 You can then use this line in the map definition to execute the lua block:
   : sewer_random_monster_list(_G)
 
-You can also set env.spawn_random_rate() to have monsters generated from the 
+You can also set env.spawn_random_rate() to have monsters generated from the
 list during play.
 
 

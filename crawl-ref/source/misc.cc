@@ -1304,6 +1304,10 @@ static void leaving_level_now()
     const std::string newtype =
         env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
+    // Extension to use for bones files.
+    const std::string newext =
+        env.markers.property_at(you.pos(), MAT_ANY, "dstext");
+
     const std::string oldname = you.level_type_name;
     std::string newname =
         env.markers.property_at(you.pos(), MAT_ANY, "dstname");
@@ -1357,6 +1361,7 @@ static void leaving_level_now()
     {
         you.level_type_tag = newtype;
     }
+
     const std::string spaced_tag = replace_all(you.level_type_tag, "_", " ");
 
     if (!you.level_type_tag.empty() && you.level_type_name.empty())
@@ -1377,6 +1382,14 @@ static void leaving_level_now()
             you.level_type_name_abbrev = shorter.substr(0, MAX_NOTE_PLACE_LEN);
         }
     }
+
+    if (!newext.empty())
+        you.level_type_ext = newext;
+    else if (!you.level_type_tag.empty())
+        you.level_type_ext = lowercase_string(you.level_type_tag);
+
+    if (you.level_type_ext.length() > 3)
+        you.level_type_ext = you.level_type_ext.substr(0, 3);
 
     if (!neworigin.empty())
         you.level_type_origin = neworigin;

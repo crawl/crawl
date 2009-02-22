@@ -877,6 +877,11 @@ public:
   // if not explicitly set by the entry portal.
   std::string level_type_name;
 
+  // Three-letter extension for portal vault bones files. Will be set
+  // to first three letters of level_type_tag if not explicitly set by
+  // the entry portal.
+  std::string level_type_ext;
+
   // Abbreviation of portal vault name, for use in notes.  If not
   // explicitly set by the portal vault, will be set from level_type_name
   // or level_type_tag if either is short enough, or the shorter of the

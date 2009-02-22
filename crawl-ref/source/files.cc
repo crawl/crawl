@@ -1540,11 +1540,16 @@ void save_game_state()
         save_game(true);
 }
 
+static std::string _make_portal_vault_ghost_suffix()
+{
+    return you.level_type_ext.empty()? "ptl" : you.level_type_ext;
+}
+
 static std::string _make_ghost_filename()
 {
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
-        std::string suffix = "ptl";
+        const std::string suffix = _make_portal_vault_ghost_suffix();
         return get_savedir_filename("bones", "", suffix, true);
     }
     else
@@ -1602,7 +1607,7 @@ void _load_ghost(void)
     fclose(gfile);
 
 #if DEBUG_DIAGNOSTICS
-        mpr( "Loaded ghost.", MSGCH_DIAGNOSTICS );
+    mpr( "Loaded ghost.", MSGCH_DIAGNOSTICS );
 #endif
 
     // Remove bones file - ghosts are hardly permanent.
@@ -1935,7 +1940,7 @@ void save_ghost( bool force )
     lk_close(gfile, "wb", cha_fil);
 
 #if DEBUG_DIAGNOSTICS
-    mpr( "Saved ghost.", MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str() );
 #endif
 
     DO_CHMOD_PRIVATE(cha_fil.c_str());
