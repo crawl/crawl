@@ -229,4 +229,4 @@ int get_parts_idx(int part, char *name);
 #define TILEP_BOOTS_NAGA_BARDING (N_PART_BOOTS + 1)
 #define TILEP_BOOTS_CENTAUR_BARDING (N_PART_BOOTS + 2)
 
-#endif // USE_TILES
+#endif // USE_TILE

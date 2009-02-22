@@ -1930,7 +1930,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_SHOP:
-#ifdef USE_TILES
+#ifdef USE_TILE
         tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
         text << "That "
@@ -1949,7 +1949,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         if (you.num_turns < 1)
             DELAY_EVENT;
 
-#ifdef USE_TILES
+#ifdef USE_TILE
         tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
         text << "That "
@@ -1967,7 +1967,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_SECRET_DOOR:
-#ifdef USE_TILES
+#ifdef USE_TILE
         tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
         text << "That "
