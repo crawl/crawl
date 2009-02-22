@@ -1102,8 +1102,6 @@ public:
     bool confusable() const;
     bool slowable() const;
 
-    bool omnivorous() const;
-
     flight_type flight_mode() const;
     bool permanent_levitation() const;
     bool permanent_flight() const;

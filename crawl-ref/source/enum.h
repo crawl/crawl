@@ -2315,8 +2315,9 @@ enum mutation_type
     MUT_BLUE_MARKS, // decorative, as in "mark of the devil"
     MUT_GREEN_MARKS,
     MUT_SAPROVOROUS,
-    MUT_SHAGGY_FUR, // new in 0.4
-    MUT_HIGH_MAGIC, // new in 0.4      --   70
+    MUT_GOURMAND,
+    MUT_SHAGGY_FUR, // new in 0.4      --   70
+    MUT_HIGH_MAGIC, // new in 0.4
     MUT_LOW_MAGIC,  // new in 0.4
 
     // several types of scales (affect AC and sometimes more)

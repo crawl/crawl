@@ -1508,6 +1508,18 @@ int prompt_eat_chunks()
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
         return (0);
 
+    // If we *know* player doesn't have the gourmand effect, don't prompt.
+    if (!player_mutation_level(MUT_GOURMAND)
+        && player_mutation_level(MUT_CARNIVOROUS) < 3)
+    {
+        if (!player_wearing_slot(EQ_AMULET))
+            return (0);
+
+        const item_def& amu(you.inv[you.equip[EQ_AMULET]]);
+        if (item_type_known(amu) && amu.sub_type != AMU_THE_GOURMAND)
+            return (0);
+    }
+
     bool found_valid = false;
     std::vector<item_def *> chunks;
 

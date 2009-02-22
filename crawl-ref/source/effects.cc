@@ -1431,7 +1431,7 @@ static void _do_book_acquirement(item_def &book, int agent)
     {
         choice = random_choose_weighted(
                                         30, BOOK_RANDART_THEME,
-           agent == GOD_SIF_MUNA ? 10 : 40, book.sub_type,
+           agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS, // normal books
                      level == -1 ?  0 :  1, BOOK_RANDART_LEVEL, 0);
     }
 
@@ -1446,6 +1446,7 @@ static void _do_book_acquirement(item_def &book, int agent)
     switch (choice)
     {
     default:
+    case NUM_BOOKS:
     {
         int total_weights = 0;
 

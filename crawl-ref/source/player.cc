@@ -1294,7 +1294,8 @@ bool player_can_smell()
 
 bool player_likes_chunks()
 {
-    return (you.omnivorous() || player_mutation_level(MUT_CARNIVOROUS) > 0);
+    return (player_mutation_level(MUT_GOURMAND)
+            || player_mutation_level(MUT_CARNIVOROUS) > 0);
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -4401,7 +4402,7 @@ int player_mental_clarity(bool calc_unid, bool items)
 // from a non-amulet source.
 bool extrinsic_amulet_effect(jewellery_type amulet)
 {
-    switch ( amulet )
+    switch (amulet)
     {
     case AMU_CONTROLLED_FLIGHT:
         return (you.duration[DUR_CONTROLLED_FLIGHT]
@@ -4424,7 +4425,7 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid)
     if (extrinsic_amulet_effect(amulet))
         return (true);
 
-    if (you.equip[EQ_AMULET] == -1)
+    if (!player_wearing_slot(EQ_AMULET))
         return (false);
 
     const item_def& amu(you.inv[you.equip[EQ_AMULET]]);
@@ -6884,11 +6885,6 @@ bool player::confusable() const
 bool player::slowable() const
 {
     return (!wearing_amulet(AMU_RESIST_SLOW));
-}
-
-bool player::omnivorous() const
-{
-    return (species == SP_TROLL || species == SP_OGRE);
 }
 
 flight_type player::flight_mode() const

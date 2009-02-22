@@ -276,7 +276,7 @@ const char *mutation_descrip[][3] = {
      "Your tail ends in a sharp poisonous barb.",
      "Your tail ends in a wicked poisonous barb."}, //jmf: nagas & dracos
 
-    {"Your wings are large and strong.", "", ""},       //jmf: dracos only
+    {"Your wings are large and strong.", "", ""},   //jmf: dracos only
 
     //jmf: these next two are for evil gods to mark their followers; good gods
     //     will never accept a 'marked' worshipper
@@ -292,11 +292,13 @@ const char *mutation_descrip[][3] = {
     {"You can tolerate rotten meat.", "You can eat rotten meat.",
      "You thrive on rotten meat."},
 
+    {"You like to eat raw meat.", "", ""},
+
+// 70
     {"You are covered in fur.",
      "You are covered in thick fur.",
      "Your thick and shaggy fur keeps you warm."},
 
-// 70
     {"You have an increased reservoir of magic (+10 percent mp).",
      "You have a strongly increased reservoir of magic (+20 percent mp).",
      "You have an extremely increased reservoir of magic (+30 percent mp)."},
@@ -554,14 +556,15 @@ const char *gain_mutation[][3] = {
     {"Your chest itches.", "Your chest and abdomen itch.",
      "Your chest, abdomen and neck itch."},
 
-    // saprovorous: can never be gained or lost, only started with
+    // saprovorous/gourmand: can never be gained or lost, only started with
+    {"", "", ""},
     {"", "", ""},
 
+// 70
     {"Fur sprouts all over your body.",
      "Your fur grows into a thick mane.",
      "Your thick fur grows shaggy and warm."},
 
-// 70
     {"You feel more energetic.", "You feel more energetic.",
      "You feel more energetic."},
 
@@ -785,14 +788,15 @@ const char *lose_mutation[][3] = {
     {"", "", ""},
     {"", "", ""},
 
-    // saprovorous: can never be gained or lost, only started with
+    // saprovorous/gourmand: can never be gained or lost, only started with
+    {"", "", ""},
     {"", "", ""},
 
+// 70
     {"You shed all your fur.",
      "Your thick fur recedes somewhat.",
      "Your shaggy fur recedes somewhat."},
 
-// 70
     {"You feel less energetic.", "You feel less energetic.",
      "You feel less energetic."},
 
@@ -946,22 +950,23 @@ static mutation_def mutation_defs[] = {
     { MUT_BREATHE_POISON,             0,  1, false, false },
     // Naga and Draconian only
     { MUT_STINGER,                    0,  3, false,  true },
+
+// 65
     // Draconian only
     { MUT_BIG_WINGS,                  0,  1, false,  true },
-// 65
      // used by evil gods to mark followers (currently UNUSED)
     { MUT_BLUE_MARKS,                 0,  3, false,  true },
     { MUT_GREEN_MARKS,                0,  3, false,  true },
 
-    // species-dependent innate mutation
+    // species-dependent innate mutations
     { MUT_SAPROVOROUS,                0,  3, false, false },
-
-    { MUT_SHAGGY_FUR,                 2,  3, false,  true },
+    { MUT_GOURMAND,                   0,  1, false, false },
 
 // 70
+    { MUT_SHAGGY_FUR,                 2,  3, false,  true },
     { MUT_HIGH_MAGIC,                 1,  3, false, false },
     { MUT_LOW_MAGIC,                  9,  3,  true, false },
-    { RANDOM_MUTATION,                0,  3, false, false },
+
     { RANDOM_MUTATION,                0,  3, false, false },
     { RANDOM_MUTATION,                0,  3, false, false },
 
@@ -1349,10 +1354,6 @@ formatted_string describe_mutations()
             result += colourname;
             result += ">";
             result += EOL;
-
-            // Gourmand is *not* identical to being saprovorous, therefore...
-            if (i == MUT_SAPROVOROUS && you.omnivorous())
-                result += "<lightblue>You like to eat raw meat.</lightblue>" EOL;
         }
     }
 
@@ -1944,8 +1945,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             return (false);
     }
 
-    // Saprovorous can't be randomly acquired.
-    if (mutat == MUT_SAPROVOROUS && !force_mutation)
+    // Saprovorous/gourmand can't be randomly acquired.
+    if (!force_mutation && (mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND))
         return (false);
 
     // Mutation resistance can't be acquired from god gifts.
