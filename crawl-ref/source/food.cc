@@ -2530,8 +2530,9 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
         if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY)
             return (true);
 
-        if (what_isit == OBJ_POTIONS && (kindof_thing == POT_BLOOD
-            || kindof_thing == POT_BLOOD_COAGULATED))
+        if (what_isit == OBJ_POTIONS
+            && (kindof_thing == POT_BLOOD
+                || kindof_thing == POT_BLOOD_COAGULATED))
         {
             return (true);
         }
@@ -2543,7 +2544,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     }
 
     bool ur_carnivorous = player_mutation_level(MUT_CARNIVOROUS) == 3;
-
     bool ur_herbivorous = player_mutation_level(MUT_HERBIVOROUS) == 3;
 
     // ur_chunkslover not defined in terms of ur_carnivorous because
