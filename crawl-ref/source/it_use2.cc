@@ -103,7 +103,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
             int nutrition = apply_herbivore_nutrition_effects(200);
 
-            if (!ur_herbivorous && player_likes_chunks())
+            if (!ur_herbivorous && player_likes_chunks(true))
             {
                 // Likes it.
                 mpr("This tastes like blood.");

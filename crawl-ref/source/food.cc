@@ -1509,7 +1509,7 @@ int prompt_eat_chunks()
         return (0);
 
     // If we *know* player doesn't have the gourmand effect, don't prompt.
-    if (!player_likes_chunks(true))
+    if (!player_likes_chunks())
         return (0);
 
     bool found_valid = false;
@@ -1735,7 +1735,7 @@ static void _say_chunk_flavour(bool likes_chunks)
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                        int mon_intel)
 {
-    bool likes_chunks = player_likes_chunks();
+    bool likes_chunks = player_likes_chunks(true);
     int nutrition     = _chunk_nutrition(likes_chunks);
     int hp_amt        = 0;
     bool suppress_msg = false; // do we display the chunk nutrition message?
@@ -2551,7 +2551,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
     bool ur_chunkslover = ((check_hunger ? you.hunger_state < HS_SATIATED
                                          : true)
-                              || player_likes_chunks());
+                              || player_likes_chunks(true));
 
     switch (what_isit)
     {
@@ -2630,7 +2630,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                         mpr("Urks, you're a herbivore!");
                     return (false);
                 }
-                if (!player_likes_chunks())
+                if (!player_likes_chunks(true))
                     _check_amu_the_gourmand(false);
                 return (true);
             case POT_WATER:
