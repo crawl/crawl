@@ -2419,6 +2419,7 @@ bool is_inedible(const item_def &item)
 
     return (false);
 }
+
 // As we want to avoid autocolouring the entire food selection, this should
 // be restricted to the absolute highlights, even though other stuff may
 // still be edible or even delicious.
@@ -2631,7 +2632,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 }
                 else
                 {
-                    _check_amu_the_gourmand(reqid);
+                    _check_amu_the_gourmand(false);
                     return (true);
                 }
             case POT_WATER:
