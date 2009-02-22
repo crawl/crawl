@@ -2030,7 +2030,8 @@ static std::vector<formatted_string> _get_overview_resistances(
     int saplevel = player_mutation_level(MUT_SAPROVOROUS);
     const char* pregourmand;
     const char* postgourmand;
-    if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
+
+    if (player_mutation_level(MUT_GOURMAND) || you.duration[DUR_GOURMAND] > 0)
     {
         pregourmand = "Gourmand  : ";
         postgourmand = itosym1(1);

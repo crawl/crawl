@@ -1292,10 +1292,11 @@ bool player_can_smell()
     return (you.species != SP_MUMMY);
 }
 
-bool player_likes_chunks()
+bool player_likes_chunks(bool permanently)
 {
     return (player_mutation_level(MUT_GOURMAND)
-            || player_mutation_level(MUT_CARNIVOROUS) > 0);
+            || player_mutation_level(MUT_CARNIVOROUS) > 0
+            || (!permanently && you.duration[DUR_GOURMAND] > 0));
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.

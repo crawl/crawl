@@ -1509,16 +1509,8 @@ int prompt_eat_chunks()
         return (0);
 
     // If we *know* player doesn't have the gourmand effect, don't prompt.
-    if (!player_mutation_level(MUT_GOURMAND)
-        && player_mutation_level(MUT_CARNIVOROUS) < 3)
-    {
-        if (!player_wearing_slot(EQ_AMULET))
-            return (0);
-
-        const item_def& amu(you.inv[you.equip[EQ_AMULET]]);
-        if (item_type_known(amu) && amu.sub_type != AMU_THE_GOURMAND)
-            return (0);
-    }
+    if (!player_likes_chunks(true))
+        return (0);
 
     bool found_valid = false;
     std::vector<item_def *> chunks;
@@ -1574,7 +1566,7 @@ int prompt_eat_chunks()
 
     const bool easy_eat = Options.easy_eat_chunks && !you.is_undead;
     const bool easy_contam = easy_eat
-        && (Options.easy_eat_gourmand && wearing_amulet(AMU_THE_GOURMAND)
+        && (Options.easy_eat_gourmand && you.duration[DUR_GOURMAND] > 0
             || Options.easy_eat_contaminated);
 
     if (found_valid)
@@ -1719,9 +1711,7 @@ static int _chunk_nutrition(bool likes_chunks)
                              : apply_herbivore_nutrition_effects(nutrition));
     }
 
-    const int gourmand =
-        wearing_amulet(AMU_THE_GOURMAND) ? you.duration[DUR_GOURMAND] : 0;
-
+    const int gourmand = you.duration[DUR_GOURMAND];
     const int effective_nutrition =
         _apply_gourmand_nutrition_effects(nutrition, gourmand);
 
@@ -2492,6 +2482,29 @@ bool is_forbidden_food(const item_def &food)
     return (false);
 }
 
+static bool _check_amu_the_gourmand(bool reqid)
+{
+    if (wearing_amulet(AMU_THE_GOURMAND, !reqid))
+    {
+        const int amulet = you.equip[EQ_AMULET];
+
+        ASSERT(amulet != -1);
+
+        if (!item_type_known(you.inv[amulet]))
+        {
+            // For artefact amulets, this will tell you its name and
+            // subtype.  Other properties may still be hidden.
+            set_ident_flags(you.inv[amulet], ISFLAG_KNOW_TYPE);
+            set_ident_type(OBJ_JEWELLERY, AMU_THE_GOURMAND, ID_KNOWN_TYPE);
+            mpr(you.inv[amulet].name(DESC_INVENTORY, false).c_str());
+        }
+
+        return (true);
+    }
+
+    return (false);
+}
+
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool reqid, bool check_hunger)
 {
@@ -2575,24 +2588,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 if (ur_chunkslover)
                     return (true);
 
-                // Else, we're not hungry enough.
-                if (wearing_amulet(AMU_THE_GOURMAND, !reqid))
-                {
-                    const int amulet = you.equip[EQ_AMULET];
-
-                    ASSERT(amulet != -1);
-
-                    if (!item_type_known(you.inv[amulet]))
-                    {
-                        // For artefact amulets, this will tell you its name
-                        // and subtype. Other properties may still be hidden.
-                        set_ident_flags(you.inv[amulet], ISFLAG_KNOW_TYPE);
-                        set_ident_type(OBJ_JEWELLERY, AMU_THE_GOURMAND,
-                                       ID_KNOWN_TYPE);
-                        mpr(you.inv[amulet].name(DESC_INVENTORY, false).c_str());
-                    }
+                if (_check_amu_the_gourmand(reqid))
                     return (true);
-                }
 
                 if (!suppress_msg)
                     mpr("You aren't quite hungry enough to eat that!");
@@ -2603,6 +2600,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
         // rations for non-herbivores) are okay.
         return (true);
     }
+
     case OBJ_CORPSES:
         if (you.species == SP_VAMPIRE)
         {
@@ -2654,6 +2652,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                     return (false);
                 }
              default:
+                _check_amu_the_gourmand(reqid);
                 return (true);
         }
 
@@ -2752,8 +2751,7 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
     // contaminated meat as though it were "clean" meat - level 3
     // saprovores get rotting meat effect from clean chunks, since they
     // love rotting meat.
-    if (wearing_amulet(AMU_THE_GOURMAND)
-        && x_chance_in_y(you.duration[DUR_GOURMAND], GOURMAND_MAX))
+    if (x_chance_in_y(you.duration[DUR_GOURMAND], GOURMAND_MAX))
     {
         if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
