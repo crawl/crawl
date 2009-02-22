@@ -2094,8 +2094,8 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (you.can_see(monster))
     {
         seen_monster(monster);
-        // If the player saw both the begining and end results of a shifter
-        // changing then he/seh knows it must be a shifter.
+        // If the player saw both the beginning and end results of a
+        // shifter changing, then he/she knows it must be a shifter.
         if (can_see && shifter.ench != ENCH_NONE)
             monster->flags |= MF_KNOWN_MIMIC;
     }
