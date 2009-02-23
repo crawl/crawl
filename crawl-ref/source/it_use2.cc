@@ -146,7 +146,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (you.duration[DUR_MIGHT] > 80)
             you.duration[DUR_MIGHT] = 80;
 
-        did_god_conduct( DID_STIMULANTS, 4 + random2(4), was_known );
+        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
     }
 
