@@ -98,28 +98,29 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         else
         {
-            const bool ur_herbivorous =
-                player_mutation_level(MUT_HERBIVOROUS) == 3;
+            int value = 100;
+            if (pot_eff == POT_BLOOD)
+                value += 100;
 
-            int nutrition = apply_herbivore_nutrition_effects(200);
+            const int herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
-            if (!ur_herbivorous && player_likes_chunks(true))
+            if (herbivorous < 3 && player_likes_chunks(true))
             {
                 // Likes it.
                 mpr("This tastes like blood.");
-                lessen_hunger(nutrition, true);
+                lessen_hunger(value, true);
             }
             else
             {
                 mpr("Blech - this tastes like blood!");
-                if (!ur_herbivorous && one_chance_in(3))
-                    lessen_hunger(nutrition, true);
-                else
+                if (x_chance_in_y(herbivorous + 1, 4))
                 {
                     // Full herbivores always become ill from blood.
                     disease_player(50 + random2(100));
                     xom_is_stimulated(32);
                 }
+                else
+                    lessen_hunger(value, true);
             }
         }
         did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);

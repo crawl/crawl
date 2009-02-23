@@ -1686,7 +1686,7 @@ void chunk_nutrition_message(int nutrition)
         mpr("That was not very filling.");
 }
 
-int apply_herbivore_nutrition_effects(int nutrition)
+static int _apply_herbivore_nutrition_effects(int nutrition)
 {
     int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
@@ -1709,7 +1709,7 @@ static int _chunk_nutrition(bool likes_chunks)
     if (likes_chunks || you.hunger_state < HS_SATIATED)
     {
         return (likes_chunks ? nutrition
-                             : apply_herbivore_nutrition_effects(nutrition));
+                             : _apply_herbivore_nutrition_effects(nutrition));
     }
 
     const int gourmand =
@@ -1724,7 +1724,7 @@ static int _chunk_nutrition(bool likes_chunks)
                 gourmand, nutrition, effective_nutrition, epercent);
 #endif
 
-    return (apply_herbivore_nutrition_effects(effective_nutrition));
+    return (_apply_herbivore_nutrition_effects(effective_nutrition));
 }
 
 static void _say_chunk_flavour(bool likes_chunks)
