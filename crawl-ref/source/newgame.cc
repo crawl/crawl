@@ -2919,6 +2919,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         you.mutation[MUT_SAPROVOROUS]                = 3;
         you.mutation[MUT_CARNIVOROUS]                = 3;
+        you.mutation[MUT_SLOW_HEALING]               = 1;
         break;
     case SP_KENKU:
         you.mutation[MUT_BEAK]   = 1;

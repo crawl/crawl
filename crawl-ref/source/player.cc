@@ -1053,12 +1053,9 @@ int player_regen()
     // Fast heal mutation.
     rr += player_mutation_level(MUT_REGENERATION) * 20;
 
-    // Ghouls and dematerialised people heal slowly.
-    if (you.species == SP_GHOUL
-        || you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-    {
+    // Dematerialised people heal slowly.
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
         rr /= 2;
-    }
 
     // Before applying other effects, make sure that there's something
     // to heal.

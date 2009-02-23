@@ -1100,7 +1100,6 @@ formatted_string describe_mutations()
         result += "Your body is rotting away." EOL;
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
         result += EOL;
-        result += "You heal slowly." EOL;
         have_any = true;
         break;
 
