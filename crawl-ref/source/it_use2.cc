@@ -98,10 +98,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         else
         {
-            int value = 100;
-            if (pot_eff == POT_BLOOD)
-                value += 100;
-
+            const int value = 200;
             const int herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
             if (herbivorous < 3 && player_likes_chunks(true))
