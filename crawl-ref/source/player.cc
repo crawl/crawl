@@ -1036,36 +1036,32 @@ int player_regen()
     if (rr > 20)
         rr = 20 + ((rr - 20) / 2);
 
-    // rings
+    // Rings.
     rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
 
-    // spell
+    // Spell.
     if (you.duration[DUR_REGENERATION])
         rr += 100;
 
-    // troll leather (except for trolls)
+    // Troll leather (except for trolls).
     if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
         && you.species != SP_TROLL)
     {
         rr += 30;
     }
 
-    // fast heal mutation
+    // Fast heal mutation.
     rr += player_mutation_level(MUT_REGENERATION) * 20;
 
-    // Ghouls heal slowly.
-    // Dematerialised people heal slowly.
-    // Dematerialised ghouls shouldn't heal any more slowly. -- bwr
-    if ((you.species == SP_GHOUL
-            && (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS))
+    // Ghouls and dematerialised people heal slowly.
+    if (you.species == SP_GHOUL
         || you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
     {
         rr /= 2;
     }
 
-    // Before applying other effects, make sure that there's
-    // something to heal.
+    // Before applying other effects, make sure that there's something
+    // to heal.
     if (rr < 1)
         rr = 1;
 
@@ -1104,7 +1100,7 @@ int player_regen()
         }
     }
 
-    // Slow heal mutation. Applied last.
+    // Slow heal mutation.  Applied last.
     // Each level reduces your natural healing by one third.
     if (player_mutation_level(MUT_SLOW_HEALING))
     {
