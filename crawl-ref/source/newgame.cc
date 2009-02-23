@@ -2900,9 +2900,9 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_DEFORMED]          = 1;
         break;
     case SP_MUMMY:
-        you.mutation[MUT_TORMENT_RESISTANCE] = 1;
-        you.mutation[MUT_POISON_RESISTANCE]  = 1;
-        you.mutation[MUT_COLD_RESISTANCE]    = 1;
+        you.mutation[MUT_TORMENT_RESISTANCE]         = 1;
+        you.mutation[MUT_POISON_RESISTANCE]          = 1;
+        you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         break;
     case SP_GNOME:
@@ -2910,15 +2910,15 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_DEEP_DWARF:
         you.mutation[MUT_SLOW_HEALING] = 3;
-        you.mutation[MUT_MAPPING] = 2;
+        you.mutation[MUT_MAPPING]      = 2;
         break;
     case SP_GHOUL:
-        you.mutation[MUT_TORMENT_RESISTANCE] = 1;
-        you.mutation[MUT_POISON_RESISTANCE]  = 1;
-        you.mutation[MUT_COLD_RESISTANCE]    = 1;
+        you.mutation[MUT_TORMENT_RESISTANCE]         = 1;
+        you.mutation[MUT_POISON_RESISTANCE]          = 1;
+        you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        you.mutation[MUT_SAPROVOROUS] = 3;
-        you.mutation[MUT_CARNIVOROUS] = 3;
+        you.mutation[MUT_SAPROVOROUS]                = 3;
+        you.mutation[MUT_CARNIVOROUS]                = 3;
         break;
     case SP_KENKU:
         you.mutation[MUT_BEAK]   = 1;
@@ -2943,7 +2943,7 @@ void give_basic_mutations(species_type speci)
         break;
     }
 
-    // Starting mutations are unremoveable.
+    // Starting mutations are unremovable.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
         you.demon_pow[i] = you.mutation[i];
 }
