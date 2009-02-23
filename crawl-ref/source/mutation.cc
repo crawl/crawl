@@ -1210,7 +1210,7 @@ formatted_string describe_mutations()
     case SP_VAMPIRE:
         have_any = true;
         if (you.hunger_state == HS_STARVING)
-            result += "<green>You do not heal.</green>" EOL;
+            result += "<green>You do not heal naturally.</green>" EOL;
         else if (you.hunger_state == HS_ENGORGED)
             result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
         else if (you.hunger_state <= HS_HUNGRY)
