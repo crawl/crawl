@@ -2541,7 +2541,7 @@ static bool _choose_weapon()
 
 // Gods are not restricted but there are some choices that are banned (false).
 // Everything else will be unrestricted.
-static char_choice_restriction  _religion_restriction(god_type god)
+static char_choice_restriction _religion_restriction(god_type god)
 {
     // Sanity check.
     if (you.species == SP_DEMIGOD)
@@ -2655,6 +2655,7 @@ static char_choice_restriction  _religion_restriction(god_type god)
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
+        case SP_DEEP_DWARF:
             return (CC_UNRESTRICTED);
         default:
             if (player_genus(GENPC_DRACONIAN))
