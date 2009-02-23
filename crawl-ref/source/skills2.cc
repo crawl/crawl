@@ -1622,7 +1622,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {
     },
 
-    // SP_OGRE_MAGE placeholder
+    // SP_OGRE_MAGE placeholder.
     {
     },
 

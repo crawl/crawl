@@ -2579,7 +2579,7 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.hunger_state == HS_STARVING);
 
         case RING_REGENERATION:
-            return ((you.mutation[MUT_SLOW_HEALING] == 3)
+            return ((player_mutation_level(MUT_SLOW_HEALING) == 3)
                     || temp && you.species == SP_VAMPIRE
                        && you.hunger_state == HS_STARVING);
 
@@ -2626,7 +2626,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.has_spell(SPELL_BONE_SHARDS)
             || you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
-            || you.mutation[MUT_RAISE_DEAD]
+            || player_mutation_level(MUT_RAISE_DEAD)
             || you.religion == GOD_YREDELEMNUL
                && you.piety >= piety_breakpoint(0))
         {

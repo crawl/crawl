@@ -2256,7 +2256,7 @@ std::string _status_mut_abilities()
 
     if (you.disease && !you.duration[DUR_REGENERATION]
         || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
-        || you.mutation[MUT_SLOW_HEALING] == 3)
+        || player_mutation_level(MUT_SLOW_HEALING) == 3)
     {
         status.push_back("non-regenerating");
     }

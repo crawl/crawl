@@ -1936,7 +1936,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     }
 
     // Saprovorous/gourmand can't be randomly acquired.
-    if (!force_mutation && (mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND))
+    if ((mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND) && !force_mutation)
         return (false);
 
     // Mutation resistance can't be acquired from god gifts.

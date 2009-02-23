@@ -1044,7 +1044,7 @@ int player_regen()
         rr += 100;
 
     // troll leather (except for trolls)
-    if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR )
+    if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
         && you.species != SP_TROLL)
     {
         rr += 30;
@@ -1106,9 +1106,9 @@ int player_regen()
 
     // Slow heal mutation. Applied last.
     // Each level reduces your natural heaing by one third.
-    if (you.mutation[MUT_SLOW_HEALING])
+    if (player_mutation_level(MUT_SLOW_HEALING))
     {
-        rr *= 3 - you.mutation[MUT_SLOW_HEALING];
+        rr *= 3 - player_mutation_level(MUT_SLOW_HEALING);
         rr /= 3;
     }
 
@@ -4093,7 +4093,7 @@ void display_char_status()
     {
         bool no_heal =
             (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
-            || (you.mutation[MUT_SLOW_HEALING] == 3);
+            || (player_mutation_level(MUT_SLOW_HEALING) == 3);
 
         if (!no_heal)
             _output_expiring_message(DUR_REGENERATION, "regenerating");
