@@ -2642,6 +2642,7 @@ static char_choice_restriction _religion_restriction(god_type god)
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
