@@ -758,8 +758,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     switch (which_god)
     {
     case GOD_ZIN:
-        dislikes.push_back("you cause yourself to mutate in a way that could "
-                           "have been avoided");
+        dislikes.push_back("you deliberately mutate yourself");
         dislikes.push_back("you polymorph monsters");
         dislikes.push_back("you eat the flesh of sentient beings");
         dislikes.push_back("you use weapons or missiles of chaos");
@@ -1776,7 +1775,7 @@ bool bless_follower(monsters *follower,
                 mpr("Couldn't increase monster's friendliness or time.");
         }
 
-        // deliberate fallthrough for the healing effects
+        // Deliberate fallthrough for the healing effects.
         case GOD_BEOGH:
         {
             // Remove harmful ailments from a monster, or heal it, if
