@@ -3760,6 +3760,7 @@ static const char *mutation_type_names[] =
     "cold resistance",
     "shock resistance",
     "regeneration",
+    "slow healing",
     "fast metabolism",
     "slow metabolism",
     "weak",
@@ -3817,7 +3818,6 @@ static const char *mutation_type_names[] =
     "shaggy fur",
     "high mp",
     "low mp",
-    "",
     "",
 
     // from here on scales

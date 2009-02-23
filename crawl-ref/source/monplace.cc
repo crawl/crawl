@@ -1134,6 +1134,7 @@ static int _place_monster_aux(const mgen_data &mg,
         {
             menv[id].destroy_inventory();
             menv[id].reset();
+            mgrd(fpos) = NON_MONSTER;
             return (-1);
         }
         else

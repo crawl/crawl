@@ -82,7 +82,7 @@ const char *naga_deformed_descrip[3] = {
     "Armour fits poorly on your badly deformed serpentine body."
 };
 
-const char *mutation_descrip[][3] = {
+const char *mutation_descrip[NUM_MUTATIONS][3] = {
     {"You have tough skin (AC +1).", "You have very tough skin (AC +2).",
      "You have extremely tough skin (AC +3)."},
 
@@ -112,7 +112,6 @@ const char *mutation_descrip[][3] = {
 
     {"Your system is immune to poisons.", "", ""},
 
-// 10
     {"Your digestive system is specialised to digest meat.",
      "Your digestive system is highly specialised to digest meat.",
      "You are carnivorous and can eat meat at any time."},
@@ -132,6 +131,8 @@ const char *mutation_descrip[][3] = {
      "You heal very quickly.",
      "You regenerate."},
 
+    {"You heal slowly.", "You heal very slowly.", "You do not heal naturally."},
+
     {"You have a fast metabolism.", "You have a very fast metabolism.",
      "Your metabolism is lightning-fast."},
 
@@ -141,7 +142,6 @@ const char *mutation_descrip[][3] = {
     {"You are weak (Str -", "", ""},
     {"You are dopey (Int -", "", ""},
 
-// 20
     {"You are clumsy (Dex -", "", ""},
 
     {"You can control translocations.", "You can control translocations.",
@@ -174,7 +174,6 @@ const char *mutation_descrip[][3] = {
      "You can sense your surroundings.",
      "You can sense a large area of your surroundings."},
 
-// 30
     {"You can breathe flames.", "You can breathe fire.",
      "You can breathe blasts of fire."},
 
@@ -211,7 +210,6 @@ const char *mutation_descrip[][3] = {
     {"Your body is slowly deteriorating.", "Your body is deteriorating.",
      "Your body is rapidly deteriorating."},
 
-// 40
     {"Your vision is a little blurry.", "Your vision is quite blurry.",
      "Your vision is extremely blurry."},
 
@@ -240,7 +238,6 @@ const char *mutation_descrip[][3] = {
     {"You can call on the torments of Hell.", "", ""},
 
     // Not summoners/necromancers/worshippers of Yredelemnul
-// 50
     {"You can raise the dead to walk for you.", "", ""},
     {"You can control demons.", "", ""},
     {"You can travel to (but not from) Pandemonium at will.", "", ""},
@@ -261,7 +258,6 @@ const char *mutation_descrip[][3] = {
     {"You have sharp fingernails.", "You have very sharp fingernails.",
      "You have claws for hands."},
 
-// 60
     {"You have very sharp teeth.", "You have extremely sharp teeth.",
      "You have razor-sharp teeth."},
 
@@ -294,7 +290,6 @@ const char *mutation_descrip[][3] = {
 
     {"You like to eat raw meat.", "", ""},
 
-// 70
     {"You are covered in fur.",
      "You are covered in thick fur.",
      "Your thick and shaggy fur keeps you warm."},
@@ -308,10 +303,7 @@ const char *mutation_descrip[][3] = {
      "Your magical capacity is extremely low (-30 percent mp)."},
 
     {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
 
-// 75
     {"You are partially covered in red scales (AC + 1).",
      "You are mostly covered in red scales (AC + 2).",
      "You are covered in red scales (AC + 4)."},
@@ -352,7 +344,6 @@ const char *mutation_descrip[][3] = {
      "You are mostly covered in purple scales (AC + 4).",
      "You are completely covered in purple scales (AC + 6)."},
 
-// 85
     {"You are partially covered in speckled scales (AC + 1).",
      "You are mostly covered in speckled scales (AC + 2).",
      "You are covered in speckled scales (AC + 3)."},
@@ -381,7 +372,7 @@ const char *mutation_descrip[][3] = {
 // If giving a mutation which must succeed (eg demonspawn), must add
 // exception to the "resist mutation" mutation thing.
 
-const char *gain_mutation[][3] = {
+const char *gain_mutation[NUM_MUTATIONS][3] = {
     {"Your skin toughens.", "Your skin toughens.", "Your skin toughens."},
 
     {"", "", ""},  // replaced with player::modify_stat() handling {dlb}
@@ -428,6 +419,10 @@ const char *gain_mutation[][3] = {
     {"You begin to heal more quickly.",
      "You begin to heal more quickly.",
      "You begin to regenerate."},
+
+    {"You begin to heal more slowly.",
+     "You begin to heal more slowly.",
+     "You stop healing."},
 
     {"You feel a little hungry.", "You feel a little hungry.",
      "You feel a little hungry."},
@@ -572,8 +567,6 @@ const char *gain_mutation[][3] = {
      "You feel less energetic."},
 
     {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
 
 // 75
     {"Red scales grow over part of your body.",
@@ -628,7 +621,7 @@ const char *gain_mutation[][3] = {
      "Patterned scales cover you completely."}
 };
 
-const char *lose_mutation[][3] = {
+const char *lose_mutation[NUM_MUTATIONS][3] = {
 
     {"Your skin feels delicate.", "Your skin feels delicate.",
      "Your skin feels delicate."},
@@ -676,6 +669,9 @@ const char *lose_mutation[][3] = {
 
     {"Your rate of healing slows.", "Your rate of healing slows.",
      "Your rate of healing slows."},
+
+    {"Your rate of healing increases.", "Your rate of healing increases.",
+     "Your rate of healing increases."},
 
     {"Your metabolism slows.", "Your metabolism slows.",
      "Your metabolism slows."},
@@ -804,8 +800,6 @@ const char *lose_mutation[][3] = {
      "You feel more energetic."},
 
     {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
 
 // 75
     {"Your red scales disappear.", "Your red scales recede somewhat.",
@@ -882,18 +876,17 @@ static mutation_def mutation_defs[] = {
     { MUT_BONEY_PLATES,               1,  3, false,  true },
     { MUT_REPULSION_FIELD,            1,  3, false, false },
     { MUT_POISON_RESISTANCE,          4,  1, false, false },
-// 10
     { MUT_CARNIVOROUS,                5,  3, false, false },
     { MUT_HERBIVOROUS,                5,  3,  true, false },
     { MUT_HEAT_RESISTANCE,            4,  3, false, false },
     { MUT_COLD_RESISTANCE,            4,  3, false, false },
     { MUT_SHOCK_RESISTANCE,           2,  1, false, false },
     { MUT_REGENERATION,               3,  3, false, false },
+    { MUT_SLOW_HEALING,               0,  3,  true, false },
     { MUT_FAST_METABOLISM,           10,  3,  true, false },
     { MUT_SLOW_METABOLISM,            7,  3, false, false },
     { MUT_WEAK,                      10, 14,  true,  true },
     { MUT_DOPEY,                     10, 14,  true,  true },
-// 20
     { MUT_CLUMSY,                    10, 14,  true,  true },
     { MUT_TELEPORT_CONTROL,           2,  1, false, false },
     { MUT_TELEPORT,                   3,  3,  true, false },
@@ -904,7 +897,6 @@ static mutation_def mutation_defs[] = {
     { MUT_TELEPORT_AT_WILL,           2,  3, false, false },
     { MUT_SPIT_POISON,                8,  3, false, false },
     { MUT_MAPPING,                    3,  3, false, false },
-// 30
     { MUT_BREATHE_FLAMES,             4,  3, false, false },
     { MUT_BLINK,                      3,  3, false, false },
     { MUT_HORNS,                      7,  3, false,  true },
@@ -915,7 +907,6 @@ static mutation_def mutation_defs[] = {
     { MUT_CLARITY,                    6,  1, false, false },
     { MUT_BERSERK,                    7,  3,  true, false },
     { MUT_DETERIORATION,             10,  3,  true, false },
-// 40
     { MUT_BLURRY_VISION,             10,  3,  true, false },
     { MUT_MUTATION_RESISTANCE,        4,  3, false, false },
     { MUT_FRAIL,                     10,  3,  true,  true },
@@ -928,7 +919,6 @@ static mutation_def mutation_defs[] = {
     { MUT_SUMMON_DEMONS,              0,  1, false, false },
     { MUT_HURL_HELLFIRE,              0,  1, false, false },
     { MUT_CALL_TORMENT,               0,  1, false, false },
-// 50
     { MUT_RAISE_DEAD,                 0,  1, false, false },
     { MUT_CONTROL_DEMONS,             0,  1, false, false },
     { MUT_PANDEMONIUM,                0,  1, false, false },
@@ -941,7 +931,6 @@ static mutation_def mutation_defs[] = {
 // end of demonic powers
 
     { MUT_CLAWS,                      2,  3, false,  true },
-// 60
     { MUT_FANGS,                      1,  3, false,  true },
     { MUT_HOOVES,                     1,  1, false,  true },
     { MUT_TALONS,                     1,  1, false,  true },
@@ -951,7 +940,6 @@ static mutation_def mutation_defs[] = {
     // Naga and Draconian only
     { MUT_STINGER,                    0,  3, false,  true },
 
-// 65
     // Draconian only
     { MUT_BIG_WINGS,                  0,  1, false,  true },
      // used by evil gods to mark followers (currently UNUSED)
@@ -962,15 +950,13 @@ static mutation_def mutation_defs[] = {
     { MUT_SAPROVOROUS,                0,  3, false, false },
     { MUT_GOURMAND,                   0,  1, false, false },
 
-// 70
     { MUT_SHAGGY_FUR,                 2,  3, false,  true },
     { MUT_HIGH_MAGIC,                 1,  3, false, false },
     { MUT_LOW_MAGIC,                  9,  3,  true, false },
 
     { RANDOM_MUTATION,                0,  3, false, false },
-    { RANDOM_MUTATION,                0,  3, false, false },
 
-// 75 -- scales of various colours and effects
+// Scales of various colours and effects
     { MUT_RED_SCALES,                 2,  3, false,  true },
     { MUT_NACREOUS_SCALES,            1,  3, false,  true },
     { MUT_GREY2_SCALES,               2,  3, false,  true },
@@ -981,7 +967,6 @@ static mutation_def mutation_defs[] = {
     { MUT_BROWN_SCALES,               2,  3, false,  true },
     { MUT_BLUE_SCALES,                2,  3, false,  true },
     { MUT_PURPLE_SCALES,              2,  3, false,  true },
-// 85
     { MUT_SPECKLED_SCALES,            2,  3, false,  true },
     { MUT_ORANGE_SCALES,              2,  3, false,  true },
     { MUT_INDIGO_SCALES,              2,  3, false,  true },
@@ -1240,6 +1225,11 @@ formatted_string describe_mutations()
             result += "You can bottle blood from corpses with 'c'." EOL;
             have_any = true;
         }
+        break;
+
+    case SP_DEEP_DWARF:
+        result += "You are resistant to damage." EOL;
+        have_any = true;
         break;
 
     default:
@@ -1992,6 +1982,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     // If you have regen, no slow metabolism.
     if (mutat == MUT_SLOW_METABOLISM && you.mutation[MUT_REGENERATION] > 0)
+        return (false);
+
+    // If you have slow healing, no regeneration.
+    if (mutat == MUT_REGENERATION && you.mutation[MUT_SLOW_HEALING] > 0)
         return (false);
 
     // This one can be forced by demonspawn or god gifts.

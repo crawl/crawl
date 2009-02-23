@@ -452,6 +452,7 @@ bool player_genus(genus_type which_genus, species_type species)
         return (which_genus == GENPC_ELVEN);
 
     case SP_MOUNTAIN_DWARF:
+    case SP_DEEP_DWARF:
         return (which_genus == GENPC_DWARVEN);
 
     case SP_OGRE:
@@ -1028,7 +1029,7 @@ int player_teleport(bool calc_unid)
     return tp;
 }
 
-int player_regen(void)
+int player_regen()
 {
     int rr = you.hp_max / 3;
 
@@ -1036,7 +1037,7 @@ int player_regen(void)
         rr = 20 + ((rr - 20) / 2);
 
     // rings
-    rr += 40 * player_equip( EQ_RINGS, RING_REGENERATION );
+    rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
 
     // spell
     if (you.duration[DUR_REGENERATION])
@@ -1063,29 +1064,53 @@ int player_regen(void)
         rr /= 2;
     }
 
+    // Before applying other effects, make sure that there's
+    // something to heal.
+    if (rr < 1)
+        rr = 1;
+
     // Healing depending on satiation.
+    // The better-fed you are, the faster you heal.
     if (you.species == SP_VAMPIRE)
     {
         switch (you.hunger_state)
         {
         case HS_STARVING:
-            return (0); // No regeneration for starving vampires!
+            // No regeneration for starving vampires!
+            rr = 0;
+            break;
+
         case HS_NEAR_STARVING:
         case HS_VERY_HUNGRY:
         case HS_HUNGRY:
-            return (rr / 2);
+            // Halved if hungry.
+            rr /= 2;
+            break;
+
         case HS_SATIATED:
-            return (rr);
+            // No effect at standard hunger.
+            break;
+
         case HS_FULL:
         case HS_VERY_FULL:
-            return (rr + 10);
+            // Bonus for being full.
+            rr += 10;
+            break;
+
         case HS_ENGORGED:
-            return (rr + 20);
+            // Bigger bonus for being engorged.
+            rr += 20;
+            break;
         }
     }
 
-    if (rr < 1)
-        rr = 1;
+    // Slow heal mutation. Applied last.
+    // Each level reduces your natural heaing by one third.
+    if (you.mutation[MUT_SLOW_HEALING])
+    {
+        rr *= 3 - you.mutation[MUT_SLOW_HEALING];
+        rr /= 3;
+    }
 
     return (rr);
 }
@@ -1254,6 +1279,7 @@ int player_res_magic(void)
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_GNOME:
+    case SP_DEEP_DWARF:
         rm = you.experience_level * 6;
         break;
     case SP_SPRIGGAN:
@@ -3174,6 +3200,23 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
 
+            case SP_DEEP_DWARF:
+                hp_adjust++;
+
+                if (you.experience_level == 14)
+                {
+                    mpr("You feel somewhat more resistant.",
+                        MSGCH_INTRINSIC_GAIN);
+                    perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1);
+                }
+                if (!(you.experience_level % 4))
+                {
+                    modify_stat(coinflip() ? STAT_STRENGTH
+                                           : STAT_INTELLIGENCE, 1, false,
+                                "level gain");
+                }
+                break;
+
             case SP_HALFLING:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_DEXTERITY, 1, false, "level gain");
@@ -3940,7 +3983,7 @@ void display_char_status()
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
-        std::string text = "";
+        std::string text;
 
         if ((you.species != SP_VAMPIRE
                 || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
@@ -4035,18 +4078,25 @@ void display_char_status()
     if (you.duration[DUR_PRAYER])
         mpr("You are praying.");
 
-    if (you.disease && !you.duration[DUR_REGENERATION]
-        && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING))
+    // Disease and regen influence each other.
+    if (you.disease)
     {
-        mpr("You do not heal.");
+        if (!you.duration[DUR_REGENERATION])
+            mpr("You are sick.");
+        else
+        {
+            _output_expiring_message(DUR_REGENERATION,
+                                     "recuperating from your illness");
+        }
     }
-
-    if (you.duration[DUR_REGENERATION]
-        && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING))
+    else
     {
-        _output_expiring_message(DUR_REGENERATION,
-                                 you.disease ? "recuperating from your illness"
-                                             : "regenerating");
+        bool no_heal =
+            (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
+            || (you.mutation[MUT_SLOW_HEALING] == 3);
+
+        if (!no_heal)
+            _output_expiring_message(DUR_REGENERATION, "regenerating");
     }
 
     _output_expiring_message(DUR_SWIFTNESS, "You can move swiftly.");
@@ -4342,6 +4392,7 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             switch (speci)
             {
             case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf";            break;
+            case SP_DEEP_DWARF:     res = "Deep Dwarf";                break;
             default:                res = "Dwarf";                     break;
             }
         }
@@ -5336,8 +5387,10 @@ void dec_poison_player()
                 adj = "very ";
             }
 
+            int oldhp = you.hp;
             ouch(hurted, NON_MONSTER, KILLED_BY_POISON);
-            mprf(channel, "You feel %ssick.", adj);
+            if (you.hp < oldhp)
+                mprf(channel, "You feel %ssick.", adj);
 
             if ((you.hp == 1 && one_chance_in(3)) || one_chance_in(8))
                 reduce_poison_player(1);

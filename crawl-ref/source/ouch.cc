@@ -844,6 +844,18 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 {
     ASSERT(!crawl_state.arena);
 
+    if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
+    {
+        // Deep Dwarves get to shave _any_ hp loss.
+        int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "HP shaved: %d.", shave);
+#endif
+        dam -= shave;
+        if (dam <= 0)
+            return;
+    }
+
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
@@ -856,7 +868,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         return;
     }
 
-    if (dam != INSTANT_DEATH)     // that is, a "death" caused by hp loss {dlb}
+    if (dam != INSTANT_DEATH)
     {
         if (dam >= you.hp)
         {

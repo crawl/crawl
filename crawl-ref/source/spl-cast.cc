@@ -870,8 +870,7 @@ static bool _spell_is_uncastable(spell_type spell)
     // Normally undead can't memorise these spells, so this check is
     // to catch those in Lich form.  As such, we allow the Lich form
     // to be extended here. -- bwr
-    if (spell != SPELL_NECROMUTATION
-        && undead_cannot_memorise( spell, you.is_undead ))
+    if (spell != SPELL_NECROMUTATION && you_cannot_memorise(spell))
     {
         mpr( "You cannot cast that spell in your current form!" );
         return (true);
@@ -883,7 +882,7 @@ static bool _spell_is_uncastable(spell_type spell)
         return (true);
     }
 
-    if (_vampire_cannot_cast( spell ))
+    if (_vampire_cannot_cast(spell))
     {
         mpr("Your current blood level is not sufficient to cast that spell.");
         return (true);
@@ -1217,7 +1216,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_PAIN:
         if (!zapping(ZAP_PAIN, powc, beam, true))
             return (SPRET_ABORT);
-        dec_hp(1, false);
+        // Deep Dwarves' damage reduction always blocks at least 1 hp.
+        if (you.species != SP_DEEP_DWARF)
+            dec_hp(1, false);
         break;
 
     case SPELL_FLAME_TONGUE:

@@ -61,7 +61,7 @@ spell_type which_spell_in_book(int sbook_type, int spl);
 int staff_spell( int zap_device_2 );
 bool is_memorised(spell_type spell);
 
-bool undead_cannot_memorise(spell_type spell, char being);
+bool you_cannot_memorise(spell_type spell);
 
 int spellbook_contents( item_def &book, read_book_action_type action,
                         formatted_string *fs = NULL );

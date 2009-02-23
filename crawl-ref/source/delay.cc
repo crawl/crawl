@@ -1197,14 +1197,14 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (god_hates_cannibalism(you.religion)
                     && is_player_same_species(item.plus))
                 {
-                    simple_god_message(" expects more respect for your departed "
-                                       "relatives.");
+                    simple_god_message(" expects more respect for your"
+                                       " departed relatives.");
                 }
                 else if (you.religion == GOD_ZIN
                          && mons_class_intel(item.plus) >= I_NORMAL)
                 {
-                    simple_god_message(" expects more respect for this departed "
-                                       "soul.");
+                    simple_god_message(" expects more respect for this"
+                                       " departed soul.");
                 }
 
                 if (you.species == SP_VAMPIRE && delay.type == DELAY_BUTCHER
@@ -1241,7 +1241,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 autopickup();
             }
 
-            // If we were interrupted while butchering (by poisonig, for
+            // If we were interrupted while butchering (by poisoning, for
             // example) then resumed butchering and finished, swap back from
             // butchering tool if appropriate.
             if (you.delay_queue.size() == 1)
@@ -1282,7 +1282,7 @@ static void _finish_delay(const delay_queue_item &delay)
             offer_corpse(delay.parm1);
             StashTrack.update_stash(); // Don't stash-track this corpse anymore.
         }
-        // If we were interrupted while butchering (by poisonig, for
+        // If we were interrupted while butchering (by poisoning, for
         // example) then resumed butchering and finished, swap back from
         // butchering tool if appropriate.
         if (you.delay_queue.size() == 1)

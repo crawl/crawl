@@ -1199,16 +1199,10 @@ int read_book( item_def &book, read_book_action_type action )
     return (keyin);
 }
 
-// Recoded to answer whether an UNDEAD_STATE is
-// barred from a particular spell passed to the
-// function. Note that the function can be expanded
-// to prevent memorisation of certain spells by
-// the living by setting up an US_ALIVE case returning
-// a value of false for a set of spells ... might be
-// an idea worth further consideration. - 12mar2000 {dlb}
-bool undead_cannot_memorise(spell_type spell, char being)
+bool you_cannot_memorise(spell_type spell)
 {
-    switch (being)
+    bool rc = false;
+    switch (you.is_undead)
     {
     case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
@@ -1229,9 +1223,10 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_STONESKIN:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
-            return (true);
+            rc = true;
+            break;
         default:
-            return (false);
+            break;
         }
         break;
 
@@ -1241,11 +1236,12 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_DEATHS_DOOR:
         case SPELL_NECROMUTATION:
-            return (true);
-        default:
             // In addition, the above US_HUNGRY_DEAD spells are not castable
             // when satiated or worse.
-            return (false);
+            rc = true;
+            break;
+        default:
+            break;
         }
         break;
 
@@ -1272,14 +1268,21 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_SUMMON_HORRIBLE_THINGS:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
-            return (true);
+            rc = true;
+            break;
         default:
-            return (false);
+            break;
         }
+        break;
+
+    case US_ALIVE:
         break;
     }
 
-    return (false);
+    if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
+        rc = true;
+
+    return (rc);
 }
 
 bool player_can_memorise(const item_def &book)
@@ -1397,7 +1400,7 @@ bool learn_spell(int book)
         return (false);
     }
 
-    if (undead_cannot_memorise(specspell, you.is_undead))
+    if (you_cannot_memorise(specspell))
     {
         mpr("You cannot use this spell.");
         return (false);
@@ -1772,7 +1775,7 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
 #endif
         }
 
-        if (avoid_uncastable && undead_cannot_memorise(spell, you.is_undead))
+        if (avoid_uncastable && you_cannot_memorise(spell))
         {
             uncastable_discard++;
             continue;

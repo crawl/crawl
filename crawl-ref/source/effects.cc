@@ -3105,14 +3105,18 @@ void handle_time(long time_delta)
     // Adjust the player's stats if s/he's diseased (or recovering).
     if (!you.disease)
     {
-        if (you.strength < you.max_strength && one_chance_in(100))
-            restore_stat(STAT_STRENGTH, 0, false, true);
+        // With slow healing 3, you have no stat recovery.
+        if (x_chance_in_y(3 - you.mutation[MUT_SLOW_HEALING], 3))
+        {
+            if (you.strength < you.max_strength && one_chance_in(100))
+                restore_stat(STAT_STRENGTH, 0, false, true);
 
-        if (you.intel < you.max_intel && one_chance_in(100))
-            restore_stat(STAT_INTELLIGENCE, 0, false, true);
+            if (you.intel < you.max_intel && one_chance_in(100))
+                restore_stat(STAT_INTELLIGENCE, 0, false, true);
 
-        if (you.dex < you.max_dex && one_chance_in(100))
-            restore_stat(STAT_DEXTERITY, 0, false, true);
+            if (you.dex < you.max_dex && one_chance_in(100))
+                restore_stat(STAT_DEXTERITY, 0, false, true);
+        }
     }
     else
     {

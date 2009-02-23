@@ -1571,6 +1571,49 @@ const int spec_skills[ NUM_SPECIES ][40] =
      (120 * 75)/100,            // SK_EVOCATIONS
     },
 
+    {                           // SP_DEEP_DWARF (39)
+     110,                       // SK_FIGHTING
+     120,                       // SK_SHORT_BLADES
+     100,                       // SK_LONG_BLADES
+     130,                       // SK_UNUSED_1
+     90,                        // SK_AXES
+     110,                       // SK_MACES_FLAILS
+     120,                       // SK_POLEARMS
+     110,                       // SK_STAVES
+     90,                        // SK_SLINGS
+     180,                       // SK_BOWS
+     90,                        // SK_CROSSBOWS
+     120,                       // SK_DARTS
+     120,                       // SK_THROWING
+     90,                        // SK_ARMOUR
+     90,                        // SK_DODGING
+     70,                        // SK_STEALTH
+     110,                       // SK_STABBING
+     90,                        // SK_SHIELDS
+     80,                        // SK_TRAPS_DOORS
+     120,                       // SK_UNARMED_COMBAT
+     100,                       // undefined
+     100,                       // undefined
+     100,                       // undefined
+     100,                       // undefined
+     100,                       // undefined
+     (120 * 130) / 100,         // SK_SPELLCASTING
+     120,                       // SK_CONJURATIONS
+     120,                       // SK_ENCHANTMENTS
+     110,                       // SK_SUMMONINGS
+     80,                        // SK_NECROMANCY
+     85,                        // SK_TRANSLOCATIONS
+     120,                       // SK_TRANSMUTATION
+     120,                       // SK_DIVINATIONS
+     110,                       // SK_FIRE_MAGIC
+     110,                       // SK_ICE_MAGIC
+     170,                       // SK_AIR_MAGIC
+     60,                        // SK_EARTH_MAGIC
+     130,                       // SK_POISON_MAGIC
+     (80 * 75) / 100,           // SK_INVOCATIONS
+     (60 * 75) / 100,           // SK_EVOCATIONS
+    },
+
     // SP_HILL_DWARF placeholder.
     {
     },

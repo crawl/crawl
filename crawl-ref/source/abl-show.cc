@@ -203,6 +203,7 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_MAPPING, "Evoke Sense Surroundings", 0, 0, 30, 0, ABFLAG_NONE },
     { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation", 3, 0, 200, 0, ABFLAG_NONE },
     { ABIL_EVOKE_BLINK, "Evoke Blink", 1, 0, 50, 0, ABFLAG_NONE },
+    { ABIL_RECHARGING, "Wand Recharging", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage", 0, 0, 0, 0, ABFLAG_NONE },
 
@@ -528,6 +529,10 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TRAN_BAT:
+        failure = 45 - (2 * you.experience_level);
+        break;
+
+    case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
         failure = 45 - (2 * you.experience_level);
         break;
         // end species abilties (some mutagenic)
@@ -1105,6 +1110,11 @@ static bool _do_ability(const ability_def& abil)
 
         break;
     }
+
+    case ABIL_RECHARGING:
+        if (!recharge_wand(-1))
+            return (false); // fail message is already given
+        break;
 
     case ABIL_DELAYED_FIREBALL:
         {
@@ -2088,6 +2098,9 @@ std::vector<talent> your_talents( bool check_confused )
     // Species-based abilities
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
+
+     if (you.species == SP_DEEP_DWARF)
+         _add_talent(talents, ABIL_RECHARGING, check_confused);
 
     // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
     // Transformed nagas, or non-nagas, can only get Spit Poison.

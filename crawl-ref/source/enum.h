@@ -45,7 +45,8 @@ enum ability_type
     ABIL_EVOKE_MAPPING,                //   30
     ABIL_EVOKE_TELEPORTATION,
     ABIL_EVOKE_BLINK,                  //   32
-    // 33 - 50 unused
+    ABIL_RECHARGING,
+    // 34 - 50 unused
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_LEVITATE,
@@ -2246,80 +2247,81 @@ enum mon_spellbook_type
 
 enum mutation_type
 {
-    MUT_TOUGH_SKIN,                    //    0
+    MUT_TOUGH_SKIN,
     MUT_STRONG,
     MUT_CLEVER,
     MUT_AGILE,
     MUT_GREEN_SCALES,
-    MUT_BLACK_SCALES,                  //    5
+    MUT_BLACK_SCALES,
     MUT_GREY_SCALES,
     MUT_BONEY_PLATES,
     MUT_REPULSION_FIELD,
     MUT_POISON_RESISTANCE,
-    MUT_CARNIVOROUS,                   //   10
+    MUT_CARNIVOROUS,
     MUT_HERBIVOROUS,
     MUT_HEAT_RESISTANCE,
     MUT_COLD_RESISTANCE,
     MUT_SHOCK_RESISTANCE,
-    MUT_REGENERATION,                  //   15
+    MUT_REGENERATION,
+    MUT_SLOW_HEALING,
     MUT_FAST_METABOLISM,
     MUT_SLOW_METABOLISM,
     MUT_WEAK,
     MUT_DOPEY,
-    MUT_CLUMSY,                        //   20
+    MUT_CLUMSY,
     MUT_TELEPORT_CONTROL,
     MUT_TELEPORT,
     MUT_MAGIC_RESISTANCE,
     MUT_FAST,
-    MUT_ACUTE_VISION,                  //   25
+    MUT_ACUTE_VISION,
     MUT_DEFORMED,
     MUT_TELEPORT_AT_WILL,
     MUT_SPIT_POISON,
     MUT_MAPPING,
-    MUT_BREATHE_FLAMES,                //   30
+    MUT_BREATHE_FLAMES,
     MUT_BLINK,
     MUT_HORNS,
     MUT_BEAK,
     MUT_STRONG_STIFF,
-    MUT_FLEXIBLE_WEAK,                 //   35
+    MUT_FLEXIBLE_WEAK,
     MUT_SCREAM,
     MUT_CLARITY,
     MUT_BERSERK,
     MUT_DETERIORATION,
-    MUT_BLURRY_VISION,                 //   40
+    MUT_BLURRY_VISION,
     MUT_MUTATION_RESISTANCE,
     MUT_FRAIL,
     MUT_ROBUST,
     MUT_TORMENT_RESISTANCE,
-    MUT_NEGATIVE_ENERGY_RESISTANCE,    //   45
+    MUT_NEGATIVE_ENERGY_RESISTANCE,
     MUT_SUMMON_MINOR_DEMONS,
     MUT_SUMMON_DEMONS,
     MUT_HURL_HELLFIRE,
     MUT_CALL_TORMENT,
-    MUT_RAISE_DEAD,                    //   50
+    MUT_RAISE_DEAD,
     MUT_CONTROL_DEMONS,
     MUT_PANDEMONIUM,
     MUT_DEATH_STRENGTH,
     MUT_CHANNEL_HELL,
-    MUT_DRAIN_LIFE,                    //   55
+    MUT_DRAIN_LIFE,
     MUT_THROW_FLAMES,
     MUT_THROW_FROST,
     MUT_SMITE,
     MUT_CLAWS,
-    MUT_FANGS,      // new in 0.3      --   60
+    MUT_FANGS,
     // hooves and talons can replace feet
     MUT_HOOVES,
-    MUT_TALONS,     // new in 0.4
+    MUT_TALONS,
     MUT_BREATHE_POISON,
     MUT_STINGER,
-    MUT_BIG_WINGS,                     //   65
+    MUT_BIG_WINGS,
     MUT_BLUE_MARKS, // decorative, as in "mark of the devil"
     MUT_GREEN_MARKS,
     MUT_SAPROVOROUS,
     MUT_GOURMAND,
-    MUT_SHAGGY_FUR, // new in 0.4      --   70
-    MUT_HIGH_MAGIC, // new in 0.4
-    MUT_LOW_MAGIC,  // new in 0.4
+    MUT_SHAGGY_FUR,
+    MUT_HIGH_MAGIC,
+    MUT_LOW_MAGIC,
 
     // several types of scales (affect AC and sometimes more)
     MUT_RED_SCALES = 75,               //   75
@@ -2346,7 +2348,7 @@ enum mutation_type
     RANDOM_BAD_MUTATION = 103
 };
 
-enum object_class_type                 // (unsigned char) mitm[].base_type
+enum object_class_type                 // mitm[].base_type
 {
     OBJ_WEAPONS,                       //    0
     OBJ_MISSILES,
@@ -2620,6 +2622,7 @@ enum species_type
     SP_KENKU,
     SP_MERFOLK,
     SP_VAMPIRE,
+    SP_DEEP_DWARF,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)
