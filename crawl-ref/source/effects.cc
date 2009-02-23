@@ -3106,7 +3106,7 @@ void handle_time(long time_delta)
     if (!you.disease)
     {
         // With slow healing 3, you have no stat recovery.
-        if (x_chance_in_y(3 - you.mutation[MUT_SLOW_HEALING], 3))
+        if (x_chance_in_y(3 - player_mutation_level(MUT_SLOW_HEALING), 3))
         {
             if (you.strength < you.max_strength && one_chance_in(100))
                 restore_stat(STAT_STRENGTH, 0, false, true);
