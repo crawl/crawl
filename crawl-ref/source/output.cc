@@ -2673,6 +2673,9 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "saprovore %d", level);
                 current = info;
                 break;
+            case MUT_GOURMAND:
+                current = "gourmand";
+                break;
             case MUT_CARNIVOROUS:
                 snprintf(info, INFO_SIZE, "carnivore %d", level);
                 current = info;
@@ -2694,6 +2697,10 @@ std::string _status_mut_abilities()
                 break;
             case MUT_REGENERATION:
                 snprintf(info, INFO_SIZE, "regeneration %d", level);
+                current = info;
+                break;
+            case MUT_SLOW_HEALING:
+                snprintf(info, INFO_SIZE, "slow healing %d", level);
                 current = info;
                 break;
             case MUT_FAST_METABOLISM:
