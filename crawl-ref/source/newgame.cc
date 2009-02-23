@@ -5438,20 +5438,12 @@ bool _give_items_skills()
         _newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
         _newgame_make_item(5, EQ_NONE, OBJ_POTIONS, POT_POISON);
 
-        // Do this early because it might be increased later.
-        you.skills[SK_UNARMED_COMBAT] = 1;
-
-        if (you.species == SP_SPRIGGAN)
-        {
-            _make_rod(you.inv[0], STAFF_STRIKING);
-            you.equip[EQ_WEAPON] = 0;
-
-            you.skills[SK_EVOCATIONS] = 2;
-        }
-        else
-            you.skills[SK_UNARMED_COMBAT] += 2;
+        // Spriggans used to get a rod of striking, but now that anyone
+        // can get one when playing an Artificer, this is no longer
+        // necessary. (jpeg)
 
         you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
         you.skills[SK_TRANSMUTATIONS] = 2;
