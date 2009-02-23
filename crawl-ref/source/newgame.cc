@@ -4643,6 +4643,7 @@ bool _give_items_skills()
         weap_skill = 3;
         break;
     }
+
     case JOB_MONK:
         you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
 
