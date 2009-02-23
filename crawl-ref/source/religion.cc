@@ -748,7 +748,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     switch (which_god)
     {
     case GOD_ELYVILON: case GOD_ZIN: case GOD_OKAWARU:
-        dislikes.push_back("you allow an ally to die");
+        dislikes.push_back("you allow allies to die");
         break;
 
     default:
@@ -766,13 +766,13 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_SHINING_ONE:
-        dislikes.push_back("you poison a monster");
-        dislikes.push_back("you attack an intelligent monster in an "
+        dislikes.push_back("you poison monsters");
+        dislikes.push_back("you attack intelligent monsters in an "
                            "unchivalric manner");
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("you kill a living thing while praying");
+        dislikes.push_back("you kill living things while praying");
         break;
 
     case GOD_YREDELEMNUL:
