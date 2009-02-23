@@ -1359,6 +1359,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
+        case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1369,7 +1370,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1380,6 +1380,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1389,7 +1390,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_CENTAUR:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1403,6 +1403,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1415,7 +1416,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
         case SP_MUMMY:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1458,6 +1458,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
+        case SP_DEEP_DWARF:
         case SP_HALFLING:
         case SP_GNOME:
         case SP_KOBOLD:
@@ -1465,7 +1466,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_NAGA:
         case SP_TROLL:
         case SP_KENKU:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1478,6 +1478,7 @@ static char_choice_restriction _class_allowed(species_type speci,
             return (CC_BANNED);
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
+        case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1488,7 +1489,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_KENKU:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1572,6 +1572,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_HUMAN:
         case SP_SLUDGE_ELF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1588,7 +1589,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1598,6 +1598,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -1609,7 +1610,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_OGRE:
         case SP_MINOTAUR:
         case SP_GHOUL:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1618,6 +1618,7 @@ static char_choice_restriction _class_allowed(species_type speci,
     case JOB_CONJURER:
         switch (speci)
         {
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -1628,7 +1629,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1639,6 +1639,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_NAGA:
         case SP_CENTAUR:
@@ -1649,7 +1650,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_RED_DRACONIAN:
         case SP_GHOUL:
         case SP_MUMMY:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1661,6 +1661,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_HUMAN:
         case SP_HIGH_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -1673,7 +1674,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
         case SP_GHOUL:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1705,6 +1705,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -1721,7 +1722,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1735,6 +1735,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
         case SP_KOBOLD:
@@ -1748,7 +1749,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1757,6 +1757,7 @@ static char_choice_restriction _class_allowed(species_type speci,
     case JOB_FIRE_ELEMENTALIST:
         switch (speci)
         {
+        case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1766,7 +1767,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1776,6 +1776,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1785,7 +1786,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1795,6 +1795,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_GNOME:
@@ -1804,7 +1805,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1815,6 +1815,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_HIGH_ELF:
         case SP_GREY_ELF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -1827,7 +1828,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_RED_DRACONIAN:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1839,6 +1839,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_HIGH_ELF:
         case SP_GREY_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
         case SP_GNOME:
@@ -1847,7 +1848,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1858,6 +1858,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_HIGH_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_CENTAUR:
         case SP_OGRE:
@@ -1867,7 +1868,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1882,6 +1882,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_NAGA:
         case SP_CENTAUR:
@@ -1889,7 +1890,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_RED_DRACONIAN:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1898,6 +1898,7 @@ static char_choice_restriction _class_allowed(species_type speci,
     case JOB_HUNTER:
         switch (speci)
         {
+        case SP_DEEP_DWARF:
         case SP_HALFLING:
         case SP_GNOME:
         case SP_KOBOLD:
@@ -1908,7 +1909,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1917,15 +1917,15 @@ static char_choice_restriction _class_allowed(species_type speci,
     case JOB_ARTIFICER:
         switch (speci)
         {
-            case SP_CENTAUR:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_OGRE:
-            case SP_MUMMY:
-            case SP_GHOUL:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_CENTAUR:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_OGRE:
+        case SP_MUMMY:
+        case SP_GHOUL:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_WANDERER:
@@ -2285,6 +2285,7 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         {
         case SP_HUMAN:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MUMMY:
         case SP_CENTAUR:
@@ -2295,7 +2296,6 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_UNRESTRICTED);
 
         default:
@@ -2593,6 +2593,7 @@ static char_choice_restriction _religion_restriction(god_type god)
         case SP_GREY_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_KOBOLD:
@@ -2606,7 +2607,6 @@ static char_choice_restriction _religion_restriction(god_type god)
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_UNRESTRICTED);
         default:
             if (player_genus(GENPC_DRACONIAN))
@@ -2642,6 +2642,7 @@ static char_choice_restriction _religion_restriction(god_type god)
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -2656,7 +2657,6 @@ static char_choice_restriction _religion_restriction(god_type god)
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-        case SP_DEEP_DWARF:
             return (CC_UNRESTRICTED);
         default:
             if (player_genus(GENPC_DRACONIAN))
@@ -2697,16 +2697,17 @@ static bool _necromancy_okay()
     {
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
-    case SP_OGRE_MAGE:
+    case SP_DEEP_DWARF:
     case SP_DEMONSPAWN:
     case SP_KENKU:
     case SP_MUMMY:
     case SP_VAMPIRE:
-    case SP_DEEP_DWARF:
         return (true);
 
     default:
-        return (player_genus(GENPC_DRACONIAN));
+        if (player_genus(GENPC_DRACONIAN))
+            return (true);
+        return (false);
     }
 }
 
