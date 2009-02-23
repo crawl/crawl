@@ -2098,11 +2098,10 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         for (int i = 0; i < num_discs; i++)
         {
             int skill  = skills[i];
-            int weight = you.skills[skill]
-                         * 200 / species_skills(skill, you.species) + 1;
+            int weight = 2 * you.skills[skill] + 1;
 
-            if (spellcount[i] < 5)
-                weight -= 5 - spellcount[i];
+            if (spellcount[i] < 3)
+                weight *= spellcount[i]/3;
 
             skill_weights[i] = std::max(0, weight);
             total_skills += skill_weights[i];

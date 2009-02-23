@@ -1319,8 +1319,7 @@ static int _spell_weight(spell_type spell)
         int disc = 1 << i;
         if (disciplines & disc)
         {
-            int skill = you.skills[spell_type2skill(disc)]
-                        * 100 / species_skills(i, you.species);
+            int skill = you.skills[spell_type2skill(disc)];
 
             weight += skill + 1;
             count++;
@@ -1405,7 +1404,7 @@ static void _do_book_acquirement(item_def &book, int agent)
             if (is_invalid_skill(i))
                 continue;
 
-            int weight = you.skills[i] * 100 / species_skills(i, you.species);
+            int weight = you.skills[i];
 
             // Anyone can get Spellcasting 1. Doesn't prove anything.
             if (i == SK_SPELLCASTING && weight >= 1)
@@ -1497,9 +1496,7 @@ static void _do_book_acquirement(item_def &book, int agent)
                 continue;
             }
 
-            int skill = you.skills[i]
-                        * 100 / species_skills(i, you.species);
-
+            int skill = you.skills[i];
             int w = (skill < 12) ? skill + 3
                                  : std::max(0, 25 - skill);
 
