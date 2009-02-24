@@ -2000,44 +2000,51 @@ void debug_item_scan( void )
 
 #endif
 
-#if DEBUG_MONS_SCAN
 void debug_mons_scan()
 {
     bool warned = false;
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
+    for (int x = 0; x < GXM; ++x)
+    {
+        for (int y = 0; y < GYM; ++y)
         {
             const int mons = mgrd[x][y];
-            if (mons != NON_MONSTER &&
-                menv[mons].pos() != coord_def(x, y))
+            if (mons != NON_MONSTER)
             {
                 const monsters *m = &menv[mons];
-                mprf(MSGCH_WARN,
-                     "Bogosity: mgrd at %d,%d points at %s, "
-                     "but monster is at %d,%d",
-                     x, y, m->name(DESC_PLAIN).c_str(), m->x, m->y);
-                warned = true;
+                if (m->x != x || m->y != y)
+                {
+                    mprf(MSGCH_ERROR,
+                         "Bogosity: mgrd at %d,%d points at %s, "
+                         "but monster is at %d,%d",
+                         x, y, m->name(DESC_PLAIN, true).c_str(), m->x, m->y);
+                    warned = true;
+                }
             }
         }
+    }
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         const monsters *m = &menv[i];
         if (!m->alive())
             continue;
-        if (mgrd(m->pos()) != i)
+
+        if (mgrd[m->x][m->y] != i)
         {
-            mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
-                 m->name(DESC_PLAIN).c_str(), m->x, m->y);
+            mprf(MSGCH_ERROR, "Floating monster: %s at (%d,%d)",
+                 m->name(DESC_PLAIN, true).c_str(), m->x, m->y);
             warned = true;
         }
     }
     // If there are warnings, force the dev to notice. :P
     if (warned)
+    {
         more();
+        mpr("Please save your game *now* and file a bug report at ");
+        mpr("http://crawl-ref.sourceforge.net");
+        mpr("Don't forget to mention your username!");
+    }
 }
-#endif
-
 
 //---------------------------------------------------------------
 //
