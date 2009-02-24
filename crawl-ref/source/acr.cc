@@ -3175,7 +3175,7 @@ static void _close_door(coord_def move)
             {
                 // Need to make sure that turn_is_over is set if creature is
                 // invisible.
-                if (!player_monster_visible(mon))
+                if (!you.can_see(mon))
                 {
                     mprf("Something is blocking the %sway!", noun);
                     you.turn_is_over = true;

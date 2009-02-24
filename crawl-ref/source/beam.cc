@@ -3494,7 +3494,7 @@ void bolt::affect_player_enchantment()
         if (thrower != KILL_YOU_MISSILE && !invalid_monster_index(beam_source))
         {
             monsters *mon = &menv[beam_source];
-            if (!player_monster_visible(mon))
+            if (!you.can_see(mon))
             {
                 mpr("Something tries to affect you, but you resist.");
                 need_msg = false;
@@ -4179,7 +4179,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
             if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
                 remove_sanctuary(true);
 
-            set_attack_conducts(conducts, mon, player_monster_visible(mon));
+            set_attack_conducts(conducts, mon, you.can_see(mon));
 
             if (you.religion == GOD_BEOGH
                 && mons_species(mon->type) == MONS_ORC
@@ -4446,7 +4446,7 @@ void bolt::affect_monster(monsters* mon)
             // It's not the player's fault if he didn't see the monster or
             // the monster was caught in an unexpected blast of ?immolation.
             const bool okay =
-                (!player_monster_visible(mon)
+                (!you.can_see(mon)
                  || aux_source == "reading a scroll of immolation"
                     && !effect_known);
 
@@ -4500,7 +4500,7 @@ void bolt::affect_monster(monsters* mon)
         mprf("The %s %s %s.",
              name.c_str(),
              engulfs ? "engulfs" : "hits",
-             player_monster_visible(mon) ?
+             you.can_see(mon) ?
                  mon->name(DESC_NOCAP_THE).c_str() : "something");
 
     }

@@ -1964,8 +1964,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
                                      && mons_is_submerged(&mon);
 
     // Handle non-visible case first.
-    if (!force_seen && !player_monster_visible(&mon)
-        && !arena_submerged)
+    if (!force_seen && !you.can_see(&mon) && !arena_submerged)
     {
         switch (desc)
         {
@@ -8306,8 +8305,6 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     const actor*    foe   = (mons_wont_attack(monster)
                              && invalid_monster_index(monster->foe)) ?
                             &you : monster->get_foe();
-    const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
-                            dynamic_cast<const monsters*>(foe) : NULL;
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
         s_type = mons_shouts(monster->type);
@@ -8341,16 +8338,17 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     else
     {
         std::string foe_name;
-        if (you.can_see(m_foe) || crawl_state.arena)
+        const monsters* m_foe = dynamic_cast<const monsters*>(foe);
+        if (you.can_see(foe) || crawl_state.arena)
         {
             if (m_foe->attitude == ATT_FRIENDLY
                 && !mons_is_unique(m_foe->type)
                 && !crawl_state.arena)
             {
-                foe_name = m_foe->name(DESC_NOCAP_YOUR);
+                foe_name = foe->name(DESC_NOCAP_YOUR);
             }
             else
-                foe_name = m_foe->name(DESC_NOCAP_THE);
+                foe_name = foe->name(DESC_NOCAP_THE);
         }
         else
             foe_name = "something";
@@ -8368,16 +8366,14 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@Foe@", upcase_first(foe_name));
 
         if (m_foe->is_named())
-            msg = replace_all(msg, "@foe_name@",
-                              m_foe->name(DESC_PLAIN, true));
+            msg = replace_all(msg, "@foe_name@", foe->name(DESC_PLAIN, true));
 
         std::string species = mons_type_name(mons_species(m_foe->type),
                                              DESC_PLAIN);
 
         msg = replace_all(msg, "@foe_species@", species);
 
-        std::string genus = mons_type_name(mons_genus(m_foe->type),
-                                           DESC_PLAIN);
+        std::string genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
 
         msg = replace_all(msg, "@foe_genus@", genus);
         msg = replace_all(msg, "@foe_genus_plural@", pluralise(genus));
@@ -8387,7 +8383,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
 
-    if (monster->is_named() && player_monster_visible(monster))
+    if (monster->is_named() && you.can_see(monster))
     {
         std::string name = monster->name(DESC_CAP_THE);
 
@@ -8399,7 +8395,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     else if (monster->attitude == ATT_FRIENDLY
              && !mons_is_unique(monster->type)
              && !crawl_state.arena
-             && player_monster_visible(monster))
+             && you.can_see(monster))
     {
         nocap = DESC_PLAIN;
         cap   = DESC_PLAIN;
@@ -8432,8 +8428,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@feature@", "buggy unseen feature");
     }
 
-
-    if (player_monster_visible(monster))
+    if (you.can_see(monster))
     {
         std::string something = monster->name(DESC_PLAIN);
         msg = replace_all(msg, "@something@",   something);

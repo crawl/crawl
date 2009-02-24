@@ -267,7 +267,7 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
     {
         if (mons->alive() && player_monster_visible(mons))
         {
-            glych  = get_screen_glyph(pos.x, pos.y);
+            glych  = get_screen_glyph(pos);
             colour = mcol;
         }
     }
@@ -413,13 +413,10 @@ static void _direction_again(dist& moves, targeting_type restricts,
     {
         const monsters *montarget = &menv[you.prev_targ];
 
-        if (!mons_near(montarget)
-            || !player_monster_visible( montarget ))
+        if (!you.can_see(montarget))
         {
             moves.isCancel = true;
-
             crawl_state.cancel_cmd_all("Your target is gone.");
-
             return;
         }
         else if (!_is_target_in_range(montarget->pos(), range))

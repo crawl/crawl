@@ -1263,7 +1263,6 @@ void monster_grid(bool do_updates)
             // monster, then make sure that the mgrd is set correctly.
             if (mgrd(monster->pos()) != s)
             {
-#ifdef DEBUG_DIAGNOSTICS
                 // If this mprf triggers for you, please note any special
                 // circumstances so we can track down where this is coming
                 // from.
@@ -1271,7 +1270,6 @@ void monster_grid(bool do_updates)
                      "improperly placed.  Updating mgrd.",
                      monster->name(DESC_PLAIN, true).c_str(), s,
                      monster->pos().x, monster->pos().y);
-#endif
                 ASSERT(mgrd(monster->pos()) == NON_MONSTER);
                 mgrd(monster->pos()) = s;
             }

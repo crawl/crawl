@@ -598,8 +598,7 @@ static bool _ely_protect_ally(monsters *monster)
     if (mons_holiness(monster) != MH_NATURAL
             && mons_holiness(monster) != MH_HOLY
         || !mons_friendly(monster)
-        || !mons_near(monster)
-        || !player_monster_visible(monster) // for simplicity
+        || !you.can_see(monster) // for simplicity
         || !one_chance_in(20))
     {
         return (false);
@@ -5714,7 +5713,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             noisy(12, monster->pos(), NULL, true);
 
             bool did_resist = false;
-            if (player_monster_visible(monster))
+            if (you.can_see(monster))
             {
                 simple_monster_message(monster,
                     make_stringf(" chants %s song.",

@@ -1553,7 +1553,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         viewwindow(true, false);
         pbolt.fire();
         msg::stream << "The weapon returns "
-                    << (player_monster_visible(monster)?
+                    << (you.can_see(monster)?
                           ("to " + monster->name(DESC_NOCAP_THE))
                         : "whence it came from")
                     << "!" << std::endl;
