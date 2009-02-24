@@ -2906,6 +2906,19 @@ void tilep_race_default(int race, int gender, int level, int *parts)
             else
                 hair = TILEP_HAIR_ARWEN;
             break;
+        case SP_DEEP_DWARF:
+            result = TILEP_BASE_DEEP_DWARF;
+            if (gender == TILEP_GENDER_MALE)
+            {
+                hair  = TILEP_HAIR_SHORT_WHITE;
+                beard = TILEP_BEARD_LONG_WHITE;
+            }
+            else
+            {
+                hair  = TILEP_HAIR_FEM_WHITE;
+                beard = TILEP_BEARD_SHORT_WHITE;
+            }
+            break;
         default:
             result = TILEP_BASE_HUMAN;
             break;
