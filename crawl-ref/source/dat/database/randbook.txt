@@ -382,11 +382,11 @@ the Glacier
 
 the Frostbite
 %%%%
-Transmutations
+Transmutation
 
 Transmigration
 
-Transmutations
+Transmutation
 
 Transformation
 
@@ -593,7 +593,7 @@ Congealing
 
 Frigorific
 %%%%
-Transmutations adj
+Transmutation adj
 
 Shifting
 
@@ -764,7 +764,7 @@ Lom Lobon
 
 __NONE
 %%%%
-Earth Transmutations owner
+Earth Transmutation owner
 
 Roxanne
 
@@ -788,7 +788,7 @@ Gloorx Vloq
 
 __NONE
 %%%%
-Necromancy Transmutations owner
+Necromancy Transmutation owner
 
 Cigotuvi
 
@@ -878,7 +878,7 @@ Ozocubu
 
 __NONE
 %%%%
-Transmutations owner
+Transmutation owner
 
 Cigotuvi
 
