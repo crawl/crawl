@@ -2669,10 +2669,6 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         break;
     }
 
-    // If it woke up, it might shout.
-    if (was_sleeping && !mons_is_sleeping(mon) && allow_shout)
-        handle_monster_shouts(mon);
-
     if (setTarget)
     {
         if (src == MHITYOU)
@@ -2693,6 +2689,10 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     // Do any resultant foe or state changes.
     _handle_behaviour(mon);
     ASSERT(in_bounds(mon->target) || mon->target.origin());
+
+    // If it woke up, it might shout.
+    if (was_sleeping && !mons_is_sleeping(mon) && allow_shout)
+        handle_monster_shouts(mon);
 
     const bool wasLurking =
         (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
@@ -3832,7 +3832,6 @@ static void _handle_behaviour(monsters *mon)
 
     const dungeon_feature_type can_move =
         (mons_amphibious(mon)) ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
-
 
     // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
