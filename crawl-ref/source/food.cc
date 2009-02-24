@@ -1508,10 +1508,13 @@ int prompt_eat_chunks()
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
         return (0);
 
-    // If we *know* player doesn't have the gourmand effect, don't
-    // prompt.
-    if (!player_likes_chunks(true) && !wearing_amulet(AMU_THE_GOURMAND, false))
+    // If we *know* player doesn't have the gourmand effect and isn't
+    // hungry, don't prompt.
+    if (!player_likes_chunks(true) && !wearing_amulet(AMU_THE_GOURMAND, false)
+        && you.hunger_state >= HS_SATIATED)
+    {
         return (0);
+    }
 
     bool found_valid = false;
     std::vector<item_def *> chunks;
