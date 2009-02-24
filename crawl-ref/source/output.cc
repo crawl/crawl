@@ -2625,7 +2625,7 @@ std::string _status_mut_abilities()
         mutations.push_back("water walking");
 
     std::string current;
-    for (unsigned i = 0; i < NUM_MUTATIONS; i++)
+    for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
         int level = player_mutation_level((mutation_type) i);
         if (!level)
