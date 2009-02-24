@@ -292,7 +292,7 @@ const char *mutation_descrip[NUM_MUTATIONS][3] = {
 
     {"You are covered in fur (AC + 1).",
      "You are covered in thick fur (AC + 2).",
-     "Your thick and shaggy fur keeps you warm (AC + 3, heat resistant)."},
+     "Your thick and shaggy fur keeps you warm (AC + 3, cold resistant)."},
 
     {"You have an increased reservoir of magic (+10 percent mp).",
      "You have a strongly increased reservoir of magic (+20 percent mp).",
