@@ -36,8 +36,8 @@ Monsters
 * Several cool new uniques.
 * Monster descriptions now list resistances and some other attributes.
 * Polymorphed uniques retain their spells and speech.
-* Reintroduce chance of orc wizards and priests in orc bands.
-* Monsters of the same type will now attempt to surround the player.
+* Reintroduce chance of orc wizards and priests in early orc bands.
+* Most monsters of the same genus will now attempt to surround the player.
 * Implemented monster miscasts: caused by Zot traps or mummy curses.
 * Make all allies (including zombies) avoid Zot traps known to the player.
 * Ghosts don't get holy wrath branded attacks anymore.
@@ -116,7 +116,7 @@ Gods
 * Greatly improved Yredelemnul.
 * Nerfed TSO/Beogh blessings of followers.
 * Xom is much more interesting.
-* Reduce damage dealt by Cleansing Flame.
+* Cleansing Flame centers on the player and deals less damage.
 * Killing a holy being is now sometimes avenged by TSO.
 * Move Divine Robustness from Zin to Elyvilon, replacing Incredible Healing.
 * Make Zin's retribution-summoned plagues permanent.
@@ -142,7 +142,7 @@ Miscellaneous
 * Crashes now leave highly informative crash dumps.
 * Poison Weapon is now a level 2 spell.
 * Extension will now also extend temporary weapon brands.
-* Butchered corpses now leave skeletons.
+* Butchered corpses sometimes leave skeletons.
 * Lua errors now report the line numbers of the actual code.
 * Flying can now be cancelled.
 * Petrify is now an Enchantment/Earth spell.
