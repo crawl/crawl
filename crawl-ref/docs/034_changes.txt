@@ -1,33 +1,37 @@
 Information for players of versions 0.3.4 or earlier
 ----------------------------------------------------
 
-There have been many changes to the interface in the new version. Among
-them:
+There have been many changes to the interface in the new version,
+mostly in 0.4, some more in 0.5. Among them:
 
 * Swapped some command keys around:
-   z         cast spell       (was Z)
-   Z         zap wand         (was z)
-   o         auto-explore     (was Ctrl-O)
-   Ctrl-O    dungeon overview (was O)
-   O         open door        (was o)
-   C         close door       (was c)
-   c         chop up          (was D, dissect)
-   E         show experience  (was C)
-   v         evoke            (was E)
-   f, F      fire/throw       (was t)
-   t         tell/yell        (was !)
-   Ctrl-V    Tiles settings   (was Ctrl-Q)
-   Ctrl-Q    quit             (was Q)
+   z         cast spell         (was Z)
+   Z         zap wand           (was z)
+   o         auto-explore       (was Ctrl-O)
+   Ctrl-O    dungeon overview   (was O)
+   O         open door          (was o)
+   C         close door         (was c)
+   c         chop up            (was D, dissect)
+   E         show experience    (was C)
+   v         evoke              (was E)
+   f, F      fire/throw         (was t)
+   t         tell/yell          (was !)
+   Ctrl-V    Tiles settings     (was Ctrl-Q)
+   Ctrl-Q    quit               (was Q)
+
+* Changed the commands for travel exclusions in the level map:
+   e         set exclusion      (was Ctrl-X) 
+   E         cycle exclusions   (was x)
 
 * Added some new commands:
    !         annotate dungeon level
              (If your annotation contains '!' you'll be prompted whenever
              you attempt to enter the level.)
-   (         cycle the quiver to the next appropriate item
+   (, )      cycle the quiver to the next/previous appropriate item
    Q         quiver an item for firing
    `         repeat previous command
    0         repeat next command # of times
-   V         verbose list of monsters in sight
+   V         verbose list of monsters and items in sight
    Ctrl-D    define macros (synonym to '~')
    Ctrl-T    change your allies' pickup behaviour
              (only available to some characters)

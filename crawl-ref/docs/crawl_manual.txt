@@ -709,10 +709,10 @@ throw with 'i'; but it may not be very effective if you lack the
 correct launcher. At times it is sensible to throw weapons like
 spears, daggers, or hand axes.
 
-Use the '(' or 'Q' command if you want to change your quiver without
-firing. If you'd like to throw something without inserting it into the
-quiver use 'F' instead. Note that non-weapon, non-missile items will
-never be quivered.
+Use the '(', ')' to cycle through your quiver without firing, and 'Q'
+to choose the quivered item. If you'd like to throw something without
+inserting it into the quiver use 'F' instead. Note that non-weapon, 
+non-missile items will never be quivered.
 
 The interface for shooting or throwing things is also used for zapping
 wands and casting certain spells, and is described in detail in
@@ -2326,7 +2326,7 @@ Character information:
 'show' means usage of the whole screen.
     @                   Display character status.
     [                   Display worn armour.
-    )                   Display wielded and secondary weapons, 
+    }                   Display wielded and secondary weapons, 
                         and missiles (to be shot with the 'f' command).
     "                   Display worn jewellery.
     E                   Display experience info.
@@ -2338,7 +2338,7 @@ Character information:
     i                   Show inventory list. Inside this list, pressing
                         a slot key shows information on that item.
     ]                   Shows a restricted inventory, only containing
-                        worn and wielded items.
+                        worn, wielded and quivered items.
     I                   Show list of memorised spells.
     V                   Lists all monsters and items in sight.
     %                   Show resistances and general character overview,
@@ -2346,7 +2346,7 @@ Character information:
                         mutations, abilities (the latter three more
                         terse than with the command @, A, a). This is a
                         highly condensed conglomeration of the commands
-                        [, (, ", C, ^, @, A, a on a single screen.
+                        [, ", C, ^, @, A, a on a single screen.
                         Pressing the key of a displayed item views it.
 
 Item interaction (inventory):
@@ -2361,7 +2361,7 @@ Item interaction (inventory):
                         Pressing f again shoots.
     F                   Directly choose an item and fire. Contrary to
                         fi this does not change the quiver.
-    (                   Cycle quiver to next suitable missile.
+    (, )                Cycle quiver to next/previous suitable missile.
     Q                   Quiver item from a menu.
     q                   Quaff a potion.
     e                   Eat food (tries floor first, inventory next).

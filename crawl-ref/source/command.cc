@@ -2034,7 +2034,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<h>Extended Movement:\n"
             "<w>o</w> : auto-explore\n"
-            "<w>Ctrl-G</w> : interlevel travel (also <w>G</w>)\n"
+            "<w>G</w> : interlevel travel (also <w>Ctrl-G</w>)\n"
             "<w>Ctrl-F</w> : Find items\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
             "<w>Ctrl-E</w> : Exclude square from searches\n"
@@ -2049,7 +2049,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     std::string item_types =
         "<h>Item types (and common commands)\n"
         "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> cycle)\n"
+        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>()</w> cycle)\n"
         "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
         "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
         "<w>?</w> : scrolls (<w>r</w>ead)\n"
@@ -2119,7 +2119,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>A</w> : show Abilities/mutations\n"
             "<w>\\</w> : show item knowledge\n"
             "<w>[</w> : display worn armour\n"
-            "<w>)</w> : display current weapons\n"
+            "<w>}</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
             "<w>$</w> : display gold in possession\n"
             "<w>E</w> : display experience info\n",
@@ -2146,7 +2146,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>{</w> : inscribe item\n"
             "<w>f</w> : Fire next appropriate item\n"
             "<w>F</w> : select an item and Fire it\n"
-            "<w>(</w> : cycle current ammunition\n"
+            "<w>Q</w> : select item slot to be quivered\n"
+            "<w>(</w>, <w>)</w> : cycle current ammunition\n"
             "<w>e</w> : ";
 
     interact += (you.species == SP_VAMPIRE ? "Drain corpses" : "Eat food");
@@ -2203,7 +2204,7 @@ static void _add_formatted_tutorial_help(column_composer &cols)
     text <<
         "<h>Item types (and common commands)\n"
         "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> to cycle ammo)\n"
+        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>()</w> to cycle ammo)\n"
         "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
         "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
         "<w>?</w> : scrolls (<w>r</w>ead)\n"
