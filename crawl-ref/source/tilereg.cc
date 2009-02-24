@@ -391,14 +391,8 @@ void DungeonRegion::pack_player(int x, int y)
         int item = you.equip[EQ_GLOVES];
         if (item != -1)
             result.parts[TILEP_PART_ARM] = tilep_equ_gloves(you.inv[item]);
-        else if (player_mutation_level(MUT_CLAWS) >= 3
-            || you.species == SP_TROLL || you.species == SP_GHOUL)
-        {
-            // There is player_has_claws() but it is not equivalent.
-            // Claws appear if they're big enough to not wear gloves
-            // or on races that have claws.
+        else if (you.has_claws(false) >= 3)
             result.parts[TILEP_PART_ARM] = TILEP_ARM_CLAWS;
-        }
         else
             result.parts[TILEP_PART_ARM] = 0;
     }
