@@ -2949,50 +2949,27 @@ void give_basic_mutations(species_type speci)
         you.demon_pow[i] = you.mutation[i];
 }
 
+// Give knowledge of things that aren't in the starting inventory.
 static void _give_basic_knowledge(job_type which_job)
 {
     if (you.species == SP_VAMPIRE)
-    {
-        set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
-        set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
-    }
-    else if (you.species == SP_DEEP_DWARF)
-    {
-        set_ident_type( OBJ_POTIONS, POT_HEALING, ID_KNOWN_TYPE );
-        set_ident_type( OBJ_POTIONS, POT_HEAL_WOUNDS, ID_KNOWN_TYPE );
-    }
+        set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
 
     switch (which_job)
     {
-    case JOB_PRIEST:
-    case JOB_PALADIN:
-        set_ident_type( OBJ_POTIONS, POT_HEALING, ID_KNOWN_TYPE );
-        break;
-
-    case JOB_HEALER:
-        set_ident_type( OBJ_POTIONS, POT_HEALING, ID_KNOWN_TYPE );
-        set_ident_type( OBJ_POTIONS, POT_HEAL_WOUNDS, ID_KNOWN_TYPE );
-        break;
-
     case JOB_STALKER:
     case JOB_ASSASSIN:
     case JOB_VENOM_MAGE:
-        set_ident_type( OBJ_POTIONS, POT_POISON, ID_KNOWN_TYPE );
-        break;
-
-    case JOB_WARPER:
-        set_ident_type( OBJ_SCROLLS, SCR_BLINKING, ID_KNOWN_TYPE );
+        set_ident_type(OBJ_POTIONS, POT_POISON, ID_KNOWN_TYPE);
         break;
 
     case JOB_TRANSMUTER:
-        set_ident_type( OBJ_POTIONS, POT_WATER, ID_KNOWN_TYPE );
-        set_ident_type( OBJ_POTIONS, POT_CONFUSION, ID_KNOWN_TYPE );
-        set_ident_type( OBJ_POTIONS, POT_POISON, ID_KNOWN_TYPE );
+        set_ident_type(OBJ_POTIONS, POT_WATER, ID_KNOWN_TYPE);
         break;
 
     case JOB_ARTIFICER:
         if (!item_is_rod(you.inv[2]))
-            set_ident_type( OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE );
+            set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE);
         break;
 
     default:
