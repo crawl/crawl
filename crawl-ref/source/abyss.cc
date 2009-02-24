@@ -914,16 +914,12 @@ static void _corrupt_choose_colours()
 {
     int colour = BLACK;
     do
-    {
         colour = random_uncommon_colour();
-    }
     while (colour == env.rock_colour || colour == LIGHTGREY || colour == WHITE);
     env.rock_colour = colour;
 
     do
-    {
         colour = random_uncommon_colour();
-    }
     while (colour == env.floor_colour || colour == LIGHTGREY
            || colour == WHITE);
     env.floor_colour = colour;
