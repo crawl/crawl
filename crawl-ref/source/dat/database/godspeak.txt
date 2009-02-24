@@ -422,7 +422,7 @@ The Shining One demands, "It is time to choose between the fair and the foul."
 The Shining One says, "Martyrs are remembered forever."
 
 w:1
-The Shining One says, "An eye for an eye, a tooth for a tooth,"
+The Shining One says, "An eye for an eye, a tooth for a tooth."
 %%%%
 ##########################################################
 # Messages for the *player* using Zin's Recite invocation
