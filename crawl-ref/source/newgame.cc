@@ -2873,6 +2873,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SAPROVOROUS] = 1;
         break;
     case SP_OGRE:
+        you.mutation[MUT_TOUGH_SKIN]      = 1;
         you.mutation[MUT_FAST_METABOLISM] = 1;
         you.mutation[MUT_SAPROVOROUS]     = 1;
         break;
@@ -2889,6 +2890,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SLOW_METABOLISM] = 3;
         break;
     case SP_CENTAUR:
+        you.mutation[MUT_TOUGH_SKIN]      = 3;
         you.mutation[MUT_FAST]            = 2;
         you.mutation[MUT_DEFORMED]        = 1;
         you.mutation[MUT_FAST_METABOLISM] = 2;
@@ -2926,6 +2928,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TALONS] = 1;
         break;
     case SP_TROLL:
+        you.mutation[MUT_TOUGH_SKIN]      = 2;
         you.mutation[MUT_REGENERATION]    = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
         you.mutation[MUT_SAPROVOROUS]     = 2;

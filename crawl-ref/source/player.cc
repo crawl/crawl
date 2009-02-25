@@ -2152,15 +2152,6 @@ int player_AC(void)
                 AC += 100 * you.experience_level / 3;              // max 9
                 break;
 
-            case SP_OGRE:
-                AC += 100;
-                break;
-
-            case SP_TROLL:
-            case SP_CENTAUR:
-                AC += 300;
-                break;
-
             default:
                 break;
             }

@@ -1943,7 +1943,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return (false);
 
     // These can be forced by demonspawn or god gifts.
-    if ((mutat == MUT_TOUGH_SKIN || mutat == MUT_SHAGGY_FUR
+    if ((mutat == MUT_SHAGGY_FUR
             || mutat >= MUT_GREEN_SCALES && mutat <= MUT_BONEY_PLATES
             || mutat >= MUT_RED_SCALES && mutat <= MUT_PATTERNED_SCALES)
         && body_covered() >= 3 && !god_gift && !force_mutation)
@@ -2532,7 +2532,6 @@ static int body_covered()
     if (player_genus(GENPC_DRACONIAN))
         covered += 3;
 
-    covered += you.mutation[MUT_TOUGH_SKIN];
     covered += you.mutation[MUT_GREEN_SCALES];
     covered += you.mutation[MUT_BLACK_SCALES];
     covered += you.mutation[MUT_GREY_SCALES];
