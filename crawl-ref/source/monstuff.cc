@@ -7194,9 +7194,7 @@ static void _handle_monster_move(monsters *monster)
         }
         _handle_nearby_ability( monster );
 
-        if (!mons_is_sleeping(monster)
-            && !mons_is_wandering(monster)
-
+        if (!mons_is_sleeping(monster) && !mons_is_wandering(monster)
             // Berserking monsters are limited to running up and
             // hitting their foes.
             && !monster->has_ench(ENCH_BERSERK))
@@ -8123,7 +8121,7 @@ static void _find_good_alternate_move(monsters *monster,
 
         // Try both directions (but randomize which one is first.)
         const int sdir = coinflip() ? j : -j;
-        const int inc = -2 * j;
+        const int inc = -2 * sdir;
 
         for (int mod = sdir, i = 0; i < 2; mod += inc, i++)
         {

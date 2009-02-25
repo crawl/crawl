@@ -3938,11 +3938,8 @@ bool mons_near(const monsters *monster, unsigned short foe)
 
     // Must be a monster.
     const monsters *myFoe = &menv[foe];
-    if (myFoe->type >= 0)
-    {
-        if ( grid_distance( monster->pos(), myFoe->pos() ) <= LOS_RADIUS )
-            return (true);
-    }
+    if (myFoe->alive())
+        return (monster->mon_see_grid(myFoe->pos()));
 
     return (false);
 }
