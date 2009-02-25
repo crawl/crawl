@@ -63,7 +63,8 @@ bool transform_allows_wearing_item(const item_def& item,
     {
         // It's not jewellery, and it's worn, so it must be armour.
         const equipment_type eqslot = get_armour_slot(item);
-        const bool is_soft_helmet = (is_helmet(item) && !is_hard_helmet(item));
+        const bool is_soft_helmet = is_helmet(item) && !is_hard_helmet(item);
+
         switch (transform)
         {
         // Some forms can wear everything.
