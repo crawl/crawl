@@ -1979,7 +1979,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return (false);
     }
 
-    // If you have regen, no slow metabolism.
+    // If you have regeneration, no slow metabolism.
     if (mutat == MUT_SLOW_METABOLISM && you.mutation[MUT_REGENERATION] > 0)
         return (false);
 
