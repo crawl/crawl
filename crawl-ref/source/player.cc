@@ -1072,7 +1072,7 @@ int player_regen()
         else if (you.hunger_state == HS_ENGORGED)
             // More bonus regeneration for engorged vampires.
             rr += 20;
-        else if (you.hunger_state <= HS_HUNGRY)
+        else if (you.hunger_state < HS_SATIATED)
             // Halved regeneration for hungry vampires.
             rr /= 2;
         else if (you.hunger_state >= HS_FULL)

@@ -1212,7 +1212,7 @@ formatted_string describe_mutations()
             result += "<green>You do not heal naturally.</green>" EOL;
         else if (you.hunger_state == HS_ENGORGED)
             result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
-        else if (you.hunger_state <= HS_HUNGRY)
+        else if (you.hunger_state < HS_SATIATED)
             result += "<green>You heal slowly.</green>" EOL;
         else if (you.hunger_state >= HS_FULL)
             result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
