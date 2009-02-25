@@ -1508,9 +1508,10 @@ int prompt_eat_chunks()
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
         return (0);
 
-    // If we *know* player doesn't have the gourmand effect and isn't
-    // hungry, don't prompt.
-    if (!player_likes_chunks(true) && !wearing_amulet(AMU_THE_GOURMAND, false)
+    // If we *know* the player can eat chunks, doesn't have the gourmand
+    // effect and isn't hungry, don't prompt for chunks.
+    if (you.species != SP_VAMPIRE && !player_likes_chunks(true)
+        && !wearing_amulet(AMU_THE_GOURMAND, false)
         && you.hunger_state >= HS_SATIATED)
     {
         return (0);
