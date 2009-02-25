@@ -3120,10 +3120,10 @@ void handle_time(long time_delta)
 
         // Slow heal mutation.  Applied last.
         // Each level reduces your stat recovery by one third.
-        if (recovery)
+        if (player_mutation_level(MUT_SLOW_HEALING) > 0)
         {
-            recovery =
-                x_chance_in_y(3 - player_mutation_level(MUT_SLOW_HEALING), 3);
+            if (x_chance_in_y(player_mutation_level(MUT_SLOW_HEALING), 3))
+                recovery = false;
         }
 
         if (recovery)
