@@ -3105,8 +3105,28 @@ void handle_time(long time_delta)
     // Adjust the player's stats if s/he's diseased (or recovering).
     if (!you.disease)
     {
-        // With slow healing 3, you have no stat recovery.
-        if (x_chance_in_y(3 - player_mutation_level(MUT_SLOW_HEALING), 3))
+        bool recovery = true;
+
+        // The better-fed you are, the faster your stat recovery.
+        if (you.species == SP_VAMPIRE)
+        {
+            if (you.hunger_state == HS_STARVING)
+                // No stat recovery for starving vampires.
+                recovery = false;
+            else if (you.hunger_state <= HS_HUNGRY)
+                // Halved stat recovery for hungry vampires.
+                recovery = coinflip();
+        }
+
+        // Slow heal mutation.  Applied last.
+        // Each level reduces your stat recovery by one third.
+        if (recovery)
+        {
+            recovery =
+                x_chance_in_y(3 - player_mutation_level(MUT_SLOW_HEALING), 3);
+        }
+
+        if (recovery)
         {
             if (you.strength < you.max_strength && one_chance_in(100))
                 restore_stat(STAT_STRENGTH, 0, false, true);

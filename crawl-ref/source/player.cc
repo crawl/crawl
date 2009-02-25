@@ -1066,35 +1066,18 @@ int player_regen()
     // The better-fed you are, the faster you heal.
     if (you.species == SP_VAMPIRE)
     {
-        switch (you.hunger_state)
-        {
-        case HS_STARVING:
-            // No regeneration for starving vampires!
+        if (you.hunger_state == HS_STARVING)
+            // No regeneration for starving vampires.
             rr = 0;
-            break;
-
-        case HS_NEAR_STARVING:
-        case HS_VERY_HUNGRY:
-        case HS_HUNGRY:
-            // Halved if hungry.
-            rr /= 2;
-            break;
-
-        case HS_SATIATED:
-            // No effect at standard hunger.
-            break;
-
-        case HS_FULL:
-        case HS_VERY_FULL:
-            // Bonus for being full.
-            rr += 10;
-            break;
-
-        case HS_ENGORGED:
-            // Bigger bonus for being engorged.
+        else if (you.hunger_state == HS_ENGORGED)
+            // More bonus regeneration for engorged vampires.
             rr += 20;
-            break;
-        }
+        else if (you.hunger_state <= HS_HUNGRY)
+            // Halved regeneration for hungry vampires.
+            rr /= 2;
+        else if (you.hunger_state >= HS_FULL)
+            // Bonus regeneration for full vampires.
+            rr += 10;
     }
 
     // Slow heal mutation.  Applied last.
