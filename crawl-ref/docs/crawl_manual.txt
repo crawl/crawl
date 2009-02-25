@@ -780,9 +780,9 @@ butchering your food.
 
 Some species are less fastidious about their food. Trolls and Ghouls can
 use their claws, and so do not need a cutting device. Also, Orcs, Ogres,
-Kobolds, Trolls, and Ghouls care less (in different degrees) about the
-quality of the corpse. Ogres, Kobolds, Trolls, and Ghouls are happy to
-eat raw meat at any time.
+Kobolds, Trolls and Ghouls care less (in different degrees) about the
+quality of the corpse. Kobolds, Trolls and Ghouls are happy to eat raw
+meat at any time.
 
 Vampires are a special case. Members of this species can try to drink
 blood from a fresh corpse (use either the 'q' or the 'e' command).
@@ -1138,7 +1138,7 @@ permanent and can never be removed. If one of your Demonspawn powers has
 been augmented by a mutation, it is displayed in a lighter red colour.
 
 Many a race starts with some special intrinsic feats, like the greater
-speed of Centaurs or Spriggans, or the eating habits of Trolls, Ogres,
+speed of Centaurs or Spriggans, or the eating habits of Trolls, Kobolds
 and others. These are often, but not always, like a preset mutation. In
 case such an innate feature gets amplified by an ordinary mutation, it
 is displayed in a light blue colour.
@@ -1645,12 +1645,11 @@ extra food to survive.
 
 Ogres
 -----
-Ogres are huge, chunky creatures who typically are strong rather than 
-smart, and not nimble at all. Although Ogres can eat almost anything, 
-their size also means that they need to do so more frequently than 
-smaller folk. Ogres mature almost as quickly as Humans.
+Ogres are huge, chunky creatures who typically are strong rather than
+smart, and not nimble at all. Their size also makes them hunger more
+than smaller folk. Ogres mature almost as quickly as Humans.
 
-Their preferred method of avoiding beatings is dodging and the use of 
+Their preferred method of avoiding beatings is dodging and the use of
 shields. Many Ogres find it natural to wield some large and blunt weapon.
 (Countless lethal incidents have taught them to leave edged weapons be.)
 While all sophisticated forms of missile combat are too awkward for them,
