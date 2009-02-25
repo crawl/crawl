@@ -180,28 +180,27 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
 // FIXME: merge this with you_can_wear(), can_wear_armour(), etc.
 bool _mutations_prevent_wearing(const item_def& item)
 {
-    if (item.base_type == OBJ_JEWELLERY)
-        return (false);
-
     const equipment_type eqslot = get_armour_slot(item);
 
     if (is_hard_helmet(item)
-        && (you.mutation[MUT_HORNS] || you.mutation[MUT_BEAK]))
+        && (player_mutation_level(MUT_HORNS)
+            || player_mutation_level(MUT_BEAK)))
     {
         return (true);
     }
 
-    if (item.sub_type == ARM_BOOTS // barding excepted!
-        && (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]))
+    // Barding is excepted here.
+    if (item.sub_type == ARM_BOOTS
+        && (player_mutation_level(MUT_HOOVES)
+            || player_mutation_level(MUT_TALONS)))
     {
         return (true);
     }
 
-    if (eqslot == EQ_GLOVES && you.mutation[MUT_CLAWS] >= 2)
+    if (eqslot == EQ_GLOVES && player_mutation_level(MUT_CLAWS) >= 3)
         return (true);
 
     return (false);
-
 }
 
 static void _rewear_equipment_slot(equipment_type e)

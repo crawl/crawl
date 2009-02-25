@@ -560,7 +560,7 @@ void list_armour()
                                  : "unknown")
              << " : ";
 
-        if (!you_can_wear(i,true))
+        if (!you_can_wear(i, true))
             estr << "    (unavailable)";
         else if (armour_id != -1 && !you_tran_can_wear(you.inv[armour_id])
                  || !you_tran_can_wear(i))

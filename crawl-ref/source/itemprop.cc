@@ -817,8 +817,7 @@ void set_equip_desc( item_def &item, unsigned long flags )
 //
 short get_helmet_desc( const item_def &item )
 {
-    ASSERT( item.base_type == OBJ_ARMOUR
-            && get_armour_slot( item ) == EQ_HELMET );
+    ASSERT( is_helmet(item) );
 
     return item.plus2;
 }
@@ -835,7 +834,7 @@ void set_helmet_desc( item_def &item, helmet_desc_type type )
 
 bool is_helmet(const item_def& item)
 {
-    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
+    return (item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET);
 }
 
 bool is_hard_helmet(const item_def &item)
