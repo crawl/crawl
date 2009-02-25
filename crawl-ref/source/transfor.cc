@@ -77,6 +77,7 @@ bool transform_allows_wearing_item(const item_def& item,
         case TRAN_DRAGON:
         case TRAN_SERPENT_OF_HELL:
         case TRAN_AIR:          // How did you carry it?
+        case TRAN_BAT:
             rc = false;
             break;
 
