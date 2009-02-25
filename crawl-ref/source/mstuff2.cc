@@ -956,12 +956,12 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     if (silent)
     {
         mons_speaks_msg(monster, msg, chan, true);
-        return;
     }
-
-    // noisy() returns true if the player heard the noise.
-    if (noisy(noise, monster->pos()) || !unseen)
+    else if (noisy(noise, monster->pos()) || !unseen)
+    {
+        // noisy() returns true if the player heard the noise.
         mons_speaks_msg(monster, msg, chan);
+    }
 }
 
 // Set up bolt structure for monster spell casting.

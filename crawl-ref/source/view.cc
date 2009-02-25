@@ -1201,6 +1201,10 @@ void handle_monster_shouts(monsters* monster, bool force)
         {
             msg = do_mon_str_replacements(msg, monster, s_type);
             msg::streams(channel) << msg << std::endl;
+
+            // Otherwise it can move away with no feedback.
+            if (you.can_see(monster))
+                seen_monster(monster);
         }
     }
 

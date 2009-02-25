@@ -366,7 +366,7 @@ static bool _polyd_can_speak(const monsters* monster)
 }
 
 // Returns true if something is said.
-bool mons_speaks(const monsters *monster)
+bool mons_speaks(monsters *monster)
 {
     ASSERT(!invalid_monster_class(monster->type));
 
@@ -489,17 +489,17 @@ bool mons_speaks(const monsters *monster)
     }
 
 #ifdef DEBUG_MONSPEAK
-{
-    std::string prefix = "";
-    const int size = prefixes.size();
-    for (int i = 0; i < size; i++)
     {
-        prefix += prefixes[i];
-        prefix += " ";
+        std::string prefix;
+        const int size = prefixes.size();
+        for (int i = 0; i < size; i++)
+        {
+            prefix += prefixes[i];
+            prefix += " ";
+        }
+        mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s: prefix = %s",
+             monster->name(DESC_PLAIN).c_str(), prefix.c_str());
     }
-    mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s: prefix = %s",
-         monster->name(DESC_PLAIN).c_str(), prefix.c_str());
-}
 #endif
 
     const bool no_foe      = foe == NULL;
@@ -726,22 +726,22 @@ bool mons_speaks(const monsters *monster)
             msg = replace_all(msg, "__YOU_RESIST", "__NOTHING_HAPPENS");
     }
 
-    mons_speaks_msg(monster, msg, MSGCH_TALK, silence);
-    return (true);
+    return (mons_speaks_msg(monster, msg, MSGCH_TALK, silence));
 }
 
-void mons_speaks_msg(const monsters *monster, const std::string &msg,
+bool mons_speaks_msg(monsters *monster, const std::string &msg,
                      const msg_channel_type def_chan, const bool silence)
 {
     if (!mons_near(monster))
-        return;
+        return (false);
 
-    mon_acting mact(const_cast<monsters*>(monster));
+    mon_acting mact(monster);
 
     // We have a speech string, now parse and act on it.
-    std::string _msg = do_mon_str_replacements(msg, monster);
+    const std::string _msg = do_mon_str_replacements(msg, monster);
+    const std::vector<std::string> lines = split_string("\n", _msg);
 
-    std::vector<std::string> lines = split_string("\n", _msg);
+    bool noticed = false;       // Any messages actually printed?
 
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
@@ -793,6 +793,9 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
                 line = line.substr(pos + 1);
         }
 
+        const bool old_noticed = noticed;
+        noticed = true;         // Only one case is different.
+
         // Except for VISUAL, none of the above influence these.
         if (line == "__YOU_RESIST" && (!silence || param == "VISUAL"))
             canned_msg( MSG_YOU_RESIST );
@@ -801,8 +804,13 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
         else if (line == "__MORE" && (!silence || param == "VISUAL"))
             more();
         else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(monster))
-            ;                   // do nothing
+            noticed = old_noticed;
         else
+        {
+            if (you.can_see(monster))
+                seen_monster(monster);
             mpr(line.c_str(), msg_type);
+        }
     }
+    return (noticed);
 }
