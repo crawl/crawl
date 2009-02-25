@@ -749,7 +749,7 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
 
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
-        // warning to scare the player.  In order to accomidate this
+        // warning to scare the player.  In order to accomodate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr
@@ -795,21 +795,14 @@ void mons_speaks_msg(const monsters *monster, const std::string &msg,
 
         // Except for VISUAL, none of the above influence these.
         if (line == "__YOU_RESIST" && (!silence || param == "VISUAL"))
-        {
             canned_msg( MSG_YOU_RESIST );
-            continue;
-        }
         else if (line == "__NOTHING_HAPPENS" && (!silence || param == "VISUAL"))
-        {
             canned_msg( MSG_NOTHING_HAPPENS );
-            continue;
-        }
         else if (line == "__MORE" && (!silence || param == "VISUAL"))
-        {
             more();
-            continue;
-        }
-
-        mpr(line.c_str(), msg_type);
+        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(monster))
+            ;                   // do nothing
+        else
+            mpr(line.c_str(), msg_type);
     }
 }

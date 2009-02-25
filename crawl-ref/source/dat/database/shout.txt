@@ -263,25 +263,25 @@ Wanderer player ghost
 %%%%
 'a'
 
-@The_monster@ twitches @possessive@ antennae in your direction.
+VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
 'cap-B'
 
-@The_monster@ twitches @possessive@ antennae in your direction.
+VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
 # Giant spores have their own visual, this is only for the eyeball
 # related ones.
 'cap-G'
 
-@The_monster@ turns @possessive@ gaze towards you.
+VISUAL:@The_monster@ turns @possessive@ gaze towards you.
 %%%%
 'j'
 
-@The_monster@ swivels @possessive@ eye-stalks towards you.
+VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
 %%%%
 'cap-J'
 
-@The_monster@ quivers.
+VISUAL:@The_monster@ quivers.
 ########################################
 # Shouts for specific monsters
 ########################################
@@ -290,7 +290,7 @@ Wanderer player ghost
 # other 'G' monsters.
 giant spore
 
-@The_monster@ waves @possessive@ rhizomes.
+VISUAL:@The_monster@ waves @possessive@ rhizomes.
 %%%%
 # Shadow imps and white imps copy imps.
 imp
@@ -298,11 +298,11 @@ imp
 # Shout one half the time, taunt the other half.
 @__SHOUT@
 
-@The_monster@ @says@, "@imp_taunt@"
+SOUND:@The_monster@ @says@, "@imp_taunt@"
 %%%%
 moth of wrath
 
-@The_monster@'s fur bristles in rage as it notices you.
+VISUAL:@The_monster@'s fur bristles in rage as it notices you.
 %%%%
 shadow imp
 
@@ -318,5 +318,5 @@ white imp
 Polyphemus
 
 # This would also work for other monsters that are surrounded by allies.
-@The_monster@ shouts, "Attack, my pets! Attack!"
+SOUND:@The_monster@ shouts, "Attack, my pets! Attack!"
 %%%%

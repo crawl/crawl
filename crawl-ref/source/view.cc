@@ -1197,8 +1197,11 @@ void handle_monster_shouts(monsters* monster, bool force)
             }
         }
 
-        msg = do_mon_str_replacements(msg, monster, s_type);
-        msg::streams(channel) << msg << std::endl;
+        if (channel != MSGCH_TALK_VISUAL || you.can_see(monster))
+        {
+            msg = do_mon_str_replacements(msg, monster, s_type);
+            msg::streams(channel) << msg << std::endl;
+        }
     }
 
     const int noise_level = get_shout_noise_level(s_type);

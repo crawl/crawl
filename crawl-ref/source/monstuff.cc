@@ -8125,7 +8125,7 @@ static void _find_good_alternate_move(monsters *monster,
 
         for (int mod = sdir, i = 0; i < 2; mod += inc, i++)
         {
-            int newdir = (dir + 8 + mod) % 8;
+            const int newdir = (dir + 8 + mod) % 8;
             if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
             {
                 dist[i] = distance(monster->pos()+mon_compass[newdir],
@@ -8133,10 +8133,12 @@ static void _find_good_alternate_move(monsters *monster,
             }
             else
             {
-                dist[i] = (mons_is_fleeing(monster)) ? (-FAR_AWAY)
-                    : FAR_AWAY;
+                dist[i] = (mons_is_fleeing(monster)) ? (-FAR_AWAY) : FAR_AWAY;
             }
         }
+
+        const int dir0 = ((dir + 8 + sdir) % 8);
+        const int dir1 = ((dir + 8 - sdir) % 8);
 
         // Now choose.
         if (dist[0] == dist[1] && abs(dist[0]) == FAR_AWAY)
@@ -8147,12 +8149,12 @@ static void _find_good_alternate_move(monsters *monster,
         {
             if (dist[0] >= dist[1] && dist[0] >= current_distance)
             {
-                mmov = mon_compass[((dir+8)+sdir)%8];
+                mmov = mon_compass[dir0];
                 break;
             }
             if (dist[1] >= dist[0] && dist[1] >= current_distance)
             {
-                mmov = mon_compass[((dir+8)-sdir)%8];
+                mmov = mon_compass[dir1];
                 break;
             }
         }
@@ -8160,12 +8162,12 @@ static void _find_good_alternate_move(monsters *monster,
         {
             if (dist[0] <= dist[1] && dist[0] <= current_distance)
             {
-                mmov = mon_compass[((dir+8)+sdir)%8];
+                mmov = mon_compass[dir0];
                 break;
             }
             if (dist[1] <= dist[0] && dist[1] <= current_distance)
             {
-                mmov = mon_compass[((dir+8)-sdir)%8];
+                mmov = mon_compass[dir1];
                 break;
             }
         }
