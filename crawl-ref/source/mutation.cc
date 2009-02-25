@@ -2037,10 +2037,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
         return (false);
 
-    // Vampires' thirst rate depends on their blood level.
+    // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
-        && (mutat == MUT_SLOW_METABOLISM || mutat == MUT_FAST_METABOLISM
-            || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
+        && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
+            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_HEALING
+            || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
     {
         return (false);
     }
