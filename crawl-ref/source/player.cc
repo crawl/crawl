@@ -1082,7 +1082,7 @@ int player_regen()
 
     // Slow heal mutation.  Applied last.
     // Each level reduces your natural healing by one third.
-    if (player_mutation_level(MUT_SLOW_HEALING))
+    if (player_mutation_level(MUT_SLOW_HEALING) > 0)
     {
         rr *= 3 - player_mutation_level(MUT_SLOW_HEALING);
         rr /= 3;
