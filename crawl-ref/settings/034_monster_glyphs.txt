@@ -149,6 +149,8 @@ mon_glyph = mummy : white
 mon_glyph = greater mummy : darkgrey
 mon_glyph = wraith : darkgrey
 mon_glyph = player ghost : darkgrey
+mon_glyph = small simulacrum : white
+mon_glyph = large simulacrum : white
 
 # unique monsters
 mon_glyph = Gloorx Vloq : darkgrey
@@ -289,6 +291,8 @@ mon_glyph = Frederick : darkgrey
 # greater mummy           darkgrey       white
 # wraith                  darkgrey       white
 # player ghost            darkgrey       white
+# small simulacrum        white          ice
+# large simulacrum        white          ice
 #
 # monster                 old colour     new colour
 # -------                 ----------     ----------
