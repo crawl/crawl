@@ -5478,10 +5478,10 @@ bool _give_items_skills()
         break;
 
     case JOB_VENOM_MAGE:
-        // Give them a useful weapon they can poison if they want.
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_YOUNG_POISONERS);
+        // Venom Mages don't need a starting weapon since acquiring a weapon
+        // to poison should be easy, and Sting is *powerful*.
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_YOUNG_POISONERS);
 
         you.skills[SK_POISON_MAGIC] = 4;
         you.skills[SK_SPELLCASTING] = 1;

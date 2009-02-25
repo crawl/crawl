@@ -2603,6 +2603,9 @@ static std::string _monster_stat_description(const monsters& mon)
     for (unsigned int i = 0; i < ARRAYSZ(resists); ++i)
     {
         int level = resist.get_resist_level(resists[i]);
+        if (resists[i] == MR_RES_FIRE && resist.hellfire)
+            level = 3;
+
         if (level != 0)
         {
             const char* attackname = _get_resist_name(resists[i]);
