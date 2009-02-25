@@ -103,6 +103,7 @@ bool transform_allows_wearing_item(const item_def& item,
             break;
         }
     }
+
     return (rc);
 }
 
