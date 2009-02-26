@@ -1494,8 +1494,8 @@ Deep Dwarves
 ------------
 Deep Dwarves are a species who, unlike their Mountain Dwarf relatives,
 never left their underground home. Living there for countless
-generations made them pale and lose all ability to regenerate on their
-own (nor are they receptive to outside effects which merely hasten
+generations made them turn pale and lose all ability to regenerate on
+their own (nor are they receptive to outside effects which merely hasten
 regeneration), as well as all ability to recover from losses to physical
 attributes over time. On the other hand, Deep Dwarves have developed the
 ability to instantly counteract small doses of damage.
@@ -1813,13 +1813,13 @@ Ghouls
 Vampires
   Vampires are another form of undead, but with a peculiarity: by
   consuming fresh blood, they may become alive. A bloodless Vampire has
-  all the traits of an undead, yet possesses no innate healing power at
-  all - in particular, magical items or spells which increase the rate
-  of regeneration will not work. On the other hand, a Vampire full with
-  blood will regenerate very quickly, but lose all undead powers.
-  Vampires can never starve. Upon growing, they learn to transform into
-  quick bats and, later, how to draw potions of blood from fresh
-  corpses.
+  all the traits of an undead, but cannot regain lost physical
+  attributes or regenerate from wounds over time - in particular,
+  magical items or spells which increase the rate of regeneration will
+  not work. On the other hand, a Vampire full with blood will regenerate
+  very quickly, but lose all undead powers. Vampires can never starve.
+  Upon growing, they learn to transform into quick bats and, later, how
+  to draw potions of blood from fresh corpses.
 
 
 Note: Use 'A' to check for which particular peculiarities a species
