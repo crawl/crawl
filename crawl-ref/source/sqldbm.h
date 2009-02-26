@@ -16,13 +16,9 @@
 #include <sys/types.h>
 #include <memory>
 
-#if defined(DOS) || defined(WIN32CONSOLE)
 #define SQLITE_INT64_TYPE int
 #define SQLITE_UINT64_TYPE unsigned int
-#else
-#define SQLITE_INT64_TYPE int64_t
-#define SQLITE_UINT64_TYPE uint64_t
-#endif
+
 #include <sqlite3.h>
 #include <string>
 
