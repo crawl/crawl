@@ -22,8 +22,8 @@
 
    Enchantment
    These spells mostly cause some kind of durational effect, which lasts only
-   until the magic wears off. Enchantments are distinguished from trans-
-   migrations in that the latter cause a permanent alteration in something
+   until the magic wears off. Enchantments are distinguished from
+   transmutations in that the latter cause a permanent alteration in something
    which persists even after the magic has faded, while the effects of the
    former last only so long as the magic does. Sometimes enchantments may take
    advantage of the more powerful aspects of transmutation to induce some
@@ -119,7 +119,6 @@
  *   Trigger contingency
  *   Preserve Corpses
  *   Permanency
- *   Ball Lightning
  *   Explosive rune?
  *   Fennel wands
  *   More summonings!
@@ -169,19 +168,6 @@
 },
 
 {
-    SPELL_CREATE_NOISE, "Create Noise",
-     SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
-     1,
-     0,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_REMOVE_CURSE, "Remove Curse",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
@@ -221,19 +207,6 @@
 },
 
 {
-    SPELL_SWAP, "Swap",
-     SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
-     4,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_APPORTATION, "Apportation",
      SPTYP_TRANSLOCATION,
      SPFLAG_GRID | SPFLAG_NOT_SELF,
@@ -243,32 +216,6 @@
      0,
      "Pull items from where?",
      false,
-     false
-},
-
-{
-    SPELL_TWIST, "Twist",
-     SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
-     1,
-     25,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
-    SPELL_FAR_STRIKE, "Far Strike",
-     SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
-     3,
-     100,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     true,
      false
 },
 
@@ -288,7 +235,7 @@
 {
     SPELL_STRIKING, "Striking",
      0,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE, // rod of striking
      1,
      25,
      5, 5,
@@ -420,7 +367,7 @@
 {
     SPELL_PARALYSE, "Paralyse",
      SPTYP_ENCHANTMENT,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -548,45 +495,6 @@
 },
 
 {
-    SPELL_RESTORE_STRENGTH, "Restore Strength",
-     SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
-     2,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
-    SPELL_RESTORE_INTELLIGENCE, "Restore Intelligence",
-     SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
-     2,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
-    SPELL_RESTORE_DEXTERITY, "Restore Dexterity",
-     SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
-     2,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_VENOM_BOLT, "Venom Bolt",
      SPTYP_CONJURATION | SPTYP_POISON,
      SPFLAG_DIR_OR_TARGET,
@@ -628,7 +536,7 @@
 {
     SPELL_LESSER_HEALING, "Lesser Healing",
      SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
      2,
      0,
      LOS_RADIUS, LOS_RADIUS,
@@ -641,36 +549,10 @@
 {
     SPELL_GREATER_HEALING, "Greater Healing",
      SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
      6,
      0,
      LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
-    SPELL_CURE_POISON_I, "Cure Poison",
-     SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
-     3,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
-    SPELL_PURIFICATION, "Purification",
-     SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
-     5,
-     0,
-     -1, -1,
      0,
      NULL,
      false,
@@ -719,38 +601,12 @@
 {
     SPELL_SMITING, "Smiting",
      SPTYP_NONE,
-     SPFLAG_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF, // divine ability, rod, monsters
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
      4, // SPTYP_NONE spells have no default noise level
      "Smite whom?",
-     false,
-     false
-},
-
-{
-    SPELL_REPEL_UNDEAD, "Repel Undead",
-     SPTYP_HOLY,
-     SPFLAG_AREA,
-     3,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
-    SPELL_HOLY_WORD, "Holy Word",
-     SPTYP_HOLY,
-     SPFLAG_AREA,
-     7,
-     0,
-     -1, -1,
-     0,
-     NULL,
      false,
      false
 },
@@ -782,7 +638,7 @@
 },
 
 {
-    SPELL_ABJURATION_I, "Abjuration",
+    SPELL_ABJURATION, "Abjuration",
      SPTYP_SUMMONING,
      SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
      3,
@@ -849,7 +705,7 @@
 {
     SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET, // rod/tome of destruction
      3,
      1000,
      7, 7,
@@ -929,7 +785,7 @@
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
-     SPFLAG_BATTLE,
+     SPFLAG_BATTLE, // rod of summoning, and Xom may cast this.
      6,
      200,
      -1, -1,
@@ -975,19 +831,6 @@
      0,
      NULL,
      false,
-     true
-},
-
-{
-    SPELL_HEAL_OTHER, "Heal Other",
-     SPTYP_HOLY,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_NOT_SELF,
-     3,
-     100,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     true,
      true
 },
 
@@ -1105,19 +948,6 @@
      NULL,
      false,
      true
-},
-
-{
-    SPELL_BURN, "Burn", // used by wanderers
-     SPTYP_FIRE,
-     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
-     1,
-     25,
-     1, 1,
-     0,
-     NULL,
-     false,
-     false
 },
 
 {
@@ -1247,98 +1077,6 @@
      0,
      NULL,
      true,
-     false
-},
-
-{
-    SPELL_SUMMON_ANGEL, "Summon Angel",
-     SPTYP_HOLY,
-     SPFLAG_NONE,
-     7,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
-    SPELL_PESTILENCE, "Pestilence",
-     SPTYP_HOLY,
-     SPFLAG_NONE,
-     4,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
-    SPELL_THUNDERBOLT, "Thunderbolt",
-     SPTYP_HOLY | SPTYP_AIR,
-     SPFLAG_DIR_OR_TARGET,
-     6,         // why is this the only holy spell with a secondary? {dlb}
-     200,
-     8, 8,
-     0,
-     NULL,
-     true,
-     false
-}
-,
-
-{
-    SPELL_FLAME_OF_CLEANSING, "Flame of Cleansing",
-     SPTYP_HOLY,
-     SPFLAG_DIR_OR_TARGET,
-     8,
-     200,
-     6, 6,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
-    SPELL_SHINING_LIGHT, "Shining Light",
-     SPTYP_HOLY,
-     SPFLAG_NONE,
-     7,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
-    SPELL_SUMMON_DAEVA, "Summon Daeva",
-     SPTYP_HOLY,
-     SPFLAG_NONE,
-     8,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
-    SPELL_ABJURATION_II, "Abjuration",
-     SPTYP_HOLY,
-     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
-     4,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
      false
 },
 
@@ -1475,7 +1213,8 @@
 {
     SPELL_HELLFIRE, "Hellfire",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_MONSTER,
+        // plus DS ability, staff of Dispater & Sceptre of Asmodeus
      9,
      200,
      7, 7,
@@ -1590,19 +1329,6 @@
 },
 
 {
-    SPELL_CRUSH, "Crush",
-     SPTYP_EARTH,
-     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_DEVEL | SPFLAG_BATTLE,
-     1,
-     25,
-     1, 1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_BOLT_OF_IRON, "Bolt of Iron",
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
@@ -1627,20 +1353,6 @@
      true,
      false
 },
-
-{
-    SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
-     SPTYP_CONJURATION | SPTYP_EARTH, // conj makes more sense than tmig -- bwr
-     SPFLAG_CARD,
-     7,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-}
-,
 
 {
     SPELL_STONEMAIL, "Stonemail",
@@ -1708,19 +1420,6 @@
 },
 
 {
-    SPELL_ORB_OF_ELECTROCUTION, "Orb of Electrocution",
-     SPTYP_CONJURATION | SPTYP_AIR,
-     SPFLAG_DIR_OR_TARGET,
-     7,
-     200,
-     7, 12,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_DETECT_CREATURES, "Detect Creatures",
      SPTYP_DIVINATION,
      SPFLAG_MAPPING,
@@ -1734,7 +1433,7 @@
 },
 
 {
-    SPELL_CURE_POISON_II, "Cure Poison",
+    SPELL_CURE_POISON, "Cure Poison",
      SPTYP_POISON,
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
@@ -1905,7 +1604,7 @@
 {
     SPELL_DISINTEGRATE, "Disintegrate",
      SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CARD,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CARD, // also: wand
      6,
      200,
      6, 6,
@@ -2020,19 +1719,6 @@
 },
 
 {
-    SPELL_ORB_OF_FRAGMENTATION, "Orb of Fragmentation",
-     SPTYP_CONJURATION | SPTYP_EARTH,
-     SPFLAG_DIR_OR_TARGET,
-     7,
-     200,
-     5, 5,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_ICE_BOLT, "Ice Bolt",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
@@ -2059,19 +1745,6 @@
 },
 
 {
-    SPELL_ARC, "Arc",
-     SPTYP_AIR,
-     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
-     1,
-     25,
-     1, 1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_AIRSTRIKE, "Airstrike",
      SPTYP_AIR,
      SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
@@ -2086,7 +1759,7 @@
 
 {
     SPELL_SHADOW_CREATURES, "Shadow Creatures",
-     SPTYP_SUMMONING, // jmf: or SPTYP_SUMMONING | SPTYP_CONJURATION
+     SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
      5,
      0,
@@ -2191,7 +1864,7 @@
 {
     SPELL_SUMMON_DRAGON, "Summon Dragon",
      SPTYP_FIRE | SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_NONE, // Xom may cast this spell.
      9,
      200,
      -1, -1,
@@ -2238,19 +1911,6 @@
      NULL,
      false,
      false
-},
-
-{
-    SPELL_DETECT_MAGIC, "Detect Magic",
-     SPTYP_DIVINATION,
-     SPFLAG_DEVEL,
-     1,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
 },
 
 {
@@ -2371,19 +2031,6 @@
 },
 
 {
-    SPELL_BEND, "Bend",
-     SPTYP_TRANSLOCATION,
-     SPFLAG_DIR | SPFLAG_BATTLE,
-     1,
-     100,
-     1, 1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_BACKLIGHT, "Corona",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
@@ -2436,19 +2083,6 @@
 },
 
 {
-    SPELL_AIR_WALK, "Air Walk",
-     SPTYP_TRANSMUTATION | SPTYP_AIR,
-     SPFLAG_HELPFUL,
-     9,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_SANDBLAST, "Sandblast",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
@@ -2458,19 +2092,6 @@
      0,
      NULL,
      true,
-     false
-},
-
-{
-    SPELL_ROTTING, "Rotting",
-     SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
-     SPFLAG_AREA,
-     5,
-     200,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     false,
      false
 },
 
@@ -2493,19 +2114,6 @@
      SPFLAG_HELPFUL,
      4,
      200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
-    SPELL_SEMI_CONTROLLED_BLINK, "Semi-Controlled Blink",
-     SPTYP_TRANSLOCATION,
-     SPFLAG_ESCAPE,
-     3,
-     100,
      -1, -1,
      0,
      NULL,
@@ -2893,7 +2501,7 @@
 {
     SPELL_WATER_ELEMENTALS, "Summon Water Elementals",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_MONSTER,
      5,
      0,
      -1, -1,

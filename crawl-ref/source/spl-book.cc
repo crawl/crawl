@@ -127,7 +127,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 7 - Book of Summonings
-    {SPELL_ABJURATION_I,
+    {SPELL_ABJURATION,
      SPELL_RECALL,
      SPELL_CALL_CANINE_FAMILIAR,
      SPELL_SUMMON_UGLY_THING,
@@ -189,7 +189,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
     // 13 - Young Poisoner's Handbook
     {SPELL_STING,
-     SPELL_CURE_POISON_II,
+     SPELL_CURE_POISON,
      SPELL_POISON_WEAPON,
      SPELL_MEPHITIC_CLOUD,
      SPELL_VENOM_BOLT,
@@ -403,7 +403,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_ALTER_SELF,
      // SPELL_IGNITE_POISON,    // moved to Fire which was a bit slim -- bwr
      SPELL_SHATTER,
-     // SPELL_AIR_WALK,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -515,7 +514,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // 43 - Book of Demonology - Vehumet special
-    {SPELL_ABJURATION_I,
+    {SPELL_ABJURATION,
      SPELL_RECALL,
      SPELL_CALL_IMP,
      SPELL_SUMMON_DEMON,
@@ -605,7 +604,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // 51 - Rod of summoning
-    {SPELL_ABJURATION_I,
+    {SPELL_ABJURATION,
      SPELL_RECALL,
      SPELL_SUMMON_ELEMENTAL,
      SPELL_SUMMON_SWARM,
@@ -655,7 +654,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 56 - Rod of warding
-    {SPELL_ABJURATION_I,
+    {SPELL_ABJURATION,
      SPELL_CONDENSATION_SHIELD,
      SPELL_CAUSE_FEAR,
      SPELL_DEFLECT_MISSILES,
@@ -675,7 +674,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 58 - Rod of demonology
-    {SPELL_ABJURATION_I,
+    {SPELL_ABJURATION,
      SPELL_RECALL,
      SPELL_CALL_IMP,
      SPELL_SUMMON_DEMON,
@@ -695,7 +694,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 60 - Rod of venom
-    {SPELL_CURE_POISON_II,
+    {SPELL_CURE_POISON,
      SPELL_VENOM_BOLT,
      SPELL_POISON_ARROW,
      SPELL_POISONOUS_CLOUD,
@@ -1195,12 +1194,11 @@ bool you_cannot_memorise(spell_type spell)
     case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
-        case SPELL_AIR_WALK:
         case SPELL_ALTER_SELF:
         case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_CURE_POISON_II:
+        case SPELL_CURE_POISON:
         case SPELL_DEATHS_DOOR:
         case SPELL_DRAGON_FORM:
         case SPELL_ICE_FORM:
@@ -1236,12 +1234,11 @@ bool you_cannot_memorise(spell_type spell)
     case US_UNDEAD: // Mummies
         switch (spell)
         {
-        case SPELL_AIR_WALK:
         case SPELL_ALTER_SELF:
         case SPELL_BERSERKER_RAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_CURE_POISON_II:
+        case SPELL_CURE_POISON:
         case SPELL_DEATHS_DOOR:
         case SPELL_DRAGON_FORM:
         case SPELL_ICE_FORM:

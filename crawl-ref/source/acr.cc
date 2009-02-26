@@ -4044,9 +4044,9 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 19       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 33              , c3);
-    COMPILE_CHECK(SPELL_BOLT_OF_MAGMA == 19     , c4);
-    COMPILE_CHECK(SPELL_POISON_ARROW == 94      , c5);
-    COMPILE_CHECK(NUM_SPELLS == 229             , c6);
+    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 107    , c4);
+    COMPILE_CHECK(SPELL_PETRIFY == 160          , c5);
+    COMPILE_CHECK(NUM_SPELLS == 198             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c7);

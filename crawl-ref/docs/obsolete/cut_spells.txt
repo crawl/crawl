@@ -1,0 +1,407 @@
+Spell definitions cut from the code:
+
+{
+    SPELL_CREATE_NOISE, "Create Noise",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_NONE,
+     1,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SWAP, "Swap",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_NONE,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_TWIST, "Twist",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     1,
+     25,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_FAR_STRIKE, "Far Strike",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     3,
+     100,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_RESTORE_STRENGTH, "Restore Strength",
+     SPTYP_HOLY,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_RESTORE_INTELLIGENCE, "Restore Intelligence",
+     SPTYP_HOLY,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_RESTORE_DEXTERITY, "Restore Dexterity",
+     SPTYP_HOLY,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_CURE_POISON_I, "Cure Poison",
+     SPTYP_HOLY,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
+     3,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_PURIFICATION, "Purification",
+     SPTYP_HOLY,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_REPEL_UNDEAD, "Repel Undead",
+     SPTYP_HOLY,
+     SPFLAG_AREA,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HOLY_WORD, "Holy Word",
+     SPTYP_HOLY,
+     SPFLAG_AREA,
+     7,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HEAL_OTHER, "Heal Other",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_NOT_SELF,
+     3,
+     100,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     true
+},
+
+{
+    SPELL_BURN, "Burn", // used by wanderers
+     SPTYP_FIRE,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     1,
+     25,
+     1, 1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_ANGEL, "Summon Angel",
+     SPTYP_HOLY,
+     SPFLAG_NONE,
+     7,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_PESTILENCE, "Pestilence",
+     SPTYP_HOLY,
+     SPFLAG_NONE,
+     4,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_THUNDERBOLT, "Thunderbolt",
+     SPTYP_HOLY | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET,
+     6,         // why is this the only holy spell with a secondary? {dlb}
+     200,
+     8, 8,
+     0,
+     NULL,
+     true,
+     false
+}
+,
+
+{
+    SPELL_FLAME_OF_CLEANSING, "Flame of Cleansing",
+     SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET,
+     8,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_SHINING_LIGHT, "Shining Light",
+     SPTYP_HOLY,
+     SPFLAG_NONE,
+     7,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_DAEVA, "Summon Daeva",
+     SPTYP_HOLY,
+     SPFLAG_NONE,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_ABJURATION_II, "Abjuration",
+     SPTYP_HOLY,
+     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
+     4,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_CRUSH, "Crush",
+     SPTYP_EARTH,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_DEVEL | SPFLAG_BATTLE,
+     1,
+     25,
+     1, 1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
+     SPTYP_CONJURATION | SPTYP_EARTH, // conj makes more sense than tmig -- bwr
+     SPFLAG_CARD,
+     7,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+}
+,
+
+{
+    SPELL_ORB_OF_ELECTROCUTION, "Orb of Electrocution",
+     SPTYP_CONJURATION | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET,
+     7,
+     200,
+     7, 12,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_ORB_OF_FRAGMENTATION, "Orb of Fragmentation",
+     SPTYP_CONJURATION | SPTYP_EARTH,
+     SPFLAG_DIR_OR_TARGET,
+     7,
+     200,
+     5, 5,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_ARC, "Arc",
+     SPTYP_AIR,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+     1,
+     25,
+     1, 1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_BEND, "Bend",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_DIR | SPFLAG_BATTLE,
+     1,
+     100,
+     1, 1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_ERINGYAS_SURPRISING_BOUQUET, "Eringya's Surprising Bouquet",
+     SPTYP_TRANSMIGRATION | SPTYP_EARTH,
+     SPFLAG_NONE,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_AIR_WALK, "Air Walk",
+     SPTYP_TRANSMUTATION | SPTYP_AIR,
+     SPFLAG_HELPFUL,
+     9,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_ROTTING, "Rotting",
+     SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
+     SPFLAG_AREA,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SEMI_CONTROLLED_BLINK, "Semi-Controlled Blink",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE,
+     3,
+     100,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DETECT_MAGIC, "Detect Magic",
+     SPTYP_DIVINATION,
+     SPFLAG_DEVEL,
+     1,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+

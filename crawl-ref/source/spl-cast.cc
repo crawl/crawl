@@ -841,11 +841,10 @@ static bool _vampire_cannot_cast(spell_type spell)
     // Satiated or less
     switch (spell)
     {
-    case SPELL_AIR_WALK:
     case SPELL_ALTER_SELF:
     case SPELL_BERSERKER_RAGE:
     case SPELL_BLADE_HANDS:
-    case SPELL_CURE_POISON_II:
+    case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
     case SPELL_RESIST_POISON:
@@ -954,10 +953,7 @@ beam_type _spell_to_beam_type(spell_type spell)
 {
     switch (spell)
     {
-    case SPELL_BURN: return BEAM_FIRE;
     case SPELL_FREEZE: return BEAM_COLD;
-    case SPELL_CRUSH: return BEAM_MISSILE;
-    case SPELL_ARC: return BEAM_ELECTRICITY;
     default: break;
     }
     return BEAM_NONE;
@@ -1076,8 +1072,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
         {
-            if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_HEAL_OTHER
-                || spell == SPELL_POLYMORPH_OTHER || spell == SPELL_BANISHMENT)
+            if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_POLYMORPH_OTHER
+                || spell == SPELL_BANISHMENT)
             {
                 mpr( "Sorry, this spell works on others only." );
             }
@@ -1181,10 +1177,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     switch (spell)
     {
     // spells using burn_freeze()
-    case SPELL_BURN:
     case SPELL_FREEZE:
-    case SPELL_CRUSH:
-    case SPELL_ARC:
         if (!burn_freeze(powc, _spell_to_beam_type(spell),
                          monster_at(you.pos() + spd.delta)))
         {
@@ -1320,11 +1313,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_THUNDERBOLT:
-        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_AGONY:
         if (!zapping(ZAP_AGONY, powc, beam, true))
             return (SPRET_ABORT);
@@ -1345,31 +1333,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_ORB_OF_FRAGMENTATION:
-        if (!zapping(ZAP_ORB_OF_FRAGMENTATION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_CIGOTUVIS_DEGENERATION:
         if (!zapping(ZAP_DEGENERATION, powc, beam, true))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_ORB_OF_ELECTROCUTION:
-        if (!zapping(ZAP_ORB_OF_ELECTRICITY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_FLAME_OF_CLEANSING:
-        cleansing_flame(powc, CLEANSING_FLAME_SPELL, you.pos(), &you);
-        break;
-
-    case SPELL_HOLY_WORD:
-        holy_word(100, HOLY_WORD_SPELL, you.pos(), true, &you);
-        break;
-
-    case SPELL_REPEL_UNDEAD:
-        turn_undead(100);
         break;
 
     case SPELL_HELLFIRE:
@@ -1457,10 +1423,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_TWIST:
-        cast_twist(powc, beam.target);
-        break;
-
     case SPELL_AIRSTRIKE:
         airstrike(powc, spd);
         break;
@@ -1468,10 +1430,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_FRAGMENTATION:
         if (!cast_fragmentation(powc, spd))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_FAR_STRIKE:
-        cast_far_strike(powc);
         break;
 
     case SPELL_PORTAL_PROJECTILE:
@@ -1496,10 +1454,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_shatter(powc);
         break;
 
-    case SPELL_BEND:
-        cast_bend(powc);
-        break;
-
     case SPELL_SYMBOL_OF_TORMENT:
         torment(TORMENT_SPELL, you.pos());
         break;
@@ -1510,10 +1464,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_IGNITE_POISON:
         cast_ignite_poison(powc);
-        break;
-
-    case SPELL_ROTTING:
-        cast_rotting(powc);
         break;
 
     // Summoning spells, and other spells that create new monsters.
@@ -1560,16 +1510,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_dragon(powc, god);
         break;
 
-    case SPELL_SUMMON_ANGEL:
-        summon_holy_being_type(MONS_ANGEL, powc, god, (int)spell);
-        break;
-
-    case SPELL_SUMMON_DAEVA:
-        summon_holy_being_type(MONS_DAEVA, powc, god, (int)spell);
-        break;
-
     case SPELL_TUKIMAS_DANCE:
-        // Temporarily turn a wielded weapon into a dancing weapon.
+        // Temporarily turns a wielded weapon into a dancing weapon.
         if (normal_cast)
             crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
         cast_tukimas_dance(powc, god);
@@ -1720,8 +1662,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         mass_enchantment(ENCH_CHARM, powc, MHITYOU);
         break;
 
-    case SPELL_ABJURATION_I:
-    case SPELL_ABJURATION_II:
+    case SPELL_ABJURATION:
         abjuration(powc);
         break;
 
@@ -1760,10 +1701,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_HEAL_OTHER:
-        zapping(ZAP_HEALING, powc, beam);
-        break;
-
     // Self-enchantments. (Spells that can only affect the player.)
     // Resistances.
     case SPELL_INSULATION:
@@ -1783,26 +1720,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     // Healing.
-    case SPELL_CURE_POISON_I:   // Ely version
-    case SPELL_CURE_POISON_II:  // Poison magic version
-        // both use same function
+    case SPELL_CURE_POISON:
         cast_cure_poison(powc);
-        break;
-
-    case SPELL_PURIFICATION:
-        purification();
-        break;
-
-    case SPELL_RESTORE_STRENGTH:
-        restore_stat(STAT_STRENGTH, 0, false);
-        break;
-
-    case SPELL_RESTORE_INTELLIGENCE:
-        restore_stat(STAT_INTELLIGENCE, 0, false);
-        break;
-
-    case SPELL_RESTORE_DEXTERITY:
-        restore_stat(STAT_DEXTERITY, 0, false);
         break;
 
     // Weapon brands.
@@ -1882,11 +1801,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_NECROMUTATION:
         if (!transform(powc, TRAN_LICH))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_AIR_WALK:
-        if (!transform(powc, TRAN_AIR))
             canned_msg(MSG_SPELL_FIZZLES);
         break;
 
@@ -2006,12 +1920,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         you_teleport();
         break;
 
-    case SPELL_SEMI_CONTROLLED_BLINK:
-        //jmf: powc is ignored
-        if (cast_semi_controlled_blink(powc) == -1)
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_CONTROLLED_BLINK:
         if (blink(powc, true) == -1)
             return (SPRET_ABORT);
@@ -2083,10 +1991,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         }
         break;
 
-    case SPELL_CREATE_NOISE:  // Unused, the player can shout to do this. - bwr
-        noisy(25, you.pos(), "You hear a voice calling your name!");
-        break;
-
     case SPELL_PROJECTED_NOISE:
         project_noise();
         break;
@@ -2105,19 +2009,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_passwall(powc);
         break;
 
-    case SPELL_TOMB_OF_DOROKLOHE:
-        entomb(powc);
-        break;
-
     case SPELL_APPORTATION:
         if (!cast_apportation(powc, beam.target))
             return (SPRET_ABORT);
-        break;
-
-    case SPELL_SWAP:
-        if (normal_cast)
-            crawl_state.cant_cmd_repeat("You can't swap.");
-        cast_swap(powc);
         break;
 
     case SPELL_RECALL:
@@ -2137,10 +2031,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_FULSOME_DISTILLATION:
         cast_fulsome_distillation(powc);
-        break;
-
-    case SPELL_DETECT_MAGIC:
-        mpr("FIXME: implement!");
         break;
 
     case SPELL_DEBUGGING_RAY:
