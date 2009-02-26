@@ -512,13 +512,13 @@ bool conjure_flame(int pow, const coord_def& where)
     }
 
     const int cloud = env.cgrid(where);
-    
+
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
     {
         mpr("There's already a cloud there!");
         return (false);
     }
-    
+
     // Note that self-targeting is handled by SPFLAG_NOT_SELF.
     monsters *monster = monster_at(where);
     if (monster)

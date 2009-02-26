@@ -468,7 +468,7 @@ mutation_def mutation_defs[] = {
        "There is a nasty taste in your mouth for a moment.",
        "There is a nasty taste in your mouth for a moment."},
 
-      {"You feel an ache in your throat.", 
+      {"You feel an ache in your throat.",
        "You feel an ache in your throat.",
        "You feel an ache in your throat."},
 
@@ -2684,7 +2684,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 
     // level == -1 means default action of current level
     if (level == -1)
-    {        
+    {
         if (!fully_inactive)
             level = player_mutation_level(mut);
         else // give description of fully active mutation

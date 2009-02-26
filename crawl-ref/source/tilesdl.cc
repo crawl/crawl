@@ -704,7 +704,7 @@ struct cursor_loc
     void reset() { reg = NULL; cx = cy = -1; }
     bool operator==(const cursor_loc &rhs) const
     {
-        return (rhs.reg == reg 
+        return (rhs.reg == reg
                 && rhs.cx == cx
                 && rhs.cy == cy
                 && reg);
@@ -804,7 +804,7 @@ int TilesFramework::getch_ck()
                         i < m_layers[m_active_layer].m_regions.size(); i++)
                     {
                         Region *reg = m_layers[m_active_layer].m_regions[i];
-                        if (reg->mouse_pos(m_mouse.x, m_mouse.y, 
+                        if (reg->mouse_pos(m_mouse.x, m_mouse.y,
                                            cur_loc.cx, cur_loc.cy))
                         {
                             cur_loc.reg = reg;

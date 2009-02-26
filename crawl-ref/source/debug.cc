@@ -3742,7 +3742,6 @@ bool wizard_add_mutation()
     bool success = false;
     char specs[80];
 
-       
     if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 0
         && !crawl_state.is_replaying_keys())
     {
