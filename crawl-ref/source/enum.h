@@ -288,45 +288,44 @@ enum book_type
     BOOK_PRACTICAL_MAGIC,
     BOOK_WAR_CHANTS,                   //   20
     BOOK_CLOUDS,
-    BOOK_HEALING,                      //  XXX: not used
     BOOK_NECROMANCY,
     BOOK_CALLINGS,
-    BOOK_CHARMS,                       //   25
-    BOOK_AIR,
+    BOOK_CHARMS,
+    BOOK_AIR,                          //   25
     BOOK_SKY,
     BOOK_DIVINATIONS,
     BOOK_WARP,
-    BOOK_ENVENOMATIONS,                //   30
-    BOOK_UNLIFE,
+    BOOK_ENVENOMATIONS,
+    BOOK_UNLIFE,                       //   30
     BOOK_CONTROL,
     BOOK_MUTATIONS,
     BOOK_TUKIMA,
-    BOOK_GEOMANCY,                     //   35
-    BOOK_EARTH,
+    BOOK_GEOMANCY,
+    BOOK_EARTH,                        //   35
     BOOK_WIZARDRY,
     BOOK_POWER,
     BOOK_CANTRIPS,                     //jmf: 04jan2000
-    BOOK_PARTY_TRICKS,           // 40 //jmf: 04jan2000
-    BOOK_BEASTS,
+    BOOK_PARTY_TRICKS,                 //jmf: 04jan2000
+    BOOK_BEASTS,                       //   40
     BOOK_STALKING,         // renamed -- assassination was confusing  -- bwr
     MAX_NORMAL_BOOK = BOOK_STALKING,
 
-    MIN_GOD_ONLY_BOOK,                      // 43
-    BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK, // 43
+    MIN_GOD_ONLY_BOOK,                      // 42
+    BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK,
     BOOK_DEMONOLOGY,
-    BOOK_NECRONOMICON,                      // 45
+    BOOK_NECRONOMICON,
     MAX_GOD_ONLY_BOOK = BOOK_NECRONOMICON,
 
     MAX_FIXED_BOOK = MAX_GOD_ONLY_BOOK,
 
-    BOOK_RANDART_LEVEL,                     // 46
+    BOOK_RANDART_LEVEL,                     // 45
     BOOK_RANDART_THEME,
     BOOK_CARD_EFFECT,    // not implemented
 
     MAX_MEMORISABLE_BOOK = BOOK_CARD_EFFECT,
 
     BOOK_MANUAL,
-    BOOK_DESTRUCTION,                       // 50
+    BOOK_DESTRUCTION,                       // 49
     NUM_BOOKS
 };
 

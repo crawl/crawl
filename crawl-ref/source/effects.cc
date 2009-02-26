@@ -1339,7 +1339,7 @@ static int _book_weight(int book)
 {
     ASSERT(book >= 0 && book <= MAX_NORMAL_BOOK);
 
-    if (book == BOOK_HEALING)
+    if (book_rarity(book) == 100)
         return 0;
 
     int total_weight = 0;

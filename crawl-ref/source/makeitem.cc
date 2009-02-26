@@ -2480,7 +2480,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
                 continue;
             }
         }
-        while (item.sub_type == BOOK_HEALING);
+        while (book_rarity(item.sub_type) == 100);
 
         // Tome of destruction: rare!
         if (item_level > 10 && x_chance_in_y(21 + item_level, 7000))
