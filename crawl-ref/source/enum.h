@@ -2323,22 +2323,22 @@ enum mutation_type
     MUT_LOW_MAGIC,
 
     // several types of scales (affect AC and sometimes more)
-    MUT_RED_SCALES = 75,               //   75
+    MUT_RED_SCALES,
     MUT_NACREOUS_SCALES,
     MUT_GREY2_SCALES,
     MUT_METALLIC_SCALES,
     MUT_BLACK2_SCALES,
-    MUT_WHITE_SCALES,                  //   80
+    MUT_WHITE_SCALES,
     MUT_YELLOW_SCALES,
     MUT_BROWN_SCALES,
     MUT_BLUE_SCALES,
     MUT_PURPLE_SCALES,
-    MUT_SPECKLED_SCALES,               //   85
+    MUT_SPECKLED_SCALES,
     MUT_ORANGE_SCALES,
     MUT_INDIGO_SCALES,
     MUT_RED2_SCALES,
     MUT_IRIDESCENT_SCALES,
-    MUT_PATTERNED_SCALES,              //   90
+    MUT_PATTERNED_SCALES,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = 100,

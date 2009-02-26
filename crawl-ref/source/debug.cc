@@ -3734,127 +3734,15 @@ void wizard_set_all_skills(void)
 }
 #endif
 
-
-//---------------------------------------------------------------
-//
-// debug_add_mutation
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
+extern mutation_def mutation_defs[];
 
-static const char *mutation_type_names[] =
-{
-    "tough skin",
-    "strong",
-    "clever",
-    "agile",
-    "green scales",
-    "black scales",
-    "grey scales",
-    "boney plates",
-    "repulsion field",
-    "poison resistance",
-    "carnivorous",
-    "herbivorous",
-    "heat resistance",
-    "cold resistance",
-    "shock resistance",
-    "regeneration",
-    "slow healing",
-    "fast metabolism",
-    "slow metabolism",
-    "weak",
-    "dopey",
-    "clumsy",
-    "teleport control",
-    "teleport",
-    "magic resistance",
-    "fast",
-    "acute vision",
-    "deformed",
-    "teleport at will",
-    "spit poison",
-    "mapping",
-    "breathe flames",
-    "blink",
-    "horns",
-    "beak",
-    "strong stiff",
-    "flexible weak",
-    "scream",
-    "clarity",
-    "berserk",
-    "deterioration",
-    "blurry vision",
-    "mutation resistance",
-    "frail",
-    "robust",
-    "torment resistance",
-    "negative energy resistance",
-    "summon minor demons",
-    "summon demons",
-    "hurl hellfire",
-    "call torment",
-    "raise dead",
-    "control demons",
-    "pandemonium",
-    "death strength",
-    "channel hell",
-    "drain life",
-    "throw flames",
-    "throw frost",
-    "smite",
-    "claws",
-    "fangs",
-    "hooves",
-    "talons",
-    "breathe poison",
-    "stinger",
-    "big wings",
-    "blue marks",
-    "green marks",
-    "saprovorous",
-    "gourmand",
-    "shaggy fur",
-    "high mp",
-    "low mp",
-    "",
-
-    // from here on scales
-    "red scales",
-    "nacreous scales",
-    "grey2 scales",
-    "metallic scales",
-    "black2 scales",
-    "white scales",
-    "yellow scales",
-    "brown scales",
-    "blue scales",
-    "purple scales",
-    "speckled scales",
-    "orange scales",
-    "indigo scales",
-    "red2 scales",
-    "iridescent scales",
-    "patterned scales"
-};
-
-bool wizard_add_mutation(void)
+bool wizard_add_mutation()
 {
     bool success = false;
     char specs[80];
 
-    if ((sizeof(mutation_type_names) / sizeof(char*)) != NUM_MUTATIONS)
-    {
-        mprf("Mutation name list has %d entries, but there are %d "
-             "mutations total; update mutation_type_names in debug.cc "
-             "to reflect current list.",
-             (sizeof(mutation_type_names) / sizeof(char*)),
-             (int) NUM_MUTATIONS);
-        crawl_state.cancel_cmd_repeat();
-        return (false);
-    }
-
+       
     if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 0
         && !crawl_state.is_replaying_keys())
     {
@@ -3883,23 +3771,24 @@ bool wizard_add_mutation(void)
 
     bool god_gift = yesno("Treat mutation as god gift?", true, 'n');
 
-    // Yeah, the gaining message isn't too good for this... but
-    // there isn't an array of simple mutation names. -- bwr
     mpr("Which mutation (name, 'good', 'bad', 'any', 'xom')? ", MSGCH_PROMPT);
     get_input_line( specs, sizeof( specs ) );
 
     if (specs[0] == '\0')
         return (false);
 
+    strlwr(specs);
+
     mutation_type mutat = NUM_MUTATIONS;
 
-    if (strcasecmp(specs, "good") == 0)
+
+    if (strcmp(specs, "good") == 0)
         mutat = RANDOM_GOOD_MUTATION;
-    else if (strcasecmp(specs, "bad") == 0)
+    else if (strcmp(specs, "bad") == 0)
         mutat = RANDOM_BAD_MUTATION;
-    else if (strcasecmp(specs, "any") == 0)
+    else if (strcmp(specs, "any") == 0)
         mutat = RANDOM_MUTATION;
-    else if (strcasecmp(specs, "xom") == 0)
+    else if (strcmp(specs, "xom") == 0)
         mutat = RANDOM_XOM_MUTATION;
 
     if (mutat != NUM_MUTATIONS)
@@ -3917,26 +3806,28 @@ bool wizard_add_mutation(void)
         return (success);
     }
 
-    std::vector<int> partial_matches;
+    std::vector<mutation_type> partial_matches;
 
-    for (int i = 0; i < NUM_MUTATIONS; i++)
+    for (unsigned i = 0; true; ++i)
     {
-        if (strcasecmp(specs, mutation_type_names[i]) == 0)
+        if (strcmp(specs, mutation_defs[i].wizname) == 0)
         {
-            mutat = (mutation_type) i;
+            mutat = mutation_defs[i].mutation;
             break;
         }
 
-        if (strstr(mutation_type_names[i], strlwr(specs)))
-            partial_matches.push_back(i);
+        if (strstr(mutation_defs[i].wizname, specs))
+            partial_matches.push_back(mutation_defs[i].mutation);
+
+        // FIXME: hack, but I don't want to export the size
+        // of the array...this is even worse.
+        if (mutation_defs[i].mutation + 1 == NUM_MUTATIONS)
+            break;
     }
 
     // If only one matching mutation, use that.
-    if (mutat == NUM_MUTATIONS)
-    {
-        if (partial_matches.size() == 1)
-            mutat = (mutation_type) partial_matches[0];
-    }
+    if (mutat == NUM_MUTATIONS && partial_matches.size() == 1)
+        mutat = partial_matches[0];
 
     if (mutat == NUM_MUTATIONS)
     {
@@ -3948,11 +3839,9 @@ bool wizard_add_mutation(void)
         {
             std::vector<std::string> matches;
 
-            for (unsigned int i = 0, size = partial_matches.size();
-                 i < size; i++)
-            {
-                matches.push_back(mutation_type_names[partial_matches[i]]);
-            }
+            for (unsigned int i = 0; i < partial_matches.size(); ++i)
+                matches.push_back(get_mutation_def(partial_matches[i]).wizname);
+
             std::string prefix = "No exact match for mutation '" +
                 std::string(specs) +  "', possible matches are: ";
 
@@ -3967,7 +3856,8 @@ bool wizard_add_mutation(void)
     else
     {
         mprf("Found #%d: %s (\"%s\")", (int) mutat,
-             mutation_type_names[mutat], mutation_name(mutat, 1));
+             get_mutation_def(mutat).wizname,
+             mutation_name(mutat, 1, false).c_str());
 
         const int levels =
             _debug_prompt_for_int("How many levels to increase or decrease? ",
@@ -3975,7 +3865,7 @@ bool wizard_add_mutation(void)
 
         if (levels == 0)
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             success = false;
         }
         else if (levels > 0)
@@ -3999,7 +3889,6 @@ bool wizard_add_mutation(void)
     return (success);
 }
 #endif
-
 
 #ifdef WIZARD
 void wizard_get_religion(void)
