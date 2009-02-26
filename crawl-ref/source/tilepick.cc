@@ -912,7 +912,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_MURRAY:
         return TILEP_MONS_MURRAY;
     case MONS_ROXANNE:
-        return TILEP_ICE_STATUE; // TODO enne
+        return TILEP_MONS_ROXANNE;
     case MONS_SONJA:
         return TILEP_MONS_KOBOLD; // TODO enne
     case MONS_AZRAEL:
@@ -987,7 +987,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_MARGERY:
         return TILEP_MONS_MARGERY;
     case MONS_EUSTACHIO:
-        return TILEP_MONS_HUMAN; // TODO enne
+        return TILEP_MONS_EUSTACHIO;
 
     // unique major demons ('&')
     case MONS_MNOLEG:

@@ -250,7 +250,7 @@ A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
 %%%%
 Roxanne
 
-A beautiful sapphire statue of a famous earth mage who disappeared after a catastrophic spell failure.
+A beautiful sapphire statue of a famous earth mage who disappeared after a catastrophic spell failure. It is clutching a book.
 %%%%
 Rupert
 
@@ -277,7 +277,7 @@ Sigmund
 
  And the song, and the tinkling of harp-strings to the roof-tree winded up;
  And Sigmund was dreamy with wine and the wearing of many a year;
- And the noise and the glee of the people as the sound of the wild woods were 
+ And the noise and the glee of the people as the sound of the wild woods were
  And the blossoming boughs of the Branstock were the wild trees waving about;
 
  So he said: 'Well seen, my fosterling; let the lip then strain it out.'"
@@ -574,7 +574,7 @@ A huge grey slug with folds of wrinkled skin.
 %%%%
 elf
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave.
 %%%%
 ettin
 
@@ -719,7 +719,7 @@ A huge wrinkled brain, floating just off the floor. Every now and then it seems 
 %%%%
 giant slug
 
-A huge and disgusting gastropod. 
+A huge and disgusting gastropod.
 %%%%
 giant snail
 

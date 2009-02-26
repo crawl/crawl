@@ -1,4 +1,4 @@
-# This file keybinds for using 0.3.4 command keys instead of the 
+# This file keybinds for using 0.3.4 command keys instead of the
 # new set from 0.4.
 
 # If you want to use it, add the following line to your init.txt:
@@ -7,6 +7,8 @@
 # Note that the 'v'iew item command is not available anymore. You can
 # get the same functionality by pressing the item slot while looking at
 # you inventory.
+# For a full list of all game commands (CMD_xxx) and their default keys,
+# see docs/keybind.txt.
 
 bindkey = [^I] CMD_ANNOTATE_LEVEL
 bindkey = [^O] CMD_EXPLORE

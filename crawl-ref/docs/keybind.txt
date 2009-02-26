@@ -1,5 +1,5 @@
-Here's a list of all commands, in the form they are parsed by the 
-bindkey option, with their default key and a short explanation 
+Here's a list of all commands, in the form they are parsed by the
+bindkey option, with their default key and a short explanation
 (where necessary).
 
 Movement
@@ -56,6 +56,7 @@ Z         CMD_ZAP_WAND
 =         CMD_ADJUST_INVENTORY
 {         CMD_INSCRIBE_ITEM
 (         CMD_CYCLE_QUIVER_FORWARD
+)         CMD_CYCLE_QUIVER_BACKWARD
 '         CMD_WEAPON_SWAP
 
 Dungeon interaction
@@ -66,6 +67,7 @@ s, .      CMD_SEARCH, CMD_MOVE_NOWHERE  (same command)
 5         CMD_REST             (rest/search 100 turns)
 t         CMD_SHOUT
 x         CMD_LOOK_AROUND
+V         CMD_FULL_VIEW
 z         CMD_CAST_SPELL
 C         CMD_CLOSE_DOOR
 ^E        CMD_FORGET_STASH
@@ -97,7 +99,7 @@ I         CMD_DISPLAY_SPELLS
 "         CMD_LIST_JEWELLERY
 [         CMD_LIST_ARMOUR
 ]         CMD_LIST_EQUIPMENT
-)         CMD_LIST_WEAPONS
+}         CMD_LIST_WEAPONS
 $         CMD_LIST_GOLD
 \         CMD_DISPLAY_KNOWN_OBJECTS
 #         CMD_CHARACTER_DUMP
@@ -158,7 +160,7 @@ _              CMD_TARGET_FIND_ALTAR
 ^L             CMD_TARGET_TOGGLE_MLIST     (non-Tiles only)
 p              CMD_TARGET_PREV_TARGET
 f, t           CMD_TARGET_MAYBE_PREV_TARGET
--              CMD_TARGET_CYCLE_BACK},
+-              CMD_TARGET_CYCLE_BACK,
 +, =           CMD_TARGET_CYCLE_FORWARD
 /              CMD_TARGET_OBJ_CYCLE_BACK
 *, '           CMD_TARGET_OBJ_CYCLE_FORWARD
@@ -217,3 +219,8 @@ s         CMD_TARGET_WIZARD_MAKE_SHOUT
 w         CMD_TARGET_WIZARD_PATHFIND
 F         CMD_TARGET_WIZARD_MAKE_FRIENDLY
 P         CMD_TARGET_WIZARD_BLESS_MONSTER
+G         CMD_TARGET_WIZARD_GAIN_LEVEL
+M         CMD_TARGET_WIZARD_MISCAST
+S         CMD_TARGET_WIZARD_MAKE_SUMMONED
+~         CMD_TARGET_WIZARD_POLYMORPH
+T         CMD_MAP_WIZARD_TELEPORT

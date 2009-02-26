@@ -248,6 +248,9 @@ toenail_golem MONS_TOENAIL_GOLEM
 wood_golem MONS_WOOD_GOLEM
 
 ## Statues (also '8')
+%sdir dc-mon/unique
+roxanne MONS_ROXANNE
+%sdir dc-mon
 ice_statue ICE_STATUE
 silver_statue SILVER_STATUE
 orange_crystal_statue ORANGE_CRYSTAL_STATUE
@@ -265,6 +268,7 @@ donald MONS_DONALD
 duane MONS_DUANE
 edmund MONS_EDMUND
 erica MONS_ERICA
+eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
 francis MONS_FRANCIS
 frederick MONS_FREDERICK
