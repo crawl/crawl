@@ -83,8 +83,8 @@ const char *naga_deformed_descrip[3] = {
 };
 
 const char *mutation_descrip[NUM_MUTATIONS][3] = {
-    {"You have tough skin (AC +1).", "You have very tough skin (AC +2).",
-     "You have extremely tough skin (AC +3)."},
+    {"You have tough skin (AC + 1).", "You have very tough skin (AC + 2).",
+     "You have extremely tough skin (AC + 3)."},
 
     {"Your muscles are strong (Str +", "", ""},
     {"Your mind is acute (Int +", "", ""},
