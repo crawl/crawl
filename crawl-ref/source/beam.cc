@@ -5598,7 +5598,7 @@ std::string bolt::get_short_name() const
 
 std::string beam_type_name(beam_type type)
 {
-    switch(type)
+    switch (type)
     {
     case BEAM_NONE: return("none");
     case BEAM_MISSILE: return("missile");

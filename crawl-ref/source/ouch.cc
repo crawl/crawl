@@ -959,7 +959,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             if (death_type != KILLED_BY_XOM)
                 aux = "Xom";
         }
-        else if(strstr(aux, "Xom") == NULL)
+        else if (strstr(aux, "Xom") == NULL)
             death_type = KILLED_BY_XOM;
     }
 
