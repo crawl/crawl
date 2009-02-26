@@ -1414,7 +1414,7 @@ formatted_string describe_mutations()
     case SP_WHITE_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe frost." EOL;
+            result += "You can breathe cold." EOL;
             have_any = true;
         }
         break;
