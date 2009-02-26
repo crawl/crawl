@@ -880,7 +880,6 @@ mutation_def mutation_defs[] = {
 
       "stinger"
     },
-
     // Draconian only
     { MUT_BIG_WINGS,                  0,  1, false,  true,
       {"Your wings are large and strong.", "", ""},
@@ -889,7 +888,8 @@ mutation_def mutation_defs[] = {
 
       "big wings"
     },
-    // used by evil gods to mark followers (currently UNUSED)
+
+    // used by evil gods to mark followers - FIXME: unused!
     { MUT_BLUE_MARKS,                 0,  3, false,  true,
       {"There is a blue sigil on each of your hands.",
        "There are several blue sigils on your hands and arms.",
