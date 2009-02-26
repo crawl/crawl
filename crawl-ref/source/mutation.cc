@@ -85,7 +85,8 @@ const char *naga_deformed_descrip[3] = {
 };
 
 // mutation definitions:
-// first  number  = probability  (0 means it doesn't appear naturally?)
+// first  number  = probability (0 means it doesn't appear naturally
+//                  unless you have some level of it already)
 // second number  = maximum levels
 // first  boolean = is mutation mostly bad?
 // second boolean = is mutation physical, i.e. external only?
@@ -756,6 +757,7 @@ mutation_def mutation_defs[] = {
 
       "control demons"
     },
+    // FIXME: unused!
     { MUT_PANDEMONIUM,                0,  1, false, false,
       {"You can travel to (but not from) Pandemonium at will.", "", ""},
       {"You feel something pulling you to a strange and terrible place.",
@@ -862,7 +864,7 @@ mutation_def mutation_defs[] = {
 
       "breathe poison"
     },
-    // Naga and Draconian only -- FIXME: unused!
+    // Naga and Draconian only - FIXME: unused!
     { MUT_STINGER,                    0,  3, false,  true,
       {"Your tail ends in a poisonous barb.",
        "Your tail ends in a sharp poisonous barb.",
