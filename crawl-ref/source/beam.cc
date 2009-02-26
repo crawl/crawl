@@ -3901,7 +3901,7 @@ void bolt::affect_player()
     if (affects_items)
     {
         // Simple cases for scroll burns.
-        if (flavour == BEAM_LAVA || name == "hellfire")
+        if (flavour == BEAM_LAVA || name.find("hellfire") != std::string::npos)
             expose_player_to_element(BEAM_LAVA, burn_power);
 
         // More complex (geez..)
@@ -4978,7 +4978,7 @@ int bolt::range_used_on_hit(const actor* victim) const
     else if (is_enchantment())
         used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
     // Hellfire stops for nobody!
-    else if (name == "hellfire")
+    else if (name.find("hellfire") != std::string::npos)
         used = 0;
     // Generic explosion.
     else if (is_explosion || is_big_cloud)
@@ -5038,7 +5038,7 @@ void bolt::refine_for_explosion()
         type    = dchar_glyph(DCHAR_FIRED_BURST);
     }
 
-    if (name == "hellfire")
+    if (name.find("hellfire") != std::string::npos)
     {
         seeMsg  = "The hellfire explodes!";
         hearMsg = "You hear a strangely unpleasant explosion.";

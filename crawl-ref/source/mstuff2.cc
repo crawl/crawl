@@ -1856,7 +1856,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_HELLFIRE_BURST:
         beam.aux_source   = "burst of hellfire";
-        beam.name         = "hellfire";
+        beam.name         = "burst of hellfire";
         beam.ex_size      = 1;
         beam.flavour      = BEAM_HELLFIRE;
         beam.is_explosion = true;
@@ -2039,7 +2039,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         break;
 
     case SPELL_HELLFIRE:           // fiend's hellfire
-        beam.name         = "hellfire";
+        beam.name         = "blast of hellfire";
         beam.aux_source   = "blast of hellfire";
         beam.colour       = RED;
         beam.damage       = dice_def( 3, 25 );
