@@ -31,6 +31,8 @@ dragon CORPSE_DRAGON /* D */
 golden_dragon CORPSE_GOLDEN_DRAGON /* D */
 hydra5 CORPSE_HYDRA /* D */
 ice_dragon CORPSE_ICE_DRAGON /* D */
+iron_dragon CORPSE_IRON_DRAGON /* D */
+quicksilver_dragon CORPSE_QUICKSILVER_DRAGON /* D */
 shadow_dragon CORPSE_SHADOW_DRAGON /* D */
 storm_dragon CORPSE_STORM_DRAGON /* D */
 swamp_dragon CORPSE_SWAMP_DRAGON /* D */
@@ -201,6 +203,7 @@ killer_bee_larva CORPSE_ANT_LARVA /* w */
 brain_worm CORPSE_BRAIN_WORM /* w */
 killer_bee_larva CORPSE_KILLER_BEE_LARVA /* w */
 spiny_worm CORPSE_SPINY_WORM /* w */
+swamp_worm CORPSE_SWAMP_WORM /* w */
 worm CORPSE_WORM /* w */
 
 giant_blowfly CORPSE_GIANT_BLOWFLY /* y */

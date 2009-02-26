@@ -1756,6 +1756,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_BRAIN_WORM;
     case MONS_SPINY_WORM:
         return TILE_CORPSE_SPINY_WORM;
+    case MONS_SWAMP_WORM:
+        return TILE_CORPSE_SWAMP_WORM;
     case MONS_YELLOW_WASP:
         return TILE_CORPSE_YELLOW_WASP;
     case MONS_GIANT_MOSQUITO:
@@ -1792,6 +1794,10 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_HYDRA;
     case MONS_ICE_DRAGON:
         return TILE_CORPSE_ICE_DRAGON;
+    case MONS_IRON_DRAGON:
+        return TILE_CORPSE_IRON_DRAGON;
+    case MONS_QUICKSILVER_DRAGON:
+        return TILE_CORPSE_QUICKSILVER_DRAGON;
     case MONS_STEAM_DRAGON:
         return TILE_CORPSE_STEAM_DRAGON;
     case MONS_SWAMP_DRAGON:
