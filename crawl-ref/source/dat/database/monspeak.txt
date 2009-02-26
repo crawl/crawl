@@ -1108,7 +1108,7 @@ VISUAL:@The_monster@ blows smoke rings.
 
 VISUAL: @The_monster@'s eyes look fiery.
 
-VISUAL: @The_monster@ is momentarily hid by a cloud of flames.
+VISUAL: @The_monster@ is momentarily hidden by a cloud of flames.
 %%%%
 _Azrael_rare_
 
