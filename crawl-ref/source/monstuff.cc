@@ -6743,9 +6743,9 @@ int mons_natural_regen_rate(monsters *monster)
     // The undead have a harder time regenerating.
     switch (monster->holiness())
     {
-    // The undead don't regenerate easily.
+    // The undead don't regenerate easily, except for enslaved souls.
     case MH_UNDEAD:
-        divider *= 4;
+        divider *= (mons_enslaved_soul(monster)) ? 2 : 4;
         break;
 
     // And golems have it worse.
