@@ -1769,7 +1769,7 @@ static void _tweak_randart(item_def &item)
     {
     case RAP_VAL_BOOL:
         mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[choice],
-             props[choice] ? "off" : "on", 1);
+             props[choice] ? "off" : "on");
         randart_set_property(item, static_cast<randart_prop_type>(choice),
                              !props[choice]);
         break;

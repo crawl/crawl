@@ -1528,6 +1528,7 @@ void direction(dist& moves, targeting_type restricts,
             bool in_range = (range < 0
                              || grid_distance(moves.target,you.pos()) <= range);
             terse_describe_square(moves.target, in_range);
+            flush_prev_message();
         }
 
 #ifdef USE_TILE

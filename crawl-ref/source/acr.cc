@@ -428,6 +428,7 @@ static void _startup_tutorial()
         << "Press any key to start the tutorial intro, or Escape to skip it."
         << std::endl;
 
+    flush_prev_message();
     const int ch = c_getch();
     if (ch != ESCAPE)
         tut_starting_screen();

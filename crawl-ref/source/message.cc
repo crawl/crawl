@@ -66,7 +66,8 @@ static FILE* _msg_dump_file = NULL;
 
 static bool suppress_messages = false;
 static void base_mpr(const char *inf, msg_channel_type channel, int param,
-                     unsigned char colour, bool check_previous_msg = true);
+                     unsigned char colour, int repeats = 1,
+                     bool check_previous_msg = true);
 static unsigned char prepare_message(const std::string& imsg,
                                      msg_channel_type channel,
                                      int param);
@@ -648,7 +649,7 @@ static bool channel_message_history(msg_channel_type channel)
 // Adds a given message to the message history.
 static void mpr_store_messages(const std::string& message,
                                msg_channel_type channel, int param,
-                               unsigned char colour)
+                               unsigned char colour, int repeats = 1)
 {
     const int num_lines = crawl_view.msgsz.y;
 
@@ -667,7 +668,7 @@ static void mpr_store_messages(const std::string& message,
             && prev_msg.param == param && prev_msg.text == message
             && prev_msg.colour == colour)
         {
-            prev_message.repeats++;
+            prev_msg.repeats += repeats;
             was_repeat = true;
         }
     }
@@ -692,7 +693,7 @@ static void mpr_store_messages(const std::string& message,
         Store_Message[ Next_Message ].colour  = colour;
         Store_Message[ Next_Message ].channel = channel;
         Store_Message[ Next_Message ].param   = param;
-        Store_Message[ Next_Message ].repeats = 1;
+        Store_Message[ Next_Message ].repeats = repeats;
         Next_Message++;
 
         if (Next_Message >= NUM_STORED_MESSAGES)
@@ -758,21 +759,23 @@ void flush_prev_message()
 {
     if (prev_message.text.empty())
         return;
-
+/*
     if (prev_message.repeats > 1)
     {
         snprintf(info, INFO_SIZE, "%s (x%d)",
                  prev_message.text.c_str(), prev_message.repeats);
         prev_message.text = info;
     }
+*/
     base_mpr(prev_message.text.c_str(), prev_message.channel,
-             prev_message.param, prev_message.colour, false);
+             prev_message.param, prev_message.colour, prev_message.repeats,
+             false);
 
     prev_message = message_item();
 }
 
 static void base_mpr(const char *inf, msg_channel_type channel, int param,
-                     unsigned char colour, bool check_previous_msg)
+                     unsigned char colour, int repeats, bool check_previous_msg)
 {
     if (colour == MSGCOL_MUTED)
         return;
@@ -789,7 +792,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
                 && prev_message.param == param && prev_message.text == imsg
                 && prev_message.colour == colour)
             {
-                prev_message.repeats++;
+                prev_message.repeats += repeats;
                 return;
             }
             flush_prev_message();
@@ -805,7 +808,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
             prev_message.channel = channel;
             prev_message.param   = param;
             prev_message.colour  = colour;
-            prev_message.repeats = 1;
+            prev_message.repeats = repeats;
             return;
         }
     }
@@ -818,6 +821,11 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
         need_prefix = false;
     }
 
+    if (repeats > 1)
+    {
+        snprintf(info, INFO_SIZE, "%s (x%d)", inf, repeats);
+        inf = info;
+    }
     message_out( Message_Line, colour, inf,
                  Options.delay_message_clear? 2 : 1 );
 
@@ -835,7 +843,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
         }
     }
 
-    mpr_store_messages(imsg, channel, param, colour);
+    mpr_store_messages(imsg, channel, param, colour, repeats);
 
     if (channel == MSGCH_ERROR)
         interrupt_activity( AI_FORCE_INTERRUPT );
