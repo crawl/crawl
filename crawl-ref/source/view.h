@@ -216,6 +216,7 @@ void view_update_at(const coord_def &pos);
 void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
                           int fmc_delay);
 #endif
+void calc_show_los();
 void viewwindow(bool draw_it, bool do_updates);
 void update_monsters_in_view();
 void flush_comes_into_view();

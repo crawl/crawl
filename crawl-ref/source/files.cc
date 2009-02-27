@@ -1075,7 +1075,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     you.prev_targ     = MHITNOT;
-    you.prev_grd_targ = coord_def(0, 0);
+    you.prev_grd_targ.reset();
 
     // We clear twice - on save and on load.
     // Once would be enough...
@@ -1391,7 +1391,7 @@ void _save_level(int level_saved, level_area_type old_ltype,
                                          false );
 
     you.prev_targ     = MHITNOT;
-    you.prev_grd_targ = coord_def(0, 0);
+    you.prev_grd_targ.reset();
 
     FILE *saveFile = fopen(cha_fil.c_str(), "wb");
 
@@ -1719,6 +1719,9 @@ static void _restore_level(const level_id &original)
 
     load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
           you.level_type, you.your_level, you.where_are_you );
+
+    // Rebuild the show grid, which was cleared out before.
+    calc_show_los();
 }
 
 // Given a level returns true if the level has been created already

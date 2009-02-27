@@ -5071,6 +5071,23 @@ static void _debug_pane_bounds()
 #endif
 }
 
+void calc_show_los()
+{
+    if (!crawl_state.arena && !crawl_state.arena_suspended)
+    {
+        // Must be done first.
+        losight(env.show, grd, you.pos());
+
+        // What would be visible, if all of the translucent walls were
+        // made opaque.
+        losight(env.no_trans_show, grd, you.pos(), true);
+    }
+    else
+    {
+        losight(env.show, grd, crawl_view.glosc());
+    }
+}
+
 //---------------------------------------------------------------
 //
 // viewwindow -- now unified and rolled into a single pass
@@ -5096,19 +5113,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
     int count_x, count_y;
 
-    if (!crawl_state.arena && !crawl_state.arena_suspended)
-    {
-        // Must be done first.
-        losight(env.show, grd, you.pos());
-
-        // What would be visible, if all of the translucent walls were
-        // made opaque.
-        losight(env.no_trans_show, grd, you.pos(), true);
-    }
-    else
-    {
-        losight(env.show, grd, crawl_view.glosc());
-    }
+    calc_show_los();
 
 #ifdef USE_TILE
     tile_draw_floor();
