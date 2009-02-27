@@ -6209,15 +6209,18 @@ bool monsters::find_place_near_player()
 
 bool monsters::find_home_anywhere()
 {
-    int tries = 600;
-    do
+    coord_def place(-1, -1);
+    int nvalid = 0;
+    for (int tries = 0; tries < 600; ++tries)
     {
-        position.set(random_range(6, GXM - 7), random_range(6, GYM - 7));
+        if (check_set_valid_home(random_in_bounds(), place, nvalid))
+        {
+            moveto(place);
+            return (true);
+        }
     }
-    while ((grd(pos()) != DNGN_FLOOR || mgrd(pos()) != NON_MONSTER)
-           && tries-- > 0);
 
-    return (tries >= 0);
+    return (false);
 }
 
 bool monsters::find_place_to_live(bool near_player)

@@ -208,10 +208,7 @@ void place_transiting_items()
         coord_def pos = item->pos;
 
         if (!in_bounds(pos))
-        {
-            pos.x = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
-            pos.y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
-        }
+            pos = random_in_bounds();
 
         const coord_def where_to_go =
             dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
