@@ -5457,7 +5457,7 @@ static bool _beogh_followers_abandon_you()
                     behaviour_event(monster, ME_ALERT, MHITYOU);
                     // For now CREATED_FRIENDLY stays.
 
-                    if (player_monster_visible(monster))
+                    if (you.can_see(monster))
                         num_reconvert++; // Only visible ones.
 
                     reconvert = true;
@@ -5558,7 +5558,7 @@ void good_god_holy_attitude_change(monsters *holy)
 {
     ASSERT(mons_is_holy(holy));
 
-    if (player_monster_visible(holy)) // show reaction
+    if (you.can_see(holy)) // show reaction
     {
         _print_good_god_holy_being_speech(true, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
@@ -5586,7 +5586,7 @@ void good_god_holy_fail_attitude_change(monsters *holy)
 {
     ASSERT(mons_is_holy(holy));
 
-    if (player_monster_visible(holy)) // show reaction
+    if (you.can_see(holy)) // show reaction
     {
         _print_good_god_holy_being_speech(false, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
@@ -5719,10 +5719,10 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     name_zombie(mon, &orig);
 
+    mons_make_god_gift(mon, GOD_YREDELEMNUL);
+
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
-
-    mons_make_god_gift(mon, GOD_YREDELEMNUL);
 
     if (!quiet)
     {
@@ -5752,7 +5752,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 {
     ASSERT(mons_species(orc->type) == MONS_ORC);
 
-    if (player_monster_visible(orc)) // show reaction
+    if (you.can_see(orc)) // show reaction
     {
         if (emergency || !orc->alive())
         {
