@@ -2600,8 +2600,7 @@ int player_see_invis(bool calc_unid)
 
 // This does NOT do line of sight!  It checks the monster's visibility
 // with respect to the players perception, but doesn't do walls or
-// range.  To find if the square the monster is in is in LOS, see
-// mons_near().
+// range.  To find if the square the monster is in LOS, see mons_near().
 bool player_monster_visible(const monsters *mon)
 {
     if (!player_see_invis() && mon->invisible())
