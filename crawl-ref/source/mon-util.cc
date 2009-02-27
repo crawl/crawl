@@ -6194,6 +6194,7 @@ bool monsters::find_home_around(const coord_def &c, int radius)
         moveto(place);
         return (true);
     }
+
     return (false);
 }
 
