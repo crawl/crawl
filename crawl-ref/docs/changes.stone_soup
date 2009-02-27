@@ -30,6 +30,20 @@ Levels
 * Tweaked most of the oklob vaults to make them less dangerous.
 * Allow bazaars outside of the main dungeon.
 
+Characters
+----------
+* Merged Ogre-Mages into Ogres with completely new aptitudes.
+* Added non-healing species: Deep Dwarves.
+* Added Artificer class.
+* Transformations now cause worn equipment to be melded rather than removed.
+* Vampires can no longer heal via potions of blood or non-fresh corpses.
+* Overhaul nutrition values and duration for Vampires feeding on corpses.
+* Draining of the experience pool is now reduced by life protection.
+* Player and monster nagas no longer flounder or lose stealth in shallow water.
+* Secondary unarmed attacks now wake sleeping monsters.
+* Pure spellcasters don't start with a knife anymore.
+* Tweak starting choice restrictions.
+
 Monsters
 --------
 * Disallow zombified monsters' use of stairs.
@@ -99,20 +113,6 @@ Items
 * ?random uselessness now autoIDs.
 * Identify the Horn of Geryon when wielding it.
 
-Characters
-----------
-* Merged Ogre-Mages into Ogres with completely new aptitudes.
-* Added non-healing species: Deep Dwarves.
-* Added Artificer class.
-* Transformations now cause worn equipment to be melded rather than removed.
-* Vampires can no longer heal via potions of blood or non-fresh corpses.
-* Overhaul nutrition values and duration for Vampires feeding on corpses.
-* Draining of the experience pool is now reduced by life protection.
-* Player and monster nagas no longer flounder or lose stealth in shallow water.
-* Secondary unarmed attacks now wake sleeping monsters.
-* Pure spellcasters don't start with a knife anymore.
-* Tweak starting choice restrictions.
-
 Gods
 ----
 * Greatly improved Yredelemnul.
@@ -148,7 +148,7 @@ Miscellaneous
 * Flying can now be cancelled.
 * Petrify is now an Enchantment/Earth spell.
 * Lee's Rapid Deconstruction deals great damage to petrified monsters.
-* Rewrite and clean up of (among others) beam and trap code.
+* Rewrite and clean up of (among others) beam, trap, and mutations code.
 * Store code revision in save files for easier bug tracking.
 * Many useful new wizard commands.
 

@@ -29,7 +29,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "traps.h"
 
-static void _drop_everything();
 static void _extra_hp(int amount_extra);
 
 bool transformation_can_wield(transformation_type trans)
@@ -900,23 +899,6 @@ void _extra_hp(int amount_extra) // must also set in calc_hp
     you.hp /= 10;
 
     deflate_hp(you.hp_max, false);
-}
-
-void _drop_everything()
-{
-    if (inv_count() < 1)
-        return;
-
-    mpr( "You find yourself unable to carry your possessions!" );
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (is_valid_item( you.inv[i] ))
-        {
-            copy_item_to_grid( you.inv[i], you.pos() );
-            you.inv[i].quantity = 0;
-        }
-    }
 }
 
 // Used to mark transformations which override species/mutation intrinsics.

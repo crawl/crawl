@@ -1215,8 +1215,6 @@ static bool _do_ability(const ability_def& abil)
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
-            // Don't check for hell serpents - they get hell fire,
-            // never regular fire. (GDL)
             power = you.experience_level;
             power += player_mutation_level(MUT_BREATHE_FLAMES) * 4;
 
