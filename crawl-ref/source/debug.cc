@@ -5056,7 +5056,7 @@ void wizard_dismiss_all_monsters(bool force_all)
     {
         monsters *monster = &menv[mon];
 
-        if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN)))
+        if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN, true)))
         {
             if (!keep_item)
                 _vanish_orig_eq(monster);

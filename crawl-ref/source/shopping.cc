@@ -1698,6 +1698,11 @@ unsigned int item_value( item_def item, bool ident )
                 }
 
                 rarity /= count_valid;
+
+                // Fixed level randarts get a bonus for the really low and
+                // really high level spells.
+                if (item.sub_type == BOOK_RANDART_LEVEL)
+                    valued += 50 * abs(5 - item.plus);
             }
             else
                 rarity = book_rarity(item.sub_type);
@@ -1773,7 +1778,7 @@ void shop()
     const std::string shopname = shop_name(env.shop[i].pos);
 
     // If the shop is now empty, erase it from the overmap.
-    if ( _shop_get_stock(i).empty() )
+    if (_shop_get_stock(i).empty())
         _delete_shop(i);
 
     burden_change();

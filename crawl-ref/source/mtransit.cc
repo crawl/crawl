@@ -268,6 +268,7 @@ bool follower::place(bool near_player)
                     near_player = true;
                 else
                 {
+                    m.moveto(where_to_go);
                     mgrd(where_to_go) = m.mindex();
                     placed = true;
                 }

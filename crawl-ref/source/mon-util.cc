@@ -6225,7 +6225,7 @@ bool monsters::find_home_anywhere()
 
 bool monsters::find_place_to_live(bool near_player)
 {
-    if ((near_player && find_place_near_player())
+    if (near_player && find_place_near_player()
         || find_home_anywhere())
     {
         mgrd(pos()) = mindex();
