@@ -1064,17 +1064,17 @@ static int _place_monster_aux(const mgen_data &mg,
             break;
         }
     }
-    // 6 out of 7 non-priestly orcs are believers.
+    // 1 out of 7 non-priestly orcs are unbelievers.
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
-        if (x_chance_in_y(6, 7))
+        if (!one_chance_in(7))
             menv[id].god = GOD_BEOGH;
     }
-    // Angels and Daevas belong to TSO, but you may find ones adopted by
-    // Xom in the Abyss.
+    // Angels and Daevas belong to TSO, but 1 out of 7 in the Abyss are
+    // adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
     {
-        if (mg.level_type != LEVEL_ABYSS || x_chance_in_y(6, 7))
+        if (mg.level_type != LEVEL_ABYSS || !one_chance_in(7))
             menv[id].god = GOD_SHINING_ONE;
         else
             menv[id].god = GOD_XOM;
