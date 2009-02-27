@@ -7,7 +7,6 @@ crawl - play the roguelike game of crawl
 [-name <string>]
 [-race <letter>]
 [-class <letter>]
-[-pizza <string>]
 [-plain]
 [-dir <path>]
 [-rc <file>]
@@ -35,9 +34,6 @@ preselect race
 .TP
 \fB-class\fR <letter>
 preselect class
-.TP
-\fB-pizza\fR <string>
-crawl pizza
 .TP
 \fB-plain\fR
 don't use IBM extended characters (needed when playing in a xterm)
@@ -1034,8 +1030,6 @@ either shout to attract them or tell them who to attack.
 .SH ENVIRONMENT VARIABLES
 .IP CRAWL_NAME
 Default name for your character.
-.IP CRAWL_PIZZA
-Your favourite pizza topping.
 .IP CRAWL_DIR
 The directory where your macros and character dumps are stored.
 .IP CRAWL_RC

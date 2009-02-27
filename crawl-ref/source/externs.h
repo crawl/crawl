@@ -2022,6 +2022,8 @@ public:
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
+    std::string pizza;
+    
 #ifdef WIZARD
     int         wiz_mode;        // yes, no, never in wiz mode to start
 #endif

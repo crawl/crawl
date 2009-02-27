@@ -51,7 +51,6 @@ struct system_environment
 {
 public:
     std::string crawl_name;
-    std::string crawl_pizza;
     std::string crawl_rc;
     std::string crawl_dir;
 

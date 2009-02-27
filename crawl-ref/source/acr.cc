@@ -294,7 +294,6 @@ static void _show_commandline_options_help()
     puts("  -name <string>   character name");
     puts("  -race <arg>      preselect race (by letter, abbreviation, or name)");
     puts("  -class <arg>     preselect class (by letter, abbreviation, or name)");
-    puts("  -pizza <string>  crawl pizza");
     puts("  -plain           don't use IBM extended characters");
     puts("  -dir <path>      crawl directory");
     puts("  -rc <file>       init file name");
@@ -303,7 +302,7 @@ static void _show_commandline_options_help()
     puts("  -macro <dir>     directory to save/find macro.txt");
     puts("");
     puts("Command line options override init file options, which override");
-    puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
+    puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
     puts("");
     puts("Highscore list options: (Can now be redirected to more, etc)");
     puts("  -scores [N]            highscore list");

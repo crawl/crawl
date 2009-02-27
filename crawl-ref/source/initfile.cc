@@ -855,7 +855,9 @@ void game_options::reset_options()
                    false);
 
     item_stack_summary_minimum = 5;
-
+    
+    pizza.clear();
+    
 #ifdef WIZARD
     fsim_rounds = 40000L;
     fsim_mons   = "worm";
@@ -2291,6 +2293,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         set_fire_order(field, plus_equal);
     }
+    else if (key == "pizza")
+    {
+        // field is already cleaned up from trim_string()
+        pizza = field;
+    }
 
     BOOL_OPTION(random_pick);
     else BOOL_OPTION(good_random);
@@ -3313,9 +3320,6 @@ void get_system_environment(void)
     // The player's name
     SysEnv.crawl_name = check_string( getenv("CRAWL_NAME") );
 
-    // The player's pizza
-    SysEnv.crawl_pizza = check_string( getenv("CRAWL_PIZZA") );
-
     // The directory which contians init.txt, macro.txt, morgue.txt
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string( getenv("CRAWL_DIR") );
@@ -3359,7 +3363,6 @@ enum commandline_option_type {
     CLO_NAME,
     CLO_RACE,
     CLO_CLASS,
-    CLO_PIZZA,
     CLO_PLAIN,
     CLO_DIR,
     CLO_RC,
@@ -3376,7 +3379,7 @@ enum commandline_option_type {
 };
 
 static const char *cmd_ops[] = {
-    "scores", "name", "race", "class", "pizza", "plain", "dir", "rc",
+    "scores", "name", "race", "class", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena"
 };
@@ -3566,16 +3569,6 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 if (o == 3)
                     Options.cls = _str_to_class( std::string( next_arg ) );
             }
-            nextUsed = true;
-            break;
-
-        case CLO_PIZZA:
-            if (!next_is_param)
-                return (false);
-
-            if (!rc_only)
-                SysEnv.crawl_pizza = next_arg;
-
             nextUsed = true;
             break;
 

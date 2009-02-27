@@ -2097,8 +2097,8 @@ void finished_eating_message(int food_type)
         restore_stat(STAT_ALL, 0, false);
         break;
     case FOOD_PIZZA:
-        if (!SysEnv.crawl_pizza.empty() && !one_chance_in(3))
-            mprf("Mmm... %s.", SysEnv.crawl_pizza.c_str());
+        if (!Options.pizza.empty() && !one_chance_in(3))
+            mprf("Mmm... %s.", Options.pizza.c_str());
         else
         {
             int temp_rand;

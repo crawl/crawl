@@ -386,6 +386,8 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # colour.lightgray = black
 # colour.lightcyan = cyan
 # colour.yellow    = brown
+#
+# pizza            = Sausage
 
 # See options_guide.txt for the options
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any,
