@@ -1462,8 +1462,8 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(3))
         {
         case 0:
-            mpr(forget_spell() ? "You have forgotten a spell!"
-                               : "You get a splitting headache.");
+            if (!forget_spell())
+                mpr("You get a splitting headache.");
             break;
         case 1:
             mpr("You feel completely lost.");

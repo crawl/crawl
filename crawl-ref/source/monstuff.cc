@@ -1200,9 +1200,10 @@ int monster_die(monsters *monster, killer_type killer,
         }
 
         if (!wizard && !mons_reset && !submerged)
+        {
             place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
-
+        }
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
@@ -1595,7 +1596,6 @@ int monster_die(monsters *monster, killer_type killer,
             // Monster doesn't die, just goes back to wherever it came from
             // This must only be called by monsters running out of time (or
             // abjuration), because it uses the beam variables! Or does it???
-            if (!wizard)
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.

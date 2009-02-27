@@ -569,10 +569,12 @@ bool forget_spell(void)
     if (slot == -1)              // should never happen though
         return (false);
 
-    del_spell_from_memory_by_slot( slot );
+    mprf("Your knowledge of %s becomes hazy all of a sudden, and you forget "
+         "the spell!", spell_title(you.spells[slot]));
 
+    del_spell_from_memory_by_slot( slot );
     return (true);
-}                               // end forget_spell()
+}
 
 // use player::decrease_stats() instead iff:
 // (a) player_sust_abil() should not factor in; and
