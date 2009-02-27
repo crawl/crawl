@@ -454,45 +454,6 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     return (stat_restored);
 }
 
-void turn_undead(int pow)
-{
-    mpr("You attempt to repel the undead.");
-
-    for (int i = 0; i < MAX_MONSTERS; i++)
-    {
-        monsters* const monster = &menv[i];
-
-        if (monster->type == -1 || !mons_near(monster))
-            continue;
-
-        // Used to inflict random2(5) + (random2(pow) / 20) damage,
-        // in addition. {dlb}
-        if (mons_holiness(monster) == MH_UNDEAD)
-        {
-            if (check_mons_resist_magic( monster, pow ))
-            {
-                simple_monster_message( monster, mons_immune_magic(monster) ?
-                                        " is unaffected." : " resists." );
-                continue;
-            }
-
-            if (!monster->add_ench(ENCH_FEAR))
-                continue;
-
-            simple_monster_message( monster, " is repelled!" );
-
-            //mv: Must be here to work.
-            behaviour_event( monster, ME_SCARE, MHITYOU );
-
-            // Reduce power based on monster turned.
-            pow -= monster->hit_dice * 3;
-            if (pow <= 0)
-                break;
-
-        }
-    }
-}
-
 typedef std::pair<const monsters*,int> counted_monster;
 typedef std::vector<counted_monster> counted_monster_list;
 static void _record_monster_by_name(counted_monster_list &list,
@@ -1618,14 +1579,6 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
                                           std::min(2 + (random2(pow) / 4), 6) :
                                           0,
                                       !force_hostile, quiet);
-}
-
-bool summon_holy_being_type(monster_type mon, int pow,
-                            god_type god, int spell)
-{
-    return _summon_holy_being_wrapper(pow, god, spell, mon,
-                                      std::min(2 + (random2(pow) / 4), 6),
-                                      true, false);
 }
 
 bool cast_tukimas_dance(int pow, god_type god,

@@ -51,12 +51,8 @@ bool summon_berserker(int pow, god_type god = GOD_NO_GOD, int spell = 0,
 bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool force_hostile = false, bool permanent = false,
                          bool quiet = false);
-bool summon_holy_being_type(monster_type mon, int pow,
-                            god_type god = GOD_NO_GOD, int spell = 0);
 bool cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
                         bool force_hostile = false);
 bool cast_conjure_ball_lightning(int pow, god_type god = GOD_NO_GOD);
-void turn_undead(int pow);      // what should I use for pow?
-
 
 #endif

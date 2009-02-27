@@ -104,7 +104,6 @@ enum ability_type
     ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
 
     ABIL_CHARM_SNAKE,                       //  237
-    ABIL_ROTTING,
     ABIL_TORMENT_II,
     ABIL_TRAN_BAT,
     ABIL_HARM_PROTECTION,                   //  240

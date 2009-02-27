@@ -300,7 +300,6 @@ static const ability_def Ability_List[] =
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
     { ABIL_BREATHE_HELLFIRE, "Breathe Hellfire", 0, 8, 200, 0, ABFLAG_BREATH },
 
-    { ABIL_ROTTING, "Rotting", 4, 4, 0, 2, ABFLAG_NONE },
     { ABIL_TORMENT_II, "Call Torment", 9, 0, 0, 3, ABFLAG_PAIN },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
@@ -757,11 +756,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_CHARM_SNAKE:
         invoc = true;
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_ROTTING:
-        invoc = true;
-        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
 
     case ABIL_TORMENT_II:
@@ -1891,11 +1885,6 @@ static bool _do_ability(const ability_def& abil)
 
         you.duration[DUR_BREATH_WEAPON] +=
                         3 + random2(5) + random2(30 - you.experience_level);
-        break;
-
-    case ABIL_ROTTING:
-        cast_rotting(you.experience_level * 2 + you.skills[SK_INVOCATIONS] * 3);
-        exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
     case ABIL_TORMENT_II:
