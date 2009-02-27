@@ -1281,8 +1281,6 @@ void fixup_mutations()
 
 bool mutation_is_fully_active(mutation_type mut)
 {
-    const mutation_def& mdef = get_mutation_def(mut);
-
     // For all except the semi-undead, mutations always apply.
     if (you.is_undead != US_SEMI_UNDEAD)
         return (true);
@@ -1291,12 +1289,12 @@ bool mutation_is_fully_active(mutation_type mut)
     if (you.demon_pow[mut])
         return (true);
 
-    // ... as are physical mutations
-    if (mdef.physical)
+    // ... as are all mutations for semi-undead who are fully alive
+    if (you.hunger_state == HS_ENGORGED)
         return (true);
 
-    // ... as are all mutations for semi-undead who are fully alive.
-    if (you.hunger_state == HS_ENGORGED)
+    // ... as are physical mutations.
+    if (get_mutation_def(mut).physical)
         return (true);
 
     return (false);
@@ -2698,12 +2696,16 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         (you.species == SP_TROLL || you.species == SP_GHOUL))
     {
         innate = true;
+        if (you.species == SP_TROLL)
+            result = troll_claw_descrip[level];
     }
 
     if ((mut == MUT_FAST || mut == MUT_BREATHE_POISON)
         && you.species == SP_NAGA)
     {
         innate = true;
+        if (mut == MUT_FAST)
+            result = naga_speed_descrip[level];
     }
 
     const mutation_def& mdef = get_mutation_def(mut);
@@ -2716,7 +2718,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         ostr << mdef.have[0] << level << ").";
         result = ostr.str();
     }
-    else
+    else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
     if (fully_inactive)
