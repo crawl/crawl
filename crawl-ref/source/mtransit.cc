@@ -213,10 +213,11 @@ void place_transiting_items()
             pos.y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
         }
 
-        const coord_def where_to_go
-            = dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN, pos, true);
+        const coord_def where_to_go =
+            dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
+                                  pos, true);
 
-        // List of items we couldn't place
+        // List of items we couldn't place.
         if (!copy_item_to_grid(*item, where_to_go))
             keep.push_back(*item);
     }
