@@ -4871,7 +4871,8 @@ bool monsters::check_set_valid_home(const coord_def &place,
     if (place == you.pos())
         return (false);
 
-    if (mgrd(place) != NON_MONSTER || grd(place) < DNGN_FLOOR)
+    // Don't drop on anything but vanilla floor right now.
+    if (mgrd(place) != NON_MONSTER || grd(place) != DNGN_FLOOR)
         return (false);
 
     if (one_chance_in(++nvalid))
