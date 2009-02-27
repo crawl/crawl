@@ -56,6 +56,7 @@ public:
 
 // Circular buffer for keeping past messages.
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
+message_item prev_message;
 int Next_Message = 0;                                 // end of messages
 
 int Message_Line = 0;                // line of next (previous?) message
@@ -65,7 +66,7 @@ static FILE* _msg_dump_file = NULL;
 
 static bool suppress_messages = false;
 static void base_mpr(const char *inf, msg_channel_type channel, int param,
-                     unsigned char colour);
+                     unsigned char colour, bool check_previous_msg = true);
 static unsigned char prepare_message(const std::string& imsg,
                                      msg_channel_type channel,
                                      int param);
@@ -660,11 +661,11 @@ static void mpr_store_messages(const std::string& message,
         if (prev_message_num < 0)
             prev_message_num = NUM_STORED_MESSAGES - 1;
 
-        message_item &prev_message = Store_Message[prev_message_num];
+        message_item &prev_msg = Store_Message[prev_message_num];
 
-        if (prev_message.repeats > 0 && prev_message.channel == channel
-            && prev_message.param == param && prev_message.text == message
-            && prev_message.colour == colour)
+        if (prev_msg.repeats > 0 && prev_msg.channel == channel
+            && prev_msg.param == param && prev_msg.text == message
+            && prev_msg.colour == colour)
         {
             prev_message.repeats++;
             was_repeat = true;
@@ -750,13 +751,64 @@ static void handle_more(int colour)
     }
 }
 
-static void base_mpr(const char *inf, msg_channel_type channel, int param,
-                     unsigned char colour)
+// Output the previous message.
+// Needs to be called whenever the player gets a turn or needs to do
+// something, e.g. answer a prompt.
+void flush_prev_message()
 {
-    const std::string imsg = inf;
+    if (prev_message.text.empty())
+        return;
 
+    if (prev_message.repeats > 1)
+    {
+        snprintf(info, INFO_SIZE, "%s (x%d)",
+                 prev_message.text.c_str(), prev_message.repeats);
+        prev_message.text = info;
+    }
+    base_mpr(prev_message.text.c_str(), prev_message.channel,
+             prev_message.param, prev_message.colour, false);
+
+    prev_message = message_item();
+}
+
+static void base_mpr(const char *inf, msg_channel_type channel, int param,
+                     unsigned char colour, bool check_previous_msg)
+{
     if (colour == MSGCOL_MUTED)
         return;
+
+    const std::string imsg = inf;
+
+    if (check_previous_msg)
+    {
+        if (!prev_message.text.empty())
+        {
+            // If a message is identical to the previous one, increase the
+            // counter.
+            if (Options.msg_condense_repeats && prev_message.channel == channel
+                && prev_message.param == param && prev_message.text == imsg
+                && prev_message.colour == colour)
+            {
+                prev_message.repeats++;
+                return;
+            }
+            flush_prev_message();
+        }
+
+        // Always output prompts right away.
+        if (channel == MSGCH_PROMPT)
+            prev_message = message_item();
+        else
+        {
+            // Store other messages until later.
+            prev_message.text    = imsg;
+            prev_message.channel = channel;
+            prev_message.param   = param;
+            prev_message.colour  = colour;
+            prev_message.repeats = 1;
+            return;
+        }
+    }
 
     handle_more(colour);
 

@@ -126,7 +126,6 @@ void get_input_line( char *const buff, int len )
         std::string &line = crawl_state.input_line_strs[curr];
 
         strcpy(buff, line.c_str());
-
         return;
     }
 

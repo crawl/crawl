@@ -5085,6 +5085,8 @@ static void _debug_pane_bounds()
 //---------------------------------------------------------------
 void viewwindow(bool draw_it, bool do_updates)
 {
+    flush_prev_message();
+
 #ifdef USE_TILE
     std::vector<unsigned int> tileb(
         crawl_view.viewsz.y * crawl_view.viewsz.x * 2);

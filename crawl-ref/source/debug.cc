@@ -1592,13 +1592,16 @@ bool get_item_by_name(item_def *item, char* specs,
         {
             const char* prompt;
             if (item->sub_type == POT_BLOOD)
+            {
                 prompt = "# turns away from coagulation? "
                          "[ENTER for fully fresh] ";
+            }
             else
+            {
                 prompt = "# turns away from rotting? "
                          "[ENTER for fully fresh] ";
-            int age =
-                _debug_prompt_for_int(prompt, false);
+            }
+            int age = _debug_prompt_for_int(prompt, false);
 
             if (age <= 0)
                 age = -1;
@@ -1766,7 +1769,7 @@ static void _tweak_randart(item_def &item)
     {
     case RAP_VAL_BOOL:
         mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[choice],
-             props[choice] ? "off" : "on");
+             props[choice] ? "off" : "on", 1);
         randart_set_property(item, static_cast<randart_prop_type>(choice),
                              !props[choice]);
         break;
@@ -1820,11 +1823,15 @@ void wizard_tweak_object(void)
             mpr( you.inv[item].name(DESC_INVENTORY_EQUIP).c_str() );
 
             if (is_art)
+            {
                 mpr( "a - plus  b - plus2  c - art props  d - quantity  "
                      "e - flags  ESC - exit", MSGCH_PROMPT );
+            }
             else
+            {
                 mpr( "a - plus  b - plus2  c - special  d - quantity  "
                      "e - flags  ESC - exit", MSGCH_PROMPT );
+            }
 
             mpr( "Which field? ", MSGCH_PROMPT );
 
@@ -1908,7 +1915,8 @@ static bool _make_book_randart(item_def &book)
     {
         mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
         type = tolower(getch());
-    } while (type != 't' && type != 'l');
+    }
+    while (type != 't' && type != 'l');
 
     if (type == 'l')
         return make_book_level_randart(book);

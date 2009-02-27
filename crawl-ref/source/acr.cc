@@ -880,6 +880,7 @@ static void _input()
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
+    flush_prev_message();
 
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
@@ -909,7 +910,7 @@ static void _input()
         else if (player_feels_safe && you.level_type != LEVEL_ABYSS)
         {
             // We don't want those "Whew, it's safe to rest now" messages
-            // when you were just cast into the Abyss. Right?
+            // if you were just cast into the Abyss. Right?
 
             if (2 * you.hp < you.hp_max
                 || 2 * you.magic_points < you.max_magic_points)
@@ -946,9 +947,10 @@ static void _input()
     if (you.cannot_act())
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)
+        {
             crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
                                           "repetition.");
-
+        }
         world_reacts();
         return;
     }
@@ -990,6 +992,8 @@ static void _input()
     crawl_state.input_line_curr = 0;
 
     {
+        flush_prev_message();
+
         // Enable the cursor to read input. The cursor stays on while
         // the command is being processed, so subsidiary prompts
         // shouldn't need to turn it on explicitly.

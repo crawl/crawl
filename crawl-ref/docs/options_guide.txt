@@ -1398,10 +1398,12 @@ force_more_message = <list of regexes>
         The syntax is identical to that of travel_stop_message (4-g).
 
 msg_condense_repeats = true
-        If the same message is repeated multiple times, then the Show
-        Previous Message command (Ctrl-P) will condense them into one
-        line indicating how many times it was repeated.  For example:
-            You hear a distant "Zot!" (x3)
+        If the same message is repeated multiple times during the same
+        turn, then it will be output in a condensed format indicating
+        how many times it was repeated.  If the same output (including the
+        counter) is repeated over several turns, the Show Previous Message
+        command (Ctrl-P) will likewise condense them into one. For example:
+            The killer bee misses you. (x5)
 
 4-k     Missiles.
 -----------------
