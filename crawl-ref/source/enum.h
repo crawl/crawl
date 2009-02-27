@@ -104,11 +104,10 @@ enum ability_type
     ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
 
     ABIL_CHARM_SNAKE,                       //  237
-    ABIL_TRAN_SERPENT_OF_HELL,
     ABIL_ROTTING,
     ABIL_TORMENT_II,
     ABIL_TRAN_BAT,
-    ABIL_HARM_PROTECTION,
+    ABIL_HARM_PROTECTION,                   //  240
     ABIL_HARM_PROTECTION_II,
     ABIL_RENOUNCE_RELIGION = 250            //  250
 };

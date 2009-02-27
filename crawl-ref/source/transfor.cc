@@ -75,8 +75,6 @@ bool transform_allows_wearing_item(const item_def& item,
 
         // Some can't wear anything.
         case TRAN_DRAGON:
-        case TRAN_SERPENT_OF_HELL:
-        case TRAN_AIR:          // How did you carry it?
         case TRAN_BAT:
             rc = false;
             break;
@@ -280,7 +278,6 @@ static bool _tran_may_meld_cursed(int transformation)
             return (true);
         // intentional fall-through
     case TRAN_SPIDER:
-    case TRAN_AIR:
         return (false);
     default:
         return (true);
@@ -436,10 +433,7 @@ size_type player::transform_size(int psize) const
     case TRAN_ICE_BEAST:
         return SIZE_LARGE;
     case TRAN_DRAGON:
-    case TRAN_SERPENT_OF_HELL:
         return SIZE_HUGE;
-    case TRAN_AIR:
-        return SIZE_MEDIUM;
     default:
         return SIZE_CHARACTER;
     }
@@ -459,9 +453,7 @@ static void _transformation_expiration_warning()
 bool transform(int pow, transformation_type which_trans, bool quiet)
 {
     if (you.species == SP_MERFOLK && player_is_swimming()
-        && which_trans != TRAN_DRAGON
-        && which_trans != TRAN_AIR
-        && which_trans != TRAN_BAT)
+        && which_trans != TRAN_DRAGON && which_trans != TRAN_BAT)
     {
         // This might be overkill, but it's okay because obviously
         // whatever magical ability that lets them walk on land is
@@ -594,25 +586,6 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         msg       = "Your body is suffused with negative energy!";
         break;
 
-    case TRAN_SERPENT_OF_HELL:
-        tran_name = "Serpent of Hell";
-        str       = 13;
-        xhp       = 17;
-        symbol    = 'S';
-        colour    = RED;
-        dur       = std::min(20 + random2(pow) + random2(pow), 120);
-        msg       = "You transform into a huge demonic serpent!";
-        break;
-
-    case TRAN_AIR:
-        tran_name = "air";
-        dex       = 8;
-        symbol    = '#';
-        colour    = DARKGREY;
-        dur       = std::min(35 + random2(pow) + random2(pow), 150);
-        msg       = "You feel diffuse...";
-        break;
-
     case TRAN_BAT:
         tran_name = "bat";
         str       = -5;
@@ -718,19 +691,6 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         set_redraw_status(REDRAW_HUNGER);
         break;
 
-    case TRAN_AIR:
-        _drop_everything();
-
-        if (you.attribute[ATTR_HELD])
-        {
-            mpr("You drift through the net!");
-            you.attribute[ATTR_HELD] = 0;
-            int net = get_trapping_net(you.pos());
-            if (net != NON_ITEM)
-                remove_item_stationary(mitm[net]);
-        }
-        break;
-
     default:
         break;
     }
@@ -743,8 +703,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
 bool transform_can_butcher_barehanded(transformation_type tt)
 {
-    return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON
-            || tt == TRAN_SERPENT_OF_HELL);
+    return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON);
 }
 
 void untransform(void)
@@ -834,19 +793,6 @@ void untransform(void)
         modify_stat(STAT_STRENGTH, -3, true,
                     "losing the lich transformation" );
         you.is_undead = US_ALIVE;
-        break;
-
-    case TRAN_AIR:
-        mpr( "Your body solidifies.", MSGCH_DURATION );
-        modify_stat(STAT_DEXTERITY, -8, true,
-                    "losing the air transformation");
-        break;
-
-    case TRAN_SERPENT_OF_HELL:
-        mpr( "Your transformation has ended.", MSGCH_DURATION );
-        modify_stat(STAT_STRENGTH, -13, true,
-                    "losing the Serpent of Hell transformation");
-        hp_downscale = 17;
         break;
 
     default:

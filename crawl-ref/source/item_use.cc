@@ -1487,8 +1487,6 @@ static bool _fire_warn_if_impossible()
         || trans == TRAN_BLADE_HANDS
         || trans == TRAN_ICE_BEAST
         || trans == TRAN_DRAGON
-        || trans == TRAN_SERPENT_OF_HELL
-        || trans == TRAN_AIR
         || trans == TRAN_BAT)
     {
         canned_msg(MSG_PRESENT_FORM);

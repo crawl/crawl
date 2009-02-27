@@ -298,7 +298,6 @@ static const ability_def Ability_List[] =
 
     // These six are unused "evil" god abilities:
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
-    { ABIL_TRAN_SERPENT_OF_HELL, "Turn into Demonic Serpent", 16, 0, 600, 8, ABFLAG_NONE },
     { ABIL_BREATHE_HELLFIRE, "Breathe Hellfire", 0, 8, 200, 0, ABFLAG_BREATH },
 
     { ABIL_ROTTING, "Rotting", 4, 4, 0, 2, ABFLAG_NONE },
@@ -758,11 +757,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_CHARM_SNAKE:
         invoc = true;
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_TRAN_SERPENT_OF_HELL:
-        invoc = true;
-        failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
     case ABIL_ROTTING:
@@ -1886,13 +1880,6 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
-    case ABIL_TRAN_SERPENT_OF_HELL:
-        transform(10 + (you.experience_level * 2) +
-                  (you.skills[SK_INVOCATIONS] * 3), TRAN_SERPENT_OF_HELL);
-
-        exercise(SK_INVOCATIONS, 6 + random2(9));
-        break;
-
     case ABIL_BREATHE_HELLFIRE:
         if (you.duration[DUR_BREATH_WEAPON])
         {
@@ -2247,10 +2234,8 @@ std::vector<talent> your_talents( bool check_confused )
 
     //jmf: Check for breath weapons -- they're exclusive of each other, I hope!
     //     Make better come ones first.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
-        _add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-             || player_mutation_level(MUT_BREATHE_FLAMES))
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+        || player_mutation_level(MUT_BREATHE_FLAMES))
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
     }

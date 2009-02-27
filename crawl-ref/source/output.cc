@@ -2482,12 +2482,6 @@ std::string _status_mut_abilities()
         case TRAN_LICH:
             text += "\nYou are in lich-form.";
             break;
-        case TRAN_SERPENT_OF_HELL:
-            text += "\nYou are a huge demonic serpent.";
-            break;
-        case TRAN_AIR:
-            text += "\nYou are a cloud of diffuse gas.";
-            break;
         }
         if ((you.species != SP_VAMPIRE
                 || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)

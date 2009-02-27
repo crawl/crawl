@@ -963,11 +963,8 @@ void MiscastEffect::_enchantment(int severity)
                 msg_ch  = MSGCH_SOUND;
                 return;
             }
-            else if (target->atype() == ACT_PLAYER
-                     && you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
-            {
+            else if (target->atype() == ACT_PLAYER)
                 you_msg = "Your skull vibrates slightly.";
-            }
             break;
         }
         do_msg();

@@ -24,8 +24,6 @@ enum transformation_type
     TRAN_ICE_BEAST,
     TRAN_DRAGON,                       //    5
     TRAN_LICH,
-    TRAN_SERPENT_OF_HELL,
-    TRAN_AIR,
     TRAN_BAT,
     NUM_TRANSFORMATIONS                // must remain last member {dlb}
 };

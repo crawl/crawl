@@ -1175,13 +1175,6 @@ std::string origin_desc(const item_def &item)
 
 bool pickup_single_item(int link, int qty)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR
-        && you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        mpr("You can't pick up anything in this form!");
-        return (false);
-    }
-
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
@@ -1216,13 +1209,6 @@ bool pickup_single_item(int link, int qty)
 void pickup()
 {
     int keyin = 'x';
-
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR
-        && you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        mpr("You can't pick up anything in this form!");
-        return;
-    }
 
     if (you.flight_mode() == FL_LEVITATE)
     {
@@ -2357,12 +2343,6 @@ bool can_autopickup()
     // pickup_thrown.
     if (!Options.autopickup_on)
         return (false);
-
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR
-        && you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        return (false);
-    }
 
     if (you.flight_mode() == FL_LEVITATE)
         return (false);

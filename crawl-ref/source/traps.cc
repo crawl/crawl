@@ -276,12 +276,6 @@ void player_caught_in_net()
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-    {
-        mpr("The net passes right through you!");
-        return;
-    }
-
     if (you.flight_mode() == FL_FLY && (!you.confused() || one_chance_in(3)))
     {
         mpr("You dart out from under the net!");

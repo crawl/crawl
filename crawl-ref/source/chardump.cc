@@ -251,12 +251,6 @@ static void _sdump_transform(dump_params &par)
         case TRAN_LICH:
             text += "You " + verb + " in lich-form.";
             break;
-        case TRAN_SERPENT_OF_HELL:
-            text += "You " + verb + " a huge, demonic serpent!";
-            break;
-        case TRAN_AIR:
-            text += "You " + verb + " a cloud of diffuse gas.";
-            break;
         }
 
         text += "\n\n";

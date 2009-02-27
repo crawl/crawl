@@ -304,8 +304,6 @@ void cast_shatter(int pow)
     case TRAN_SPIDER:
     case TRAN_LICH:
     case TRAN_DRAGON:
-    case TRAN_AIR:
-    case TRAN_SERPENT_OF_HELL:
     case TRAN_BAT:
         break;
 

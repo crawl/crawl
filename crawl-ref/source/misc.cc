@@ -2974,16 +2974,12 @@ std::string your_hand(bool plural)
     case TRAN_SPIDER:
         result = "front leg";
         break;
-    case TRAN_SERPENT_OF_HELL:
     case TRAN_DRAGON:
     case TRAN_BAT:
         result = "foreclaw";
         break;
     case TRAN_BLADE_HANDS:
         result = "scythe-like blade";
-        break;
-    case TRAN_AIR:
-        result = "misty tendril";
         break;
     }
 
@@ -3084,11 +3080,9 @@ bool is_dragonkind(const actor *act)
     }
 
     if (act->atype() == ACT_PLAYER)
-    {
-        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL);
-    }
-    // else the actor is a monster
+        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
+
+    // Else the actor is a monster.
     const monsters* mon = dynamic_cast<const monsters*>(act);
 
     if (mon->type == MONS_SERPENT_OF_HELL)

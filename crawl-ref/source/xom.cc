@@ -1373,7 +1373,7 @@ static void _xom_zero_miscast()
             messages.push_back("You trip over your bandages.");
     }
 
-    if (transform != TRAN_SPIDER && transform != TRAN_AIR)
+    if (transform != TRAN_SPIDER)
     {
         std::string str = "A monocle briefly appears over your ";
         str += coinflip() ? "right" : "left";
@@ -1506,9 +1506,6 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
     can_plural = true;
 
     const int transform = you.attribute[ATTR_TRANSFORMATION];
-
-    if (transform == TRAN_AIR)
-        return;
 
     std::vector<std::string> hand_vec;
     std::vector<bool>        plural_vec;

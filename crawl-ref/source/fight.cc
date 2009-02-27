@@ -1000,8 +1000,7 @@ bool melee_attack::player_aux_unarmed()
                 }
             }
 
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
+            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
@@ -1036,8 +1035,7 @@ bool melee_attack::player_aux_unarmed()
                 }
             }
 
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
+            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
@@ -1118,8 +1116,7 @@ bool melee_attack::player_aux_unarmed()
             if (uattack != UNAT_PUNCH)
                 continue;
 
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
+            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
@@ -1718,7 +1715,6 @@ int melee_attack::player_weapon_type_modify(int damage)
                 attack_verb = "pummel";
             break;
         case TRAN_DRAGON:
-        case TRAN_SERPENT_OF_HELL:
             if (damage < HIT_MED)
                 attack_verb = "claw";
             else if (damage < HIT_STRONG)
@@ -1729,9 +1725,6 @@ int melee_attack::player_weapon_type_modify(int damage)
                 if (defender->body_size() <= SIZE_MEDIUM && coinflip())
                     attack_verb = "trample on";
             }
-            break;
-        case TRAN_AIR:
-            attack_verb = "buffet";
             break;
         } // transformations
 
@@ -3541,15 +3534,11 @@ int melee_attack::player_to_hit(bool random_factor)
         case TRAN_STATUE:
             your_to_hit += maybe_random2(9, random_factor);
             break;
-        case TRAN_SERPENT_OF_HELL:
         case TRAN_DRAGON:
             your_to_hit += maybe_random2(10, random_factor);
             break;
         case TRAN_LICH:
             your_to_hit += maybe_random2(10, random_factor);
-            break;
-        case TRAN_AIR:
-            your_to_hit = 0;
             break;
         case TRAN_NONE:
         default:
@@ -3742,15 +3731,11 @@ int melee_attack::player_calc_base_unarmed_damage()
         case TRAN_STATUE:
             damage = 12 + you.strength;
             break;
-        case TRAN_SERPENT_OF_HELL:
         case TRAN_DRAGON:
             damage = 20 + you.strength;
             break;
         case TRAN_LICH:
             damage = 5;
-            break;
-        case TRAN_AIR:
-            damage = 0;
             break;
         }
     }

@@ -474,15 +474,11 @@ bool is_player_same_species(const int mon, bool transform)
     {
         switch (you.attribute[ATTR_TRANSFORMATION])
         {
-        case TRAN_AIR:
-            return (false);
         // Unique monsters.
         case TRAN_BAT:
             return (mon == MONS_GIANT_BAT);
         case TRAN_ICE_BEAST:
             return (mon == MONS_ICE_BEAST);
-        case TRAN_SERPENT_OF_HELL:
-            return (mon == MONS_SERPENT_OF_HELL);
         // Compare with monster *species*.
         case TRAN_LICH:
             return (mons_species(mon) == MONS_LICH);
@@ -689,10 +685,6 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     const int transform = you.attribute[ATTR_TRANSFORMATION];
 
-    // Clouds cannot wear anything.
-    if (transform == TRAN_AIR)
-        return (false);
-
     // Everybody else can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
         return (true);
@@ -725,11 +717,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         return (true);
 
     // These cannot use anything but jewellery.
-    if (transform == TRAN_SPIDER || transform == TRAN_DRAGON
-        || transform == TRAN_SERPENT_OF_HELL)
-    {
+    if (transform == TRAN_SPIDER || transform == TRAN_DRAGON)
         return (false);
-    }
 
     if (transform == TRAN_BLADE_HANDS)
     {
@@ -1053,10 +1042,6 @@ int player_regen()
     // Fast heal mutation.
     rr += player_mutation_level(MUT_REGENERATION) * 20;
 
-    // Dematerialised people heal slowly.
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-        rr /= 2;
-
     // Before applying other effects, make sure that there's something
     // to heal.
     if (rr < 1)
@@ -1097,11 +1082,6 @@ int player_hunger_rate(void)
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         return 1;
-
-    // jmf: Hunger isn't fair while you can't eat.
-    // Actually, it is since you can detransform any time you like -- bwr
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-        return 0;
 
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
@@ -1356,12 +1336,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         case TRAN_DRAGON:
             rf += 2;
             break;
-        case TRAN_SERPENT_OF_HELL:
-            rf += 2;
-            break;
-        case TRAN_AIR:
-            rf -= 2;
-            break;
         }
     }
 
@@ -1410,9 +1384,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             break;
         case TRAN_LICH:
             rc++;
-            break;
-        case TRAN_AIR:
-            rc -= 2;
             break;
         }
 
@@ -1516,9 +1487,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
             re += 1;
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-            re += 2;  // multiple levels currently meaningless
-
         if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
             re = 3;
         else if (re > 1)
@@ -1559,8 +1527,6 @@ bool player_res_asphyx()
     {
     case TRAN_LICH:
     case TRAN_STATUE:
-    case TRAN_SERPENT_OF_HELL:
-    case TRAN_AIR:
         return (true);
     }
 
@@ -1635,8 +1601,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
         case TRAN_DRAGON:
-        case TRAN_SERPENT_OF_HELL:
-        case TRAN_AIR:
             rp++;
             break;
         }
@@ -1734,9 +1698,6 @@ int player_spec_earth()
     // Staves
     se += player_equip( EQ_STAFF, STAFF_EARTH );
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-        se--;
-
     return se;
 }
 
@@ -1747,9 +1708,6 @@ int player_spec_air()
     // Staves
     sa += player_equip( EQ_STAFF, STAFF_AIR );
 
-    //jmf: this was too good
-    //if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-    //  sa++;
     return sa;
 }
 
@@ -1863,9 +1821,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         {
         case TRAN_STATUE:
             pl++;
-            break;
-        case TRAN_SERPENT_OF_HELL:
-            pl += 2;
             break;
         case TRAN_LICH:
             pl += 3;
@@ -2012,11 +1967,6 @@ int player_speed(void)
     {
     case TRAN_STATUE:
         ps *= 15;
-        ps /= 10;
-        break;
-
-    case TRAN_SERPENT_OF_HELL:
-        ps *= 12;
         ps /= 10;
         break;
 
@@ -2251,14 +2201,6 @@ int player_AC(void)
                 AC += (100 + 100 * you.skills[SK_EARTH_MAGIC] / 4); // max +7
             break;
 
-        case TRAN_SERPENT_OF_HELL:
-            AC += (1000 + 100 * you.skills[SK_FIRE_MAGIC] / 3);     // max 19
-            break;
-
-        case TRAN_AIR:    // air - scales & species ought to be irrelevant
-            AC = (you.skills[SK_AIR_MAGIC] * 300) / 2;            // max 40
-            break;
-
         default:
             break;
         }
@@ -2436,10 +2378,6 @@ int player_evasion()
         ev -= 5;                // stiff
         break;
 
-    case TRAN_AIR:
-        ev += 20;               // vapourous
-        break;
-
     default:
         break;
     }
@@ -2543,7 +2481,6 @@ int old_player_evasion(void)
         break;
 
     case TRAN_STATUE:
-    case TRAN_SERPENT_OF_HELL:
         ev -= 5;
         break;
 
@@ -2553,10 +2490,6 @@ int old_player_evasion(void)
 
     case TRAN_BAT:
         ev += 20 + (you.experience_level - 10);
-        break;
-
-    case TRAN_AIR:
-        ev += 20;
         break;
 
     default:
@@ -3984,12 +3917,6 @@ void display_char_status()
             break;
         case TRAN_LICH:
             text += "You are in lich-form.";
-            break;
-        case TRAN_SERPENT_OF_HELL:
-            text += "You are a huge demonic serpent.";
-            break;
-        case TRAN_AIR:
-            text += "You are a cloud of diffuse gas.";
             break;
         }
         mpr(text.c_str());
@@ -5655,7 +5582,6 @@ static int _strength_modifier()
     case TRAN_STATUE:          result +=  2; break;
     case TRAN_DRAGON:          result += 10; break;
     case TRAN_LICH:            result +=  3; break;
-    case TRAN_SERPENT_OF_HELL: result += 13; break;
     case TRAN_BAT:             result -=  5; break;
     default:                                 break;
     }
@@ -5725,7 +5651,6 @@ static int _dex_modifier()
     {
     case TRAN_SPIDER: result +=  5; break;
     case TRAN_STATUE: result -=  2; break;
-    case TRAN_AIR:    result +=  8; break;
     case TRAN_BAT:    result +=  5; break;
     default:                        break;
     }
@@ -6157,9 +6082,6 @@ size_type player::body_size(int psize, bool base) const
 
 int player::body_weight() const
 {
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-        return 0;
-
     int weight = 0;
     switch (body_size(PSIZE_BODY))
     {
@@ -6231,14 +6153,11 @@ std::string player::shout_verb() const
     switch (transform)
     {
     case TRAN_DRAGON:
-    case TRAN_SERPENT_OF_HELL:
         return "roar";
     case TRAN_SPIDER:
         return "hiss";
     case TRAN_BAT:
         return "squeak";
-    case TRAN_AIR:
-        return "__NONE";
     default: // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
         if ( level <= 1)
@@ -6430,12 +6349,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     std::string str;
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-    {
-        str         = "lowest portion";
-        *can_plural = false;
-    }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
         str = "back leg";
     else if (!transform_changed_physiology())
     {
@@ -7096,11 +7010,8 @@ int player::has_claws(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring claws with them
-        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-            || attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
-        {
+        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
             return 3;
-        }
 
         // transformations other than these will override claws
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
@@ -7215,9 +7126,9 @@ bool player::can_bleed() const
     }
 
     const int tran = you.attribute[ATTR_TRANSFORMATION];
+    // The corresponding monsters don't bleed either.
     if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
-        || tran == TRAN_AIR || tran == TRAN_LICH
-        || tran == TRAN_SPIDER) // Monster spiders don't bleed either.
+        || tran == TRAN_LICH || tran == TRAN_SPIDER)
     {
         return (false);
     }
