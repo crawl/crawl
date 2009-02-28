@@ -1440,61 +1440,64 @@ int monster_die(monsters *monster, killer_type killer,
                     attacker_holy = anon ? MH_NATURAL
                                          : mons_holiness(&menv[killer_index]);
 
-                if (targ_holy == MH_NATURAL && attacker_holy == MH_UNDEAD)
+                if (you.religion == GOD_SHINING_ONE
+                    || you.religion == GOD_YREDELEMNUL
+                    || you.religion == GOD_KIKUBAAQUDGHA
+                    || you.religion == GOD_VEHUMET
+                    || you.religion == GOD_MAKHLEB
+                    || you.religion == GOD_LUGONU
+                    || !anon && mons_is_god_gift(&menv[killer_index]))
                 {
-                    // Yes, this is a hack, but it makes sure that confused
-                    // monsters doing the kill are not referred to as "slaves",
-                    // and I think it's okay that Yredelemnul ignores kills
-                    // done by confused monsters as opposed to enslaved or
-                    // friendly ones. (jpeg)
-                    if (mons_friendly(&menv[killer_index]))
+                    if (targ_holy == MH_NATURAL && attacker_holy == MH_UNDEAD)
                     {
-                        notice |=
-                            did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
-                                            monster->hit_dice);
+                        // Yes, this is a hack, but it makes sure that
+                        // confused monsters doing kills are not
+                        // referred to as "slaves", and I think it's
+                        // okay that Yredelemnul ignores kills done by
+                        // confused monsters as opposed to enslaved or
+                        // friendly ones. (jpeg)
+                        if (mons_friendly(&menv[killer_index]))
+                        {
+                            notice |= did_god_conduct(
+                                          DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
+                                          monster->hit_dice);
+                        }
+                        else
+                        {
+                            notice |= did_god_conduct(
+                                          DID_LIVING_KILLED_BY_SERVANT,
+                                          monster->hit_dice);
+                        }
                     }
-                    else
-                    {
-                        notice |=
-                            did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
-                                            monster->hit_dice);
-                    }
-                }
-                else if (you.religion == GOD_SHINING_ONE
-                         || you.religion == GOD_VEHUMET
-                         || you.religion == GOD_MAKHLEB
-                         || you.religion == GOD_LUGONU
-                         || !anon && mons_is_god_gift(&menv[killer_index]))
-                {
                     // Yes, we are splitting undead pets from the others
-                    // as a way to focus Necromancy vs Summoning (ignoring
-                    // Summon Wraith here)... at least we're being nice and
-                    // putting the natural creature Summons together with
-                    // the Demon ones.  Note that Vehumet gets a free
-                    // pass here since those followers are assumed to
-                    // come from Summoning spells...  the others are
-                    // from invocations (Zin, TSO, Makh, Kiku). -- bwr
-                    if (targ_holy == MH_NATURAL)
+                    // as a way to focus Necromancy vs. Summoning
+                    // (ignoring Summon Wraith here)... at least we're
+                    // being nice and putting the natural creature
+                    // summons together with the demonic ones.  Note
+                    // that Vehumet gets a free pass here since those
+                    // followers are assumed to come from summoning
+                    // spells...  the others are from invocations (TSO,
+                    // Makhleb, Kiku). - bwr
+                    else if (targ_holy == MH_NATURAL)
                     {
                         notice |= did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
                                                   monster->hit_dice);
 
                         if (mons_is_evil(monster))
                         {
-                            notice |=
-                                did_god_conduct(
-                                        DID_NATURAL_EVIL_KILLED_BY_SERVANT,
-                                        monster->hit_dice);
+                            notice |= did_god_conduct(
+                                          DID_NATURAL_EVIL_KILLED_BY_SERVANT,
+                                          monster->hit_dice);
                         }
-                    }
-                    else if (targ_holy == MH_DEMONIC)
-                    {
-                        notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
-                                                  monster->hit_dice);
                     }
                     else if (targ_holy == MH_UNDEAD)
                     {
                         notice |= did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
+                                                  monster->hit_dice);
+                    }
+                    else if (targ_holy == MH_DEMONIC)
+                    {
+                        notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
                                                   monster->hit_dice);
                     }
                 }
@@ -1504,22 +1507,23 @@ int monster_die(monsters *monster, killer_type killer,
                 {
                     if (attacker_holy == MH_UNDEAD)
                     {
-                        // Yes, this is a hack, but it makes sure that confused
-                        // monsters doing the kill are not referred to as
-                        // "slave", and I think it's okay that Yredelemnul
-                        // ignores kills done by confused monsters as opposed
-                        // to enslaved or friendly ones. (jpeg)
+                        // Yes, this is a hack, but it makes sure that
+                        // confused monsters doing kills are not
+                        // referred to as "slaves", and I think it's
+                        // okay that Yredelemnul ignores kills done by
+                        // confused monsters as opposed to enslaved or
+                        // friendly ones. (jpeg)
                         if (mons_friendly(&menv[killer_index]))
                         {
-                            notice |=
-                                did_god_conduct(DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
-                                                monster->hit_dice);
+                            notice |= did_god_conduct(
+                                          DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
+                                          monster->hit_dice);
                         }
                         else
                         {
-                            notice |=
-                                did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
-                                                monster->hit_dice);
+                            notice |= did_god_conduct(
+                                          DID_HOLY_KILLED_BY_SERVANT,
+                                          monster->hit_dice);
                         }
                     }
                     else

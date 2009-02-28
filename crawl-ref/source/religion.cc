@@ -2795,6 +2795,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
             case GOD_MAKHLEB:
+            case GOD_BEOGH:
             case GOD_LUGONU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
@@ -2851,6 +2852,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_KIKUBAAQUDGHA:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
+            case GOD_BEOGH:
             case GOD_LUGONU:
                 simple_god_message(" accepts your slave's kill.");
                 retval = true;
