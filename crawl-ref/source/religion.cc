@@ -5330,8 +5330,7 @@ static bool _beogh_followers_on_level_abandon_you()
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (is_orcish_follower(monster)
-            || mons_is_god_gift(monster, GOD_BEOGH))
+        if (mons_is_god_gift(monster, GOD_BEOGH))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Orc abandoning: %s on level %d, branch %d",
@@ -5454,8 +5453,7 @@ static bool _beogh_followers_abandon_you()
             if (monster == NULL)
                 continue;
 
-            if (is_orcish_follower(monster)
-                || mons_is_god_gift(monster, GOD_BEOGH))
+            if (mons_is_god_gift(monster, GOD_BEOGH))
             {
                 num_followers++;
 
