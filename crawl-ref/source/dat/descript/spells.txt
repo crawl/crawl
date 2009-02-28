@@ -7,10 +7,6 @@ Agony
 
 This spell cuts the resilience of a target creature in half, although it will never cause death directly. 
 %%%%
-Air Walk
-
-This spell transforms the caster's body into an insubstantial cloud. The caster becomes immaterial and nearly immune to physical harm, but is vulnerable to magical fire and ice. While insubstantial the caster is, of course, unable to interact with physical objects (but may still cast spells). 
-%%%%
 Airstrike
 
 This spell causes the air around a creature to twist itself into a whirling vortex of meteorological fury. This spell is especially effective against flying enemies.
@@ -35,17 +31,9 @@ Apportation
 
 This spell allows the caster to pull the top item or group of similar items from a distant pile to the floor near the caster. The mass of the target item(s) will make the task more difficult, with some items too massive to ever be moved by this spell. Using this spell on a group of items can be risky; insufficient power will cause some of the items to be lost in the infinite void.
 %%%%
-Arc
-
-This spell zaps at random a nearby creature with a powerful electrical current.
-%%%%
 Banishment
 
 This spell banishes one creature to the Abyss. This magic cannot be used to relocate the caster.
-%%%%
-Bend
-
-This spell applies a localized spatial distortion to the detriment of some nearby creature. 
 %%%%
 Berserker Rage
 
@@ -90,10 +78,6 @@ This spell uses the bones of a skeleton to dispense a lethal spray of slicing fr
 Borgnjor's Revivification
 
 This spell instantly heals any and all wounds suffered by the caster, but also permanently lessens his or her resilience to injury - to a degree dependent on (and inversely related to) magical skill. 
-%%%%
-Burn
-
-This spell burns a creature. 
 %%%%
 Call Canine Familiar
 
@@ -155,14 +139,6 @@ Corpse Rot
 
 This spell rapidly accelerates the decomposition of any corpses lying around the caster, emitting in the process a foul miasmic vapour, which eats away at the life force of any creature it envelops. 
 %%%%
-Create Noise
-
-This spell causes a loud noise to be heard. 
-%%%%
-Crush
-
-This spell crushes a nearby creature with waves of gravitational force. 
-%%%%
 Cure Poison
 
 This spell removes poison from the caster's system. 
@@ -206,10 +182,6 @@ Detect Items
 
 This spell detects any items lying about the caster's general vicinity. 
 %%%%
-Detect Magic
-
-This spell probes one or more items lying nearby for enchantment. An experienced diviner may glean additional information. 
-%%%%
 Detect Secret Doors
 
 This spell is beloved by lazy dungeoneers everywhere, for it can greatly reduce time-consuming searches. 
@@ -250,10 +222,6 @@ Ensorcelled Hibernation
 
 This spell tries to lower its target's metabolic rate, inducing hypothermic hibernation. It may have side effects on cold-blooded creatures. 
 %%%%
-Eringya's Surprising Bouquet
-
-This spell transmutes any wooden items in the caster's grasp into a bouquet of beautiful flowers. 
-%%%%
 Evaporate
 
 This spell heats a potion causing it to explode into a large cloud when thrown. The potion must be thrown immediately, as part of the spell, for this to work. 
@@ -265,10 +233,6 @@ This spell temporarily infuses the weapon held by the caster with the essence of
 Extension
 
 This spell extends the duration of most enchantments affecting the caster.
-%%%%
-Far Strike
-
-This spell allows the caster to transfer the force of a weapon strike to any target the caster can see. This spell will only deliver the impact of the blow; magical side-effects and enchantments cannot be transferred in this way. The force transferred by this spell has little to do with one's skill with weapons, and more to do with personal strength, translocation skill and magic ability. 
 %%%%
 Fire Brand
 
@@ -322,17 +286,9 @@ Haste
 
 This spell speeds the actions of a creature. 
 %%%%
-Heal Other
-
-This spell heals another creature from a distance. 
-%%%%
 Hellfire
 
 This spell should only be available from Dispater's staff. So how are you reading this?
-%%%%
-Holy Word
-
-This spell involves the intonation of a word of power which repels and can destroy unholy creatures. 
 %%%%
 Ice Bolt
 
@@ -422,10 +378,6 @@ Olgreb's Toxic Radiance
 
 This spell bathes the caster's surroundings in poisonous green light. 
 %%%%
-Orb of Electrocution
-
-This spell hurls a crackling orb of electrical energy which explodes with immense force on impact. 
-%%%%
 Ozocubu's Armour
 
 This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment are protected from the cold, but the spell will not function for casters already wearing heavy armour. The effects of this spell are boosted if the caster is in ice form. 
@@ -482,10 +434,6 @@ Projected Noise
 
 This spell produces a noise emanating from a place of the caster's own choosing. 
 %%%%
-Purification
-
-This spell purifies the caster's body, removing poison, disease and certain malign enchantments. 
-%%%%
 Recall
 
 This spell is greatly prized by summoners and necromancers, as it allows the caster to recall any friendly creatures nearby to a position adjacent to the caster. 
@@ -502,33 +450,13 @@ Repel Missiles
 
 This spell reduces the chance of projectile attacks striking the caster. Even powerful attacks such as lightning bolts or dragon breath are affected, although smaller missiles are repelled to a much greater extent. 
 %%%%
-Repel Undead
-
-This spell calls on a divine power to repel the unholy. 
-%%%%
 Resist Poison
 
 This spell protects the caster from exposure to all poisons for a period of time. 
 %%%%
-Restore Dexterity
-
-This spell restores the dexterity of the caster. 
-%%%%
-Restore Intelligence
-
-This spell restores the intelligence of the caster. 
-%%%%
-Restore Strength
-
-This spell restores the physical strength of the caster. 
-%%%%
 Ring of Flames
 
 This spell surrounds the caster with a mobile ring of searing flame, and keeps other fire clouds away from the caster. This spell attunes the caster to the forces of fire, increasing their fire magic and giving protection from fire. However, it also makes them much more susceptible to the forces of ice. 
-%%%%
-Rotting
-
-This spell causes the flesh of all those near the caster to rot. It will affect the living and many of the corporeal undead. 
 %%%%
 Sandblast
 
@@ -666,10 +594,6 @@ Sure Blade
 
 This spell forms a mystical bond between the caster and a wielded short blade, making the blade much easier to use. 
 %%%%
-Swap
-
-This spell allows the caster to swap positions with an adjacent being. 
-%%%%
 Swiftness
 
 This spell imbues its caster with the ability to achieve great movement speeds. Flying spellcasters can move even faster.
@@ -698,10 +622,6 @@ Throw Frost
 
 This spell throws a small bolt of frost. 
 %%%%
-Tomb of Doroklohe
-
-This spell entombs the caster within four walls of rock. These walls will destroy most objects in their way, but their growth is obstructed by the presence of any creature. Beware - only the unwise cast this spell without reliable means of escape. 
-%%%%
 Tukima's Dance
 
 This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain willful artefacts. 
@@ -709,10 +629,6 @@ This spell causes a weapon held in the caster's hand to dance into the air and s
 Tukima's Vorpal Blade
 
 This spell bestows a lethal but temporary sharpness on a sword held by the caster. It will not affect weapons otherwise subject to special enchantments. 
-%%%%
-Twist
-
-This spell causes a slight spatial distortion around a monster in line of sight of the caster, causing injury. 
 %%%%
 Twisted Resurrection
 

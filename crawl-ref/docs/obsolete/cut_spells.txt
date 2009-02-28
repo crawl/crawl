@@ -405,3 +405,94 @@ Spell definitions cut from the code:
      true
 },
 
+Spell descriptions cut from the code:
+
+[Cure Poison and Abjuration are duplicates of existing spells and are omitted.]
+
+[Summon Angel, Pestilence, Thunderbolt, Flame of Cleansing, Shining Light, Summon Daeva, Orb of Fragmentation and Semi-Controlled Blink have no descriptions and are omitted.
+
+%%%%
+Create Noise
+
+This spell causes a loud noise to be heard. 
+%%%%
+Swap
+
+This spell allows the caster to swap positions with an adjacent being. 
+%%%%
+Twist
+
+This spell causes a slight spatial distortion around a monster in line of sight of the caster, causing injury. 
+%%%%
+Far Strike
+
+This spell allows the caster to transfer the force of a weapon strike to any target the caster can see. This spell will only deliver the impact of the blow; magical side-effects and enchantments cannot be transferred in this way. The force transferred by this spell has little to do with one's skill with weapons, and more to do with personal strength, translocation skill and magic ability. 
+%%%%
+Restore Strength
+
+This spell restores the physical strength of the caster. 
+%%%%
+Restore Intelligence
+
+This spell restores the intelligence of the caster. 
+%%%%
+Restore Dexterity
+
+This spell restores the dexterity of the caster. 
+%%%%
+Purification
+
+This spell purifies the caster's body, removing poison, disease and certain malign enchantments. 
+%%%%
+Repel Undead
+
+This spell calls on a divine power to repel the unholy. 
+%%%%
+Holy Word
+
+This spell involves the intonation of a word of power which repels and can destroy unholy creatures. 
+%%%%
+Heal Other
+
+This spell heals another creature from a distance. 
+%%%%
+Burn
+
+This spell burns a creature. 
+%%%%
+Crush
+
+This spell crushes a nearby creature with waves of gravitational force. 
+%%%%
+Tomb of Doroklohe
+
+This spell entombs the caster within four walls of rock. These walls will destroy most objects in their way, but their growth is obstructed by the presence of any creature. Beware - only the unwise cast this spell without reliable means of escape. 
+%%%%
+Orb of Electrocution
+
+This spell hurls a crackling orb of electrical energy which explodes with immense force on impact. 
+%%%%
+Arc
+
+This spell zaps at random a nearby creature with a powerful electrical current.
+%%%%
+Bend
+
+This spell applies a localized spatial distortion to the detriment of some nearby creature. 
+%%%%
+Eringya's Surprising Bouquet
+
+This spell transmutes any wooden items in the caster's grasp into a bouquet of beautiful flowers. 
+%%%%
+Air Walk
+
+This spell transforms the caster's body into an insubstantial cloud. The caster becomes immaterial and nearly immune to physical harm, but is vulnerable to magical fire and ice. While insubstantial the caster is, of course, unable to interact with physical objects (but may still cast spells). 
+%%%%
+Rotting
+
+This spell causes the flesh of all those near the caster to rot. It will affect the living and many of the corporeal undead. 
+%%%%
+Detect Magic
+
+This spell probes one or more items lying nearby for enchantment. An experienced diviner may glean additional information. 
+%%%%
