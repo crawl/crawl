@@ -1662,7 +1662,7 @@ bool bless_follower(monsters *follower,
     }
     ASSERT(follower);
 
-    if (chance == 0) // 5% chance of holy branding, or priesthood
+    if (chance <= 1) // 10% chance of holy branding, or priesthood
     {
         switch (god)
         {
