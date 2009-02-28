@@ -271,7 +271,8 @@ Lesser Healing
 
 Depending on your Invocations skill, heal a small amount of hitpoints. 
 
-Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids and still worse on demons and undead. Even if the pacification does not succeed, the invested food, piety and magic point are lost; but the monster will not be healed. If the attempt is successful, the monster is healed and you gain some piety. In total, this is a net piety gain if you need just one try.
+Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids and still worse on demons and undead. The chance for successful pacification depends on the healing power.
+Even if the pacification does not succeed, the invested food, piety and magic point are lost; but the monster will not be healed. If the attempt is successful, the monster is healed and you gain some piety. In total, this is a net piety gain if you need just one try.
 
 You can also heal allies and neutral monsters.
 %%%%
@@ -281,9 +282,10 @@ Purge your body of bad effects such as sickness, poisoning, slowness, confusion 
 %%%%
 Greater Healing
 
-Depending on your Invocations skill, heal a moderate amount of hitpoints.
+Depending on your Invocations skill, heal a moderate amount of hitpoints. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher piety cost.
 
-Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids and still worse on demons and undead. Even if the pacification does not succeed, the invested food, piety and magic points are lost; but the monster will not be healed. If the attempt is successful, the monster is healed and you gain some piety. In total, this is a net piety loss even if you need just one try.
+Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids and still worse on demons and undead. The chance for successful pacification depends on the healing power.
+Even if the pacification does not succeed, the invested food, piety and magic points are lost; but the monster will not be healed. If the attempt is successful, the monster is healed and you gain some piety. In total, this is a net piety loss even if you need just one try. 
 
 You can also heal allies and neutral monsters.
 %%%%
@@ -340,7 +342,7 @@ Draw five cards from your wielded deck, losing the rest of the deck. Look at the
 # Beogh
 Smiting
 
-Smite an enemy within your field of vision. This doesn't require a direct path.
+Smite an enemy within your field of vision. This doesn't require a direct path, just seeing the enemy is enough.
 %%%%
 Recall Orcish Followers
 
