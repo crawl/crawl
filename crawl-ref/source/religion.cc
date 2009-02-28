@@ -5904,6 +5904,7 @@ void excommunication(god_type new_god)
 
     case GOD_BEOGH:
         _beogh_followers_abandon_you(); // friendly orcs around turn hostile
+        _make_god_gifts_hostile(false); // so do their creations, if applicable
 
         // You might have lost water walking at a bad time...
         if (_need_water_walking())
