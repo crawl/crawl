@@ -1882,7 +1882,8 @@ void wizard_tweak_object(void)
             return;
 
         char *end;
-        int   new_value = strtol( specs, &end, 0 );
+        const bool hex = (keyin == 'e');
+        int   new_value = strtol(specs, &end, hex ? 16 : 0);
 
         if (new_value == 0 && end == specs)
             return;

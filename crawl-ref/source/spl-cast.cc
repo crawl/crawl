@@ -332,14 +332,9 @@ int spell_fail(spell_type spell)
         // Dwarven armour hinders everyone.
         switch (race_arm)
         {
-        case ISFLAG_ELVEN:
-            armour -= 20;
-            break;
-        case ISFLAG_DWARVEN:
-            armour += 10;
-            break;
-        default:
-            break;
+        case ISFLAG_ELVEN:   armour -= 20; break;
+        case ISFLAG_DWARVEN: armour += 10; break;
+        default:                           break;
         }
 
         // Armour of the same racial type reduces penalty.
