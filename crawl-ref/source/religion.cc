@@ -5283,7 +5283,7 @@ static bool _yred_enslaved_souls_on_level_disappear()
     return (success);
 }
 
-static bool _yred_undead_slaves_on_level_abandon_you()
+static bool _yred_slaves_on_level_abandon_you()
 {
     bool success = false;
 
@@ -5323,14 +5323,15 @@ static bool _yred_undead_slaves_on_level_abandon_you()
     return (success);
 }
 
-static bool _orcish_followers_on_level_abandon_you()
+static bool _beogh_followers_on_level_abandon_you()
 {
     bool success = false;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (is_orcish_follower(monster))
+        if (is_orcish_follower(monster)
+            || mons_is_god_gift(monster, GOD_BEOGH))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Orc abandoning: %s on level %d, branch %d",
@@ -5366,7 +5367,7 @@ static bool _yred_slaves_abandon_you()
 
     if (you.religion != GOD_YREDELEMNUL)
         reclaim =
-            apply_to_all_dungeons(_yred_undead_slaves_on_level_abandon_you);
+            apply_to_all_dungeons(_yred_slaves_on_level_abandon_you);
     else
     {
         for (radius_iterator ri(you.pos(), 9); ri; ++ri)
@@ -5430,8 +5431,9 @@ static bool _yred_slaves_abandon_you()
     return (false);
 }
 
-// Upon excommunication, ex-Beoghites lose all their orcish followers.
-// When under penance, Beoghites can lose all orcish followers in sight,
+// Upon excommunication, ex-Beoghites lose all their orcish followers,
+// plus all monsters created by their priestly orcish followers.  When
+// under penance, Beoghites can lose all orcish followers in sight,
 // subject to a few limitations.
 static bool _beogh_followers_abandon_you()
 {
@@ -5442,7 +5444,7 @@ static bool _beogh_followers_abandon_you()
     if (you.religion != GOD_BEOGH)
     {
         reconvert =
-            apply_to_all_dungeons(_orcish_followers_on_level_abandon_you);
+            apply_to_all_dungeons(_beogh_followers_on_level_abandon_you);
     }
     else
     {
@@ -5452,7 +5454,8 @@ static bool _beogh_followers_abandon_you()
             if (monster == NULL)
                 continue;
 
-            if (is_orcish_follower(monster))
+            if (is_orcish_follower(monster)
+                || mons_is_god_gift(monster, GOD_BEOGH))
             {
                 num_followers++;
 
@@ -5904,7 +5907,6 @@ void excommunication(god_type new_god)
 
     case GOD_BEOGH:
         _beogh_followers_abandon_you(); // friendly orcs around turn hostile
-        _make_god_gifts_hostile(false); // so do their creations, if applicable
 
         // You might have lost water walking at a bad time...
         if (_need_water_walking())
