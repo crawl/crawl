@@ -57,6 +57,8 @@ public:
 // Circular buffer for keeping past messages.
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
 message_item prev_message;
+bool did_flush_message = false;
+
 int Next_Message = 0;                                 // end of messages
 
 int Message_Line = 0;                // line of next (previous?) message
@@ -757,9 +759,10 @@ static void handle_more(int colour)
 // something, e.g. answer a prompt.
 void flush_prev_message()
 {
-    if (prev_message.text.empty())
+    if (did_flush_message || prev_message.text.empty())
         return;
 
+    did_flush_message = true;
     base_mpr(prev_message.text.c_str(), prev_message.channel,
              prev_message.param, prev_message.colour, prev_message.repeats,
              false);
@@ -802,6 +805,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
             prev_message.param   = param;
             prev_message.colour  = colour;
             prev_message.repeats = repeats;
+            did_flush_message = false;
             return;
         }
     }
@@ -845,7 +849,6 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
 
 static void mpr_formatted_output(formatted_string fs, int colour)
 {
-    flush_prev_message();
     int curcol = Options.delay_message_clear ? 2 : 1;
 
     if (need_prefix)
@@ -886,6 +889,8 @@ static void mpr_formatted_output(formatted_string fs, int colour)
 void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
                    int param)
 {
+    flush_prev_message();
+
     const std::string imsg = fs.tostring();
     const int colour = prepare_message(imsg, channel, param);
     if (colour == MSGCOL_MUTED)
@@ -914,6 +919,8 @@ void formatted_message_history(const std::string &st_nocolor,
                                msg_channel_type channel,
                                int param, int wrap_col)
 {
+    flush_prev_message();
+
     if (suppress_messages)
         return;
 

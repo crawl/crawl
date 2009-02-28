@@ -2794,8 +2794,9 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (you.religion != GOD_NO_GOD)
             listed.push_back("your religious standing (<w>^</w>)");
 
-        listed.push_back("the character overview screen (<w>%</w>).");
-        text << comma_separated_line(listed.begin(), listed.end());
+        listed.push_back("the message history (<w>Ctrl-P</w>)");
+        listed.push_back("the character overview screen (<w>%</w>)");
+        text << comma_separated_line(listed.begin(), listed.end()) << ".";
 
         text << "\nAlternatively, you can dump all information pertaining to "
                 "your character into a text file with the <w>#</w> command. "

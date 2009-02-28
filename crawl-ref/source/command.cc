@@ -2245,6 +2245,7 @@ static void _add_formatted_tutorial_help(column_composer &cols)
             1,
             "<h>Additional important commands\n"
             "<w>S</w> : Save the game and exit\n"
+            "\n"
             "<w>s</w> : search for one turn (also <w>.</w> and <w>Del</w>)\n"
             "<w>5</w> : rest full/search longer (<w>Shift-Num 5</w>)\n"
             "<w>x</w> : examine surroundings\n"
