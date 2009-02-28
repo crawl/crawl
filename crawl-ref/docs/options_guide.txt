@@ -1331,8 +1331,8 @@ menu_colour = <match>:<colour>:<regex>
 
         When looking for menu_colour matches, these prefixes are prepended to
         the actual item name, e.g. in the form of
-           identified, evil_item wand of draining (4)
-           unidentified, equipped, artefact sparkling ring (left hand)
+           identified evil_item wand of draining (4)
+           unidentified equipped artefact sparkling ring (left hand)
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.

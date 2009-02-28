@@ -2248,7 +2248,7 @@ bool is_interesting_item( const item_def& item )
         return (true);
     }
 
-    const std::string iname = menu_colour_item_prefix(item, false)
+    const std::string iname = menu_colour_item_prefix(item, false) + " "
                               + item.name(DESC_PLAIN);
     for (unsigned i = 0; i < Options.note_items.size(); ++i)
         if (Options.note_items[i].matches(iname))
@@ -2765,18 +2765,18 @@ static const std::string _item_prefix(const item_def &item, bool temp,
     return result;
 }
 
-const std::string menu_colour_item_prefix(const item_def &item, bool temp)
+std::string menu_colour_item_prefix(const item_def &item, bool temp)
 {
     return _item_prefix(item, temp, false);
 }
 
-const std::string filtering_item_prefix(const item_def &item, bool temp)
+std::string filtering_item_prefix(const item_def &item, bool temp)
 {
     return _item_prefix(item, temp, true);
 }
 
-const std::string get_menu_colour_prefix_tags(item_def &item,
-                                              description_level_type desc)
+std::string get_menu_colour_prefix_tags(const item_def &item,
+                                        description_level_type desc)
 {
     std::string cprf       = menu_colour_item_prefix(item);
     std::string colour     = "";
@@ -2798,9 +2798,9 @@ const std::string get_menu_colour_prefix_tags(item_def &item,
     return (item_name);
 }
 
-const std::string get_message_colour_tags(item_def &item,
-                                          description_level_type desc,
-                                          msg_channel_type channel)
+std::string get_message_colour_tags(const item_def &item,
+                                    description_level_type desc,
+                                    msg_channel_type channel)
 {
     std::string cprf       = menu_colour_item_prefix(item);
     std::string colour     = "";

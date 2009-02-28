@@ -2293,7 +2293,7 @@ void autoinscribe()
 static inline std::string _autopickup_item_name(const item_def &item)
 {
     return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
-           + menu_colour_item_prefix(item, false)
+           + menu_colour_item_prefix(item, false) + " "
            + item.name(DESC_PLAIN);
 }
 
