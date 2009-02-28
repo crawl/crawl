@@ -2065,9 +2065,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
         "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>z</w>ap)\n"
         "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
         "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"
-        "<lightmagenta>0</lightmagenta> : the Orb of Zot (Carry the Orb \n"
-        "    to the surface and win!)\n"
-        "<yellow>$</yellow> : gold (<w>$</w> counts gold)\n",
+        "<yellow>$</yellow> : gold (<w>$</w> counts gold)\n"
+        "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
+        "    Carry it to the surface and win!\n",
+
 
 
     cols.add_formatted(
@@ -2077,8 +2078,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>Other Gameplay Actions:\n"
-            "<w>a</w> : use special Ability\n"
-            "<w>p</w> : Pray\n"
+            "<w>a</w> : use special Ability (<w>a!</w> for help)\n"
+            "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n"
             "<w>z</w> : cast a spell\n"
             "<w>I</w> : list all spells\n"
             "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
@@ -2132,7 +2133,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w><<</w>/<w>></w> : use staircase (<w><<</w> enter shop)\n"
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
-            "<w>X</w>   : eXamine level map\n"
+            "<w>X</w>   : eXamine level map (<w>X?</w> for help)\n"
             "<w>V</w>   : list monsters and items in sight\n"
             "<w>Ctrl-O</w> : show dungeon Overview\n"
             "<w>Ctrl-A</w> : toggle auto-pickup\n"
@@ -2191,7 +2192,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "Many commands have context sensitive \n"
             "help, among them <w>X</w>, <w>x</w>, <w>f</w> (or any \n"
             "form of targeting), <w>Ctrl-G</w> or <w>G</w>, and \n"
-            "<w>Ctrl-F</w>.\n",
+            "<w>Ctrl-F</w>.\n"
+            "You can read descriptions of your \n"
+            "current spells (<w>I</w>), skills (<w>m?</w>) and \n"
+            "abilities (<w>a!</w>).",
             true, true, _cmdhelp_textfilter);
 }
 

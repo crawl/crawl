@@ -211,7 +211,7 @@ int list_spells(bool toggle_with_I)
     if (toggle_with_I)
     {
         spell_menu.set_more(
-            formatted_string("Press '!' or 'I' to toggle spell view."));
+            formatted_string("Press '!' or 'I' to toggle spell view. Press spell slot for description."));
         spell_menu.add_toggle_key('I');
     }
     else

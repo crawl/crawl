@@ -2329,21 +2329,25 @@ Character information:
     E                   Display experience info.
     ^                   Show religion screen.
     A                   Show abilities/mutations.
-    a                   Show current abilities menu.
+    a                   Lets you choose an ability. Pressing a? or a*
+                        show current abilities as a menu. Pressing a! 
+                        brings up the help on abilities.
     \                   Show item knowledge.
-    m                   Show skill screen.
+    m                   Show skill screen. You can get descriptions of
+                        present skills from that screen, as well as the
+                        aptitudes.
     i                   Show inventory list. Inside this list, pressing
                         a slot key shows information on that item.
     ]                   Shows a restricted inventory, only containing
                         worn, wielded and quivered items.
     I                   Show list of memorised spells.
     V                   Lists all monsters and items in sight.
-    %                   Show resistances and general character overview,
-                        including health, experience, gear, status,
-                        mutations, abilities (the latter three more
-                        terse than with the command @, A, a). This is a
-                        highly condensed conglomeration of the commands
-                        [, ", C, ^, @, A, a on a single screen.
+    %                   Show resistances and general character overview:
+                        health, experience, money, gear, and 
+                        status, mutations, abilities (the latter three 
+                        more terse than with the command @, A, a). This 
+                        is a highly condensed conglomeration of
+                        [, ", E, ^, @, A, a, $ on a single screen.
                         Pressing the key of a displayed item views it.
 
 Item interaction (inventory):
