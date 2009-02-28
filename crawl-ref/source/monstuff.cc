@@ -1443,7 +1443,7 @@ int monster_die(monsters *monster, killer_type killer,
                 if (targ_holy == MH_NATURAL && attacker_holy == MH_UNDEAD)
                 {
                     // Yes, this is a hack, but it makes sure that confused
-                    // monsters doing the kill are not referred to as "slave",
+                    // monsters doing the kill are not referred to as "slaves",
                     // and I think it's okay that Yredelemnul ignores kills
                     // done by confused monsters as opposed to enslaved or
                     // friendly ones. (jpeg)
