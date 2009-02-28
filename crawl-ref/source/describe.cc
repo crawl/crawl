@@ -3298,14 +3298,16 @@ static void _detailed_god_description(god_type which_god)
             break;
 
         case GOD_ELYVILON:
-            broken = "Using your healing abilities on monsters may turn hostile "
-                     "ones neutral. Pacification works better on natural beasts "
-                     "and worse on demons and undead. If the neutralisation does "
-                     "not succeed, then piety, food and Magic are still spent, "
-                     "but the monster will not be healed. If you successfully "
-                     "pacify a monster, it is healed and you will gain half of "
-                     "its experience value and some piety. Pacified monsters try "
-                     "to leave the level as quickly as possible.";
+            broken = "Using your healing abilities on monsters may pacify "
+                     "hostile ones, turning them neutral. Pacification "
+                     "works best on natural beasts, worse on humanoids of "
+                     "your species, worse on other humanoids, and worst of "
+                     "all on demons and undead. Whether it succeeds or not, "
+                     "piety, food and magic are still spent. If it does "
+                     "succeed, the monster is healed and you gain half of "
+                     "its experience value and some piety. Otherwise, the "
+                     "monster is unaffected and you gain nothing. Pacified "
+                     "monsters try to leave the level as quickly as possible.";
             break;
 
         case GOD_NEMELEX_XOBEH:
