@@ -2772,24 +2772,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        // You shouldn't have undead slaves if you worship a good god,
-        // but check anyway, just in case.
         case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
             {
-            case GOD_ZIN:
-            case GOD_SHINING_ONE:
-            case GOD_ELYVILON:
-                if (testbits(victim->flags, MF_CREATED_FRIENDLY)
-                    || testbits(victim->flags, MF_WAS_NEUTRAL))
-                {
-                    level *= 3;
-                    penance = level;
-                }
-                piety_change = -level;
-                retval = true;
-                break;
-
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
             case GOD_MAKHLEB:
@@ -2881,6 +2866,23 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE:
+            switch (you.religion)
+            {
+            case GOD_VEHUMET:
+            case GOD_MAKHLEB:
+            case GOD_BEOGH:
+            case GOD_LUGONU:
+                simple_god_message(" accepts your slave's kill.");
+                retval = true;
+                if (random2(level + 10 - you.experience_level/3) > 5)
+                    piety_change = 1;
+                break;
+            default:
+                break;
+            }
+            break;
+
         case DID_UNDEAD_KILLED_BY_SERVANT:
             switch (you.religion)
             {
@@ -2896,6 +2898,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 {
                     piety_change = 1;
                 }
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DID_DEMON_KILLED_BY_UNDEAD_SLAVE:
+            switch (you.religion)
+            {
+            case GOD_MAKHLEB:
+            case GOD_BEOGH:
+                simple_god_message(" accepts your slave's kill.");
+                retval = true;
+                if (random2(level + 10 - you.experience_level/3) > 5)
+                    piety_change = 1;
                 break;
             default:
                 break;
@@ -3096,7 +3113,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Demon", "Kill Natural Evil", "Kill Chaotic",
                 "Kill Wizard", "Kill Priest", "Kill Holy",
                 "Undead Slave Kill Living", "Servant Kill Living",
-                "Servant Kill Undead", "Servant Kill Demon",
+                "Undead Slave Kill Undead", "Servant Kill Undead",
+                "Undead Slave Kill Demon", "Servant Kill Demon",
                 "Servant Kill Natural Evil", "Undead Slave Kill Holy",
                 "Servant Kill Holy", "Spell Memorise", "Spell Cast",
                 "Spell Practise", "Spell Nonutility", "Cards", "Stimulants",

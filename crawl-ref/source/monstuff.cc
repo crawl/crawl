@@ -1448,24 +1448,36 @@ int monster_die(monsters *monster, killer_type killer,
                     || you.religion == GOD_LUGONU
                     || !anon && mons_is_god_gift(&menv[killer_index]))
                 {
-                    if (targ_holy == MH_NATURAL && attacker_holy == MH_UNDEAD)
+                    if (attacker_holy == MH_UNDEAD)
                     {
-                        // Yes, this is a hack, but it makes sure that
+                        const bool confused =
+                            !mons_friendly(&menv[killer_index]);
+
+                        // Yes, these are hacks, but they make sure that
                         // confused monsters doing kills are not
                         // referred to as "slaves", and I think it's
-                        // okay that Yredelemnul ignores kills done by
-                        // confused monsters as opposed to enslaved or
-                        // friendly ones. (jpeg)
-                        if (mons_friendly(&menv[killer_index]))
+                        // okay that e.g. Yredelemnul ignores kills done
+                        // by confused monsters as opposed to enslaved
+                        // or friendly ones. (jpeg)
+                        if (targ_holy == MH_NATURAL)
                         {
                             notice |= did_god_conduct(
-                                          DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
+                                          !confused ? DID_LIVING_KILLED_BY_UNDEAD_SLAVE :
+                                                      DID_LIVING_KILLED_BY_SERVANT,
                                           monster->hit_dice);
                         }
-                        else
+                        else if (targ_holy == MH_UNDEAD)
                         {
                             notice |= did_god_conduct(
-                                          DID_LIVING_KILLED_BY_SERVANT,
+                                          !confused ? DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE :
+                                                      DID_UNDEAD_KILLED_BY_SERVANT,
+                                          monster->hit_dice);
+                        }
+                        else if (targ_holy == MH_DEMONIC)
+                        {
+                            notice |= did_god_conduct(
+                                          !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
+                                                      DID_DEMON_KILLED_BY_SERVANT,
                                           monster->hit_dice);
                         }
                     }
