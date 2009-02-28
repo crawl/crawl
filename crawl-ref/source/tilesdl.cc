@@ -6,6 +6,7 @@ REVISION("$Rev$");
 #include "items.h"
 #include "itemprop.h"
 #include "files.h"
+#include "message.h"
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
@@ -717,6 +718,7 @@ struct cursor_loc
 
 int TilesFramework::getch_ck()
 {
+    flush_prev_message();
     SDL_Event event;
     cursor_loc cur_loc;
     cursor_loc tip_loc;

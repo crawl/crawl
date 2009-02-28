@@ -68,6 +68,7 @@ REVISION("$Rev$");
 #include "cio.h"
 #include "defines.h"
 #include "libutil.h"
+#include "message.h"
 #include "state.h"
 #include "stuff.h"
 #include "version.h"
@@ -835,6 +836,7 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
 
 int getch_ck(void)
 {
+    flush_prev_message();
     INPUT_RECORD ir;
     DWORD nread;
     int key = 0;
