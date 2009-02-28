@@ -147,6 +147,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
          monster_index(monster), spell_title(spell_cast), spell_cast);
 #endif
 
+    if (spell_cast == SPELL_CANTRIP)
+        do_noise = false;       // Spell itself does the messaging
+
     if (_los_free_spell(spell_cast) && !spell_is_direct_explosion(spell_cast))
     {
         if (monster->foe == MHITYOU || monster->foe == MHITNOT)
@@ -213,19 +216,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
-            monster_type mon = MONS_GIANT_BAT;
-
-            if (!one_chance_in(3))
-            {
-                int temp_rand = random2(4);
-
-                mon = (temp_rand == 0) ? MONS_ORANGE_RAT :
-                      (temp_rand == 1) ? MONS_GREEN_RAT :
-                      (temp_rand == 2) ? MONS_GREY_RAT
-                                       : MONS_RAT;
-
-            }
-
+            const monster_type rats[] = { MONS_ORANGE_RAT, MONS_GREEN_RAT,
+                                          MONS_GREY_RAT,   MONS_RAT };
+            const monster_type mon = (one_chance_in(3) ? MONS_GIANT_BAT
+                                                       : RANDOM_ELEMENT(rats));
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(monster),
                           5, spell_cast, monster->pos(), monster->foe, 0, god));
@@ -783,7 +777,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
     else if (in_bounds(pbolt.target) && see_grid(pbolt.target))
     {
-        if (monsters* mtarg = monster_at(pbolt.target))
+        if (const monsters* mtarg = monster_at(pbolt.target))
             if (you.can_see(mtarg))
                 target = mtarg->name(DESC_NOCAP_THE);
     }
@@ -797,22 +791,16 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
             int count = 0;
             for (adjacent_iterator ai(pbolt.target); ai; ++ai)
             {
-                if (*ai == monster->pos())
-                    continue;
-
-                if (*ai == you.pos())
+                const actor* act = actor_at(*ai);
+                if (act && act != monster && you.can_see(act))
                 {
                     targ_prep = "next to";
-                    target    = "you";
-                    break;
-                }
 
-                const monsters *m = monster_at(*ai);
-                if (m && you.can_see(m))
-                {
-                    targ_prep = "next to";
-                    if (one_chance_in(count++))
-                        target = m->name(DESC_NOCAP_THE);
+                    if (act->atype() == ACT_PLAYER || one_chance_in(++count))
+                        target = act->name(DESC_NOCAP_THE);
+
+                    if (act->atype() == ACT_PLAYER)
+                        break;
                 }
             }
         }
@@ -876,31 +864,25 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 int count = 0;
                 for (adjacent_iterator ai(pbolt.target); ai; ++ai)
                 {
-                    if (*ai == monster->pos())
-                        continue;
-
-                    if (*ai == you.pos())
+                    const actor* act = monster_at(*ai);
+                    if (act && act != monster && you.can_see(act))
                     {
                         targ_prep = "past";
-                        target    = "you";
-                        break;
-                    }
+                        if (act->atype() == ACT_PLAYER
+                            || one_chance_in(++count))
+                        {
+                            target = act->name(DESC_NOCAP_THE);
+                        }
 
-                    const monsters *m2 = monster_at(*ai);
-                    if (m2 && you.can_see(m2))
-                    {
-                        targ_prep = "past";
-                        if (one_chance_in(count++))
-                            target = m2->name(DESC_NOCAP_THE);
+                        if (act->atype() == ACT_PLAYER)
+                            break;
                     }
                 }
             }
         } // for (unsigned int i = 0; i < path.size(); i++)
     } // if (target == "nothing" && targeted)
 
-    const actor*    foe   = monster->get_foe();
-    const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
-                            dynamic_cast<const monsters*>(foe) : NULL;
+    const actor* foe = monster->get_foe();
 
     // If we still can't find what appears to be the target, and the
     // monster isn't just throwing the spell in a random direction,
@@ -909,20 +891,16 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     // implied by gesturing).  But only if the beam didn't actually hit
     // anything (but if it did hit something, why didn't that monster
     // show up in the beam's path?)
-    if (targeted && target == "nothing" && foe != NULL
+    if (targeted
+        && target == "nothing"
         && (tracer.foe_info.count + tracer.friend_info.count) == 0
-        && (you.can_see(foe) || foe == &you) && !monster->confused()
+        && foe != NULL
+        && you.can_see(foe)
+        && !monster->confused()
         && (visible_beam || gestured))
     {
-        if (foe == &you)
-            target = "you";
-        else
-            target = m_foe->name(DESC_NOCAP_THE);
-
-        if (pbolt.aimed_at_spot)
-            targ_prep = "next to";
-        else
-            targ_prep = "past";
+        target = foe->name(DESC_NOCAP_THE);
+        targ_prep = (pbolt.aimed_at_spot ? "next to" : "past");
     }
 
     // If the monster gestures to create an invisible beam then

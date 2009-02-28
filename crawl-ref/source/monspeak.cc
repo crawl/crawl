@@ -779,7 +779,8 @@ bool mons_speaks_msg(monsters *monster, const std::string &msg,
                 msg_type = mons_friendly(monster) ? MSGCH_FRIEND_SPELL
                                                   : MSGCH_MONSTER_SPELL;
             }
-            else if (param == "ENCHANT" && !silence || param == "VISUAL ENCHANT")
+            else if (param == "ENCHANT" && !silence
+                     || param == "VISUAL ENCHANT")
             {
                 msg_type = mons_friendly(monster) ? MSGCH_FRIEND_ENCHANT
                                                   : MSGCH_MONSTER_ENCHANT;
