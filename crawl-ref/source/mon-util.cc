@@ -8390,7 +8390,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     if (monster->is_named() && you.can_see(monster))
     {
-        std::string name = monster->name(DESC_CAP_THE);
+        const std::string name = monster->name(DESC_CAP_THE);
 
         msg = replace_all(msg, "@the_something@", name);
         msg = replace_all(msg, "@The_something@", name);
@@ -8455,6 +8455,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@A_something@",   "Something");
         msg = replace_all(msg, "@The_something@", "Something");
     }
+
+    // Player name.
+    msg = replace_all(msg, "@player_name@", you.your_name);
 
     std::string plain = monster->name(DESC_PLAIN);
     msg = replace_all(msg, "@monster@",     plain);
