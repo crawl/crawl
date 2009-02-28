@@ -2205,13 +2205,6 @@ void pray()
          was_praying ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    // Beoghites and Nemelexites offer the items they're standing on.
-    if (altar_god == GOD_NO_GOD
-        && (you.religion == GOD_BEOGH ||  you.religion == GOD_NEMELEX_XOBEH))
-    {
-        offer_items();
-    }
-
     you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
                                  + (random2(you.piety) / 20);
 
@@ -2233,8 +2226,13 @@ void pray()
         you.duration[DUR_PRAYER] = 1;
     }
     else if (you.religion == GOD_YREDELEMNUL || you.religion == GOD_ELYVILON)
-    {
         you.duration[DUR_PRAYER] = 20;
+
+    // Beoghites and Nemelexites offer the items they're standing on.
+    if (altar_god == GOD_NO_GOD
+        && (you.religion == GOD_BEOGH ||  you.religion == GOD_NEMELEX_XOBEH))
+    {
+        offer_items();
     }
 
     if (!was_praying)
