@@ -4858,7 +4858,7 @@ bool _give_items_skills()
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        if (you.is_undead != US_UNDEAD)
+        if (you.religion == GOD_ZIN)
             _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
 
         you.skills[SK_FIGHTING]    = 2;
