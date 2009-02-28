@@ -17,7 +17,7 @@ Teleport yourself to a random location on the level.
 %%%%
 Blink ability
 
-Blink to another grid within your line of sight.
+Blink to another grid within your line of sight. The destination is chosen randomly among all eligible grids.
 %%%%
 Breathe Fire
 
@@ -87,7 +87,7 @@ Temporarily enslave a demon.
 %%%%
 Gate Yourself to Pandemonium
 
-Enter the chaotic realm of Pandemonium. Note that getting back might be difficult.
+Enter the chaotic realm of Pandemonium. Note that getting back might be more difficult.
 %%%%
 Channeling
 
@@ -127,7 +127,7 @@ Teleport yourself to a random location on the level.
 %%%%
 Evoke Blink
 
-Blink to another grid within your line of sight.
+Blink to another grid within your line of sight. The destination is chosen randomly among all eligible grids.
 %%%%
 Evoke Berserk Rage
 
@@ -164,7 +164,7 @@ If Zin is most pleased with you, you can Vitalise yourself. This will remove a n
 %%%%
 Sanctuary
 
-For a short duration gain safety in a divine refuge. While the sanctuary is in effect monsters will not attack you, but the protection will disappear at once should you breach the divine peace.
+For a short duration gain safety in a divine refuge. While you are inside the sanctuary, monsters will not attack you, but the protection will disappear at once should you breach the divine peace.
 %%%%
 # The Shining One
 Divine Shield
@@ -260,7 +260,7 @@ A powerful regeneration ability which stacks with all other sources.
 %%%%
 Brothers in Arms
 
-Sends huge angry allies to roam the dungeon.
+Sends huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
 Destroy Weapons
@@ -269,7 +269,11 @@ Destroys all weapons on the ground. In order to prevent a weapon from being acci
 %%%%
 Lesser Healing
 
-Depending on your Invocations skill, heal a small amount of hitpoints.
+Depending on your Invocations skill, heal a small amount of hitpoints. 
+
+Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids and still worse on demons and undead. Even if the pacification does not succeed, the invested food, piety and magic point are lost; but the monster will not be healed. If the attempt is successful, the monster is healed and you gain some piety. In total, this is a net piety gain if you need just one try.
+
+You can also heal allies and neutral monsters.
 %%%%
 Purification
 
@@ -278,6 +282,10 @@ Purge your body of bad effects such as sickness, poisoning, slowness, confusion 
 Greater Healing
 
 Depending on your Invocations skill, heal a moderate amount of hitpoints.
+
+Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids and still worse on demons and undead. Even if the pacification does not succeed, the invested food, piety and magic points are lost; but the monster will not be healed. If the attempt is successful, the monster is healed and you gain some piety. In total, this is a net piety loss even if you need just one try.
+
+You can also heal allies and neutral monsters.
 %%%%
 Restoration
 
