@@ -1884,7 +1884,7 @@ Priests:
 Priests serve either Zin, the ancient and revered God of Law, or
 Yredelemnul, the rather less pleasant God of Death. In addition, Hill
 Orcs may choose to follow the Orc god Beogh instead. Priests enter the
-dungeon with a traditional weapo, and a priestly robe. Those who serve
+dungeon with a traditional weapon, and a priestly robe. Those who serve
 Zin also get a few healing potions.
 
 Chaos Knights:
