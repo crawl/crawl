@@ -4366,7 +4366,7 @@ monsters *choose_random_monster_on_level(int weight,
     radius_iterator ri(you.pos(), near_by ? 9 : std::max(GXM, GYM),
                        true, in_sight);
 
-    for ( ; ri; ++ri )
+    for (; ri; ++ri)
     {
         if (monsters *mon = monster_at(*ri))
         {
@@ -4386,13 +4386,13 @@ monsters *choose_random_monster_on_level(int weight,
                 // Named or priestly monsters have doubled chances.
                 int mon_weight = 1;
 
-                if ((prefer_named && mon->is_named())
-                    || (prefer_priest && mons_class_flag(mon->type, M_PRIEST)))
-                {
+                if (prefer_named && mon->is_named())
                     mon_weight++;
-                }
 
-                if ( x_chance_in_y(mon_weight, (weight += mon_weight)) )
+                if (prefer_priest && mons_class_flag(mon->type, M_PRIEST))
+                    mon_weight++;
+
+                if (x_chance_in_y(mon_weight, (weight += mon_weight)))
                     chosen = mon;
             }
         }
