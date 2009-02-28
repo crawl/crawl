@@ -8268,18 +8268,26 @@ static std::string _replace_god_name(god_type god, bool need_verb = false,
 static std::string _get_species_insult(const std::string &species,
                                        const std::string &type)
 {
-    std::string lookup = "insult ";
-    // Get species genus.
-    lookup += species_name(you.species, 1, true);
-    lookup += " ";
-    lookup += type;
+    std::string insult;
+    std::string lookup;
 
-    std::string insult = getSpeakString(lowercase(lookup));
+    // Get species genus.
+    if (!species.empty())
+    {
+        lookup  = "insult ";        
+        lookup += species;
+        lookup += " ";
+        lookup += type;
+
+        insult  = getSpeakString(lowercase(lookup));
+    }
+
     if (insult.empty()) // Species too specific?
     {
-        lookup = "insult general ";
+        lookup  = "insult general ";
         lookup += type;
-        insult = getSpeakString(lookup);
+
+        insult  = getSpeakString(lookup);
     }
 
     return (insult);
@@ -8559,7 +8567,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     }
 
     // Replace with species specific insults.
-    if (foe != NULL && msg.find("@species_insult_") != std::string::npos)
+    if (msg.find("@species_insult_") != std::string::npos)
     {
         msg = replace_all(msg, "@species_insult_adj1@",
                                _get_species_insult(foe_species, "adj1"));
