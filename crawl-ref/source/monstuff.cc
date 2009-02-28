@@ -1368,8 +1368,7 @@ int monster_die(monsters *monster, killer_type killer,
             if (!created_friendly
                 && gives_xp
                 && (you.religion == GOD_BEOGH
-                        && mons_holiness(monster) == MH_NATURAL
-                        && random2(you.piety) >= piety_breakpoint(2))
+                    && random2(you.piety) >= piety_breakpoint(2))
                 && !player_under_penance())
             {
                 bless_follower();
@@ -1568,7 +1567,6 @@ int monster_die(monsters *monster, killer_type killer,
 
                 // Randomly bless the follower who killed.
                 if (you.religion == GOD_BEOGH
-                    && mons_holiness(monster) == MH_NATURAL
                     && random2(you.piety) >= piety_breakpoint(2)
                     && !player_under_penance()
                     && !one_chance_in(3)
