@@ -742,7 +742,7 @@ void item_check(bool verbose)
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
     {
         std::vector<unsigned short int> item_chars;
-        for ( unsigned int i = 0; i < items.size() && i < 50; ++i )
+        for (unsigned int i = 0; i < items.size() && i < 50; ++i)
         {
             unsigned glyph_char;
             unsigned short glyph_col;
@@ -754,10 +754,10 @@ void item_check(bool verbose)
 
         std::string out_string = "Items here: ";
         int cur_state = -1;
-        for ( unsigned int i = 0; i < item_chars.size(); ++i )
+        for (unsigned int i = 0; i < item_chars.size(); ++i)
         {
             const int specialness = 10 - (item_chars[i] % 0x100);
-            if ( specialness != cur_state )
+            if (specialness != cur_state)
             {
                 switch (specialness)
                 {

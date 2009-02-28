@@ -3331,6 +3331,8 @@ static int prompt_ring_to_remove(int new_ring)
 
     mprf(" %s", left.name(DESC_INVENTORY).c_str());
     mprf(" %s", right.name(DESC_INVENTORY).c_str());
+//    mprf(MSGCH_PROMPT_OUTPUT, " %s", left.name(DESC_INVENTORY).c_str());
+//    mprf(MSGCH_PROMPT_OUTPUT, " %s", right.name(DESC_INVENTORY).c_str());
 
     int c;
     do

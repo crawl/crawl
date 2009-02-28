@@ -759,14 +759,7 @@ void flush_prev_message()
 {
     if (prev_message.text.empty())
         return;
-/*
-    if (prev_message.repeats > 1)
-    {
-        snprintf(info, INFO_SIZE, "%s (x%d)",
-                 prev_message.text.c_str(), prev_message.repeats);
-        prev_message.text = info;
-    }
-*/
+
     base_mpr(prev_message.text.c_str(), prev_message.channel,
              prev_message.param, prev_message.colour, prev_message.repeats,
              false);
@@ -852,6 +845,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
 
 static void mpr_formatted_output(formatted_string fs, int colour)
 {
+    flush_prev_message();
     int curcol = Options.delay_message_clear ? 2 : 1;
 
     if (need_prefix)

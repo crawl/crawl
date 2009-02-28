@@ -663,6 +663,7 @@ static keyseq getch_mul( int (*rgetch)() = NULL )
  */
 int getchm( int (*rgetch)() )
 {
+    flush_prev_message();
     return getchm( KC_DEFAULT, rgetch );
 }
 

@@ -12,6 +12,7 @@ REVISION("$Rev$");
 #include "cio.h"
 #include "externs.h"
 #include "macro.h"
+#include "message.h"
 #include "state.h"
 
 #include <queue>
@@ -280,6 +281,7 @@ int wrapcprintf( int wrapcol, const char *s, ... )
 int cancelable_get_line( char *buf, int len, int maxcol,
                          input_history *mh, int (*keyproc)(int &ch) )
 {
+    flush_prev_message();
     line_reader reader(buf, len, maxcol);
     reader.set_input_history(mh);
     reader.set_keyproc(keyproc);
