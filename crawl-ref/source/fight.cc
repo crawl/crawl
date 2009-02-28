@@ -917,6 +917,7 @@ bool melee_attack::player_attack()
             // Call function of orcs first noticing you, but with
             // beaten-up conversion messages (if applicable).
             beogh_follower_convert(defender_as_monster(), true);
+            return (true);
         }
     }
     else
