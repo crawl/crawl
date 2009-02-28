@@ -65,8 +65,6 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
     NUM_DEBRIS
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
-static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype);
-
 // Just to avoid typing this over and over.
 // Returns true if monster died. -- bwr
 static bool _player_hurt_monster(monsters& m, int damage)
@@ -88,12 +86,6 @@ static bool _player_hurt_monster(monsters& m, int damage)
     }
 
     return (false);
-}
-
-static bool _player_hurt_monster(int monster, int damage)
-{
-    ASSERT( !invalid_monster_index(monster) );
-    return _player_hurt_monster(menv[monster], damage);
 }
 
 // Here begin the actual spells:
@@ -885,29 +877,6 @@ void cast_dispersal(int pow)
 {
     if (apply_area_around_square(disperse_monsters, you.pos(), pow) == 0)
         mpr("The air shimmers briefly around you.");
-}
-
-static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype)
-{
-    for (stack_iterator si(where); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-        {
-            // Found a corpse.  Skeletonise it if possible.
-            if (!mons_skeleton(si->plus))
-                destroy_item(si->index());
-            else
-                turn_corpse_into_skeleton(*si);
-
-            place_cloud(ctype, where,
-                        (3 + random2(pow / 4) + random2(pow / 4)
-                           + random2(pow / 4)),
-                        KC_YOU);
-            return (1);
-        }
-    }
-
-    return (0);
 }
 
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
