@@ -1493,16 +1493,16 @@ Elves.
 Deep Dwarves
 ------------
 Deep Dwarves are a species who, unlike their Mountain Dwarf relatives,
-never left their underground home. Living there for countless
+never left the underground homelands. Living there for countless
 generations made them turn pale and lose all ability to regenerate on
 their own (nor are they receptive to outside effects which merely hasten
 regeneration), as well as all ability to recover from losses to physical
 attributes over time. On the other hand, Deep Dwarves have developed the
 ability to instantly counteract small doses of damage.
 
-Given their lack of innate healing, few Deep Dwarves want for adventures
-or even combat. Those who do usually bring a wand of healing, or rely on
-divine assistance.
+Given their lack of innate healing, few Deep Dwarves venture out for
+adventures or even combat. Those who do usually bring a wand of healing,
+or rely on divine assistance.
 
 Naturally, Deep Dwarves are quite adept with all arts of avoiding blows
 and damage and ungifted in the ways of physical combat. Those who have
@@ -1511,9 +1511,9 @@ bows, which are too unwieldy for them) or spells. Deep Dwarves are
 highly spiritual beings, often portrayed as actual spirits by outsiders.
 They are most at home with the magics of earth and death.
 
-Most unlike all other dwarves, they are pretty nimble. Deep Dwarves can
-easily tinker with gadgets so as to recharge them. However, each time
-they do so, they lose a bit of their magical essence.
+Like all other dwarves, they are gifted forgers. In addition, Deep
+Dwarves can tinker with gadgets so as to recharge them. However, each
+time they do so, they lose a bit of their magical essence.
 
 Hill Orcs
 ---------
