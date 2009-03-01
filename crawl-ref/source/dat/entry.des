@@ -4401,8 +4401,9 @@ ENDMAP
 
 ##############################################################
 # The zoo
-NAME:    onia_ninara_005_the_zoo
-TAGS:    entry no_rotate no_hmirror
+#
+NAME:    onia_ninara_005_the_zoo_common
+WEIGHT:  9
 ORIENT:  float
 SHUFFLE: 1234567
 MONS: giant gecko /giant iguana / giant lizard / giant newt / gila monster /\
@@ -4421,6 +4422,32 @@ xxx.G.......G.xxx
 x...............x
 x.G..xxxxxxx..G.x
 x....x12345x....x
+x.G..xmmmmmx..G.x
+x...............x
+xxx.............x
+xxxxxxxxxxxx....x
+xxxxx[{(<.....xxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    onia_ninara_005_the_zoo_special
+TAGS:    entry no_rotate no_hmirror
+WEIGHT:  1
+ORIENT:  float
+SHUFFLE: 12
+MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
+MONS:    ettin / frost giant / hill giant / stone giant / fire giant
+MONS:    rat / green rat / orange rat / grey rat / quokka
+MONS:    giant cockroach / giant ant / soldier ant
+MONS:    spiny worm / ant larva / worm
+MONS:    giant lizard / lindwurm / gila monster / komodo dragon
+MAP
+xxxxxxxx@xxxxxxxx
+xxxxxx.G.G.xxxxxx
+xxx.G.......G.xxx
+x...............x
+x.G..xxxxxxx..G.x
+x....x13456x....x
 x.G..xmmmmmx..G.x
 x...............x
 xxx.............x
