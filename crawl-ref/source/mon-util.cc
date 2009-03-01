@@ -6157,11 +6157,10 @@ bool monsters::check_set_valid_home(const coord_def &place,
     if (!in_bounds(place))
         return (false);
 
-    if (place == you.pos())
+    if (actor_at(place))
         return (false);
 
-    // Don't drop on anything but vanilla floor right now.
-    if (mgrd(place) != NON_MONSTER || grd(place) != DNGN_FLOOR)
+    if (!monster_habitable_grid(this, grd(place)))
         return (false);
 
     if (one_chance_in(++nvalid))
@@ -6199,13 +6198,18 @@ bool monsters::find_home_around(const coord_def &c, int radius)
     return (false);
 }
 
-bool monsters::find_place_near_player()
+bool monsters::find_home_near_place(const coord_def &c)
 {
     for (int radius = 1; radius < 7; ++radius)
-        if (find_home_around(you.pos(), radius))
+        if (find_home_around(c, radius))
             return (true);
 
     return (false);
+}
+
+bool monsters::find_home_near_player()
+{
+    return (find_home_near_place(you.pos()));
 }
 
 bool monsters::find_home_anywhere()
@@ -6226,7 +6230,7 @@ bool monsters::find_home_anywhere()
 
 bool monsters::find_place_to_live(bool near_player)
 {
-    if (near_player && find_place_near_player()
+    if (near_player && find_home_near_player()
         || find_home_anywhere())
     {
         mgrd(pos()) = mindex();

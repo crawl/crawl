@@ -262,16 +262,12 @@ bool follower::place(bool near_player)
                 dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
                                       m.pos(), true);
 
-            if (monster_habitable_grid(&m, grd(where_to_go)))
+            if (where_to_go == you.pos())
+                near_player = true;
+            else if (m.find_home_near_place(where_to_go))
             {
-                if (where_to_go == you.pos())
-                    near_player = true;
-                else
-                {
-                    m.moveto(where_to_go);
-                    mgrd(where_to_go) = m.mindex();
-                    placed = true;
-                }
+                mgrd(m.pos()) = m.mindex();
+                placed = true;
             }
         }
 
