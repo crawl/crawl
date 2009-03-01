@@ -5327,6 +5327,8 @@ static bool _beogh_followers_on_level_abandon_you()
 {
     bool success = false;
 
+    // Note that orc high priests' summons are gifts of Beogh, so we
+    // can't use is_orcish_follower() here.
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
@@ -5453,6 +5455,8 @@ static bool _beogh_followers_abandon_you()
             if (monster == NULL)
                 continue;
 
+            // Note that orc high priests' summons are gifts of Beogh,
+            // so we can't use is_orcish_follower() here.
             if (mons_is_god_gift(monster, GOD_BEOGH))
             {
                 num_followers++;
