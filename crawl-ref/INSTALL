@@ -125,7 +125,7 @@ Building:
   and set SAVEDIR and DATADIR to appropriate directories. This is not
   necessary if only one user is going to play Crawl. Also check
   INSTALLDIR and change it if necessary.
-  
+
 * Edit AppHdr.h and check that SAVE_PACKAGE_CMD and LOAD_UNPACKAGE_CMD
   are set correctly for your system. If you do not want your saves
   packaged in a zip archive, it's safe to comment out SAVE_PACKAGE_CMD
@@ -263,17 +263,24 @@ Building Tiles versions
          make MAKEFILE=makefile_tiles.mgw
 
 * For Linux builds, run
-         make MAKEFILE=makefile.x11
+         make MAKEFILE=makefile_tiles.unix
 
 * For Mac OS X builds, run
-         make MAKEFILE=makefile.x11 OSX=y
+         make MAKEFILE=makefile_tiles.unix OSX=y
 
-* All platforms require the same prerequisites listed in the other 
+* If you compiled the ASCII binary before you'll need to run make clean
+  before running make.
+
+* All platforms require the same prerequisites listed in the other
   sections above for building each of these platforms.
 
 * The Linux and Mac OS X builds additionally require libpng.  The Mac OS X
   version expects it to be installed via fink in /sw.  If this is not the
   case, then you should edit PNG_INCLUDE and PNG_LIB in makefile.x11.
+
+* If you want both ASCII and Tiles binaries you need to compile them
+  separately, rename one of them, and copy them into the same Crawl
+  directory.
 
 *****************************************************************************
 Data files
@@ -284,7 +291,7 @@ Crawl looks for several data files when starting up. They include:
 * Special level and vault layout (dat/*.des) files.
 * Core Lua code (dat/clua/*.lua).
 * Descriptions for monsters and game features (dat/descript/*.txt).
-* Monster dialogue files (dat/*.txt).
+* Definitions for monster dialogue and randart names (dat/database/*.txt).
 
 All these files are in the source tree under source/dat.
 
@@ -327,7 +334,7 @@ are:
 
 * Run flex on levcomp.lpp to produce the levcomp.lex.cc lexer.
 * Run bison on levcomp.ypp to produce the levcomp.tab.cc parser and
-  levcomp.tab.h 
+  levcomp.tab.h
 * Compile the resulting C++ source files and levcomp.cc and link the
   object files into the Crawl executable.
 
