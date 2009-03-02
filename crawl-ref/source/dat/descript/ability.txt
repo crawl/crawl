@@ -271,7 +271,7 @@ Minor Healing
 
 Depending on your Invocations skill, heal a small amount of hitpoints.
 
-Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
+Can be used on hostile monsters, trying to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
 
 Whether the pacification succeeds or not, the invested food, piety and magic point are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety gain if you need just one try.
 
@@ -285,7 +285,7 @@ Major Healing
 
 Depending on your Invocations skill, heal a moderate amount of hitpoints. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher piety cost.
 
-Can be used on hostile monsters, trying to make then neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
+Can be used on hostile monsters, trying to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
 
 Whether the pacification succeeds or not, the invested food, piety and magic point are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience level. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety gain if you need just one try.
 
