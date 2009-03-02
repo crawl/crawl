@@ -56,7 +56,7 @@ Monsters
 * Implemented monster miscasts caused by Zot traps or mummy curses.
 * Make all allies (including zombies) avoid Zot traps known to the player.
 * Ghosts don't get holy wrath branded attacks anymore.
-* Monsters will now drink !healing to cure confusion etc.
+* Monsters will now drink !healing to cure confusion, etc.
 * Allies no longer mind being teleported by the player.
 * Retain the teleportation enchantment on polymorphed monsters.
 * Make vampiric draining alert and anger its target.
@@ -126,6 +126,7 @@ Gods
 * Sif Muna no longer gifts Kiku/Vehumet specific books.
 * Vehumet accepts undead killing for you.
 * Disallow shapeshifters in orc form to become Beoghites' followers.
+* Beogh no longer accepts butchery.
 
 Tiles
 -----
