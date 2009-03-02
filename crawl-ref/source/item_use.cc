@@ -4955,19 +4955,39 @@ void read_scroll(int slot)
         if (you.weapon())
         {
             item_def& wpn = *you.weapon();
-            mprf("%s glows bright yellow for a while.",
-                 wpn.name(DESC_CAP_YOUR).c_str() );
 
-            do_uncurse_item(wpn);
-            _handle_enchant_weapon( ENCHANT_TO_HIT, true );
+            const bool is_cursed = item_cursed(wpn);
 
-            if (coinflip())
+            // Get item name now before changing enchantment.
+            std::string iname = wpn.name(DESC_CAP_YOUR);
+
+            if (wpn.base_type == OBJ_WEAPONS)
+            {
+                mprf("%s glows bright yellow for a while.", iname.c_str());
+
                 _handle_enchant_weapon( ENCHANT_TO_HIT, true );
 
-            _handle_enchant_weapon( ENCHANT_TO_DAM, true );
+                if (coinflip())
+                    _handle_enchant_weapon( ENCHANT_TO_HIT, true );
 
-            if (coinflip())
                 _handle_enchant_weapon( ENCHANT_TO_DAM, true );
+
+                if (coinflip())
+                    _handle_enchant_weapon( ENCHANT_TO_DAM, true );
+            }
+            else if (wpn.base_type == OBJ_MISSILES)
+            {
+                mprf("%s glow%s bright yellow for a while.", iname.c_str(),
+                     wpn.quantity > 1 ? "" : "s");
+
+                _handle_enchant_weapon( ENCHANT_TO_HIT, true );
+
+                if (coinflip())
+                    _handle_enchant_weapon( ENCHANT_TO_HIT, true );
+            }
+
+            if (is_cursed)
+                do_uncurse_item( wpn );
         }
         else
         {
