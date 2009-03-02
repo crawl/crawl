@@ -534,7 +534,7 @@
 },
 
 {
-    SPELL_LESSER_HEALING, "Lesser Healing",
+    SPELL_MINOR_HEALING, "Minor Healing",
      SPTYP_HOLY,
      SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
      2,
@@ -547,7 +547,7 @@
 },
 
 {
-    SPELL_GREATER_HEALING, "Greater Healing",
+    SPELL_MAJOR_HEALING, "Major Healing",
      SPTYP_HOLY,
      SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
      6,

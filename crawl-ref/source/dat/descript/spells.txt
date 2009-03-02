@@ -278,7 +278,7 @@ Fulsome Distillation
 
 This spell extracts the vile and poisonous essences from a corpse. A rotten corpse may produce a stronger potion. You probably don't want to drink the results. 
 %%%%
-Greater Healing
+Major Healing
 
 This spell heals a large amount of damage to the caster's body. 
 %%%%
@@ -330,7 +330,7 @@ Lehudib's Crystal Spear
 
 This spell hurls a lethally sharp bolt of crystal. 
 %%%%
-Lesser Healing
+Minor Healing
 
 This spell heals a small amount of damage to the caster's body. 
 %%%%

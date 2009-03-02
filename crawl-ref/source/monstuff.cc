@@ -6279,14 +6279,14 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 spell_cast = SPELL_DIG;
                 finalAnswer = true;
             }
-            else if ((monster->has_spell(SPELL_LESSER_HEALING)
-                         || monster->has_spell(SPELL_GREATER_HEALING))
+            else if ((monster->has_spell(SPELL_MINOR_HEALING)
+                         || monster->has_spell(SPELL_MAJOR_HEALING))
                      && monster->hit_points < monster->max_hit_points)
             {
                 // The player's out of sight!
                 // Quick, let's take a turn to heal ourselves. -- bwr
-                spell_cast = monster->has_spell(SPELL_GREATER_HEALING) ?
-                             SPELL_GREATER_HEALING : SPELL_LESSER_HEALING;
+                spell_cast = monster->has_spell(SPELL_MAJOR_HEALING) ?
+                             SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
                 finalAnswer = true;
             }
             else if (mons_is_fleeing(monster) || mons_is_pacified(monster))
@@ -8778,7 +8778,7 @@ static spell_type _map_wand_to_mspell(int wand_type)
     case WAND_SLOWING:         return SPELL_SLOW;
     case WAND_HASTING:         return SPELL_HASTE;
     case WAND_MAGIC_DARTS:     return SPELL_MAGIC_DART;
-    case WAND_HEALING:         return SPELL_LESSER_HEALING;
+    case WAND_HEALING:         return SPELL_MINOR_HEALING;
     case WAND_PARALYSIS:       return SPELL_PARALYSE;
     case WAND_FIRE:            return SPELL_BOLT_OF_FIRE;
     case WAND_COLD:            return SPELL_BOLT_OF_COLD;

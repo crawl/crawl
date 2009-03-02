@@ -2810,8 +2810,8 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
     {
     case SPELL_HASTE:
     case SPELL_INVISIBILITY:
-    case SPELL_LESSER_HEALING:
-    case SPELL_GREATER_HEALING:
+    case SPELL_MINOR_HEALING:
+    case SPELL_MAJOR_HEALING:
     case SPELL_ANIMATE_DEAD:
         return (true);
 
@@ -2856,8 +2856,8 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
         if (mon->has_ench(ENCH_TP))
             return (false);
         // intentional fall-through
-    case SPELL_LESSER_HEALING:
-    case SPELL_GREATER_HEALING:
+    case SPELL_MINOR_HEALING:
+    case SPELL_MAJOR_HEALING:
         ret = true;
         break;
 
@@ -2990,8 +2990,8 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         }
         break;
 
-    case SPELL_LESSER_HEALING:
-    case SPELL_GREATER_HEALING:
+    case SPELL_MINOR_HEALING:
+    case SPELL_MAJOR_HEALING:
         if (mon->hit_points > mon->max_hit_points / 2)
             ret = true;
         break;
@@ -3119,8 +3119,8 @@ static bool _ms_ranged_spell( spell_type monspell, bool attack_only )
     {
     case SPELL_NO_SPELL:
     case SPELL_HASTE:
-    case SPELL_LESSER_HEALING:
-    case SPELL_GREATER_HEALING:
+    case SPELL_MINOR_HEALING:
+    case SPELL_MAJOR_HEALING:
     case SPELL_TELEPORT_SELF:
     case SPELL_INVISIBILITY:
     case SPELL_BLINK:

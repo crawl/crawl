@@ -195,7 +195,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     default:
         break;
 
-    case SPELL_GREATER_HEALING:
+    case SPELL_MAJOR_HEALING:
         if (heal_monster(monster, 50 + random2avg(monster->hit_dice * 10, 2),
                          false))
         {
@@ -986,7 +986,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     switch (spell_cast)
     {
     case SPELL_SUMMON_SMALL_MAMMALS:
-    case SPELL_GREATER_HEALING:
+    case SPELL_MAJOR_HEALING:
     case SPELL_VAMPIRE_SUMMON:
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
@@ -1049,7 +1049,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
 
     if (spell_cast == SPELL_HASTE
         || spell_cast == SPELL_INVISIBILITY
-        || spell_cast == SPELL_LESSER_HEALING
+        || spell_cast == SPELL_MINOR_HEALING
         || spell_cast == SPELL_TELEPORT_SELF)
     {
         pbolt.target = monster->pos();
@@ -1846,7 +1846,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
                                                    : dice_def(3, 20);
         break;
 
-    case SPELL_LESSER_HEALING:
+    case SPELL_MINOR_HEALING:
         beam.flavour  = BEAM_HEALING;
         beam.hit      = 25 + (power / 5);
         break;

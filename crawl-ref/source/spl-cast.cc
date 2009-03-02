@@ -1686,12 +1686,12 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_LESSER_HEALING:
+    case SPELL_MINOR_HEALING:
         if (cast_healing(5) < 0)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_GREATER_HEALING:
+    case SPELL_MAJOR_HEALING:
         if (cast_healing(25) < 0)
             return (SPRET_ABORT);
         break;

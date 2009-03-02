@@ -260,9 +260,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark four cards in a deck",
       "order the top five cards of a deck, losing the rest" },
     // Elyvilon
-    { "call upon Elyvilon for minor healing",
+    { "call upon Elyvilon for lesser healing",
       "call upon Elyvilon for purification",
-      "call upon Elyvilon for major healing",
+      "call upon Elyvilon for greater healing",
       "call upon Elyvilon to restore your abilities",
       "call upon Elyvilon for divine vigour" },
     // Lugonu
