@@ -858,7 +858,7 @@ bool melee_attack::player_attack()
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH
             && defender->mons_species() == MONS_ORC
-            && !mons_is_summoned(defender_as_monster())
+            && !defender->is_summoned()
             && !mons_is_shapeshifter(defender_as_monster())
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
             && mons_near(defender_as_monster()) && defender->asleep())
@@ -4678,6 +4678,7 @@ void melee_attack::mons_perform_attack_rounds()
 
                 bleed_onto_floor(pos, type, blood, true);
             }
+
             if (decapitate_hydra(damage_done,
                                  attacker->damage_type(attack_number)))
             {
