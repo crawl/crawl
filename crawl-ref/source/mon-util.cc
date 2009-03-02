@@ -6521,7 +6521,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
         }
     }
 
-    int midx = monster_index(mon);
+    int midx = mon->mindex();
 
     if (mgrd(mon->pos()) == NON_MONSTER)
         mgrd(mon->pos()) = midx;
@@ -6567,12 +6567,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     if (okay_squares > 0)
     {
-        int mnum = mgrd(mon->pos());
-        mgrd(mon->pos()) = NON_MONSTER;
-
-        mgrd(target_square) = mnum;
-        mon->moveto(target_square);
-
+        mon->move_to_pos(target_square);
         return (true);
     }
 
@@ -6595,13 +6590,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     }
 
     if (okay_squares > 0)
-    {
-        int mnum = mgrd(mon->pos());
-        mgrd(mon->pos()) = NON_MONSTER;
-
-        mgrd(target_square) = mnum;
-        mon->moveto(target_square);
-    }
+        mon->move_to_pos(target_square);
 
     return (true);
 }
@@ -7722,7 +7711,7 @@ void monsters::apply_location_effects(const coord_def &oldpos)
 
 bool monsters::move_to_pos(const coord_def &newpos)
 {
-    if (mgrd(newpos) != NON_MONSTER || you.pos() == newpos )
+    if (actor_at(newpos))
         return (false);
 
     // Clear old cell pointer.
