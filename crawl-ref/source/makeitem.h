@@ -25,8 +25,8 @@ int items( int allow_uniques, object_class_type force_class, int force_type,
            bool dont_place, int item_level, int item_race,
            unsigned mapmask = 0, int force_ego = 0, int agent = -1 );
 
-void item_colour( item_def &item );
-void init_rod_mp(item_def &item);
+void item_colour(item_def &item);
+void init_rod_mp(item_def &item, int ncharges = -1);
 void give_item(int mid, int level_number, bool mons_summoned);
 
 jewellery_type get_random_ring_type();

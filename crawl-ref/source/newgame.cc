@@ -3466,7 +3466,7 @@ static bool _give_wanderer_weapon( int slot, int wpn_skill )
     return (ret);
 }
 
-static void _make_rod(item_def &item, stave_type rod_type)
+static void _make_rod(item_def &item, stave_type rod_type, int ncharges)
 {
     item.base_type = OBJ_STAVES;
     item.sub_type  = rod_type;
@@ -3474,7 +3474,7 @@ static void _make_rod(item_def &item, stave_type rod_type)
     item.special   = you.item_description[IDESC_STAVES][rod_type];
     item.colour    = BROWN;
 
-    init_rod_mp(item);
+    init_rod_mp(item, ncharges);
 }
 
 // Creates an item of a given base and sub type.
@@ -4381,7 +4381,7 @@ static bool _choose_wand()
 
     const wand_type startwand[5] = { WAND_ENSLAVEMENT, WAND_CONFUSION,
                                      WAND_MAGIC_DARTS, WAND_FROST, WAND_FLAME };
-    _make_rod(you.inv[2], STAFF_STRIKING);
+    _make_rod(you.inv[2], STAFF_STRIKING, 8);
     const int num_choices = 6;
 
     int keyin = 0;
@@ -4530,6 +4530,7 @@ static bool _choose_wand()
         ng_wand = keyin - 'a' + 1;
 
 wand_done:
+
     if (keyin - 'a' == num_choices - 1)
     {
         // Choose the rod; we're all done.
@@ -4538,10 +4539,10 @@ wand_done:
 
     // 1 wand of random effects and one chosen lesser wand
     const wand_type choice = startwand[keyin - 'a'];
-    int nCharges = 15;
+    int ncharges = 15;
     _newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS, -1, 1,
-                       nCharges, 0);
-    _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice, -1, 1, nCharges, 0);
+                       ncharges, 0);
+    _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice, -1, 1, ncharges, 0);
 
     return (true);
 }

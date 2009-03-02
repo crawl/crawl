@@ -341,7 +341,7 @@ static int _armour_colour(const item_def &item)
                                          : _newwave_armour_colour(item));
 }
 
-void item_colour( item_def &item )
+void item_colour(item_def &item)
 {
     int switchnum = 0;
     int temp_value;
@@ -2559,8 +2559,8 @@ static void _generate_staff_item(item_def& item, int force_type)
         }
     }
 
-    if (item_is_rod( item ))
-        init_rod_mp( item );
+    if (item_is_rod(item))
+        init_rod_mp(item);
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
@@ -2906,19 +2906,24 @@ int items( int allow_uniques,       // not just true-false,
     }
 
     // Note that item might be invalidated now, since p could have changed.
-    ASSERT( is_valid_item(mitm[p]) );
-    return p;
+    ASSERT(is_valid_item(mitm[p]));
+    return (p);
 }
 
-void init_rod_mp(item_def &item)
+void init_rod_mp(item_def &item, int ncharges)
 {
     if (!item_is_rod(item))
         return;
 
-    if (item.sub_type == STAFF_STRIKING)
-        item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
+    if (ncharges != -1)
+        item.plus2 = ncharges * ROD_CHARGE_MULT;
     else
-        item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
+    {
+        if (item.sub_type == STAFF_STRIKING)
+            item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
+        else
+            item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
+    }
 
     item.plus = item.plus2;
 }
