@@ -1511,7 +1511,7 @@ bows, which are too unwieldy for them) or spells. Deep Dwarves are
 highly spiritual beings, often portrayed as actual spirits by outsiders.
 They are most at home with the magics of earth and death.
 
-Like all other dwarves, they are gifted forgers. In addition, Deep
+Like all other Dwarves, they are gifted forgers. In addition, Deep
 Dwarves can tinker with gadgets so as to recharge them. However, each
 time they do so, they lose a bit of their magical essence.
 
