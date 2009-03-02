@@ -856,10 +856,12 @@ bool melee_attack::player_attack()
         }
 
         bool hit_woke_orc = false;
-        if (you.religion == GOD_BEOGH && defender->mons_species() == MONS_ORC
-            && defender->asleep() && !player_under_penance()
-            && you.piety >= piety_breakpoint(2)
-            && mons_near(defender_as_monster()))
+        if (you.religion == GOD_BEOGH
+            && defender->mons_species() == MONS_ORC
+            && !mons_is_summoned(defender_as_monster())
+            && !mons_is_shapeshifter(defender_as_monster())
+            && !player_under_penance() && you.piety >= piety_breakpoint(2)
+            && mons_near(defender_as_monster()) && defender->asleep())
         {
             hit_woke_orc = true;
         }
@@ -870,6 +872,7 @@ bool melee_attack::player_attack()
                         coord_def(), !stab_attempt);
 
         if (damage_done > 0
+            && defender->can_bleed()
             && !defender->is_summoned()
             && !defender->submerged())
         {
