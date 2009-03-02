@@ -4539,7 +4539,7 @@ wand_done:
 
     // 1 wand of random effects and one chosen lesser wand
     const wand_type choice = startwand[keyin - 'a'];
-    int ncharges = 15;
+    const int ncharges = 15;
     _newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS, -1, 1,
                        ncharges, 0);
     _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice, -1, 1, ncharges, 0);
