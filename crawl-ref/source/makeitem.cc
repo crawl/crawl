@@ -1931,9 +1931,9 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
             break;
 
         case ARM_HELMET:
-            if (one_chance_in(8))
-                rc = ISFLAG_ORCISH;
             if (one_chance_in(6))
+                rc = ISFLAG_ORCISH;
+            if (one_chance_in(5))
                 rc = ISFLAG_DWARVEN;
             break;
 
