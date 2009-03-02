@@ -2636,7 +2636,7 @@ bool player_mesmerised_by(const monsters *mon)
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "mesmerised_by.size: %d, DUR_MESMERISED: %d, "
                             "current mon: %d", you.mesmerised_by.size(),
-                            you.duration[DUR_MESMERISED], monster_index(mon));
+                            you.duration[DUR_MESMERISED], mon->mindex());
 #endif
 
     if (you.mesmerised_by.empty()) // shouldn't happen
@@ -6919,7 +6919,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     const monsters *mon = dynamic_cast<const monsters*>(agent);
     if (agent->atype() == ACT_MONSTER)
     {
-        ouch(amount, monster_index(mon),
+        ouch(amount, mon->mindex(),
              KILLED_BY_MONSTER, "", player_monster_visible(mon));
     }
     else

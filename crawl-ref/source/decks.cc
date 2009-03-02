@@ -1375,9 +1375,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
     // Don't choose yourself unless there are no monsters nearby.
     monsters *mon_to_swap = choose_random_nearby_monster(0);
     if (!mon_to_swap)
-    {
         mpr("You spin around.");
-    }
     else
     {
         monsters& mon(*mon_to_swap);
@@ -1401,8 +1399,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
         mon.moveto(you.pos());
 
         // Plunk it down.
-        mgrd(mon.pos()) = monster_index(mon_to_swap);
-
+        mgrd(mon.pos()) = mon_to_swap->mindex();
 
         if (you_caught)
         {

@@ -705,7 +705,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
         }
 
         if (alert)
-            data.foe = monster_index(mon_target);
+            data.foe = mon_target->mindex();
 
         // No permanent allies from miscasts.
         if (data.behaviour == BEH_FRIENDLY && abj_deg == 0)
