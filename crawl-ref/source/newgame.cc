@@ -3010,9 +3010,6 @@ static void _give_basic_spells(job_type which_job)
     case JOB_SUMMONER:
         which_spell = SPELL_SUMMON_SMALL_MAMMALS;
         break;
-    case JOB_ICE_ELEMENTALIST:
-        which_spell = SPELL_FREEZE;
-        break;
     case JOB_NECROMANCER:
         which_spell = SPELL_PAIN;
         break;
@@ -3021,6 +3018,9 @@ static void _give_basic_spells(job_type which_job)
         break;
     case JOB_FIRE_ELEMENTALIST:
         which_spell = SPELL_FLAME_TONGUE;
+        break;
+    case JOB_ICE_ELEMENTALIST:
+        which_spell = SPELL_FREEZE;
         break;
     case JOB_AIR_ELEMENTALIST:
         which_spell = SPELL_SHOCK;
