@@ -246,7 +246,7 @@ Forget Spell
 Forget any spell out of the ones you've currently memorised, so as to free memory to learn others.
 %%%%
 # Trog
-Burn Books
+Burn Spellbooks
 
 All spellbooks within your line of sight are set on fire. The fire is fueled by Trog's hatred, and Trog likes it most when you don't even care which books of madness burst into flames.
 %%%%
