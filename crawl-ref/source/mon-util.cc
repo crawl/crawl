@@ -2653,8 +2653,7 @@ bool mons_is_lurking(const monsters *m)
 bool mons_is_influenced_by_sanctuary(const monsters *m)
 {
     return (!mons_wont_attack(m)
-            && mons_holiness(m) != MH_PLANT
-            && !mons_is_stationary(m));
+            && (mons_holiness(m) != MH_PLANT || mons_is_stationary(m)));
 }
 
 bool mons_is_fleeing_sanctuary(const monsters *m)

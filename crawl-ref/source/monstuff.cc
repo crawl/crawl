@@ -7068,7 +7068,8 @@ static void _handle_monster_move(monsters *monster)
         }
 
         _handle_behaviour(monster);
-        // _handle_behaviour could make the monster leave the level.
+
+        // _handle_behaviour() could make the monster leave the level.
         if (!monster->alive())
             break;
 
