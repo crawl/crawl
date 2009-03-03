@@ -2717,12 +2717,12 @@ some commands:
   !R   prompt before removing jewelry
   !v   prompt before evoking an item
   !Q   prompt before explicitly quivering an item
-  !p   prompt Nemelex Xobeh worshippers before sacrificing a stack
-       containing an item with this inscription; if the answer is "No",
-       the whole stack will be skipped, and no item is sacrificed
-  =p   prompt Nemelex Xobeh worshippers before sacrificing this
-       particular item; if the answer is "No", then Crawl will go on
-       to sacrifice further items in the stack
+  !p   prompt before sacrificing a stack containing an item with this
+       inscription; if the answer is "No", the whole stack will be
+       skipped, and no items will be sacrificed
+  =p   prompt before sacrificing this particular item; if the answer is
+       "No", then Crawl will go on to sacrifice further items in the
+       stack
   =g   item will be picked up automatically if autopickup is on
   =k   item will be ignored in all listings on the ground
        (it can still be picked up if all items on the ground have
