@@ -3174,7 +3174,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
     if (targ_item != NON_ITEM)
     {
-        // If a mimic is on this square, we pretend it's the first item -- bwr
+        // If a mimic is on this square, we pretend it's the first item - bwr
         if (mimic_item)
             mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
         else
