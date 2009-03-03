@@ -4394,7 +4394,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
                      wpn.name(DESC_CAP_YOUR).c_str());
             }
 
-            do_uncurse_item( wpn );
+            do_uncurse_item(wpn);
             return (true);
         }
         else
@@ -4438,7 +4438,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
     }
 
     if (is_cursed)
-        do_uncurse_item( wpn );
+        do_uncurse_item(wpn);
 
     xom_is_stimulated(16);
     return (true);
@@ -4496,7 +4496,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         ac_change = property(arm, PARM_AC) - ac_change;
 
         if (is_cursed)
-            do_uncurse_item( arm );
+            do_uncurse_item(arm);
 
         // No additional enchantment.
         return (true);
@@ -4514,13 +4514,14 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
                 mprf("%s glows silver for a moment.",
                      arm.name(DESC_CAP_YOUR).c_str());
             }
-            do_uncurse_item( arm );
+
+            do_uncurse_item(arm);
             return (true);
         }
         else
         {
             if (!quiet)
-                canned_msg( MSG_NOTHING_HAPPENS );
+                canned_msg(MSG_NOTHING_HAPPENS);
 
             return (false);
         }
@@ -4537,7 +4538,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     ac_change++;
 
     if (is_cursed)
-        do_uncurse_item( arm );
+        do_uncurse_item(arm);
 
     xom_is_stimulated(16);
     return (true);
@@ -4944,11 +4945,11 @@ void read_scroll(int slot)
 
     // Everything [in the switch] below this line is a nightmare {dlb}:
     case SCR_ENCHANT_WEAPON_I:
-        id_the_scroll = _handle_enchant_weapon( ENCHANT_TO_HIT );
+        id_the_scroll = _handle_enchant_weapon(ENCHANT_TO_HIT);
         break;
 
     case SCR_ENCHANT_WEAPON_II:
-        id_the_scroll = _handle_enchant_weapon( ENCHANT_TO_DAM );
+        id_the_scroll = _handle_enchant_weapon(ENCHANT_TO_DAM);
         break;
 
     case SCR_ENCHANT_WEAPON_III:
@@ -4965,29 +4966,32 @@ void read_scroll(int slot)
             {
                 mprf("%s glows bright yellow for a while.", iname.c_str());
 
-                _handle_enchant_weapon( ENCHANT_TO_HIT, true );
+                _handle_enchant_weapon(ENCHANT_TO_HIT, true);
 
                 if (coinflip())
-                    _handle_enchant_weapon( ENCHANT_TO_HIT, true );
+                    _handle_enchant_weapon(ENCHANT_TO_HIT, true);
 
-                _handle_enchant_weapon( ENCHANT_TO_DAM, true );
+                _handle_enchant_weapon(ENCHANT_TO_DAM, true);
 
                 if (coinflip())
-                    _handle_enchant_weapon( ENCHANT_TO_DAM, true );
+                    _handle_enchant_weapon(ENCHANT_TO_DAM, true);
+
+                if (is_cursed)
+                    do_uncurse_item(wpn);
             }
             else if (wpn.base_type == OBJ_MISSILES)
             {
                 mprf("%s glow%s bright yellow for a while.", iname.c_str(),
                      wpn.quantity > 1 ? "" : "s");
 
-                _handle_enchant_weapon( ENCHANT_TO_HIT, true );
+                _handle_enchant_weapon(ENCHANT_TO_HIT, true);
 
                 if (coinflip())
-                    _handle_enchant_weapon( ENCHANT_TO_HIT, true );
-            }
+                    _handle_enchant_weapon(ENCHANT_TO_HIT, true);
 
-            if (is_cursed)
-                do_uncurse_item( wpn );
+                if (is_cursed)
+                    do_uncurse_item(wpn);
+            }
         }
         else
         {

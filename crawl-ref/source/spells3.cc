@@ -136,7 +136,7 @@ bool remove_curse(bool suppress_msg)
         if (you.equip[i] != -1 && item_cursed(you.inv[you.equip[i]])
             && you_tran_can_wear(you.equip[i]))
         {
-            do_uncurse_item( you.inv[you.equip[i]] );
+            do_uncurse_item(you.inv[you.equip[i]]);
             success = true;
         }
     }

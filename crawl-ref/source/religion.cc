@@ -6009,39 +6009,42 @@ void excommunication(god_type new_god)
                           coord_def((int)new_god, old_piety));
 }
 
-static bool _bless_weapon( god_type god, brand_type brand, int colour )
+static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
-    item_def& weap = *you.weapon();
+    item_def& wpn = *you.weapon();
 
     // Only bless melee weapons.
-    if (!is_artefact(weap) && !is_range_weapon(weap))
+    if (!is_artefact(wpn) && !is_range_weapon(wpn))
     {
         you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
-        set_equip_desc( weap, ISFLAG_GLOWING );
-        set_item_ego_type( weap, OBJ_WEAPONS, brand );
-        weap.colour = colour;
+        set_equip_desc(wpn, ISFLAG_GLOWING);
+        set_item_ego_type(wpn, OBJ_WEAPONS, brand);
+        wpn.colour = colour;
 
-        do_uncurse_item( weap );
+        const bool is_cursed = item_cursed(wpn);
 
-        enchant_weapon( ENCHANT_TO_HIT, true, weap );
-
-        if (coinflip())
-            enchant_weapon( ENCHANT_TO_HIT, true, weap );
-
-        enchant_weapon( ENCHANT_TO_DAM, true, weap );
+        enchant_weapon(ENCHANT_TO_HIT, true, wpn);
 
         if (coinflip())
-            enchant_weapon( ENCHANT_TO_DAM, true, weap );
+            enchant_weapon(ENCHANT_TO_HIT, true, wpn);
 
-        if ( god == GOD_SHINING_ONE )
+        enchant_weapon(ENCHANT_TO_DAM, true, wpn);
+
+        if (coinflip())
+            enchant_weapon(ENCHANT_TO_DAM, true, wpn);
+
+        if (is_cursed)
+            do_uncurse_item(wpn);
+
+        if (god == GOD_SHINING_ONE)
         {
-            convert2good(weap);
+            convert2good(wpn);
 
-            if (is_blessed_blade_convertible(weap))
+            if (is_blessed_blade_convertible(wpn))
             {
-                origin_acquired(weap, GOD_SHINING_ONE);
-                make_item_blessed_blade(weap);
+                origin_acquired(wpn, GOD_SHINING_ONE);
+                make_item_blessed_blade(wpn);
             }
 
             burden_change();
@@ -6054,10 +6057,10 @@ static bool _bless_weapon( god_type god, brand_type brand, int colour )
         you.flash_colour = colour;
         viewwindow(true, false);
 
-        mprf( MSGCH_GOD, "Your weapon shines brightly!" );
-        simple_god_message( " booms: Use this gift wisely!" );
+        mprf(MSGCH_GOD, "Your weapon shines brightly!");
+        simple_god_message(" booms: Use this gift wisely!");
 
-        if ( god == GOD_SHINING_ONE )
+        if (god == GOD_SHINING_ONE)
         {
             holy_word(100, HOLY_WORD_TSO, you.pos(), true);
 #ifndef USE_TILE
