@@ -7068,6 +7068,10 @@ static void _handle_monster_move(monsters *monster)
         }
 
         _handle_behaviour(monster);
+        // _handle_behaviour could make the monster leave the level.
+        if (!monster->alive())
+            break;
+
         ASSERT(!crawl_state.arena || monster->foe != MHITYOU);
         ASSERT(in_bounds(monster->target) || monster->target.origin());
 
