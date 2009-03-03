@@ -2988,7 +2988,7 @@ static void _describe_monster(const monsters *mon)
 
 // This method is called in two cases:
 // a) Monsters coming into view: "An ogre comes into view. It is wielding ..."
-// b) Monster description via 'x': "An ogre, wielding a club and wearing ..."
+// b) Monster description via 'x': "An ogre, wielding a club, and wearing ..."
 std::string get_monster_desc(const monsters *mon, bool full_desc,
                              description_level_type mondtype,
                              bool print_attitude)
@@ -3021,7 +3021,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     if (!weap.empty())
     {
         if (full_desc)
-            desc += ",";
+            desc += ", ";
         desc += weap;
     }
 
