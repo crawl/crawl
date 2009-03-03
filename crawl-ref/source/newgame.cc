@@ -5651,9 +5651,9 @@ bool _give_items_skills()
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                               ARM_LEATHER_ARMOUR, ARM_ROBE);
-        // Choice of lesser wands, 15 charges plus wand of random effects:
-        // confusion, enslavement, slowing, magic dart, frost, flame; OR a rod
-        // of striking and no random effects.
+        // Choice of lesser wands, 15 charges plus wand of random
+        // effects: confusion, enslavement, slowing, magic dart, frost,
+        // flame; OR a rod of striking, 8 charges and no random effects.
         if (!_choose_wand())
             return (false);
 
