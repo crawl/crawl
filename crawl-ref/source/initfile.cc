@@ -2454,6 +2454,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // field is already cleaned up from trim_string()
         user_note_prefix = field;
     }
+    else BOOL_OPTION(note_all_skill_levels);
     else BOOL_OPTION(note_skill_max);
     else BOOL_OPTION(note_all_spells);
     else BOOL_OPTION(delay_message_clear);
