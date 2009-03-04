@@ -1442,13 +1442,6 @@ High Elves
   Compared with Humans, they have fewer HP but more magic. Among all
   Elves, they are best with blades and bows.
 
-Grey Elves
-  These also advance slowly, but not as slowly as High Elves. They are
-  good at using short and long swords and bows, but are poor at other
-  fighting skills. They are excellent at all forms of magic except for
-  necromancy. In particular, they are masters of enchantments and magics
-  related to air.
-
 Deep Elves
   This is an Elven race who long ago fled the overworld to live in
   darkness underground. There, they developed their mental powers,
@@ -1456,7 +1449,8 @@ Deep Elves
   and earth magic), and adapted physically to their new environment,
   becoming shorter and weaker than other elves and losing all
   colouration. They are poor at hand-to-hand combat, but excellent at
-  fighting from a distance. They advance at the pace of Grey Elves.
+  fighting from a distance. They advance in levels slightly faster than
+  High Elves.
 
 Sludge Elves
   This is a somewhat degenerate race of Elves. They are mirror images of
@@ -1466,7 +1460,7 @@ Sludge Elves
   divinations). On the other hand, they are superlative transmuters, and
   are comfortable dabbling in necromantic, poison and elemental magic.
   As fighters they are often more dangerous unarmed than armed. They
-  advance in level slightly slower than humans.
+  advance in levels slightly slower than Humans.
 
 Mountain Dwarves
 ----------------
@@ -1487,8 +1481,7 @@ quite bad weapons for Dwarves.
 In general, they are rather resistant to magic than capable of dealing
 with it. However, they are very proficient at earth and fire magics.
 Thus, many a Mountain Dwarf started career as an elementalist in one of
-those schools. They advance in levels at a similar rate to Grey and Deep
-Elves.
+those schools. They advance in levels at a similar rate to Deep Elves.
 
 Deep Dwarves
 ------------
@@ -1498,7 +1491,9 @@ generations made them turn pale and lose all ability to regenerate on
 their own (nor are they receptive to outside effects which merely hasten
 regeneration), as well as all ability to recover from losses to physical
 attributes over time. On the other hand, Deep Dwarves have developed the
-ability to instantly counteract small doses of damage.
+ability to instantly counteract small doses of damage. They can also use
+their empathy with the earth to sense their surroundings; this ability
+increases in power as they gain experience levels.
 
 Given their lack of innate healing, few Deep Dwarves venture out for
 adventures or even combat. Those who do usually bring a wand of healing,
@@ -1528,7 +1523,7 @@ blades, at which they are only fair), although they are not particularly
 good at using missile weapons. They prefer to use their own weapons.
 Orcs are poor at using most types of magic, with the exception of
 conjurations, necromancy, and the elemental magic of earth, fire, and
-ice. They advance as quickly as Humans.
+ice. They advance in levels as quickly as Humans.
 
 Merfolk
 -------
@@ -1618,13 +1613,13 @@ Nagas are a hybrid race: Human from the waist up with a large snake tail
 instead of legs.
 
 They are reasonably good at most things and advance in experience levels
-at a decent rate. They are naturally immune to poisons, can see
-invisible creatures and have tough skin, but their tails are relatively
-slow and cannot move them around as quickly as can other creatures' legs
-(this only affects their movement rate; all other actions are at normal
-speed). Their body shape also prevents them from gaining full protection
-from most armour. A Naga's biggest forte is stealth: Nagas are very good
-at moving unnoticed.
+at the same rate as Sludge Elves. They are naturally immune to poisons,
+can see invisible creatures and have tough skin, but their tails are
+relatively slow and cannot move them around as quickly as can other
+creatures' legs (this only affects their movement rate; all other
+actions are at normal speed). Their body shape also prevents them from
+gaining full protection from most armour. A Naga's biggest forte is
+stealth: Nagas are very good at moving unnoticed.
 
 Every now and then, a Naga can spit poison; the range, accuracy and
 damage of this poison increases with the Naga's experience level.
@@ -1637,7 +1632,7 @@ torsos. They usually live in forests, surviving by hunting.
 Centaurs can move very quickly on their four legs, and are excellent
 with bows and other missile weapons; they are also reasonable at the
 Fighting skill while being slow learners at specific weapon skills.
-They advance quite slowly in experience level and are rather
+They advance quite slowly in experience levels and are rather
 sub-average at using magic. Due to their large bulk, they need a little
 extra food to survive.
 
@@ -1704,7 +1699,7 @@ on a variety of colours. This happens at an early stage in their career,
 and the colour is determined by chromosomes, not by behaviour.
 
 Some types of Draconians have breath weapons or special resistances.
-Draconians advance very slowly in level, but are reasonably good at all
+Draconians advance very slowly in levels, but are reasonably good at all
 skills but armour (most types of which they cannot wear) and missile 
 weapons. Still, each colour has its own strengths and some have
 complementary weaknesses, which sometimes requires a bit of flexibility
@@ -1790,7 +1785,7 @@ Mummies
   These are undead creatures who travel into the depths in search of 
   revenge, redemption, or just because they want to.
 
-  Mummies progress very slowly in level, half again as slowly as Humans
+  Mummies progress very slowly in levels, half again as slowly as Humans
   in all skills except fighting, spellcasting and necromancy. As they
   increase in levels, they become increasingly in touch with the powers
   of death, but cannot use some types of necromancy which only affect
@@ -2059,8 +2054,8 @@ Fighting skills:
 Fighting is the basic skill used in hand-to-hand combat, and applies no
 matter which weapon your character is wielding (if any). Fighting is
 also the skill that determines the number of hit points your character
-gets as they increase in level (note that this is calculated so that you
-don't get a long run advantage by starting out with a high fighting
+gets as they increase in levels (note that this is calculated so that
+you don't get a long run advantage by starting out with a high fighting
 skill). The first two levels of fighting skill can be obtained by
 training melee combat against plants and fungi.
 
