@@ -117,18 +117,17 @@ static god_type ng_pr;
 // The red draconian is later replaced by a random variant.
 // The old and new lists are expected to have the same length.
 static species_type old_species_order[] = {
-    SP_HUMAN,         SP_HIGH_ELF,
-    SP_GREY_ELF,      SP_DEEP_ELF,
-    SP_SLUDGE_ELF,    SP_MOUNTAIN_DWARF,
-    SP_HALFLING,      SP_HILL_ORC,
-    SP_KOBOLD,        SP_MUMMY,
-    SP_NAGA,          SP_GNOME,
-    SP_OGRE,          SP_TROLL,
-    SP_RED_DRACONIAN, SP_CENTAUR,
-    SP_DEMIGOD,       SP_SPRIGGAN,
-    SP_MINOTAUR,      SP_DEMONSPAWN,
-    SP_GHOUL,         SP_KENKU,
-    SP_MERFOLK,       SP_VAMPIRE,
+    SP_HUMAN,          SP_HIGH_ELF,
+    SP_DEEP_ELF,       SP_SLUDGE_ELF,
+    SP_MOUNTAIN_DWARF, SP_HALFLING,
+    SP_HILL_ORC,       SP_KOBOLD,
+    SP_MUMMY,          SP_NAGA,
+    SP_OGRE,           SP_TROLL,
+    SP_RED_DRACONIAN,  SP_CENTAUR,
+    SP_DEMIGOD,        SP_SPRIGGAN,
+    SP_MINOTAUR,       SP_DEMONSPAWN,
+    SP_GHOUL,          SP_KENKU,
+    SP_MERFOLK,        SP_VAMPIRE,
     SP_DEEP_DWARF
 };
 
@@ -137,23 +136,22 @@ static species_type old_species_order[] = {
 // all living creatures finally the undead. (MM)
 static species_type new_species_order[] = {
     // comparatively human-like looks
-    SP_HUMAN,         SP_HIGH_ELF,
-    SP_GREY_ELF,      SP_DEEP_ELF,
-    SP_SLUDGE_ELF,    SP_MOUNTAIN_DWARF,
-    SP_DEEP_DWARF,    SP_HILL_ORC,
-    SP_MERFOLK,
+    SP_HUMAN,          SP_HIGH_ELF,
+    SP_DEEP_ELF,       SP_SLUDGE_ELF,
+    SP_MOUNTAIN_DWARF, SP_DEEP_DWARF,
+    SP_HILL_ORC,       SP_MERFOLK,
     // small species
-    SP_HALFLING,      SP_GNOME,
-    SP_KOBOLD,        SP_SPRIGGAN,
+    SP_HALFLING,       SP_KOBOLD,
+    SP_SPRIGGAN,
     // significantly different body type from human
-    SP_NAGA,          SP_CENTAUR,
-    SP_OGRE,          SP_TROLL,
-    SP_MINOTAUR,      SP_KENKU,
+    SP_NAGA,           SP_CENTAUR,
+    SP_OGRE,           SP_TROLL,
+    SP_MINOTAUR,       SP_KENKU,
     SP_RED_DRACONIAN,
     // celestial species
-    SP_DEMIGOD,       SP_DEMONSPAWN,
+    SP_DEMIGOD,        SP_DEMONSPAWN,
     // undead species
-    SP_MUMMY,         SP_GHOUL,
+    SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE
 };
 
@@ -227,13 +225,13 @@ static job_type _get_class(const int index)
 }
 
 static const char * Species_Abbrev_List[ NUM_SPECIES ] =
-    { "XX", "Hu", "HE", "GE", "DE", "SE", "MD", "Ha",
-      "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr",
+    { "XX", "Hu", "HE", "DE", "SE", "MD", "Ha",
+      "HO", "Ko", "Mu", "Na", "Og", "Tr",
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
       // placeholders
-      "El", "HD", "OM" };
+      "El", "HD", "OM", "GE", "Gn" };
 
 int get_species_index_by_abbrev( const char *abbrev )
 {
@@ -1026,14 +1024,12 @@ static void _give_species_bonus_hp()
             inc_max_hp(1);
             break;
 
-        case SP_GREY_ELF:
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
             dec_max_hp(1);
             break;
 
         case SP_DEEP_ELF:
-        case SP_GNOME:
         case SP_HALFLING:
         case SP_KENKU:
         case SP_KOBOLD:
@@ -1055,7 +1051,6 @@ static void _give_species_bonus_mp()
     case SP_VAMPIRE:
     case SP_SPRIGGAN:
     case SP_DEMIGOD:
-    case SP_GREY_ELF:
     case SP_DEEP_ELF:
         inc_max_mp(1);
         break;
@@ -1356,13 +1351,11 @@ static char_choice_restriction _class_allowed(species_type speci,
     case JOB_FIGHTER:
         switch (speci)
         {
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -1378,12 +1371,10 @@ static char_choice_restriction _class_allowed(species_type speci,
     case JOB_GLADIATOR:
         switch (speci)
         {
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -1400,13 +1391,11 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_HUMAN:
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -1427,12 +1416,10 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEMIGOD:
             return (CC_BANNED);
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -1455,12 +1442,10 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_GHOUL:
         case SP_VAMPIRE:
             return (CC_BANNED);
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_DEEP_DWARF:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -1476,12 +1461,10 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_DEMIGOD:
             return (CC_BANNED);
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
@@ -1499,7 +1482,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_DEMIGOD:
             return (CC_BANNED);
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -1512,8 +1494,6 @@ static char_choice_restriction _class_allowed(species_type speci,
     case JOB_DEATH_KNIGHT:
         switch (speci)
         {
-        case SP_GREY_ELF:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_KENKU:
@@ -1535,7 +1515,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_ELF:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
@@ -1575,7 +1554,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -1602,7 +1580,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
@@ -1622,7 +1599,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
@@ -1665,7 +1641,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
@@ -1683,11 +1658,9 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
@@ -1701,7 +1674,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_HUMAN:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
@@ -1710,7 +1682,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_KOBOLD:
-        case SP_GNOME:
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
@@ -1732,14 +1703,12 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_HUMAN:
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
         case SP_KOBOLD:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
@@ -1760,7 +1729,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
@@ -1779,7 +1747,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
@@ -1798,7 +1765,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
-        case SP_GNOME:
         case SP_CENTAUR:
         case SP_TROLL:
         case SP_MINOTAUR:
@@ -1814,7 +1780,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
@@ -1837,12 +1802,10 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_CENTAUR:
         case SP_TROLL:
         case SP_MINOTAUR:
@@ -1900,7 +1863,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         {
         case SP_DEEP_DWARF:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -2013,12 +1975,10 @@ static char_choice_restriction _book_restriction(startup_book_type booktype)
         {
         case SP_HUMAN:
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
         case SP_KENKU:
@@ -2039,12 +1999,10 @@ static char_choice_restriction _book_restriction(startup_book_type booktype)
         {
         case SP_HUMAN:
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
         case SP_KENKU:
@@ -2063,7 +2021,6 @@ static char_choice_restriction _book_restriction(startup_book_type booktype)
     case SBT_SUMM: // Summoning
         switch (you.species)
         {
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_KOBOLD:
@@ -2258,13 +2215,11 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
                 return (CC_RESTRICTED);
             // else fall through
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         // Sludge elves have bad aptitudes with short swords (110) but are
         // still better with them than any other starting weapon.
         case SP_SLUDGE_ELF:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
             return (CC_UNRESTRICTED);
@@ -2590,14 +2545,12 @@ static char_choice_restriction _religion_restriction(god_type god)
 
         case SP_HUMAN:
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_KOBOLD:
-        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_OGRE:
@@ -2638,7 +2591,6 @@ static char_choice_restriction _religion_restriction(god_type god)
         {
         case SP_HUMAN:
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
@@ -2646,7 +2598,6 @@ static char_choice_restriction _religion_restriction(god_type god)
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
         case SP_CENTAUR:
@@ -2764,7 +2715,6 @@ static void _species_stat_init(species_type which_species)
     case SP_DEMONSPAWN:         sb =  4; ib =  4; db =  4;      break;  // 12+7
 
     case SP_HIGH_ELF:           sb =  5; ib =  9; db =  8;      break;  // 22
-    case SP_GREY_ELF:           sb =  4; ib =  9; db =  8;      break;  // 21
     case SP_DEEP_ELF:           sb =  3; ib = 10; db =  8;      break;  // 21
     case SP_SLUDGE_ELF:         sb =  6; ib =  7; db =  7;      break;  // 20
 
@@ -2779,7 +2729,6 @@ static void _species_stat_init(species_type which_species)
     case SP_CENTAUR:            sb =  8; ib =  5; db =  2;      break;  // 15
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
 
-    case SP_GNOME:              sb =  6; ib =  6; db =  7;      break;  // 19
     case SP_MERFOLK:            sb =  6; ib =  5; db =  7;      break;  // 18
     case SP_KENKU:              sb =  6; ib =  6; db =  7;      break;  // 19
 
@@ -2906,9 +2855,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE]          = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        break;
-    case SP_GNOME:
-        you.mutation[MUT_MAPPING] = 2;
         break;
     case SP_DEEP_DWARF:
         you.mutation[MUT_SLOW_HEALING] = 3;
@@ -5464,12 +5410,6 @@ bool _give_items_skills()
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        if (you.species == SP_GNOME)
-        {
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            you.skills[SK_SLINGS] = 1;
-        }
-
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
@@ -5597,7 +5537,6 @@ bool _give_items_skills()
             break;
 
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,

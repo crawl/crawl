@@ -2514,7 +2514,7 @@ enum size_type
 {
     SIZE_TINY,              // rats/bats
     SIZE_LITTLE,            // spriggans
-    SIZE_SMALL,             // halflings/kobolds/gnomes
+    SIZE_SMALL,             // halflings/kobolds
     SIZE_MEDIUM,            // humans/elves/dwarves
     SIZE_LARGE,             // trolls/ogres
     SIZE_BIG,               // large quadrupeds/centaurs/nagas
@@ -2590,7 +2590,6 @@ enum species_type
 {
     SP_HUMAN = 1,
     SP_HIGH_ELF,
-    SP_GREY_ELF,
     SP_DEEP_ELF,
     SP_SLUDGE_ELF,
     SP_MOUNTAIN_DWARF,
@@ -2599,7 +2598,6 @@ enum species_type
     SP_KOBOLD,
     SP_MUMMY,
     SP_NAGA,
-    SP_GNOME,
     SP_OGRE,
     SP_TROLL,
     SP_RED_DRACONIAN,
@@ -2625,6 +2623,8 @@ enum species_type
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)
+    SP_GREY_ELF,                       // (placeholder)
+    SP_GNOME,                          // (placeholder)
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100

@@ -1147,8 +1147,8 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
     }
-    case ABIL_EVOKE_MAPPING:    // randarts
-    case ABIL_MAPPING:          // Gnome + sense surrounds mut
+    case ABIL_EVOKE_MAPPING:    // Randarts
+    case ABIL_MAPPING:          // Sense surroundings mutation
         if (abil.ability == ABIL_MAPPING
             && player_mutation_level(MUT_MAPPING) < 3
             && (you.level_type == LEVEL_PANDEMONIUM

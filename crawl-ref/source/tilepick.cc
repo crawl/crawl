@@ -2805,7 +2805,6 @@ void tilep_race_default(int race, int gender, int level, int *parts)
             break;
         case SP_ELF:
         case SP_HIGH_ELF:
-        case SP_GREY_ELF:
         case SP_SLUDGE_ELF:
             result = TILEP_BASE_ELF;
             hair   = TILEP_HAIR_ELF_YELLOW;
@@ -2845,9 +2844,6 @@ void tilep_race_default(int race, int gender, int level, int *parts)
             break;
         case SP_NAGA:
             result = TILEP_BASE_NAGA;
-            break;
-        case SP_GNOME:
-            result = TILEP_BASE_GNOME;
             break;
         case SP_OGRE:
             result = TILEP_BASE_OGRE;

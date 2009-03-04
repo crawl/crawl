@@ -134,7 +134,7 @@
    size:
      SIZE_TINY,              // rats/bats
      SIZE_LITTLE,            // spriggans
-     SIZE_SMALL,             // halflings/kobolds/gnomes
+     SIZE_SMALL,             // halflings/kobolds
      SIZE_MEDIUM,            // humans/elves/dwarves
      SIZE_LARGE,             // trolls/ogres
      SIZE_BIG,               // large quadrupeds/centaurs/nagas

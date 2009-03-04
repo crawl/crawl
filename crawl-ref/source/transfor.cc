@@ -543,9 +543,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         symbol    = '8';
         colour    = LIGHTGREY;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
-        if (you.species == SP_GNOME && coinflip())
-            msg = "Look, a garden gnome.  How cute!";
-        else if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
+        if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else
             msg = "You turn into a living statue of rough stone.";

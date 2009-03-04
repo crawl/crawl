@@ -447,7 +447,6 @@ bool player_genus(genus_type which_genus, species_type species)
         return (which_genus == GENPC_DRACONIAN);
 
     case SP_HIGH_ELF:
-    case SP_GREY_ELF:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
         return (which_genus == GENPC_ELVEN);
@@ -543,7 +542,6 @@ bool is_player_same_species(const int mon, bool transform)
             }
             return (false);
 
-        case SP_GREY_ELF:
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
@@ -1222,7 +1220,6 @@ int player_res_magic(void)
         rm = you.experience_level * 3;
         break;
     case SP_HIGH_ELF:
-    case SP_GREY_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
     case SP_MOUNTAIN_DWARF:
@@ -1235,7 +1232,6 @@ int player_res_magic(void)
         rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
-    case SP_GNOME:
     case SP_DEEP_DWARF:
         rm = you.experience_level * 6;
         break;
@@ -3043,22 +3039,6 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
-            case SP_GREY_ELF:
-                if (you.experience_level < 14)
-                    hp_adjust--;
-
-                if (you.experience_level % 3)
-                    mp_adjust++;
-
-                if (!(you.experience_level % 4))
-                {
-                    modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                             : STAT_DEXTERITY), 1, false,
-                                 "level gain");
-                }
-
-                break;
-
             case SP_DEEP_ELF:
                 if (you.experience_level < 17)
                     hp_adjust--;
@@ -3205,21 +3185,6 @@ void level_change(bool skip_attribute_increase)
                 {
                     mpr("Your skin feels tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
-                }
-                break;
-
-            case SP_GNOME:
-                if (you.experience_level < 13)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 3))
-                    hp_adjust--;
-
-                if (!(you.experience_level % 4))
-                {
-                    modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                             : STAT_DEXTERITY), 1, false,
-                                 "level gain");
                 }
                 break;
 
@@ -3609,7 +3574,6 @@ int check_stealth(void)
                 else
                     stealth += (you.skills[SK_STEALTH] * 18);
                 break;
-            case SP_GNOME:
             case SP_HALFLING:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
@@ -4268,7 +4232,6 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             switch (speci)
             {
             case SP_HIGH_ELF:   res = "High Elf";   break;
-            case SP_GREY_ELF:   res = "Grey Elf";   break;
             case SP_DEEP_ELF:   res = "Deep Elf";   break;
             case SP_SLUDGE_ELF: res = "Sludge Elf"; break;
             default:            res = "Elf";        break;
@@ -4309,7 +4272,6 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
             break;
 
-        case SP_GNOME:      res = (adj ? "Gnomish"    : "Gnome");      break;
         case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");       break;
         case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");      break;
         case SP_DEMIGOD:    res = (adj ? "Divine"     : "Demigod");    break;
@@ -4403,7 +4365,6 @@ static int _species_exp_mod(species_type species)
         case SP_HILL_ORC:
         case SP_KOBOLD:
             return 10;
-        case SP_GNOME:
         case SP_OGRE:
             return 11;
         case SP_SLUDGE_ELF:
@@ -4414,7 +4375,6 @@ static int _species_exp_mod(species_type species)
         case SP_SPRIGGAN:
         case SP_KENKU:
             return 13;
-        case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_CENTAUR:
         case SP_MINOTAUR:
@@ -6066,7 +6026,6 @@ size_type player::body_size(int psize, bool base) const
             break;
 
         case SP_HALFLING:
-        case SP_GNOME:
         case SP_KOBOLD:
             ret = SIZE_SMALL;
             break;
@@ -6878,8 +6837,7 @@ int player::mons_species() const
     {
     case SP_HILL_ORC:
         return (MONS_ORC);
-    case SP_HIGH_ELF: case SP_GREY_ELF:
-    case SP_DEEP_ELF: case SP_SLUDGE_ELF:
+    case SP_HIGH_ELF: case SP_DEEP_ELF: case SP_SLUDGE_ELF:
         return (MONS_ELF);
 
     default:

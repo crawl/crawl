@@ -864,7 +864,7 @@ void remove_net_from(monsters *mon)
 static int damage_or_escape_net(int hold)
 {
     // Spriggan: little (+2)
-    // Halfling, Kobold, Gnome: small (+1)
+    // Halfling, Kobold: small (+1)
     // Human, Elf, ...: medium (0)
     // Ogre, Troll, Centaur, Naga: large (-1)
     // transformations: spider, bat: tiny (+3); ice beast: large (-1)

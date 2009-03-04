@@ -1777,7 +1777,6 @@ bool acquirement(object_class_type class_wanted, int agent,
                 break;
 
             case SP_HALFLING:
-            case SP_GNOME:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
                 switch (thing.sub_type)
