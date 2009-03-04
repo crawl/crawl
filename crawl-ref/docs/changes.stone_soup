@@ -9,6 +9,7 @@ Breaks saves compatibility.
 0.5 Highlights
 --------------
 * New species and class: Deep Dwarf, Artificer.
+* Removed three species: Gnome, Grey Elf, Ogre.
 * Several cool new uniques and other monsters.
 * Several great new portal vaults.
 * Cooler labyrinths.
@@ -39,6 +40,7 @@ Characters
 * Transformations now cause worn equipment to be melded rather than removed.
 * Vampires can no longer heal via potions of blood or non-fresh corpses.
 * Overhaul nutrition values and duration for Vampires feeding on corpses.
+* Vampires recover lost attributes depending on blood level.
 * Draining of the experience pool is now reduced by life protection.
 * Player and monster nagas no longer flounder or lose stealth in shallow water.
 * Secondary unarmed attacks now wake sleeping monsters.
@@ -97,7 +99,7 @@ Items
 * New scroll: ?vulnerability, applying to all creatures in LoS including you.
 * Introduce randart spellbooks with random spell selections.
 * Book acquirements are now much more random and may yield manuals.
-* Make missile enchantment decrease chance of destruction on impact.
+* Missile enchantment decreases chance of destruction on impact.
 * Freezing weapons can now slow cold-blooded monsters.
 * The staff of channeling now trains Evocations.
 * Item descriptions now mention enchantment/charging limits.
@@ -107,11 +109,11 @@ Items
 * Ammo that IDs through throwing now merges in your pack instantaneously.
 * ?immolation doesn't burn scrolls anymore.
 * ?summoning creates a permanent abomination.
-* Vorpalise weapon now fixes temporary brands instead of EWIII.
+* ?random uselessness now autoIDs.
+* ?vorpalise weapon now fixes temporary brands instead of EWIII.
 * Nemelex-gifted decks now ID after drawing one card.
 * Decks of punishment are no longer randomly generated.
 * Removing rings of levitation or invisibility no longer cancels the effect.
-* ?random uselessness now autoIDs.
 * Identify the Horn of Geryon when wielding it.
 
 Gods
@@ -127,7 +129,9 @@ Gods
 * Sif Muna no longer gifts Kiku/Vehumet specific books.
 * Vehumet accepts undead killing for you.
 * Disallow shapeshifters in orc form to become Beoghites' followers.
-* Beogh no longer accepts butchery, but takes more kinds of kills.
+* Beogh no longer accepts butcher but likes prayer over orc corpses.
+* Beogh accepts more kinds of kills.
+* Beogh has a non-cannibalism conduct.
 
 Tiles
 -----
