@@ -252,7 +252,7 @@ bool TilesFramework::initialise()
 
     bool too_small = (m_screen_width < 1024 || m_screen_height < 800);
     if (Options.tile_full_screen == SCREENMODE_FULL
-        || (Options.tile_full_screen == SCREENMODE_AUTO && too_small))
+        || too_small && Options.tile_full_screen == SCREENMODE_AUTO)
     {
         flags |= SDL_FULLSCREEN;
     }
@@ -286,16 +286,16 @@ bool TilesFramework::initialise()
 
     calculate_default_options();
 
-    int crt_font = load_font(Options.tile_font_crt_file.c_str(),
-                             Options.tile_font_crt_size, true, true);
-    int msg_font = load_font(Options.tile_font_msg_file.c_str(),
-                             Options.tile_font_msg_size, true, false);
+    int crt_font  = load_font(Options.tile_font_crt_file.c_str(),
+                              Options.tile_font_crt_size, true, true);
+    int msg_font  = load_font(Options.tile_font_msg_file.c_str(),
+                              Options.tile_font_msg_size, true, false);
     int stat_font = load_font(Options.tile_font_stat_file.c_str(),
                               Options.tile_font_stat_size, true, false);
-    m_tip_font = load_font(Options.tile_font_tip_file.c_str(),
-                           Options.tile_font_tip_size, true, false);
-    int lbl_font = load_font(Options.tile_font_lbl_file.c_str(),
-                             Options.tile_font_lbl_size, true, true);
+    m_tip_font    = load_font(Options.tile_font_tip_file.c_str(),
+                              Options.tile_font_tip_size, true, false);
+    int lbl_font  = load_font(Options.tile_font_lbl_file.c_str(),
+                              Options.tile_font_lbl_size, true, true);
 
     if (crt_font == -1 || msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || lbl_font == -1)
@@ -306,8 +306,8 @@ bool TilesFramework::initialise()
     m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font,
                                       TILE_X, TILE_Y);
     m_region_map  = new MapRegion(Options.tile_map_pixels);
-    m_region_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
-                                            TILE_X, TILE_Y);
+    m_region_inv  = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
+                                        TILE_X, TILE_Y);
 
     m_region_msg  = new MessageRegion(m_fonts[msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
@@ -644,23 +644,23 @@ int TilesFramework::handle_mouse(MouseEvent &event)
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
-    MouseEvent &tile_event)
+                             MouseEvent &tile_event)
 {
-    tile_event.held = MouseEvent::NONE;
-    tile_event.event = MouseEvent::MOVE;
+    tile_event.held   = MouseEvent::NONE;
+    tile_event.event  = MouseEvent::MOVE;
     tile_event.button = MouseEvent::NONE;
-    tile_event.px = sdl_event.x;
-    tile_event.py = sdl_event.y;
+    tile_event.px     = sdl_event.x;
+    tile_event.py     = sdl_event.y;
 
     // TODO enne - do we want the relative motion?
 }
 
 static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
-    MouseEvent &tile_event)
+                             MouseEvent &tile_event)
 {
-    tile_event.held = MouseEvent::NONE;
+    tile_event.held  = MouseEvent::NONE;
     tile_event.event = (sdl_event.type == SDL_MOUSEBUTTONDOWN) ?
-                       MouseEvent::PRESS : MouseEvent::RELEASE;
+                            MouseEvent::PRESS : MouseEvent::RELEASE;
     switch (sdl_event.button)
     {
     case SDL_BUTTON_LEFT:

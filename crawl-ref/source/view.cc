@@ -3489,7 +3489,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
             if (cme.left_clicked() && in_bounds(grdp))
             {
                 spec_place = grdp;
-                map_alive     = false;
+                map_alive  = false;
             }
             else if (cme.scroll_up())
                 scroll_y = -block_step;

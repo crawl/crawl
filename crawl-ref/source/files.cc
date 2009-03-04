@@ -100,7 +100,7 @@ static void _save_level( int level_saved, level_area_type lt,
                          branch_type where_were_you);
 
 static bool _get_and_validate_version( FILE *restoreFile, char& major,
-                                       char& minor, std::string* reason=0);
+                                       char& minor, std::string* reason = 0);
 
 
 static bool _determine_ghost_version( FILE *ghostFile,
@@ -1049,6 +1049,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
     you.reset_prev_move();
+#ifdef USE_TILE
+    you.last_clicked_grid = coord_def();
+#endif
 
     const bool make_changes =
         (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR);

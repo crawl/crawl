@@ -943,6 +943,9 @@ public:
   bool entering_level;
   int lava_in_sight;       // Is there lava in LoS?
   int water_in_sight;      // Is there deep water in LoS?
+#ifdef USE_TILE
+  coord_def last_clicked_grid; // The map position the player last clicked on.
+#endif
 
   // Warning: these two are quite different.
   //
@@ -2024,7 +2027,7 @@ public:
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
     std::string pizza;
-    
+
 #ifdef WIZARD
     int         wiz_mode;        // yes, no, never in wiz mode to start
 #endif
