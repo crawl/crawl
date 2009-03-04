@@ -32,6 +32,7 @@ Levels
 
 Characters
 ----------
+* Removed Grey Elf and Gnome species.
 * Merged Ogre-Mages into Ogres with completely new aptitudes.
 * Added non-healing species: Deep Dwarves.
 * Added Artificer class.
@@ -126,7 +127,7 @@ Gods
 * Sif Muna no longer gifts Kiku/Vehumet specific books.
 * Vehumet accepts undead killing for you.
 * Disallow shapeshifters in orc form to become Beoghites' followers.
-* Beogh no longer accepts butchery.
+* Beogh no longer accepts butchery, but takes more kinds of kills.
 
 Tiles
 -----
