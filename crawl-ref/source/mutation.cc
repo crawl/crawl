@@ -44,7 +44,7 @@ REVISION("$Rev$");
 #include "xom.h"
 
 
-static int body_covered();
+static int _body_covered();
 
 const char *troll_claw_descrip[4] = {
     "You have claws for hands.",
@@ -97,9 +97,9 @@ const char *naga_deformed_descrip[3] = {
 mutation_def mutation_defs[] = {
     { MUT_TOUGH_SKIN,                10,  3, false,  true,
 
-      {"You have tough skin (AC + 1).",
-       "You have very tough skin (AC + 2).",
-       "You have extremely tough skin (AC + 3)."},
+      {"You have tough skin (AC +1).",
+       "You have very tough skin (AC +2).",
+       "You have extremely tough skin (AC +3)."},
 
       {"Your skin toughens.",
        "Your skin toughens.",
@@ -131,9 +131,9 @@ mutation_def mutation_defs[] = {
       "agile"
     },
     { MUT_GREEN_SCALES,               2,  3, false,  true,
-      {"You are partially covered in green scales (AC + 1).",
-       "You are mostly covered in green scales (AC + 3).",
-       "You are covered in green scales (AC + 5)."},
+      {"You are partially covered in green scales (AC +1).",
+       "You are mostly covered in green scales (AC +3).",
+       "You are covered in green scales (AC +5)."},
 
       {"Green scales grow over part of your body.",
        "Green scales spread over more of your body.",
@@ -146,9 +146,9 @@ mutation_def mutation_defs[] = {
       "green scales"
     },
     { MUT_BLACK_SCALES,               1,  3, false,  true,
-      {"You are partially covered in thick black scales (AC + 3, Dex - 1).",
-       "You are mostly covered in thick black scales (AC + 6, Dex - 2).",
-       "You are completely covered in thick black scales (AC + 9, Dex - 3)."},
+      {"You are partially covered in thick black scales (AC +3, Dex -1).",
+       "You are mostly covered in thick black scales (AC +6, Dex -2).",
+       "You are completely covered in thick black scales (AC +9, Dex -3)."},
 
       {"Thick black scales grow over part of your body.",
        "Thick black scales spread over more of your body.",
@@ -161,9 +161,9 @@ mutation_def mutation_defs[] = {
       "black scales"
     },
     { MUT_GREY_SCALES,                2,  3, false,  true,
-      {"You are partially covered in supple grey scales (AC + 1).",
-       "You are mostly covered in supple grey scales (AC + 2).",
-       "You are completely covered in supple grey scales (AC + 3)."},
+      {"You are partially covered in supple grey scales (AC +1).",
+       "You are mostly covered in supple grey scales (AC +2).",
+       "You are completely covered in supple grey scales (AC +3)."},
 
       {"Supple grey scales grow over part of your body.",
        "Supple grey scales spread over more of your body.",
@@ -176,9 +176,9 @@ mutation_def mutation_defs[] = {
       "grey scales"
     },
     { MUT_BONEY_PLATES,               1,  3, false,  true,
-      {"You are protected by plates of bone (AC + 2, Dex -1).",
-       "You are protected by plates of bone (AC + 3, Dex -2).",
-       "You are protected by plates of bone (AC + 4, Dex -3)."},
+      {"You are protected by plates of bone (AC +2, Dex -1).",
+       "You are protected by plates of bone (AC +3, Dex -2).",
+       "You are protected by plates of bone (AC +4, Dex -3)."},
 
       {"You grow protective plates of bone.",
        "You grow more protective plates of bone.",
@@ -191,10 +191,10 @@ mutation_def mutation_defs[] = {
       "boney plates"
     },
     { MUT_REPULSION_FIELD,            1,  3, false, false,
-      {"You are surrounded by a mild repulsion field (EV + 1).",
-       "You are surrounded by a moderate repulsion field (EV + 3).",
+      {"You are surrounded by a mild repulsion field (EV +1).",
+       "You are surrounded by a moderate repulsion field (EV +3).",
        "You are surrounded by a strong repulsion field "
-       "(EV + 5; repel missiles)."},
+       "(EV +5; repel missiles)."},
 
       {"You begin to radiate repulsive energy.",
        "Your repulsive radiation grows stronger.",
@@ -296,7 +296,7 @@ mutation_def mutation_defs[] = {
 
       "regeneration"
     },
-    { MUT_SLOW_HEALING,               0,  3,  true, false,
+    { MUT_SLOW_HEALING,               3,  3,  true, false,
       {"You heal slowly.",
        "You heal very slowly.",
        "You do not heal naturally."},
@@ -938,9 +938,9 @@ mutation_def mutation_defs[] = {
     },
 
     { MUT_SHAGGY_FUR,                 2,  3, false,  true,
-      {"You are covered in fur (AC + 1).",
-       "You are covered in thick fur (AC + 2).",
-       "Your thick and shaggy fur keeps you warm (AC + 3, cold resistant)."},
+      {"You are covered in fur (AC +1).",
+       "You are covered in thick fur (AC +2).",
+       "Your thick and shaggy fur keeps you warm (AC +3, cold resistant)."},
 
       {"Fur sprouts all over your body.",
        "Your fur grows into a thick mane.",
@@ -993,9 +993,9 @@ mutation_def mutation_defs[] = {
 
 // Scales of various colours and effects
     { MUT_RED_SCALES,                 2,  3, false,  true,
-      {"You are partially covered in red scales (AC + 1).",
-       "You are mostly covered in red scales (AC + 2).",
-       "You are covered in red scales (AC + 4)."},
+      {"You are partially covered in red scales (AC +1).",
+       "You are mostly covered in red scales (AC +2).",
+       "You are covered in red scales (AC +4)."},
 
       {"Red scales grow over part of your body.",
        "Red scales spread over more of your body.",
@@ -1008,9 +1008,9 @@ mutation_def mutation_defs[] = {
       "red scales"
     },
     { MUT_NACREOUS_SCALES,            1,  3, false,  true,
-      {"You are partially covered in smooth nacreous scales (AC + 1).",
-       "You are mostly covered in smooth nacreous scales (AC + 3).",
-       "You are completely covered in smooth nacreous scales (AC + 5)."},
+      {"You are partially covered in smooth nacreous scales (AC +1).",
+       "You are mostly covered in smooth nacreous scales (AC +3).",
+       "You are completely covered in smooth nacreous scales (AC +5)."},
 
       {"Smooth nacreous scales grow over part of your body.",
        "Smooth nacreous scales spread over more of your body.",
@@ -1023,9 +1023,9 @@ mutation_def mutation_defs[] = {
       "nacreous scales"
     },
     { MUT_GREY2_SCALES,               2,  3, false,  true,
-      {"You are partially covered in ridged grey scales (AC + 2, Dex -1).",
-       "You are mostly covered in ridged grey scales (AC + 4, Dex -1).",
-       "You are completely covered in ridged grey scales (AC + 6, Dex -2)."},
+      {"You are partially covered in ridged grey scales (AC +2, Dex -1).",
+       "You are mostly covered in ridged grey scales (AC +4, Dex -1).",
+       "You are completely covered in ridged grey scales (AC +6, Dex -2)."},
 
       {"Ridged grey scales grow over part of your body.",
        "Ridged grey scales spread over more of your body.",
@@ -1038,9 +1038,9 @@ mutation_def mutation_defs[] = {
       "grey2 scales"
     },
     { MUT_METALLIC_SCALES,            1,  3, false,  true,
-      {"You are partially covered in metallic scales (AC + 3, Dex -2).",
-       "You are mostly covered in metallic scales (AC + 7, Dex -3).",
-       "You are completely covered in metallic scales (AC + 10, Dex -4)."},
+      {"You are partially covered in metallic scales (AC +3, Dex -2).",
+       "You are mostly covered in metallic scales (AC +7, Dex -3).",
+       "You are completely covered in metallic scales (AC +10, Dex -4)."},
 
       {"Metallic scales grow over part of your body.",
        "Metallic scales spread over more of your body.",
@@ -1053,9 +1053,9 @@ mutation_def mutation_defs[] = {
       "metallic scales"
     },
     { MUT_BLACK2_SCALES,              2,  3, false,  true,
-      {"You are partially covered in black scales (AC + 1).",
-       "You are mostly covered in black scales (AC + 3).",
-       "You are completely covered in black scales (AC + 5)."},
+      {"You are partially covered in black scales (AC +1).",
+       "You are mostly covered in black scales (AC +3).",
+       "You are completely covered in black scales (AC +5)."},
 
       {"Black scales grow over part of your body.",
        "Black scales spread over more of your body.",
@@ -1068,9 +1068,9 @@ mutation_def mutation_defs[] = {
       "black2 scales"
     },
     { MUT_WHITE_SCALES,               2,  3, false,  true,
-      {"You are partially covered in white scales (AC + 1).",
-       "You are mostly covered in white scales (AC + 3).",
-       "You are completely covered in white scales (AC + 5)."},
+      {"You are partially covered in white scales (AC +1).",
+       "You are mostly covered in white scales (AC +3).",
+       "You are completely covered in white scales (AC +5)."},
 
       {"White scales grow over part of your body.",
        "White scales spread over more of your body.",
@@ -1083,9 +1083,9 @@ mutation_def mutation_defs[] = {
       "white scales"
     },
     { MUT_YELLOW_SCALES,              2,  3, false,  true,
-      {"You are partially covered in yellow scales (AC + 2).",
-       "You are mostly covered in yellow scales (AC + 4, Dex -1).",
-       "You are completely covered in yellow scales (AC + 6, Dex -2)."},
+      {"You are partially covered in yellow scales (AC +2).",
+       "You are mostly covered in yellow scales (AC +4, Dex -1).",
+       "You are completely covered in yellow scales (AC +6, Dex -2)."},
 
       {"Yellow scales grow over part of your body.",
        "Yellow scales spread over more of your body.",
@@ -1098,9 +1098,9 @@ mutation_def mutation_defs[] = {
       "yellow scales"
     },
     { MUT_BROWN_SCALES,               2,  3, false,  true,
-      {"You are partially covered in brown scales (AC + 2).",
-       "You are mostly covered in brown scales (AC + 4).",
-       "You are completely covered in brown scales (AC + 5)."},
+      {"You are partially covered in brown scales (AC +2).",
+       "You are mostly covered in brown scales (AC +4).",
+       "You are completely covered in brown scales (AC +5)."},
 
       {"Brown scales grow over part of your body.",
        "Brown scales spread over more of your body.",
@@ -1113,9 +1113,9 @@ mutation_def mutation_defs[] = {
       "brown scales"
     },
     { MUT_BLUE_SCALES,                2,  3, false,  true,
-      {"You are partially covered in blue scales (AC + 1).",
-       "You are mostly covered in blue scales (AC + 2).",
-       "You are completely covered in blue scales (AC + 3)."},
+      {"You are partially covered in blue scales (AC +1).",
+       "You are mostly covered in blue scales (AC +2).",
+       "You are completely covered in blue scales (AC +3)."},
 
       {"Blue scales grow over part of your body.",
        "Blue scales spread over more of your body.",
@@ -1128,9 +1128,9 @@ mutation_def mutation_defs[] = {
       "blue scales"
     },
     { MUT_PURPLE_SCALES,              2,  3, false,  true,
-      {"You are partially covered in purple scales (AC + 2).",
-       "You are mostly covered in purple scales (AC + 4).",
-       "You are completely covered in purple scales (AC + 6)."},
+      {"You are partially covered in purple scales (AC +2).",
+       "You are mostly covered in purple scales (AC +4).",
+       "You are completely covered in purple scales (AC +6)."},
 
       {"Purple scales grow over part of your body.",
        "Purple scales spread over more of your body.",
@@ -1143,9 +1143,9 @@ mutation_def mutation_defs[] = {
       "purple scales"
     },
     { MUT_SPECKLED_SCALES,            2,  3, false,  true,
-      {"You are partially covered in speckled scales (AC + 1).",
-       "You are mostly covered in speckled scales (AC + 2).",
-       "You are covered in speckled scales (AC + 3)."},
+      {"You are partially covered in speckled scales (AC +1).",
+       "You are mostly covered in speckled scales (AC +2).",
+       "You are covered in speckled scales (AC +3)."},
 
       {"Speckled scales grow over part of your body.",
        "Speckled scales spread over more of your body.",
@@ -1158,9 +1158,9 @@ mutation_def mutation_defs[] = {
       "speckled scales"
     },
     { MUT_ORANGE_SCALES,              2,  3, false,  true,
-      {"You are partially covered in orange scales (AC + 1).",
-       "You are mostly covered in orange scales (AC + 3).",
-       "You are completely covered in orange scales (AC + 4)."},
+      {"You are partially covered in orange scales (AC +1).",
+       "You are mostly covered in orange scales (AC +3).",
+       "You are completely covered in orange scales (AC +4)."},
 
       {"Orange scales grow over part of your body.",
        "Orange scales spread over more of your body.",
@@ -1173,9 +1173,9 @@ mutation_def mutation_defs[] = {
       "orange scales"
     },
     { MUT_INDIGO_SCALES,              2,  3, false,  true,
-      {"You are partially covered in indigo scales (AC + 2).",
-       "You are mostly covered in indigo scales (AC + 3).",
-       "You are completely covered in indigo scales (AC + 5)."},
+      {"You are partially covered in indigo scales (AC +2).",
+       "You are mostly covered in indigo scales (AC +3).",
+       "You are completely covered in indigo scales (AC +5)."},
 
       {"Indigo scales grow over part of your body.",
        "Indigo scales spread over more of your body.",
@@ -1188,9 +1188,9 @@ mutation_def mutation_defs[] = {
       "indigo scales"
     },
     { MUT_RED2_SCALES,                1,  3, false,  true,
-      {"You are partially covered in knobbly red scales (AC + 2).",
-       "You are mostly covered in knobbly red scales (AC + 5, Dex -1).",
-       "You are completely covered in knobbly red scales (AC + 7, Dex -2)."},
+      {"You are partially covered in knobbly red scales (AC +2).",
+       "You are mostly covered in knobbly red scales (AC +5, Dex -1).",
+       "You are completely covered in knobbly red scales (AC +7, Dex -2)."},
 
       {"Knobbly red scales grow over part of your body.",
        "Knobbly red scales spread over more of your body.",
@@ -1203,9 +1203,9 @@ mutation_def mutation_defs[] = {
       "red2 scales"
     },
     { MUT_IRIDESCENT_SCALES,          1,  3, false,  true,
-      {"You are partially covered in iridescent scales (AC + 1).",
-       "You are mostly covered in iridescent scales (AC + 2).",
-       "You are completely covered in iridescent scales (AC + 3)."},
+      {"You are partially covered in iridescent scales (AC +1).",
+       "You are mostly covered in iridescent scales (AC +2).",
+       "You are completely covered in iridescent scales (AC +3)."},
 
       {"Iridescent scales grow over part of your body.",
        "Iridescent scales spread over more of your body.",
@@ -1218,9 +1218,9 @@ mutation_def mutation_defs[] = {
       "iridescent scales"
     },
     { MUT_PATTERNED_SCALES,           1,  3, false,  true,
-      {"You are partially covered in patterned scales (AC + 1).",
-       "You are mostly covered in patterned scales (AC + 2).",
-       "You are completely covered in patterned scales (AC + 3)."},
+      {"You are partially covered in patterned scales (AC +1).",
+       "You are mostly covered in patterned scales (AC +2).",
+       "You are completely covered in patterned scales (AC +3)."},
 
       {"Patterned scales grow over part of your body.",
        "Patterned scales spread over more of your body.",
@@ -1868,27 +1868,22 @@ static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false,
 
 static mutation_type get_random_xom_mutation(bool non_fatal = false)
 {
+    const mutation_type bad_muts[] = {
+        MUT_WEAK,          MUT_DOPEY,  MUT_CLUMSY,
+        MUT_DEFORMED,      MUT_SCREAM, MUT_DETERIORATION,
+        MUT_BLURRY_VISION, MUT_FRAIL,  MUT_SLOW_HEALING
+    };
+
     mutation_type mutat = NUM_MUTATIONS;
+
     do
     {
         mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
 
         if (one_chance_in(1000))
             return (NUM_MUTATIONS);
-        if (one_chance_in(5))
-        {
-            switch (random2(8))
-            {
-            case 0: mutat = MUT_WEAK; break;
-            case 1: mutat = MUT_DOPEY; break;
-            case 2: mutat = MUT_CLUMSY; break;
-            case 3: mutat = MUT_DEFORMED; break;
-            case 4: mutat = MUT_SCREAM; break;
-            case 5: mutat = MUT_DETERIORATION; break;
-            case 6: mutat = MUT_BLURRY_VISION; break;
-            case 7: mutat = MUT_FRAIL; break;
-            }
-        }
+        else if (one_chance_in(5))
+            mutat = RANDOM_ELEMENT(bad_muts);
     }
     while (!accept_mutation(mutat, false, non_fatal));
 
@@ -1929,6 +1924,92 @@ static bool _is_random(mutation_type which_mutation)
             || which_mutation == RANDOM_XOM_MUTATION
             || which_mutation == RANDOM_GOOD_MUTATION
             || which_mutation == RANDOM_BAD_MUTATION);
+}
+
+// Tries to give you the mutation by deleting a conflicting
+// one, or clears out conflicting mutations if we should give
+// you the mutation anyway.
+// Return:
+//  1 if we should stop processing (success);
+//  0 if we should continue processing;
+// -1 if we should stop processing (failure).
+static int _handle_conflicting_mutations(mutation_type mutation,
+                                         bool override)
+{
+    if (override)
+    {
+        // These are mutations which should be cleared away if
+        // forced.
+        const mutation_type override_conflict[][2] = {
+            { MUT_REGENERATION, MUT_SLOW_METABOLISM },
+            { MUT_REGENERATION, MUT_SLOW_HEALING    },
+            { MUT_ACUTE_VISION, MUT_BLURRY_VISION   }
+        };
+
+        // If we have one of the pair, delete all levels of
+        // the other, and continue processing.
+        for (unsigned i = 0; i < ARRAYSZ(override_conflict); ++i)
+        {
+            for (int j = 0; j < 2; ++j)
+            {
+                const mutation_type a = override_conflict[i][j];
+                const mutation_type b = override_conflict[i][1-j];
+
+                if (mutation == a)
+                    while (delete_mutation(b, true, true))
+                        ;
+            }
+        }
+    }
+
+    // These are mutations which can't be traded off against each
+    // other, so we just fail.
+    const mutation_type fail_conflict[][2] = {
+        { MUT_REGENERATION, MUT_SLOW_METABOLISM },
+        { MUT_FANGS,        MUT_BEAK            }
+    };
+    for (unsigned i = 0; i < ARRAYSZ(fail_conflict); ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            const mutation_type a = fail_conflict[i][j];
+            const mutation_type b = fail_conflict[i][1-j];
+            if (mutation == a && you.mutation[b] > 0)
+                return (-1);    // Fail.
+        }
+    }
+
+    // These are mutations which trade off against each other.
+    const mutation_type simple_conflict[][2] = {
+        { MUT_STRONG,          MUT_WEAK            },
+        { MUT_CLEVER,          MUT_DOPEY           },
+        { MUT_AGILE,           MUT_CLUMSY          },
+        { MUT_STRONG_STIFF,    MUT_FLEXIBLE_WEAK   },
+        { MUT_ROBUST,          MUT_FRAIL           },
+        { MUT_HIGH_MAGIC,      MUT_LOW_MAGIC       },
+        { MUT_CARNIVOROUS,     MUT_HERBIVOROUS     },
+        { MUT_SLOW_METABOLISM, MUT_FAST_METABOLISM },
+        { MUT_REGENERATION,    MUT_SLOW_HEALING    },
+        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION   }
+    };
+
+    for (unsigned i = 0; i < ARRAYSZ(simple_conflict); ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            // If we have one of the pair, delete a level of the
+            // other, and that's it.
+            const mutation_type a = simple_conflict[i][j];
+            const mutation_type b = simple_conflict[i][1-j];
+            if (mutation == a && you.mutation[b] > 0)
+            {
+                delete_mutation(b);
+                return (1);     // Nothing more to do
+            }
+        }
+    }
+
+    return (0);
 }
 
 bool mutate(mutation_type which_mutation, bool failMsg,
@@ -2069,7 +2150,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if ((mutat == MUT_SHAGGY_FUR
             || mutat >= MUT_GREEN_SCALES && mutat <= MUT_BONEY_PLATES
             || mutat >= MUT_RED_SCALES && mutat <= MUT_PATTERNED_SCALES)
-        && body_covered() >= 3 && !god_gift && !force_mutation)
+        && _body_covered() >= 3 && !god_gift && !force_mutation)
     {
         return (false);
     }
@@ -2093,45 +2174,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
     }
 
-    // This one can be forced by demonspawn or god gifts.
-    if (mutat == MUT_REGENERATION
-        && you.mutation[MUT_SLOW_METABOLISM] > 0 && !god_gift
-        && !force_mutation)
-    {
-        // If you have a slow metabolism, no regeneration.
-        return (false);
-    }
-
-    // If you have regeneration, no slow metabolism.
-    if (mutat == MUT_SLOW_METABOLISM && you.mutation[MUT_REGENERATION] > 0)
-        return (false);
-
-    // If you have slow healing, no regeneration.
-    if (mutat == MUT_REGENERATION && you.mutation[MUT_SLOW_HEALING] > 0)
-        return (false);
-
-    // This one can be forced by demonspawn or god gifts.
-    if (mutat == MUT_ACUTE_VISION
-        && you.mutation[MUT_BLURRY_VISION] > 0 && !god_gift
-        && !force_mutation)
-    {
-        return (false);
-    }
-
-    // No blurred vision with see invisible.
-    if (mutat == MUT_BLURRY_VISION && you.mutation[MUT_ACUTE_VISION] > 0)
-        return (false);
-
     // Only Nagas and Draconians can get this one.
     if (mutat == MUT_STINGER
         && !(you.species == SP_NAGA || player_genus(GENPC_DRACONIAN)))
-    {
-        return (false);
-    }
-
-    // No fangs with beaks, or vice versa.
-    if ((mutat == MUT_FANGS && you.mutation[MUT_BEAK] > 0)
-        || (mutat == MUT_BEAK && you.mutation[MUT_FANGS] > 0))
     {
         return (false);
     }
@@ -2174,129 +2219,38 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (you.mutation[mutat] >= mdef.levels)
         return (false);
 
-    bool      need_msg      = true;
-    stat_type change_stat   = STAT_RANDOM;
-    int       change_amount = 0;
+    // God gifts and forced mutations clear away conflicting mutations.
+    int rc =_handle_conflicting_mutations(mutat, god_gift || force_mutation);
+    if (rc == 1)
+        return (true);
+    if (rc == -1)
+        return (false);
+    ASSERT(rc == 0);
+
+    bool gain_msg = true;
+    bool stat_msg = false;
+
+    // Save original stats.
+    const stat_type stats[] = {STAT_STRENGTH, STAT_DEXTERITY,
+                               STAT_INTELLIGENCE};
+    int modifiers[3];
+
+    for (int i = 0; i < 3; ++i)
+        modifiers[i] = stat_modifier(stats[i]);
 
     switch (mutat)
     {
-    case MUT_STRONG:
-        if (you.mutation[MUT_WEAK] > 0)
-        {
-            delete_mutation(MUT_WEAK);
-            return (true);
-        }
-        change_stat   = STAT_STRENGTH;
-        change_amount = 1;
-        break;
-
-    case MUT_CLEVER:
-        if (you.mutation[MUT_DOPEY] > 0)
-        {
-            delete_mutation(MUT_DOPEY);
-            return (true);
-        }
-        change_stat   = STAT_INTELLIGENCE;
-        change_amount = 1;
-        break;
-
-    case MUT_AGILE:
-        if (you.mutation[MUT_CLUMSY] > 0)
-        {
-            delete_mutation(MUT_CLUMSY);
-            return (true);
-        }
-        change_stat   = STAT_DEXTERITY;
-        change_amount = 1;
-        break;
-
-    case MUT_WEAK:
-        if (you.mutation[MUT_STRONG] > 0)
-        {
-            delete_mutation(MUT_STRONG);
-            return (true);
-        }
-        change_stat   = STAT_STRENGTH;
-        change_amount = -1;
-        break;
-
-    case MUT_DOPEY:
-        if (you.mutation[MUT_CLEVER] > 0)
-        {
-            delete_mutation(MUT_CLEVER);
-            return (true);
-        }
-        change_stat   = STAT_INTELLIGENCE;
-        change_amount = -1;
-        break;
-
-    case MUT_CLUMSY:
-        if (you.mutation[MUT_AGILE] > 0)
-        {
-            delete_mutation(MUT_AGILE);
-            return (true);
-        }
-        change_stat   = STAT_DEXTERITY;
-        change_amount = -1;
-        break;
-
-    case MUT_REGENERATION:
-        if (you.mutation[MUT_SLOW_METABOLISM] > 0)
-        {
-            // Should only get here from demonspawn or a god gift, where
-            // our innate ability will clear away the counter-mutation.
-            while (delete_mutation(MUT_SLOW_METABOLISM))
-                ;
-        }
-        break;
-
-    case MUT_ACUTE_VISION:
-        if (you.mutation[MUT_BLURRY_VISION] > 0)
-        {
-            // Should only get here from demonspawn or a god gift, where
-            // our innate ability will clear away the counter-mutation.
-            while (delete_mutation(MUT_BLURRY_VISION))
-                ;
-        }
-        break;
-
-    case MUT_CARNIVOROUS:
-        if (you.mutation[MUT_HERBIVOROUS] > 0)
-        {
-            delete_mutation(MUT_HERBIVOROUS);
-            return (true);
-        }
-        break;
-
-    case MUT_HERBIVOROUS:
-        if (you.mutation[MUT_CARNIVOROUS] > 0)
-        {
-            delete_mutation(MUT_CARNIVOROUS);
-            return (true);
-        }
-        break;
-
-    case MUT_FAST_METABOLISM:
-        if (you.mutation[MUT_SLOW_METABOLISM] > 0)
-        {
-            delete_mutation(MUT_SLOW_METABOLISM);
-            return (true);
-        }
-        break;
-
-    case MUT_SLOW_METABOLISM:
-        if (you.mutation[MUT_FAST_METABOLISM] > 0)
-        {
-            delete_mutation(MUT_FAST_METABOLISM);
-            return (true);
-        }
+    case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
+    case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
+        stat_msg = true;
+        gain_msg = false;
         break;
 
         // FIXME: these cases should be handled better.
     case MUT_HOOVES:
     case MUT_TALONS:
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        need_msg = false;
+        gain_msg = false;
 
         // Hooves and talons force boots off.
         if (you_tran_can_wear(EQ_BOOTS))
@@ -2305,7 +2259,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     case MUT_CLAWS:
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        need_msg = false;
+        gain_msg = false;
 
         // Gloves aren't prevented until level 3.  We don't have the
         // mutation yet, so we have to check for level 2 or higher claws
@@ -2317,7 +2271,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_HORNS:
     case MUT_BEAK:
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-        need_msg = false;
+        gain_msg = false;
 
         // Horns and beaks force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
@@ -2328,101 +2282,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
         break;
 
-    case MUT_STRONG_STIFF:
-        if (you.mutation[MUT_FLEXIBLE_WEAK] > 0)
-        {
-            delete_mutation(MUT_FLEXIBLE_WEAK);
-            return (true);
-        }
-        modify_stat(STAT_STRENGTH,   1, true, "gaining a mutation");
-        modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
-        break;
-
-    case MUT_FLEXIBLE_WEAK:
-        if (you.mutation[MUT_STRONG_STIFF] > 0)
-        {
-            delete_mutation(MUT_STRONG_STIFF);
-            return (true);
-        }
-        modify_stat(STAT_STRENGTH, -1, true, "gaining a mutation");
-        modify_stat(STAT_DEXTERITY, 1, true, "gaining a mutation");
-        break;
-
-    case MUT_FRAIL:
-        if (you.mutation[MUT_ROBUST] > 0)
-        {
-            delete_mutation(MUT_ROBUST);
-            return (true);
-        }
-        // special-case check
-        you.mutation[mutat]++;
-        calc_hp();
-        you.mutation[mutat]--;
-        you.redraw_hit_points = true;
-        break;
-
-    case MUT_ROBUST:
-        if (you.mutation[MUT_FRAIL] > 0)
-        {
-            delete_mutation(MUT_FRAIL);
-            return (true);
-        }
-        // special-case check
-        you.mutation[mutat]++;
-        calc_hp();
-        you.mutation[mutat]--;
-        you.redraw_hit_points = true;
-        break;
-
-    case MUT_LOW_MAGIC:
-        if (you.mutation[MUT_HIGH_MAGIC] > 0)
-        {
-            delete_mutation(MUT_HIGH_MAGIC);
-            return (true);
-        }
-        // special-case check
-        you.mutation[mutat]++;
-        calc_mp();
-        you.mutation[mutat]--;
-        you.redraw_magic_points = true;
-        break;
-
-    case MUT_HIGH_MAGIC:
-        if (you.mutation[MUT_LOW_MAGIC] > 0)
-        {
-            delete_mutation(MUT_LOW_MAGIC);
-            return (true);
-        }
-        // special-case check
-        you.mutation[mutat]++;
-        calc_mp();
-        you.mutation[mutat]--;
-        you.redraw_magic_points = true;
-        break;
-
-    case MUT_BLACK_SCALES:
-    case MUT_BONEY_PLATES:
-        modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
-        break;
-
-    case MUT_GREY2_SCALES:
-        if (you.mutation[mutat] != 1)
-            modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
-        break;
-
-    case MUT_METALLIC_SCALES:
-        if (you.mutation[mutat] == 0)
-            modify_stat(STAT_DEXTERITY, -2, true, "gaining a mutation");
-        else
-            modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
-        break;
-
-    case MUT_RED2_SCALES:
-    case MUT_YELLOW_SCALES:
-        if (you.mutation[mutat] != 0)
-            modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
-        break;
-
     default:
         break;
     }
@@ -2430,18 +2289,29 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // For all those scale mutations.
     you.redraw_armour_class = true;
 
-    if (change_stat != STAT_RANDOM && change_amount != 0)
-        modify_stat(change_stat, change_amount, false, "losing a mutation");
-    else if (need_msg)
-        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
-
-    // Note the difference from losing a mutation, where the
-    // post-increment index is used.
     you.mutation[mutat]++;
 
+    for (int i = 0; i < 3; ++i)
+    {
+        const int new_modifier = stat_modifier(stats[i]);
+        if (new_modifier != modifiers[i])
+        {
+            modify_stat(stats[i], new_modifier - modifiers[i],
+                        !stat_msg, "losing a mutation");
+        }
+    }
+
+    if (gain_msg)
+        mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
+
+    // Do post-mutation effects.
+    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST)
+        calc_hp();
+    if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
+        calc_mp();
+
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
-    int amusement_value = _calc_mutation_amusement_value(mutat);
-    xom_is_stimulated(amusement_value);
+    xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
     return (true);
@@ -2518,90 +2388,23 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
     const mutation_def& mdef = get_mutation_def(mutat);
 
-    stat_type change_stat   = STAT_RANDOM;
-    int       change_amount = 0;
+    bool lose_msg = true;
+    bool stat_msg = false;
+
+    // Save original stats.
+    const stat_type stats[] = {STAT_STRENGTH, STAT_DEXTERITY,
+                               STAT_INTELLIGENCE};
+    int modifiers[3];
+
+    for (int i = 0; i < 3; ++i)
+        modifiers[i] = stat_modifier(stats[i]);
 
     switch (mutat)
     {
-    case MUT_STRONG:
-        change_stat   = STAT_STRENGTH;
-        change_amount = -1;
-        break;
-
-    case MUT_CLEVER:
-        change_stat   = STAT_INTELLIGENCE;
-        change_amount = -1;
-        break;
-
-    case MUT_AGILE:
-        change_stat   = STAT_DEXTERITY;
-        change_amount = -1;
-        break;
-
-    case MUT_WEAK:
-        change_stat   = STAT_STRENGTH;
-        change_amount = 1;
-        break;
-
-    case MUT_DOPEY:
-        change_stat   = STAT_INTELLIGENCE;
-        change_amount = 1;
-        break;
-
-    case MUT_CLUMSY:
-        change_stat   = STAT_DEXTERITY;
-        change_amount = 1;
-        break;
-
-    case MUT_STRONG_STIFF:
-        modify_stat(STAT_STRENGTH,  -1, true, "losing a mutation");
-        modify_stat(STAT_DEXTERITY,  1, true, "losing a mutation");
-        break;
-
-    case MUT_FLEXIBLE_WEAK:
-        modify_stat(STAT_STRENGTH,   1, true, "losing a mutation");
-        modify_stat(STAT_DEXTERITY, -1, true, "losing a mutation");
-        break;
-
-    case MUT_FRAIL:
-    case MUT_ROBUST:
-        // special-case check
-        you.mutation[mutat]--;
-        calc_hp();
-        you.mutation[mutat]++;
-        you.redraw_hit_points = true;
-        break;
-
-    case MUT_LOW_MAGIC:
-    case MUT_HIGH_MAGIC:
-        // special-case check
-        you.mutation[mutat]--;
-        calc_mp();
-        you.mutation[mutat]++;
-        you.redraw_magic_points = true;
-        break;
-
-    case MUT_BLACK_SCALES:
-    case MUT_BONEY_PLATES:
-        modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
-        break;
-
-    case MUT_GREY2_SCALES:
-        if (you.mutation[mutat] != 2)
-            modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
-        break;
-
-    case MUT_METALLIC_SCALES:
-        if (you.mutation[mutat] == 1)
-            modify_stat(STAT_DEXTERITY, 2, true, "losing a mutation");
-        else
-            modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
-        break;
-
-    case MUT_RED2_SCALES:
-    case MUT_YELLOW_SCALES:
-        if (you.mutation[mutat] != 1)
-            modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
+    case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
+    case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
+        stat_msg = true;
+        lose_msg = false;
         break;
 
     case MUT_BREATHE_POISON:
@@ -2626,17 +2429,30 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]--;
 
-    // Stat change will handle the message.
-    if (change_stat != STAT_RANDOM && change_amount != 0)
-        modify_stat(change_stat, change_amount, false, "losing a mutation");
-    else
+    for (int i = 0; i < 3; ++i)
+    {
+        const int new_modifier = stat_modifier(stats[i]);
+        if (new_modifier != modifiers[i])
+        {
+            modify_stat(stats[i], new_modifier - modifiers[i],
+                        !stat_msg, "losing a mutation");
+        }
+    }
+
+    if (lose_msg)
         mpr(mdef.lose[you.mutation[mutat]], MSGCH_MUTATION);
+
+    // Do post-mutation effects.
+    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST)
+        calc_hp();
+    if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
+        calc_mp();
 
     take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
     return (true);
 }
 
-static int body_covered()
+static int _body_covered()
 {
     // Check how much of your body is covered by scales, etc.
     int covered = 0;
@@ -2647,27 +2463,20 @@ static int body_covered()
     if (player_genus(GENPC_DRACONIAN))
         covered += 3;
 
-    covered += you.mutation[MUT_GREEN_SCALES];
-    covered += you.mutation[MUT_BLACK_SCALES];
-    covered += you.mutation[MUT_GREY_SCALES];
-    covered += you.mutation[MUT_BONEY_PLATES];
-    covered += you.mutation[MUT_SHAGGY_FUR];
-    covered += you.mutation[MUT_RED_SCALES];
-    covered += you.mutation[MUT_NACREOUS_SCALES];
-    covered += you.mutation[MUT_GREY2_SCALES];
-    covered += you.mutation[MUT_METALLIC_SCALES];
-    covered += you.mutation[MUT_BLACK2_SCALES];
-    covered += you.mutation[MUT_WHITE_SCALES];
-    covered += you.mutation[MUT_YELLOW_SCALES];
-    covered += you.mutation[MUT_BROWN_SCALES];
-    covered += you.mutation[MUT_BLUE_SCALES];
-    covered += you.mutation[MUT_PURPLE_SCALES];
-    covered += you.mutation[MUT_SPECKLED_SCALES];
-    covered += you.mutation[MUT_ORANGE_SCALES];
-    covered += you.mutation[MUT_INDIGO_SCALES];
-    covered += you.mutation[MUT_RED2_SCALES];
-    covered += you.mutation[MUT_IRIDESCENT_SCALES];
-    covered += you.mutation[MUT_PATTERNED_SCALES];
+    const mutation_type scales[] = {
+        MUT_SHAGGY_FUR,
+
+        MUT_BONEY_PLATES,      MUT_GREEN_SCALES,    MUT_BLACK_SCALES,
+        MUT_GREY_SCALES,       MUT_RED_SCALES,      MUT_NACREOUS_SCALES,
+        MUT_GREY2_SCALES,      MUT_METALLIC_SCALES, MUT_BLACK2_SCALES,
+        MUT_WHITE_SCALES,      MUT_YELLOW_SCALES,   MUT_BROWN_SCALES,
+        MUT_BLUE_SCALES,       MUT_PURPLE_SCALES,   MUT_SPECKLED_SCALES,
+        MUT_ORANGE_SCALES,     MUT_INDIGO_SCALES,   MUT_RED2_SCALES,
+        MUT_IRIDESCENT_SCALES, MUT_PATTERNED_SCALES
+    };
+
+    for (unsigned i = 0; i < ARRAYSZ(scales); ++i)
+        covered += you.mutation[scales[i]];
 
     return (covered);
 }
@@ -2763,10 +2572,10 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 void demonspawn()
 {
     mutation_type whichm = NUM_MUTATIONS;
-    char howm = 1;
+    int howm = 1;
     int counter = 0;
 
-    const int covered = body_covered();
+    const int covered = _body_covered();
 
     you.attribute[ATTR_NUM_DEMONIC_POWERS]++;
 
@@ -3147,25 +2956,18 @@ int how_mutated(bool all, bool levels)
 
 bool give_bad_mutation(bool failMsg, bool force_mutation, bool non_fatal)
 {
-    mutation_type mutat = NUM_MUTATIONS;
+    const mutation_type bad_muts[] = {
+        MUT_CARNIVOROUS,   MUT_HERBIVOROUS,   MUT_FAST_METABOLISM,
+        MUT_WEAK,          MUT_DOPEY,         MUT_CLUMSY,
+        MUT_TELEPORT,      MUT_DEFORMED,      MUT_SCREAM,
+        MUT_DETERIORATION, MUT_BLURRY_VISION, MUT_FRAIL,
+        MUT_LOW_MAGIC,     MUT_SLOW_HEALING
+    };
+
+    mutation_type mutat;
 
     do {
-        switch (random2(13))
-        {
-        case 0: mutat = MUT_CARNIVOROUS; break;
-        case 1: mutat = MUT_HERBIVOROUS; break;
-        case 2: mutat = MUT_FAST_METABOLISM; break;
-        case 3: mutat = MUT_WEAK; break;
-        case 4: mutat = MUT_DOPEY; break;
-        case 5: mutat = MUT_CLUMSY; break;
-        case 6: mutat = MUT_TELEPORT; break;
-        case 7: mutat = MUT_DEFORMED; break;
-        case 8: mutat = MUT_SCREAM; break;
-        case 9: mutat = MUT_DETERIORATION; break;
-        case 10: mutat = MUT_BLURRY_VISION; break;
-        case 11: mutat = MUT_FRAIL; break;
-        case 12: mutat = MUT_LOW_MAGIC; break;
-        }
+        mutat = RANDOM_ELEMENT(bad_muts);
     } while (non_fatal && !accept_mutation(mutat, true, true));
 
     const bool result = mutate(mutat, failMsg, force_mutation);
