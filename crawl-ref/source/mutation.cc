@@ -1966,8 +1966,10 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     // other, so we just fail.
     const mutation_type fail_conflict[][2] = {
         { MUT_REGENERATION, MUT_SLOW_METABOLISM },
-        { MUT_FANGS,        MUT_BEAK            }
+        { MUT_FANGS,        MUT_BEAK            },
+        { MUT_HOOVES,       MUT_TALONS          }
     };
+
     for (unsigned i = 0; i < ARRAYSZ(fail_conflict); ++i)
     {
         for (int j = 0; j < 2; ++j)
@@ -2010,6 +2012,47 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     }
 
     return (0);
+}
+
+static bool _physiology_mutation_conflict(mutation_type mutat)
+{
+    // Only Nagas and Draconians can get this one.
+    if (mutat == MUT_STINGER
+        && you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN))
+    {
+        return (true);
+    }
+
+    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet())
+        return (true);
+
+    // Already innate.
+    if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
+        return (true);
+
+    // Red Draconians can already breathe flames.
+    if (mutat == MUT_BREATHE_FLAMES && you.species == SP_RED_DRACONIAN)
+        return (true);
+
+    // Green Draconians can already breathe poison, so they don't need
+    // to spit it.
+    if (mutat == MUT_SPIT_POISON && you.species == SP_GREEN_DRACONIAN)
+        return (true);
+
+    // Only Draconians can get wings.
+    if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
+        return (true);
+
+    // Vampires' healing and thirst rates depend on their blood level.
+    if (you.species == SP_VAMPIRE
+        && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
+            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_HEALING
+            || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
+    {
+        return (true);
+    }
+
+    return (false);
 }
 
 bool mutate(mutation_type which_mutation, bool failMsg,
@@ -2174,45 +2217,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
     }
 
-    // Only Nagas and Draconians can get this one.
-    if (mutat == MUT_STINGER
-        && !(you.species == SP_NAGA || player_genus(GENPC_DRACONIAN)))
-    {
+    if (_physiology_mutation_conflict(mutat))
         return (false);
-    }
-
-    // Putting boots on after they are forced off. -- bwr
-    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS)
-         && !player_has_feet())
-    {
-        return (false);
-    }
-
-    // Already innate.
-    if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
-        return (false);
-
-    // Red Draconians can already breathe flames.
-    if (mutat == MUT_BREATHE_FLAMES && you.species == SP_RED_DRACONIAN)
-        return (false);
-
-    // Green Draconians can already breathe poison, so they don't need
-    // to spit it.
-    if (mutat == MUT_SPIT_POISON && you.species == SP_GREEN_DRACONIAN)
-        return (false);
-
-    // Only Draconians can get wings.
-    if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
-        return (false);
-
-    // Vampires' healing and thirst rates depend on their blood level.
-    if (you.species == SP_VAMPIRE
-        && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
-            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_HEALING
-            || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
-    {
-        return (false);
-    }
 
     const mutation_def& mdef = get_mutation_def(mutat);
 
@@ -2424,7 +2430,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         break;
     }
 
-    // For all those various scale mutations.
+    // For all those scale mutations.
     you.redraw_armour_class = true;
 
     you.mutation[mutat]--;
