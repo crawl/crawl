@@ -2711,10 +2711,10 @@ static std::string _monster_stat_description(const monsters& mon)
     return result.str();
 }
 
-void get_monster_desc(const monsters& mons, describe_info &inf)
+void get_monster_desc(const monsters& mons, describe_info &inf, bool force_seen)
 {
     // For undetected mimics describe mimicked item instead.
-    if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
+    if (!force_seen && mons_is_unknown_mimic(&mons))
     {
         item_def item;
         get_mimic_item(&mons, item);
@@ -2724,9 +2724,12 @@ void get_monster_desc(const monsters& mons, describe_info &inf)
 
     inf.title = mons.full_name(DESC_CAP_A, true);
 
-    std::string db_name = mons.base_name(DESC_DBNAME);
+    std::string db_name = mons.base_name(DESC_DBNAME, force_seen);
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
+    {
         db_name = "mimic";
+        inf.title = "A mimic";
+    }
 
     // Don't get description for player ghosts.
     if (mons.type != MONS_PLAYER_GHOST)
@@ -2914,10 +2917,10 @@ void get_monster_desc(const monsters& mons, describe_info &inf)
 #endif
 }
 
-void describe_monsters(const monsters& mons)
+void describe_monsters(const monsters& mons, bool force_seen)
 {
     describe_info inf;
-    get_monster_desc(mons, inf);
+    get_monster_desc(mons, inf, force_seen);
     print_description(inf);
 
     mouse_control mc(MOUSE_MODE_MORE);

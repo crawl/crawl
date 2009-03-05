@@ -87,8 +87,9 @@ void append_missile_info(std::string &description);
 /* ***********************************************************************
  * called from: command - direct
  * *********************************************************************** */
-void describe_monsters(const monsters &mons);
-void get_monster_desc(const monsters &item, describe_info &inf);
+void describe_monsters(const monsters &mons, bool force_seen = false);
+void get_monster_desc(const monsters &item, describe_info &inf,
+                      bool force_seen = false);
 
 // last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************

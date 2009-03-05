@@ -1316,8 +1316,7 @@ static bool _do_description(std::string key, std::string type,
             else
                 mon.base_monster = MONS_PROGRAM_BUG;
 
-            const monsters m = mon;
-            describe_monsters(m);
+            describe_monsters(mon, true);
             return (false);
         }
         else
