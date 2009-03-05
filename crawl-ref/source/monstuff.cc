@@ -2096,6 +2096,9 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->hit_points = std::min(monster->max_hit_points,
                                    monster->hit_points);
 
+    // Don't kill it.
+    monster->hit_points = std::max(monster->hit_points, 1);
+
     monster->speed_increment = 67 + random2(6);
 
     monster_drop_ething(monster);
