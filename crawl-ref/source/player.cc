@@ -3141,13 +3141,14 @@ void level_change(bool skip_attribute_increase)
             case SP_MUMMY:
                 if (you.experience_level == 13 || you.experience_level == 26)
                 {
-                    mpr( "You feel more in touch with the powers of death.",
-                         MSGCH_INTRINSIC_GAIN );
+                    mpr("You feel more in touch with the powers of death.",
+                        MSGCH_INTRINSIC_GAIN);
                 }
 
                 if (you.experience_level == 13)  // level 13 for now -- bwr
                 {
-                    mpr( "You can now infuse your body with magic to restore decomposition.", MSGCH_INTRINSIC_GAIN );
+                    mpr("You can now infuse your body with magic to restore "
+                        "decomposition.", MSGCH_INTRINSIC_GAIN);
                 }
                 break;
 
@@ -3156,13 +3157,13 @@ void level_change(bool skip_attribute_increase)
                 {
                     if (you.hunger_state > HS_SATIATED)
                     {
-                        mpr( "If you weren't so full you could now transform "
-                             "into a vampire bat.", MSGCH_INTRINSIC_GAIN );
+                        mpr("If you weren't so full you could now transform "
+                            "into a vampire bat.", MSGCH_INTRINSIC_GAIN);
                     }
                     else
                     {
-                        mpr( "You can now transform into a vampire bat.",
-                             MSGCH_INTRINSIC_GAIN );
+                        mpr("You can now transform into a vampire bat.",
+                            MSGCH_INTRINSIC_GAIN );
                     }
                 }
                 else if (you.experience_level == 6)
