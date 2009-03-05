@@ -69,7 +69,7 @@ A:stuck
 
 Hopefully not. Search all the walls with '5' in case there's a secret door.
 If you really can't find any, it could be a bug and need fixing, so please
-report it on our Sourceforge tracker. In the meantime, you can try to escape
+report it on our SourceForge tracker. In the meantime, you can try to escape
 with digging, disintegration or teleportation.
 %%%%
 Q:survival
@@ -99,11 +99,11 @@ Is there a cheating mode to Crawl where I can play without dying?
 %%%%
 A:cheating
 
-Not a cheating mode, exactly, but if your compilation supports it you can
-play in wizard mode (access with '&') where you are prompted whenever you're
-about to die, and have access to a number of nifty commands to create
-equipment, travel to distant branches, or fiddle with your stats or skills.
-Note that wizard mode games will never appear on the highscore list.
+Not a cheating mode, exactly, but if your build supports it you can play
+wizard mode (access with '&') where you are prompted whenever you're about
+to die, and have access to a number of nifty commands to create equipment,
+travel to distant branches, or fiddle with your stats or skills. Note that
+wizard mode games will never appear on the highscore list.
 
 Many players reckon long-time use of wizard mode to be detrimental to your
 playing skills. On the other hand, we are thankful for bug reports using
@@ -161,6 +161,7 @@ level, it won't be loaded again - unless you happen to die on that level.
 Keep in mind that you don't absolutely have to fight every monster you meet, 
 and with ghosts it's even easier: they cannot leave the level they were 
 created on.
+
 Alternatively, you could play a couple of strong species/class combinations
 for the sole purpose of busting those ghosts, for example Berserkers or a
 spellcaster who's learned Dispel Undead.
@@ -233,7 +234,7 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-Please submit a bug report on Sourceforge, and give as much information as
+Please submit a bug report on SourceForge, and give as much information as
 you can. (What were you doing at the time? What did you expect to happen,
 what happened instead? etc.) Most importantly, what version are you playing? 
 Sometimes a screenshot can be helpful. For crashes or monsters/items/levels 
@@ -242,7 +243,7 @@ the entire zipped save of the character in question. If there are error
 messages, please write them down. Short of a save file, a guide on how to 
 reproduce the crash (or bug) can be useful; you can use wizard mode for this.
 
-If you don't log in to Sourceforge or leave an email address at least check
+If you don't log in to SourceForge or leave an email address at least check
 the thread from time to time in case we have some more questions. 
 
 Thanks in advance!
@@ -259,7 +260,7 @@ project before joining. Once you've become indispensible to the team and we
 start wondering how we ever got along without you, we _may_ ask you to join 
 us, but don't hold your breath.
 
-Please submit your ideas to the Feature Requests tracker of Sourceforge. If
+Please submit your ideas to the Feature Requests tracker of SourceForge. If
 they catch the interest of at least one coder, chances are they'll make it 
 into the game.
 %%%%
@@ -269,11 +270,11 @@ Hey! Why did you close my feature request?
 %%%%
 A:feature
 
-If you are logged in to Sourceforge when submitting your feature request, 
+If you are logged in to SourceForge when submitting your feature request, 
 or choose to "Monitor" the resulting thread while logged in, you will get 
 an email any time someone replies to (or fiddles with) this thread. Once a 
-thread has been closed, you can still access it by setting the Status to 
-closed and then clicking Browse, thus searching for all closed requests.
+thread has been closed, you can still access it by searching for requests
+with the "Closed" status.
 
 We always try to give a reason for closing a request, but it usually boils
 down to three reasons:
@@ -293,7 +294,7 @@ I've written a patch for a cool new feature! Where should I send it?
 %%%%
 A:patch
 
-Please submit it to the Patches tracker on Sourceforge. Keep in mind that
+Please submit it to the Patches tracker on SourceForge. Keep in mind that
 without previous discussions, we may not be able to use the patch, or it
 might need heavy modification. In general, it is safer to first file your
 suggestions under Feature Requests and wait for people to become
@@ -314,8 +315,9 @@ appreciated. These are:
 * tiles (For this you'll need the source code, check the rltiles/ folder.)
 
 If you've got some cool addition, you can send it over the mailing list, or
-post it as a Sourceforge item. You can also help us by giving feedback on
-the most recent version or trunk (downloadable from http://crawl.develz.org).
+post it as a SourceForge item. You can also help us by giving feedback on
+the most recent version or trunk (available via SVN, Windows binaries 
+downloadable from http://crawl.develz.org/trunk/).
 
 Thanks a lot for your support!
 %%%%
@@ -326,11 +328,11 @@ Is there a way for me to play the new version before it is released?
 A:beta
 
 There certainly is! You can play "trunk" (what will eventually become the
-next version) online on http://crawl.develz.org, or you can download it from
-the same site. Note that trunk may be buggy, and that many changes will
-invalidate your saved games. If that doesn't bother you, go ahead and play.
-Be sure to leave some feedback/suggestions/bug reports on the Sourceforge
-trackers.
+next version) online on http://crawl.develz.org, or you can download Windows 
+binaries from the same site. Note that trunk may be buggy, and that many
+changes will invalidate your saved games. If that doesn't bother you, go
+ahead and play. Be sure to leave some feedback/suggestions/bug reports on
+the SourceForge trackers.
 %%%%
 Q:interact
 
@@ -342,6 +344,7 @@ If you play online on http://crawl.akrasiac.org or http://crawl.develz.org
 you can watch games in progress, other players can watch you while you play,
 and you can kill other players' ghosts. You can even send and receive 
 messages.
+
 Check docs/ssh_guide.txt for an explanation about how to play online. You can
 also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the
 Something Awful forum or the rec.games.roguelike.misc newsgroup.
