@@ -6757,10 +6757,9 @@ int mons_natural_regen_rate(monsters *monster)
     int divider =
         std::max(div_rand_round(15 - monster->hit_dice, 4), 1);
 
-    // The undead have a harder time regenerating.
+    // The undead have a harder time regenerating.  Golems have it worse.
     switch (monster->holiness())
     {
-    // The undead don't regenerate easily, except for enslaved souls.
     case MH_UNDEAD:
         divider *= (mons_enslaved_soul(monster)) ? 2 : 4;
         break;
