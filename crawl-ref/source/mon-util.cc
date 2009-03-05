@@ -7460,7 +7460,7 @@ int monsters::base_speed(int mcls)
 void monsters::fix_speed()
 {
     if (mons_is_zombified(this))
-        speed = base_speed(number) - 2;
+        speed = base_speed(mons_zombie_base(this)) - 2;
     else
         speed = base_speed(type);
 
