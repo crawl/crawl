@@ -2489,7 +2489,7 @@ bool is_forbidden_food(const item_def &food)
     return (false);
 }
 
-static bool _check_amu_the_gourmand(bool reqid)
+bool check_amu_the_gourmand(bool reqid)
 {
     if (wearing_amulet(AMU_THE_GOURMAND, !reqid))
     {
@@ -2595,7 +2595,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 if (ur_chunkslover)
                     return (true);
 
-                if (_check_amu_the_gourmand(reqid))
+                if (check_amu_the_gourmand(reqid))
                     return (true);
 
                 if (!suppress_msg)
@@ -2636,8 +2636,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                         mpr("Urks, you're a herbivore!");
                     return (false);
                 }
-                if (!player_likes_chunks(true))
-                    _check_amu_the_gourmand(false);
                 return (true);
             case POT_WATER:
                 if (you.species == SP_VAMPIRE)

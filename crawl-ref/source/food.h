@@ -86,6 +86,7 @@ bool causes_rot(const item_def &food);
 bool is_inedible(const item_def &item);
 bool is_preferred_food(const item_def &food);
 bool is_forbidden_food(const item_def &food);
+bool check_amu_the_gourmand(bool reqid);
 
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool reqid = false, bool check_hunger = true);
