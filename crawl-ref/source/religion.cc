@@ -5732,6 +5732,9 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         mon->flags |= MF_HONORARY_UNDEAD;
     else if (corps != -1)
     {
+        // Give spectral things the same speed as the original monster.
+        mon->speed = mons_class_speed(mon->base_monster);
+
         // Re-equip spectral things.
         equip_undead(mon->pos(), corps, monster_index(mon),
                      mon->base_monster);
