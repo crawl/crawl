@@ -70,6 +70,7 @@ bool is_stair(dungeon_feature_type gridc);
 bool is_travelable_stair(dungeon_feature_type gridc);
 bool is_gate(dungeon_feature_type gridc);
 command_type direction_to_command( char x, char y );
+bool is_altar(dungeon_feature_type gridc);
 bool is_resting( void );
 #ifdef CLUA_BINDINGS
 const char *trap_name(const coord_def &p);

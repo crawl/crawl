@@ -23,6 +23,7 @@ REVISION("$Rev$");
 #include "newgame.h"
 #include "mon-util.h"
 #include "player.h"
+#include "religion.h"
 #include "spells3.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -879,19 +880,26 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         switch (event.button)
         {
         case MouseEvent::LEFT:
+        {
             if (!(event.mod & MOD_SHIFT))
                 return 'g';
 
-            switch (grid_stair_direction(grd(gc)))
+            const dungeon_feature_type grid = grd(gc);
+            switch (grid_stair_direction(grid))
             {
-                case CMD_GO_DOWNSTAIRS:
-                    return ('>');
-                case CMD_GO_UPSTAIRS:
-                    return ('<');
-                default:
-                    return 0;
+            case CMD_GO_DOWNSTAIRS:
+                return ('>');
+            case CMD_GO_UPSTAIRS:
+                return ('<');
+            default:
+                if (is_altar(grid)
+                    && player_can_join_god(grid_altar_god(grid)))
+                {
+                    return ('p');
+                }
+                return 0;
             }
-
+        }
         case MouseEvent::RIGHT:
             if (!(event.mod & MOD_SHIFT))
                 return '%'; // Character overview.
@@ -1011,8 +1019,25 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         if (igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
             tip += "\n[L-Click] Pick up items (g)";
 
-        if (grid_stair_direction(grd(m_cursor[CURSOR_MOUSE])) != CMD_NO_CMD)
-            tip += "\n[Shift-L-Click] use stairs (</>)";
+        const dungeon_feature_type grid = grd(m_cursor[CURSOR_MOUSE]);
+        const command_type dir = grid_stair_direction(grid);
+        if (dir != CMD_NO_CMD)
+        {
+            tip += "\n[Shift-L-Click] ";
+            if (grid == DNGN_ENTER_SHOP)
+                tip += "enter shop";
+            else if (is_gate(grid))
+                tip += "enter gate";
+            else
+                tip += "use stairs";
+
+            if (dir == CMD_GO_DOWNSTAIRS)
+                tip += " (>)";
+            else
+                tip += " (<)";
+        }
+        else if (is_altar(grid) && player_can_join_god(grid_altar_god(grid)))
+            tip += "\n[Shift-L-Click] pray on altar (p)";
 
         // Character overview.
         tip += "\n[R-Click] Overview (%)";
@@ -1441,6 +1466,9 @@ void InventoryRegion::place_cursor(const coord_def &cursor)
         m_dirty = true;
     }
 
+    if (m_cursor != cursor)
+        you.last_clicked_item = -1;
+
     m_cursor = cursor;
 
     if (m_cursor == NO_CURSOR || cursor_index() >= m_items.size())
@@ -1502,6 +1530,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             else
                 tile_item_use(idx);
         }
+        you.last_clicked_item = item_idx;
         // TODO enne - need to redraw inventory here?
         return CK_MOUSE_CMD;
     }
@@ -1512,6 +1541,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             if (event.mod & MOD_SHIFT)
             {
                 tile_item_eat_floor(idx);
+                you.last_clicked_item = item_idx;
             }
             else
             {
@@ -1806,6 +1836,9 @@ bool InventoryRegion::update_alt_text(std::string &alt)
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
+        return (false);
+
+    if (item_idx == you.last_clicked_item)
         return (false);
 
     int idx = m_items[item_idx].idx;

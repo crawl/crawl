@@ -5894,6 +5894,7 @@ void player::init()
 
 #ifdef USE_TILE
     last_clicked_grid = coord_def();
+    last_clicked_item = -1;
 #endif
 
     if (m_quiver)

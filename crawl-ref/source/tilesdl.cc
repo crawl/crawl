@@ -613,10 +613,12 @@ int TilesFramework::handle_mouse(MouseEvent &event)
 
     // Handle "more" mode globally here, rather than duplicate across regions.
     if (mouse_control::current_mode() == MOUSE_MODE_MORE
-        && event.button == MouseEvent::LEFT
         && event.event == MouseEvent::PRESS)
     {
-        return CK_MOUSE_CLICK;
+        if (event.button == MouseEvent::LEFT)
+            return CK_MOUSE_CLICK;
+        else if (event.button == MouseEvent::RIGHT)
+            return CK_MOUSE_CMD;
     }
 
     // TODO enne - in what cases should the buttons be returned?

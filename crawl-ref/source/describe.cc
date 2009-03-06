@@ -3357,13 +3357,18 @@ static void _detailed_god_description(god_type which_god)
 
     cgotoxy(1, bottom_line);
     formatted_string::parse_string(
-        "Press '<w>!</w>' to toggle between the overview and the more detailed "
+#ifndef USE_TILE
+        "Press '<w>!</w>'"
+#else
+        "<w>Right-click</w>"
+#endif
+        " to toggle between the overview and the more detailed "
         "description.").display();
 
     mouse_control mc(MOUSE_MODE_MORE);
 
     const int keyin = getch();
-    if (keyin == '!')
+    if (keyin == '!' || keyin == CK_MOUSE_CMD)
         describe_god(which_god, true);
 }
 
@@ -3594,13 +3599,17 @@ void describe_god( god_type which_god, bool give_title )
     cgotoxy(1, bottom_line);
     textcolor(LIGHTGREY);
     formatted_string::parse_string(
-        "Press '<w>!</w>' to toggle between the overview and the more detailed "
+#ifndef USE_TILE
+        "Press '<w>!</w>'"
+#else
+        "<w>Right-click</w>"
+#endif
+        " to toggle between the overview and the more detailed "
         "description.").display();
 
     mouse_control mc(MOUSE_MODE_MORE);
-
     const int keyin = getch();
-    if (keyin == '!')
+    if (keyin == '!' || keyin == CK_MOUSE_CMD)
         _detailed_god_description(which_god);
 }
 

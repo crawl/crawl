@@ -23,6 +23,7 @@ REVISION("$Rev$");
  #include <conio.h>
 #endif
 
+#include "cio.h"
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
@@ -1543,7 +1544,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     // SP_GREY_ELF placeholder.
     {
     },
-    
+
     // SP_GNOME placeholder.
     {
     }
@@ -1765,10 +1766,14 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         if (_player_knows_aptitudes())
         {
             cgotoxy(1, bottom_line);
-            formatted_string::parse_string("Press '<w>!</w>' to toggle between "
-                                           "<cyan>progress</cyan> and "
-                                           "<red>aptitude</red> "
-                                           "display.").display();
+            formatted_string::parse_string(
+#ifndef USE_TILE
+                "Press '<w>!</w>'"
+#else
+                "<w>Right-click</w>"
+#endif
+                " to toggle between <cyan>progress</cyan> and "
+                "<red>aptitude</red> display.").display();
         }
     }
 }
@@ -1782,8 +1787,10 @@ void show_skills()
     {
         _display_skill_table(show_aptitudes, show_description);
 
+        mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
-        if (keyin == '!' && _player_knows_aptitudes())
+        if ((keyin == '!' || keyin == CK_MOUSE_CMD)
+            && _player_knows_aptitudes())
         {
             show_aptitudes = !show_aptitudes;
             continue;

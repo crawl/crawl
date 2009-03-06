@@ -26,6 +26,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "cio.h"
 #include "defines.h"
 #include "effects.h"
 #include "format.h"
@@ -1547,8 +1548,14 @@ formatted_string describe_mutations()
     {
         result += EOL EOL;
         result += EOL EOL;
-        result += "Press '<w>!</w>' to toggle between mutations and "
-            "properties depending on your" EOL "hunger status." EOL;
+        result +=
+#ifndef USE_TILE
+            "Press '<w>!</w>'"
+#else
+            "<w>Right-click</w>"
+#endif
+            " to toggle between mutations and properties depending on your" EOL
+            "hunger status." EOL;
     }
 
     return formatted_string::parse_string(result);
@@ -1637,16 +1644,23 @@ static void _display_vampire_attributes()
     }
 
     result += EOL;
-    result += "Press '<w>!</w>' to toggle between mutations and properties depending on your " EOL
-              "hunger status." EOL;
+    result +=
+#ifndef USE_TILE
+        "Press '<w>!</w>'"
+#else
+        "<w>Right-click</w>"
+#endif
+        " to toggle between mutations and properties depending on your" EOL
+        "hunger status." EOL;
 
     const formatted_string vp_props = formatted_string::parse_string(result);
     vp_props.display();
 
     if (you.species == SP_VAMPIRE)
     {
+        mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
-        if (keyin == '!')
+        if (keyin == '!' || keyin == CK_MOUSE_CMD)
             display_mutations();
     }
 }
@@ -1661,8 +1675,9 @@ void display_mutations()
     if (you.species == SP_VAMPIRE)
     {
         mutation_fs.display();
+        mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
-        if (keyin == '!')
+        if (keyin == '!' || keyin == CK_MOUSE_CMD)
             _display_vampire_attributes();
     }
     else

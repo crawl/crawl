@@ -6518,6 +6518,20 @@ void offer_items()
     }
 }
 
+bool player_can_join_god(god_type which_god)
+{
+    if (you.species == SP_DEMIGOD)
+        return (false);
+
+    if (player_is_unholy() && is_good_god(which_god))
+        return (false);
+
+    if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
+        return (false);
+
+    return (true);
+}
+
 void god_pitch(god_type which_god)
 {
     mprf("You %s the altar of %s.",
@@ -6530,8 +6544,7 @@ void god_pitch(god_type which_god)
     // return, or not allow worshippers from other religions.  -- bwr
 
     // Gods can be racist...
-    if (player_is_unholy() && is_good_god(which_god)
-        || which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
+    if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
         simple_god_message(" does not accept worship from those such as you!",

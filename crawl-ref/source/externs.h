@@ -945,6 +945,7 @@ public:
   int water_in_sight;      // Is there deep water in LoS?
 #ifdef USE_TILE
   coord_def last_clicked_grid; // The map position the player last clicked on.
+  int last_clicked_item; // The inventory cell the player last clicked on.
 #endif
 
   // Warning: these two are quite different.

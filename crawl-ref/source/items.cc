@@ -1255,12 +1255,9 @@ void pickup()
                 mprf(MSGCH_PROMPT, "Pick up %s? (y/n/a/*?g,/q)",
                      get_message_colour_tags(mitm[o], DESC_NOCAP_A,
                                              MSGCH_PROMPT).c_str());
-#ifndef USE_TILE
-                keyin = get_ch();
-#else
-                // TODO enne - why?
-                keyin = getch_ck();
-#endif
+
+                mouse_control mc(MOUSE_MODE_MORE);
+                keyin = getch();
             }
 
             if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'

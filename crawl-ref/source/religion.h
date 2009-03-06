@@ -82,6 +82,7 @@ void pray();
 void end_prayer();
 void handle_god_time(void);
 int god_colour(god_type god);
+bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
 void offer_items();
