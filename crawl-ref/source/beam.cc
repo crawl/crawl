@@ -1332,16 +1332,19 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
 // electricity.
 bool bolt::can_affect_wall_monster(const monsters* mon) const
 {
+    if (is_enchantment())
+        return (true);
+
     const bool superconductor = (grd(mon->pos()) == DNGN_METAL_WALL
                                  && flavour == BEAM_ELECTRICITY);
     if (mons_wall_shielded(mon) && !superconductor)
         return (false);
 
+    if (!is_explosion && !is_big_cloud)
+        return (true);
+
     if (is_bouncy(grd(mon->pos())))
         return (false);
-
-    if (is_enchantment() || (!is_explosion && !is_big_cloud))
-        return (true);
 
     return (false);
 }
