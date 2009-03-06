@@ -3021,7 +3021,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     if (!weap.empty())
     {
         if (full_desc)
-            desc += ", ";
+            desc += ",";
         desc += weap;
     }
 
