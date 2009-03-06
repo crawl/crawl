@@ -1386,13 +1386,13 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     menv[mid].max_hit_points = menv[mid].hit_points;
 
     menv[mid].ac -= 2;
-    menv[mid].ac  = std::min(0, menv[mid].ac);
+    menv[mid].ac  = std::max(0, menv[mid].ac);
 
     menv[mid].ev -= 5;
-    menv[mid].ev  = std::min(0, menv[mid].ev);
+    menv[mid].ev  = std::max(0, menv[mid].ev);
 
     menv[mid].speed -= 2;
-    menv[mid].speed  = std::min(3, menv[mid].speed);
+    menv[mid].speed  = std::max(3, menv[mid].speed);
 
     // Now override type with the required type.
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
@@ -1406,10 +1406,10 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
         menv[mid].max_hit_points = menv[mid].hit_points;
 
         menv[mid].ac -= 4;
-        menv[mid].ac  = std::min(0, menv[mid].ac);
+        menv[mid].ac  = std::max(0, menv[mid].ac);
 
         menv[mid].ev -= 2;
-        menv[mid].ev  = std::min(0, menv[mid].ev);
+        menv[mid].ev  = std::max(0, menv[mid].ev);
 
         menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG)
                              ? MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
