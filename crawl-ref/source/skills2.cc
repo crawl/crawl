@@ -2108,65 +2108,18 @@ void init_skill_order( void )
     }
 }
 
-int calc_hp(bool real_hp)
+void calc_hp()
 {
-    int hitp = get_real_hp(!real_hp, false);
+    you.hp_max = get_real_hp(true, false);
+    deflate_hp(you.hp_max, false);
+}
 
-    you.hp_max = hitp;
-
-    deflate_hp( you.hp_max, false );
-
-    return (hitp);
-}                               // end calc_hp()
-
-int calc_mp(bool real_mp)
+void calc_mp()
 {
-    int enp;
-
-    // base_magic_points2 accounts for species and magic potions
-    enp = (you.base_magic_points2 - 5000);
-
-    int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
-    int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
-
-    if (spell_extra > invoc_extra)
-        enp += spell_extra;
-    else
-        enp += invoc_extra;
-
-    you.max_magic_points = stepdown_value( enp, 9, 18, 45, 100 );
-
-    // this is our "rotted" base (applied after scaling):
-    you.max_magic_points += (you.base_magic_points - 5000);
-
-    // Yes, we really do want this duplication... this is so the stepdown
-    // doesn't truncate before we apply the rotted base.  We're doing this
-    // the nice way. -- bwr
-    if (you.max_magic_points > 50)
-        you.max_magic_points = 50;
-
-    // now applied after scaling so that power items are more useful -- bwr
-    if (!real_mp)
-        you.max_magic_points += player_magical_power();
-
-    // analogous to ROBUST/FRAIL
-    you.max_magic_points *= (10 + player_mutation_level(MUT_HIGH_MAGIC)
-                                - player_mutation_level(MUT_LOW_MAGIC));
-    you.max_magic_points /= 10;
-
-    if (you.max_magic_points > 50)
-        you.max_magic_points = 50 + ((you.max_magic_points - 50) / 2);
-
-    if (you.max_magic_points < 0)
-        you.max_magic_points = 0;
-
-    if (you.magic_points > you.max_magic_points)
-        you.magic_points = you.max_magic_points;
-
+    you.max_magic_points = get_real_mp(true);
+    you.magic_points = std::min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
-
-    return (you.max_magic_points);
-}                               // end calc_mp()
+}
 
 unsigned int skill_exp_needed(int lev)
 {

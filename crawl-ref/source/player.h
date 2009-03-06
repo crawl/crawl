@@ -348,45 +348,18 @@ bool player_wearing_slot( int eq );
 bool you_tran_can_wear(const item_def &item);
 bool you_tran_can_wear( int eq, bool check_mutation = false );
 
-/* ***********************************************************************
- * called from: ability - effects - fight - it_use3 - ouch - spell -
- *              spells - spells2 - spells3 - spells4
- * *********************************************************************** */
+bool enough_hp(int minimum, bool suppress_msg);
+bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
+
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
-
-
-/* ***********************************************************************
- * called from: ability - it_use3 - spell - spells3
- * *********************************************************************** */
-bool enough_hp (int minimum, bool suppress_msg);
-
-
-/* ***********************************************************************
- * called from: ability - it_use3
- * *********************************************************************** */
-bool enough_mp (int minimum, bool suppress_msg);
-
-
-/* ***********************************************************************
- * called from: ability - fight - it_use3 - monstuff - ouch - spell
- * *********************************************************************** */
 void dec_mp(int mp_loss);
 
-
-/* ***********************************************************************
- * called from: ability - acr - fight - it_use2 - it_use3 - spells3
- * *********************************************************************** */
 void inc_mp(int mp_gain, bool max_too);
-
-
-/* ***********************************************************************
- * called from: acr - fight - food - spells1 - spells2
- * *********************************************************************** */
 void inc_hp(int hp_gain, bool max_too);
 
 void rot_hp( int hp_loss );
 void unrot_hp( int hp_recovered );
-int player_rotted( void );
+int player_rotted();
 void rot_mp( int mp_loss );
 
 void inc_max_hp( int hp_gain );
@@ -395,28 +368,14 @@ void dec_max_hp( int hp_loss );
 void inc_max_mp( int mp_gain );
 void dec_max_mp( int mp_loss );
 
-/* ***********************************************************************
- * called from: acr - misc - religion - skills2 - spells1 - transfor
- * *********************************************************************** */
 void deflate_hp(int new_level, bool floor);
-
-
-/* ***********************************************************************
- * called from: acr - it_use2 - newgame - ouch - religion - spell - spells1
- * *********************************************************************** */
 void set_hp(int new_amount, bool max_too);
 
 int get_real_hp(bool trans, bool rotted = false);
+int get_real_mp(bool include_items);
 
-/* ***********************************************************************
- * called from: it_use3 - newgame
- * *********************************************************************** */
 void set_mp(int new_amount, bool max_too);
 
-// last updated 19apr2001 {gdl}
-/* ***********************************************************************
- * called from:
- * *********************************************************************** */
 void contaminate_player(int change, bool controlled = false,
                         bool status_only = false);
 

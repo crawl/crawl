@@ -3493,25 +3493,20 @@ void level_change(bool skip_attribute_increase)
         inc_max_hp( hp_adjust );
         inc_max_mp( mp_adjust );
 
-        deflate_hp( you.hp_max, false );
+        deflate_hp(you.hp_max, false);
 
         you.magic_points = std::max(0, you.magic_points);
 
-        {
-            unwind_var<int> hpmax(you.hp_max);
-            unwind_var<int> hp(you.hp);
-            unwind_var<int> mpmax(you.max_magic_points);
-            unwind_var<int> mp(you.magic_points);
-            // calculate "real" values for note-taking, i.e. ignore Berserk,
-            // transformations or equipped items
-            calc_hp(true);
-            calc_mp(true);
+        // Get "real" values for note-taking, i.e. ignore Berserk,
+        // transformations or equipped items.
+        const int note_maxhp = get_real_hp(false, false);
+        const int note_maxmp = get_real_mp(false);
 
-            char buf[200];
-            sprintf(buf, "HP: %d/%d MP: %d/%d",
-                    you.hp, you.hp_max, you.magic_points, you.max_magic_points);
-            take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
-        }
+        char buf[200];
+        sprintf(buf, "HP: %d/%d MP: %d/%d",
+                std::min(you.hp, note_maxhp), note_maxhp,
+                std::min(you.magic_points, note_maxmp), note_maxmp);
+        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
         // recalculate for game
         calc_hp();
@@ -4780,21 +4775,32 @@ bool enough_hp(int minimum, bool suppress_msg)
     return (true);
 }
 
-bool enough_mp(int minimum, bool suppress_msg)
+bool enough_mp(int minimum, bool suppress_msg, bool include_items)
 {
     ASSERT(!crawl_state.arena);
 
-    if (you.magic_points < minimum)
+    bool rc = false;
+
+    if (get_real_mp(include_items) < minimum)
+    {
+        if (!suppress_msg)
+            mpr("You haven't enough magic capacity.");        
+    }
+    else if (you.magic_points < minimum)
     {
         if (!suppress_msg)
             mpr("You haven't enough magic at the moment.");
+    }
+    else
+        rc = true;
 
+    if (!rc)
+    {
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return (false);
     }
 
-    return (true);
+    return (rc);
 }
 
 // Note that "max_too" refers to the base potential, the actual
@@ -5031,6 +5037,42 @@ int get_real_hp(bool trans, bool rotted)
     hitp /= 10;
 
     return (hitp);
+}
+
+int get_real_mp(bool include_items)
+{
+    // base_magic_points2 accounts for species
+    int enp = (you.base_magic_points2 - 5000);
+
+    int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
+    int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
+
+    enp += std::max(spell_extra, invoc_extra);
+    enp = stepdown_value(enp, 9, 18, 45, 100);
+
+    // this is our "rotted" base (applied after scaling):
+    enp += (you.base_magic_points - 5000);
+
+    // Yes, we really do want this duplication... this is so the stepdown
+    // doesn't truncate before we apply the rotted base.  We're doing this
+    // the nice way. -- bwr
+    enp = std::min(enp, 50);
+
+    // Now applied after scaling so that power items are more useful -- bwr
+    if (include_items)
+        enp += player_magical_power();
+
+    // Analogous to ROBUST/FRAIL
+    enp *= (10 + player_mutation_level(MUT_HIGH_MAGIC)
+               - player_mutation_level(MUT_LOW_MAGIC));
+    enp /= 10;
+
+    if (enp > 50)
+        enp = 50 + ((enp - 50) / 2);
+
+    enp = std::max(enp, 0);
+
+    return enp;
 }
 
 static int _get_contamination_level()
