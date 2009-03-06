@@ -7413,7 +7413,7 @@ void monsters::scale_hp(int num, int den)
 
 kill_category monsters::kill_alignment() const
 {
-    return (mons_friendly_real(this)? KC_FRIENDLY : KC_OTHER);
+    return (mons_friendly_real(this) ? KC_FRIENDLY : KC_OTHER);
 }
 
 bool monsters::sicken(int amount)
