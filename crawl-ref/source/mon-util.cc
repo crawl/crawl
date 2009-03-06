@@ -1746,7 +1746,7 @@ void define_monster(monsters &mons)
     ac = m->AC;
     ev = m->ev;
 
-    speed = _base_speed(type);
+    speed = _base_speed(mcls);
 
     mons.god = GOD_NO_GOD;
 
