@@ -617,14 +617,15 @@ bool mons_skeleton(int mc);
  * called from: describe - fight - items - misc - monstuff - mon-util -
  *              player - spells2 - spells3
  * *********************************************************************** */
-int mons_weight(int mclass);
+int mons_weight(int mc);
 
 
 // last updated 08may2001 {gdl}
 /* ***********************************************************************
  * called from: monplace mon-util
  * *********************************************************************** */
-int mons_speed(int mc);
+int mons_class_speed(int mc);
+int mons_speed(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}
