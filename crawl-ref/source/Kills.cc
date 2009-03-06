@@ -846,7 +846,7 @@ static int kill_lualc_symbol(lua_State *ls)
         case kill_monster_desc::M_ZOMBIE:
         case kill_monster_desc::M_SKELETON:
         case kill_monster_desc::M_SIMULACRUM:
-            ch = mons_zombie_size(ke->monnum) == Z_SMALL? 'z' : 'Z';
+            ch = mons_zombie_size(ke->monnum) == Z_SMALL ? 'z' : 'Z';
             break;
         case kill_monster_desc::M_SPECTRE:
             ch = 'W';

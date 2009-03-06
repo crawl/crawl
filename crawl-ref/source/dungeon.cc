@@ -4607,9 +4607,8 @@ int dgn_place_monster(mons_spec &mspec,
 
             int tries = 100;
             do
-            {
                 mg.cls = pick_random_monster(mspec.place, lev, lev);
-            } while (mg.cls != MONS_PROGRAM_BUG
+            while (mg.cls != MONS_PROGRAM_BUG
                      && mons_class_is_zombified(mspec.monbase)
                      && !mons_zombie_size(mg.cls)
                      && tries-- > 0);

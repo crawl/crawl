@@ -1228,15 +1228,15 @@ static monster_type _pick_random_zombie()
             zombifiable.push_back(mcls);
         }
     }
-    return (zombifiable[ random2(zombifiable.size()) ]);
+    return (zombifiable[random2(zombifiable.size())]);
 }
 
-static void _define_zombie( int mid, monster_type ztype,
-                            monster_type cs, int power, coord_def pos )
+static void _define_zombie(int mid, monster_type ztype, monster_type cs,
+                           int power, coord_def pos)
 {
-    monster_type cls       = MONS_PROGRAM_BUG;
-    monster_type mons_sec2 = MONS_PROGRAM_BUG;
-    int  zombie_size       = 0;
+    monster_type cls             = MONS_PROGRAM_BUG;
+    monster_type mons_sec2       = MONS_PROGRAM_BUG;
+    zombie_size_type zombie_size = Z_NOZOMBIE;
     bool ignore_rarity     = false;
 
     if (power > 27)
@@ -1258,7 +1258,6 @@ static void _define_zombie( int mid, monster_type ztype,
             break;
 
         case MONS_SPECTRAL_THING:
-            zombie_size = -1;
             break;
 
         default:
@@ -1294,14 +1293,14 @@ static void _define_zombie( int mid, monster_type ztype,
             // such as the Temple, HoB, and Slime Pits.
             if (you.level_type != LEVEL_DUNGEON
                 || player_in_hell()
-                || player_in_branch( BRANCH_HALL_OF_ZOT )
-                || player_in_branch( BRANCH_VESTIBULE_OF_HELL )
-                || player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
-                || player_in_branch( BRANCH_CRYPT )
-                || player_in_branch( BRANCH_TOMB )
-                || player_in_branch( BRANCH_HALL_OF_BLADES )
-                || player_in_branch( BRANCH_SNAKE_PIT )
-                || player_in_branch( BRANCH_SLIME_PITS )
+                || player_in_branch(BRANCH_HALL_OF_ZOT)
+                || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+                || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+                || player_in_branch(BRANCH_CRYPT)
+                || player_in_branch(BRANCH_TOMB)
+                || player_in_branch(BRANCH_HALL_OF_BLADES)
+                || player_in_branch(BRANCH_SNAKE_PIT)
+                || player_in_branch(BRANCH_SLIME_PITS)
                 || one_chance_in(1000))
             {
                 ignore_rarity = true;
@@ -1320,8 +1319,11 @@ static void _define_zombie( int mid, monster_type ztype,
 
             // Size must match, but you can make a spectral thing out
             // of anything.
-            if (zombie_size != -1 && mons_zombie_size(cls) != zombie_size)
+            if (cs != MONS_SPECTRAL_THING
+                && mons_zombie_size(cls) != zombie_size)
+            {
                 continue;
+            }
 
             if (cs == MONS_SKELETON_SMALL || cs == MONS_SIMULACRUM_SMALL)
             {

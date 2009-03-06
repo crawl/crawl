@@ -3649,13 +3649,13 @@ int monsters::body_weight() const
 {
     int mclass = type;
 
-    switch(mclass)
+    switch (mclass)
     {
     case MONS_SPECTRAL_THING:
     case MONS_SPECTRAL_WARRIOR:
     case MONS_ELECTRIC_GOLEM:
     case MONS_RAKSHASA_FAKE:
-        return 0;
+        return (0);
 
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
