@@ -1125,12 +1125,11 @@ static void _finish_delay(const delay_queue_item &delay)
 
         if (pass.x != 0 && pass.y != 0)
         {
-
             switch (grd(pass))
             {
             default:
                 if (!you.can_pass_through_feat(grd(pass)))
-                    ouch(1 + you.hp, NON_MONSTER, KILLED_BY_PETRIFICATION);
+                    ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_PETRIFICATION);
                 break;
 
             case DNGN_SECRET_DOOR:      // oughtn't happen
@@ -1139,8 +1138,9 @@ static void _finish_delay(const delay_queue_item &delay)
                 break;
             }
 
-            // Move any monsters out of the way:
-            if (monsters* m = monster_at(pass))
+            // Move any monsters out of the way.
+            monsters *m = monster_at(pass);
+            if (m)
             {
                 // One square, a few squares, anywhere...
                 if (!shift_monster(m) && !monster_blink(m))
@@ -1148,6 +1148,11 @@ static void _finish_delay(const delay_queue_item &delay)
             }
 
             move_player_to_grid(pass, false, true, true);
+
+            // Wake the monster if it's asleep.
+            if (m)
+                behaviour_event(m, ME_ALERT, MHITYOU);
+
             redraw_screen();
         }
         break;

@@ -952,7 +952,7 @@ static int _passwall(coord_def where, int pow, int, actor *)
         {
             if (howdeep > range || non_rock_barriers)
             {
-                ouch(1 + you.hp, NON_MONSTER, KILLED_BY_PETRIFICATION);
+                ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_PETRIFICATION);
                 //jmf: not return; if wizard, successful transport is option
             }
         }
