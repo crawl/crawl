@@ -61,8 +61,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           dungeon_char_type *stair_type,
                                           int *lev_mons);
 
-static void _define_zombie(int mid, monster_type ztype,
-                           monster_type cs, int power, coord_def pos);
+static void _define_zombie(int mid, monster_type ztype, monster_type cs,
+                           int power, coord_def pos);
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size);
 // static int _place_monster_aux(int mon_type, beh_type behaviour, int target,
@@ -1386,14 +1386,13 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     menv[mid].max_hit_points = menv[mid].hit_points;
 
     menv[mid].ac -= 2;
-
-    if (menv[mid].ac < 0)
-        menv[mid].ac = 0;
+    menv[mid].ac  = std::min(0, menv[mid].ac);
 
     menv[mid].ev -= 5;
+    menv[mid].ev  = std::min(0, menv[mid].ev);
 
-    if (menv[mid].ev < 0)
-        menv[mid].ev = 0;
+    menv[mid].speed -= 2;
+    menv[mid].speed  = std::min(3, menv[mid].speed);
 
     // Now override type with the required type.
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
@@ -1403,18 +1402,14 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     }
     else if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
     {
-        menv[mid].hit_points     = hit_points( menv[mid].hit_dice, 5, 4 );
+        menv[mid].hit_points     = hit_points(menv[mid].hit_dice, 5, 4);
         menv[mid].max_hit_points = menv[mid].hit_points;
 
         menv[mid].ac -= 4;
-
-        if (menv[mid].ac < 0)
-            menv[mid].ac = 0;
+        menv[mid].ac  = std::min(0, menv[mid].ac);
 
         menv[mid].ev -= 2;
-
-        if (menv[mid].ev < 0)
-            menv[mid].ev = 0;
+        menv[mid].ev  = std::min(0, menv[mid].ev);
 
         menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG)
                              ? MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
@@ -1424,6 +1419,7 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
         // Simulacra aren't tough, but you can create piles of them. - bwr
         menv[mid].hit_points     = hit_points(menv[mid].hit_dice, 1, 4);
         menv[mid].max_hit_points = menv[mid].hit_points;
+
         menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG)
                              ? MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
     }
@@ -1431,7 +1427,9 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     {
         menv[mid].hit_points     = hit_points(menv[mid].hit_dice, 4, 4);
         menv[mid].max_hit_points = menv[mid].hit_points;
+
         menv[mid].ac            += 4;
+
         menv[mid].type           = MONS_SPECTRAL_THING;
     }
 

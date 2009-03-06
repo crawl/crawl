@@ -80,8 +80,7 @@ static mon_spellbook mspell_list[] = {
 
 static int _mons_exp_mod(int mclass);
 
-static int _mons_class_base_speed(int mc);
-static int _mons_base_speed(const monsters *mon);
+static int _base_speed(int mc);
 
 // Macro that saves some typing, nothing more.
 #define smc get_monster_data(mc)
@@ -1747,7 +1746,7 @@ void define_monster(monsters &mons)
     ac = m->AC;
     ev = m->ev;
 
-    speed = _mons_base_speed(&mons);
+    speed = _base_speed(type);
 
     mons.god = GOD_NO_GOD;
 
@@ -7435,7 +7434,7 @@ bool monsters::sicken(int amount)
     return (true);
 }
 
-static int _mons_class_base_speed(int mc)
+static int _base_speed(int mc)
 {
     const monsterentry *m = get_monster_data(mc);
     if (!m)
@@ -7459,18 +7458,10 @@ static int _mons_class_base_speed(int mc)
     return (speed);
 }
 
-static int _mons_base_speed(const monsters *mon)
-{
-    if (mons_is_zombified(mon))
-        return (std::max(3, _mons_class_base_speed(mons_zombie_base(mon)) - 2));
-    else
-        return (_mons_class_base_speed(mon->type));
-}
-
 // Recalculate movement speed.
 void monsters::fix_speed()
 {
-    speed = _mons_base_speed(this);
+    speed = _base_speed(type);
 
     if (has_ench(ENCH_HASTE))
         speed *= 2;
