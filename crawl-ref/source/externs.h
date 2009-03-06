@@ -1543,7 +1543,6 @@ public:
     std::string describe_enchantments() const;
 
     int action_energy(energy_use_type et) const;
-    static int base_speed(int mcls);
 
     bool do_shaft();
 
