@@ -1795,10 +1795,6 @@ void bolt::hit_wall()
         bounce();
     else
     {
-        // Affect a creature in the wall, if any.
-        if (monsters* m = monster_at(pos()))
-            affect_monster(m);
-
         // Regress for explosions: blow up in an open grid (if regressing
         // makes any sense).  Also regress when dropping items.
         if (!aimed_at_spot
