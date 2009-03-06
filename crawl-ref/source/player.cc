@@ -4784,7 +4784,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items)
     if (get_real_mp(include_items) < minimum)
     {
         if (!suppress_msg)
-            mpr("You haven't enough magic capacity.");        
+            mpr("You haven't enough magic capacity.");
     }
     else if (you.magic_points < minimum)
     {

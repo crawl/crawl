@@ -8266,7 +8266,7 @@ static std::string _get_species_insult(const std::string &species,
     // Get species genus.
     if (!species.empty())
     {
-        lookup  = "insult ";        
+        lookup  = "insult ";
         lookup += species;
         lookup += " ";
         lookup += type;

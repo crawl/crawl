@@ -855,9 +855,9 @@ void game_options::reset_options()
                    false);
 
     item_stack_summary_minimum = 5;
-    
+
     pizza.clear();
-    
+
 #ifdef WIZARD
     fsim_rounds = 40000L;
     fsim_mons   = "worm";
