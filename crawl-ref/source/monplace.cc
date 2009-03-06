@@ -1400,8 +1400,6 @@ static void _define_zombie( int mid, monster_type ztype,
     if (menv[mid].speed < 3)
         menv[mid].speed = 3;
 
-    menv[mid].speed_increment = 70;
-
     // Now override type with the required type.
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
     {

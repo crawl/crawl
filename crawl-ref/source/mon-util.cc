@@ -7462,7 +7462,7 @@ static int _mons_class_base_speed(int mc)
 static int _mons_base_speed(const monsters *mon)
 {
     if (mons_is_zombified(mon))
-        return (_mons_class_base_speed(mons_zombie_base(mon)) - 2);
+        return (std::max(3, _mons_class_base_speed(mons_zombie_base(mon)) - 2));
     else
         return (_mons_class_base_speed(mon->type));
 }
