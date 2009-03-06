@@ -2700,15 +2700,15 @@ static std::string _monster_stat_description(const monsters& mon)
         result << ".$";
     }
 
-    // Can the monster fly/levitate?
-    const flight_type fly = mons_class_flies(mon.type);
+    // Can the monster levitate/fly?
+    const flight_type fly = mons_flies(&mon);
     if (fly != FL_NONE)
     {
         result << pronoun << " can "
                << (fly == FL_FLY ? "fly" : "levitate") << ".$";
     }
 
-    return result.str();
+    return (result.str());
 }
 
 void get_monster_desc(const monsters& mons, describe_info &inf, bool force_seen)
