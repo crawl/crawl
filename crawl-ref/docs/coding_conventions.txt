@@ -70,11 +70,11 @@ This probably seems obvious for simple ifs ...
 Space allowing, logical connectives of different precedence should use nested 
 indenting.
 
-    case ABIL_MAPPING:          // Gnome + sense surrounds mut
+    case ABIL_MAPPING:          // Sense surroundings mutation
         if (abil.ability == ABIL_MAPPING
             && player_mutation_level(MUT_MAPPING) < 3
             && (you.level_type == LEVEL_PANDEMONIUM
-                || you.level_type == LEVEL_LABYRINTH))
+                || !player_in_mappable_area()))
         {
             mpr("You feel momentarily disoriented.");
             return (false);
@@ -89,7 +89,7 @@ beginning of the new line rather than at the end of the old one.
              && mutat != MUT_AGILE && mutat != MUT_WEAK
              && mutat != MUT_DOPEY && mutat != MUT_CLUMSY)
     {
-        return false;
+        return (false);
     }
 
 Since conjunctions (&&) take precedence over disjunctions (||), pure 
@@ -366,4 +366,3 @@ the issue.
 
   // FIXME: implement this for tiles
   void update_monster_pane() {}
-

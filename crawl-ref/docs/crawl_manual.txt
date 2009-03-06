@@ -1566,20 +1566,6 @@ magic (except enchantments and, for some reason, translocations). They
 advance in levels as rapidly as Humans. Halflings cannot wield large
 weapons.
 
-Gnomes
-------
-Gnomes are an underground-dwelling race of creatures, related to the
-Dwarves, but even more closely in touch with the earth.
-
-They are quite small, and share many characteristics with Halflings
-(except for the great agility), although they advance slightly more
-slowly in experience levels. They are okay at most skills, but
-excellent at earth elemental magic and very poor at air magic.
-
-Occasionally, they can use their empathy with the earth to sense their
-surroundings; this ability increases in power as they gain experience 
-levels.
-
 Kobolds
 -------
 Kobolds are small, ugly creatures with few redeeming features. They are
