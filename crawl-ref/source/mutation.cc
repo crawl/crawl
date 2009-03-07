@@ -44,7 +44,6 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
-
 static int _body_covered();
 
 const char *troll_claw_descrip[4] = {
