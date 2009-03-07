@@ -730,7 +730,7 @@ static void _fixup_pandemonium_stairs()
             if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
                 && grd[i][j] <= DNGN_ESCAPE_HATCH_UP)
             {
-                if (one_chance_in( you.mutation[MUT_PANDEMONIUM] ? 5 : 50 ))
+                if (one_chance_in(50))
                     grd[i][j] = DNGN_EXIT_PANDEMONIUM;
                 else
                     grd[i][j] = DNGN_FLOOR;
@@ -6210,13 +6210,13 @@ static char _plan_6(int level_number)
     // for demonspawn who gate themselves there. -- bwr
     if ((player_in_branch(BRANCH_MAIN_DUNGEON) && level_number > 20
             || you.level_type == LEVEL_PANDEMONIUM)
-        && (coinflip() || player_mutation_level(MUT_PANDEMONIUM)))
+        && coinflip())
     {
         grd[40][36] = DNGN_ENTER_ABYSS;
         grd[41][36] = DNGN_ENTER_ABYSS;
     }
 
-    return 0;
+    return (0);
 }
 
 bool octa_room(spec_room &sr, int oblique_max,

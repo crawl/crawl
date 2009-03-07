@@ -3905,16 +3905,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (wizard_map || !get_envmap_obj(*ri))
                 set_envmap_obj(*ri, grd(*ri));
 
-            // Hack to give demonspawn Pandemonium mutation the ability
-            // to detect exits magically.
-            if (wizard_map
-                || player_mutation_level(MUT_PANDEMONIUM) > 1
-                   && grd(*ri) == DNGN_EXIT_PANDEMONIUM)
-            {
-                set_terrain_seen( *ri );
-            }
+            if (wizard_map)
+                set_terrain_seen(*ri);
             else
-                set_terrain_mapped( *ri );
+                set_terrain_mapped(*ri);
         }
     }
 

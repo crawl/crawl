@@ -2836,9 +2836,6 @@ std::string _status_mut_abilities()
             case MUT_CONTROL_DEMONS:
                 current = "control demons";
                 break;
-            case MUT_PANDEMONIUM:
-                current = "portal to Pandemonium";
-                break;
             case MUT_DEATH_STRENGTH:
                 current = "draw strength from death and destruction";
                 break;

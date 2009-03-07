@@ -180,7 +180,6 @@ static const ability_def Ability_List[] =
     { ABIL_TORMENT, "Torment", 9, 0, 250, 0, ABFLAG_PAIN },
     { ABIL_RAISE_DEAD, "Raise Dead", 5, 5, 150, 0, ABFLAG_NONE },
     { ABIL_CONTROL_DEMON, "Control Demon", 4, 4, 100, 0, ABFLAG_NONE },
-    { ABIL_TO_PANDEMONIUM, "Gate Yourself to Pandemonium", 7, 0, 200, 0, ABFLAG_NONE },
     { ABIL_CHANNELING, "Channeling", 1, 0, 30, 0, ABFLAG_NONE },
     { ABIL_THROW_FLAME, "Throw Flame", 1, 1, 50, 0, ABFLAG_NONE },
     { ABIL_THROW_FROST, "Throw Frost", 1, 1, 50, 0, ABFLAG_NONE },
@@ -556,10 +555,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_SUMMON_DEMON:
         failure = 40 - you.experience_level;
-        break;
-
-    case ABIL_TO_PANDEMONIUM:
-        failure = 57 - (you.experience_level * 2);
         break;
 
     case ABIL_HELLFIRE:
@@ -1388,16 +1383,6 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
-    case ABIL_TO_PANDEMONIUM:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("You're already here.");
-            return (false);
-        }
-
-        banished(DNGN_ENTER_PANDEMONIUM, "self");
-        break;
-
     case ABIL_CHANNELING:
         mpr("You channel some magical energy.");
         inc_mp(1 + random2(5), false);
@@ -2170,9 +2155,6 @@ std::vector<talent> your_talents( bool check_confused )
 
     if (player_mutation_level(MUT_CONTROL_DEMONS))
         _add_talent(talents, ABIL_CONTROL_DEMON, check_confused );
-
-    if (player_mutation_level(MUT_PANDEMONIUM))
-        _add_talent(talents, ABIL_TO_PANDEMONIUM, check_confused );
 
     if (player_mutation_level(MUT_CHANNEL_HELL))
         _add_talent(talents, ABIL_CHANNELING, check_confused );

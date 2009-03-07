@@ -758,15 +758,6 @@ mutation_def mutation_defs[] = {
 
       "control demons"
     },
-    // FIXME: unused!
-    { MUT_PANDEMONIUM,                0,  1, false, false,
-      {"You can travel to (but not from) Pandemonium at will.", "", ""},
-      {"You feel something pulling you to a strange and terrible place.",
-       "", ""},
-      {"", "", ""},
-
-      "pandemonium"
-    },
     { MUT_DEATH_STRENGTH,             0,  1, false, false,
       {"You can draw strength from death and destruction.", "", ""},
       {"You feel hungry for death.", "", ""},
