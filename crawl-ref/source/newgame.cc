@@ -747,7 +747,7 @@ void initialise_item_descriptions()
     you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
     you.item_description[IDESC_POTIONS][POT_BLOOD] = PDESCS(PDC_RED);
     you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
-         = _get_random_coagulated_blood_desc();
+        = _get_random_coagulated_blood_desc();
 
     // The order here must match that of IDESC in describe.h
     // (I don't really know about scrolls, which is why I left the height value.)
