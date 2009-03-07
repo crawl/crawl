@@ -2110,14 +2110,14 @@ std::vector<talent> your_talents( bool check_confused )
         }
 
         if (ability != ABIL_NON_ABILITY)
-            _add_talent(talents, ability, check_confused );
+            _add_talent(talents, ability, check_confused);
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
         && you.hunger_state <= HS_SATIATED
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
-        _add_talent(talents, ABIL_TRAN_BAT, check_confused );
+        _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
     if (!player_is_airborne() && !transform_changed_physiology())
@@ -2126,62 +2126,62 @@ std::vector<talent> your_talents( bool check_confused )
         // (until level 15, when it becomes permanent until revoked).
         // jmf: "upgrade" for draconians -- expensive flight
         if (you.species == SP_KENKU && you.experience_level >= 5)
-            _add_talent(talents, ABIL_FLY, check_confused );
+            _add_talent(talents, ABIL_FLY, check_confused);
         else if (player_genus(GENPC_DRACONIAN)
                  && player_mutation_level(MUT_BIG_WINGS))
         {
-            _add_talent(talents, ABIL_FLY_II, check_confused );
+            _add_talent(talents, ABIL_FLY_II, check_confused);
         }
     }
 
     // Mutations.
     if (player_mutation_level(MUT_MAPPING))
-        _add_talent(talents, ABIL_MAPPING, check_confused );
+        _add_talent(talents, ABIL_MAPPING, check_confused);
 
     if (player_mutation_level(MUT_SUMMON_MINOR_DEMONS))
-        _add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );
+        _add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused);
 
     if (player_mutation_level(MUT_SUMMON_DEMONS))
-        _add_talent(talents, ABIL_SUMMON_DEMON, check_confused );
+        _add_talent(talents, ABIL_SUMMON_DEMON, check_confused);
 
     if (player_mutation_level(MUT_HURL_HELLFIRE))
-        _add_talent(talents, ABIL_HELLFIRE, check_confused );
+        _add_talent(talents, ABIL_HELLFIRE, check_confused);
 
     if (player_mutation_level(MUT_CALL_TORMENT))
-        _add_talent(talents, ABIL_TORMENT, check_confused );
+        _add_talent(talents, ABIL_TORMENT, check_confused);
 
     if (player_mutation_level(MUT_RAISE_DEAD))
-        _add_talent(talents, ABIL_RAISE_DEAD, check_confused );
+        _add_talent(talents, ABIL_RAISE_DEAD, check_confused);
 
     if (player_mutation_level(MUT_CONTROL_DEMONS))
-        _add_talent(talents, ABIL_CONTROL_DEMON, check_confused );
+        _add_talent(talents, ABIL_CONTROL_DEMON, check_confused);
 
     if (player_mutation_level(MUT_CHANNEL_HELL))
-        _add_talent(talents, ABIL_CHANNELING, check_confused );
+        _add_talent(talents, ABIL_CHANNELING, check_confused);
 
     if (player_mutation_level(MUT_THROW_FLAMES))
-        _add_talent(talents, ABIL_THROW_FLAME, check_confused );
+        _add_talent(talents, ABIL_THROW_FLAME, check_confused);
 
     if (player_mutation_level(MUT_THROW_FROST))
-        _add_talent(talents, ABIL_THROW_FROST, check_confused );
+        _add_talent(talents, ABIL_THROW_FROST, check_confused);
 
     if (player_mutation_level(MUT_SMITE))
-        _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused );
+        _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused);
 
     if (you.duration[DUR_TRANSFORMATION])
-        _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused );
+        _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
 
     if (player_mutation_level(MUT_BLINK))
-        _add_talent(talents, ABIL_BLINK, check_confused );
+        _add_talent(talents, ABIL_BLINK, check_confused);
 
     if (player_mutation_level(MUT_TELEPORT_AT_WILL))
-        _add_talent(talents, ABIL_TELEPORTATION, check_confused );
+        _add_talent(talents, ABIL_TELEPORTATION, check_confused);
 
     // Religious abilities.
     if (you.religion == GOD_ELYVILON)
-        _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
+        _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused);
     else if (you.religion == GOD_TROG)
-        _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused );
+        _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
 
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require
@@ -2202,29 +2202,29 @@ std::vector<talent> your_talents( bool check_confused )
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced( you.pos() ))
-        _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused );
+        _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
     //jmf: Check for breath weapons -- they're exclusive of each other, I hope!
     //     Make better come ones first.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
         || player_mutation_level(MUT_BREATHE_FLAMES))
     {
-        _add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
+        _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);
     }
 
     // Checking for unreleased delayed Fireball.
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
-        _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused );
+        _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 
     // Evocations from items.
     if (scan_randarts(RAP_BLINK))
-        _add_talent(talents, ABIL_EVOKE_BLINK, check_confused );
+        _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
 
     if (wearing_amulet(AMU_RAGE) || scan_randarts(RAP_BERSERK))
-        _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused );
+        _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
     if (scan_randarts( RAP_MAPPING ))
-        _add_talent(talents, ABIL_EVOKE_MAPPING, check_confused );
+        _add_talent(talents, ABIL_EVOKE_MAPPING, check_confused);
 
     if (player_equip( EQ_RINGS, RING_INVISIBILITY )
         || player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_DARKNESS )
@@ -2234,9 +2234,9 @@ std::vector<talent> your_talents( bool check_confused )
         // activatable item.  Wands and potions will have to time
         // out. -- bwr
         if (you.duration[DUR_INVIS])
-            _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused );
+            _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
         else
-            _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused );
+            _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
 
     // Note: This ability only applies to this counter.
@@ -2260,7 +2260,7 @@ std::vector<talent> your_talents( bool check_confused )
     if (player_equip( EQ_RINGS, RING_TELEPORTATION )
         || scan_randarts( RAP_CAN_TELEPORT ))
     {
-        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused );
+        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.
