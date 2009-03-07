@@ -1589,21 +1589,7 @@ int exper_value(const monsters *monster)
     if (mons_is_statue(mclass))
         return (mHD * 15);
 
-    // These undead take damage to maxhp, so we use only HD. -- bwr
-    if (mclass == MONS_ZOMBIE_SMALL
-        || mclass == MONS_ZOMBIE_LARGE
-        || mclass == MONS_SIMULACRUM_SMALL
-        || mclass == MONS_SIMULACRUM_LARGE
-        || mclass == MONS_SKELETON_SMALL
-        || mclass == MONS_SKELETON_LARGE)
-    {
-        x_val = (16 + mHD * 4) * (mHD * mHD) / 10;
-    }
-    else
-    {
-        x_val = (16 + maxhp) * (mHD * mHD) / 10;
-    }
-
+    x_val = (16 + maxhp) * (mHD * mHD) / 10;
 
     // Let's calculate a simple difficulty modifier. -- bwr
     int diff = 0;
