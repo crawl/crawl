@@ -2005,7 +2005,11 @@ static void _do_god_gift(bool prayed_for)
                     && !grid_destroys_items(grd(you.pos())))
                 {
                     if (gift == OBJ_RANDOM)
-                        success = acquirement(OBJ_BOOKS, you.religion);
+                    {
+                        // Sif Muna special: Keep quiet if acquirement fails
+                        // because the player already has seen all spells.
+                        success = acquirement(OBJ_BOOKS, you.religion, true);
+                    }
                     else
                     {
                         int thing_created = items(1, OBJ_BOOKS, gift, true, 1,

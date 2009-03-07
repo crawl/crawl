@@ -1474,6 +1474,7 @@ void direction(dist& moves, targeting_type restricts,
             break;
         }
 
+        flush_prev_message();
         if (loop_done == true)
         {
             // Confirm that the loop is really done. If it is,

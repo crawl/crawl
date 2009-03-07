@@ -1341,9 +1341,6 @@ static int _book_weight(int book)
 {
     ASSERT(book >= 0 && book <= MAX_NORMAL_BOOK);
 
-    if (book_rarity(book) == 100)
-        return 0;
-
     int total_weight = 0;
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
@@ -1361,7 +1358,7 @@ static int _book_weight(int book)
     return (total_weight);
 }
 
-static void _do_book_acquirement(item_def &book, int agent)
+static bool _do_book_acquirement(item_def &book, int agent)
 {
     // items() shouldn't make book a randart for acquirement items.
     ASSERT(!is_random_artefact(book));
@@ -1469,15 +1466,19 @@ static void _do_book_acquirement(item_def &book, int agent)
     }
     case BOOK_RANDART_THEME:
         book.sub_type = BOOK_RANDART_THEME;
-        make_book_theme_randart(book, 0, 0, 5 + coinflip(), 20, SPELL_NO_SPELL,
-                                owner);
+        if (!make_book_theme_randart(book, 0, 0, 5 + coinflip(), 20,
+                                     SPELL_NO_SPELL, owner))
+        {
+            return (false);
+        }
         break;
 
     case BOOK_RANDART_LEVEL:
     {
         book.sub_type  = BOOK_RANDART_LEVEL;
         int max_spells = 5 + level/3;
-        make_book_level_randart(book, level, max_spells, owner);
+        if (!make_book_level_randart(book, level, max_spells, owner))
+            return (false);
         break;
     }
 
@@ -1485,7 +1486,7 @@ static void _do_book_acquirement(item_def &book, int agent)
     {
         // The Tome of Destruction is rare enough we won't change this.
         if (book.sub_type == BOOK_DESTRUCTION)
-            return;
+            return (true);
 
         int weights[NUM_SKILLS];
         int total_weights = 0;
@@ -1513,10 +1514,7 @@ static void _do_book_acquirement(item_def &book, int agent)
 
         // Are we too skilled to get any manuals?
         if (total_weights == 0)
-        {
-            _do_book_acquirement(book, agent);
-            return;
-        }
+            return _do_book_acquirement(book, agent);
 
         book.sub_type = BOOK_MANUAL;
         book.plus     = choose_random_weighted(weights, weights + NUM_SKILLS);
@@ -1525,6 +1523,7 @@ static void _do_book_acquirement(item_def &book, int agent)
         break;
     }
     }
+    return (true);
 }
 
 bool acquirement(object_class_type class_wanted, int agent,
@@ -1711,7 +1710,14 @@ bool acquirement(object_class_type class_wanted, int agent,
 
         if (thing.base_type == OBJ_BOOKS)
         {
-            _do_book_acquirement(thing, agent);
+            if (!_do_book_acquirement(thing, agent))
+            {
+                if (!quiet)
+                    mpr("The demon of the infinite void smiles upon you.");
+                *item_index = NON_ITEM;
+                destroy_item(thing, true);
+                return (false);
+            }
             mark_had_book(thing);
         }
         else if (thing.base_type == OBJ_JEWELLERY)

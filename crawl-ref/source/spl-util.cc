@@ -118,8 +118,10 @@ void init_spell_descs(void)
         if (data.flags & SPFLAG_TARGETING_MASK)
         {
             if (data.min_range <= -1 || data.max_range <= 0)
+            {
                 end(1, false, "targeted/directed spell '%s' has invalid range",
                     data.title);
+            }
         }
 #endif
 
@@ -980,7 +982,7 @@ static int _sandblast_range(int pow, bool real_cast)
     int res = 1;
 
     if (wielding_rocks() && (!real_cast || coinflip()))
-            res = 2;
+        res = 2;
 
     return (res);
 }

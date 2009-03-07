@@ -977,11 +977,8 @@ void init_spell_rarities()
 
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
-        const int rarity = book_rarity(i);
-
-        // Manuals, books of destruction, books only created as gifts
-        // from specific gods, and the unused Book of Healing.
-        if (rarity >= 20)
+        // Manuals and books of destruction are not even part of this loop.
+        if (i >= MIN_GOD_ONLY_BOOK && i <= MAX_GOD_ONLY_BOOK)
             continue;
 
         for (int j = 0; j < SPELLBOOK_SIZE; ++j)
@@ -1006,6 +1003,7 @@ void init_spell_rarities()
             }
 #endif
 
+            const int rarity = book_rarity(i);
             if (rarity < _lowest_rarity[spell])
                 _lowest_rarity[spell] = rarity;
         }
@@ -1720,7 +1718,32 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
 {
-    for (int i = 0; i < NUM_SPELLS; i++)
+    // For randarts handed out by Sif Muna, spells contained in the
+    // Vehumet/Kiku specials are fair game.
+    // We store them in an extra vector that (once sorted) can later
+    // be checked for each spell with a rarity -1 (i.e. not normally
+    // appearing randomly).
+    std::vector<spell_type> special_spells;
+    if (god == GOD_SIF_MUNA)
+    {
+        for (int i = MIN_GOD_ONLY_BOOK; i <= MAX_GOD_ONLY_BOOK; ++i)
+            for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+            {
+                spell_type spell = which_spell_in_book(i, j);
+                if (spell == SPELL_NO_SPELL)
+                    continue;
+
+                if (spell_rarity(spell) != -1)
+                    continue;
+
+                special_spells.push_back(spell);
+            }
+
+        std::sort(special_spells.begin(), special_spells.end());
+    }
+
+    int specnum = 0;
+    for (int i = 0; i < NUM_SPELLS; ++i)
     {
         const spell_type spell = (spell_type) i;
 
@@ -1730,22 +1753,38 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
         // Only use spells available in books you might find lying about
         // the dungeon.
         if (spell_rarity(spell) == -1)
-            continue;
+        {
+            bool skip_spell = true;
+            while ((unsigned int) specnum < special_spells.size()
+                   && spell == special_spells[specnum])
+            {
+                specnum++;
+                skip_spell = false;
+            }
+
+            if (skip_spell)
+                continue;
+        }
 
         if (avoid_known && you.seen_spell[spell])
             continue;
 
-        const unsigned int disciplines = get_spell_disciplines(spell);
         if (level != -1)
         {
+            // fixed level randart: only include spells of the given level
             if (spell_difficulty(spell) != level)
                 continue;
         }
-        else if (!((disciplines & disc1) || (disciplines & disc2))
+        else
+        {
+            // themed randart: only include spells of the given disciplines
+            const unsigned int disciplines = get_spell_disciplines(spell);
+            if ((!(disciplines & disc1) && !(disciplines & disc2))
                  || disciplines_conflict(disc1, disciplines)
                  || disciplines_conflict(disc2, disciplines))
-        {
-            continue;
+            {
+                continue;
+            }
         }
 
         // Only wizard mode gets spells still under development.
@@ -1771,6 +1810,9 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
             god_discard++;
             continue;
         }
+
+//         if (spell_rarity(spell) == -1)
+//             mprf("chosen spell: %s (%d)", spell_title(spell), spell);
 
         // Passed all tests.
         spell_list.push_back(spell);
@@ -2068,11 +2110,16 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 
     int num_discs = ok_discs.size();
 
-    ASSERT( num_discs > 0 );
     if (num_discs == 0)
     {
+#ifdef DEBUG
         mpr("No valid disciplines with which to make a themed ranadart "
             "spellbook.", MSGCH_ERROR);
+#endif
+        // Only happens if !completely_random and the player already knows
+        // all available spells. We could simply re-allow all disciplines
+        // but the player isn't going to get any new spells, anyway, so just
+        // consider this acquirement failed. (jpeg)
         return (false);
     }
 

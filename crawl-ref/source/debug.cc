@@ -5453,20 +5453,24 @@ void wizard_give_monster_item(monsters *mon)
     dec_inv_item_quantity(player_slot, item.quantity);
 
     if ((mon->flags & MF_HARD_RESET) && !(item.flags & ISFLAG_SUMMONED))
+    {
        mprf(MSGCH_WARN, "WARNING: Monster has MF_HARD_RESET and all its "
             "items will disappear when it does.");
+    }
     else if ((item.flags & ISFLAG_SUMMONED) && !mon->is_summoned())
+    {
        mprf(MSGCH_WARN, "WARNING: Item is summoned and will disappear when "
             "the monster does.");
-
+    }
     // Monster's old item moves to player's inventory.
     if (old_eq != NON_ITEM)
     {
         mpr("Fetching monster's old item.");
         if (mitm[old_eq].flags & ISFLAG_SUMMONED)
+        {
            mprf(MSGCH_WARN, "WARNING: Item is summoned and shouldn't really "
                 "be anywhere but in the inventory of a summoned monster.");
-
+        }
         mitm[old_eq].pos.reset();
         mitm[old_eq].link = NON_ITEM;
         move_item_to_player(old_eq, mitm[old_eq].quantity);

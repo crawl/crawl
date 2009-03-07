@@ -1637,9 +1637,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     // If moving an item directly from a monster to the player without the
     // item having been on the grid, then it really isn't a position event.
     if (in_bounds(p))
+    {
         dungeon_events.fire_position_event(
             dgn_event(DET_ITEM_PICKUP, p, 0, obj, -1), p);
-
+    }
     item_def &item = you.inv[freeslot];
     // Copy item.
     item        = mitm[obj];
