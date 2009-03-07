@@ -96,7 +96,6 @@ const char *naga_deformed_descrip[3] = {
 // fourth string  = wizard-mode name of mutation
 mutation_def mutation_defs[] = {
     { MUT_TOUGH_SKIN,                10,  3, false,  true,
-
       {"You have tough skin (AC +1).",
        "You have very tough skin (AC +2).",
        "You have extremely tough skin (AC +3)."},
