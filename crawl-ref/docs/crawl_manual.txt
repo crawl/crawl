@@ -896,11 +896,11 @@ Some items have been crafted by members of a gifted race, and have
 special properties.
 
 Dwarven weapons and armours are very durable, and do not rust or
-corrode easily. All species get a bonus when wearing dwarven armours
+corrode easily. All species get a bonus when wearing Dwarven armours
 at the expense that these mails make spellcasting slightly more
 difficult. Dwarves get a larger bonus without the magical hampering.
 
-Orcish (cross)bows do a bit more damage with orcish arrows/bolts. In
+Orcish (cross)bows do a bit more damage with Orcish arrows/bolts. In
 general, Orcs do better with gear from their own kin; this applies to
 weapons, as well as to armours.
 
@@ -908,7 +908,7 @@ Elven armour is unusually light, and does not affect the dodging or
 stealth of its wearer to the extent that other armours do. It also is
 less restrictive for spellcasting than other armours. Elven cloaks and
 boots are particularly useful to those who wish to be stealthy. Elven
-bows are particularly effective in conjunction with elven arrows. An Elf
+bows are particularly effective in conjunction with Elven arrows. An Elf
 does even a bit better whenever using armour or weapons of his own kind.
 
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a
@@ -1459,7 +1459,7 @@ Sludge Elves
   traditional areas of High Elven magic (enchantments, conjurations and
   divinations). On the other hand, they are superlative transmuters, and
   are comfortable dabbling in necromantic, poison and elemental magic.
-  As fighters they are often more dangerous unarmed than armed. They
+  As fighters, they are often more dangerous unarmed than armed. They
   advance in levels slightly slower than Humans.
 
 Mountain Dwarves
@@ -1467,7 +1467,7 @@ Mountain Dwarves
 Dwarves are generally short, hardy people. They love to fight, and often
 venture forth to seek fame and fortune through battle. Their armour and
 weapons are very well-crafted and much more durable than the products of
-lesser artisans. Dwarves are particularly dangerous when using dwarven
+lesser artisans. Dwarves are particularly dangerous when using Dwarven
 weaponry.
 
 Mountain Dwarves, as opposed to the subterranean specimen, come from
@@ -1522,7 +1522,7 @@ they are skilled at using most hand weapons (with the exception of short
 blades, at which they are only fair), although they are not particularly
 good at using missile weapons. They prefer to use their own weapons.
 Orcs are poor at using most types of magic, with the exception of
-conjurations, necromancy, and the elemental magic of earth, fire, and
+conjurations, necromancy, and the elemental magic of earth, fire and
 ice. They advance in levels as quickly as Humans.
 
 Merfolk
