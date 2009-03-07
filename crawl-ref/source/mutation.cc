@@ -856,7 +856,7 @@ mutation_def mutation_defs[] = {
 
       "breathe poison"
     },
-    // Naga and Draconian only - FIXME: unused!
+    // Naga and Draconian only
     { MUT_STINGER,                    0,  3, false,  true,
       {"Your tail ends in a poisonous barb.",
        "Your tail ends in a sharp poisonous barb.",
@@ -1239,9 +1239,16 @@ const mutation_def& get_mutation_def(mutation_type mut)
 void fixup_mutations()
 {
     if (player_genus(GENPC_DRACONIAN))
+    {
         for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
-            if (mutation_defs[i].mutation == MUT_BIG_WINGS)
+        {
+            if (mutation_defs[i].mutation == MUT_STINGER
+                || mutation_defs[i].mutation == MUT_BIG_WINGS)
+            {
                 mutation_defs[i].rarity = 1;
+            }
+        }
+    }
 
     if (you.species == SP_TROLL)
     {
@@ -1259,10 +1266,18 @@ void fixup_mutations()
     }
 
     if (you.species == SP_NAGA)
+    {
         for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
+        {
             if (mutation_defs[i].mutation == MUT_DEFORMED)
+            {
                 for (int j = 0; j < 3; ++j)
                     mutation_defs[i].have[j] = naga_deformed_descrip[j];
+            }
+            else if (mutation_defs[i].mutation == MUT_STINGER)
+                mutation_defs[i].rarity = 1;
+        }
+    }
 
     if (you.species == SP_CENTAUR)
         for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
