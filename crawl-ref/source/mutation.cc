@@ -1888,9 +1888,9 @@ static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false,
 static mutation_type get_random_xom_mutation(bool non_fatal = false)
 {
     const mutation_type bad_muts[] = {
-        MUT_WEAK,          MUT_DOPEY,  MUT_CLUMSY,
-        MUT_DEFORMED,      MUT_SCREAM, MUT_DETERIORATION,
-        MUT_BLURRY_VISION, MUT_FRAIL,  MUT_SLOW_HEALING
+        MUT_SLOW_HEALING,  MUT_WEAK,          MUT_DOPEY,
+        MUT_CLUMSY,        MUT_DEFORMED,      MUT_SCREAM,
+        MUT_DETERIORATION, MUT_BLURRY_VISION, MUT_FRAIL
     };
 
     mutation_type mutat = NUM_MUTATIONS;
@@ -2983,17 +2983,17 @@ bool give_bad_mutation(bool failMsg, bool force_mutation, bool non_fatal)
 {
     const mutation_type bad_muts[] = {
         MUT_CARNIVOROUS,   MUT_HERBIVOROUS,   MUT_FAST_METABOLISM,
-        MUT_WEAK,          MUT_DOPEY,         MUT_CLUMSY,
-        MUT_TELEPORT,      MUT_DEFORMED,      MUT_SCREAM,
-        MUT_DETERIORATION, MUT_BLURRY_VISION, MUT_FRAIL,
-        MUT_LOW_MAGIC,     MUT_SLOW_HEALING
+        MUT_SLOW_HEALING,  MUT_WEAK,          MUT_DOPEY,
+        MUT_CLUMSY,        MUT_TELEPORT,      MUT_DEFORMED,
+        MUT_SCREAM,        MUT_DETERIORATION, MUT_BLURRY_VISION,
+        MUT_FRAIL,         MUT_LOW_MAGIC
     };
 
     mutation_type mutat;
 
-    do {
+    do
         mutat = RANDOM_ELEMENT(bad_muts);
-    } while (non_fatal && !accept_mutation(mutat, true, true));
+    while (non_fatal && !accept_mutation(mutat, true, true));
 
     const bool result = mutate(mutat, failMsg, force_mutation);
     if (result)
