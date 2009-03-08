@@ -1711,7 +1711,7 @@ void mons_load_spells( monsters *mon, mon_spellbook_type book )
 monster_type random_draconian_monster_species()
 {
     const int num_drac = MONS_PALE_DRACONIAN - MONS_BLACK_DRACONIAN + 1;
-    return static_cast<monster_type>(SP_BLACK_DRACONIAN + random2(num_drac));
+    return static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(num_drac));
 }
 
 void define_monster(int index)
