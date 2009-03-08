@@ -1708,7 +1708,7 @@ void mons_load_spells( monsters *mon, mon_spellbook_type book )
     mon->load_spells(book);
 }
 
-static monster_type _random_draconian_monster_species()
+monster_type random_draconian_monster_species()
 {
     const int num_drac = MONS_PALE_DRACONIAN - MONS_BLACK_DRACONIAN + 1;
     return static_cast<monster_type>(SP_BLACK_DRACONIAN + random2(num_drac));
@@ -1844,7 +1844,7 @@ void define_monster(monsters &mons)
         // White draconians will never be draconian scorchers, but
         // apart from that, anything goes.
         do
-            monbase = _random_draconian_monster_species();
+            monbase = random_draconian_monster_species();
         while (drac_colour_incompatible(mcls, monbase));
         break;
     }
@@ -1863,7 +1863,7 @@ void define_monster(monsters &mons)
                                  : MST_DEEP_ELF_CONJURER_II);
         }
 
-        monbase = _random_draconian_monster_species();
+        monbase = random_draconian_monster_species();
         break;
     }
 

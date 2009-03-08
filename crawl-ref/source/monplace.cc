@@ -497,11 +497,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                    || drac_colour_incompatible(mon_type, base_type)));
     }
     else if (mon_type == RANDOM_BASE_DRACONIAN)
-    {
-        mon_type =
-            static_cast<monster_type>(
-                random_range(MONS_BLACK_DRACONIAN, MONS_PALE_DRACONIAN));
-    }
+        mon_type = random_draconian_monster_species();
     else if (mon_type == RANDOM_NONBASE_DRACONIAN)
     {
         mon_type =

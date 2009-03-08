@@ -680,6 +680,8 @@ int mons_colour(const monsters *mon);
 
 void mons_load_spells( monsters *mon, mon_spellbook_type book );
 
+monster_type random_draconian_monster_species();
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: dungeon - fight
