@@ -275,9 +275,7 @@ bool radius_iterator::on_valid_square() const
 const radius_iterator& radius_iterator::operator++()
 {
     do
-    {
         this->step();
-    }
     while (!this->done() && !this->on_valid_square());
 
     return (*this);
@@ -286,9 +284,7 @@ const radius_iterator& radius_iterator::operator++()
 const radius_iterator& radius_iterator::operator--()
 {
     do
-    {
         this->step_back();
-    }
     while (!this->done() && !this->on_valid_square());
 
     return (*this);
@@ -1305,12 +1301,13 @@ unsigned char random_colour(void)
 unsigned char random_uncommon_colour()
 {
     unsigned char result;
+
     do
         result = random_colour();
-    while ( result == LIGHTCYAN || result == CYAN || result == BROWN );
-    return result;
-}
+    while (result == LIGHTCYAN || result == CYAN || result == BROWN);
 
+    return (result);
+}
 
 // returns if a colour is one of the special element colours (ie not regular)
 bool is_element_colour( int col )
