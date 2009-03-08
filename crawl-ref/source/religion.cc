@@ -5708,30 +5708,31 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         // Drop the monster's corpse, so that it can be properly
         // re-equipped below.
         corps = place_monster_corpse(mon, true, true);
-
-        mon->type = MONS_SPECTRAL_THING;
-        mon->base_monster = soul_type;
     }
 
     // Drop the monster's equipment.
     monster_drop_ething(mon);
 
-    // Recreate the monster as an abomination or spectral thing.
+    // Recreate the monster as an abomination, or as itself before
+    // turning it into a spectral thing below.
     define_monster(*mon);
 
     mon->colour = ETC_UNHOLY;
-    mon->flags |= MF_ENSLAVED_SOUL;
+
     mon->flags |= MF_CREATED_FRIENDLY;
+    mon->flags |= MF_ENSLAVED_SOUL;
 
     if (twisted)
         // Mark abominations as undead.
         mon->flags |= MF_HONORARY_UNDEAD;
     else if (corps != -1)
     {
-        // Give spectral things the same speed as the original monster.
-        mon->speed = mons_class_speed(mon->base_monster);
+        // Turn the monster into a spectral thing, minus the usual
+        // adjustments for zombified monsters.
+        mon->type = MONS_SPECTRAL_THING;
+        mon->base_monster = soul_type;
 
-        // Re-equip spectral things.
+        // Re-equip the spectral thing.
         equip_undead(mon->pos(), corps, monster_index(mon),
                      mon->base_monster);
 
