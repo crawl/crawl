@@ -211,7 +211,11 @@ shadow_imp MONS_SHADOW_IMP
 ufetubus MONS_UFETUBUS
 white_imp MONS_WHITE_IMP
 
-efreet MONS_EFREET /*'E'*/
+# efreet ('E')
+%sdir dc-mon/unique
+azrael MONS_AZRAEL
+%sdir dc-mon/demons
+efreet MONS_EFREET
 
 ## Rakshasa ('R')
 rakshasa MONS_RAKSHASA
@@ -251,9 +255,9 @@ wood_golem MONS_WOOD_GOLEM
 %sdir dc-mon/unique
 roxanne MONS_ROXANNE
 %sdir dc-mon
-ice_statue ICE_STATUE
-silver_statue SILVER_STATUE
-orange_crystal_statue ORANGE_CRYSTAL_STATUE
+ice_statue MONS_ICE_STATUE
+silver_statue MONS_SILVER_STATUE
+orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
 
 ## Gargoyles ('9')
 gargoyle MONS_GARGOYLE
@@ -511,6 +515,7 @@ rotting_hulk MONS_ROTTING_HULK
 %sdir dc-mon/unique
 blork_the_orc MONS_BLORK_THE_ORC
 urug MONS_URUG
+saint_roka MONS_SAINT_ROKA
 %sdir dc-mon
 orc MONS_ORC
 orc_wizard MONS_ORC_WIZARD

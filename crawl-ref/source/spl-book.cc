@@ -1811,9 +1811,6 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
             continue;
         }
 
-//         if (spell_rarity(spell) == -1)
-//             mprf("chosen spell: %s (%d)", spell_title(spell), spell);
-
         // Passed all tests.
         spell_list.push_back(spell);
     }

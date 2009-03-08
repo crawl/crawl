@@ -858,11 +858,11 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
 
     // statues (also '8')
     case MONS_ICE_STATUE:
-        return TILEP_ICE_STATUE;
+        return TILEP_MONS_ICE_STATUE;
     case MONS_SILVER_STATUE:
-        return TILEP_SILVER_STATUE;
+        return TILEP_MONS_SILVER_STATUE;
     case MONS_ORANGE_STATUE:
-        return TILEP_ORANGE_CRYSTAL_STATUE;
+        return TILEP_MONS_ORANGE_CRYSTAL_STATUE;
 
     // gargoyles ('9')
     case MONS_GARGOYLE:
@@ -916,7 +916,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SONJA:
         return TILEP_MONS_KOBOLD; // TODO enne
     case MONS_AZRAEL:
-        return TILEP_MONS_EFREET; // TODO enne
+        return TILEP_MONS_AZRAEL;
     case MONS_ILSUIW:
         if (in_water)
             return TILEP_MONS_ILSUIW_WATER;
@@ -927,7 +927,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_NERGALLE:
         return TILEP_MONS_ORC_SORCERER; // TODO enne
     case MONS_SAINT_ROKA:
-        return TILEP_MONS_ORC_WARLORD; // TODO enne
+        return TILEP_MONS_SAINT_ROKA;
     case MONS_NESSOS:
         return TILEP_MONS_NESSOS;
     case MONS_LERNAEAN_HYDRA:
@@ -2636,7 +2636,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case '+': fg = TILE_BOOK_PAPER_OFFSET + 15; break;
 
         case '/': fg = TILE_WAND_OFFSET; break;
-        case '8': fg = TILEP_SILVER_STATUE; break;
+        case '8': fg = TILEP_MONS_SILVER_STATUE; break;
         case '<': bg = TILE_DNGN_STONE_STAIRS_UP; break;
         case '=': fg = TILE_RING_NORMAL_OFFSET + 1; break;
         case '>': bg = TILE_DNGN_STONE_STAIRS_DOWN; break;
