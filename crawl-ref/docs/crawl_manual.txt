@@ -39,8 +39,8 @@ and hideous creatures.
 If you have never played Crawl (or a similar game) before, you may want
 to try out a tutorial. These are accessed by entering 'T' in the class
 or species selection screens. You can choose among three quite popular
-and rather straightforward combinations: a strong melee fighter with
-the additional help of a mighty war god, a Centaur hunter using bow and
+and rather straightforward combinations: a Minotaur fighter with the
+additional help of a mighty war god, a Centaur hunter using a bow and
 arrows, and an Elven magician. The prime aim of the tutorials is to
 explain Crawl's interface. They do not focus on 'optimal' gameplay
 (also, many experienced players share different views on the latter).
