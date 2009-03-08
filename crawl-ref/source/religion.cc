@@ -1300,9 +1300,7 @@ static bool _blessing_wpn(monsters* mon)
     int slot;
 
     do
-    {
         slot = (coinflip()) ? weapon : alt_weapon;
-    }
     while (slot == NON_ITEM);
 
     item_def& wpn(mitm[slot]);
@@ -1330,9 +1328,7 @@ static bool _blessing_AC(monsters* mon)
     int slot;
 
     do
-    {
         slot = (coinflip()) ? armour : shield;
-    }
     while (slot == NON_ITEM);
 
     item_def& arm(mitm[slot]);
@@ -1372,7 +1368,7 @@ static bool _blessing_balms(monsters *mon)
     if (mon->del_ench(ENCH_FATIGUE, true))
         success = true;
 
-    return success;
+    return (success);
 }
 
 static bool _blessing_healing(monsters* mon)
@@ -1403,9 +1399,7 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
     int slot;
 
     do
-    {
         slot = (coinflip()) ? weapon : alt_weapon;
-    }
     while (slot == NON_ITEM);
 
     item_def& wpn(mitm[slot]);
@@ -1449,9 +1443,7 @@ static bool _tso_blessing_holy_arm(monsters* mon)
     int slot;
 
     do
-    {
         slot = (coinflip()) ? armour : shield;
-    }
     while (slot == NON_ITEM);
 
     item_def& arm(mitm[slot]);
@@ -1490,7 +1482,7 @@ static bool _increase_ench_duration(monsters *mon,
 static int _tso_blessing_extend_stay(monsters* mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
-        return 0;
+        return (0);
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 

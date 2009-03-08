@@ -1393,8 +1393,8 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     // Now override type with the required type.
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
     {
-        menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG)
-                             ? MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
+        menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG) ?
+                             MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
     }
     else if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
     {
@@ -1407,8 +1407,8 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
         menv[mid].ev -= 2;
         menv[mid].ev  = std::max(0, menv[mid].ev);
 
-        menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG)
-                             ? MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
+        menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG) ?
+                             MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
     }
     else if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
     {
@@ -1416,8 +1416,8 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
         menv[mid].hit_points     = hit_points(menv[mid].hit_dice, 1, 4);
         menv[mid].max_hit_points = menv[mid].hit_points;
 
-        menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG)
-                             ? MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
+        menv[mid].type = ((mons_zombie_size(menv[mid].base_monster) == Z_BIG) ?
+                             MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
     }
     else if (cs == MONS_SPECTRAL_THING)
     {
