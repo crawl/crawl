@@ -879,36 +879,6 @@ mutation_def mutation_defs[] = {
       "big wings"
     },
 
-    // used by evil gods to mark followers - FIXME: unused!
-    { MUT_BLUE_MARKS,                 0,  3, false,  true,
-      {"There is a blue sigil on each of your hands.",
-       "There are several blue sigils on your hands and arms.",
-       "Your hands, arms and shoulders are covered in intricate, "
-       "arcane blue writing."},
-
-      {"Your hands itch.",
-       "Your hands and forearms itch.",
-       "Your arms, hands and shoulders itch."},
-
-      {"", "", ""},
-
-      "blue marks"
-    },
-    { MUT_GREEN_MARKS,                0,  3, false,  true,
-      {"There is a green sigil on your chest.",
-       "There are several green sigils on your chest and abdomen.",
-       "Your chest, abdomen and neck are covered in intricate, "
-       "arcane green writing."},
-
-      {"Your chest itches.",
-       "Your chest and abdomen itch.",
-       "Your chest, abdomen and neck itch."},
-
-      {"", "", ""},
-
-      "green marks"
-    },
-
     // species-dependent innate mutations
     { MUT_SAPROVOROUS,                0,  3, false, false,
       {"You can tolerate rotten meat.",
@@ -1740,8 +1710,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BREATHE_POISON:
     case MUT_STINGER:
     case MUT_BIG_WINGS:
-    case MUT_BLUE_MARKS:
-    case MUT_GREEN_MARKS:
     case MUT_LOW_MAGIC:
         amusement *= 2; // funny!
         break;

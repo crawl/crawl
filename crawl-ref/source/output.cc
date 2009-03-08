@@ -2880,14 +2880,6 @@ std::string _status_mut_abilities()
             case MUT_BIG_WINGS:
                 current = "large and strong wings";
                 break;
-            case MUT_BLUE_MARKS:
-                snprintf(info, INFO_SIZE, "blue evil mark %d", level);
-                current = info;
-                break;
-            case MUT_GREEN_MARKS:
-                snprintf(info, INFO_SIZE, "green evil mark %d", level);
-                current = info;
-                break;
 
             // scales etc. -> calculate sum of AC bonus
             case MUT_RED_SCALES:

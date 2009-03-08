@@ -2312,8 +2312,6 @@ enum mutation_type
     MUT_BREATHE_POISON,
     MUT_STINGER,
     MUT_BIG_WINGS,
-    MUT_BLUE_MARKS, // decorative, as in "mark of the devil"
-    MUT_GREEN_MARKS,
     MUT_SAPROVOROUS,
     MUT_GOURMAND,
     MUT_SHAGGY_FUR,
