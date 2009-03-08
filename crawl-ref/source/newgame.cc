@@ -155,9 +155,9 @@ static species_type new_species_order[] = {
     SP_VAMPIRE
 };
 
-static species_type _random_draconian_species()
+static species_type _random_draconian_player_species()
 {
-    const int num_drac = SP_BASE_DRACONIAN - SP_RED_DRACONIAN;
+    const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN + 1;
     return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
 }
 
@@ -610,7 +610,7 @@ static void _pick_random_species_and_class( bool unrestricted_only )
 
     // Return draconian variety here.
     if (species == SP_RED_DRACONIAN)
-        you.species = _random_draconian_species();
+        you.species = _random_draconian_player_species();
     else
         you.species = species;
 
@@ -1196,7 +1196,7 @@ game_start:
 
     // Pick random draconian type.
     if (you.species == SP_RED_DRACONIAN)
-        you.species = _random_draconian_species();
+        you.species = _random_draconian_player_species();
 
     strcpy( you.class_name, get_class_name(you.char_class) );
 

@@ -714,16 +714,16 @@ monster_type draco_subspecies(const monsters *mon)
         switch (mon->colour)
         {
         case RED:
-            return MONS_RED_DRACONIAN;
+            return (MONS_RED_DRACONIAN);
         case WHITE:
-            return MONS_WHITE_DRACONIAN;
+            return (MONS_WHITE_DRACONIAN);
         case BLUE:  // black
         case DARKGREY:
-            return MONS_BLACK_DRACONIAN;
+            return (MONS_BLACK_DRACONIAN);
         case GREEN:
-            return MONS_GREEN_DRACONIAN;
+            return (MONS_GREEN_DRACONIAN);
         case MAGENTA:
-            return MONS_PURPLE_DRACONIAN;
+            return (MONS_PURPLE_DRACONIAN);
         default:
             break;
         }
@@ -732,7 +732,7 @@ monster_type draco_subspecies(const monsters *mon)
     monster_type ret = mons_species(mon->type);
 
     if (ret == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
-        ret = static_cast<monster_type>( mon->base_monster );
+        ret = static_cast<monster_type>(mon->base_monster);
 
     return (ret);
 }
@@ -1708,6 +1708,12 @@ void mons_load_spells( monsters *mon, mon_spellbook_type book )
     mon->load_spells(book);
 }
 
+static monster_type _random_draconian_monster_species()
+{
+    const int num_drac = MONS_PALE_DRACONIAN - MONS_BLACK_DRACONIAN + 1;
+    return static_cast<monster_type>(SP_BLACK_DRACONIAN + random2(num_drac));
+}
+
 void define_monster(int index)
 {
     define_monster(menv[index]);
@@ -1803,7 +1809,7 @@ void define_monster(monsters &mons)
 
     case MONS_DEEP_ELF_CONJURER:
         spells =
-            (coinflip()? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
+            (coinflip() ? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
         break;
 
     case MONS_BUTTERFLY:
@@ -1838,11 +1844,11 @@ void define_monster(monsters &mons)
         // White draconians will never be draconian scorchers, but
         // apart from that, anything goes.
         do
-            monbase =
-                static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(8));
+            monbase = _random_draconian_monster_species();
         while (drac_colour_incompatible(mcls, monbase));
         break;
     }
+
     case MONS_DRACONIAN_KNIGHT:
     {
         temp_rand = random2(10);
@@ -1857,7 +1863,7 @@ void define_monster(monsters &mons)
                                  : MST_DEEP_ELF_CONJURER_II);
         }
 
-        monbase = static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(8));
+        monbase = _random_draconian_monster_species();
         break;
     }
 
@@ -1871,8 +1877,8 @@ void define_monster(monsters &mons)
         break;
 
     default:
-        if (mons_is_mimic( mcls ))
-            col = get_mimic_colour( &mons );
+        if (mons_is_mimic(mcls))
+            col = get_mimic_colour(&mons);
         break;
     }
 
@@ -1883,8 +1889,8 @@ void define_monster(monsters &mons)
         spells = m->sec;
 
     // Some calculations.
-    hp = hit_points(hd, m->hpdice[1], m->hpdice[2]);
-    hp += m->hpdice[3];
+    hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
+    hp    += m->hpdice[3];
     hp_max = hp;
 
     // So let it be written, so let it be done.
@@ -1902,11 +1908,11 @@ void define_monster(monsters &mons)
     if (mons.number == 0)
         mons.number = monnumber;
 
-    mons.flags = 0L;
+    mons.flags      = 0L;
     mons.experience = 0L;
-    mons.colour = col;
+    mons.colour     = col;
 
-    mons_load_spells( &mons, spells );
+    mons_load_spells(&mons, spells);
 
     // Reset monster enchantments.
     mons.enchantments.clear();
