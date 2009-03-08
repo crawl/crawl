@@ -1733,10 +1733,10 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
             return (true);
         }
 
-        // Swap things around to the same effect, but as if we were gaining
-        // a mutation, or return early if deleting the mutation is never
-        // a problem.
-        switch(mutat)
+        // Swap things around to the same effect, but as if we were
+        // gaining a mutation, or return early if deleting the mutation
+        // is never a problem.
+        switch (mutat)
         {
         case MUT_GREY2_SCALES:
         case MUT_METALLIC_SCALES:
@@ -1925,16 +1925,15 @@ static int _handle_conflicting_mutations(mutation_type mutation,
 {
     if (override)
     {
-        // These are mutations which should be cleared away if
-        // forced.
+        // These are mutations which should be cleared away if forced.
         const mutation_type override_conflict[][2] = {
             { MUT_REGENERATION, MUT_SLOW_METABOLISM },
             { MUT_REGENERATION, MUT_SLOW_HEALING    },
             { MUT_ACUTE_VISION, MUT_BLURRY_VISION   }
         };
 
-        // If we have one of the pair, delete all levels of
-        // the other, and continue processing.
+        // If we have one of the pair, delete all levels of the other,
+        // and continue processing.
         for (unsigned i = 0; i < ARRAYSZ(override_conflict); ++i)
         {
             for (int j = 0; j < 2; ++j)
@@ -1949,8 +1948,8 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         }
     }
 
-    // These are mutations which can't be traded off against each
-    // other, so we just fail.
+    // These are mutations which can't be traded off against each other,
+    // so we just fail.
     const mutation_type fail_conflict[][2] = {
         { MUT_REGENERATION, MUT_SLOW_METABOLISM },
         { MUT_FANGS,        MUT_BEAK            },
@@ -1986,14 +1985,14 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     {
         for (int j = 0; j < 2; ++j)
         {
-            // If we have one of the pair, delete a level of the
-            // other, and that's it.
+            // If we have one of the pair, delete a level of the other,
+            // and that's it.
             const mutation_type a = simple_conflict[i][j];
             const mutation_type b = simple_conflict[i][1-j];
             if (mutation == a && you.mutation[b] > 0)
             {
                 delete_mutation(b);
-                return (1);     // Nothing more to do
+                return (1);     // Nothing more to do.
             }
         }
     }
@@ -2195,7 +2194,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
             mutat = MUT_BREATHE_POISON;
 
-            // breathe poison replaces spit poison (so it takes the slot)
+            // Breathe poison replaces spit poison (so it takes the slot).
             for (int i = 0; i < 52; ++i)
             {
                 if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
