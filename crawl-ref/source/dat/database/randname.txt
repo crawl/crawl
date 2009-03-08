@@ -189,7 +189,7 @@ w:3
 of @flower_name@
 
 w:3
-of @critter_name@
+of the @critter_name@
 
 w:5
 of @evil_being@

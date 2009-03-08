@@ -1825,7 +1825,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                 text += " comes into view.";
 
             const std::string mweap =
-                get_monster_desc(mon, false, DESC_NONE);
+                get_monster_equipment_desc(mon, false, DESC_NONE);
 
             if (!mweap.empty())
             {

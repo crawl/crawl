@@ -1168,7 +1168,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         return (false);
 
     describe_info inf;
-    get_square_desc(gc, inf);
+    get_square_desc(gc, inf, true);
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
     process_description<alt_desc_proc>(proc, inf);

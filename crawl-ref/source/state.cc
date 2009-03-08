@@ -195,7 +195,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 #ifndef DEBUG_DIAGNOSTICS
         if (at.context == "newly seen")
         {
-            std::string text = get_monster_desc(mon, false);
+            std::string text = get_monster_equipment_desc(mon, false);
             text += " comes into view.";
             print_formatted_paragraph(text, MSGCH_WARN);
         }

@@ -1175,11 +1175,11 @@ void wizard_create_spec_object()
     while (class_wanted == OBJ_UNASSIGNED)
     {
         mpr(") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls",
-             MSGCH_PROMPT);
+            MSGCH_PROMPT);
         mpr("= - jewellery   ! - potions   : - books   | - staves   0  - The Orb",
-             MSGCH_PROMPT);
+            MSGCH_PROMPT);
         mpr("} - miscellany  X - corpses   % - food    $ - gold    ESC - exit",
-             MSGCH_PROMPT);
+            MSGCH_PROMPT);
 
         mpr("What class of item? ", MSGCH_PROMPT);
 
@@ -1561,12 +1561,16 @@ bool get_item_by_name(item_def *item, char* specs,
                 item->plus2 = 3 + random2(15);
             }
             else
-                mpr( "Sorry, no books on that skill today." );
+                mpr("Sorry, no books on that skill today.");
         }
         else if (type_wanted == BOOK_RANDART_THEME)
-            make_book_theme_randart(*item);
+            make_book_theme_randart(*item, 0, 0, 5 + coinflip(), 20);
         else if (type_wanted == BOOK_RANDART_LEVEL)
-            make_book_level_randart(*item);
+        {
+            int level = random_range(1, 9);
+            int max_spells = 5 + level/3;
+            make_book_level_randart(*item, level, max_spells);
+        }
         break;
 
     case OBJ_WANDS:

@@ -120,6 +120,7 @@ static char _find_square( const coord_def& where,
 static int  _targeting_cmd_to_compass( command_type command );
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
+static std::string _get_monster_desc(const monsters *mon);
 
 void direction_choose_compass( dist& moves, targeting_behaviour *beh)
 {
@@ -553,8 +554,8 @@ void full_describe_view()
                 damage_level = MDAM_OKAY;
 
             std::vector<formatted_string> fss;
-            std::string str = get_monster_desc(list_mons[i], true, DESC_CAP_A,
-                                               true);
+            std::string str = get_monster_equipment_desc(list_mons[i], true,
+                                                         DESC_CAP_A, true);
             if (player_mesmerised_by(list_mons[i]))
                 str += ", keeping you mesmerised";
 
@@ -1642,7 +1643,8 @@ void terse_describe_square(const coord_def &c, bool in_range)
         _describe_cell(c, in_range);
 }
 
-void get_square_desc(const coord_def &c, describe_info &inf)
+void get_square_desc(const coord_def &c, describe_info &inf,
+                     bool examine_mons)
 {
     // NOTE: Keep this function in sync with full_describe_square.
 
@@ -1656,7 +1658,20 @@ void get_square_desc(const coord_def &c, describe_info &inf)
     if (mons && player_monster_visible(mons))
     {
         // First priority: monsters.
-        get_monster_desc(*mons, inf);
+        if (examine_mons && !mons_is_unknown_mimic(mons))
+        {
+            // If examine_mons is true (currently only for the Tiles
+            // mouse-over information), set monster's
+            // equipment/woundedness/enchantment description as title.
+            std::string desc   = get_monster_equipment_desc(mons) + ".\n";
+            std::string wounds = get_wounds_description(mons);
+            if (!wounds.empty())
+                desc += mons->pronoun(PRONOUN_CAP) + wounds + "\n";
+            desc += _get_monster_desc(mons);
+
+            inf.title = desc;
+        }
+        get_monster_db_desc(*mons, inf);
     }
     else if (oid != NON_ITEM)
     {
@@ -2879,31 +2894,27 @@ std::string _mon_enchantments_string(const monsters* mon)
         return "";
 }
 
-static void _describe_monster(const monsters *mon)
+// Returns the description string for a given monster, including attitude
+// and enchantments but not equipment or wounds.
+static std::string _get_monster_desc(const monsters *mon)
 {
-    // First print type and equipment.
-    std::string text = get_monster_desc(mon) + ".";
-    print_formatted_paragraph(text);
+    std::string text    = "";
+    std::string pronoun = mon->pronoun(PRONOUN_CAP);
 
     if (player_mesmerised_by(mon))
-        mpr("You are mesmerised by her song.", MSGCH_EXAMINE);
-
-    print_wounds(mon);
+        text += "You are mesmerised by her song.\n";
 
     if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))
     {
         if (mons_is_sleeping(mon))
         {
-            mprf(MSGCH_EXAMINE, "%s appears to be %s.",
-                 mon->pronoun(PRONOUN_CAP).c_str(),
-                 mons_is_confused(mon) ? "sleepwalking" : "resting");
+            text += pronoun + " appears to be "
+                    + (mons_is_confused(mon) ? "sleepwalking" : "resting")
+                    + ".\n";
         }
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(mon))
-        {
-            mprf(MSGCH_EXAMINE, "%s is retreating.",
-                 mon->pronoun(PRONOUN_CAP).c_str());
-        }
+            text += pronoun + " is retreating.\n";
         // hostile with target != you
         else if (!mons_friendly(mon) && !mons_neutral(mon)
                  && mon->foe != MHITYOU && !crawl_state.arena_suspended)
@@ -2911,29 +2922,17 @@ static void _describe_monster(const monsters *mon)
             // special case: batty monsters get set to BEH_WANDER as
             // part of their special behaviour.
             if (!mons_is_batty(mon))
-            {
-                mprf(MSGCH_EXAMINE, "%s doesn't appear to have noticed you.",
-                     mon->pronoun(PRONOUN_CAP).c_str());
-            }
+                text += pronoun + " doesn't appear to have noticed you.\n";
         }
     }
 
     if (mon->attitude == ATT_FRIENDLY)
-    {
-        mprf(MSGCH_EXAMINE, "%s is friendly.",
-             mon->pronoun(PRONOUN_CAP).c_str());
-    }
+        text += pronoun + " is friendly.\n";
     else if (mons_neutral(mon)) // don't differentiate between permanent or not
-    {
-        mprf(MSGCH_EXAMINE, "%s is indifferent to you.",
-             mon->pronoun(PRONOUN_CAP).c_str());
-    }
+        text += pronoun + " is indifferent to you.\n";
 
     if (mon->haloed())
-    {
-        mprf(MSGCH_EXAMINE, "%s is illuminated by a divine halo.",
-             mon->pronoun(PRONOUN_CAP).c_str());
-    }
+        text += pronoun + " is illuminated by a divine halo.\n";
 
     // Give an indication of monsters being capable of seeing/sensing
     // invisible creatures.
@@ -2945,54 +2944,57 @@ static void _describe_monster(const monsters *mon)
         if (foe && foe->invisible() && !mons_is_fleeing(mon))
         {
             if (!you.can_see(foe))
-            {
-                mprf(MSGCH_EXAMINE, "%s is looking at something unseen.",
-                     mon->pronoun(PRONOUN_CAP).c_str());
-            }
+                text += pronoun + " is looking at something unseen.\n";
             else if (mons_see_invis(mon))
             {
-                mprf(MSGCH_EXAMINE, "%s is watching %s carefully.",
-                     mon->pronoun(PRONOUN_CAP).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str());
+                text += pronoun + " is watching "
+                        + foe->name(DESC_NOCAP_THE)
+                        + ".\n";
             }
             else
             {
+                text += pronoun + " is looking in ";
                 std::string name = foe->atype() == ACT_PLAYER
-                                 ? "your" : (foe->name(DESC_NOCAP_THE) + "'s");
-                mprf(MSGCH_EXAMINE, "%s is looking in %s general direction.",
-                     mon->pronoun(PRONOUN_CAP).c_str(),
-                     name.c_str());
+                                  ? "your" : (foe->name(DESC_NOCAP_THE) + "'s");
+                text += name + "general direction.\n";
             }
         }
         else if (!foe || mons_is_fleeing(mon))
-        {
-            mprf(MSGCH_EXAMINE, "%s seems to be peering into the shadows.",
-                 mon->pronoun(PRONOUN_CAP).c_str());
-        }
+            text += pronoun + " seems to be peering into the shadows.\n";
     }
 
     if (mons_enslaved_body_and_soul(mon))
     {
-        mprf(MSGCH_EXAMINE, "%s soul is ripe for the taking.",
-             mon->pronoun(PRONOUN_CAP_POSSESSIVE).c_str());
+        text += mon->pronoun(PRONOUN_CAP_POSSESSIVE)
+                + " soul is ripe for the taking.\n";
     }
     else if (mons_enslaved_soul(mon))
-    {
-        mprf(MSGCH_EXAMINE, "%s is a disembodied soul.",
-             mon->pronoun(PRONOUN_CAP).c_str());
-    }
+        text += pronoun + " is a disembodied soul.\n";
 
-    text = _mon_enchantments_string(mon);
+    text += _mon_enchantments_string(mon);
+    return text;
+}
+
+static void _describe_monster(const monsters *mon)
+{
+    // First print type and equipment.
+    std::string text = get_monster_equipment_desc(mon) + ".";
+    print_formatted_paragraph(text);
+
+    print_wounds(mon);
+
+    // Print the rest of the description.
+    text = _get_monster_desc(mon);
     if (!text.empty())
-        print_formatted_paragraph(text);
+        print_formatted_paragraph(text, MSGCH_EXAMINE);
 }
 
 // This method is called in two cases:
 // a) Monsters coming into view: "An ogre comes into view. It is wielding ..."
 // b) Monster description via 'x': "An ogre, wielding a club, and wearing ..."
-std::string get_monster_desc(const monsters *mon, bool full_desc,
-                             description_level_type mondtype,
-                             bool print_attitude)
+std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
+                                       description_level_type mondtype,
+                                       bool print_attitude)
 {
     std::string desc = "";
     if (mondtype != DESC_NONE)

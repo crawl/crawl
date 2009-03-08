@@ -56,7 +56,7 @@ REVISION("$Rev$");
 
 static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 {
-    // 0 - Minor Magic I
+    // 0 - Minor Magic I (fire)
     {SPELL_MAGIC_DART,
      SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_THROW_FLAME,
@@ -66,7 +66,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_CONJURE_FLAME,
      SPELL_NO_SPELL,
      },
-    // 1 - Minor Magic II
+
+    // 1 - Minor Magic II (ice)
     {SPELL_MAGIC_DART,
      SPELL_THROW_FROST,
      SPELL_BLINK,
@@ -76,7 +77,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_OZOCUBUS_ARMOUR,
      SPELL_NO_SPELL,
      },
-    // 2 - Minor Magic III
+
+    // 2 - Minor Magic III (summ)
     {SPELL_MAGIC_DART,
      SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_BLINK,
@@ -86,6 +88,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_MEPHITIC_CLOUD,
      SPELL_NO_SPELL,
      },
+
     // 3 - Book of Conjurations I - Fire and Earth
     {SPELL_MAGIC_DART,
      SPELL_THROW_FLAME,
@@ -96,6 +99,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 4 - Book of Conjurations II - Air and Ice
     {SPELL_MAGIC_DART,
      SPELL_THROW_FROST,
@@ -106,6 +110,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 5 - Book of Flames
     {SPELL_FLAME_TONGUE,
      SPELL_THROW_FLAME,
@@ -116,6 +121,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 6 - Book of Frost
     {SPELL_FREEZE,
      SPELL_THROW_FROST,
@@ -126,6 +132,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 7 - Book of Summonings
     {SPELL_ABJURATION,
      SPELL_RECALL,
@@ -136,6 +143,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_SUMMON_HORRIBLE_THINGS,
      SPELL_NO_SPELL,
      },
+
     // 8 - Book of Fire
     {SPELL_EVAPORATE,
      SPELL_FIRE_BRAND,
@@ -146,6 +154,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_RING_OF_FLAMES,
      SPELL_NO_SPELL,
      },
+
     // 9 - Book of Ice
     {SPELL_FREEZING_AURA,
      SPELL_SLEEP,
@@ -167,6 +176,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL
      },
+
     // 11 - Book of Spatial Translocations
     {SPELL_APPORTATION,
      SPELL_PORTAL_PROJECTILE,
@@ -177,6 +187,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_TELEPORT_SELF,
      SPELL_NO_SPELL,
      },
+
     // 12 - Book of Enchantments (fourth one)
     {SPELL_LEVITATION,
      SPELL_SELECTIVE_AMNESIA,
@@ -187,6 +198,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_HASTE,
      SPELL_NO_SPELL,
      },
+
     // 13 - Young Poisoner's Handbook
     {SPELL_STING,
      SPELL_CURE_POISON,
@@ -197,6 +209,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 14 - Book of the Tempests
     {SPELL_DISCHARGE,
      SPELL_LIGHTNING_BOLT,
@@ -207,6 +220,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 15 - Book of Death
     {SPELL_CORPSE_ROT,
      SPELL_LETHAL_INFUSION,
@@ -217,6 +231,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 16 - Book of Hinderance
     {SPELL_CONFUSING_TOUCH,
      SPELL_SLOW,
@@ -227,6 +242,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 17 - Book of Changes
     {SPELL_FULSOME_DISTILLATION,
      SPELL_STICKS_TO_SNAKES,
@@ -237,6 +253,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_BLADE_HANDS,
      SPELL_NO_SPELL,
      },
+
     // 18 - Book of Transfigurations
     {SPELL_SANDBLAST,
      SPELL_POLYMORPH_OTHER,
@@ -247,6 +264,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 19 - Book of Practical Magic
     {SPELL_PROJECTED_NOISE,
      SPELL_DETECT_CURSE,
@@ -268,6 +286,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 21 - Book of Clouds
     {SPELL_EVAPORATE,
      SPELL_MEPHITIC_CLOUD,
@@ -278,6 +297,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 22 - Book of Necromancy
     {SPELL_PAIN,
      SPELL_ANIMATE_SKELETON,
@@ -288,6 +308,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 23 - Book of Callings
     {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
@@ -298,6 +319,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 24 - Book of Charms
     {SPELL_BACKLIGHT,
      SPELL_REPEL_MISSILES,
@@ -308,6 +330,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_INVISIBILITY,
      SPELL_NO_SPELL,
      },
+
     // 25 - Book of Air
     {SPELL_SHOCK,
      SPELL_SWIFTNESS,
@@ -318,21 +341,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-
-    // Removing Air Walk... it's currently broken in a number or ways:
-    // - the AC/EV bonus probably means very little to any character
-    //   capable of casting a level nine spell
-    // - the penalty of dropping inventory is a bit harsh considering
-    //   the above
-    // - the fire/ice susceptibility doesn't work... the AC/EV bonus
-    //   cancel it out (so you'd hardly be wary of them since they
-    //   can't really do any damage).
-    // - there is no need for another invulnerability spell (which is
-    //   what this spell is trying to be), one is more than enough...
-    //   let people use necromancy.
-    // - there is no need for another air spell... air spells are
-    //   already very common (i.e,. this level nine spell occurred in
-    //   two books!)
 
     // 26 - Book of the Sky
     {SPELL_SUMMON_ELEMENTAL,
@@ -355,6 +363,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_IDENTIFY,
      SPELL_NO_SPELL,
      },
+
     // 28 - Book of the Warp
     {SPELL_BANISHMENT,
      SPELL_WARP_BRAND,
@@ -365,6 +374,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 29 - Book of Envenomations
     {SPELL_SPIDER_FORM,
      SPELL_SUMMON_SCORPIONS,
@@ -375,6 +385,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 30 - Book of Unlife
     {SPELL_SUBLIMATION_OF_BLOOD,
      SPELL_ANIMATE_DEAD,
@@ -396,6 +407,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 32 - Book of Morphology
     {SPELL_FRAGMENTATION,
      SPELL_POLYMORPH_OTHER,
@@ -407,6 +419,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 33 - Book of Tukima
     {SPELL_SURE_BLADE,
      SPELL_TUKIMAS_VORPAL_BLADE,
@@ -417,6 +430,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 34 - Book of Geomancy
     {SPELL_SANDBLAST,
      SPELL_STONESKIN,
@@ -438,6 +452,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL
      },
+
     // 36 - Book of Wizardry
     {SPELL_DETECT_CREATURES,
      SPELL_SUMMON_ELEMENTAL,
@@ -448,6 +463,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_HASTE,
      SPELL_NO_SPELL,
      },
+
     // 37 - Book of Power
     {SPELL_ANIMATE_DEAD,
      SPELL_TELEPORT_OTHER,
@@ -458,6 +474,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_POISONOUS_CLOUD,
      SPELL_NO_SPELL,
      },
+
     // 38 - Book of Cantrips      //jmf: added 04jan2000
     {SPELL_CONFUSING_TOUCH,
      SPELL_ANIMATE_SKELETON,
@@ -613,6 +630,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 52 - Rod of destruction (fire)
     {SPELL_THROW_FLAME,
      SPELL_BOLT_OF_FIRE,
@@ -623,6 +641,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 53 - Rod of destruction (ice)
     {SPELL_THROW_FROST,
      SPELL_ICE_BOLT,
@@ -633,6 +652,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 54 - Rod of destruction (lightning, iron, fireball)
     {SPELL_LIGHTNING_BOLT,
      SPELL_BOLT_OF_IRON,
@@ -643,6 +663,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 55 - Rod of destruction (inaccuracy, magma, cold)
     {SPELL_BOLT_OF_INACCURACY,
      SPELL_BOLT_OF_MAGMA,
@@ -653,6 +674,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 56 - Rod of warding
     {SPELL_ABJURATION,
      SPELL_CONDENSATION_SHIELD,
@@ -663,6 +685,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 57 - Rod of discovery
     {SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_TRAPS,
@@ -673,6 +696,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 58 - Rod of demonology
     {SPELL_ABJURATION,
      SPELL_RECALL,
@@ -683,6 +707,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 59 - Rod of striking
     {SPELL_STRIKING,
      SPELL_NO_SPELL,
@@ -693,6 +718,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+
     // 60 - Rod of venom
     {SPELL_CURE_POISON,
      SPELL_VENOM_BOLT,
@@ -2597,56 +2623,68 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     else
         book.props["is_named"].get_bool() = false;
 
-    name += getRandNameString("book_name") + " ";
+    // Sometimes use a completely random title.
+    std::string bookname = "";
+    if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
+        bookname = getRandNameString("random_book_title");
 
-    // For the actual name there's a 66% chance of getting something like
-    //  <book> of the Fiery Traveller (Translocation/Fire), else
-    //  <book> of Displacement and Flames.
-    std::string type_name;
-    if (disc1 != disc2 && !one_chance_in(3))
-    {
-        std::string lookup = spelltype_long_name(disc2);
-        type_name = getRandNameString(lookup + " adj");
-    }
-
-    if (type_name.empty())
-    {
-        // No adjective found, use the normal method of combining two nouns.
-        type_name = getRandNameString(spelltype_long_name(disc1));
-        if (type_name.empty())
-            name += spelltype_long_name(disc1);
-        else
-            name += type_name;
-
-        if (disc1 != disc2)
-        {
-            name += " and ";
-            type_name = getRandNameString(spelltype_long_name(disc2));
-
-            if (type_name.empty())
-                name += spelltype_long_name(disc2);
-            else
-                name += type_name;
-        }
-    }
+    if (!bookname.empty())
+        name += getRandNameString("book_noun") + " of " + bookname;
     else
     {
-        std::string bookname = type_name + " ";
+        // Give a name that reflects the primary and secondary
+        // spell disciplines of the spells contained in the book.
+        name += getRandNameString("book_name") + " ";
 
-        // Add the noun for the first discipline.
-        type_name = getRandNameString(spelltype_long_name(disc1));
+        // For the actual name there's a 66% chance of getting something like
+        //  <book> of the Fiery Traveller (Translocation/Fire), else
+        //  <book> of Displacement and Flames.
+        std::string type_name;
+        if (disc1 != disc2 && !one_chance_in(3))
+        {
+            std::string lookup = spelltype_long_name(disc2);
+            type_name = getRandNameString(lookup + " adj");
+        }
+
         if (type_name.empty())
-            bookname += spelltype_long_name(disc1);
+        {
+            // No adjective found, use the normal method of combining two nouns.
+            type_name = getRandNameString(spelltype_long_name(disc1));
+            if (type_name.empty())
+                name += spelltype_long_name(disc1);
+            else
+                name += type_name;
+
+            if (disc1 != disc2)
+            {
+                name += " and ";
+                type_name = getRandNameString(spelltype_long_name(disc2));
+
+                if (type_name.empty())
+                    name += spelltype_long_name(disc2);
+                else
+                    name += type_name;
+            }
+        }
         else
         {
-            if (type_name.find("the ", 0) != std::string::npos)
+            bookname = type_name + " ";
+
+            // Add the noun for the first discipline.
+            type_name = getRandNameString(spelltype_long_name(disc1));
+            if (type_name.empty())
+                bookname += spelltype_long_name(disc1);
+            else
             {
-                type_name = replace_all(type_name, "the ", "");
-                bookname = "the " + bookname;
+                if (type_name.find("the ", 0) != std::string::npos)
+                {
+                    type_name = replace_all(type_name, "the ", "");
+                    bookname = "the " + bookname;
+                }
+                bookname += type_name;
             }
-            bookname += type_name;
+            name += bookname;
         }
-        name += bookname;
     }
 
     set_randart_name(book, name);

@@ -331,7 +331,7 @@ static void _trim_randart_inscrip( item_def& item )
 std::string randart_auto_inscription( const item_def& item )
 {
     if (item.base_type == OBJ_BOOKS)
-        return("");
+        return ("");
 
     const std::vector<std::string> propnames = _randart_propnames(item);
 
@@ -2683,7 +2683,7 @@ static std::string _monster_stat_description(const monsters& mon)
         result << pronoun << " can sense the presence of invisible creatures.$";
 
     // Unusual monster speed.
-    const int speed = mons_speed(&mon);
+    const int speed = mons_class_speed(mon.type);
     if (speed != 10)
     {
         result << pronoun << " is ";
@@ -2711,7 +2711,9 @@ static std::string _monster_stat_description(const monsters& mon)
     return (result.str());
 }
 
-void get_monster_desc(const monsters& mons, describe_info &inf, bool force_seen)
+// Fetches the monster's database description and reads it into inf.
+void get_monster_db_desc(const monsters& mons, describe_info &inf,
+                         bool force_seen)
 {
     // For undetected mimics describe mimicked item instead.
     if (!force_seen && mons_is_unknown_mimic(&mons))
@@ -2722,13 +2724,15 @@ void get_monster_desc(const monsters& mons, describe_info &inf, bool force_seen)
         return;
     }
 
-    inf.title = mons.full_name(DESC_CAP_A, true);
+    if (inf.title.empty())
+        inf.title = mons.full_name(DESC_CAP_A, true);
 
     std::string db_name = mons.base_name(DESC_DBNAME, force_seen);
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
     {
-        db_name = "mimic";
-        inf.title = "A mimic";
+        db_name   = "mimic";
+        if (inf.title.empty())
+            inf.title = "A mimic";
     }
 
     // Don't get description for player ghosts.
@@ -2855,7 +2859,7 @@ void get_monster_desc(const monsters& mons, describe_info &inf, bool force_seen)
     {
         inf.body << "$" << mons_pronoun(static_cast<monster_type>(mons.type),
                                     PRONOUN_CAP, true)
-             << " is incapable of using stairs.$";
+                 << " is incapable of using stairs.$";
     }
 
     if (mons_is_summoned(&mons))
@@ -2911,7 +2915,7 @@ void get_monster_desc(const monsters& mons, describe_info &inf, bool force_seen)
                 has_item = true;
             }
             inf.body << "    " << i << ") "
-                 << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
+                     << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
         }
     }
 #endif
@@ -2920,12 +2924,12 @@ void get_monster_desc(const monsters& mons, describe_info &inf, bool force_seen)
 void describe_monsters(const monsters& mons, bool force_seen)
 {
     describe_info inf;
-    get_monster_desc(mons, inf, force_seen);
+    get_monster_db_desc(mons, inf, force_seen);
     print_description(inf);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    // TODO enne - this should really move into get_monster_desc
+    // TODO enne - this should really move into get_monster_db_desc
     // and an additional tutorial string added to describe_info.
     if (Options.tutorial_left)
         tutorial_describe_monster(&mons);

@@ -2467,6 +2467,24 @@ void mons_get_damage_level( const monsters* monster, std::string& desc,
     desc += _wounded_damaged(monster->type) ? "damaged" : "wounded";
 }
 
+std::string get_wounds_description(const monsters *monster)
+{
+    if (!monster->alive() || monster->hit_points == monster->max_hit_points)
+        return "";
+
+    if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS))
+        return "";
+
+    std::string desc;
+    mon_dam_level_type dam_level;
+    mons_get_damage_level(monster, desc, dam_level);
+
+    desc.insert(0, " is ");
+    desc += ".";
+
+    return desc;
+}
+
 void print_wounds(const monsters *monster)
 {
     if (!monster->alive() || monster->hit_points == monster->max_hit_points)

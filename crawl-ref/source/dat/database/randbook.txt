@@ -92,6 +92,58 @@ w:9
 w:4
 @book_noun_on@ on
 %%%%
+# @book_noun@ of ...
+random_book_title
+
+w:15
+the @book_plant_animal@
+
+w:20
+@number_or_qualifier@ @thing_names@
+
+w:4
+the @profession_name@
+
+w:13
+@philosophy_or_science@
+
+w:8
+@wacky_armour_name@
+
+w:2
+@destiny_name@
+
+w:6
+@place_name@
+
+w:1
+@magic_name@
+
+w:4
+@substance_name@
+
+w:2
+@power_name@
+
+w:2
+@mental_illness_weapon@
+%%%%
+book_plant_animal
+
+w:1
+@jewellery_animal@
+
+w:1
+@critter_name@
+
+w:1
+@plant_name@
+
+w:6
+@weapon_animal@
+
+@armour_animal@
+%%%%
 book_adjective
 
 glistering

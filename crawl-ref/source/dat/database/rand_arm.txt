@@ -4,7 +4,7 @@
 # rand_arm.txt: keywords for randart ARMOUR
 #
 # This file contains the lists of keywords (and their
-# weights) for most of the keywords used for randart 
+# weights) for most of the keywords used for randart
 # armour. You will find others in rand_wpn.txt and
 # rand_all.txt, respectively.
 #
@@ -91,12 +91,12 @@ the Garden
 # non-Crawl critters
 critter_name
 
-the Slorg
+Slorg
 
-the Alphagorgon
+Alphagorgon
 
 # from the crawl.akrasiac.org patch.
-the Hot Ocelot
+Hot Ocelot
 
 Eight Boll Weevils
 %%%%
@@ -192,7 +192,8 @@ the Invisible Hand
 
 Divine Intervention
 %%%%
-# in contrast to "wacky_armour_name" these do have some connection to armour and protection
+# in contrast to "wacky_armour_name" these do have some
+# connection to armour and protection
 armour_name_shielding
 
 Shielding
@@ -322,7 +323,7 @@ the Accordion
 the Bagpipe
 
 the Lute
-%%%%    
+%%%%
 evil_being
 
 the Devil
