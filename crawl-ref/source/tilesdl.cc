@@ -592,7 +592,7 @@ static int _translate_keysym(SDL_keysym &keysym)
 
 int TilesFramework::handle_mouse(MouseEvent &event)
 {
-    m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+//     m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 
     // Note: the mouse event goes to all regions in the active layer because
     // we want to be able to start some GUI event (e.g. far viewing) and

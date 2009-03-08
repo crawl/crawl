@@ -215,8 +215,13 @@ static void _print_version(void)
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
     cmd_version.set_more( formatted_string::parse_string(
+#ifdef USE_TILE
+                              "<cyan>[ +/L-click : Page down.   - : Page up."
+                              "           Esc/R-click exits.]"));
+#else
                               "<cyan>[ + : Page down.   - : Page up."
-                              "                           Esc exits.]") );
+                              "                           Esc exits.]"));
+#endif
 
     cmd_version.add_text(_get_version_information());
     cmd_version.add_text(_get_version_features());
@@ -1828,8 +1833,13 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
     cmd_help.set_more( formatted_string::parse_string(
-                           "<cyan>[ + : Page down.   - : Page up."
-                           "                           Esc exits.]"));
+#ifdef USE_TILE
+                            "<cyan>[ +/L-click : Page down.   - : Page up."
+                            "           Esc/R-click exits.]"));
+#else
+                            "<cyan>[ + : Page down.   - : Page up."
+                            "                           Esc exits.]"));
+#endif
 
     if (with_manual)
     {

@@ -298,7 +298,13 @@ void Menu::do_menu()
     alive = true;
     while (alive)
     {
-        int keyin = getchm(KC_MENU, c_getch);
+        mouse_control mc(MOUSE_MODE_MORE);
+        int keyin =
+#ifndef USE_TILE
+            getchm(KC_MENU, c_getch);
+#else
+            getch();
+#endif
 
         if (!process_key( keyin ))
             return;
@@ -343,11 +349,13 @@ bool Menu::process_key( int keyin )
         return (false);
     case CK_ESCAPE:
     case CK_MOUSE_B2:
+    case CK_MOUSE_CMD:
         sel.clear();
         lastch = keyin;
         return (false);
     case ' ': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B1:
+    case CK_MOUSE_CLICK:
         nav = true;
         repaint = page_down();
         if (!repaint && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
@@ -1694,9 +1702,11 @@ bool formatted_scroller::process_key( int keyin )
         return (true);
     case -1:
     case CK_ESCAPE:
+    case CK_MOUSE_CMD:
         return (false);
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B5:
+    case CK_MOUSE_CLICK:
         repaint = page_down();
         break;
     case '-': case CK_PGUP: case '<': case ';':

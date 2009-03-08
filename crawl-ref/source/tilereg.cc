@@ -875,6 +875,8 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.event != MouseEvent::PRESS)
         return 0;
 
+    you.last_clicked_grid = m_cursor[CURSOR_MOUSE];
+
     if (you.pos() == gc)
     {
         switch (event.button)
@@ -922,7 +924,6 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.button != MouseEvent::LEFT)
         return 0;
 
-    you.last_clicked_grid = m_cursor[CURSOR_MOUSE];
     return _click_travel(gc, event);
 }
 
@@ -955,6 +956,8 @@ int DungeonRegion::get_buffer_index(const coord_def &gc)
 
 void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
 {
+    coord_def result = gc;
+
     // If we're only looking for a direction, put the mouse
     // cursor next to the player to let them know that their
     // spell/wand will only go one square.
@@ -966,8 +969,7 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
         int ax = abs(delta.x);
         int ay = abs(delta.y);
 
-        coord_def result = you.pos();
-
+        result = you.pos();
         if (1000 * ay < 414 * ax)
             result += (delta.x > 0) ? coord_def(1, 0) : coord_def(-1, 0);
         else if (1000 * ax < 414 * ay)
@@ -976,20 +978,15 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
             result += (delta.y > 0) ? coord_def(1, 1) : coord_def(1, -1);
         else if (delta.x < 0)
             result += (delta.y > 0) ? coord_def(-1, 1) : coord_def(-1, -1);
-
-        if (m_cursor[type] != result)
-        {
-            m_dirty = true;
-            m_cursor[type] = result;
-        }
     }
-    else
+
+    if (m_cursor[type] != result)
     {
-        if (m_cursor[type] != gc)
-        {
-            m_dirty = true;
-            m_cursor[type] = gc;
-        }
+        m_dirty = true;
+        coord_def old_cursor = m_cursor[type];
+        m_cursor[type] = result;
+        if (type == CURSOR_MOUSE)
+            you.last_clicked_grid = coord_def();
     }
 }
 
@@ -1701,7 +1698,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     tip += "\n[Ctrl-L-Click] Fire (f)";
                 break;
             case OBJ_WEAPONS + EQUIP_OFFSET:
-                tip += "Unwield";
+                tip += "Unwield (w-)";
                 if (is_throwable(&you, item))
                     tip += "\n[Ctrl-L-Click] Fire (f)";
                 break;
@@ -1709,14 +1706,14 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (item.sub_type >= MISC_DECK_OF_ESCAPE
                     && item.sub_type <= MISC_DECK_OF_DEFENCE)
                 {
-                    tip += "Draw a card (v)";
-                    tip += "\n[Ctrl-L-Click] Unwield";
+                    tip += "Draw a card (v)\n";
+                    tip += "[Ctrl-L-Click] Unwield (w-)";
                     break;
                 }
                 // else fall-through
             case OBJ_STAVES + EQUIP_OFFSET: // rods - other staves handled above
-                tip += "Evoke (v)";
-                tip += "\n[Ctrl-L-Click] Unwield";
+                tip += "Evoke (v)\n";
+                tip += "[Ctrl-L-Click] Unwield (w-)";
                 break;
             case OBJ_ARMOUR:
                 tip += "Wear (W)";
@@ -1734,7 +1731,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 tip += "Fire (f)";
 
                 if (wielded)
-                    tip += "\n[Ctrl-L-Click] Unwield";
+                    tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 else if (item.sub_type == MI_STONE
                             && player_knows_spell(SPELL_SANDBLAST)
                          || item.sub_type == MI_ARROW
@@ -1748,7 +1745,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             case OBJ_WANDS:
                 tip += "Zap (Z)";
                 if (wielded)
-                    tip += "\n[Ctrl-L-Click] Unwield";
+                    tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item)
@@ -1757,20 +1754,20 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 {
                     tip += "Memorise (M)";
                     if (wielded)
-                        tip += "\n[Ctrl-L-Click] Unwield";
+                        tip += "\n[Ctrl-L-Click] Unwield (w-)";
                     break;
                 }
                 // else fall-through
             case OBJ_SCROLLS:
                 tip += "Read (r)";
                 if (wielded)
-                    tip += "\n[Ctrl-L-Click] Unwield";
+                    tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 break;
             case OBJ_POTIONS:
                 tip += "Quaff (q)";
                 // For Sublimation of Blood.
                 if (wielded)
-                    tip += "\n[Ctrl-L-Click] Unwield";
+                    tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 else if (item_type_known(item)
                          && is_blood_potion(item)
                          && player_knows_spell(SPELL_SUBLIMATION_OF_BLOOD))
@@ -1782,7 +1779,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 tip += "Eat (e)";
                 // For Sublimation of Blood.
                 if (wielded)
-                    tip += "\n[Ctrl-L-Click] Unwield";
+                    tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 else if (item.sub_type == FOOD_CHUNK
                          && player_knows_spell(
                                 SPELL_SUBLIMATION_OF_BLOOD))
@@ -1798,7 +1795,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 {
                     if (you.species == SP_VAMPIRE)
                         tip += EOL;
-                    tip += "[Ctrl-L-Click] Unwield";
+                    tip += "[Ctrl-L-Click] Unwield (w-)";
                 }
                 break;
             default:
@@ -1838,9 +1835,11 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return (false);
 
-    if (item_idx == you.last_clicked_item)
+    if (you.last_clicked_item >= 0
+        && item_idx == (unsigned int) you.last_clicked_item)
+    {
         return (false);
-
+    }
     int idx = m_items[item_idx].idx;
 
     const item_def *item;

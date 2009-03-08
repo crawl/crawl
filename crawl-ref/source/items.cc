@@ -1252,7 +1252,13 @@ void pickup()
 
             if (keyin != 'a')
             {
-                mprf(MSGCH_PROMPT, "Pick up %s? (y/n/a/*?g,/q)",
+                std::string prompt = "Pick up %s? ("
+#ifdef USE_TILE
+                                     "Left-click to enter menu, or press "
+#endif
+                                     "y/n/a/*?g,/q)";
+
+                mprf(MSGCH_PROMPT, prompt.c_str(),
                      get_message_colour_tags(mitm[o], DESC_NOCAP_A,
                                              MSGCH_PROMPT).c_str());
 

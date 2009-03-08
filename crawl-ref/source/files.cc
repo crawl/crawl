@@ -1278,9 +1278,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (timeval > 0)
         {
             you.time_taken = timeval;
-#ifndef USE_TILE
             viewwindow(true, false);
-#endif
             handle_monsters();
         }
     }
