@@ -1672,6 +1672,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_AGILE:
     case MUT_POISON_RESISTANCE:
     case MUT_SHOCK_RESISTANCE:
+    case MUT_REGENERATION:
     case MUT_SLOW_METABOLISM:
     case MUT_TELEPORT_CONTROL:
     case MUT_MAGIC_RESISTANCE:
@@ -1686,6 +1687,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
 
     case MUT_CARNIVOROUS:
     case MUT_HERBIVOROUS:
+    case MUT_SLOW_HEALING:
     case MUT_FAST_METABOLISM:
     case MUT_WEAK:
     case MUT_DOPEY:
