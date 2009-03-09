@@ -883,7 +883,9 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     // Search all the items on the ground for a corpse.
     for (stack_iterator si(a); si; ++si)
     {
-        if (class_allowed == CORPSE_BODY || si->sub_type == CORPSE_SKELETON)
+        if (si->base_type == OBJ_CORPSES
+            && (class_allowed == CORPSE_BODY
+                || si->sub_type == CORPSE_SKELETON))
         {
             number_found++;
 
