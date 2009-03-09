@@ -16,12 +16,9 @@ end
 end >
 
 # Exclude items useless in general (?paper, bad potions unless you know
-# Evaporate) or for your current character (such as food for Mummies or 
+# Evaporate) or for your current character (such as inedible food or
 # armour you can't wear).
 ae = useless_item
-
-# Exclude food items your character cannot eat.
-ae = inedible
 
 # Exclude potentially useful items of high risk, like ?torment or
 # !mutation.

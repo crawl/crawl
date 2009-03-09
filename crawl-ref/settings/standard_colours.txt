@@ -1,10 +1,11 @@
 ### standard colours to be used for menu and inventory colouring
 
 $inedible     := darkgrey
-$evil         := magenta
+$evil         := red
 $preferred    := yellow
 $rot-inducing := lightred
 $mutagenic    := magenta
+$dangerous    := magenta
 $poisonous    := lightgreen
 $contaminated := brown
 

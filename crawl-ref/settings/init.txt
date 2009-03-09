@@ -266,8 +266,9 @@ include = standard_colours.txt
 #
 #   yellow     = preferred food                    ($preferred)
 #   darkgrey   = cannot be eaten at all            ($inedible)
-#   lightred   = extremely dangerous, causes rot   ($rot-inducing)
-#   magenta    = mutagenic, or evil                ($mutagenic, $evil)
+#   lightred   = causes rot                        ($rot-inducing)
+#   magenta    = dangerous to use, mutagenic       ($dangerous, $mutagenic)
+#   red        = considered "evil" by your deity   ($evil)
 #   lightgreen = poisonous                         ($poisonous)
 #   brown      = contaminated, may cause sickness  ($contaminated)
 #

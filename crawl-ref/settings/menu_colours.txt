@@ -1,6 +1,6 @@
 # Changing colours of items in the inventory and other menus
 
-menu := menu_colour 
+menu := menu_colour
 ae   := autopickup_exceptions
 
 # Items currently not affecting you.
@@ -29,7 +29,7 @@ menu = inventory:white:.*artefact.*
 #menu = white:.*identified.*artefact.*
 #menu = lightblue:.*unidentified.*artefact.*
 
-# Ego items 
+# Ego items
 #
 : if options.menu_colour_prefix_class then
 menu = lightblue:(^identified armour .* pair of .* of )
@@ -54,7 +54,7 @@ menu = cyan:.*good_item.*
 menu = cyan:.*misc.*[lL]antern
 
 # Dangerous (but still useful) items
-menu = magenta:.*dangerous_item.*
+menu = $dangerous:.*dangerous_item.*
 
 # Evil items
 menu = $evil:.*evil_item.*

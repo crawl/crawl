@@ -2608,11 +2608,12 @@ bool is_useless_item(const item_def &item, bool temp)
         break;
 
     case OBJ_FOOD:
-        if (item.sub_type != FOOD_CHUNK || !is_inedible(item))
+        if (!is_inedible(item))
             return (false);
 
-        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-            || you.has_spell(SPELL_SIMULACRUM))
+        if (item.sub_type == FOOD_CHUNK
+            && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+                || you.has_spell(SPELL_SIMULACRUM)))
         {
             return (false);
         }
