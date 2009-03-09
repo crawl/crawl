@@ -1449,6 +1449,8 @@ int prompt_invent_item( const char *prompt,
 
         if (need_prompt)
             mpr(prompt, MSGCH_PROMPT);
+        else
+            flush_prev_message();
 
         if (need_getch)
             keyin = get_ch();

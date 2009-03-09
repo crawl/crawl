@@ -1075,7 +1075,6 @@ static int _which_spellbook( void )
 
     mprf("You can memorise %d more level%s of spells.",
          avail_levels, (avail_levels > 1) ? "s" : "" );
-    flush_prev_message();
 
     book = prompt_invent_item("Memorise from which spellbook?", MT_INVLIST,
                               OSEL_MEMORISE );
