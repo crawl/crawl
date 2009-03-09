@@ -858,7 +858,7 @@ mutation_def mutation_defs[] = {
     { MUT_STINGER,                    0,  3, false,  true,
       {"Your tail ends in a poisonous barb.",
        "Your tail ends in a sharp poisonous barb.",
-       "Your tail ends in a wickedly poisonous barb."},
+       "Your tail ends in a wickedly sharp and poisonous barb."},
 
       {"A poisonous barb forms on the end of your tail.",
        "The barb on your tail looks sharper.",
