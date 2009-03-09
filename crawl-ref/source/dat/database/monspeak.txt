@@ -1717,7 +1717,7 @@ VISUAL:@The_monster@ tries to grin evilly.
 
 @The_monster@ says @to_foe@, "I'm here to kill trespassers. I like my job."
 
-@The_monster@ says @to_foe@, "You must be punished!  Or...  I want to punish you!"
+@The_monster@ says @to_foe@, "You must be punished!  Or... I want to punish you!"
 %%%%
 _Joseph_rare_
 
@@ -2050,7 +2050,7 @@ VISUAL:@The_monster@ smiles happily.
 
 @The_monster@ says @to_foe@, "I love killing ugly monsters like you."
 
-@The_monster@ says @to_foe@, "Another dead monster...  It must be my lucky day!"
+@The_monster@ says @to_foe@, "Another dead monster... It must be my lucky day!"
 
 @The_monster@ screams @at_foe@, "Die, monster!"
 
@@ -2908,7 +2908,7 @@ good_god_nonneutral_holy_being_speech
 @The_monster@ says @to_foe@, "I sense wickedness within thee, mortal!"
 %%%%
 #############################################################
-# evil monsters may also have some choicy things to say...
+# evil monsters may also have some choice things to say...
 #############################################################
 good god '&'
 
