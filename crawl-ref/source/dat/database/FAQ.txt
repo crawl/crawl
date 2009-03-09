@@ -8,11 +8,11 @@
 #  Q:key word, for the question
 #  A:key word, for the corresponding answer
 #
-# Questions are pushed into a menu in the order the questions are defined 
-# in this file. Answers need not necessarily be right next to the question, 
+# Questions are pushed into a menu in the order the questions are defined
+# in this file. Answers need not necessarily be right next to the question,
 # but it's easier to read if they are.
 #
-# This file is not meant as an easy-access spoiler file, but rather 
+# This file is not meant as an easy-access spoiler file, but rather
 # intended to answer general questions that crop up from time to time.
 #
 
@@ -28,11 +28,11 @@ A:goal
 
 To survive and to win, obviously. For this you need to find the fabled
 Orb of Zot deep down in the dungeon and bring it back to the surface.
-To enter the realm of Zot, you'll first need to collect three runes to be 
+To enter the realm of Zot, you'll first need to collect three runes to be
 found in various branches of the dungeon.
 
 However, if you're new to the game you really shouldn't worry about this.
-Just try to delve as deeply as possible and have fun exploring the many 
+Just try to delve as deeply as possible and have fun exploring the many
 side branches in Crawl with various characters of different species,
 skill sets, and religions.
 %%%%
@@ -44,7 +44,7 @@ A:drop
 
 Press 'd' (or ','/'g'), followed by a number (the amount), and finally the
 item's letter. For pickup, this is only possible when choosing items from
-a menu, i.e. ',,' or 'gg'. 
+a menu, i.e. ',,' or 'gg'.
 Stacks that are selected only in part are marked with '#' rather than '+'.
 %%%%
 Q:downstairs
@@ -115,12 +115,12 @@ I've got two cool weapons. How can I tell which one is better?
 %%%%
 A:weapons
 
-"Better" depends on a number of factors, such as your weapon skills, 
-whether it's one or two-handed, the randart properties, the weapon brand, 
-and the monsters you're about to face. In general, switching from a weapon 
-type you are already highly skilled with to another one that you have no 
-skill in is a waste of time. The brands may greatly differ in damage output 
-but you can get a good idea by bashing a few comparatively harmless monsters 
+"Better" depends on a number of factors, such as your weapon skills,
+whether it's one or two-handed, the randart properties, the weapon brand,
+and the monsters you're about to face. In general, switching from a weapon
+type you are already highly skilled with to another one that you have no
+skill in is a waste of time. The brands may greatly differ in damage output
+but you can get a good idea by bashing a few comparatively harmless monsters
 with each and comparing the results. Of the enchantments, damage is usually
 more important unless you hardly ever manage to hit with a weapon.
 %%%%
@@ -130,9 +130,9 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-The easiest gods to play are probably Trog (for pure fighters), Sif Muna 
-(for spellcasters), Beogh (for orcs) and Xom (for general fun). 
-When you reach the Temple for the first time be sure to read all gods' 
+The easiest gods to play are probably Trog (for pure fighters), Sif Muna
+(for spellcasters), Beogh (for orcs) and Xom (for general fun).
+When you reach the Temple for the first time be sure to read all gods'
 descriptions and take your time in deciding which way to go.
 %%%%
 Q:starving
@@ -156,10 +156,10 @@ I keep getting murdered by my own ghosts. Can I deactivate them?
 %%%%
 A:ghosts
 
-No, you can't. On the plus side, once a ghost has been loaded onto a 
-level, it won't be loaded again - unless you happen to die on that level. 
-Keep in mind that you don't absolutely have to fight every monster you meet, 
-and with ghosts it's even easier: they cannot leave the level they were 
+No, you can't. On the plus side, once a ghost has been loaded onto a
+level, it won't be loaded again - unless you happen to die on that level.
+Keep in mind that you don't absolutely have to fight every monster you meet,
+and with ghosts it's even easier: they cannot leave the level they were
 created on.
 
 Alternatively, you could play a couple of strong species/class combinations
@@ -172,7 +172,7 @@ I've somehow ended up in a place called "Abyss". How do I get out of here?
 %%%%
 A:abyss
 
-If you are in the Abyss for the first time, chances of getting out are 
+If you are in the Abyss for the first time, chances of getting out are
 slim. Still, here are a few general hints:
 * You need to find a gateway leading out of the Abyss. These are rare!
 * Don't stick around to fight, move as much as possible!
@@ -191,15 +191,15 @@ A:randart
 Apart from the standard items you'll find lying around in the dungeon, you
 might also stumble upon artefacts which come in three varieties:
 
-* randart: a random artefact, usually a weapon or type of armour with 
+* randart: a random artefact, usually a weapon or type of armour with
   random properties such as conferring resistances or abilities
-* unrandart: an artefact that looks like a randart but is really 
+* unrandart: an artefact that looks like a randart but is really
   predefined. There's no further difference except that players "in the know"
   can recognize such an item by its special description and/or colour.
-* fixedart: an artefact that does not use the random artefact properties but 
+* fixedart: an artefact that does not use the random artefact properties but
   instead has unique hardcoded effects and descriptions.
 
-None of the three types can be enchanted or branded, neither temporarily nor 
+None of the three types can be enchanted or branded, neither temporarily nor
 permanently.
 %%%%
 Q:oklobs
@@ -218,11 +218,11 @@ I went down these stairs and got killed instantly! Is this a bug?
 %%%%
 A:instadeath
 
-Probably not. While your death might be due to an ill-placed vault (this 
-would be a bug), it is generally just really bad luck. We believe that a 
-game is more fun if the risk of death is real. This means that such instant 
-deaths cannot be fully avoided as Crawl relies on randomness for posing 
-challenges. It is important to realize that for highly skilled players, the 
+Probably not. While your death might be due to an ill-placed vault (this
+would be a bug), it is generally just really bad luck. We believe that a
+game is more fun if the risk of death is real. This means that such instant
+deaths cannot be fully avoided as Crawl relies on randomness for posing
+challenges. It is important to realize that for highly skilled players, the
 margin of such deaths is really slim...
 %%%%
 ##############################################
@@ -236,15 +236,15 @@ A:bug
 
 Please submit a bug report on SourceForge, and give as much information as
 you can. (What were you doing at the time? What did you expect to happen,
-what happened instead? etc.) Most importantly, what version are you playing? 
-Sometimes a screenshot can be helpful. For crashes or monsters/items/levels 
-behaving oddly, we probably need a save file. To be on the safe side, attach 
-the entire zipped save of the character in question. If there are error 
-messages, please write them down. Short of a save file, a guide on how to 
+what happened instead? etc.) Most importantly, what version are you playing?
+Sometimes a screenshot can be helpful. For crashes or monsters/items/levels
+behaving oddly, we probably need a save file. To be on the safe side, attach
+the entire zipped save of the character in question. If there are error
+messages, please write them down. Short of a save file, a guide on how to
 reproduce the crash (or bug) can be useful; you can use wizard mode for this.
 
 If you don't log in to SourceForge or leave an email address at least check
-the thread from time to time in case we have some more questions. 
+the thread from time to time in case we have some more questions.
 
 Thanks in advance!
 %%%%
@@ -254,14 +254,14 @@ I've got millions of ideas! Can I join the team?
 %%%%
 A:ideas
 
-No, you can't. All of the devteam members submitted a number of code 
-intensive patches and/or took over responsibility over an important side 
-project before joining. Once you've become indispensible to the team and we 
-start wondering how we ever got along without you, we _may_ ask you to join 
+No, you can't. All of the devteam members submitted a number of code
+intensive patches and/or took over responsibility over an important side
+project before joining. Once you've become indispensible to the team and we
+start wondering how we ever got along without you, we _may_ ask you to join
 us, but don't hold your breath.
 
 Please submit your ideas to the Feature Requests tracker of SourceForge. If
-they catch the interest of at least one coder, chances are they'll make it 
+they catch the interest of at least one coder, chances are they'll make it
 into the game.
 %%%%
 Q:feature
@@ -270,9 +270,9 @@ Hey! Why did you close my feature request?
 %%%%
 A:feature
 
-If you are logged in to SourceForge when submitting your feature request, 
-or choose to "Monitor" the resulting thread while logged in, you will get 
-an email any time someone replies to (or fiddles with) this thread. Once a 
+If you are logged in to SourceForge when submitting your feature request,
+or choose to "Monitor" the resulting thread while logged in, you will get
+an email any time someone replies to (or fiddles with) this thread. Once a
 thread has been closed, you can still access it by searching for requests
 with the "Closed" status.
 
@@ -283,9 +283,9 @@ down to three reasons:
 * We just don't think it's interesting enough to ever be implemented.
 
 Please don't let this stop you from bringing up more suggestions. Already the
-next one might generate heavy interest and excitement, and end up in the 
-game. However, do try to be specific in your suggestions. If you cannot even 
-explain the basics of your idea, why should we bother to flesh it out, let 
+next one might generate heavy interest and excitement, and end up in the
+game. However, do try to be specific in your suggestions. If you cannot even
+explain the basics of your idea, why should we bother to flesh it out, let
 alone code it?
 %%%%
 Q:patch
@@ -316,7 +316,7 @@ appreciated. These are:
 
 If you've got some cool addition, you can send it over the mailing list, or
 post it as a SourceForge item. You can also help us by giving feedback on
-the most recent version or trunk (available via SVN, Windows binaries 
+the most recent version or trunk (available via SVN, Windows binaries
 downloadable from http://crawl.develz.org/trunk/).
 
 Thanks a lot for your support!
@@ -328,7 +328,7 @@ Is there a way for me to play the new version before it is released?
 A:beta
 
 There certainly is! You can play "trunk" (what will eventually become the
-next version) online on http://crawl.develz.org, or you can download Windows 
+next version) online on http://crawl.develz.org, or you can download Windows
 binaries from the same site. Note that trunk may be buggy, and that many
 changes will invalidate your saved games. If that doesn't bother you, go
 ahead and play. Be sure to leave some feedback/suggestions/bug reports on
@@ -342,7 +342,7 @@ A:interact
 
 If you play online on http://crawl.akrasiac.org or http://crawl.develz.org
 you can watch games in progress, other players can watch you while you play,
-and you can kill other players' ghosts. You can even send and receive 
+and you can kill other players' ghosts. You can even send and receive
 messages.
 
 Check docs/ssh_guide.txt for an explanation about how to play online. You can
@@ -369,12 +369,22 @@ Is there a way for me to replace some of the tiles with different ones?
 %%%%
 A:tiles graphics
 
-Not without compiling, no. If you can compile (or get someone to do it for
-you), either directly replace the tiles in the rltiles/ folder, or change
-the paths in the dc-xxxx.txt files. You may also need to delete or rename
-the *.png files in rltiles/. Upon compilation, the newly rolled *.png files
-are copied into the dat/tiles/ folder which is where the game accesses the
-tiles it needs.
+It depends. If all you want are minor modifications (such as colour changes)
+you can directly modify the png files in the dat/tiles/ folder.
+
+Otherwise, you'll need to be able to compile the game. In this case you can
+either directly replace the tiles in the rltiles/ subfolders, or change their
+paths in the dc-xxxx.txt files. For the compilation to be successful, you may
+also need to delete or rename the *.png files in rltiles/. Upon compilation,
+the newly rolled *.png files are copied into the dat/tiles/ folder which is
+where the game accesses the tiles it needs. You can then share these files
+with others players, so they can use your tileset without having to compile
+the game.
+
+If you've created some nice new tiles or variations of existing ones you'd
+like to share you might want to send them over the mailing list or submit
+them as a SourceForge item. It's easiest for us if they are already in
+32x32 png format, preferrably zipped if there are several. Thanks in advance!
 %%%%
 Q:tiles options
 

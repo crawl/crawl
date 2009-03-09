@@ -208,7 +208,7 @@ bool TilesFramework::initialise()
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {
         printf("Failed to initialise SDL: %s\n", SDL_GetError());
-        return false;
+        return (false);
     }
 
     {
@@ -229,7 +229,7 @@ bool TilesFramework::initialise()
     if (!icon)
     {
         printf("Failed to load icon: %s\n", SDL_GetError());
-        return false;
+        return (false);
     }
     SDL_WM_SetIcon(icon, NULL);
 
@@ -278,11 +278,11 @@ bool TilesFramework::initialise()
     if (!m_context)
     {
         printf("Failed to set video mode: %s\n", SDL_GetError());
-        return false;
+        return (false);
     }
 
     if (!m_image.load_textures())
-        return false;
+        return (false);
 
     calculate_default_options();
 
@@ -300,7 +300,7 @@ bool TilesFramework::initialise()
     if (crt_font == -1 || msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || lbl_font == -1)
     {
-        return false;
+        return (false);
     }
 
     m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font,
@@ -329,7 +329,7 @@ bool TilesFramework::initialise()
 
     resize();
 
-    return true;
+    return (true);
 }
 
 int TilesFramework::load_font(const char *font_file, int font_size,

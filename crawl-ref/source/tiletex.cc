@@ -40,7 +40,7 @@ bool GenericTexture::load_texture(const char *filename,
     if (tex_path.c_str()[0] == 0)
     {
         fprintf(stderr, "Couldn't find texture '%s'.\n", filename);
-        return false;
+        return (false);
     }
 
     SDL_Surface *img = IMG_Load(tex_path.c_str());
@@ -48,7 +48,7 @@ bool GenericTexture::load_texture(const char *filename,
     if (!img)
     {
         fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
-        return false;
+        return (false);
     }
 
     unsigned int bpp = img->format->BytesPerPixel;
@@ -59,6 +59,7 @@ bool GenericTexture::load_texture(const char *filename,
     int new_width = 1;
     while (new_width < img->w)
         new_width *= 2;
+
     int new_height = 1;
     while (new_height < img->h)
         new_height *= 2;
@@ -178,7 +179,7 @@ bool GenericTexture::load_texture(const char *filename,
     {
         printf("Warning: unsupported format, bpp = %d for '%s'\n",
                bpp, acBuffer);
-        return false;
+        return (false);
     }
 
     bool success = false;
@@ -193,7 +194,7 @@ bool GenericTexture::load_texture(const char *filename,
 
     SDL_FreeSurface(img);
 
-    return success;
+    return (success);
 }
 
 bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
@@ -201,7 +202,7 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
                                   GenericTexture::MipMapOptions mip_opt)
 {
     if (!pixels || !new_width || !new_height)
-        return false;
+        return (false);
 
     // Assumptions...
     const unsigned int bpp = 4;
@@ -234,7 +235,7 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
                      texture_format, format, pixels);
     }
 
-    return true;
+    return (true);
 }
 
 void GenericTexture::bind() const

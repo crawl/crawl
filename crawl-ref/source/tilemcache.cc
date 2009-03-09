@@ -127,7 +127,7 @@ unsigned int tile_fg_store::operator=(unsigned int tile)
 {
     if (tile & TILE_FLAG_MASK == m_tile & TILE_FLAG_MASK)
     {
-        // update, as flags may have changed.
+        // Update, as flags may have changed.
         m_tile = tile;
         return m_tile;
     }
@@ -166,25 +166,15 @@ unsigned int mcache_manager::register_monster(const monsters *mon)
     mcache_entry *entry;
 
     if (mcache_demon::valid(mon))
-    {
         entry = new mcache_demon(mon);
-    }
     else if (mcache_ghost::valid(mon))
-    {
         entry = new mcache_ghost(mon);
-    }
     else if (mcache_draco::valid(mon))
-    {
         entry = new mcache_draco(mon);
-    }
     else if (mcache_monster::valid(mon))
-    {
         entry = new mcache_monster(mon);
-    }
     else
-    {
         return 0;
-    }
 
     unsigned int idx = ~0;
 
@@ -204,7 +194,7 @@ unsigned int mcache_manager::register_monster(const monsters *mon)
         m_entries.push_back(entry);
     }
 
-    return TILEP_MCACHE_START + idx;
+    return (TILEP_MCACHE_START + idx);
 }
 
 void mcache_manager::clear_nonref()
@@ -222,9 +212,8 @@ void mcache_manager::clear_nonref()
 void mcache_manager::clear_all()
 {
     for (unsigned int i = 0; i < m_entries.size(); i++)
-    {
         delete m_entries[i];
-    }
+
     m_entries.resize(0);
 }
 
@@ -332,10 +321,14 @@ mcache_monster::mcache_monster(const monsters *mon)
     m_equ_tile = tilep_equ_weapon(mitm[mon_wep]);
 }
 
+// Returns the amount of pixels necessary to shift a wielded weapon
+// from its default placement. Tiles showing monsters already wielding
+// a weapon should not be listed here.
 bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
 {
     switch (mon_tile)
     {
+    // No shift necessary.
     case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
@@ -362,17 +355,22 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_MERMAID_WATER:
     case TILEP_MONS_MERFOLK_FIGHTER:
     case TILEP_MONS_MERFOLK_FIGHTER_WATER:
+    case TILEP_MONS_ILSUIW:
+    case TILEP_MONS_ILSUIW_WATER:
         ofs_x = 0;
         ofs_y = 0;
         break;
-    case TILEP_MONS_CENTAUR_MELEE:
+    // Shift upwards.
+    case TILEP_MONS_GNOLL:
+    case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
         ofs_x = -1;
-        ofs_y = -3;
+        ofs_y = 0;
         break;
-    case TILEP_MONS_CENTAUR_WARRIOR_MELEE:
-        ofs_x = 0;
-        ofs_y = -1;
+    case TILEP_MONS_TIAMAT:
+        ofs_x = -2;
+        ofs_y = 0;
         break;
+    // Shift downwards.
     case TILEP_MONS_YAKTAUR_MELEE:
         ofs_x = 2;
         ofs_y = 0;
@@ -381,50 +379,23 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = 4;
         ofs_y = 0;
         break;
-    case TILEP_MONS_ORC:
-    case TILEP_MONS_URUG:
-    case TILEP_MONS_BLORK_THE_ORC:
-    case TILEP_MONS_ORC_WARRIOR:
-    case TILEP_MONS_ORC_KNIGHT:
-    case TILEP_MONS_ORC_WARLORD:
+    // Shift to the left.
+    case TILEP_MONS_CENTAUR_WARRIOR_MELEE:
+    case TILEP_MONS_DEEP_ELF_SORCERER:
+    case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
         ofs_x = 0;
-        ofs_y = 2;
-        break;
-    case TILEP_MONS_GOBLIN:
-    case TILEP_MONS_IJYB:
-        ofs_x = 0;
-        ofs_y = 4;
-        break;
-    case TILEP_MONS_GNOLL:
-        ofs_x = -1;
-        ofs_y = 0;
-        break;
-    case TILEP_MONS_BOGGART:
-    case TILEP_MONS_DEEP_ELF_FIGHTER:
-    case TILEP_MONS_DEEP_ELF_SOLDIER:
-        ofs_x = 0;
-        ofs_y = 2;
-        break;
-    case TILEP_MONS_DEEP_ELF_KNIGHT:
-        ofs_x = 0;
-        ofs_y = 1;
-        break;
-    case TILEP_MONS_KOBOLD:
-        ofs_x = 3;
-        ofs_y = 4;
-        break;
-    case TILEP_MONS_KOBOLD_DEMONOLOGIST:
-        ofs_x = 0;
-        ofs_y = -10;
-        break;
-    case TILEP_MONS_BIG_KOBOLD:
-        ofs_x = 2;
-        ofs_y = 3;
+        ofs_y = -1;
         break;
     case TILEP_MONS_MIDGE:
         ofs_x = 0;
         ofs_y = -2;
         break;
+    case TILEP_MONS_KOBOLD_DEMONOLOGIST:
+        ofs_x = 0;
+        ofs_y = -10;
+        break;
+    // Shift to the right.
+    case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_NAGA:
     case TILEP_MONS_GREATER_NAGA:
     case TILEP_MONS_NAGA_WARRIOR:
@@ -433,30 +404,25 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = 0;
         ofs_y = 1;
         break;
-    case TILEP_MONS_HELL_KNIGHT:
-        ofs_x = -1;
-        ofs_y = 3;
-        break;
-    case TILEP_MONS_RED_DEVIL:
-        ofs_x = 2;
-        ofs_y = -3;
-        break;
-    case TILEP_MONS_WIZARD:
-        ofs_x = 2;
-        ofs_y = -2;
-        break;
-    case TILEP_MONS_HUMAN:
-        ofs_x = 5;
+    case TILEP_MONS_ORC:
+    case TILEP_MONS_URUG:
+    case TILEP_MONS_BLORK_THE_ORC:
+    case TILEP_MONS_SAINT_ROKA:
+    case TILEP_MONS_ORC_WARRIOR:
+    case TILEP_MONS_ORC_KNIGHT:
+    case TILEP_MONS_ORC_WARLORD:
+    case TILEP_MONS_BOGGART:
+    case TILEP_MONS_DEEP_ELF_FIGHTER:
+    case TILEP_MONS_DEEP_ELF_SOLDIER:
+        ofs_x = 0;
         ofs_y = 2;
         break;
-    case TILEP_MONS_ELF:
-        ofs_y = 1;
-        ofs_x = 4;
+    case TILEP_MONS_GOBLIN:
+    case TILEP_MONS_IJYB:
+        ofs_x = 0;
+        ofs_y = 4;
         break;
-    case TILEP_MONS_OGRE_MAGE:
-        ofs_y = -2;
-        ofs_x = -4;
-        break;
+    // Shift upwards and to the left.
     case TILEP_MONS_DEEP_ELF_MAGE:
     case TILEP_MONS_DEEP_ELF_SUMMONER:
     case TILEP_MONS_DEEP_ELF_CONJURER:
@@ -466,25 +432,60 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = -1;
         ofs_y = -2;
         break;
-    case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
+    case TILEP_MONS_CENTAUR_MELEE:
         ofs_x = -1;
-        ofs_y = 0;
+        ofs_y = -3;
         break;
-    case TILEP_MONS_DEEP_ELF_SORCERER:
-    case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
-        ofs_x = 0;
-        ofs_y = -1;
-        break;
-    case TILEP_MONS_TIAMAT:
+    case TILEP_MONS_SONJA:
         ofs_x = -2;
-        ofs_y = 0;
+        ofs_y = -7;
+        break;
+    case TILEP_MONS_OGRE_MAGE:
+        ofs_x = -4;
+        ofs_y = -2;
+        break;
+    // Shift upwards and to the right.
+    case TILEP_MONS_HELL_KNIGHT:
+        ofs_x = -1;
+        ofs_y = 3;
+        break;
+    // Shift downwards and to the left.
+    case TILEP_MONS_WIZARD:
+        ofs_x = 2;
+        ofs_y = -2;
+        break;
+    case TILEP_MONS_RED_DEVIL:
+        ofs_x = 2;
+        ofs_y = -3;
+        break;
+    // Shift downwards and to the right.
+    case TILEP_MONS_BIG_KOBOLD:
+        ofs_x = 2;
+        ofs_y = 3;
+        break;
+    case TILEP_MONS_KOBOLD:
+        ofs_x = 3;
+        ofs_y = 4;
+        break;
+    case TILEP_MONS_ELF:
+    case TILEP_MONS_ZOMBIE_LARGE:
+        ofs_x = 4;
+        ofs_y = 1;
+        break;
+    case TILEP_MONS_ZOMBIE_SMALL:
+        ofs_x = 4;
+        ofs_y = 3;
+        break;
+    case TILEP_MONS_HUMAN:
+        ofs_x = 5;
+        ofs_y = 2;
         break;
     default:
         // This monster cannot be displayed with a weapon.
-        return false;
+        return (false);
     }
 
-    return true;
+    return (true);
 }
 
 unsigned int mcache_monster::info(tile_draw_info *dinfo) const
@@ -514,22 +515,19 @@ unsigned int mcache_monster::info(tile_draw_info *dinfo) const
         };
 
         dinfo[2].set(eq2, -ofs_x, ofs_y);
-
         return 3;
     }
     else
-    {
         return 2;
-    }
 }
 
 bool mcache_monster::valid(const monsters *mon)
 {
     if (!mon)
-        return false;
+        return (false);
     int mon_wep = mon->inv[MSLOT_WEAPON];
     if (mon_wep == NON_ITEM)
-        return false;
+        return (false);
 
     int mon_tile = tileidx_monster(mon, false) & TILE_FLAG_MASK;
 
@@ -824,9 +822,7 @@ mcache_demon::mcache_demon(const monsters *mon)
         m_demon.wings = TILEP_DEMON_WINGS + wings_offset;
     }
     else
-    {
         m_demon.wings = 0;
-    }
 }
 
 unsigned int mcache_demon::info(tile_draw_info *dinfo) const

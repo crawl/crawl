@@ -914,7 +914,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ROXANNE:
         return TILEP_MONS_ROXANNE;
     case MONS_SONJA:
-        return TILEP_MONS_KOBOLD; // TODO enne
+        return TILEP_MONS_SONJA;
     case MONS_AZRAEL:
         return TILEP_MONS_AZRAEL;
     case MONS_ILSUIW:
@@ -4036,18 +4036,12 @@ void tile_init_flavour(const coord_def &gc)
             env.tile_flv(gc).special = target - TILE_DNGN_CLOSED_DOOR;
         }
         else
-        {
             env.tile_flv(gc).special = 0;
-        }
     }
     else if (grd(gc) == DNGN_SECRET_DOOR)
-    {
         env.tile_flv(gc).special = 0;
-    }
     else if (!env.tile_flv(gc).special)
-    {
         env.tile_flv(gc).special = random2(256);
-    }
 }
 
 static bool _adjacent_target(dungeon_feature_type target, int x, int y)
@@ -4058,10 +4052,10 @@ static bool _adjacent_target(dungeon_feature_type target, int x, int y)
             if (!map_bounds(x+i, y+j))
                 continue;
             if (grd[x+i][y+j] == target)
-                return true;
+                return (true);
         }
 
-    return false;
+    return (false);
 }
 
 void tile_floor_halo(dungeon_feature_type target, int tile)

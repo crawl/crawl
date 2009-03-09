@@ -983,7 +983,6 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
     if (m_cursor[type] != result)
     {
         m_dirty = true;
-        coord_def old_cursor = m_cursor[type];
         m_cursor[type] = result;
         if (type == CURSOR_MOUSE)
             you.last_clicked_grid = coord_def();
