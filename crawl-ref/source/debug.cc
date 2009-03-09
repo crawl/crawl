@@ -4703,7 +4703,6 @@ static const char* dur_names[NUM_DURATIONS] =
     "silence",
     "condensation shield",
     "stoneskin",
-    "repel undead",
     "gourmand",
     "bargain",
     "insulation",
