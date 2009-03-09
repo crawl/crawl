@@ -2683,9 +2683,8 @@ static std::string _monster_stat_description(const monsters& mon)
         result << pronoun << " can sense the presence of invisible creatures.$";
 
     // Unusual monster speed.
-    const int speed =
-        mons_is_zombified(&mon) ? mons_class_zombie_speed(mon.base_monster)
-                                : mons_class_speed(mon.type);
+    const int speed = mons_class_is_zombified(mon.type) ?
+        mons_class_zombie_speed(mon.base_monster) : mons_class_speed(mon.type);
     if (speed != 10)
     {
         result << pronoun << " is ";
