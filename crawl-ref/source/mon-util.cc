@@ -1569,13 +1569,16 @@ int exper_value(const monsters *monster)
 {
     long x_val = 0;
 
-    // These three are the original arguments.
+    // These four are the original arguments.
     const int  mclass      = monster->type;
+    const int  zclass      = monster->base_monster;
     const int  mHD         = monster->hit_dice;
     const int  maxhp       = monster->max_hit_points;
 
     // These are some values we care about.
-    const int  speed       = mons_speed(monster);
+    const int speed =
+        mons_is_zombified(monster) ? mons_class_zombie_speed(zclass)
+                                   : mons_class_speed(mclass);
     const int  modifier    = _mons_exp_mod(mclass);
     const int  item_usage  = mons_itemuse(monster);
 
@@ -2292,9 +2295,9 @@ int mons_class_speed(int mc)
     return (smc->speed);
 }
 
-int mons_speed(const monsters *mon)
+int mons_class_zombie_speed(int mc)
 {
-    return (mon->speed);
+    return (std::max(3, _base_speed(mc) - 2));
 }
 
 mon_intel_type mons_class_intel(int mc)
@@ -7469,7 +7472,7 @@ void monsters::fix_speed()
 // Check speed and speed_increment sanity.
 void monsters::check_speed()
 {
-    // FIXME: If speed is borked, recalculate. Need to figure out how
+    // FIXME: If speed is borked, recalculate.  Need to figure out how
     // speed is getting borked.
     if (speed < 0 || speed > 130)
     {

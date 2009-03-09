@@ -1387,8 +1387,7 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     menv[mid].ev -= 5;
     menv[mid].ev  = std::max(0, menv[mid].ev);
 
-    menv[mid].speed -= 2;
-    menv[mid].speed  = std::max(3, menv[mid].speed);
+    menv[mid].speed = mons_class_zombie_speed(menv[mid].base_monster);
 
     // Now override type with the required type.
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
