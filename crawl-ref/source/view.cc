@@ -1361,13 +1361,6 @@ bool check_awaken(monsters* monster)
     if (you.duration[DUR_BERSERKER])
         return (true);
 
-    // Repel undead is a holy aura, to which undead and demonic
-    // creatures are sensitive.  Note that even though demons aren't
-    // affected by repel undead, they do sense this type of divine aura.
-    // -- bwr
-    if (you.duration[DUR_REPEL_UNDEAD] && mons_is_unholy(monster))
-        return (true);
-
     // I assume that creatures who can sense invisible are very perceptive.
     int mons_perc = 10 + (mons_intel(monster) * 4) + monster->hit_dice
                        + mons_sense_invis(monster) * 5;

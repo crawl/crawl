@@ -409,11 +409,6 @@ public:
         return cannot_move() || asleep() || confused() || caught();
     }
 
-    virtual int holy_aura() const
-    {
-        return (0);
-    }
-
     virtual int warding() const
     {
         return (0);
@@ -1086,7 +1081,6 @@ public:
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
 
-    int holy_aura() const;
     int warding() const;
 
     int mons_species() const;
@@ -1497,8 +1491,6 @@ public:
     bool asleep() const;
     bool backlit(bool check_haloed = true) const;
     bool haloed() const;
-
-    int holy_aura() const;
 
     bool has_spell(spell_type spell) const;
 

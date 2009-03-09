@@ -3701,9 +3701,6 @@ int get_expiration_threshold(duration_type dur)
 {
     switch (dur)
     {
-    case DUR_REPEL_UNDEAD:
-        return 4;
-
     case DUR_FIRE_SHIELD:
     case DUR_SILENCE: // no message
         return 5;
@@ -3906,9 +3903,6 @@ void display_char_status()
 
     if (you.duration[DUR_BREATH_WEAPON])
         mpr("You are short of breath.");
-
-    _output_expiring_message(DUR_REPEL_UNDEAD,
-                            "You have a holy aura protecting you from undead.");
 
     if (you.duration[DUR_LIQUID_FLAMES])
         mpr("You are covered in liquid flames.");
@@ -6584,11 +6578,6 @@ int calc_hunger(int food_cost)
         return (food_cost/2);
     }
     return (food_cost);
-}
-
-int player::holy_aura() const
-{
-    return (duration[DUR_REPEL_UNDEAD] ? piety : 0);
 }
 
 int player::warding() const

@@ -5706,11 +5706,6 @@ void monsters::banish(const std::string &)
     monster_die(this, KILL_RESET, NON_MONSTER);
 }
 
-int monsters::holy_aura() const
-{
-    return (mons_is_holy(this) ? hit_dice : 0);
-}
-
 bool monsters::has_spell(spell_type spell) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)

@@ -624,12 +624,6 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_PRAYER])
         out.push_back(status_light(WHITE, "Pray"));  // no end of effect warning
 
-    if (you.duration[DUR_REPEL_UNDEAD])
-    {
-        int colour = _dur_colour( LIGHTGREY, dur_expiring(DUR_REPEL_UNDEAD) );
-        out.push_back(status_light(colour, "Holy"));
-    }
-
     if (you.duration[DUR_TELEPORT])
         out.push_back(status_light(LIGHTBLUE, "Tele"));
 
@@ -2229,12 +2223,6 @@ std::string _status_mut_abilities()
 
     if (you.duration[DUR_BREATH_WEAPON])
         status.push_back("short of breath");
-
-    if (you.duration[DUR_REPEL_UNDEAD])
-    {
-        status.push_back(_get_expiration_string(DUR_REPEL_UNDEAD,
-                                                "repel undead"));
-    }
 
     // TODO: Differentiate between mermaids and sirens!
     if (you.duration[DUR_MESMERISED])

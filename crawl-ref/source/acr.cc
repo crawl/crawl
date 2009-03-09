@@ -2017,10 +2017,9 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
     return rc;
 }
 
-//  Perhaps we should write functions like: update_repel_undead(),
-//  update_liquid_flames(), and so on. Even better, we could have a
-//  vector of callback functions (or objects) which get installed
-//  at some point.
+//  Perhaps we should write functions like: update_liquid_flames(), etc.
+//  Even better, we could have a vector of callback functions (or
+//  objects) which get installed at some point.
 static void _decrement_durations()
 {
     if (wearing_amulet(AMU_THE_GOURMAND))
@@ -2158,9 +2157,6 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
                           0, NULL, MSGCH_RECOVERY);
 
-    _decrement_a_duration(DUR_REPEL_UNDEAD,
-                          "Your holy aura fades away.", random2(3),
-                          "Your holy aura is starting to fade.");
     _decrement_a_duration(DUR_SWIFTNESS,
                           "You feel sluggish.", coinflip(),
                           "You start to feel a little slower.");
