@@ -298,12 +298,11 @@ void Menu::do_menu()
     alive = true;
     while (alive)
     {
-        mouse_control mc(MOUSE_MODE_MORE);
-        int keyin =
 #ifndef USE_TILE
-            getchm(KC_MENU, c_getch);
+        int keyin = getchm(KC_MENU, c_getch);
 #else
-            getch();
+        mouse_control mc(MOUSE_MODE_MORE);
+        int keyin = getch();
 #endif
 
         if (!process_key( keyin ))
@@ -1071,7 +1070,7 @@ int slider_menu::item_colour(int index, const MenuEntry *me) const
 #if defined(WIN32CONSOLE) || defined(DOS)
         colour = dos_brand(colour, CHATTR_REVERSE);
 #elif defined(USE_TILE)
-        colour = colour == WHITE ? YELLOW : WHITE;
+        colour = (colour == WHITE ? YELLOW : WHITE);
 #else
         colour |= COLFLAG_REVERSE;
 #endif

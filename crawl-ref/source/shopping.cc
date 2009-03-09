@@ -92,7 +92,7 @@ static std::string _purchase_keys(const std::string &s)
     return (list);
 }
 
-static void _list_shop_keys(const std::string &purchasable)
+static void _list_shop_keys(const std::string &purchasable, bool viewing)
 {
     char buf[200];
     const int numlines = get_number_of_lines();
@@ -100,10 +100,18 @@ static void _list_shop_keys(const std::string &purchasable)
 
     std::string pkeys = _purchase_keys(purchasable);
     if (!pkeys.empty())
-        pkeys = "[" + pkeys + "] Select Item";
-
+    {
+        pkeys = "[" + pkeys + "] Select Item to "
+                + (viewing ? "Examine" : "Buy");
+    }
     snprintf(buf, sizeof buf,
-            "[<w>x</w>/<w>Esc</w>] Exit       [<w>v</w>] Examine Items  %s",
+#ifdef USE_TILE
+            "[<w>x</w>/<w>Esc</w>/<w>R-Click</w>] Exit"
+#else
+            "[<w>x</w>/<w>Esc</w>] Exit"
+#endif
+            "       [<w>!</w>] %s  %s",
+            (viewing ? "Select Items " : "Examine Items"),
             pkeys.c_str());
 
     formatted_string fs = formatted_string::parse_string(buf);
@@ -112,8 +120,12 @@ static void _list_shop_keys(const std::string &purchasable)
     cgotoxy(1, numlines, GOTO_CRT);
 
     fs = formatted_string::parse_string(
-            "[<w>?</w>/<w>*</w>]   Inventory  "
-            "[<w>\\</w>] Known Items    [<w>Enter</w>] Make Purchase");
+            "[<w>?</w>/<w>*</w>]           Inventory  [<w>\\</w>] Known Items    "
+#ifdef USE_TILE
+            "[<w>Enter</w>/<w>L-Click</w>] Make Purchase");
+#else
+            "[<w>Enter</w>] Make Purchase");
+#endif
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
 }
@@ -220,13 +232,12 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
 //  * Enter buys (with prompt), as now
 //  * \ shows discovered items, as now
 //  * x exits (also Esc), as now
-//  --------
-//  * ? toggles examination mode (where letter keys view items)
-//  * * lists inventory  (currently also ?)
+//  * ! toggles examination mode (where letter keys view items)
+//  * *, ? lists inventory
 //
 //  For the ? key, the text should read:
-//  [?] switch to examination mode
-//  [?] switch to selection mode
+//  [!] switch to examination mode
+//  [!] switch to selection mode
 static bool _in_a_shop( int shopidx )
 {
     const shop_struct& shop = env.shop[shopidx];
@@ -242,6 +253,7 @@ static bool _in_a_shop( int shopidx )
     const bool id_stock = shoptype_identifies_stock(shop.type);
     std::vector<bool> selected;
     bool bought_something = false;
+    bool viewing = false;
     while (true)
     {
         StashTrack.get_shop(shop.pos).reset();
@@ -275,7 +287,7 @@ static bool _in_a_shop( int shopidx )
 
         const std::string purchasable = _shop_print_stock(stock, selected, shop,
                                                           total_cost);
-        _list_shop_keys(purchasable);
+        _list_shop_keys(purchasable, viewing);
 
         if (!total_cost)
         {
@@ -316,18 +328,17 @@ static bool _in_a_shop( int shopidx )
                       hello.c_str() );
         }
         else
-        {
-            snprintf( info, INFO_SIZE, "What would you like to do? ");
-        }
+            snprintf(info, INFO_SIZE, "What would you like to do? ");
 
         textcolor(CYAN);
         _shop_print(info, 1);
 
         textcolor(LIGHTGREY);
 
-        int ft = get_ch();
+        mouse_control mc(MOUSE_MODE_MORE);
+        int key = getch();
 
-        if (ft == '\\')
+        if (key == '\\')
         {
             if (!check_item_knowledge(true))
             {
@@ -335,9 +346,9 @@ static bool _in_a_shop( int shopidx )
                 _shop_more();
             }
         }
-        else if (ft == 'x' || ft == ESCAPE)
+        else if (key == 'x' || key == ESCAPE || key == CK_MOUSE_CMD)
             break;
-        else if (ft == '\r')
+        else if (key == '\r' || key == CK_MOUSE_CLICK)
         {
             // Do purchase.
             if (total_cost > you.gold)
@@ -402,75 +413,59 @@ static bool _in_a_shop( int shopidx )
             _shop_more();
             continue;
         }
-        else if (ft == 'v')
+        else if (key == '!')
         {
-            textcolor(CYAN);
-            _shop_print("Examine which item?", 1);
-            textcolor(LIGHTGREY);
-
-            bool is_ok = true;
-
-            ft = get_ch();
-            if (!isalpha(ft))
-                is_ok = false;
-            else
-            {
-                ft = tolower(ft) - 'a';
-                if ( ft >= static_cast<int>(stock.size()) )
-                    is_ok = false;
-            }
-
-            if (!is_ok)
-            {
-                _shop_print("Huh?", 1);
-                _shop_more();
-                continue;
-            }
-
-            // A hack to make the description more useful.
-            // In theory, the user could kill the process at this
-            // point and end up with valid ID for the item.
-            // That's not very useful, though, because it doesn't set
-            // type-ID and once you can access the item (by buying it)
-            // you have its full ID anyway. Worst case, it won't get
-            // noted when you buy it.
-            item_def& item = mitm[stock[ft]];
-            const unsigned long old_flags = item.flags;
-            if (id_stock)
-            {
-                item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID |
-                               ISFLAG_NOTED_GET);
-            }
-            describe_item(item);
-            if (id_stock)
-                item.flags = old_flags;
+            // Toggle between browsing and shopping.
+            viewing = !viewing;
         }
-        else if (ft == '?' || ft == '*')
+        else if (key == '?' || key == '*')
             browse_inventory(false);
-        else if (!isalpha(ft))
+        else if (!isalpha(key))
         {
             _shop_print("Huh?", 1);
             _shop_more();
         }
         else
         {
-            ft = tolower(ft) - 'a';
-            if (ft >= static_cast<int>(stock.size()) )
+            key = tolower(key) - 'a';
+            if (key >= static_cast<int>(stock.size()) )
             {
                 _shop_print("No such item.", 1);
                 _shop_more();
                 continue;
             }
 
-            item_def& item = mitm[stock[ft]];
-            const int gp_value = _shop_get_item_value(item, shop.greed,
-                                                      id_stock);
-
-            selected[ft] = !selected[ft];
-            if (selected[ft])
-                total_cost += gp_value;
+            item_def& item = mitm[stock[key]];
+            if (viewing)
+            {
+                // A hack to make the description more useful.
+                // In theory, the user could kill the process at this
+                // point and end up with valid ID for the item.
+                // That's not very useful, though, because it doesn't set
+                // type-ID and once you can access the item (by buying it)
+                // you have its full ID anyway. Worst case, it won't get
+                // noted when you buy it.
+                const unsigned long old_flags = item.flags;
+                if (id_stock)
+                {
+                    item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                                   | ISFLAG_NOTED_GET);
+                }
+                describe_item(item);
+                if (id_stock)
+                    item.flags = old_flags;
+            }
             else
-                total_cost -= gp_value;
+            {
+                const int gp_value = _shop_get_item_value(item, shop.greed,
+                                                          id_stock);
+
+                selected[key] = !selected[key];
+                if (selected[key])
+                    total_cost += gp_value;
+                else
+                    total_cost -= gp_value;
+            }
         }
     }
     return (bought_something);

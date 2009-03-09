@@ -471,9 +471,7 @@ void DungeonRegion::pack_mcache(mcache_entry *entry, int x, int y)
     ASSERT(draw_info_count <= sizeof(dinfo) / (sizeof(dinfo[0])));
 
     for (unsigned int i = 0; i < draw_info_count; i++)
-    {
         m_buf_doll.add(dinfo[i].idx, x, y, dinfo[i].ofs_x, dinfo[i].ofs_y);
-    }
 }
 
 void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int y)
@@ -532,6 +530,11 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     if (fg & TILE_FLAG_POISON)
     {
         m_buf_main.add(TILE_POISON, x, y, -status_shift, 0);
+        status_shift += 5;
+    }
+    if (fg & TILE_FLAG_FLAME)
+    {
+        m_buf_main.add(TILE_FLAME, x, y, -status_shift, 0);
         status_shift += 5;
     }
 

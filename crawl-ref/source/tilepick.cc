@@ -925,7 +925,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_PRINCE_RIBBIT:
         return TILEP_MONS_PRINCE_RIBBIT;
     case MONS_NERGALLE:
-        return TILEP_MONS_ORC_SORCERER; // TODO enne
+        return TILEP_MONS_NERGALLE;
     case MONS_SAINT_ROKA:
         return TILEP_MONS_SAINT_ROKA;
     case MONS_NESSOS:
@@ -1021,6 +1021,8 @@ int tileidx_monster(const monsters *mons, bool detected)
         ch |= TILE_FLAG_NET;
     if (mons->has_ench(ENCH_POISON))
         ch |= TILE_FLAG_POISON;
+    if (mons->has_ench(ENCH_STICKY_FLAME))
+        ch |= TILE_FLAG_FLAME;
 
     if (mons_friendly_real(mons))
         ch |= TILE_FLAG_PET;
@@ -1910,6 +1912,7 @@ static int _tileidx_rune(const item_def &item)
 {
     switch (item.plus)
     {
+    // the hell runes:
     case RUNE_DIS:         return TILE_MISC_RUNE_DIS;
     case RUNE_GEHENNA:     return TILE_MISC_RUNE_GEHENNA;
     case RUNE_COCYTUS:     return TILE_MISC_RUNE_COCYTUS;

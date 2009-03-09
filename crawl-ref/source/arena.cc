@@ -485,7 +485,7 @@ namespace arena
 
     void expand_mlist(int exp)
     {
-        crawl_view.mlistp.y -= exp;
+        crawl_view.mlistp.y  -= exp;
         crawl_view.mlistsz.y += exp;
     }
 
@@ -496,13 +496,13 @@ namespace arena
         parse_monster_spec();
         setup_level();
 
-        // Monster set up may block waiting for matchups.
+        // Monster setup may block waiting for matchups.
         setup_monsters();
 
         setup_others();
     }
 
-    // Temporarily unset craw_state.arena to force a --more-- to happen.
+    // Temporarily unset crawl_state.arena to force a --more-- to happen.
     void more()
     {
         unwind_bool state(crawl_state.arena, false);
@@ -734,6 +734,7 @@ namespace arena
 
     void do_fight()
     {
+        viewwindow(true, false);
         mesclr(true);
         {
             cursor_control coff(false);
@@ -943,7 +944,8 @@ namespace arena
 
             if (trials_done < total_trials)
                 delay(Options.arena_delay * 5);
-        } while (!contest_canceled && trials_done < total_trials);
+        }
+        while (!contest_canceled && trials_done < total_trials);
 
         if (total_trials > 0)
         {

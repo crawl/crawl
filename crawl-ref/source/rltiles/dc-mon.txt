@@ -518,6 +518,7 @@ rotting_hulk MONS_ROTTING_HULK
 %sdir dc-mon/unique
 blork_the_orc MONS_BLORK_THE_ORC
 urug MONS_URUG
+nergalle MONS_NERGALLE
 saint_roka MONS_SAINT_ROKA
 %sdir dc-mon
 orc MONS_ORC
@@ -534,6 +535,7 @@ orc_high_priest MONS_ORC_HIGH_PRIEST
 shadow MONS_SHADOW /*' '*/
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 phantom MONS_PHANTOM
+## used for Detect Creatures
 ghost MONS_PLAYER_GHOST
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST

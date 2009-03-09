@@ -378,7 +378,7 @@ paths in the dc-xxxx.txt files. For the compilation to be successful, you may
 also need to delete or rename the *.png files in rltiles/. Upon compilation,
 the newly rolled *.png files are copied into the dat/tiles/ folder which is
 where the game accesses the tiles it needs. You can then share these files
-with others players, so they can use your tileset without having to compile
+with other players, so they can use your tileset without having to compile
 the game.
 
 If you've created some nice new tiles or variations of existing ones you'd

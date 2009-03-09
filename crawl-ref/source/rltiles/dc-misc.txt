@@ -56,6 +56,7 @@ heart HEART
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 poison POISON
+flame FLAME
 %rim 0
 may_stab_brand MAY_STAB_BRAND
 stab_brand STAB_BRAND

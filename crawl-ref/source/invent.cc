@@ -51,7 +51,7 @@ static void _get_inv_items_to_show( std::vector<const item_def*> &v,
                                     int selector, int excluded_slot = -1);
 
 InvTitle::InvTitle( Menu *mn, const std::string &title,
-          invtitle_annotator tfn )
+                    invtitle_annotator tfn )
     : MenuEntry( title, MEL_TITLE )
 {
     m       = mn;
@@ -60,15 +60,15 @@ InvTitle::InvTitle( Menu *mn, const std::string &title,
 
 std::string InvTitle::get_text() const
 {
-    return titlefn? titlefn( m, MenuEntry::get_text() ) :
-                    MenuEntry::get_text();
+    return (titlefn ? titlefn( m, MenuEntry::get_text() )
+                    : MenuEntry::get_text());
 }
 
 InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
 {
     data = const_cast<item_def *>( item );
 
-    if ( in_inventory(i) && i.base_type != OBJ_GOLD )
+    if (in_inventory(i) && i.base_type != OBJ_GOLD)
     {
         // We need to do this in order to get the 'wielded' annotation.
         // We then toss out the first four characters, which look
@@ -1094,7 +1094,7 @@ std::vector<SelItem> prompt_invent_items(
         }
 
         if (need_prompt)
-            mpr( prompt, MSGCH_PROMPT );
+            mpr(prompt, MSGCH_PROMPT);
 
         if (need_getch)
             keyin = get_ch();
@@ -1448,7 +1448,7 @@ int prompt_invent_item( const char *prompt,
         }
 
         if (need_prompt)
-            mpr( prompt, MSGCH_PROMPT );
+            mpr(prompt, MSGCH_PROMPT);
 
         if (need_getch)
             keyin = get_ch();
@@ -1502,21 +1502,20 @@ int prompt_invent_item( const char *prompt,
             need_prompt = false;
             need_getch  = false;
         }
-        else if ( count == NULL && isdigit( keyin ) )
+        else if (count == NULL && isdigit( keyin ))
         {
-            /* scan for our item */
+            // scan for our item
             int res = _digit_to_index( keyin, oper );
-            if ( res != -1 )
+            if (res != -1)
             {
                 ret = res;
-                if ( check_warning_inscriptions( you.inv[ret], oper ) )
+                if (check_warning_inscriptions( you.inv[ret], oper ))
                     break;
             }
         }
         else if (keyin == ESCAPE
                 || (Options.easy_quit_item_prompts
-                    && allow_easy_quit
-                    && keyin == ' '))
+                    && allow_easy_quit && keyin == ' '))
         {
             ret = PROMPT_ABORT;
             break;
@@ -1526,8 +1525,8 @@ int prompt_invent_item( const char *prompt,
             ret = letter_to_index( keyin );
 
             if (must_exist && !is_valid_item( you.inv[ret] ))
-                mpr( "You do not have any such object." );
-            else if ( check_warning_inscriptions( you.inv[ret], oper ) )
+                mpr("You do not have any such object.");
+            else if (check_warning_inscriptions( you.inv[ret], oper ))
                 break;
         }
         else if (!isspace( keyin ))

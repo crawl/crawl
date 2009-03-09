@@ -355,6 +355,8 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_MERMAID_WATER:
     case TILEP_MONS_MERFOLK_FIGHTER:
     case TILEP_MONS_MERFOLK_FIGHTER_WATER:
+    case TILEP_MONS_SIREN:
+    case TILEP_MONS_SIREN_WATER:
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_ILSUIW_WATER:
         ofs_x = 0;

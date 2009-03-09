@@ -4631,6 +4631,7 @@ static void handle_read_book(int item_slot)
 static bool _scroll_modify_item(item_def scroll)
 {
     ASSERT(scroll.base_type == OBJ_SCROLLS);
+    flush_prev_message();
 
     // Get the slot of the scroll just read.
     int item_slot = scroll.slot;
@@ -4677,7 +4678,7 @@ static bool _scroll_modify_item(item_def scroll)
         }
         break;
     default:
-        mpr("Buggy scroll can't modify item!");
+        mprf("Buggy scroll %d can't modify item!", scroll.sub_type);
         break;
     }
 
