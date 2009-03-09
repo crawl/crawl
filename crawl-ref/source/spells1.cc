@@ -843,6 +843,7 @@ void remove_divine_stamina()
                 true, "Zin's divine stamina running out");
     modify_stat(STAT_DEXTERITY, -you.attribute[ATTR_DIVINE_STAMINA],
                 true, "Zin's divine stamina running out");
+    you.duration[DUR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
