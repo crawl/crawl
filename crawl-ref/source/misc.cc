@@ -278,7 +278,8 @@ void maybe_coagulate_blood_potions_floor(int obj)
     }
 
     if (!rot_count && !coag_count)
-        return; // nothing to be done
+        // Nothing to be done.
+        return;
 
 #ifdef DEBUG_BLOOD_POTIONS
     mprf(MSGCH_DIAGNOSTICS, "in maybe_coagulate_blood_potions_FLOOR "
