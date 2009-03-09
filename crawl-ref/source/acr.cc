@@ -2088,7 +2088,7 @@ static void _decrement_durations()
             if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 0;
-                mpr("Your divine shield fades completely.", MSGCH_DURATION);
+                mpr("Your divine shield fades away.", MSGCH_DURATION);
             }
         }
     }
@@ -2102,7 +2102,7 @@ static void _decrement_durations()
         const int temp_effect = get_weapon_brand(weapon);
 
         you.duration[DUR_WEAPON_BRAND] = 0;
-        set_item_ego_type( weapon, OBJ_WEAPONS, SPWPN_NORMAL );
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
         std::string msg = weapon.name(DESC_CAP_YOUR);
 
         switch (temp_effect)
@@ -2145,8 +2145,8 @@ static void _decrement_durations()
         || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
         || you.duration[DUR_TRANSFORMATION] <= 5)
     {
-        if ( _decrement_a_duration(DUR_TRANSFORMATION, NULL, random2(3),
-                                   "Your transformation is almost over.") )
+        if (_decrement_a_duration(DUR_TRANSFORMATION, NULL, random2(3),
+                                  "Your transformation is almost over."))
         {
             untransform();
             you.duration[DUR_BREATH_WEAPON] = 0;
@@ -2256,10 +2256,10 @@ static void _decrement_durations()
                           " stop glowing.").c_str());
 
     _decrement_a_duration(DUR_SURE_BLADE,
-                          "The bond with your blade fades away." );
+                          "The bond with your blade fades away.");
 
-    if ( _decrement_a_duration(DUR_MESMERISED, "You break out of your daze.",
-                               0, NULL, MSGCH_RECOVERY ))
+    if (_decrement_a_duration(DUR_MESMERISED, "You break out of your daze.",
+                              0, NULL, MSGCH_RECOVERY))
     {
         you.mesmerised_by.clear();
     }
@@ -2378,7 +2378,7 @@ static void _decrement_durations()
             // Landing kills controlled flight.
             you.duration[DUR_CONTROLLED_FLIGHT] = 0;
             // Re-enter the terrain.
-            move_player_to_grid( you.pos(), false, true, true );
+            move_player_to_grid(you.pos(), false, true, true);
         }
     }
 
@@ -2432,7 +2432,7 @@ static void _decrement_durations()
         {
             mpr("Your life is in your own hands once again.", MSGCH_DURATION);
             you.duration[DUR_PARALYSIS] += 5 + random2(5);
-            confuse_player( 10 + random2(10) );
+            confuse_player(10 + random2(10));
             you.hp_max--;
             deflate_hp(you.hp_max, false);
             you.duration[DUR_DEATHS_DOOR] = 0;

@@ -1854,7 +1854,7 @@ bool cast_sandblast(int pow, bolt &beam)
 
 void remove_condensation_shield()
 {
-    mpr("Your icy shield dissipates!", MSGCH_DURATION);
+    mpr("Your icy shield evaporates.", MSGCH_DURATION);
     you.duration[DUR_CONDENSATION_SHIELD] = 0;
     you.redraw_armour_class = true;
 }

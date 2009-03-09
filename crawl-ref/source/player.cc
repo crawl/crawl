@@ -3703,7 +3703,7 @@ int get_expiration_threshold(duration_type dur)
     {
     case DUR_FIRE_SHIELD:
     case DUR_SILENCE: // no message
-        return 5;
+        return (5);
 
     case DUR_DEFLECT_MISSILES:
     case DUR_REPEL_MISSILES:
@@ -3718,23 +3718,23 @@ int get_expiration_threshold(duration_type dur)
     case DUR_FORESCRY:
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
-        return 6;
+        return (6);
 
     case DUR_LEVITATION:
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
-        return 10;
+        return (10);
 
     // These get no messages when they "flicker".
     case DUR_SAGE:
     case DUR_BARGAIN:
-        return 15;
+        return (15);
 
     case DUR_CONFUSING_TOUCH:
-        return 20;
+        return (20);
 
     default:
-        return 0;
+        return (0);
     }
 }
 

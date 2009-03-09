@@ -232,7 +232,7 @@ This spell temporarily infuses the weapon held by the caster with the essence of
 %%%%
 Extension
 
-This spell extends the duration of most enchantments affecting the caster.
+This spell extends the duration of most enchantments affecting the caster. Be wary that using it slowly contaminates you with magical energy.
 %%%%
 Fire Brand
 

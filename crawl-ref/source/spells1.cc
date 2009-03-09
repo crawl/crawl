@@ -794,7 +794,7 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where)
 
 void remove_divine_vigour()
 {
-    mpr("Your divine vigour fades.", MSGCH_DURATION);
+    mpr("Your divine vigour fades away.", MSGCH_DURATION);
     you.duration[DUR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     calc_hp();
@@ -827,7 +827,7 @@ bool cast_divine_vigour()
 
 void remove_divine_stamina()
 {
-    mpr("Your divine stamina fades.", MSGCH_DURATION);
+    mpr("Your divine stamina fades away.", MSGCH_DURATION);
     modify_stat(STAT_STRENGTH, -you.attribute[ATTR_DIVINE_STAMINA],
                 true, "Zin's divine stamina running out");
     modify_stat(STAT_INTELLIGENCE, -you.attribute[ATTR_DIVINE_STAMINA],
