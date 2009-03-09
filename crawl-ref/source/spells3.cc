@@ -899,7 +899,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 
             if (actual && success)
             {
-                // ignores quiet
+                // Ignore quiet.
                 if (was_butchering)
                     mpr("The corpse you are butchering rises to attack!");
 
