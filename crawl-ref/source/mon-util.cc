@@ -7469,8 +7469,8 @@ void monsters::fix_speed()
 // Check speed and speed_increment sanity.
 void monsters::check_speed()
 {
-    // FIXME: If speed is borked, recalculate. Need to figure out how speed
-    // is getting borked.
+    // FIXME: If speed is borked, recalculate. Need to figure out how
+    // speed is getting borked.
     if (speed < 0 || speed > 130)
     {
 #ifdef DEBUG_DIAGNOSTICS
