@@ -99,7 +99,7 @@ int burden_change(void);
 /* ***********************************************************************
  * called from: items - misc
  * *********************************************************************** */
-int carrying_capacity( burden_state_type bs = BS_OVERLOADED );
+int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
 
 /* ***********************************************************************

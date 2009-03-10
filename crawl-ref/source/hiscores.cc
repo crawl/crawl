@@ -1776,7 +1776,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
     }
 
-
     if (oneline && desc.length() > 2)
         desc[1] = tolower(desc[1]);
 

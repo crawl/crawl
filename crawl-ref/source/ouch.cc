@@ -262,7 +262,7 @@ void splash_with_acid(int acid_strength, bool corrode_items)
 
         if (post_res_dam > 0)
         {
-            mpr( "The acid burns!" );
+            mpr("The acid burns!");
 
             if (post_res_dam < dam)
                 canned_msg(MSG_YOU_RESIST);
@@ -285,7 +285,7 @@ void weapon_acid(int acid_strength)
         ouch(roll_dice(1, acid_strength), NON_MONSTER, KILLED_BY_ACID);
     }
     else if (x_chance_in_y(acid_strength + 1, 20))
-        _item_corrode( hand_thing );
+        _item_corrode(hand_thing);
 }
 
 void _item_corrode(int slot)

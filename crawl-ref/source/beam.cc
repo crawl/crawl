@@ -3831,17 +3831,15 @@ void bolt::affect_player()
     bool was_affected = false;
     int  old_hp       = you.hp;
 
-    hurted = std::max(hurted, 0);
+    hurted = std::max(0, hurted);
 
     // If the beam is an actual missile or of the MMISSILE type (Earth magic)
     // we might bleed on the floor.
     if (!engulfs
         && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
     {
-        int blood = hurted / 2; // assumes DVORP_PIERCING, factor: 0.5
-        if (blood > you.hp)
-            blood = you.hp;
-
+        // assumes DVORP_PIERCING, factor: 0.5
+        int blood = std::min(you.hp, hurted / 2);
         bleed_onto_floor(you.pos(), -1, blood, true);
     }
 
@@ -3865,8 +3863,8 @@ void bolt::affect_player()
     // handling of missiles
     if (item && item->base_type == OBJ_MISSILES)
     {
-        // SPMSL_POISONED handled via callback _poison_hit_victim() in
-        // item_use.cc
+        // SPMSL_POISONED is handled via callback _poison_hit_victim()
+        // in item_use.cc.
         if (item->sub_type == MI_THROWING_NET)
         {
             player_caught_in_net();

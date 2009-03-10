@@ -2744,20 +2744,21 @@ int player_sust_abil(bool calc_unid)
 {
     int sa = 0;
 
-    sa += player_equip( EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid );
+    sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
 
-    return sa;
-}                               // end player_sust_abil()
+    return (sa);
+}
 
-int carrying_capacity( burden_state_type bs )
+int carrying_capacity(burden_state_type bs)
 {
     int cap = 3500 + (you.strength * 100) + (player_is_airborne() ? 1000 : 0);
-    if ( bs == BS_UNENCUMBERED )
-        return (cap * 5) / 6;
-    else if ( bs == BS_ENCUMBERED )
-        return (cap * 11) / 12;
+
+    if (bs == BS_UNENCUMBERED)
+        return ((cap * 5) / 6);
+    else if (bs == BS_ENCUMBERED)
+        return ((cap * 11) / 12);
     else
-        return cap;
+        return (cap);
 }
 
 int burden_change(void)
@@ -6911,9 +6912,9 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
                  bool cleanup_dead)
 {
     // We ignore cleanup_dead here.
-    const monsters *mon = dynamic_cast<const monsters*>(agent);
     if (agent->atype() == ACT_MONSTER)
     {
+        const monsters *mon = dynamic_cast<const monsters*>(agent);
         ouch(amount, mon->mindex(),
              KILLED_BY_MONSTER, "", player_monster_visible(mon));
     }
