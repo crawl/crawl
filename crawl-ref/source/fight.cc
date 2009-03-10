@@ -969,7 +969,7 @@ bool melee_attack::player_aux_unarmed()
         if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                || player_genus(GENPC_DRACONIAN)
                || (you.species == SP_MERFOLK && player_is_swimming())
-               || player_mutation_level( MUT_STINGER ))
+               || player_mutation_level(MUT_STINGER))
             && one_chance_in(3))
         {
             uattack = UNAT_TAILSLAP;
@@ -1100,9 +1100,9 @@ bool melee_attack::player_aux_unarmed()
             unarmed_attack = "tail-slap";
             aux_damage = 6;
 
-            if (player_mutation_level( MUT_STINGER ) > 0)
+            if (player_mutation_level(MUT_STINGER) > 0)
             {
-                aux_damage += (player_mutation_level( MUT_STINGER ) * 2 - 1);
+                aux_damage += (player_mutation_level(MUT_STINGER) * 2 - 1);
                 damage_brand  = SPWPN_VENOM;
             }
 
