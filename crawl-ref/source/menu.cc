@@ -221,11 +221,8 @@ void Menu::set_maxpagesize(int max)
 void Menu::set_flags(int new_flags, bool use_options)
 {
     flags = new_flags;
-    if (use_options)
-    {
-        if (Options.easy_exit_menu)
-            flags |= MF_EASY_EXIT;
-    }
+    if (use_options && Options.easy_exit_menu)
+        flags |= MF_EASY_EXIT;
 }
 
 void Menu::set_more(const formatted_string &fs)
@@ -359,7 +356,7 @@ bool Menu::process_key( int keyin )
         repaint = page_down();
         if (!repaint && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
         {
-            repaint = first_entry != 0;
+            repaint = (first_entry != 0);
             first_entry = 0;
         }
         break;
@@ -377,7 +374,7 @@ bool Menu::process_key( int keyin )
         break;
     case CK_HOME:
         nav = true;
-        repaint = first_entry != 0;
+        repaint = (first_entry != 0);
         first_entry = 0;
         break;
     case CK_END:
@@ -442,7 +439,7 @@ bool Menu::process_key( int keyin )
         break;
 
     default:
-        keyin = post_process(keyin);
+        keyin  = post_process(keyin);
         lastch = keyin;
 
         // If no selection at all is allowed, exit now.
@@ -616,15 +613,14 @@ bool Menu::is_hotkey(int i, int key)
     int end = first_entry + pagesize;
     if (end > static_cast<int>(items.size())) end = items.size();
 
-    bool ishotkey = is_set(MF_SINGLESELECT)?
-                        items[i]->is_primary_hotkey(key)
-                      : items[i]->is_hotkey(key);
+    bool ishotkey = (is_set(MF_SINGLESELECT) ? items[i]->is_primary_hotkey(key)
+                                             : items[i]->is_hotkey(key));
 
-    return !is_set(MF_SELECT_BY_PAGE)? ishotkey
-        : ishotkey && i >= first_entry && i < end;
+    return !is_set(MF_SELECT_BY_PAGE) ? ishotkey
+                                      : ishotkey && i >= first_entry && i < end;
 }
 
-void Menu::select_items( int key, int qty )
+void Menu::select_items(int key, int qty)
 {
     int x = wherex(), y = wherey();
 
@@ -681,6 +677,23 @@ void Menu::select_items( int key, int qty )
     cgotoxy( x, y );
 }
 
+#ifdef USE_TILE
+bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+{
+    // Is this a monster?
+    monsters *m = (monsters*)(data);
+    if (!m)
+        return (false);
+
+    const coord_def c = m->pos();
+    const dungeon_feature_type feat = grd(c);
+    tileset.push_back(tile_def(tileidx_feature(feat, c.x, c.y), TEX_DUNGEON));
+    tileset.push_back(tile_def(tileidx_monster_base(m), TEX_PLAYER));
+
+    return (true);
+}
+#endif
+
 bool Menu::is_selectable(int item) const
 {
     if (select_filter.empty())
@@ -688,10 +701,9 @@ bool Menu::is_selectable(int item) const
 
     std::string text = items[item]->get_filter_text();
     for (int i = 0, count = select_filter.size(); i < count; ++i)
-    {
         if (select_filter[i].matches(text))
             return (true);
-    }
+
     return (false);
 }
 
@@ -809,7 +821,7 @@ void Menu::write_title()
 {
     textattr( item_colour(-1, title) );
     cprintf("%s", title->get_text().c_str());
-    if ( flags & MF_SHOW_PAGENUMBERS )
+    if (flags & MF_SHOW_PAGENUMBERS)
     {
         // The total number of pages is well defined, but the current
         // page a bit less so. To make sense, we hack it so that your
@@ -817,7 +829,7 @@ void Menu::write_title()
         // you're seeing the last item.
         int numpages = items.empty() ? 1 : ((items.size()-1) / pagesize + 1);
         int curpage = first_entry / pagesize + 1;
-        if ( in_page(items.size() - 1) )
+        if (in_page(items.size() - 1))
             curpage = numpages;
         cprintf(" (page %d of %d)", curpage, numpages);
     }
@@ -1417,7 +1429,7 @@ void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
 {
     MenuEntry* me = new MenuEntry;
     me->data = new formatted_string(fs);
-    if ( hotkey )
+    if (hotkey)
     {
         me->add_hotkey(hotkey);
         me->quantity = 1;
@@ -1428,14 +1440,14 @@ void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
 void formatted_scroller::add_item_string(const std::string& s, int hotkey)
 {
     MenuEntry* me = new MenuEntry(s);
-    if ( hotkey )
+    if (hotkey)
         me->add_hotkey(hotkey);
     add_entry(me);
 }
 
 void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
 {
-    if ( me->data == NULL )
+    if (me->data == NULL)
         Menu::draw_index_item(index, me);
     else
         static_cast<formatted_string*>(me->data)->display();
@@ -1443,10 +1455,10 @@ void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
 
 formatted_scroller::~formatted_scroller()
 {
-    // very important: this destructor is called *before* the
+    // Very important: this destructor is called *before* the
     // base (Menu) class destructor...which is at it should be.
-    for ( unsigned i = 0; i < items.size(); ++i )
-        if ( items[i]->data != NULL )
+    for (unsigned i = 0; i < items.size(); ++i)
+        if (items[i]->data != NULL)
             delete static_cast<formatted_string*>(items[i]->data);
 }
 
@@ -1725,7 +1737,7 @@ bool formatted_scroller::process_key( int keyin )
     case CK_END:
     {
         const int breakpoint = (items.size() + 1) - pagesize;
-        if ( first_entry < breakpoint )
+        if (first_entry < breakpoint)
             repaint = jump_to(breakpoint);
         break;
     }
@@ -1753,8 +1765,8 @@ bool formatted_scroller::process_key( int keyin )
 
 int ToggleableMenu::pre_process(int key)
 {
-    if ( std::find(toggle_keys.begin(), toggle_keys.end(), key) !=
-         toggle_keys.end() )
+    if (std::find(toggle_keys.begin(), toggle_keys.end(), key) !=
+            toggle_keys.end())
     {
         // Toggle all menu entries
         for (unsigned int i = 0; i < items.size(); ++i)

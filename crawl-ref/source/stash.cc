@@ -556,8 +556,8 @@ bool Stash::show_menu(const std::string &prefix, bool can_travel) const
     StashMenu menu;
 
     MenuEntry *mtitle = new MenuEntry("Stash (" + prefix, MEL_TITLE);
-    menu.can_travel = can_travel;
-    mtitle->quantity = items.size();
+    menu.can_travel   = can_travel;
+    mtitle->quantity  = items.size();
     menu.set_title(mtitle);
     menu.load_items( InvMenu::xlat_itemvect(items), stash_menu_fixup);
 

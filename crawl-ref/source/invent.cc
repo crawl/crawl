@@ -171,8 +171,9 @@ const int InvEntry::item_freshness() const
 
 void InvEntry::select(int qty)
 {
-    if ( item && item->quantity < qty )
+    if (item && item->quantity < qty)
         qty = item->quantity;
+
     MenuEntry::select(qty);
 }
 
@@ -298,7 +299,7 @@ void InvEntry::set_show_glyph(bool doshow)
 
 InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
-      title_annotate(NULL)
+      title_annotate(NULL), allow_toggle(false), menu_action(ACT_EXAMINE)
 {
     mdisplay->set_num_columns(2);
 }
@@ -747,6 +748,13 @@ bool InvMenu::process_key( int key )
         deselect_all();
         sel.clear();
         draw_select_count(0, true);
+        return (true);
+    }
+    else if (key == '!')
+    {
+        sel.clear();
+        menu_action = (action)((menu_action+1) % ACT_NUM);
+        update_title();
         return (true);
     }
     return Menu::process_key( key );

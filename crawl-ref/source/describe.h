@@ -130,12 +130,12 @@ template<class T>
 inline void process_description(T &proc, const describe_info &inf)
 {
     const unsigned int line_width = proc.width();
-    const          int height    = proc.height();
+    const          int height     = proc.height();
 
     std::string desc;
 
     if (inf.title.empty())
-       desc = inf.body.str();
+        desc = inf.body.str();
     else
     {
         desc = inf.title + "$$";

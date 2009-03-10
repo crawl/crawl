@@ -53,7 +53,8 @@ int tileidx_bolt(const bolt &bolt);
 int tileidx_zap(int colour);
 int tile_idx_unseen_terrain(int x, int y, int what);
 int tile_unseen_flag(const coord_def& gc);
-int tileidx_monster(const monsters *mon, bool detected);
+int tileidx_monster_base(const monsters *mon, bool detected = false);
+int tileidx_monster(const monsters *mon, bool detected = false);
 
 // Player tile related
 void tilep_race_default(int race, int gender, int level, int *parts);

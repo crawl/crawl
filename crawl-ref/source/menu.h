@@ -114,7 +114,7 @@ struct MenuEntry
         {
             char buf[300];
             snprintf(buf, sizeof buf,
-                    "%c - %s", hotkeys[0], text.c_str());
+                    " %c - %s", hotkeys[0], text.c_str());
             return std::string(buf);
         }
         return text;
@@ -144,10 +144,7 @@ struct MenuEntry
     }
 
 #ifdef USE_TILE
-    virtual bool get_tiles(std::vector<tile_def>& tileset) const
-    {
-        return (false);
-    }
+    virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
 

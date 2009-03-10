@@ -115,7 +115,7 @@ static int _bow_offset(const monsters *mon)
     }
 }
 
-static int _tileidx_monster_base(const monsters *mon, bool detected)
+int tileidx_monster_base(const monsters *mon, bool detected)
 {
     bool in_water = grid_is_water(grd(mon->pos()));
 
@@ -1008,12 +1008,12 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ERESHKIGAL;
     }
 
-    return TILEP_ERROR;
+    return TILEP_MONS_PROGRAM_BUG;
 }
 
 int tileidx_monster(const monsters *mons, bool detected)
 {
-    int ch = _tileidx_monster_base(mons, detected);
+    int ch = tileidx_monster_base(mons, detected);
 
     if (mons_flies(mons))
         ch |= TILE_FLAG_FLYING;
@@ -1064,6 +1064,7 @@ int tileidx_monster(const monsters *mons, bool detected)
         // no flag for okay.
         break;
     }
+
     return ch;
 }
 
@@ -1076,25 +1077,25 @@ static int _tileidx_monster(int mon_idx, bool detected)
 
 static int _tileidx_fixed_artefact(int special)
 {
-  switch(special)
-  {
-  case SPWPN_SINGING_SWORD:       return TILE_SPWPN_SINGING_SWORD;
-  case SPWPN_WRATH_OF_TROG:       return TILE_SPWPN_WRATH_OF_TROG;
-  case SPWPN_SCYTHE_OF_CURSES:    return TILE_SPWPN_SCYTHE_OF_CURSES;
-  case SPWPN_MACE_OF_VARIABILITY: return TILE_SPWPN_MACE_OF_VARIABILITY;
-  case SPWPN_GLAIVE_OF_PRUNE:     return TILE_SPWPN_GLAIVE_OF_PRUNE;
-  case SPWPN_SCEPTRE_OF_TORMENT:  return TILE_SPWPN_SCEPTRE_OF_TORMENT;
-  case SPWPN_SWORD_OF_ZONGULDROK: return TILE_SPWPN_SWORD_OF_ZONGULDROK;
-  case SPWPN_SWORD_OF_CEREBOV:    return TILE_SPWPN_SWORD_OF_CEREBOV;
-  case SPWPN_STAFF_OF_DISPATER:   return TILE_SPWPN_STAFF_OF_DISPATER;
-  case SPWPN_SCEPTRE_OF_ASMODEUS: return TILE_SPWPN_SCEPTRE_OF_ASMODEUS;
-  case SPWPN_SWORD_OF_POWER:      return TILE_SPWPN_SWORD_OF_POWER;
-  case SPWPN_STAFF_OF_OLGREB:     return TILE_SPWPN_STAFF_OF_OLGREB;
-  case SPWPN_VAMPIRES_TOOTH:      return TILE_SPWPN_VAMPIRES_TOOTH;
-  case SPWPN_STAFF_OF_WUCAD_MU:   return TILE_SPWPN_STAFF_OF_WUCAD_MU;
-  }
+    switch(special)
+    {
+    case SPWPN_SINGING_SWORD:       return TILE_SPWPN_SINGING_SWORD;
+    case SPWPN_WRATH_OF_TROG:       return TILE_SPWPN_WRATH_OF_TROG;
+    case SPWPN_SCYTHE_OF_CURSES:    return TILE_SPWPN_SCYTHE_OF_CURSES;
+    case SPWPN_MACE_OF_VARIABILITY: return TILE_SPWPN_MACE_OF_VARIABILITY;
+    case SPWPN_GLAIVE_OF_PRUNE:     return TILE_SPWPN_GLAIVE_OF_PRUNE;
+    case SPWPN_SCEPTRE_OF_TORMENT:  return TILE_SPWPN_SCEPTRE_OF_TORMENT;
+    case SPWPN_SWORD_OF_ZONGULDROK: return TILE_SPWPN_SWORD_OF_ZONGULDROK;
+    case SPWPN_SWORD_OF_CEREBOV:    return TILE_SPWPN_SWORD_OF_CEREBOV;
+    case SPWPN_STAFF_OF_DISPATER:   return TILE_SPWPN_STAFF_OF_DISPATER;
+    case SPWPN_SCEPTRE_OF_ASMODEUS: return TILE_SPWPN_SCEPTRE_OF_ASMODEUS;
+    case SPWPN_SWORD_OF_POWER:      return TILE_SPWPN_SWORD_OF_POWER;
+    case SPWPN_STAFF_OF_OLGREB:     return TILE_SPWPN_STAFF_OF_OLGREB;
+    case SPWPN_VAMPIRES_TOOTH:      return TILE_SPWPN_VAMPIRES_TOOTH;
+    case SPWPN_STAFF_OF_WUCAD_MU:   return TILE_SPWPN_STAFF_OF_WUCAD_MU;
+    }
 
-  return TILE_ERROR;
+    return TILE_ERROR;
 }
 
 static int _tileidx_unrand_artefact(int idx)

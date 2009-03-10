@@ -20,7 +20,7 @@ REVISION("$Rev$");
 #include <algorithm>
 
 #ifdef DOS
-#include <conio.h>
+ #include <conio.h>
 #endif
 
 #include "externs.h"
@@ -50,6 +50,7 @@ REVISION("$Rev$");
 #ifdef USE_TILE
  #include "tiles.h"
  #include "tilereg.h"
+ #include "tilesdl.h"
 #endif
 #include "terrain.h"
 #include "traps.h"
@@ -440,6 +441,15 @@ static void _direction_again(dist& moves, targeting_type restricts,
     moves.isTarget = true;
 }
 
+class view_desc_proc
+{
+public:
+    int width() { return crawl_view.msgsz.x; }
+    int height() { return crawl_view.msgsz.y; }
+    void print(const std::string &str) { cprintf("%s", str.c_str()); }
+    void nextline() { cgotoxy(1, wherey() + 1); }
+};
+
 static void _describe_monster(const monsters *mon);
 
 // Lists all the monsters and items currently in view by the player.
@@ -502,20 +512,19 @@ void full_describe_view()
         mprf("Neither monsters nor items are visible.");
         return;
     }
-/*
-    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                      MF_ALLOW_FORMATTING,
-                      "description", false);
-*/
+
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
                       /*MF_ALWAYS_SHOW_MORE |*/ MF_ALLOW_FORMATTING);
 
     desc_menu.set_highlighter(NULL);
+    // FIXME: Need different title for the opposite toggle:
+    // "Visible Monsters/Items (select for more detail, '!' to examine):"
     desc_menu.set_title(
-        new MenuEntry("Visible Monsters/Items (select for more detail):",
+        new MenuEntry("Visible Monsters/Items (select for more detail, '!' to view/travel):",
                       MEL_TITLE));
 
     desc_menu.set_tag("description");
+    desc_menu.allow_toggle = true;
 
     int menu_index = -1;
     // Build menu entries for monsters.
@@ -535,14 +544,13 @@ void full_describe_view()
             if (colour == BLACK)
                 colour = LIGHTGREY;
 
-            std::string prefix = "(<";
-            prefix += colour_to_str(colour);
-            prefix += ">";
-            prefix += stringize_glyph(mons_char( list_mons[i]->type) );
-            prefix += "</";
-            prefix += colour_to_str(colour);
-            prefix += ">) ";
-
+            std::string prefix = "";
+#ifndef USE_TILE
+            const std::string col_string = colour_to_str(colour);
+            prefix = "(<" + col_string + ">"
+                     + stringize_glyph(mons_char( list_mons[i]->type) )
+                     + "</" + col_string + ">) ";
+#endif
             // Get damage level.
             std::string damage_desc;
 
@@ -597,7 +605,6 @@ void full_describe_view()
             const item_def &item = list_items[i];
 
             InvEntry *me = new InvEntry(item);
-
 #ifndef USE_TILE
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
@@ -605,9 +612,16 @@ void full_describe_view()
             me->tag = "i";
             me->hotkeys[0] = letter;
             me->quantity = 2; // Hack to make items selectable.
+
             desc_menu.add_entry(me);
         }
     }
+
+    // Select an item to read its full description, or a monster to read its
+    // e'x'amine description. Toggle with '!' to travel to an item's position
+    // or read a monster's database entry.
+    // (Maybe that should be reversed in the case of monsters.)
+    // For ASCII, the 'x' information may include short database descriptions.
 
     // Menu loop
     while (true)
@@ -618,7 +632,6 @@ void full_describe_view()
         if (sel.empty())
             break;
 
-        // Possibility to select a menu item to get full description
         // HACK: quantity == 1: monsters, quantity == 2: items
         const int quant = sel[0]->quantity;
         if (quant == 1)
@@ -634,17 +647,41 @@ void full_describe_view()
             tiles.clear_text_tags(TAG_TUTORIAL);
             tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
-            mesclr();
-            _describe_monster( m );
 
-            if (getch() == 0)
-                getch();
+            if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
+            {
+                describe_info inf;
+                get_square_desc(m->pos(), inf, true);
+#ifndef USE_TILE
+                // Hmpf. This was supposed to work for both ASCII *and* Tiles!
+                view_desc_proc proc;
+                process_description<view_desc_proc>(proc, inf);
+#else
+                mesclr();
+                _describe_monster(m);
+#endif
+                if (getch() == 0)
+                    getch();
+            }
+            else // ACT_TRAVEL, here used to view database entry
+            {
+                describe_monsters(*m);
+                redraw_screen();
+                mesclr(true);
+            }
         }
         else if (quant == 2)
         {
             // Get selected item.
             item_def* i = (item_def*)(sel[0]->data);
-            describe_item( *i );
+            if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
+                describe_item( *i );
+            else // ACT_TRAVEL
+            {
+                const coord_def c = i->pos;
+                start_travel( c );
+                break;
+            }
         }
     }
 
@@ -747,7 +784,7 @@ range_view_annotator::range_view_annotator(int range)
         // Save and replace grid colours. -1 means unchanged.
         orig_colours.init(-1);
         const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
-        for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
+        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
             if (grid_distance(you.pos(), *ri) > range)
             {
@@ -767,9 +804,7 @@ range_view_annotator::range_view_annotator(int range)
                 menv[i].colour = DARKGREY;
             }
             else
-            {
                 orig_mon_colours[i] = -1;
-            }
         }
 
         // Repaint.
@@ -791,15 +826,13 @@ void range_view_annotator::restore_state()
     // Restore grid colours.
     coord_def c;
     const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
-    for ( c.x = 0; c.x < ENV_SHOW_DIAMETER; ++c.x )
-    {
-        for ( c.y = 0; c.y < ENV_SHOW_DIAMETER; ++c.y )
+    for (c.x = 0; c.x < ENV_SHOW_DIAMETER; ++c.x)
+        for (c.y = 0; c.y < ENV_SHOW_DIAMETER; ++c.y)
         {
             const int old_colour = orig_colours(c);
-            if ( old_colour != -1 )
+            if (old_colour != -1)
                 env.grid_colours(you.pos() + c - offset) = old_colour;
         }
-    }
 
     // Restore monster colours.
     for (int i = 0; i < MAX_MONSTERS; ++i)
@@ -3131,7 +3164,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         }
         else
         {
-            if ( !in_range )
+            if (!in_range)
             {
                 mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
                      mon->pronoun(PRONOUN_CAP).c_str());

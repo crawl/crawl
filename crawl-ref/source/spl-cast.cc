@@ -238,7 +238,7 @@ int list_spells(bool toggle_with_I)
 
     std::vector<MenuEntry*> sel = spell_menu.show();
     redraw_screen();
-    if ( sel.empty() )
+    if (sel.empty())
     {
         return 0;
     }

@@ -1531,9 +1531,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
         tiles.add_text_tag(TAG_NAMED_MONSTER, mon->mname, gc);
     }
     else
-    {
         tiles.add_text_tag(TAG_NAMED_MONSTER, mon->name(DESC_PLAIN), gc);
-    }
 }
 
 bool TilesFramework::initialise_items()

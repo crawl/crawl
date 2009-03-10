@@ -219,7 +219,7 @@ DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
     m_cx_to_gx(0),
     m_cy_to_gy(0),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_doll(&im->m_textures[TEX_DOLL]),
+    m_buf_doll(&im->m_textures[TEX_PLAYER]),
     m_buf_main(&im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)
@@ -1616,7 +1616,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     // TODO enne - consider subclassing this class, rather than depending
     // on "key" to determine if this is the crt inventory or the on screen one.
     bool display_actions = (m_items[item_idx].key == 0
-        && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
+                    && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
 
     // TODO enne - should the command keys here respect keymaps?
 
@@ -2792,9 +2792,10 @@ void MenuRegion::set_entry(int idx, const std::string &str, int colour,
     e.text.clear();
     e.text.textcolor(colour);
     e.text += formatted_string::parse_string(str);
-    e.heading = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);
+
+    e.heading  = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);
     e.selected = me->selected();
-    e.key = me->hotkeys.size() > 0 ? me->hotkeys[0] : 0;
+    e.key      = me->hotkeys.size() > 0 ? me->hotkeys[0] : 0;
     e.sx = e.sy = e.ex = e.ey = 0;
     e.tiles.clear();
     me->get_tiles(e.tiles);
@@ -2817,7 +2818,7 @@ int MenuRegion::maxpagesize() const
     int more_height = (lines + 1) * m_font_entry->char_height();
 
     int pagesize = ((my - more_height) / 32) * m_max_columns;
-    return pagesize;
+    return (pagesize);
 }
 
 void MenuRegion::set_offset(int lines)
@@ -2848,11 +2849,11 @@ bool ImageManager::load_textures()
     if (!m_textures[TEX_DUNGEON].load_texture("dngn.png", mip))
         return (false);
 
-    if (!m_textures[TEX_DOLL].load_texture("player.png", mip))
+    if (!m_textures[TEX_PLAYER].load_texture("player.png", mip))
         return (false);
 
     m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
-    m_textures[TEX_DOLL].set_info(TILEP_PLAYER_MAX, &tile_player_info);
+    m_textures[TEX_PLAYER].set_info(TILEP_PLAYER_MAX, &tile_player_info);
 
     return (true);
 }
@@ -2944,7 +2945,7 @@ static bool _copy_under(unsigned char *pixels, int width,
                         int uofs_x = 0, int uofs_y = 0)
 {
     const tile_info &under = tile_main_info(idx_under);
-    const tile_info &over = tile_main_info(idx_over);
+    const tile_info &over  = tile_main_info(idx_over);
 
     if (over.width != under.width || over.height != under.height)
         return (false);
@@ -3043,7 +3044,5 @@ bool ImageManager::load_item_texture()
 void ImageManager::unload_textures()
 {
     for (int i = 0; i < TEX_MAX; i++)
-    {
         m_textures[i].unload_texture();
-    }
 }

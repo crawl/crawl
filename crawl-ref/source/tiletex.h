@@ -9,11 +9,12 @@
 
 #include "tiles.h"
 
+// The different texture types.
 enum TextureID
 {
-    TEX_DUNGEON,
-    TEX_DOLL,
-    TEX_DEFAULT,
+    TEX_DUNGEON, // dngn.png
+    TEX_PLAYER,  // player.png
+    TEX_DEFAULT, // main.png
     TEX_MAX
 };
 
