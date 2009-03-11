@@ -29,19 +29,19 @@ int div_rand_round( int num, int den );
 int div_round_up( int num, int den );
 bool one_chance_in(int a_million);
 bool x_chance_in_y(int x, int y);
-int random2(int randmax);
-int maybe_random2( int x, bool random_factor );
+int random2(int max);
+int maybe_random2(int x, bool random_factor);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 const char* random_choose_string(const char* first, ...);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
 unsigned long random_int();
-int random2avg( int max, int rolls );
+int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
 
-int roll_dice( int num, int size );
-void scale_dice( dice_def &dice, int threshold = 24 );
+int roll_dice(int num, int size);
+void scale_dice(dice_def &dice, int threshold = 24);
 
 // Various ways to iterate over things.
 

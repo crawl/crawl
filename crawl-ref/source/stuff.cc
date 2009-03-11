@@ -577,28 +577,27 @@ int random_choose_weighted(int weight, int first, ...)
     return (chosen);
 }
 
-int random2( int max )
+int random2(int max)
 {
     if (max <= 1)
         return (0);
 
-    return (static_cast<int>( genrand_int32() / (0xFFFFFFFFUL / max + 1) ));
+    return (static_cast<int>(genrand_int32() / (0xFFFFFFFFUL / max + 1)));
 }
 
-bool coinflip( void )
+bool coinflip(void)
 {
-    return (static_cast<bool>( random2(2) ));
+    return (static_cast<bool>(random2(2)));
 }
 
 // Returns random2(x) if random_factor is true, otherwise the mean.
-int maybe_random2( int x, bool random_factor )
+int maybe_random2(int x, bool random_factor)
 {
     if (random_factor)
-        return random2(x);
+        return (random2(x));
     else
-        return x / 2;
+        return (x / 2);
 }
-
 
 void push_rng_state()
 {
@@ -610,9 +609,9 @@ void pop_rng_state()
     pop_mt_state();
 }
 
-// Attempts to make missile weapons nicer to the player by
-// reducing the extreme variance in damage done.
-void scale_dice( dice_def &dice, int threshold )
+// Attempts to make missile weapons nicer to the player by reducing the
+// extreme variance in damage done.
+void scale_dice(dice_def &dice, int threshold)
 {
     while (dice.size > threshold)
     {
@@ -626,32 +625,30 @@ void scale_dice( dice_def &dice, int threshold )
 int bestroll(int max, int rolls)
 {
     int best = 0;
+
     for (int i = 0; i < rolls; i++)
     {
         int curr = random2(max);
         if (curr > best)
             best = curr;
     }
+
     return (best);
 }
 
-// random2avg() returns same mean value as random2() but with a  lower variance
+// random2avg() returns same mean value as random2() but with a lower variance
 // never use with rolls < 2 as that would be silly - use random2() instead {dlb}
 int random2avg(int max, int rolls)
 {
-    int sum = 0;
-
-    sum += random2(max);
+    int sum = random2(max);
 
     for (int i = 0; i < (rolls - 1); i++)
-    {
         sum += random2(max + 1);
-    }
 
     return (sum / rolls);
 }
 
-int roll_dice( int num, int size )
+int roll_dice(int num, int size)
 {
     int ret = 0;
     int i;
@@ -664,7 +661,7 @@ int roll_dice( int num, int size )
         ret += num;     // since random2() is zero based
 
         for (i = 0; i < num; i++)
-            ret += random2( size );
+            ret += random2(size);
     }
 
     return (ret);
@@ -679,7 +676,7 @@ int random2limit(int max, int limit)
     int sum = 0;
 
     if (max < 1)
-        return 0;
+        return (0);
 
     for (i = 0; i < max; i++)
     {
@@ -687,8 +684,8 @@ int random2limit(int max, int limit)
             sum++;
     }
 
-    return sum;
-}                               // end random2limit()
+    return (sum);
+}
 
 void cio_init()
 {
@@ -908,12 +905,12 @@ int stat_div( int stat_level, int value, int mult, int shift )
 }
 
 // Calculates num/den and randomly adds one based on the remainder.
-int div_rand_round( int num, int den )
+int div_rand_round(int num, int den)
 {
     return (num / den + (random2(den) < num % den));
 }
 
-int div_round_up( int num, int den )
+int div_round_up(int num, int den)
 {
     return (num / den + (num % den != 0));
 }
@@ -1017,9 +1014,7 @@ void canned_msg(canned_message_type which_message)
         mpr("You are now empty-handed.");
         break;
     }
-
-    return;
-}                               // end canned_msg()
+}
 
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
@@ -1088,7 +1083,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         else if (!noprompt)
             mpr("[Y]es or [N]o only, please.");
     }
-}                               // end yesno()
+}
 
 static std::string _list_alternative_yes(char yes1, char yes2,
                                          bool lowered = false,
@@ -1540,7 +1535,7 @@ int element_colour( int element, bool no_random )
 char index_to_letter(int the_index)
 {
     return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
-}                               // end index_to_letter()
+}
 
 int letter_to_index(int the_letter)
 {
@@ -1551,8 +1546,8 @@ int letter_to_index(int the_letter)
         // returns range [26-51] {dlb}
         the_letter -= ('A' - 26);
 
-    return the_letter;
-}                               // end letter_to_index()
+    return (the_letter);
+}
 
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 {
