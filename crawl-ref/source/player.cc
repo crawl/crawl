@@ -665,6 +665,9 @@ bool you_tran_can_wear(const item_def &item)
             return (true);
         }
 
+        if (fit_armour_size(item, player_size(PSIZE_BODY, false)) != 0)
+            return (false);
+
         return you_tran_can_wear(get_armour_slot(item), true);
 
     default:
@@ -682,9 +685,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
         eq = EQ_LEFT_RING;
 
-    const int transform = you.attribute[ATTR_TRANSFORMATION];
-
-    // Everybody else can wear at least some type of armour.
+    // Everybody can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
         return (true);
 
@@ -702,6 +703,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
             return (false);
         }
     }
+
+    const int transform = you.attribute[ATTR_TRANSFORMATION];
 
     // No further restrictions.
     if (transform == TRAN_NONE || transform == TRAN_LICH)
