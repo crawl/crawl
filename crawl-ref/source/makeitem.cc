@@ -868,10 +868,9 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             && one_chance_in(50))
         {
             const int idx = find_okay_unrandart(OBJ_WEAPONS, force_type);
-
             if (idx != -1)
             {
-                make_item_unrandart( item, idx );
+                make_item_unrandart(item, idx);
                 return (true);
             }
         }
@@ -1802,7 +1801,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             const int idx = find_okay_unrandart(OBJ_ARMOUR, force_type);
             if (idx != -1)
             {
-                make_item_unrandart( item, idx );
+                make_item_unrandart(item, idx);
                 return (true);
             }
         }
@@ -2554,14 +2553,14 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
     {
         // The old generation code did not respect force_type here.
         const int idx = find_okay_unrandart(OBJ_JEWELLERY, force_type);
-
         if (idx != -1)
         {
-            make_item_unrandart( item, idx );
+            make_item_unrandart(item, idx);
             rc = true;
         }
     }
-    return rc;
+
+    return (rc);
 }
 
 static int _determine_ring_plus(int subtype)
