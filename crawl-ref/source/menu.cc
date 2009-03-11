@@ -1455,8 +1455,8 @@ void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
 
 formatted_scroller::~formatted_scroller()
 {
-    // Very important: this destructor is called *before* the
-    // base (Menu) class destructor...which is at it should be.
+    // Very important: this destructor is called *before* the base
+    // (Menu) class destructor... which is as it should be.
     for (unsigned i = 0; i < items.size(); ++i)
         if (items[i]->data != NULL)
             delete static_cast<formatted_string*>(items[i]->data);
