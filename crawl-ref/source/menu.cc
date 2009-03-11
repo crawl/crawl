@@ -84,11 +84,12 @@ void MenuDisplayTile::set_num_columns(int columns)
 #endif
 
 Menu::Menu( int _flags, const std::string& tagname, bool text_only )
- : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), title(NULL),
-   flags(_flags), tag(tagname), first_entry(0), y_offset(0),
-   pagesize(0), max_pagesize(0), more("-more-", true), items(),
-   sel(), select_filter(), highlighter(new MenuHighlighter), num(-1),
-   lastch(0), alive(false), last_selected(-1)
+  : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), allow_toggle(false),
+    menu_action(ACT_EXAMINE), title(NULL), flags(_flags), tag(tagname),
+    first_entry(0), y_offset(0), pagesize(0), max_pagesize(0),
+    more("-more-", true), items(), sel(), select_filter(),
+    highlighter(new MenuHighlighter), num(-1), lastch(0), alive(false),
+    last_selected(-1)
 {
 #ifdef USE_TILE
     if (text_only)
@@ -328,6 +329,13 @@ bool Menu::process_key( int keyin )
     {
         lastch = keyin;
         return (false);
+    }
+    else if (allow_toggle && (keyin == '!' || keyin == '?'))
+    {
+        sel.clear();
+        menu_action = (action)((menu_action+1) % ACT_NUM);
+        update_title();
+        return (true);
     }
 
     bool nav = false, repaint = false;
@@ -820,6 +828,7 @@ void Menu::draw_title()
 void Menu::write_title()
 {
     textattr( item_colour(-1, title) );
+
     cprintf("%s", title->get_text().c_str());
     if (flags & MF_SHOW_PAGENUMBERS)
     {
@@ -1678,8 +1687,8 @@ bool formatted_scroller::line_down()
 
 bool formatted_scroller::line_up()
 {
-    if (first_entry > 0 && items[first_entry-1]->level != MEL_TITLE &&
-        items[first_entry]->level != MEL_TITLE)
+    if (first_entry > 0 && items[first_entry-1]->level != MEL_TITLE
+        && items[first_entry]->level != MEL_TITLE)
     {
         --first_entry;
         return (true);

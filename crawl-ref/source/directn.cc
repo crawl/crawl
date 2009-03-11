@@ -50,7 +50,7 @@ REVISION("$Rev$");
 #ifdef USE_TILE
  #include "tiles.h"
  #include "tilereg.h"
- #include "tilesdl.h"
+// #include "tilesdl.h"
 #endif
 #include "terrain.h"
 #include "traps.h"
@@ -663,7 +663,7 @@ void full_describe_view()
                 if (getch() == 0)
                     getch();
             }
-            else // ACT_TRAVEL, here used to view database entry
+            else // ACT_EXECUTE, here used to view database entry
             {
                 describe_monsters(*m);
                 redraw_screen();
@@ -676,7 +676,7 @@ void full_describe_view()
             item_def* i = (item_def*)(sel[0]->data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_item( *i );
-            else // ACT_TRAVEL
+            else // ACT_EXECUTE -> travel to item
             {
                 const coord_def c = i->pos;
                 start_travel( c );
@@ -692,6 +692,9 @@ void full_describe_view()
         InvEntry *me = new InvEntry(list_items[0]);
         me->set_show_glyph(false);
     }
+#else
+    tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+    tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
 }
 

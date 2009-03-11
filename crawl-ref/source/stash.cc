@@ -1778,14 +1778,13 @@ public:
     StashSearchMenu(const char* sort_style_)
         : Menu(), can_travel(true),
           request_toggle_sort_method(false),
-          menu_action(ACT_TRAVEL),
+//          allow_toggle(true), menu_action(ACT_EXECUTE),
           sort_style(sort_style_)
     { }
 
 public:
     bool can_travel;
     bool request_toggle_sort_method;
-    enum action { ACT_TRAVEL, ACT_EXAMINE, ACT_NUM } menu_action;
     const char* sort_style;
 
 protected:
@@ -1806,8 +1805,8 @@ void StashSearchMenu::draw_title()
 
         char buf[200];
         snprintf(buf, 200,
-                 "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>: change action  <w>/</w>: change sort]",
-                 menu_action == ACT_TRAVEL ? "travel" : "examine");
+                 "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action  <w>/</w>: change sort]",
+                 menu_action == ACT_EXECUTE ? "travel" : "examine");
 
         draw_title_suffix(formatted_string::parse_string(buf), false);
     }
@@ -1816,14 +1815,7 @@ void StashSearchMenu::draw_title()
 
 bool StashSearchMenu::process_key(int key)
 {
-    if (key == '?')
-    {
-        sel.clear();
-        menu_action = (action)((menu_action+1) % ACT_NUM);
-        update_title();
-        return (true);
-    }
-    else if (key == '/')
+    if (key == '/')
     {
         request_toggle_sort_method = true;
         return (false);
@@ -1845,6 +1837,8 @@ bool StashTracker::display_search_results(
     StashSearchMenu stashmenu(sort_style);
     stashmenu.set_tag("stash");
     stashmenu.can_travel = travelable;
+    stashmenu.allow_toggle = true;
+    stashmenu.menu_action = Menu::ACT_EXECUTE;
     std::string title = "match";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
@@ -1920,7 +1914,7 @@ bool StashTracker::display_search_results(
     }
 
     redraw_screen();
-    if (sel.size() == 1 && stashmenu.menu_action == StashSearchMenu::ACT_TRAVEL)
+    if (sel.size() == 1 && stashmenu.menu_action == Menu::ACT_EXECUTE)
     {
         const stash_search_result *res =
                 static_cast<stash_search_result *>(sel[0]->data);

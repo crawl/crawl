@@ -123,9 +123,6 @@ class InvMenu : public Menu
 public:
     InvMenu(int mflags = MF_MULTISELECT);
 
-    bool allow_toggle;
-    enum action { ACT_TRAVEL, ACT_EXAMINE, ACT_NUM } menu_action;
-
 public:
     unsigned char getkey() const;
 

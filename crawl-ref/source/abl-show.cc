@@ -831,7 +831,7 @@ bool activate_ability()
     }
 
     std::vector<talent> talents = your_talents(false);
-    if ( talents.empty() )
+    if (talents.empty())
     {
         // Give messages if the character cannot use innate talents right now.
         // * Vampires can't turn into bats when full of blood.
@@ -867,8 +867,7 @@ bool activate_ability()
     int selected = -1;
     while (selected < 0)
     {
-        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list, ! "
-                                      "for descriptions)"
+        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list)"
                                    << std::endl;
 
         const int keyin = get_ch();
@@ -880,19 +879,6 @@ bool activate_ability()
             {
                 canned_msg( MSG_OK );
                 return (false);
-            }
-        }
-        else if (keyin == '!')
-        {
-            while (true)
-            {
-                selected = choose_ability_menu(talents, true);
-                if (selected == -1)
-                {
-                    canned_msg( MSG_OK );
-                    return (false);
-                }
-                _print_talent_description(talents[selected]);
             }
         }
         else if (keyin == ESCAPE || keyin == ' ' || keyin == '\r'
@@ -1959,25 +1945,33 @@ int choose_ability_menu(const std::vector<talent>& talents, bool describe)
 
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
-        new MenuEntry("  Ability                           "
+        new MenuEntry("  Ability                            "
                       "Cost                    Success"));
 
-    if (describe)
-    {
-        abil_menu.set_more(formatted_string::parse_string(
-                                "Choose any ability to read its description, "
-                                "or exit the menu with Escape."));
-        abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                            MF_ALWAYS_SHOW_MORE);
-    }
-    else if (Options.tutorial_left)
+    abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
+                            | MF_ALWAYS_SHOW_MORE);
+
+    if (Options.tutorial_left)
     {
         // XXX This could be buggy if you manage to pick up lots and lots
         // of abilities during the tutorial.
         abil_menu.set_more(tut_abilities_info());
-        abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                            MF_ALWAYS_SHOW_MORE);
     }
+    else if (describe)
+    {
+        abil_menu.set_more(formatted_string::parse_string(
+                           "Choose any ability to read its description, "
+                           "or exit the menu with Escape."));
+    }
+    else
+    {
+        abil_menu.set_more(formatted_string::parse_string(
+                           "Press '<w>!</w>' or '<w>?</w>' to toggle "
+                           "between ability selection and description."));
+    }
+
+    abil_menu.allow_toggle = true;
+    abil_menu.menu_action  = Menu::ACT_EXECUTE;
 
     int numbers[52];
     for (int i = 0; i < 52; ++i)
@@ -2014,17 +2008,21 @@ int choose_ability_menu(const std::vector<talent>& talents, bool describe)
         }
     }
 
-    std::vector<MenuEntry*> sel = abil_menu.show(false);
-    redraw_screen();
-    if (sel.empty())
+    while (true)
     {
-        return -1;
-    }
-    else
-    {
+        std::vector<MenuEntry*> sel = abil_menu.show(false);
+        redraw_screen();
+        if (sel.empty())
+            return -1;
+
         ASSERT(sel.size() == 1);
         ASSERT(sel[0]->hotkeys.size() == 1);
-        return (*(reinterpret_cast<int*>(sel[0]->data)));
+        int selected = *(reinterpret_cast<int*>(sel[0]->data));
+
+        if (abil_menu.menu_action == Menu::ACT_EXAMINE)
+            _print_talent_description(talents[selected]);
+        else
+            return (*(reinterpret_cast<int*>(sel[0]->data)));
     }
 }
 

@@ -2826,8 +2826,8 @@ formatted_string tut_abilities_info()
     std::string broken = "This screen shows your character's set of talents. "
         "You can gain new abilities via certain items, through religion or by "
         "way of mutations. Activation of an ability usually comes at a cost, "
-        "e.g. nutrition or Magic power. If, from the main screen, you press "
-        "<w>a!</w> you can read your abilities' descriptions.";
+        "e.g. nutrition or Magic power. Press '<w>!</w>' or '<w>?</w>' to "
+        "toggle between ability selection and description.";
     linebreak_string2(broken, _get_tutorial_cols());
     text << broken;
 
