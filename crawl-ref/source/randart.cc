@@ -675,7 +675,7 @@ void static _get_randart_properties(const item_def &item,
 
     proprt.init(0);
 
-    if (aclass == OBJ_WEAPONS)  // Only weapons get brands, of course
+    if (aclass == OBJ_WEAPONS) // only weapons get brands, of course
     {
         proprt[RAP_BRAND] = SPWPN_FLAMING + random2(15);        // brand
 
@@ -688,7 +688,13 @@ void static _get_randart_properties(const item_def &item,
         if (proprt[RAP_BRAND] == SPWPN_DRAGON_SLAYING
             && weapon_skill(item) != SK_POLEARMS)
         {
-            proprt[RAP_BRAND] = 0;      // missile wpns
+            proprt[RAP_BRAND] = SPWPN_NORMAL;
+        }
+
+        if (proprt[RAP_BRAND] == SPWPN_VENOM
+            && get_vorpal_type(item) == DVORP_CRUSHING)
+        {
+            proprt[RAP_BRAND] = SPWPN_NORMAL;
         }
 
         if (one_chance_in(6))
@@ -697,13 +703,13 @@ void static _get_randart_properties(const item_def &item,
         if (proprt[RAP_BRAND] == SPWPN_FLAME
             || proprt[RAP_BRAND] == SPWPN_FROST)
         {
-            proprt[RAP_BRAND] = 0;      // missile wpns
+            proprt[RAP_BRAND] = SPWPN_NORMAL;      // missile wpns
         }
 
         if (proprt[RAP_BRAND] == SPWPN_PROTECTION)
-            proprt[RAP_BRAND] = 0;      // no protection
+            proprt[RAP_BRAND] = SPWPN_NORMAL;      // no protection
 
-        // if this happens, things might get broken -- bwr
+        // if this happens, things might get broken - bwr
         if (proprt[RAP_BRAND] == SPWPN_SPEED && atype == WPN_QUICK_BLADE)
             proprt[RAP_BRAND] = SPWPN_NORMAL;
 
@@ -2217,7 +2223,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     item.flags |= ISFLAG_UNRANDART;
     _init_randart_properties(item);
 
-    item.special = unrand->prpty[ RAP_BRAND ];
+    item.special = unrand->prpty[RAP_BRAND];
     if (item.special != 0)
     {
         do_curse_item( item );

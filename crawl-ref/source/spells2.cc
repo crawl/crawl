@@ -348,22 +348,23 @@ bool brand_weapon(brand_type which_brand, int power)
         msg += " glows silver and feels heavier.";
         duration_affected = 7;
         break;
+
     default:
         break;
     }
 
-    if ( !temp_brand )
+    if (!temp_brand)
     {
-        set_item_ego_type( weapon, OBJ_WEAPONS, which_brand );
+        set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;
     }
 
-    if ( emit_special_message )
+    if (emit_special_message)
         mpr(msg.c_str());
     else
         mprf("%s flashes.", weapon.name(DESC_CAP_YOUR).c_str());
 
-    const int dur_change = duration_affected + roll_dice( 2, power );
+    const int dur_change = duration_affected + roll_dice(2, power);
 
     you.duration[DUR_WEAPON_BRAND] += dur_change;
 

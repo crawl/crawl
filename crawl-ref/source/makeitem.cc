@@ -1272,7 +1272,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(4) && (rc == SPWPN_NORMAL || one_chance_in(3)))
                 rc = SPWPN_VORPAL;
-
             break;
 
         case WPN_WAR_AXE:
@@ -1309,7 +1308,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(12))
                 rc = SPWPN_VENOM;
-
             break;
 
         case WPN_WHIP:
