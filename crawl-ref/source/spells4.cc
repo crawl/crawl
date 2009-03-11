@@ -1375,7 +1375,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     const char *what = NULL;
 
     ray_def ray;
-    if ( !find_ray(you.pos(), spd.target, false, ray) )
+    if (!find_ray(you.pos(), spd.target, false, ray))
     {
         mpr("There's a wall in the way!");
         return (false);
@@ -1713,7 +1713,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     }
     else if (beam.damage.num == 0)
     {
-        // If damage dice are zero we assume that nothing happened at all.
+        // If damage dice are zero, assume that nothing happened at all.
         canned_msg(MSG_SPELL_FIZZLES);
     }
 
