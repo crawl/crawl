@@ -877,7 +877,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         }
 
         // The other 98% are normal randarts.
-        make_item_randart( item );
+        make_item_randart(item);
         item.plus  = random2(7);
         item.plus2 = random2(7);
 
@@ -1482,26 +1482,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
     return (rc);
 }
 
-// Is this item something that no one would bother enchanting?
-static bool _item_is_mundane(const item_def& item)
-{
-    bool retval = false;
-
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        retval = (item.sub_type == WPN_CLUB
-                     || item.sub_type == WPN_GIANT_CLUB
-                     || item.sub_type == WPN_GIANT_SPIKED_CLUB
-                     || item.sub_type == WPN_KNIFE);
-        break;
-    default:
-        break;
-    }
-
-    return (retval);
-}
-
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
                                   int item_race)
@@ -1567,7 +1547,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     }
     else if ((force_good || is_demonic(item) || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
-                && !_item_is_mundane(item))
+                && !item_is_mundane(item))
     {
         // Make a better item (possibly ego).
         if (!no_brand)
@@ -2126,7 +2106,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
     else if ((force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
                     || x_chance_in_y(51 + item_level, 250))
-                && !_item_is_mundane(item))
+                && !item_is_mundane(item))
     {
         // Make a good item...
         item.plus += random2(3);
@@ -2662,7 +2642,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     if (allow_uniques && item_level > 2
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
-        make_item_randart( item );
+        make_item_randart(item);
     }
     else if (item.sub_type == RING_HUNGER || item.sub_type == RING_TELEPORTATION
              || one_chance_in(50))
@@ -2931,7 +2911,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     const int brand = get_weapon_brand(item);
     const bool visibly_branded = (brand != SPWPN_NORMAL);
 
-    if (_item_is_mundane(item))
+    if (item_is_mundane(item))
         return (false);
 
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
@@ -2954,7 +2934,7 @@ static bool _armour_is_visibly_special(const item_def &item)
     const int brand = get_armour_ego_type(item);
     const bool visibly_branded = (brand != SPARM_NORMAL);
 
-    if (_item_is_mundane(item))
+    if (item_is_mundane(item))
         return (false);
 
     if (get_equip_desc(item) != ISFLAG_NO_DESC)

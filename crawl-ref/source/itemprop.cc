@@ -528,9 +528,7 @@ void do_uncurse_item( item_def &item )
     item.flags &= (~ISFLAG_CURSED);
 }
 
-//
-// Is item stationary (cannot be picked up?)
-//
+// Is item stationary (cannot be picked up)?
 void set_item_stationary( item_def &item )
 {
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
@@ -571,6 +569,26 @@ bool item_is_critical(const item_def &item)
             && item.sub_type == MISC_RUNE_OF_ZOT
             && item.plus != RUNE_DEMONIC
             && item.plus != RUNE_ABYSSAL);
+}
+
+// Is item something that no one would bother enchanting?
+bool item_is_mundane(const item_def &item)
+{
+    bool retval = false;
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        retval = (item.sub_type == WPN_CLUB
+                     || item.sub_type == WPN_GIANT_CLUB
+                     || item.sub_type == WPN_GIANT_SPIKED_CLUB
+                     || item.sub_type == WPN_KNIFE);
+        break;
+    default:
+        break;
+    }
+
+    return (retval);
 }
 
 void set_ident_flags( item_def &item, unsigned long flags )

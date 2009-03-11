@@ -2130,6 +2130,9 @@ bool make_item_blessed_blade( item_def &item )
 
 bool make_item_randart( item_def &item )
 {
+    if (item_is_mundane(item))
+        return (false);
+
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
         && item.base_type != OBJ_JEWELLERY
