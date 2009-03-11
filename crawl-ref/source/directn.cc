@@ -50,7 +50,6 @@ REVISION("$Rev$");
 #ifdef USE_TILE
  #include "tiles.h"
  #include "tilereg.h"
-// #include "tilesdl.h"
 #endif
 #include "terrain.h"
 #include "traps.h"

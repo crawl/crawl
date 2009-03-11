@@ -180,7 +180,7 @@ static std::string _spell_extra_description(spell_type spell)
     return desc.str();
 }
 
-int list_spells(bool toggle_with_I)
+int list_spells(bool toggle_with_I, bool viewing)
 {
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
         MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
@@ -189,9 +189,9 @@ int list_spells(bool toggle_with_I)
         // [enne] - Hack.  Make title an item so that it's aligned.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                " Your Spells                      Type          "
+                " Your Spells                       Type          "
                 "                Success   Level",
-                " Your Spells                      Power         "
+                " Your Spells                       Power         "
                 "Range           Hunger    Level",
                 MEL_ITEM);
         me->colour = BLUE;
@@ -200,27 +200,31 @@ int list_spells(bool toggle_with_I)
 #else
     spell_menu.set_title(
         new ToggleableMenuEntry(
-            " Your Spells                      Type          "
+            " Your Spells                       Type          "
             "                Success   Level",
-            " Your Spells                      Power         "
+            " Your Spells                       Power         "
             "Range           Hunger    Level",
             MEL_TITLE));
 #endif
     spell_menu.set_highlighter(NULL);
+    spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');
+
+    std::string more_str = "Press '!' ";
     if (toggle_with_I)
     {
-        spell_menu.set_more(
-            formatted_string("Press '!' or 'I' to toggle spell view. Press spell slot for description."));
         spell_menu.add_toggle_key('I');
+        more_str += "or 'I' ";
     }
-    else
+    more_str += "to toggle spell view.";
+    if (!viewing)
     {
-        spell_menu.set_more(
-            formatted_string("Press '!' to toggle spell view."));
+        spell_menu.allow_toggle = true;
+        spell_menu.menu_action  = Menu::ACT_EXECUTE;
+        more_str += " Press ''?' to toggle between spell selection"
+                    " and description.";
     }
-
-    spell_menu.set_tag("spell");
+    spell_menu.set_more(formatted_string(more_str));
 
     for (int i = 0; i < 52; ++i)
     {
@@ -236,17 +240,22 @@ int list_spells(bool toggle_with_I)
         }
     }
 
-    std::vector<MenuEntry*> sel = spell_menu.show();
-    redraw_screen();
-    if (sel.empty())
+    while (true)
     {
-        return 0;
-    }
-    else
-    {
+        std::vector<MenuEntry*> sel = spell_menu.show();
+        redraw_screen();
+        if (sel.empty())
+            return 0;
+
         ASSERT(sel.size() == 1);
         ASSERT(sel[0]->hotkeys.size() == 1);
-        return sel[0]->hotkeys[0];
+        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
+        {
+            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]));
+            redraw_screen();
+        }
+        else
+            return sel[0]->hotkeys[0];
     }
 }
 
@@ -543,15 +552,10 @@ void inspect_spells()
 
     // Maybe we should honour auto_list here, but if you want the
     // description, you probably want the listing, too.
-    int keyin = list_spells();
-    if ( isalpha(keyin) )
-    {
-        describe_spell(get_spell_by_letter(keyin));
-        redraw_screen();
-    }
+    list_spells(true, true);
 }
 
-// returns false if spell failed, and true otherwise
+// Returns false if spell failed, and true otherwise.
 bool cast_a_spell()
 {
     if (!you.spell_no)
@@ -579,7 +583,7 @@ bool cast_a_spell()
 
     while (true)
     {
-        mpr( "Cast which spell ([?*] list)? ", MSGCH_PROMPT );
+        mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
 
         keyin = get_ch();
 
@@ -591,15 +595,13 @@ bool cast_a_spell()
 
             redraw_screen();
 
-            if ( isalpha(keyin) || keyin == ESCAPE )
+            if (isalpha(keyin) || keyin == ESCAPE)
                 break;
             else
                 mesclr();
         }
         else
-        {
             break;
-        }
     }
 
     if (keyin == ESCAPE)

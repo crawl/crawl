@@ -867,7 +867,7 @@ bool activate_ability()
     int selected = -1;
     while (selected < 0)
     {
-        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list)"
+        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list) "
                                    << std::endl;
 
         const int keyin = get_ch();
@@ -1939,7 +1939,7 @@ static void _pay_ability_costs(const ability_def& abil)
         lose_piety( piety_cost );
 }
 
-int choose_ability_menu(const std::vector<talent>& talents, bool describe)
+int choose_ability_menu(const std::vector<talent>& talents)
 {
     Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE, "ability");
 
@@ -1956,12 +1956,6 @@ int choose_ability_menu(const std::vector<talent>& talents, bool describe)
         // XXX This could be buggy if you manage to pick up lots and lots
         // of abilities during the tutorial.
         abil_menu.set_more(tut_abilities_info());
-    }
-    else if (describe)
-    {
-        abil_menu.set_more(formatted_string::parse_string(
-                           "Choose any ability to read its description, "
-                           "or exit the menu with Escape."));
     }
     else
     {
