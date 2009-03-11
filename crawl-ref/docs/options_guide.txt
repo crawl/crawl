@@ -1011,10 +1011,9 @@ always_confirm_butcher = false
         square, you will always be prompted, regardless of this option.
 
 prefer_safe_chunks = true
-        If eat.lua has been sourced, the (e)at command will prompt for
-        all chunks on the floor and in your inventory, sorted by age.
-        If this option is set to true, clean chunks will be offered
-        before contaminated ones even if the latter are older.
+        The (e)at command will prompt for all chunks on the floor and in your
+        inventory, sorted by age. If this option is set to true, clean chunks
+        will be offered before contaminated ones even if the latter are older.
         Poisonous, mutagenic, rot-inducing, and chunks forbidden by
         your religion will always be offered last.
 

@@ -1231,6 +1231,27 @@ game_start:
             }
         }
     }
+    else if (Options.random_pick)
+    {
+        // For completely random combinations (!, #, or Options.random_pick)
+        // reroll characters until the player accepts one of them or quits.
+        clrscr();
+
+        std::string specs = species_name(you.species, you.experience_level);
+        if (specs.length() > 79)
+            specs = specs.substr(0, 79);
+
+        cprintf( "You are a%s %s %s." EOL,
+                 (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
+                 you.class_name );
+
+        cprintf(EOL "Do you want to play this combination? (ynq) [y]");
+        char c = getch();
+        if (c == ESCAPE || tolower(c) == 'q')
+            end(0);
+        if (tolower(c) == 'n')
+            goto game_start;
+    }
 
 
 // ************ Round-out character statistics and such. ************
@@ -2175,9 +2196,9 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
         {
             for (int i = 0; i < numbooks; i++)
             {
-                if (_book_restriction(
-                        _book_to_start(firstbook + i)) == CC_UNRESTRICTED
-                            && one_chance_in(++good_choices))
+                if (_book_restriction(_book_to_start(firstbook + i))
+                            == CC_UNRESTRICTED
+                        && one_chance_in(++good_choices))
                 {
                     keyin = i;
                 }
