@@ -273,11 +273,11 @@ static const ability_def Ability_List[] =
       ABFLAG_CONF_OK },
 
     // Lugonu
-    { ABIL_LUGONU_ABYSS_EXIT,  "Depart the Abyss", 1, 0, 150, 10, ABFLAG_NONE },
-    { ABIL_LUGONU_BEND_SPACE,  "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
-    { ABIL_LUGONU_BANISH,      "Banish",
+    { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss", 1, 0, 150, 10, ABFLAG_NONE },
+    { ABIL_LUGONU_BEND_SPACE, "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
+    { ABIL_LUGONU_BANISH, "Banish",
       4, 0, 200, generic_cost::range(3, 4), ABFLAG_NONE },
-    { ABIL_LUGONU_CORRUPT,     "Corrupt",
+    { ABIL_LUGONU_CORRUPT, "Corrupt",
       7, 5, 500, generic_cost::range(10, 14), ABFLAG_NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
       9, 0, 500, generic_cost::fixed(35), ABFLAG_PAIN },
@@ -294,12 +294,6 @@ static const ability_def Ability_List[] =
       3, 0, 80, generic_cost::fixed(3), ABFLAG_NONE },
     { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
       2, 0, 50, 0, ABFLAG_NONE },
-
-    // These six are unused "evil" god abilities:
-    { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
-    { ABIL_BREATHE_HELLFIRE, "Breathe Hellfire", 0, 8, 200, 0, ABFLAG_BREATH },
-
-    { ABIL_TORMENT_II, "Call Torment", 9, 0, 0, 3, ABFLAG_PAIN },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm", 0, 0, 0, 0, ABFLAG_PIETY },
@@ -582,12 +576,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         perfect = true;
         failure = 0;
         break;
-
-    case ABIL_BREATHE_HELLFIRE:
-        failure = 32 - you.experience_level;
-        break;
         // end transformation abilities {dlb}
-        //
+
         // begin item abilities - some possibly mutagenic {dlb}
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_TELEPORTATION:
@@ -745,17 +735,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         invoc = true;
         perfect = true;         // Tactically important to allow perfection
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
-        break;
-
-        //jmf: following for to-be-created gods
-    case ABIL_CHARM_SNAKE:
-        invoc = true;
-        failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_TORMENT_II:
-        invoc = true;
-        failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
     case ABIL_RENOUNCE_RELIGION:
@@ -1836,40 +1815,6 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         recall(2);
         exercise(SK_INVOCATIONS, 1);
-        break;
-
-    //jmf: intended as invocations from evil god(s):
-    case ABIL_CHARM_SNAKE:
-        cast_snake_charm( you.experience_level * 2
-                            + you.skills[SK_INVOCATIONS] * 3 );
-
-        exercise(SK_INVOCATIONS, 2 + random2(4));
-        break;
-
-    case ABIL_BREATHE_HELLFIRE:
-        if (you.duration[DUR_BREATH_WEAPON])
-        {
-            canned_msg(MSG_CANNOT_DO_YET);
-            return (false);
-        }
-
-        if (your_spells(SPELL_HELLFIRE,
-                        20 + you.experience_level, false ) == SPRET_ABORT)
-            return (false);
-
-        you.duration[DUR_BREATH_WEAPON] +=
-                        3 + random2(5) + random2(30 - you.experience_level);
-        break;
-
-    case ABIL_TORMENT_II:
-        if (you.is_undead)
-        {
-            mpr("The unliving cannot use this ability.");
-            return (false);
-        }
-
-        torment(TORMENT_GENERIC, you.pos());
-        exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
     case ABIL_TRAN_BAT:

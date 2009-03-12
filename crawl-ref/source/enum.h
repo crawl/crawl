@@ -37,15 +37,14 @@ enum ability_type
     ABIL_THROW_FLAME,
     ABIL_THROW_FROST,
     ABIL_BOLT_OF_DRAINING,
-    ABIL_BREATHE_HELLFIRE,             //   25
-    ABIL_FLY_II,
+    ABIL_FLY_II,                       //   25
     ABIL_DELAYED_FIREBALL,
     ABIL_MUMMY_RESTORATION,
     ABIL_EVOKE_MAPPING,
-    ABIL_EVOKE_TELEPORTATION,          //   30
-    ABIL_EVOKE_BLINK,
-    ABIL_RECHARGING,                   //   32
-    // 33 - 50 unused
+    ABIL_EVOKE_TELEPORTATION,
+    ABIL_EVOKE_BLINK,                  //   30
+    ABIL_RECHARGING,                   //   31
+    // 32 - 50 unused
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_LEVITATE,
@@ -102,11 +101,9 @@ enum ability_type
     ABIL_BEOGH_SMITING,                     //  235
     ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
 
-    ABIL_CHARM_SNAKE,                       //  237
-    ABIL_TORMENT_II,
     ABIL_TRAN_BAT,
-    ABIL_HARM_PROTECTION,                   //  240
-    ABIL_HARM_PROTECTION_II,
+    ABIL_HARM_PROTECTION,
+    ABIL_HARM_PROTECTION_II,                //  239
     ABIL_RENOUNCE_RELIGION = 250            //  250
 };
 

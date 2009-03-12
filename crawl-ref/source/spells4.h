@@ -44,7 +44,6 @@ void cast_shatter(int pow);
 void cast_silence(int pow);
 void cast_tame_beasts(int pow);
 void cast_dispersal(int pow);
-void cast_snake_charm(int pow);
 void cast_stoneskin(int pow);
 
 int cast_semi_controlled_blink(int pow);

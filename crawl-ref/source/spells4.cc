@@ -1343,30 +1343,6 @@ void cast_fulsome_distillation( int powc )
         mpr( "Unfortunately, you can't carry it right now!" );
 }
 
-static int _snake_charm_monsters(coord_def where, int pow, int, actor *)
-{
-    monsters* monster = monster_at(where);
-
-    if (monster == NULL
-        || one_chance_in(4)
-        || mons_friendly(monster)
-        || mons_char(monster->type) != 'S'
-        || check_mons_resist_magic(monster, pow))
-    {
-        return 0;
-    }
-
-    monster->attitude = ATT_FRIENDLY;
-    mprf("%s sways back and forth.", monster->name(DESC_CAP_THE).c_str());
-
-    return 1;
-}
-
-void cast_snake_charm(int pow)
-{
-    apply_one_neighbouring_square(_snake_charm_monsters, pow);
-}
-
 bool cast_fragmentation(int pow, const dist& spd)
 {
     int debris = 0;
