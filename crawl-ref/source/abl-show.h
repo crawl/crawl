@@ -73,11 +73,11 @@ int choose_ability_menu(const std::vector<talent>& talents);
  * called from: acr
  * *********************************************************************** */
 bool activate_ability();
-std::vector<talent> your_talents( bool check_confused );
+std::vector<talent> your_talents(bool check_confused);
 
-std::string print_abilities( void );
+std::string print_abilities(void);
 
-void set_god_ability_slots( void );
+void set_god_ability_slots(void);
 
 
 #endif

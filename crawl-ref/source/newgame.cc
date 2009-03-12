@@ -5650,9 +5650,7 @@ bool _give_items_skills()
         if (!you.weapon())
             you.skills[SK_UNARMED_COMBAT] = weap_skill;
         else
-        {
             you.skills[weapon_skill(*you.weapon())] = weap_skill;
-        }
     }
 
     init_skill_order();
@@ -5662,5 +5660,6 @@ bool _give_items_skills()
         you.worshipped[you.religion] = 1;
         set_god_ability_slots();
     }
+
     return (true);
 }

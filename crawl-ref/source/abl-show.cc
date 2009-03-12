@@ -1804,12 +1804,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_BEOGH_SMITING:
-        if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
-                         false ) == SPRET_ABORT)
+        if (your_spells(SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
+                        false) == SPRET_ABORT)
         {
             return (false);
         }
-        exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
+        exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
@@ -1990,7 +1990,7 @@ static void _add_talent(std::vector<talent>& vec, const ability_type ability,
         vec.push_back(t);
 }
 
-std::vector<talent> your_talents( bool check_confused )
+std::vector<talent> your_talents(bool check_confused)
 {
     std::vector<talent> talents;
 
@@ -2243,10 +2243,10 @@ std::vector<talent> your_talents( bool check_confused )
 // the old invocation slots void and erase them).  We also try to
 // protect any bindings the character might have made into the
 // traditional invocation slots (A-E and X). -- bwr
-static void _set_god_ability_helper( ability_type abil, char letter )
+static void _set_god_ability_helper(ability_type abil, char letter)
 {
     int i;
-    const int index = letter_to_index( letter );
+    const int index = letter_to_index(letter);
 
     for (i = 0; i < 52; i++)
         if (you.ability_letter_table[i] == abil)
@@ -2265,7 +2265,7 @@ static void _set_god_ability_helper( ability_type abil, char letter )
 static int _is_god_ability(int abil)
 {
     if (abil == ABIL_NON_ABILITY)
-        return GOD_NO_GOD;
+        return (GOD_NO_GOD);
 
     for (int i = 0; i < MAX_NUM_GODS; ++i)
         for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
@@ -2305,21 +2305,21 @@ void set_god_ability_slots()
 
 // Returns an index (0-51) if successful, -1 if you should
 // just use the next one.
-static int _find_ability_slot( ability_type which_ability )
+static int _find_ability_slot(ability_type which_ability)
 {
     for (int slot = 0; slot < 52; slot++)
         if (you.ability_letter_table[slot] == which_ability)
-            return slot;
+            return (slot);
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations)
+    // Skip over a-e (invocations).
     for (int slot = 5; slot < 52; slot++)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
             you.ability_letter_table[slot] = which_ability;
-            return slot;
+            return (slot);
         }
     }
 
@@ -2329,12 +2329,12 @@ static int _find_ability_slot( ability_type which_ability )
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
             you.ability_letter_table[slot] = which_ability;
-            return slot;
+            return (slot);
         }
     }
 
     // All letters are assigned.
-    return -1;
+    return (-1);
 }
 
 ////////////////////////////////////////////////////////////////////////////
