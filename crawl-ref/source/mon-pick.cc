@@ -665,7 +665,6 @@ int mons_standard_level(int mcls)
     case MONS_WRAITH:
     case MONS_UNSEEN_HORROR:
     case MONS_TRAPDOOR_SPIDER:
-    case MONS_ROCK_WORM:
         return 14;
 
     case MONS_ARMOUR_MIMIC:
@@ -704,6 +703,7 @@ int mons_standard_level(int mcls)
     case MONS_WIZARD:
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
+    case MONS_ROCK_WORM:
         return 17;
 
     case MONS_DRAGON:

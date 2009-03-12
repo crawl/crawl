@@ -4319,7 +4319,7 @@ bool bolt::handle_statue_disintegration(monsters* mon)
 {
     bool rc = false;
     if ((flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
-        && mons_is_statue(mon->type) && !mons_is_icy(mon->type))
+        && mons_is_statue(mon->type, true))
     {
         rc = true;
         // Disintegrate the statue.

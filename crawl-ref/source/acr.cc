@@ -1306,14 +1306,18 @@ static void _print_friendly_pickup_setting(bool was_changed)
         mprf("Your intelligent allies may %sonly pick up items dropped by allies.",
              now.c_str());
     }
+    else if (you.friendly_pickup == FRIENDLY_PICKUP_PLAYER)
+    {
+        mprf("Your intelligent allies may %sonly pick up items dropped by you "
+             "and your allies.", now.c_str());
+    }
     else if (you.friendly_pickup == FRIENDLY_PICKUP_ALL)
     {
-        mprf("Your intelligent allies may %spick up anything they need.", now.c_str());
+        mprf("Your intelligent allies may %spick up anything they need.",
+             now.c_str());
     }
     else
-    {
         mprf(MSGCH_ERROR, "Your allies%s are collecting bugs!", now.c_str());
-    }
 }
 
 // Note that in some actions, you don't want to clear afterwards.
@@ -1444,8 +1448,8 @@ void process_command( command_type cmd )
         // Toggle pickup mode for friendlies.
         _print_friendly_pickup_setting(false);
 
-        mpr("Change to (d)efault, (n)othing, (f)riend-dropped, or (a)ll? ",
-            MSGCH_PROMPT);
+        mpr("Change to (d)efault, (n)othing, (f)riend-dropped, (p)layer, "
+            "or (a)ll? ", MSGCH_PROMPT);
 
         char type = (char) getchm(KC_DEFAULT);
         type = tolower(type);
@@ -1456,6 +1460,8 @@ void process_command( command_type cmd )
             you.friendly_pickup = FRIENDLY_PICKUP_NONE;
         else if (type == 'f')
             you.friendly_pickup = FRIENDLY_PICKUP_FRIEND;
+        else if (type == 'p')
+            you.friendly_pickup = FRIENDLY_PICKUP_PLAYER;
         else if (type == 'a')
             you.friendly_pickup = FRIENDLY_PICKUP_ALL;
         else

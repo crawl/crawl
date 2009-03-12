@@ -2107,6 +2107,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             default_friendly_pickup = FRIENDLY_PICKUP_NONE;
         else if (field == "friend")
             default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
+        else if (field == "player")
+            default_friendly_pickup = FRIENDLY_PICKUP_PLAYER;
         else if (field == "all")
             default_friendly_pickup = FRIENDLY_PICKUP_ALL;
     }

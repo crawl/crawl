@@ -641,12 +641,15 @@ bool invalid_monster_index(int i)
     return (i < 0 || i >= MAX_MONSTERS);
 }
 
-bool mons_is_statue(int mc)
+bool mons_is_statue(int mc, bool allow_disintegrate)
 {
-    return (mc == MONS_ORANGE_STATUE
-            || mc == MONS_SILVER_STATUE
-            || mc == MONS_ICE_STATUE
-            || mc == MONS_ROXANNE);
+    if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
+        return (true);
+
+    if (!allow_disintegrate)
+        return (mc == MONS_ICE_STATUE || mc == MONS_ROXANNE);
+
+    return (false);
 }
 
 bool mons_is_mimic(int mc)
@@ -5103,7 +5106,10 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             // pick up anything, or only stuff dropped by (other) allies.
             if (you.friendly_pickup == FRIENDLY_PICKUP_NONE
                 || you.friendly_pickup == FRIENDLY_PICKUP_FRIEND
-                   && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY))
+                   && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY)
+                || you.friendly_pickup == FRIENDLY_PICKUP_PLAYER
+                   && !(item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+                                        | ISFLAG_DROPPED_BY_ALLY)))
             {
                 return (false);
             }

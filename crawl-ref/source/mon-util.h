@@ -565,7 +565,7 @@ mon_holy_type mons_class_holiness(int mc);
 mon_holy_type mons_holiness(const monsters *mon);
 
 bool mons_is_mimic( int mc );
-bool mons_is_statue( int mc );
+bool mons_is_statue( int mc, bool allow_disintegrate = false );
 bool mons_is_demon( int mc );
 
 bool mons_class_wields_two_weapons(int mc);
