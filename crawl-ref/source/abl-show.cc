@@ -202,7 +202,7 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_MAPPING, "Evoke Sense Surroundings", 0, 0, 30, 0, ABFLAG_NONE },
     { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation", 3, 0, 200, 0, ABFLAG_NONE },
     { ABIL_EVOKE_BLINK, "Evoke Blink", 1, 0, 50, 0, ABFLAG_NONE },
-    { ABIL_RECHARGING, "Wand Recharging", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
+    { ABIL_RECHARGING, "Device Recharging", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage", 0, 0, 0, 0, ABFLAG_NONE },
 

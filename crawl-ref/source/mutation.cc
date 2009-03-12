@@ -1460,6 +1460,7 @@ formatted_string describe_mutations()
 
     case SP_DEEP_DWARF:
         result += "You are resistant to damage." EOL;
+        result += "You can recharge devices by infusing magical energy." EOL;
         have_any = true;
         break;
 
