@@ -113,7 +113,7 @@ Self-Restoration
 
 At the permanent loss of one magic point restore your Strength, Dexterity and Intelligence, and heal a large amount of rotted hitpoints.
 %%%%
-Wand Recharging
+Device Recharging
 
 At the permanent loss of one magic point recharge a wand or rod or enchant a weapon of electrocution.
 %%%%
