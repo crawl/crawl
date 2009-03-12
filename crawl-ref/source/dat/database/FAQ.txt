@@ -162,7 +162,7 @@ Keep in mind that you don't absolutely have to fight every monster you meet,
 and with ghosts it's even easier: they cannot leave the level they were
 created on.
 
-Alternatively, you could play a couple of strong species/class combinations
+Alternatively, you could play a couple of strong species/job combinations
 for the sole purpose of busting those ghosts, for example Berserkers or a
 spellcaster who's learned Dispel Undead.
 %%%%

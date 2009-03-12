@@ -1188,7 +1188,7 @@ game_start:
                                _get_class(letter_to_index(Options.cls))))
         {
             end(1, false,
-                "Incompatible race and class specified in options file.");
+                "Incompatible species and job specified in options file.");
         }
         // Repeat until valid race/class combination found.
         while (choose_race() && !choose_class());
@@ -3075,8 +3075,8 @@ static void _show_name_prompt(int where, bool blankOK,
         else
         {
             cprintf(EOL
-                    "Press <Enter> to answer this after race and "
-                    "class are chosen." EOL);
+                    "Press <Enter> to answer this after species and "
+                    "job are chosen." EOL);
         }
     }
 
@@ -3847,14 +3847,14 @@ spec_query:
         cprintf(EOL EOL);
         if (you.char_class == JOB_UNKNOWN)
         {
-            cprintf("Space - Choose class first; * - Random species" EOL
+            cprintf("Space - Choose job first; * - Random species" EOL
                     "! - Random character; # - Good random character; X - Quit"
                     EOL);
         }
         else
         {
             cprintf("* - Random; + - Good random; "
-                    "Bksp - Back to class selection; X - Quit"
+                    "Bksp - Back to job selection; X - Quit"
                     EOL);
         }
 
@@ -4097,8 +4097,8 @@ job_query:
         if (you.species == SP_UNKNOWN)
         {
             cprintf(EOL
-                    "Space - Choose species first; * - Random class; "
-                    "+ - Good random class" EOL
+                    "Space - Choose species first; * - Random job; "
+                    "+ - Good random job" EOL
                     "! - Random character; # - Good random character; X - Quit"
                     EOL);
         }

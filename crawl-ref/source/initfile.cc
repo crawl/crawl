@@ -385,7 +385,7 @@ static char _str_to_race( const std::string &str )
         index = get_species_index_by_name( str.c_str() );
 
     if (index == -1)
-        fprintf( stderr, "Unknown race choice: %s\n", str.c_str() );
+        fprintf( stderr, "Unknown species choice: %s\n", str.c_str() );
 
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
@@ -407,7 +407,7 @@ static int _str_to_class( const std::string &str )
         index = get_class_index_by_name( str.c_str() );
 
     if (index == -1)
-        fprintf( stderr, "Unknown class choice: %s\n", str.c_str() );
+        fprintf( stderr, "Unknown job choice: %s\n", str.c_str() );
 
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
@@ -1309,9 +1309,9 @@ static void write_newgame_options(FILE *f)
 
     // Race selection
     if (Options.prev_race)
-        fprintf(f, "race = %c\n", Options.prev_race);
+        fprintf(f, "species = %c\n", Options.prev_race);
     if (Options.prev_cls)
-        fprintf(f, "class = %c\n", Options.prev_cls);
+        fprintf(f, "job = %c\n", Options.prev_cls);
 
     if (Options.prev_weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(Options.prev_weapon).c_str());
@@ -1987,7 +1987,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     const std::string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
-        && key != "race" && key != "class" && key != "ban_pickup"
+        && key != "species" && key != "job" && key != "ban_pickup"
         && key != "autopickup_exceptions"
         && key != "stop_travel" && key != "sound"
         && key != "travel_stop_message" && key != "force_more_message"
@@ -2373,11 +2373,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         macro_dir = field;
     }
 #endif
-    else if (key == "race")
+    else if (key == "species" || key == "race")
     {
         race = _str_to_race( field );
     }
-    else if (key == "class")
+    else if (key == "job" || key == "class")
     {
         cls = _str_to_class( field );
     }
@@ -3380,7 +3380,7 @@ enum commandline_option_type {
 };
 
 static const char *cmd_ops[] = {
-    "scores", "name", "race", "class", "plain", "dir", "rc",
+    "scores", "name", "species", "job", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena"
 };

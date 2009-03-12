@@ -1593,8 +1593,10 @@ int prompt_eat_chunks()
             //    and may have unintended consequences.
             //  * Ghouls may want to wait until chunks become rotten.
             if (easy_eat && !bad && !contam)
+            {
                 // If this chunk is safe to eat, just do so without prompting.
                 autoeat = true;
+            }
             else if (easy_contam && contam && !bad)
                 autoeat = true;
             else

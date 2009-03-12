@@ -61,8 +61,8 @@
 # chaos_knight = (Xom | Makhleb | random)
 # death_knight = (necromancy | Yredelemnul | random)
 # priest       = (Zin | Yredelemnul | Beogh | random)
-# race  = (Human |...| Merfolk | random)
-# class = (Fighter |...| Wanderer | random)
+# species = (Human |...| Vampire | random)
+# job     = (Fighter |...| Wanderer | random)
 # random_pick = true
 # good_random = false
 
@@ -278,7 +278,7 @@ include = standard_colours.txt
 include = food_colouring.txt
 
 # There is elaborate colouring of items in the inventory (and other menus)
-# depending on their usefulness, taking race and other criteria into account.
+# depending on their usefulness, taking species and other criteria into account.
 include = menu_colours.txt
 
 # Colouring of autoinscribed god gifts

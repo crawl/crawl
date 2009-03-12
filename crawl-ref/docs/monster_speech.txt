@@ -60,7 +60,7 @@ of the time the database lookup stage isn't even reached.
 
 First, the player will only ever hear monsters speak if they are in
 line of sight, and monsters will only ever speak if they are not
-asleep, not submerged in water, air or lava, and not wandering around 
+asleep, not submerged in water, air or lava, and not wandering around
 aimlessly (unless neutral).
 
 Berserk monsters are too busy killing and maiming to speak. Also,
@@ -264,7 +264,7 @@ following order:
 3. Then the monster glyph, with prefix "cap-" for capital letters.
    Examples: "default 'cap-J'", "default confused 'k'"
 4. A group description (such as 'insect' or 'humanoid') defined by the
-   monster's body shape (winged, tailed etc). The definition of the 
+   monster's body shape (winged, tailed etc). The definition of the
    latter is entirely hardcoded, though.
    Examples: "default winged insect", "default confused humanoid"
 
@@ -282,10 +282,10 @@ affect speech of this kind.
 
 For the last round (shape comparison, e.g. "winged humanoid")
 occasionally an additional intelligence estimate ("stupid", "smart")
-is prefixed to the search string, depending on the monster type, e.g. 
+is prefixed to the search string, depending on the monster type, e.g.
 a "stupid humanoid" may still be smarter than a "smart arachnid".
 
-Here's a list of allowed monster shapes that should hopefully be 
+Here's a list of allowed monster shapes that should hopefully be
 self-explanatory:
 
   humanoid, winged humanoid (angels), tailed humanoid (draconians),
@@ -301,7 +301,7 @@ definitely stays silent.
 Examples
 --------
 
-Example 1: 
+Example 1:
   The monster we want to make "speak" is a "confused killer bee".
 
   However, such an entry cannot be found in the database, so the game
@@ -519,7 +519,7 @@ replacements don't hold. Instead you can use @The_weapon@,
 replaced by "The (weapon name)", "the (weapon name)", "Your (weapon
 name)", "your (weapon name)", and the plain weapon name,
 respectively.
-@player_name@ is expanded as above, as is @player_god@, though for 
+@player_name@ is expanded as above, as is @player_god@, though for
 atheists it returns "atheism".
 
 Note that the Singing Sword, being unique, cannot be referred to by
@@ -766,9 +766,9 @@ mode, examining monsters offers several new sub-commands such as 'F'
 (make monster friendly/neutral/hostile) and 's' (make monster shout).
 These last two are of particular interest to monster speech designers.
 
-Also, the Singing Sword and all other hardcoded artefacts can be
-created with '&|'. The Elemental Staff and the spear of Voo-Doo are
-examples of noisy weapons.
+Also, the Singing Sword and other hardcoded artefacts can be created
+with '&o'. To create all artefacts at the same time, use '&|'. The
+Elemental Staff and the spear of Voo-Doo are examples of noisy weapons.
 
 You can also temporarily increase the likelihood of a given message by
 adding a high weight value before it, e.g. w:5000, or equally
