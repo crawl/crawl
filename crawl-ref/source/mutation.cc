@@ -1830,8 +1830,8 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
     return (amnt >= (*stat_ptr + mod));
 }
 
-static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false,
-                            bool non_fatal = false, bool delete_mut = false)
+static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false,
+                             bool non_fatal = false, bool delete_mut = false)
 {
     if (mutat == RANDOM_MUTATION)
         return (false);
@@ -1856,7 +1856,7 @@ static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false,
     return (x_chance_in_y(rarity, 10));
 }
 
-static mutation_type get_random_xom_mutation(bool non_fatal = false)
+static mutation_type _get_random_xom_mutation(bool non_fatal = false)
 {
     const mutation_type bad_muts[] = {
         MUT_SLOW_HEALING,  MUT_WEAK,          MUT_DOPEY,
@@ -1875,14 +1875,14 @@ static mutation_type get_random_xom_mutation(bool non_fatal = false)
         else if (one_chance_in(5))
             mutat = RANDOM_ELEMENT(bad_muts);
     }
-    while (!accept_mutation(mutat, false, non_fatal));
+    while (!_accept_mutation(mutat, false, non_fatal));
 
     return (mutat);
 }
 
-static mutation_type get_random_mutation(bool prefer_good,
-                                         int preferred_multiplier,
-                                         bool non_fatal = false)
+static mutation_type _get_random_mutation(bool prefer_good,
+                                          int preferred_multiplier,
+                                          bool non_fatal = false)
 {
     int cweight = 0;
     mutation_type chosen = NUM_MUTATIONS;
@@ -1892,7 +1892,7 @@ static mutation_type get_random_mutation(bool prefer_good,
             continue;
 
         const mutation_type curr = mutation_defs[i].mutation;
-        if (!accept_mutation(curr, true, non_fatal))
+        if (!_accept_mutation(curr, true, non_fatal))
             continue;
 
         const bool weighted = mutation_defs[i].bad != prefer_good;
@@ -1905,6 +1905,7 @@ static mutation_type get_random_mutation(bool prefer_good,
         if (x_chance_in_y(weight, cweight))
             chosen = curr;
     }
+
     return (chosen);
 }
 
@@ -2150,22 +2151,22 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             if (one_chance_in(1000))
                 return (false);
         }
-        while (!accept_mutation(mutat, false, non_fatal));
+        while (!_accept_mutation(mutat, false, non_fatal));
     }
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
-        if ((mutat = get_random_xom_mutation(non_fatal)) == NUM_MUTATIONS)
+        if ((mutat = _get_random_xom_mutation(non_fatal)) == NUM_MUTATIONS)
             return (false);
     }
     else if (which_mutation == RANDOM_GOOD_MUTATION)
     {
-        mutat = get_random_mutation(true, 500, non_fatal);
+        mutat = _get_random_mutation(true, 500, non_fatal);
         if (mutat == NUM_MUTATIONS)
             return (false);
     }
     else if (which_mutation == RANDOM_BAD_MUTATION)
     {
-        mutat = get_random_mutation(false, 500, non_fatal);
+        mutat = _get_random_mutation(false, 500, non_fatal);
         if (mutat == NUM_MUTATIONS)
             return (false);
     }
@@ -2354,7 +2355,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                 continue;
             }
 
-            if (!accept_mutation(mutat, true, non_fatal, true))
+            if (!_accept_mutation(mutat, true, non_fatal, true))
                 continue;
 
             if (you.demon_pow[mutat] >= you.mutation[mutat])
@@ -2963,7 +2964,7 @@ bool give_bad_mutation(bool failMsg, bool force_mutation, bool non_fatal)
 
     do
         mutat = RANDOM_ELEMENT(bad_muts);
-    while (non_fatal && !accept_mutation(mutat, true, true));
+    while (non_fatal && !_accept_mutation(mutat, true, true));
 
     const bool result = mutate(mutat, failMsg, force_mutation);
     if (result)
