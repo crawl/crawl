@@ -739,11 +739,7 @@ bool vampiric_drain(int pow, const dist &vmove)
 
     if (success)
     {
-        if (!monster->alive()
-            || (mons_holiness(monster) != MH_NATURAL
-                && !mons_is_unholy(monster))
-            || mons_res_negative_energy(monster)
-            || mons_is_summoned(monster))
+        if (!monster->alive())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
@@ -753,6 +749,13 @@ bool vampiric_drain(int pow, const dist &vmove)
         {
             mpr("Aaaarggghhhhh!");
             dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
+            return (false);
+        }
+
+        if (mons_res_negative_energy(monster)
+            || mons_is_summoned(monster))
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
 
