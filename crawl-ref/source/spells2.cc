@@ -756,7 +756,7 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
-        // The practical maximum of this is about 25 (pow @ 100).  -- bwr
+        // The practical maximum of this is about 25 (pow @ 100). - bwr
         int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
         hp_gain = std::min(monster->hit_points, hp_gain);
