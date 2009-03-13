@@ -1873,12 +1873,15 @@ static void _do_god_gift(bool prayed_for)
 
         case GOD_ZIN:
             //jmf: this "good" god will feed you (a la Nethack)
-            if (zin_sustenance())
+            if (prayed_for && zin_sustenance())
             {
                 god_speaks(you.religion, "Your stomach feels content.");
                 set_hunger(6000, true);
                 lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
                 _inc_gift_timeout(30 + random2avg(10, 2));
+            }
+            else
+            {
             }
             break;
 
@@ -3319,7 +3322,7 @@ void gain_piety(int pgn)
         // may look backwards.
         const int old_hysteresis = you.piety_hysteresis;
         you.piety_hysteresis =
-            (unsigned char) std::max<int>( 0, you.piety_hysteresis - pgn );
+            (unsigned char)std::max<int>(0, you.piety_hysteresis - pgn);
         const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
         pgn -= pgn_borrowed;
 
@@ -4153,6 +4156,26 @@ static bool _tso_retribution()
     return (false);
 }
 
+static bool _zin_remove_good_mutations()
+{
+    simple_god_message(" draws some chaos from your body!", GOD_ZIN);
+
+    bool success = false;
+    for (int i = 0; i < 7; ++i)
+    {
+        if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION))
+            success = true;
+    }
+
+    if (success && !how_mutated())
+    {
+        simple_god_message(" rids your body of chaos!", GOD_ZIN);
+        dec_penance(GOD_ZIN, 1);
+    }
+
+    return (success);
+}
+
 static bool _zin_retribution()
 {
     // surveillance/creeping doom theme
@@ -4160,33 +4183,16 @@ static bool _zin_retribution()
 
     int punishment = random2(10);
 
-    // If little mutated or can't unmutate, do something else instead.
-    if (punishment < 2
-        && (how_mutated() <= random2(3)
-            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
-    {
+    // If we can't unmutate, do something else instead.
+    if (punishment < 2 && player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
         punishment = random2(8) + 2;
-    }
 
     switch (punishment)
     {
     case 0:
     case 1: // Remove good mutations. (20%)
-    {
-        simple_god_message(" draws some chaos from your body!", god);
-        bool success = false;
-        for (int i = 0; i < 7; ++i)
-            if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION))
-                success = true;
-
-        if (success && !how_mutated())
-        {
-            simple_god_message(" rids your body of chaos!", god);
-            // Lower penance a bit more for being particularly successful.
-            dec_penance(god, 1);
-        }
+        _zin_remove_good_mutations();
         break;
-    }
     case 2:
     case 3:
     case 4: // Summon eyes or bugs (pestilence). (30%)
