@@ -4156,7 +4156,7 @@ static bool _tso_retribution()
 static void _zin_remove_good_mutations()
 {
     if (!how_mutated() || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
-        return (false);
+        return;
 
     bool success = false;
 
