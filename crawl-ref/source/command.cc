@@ -2056,6 +2056,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     // Initialize colour to quiet some Valgrind warnings
     unsigned short colour = BLACK;
     std::string item_types =
+        "\n"
         "<h>Item types (and common commands)\n"
         "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
         "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>()</w> cycle)\n"
@@ -2168,7 +2169,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>r</w> : Read a scroll or book\n"
             "<w>M</w> : Memorise a spell from a book\n"
             "<w>w</w> : Wield an item ( <w>-</w> for none)\n"
-            "<w>'</w> : wield item a, or switch to b\n"
+            "<w>'</w> : wield item a, or switch to b \n"
+            "    (use <w>=</w> to assign slots)\n"
             "<w>v</w> : eVoke power of wielded item\n"
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
             "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n",
@@ -2180,16 +2182,17 @@ static void _add_formatted_keyhelp(column_composer &cols)
     interact =
             "<h>Item Interaction (floor):\n"
             "<w>,</w> : pick up items (also <w>g</w>) \n"
-            "    (press twice for pick up menu) \n"
+            "    (press twice for pick up menu)\n"
             "<w>d</w> : Drop an item\n"
-            "<w>d#</w>: Drop exact number of items \n"
-            "<w>c</w> : Chop up a corpse ";
+            "<w>d#</w>: Drop exact number of items\n"
+            "<w>c</w> : Chop up a corpse";
 
     if (you.species == SP_VAMPIRE && you.experience >= 6)
-        interact += "or bottle its blood ";
+        interact += " or bottle its blood";
 
     interact +=
-            "\n<w>e</w> : Eat food from floor \n";
+            "\n"
+            "<w>e</w> : Eat food from floor\n";
 
     cols.add_formatted(
             1, interact,

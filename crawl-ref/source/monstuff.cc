@@ -1889,9 +1889,7 @@ static bool _valid_morph( monsters *monster, int new_mclass )
 
         // Other poly-unsuitable things.
         || new_mclass == MONS_ORB_GUARDIAN
-        || new_mclass == MONS_ORANGE_STATUE
-        || new_mclass == MONS_SILVER_STATUE
-        || new_mclass == MONS_ICE_STATUE)
+        || mons_is_statue(new_mclass))
     {
         return (false);
     }
@@ -4646,9 +4644,8 @@ static void _handle_movement(monsters *monster)
         if (crawl_state.arena && Options.arena_force_ai
             && !mons_is_stationary(monster))
         {
-            const bool ranged =
-                mons_has_ranged_attack(monster)
-                || mons_has_ranged_spell(monster);
+            const bool ranged = (mons_has_ranged_attack(monster)
+                                 || mons_has_ranged_spell(monster));
 
             // Smiters are happy if they have clear visibility through
             // glass, but other monsters must go around.
@@ -4657,8 +4654,8 @@ static void _handle_movement(monsters *monster)
             // Monsters in the arena are smarter than the norm and
             // always pathfind to their targets.
             if (delta.abs() > 2
-                && (!ranged ||
-                    !monster->mon_see_grid(monster->target, !glass_ok)))
+                && (!ranged
+                    || !monster->mon_see_grid(monster->target, !glass_ok)))
             {
                 monster_pathfind mp;
                 if (mp.init_pathfind(monster, monster->target))

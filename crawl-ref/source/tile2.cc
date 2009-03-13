@@ -176,9 +176,6 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_TOMB;
         return;
 
-    case BRANCH_INFERNO:
-    case BRANCH_THE_PIT:
-    case BRANCH_CAVERNS:
     case NUM_BRANCHES:
         break;
     }

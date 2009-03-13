@@ -120,10 +120,11 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing)
     cgotoxy(1, numlines, GOTO_CRT);
 
     fs = formatted_string::parse_string(
-            "[<w>?</w>/<w>*</w>]           Inventory  [<w>\\</w>] Known Items    "
 #ifdef USE_TILE
+            "[<w>?</w>/<w>*</w>]           Inventory  [<w>\\</w>] Known Items    "
             "[<w>Enter</w>/<w>L-Click</w>] Make Purchase");
 #else
+            "[<w>?</w>/<w>*</w>]   Inventory  [<w>\\</w>] Known Items    "
             "[<w>Enter</w>] Make Purchase");
 #endif
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
@@ -1742,12 +1743,12 @@ unsigned int item_value( item_def item, bool ident )
 static void _delete_shop(int i)
 {
     grd(you.pos()) = DNGN_ABANDONED_SHOP;
-//    env.shop.erase(i);
     unnotice_feature(level_pos(level_id::current(), you.pos()));
 }
 
 void shop()
 {
+    flush_prev_message();
     int i;
 
     for (i = 0; i < MAX_SHOPS; i++)

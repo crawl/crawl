@@ -1335,7 +1335,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_INTERRUPTIBLE:
     case DELAY_UNINTERRUPTIBLE:
-        // these are simple delays that have no effect when complete
+        // These are simple delays that have no effect when complete.
         break;
 
     default:
