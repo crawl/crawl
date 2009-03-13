@@ -4153,11 +4153,12 @@ static bool _tso_retribution()
     return (false);
 }
 
-static bool _zin_remove_good_mutations()
+static void _zin_remove_good_mutations()
 {
+    bool success = false;
+
     simple_god_message(" draws some chaos from your body!", GOD_ZIN);
 
-    bool success = false;
     for (int i = 0; i < 7; ++i)
     {
         if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION))
@@ -4169,8 +4170,6 @@ static bool _zin_remove_good_mutations()
         simple_god_message(" rids your body of chaos!", GOD_ZIN);
         dec_penance(GOD_ZIN, 1);
     }
-
-    return (success);
 }
 
 static bool _zin_retribution()
