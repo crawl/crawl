@@ -1873,16 +1873,12 @@ static void _do_god_gift(bool prayed_for)
 
         case GOD_ZIN:
             //jmf: this "good" god will feed you (a la Nethack)
-            if (prayed_for)
+            if (prayed_for && zin_sustenance())
             {
-                if (zin_sustenance())
-                {
-                    god_speaks(you.religion, "Your stomach feels content.");
-                    set_hunger(6000, true);
-                    lose_piety(5 + random2avg(10, 2)
-                                 + (you.gift_timeout ? 5 : 0));
-                    _inc_gift_timeout(30 + random2avg(10, 2));
-                }
+                god_speaks(you.religion, "Your stomach feels content.");
+                set_hunger(6000, true);
+                lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
+                _inc_gift_timeout(30 + random2avg(10, 2));
             }
             break;
 
