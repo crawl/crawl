@@ -437,7 +437,7 @@ static bool _xom_annoyance_gift(int power)
     return (false);
 }
 
-static bool _xom_gives_item(int power)
+static bool _xom_give_item(int power)
 {
     if (_xom_annoyance_gift(power))
         return (true);
@@ -1000,7 +1000,7 @@ static bool _xom_rearrange_pieces(int sever)
     return (rc);
 }
 
-static bool _xom_give_mutation(bool good)
+static bool _xom_give_mutations(bool good)
 {
     bool rc = false;
 
@@ -1135,15 +1135,13 @@ static bool _xom_is_good(int sever, int tension)
         done = true;
     }
     else if (x_chance_in_y(4, sever))
-    {
         done = _xom_confuse_monsters(sever);
-    }
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(5, sever))
         done = _xom_send_allies(sever);
     else if (x_chance_in_y(6, sever))
     {
-        _xom_gives_item(sever);
+        _xom_give_item(sever);
         done = true;
     }
     // It's pointless to send in help if there's no danger.
@@ -1153,7 +1151,7 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_polymorph_nearby_monster(true);
     else if (x_chance_in_y(9, sever))
     {
-        _xom_gives_item(sever);
+        _xom_give_item(sever);
         done = true;
     }
     else if (x_chance_in_y(10, sever) && (you.level_type != LEVEL_ABYSS))
@@ -1184,9 +1182,7 @@ static bool _xom_is_good(int sever, int tension)
         }
     }
     else if (x_chance_in_y(13, sever) && x_chance_in_y(16, how_mutated()))
-    {
-        done = _xom_give_mutation(true);
-    }
+        done = _xom_give_mutations(true);
     // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(14, sever))
         done = _xom_send_major_ally(sever);
@@ -1208,7 +1204,7 @@ static bool _could_wear_eq(equipment_type eq)
 static item_def* _tran_get_eq(equipment_type eq)
 {
     if (you_tran_can_wear(eq, true))
-        return you.slot_item(eq);
+        return (you.slot_item(eq));
     else
         return (NULL);
 }
@@ -1804,9 +1800,7 @@ static bool _xom_is_bad(int sever, int tension)
             done = true;
         }
         else if (x_chance_in_y(5, sever))
-        {
             done = _xom_lose_stats();
-        }
         else if (x_chance_in_y(6, sever))
         {
             _xom_miscast(2, nasty);
@@ -1825,34 +1819,21 @@ static bool _xom_is_bad(int sever, int tension)
                 more();
             }
             while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
-
             done = true;
         }
         else if (x_chance_in_y(8, sever))
-        {
             done = _xom_chaos_upgrade_nearby_monster();
-        }
         else if (x_chance_in_y(9, sever))
-        {
-            done = _xom_give_mutation(false);
-        }
+            done = _xom_give_mutations(false);
         else if (x_chance_in_y(10, sever))
-        {
             done = _xom_polymorph_nearby_monster(false);
-        }
         // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(11, sever))
-        {
             done = _xom_player_confusion_effect(sever);
-        }
         else if (x_chance_in_y(12, sever))
-        {
             done = _xom_draining_torment_effect(sever);
-        }
         else if (x_chance_in_y(13, sever))
-        {
             done = _xom_summon_hostiles(sever);
-        }
         else if (x_chance_in_y(14, sever))
         {
             _xom_miscast(3, nasty);
