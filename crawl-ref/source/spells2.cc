@@ -48,12 +48,11 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
-int detect_traps( int pow )
+int detect_traps(int pow)
 {
-    int traps_found = 0;
+    pow = std::min(50, pow);
 
-    if (pow > 50)
-        pow = 50;
+    int traps_found = 0;
 
     const int range = 8 + random2(8) + pow;
 
@@ -76,14 +75,13 @@ int detect_traps( int pow )
     return (traps_found);
 }
 
-int detect_items( int pow )
+int detect_items(int pow)
 {
     int items_found = 0;
-    const int map_radius  = 8 + random2(8) + pow;
+    const int map_radius = 8 + random2(8) + pow;
 
-    for ( radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri )
+    for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
     {
-
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
@@ -115,10 +113,9 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
     mprf(MSGCH_DIAGNOSTICS, "dc_fuzz: Power is %d", pow);
 #endif
 
-    if (pow < 1)
-        pow = 1;
+    pow = std::max(1, pow);
 
-    *fuzz_radius = pow >= 50? 1 : 2;
+    *fuzz_radius = pow >= 50 ? 1 : 2;
 
     // Fuzz chance starts off at 100% and declines to a low of 10% for
     // obscenely powerful castings (pow caps around the 60 mark).
@@ -182,13 +179,13 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
     return (found_good);
 }
 
-int detect_creatures( int pow, bool telepathic )
+int detect_creatures(int pow, bool telepathic)
 {
     int fuzz_radius = 0, fuzz_chance = 0;
     if (!telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
-    int creatures_found  = 0;
+    int creatures_found = 0;
     const int map_radius = 8 + random2(8) + pow;
 
     // Clear the map so detect creatures is more useful and the detection

@@ -22,9 +22,9 @@ void corpse_rot();
 
 struct dist;
 bool vampiric_drain(int pow, const dist &vmove);
-int detect_creatures( int pow, bool telepathic = false );
-int detect_items( int pow );
-int detect_traps( int pow );
+int detect_creatures(int pow, bool telepathic = false);
+int detect_items(int pow);
+int detect_traps(int pow);
 void cast_refrigeration(int pow);
 void cast_toxic_radiance(void);
 void drain_life(int pow);
