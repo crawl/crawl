@@ -706,7 +706,7 @@ void drain_life(int pow)
         }
     }
 
-    hp_gain /= 2;
+    hp_gain = hp_gain / 2 + 1;
 
     hp_gain = std::min(pow * 2, hp_gain);
 
@@ -776,7 +776,7 @@ bool vampiric_drain(int pow, const dist &vmove)
         if (monster->alive())
             print_wounds(monster);
 
-        inc_hp(inflicted / 2, false);
+        inc_hp(inflicted / 2 + 1, false);
     }
 
     return (success);
