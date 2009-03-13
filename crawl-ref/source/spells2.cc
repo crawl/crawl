@@ -143,8 +143,8 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
         // the monster where it really is (and may fail).
         for (int itry = 0; itry < 5; ++itry)
         {
-            place.set( where.x + random2(fuzz_diam) - fuzz_radius,
-                       where.y + random2(fuzz_diam) - fuzz_radius );
+            place.set(where.x + random2(fuzz_diam) - fuzz_radius,
+                      where.y + random2(fuzz_diam) - fuzz_radius);
 
             // If the player would be able to see a monster at this location
             // don't place it there.
@@ -752,7 +752,8 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
-        if (mons_res_negative_energy(monster)
+        if (mons_holiness(monster) != MH_NATURAL
+            || mons_res_negative_energy(monster)
             || mons_is_summoned(monster))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -765,7 +766,7 @@ bool vampiric_drain(int pow, const dist &vmove)
         hp_gain = std::min(monster->hit_points, hp_gain);
         hp_gain = std::min(you.hp_max - you.hp, hp_gain);
 
-        if (hp_gain == 0)
+        if (!hp_gain)
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
