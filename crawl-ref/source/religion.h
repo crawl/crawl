@@ -162,5 +162,5 @@ bool god_likes_items(god_type god);
 void religion_turn_start();
 void religion_turn_end();
 
-int  get_tension(god_type god = you.religion);
+int get_tension(god_type god = you.religion);
 #endif
