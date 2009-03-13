@@ -4146,7 +4146,7 @@ static bool _tso_retribution()
         else
         {
             god_speaks(god, "You feel the Shining One's silent rage upon you!");
-            cast_silence( 25 );
+            cast_silence(25);
         }
         break;
     }
