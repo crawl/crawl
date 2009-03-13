@@ -4183,22 +4183,18 @@ static bool _zin_retribution()
     int punishment = random2(10);
 
     // If not mutated or can't unmutate, do something else instead.
-    if (punishment < 2
+    if (punishment > 7
         && (!how_mutated()
             || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
     {
-        punishment = random2(8) + 2;
+        punishment = random2(8);
     }
 
     switch (punishment)
     {
     case 0:
-    case 1: // Remove good mutations. (20%)
-        _zin_remove_good_mutations();
-        break;
-    case 2:
-    case 3:
-    case 4: // Summon eyes or bugs (pestilence). (30%)
+    case 1:
+    case 2: // summon eyes or pestilence (30%)
         if (random2(you.experience_level) > 7 && !one_chance_in(5))
         {
             const monster_type eyes[] = {
@@ -4241,8 +4237,8 @@ static bool _zin_retribution()
                                        : "'s plague fails to arrive.", god);
         }
         break;
-    case 5:
-    case 6: // recital (20%)
+    case 3:
+    case 4: // recital (20%)
         simple_god_message(" recites the Axioms of Law to you!", god);
         switch (random2(3))
         {
@@ -4257,14 +4253,18 @@ static bool _zin_retribution()
             break;
         }
         break;
-    case 7:
-    case 8: // famine (20%)
+    case 5:
+    case 6: // famine (20%)
         simple_god_message(" sends a famine down upon you!", god);
         make_hungry(you.hunger / 2, false);
         break;
-    case 9: // noisiness (10%)
+    case 7: // moisiness (10%)
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
+        break;
+    case 8:
+    case 9: // remove good mutations (20%)
+        _zin_remove_good_mutations();
         break;
     }
     return (false);
