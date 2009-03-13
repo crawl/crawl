@@ -4346,7 +4346,7 @@ bool player_is_airborne(void)
     return you.airborne();
 }
 
-bool player_has_spell( spell_type spell )
+bool player_has_spell(spell_type spell)
 {
     return you.has_spell(spell);
 }

@@ -1861,7 +1861,7 @@ static void _do_god_gift(bool prayed_for)
     // Consider a gift if we don't have a timeout and weren't already
     // praying when we prayed.
     if (!player_under_penance() && !you.gift_timeout
-        || you.religion == GOD_ZIN)
+        || (prayed_for && you.religion == GOD_ZIN))
     {
         bool success = false;
 
@@ -1873,12 +1873,16 @@ static void _do_god_gift(bool prayed_for)
 
         case GOD_ZIN:
             //jmf: this "good" god will feed you (a la Nethack)
-            if (zin_sustenance())
+            if (prayed_for)
             {
-                god_speaks(you.religion, "Your stomach feels content.");
-                set_hunger(6000, true);
-                lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
-                _inc_gift_timeout(30 + random2avg(10, 2));
+                if (zin_sustenance())
+                {
+                    god_speaks(you.religion, "Your stomach feels content.");
+                    set_hunger(6000, true);
+                    lose_piety(5 + random2avg(10, 2)
+                                 + (you.gift_timeout ? 5 : 0));
+                    _inc_gift_timeout(30 + random2avg(10, 2));
+                }
             }
             break;
 

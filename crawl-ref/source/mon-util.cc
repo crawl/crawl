@@ -586,12 +586,20 @@ bool mons_is_native_in_branch(const monsters *monster,
 
 bool mons_is_chaotic(const monsters *mon)
 {
-    if (mons_is_shapeshifter(mon) || mon->has_spell(SPELL_POLYMORPH_OTHER))
+    if (mons_is_shapeshifter(mon))
         return (true);
 
-    const int attk_flavour = mons_attack_spec(mon, 0).flavour;
-    return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT
-            || attk_flavour == AF_CHAOS);
+    if (mon->has_spell(SPELL_POLYMORPH_OTHER))
+        return (true);
+
+    if (mon->has_attack_flavour(AF_MUTATE)
+        || mon->has_attack_flavour(AF_ROT)
+        || mon->has_attack_flavour(AF_CHAOS))
+    {
+        return (true);
+    }
+
+    return (false);
 }
 
 bool mons_is_poisoner(const monsters *mon)
@@ -599,12 +607,16 @@ bool mons_is_poisoner(const monsters *mon)
     if (mons_corpse_effect(mon->type) == CE_POISONOUS)
         return (true);
 
-    const int attk_flavour = mons_attack_spec(mon, 0).flavour;
-    return (attk_flavour == AF_POISON
-            || attk_flavour == AF_POISON_NASTY
-            || attk_flavour == AF_POISON_MEDIUM
-            || attk_flavour == AF_POISON_STRONG
-            || attk_flavour == AF_POISON_STR);
+    if (mon->has_attack_flavour(AF_POISON)
+        || mon->has_attack_flavour(AF_POISON_NASTY)
+        || mon->has_attack_flavour(AF_POISON_MEDIUM)
+        || mon->has_attack_flavour(AF_POISON_STRONG)
+        || mon->has_attack_flavour(AF_POISON_STR))
+    {
+        return (true);
+    }
+
+    return (false);
 }
 
 bool mons_is_icy(int mc)
@@ -5717,6 +5729,18 @@ bool monsters::has_spell(spell_type spell) const
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         if (spells[i] == spell)
             return (true);
+
+    return (false);
+}
+
+bool monsters::has_attack_flavour(int flavour) const
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        const int attk_flavour = mons_attack_spec(this, i).flavour;
+        if (attk_flavour == flavour)
+            return (true);
+    }
 
     return (false);
 }

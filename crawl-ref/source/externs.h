@@ -1494,6 +1494,8 @@ public:
 
     bool has_spell(spell_type spell) const;
 
+    bool has_attack_flavour(int flavour) const;
+
     bool can_throw_large_rocks() const;
 
     int armour_class() const;
