@@ -466,7 +466,7 @@ static void _record_monster_by_name(counted_monster_list &list,
             return;
         }
     }
-    list.push_back( counted_monster(mons, 1) );
+    list.push_back(counted_monster(mons, 1));
 }
 
 static int _monster_count(const counted_monster_list &list)
@@ -492,14 +492,14 @@ static std::string _describe_monsters(const counted_monster_list &list)
         if (i != list.begin())
         {
             ++i;
-            out << (i == list.end()? " and " : ", ");
+            out << (i == list.end() ? " and " : ", ");
         }
         else
             ++i;
 
         const std::string name =
-            cm.second > 1? pluralise(cm.first->name(desc))
-            : cm.first->name(desc);
+            cm.second > 1 ? pluralise(cm.first->name(desc))
+                          : cm.first->name(desc);
         out << name;
     }
     return (out.str());
