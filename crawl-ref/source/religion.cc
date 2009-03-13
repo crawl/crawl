@@ -4258,7 +4258,7 @@ static bool _zin_retribution()
         simple_god_message(" sends a famine down upon you!", god);
         make_hungry(you.hunger / 2, false);
         break;
-    case 7: // moisiness (10%)
+    case 7: // noisiness (10%)
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
