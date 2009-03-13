@@ -757,26 +757,30 @@ bool vampiric_drain(int pow, const dist &vmove)
         }
 
         // The practical maximum of this is about 25 (pow @ 100).  -- bwr
-        int inflicted = 3 + random2avg(9, 2) + random2(pow) / 7;
+        int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
-        inflicted = std::min(monster->hit_points, inflicted);
-        inflicted = std::min(you.hp_max - you.hp, inflicted);
+        hp_gain = std::min(monster->hit_points, hp_gain);
+        hp_gain = std::min(you.hp_max - you.hp, hp_gain);
 
-        if (inflicted == 0)
+        if (hp_gain == 0)
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
 
-        mprf("You feel life coursing from %s into your body!",
-             monster->name(DESC_NOCAP_THE).c_str());
-
-        monster->hurt(&you, inflicted);
+        monster->hurt(&you, hp_gain);
 
         if (monster->alive())
             print_wounds(monster);
 
-        inc_hp(inflicted / 2, false);
+        hp_gain /= 2;
+
+        if (hp_gain)
+        {
+            mprf("You feel life coursing from %s into your body!",
+                 monster->name(DESC_NOCAP_THE).c_str());
+            inc_hp(hp_gain, false);
+        }
     }
 
     return (success);
