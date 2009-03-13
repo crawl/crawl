@@ -706,7 +706,7 @@ void drain_life(int pow)
         }
     }
 
-    hp_gain = hp_gain / 2;
+    hp_gain /= 2;
 
     hp_gain = std::min(pow * 2, hp_gain);
 
