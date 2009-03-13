@@ -4155,15 +4155,18 @@ static bool _tso_retribution()
 
 static void _zin_remove_good_mutations()
 {
+    if (!how_mutated() || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+        return (false);
+
     bool success = false;
 
     simple_god_message(" draws some chaos from your body!", GOD_ZIN);
 
     bool failMsg = true;
 
-    for (int i = 0; i < 8; ++i)
+    for (int i = 7; i >= 0; --i)
     {
-        if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION, failMsg))
+        if (i <= random2(10) && delete_mutation(RANDOM_GOOD_MUTATION, failMsg))
             success = true;
         else
             failMsg = false;
