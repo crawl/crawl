@@ -586,17 +586,9 @@ mutation_def mutation_defs[] = {
       "scream"
     },
     { MUT_CLARITY,                    6,  1, false, false,
-      {"You possess an exceptional clarity of mind.",
-       "You possess an unnatural clarity of mind.",
-       "You possess a supernatural clarity of mind."},
-
-      {"Your thoughts seem clearer.",
-       "Your thoughts seem clearer.",
-       "Your thoughts seem clearer."},
-
-      {"Your thinking seems confused.",
-       "Your thinking seems confused.",
-       "Your thinking seems confused."},
+      {"You possess an exceptional clarity of mind.", "", ""},
+      {"Your thoughts seem clearer.", "", ""},
+      {"Your thinking seems confused.", "", ""},
 
       "clarity"
     },

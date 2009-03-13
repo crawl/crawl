@@ -2768,8 +2768,7 @@ std::string _status_mut_abilities()
                 current = info;
                 break;
             case MUT_CLARITY:
-                snprintf(info, INFO_SIZE, "clarity %d", level);
-                current = info;
+                current = "clarity";
                 break;
             case MUT_BERSERK:
                 snprintf(info, INFO_SIZE, "berserk %d", level);
