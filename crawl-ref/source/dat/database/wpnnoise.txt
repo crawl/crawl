@@ -1,14 +1,14 @@
 ############################################################
-# As of Stone Soup 0.3 the previously hardcoded monster 
-# speech has been outsourced. This makes changing existing 
+# As of Stone Soup 0.3 the previously hardcoded monster
+# speech has been outsourced. This makes changing existing
 # messages, and adding new ones really easy.
 #
 # wpnnoise.txt contains the messages of randart weapons with
-# the noise property and of the Singing Sword, one of 
+# the noise property and of the Singing Sword, one of
 # Crawl's fixed artefacts.
 #
-# For an explanation of how to read wpnnoise.txt and how to 
-# add new messages, see monster_speech.txt in the docs 
+# For an explanation of how to read wpnnoise.txt and how to
+# add new messages, see monster_speech.txt in the docs
 # directory
 ############################################################
 %%%%
@@ -47,7 +47,7 @@ weapon_sings
 w:60
 @singing@
 
-#instrumental sounds 
+#instrumental sounds
 w:15
 @singing_sword_instruments@
 
@@ -242,7 +242,7 @@ speaking
 
 @The_weapon@ spouts musical wisdom.
 
-@The_weapon@ @points_out@ the lack of singing @not_swords@. 
+@The_weapon@ @points_out@ the lack of singing @not_swords@.
 
 @The_weapon@ embarks on a lengthy monologue about murderous music.
 
@@ -396,7 +396,7 @@ real_song
 # end Singing Sword
 %%%%
 ############################################################
-# general chatter for noisy weapons, 
+# general chatter for noisy weapons,
 # including Singing Sword
 ############################################################
 weapon_talks
@@ -760,7 +760,7 @@ several
 
 three or four
 
-a multitude of 
+a multitude of
 %%%%
 kind_of_scales
 

@@ -3,12 +3,12 @@ stash-search.prompt
 
 <h>Searching the stash-tracker</h>
 
-You can search for items and dungeon features by name (or a substring of the 
-name). In the list of search results, you can select a search result by its 
+You can search for items and dungeon features by name (or a substring of the
+name). In the list of search results, you can select a search result by its
 hotkey to travel to its location.
 
-You can also examine shops and items in the search results by pressing <w>?</w> and 
-then hitting the hotkey for the search result. This will give a description 
+You can also examine shops and items in the search results by pressing <w>?</w> and
+then hitting the hotkey for the search result. This will give a description
 of the item or the contents of the shop.
 
 Some examples of search strings:
@@ -33,7 +33,7 @@ or rods that contain the spell.
 You can search for artefact item properties (such as <w>prevents.*teleport</w>)
 to find artefacts that have the property.
 
-If you're using stash.lua (which is the default), you can also search by 
+If you're using stash.lua (which is the default), you can also search by
 some additional item properties: <w>artefact</w> will find identified artefacts.
 Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
 train that skill.
@@ -44,8 +44,8 @@ initfile, you can also search by item types such as <w>book</w> or <w>jewellery<
 
 <h>Finding Dungeon Features:</h>
 
-You can search for dungeon features by name: all shops will be found by a 
-search for <w>shop</w> (including shops that do not have "shop" in their name); 
+You can search for dungeon features by name: all shops will be found by a
+search for <w>shop</w> (including shops that do not have "shop" in their name);
 other dungeon features can also be found by name: <w>fountain</w>, <w>axe trap</w>,
 <w>altar</w>, etc. You can also search for altars by deity name: <w>Zin</w>.
 
@@ -122,8 +122,8 @@ butchering
 <w>y, c</w>: Butcher the selected corpse.
 <w>a</w>   : Butcher this corpse and all the ones following in the stack.
 <w>q</w>   : Quit the prompt (don't butcher anything).
-<w>n</w>   : Don't butcher this corpse, skip to the next one. 
-      (This is the default behaviour if you answer with anything not 
+<w>n</w>   : Don't butcher this corpse, skip to the next one.
+      (This is the default behaviour if you answer with anything not
        listed here.)
 
 <h>Special information for Vampires</h>
@@ -134,7 +134,7 @@ butchering
       will be skipped.
 
 <h>Notes for Tiles</h>
-If you are playing with Tiles you can butcher (or bottle) a single 
-corpse on the ground by clicking the <w>left mouse button</w> while pressing 
+If you are playing with Tiles you can butcher (or bottle) a single
+corpse on the ground by clicking the <w>left mouse button</w> while pressing
 <w>Shift</w>.
 %%%%

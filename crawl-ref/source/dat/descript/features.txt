@@ -44,21 +44,21 @@ A gate to the Realm of Zot
 
 Zot is the final stage as its deepest level houses the infamous Orb of Zot.
 Both the Orb and this Realm have a fearsome and questionable reputation but
-one piece of information seems to be for certain: the monsters inhabiting 
+one piece of information seems to be for certain: the monsters inhabiting
 this area and protecting the orb are strong and strange -- some of them nowhere
 encountered but here.
 %%%%
 A gateway to a bazaar
 
-Aside from the vendors who've set up their stores at various places in the 
-dungeon, there are others trying to make a living by traveling from place 
-to place. Bazaars feature a number of different shops and often have better 
-stock than the sedentary ones, sometimes even at a bargain. 
-Once you hear the clinking of coins, be sure to hurry up and find the 
+Aside from the vendors who've set up their stores at various places in the
+dungeon, there are others trying to make a living by traveling from place
+to place. Bazaars feature a number of different shops and often have better
+stock than the sedentary ones, sometimes even at a bargain.
+Once you hear the clinking of coins, be sure to hurry up and find the
 impromptu marketplace before the caravan moves on!
 
-Also be warned that their nomadic lifestyle has taught these sellers to 
-appropriate any items an adventurer might leave behind, and then leave 
+Also be warned that their nomadic lifestyle has taught these sellers to
+appropriate any items an adventurer might leave behind, and then leave
 quickly, probably to sell them elsewhere.
 %%%%
 A gateway leading out of the Abyss
@@ -68,7 +68,7 @@ impermanent landscape.
 %%%%
 A gateway to Gehenna
 
-You can feel the heat. Gehenna seems to be made out of nothing but flames, 
+You can feel the heat. Gehenna seems to be made out of nothing but flames,
 lava and hellfire.
 %%%%
 A gateway to Hell
@@ -88,7 +88,7 @@ From the frost-bitten lands, a cold chill touches your soul.
 A glowing drain
 
 Every settlement brings forth the unpleasant sewers and drains, ignored by
-most but hideaways for others. Old tales speak of dangerous creatures, 
+most but hideaways for others. Old tales speak of dangerous creatures,
 bathing in disgustingly smelling green water, preying on each other without mercy.
 The tales also allude to valuable items left by daring and unfortunate
 visitors, left to grow mildew in the damp caverns.
@@ -195,8 +195,8 @@ creatures that bite, stab and maul.
 %%%%
 A staircase to the Slime Pits
 
-An entrance to the amorphous realm of acids, jellies and slimes. 
-Any trace of intelligent beings has long been dissolved. Still, 
+An entrance to the amorphous realm of acids, jellies and slimes.
+Any trace of intelligent beings has long been dissolved. Still,
 there are rumours of great treasures deep down, hidden safely away
 in secret chambers without door or window for acid to leak in.
 %%%%
@@ -281,7 +281,7 @@ Floor
 %%%%
 Some deep water
 
-This water is as deep as it is dangerous. No sane traveller would try to set 
+This water is as deep as it is dangerous. No sane traveller would try to set
 foot into it, apart from those who fly or swim. Let it be a warning for you:
 many confused adventurers found their death at the depths, and an untimely
 end of levitation drowned even more hopeful trespassers.

@@ -41,14 +41,14 @@ present, the entry is located between Lair:2 and Lair:7.
 %%%%
 Shoals
 
-From afar you hear the steady sounds of waves and smell the salty spray. 
-Upon reaching the Shoals, you are impressed by exotic underground beaches, 
-making up a few islands in a vast sea. Out of a sudden, a bloodcurdling 
-scream fills the air, followed by a gurgle. Anxiously, you look around and 
+From afar you hear the steady sounds of waves and smell the salty spray.
+Upon reaching the Shoals, you are impressed by exotic underground beaches,
+making up a few islands in a vast sea. Out of a sudden, a bloodcurdling
+scream fills the air, followed by a gurgle. Anxiously, you look around and
 wonder: who is the predator? And who is the prey?
 
 The Shoals are five levels deep and contain the barnacled rune. A dungeon
-features only one of the Swamp or Shoals branches. If the Shoals are 
+features only one of the Swamp or Shoals branches. If the Shoals are
 present, the entry is located between Lair:2 and Lair:7.
 %%%%
 Slime Pits
@@ -70,9 +70,9 @@ entry is between Lair:3 and Lair:8.
 %%%%
 Hive
 
-You hear a many-fold buzzing. 
+You hear a many-fold buzzing.
 
-The Hive is four levels deep. The entry is located between dungeon levels 
+The Hive is four levels deep. The entry is located between dungeon levels
 11 and 16.
 %%%%
 Vaults
@@ -102,7 +102,7 @@ The Crypt is five levels deep and can be found between Vaults:2 and Vaults:4.
 %%%%
 Tomb
 
-The Tomb of the Ancients, a place of damnation, of horrors animated 
+The Tomb of the Ancients, a place of damnation, of horrors animated
 by the vilest necromancy.
 
 The Tomb is three levels deep and contains the golden rune. Its entry is
@@ -129,14 +129,14 @@ Gehenna
 The fires of Gehenna burnt many a confident hero, and they will burn
 evermore.
 
-Gehenna is seven levels deep and contains the obsidian rune. It can be 
+Gehenna is seven levels deep and contains the obsidian rune. It can be
 accessed via the Vestibule of Hell.
 %%%%
 Cocytus
 
 A grim and frost-bitten hell.
 
-Cocytus is seven levels deep and contains the icy rune. It can be accessed 
+Cocytus is seven levels deep and contains the icy rune. It can be accessed
 via the Vestibule of Hell.
 %%%%
 Tartarus
@@ -144,24 +144,24 @@ Tartarus
 Over time, the undead, demons and devils of this place drain all life out of
 treasure-craving visitors.
 
-Tartarus is seven levels deep and contains the bone rune. It can be accessed 
+Tartarus is seven levels deep and contains the bone rune. It can be accessed
 via the Vestibule of Hell.
 %%%%
 Pan
 
-Pandemonium, colloquially known as Pan, is an infinite realm of pain and 
-suffering. Pan contains four special runes, as well as generic ones, in 
-addition to lots of loot. All these treasures are guarded by demons and 
-cruel Pan lords. Many a hero, confusing confidence with megalomania, has 
+Pandemonium, colloquially known as Pan, is an infinite realm of pain and
+suffering. Pan contains four special runes, as well as generic ones, in
+addition to lots of loot. All these treasures are guarded by demons and
+cruel Pan lords. Many a hero, confusing confidence with megalomania, has
 died unsuspectingly in the barrage of torment and hellfire.
 %%%%
 Abyss
 
-The Abyss is a truly bizarre place, everchanging and twisted. It is filled 
-with all sorts of monsters, mostly of demonic nature, whose common aim is 
-to feast on intruders. It is also the garbage dump for many sorcerers, who 
-delight in sending would-be champions like you to these proving grounds of 
-madness. Reportedly, there is some structure to the chaos, as Lugonu seems 
+The Abyss is a truly bizarre place, everchanging and twisted. It is filled
+with all sorts of monsters, mostly of demonic nature, whose common aim is
+to feast on intruders. It is also the garbage dump for many sorcerers, who
+delight in sending would-be champions like you to these proving grounds of
+madness. Reportedly, there is some structure to the chaos, as Lugonu seems
 to concoct schemes around this place and its denizens.
 
 The Abyss can be purposefully reached through portals in the deeper levels
@@ -171,7 +171,7 @@ Zot
 
 A region of the dungeon complex, safely locked away and referred to usually
 by madness, frenzy, lunacy. Only the most demented adventurers would dare to
-break the seal and press deeper - in the vain hope for a fabled artefact no 
+break the seal and press deeper - in the vain hope for a fabled artefact no
 man has ever laid eyes on before.
 
 Zot is five levels deep and can only be entered when carrying three runes.

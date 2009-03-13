@@ -4,8 +4,8 @@
 # insult.txt contains the messages imps and demons apply in
 # Crawl to insult players.
 #
-# For an explanation of how to read insult.txt and how to 
-# add new messages, see monster_speech.txt in the docs 
+# For an explanation of how to read insult.txt and how to
+# add new messages, see monster_speech.txt in the docs
 # directory.
 ############################################################
 %%%%
@@ -518,7 +518,7 @@ diseased
 
 wasted
 
-rotting 
+rotting
 
 stinking
 
@@ -736,7 +736,7 @@ desiccated
 
 dried
 
-musty 
+musty
 
 flammable
 

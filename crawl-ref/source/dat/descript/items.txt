@@ -25,7 +25,7 @@ wearer of the benefits of levitation.
 %%%%
 amulet of inaccuracy
 
-This amulet makes its wearer less accurate in hand combat and when 
+This amulet makes its wearer less accurate in hand combat and when
 targeting monsters via ranged attacks or spells.
 %%%%
 amulet of rage
@@ -66,9 +66,9 @@ draining attacks.
 %%%%
 ankus
 
-What mahouts steer their elephants with. It basically resembles a 
-fireplace poker with a short, stout handle, and a bluntish spike and 
-hook for communicating one's desires through the pachyderm's thick 
+What mahouts steer their elephants with. It basically resembles a
+fireplace poker with a short, stout handle, and a bluntish spike and
+hook for communicating one's desires through the pachyderm's thick
 skin. Curiously enough, Ogres are famous for driving larger elephants.
 %%%%
 animal skin
@@ -165,11 +165,11 @@ grimoires are not to be toyed with.
 %%%%
 book of annihilations
 
-While browsing, you note blood leaking from the pages.  Even an 
-illiterate will feel the sheer impact of arcane fury contained in this 
-book. It is sought after by sorcerers, for it allows the gifted and 
-resourceful to command destruction with the ease of a twinkle.  Feeble 
-wizards, however, may well meet their doom when trying to read this 
+While browsing, you note blood leaking from the pages.  Even an
+illiterate will feel the sheer impact of arcane fury contained in this
+book. It is sought after by sorcerers, for it allows the gifted and
+resourceful to command destruction with the ease of a twinkle.  Feeble
+wizards, however, may well meet their doom when trying to read this
 opus.
 %%%%
 book of callings
@@ -179,7 +179,7 @@ grimoires are not to be toyed with.
 %%%%
 book of cantrips
 
-A book of magic spells. Unlike most of the other grimoires, 
+A book of magic spells. Unlike most of the other grimoires,
 this one can be toyed with.
 %%%%
 book of changes
@@ -219,11 +219,11 @@ grimoires are not to be toyed with.
 %%%%
 book of demonology
 
-When touching this book, you hear faint screams of tortured souls. Each 
-and every page is about demons, demons of all kinds and sizes, and how 
-to unleash them unto this unsuspecting world. Many wizards have proven 
-too weak to stand the power of this tome. You are not sure whether you 
-hear the screams of the countless victims, which have been eaten, 
+When touching this book, you hear faint screams of tortured souls. Each
+and every page is about demons, demons of all kinds and sizes, and how
+to unleash them unto this unsuspecting world. Many wizards have proven
+too weak to stand the power of this tome. You are not sure whether you
+hear the screams of the countless victims, which have been eaten,
 maimed and raped by the demons. Or do you scream yet?
 %%%%
 book of divinations
@@ -584,9 +584,9 @@ The opposite of a morningstar.
 %%%%
 executioner's axe
 
-This fearsome weapon is covered in dried blood and crude engravings of 
-torture and death, but bears a well-honed blade. The enormous axehead 
-looks quite capable of dismembering any victim who falls afoul of it, 
+This fearsome weapon is covered in dried blood and crude engravings of
+torture and death, but bears a well-honed blade. The enormous axehead
+looks quite capable of dismembering any victim who falls afoul of it,
 and you feel confident that a single stroke would suffice.
 %%%%
 falchion
@@ -812,9 +812,9 @@ A special armour made for Nagas, to wear over their tails.
 %%%%
 necronomicon
 
-An extremely rare book, powerful and sinister. Its binding is made from 
-delicate skin of unknown provenance. Many foolhardy magicians have tried 
-to study this tome, only to find themselves entangled within necromantic 
+An extremely rare book, powerful and sinister. Its binding is made from
+delicate skin of unknown provenance. Many foolhardy magicians have tried
+to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
 %%%%
 needle
@@ -827,7 +827,7 @@ A delicious, juicy orange fruit.
 %%%%
 orb of zot
 
-Once you have escaped to the surface with this invaluable artefact, your 
+Once you have escaped to the surface with this invaluable artefact, your
 quest is complete.
 %%%%
 pair of boots
@@ -858,7 +858,7 @@ creatures, as well as some undead ones.
 potion of coagulated blood
 
 A potion containing the essence of life. Vital for all living
-creatures, as well as some undead ones. The blood within won't 
+creatures, as well as some undead ones. The blood within won't
 be palatable much longer.
 %%%%
 potion of confusion
@@ -950,7 +950,7 @@ poison.
 %%%%
 potion of restore abilities
 
-A potion which restores the abilities of one who drinks it.  It also allows 
+A potion which restores the abilities of one who drinks it.  It also allows
 to use a breath weapon again, cancelling the delay.
 %%%%
 potion of slowing
@@ -1073,7 +1073,7 @@ magic.
 %%%%
 ring of slaying
 
-This ring increases or decreases the hand-to-hand and missile combat 
+This ring increases or decreases the hand-to-hand and missile combat
 skills of its wearer.
 %%%%
 ring of strength
@@ -1211,7 +1211,7 @@ It can also be used to enchant the hides of certain exotic creatures.
 scroll of enchant weapon i
 
 This scroll places an enchantment on a weapon, making it more accurate
-in combat. It may fail to affect weapons or ammunition already heavily 
+in combat. It may fail to affect weapons or ammunition already heavily
 enchanted, and will only enchant them up to +9.
 When used on ammunition this will also decrease the chances of missiles
 breaking upon impact.
@@ -1219,16 +1219,16 @@ breaking upon impact.
 scroll of enchant weapon ii
 
 This scroll places an enchantment on a weapon, making it inflict
-greater damage in combat. It may fail to affect weapons or ammunition 
+greater damage in combat. It may fail to affect weapons or ammunition
 already heavily enchanted, and will only enchant them up to +9.
 When used on ammunition this will also decrease the chances of missiles
 breaking upon impact.
 %%%%
 scroll of enchant weapon iii
 
-This scroll enchants a weapon or stack of missiles to be far more 
-effective in combat. Although it can be used in the creation of 
-especially enchanted weapons, it may fail to affect those already 
+This scroll enchants a weapon or stack of missiles to be far more
+effective in combat. Although it can be used in the creation of
+especially enchanted weapons, it may fail to affect those already
 heavily enchanted, and only allows enchantment up to +9.
 When used on ammunition this will also decrease the chances of missiles
 breaking upon impact.
@@ -1277,8 +1277,8 @@ by the sense of achievement you get from getting it to work at all.
 %%%%
 scroll of recharging
 
-This scroll restores the charges of any magical wand or rod chosen by 
-its reader, and can also be used to increase the damage dealt by weapons 
+This scroll restores the charges of any magical wand or rod chosen by
+its reader, and can also be used to increase the damage dealt by weapons
 of electrocution.
 %%%%
 scroll of remove curse
@@ -1310,9 +1310,9 @@ weapons obtained from some spells.
 %%%%
 scroll of vulnerability
 
-This scroll cancels all magical enchantments from the reader and from 
+This scroll cancels all magical enchantments from the reader and from
 beings in the vicinity. Also, the magical resistances of the reader and
-nearby beings are halved for a short duration. The latter effect does 
+nearby beings are halved for a short duration. The latter effect does
 not apply to beings fully immune to magic.
 %%%%
 scythe
@@ -1364,7 +1364,7 @@ A suit made of splints of metal.
 %%%%
 staff of air
 
-This staff increases the power of air spells cast by its wielder. 
+This staff increases the power of air spells cast by its wielder.
 It also protects the wielder from lightning and in turn may shock
 those struck by it.
 %%%%

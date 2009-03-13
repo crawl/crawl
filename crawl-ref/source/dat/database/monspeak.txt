@@ -1,19 +1,19 @@
 ############################################################
-# As of Stone Soup 0.3 the previously hardcoded monster 
-# speech has been outsourced. This makes changing existing 
+# As of Stone Soup 0.3 the previously hardcoded monster
+# speech has been outsourced. This makes changing existing
 # messages, and adding new ones really easy.
 #
-# monspeak.txt contains the messages of monsters that "talk" 
-# to the player, or at least the biggest part there-of. 
+# monspeak.txt contains the messages of monsters that "talk"
+# to the player, or at least the biggest part there-of.
 #
-# For an explanation of how to read shout.txt and monspeak.txt 
+# For an explanation of how to read shout.txt and monspeak.txt
 # and how to add new messages, see monster_speech.txt in the
 # docs directory.
 ############################################################
 
 ############################################################
 # Library of randomised word/phrase substitutions.
-# The keys will have to be changed in the unlikely event that 
+# The keys will have to be changed in the unlikely event that
 # monsters are ever given names like "yells" or "begs".
 ############################################################
 %%%%
@@ -119,7 +119,7 @@ smoke
 steam
 %%%%
 ############################################################
-# Library of speeches for types of monsters, like priests, 
+# Library of speeches for types of monsters, like priests,
 # wizards, guards and so on.
 ############################################################
 %%%%
@@ -451,7 +451,7 @@ _fleeing_silenced_rare_
 
 VISUAL:@The_monster@ opens @possessive@ mouth, as if shouting.
 
-VISUAL:@The_monster@ frantically looks around. 
+VISUAL:@The_monster@ frantically looks around.
 
 VISUAL:@The_monster@ ponders the situation.
 ## END fleeing silenced humanoid ##
@@ -929,7 +929,7 @@ __NONE
 w:1
 @_friendly_imp_@
 ####################################################################
-# Player ghost phrases.  Ghosts with different classes can be given 
+# Player ghost phrases.  Ghosts with different classes can be given
 # different messages.
 ####################################################################
 %%%%
@@ -1058,7 +1058,7 @@ _Agnes_common_
 
 VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ says @to_foe@, "I need a new robe.  I'll buy it with your money." 
+@The_monster@ says @to_foe@, "I need a new robe.  I'll buy it with your money."
 
 @The_monster@ says @to_foe@, "How can you wear that ugly dress?"
 
@@ -2406,7 +2406,7 @@ w:1
 @The_monster@ shouts @at_foe@, "There can only be one messiah: ME!"
 
 w:1
-@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!" 
+@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!"
 ## END Saint Roka ##
 %%%%
 # Mad old wizard
@@ -2850,7 +2850,7 @@ w:1
 w:1
 @The_monster@ says @to_foe@, "@player_god@ be with thee, mortal!"
 
-# The good gods are assumed to work closely together, so a Daeva praising 
+# The good gods are assumed to work closely together, so a Daeva praising
 # Elyvilon is actually flavour.
 w:1
 @The_monster@ says @to_foe@, "Praised be @good_god@ in the heavens above!"
@@ -3310,7 +3310,7 @@ w:4
 @related beogh orc@
 %%%%
 ###############################
-# orc conversion speech 
+# orc conversion speech
 ###############################
 # on sight
 beogh_converted_orc_reaction_sight
