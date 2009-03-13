@@ -4157,18 +4157,21 @@ static void _zin_remove_good_mutations()
 {
     bool success = false;
 
-    simple_god_message(" draws some chaos from your body!", GOD_ZIN);
-
     for (int i = 0; i < 7; ++i)
     {
-        if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION))
+        if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION, false))
             success = true;
     }
 
-    if (success && !how_mutated())
+    if (success)
     {
-        simple_god_message(" rids your body of chaos!", GOD_ZIN);
-        dec_penance(GOD_ZIN, 1);
+        if (!how_mutated())
+        {
+            simple_god_message(" rids your body of chaos!", GOD_ZIN);
+            dec_penance(GOD_ZIN, 1);
+        }
+        else
+            simple_god_message(" draws some chaos from your body!", GOD_ZIN);
     }
 }
 
@@ -4179,9 +4182,13 @@ static bool _zin_retribution()
 
     int punishment = random2(10);
 
-    // If we can't unmutate, do something else instead.
-    if (punishment < 2 && player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+    // If not mutated or can't unmutate, do something else instead.
+    if (punishment < 2
+        && (!how_mutated()
+            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
+    {
         punishment = random2(8) + 2;
+    }
 
     switch (punishment)
     {
