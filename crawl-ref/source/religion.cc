@@ -4157,21 +4157,22 @@ static void _zin_remove_good_mutations()
 {
     bool success = false;
 
-    for (int i = 0; i < 7; ++i)
+    simple_god_message(" draws some chaos from your body!", GOD_ZIN);
+
+    bool failMsg = true;
+
+    for (int i = 0; i < 8; ++i)
     {
-        if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION, false))
+        if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION, failMsg))
             success = true;
+        else
+            failMsg = false;
     }
 
-    if (success)
+    if (success && !how_mutated())
     {
-        if (!how_mutated())
-        {
-            simple_god_message(" rids your body of chaos!", GOD_ZIN);
-            dec_penance(GOD_ZIN, 1);
-        }
-        else
-            simple_god_message(" draws some chaos from your body!", GOD_ZIN);
+        simple_god_message(" rids your body of chaos!", GOD_ZIN);
+        dec_penance(GOD_ZIN, 1);
     }
 }
 
