@@ -1,0 +1,246 @@
+%%%%
+the Portal
+
+This card teleports you to a random location. At higher power levels this may be instantaneous, controlled or both.
+%%%%
+the Warp
+
+This card translocates you a short distance, either randomly or with increasing levels of control at higher power levels.
+%%%%
+Swap
+
+This card swaps your position with that of a nearby monster.
+%%%%
+Velocity
+
+This card makes you move or even act faster.
+%%%%
+Damnation
+
+This card banishes one or more nearby creatures to the Abyss, possibly including you.
+%%%%
+Solitude
+
+This card randomly teleports creatures adjacent to you.
+%%%%
+the Elixir
+
+This card heals you and may also drain or restore your magical energy in the process.
+%%%%
+Battlelust
+
+This card makes your more powerful in physical combat.
+%%%%
+Metamorphosis
+
+This card temporarily transforms you.
+%%%%
+the Helm
+
+This card increases your defences.
+%%%%
+the Blade
+
+This card temporarily enchants or even animates your weapon.
+%%%%
+the Shadow
+
+This card lets you blend into the shadows, making you less perceptible.
+%%%%
+the Potion
+
+This card has the same effect, positive or negative, as drinking a random magical potion.
+%%%%
+Focus
+
+This card further boosts your strongest attribute at the cost of your worst.
+%%%%
+Shuffle
+
+This card interchanges your three attributes. Use with caution!
+%%%%
+Experience
+
+This card makes you more experienced.
+%%%%
+the Helix
+
+This cards changes your mutations. Higher power levels make the change more likely to be beneficial.
+%%%%
+the Sage
+
+This card will funnel some of your earned experience towards a training specific skill and train it faster than it normally would.
+%%%%
+Dowsing
+
+This card lets you detect secret doors, traps, creatures or some combination thereof.
+%%%%
+the Trowel
+
+This card may create an altar, a statue, a golem or a portal.
+%%%%
+the Minefield
+
+This card makes your immediate surroundings more dangerous.
+%%%%
+the Stairs
+
+This card makes staircases slide towards or away from you.
+%%%%
+the Genie
+
+The Genie may grant you an acquirement or punish you for trying.
+%%%%
+the Tomb
+
+This card entombs the player in protective walls of solid rock. At lower power levels, the tomb may be imperfect. Use with caution!
+%%%%
+Water
+
+This card changes the floor around you into water.
+%%%%
+Vitrification
+
+This card turns walls translucent.
+%%%%
+the Map
+
+This scroll reveals your surroundings.
+%%%%
+the Banshee
+
+The wail of the Banshee instils fear in nearby creatures.
+%%%%
+Wild Magic
+
+This card causes wild magic, as if from miscasting a spell, to act upon you.
+%%%%
+the Crusade
+
+This card tries to convert nearby creatures to your cause.
+%%%%
+the Herd
+
+This card summons animals.
+%%%%
+the Pentagram
+
+This card summons a demon to your aid.
+%%%%
+the Dance
+
+This card summons a dancing weapon.
+%%%%
+Foxfire
+
+This card summons flying creatures.
+%%%%
+the Bones
+
+This card summons a skeletal monster.
+%%%%
+Repulsiveness
+
+This card summons an ugly or very ugly thing.
+%%%%
+Summoning
+
+This card summons random creatures.
+%%%%
+Xom
+
+This card draws the attention of Xom on yourself.
+%%%%
+Famine
+
+This card starves you.
+%%%%
+the Feast
+
+This card feeds you.
+%%%%
+Warpwright
+
+This card may create teleporters.
+%%%%
+Flight
+
+This card helps you run away by transforming you, speeding you up or creating other avenues of escape.
+%%%%
+Vitriol
+
+This card unleashes a corrosive or degenerating attack spell.
+%%%%
+Flame
+
+This card unleashes a fiery attack spell.
+%%%%
+Frost
+
+This card unleashes an icy attack spell.
+%%%%
+Venom
+
+This card unleashes a poisonous attack spell, which may affect you as well.
+%%%%
+the Spark
+
+This card unleashes an electrical attack spell.
+%%%%
+the Hammer
+
+This card unleashes a physical attack spell.
+%%%%
+Pain
+
+The Pain card unleashes a necromantic attack spell, which may affect you as well.
+%%%%
+Torment
+
+This card calls on the powers of Hell to agonising injury to any nearby living creature.
+%%%%
+the Spade
+
+This card digs a tunnel through unworked rock. 
+%%%%
+the Bargain
+
+This card grants you a temporary discount in shops.
+%%%%
+Wrath
+
+This card draws a god's wrath against you.
+%%%%
+the Wraith
+
+This card will drain you.
+%%%%
+the Curse
+
+This card places curses on your possessions and may even spoil your potions.
+%%%%
+a buggy card
+
+Buggy
+(It's a bug if you ever see this.)
+%%%%
+a very buggy card
+
+Buggy
+(It's a bug if you ever see this.)
+%%%%
+
+    [ Part 3: "Attached Text" ]
+
+------------------------------------------------------------------------------
+Apps built with the Adobe(R) Flex(R) framework and Flex Builder(TM) are
+powering Web 2.0 with engaging, cross-platform capabilities. Quickly and
+easily build your RIAs with Flex Builder, the Eclipse(TM)based development
+software that enables intelligent coding and step-through debugging.
+Download the free 60 day trial. http://p.sf.net/sfu/www-adobe-com
+    [ Part 4: "Attached Text" ]
+
+_______________________________________________
+Crawl-ref-discuss mailing list
+Crawl-ref-discuss@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss
