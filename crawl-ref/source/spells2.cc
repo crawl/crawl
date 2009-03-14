@@ -674,7 +674,7 @@ void drain_life(int pow)
 
     int hp_gain = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters* monster = &menv[i];
 
