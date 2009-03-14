@@ -573,7 +573,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
     if (one_chance_in(3)
         && !lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things"))
     {
-        mpr("Your call goes unanswered.");
+        canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
     }
 
@@ -632,7 +632,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
     }
 
     if (count == 0)
-        mpr("Your call goes unanswered.");
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return (count > 0);
 }
@@ -1025,7 +1025,7 @@ bool cast_simulacrum(int pow, god_type god)
         }
 
         if (count == 0)
-            mpr("You feel cold for a second.");
+            canned_msg(MSG_NOTHING_HAPPENS);
     }
     else
     {
