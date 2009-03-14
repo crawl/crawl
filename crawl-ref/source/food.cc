@@ -2407,7 +2407,8 @@ static int _player_likes_food_type(int type)
 bool is_inedible(const item_def &item)
 {
     if (food_is_rotten(item)
-        && !player_mutation_level(MUT_SAPROVOROUS))
+        && !player_mutation_level(MUT_SAPROVOROUS)
+        && !wearing_amulet(AMU_THE_GOURMAND))
     {
         return (true);
     }

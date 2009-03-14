@@ -128,6 +128,7 @@ void TileNewLevel(bool first_time);
 void TilePlayerEdit();
 
 int item_unid_type(const item_def &item);
+int tile_known_weapon_brand(const item_def item);
 
 void TileDrawTitle();
 

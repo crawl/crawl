@@ -15,6 +15,9 @@ REVISION("$Rev$");
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
+#ifdef USE_TILE
+ #include "mon-util.h"
+#endif
 #include "player.h"
 #include "tiles.h"
 #include "tutorial.h"
@@ -694,9 +697,28 @@ bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         return (false);
 
     const coord_def c = m->pos();
-    const dungeon_feature_type feat = grd(c);
-    tileset.push_back(tile_def(tileidx_feature(feat, c.x, c.y), TEX_DUNGEON));
+    int ch = tileidx_feature(grd(c), c.x, c.y);
+    if (ch == TILE_FLOOR_NORMAL)
+        ch = env.tile_flv(c).floor;
+    else if (ch == TILE_WALL_NORMAL)
+        ch = env.tile_flv(c).wall;
+
+    tileset.push_back(tile_def(ch, TEX_DUNGEON));
     tileset.push_back(tile_def(tileidx_monster_base(m), TEX_PLAYER));
+
+    if (!mons_flies(m))
+    {
+        if (ch == TILE_DNGN_LAVA)
+            tileset.push_back(tile_def(TILE_MASK_LAVA, TEX_DEFAULT));
+        else if (ch == TILE_DNGN_SHALLOW_WATER)
+            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER, TEX_DEFAULT));
+        else if (ch == TILE_DNGN_DEEP_WATER)
+            tileset.push_back(tile_def(TILE_MASK_DEEP_WATER, TEX_DEFAULT));
+        else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
+            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY, TEX_DEFAULT));
+        else if (ch == TILE_DNGN_DEEP_WATER_MURKY)
+            tileset.push_back(tile_def(TILE_MASK_DEEP_WATER_MURKY, TEX_DEFAULT));
+    }
 
     return (true);
 }

@@ -463,8 +463,42 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!idx)
         return (false);
 
-    tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
-    tileset.push_back(tile_def(idx, TEX_DEFAULT));
+    if (in_inventory(*item))
+    {
+        const bool equipped = item_is_equipped(*item);
+        if (equipped)
+        {
+            if (item_cursed(*item))
+                tileset.push_back(tile_def(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT));
+            else
+                tileset.push_back(tile_def(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT));
+        }
+        else if (item_cursed(*item))
+            tileset.push_back(tile_def(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT));
+
+        tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
+        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+
+        // Is item melded?
+        if (equipped && !you_tran_can_wear(*item))
+            tileset.push_back(tile_def(TILE_MESH, TEX_DEFAULT));
+    }
+    else
+    {
+        // Do we want to display the floor type or is that too distracting?
+        const coord_def c = item->pos;
+        int ch = tileidx_feature(grd(c), c.x, c.y);
+        if (ch == TILE_FLOOR_NORMAL)
+            ch = env.tile_flv(c).floor;
+        else if (ch == TILE_WALL_NORMAL)
+            ch = env.tile_flv(c).wall;
+
+        tileset.push_back(tile_def(ch, TEX_DUNGEON));
+        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+    }
+    int brand = tile_known_weapon_brand(*item);
+    if (brand)
+        tileset.push_back(tile_def(brand, TEX_DEFAULT));
 
     return (true);
 }
@@ -868,8 +902,11 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
 static bool _item_class_selected(const item_def &i, int selector)
 {
     const int itype = i.base_type;
-    if (selector == OSEL_ANY || selector == itype && itype != OBJ_ARMOUR)
+    if (selector == OSEL_ANY || selector == itype
+                                && itype != OBJ_FOOD && itype != OBJ_ARMOUR)
+    {
         return (true);
+    }
 
     switch (selector)
     {
@@ -914,6 +951,9 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
+
+    case OBJ_FOOD:
+        return (itype == OBJ_FOOD && !is_inedible(i));
 
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY

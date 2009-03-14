@@ -480,9 +480,7 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
-    {
         m_buf_main.add(fg_idx, x, y);
-    }
 
     if (fg_idx && !(fg & TILE_FLAG_FLYING))
     {

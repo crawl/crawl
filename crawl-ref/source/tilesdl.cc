@@ -1259,6 +1259,42 @@ void TilesFramework::update_minimap_bounds()
     m_region_map->update_bounds();
 }
 
+int tile_known_weapon_brand(const item_def item)
+{
+    if (!item_type_known(item))
+        return 0;
+
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        if (!is_fixed_artefact(item)
+            && get_weapon_brand(item) != SPWPN_NORMAL)
+        {
+            return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
+        }
+    }
+    else if (item.base_type == OBJ_MISSILES)
+    {
+        switch (get_ammo_brand(item))
+        {
+        case SPMSL_FLAME:
+            return TILE_BRAND_FLAME;
+        case SPMSL_FROST:
+            return TILE_BRAND_FROST;
+        case SPMSL_POISONED:
+            return TILE_BRAND_POISONED;
+        case SPMSL_CURARE:
+            return TILE_BRAND_CURARE;
+        case SPMSL_RETURNING:
+            return TILE_BRAND_RETURNING;
+        case SPMSL_CHAOS:
+            return TILE_BRAND_CHAOS;
+        default:
+            break;
+        }
+    }
+    return 0;
+}
+
 static void _fill_item_info(InventoryTile &desc, const item_def &item)
 {
     desc.tile = tileidx_item(item);
@@ -1279,43 +1315,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     else
         desc.quantity = -1;
 
-    if (item_type_known(item))
-    {
-        if (item.base_type == OBJ_WEAPONS)
-        {
-            if (!is_fixed_artefact(item)
-                && get_weapon_brand(item) != SPWPN_NORMAL)
-            {
-                desc.special = TILE_BRAND_FLAMING + get_weapon_brand(item) - 1;
-            }
-        }
-        else if (item.base_type == OBJ_MISSILES)
-        {
-            switch (get_ammo_brand(item))
-            {
-            case SPMSL_FLAME:
-                desc.special = TILE_BRAND_FLAME;
-                break;
-            case SPMSL_FROST:
-                desc.special = TILE_BRAND_FROST;
-                break;
-            case SPMSL_POISONED:
-                desc.special = TILE_BRAND_POISONED;
-                break;
-            case SPMSL_CURARE:
-                desc.special = TILE_BRAND_CURARE;
-                break;
-            case SPMSL_RETURNING:
-                desc.special = TILE_BRAND_RETURNING;
-                break;
-            case SPMSL_CHAOS:
-                desc.special = TILE_BRAND_CHAOS;
-                break;
-            default:
-                break;
-            }
-        }
-    }
+    desc.special = tile_known_weapon_brand(item);
     desc.flag = 0;
     if (item_cursed(item) && item_ident(item, ISFLAG_KNOW_CURSE))
         desc.flag |= TILEI_FLAG_CURSE;
