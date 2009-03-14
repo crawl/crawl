@@ -1030,7 +1030,7 @@ bool name_zombie(monsters *mon, const monsters* orig)
     else
         name = mons_type_name(orig->type, DESC_PLAIN);
 
-    return name_zombie(mon, orig->type, name);
+    return (name_zombie(mon, orig->type, name));
 }
 
 int downscale_zombie_damage(int damage)
