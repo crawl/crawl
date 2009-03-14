@@ -1483,7 +1483,7 @@ bool summon_berserker(int pow, god_type god, int spell,
     else if (pow <= 180)
     {
         // trolls
-        switch(random2(8))
+        switch (random2(8))
         {
         case 0:
             mon = MONS_DEEP_TROLL;

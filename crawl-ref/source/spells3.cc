@@ -564,6 +564,7 @@ bool cast_shadow_creatures(god_type god)
     }
 
     player_angers_monster(&menv[monster]);
+
     return (true);
 }
 
@@ -1006,25 +1007,23 @@ bool cast_simulacrum(int pow, god_type god)
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (create_monster(
+            const int monster =
+                create_monster(
                     mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
-                              0, god, mon)) != -1)
+                              0, god, mon));
+
+            if (monster != -1)
             {
                 count++;
+
+                player_angers_monster(&menv[monster]);
             }
         }
 
-        if (count > 0)
-        {
-            mprf("%s icy figure%s form%s before you!",
-                count > 1 ? "Some" : "An", count > 1 ? "s" : "",
-                count > 1 ? "" : "s");
-            rc = true;
-        }
-        else
-            mpr("You feel cold for a second.");
+        if (count == 0)
+            canned_msg(MSG_NOTHING_HAPPENS);
     }
     else
     {
