@@ -987,7 +987,8 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 // reforming the original monster out of ice anyways.
 bool cast_simulacrum(int pow, god_type god)
 {
-    bool rc = false;
+    bool success = false;
+
     const item_def* weapon = you.weapon();
 
     if (weapon
@@ -1001,10 +1002,6 @@ bool cast_simulacrum(int pow, god_type god)
         int how_many = std::min(8, 4 + random2(pow) / 20);
         how_many = std::min<int>(how_many, weapon->quantity);
 
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], how_many);
-
-        int count = 0;
-
         for (int i = 0; i < how_many; ++i)
         {
             const int monster =
@@ -1016,13 +1013,15 @@ bool cast_simulacrum(int pow, god_type god)
 
             if (monster != -1)
             {
-                count++;
+                success = true;
+
+                dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
                 player_angers_monster(&menv[monster]);
             }
         }
 
-        if (count == 0)
+        if (!success)
             canned_msg(MSG_NOTHING_HAPPENS);
     }
     else
@@ -1031,7 +1030,7 @@ bool cast_simulacrum(int pow, god_type god)
             "effective!");
     }
 
-    return (rc);
+    return (success);
 }
 
 bool cast_twisted_resurrection(int pow, god_type god)
