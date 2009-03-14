@@ -124,10 +124,7 @@ ENDMAP
 # good luck! (Shiori)
 NAME:    shiawase
 TAGS:    entry no_monster_gen no_rotate no_vmirror
-WEIGHT:  5
 ORIENT:  float
-ITEM:    bread ration, meat ration, apple, orange, banana, choko, pear
-SUBST:   . = .:100 $ % d
 SHUFFLE: +=
 SUBST:   =:==x , x:xvcb
 MAP
