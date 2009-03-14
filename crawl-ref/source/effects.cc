@@ -112,10 +112,9 @@ int holy_word_player(int pow, int caster, actor *attacker)
 int holy_word_monsters(coord_def where, int pow, int caster,
                        actor *attacker)
 {
-    int retval = 0;
-
-    // doubt this will ever happen, but it's here as a safety -- bwr
     pow = std::min(300, pow);
+
+    int retval = 0;
 
     // Is the player in this cell?
     if (where == you.pos())
@@ -272,10 +271,15 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
     int hploss = std::max(0, monster->hit_points / 2 - 1);
 
     if (hploss)
+    {
         simple_monster_message(monster, " convulses!");
 
-    // Currently, torment doesn't annoy the monsters it affects because
-    // it can't kill them, and because hostile monsters use it.
+        // Currently, torment doesn't annoy the monsters it affects
+        // because it can't kill them, and because hostile monsters use
+        // it.  It will alert them, though.
+        behaviour_event(monster, ME_ALERT, MHITYOU);
+    }
+
     monster->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
 
     if (hploss)
