@@ -341,11 +341,11 @@ NAME:   hiddenorc2_lemuel
 TAGS:   orc_entry
 ORIENT: float
 MONS:   orc w:20 / orc wizard w:2 / orc priest w:2 / orc warrior w:1
-SUBST:  a : x.
-SUBST:  b : x.
-SUBST:  c : x.
-SUBST:  d : x.
+SUBST:  a : x. , b : x. , c : x. , d : x.
+COLOUR: 1 = none /brown w:5
+COLOUR: . = none / brown
 SUBST:  ? = @ x:20 + =
+COLOUR: ! = brown
 SUBST:  ! : .$
 MAP
 xx?xxxxxxx?xx
