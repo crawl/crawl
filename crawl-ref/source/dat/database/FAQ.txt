@@ -106,8 +106,9 @@ travel to distant branches, or fiddle with your stats or skills. Note that
 wizard mode games will never appear on the highscore list.
 
 Many players reckon long-time use of wizard mode to be detrimental to your
-playing skills. On the other hand, we are thankful for bug reports using
-wizard mode for reproducing and exploring bugs.
+playing skills. On the other hand, wizard mode has its uses: we are really
+thankful whenever we get bug reports using wizard mode for reproducing and
+exploring bugs.
 %%%%
 Q:weapons
 
@@ -254,11 +255,12 @@ I've got millions of ideas! Can I join the team?
 %%%%
 A:ideas
 
-No, you can't. All of the devteam members submitted a number of code
-intensive patches and/or took over responsibility over an important side
-project before joining. Once you've become indispensible to the team and we
-start wondering how we ever got along without you, we _may_ ask you to join
-us, but don't hold your breath.
+No, you can't. At least not on ideas alone.
+
+All of the devteam members submitted a number of code intensive patches 
+and/or took over responsibility over an important side project before
+joining. A good way to become indispensable is to help us with patches or
+vaults etc.
 
 Please submit your ideas to the Feature Requests tracker of SourceForge. If
 they catch the interest of at least one coder, chances are they'll make it
@@ -300,6 +302,7 @@ might need heavy modification. In general, it is safer to first file your
 suggestions under Feature Requests and wait for people to become
 enthusiastic and give feedback before you submit a patch. If you want,
 you can also write a patch that implements an existing FR or fixes a bug.
+We appreciate your help!
 %%%%
 Q:help
 
@@ -369,7 +372,7 @@ Is there a way for me to replace some of the tiles with different ones?
 %%%%
 A:tiles graphics
 
-It depends. If all you want are minor modifications (such as colour changes)
+It depends. If all you want are minor modifications such as colour changes
 you can directly modify the png files in the dat/tiles/ folder.
 
 Otherwise, you'll need to be able to compile the game. In this case you can
