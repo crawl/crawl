@@ -283,7 +283,7 @@ ENDMAP
 
 NAME:    minitomb_2
 # Generally have rooms full of either monsters or traps. To protect the
-# monsters, all doors will be secret, no alarm traps, and mostly needle
+# monsters, all doors are secret, no alarm traps, and mostly needle
 # traps.
 WEIGHT:  30
 ORIENT:  encompass
