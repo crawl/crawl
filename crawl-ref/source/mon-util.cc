@@ -950,14 +950,13 @@ bool mons_class_is_zombified(int mc)
 
 bool mons_is_zombified(const monsters *mon)
 {
-    return mons_class_is_zombified(mon->type);
+    return (mons_class_is_zombified(mon->type));
 }
 
 bool mons_class_can_be_zombified(int mc)
 {
     int ms = mons_species(mc);
-    return (mons_zombie_size(ms) != Z_NOZOMBIE
-        && mons_weight(ms) > 0);
+    return (mons_zombie_size(ms) != Z_NOZOMBIE && mons_weight(ms) > 0);
 }
 
 bool mons_can_be_zombified(const monsters *mon)
@@ -998,8 +997,7 @@ bool mons_enslaved_intact_soul(const monsters *mon)
 
 bool mons_enslaved_soul(const monsters *mon)
 {
-    return (mons_enslaved_twisted_soul(mon)
-        || mons_enslaved_intact_soul(mon));
+    return (mons_enslaved_twisted_soul(mon) || mons_enslaved_intact_soul(mon));
 }
 
 bool name_zombie(monsters *mon, int mc, const std::string mon_name)
@@ -2339,8 +2337,8 @@ habitat_type mons_class_habitat(int mc)
 
 habitat_type mons_habitat(const monsters *mon)
 {
-    return mons_class_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                                     : mon->type);
+    return (mons_class_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                                      : mon->type));
 }
 
 habitat_type mons_class_primary_habitat(int mc)
@@ -2355,8 +2353,8 @@ habitat_type mons_class_primary_habitat(int mc)
 
 habitat_type mons_primary_habitat(const monsters *mon)
 {
-    return mons_class_primary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                                             : mon->type);
+    return (mons_class_primary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                                              : mon->type));
 }
 
 habitat_type mons_class_secondary_habitat(int mc)
@@ -2371,8 +2369,8 @@ habitat_type mons_class_secondary_habitat(int mc)
 
 habitat_type mons_secondary_habitat(const monsters *mon)
 {
-    return mons_class_secondary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                                               : mon->type);
+    return (mons_class_secondary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                                                : mon->type));
 }
 
 bool intelligent_ally(const monsters *mon)
