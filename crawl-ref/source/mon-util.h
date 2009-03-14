@@ -624,8 +624,9 @@ int mons_weight(int mc);
 /* ***********************************************************************
  * called from: monplace mon-util
  * *********************************************************************** */
-int mons_class_speed(int mc);
-int mons_class_zombie_speed(int mc);
+int mons_class_base_speed(int mc);
+int mons_class_zombie_base_speed(int zombie_base_mc);
+int mons_base_speed(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}

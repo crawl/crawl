@@ -763,7 +763,7 @@ int place_monster(mgen_data mg, bool force_pos)
         // For some cases disallow monsters on stairs.
         if (mons_class_is_stationary(mg.cls)
             || (pval == 2 // Stairs occupied by player.
-                && (mons_class_speed(mg.cls) == 0
+                && (mons_class_base_speed(mg.cls) == 0
                     || grd(mg.pos) == DNGN_LAVA
                     || grd(mg.pos) == DNGN_DEEP_WATER)))
         {
@@ -830,8 +830,7 @@ int place_monster(mgen_data mg, bool force_pos)
             case PROX_NEAR_STAIRS:
                 if (pval == 2) // player on stairs
                 {
-                    // 0 speed monsters can't shove player out of their way.
-                    if (mons_class_speed(mg.cls) == 0)
+                    if (mons_class_base_speed(mg.cls) == 0)
                     {
                         proxOK = false;
                         break;
@@ -1387,7 +1386,7 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     menv[mid].ev -= 5;
     menv[mid].ev  = std::max(0, menv[mid].ev);
 
-    menv[mid].speed = mons_class_zombie_speed(menv[mid].base_monster);
+    menv[mid].speed = mons_class_zombie_base_speed(menv[mid].base_monster);
 
     // Now override type with the required type.
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
