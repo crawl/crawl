@@ -396,7 +396,7 @@ bool player_in_hell( void )
     // No real reason except to draw someone's attention here if they
     // mess with the branch enum.
     COMPILE_CHECK(BRANCH_FIRST_HELL == BRANCH_DIS, a);
-    COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_THE_PIT, b);
+    COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_TARTARUS, b);
 
     return (you.level_type == LEVEL_DUNGEON
             && you.where_are_you >= BRANCH_FIRST_HELL
@@ -4346,7 +4346,7 @@ bool player_is_airborne(void)
     return you.airborne();
 }
 
-bool player_has_spell(spell_type spell)
+bool player_has_spell( spell_type spell )
 {
     return you.has_spell(spell);
 }

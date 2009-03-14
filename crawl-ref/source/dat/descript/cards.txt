@@ -105,7 +105,7 @@ This card turns walls translucent.
 %%%%
 the Map
 
-This scroll reveals your surroundings.
+This card reveals your surroundings.
 %%%%
 the Banshee
 
@@ -229,18 +229,3 @@ a very buggy card
 Buggy
 (It's a bug if you ever see this.)
 %%%%
-
-    [ Part 3: "Attached Text" ]
-
-------------------------------------------------------------------------------
-Apps built with the Adobe(R) Flex(R) framework and Flex Builder(TM) are
-powering Web 2.0 with engaging, cross-platform capabilities. Quickly and
-easily build your RIAs with Flex Builder, the Eclipse(TM)based development
-software that enables intelligent coding and step-through debugging.
-Download the free 60 day trial. http://p.sf.net/sfu/www-adobe-com
-    [ Part 4: "Attached Text" ]
-
-_______________________________________________
-Crawl-ref-discuss mailing list
-Crawl-ref-discuss@lists.sourceforge.net
-https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss

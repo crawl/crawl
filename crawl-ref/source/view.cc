@@ -4473,9 +4473,6 @@ void init_feature_table( void )
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
-        case DNGN_ENTER_RESERVED_2:
-        case DNGN_ENTER_RESERVED_3:
-        case DNGN_ENTER_RESERVED_4:
             Feature[i].colour      = YELLOW;
             Feature[i].dchar       = DCHAR_STAIRS_DOWN;
             Feature[i].flags      |= FFT_NOTABLE;
@@ -4506,9 +4503,6 @@ void init_feature_table( void )
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
-        case DNGN_RETURN_RESERVED_2:
-        case DNGN_RETURN_RESERVED_3:
-        case DNGN_RETURN_RESERVED_4:
             Feature[i].colour      = YELLOW;
             Feature[i].dchar       = DCHAR_STAIRS_UP;
             Feature[i].map_colour  = GREEN;

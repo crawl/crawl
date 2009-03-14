@@ -139,6 +139,14 @@ unsigned long get_branch_flags(branch_type branch)
 }
 
 Branch branches[] = {
+    // Branch struct:
+    //  branch id, parent branch, depth, startdepth, branch flags, level flags
+    //  entry stairs, exit stairs, short name, long name, abbrev name
+    //  entry message
+    //  has_shops, has_uniques, floor colour, rock colour
+    //  mons rarity function, mons level function
+    //  num_traps_function, rand_trap_function, num_fogs_function, rand_fog_function
+    //  altar chance (in %), travel shortcut, upstairs exit branch, dangerous branch end
 
     { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, 27, -1, 0, 0,
       NUM_FEATURES, NUM_FEATURES,  // sentinel values
@@ -312,24 +320,6 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'Y', true, true },
 
-    { BRANCH_INFERNO, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
-      NUM_FEATURES, NUM_FEATURES,
-      NULL, NULL, NULL,
-      NULL,
-      false, false, BLACK, BLACK,
-      NULL, NULL,
-      NULL, NULL, NULL, NULL,
-      0, 'R', false, false },
-
-    { BRANCH_THE_PIT, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
-      NUM_FEATURES, NUM_FEATURES,
-      NULL, NULL, NULL,
-      NULL,
-      false, false, BLACK, BLACK,
-      NULL, NULL,
-      NULL, NULL, NULL, NULL,
-      0, '0', false, false },
-
     { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 5, 27, BFLAG_HAS_ORB, 0,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",
@@ -338,13 +328,4 @@ Branch branches[] = {
       mons_hallzot_rare, mons_hallzot_level,
       NULL, NULL, NULL, NULL,
       1, 'Z', false, true },
-
-    { BRANCH_CAVERNS, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
-      NUM_FEATURES, NUM_FEATURES,
-      NULL, NULL, NULL,
-      NULL,
-      false, false, BLACK, BLACK,
-      NULL, NULL,
-      NULL, NULL, NULL, NULL,
-      0, 0, false, false }
 };

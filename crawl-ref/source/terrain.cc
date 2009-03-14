@@ -126,9 +126,6 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
-    case DNGN_RETURN_RESERVED_2:
-    case DNGN_RETURN_RESERVED_3:
-    case DNGN_RETURN_RESERVED_4:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
     case DNGN_EXIT_PORTAL_VAULT:
@@ -164,9 +161,6 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
-    case DNGN_ENTER_RESERVED_2:
-    case DNGN_ENTER_RESERVED_3:
-    case DNGN_ENTER_RESERVED_4:
         return (CMD_GO_DOWNSTAIRS);
 
     default:

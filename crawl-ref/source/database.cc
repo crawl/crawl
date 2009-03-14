@@ -70,6 +70,7 @@ static TextDB AllDBs[] =
             "descript/branches.txt",
             "descript/skills.txt",
             "descript/ability.txt",
+            "descript/cards.txt",
             NULL),
 
     TextDB( "db/randart",

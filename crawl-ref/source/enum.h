@@ -349,11 +349,8 @@ enum branch_type                // you.where_are_you
     BRANCH_GEHENNA,
     BRANCH_COCYTUS,
     BRANCH_TARTARUS,
-    BRANCH_INFERNO,             // unimplemented
-    BRANCH_THE_PIT,             // unimplemented
-    BRANCH_LAST_HELL = BRANCH_THE_PIT,
+    BRANCH_LAST_HELL = BRANCH_TARTARUS,
     BRANCH_HALL_OF_ZOT,
-    BRANCH_CAVERNS,             // unimplemented
     NUM_BRANCHES
 };
 
@@ -1045,10 +1042,7 @@ enum dungeon_feature_type
     DNGN_ENTER_TOMB,
     DNGN_ENTER_SWAMP,                  //  122
     DNGN_ENTER_SHOALS,
-    DNGN_ENTER_RESERVED_2,
-    DNGN_ENTER_RESERVED_3,
-    DNGN_ENTER_RESERVED_4,             // 126
-    DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_RESERVED_4,
+    DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_SHOALS,
 
     // Exits from various branches
     // Order must be the same as above
@@ -1065,12 +1059,9 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_SNAKE_PIT,
     DNGN_RETURN_FROM_ELVEN_HALLS,      //  140
     DNGN_RETURN_FROM_TOMB,
-    DNGN_RETURN_FROM_SWAMP,               //  142
+    DNGN_RETURN_FROM_SWAMP,            //  142
     DNGN_RETURN_FROM_SHOALS,
-    DNGN_RETURN_RESERVED_2,
-    DNGN_RETURN_RESERVED_3,
-    DNGN_RETURN_RESERVED_4,             // 146
-    DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_RESERVED_4,
+    DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_SHOALS,
 
     // Portals to various places unknown.
     DNGN_ENTER_PORTAL_VAULT = 160,
