@@ -495,6 +495,12 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 
         tileset.push_back(tile_def(ch, TEX_DUNGEON));
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
+
+        // Needs to be displayed so as to not give away mimics in shallow water.
+        if (ch == TILE_DNGN_SHALLOW_WATER)
+            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER, TEX_DEFAULT));
+        else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
+            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY, TEX_DEFAULT));
     }
     int brand = tile_known_weapon_brand(*item);
     if (brand)

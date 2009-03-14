@@ -537,9 +537,7 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)
-    {
         m_buf_main.add(TILE_ANIMATED_WEAPON, x, y);
-    }
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
         m_buf_main.add(TILE_MESH, x, y);

@@ -16,6 +16,7 @@ REVISION("$Rev$");
 #include "macro.h"
 #include "message.h"
 #ifdef USE_TILE
+ #include "monstuff.h"
  #include "mon-util.h"
 #endif
 #include "player.h"
@@ -704,7 +705,18 @@ bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         ch = env.tile_flv(c).wall;
 
     tileset.push_back(tile_def(ch, TEX_DUNGEON));
-    tileset.push_back(tile_def(tileidx_monster_base(m), TEX_PLAYER));
+
+    if (m->type == MONS_DANCING_WEAPON)
+    {
+        item_def item = mitm[m->inv[MSLOT_WEAPON]];
+        tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
+        tileset.push_back(tile_def(TILE_ANIMATED_WEAPON, TEX_DEFAULT));
+
+    }
+    else if (mons_is_mimic(m->type))
+        tileset.push_back(tile_def(tileidx_monster_base(m), TEX_DEFAULT));
+    else
+        tileset.push_back(tile_def(tileidx_monster_base(m), TEX_PLAYER));
 
     if (!mons_flies(m))
     {
@@ -719,6 +731,46 @@ bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         else if (ch == TILE_DNGN_DEEP_WATER_MURKY)
             tileset.push_back(tile_def(TILE_MASK_DEEP_WATER_MURKY, TEX_DEFAULT));
     }
+
+    if (!monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
+    {
+        std::string damage_desc;
+        mon_dam_level_type damage_level;
+        mons_get_damage_level(m, damage_desc, damage_level);
+
+        switch (damage_level)
+        {
+        case MDAM_DEAD:
+        case MDAM_ALMOST_DEAD:
+            tileset.push_back(tile_def(TILE_MDAM_ALMOST_DEAD, TEX_DEFAULT));
+            break;
+        case MDAM_SEVERELY_DAMAGED:
+            tileset.push_back(tile_def(TILE_MDAM_SEVERELY_DAMAGED, TEX_DEFAULT));
+            break;
+        case MDAM_HEAVILY_DAMAGED:
+            tileset.push_back(tile_def(TILE_MDAM_HEAVILY_DAMAGED, TEX_DEFAULT));
+            break;
+        case MDAM_MODERATELY_DAMAGED:
+            tileset.push_back(tile_def(TILE_MDAM_MODERATELY_DAMAGED, TEX_DEFAULT));
+            break;
+        case MDAM_LIGHTLY_DAMAGED:
+            tileset.push_back(tile_def(TILE_MDAM_LIGHTLY_DAMAGED, TEX_DEFAULT));
+            break;
+        case MDAM_OKAY:
+        default:
+            // no flag for okay.
+            break;
+        }
+    }
+
+    if (mons_friendly_real(m))
+        tileset.push_back(tile_def(TILE_HEART, TEX_DEFAULT));
+    else if (mons_neutral(m))
+        tileset.push_back(tile_def(TILE_NEUTRAL, TEX_DEFAULT));
+    else if (mons_looks_stabbable(m))
+        tileset.push_back(tile_def(TILE_STAB_BRAND, TEX_DEFAULT));
+    else if (mons_looks_distracted(m))
+        tileset.push_back(tile_def(TILE_MAY_STAB_BRAND, TEX_DEFAULT));
 
     return (true);
 }

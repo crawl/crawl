@@ -563,6 +563,7 @@ void full_describe_view()
             std::vector<formatted_string> fss;
             std::string str = get_monster_equipment_desc(list_mons[i], true,
                                                          DESC_CAP_A, true);
+
             if (player_mesmerised_by(list_mons[i]))
                 str += ", keeping you mesmerised";
 
@@ -3041,10 +3042,25 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
 
         if (print_attitude)
         {
+            std::string str = "";
             if (mons_friendly(mon))
-                desc += " (friendly)";
+                str = "friendly";
             else if (mons_neutral(mon))
-                desc += " (neutral)";
+                str = "neutral";
+
+            if (mon->type == MONS_DANCING_WEAPON
+                || mons_is_known_mimic(mon))
+            {
+                if (!str.empty())
+                    str += " ";
+
+                if (mon->type == MONS_DANCING_WEAPON)
+                    str += "dancing weapon";
+                else
+                    str += "mimic";
+            }
+            if (!str.empty())
+                desc += " (" + str + ")";
         }
     }
 
