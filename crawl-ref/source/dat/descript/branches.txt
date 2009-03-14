@@ -7,28 +7,38 @@ by all kinds of species who fled the overworld and shunned the light. No
 matter what the origin of this cave is, it is filled with riches unheard of
 as well as with ample dangers to any intruder. Few have escaped alive, and
 even fewer have kept some rest of sanity to tell the tale.
+
+The dungeon is 27 levels deep but honestly, this is only the beginning.
 %%%%
 Temple
 
 The Temple of some of the Gods, a place of peace and refuge from the
-insanity of the dungeon.
+insanity of the dungeon. It is located between the levels 4 and 7 of
+the main dungeon.
 %%%%
 Orcish Mines
 
 The mines of the orcs, filled with their gold, but treacherous and easy to
 get trapped in.
+
+The Orcish Mines are four levels deep and contain the entrance to the Elven
+Halls.
 %%%%
 Elven Halls
 
 Whereas most elven folk would never move into a dark subterranean complex
 like this, the deep elves did. Their halls are filled with riches but any
 passersby should be aware of the legendary magical prowess of this species.
+
+The Elven Halls are seven levels deep.
 %%%%
 Lair
 
 Most adventurers find the lair to be an exciting change of climate. And
 indeed, there is something to be said about getting gored, mauled and
 eaten rather than sliced, burnt or stabbed.
+
+The Lair is ten levels deep and contains the stairs to three more branches.
 %%%%
 Swamp
 
@@ -72,7 +82,7 @@ Hive
 
 You hear a many-fold buzzing.
 
-The Hive is four levels deep. The entry is located between dungeon levels
+The Hive is two levels deep. The entry is located between dungeon levels
 11 and 16.
 %%%%
 Vaults
@@ -154,6 +164,8 @@ suffering. Pan contains four special runes, as well as generic ones, in
 addition to lots of loot. All these treasures are guarded by demons and
 cruel Pan lords. Many a hero, confusing confidence with megalomania, has
 died unsuspectingly in the barrage of torment and hellfire.
+
+Pan is endless.
 %%%%
 Abyss
 
