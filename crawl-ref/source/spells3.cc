@@ -283,25 +283,34 @@ int airstrike(int power, dist &beam)
 
 bool cast_bone_shards(int power, bolt &beam)
 {
+    if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return (false);
+    }
+
     bool success = false;
 
-    if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
-        canned_msg(MSG_SPELL_FIZZLES);
-    else if (you.weapon()->sub_type != CORPSE_SKELETON)
-        mpr("The corpse collapses into a mass of pulpy flesh.");
+    if (you.weapon()->sub_type != CORPSE_SKELETON)
+    {
+        mpr("The corpse collapses into a pulpy mess.");
+
+        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+    }
     else
     {
         // Practical max of 100 * 15 + 3000 = 4500.
         // Actual max of    200 * 15 + 3000 = 6000.
         power *= 15;
-        power += mons_weight( you.weapon()->plus );
+        power += mons_weight(you.weapon()->plus);
 
         if (!player_tracer(ZAP_BONE_SHARDS, power, beam))
             return (false);
 
         mpr("The skeleton explodes into sharp fragments of bone!");
 
-        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
         zapping(ZAP_BONE_SHARDS, power, beam);
 
         success = true;

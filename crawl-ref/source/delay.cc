@@ -1161,7 +1161,7 @@ static void _finish_delay(const delay_queue_item &delay)
     case DELAY_BUTCHER:
     case DELAY_BOTTLE_BLOOD:
     {
-        const item_def &item = mitm[delay.parm1];
+        item_def &item = mitm[delay.parm1];
         if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
             if (item.sub_type == CORPSE_SKELETON)
@@ -1183,12 +1183,10 @@ static void _finish_delay(const delay_queue_item &delay)
             {
                 mpr("You finish bottling this corpse's blood.");
 
-                item_def &corpse = mitm[delay.parm1];
-
-                if (mons_skeleton(corpse.plus) && one_chance_in(3))
-                    turn_corpse_into_skeleton_and_blood_potions(corpse);
+                if (mons_skeleton(item.plus) && one_chance_in(3))
+                    turn_corpse_into_skeleton_and_blood_potions(item);
                 else
-                    turn_corpse_into_blood_potions(corpse);
+                    turn_corpse_into_blood_potions(item);
             }
             else
             {
@@ -1221,12 +1219,10 @@ static void _finish_delay(const delay_queue_item &delay)
                     mpr("What a waste.");
                 }
 
-                item_def &corpse = mitm[delay.parm1];
-
-                if (mons_skeleton(corpse.plus) && one_chance_in(3))
-                    turn_corpse_into_skeleton_and_chunks(corpse);
+                if (mons_skeleton(item.plus) && one_chance_in(3))
+                    turn_corpse_into_skeleton_and_chunks(item);
                 else
-                    turn_corpse_into_chunks(corpse);
+                    turn_corpse_into_chunks(item);
 
                 if (you.duration[DUR_BERSERKER]
                     && you.berserk_penalty != NO_BERSERK_PENALTY)

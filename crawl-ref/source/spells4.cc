@@ -1010,8 +1010,8 @@ void cast_intoxicate(int pow)
 
 bool backlight_monsters(coord_def where, int pow, int garbage)
 {
-    UNUSED( pow );
-    UNUSED( garbage );
+    UNUSED(pow);
+    UNUSED(garbage);
 
     monsters *monster = monster_at(where);
     if (monster == NULL)
@@ -1180,7 +1180,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     }
 
     if (coinflip())
-        exercise( SK_THROWING, 1 );
+        exercise(SK_THROWING, 1);
 
     // Really fire.
     beem.flavour = real_flavour;
@@ -1191,7 +1191,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     if (is_blood_potion(potion))
         remove_oldest_blood_potion(potion);
 
-    dec_inv_item_quantity( pot_idx, 1 );
+    dec_inv_item_quantity(pot_idx, 1);
 
     return (true);
 }
@@ -1201,11 +1201,10 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 // spell out of corpses, thus potentially making it useful.
 // Producing helpful potions would break game balance here...
 // and producing more than one potion from a corpse, or not
-// using up the corpse might also lead to game balance problems. -- bwr
-void cast_fulsome_distillation( int powc )
+// using up the corpse might also lead to game balance problems. - bwr
+void cast_fulsome_distillation(int pow)
 {
-    if (powc > 50)
-        powc = 50;
+    pow = std::min(50, pow);
 
     int corpse = -1;
 
@@ -1214,10 +1213,10 @@ void cast_fulsome_distillation( int powc )
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
-            snprintf( info, INFO_SIZE, "Distill a potion from %s?",
-                      si->name(DESC_NOCAP_THE).c_str() );
+            snprintf(info, INFO_SIZE, "Distill a potion from %s?",
+                     si->name(DESC_NOCAP_THE).c_str());
 
-            if (yesno( info, true, 0, false ))
+            if (yesno(info, true, 0, false))
             {
                 corpse = si->index();
                 break;
@@ -1232,7 +1231,7 @@ void cast_fulsome_distillation( int powc )
     }
 
     const bool rotten      = food_is_rotten(mitm[corpse]);
-    const bool big_monster = (mons_type_hit_dice( mitm[corpse].plus ) >= 5);
+    const bool big_monster = (mons_type_hit_dice(mitm[corpse].plus) >= 5);
     const bool power_up    = (rotten && big_monster);
 
     potion_type pot_type = POT_WATER;
@@ -1264,7 +1263,7 @@ void cast_fulsome_distillation( int powc )
         break;
 
     default:
-        switch (mons_corpse_effect( mitm[corpse].plus ))
+        switch (mons_corpse_effect(mitm[corpse].plus))
         {
         case CE_CLEAN:
             pot_type = (power_up ? POT_CONFUSION : POT_WATER);
@@ -1298,7 +1297,7 @@ void cast_fulsome_distillation( int powc )
     }
 
     // If not powerful enough, we downgrade the potion.
-    if (random2(50) > powc + 10 * rotten)
+    if (random2(50) > pow + 10 * rotten)
     {
         switch (pot_type)
         {
@@ -1333,14 +1332,14 @@ void cast_fulsome_distillation( int powc )
     mitm[corpse].plus2     = 0;
     mitm[corpse].flags     = 0;
     mitm[corpse].inscription.clear();
-    item_colour( mitm[corpse] );  // sets special as well
+    item_colour(mitm[corpse]); // sets special as well
 
     mprf("You extract %s from the corpse.",
          mitm[corpse].name(DESC_NOCAP_A).c_str());
 
     // Try to move the potion to the player (for convenience).
-    if (move_item_to_player( corpse, 1 ) != 1)
-        mpr( "Unfortunately, you can't carry it right now!" );
+    if (move_item_to_player(corpse, 1) != 1)
+        mpr("Unfortunately, you can't carry it right now!");
 }
 
 bool cast_fragmentation(int pow, const dist& spd)

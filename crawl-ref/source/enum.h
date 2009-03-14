@@ -692,8 +692,8 @@ enum conduct_type
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
-    DID_KILL_NATURAL_EVIL,    // TSO
-    DID_KILL_CHAOTIC,         // Zin
+    DID_KILL_NATURAL_EVIL,              // TSO
+    DID_KILL_CHAOTIC,                   // Zin
     DID_KILL_WIZARD,
     DID_KILL_PRIEST,
     DID_KILL_HOLY,
@@ -715,11 +715,11 @@ enum conduct_type
     DID_DRINK_BLOOD,
     DID_CANNIBALISM,
     DID_EAT_MEAT,                       // unused
-    DID_EAT_SOULED_BEING,     // Zin
-    DID_DELIBERATE_MUTATING,  // Zin
-    DID_CAUSE_GLOWING,        // Zin
-    DID_CHAOS,                // Zin (used weapon/magic of chaos)
-    DID_DESTROY_ORCISH_IDOL,  // Beogh
+    DID_EAT_SOULED_BEING,               // Zin
+    DID_DELIBERATE_MUTATING,            // Zin
+    DID_CAUSE_GLOWING,                  // Zin
+    DID_CHAOS,                          // Zin (used weapon/magic of chaos)
+    DID_DESTROY_ORCISH_IDOL,            // Beogh
     DID_CREATE_LIFE,                    // unused
 
     NUM_CONDUCTS
