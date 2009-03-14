@@ -2511,7 +2511,7 @@ static bool _wounded_damaged(int monster_type)
         return (true);
 
     return (false);
-}                               // end _wounded_damaged()
+}
 
 //---------------------------------------------------------------
 //
