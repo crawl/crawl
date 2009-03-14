@@ -7465,6 +7465,7 @@ bool monsters::sicken(int amount)
 
 static int _mons_real_base_speed(int mc)
 {
+    ASSERT(smc);
     int speed = smc->speed;
 
     switch (mc)
