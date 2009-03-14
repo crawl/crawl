@@ -597,41 +597,44 @@ bool cast_summon_horrible_things(int pow, god_type god)
 
     while (how_many_big > 0)
     {
-        if (create_monster(
+        const int monster =
+            create_monster(
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
-                         0, god)) != -1)
+                         0, god));
+
+        if (monster != -1)
         {
             count++;
-        }
+            how_many_big--;
 
-        how_many_big--;
+            player_angers_monster(&menv[monster]);
+        }
     }
 
     while (how_many_small > 0)
     {
-        if (create_monster(
+        const int monster =
+            create_monster(
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
-                         0, god)) != -1)
+                         0, god));
+
+        if (monster != -1)
         {
             count++;
+            how_many_small--;
+
+            player_angers_monster(&menv[monster]);
         }
-
-        how_many_small--;
     }
 
-    if (count > 0)
-    {
-        mprf("Some thing%s answered your call!",
-             count > 1 ? "s" : "");
-        return (true);
-    }
+    if (count == 0)
+        mpr("Your call goes unanswered.");
 
-    mpr("Your call goes unanswered.");
-    return (false);
+    return (count > 0);
 }
 
 static bool _animatable_remains(const item_def& item)
@@ -1022,7 +1025,7 @@ bool cast_simulacrum(int pow, god_type god)
         }
 
         if (count == 0)
-            canned_msg(MSG_NOTHING_HAPPENS);
+            mpr("You feel cold for a second.");
     }
     else
     {
