@@ -282,8 +282,9 @@ ccc.c   ccc+ccc   c.ccc
 ENDMAP
 
 NAME:    minitomb_2
-# Generally have rooms full of either monsters or traps. To protect the 
-# monsters, all doors be secret, no alarm traps, mostly needle traps.
+# Generally have rooms full of either monsters or traps. To protect the
+# monsters, all doors will be secret, no alarm traps, and mostly needle
+# traps.
 WEIGHT:  30
 ORIENT:  encompass
 TAGS:    minitomb no_item_gen no_monster_gen no_rotate
