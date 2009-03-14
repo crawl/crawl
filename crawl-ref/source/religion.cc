@@ -6234,7 +6234,7 @@ static bool _god_likes_item(god_type god, const item_def& item)
                    && mons_species(item.plus) == MONS_ORC);
 
     case GOD_NEMELEX_XOBEH:
-        return !is_deck(item);
+        return (!is_deck(item));
 
     default:
         return (false);
