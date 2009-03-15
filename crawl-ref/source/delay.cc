@@ -1101,6 +1101,8 @@ static void _finish_delay(const delay_queue_item &delay)
         item_def &item = (delay.parm1 ? you.inv[delay.parm2]
                                       : mitm[delay.parm2]);
 
+        const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+
         vampire_nutrition_per_turn(item, 1);
 
         if (mons_skeleton(item.plus) && one_chance_in(3))
@@ -1112,6 +1114,9 @@ static void _finish_delay(const delay_queue_item &delay)
             else
                 dec_mitm_item_quantity(delay.parm2, 1);
         }
+
+        if (was_orc)
+            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         break;
     }
     case DELAY_MEMORISE:
@@ -1191,10 +1196,15 @@ static void _finish_delay(const delay_queue_item &delay)
             {
                 mpr("You finish bottling this corpse's blood.");
 
+                const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(item);
                 else
                     turn_corpse_into_blood_potions(item);
+
+                if (was_orc)
+                    did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
             }
             else
             {
@@ -1227,6 +1237,8 @@ static void _finish_delay(const delay_queue_item &delay)
                     mpr("What a waste.");
                 }
 
+                const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+
                 if (mons_skeleton(item.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_chunks(item);
                 else
@@ -1238,6 +1250,9 @@ static void _finish_delay(const delay_queue_item &delay)
                     mpr("You enjoyed that.");
                     you.berserk_penalty = 0;
                 }
+
+                if (was_orc)
+                    did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
             }
 
             // Don't autopickup chunks/potions if there's still another

@@ -291,11 +291,16 @@ bool cast_bone_shards(int power, bolt &beam)
 
     bool success = false;
 
+    const bool was_orc = (mons_species(you.weapon()->plus) == MONS_ORC);
+
     if (you.weapon()->sub_type != CORPSE_SKELETON)
     {
         mpr("The corpse collapses into a pulpy mess.");
 
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+        if (was_orc)
+            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
     }
     else
     {
@@ -310,6 +315,9 @@ bool cast_bone_shards(int power, bolt &beam)
         mpr("The skeleton explodes into sharp fragments of bone!");
 
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+        if (was_orc)
+            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
 
         zapping(ZAP_BONE_SHARDS, power, beam);
 
@@ -337,6 +345,9 @@ bool cast_sublimation_of_blood(int pow)
             inc_mp(7 + random2(7), false);
 
             dec_inv_item_quantity(wielded, 1);
+
+            if (mons_species(you.inv[wielded].plus) == MONS_ORC)
+                did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
@@ -1039,6 +1050,7 @@ bool cast_simulacrum(int pow, god_type god)
 bool cast_twisted_resurrection(int pow, god_type god)
 {
     int how_many_corpses = 0;
+    int how_many_orcs = 0;
     int total_mass = 0;
     int rotted = 0;
 
@@ -1048,6 +1060,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
         {
             total_mass += mons_weight(si->plus);
             how_many_corpses++;
+            if (mons_species(si->plus) == MONS_ORC)
+                how_many_orcs++;
             if (food_is_rotten(*si))
                 rotted++;
             destroy_item(si->index());
@@ -1080,6 +1094,10 @@ bool cast_twisted_resurrection(int pow, god_type god)
     {
         mprf("The corpse%s collapse%s into a pulpy mess.",
              how_many_corpses > 1 ? "s": "", how_many_corpses > 1 ? "": "s");
+
+        if (how_many_orcs > 0)
+            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
+
         return (false);
     }
 
@@ -1102,6 +1120,10 @@ bool cast_twisted_resurrection(int pow, god_type god)
     if (monster == -1)
     {
         mpr("The corpses collapse into a pulpy mess.");
+
+        if (how_many_orcs > 0)
+            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
+
         return (false);
     }
 
@@ -1109,6 +1131,9 @@ bool cast_twisted_resurrection(int pow, god_type god)
     menv[monster].flags |= MF_HONORARY_UNDEAD;
 
     mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
+
+    if (how_many_orcs > 0)
+        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
 
     if (mon == MONS_ABOMINATION_LARGE)
     {

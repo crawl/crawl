@@ -1324,6 +1324,8 @@ void cast_fulsome_distillation(int pow)
         }
     }
 
+    const bool was_orc = (mons_species(mitm[corpse].plus) == MONS_ORC);
+
     // We borrow the corpse's object to make our potion.
     mitm[corpse].base_type = OBJ_POTIONS;
     mitm[corpse].sub_type  = pot_type;
@@ -1340,6 +1342,9 @@ void cast_fulsome_distillation(int pow)
     // Try to move the potion to the player (for convenience).
     if (move_item_to_player(corpse, 1) != 1)
         mpr("Unfortunately, you can't carry it right now!");
+
+    if (was_orc)
+        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
 }
 
 bool cast_fragmentation(int pow, const dist& spd)

@@ -719,6 +719,7 @@ enum conduct_type
     DID_DELIBERATE_MUTATING,            // Zin
     DID_CAUSE_GLOWING,                  // Zin
     DID_CHAOS,                          // Zin (used weapon/magic of chaos)
+    DID_DESECRATE_ORCISH_REMAINS,       // Beogh
     DID_DESTROY_ORCISH_IDOL,            // Beogh
     DID_CREATE_LIFE,                    // unused
 

@@ -530,7 +530,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_BEOGH:
         snprintf(info, INFO_SIZE, "you bless dead orcs%s",
-                 verbose ? " (by standing over their corpses and <w>p</w>raying)" : "");
+                 verbose ? " (by standing over their remains and <w>p</w>raying)" : "");
 
         likes.push_back(info);
         break;
@@ -784,6 +784,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_BEOGH:
+        dislikes.push_back("you desecrate orcish remains");
         dislikes.push_back("you destroy orcish idols");
         break;
 
@@ -3074,6 +3075,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_DESECRATE_ORCISH_REMAINS:
+            if (you.religion == GOD_BEOGH)
+            {
+                piety_change = -level;
+                retval = true;
+            }
+            break;
+
         case DID_DESTROY_ORCISH_IDOL:
             if (you.religion == GOD_BEOGH)
             {
@@ -3116,7 +3125,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Spell Practise", "Spell Nonutility", "Cards", "Stimulants",
                 "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Chaos",
-                "Destroy Orcish Idol", "Create Life"
+                "Desecrate Orcish Remains", "Destroy Orcish Idol",
+                "Create Life"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
@@ -6230,7 +6240,6 @@ static bool _god_likes_item(god_type god, const item_def& item)
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
-                   && item.sub_type == CORPSE_BODY
                    && mons_species(item.plus) == MONS_ORC);
 
     case GOD_NEMELEX_XOBEH:
@@ -6286,10 +6295,21 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     {
         const int item_orig = item.orig_monnum - 1;
 
-        if ((item_orig == MONS_SAINT_ROKA && !one_chance_in(5))
-            || (item_orig == MONS_ORC_HIGH_PRIEST && x_chance_in_y(3, 5))
-            || (item_orig == MONS_ORC_PRIEST && x_chance_in_y(2, 5))
-            || one_chance_in(5))
+        int chance = 4;
+
+        if (item_orig == MONS_SAINT_ROKA)
+            chance += 12;
+        else if (item_orig == MONS_ORC_HIGH_PRIEST)
+            chance += 8;
+        else if (item_orig == MONS_ORC_PRIEST)
+            chance += 4;
+
+        if (food_is_rotten(item))
+            chance--;
+        else if (item.sub_type == CORPSE_SKELETON)
+            chance -= 2;
+
+        if (x_chance_in_y(chance, 20))
         {
             gain_piety(1);
             relative_piety_gain = PIETY_SOME;
@@ -6525,7 +6545,7 @@ void offer_items()
         if (you.religion == GOD_SHINING_ONE)
             simple_god_message(" only cares about evil items!");
         else if (you.religion == GOD_BEOGH)
-            simple_god_message(" only cares about orc corpses!");
+            simple_god_message(" only cares about orcish remains!");
         else if (you.religion == GOD_NEMELEX_XOBEH)
             simple_god_message(" expects you to use your decks, not offer them!");
     }
