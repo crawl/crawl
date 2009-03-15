@@ -1520,23 +1520,18 @@ void armour_wear_effects(const int item_slot)
         }
     }
 
-    if (is_random_artefact( arm ))
-        use_randart( arm, melded );
+    if (is_random_artefact(arm))
+        use_randart(arm, melded);
 
-    if (item_cursed( arm ) && !melded)
+    if (item_cursed(arm) && !melded)
     {
-        mpr( "Oops, that feels deathly cold." );
+        mpr("Oops, that feels deathly cold.");
         learned_something_new(TUT_YOU_CURSED);
 
-        // Cursed cloaks prevent you from removing body armour
-        int cloak_mult = 1;
-        if (get_armour_slot(arm) == EQ_CLOAK)
-            cloak_mult = 2;
+        // Cursed cloaks prevent you from removing body armour.
+        const int cloak_mult = (get_armour_slot(arm) == EQ_CLOAK) ? 2 : 1;
 
-        if (known_cursed)
-            xom_is_stimulated(32 * cloak_mult);
-        else
-            xom_is_stimulated(64 * cloak_mult);
+        xom_is_stimulated(32 * cloak_mult * (!known_cursed ? 2 : 1));
     }
 
     if (eq_slot == EQ_SHIELD)
