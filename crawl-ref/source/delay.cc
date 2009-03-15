@@ -1390,7 +1390,7 @@ void armour_wear_effects(const int item_slot)
 
     if (!was_known)
     {
-        if (Options.autoinscribe_randarts && is_random_artefact( arm ))
+        if (Options.autoinscribe_randarts && is_random_artefact(arm))
             add_autoinscription( arm, randart_auto_inscription(arm));
     }
     if (!melded)
