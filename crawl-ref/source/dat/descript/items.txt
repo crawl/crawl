@@ -541,7 +541,7 @@ deck of war
 
 A deck of magical cards which are useful before and during battle.
 
-It may contain the following cards: the Portal, the Warp, Swap, Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness, Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment
+It may contain the following cards: the Portal, the Warp, Swap, Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness, Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
 %%%%
 deck of wonders
 
