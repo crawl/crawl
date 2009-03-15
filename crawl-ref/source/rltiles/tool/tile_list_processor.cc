@@ -807,6 +807,65 @@ bool tile_list_processor::write_data()
             "    return (idx >= tile && idx < tile + tile_%s_count(tile));\n"
             "}\n\n",
             lcname.c_str(), m_start_value.c_str(), max.c_str(), lcname.c_str());
+
+        fclose(fp);
+    }
+
+    // write "tile-%name.html"
+    {
+        char filename[1024];
+        sprintf(filename, "tile-%s.html", lcname.c_str());
+        FILE *fp = fopen(filename, "w");
+        
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return false;
+        }
+
+        fprintf(fp, "<html><table>\n");
+
+        fprintf(fp, "%s", "<tr><td>Image</td><td>Vault String</td><td>Enum</td><td>Path</td></tr>\n");
+
+        for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
+        {
+            fprintf(fp, "<tr>");
+            
+            fprintf(fp, "<td><img src=\"%s\"/></td>",
+                m_page.m_tiles[i]->filename().c_str());
+
+            std::string lcenum = m_page.m_tiles[i]->enumname();
+            for (unsigned int c = 0; c < lcenum.size(); c++)
+                lcenum[c] = std::tolower(lcenum[c]);
+
+            fprintf(fp, "<td>%s</td>", lcenum.c_str());
+
+            const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
+            if (m_page.m_tiles[i]->enumname().empty())
+            {
+                fprintf(fp, "<td></td>");
+            }
+            else if (parts_ctg.empty())
+            {
+                fprintf(fp, "<td>%s_%s</td>",
+                    m_prefix.c_str(), m_page.m_tiles[i]->enumname().c_str());
+            }
+            else
+            {
+                fprintf(fp, "<td>%s_%s_%s</td>",
+                    m_prefix.c_str(),
+                    parts_ctg.c_str(),
+                    m_page.m_tiles[i]->enumname().c_str());
+            }
+
+            fprintf(fp, "<td>%s</td>", m_page.m_tiles[i]->filename().c_str());
+
+            fprintf(fp, "</tr>\n");
+        }
+
+        fprintf(fp, "</table></html>\n");
+
+        fclose(fp);
     }
 
     delete[] part_min;

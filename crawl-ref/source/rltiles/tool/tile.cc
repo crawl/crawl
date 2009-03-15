@@ -325,6 +325,8 @@ bool tile::compose(const tile &img)
 
 bool tile::load(const std::string &filename)
 {
+    m_filename = filename;
+
     if (m_pixels)
     {
         unload();
