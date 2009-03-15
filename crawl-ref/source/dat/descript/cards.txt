@@ -3,7 +3,7 @@
 the Portal
 
 This card teleports you to a random location. At higher power levels this may be instantaneous, controlled or both.
-It is usually found in decks of escape and war, or in Nemelex' deck of punishment.
+It is usually found in decks of escape and war, or in Nemelex's deck of punishment.
 %%%%
 the Warp
 
@@ -24,32 +24,32 @@ It is usually found in decks of escape and war.
 the Tomb
 
 This card entombs the player in protective walls of solid rock. At lower power levels, the tomb may be imperfect. Use with caution!
-It is usually found in decks of defence, escape, and war, or in Nemelex' deck of punishment.
+It is usually found in decks of defence, escape and war, or in Nemelex's deck of punishment.
 %%%%
 the Banshee
 
 The wail of the Banshee instils fear in nearby creatures.
-It is usually found in decks of defence, escape, and war.
+It is usually found in decks of defence, escape and war.
 %%%%
 Damnation
 
 This card banishes one or more nearby creatures to the Abyss, possibly including you.
-It is usually found in decks of defence, escape, and war, or in Nemelex' deck of punishment.
+It is usually found in decks of defence, escape and war, or in Nemelex's deck of punishment.
 %%%%
 Solitude
 
 This card randomly teleports creatures adjacent to you.
-It is usually found in decks of defence, escape, and war.
+It is usually found in decks of defence, escape and war.
 %%%%
 Warpwright
 
 This card may create teleporters.
-It is usually found in decks of defence, escape, and war.
+It is usually found in decks of defence, escape and war.
 %%%%
 Flight
 
 This card helps you run away by transforming you, speeding you up or creating other avenues of escape.
-It is usually found in decks of defence, escape, and war.
+It is usually found in decks of defence, escape and war.
 %%%%
 # deck of battle -> changes, defence, war
 the Elixir
@@ -147,7 +147,7 @@ It is usually found in decks of changes and dungeons.
 the Minefield
 
 This card makes your immediate surroundings more dangerous.
-It is usually found in decks of changes and dungeons, or in Nemelex' deck of punishment.
+It is usually found in decks of changes and dungeons, or in Nemelex's deck of punishment.
 %%%%
 # deck of summonings
 the Crusade
@@ -229,32 +229,32 @@ It is usually found in decks of destruction and war.
 Wrath
 
 This card draws a god's wrath against you.
-It is usually only found in Nemelex' deck of punishment.
+It is usually only found in Nemelex's deck of punishment.
 %%%%
 the Wraith
 
 This card will drain you.
-It is usually only found in Nemelex' deck of punishment.
+It is usually only found in Nemelex's deck of punishment.
 %%%%
 the Curse
 
 This card places curses on your possessions and may even spoil your potions.
-It is usually only found in Nemelex' deck of punishment.
+It is usually only found in Nemelex's deck of punishment.
 %%%%
 Xom
 
 This card draws the attention of Xom on yourself.
-It is usually only found in Nemelex' deck of punishment.
+It is usually only found in Nemelex's deck of punishment.
 %%%%
 Famine
 
 This card starves you.
-It is usually only found in Nemelex' deck of punishment.
+It is usually only found in Nemelex's deck of punishment.
 %%%%
 Wild Magic
 
 This card causes wild magic, as if from miscasting a spell, to act upon you.
-It is usually only found in Nemelex' deck of punishment.
+It is usually only found in Nemelex's deck of punishment.
 %%%%
 # deck of oddities (random card, along with a few others)
 the Bargain
