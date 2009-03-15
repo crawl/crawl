@@ -3445,7 +3445,7 @@ static void _make_rod(item_def &item, stave_type rod_type, int ncharges)
 }
 
 // Creates an item of a given base and sub type.
-// replacement is used when handing out armour that is not be wearable for
+// replacement is used when handing out armour that is not wearable for
 // some species; otherwise use -1.
 static void _newgame_make_item(int slot, equipment_type eqslot,
                                object_class_type base,
