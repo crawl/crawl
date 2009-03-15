@@ -484,6 +484,7 @@ void stop_delay( bool stop_stair_travel )
         }
 
         did_god_conduct(DID_DRINK_BLOOD, 8);
+
         delay.duration = 0;
         _pop_delay();
         handle_delay();
@@ -950,19 +951,22 @@ void handle_delay( void )
         // fun with valgrind.
         delay.duration--;
 
-        switch ( delay.type )
+        switch (delay.type)
         {
         case DELAY_ARMOUR_ON:
             mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
                  you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
             break;
+
         case DELAY_ARMOUR_OFF:
             mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
                  you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
             break;
+
         case DELAY_BUTCHER:
             mprf(MSGCH_MULTITURN_ACTION, "You continue butchering the corpse.");
             break;
+
         case DELAY_BOTTLE_BLOOD:
             mprf(MSGCH_MULTITURN_ACTION, "You continue bottling blood from "
                                          "the corpse.");
@@ -979,26 +983,30 @@ void handle_delay( void )
         case DELAY_MEMORISE:
             mpr("You continue memorising.", MSGCH_MULTITURN_ACTION);
             break;
+
         case DELAY_PASSWALL:
             mpr("You continue meditating on the rock.",
                 MSGCH_MULTITURN_ACTION);
             break;
+
         case DELAY_RECITE:
             mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
                  _get_recite_speech("other", you.num_turns + delay.duration+1).c_str());
-
             if (apply_area_visible(_recite_to_monsters, delay.parm1))
                 viewwindow(true, false);
             break;
+
         case DELAY_MULTIDROP:
-            drop_item( items_for_multidrop[0].slot,
-                       items_for_multidrop[0].quantity,
-                       items_for_multidrop.size() == 1 );
-            items_for_multidrop.erase( items_for_multidrop.begin() );
+            drop_item(items_for_multidrop[0].slot,
+                      items_for_multidrop[0].quantity,
+                      items_for_multidrop.size() == 1);
+            items_for_multidrop.erase(items_for_multidrop.begin());
             break;
+
         case DELAY_EAT:
             mpr("You continue eating.", MSGCH_MULTITURN_ACTION);
             break;
+
         case DELAY_FEED_VAMPIRE:
         {
             item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
@@ -1014,14 +1022,13 @@ void handle_delay( void )
             vampire_nutrition_per_turn(corpse, 0);
             break;
         }
+
         default:
             break;
         }
     }
     else
-    {
         _finish_delay(delay);
-    }
 }
 
 static void _finish_delay(const delay_queue_item &delay)
@@ -1088,15 +1095,16 @@ static void _finish_delay(const delay_queue_item &delay)
     case DELAY_FEED_VAMPIRE:
     {
         mprf("You finish drinking.");
+
         did_god_conduct(DID_DRINK_BLOOD, 8);
 
-        item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
-                                        : mitm[delay.parm2]);
+        item_def &item = (delay.parm1 ? you.inv[delay.parm2]
+                                      : mitm[delay.parm2]);
 
-        vampire_nutrition_per_turn(corpse, 1);
+        vampire_nutrition_per_turn(item, 1);
 
-        if (mons_skeleton(corpse.plus) && one_chance_in(3))
-            turn_corpse_into_skeleton(corpse);
+        if (mons_skeleton(item.plus) && one_chance_in(3))
+            turn_corpse_into_skeleton(item);
         else
         {
             if (delay.parm1)
@@ -1107,8 +1115,8 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
     }
     case DELAY_MEMORISE:
-        mpr( "You finish memorising." );
-        add_spell_to_memory( static_cast<spell_type>( delay.parm1 ) );
+        mpr("You finish memorising.");
+        add_spell_to_memory(static_cast<spell_type>(delay.parm1));
         break;
 
     case DELAY_RECITE:
@@ -1118,7 +1126,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_PASSWALL:
     {
-        mpr( "You finish merging with the rock." );
+        mpr("You finish merging with the rock.");
         more();  // or the above message won't be seen
 
         const coord_def pass(delay.parm1, delay.parm2);
