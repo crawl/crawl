@@ -248,7 +248,7 @@ void corpse_rot()
 
 bool brand_weapon(brand_type which_brand, int power)
 {
-    if ( !you.weapon() )
+    if (!you.weapon())
         return (false);
 
     const bool temp_brand = you.duration[DUR_WEAPON_BRAND];
