@@ -3486,12 +3486,13 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
     item.plus2     = plus2;
     item.special   = 0;
 
-    // If the character is restricted in wearing armour of equipment slot
-    // eqslot, hand out replacement instead.
+    // If the character is restricted in wearing armour of equipment
+    // slot eqslot, hand out replacement instead.
     if (item.base_type == OBJ_ARMOUR && replacement != -1
         && !you_can_wear(eqslot))
     {
-        // Don't replace shields with bucklers for large races or draconians
+        // Don't replace shields with bucklers for large races or
+        // draconians.
         if (sub_type != ARM_SHIELD
             || player_size(PSIZE_TORSO) < SIZE_LARGE
                && !player_genus(GENPC_DRACONIAN))
