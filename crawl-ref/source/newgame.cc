@@ -2694,17 +2694,17 @@ static void _give_last_paycheck(job_type which_job)
     {
     case JOB_HEALER:
     case JOB_THIEF:
-        you.gold = roll_dice( 2, 100 );
+        you.gold = roll_dice(2, 100);
         break;
 
     case JOB_WANDERER:
     case JOB_WARPER:
     case JOB_ASSASSIN:
-        you.gold = roll_dice( 2, 50 );
+        you.gold = roll_dice(2, 50);
         break;
 
     default:
-        you.gold = roll_dice( 2, 20 );
+        you.gold = roll_dice(2, 20);
         break;
 
     case JOB_PALADIN:
