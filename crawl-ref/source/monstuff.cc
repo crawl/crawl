@@ -6487,12 +6487,14 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     {
                         spellOK = false;
                     }
-                    else if (monster->type == MONS_DAEVA)
+                    else if (monster->type == MONS_DAEVA
+                            && monster->god == GOD_SHINING_ONE)
                     {
                         const monsters *mon = &menv[monster->foe];
 
-                        // Don't allow daevas to make unchivalric magic
-                        // attacks, except against appropriate monsters.
+                        // Don't allow TSO-worshipping daevas to make
+                        // unchivalric magic attacks, except against
+                        // appropriate monsters.
                         if (is_unchivalric_attack(monster, mon)
                             && !tso_unchivalric_attack_safe_monster(mon))
                         {
