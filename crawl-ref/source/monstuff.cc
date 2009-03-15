@@ -6253,20 +6253,25 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         return (false);
     }
 
+    // If the monster's a priest, assume summons come from priestly
+    // abilities, in which case they'll have the same god.  If the
+    // monster is neither a priest nor a wizard, assume summons come
+    // from intrinsic abilities, in which case they'll also have the
+    // same god.
+    const bool priest = mons_class_flag(monster->type, M_PRIEST);
+    const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
+    god_type god = (priest || !(priest || wizard)) ? monster->god : GOD_NO_GOD;
+
     if (silenced(monster->pos())
-        && mons_class_flag(monster->type,
-                           M_PRIEST | M_ACTUAL_SPELLS | M_SPELL_NO_SILENT))
+        && (priest || wizard
+            || mons_class_flag(monster->type, M_SPELL_NO_SILENT)))
     {
         return (false);
     }
 
     // Shapeshifters don't get spells.
-    if (mons_is_shapeshifter(monster)
-        && (mons_class_flag(monster->type, M_ACTUAL_SPELLS)
-            || mons_class_flag(monster->type, M_PRIEST)))
-    {
+    if (mons_is_shapeshifter(monster) && (priest || wizard))
         return (false);
-    }
     else if (monster->has_ench(ENCH_CONFUSION)
              && !mons_class_flag(monster->type, M_CONFUSED))
     {
@@ -6304,7 +6309,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 // The player's out of sight!
                 // Quick, let's take a turn to heal ourselves. -- bwr
                 spell_cast = monster->has_spell(SPELL_MAJOR_HEALING) ?
-                             SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
+                                 SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
                 finalAnswer = true;
             }
             else if (mons_is_fleeing(monster) || mons_is_pacified(monster))
@@ -6331,9 +6336,9 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         if (!finalAnswer && mon_enemies_around(monster)
             && mons_is_caught(monster) && one_chance_in(4))
         {
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
-                if (ms_quick_get_away( monster, hspell_pass[i] ))
+                if (ms_quick_get_away(monster, hspell_pass[i]))
                 {
                     spell_cast = hspell_pass[i];
                     finalAnswer = true;
@@ -6363,7 +6368,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 int found_spell = 0;
                 for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
                 {
-                    if (ms_low_hitpoint_cast( monster, hspell_pass[i] )
+                    if (ms_low_hitpoint_cast(monster, hspell_pass[i])
                         && one_chance_in(++found_spell))
                     {
                         spell_cast = hspell_pass[i];
@@ -6386,11 +6391,11 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             // Remove healing/invis/haste if we don't need them.
             int num_no_spell = 0;
 
-            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {
                 if (hspell_pass[i] == SPELL_NO_SPELL)
                     num_no_spell++;
-                else if (ms_waste_of_time( monster, hspell_pass[i] )
+                else if (ms_waste_of_time(monster, hspell_pass[i])
                          || hspell_pass[i] == SPELL_DIG)
                 {
                     // Should monster not have selected dig by now,
@@ -6532,7 +6537,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
         if (spell_cast == SPELL_ANIMATE_DEAD
             && !animate_dead(monster, 100, SAME_ATTITUDE(monster),
-                             monster->foe, GOD_NO_GOD, false))
+                             monster->foe, god, false))
         {
             return (false);
         }
