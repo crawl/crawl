@@ -369,8 +369,8 @@ bool cast_sublimation_of_blood(int pow)
     {
         if (you.duration[DUR_DEATHS_DOOR])
         {
-            mpr( "A conflicting enchantment prevents the spell from "
-                 "coming into effect." );
+            mpr("A conflicting enchantment prevents the spell from "
+                "coming into effect.");
         }
         else if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
