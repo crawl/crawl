@@ -310,6 +310,8 @@ ENDMAP
 NAME: ziggurat_pillar_centre_c
 TAGS: ziggurat_pillar centered
 # This is evil. Monster sets are: summoners (1), evil eyes (2), harmless (3).
+# This pillar has tactical implications: you will have to stay away from it,
+# and teleports are more risky.
 MONS: ancient lich / boggart / curse skull
 MONS: eye of draining / eye of devastation / giant eyeball
 MONS: plant col:lightred
@@ -349,6 +351,19 @@ cc....cc
 cc....cc
  cccccc
 ENDMAP
+
+NAME: ziggurat_loot_2
+TAGS: ziggurat_loot_chamber allow_dup no_rotate
+ORIENT: float
+: ziggurat_loot_spot(_G, "X")
+MAP
+ ccc ccc
+cc.ccc.cc
+@......Xc
+cc.ccc.cc
+ ccc ccc
+ENDMAP
+
 
 # not finished!
 NAME: ziggurat_arena
