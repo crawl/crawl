@@ -602,7 +602,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
-                         0, god));
+                         MG_FORCE_BEH, god));
 
         if (monster != -1)
         {
@@ -1012,7 +1012,7 @@ bool cast_simulacrum(int pow, god_type god)
                     mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
-                              0, god, mon));
+                              MG_FORCE_BEH, god, mon));
 
             if (monster != -1)
             {
