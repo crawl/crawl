@@ -221,7 +221,7 @@ int list_spells(bool toggle_with_I, bool viewing)
     {
         spell_menu.allow_toggle = true;
         spell_menu.menu_action  = Menu::ACT_EXECUTE;
-        more_str += " Press ''?' to toggle between spell selection"
+        more_str += " Press '?' to toggle between spell selection"
                     " and description.";
     }
     spell_menu.set_more(formatted_string(more_str));
