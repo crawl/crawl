@@ -1174,8 +1174,8 @@ int monster_die(monsters *monster, killer_type killer,
     {
         if (!silent && !mons_reset)
         {
-            simple_monster_message( monster, " dissipates!",
-                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
+            simple_monster_message(monster, " dissipates!",
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
 
@@ -5392,7 +5392,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons_player_visible( monster ))
+        if (!mons_player_visible(monster))
             break;
 
         if (coinflip())
@@ -5402,7 +5402,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         beem.name        = "glob of lava";
         beem.aux_source  = "glob of lava";
         beem.range       = 6;
-        beem.damage      = dice_def( 3, 10 );
+        beem.damage      = dice_def(3, 10);
         beem.hit         = 20;
         beem.colour      = RED;
         beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
