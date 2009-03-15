@@ -118,11 +118,7 @@ Menu::Menu( const formatted_string &fs )
    select_filter(), highlighter(new MenuHighlighter), num(-1),
    lastch(0), alive(false), last_selected(-1)
 {
-#ifdef USE_TILE
     mdisplay = new MenuDisplayText(this);
-#else
-    mdisplay = new MenuDisplayText(this);
-#endif
     mdisplay->set_num_columns(1);
 
     int colour = LIGHTGREY;

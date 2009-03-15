@@ -24,6 +24,7 @@ REVISION("$Rev$");
 #include "cio.h"
 #include "database.h"
 #include "debug.h"
+#include "decks.h"
 #include "describe.h"
 #include "files.h"
 #include "initfile.h"
@@ -1108,6 +1109,20 @@ static bool _feature_filter(std::string key, std::string body)
     return (feat_by_desc(key) == DNGN_UNSEEN);
 }
 
+static bool _card_filter(std::string key, std::string body)
+{
+    key = lowercase_string(key);
+    std::string name;
+    for (int i = 0; i < NUM_CARDS; ++i)
+    {
+        name = lowercase_string(card_name((card_type) i));
+
+        if (name.find(key) != std::string::npos)
+            return (false);
+    }
+    return (true);
+}
+
 typedef void (*db_keys_recap)(std::vector<std::string>&);
 
 static void _recap_mon_keys(std::vector<std::string> &keys)
@@ -1459,8 +1474,8 @@ static bool _find_description(bool &again, std::string& error_inout)
 
     if (!error_inout.empty())
         mpr(error_inout.c_str(), MSGCH_PROMPT);
-    mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od "
-        "or (B)ranch?", MSGCH_PROMPT);
+    mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od, "
+        "(B)ranch, or (C)ard?", MSGCH_PROMPT);
 
     int ch = toupper(getch());
     std::string    type;
@@ -1492,6 +1507,10 @@ static bool _find_description(bool &again, std::string& error_inout)
     case 'K':
         type   = "skill";
         filter = _skill_filter;
+        break;
+    case 'C':
+        type   = "card";
+        filter = _card_filter;
         break;
     case 'I':
         type        = "item";

@@ -182,8 +182,8 @@ static std::string _spell_extra_description(spell_type spell)
 
 int list_spells(bool toggle_with_I, bool viewing)
 {
-    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
-        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                                |   MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
 #ifdef USE_TILE
     {
         // [enne] - Hack.  Make title an item so that it's aligned.

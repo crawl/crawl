@@ -105,12 +105,11 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing)
                 + (viewing ? "Examine" : "Buy");
     }
     snprintf(buf, sizeof buf,
+            "[<w>x</w>/<w>Esc</w>"
 #ifdef USE_TILE
-            "[<w>x</w>/<w>Esc</w>/<w>R-Click</w>] exit"
-#else
-            "[<w>x</w>/<w>Esc</w>] exit"
+            "/<w>R-Click</w>"
 #endif
-            "            [<w>!</w>] %s  %s",
+            "] exit            [<w>!</w>] %s  %s",
             (viewing ? "to select items " : "to examine items"),
             pkeys.c_str());
 
@@ -120,13 +119,13 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing)
     cgotoxy(1, numlines, GOTO_CRT);
 
     fs = formatted_string::parse_string(
+            "[<w>Enter</w>"
 #ifdef USE_TILE
-            "[<w>?</w>/<w>*</w>]           inventory  [<w>\\</w>] known items    "
-            "[<w>Enter</w>/<w>L-Click</w>] make purchase");
-#else
-            "[<w>Enter</w>] make purchase   [<w>\\</w>] list known items   "
-            "[<w>?</w>/<w>*</w>] inventory");
+            "/<w>L-Click</w>"
 #endif
+            "] make purchase   [<w>\\</w>] list known items   "
+            "[<w>?</w>/<w>*</w>] inventory");
+
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
 }
