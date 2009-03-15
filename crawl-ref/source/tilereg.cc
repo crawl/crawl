@@ -1847,7 +1847,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
         item = &you.inv[idx];
 
     describe_info inf;
-    get_item_desc(*item, inf);
+    get_item_desc(*item, inf, true);
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
     process_description<alt_desc_proc>(proc, inf);

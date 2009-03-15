@@ -1160,20 +1160,30 @@ static void _append_non_item(std::string &desc, std::string key)
     unsigned int flags = get_spell_flags(type);
 
     if (flags & SPFLAG_DEVEL)
+    {
         desc += "$This spell is still being developed, and is only available "
                 "via the &Z wizard command.";
+    }
     else if (flags & SPFLAG_TESTING)
+    {
         desc += "$This is a testing spell, only available via the "
                 "&Z wizard command.";
+    }
     else if (flags & SPFLAG_MONSTER)
+    {
         desc += "$This is a monster-only spell, only available via the "
                 "&Z wizard command.";
+    }
     else if (flags & SPFLAG_CARD)
+    {
         desc += "$This is a card-effect spell, unavailable in ordinary "
                 "spellbooks.";
+    }
     else
+    {
         desc += "$Odd, this spell can't be found anywhere.  Please "
                 "file a bug report.";
+    }
 
 #ifdef WIZARD
     if (!you.wizard)
@@ -1182,8 +1192,10 @@ static void _append_non_item(std::string &desc, std::string key)
 #endif
     {
         if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER | SPFLAG_DEVEL))
+        {
             desc += "$$You aren't in wizard mode, so you shouldn't be "
                     "seeing this entry.  Please file a bug report.";
+        }
     }
 }
 

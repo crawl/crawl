@@ -2082,7 +2082,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     }
 
     return description.str();
-}                               // end get_item_description()
+}
 
 static std::string _marker_feature_description(const coord_def &pos)
 {
@@ -2193,9 +2193,13 @@ void set_feature_desc_long(const std::string &raw_name,
         desc_table[raw_name] = desc;
 }
 
-void get_item_desc(const item_def &item, describe_info &inf)
+void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 {
-    inf.body << get_item_description(item, true, false, Options.tutorial_left);
+    // Don't use verbose descriptions if terse and the item contains spells,
+    // so we can actually output these spells if space is scarce.
+    const bool verbose = !terse || !item.has_spells();
+    inf.body << get_item_description(item, verbose, false,
+                                     Options.tutorial_left);
 }
 
 // Returns true if spells can be shown to player.
@@ -2228,11 +2232,9 @@ static bool _show_item_description(const item_def &item)
 
         formatted_string fs;
         item_def dup = item;
-        spellbook_contents( dup,
-                item.base_type == OBJ_BOOKS?
-                    RBOOK_READ_SPELL
-                  : RBOOK_USE_STAFF,
-                &fs );
+        spellbook_contents( dup, item.base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
+                                                             : RBOOK_USE_STAFF,
+                            &fs );
         fs.display(2, -2);
         return (true);
     }

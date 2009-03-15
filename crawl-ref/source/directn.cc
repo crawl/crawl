@@ -1712,7 +1712,8 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     else if (oid != NON_ITEM)
     {
         // Second priority: objects.
-        get_item_desc(mitm[oid], inf);
+        // If examine_mons is true, use terse descriptions.
+        get_item_desc(mitm[oid], inf, examine_mons);
     }
     else
     {

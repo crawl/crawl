@@ -73,7 +73,8 @@ void set_feature_desc_long(const std::string &raw_name,
  * called from: item_use - shopping
  * *********************************************************************** */
 void describe_item(item_def &item, bool allow_inscribe = false);
-void get_item_desc(const item_def &item, describe_info &inf);
+void get_item_desc(const item_def &item, describe_info &inf,
+                   bool terse = false);
 void inscribe_item(item_def &item, bool proper_prompt);
 
 /* ***********************************************************************
