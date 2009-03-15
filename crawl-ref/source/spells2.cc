@@ -781,8 +781,7 @@ bool vampiric_drain(int pow, const dist &vmove)
 
         if (hp_gain)
         {
-            mprf("You feel life coursing from %s into your body!",
-                 monster->name(DESC_NOCAP_THE).c_str());
+            mpr("You feel life coursing into your body.");
             inc_hp(hp_gain, false);
         }
     }
