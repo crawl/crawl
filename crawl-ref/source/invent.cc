@@ -225,54 +225,70 @@ std::string InvEntry::get_text() const
     return tstr.str();
 }
 
-void InvEntry::add_class_hotkeys(const item_def &i)
+static void _get_class_hotkeys(const int type, std::vector<char> &glyphs)
 {
-    switch (i.base_type)
+    switch (type)
     {
     case OBJ_GOLD:
-        add_hotkey('$');
+        glyphs.push_back('$');
         break;
     case OBJ_MISSILES:
-        add_hotkey('(');
+        glyphs.push_back('(');
         break;
     case OBJ_WEAPONS:
-        add_hotkey(')');
+        glyphs.push_back(')');
         break;
     case OBJ_ARMOUR:
-        add_hotkey('[');
+        glyphs.push_back('[');
         break;
     case OBJ_WANDS:
-        add_hotkey('/');
+        glyphs.push_back('/');
         break;
     case OBJ_FOOD:
-        add_hotkey('%');
+        glyphs.push_back('%');
         break;
     case OBJ_BOOKS:
-        add_hotkey('+');
-        add_hotkey(':');
+        glyphs.push_back('+');
+        glyphs.push_back(':');
         break;
     case OBJ_SCROLLS:
-        add_hotkey('?');
+        glyphs.push_back('?');
         break;
     case OBJ_JEWELLERY:
-        add_hotkey(i.sub_type >= AMU_RAGE ? '"' : '=');
+        glyphs.push_back('"');
+        glyphs.push_back('=');
         break;
     case OBJ_POTIONS:
-        add_hotkey('!');
+        glyphs.push_back('!');
         break;
     case OBJ_STAVES:
-        add_hotkey('\\');
-        add_hotkey('|');
+        glyphs.push_back('\\');
+        glyphs.push_back('|');
         break;
     case OBJ_MISCELLANY:
-        add_hotkey('}');
+        glyphs.push_back('}');
         break;
     case OBJ_CORPSES:
-        add_hotkey('&');
+        glyphs.push_back('&');
         break;
     default:
         break;
     }
+}
+
+void InvEntry::add_class_hotkeys(const item_def &i)
+{
+    const int type = i.base_type;
+    if (type == OBJ_JEWELLERY)
+    {
+        add_hotkey(i.sub_type >= AMU_RAGE ? '"' : '=');
+        return;
+    }
+
+    std::vector<char> glyphs;
+    _get_class_hotkeys(type, glyphs);
+    for (unsigned int k = 0; k < glyphs.size(); ++k)
+        add_hotkey(glyphs[k]);
 }
 
 bool InvEntry::show_prices = false;
@@ -714,7 +730,27 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        add_entry( new MenuEntry( item_class_name(i), MEL_SUBTITLE ) );
+        std::string subtitle = item_class_name(i);
+#ifdef USE_TILE
+        // For Tiles, mention the class selection shortcuts.
+        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+        {
+            std::vector<char> glyphs;
+            _get_class_hotkeys(i, glyphs);
+            if (!glyphs.empty())
+            {
+                const std::string misc = "Miscellaneous";
+                subtitle += std::string(misc.length()
+                                        - subtitle.length() + 1, ' ');
+                subtitle += "(select all with <w>";
+                for (unsigned int k = 0; k < glyphs.size(); ++k)
+                     subtitle += glyphs[k];
+                subtitle += "</w><blue>)";
+            }
+        }
+#endif
+
+        add_entry( new MenuEntry( subtitle, MEL_SUBTITLE ) );
         items_in_class.clear();
 
         for (int j = 0, count = mitems.size(); j < count; ++j)

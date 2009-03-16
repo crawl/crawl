@@ -90,11 +90,11 @@ const int dir_dx[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
 const int dir_dy[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
 
 const int cmd_normal[9] = {'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u'};
-const int cmd_shift[9] = {'B', 'J', 'N', 'H', '5', 'L', 'Y', 'K', 'U'};
-const int cmd_ctrl[9] = {CONTROL('B'), CONTROL('J'), CONTROL('N'),
-                      CONTROL('H'), 'X', CONTROL('L'),
-                      CONTROL('Y'), CONTROL('K'), CONTROL('U')};
-const int cmd_dir[9] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+const int cmd_shift[9]  = {'B', 'J', 'N', 'H', '5', 'L', 'Y', 'K', 'U'};
+const int cmd_ctrl[9]   = {CONTROL('B'), CONTROL('J'), CONTROL('N'),
+                           CONTROL('H'), 'X', CONTROL('L'),
+                           CONTROL('Y'), CONTROL('K'), CONTROL('U')};
+const int cmd_dir[9]    = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 Region::Region() :
     ox(0),
@@ -1254,10 +1254,8 @@ void InventoryRegion::on_resize()
         return;
 
     m_flavour = new unsigned char[mx * my];
-    for (int i = 0; i < mx * my; i++)
-    {
+    for (int i = 0; i < mx * my; ++i)
         m_flavour[i] = random2((unsigned char)~0);
-    }
 }
 
 void InventoryRegion::update(int num, InventoryTile *items)

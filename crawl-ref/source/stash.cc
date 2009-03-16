@@ -1778,7 +1778,6 @@ public:
     StashSearchMenu(const char* sort_style_)
         : Menu(), can_travel(true),
           request_toggle_sort_method(false),
-//          allow_toggle(true), menu_action(ACT_EXECUTE),
           sort_style(sort_style_)
     { }
 
@@ -1836,9 +1835,9 @@ bool StashTracker::display_search_results(
 
     StashSearchMenu stashmenu(sort_style);
     stashmenu.set_tag("stash");
-    stashmenu.can_travel = travelable;
+    stashmenu.can_travel   = travelable;
     stashmenu.allow_toggle = true;
-    stashmenu.menu_action = Menu::ACT_EXECUTE;
+    stashmenu.menu_action  = Menu::ACT_EXECUTE;
     std::string title = "match";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);

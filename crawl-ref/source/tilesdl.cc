@@ -183,7 +183,8 @@ void TilesFramework::calculate_default_options()
         {
             break;
         }
-    } while (++auto_size < num_screen_sizes - 1);
+    }
+    while (++auto_size < num_screen_sizes - 1);
 
     // Auto pick map and font sizes if option is zero.
 #define AUTO(x,y) (x = (x) ? (x) : _screen_sizes[auto_size][(y)])

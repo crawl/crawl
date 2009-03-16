@@ -334,7 +334,7 @@ bool Menu::process_key( int keyin )
     {
         sel.clear();
         menu_action = (action)((menu_action+1) % ACT_NUM);
-        update_title();
+//         update_title();
         return (true);
     }
 
@@ -1093,10 +1093,11 @@ void slider_menu::adjust_pagesizes(int recurse_depth)
         pagesize--;
 
     if (selected != -1
-            && (selected < first_entry || selected >= first_entry + pagesize)
-            && recurse_depth > 0)
+        && (selected < first_entry || selected >= first_entry + pagesize)
+        && recurse_depth > 0)
+    {
         fix_entry(recurse_depth - 1);
-
+    }
     calc_y_offset();
 }
 

@@ -165,7 +165,7 @@ trap_item_brand    = reverse
 # explore_stop     = items,greedy_items,stairs,shops,altars,gates
 # explore_improved = true
 auto_exclude = oklob plant,silver statue,orange crystal statue,ice statue
-auto_exclude = curse skull,Roxanne
+auto_exclude = curse skull,roxanne
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -325,9 +325,9 @@ menu_colour = notes:white:Reached XP level
 
 ##### 4-m	Inscriptions ##########################
 #
-# autoinscribe = royal jell:=g
-# autoinscribe = distortion:!w
+autoinscribe = distortion:!w
 # autoinscribe = potion.*mutation:!q
+# autoinscribe = royal jell:=g
 # autoinscribe_randarts = false
 
 ##### 4-n	Macro related Options #################

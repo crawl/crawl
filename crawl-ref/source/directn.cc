@@ -560,7 +560,6 @@ void full_describe_view()
             if (monster_descriptor(list_mons[i]->type, MDSC_NOMSG_WOUNDS))
                 damage_level = MDAM_OKAY;
 
-            std::vector<formatted_string> fss;
             std::string str = get_monster_equipment_desc(list_mons[i], true,
                                                          DESC_CAP_A, true);
 
@@ -572,6 +571,7 @@ void full_describe_view()
 
             // Wraparound if the description is longer than allowed.
             linebreak_string2(str, get_number_of_cols() - 8);
+            std::vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
             MenuEntry *me;
             for (unsigned int j = 0; j < fss.size(); j++)
