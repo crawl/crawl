@@ -756,7 +756,7 @@ static const char *targeting_help_1 =
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>Ctrl-F</w> : change monster targeting mode\n"
 #ifndef USE_TILE
-    "<w>Ctrl-L</w> : toggle targetting via monster list\n"
+    "<w>Ctrl-L</w> : toggle targeting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
     " \n"
