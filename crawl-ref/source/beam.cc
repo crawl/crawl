@@ -1800,7 +1800,7 @@ void bolt::hit_wall()
     {
         // Regress for explosions: blow up in an open grid (if regressing
         // makes any sense).  Also regress when dropping items.
-        if (!aimed_at_spot
+        if (pos() != source
             && ((is_explosion && !in_explosion_phase) || drop_item))
         {
             do {
