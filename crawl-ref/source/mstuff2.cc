@@ -470,68 +470,40 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_CANTRIP:
     {
-        // Don't give any message if the monster isn't nearby.
-        // (Otherwise you could get them from halfway across the level.)
-        if (!mons_near(monster))
-            return;
-
-        const bool friendly      = mons_friendly(monster);
-        const bool buff_only     = !friendly && is_sanctuary(you.pos());
-        bool need_friendly_stub  = false;
-        const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
-                                                    : MSGCH_MONSTER_ENCHANT;
-
         // Monster spell of uselessness, just prints a message.
         // This spell exists so that some monsters with really strong
         // spells (ie orc priest) can be toned down a bit. -- bwr
         //
         // XXX: Needs expansion, and perhaps different priest/mage flavours.
-        switch (random2((buff_only || crawl_state.arena) ? 4 : 7))
-        {
-        case 0:
-            simple_monster_message(monster, " glows brightly for a moment.",
-                                   channel);
-            break;
-        case 1:
-            simple_monster_message(monster, " looks stronger.",
-                                   channel);
-            break;
-        case 2:
-            simple_monster_message(monster, " becomes somewhat translucent.",
-                                   channel);
-            break;
-        case 3:
-            simple_monster_message(monster, "'s eyes start to glow.",
-                                   channel);
-            break;
-        case 4:
-            if (friendly)
-                need_friendly_stub = true;
-            else
-                mpr("You feel troubled.");
-            break;
-        case 5:
-            if (friendly)
-                need_friendly_stub = true;
-            else
-                mpr("You feel a wave of unholy energy pass over you.");
-            break;
-        case 6:
-        default:
-            if (friendly)
-                need_friendly_stub = true;
-            else if (one_chance_in(20))
-                mpr("You resist (whatever that was supposed to do).");
-            else
-                mpr("You resist.");
-            break;
-        }
 
-        if (need_friendly_stub)
-        {
-            simple_monster_message(monster, " shimmers for a moment.",
-                                   channel);
-        }
+        // Don't give any message if the monster isn't nearby.
+        // (Otherwise you could get them from halfway across the level.)
+        if (!mons_near(monster))
+            return;
+
+        const bool friendly  = mons_friendly(monster);
+        const bool buff_only = !friendly && is_sanctuary(you.pos());
+        const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
+                                                    : MSGCH_MONSTER_ENCHANT;
+
+        // Messages about the monster influencing itself.
+        const char* buff_msgs[] = { " glows brightly for a moment.",
+                                    " looks stronger.",
+                                    " becomes somewhat translucent.",
+                                    "'s eyes start to glow." };
+
+        // Messages about the monster influencing you.
+        const char* other_msgs[] = {
+            "You feel troubled.",
+            "You feel a wave of unholy energy pass over you."
+        };
+
+        if (buff_only || crawl_state.arena || x_chance_in_y(2,3))
+            simple_monster_message(monster, RANDOM_ELEMENT(buff_msgs), channel);
+        else if (friendly)
+            simple_monster_message(monster, " shimmers for a moment.", channel);
+        else
+            mpr(RANDOM_ELEMENT(other_msgs));
 
         return;
     }
