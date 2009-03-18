@@ -1097,6 +1097,14 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
+            // TSO worshippers don't use their stinger in order to
+            // avoid poisoning.
+            if (you.religion == GOD_SHINING_ONE
+                && player_mutation_level(MUT_STINGER) > 0)
+            {
+                continue;
+            }
+
             unarmed_attack = "tail-slap";
             aux_damage = 6;
 

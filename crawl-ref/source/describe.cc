@@ -3644,7 +3644,12 @@ std::string get_skill_description(int skill, bool need_title)
             || you.species == SP_MERFOLK && player_is_swimming()
             || player_mutation_level( MUT_STINGER ))
         {
-            unarmed_attacks.push_back("slap with your tail");
+            // TSO worshippers will not use their venomous tails.
+            if (!(you.religion == GOD_SHINING_ONE
+                  && player_mutation_level(MUT_STINGER)))
+            {
+                unarmed_attacks.push_back("slap with your tail");
+            }
         }
 
         if (player_mutation_level(MUT_FANGS)
