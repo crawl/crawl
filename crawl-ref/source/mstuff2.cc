@@ -507,6 +507,16 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
         return;
     }
+    case SPELL_BLINK_OTHER:
+    {
+        std::string msg = getSpeakString(monster->name(DESC_PLAIN)
+                                         + " blink_other");
+        if (!msg.empty())
+        {
+            mons_speaks_msg(monster, msg, MSGCH_TALK,
+                            silenced(you.pos()) || silenced(monster->pos()));
+        }
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,

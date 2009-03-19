@@ -960,7 +960,7 @@
     },
 
     // ---------------------
-    // unique's "spellbooks"
+    // uniques' "spellbooks"
     // ---------------------
 
     // Crusader theme.
@@ -975,14 +975,16 @@
       }
     },
 
+    // statue, earth spells
+    // Blink Other for foes out of the other spells' range
     { MST_ROXANNE,
       {
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
        SPELL_BOLT_OF_IRON,
+       SPELL_BLINK_OTHER,
        SPELL_BOLT_OF_MAGMA,
-       SPELL_STONE_ARROW,
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
-       SPELL_SANDBLAST
+       SPELL_STONE_ARROW
       }
     },
 

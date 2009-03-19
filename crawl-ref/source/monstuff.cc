@@ -914,11 +914,15 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     else
     {
         if (index == NON_MONSTER)
+        {
             mpr("You feel extremely nervous for a moment...",
                 MSGCH_MONSTER_SPELL);
+        }
         else if (you.can_see(target))
+        {
             mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
                  target->name(DESC_NOCAP_THE).c_str());
+        }
         MiscastEffect(target, monster_index(monster), SPTYP_NECROMANCY,
                       pow, random2avg(88, 3), "a mummy death curse");
     }

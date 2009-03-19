@@ -981,7 +981,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             mprf(MSGCH_DIAGNOSTICS, "Damage: %d; Hit points: %d", dam, you.hp);
 #endif
 
-            if (!yesno("Die?", true, 'n'))
+            if (!yesno("Die?", false, 'n'))
             {
                 take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);

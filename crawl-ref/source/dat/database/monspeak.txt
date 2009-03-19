@@ -2319,8 +2319,6 @@ w:1
 %%%%
 _Roxanne_common_
 
-@The_monster@ says @to_foe@, "Come a little closer, will you?"
-
 @The_monster@ mutters, "When I said I wanted to live forever... this was not what I had in mind."
 
 @The_monster@ says @to_foe@, "At least I didn't end up somewhere with nobody to talk to."
@@ -2359,6 +2357,18 @@ _Roxanne_rare_
 @The_monster@ says @to_foe@, "A mighty warrior you might be, a mason you are not!"
 
 @The_monster@ says @to_foe@, "They said I was crazy for my new spells... Turns out they were right."
+%%%%
+Roxanne blink_other
+
+w:20
+__NONE
+
+@The_monster@ says @to_foe@, "Come a little closer, will you?"
+
+@The_monster@ says, "I keep my friends close, but my enemies closer."
+
+w:5
+@The_monster@ says @to_foe@, "Don't just stand there! You can move, can't you?"
 ## END Roxanne ##
 %%%%
 # orc warlord

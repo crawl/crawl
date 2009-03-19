@@ -3069,6 +3069,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
 
         bool seen_secret = false;
+        std::vector<coord_def> excludes;
         for (std::set<coord_def>::iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
@@ -3093,6 +3094,14 @@ static void _open_door(coord_def move, bool check_confused)
                 }
             }
             grd(dc) = DNGN_OPEN_DOOR;
+            if (is_excluded(dc))
+                excludes.push_back(dc);
+        }
+        if (!excludes.empty())
+        {
+            mark_all_excludes_non_updated();
+            for (unsigned int i = 0; i < excludes.size(); ++i)
+                update_exclusion_los(excludes[i]);
         }
         you.turn_is_over = true;
     }
@@ -3234,6 +3243,7 @@ static void _close_door(coord_def move)
             mprf( "You %s the %s%s.", verb, adj, noun );
         }
 
+        std::vector<coord_def> excludes;
         for (std::set<coord_def>::const_iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
@@ -3249,6 +3259,14 @@ static void _close_door(coord_def move)
                 env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
             }
+            if (is_excluded(dc))
+                excludes.push_back(dc);
+        }
+        if (!excludes.empty())
+        {
+            mark_all_excludes_non_updated();
+            for (unsigned int i = 0; i < excludes.size(); ++i)
+                update_exclusion_los(excludes[i]);
         }
         you.turn_is_over = true;
     }
@@ -3728,7 +3746,7 @@ static int _get_num_and_char_keyfun(int &ch)
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 {
     if (prompt != NULL)
-        mpr(prompt);
+        mpr(prompt, MSGCH_PROMPT);
 
     line_reader reader(buf, buf_len);
 

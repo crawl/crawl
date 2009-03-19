@@ -484,12 +484,12 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         const bool equipped = item_is_equipped(*item);
         if (equipped)
         {
-            if (item_cursed(*item))
+            if (item_known_cursed(*item))
                 tileset.push_back(tile_def(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT));
             else
                 tileset.push_back(tile_def(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT));
         }
-        else if (item_cursed(*item))
+        else if (item_known_cursed(*item))
             tileset.push_back(tile_def(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT));
 
         tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
