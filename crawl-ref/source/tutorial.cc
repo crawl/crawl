@@ -135,8 +135,8 @@ bool pick_tutorial()
 
     formatted_string::parse_string(
         EOL
-        "<brown>SPACE - Back to class selection; "
-        "Bksp - Back to race selection; X - Quit"
+        "<brown>SPACE - Back to job selection; "
+        "Bksp - Back to species selection; X - Quit"
         EOL "* - Random tutorial"
         "</brown>" EOL).display();
 
@@ -308,7 +308,7 @@ static formatted_string _tut_starting_info(unsigned int width)
         "  <lightblue>quickstart.txt</lightblue>     - "
         "A very short guide to Crawl." EOL
         "  <lightblue>crawl_manual.txt</lightblue>   - "
-        "This contains all details on races, magic, skills, etc." EOL
+        "This contains all details on species, magic, skills, etc." EOL
         "  <lightblue>options_guide.txt</lightblue>  - "
         "Crawl's interface is highly configurable. This document " EOL
         "                       explains all the options." EOL
@@ -807,7 +807,7 @@ void tutorial_finished()
 
     Options.tutorial_left = 0;
     text =  "Congrats! You survived until the end of this tutorial - be sure "
-            "to try the other ones as well. Note that the help screen "
+            "to try the other ones as well. Note that the command help screen "
             "(<w>?\?</w>) will look very different from now on. Here's a last "
             "playing hint:";
 
@@ -817,9 +817,8 @@ void tutorial_finished()
     if (Options.tut_explored)
     {
         text =  "Walking around and exploring levels gets easier by using "
-                "auto-explore (<w>o</w>). You can even make Crawl "
-                "automatically pick up interesting items by setting the "
-                "option <w>explore_greedy=true</w> in the init file.";
+                "auto-explore (<w>o</w>). Crawl will let you automatically "
+                "move to and pick up interesting items.";
     }
     else if (Options.tut_travel)
     {
@@ -2231,7 +2230,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_ROTTEN_FOOD:
         text << "One or more of the chunks or corpses you carry has started "
-                "to rot. Few races can digest these safely, so you might "
+                "to rot. Few species can digest these safely, so you might "
                 "just as well <w>d</w>rop them now.";
         break;
 
@@ -2771,8 +2770,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (Options.tutorial_type == TUT_BERSERK_CHAR)
             text << ", especially if you're berserking while doing so";
 
-        text << ". Small races may also wriggle out of a net, only damaging it "
-                "a bit, so as to then <w>f</w>ire it at a monster.";
+        text << ". Small species may also wriggle out of a net, only damaging "
+                "it a bit, so as to then <w>f</w>ire it at a monster.";
 
         if (Options.tutorial_type == TUT_MAGIC_CHAR)
             text << " Note that casting spells is still very much possible.";

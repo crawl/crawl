@@ -55,6 +55,7 @@ enum kill_method_type
     KILLED_BY_DIVINE_WRATH,
     KILLED_BY_BOUNCE,                  // 35
     KILLED_BY_REFLECTION,
+    KILLED_BY_SELF_AIMED,
 
     NUM_KILLBY
 };

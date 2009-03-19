@@ -3136,7 +3136,12 @@ void bolt::internal_ouch(int dam)
         else if (bounces > 0)
             ouch(dam, NON_MONSTER, KILLED_BY_BOUNCE, name.c_str());
         else
-            ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
+        {
+            if (aimed_at_feet && effect_known)
+                ouch(dam, NON_MONSTER, KILLED_BY_SELF_AIMED, name.c_str());
+            else
+                ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
+        }
     }
     else if (MON_KILL(thrower))
         ouch(dam, beam_source, KILLED_BY_BEAM, aux_source.c_str());

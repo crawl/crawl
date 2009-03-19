@@ -307,8 +307,8 @@ static const char *const _range_type_verb( const char *const aux )
     if (strncmp( aux, "Shot ", 5 ) == 0)                // launched
         return ("shot");
     else if (aux[0] == 0                                // unknown
-            || strncmp( aux, "Hit ", 4 ) == 0           // thrown
-            || strncmp( aux, "volley ", 7 ) == 0)       // manticore spikes
+             || strncmp( aux, "Hit ", 4 ) == 0          // thrown
+             || strncmp( aux, "volley ", 7 ) == 0)      // manticore spikes
     {
         return ("hit from afar");
     }
@@ -427,7 +427,7 @@ static const char *kill_method_names[] =
     "wild_magic", "xom", "statue", "rotting", "targeting", "spore",
     "tso_smiting", "petrification", "unknown", "something",
     "falling_down_stairs", "acid", "curare", "melting", "bleeding",
-    "beogh_smiting", "divine_wrath", "bounce", "reflect"
+    "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed"
 };
 
 const char *kill_method_name(kill_method_type kmt)
@@ -1668,6 +1668,20 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else
         {
             desc += "Killed themselves with a bounced ";
+            if (auxkilldata.empty())
+                desc += "beam";
+            else
+                desc += auxkilldata;
+        }
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_SELF_AIMED:
+        if (terse)
+            desc += "suicidal targeting";
+        else
+        {
+            desc += "Shot themselves with a ";
             if (auxkilldata.empty())
                 desc += "beam";
             else

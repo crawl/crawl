@@ -509,9 +509,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     }
     case SPELL_BLINK_OTHER:
     {
+        // Allow the caster to comment on moving the foe.
         std::string msg = getSpeakString(monster->name(DESC_PLAIN)
                                          + " blink_other");
-        if (!msg.empty())
+        if (!msg.empty() && msg != "__NONE")
         {
             mons_speaks_msg(monster, msg, MSGCH_TALK,
                             silenced(you.pos()) || silenced(monster->pos()));

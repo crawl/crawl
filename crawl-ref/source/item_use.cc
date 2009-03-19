@@ -1774,9 +1774,10 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
     used = 0;
 
     if (!beam.is_tracer && you.can_see(victim))
+    {
         mprf("The %s passes through %s!", beam.name.c_str(),
              victim->name(DESC_NOCAP_THE).c_str());
-
+    }
     return (true);
 }
 

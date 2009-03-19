@@ -104,15 +104,15 @@ const char *describe_xom_favour()
         return "A BORING thing.";
     else
         return (you.piety > 180) ? "A beloved toy of Xom." :
-           (you.piety > 160) ? "A favourite toy of Xom." :
-           (you.piety > 140) ? "A very special toy of Xom." :
-           (you.piety > 120) ? "A special toy of Xom." :
-           (you.piety > 100) ? "A toy of Xom." :
-           (you.piety >  80) ? "A plaything of Xom." :
-           (you.piety >  60) ? "A special plaything of Xom." :
-           (you.piety >  40) ? "A very special plaything of Xom." :
-           (you.piety >  20) ? "A favourite plaything of Xom."
-                             : "A beloved plaything of Xom.";
+               (you.piety > 160) ? "A favourite toy of Xom." :
+               (you.piety > 140) ? "A very special toy of Xom." :
+               (you.piety > 120) ? "A special toy of Xom." :
+               (you.piety > 100) ? "A toy of Xom." :
+               (you.piety >  80) ? "A plaything of Xom." :
+               (you.piety >  60) ? "A special plaything of Xom." :
+               (you.piety >  40) ? "A very special plaything of Xom." :
+               (you.piety >  20) ? "A favourite plaything of Xom."
+                                 : "A beloved plaything of Xom.";
 }
 
 static std::string _get_xom_speech(const std::string key)
@@ -169,6 +169,7 @@ static void _xom_is_stimulated(int maxinterestingness,
     }
 
     if (was_stimulated || force_message)
+    {
         god_speaks(GOD_XOM,
                    ((interestingness > 200) ? message_array[5] :
                     (interestingness > 100) ? message_array[4] :
@@ -176,6 +177,7 @@ static void _xom_is_stimulated(int maxinterestingness,
                     (interestingness >  50) ? message_array[2] :
                     (interestingness >  25) ? message_array[1]
                                             : message_array[0]));
+    }
 }
 
 void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
@@ -223,6 +225,9 @@ void xom_tick()
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
                        bool force_message)
 {
+    if (you.religion != GOD_XOM)
+        return;
+
     const char *message_array[6];
 
     for (int i = 0; i < 6; ++i)
@@ -1995,11 +2000,15 @@ void xom_acts(bool niceness, int sever)
         // mode to escape death from deep water or lava.
         ASSERT(you.wizard && !you.did_escape_death());
         if (_feat_is_deadly(grd(you.pos())))
+        {
             mpr("Player is standing in deadly terrain, skipping Xom act.",
                 MSGCH_DIAGNOSTICS);
+        }
         else
+        {
             mpr("Player is already dead, skipping Xom act.",
                 MSGCH_DIAGNOSTICS);
+        }
         return;
     }
 #else
@@ -2170,4 +2179,9 @@ void xom_check_destroyed_item(const item_def& item, int cause)
                       (amusement > 64)  ? "Xom snickers."
                                         : "Xom snickers softly.",
                       true);
+}
+
+void xom_death_message()
+{
+    god_speaks(GOD_XOM, _get_xom_speech("laughter").c_str());
 }

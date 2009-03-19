@@ -360,6 +360,36 @@ Xom resurrection
 
 Xom brings you back to life.
 %%%%
+# Xom laughing
+# (Currently only used post-game in response to "You die...")
+Xom laughter
+
+Xom guffaws!
+
+Xom roars with laughter!
+
+Xom thinks this is hilarious!
+
+Xom is highly amused!
+
+Xom cackles wildly!
+
+Xom snickers!
+
+Xom laughs nastily!
+
+Xom howls with laughter!
+
+Xom bursts into laughter!
+
+Xom giggles madly!
+
+Xom titters!
+
+Xom chuckles heartily!
+
+Xom chortles!
+%%%%
 ############################################
 # Beogh rants on destroying an orcish idol #
 ############################################

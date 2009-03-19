@@ -861,7 +861,14 @@ void handle_delay( void )
                     // Only give the rotting message if the corpse wasn't
                     // previously rotten. (special < 100 is the rottenness check).
                     if (delay.parm2 >= 100)
+                    {
                         mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+                        if (you.is_undead != US_UNDEAD
+                            && player_mutation_level(MUT_SAPROVOROUS) < 3)
+                        {
+                            _xom_check_corpse_waste();
+                        }
+                    }
 
                     if (delay.type == DELAY_OFFER_CORPSE)
                     {
@@ -875,11 +882,6 @@ void handle_delay( void )
 
                     delay.parm2 = 99; // Don't give the message twice.
 
-                    if (you.is_undead != US_UNDEAD
-                        && player_mutation_level(MUT_SAPROVOROUS) < 3)
-                    {
-                        _xom_check_corpse_waste();
-                    }
                     // Vampires won't continue bottling rotting corpses.
                     if (delay.type == DELAY_BOTTLE_BLOOD)
                     {

@@ -35,5 +35,5 @@ inline void xom_acts(int sever)
 
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item, int cause = -1);
-
+void xom_death_message();
 #endif
