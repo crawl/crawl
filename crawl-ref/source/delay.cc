@@ -470,7 +470,12 @@ void stop_delay( bool stop_stair_travel )
         item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                         : mitm[delay.parm2]);
 
+        const bool was_orc = (mons_species(corpse.plus) == MONS_ORC);
+
         mpr("All blood oozes out of the corpse!");
+
+        did_god_conduct(DID_DRINK_BLOOD, 8);
+
         bleed_onto_floor(you.pos(), corpse.plus, delay.duration, false);
 
         if (mons_skeleton(corpse.plus) && one_chance_in(3))
@@ -483,7 +488,8 @@ void stop_delay( bool stop_stair_travel )
                 dec_mitm_item_quantity(delay.parm2, 1);
         }
 
-        did_god_conduct(DID_DRINK_BLOOD, 8);
+        if (was_orc)
+            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
 
         delay.duration = 0;
         _pop_delay();
