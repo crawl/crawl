@@ -414,20 +414,21 @@ void stop_delay( bool stop_stair_travel )
     case DELAY_MEMORISE:
         // Losing work here is okay... having to start from
         // scratch is a reasonable behaviour. -- bwr
-        mpr( "Your memorisation is interrupted." );
+        mpr("Your memorisation is interrupted.");
         _pop_delay();
         break;
 
     case DELAY_MULTIDROP:
         // No work lost
         if (!items_for_multidrop.empty())
-            mpr( "You stop dropping stuff." );
+            mpr("You stop dropping stuff.");
         _pop_delay();
         break;
 
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You stop %s.",
-             _get_recite_speech("other", you.num_turns + delay.duration).c_str());
+             _get_recite_speech("other",
+                                you.num_turns + delay.duration).c_str());
         _pop_delay();
         break;
 
@@ -465,21 +466,22 @@ void stop_delay( bool stop_stair_travel )
     case DELAY_FEED_VAMPIRE:
     {
         mpr("You stop draining the corpse.");
-        _xom_check_corpse_waste();
-
-        item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
-                                        : mitm[delay.parm2]);
-
-        const bool was_orc = (mons_species(corpse.plus) == MONS_ORC);
-
-        mpr("All blood oozes out of the corpse!");
 
         did_god_conduct(DID_DRINK_BLOOD, 8);
 
-        bleed_onto_floor(you.pos(), corpse.plus, delay.duration, false);
+        _xom_check_corpse_waste();
 
-        if (mons_skeleton(corpse.plus) && one_chance_in(3))
-            turn_corpse_into_skeleton(corpse);
+        item_def &item = (delay.parm1 ? you.inv[delay.parm2]
+                                      : mitm[delay.parm2]);
+
+        const bool was_orc = (mons_species(item.plus) == MONS_ORC);
+
+        mpr("All blood oozes out of the corpse!");
+
+        bleed_onto_floor(you.pos(), item.plus, delay.duration, false);
+
+        if (mons_skeleton(item.plus) && one_chance_in(3))
+            turn_corpse_into_skeleton(item);
         else
         {
             if (delay.parm1)
@@ -496,6 +498,7 @@ void stop_delay( bool stop_stair_travel )
         handle_delay();
         return;
     }
+
     case DELAY_ARMOUR_ON:
     case DELAY_ARMOUR_OFF:
         // These two have the default action of not being interruptible,
@@ -511,14 +514,14 @@ void stop_delay( bool stop_stair_travel )
 
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
     case DELAY_DESCENDING_STAIRS: // short... and probably what people want
-         if (stop_stair_travel)
-         {
-             mprf("You stop %s the stairs.",
-                  delay.type == DELAY_ASCENDING_STAIRS ? "ascending"
-                                                       : "descending");
-             _pop_delay();
-         }
-         break;
+        if (stop_stair_travel)
+        {
+            mprf("You stop %s the stairs.",
+                 delay.type == DELAY_ASCENDING_STAIRS ? "ascending"
+                                                      : "descending");
+            _pop_delay();
+        }
+        break;
 
     case DELAY_WEAPON_SWAP:       // one turn... too much trouble
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
