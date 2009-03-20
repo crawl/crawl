@@ -873,6 +873,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         can_wear = (you.species == SP_NAGA);
     else if (sub_type == ARM_CENTAUR_BARDING)
         can_wear = (you.species == SP_CENTAUR);
+    else
+        can_wear = (fit_armour_size(item, player_size()) == 0);
 
     if (!can_wear)
     {

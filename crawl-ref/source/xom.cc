@@ -2182,6 +2182,8 @@ void xom_check_destroyed_item(const item_def& item, int cause)
 
 void xom_death_message()
 {
-    if (you.religion == GOD_XOM)
-        god_speaks(GOD_XOM, _get_xom_speech("laughter").c_str());
+    if (you.religion != GOD_XOM && (!you.worshipped[GOD_XOM] || coinflip()))
+        return;
+
+    god_speaks(GOD_XOM, _get_xom_speech("laughter").c_str());
 }
