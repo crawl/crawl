@@ -1610,7 +1610,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_SLEEP:
     {
         const int sleep_power =
-            stepdown_value( powc * 9 / 10, 5, 35, 45, 50 );
+            stepdown_value(powc * 9 / 10, 5, 35, 45, 50);
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Sleep power stepdown: %d -> %d",
              powc, sleep_power);

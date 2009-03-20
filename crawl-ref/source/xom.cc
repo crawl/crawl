@@ -58,7 +58,7 @@ REVISION("$Rev$");
 static const spell_type _xom_spells[] =
 {
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_MAGIC_MAPPING,
-    SPELL_DETECT_ITEMS, SPELL_DETECT_CREATURES, SPELL_MASS_CONFUSION,
+    SPELL_DETECT_ITEMS, SPELL_DETECT_CREATURES, SPELL_CAUSE_FEAR,
     SPELL_MASS_SLEEP, SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES,
     SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_TUKIMAS_VORPAL_BLADE,
     SPELL_MAXWELLS_SILVER_HAMMER, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
@@ -792,7 +792,6 @@ static bool _xom_confuse_monsters(int sever)
     return (rc);
 }
 
-
 static bool _xom_send_allies(int sever)
 {
     bool rc = false;
@@ -967,8 +966,8 @@ static bool _xom_rearrange_pieces(int sever)
     // Every now and then, Xom also confuses them all.
     const bool confusem = one_chance_in(10);
 
-    // Not just every monster in sight - oh no.  Every monster on
-    // this level!
+    // Not just every monster in sight - oh no.  Every monster on this
+    // level!
     for (unsigned i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters* monster = &menv[i];
@@ -997,8 +996,8 @@ static bool _xom_rearrange_pieces(int sever)
         }
     }
 
-    // If Xom blinked at least one monster, blink the player,
-    // too, and then consider this act done.
+    // If Xom blinked at least one monster, blink the player, too, and
+    // then consider this act done.
     if (rc)
         random_blink(false);
 
@@ -1163,9 +1162,9 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_rearrange_pieces(sever);
     else if (x_chance_in_y(11, sever) && (you.level_type != LEVEL_ABYSS))
     {
-        // The Xom teleportation train takes you on instant teleportation to
-        // a few random areas, stopping randomly but most likely in an area
-        // that is not dangerous to you.
+        // The Xom teleportation train takes you on instant teleportation
+        // to a few random areas, stopping randomly but most likely in
+        // an area that is not dangerous to you.
         god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
         do
         {

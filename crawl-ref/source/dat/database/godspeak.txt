@@ -209,7 +209,7 @@ Xom medium miscast effect
 # miscast strength random2(4), up to really nasty
 Xom major miscast effect
 
-"Try this!"
+"Try this."
 
 Xom's attention turns to you.
 
@@ -236,13 +236,17 @@ Xom decides to rearrange the pieces.
 %%%%
 Xom teleportation journey
 
-Whee!
+"Whee!"
 
-Let's go for a ride!
+"Let's go for a ride!"
+
+"Where it stops, nobody knows!"
+
+Xom twists space around you.
 %%%%
 Xom confusion
 
-Heh heh heh...
+"Heh heh heh..."
 %%%%
 # 25% chance of draining, else torment
 Xom draining or torment
@@ -277,7 +281,11 @@ The world seems to spin as Xom's maniacal laughter rings in your ears.
 # Xom upgrades a nearby hostile monster's weapon to a chaos brand
 Xom chaos upgrade
 
+Xom's power touches on a nearby weapon.
+
 "Have a taste of chaos, mortal."
+
+Xom chortles.
 %%%%
 #####################
 # other effects
@@ -358,7 +366,17 @@ Xom weird death
 %%%%
 Xom resurrection
 
+"Let me repair your body."
+
+Xom tricks Death into leaving you alone.
+
+Xom's maniacal laughter scares Death away.
+
+Xom's power revives you.
+
 Xom brings you back to life.
+
+Xom smiles on you.
 %%%%
 # Xom laughing
 # (Currently only used post-game in response to "You die...")

@@ -943,8 +943,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.escaped_death_cause = death_type;
         you.escaped_death_aux   = aux == NULL ? "" : aux;
 
-        // Xom should only kill his worshippers if they're under penance or
-        // Xom is bored.
+        // Xom should only kill his worshippers if they're under penance
+        // or Xom is bored.
         if (you.religion == GOD_XOM && !you.penance[GOD_XOM]
             && you.gift_timeout > 0)
         {
