@@ -953,7 +953,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
         // Also don't kill wizards testing Xom acts.
         if ((crawl_state.repeat_cmd == CMD_WIZARD
-             || crawl_state.prev_cmd == CMD_WIZARD)
+                || crawl_state.prev_cmd == CMD_WIZARD)
             && you.religion != GOD_XOM)
         {
             return;
@@ -962,7 +962,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         // Okay, you *didn't* escape death.
         you.reset_escaped_death();
 
-        // Ensure some minimal informfullness about Xom's involvment.
+        // Ensure some minimal information about Xom's involvment.
         if (aux == NULL || strlen(aux) == 0)
         {
             if (death_type != KILLED_BY_XOM)
