@@ -739,8 +739,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             _get_class_hotkeys(i, glyphs);
             if (!glyphs.empty())
             {
-                const std::string misc = "Miscellaneous";
-                subtitle += std::string(misc.length()
+                const std::string str = "Magical Devices"; // longest string
+                subtitle += std::string(str.length()
                                         - subtitle.length() + 1, ' ');
                 subtitle += "(select all with <w>";
                 for (unsigned int k = 0; k < glyphs.size(); ++k)

@@ -1123,6 +1123,15 @@ static bool _card_filter(std::string key, std::string body)
     return (true);
 }
 
+static bool _ability_filter(std::string key, std::string body)
+{
+    key = lowercase_string(key);
+    if (string_matches_ability_name(key))
+        return (false);
+
+    return (true);
+}
+
 typedef void (*db_keys_recap)(std::vector<std::string>&);
 
 static void _recap_mon_keys(std::vector<std::string> &keys)
@@ -1487,7 +1496,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     if (!error_inout.empty())
         mpr(error_inout.c_str(), MSGCH_PROMPT);
     mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od, "
-        "(B)ranch, or (C)ard?", MSGCH_PROMPT);
+        "(A)bility, (B)ranch, or (C)ard?", MSGCH_PROMPT);
 
     int ch = toupper(getch());
     std::string    type;
@@ -1519,6 +1528,10 @@ static bool _find_description(bool &again, std::string& error_inout)
     case 'K':
         type   = "skill";
         filter = _skill_filter;
+        break;
+    case 'A':
+        type   = "ability";
+        filter = _ability_filter;
         break;
     case 'C':
         type   = "card";

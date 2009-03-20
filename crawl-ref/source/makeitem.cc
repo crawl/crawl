@@ -811,6 +811,36 @@ void item_colour(item_def &item)
     }
 }
 
+// Does Xom consider an item boring?
+static bool _is_boring_item(int type, int sub_type)
+{
+    switch (type)
+    {
+    case OBJ_POTIONS:
+        return (sub_type == POT_CURE_MUTATION);
+    case OBJ_SCROLLS:
+        // The corresponding spells are considered "boring", so Xom
+        // shouldn't gift these scrolls either.
+        switch (sub_type)
+        {
+        case SCR_DETECT_CURSE:
+        case SCR_REMOVE_CURSE:
+        case SCR_IDENTIFY:
+        case SCR_MAGIC_MAPPING:
+            return (true);
+        default:
+            break;
+        }
+        break;
+    case OBJ_JEWELLERY:
+        return (sub_type == RING_TELEPORT_CONTROL
+                || sub_type == AMU_RESIST_MUTATION);
+    default:
+        break;
+    }
+    return (false);
+}
+
 static weapon_type _determine_weapon_subtype(int item_level)
 {
     weapon_type rc = WPN_UNKNOWN;
@@ -2301,7 +2331,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
 }
 
 static void _generate_potion_item(item_def& item, int force_type,
-                                  int item_level)
+                                  int item_level, int agent)
 {
     item.quantity = 1;
 
@@ -2345,12 +2375,13 @@ static void _generate_potion_item(item_def& item, int force_type,
                                             10, POT_DECAY,
                                             0);
         }
-        while ( stype == POT_POISON && item_level < 1
-                || stype == POT_STRONG_POISON && item_level < 11 );
+        while (stype == POT_POISON && item_level < 1
+               || stype == POT_STRONG_POISON && item_level < 11
+               || agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype));
 
-        if ( stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY
-             || stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE
-             || stype == POT_MAGIC || stype == POT_RESTORE_ABILITIES )
+        if (stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY
+            || stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE
+            || stype == POT_MAGIC || stype == POT_RESTORE_ABILITIES)
         {
             item.quantity = 1;
         }
@@ -2362,7 +2393,7 @@ static void _generate_potion_item(item_def& item, int force_type,
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
-                                  int item_level)
+                                  int item_level, int agent)
 {
     // determine sub_type:
     if (force_type != OBJ_RANDOM)
@@ -2371,40 +2402,44 @@ static void _generate_scroll_item(item_def& item, int force_type,
     {
         const int depth_mod = random2(1 + item_level);
 
-        // total weight: 10000
-        item.sub_type = random_choose_weighted(
-            1797, SCR_IDENTIFY,
-            1305, SCR_REMOVE_CURSE,
-            802, SCR_TELEPORTATION,
-            642, SCR_DETECT_CURSE,
-            321, SCR_FEAR,
-            321, SCR_NOISE,
-            321, SCR_MAGIC_MAPPING,
-            321, SCR_FOG,
-            321, SCR_RANDOM_USELESSNESS,
-            321, SCR_CURSE_WEAPON,
-            321, SCR_CURSE_ARMOUR,
-            321, SCR_RECHARGING,
-            321, SCR_BLINKING,
-            161, SCR_PAPER,
-            321, SCR_ENCHANT_ARMOUR,
-            321, SCR_ENCHANT_WEAPON_I,
-            321, SCR_ENCHANT_WEAPON_II,
+        do
+        {
+            // total weight: 10000
+            item.sub_type = random_choose_weighted(
+                1797, SCR_IDENTIFY,
+                1305, SCR_REMOVE_CURSE,
+                802, SCR_TELEPORTATION,
+                642, SCR_DETECT_CURSE,
+                321, SCR_FEAR,
+                321, SCR_NOISE,
+                321, SCR_MAGIC_MAPPING,
+                321, SCR_FOG,
+                321, SCR_RANDOM_USELESSNESS,
+                321, SCR_CURSE_WEAPON,
+                321, SCR_CURSE_ARMOUR,
+                321, SCR_RECHARGING,
+                321, SCR_BLINKING,
+                161, SCR_PAPER,
+                321, SCR_ENCHANT_ARMOUR,
+                321, SCR_ENCHANT_WEAPON_I,
+                321, SCR_ENCHANT_WEAPON_II,
 
-            // Don't create ?oImmolation at low levels (encourage read-ID)
-            321, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
+                // Don't create ?oImmolation at low levels (encourage read-ID)
+                321, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
 
-            // Medium-level scrolls
-            160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
-            160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
-            160, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
-            160, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
+                // Medium-level scrolls
+                160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
+                160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
+                160, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
+                160, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
 
-            // High-level scrolls
-            160, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
-            160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
-            160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
-            0);
+                // High-level scrolls
+                160, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
+                160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
+                160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
+                0);
+        }
+        while (agent == GOD_XOM && _is_boring_item(OBJ_SCROLLS, item.sub_type));
     }
 
     // determine quantity
@@ -2593,7 +2628,7 @@ static int _determine_ring_plus(int subtype)
 }
 
 static void _generate_jewellery_item(item_def& item, bool allow_uniques,
-                                     int force_type, int item_level)
+                                     int force_type, int item_level, int agent)
 {
     if (allow_uniques
         && _try_make_jewellery_unrandart(item, force_type, item_level))
@@ -2607,8 +2642,13 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else
     {
-        item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
-                                          : get_random_ring_type());
+        do
+        {
+            item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
+                                              : get_random_ring_type());
+        }
+        while (agent == GOD_XOM
+               && _is_boring_item(OBJ_JEWELLERY, item.sub_type));
     }
 
     // Everything begins as uncursed, unenchanted jewellery {dlb}:
@@ -2811,15 +2851,16 @@ int items( int allow_uniques,       // not just true-false,
         break;
 
     case OBJ_POTIONS:
-        _generate_potion_item(item, force_type, item_level);
+        _generate_potion_item(item, force_type, item_level, agent);
         break;
 
     case OBJ_SCROLLS:
-        _generate_scroll_item(item, force_type, item_level);
+        _generate_scroll_item(item, force_type, item_level, agent);
         break;
 
     case OBJ_JEWELLERY:
-        _generate_jewellery_item(item, allow_uniques, force_type,  item_level);
+        _generate_jewellery_item(item, allow_uniques, force_type, item_level,
+                                 agent);
         break;
 
     case OBJ_BOOKS:

@@ -103,6 +103,7 @@ const char *describe_xom_favour()
     else if (you.gift_timeout < 1)
         return "A BORING thing.";
     else
+    {
         return (you.piety > 180) ? "A beloved toy of Xom." :
                (you.piety > 160) ? "A favourite toy of Xom." :
                (you.piety > 140) ? "A very special toy of Xom." :
@@ -113,6 +114,7 @@ const char *describe_xom_favour()
                (you.piety >  40) ? "A very special plaything of Xom." :
                (you.piety >  20) ? "A favourite plaything of Xom."
                                  : "A beloved plaything of Xom.";
+    }
 }
 
 static std::string _get_xom_speech(const std::string key)
@@ -135,7 +137,7 @@ bool xom_is_nice()
 
     if (you.religion == GOD_XOM)
         // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
-        return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2));
+        return (you.gift_timeout > 0 && you.piety > random2(MAX_PIETY));
     else
         return coinflip();
 }
@@ -219,7 +221,7 @@ void xom_tick()
         simple_god_message(" is getting BORED.");
 
     if (one_chance_in(20))
-        xom_acts(abs(you.piety - 100));
+        xom_acts(xom_is_nice());
 }
 
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
@@ -1810,7 +1812,7 @@ static bool _xom_is_bad(int sever, int tension)
             _xom_miscast(2, nasty);
             done = true;
         }
-        else if (x_chance_in_y(7, sever) && (you.level_type != LEVEL_ABYSS))
+        else if (x_chance_in_y(7, sever) && you.level_type != LEVEL_ABYSS)
         {
             // The Xom teleportation train takes you on instant
             // teleportation to a few random areas, stopping if either
@@ -2029,7 +2031,7 @@ void xom_acts(bool niceness, int sever)
         {
             niceness = false;
             simple_god_message(" asks Xom for help in punishing you, and "
-                       "Xom happily agrees.", which_god);
+                               "Xom happily agrees.", which_god);
         }
         else
         {
@@ -2077,10 +2079,10 @@ void xom_acts(bool niceness, int sever)
         }
     }
 
-    if (you.religion == GOD_XOM && coinflip())
+    if (you.religion == GOD_XOM && one_chance_in(5))
     {
         const std::string old_xom_favour = describe_xom_favour();
-        you.piety = MAX_PIETY - you.piety;
+        you.piety = random2(MAX_PIETY+1);
         const std::string new_xom_favour = describe_xom_favour();
         if (old_xom_favour != new_xom_favour)
         {
@@ -2099,9 +2101,9 @@ static void _xom_check_less_runes(int runes_gone)
     }
 
     int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
-        + you.attribute[ATTR_DEMONIC_RUNES]
-        + you.attribute[ATTR_ABYSSAL_RUNES]
-        - you.attribute[ATTR_RUNES_IN_ZOT];
+                       + you.attribute[ATTR_DEMONIC_RUNES]
+                       + you.attribute[ATTR_ABYSSAL_RUNES]
+                       - you.attribute[ATTR_RUNES_IN_ZOT];
     int was_avail = runes_avail + runes_gone;
 
     // No longer enough available runes to get into Zot.

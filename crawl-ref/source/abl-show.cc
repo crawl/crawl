@@ -313,6 +313,21 @@ const struct ability_def & get_ability_def( ability_type abil )
     return (Ability_List[0]);
 }
 
+bool string_matches_ability_name(const std::string key)
+{
+    for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
+    {
+        const ability_def abil = get_ability_def((ability_type) i);
+        if (abil.ability == ABIL_NON_ABILITY)
+            continue;
+
+        std::string name = lowercase_string(ability_name(abil.ability));
+        if (name.find(key) != std::string::npos)
+            return (true);
+    }
+    return (false);
+}
+
 std::string print_abilities()
 {
     std::string text = "\n<w>a:</w> ";
