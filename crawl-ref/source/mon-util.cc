@@ -2116,10 +2116,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
             result += cardinals[mon.number - 1];
         }
         else
-        {
-            snprintf(info, INFO_SIZE, "%d", mon.number);
-            result += info;
-        }
+            result += make_stringf("%d", mon.number);
 
         result += "-headed ";
     }
@@ -2156,11 +2153,13 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         break;
     }
 
-    // Vowel fix: Change 'a orc' to 'an orc'
+    // Vowel fix: Change 'a orc' to 'an orc'.
     if (result.length() >= 3
         && (result[0] == 'a' || result[0] == 'A')
         && result[1] == ' '
-        && is_vowel(result[2]))
+        && is_vowel(result[2])
+        // XXX: Hack
+        && !starts_with(&result[2], "one-"))
     {
         result.insert(1, "n");
     }
@@ -2189,6 +2188,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 std::string mons_type_name(int type, description_level_type desc )
 {
     std::string result;
+
     if (!mons_is_unique(type))
     {
         switch (desc)
@@ -2201,7 +2201,7 @@ std::string mons_type_name(int type, description_level_type desc )
         }
     }
 
-    switch(type)
+    switch (type)
     {
     case RANDOM_MONSTER:
         result += "random monster";
@@ -2230,11 +2230,13 @@ std::string mons_type_name(int type, description_level_type desc )
 
     result += me->name;
 
-    // Vowel fix: Change 'a orc' to 'an orc'.
+    // Vowel fix: Change 'a orc' to 'an orc'..
     if (result.length() >= 3
         && (result[0] == 'a' || result[0] == 'A')
         && result[1] == ' '
-        && is_vowel(result[2]) )
+        && is_vowel(result[2])
+        // XXX: Hack
+        && !starts_with(&result[2], "one-"))
     {
         result.insert(1, "n");
     }

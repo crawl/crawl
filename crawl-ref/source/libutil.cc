@@ -292,7 +292,7 @@ std::string article_a(const std::string &name, bool lowercase)
         case 'a': case 'e': case 'i': case 'o': case 'u':
         case 'A': case 'E': case 'I': case 'O': case 'U':
             // XXX: Hack
-            if (starts_with(name, "one-way"))
+            if (starts_with(name, "one-"))
                 return a + name;
             return an + name;
         default:
@@ -353,7 +353,7 @@ std::string pluralise(const std::string &name,
     {
         if (name == "y")
             return ("ys");
-        // sensibilitiy -> sensibilities
+        // sensibility -> sensibilities
         else if (name[name.length() - 2] == 'i')
             return name.substr(0, name.length() - 1) + "es";
         // day -> days, boy -> boys, etc
