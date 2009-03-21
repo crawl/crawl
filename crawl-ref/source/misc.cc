@@ -2533,8 +2533,7 @@ bool go_berserk(bool intentional)
     you.duration[DUR_BERSERKER] += 20 + random2avg(19, 2);
 
     calc_hp();
-    you.hp *= 15;
-    you.hp /= 10;
+    you.hp *= 2;
 
     deflate_hp(you.hp_max, false);
 
