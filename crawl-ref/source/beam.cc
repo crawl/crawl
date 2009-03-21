@@ -4988,14 +4988,11 @@ int bolt::range_used_on_hit(const actor* victim) const
     // Plant spit.
     else if (flavour == BEAM_ACID)
         used = BEAM_STOP;
-    // Lava doesn't go far, but it goes through most stuff.
-    else if (flavour == BEAM_LAVA)
-        used = 1;
     // Lightning goes through things.
     else if (flavour == BEAM_ELECTRICITY)
         used = 0;
     else
-        used = 2;
+        used = 1;
 
     if (in_explosion_phase)
         return (used);
