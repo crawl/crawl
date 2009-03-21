@@ -236,6 +236,11 @@ instrumental_noises
 %%%%
 speaking
 
+@The_weapon@ shouts, "Live by the sword, die by the sword!"
+
+w:1
+@The_weapon@ shouts, "Lie by the sword, die by the sword!"
+
 @The_weapon@ shouts, "Sing along with me!"
 
 @The_weapon@ shouts, "One, two, three..."
