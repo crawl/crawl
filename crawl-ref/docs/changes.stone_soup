@@ -46,6 +46,7 @@ Characters
 * Secondary unarmed attacks now wake sleeping monsters.
 * Pure spellcasters don't start with a weapon anymore.
 * Tweak starting choice restrictions.
+* Going into berserk rage doubles Health, ending it halves Health.
 
 Monsters
 --------
@@ -147,6 +148,7 @@ Tiles
 Miscellaneous
 -------------
 * Greatly reduced ranges (both player and monster), now mostly capped by LOS.
+* For most bolts, hitting a monster reduces range by one.
 * Added arena mode to watch monsters fighting other monsters.
 * Crashes now leave highly informative crash dumps.
 * Poison Weapon is now a level 2 spell.
