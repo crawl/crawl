@@ -2673,7 +2673,7 @@ void update_beholders(const monsters *mon, bool force)
         {
              unsigned int which_mon = help[i];
              if (monster_index(mon) != which_mon)
-                 you.mesmerised_by.push_back(i);
+                 you.mesmerised_by.push_back(which_mon);
         }
 
         if (you.mesmerised_by.empty())
