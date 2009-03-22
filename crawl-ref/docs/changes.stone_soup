@@ -91,7 +91,7 @@ Interface
 * Purchases and donations are now noted.
 * The database search now also prints armour base AC/EV and weapon plusses.
 * Add spells and books to book/spell descriptions when searching the database.
-* Card descriptions are now searchable in the database ('?/c').
+* Ability and card descriptions are now searchable in the database ('?/').
 * Allow wishing for specific fixed and randarts in wizard mode ('o' command).
 * Add food item based hunger descriptions to spells.
 

@@ -136,9 +136,11 @@ bool xom_is_nice()
         return (false);
 
     if (you.religion == GOD_XOM)
+    {
         // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
         return (you.gift_timeout > 0 && you.piety > random2(MAX_PIETY));
-    else
+    }
+    else // CARD_XOM
         return coinflip();
 }
 
@@ -221,7 +223,7 @@ void xom_tick()
         simple_god_message(" is getting BORED.");
 
     if (one_chance_in(20))
-        xom_acts(xom_is_nice());
+        xom_acts(abs(you.piety - MAX_PIETY/2));
 }
 
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
