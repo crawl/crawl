@@ -725,8 +725,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you drink blood");
         dislikes.push_back("you use necromancy");
         dislikes.push_back("you use unholy magic or items");
-        dislikes.push_back("you attack holy beings");
-        dislikes.push_back("you or your allies kill holy beings");
+        dislikes.push_back("you attack non-hostile holy beings");
+        dislikes.push_back("you or your allies kill non-hostile holy beings");
         dislikes.push_back("you attack neutral beings");
     }
 
