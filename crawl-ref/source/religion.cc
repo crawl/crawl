@@ -2446,10 +2446,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                                        "just this once.");
                     break;
                 }
-                piety_change = -level;
-                if (known || thing_done == DID_ATTACK_HOLY
-                    && victim->attitude != ATT_HOSTILE)
+                if (thing_done == DID_ATTACK_HOLY
+                    && (victim->attitude != ATT_HOSTILE
+                        || testbits(victim->flags, MF_CREATED_FRIENDLY)
+                        || testbits(victim->flags, MF_WAS_NEUTRAL)))
                 {
+                    piety_change = -level;
                     penance = level * ((you.religion == GOD_SHINING_ONE) ? 2
                                                                          : 1);
                 }
@@ -2731,13 +2733,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (testbits(victim->flags, MF_CREATED_FRIENDLY)
+                if (victim->attitude != ATT_HOSTILE
+                    || testbits(victim->flags, MF_CREATED_FRIENDLY)
                     || testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
-                    level *= 3;
-                    penance = level;
+                    penance = level * 3;
+                    piety_change = -level * 3;
                 }
-                piety_change = -level;
                 retval = true;
                 break;
 
@@ -2800,10 +2802,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (testbits(victim->flags, MF_CREATED_FRIENDLY)
                     || testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
-                    level *= 3;
-                    penance = level;
+                    penance = level * 3;
+                    piety_change = -level * 3;
                 }
-                piety_change = -level;
                 retval = true;
                 break;
 

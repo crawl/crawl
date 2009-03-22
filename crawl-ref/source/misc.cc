@@ -3013,7 +3013,10 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     const bool isFriendly    = mons_friendly(mon);
     const bool isNeutral     = mons_neutral(mon);
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);
-    const bool isHoly        = mons_is_holy(mon);
+    const bool isHoly        = mons_is_holy(mon)
+                                   && (mon->attitude != ATT_HOSTILE
+                                       || testbits(mon->flags, MF_CREATED_FRIENDLY)
+                                       || testbits(mon->flags, MF_WAS_NEUTRAL));
 
     if (isFriendly)
     {
@@ -3033,8 +3036,6 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                 && you.religion == GOD_SHINING_ONE
                 && !tso_unchivalric_attack_safe_monster(mon))
     {
-        // "Really fire through the helpless neutral holy Daeva?"
-        // was: "Really fire through this helpless neutral holy creature?"
         snprintf(info, INFO_SIZE, "Really %s the %s%s%s%s%s?",
                  (beam_attack) ? (beam_target) ? "fire at"
                                                : "fire through"
