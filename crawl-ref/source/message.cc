@@ -1069,7 +1069,7 @@ void more(bool user_forced)
             autoclear_more = true;
     }
     mesclr(true);
-}                               // end more()
+}
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
 {

@@ -3255,6 +3255,7 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case AMU_THE_GOURMAND:
+        // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
         break;
 

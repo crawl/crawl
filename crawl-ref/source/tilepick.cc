@@ -4301,21 +4301,18 @@ void tile_draw_floor()
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
             int object = show_appearance(ep);
-            if (in_bounds(gc) && object != 0)
+            if (object != 0 && map_bounds(gc))
             {
                 bg = tileidx_feature(object, gc.x, gc.y);
 
-                if (is_travelable_stair((dungeon_feature_type)object)
+                if (in_bounds(gc)
+                    && is_travelable_stair((dungeon_feature_type)object)
                     && !travel_cache.know_stair(gc))
                 {
                     bg |= TILE_FLAG_NEW_STAIR;
                 }
             }
-            else if (map_bounds(gc) && object != 0)
-            {
-                // outside border
-                bg = tileidx_feature(object, gc.x, gc.y);
-            }
+
             // init tiles
             env.tile_bg[ep.x-1][ep.y-1] = bg;
             env.tile_fg[ep.x-1][ep.y-1] = 0;

@@ -3050,6 +3050,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
                 str = "neutral";
 
             if (mon->type == MONS_DANCING_WEAPON
+                || mon-> type == MONS_PANDEMONIUM_DEMON
                 || mons_is_known_mimic(mon))
             {
                 if (!str.empty())
@@ -3057,6 +3058,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
 
                 if (mon->type == MONS_DANCING_WEAPON)
                     str += "dancing weapon";
+                else if (mon->type == MONS_PANDEMONIUM_DEMON)
+                    str += "pandemonium demon";
                 else
                     str += "mimic";
             }

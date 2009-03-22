@@ -1964,8 +1964,9 @@ void process_command( command_type cmd )
         else // well, not examine, but...
            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
         break;
-
     }
+
+    flush_prev_message();
 }
 
 static void _prep_input()

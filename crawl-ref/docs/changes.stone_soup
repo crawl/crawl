@@ -104,6 +104,7 @@ Items
 * Missile enchantment decreases chance of destruction on impact.
 * Freezing weapons can now slow cold-blooded monsters.
 * The staff of channeling now trains Evocations.
+* Potions of magic no longer increase max. mana.
 * Item descriptions now mention enchantment/charging limits.
 * Randarts now get their known properties autoinscribed.
 * Randarts are now noted as identified even if the plusses are still unknown.

@@ -104,16 +104,13 @@ const char *describe_xom_favour()
         return "A BORING thing.";
     else
     {
-        return (you.piety > 180) ? "A beloved toy of Xom." :
-               (you.piety > 160) ? "A favourite toy of Xom." :
-               (you.piety > 140) ? "A very special toy of Xom." :
-               (you.piety > 120) ? "A special toy of Xom." :
-               (you.piety > 100) ? "A toy of Xom." :
-               (you.piety >  80) ? "A plaything of Xom." :
-               (you.piety >  60) ? "A special plaything of Xom." :
-               (you.piety >  40) ? "A very special plaything of Xom." :
-               (you.piety >  20) ? "A favourite plaything of Xom."
-                                 : "A beloved plaything of Xom.";
+        return (you.piety > 180) ? "Xom's teddy bear." :
+               (you.piety > 150) ? "A beloved toy of Xom." :
+               (you.piety > 120) ? "A favourite toy of Xom." :
+               (you.piety >  80) ? "A toy of Xom." :
+               (you.piety >  50) ? "A plaything of Xom." :
+               (you.piety >  20) ? "A special plaything of Xom."
+                                 : "A very special plaything of Xom.";
     }
 }
 
@@ -138,7 +135,7 @@ bool xom_is_nice()
     if (you.religion == GOD_XOM)
     {
         // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
-        return (you.gift_timeout > 0 && you.piety > random2(MAX_PIETY));
+        return (you.gift_timeout > 0 && you.piety >= random2(MAX_PIETY+1));
     }
     else // CARD_XOM
         return coinflip();
@@ -222,7 +219,7 @@ void xom_tick()
     if (you.gift_timeout == 1)
         simple_god_message(" is getting BORED.");
 
-    if (one_chance_in(20))
+    if (one_chance_in(10) && (coinflip() || get_tension(GOD_XOM)))
         xom_acts(abs(you.piety - MAX_PIETY/2));
 }
 
