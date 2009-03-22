@@ -664,7 +664,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_ZIN:
-        really_likes.push_back("you kill monsters which cause mutation or rotting");
+        really_likes.push_back("you kill chaotic monsters");
         break;
 
     case GOD_YREDELEMNUL:
