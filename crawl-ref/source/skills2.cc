@@ -584,7 +584,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     },
 
     {                           // SP_OGRE
-      70,                       // SK_FIGHTING
+     70,                        // SK_FIGHTING
      200,                       // SK_SHORT_BLADES
      180,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
@@ -596,7 +596,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      180,                       // SK_BOWS
      180,                       // SK_CROSSBOWS
      180,                       // SK_DARTS
-      80,                       // SK_THROWING
+     80,                        // SK_THROWING
      150,                       // SK_ARMOUR
      120,                       // SK_DODGING
      150,                       // SK_STEALTH
