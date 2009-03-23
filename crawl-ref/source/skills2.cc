@@ -589,7 +589,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      180,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      180,                       // SK_AXES
-     100,                       // SK_MACES_FLAILS
+     90,                        // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
      120,                       // SK_STAVES
      180,                       // SK_SLINGS
@@ -603,7 +603,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_STABBING
      120,                       // SK_SHIELDS
      150,                       // SK_TRAPS_DOORS
-     130,                       // SK_UNARMED_COMBAT
+     110,                       // SK_UNARMED_COMBAT
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
