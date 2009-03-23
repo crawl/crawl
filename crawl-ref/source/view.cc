@@ -2812,7 +2812,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 // done by updating with a second array.
 void losight(env_show_grid &sh,
              feature_grid &gr, const coord_def& center,
-             bool clear_walls_block, bool ignore_clouds, bool inwards)
+             bool clear_walls_block, bool ignore_clouds)
 {
     raycast();
     const int x_p = center.x;
