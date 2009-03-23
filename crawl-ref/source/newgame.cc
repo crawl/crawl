@@ -5531,6 +5531,7 @@ bool _give_items_skills()
         switch (you.species)
         {
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_CENTAUR:
         case SP_OGRE:
