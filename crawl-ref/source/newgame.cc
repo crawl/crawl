@@ -2003,6 +2003,7 @@ static char_choice_restriction _book_restriction(startup_book_type booktype)
         case SP_HILL_ORC:
         case SP_KOBOLD:
         case SP_NAGA:
+        case SP_OGRE:
         case SP_KENKU:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
@@ -2027,6 +2028,7 @@ static char_choice_restriction _book_restriction(startup_book_type booktype)
         case SP_MERFOLK:
         case SP_KOBOLD:
         case SP_NAGA:
+        case SP_OGRE:
         case SP_KENKU:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
