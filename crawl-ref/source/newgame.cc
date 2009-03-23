@@ -1552,6 +1552,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_SPRIGGAN:
         case SP_NAGA:
