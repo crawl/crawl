@@ -156,12 +156,12 @@ public:
     // of the use of the item pointers, or mayhem results!
     static std::vector<const item_def*> xlat_itemvect(
             const std::vector<item_def> &);
+    const menu_sort_condition *find_menu_sort_condition() const;
+    void sort_menu(std::vector<InvEntry*> &items,
+                   const menu_sort_condition *cond);
 protected:
     bool process_key(int key);
     void do_preselect(InvEntry *ie);
-    void sort_menu(std::vector<InvEntry*> &items,
-                   const menu_sort_condition *cond);
-    const menu_sort_condition *find_menu_sort_condition() const;
     virtual bool is_selectable(int index) const;
 
 protected:

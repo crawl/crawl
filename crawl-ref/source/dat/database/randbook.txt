@@ -144,6 +144,38 @@ w:6
 
 @armour_animal@
 %%%%
+Xom_book_title
+
+w:30
+@random_book_title@
+
+# increased chances (obviously!)
+@chaos_name@
+
+w:1
+@game_name@
+
+w:2
+@player_death@
+
+w:8
+@wacky_armour_name@
+
+w:1
+@politics_name_armour@
+
+w:5
+@power_name@
+
+w:3
+@discomfort_and_inaction@
+
+w:3
+@discomfort_weapon@
+
+w:3
+@mental_illness_weapon@
+%%%%
 book_adjective
 
 glistering

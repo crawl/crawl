@@ -301,7 +301,7 @@ void inc_inv_item_quantity( int obj, int amount, bool suppress_burden )
     you.m_quiver->on_inv_quantity_changed(obj, amount);
     you.inv[obj].quantity += amount;
 
-    if ( !suppress_burden )
+    if (!suppress_burden)
         burden_change();
 }
 
@@ -1300,7 +1300,7 @@ void pickup()
         if (!pickup_warning.empty())
             mpr(pickup_warning.c_str());
     }
-}                               // end pickup()
+}
 
 bool is_stackable_item( const item_def &item )
 {
@@ -1615,8 +1615,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
                 _got_item(mitm[obj], quant_got);
 
                 if (!quiet)
-                    mpr( you.inv[m].name(DESC_INVENTORY).c_str() );
-
+                {
+                    mpr(get_message_colour_tags(you.inv[m],
+                                                DESC_INVENTORY).c_str());
+                }
                 you.turn_is_over = true;
 
                 return (retval);
@@ -1624,7 +1626,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
         }
     }
 
-    // can't combine, check for slot space
+    // Can't combine, check for slot space.
     if (inv_count() >= ENDOFPACK)
         return (-1);
 
@@ -1681,8 +1683,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     burden_change();
 
     if (!quiet)
-        mpr( you.inv[freeslot].name(DESC_INVENTORY).c_str() );
-
+    {
+        mpr(get_message_colour_tags(you.inv[freeslot],
+                                    DESC_INVENTORY).c_str());
+    }
     if (Options.tutorial_left)
     {
         taken_new_item(item.base_type);

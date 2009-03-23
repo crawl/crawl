@@ -1278,9 +1278,7 @@ void wizard_create_spec_object()
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)
-        {
             dummy.number = _debug_prompt_for_int("How many heads?", false);
-        }
 
         if (fill_out_corpse(&dummy, mitm[thing_created], true) == -1)
         {

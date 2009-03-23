@@ -334,7 +334,7 @@ std::string print_abilities()
 
     const std::vector<talent> talents = your_talents(false);
 
-    if ( talents.empty() )
+    if (talents.empty())
         text += "no special abilities";
     else
     {

@@ -17,6 +17,7 @@ REVISION("$Rev$");
 
 #include "beam.h"
 #include "cio.h"
+#include "database.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "files.h"
@@ -927,6 +928,26 @@ static void _redraw_stacked_cards(const std::vector<card_type>& draws,
     }
 }
 
+static void _describe_cards(std::vector<card_type> cards)
+{
+    ASSERT(!cards.empty());
+
+    std::ostringstream data;
+    for (unsigned int i = 0; i < cards.size(); ++i)
+    {
+        std::string name = card_name(cards[i]);
+        std::string desc = getLongDescription(name + " card");
+        if (desc.empty())
+            desc = "No description found.";
+
+        data << name << "$$" << desc << "$$";
+    }
+    print_description(data.str());
+    if (getch() == 0)
+        getch();
+
+    redraw_screen();
+}
 
 // Stack a deck: look at the next five cards, put them back in any
 // order, discard the rest of the deck.
@@ -985,20 +1006,26 @@ bool deck_stack()
 
     if (draws.size() > 1)
     {
+        bool need_prompt_redraw = true;
         unsigned int selected = draws.size();
-        clrscr();
-        cgotoxy(1,1);
-        textcolor(WHITE);
-        cprintf("Press a digit to select a card, "
-                "then another digit to swap it.");
-        cgotoxy(1,10);
-        cprintf("Press Enter to accept.");
-
-        _redraw_stacked_cards(draws, selected);
-
-        // Hand-hacked implementation, instead of using Menu. Oh well.
         while (true)
         {
+            if (need_prompt_redraw)
+            {
+                clrscr();
+                cgotoxy(1,1);
+                textcolor(WHITE);
+                cprintf("Press a digit to select a card, then another digit "
+                        "to swap it.");
+                cgotoxy(1,10);
+                cprintf("Press ? for the card descriptions, or Enter to "
+                        "accept.");
+
+                _redraw_stacked_cards(draws, selected);
+                need_prompt_redraw = false;
+            }
+
+            // Hand-hacked implementation, instead of using Menu. Oh well.
             const int c = getch();
             if (c == CK_ENTER)
             {
@@ -1013,7 +1040,12 @@ bool deck_stack()
                 continue;
             }
 
-            if (c >= '1' && c <= '0' + static_cast<int>(draws.size()))
+            if (c == '?')
+            {
+                _describe_cards(draws);
+                need_prompt_redraw = true;
+            }
+            else if (c >= '1' && c <= '0' + static_cast<int>(draws.size()))
             {
                 const unsigned int new_selected = c - '1';
                 if (selected < draws.size())
@@ -1088,17 +1120,27 @@ bool deck_triple_draw()
         flags.push_back(_flags);
     }
 
-    mpr("You draw... (choose one card)");
-    for (int i = 0; i < num_to_draw; ++i)
-    {
-        msg::streams(MSGCH_PROMPT) << (static_cast<char>(i + 'a')) << " - "
-                                   << card_name(draws[i]) << std::endl;
-    }
     int selected = -1;
+    bool need_prompt_redraw = true;
     while (true)
     {
+        if (need_prompt_redraw)
+        {
+            mpr("You draw... (choose one card, ? for their descriptions)");
+            for (int i = 0; i < num_to_draw; ++i)
+            {
+                msg::streams(MSGCH_PROMPT) << (static_cast<char>(i + 'a')) << " - "
+                                           << card_name(draws[i]) << std::endl;
+            }
+            need_prompt_redraw = false;
+        }
         const int keyin = tolower(get_ch());
-        if (keyin >= 'a' && keyin < 'a' + num_to_draw)
+        if (keyin == '?')
+        {
+            _describe_cards(draws);
+            need_prompt_redraw = true;
+        }
+        else if (keyin >= 'a' && keyin < 'a' + num_to_draw)
         {
             selected = keyin - 'a';
             break;

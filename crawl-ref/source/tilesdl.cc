@@ -1305,7 +1305,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         || type == OBJ_POTIONS || type == OBJ_MISSILES)
     {
         // -1 specifies don't display anything
-        desc.quantity = item.quantity == 1 ? -1 : item.quantity;
+        desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
     }
     else if (type == OBJ_WANDS
              && ((item.flags & ISFLAG_KNOW_PLUSES)
@@ -1313,6 +1313,8 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     {
         desc.quantity = item.plus;
     }
+    else if (item_is_rod(item) && item.flags & ISFLAG_KNOW_PLUSES)
+        desc.quantity = item.plus / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;
 

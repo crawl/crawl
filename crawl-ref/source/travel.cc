@@ -313,7 +313,7 @@ void travel_exclude::set_exclude_show()
 {
     // ignores clouds
     feature_grid fgrid = _map_to_grid(pos);
-    losight(show, fgrid, pos, false, true);
+    losight(show, fgrid, pos, false, true, true);
     uptodate = true;
 }
 

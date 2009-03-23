@@ -1418,7 +1418,9 @@ void column_composer::add_formatted(
     // be added at page boundaries.
     if (add_separator && col.lines && !segs.empty()
             && (!pagesize || col.lines % pagesize))
+    {
         newlines.push_back(formatted_string());
+    }
 
     for (unsigned i = 0, size = segs.size(); i < size; ++i)
     {
@@ -1747,8 +1749,8 @@ bool formatted_scroller::page_up()
 
 bool formatted_scroller::line_down()
 {
-    if (first_entry + pagesize < static_cast<int>(items.size()) &&
-        items[first_entry + pagesize]->level != MEL_TITLE )
+    if (first_entry + pagesize < static_cast<int>(items.size())
+        && items[first_entry + pagesize]->level != MEL_TITLE)
     {
         ++first_entry;
         return (true);

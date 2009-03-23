@@ -1933,14 +1933,16 @@ bool check_item_knowledge(bool quiet)
         std::sort(items.begin(), items.end(), item_names);
         InvMenu menu;
         menu.set_title("You recognise:");
-        menu.load_items(items, discoveries_item_mangle);
         menu.set_flags(MF_NOSELECT);
+        menu.load_items(items, discoveries_item_mangle);
         menu.show();
         redraw_screen();
 
-        for ( std::vector<const item_def*>::iterator iter = items.begin();
-              iter != items.end(); ++iter )
+        for (std::vector<const item_def*>::iterator iter = items.begin();
+             iter != items.end(); ++iter)
+        {
             delete *iter;
+        }
     }
 
     return (rc);

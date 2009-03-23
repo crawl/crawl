@@ -1525,7 +1525,7 @@ int count_staff_spells(const item_def &item, bool need_id)
         return (0);
 
     const int type = item.book_number();
-    if ( !item_is_rod(item) || type == -1)
+    if (!item_is_rod(item) || type == -1)
         return (0);
 
     int nspel = 0;
@@ -2042,60 +2042,68 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     // None of these books need a definite article prepended.
     book.props["is_named"].get_bool() = true;
 
-    std::string lookup;
-    if (level == 1)
-        lookup = "starting";
-    else if (level <= 3 || level == 4 && coinflip())
-        lookup = "easy";
-    else if (level <= 6)
-        lookup = "moderate";
-    else
-        lookup = "difficult";
-
-    lookup += " level book";
-
     std::string bookname;
-    // First try for names respecting the book's previous owner/author
-    // (if one exists), then check for general difficulty.
-    if (has_owner)
-        bookname = getRandNameString(lookup + " owner");
-
-    if (!has_owner || bookname.empty())
-        bookname = getRandNameString(lookup);
-
-    bookname = uppercase_first(bookname);
-    if (has_owner)
+    if (god == GOD_XOM && coinflip())
     {
-        if (bookname.substr(0, 4) == "The ")
-            bookname = bookname.substr(4);
-        else if (bookname.substr(0, 2) == "A ")
-            bookname = bookname.substr(2);
-        else if (bookname.substr(0, 3) == "An ")
-            bookname = bookname.substr(3);
+        bookname = getRandNameString("book_noun") + " of "
+                   + getRandNameString("Xom_book_title");
+    }
+    else
+    {
+        std::string lookup;
+        if (level == 1)
+            lookup = "starting";
+        else if (level <= 3 || level == 4 && coinflip())
+            lookup = "easy";
+        else if (level <= 6)
+            lookup = "moderate";
+        else
+            lookup = "difficult";
+
+        lookup += " level book";
+
+        // First try for names respecting the book's previous owner/author
+        // (if one exists), then check for general difficulty.
+        if (has_owner)
+            bookname = getRandNameString(lookup + " owner");
+
+        if (!has_owner || bookname.empty())
+            bookname = getRandNameString(lookup);
+
+        bookname = uppercase_first(bookname);
+        if (has_owner)
+        {
+            if (bookname.substr(0, 4) == "The ")
+                bookname = bookname.substr(4);
+            else if (bookname.substr(0, 2) == "A ")
+                bookname = bookname.substr(2);
+            else if (bookname.substr(0, 3) == "An ")
+                bookname = bookname.substr(3);
+        }
+
+        if (bookname.find("@level@", 0) != std::string::npos)
+        {
+            std::string number;
+            switch (level)
+            {
+            case 1: number = "One"; break;
+            case 2: number = "Two"; break;
+            case 3: number = "Three"; break;
+            case 4: number = "Four"; break;
+            case 5: number = "Five"; break;
+            case 6: number = "Six"; break;
+            case 7: number = "Seven"; break;
+            case 8: number = "Eight"; break;
+            case 9: number = "Nine"; break;
+            default:
+                number = ""; break;
+            }
+            bookname = replace_all(bookname, "@level@", number);
+        }
     }
 
     if (bookname.empty())
         bookname = getRandNameString("book");
-
-    if (bookname.find("@level@", 0) != std::string::npos)
-    {
-        std::string number;
-        switch (level)
-        {
-        case 1: number = "One"; break;
-        case 2: number = "Two"; break;
-        case 3: number = "Three"; break;
-        case 4: number = "Four"; break;
-        case 5: number = "Five"; break;
-        case 6: number = "Six"; break;
-        case 7: number = "Seven"; break;
-        case 8: number = "Eight"; break;
-        case 9: number = "Nine"; break;
-        default:
-            number = ""; break;
-        }
-        bookname = replace_all(bookname, "@level@", number);
-    }
 
     name += bookname;
 
@@ -2353,7 +2361,16 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         if (disc1 == 0 && disc2 == 0)
         {
             if (!_get_weighted_discs(completely_random, god, disc1, disc2))
-                return (false);
+            {
+                if (completely_random)
+                    return (false);
+
+                // Rather than give up at this point, choose schools randomly.
+                // This way, an acquirement won't fail once the player has
+                // seen all spells.
+                if (!_get_weighted_discs(true, god, disc1, disc2))
+                    return (false);
+            }
         }
         else if (disc2 == 0)
             disc2 = disc1;
@@ -2625,7 +2642,9 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     // Sometimes use a completely random title.
     std::string bookname = "";
-    if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
+    if (owner == "Xom" && !one_chance_in(20))
+        bookname = getRandNameString("Xom_book_title");
+    else if (one_chance_in(20) && (owner.empty() || one_chance_in(3)))
         bookname = getRandNameString("random_book_title");
 
     if (!bookname.empty())

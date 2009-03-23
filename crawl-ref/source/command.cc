@@ -1113,6 +1113,11 @@ static bool _card_filter(std::string key, std::string body)
 {
     key = lowercase_string(key);
     std::string name;
+
+    // Every card description contains the keyword "card".
+    if (key.find("card") != std::string::npos)
+        return (false);
+
     for (int i = 0; i < NUM_CARDS; ++i)
     {
         name = lowercase_string(card_name((card_type) i));

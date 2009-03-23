@@ -2812,7 +2812,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 // done by updating with a second array.
 void losight(env_show_grid &sh,
              feature_grid &gr, const coord_def& center,
-             bool clear_walls_block, bool ignore_clouds)
+             bool clear_walls_block, bool ignore_clouds, bool inwards)
 {
     raycast();
     const int x_p = center.x;
@@ -2850,6 +2850,7 @@ void losight(env_show_grid &sh,
 
         // kill all blocked rays
         const unsigned long* inptr = los_blockrays;
+
         for (int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff)
             for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
                  ++ydiff, inptr += num_words)
@@ -3984,8 +3985,8 @@ bool see_grid( const env_show_grid &show,
 bool see_grid( const coord_def &p )
 {
     return ((crawl_state.arena || crawl_state.arena_suspended)
-            && crawl_view.in_grid_los(p))
-        || see_grid(env.show, you.pos(), p);
+                && crawl_view.in_grid_los(p))
+            || see_grid(env.show, you.pos(), p);
 }
 
 // Answers the question: "Would a grid be within character's line of sight,
@@ -4859,10 +4860,10 @@ std::string screenshot( bool fullscreen )
             const coord_def gc = view2grid(coord_def(count_x, count_y));
 
             int ch =
-                (!map_bounds(gc)) ? 0
-                : (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y)
-                : (gc == you.pos()) ? you.symbol
-                : get_screen_glyph(gc.x, gc.y);
+                  (!map_bounds(gc))             ? 0 :
+                  (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y) :
+                  (gc == you.pos())             ? you.symbol
+                                                : get_screen_glyph(gc.x, gc.y);
 
             if (ch && !isprint(ch))
             {

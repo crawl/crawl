@@ -1966,29 +1966,40 @@ std::string get_item_description( const item_def &item, bool verbose,
     case OBJ_STAVES:
         if (item_is_rod( item ))
         {
-            description <<
-                "$It uses its own mana reservoir for casting spells, and "
-                "recharges automatically by channeling mana from its "
-                "wielder.";
-
-            const int max_charges = MAX_ROD_CHARGE;
-            if (item_ident(item, ISFLAG_KNOW_PLUSES))
+            if (verbose)
             {
-                const int num_charges = item.plus2 / ROD_CHARGE_MULT;
-                if (max_charges > num_charges)
+                description <<
+                    "$It uses its own mana reservoir for casting spells, and "
+                    "recharges automatically by channeling mana from its "
+                    "wielder.";
+
+                const int max_charges = MAX_ROD_CHARGE;
+                if (item_ident(item, ISFLAG_KNOW_PLUSES))
                 {
-                    description << "$It can currently hold " << num_charges
-                                << " charges. It can be magically recharged "
-                                << "to contain up to " << max_charges
-                                << " charges.";
+                    const int num_charges = item.plus2 / ROD_CHARGE_MULT;
+                    if (max_charges > num_charges)
+                    {
+                        description << "$It can currently hold " << num_charges
+                                    << " charges. It can be magically recharged "
+                                    << "to contain up to " << max_charges
+                                    << " charges.";
+                    }
+                    else
+                        description << "$It is fully charged.";
                 }
                 else
-                    description << "$It is fully charged.";
+                {
+                    description << "$It can have at most " << max_charges
+                                << " charges.";
+                }
             }
-            else
+            else if (Options.dump_book_spells)
             {
-                description << "$It can have at most " << max_charges
-                            << " charges.";
+                append_spells( desc, item );
+                if (desc.empty())
+                    need_extra_line = false;
+                else
+                    description << desc;
             }
         }
         else
@@ -2208,7 +2219,6 @@ static bool _show_item_description(const item_def &item)
     const unsigned int lineWidth = get_number_of_cols()  - 1;
     const          int height    = get_number_of_lines();
 
-    describe_info inf;
     std::string desc =
         get_item_description(item, true, false, Options.tutorial_left);
 

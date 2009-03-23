@@ -228,8 +228,7 @@ stash_filter = ring of hunger, amulet of inaccuracy
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
 # msg_condense_repeats   = false
-# sort_menus = pickup: true : basename, qualname, curse, qty
-
+# sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness
 
 

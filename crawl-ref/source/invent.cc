@@ -149,8 +149,8 @@ const bool InvEntry::is_item_equipped() const
     return (false);
 }
 
-// returns values < 0 for edible chunks (non-rotten except for Saprovores),
-// 0 for non-chunks, and values > 0 for rotten chunks for non-Saprovores
+// Returns values < 0 for edible chunks (non-rotten except for Saprovores),
+// 0 for non-chunks, and values > 0 for rotten chunks for non-Saprovores.
 const int InvEntry::item_freshness() const
 {
     if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
@@ -739,7 +739,7 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             _get_class_hotkeys(i, glyphs);
             if (!glyphs.empty())
             {
-                const std::string str = "Magical Devices"; // longest string
+                const std::string str = "Magical Staves and Rods"; // longest string
                 subtitle += std::string(str.length()
                                         - subtitle.length() + 1, ' ');
                 subtitle += "(select all with <w>";

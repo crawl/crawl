@@ -512,8 +512,8 @@ void full_describe_view()
         return;
     }
 
-    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                      /*MF_ALWAYS_SHOW_MORE |*/ MF_ALLOW_FORMATTING);
+    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_ALLOW_FORMATTING);
 
     desc_menu.set_highlighter(NULL);
     // FIXME: Need different title for the opposite toggle:
@@ -522,7 +522,8 @@ void full_describe_view()
         new MenuEntry("Visible Monsters/Items (select for more detail, '!' to view/travel):",
                       MEL_TITLE));
 
-    desc_menu.set_tag("description");
+    desc_menu.set_tag("pickup");
+    desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
     desc_menu.allow_toggle = true;
 
     int menu_index = -1;
@@ -539,7 +540,7 @@ void full_describe_view()
             const char letter = index_to_letter(menu_index);
 
             // Get colour-coded letter.
-            unsigned char colour = mons_class_colour(list_mons[i]->type);
+            unsigned char colour = get_mons_colour(list_mons[i]);
             if (colour == BLACK)
                 colour = LIGHTGREY;
 
@@ -580,7 +581,6 @@ void full_describe_view()
                 {
                     me = new MenuEntry(prefix + str, MEL_ITEM, 1, letter);
                     me->data = (void*) list_mons[i];
-                    me->tag = "m";
                     me->quantity = 1; // Hack to make monsters selectable.
                 }
                 else
@@ -597,19 +597,24 @@ void full_describe_view()
     // Build menu entries for items.
     if (list_items.size())
     {
-        desc_menu.add_entry( new MenuEntry( "Items", MEL_SUBTITLE ) );
+        std::vector<InvEntry*> all_items;
         for (unsigned int i = 0; i < list_items.size(); ++i)
+            all_items.push_back( new InvEntry(list_items[i]) );
+
+        const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
+        desc_menu.sort_menu(all_items, cond);
+
+        desc_menu.add_entry( new MenuEntry( "Items", MEL_SUBTITLE ) );
+        for (unsigned int i = 0; i < all_items.size(); ++i)
         {
             ++menu_index;
             const char letter = index_to_letter(menu_index);
-            const item_def &item = list_items[i];
-
-            InvEntry *me = new InvEntry(item);
+            InvEntry *me = all_items[i];
 #ifndef USE_TILE
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
 #endif
-            me->tag = "i";
+            me->tag = "pickup";
             me->hotkeys[0] = letter;
             me->quantity = 2; // Hack to make items selectable.
 
@@ -693,6 +698,7 @@ void full_describe_view()
         me->set_show_glyph(false);
     }
 #else
+    // Clear cursor placement.
     tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
@@ -3180,15 +3186,25 @@ static void _describe_cell(const coord_def& where, bool in_range)
             goto look_clouds;
 #endif
 
-        _describe_monster(mon);
-
         if (mons_is_mimic(mon->type))
         {
+            if (mons_is_known_mimic(mon))
+                _describe_monster(mon);
+            else
+            {
+                item_def item;
+                get_mimic_item( mon, item );
+                std::string name = get_message_colour_tags(item, DESC_NOCAP_A,
+                                                           MSGCH_FLOOR_ITEMS);
+                mprf("You see %s here.", name.c_str());
+            }
             mimic_item = true;
             item_described = true;
         }
         else
         {
+            _describe_monster(mon);
+
             if (!in_range)
             {
                 mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
@@ -3244,8 +3260,11 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 mprf( MSGCH_FLOOR_ITEMS, "A pile of gold coins." );
             else
             {
+                std::string name = get_message_colour_tags(mitm[targ_item],
+                                                           DESC_NOCAP_A,
+                                                           MSGCH_FLOOR_ITEMS);
                 mprf( MSGCH_FLOOR_ITEMS, "You see %s here.",
-                      mitm[targ_item].name(DESC_NOCAP_A).c_str());
+                      name.c_str());
             }
 
             if (mitm[ targ_item ].link != NON_ITEM)
