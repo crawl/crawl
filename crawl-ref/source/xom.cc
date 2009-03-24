@@ -1774,7 +1774,7 @@ static bool _xom_summon_hostiles(int sever)
         rc = cast_tukimas_dance(100, GOD_XOM, true);
     else
     {
-        // The number of demons is dependant on severity, though heavily
+        // The number of demons is dependent on severity, though heavily
         // randomized.
         int numdemons = sever;
         for (int i = 0; i < 3; i++)
