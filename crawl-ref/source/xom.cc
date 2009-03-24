@@ -55,7 +55,16 @@ REVISION("$Rev$");
 // Which spells?  First I copied all spells from your_spells(), and then
 // I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
-static const spell_type _xom_spells[] =
+static const spell_type _xom_nontension_spells[] =
+{
+    SPELL_BLINK, SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS,
+    SPELL_DETECT_CREATURES, SPELL_RING_OF_FLAMES, SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_EXCRUCIATING_WOUNDS, SPELL_SUMMON_BUTTERFLIES,
+    SPELL_FLY, SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM,
+    SPELL_DRAGON_FORM, SPELL_ANIMATE_DEAD, SPELL_NECROMUTATION
+};
+
+static const spell_type _xom_tension_spells[] =
 {
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_MAGIC_MAPPING,
     SPELL_DETECT_ITEMS, SPELL_DETECT_CREATURES, SPELL_CAUSE_FEAR,
@@ -219,7 +228,7 @@ void xom_tick()
     if (you.gift_timeout == 1)
         simple_god_message(" is getting BORED.");
 
-    if (one_chance_in(10) && (coinflip() || get_tension(GOD_XOM)))
+    if (one_chance_in(5) && (one_chance_in(3) || get_tension(GOD_XOM)))
         xom_acts(abs(you.piety - MAX_PIETY/2));
 }
 
@@ -237,16 +246,25 @@ void xom_is_stimulated(int maxinterestingness, const std::string& message,
     _xom_is_stimulated(maxinterestingness, message_array, force_message);
 }
 
-static void _xom_makes_you_cast_random_spell(int sever)
+static void _xom_makes_you_cast_random_spell(int sever, int tension)
 {
     int spellenum = sever;
 
     god_acting gdact(GOD_XOM);
 
-    const int nxomspells = ARRAYSZ(_xom_spells);
-    spellenum = std::min(nxomspells, spellenum);
-
-    const spell_type spell = _xom_spells[random2(spellenum)];
+    spell_type spell;
+    if (tension > 0)
+    {
+        const int nxomspells = ARRAYSZ(_xom_tension_spells);
+        spellenum = std::min(nxomspells, spellenum);
+        spell     = _xom_tension_spells[random2(spellenum)];
+    }
+    else
+    {
+        const int nxomspells = ARRAYSZ(_xom_nontension_spells);
+        spellenum = std::min(nxomspells, spellenum);
+        spell     = _xom_nontension_spells[random2(spellenum)];
+    }
 
     god_speaks(GOD_XOM, _get_xom_speech("spell effect").c_str());
 
@@ -1136,8 +1154,11 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_do_potion();
     else if (x_chance_in_y(3, sever))
     {
-        _xom_makes_you_cast_random_spell(sever);
-        done = true;
+        if (tension || coinflip())
+        {
+            _xom_makes_you_cast_random_spell(sever, tension);
+            done = true;
+        }
     }
     else if (x_chance_in_y(4, sever))
         done = _xom_confuse_monsters(sever);
@@ -1750,18 +1771,15 @@ static bool _xom_summon_hostiles(int sever)
 
     // Nasty, but fun.
     if (one_chance_in(4))
-    {
-        god_speaks(GOD_XOM, speech.c_str());
-        cast_tukimas_dance(100, GOD_XOM, true);
-        // FIXME: We should probably only do this if the spell
-        // succeeded.
-        rc = true;
-    }
+        rc = cast_tukimas_dance(100, GOD_XOM, true);
     else
     {
-        // XXX: Can we clean up this ugliness, please?
-        const int numdemons =
-            std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
+        // The number of demons is dependant on severity, though heavily
+        // randomized.
+        int numdemons = sever;
+        for (int i = 0; i < 3; i++)
+            numdemons = random2(numdemons+1);
+        numdemons = std::min(numdemons+1,14);
 
         for (int i = 0; i < numdemons; ++i)
         {
@@ -1774,10 +1792,11 @@ static bool _xom_summon_hostiles(int sever)
                 rc = true;
             }
         }
-
-        if (rc)
-            god_speaks(GOD_XOM, speech.c_str());
     }
+
+    if (rc)
+        god_speaks(GOD_XOM, speech.c_str());
+
     return (rc);
 }
 
@@ -2052,7 +2071,7 @@ void xom_acts(bool niceness, int sever)
     const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
         = you.mutation;
 
-    if (niceness && !one_chance_in(5))
+    if (niceness && !one_chance_in(20))
     {
         // Good stuff.
         while (!_xom_is_good(sever, tension))
@@ -2078,7 +2097,7 @@ void xom_acts(bool niceness, int sever)
         }
     }
 
-    if (you.religion == GOD_XOM && one_chance_in(5))
+    if (you.religion == GOD_XOM && one_chance_in(8))
     {
         const std::string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY+1);

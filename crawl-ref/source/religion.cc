@@ -7095,7 +7095,7 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
     const mon_holy_type holiness = mon->holiness();
     return (mons_intel(mon) < I_NORMAL
             || mons_is_evil(mon)
-            || (holiness != MH_NATURAL && holiness != MH_HOLY));
+            || holiness != MH_NATURAL && holiness != MH_HOLY);
 }
 
 int get_tension(god_type god)
@@ -7104,6 +7104,7 @@ int get_tension(god_type god)
 
     int total = 0;
 
+    bool nearby_monster = false;
     for (int midx = 0; midx < MAX_MONSTERS; ++midx)
     {
         const monsters* mons = &menv[midx];
@@ -7112,12 +7113,20 @@ int get_tension(god_type god)
             continue;
 
         if (see_grid(mons->pos()))
-            ; // Monster is nearby.
+        {
+            // Monster is nearby.
+            if (!nearby_monster && !mons_wont_attack(mons))
+                nearby_monster = true;
+        }
         else
         {
             // Is the monster trying to get somewhere nearby?
             coord_def    target;
             unsigned int travel_size = mons->travel_path.size();
+
+            // If the monster is too far away, it doesn't count.
+            if (travel_size > 3)
+                continue;
 
             if (travel_size > 0)
                 target = mons->travel_path[travel_size - 1];
@@ -7193,6 +7202,11 @@ int get_tension(god_type god)
 
         total += exper;
     }
+
+    // At least one monster has to be nearby, for tension to count.
+    if (!nearby_monster)
+        return (0);
+
     const int scale = 1;
 
     int tension = total;

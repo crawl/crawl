@@ -1589,8 +1589,7 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
                                       !force_hostile, quiet);
 }
 
-bool cast_tukimas_dance(int pow, god_type god,
-                        bool force_hostile)
+bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 {
     bool success = true;
 
@@ -1613,10 +1612,12 @@ bool cast_tukimas_dance(int pow, god_type god,
     if (i == NON_ITEM)
         success = false;
     else if (success)
+    {
         // Copy item now so that mitm[i] is occupied and doesn't get picked
         // by get_item_slot() when giving the dancing weapon its item
         // during create_monster().
         mitm[i] = you.inv[wpn];
+    }
 
     int monster;
 

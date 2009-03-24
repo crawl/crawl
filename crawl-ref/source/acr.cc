@@ -2678,7 +2678,7 @@ void world_reacts()
     if (you.cannot_act() && any_messages())
         more();
 
-#if DEBUG_TENSION || DEBUG_RELIGION
+#ifdef DEBUG_TENSION | DEBUG_RELIGION
     if (you.religion != GOD_NO_GOD)
         mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif

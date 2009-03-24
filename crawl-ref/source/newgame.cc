@@ -1400,7 +1400,9 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_CENTAUR:
+        case SP_TROLL:
         case SP_RED_DRACONIAN:
+        case SP_GHOUL:
         case SP_MUMMY:
             return (CC_RESTRICTED);
         default:
@@ -1421,7 +1423,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_KENKU:
         case SP_RED_DRACONIAN:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
@@ -1647,6 +1648,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MINOTAUR:
         case SP_KENKU:
         case SP_RED_DRACONIAN:
+        case SP_DEMONSPAWN:
         case SP_GHOUL:
         case SP_MUMMY:
             return (CC_RESTRICTED);
@@ -1688,6 +1690,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_CENTAUR:
         case SP_TROLL:
         case SP_MINOTAUR:
+        case SP_GHOUL:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -1705,7 +1708,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_KOBOLD:
-        case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
         case SP_TROLL:
@@ -1885,9 +1887,7 @@ static char_choice_restriction _class_allowed(species_type speci,
         switch (speci)
         {
         case SP_DEEP_DWARF:
-        case SP_HALFLING:
         case SP_KOBOLD:
-        case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
         case SP_RED_DRACONIAN:
@@ -2543,8 +2543,10 @@ static char_choice_restriction _religion_restriction(god_type god)
             return (CC_BANNED);
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_MINOTAUR:
+        case SP_OGRE:
             return (CC_UNRESTRICTED);
         default:
             return (CC_RESTRICTED);

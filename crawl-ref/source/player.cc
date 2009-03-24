@@ -6327,11 +6327,11 @@ std::string player::pronoun(pronoun_type pro, bool) const
     switch (pro)
     {
     default:
-    case PRONOUN_CAP:   return "You";
-    case PRONOUN_NOCAP: return "you";
-    case PRONOUN_CAP_POSSESSIVE: return "Your";
-    case PRONOUN_NOCAP_POSSESSIVE: return "your";
-    case PRONOUN_REFLEXIVE: return "yourself";
+    case PRONOUN_CAP:               return "You";
+    case PRONOUN_NOCAP:             return "you";
+    case PRONOUN_CAP_POSSESSIVE:    return "Your";
+    case PRONOUN_NOCAP_POSSESSIVE:  return "your";
+    case PRONOUN_REFLEXIVE:         return "yourself";
     }
 }
 
@@ -6357,7 +6357,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
     std::string str;
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
-        str = "back leg";
+        str = "hind leg";
     else if (!transform_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES))
@@ -6400,7 +6400,7 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     else if (you.species == SP_KENKU)
         str = "feathered arm";
     else if (you.species == SP_MUMMY)
-        str = "bandaged wrapped arm";
+        str = "bandage wrapped arm";
 
     if (plural)
         str = pluralise(str);
