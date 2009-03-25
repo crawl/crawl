@@ -513,7 +513,7 @@ void full_describe_view()
     }
 
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                        | MF_ALLOW_FORMATTING);
+                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
     desc_menu.set_highlighter(NULL);
     // FIXME: Need different title for the opposite toggle:
@@ -526,18 +526,23 @@ void full_describe_view()
     desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
     desc_menu.allow_toggle = true;
 
-    int menu_index = -1;
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (list_mons.size() + list_items.size() > 52
+        && (desc_menu.maxpagesize() > 52 || desc_menu.maxpagesize() == 0))
+    {
+        desc_menu.set_maxpagesize(52);
+    }
+
+    menu_letter hotkey;
     // Build menu entries for monsters.
     if (!list_mons.empty())
     {
         desc_menu.add_entry( new MenuEntry("Monsters", MEL_SUBTITLE) );
-        for (unsigned int i = 0; i < list_mons.size(); ++i)
+//         desc_menu.mdisplay->set_num_columns(1);
+        for (unsigned int i = 0; i < list_mons.size(); ++i, ++hotkey)
         {
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
-
-            ++menu_index;
-            const char letter = index_to_letter(menu_index);
 
             // Get colour-coded letter.
             unsigned char colour = get_mons_colour(list_mons[i]);
@@ -570,8 +575,10 @@ void full_describe_view()
             if (damage_level != MDAM_OKAY)
                 str += ", " + damage_desc;
 
+#ifndef USE_TILE
             // Wraparound if the description is longer than allowed.
-            linebreak_string2(str, get_number_of_cols() - 8);
+            linebreak_string2(str, get_number_of_cols() - 9);
+#endif
             std::vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
             MenuEntry *me;
@@ -579,16 +586,17 @@ void full_describe_view()
             {
                 if (j == 0)
                 {
-                    me = new MenuEntry(prefix + str, MEL_ITEM, 1, letter);
+                    me = new MenuEntry(prefix + str, MEL_ITEM, 1, hotkey);
                     me->data = (void*) list_mons[i];
                     me->quantity = 1; // Hack to make monsters selectable.
                 }
+#ifndef USE_TILE
                 else
                 {
-                    str = "        " + fss[j].tostring();
+                    str = "         " + fss[j].tostring();
                     me = new MenuEntry(str, MEL_ITEM, 1);
                 }
-
+#endif
                 desc_menu.add_entry(me);
             }
         }
@@ -605,17 +613,15 @@ void full_describe_view()
         desc_menu.sort_menu(all_items, cond);
 
         desc_menu.add_entry( new MenuEntry( "Items", MEL_SUBTITLE ) );
-        for (unsigned int i = 0; i < all_items.size(); ++i)
+        for (unsigned int i = 0; i < all_items.size(); ++i, ++hotkey)
         {
-            ++menu_index;
-            const char letter = index_to_letter(menu_index);
             InvEntry *me = all_items[i];
 #ifndef USE_TILE
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
 #endif
             me->tag = "pickup";
-            me->hotkeys[0] = letter;
+            me->hotkeys[0] = hotkey;
             me->quantity = 2; // Hack to make items selectable.
 
             desc_menu.add_entry(me);
@@ -3045,7 +3051,10 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     std::string desc = "";
     if (mondtype != DESC_NONE)
     {
-        desc = mon->full_name(mondtype);
+        if (print_attitude && mon->type == MONS_PLAYER_GHOST)
+            desc = get_ghost_description(*mon);
+        else
+            desc = mon->full_name(mondtype);
 
         if (print_attitude)
         {
@@ -3056,7 +3065,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
                 str = "neutral";
 
             if (mon->type == MONS_DANCING_WEAPON
-                || mon-> type == MONS_PANDEMONIUM_DEMON
+                || mon->type == MONS_PANDEMONIUM_DEMON
+                || mon->type == MONS_PLAYER_GHOST
                 || mons_is_known_mimic(mon))
             {
                 if (!str.empty())
@@ -3066,6 +3076,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
                     str += "dancing weapon";
                 else if (mon->type == MONS_PANDEMONIUM_DEMON)
                     str += "pandemonium demon";
+                else if (mon->type == MONS_PLAYER_GHOST)
+                    str += "ghost";
                 else
                     str += "mimic";
             }
@@ -3194,8 +3206,8 @@ static void _describe_cell(const coord_def& where, bool in_range)
             {
                 item_def item;
                 get_mimic_item( mon, item );
-                std::string name = get_message_colour_tags(item, DESC_NOCAP_A,
-                                                           MSGCH_FLOOR_ITEMS);
+                std::string name = get_menu_colour_prefix_tags(item,
+                                                               DESC_NOCAP_A);
                 mprf("You see %s here.", name.c_str());
             }
             mimic_item = true;
@@ -3260,9 +3272,8 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 mprf( MSGCH_FLOOR_ITEMS, "A pile of gold coins." );
             else
             {
-                std::string name = get_message_colour_tags(mitm[targ_item],
-                                                           DESC_NOCAP_A,
-                                                           MSGCH_FLOOR_ITEMS);
+                std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
+                                                               DESC_NOCAP_A);
                 mprf( MSGCH_FLOOR_ITEMS, "You see %s here.",
                       name.c_str());
             }

@@ -3814,6 +3814,9 @@ static void _give_ammo(monsters *mon, int level,
             set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                               _got_curare_roll(level) ? SPMSL_CURARE
                                                       : SPMSL_POISONED);
+
+            if (get_ammo_brand( mitm[thing_created] ) == SPMSL_CURARE)
+                mitm[thing_created].quantity = random_range(2, 8);
         }
         else
         {

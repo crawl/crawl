@@ -731,8 +731,7 @@ void item_check(bool verbose)
     if (items.size() == 1 )
     {
         item_def it(*items[0]);
-        std::string name = get_message_colour_tags(it, DESC_NOCAP_A,
-                                                   MSGCH_FLOOR_ITEMS);
+        std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
         strm << "You see here " << name << '.' << std::endl;
         return;
     }
@@ -787,8 +786,7 @@ void item_check(bool verbose)
         for (unsigned int i = 0; i < items.size(); ++i)
         {
             item_def it(*items[i]);
-            std::string name = get_message_colour_tags(it, DESC_NOCAP_A,
-                                                       MSGCH_FLOOR_ITEMS);
+            std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);
             strm << name << std::endl;
         }
     }
@@ -1259,8 +1257,8 @@ void pickup()
                                      "y/n/a/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
-                     get_message_colour_tags(mitm[o], DESC_NOCAP_A,
-                                             MSGCH_PROMPT).c_str());
+                     get_menu_colour_prefix_tags(mitm[o],
+                                                 DESC_NOCAP_A).c_str());
 
                 mouse_control mc(MOUSE_MODE_MORE);
                 keyin = getch();
@@ -1616,8 +1614,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
 
                 if (!quiet)
                 {
-                    mpr(get_message_colour_tags(you.inv[m],
-                                                DESC_INVENTORY).c_str());
+                    mpr(get_menu_colour_prefix_tags(you.inv[m],
+                                                    DESC_INVENTORY).c_str());
                 }
                 you.turn_is_over = true;
 
@@ -1684,8 +1682,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
 
     if (!quiet)
     {
-        mpr(get_message_colour_tags(you.inv[freeslot],
-                                    DESC_INVENTORY).c_str());
+        mpr(get_menu_colour_prefix_tags(you.inv[freeslot],
+                                        DESC_INVENTORY).c_str());
     }
     if (Options.tutorial_left)
     {

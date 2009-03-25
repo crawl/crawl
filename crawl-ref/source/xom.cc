@@ -195,6 +195,18 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
                        force_message);
 }
 
+static bool _xom_is_bored()
+{
+    return (you.religion == GOD_XOM && you.gift_timeout == 0);
+}
+
+static bool _xom_feels_nasty()
+{
+    // Xom will only directly kill you with a bad effect if you're under
+    // penance from him, or if he's bored.
+    return (you.penance[GOD_XOM] || _xom_is_bored());
+}
+
 void xom_tick()
 {
     // Xom semi-randomly drifts your piety.
@@ -226,8 +238,30 @@ void xom_tick()
     if (you.gift_timeout == 1)
         simple_god_message(" is getting BORED.");
 
-    if (one_chance_in(5) && (one_chance_in(3) || get_tension(GOD_XOM)))
-        xom_acts(abs(you.piety - MAX_PIETY/2));
+    if (one_chance_in(3))
+    {
+        if (_xom_is_bored())
+            xom_acts(abs(you.piety - MAX_PIETY/2));
+        else
+        {
+            const int tension = get_tension(GOD_XOM);
+/*
+            const int chance = (tension == 0 ? 1 :
+                                tension <= 5 ? 2 : 3);
+
+            if (x_chance_in_y(chance, 3))
+                xom_acts(abs(you.piety - MAX_PIETY/2));
+*/
+            const int chance = (tension ==  0 ? 1 :
+                                tension <=  5 ? 2 :
+                                tension <= 10 ? 3 :
+                                tension <= 20 ? 4
+                                              : 5);
+
+            if (x_chance_in_y(chance, 5))
+                xom_acts(abs(you.piety - MAX_PIETY/2));
+        }
+    }
 }
 
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
@@ -745,14 +779,6 @@ static bool _player_is_dead()
             || you.did_escape_death());
 }
 
-static bool _xom_feels_nasty()
-{
-    // Xom will only directly kill you with a bad effect if you're under
-    // penance from him, or if he's bored.
-    return (you.penance[GOD_XOM]
-            || (you.religion == GOD_XOM && you.gift_timeout == 0));
-}
-
 static bool _xom_do_potion()
 {
     bool rc = false;
@@ -812,8 +838,13 @@ static bool _xom_confuse_monsters(int sever)
 static bool _xom_send_allies(int sever)
 {
     bool rc = false;
-    const int numdemons =
-        std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
+    // The number of allies is dependent on severity, though heavily
+    // randomized.
+    int numdemons = sever;
+    for (int i = 0; i < 3; i++)
+        numdemons = random2(numdemons+1);
+    numdemons = std::min(numdemons+2,16);
+
     int numdifferent = 0;
 
     // If we have a mix of demons and non-demons, there's a chance
@@ -1147,8 +1178,8 @@ static bool _xom_is_good(int sever, int tension)
     // This series of random calls produces a poisson-looking
     // distribution: initial hump, plus a long-ish tail.
 
-    // Don't make the player berserk if there's no danger.
-    if (tension > 0 && x_chance_in_y(2, sever))
+    // Don't make the player go berserk if there's no danger.
+    if (tension > random2(3) && x_chance_in_y(2, sever))
         done = _xom_do_potion();
     else if (x_chance_in_y(3, sever))
     {
@@ -1161,16 +1192,16 @@ static bool _xom_is_good(int sever, int tension)
     else if (x_chance_in_y(4, sever))
         done = _xom_confuse_monsters(sever);
     // It's pointless to send in help if there's no danger.
-    else if (tension > 0 && x_chance_in_y(5, sever))
-        done = _xom_send_allies(sever);
+    else if (tension > random2(5) && x_chance_in_y(5, sever))
+        done = _xom_send_one_ally(sever);
     else if (x_chance_in_y(6, sever))
     {
         _xom_give_item(sever);
         done = true;
     }
     // It's pointless to send in help if there's no danger.
-    else if (tension > 0 && x_chance_in_y(7, sever))
-        done = _xom_send_one_ally(sever);
+    else if (tension > random2(10) && x_chance_in_y(7, sever))
+        done = _xom_send_allies(sever);
     else if (x_chance_in_y(8, sever))
         done = _xom_polymorph_nearby_monster(true);
     else if (x_chance_in_y(9, sever))
@@ -1196,7 +1227,7 @@ static bool _xom_is_good(int sever, int tension)
         while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
         done = true;
     }
-    else if (x_chance_in_y(12, sever))
+    else if (random2(tension) < 5 && x_chance_in_y(12, sever))
     {
         // This can fail with radius 1, or in open areas.
         if (vitrify_area(random2avg(sever / 2, 3) + 1))
@@ -1205,10 +1236,13 @@ static bool _xom_is_good(int sever, int tension)
             done = true;
         }
     }
-    else if (x_chance_in_y(13, sever) && x_chance_in_y(16, how_mutated()))
+    else if (random2(tension) < 5 && x_chance_in_y(13, sever)
+             && x_chance_in_y(16, how_mutated()))
+    {
         done = _xom_give_mutations(true);
+    }
     // It's pointless to send in help if there's no danger.
-    else if (tension > 0 && x_chance_in_y(14, sever))
+    else if (tension > random2(15) && x_chance_in_y(14, sever))
         done = _xom_send_major_ally(sever);
     else if (x_chance_in_y(15, sever))
         done = _xom_throw_divine_lightning();
@@ -1350,9 +1384,12 @@ static void _xom_zero_miscast()
                            + " seems to fall away from under you!");
             vec->push_back(feat_name
                            + " seems to rush up at you!");
+
             if (grid_is_water(feat))
+            {
                 priority.push_back("Something invisible splashes into the "
                                    "water beneath you!");
+            }
         }
         else if (grid_is_water(feat))
         {
@@ -1409,7 +1446,8 @@ static void _xom_zero_miscast()
     }
 
     if (you.species != SP_NAGA
-        && (you.species != SP_MERFOLK || !player_is_swimming()))
+        && (you.species != SP_MERFOLK || !player_is_swimming())
+        && !you.airborne())
     {
         messages.push_back("You do an impromptu tapdance.");
     }
@@ -1856,7 +1894,7 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(8, sever))
             done = _xom_chaos_upgrade_nearby_monster();
-        else if (x_chance_in_y(9, sever))
+        else if (random2(tension) < 10 && x_chance_in_y(9, sever))
             done = _xom_give_mutations(false);
         else if (x_chance_in_y(10, sever))
             done = _xom_polymorph_nearby_monster(false);

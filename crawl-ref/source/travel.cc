@@ -2979,7 +2979,7 @@ void start_explore(bool grab_items)
     // Forget interrupted butchering.
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
-    you.running = grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE;
+    you.running = (grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
     if (you.running == RMODE_EXPLORE_GREEDY
         && Options.stash_tracking != STM_ALL)
     {
@@ -4191,7 +4191,8 @@ void explore_discoveries::add_item(const item_def &i)
         items[j].thing.quantity = orig_quantity;
     }
 
-    items.push_back( named_thing<item_def>(i.name(DESC_NOCAP_A), i) );
+    items.push_back( named_thing<item_def>(get_menu_colour_prefix_tags(i,
+                                                DESC_NOCAP_A), i) );
 
     // First item of this type?
     // XXX: Only works when travelling.
@@ -4230,8 +4231,8 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
     } // if (you.running == RMODE_EXPLORE_GREEDY)
 
     add_item(i);
-    es_flags |= (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP :
-                                                        ES_PICKUP;
+    es_flags |= (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP
+                                                      : ES_PICKUP;
 }
 
 // Expensive O(n^2) duplicate search, but we can live with that.

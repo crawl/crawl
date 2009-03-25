@@ -515,8 +515,10 @@ void StashMenu::draw_title()
         textcolor(title->colour);
         cprintf( "%s", title->text.c_str());
         if (title->quantity)
+        {
             cprintf(", %d item%s", title->quantity,
                                    title->quantity == 1? "" : "s");
+        }
         cprintf(")");
         if (can_travel)
             cprintf("  [ENTER: travel]");

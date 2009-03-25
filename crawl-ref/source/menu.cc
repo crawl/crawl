@@ -1203,7 +1203,8 @@ void slider_menu::calc_y_offset()
 int slider_menu::entry_end() const
 {
     int end = first_entry + pagesize;
-    if (end > (int) items.size()) end = items.size();
+    if (end > (int) items.size())
+        end = items.size();
     return (end);
 }
 
@@ -1400,13 +1401,12 @@ void column_composer::clear()
     flines.clear();
 }
 
-void column_composer::add_formatted(
-        int ncol,
-        const std::string &s,
-        bool add_separator,
-        bool eol_ends_format,
-        bool (*tfilt)(const std::string &),
-        int  margin)
+void column_composer::add_formatted(int ncol,
+                                    const std::string &s,
+                                    bool add_separator,
+                                    bool eol_ends_format,
+                                    bool (*tfilt)(const std::string &),
+                                    int  margin)
 {
     ASSERT(ncol >= 0 && ncol < (int) columns.size());
 
@@ -1433,10 +1433,9 @@ void column_composer::add_formatted(
 
     strip_blank_lines(newlines);
 
-    compose_formatted_column(
-            newlines,
-            col.lines,
-            margin == -1? col.margin : margin);
+    compose_formatted_column( newlines,
+                              col.lines,
+                              margin == -1? col.margin : margin );
 
     col.lines += newlines.size();
 
