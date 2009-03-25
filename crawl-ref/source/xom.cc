@@ -57,17 +57,15 @@ REVISION("$Rev$");
 // roughly ascending order of power.
 static const spell_type _xom_nontension_spells[] =
 {
-    SPELL_BLINK, SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS,
-    SPELL_DETECT_CREATURES, SPELL_RING_OF_FLAMES, SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_EXCRUCIATING_WOUNDS, SPELL_SUMMON_BUTTERFLIES,
+    SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS, SPELL_DETECT_CREATURES,
+    SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_SUMMON_BUTTERFLIES,
     SPELL_FLY, SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM,
-    SPELL_DRAGON_FORM, SPELL_ANIMATE_DEAD, SPELL_NECROMUTATION
+    SPELL_DRAGON_FORM, SPELL_NECROMUTATION
 };
 
 static const spell_type _xom_tension_spells[] =
 {
-    SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_MAGIC_MAPPING,
-    SPELL_DETECT_ITEMS, SPELL_DETECT_CREATURES, SPELL_CAUSE_FEAR,
+    SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_CAUSE_FEAR,
     SPELL_MASS_SLEEP, SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES,
     SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_TUKIMAS_VORPAL_BLADE,
     SPELL_MAXWELLS_SILVER_HAMMER, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
@@ -1154,7 +1152,7 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_do_potion();
     else if (x_chance_in_y(3, sever))
     {
-        if (tension || coinflip())
+        if (tension || one_chance_in(3))
         {
             _xom_makes_you_cast_random_spell(sever, tension);
             done = true;
@@ -1407,6 +1405,13 @@ static void _xom_zero_miscast()
         && (transform == TRAN_NONE || transform == TRAN_BLADE_HANDS))
     {
         messages.push_back("Your eyebrows briefly feel incredibly bushy.");
+        messages.push_back("Your eyebrows wriggle.");
+    }
+
+    if (you.species != SP_NAGA
+        && (you.species != SP_MERFOLK || !player_is_swimming()))
+    {
+        messages.push_back("You do an impromptu tapdance.");
     }
 
     ///////////////////////////
@@ -1444,8 +1449,6 @@ static void _xom_zero_miscast()
         std::string str = "You compulsively click the heels of your ";
         str += name;
         str += " together three times.";
-
-        messages.push_back(str);
     }
 
     if ((item = _tran_get_eq(EQ_SHIELD)))
@@ -1454,6 +1457,11 @@ static void _xom_zero_miscast()
         str += item->name(DESC_BASENAME, false, false, false);
         str += " spins!";
 
+        messages.push_back(str);
+
+        str = "Your ";
+        str += item->name(DESC_BASENAME, false, false, false);
+        str += " briefly flashes a lurid colour!";
         messages.push_back(str);
     }
 
@@ -1487,8 +1495,8 @@ static void _xom_zero_miscast()
             str += pluralise(name);
             str += ".";
         }
-        else if (item->sub_type >= ARM_RING_MAIL &&
-                 item->sub_type <= ARM_PLATE_MAIL)
+        else if (item->sub_type >= ARM_RING_MAIL
+                 && item->sub_type <= ARM_PLATE_MAIL)
         {
             str  = "Your ";
             str += name;
@@ -1803,7 +1811,7 @@ static bool _xom_summon_hostiles(int sever)
 static bool _xom_is_bad(int sever, int tension)
 {
     bool done = false;
-    bool nasty = _xom_feels_nasty();
+    bool nasty = (sever >= 5 && _xom_feels_nasty());
 
     god_acting gdact(GOD_XOM);
 
@@ -1813,12 +1821,12 @@ static bool _xom_is_bad(int sever, int tension)
         if (_player_is_dead())
             return (true);
 
-        if (x_chance_in_y(3, sever))
+        if (!nasty && x_chance_in_y(3, sever))
         {
             _xom_miscast(0, nasty);
             done = true;
         }
-        else if (x_chance_in_y(4, sever))
+        else if (!nasty && x_chance_in_y(4, sever))
         {
             _xom_miscast(1, nasty);
             done = true;
@@ -1830,7 +1838,8 @@ static bool _xom_is_bad(int sever, int tension)
             _xom_miscast(2, nasty);
             done = true;
         }
-        else if (x_chance_in_y(7, sever) && you.level_type != LEVEL_ABYSS)
+        else if ((!nasty || coinflip())
+                 && x_chance_in_y(7, sever) && you.level_type != LEVEL_ABYSS)
         {
             // The Xom teleportation train takes you on instant
             // teleportation to a few random areas, stopping if either

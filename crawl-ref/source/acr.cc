@@ -546,7 +546,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         if (you.religion == GOD_XOM)
             xom_acts(abs(you.piety - 100));
         else
-            xom_acts(coinflip(), random_range(0, MAX_PIETY - 100));
+            xom_acts(coinflip(), random_range(0, MAX_PIETY/2));
         break;
 
     case 'p':
@@ -2678,7 +2678,7 @@ void world_reacts()
     if (you.cannot_act() && any_messages())
         more();
 
-#ifdef DEBUG_TENSION | DEBUG_RELIGION
+#if defined(DEBUG_TENSION) || defined(DEBUG_RELIGION)
     if (you.religion != GOD_NO_GOD)
         mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif
