@@ -1275,9 +1275,7 @@ public:
     int shield_blocks;                 // Count of shield blocks this round.
 
     god_type god;                      // What god the monster worships, if
-                                       // any.  This is currently only used for
-                                       // monsters that are god gifts, to
-                                       // indicate which god sent them.
+                                       // any.
 
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 

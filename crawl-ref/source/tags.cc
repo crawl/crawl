@@ -2172,7 +2172,7 @@ static void unmarshall_monster(reader &th, monsters &m)
 
     unmarshallSpells(th, m.spells);
 
-    m.god = (god_type) unmarshallByte(th);
+    m.god = static_cast<god_type>( unmarshallByte(th) );
 
     if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
         m.set_ghost( unmarshallGhost(th) );

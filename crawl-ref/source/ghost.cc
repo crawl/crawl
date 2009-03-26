@@ -311,7 +311,8 @@ void ghost_demon::init_player_ghost()
         const item_def& weapon = *you.weapon();
         if (weapon.base_type == OBJ_WEAPONS || weapon.base_type == OBJ_STAVES)
         {
-            damage = property( weapon, PWPN_DAMAGE );
+            damage = property(weapon, PWPN_DAMAGE);
+
             damage *= 25 + you.skills[weapon_skill(weapon)];
             damage /= 25;
 
@@ -321,7 +322,7 @@ void ghost_demon::init_player_ghost()
 
                 // Ghosts can't get holy wrath, but they get to keep
                 // the weapon.
-                if ( brand == SPWPN_HOLY_WRATH )
+                if (brand == SPWPN_HOLY_WRATH)
                     brand = SPWPN_NORMAL;
             }
         }
@@ -344,10 +345,10 @@ void ghost_demon::init_player_ghost()
         damage = 50;
 
     species = you.species;
+    job = you.char_class;
     best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
-    job = you.char_class;
 
     add_spells();
 }
