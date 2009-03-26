@@ -3987,13 +3987,13 @@ void tile_clear_flavour()
 // set them to a random instance of the default floor and wall tileset.
 void tile_init_flavour()
 {
-    for (rectangle_iterator ri(1); ri; ++ri)
+    for (rectangle_iterator ri(0); ri; ++ri)
         tile_init_flavour(*ri);
 }
 
 void tile_init_flavour(const coord_def &gc)
 {
-    if (!in_bounds(gc))
+    if (!map_bounds(gc))
         return;
 
     if (!env.tile_flv(gc).floor)
