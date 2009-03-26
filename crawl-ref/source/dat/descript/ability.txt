@@ -9,7 +9,7 @@ Spit poison at a targeted monster.
 %%%%
 Sense Surroundings
 
-You can map your vicinity.
+Map your vicinity.
 %%%%
 Teleportation
 
@@ -17,7 +17,7 @@ Teleport yourself to a random location on the level.
 %%%%
 Blink ability
 
-Blink to another grid within your line of sight. The destination is chosen randomly among all eligible grids.
+Randomly translocate a short distance.
 %%%%
 Breathe Fire
 
@@ -50,6 +50,7 @@ Breathe a jet of steam at a targeted monster.
 Bat Form
 
 Turn into a speedy vampire bat. In bat form, you can neither interact with items in any form (except picking them up or dropping them), nor cast spells. Note that Bat Form will decrease your current strength while increasing your dexterity. Thus, you won't be able to change form if your strength is too low.
+
 Vampires below experience level 10 will be unable to transform if wearing cursed equipment.
 %%%%
 Spit Acid
@@ -59,7 +60,7 @@ Spit acid at a targeted monster.
 # Both for Fly I and II.
 Fly
 
-Pretty self-explanatory: Start flying.
+Start flying.
 %%%%
 Summon Minor Demon
 
@@ -107,7 +108,7 @@ Drain the life force of a targeted monster. This will reduce the experience you'
 %%%%
 Release Delayed Fireball
 
-Release a previously memorised (delayed) fireball without additional cost in terms of magic or hunger.
+Instantly release a previously memorised (delayed) fireball without additional cost in terms of magic or hunger.
 %%%%
 Self-Restoration
 
@@ -119,7 +120,7 @@ At the permanent loss of one magic point recharge a wand or rod or enchant a wea
 %%%%
 Evoke Sense Surroundings
 
-You can map your vicinity.
+Map your vicinity.
 %%%%
 Evoke Teleportation
 
@@ -127,11 +128,11 @@ Teleport yourself to a random location on the level.
 %%%%
 Evoke Blink
 
-Blink to another grid within your line of sight. The destination is chosen randomly among all eligible grids.
+Randomly translocate a short distance.
 %%%%
 Evoke Berserk Rage
 
-Berserk greatly if temporarily increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, cannot berserk again, and occasionally even pass out.
+Go berserk. Going berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, cannot berserk again, and occasionally even pass out.
 %%%%
 Evoke Invisibility
 
@@ -139,7 +140,7 @@ Turn yourself invisible for a limited amount of time. Turning invisible increase
 %%%%
 Turn Visible
 
-Pretty self-explanatory: turn visible again.
+Turn visible again.
 %%%%
 Evoke Levitation
 
@@ -147,20 +148,20 @@ Start levitating. During levitation you can safely cross water and similar obsta
 %%%%
 Stop Levitating
 
-Pretty self-explanatory: stop levitating.
+Stop levitating.
 %%%%
 End Transformation
 
-With a short delay, you revert to your normal form.
+Revert to your normal form, with a short delay.
 %%%%
 # Zin
 Recite
 
-Preaching to monsters about Zin's laws leads to various results. It works best on humanoids, worse on undead and demons, and not at all on beasts.
+Preach to monsters about Zin's laws which can lead to various results. It works best on humanoids, worse on undead and demons, and not at all on beasts.
 %%%%
 Vitalisation
 
-If Zin is most pleased with you, you can Vitalise yourself. This will remove a negative affliction from you, or restore one of your attributes. In case neither of these is necessary, it will give you temporary boosts to your attributes instead.
+Vitalise yourself. This will remove a negative affliction from you, or restore one of your attributes. In case neither of these is necessary, it will give you temporary boosts to your attributes instead.
 %%%%
 Sanctuary
 
@@ -169,15 +170,15 @@ For a short duration gain safety in a divine refuge. While you are inside the sa
 # The Shining One
 Divine Shield
 
-Conjures up a divine shield that stacks with an ordinary shield and can be used even when wielding a two-handed weapon, as the Divine Shield is managed by the Shining One.
+Conjure up a divine shield that stacks with an ordinary shield and can be used even when wielding a two-handed weapon, as the Divine Shield is managed by the Shining One.
 %%%%
 Cleansing Flame
 
-Hurls a huge blast of divine fury, severely damaging undead and demons. All other hostiles also take damage, if less so, whereas allies are never affected.
+Invoke a huge blast of divine fury centered on you, severely damaging undead and demons. All other hostiles also take damage, if less so, whereas you and your allies are never affected.
 %%%%
 Summon Divine Warrior
 
-Summoned Angels and Daevas are powerful warriors against evil. They might be blessed by the Shining One to stay longer or even permanently in this world.
+Summon an Angel or Daeva, powerful warriors against evil. They may be blessed by the Shining One to stay longer or even permanently in this world.
 %%%%
 # Both Kikubaaqudgha and Yredelemnul.
 Recall Undead Slaves
@@ -208,7 +209,7 @@ Heal hit points by draining the life force of the living monsters surrounding yo
 %%%%
 Enslave Soul
 
-Mark a monster's living soul as yours, once the monster dies. The soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment. However, you can only enslave one soul at any given time. Note that enslaved souls, whether twisted or intact, can leave the level they were created on via stairs.
+Mark a monster's living soul as yours, once the monster dies. The soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment. However, you can only enslave one soul at any given time. Note that enslaved souls, whether twisted or intact, can follow you beyond the level they were created on.
 %%%%
 # Okawaru
 Might
@@ -222,7 +223,7 @@ Greatly increase your movement speed. Hasting yourself will increase your magica
 # Makhleb
 Minor Destruction
 
-Shoot a random harmful beam at the targeted monster.
+Shoot a random harmful blast at the targeted monster.
 %%%%
 Lesser Servant of Makhleb
 
@@ -230,7 +231,7 @@ Summon a minor demon, with a chance of being hostile at low Invocations skill.
 %%%%
 Major Destruction
 
-Inflict a random harmful beam or explosion on the targeted monster.
+Shoot a random harmful beam or explosion at the targeted monster.
 %%%%
 Greater Servant of Makhleb
 
@@ -248,28 +249,28 @@ Forget any spell out of the ones you've currently memorised, so as to free memor
 # Trog
 Burn Spellbooks
 
-All spellbooks within your line of sight are set on fire. The fire is fueled by Trog's hatred, and Trog likes it most when you don't even care which books of madness burst into flames.
+Set all spellbooks within your field of vision on fire. The fire is fuelled by Trog's hatred, and Trog likes it most when you don't even care which books of madness burst into flames.
 %%%%
 Berserk
 
-Berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands or evoke items. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, and cannot berserk again. Unlike other sources of rage, depending on your piety Trog may occasionally prevent you from passing out.
+Go berserk. Going berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, and cannot berserk again. Unlike other sources of rage, depending on your piety Trog may occasionally prevent you from passing out.
 %%%%
 Trog's Hand
 
-A powerful regeneration ability which stacks with all other sources.
+Invoke a powerful regeneration ability which stacks with all other sources.
 %%%%
 Brothers in Arms
 
-Sends huge angry allies to wreak havoc.
+Summon huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
 Destroy Weapons
 
-Destroys all weapons on the ground. In order to prevent a weapon from being accidentally destroyed, use the !D inscription.
+Destroy all weapons on the ground. In order to prevent a weapon from being accidentally destroyed, use the !D inscription.
 %%%%
-Minor Healing
+Lesser Healing
 
-Depending on your Invocations skill, heal a small amount of hitpoints.
+Depending on your Invocations skill, heal a small amount of hit points.
 
 Can be used on hostile monsters, trying to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
 
@@ -281,13 +282,13 @@ Purification
 
 Purge your body of bad effects such as sickness, poisoning, slowness, confusion and rotting.
 %%%%
-Major Healing
+Greater Healing
 
-Depending on your Invocations skill, heal a moderate amount of hitpoints. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher piety cost.
+Depending on your Invocations skill, heal a moderate amount of hit points. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher piety cost.
 
 Can be used on hostile monsters, trying to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
 
-Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience level. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety loss even if you need just one try.
+Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety loss even if you need just one try.
 
 You can also heal allies and neutral monsters.
 %%%%
@@ -318,7 +319,7 @@ Corrupt the current level by unleashing Abyssal energies on it. This will cause 
 %%%%
 Enter the Abyss
 
-You can transfer yourself to Lugonu's realm instantly... but at a cost.
+You can transfer yourself to Lugonu's realm instantly... at a cost.
 %%%%
 # Nemelex Xobeh
 Draw One
@@ -327,15 +328,15 @@ Choose any deck in your inventory and draw a card from it.
 %%%%
 Peek at Two
 
-Draw two cards from your wielded deck, look at them, and shuffle them back into the deck. The deck will be inscribed as containing those two cards, and, if they are different, this will identify the deck.
+Draw two cards from any deck in your inventory, look at them, and shuffle them back into the deck. The deck will be inscribed as containing those two cards, and, if they are different, this will identify the deck.
 %%%%
 Triple Draw
 
-Draw three cards from your wielded deck, look at them, and decide which one to keep, discarding the other two.
+Draw three cards from any deck in your inventory, look at them, and decide which one to keep, discarding the other two.
 %%%%
 Mark Four
 
-Draw four cards from your wielded deck, mark and remember them, and shuffle them back into the deck. The deck will be inscribed as containing those cards, and doing so will identify the deck.
+Draw four cards from any deck in your inventory, mark and remember them, so that you can tell when they are on top, and shuffle them back into the deck. The deck will be inscribed as containing those cards, and doing so will identify the deck.
 %%%%
 Stack Five
 
@@ -348,7 +349,7 @@ Smite an enemy within your field of vision. This doesn't require a direct path, 
 %%%%
 Recall Orcish Followers
 
-Recall all of your orcish followers on the level to your vicinity.
+Recall your orcish followers from anywhere on the level to your immediate surroundings.
 %%%%
 Renounce Religion
 
