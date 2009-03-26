@@ -56,6 +56,7 @@ static spell_type search_order_conj[] = {
     SPELL_STING,
 // 20
     SPELL_SHOCK,
+    SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
     SPELL_SLEEP,
     SPELL_BACKLIGHT,
