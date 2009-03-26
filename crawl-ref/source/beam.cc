@@ -5529,6 +5529,7 @@ void bolt::setup_retrace()
         target = pos();
 
     std::swap(source, target);
+    chose_ray       = false;
     affects_nothing = true;
     aimed_at_spot   = true;
     range_used      = 0;
