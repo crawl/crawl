@@ -2425,6 +2425,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
 
     marshallShort(th, ghost.species);
     marshallShort(th, ghost.job);
+    marshallByte(th, ghost.religion);
     marshallShort(th, ghost.best_skill);
     marshallShort(th, ghost.best_skill_level);
     marshallShort(th, ghost.xl);
@@ -2453,6 +2454,7 @@ static ghost_demon unmarshallGhost(reader &th)
 
     ghost.species          = static_cast<species_type>( unmarshallShort(th) );
     ghost.job              = static_cast<job_type>( unmarshallShort(th) );
+    ghost.religion         = static_cast<god_type>( unmarshallByte(th) );
     ghost.best_skill       = static_cast<skill_type>( unmarshallShort(th) );
     ghost.best_skill_level = unmarshallShort(th);
     ghost.xl               = unmarshallShort(th);

@@ -6159,6 +6159,7 @@ void monsters::pandemon_init()
 void monsters::ghost_init()
 {
     type            = MONS_PLAYER_GHOST;
+    god             = ghost->religion;
     hit_dice        = ghost->xl;
     hit_points      = ghost->max_hp;
     max_hit_points  = ghost->max_hp;

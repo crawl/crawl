@@ -2997,7 +2997,7 @@ std::string get_ghost_description(const monsters &mons, bool concise)
          << skill_title( ghost.best_skill,
                          (unsigned char)ghost.best_skill_level,
                          gspecies,
-                         str, dex, GOD_NO_GOD )
+                         str, dex, ghost.religion )
          << ", a"
          << ((ghost.xl <  4) ? " weakling" :
              (ghost.xl <  7) ? "n average" :

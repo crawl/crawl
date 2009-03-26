@@ -22,6 +22,7 @@ REVISION("$Rev$");
 #include "mtransit.h"
 #include "place.h"
 #include "player.h"
+#include "religion.h"
 #include <vector>
 
 std::vector<ghost_demon> ghosts;
@@ -118,6 +119,7 @@ void ghost_demon::reset()
     name.clear();
     species          = SP_UNKNOWN;
     job              = JOB_UNKNOWN;
+    religion         = GOD_NO_GOD;
     best_skill       = SK_FIGHTING;
     best_skill_level = 0;
     xl               = 0;
@@ -346,6 +348,10 @@ void ghost_demon::init_player_ghost()
 
     species = you.species;
     job = you.char_class;
+
+    // Ghosts can't worship good gods.
+    religion = is_good_god(you.religion) ? GOD_NO_GOD : you.religion;
+
     best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
