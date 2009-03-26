@@ -373,7 +373,7 @@ void MiscastEffect::do_miscast()
     case SPTYP_TRANSLOCATION:  _translocation(severity);  break;
     case SPTYP_SUMMONING:      _summoning(severity);      break;
     case SPTYP_NECROMANCY:     _necromancy(severity);     break;
-    case SPTYP_TRANSMUTATION:  _transmutation(severity); break;
+    case SPTYP_TRANSMUTATION:  _transmutation(severity);  break;
     case SPTYP_FIRE:           _fire(severity);           break;
     case SPTYP_ICE:            _ice(severity);            break;
     case SPTYP_EARTH:          _earth(severity);          break;

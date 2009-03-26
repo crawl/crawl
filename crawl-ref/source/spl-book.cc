@@ -2144,7 +2144,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     if (num_discs == 0)
     {
 #ifdef DEBUG
-        mpr("No valid disciplines with which to make a themed ranadart "
+        mpr("No valid disciplines with which to make a themed randart "
             "spellbook.", MSGCH_ERROR);
 #endif
         // Only happens if !completely_random and the player already knows

@@ -1928,12 +1928,11 @@ static void _mark_portal_return_point(const coord_def &pos)
 
 // All changes to you.level_type, you.where_are_you and you.your_level
 // for descending stairs should happen here.
-static void _player_change_level_downstairs(
-    dungeon_feature_type stair_find,
-    const level_id &place_override,
-    bool shaft,
-    int shaft_level,
-    const level_id &shaft_dest)
+static void _player_change_level_downstairs(dungeon_feature_type stair_find,
+                                            const level_id &place_override,
+                                            bool shaft,
+                                            int shaft_level,
+                                            const level_id &shaft_dest)
 {
     if (_stair_force_destination(place_override))
         return;
@@ -1999,8 +1998,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     branch_type old_where = you.where_are_you;
 
     const bool shaft = (!force_stair
-                  && get_trap_type(you.pos()) == TRAP_SHAFT
-                  || force_stair == DNGN_TRAP_NATURAL);
+                            && get_trap_type(you.pos()) == TRAP_SHAFT
+                        || force_stair == DNGN_TRAP_NATURAL);
     level_id shaft_dest;
     int      shaft_level = -1;
 
@@ -2136,9 +2135,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
 
-    const level_id  old_level_id    = level_id::current();
-    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
-    const coord_def stair_pos = you.pos();
+    const level_id  old_level_id = level_id::current();
+    LevelInfo &old_level_info    = travel_cache.get_level_info(old_level_id);
+    const coord_def stair_pos    = you.pos();
     if (collect_travel_data)
         old_level_info.update();
 
@@ -2155,6 +2154,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         _mark_portal_return_point(you.pos());
     }
 
+    const int shaft_depth = (shaft ? shaft_level - you.your_level : 1);
     _player_change_level_reset();
     _player_change_level_downstairs(stair_find, destination_override, shaft,
                                     shaft_level, shaft_dest);
@@ -2288,7 +2288,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         switch (you.level_type)
         {
         case LEVEL_DUNGEON:
-            xom_is_stimulated(49);
+            // Xom thinks it's funny if you enter a new level via shaft
+            // or escape hatch, for shafts it's funnier the deeper you fell.
+            if (shaft || grid_is_escape_hatch(stair_find))
+                xom_is_stimulated(shaft_depth * 50);
+            else
+                xom_is_stimulated(14);
             break;
 
         case LEVEL_PORTAL_VAULT:

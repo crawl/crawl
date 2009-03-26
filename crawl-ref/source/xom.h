@@ -25,12 +25,12 @@ void xom_is_stimulated(int maxinterestingness,
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
                        bool force_message = false);
 bool xom_is_nice();
-void xom_acts(bool niceness, int sever);
+void xom_acts(bool niceness, int sever, int tension = -1);
 const char *describe_xom_favour();
 
-inline void xom_acts(int sever)
+inline void xom_acts(int sever, int tension = -1)
 {
-    xom_acts(xom_is_nice(), sever);
+    xom_acts(xom_is_nice(), sever, tension);
 }
 
 void xom_check_lost_item(const item_def& item);

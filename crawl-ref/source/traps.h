@@ -31,7 +31,7 @@ void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(const coord_def& where, bool trapped = true);
 void mark_net_trapping(const coord_def& where);
 void monster_caught_in_net(monsters *mon, bolt &pbolt);
-void player_caught_in_net();
+bool player_caught_in_net();
 void clear_trapping_net();
 void check_net_will_hold_monster(monsters *mon);
 

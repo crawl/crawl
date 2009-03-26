@@ -3872,8 +3872,12 @@ void bolt::affect_player()
         // in item_use.cc.
         if (item->sub_type == MI_THROWING_NET)
         {
-            player_caught_in_net();
-            was_affected = true;
+            if (player_caught_in_net())
+            {
+                if (beam_source != NON_MONSTER)
+                    xom_is_stimulated(64);
+                was_affected = true;
+            }
         }
         else if (item->special == SPMSL_CURARE)
         {

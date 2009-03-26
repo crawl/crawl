@@ -289,6 +289,15 @@ void InvEntry::add_class_hotkeys(const item_def &i)
     _get_class_hotkeys(type, glyphs);
     for (unsigned int k = 0; k < glyphs.size(); ++k)
         add_hotkey(glyphs[k]);
+
+    // Hack to make rotten chunks answer to '&' as well.
+    // Check for uselessness rather than inedibility to cover the spells
+    // that use chunks.
+    if (i.base_type == OBJ_FOOD && i.sub_type == FOOD_CHUNK
+        && is_useless_item(i))
+    {
+        add_hotkey('&');
+    }
 }
 
 bool InvEntry::show_prices = false;
@@ -503,20 +512,33 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     {
         // Do we want to display the floor type or is that too distracting?
         const coord_def c = item->pos;
-        int ch = tileidx_feature(grd(c), c.x, c.y);
-        if (ch == TILE_FLOOR_NORMAL)
-            ch = env.tile_flv(c).floor;
-        else if (ch == TILE_WALL_NORMAL)
-            ch = env.tile_flv(c).wall;
+        int ch = -1;
+        if (c != coord_def())
+        {
+            ch = tileidx_feature(grd(c), c.x, c.y);
+            if (ch == TILE_FLOOR_NORMAL)
+                ch = env.tile_flv(c).floor;
+            else if (ch == TILE_WALL_NORMAL)
+                ch = env.tile_flv(c).wall;
 
-        tileset.push_back(tile_def(ch, TEX_DUNGEON));
+            tileset.push_back(tile_def(ch, TEX_DUNGEON));
+        }
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
-        // Needs to be displayed so as to not give away mimics in shallow water.
-        if (ch == TILE_DNGN_SHALLOW_WATER)
-            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER, TEX_DEFAULT));
-        else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-            tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY, TEX_DEFAULT));
+        if (ch != -1)
+        {
+            // Needs to be displayed so as to not give away mimics in shallow water.
+            if (ch == TILE_DNGN_SHALLOW_WATER)
+            {
+                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER,
+                                           TEX_DEFAULT));
+            }
+            else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
+            {
+                tileset.push_back(tile_def(TILE_MASK_SHALLOW_WATER_MURKY,
+                                           TEX_DEFAULT));
+            }
+        }
     }
     int brand = tile_known_weapon_brand(*item);
     if (brand)

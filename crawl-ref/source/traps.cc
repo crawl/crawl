@@ -43,6 +43,7 @@ REVISION("$Rev$");
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 bool trap_def::active() const
 {
@@ -271,15 +272,15 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
     }
 }
 
-void player_caught_in_net()
+bool player_caught_in_net()
 {
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
-        return;
+        return (false);
 
     if (you.flight_mode() == FL_FLY && (!you.confused() || one_chance_in(3)))
     {
         mpr("You dart out from under the net!");
-        return;
+        return (false);
     }
 
     if (!you.attribute[ATTR_HELD])
@@ -297,7 +298,9 @@ void player_caught_in_net()
         }
 
         stop_delay(true); // even stair delays
+        return (true);
     }
+    return (false);
 }
 
 void check_net_will_hold_monster(monsters *mons)
@@ -496,7 +499,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 else
                 {
                     mpr("A large net falls onto you!");
-                    player_caught_in_net();
+                    if (player_caught_in_net() && player_in_a_dangerous_place())
+                        xom_is_stimulated(64);
                 }
 
                 item_def item = this->generate_trap_item();
@@ -573,6 +577,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             mpr((trig_knows) ? "You enter the Zot trap."
                              : "Oh no! You have blundered into a Zot trap!");
+            if (!trig_knows)
+                xom_is_stimulated(32);
+
             MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                            3, "a Zot trap" );
         }

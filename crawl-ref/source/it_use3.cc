@@ -834,12 +834,11 @@ void tome_of_power(int slot)
     msg::stream << "The book opens to a page covered in "
                 << weird_writing() << '.' << std::endl;
 
+    set_ident_flags(you.inv[slot], ISFLAG_KNOW_TYPE);
     you.turn_is_over = true;
 
     if (!yesno("Read it?"))
         return;
-
-    set_ident_flags( you.inv[slot], ISFLAG_KNOW_TYPE );
 
     if (player_mutation_level(MUT_BLURRY_VISION) > 0
         && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
@@ -875,7 +874,7 @@ void tome_of_power(int slot)
         if (one_chance_in(5))
         {
             mpr("The book disappears in a mighty explosion!");
-            dec_inv_item_quantity( slot, 1 );
+            dec_inv_item_quantity(slot, 1);
         }
 
         immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
@@ -930,7 +929,9 @@ void skill_manual(int slot)
     // a manual in advance.
     you.turn_is_over = true;
     item_def& manual(you.inv[slot]);
-    set_ident_flags( manual, ISFLAG_KNOW_TYPE );
+    const bool known = item_type_known(manual);
+    if (!known)
+        set_ident_flags( manual, ISFLAG_KNOW_TYPE );
     const int skill = manual.plus;
 
     mprf("You read about %s.", skill_name(skill));
@@ -945,7 +946,7 @@ void skill_manual(int slot)
     else
         mpr("The manual looks somewhat more worn.");
 
-    xom_is_stimulated(14);
+    xom_is_stimulated(known ? 14 : 64);
 }
 
 static bool box_of_beasts()

@@ -2429,14 +2429,11 @@ void wizard_gain_piety()
         if (one_chance_in(10))
             you.gift_timeout = 0;
         else
-            you.gift_timeout = random2(256);  // reroll interest
+            you.gift_timeout = random2(40) + random2(40);  // reroll interest
 
         const std::string new_xom_favour = describe_xom_favour();
-        if (old_xom_favour != new_xom_favour)
-        {
-            const std::string msg = "Your title is now: " + new_xom_favour;
-            god_speaks(you.religion, msg.c_str());
-        }
+        const std::string msg = "Your title is now: " + new_xom_favour;
+        god_speaks(you.religion, msg.c_str());
         return;
     }
 

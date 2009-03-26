@@ -121,7 +121,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     int type = mon->type;
 
-    // show only base class for detected monsters
+    // Show only base class for detected monsters.
     if (detected)
         type = mons_genus(type);
 
@@ -143,7 +143,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_GIANT_BAT:
         return TILEP_MONS_GIANT_BAT;
     case MONS_BUTTERFLY:
-        return TILEP_MONS_BUTTERFLY + ((mon->colour)%7);
+        return TILEP_MONS_BUTTERFLY + ((mon->colour) % 7);
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -154,6 +154,10 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_YAKTAUR + _bow_offset(mon);
     case MONS_YAKTAUR_CAPTAIN:
         return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
+
+    // draconians ('d'):
+    case MONS_DRACONIAN:
+        return TILEP_DRACO_BASE;
 
     // elves ('e')
     case MONS_ELF:
@@ -740,15 +744,15 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SCROLL_MIMIC:
     case MONS_POTION_MIMIC:
     {
-      // Use item tile
-      item_def  item;
-      get_mimic_item( mon, item );
-      return tileidx_item(item);
+        // Use item tile.
+        item_def  item;
+        get_mimic_item( mon, item );
+        return tileidx_item(item);
     }
 
     case MONS_DANCING_WEAPON:
     {
-        // Use item tile
+        // Use item tile.
         item_def item = mitm[mon->inv[MSLOT_WEAPON]];
         return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
     }

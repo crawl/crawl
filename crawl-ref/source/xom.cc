@@ -134,6 +134,18 @@ static std::string _get_xom_speech(const std::string key)
     return (result);
 }
 
+static bool _xom_is_bored()
+{
+    return (you.religion == GOD_XOM && you.gift_timeout == 0);
+}
+
+static bool _xom_feels_nasty()
+{
+    // Xom will only directly kill you with a bad effect if you're under
+    // penance from him, or if he's bored.
+    return (you.penance[GOD_XOM] || _xom_is_bored());
+}
+
 bool xom_is_nice()
 {
     if (you.penance[GOD_XOM])
@@ -161,13 +173,13 @@ static void _xom_is_stimulated(int maxinterestingness,
 
     int interestingness = random2(maxinterestingness);
 
+    interestingness = std::min(255, interestingness);
+
 #if DEBUG_RELIGION || DEBUG_GIFTS || DEBUG_XOM
     mprf(MSGCH_DIAGNOSTICS,
-         "Xom: maxinterestingness = %d, interestingness = %d",
-         maxinterestingness, interestingness);
+         "Xom: gift_timeout: %d, maxinterestingness = %d, interestingness = %d",
+         you.gift_timeout, maxinterestingness, interestingness);
 #endif
-
-    interestingness = std::min(255, interestingness);
 
     bool was_stimulated = false;
     if (interestingness > you.gift_timeout && interestingness >= 12)
@@ -195,18 +207,6 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
                        force_message);
 }
 
-static bool _xom_is_bored()
-{
-    return (you.religion == GOD_XOM && you.gift_timeout == 0);
-}
-
-static bool _xom_feels_nasty()
-{
-    // Xom will only directly kill you with a bad effect if you're under
-    // penance from him, or if he's bored.
-    return (you.penance[GOD_XOM] || _xom_is_bored());
-}
-
 void xom_tick()
 {
     // Xom semi-randomly drifts your piety.
@@ -225,7 +225,7 @@ void xom_tick()
     }
 
     // ...but he gets bored...
-    if (coinflip())
+    if (you.gift_timeout > 0 && coinflip())
         you.gift_timeout--;
 
     new_xom_favour = describe_xom_favour();
@@ -245,13 +245,6 @@ void xom_tick()
         else
         {
             const int tension = get_tension(GOD_XOM);
-/*
-            const int chance = (tension == 0 ? 1 :
-                                tension <= 5 ? 2 : 3);
-
-            if (x_chance_in_y(chance, 3))
-                xom_acts(abs(you.piety - MAX_PIETY/2));
-*/
             const int chance = (tension ==  0 ? 1 :
                                 tension <=  5 ? 2 :
                                 tension <= 10 ? 3 :
@@ -259,7 +252,7 @@ void xom_tick()
                                               : 5);
 
             if (x_chance_in_y(chance, 5))
-                xom_acts(abs(you.piety - MAX_PIETY/2));
+                xom_acts(abs(you.piety - MAX_PIETY/2), tension);
         }
     }
 }
@@ -1183,7 +1176,7 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_do_potion();
     else if (x_chance_in_y(3, sever))
     {
-        if (tension || one_chance_in(3))
+        if (tension > 0 || one_chance_in(3))
         {
             _xom_makes_you_cast_random_spell(sever, tension);
             done = true;
@@ -1204,7 +1197,7 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_send_allies(sever);
     else if (x_chance_in_y(8, sever))
         done = _xom_polymorph_nearby_monster(true);
-    else if (x_chance_in_y(9, sever))
+    else if (random2(tension) < 15 && x_chance_in_y(9, sever))
     {
         _xom_give_item(sever);
         done = true;
@@ -1244,7 +1237,7 @@ static bool _xom_is_good(int sever, int tension)
     // It's pointless to send in help if there's no danger.
     else if (tension > random2(15) && x_chance_in_y(14, sever))
         done = _xom_send_major_ally(sever);
-    else if (x_chance_in_y(15, sever))
+    else if (tension > 0 && x_chance_in_y(15, sever))
         done = _xom_throw_divine_lightning();
 
     return (done);
@@ -2051,7 +2044,7 @@ static void _handle_accidental_death(const int orig_hp,
         you.teleport(true);
 }
 
-void xom_acts(bool niceness, int sever)
+void xom_acts(bool niceness, int sever, int tension)
 {
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
     mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d); piety: %u, interest: %u\n",
@@ -2105,7 +2098,8 @@ void xom_acts(bool niceness, int sever)
         }
     }
 
-    const int tension = get_tension(which_god);
+    if (tension == -1)
+        tension = get_tension(which_god);
 
 #if DEBUG_RELIGION || DEBUG_XOM || DEBUG_TENSION
     mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
@@ -2129,6 +2123,10 @@ void xom_acts(bool niceness, int sever)
         // Bad mojo.
         while (!_xom_is_bad(sever, tension))
             ;
+
+        // If we got here because Xom was bored, reset gift timeout.
+        if (_xom_is_bored())
+            you.gift_timeout = random2(40) + random2(40);
     }
 
     _handle_accidental_death(orig_hp, orig_stats, orig_mutation);
@@ -2195,7 +2193,7 @@ void xom_check_lost_item(const item_def& item)
         if (is_unique_rune(item))
             xom_is_stimulated(255, "Xom snickers loudly.", true);
         else if (you.entry_cause == EC_SELF_EXPLICIT
-            && !(item.flags & ISFLAG_BEEN_IN_INV))
+                 && !(item.flags & ISFLAG_BEEN_IN_INV))
         {
             // Player voluntarily entered Pan or the Abyss looking for
             // runes, yet never found them.

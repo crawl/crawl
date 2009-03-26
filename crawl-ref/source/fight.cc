@@ -3432,7 +3432,7 @@ int melee_attack::player_to_hit(bool random_factor)
         your_to_hit -= 5;
 
     const bool see_invis = player_see_invis();
-    // if you can't see yourself, you're a little less accurate.
+    // If you can't see yourself, you're a little less accurate.
     if (you.invisible() && !see_invis)
         your_to_hit -= 5;
 

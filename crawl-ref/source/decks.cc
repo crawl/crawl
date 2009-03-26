@@ -940,9 +940,12 @@ static void _describe_cards(std::vector<card_type> cards)
         if (desc.empty())
             desc = "No description found.";
 
-        data << name << "$$" << desc << "$$";
+        name = uppercase_first(name);
+        data << "<w>" << name << "</w>" << EOL << desc << EOL EOL;
     }
-    print_description(data.str());
+    formatted_string fs = formatted_string::parse_string(data.str());
+    clrscr();
+    fs.display();
     if (getch() == 0)
         getch();
 
