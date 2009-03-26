@@ -167,8 +167,8 @@ static void tag_construct_lost_items(writer &th);
 static void tag_read_you(reader &th, char minorVersion);
 static void tag_read_you_items(reader &th, char minorVersion);
 static void tag_read_you_dungeon(reader &th);
-static void tag_read_lost_monsters(reader &th, int minorVersion);
-static void tag_read_lost_items(reader &th, int minorVersion);
+static void tag_read_lost_monsters(reader &th);
+static void tag_read_lost_items(reader &th);
 
 static void tag_construct_level(writer &th);
 static void tag_construct_level_items(writer &th);
@@ -730,8 +730,8 @@ tag_type tag_read(FILE *fp, char minorVersion)
     case TAG_LEVEL_TILES:    tag_read_level_tiles(th);                  break;
     case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
     case TAG_LOST_MONSTERS:
-        tag_read_lost_monsters(th, minorVersion);
-        tag_read_lost_items(th, minorVersion);
+        tag_read_lost_monsters(th);
+        tag_read_lost_items(th);
         break;
     default:
         // I don't know how to read that!
@@ -1639,14 +1639,14 @@ static void tag_read_you_dungeon(reader &th)
     read_level_connectivity(th);
 }
 
-static void tag_read_lost_monsters(reader &th, int minorVersion)
+static void tag_read_lost_monsters(reader &th)
 {
     the_lost_ones.clear();
     unmarshallMap(th, the_lost_ones,
                   unmarshall_level_id, unmarshall_follower_list);
 }
 
-static void tag_read_lost_items(reader &th, int minorVersion)
+static void tag_read_lost_items(reader &th)
 {
     transiting_items.clear();
 
