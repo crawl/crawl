@@ -3022,7 +3022,8 @@ static void _give_monster_item(monsters *mon, int thing,
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Destroying %s because %s doesn't want it!",
-             mthing.name(DESC_PLAIN).c_str(), mon->name(DESC_PLAIN).c_str());
+             mthing.name(DESC_PLAIN, false, true).c_str(),
+             mon->name(DESC_PLAIN, true).c_str());
 #endif
         destroy_item(thing, true);
         return;

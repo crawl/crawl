@@ -4361,7 +4361,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
             }
             else
             {
-                mprf(MSGCH_DIAGNOSTICS, "Items %s thinks it's alread held by "
+                mprf(MSGCH_DIAGNOSTICS, "Item %s thinks it's already held by "
                                         "monster %s.",
                      item.name(DESC_PLAIN, false, true).c_str(),
                      name(DESC_PLAIN, true).c_str());

@@ -3714,8 +3714,11 @@ bool god_hates_item_handling(const item_def &item)
         break;
     }
 
-    if (god_hates_spellbook(item) || god_hates_rod(item))
+    if (item_type_known(item)
+        && (god_hates_spellbook(item) || god_hates_rod(item)))
+    {
         return (true);
+    }
 
     return (false);
 }
@@ -5032,8 +5035,9 @@ static bool _evil_beings_on_level_attitude_change()
             && mons_is_evil_or_unholy(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Evil attitude changing: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
+            mprf(MSGCH_DIAGNOSTICS, "Evil attitude changing: %s "
+                 "on level %d, branch %d",
+                 monster->name(DESC_PLAIN, true).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
 #endif
