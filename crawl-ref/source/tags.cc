@@ -187,7 +187,7 @@ static void tag_construct_ghost(writer &th);
 static void tag_read_ghost(reader &th, char minorVersion);
 
 static void marshallGhost(writer &th, const ghost_demon &ghost);
-static ghost_demon unmarshallGhost( reader &th );
+static ghost_demon unmarshallGhost(reader &th);
 
 static void marshallResists(writer &, const mon_resist_def &);
 static void unmarshallResists(reader &, mon_resist_def &);
@@ -2175,7 +2175,7 @@ static void unmarshall_monster(reader &th, monsters &m)
     m.god = static_cast<god_type>( unmarshallByte(th) );
 
     if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
-        m.set_ghost( unmarshallGhost(th) );
+        m.set_ghost(unmarshallGhost(th));
 
     m.check_speed();
 }
@@ -2445,7 +2445,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallSpells(th, ghost.spells);
 }
 
-static ghost_demon unmarshallGhost( reader &th )
+static ghost_demon unmarshallGhost(reader &th)
 {
     ghost_demon ghost;
 
@@ -2492,5 +2492,5 @@ static void tag_read_ghost(reader &th, char minorVersion)
         return;
 
     for (int i = 0; i < nghosts; ++i)
-        ghosts.push_back( unmarshallGhost(th) );
+        ghosts.push_back(unmarshallGhost(th));
 }
