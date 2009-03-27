@@ -189,11 +189,17 @@ local function set_random_floor_colour()
 end
 
 local function with_props(spec, props)
-  return util.cathash({ spec = spec }, props)
+  local spec_table = type(spec) == "table" and spec or { spec = spec }
+  return util.cathash(spec_table, props)
+end
+
+local function spec_fn(specfn)
+  return { specfn = specfn }
 end
 
 local function spec_if(fn, spec)
-  return { spec = spec, cond = fn }
+  local spec_table = type(spec) == "table" and spec or { spec = spec }
+  return util.cathash(spec_table, { cond = fn })
 end
 
 local function depth_ge(lev)
@@ -233,7 +239,8 @@ local function monster_creator_fn(arg)
     return { fn = mspec, spec = arg }
   elseif atyp == "table" then
     if not arg.cond or arg.cond() then
-      return util.cathash(monster_creator_fn(arg.spec), arg)
+      local spec = arg.spec or arg.specfn()
+      return util.cathash(monster_creator_fn(spec), arg)
     end
   elseif atyp == "function" then
     return { fn = arg }
@@ -270,6 +277,17 @@ mset("place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
      with_props("daeva / angel", { weight = 2 }))
 mset_if(depth_ge(6), "place:Pan w:400 / w:15 pandemonium lord")
 mset_if(depth_lt(6), "place:Pan")
+
+-- spec_fn can be used to wrap a function that returns a monster spec.
+-- This is useful if you want to adjust monster weights in the spec
+-- wrt to depth in the ziggurat. At level-generation time, the spec
+-- returned by this function will also be used to init the monster
+-- population (with dgn.set_random_mon_list). As an example:
+mset(spec_fn(function ()
+               local depth = zig().depth
+               return "place:Vault:$ w:" .. (50 - depth) ..
+                 " / ancient lich w:" .. math.max(0, depth - 12)
+             end))
 
 local drac_creator = dgn.monster_fn("random draconian")
 local function mons_drac_gen(x, y, nth)

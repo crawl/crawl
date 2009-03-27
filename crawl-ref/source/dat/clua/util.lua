@@ -196,8 +196,9 @@ end
 
 function util.random_weighted_from(weightfn, list)
   if type(weightfn) ~= "function" then
+    local weightkey = weightfn
     weightfn = function (table)
-                 return table[weightfn]
+                 return table[weightkey]
                end
   end
   local cweight = 0
