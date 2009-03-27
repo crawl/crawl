@@ -2222,7 +2222,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "    (use <w>=</w> to assign slots)\n"
             "<w>v</w> : eVoke power of wielded item\n"
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
-            "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n",
+            "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n";
 
     cols.add_formatted(
             1, interact,

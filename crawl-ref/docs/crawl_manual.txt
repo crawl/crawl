@@ -2550,7 +2550,7 @@ following, if an item is already selected, the key will deselect it
     [                   Select all armour.
     ?                   Select all scrolls.
     %                   Select all food.
-    &                   Select all carrion.
+    &                   Select all carrion and inedible food.
     + or :              Select all books.
     /                   Select all wands.
     \ or |              Select all staves.
