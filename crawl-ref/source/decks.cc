@@ -941,7 +941,7 @@ static void _describe_cards(std::vector<card_type> cards)
             desc = "No description found.";
 
         name = uppercase_first(name);
-        data << "<w>" << name << "</w>" << EOL << desc << EOL EOL;
+        data << "<w>" << name << "</w>" << EOL << desc << EOL;
     }
     formatted_string fs = formatted_string::parse_string(data.str());
     clrscr();
