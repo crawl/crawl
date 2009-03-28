@@ -959,12 +959,17 @@ static void _grab_followers()
 {
     const bool can_follow = level_type_allows_followers(you.level_type);
 
+    int non_stair_using_allies = 0;
+
     // Handle nearby ghosts.
     for (adjacent_iterator ai; ai; ++ai)
     {
         monsters *fmenv = monster_at(*ai);
         if (fmenv == NULL)
             continue;
+
+        if (!mons_can_use_stairs(fmenv))
+            non_stair_using_allies++;
 
         if (fmenv->type == MONS_PLAYER_GHOST
             && fmenv->hit_points < fmenv->max_hit_points / 2)
@@ -976,6 +981,15 @@ static void _grab_followers()
 
     if (can_follow)
     {
+        if (non_stair_using_allies > 0)
+        {
+            // XXX: This assumes that the only monsters that are
+            // incapable of using stairs are zombified.
+            mprf("Your zombified all%s stay%s behind.",
+                 non_stair_using_allies > 1 ? "ies" : "y",
+                 non_stair_using_allies > 1 ? ""    : "s");
+        }
+
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
         std::vector<coord_def> places[2];
         int place_set = 0;
