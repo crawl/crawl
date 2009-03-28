@@ -676,6 +676,16 @@ bool is_vampire_feeding()
     return (delay.type == DELAY_FEED_VAMPIRE);
 }
 
+bool player_stair_delay()
+{
+    if (!you_are_delayed())
+        return (false);
+
+    const delay_queue_item &delay = you.delay_queue.front();
+    return (delay.type == DELAY_ASCENDING_STAIRS
+            || delay.type == DELAY_DESCENDING_STAIRS);
+}
+
 // Check whether there are monsters who might be influenced by Recite.
 // Returns 0, if no monsters found
 // Returns 1, if eligible audience found
@@ -1539,10 +1549,22 @@ void armour_wear_effects(const int item_slot)
         mpr("Oops, that feels deathly cold.");
         learned_something_new(TUT_YOU_CURSED);
 
-        // Cursed cloaks prevent you from removing body armour.
-        const int cloak_mult = (get_armour_slot(arm) == EQ_CLOAK) ? 2 : 1;
+        int amusement = 32;
 
-        xom_is_stimulated(32 * cloak_mult * (!known_cursed ? 2 : 1));
+        // Cursed cloaks prevent you from removing body armour.
+        if (get_armour_slot(arm) == EQ_CLOAK)
+            amusement *= 2;
+
+        if (!known_cursed)
+        {
+            amusement *= 2;
+
+            god_type god;
+            if (origin_is_god_gift(arm, &god) && god == GOD_XOM)
+                amusement *= 2;
+        }
+
+        xom_is_stimulated(amusement);
     }
 
     if (eq_slot == EQ_SHIELD)
@@ -1757,11 +1779,8 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     delay_type curr = current_delay_action();
 
-    if (ai == AI_SEE_MONSTER && (curr == DELAY_ASCENDING_STAIRS
-                                 || curr == DELAY_DESCENDING_STAIRS))
-    {
+    if (ai == AI_SEE_MONSTER && player_stair_delay())
         return (false);
-    }
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
     {

@@ -941,7 +941,13 @@ static void _describe_cards(std::vector<card_type> cards)
             desc = "No description found.";
 
         name = uppercase_first(name);
-        data << "<w>" << name << "</w>" << EOL << desc << EOL;
+        data << "<w>" << name << "</w>\n"
+             << get_linebreak_string(desc, get_number_of_cols())
+#ifdef USE_TILE
+    // For some reason we need another linebreak here, for the tiles version.
+             << EOL
+#endif
+             << EOL;
     }
     formatted_string fs = formatted_string::parse_string(data.str());
     clrscr();
@@ -1422,66 +1428,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
     if (!mon_to_swap)
         mpr("You spin around.");
     else
-    {
-        monsters& mon(*mon_to_swap);
-        const coord_def newpos = mon.pos();
-
-        // Be nice: no swapping into uninhabitable environments.
-        if (!you.is_habitable(newpos) || !mon.is_habitable(you.pos()))
-        {
-            mpr("You spin around.");
-            return;
-        }
-
-        const bool mon_caught = mons_is_caught(&mon);
-        const bool you_caught = you.attribute[ATTR_HELD];
-
-        // If it was submerged, it surfaces first.
-        mon.del_ench(ENCH_SUBMERGED);
-
-        // Pick the monster up.
-        mgrd(newpos) = NON_MONSTER;
-        mon.moveto(you.pos());
-
-        // Plunk it down.
-        mgrd(mon.pos()) = mon_to_swap->mindex();
-
-        if (you_caught)
-        {
-            check_net_will_hold_monster(&mon);
-            if (!mon_caught)
-                you.attribute[ATTR_HELD] = 0;
-        }
-
-        // Move you to its previous location.
-        move_player_to_grid(newpos, false, true, true, false);
-
-        if (mon_caught)
-        {
-            if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
-            {
-                mpr("The net rips apart!");
-                you.attribute[ATTR_HELD] = 0;
-                int net = get_trapping_net(you.pos());
-                if (net != NON_ITEM)
-                    destroy_item(net);
-            }
-            else
-            {
-                you.attribute[ATTR_HELD] = 10;
-                mpr("You become entangled in the net!");
-
-                // Xom thinks this is hilarious if you trap yourself this way.
-                if (you_caught)
-                    xom_is_stimulated(16);
-                else
-                    xom_is_stimulated(255);
-            }
-
-            if (!you_caught)
-                mon.del_ench(ENCH_HELD, true);
-        }
-    }
+        swap_with_monster(mon_to_swap);
 }
 
 static void _velocity_card(int power, deck_rarity_type rarity)

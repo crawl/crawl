@@ -116,5 +116,5 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
 bool is_orckind(const actor *act);
 
 bool is_dragonkind(const actor *act);
-
+void swap_with_monster(monsters *mon_to_swap);
 #endif

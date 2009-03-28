@@ -3110,3 +3110,69 @@ bool is_dragonkind(const actor *act)
 
     return (false);
 }
+
+// Make the player swap positions with a given monster.
+void swap_with_monster(monsters *mon_to_swap)
+{
+    monsters& mon(*mon_to_swap);
+    ASSERT(mon.alive());
+    const coord_def newpos = mon.pos();
+
+    // Be nice: no swapping into uninhabitable environments.
+    if (!you.is_habitable(newpos) || !mon.is_habitable(you.pos()))
+    {
+        mpr("You spin around.");
+        return;
+    }
+
+    const bool mon_caught = mons_is_caught(&mon);
+    const bool you_caught = you.attribute[ATTR_HELD];
+
+    // If it was submerged, it surfaces first.
+    mon.del_ench(ENCH_SUBMERGED);
+
+    mprf("You swap places with %s.", mon.name(DESC_NOCAP_THE).c_str());
+
+    // Pick the monster up.
+    mgrd(newpos) = NON_MONSTER;
+    mon.moveto(you.pos());
+
+    // Plunk it down.
+    mgrd(mon.pos()) = mon_to_swap->mindex();
+
+    if (you_caught)
+    {
+        check_net_will_hold_monster(&mon);
+        if (!mon_caught)
+            you.attribute[ATTR_HELD] = 0;
+    }
+
+    // Move you to its previous location.
+    move_player_to_grid(newpos, false, true, true, false);
+
+    if (mon_caught)
+    {
+        if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+        {
+            mpr("The net rips apart!");
+            you.attribute[ATTR_HELD] = 0;
+            int net = get_trapping_net(you.pos());
+            if (net != NON_ITEM)
+                destroy_item(net);
+        }
+        else
+        {
+            you.attribute[ATTR_HELD] = 10;
+            mpr("You become entangled in the net!");
+
+            // Xom thinks this is hilarious if you trap yourself this way.
+            if (you_caught)
+                xom_is_stimulated(16);
+            else
+                xom_is_stimulated(255);
+        }
+
+        if (!you_caught)
+            mon.del_ench(ENCH_HELD, true);
+    }
+}

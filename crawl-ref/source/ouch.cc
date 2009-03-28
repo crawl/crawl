@@ -1079,9 +1079,7 @@ void end_game( scorefile_entry &se )
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].base_type != 0)
-        {
             set_ident_type( you.inv[i], ID_KNOWN_TYPE );
-        }
     }
 
     if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
@@ -1147,7 +1145,7 @@ void end_game( scorefile_entry &se )
     if (dead)
     {
         mpr("You die...");      // insert player name here? {dlb}
-        xom_death_message();
+        xom_death_message((kill_method_type) se.death_type);
         flush_prev_message();
         viewwindow(true, false); // don't do for leaving/winning characters
 

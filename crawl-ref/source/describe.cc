@@ -81,18 +81,18 @@ static void _append_value( std::string & description, int valu, bool plussed )
 
 int count_desc_lines(const std::string _desc, const int width)
 {
-   std::string desc = get_linebreak_string(_desc, width);
+    std::string desc = get_linebreak_string(_desc, width);
 
-   int count = 0;
-   for (int i = 0, size = desc.size(); i < size; i++)
-   {
-       const char ch = desc[i];
+    int count = 0;
+    for (int i = 0, size = desc.size(); i < size; i++)
+    {
+        const char ch = desc[i];
 
-       if (ch == '\n' || ch == '$')
-           count++;
-   }
+        if (ch == '\n' || ch == '$')
+            count++;
+    }
 
-  return count;
+    return count;
 }
 
 //---------------------------------------------------------------

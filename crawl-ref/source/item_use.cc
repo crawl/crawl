@@ -725,7 +725,15 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 mpr("Space warps around you for a moment!");
 
                 if (!was_known)
-                    xom_is_stimulated(32);
+                {
+                    // Xom loves when you ID a distortion weapon this way,
+                    // and even more so if he gifted the weapon himself.
+                    god_type god;
+                    if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+                        xom_is_stimulated(255);
+                    else
+                        xom_is_stimulated(128);
+                }
                 break;
 
             case SPWPN_SCYTHE_OF_CURSES:
@@ -748,10 +756,20 @@ void wield_effects(int item_wield_2, bool showMsgs)
         if (item_cursed(item))
         {
             mpr("It sticks to your hand!");
-            if (known_cursed || was_known && special == SPWPN_SCYTHE_OF_CURSES)
-                xom_is_stimulated(32);
-            else
-                xom_is_stimulated(64);
+            int amusement = 16;
+            if (!known_cursed
+                && !(was_known && special == SPWPN_SCYTHE_OF_CURSES))
+            {
+                amusement *= 2;
+                god_type god;
+                if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+                    amusement *= 2;
+            }
+            const int wpn_skill = weapon_skill(item.base_type, item.sub_type);
+            if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
+                amusement *= 2;
+
+            xom_is_stimulated(amusement);
         }
 
         break;
@@ -3300,10 +3318,16 @@ void jewellery_wear_effects(item_def &item)
              jewellery_is_amulet(item)? "amulet" : "ring");
         learned_something_new(TUT_YOU_CURSED);
 
-        if (known_cursed || known_bad)
-            xom_is_stimulated(64);
-        else
-            xom_is_stimulated(128);
+        int amusement = 32;
+        if (!known_cursed && !known_bad)
+        {
+            amusement *= 2;
+
+            god_type god;
+            if (origin_is_god_gift(item, &god) && god == GOD_XOM)
+                amusement *= 2;
+        }
+        xom_is_stimulated(amusement);
     }
 
     // Cursed or not, we know that since we've put the ring on.
@@ -4825,6 +4849,7 @@ void read_scroll(int slot)
     bool id_the_scroll = true;  // to prevent unnecessary repetition
     bool tried_on_item = false; // used to modify item (?EA, ?RC, ?ID)
 
+    bool bad_effect = false; // for Xom: result is bad (or at least dangerous)
     switch (which_scroll)
     {
     case SCR_PAPER:
@@ -4918,6 +4943,7 @@ void read_scroll(int slot)
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
+        bad_effect = true;
         break;
 
     case SCR_IMMOLATION:
@@ -4928,6 +4954,7 @@ void read_scroll(int slot)
         dec_inv_item_quantity(item_slot, 1);
 
         immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);
+        bad_effect = true;
         break;
     }
 
@@ -4944,6 +4971,7 @@ void read_scroll(int slot)
             // Also sets wield_change.
             do_curse_item( *you.weapon(), false );
             learned_something_new(TUT_YOU_CURSED);
+            bad_effect = true;
         }
         break;
 
@@ -5068,6 +5096,7 @@ void read_scroll(int slot)
         // Make the name before we curse it.
         do_curse_item( you.inv[you.equip[affected]], false );
         learned_something_new(TUT_YOU_CURSED);
+        bad_effect = true;
         break;
     }
 
@@ -5123,8 +5152,9 @@ void read_scroll(int slot)
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you read an unknown scroll and there is a
-        // dangerous monster nearby...
-        xom_is_stimulated(255);
+        // dangerous monster nearby... (though not as much as potions
+        // since there are no *really* bad scrolls, merely useless ones).
+        xom_is_stimulated(bad_effect ? 128 : 64);
     }
 }
 
@@ -5257,7 +5287,7 @@ void use_randart(item_def &item, bool unmeld)
     {
         // Xom loves it when you use an unknown random artefact and
         // there is a dangerous monster nearby...
-        xom_is_stimulated(255);
+        xom_is_stimulated(128);
     }
 #undef unknown_proprt
 }

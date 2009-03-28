@@ -14,6 +14,7 @@ REVISION("$Rev$");
 #include "beam.h"
 #include "branch.h"
 #include "database.h"
+#include "delay.h"
 #include "effects.h"
 #include "it_use2.h"
 #include "items.h"
@@ -38,6 +39,7 @@ REVISION("$Rev$");
 #include "state.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "traps.h"
 #include "view.h"
 #include "xom.h"
 
@@ -175,7 +177,7 @@ static void _xom_is_stimulated(int maxinterestingness,
 
     interestingness = std::min(255, interestingness);
 
-#if DEBUG_RELIGION || DEBUG_GIFTS || DEBUG_XOM
+#if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
          "Xom: gift_timeout: %d, maxinterestingness = %d, interestingness = %d",
          you.gift_timeout, maxinterestingness, interestingness);
@@ -240,20 +242,26 @@ void xom_tick()
 
     if (one_chance_in(3))
     {
-        if (_xom_is_bored())
-            xom_acts(abs(you.piety - MAX_PIETY/2));
-        else
-        {
-            const int tension = get_tension(GOD_XOM);
-            const int chance = (tension ==  0 ? 1 :
-                                tension <=  5 ? 2 :
-                                tension <= 10 ? 3 :
-                                tension <= 20 ? 4
-                                              : 5);
+        const int tension = get_tension(GOD_XOM);
+        const int chance = (tension ==  0 ? 1 :
+                            tension <=  5 ? 2 :
+                            tension <= 10 ? 3 :
+                            tension <= 20 ? 4
+                                          : 5);
 
-            if (x_chance_in_y(chance, 5))
-                xom_acts(abs(you.piety - MAX_PIETY/2), tension);
+        // During tension, Xom may briefly forget about being bored.
+        if (_xom_is_bored() && x_chance_in_y(chance-1, 4))
+        {
+            you.gift_timeout += random2(chance*20);
+#if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
+            mprf(MSGCH_DIAGNOSTICS,
+                 "tension %d (chance: %d) -> increase interest to %d",
+                 tension, chance, you.gift_timeout);
+#endif
         }
+
+        if (x_chance_in_y(chance, 5))
+            xom_acts(abs(you.piety - MAX_PIETY/2), tension);
     }
 }
 
@@ -293,7 +301,7 @@ static void _xom_makes_you_cast_random_spell(int sever, int tension)
 
     god_speaks(GOD_XOM, _get_xom_speech("spell effect").c_str());
 
-#if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
          "_xom_makes_you_cast_random_spell(); spell: %d, spellenum: %d",
          spell, spellenum);
@@ -999,50 +1007,125 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
     return (rc);
 }
 
-// Blink every monster on this level and the player.
-static bool _xom_rearrange_pieces(int sever)
+static void _confuse_monster(monsters mons, int sever)
 {
-    bool rc = false;
+//     monsters& mons(*mon);
 
-    // Every now and then, Xom also confuses them all.
-    const bool confusem = one_chance_in(10);
+    if (!mons_class_is_confusable(mons.type))
+        return;
 
-    // Not just every monster in sight - oh no.  Every monster on this
-    // level!
-    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+    const bool was_confused = mons.confused();
+    if (mons.add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY,
+                                  random2(sever))))
     {
-        monsters* monster = &menv[i];
+        if (was_confused)
+            simple_monster_message(&mons, " looks rather more confused.");
+        else
+            simple_monster_message(&mons, " looks rather confused.");
+    }
+}
 
-        if (!monster->alive())
-            continue;
+static bool _swap_monsters(monsters *m1, monsters *m2)
+{
+    monsters& mon1(*m1);
+    monsters& mon2(*m2);
 
-        if (monster_blink(monster))
-        {
-            // Only give a message once.
-            if (!rc)
-                god_speaks(GOD_XOM,
-                           _get_xom_speech("rearrange the pieces").c_str());
+    const bool mon1_caught = mons_is_caught(&mon1);
+    const bool mon2_caught = mons_is_caught(&mon2);
 
-            if (confusem)
-            {
-                if (mons_class_is_confusable(monster->type)
-                    && monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                                                     KC_FRIENDLY,
-                                                     random2(sever))))
-                {
-                    simple_monster_message(monster, " looks rather confused.");
-                }
-            }
-            rc = true;
-        }
+    const coord_def mon1_pos = mon1.pos();
+    const coord_def mon2_pos = mon2.pos();
+
+    if (!mon2.is_habitable(mon1_pos) || !mon1.is_habitable(mon2_pos))
+        return (false);
+
+    // Make submerged monsters unsubmerge.
+    mon1.del_ench(ENCH_SUBMERGED);
+    mon2.del_ench(ENCH_SUBMERGED);
+
+    mgrd(mon1_pos) = mon2.mindex();
+    mon1.moveto(mon2_pos);
+    mgrd(mon2_pos) = mon1.mindex();
+    mon2.moveto(mon1_pos);
+
+    if (mon1_caught && !mon2_caught)
+    {
+        check_net_will_hold_monster(&mon2);
+        mon1.del_ench(ENCH_HELD, true);
+
+    }
+    else if (mon2_caught && !mon1_caught)
+    {
+        check_net_will_hold_monster(&mon1);
+        mon2.del_ench(ENCH_HELD, true);
     }
 
-    // If Xom blinked at least one monster, blink the player, too, and
-    // then consider this act done.
-    if (rc)
-        random_blink(false);
+    return (true);
+}
 
-    return (rc);
+// Swap places with a random monster and, depending on severity, also
+// between monsters. This can be pretty bad if there are a lot of hostile
+// monsters around.
+static bool _xom_rearrange_pieces(int sever)
+{
+    if (player_stair_delay())
+        return (false);
+
+    std::vector<monsters *> mons;
+    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters* m = &menv[i];
+
+        if (!m->alive())
+            continue;
+
+        if (!see_grid(m->pos()))
+            continue;
+
+        mons.push_back(m);
+    }
+    if (mons.empty())
+        return (false);
+
+    god_speaks(GOD_XOM, _get_xom_speech("rearrange the pieces").c_str());
+
+    const int num_mons = mons.size();
+
+    // Swap places with a random monster.
+    monsters *mon = mons[random2(num_mons)];
+    swap_with_monster(mon);
+
+    // Occasionally confuse said monster.
+    if (one_chance_in(5))
+        _confuse_monster(*mon, sever);
+
+    if (num_mons > 1 && x_chance_in_y(sever,70))
+    {
+        bool did_message = false;
+        const int max_repeats = std::min(num_mons/2, 8);
+        const int repeats     = std::min(random2(sever/10)+1, max_repeats);
+        for (int i = 0; i < repeats; ++i)
+        {
+            const int mon1 = random2(num_mons);
+            int mon2 = mon1;
+            while (mon1 == mon2)
+                mon2 = random2(num_mons);
+
+            if (_swap_monsters(mons[mon1], mons[mon2]))
+            {
+                if (!did_message)
+                {
+                    mpr("Some monsters swap places.");
+                    did_message = true;
+                }
+                if (one_chance_in(5))
+                    _confuse_monster(*mons[mon1], sever);
+                if (one_chance_in(5))
+                    _confuse_monster(*mons[mon2], sever);
+            }
+        }
+    }
+    return (true);
 }
 
 static bool _xom_give_mutations(bool good)
@@ -1077,6 +1160,7 @@ static bool _xom_give_mutations(bool good)
     return (rc);
 }
 
+// Summons a permanent ally.
 static bool _xom_send_major_ally(int sever)
 {
     bool rc = false;
@@ -1176,6 +1260,8 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_do_potion();
     else if (x_chance_in_y(3, sever))
     {
+        // There are a lot less non-tension spells than tension ones,
+        // so use them more rarely.
         if (tension > 0 || one_chance_in(3))
         {
             _xom_makes_you_cast_random_spell(sever, tension);
@@ -1197,13 +1283,13 @@ static bool _xom_is_good(int sever, int tension)
         done = _xom_send_allies(sever);
     else if (x_chance_in_y(8, sever))
         done = _xom_polymorph_nearby_monster(true);
-    else if (random2(tension) < 15 && x_chance_in_y(9, sever))
+    else if (tension > 0 && x_chance_in_y(9, sever))
+        done = _xom_rearrange_pieces(sever);
+    else if (random2(tension) < 15 && x_chance_in_y(10, sever))
     {
         _xom_give_item(sever);
         done = true;
     }
-    else if (x_chance_in_y(10, sever) && (you.level_type != LEVEL_ABYSS))
-        done = _xom_rearrange_pieces(sever);
     else if (x_chance_in_y(11, sever) && (you.level_type != LEVEL_ABYSS))
     {
         // The Xom teleportation train takes you on instant teleportation
@@ -1223,7 +1309,7 @@ static bool _xom_is_good(int sever, int tension)
     else if (random2(tension) < 5 && x_chance_in_y(12, sever))
     {
         // This can fail with radius 1, or in open areas.
-        if (vitrify_area(random2avg(sever / 2, 3) + 1))
+        if (vitrify_area(random2avg(sever/4,2) + 1))
         {
             god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
             done = true;
@@ -1305,8 +1391,10 @@ static void _xom_zero_miscast()
     }
 
     if (in_view[DNGN_DEEP_WATER])
+    {
         messages.push_back("From the corner of your eye you spot something "
                            "lurking in the deep water.");
+    }
 
     if (in_view[DNGN_ORCISH_IDOL])
     {
@@ -1846,6 +1934,9 @@ static bool _xom_is_bad(int sever, int tension)
 
     god_acting gdact(GOD_XOM);
 
+    // Rough estimate of how bad a Xom effect hits the player,
+    // scaled between 1 (harmless) and 5 (disastrous).
+    int badness = 1;
     while (!done)
     {
         // Did Xom kill the player?
@@ -1863,10 +1954,14 @@ static bool _xom_is_bad(int sever, int tension)
             done = true;
         }
         else if (x_chance_in_y(5, sever))
+        {
             done = _xom_lose_stats();
+            badness = 2;
+        }
         else if (x_chance_in_y(6, sever))
         {
             _xom_miscast(2, nasty);
+            badness = 2;
             done = true;
         }
         else if ((!nasty || coinflip())
@@ -1883,37 +1978,66 @@ static bool _xom_is_bad(int sever, int tension)
                 more();
             }
             while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
+            badness = player_in_a_dangerous_place() ? 3 : 1;
             done = true;
         }
         else if (x_chance_in_y(8, sever))
+        {
             done = _xom_chaos_upgrade_nearby_monster();
+            badness = 2 + coinflip();
+        }
         else if (random2(tension) < 10 && x_chance_in_y(9, sever))
+        {
             done = _xom_give_mutations(false);
+            badness = 3;
+        }
         else if (x_chance_in_y(10, sever))
+        {
             done = _xom_polymorph_nearby_monster(false);
+            badness = 3;
+        }
         // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(11, sever))
+        {
             done = _xom_player_confusion_effect(sever);
+            badness = (random2(tension) > 5 ? 2 : 1);
+        }
         else if (x_chance_in_y(12, sever))
+        {
             done = _xom_draining_torment_effect(sever);
+            badness = (random2(tension) > 5 ? 3 : 2);
+        }
         else if (x_chance_in_y(13, sever))
+        {
             done = _xom_summon_hostiles(sever);
+            badness = 3 + coinflip();
+        }
         else if (x_chance_in_y(14, sever))
         {
             _xom_miscast(3, nasty);
+            badness = 4 + coinflip();
             done = true;
         }
-        else if (one_chance_in(sever))
+        else if (one_chance_in(sever) && you.level_type != LEVEL_ABYSS)
         {
-            if (you.level_type != LEVEL_ABYSS)
-            {
-                god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
-                banished(DNGN_ENTER_ABYSS, "Xom");
-                done = true;
-            }
+            god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
+            banished(DNGN_ENTER_ABYSS, "Xom");
+            badness = 5;
+            done = true;
         }
     }
 
+    // If we got here because Xom was bored, reset gift timeout according
+    // to the badness of the effect.
+    if (done && _xom_is_bored())
+    {
+        const int interest = random2avg(badness*60, 2);
+        you.gift_timeout   = std::min(interest, 255);
+#if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
+        mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
+             badness, you.gift_timeout);
+#endif
+    }
     return (done);
 }
 
@@ -2046,9 +2170,9 @@ static void _handle_accidental_death(const int orig_hp,
 
 void xom_acts(bool niceness, int sever, int tension)
 {
-#if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
-    mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d); piety: %u, interest: %u\n",
-         niceness, sever, you.piety, you.gift_timeout);
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
+    mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u\n",
+            niceness, sever, tension, you.piety, you.gift_timeout);
 #endif
 
 #ifdef WIZARD
@@ -2101,7 +2225,7 @@ void xom_acts(bool niceness, int sever, int tension)
     if (tension == -1)
         tension = get_tension(which_god);
 
-#if DEBUG_RELIGION || DEBUG_XOM || DEBUG_TENSION
+#if defined(DEBUG_RELIGION) || defined(DEBUG_XOM) || defined(DEBUG_TENSION)
     mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
 #endif
 
@@ -2123,10 +2247,6 @@ void xom_acts(bool niceness, int sever, int tension)
         // Bad mojo.
         while (!_xom_is_bad(sever, tension))
             ;
-
-        // If we got here because Xom was bored, reset gift timeout.
-        if (_xom_is_bored())
-            you.gift_timeout = random2(40) + random2(40);
     }
 
     _handle_accidental_death(orig_hp, orig_stats, orig_mutation);
@@ -2245,10 +2365,30 @@ void xom_check_destroyed_item(const item_def& item, int cause)
                       true);
 }
 
-void xom_death_message()
+static bool _death_is_funny(const kill_method_type killed_by)
+{
+    switch (killed_by)
+    {
+    // The less original deaths are boring.
+    case KILLED_BY_MONSTER:
+    case KILLED_BY_BEAM:
+    case KILLED_BY_CLOUD:
+    case KILLED_BY_FREEZING:
+    case KILLED_BY_BURNING:
+    case KILLED_BY_SELF_AIMED:
+    case KILLED_BY_SOMETHING:
+        return (false);
+    default:
+        // All others are fun (says Xom).
+        return (true);
+    }
+}
+
+void xom_death_message(const kill_method_type killed_by)
 {
     if (you.religion != GOD_XOM && (!you.worshipped[GOD_XOM] || coinflip()))
         return;
 
-    god_speaks(GOD_XOM, _get_xom_speech("laughter").c_str());
+    if (_death_is_funny(killed_by) || you.hp < -1 * random2(10))
+        god_speaks(GOD_XOM, _get_xom_speech("laughter").c_str());
 }

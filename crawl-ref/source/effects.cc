@@ -2270,7 +2270,7 @@ bool vitrify_area(int radius)
     // This hinges on clear wall types having the same order as non-clear ones!
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
     bool something_happened = false;
-    for ( radius_iterator ri(you.pos(), radius, false, false); ri; ++ri )
+    for (radius_iterator ri(you.pos(), radius, false, false); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
 
@@ -2278,8 +2278,7 @@ bool vitrify_area(int radius)
             || grid == DNGN_STONE_WALL
             || grid == DNGN_PERMAROCK_WALL )
         {
-            grd(*ri)
-                = static_cast<dungeon_feature_type>(grid + clear_plus);
+            grd(*ri) = static_cast<dungeon_feature_type>(grid + clear_plus);
             set_terrain_changed(ri->x, ri->y);
             something_happened = true;
         }

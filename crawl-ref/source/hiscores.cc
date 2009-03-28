@@ -761,9 +761,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER
-         || death_type == KILLED_BY_BEAM
-         || death_type == KILLED_BY_SPORE
-         || death_type == KILLED_BY_REFLECTION)
+            || death_type == KILLED_BY_BEAM
+            || death_type == KILLED_BY_SPORE
+            || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
     {
@@ -1110,8 +1110,8 @@ const char *scorefile_entry::damage_verb() const
     // bwr: changed "blasted" since this is for melee
     return (final_hp > -6)  ? "Slain"   :
            (final_hp > -14) ? "Mangled" :
-           (final_hp > -22) ? "Demolished" :
-                              "Annihilated";
+           (final_hp > -22) ? "Demolished"
+                            : "Annihilated";
 }
 
 std::string scorefile_entry::death_source_desc() const

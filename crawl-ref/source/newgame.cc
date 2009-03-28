@@ -5020,7 +5020,7 @@ bool _give_items_skills()
 
             // The new Xom also uses gift_timeout in his own special way...
             // (Namely, a countdown to becoming bored.)
-            you.gift_timeout = random2(40) + random2(40);
+            you.gift_timeout = std::max(5, random2(40) + random2(40));
         }
         else // Makhleb or Lugonu
         {
