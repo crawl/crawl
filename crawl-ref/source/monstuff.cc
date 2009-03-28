@@ -2549,8 +2549,8 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
         mon->behaviour = BEH_FLEE;
-        mon->foe = MHITYOU;
-        mon->target = env.sanctuary_pos;
+        mon->foe       = MHITYOU;
+        mon->target    = env.sanctuary_pos;
         return;
     }
 
@@ -2677,11 +2677,29 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             break;
         }
 
-        mon->foe = src;
-        mon->behaviour = BEH_FLEE;
         // Assume monsters know where to run from, even if player is
         // invisible.
-        setTarget = true;
+        mon->behaviour = BEH_FLEE;
+        mon->foe       = src;
+        mon->target    = src_pos;
+        if (src == MHITYOU)
+        {
+            // Friendly monsters don't become hostile if you read a
+            // scroll of fear, but enslaved ones will.
+            // Send friendlies off to a random target so they don't cling
+            // to you in fear.
+            if (mons_friendly(mon))
+            {
+                breakCharm = true;
+                mon->foe   = MHITNOT;
+                _set_random_target(mon);
+            }
+            else
+                setTarget = true;
+        }
+        else if (mons_friendly(mon))
+            mon->foe = MHITYOU;
+
         if (see_grid(mon->pos()))
             learned_something_new(TUT_FLEEING_MONSTER);
         break;
@@ -2697,7 +2715,15 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
         // Just set behaviour... foe doesn't change.
         if (!mons_is_cornered(mon))
-            simple_monster_message(mon, " turns to fight!");
+        {
+            if (mons_friendly(mon))
+            {
+                mon->foe = MHITYOU;
+                simple_monster_message(mon, " returns to your side!");
+            }
+            else
+                simple_monster_message(mon, " turns to fight!");
+        }
 
         mon->behaviour = BEH_CORNERED;
         break;
@@ -2714,9 +2740,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             mon->attitude = ATT_HOSTILE;
         }
         else if (src != MHITNOT)
-        {
             mon->target = menv[src].pos();
-        }
     }
 
     // Now, break charms if appropriate.
@@ -4252,7 +4276,8 @@ static void _handle_behaviour(monsters *mon)
             if (isFriendly)
             {
                 // Special-cased below so that it will flee *towards* you.
-                mon->target = you.pos();
+                if (mon->foe == MHITYOU)
+                    mon->target = you.pos();
             }
             else if (mons_wall_shielded(mon) && _find_wall_target(mon))
                 ; // Wall target found.

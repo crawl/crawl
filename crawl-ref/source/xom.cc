@@ -1009,8 +1009,6 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
 
 static void _confuse_monster(monsters mons, int sever)
 {
-//     monsters& mons(*mon);
-
     if (!mons_class_is_confusable(mons.type))
         return;
 
