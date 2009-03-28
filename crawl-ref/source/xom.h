@@ -9,6 +9,8 @@
 #ifndef XOM_H
 #define XOM_H
 
+#include "ouch.h"
+
 struct item_def;
 
 enum xom_message_type
