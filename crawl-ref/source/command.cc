@@ -1410,7 +1410,7 @@ static bool _do_description(std::string key, std::string type,
     linebreak_string2(footer, width - 1);
 
     inf.footer = footer;
-    inf.title = key;
+    inf.title  = key;
 
     print_description(inf);
     return (true);

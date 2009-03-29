@@ -1240,8 +1240,6 @@ bool merfolk_change_is_safe(bool quiet)
 
     std::set<equipment_type> r;
     r.insert(EQ_BOOTS);
-    if (!player_light_armour())
-        r.insert(EQ_BODY_ARMOUR);
 
     if (check_transformation_stat_loss(r, quiet))
         return (false);
@@ -1255,13 +1253,6 @@ void merfolk_start_swimming()
         untransform();
 
     remove_one_equip(EQ_BOOTS);
-
-    // Perhaps a bit to easy for the player, but we allow merfolk
-    // to slide out of heavy body armour freely when entering water,
-    // rather than handling emcumbered swimming. -- bwr
-    if (!player_light_armour())
-        remove_one_equip(EQ_BODY_ARMOUR, false);
-
     you.redraw_evasion = true;
 }
 
@@ -1841,9 +1832,6 @@ void up_stairs(dungeon_feature_type force_stair,
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
-
-    // Tell stash-tracker and travel that we've changed levels.
-    trackers_init_new_level(true);
 
     if (collect_travel_data)
     {

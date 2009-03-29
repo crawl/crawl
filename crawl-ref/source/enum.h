@@ -1533,30 +1533,30 @@ enum map_marker_type
 
 enum map_feature
 {
-    MF_UNSEEN,
+    MF_UNSEEN,          //  0
     MF_FLOOR,
     MF_WALL,
     MF_MAP_FLOOR,
     MF_MAP_WALL,
-    MF_DOOR,
+    MF_DOOR,            //  5
     MF_ITEM,
     MF_MONS_HOSTILE,
     MF_MONS_FRIENDLY,
     MF_MONS_NEUTRAL,
-    MF_MONS_NO_EXP,
+    MF_MONS_NO_EXP,     // 10
     MF_STAIR_UP,
     MF_STAIR_DOWN,
     MF_STAIR_BRANCH,
     MF_FEATURE,
-    MF_WATER,
+    MF_WATER,           // 15
     MF_LAVA,
     MF_TRAP,
     MF_EXCL_ROOT,
     MF_EXCL,
-    MF_PLAYER,
+    MF_PLAYER,          // 20
     MF_MAX,
 
-    MF_SKIP
+    MF_SKIP             // 22
 };
 
 enum menu_type

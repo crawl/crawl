@@ -968,7 +968,7 @@ static void _grab_followers()
         if (fmenv == NULL)
             continue;
 
-        if (!mons_can_use_stairs(fmenv))
+        if (mons_wont_attack(fmenv) && !mons_can_use_stairs(fmenv))
             non_stair_using_allies++;
 
         if (fmenv->type == MONS_PLAYER_GHOST
@@ -985,9 +985,9 @@ static void _grab_followers()
         {
             // XXX: This assumes that the only monsters that are
             // incapable of using stairs are zombified.
-            mprf("Your zombified all%s stay%s behind.",
-                 non_stair_using_allies > 1 ? "ies" : "y",
-                 non_stair_using_allies > 1 ? ""    : "s");
+            mprf("Your mindless thrall%s stay%s behind.",
+                 non_stair_using_allies > 1 ? "s" : "",
+                 non_stair_using_allies > 1 ? ""  : "s");
         }
 
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
@@ -1249,10 +1249,15 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         place_transiting_items();
     }
 
-#ifdef USE_TILE
+    // Tell stash-tracker and travel that we've changed levels.
     if (load_mode != LOAD_VISITOR)
+    {
+        // Tell stash-tracker and travel that we've changed levels.
+        trackers_init_new_level(true);
+#ifdef USE_TILE
         TileNewLevel(just_created_level);
 #endif
+    }
 
     _redraw_all();
 

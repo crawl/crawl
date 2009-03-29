@@ -1638,7 +1638,7 @@ void append_spells(std::string &desc, const item_def &item)
         if (stype == SPELL_NO_SPELL)
             continue;
 
-        std::string name = (is_memorised(stype)) ? "*" : "";
+        std::string name = (is_memorised(stype) ? "*" : "");
                     name += spell_title(stype);
         desc += name;
         for (unsigned int i = 0; i < 35 - name.length(); i++)

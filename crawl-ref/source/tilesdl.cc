@@ -390,7 +390,6 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
     int count = 0;
     for (int y = 0; y < wy; y++)
-    {
         for (int x = 0; x < wx; x++)
         {
             unsigned int fg;
@@ -412,7 +411,7 @@ void TilesFramework::load_dungeon(const coord_def &cen)
                 bg = env.tile_bk_bg(gc);
                 if (!fg && !bg)
                     tileidx_unseen(fg, bg, get_envmap_char(gc), gc);
-                bg |=  tile_unseen_flag(gc);
+                bg |= tile_unseen_flag(gc);
             }
             else
             {
@@ -426,7 +425,6 @@ void TilesFramework::load_dungeon(const coord_def &cen)
             tb[count++] = fg;
             tb[count++] = bg;
         }
-    }
 
     load_dungeon(tb, cen);
     tiles.redraw();
@@ -1229,7 +1227,7 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
         else if (mons_class_flag(menv[grid].type, M_NO_EXP_GAIN))
             f = MF_MONS_NO_EXP;
     }
-    else if (f == MF_FLOOR || f == MF_MAP_FLOOR)
+    else if (f == MF_FLOOR || f == MF_MAP_FLOOR || f == MF_WATER)
     {
         if (is_exclude_root(gc))
             f = MF_EXCL_ROOT;

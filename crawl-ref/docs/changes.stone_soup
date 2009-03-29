@@ -60,6 +60,7 @@ Monsters
 * Implemented monster miscasts caused by Zot traps or mummy curses.
 * Make all allies (including zombies) avoid Zot traps known to the player.
 * Ghosts don't get holy wrath branded attacks anymore.
+* Monsters will now shout when woken, unless stabbed.
 * Monsters will now drink !healing to cure confusion, etc.
 * Allies no longer mind being teleported by the player.
 * Retain the teleportation enchantment on polymorphed monsters.
@@ -112,7 +113,7 @@ Items
 * Ammo that IDs through throwing now merges in your pack instantaneously.
 * ?immolation doesn't burn scrolls anymore.
 * ?summoning creates a permanent abomination.
-* ?fear don't turn allies hostile anymore.
+* ?fear doesn't turn allies hostile anymore.
 * ?random uselessness now autoIDs.
 * ?vorpalise weapon now fixes temporary brands instead of EWIII.
 * Nemelex-gifted decks now ID after drawing one card.

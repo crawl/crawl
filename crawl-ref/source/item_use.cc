@@ -990,18 +990,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return (false);
     }
 
-    // Cannot swim in heavy armour.
-    if (!ignore_temporary
-        && player_is_swimming()
-        && slot == EQ_BODY_ARMOUR
-        && !is_light_armour( item ))
-    {
-        if (verbose)
-           mpr("You can't swim in that!");
-
-        return (false);
-    }
-
     // Giant races and draconians.
     if (player_size(PSIZE_TORSO) >= SIZE_LARGE || player_genus(GENPC_DRACONIAN))
     {

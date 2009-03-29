@@ -1261,15 +1261,6 @@ bool check_armour_shape( const item_def &item, bool quiet )
             break;
 
         case EQ_BODY_ARMOUR:
-            // Cannot swim in heavy armour.
-            if (player_is_swimming() && !is_light_armour( item ))
-            {
-                if (!quiet)
-                   mpr("You can't swim in that!");
-
-                return (false);
-            }
-
             // Draconians are human-sized, but have wings that cause problems
             // with most body armours (only very flexible fit allowed).
             if (player_genus( GENPC_DRACONIAN )

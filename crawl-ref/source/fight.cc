@@ -221,8 +221,15 @@ int calc_heavy_armour_penalty( bool random_factor )
     // Heavy armour modifiers for PARM_EVASION.
     if (player_wearing_slot(EQ_BODY_ARMOUR))
     {
-        const int ev_pen = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
-                                     PARM_EVASION );
+        int ev_pen = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
+                               PARM_EVASION );
+
+        // Wearing heavy armour in water is particularly cumbersome.
+        if (you.species == SP_MERFOLK && grd(you.pos()) == DNGN_DEEP_WATER
+            && player_is_swimming())
+        {
+            ev_pen *= 2;
+        }
 
         if (ev_pen < 0 && maybe_random2(you.skills[SK_ARMOUR],
                                         random_factor) < abs(ev_pen))

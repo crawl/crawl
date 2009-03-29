@@ -4147,7 +4147,7 @@ void init_feature_table( void )
         Feature[i].seen_colour    = BLACK;   // -> no special seen map handling
         Feature[i].seen_em_colour = BLACK;
         Feature[i].em_colour      = BLACK;
-        Feature[i].minimap = MF_UNSEEN;
+        Feature[i].minimap        = MF_UNSEEN;
 
         switch (i)
         {

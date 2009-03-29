@@ -2245,7 +2245,7 @@ bool player_light_armour(bool with_skill)
     }
 
     return (is_light_armour(you.inv[arm]));
-}                               // end player_light_armour()
+}
 
 //
 // This function returns true if the player has a radically different
@@ -2388,7 +2388,16 @@ int player_evasion()
         // Merfolk get an evasion bonus in water.
         if (you.swimming())
         {
-            const int ev_bonus = std::min(9, std::max(2, ev / 4));
+            // ... though a bit less so if swimming in heavy armour.
+            int factor = 4;
+            int min_bonus = 2;
+            if (grd(you.pos()) == DNGN_DEEP_WATER && !player_light_armour())
+            {
+                factor = 6;
+                min_bonus = 1;
+            }
+
+            const int ev_bonus = std::min(9, std::max(min_bonus, ev / factor));
             ev += ev_bonus;
         }
         break;

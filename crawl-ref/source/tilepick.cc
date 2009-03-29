@@ -38,8 +38,8 @@ void TileNewLevel(bool first_time)
 {
     tiles.clear_minimap();
 
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
+    for (unsigned int x = 0; x < GXM; x++)
+        for (unsigned int y = 0; y < GYM; y++)
             tiles.update_minimap(x, y);
 
     if (first_time)

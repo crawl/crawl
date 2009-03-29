@@ -64,7 +64,6 @@ void toggle_exclude(const coord_def &p);
 void set_exclude(const coord_def &p, int radius2);
 void clear_excludes();
 unsigned char is_waypoint(const coord_def &p);
-void update_excludes();
 bool is_exclude_root(const coord_def &p);
 bool is_stair(dungeon_feature_type gridc);
 bool is_travelable_stair(dungeon_feature_type gridc);
