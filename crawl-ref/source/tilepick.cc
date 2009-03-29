@@ -4419,7 +4419,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         else if (pref == TAGPREF_TUTORIAL)
         {
             const long kills = you.kills->num_kills(mon);
-            const int limit = 3;
+            const int limit = 0;
 
             if (!mon->is_named() && kills > limit)
                 return;
