@@ -106,12 +106,6 @@ void init_tutorial_options()
     Options.auto_list = true;
 
 #ifdef USE_TILE
-    // Show all items in inventory.
-    // FIXME: Ideally, we'd use the user-specified order, and push all
-    //        missing item types at the end of it, NetHack like.
-    //        Unfortunately I can't think of a remotely non-hacky way
-    //        to do this.
-    strncpy(Options.tile_show_items, "!?/%=([)x}+\\_.", 18);
     Options.tile_tag_pref = TAGPREF_TUTORIAL;
 #endif
 }
