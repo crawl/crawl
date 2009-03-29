@@ -1249,7 +1249,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         place_transiting_items();
     }
 
-    // Tell stash-tracker and travel that we've changed levels.
     if (load_mode != LOAD_VISITOR)
     {
         // Tell stash-tracker and travel that we've changed levels.

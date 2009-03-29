@@ -178,7 +178,6 @@ static void _xom_is_stimulated(int maxinterestingness,
 
     interestingness = std::min(255, interestingness);
 
-#define DEBUG_XOM
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
          "Xom: gift_timeout: %d, maxinterestingness = %d, interestingness = %d",

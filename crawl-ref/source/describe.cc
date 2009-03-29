@@ -3185,7 +3185,7 @@ static std::string _religion_help( god_type god )
 
 // The various titles granted by the god of your choice.
 // Note that Xom doesn't use piety the same way as the other gods, so
-// it's completely useless.
+// these are just placeholders.
 const char *divine_title[NUM_GODS][8] =
 {
     //  No god
@@ -3210,7 +3210,7 @@ const char *divine_title[NUM_GODS][8] =
 
     //  Xom
     {"Toy",                "Toy",                   "Toy",                      "Toy",
-     "Toy",                "Toy",                   "Toy",                      "Teddy Bear"},
+     "Toy",                "Toy",                   "Toy",                      "Toy"},
 
     //  Vehumet -- battle mage theme
     {"Meek",               "Sorcerer's Apprentice", "Scholar of Destruction",   "Caster of Ruination",
