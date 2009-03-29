@@ -3836,9 +3836,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         return (false);
     }
 
-    if (!suppress_msg)
-        mpr( "You feel aware of your surroundings." );
-
     if (map_radius > 50 && map_radius != 1000)
         map_radius = 50;
     else if (map_radius < 5)
@@ -3848,8 +3845,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const int pfar = (map_radius * 7) / 10;
     const int very_far = (map_radius * 9) / 10;
 
-    const bool wizard_map = map_radius == 1000 && you.wizard;
-    for ( radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri )
+    const bool wizard_map = (you.wizard && map_radius == 1000);
+
+    bool did_map = false;
+    for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
     {
         if (proportion < 100 && random2(100) >= proportion)
             continue;       // note that proportion can be over 100
@@ -3875,7 +3874,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         }
 #endif
 
-        if (!wizard_map && is_terrain_known(*ri))
+        if (!wizard_map && (is_terrain_known(*ri) || is_terrain_seen(*ri)))
             continue;
 
         bool open = true;
@@ -3883,7 +3882,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (grid_is_solid(grd(*ri)) && grd(*ri) != DNGN_CLOSED_DOOR)
         {
             open = false;
-            for ( adjacent_iterator ai(*ri); ai; ++ai )
+            for (adjacent_iterator ai(*ri); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
                                         || grd(*ai) == DNGN_CLOSED_DOOR))
@@ -3894,7 +3893,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             }
         }
 
-        if (open > 0)
+        if (open)
         {
             if (wizard_map || !get_envmap_obj(*ri))
                 set_envmap_obj(*ri, grd(*ri));
@@ -3903,10 +3902,18 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 set_terrain_seen(*ri);
             else
                 set_terrain_mapped(*ri);
+
+            did_map = true;
         }
     }
 
-    return (true);
+    if (!suppress_msg)
+    {
+        mpr(did_map ? "You feel aware of your surroundings."
+                    : "You feel momentarily disoriented.");
+    }
+
+    return (did_map);
 }
 
 // Realize that this is simply a repackaged version of

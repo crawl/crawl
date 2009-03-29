@@ -1978,9 +1978,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_MAGIC_MAPPING:
         if (you.level_type == LEVEL_PANDEMONIUM)
-        {
             mpr("Your Earth magic cannot map Pandemonium.");
-        }
         else
         {
             powc = stepdown_value( powc, 10, 10, 40, 45 );

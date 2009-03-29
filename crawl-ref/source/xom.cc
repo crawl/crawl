@@ -33,6 +33,7 @@ REVISION("$Rev$");
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -209,6 +210,20 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
                        force_message);
 }
 
+void xom_is_stimulated(int maxinterestingness, const std::string& message,
+                       bool force_message)
+{
+    if (you.religion != GOD_XOM)
+        return;
+
+    const char *message_array[6];
+
+    for (int i = 0; i < 6; ++i)
+        message_array[i] = message.c_str();
+
+    _xom_is_stimulated(maxinterestingness, message_array, force_message);
+}
+
 void xom_tick()
 {
     // Xom semi-randomly drifts your piety.
@@ -249,15 +264,30 @@ void xom_tick()
                             tension <= 20 ? 4
                                           : 5);
 
-        // During tension, Xom may briefly forget about being bored.
-        if (_xom_is_bored() && x_chance_in_y(chance-1, 4))
+        // If Xom is bored the chances for Xom acting are reversed.
+        if (you.gift_timeout == 0 && x_chance_in_y(5-chance,5))
         {
-            you.gift_timeout += random2(chance*20);
+            xom_acts(abs(you.piety - MAX_PIETY/2), tension);
+            return;
+        }
+        else if (you.gift_timeout <= 1 && x_chance_in_y(chance-1, 4))
+        {
+            // During tension, Xom may briefly forget about being bored.
+            const int interest = random2(chance*15);
+            if (interest > 0)
+            {
+                if (interest < 25)
+                    simple_god_message(" is interested.");
+                else
+                    simple_god_message(" is intrigued.");
+
+                you.gift_timeout += interest;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-            mprf(MSGCH_DIAGNOSTICS,
-                 "tension %d (chance: %d) -> increase interest to %d",
-                 tension, chance, you.gift_timeout);
+                mprf(MSGCH_DIAGNOSTICS,
+                     "tension %d (chance: %d) -> increase interest to %d",
+                     tension, chance, you.gift_timeout);
 #endif
+            }
         }
 
         if (x_chance_in_y(chance, 5))
@@ -265,21 +295,63 @@ void xom_tick()
     }
 }
 
-void xom_is_stimulated(int maxinterestingness, const std::string& message,
-                       bool force_message)
+// Picks 100 random grids from the level and checks whether they've been
+// marked as seen (explored) or known (mapped). If seen_only is true
+// grids only "seen" via magic mapping don't count.
+// Returns the estimated percentage value of exploration.
+static int _exploration_estimate(bool seen_only = false)
 {
-    if (you.religion != GOD_XOM)
-        return;
+    int seen  = 0;
+    int total = 0;
+    int tries = 0;
+    do
+    {
+        tries++;
+        coord_def pos = random_in_bounds();
+        if (!seen_only && is_terrain_known(pos) || is_terrain_seen(pos))
+        {
+            seen++;
+            total++;
+            continue;
+        }
 
-    const char *message_array[6];
+        bool open = true;
+        if (grid_is_solid(grd(pos)) && grd(pos) != DNGN_CLOSED_DOOR)
+        {
+            open = false;
+            for (adjacent_iterator ai(pos); ai; ++ai)
+            {
+                if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
+                                        || grd(*ai) == DNGN_CLOSED_DOOR))
+                {
+                    open = true;
+                    break;
+                }
+            }
+        }
+        if (open)
+            total++;
+    }
+    while (total < 100 && tries < 1000);
 
-    for (int i = 0; i < 6; ++i)
-        message_array[i] = message.c_str();
+#ifdef DEBUG_XOM
+    mprf(MSGCH_DIAGNOSTICS,
+         "exploration estimate (%s): %d out of %d grids seen",
+         seen_only ? "explored" : "mapped", seen, total);
+#endif
 
-    _xom_is_stimulated(maxinterestingness, message_array, force_message);
+    // If we didn't get any qualifying grids, there are probably so few
+    // of them you've already seen them all.
+    if (total == 0)
+        return 100;
+
+    if (total < 100)
+        seen *= 100/total;
+
+    return (seen);
 }
 
-static void _xom_makes_you_cast_random_spell(int sever, int tension)
+static bool _xom_makes_you_cast_random_spell(int sever, int tension)
 {
     int spellenum = sever;
 
@@ -297,7 +369,19 @@ static void _xom_makes_you_cast_random_spell(int sever, int tension)
         const int nxomspells = ARRAYSZ(_xom_nontension_spells);
         spellenum = std::min(nxomspells, spellenum);
         spell     = _xom_nontension_spells[random2(spellenum)];
+
+        if (spell == SPELL_MAGIC_MAPPING)
+        {
+            // If the level is already mostly explored, there's
+            // a chance we might try something else.
+            const int explored = _exploration_estimate();
+            if (explored > 80 && x_chance_in_y(explored, 100))
+                return (false);
+        }
     }
+    // Don't attempt to cast spells the undead cannot memorise.
+    if (you_cannot_memorise(spell))
+        return (false);
 
     god_speaks(GOD_XOM, _get_xom_speech("spell effect").c_str());
 
@@ -308,6 +392,7 @@ static void _xom_makes_you_cast_random_spell(int sever, int tension)
 #endif
 
     your_spells(spell, sever, false);
+    return (true);
 }
 
 static void _try_brand_switch(const int item_index)
@@ -1261,10 +1346,7 @@ static bool _xom_is_good(int sever, int tension)
         // There are a lot less non-tension spells than tension ones,
         // so use them more rarely.
         if (tension > 0 || one_chance_in(3))
-        {
-            _xom_makes_you_cast_random_spell(sever, tension);
-            done = true;
-        }
+            done = _xom_makes_you_cast_random_spell(sever, tension);
     }
     else if (x_chance_in_y(4, sever))
         done = _xom_confuse_monsters(sever);
@@ -1288,8 +1370,15 @@ static bool _xom_is_good(int sever, int tension)
         _xom_give_item(sever);
         done = true;
     }
-    else if (x_chance_in_y(11, sever) && (you.level_type != LEVEL_ABYSS))
+    else if (x_chance_in_y(11, sever) && you.level_type != LEVEL_ABYSS)
     {
+        // This is not very interesting if the level is already fully
+        // explored (presumably cleared). Even then, it may occasionally
+        // happen.
+        const int explored = _exploration_estimate(true);
+        if (explored >= 80 && x_chance_in_y(explored, 120))
+            return (false);
+
         // The Xom teleportation train takes you on instant teleportation
         // to a few random areas, stopping randomly but most likely in
         // an area that is not dangerous to you.
@@ -1679,7 +1768,8 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
         hand_vec.push_back("mandible");
         plural_vec.push_back(true);
     }
-    else if (you.species != SP_MUMMY || transform_changed_physiology())
+    else if (you.species != SP_MUMMY && !player_mutation_level(MUT_BEAK)
+             || transform_changed_physiology())
     {
         hand_vec.push_back("nose");
         plural_vec.push_back(false);
@@ -1962,9 +2052,19 @@ static bool _xom_is_bad(int sever, int tension)
             badness = 2;
             done = true;
         }
-        else if ((!nasty || coinflip())
-                 && x_chance_in_y(7, sever) && you.level_type != LEVEL_ABYSS)
+        else if (x_chance_in_y(7, sever) && you.level_type != LEVEL_ABYSS)
         {
+            // This is not particularly exciting if the level is already fully
+            // explored (presumably cleared). If Xom is feeling nasty this
+            // is likelier to happen if the level is unexplored.
+            const int explored = _exploration_estimate(true);
+            if (nasty && explored >= 50 && coinflip()
+                || explored >= 80 + random2(20))
+            {
+                done = false;
+                continue;
+            }
+
             // The Xom teleportation train takes you on instant
             // teleportation to a few random areas, stopping if either
             // an area is dangerous to you or randomly.

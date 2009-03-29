@@ -806,7 +806,8 @@ void random_uselessness(int scroll_slot)
         break;
 
     case 1:
-        mpr("The scroll reassembles itself in your hands!");
+        mprf("The scroll reassembles itself in your %s!",
+             your_hand(true).c_str());
         inc_inv_item_quantity(scroll_slot, 1);
         break;
 
@@ -825,12 +826,10 @@ void random_uselessness(int scroll_slot)
         break;
 
     case 3:
-        if (player_can_smell())
-            mprf("You smell %s.", weird_smell().c_str());
-        else if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY)
             mpr("Your bandages flutter.");
-        else // currently not ever used
-            canned_msg(MSG_NOTHING_HAPPENS);
+        else // if (player_can_smell())
+            mprf("You smell %s.", weird_smell().c_str());
         break;
 
     case 4:
@@ -839,10 +838,12 @@ void random_uselessness(int scroll_slot)
 
     case 5:
         temp_rand = random2(3);
-        mprf("Your %s",
-             (temp_rand == 0) ? "ears itch!" :
-             (temp_rand == 1) ? "brain hurts!"
-                              : "nose twitches suddenly!");
+        if (player_mutation_level(MUT_BEAK) || one_chance_in(3))
+            mpr("Your brain hurts!");
+        else if (you.species == SP_MUMMY || coinflip())
+            mpr("Your ears itch!");
+        else
+            mpr("Your nose twitches suddenly!");
         break;
 
     case 6:

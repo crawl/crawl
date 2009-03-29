@@ -112,6 +112,7 @@ Items
 * Ammo that IDs through throwing now merges in your pack instantaneously.
 * ?immolation doesn't burn scrolls anymore.
 * ?summoning creates a permanent abomination.
+* ?fear don't turn allies hostile anymore.
 * ?random uselessness now autoIDs.
 * ?vorpalise weapon now fixes temporary brands instead of EWIII.
 * Nemelex-gifted decks now ID after drawing one card.
