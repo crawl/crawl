@@ -142,11 +142,13 @@ Tiles
 -----
 * Overhauled and improved tiles code, now using SDL.
 * Added auto-sizing for font, map, and window sizes.
+* Support for full screen mode and for small resolutions (800x480).
 * Graphical menu improvements: some menus are now clickable and show icons.
 * Mouse clicks on the map when unsafe now travel one square in that direction.
-* Improved a number of tiles, and added some new ones. (Pandemonium lords!)
+* Added new and improved tiles: Pandemonium lords, draconians, randart books.
 * Monster tiles now include health bars.
-* Added type specific icons for jewellery, shops, and weapon brands.
+* Added type-specific icons for jewellery, shops, and weapon brands.
+* Vaults can now specify floor and wall tiles in their description.
 
 Miscellaneous
 -------------
