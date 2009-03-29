@@ -709,6 +709,10 @@ struct cursor_loc
                 && rhs.cy == cy
                 && reg);
     }
+    bool operator!=(const cursor_loc &rhs) const
+    {
+        return !(*this == rhs);
+    }
 
     Region *reg;
     int cx, cy;
@@ -721,10 +725,11 @@ int TilesFramework::getch_ck()
     SDL_Event event;
     cursor_loc cur_loc;
     cursor_loc tip_loc;
+    cursor_loc last_loc;
 
     int key = 0;
 
-    const unsigned int ticks_per_redraw = 16; // 60 FPS = 16.6 ms/frame
+    const unsigned int ticks_per_redraw = 50;
     unsigned int last_redraw_tick = 0;
 
     unsigned int res = std::max(30, Options.tile_tooltip_ms);
@@ -743,6 +748,8 @@ int TilesFramework::getch_ck()
         if (SDL_WaitEvent(&event))
         {
             ticks = SDL_GetTicks();
+
+            last_loc = cur_loc;
 
             if (event.type != SDL_USEREVENT)
             {
@@ -871,15 +878,19 @@ int TilesFramework::getch_ck()
                     if (reg->update_tip_text(m_tooltip))
                         break;
                 }
+                m_need_redraw = true;
             }
         }
         else
         {
+            if (last_loc != cur_loc)
+                m_need_redraw = true;
+
             m_tooltip.clear();
             tip_loc.reset();
         }
 
-        if (ticks - last_redraw_tick > ticks_per_redraw)
+        if ((ticks - last_redraw_tick > ticks_per_redraw) && need_redraw())
         {
             redraw();
             last_redraw_tick = ticks;
