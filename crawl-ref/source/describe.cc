@@ -3102,7 +3102,7 @@ std::string describe_favour(god_type which_god)
                                : "You should show more discipline.";
     }
 
-    return (which_god == GOD_XOM) ? describe_xom_favour()
+    return (which_god == GOD_XOM) ? describe_xom_favour(true)
                                   : _describe_favour_generic(which_god);
 }
 

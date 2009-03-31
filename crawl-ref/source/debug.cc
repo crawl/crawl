@@ -930,14 +930,11 @@ static void _rune_from_specs(const char* _specs, item_def &item)
 
     while (true)
     {
-        mpr(
-"[a] iron       [b] obsidian [c] icy      [d] bone     [e] slimy   [f] silver",
+        mpr("[a] iron       [b] obsidian [c] icy      [d] bone     [e] slimy    [f] silver",
             MSGCH_PROMPT);
-        mpr(
-"[g] serpentine [h] elven    [i] golden   [j] decaying [k] barnacle [l] demonic",
+        mpr("[g] serpentine [h] elven    [i] golden   [j] decaying [k] barnacle [l] demonic",
             MSGCH_PROMPT);
-        mpr(
-"[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark    [r] buggy",
+        mpr("[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark     [r] buggy",
             MSGCH_PROMPT);
         mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
 
@@ -2424,7 +2421,6 @@ void wizard_gain_piety()
     }
     else if (you.religion == GOD_XOM)
     {
-        const std::string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY+1); // reroll mood
         if (one_chance_in(10))
             you.gift_timeout = 0;
@@ -2432,7 +2428,7 @@ void wizard_gain_piety()
             you.gift_timeout = random2(40) + random2(40);  // reroll interest
 
         const std::string new_xom_favour = describe_xom_favour();
-        const std::string msg = "Your title is now: " + new_xom_favour;
+        const std::string msg = "You are now " + new_xom_favour;
         god_speaks(you.religion, msg.c_str());
         return;
     }

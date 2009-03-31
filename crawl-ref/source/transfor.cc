@@ -354,7 +354,7 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
         return (true);
     }
 
-    // Check over all items to be removed.
+    // Check over all items to be removed or melded.
     std::set<equipment_type>::const_iterator iter;
     for (iter = remove.begin(); iter != remove.end(); ++iter)
     {
@@ -364,15 +364,14 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
 
         const item_def& item = you.inv[you.equip[e]];
 
-        // Wielding a stat-boosting non-weapon/non-staff won't hinder
-        // transformations.
+        // There are no stat-boosting non-weapons/non-staves.
         if (e == EQ_WEAPON
             && item.base_type != OBJ_WEAPONS && item.base_type != OBJ_STAVES)
         {
             continue;
         }
 
-        // Currently, the only nonartefacts which have stat-changing
+        // Currently, the only non-artefacts which have stat-changing
         // effects are rings.
         if (item.base_type == OBJ_JEWELLERY)
         {
@@ -448,8 +447,10 @@ static void _transformation_expiration_warning()
 }
 
 // Transforms you into the specified form. If quiet is true, fails silently
-// (if it fails).
-bool transform(int pow, transformation_type which_trans, bool quiet)
+// (if it fails). If just_check is true the transformation doesn't actually
+// happen, but the method returns whether it would be successful.
+bool transform(int pow, transformation_type which_trans, bool quiet,
+               bool just_check)
 {
     if (you.species == SP_MERFOLK && player_is_swimming()
         && which_trans != TRAN_DRAGON && which_trans != TRAN_BAT)
@@ -471,6 +472,9 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
     {
         if (you.duration[DUR_TRANSFORMATION] < 100)
         {
+            if (just_check)
+                return (true);
+
             mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] += random2(pow);
 
@@ -487,7 +491,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         }
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+    if (!just_check && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
         untransform();
 
     // Catch some conditions which prevent transformation.
@@ -568,7 +572,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         if (you.species == SP_MERFOLK && player_is_swimming())
         {
             msg = "You fly out of the water as you turn into "
-                "a fearsome dragon!";
+                  "a fearsome dragon!";
         }
         else
             msg = "You turn into a fearsome dragon!";
@@ -602,15 +606,19 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
     }
 
     if (check_transformation_stat_loss(rem_stuff, quiet,
-                                       std::max(-str, 0), std::max(-dex,0)))
+                                       std::max(-str, 0), std::max(-dex, 0)))
     {
         return (false);
     }
 
+    // If we're just pretending return now.
+    if (just_check)
+        return (true);
+
     // All checks done, transformation will take place now.
-    you.redraw_evasion = true;
+    you.redraw_evasion      = true;
     you.redraw_armour_class = true;
-    you.wield_change = true;
+    you.wield_change        = true;
 
     // Most transformations conflict with stone skin.
     if (which_trans != TRAN_NONE
@@ -692,6 +700,11 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         break;
     }
 
+    // This only has an effect if the transformation happens passively,
+    // for example if Xom decides to transform you while you're busy
+    // running around or butchering corpses.
+    stop_delay();
+
     if (you.species != SP_VAMPIRE || which_trans != TRAN_BAT)
         _transformation_expiration_warning();
 
@@ -707,9 +720,9 @@ void untransform(void)
 {
     const flight_type old_flight = you.flight_mode();
 
-    you.redraw_evasion = true;
+    you.redraw_evasion      = true;
     you.redraw_armour_class = true;
-    you.wield_change = true;
+    you.wield_change        = true;
 
     you.symbol = '@';
     you.colour = LIGHTGREY;
@@ -722,7 +735,7 @@ void untransform(void)
     std::set<equipment_type> melded = _init_equipment_removal(old_form);
 
     you.attribute[ATTR_TRANSFORMATION] = TRAN_NONE;
-    you.duration[DUR_TRANSFORMATION] = 0;
+    you.duration[DUR_TRANSFORMATION]   = 0;
 
     int hp_downscale = 10;
 

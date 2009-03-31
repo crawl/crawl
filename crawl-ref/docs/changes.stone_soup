@@ -8,7 +8,7 @@ Breaks saves compatibility.
 
 0.5 Highlights
 --------------
-* New species and class: Deep Dwarf, Artificer.
+* New species and job: Deep Dwarf, Artificer.
 * Removed three species: Gnome, Grey Elf, Ogre-Mage.
 * Several cool new uniques and other monsters.
 * Several great new portal vaults.
@@ -42,6 +42,7 @@ Characters
 * Vampires can no longer heal via potions of blood or non-fresh corpses.
 * Vampires recover lost attributes depending on blood level.
 * Draining of the experience pool is now reduced by life protection.
+* Merfolk can now swim in heavy armour, albeit with doubled armour penalty.
 * Player and monster nagas no longer flounder or lose stealth in shallow water.
 * Secondary unarmed attacks now wake sleeping monsters.
 * Pure spellcasters don't start with a weapon anymore.
@@ -78,6 +79,8 @@ Monsters
 Interface
 ---------
 * Store message history across saves.
+* Some message condensation for identical messages.
+* Added stat_colour option to highlight dangerously low stats.
 * New option: Automatically set travel exclusions for statues and oklob plants.
 * Limit travel exclusions to line of sight.
 * Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
@@ -86,7 +89,7 @@ Interface
 * Wizard commands can now be used from the wizard help screen.
 * With a full pack, check entire list of selected items to allow for merging.
 * Added an option to make menu colours apply to shops.
-* Added stat_colour option to highlight dangerously low stats.
+* Use menu colours for announcements of items found while travelling.
 * Pressing Esc at -More- automatically clears all queued -More- prompts.
 * Greatly improved the monster view command ('V'), allowing travel to items.
 * Add FAQ to help screen ('?Q').
@@ -124,19 +127,19 @@ Items
 Gods
 ----
 * Greatly improved Yredelemnul.
-* Nerfed TSO/Beogh blessings of followers.
-* Xom is much more interesting.
+* Nerfed TSO/Beogh's blessings of followers.
+* Xom is more interesting and more useful in combat.
 * Cleansing Flame centers on the player and deals less damage.
 * Killing a holy being is now sometimes avenged by TSO.
 * Move Divine Robustness from Zin to Elyvilon, replacing Incredible Healing.
 * Make Zin's retribution-summoned plagues permanent.
-* Allow Trog to accept kills of demons.
 * Sif Muna no longer gifts Kiku/Vehumet specific books, spells still possible.
+* Allow Trog to accept kills of demons.
 * Vehumet accepts undead killing for you.
-* Disallow shapeshifters in orc form to become Beoghites' followers.
 * Beogh no longer accepts butcher but likes prayer over orcish remains.
 * Beogh accepts more kinds of kills.
 * Beogh has a non-cannibalism conduct.
+* Disallow shapeshifters in orc form to become Beoghites' followers.
 
 Tiles
 -----

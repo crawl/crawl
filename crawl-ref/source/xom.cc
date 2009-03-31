@@ -58,14 +58,18 @@ REVISION("$Rev$");
 // Which spells?  First I copied all spells from your_spells(), and then
 // I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
+
+// Spells to be cast at tension 0 (no or only low-level monsters around),
+// mostly flavour.
 static const spell_type _xom_nontension_spells[] =
 {
-    SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS, SPELL_DETECT_CREATURES,
-    SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_SUMMON_BUTTERFLIES,
-    SPELL_FLY, SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM,
+    SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS, SPELL_SUMMON_BUTTERFLIES,
+    SPELL_DETECT_CREATURES, SPELL_FLY, SPELL_SPIDER_FORM,
+    SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_STATUE_FORM, SPELL_ICE_FORM,
     SPELL_DRAGON_FORM, SPELL_NECROMUTATION
 };
 
+// Spells to be cast at tension > 0, i.e. usually in battle situations.
 static const spell_type _xom_tension_spells[] =
 {
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_CAUSE_FEAR,
@@ -106,22 +110,28 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
     }
 };
 
-const char *describe_xom_favour()
+const char *describe_xom_favour(bool upper)
 {
+    std::string favour;
     if (you.religion != GOD_XOM)
-        return ("A very buggy toy of Xom.");
+        favour = "a very buggy toy of Xom.";
     else if (you.gift_timeout < 1)
-        return "A BORING thing.";
+        favour = "a BORING thing.";
     else
     {
-        return (you.piety > 180) ? "Xom's teddy bear." :
-               (you.piety > 150) ? "A beloved toy of Xom." :
-               (you.piety > 120) ? "A favourite toy of Xom." :
-               (you.piety >  80) ? "A toy of Xom." :
-               (you.piety >  50) ? "A plaything of Xom." :
-               (you.piety >  20) ? "A special plaything of Xom."
-                                 : "A very special plaything of Xom.";
+        favour = (you.piety > 180) ? "Xom's teddy bear." :
+                 (you.piety > 150) ? "a beloved toy of Xom." :
+                 (you.piety > 120) ? "a favourite toy of Xom." :
+                 (you.piety >  80) ? "a toy of Xom." :
+                 (you.piety >  50) ? "a plaything of Xom." :
+                 (you.piety >  20) ? "a special plaything of Xom."
+                                   : "a very special plaything of Xom.";
     }
+
+    if (upper)
+        favour = uppercase_first(favour);
+
+    return (favour.c_str());
 }
 
 static std::string _get_xom_speech(const std::string key)
@@ -248,7 +258,7 @@ void xom_tick()
     new_xom_favour = describe_xom_favour();
     if (old_xom_favour != new_xom_favour)
     {
-        const std::string msg = "Your title is now: " + new_xom_favour;
+        const std::string msg = "You are now " + new_xom_favour;
         god_speaks(you.religion, msg.c_str());
     }
 
@@ -351,9 +361,60 @@ static int _exploration_estimate(bool seen_only = false)
     return (seen);
 }
 
+static bool _spell_requires_weapon(const spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_TUKIMAS_VORPAL_BLADE:
+    case SPELL_MAXWELLS_SILVER_HAMMER:
+    case SPELL_FIRE_BRAND:
+    case SPELL_FREEZING_AURA:
+    case SPELL_POISON_WEAPON:
+    case SPELL_LETHAL_INFUSION:
+    case SPELL_EXCRUCIATING_WOUNDS:
+    case SPELL_WARP_BRAND:
+    case SPELL_TUKIMAS_DANCE:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+static bool _transformation_check(const spell_type spell)
+{
+    transformation_type tran = TRAN_NONE;
+    switch (spell)
+    {
+    case SPELL_SPIDER_FORM:
+        tran = TRAN_SPIDER;
+        break;
+    case SPELL_STATUE_FORM:
+        tran = TRAN_STATUE;
+        break;
+    case SPELL_ICE_FORM:
+        tran = TRAN_ICE_BEAST;
+        break;
+    case SPELL_DRAGON_FORM:
+        tran = TRAN_DRAGON;
+        break;
+    case SPELL_NECROMUTATION:
+        tran = TRAN_LICH;
+        break;
+    default:
+        break;
+    }
+
+    if (tran == TRAN_NONE)
+        return (true);
+
+    // Check whether existing enchantments/transformations, cursed equipment,
+    // or potential stat loss interfere with this transformation.
+    return transform(0, tran, true, true);
+}
+
 static bool _xom_makes_you_cast_random_spell(int sever, int tension)
 {
-    int spellenum = sever;
+    int spellenum = std::max(1, sever);
 
     god_acting gdact(GOD_XOM);
 
@@ -363,14 +424,20 @@ static bool _xom_makes_you_cast_random_spell(int sever, int tension)
         const int nxomspells = ARRAYSZ(_xom_tension_spells);
         spellenum = std::min(nxomspells, spellenum);
         spell     = _xom_tension_spells[random2(spellenum)];
+
+        // Don't attempt to cast spells that are guaranteed to fail.
+        // You may still get results such as "The spell fizzles" or
+        // "Nothing appears to happen", but those should be rarer now.
+        if (_spell_requires_weapon(spell) && !player_weapon_wielded())
+            return (false);
     }
     else
     {
         const int nxomspells = ARRAYSZ(_xom_nontension_spells);
-        spellenum = std::min(nxomspells, spellenum);
+        spellenum = std::min(nxomspells, std::max(3 + coinflip(), spellenum));
         spell     = _xom_nontension_spells[random2(spellenum)];
 
-        if (spell == SPELL_MAGIC_MAPPING)
+        if (spell == SPELL_MAGIC_MAPPING || spell == SPELL_DETECT_ITEMS)
         {
             // If the level is already mostly explored, there's
             // a chance we might try something else.
@@ -381,6 +448,10 @@ static bool _xom_makes_you_cast_random_spell(int sever, int tension)
     }
     // Don't attempt to cast spells the undead cannot memorise.
     if (you_cannot_memorise(spell))
+        return (false);
+
+    // Don't attempt to transform the player if the transformation will fail.
+    if (!_transformation_check(spell))
         return (false);
 
     god_speaks(GOD_XOM, _get_xom_speech("spell effect").c_str());
@@ -2135,6 +2206,9 @@ static bool _xom_is_bad(int sever, int tension)
         mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
              badness, you.gift_timeout);
 #endif
+        const std::string new_xom_favour = describe_xom_favour();
+        const std::string msg = "You are now " + new_xom_favour;
+        god_speaks(you.religion, msg.c_str());
     }
     return (done);
 }
@@ -2367,7 +2441,7 @@ void xom_acts(bool niceness, int sever, int tension)
         const std::string new_xom_favour = describe_xom_favour();
         if (old_xom_favour != new_xom_favour)
         {
-            const std::string msg = "Your title is now: " + new_xom_favour;
+            const std::string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
         }
     }
