@@ -513,7 +513,12 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         // Do we want to display the floor type or is that too distracting?
         const coord_def c = item->pos;
         int ch = -1;
-        if (c != coord_def())
+        if (c.x == 0)
+        {
+            // Store items.
+            tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
+        }
+        else if (c != coord_def())
         {
             ch = tileidx_feature(grd(c), c.x, c.y);
             if (ch == TILE_FLOOR_NORMAL)

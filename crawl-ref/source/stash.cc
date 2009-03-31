@@ -912,6 +912,18 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
         const_cast<shop_item&>(si).item.flags = oldflags;
 }
 
+class ShopItemEntry : public InvEntry
+{
+public:
+    ShopItemEntry(const ShopInfo::shop_item &it,
+                  const std::string &item_name,
+                  menu_letter hotkey) : InvEntry(it.item)
+    {
+        text = item_name;
+        add_hotkey(hotkey);
+    }
+};
+
 bool ShopInfo::show_menu(const std::string &place,
                          bool can_travel) const
 {
@@ -937,11 +949,9 @@ bool ShopInfo::show_menu(const std::string &place,
     {
         for (int i = 0, count = items.size(); i < count; ++i)
         {
-            MenuEntry *me = new MenuEntry(shop_item_name(items[i]),
-                                          MEL_ITEM,
-                                          1,
-                                          hotkey++);
-            me->data = const_cast<shop_item *>( &items[i] );
+            MenuEntry *me = new ShopItemEntry(items[i],
+                                              shop_item_name(items[i]),
+                                              hotkey++);
             menu.add_entry(me);
         }
     }

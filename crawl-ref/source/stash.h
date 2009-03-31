@@ -145,6 +145,13 @@ public:
 
     bool isAt(int xp, int yp) const { return x == xp && y == yp; }
 
+    // Messy!
+    struct shop_item
+    {
+        item_def item;
+        unsigned price;
+    };
+
 private:
     int x, y;
     std::string name;
@@ -154,12 +161,6 @@ private:
     // Set true if the player has visited this shop
     bool visited;
 
-    // Messy!
-    struct shop_item
-    {
-        item_def item;
-        unsigned price;
-    };
     std::vector<shop_item> items;
 
     std::string shop_item_name(const shop_item &si) const;

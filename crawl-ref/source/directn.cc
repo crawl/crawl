@@ -586,9 +586,7 @@ void full_describe_view()
             {
                 if (j == 0)
                 {
-                    me = new MenuEntry(prefix + str, MEL_ITEM, 1, hotkey);
-                    me->data = (void*) list_mons[i];
-                    me->quantity = 1; // Hack to make monsters selectable.
+                    me = new MonsterMenuEntry(prefix+str, list_mons[i], hotkey);
                 }
 #ifndef USE_TILE
                 else

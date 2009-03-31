@@ -685,10 +685,21 @@ void Menu::select_items(int key, int qty)
     cgotoxy( x, y );
 }
 
+MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monsters* mon, int hotkey) :
+    MenuEntry(str, MEL_ITEM, 1, hotkey)
+{
+    data = (void*)mon;
+    quantity = 1;
+}
+
 #ifdef USE_TILE
 bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
-    // Is this a monster?
+    return false;
+}
+
+bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+{
     monsters *m = (monsters*)(data);
     if (!m)
         return (false);
