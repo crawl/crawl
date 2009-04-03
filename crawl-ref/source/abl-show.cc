@@ -2342,6 +2342,10 @@ void set_god_ability_slots()
 
     // Finally, add in current god's invocations in traditional slots.
     int num = 0;
+
+    if (you.religion == GOD_ELYVILON)
+        _set_god_ability_helper(ABIL_ELYVILON_DESTROY_WEAPONS, 'a' + num++);
+
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
         if (god_abilities[you.religion][i] != ABIL_NON_ABILITY)
