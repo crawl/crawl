@@ -689,7 +689,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
 static int _healing_spell(int healed, bool divine_ability,
-                          const coord_def& where)
+                          const coord_def& where, targ_mode_type mode)
 {
     ASSERT(healed >= 1);
 
@@ -699,14 +699,15 @@ static int _healing_spell(int healed, bool divine_ability,
     if (where.origin())
     {
         spd.isValid = spell_direction(spd, beam, DIR_TARGET,
+                                      mode != TARG_NUM_MODES ? mode :
                                       you.religion == GOD_ELYVILON ?
-                                          TARG_ANY : TARG_FRIEND,
+                                            TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS,
                                       false, true, true, "Heal whom?");
     }
     else
     {
-        spd.target = where;
+        spd.target  = where;
         spd.isValid = in_bounds(spd.target);
     }
 
@@ -786,10 +787,12 @@ static int _healing_spell(int healed, bool divine_ability,
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
-int cast_healing(int pow, bool divine_ability, const coord_def& where)
+int cast_healing(int pow, bool divine_ability, const coord_def& where,
+                 targ_mode_type mode)
 {
     pow = std::min(50, pow);
-    return (_healing_spell(pow + roll_dice(2, pow) - 2, divine_ability, where));
+    return (_healing_spell(pow + roll_dice(2, pow) - 2, divine_ability, where,
+                           mode));
 }
 
 void remove_divine_vigour()

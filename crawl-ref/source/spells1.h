@@ -18,7 +18,8 @@ struct bolt;
 
 bool cast_sure_blade(int power);
 int cast_healing(int pow, bool divine_ability = false,
-                 const coord_def& where = coord_def(0,0));
+                 const coord_def& where = coord_def(0,0),
+                 targ_mode_type mode = TARG_NUM_MODES);
 
 void remove_divine_vigour();
 bool cast_divine_vigour();

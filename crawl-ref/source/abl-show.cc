@@ -135,8 +135,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
       ABIL_NEMELEX_MARK_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
-    { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
-      ABIL_ELYVILON_GREATER_HEALING, ABIL_ELYVILON_RESTORATION,
+    { ABIL_ELYVILON_LESSER_HEALING_SELF, ABIL_ELYVILON_PURIFICATION,
+      ABIL_ELYVILON_GREATER_HEALING_SELF, ABIL_ELYVILON_RESTORATION,
       ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE, ABIL_LUGONU_BANISH,
@@ -262,11 +262,15 @@ static const ability_def Ability_List[] =
 
     // Elyvilon
     { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing",
+    { ABIL_ELYVILON_LESSER_HEALING_SELF, "Lesser Self-Healing",
+      1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_LESSER_HEALING_OTHERS, "Lesser Healing",
       1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
     { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1,
       ABFLAG_CONF_OK },
-    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
+    { ABIL_ELYVILON_GREATER_HEALING_SELF, "Greater Self-Healing",
+      2, 0, 250, 2, ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_GREATER_HEALING_OTHERS, "Greater Healing",
       2, 0, 250, 2, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour", 6, 0, 600, 5,
@@ -468,7 +472,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // Look through the table to see if there's a preference, else
     // find a new empty slot for this ability. -- bwr
     const int index = _find_ability_slot( ability );
-    if ( index != -1 )
+    if (index != -1)
         result.hotkey = index_to_letter(index);
     else
         result.hotkey = 0;      // means 'find later on'
@@ -633,7 +637,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_OKAWARU_MIGHT:
-    case ABIL_ELYVILON_LESSER_HEALING:
+    case ABIL_ELYVILON_LESSER_HEALING_SELF:
+    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
@@ -679,7 +684,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_KIKU_ENSLAVE_UNDEAD:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_GREATER_HEALING_SELF:
+    case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BEND_SPACE:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
@@ -1678,25 +1684,39 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         break;
 
-    case ABIL_ELYVILON_LESSER_HEALING:
-        if (cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6), true) < 0)
+    case ABIL_ELYVILON_LESSER_HEALING_SELF:
+    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
+    {
+        const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
+        if (cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6), true,
+                         self ? you.pos() : coord_def(0,0),
+                         self ? TARG_NUM_MODES : TARG_NOT_SELF) < 0)
+        {
             return (false);
+        }
 
         exercise(SK_INVOCATIONS, 1);
         break;
-
+    }
     case ABIL_ELYVILON_PURIFICATION:
         purification();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
-    case ABIL_ELYVILON_GREATER_HEALING:
-        if (cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3), true) < 0)
+    case ABIL_ELYVILON_GREATER_HEALING_SELF:
+    case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
+    {
+        const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
+        if (cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3), true,
+                         self ? you.pos() : coord_def(0,0),
+                         self ? TARG_NUM_MODES : TARG_NOT_SELF) < 0)
+        {
             return (false);
+        }
 
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
-
+    }
     case ABIL_ELYVILON_RESTORATION:
         restore_stat(STAT_ALL, 0, false);
         unrot_hp(100);
@@ -2147,7 +2167,21 @@ std::vector<talent> your_talents(bool check_confused)
             {
                 const ability_type abil = god_abilities[you.religion][i];
                 if (abil != ABIL_NON_ABILITY)
+                {
                     _add_talent(talents, abil, check_confused);
+                    if (abil == ABIL_ELYVILON_LESSER_HEALING_SELF)
+                    {
+                        _add_talent(talents,
+                                    ABIL_ELYVILON_LESSER_HEALING_OTHERS,
+                                    check_confused);
+                    }
+                    else if (abil == ABIL_ELYVILON_GREATER_HEALING_SELF)
+                    {
+                        _add_talent(talents,
+                                    ABIL_ELYVILON_GREATER_HEALING_OTHERS,
+                                    check_confused);
+                    }
+                }
             }
         }
     }
@@ -2219,19 +2253,19 @@ std::vector<talent> your_talents(bool check_confused)
     for (unsigned int i = 0; i < talents.size(); ++i)
     {
         // Skip preassigned hotkeys.
-        if ( talents[i].hotkey != 0 )
+        if (talents[i].hotkey != 0)
             continue;
 
         // Try to find a free hotkey for i, starting from Z.
-        for ( int k = 51; k >= 0; ++k )
+        for (int k = 51; k >= 0; ++k)
         {
             const int kkey = index_to_letter(k);
             bool good_key = true;
 
             // Check that it doesn't conflict with other hotkeys.
-            for ( unsigned int j = 0; j < talents.size(); ++j )
+            for (unsigned int j = 0; j < talents.size(); ++j)
             {
-                if ( talents[j].hotkey == kkey )
+                if (talents[j].hotkey == kkey)
                 {
                     good_key = false;
                     break;
@@ -2312,8 +2346,24 @@ void set_god_ability_slots()
     {
         if (god_abilities[you.religion][i] != ABIL_NON_ABILITY)
         {
-            _set_god_ability_helper(god_abilities[you.religion][i], 'a' + num);
-            ++num;
+            _set_god_ability_helper(god_abilities[you.religion][i],
+                                    'a' + num++);
+
+            if (you.religion == GOD_ELYVILON)
+            {
+                if (god_abilities[you.religion][i]
+                        == ABIL_ELYVILON_LESSER_HEALING_SELF)
+                {
+                    _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_OTHERS,
+                                            'a' + num++);
+                }
+                else if (god_abilities[you.religion][i]
+                            == ABIL_ELYVILON_GREATER_HEALING_SELF)
+                {
+                    _set_god_ability_helper(ABIL_ELYVILON_GREATER_HEALING_OTHERS,
+                                            'a' + num++);
+                }
+            }
         }
     }
 }
@@ -2329,7 +2379,8 @@ static int _find_ability_slot(ability_type which_ability)
     // No requested slot, find new one and make it preferred.
 
     // Skip over a-e (invocations).
-    for (int slot = 5; slot < 52; slot++)
+    const int first_slot = (you.religion == GOD_ELYVILON ? 7 : 5);
+    for (int slot = first_slot; slot < 52; slot++)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
@@ -2339,7 +2390,7 @@ static int _find_ability_slot(ability_type which_ability)
     }
 
     // If we can't find anything else, try a-e.
-    for (int slot = 4; slot >= 0; slot--)
+    for (int slot = first_slot - 1; slot >= 0; slot--)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
