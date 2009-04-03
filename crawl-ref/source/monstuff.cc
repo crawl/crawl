@@ -7649,7 +7649,8 @@ static bool _mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     if (!monster_shover(mpusher))
         return (false);
 
-    if (!monster_senior(mpusher, mpushee))
+    // Fleeing monsters of the same type may push past higher ranking ones.
+    if (!monster_senior(mpusher, mpushee, mons_is_fleeing(mpusher)))
         return (false);
 
     return (true);

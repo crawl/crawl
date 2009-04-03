@@ -3873,7 +3873,7 @@ void zap_wand(int slot)
         return;
     }
 
-    // if you happen to be wielding the wand, its display might change.
+    // If you happen to be wielding the wand, its display might change.
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 

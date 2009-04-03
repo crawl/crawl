@@ -3393,7 +3393,7 @@ bool monster_shover(const monsters *m)
 // Returns true if m1 and m2 are related, and m1 is higher up the totem pole
 // than m2. The criteria for being related are somewhat loose, as you can see
 // below.
-bool monster_senior(const monsters *m1, const monsters *m2)
+bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
 {
     const monsterentry *me1 = get_monster_data(m1->type),
                        *me2 = get_monster_data(m2->type);
@@ -3406,12 +3406,12 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 
     // If both are demons, the smaller number is the nastier demon.
     if (isdigit(mchar1) && isdigit(mchar2))
-        return (mchar1 < mchar2);
+        return (fleeing || mchar1 < mchar2);
 
     // &s are the evillest demons of all, well apart from Geryon, who really
     // profits from *not* pushing past beasts.
     if (mchar1 == '&' && isdigit(mchar2) && m1->type != MONS_GERYON)
-        return (m1->hit_dice > m2->hit_dice);
+        return (fleeing || m1->hit_dice > m2->hit_dice);
 
     // If they're the same holiness, monsters smart enough to use stairs can
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
@@ -3422,21 +3422,24 @@ bool monster_senior(const monsters *m1, const monsters *m2)
         return (true);
     }
 
-    if (m1->type == MONS_QUEEN_BEE
-        && (m2->type == MONS_KILLER_BEE
-            || m2->type == MONS_KILLER_BEE_LARVA))
+    if (mons_genus(m1->type) == MONS_KILLER_BEE
+        && mons_genus(m2->type) == MONS_KILLER_BEE)
     {
-        return (true);
-    }
+        if (fleeing)
+            return (true);
 
-    if (m1->type == MONS_KILLER_BEE && m2->type == MONS_KILLER_BEE_LARVA)
-        return (true);
+        if (m1->type == MONS_QUEEN_BEE && m2->type != MONS_QUEEN_BEE)
+            return (true);
+
+        if (m1->type == MONS_KILLER_BEE && m2->type == MONS_KILLER_BEE_LARVA)
+            return (true);
+    }
 
     // Special-case gnolls, so they can't get past (hob)goblins.
     if (m1->type == MONS_GNOLL && m2->type != MONS_GNOLL)
         return (false);
 
-    return (mchar1 == mchar2 && m1->hit_dice > m2->hit_dice);
+    return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }
 
 

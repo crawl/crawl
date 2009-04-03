@@ -457,10 +457,14 @@ void full_describe_view()
 {
     std::vector<const monsters*> list_mons;
     std::vector<item_def> list_items;
+    std::vector<coord_def> list_features;
 
     // Grab all items known (or thought) to be in the stashes in view.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
+        if (grid_stair_direction(grd(*ri)) != CMD_NO_CMD)
+            list_features.push_back(*ri);
+
         const monsters *mon = monster_at(*ri);
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
@@ -506,9 +510,9 @@ void full_describe_view()
     for (unsigned int i = 0; i < mons.size(); i++)
         list_mons.push_back(mons[i].m_mon);
 
-    if (list_mons.empty() && list_items.empty())
+    if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
-        mprf("Neither monsters nor items are visible.");
+        mprf("No monsters, items or features are visible.");
         return;
     }
 
@@ -518,9 +522,23 @@ void full_describe_view()
     desc_menu.set_highlighter(NULL);
     // FIXME: Need different title for the opposite toggle:
     // "Visible Monsters/Items (select for more detail, '!' to examine):"
-    desc_menu.set_title(
-        new MenuEntry("Visible Monsters/Items (select for more detail, '!' to view/travel):",
-                      MEL_TITLE));
+    std::string title = "";
+    if (!list_mons.empty())
+        title += "Monsters";
+    if (!list_items.empty())
+    {
+        if (!title.empty())
+            title += "/";
+        title += "Items";
+    }
+    if (!list_features.empty())
+    {
+        if (!title.empty())
+            title += "/";
+        title += "Features";
+    }
+    title = "Visible " + title + " (select for more detail, '!' to view/travel):";
+    desc_menu.set_title( new MenuEntry(title, MEL_TITLE));
 
     desc_menu.set_tag("pickup");
     desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
@@ -538,7 +556,6 @@ void full_describe_view()
     if (!list_mons.empty())
     {
         desc_menu.add_entry( new MenuEntry("Monsters", MEL_SUBTITLE) );
-//         desc_menu.mdisplay->set_num_columns(1);
         for (unsigned int i = 0; i < list_mons.size(); ++i, ++hotkey)
         {
             // List monsters in the form
@@ -601,7 +618,7 @@ void full_describe_view()
     }
 
     // Build menu entries for items.
-    if (list_items.size())
+    if (!list_items.empty())
     {
         std::vector<InvEntry*> all_items;
         for (unsigned int i = 0; i < list_items.size(); ++i)
@@ -626,6 +643,40 @@ void full_describe_view()
         }
     }
 
+    if (!list_features.empty())
+    {
+        desc_menu.add_entry( new MenuEntry("Features", MEL_SUBTITLE) );
+        for (unsigned int i = 0; i < list_features.size(); ++i, ++hotkey)
+        {
+            const coord_def c = list_features[i];
+            std::string desc = "";
+#ifndef USE_TILE
+//            get_screen_glyph(c)
+            const coord_def e  = c - you.pos() + coord_def(9,9);
+            unsigned short col = env.show_col(e);;
+            int object         = env.show(e);
+            unsigned ch;
+            get_item_symbol( object, &ch, &col );
+
+            const std::string colour_str = colour_to_str(col);
+            desc = "(<" + colour_str + ">";
+            desc += stringize_glyph(ch);
+            if (ch == '<')
+                desc += '<';
+
+            desc += "</" + colour_str +">) ";
+#endif
+            desc += feature_description(c);
+            if (is_travelable_stair(grd(c)) && !travel_cache.know_stair(c))
+                desc += " (not visited)";
+            FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
+            me->tag        = "description";
+            // Hack to make features selectable.
+            me->quantity   = c.x*100 + c.y + 3;
+            desc_menu.add_entry(me);
+        }
+    }
+
     // Select an item to read its full description, or a monster to read its
     // e'x'amine description. Toggle with '!' to travel to an item's position
     // or read a monster's database entry.
@@ -633,9 +684,10 @@ void full_describe_view()
     // For ASCII, the 'x' information may include short database descriptions.
 
     // Menu loop
+    std::vector<MenuEntry*> sel;
     while (true)
     {
-        std::vector<MenuEntry*> sel = desc_menu.show();
+        sel = desc_menu.show();
         redraw_screen();
 
         if (sel.empty())
@@ -688,6 +740,21 @@ void full_describe_view()
             else // ACT_EXECUTE -> travel to item
             {
                 const coord_def c = i->pos;
+                start_travel( c );
+                break;
+            }
+        }
+        else
+        {
+            const int num = quant - 3;
+            const int y = num % 100;
+            const int x = (num - y)/100;
+            coord_def c(x,y);
+
+            if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
+                describe_feature_wide(c);
+            else // ACT_EXECUTE -> travel to feature
+            {
                 start_travel( c );
                 break;
             }

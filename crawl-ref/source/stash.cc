@@ -908,7 +908,7 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
     item_def it = static_cast<item_def>(si.item);
     describe_item( it );
 
-    if ( oldflags != si.item.flags )
+    if (oldflags != si.item.flags)
         const_cast<shop_item&>(si).item.flags = oldflags;
 }
 
@@ -920,7 +920,7 @@ public:
                   menu_letter hotkey) : InvEntry(it.item)
     {
         text = item_name;
-        add_hotkey(hotkey);
+        hotkeys[0] = hotkey;
     }
 };
 
@@ -930,8 +930,8 @@ bool ShopInfo::show_menu(const std::string &place,
     StashMenu menu;
 
     MenuEntry *mtitle = new MenuEntry(name + " (" + place, MEL_TITLE);
-    menu.can_travel = can_travel;
-    mtitle->quantity = items.size();
+    menu.can_travel   = can_travel;
+    mtitle->quantity  = items.size();
     menu.set_title(mtitle);
 
     menu_letter hotkey;
@@ -949,9 +949,9 @@ bool ShopInfo::show_menu(const std::string &place,
     {
         for (int i = 0, count = items.size(); i < count; ++i)
         {
-            MenuEntry *me = new ShopItemEntry(items[i],
-                                              shop_item_name(items[i]),
-                                              hotkey++);
+            ShopItemEntry *me = new ShopItemEntry(items[i],
+                                                  shop_item_name(items[i]),
+                                                  hotkey++);
             menu.add_entry(me);
         }
     }

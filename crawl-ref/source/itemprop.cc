@@ -513,6 +513,9 @@ void do_curse_item( item_def &item, bool quiet )
     {
         mprf("Your %s glows black for a moment.",
              item.name(DESC_PLAIN).c_str());
+
+        // If we get the message, we know the item is cursed now.
+        item.flags |= ISFLAG_KNOW_CURSE;
     }
 
     item.flags |= ISFLAG_CURSED;

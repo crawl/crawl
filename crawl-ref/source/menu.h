@@ -172,6 +172,18 @@ public:
 #endif
 };
 
+class FeatureMenuEntry : public MenuEntry
+{
+public:
+    coord_def pos;
+
+    FeatureMenuEntry(const std::string &str, const coord_def p, int hotkey);
+
+#ifdef USE_TILE
+    virtual bool get_tiles(std::vector<tile_def>& tileset) const;
+#endif
+};
+
 class MenuHighlighter
 {
 public:

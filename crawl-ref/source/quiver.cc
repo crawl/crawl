@@ -166,14 +166,19 @@ void choose_item_for_quiver()
                                 : "hand crossbow");
         return;
     }
-    else if (slot == you.equip[EQ_WEAPON])
+    else if (slot == you.equip[EQ_WEAPON]
+             && you.inv[slot].base_type == OBJ_WEAPONS
+             && (get_weapon_brand(you.inv[slot]) != SPWPN_RETURNING
+                 || you.skills[SK_THROWING] == 0))
     {
-        mpr("You can't quiver wielded items.");
+        // Don't quiver a wielded weapon unless it's a weapon of returning
+        // and we've got some throwing skill.
+        mpr("You can't quiver wielded weapons.");
         return;
     }
     else
     {
-        for (int i = 0; i < NUM_EQUIP; i++)
+        for (int i = EQ_CLOAK; i < NUM_EQUIP; i++)
         {
             if (you.equip[i] == slot)
             {
@@ -320,8 +325,11 @@ void player_quiver::_maybe_fill_empty_slot()
         // If we're wielding an item previously quivered, the quiver may need
         // to be cleared. Else, any already quivered item is valid and we
         // don't need to do anything else.
-        if (m_last_used_of_type[slot].link == you.equip[EQ_WEAPON])
+        if (m_last_used_of_type[slot].link == you.equip[EQ_WEAPON]
+            && you.equip[EQ_WEAPON] == -1)
+        {
             unquiver_weapon = true;
+        }
         else
             return;
     }
@@ -332,8 +340,6 @@ void player_quiver::_maybe_fill_empty_slot()
 
     const launch_retval desired_ret =
          (weapon && is_range_weapon(*weapon)) ? LRET_LAUNCHED : LRET_THROWN;
-//    const launch_retval desired_ret =
-//        (slot == AMMO_THROW ? LRET_THROWN : LRET_LAUNCHED);
 
     std::vector<int> order;
     _get_fire_order(order, false, weapon);
@@ -398,9 +404,15 @@ void player_quiver::_get_fire_order( std::vector<int>& order,
         if (!is_valid_item(item))
             continue;
 
-        // Don't quiver wielded weapon.
-        if (you.equip[EQ_WEAPON] == i_inv)
+        // Don't quiver a wielded weapon unless it's a weapon of returning
+        // and we've got some throwing skill.
+        if (you.equip[EQ_WEAPON] == i_inv
+            && you.inv[i_inv].base_type == OBJ_WEAPONS
+            && (get_weapon_brand(you.inv[i_inv]) != SPWPN_RETURNING
+                || you.skills[SK_THROWING] == 0))
+        {
             continue;
+        }
 
         // Don't do anything if this item is not really fit for throwing.
         if (is_launched(&you, you.weapon(), item) == LRET_FUMBLED)

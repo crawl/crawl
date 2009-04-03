@@ -815,7 +815,8 @@ bool mons_is_petrifying(const monsters *m);
 bool mons_cannot_act(const monsters *m);
 bool mons_cannot_move(const monsters *m);
 
-bool monster_senior(const monsters *first, const monsters *second);
+bool monster_senior(const monsters *first, const monsters *second,
+                    bool fleeing = false);
 monster_type draco_subspecies( const monsters *mon );
 std::string draconian_colour_name(monster_type mtype);
 monster_type draconian_colour_by_name(const std::string &colour);

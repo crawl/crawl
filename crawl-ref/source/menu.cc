@@ -20,7 +20,11 @@ REVISION("$Rev$");
  #include "mon-util.h"
 #endif
 #include "player.h"
-#include "tiles.h"
+#ifdef USE_TILE
+ #include "stuff.h"
+ #include "tiles.h"
+ #include "travel.h"
+#endif
 #include "tutorial.h"
 #include "view.h"
 #include "initfile.h"
@@ -692,10 +696,17 @@ MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monsters* mon, 
     quantity = 1;
 }
 
+FeatureMenuEntry::FeatureMenuEntry(const std::string &str, const coord_def p, int hotkey) :
+    MenuEntry(str, MEL_ITEM, 1, hotkey)
+{
+    pos      = p;
+    quantity = 1;
+}
+
 #ifdef USE_TILE
 bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
-    return false;
+    return (false);
 }
 
 bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
@@ -778,6 +789,19 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(TILE_STAB_BRAND, TEX_DEFAULT));
     else if (mons_looks_distracted(m))
         tileset.push_back(tile_def(TILE_MAY_STAB_BRAND, TEX_DEFAULT));
+
+    return (true);
+}
+
+bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+{
+    if (!in_bounds(pos))
+        return (false);
+
+    tileset.push_back(tile_def(tileidx_feature(grd(pos), pos.x, pos.y),
+                               TEX_DUNGEON));
+    if (is_travelable_stair(grd(pos)) && !travel_cache.know_stair(pos))
+        tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
 
     return (true);
 }
@@ -1505,11 +1529,12 @@ formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
 void formatted_scroller::add_text(const std::string& s)
 {
     size_t eolpos = 0;
-    while ( true )
+    while (true)
     {
         const size_t newpos = s.find( "\n", eolpos );
-        add_item_formatted_string(formatted_string::parse_string(std::string(s, eolpos, newpos-eolpos)));
-        if ( newpos == std::string::npos )
+        add_item_formatted_string(formatted_string::parse_string(
+                                        std::string(s, eolpos, newpos-eolpos)));
+        if (newpos == std::string::npos)
             break;
         else
             eolpos = newpos + 1;

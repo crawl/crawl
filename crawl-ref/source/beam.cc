@@ -4956,12 +4956,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             return (MON_OTHER);
         }
 
-        if (mon->add_ench(ENCH_CHARM))
+        if (!mon->has_ench(ENCH_CHARM))
         {
-            // FIXME: Put in an exception for fungi, plants and other
-            // things you won't notice becoming charmed.
             if (simple_monster_message(mon, " is charmed."))
                 obvious_effect = true;
+            mon->add_ench(ENCH_CHARM);
         }
         return (MON_AFFECTED);
 

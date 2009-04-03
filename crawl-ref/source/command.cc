@@ -1371,7 +1371,6 @@ static bool _do_description(std::string key, std::string type,
             if (thing_created != NON_ITEM
                 && (type == "item" || type == "spell"))
             {
-
                 char name[80];
                 strncpy(name, key.c_str(), sizeof(name));
                 if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
