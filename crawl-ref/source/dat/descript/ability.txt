@@ -270,13 +270,15 @@ Destroy all weapons on the ground. In order to prevent a weapon from being accid
 %%%%
 Lesser Healing
 
-Depending on your Invocations skill, heal a small amount of hit points.
-
-Can be used on hostile monsters, trying to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
+Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
 
 Whether the pacification succeeds or not, the invested food, piety and magic point are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety gain if you need just one try.
 
 You can also heal allies and neutral monsters.
+%%%%
+Lesser Self-Healing
+
+Depending on your Invocations skill, heal a small amount of your health.
 %%%%
 Purification
 
@@ -284,13 +286,15 @@ Purge your body of bad effects such as sickness, poisoning, slowness, confusion 
 %%%%
 Greater Healing
 
-Depending on your Invocations skill, heal a moderate amount of hit points. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher piety cost.
-
-Can be used on hostile monsters, trying to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
+Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power, so is significantly better than using Lesser Healing. 
 
 Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety loss even if you need just one try.
 
 You can also heal allies and neutral monsters.
+%%%%
+Greater Self-Healing
+
+Depending on your Invocations skill, heal a moderate amount of your health. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher total piety cost.
 %%%%
 Restoration
 

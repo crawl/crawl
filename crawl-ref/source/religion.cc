@@ -260,10 +260,10 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark four cards in a deck",
       "order the top five cards of a deck, losing the rest" },
     // Elyvilon
-    { "call upon Elyvilon for lesser healing of yourself and others",
-      "call upon Elyvilon for purification",
-      "call upon Elyvilon for greater healing of yourself and others",
-      "call upon Elyvilon to restore your abilities",
+    { "provide lesser healing for yourself and others",
+      "purify yourself",
+      "provide greater healing for yourself and others",
+      "restore your abilities",
       "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss",
@@ -346,10 +346,10 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark decks",
       "stack decks" },
     // Elyvilon
-    { "call upon Elyvilon for minor healing",
-      "call upon Elyvilon for purification",
-      "call upon Elyvilon for major healing",
-      "call upon Elyvilon to restore your abilities",
+    { "provide lesser healing",
+      "purify yourself",
+      "provide greater healing",
+      "restore your abilities",
       "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss at will",

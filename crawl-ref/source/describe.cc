@@ -3479,10 +3479,8 @@ void describe_god( god_type which_god, bool give_title )
         textcolor(colour);
 
         // mv: Some gods can protect you from harm.
-        // I'm not sure how to explain such divine protection because
-        // god isn't really protecting player - he only sometimes saves
-        // his life (probably it shouldn't be displayed at all).
-        // What about this?
+        // The god isn't really protecting player - only sometimes saving
+        // his life.
         bool have_any = false;
 
         if (harm_protection_type hpt =
@@ -3565,9 +3563,9 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_ELYVILON)
         {
             have_any = true;
-            std::string buf = "You can call upon ";
+            std::string buf = "You can destroy weapons on the ground in ";
             buf += god_name(which_god);
-            buf += " to destroy weapons lying on the ground.";
+            buf += "'s name.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_ELYVILON_DESTROY_WEAPONS);
         }
