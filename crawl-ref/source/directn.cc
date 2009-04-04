@@ -1048,7 +1048,7 @@ void direction(dist& moves, targeting_type restricts,
     bool target_unshifted = Options.target_unshifted_dirs;
 
     // Find a default target.
-    if (Options.default_target && (mode == TARG_ENEMY || mode == TARG_NOT_SELF))
+    if (Options.default_target && (mode == TARG_ENEMY || mode == TARG_HOSTILE))
     {
         skip_iter = true;   // Skip first iteration...XXX mega-hack
         if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
@@ -1056,7 +1056,8 @@ void direction(dist& moves, targeting_type restricts,
             const monsters *montarget = &menv[you.prev_targ];
             if (you.can_see(montarget)
                     // not made friendly since then
-                && (mode == TARG_NOT_SELF || !mons_friendly(montarget))
+                && (mons_attitude(montarget) == ATT_HOSTILE
+                    || mode == TARG_ENEMY && !mons_friendly(montarget))
                 && _is_target_in_range(montarget->pos(), range))
             {
                 found_autotarget = true;
@@ -1330,9 +1331,10 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
             mprf( "Targeting mode is now: %s",
-                  (mode == TARG_ANY)   ? "any" :
-                  (mode == TARG_ENEMY) ? "enemies"
-                                       : "friends" );
+                  (mode == TARG_ANY)     ? "any" :
+                  (mode == TARG_ENEMY)   ? "enemies" :
+                  (mode == TARG_HOSTILE) ? "hostiles"
+                                         : "friends" );
             break;
 
         case CMD_TARGET_PREV_TARGET:
@@ -2004,8 +2006,11 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
         return (false);
 
     // Now compare target modes.
-    if (mode == TARG_ANY || mode == TARG_NOT_SELF)
+    if (mode == TARG_ANY)
         return (true);
+
+    if (mode == TARG_HOSTILE)
+        return (mons_attitude(mon) == ATT_HOSTILE);
 
     if (mode == TARG_FRIEND)
         return (mons_friendly(mon));

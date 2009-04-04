@@ -1584,9 +1584,9 @@ enum mon_holy_type
 enum targ_mode_type
 {
     TARG_ANY,
-    TARG_ENEMY,
+    TARG_ENEMY,  // hostile + neutral
     TARG_FRIEND,
-    TARG_NOT_SELF,
+    TARG_HOSTILE,
     TARG_NUM_MODES
 };
 

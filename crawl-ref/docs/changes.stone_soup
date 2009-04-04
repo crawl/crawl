@@ -88,6 +88,7 @@ Interface
 * Switch off autopickup and autoswap if you see a monster turn invisible.
 * Shops now use shopping cart behaviour.
 * Wizard commands can now be used from the wizard help screen.
+* Allow quivering/firing of wielded missiles and wielded weapons of returning.
 * With a full pack, check entire list of selected items to allow for merging.
 * Added an option to make menu colours apply to shops.
 * Use menu colours for announcements of items found while travelling.
@@ -117,7 +118,6 @@ Items
 * Ammo that IDs through throwing now merges in your pack instantaneously.
 * ?immolation doesn't burn scrolls anymore.
 * ?summoning creates a permanent abomination.
-* ?fear doesn't turn allies hostile anymore.
 * ?random uselessness now autoIDs.
 * ?vorpalise weapon now fixes temporary brands instead of EWIII.
 * Nemelex-gifted decks now ID after drawing one card.
@@ -132,7 +132,7 @@ Gods
 * Xom is more interesting and more useful in combat.
 * Cleansing Flame centers on the player and deals less damage.
 * Killing a holy being is now sometimes avenged by TSO.
-* Split Elyvilon's healing powers in self and other versions.
+* Split Elyvilon's healing powers in "heal self" and "heal other" versions.
 * Move Divine Robustness from Zin to Elyvilon, replacing Incredible Healing.
 * Make Zin's retribution-summoned plagues permanent.
 * Sif Muna no longer gifts Kiku/Vehumet specific books, spells still possible.

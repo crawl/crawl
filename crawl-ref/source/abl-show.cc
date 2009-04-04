@@ -1690,7 +1690,7 @@ static bool _do_ability(const ability_def& abil)
         const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
         if (cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6), true,
                          self ? you.pos() : coord_def(0,0),
-                         self ? TARG_NUM_MODES : TARG_NOT_SELF) < 0)
+                         self ? TARG_NUM_MODES : TARG_HOSTILE) < 0)
         {
             return (false);
         }
@@ -1709,7 +1709,7 @@ static bool _do_ability(const ability_def& abil)
         const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
         if (cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3), true,
                          self ? you.pos() : coord_def(0,0),
-                         self ? TARG_NUM_MODES : TARG_NOT_SELF) < 0)
+                         self ? TARG_NUM_MODES : TARG_HOSTILE) < 0)
         {
             return (false);
         }
