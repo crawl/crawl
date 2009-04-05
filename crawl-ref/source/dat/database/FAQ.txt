@@ -58,10 +58,12 @@ A:downstairs
 While this might be a bug, chances are the downstairs are somewhere in a
 room closed off by a secret door. If you search (with '5') in suspicious
 looking corridors and along walls near empty terrain, you will eventually
-find one. Alternatively, if you are in one of the branches, you might also
-have reached its lowest level and have to turn around to explore another
-one. Check the database description ("?/b") for the number of levels per
-branch.
+find one. Note that most level feature three downstairs as well as three
+upstairs, not counting any escape hatches. If you get stuck, you might
+try another stairs from the level above.
+Alternatively, if you are in one of the branches, you might also have 
+reached its lowest level and have to turn around to explore another one.
+Check the database ("?/b") for the number of levels per branch.
 %%%%
 Q:stuck
 
@@ -93,7 +95,9 @@ in-game to create a "dump" in your morgue folder that you can then post on
 the rec.games.roguelike.misc group or in the Something Awful forum, so
 other players can comment on your equipment, skills or spell selection.
 Please try to trim your dump by removing stuff unnecessary for this task
-(such as the extensive Vanquished list).
+(such as the extensive Vanquished list). If you join the ##crawl channel of
+the freenode IRC, you will find helpful souls who will even watch you and
+give hints should you play on one of the public servers.
 %%%%
 Q:cheating
 
@@ -151,7 +155,8 @@ eat monster chunks, even those that sometimes make you sick (coloured brown
 in the menu and the prompt). If you worship a god who enjoys sacrifices pay
 attention to your own hunger status and wait until the end of prayer before
 chopping a corpse if need be. Also, casting (difficult) spells will make you
-hungry, but a high Intelligence will lessen this effect.
+hungry, but high Intelligence and Spellcasting will lessen this effect. If
+you press "II", you can read about the hunger effects of your spells.
 %%%%
 Q:ghosts
 
@@ -187,7 +192,7 @@ slim. Still, here are a few general hints:
 %%%%
 Q:randart
 
-What do the terms "randart" and "fixedart" signify?
+What do the terms "randart", "fixedart" and "egotitem" signify? 
 %%%%
 A:randart
 
@@ -203,7 +208,14 @@ might also stumble upon artefacts which come in three varieties:
   instead has unique hardcoded effects and descriptions.
 
 None of the three types can be enchanted or branded, neither temporarily nor
-permanently.
+permanently. There is another type of special item that pops up a bit more 
+often:
+
+* egoitem: these are ordinary items with one special property. For example,
+  a short sword of venom, a cap of see invisible or boots of running. These
+  can be affected by enchanting scrolls and also by corrision and acids.
+  Weapons of this type are branded, so you cannot brand them in other ways.
+
 %%%%
 Q:oklobs
 
@@ -238,7 +250,8 @@ No, it's a deliberate design decision. As of version 0.5, zombies,
 skeletons and simulacra are considered too stupid to manoeuvre along
 staircases. We realize that this weakens Necromancers but we consider the
 interface improvement of zombie herding becoming unfeasible to be more
-important.
+important. Interestingly, this makes Necromancy and Yredelelmnul more fun
+than before.
 
 Keep in mind that the same also applies to hostile undead of the same kind!
 %%%%
@@ -261,7 +274,8 @@ messages, please write them down. Short of a save file, a guide on how to
 reproduce the crash (or bug) can be useful; you can use wizard mode for this.
 
 If you don't log in to SourceForge or leave an email address at least check
-the thread from time to time in case we have some more questions.
+the thread from time to time in case we have some more questions. In any case
+leave a nick so that we can refer to you in some way.
 
 Thanks in advance!
 %%%%
@@ -281,6 +295,11 @@ vaults etc.
 Please submit your ideas to the Feature Requests tracker of SourceForge. If
 they catch the interest of at least one coder, chances are they'll make it
 into the game.
+
+Note that your idea has better chances to be accepted if you present the
+ramifications on gameplay. Since we put a lot of emphasis on the interface,
+a good proposal on how to make the game play smoother may go without much
+ado.
 %%%%
 Q:feature
 
