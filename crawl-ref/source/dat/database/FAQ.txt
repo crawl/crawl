@@ -99,7 +99,7 @@ Is there a cheating mode to Crawl where I can play without dying?
 %%%%
 A:cheating
 
-Not a cheating mode, exactly, but if your build supports it you can play
+Not a cheating mode, exactly, but if your build supports it you can play in
 wizard mode (access with '&') where you are prompted whenever you're about
 to die, and have access to a number of nifty commands to create equipment,
 travel to distant branches, or fiddle with your stats or skills. Note that
@@ -226,6 +226,20 @@ deaths cannot be fully avoided as Crawl relies on randomness for posing
 challenges. It is important to realize that for highly skilled players, the
 margin of such deaths is really slim...
 %%%%
+Q:zombified
+
+My zombies refuse to follow me into the next level. Is this a bug?
+%%%%
+A:zombified
+
+No, it's a deliberate design decision. As of version 0.5, zombies,
+skeletons and simulacra are considered too stupid to manoeuvre along
+staircases. We realize that this weakens Necromancers but we consider the
+interface improvement of zombie herding becoming unfeasible to be more
+important.
+
+Keep in mind that the same also applies to hostile undead of the same kind!
+%%%%
 ##############################################
 # Questions about the development process.
 ##############################################
@@ -257,7 +271,7 @@ A:ideas
 
 No, you can't. At least not on ideas alone.
 
-All of the devteam members submitted a number of code intensive patches 
+All of the devteam members submitted a number of code intensive patches
 and/or took over responsibility over an important side project before
 joining. A good way to become indispensable is to help us with patches or
 vaults etc.
@@ -334,8 +348,11 @@ There certainly is! You can play "trunk" (what will eventually become the
 next version) online on http://crawl.develz.org, or you can download Windows
 binaries from the same site. Note that trunk may be buggy, and that many
 changes will invalidate your saved games. If that doesn't bother you, go
-ahead and play. Be sure to leave some feedback/suggestions/bug reports on
-the SourceForge trackers.
+ahead and play!
+Be sure to leave some feedback/suggestions/bug reports on the SourceForge
+trackers. When doing so please mention the version (r????) you're currently
+playing in case the bug's already been fixed or the feature already
+implemented.
 %%%%
 Q:interact
 
