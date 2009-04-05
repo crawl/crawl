@@ -38,12 +38,12 @@ and hideous creatures.
 
 If you have never played Crawl (or a similar game) before, you may want
 to try out a tutorial. These are accessed by entering 'T' in the species
-or job selection screens. You can choose among three quite popular
-and rather straightforward combinations: a Minotaur fighter with the
-additional help of a mighty war god, a Centaur hunter using a bow and
-arrows, and an Elven magician. The prime aim of the tutorials is to
-explain Crawl's interface. They do not focus on 'optimal' gameplay
-(also, many experienced players share different views on the latter).
+or job selection screens. You can choose among three quite popular and
+rather straightforward combinations: a Minotaur fighter with the help of
+a mighty war god, a Centaur hunter using a bow and arrows, and an Elven
+magician. The prime aim of the tutorial is to explain Crawl's interface.
+They do not focus on 'optimal' gameplay (also, many experienced players
+share different views on the latter).
 The tutorial has a special help screen (viewed by pressing '??') and
 ends when you reach the seventh experience level.
 
@@ -54,7 +54,8 @@ whole manual and would prefer a short summary of the important points,
 look at the quick-start guide (quickstart.txt) and learn as you play.
 
 You can also read these documents while playing Crawl, by hitting '?' at
-the help menu.
+the help menu. There is also a list of frequently asked questions about
+gameplay and design, to be accessed by pressing ?Q in the game.
 
 While Dungeon Crawl is a strict single player game, you can play on a
 server together with many others. These are the relevant webpage and

@@ -18,6 +18,9 @@ Contents:
 4. License and history information.
 5. How you can help!
 
+There is a list of frequently asked questions which you can access pressing 
+?Q in the game.
+
 1. Getting started
 ------------------
 If you'd like to dive in immediately, your best bets are to
