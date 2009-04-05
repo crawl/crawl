@@ -259,14 +259,9 @@ local function mset_if(condition, ...)
   mset(unpack(util.map(util.curry(spec_if, condition), { ... })))
 end
 
-mset("place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
-     "deep elf annihilator / deep elf sorcerer / deep elf demonologist",
-     "place:Orc:$ w:120 / orc warlord / orc knight / stone giant",
-     "place:Vault:$",
-     with_props("place:Slime:$", { jelly_protect = true }),
+mset(with_props("place:Slime:$", { jelly_protect = true }),
      "place:Snake:$",
      with_props("place:Lair:$", { weight = 5 }),
-     "place:Tomb:$ w:200 / greater mummy",
      "place:Crypt:$",
      "place:Abyss",
      with_props("place:Shoal:$", { weight = 5 }),
@@ -275,8 +270,6 @@ mset("place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
      with_props("place:Dis:$", { weight = 5 }),
      with_props("place:Tar:$", { weight = 5 }),
      with_props("daeva / angel", { weight = 2 }))
-mset_if(depth_ge(6), "place:Pan w:400 / w:15 pandemonium lord")
-mset_if(depth_lt(6), "place:Pan")
 
 -- spec_fn can be used to wrap a function that returns a monster spec.
 -- This is useful if you want to adjust monster weights in the spec
@@ -284,10 +277,35 @@ mset_if(depth_lt(6), "place:Pan")
 -- returned by this function will also be used to init the monster
 -- population (with dgn.set_random_mon_list). As an example:
 mset(spec_fn(function ()
-               local depth = zig().depth
-               return "place:Vault:$ w:" .. (50 - depth) ..
-                 " / ancient lich w:" .. math.max(0, depth - 12)
-             end))
+     local d = math.max(0, zig().depth - 12)
+     return "place:Vault:$ w:60 / ancient lich w:" .. d
+   end))
+
+mset(spec_fn(function ()
+    local d = math.max(0, zig().depth - 5)
+     return "place:Pan w:40 / pandemonium lord w:" .. d
+   end))
+
+mset(spec_fn(function ()
+     local d = zig().depth + 5
+     return "place:Tomb:$ w:200 / greater mummy w:" .. d
+   end))
+
+mset(spec_fn(function ()
+     local d = 300 - 10 * zig().depth
+     return "place:Elf:$ w:" .. d .. " / deep elf sorcerer / " ..
+            "deep elf blademaster / deep elf master archer / " ..
+            "deep elf annihilator / deep elf demonologist"
+   end))
+
+mset(spec_fn(function ()
+     local d = 310 - 10 * zig().depth
+     local e = math.max(0, zig().depth - 20)
+     return "place:Orc:$ w:" .. d .. " / orc warlord / orc knight / " ..
+            "orc high priest w:5 / orc sorcerer w:5 / stone giant / " ..
+            "moth of wrath w:" .. e
+   end))
+
 
 local drac_creator = dgn.monster_fn("random draconian")
 local function mons_drac_gen(x, y, nth)
