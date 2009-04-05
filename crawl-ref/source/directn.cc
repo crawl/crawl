@@ -462,8 +462,11 @@ void full_describe_view()
     // Grab all items known (or thought) to be in the stashes in view.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        if (grid_stair_direction(grd(*ri)) != CMD_NO_CMD)
+        if (grid_stair_direction(grd(*ri)) != CMD_NO_CMD
+            || is_altar(grd(*ri)))
+        {
             list_features.push_back(*ri);
+        }
 
         const monsters *mon = monster_at(*ri);
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
@@ -668,7 +671,6 @@ void full_describe_view()
             const coord_def c = list_features[i];
             std::string desc = "";
 #ifndef USE_TILE
-//            get_screen_glyph(c)
             const coord_def e  = c - you.pos() + coord_def(9,9);
             unsigned short col = env.show_col(e);;
             int object         = env.show(e);

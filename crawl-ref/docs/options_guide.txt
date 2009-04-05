@@ -2005,7 +2005,7 @@ background = black
         colour other than black (such as an xterm), but this option is
         still experimental and the results may not be very good.
 
-use_fake_cursor = false
+use_fake_cursor = true
         If true, Crawl draws the cursor explicitly on the level-map and
         targeting screens instead of relying on the term to draw the
         cursor. Use this if your term cannot show a cursor over

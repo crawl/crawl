@@ -809,7 +809,7 @@ void game_options::reset_options()
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
-    use_fake_cursor        = false;
+    use_fake_cursor        = true;
 
     stash_tracking         = STM_ALL;
 

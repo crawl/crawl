@@ -17,7 +17,6 @@ Breaks saves compatibility.
 * Much more convenient tiles version.
 * Zombies and skeletons can no longer use stairs.
 * Transformations meld equipment instead of removing it.
-* Arena mode for inter-monster fights.
 
 Levels
 ------
@@ -78,6 +77,7 @@ Monsters
 * Fixed summoned monsters taking non-summoned items with them.
 * Make abominations resist poison.
 * Butchered corpses sometimes leave skeletons.
+* Finally fixed monsters acting before being announced as "coming into view".
 
 Interface
 ---------
@@ -103,6 +103,7 @@ Interface
 * Ability and card descriptions are now searchable in the database ('?/').
 * Allow wishing for specific fixed and randarts in wizard mode ('o' command).
 * Add food item based hunger descriptions to spells.
+* "Glow" status now appears as soon as contamination effects become possible.
 
 Items
 -----
@@ -163,6 +164,7 @@ Miscellaneous
 * Greatly reduced ranges (both player and monster), now mostly capped by LOS.
 * For most bolts, hitting a monster reduces range by one.
 * Added arena mode to watch monsters fighting other monsters.
+* Fixed crashes involving "invisible/unmoving" monsters.
 * Crashes now leave highly informative crash dumps.
 * Poison Weapon is now a level 2 spell.
 * Extension will now also extend temporary weapon brands.

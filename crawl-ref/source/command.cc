@@ -1480,7 +1480,7 @@ static bool _handle_FAQ()
                 answer = "No answer found in the FAQ! Please submit a "
                          "bug report!";
             }
-            answer = "Q: " + getFAQ_Question(key) + EOL + "A: " + answer;
+            answer = "Q: " + getFAQ_Question(key) + EOL + answer;
             linebreak_string2(answer, width - 1);
             print_description(answer);
             if (getch() == 0)
