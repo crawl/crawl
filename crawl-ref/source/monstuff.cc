@@ -2617,8 +2617,13 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         break;
 
     case ME_ALERT:
-        if (mons_friendly(mon) && mon->is_patrolling())
+        // Allow monsters falling asleep while patrolling (can happen if
+        // they're left alone for a long time) to be woken by this event.
+        if (mons_friendly(mon) && mon->is_patrolling()
+            && !mons_is_sleeping(mon))
+        {
             break;
+        }
 
         if (mons_is_sleeping(mon) && mons_near(mon))
             remove_auto_exclude(mon, true);

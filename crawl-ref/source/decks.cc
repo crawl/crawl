@@ -1493,7 +1493,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
     int count = 0;
     coord_def f;
     for (adjacent_iterator ai; ai; ++ai)
-        if (grd(*ai) == DNGN_FLOOR && find_trap(*ai) && one_chance_in(++count))
+        if (grd(*ai) == DNGN_FLOOR && !find_trap(*ai) && one_chance_in(++count))
             f = *ai;
 
     if (count > 0)              // found a spot

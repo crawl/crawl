@@ -685,8 +685,11 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
         return (BLACK);
 
 #ifdef WIZARD
-    if (travel_colour && testbits(env.map(p).property, FPROP_HIGHLIGHT))
+    if (travel_colour && you.wizard
+        && testbits(env.map(p).property, FPROP_HIGHLIGHT))
+    {
         return (LIGHTGREEN);
+    }
 #endif
 
     dungeon_feature_type grid_value = grd(p);
