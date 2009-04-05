@@ -11,6 +11,8 @@
 # Questions are pushed into a menu in the order the questions are defined
 # in this file. Answers need not necessarily be right next to the question,
 # but it's easier to read if they are.
+# There may be at most 52 questions, but it is recommended to keep the
+# number much lower than that.
 #
 # This file is not meant as an easy-access spoiler file, but rather
 # intended to answer general questions that crop up from time to time.

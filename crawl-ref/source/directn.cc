@@ -523,22 +523,39 @@ void full_describe_view()
     // FIXME: Need different title for the opposite toggle:
     // "Visible Monsters/Items (select for more detail, '!' to examine):"
     std::string title = "";
+    std::string action = "";
     if (!list_mons.empty())
-        title += "Monsters";
+    {
+        title  = "Monsters";
+        action = "view"; // toggle views monster description
+    }
+    bool nonmons = false;
     if (!list_items.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Items";
+        nonmons = true;
     }
     if (!list_features.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Features";
+        nonmons = true;
     }
-    title = "Visible " + title + " (select for more detail, '!' to view/travel):";
-    desc_menu.set_title( new MenuEntry(title, MEL_TITLE));
+    if (nonmons)
+    {
+        if (!action.empty())
+            action += "/";
+        action += "travel"; // toggle travels to items/features
+    }
+    title = "Visible " + title;
+    std::string title1 = title + " (select to " + action + ", '!' to examine):";
+    title += " (select for more detail, '!' to " + action + "):";
+
+    desc_menu.set_title( new MenuEntry(title, MEL_TITLE), false);
+    desc_menu.set_title( new MenuEntry(title1, MEL_TITLE) );
 
     desc_menu.set_tag("pickup");
     desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
@@ -3029,7 +3046,8 @@ static std::string _get_monster_desc(const monsters *mon)
         if (mons_is_sleeping(mon))
         {
             text += pronoun + " appears to be "
-                    + (mons_is_confused(mon) ? "sleepwalking" : "resting")
+                    + (mons_is_confused(mon, true) ? "sleepwalking"
+                                                   : "resting")
                     + ".\n";
         }
         // Applies to both friendlies and hostiles
@@ -3039,7 +3057,7 @@ static std::string _get_monster_desc(const monsters *mon)
         else if (!mons_friendly(mon) && !mons_neutral(mon)
                  && mon->foe != MHITYOU && !crawl_state.arena_suspended)
         {
-            // special case: batty monsters get set to BEH_WANDER as
+            // Special case: batty monsters get set to BEH_WANDER as
             // part of their special behaviour.
             if (!mons_is_batty(mon))
                 text += pronoun + " doesn't appear to have noticed you.\n";

@@ -242,13 +242,21 @@ void Menu::set_highlighter( MenuHighlighter *mh )
     highlighter = mh;
 }
 
-void Menu::set_title( MenuEntry *e )
+void Menu::set_title( MenuEntry *e, bool first )
 {
-    if (title != e)
-        delete title;
+    if (first)
+    {
+        if (title != e)
+            delete title;
 
-    title = e;
-    title->level = MEL_TITLE;
+        title = e;
+        title->level = MEL_TITLE;
+    }
+    else
+    {
+        title2 = e;
+        title2->level = MEL_TITLE;
+    }
 }
 
 void Menu::add_entry( MenuEntry *entry )
@@ -338,7 +346,7 @@ bool Menu::process_key( int keyin )
     {
         sel.clear();
         menu_action = (action)((menu_action+1) % ACT_NUM);
-//         update_title();
+        update_title();
         return (true);
     }
 
@@ -932,9 +940,14 @@ void Menu::draw_title()
 
 void Menu::write_title()
 {
-    textattr( item_colour(-1, title) );
+    const bool first = (!allow_toggle || menu_action == ACT_EXECUTE);
+    if (!first)
+        ASSERT(title2);
 
-    cprintf("%s", title->get_text().c_str());
+    textattr( item_colour(-1, first ? title : title2) );
+
+    std::string text = (first ? title->get_text() : title2->get_text());
+    cprintf("%s", text.c_str());
     if (flags & MF_SHOW_PAGENUMBERS)
     {
         // The total number of pages is well defined, but the current

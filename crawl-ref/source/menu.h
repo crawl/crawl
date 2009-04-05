@@ -296,7 +296,7 @@ public:
     const formatted_string &get_more() const { return more; }
 
     void set_highlighter( MenuHighlighter *h );
-    void set_title( MenuEntry *e );
+    void set_title( MenuEntry *e, bool first = true );
     void add_entry( MenuEntry *entry );
     void get_selected( std::vector<MenuEntry*> *sel ) const;
 
@@ -336,6 +336,8 @@ public:
 
 protected:
     MenuEntry *title;
+    MenuEntry *title2;
+
     int flags;
     std::string tag;
 

@@ -1925,8 +1925,11 @@ int choose_ability_menu(const std::vector<talent>& talents)
 
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
-        new MenuEntry("  Ability                            "
+        new MenuEntry("  Ability - do what?                 "
                       "Cost                    Success"));
+    abil_menu.set_title(
+        new MenuEntry("  Ability - describe what?           "
+                      "Cost                    Success"), false);
 
     abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
                             | MF_ALWAYS_SHOW_MORE);

@@ -351,9 +351,9 @@ void InvMenu::set_title_annotator(invtitle_annotator afn)
     title_annotate = afn;
 }
 
-void InvMenu::set_title(MenuEntry *t)
+void InvMenu::set_title(MenuEntry *t, bool first)
 {
-    Menu::set_title(t);
+    Menu::set_title(t, first);
 }
 
 void InvMenu::set_preselect(const std::vector<SelItem> *pre)

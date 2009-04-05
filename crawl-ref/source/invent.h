@@ -134,7 +134,7 @@ public:
     // effect.
     void set_title_annotator(invtitle_annotator fn);
 
-    void set_title(MenuEntry *title);
+    void set_title(MenuEntry *title, bool first = true);
     void set_title(const std::string &s);
 
     // Loads items into the menu. If "procfn" is provided, it'll be called
@@ -159,6 +159,7 @@ public:
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(std::vector<InvEntry*> &items,
                    const menu_sort_condition *cond);
+
 protected:
     bool process_key(int key);
     void do_preselect(InvEntry *ie);

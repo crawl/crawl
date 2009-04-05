@@ -2627,10 +2627,10 @@ bool mons_cannot_move(const monsters *m)
     return (mons_cannot_act(m) || mons_is_petrifying(m));
 }
 
-bool mons_is_confused(const monsters *m)
+bool mons_is_confused(const monsters *m, bool class_too)
 {
     return (m->has_ench(ENCH_CONFUSION)
-            && !mons_class_flag(m->type, M_CONFUSED));
+            && (class_too || !mons_class_flag(m->type, M_CONFUSED)));
 }
 
 bool mons_is_caught(const monsters *m)

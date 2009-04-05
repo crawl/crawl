@@ -760,7 +760,7 @@ bool mons_is_native_in_branch(const monsters *monster,
                               const branch_type branch = you.where_are_you);
 bool mons_is_chaotic(const monsters *mon);
 bool mons_is_poisoner(const monsters *mon);
-bool mons_is_confused(const monsters *m);
+bool mons_is_confused(const monsters *m, bool class_too = false);
 bool mons_is_caught(const monsters *m);
 bool mons_is_sleeping(const monsters *m);
 bool mons_is_wandering(const monsters *m);
