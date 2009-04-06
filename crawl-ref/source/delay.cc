@@ -592,7 +592,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         // Turn is over, set up a delay to do swapping next turn.
         if (prompt && yesno(prompt_str, true, 'n') || safe && swap_if_safe)
         {
-            start_delay(DELAY_WEAPON_SWAP, 1, weap);
+            if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+                start_delay(DELAY_WEAPON_SWAP, 1, weap);
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
         }
         return;
@@ -604,7 +605,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         if (_is_butcher_delay(delay)
             && (safe || prompt && yesno(prompt_str, true, 'n')))
         {
-            start_delay(DELAY_WEAPON_SWAP, 1, weap);
+            if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+                start_delay(DELAY_WEAPON_SWAP, 1, weap);
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
         }
         return;
@@ -620,9 +622,11 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         return;
     }
 
-    weapon_switch(weap);
-    print_stats();
-
+    if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
+    {
+        weapon_switch(weap);
+        print_stats();
+    }
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 

@@ -30,7 +30,7 @@ enum transformation_type
 
 bool transform_can_butcher_barehanded(transformation_type tt);
 
-void untransform(void);
+void untransform(bool skip_wielding = false);
 
 bool can_equip(equipment_type use_which, bool ignore_temporary);
 bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
@@ -38,7 +38,7 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
                                     int dex_loss = 0, int int_loss = 0);
 size_type transform_size(int psize = PSIZE_BODY);
 
-bool transform(int pow, transformation_type which_trans, bool quiet = false,
+bool transform(int pow, transformation_type which_trans, bool force = false,
                bool just_check = false);
 
 void remove_one_equip(equipment_type eq, bool meld = true);

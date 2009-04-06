@@ -324,7 +324,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return (false);
     }
 
-    // Wield the weapon.
+    // Make sure that wielding the weapon won't kill the player.
     if (!safe_to_remove_or_wear(new_wpn, false))
         return (false);
 
@@ -334,7 +334,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     you.equip[EQ_WEAPON] = item_slot;
 
-    // any oddness on wielding taken care of here
+    // Any oddness on wielding taken care of here.
     wield_effects(item_slot, show_weff_messages);
 
     mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
@@ -3460,10 +3460,11 @@ static bool _swap_rings(int ring_slot)
     if (!remove_ring(unwanted, false))
         return (false);
 
-    // Put on the new ring.
+    // Check that the new ring won't kill us.
     if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
         return (false);
 
+    // Put on the new ring.
     start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
 
     return (true);

@@ -1773,32 +1773,32 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     // Transformations.
     case SPELL_BLADE_HANDS:
         if (!transform(powc, TRAN_BLADE_HANDS))
-            canned_msg(MSG_SPELL_FIZZLES);
+            return (SPRET_ABORT);
         break;
 
     case SPELL_SPIDER_FORM:
         if (!transform(powc, TRAN_SPIDER))
-            canned_msg(MSG_SPELL_FIZZLES);
+            return (SPRET_ABORT);
         break;
 
     case SPELL_STATUE_FORM:
         if (!transform(powc, TRAN_STATUE))
-            canned_msg(MSG_SPELL_FIZZLES);
+            return (SPRET_ABORT);
         break;
 
     case SPELL_ICE_FORM:
         if (!transform(powc, TRAN_ICE_BEAST))
-            canned_msg(MSG_SPELL_FIZZLES);
+            return (SPRET_ABORT);
         break;
 
     case SPELL_DRAGON_FORM:
         if (!transform(powc, TRAN_DRAGON))
-            canned_msg(MSG_SPELL_FIZZLES);
+            return (SPRET_ABORT);
         break;
 
     case SPELL_NECROMUTATION:
         if (!transform(powc, TRAN_LICH))
-            canned_msg(MSG_SPELL_FIZZLES);
+            return (SPRET_ABORT);
         break;
 
     case SPELL_ALTER_SELF:

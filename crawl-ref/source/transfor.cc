@@ -17,6 +17,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "delay.h"
+#include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -26,6 +27,7 @@ REVISION("$Rev$");
 #include "player.h"
 #include "randart.h"
 #include "skills2.h"
+#include "state.h"
 #include "stuff.h"
 #include "traps.h"
 
@@ -414,6 +416,34 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
     return (false);
 }
 
+// Returns true if the player got prompted by an inscription warning and
+// chose to opt out.
+bool _check_transformation_inscription_warning(
+            const std::set<equipment_type> &remove)
+{
+    // Check over all items to be removed or melded.
+    std::set<equipment_type>::const_iterator iter;
+    for (iter = remove.begin(); iter != remove.end(); ++iter)
+    {
+        equipment_type e = *iter;
+        if (you.equip[e] == -1)
+            continue;
+
+        const item_def& item = you.inv[you.equip[e]];
+
+        operation_types op = OPER_WEAR;
+        if (e == EQ_WEAPON)
+            op = OPER_WIELD;
+        else if (item.base_type == OBJ_JEWELLERY)
+            op = OPER_PUTON;
+
+        if (!check_old_item_warning(item, op))
+            return (true);
+    }
+
+    return (false);
+}
+
 // FIXME: Switch to 4.1 transforms handling.
 size_type transform_size(int psize)
 {
@@ -446,12 +476,26 @@ static void _transformation_expiration_warning()
     }
 }
 
-// Transforms you into the specified form. If quiet is true, fails silently
+static bool _abort_or_fizzle()
+{
+    if (you.turn_is_over)
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return (true); // pay the necessary costs
+    }
+    return (false); // SPRET_ABORT
+}
+
+// Transforms you into the specified form. If force is true, checks for
+// inscription warnings are skipped, and the transformation fails silently
 // (if it fails). If just_check is true the transformation doesn't actually
 // happen, but the method returns whether it would be successful.
-bool transform(int pow, transformation_type which_trans, bool quiet,
+bool transform(int pow, transformation_type which_trans, bool force,
                bool just_check)
 {
+    if (!force && crawl_state.is_god_acting())
+        force = true;
+
     if (you.species == SP_MERFOLK && player_is_swimming()
         && which_trans != TRAN_DRAGON && which_trans != TRAN_BAT)
     {
@@ -461,7 +505,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet,
         // form is completely over-riding any other... goes well with
         // the forced transform when entering water)... but merfolk can
         // transform into flying forms.
-        if (!quiet)
+        if (!force)
             mpr("You cannot transform out of your normal form while in water.");
         return (false);
     }
@@ -485,39 +529,55 @@ bool transform(int pow, transformation_type which_trans, bool quiet,
         }
         else
         {
-            if (!quiet)
+            if (!force)
                 mpr("You cannot extend your transformation any further!");
             return (false);
         }
     }
 
+    // The actual transformation may still fail later (e.g. due to cursed
+    // equipment). In any case, untransforming costs us a turn but nothing
+    // else (as does the "End Transformation" ability).
     if (!just_check && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
-        untransform();
+    {
+        bool skip_wielding = false;
+        switch (which_trans)
+        {
+        case TRAN_STATUE:
+        case TRAN_LICH:
+            break;
+        default:
+            skip_wielding = true;
+            break;
+        }
+        // Skip wielding weapon if it gets unwielded again right away.
+        untransform(skip_wielding);
+    }
 
     // Catch some conditions which prevent transformation.
     if (you.is_undead
         && (you.species != SP_VAMPIRE
             || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED))
     {
-        if (!quiet)
+        if (!force)
             mpr("Your unliving flesh cannot be transformed in this way.");
-        return (false);
+        return (_abort_or_fizzle());
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
-        if (!quiet)
+        if (!force)
         {
             mpr("The transformation conflicts with an enchantment "
                 "already in effect.");
         }
-        return (false);
+        return (_abort_or_fizzle());
     }
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
-        return (false);
+    if (_check_for_cursed_equipment(rem_stuff, which_trans, force))
+        return (_abort_or_fizzle());
 
     int str = 0, dex = 0, symbol = '@', colour = LIGHTGREY, xhp = 0, dur = 0;
     const char* tran_name = "buggy";
@@ -605,15 +665,18 @@ bool transform(int pow, transformation_type which_trans, bool quiet,
         break;
     }
 
-    if (check_transformation_stat_loss(rem_stuff, quiet,
+    if (check_transformation_stat_loss(rem_stuff, force,
                                        std::max(-str, 0), std::max(-dex, 0)))
     {
-        return (false);
+        return (_abort_or_fizzle());
     }
 
     // If we're just pretending return now.
     if (just_check)
         return (true);
+
+    if (!force && _check_transformation_inscription_warning(rem_stuff))
+        return (_abort_or_fizzle());
 
     // All checks done, transformation will take place now.
     you.redraw_evasion      = true;
@@ -716,7 +779,7 @@ bool transform_can_butcher_barehanded(transformation_type tt)
     return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON);
 }
 
-void untransform(void)
+void untransform(bool skip_wielding)
 {
     const flight_type old_flight = you.flight_mode();
 
@@ -776,7 +839,6 @@ void untransform(void)
             you.duration[DUR_STONESKIN] = 1;
 
         hp_downscale = 15;
-
         break;
 
     case TRAN_ICE_BEAST:
@@ -788,7 +850,6 @@ void untransform(void)
             you.duration[DUR_ICY_ARMOUR] = 1;
 
         hp_downscale = 12;
-
         break;
 
     case TRAN_DRAGON:
@@ -843,7 +904,10 @@ void untransform(void)
     }
     calc_hp();
 
-    handle_interrupted_swap(true, false, true);
+    if (!skip_wielding)
+        handle_interrupted_swap(true, false, true);
+
+    you.turn_is_over = true;
 }
 
 // XXX: This whole system is a mess as it still relies on special
