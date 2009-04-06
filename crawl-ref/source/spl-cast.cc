@@ -216,14 +216,7 @@ int list_spells(bool toggle_with_I, bool viewing)
         spell_menu.add_toggle_key('I');
         more_str += "or 'I' ";
     }
-    more_str += "to toggle spell view";
-    if (!viewing)
-    {
-        spell_menu.allow_toggle = true;
-        spell_menu.menu_action  = Menu::ACT_EXECUTE;
-        more_str += ", or '?' to read the descriptions";
-    }
-    more_str += ".";
+    more_str += "to toggle spell view.";
     spell_menu.set_more(formatted_string(more_str));
 
     for (int i = 0; i < 52; ++i)

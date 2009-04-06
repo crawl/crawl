@@ -536,8 +536,9 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     // The actual transformation may still fail later (e.g. due to cursed
-    // equipment). In any case, untransforming costs us a turn but nothing
-    // else (as does the "End Transformation" ability).
+    // equipment). Ideally, untransforming should cost a turn but nothing
+    // else (as does the "End Transformation" ability). As it is, you
+    // pay with mana and hunger if you already untransformed.
     if (!just_check && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
     {
         bool skip_wielding = false;

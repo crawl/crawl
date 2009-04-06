@@ -4674,7 +4674,7 @@ static bool _scroll_modify_item(item_def scroll)
         }
         break;
     case SCR_RECHARGING:
-        if (item_is_rechargeable(item, true))
+        if (item_is_rechargeable(item, false, true))
         {
             // Might still fail on highly enchanted weapons of electrocution.
             // (If so, already prints the "Nothing happens" message.)
