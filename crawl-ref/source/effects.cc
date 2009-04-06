@@ -277,7 +277,8 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
         // it.  It does alert them, though.
-        behaviour_event(monster, ME_ALERT, MHITYOU);
+        if (attacker != NULL)
+            behaviour_event(monster, ME_ALERT, attacker->mindex());
     }
 
     monster->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
