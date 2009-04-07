@@ -57,12 +57,7 @@ use:
 
 Kinds of Vaults
 ---------------
-The different kinds of vaults used by Crawl are described briefly below. In
-most cases, when the dungeon builder places a vault on a level, the rest of
-the level (assuming the vault is not a full-map vault) is generated as
-rooms+corridors. The only exceptions to this are branch entry vaults and
-minivaults - these are placed after the level is generated, and therefore
-do not influence level generation.
+The different kinds of vaults used by Crawl are described briefly below.
 
 Entry vault:
     A map designed for D:1, which (usually) contains the primary upstair {
