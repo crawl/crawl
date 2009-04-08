@@ -2300,8 +2300,7 @@ Dungeon interaction:
                         annotate the level that staircase leads to.
                         Should your annotation contain an exclamation
                         mark (!), you will be prompted before entering
-                        the level. An empty string clears any
-                        annotation.
+                        the level. An empty string clears annotations.
 
 Character information:
 'display' below means usage of the message area,
@@ -2325,8 +2324,9 @@ Character information:
     ]                   Shows a restricted inventory, only containing
                         worn, wielded and quivered items.
     I                   Show list of memorised spells.
-    V                   Lists all monsters and items in sight. You may read
-                        their descriptions and travel to selected items.
+    V                   Lists all monsters, items and features in sight. 
+                        You may read their descriptions and travel to 
+                        an item or feature.
     %                   Show resistances and general character overview:
                         health, experience, money, gear, and
                         status, mutations, abilities (the latter three
@@ -2357,7 +2357,8 @@ Item interaction (inventory):
     M                   Memorise a spell from a book.
     w                   Wield an item ( - for none).
     '                   Wield item a, or switch to b.
-    v                   Evoke power of wielded item.
+    v                   Evoke power of wielded item. Also used to attack
+                        non-adjacent monsters with weapons of reaching.
     W                   Wear armour. Also allows to take off armour.
     T                   Take off armour.
     P                   Put on jewellery. Also allows to remove it.
@@ -2381,10 +2382,10 @@ Item interaction (floor):
                         primary weapon. In case there are several
                         corpses on the ground, you are prompted one by
                         one. There, you can answer
-                         y, c:      yes (chop up this corpse)
-                         n, Space:  no (skip this corpse)
-                         a:         yes to all (chop up all corpses)
-                         q, Esc:    stop chopping altogether
+                         y, c       yes (chop up this corpse)
+                         n, Space   no (skip this corpse)
+                         a          yes to all (chop up all corpses)
+                         q, Esc     stop chopping altogether
 
 Other game-playing commands:
     a                   Use special ability.
