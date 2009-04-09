@@ -3217,7 +3217,7 @@ static void _enter_player_name(bool blankOK)
              formatted_string::parse_string(
                 "  If you've never been here before, you might want to try out" EOL
                 "  the Dungeon Crawl tutorial. To do this, press "
-                "<white>T</white> on the next" EOL
+                "<white>Ctrl-T</white> on the next" EOL
                 "  screen.").display();
         }
         else
@@ -3794,7 +3794,7 @@ spec_query:
             textcolor( WHITE );
             cprintf("You must be new here!");
         }
-        cprintf("  (Press T to enter a tutorial.)");
+        cprintf("  (Press Ctrl-T to enter a tutorial.)");
         cprintf(EOL EOL);
         textcolor( CYAN );
         cprintf("You can be:  "
@@ -3950,7 +3950,7 @@ spec_query:
 
     // These are handled specially as they _could_ be set
     // using Options.race or prev_race.
-    if (keyn == 'T') // easy to set in init.txt
+    if (keyn == CONTROL('T') || keyn == 'T') // easy to set in init.txt
         return !pick_tutorial();
 
     bool good_randrace = (keyn == '+');
@@ -4044,7 +4044,7 @@ job_query:
             textcolor( WHITE );
             cprintf("You must be new here!");
         }
-        cprintf("  (Press T to enter a tutorial.)");
+        cprintf("  (Press Ctrl-T to enter a tutorial.)");
 
         cprintf(EOL EOL);
         textcolor( CYAN );
@@ -4160,6 +4160,7 @@ job_query:
             return (false);
         }
     case 'T':
+    case CONTROL('T'):
         return pick_tutorial();
     case '#':
         good_random = true;

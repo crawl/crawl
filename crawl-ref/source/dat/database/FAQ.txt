@@ -83,21 +83,22 @@ How can I avoid dying all the time? Can you give me some playing tips?
 A:survival
 
 A: If you've got trouble even reaching the Temple, you might want to try
-out the Tutorial for some general playing hints. (To do this, press 'T' in
-the character selection menu.) Also, there are easy playing combinations
-and more challenging ones (marked in dark grey on the selection screen).
-If you are new to Crawl, sticking to the easier ones is advisable. In
-general, treat each new monster you meet with utmost caution and keep an
-eye on your hit points and magic.
+out the Tutorial for some general playing hints. (To do this, press
+'Ctrl-T' in the character selection menu.)
+Also, there are easy playing combinations and more challenging ones
+(marked in dark grey on the selection screen). If you are new to Crawl,
+sticking to the easier ones is advisable. In general, treat each new
+monster you meet with utmost caution and keep an eye on your hit points
+and magic.
 
 For specific hints dealing with a particular character, you can press '#'
 in-game to create a "dump" in your morgue folder that you can then post on
 the rec.games.roguelike.misc group or in the Something Awful forum, so
 other players can comment on your equipment, skills or spell selection.
 Please try to trim your dump by removing stuff unnecessary for this task
-(such as the extensive Vanquished list). If you join the ##crawl channel of
-the freenode IRC, you will find helpful souls who will even watch you and
-give hints should you play on one of the public servers.
+(such as the extensive Vanquished list). If you join the ##crawl channel
+of the freenode IRC, you will find helpful souls who will even watch you
+and give hints should you play on one of the public servers.
 %%%%
 Q:cheating
 
@@ -105,10 +106,11 @@ Is there a cheating mode to Crawl where I can play without dying?
 %%%%
 A:cheating
 
-A: Not a cheating mode, exactly, but if your build supports it you can play
-in wizard mode (access with '&') where you are prompted whenever you're
-about to die, and have access to a number of nifty commands to create
-equipment, travel to distant branches, or fiddle with your stats or skills.
+A: Not a cheating mode, exactly, but if your build supports it you can
+play in wizard mode (access with '&') where you are prompted whenever
+you're about to die, and have access to a number of nifty commands to
+create equipment, travel to distant branches, or fiddle with your stats
+or skills.
 Note that wizard mode games will never appear on the highscore list.
 
 Many players reckon long-time use of wizard mode to be detrimental to your

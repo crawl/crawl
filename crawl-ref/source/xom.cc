@@ -188,6 +188,7 @@ static void _xom_is_stimulated(int maxinterestingness,
 
     interestingness = std::min(255, interestingness);
 
+#define DEBUG_XOM
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
          "Xom: gift_timeout: %d, maxinterestingness = %d, interestingness = %d",
@@ -362,10 +363,13 @@ static int _exploration_estimate(bool seen_only = false)
     return (seen);
 }
 
-static bool _spell_requires_weapon(const spell_type spell)
+static bool _spell_weapon_check(const spell_type spell)
 {
     switch (spell)
     {
+    case SPELL_TUKIMAS_DANCE:
+        // Requires a wielded weapon.
+        return player_weapon_wielded();
     case SPELL_TUKIMAS_VORPAL_BLADE:
     case SPELL_MAXWELLS_SILVER_HAMMER:
     case SPELL_FIRE_BRAND:
@@ -374,10 +378,17 @@ static bool _spell_requires_weapon(const spell_type spell)
     case SPELL_LETHAL_INFUSION:
     case SPELL_EXCRUCIATING_WOUNDS:
     case SPELL_WARP_BRAND:
-    case SPELL_TUKIMAS_DANCE:
-        return (true);
+    {
+        if (!player_weapon_wielded())
+            return (false);
+
+        // The wielded weapon must be a non-branded non-launcher non-artefact!
+        const item_def& weapon = *you.weapon();
+        return (!is_artefact(weapon) && !is_range_weapon(weapon)
+                && get_weapon_brand(weapon) == SPWPN_NORMAL);
+    }
     default:
-        return (false);
+        return (true);
     }
 }
 
@@ -429,7 +440,7 @@ static bool _xom_makes_you_cast_random_spell(int sever, int tension)
         // Don't attempt to cast spells that are guaranteed to fail.
         // You may still get results such as "The spell fizzles" or
         // "Nothing appears to happen", but those should be rarer now.
-        if (_spell_requires_weapon(spell) && !player_weapon_wielded())
+        if (!_spell_weapon_check(spell))
             return (false);
     }
     else

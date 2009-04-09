@@ -440,11 +440,6 @@ static void _push_top_card(item_def& deck, card_type card,
     flags.push_back((char) _flags);
 }
 
-static bool _wielding_deck()
-{
-    return (you.weapon() && is_deck(*you.weapon()));
-}
-
 static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
 {
     ASSERT( is_deck(deck) );
@@ -453,11 +448,8 @@ static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
     drawn.push_back( static_cast<char>(card) );
 
     // Once you've drawn two cards, you know the deck.
-    if (allow_id &&
-        (drawn.size() >= 2 || origin_is_god_gift(deck)))
-    {
+    if (allow_id && (drawn.size() >= 2 || origin_is_god_gift(deck)))
         _deck_ident(deck);
-    }
 }
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck)
@@ -963,14 +955,14 @@ static void _describe_cards(std::vector<card_type> cards)
 // Return false if the operation was failed/aborted along the way.
 bool deck_stack()
 {
-    cursor_control con(false);
-    if (!_wielding_deck())
+    const int slot = _choose_inventory_deck("Stack which deck?");
+    if (slot == -1)
     {
-        mpr("You aren't wielding a deck!");
         crawl_state.zero_turns_taken();
         return (false);
     }
-    item_def& deck(*you.weapon());
+
+    item_def& deck(you.inv[slot]);
     if (_check_buggy_deck(deck))
         return (false);
 
@@ -982,6 +974,7 @@ bool deck_stack()
         return (false);
     }
 
+    _deck_ident(deck);
     const int num_cards    = cards_in_deck(deck);
     const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
