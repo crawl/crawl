@@ -8,13 +8,12 @@ matter what the origin of this cave is, it is filled with riches unheard of
 as well as with ample dangers to any intruder. Few have escaped alive, and
 even fewer have kept some rest of sanity to tell the tale.
 
-The dungeon is 27 levels deep but honestly, this is only the beginning.
+The dungeon is 27 levels deep, but honestly, this is only the beginning.
 %%%%
 Temple
 
-The Temple of some of the Gods, a place of peace and refuge from the
-insanity of the dungeon. It is located between the levels 4 and 7 of
-the main dungeon.
+A Temple of Gods, a place of peace and refuge from the insanity of the
+dungeon. It is located between the levels 4 and 7 of the main dungeon.
 %%%%
 Orcish Mines
 
@@ -34,15 +33,15 @@ The Elven Halls are seven levels deep.
 %%%%
 Lair
 
-Most adventurers find the lair to be an exciting change of climate. And
-indeed, there is something to be said about getting gored, mauled and
-eaten rather than sliced, burnt or stabbed.
+Most adventurers find the Lair of Beasts to be an exciting change of
+climate. And indeed, there is something to be said about getting gored,
+mauled and eaten rather than sliced, burnt or stabbed.
 
 The Lair is ten levels deep and contains the stairs to three more branches.
 %%%%
 Swamp
 
-A swampy waste land, complete with ooze, muck, flies and large slavering
+A swampy wasteland, complete with ooze, muck, flies and large slavering
 carnivorous monsters.
 
 The Swamp is five levels deep and contains the decaying rune. A dungeon
@@ -55,7 +54,7 @@ From afar you hear the steady sounds of waves and smell the salty spray.
 Upon reaching the Shoals, you are impressed by exotic underground beaches,
 making up a few islands in a vast sea. Out of a sudden, a bloodcurdling
 scream fills the air, followed by a gurgle. Anxiously, you look around and
-wonder: who is the predator? And who is the prey?
+wonder: Who is the predator? And who is the prey?
 
 The Shoals are five levels deep and contain the barnacled rune. A dungeon
 features only one of the Swamp or Shoals branches. If the Shoals are
@@ -87,7 +86,7 @@ The Hive is two levels deep. The entry is located between dungeon levels
 %%%%
 Vaults
 
-Possibly constructed by some powerful madman, the vaults are said to be home
+Possibly constructed by some powerful madman, the Vaults are said to be home
 to great treasures. The blood spots all around the entrance indicate that
 there is a certain amount of violence, too.
 
@@ -100,15 +99,15 @@ Once upon a time, all the daggers and axes and polearms would gather at the
 time of night and dance the waltz, dreaming of battlefields void of man and
 beast. That time is no more, yet the weapons are still there.
 
-The Hall of Blades is a single level and can be found between Vaults:4 and
-Vaults:6.
+The Hall of Blades is a single level and can be found between Vault:4 and
+Vault:6.
 %%%%
 Crypt
 
 You hear moans and shrieks of tortured souls, suffering in acts of the
 unspeakable.
 
-The Crypt is five levels deep and can be found between Vaults:2 and Vaults:4.
+The Crypt is five levels deep and can be found between Vault:2 and Vault:4.
 %%%%
 Tomb
 
@@ -129,7 +128,7 @@ of the main dungeon.
 %%%%
 Dis
 
-Who will stand the test of iron?
+The Iron City of Dis. Who will stand the test of iron?
 
 Dis is seven levels deep and contains the iron rune. It can be accessed via
 the Vestibule of Hell.
@@ -144,28 +143,29 @@ accessed via the Vestibule of Hell.
 %%%%
 Cocytus
 
-A grim and frost-bitten hell.
+A grim and frost-bitten wasteland.
 
 Cocytus is seven levels deep and contains the icy rune. It can be accessed
 via the Vestibule of Hell.
 %%%%
 Tartarus
 
-Over time, the undead, demons and devils of this place drain all life out of
-treasure-craving visitors.
+A decaying netherworld. Over time, the undead, demons and devils of this
+place drain all life out of treasure-craving visitors.
 
 Tartarus is seven levels deep and contains the bone rune. It can be accessed
 via the Vestibule of Hell.
 %%%%
 Pan
 
-Pandemonium, colloquially known as Pan, is an infinite realm of pain and
-suffering. Pan contains four special runes, as well as generic ones, in
-addition to lots of loot. All these treasures are guarded by demons and
-cruel Pan lords. Many a hero, confusing confidence with megalomania, has
-died unsuspectingly in the barrage of torment and hellfire.
+Pandemonium, is an infinite realm of pain and suffering. It contains four
+special runes, as well as generic ones, in addition to lots of loot. All
+these treasures are guarded by demons and even crueler demon lords. Many a
+hero, confusing confidence with megalomania, has died unsuspectingly in the
+barrage of torment and hellfire.
 
-Pan is endless.
+Pandemonium is endless. Portals there are found abundantly in the deeper
+parts of the main dungeon. Note that getting back might be more difficult.
 %%%%
 Abyss
 
@@ -184,7 +184,8 @@ Zot
 A region of the dungeon complex, safely locked away and referred to usually
 by madness, frenzy, lunacy. Only the most demented adventurers would dare to
 break the seal and press deeper - in the vain hope for a fabled artefact no
-man has ever laid eyes on before.
+one has ever laid eyes on before.
 
-Zot is five levels deep and can only be entered when carrying three runes.
+The Realm of Zot is five levels deep and can only be entered when carrying
+at least three runes.
 %%%%

@@ -476,9 +476,9 @@ static void _transformation_expiration_warning()
     }
 }
 
-static bool _abort_or_fizzle()
+static bool _abort_or_fizzle(bool just_check)
 {
-    if (you.turn_is_over)
+    if (!just_check && you.turn_is_over)
     {
         canned_msg(MSG_SPELL_FIZZLES);
         return (true); // pay the necessary costs
@@ -562,7 +562,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     {
         if (!force)
             mpr("Your unliving flesh cannot be transformed in this way.");
-        return (_abort_or_fizzle());
+        return (_abort_or_fizzle(just_check));
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
@@ -572,13 +572,13 @@ bool transform(int pow, transformation_type which_trans, bool force,
             mpr("The transformation conflicts with an enchantment "
                 "already in effect.");
         }
-        return (_abort_or_fizzle());
+        return (_abort_or_fizzle(just_check));
     }
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     if (_check_for_cursed_equipment(rem_stuff, which_trans, force))
-        return (_abort_or_fizzle());
+        return (_abort_or_fizzle(just_check));
 
     int str = 0, dex = 0, symbol = '@', colour = LIGHTGREY, xhp = 0, dur = 0;
     const char* tran_name = "buggy";
@@ -669,7 +669,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     if (check_transformation_stat_loss(rem_stuff, force,
                                        std::max(-str, 0), std::max(-dex, 0)))
     {
-        return (_abort_or_fizzle());
+        return (_abort_or_fizzle(just_check));
     }
 
     // If we're just pretending return now.
@@ -677,7 +677,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (true);
 
     if (!force && _check_transformation_inscription_warning(rem_stuff))
-        return (_abort_or_fizzle());
+        return (_abort_or_fizzle(just_check));
 
     // All checks done, transformation will take place now.
     you.redraw_evasion      = true;

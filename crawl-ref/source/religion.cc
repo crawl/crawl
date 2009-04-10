@@ -2185,10 +2185,11 @@ void pray()
     else if (!_god_accepts_prayer(you.religion))
     {
         simple_god_message(" ignores your prayer.");
+        you.turn_is_over = false;
         return;
     }
 
-    // Beoghites and Nemelexites can abort out now instead of offering
+    // Beoghites and Nemelexites can abort now instead of offering
     // something they don't want to lose.
     if (altar_god == GOD_NO_GOD
         && (you.religion == GOD_BEOGH ||  you.religion == GOD_NEMELEX_XOBEH)

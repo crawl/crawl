@@ -49,7 +49,7 @@ Breathe a jet of steam at a targeted monster.
 %%%%
 Bat Form
 
-Turn into a speedy vampire bat. In bat form, you can neither interact with items in any form (except picking them up or dropping them), nor cast spells. Note that Bat Form will decrease your current strength while increasing your dexterity. Thus, you won't be able to change form if your strength is too low.
+Turn into a speedy vampire bat. In bat form, you can neither interact with items in any form (except picking them up or dropping them), nor cast spells. Note that Bat Form will decrease your current Strength while increasing your Dexterity. Thus, you won't be able to change form if your Strength is too low.
 
 Vampires below experience level 10 will be unable to transform if wearing cursed equipment.
 %%%%
@@ -80,7 +80,7 @@ Torment yourself and the monsters around you.
 %%%%
 Raise Dead
 
-Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on via stairs.
+Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
 %%%%
 Control Demon
 
@@ -112,7 +112,7 @@ Instantly release a previously memorised (delayed) fireball without additional c
 %%%%
 Self-Restoration
 
-At the permanent loss of one magic point restore your Strength, Dexterity and Intelligence, and heal a large amount of rotted hitpoints.
+At the permanent loss of one magic point restore your Strength, Dexterity and Intelligence, and heal a large amount of rotted hit points.
 %%%%
 Device Recharging
 
@@ -192,16 +192,16 @@ Permanently enslave undead monsters.
 %%%%
 Invoke Death
 
-Summon the personification of Death, which, depending on your Invocations skill, may be hostile.
+Summon a personification of Death, which, depending on your Invocations skill, may be hostile.
 %%%%
 # Yredelemnul
 Animate Remains
 
-Reanimate a single corpse or skeleton as a follower. Note that zombies and skeletons cannot leave the level they were created on via stairs.
+Reanimate a single corpse or skeleton as a follower. Note that zombies and skeletons cannot leave the level they were created on.
 %%%%
 Animate Dead ability
 
-Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on via stairs.
+Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
 %%%%
 Drain Life
 
@@ -270,7 +270,7 @@ Destroy all weapons on the ground. In order to prevent a weapon from being accid
 %%%%
 Lesser Healing
 
-Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power.
+Depending on your Invocations skill, heal a creature other than you by a small amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power. Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety gain if you need just one try.
 
 Whether the pacification succeeds or not, the invested food, piety and magic point are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety gain if you need just one try.
 
@@ -278,7 +278,7 @@ You can also heal allies and neutral monsters.
 %%%%
 Lesser Self-Healing
 
-Depending on your Invocations skill, heal a small amount of your health.
+Depending on your Invocations skill, heal a small amount of hit points.
 %%%%
 Purification
 
@@ -286,7 +286,7 @@ Purge your body of bad effects such as sickness, poisoning, slowness, confusion 
 %%%%
 Greater Healing
 
-Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power, so is significantly better than using Lesser Healing. 
+Depending on your Invocations skill, heal a creature other than you by a moderate amount. Using this ability on hostile monsters will try to make them neutral. This works best on animals, worse on humanoids of your species, still worse on other humanoids, and worst of all on demons and undead. The chance for successful pacification depends on the healing power, so it is significantly better than using Lesser Healing. Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety loss even if you need just one try.
 
 Whether the pacification succeeds or not, the invested food, piety and magic points are lost. If it does succeed, the monster is healed and you gain some piety and half the monster's experience value. Otherwise, the monster is unaffected and you gain nothing. In total, this is a net piety loss even if you need just one try.
 
@@ -294,15 +294,15 @@ You can also heal allies and neutral monsters.
 %%%%
 Greater Self-Healing
 
-Depending on your Invocations skill, heal a moderate amount of your health. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher total piety cost.
+Depending on your Invocations skill, heal a moderate amount of hit points. Roughly, Greater Healing will allow you to heal three times the amount of Lesser Healing at a slightly higher total piety cost.
 %%%%
 Restoration
 
-Fully restore your Strength, Dexterity and Intelligence, and heal a large amount of rotted hitpoints.
+Fully restore your Strength, Dexterity and Intelligence, and heal a large amount of rotted hit points.
 %%%%
 Divine Vigour
 
-Depending on your Invocations skill, heal a large amount of, and temporarily increase, your hitpoints.
+Depending on your Invocations skill, heal a large amount of, and temporarily increase, your hit points.
 %%%%
 # Lugonu
 Depart the Abyss
@@ -323,7 +323,7 @@ Corrupt the current level by unleashing Abyssal energies on it. This will cause 
 %%%%
 Enter the Abyss
 
-You can transfer yourself to Lugonu's realm instantly... at a cost.
+Transfer yourself to Lugonu's realm instantly... at a cost.
 %%%%
 # Nemelex Xobeh
 Draw One
@@ -344,7 +344,7 @@ Draw four cards from any deck in your inventory, mark and remember them, so that
 %%%%
 Stack Five
 
-Draw five cards from your wielded deck, losing the rest of the deck. Look at the cards and sort them into any order you'd like. Subsequently, you'll draw these cards in the order you chose.
+Draw five cards from any deck in your inventory, losing the rest of the deck. Look at the cards and sort them into any order you'd like. Subsequently, you can draw these cards in the order you chose.
 %%%%
 # Beogh
 Smiting
