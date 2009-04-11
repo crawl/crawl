@@ -2010,6 +2010,7 @@ use_fake_cursor = true
         targeting screens instead of relying on the term to draw the
         cursor. Use this if your term cannot show a cursor over
         darkgrey/black squares.
+        On non-Unix builds this option defaults to false.
 
 
 7-  Inline Lua.

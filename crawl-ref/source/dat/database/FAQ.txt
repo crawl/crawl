@@ -129,9 +129,11 @@ whether it's one or two-handed, the randart properties, the weapon brand,
 and the monsters you're about to face. In general, switching from a weapon
 type you are already highly skilled with to another one that you have no
 skill in is a waste of time. The brands may greatly differ in damage output
-but you can get a good idea by bashing a few comparatively harmless monsters
-with each and comparing the results. Of the enchantments, damage is usually
-more important unless you hardly ever manage to hit with a weapon.
+but you can get a good idea by bashing a few comparatively harmless
+monsters with each and comparing the results.
+Of the enchantments, the second value (damage) is usually more important
+than the first (accuracy) unless you hardly ever manage to hit with a
+weapon.
 %%%%
 Q:religion
 

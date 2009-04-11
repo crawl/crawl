@@ -228,7 +228,7 @@ This spell heats a potion causing it to explode into a large cloud when thrown. 
 %%%%
 Excruciating Wounds
 
-This spell temporarily infuses the weapon held by the caster with the essence of pain itself. It will not affect weapons which are otherwise subject to special enchantments.
+This spell temporarily infuses the weapon held by the caster with the essence of pain itself. It will not affect weapons which are otherwise subject to special enchantments. Note that unlike other brands, pain can not be made permanent by reading a scroll of vorpalise weapon.
 %%%%
 Extension
 
@@ -644,5 +644,5 @@ This spell throws a bolt of poison.
 %%%%
 Warp Weapon
 
-This spell temporarily binds a localized warp field to the invoker's weapon.
+This spell temporarily binds a localized warp field to the invoker's weapon. Note that unlike other brands, distortion can not be made permanent by reading a scroll of vorpalise weapon.
 %%%%

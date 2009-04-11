@@ -4282,14 +4282,14 @@ bool _drink_fountain()
 static bool _vorpalise_weapon()
 {
     if (!you.weapon())
-        return false;
+        return (false);
 
     // Check if you're wielding a brandable weapon.
     item_def& wpn = *you.weapon();
     if (wpn.base_type != OBJ_WEAPONS || wpn.sub_type == WPN_BLOWGUN
         || is_artefact(wpn))
     {
-        return false;
+        return (false);
     }
 
     you.wield_change = true;
@@ -4301,12 +4301,12 @@ static bool _vorpalise_weapon()
         mprf("%s emits a brilliant flash of light!",
              wpn.name(DESC_CAP_YOUR).c_str());
         set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
-        return true;
+        return (true);
     }
 
     // If there's a permanent brand, fail.
     if (you.duration[DUR_WEAPON_BRAND] == 0)
-        return false;
+        return (false);
 
     // There's a temporary brand, attempt to make it permanent.
     const std::string itname = wpn.name(DESC_CAP_YOUR);
@@ -4655,8 +4655,9 @@ static bool _scroll_modify_item(item_def scroll)
     // Get the slot of the item the scroll is to be used on.
     // Ban the scroll's own slot from the prompt to avoid the stupid situation
     // where you use identify on itself.
-    item_slot = prompt_invent_item("Use on which item?", MT_INVLIST,
-                                   OSEL_ANY, true, true, false, 0, item_slot);
+    item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
+                                   MT_INVLIST, OSEL_ANY, true, true, false, 0,
+                                   item_slot, NULL, OPER_ANY, true);
 
     if (prompt_failed(item_slot))
         return (false);

@@ -182,7 +182,8 @@ int prompt_invent_item( const char *prompt,
                         const char other_valid_char = '\0',
                         int excluded_slot = -1,
                         int *const count = NULL,
-                        operation_types oper = OPER_ANY );
+                        operation_types oper = OPER_ANY,
+                        bool allow_list_known = false );
 
 std::vector<SelItem> select_items(
                         const std::vector<const item_def*> &items,

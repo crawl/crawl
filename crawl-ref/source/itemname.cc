@@ -1903,7 +1903,6 @@ bool check_item_knowledge(bool quiet)
 
 
     for (int i = 0; i < 5; i++)
-    {
         for (int j = 0; j < idx_to_maxtype[i]; j++)
         {
             if (type_ids[i][j] == ID_KNOWN_TYPE)
@@ -1919,7 +1918,6 @@ bool check_item_knowledge(bool quiet)
                 }
             }
         }
-    }
 
     if (items.empty())
     {

@@ -859,7 +859,7 @@ unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
     if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
-        && mkey != '*' && mkey != ESCAPE)
+        && mkey != '*' && mkey != ESCAPE && mkey != '\\')
     {
         mkey = ' ';
     }
@@ -1514,7 +1514,8 @@ int prompt_invent_item( const char *prompt,
                         const char other_valid_char,
                         int excluded_slot,
                         int *const count,
-                        operation_types oper )
+                        operation_types oper,
+                        bool allow_list_known )
 {
     if (!_any_items_to_select(type_expect) && type_expect == OSEL_THROWABLE
         && oper == OPER_FIRE && mtype == MT_INVLIST)
@@ -1589,6 +1590,13 @@ int prompt_invent_item( const char *prompt,
                         NULL,
                         &items );
 
+            if (allow_list_known && keyin == '\\')
+            {
+                if (check_item_knowledge(true))
+                    keyin = '?';
+                else
+                    mpr("You don't recognise anything yet!");
+            }
 
             need_getch  = false;
 
@@ -1625,11 +1633,21 @@ int prompt_invent_item( const char *prompt,
             }
         }
         else if (keyin == ESCAPE
-                || (Options.easy_quit_item_prompts
-                    && allow_easy_quit && keyin == ' '))
+                 || (Options.easy_quit_item_prompts
+                     && allow_easy_quit && keyin == ' '))
         {
             ret = PROMPT_ABORT;
             break;
+        }
+        else if (allow_list_known && keyin == '\\')
+        {
+                if (check_item_knowledge(true))
+                {
+                    keyin = '?';
+                    need_getch = false;
+                }
+                else
+                    mpr("You don't recognise anything yet!");
         }
         else if (isalpha( keyin ))
         {
@@ -1642,7 +1660,7 @@ int prompt_invent_item( const char *prompt,
         }
         else if (!isspace( keyin ))
         {
-            // we've got a character we don't understand...
+            // We've got a character we don't understand...
             canned_msg( MSG_HUH );
         }
         else

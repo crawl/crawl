@@ -1774,7 +1774,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_DISPLAY_KNOWN_OBJECTS:
-        check_item_knowledge(false);
+        check_item_knowledge();
         break;
 
     case CMD_REPLAY_MESSAGES:

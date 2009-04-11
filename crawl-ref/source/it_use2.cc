@@ -48,6 +48,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                         && you.hunger_state < HS_SATIATED
                         && drank_it ? 2 : 1);
 
+    // Knowingly drinking bad potions is much less amusing.
+    const int xom_factor = factor * (drank_it && was_known ? 2 : 1);
+
     switch (pot_eff)
     {
     case POT_HEALING:
@@ -117,7 +120,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                 {
                     // Full herbivores always become ill from blood.
                     disease_player(50 + random2(100));
-                    xom_is_stimulated(32);
+                    xom_is_stimulated(32/xom_factor);
                 }
                 else
                     lessen_hunger(value, true);
@@ -214,24 +217,24 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
             poison_player( ((pot_eff == POT_POISON) ? 1 + random2avg(5, 2)
                                                     : 3 + random2avg(13, 2)) );
-            xom_is_stimulated(128);
+            xom_is_stimulated(128 / xom_factor);
         }
         break;
 
     case POT_SLOWING:
         if (slow_player((10 + random2(pow)) / factor))
-            xom_is_stimulated(64 / factor);
+            xom_is_stimulated(64 / xom_factor);
         break;
 
     case POT_PARALYSIS:
         you.paralyse(NULL,
                      (2 + random2( 6 + you.duration[DUR_PARALYSIS] )) / factor);
-        xom_is_stimulated(64 / factor);
+        xom_is_stimulated(64 / xom_factor);
         break;
 
     case POT_CONFUSION:
         if (confuse_player((3 + random2(8)) / factor))
-            xom_is_stimulated(128 / factor);
+            xom_is_stimulated(128 / xom_factor);
         break;
 
     case POT_INVISIBILITY:
@@ -274,14 +277,14 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
                       "drinking a potion of degeneration"))
         {
-            xom_is_stimulated(64 / factor);
+            xom_is_stimulated(64 / xom_factor);
         }
         break;
 
     // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
         if (rot_player((10 + random2(10)) / factor))
-            xom_is_stimulated(64 / factor);
+            xom_is_stimulated(64 / xom_factor);
         break;
 
     case POT_WATER:
