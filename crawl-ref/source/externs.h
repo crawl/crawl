@@ -325,6 +325,7 @@ public:
     virtual bool visible_to(const actor *looker) const = 0;
     virtual bool can_see(const actor *target) const = 0;
     virtual bool is_icy() const = 0;
+    virtual bool is_fiery() const = 0;
     virtual void go_berserk(bool intentional) = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
@@ -991,6 +992,7 @@ public:
     bool visible_to(const actor *looker) const;
     bool can_see(const actor *target) const;
     bool is_icy() const;
+    bool is_fiery() const;
 
     bool light_flight() const;
     bool travelling_light() const;
@@ -1480,6 +1482,7 @@ public:
     bool mon_see_grid(const coord_def& pos, bool reach = false) const;
     bool can_see(const actor *target) const;
     bool is_icy() const;
+    bool is_fiery() const;
     bool paralysed() const;
     bool cannot_move() const;
     bool cannot_act() const;

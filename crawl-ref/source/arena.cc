@@ -703,7 +703,7 @@ namespace arena
             return;
         }
 
-        const command_type cmd = key_to_command(ch, KC_DEFAULT);
+        const command_type cmd = key_to_command(ch, KMC_DEFAULT);
 
         // We only allow a short list of commands to be used in the arena.
         switch(cmd)

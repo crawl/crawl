@@ -5164,7 +5164,7 @@ void debug_make_monster_shout(monsters* mon)
 {
     mpr("Make the monster (S)hout or (T)alk?", MSGCH_PROMPT);
 
-    char type = (char) getchm(KC_DEFAULT);
+    char type = (char) getchm(KMC_DEFAULT);
     type = tolower(type);
 
     if (type != 's' && type != 't')
@@ -5228,7 +5228,7 @@ void wizard_apply_monster_blessing(monsters* mon)
     mpr("Apply blessing of (B)eogh, The (S)hining One, or (R)andomly?",
         MSGCH_PROMPT);
 
-    char type = (char) getchm(KC_DEFAULT);
+    char type = (char) getchm(KMC_DEFAULT);
     type = tolower(type);
 
     if (type != 'b' && type != 's' && type != 'r')

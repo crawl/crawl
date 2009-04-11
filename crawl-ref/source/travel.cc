@@ -2562,7 +2562,7 @@ void start_translevel_travel(bool prompt_for_destination)
     if (level_target.p.id.depth > 0)
     {
         // Forget interrupted butchering.
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+        maybe_clear_weapon_swap();
 
         you.running = RMODE_INTERLEVEL;
         you.running.pos.reset();
@@ -2977,7 +2977,7 @@ void start_explore(bool grab_items)
         return;
 
     // Forget interrupted butchering.
-    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+    maybe_clear_weapon_swap();
 
     you.running = (grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
     if (you.running == RMODE_EXPLORE_GREEDY

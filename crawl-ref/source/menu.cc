@@ -93,8 +93,8 @@ void MenuDisplayTile::set_num_columns(int columns)
 
 Menu::Menu( int _flags, const std::string& tagname, bool text_only )
   : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), allow_toggle(false),
-    menu_action(ACT_EXAMINE), title(NULL), flags(_flags), tag(tagname),
-    first_entry(0), y_offset(0), pagesize(0), max_pagesize(0),
+    menu_action(ACT_EXAMINE), title(NULL), title2(NULL), flags(_flags),
+    tag(tagname), first_entry(0), y_offset(0), pagesize(0), max_pagesize(0),
     more("-more-", true), items(), sel(), select_filter(),
     highlighter(new MenuHighlighter), num(-1), lastch(0), alive(false),
     last_selected(-1)
@@ -112,7 +112,8 @@ Menu::Menu( int _flags, const std::string& tagname, bool text_only )
 }
 
 Menu::Menu( const formatted_string &fs )
- : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), title(NULL),
+ : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),  allow_toggle(false),
+   menu_action(ACT_EXAMINE), title(NULL), title2(NULL),
 
    // This is a text-viewer menu, init flags to be easy on the user.
    flags(MF_NOSELECT | MF_EASY_EXIT),

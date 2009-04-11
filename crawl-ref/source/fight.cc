@@ -24,6 +24,7 @@ REVISION("$Rev$");
 
 #include "beam.h"
 #include "cloud.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
@@ -493,9 +494,9 @@ std::string melee_attack::wep_name(description_level_type desc,
     }
 
     if (possessive)
-        name = apostrophise(atk_name(desc));
+        name = apostrophise(atk_name(desc)) + " ";
 
-    name += weapon->name(desc, false, false, false, false, ignore_flags);
+    name += weapon->name(DESC_PLAIN, false, false, false, false, ignore_flags);
 
     return (name);
 }
@@ -2259,7 +2260,7 @@ enum chaos_type
     CHAOS_HASTE,
     CHAOS_INVIS,
     CHAOS_SLOW,
-    CHAOS_PARA,
+    CHAOS_PARALYSIS,
     CHAOS_PETRIFY,
     NUM_CHAOS_TYPES
 };
@@ -2328,7 +2329,7 @@ void melee_attack::chaos_affects_defender()
         10, // CHAOS_INVIS
 
         10, // CHAOS_SLOW
-        10, // CHAOS_PARA
+        10, // CHAOS_PARALYSIS
         10, // CHAOS_PETRIFY
     };
 
@@ -2389,12 +2390,14 @@ void melee_attack::chaos_affects_defender()
     {
         int level = defender->get_experience_level();
 
-        // At level == 27 there's a 20.3% chance of a level 3 miscast.
-        int level1_chance = level;
-        int level2_chance = std::max( 0, level - 7);
-        int level3_chance = std::max( 0, level - 15);
+        // At level == 27 there's a 13.9% chance of a level 3 miscast.
+        int level0_chance = level;
+        int level1_chance = std::max( 0, level - 7);
+        int level2_chance = std::max( 0, level - 12);
+        int level3_chance = std::max( 0, level - 17);
 
         level = random_choose_weighted(
+            level0_chance, 0,
             level1_chance, 1,
             level2_chance, 2,
             level3_chance, 3,
@@ -2403,7 +2406,6 @@ void melee_attack::chaos_affects_defender()
         miscast_level  = level;
         miscast_type   = SPTYP_RANDOM;
         miscast_target = coinflip() ? attacker : defender;
-
         break;
     }
 
@@ -2429,7 +2431,7 @@ void melee_attack::chaos_affects_defender()
         beam.flavour = BEAM_SLOW;
         break;
 
-    case CHAOS_PARA:
+    case CHAOS_PARALYSIS:
         beam.flavour = BEAM_PARALYSIS;
         break;
 
@@ -2535,21 +2537,44 @@ void melee_attack::chaos_affects_attacker()
         DID_AFFECT();
     }
 
-    // Make a loud noise.
-    if (weapon && player_can_hear(attacker->pos())
-        && one_chance_in(1000))
+    // Create a colourful cloud.
+    if (weapon && one_chance_in(1000))
     {
-        std::string msg = wep_name(DESC_CAP_YOUR);
-        msg += " twangs alarmingly!";
-
-        if (!you.can_see(attacker))
-            msg = "You hear a loud twang.";
-
-        noisy(15, attacker->pos(), msg.c_str());
+        mprf("Smoke pours forth from %s!", wep_name(DESC_NOCAP_YOUR).c_str());
+        big_cloud(random_smoke_type(), KC_OTHER, attacker->pos(), 20,
+                  8 + random2(4));
         DID_AFFECT();
     }
 
-    return;
+    // Make a loud noise.
+    if (weapon && player_can_hear(attacker->pos())
+        && one_chance_in(200))
+    {
+        std::string msg = "";
+        if (!you.can_see(attacker))
+        {
+            std::string noise = getSpeakString("weapon_noise");
+            if (!noise.empty())
+                msg = "You hear " + noise;
+        }
+        else
+        {
+            msg = getSpeakString("weapon_noises");
+            std::string wepname = wep_name(DESC_CAP_YOUR);
+            if (!msg.empty())
+            {
+                msg = replace_all(msg, "@Your_weapon@", wepname);
+                msg = replace_all(msg, "@The_weapon@", wepname);
+            }
+        }
+
+        if (!msg.empty())
+        {
+            mpr(msg.c_str(), MSGCH_SOUND);
+            noisy(15, attacker->pos());
+            DID_AFFECT();
+        }
+    }
 }
 
 static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
@@ -2778,19 +2803,75 @@ void melee_attack::do_miscast()
 // by the non-chaos brands/flavours they return.
 int melee_attack::random_chaos_brand()
 {
-    return (random_choose_weighted(
-        15, SPWPN_NORMAL,
-        10, SPWPN_FLAMING,
-        10, SPWPN_FREEZING,
-        10, SPWPN_ELECTROCUTION,
-        10, SPWPN_VENOM,
-        10, SPWPN_CHAOS,
-         5, SPWPN_VORPAL,
-         5, SPWPN_DRAINING,
-         5, SPWPN_VAMPIRICISM,
-         2, SPWPN_CONFUSE,
-         2, SPWPN_DISTORTION,
-         0));
+    int brand = SPWPN_NORMAL;
+    // Assuming the chaos to be mildly intelligent, try to avoid brands
+    // that clash with the most basic resists of the defender,
+    // i.e. its holiness.
+    while (true)
+    {
+        brand = (random_choose_weighted(
+                     5, SPWPN_VORPAL,
+                    10, SPWPN_FLAMING,
+                    10, SPWPN_FREEZING,
+                    10, SPWPN_ELECTROCUTION,
+                    10, SPWPN_VENOM,
+                    10, SPWPN_CHAOS,
+                     5, SPWPN_DRAINING,
+                     5, SPWPN_VAMPIRICISM,
+                     5, SPWPN_HOLY_WRATH,
+                     2, SPWPN_CONFUSE,
+                     2, SPWPN_DISTORTION,
+                     0));
+
+        if (one_chance_in(3))
+            break;
+
+        bool susceptible = true;
+        switch (brand)
+        {
+        case SPWPN_FLAMING:
+            if (defender->is_fiery())
+                susceptible = false;
+            break;
+        case SPWPN_FREEZING:
+            if (defender->is_icy())
+                susceptible = false;
+            break;
+        case SPWPN_ELECTROCUTION:
+            if (defender->airborne())
+                susceptible = false;
+            break;
+        case SPWPN_VENOM:
+            if (defender->holiness() == MH_UNDEAD)
+                susceptible = false;
+            break;
+        case SPWPN_DRAINING:
+        case SPWPN_VAMPIRICISM:
+            if (defender->holiness() != MH_NATURAL)
+                susceptible = false;
+            break;
+        case SPWPN_HOLY_WRATH:
+            if (defender->holiness() != MH_UNDEAD
+                && defender->holiness() != MH_DEMONIC)
+            {
+                susceptible = false;
+            }
+            break;
+        case SPWPN_CONFUSE:
+            if (defender->holiness() != MH_NONLIVING
+                && defender->holiness() != MH_PLANT)
+            {
+                susceptible = false;
+            }
+            break;
+        default:
+            break;
+        }
+
+        if (susceptible)
+            break;
+    }
+    return (brand);
 }
 
 mon_attack_flavour melee_attack::random_chaos_attack_flavour()

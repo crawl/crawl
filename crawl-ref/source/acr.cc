@@ -1451,7 +1451,7 @@ void process_command( command_type cmd )
         mpr("Change to (d)efault, (n)othing, (f)riend-dropped, (p)layer, "
             "or (a)ll? ", MSGCH_PROMPT);
 
-        char type = (char) getchm(KC_DEFAULT);
+        char type = (char) getchm(KMC_DEFAULT);
         type = tolower(type);
 
         if (type == 'd')
@@ -2885,7 +2885,7 @@ static command_type _keycode_to_command( keycode_type key )
     case KEY_REPEAT_KEYS:        return CMD_REPEAT_KEYS;
 
     default:
-        return key_to_command(key, KC_DEFAULT);
+        return key_to_command(key, KMC_DEFAULT);
     }
 }
 

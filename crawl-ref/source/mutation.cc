@@ -1530,6 +1530,8 @@ formatted_string describe_mutations()
 
 static void _display_vampire_attributes()
 {
+    ASSERT(you.species == SP_VAMPIRE);
+
     clrscr();
     cgotoxy(1,1);
 
@@ -1623,13 +1625,10 @@ static void _display_vampire_attributes()
     const formatted_string vp_props = formatted_string::parse_string(result);
     vp_props.display();
 
-    if (you.species == SP_VAMPIRE)
-    {
-        mouse_control mc(MOUSE_MODE_MORE);
-        const int keyin = getch();
-        if (keyin == '!' || keyin == CK_MOUSE_CMD)
-            display_mutations();
-    }
+    mouse_control mc(MOUSE_MODE_MORE);
+    const int keyin = getch();
+    if (keyin == '!' || keyin == CK_MOUSE_CMD)
+        display_mutations();
 }
 
 void display_mutations()

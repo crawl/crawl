@@ -7678,6 +7678,26 @@ bool monsters::is_icy() const
     return (mons_is_icy(type));
 }
 
+static bool _mons_is_fiery(int mc)
+{
+    return (mc == MONS_FIRE_VORTEX
+            || mc == MONS_FIRE_ELEMENTAL
+            || mc == MONS_FLAMING_CORPSE
+            || mc == MONS_EFREET
+            || mc == MONS_AZRAEL
+            || mc == MONS_LAVA_WORM
+            || mc == MONS_LAVA_FISH
+            || mc == MONS_LAVA_SNAKE
+            || mc == MONS_SALAMANDER
+            || mc == MONS_MOLTEN_GARGOYLE
+            || mc == MONS_ORB_OF_FIRE);
+}
+
+bool monsters::is_fiery() const
+{
+    return (_mons_is_fiery(type));
+}
+
 bool monsters::has_action_energy() const
 {
     return (speed_increment >= 80);

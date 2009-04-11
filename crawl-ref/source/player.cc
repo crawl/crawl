@@ -7169,6 +7169,11 @@ bool player::is_icy() const
     return (attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST);
 }
 
+bool player::is_fiery() const
+{
+    return (false);
+}
+
 void player::base_moveto(const coord_def &c)
 {
     ASSERT(!crawl_state.arena);
@@ -7509,12 +7514,11 @@ bool player::do_shaft()
             return (false);
         }
 
+        mpr("A shaft briefly opens up underneath you!");
+        handle_items_on_shaft(you.pos(), false);
+
         if (airborne() || total_weight() == 0)
-        {
-            mpr("A shaft briefly opens up underneath you!");
-            handle_items_on_shaft(you.pos(), false);
             return (true);
-        }
 
         force_stair = DNGN_TRAP_NATURAL;
     }

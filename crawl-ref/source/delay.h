@@ -78,6 +78,7 @@ bool is_being_butchered(const item_def &item, bool just_first = true);
 bool is_vampire_feeding();
 bool player_stair_delay();
 void stop_butcher_delay();
+void maybe_clear_weapon_swap();
 void handle_interrupted_swap(bool swap_if_safe = false,
                              bool force_unsafe = false,
                              bool transform = false);

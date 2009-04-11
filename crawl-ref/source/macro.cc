@@ -53,18 +53,18 @@ REVISION("$Rev$");
 typedef std::deque<int> keybuf;
 typedef std::map<keyseq,keyseq> macromap;
 
-static macromap Keymaps[KC_CONTEXT_COUNT];
+static macromap Keymaps[KMC_CONTEXT_COUNT];
 static macromap Macros;
 
 static macromap *all_maps[] =
 {
-    &Keymaps[KC_DEFAULT],
-    &Keymaps[KC_LEVELMAP],
-    &Keymaps[KC_TARGETING],
-    &Keymaps[KC_CONFIRM],
+    &Keymaps[KMC_DEFAULT],
+    &Keymaps[KMC_LEVELMAP],
+    &Keymaps[KMC_TARGETING],
+    &Keymaps[KMC_CONFIRM],
 
 #ifdef USE_TILE
-    &Keymaps[KC_TILE],
+    &Keymaps[KMC_TILE],
 #endif
 
     &Macros,
@@ -106,8 +106,8 @@ static default_binding _default_binding_list[] = {
 typedef std::map<int, int> key_to_cmd_map;
 typedef std::map<int, int> cmd_to_key_map;
 
-static key_to_cmd_map _keys_to_cmds[KC_CONTEXT_COUNT];
-static cmd_to_key_map _cmds_to_keys[KC_CONTEXT_COUNT];
+static key_to_cmd_map _keys_to_cmds[KMC_CONTEXT_COUNT];
+static cmd_to_key_map _cmds_to_keys[KMC_CONTEXT_COUNT];
 
 inline int userfunc_index(int key)
 {
@@ -458,7 +458,7 @@ void macro_buf_add( int key, bool reverse )
  * O(N^2) analysis to the sequence to replace macros.
  */
 static void macro_buf_add_long( keyseq actions,
-                                macromap &keymap = Keymaps[KC_DEFAULT] )
+                                macromap &keymap = Keymaps[KMC_DEFAULT] )
 {
     keyseq tmp;
 
@@ -610,7 +610,7 @@ void macro_save()
 
     f << "# WARNING: This file is entirely auto-generated." << std::endl
       << std::endl << "# Key Mappings:" << std::endl;
-    for (int mc = KC_DEFAULT; mc < KC_CONTEXT_COUNT; ++mc)
+    for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
         char keybuf[30] = "K:";
         if (mc)
@@ -664,7 +664,7 @@ static keyseq getch_mul( int (*rgetch)() = NULL )
 int getchm( int (*rgetch)() )
 {
     flush_prev_message();
-    return getchm( KC_DEFAULT, rgetch );
+    return getchm( KMC_DEFAULT, rgetch );
 }
 
 int getchm(KeymapContext mc, int (*rgetch)())
@@ -677,7 +677,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
 
     // Read some keys...
     keyseq keys = getch_mul(rgetch);
-    if (mc == KC_NONE)
+    if (mc == KMC_NONE)
         macro_buf_add(keys);
     else
         macro_buf_add_long(keys, Keymaps[mc]);
@@ -747,7 +747,7 @@ void macro_add_query( void )
 {
     int input;
     bool keymap = false;
-    KeymapContext keymc = KC_DEFAULT;
+    KeymapContext keymc = KMC_DEFAULT;
 
     mesclr();
     mpr("(m)acro, keymap "
@@ -759,27 +759,27 @@ void macro_add_query( void )
     if (input == 'k')
     {
         keymap = true;
-        keymc  = KC_DEFAULT;
+        keymc  = KMC_DEFAULT;
     }
     else if (input == 'x')
     {
         keymap = true;
-        keymc  = KC_LEVELMAP;
+        keymc  = KMC_LEVELMAP;
     }
     else if (input == 't')
     {
         keymap = true;
-        keymc  = KC_TARGETING;
+        keymc  = KMC_TARGETING;
     }
     else if (input == 'c')
     {
         keymap = true;
-        keymc  = KC_CONFIRM;
+        keymc  = KMC_CONFIRM;
     }
     else if (input == 'e')
     {
         keymap = true;
-        keymc  = KC_MENU;
+        keymc  = KMC_MENU;
     }
     else if (input == 'm')
         keymap = false;
@@ -799,12 +799,12 @@ void macro_add_query( void )
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
 
     mprf(MSGCH_PROMPT, "Input %s%s trigger key: ",
-         keymap ? (keymc == KC_DEFAULT   ? "default " :
-                   keymc == KC_LEVELMAP  ? "level-map " :
-                   keymc == KC_TARGETING ? "targeting " :
-                   keymc == KC_CONFIRM   ? "confirm " :
-                   keymc == KC_MENU      ? "menu " :
-                   "buggy") : "",
+         keymap ? (keymc == KMC_DEFAULT   ? "default " :
+                   keymc == KMC_LEVELMAP  ? "level-map " :
+                   keymc == KMC_TARGETING ? "targeting " :
+                   keymc == KMC_CONFIRM   ? "confirm " :
+                   keymc == KMC_MENU      ? "menu "
+                                          : "buggy") : "",
          (keymap ? "keymap" : "macro") );
 
     keyseq key;
@@ -865,7 +865,7 @@ static void _read_macros_from(const char* filename)
     std::ifstream f;
     keyseq key, action;
     bool keymap = false;
-    KeymapContext keymc = KC_DEFAULT;
+    KeymapContext keymc = KMC_DEFAULT;
 
     f.open( filename );
 
@@ -879,12 +879,12 @@ static void _read_macros_from(const char* filename)
         {
             key = parse_keyseq(s.substr(2));
             keymap = true;
-            keymc  = KC_DEFAULT;
+            keymc  = KMC_DEFAULT;
         }
         else if (s.length() >= 3 && s[0] == 'K' && s[2] == ':')
         {
-            keymc  = KeymapContext( KC_DEFAULT + s[1] - '0' );
-            if (keymc >= KC_DEFAULT && keymc < KC_CONTEXT_COUNT)
+            keymc  = KeymapContext( KMC_DEFAULT + s[1] - '0' );
+            if (keymc >= KMC_DEFAULT && keymc < KMC_CONTEXT_COUNT)
             {
                 key    = parse_keyseq(s.substr(3));
                 keymap = true;
@@ -1065,7 +1065,7 @@ void init_keybindings()
 
         KeymapContext context = context_for_command(data.cmd);
 
-        ASSERT(context < KC_CONTEXT_COUNT);
+        ASSERT(context < KMC_CONTEXT_COUNT);
 
         key_to_cmd_map &key_map = _keys_to_cmds[context];
         cmd_to_key_map &cmd_map = _cmds_to_keys[context];
@@ -1120,7 +1120,7 @@ int command_to_key(command_type cmd)
 {
     KeymapContext context = context_for_command(cmd);
 
-    if (context == KC_NONE)
+    if (context == KMC_NONE)
         return ('\0');
 
     cmd_to_key_map           &cmd_map = _cmds_to_keys[context];
@@ -1136,19 +1136,19 @@ KeymapContext context_for_command(command_type cmd)
 {
 #ifdef USE_TILE
     if (cmd >= CMD_MIN_TILE && cmd <= CMD_MAX_TILE)
-        return KC_TILE;
+        return KMC_TILE;
 #endif
 
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
-        return KC_DEFAULT;
+        return KMC_DEFAULT;
 
     if (cmd >= CMD_MIN_OVERMAP && cmd <= CMD_MAX_OVERMAP)
-        return KC_LEVELMAP;
+        return KMC_LEVELMAP;
 
     if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
-        return KC_TARGETING;
+        return KMC_TARGETING;
 
-    return KC_NONE;
+    return KMC_NONE;
 }
 
 void bind_command_to_key(command_type cmd, int key)
@@ -1156,7 +1156,7 @@ void bind_command_to_key(command_type cmd, int key)
     KeymapContext context      = context_for_command(cmd);
     std::string   command_name = command_to_name(cmd);
 
-    if (context == KC_NONE || command_name == "CMD_NO_CMD"
+    if (context == KMC_NONE || command_name == "CMD_NO_CMD"
         || !VALID_BIND_COMMAND(cmd))
     {
         if (command_name == "CMD_NO_CMD")

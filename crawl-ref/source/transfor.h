@@ -28,6 +28,7 @@ enum transformation_type
     NUM_TRANSFORMATIONS                // must remain last member {dlb}
 };
 
+bool transformation_can_wield(transformation_type trans);
 bool transform_can_butcher_barehanded(transformation_type tt);
 
 void untransform(bool skip_wielding = false);

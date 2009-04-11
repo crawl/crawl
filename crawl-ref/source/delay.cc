@@ -547,6 +547,15 @@ void stop_butcher_delay()
         stop_delay();
 }
 
+void maybe_clear_weapon_swap()
+{
+    if (transformation_can_wield(static_cast<transformation_type>(
+                                    you.attribute[ATTR_TRANSFORMATION])))
+    {
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+    }
+}
+
 void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
                              bool transform)
 {
@@ -1968,8 +1977,8 @@ bool interrupt_activity( activity_interrupt_type ai,
 
     if (_should_stop_activity(item, ai, at))
     {
-        // no monster will attack you inside a sanctuary,
-        // so presence of monsters won't matter
+        // No monster will attack you inside a sanctuary,
+        // so presence of monsters won't matter.
         if (is_sanctuary(you.pos()))
             return (false);
 
@@ -1997,9 +2006,8 @@ bool interrupt_activity( activity_interrupt_type ai,
             {
                 if (is_run_delay( you.delay_queue[j].type ))
                 {
-                    was_monst =
-                        _monster_warning(ai, at, you.delay_queue[j].type)
-                        || was_monst;
+                    was_monst = was_monst ||
+                            _monster_warning(ai, at, you.delay_queue[j].type);
 
                     stop_delay(ai == AI_TELEPORT);
                     if (was_monst)

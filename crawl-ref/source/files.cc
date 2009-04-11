@@ -1396,7 +1396,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         // Forget about interrupted butchering, since we probably aren't going
         // to get back to the corpse in time to finish things.
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+        // But do not reset the weapon swap if we swapped weapons
+        // because of a transformation.
+        maybe_clear_weapon_swap();
     }
 
     return just_created_level;
