@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "state.h"
 #include "stuff.h"
 #include "traps.h"
+#include "xom.h"
 
 static void _extra_hp(int amount_extra);
 
@@ -153,7 +154,7 @@ static void _unwear_equipment_slot(equipment_type eqslot)
 }
 
 static void _remove_equipment(const std::set<equipment_type>& removed,
-                              bool meld = true)
+                              bool meld = true, bool mutation = false)
 {
     // Meld items into you in (reverse) order. (std::set is a sorted container)
     std::set<equipment_type>::const_iterator iter;
@@ -172,7 +173,16 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
         _unwear_equipment_slot(e);
 
         if (unequip)
+        {
             you.equip[e] = -1;
+
+            if (mutation)
+            {
+                // A mutation made us not only lose an equipment slot
+                // but actually removed a worn item: Funny!
+                xom_is_stimulated(is_artefact(*equip) ? 255 : 128);
+            }
+        }
     }
 }
 
@@ -261,11 +271,11 @@ void unmeld_one_equip(equipment_type eq)
     _unmeld_equipment(e);
 }
 
-void remove_one_equip(equipment_type eq, bool meld)
+void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
     std::set<equipment_type> r;
     r.insert(eq);
-    _remove_equipment(r, meld);
+    _remove_equipment(r, meld, mutation);
 }
 
 static bool _tran_may_meld_cursed(int transformation)

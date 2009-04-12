@@ -1123,9 +1123,11 @@ int monster_die(monsters *monster, killer_type killer,
 
     // Take note!
     if (!mons_reset && !crawl_state.arena && MONST_INTERESTING(monster))
+    {
         take_note(Note(NOTE_KILL_MONSTER,
                        monster->type, mons_friendly(monster),
                        monster->name(DESC_NOCAP_A, true).c_str()));
+    }
 
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
@@ -1737,6 +1739,10 @@ int monster_die(monsters *monster, killer_type killer,
                                "as it dies; that was a shifter!");
     }
 
+    // If we kill an invisible monster reactivate autopickup.
+    if (mons_near(monster) && !player_monster_visible(monster))
+        autotoggle_autopickup(false);
+
     crawl_state.dec_mon_acting(monster);
     monster_cleanup(monster);
 
@@ -1970,7 +1976,9 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
         return simple_monster_message(monster, " looks momentarily different.");
 
     // Messaging.
-    bool can_see = you.can_see(monster);
+    bool can_see     = you.can_see(monster);
+    bool can_see_new = !mons_class_flag(targetc, M_INVIS) || player_see_invis();
+
 
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
@@ -1991,7 +1999,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
         else
             str_polymon = " evaporates and reforms as ";
 
-        if (!can_see)
+        if (!can_see_new)
             str_polymon += "something you cannot see!";
         else
         {
@@ -2088,6 +2096,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (!player_messaged && you.can_see(monster))
     {
         mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
+        autotoggle_autopickup(false);
         player_messaged = true;
     }
 

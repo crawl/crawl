@@ -42,7 +42,8 @@ size_type transform_size(int psize = PSIZE_BODY);
 bool transform(int pow, transformation_type which_trans, bool force = false,
                bool just_check = false);
 
-void remove_one_equip(equipment_type eq, bool meld = true);
+void remove_one_equip(equipment_type eq, bool meld = true,
+                      bool mutation = false);
 void unmeld_one_equip(equipment_type eq);
 
 bool transform_changed_physiology( bool phys_scales = false );

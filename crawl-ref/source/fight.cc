@@ -62,6 +62,10 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
+#ifdef DEBUG_CHAOS
+#include "notes.h"
+#endif
+
 const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
 const int HIT_STRONG = 36;
@@ -1986,7 +1990,7 @@ void melee_attack::_monster_die(monsters* monster, killer_type killer,
         def_copy = new monsters(*monster);
 
     // The monster is about to die, so restore its original attitude
-    // for the cleanup effects (god reactions.) This could be a
+    // for the cleanup effects (god reactions). This could be a
     // problem if the "killing" is actually an Abyss banishment - we
     // don't want to create permafriendlies this way - so don't do it
     // then.
@@ -2339,6 +2343,28 @@ void melee_attack::chaos_affects_defender()
     beam.flavour = BEAM_NONE;
 
     int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
+#ifdef DEBUG_CHAOS
+    std::string chaos_effect = "CHAOS effect: ";
+    switch (choice)
+    {
+    case CHAOS_CLONE:           chaos_effect += "clone"; break;
+    case CHAOS_POLY:            chaos_effect += "polymorph"; break;
+    case CHAOS_POLY_UP:         chaos_effect += "polymorph PPT_MORE"; break;
+    case CHAOS_MAKE_SHIFTER:    chaos_effect += "shifter"; break;
+    case CHAOS_MISCAST:         chaos_effect += "miscast"; break;
+    case CHAOS_RAGE:            chaos_effect += "berserk"; break;
+    case CHAOS_HEAL:            chaos_effect += "healing"; break;
+    case CHAOS_HASTE:           chaos_effect += "hasting"; break;
+    case CHAOS_INVIS:           chaos_effect += "invisible"; break;
+    case CHAOS_SLOW:            chaos_effect += "slowing"; break;
+    case CHAOS_PARALYSIS:       chaos_effect += "paralysis"; break;
+    case CHAOS_PETRIFY:         chaos_effect += "petrify"; break;
+    default:                    chaos_effect += "(other)"; break;
+    }
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, chaos_effect.c_str()), true);
+#endif
+
     switch (static_cast<chaos_type>(choice))
     {
     case CHAOS_CLONE:
@@ -2542,7 +2568,13 @@ void melee_attack::chaos_affects_attacker()
 
     // Move stairs out from under the attacker.
     if (one_chance_in(100) && _move_stairs(attacker, defender))
+    {
+#ifdef DEBUG_CHAOS
+        take_note(Note(NOTE_MESSAGE, 0, 0,
+                       "CHAOS affects attacker: move stairs"), true);
+#endif
         DID_AFFECT();
+    }
 
     // Dump attacker or items under attacker to another level.
     if (is_valid_shaft_level()
@@ -2551,6 +2583,10 @@ void melee_attack::chaos_affects_attacker()
         && one_chance_in(1000))
     {
         (void) attacker->do_shaft();
+#ifdef DEBUG_CHAOS
+        take_note(Note(NOTE_MESSAGE, 0, 0,
+                       "CHAOS affects attacker: shaft effect"), true);
+#endif
         DID_AFFECT();
     }
 
@@ -2560,6 +2596,10 @@ void melee_attack::chaos_affects_attacker()
         mprf("Smoke pours forth from %s!", wep_name(DESC_NOCAP_YOUR).c_str());
         big_cloud(random_smoke_type(), KC_OTHER, attacker->pos(), 20,
                   4 + random2(8));
+#ifdef DEBUG_CHAOS
+        take_note(Note(NOTE_MESSAGE, 0, 0,
+                       "CHAOS affects attacker: smoke"), true);
+#endif
         DID_AFFECT();
     }
 
@@ -2589,6 +2629,10 @@ void melee_attack::chaos_affects_attacker()
         {
             mpr(msg.c_str(), MSGCH_SOUND);
             noisy(15, attacker->pos());
+#ifdef DEBUG_CHAOS
+            take_note(Note(NOTE_MESSAGE, 0, 0,
+                           "CHAOS affects attacker: noise"), true);
+#endif
             DID_AFFECT();
         }
     }
@@ -2711,10 +2755,16 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         if (you.can_see(zombie))
             simple_monster_message(mon, " instantly turns into a zombie!");
         else if (last_item != NON_ITEM)
+        {
             simple_monster_message(mon, "'s equipment vanishes!");
+            autotoggle_autopickup(true);
+        }
     }
     else
+    {
         simple_monster_message(zombie, " appears from thin air!");
+        autotoggle_autopickup(false);
+    }
 
     return (true);
 }
@@ -2744,9 +2794,14 @@ void melee_attack::chaos_killed_defender(monsters* mon)
     _find_remains(mon, corpse_class, corpse_index, fake_corpse, last_item,
                   items);
 
-    if (one_chance_in(100) &&
-        _make_zombie(mon, corpse_class, corpse_index, fake_corpse, last_item))
+    if (one_chance_in(100)
+        && _make_zombie(mon, corpse_class, corpse_index, fake_corpse,
+                        last_item))
     {
+#ifdef DEBUG_CHAOS
+        take_note(Note(NOTE_MESSAGE, 0, 0,
+                       "CHAOS killed defender: zombified monster"), true);
+#endif
         DID_AFFECT();
     }
 }
@@ -2888,6 +2943,32 @@ int melee_attack::random_chaos_brand()
         if (susceptible)
             break;
     }
+#ifdef DEBUG_CHAOS
+    std::string brand_name = "CHAOS brand: ";
+    switch (brand)
+    {
+    case SPWPN_NORMAL:          brand_name += "(plain)"; break;
+    case SPWPN_FLAMING:         brand_name += "flaming"; break;
+    case SPWPN_FREEZING:        brand_name += "freezing"; break;
+    case SPWPN_HOLY_WRATH:      brand_name += "holy wrath"; break;
+    case SPWPN_ELECTROCUTION:   brand_name += "electrocution"; break;
+    case SPWPN_VENOM:           brand_name += "venom"; break;
+    case SPWPN_DRAINING:        brand_name += "draining"; break;
+    case SPWPN_DISTORTION:      brand_name += "distortion"; break;
+    case SPWPN_VAMPIRICISM:     brand_name += "vampiricism"; break;
+    case SPWPN_VORPAL:          brand_name += "vorpal"; break;
+    // ranged weapon brands
+    case SPWPN_FLAME:           brand_name += "(flame)"; break;
+    case SPWPN_FROST:           brand_name += "(frost)"; break;
+
+    // both ranged and non-ranged
+    case SPWPN_CHAOS:           brand_name += "chaos"; break;
+    case SPWPN_CONFUSE:         brand_name += "confusion"; break;
+    default:                    brand_name += "(other)"; break;
+    }
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
+#endif
     return (brand);
 }
 

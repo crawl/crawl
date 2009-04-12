@@ -5416,7 +5416,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_BLOB:
     case MON_SHAPE_SNAKE:
     case MON_SHAPE_FISH:
-        return foot_name(plural);
+        return foot_name(plural, can_plural);
 
     case MON_SHAPE_BAT:
         str = "wing";
@@ -6750,6 +6750,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             {
                 mprf("%s appears from thin air!",
                      name(DESC_CAP_A, true).c_str());
+                autotoggle_autopickup(false);
             }
 
             seen_monster(this);
@@ -6881,7 +6882,6 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity(AI_FORCE_INTERRUPT);
         }
-
         break;
 
     default:

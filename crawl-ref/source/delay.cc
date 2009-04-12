@@ -1902,6 +1902,33 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     return (false);
 }
 
+// Turns autopickup off if we ran into an invisible monster or saw a monster
+// turn invisible.
+// Turns autopickup on if we saw an invisible monster become visible or
+// killed an invisible monster.
+void autotoggle_autopickup(bool off)
+{
+    if (off)
+    {
+        if (Options.autopickup_on)
+        {
+            Options.autopickup_on = false;
+            mprf(MSGCH_WARN,
+                "Deactivating autopickup; reactivate with <w>Ctrl+A</w>.");
+        }
+        if (Options.tutorial_left)
+        {
+            learned_something_new(TUT_INVISIBLE_DANGER);
+            Options.tut_seen_invisible = you.num_turns;
+        }
+    }
+    else if (!Options.autopickup_on)
+    {
+        Options.autopickup_on = true;
+        mprf(MSGCH_WARN, "Reactivating autopickup.");
+    }
+}
+
 static bool _paranoid_option_disable( activity_interrupt_type ai,
                                       const activity_interrupt_data &at )
 {
@@ -1909,34 +1936,7 @@ static bool _paranoid_option_disable( activity_interrupt_type ai,
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (mon && !player_monster_visible(mon) && !mons_is_submerged(mon))
-        {
-            // Now that autoprayer has been removed the vectors aren't
-            // really needed anymore, but let's keep them "just in case".
-            std::vector<std::string> deactivatees;
-            std::vector<std::string> restart;
-
-            if (Options.autopickup_on)
-            {
-                deactivatees.push_back("autopickup");
-                Options.autopickup_on = false;
-                restart.push_back("Ctrl+A");
-            }
-
-            if (!deactivatees.empty())
-            {
-                mprf(MSGCH_WARN, "Deactivating %s; reactivate with %s.",
-                      comma_separated_line(deactivatees.begin(),
-                                           deactivatees.end()).c_str(),
-                      comma_separated_line(restart.begin(),
-                                           restart.end()).c_str());
-            }
-
-            if (Options.tutorial_left)
-            {
-                learned_something_new(TUT_INVISIBLE_DANGER);
-                Options.tut_seen_invisible = you.num_turns;
-            }
-        }
+            autotoggle_autopickup(true);
         return (true);
     }
     return (false);
