@@ -605,7 +605,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
                             see_grid(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
                             false);
 
-    std::string prep = grid_preposition(orig_feat, true);
+    std::string prep = grid_preposition(orig_feat, false);
 
     std::string orig_actor, dest_actor;
     if (orig_pos == you.pos())
@@ -882,10 +882,8 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     }
     else
     {
-        radius_iterator ri(src, 1, true, false, true);
-
         int squares = 0;
-        for (; ri; ++ri)
+        for (radius_iterator ri(src, 1, true, false, true); ri; ++ri)
         {
             if (_ok_dest_grid(orig_actor, orig_feat, *ri))
             {
@@ -1033,6 +1031,10 @@ dungeon_feature_type feat_by_desc(std::string desc)
     return (DNGN_UNSEEN);
 }
 
+// If active is true, the player is just stepping onto the grid, with the
+// message: "<feature> slides away as you move <prep> it!"
+// Else, the actor is already on the grid:
+// "<feature> moves from <prep origin> to <prep destination>!"
 std::string grid_preposition(dungeon_feature_type grid, bool active,
                              const actor* who)
 {
@@ -1043,41 +1045,53 @@ std::string grid_preposition(dungeon_feature_type grid, bool active,
     {
         if (grid == DNGN_STONE_ARCH)
             return "beside";
-        else if (grid_is_solid(grid))
+        else if (grid_is_solid(grid)) // Passwall?
         {
             if (active)
-                return "around";
-            else
                 return "inside";
-        }
-        else if (!airborne && (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER))
-        {
-            if (active)
+            else
                 return "around";
-            else
-                return "in";
         }
-        else
+        else if (!airborne)
         {
-            if (active)
-                return "over";
+            if (grid == DNGN_LAVA || grid_is_water(grid))
+            {
+                if (active)
+                    return "into";
+                else
+                    return "around";
+            }
             else
-                return "above";
+            {
+                if (active)
+                    return "onto";
+                else
+                    return "under";
+            }
         }
+    }
+
+    if (dir == CMD_GO_UPSTAIRS && grid_is_escape_hatch(grid))
+    {
+        if (active)
+            return "under";
+        else
+            return "above";
+    }
+
+    if (airborne)
+    {
+        if (active)
+            return "over";
+        else
+            return "beneath";
     }
 
     if (dir == CMD_GO_DOWNSTAIRS
         && (grid_is_staircase(grid) || grid_is_escape_hatch(grid)))
     {
         if (active)
-            return "over";
-        else
-            return "above";
-    }
-    else if (grid_is_escape_hatch(grid))
-    {
-        if (active)
-            return "under";
+            return "onto";
         else
             return "beneath";
     }

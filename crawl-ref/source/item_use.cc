@@ -4910,7 +4910,7 @@ void read_scroll(int slot)
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
-        big_cloud(random_smoke_type(), KC_OTHER, you.pos(), 50, 8 + random2(8));
+        big_cloud(random_smoke_type(), KC_YOU, you.pos(), 50, 8 + random2(8));
         break;
 
     case SCR_MAGIC_MAPPING:

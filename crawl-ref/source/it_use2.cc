@@ -49,7 +49,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                         && drank_it ? 2 : 1);
 
     // Knowingly drinking bad potions is much less amusing.
-    const int xom_factor = factor * (drank_it && was_known ? 2 : 1);
+    int xom_factor = factor;
+    if (drank_it && was_known)
+    {
+        xom_factor *= 2;
+        if (!player_in_a_dangerous_place())
+            xom_factor *= 3;
+    }
 
     switch (pot_eff)
     {

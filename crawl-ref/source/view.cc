@@ -3470,9 +3470,9 @@ void show_map( coord_def &spec_place, bool travel_mode )
         redraw_map = true;
 
         c_input_reset(true);
-        int key = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
+        int key = unmangle_direction_keys(getchm(KMC_LEVELMAP), KMC_LEVELMAP,
                                           false, false);
-        command_type cmd = key_to_command(key, KC_LEVELMAP);
+        command_type cmd = key_to_command(key, KMC_LEVELMAP);
         if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
             cmd = CMD_NO_CMD;
 

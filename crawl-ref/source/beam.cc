@@ -3975,7 +3975,18 @@ void bolt::update_hurt_or_helped(monsters *mon)
         if (nasty_to(mon))
             foe_info.hurt++;
         else if (nice_to(mon))
+        {
             foe_info.helped++;
+            // Accidentally helped a foe.
+            if (!is_tracer && !effect_known)
+            {
+                int interest = 128;
+                if (flavour == BEAM_INVISIBILITY && can_see_invis)
+                    interest = 32;
+
+                xom_is_stimulated(interest);
+            }
+        }
     }
     else
     {
@@ -4586,8 +4597,8 @@ bool bolt::has_saving_throw() const
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
-    case BEAM_ENSLAVE_SOUL:     // it has a different saving throw
-    case BEAM_ENSLAVE_DEMON:    // it has a different saving throw
+    case BEAM_ENSLAVE_SOUL:     // has a different saving throw
+    case BEAM_ENSLAVE_DEMON:    // ditto
         rc = false;
         break;
     default:

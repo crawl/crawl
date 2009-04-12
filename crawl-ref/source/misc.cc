@@ -2016,7 +2016,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         return;
     }
 
-    if (!force_stair && you.flight_mode() == FL_LEVITATE)
+    if (!force_stair && you.flight_mode() == FL_LEVITATE
+        && !is_gate(stair_find))
     {
         mpr("You're floating high up above the floor!");
         return;

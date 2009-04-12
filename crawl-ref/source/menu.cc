@@ -310,7 +310,7 @@ void Menu::do_menu()
     while (alive)
     {
 #ifndef USE_TILE
-        int keyin = getchm(KC_MENU, c_getch);
+        int keyin = getchm(KMC_MENU, c_getch);
 #else
         mouse_control mc(MOUSE_MODE_MORE);
         int keyin = getch();

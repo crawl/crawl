@@ -55,6 +55,7 @@ REVISION("$Rev$");
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 //jmf: moved from inside function
 static FixedVector < int, NUM_MONSTERS > mon_entry;
@@ -5713,6 +5714,10 @@ void monsters::go_berserk(bool /* intentional */)
     add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
     add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
     simple_monster_message( this, " goes berserk!" );
+
+    // Xom likes monsters going berserk.
+    if (mons_near(this))
+        xom_is_stimulated(mons_friendly(this) ? 32 : 128);
 }
 
 void monsters::expose_to_element(beam_type flavour, int strength)

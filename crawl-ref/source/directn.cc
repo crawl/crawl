@@ -3462,7 +3462,7 @@ int targeting_behaviour::get_key()
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
-    return unmangle_direction_keys( getchm(KC_TARGETING), KC_TARGETING,
+    return unmangle_direction_keys( getchm(KMC_TARGETING), KMC_TARGETING,
                                     false, false);
 }
 
@@ -3471,7 +3471,7 @@ command_type targeting_behaviour::get_command(int key)
     if (key == -1)
         key = get_key();
 
-    command_type cmd = key_to_command(key, KC_TARGETING);
+    command_type cmd = key_to_command(key, KMC_TARGETING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
         return (cmd);
 

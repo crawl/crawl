@@ -4872,6 +4872,9 @@ void rot_hp( int hp_loss )
     you.base_hp -= hp_loss;
     calc_hp();
 
+    if (you.species != SP_GHOUL)
+        xom_is_stimulated(hp_loss * 32);
+
     you.redraw_hit_points = true;
 }
 
@@ -5059,7 +5062,7 @@ int get_real_mp(bool include_items)
     enp += std::max(spell_extra, invoc_extra);
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
-    // this is our "rotted" base (applied after scaling):
+    // This is our "rotted" base (applied after scaling):
     enp += (you.base_magic_points - 5000);
 
     // Yes, we really do want this duplication... this is so the stepdown

@@ -2286,8 +2286,8 @@ void melee_attack::chaos_affects_defender()
     int rage_chance    = can_rage         ? 10 : 0;
     int miscast_chance = 10;
 
+    // Already a shifter?
     if (is_shifter)
-        // Already a shifter.
         shifter_chance = 0;
 
     // A chaos self-attack increased the chance of certain effects,
@@ -2306,9 +2306,11 @@ void melee_attack::chaos_affects_defender()
             if (defender->atype() == ACT_PLAYER)
                 mpr("You give off a flash of multicoloured light!");
             else if (you.can_see(defender))
+            {
                 simple_monster_message(defender_as_monster(),
                                        " gives off a flash of "
                                        "multicoloured light!");
+            }
             else
                 mpr("There is a flash of multicoloured light!");
         }
@@ -2349,14 +2351,19 @@ void melee_attack::chaos_affects_defender()
         if (clone_idx != NON_MONSTER)
         {
             if (obvious_effect)
+            {
                 special_damage_message =
                     make_stringf("%s is duplicated!",
                                  def_name(DESC_NOCAP_THE).c_str());
+            }
 
             monsters &clone(menv[clone_idx]);
             // The player shouldn't get new permanent followers from cloning.
             if (clone.attitude == ATT_FRIENDLY && !clone.is_summoned())
                 clone.mark_summoned(6, true, MON_SUMM_CLONE);
+
+            // Monsters being cloned is interesting.
+            xom_is_stimulated(mons_friendly(&clone) ? 16 : 32);
         }
         break;
     }
@@ -2375,6 +2382,7 @@ void melee_attack::chaos_affects_defender()
         break;
 
     case CHAOS_MAKE_SHIFTER:
+    {
         ASSERT(can_poly && shifter_chance > 0);
         ASSERT(!is_shifter);
         ASSERT(defender->atype() == ACT_MONSTER);
@@ -2384,8 +2392,14 @@ void melee_attack::chaos_affects_defender()
             ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
         // Immediately polymorph monster, just to make the effect obvious.
         monster_polymorph(defender_as_monster(), RANDOM_MONSTER);
-        break;
 
+        // Xom loves it if this happens!
+        const int friend_factor = mons_friendly(defender_as_monster()) ? 1 : 2;
+        const int glow_factor   =
+            (defender_as_monster()->has_ench(ENCH_SHAPESHIFTER) ? 1 : 2);
+        xom_is_stimulated( 64 * friend_factor * glow_factor );
+        break;
+    }
     case CHAOS_MISCAST:
     {
         int level = defender->get_experience_level();
@@ -2405,7 +2419,7 @@ void melee_attack::chaos_affects_defender()
 
         miscast_level  = level;
         miscast_type   = SPTYP_RANDOM;
-        miscast_target = coinflip() ? attacker : defender;
+        miscast_target = one_chance_in(3) ? attacker : defender;
         break;
     }
 
@@ -2464,6 +2478,9 @@ void melee_attack::chaos_affects_defender()
             : attacker_as_monster()->confused_by_you() ? KILL_YOU_CONF
                                                        : KILL_MON;
 
+        if (beam.thrower == KILL_YOU || mons_friendly(attacker_as_monster()))
+            beam.attitude = ATT_FRIENDLY;
+
         beam.beam_source = attacker->mindex();
 
         beam.source = defender->pos();
@@ -2493,7 +2510,7 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
 
     // The player can't use shops to escape, so don't bother.
     if (stair_feat == DNGN_ENTER_SHOP)
-        return false;
+        return (false);
 
     // Don't move around notable terrain the player is aware of if it's
     // out of sight.
@@ -2542,7 +2559,7 @@ void melee_attack::chaos_affects_attacker()
     {
         mprf("Smoke pours forth from %s!", wep_name(DESC_NOCAP_YOUR).c_str());
         big_cloud(random_smoke_type(), KC_OTHER, attacker->pos(), 20,
-                  8 + random2(4));
+                  4 + random2(8));
         DID_AFFECT();
     }
 
