@@ -53,12 +53,12 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
-static bool ball_of_energy(void);
-static bool ball_of_fixation(void);
-static bool ball_of_seeing(void);
-static bool box_of_beasts(void);
-static bool disc_of_storms(void);
-static bool efreet_flask(void);
+static bool _ball_of_energy();
+static bool _ball_of_fixation();
+static bool _ball_of_seeing();
+static bool _box_of_beasts();
+static bool _disc_of_storms();
+static bool _efreet_flask();
 
 void special_wielded()
 {
@@ -612,12 +612,12 @@ bool evoke_wielded()
         switch (wpn.sub_type)
         {
         case MISC_BOTTLED_EFREET:
-            if (efreet_flask())
+            if (_efreet_flask())
                 pract = 2;
             break;
 
         case MISC_CRYSTAL_BALL_OF_SEEING:
-            if (ball_of_seeing())
+            if (_ball_of_seeing())
                 pract = 1;
             break;
 
@@ -657,22 +657,22 @@ bool evoke_wielded()
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (box_of_beasts())
+            if (_box_of_beasts())
                 pract = 1;
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
-            if (ball_of_energy())
+            if (_ball_of_energy())
                 pract = 1;
             break;
 
         case MISC_CRYSTAL_BALL_OF_FIXATION:
-            if (ball_of_fixation())
+            if (_ball_of_fixation())
                 pract = 1;
             break;
 
         case MISC_DISC_OF_STORMS:
-            if (disc_of_storms())
+            if (_disc_of_storms())
                 pract = (coinflip() ? 2 : 1);
             break;
 
@@ -701,7 +701,7 @@ bool evoke_wielded()
     return (did_work);
 }                               // end evoke_wielded()
 
-static bool efreet_flask(void)
+static bool _efreet_flask()
 {
     bool friendly = x_chance_in_y(10 + you.skills[SK_EVOCATIONS] / 3, 20);
 
@@ -740,7 +740,7 @@ static bool efreet_flask(void)
     return (true);
 }
 
-static bool ball_of_seeing(void)
+static bool _ball_of_seeing(void)
 {
     bool ret = false;
 
@@ -779,15 +779,12 @@ static bool ball_of_seeing(void)
     }
 
     return (ret);
-}                               // end ball_of_seeing()
+}
 
-static bool disc_of_storms(void)
+static bool _disc_of_storms(void)
 {
-    int temp_rand = 0;          // probability determination {dlb}
-    int disc_count = 0;
-
     const int fail_rate = (30 - you.skills[SK_EVOCATIONS]);
-    bool ret = false;
+    bool rc = false;
 
     if (player_res_electricity() || x_chance_in_y(fail_rate, 100))
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -798,32 +795,29 @@ static bool disc_of_storms(void)
     else
     {
         mpr("The disc erupts in an explosion of electricity!");
+        rc = true;
 
-        disc_count = roll_dice( 2, 1 + you.skills[SK_EVOCATIONS] / 7 );
+        const int disc_count = roll_dice(2, 1 + you.skills[SK_EVOCATIONS] / 7);
 
-        while (disc_count)
+        for (int i = 0; i < disc_count; ++i)
         {
             bolt beam;
+            const zap_type types[] = { ZAP_LIGHTNING, ZAP_ELECTRICITY,
+                                       ZAP_ORB_OF_ELECTRICITY };
 
-            temp_rand = random2(3);
+            const zap_type which_zap = RANDOM_ELEMENT(types);
 
-            zap_type which_zap = ((temp_rand > 1) ? ZAP_LIGHTNING :
-                                  (temp_rand > 0) ? ZAP_ELECTRICITY
-                                                  : ZAP_ORB_OF_ELECTRICITY);
-
+            beam.range = you.skills[SK_EVOCATIONS]/3 + 5; // 5--14
             beam.source = you.pos();
             beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
 
             // Non-controlleable, so no player tracer.
-            zapping( which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam );
+            zapping(which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam);
 
-            disc_count--;
         }
-
-        ret = true;
     }
 
-    return (ret);
+    return (rc);
 }
 
 void tome_of_power(int slot)
@@ -949,7 +943,7 @@ void skill_manual(int slot)
     xom_is_stimulated(known ? 14 : 64);
 }
 
-static bool box_of_beasts()
+static bool _box_of_beasts()
 {
     bool success = false;
 
@@ -1008,7 +1002,7 @@ static bool box_of_beasts()
     return (success);
 }
 
-static bool ball_of_energy(void)
+static bool _ball_of_energy(void)
 {
     bool ret = false;
 
@@ -1053,7 +1047,7 @@ static bool ball_of_energy(void)
     return (ret);
 }
 
-static bool ball_of_fixation(void)
+static bool _ball_of_fixation(void)
 {
     mpr("You gaze into the crystal ball.");
     mpr("You are mesmerised by a rainbow of scintillating colours!");
