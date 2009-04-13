@@ -66,6 +66,7 @@ REVISION("$Rev$");
     #define NOTE_DEBUG_CHAOS_EFFECTS
 #endif
 
+#define NOTE_DEBUG_CHAOS_EFFECTS
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
 #include "notes.h"
 #endif
@@ -2934,8 +2935,8 @@ int melee_attack::random_chaos_brand()
             }
             break;
         case SPWPN_CONFUSE:
-            if (defender->holiness() != MH_NONLIVING
-                && defender->holiness() != MH_PLANT)
+            if (defender->holiness() == MH_NONLIVING
+                || defender->holiness() == MH_PLANT)
             {
                 susceptible = false;
             }

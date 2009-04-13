@@ -1635,6 +1635,11 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     else
         pct = 50;
 
+    // When the effect is still strong, the chance to actually catch a stair
+    // is smaller. (Assuming the duration starts out at 500.)
+    const int dur = std::max(0, you.duration[DUR_REPEL_STAIRS_CLIMB] - 200);
+    pct += dur/20;
+
     if (!x_chance_in_y(pct, 100))
         return (false);
 

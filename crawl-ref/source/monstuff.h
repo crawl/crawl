@@ -118,7 +118,7 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins = false,
 /* ***********************************************************************
  * called from: fight
  * *********************************************************************** */
-bool monster_blink(monsters *monster);
+bool monster_blink(monsters *monster, bool quiet = false);
 
 
 /* ***********************************************************************

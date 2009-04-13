@@ -883,12 +883,12 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     else
     {
         int squares = 0;
-        for (radius_iterator ri(src, 1, true, false, true); ri; ++ri)
+        for (adjacent_iterator ai(src); ai; ++ai)
         {
-            if (_ok_dest_grid(orig_actor, orig_feat, *ri))
+            if (_ok_dest_grid(orig_actor, orig_feat, *ai)
+                && one_chance_in(++squares))
             {
-                if (one_chance_in(++squares))
-                    prefered_dest = *ri;
+                prefered_dest = *ai;
             }
         }
     }

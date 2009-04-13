@@ -403,9 +403,11 @@ static int follower_tag_radius2()
     // If only friendlies are adjacent, we set a max radius of 6, otherwise
     // only adjacent friendlies may follow.
     for (adjacent_iterator ai; ai; ++ai)
+    {
         if (const monsters *mon = monster_at(*ai))
             if (!mons_friendly(mon))
                 return (2);
+    }
 
     return (6 * 6);
 }

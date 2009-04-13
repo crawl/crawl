@@ -2201,12 +2201,15 @@ static coord_def _random_monster_nearby_habitable_space(const monsters& mon,
     return (target);
 }
 
-bool monster_blink(monsters *monster)
+bool monster_blink(monsters *monster, bool quiet)
 {
     coord_def near = _random_monster_nearby_habitable_space(*monster, false,
                                                             true);
     if (near == monster->pos())
         return (false);
+
+    if (!quiet)
+        simple_monster_message(monster, " blinks!");
 
     if (!(monster->flags & MF_WAS_IN_VIEW))
         monster->seen_context = "thin air";
@@ -5627,10 +5630,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     case MONS_KILLER_KLOWN:
     case MONS_PRINCE_RIBBIT:
         if (one_chance_in(7) || mons_is_caught(monster) && one_chance_in(3))
-        {
-            simple_monster_message(monster, " blinks.");
             used = monster_blink(monster);
-        }
         break;
 
     case MONS_MANTICORE:
@@ -6011,7 +6011,6 @@ static bool _handle_scroll(monsters *monster)
             if (mons_near(monster))
             {
                 simple_monster_message(monster, " reads a scroll.");
-                simple_monster_message(monster, " blinks!");
                 monster_blink(monster);
                 read  = true;
                 ident = ID_KNOWN_TYPE;
@@ -6602,8 +6601,6 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             if (monsterNearby)
             {
                 mons_cast_noise(monster, beem, spell_cast);
-
-                simple_monster_message(monster, " blinks!");
                 monster_blink(monster);
 
                 monster->lose_energy(EUT_SPELL);

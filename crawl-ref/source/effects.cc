@@ -3201,15 +3201,15 @@ void handle_time(long time_delta)
         mutagenic_randart = true;
     }
 
-    // we take off about .5 points per turn
+    // We take off about .5 points per turn.
     if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
         added_contamination--;
 
-    // only punish if contamination caused by mutagenic randarts
-    // (haste and invisibility already penalized earlier)
+    // Only punish if contamination caused by mutagenic randarts.
+    // (Haste and invisibility already penalized earlier.)
     contaminate_player( added_contamination, mutagenic_randart );
 
-    // only check for badness once every other turn
+    // Only check for badness once every other turn.
     if (coinflip())
     {
         // [ds] Be less harsh with glow mutation; Brent and Mark Mackey note
@@ -3255,7 +3255,7 @@ void handle_time(long time_delta)
                 beam.explode();
             }
 
-            // we want to warp the player, not do good stuff!
+            // We want to warp the player, not do good stuff!
             if (one_chance_in(5))
                 mutate(RANDOM_MUTATION);
             else

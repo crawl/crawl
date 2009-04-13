@@ -115,7 +115,7 @@ Items
 * Missile enchantment decreases chance of destruction on impact.
 * Freezing weapons can now slow cold-blooded monsters.
 * The staff of channeling now trains Evocations.
-* Potions of magic no longer increase max. mana.
+* Potions of magic no longer increase max. magic points.
 * Item descriptions now mention enchantment/charging limits.
 * Randarts now get their known properties autoinscribed.
 * Randarts are now noted as identified even if the plusses are still unknown.
@@ -147,7 +147,7 @@ Gods
 * Beogh accepts more kinds of kills.
 * Beogh has a non-cannibalism conduct.
 * Disallow shapeshifters in orc form to become Beoghites' followers.
-* Can see card descriptions when using Nemelex' Triple Draw or Stack Five.
+* Offer card descriptions when using Nemelex' Triple Draw or Stack Five.
 
 Tiles
 -----

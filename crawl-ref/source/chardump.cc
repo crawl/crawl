@@ -56,6 +56,7 @@ REVISION("$Rev$");
 #include "transfor.h"
 #include "version.h"
 #include "view.h"
+#include "xom.h"
 
 struct dump_params;
 
@@ -649,6 +650,15 @@ static void _sdump_religion(dump_params &par)
                 text += god_name(you.religion);
                 text += " " + verb + " demanding penance.\n";
             }
+        }
+        else
+        {
+            if (par.se)
+                text += "You were ";
+            else
+                text += "You are ";
+            text += describe_xom_favour(false);
+            text += "\n";
         }
     }
 }

@@ -164,7 +164,7 @@ static bool _xom_feels_nasty()
     return (you.penance[GOD_XOM] || _xom_is_bored());
 }
 
-bool xom_is_nice()
+bool xom_is_nice(int tension)
 {
     if (you.penance[GOD_XOM])
         return (false);
@@ -172,7 +172,14 @@ bool xom_is_nice()
     if (you.religion == GOD_XOM)
     {
         // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
-        return (you.gift_timeout > 0 && you.piety >= random2(MAX_PIETY+1));
+        if (you.gift_timeout == 0)
+            return (false);
+
+        // At high tension Xom is more likely to be nice.
+        int tension_bonus = (tension <= 0 ? 0 : random2(tension));
+
+        // Whether Xom is nice depends largely on his mood (== piety).
+        return (x_chance_in_y(you.piety + tension_bonus, MAX_PIETY + 1));
     }
     else // CARD_XOM
         return coinflip();
@@ -1410,10 +1417,11 @@ static bool _xom_give_mutations(bool good)
         const char* lookup = (good ? "good mutations" : "random mutations");
         god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
+        const int num_tries = random2(4) + 1;
 #ifdef NOTE_DEBUG_XOM
         static char mut_buf[80];
-        snprintf(mut_buf, sizeof(mut_buf), "XOM: give %s mutations",
-                 good  || !_xom_feels_nasty() ? "good" : "random");
+        snprintf(mut_buf, sizeof(mut_buf), "XOM: give %s mutation%s",
+                 good ? "good" : "random", num_tries > 1 ? "s" : "");
         take_note(Note(NOTE_MESSAGE, 0, 0, mut_buf), true);
 #endif
 
@@ -1424,7 +1432,7 @@ static bool _xom_give_mutations(bool good)
 
         bool failMsg = true;
 
-        for (int i = random2(4); i >= 0; --i)
+        for (int i = num_tries; i > 0; --i)
         {
             if (mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
                        failMsg, false, true, false, false,
@@ -1491,8 +1499,30 @@ static bool _xom_throw_divine_lightning()
     if (!player_in_a_dangerous_place())
         return (false);
 
+    // Make sure there's at least one enemy within the lightning radius.
+    bool found_hostile = false;
+    for (radius_iterator ri(you.pos(), 2, true, true, true); ri; ++ri)
+    {
+        if (monsters* mon = monster_at(*ri))
+        {
+            if (!mons_wont_attack(mon))
+            {
+                found_hostile = true;
+                break;
+            }
+        }
+    }
+
+    // No hostiles within radius.
+    if (!found_hostile)
+        return (false);
+
+    bool protection = false;
     if (you.hp <= random2(201))
+    {
         you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
+        protection = true;
+    }
 
     god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
 
@@ -1526,7 +1556,10 @@ static bool _xom_throw_divine_lightning()
         you.reset_escaped_death();
     }
 #ifdef NOTE_DEBUG_XOM
-    take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: divine lightning"), true);
+    static char lightning_buf[80];
+    snprintf(lightning_buf, sizeof(lightning_buf),
+             "XOM: divine lightning%s", protection ? " (protected)" : "");
+    take_note(Note(NOTE_MESSAGE, 0, 0, lightning_buf), true);
 #endif
     return (true);
 }
@@ -2105,8 +2138,8 @@ static bool _xom_lose_stats()
 #ifdef NOTE_DEBUG_XOM
     static char stat_buf[80];
     snprintf(stat_buf, sizeof(stat_buf), "XOM: stat loss: -%d %s (%d/%d)",
-             loss, (stat == STAT_STRENGTH  ? " Str" :
-                    stat == STAT_DEXTERITY ? " Dex" : "Int"),
+             loss, (stat == STAT_STRENGTH  ? "Str" :
+                    stat == STAT_DEXTERITY ? "Dex" : "Int"),
              (stat == STAT_STRENGTH  ? you.strength :
               stat == STAT_DEXTERITY ? you.dex : you.intel),
              (stat == STAT_STRENGTH  ? you.max_strength :
@@ -2196,6 +2229,210 @@ static bool _xom_player_confusion_effect(int sever)
     return (rc);
 }
 
+static bool _move_stair(coord_def stair_pos, bool away)
+{
+    dungeon_feature_type feat = grd(stair_pos);
+    ASSERT(grid_stair_direction(feat) != CMD_NO_CMD);
+
+    coord_def begin, towards;
+
+    bool stairs_moved = false;
+    if (away)
+    {
+        // If the staircase starts out under the player first shove it onto
+        // a neighbouring grid.
+        if (stair_pos == you.pos())
+        {
+            coord_def new_pos(stair_pos);
+            int adj_count = 0;
+            for (adjacent_iterator ai(stair_pos); ai; ++ai)
+                if (grid_stair_direction(grd(*ai)) == CMD_NO_CMD
+                    && one_chance_in(++adj_count))
+                {
+                    new_pos = *ai;
+                }
+
+            if (new_pos == stair_pos)
+                return (false);
+
+            if (!slide_feature_over(stair_pos, new_pos))
+                return (false);
+
+            stair_pos = new_pos;
+            stairs_moved = true;
+        }
+
+        begin   = you.pos();
+        towards = stair_pos;
+    }
+    else
+    {
+        // Can't move towards player if it's already adjacent.
+        if (adjacent(you.pos(), stair_pos))
+            return (false);
+
+        begin   = stair_pos;
+        towards = you.pos();
+    }
+
+    ray_def ray;
+    if (!find_ray(begin, towards, true, ray, 0, true))
+    {
+        mpr("Couldn't find ray between player and stairs.", MSGCH_ERROR);
+        return (stairs_moved);
+    }
+
+    // Don't start off under the player.
+    if (away)
+        ray.advance();
+
+    bool found_stairs = false;
+    int  past_stairs  = 0;
+    while (in_bounds(ray.pos()) && see_grid(ray.pos())
+           && !grid_is_solid(ray.pos()) && ray.pos() != you.pos())
+    {
+        if (ray.pos() == stair_pos)
+            found_stairs = true;
+        if (found_stairs)
+            past_stairs++;
+        ray.advance();
+    }
+    past_stairs--;
+
+    if (!away && grid_is_solid(ray.pos()))
+    {
+        // Transparent wall between stair and player.
+        return (stairs_moved);
+    }
+
+    if (away && !found_stairs)
+    {
+        if (grid_is_solid(ray.pos()))
+        {
+            // Transparent wall between stair and player.
+            return (stairs_moved);
+        }
+
+        mpr("Ray didn't cross stairs.", MSGCH_ERROR);
+    }
+
+    if (away && past_stairs <= 0)
+    {
+        // Stairs already at edge, can't move further away.
+        return (stairs_moved);
+    }
+
+    if (!in_bounds(ray.pos()) || ray.pos() == you.pos())
+        ray.regress();
+
+    while (!see_grid(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
+    {
+        ray.regress();
+        if (!in_bounds(ray.pos()) || ray.pos() == you.pos()
+            || ray.pos() == stair_pos)
+        {
+            // No squares in path are a plain floor.
+            return (stairs_moved);
+        }
+    }
+
+    ASSERT(stair_pos != ray.pos());
+
+    std::string stair_str =
+        feature_description(stair_pos, false, DESC_CAP_THE, false);
+
+    mprf("%s slides %s you!", stair_str.c_str(),
+         away ? "away from" : "towards");
+
+    // Animate stair moving.
+    const feature_def &feat_def = get_feature_def(feat);
+
+    bolt beam;
+
+    beam.range   = INFINITE_DISTANCE;
+    beam.flavour = BEAM_VISUAL;
+    beam.type    = feat_def.symbol;
+    beam.colour  = feat_def.colour;
+    beam.source  = stair_pos;
+    beam.target  = ray.pos();
+    beam.name    = "STAIR BEAM";
+    beam.draw_delay = 50; // Make beam animation slower than normal.
+
+    beam.aimed_at_spot = true;
+    beam.fire();
+
+    // Clear out "missile trails"
+    viewwindow(true, false);
+
+    if (!swap_features(stair_pos, ray.pos(), false, false))
+    {
+        mprf(MSGCH_ERROR, "_move_stair(): failed to move %s",
+             stair_str.c_str());
+        return (stairs_moved);
+    }
+    return (true);
+}
+
+static bool _repel_stairs()
+{
+    // Repeating the effect while it's still active is boring.
+    if (you.duration[DUR_REPEL_STAIRS_MOVE]
+        || you.duration[DUR_REPEL_STAIRS_CLIMB])
+    {
+        return (false);
+    }
+
+    std::vector<coord_def> stairs_avail;
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true); ri; ++ri)
+    {
+        dungeon_feature_type feat = grd(*ri);
+        if (grid_stair_direction(feat) != CMD_NO_CMD
+            && feat != DNGN_ENTER_SHOP)
+        {
+            stairs_avail.push_back(*ri);
+        }
+    }
+
+    // Should only happen if there are stairs in view.
+    if (stairs_avail.empty())
+    {
+        mpr("No stairs found!");
+        return (false);
+    }
+
+    god_speaks(GOD_XOM,
+               _get_xom_speech("repel stairs").c_str());
+
+    you.duration[DUR_REPEL_STAIRS_MOVE] = 1000;
+
+    if (one_chance_in(5)
+        || grid_stair_direction(grd(you.pos())) != CMD_NO_CMD
+           && grd(you.pos()) != DNGN_ENTER_SHOP)
+    {
+        you.duration[DUR_REPEL_STAIRS_CLIMB] = 500;
+    }
+
+    std::random_shuffle(stairs_avail.begin(), stairs_avail.end());
+    int count_moved = 0;
+    for (unsigned int i = 0; i < stairs_avail.size(); i++)
+        if (_move_stair(stairs_avail[i], true))
+            count_moved++;
+
+    if (!count_moved)
+    {
+        if (one_chance_in(8))
+            mpr("Nothing appears to happen... Ominous!");
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
+    }
+
+#ifdef NOTE_DEBUG_XOM
+    take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: repel stairs"), true);
+#endif
+
+    return (true);
+}
+
 static bool _xom_draining_torment_effect(int sever)
 {
     const std::string speech = _get_xom_speech("draining or torment");
@@ -2230,8 +2467,8 @@ static bool _xom_draining_torment_effect(int sever)
             torment_player(0, TORMENT_XOM);
 #ifdef NOTE_DEBUG_XOM
             static char torment_buf[80];
-            snprintf(torment_buf, sizeof(torment_buf), "XOM: torment (%d/%d)",
-                     you.hp, you.hp_max);
+            snprintf(torment_buf, sizeof(torment_buf),
+                     "XOM: torment (%d/%d hp)", you.hp, you.hp_max);
             take_note(Note(NOTE_MESSAGE, 0, 0, torment_buf), true);
 #endif
             rc = true;
@@ -2386,23 +2623,28 @@ static bool _xom_is_bad(int sever, int tension)
             done = _xom_polymorph_nearby_monster(false);
             badness = 3;
         }
+        else if ((!nasty || tension > 0) && x_chance_in_y(11, sever))
+        {
+            done = _repel_stairs();
+            badness = (you.duration[DUR_REPEL_STAIRS_CLIMB] ? 3 : 2);
+        }
         // It's pointless to confuse player if there's no danger nearby.
-        else if (tension > 0 && x_chance_in_y(11, sever))
+        else if (tension > 0 && x_chance_in_y(12, sever))
         {
             done = _xom_player_confusion_effect(sever);
             badness = (random2(tension) > 5 ? 2 : 1);
         }
-        else if (x_chance_in_y(12, sever))
+        else if (x_chance_in_y(13, sever))
         {
             done = _xom_draining_torment_effect(sever);
             badness = (random2(tension) > 5 ? 3 : 2);
         }
-        else if (x_chance_in_y(13, sever))
+        else if (x_chance_in_y(14, sever))
         {
             done = _xom_summon_hostiles(sever);
             badness = 3 + coinflip();
         }
-        else if (x_chance_in_y(14, sever))
+        else if (x_chance_in_y(15, sever))
         {
             _xom_miscast(3, nasty);
             badness = 4 + coinflip();
@@ -2629,7 +2871,14 @@ void xom_acts(bool niceness, int sever, int tension)
     const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
         = you.mutation;
 
-    if (niceness && !one_chance_in(20))
+#ifdef DEBUG_XOM
+    static char xom_buf[100];
+    snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d), mood: %d",
+             (niceness ? "true" : "false"), sever, tension, you.piety);
+    take_note(Note(NOTE_MESSAGE, 0, 0, xom_buf), true);
+#endif
+
+    if (niceness && !one_chance_in(15))
     {
         // Good stuff.
         while (!_xom_is_good(sever, tension))
@@ -2637,6 +2886,18 @@ void xom_acts(bool niceness, int sever, int tension)
     }
     else
     {
+#ifdef NOTE_DEBUG_XOM
+        if (_xom_is_bored())
+            take_note(Note(NOTE_MESSAGE, 0, 0, "XOM is BORED!"), true);
+#ifdef DEBUG_XOM
+        else if (niceness)
+        {
+            take_note(Note(NOTE_MESSAGE, 0, 0, "good act randomly turned bad"),
+                      true);
+        }
+#endif
+#endif
+
         // Bad mojo.
         while (!_xom_is_bad(sever, tension))
             ;

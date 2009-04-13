@@ -1944,7 +1944,17 @@ static std::vector<formatted_string> _get_overview_stats()
     char god_colour_tag[20];
     god_colour_tag[0] = 0;
     std::string godpowers(god_name(you.religion));
-    if (you.religion != GOD_NO_GOD)
+    if (you.religion == GOD_XOM)
+    {
+        snprintf(god_colour_tag, sizeof god_colour_tag, "<%s>",
+                 colour_to_str(god_colour(you.religion)).c_str());
+
+        if (you.gift_timeout == 0)
+            godpowers += " - BORED";
+        else if (you.gift_timeout == 1)
+            godpowers += " - getting BORED";
+    }
+    else if (you.religion != GOD_NO_GOD)
     {
         if (player_under_penance())
             strcpy(god_colour_tag, "<red>*");

@@ -4381,8 +4381,10 @@ static bool _vorpalise_weapon()
 
 bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 {
+    bool to_hit = (which_stat == ENCHANT_TO_HIT);
+
     // Cannot be enchanted nor uncursed.
-    if (!is_enchantable_weapon(wpn, true))
+    if (!is_enchantable_weapon(wpn, true, to_hit))
     {
         if (!quiet)
             canned_msg( MSG_NOTHING_HAPPENS );
@@ -4394,14 +4396,17 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 
     // Missiles only have one stat.
     if (wpn.base_type == OBJ_MISSILES)
+    {
         which_stat = ENCHANT_TO_HIT;
+        to_hit     = true;
+    }
 
-    int enchant_level = (which_stat == ENCHANT_TO_HIT) ? wpn.plus
-                                                       : wpn.plus2;
+    int enchant_level = (to_hit ? wpn.plus
+                                : wpn.plus2);
 
     // Even if not affected, it may be uncursed.
-    if (!is_enchantable_weapon(wpn, false)
-        || enchant_level >= 4 && x_chance_in_y(enchant_level, 9))
+    if (!is_enchantable_weapon(wpn, false, to_hit)
+        || enchant_level >= 4 && x_chance_in_y(enchant_level, MAX_WPN_ENCHANT))
     {
         if (is_cursed)
         {
@@ -4419,6 +4424,10 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
             if (!quiet)
                 canned_msg(MSG_NOTHING_HAPPENS);
 
+            // Xom thinks it's funny if enchantment is possible but fails.
+            if (is_enchantable_weapon(wpn, false, to_hit))
+                xom_is_stimulated(32);
+
             return (false);
         }
     }
@@ -4428,7 +4437,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 
     if (wpn.base_type == OBJ_WEAPONS)
     {
-        if (which_stat == ENCHANT_TO_HIT)
+        if (to_hit)
         {
             if (!quiet)
                 mprf("%s glows green for a moment.", iname.c_str());
@@ -4457,7 +4466,6 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
     if (is_cursed)
         do_uncurse_item(wpn);
 
-    xom_is_stimulated(16);
     return (true);
 }
 
@@ -4540,6 +4548,10 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
             if (!quiet)
                 canned_msg(MSG_NOTHING_HAPPENS);
 
+            // Xom thinks it's funny if enchantment is possible but fails.
+            if (is_enchantable_armour(arm, false))
+                xom_is_stimulated(32);
+
             return (false);
         }
     }
@@ -4557,7 +4569,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     if (is_cursed)
         do_uncurse_item(arm);
 
-    xom_is_stimulated(16);
     return (true);
 }
 
@@ -4978,38 +4989,57 @@ void read_scroll(int slot)
 
             const bool is_cursed = item_cursed(wpn);
 
+            if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES
+                || !is_cursed
+                   && !is_enchantable_weapon(wpn, true, true)
+                   && !is_enchantable_weapon(wpn, true, false))
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+                id_the_scroll = false;
+                break;
+            }
+            // It's a weapon or stack of missiles that is not an artefact
+            // and not fully enchanted, or at least needs to be uncursed.
+
             // Get item name now before changing enchantment.
             std::string iname = wpn.name(DESC_CAP_YOUR);
 
+            // Uncursing is always possible.
+            bool success = is_cursed;
+            if (_handle_enchant_weapon(ENCHANT_TO_HIT, true))
+                success = true;
+
+            if (is_enchantable_weapon(wpn, true, true) && coinflip()
+                && _handle_enchant_weapon(ENCHANT_TO_HIT, true))
+            {
+                success = true;
+            }
+
+            // Only weapons use the second stat.
             if (wpn.base_type == OBJ_WEAPONS)
             {
-                mprf("%s glows bright yellow for a while.", iname.c_str());
+                if (_handle_enchant_weapon(ENCHANT_TO_DAM, true))
+                    success = true;
 
-                _handle_enchant_weapon(ENCHANT_TO_HIT, true);
-
-                if (coinflip())
-                    _handle_enchant_weapon(ENCHANT_TO_HIT, true);
-
-                _handle_enchant_weapon(ENCHANT_TO_DAM, true);
-
-                if (coinflip())
-                    _handle_enchant_weapon(ENCHANT_TO_DAM, true);
-
-                if (is_cursed)
-                    do_uncurse_item(wpn);
+                if (is_enchantable_weapon(wpn, true, false) && coinflip()
+                    && _handle_enchant_weapon(ENCHANT_TO_DAM, true))
+                {
+                    success = true;
+                }
             }
-            else if (wpn.base_type == OBJ_MISSILES)
+
+            if (is_cursed)
+                do_uncurse_item(wpn);
+
+            if (success)
             {
                 mprf("%s glow%s bright yellow for a while.", iname.c_str(),
                      wpn.quantity > 1 ? "" : "s");
-
-                _handle_enchant_weapon(ENCHANT_TO_HIT, true);
-
-                if (coinflip())
-                    _handle_enchant_weapon(ENCHANT_TO_HIT, true);
-
-                if (is_cursed)
-                    do_uncurse_item(wpn);
+            }
+            else
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+                id_the_scroll = false;
             }
         }
         else

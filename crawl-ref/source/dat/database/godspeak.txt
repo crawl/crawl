@@ -378,6 +378,16 @@ Xom brings you back to life.
 
 Xom smiles on you.
 %%%%
+Xom repel stairs
+
+Xom alters the dungeon around you.
+
+Xom changes the scenery.
+
+Xom pokes at a staircase.
+
+"Tag, you're it!"
+%%%%
 # Xom laughing
 # (Currently only used post-game in response to "You die...")
 Xom laughter

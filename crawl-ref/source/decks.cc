@@ -1685,9 +1685,9 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
 
     if (grid_stair_direction(grd(you.pos())) == CMD_NO_CMD)
-        you.duration[DUR_REPEL_STAIRS_MOVE] = 1000;
+        you.duration[DUR_REPEL_STAIRS_MOVE]  = 1000;
     else
-        you.duration[DUR_REPEL_STAIRS_CLIMB] = 1000;
+        you.duration[DUR_REPEL_STAIRS_CLIMB] =  500; // more annoying
 
     std::vector<coord_def> stairs_avail;
 

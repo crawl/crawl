@@ -1190,7 +1190,7 @@ static void _finish_delay(const delay_queue_item &delay)
             if (m)
             {
                 // One square, a few squares, anywhere...
-                if (!shift_monster(m) && !monster_blink(m))
+                if (!shift_monster(m) && !monster_blink(m, true))
                     monster_teleport(m, true, true);
             }
 

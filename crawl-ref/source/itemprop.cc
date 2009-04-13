@@ -484,6 +484,17 @@ void do_curse_item( item_def &item, bool quiet )
     if (item.flags & ISFLAG_CURSED)
         return;
 
+    if (!quiet)
+    {
+        mprf("Your %s glows black for a moment.",
+             item.name(DESC_PLAIN).c_str());
+
+        // If we get the message, we know the item is cursed now.
+        item.flags |= ISFLAG_KNOW_CURSE;
+    }
+
+    item.flags |= ISFLAG_CURSED;
+
     // Xom is amused by the player's items being cursed, especially
     // if they're worn/equipped.
     if (in_inventory(item))
@@ -508,17 +519,6 @@ void do_curse_item( item_def &item, bool quiet )
         }
         xom_is_stimulated(amusement);
     }
-
-    if (!quiet)
-    {
-        mprf("Your %s glows black for a moment.",
-             item.name(DESC_PLAIN).c_str());
-
-        // If we get the message, we know the item is cursed now.
-        item.flags |= ISFLAG_KNOW_CURSE;
-    }
-
-    item.flags |= ISFLAG_CURSED;
 }
 
 void do_uncurse_item( item_def &item )
@@ -1389,7 +1389,7 @@ int wand_charge_value(int type)
     }
 }
 
-bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
+bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
 {
     if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES)
         return (false);
@@ -1399,7 +1399,8 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
     if (wpn.base_type == OBJ_WEAPONS)
     {
         if (is_artefact(wpn)
-            || wpn.plus >= MAX_WPN_ENCHANT && wpn.plus2 >= MAX_WPN_ENCHANT)
+            || first && wpn.plus >= MAX_WPN_ENCHANT
+            || !first && wpn.plus2 >= MAX_WPN_ENCHANT)
         {
             return (uncurse && item_cursed(wpn));
         }

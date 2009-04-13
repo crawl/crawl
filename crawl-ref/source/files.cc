@@ -1371,23 +1371,29 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             dungeon_feature_type feat = grd(you.pos());
             if (feat != DNGN_ENTER_SHOP
                 && grid_stair_direction(feat) != CMD_NO_CMD
-                && grid_stair_direction(stair_taken) != CMD_NO_CMD
-                && coinflip()
-                && slide_feature_over(you.pos(), coord_def(-1, -1), false))
+                && grid_stair_direction(stair_taken) != CMD_NO_CMD)
             {
                 std::string stair_str =
                     feature_description(feat, NUM_TRAPS, false,
                                         DESC_CAP_THE, false);
                 std::string verb = stair_climb_verb(feat);
 
-                mprf("%s slides away from you right after you %s through it!",
-                     stair_str.c_str(), verb.c_str());
+                if (coinflip()
+                    && slide_feature_over(you.pos(), coord_def(-1, -1), false))
+                {
+                    mprf("%s slides away from you right after you %s through "
+                         "it!", stair_str.c_str(), verb.c_str());
+                }
+
+                if (coinflip())
+                {
+                    // Stairs stop fleeing from you now you actually caught one.
+                    mprf("%s settles down.", stair_str.c_str(), verb.c_str());
+                    you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
+                    you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
+                }
             }
         }
-
-        // Stairs running from you is done now that you actually caught one.
-        you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
-        you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
 
         // If butchering was interrupted by switching levels (banishment)
         // then switch back from butchering tool if there's no hostiles
