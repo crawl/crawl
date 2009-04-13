@@ -3932,7 +3932,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
         if (crawl_state.arena || crawl_state.arena_suspended)
             return (true);
 
-        if ( grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS )
+        if (grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS)
         {
             const coord_def diff = grid2show(monster->pos());
             if (show_bounds(diff) && env.show(diff))

@@ -107,18 +107,14 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_DISTORTION,
     SPWPN_REACHING,
     SPWPN_RETURNING,                   //   18
-
-    MAX_PAN_LORD_BRANDS = SPWPN_RETURNING,
-
     SPWPN_CHAOS,
+
+    MAX_PAN_LORD_BRANDS = SPWPN_CHAOS,
+
     SPWPN_CONFUSE,                     //   20
-    SPWPN_PENETRATION,
-    SPWPN_SHADOW,
-    SPWPN_RANDART_I = 25,              //   25
-    SPWPN_RANDART_II,
-    SPWPN_RANDART_III,
-    SPWPN_RANDART_IV,
-    SPWPN_RANDART_V,
+    SPWPN_PENETRATION,  // unused
+    SPWPN_SHADOW,       // unused
+    SPWPN_DEBUG_RANDART = 25,          //   25
     NUM_SPECIAL_WEAPONS,
     SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
 

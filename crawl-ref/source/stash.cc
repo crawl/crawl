@@ -102,6 +102,16 @@ std::string stash_annotate_item(const char *s,
     return text;
 }
 
+void maybe_update_stashes()
+{
+    if (Options.stash_tracking && !crawl_state.arena)
+    {
+        StashTrack.update_visible_stashes(
+            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
+                                              : StashTracker::ST_PASSIVE);
+    }
+}
+
 bool is_stash(int x, int y)
 {
     LevelStashes *ls = StashTrack.find_current_level();

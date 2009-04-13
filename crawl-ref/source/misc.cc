@@ -2402,13 +2402,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     trackers_init_new_level(true);
 
     viewwindow(true, true);
-
-    if (Options.stash_tracking && !crawl_state.arena)
-    {
-        StashTrack.update_visible_stashes(
-            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
-                                              : StashTracker::ST_PASSIVE);
-    }
+    maybe_update_stashes();
 
     if (collect_travel_data)
     {

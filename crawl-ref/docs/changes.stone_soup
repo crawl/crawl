@@ -88,6 +88,7 @@ Interface
 * Limit travel exclusions to line of sight.
 * Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
 * Switch off autopickup and autoswap if you see a monster turn invisible.
+* Killing an invisible monster reactivates autopickup.
 * Shops now use shopping cart behaviour.
 * Wizard commands can now be used from the wizard help screen.
 * Allow quivering/firing of wielded missiles and wielded weapons of returning.
@@ -108,6 +109,7 @@ Interface
 Items
 -----
 * New scroll: ?vulnerability, applying to all creatures in LoS including you.
+* New weapon brand: chaos, available only via Xom and pandemonium lords.
 * Introduce randart spellbooks with random spell selections.
 * Book acquirements are now much more random and may yield manuals.
 * Missile enchantment decreases chance of destruction on impact.
@@ -117,7 +119,7 @@ Items
 * Item descriptions now mention enchantment/charging limits.
 * Randarts now get their known properties autoinscribed.
 * Randarts are now noted as identified even if the plusses are still unknown.
-* Eliminate RAP_ANGRY and RAP_BERSERK for missile weapons.
+* Eliminate RAP_ANGRY and RAP_BERSERK for launcher weapons.
 * Ammo that IDs through throwing now merges in your pack instantaneously.
 * ?immolation doesn't burn scrolls anymore.
 * ?summoning creates a permanent abomination.

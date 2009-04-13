@@ -408,7 +408,6 @@ void stop_delay( bool stop_stair_travel )
             if (!i_feel_safe())
                 handle_interrupted_swap(false, true);
         }
-
         break;
     }
     case DELAY_MEMORISE:
@@ -560,7 +559,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
                              bool transform)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-        || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act())
+        || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act()
+        || you.duration[DUR_BERSERKER])
     {
         return;
     }

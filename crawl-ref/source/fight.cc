@@ -62,7 +62,11 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_BRAND
+    #define NOTE_DEBUG_CHAOS_EFFECTS
+#endif
+
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
 #include "notes.h"
 #endif
 
@@ -1263,8 +1267,8 @@ bool melee_attack::player_aux_unarmed()
             else
             {
                 mprf("Your %s misses %s.",
-                     miss_verb.empty()? unarmed_attack.c_str()
-                     : miss_verb.c_str(),
+                     miss_verb.empty() ? unarmed_attack.c_str()
+                                       : miss_verb.c_str(),
                      defender->name(DESC_NOCAP_THE).c_str());
             }
 
@@ -2343,7 +2347,7 @@ void melee_attack::chaos_affects_defender()
     beam.flavour = BEAM_NONE;
 
     int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
     std::string chaos_effect = "CHAOS effect: ";
     switch (choice)
     {
@@ -2569,7 +2573,7 @@ void melee_attack::chaos_affects_attacker()
     // Move stairs out from under the attacker.
     if (one_chance_in(100) && _move_stairs(attacker, defender))
     {
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
                        "CHAOS affects attacker: move stairs"), true);
 #endif
@@ -2583,7 +2587,7 @@ void melee_attack::chaos_affects_attacker()
         && one_chance_in(1000))
     {
         (void) attacker->do_shaft();
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
                        "CHAOS affects attacker: shaft effect"), true);
 #endif
@@ -2596,7 +2600,7 @@ void melee_attack::chaos_affects_attacker()
         mprf("Smoke pours forth from %s!", wep_name(DESC_NOCAP_YOUR).c_str());
         big_cloud(random_smoke_type(), KC_OTHER, attacker->pos(), 20,
                   4 + random2(8));
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
                        "CHAOS affects attacker: smoke"), true);
 #endif
@@ -2629,7 +2633,7 @@ void melee_attack::chaos_affects_attacker()
         {
             mpr(msg.c_str(), MSGCH_SOUND);
             noisy(15, attacker->pos());
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
             take_note(Note(NOTE_MESSAGE, 0, 0,
                            "CHAOS affects attacker: noise"), true);
 #endif
@@ -2798,7 +2802,7 @@ void melee_attack::chaos_killed_defender(monsters* mon)
         && _make_zombie(mon, corpse_class, corpse_index, fake_corpse,
                         last_item))
     {
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
                        "CHAOS killed defender: zombified monster"), true);
 #endif
@@ -2943,7 +2947,7 @@ int melee_attack::random_chaos_brand()
         if (susceptible)
             break;
     }
-#ifdef DEBUG_CHAOS
+#ifdef NOTE_DEBUG_CHAOS_BRAND
     std::string brand_name = "CHAOS brand: ";
     switch (brand)
     {
@@ -2967,7 +2971,10 @@ int melee_attack::random_chaos_brand()
     default:                    brand_name += "(other)"; break;
     }
 
-    take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
+    // Pretty much duplicated by the chaos effect note,
+    // which will be much more informative.
+    if (brand != SPWPN_CHAOS)
+        take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
 #endif
     return (brand);
 }

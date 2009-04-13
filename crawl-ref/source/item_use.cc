@@ -2008,8 +2008,8 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     const bool exploding = ammo_brand == SPMSL_EXPLODING;
     const bool penetrating = !exploding
-        && (bow_brand  == SPWPN_PENETRATION
-            || ammo_brand == SPMSL_PENETRATION);
+                             && (bow_brand  == SPWPN_PENETRATION
+                                 || ammo_brand == SPMSL_PENETRATION);
     const bool silver = ammo_brand == SPMSL_SILVER;
     const bool disperses = ammo_brand == SPMSL_DISPERSAL;
     const bool shadow = bow_brand  == SPWPN_SHADOW

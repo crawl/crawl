@@ -103,6 +103,7 @@ REVISION("$Rev$");
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
@@ -2609,13 +2610,7 @@ void world_reacts()
 
     viewwindow(true, true);
 
-    if (Options.stash_tracking && !crawl_state.arena)
-    {
-        StashTrack.update_visible_stashes(
-            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
-                                              : StashTracker::ST_PASSIVE);
-    }
-
+    maybe_update_stashes();
     handle_monsters();
 
     _check_banished();
@@ -3479,13 +3474,7 @@ static bool _initialise(void)
 #endif
 
     set_cursor_enabled(false);
-
-    if (Options.stash_tracking && !crawl_state.arena)
-    {
-        StashTrack.update_visible_stashes(
-            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
-                                              : StashTracker::ST_PASSIVE);
-    }
+    maybe_update_stashes();
 
     // This just puts the view up for the first turn.
     viewwindow(true, false);

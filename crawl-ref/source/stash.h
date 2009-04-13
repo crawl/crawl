@@ -358,6 +358,7 @@ private:
 
 extern StashTracker StashTrack;
 
+void maybe_update_stashes();
 bool is_stash(int x, int y);
 inline bool is_stash( const coord_def& p ) { return is_stash(p.x, p.y); }
 void describe_stash(int x, int y);

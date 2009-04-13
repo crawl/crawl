@@ -585,10 +585,10 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     int noise;
     if (silent
-       || (innate
-           && !mons_class_flag(monster->type, M_NOISY_SPELLS)
-           && !(flags & SPFLAG_NOISY)
-           && mons_genus(monster->type) != MONS_DRAGON))
+        || (innate
+            && !mons_class_flag(monster->type, M_NOISY_SPELLS)
+            && !(flags & SPFLAG_NOISY)
+            && mons_genus(monster->type) != MONS_DRAGON))
     {
         noise = 0;
     }
@@ -635,11 +635,11 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         key_list.push_back("demon" + cast_str);
 
     const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
-                           && pbolt.name[0] != '0'
-                           && !pbolt.is_enchantment();
+                              && pbolt.name[0] != '0'
+                              && !pbolt.is_enchantment();
 
     const bool targeted = (flags & SPFLAG_TARGETING_MASK)
-                       && (pbolt.target != monster->pos() || visible_beam);
+                           && (pbolt.target != monster->pos() || visible_beam);
 
     if (targeted)
     {
@@ -725,9 +725,9 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     /////////////////////
 
     const bool gestured = msg.find("Gesture") != std::string::npos
-                       || msg.find(" gesture") != std::string::npos
-                       || msg.find("Point") != std::string::npos
-                       || msg.find(" point") != std::string::npos;
+                          || msg.find(" gesture") != std::string::npos
+                          || msg.find("Point") != std::string::npos
+                          || msg.find(" point") != std::string::npos;
 
     bolt tracer = pbolt;
     if (targeted)
@@ -761,8 +761,10 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     else if (in_bounds(pbolt.target) && see_grid(pbolt.target))
     {
         if (const monsters* mtarg = monster_at(pbolt.target))
+        {
             if (you.can_see(mtarg))
                 target = mtarg->name(DESC_NOCAP_THE);
+        }
     }
 
     // Monster might be aiming past the real target, or maybe some fuzz has
@@ -911,13 +913,11 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     const msg_channel_type chan =
         (unseen                      ? MSGCH_SOUND :
-         mons_friendly_real(monster) ? MSGCH_FRIEND_SPELL :
-                                       MSGCH_MONSTER_SPELL);
+         mons_friendly_real(monster) ? MSGCH_FRIEND_SPELL
+                                     : MSGCH_MONSTER_SPELL);
 
     if (silent)
-    {
         mons_speaks_msg(monster, msg, chan, true);
-    }
     else if (noisy(noise, monster->pos()) || !unseen)
     {
         // noisy() returns true if the player heard the noise.

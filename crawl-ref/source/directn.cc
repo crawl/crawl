@@ -3155,6 +3155,13 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
             else if (mons_neutral(mon))
                 str = "neutral";
 
+            if (mons_is_summoned(mon))
+            {
+                if (!str.empty())
+                    str += ", ";
+                str += "summoned";
+            }
+
             if (mon->type == MONS_DANCING_WEAPON
                 || mon->type == MONS_PANDEMONIUM_DEMON
                 || mon->type == MONS_PLAYER_GHOST

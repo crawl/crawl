@@ -168,7 +168,7 @@ void ghost_demon::init_random_demon()
             resists.cold = -1;
     }
 
-    // demons, like ghosts, automatically get poison res. and life prot.
+    // Demons, like ghosts, automatically get poison res. and life prot.
 
     // resist electricity:
     resists.elec = one_chance_in(3);

@@ -1325,9 +1325,7 @@ void wizard_create_spec_object()
         canned_msg(MSG_SOMETHING_APPEARS);
 
         // Tell the stash tracker.
-        StashTrack.update_visible_stashes(
-            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
-                                              : StashTracker::ST_PASSIVE);
+        maybe_update_stashes();
     }
 }
 
@@ -2941,10 +2939,12 @@ void debug_mons_scan()
         coord_def pos = m->pos();
 
         if (!in_bounds(pos))
+        {
             mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
                               "midx = %d",
                  m->full_name(DESC_PLAIN, true).c_str(),
                  pos.x, pos.y, i);
+        }
         else if (mgrd(pos) != i)
         {
             floating_mons.push_back(i);
@@ -3089,8 +3089,10 @@ void debug_mons_scan()
         if (vaults.size() == 0)
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
+        {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
                                      " and ", ", ", MSGCH_WARN);
+        }
     }
 
     mpr("");
@@ -3110,8 +3112,10 @@ void debug_mons_scan()
         if (vaults.size() == 0)
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
+        {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
                                      " and ", ", ", MSGCH_WARN);
+        }
 
         // Don't report on same monster twice.
         if (is_floating[idx])
@@ -3123,8 +3127,10 @@ void debug_mons_scan()
         if (vaults.size() == 0)
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
+        {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
                                      " and ", ", ", MSGCH_WARN);
+        }
     }
 
     mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
@@ -3195,7 +3201,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     int num_arts     = 0;
 
     int subtype_quants[256];
-    int ego_quants[SPWPN_RANDART_I];
+    int ego_quants[SPWPN_DEBUG_RANDART];
 
     memset(subtype_quants, 0, sizeof(subtype_quants));
     memset(ego_quants, 0, sizeof(ego_quants));

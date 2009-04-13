@@ -1670,8 +1670,10 @@ static void _move_stair(coord_def stair_pos, bool away)
     viewwindow(true, false);
 
     if (!swap_features(stair_pos, ray.pos(), false, false))
+    {
         mprf(MSGCH_ERROR, "_move_stair(): failed to move %s",
              stair_str.c_str());
+    }
 }
 
 static void _stairs_card(int power, deck_rarity_type rarity)
@@ -1689,8 +1691,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
 
     std::vector<coord_def> stairs_avail;
 
-    radius_iterator ri(you.pos(), LOS_RADIUS, false, true, true);
-    for (; ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true, true); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
         if (grid_stair_direction(feat) != CMD_NO_CMD
