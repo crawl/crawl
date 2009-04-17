@@ -544,6 +544,7 @@ bool mons_pan(int mcls)
     case MONS_BALRUG:
     case MONS_BLUE_DEATH:
     case MONS_CACODEMON:
+    case MONS_CHAOS_SPAWN:
     case MONS_EXECUTIONER:
     case MONS_GREEN_DEATH:
     case MONS_HELLWING:
