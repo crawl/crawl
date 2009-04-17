@@ -367,17 +367,17 @@ static spell_type search_first_list(int ignore_spell)
          i < sizeof(search_order_conj) / sizeof(*search_order_conj); i++)
      {
         if (search_order_conj[i] == SPELL_NO_SPELL)
-            return SPELL_NO_SPELL;
+            return (SPELL_NO_SPELL);
 
         if (search_order_conj[i] == ignore_spell)
             continue;
 
         if (player_has_spell(search_order_conj[i]))
-            return search_order_conj[i];
+            return (search_order_conj[i]);
     }
 
-    return SPELL_NO_SPELL;
-}                               // end search_first_list()
+    return (SPELL_NO_SPELL);
+}
 
 static spell_type search_second_list(int ignore_spell)
 {
@@ -385,17 +385,17 @@ static spell_type search_second_list(int ignore_spell)
          i < sizeof(search_order_third) / sizeof(*search_order_third); i++)
     {
         if (search_order_third[i] == SPELL_NO_SPELL)
-            return SPELL_NO_SPELL;
+            return (SPELL_NO_SPELL);
 
         if (search_order_third[i] == ignore_spell)
             continue;
 
         if (player_has_spell(search_order_third[i]))
-            return search_order_third[i];
+            return (search_order_third[i]);
     }
 
-    return SPELL_NO_SPELL;
-}                               // end search_second_list()
+    return (SPELL_NO_SPELL);
+}
 
 static spell_type search_third_list(int ignore_spell)
 {
@@ -403,17 +403,17 @@ static spell_type search_third_list(int ignore_spell)
          i < sizeof(search_order_misc) / sizeof(*search_order_misc); i++)
     {
         if (search_order_misc[i] == SPELL_NO_SPELL)
-            return SPELL_NO_SPELL;
+            return (SPELL_NO_SPELL);
 
         if (search_order_misc[i] == ignore_spell)
             continue;
 
         if (player_has_spell(search_order_misc[i]))
-            return search_order_misc[i];
+            return (search_order_misc[i]);
     }
 
-    return SPELL_NO_SPELL;
-}                               // end search_third_list()
+    return (SPELL_NO_SPELL);
+}
 
 // Used when creating ghosts: goes through and finds spells for the
 // ghost to cast.  Death is a traumatic experience, so ghosts only
@@ -452,7 +452,7 @@ void ghost_demon::add_spells()
 
     for (i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
         spells[i] = translate_spell( spells[i] );
-}                               // end add_spells()
+}
 
 // When passed the number for a player spell, returns the equivalent
 // monster spell.  Returns SPELL_NO_SPELL on failure (no equivalent).
