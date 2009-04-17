@@ -3020,6 +3020,11 @@ std::string get_ghost_description(const monsters &mons, bool concise)
              << " "
              << get_class_name(ghost.job);
     }
+    if (ghost.religion != GOD_NO_GOD)
+    {
+        gstr << " of "
+             << god_name(ghost.religion);
+    }
 
     return gstr.str();
 }
@@ -3418,7 +3423,7 @@ void describe_god( god_type which_god, bool give_title )
     // Print god's description.
     textcolor(LIGHTGREY);
 
-    std::string god_desc = getLongDescription(god_name(which_god, false));
+    std::string god_desc = getLongDescription(god_name(which_god));
     const int numcols = get_number_of_cols();
     cprintf("%s", get_linebreak_string(god_desc.c_str(), numcols).c_str());
 
