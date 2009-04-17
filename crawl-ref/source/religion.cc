@@ -3906,17 +3906,14 @@ bool ely_destroy_weapons()
 
         piety_gain_t pgain = PIETY_NONE;
         const bool is_evil_weapon = is_evil_item(item);
+
         if (is_evil_weapon || _destroyed_valuable_weapon(value, item.base_type))
-        {
             pgain = PIETY_SOME;
-            gain_piety(1);
-        }
 
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
         {
             // Weapons blessed by TSO don't get destroyed but are instead
             // returned whence they came. (jpeg)
-//            _print_sacrifice_message(GOD_SHINING_ONE, item, pgain);
             simple_god_message(
                 make_stringf(" %sreclaims %s.",
                              pgain == PIETY_SOME ? "gladly " : "",
@@ -3935,6 +3932,9 @@ bool ely_destroy_weapons()
                                    "weapon.", GOD_ELYVILON);
             }
         }
+
+        if (pgain == PIETY_SOME)
+            gain_piety(1);
 
         destroy_item(si.link());
         success = true;
@@ -4041,6 +4041,7 @@ bool trog_burn_spellbooks()
          simple_god_message(" is delighted!", GOD_TROG);
          gain_piety(totalpiety);
     }
+
     return (true);
 }
 
