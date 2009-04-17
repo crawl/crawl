@@ -576,8 +576,8 @@ static void _xom_acquirement(object_class_type force_class)
     if (!acquirement(force_class, GOD_XOM, false, &item_index)
         || item_index == NON_ITEM)
     {
-       god_speaks(GOD_XOM, "\"No, never mind.\"");
-       return;
+        god_speaks(GOD_XOM, "\"No, never mind.\"");
+        return;
     }
 
     _try_brand_switch(item_index);

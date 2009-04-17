@@ -631,7 +631,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
-                         0, god));
+                         MG_FORCE_BEH, god));
 
         if (monster != -1)
         {
@@ -1010,7 +1010,9 @@ bool cast_simulacrum(int pow, god_type god)
             || (weapon->base_type == OBJ_FOOD
                 && weapon->sub_type == FOOD_CHUNK)))
     {
-        const monster_type mon = static_cast<monster_type>(weapon->plus);
+        const monster_type type = static_cast<monster_type>(weapon->plus);
+        const monster_type sim_type = mons_zombie_size(type) == Z_BIG ?
+            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
         // Can't create more than the available chunks.
         int how_many = std::min(8, 4 + random2(pow) / 20);
@@ -1020,10 +1022,10 @@ bool cast_simulacrum(int pow, god_type god)
         {
             const int monster =
                 create_monster(
-                    mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
+                    mgen_data(sim_type, BEH_FRIENDLY,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
-                              MG_FORCE_BEH, god, mon));
+                              MG_FORCE_BEH, god, type));
 
             if (monster != -1)
             {

@@ -1784,8 +1784,8 @@ static void _generate_missile_item(item_def& item, int force_type,
         return;
     }
 
-
     set_equip_race(item, _determine_missile_race(item, item_race));
+
     if (!no_brand)
     {
         set_item_ego_type( item, OBJ_MISSILES,
