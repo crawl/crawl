@@ -1889,7 +1889,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_DEEP_DWARF:
         case SP_KOBOLD:
         case SP_NAGA:
-        case SP_OGRE:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
         case SP_GHOUL:
