@@ -1114,7 +1114,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     const int monster =
         create_monster(
             mgen_data(mon, BEH_FRIENDLY,
-                      0, SPELL_TWISTED_RESURRECTION,
+                      0, 0,
                       you.pos(), MHITYOU,
                       MG_FORCE_BEH, god,
                       MONS_PROGRAM_BUG, 0, colour));
