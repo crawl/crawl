@@ -457,10 +457,10 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_KOBOLD
      80,                        // SK_FIGHTING
      60,                        // SK_SHORT_BLADES
-     100,                       // SK_LONG_BLADES
+     140,                       // SK_LONG_BLADES
      120,                       // SK_UNUSED_1
      110,                       // SK_AXES
-     140,                       // SK_MACES_FLAILS
+     100,                       // SK_MACES_FLAILS
      150,                       // SK_POLEARMS
      110,                       // SK_STAVES
      70,                        // SK_SLINGS

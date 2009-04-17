@@ -1575,12 +1575,12 @@ Kobolds are small, ugly creatures with few redeeming features. They are
 not the sort of people you would want to spend much time with, unless
 you happened to be a Kobold yourself.
 
-They have poor abilities and have similar aptitudes to Halflings without
-the excellent agility. However, they are better than Halflings at using
-some types of magic, particularly summonings and necromancy. They often
-live as scavengers, surviving on carrion (which they can eat even when
-not hungry), but are carnivorous and can only eat meat. They advance in
-levels as quickly as Humans.
+They have poor abilities and similar aptitudes to Halflings, except for
+a tendency to be stronger and less agile. Also, they are better than
+Halflings at using some types of magic, particularly summonings and
+necromancy. They often live as scavengers, surviving on carrion (which
+they can eat even when not hungry), but are carnivorous and can only eat
+meat. Kobolds advance in levels as quickly as Humans.
 
 Spriggans
 ---------
