@@ -56,8 +56,9 @@
 # name = Delilah
 # remember_name = false
 # use_old_selection_order = true
-# weapon = (random | short sword | hand axe | spear | mace | trident)
+# weapon = (short sword | hand axe | spear | mace | trident | random)
 # book = (fire | ice | summ | random)
+# wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
 # chaos_knight = (Xom | Makhleb | random)
 # death_knight = (necromancy | Yredelemnul | random)
 # priest       = (Zin | Yredelemnul | Beogh | random)
