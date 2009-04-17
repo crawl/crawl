@@ -153,7 +153,8 @@ int holy_word_monsters(coord_def where, int pow, int caster,
                 // Currently, holy word annoys the monsters it affects
                 // because it can kill them, and because hostile
                 // monsters don't use it.
-                behaviour_event(monster, ME_ANNOY, MHITYOU);
+                if (attacker != NULL)
+                    behaviour_event(monster, ME_ANNOY, attacker->mindex());
 
                 if (monster->speed_increment >= 25)
                     monster->speed_increment -= 20;
