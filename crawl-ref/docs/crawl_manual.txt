@@ -1631,11 +1631,12 @@ Ogres are huge, chunky creatures who typically are strong rather than
 smart, and not nimble at all. Their size also makes them hunger more
 than smaller folk. Ogres mature almost as quickly as Humans.
 
-Their preferred method of avoiding beatings is dodging and the use of
-shields. Many Ogres find it natural to wield some large and blunt weapon.
-(Countless lethal incidents have taught them to leave edged weapons be.)
-While all sophisticated forms of missile combat are too awkward for them,
-they are good at throwing things, in particular boulders.
+Their preferred methods of avoiding beatings are dodging and the use of
+shields. Many Ogres find it natural to wield some large and blunt
+weapon. (Countless lethal incidents have taught them to leave most edged
+weapons be.) While all sophisticated forms of missile combat are too
+awkward for them, they are good at throwing things, in particular
+boulders.
 
 Contrary to expectations, Ogres are not reduced to mindless brutes. They
 possess a raw talent for witchcraft, letting them pick up the basics of

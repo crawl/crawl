@@ -21,11 +21,11 @@ This spell causes aberrations to form in the caster's body, leaving the caster i
 %%%%
 Animate Dead
 
-This spell causes the dead to rise up and serve the caster; every corpse within a certain distance of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on via stairs.
+This spell causes the dead to rise up and serve the caster; every corpse within a certain distance of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on.
 %%%%
 Animate Skeleton
 
-This spell raises an inert skeleton to a state of unlife. Note that skeletons are incapable of leaving the level they were created on via stairs.
+This spell raises an inert skeleton to a state of unlife. Note that skeletons are incapable of leaving the level they were created on.
 %%%%
 Apportation
 
@@ -145,7 +145,7 @@ This spell removes poison from the caster's system.
 %%%%
 Death Channel
 
-This spell raises living creatures slain by the caster into a state of unliving slavery as spectral things. Note that spectral things are incapable of leaving the level they were created on via stairs.
+This spell raises living creatures slain by the caster into a state of unliving slavery as spectral things. Note that spectral things are incapable of leaving the level they were created on.
 %%%%
 Death's Door
 
@@ -488,7 +488,7 @@ This spell eliminates all sound near the caster. This makes reading scrolls, cas
 %%%%
 Simulacrum
 
-This spell uses a piece of flesh in hand to create a replica of the original being out of ice. This magic is unstable so eventually the replica will sublimate into a freezing cloud, if it isn't hacked or melted into a small puddle of water first. Note that simulacra are incapable of leaving the level they were created on via stairs.
+This spell uses a piece of flesh in hand to create a replica of the original being out of ice. This magic is unstable so eventually the replica will sublimate into a freezing cloud, if it isn't hacked or melted into a small puddle of water first. Note that simulacra are incapable of leaving the level they were created on.
 %%%%
 Slow
 
