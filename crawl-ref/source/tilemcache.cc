@@ -125,7 +125,7 @@ protected:
 
 unsigned int tile_fg_store::operator=(unsigned int tile)
 {
-    if (tile & TILE_FLAG_MASK == m_tile & TILE_FLAG_MASK)
+    if ((tile & TILE_FLAG_MASK) == (m_tile & TILE_FLAG_MASK))
     {
         // Update, as flags may have changed.
         m_tile = tile;
