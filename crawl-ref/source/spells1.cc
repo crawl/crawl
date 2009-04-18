@@ -731,6 +731,7 @@ static int _healing_spell(int healed, bool divine_ability,
     }
 
     const bool can_pacify = _can_pacify_monster(monster, healed);
+    const bool was_hostile = _mons_hostile(monster);
 
     // Don't divinely heal a monster you can't pacify.
     if (divine_ability
@@ -775,7 +776,7 @@ static int _healing_spell(int healed, bool divine_ability,
         else
             print_wounds(monster);
 
-        if (you.religion == GOD_ELYVILON && !_mons_hostile(monster))
+        if (you.religion == GOD_ELYVILON && !was_hostile)
         {
             simple_god_message(" appreciates your healing of a fellow "
                                "creature.");
