@@ -1820,7 +1820,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                 // either the wand "no charges left" or the meat chunk
                 // "unpleasant" description can follow on the same line.
                 // Same for missiles' descriptions.
-                description.seekp(description.tellp() - (std::streamoff)1);
+                description.seekp(description.tellp() - (std::streamoff)2);
                 description << " ";
             }
         }
@@ -1952,7 +1952,8 @@ std::string get_item_description( const item_def &item, bool verbose,
                 break;
             }
 
-            if (is_good_god(you.religion) && is_player_same_species(item.plus)
+            if (god_hates_cannibalism(you.religion)
+                   && is_player_same_species(item.plus)
                 || you.religion == GOD_ZIN
                    && mons_class_intel(item.plus) >= I_NORMAL)
             {
@@ -2720,6 +2721,12 @@ static std::string _monster_stat_description(const monsters& mon)
                << (fly == FL_FLY ? "fly" : "levitate") << ".$";
     }
 
+    // Unusual regeneration rates.
+    if (!mons_can_regenerate(&mon))
+        result << pronoun << " cannot regenerate.$";
+    else if (monster_descriptor(mon.type, MDSC_REGENERATES))
+        result << pronoun << " regenerates quickly.$";
+
     return (result.str());
 }
 
@@ -2859,8 +2866,8 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         break;
     }
 
-    // Don't leak or duplicate resistance information for ghosts/demons.
-    if (mons.type != MONS_PANDEMONIUM_DEMON && mons.type != MONS_PLAYER_GHOST)
+    // Don't leak or duplicate resistance information for demons.
+    if (mons.type != MONS_PANDEMONIUM_DEMON)
     {
         std::string result = _monster_stat_description(mons);
         if (!result.empty())

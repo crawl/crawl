@@ -1562,22 +1562,22 @@ void armour_wear_effects(const int item_slot)
         mpr("Oops, that feels deathly cold.");
         learned_something_new(TUT_YOU_CURSED);
 
-        int amusement = 32;
-
-        // Cursed cloaks prevent you from removing body armour.
-        if (get_armour_slot(arm) == EQ_CLOAK)
-            amusement *= 2;
-
         if (!known_cursed)
         {
-            amusement *= 2;
+            int amusement = 64;
+
+            // Cursed cloaks prevent you from removing body armour.
+            // Cursed gloves prevent switching of rings.
+            if (get_armour_slot(arm) == EQ_CLOAK
+                || get_armour_slot(arm) == EQ_GLOVES)
+            {
+                amusement *= 2;
+            }
 
             god_type god;
             if (origin_is_god_gift(arm, &god) && god == GOD_XOM)
                 amusement *= 2;
         }
-
-        xom_is_stimulated(amusement);
     }
 
     if (eq_slot == EQ_SHIELD)
