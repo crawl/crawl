@@ -233,6 +233,8 @@ You hear Xom's maniacal laughter.
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
+
+"This might be better!"
 %%%%
 Xom teleportation journey
 
@@ -247,6 +249,8 @@ Xom twists space around you.
 Xom confusion
 
 "Heh heh heh..."
+
+Xom titters.
 %%%%
 # 25% chance of draining, else torment
 Xom draining or torment
@@ -380,13 +384,13 @@ Xom smiles on you.
 %%%%
 Xom repel stairs
 
-Xom alters the dungeon around you.
-
 Xom changes the scenery.
 
 Xom pokes at a staircase.
 
 "Tag, you're it!"
+
+Xom alters the dungeon around you.
 %%%%
 # Xom laughing
 # (Currently only used post-game in response to "You die...")

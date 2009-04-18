@@ -1340,8 +1340,8 @@ static bool _swap_monsters(monsters *m1, monsters *m2)
 }
 
 // Swap places with a random monster and, depending on severity, also
-// between monsters. This can be pretty bad if there are a lot of hostile
-// monsters around.
+// between monsters. This can be pretty bad if there are a lot of
+// hostile monsters around.
 static bool _xom_rearrange_pieces(int sever)
 {
     if (player_stair_delay())
@@ -1375,11 +1375,11 @@ static bool _xom_rearrange_pieces(int sever)
     if (one_chance_in(5))
         _confuse_monster(*mon, sever);
 
-    if (num_mons > 1 && x_chance_in_y(sever,70))
+    if (num_mons > 1 && x_chance_in_y(sever, 70))
     {
         bool did_message = false;
-        const int max_repeats = std::min(num_mons/2, 8);
-        const int repeats     = std::min(random2(sever/10)+1, max_repeats);
+        const int max_repeats = std::min(num_mons / 2, 8);
+        const int repeats     = std::min(random2(sever / 10) + 1, max_repeats);
         for (int i = 0; i < repeats; ++i)
         {
             const int mon1 = random2(num_mons);
