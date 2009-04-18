@@ -2385,6 +2385,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         {
             item.quantity = 1;
         }
+
         item.sub_type = stype;
     }
 
@@ -2873,7 +2874,7 @@ int items( int allow_uniques,       // not just true-false,
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
         item.sub_type = force_type;
-        set_unique_item_status( OBJ_ORBS, item.sub_type, UNIQ_EXISTS );
+        set_unique_item_status(OBJ_ORBS, item.sub_type, UNIQ_EXISTS);
         break;
 
     case OBJ_MISCELLANY:
