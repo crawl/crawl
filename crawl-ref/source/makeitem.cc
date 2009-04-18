@@ -2819,7 +2819,7 @@ int items( int allow_uniques,       // not just true-false,
         if (get_unique_item_status(OBJ_WEAPONS, force_ego) == UNIQ_NOT_EXISTS)
         {
             make_item_fixed_artefact(mitm[p], false, force_ego);
-            return p;
+            return (p);
         }
         // the base item otherwise
         item.special = SPWPN_NORMAL;
