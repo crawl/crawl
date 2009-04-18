@@ -2489,7 +2489,7 @@ void wizard_list_items()
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         item_def &item(mitm[i]);
-        if (!is_valid_item(item) || held_by_monster(item))
+        if (!is_valid_item(item) || item.held_by_monster())
             continue;
 
         if (item.link != NON_ITEM)
@@ -2728,7 +2728,7 @@ void debug_item_scan( void )
 
         strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
 
-        const monsters* mon = holding_monster(mitm[i]);
+        const monsters* mon = mitm[i].holding_monster();
 
         // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
@@ -3007,7 +3007,7 @@ void debug_mons_scan()
                 continue;
             }
 
-            const monsters* holder = holding_monster(item);
+            const monsters* holder = item.holding_monster();
 
             if (holder == NULL)
             {
@@ -3031,6 +3031,7 @@ void debug_mons_scan()
                                  "monster %s (%d, %d) [midx = %d]",
                      m->full_name(DESC_PLAIN, true).c_str(),
                      m->pos().x, m->pos().y, i,
+                     item.name(DESC_PLAIN).c_str(),
                      holder->full_name(DESC_PLAIN, true).c_str(),
                      holder->pos().x, holder->pos().y, holder->mindex());
 
@@ -6680,12 +6681,12 @@ void debug_dump_mon(const monsters* mon, bool recurse)
 
         fprintf(stderr, "%s", item.name(DESC_PLAIN, false, true).c_str());
 
-        if (!held_by_monster(item))
+        if (!item.held_by_monster())
             fprintf(stderr, " [not held by monster, pos = %s]",
                     debug_coord_str(item.pos).c_str());
-        else if (holding_monster(item) != mon)
+        else if (item.holding_monster() != mon)
             fprintf(stderr, " [held by other monster: %s]",
-                    debug_mon_str(holding_monster(item)).c_str());
+                    debug_mon_str(item.holding_monster()).c_str());
 
         fprintf(stderr, EOL);
     }

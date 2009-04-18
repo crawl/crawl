@@ -620,6 +620,16 @@ public:
     {
         *this = item_def();
     }
+
+    // Sets this item as being held by a given monster.
+    void set_holding_monster(int midx);
+
+    // Returns monster holding this item.  NULL if none.
+    monsters* holding_monster() const;
+
+    // Returns true if a monster is holding this item.
+    bool held_by_monster() const;
+
 private:
     std::string name_aux(description_level_type desc,
                          bool terse, bool ident,

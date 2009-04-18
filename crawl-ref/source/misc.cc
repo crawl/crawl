@@ -302,7 +302,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     // Coagulated blood cannot coagulate any further...
     ASSERT(blood.sub_type == POT_BLOOD);
 
-    if (!held_by_monster(blood))
+    if (!blood.held_by_monster())
     {
         // Now that coagulating is necessary, check square for
         // !coagulated blood.
@@ -392,8 +392,8 @@ void maybe_coagulate_blood_potions_floor(int obj)
     ASSERT(timer_new.size() == coag_count);
     props_new.assert_validity();
 
-    if (held_by_monster(blood))
-        move_item_to_grid(&o, holding_monster(blood)->pos());
+    if (blood.held_by_monster())
+        move_item_to_grid(&o, blood.holding_monster()->pos());
     else
         move_item_to_grid(&o, blood.pos);
 

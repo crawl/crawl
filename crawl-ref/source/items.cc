@@ -114,7 +114,7 @@ void link_items(void)
     {
         // Don't mess with monster held items, since the index of the holding
         // monster is stored in the link field.
-        if (held_by_monster(mitm[i]))
+        if (mitm[i].held_by_monster())
             continue;
 
         if (!is_valid_item(mitm[i]))
@@ -368,7 +368,7 @@ void unlink_item( int dest )
     if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
         return;
 
-    monsters* monster = holding_monster(mitm[dest]);
+    monsters* monster = mitm[dest].holding_monster();
 
     if (monster != NULL)
     {
@@ -2687,4 +2687,27 @@ int item_def::armour_rating() const
         return (0);
 
     return (property(*this, PARM_AC) + plus);
+}
+
+monsters* item_def::holding_monster() const
+{
+    if (!pos.equals(-2, -2))
+        return (NULL);
+    const int midx = link - NON_ITEM - 1;
+    if (invalid_monster_index(midx))
+        return (NULL);
+
+    return (&menv[midx]);
+}
+
+void item_def::set_holding_monster(int midx)
+{
+    ASSERT(midx != NON_MONSTER);
+    pos.set(-2, -2);
+    link = NON_ITEM + 1 + midx;
+}
+
+bool item_def::held_by_monster() const
+{
+    return (pos.equals(-2, -2) && !invalid_monster_index(link - NON_ITEM - 1));
 }

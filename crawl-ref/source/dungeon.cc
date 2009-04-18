@@ -1089,7 +1089,7 @@ static void _fixup_misplaced_items()
     {
         item_def& item(mitm[i]);
         if (!is_valid_item(item) || (item.pos.x == 0)
-            || held_by_monster(item))
+            || item.held_by_monster())
         {
             continue;
         }

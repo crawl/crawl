@@ -2565,6 +2565,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
 
         mon.inv[i]      = new_index;
         mitm[new_index] = mitm[old_index];
+        mitm[new_index].set_holding_monster(midx);
     }
 
     bool _obvious;

@@ -3029,7 +3029,7 @@ static void _give_monster_item(monsters *mon, int thing,
         return;
     }
     ASSERT(is_valid_item(mthing));
-    ASSERT(holding_monster(mthing) == mon);
+    ASSERT(mthing.holding_monster() == mon);
 
     if (!force_item || mthing.colour == BLACK)
         item_colour(mthing);

@@ -4329,28 +4329,11 @@ void monsters::pickup_message(const item_def &item, int near)
     }
 }
 
-bool held_by_monster(const item_def &item)
-{
-    return (item.pos.equals(-2, -2)
-            && !invalid_monster_index(item.link - NON_ITEM - 1));
-}
-
-monsters* holding_monster(const item_def &item)
-{
-    if (!item.pos.equals(-2, -2))
-        return (NULL);
-    const int midx = item.link - NON_ITEM - 1;
-    if (invalid_monster_index(midx))
-        return (NULL);
-
-    return (&menv[midx]);
-}
-
 bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 {
     ASSERT(is_valid_item(item));
 
-    const monsters *other_mon = holding_monster(item);
+    const monsters *other_mon = item.holding_monster();
 
     if (other_mon != NULL)
     {
@@ -4442,8 +4425,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 
     inv[slot] = item_index;
 
-    item.pos.set(-2, -2);
-    item.link = NON_ITEM + 1 + mindex();
+    item.set_holding_monster(mindex());
 
     pickup_message(item, near);
     equip(item, slot, near);
