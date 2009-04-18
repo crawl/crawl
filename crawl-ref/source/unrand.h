@@ -873,9 +873,9 @@
         0, 0
     }
     ,
-        "This trident was stolen many years ago from the Octopus king's garden "
-        "by a really unimportant and already dead man. But beware of "
-        "the Octopus king's wrath!",
+        "This trident was stolen many years ago from the Octopus King's garden "
+        "by a really unimportant and already dead man. But beware of the "
+        "Octopus King's wrath!",
         "",
         ""
 }
