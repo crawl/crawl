@@ -2172,12 +2172,14 @@ void TextRegion::addstr(char *buffer)
     {
         char c = buffer[i];
         bool newline = false;
-        if (c == '\n' || c == '\r')
+
+        if (c == '\r')
+            continue;
+
+        if (c == '\n')
         {
             c = 0;
             newline = true;
-            if (buffer[i+1] == '\n' || buffer[i+1] == '\r')
-                i++;
         }
         buf2[j] = c;
         j++;

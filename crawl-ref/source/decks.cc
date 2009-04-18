@@ -935,10 +935,6 @@ static void _describe_cards(std::vector<card_type> cards)
         name = uppercase_first(name);
         data << "<w>" << name << "</w>\n"
              << get_linebreak_string(desc, get_number_of_cols())
-#ifdef USE_TILE
-    // For some reason we need another linebreak here, for the tiles version.
-             << EOL
-#endif
              << EOL;
     }
     formatted_string fs = formatted_string::parse_string(data.str());
