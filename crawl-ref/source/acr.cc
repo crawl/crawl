@@ -3946,6 +3946,7 @@ static void _do_prev_cmd_again()
         mpr("No previous command to re-do.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
+        repeat_again_rec.clear();
         return;
     }
 
