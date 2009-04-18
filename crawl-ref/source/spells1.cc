@@ -730,16 +730,41 @@ static int _healing_spell(int healed, bool divine_ability,
         return (0);
     }
 
+    const bool can_pacify = _can_pacify_monster(monster, healed);
+
     // Don't divinely heal a monster you can't pacify.
     if (divine_ability
         && you.religion == GOD_ELYVILON
-        && !_can_pacify_monster(monster, healed))
+        && !can_pacify)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (0);
     }
 
     bool did_something = false;
+
+    if (you.religion == GOD_ELYVILON
+        && can_pacify
+        && _mons_hostile(monster))
+    {
+        did_something = true;
+        simple_god_message(" supports your offer of peace.");
+
+        if (mons_is_holy(monster))
+            good_god_holy_attitude_change(monster);
+        else
+        {
+            const bool is_summoned = mons_is_summoned(monster);
+
+            simple_monster_message(monster, " turns neutral.");
+            mons_pacify(monster);
+
+            // Give a small piety return.
+            if (!is_summoned)
+                gain_piety(1 + random2(healed/15));
+        }
+    }
+
     if (heal_monster(monster, healed, false))
     {
         did_something = true;
@@ -756,27 +781,6 @@ static int _healing_spell(int healed, bool divine_ability,
                                "creature.");
             if (one_chance_in(8))
                 gain_piety(1);
-        }
-    }
-
-    if (you.religion == GOD_ELYVILON
-        && _can_pacify_monster(monster, healed)
-        && _mons_hostile(monster))
-    {
-        did_something = true;
-        simple_god_message(" supports your offer of peace.");
-
-        if (mons_is_holy(monster))
-            good_god_holy_attitude_change(monster);
-        else
-        {
-            const bool is_summoned = mons_is_summoned(monster);
-            simple_monster_message(monster, " turns neutral.");
-            mons_pacify(monster);
-
-            // Give a small piety return.
-            if (!is_summoned)
-                gain_piety(1 + random2(healed/15));
         }
     }
 
