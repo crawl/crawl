@@ -890,7 +890,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 {
                     lose_piety(21 + random2(20));
                 }
-
                 return;
             }
         }

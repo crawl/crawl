@@ -1237,7 +1237,7 @@ void pickup()
         int next;
         mpr("There are several objects here.");
         std::string pickup_warning;
-        while ( o != NON_ITEM )
+        while (o != NON_ITEM)
         {
             // Must save this because pickup can destroy the item.
             next = mitm[o].link;
@@ -1254,7 +1254,7 @@ void pickup()
 #ifdef USE_TILE
                                      "Left-click to enter menu, or press "
 #endif
-                                     "y/n/a/*?g,/q)";
+                                     "y/n/a/*?g,/q/o)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
                      get_menu_colour_prefix_tags(mitm[o],
@@ -1271,7 +1271,7 @@ void pickup()
                 break;
             }
 
-            if (keyin == 'q' || keyin == ESCAPE)
+            if (keyin == 'q' || keyin == ESCAPE || keyin == 'o')
                 break;
 
             if (keyin == 'y' || keyin == 'a')
@@ -1297,6 +1297,9 @@ void pickup()
 
         if (!pickup_warning.empty())
             mpr(pickup_warning.c_str());
+
+        if (keyin == 'o')
+            start_explore(Options.explore_greedy);
     }
 }
 

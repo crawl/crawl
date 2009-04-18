@@ -1126,7 +1126,7 @@ int monster_die(monsters *monster, killer_type killer,
     {
         take_note(Note(NOTE_KILL_MONSTER,
                        monster->type, mons_friendly(monster),
-                       monster->name(DESC_NOCAP_A, true).c_str()));
+                       monster->full_name(DESC_NOCAP_A).c_str()));
     }
 
     // From time to time Trog gives you a little bonus
@@ -1979,17 +1979,17 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     bool can_see     = you.can_see(monster);
     bool can_see_new = !mons_class_flag(targetc, M_INVIS) || player_see_invis();
 
+    bool need_note = false;
+    std::string old_name = monster->full_name(DESC_CAP_A);
 
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
     if (can_see && MONST_INTERESTING(monster))
-    {
-        take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
-                       monster->name(DESC_CAP_A, true).c_str()));
-    }
+        need_note = true;
 
+    std::string new_name = "";
     if (monster->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
-        str_polymon = " grows a second head!";
+        str_polymon = " grows a second head";
     else
     {
         if (mons_is_shapeshifter(monster))
@@ -2000,17 +2000,20 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
             str_polymon = " evaporates and reforms as ";
 
         if (!can_see_new)
-            str_polymon += "something you cannot see!";
+        {
+            new_name = "something unseen";
+            str_polymon += "something you cannot see";
+        }
         else
         {
             str_polymon += mons_type_name(targetc, DESC_NOCAP_A);
 
             if (targetc == MONS_PULSATING_LUMP)
                 str_polymon += " of flesh";
-
-            str_polymon += "!";
         }
     }
+    str_polymon += "!";
+
     bool player_messaged = can_see
                        && simple_monster_message(monster, str_polymon.c_str());
 
@@ -2116,13 +2119,25 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     // New monster type might be interesting.
     mark_interesting_monst(monster);
+    if (new_name.empty())
+        new_name = monster->full_name(DESC_NOCAP_A);
+
+    if (need_note
+        || can_see && you.can_see(monster) && MONST_INTERESTING(monster))
+    {
+        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name.c_str(),
+                       new_name.c_str()));
+
+        if (you.can_see(monster))
+            monster->flags |= MF_SEEN;
+    }
 
     // If new monster is visible to player, then we've seen it.
     if (you.can_see(monster))
     {
         seen_monster(monster);
         // If the player saw both the beginning and end results of a
-        // shifter changing, then he/she knows it must be a shifter.
+        // shifter changing, then s/he knows it must be a shifter.
         if (can_see && shifter.ench != ENCH_NONE)
             monster->flags |= MF_KNOWN_MIMIC;
     }
@@ -2680,16 +2695,13 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         break;
 
     case ME_SCARE:
-        // Stationary monsters can't flee.
-        if (mons_is_stationary(mon))
+        // Stationary monsters can't flee, and berserking monsters
+        // are too enraged.
+        if (mons_is_stationary(mon) || mon->has_ench(ENCH_BERSERK))
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;
         }
-
-        // Berserking monsters don't flee.
-        if (mon->has_ench(ENCH_BERSERK))
-            break;
 
         // Neither do plants or nonliving beings.
         if (mons_class_holiness(mon->type) == MH_PLANT
@@ -8888,7 +8900,7 @@ void seen_monster(monsters *monster)
     {
         take_note(
             Note(NOTE_SEEN_MONSTER, monster->type, 0,
-                 monster->name(DESC_NOCAP_A).c_str()));
+                 monster->name(DESC_NOCAP_A, true).c_str()));
     }
 }
 

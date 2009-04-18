@@ -60,6 +60,8 @@ REVISION("$Rev$");
 #    define DEBUG_GIFTS       1
 #endif
 
+#define HALF_MAX_PIETY      MAX_PIETY / 2
+
 // Which spells?  First I copied all spells from your_spells(), and then
 // I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
@@ -70,8 +72,7 @@ static const spell_type _xom_nontension_spells[] =
 {
     SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS, SPELL_SUMMON_BUTTERFLIES,
     SPELL_DETECT_CREATURES, SPELL_FLY, SPELL_SPIDER_FORM,
-    SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_STATUE_FORM, SPELL_ICE_FORM,
-    SPELL_DRAGON_FORM, SPELL_NECROMUTATION
+    SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_NECROMUTATION
 };
 
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
@@ -96,22 +97,22 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
 {
     // XM_NORMAL
     {
-        "Xom roars with laughter!",
-        "Xom thinks this is hilarious!",
-        "Xom is highly amused!",
-        "Xom is amused.",
+        "Xom is interested.",
         "Xom is mildly amused.",
-        "Xom is interested."
+        "Xom is amused.",
+        "Xom is highly amused!",
+        "Xom thinks this is hilarious!",
+        "Xom roars with laughter!"
     },
 
     // XM_INTRIGUED
     {
-        "Xom is fascinated!",
-        "Xom is very intrigued!",
-        "Xom is intrigued!",
-        "Xom is extremely interested.",
+        "Xom is interested.",
         "Xom is very interested.",
-        "Xom is interested."
+        "Xom is extremely interested.",
+        "Xom is intrigued!",
+        "Xom is very intrigued!",
+        "Xom is fascinated!"
     }
 };
 
@@ -175,11 +176,22 @@ bool xom_is_nice(int tension)
         if (you.gift_timeout == 0)
             return (false);
 
-        // At high tension Xom is more likely to be nice.
-        int tension_bonus = (tension <= 0 ? 0 : random2(tension));
+        // At high tension Xom is more likely to be nice,
+        // at zero tension the opposite.
+        const int tension_bonus
+            = (tension == -1 ? 0 :
+               tension ==  0 ? -std::min(abs(HALF_MAX_PIETY - you.piety)/2,
+                                         you.piety/10)
+                             : std::min((MAX_PIETY - you.piety)/2,
+                                        random2(tension)));
 
+#ifdef DEBUG_XOM
+        mprf(MSGCH_DIAGNOSTICS,
+             "Xom: tension: %d, piety: %d -> tension bonus = %d",
+             tension, you.piety, tension_bonus);
+#endif
         // Whether Xom is nice depends largely on his mood (== piety).
-        return (x_chance_in_y(you.piety + tension_bonus, MAX_PIETY + 1));
+        return (x_chance_in_y(you.piety + tension_bonus, MAX_PIETY));
     }
     else // CARD_XOM
         return coinflip();
@@ -250,18 +262,37 @@ void xom_tick()
 {
     // Xom semi-randomly drifts your piety.
     const std::string old_xom_favour = describe_xom_favour();
-    const bool good = you.piety > (MAX_PIETY / 2);
-    int size = abs(you.piety - 100);
+    const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
+                                                  : you.piety > HALF_MAX_PIETY);
+    int size = abs(you.piety - HALF_MAX_PIETY);
+
+    // Piety slowly drifts towards the extremes.
     int delta = (x_chance_in_y(511, 1000) ? 1 : -1);
     size += delta;
-    you.piety = (MAX_PIETY / 2) + (good ? size : -size);
+    if (size > HALF_MAX_PIETY)
+        size = HALF_MAX_PIETY;
+
+    you.piety = HALF_MAX_PIETY + (good ? size : -size);
     std::string new_xom_favour = describe_xom_favour();
     if (old_xom_favour != new_xom_favour)
     {
-        // Dampen oscillation across announcement boundaries.
+        // If we entered another favour state, take a big step into
+        // the new territory to avoid oscillating favour announcements
+        // every few turns.
         size += delta * 8;
-        you.piety = (MAX_PIETY / 2) + (good ? size : -size);
+        if (size > HALF_MAX_PIETY)
+            size = HALF_MAX_PIETY;
+
+        // If size was 0 to begin with it may become negative but that
+        // doesn't really matter.
+        you.piety = HALF_MAX_PIETY + (good ? size : -size);
     }
+
+#ifdef DEBUG_XOM
+    snprintf(info, INFO_SIZE, "xom_tick(), delta: %d, piety: %d",
+             delta, you.piety);
+    take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
+#endif
 
     // ...but he gets bored...
     if (you.gift_timeout > 0 && coinflip())
@@ -289,7 +320,7 @@ void xom_tick()
         // If Xom is bored the chances for Xom acting are reversed.
         if (you.gift_timeout == 0 && x_chance_in_y(5-chance,5))
         {
-            xom_acts(abs(you.piety - MAX_PIETY/2), tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
@@ -314,7 +345,7 @@ void xom_tick()
         }
 
         if (x_chance_in_y(chance, 5))
-            xom_acts(abs(you.piety - MAX_PIETY/2), tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
     }
 }
 
@@ -831,8 +862,11 @@ static bool _choose_chaos_upgrade(const monsters* mon)
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.
-    if (mons_species(mon->type) == MONS_ORC)
+    if (mons_species(mon->type) == MONS_ORC
+        && (mons_class_flag(mon->type, M_PRIEST) || coinflip()))
+    {
         return (false);
+    }
 
     mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON, MSLOT_MISSILE};
 
@@ -1262,7 +1296,7 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
             god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
 #ifdef NOTE_DEBUG_XOM
-            std::string old_name = mon->name(DESC_PLAIN);
+            std::string old_name = mon->full_name(DESC_PLAIN);
 #endif
             if (one_chance_in(8) && !mons_is_shapeshifter(mon))
             {
@@ -1277,7 +1311,7 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
 #ifdef NOTE_DEBUG_XOM
             static char poly_buf[120];
             snprintf(poly_buf, sizeof(poly_buf), "XOM: polymorph %s -> %s (%s)",
-                     old_name.c_str(), mon->name(DESC_PLAIN, true).c_str(),
+                     old_name.c_str(), mon->full_name(DESC_PLAIN).c_str(),
                      powerup ? "upgrade" : "downgrade");
             take_note(Note(NOTE_MESSAGE, 0, 0, poly_buf), true);
 #endif
@@ -1374,8 +1408,8 @@ static bool _xom_rearrange_pieces(int sever)
     monsters *mon = mons[random2(num_mons)];
     swap_with_monster(mon);
 
-    // Occasionally confuse said monster.
-    if (one_chance_in(5))
+    // Sometimes confuse said monster.
+    if (coinflip())
         _confuse_monster(*mon, sever);
 
     if (num_mons > 1 && x_chance_in_y(sever, 70))
@@ -1397,9 +1431,9 @@ static bool _xom_rearrange_pieces(int sever)
                     mpr("Some monsters swap places.");
                     did_message = true;
                 }
-                if (one_chance_in(5))
+                if (one_chance_in(3))
                     _confuse_monster(*mons[mon1], sever);
-                if (one_chance_in(5))
+                if (one_chance_in(3))
                     _confuse_monster(*mons[mon2], sever);
             }
         }
@@ -2237,6 +2271,14 @@ static bool _xom_player_confusion_effect(int sever)
     return (rc);
 }
 
+static bool _valid_floor_grid(coord_def pos)
+{
+    if (!in_bounds(pos))
+        return (false);
+
+    return (grd(pos) == DNGN_FLOOR);
+}
+
 static bool _move_stair(coord_def stair_pos, bool away)
 {
     dungeon_feature_type feat = grd(stair_pos);
@@ -2252,13 +2294,24 @@ static bool _move_stair(coord_def stair_pos, bool away)
         if (stair_pos == you.pos())
         {
             coord_def new_pos(stair_pos);
-            int adj_count = 0;
-            for (adjacent_iterator ai(stair_pos); ai; ++ai)
-                if (grid_stair_direction(grd(*ai)) == CMD_NO_CMD
-                    && one_chance_in(++adj_count))
-                {
-                    new_pos = *ai;
-                }
+            // Loop twice through all adjacent grids. In the first round,
+            // only consider grids whose next neighbour in the direction
+            // away from the player is also of type floor. If we didn't
+            // find any matching grid, try again without that restriction.
+            for (int tries = 0; tries < 2; ++tries)
+            {
+                int adj_count = 0;
+                for (adjacent_iterator ai(stair_pos); ai; ++ai)
+                    if (grd(*ai) == DNGN_FLOOR
+                        && (tries || _valid_floor_grid(*ai + *ai - stair_pos))
+                        && one_chance_in(++adj_count))
+                    {
+                        new_pos = *ai;
+                    }
+
+                if (!tries && new_pos != stair_pos)
+                    break;
+            }
 
             if (new_pos == stair_pos)
                 return (false);
@@ -2403,10 +2456,7 @@ static bool _repel_stairs()
 
     // Should only happen if there are stairs in view.
     if (stairs_avail.empty())
-    {
-        mpr("No stairs found!");
         return (false);
-    }
 
     god_speaks(GOD_XOM,
                _get_xom_speech("repel stairs").c_str());
@@ -2491,13 +2541,21 @@ static bool _xom_summon_hostiles(int sever)
     const std::string speech = _get_xom_speech("hostile monster");
 
     // Nasty, but fun.
-    if (player_weapon_wielded() && one_chance_in(4))
+//     if (player_weapon_wielded() && one_chance_in(4))
+    if (player_weapon_wielded())
     {
+        const item_def& weapon = *you.weapon();
+        const std::string wep_name = weapon.name(DESC_PLAIN);
         rc = cast_tukimas_dance(100, GOD_XOM, true);
 
 #ifdef NOTE_DEBUG_XOM
         if (rc)
-            take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: animates weapon"), true);
+        {
+            static char wpn_buf[80];
+            snprintf(wpn_buf, sizeof(wpn_buf),
+                     "XOM: animates weapon (%s)", wep_name.c_str());
+            take_note(Note(NOTE_MESSAGE, 0, 0, wpn_buf), true);
+        }
 #endif
     }
     else
@@ -2677,9 +2735,6 @@ static bool _xom_is_bad(int sever, int tension)
         mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
              badness, you.gift_timeout);
 #endif
-        const std::string new_xom_favour = describe_xom_favour();
-        const std::string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
     }
     return (done);
 }
@@ -2886,7 +2941,8 @@ void xom_acts(bool niceness, int sever, int tension)
     take_note(Note(NOTE_MESSAGE, 0, 0, xom_buf), true);
 #endif
 
-    if (niceness && !one_chance_in(15))
+    const bool was_bored = _xom_is_bored();
+    if (niceness && !one_chance_in(20))
     {
         // Good stuff.
         while (!_xom_is_good(sever, tension))
@@ -2895,7 +2951,7 @@ void xom_acts(bool niceness, int sever, int tension)
     else
     {
 #ifdef NOTE_DEBUG_XOM
-        if (_xom_is_bored())
+        if (was_bored)
             take_note(Note(NOTE_MESSAGE, 0, 0, "XOM is BORED!"), true);
 #ifdef DEBUG_XOM
         else if (niceness)
@@ -2924,16 +2980,29 @@ void xom_acts(bool niceness, int sever, int tension)
         }
     }
 
-    if (you.religion == GOD_XOM && one_chance_in(8))
+    if (you.religion == GOD_XOM && one_chance_in(5))
     {
         const std::string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY+1);
         const std::string new_xom_favour = describe_xom_favour();
-        if (old_xom_favour != new_xom_favour)
+        if (was_bored || old_xom_favour != new_xom_favour)
         {
             const std::string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
         }
+#ifdef NOTE_DEBUG_XOM
+        snprintf(info, INFO_SIZE, "xom_acts(): reroll piety(1/5), piety: %d",
+                 you.piety);
+        take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
+#endif
+    }
+    else if (was_bored)
+    {
+        // If we didn't reroll at least mention the new favour
+        // now it's not "BORING thing" anymore.
+        const std::string new_xom_favour = describe_xom_favour();
+        const std::string msg = "You are now " + new_xom_favour;
+        god_speaks(you.religion, msg.c_str());
     }
 }
 

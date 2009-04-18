@@ -24,6 +24,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "decks.h"
+#include "describe.h"
 #include "food.h"
 #include "initfile.h"
 #include "invent.h"
@@ -43,11 +44,8 @@ REVISION("$Rev$");
 #include "spl-book.h"
 #include "state.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "view.h"
-#include "items.h"
-
-
-#include "describe.h"
 
 
 id_arr type_ids;
@@ -2613,7 +2611,8 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == FOOD_CHUNK
             && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-                || you.has_spell(SPELL_SIMULACRUM)))
+                || you.has_spell(SPELL_SIMULACRUM)
+                || !temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH))
         {
             return (false);
         }

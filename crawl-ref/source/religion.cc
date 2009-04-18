@@ -85,6 +85,7 @@ REVISION("$Rev$");
 #    define DEBUG_PIETY       1
 #endif
 
+#define DEBUG_PIETY 1
 #define PIETY_HYSTERESIS_LIMIT 1
 
 // Item offering messages for the gods:
@@ -2670,7 +2671,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // Holy gods are easier to please this way
                 if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
                                           you.experience_level / 2)) > 3)
+                {
                     piety_change = 1;
+                }
                 break;
 
             default:
@@ -3248,7 +3251,7 @@ static void _dock_piety(int piety_loss, int penance)
                   (piety_loss == 1) ? " a little " :
                   (piety_loss <  5) ? " " :
                   (piety_loss < 10) ? " very "
-                  : " extremely " );
+                                    : " extremely " );
         }
 
         last_piety_lecture = you.num_turns;
@@ -5393,8 +5396,7 @@ static bool _yred_slaves_abandon_you()
     int num_slaves = 0;
 
     if (you.religion != GOD_YREDELEMNUL)
-        reclaim =
-            apply_to_all_dungeons(_yred_slaves_on_level_abandon_you);
+        reclaim = apply_to_all_dungeons(_yred_slaves_on_level_abandon_you);
     else
     {
         for (radius_iterator ri(you.pos(), 9); ri; ++ri)
@@ -5411,8 +5413,8 @@ static bool _yred_slaves_abandon_you()
                 const int hd = monster->hit_dice;
 
                 // During penance, followers get a saving throw.
-                if (random2((you.piety-you.penance[GOD_YREDELEMNUL])/18) +
-                    random2(you.skills[SK_INVOCATIONS]-6)
+                if (random2((you.piety - you.penance[GOD_YREDELEMNUL])/18)
+                    + random2(you.skills[SK_INVOCATIONS]-6)
                     > random2(hd) + hd + random2(5))
                 {
                     continue;
@@ -5495,8 +5497,8 @@ static bool _beogh_followers_abandon_you()
                     const int hd = monster->hit_dice;
 
                     // During penance, followers get a saving throw.
-                    if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
-                        random2(you.skills[SK_INVOCATIONS]-6)
+                    if (random2((you.piety - you.penance[GOD_BEOGH])/18)
+                        + random2(you.skills[SK_INVOCATIONS]-6)
                         > random2(hd) + hd + random2(5))
                     {
                         continue;

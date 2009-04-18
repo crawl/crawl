@@ -978,7 +978,7 @@ void game_options::reset_options()
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
-    menu_colour_prefix_class = false;
+    menu_colour_prefix_class = true;
     menu_colour_shops = true;
     message_colour_mappings.clear();
     drop_filter.clear();

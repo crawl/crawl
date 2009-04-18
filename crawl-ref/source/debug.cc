@@ -580,7 +580,7 @@ void wizard_create_spec_monster_name()
         }
         ghost.species = static_cast<species_type>(sp_id);
 
-        mpr( "Make player ghost which class? ", MSGCH_PROMPT );
+        mpr( "Make player ghost which job? ", MSGCH_PROMPT );
         get_input_line( input_str, sizeof( input_str ) );
 
         int class_id = get_class_by_abbrev(input_str);
@@ -590,7 +590,7 @@ void wizard_create_spec_monster_name()
 
         if (class_id == -1)
         {
-            mpr("No such class, making it a Fighter.");
+            mpr("No such job, making it a Fighter.");
             class_id = JOB_FIGHTER;
         }
         ghost.job = static_cast<job_type>(class_id);
@@ -5071,6 +5071,8 @@ void wizard_dismiss_all_monsters(bool force_all)
                 monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
             }
         }
+        // If it was turned off turn autopickup back on.
+        autotoggle_autopickup(false);
         return;
     }
 

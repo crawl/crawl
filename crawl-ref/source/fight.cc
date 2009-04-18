@@ -66,7 +66,6 @@ REVISION("$Rev$");
     #define NOTE_DEBUG_CHAOS_EFFECTS
 #endif
 
-#define NOTE_DEBUG_CHAOS_EFFECTS
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
 #include "notes.h"
 #endif

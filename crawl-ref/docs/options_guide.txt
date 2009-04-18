@@ -1367,7 +1367,7 @@ menu_colour = <match>:<colour>:<regex>
         white:
           menu_colour = notes:white:Reached XP level
 
-menu_colour_prefix_class = false
+menu_colour_prefix_class = true
         Setting this option to true will prefix the string against which
         menu_colour regexes are matched (not the string displayed) with
         the item's object type: armour, weapon, wand, etc.

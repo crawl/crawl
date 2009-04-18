@@ -1181,9 +1181,10 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
     if (summoned)
+    {
         menv[id].mark_summoned( mg.abjuration_duration, true,
                                 mg.summon_type );
-
+    }
     menv[id].foe = mg.foe;
 
     // Initialise pandemonium demons.
@@ -2072,7 +2073,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
     bool interesting = false;
 
     // Unique monsters are always intersting
-    if ( mons_is_unique(monster->type) )
+    if (mons_is_unique(monster->type))
         interesting = true;
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)

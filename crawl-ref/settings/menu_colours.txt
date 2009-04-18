@@ -24,7 +24,7 @@ menu = lightmagenta:.*orb.*Zot
 
 # Artefacts
 #
-menu = inventory:white:.*artefact.*
+menu = white:.*artefact.*
 
 #menu = white:.*identified.*artefact.*
 #menu = lightblue:.*unidentified.*artefact.*
@@ -39,11 +39,6 @@ menu = lightblue:(^identified (weapon|armour) .* of )
 # Possible egos
 menu = lightblue:^unidentified .*weapon.*(runed|glowing)
 menu = lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
-
-: elseif options.menu_colour_prefix_class then
-#Possible egos
-menu = lightblue:.*weapon.*(runed|glowing)
-menu = lightblue:.*armour.*(runed|glowing|embroidered|shiny|dyed)
 :end
 
 # Emergency items

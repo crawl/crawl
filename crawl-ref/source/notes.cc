@@ -344,7 +344,7 @@ std::string Note::describe( bool when, bool where, bool what ) const
                 result << "Defeated " << name;
             break;
         case NOTE_POLY_MONSTER:
-            result << name << " changed form";
+            result << name << " changed into " << desc;
             break;
         case NOTE_GOD_POWER:
             result << "Acquired "

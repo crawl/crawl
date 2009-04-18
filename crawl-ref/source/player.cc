@@ -4203,7 +4203,7 @@ int str_to_species(const std::string &species)
 }
 
 std::string species_name(species_type speci, int level, bool genus, bool adj)
-// defaults:             false                          false       false
+// defaults:                                            false       false
 {
     std::string res;
 
@@ -5170,6 +5170,9 @@ void contaminate_player(int change, bool controlled, bool status_only)
         mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
              "You feel %s contaminated with magical energies.",
              (change > 0) ? "more" : "less" );
+
+        if (change > 0)
+            xom_is_stimulated(new_level * 32);
     }
 
     if (new_level >= 1)

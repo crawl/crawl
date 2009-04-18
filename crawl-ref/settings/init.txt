@@ -258,7 +258,7 @@ sort_menus = inv: true : equipped, freshness
 
 #####          Colours (messages and menus) #####
 #
-menu_colour_prefix_class = true
+# menu_colour_prefix_class = false
 # menu_colour_shops = false
 
 # Food is colour coded in standard_colours.txt as follows:
