@@ -3598,23 +3598,26 @@ void update_level(double elapsedTime)
         if (mon->flags & MF_JUST_SUMMONED)
             continue;
 
-        // XXX: Allow some spellcasting (like Healing and Teleport)? -- bwr
+        // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
         // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
 
         // This is the monster healing code, moved here from tag.cc:
-        if (monster_descriptor(mon->type, MDSC_REGENERATES)
-            || mon->type == MONS_PLAYER_GHOST)
+        if (mons_can_regenerate(mon))
         {
-            heal_monster(mon, turns, false);
-        }
-        else if (mons_can_regenerate(mon))
-        {
-            // Set a lower ceiling of 0.1 on the regen rate.
-            const int regen_rate =
-                std::max(mons_natural_regen_rate(mon) * 2, 5);
+            if (monster_descriptor(mon->type, MDSC_REGENERATES)
+                || mon->type == MONS_PLAYER_GHOST)
+            {
+                heal_monster(mon, turns, false);
+            }
+            else
+            {
+                // Set a lower ceiling of 0.1 on the regen rate.
+                const int regen_rate =
+                    std::max(mons_natural_regen_rate(mon) * 2, 5);
 
-            heal_monster(mon, div_rand_round(turns * regen_rate, 50),
-                         false);
+                heal_monster(mon, div_rand_round(turns * regen_rate, 50),
+                             false);
+            }
         }
 
         // Handle nets specially to remove the trapping property of the net.

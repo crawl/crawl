@@ -927,6 +927,9 @@ bool mons_class_can_regenerate(int mc)
 
 bool mons_can_regenerate(const monsters *mon)
 {
+    if (mon->type == MONS_PLAYER_GHOST && mon->ghost->species == SP_DEEP_DWARF)
+        return (false);
+
     return (mons_class_can_regenerate(mon->type));
 }
 
@@ -1648,15 +1651,15 @@ int exper_value(const monsters *monster)
     }
 
     // Let's look at regeneration.
-    if (monster_descriptor( mclass, MDSC_REGENERATES ))
+    if (monster_descriptor(mclass, MDSC_REGENERATES))
         diff += 15;
 
     // Monsters at normal or fast speed with big melee damage.
     if (speed >= 10)
     {
         int max_melee = 0;
-        for (int i = 0; i < 4; i++)
-            max_melee += mons_damage( mclass, i );
+        for (int i = 0; i < 4; ++i)
+            max_melee += mons_damage(mclass, i);
 
         if (max_melee > 30)
             diff += (max_melee / ((speed == 10) ? 2 : 1));
