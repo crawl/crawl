@@ -1397,10 +1397,11 @@ static bool _do_description(std::string key, std::string type,
                 }
                 else
                     _append_non_item(desc, key);
-
-                // Now we don't need the item anymore.
-                destroy_item(thing_created);
             }
+
+            // Now we don't need the item anymore.
+            if (thing_created != NON_ITEM)
+                destroy_item(thing_created);
         }
     }
 

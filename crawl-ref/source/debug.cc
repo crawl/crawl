@@ -1401,7 +1401,8 @@ bool get_item_by_name(item_def *item, char* specs,
                 // Earliest match is the winner.
                 if (ptr - obj_name < best_index)
                 {
-                    mpr( obj_name );
+                    if (create_for_real)
+                        mpr(obj_name);
                     type_wanted = i;
                     best_index = ptr - obj_name;
                 }
@@ -1439,7 +1440,7 @@ bool get_item_by_name(item_def *item, char* specs,
                     if (ptr != NULL)
                     {
                         if (create_for_real)
-                            mpr( obj_name );
+                            mpr(obj_name);
                         return(true);
                     }
                     else
@@ -1465,7 +1466,7 @@ bool get_item_by_name(item_def *item, char* specs,
                     if (ptr != NULL && item->base_type == class_wanted)
                     {
                         if (create_for_real)
-                            mpr( obj_name );
+                            mpr(obj_name);
                         return(true);
                     }
 
@@ -1530,7 +1531,8 @@ bool get_item_by_name(item_def *item, char* specs,
                     // earliest match is the winner
                     if (ptr - obj_name < best_index)
                     {
-                        mpr( obj_name );
+                        if (create_for_real)
+                            mpr(obj_name);
                         special_wanted = i;
                         best_index = ptr - obj_name;
                     }
