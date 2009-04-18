@@ -60,8 +60,6 @@ REVISION("$Rev$");
 #    define DEBUG_GIFTS       1
 #endif
 
-#define HALF_MAX_PIETY      MAX_PIETY / 2
-
 // Which spells?  First I copied all spells from your_spells(), and then
 // I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
@@ -180,9 +178,9 @@ bool xom_is_nice(int tension)
         // at zero tension the opposite.
         const int tension_bonus
             = (tension == -1 ? 0 :
-               tension ==  0 ? -std::min(abs(HALF_MAX_PIETY - you.piety)/2,
-                                         you.piety/10)
-                             : std::min((MAX_PIETY - you.piety)/2,
+               tension ==  0 ? -std::min(abs(HALF_MAX_PIETY - you.piety) / 2,
+                                         you.piety / 10)
+                             : std::min((MAX_PIETY - you.piety) / 2,
                                         random2(tension)));
 
 #ifdef DEBUG_XOM
@@ -2982,7 +2980,7 @@ void xom_acts(bool niceness, int sever, int tension)
     if (you.religion == GOD_XOM && one_chance_in(5))
     {
         const std::string old_xom_favour = describe_xom_favour();
-        you.piety = random2(MAX_PIETY+1);
+        you.piety = random2(MAX_PIETY + 1);
         const std::string new_xom_favour = describe_xom_favour();
         if (was_bored || old_xom_favour != new_xom_favour)
         {

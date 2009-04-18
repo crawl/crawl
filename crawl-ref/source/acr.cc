@@ -545,9 +545,9 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 'X':
         if (you.religion == GOD_XOM)
-            xom_acts(abs(you.piety - 100));
+            xom_acts(abs(you.piety - HALF_MAX_PIETY));
         else
-            xom_acts(coinflip(), random_range(0, MAX_PIETY/2));
+            xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
         break;
 
     case 'p':

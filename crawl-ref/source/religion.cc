@@ -6632,7 +6632,7 @@ void god_pitch(god_type which_god)
     if (you.religion == GOD_XOM)
     {
         // Xom uses piety and gift_timeout differently.
-        you.piety = (MAX_PIETY / 2);
+        you.piety = HALF_MAX_PIETY;
         you.gift_timeout = random2(40) + random2(40);
     }
     else
