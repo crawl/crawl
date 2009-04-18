@@ -2967,10 +2967,12 @@ std::string get_ghost_description(const monsters &mons, bool concise)
     // stats aren't required anyways, all that matters is whether
     // dex >= str. -- bwr
     const int dex = 10;
-    int str;
+    int str = 5;
+
     switch (gspecies)
     {
     case SP_MOUNTAIN_DWARF:
+    case SP_DEEP_DWARF:
     case SP_TROLL:
     case SP_OGRE:
     case SP_MINOTAUR:
@@ -2979,25 +2981,24 @@ std::string get_ghost_description(const monsters &mons, bool concise)
     case SP_NAGA:
     case SP_MUMMY:
     case SP_GHOUL:
-        str = 15;
+        str += 10;
         break;
 
     case SP_HUMAN:
     case SP_DEMIGOD:
     case SP_DEMONSPAWN:
-        str = 10;
+        str += 5;
         break;
 
     default:
-        str = 5;
         break;
     }
 
     gstr << ghost.name << " the "
-         << skill_title( ghost.best_skill,
-                         (unsigned char)ghost.best_skill_level,
-                         gspecies,
-                         str, dex, ghost.religion )
+         << skill_title(ghost.best_skill,
+                        (unsigned char)ghost.best_skill_level,
+                        gspecies,
+                        str, dex, ghost.religion)
          << ", a"
          << ((ghost.xl <  4) ? " weakling" :
              (ghost.xl <  7) ? "n average" :
@@ -3008,6 +3009,7 @@ std::string get_ghost_description(const monsters &mons, bool concise)
              (ghost.xl < 27) ? "n awesomely powerful"
                              : " legendary")
          << " ";
+
     if (concise)
     {
         gstr << get_species_abbrev(gspecies)
@@ -3020,13 +3022,14 @@ std::string get_ghost_description(const monsters &mons, bool concise)
              << " "
              << get_class_name(ghost.job);
     }
+
     if (ghost.religion != GOD_NO_GOD)
     {
         gstr << " of "
              << god_name(ghost.religion);
     }
 
-    return gstr.str();
+    return (gstr.str());
 }
 
 extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
