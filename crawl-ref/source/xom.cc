@@ -1094,8 +1094,8 @@ static bool _xom_send_allies(int sever)
     // randomized.
     int numdemons = sever;
     for (int i = 0; i < 3; i++)
-        numdemons = random2(numdemons+1);
-    numdemons = std::min(numdemons+2,16);
+        numdemons = random2(numdemons + 1);
+    numdemons = std::min(numdemons + 2, 16);
 
     int numdifferent = 0;
 
@@ -1199,6 +1199,7 @@ static bool _xom_send_allies(int sever)
 
         rc = true;
     }
+
     return (rc);
 }
 
@@ -1243,6 +1244,7 @@ static bool _xom_send_one_ally(int sever)
 
         rc = true;
     }
+
     return (rc);
 }
 
@@ -1282,6 +1284,7 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
             rc = true;
         }
     }
+
     return (rc);
 }
 
@@ -1404,6 +1407,7 @@ static bool _xom_rearrange_pieces(int sever)
 #ifdef NOTE_DEBUG_XOM
     take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: swap monsters"), true);
 #endif
+
     return (true);
 }
 
@@ -1444,6 +1448,7 @@ static bool _xom_give_mutations(bool good)
                 failMsg = false;
         }
     }
+
     return (rc);
 }
 
@@ -1561,6 +1566,7 @@ static bool _xom_throw_divine_lightning()
              "XOM: divine lightning%s", protection ? " (protected)" : "");
     take_note(Note(NOTE_MESSAGE, 0, 0, lightning_buf), true);
 #endif
+
     return (true);
 }
 
@@ -1683,8 +1689,8 @@ static item_def* _tran_get_eq(equipment_type eq)
 {
     if (you_tran_can_wear(eq, true))
         return (you.slot_item(eq));
-    else
-        return (NULL);
+
+    return (NULL);
 }
 
 // Which types of dungeon features are in view?
@@ -2179,6 +2185,7 @@ static bool _xom_chaos_upgrade_nearby_monster()
     if (rc)
         take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: chaos upgrade monster"), true);
 #endif
+
     return (rc);
 }
 
@@ -2187,7 +2194,7 @@ static bool _xom_player_confusion_effect(int sever)
     bool rc = false;
 
     // Looks like this will *always* succeed?
-    if (confuse_player(random2(sever)+1, false))
+    if (confuse_player(random2(sever) + 1, false))
     {
         // FIXME: Message order is a bit off here.
         god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
@@ -2226,6 +2233,7 @@ static bool _xom_player_confusion_effect(int sever)
         take_note(Note(NOTE_MESSAGE, 0, 0, conf_msg.c_str()), true);
 #endif
     }
+
     return (rc);
 }
 
