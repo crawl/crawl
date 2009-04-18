@@ -1207,7 +1207,7 @@
     ,
         "",
         "A double-ended whip made from the cured hides of the "
-        "Lair of the Beasts' deadly grey snakes.",
+        "Lair of Beasts' deadly grey snakes.",
         ""
 },
 
