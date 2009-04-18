@@ -136,7 +136,7 @@
         0, 0, 0, 0, 0, 0,
 /* see invis, turn invis, levitate, blink, teleport at will, go berserk */
         0, 0, 0, 0, 0, 0,
-/* sense surroundings, make noise, no spells, teleport, no teleprt */
+/* sense surroundings, make noise, no spells, teleport, no teleport */
         0, 0, 0, 0, 0,
 /* force berserk, speed metabolism, mutate, +/- to hit, +/- to dam (not weapons) */
         0, 0, 0, 0, 0,
@@ -1244,7 +1244,7 @@
         0, 0, 0, 0, 0, 0,
 /* see invis, turn invis, levitate, blink, teleport at will, go berserk */
         0, 0, 0, 0, 0, 0,
-/* sense surroundings, make noise, no spells, teleport, no teleprt */
+/* sense surroundings, make noise, no spells, teleport, no teleport */
         0, 0, 0, 0, 0,
 /* force berserk, speed metabolism, mutate, +/- to hit, +/- to dam (not weapons) */
         0, 0, 0, 0, 0,
