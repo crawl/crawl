@@ -85,7 +85,6 @@ REVISION("$Rev$");
 #    define DEBUG_PIETY       1
 #endif
 
-#define DEBUG_PIETY 1
 #define PIETY_HYSTERESIS_LIMIT 1
 
 // Item offering messages for the gods:

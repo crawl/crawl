@@ -2541,8 +2541,7 @@ static bool _xom_summon_hostiles(int sever)
     const std::string speech = _get_xom_speech("hostile monster");
 
     // Nasty, but fun.
-//     if (player_weapon_wielded() && one_chance_in(4))
-    if (player_weapon_wielded())
+    if (player_weapon_wielded() && one_chance_in(4))
     {
         const item_def& weapon = *you.weapon();
         const std::string wep_name = weapon.name(DESC_PLAIN);
@@ -2990,7 +2989,7 @@ void xom_acts(bool niceness, int sever, int tension)
             const std::string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
         }
-#ifdef NOTE_DEBUG_XOM
+#ifdef DEBUG_XOM
         snprintf(info, INFO_SIZE, "xom_acts(): reroll piety(1/5), piety: %d",
                  you.piety);
         take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
