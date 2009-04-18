@@ -2516,7 +2516,7 @@ int mons_offhand_weapon_index(const monsters *m)
 int mons_base_damage_brand(const monsters *m)
 {
     if (m->type == MONS_PLAYER_GHOST || m->type == MONS_PANDEMONIUM_DEMON)
-        return m->ghost->brand;
+        return (m->ghost->brand);
 
     return (SPWPN_NORMAL);
 }
