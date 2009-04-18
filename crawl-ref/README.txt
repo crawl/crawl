@@ -18,7 +18,7 @@ Contents:
 4. License and history information.
 5. How you can help!
 
-There is a list of frequently asked questions which you can access pressing 
+There is a list of frequently asked questions which you can access pressing
 ?Q in the game.
 
 1. Getting started
@@ -49,7 +49,7 @@ The following files in the Crawl's main folder are essential:
 * crawl              These start the game. (The actual name depends on your
 * crawl.exe          operating system.)
 
-The docs/ folder contains the following helpful texts (all of which can be 
+The docs/ folder contains the following helpful texts (all of which can be
 read in-game by bringing up the help menu with '?'):
 
 * crawl_manual.txt   The complete manual; describing all aspects in detail.
@@ -155,7 +155,7 @@ tell us via the list.
 If you like to, you can download the source code and apply patches. Both
 patches for bug fixes as well as implementation of new features are very much
 welcome. If you want to code a cool feature that is likely to be accepted but
-unlikely to be coded by the devteam, search the Feature Requests tracker on 
+unlikely to be coded by the devteam, search the Feature Requests tracker on
 the Sourceforge site for Groups "Patches Welcome".
 Please be sure to read docs/coding_conventions.txt first.
 
