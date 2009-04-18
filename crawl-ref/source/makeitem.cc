@@ -2735,17 +2735,17 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
 }
 
 // Returns item slot or NON_ITEM if it fails.
-int items( int allow_uniques,       // not just true-false,
-                                    // because of BCR acquirement hack
-           object_class_type force_class, // desired OBJECTS class {dlb}
-           int force_type,          // desired SUBTYPE - enum varies by OBJ
-           bool dont_place,         // don't randomly place item on level
-           int item_level,          // level of the item, can differ from global
-           int item_race,           // weapon / armour racial categories
-                                    // item_race also gives type of rune!
-           unsigned mapmask,
-           int force_ego,           // desired ego/brand
-           int agent)               // acquirement agent, if not -1
+int items(int allow_uniques,       // not just true-false,
+                                   // because of BCR acquirement hack
+          object_class_type force_class, // desired OBJECTS class {dlb}
+          int force_type,          // desired SUBTYPE - enum varies by OBJ
+          bool dont_place,         // don't randomly place item on level
+          int item_level,          // level of the item, can differ from global
+          int item_race,           // weapon / armour racial categories
+                                   // item_race also gives type of rune!
+          unsigned mapmask,
+          int force_ego,           // desired ego/brand
+          int agent)               // acquirement agent, if not -1
 {
     // TODO: Allow a combination of force_ego > 0 and
     // force_type == OBJ_RANDOM, so that (for example) you could have
@@ -3763,8 +3763,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     // force_item is set... otherwise we're just going to take the
     // base and subtypes and create a new item. -- bwr
     const int thing_created =
-        ((force_item) ? get_item_slot() : items( 0, xitc, xitt, true,
-                                                 level, item_race) );
+        ((force_item) ? get_item_slot() : items(0, xitc, xitt, true,
+                                                level, item_race));
 
     if (thing_created == NON_ITEM)
         return (item_race);
@@ -3808,6 +3808,7 @@ static void _give_ammo(monsters *mon, int level,
             xitt = MI_SLING_BULLET;
 
         const int thing_created = items(0, xitc, xitt, true, level, item_race);
+
         if (thing_created == NON_ITEM)
             return;
 
@@ -3973,7 +3974,7 @@ static bool make_item_for_monster(
         return (false);
 
     const int thing_created =
-        items( allow_uniques, base, subtype, true, level, race );
+        items(allow_uniques, base, subtype, true, level, race);
 
     if (thing_created == NON_ITEM)
         return (false);
@@ -4060,9 +4061,9 @@ void give_armour(monsters *mon, int level)
 {
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
 
-    int force_colour = 0; //mv: important !!! Items with force_colour = 0
-                         //are colored defaultly after following
-                         //switch. Others will get force_colour.
+    int force_colour = 0; // mv: Important!!! Items with force_colour = 0
+                          // are colored by default after following
+                          // switch. Others will get force_colour.
 
     item_def item;
 
@@ -4303,14 +4304,14 @@ void give_armour(monsters *mon, int level)
             level = level * 2 + 5;
     }
 
-    const int thing_created = items( 0, xitc, xitt, true, level, item_race );
+    const int thing_created = items(0, xitc, xitt, true, level, item_race);
 
     if (thing_created == NON_ITEM)
         return;
 
     _give_monster_item(mon, thing_created);
 
-    //mv: all items with force_colour = 0 are colored via items().
+    //mv: All items with force_colour = 0 are colored via items().
     if (force_colour)
         mitm[thing_created].colour = force_colour;
 }
