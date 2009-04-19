@@ -911,7 +911,7 @@ int TilesFramework::getch_ck()
             tip_loc.reset();
         }
 
-        if ((ticks - last_redraw_tick > ticks_per_redraw) && need_redraw())
+        if ((ticks - last_redraw_tick > ticks_per_redraw) || need_redraw())
         {
             redraw();
             last_redraw_tick = ticks;
