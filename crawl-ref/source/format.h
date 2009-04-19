@@ -57,7 +57,8 @@ public:
     static formatted_string parse_string(
             const std::string &s,
             bool  eot_ends_format = true,
-            bool (*process_tag)(const std::string &tag) = NULL );
+            bool (*process_tag)(const std::string &tag) = NULL,
+            int main_colour = LIGHTGREY );
 
     static void parse_string_to_multiple(
             const std::string &s,

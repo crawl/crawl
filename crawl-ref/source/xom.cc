@@ -179,13 +179,17 @@ bool xom_is_nice(int tension)
                              : std::min((MAX_PIETY - you.piety) / 2,
                                         random2(tension)));
 
+        const int effective_piety = you.piety + tension_bonus;
+        ASSERT(effective_piety >= 0 && effective_piety <= MAX_PIETY);
+
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
-             "Xom: tension: %d, piety: %d -> tension bonus = %d",
-             tension, you.piety, tension_bonus);
+             "Xom: tension: %d, piety: %d -> tension bonus = %d, eff. piety: %d",
+             tension, you.piety, tension_bonus, effective_piety);
 #endif
+
         // Whether Xom is nice depends largely on his mood (== piety).
-        return (x_chance_in_y(you.piety + tension_bonus, MAX_PIETY));
+        return (x_chance_in_y(effective_piety, MAX_PIETY));
     }
     else // CARD_XOM
         return coinflip();
@@ -482,6 +486,8 @@ static bool _xom_makes_you_cast_random_spell(int sever, int tension)
     else
     {
         const int nxomspells = ARRAYSZ(_xom_nontension_spells);
+        // spellenum will be at least 3, so we don't run into infinite loops
+        // for Detect Creatures/Magic Mapping in fully explored levels.
         spellenum = std::min(nxomspells, std::max(3 + coinflip(), spellenum));
         spell     = _xom_nontension_spells[random2(spellenum)];
 
@@ -1463,12 +1469,14 @@ static bool _xom_give_mutations(bool good)
         const int num_tries = random2(4) + 1;
 
         static char mut_buf[80];
-        snprintf(mut_buf, sizeof(mut_buf), "give %smutations",
+        snprintf(mut_buf, sizeof(mut_buf), "give %smutation%s",
 #ifdef NOTE_DEBUG_XOM
-                 good ? "good " : "random ");
+                 good ? "good " : "random ",
 #else
-                 "");
+                 "",
 #endif
+                 num_tries > 1 ? "s" : "");
+
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, mut_buf), true);
 
         mpr("Your body is suffused with distortional energy.");
@@ -2943,7 +2951,7 @@ void xom_acts(bool niceness, int sever, int tension)
     const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
         = you.mutation;
 
-#ifdef DEBUG_XOM
+#ifdef NOTE_DEBUG_XOM
     static char xom_buf[100];
     snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d), mood: %d",
              (niceness ? "true" : "false"), sever, tension, you.piety);
@@ -2961,7 +2969,7 @@ void xom_acts(bool niceness, int sever, int tension)
     {
         if (was_bored && Options.note_xom_effects)
             take_note(Note(NOTE_MESSAGE, 0, 0, "XOM is BORED!"), true);
-#ifdef DEBUG_XOM
+#ifdef NOTE_DEBUG_XOM
         else if (niceness)
         {
             take_note(Note(NOTE_MESSAGE, 0, 0, "good act randomly turned bad"),
@@ -2997,9 +3005,8 @@ void xom_acts(bool niceness, int sever, int tension)
             const std::string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
         }
-#ifdef DEBUG_XOM
-        snprintf(info, INFO_SIZE, "xom_acts(): reroll piety(1/5), piety: %d",
-                 you.piety);
+#ifdef NOTE_DEBUG_XOM
+        snprintf(info, INFO_SIZE, "reroll piety: %d", you.piety);
         take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
 #endif
     }

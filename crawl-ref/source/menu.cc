@@ -40,9 +40,10 @@ MenuDisplayText::MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1)
 
 void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
 {
-    textattr(m_menu->item_colour(index, me));
+    const int col = m_menu->item_colour(index, me);
+    textattr(col);
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
-        formatted_string::parse_string(me->get_text()).display();
+        formatted_string::parse_string(me->get_text(), true, NULL, col).display();
     else
     {
         std::string text = me->get_text();

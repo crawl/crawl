@@ -94,6 +94,7 @@ Interface
 * Wizard commands can now be used from the wizard help screen.
 * Allow quivering/firing of wielded missiles and wielded weapons of returning.
 * With a full pack, check entire list of selected items to allow for merging.
+* Eating now prompts for chunks sorted by age and side effects.
 * Added an option to make menu colours apply to shops.
 * Use menu colours for announcements of items found while travelling.
 * Pressing Esc at -More- automatically clears all queued -More- prompts.
@@ -149,6 +150,7 @@ Gods
 * Beogh has a non-cannibalism conduct.
 * Disallow shapeshifters in orc form to become Beoghites' followers.
 * Offer card descriptions when using Nemelex's Triple Draw or Stack Five.
+* Enable automatic note taking for Xom effects.
 
 Tiles
 -----

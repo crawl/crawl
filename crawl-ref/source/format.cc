@@ -86,11 +86,12 @@ formatted_string formatted_string::parse_block(
 formatted_string formatted_string::parse_string(
         const std::string &s,
         bool  eot_ends_format,
-        bool (*process)(const std::string &tag))
+        bool (*process)(const std::string &tag),
+        int main_colour)
 {
     // Safe assumption, that incoming color is LIGHTGREY
     std::vector<int> colour_stack;
-    colour_stack.push_back(LIGHTGREY);
+    colour_stack.push_back(main_colour);
 
     formatted_string fs;
 
