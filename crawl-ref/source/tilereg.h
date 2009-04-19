@@ -423,6 +423,22 @@ protected:
     bool m_far_view;
 };
 
+class TitleRegion : public Region
+{
+public:
+    TitleRegion(int width, int height);
+
+    virtual void render();
+    virtual void clear() {};
+
+    virtual int handle_mouse(MouseEvent &event) { return 0; }
+
+protected:
+    virtual void on_resize() {}
+
+    GenericTexture m_img;
+    VertBuffer<PTVert> m_buf;
+};
 
 #endif
 #endif

@@ -44,7 +44,8 @@ public:
         unsigned int h);
 
     bool load_texture(const char *filename, MipMapOptions mip_opt,
-                      tex_proc_func proc = NULL);
+                      tex_proc_func proc = NULL,
+                      bool force_power_of_two = true);
     bool load_texture(unsigned char *pixels, unsigned int w, unsigned int h,
                       MipMapOptions mip_opt);
     void unload_texture();

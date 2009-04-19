@@ -31,7 +31,8 @@ void GenericTexture::unload_texture()
 
 bool GenericTexture::load_texture(const char *filename,
                                   GenericTexture::MipMapOptions mip_opt,
-                                  tex_proc_func proc)
+                                  tex_proc_func proc,
+                                  bool force_power_of_two)
 {
     char acBuffer[512];
 
@@ -56,13 +57,24 @@ bool GenericTexture::load_texture(const char *filename,
 
     // Determine texture format
     unsigned char *pixels = (unsigned char*)img->pixels;
-    int new_width = 1;
-    while (new_width < img->w)
-        new_width *= 2;
 
-    int new_height = 1;
-    while (new_height < img->h)
-        new_height *= 2;
+    int new_width;
+    int new_height;
+    if (force_power_of_two)
+    {
+        new_width = 1;
+        while (new_width < img->w)
+            new_width *= 2;
+
+        new_height = 1;
+        while (new_height < img->h)
+            new_height *= 2;
+    }
+    else
+    {
+        new_width = img->w;
+        new_height = img->h;
+    }
 
     GLenum texture_format;
     if (bpp == 4)

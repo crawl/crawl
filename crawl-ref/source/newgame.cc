@@ -3021,7 +3021,7 @@ static void _opening_screen(void)
 #ifdef USE_TILE
     // More grand... Like this? ;)
     if (Options.tile_title_screen)
-        TileDrawTitle();
+        tiles.draw_title();
 #endif
 
     std::string msg =

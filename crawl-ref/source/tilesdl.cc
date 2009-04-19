@@ -148,6 +148,7 @@ void TilesFramework::shutdown()
     delete m_region_inv;
     delete m_region_crt;
     delete m_region_menu;
+    delete m_region_title;
 
     m_region_tile = NULL;
     m_region_stat = NULL;
@@ -156,6 +157,7 @@ void TilesFramework::shutdown()
     m_region_inv = NULL;
     m_region_crt = NULL;
     m_region_menu = NULL;
+    m_region_title = NULL;
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
         m_layers[i].m_regions.clear();
@@ -169,6 +171,14 @@ void TilesFramework::shutdown()
     SDL_Quit();
 
     _shutdown_console();
+}
+
+void TilesFramework::draw_title()
+{
+    m_active_layer = LAYER_TITLE;
+    set_need_redraw();
+
+    getch();
 }
 
 void TilesFramework::calculate_default_options()
@@ -315,6 +325,8 @@ bool TilesFramework::initialise()
     m_region_crt  = new CRTRegion(m_fonts[crt_font].font);
     m_region_menu = new MenuRegion(&m_image, m_fonts[crt_font].font);
 
+    m_region_title = new TitleRegion(m_windowsz.x, m_windowsz.y);
+
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_inv);
@@ -323,6 +335,8 @@ bool TilesFramework::initialise()
 
     m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
     m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
+
+    m_layers[LAYER_TITLE].m_regions.push_back(m_region_title);
 
     cgotoxy(1, 1, GOTO_CRT);
 

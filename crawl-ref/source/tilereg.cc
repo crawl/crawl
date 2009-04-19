@@ -2830,6 +2830,57 @@ void MenuRegion::set_more(const formatted_string &more)
     m_dirty = true;
 }
 
+TitleRegion::TitleRegion(int width, int height) :
+    m_buf(&m_img, GL_QUADS)
+{
+    sx = sy = 0;
+    dx = dy = 1;
+
+    if (!m_img.load_texture("title.png", GenericTexture::MIPMAP_NONE, NULL, false))
+        return;
+
+    // Center
+    wx = width;
+    wy = height;
+    ox = (wx - m_img.width()) / 2;
+    oy = (wy - m_img.height()) / 2;
+
+    {
+        PTVert &v = m_buf.get_next();
+        v.pos_x = 0;
+        v.pos_y = 0;
+        v.tex_x = 0;
+        v.tex_y = 0;
+    }
+    {
+        PTVert &v = m_buf.get_next();
+        v.pos_x = 0;
+        v.pos_y = m_img.height();
+        v.tex_x = 0;
+        v.tex_y = 1;
+    }
+    {
+        PTVert &v = m_buf.get_next();
+        v.pos_x = m_img.width();
+        v.pos_y = m_img.height();
+        v.tex_x = 1;
+        v.tex_y = 1;
+    }
+    {
+        PTVert &v = m_buf.get_next();
+        v.pos_x = m_img.width();
+        v.pos_y = 0;
+        v.tex_x = 1;
+        v.tex_y = 0;
+    }
+}
+
+void TitleRegion::render()
+{
+    set_transform();
+    m_buf.draw();
+}
+
 ImageManager::ImageManager()
 {
 }

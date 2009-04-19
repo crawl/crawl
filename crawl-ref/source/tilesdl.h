@@ -125,6 +125,8 @@ public:
     void add_overlay(const coord_def &gc, int idx);
     void clear_overlays();
 
+    void draw_title();
+
     MenuRegion *get_menu() { return m_region_menu; }
 protected:
 
@@ -168,6 +170,9 @@ protected:
     // Full-screen CRT layer
     CRTRegion *m_region_crt;
     MenuRegion *m_region_menu;
+
+    // Title layer
+    TitleRegion *m_region_title;
 
     struct font_info
     {
