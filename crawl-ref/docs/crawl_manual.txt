@@ -149,7 +149,7 @@ may examine it with the following commands:
  m - shows your skills and lets you switch off some if wanted
  i - the equipment
  ^ - the text for your god, should you have started with a religion
- % - a general, if tense, overview over your gear and most attributes
+ % - a general, if terse, overview over your gear and most attributes
 
 
 ------------------------------------------------------------------------
@@ -315,7 +315,7 @@ dark grey around it is the parts of the level which you have visited,
 but cannot currently see. The 'x' command lets you move the cursor
 around to get a description of the various dungeon features, and
 typing 'v' when the cursor is over a monster or feature brings up a
-short description of that monster. This is generally useful with 
+short description of that monster. This is generally useful with
 monsters you've never encountered before. You can get a map of the
 whole level (which shows where you've already been) by typing 'X'.
 
@@ -488,7 +488,7 @@ dungeons. They range from different weapon skills (both for close and
 ranged combat) to many magical skills and several additional activities
 like Dodging or Stabbing. See Appendix 3 for a detailed description of
 all skills present in Crawl. The ease with which a character learns a
-skill depends solely on species. These aptitudes are hinted at in the 
+skill depends solely on species. These aptitudes are hinted at in the
 list of species (see Appendix 1). For the curious, the full table can be
 checked in aptitudes.txt (also from the help screen during play), though
 it is not necessary to bother with the numbers in order to win!
@@ -497,12 +497,12 @@ You can see your character's skills by pressing the 'm' key; the higher
 the level of a skill, the better you are at it. Almost all characters
 start with a few skills already trained (which depends essentially on
 their job), those which are not present have to be learned from scratch.
-Each skill can go up to 27. 
+Each skill can go up to 27.
 
 Each time your character gains experience points, those points become
 available to increase skills. You convert experience points into skill
 levels by practising the skill in question (e.g. fighting with a certain
-type of weapon, casting a certain type of spell, or walking around 
+type of weapon, casting a certain type of spell, or walking around
 unnoticed to practise stealth). The amount of unassigned experience
 points is shown on the main screen as well as on the skills screen, and
 the number in blue next to each skill counts up from 0% to 100% as you
@@ -513,7 +513,7 @@ skill screen (making it turn dark grey). This means that you will be
 less likely to increase that skill when you practise it (and will also
 not spend as many experience points on it). The main use of turning off
 skills is to spend more points on other skills: You will not lose any
-experience by deselecting skills, you will rather spend it elsewhere. 
+experience by deselecting skills, you will rather spend it elsewhere.
 It can happen that the pool grows rather large in this way; the maximum
 is 20000 experience points.
 
@@ -1379,7 +1379,7 @@ you feel you need to read spoilers - a legitimate feeling.) The joy of
 dealing with ever-changing, unexpected and challenging strategic and
 tactical situations that arise out of transparent rules, on the other
 hand, is nice again and again. That said, we believe that qualitative
-feedback is often better than precise numbers. 
+feedback is often better than precise numbers.
 
 In concrete terms, we either spell out a gameplay mechanic explicitly
 (either in the manual, or by in-game feedback) or leave it to min-maxers
@@ -1494,11 +1494,11 @@ Dwarves are generally short, hardy people. Originally inhabiting deep
 underground caverns, some of them moved closer to the surface while
 still sticking to the mountainous habitat. All Dwarves are particularly
 dangerous when using Dwarven weaponry. Their armour and weapons are very
-well-crafted and much more durable than the products of lesser artisans. 
+well-crafted and much more durable than the products of lesser artisans.
 
 Mountain Dwarves
   Mountain Dwarves, as opposed to the subterranean specimen, come from
-  cities far above the Dungeon. They love to fight, and often venture 
+  cities far above the Dungeon. They love to fight, and often venture
   forth to seek fame and fortune through battle. As such, they are very
   robust and excellent at hand combat, especially favouring axes or
   bludgeoning weapons, and are good at using armour and shields. They
@@ -2340,8 +2340,10 @@ Character information:
     E                   Display experience info.
     ^                   Show religion screen.
     A                   Show abilities/mutations.
-    a                   Lets you choose an ability or read its description.
-                        Pressing a? or a* show current abilities as a menu.
+    a                   Lets you choose an ability or read its
+                        description.
+                        Pressing a? or a* show current abilities as a
+                        menu.
     \                   Show item knowledge.
     m                   Show skill screen. You can get descriptions of
                         present skills from that screen, as well as the
@@ -2351,8 +2353,8 @@ Character information:
     ]                   Shows a restricted inventory, only containing
                         worn, wielded and quivered items.
     I                   Show list of memorised spells.
-    V                   Lists all monsters, items and features in sight. 
-                        You may read their descriptions and travel to 
+    V                   Lists all monsters, items and features in sight.
+                        You may read their descriptions and travel to
                         an item or feature.
     %                   Show resistances and general character overview:
                         health, experience, money, gear, and
