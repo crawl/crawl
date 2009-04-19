@@ -2036,10 +2036,45 @@ _Nergalle_rare_
 @The_monster@ blows @possessive@ nose.
 ## END Nergalle ##
 %%%%
-# evil centaur, needs speech!
+# evil centaur
 Nessos
 
-__NONE
+@_Nessos_common_@
+
+w:3
+@_Nessos_rare_@
+%%%%
+_Nessos_common_
+
+@The_monster@ pounds the earth with his hooves.
+
+@The_monster@ intently looks at you, slowly moving @possessive@ tail.
+
+@The_monster@ stands on @possessive@ hind legs for a moment.
+
+@The_monster@ prepares to charge into full speed.
+%%%%
+_Nessos_rare_
+
+@The_monster@ says, "Study your classics!'
+
+@The_monster@ says, "I'll learn you. I'll learn you yet!"
+
+@The_monster@ says, "Even if you were a mare, I'd kill you!"
+
+@The_monster@ shouts, "I'm half man! Half horse! And all stone-cold KILLER!"
+
+w:1
+@The_monster@ says, "Hold still for a moment, will you? I've got a trick shot I want to try here."
+
+w:1
+@The_monster@ says, "I schooled the Big Guy. You'll be no problem."
+
+w:1
+@The_monster@ tries to tell you a complicated story about hydras, his blood, and
+marriage.
+
+## END NESSOS
 %%%%
 # A skilled warrior looking for some fame.  More kills = more fame.
 Norbert
