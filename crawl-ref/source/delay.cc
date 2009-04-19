@@ -1839,10 +1839,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
                 toggle_exclude(mon->pos());
 
-            std::string text = mon->name(DESC_CAP_A);
-            // For named monsters also mention the base type.
-            if (!(mon->mname).empty() && mon->type != MONS_PLAYER_GHOST)
-                text += " the " + mon->name(DESC_BASENAME);
+            std::string text = mon->full_name(DESC_CAP_A);
 
             if (starts_with(at.context, "open"))
                 text += " " + at.context;
