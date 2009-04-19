@@ -632,7 +632,8 @@ static bool _mons_hostile(const monsters *mon)
 
 static bool _can_pacify_monster(const monsters *mon, const int healed)
 {
-    ASSERT(you.religion == GOD_ELYVILON);
+    if (you.religion != GOD_ELYVILON)
+        return (false);
 
     if (healed < 1)
         return (false);
