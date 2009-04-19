@@ -3347,9 +3347,10 @@ static void _detailed_god_description(god_type which_god)
                      "all on demons and undead. Whether it succeeds or not, "
                      "piety, food and magic are still spent. If it does "
                      "succeed, the monster is healed and you gain half of "
-                     "its experience value and some piety. Otherwise, the "
-                     "monster is unaffected and you gain nothing. Pacified "
-                     "monsters try to leave the level as quickly as possible.";
+                     "its experience value and possibly some piety. "
+                     "Otherwise, the monster is unaffected and you gain "
+                     "nothing. Pacified monsters try to leave the level as "
+                     "quickly as possible.";
             break;
 
         case GOD_NEMELEX_XOBEH:
