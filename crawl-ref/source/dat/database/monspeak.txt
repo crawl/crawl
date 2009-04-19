@@ -1316,13 +1316,20 @@ dissolution_speech
 
 @The_monster@ says, "Acid is thicker than water."
 
+@The_monster@ says, "Acid to acid, slime to slime."
+
 @dissolution_rare@
 %%%%
 dissolution_rare
 
 @The_monster@ says, "We come from slime, we turn to slime."
 
+w:1
+@The_monster@ says, "From Slime we come, to Slime we go."
+
 @The_monster@ says, "Resolve to dissolve!"
+
+@The_monster@ presages, "An acid flood will etch off all the scum!"
 
 w:2
 @The_monster@ says, "There is a problem solver and its name is Dissolver!"
