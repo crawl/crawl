@@ -277,7 +277,7 @@ Branch branches[] = {
 
     { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 1, -1, 0, 0,
       DNGN_ENTER_HELL, DNGN_EXIT_HELL, // sentinel
-      "Hell", "The Vestibule of Hell", "Hell",
+      "Hell", "the Vestibule of Hell", "Hell",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
       mons_standard_rare, mons_standard_level,
