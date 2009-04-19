@@ -2379,16 +2379,27 @@ static bool _choose_weapon()
     for (int i = 0; i < num_choices; i++)
         startwep_restrictions[i] = _weapon_restriction(startwep[i]);
 
-    if (Options.weapon != WPN_UNKNOWN && Options.weapon != WPN_RANDOM
-        && (Options.weapon != WPN_UNARMED || claws_allowed))
+    if (Options.weapon == WPN_UNARMED && claws_allowed)
     {
-        if (Options.weapon == WPN_UNARMED)
-            you.inv[0].quantity = 0; // no weapon
-        else
-            you.inv[0].sub_type = Options.weapon;
-
+        you.inv[0].quantity = 0; // no weapon
         ng_weapon = Options.weapon;
         return (true);
+    }
+
+    if (Options.weapon != WPN_UNKNOWN && Options.weapon != WPN_RANDOM
+        && Options.weapon != WPN_UNARMED)
+    {
+        // If Options.weapon is available, then use it.
+        for (int i = 0; i < num_choices; i++)
+        {
+            if (startwep[i] == Options.weapon
+                && startwep_restrictions[i] != CC_BANNED)
+            {
+                you.inv[0].sub_type = Options.weapon;
+                ng_weapon = Options.weapon;
+                return (true);
+            }
+        }
     }
 
     int keyin = 0;
