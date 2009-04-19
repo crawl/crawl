@@ -16,7 +16,7 @@ struct dist;
 struct activity_interrupt_data;
 
 bool go_berserk(bool intentional);
-void search_around( bool only_adjacent = false );
+void search_around(bool only_adjacent = false);
 void down_stairs(int old_level,
                  dungeon_feature_type force_stair = DNGN_UNSEEN,
                  entry_cause_type entry_cause = EC_UNKNOWN);

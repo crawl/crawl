@@ -1178,7 +1178,7 @@ void generate_random_blood_spatter_on_level()
     }
 }
 
-void search_around( bool only_adjacent )
+void search_around(bool only_adjacent)
 {
     ASSERT(!crawl_state.arena);
 
