@@ -2739,7 +2739,7 @@ void debug_item_scan( void )
             mpr( "Unlinked temporary item:", MSGCH_ERROR );
             _dump_item( name, i, mitm[i] );
         }
-        else if (mon != NULL && !mon->type == -1)
+        else if (mon != NULL && mon->type == -1)
         {
             mpr( "Unlinked item held by dead monster:", MSGCH_ERROR );
             _dump_item( name, i, mitm[i] );
