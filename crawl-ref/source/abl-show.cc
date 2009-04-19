@@ -165,9 +165,11 @@ static const ability_def Ability_List[] =
     { ABIL_BREATHE_FIRE, "Breathe Fire", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_FROST, "Breathe Frost", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_POISON, "Breathe Poison Gas", 0, 0, 125, 0, ABFLAG_BREATH },
-    { ABIL_BREATHE_LIGHTNING, "Breathe Lightning", 0, 0, 125, 0, ABFLAG_BREATH },
+    { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
+      0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_POWER, "Breathe Power", 0, 0, 125, 0, ABFLAG_BREATH },
-    { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame", 0, 0, 125, 0, ABFLAG_BREATH },
+    { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame",
+      0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, ABFLAG_NONE },
 
@@ -186,10 +188,12 @@ static const ability_def Ability_List[] =
     { ABIL_BOLT_OF_DRAINING, "Bolt of Draining", 4, 4, 100, 0, ABFLAG_NONE },
 
     // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
-    // as exhaustion's only (and designed) effect is preventing Berserk. -- bwr
+    // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
     { ABIL_FLY_II, "Fly", 0, 0, 25, 0, ABFLAG_NONE },
-    { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball", 0, 0, 0, 0, ABFLAG_INSTANT },
-    { ABIL_MUMMY_RESTORATION, "Self-Restoration", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
+    { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
+      0, 0, 0, 0, ABFLAG_INSTANT },
+    { ABIL_MUMMY_RESTORATION, "Self-Restoration",
+      1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
     // EVOKE abilities use Evocations and come from items:
     // Mapping, Teleportation, and Blink can also come from mutations
@@ -199,14 +203,17 @@ static const ability_def Ability_List[] =
     // you used a wand, potion, or miscast effect).  I didn't see
     // any reason to label them as "Evoke" in the text, they don't
     // use or train Evocations (the others do).  -- bwr
-    { ABIL_EVOKE_MAPPING, "Evoke Sense Surroundings", 0, 0, 30, 0, ABFLAG_NONE },
-    { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation", 3, 0, 200, 0, ABFLAG_NONE },
+    { ABIL_EVOKE_MAPPING, "Evoke Sense Surroundings",
+      0, 0, 30, 0, ABFLAG_NONE },
+    { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation",
+      3, 0, 200, 0, ABFLAG_NONE },
     { ABIL_EVOKE_BLINK, "Evoke Blink", 1, 0, 50, 0, ABFLAG_NONE },
     { ABIL_RECHARGING, "Device Recharging", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage", 0, 0, 0, 0, ABFLAG_NONE },
 
-    { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility", 2, 0, 250, 0, ABFLAG_NONE },
+    { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
+      2, 0, 250, 0, ABFLAG_NONE },
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_EVOKE_LEVITATE, "Evoke Levitation", 1, 0, 100, 0, ABFLAG_NONE },
     { ABIL_EVOKE_STOP_LEVITATING, "Stop Levitating", 0, 0, 0, 0, ABFLAG_NONE },
@@ -223,17 +230,20 @@ static const ability_def Ability_List[] =
     // The Shining One
     { ABIL_TSO_DIVINE_SHIELD, "Divine Shield", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame", 5, 0, 100, 2, ABFLAG_NONE },
-    { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior", 8, 0, 150, 4, ABFLAG_NONE },
+    { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
+      8, 0, 150, 4, ABFLAG_NONE },
 
     // Kikubaaqudgha
-    { ABIL_KIKU_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves", 2, 0, 50, 0, ABFLAG_NONE },
+    { ABIL_KIKU_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
+      2, 0, 50, 0, ABFLAG_NONE },
     { ABIL_KIKU_ENSLAVE_UNDEAD, "Enslave Undead", 4, 0, 150, 3, ABFLAG_NONE },
     { ABIL_KIKU_INVOKE_DEATH, "Invoke Death", 4, 0, 250, 3, ABFLAG_NONE },
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains", 1, 0, 100, 0, ABFLAG_NONE },
-    { ABIL_YRED_RECALL_UNDEAD, "Recall Undead Slaves", 2, 0, 50, 0, ABFLAG_NONE },
+    { ABIL_YRED_RECALL_UNDEAD, "Recall Undead Slaves",
+      2, 0, 50, 0, ABFLAG_NONE },
     { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 3, 0, 100, 1, ABFLAG_NONE },
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, ABFLAG_NONE },
     { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul", 8, 0, 150, 4, ABFLAG_NONE },
@@ -244,13 +254,18 @@ static const ability_def Ability_List[] =
       5, 0, 100, generic_cost::fixed(5), ABFLAG_NONE },
 
     // Makhleb
-    { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction", 1, 0, 20, 0, ABFLAG_NONE },
-    { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb", 2, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction", 4, 0, 100, 2, ABFLAG_NONE },
-    { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb", 6, 0, 100, 3, ABFLAG_NONE },
+    { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
+      1, 0, 20, 0, ABFLAG_NONE },
+    { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
+      2, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
+      4, 0, 100, 2, ABFLAG_NONE },
+    { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
+      6, 0, 100, 3, ABFLAG_NONE },
 
     // Sif Muna
-    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy", 0, 0, 100, 0, ABFLAG_NONE },
+    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
+      0, 0, 100, 0, ABFLAG_NONE },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell", 5, 0, 0, 8, ABFLAG_NONE },
 
     // Trog
@@ -261,11 +276,12 @@ static const ability_def Ability_List[] =
       0, 0, 100, generic_cost::range(5, 6), ABFLAG_NONE },
 
     // Elyvilon
-    { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons",
+      0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_ELYVILON_LESSER_HEALING_SELF, "Lesser Self-Healing",
       1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
     { ABIL_ELYVILON_LESSER_HEALING_OTHERS, "Lesser Healing",
-      1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
+      1, 0, 100, 0, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1,
       ABFLAG_CONF_OK },
     { ABIL_ELYVILON_GREATER_HEALING_SELF, "Greater Self-Healing",
@@ -300,7 +316,8 @@ static const ability_def Ability_List[] =
       2, 0, 50, 0, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm", 0, 0, 0, 0, ABFLAG_PIETY },
+    { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
+      0, 0, 0, 0, ABFLAG_PIETY },
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };

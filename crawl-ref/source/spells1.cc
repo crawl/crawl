@@ -763,7 +763,7 @@ static int _healing_spell(int healed, bool divine_ability,
 
             // Give a small piety return.
             if (!is_summoned)
-                gain_piety(1 + random2(healed/15));
+                gain_piety(random2(1 + random2(monster->max_hit_points / 12)));
         }
     }
 
@@ -787,9 +787,12 @@ static int _healing_spell(int healed, bool divine_ability,
     }
 
     if (!did_something)
+    {
         canned_msg(MSG_NOTHING_HAPPENS);
+        return (0);
+    }
 
-    return (did_something ? 1 : 0);
+    return (1);
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
