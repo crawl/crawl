@@ -10,7 +10,7 @@
 # (New players should just ignore these lines.)
 #
 # include                 = 034_monster_glyphs.txt
-# inlcude                 = 034_command_keys.txt
+# include                 = 034_command_keys.txt
 # classic_item_colours    = true
 # classic_hud             = true
 # use_old_selection_order = true
