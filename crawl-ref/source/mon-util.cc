@@ -1494,7 +1494,7 @@ flight_type mons_class_flies(int mc)
     return (FL_NONE);
 }
 
-flight_type mons_flies(const monsters *mon)
+flight_type mons_flies(const monsters *mon, bool randarts)
 {
     if (mons_enslaved_twisted_soul(mon))
         return (FL_LEVITATE);
@@ -1512,8 +1512,11 @@ flight_type mons_flies(const monsters *mon)
     if (ret == FL_NONE && mons_is_zombified(mon))
         ret = mons_class_flies(mon->type);
 
-    if (ret == FL_NONE && _scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0)
+    if (randarts && ret == FL_NONE
+        && _scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0)
+    {
         ret = FL_LEVITATE;
+    }
 
     return (ret);
 }

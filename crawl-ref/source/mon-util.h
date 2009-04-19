@@ -452,6 +452,7 @@ habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(int p_monsterid);
+const mon_resist_def &get_mons_class_resists(int mc);
 mon_resist_def get_mons_resists(const monsters *mon);
 
 // last updated 10jun2000 {dlb}
@@ -473,7 +474,7 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only = true);
  * called from: beam - direct - fight - monstuff - mstuff2 - spells4 - view
  * *********************************************************************** */
 flight_type mons_class_flies(int mc);
-flight_type mons_flies(const monsters *mon);
+flight_type mons_flies(const monsters *mon, bool randarts = true);
 
 bool mons_class_amphibious(int mc);
 bool mons_amphibious(const monsters *mon);

@@ -374,8 +374,10 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
     if (!monster->mname.empty())
         corpse.props[CORPSE_NAME_KEY] = monster->mname;
     else if (mons_is_unique(monster->type))
+    {
         corpse.props[CORPSE_NAME_KEY] = mons_type_name(monster->type,
                                                        DESC_PLAIN);
+    }
 
     return (corpse_class);
 }

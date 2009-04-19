@@ -3798,7 +3798,7 @@ static monsterentry mondata[] = {
 },
 
 // major demons ('&')
-// random demon in pan - only one per level. stats are stored in ghost struct
+// random demon in pan - only one per level. Stats are stored in ghost struct.
 {
     MONS_PANDEMONIUM_DEMON, '&', BLACK, "pandemonium lord",
     M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_EVIL,

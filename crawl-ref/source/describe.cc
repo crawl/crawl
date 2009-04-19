@@ -2602,7 +2602,14 @@ static const char* _get_resist_name(mon_resist_flags res_type)
 // attributes.
 static std::string _monster_stat_description(const monsters& mon)
 {
-    const mon_resist_def resist = get_mons_resists(&mon);
+    std::ostringstream result;
+
+    // Don't leak or duplicate resistance information for ghosts/demons.
+    const mon_resist_def resist =
+        (mon.type == MONS_PANDEMONIUM_DEMON
+         || mon.type == MONS_PLAYER_GHOST ? get_mons_class_resists(mon.type)
+                                          : get_mons_resists(&mon));
+
     const mon_resist_flags resists[] = {
         MR_RES_ELEC,  MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM, MR_RES_COLD,   MR_RES_ACID
@@ -2642,9 +2649,6 @@ static std::string _monster_stat_description(const monsters& mon)
         }
     }
 
-    const char* pronoun = mons_pronoun(static_cast<monster_type>(mon.type),
-                                       PRONOUN_CAP, true);
-
     std::vector<std::string> resist_descriptions;
     if (!extreme_resists.empty())
     {
@@ -2666,7 +2670,8 @@ static std::string _monster_stat_description(const monsters& mon)
         resist_descriptions.push_back(tmp);
     }
 
-    std::ostringstream result;
+    const char* pronoun = mons_pronoun(static_cast<monster_type>(mon.type),
+                                       PRONOUN_CAP, true);
 
     if (!resist_descriptions.empty())
     {
@@ -2690,31 +2695,37 @@ static std::string _monster_stat_description(const monsters& mon)
         result << pronoun << " is immune to magical enchantments.$";
 
     // Seeing/sensing invisible.
-    if (mons_class_flag(mon.type, M_SEE_INVIS))
-        result << pronoun << " can see invisible.$";
-    else if (mons_class_flag(mon.type, M_SENSE_INVIS))
-        result << pronoun << " can sense the presence of invisible creatures.$";
-
-    // Unusual monster speed.
-    const int speed = mons_base_speed(&mon);
-    if (speed != 10)
+    if (mon.type != MONS_PANDEMONIUM_DEMON && mon.type != MONS_PLAYER_GHOST)
     {
-        result << pronoun << " is ";
-        if (speed < 7)
-            result << "very slow";
-        else if (speed < 10)
-            result << "slow";
-        else if (speed > 20)
-            result << "extremely fast";
-        else if (speed > 15)
-            result << "very fast";
-        else if (speed > 10)
-            result << "fast";
-        result << ".$";
+        if (mons_class_flag(mon.type, M_SEE_INVIS))
+            result << pronoun << " can see invisible.$";
+        else if (mons_class_flag(mon.type, M_SENSE_INVIS))
+            result << pronoun << " can sense the presence of invisible creatures.$";
+
+        // Unusual monster speed.
+        const int speed = mons_base_speed(&mon);
+        if (speed != 10)
+        {
+            result << pronoun << " is ";
+            if (speed < 7)
+                result << "very slow";
+            else if (speed < 10)
+                result << "slow";
+            else if (speed > 20)
+                result << "extremely fast";
+            else if (speed > 15)
+                result << "very fast";
+            else if (speed > 10)
+                result << "fast";
+            result << ".$";
+        }
     }
 
     // Can the monster levitate/fly?
-    const flight_type fly = mons_flies(&mon);
+    // This doesn't give anything away since all ghosts can fly, and
+    // for demons it's already mentioned in their flavour description.
+    const flight_type fly = mons_flies(&mon, false);
+
     if (fly != FL_NONE)
     {
         result << pronoun << " can "
@@ -2848,7 +2859,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        inf.body << _describe_demon(mons);
+        inf.body << _describe_demon(mons) << "$";
         break;
 
     case MONS_URUG:
@@ -2866,13 +2877,10 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         break;
     }
 
-    // Don't leak or duplicate resistance information for demons.
-    if (mons.type != MONS_PANDEMONIUM_DEMON)
-    {
-        std::string result = _monster_stat_description(mons);
-        if (!result.empty())
-            inf.body << "$" << result;
-    }
+    // Get information on resistances, speed, etc.
+    std::string result = _monster_stat_description(mons);
+    if (!result.empty())
+        inf.body << "$" << result;
 
     if (!mons_can_use_stairs(&mons))
     {

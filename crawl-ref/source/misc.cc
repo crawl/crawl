@@ -82,8 +82,10 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
-static void _create_monster_hide(int mons_class)
+static void _create_monster_hide(const item_def corpse)
 {
+    int mons_class = corpse.plus;
+
     int o = get_item_slot();
     if (o == NON_ITEM)
         return;
@@ -117,6 +119,10 @@ static void _create_monster_hide(int mons_class)
         item.sub_type = ARM_ANIMAL_SKIN;
         break;
     }
+
+    int mtype = corpse.orig_monnum - 1;
+    if (!invalid_monster_class(mtype) && mons_is_unique(mtype))
+        item.inscription = mons_type_name(mtype, DESC_PLAIN);
 
     move_item_to_grid(&o, you.pos());
 }
@@ -163,7 +169,7 @@ void turn_corpse_into_chunks(item_def &item)
 
     // Happens after the corpse has been butchered.
     if (monster_descriptor(item.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
-        _create_monster_hide(item.plus);
+        _create_monster_hide(item);
 }
 
 void turn_corpse_into_skeleton_and_chunks(item_def &item)
@@ -896,7 +902,7 @@ void turn_corpse_into_blood_potions(item_def &item)
 
     // Happens after the blood has been bottled.
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
-        _create_monster_hide(mons_class);
+        _create_monster_hide(item);
 }
 
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item)

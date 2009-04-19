@@ -26,6 +26,7 @@ REVISION("$Rev$");
 #include "monplace.h"
 #include "monstuff.h"
 #include "mutation.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
@@ -48,11 +49,6 @@ REVISION("$Rev$");
 #ifdef DEBUG_XOM
 #    define DEBUG_RELIGION    1
 #    define NOTE_DEBUG_XOM    1
-#endif
-
-#define NOTE_DEBUG_XOM
-#ifdef NOTE_DEBUG_XOM
-#include "notes.h"
 #endif
 
 #ifdef DEBUG_RELIGION
@@ -514,12 +510,11 @@ static bool _xom_makes_you_cast_random_spell(int sever, int tension)
          spell, spellenum);
 #endif
 
-#ifdef NOTE_DEBUG_XOM
     static char spell_buf[100];
-    snprintf(spell_buf, sizeof(spell_buf), "XOM: cast spell '%s' (tension %d)",
-             spell_title(spell), tension);
-    take_note(Note(NOTE_MESSAGE, 0, 0, spell_buf), true);
-#endif
+    snprintf(spell_buf, sizeof(spell_buf), "cast spell '%s'",
+             spell_title(spell));
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, spell_buf), true);
+
     your_spells(spell, sever, false);
     return (true);
 }
@@ -582,16 +577,14 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 
     _try_brand_switch(thing_created);
 
+    static char gift_buf[100];
+    snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
+             mitm[thing_created].name(DESC_PLAIN).c_str());
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, gift_buf), true);
+
     move_item_to_grid(&thing_created, you.pos());
     mitm[thing_created].inscription = "god gift";
     canned_msg(MSG_SOMETHING_APPEARS);
-
-#ifdef NOTE_DEBUG_XOM
-    static char gift_buf[100];
-    snprintf(gift_buf, sizeof(gift_buf), "XOM: god gift: %s",
-             mitm[thing_created].name(DESC_PLAIN).c_str());
-    take_note(Note(NOTE_MESSAGE, 0, 0, gift_buf), true);
-#endif
 
     stop_running();
 }
@@ -611,12 +604,10 @@ static void _xom_acquirement(object_class_type force_class)
 
     _try_brand_switch(item_index);
 
-#ifdef NOTE_DEBUG_XOM
     static char gift_buf[100];
-    snprintf(gift_buf, sizeof(gift_buf), "XOM: god gift: %s",
+    snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
              mitm[item_index].name(DESC_PLAIN).c_str());
-    take_note(Note(NOTE_MESSAGE, 0, 0, gift_buf), true);
-#endif
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, gift_buf), true);
 
     stop_running();
 }
@@ -1063,8 +1054,8 @@ static bool _xom_do_potion()
         if (pot == POT_BERSERK_RAGE)
             you.berserk_penalty = NO_BERSERK_PENALTY;
 
-#ifdef NOTE_DEBUG_XOM
-        std::string potion_msg = "XOM: potion effect ";
+        // Take a note.
+        std::string potion_msg = "potion effect ";
         switch (pot)
         {
         case POT_HEALING:       potion_msg += "(healing)"; break;
@@ -1076,8 +1067,9 @@ static bool _xom_do_potion()
         case POT_EXPERIENCE:    potion_msg += "(experience)"; break;
         default:                potion_msg += "(other)"; break;
         }
-        take_note(Note(NOTE_MESSAGE, 0, 0, potion_msg.c_str()), true);
-#endif
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                       potion_msg.c_str()), true);
+
         potion_effect(pot, 150);
 
         rc = true;
@@ -1112,10 +1104,12 @@ static bool _xom_confuse_monsters(int sever)
             rc = true;
         }
     }
-#ifdef NOTE_DEBUG_XOM
+
     if (rc == true)
-        take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: confuse monster(s)"), true);
-#endif
+    {
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "confuse monster(s)"),
+                  true);
+    }
     return (rc);
 }
 
@@ -1218,16 +1212,15 @@ static bool _xom_send_allies(int sever)
             player_angers_monster(mon);
         }
 
-#ifdef NOTE_DEBUG_XOM
+        // Take a note.
         static char summ_buf[80];
-        snprintf(summ_buf, sizeof(summ_buf), "XOM: summons %d %s%s%s",
+        snprintf(summ_buf, sizeof(summ_buf), "summons %d %s%s%s",
                  num_actually_summoned,
                  hostiletype == 0 ? "friendly " :
                  hostiletype == 3 ? "hostile " : "",
                  only_demonic ? "demon" : "monster",
                  num_actually_summoned > 1 ? "s" : "");
-        take_note(Note(NOTE_MESSAGE, 0, 0, summ_buf), true);
-#endif
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
         rc = true;
     }
@@ -1266,13 +1259,12 @@ static bool _xom_send_one_ally(int sever)
 
         player_angers_monster(&menv[summons]);
 
-#ifdef NOTE_DEBUG_XOM
+        // Take a note.
         static char summ_buf[80];
-        snprintf(summ_buf, sizeof(summ_buf), "XOM: summons %s %s",
+        snprintf(summ_buf, sizeof(summ_buf), "summons %s %s",
                  beha == BEH_FRIENDLY ? "friendly" : "hostile",
                  menv[summons].name(DESC_PLAIN).c_str());
-        take_note(Note(NOTE_MESSAGE, 0, 0, summ_buf), true);
-#endif
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
         rc = true;
     }
@@ -1293,9 +1285,9 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
                                           : "bad monster polymorph");
             god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
-#ifdef NOTE_DEBUG_XOM
+            bool see_old = you.can_see(mon);
             std::string old_name = mon->full_name(DESC_PLAIN);
-#endif
+
             if (one_chance_in(8) && !mons_is_shapeshifter(mon))
             {
                 mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
@@ -1306,13 +1298,30 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
             monster_polymorph(mon, RANDOM_MONSTER,
                               powerup ? PPT_MORE : PPT_LESS);
 
+            bool see_new = you.can_see(mon);
+
+            if (see_old || see_new)
+            {
+                std::string new_name = mon->full_name(DESC_PLAIN);
+                if (!see_old)
+                    old_name = "something unseen";
+                else if (!see_new)
+                    new_name = "something unseen";
+
+                // Take a note.
+                static char poly_buf[120];
+                snprintf(poly_buf, sizeof(poly_buf), "polymorph %s -> %s",
+                         old_name.c_str(), new_name.c_str());
+
+                std::string poly = poly_buf;
 #ifdef NOTE_DEBUG_XOM
-            static char poly_buf[120];
-            snprintf(poly_buf, sizeof(poly_buf), "XOM: polymorph %s -> %s (%s)",
-                     old_name.c_str(), mon->full_name(DESC_PLAIN).c_str(),
-                     powerup ? "upgrade" : "downgrade");
-            take_note(Note(NOTE_MESSAGE, 0, 0, poly_buf), true);
+                poly += " (";
+                poly += (powerup ? "upgrade" : "downgrade");
+                poly += ")";
 #endif
+                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, poly.c_str()),
+                          true);
+            }
             rc = true;
         }
     }
@@ -1436,9 +1445,7 @@ static bool _xom_rearrange_pieces(int sever)
             }
         }
     }
-#ifdef NOTE_DEBUG_XOM
-    take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: swap monsters"), true);
-#endif
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "swap monsters"), true);
 
     return (true);
 }
@@ -1454,12 +1461,15 @@ static bool _xom_give_mutations(bool good)
         god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
         const int num_tries = random2(4) + 1;
-#ifdef NOTE_DEBUG_XOM
+
         static char mut_buf[80];
-        snprintf(mut_buf, sizeof(mut_buf), "XOM: give %s mutation%s",
-                 good ? "good" : "random", num_tries > 1 ? "s" : "");
-        take_note(Note(NOTE_MESSAGE, 0, 0, mut_buf), true);
+        snprintf(mut_buf, sizeof(mut_buf), "give %smutations",
+#ifdef NOTE_DEBUG_XOM
+                 good ? "good " : "random ");
+#else
+                 "");
 #endif
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, mut_buf), true);
 
         mpr("Your body is suffused with distortional energy.");
 
@@ -1517,13 +1527,12 @@ static bool _xom_send_major_ally(int sever)
 
         player_angers_monster(&menv[summons]);
 
-#ifdef NOTE_DEBUG_XOM
+        // Take a note.
         static char summ_buf[80];
-        snprintf(summ_buf, sizeof(summ_buf), "XOM: sends permanent %s %s",
+        snprintf(summ_buf, sizeof(summ_buf), "sends permanent %s %s",
                  beha == BEH_FRIENDLY ? "friendly" : "hostile",
                  menv[summons].name(DESC_PLAIN).c_str());
-        take_note(Note(NOTE_MESSAGE, 0, 0, summ_buf), true);
-#endif
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
         rc = true;
     }
@@ -1592,12 +1601,12 @@ static bool _xom_throw_divine_lightning()
         you.hp = 1;
         you.reset_escaped_death();
     }
-#ifdef NOTE_DEBUG_XOM
+
+    // Take a note.
     static char lightning_buf[80];
     snprintf(lightning_buf, sizeof(lightning_buf),
-             "XOM: divine lightning%s", protection ? " (protected)" : "");
-    take_note(Note(NOTE_MESSAGE, 0, 0, lightning_buf), true);
-#endif
+             "divine lightning%s", protection ? " (protected)" : "");
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, lightning_buf), true);
 
     return (true);
 }
@@ -1673,13 +1682,15 @@ static bool _xom_is_good(int sever, int tension)
         while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
         maybe_update_stashes();
 
-#ifdef NOTE_DEBUG_XOM
+        // Take a note.
         static char tele_buf[80];
         snprintf(tele_buf, sizeof(tele_buf),
-                 "XOM: %d-stop teleportation journey%s",
-                 count, (player_in_a_dangerous_place() ? " (dangerous)" : ""));
-        take_note(Note(NOTE_MESSAGE, 0, 0, tele_buf), true);
+                 "XOM: %d-stop teleportation journey%s", count,
+#ifdef NOTE_DEBUG_XOM
+                 player_in_a_dangerous_place() ? " (dangerous)" : // see below
 #endif
+                 "");
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, tele_buf), true);
         done = true;
     }
     else if (random2(tension) < 5 && x_chance_in_y(12, sever))
@@ -1688,9 +1699,8 @@ static bool _xom_is_good(int sever, int tension)
         if (vitrify_area(random2avg(sever/4,2) + 1))
         {
             god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
-#ifdef NOTE_DEBUG_XOM
-            take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: vitrification"), true);
-#endif
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, tension,
+                           "vitrification"), true);
             done = true;
         }
     }
@@ -2112,12 +2122,15 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     const int level = random2(max_level + 1);
 
+    // Take a note.
+    std::string desc = "miscast effect";
 #ifdef NOTE_DEBUG_XOM
-    static char miscast_buf[80];
-    snprintf(miscast_buf, sizeof(miscast_buf), "XOM: level %d miscast effect %s",
-             level, nasty ? "(nasty)" : "");
-    take_note(Note(NOTE_MESSAGE, 0, 0, miscast_buf), true);
+    static char level_buf[20];
+    snprintf(level_buf, sizeof(level_buf), " level %d%s",
+             level, (nasty ? " (nasty)" : ""));
+    desc += level_buf;
 #endif
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
 
     if (level == 0 && one_chance_in(20))
     {
@@ -2173,17 +2186,18 @@ static bool _xom_lose_stats()
     const int loss = 1 + random2(max);
     lose_stat(stat, loss, true, "the vengeance of Xom" );
 
-#ifdef NOTE_DEBUG_XOM
+    // Take a note.
     static char stat_buf[80];
-    snprintf(stat_buf, sizeof(stat_buf), "XOM: stat loss: -%d %s (%d/%d)",
+    snprintf(stat_buf, sizeof(stat_buf), "stat loss: -%d %s (%d/%d)",
              loss, (stat == STAT_STRENGTH  ? "Str" :
                     stat == STAT_DEXTERITY ? "Dex" : "Int"),
              (stat == STAT_STRENGTH  ? you.strength :
               stat == STAT_DEXTERITY ? you.dex : you.intel),
              (stat == STAT_STRENGTH  ? you.max_strength :
               stat == STAT_DEXTERITY ? you.max_dex : you.max_intel));
-    take_note(Note(NOTE_MESSAGE, 0, 0, stat_buf), true);
-#endif
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, stat_buf), true);
+
     return (true);
 }
 
@@ -2213,10 +2227,9 @@ static bool _xom_chaos_upgrade_nearby_monster()
 
     // Wake the monster up.
     behaviour_event(mon, ME_ALERT, MHITYOU);
-#ifdef NOTE_DEBUG_XOM
+
     if (rc)
-        take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: chaos upgrade monster"), true);
-#endif
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos upgrade"), true);
 
     return (rc);
 }
@@ -2258,12 +2271,12 @@ static bool _xom_player_confusion_effect(int sever)
                 mons_too = true;
             }
         }
-#ifdef NOTE_DEBUG_XOM
-        std::string conf_msg = "XOM: confusion";
+
+        // Take a note.
+        std::string conf_msg = "confusion";
         if (mons_too)
             conf_msg += " (+ monsters)";
-        take_note(Note(NOTE_MESSAGE, 0, 0, conf_msg.c_str()), true);
-#endif
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg.c_str()), true);
     }
 
     return (rc);
@@ -2481,10 +2494,8 @@ static bool _repel_stairs()
         else
             canned_msg(MSG_NOTHING_HAPPENS);
     }
-
-#ifdef NOTE_DEBUG_XOM
-    take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: repel stairs"), true);
-#endif
+    else
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "repel stairs"), true);
 
     return (true);
 }
@@ -2508,9 +2519,7 @@ static bool _xom_draining_torment_effect(int sever)
             if (random2(sever) > 3 && (nasty || you.experience > 0))
                 drain_exp();
 
-#ifdef NOTE_DEBUG_XOM
-            take_note(Note(NOTE_MESSAGE, 0, 0, "XOM: draining"), true);
-#endif
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             rc = true;
         }
     }
@@ -2521,12 +2530,13 @@ static bool _xom_draining_torment_effect(int sever)
         {
             god_speaks(GOD_XOM, speech.c_str());
             torment_player(0, TORMENT_XOM);
-#ifdef NOTE_DEBUG_XOM
+
+            // Take a note.
             static char torment_buf[80];
             snprintf(torment_buf, sizeof(torment_buf),
-                     "XOM: torment (%d/%d hp)", you.hp, you.hp_max);
-            take_note(Note(NOTE_MESSAGE, 0, 0, torment_buf), true);
-#endif
+                     "torment (%d/%d hp)", you.hp, you.hp_max);
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, torment_buf), true);
+
             rc = true;
         }
     }
@@ -2545,15 +2555,13 @@ static bool _xom_summon_hostiles(int sever)
         const std::string wep_name = weapon.name(DESC_PLAIN);
         rc = cast_tukimas_dance(100, GOD_XOM, true);
 
-#ifdef NOTE_DEBUG_XOM
         if (rc)
         {
             static char wpn_buf[80];
             snprintf(wpn_buf, sizeof(wpn_buf),
-                     "XOM: animates weapon (%s)", wep_name.c_str());
-            take_note(Note(NOTE_MESSAGE, 0, 0, wpn_buf), true);
+                     "animates weapon (%s)", wep_name.c_str());
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, wpn_buf), true);
         }
-#endif
     }
     else
     {
@@ -2579,13 +2587,12 @@ static bool _xom_summon_hostiles(int sever)
 
         if (num_summoned > 0)
         {
-#ifdef NOTE_DEBUG_XOM
             static char summ_buf[80];
             snprintf(summ_buf, sizeof(summ_buf),
-                     "XOM: summons %d hostile demon%s",
+                     "summons %d hostile demon%s",
                      num_summoned, num_summoned > 1 ? "s" : "");
-            take_note(Note(NOTE_MESSAGE, 0, 0, summ_buf), true);
-#endif
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
+
             rc = true;
         }
     }
@@ -2662,13 +2669,17 @@ static bool _xom_is_bad(int sever, int tension)
             badness = player_in_a_dangerous_place() ? 3 : 1;
             maybe_update_stashes();
 
-#ifdef NOTE_DEBUG_XOM
+            // Take a note.
             static char tele_buf[80];
             snprintf(tele_buf, sizeof(tele_buf),
-                     "XOM: %d-stop teleportation journey%s",
-                     count, (badness == 3 ? " (dangerous)" : ""));
-            take_note(Note(NOTE_MESSAGE, 0, 0, tele_buf), true);
+                     "%d-stop teleportation journey%s", count,
+#ifdef NOTE_DEBUG_XOM
+                     badness == 3 ? " (dangerous)" : "");
+#else
+                     "");
 #endif
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, tele_buf),
+                      true);
             done = true;
         }
         else if (x_chance_in_y(8, sever))
@@ -2716,6 +2727,7 @@ static bool _xom_is_bad(int sever, int tension)
         else if (one_chance_in(sever) && you.level_type != LEVEL_ABYSS)
         {
             god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
+            // handles note taking
             banished(DNGN_ENTER_ABYSS, "Xom");
             badness = 5;
             done = true;
@@ -2947,8 +2959,7 @@ void xom_acts(bool niceness, int sever, int tension)
     }
     else
     {
-#ifdef NOTE_DEBUG_XOM
-        if (was_bored)
+        if (was_bored && Options.note_xom_effects)
             take_note(Note(NOTE_MESSAGE, 0, 0, "XOM is BORED!"), true);
 #ifdef DEBUG_XOM
         else if (niceness)
@@ -2956,7 +2967,6 @@ void xom_acts(bool niceness, int sever, int tension)
             take_note(Note(NOTE_MESSAGE, 0, 0, "good act randomly turned bad"),
                       true);
         }
-#endif
 #endif
 
         // Bad mojo.

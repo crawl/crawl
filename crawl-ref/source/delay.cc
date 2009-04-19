@@ -1577,6 +1577,8 @@ void armour_wear_effects(const int item_slot)
             god_type god;
             if (origin_is_god_gift(arm, &god) && god == GOD_XOM)
                 amusement *= 2;
+
+            xom_is_stimulated(amusement);
         }
     }
 
