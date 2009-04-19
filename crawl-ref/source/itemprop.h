@@ -752,24 +752,24 @@ bool item_is_staff( const item_def &item );
 int ring_has_pluses( const item_def &item );
 
 // food functions:
-bool food_is_meat( const item_def &item );
-bool food_is_veg( const item_def &item );
-bool is_blood_potion( const item_def &item );
-int  food_value( const item_def &item );
-int  food_turns( const item_def &item );
-bool can_cut_meat( const item_def &item );
-bool food_is_rotten( const item_def &item );
-int  corpse_freshness( const item_def &item );
+bool food_is_meat(const item_def &item);
+bool food_is_veg(const item_def &item);
+bool is_blood_potion(const item_def &item);
+int food_value(const item_def &item);
+int food_turns(const item_def &item);
+bool can_cut_meat(const item_def &item);
+bool food_is_rotten(const item_def &item);
+int corpse_freshness(const item_def &item);
 
 // generic item property functions:
-bool is_tool( const item_def &item );
-int property( const item_def &item, int prop_type );
-bool gives_ability( const item_def &item );
-bool gives_resistance( const item_def &item );
-int item_mass( const item_def &item );
-size_type item_size( const item_def &item );
+bool is_tool(const item_def &item);
+int property(const item_def &item, int prop_type);
+bool gives_ability(const item_def &item);
+bool gives_resistance(const item_def &item);
+int item_mass(const item_def &item);
+size_type item_size(const item_def &item);
 
-bool is_colourful_item( const item_def &item );
+bool is_colourful_item(const item_def &item);
 
 std::string item_base_name(const item_def &item);
 const char* weapon_base_name(unsigned char subtype);

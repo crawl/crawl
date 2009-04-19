@@ -1115,7 +1115,7 @@ void eat_inventory_item(int which_inventory_slot)
                    intel);
     }
     else
-        _eating( food.base_type, food.sub_type );
+        _eating(food.base_type, food.sub_type);
 
     you.turn_is_over = true;
     dec_inv_item_quantity( which_inventory_slot, 1 );

@@ -2278,21 +2278,19 @@ int ring_has_pluses( const item_def &item )
 //
 // Food functions:
 //
-bool food_is_meat( const item_def &item )
+bool food_is_meat(const item_def &item)
 {
-    ASSERT( is_valid_item( item ) && item.base_type == OBJ_FOOD );
-
-    return (Food_prop[ Food_index[item.sub_type] ].carn_mod > 0);
+    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
+    return (Food_prop[Food_index[item.sub_type]].carn_mod > 0);
 }
 
 bool food_is_veg( const item_def &item )
 {
-    ASSERT( is_valid_item( item ) && item.base_type == OBJ_FOOD );
-
-    return (Food_prop[ Food_index[item.sub_type] ].herb_mod > 0);
+    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
+    return (Food_prop[Food_index[item.sub_type]].herb_mod > 0);
 }
 
-bool is_blood_potion( const item_def &item)
+bool is_blood_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
         return (false);
@@ -2302,38 +2300,37 @@ bool is_blood_potion( const item_def &item)
 }
 
 // Returns food value for one turn of eating.
-int food_value( const item_def &item )
+int food_value(const item_def &item)
 {
-    ASSERT( is_valid_item( item ) && item.base_type == OBJ_FOOD );
+    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
 
     // XXX: This needs to be better merged with the mutation system.
     const int carn = player_mutation_level(MUT_CARNIVOROUS);
 
-    const food_def &food = Food_prop[ Food_index[item.sub_type] ];
+    const food_def &food = Food_prop[Food_index[item.sub_type]];
 
     int ret = food.value;
 
     ret += (carn * food.carn_mod);
     ret += (herb * food.herb_mod);
 
-    return ((ret > 0) ? div_rand_round( ret, food.turns ) : 0);
+    return ((ret > 0) ? div_rand_round(ret, food.turns) : 0);
 }
 
-int food_turns( const item_def &item )
+int food_turns(const item_def &item)
 {
-    ASSERT( is_valid_item( item ) && item.base_type == OBJ_FOOD );
-
-    return (Food_prop[ Food_index[item.sub_type] ].turns);
+    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
+    return (Food_prop[Food_index[item.sub_type]].turns);
 }
 
-bool can_cut_meat( const item_def &item )
+bool can_cut_meat(const item_def &item)
 {
-    return (does_damage_type( item, DAM_SLICE ));
+    return (does_damage_type(item, DAM_SLICE));
 }
 
-bool food_is_rotten( const item_def &item )
+bool food_is_rotten(const item_def &item)
 {
     return (item.special < 100) && (item.base_type == OBJ_CORPSES
                                        && item.sub_type == CORPSE_BODY
@@ -2341,15 +2338,18 @@ bool food_is_rotten( const item_def &item )
                                        && item.sub_type == FOOD_CHUNK);
 }
 
-int corpse_freshness( const item_def &item )
+int corpse_freshness(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(item.special <= FRESHEST_CORPSE);
     return (item.special);
 }
 
+//
+// Generic item functions:
+//
 // Returns true if item counts as a tool for tool size comparisons and msgs.
-bool is_tool( const item_def &item )
+bool is_tool(const item_def &item)
 {
     // Currently using OBJ_WEAPONS instead of can_cut_meat() as almost
     // any weapon might be an evocable artefact.
@@ -2359,11 +2359,7 @@ bool is_tool( const item_def &item )
                 && item.sub_type != MISC_RUNE_OF_ZOT));
 }
 
-
-//
-// Generic item functions:
-//
-int property( const item_def &item, int prop_type )
+int property(const item_def &item, int prop_type)
 {
     switch (item.base_type)
     {
@@ -2585,7 +2581,7 @@ bool gives_resistance(const item_def &item)
     return (false);
 }
 
-int item_mass( const item_def &item )
+int item_mass(const item_def &item)
 {
     int unit_mass = 0;
 
@@ -2699,7 +2695,7 @@ int item_mass( const item_def &item )
 
 // Note that this function, and item sizes in general aren't quite on the
 // same scale as PCs and monsters.
-size_type item_size( const item_def &item )
+size_type item_size(const item_def &item)
 {
     int size = SIZE_TINY;
 
@@ -2761,11 +2757,11 @@ size_type item_size( const item_def &item )
     else if (size > SIZE_HUGE)
         size = SIZE_HUGE;
 
-    return (static_cast<size_type>( size ));
+    return (static_cast<size_type>(size));
 }
 
 // Returns true if we might be interested in dumping the colour.
-bool is_colourful_item( const item_def &item )
+bool is_colourful_item(const item_def &item)
 {
     bool ret = false;
 
