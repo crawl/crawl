@@ -1585,8 +1585,8 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
     case OBJ_WEAPONS:
         // Merging staff with magical staves for consistency... doing
         // as a special case because we want to be very flexible with
-        // these useful objects (we want spriggans and ogre magi to
-        // be able to use them).
+        // these useful objects (we want spriggans and ogres to be
+        // able to use them).
         if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
         {
             if (size < SIZE_SMALL)
