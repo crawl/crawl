@@ -318,7 +318,7 @@ static void _show_commandline_options_help()
 static void _wanderer_startup_message()
 {
     int skill_levels = 0;
-    for (int i = 0; i < NUM_SKILLS; i++)
+    for (int i = 0; i < NUM_SKILLS; ++i)
         skill_levels += you.skills[ i ];
 
     if (skill_levels <= 2)
@@ -592,10 +592,10 @@ static void _handle_wizard_command( void )
 
     if (!you.wizard)
     {
-        mpr( "WARNING: ABOUT TO ENTER WIZARD MODE!", MSGCH_WARN );
+        mpr("WARNING: ABOUT TO ENTER WIZARD MODE!", MSGCH_WARN);
 
 #ifndef SCORE_WIZARD_MODE
-        mpr( "If you continue, your game will not be scored!", MSGCH_WARN );
+        mpr("If you continue, your game will not be scored!", MSGCH_WARN);
 #endif
 
         if (!yesno( "Do you really want to enter wizard mode?", false, 'n' ))
@@ -614,7 +614,7 @@ static void _handle_wizard_command( void )
         }
     }
 
-    mpr( "Enter Wizard Command (? - help): ", MSGCH_PROMPT );
+    mpr("Enter Wizard Command (? - help): ", MSGCH_PROMPT);
     wiz_command = getch();
 
     if (crawl_state.cmd_repeat_start)
@@ -1205,8 +1205,8 @@ static void _go_downstairs()
 {
     ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
 
-    bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
-                  && grd(you.pos()) != DNGN_UNDISCOVERED_TRAP);
+    const bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
+                        && grd(you.pos()) != DNGN_UNDISCOVERED_TRAP);
 
     if (_stairs_check_mesmerised())
         return;
@@ -1985,7 +1985,7 @@ static void _prep_input()
 // At midpoint (defined by get_expiration_threshold() in player.cc)
 // print midmsg and decrease duration by midloss (a randomized amount so as
 // to make it impossible to know the exact remaining duration for sure).
-// NOTE: The maximum possible midloss should be greater than midpoint,
+// NOTE: The maximum possible midloss should be smaller than midpoint,
 //       otherwise the duration may end in the same turn the warning
 //       message is printed which would be a bit late.
 static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
@@ -2010,7 +2010,7 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
         }
     }
 
-    // In case midloss caused the duration to end prematurely.
+    // No "else", in case midloss caused the duration to end prematurely.
     // (This really shouldn't happen, else the whole point of the
     //  "begins to time out" message is lost!)
     if (you.duration[dur] <= 1)
@@ -2478,7 +2478,7 @@ static void _check_banished()
 
 static void _check_shafts()
 {
-    for (int i = 0; i < MAX_TRAPS; i++)
+    for (int i = 0; i < MAX_TRAPS; ++i)
     {
         trap_def &trap = env.trap[i];
 
@@ -2905,9 +2905,9 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
-    for ( adjacent_iterator ai(you.pos(), false); ai; ++ai )
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
-        if ( grd(*ai) == feat )
+        if (grd(*ai) == feat)
         {
             num++;
             delta = *ai - you.pos();
@@ -3307,13 +3307,13 @@ static bool _initialise(void)
     msg::initialise_mpr_streams();
 
     // Init item array.
-    for (int i = 0; i < MAX_ITEMS; i++)
+    for (int i = 0; i < MAX_ITEMS; ++i)
         init_item(i);
 
     // Empty messaging string.
     info[0] = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
         menv[i].reset();
 
     igrd.init(NON_ITEM);
@@ -3604,7 +3604,7 @@ static void _move_player(coord_def move)
     monsters *beholder = NULL;
     if (you.duration[DUR_MESMERISED] && !you.confused())
     {
-        for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
+        for (unsigned int i = 0; i < you.mesmerised_by.size(); ++i)
         {
              monsters& mon = menv[you.mesmerised_by[i]];
              int olddist = grid_distance(you.pos(), mon.pos());
@@ -3705,14 +3705,14 @@ static void _move_player(coord_def move)
 #if DEBUG_DIAGNOSTICS
         mpr( "Shifting.", MSGCH_DIAGNOSTICS );
         int j = 0;
-        for (int i = 0; i < MAX_ITEMS; i++)
+        for (int i = 0; i < MAX_ITEMS; ++i)
             if (is_valid_item( mitm[i] ))
                 ++j;
 
         mprf( MSGCH_DIAGNOSTICS, "Number of items present: %d", j );
 
         j = 0;
-        for (int i = 0; i < MAX_MONSTERS; i++)
+        for (int i = 0; i < MAX_MONSTERS; ++i)
             if (menv[i].type != -1)
                 ++j;
 
@@ -4068,6 +4068,6 @@ static void _compile_time_asserts()
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (int i = 0; i < NUM_BRANCHES; ++i)
         ASSERT(branches[i].id == i);
 }

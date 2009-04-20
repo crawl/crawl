@@ -268,15 +268,6 @@ dice_def calc_dice( int num_dice, int max_damage );
 // Test if the to-hit (attack) beats evasion (defence).
 bool test_beam_hit(int attack, int defence);
 
-/* FIXME: remove this
-int explosion( bolt &pbolt, bool hole_in_the_middle = false,
-               bool explode_in_wall = false,
-               bool stop_at_statues = true,
-               bool stop_at_walls   = true,
-               bool show_more       = true,
-               bool affect_items    = true);
-*/
-
 int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 

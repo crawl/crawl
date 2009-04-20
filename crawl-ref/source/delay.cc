@@ -1292,18 +1292,26 @@ static void _finish_delay(const delay_queue_item &delay)
             // Don't autopickup chunks/potions if there's still another
             // delay (usually more corpses to butcher or a weapon-swap)
             // waiting to happen.
+            // Also, don't waste time picking up chunks if you're already
+            // starving. (jpeg)
             if ((Options.chunks_autopickup
                     || delay.type == DELAY_BOTTLE_BLOOD)
                 && you.delay_queue.size() == 1)
             {
-                autopickup();
+                if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
+                    autopickup();
             }
 
             // If we were interrupted while butchering (by poisoning, for
             // example) then resumed butchering and finished, swap back from
             // butchering tool if appropriate.
-            if (you.delay_queue.size() == 1)
+            // Again, not if starving. (jpeg)
+            if (you.delay_queue.size() == 1
+                && (you.hunger_state > HS_STARVING
+                    || you.species == SP_VAMPIRE))
+            {
                 handle_interrupted_swap(true);
+            }
         }
         else
         {

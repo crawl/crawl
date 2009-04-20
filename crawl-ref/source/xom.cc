@@ -286,7 +286,7 @@ void xom_tick()
         you.piety = HALF_MAX_PIETY + (good ? size : -size);
     }
 
-#ifdef DEBUG_XOM
+#ifdef DEBUG_DIAGNOSTICS
     snprintf(info, INFO_SIZE, "xom_tick(), delta: %d, piety: %d",
              delta, you.piety);
     take_note(Note(NOTE_MESSAGE, 0, 0, info), true);

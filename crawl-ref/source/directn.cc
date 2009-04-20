@@ -522,7 +522,6 @@ void full_describe_view()
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
-//    desc_menu.set_highlighter(NULL);
     // FIXME: Need different title for the opposite toggle:
     // "Visible Monsters/Items (select for more detail, '!' to examine):"
     std::string title = "";

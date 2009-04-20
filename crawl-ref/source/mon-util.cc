@@ -4496,8 +4496,10 @@ bool monsters::drop_item(int eslot, int near)
             pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
 
         if (need_message(near))
+        {
             mprf("%s drops %s.", name(DESC_CAP_THE).c_str(),
                  pitem->name(DESC_NOCAP_A).c_str());
+        }
 
         dungeon_feature_type feat = grd(pos());
         if (grid_destroys_items(feat))

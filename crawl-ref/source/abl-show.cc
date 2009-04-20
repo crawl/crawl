@@ -1615,7 +1615,7 @@ static bool _do_ability(const ability_def& abil)
         case 1: beam.range =  8; zapping(ZAP_PAIN,  power, beam); break;
         case 2: beam.range =  5; zapping(ZAP_STONE_ARROW, power, beam); break;
         case 3: beam.range = 13; zapping(ZAP_ELECTRICITY, power, beam); break;
-        case 4: beam.range = 8; zapping(ZAP_BREATHE_ACID, power/2, beam); break;
+        case 4: beam.range =  8; zapping(ZAP_BREATHE_ACID, power/2, beam); break;
         }
 
         exercise(SK_INVOCATIONS, 1);
@@ -1644,12 +1644,12 @@ static bool _do_ability(const ability_def& abil)
             zap_type ztype = ZAP_DEBUGGING_RAY;
             switch (random2(7))
             {
-            case 0: beam.range = 6;  ztype = ZAP_FIRE;               break;
-            case 1: beam.range = 6;  ztype = ZAP_FIREBALL;           break;
+            case 0: beam.range =  6; ztype = ZAP_FIRE;               break;
+            case 1: beam.range =  6; ztype = ZAP_FIREBALL;           break;
             case 2: beam.range = 10; ztype = ZAP_LIGHTNING;          break;
-            case 3: beam.range = 5;  ztype = ZAP_STICKY_FLAME;       break;
-            case 4: beam.range = 5;  ztype = ZAP_IRON_BOLT;          break;
-            case 5: beam.range = 6;  ztype = ZAP_NEGATIVE_ENERGY;    break;
+            case 3: beam.range =  5; ztype = ZAP_STICKY_FLAME;       break;
+            case 4: beam.range =  5; ztype = ZAP_IRON_BOLT;          break;
+            case 5: beam.range =  6; ztype = ZAP_NEGATIVE_ENERGY;    break;
             case 6: beam.range = 20; ztype = ZAP_ORB_OF_ELECTRICITY; break;
             }
             zapping(ztype, power, beam);
@@ -2053,8 +2053,8 @@ std::vector<talent> your_talents(bool check_confused)
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
 
-     if (you.species == SP_DEEP_DWARF)
-         _add_talent(talents, ABIL_RECHARGING, check_confused);
+    if (you.species == SP_DEEP_DWARF)
+        _add_talent(talents, ABIL_RECHARGING, check_confused);
 
     // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
     // Transformed nagas, or non-nagas, can only get Spit Poison.
@@ -2402,9 +2402,9 @@ static int _find_ability_slot(ability_type which_ability)
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations).
+    // Skip over a-e (invocations), or a-g for Elyvilon.
     const int first_slot = (you.religion == GOD_ELYVILON ? 7 : 5);
-    for (int slot = first_slot; slot < 52; slot++)
+    for (int slot = first_slot; slot < 52; ++slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
@@ -2414,7 +2414,7 @@ static int _find_ability_slot(ability_type which_ability)
     }
 
     // If we can't find anything else, try a-e.
-    for (int slot = first_slot - 1; slot >= 0; slot--)
+    for (int slot = first_slot - 1; slot >= 0; --slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {

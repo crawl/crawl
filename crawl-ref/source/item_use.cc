@@ -2360,6 +2360,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // Don't do the tracing when using Portaled Projectile, or when confused.
     if (!teleport && !you.confused())
     {
+        // Set values absurdly high to make sure the tracer will
+        // complain if we're attempting to fire through allies.
+        pbolt.hit    = 100;
+        pbolt.damage = dice_def(1, 100);
+
         // Init tracer variables.
         pbolt.foe_info.reset();
         pbolt.friend_info.reset();
@@ -2378,6 +2383,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 delete pbolt.special_explosion;
             return (false);
         }
+        pbolt.hit    = 0;
+        pbolt.damage = dice_def();
     }
     pbolt.is_tracer = false;
 

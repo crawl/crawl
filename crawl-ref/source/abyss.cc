@@ -92,7 +92,7 @@ void generate_abyss()
          "generate_abyss(); turn_on_level: %d", env.turns_on_level);
 #endif
 
-    for ( rectangle_iterator ri(5); ri; ++ri )
+    for (rectangle_iterator ri(5); ri; ++ri)
     {
         grd(*ri) =
             static_cast<dungeon_feature_type>(
@@ -212,14 +212,16 @@ static void _generate_area(const coord_def& topleft,
             bool room_ok = true;
 
             // Check if the room is taken.
-            for ( rectangle_iterator ri(tl, br); ri && room_ok; ++ri )
+            for (rectangle_iterator ri(tl, br); ri && room_ok; ++ri)
                 if (grd(*ri) != DNGN_UNSEEN)
                     room_ok = false;
 
             // Make the room.
             if (room_ok)
-                for ( rectangle_iterator ri(tl,br); ri; ++ri )
+            {
+                for (rectangle_iterator ri(tl,br); ri; ++ri)
                     grd(*ri) = DNGN_FLOOR;
+            }
         }
     }
 
@@ -232,7 +234,7 @@ static void _generate_area(const coord_def& topleft,
         items_level = 0;
     }
 
-    for ( rectangle_iterator ri(topleft, bottomright); ri; ++ri )
+    for (rectangle_iterator ri(topleft, bottomright); ri; ++ri)
     {
         if (grd(*ri) == DNGN_UNSEEN && x_chance_in_y(thickness + 1, 100))
         {
@@ -268,7 +270,7 @@ static void _generate_area(const coord_def& topleft,
     int exits_wanted  = 0;
     int altars_wanted = 0;
 
-    for ( rectangle_iterator ri(topleft, bottomright); ri; ++ri )
+    for (rectangle_iterator ri(topleft, bottomright); ri; ++ri)
     {
         if (grd(*ri) == DNGN_UNSEEN)
             grd(*ri) = replaced[random2(5)];
@@ -449,7 +451,7 @@ void area_shift(void)
             _abyss_lose_monster(m);
     }
 
-    for (rectangle_iterator ri(5); ri; ++ri )
+    for (rectangle_iterator ri(5); ri; ++ri)
     {
         // Don't modify terrain by player.
         if (grid_distance(*ri, you.pos()) <= 10)
@@ -509,7 +511,7 @@ void area_shift(void)
         if (env.cloud[i].type == CLOUD_NONE)
             continue;
 
-        if ( grid_distance(abyss_center, env.cloud[i].pos) > 10 )
+        if (grid_distance(abyss_center, env.cloud[i].pos) > 10)
             delete_cloud( i );
     }
 
@@ -614,7 +616,7 @@ void abyss_teleport( bool new_area )
     for (int i = 0; i < MAX_CLOUDS; i++)
         delete_cloud( i );
 
-    for ( rectangle_iterator ri(10); ri; ++ri )
+    for (rectangle_iterator ri(10); ri; ++ri)
     {
         grd(*ri)       = DNGN_UNSEEN;  // So generate_area will pick it up.
         igrd(*ri)      = NON_ITEM;
@@ -868,7 +870,7 @@ static void _corrupt_level_features(const crawl_environment &oenv)
     for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
         corrupt_seeds.push_back(corrupt_markers[i]->pos);
 
-    for ( rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri )
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         int distance = GXM * GXM + GYM * GYM;
         for (int i = 0, size = corrupt_seeds.size(); i < size; ++i)

@@ -925,7 +925,15 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             {
                 // Ignore quiet.
                 if (was_butchering)
-                    mpr("The corpse you are butchering rises to attack!");
+                {
+                    if (beha == BEH_HOSTILE)
+                        mpr("The corpse you are butchering rises to attack!");
+                    else
+                    {
+                        mpr("The corpse you are butchering rises to join "
+                            "your ranks!");
+                    }
+                }
 
                 if (!quiet && see_grid(a))
                     mpr("The dead are walking!");
