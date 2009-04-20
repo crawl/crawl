@@ -1283,6 +1283,7 @@ ORIENT:  float
 MONS:    fungus
 SHUFFLE: {[(, b:xxxbcv, UVW, XYZ
 SUBST:   '=.x, U==, V=x, W=x, X==, Y=x, Z=x
+RTILE:   x = wall_vines
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx''xxxxxxxxxxxxxxxxx%xxxxxxxxxxxxx
