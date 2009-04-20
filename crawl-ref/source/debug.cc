@@ -1148,7 +1148,7 @@ static bool _book_from_spell(const char* specs, item_def &item)
         return (false);
 
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (int j = 0; j < 8; j++)
+        for (int j = 0; j < 8; ++j)
             if (which_spell_in_book(i, j) == type)
             {
                 item.sub_type = i;
@@ -2507,7 +2507,8 @@ void wizard_list_items()
     mpr(EOL);
     mpr("Floor items (stacks only show top item):");
 
-    for (rectangle_iterator ri(1); ri; ++ri)
+    const coord_def start(1,1), end(GXM-1, GYM-1);
+    for (rectangle_iterator ri(start, end); ri; ++ri)
     {
         int item = igrd(*ri);
         if (item != NON_ITEM)
@@ -6349,7 +6350,9 @@ static void _debug_marker_scan()
                  i, (int) type, marker->pos.x, marker->pos.y);
     }
 
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    const coord_def start(MAPGEN_BORDER, MAPGEN_BORDER);
+    const coord_def   end(GXM - MAPGEN_BORDER - 2, GYM - MAPGEN_BORDER - 2);
+    for (rectangle_iterator ri(start, end); ri; ++ri)
     {
         std::vector<map_marker*> at_pos = env.markers.get_markers_at(*ri);
 
