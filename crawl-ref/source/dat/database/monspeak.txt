@@ -2071,8 +2071,7 @@ w:1
 @The_monster@ says, "I schooled the Big Guy. You'll be no problem."
 
 w:1
-@The_monster@ tries to tell you a complicated story about hydras, his blood, and
-marriage.
+@The_monster@ tries to tell you a complicated story about hydras, his blood, and marriage.
 
 ## END NESSOS
 %%%%
