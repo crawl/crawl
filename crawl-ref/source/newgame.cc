@@ -4376,7 +4376,7 @@ static bool _choose_wand()
     {
         if (_start_to_wand(Options.wand, is_rod) != -1)
         {
-            keyin = 'a' + Options.wand;
+            keyin = 'a' + Options.wand - 1;
             ng_wand = Options.wand;
             goto wand_done;
         }
