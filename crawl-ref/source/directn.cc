@@ -221,7 +221,7 @@ static int _targeting_cmd_to_feature( command_type command )
     {
     case CMD_TARGET_FIND_TRAP:      return '^';
     case CMD_TARGET_FIND_PORTAL:    return '\\';
-    case CMD_TARGET_FIND_ALTAR:     return  '_';
+    case CMD_TARGET_FIND_ALTAR:     return '_';
     case CMD_TARGET_FIND_UPSTAIR:   return '<';
     case CMD_TARGET_FIND_DOWNSTAIR: return '>';
     default:                        return 0;
@@ -510,7 +510,7 @@ void full_describe_view()
     get_monster_pane_info(mons);
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
 
-    for (unsigned int i = 0; i < mons.size(); i++)
+    for (unsigned int i = 0; i < mons.size(); ++i)
         list_mons.push_back(mons[i].m_mon);
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
@@ -618,7 +618,7 @@ void full_describe_view()
             std::vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
             MenuEntry *me;
-            for (unsigned int j = 0; j < fss.size(); j++)
+            for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
                 {
@@ -1348,11 +1348,11 @@ void direction(dist& moves, targeting_type restricts,
 
         case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-            mprf( "Targeting mode is now: %s",
-                  (mode == TARG_ANY)     ? "any" :
-                  (mode == TARG_ENEMY)   ? "enemies" :
-                  (mode == TARG_HOSTILE) ? "hostiles"
-                                         : "friends" );
+            mprf("Targeting mode is now: %s",
+                 (mode == TARG_ANY)     ? "any" :
+                 (mode == TARG_ENEMY)   ? "enemies" :
+                 (mode == TARG_HOSTILE) ? "hostiles"
+                                        : "friends");
             break;
 
         case CMD_TARGET_PREV_TARGET:
@@ -1591,10 +1591,6 @@ void direction(dist& moves, targeting_type restricts,
             force_redraw = true;
             if (crawl_state.arena_suspended)
                 need_beam_redraw = true;
-            break;
-
-        case CMD_TARGET_ALL_DESCRIBE:
-            full_describe_view();
             break;
 
         case CMD_TARGET_HELP:
@@ -1955,7 +1951,7 @@ static bool _find_mlist( const coord_def& where, int idx, bool need_path,
         return (false);
 
     int real_idx = 0;
-    for (unsigned int i = 0; i+1 < mlist.size(); i++)
+    for (unsigned int i = 0; i+1 < mlist.size(); ++i)
     {
         if (real_idx == idx)
         {
@@ -2271,9 +2267,8 @@ static char _find_square( const coord_def& where,
         {
             // This part checks all eight surrounding squares to find the
             // one that leads on to the present square.
-            for (i = -1; i < 2; i++)
-            {
-                for (j = -1; j < 2; j++)
+            for (i = -1; i < 2; ++i)
+                for (j = -1; j < 2; ++j)
                 {
                     if (i == 0 && j == 0)
                         continue;
@@ -2283,7 +2278,8 @@ static char _find_square( const coord_def& where,
                         x_change = 0;
                         y_change = -1;
                     }
-                    else if (temp_xps + i - ctrx == 0 && temp_yps + j - ctry == 0)
+                    else if (temp_xps + i - ctrx == 0
+                             && temp_yps + j - ctry == 0)
                     {
                         x_change = -1;
                         y_change = 0;
@@ -2322,7 +2318,6 @@ static char _find_square( const coord_def& where,
                         goto finished_spiralling;
                     }
                 }
-            }
         }                       // end else
 
 
@@ -3289,7 +3284,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
 #if DEBUG_DIAGNOSTICS
         if (!player_monster_visible(mon))
-            mpr( "There is a non-visible monster here.", MSGCH_DIAGNOSTICS );
+            mpr("There is a non-visible monster here.", MSGCH_DIAGNOSTICS);
 #else
         if (!player_monster_visible(mon))
             goto look_clouds;
@@ -3366,19 +3361,18 @@ static void _describe_cell(const coord_def& where, bool in_range)
         else
         {
             if (mitm[ targ_item ].base_type == OBJ_GOLD)
-                mprf( MSGCH_FLOOR_ITEMS, "A pile of gold coins." );
+                mprf(MSGCH_FLOOR_ITEMS, "A pile of gold coins.");
             else
             {
                 std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
                                                                DESC_NOCAP_A);
-                mprf( MSGCH_FLOOR_ITEMS, "You see %s here.",
-                      name.c_str());
+                mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
             }
 
             if (mitm[ targ_item ].link != NON_ITEM)
             {
-                mprf( MSGCH_FLOOR_ITEMS,
-                      "There is something else lying underneath.");
+                mprf(MSGCH_FLOOR_ITEMS,
+                     "There is something else lying underneath.");
             }
         }
         item_described = true;

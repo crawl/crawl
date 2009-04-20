@@ -1131,17 +1131,17 @@ static void _fixup_branch_stairs()
         && you.level_type == LEVEL_DUNGEON)
     {
         const dungeon_feature_type exit = your_branch().exit_stairs;
-        for ( rectangle_iterator ri(1); ri; ++ri )
+        for (rectangle_iterator ri(1); ri; ++ri)
         {
-                if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
-                    && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
-                {
-                    if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
-                        env.markers.add(new map_feature_marker(*ri, grd(*ri)));
+            if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
+                && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
+            {
+                if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
+                    env.markers.add(new map_feature_marker(*ri, grd(*ri)));
 
-                    grd(*ri) = exit;
-                }
+                grd(*ri) = exit;
             }
+        }
     }
 
     // Branches that consist of only 1 level (Hall of Blades).

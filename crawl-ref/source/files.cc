@@ -900,19 +900,18 @@ static void _place_player_on_stair(level_area_type old_level_type,
 
 static void _close_level_gates()
 {
-    for ( int i = 0; i < GXM; ++i )
-        for ( int j = 0; j < GYM; ++j )
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (you.char_direction == GDT_ASCENDING
+            && you.level_type != LEVEL_PANDEMONIUM)
         {
-            if (you.char_direction == GDT_ASCENDING
-                && you.level_type != LEVEL_PANDEMONIUM)
+            if (grid_sealable_portal(grd(*ri)))
             {
-                if (grid_sealable_portal(grd[i][j]))
-                {
-                    grd[i][j] = DNGN_STONE_ARCH;
-                    env.markers.remove_markers_at(coord_def(i,j), MAT_ANY);
-                }
+                grd(*ri) = DNGN_STONE_ARCH;
+                env.markers.remove_markers_at(*ri, MAT_ANY);
             }
         }
+    }
 }
 
 static void _clear_env_map()

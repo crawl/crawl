@@ -84,7 +84,7 @@ int count_desc_lines(const std::string _desc, const int width)
     std::string desc = get_linebreak_string(_desc, width);
 
     int count = 0;
-    for (int i = 0, size = desc.size(); i < size; i++)
+    for (int i = 0, size = desc.size(); i < size; ++i)
     {
         const char ch = desc[i];
 
@@ -320,7 +320,7 @@ static void _trim_randart_inscrip( item_def& item )
 {
     std::vector<std::string> propnames = _randart_propnames(item);
 
-    for (unsigned int i = 0; i < propnames.size(); i++)
+    for (unsigned int i = 0; i < propnames.size(); ++i)
     {
         item.inscription = replace_all(item.inscription, propnames[i]+",", "");
         item.inscription = replace_all(item.inscription, propnames[i],     "");
@@ -895,11 +895,15 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 break;
             case SPWPN_CHAOS:
                 if (is_range_weapon(item))
+                {
                     description += "Each time it fires it turns the launched "
                         "projectile into a different, random type of bolt.";
+                }
                 else
+                {
                     description += "Each time it hits an enemy it has a "
                         "different, random effect.";
+                }
                 break;
             case SPWPN_VAMPIRICISM:
                 description += "It inflicts no extra harm, "
@@ -1632,7 +1636,7 @@ void append_spells(std::string &desc, const item_def &item)
 
     desc += "$$Spells                             Type                      Level$";
 
-    for (int j = 0; j < SPELLBOOK_SIZE; j++)
+    for (int j = 0; j < SPELLBOOK_SIZE; ++j)
     {
         spell_type stype = which_spell_in_book(item, j);
         if (stype == SPELL_NO_SPELL)
@@ -1641,7 +1645,7 @@ void append_spells(std::string &desc, const item_def &item)
         std::string name = (is_memorised(stype) ? "*" : "");
                     name += spell_title(stype);
         desc += name;
-        for (unsigned int i = 0; i < 35 - name.length(); i++)
+        for (unsigned int i = 0; i < 35 - name.length(); ++i)
              desc += " ";
 
         name = "";
@@ -1651,7 +1655,7 @@ void append_spells(std::string &desc, const item_def &item)
         {
             bool already = false;
 
-            for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+            for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
             {
                 if (spell_typematch( stype, 1 << i ))
                 {
@@ -1665,7 +1669,7 @@ void append_spells(std::string &desc, const item_def &item)
         }
         desc += name;
 
-        for (unsigned int i = 36; i < 65 - name.length(); i++)
+        for (unsigned int i = 36; i < 65 - name.length(); ++i)
              desc += " ";
 
         char sval[3];
@@ -2032,7 +2036,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             description << "$Quantity: " << stack.quantity
                         << "        Timer size: " << (int) timer.size();
             description << "$Timers:$";
-            for (int i = 0; i < timer.size(); i++)
+            for (int i = 0; i < timer.size(); ++i)
                  description << (timer[i].get_long()) << "  ";
         }
 #endif
@@ -2411,7 +2415,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
         if (!cancelable_get_line(buf, sizeof buf))
         {
             // Strip spaces from the end.
-            for (int i = strlen(buf) - 1; i >= 0; i--)
+            for (int i = strlen(buf) - 1; i >= 0; --i)
             {
                 if (isspace( buf[i] ))
                     buf[i] = 0;
@@ -2694,9 +2698,10 @@ static std::string _monster_stat_description(const monsters& mon)
     if (mons_immune_magic(&mon))
         result << pronoun << " is immune to magical enchantments.$";
 
-    // Seeing/sensing invisible.
+    // These differ from ghost to ghost, so would be spoily.
     if (mon.type != MONS_PANDEMONIUM_DEMON && mon.type != MONS_PLAYER_GHOST)
     {
+        // Seeing/sensing invisible.
         if (mons_class_flag(mon.type, M_SEE_INVIS))
             result << pronoun << " can see invisible.$";
         else if (mons_class_flag(mon.type, M_SENSE_INVIS))
@@ -2913,7 +2918,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         const monster_spells &hspell_pass = mons.spells;
         bool found_spell = false;
 
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
             if (hspell_pass[i] != SPELL_NO_SPELL)
             {
@@ -2932,7 +2937,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     bool has_item = false;
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
     {
         if (mons.inv[i] != NON_ITEM)
         {
@@ -3503,7 +3508,7 @@ void describe_god( god_type which_god, bool give_title )
         textcolor(colour);
 
         // mv: Some gods can protect you from harm.
-        // The god isn't really protecting player - only sometimes saving
+        // The god isn't really protecting the player - only sometimes saving
         // his life.
         bool have_any = false;
 
@@ -3677,8 +3682,8 @@ std::string get_skill_description(int skill, bool need_title)
             || player_mutation_level( MUT_STINGER ))
         {
             // TSO worshippers will not use their venomous tails.
-            if (!(you.religion == GOD_SHINING_ONE
-                  && player_mutation_level(MUT_STINGER)))
+            if (you.religion != GOD_SHINING_ONE
+                || !player_mutation_level(MUT_STINGER))
             {
                 unarmed_attacks.push_back("slap with your tail");
             }

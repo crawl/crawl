@@ -6403,6 +6403,12 @@ bool monsters::add_ench(const mon_enchant &ench)
     if (ench.ench == ENCH_NONE)
         return (false);
 
+    if (ench.ench == ENCH_FEAR
+        && (holiness() == MH_NONLIVING || has_ench(ENCH_BERSERK)))
+    {
+        return (false);
+    }
+
     mon_enchant_list::iterator i = enchantments.find(ench.ench);
     bool new_enchantment = false;
     mon_enchant *added = NULL;

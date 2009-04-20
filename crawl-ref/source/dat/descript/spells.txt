@@ -637,6 +637,7 @@ This spell allows its caster to imbue a mass of deceased flesh with a magical li
 Vampiric Draining
 
 This spell steals the life of a living creature and grants it to the caster. Life will not be drained in excess of what the caster can capably absorb.
+However, attempting to drain an undead or demonic creature will backfire on the caster.
 %%%%
 Venom Bolt
 

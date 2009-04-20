@@ -214,10 +214,10 @@ static void _shuffle_deck(item_def &deck)
     // Don't use std::shuffle(), since we want to apply exactly the
     // same shuffling to both the cards vector and the flags vector.
     std::vector<vec_size> pos;
-    for (unsigned long i = 0; i < cards.size(); i++)
+    for (unsigned long i = 0; i < cards.size(); ++i)
         pos.push_back(random2(cards.size()));
 
-    for (vec_size i = 0; i < pos.size(); i++)
+    for (vec_size i = 0; i < pos.size(); ++i)
     {
         std::swap(cards[i], cards[pos[i]]);
         std::swap(flags[i], flags[pos[i]]);
@@ -538,7 +538,7 @@ static bool _check_buggy_deck(item_def& deck)
     unsigned int num_buggy     = 0;
     unsigned int num_marked    = 0;
 
-    for (vec_size i = 0; i < num_cards; i++)
+    for (vec_size i = 0; i < num_cards; ++i)
     {
         unsigned char card   = cards[i].get_byte();
         unsigned char _flags = flags[i].get_byte();
@@ -611,7 +611,7 @@ static bool _check_buggy_deck(item_def& deck)
         strm << "More cards than flags.";
 #endif
         strm << std::endl;
-        for (unsigned int i = num_flags + 1; i <= num_cards; i++)
+        for (unsigned int i = num_flags + 1; i <= num_cards; ++i)
             flags[i] = static_cast<char>(0);
 
         problems = true;
@@ -625,7 +625,7 @@ static bool _check_buggy_deck(item_def& deck)
 #endif
         strm << std::endl;
 
-        for (unsigned int i = num_flags; i > num_cards; i--)
+        for (unsigned int i = num_flags; i > num_cards; --i)
             flags.erase(i);
 
         problems = true;
@@ -1386,8 +1386,8 @@ static void _portal_card(int power, deck_rarity_type rarity)
     }
 
     const bool was_controlled = player_control_teleport();
-    const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0)
-        && (you.duration[DUR_CONTROL_TELEPORT] < 6);
+    const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0
+                                && you.duration[DUR_CONTROL_TELEPORT] < 6);
 
     if (controlled && (!was_controlled || short_control))
         you.duration[DUR_CONTROL_TELEPORT] = 6; // Long enough to kick in.
@@ -1542,7 +1542,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
     const int radius = power_level * 2 + 2;
     for (radius_iterator ri(you.pos(), radius, false, false, false); ri; ++ri)
     {
-        if ( *ri == you.pos() )
+        if (*ri == you.pos())
             continue;
 
         if (grd(*ri) == DNGN_FLOOR && !find_trap(*ri)
@@ -1623,7 +1623,7 @@ static void _move_stair(coord_def stair_pos, bool away)
         // Stairs already at edge, can't move further away.
         return;
 
-    if ( !in_bounds(ray.pos()) || ray.pos() == you.pos() )
+    if (!in_bounds(ray.pos()) || ray.pos() == you.pos())
         ray.regress();
 
     while (!see_grid(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
@@ -1672,6 +1672,8 @@ static void _move_stair(coord_def stair_pos, bool away)
     }
 }
 
+// This does not describe an actual card. Instead, it only exists to test
+// the stair movement effect in wizard mode ("&c stairs").
 static void _stairs_card(int power, deck_rarity_type rarity)
 {
     UNUSED(power);
@@ -1705,7 +1707,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
 
     std::random_shuffle(stairs_avail.begin(), stairs_avail.end());
 
-    for (unsigned int i = 0; i < stairs_avail.size(); i++)
+    for (unsigned int i = 0; i < stairs_avail.size(); ++i)
         _move_stair(stairs_avail[i], stair_draw_count % 2);
 
     stair_draw_count++;
@@ -1984,8 +1986,8 @@ static void _shadow_card(int power, deck_rarity_type rarity)
 
     if (power_level >= 1)
     {
-        mpr( you.duration[DUR_STEALTH] ? "You feel more catlike."
-                                       : "You feel stealthy.");
+        mpr(you.duration[DUR_STEALTH] ? "You feel more catlike."
+                                      : "You feel stealthy.");
         you.duration[DUR_STEALTH] += random2(power/4) + 1;
     }
 
@@ -2324,7 +2326,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
 
 static void _create_pond(const coord_def& center, int radius, bool allow_deep)
 {
-    for ( radius_iterator ri(center, radius, false); ri; ++ri )
+    for (radius_iterator ri(center, radius, false); ri; ++ri)
     {
         const coord_def p = *ri;
         if (p != you.pos() && coinflip())
@@ -2346,7 +2348,7 @@ static void _create_pond(const coord_def& center, int radius, bool allow_deep)
 
 static void _deepen_water(const coord_def& center, int radius)
 {
-    for ( radius_iterator ri(center, radius, false); ri; ++ri )
+    for (radius_iterator ri(center, radius, false); ri; ++ri)
     {
         // FIXME The iteration shouldn't affect the later squares in the
         // same iteration, i.e., a newly-flooded square shouldn't count
@@ -2387,7 +2389,7 @@ static void _water_card(int power, deck_rarity_type rarity)
         mpr("Water floods your area!");
 
         // Flood all visible squares.
-        for ( radius_iterator ri( you.pos(), LOS_RADIUS, false ); ri; ++ri )
+        for (radius_iterator ri( you.pos(), LOS_RADIUS, false ); ri; ++ri)
         {
             coord_def p = *ri;
             destroy_trap(p);
@@ -2592,7 +2594,7 @@ static void _curse_card(int power, deck_rarity_type rarity)
     if (power_level >= 2)
     {
         // Curse (almost) everything + chance of decay.
-        while ( curse_an_item(one_chance_in(6), true) && !one_chance_in(1000) )
+        while (curse_an_item(one_chance_in(6), true) && !one_chance_in(1000))
             ;
     }
     else if (power_level == 1)
@@ -2602,7 +2604,7 @@ static void _curse_card(int power, deck_rarity_type rarity)
         {
             curse_an_item(false);
         }
-        while ( !one_chance_in(4) );
+        while (!one_chance_in(4));
     }
     else
     {
@@ -3143,7 +3145,7 @@ void init_deck(item_def &item)
     props["card_flags"].new_vector(SV_BYTE).resize((vec_size)item.plus);
     props["drawn_cards"].new_vector(SV_BYTE);
 
-    for (int i = 0; i < item.plus; i++)
+    for (int i = 0; i < item.plus; ++i)
     {
         bool      was_odd = false;
         card_type card    = _random_card(item, was_odd);

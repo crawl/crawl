@@ -359,7 +359,7 @@ void stop_delay( bool stop_stair_travel )
         bool butcher_swap_setup  = false;
         int  butcher_swap_weapon = 0;
 
-        for (unsigned int i = 1; i < you.delay_queue.size(); i++)
+        for (unsigned int i = 1; i < you.delay_queue.size(); ++i)
         {
             if (you.delay_queue[i].type == DELAY_BUTCHER
                 || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD
@@ -660,7 +660,7 @@ bool is_being_butchered(const item_def &item, bool just_first)
     if (!you_are_delayed())
         return (false);
 
-    for (unsigned int i = 0; i < you.delay_queue.size(); i++)
+    for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
     {
         if (you.delay_queue[i].type == DELAY_BUTCHER
             || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD
@@ -707,7 +707,7 @@ int check_recital_audience()
 {
     bool found_monsters = false;
 
-    for ( radius_iterator ri(you.pos(), 8); ri; ++ri )
+    for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
         monsters* mons = monster_at(*ri);
         if (mons == NULL)
@@ -1400,7 +1400,7 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     default:
-        mpr( "You finish doing something." );
+        mpr("You finish doing something.");
         break;
     }
 
@@ -1444,7 +1444,7 @@ void armour_wear_effects(const int item_slot)
 
         if (you.duration[DUR_ICY_ARMOUR] != 0)
         {
-            mpr( "Your icy armour melts away.", MSGCH_DURATION );
+            mpr("Your icy armour melts away.", MSGCH_DURATION);
             you.redraw_armour_class = true;
             you.duration[DUR_ICY_ARMOUR] = 0;
         }

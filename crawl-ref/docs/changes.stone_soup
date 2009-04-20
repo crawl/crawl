@@ -76,6 +76,7 @@ Monsters
 * Monsters raised from the dead are now equipped with their original equipment.
 * Zombies/skeletons no longer drown, but will still avoid water.
 * Fixed summoned monsters taking non-summoned items with them.
+* Summoned monsters are no longer susceptible to Vampiric Draining.
 * Make abominations resist poison.
 * Butchered corpses sometimes leave skeletons.
 * Finally fixed monsters acting before being announced as "coming into view".

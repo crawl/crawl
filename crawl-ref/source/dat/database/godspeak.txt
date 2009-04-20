@@ -386,7 +386,7 @@ Xom repel stairs
 
 Xom changes the scenery.
 
-Xom pokes at a staircase.
+Xom pokes at a nearby @staircase@.
 
 "Tag, you're it!"
 

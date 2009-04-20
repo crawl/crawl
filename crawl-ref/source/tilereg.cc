@@ -2836,7 +2836,7 @@ TitleRegion::TitleRegion(int width, int height) :
     sx = sy = 0;
     dx = dy = 1;
 
-    if (!m_img.load_texture("title.png", GenericTexture::MIPMAP_NONE, NULL, false))
+    if (!m_img.load_texture("title.png", GenericTexture::MIPMAP_NONE, NULL, true))
         return;
 
     // Center

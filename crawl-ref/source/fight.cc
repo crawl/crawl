@@ -2921,8 +2921,15 @@ int melee_attack::random_chaos_brand()
             if (defender->holiness() == MH_UNDEAD)
                 susceptible = false;
             break;
-        case SPWPN_DRAINING:
         case SPWPN_VAMPIRICISM:
+            if (defender->atype() != ACT_PLAYER
+                && defender_as_monster()->is_summoned())
+            {
+                susceptible = false;
+                break;
+            }
+            // intentional fall-through
+        case SPWPN_DRAINING:
             if (defender->holiness() != MH_NATURAL)
                 susceptible = false;
             break;
@@ -3097,8 +3104,10 @@ bool melee_attack::apply_damage_brand()
             if (defender->atype() == ACT_PLAYER)
                 old_poison = you.duration[DUR_POISONING];
             else
+            {
                 old_poison =
                     (defender_as_monster()->get_ench(ENCH_POISON)).degree;
+            }
 
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
@@ -3141,8 +3150,10 @@ bool melee_attack::apply_damage_brand()
         if (x_chance_in_y(defender->res_negative_energy(), 3))
             break;
 
-        if (defender->holiness() != MH_NATURAL || !weapon
-            || damage_done < 1 || attacker->stat_hp() == attacker->stat_maxhp()
+        if (!weapon || defender->holiness() != MH_NATURAL || damage_done < 1
+            || attacker->stat_hp() == attacker->stat_maxhp()
+            || defender->atype() != ACT_PLAYER
+               && defender_as_monster()->is_summoned()
             || one_chance_in(5))
         {
             break;

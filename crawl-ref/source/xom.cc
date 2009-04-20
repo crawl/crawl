@@ -2463,6 +2463,7 @@ static bool _repel_stairs()
     }
 
     std::vector<coord_def> stairs_avail;
+    bool real_stairs = false;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
@@ -2470,6 +2471,8 @@ static bool _repel_stairs()
             && feat != DNGN_ENTER_SHOP)
         {
             stairs_avail.push_back(*ri);
+            if (grid_is_staircase(feat))
+                real_stairs = true;
         }
     }
 
@@ -2477,8 +2480,17 @@ static bool _repel_stairs()
     if (stairs_avail.empty())
         return (false);
 
-    god_speaks(GOD_XOM,
-               _get_xom_speech("repel stairs").c_str());
+    // Don't mention staircases if there aren't any nearby.
+    std::string stair_msg = _get_xom_speech("repel stairs");
+    if (!real_stairs && stair_msg.find("@staircase@") != std::string::npos)
+    {
+        std::string feat_name = "gate";
+        if (grid_is_escape_hatch(grd(stairs_avail[0])))
+            feat_name = "escape hatch";
+        stair_msg = replace_all(stair_msg, "@staircase@", feat_name);
+    }
+
+    god_speaks(GOD_XOM, stair_msg.c_str());
 
     you.duration[DUR_REPEL_STAIRS_MOVE] = 1000;
 
