@@ -2314,8 +2314,7 @@ Dungeon interaction:
     <                   Use staircase to go higher, also enters shops.
     >                   Use staircase to go deeper, also enters branch.
     ;                   Examine occupied tile, also causes auto-pickup.
-    x                   Examine surroundings mode, see below. Has '?'
-                        help.
+    x                   Examine surroundings, see below. Has '?' help.
     X                   Examine level map, see below. Has help on '?'.
     Ctrl-O              Show dungeon overview (branches, shops, etc.).
     !                   Annotate current level: you can enter any
@@ -2340,10 +2339,8 @@ Character information:
     E                   Display experience info.
     ^                   Show religion screen.
     A                   Show abilities/mutations.
-    a                   Lets you choose an ability or read its
-                        description.
-                        Pressing a? or a* show current abilities as a
-                        menu.
+    a                   Choose an ability or read its description.
+                        a? or a* show current abilities as a menu.
     \                   Show item knowledge.
     m                   Show skill screen. You can get descriptions of
                         present skills from that screen, as well as the
@@ -2398,8 +2395,7 @@ Item interaction (floor):
                         Within the drop list, you can select slots based
                         on a regular expression by pressing Ctrl-F,
                         followed by the regex.
-    #d                  Drop exact number of items, where # is any
-                        number.
+    #d                  Drop exact number of items, where # is a number.
     g or ,              Pick up items; press twice for pick up menu.
                         Use a prefix to pick up smaller quantities.
                         As with dropping, Ctrl-F allows you to pick up
@@ -2421,8 +2417,7 @@ Other game-playing commands:
     p                   Pray (or renew an existing prayer).
     z                   Cast a spell.
     I                   List spells.
-    t                   Tell commands to allies, or shout (the latter
-                        with tt).
+    t                   Tell commands to allies, or shout (with tt).
     Ctrl-A              Toggle autopickup. Note that encounters with
                         invisible monsters always turns autopickup off.
                         You need to switch it on with Ctrl-A afterwards.
