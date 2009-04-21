@@ -54,10 +54,16 @@ public:
     unsigned int height() const { return m_height; }
     void bind() const;
 
+    unsigned int orig_width() const { return m_orig_width; }
+    unsigned int orig_height() const { return m_orig_height; }
+
 protected:
     unsigned int m_handle;
     unsigned int m_width;
     unsigned int m_height;
+
+    unsigned int m_orig_width;
+    unsigned int m_orig_height;
 };
 
 class TilesTexture : public GenericTexture

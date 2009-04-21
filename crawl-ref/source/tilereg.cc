@@ -2836,14 +2836,14 @@ TitleRegion::TitleRegion(int width, int height) :
     sx = sy = 0;
     dx = dy = 1;
 
-    if (!m_img.load_texture("title.png", GenericTexture::MIPMAP_NONE, NULL, true))
+    if (!m_img.load_texture("title.png", GenericTexture::MIPMAP_NONE))
         return;
 
     // Center
     wx = width;
     wy = height;
-    ox = (wx - m_img.width()) / 2;
-    oy = (wy - m_img.height()) / 2;
+    ox = (wx - m_img.orig_width()) / 2;
+    oy = (wy - m_img.orig_height()) / 2;
 
     {
         PTVert &v = m_buf.get_next();

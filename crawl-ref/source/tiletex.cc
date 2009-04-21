@@ -12,7 +12,9 @@ REVISION("$Rev$");
 GenericTexture::GenericTexture() :
     m_handle(0),
     m_width(0),
-    m_height(0)
+    m_height(0),
+    m_orig_width(0),
+    m_orig_height(0)
 {
 }
 
@@ -203,6 +205,9 @@ bool GenericTexture::load_texture(const char *filename,
     // If conversion has occurred, delete converted data.
     if (pixels != img->pixels)
         delete pixels;
+
+    m_orig_width = img->w;
+    m_orig_height = img->h;
 
     SDL_FreeSurface(img);
 
