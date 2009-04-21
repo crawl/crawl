@@ -149,7 +149,7 @@ rectangle_iterator::rectangle_iterator( int x_border_dist, int y_border_dist )
 
 rectangle_iterator::operator bool() const
 {
-    return !(current.y > bottomright.y);
+    return (current.y <= bottomright.y);
 }
 
 coord_def rectangle_iterator::operator *() const
@@ -164,7 +164,7 @@ const coord_def* rectangle_iterator::operator->() const
 
 rectangle_iterator& rectangle_iterator::operator ++()
 {
-    if ( current.x == bottomright.x )
+    if (current.x == bottomright.x)
     {
         current.x = topleft.x;
         current.y++;
@@ -681,10 +681,8 @@ int random2limit(int max, int limit)
         return (0);
 
     for (i = 0; i < max; i++)
-    {
         if (random2(limit) >= i)
             sum++;
-    }
 
     return (sum);
 }

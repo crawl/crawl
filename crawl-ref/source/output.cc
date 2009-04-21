@@ -2072,7 +2072,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rclar, 1), itosym1(rclar));
     cols.add_formatted(1, buf, false);
 
-    if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
+    if (scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid))
     {
         snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
                  _determine_colour_string(-1, 1), itosym1(1));

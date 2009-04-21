@@ -1667,6 +1667,10 @@ static bool _xom_is_good(int sever, int tension)
     }
     else if (x_chance_in_y(11, sever) && you.level_type != LEVEL_ABYSS)
     {
+        // Try something else if teleportation is impossible.
+        if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+            return (false);
+
         // This is not very interesting if the level is already fully
         // explored (presumably cleared). Even then, it may occasionally
         // happen.
@@ -2662,6 +2666,10 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(7, sever) && you.level_type != LEVEL_ABYSS)
         {
+            // Try something else if teleportation is impossible.
+            if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+                return (false);
+
             // This is not particularly exciting if the level is already fully
             // explored (presumably cleared). If Xom is feeling nasty this
             // is likelier to happen if the level is unexplored.
