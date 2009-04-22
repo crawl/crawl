@@ -1038,7 +1038,7 @@ static void _do_lost_items(level_area_type old_level_type)
         if (!is_valid_item(item))
             continue;
 
-        // Item is in player intentory, so it's not lost.
+        // Item is in player inventory, so it's not lost.
         if (item.pos == coord_def(-1,-1))
             continue;
 
