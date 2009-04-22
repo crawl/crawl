@@ -3017,6 +3017,20 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
     }
 }
 
+static bool _is_level_exit(const coord_def& pos)
+{
+    // All types of stairs.
+    if (is_stair(grd(pos)))
+        return (true);
+
+    // Teleportation and shaft traps.
+    const trap_type tt = get_trap_type(pos);
+    if (tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
+        return (true);
+
+    return (false);
+}
+
 static void _find_all_level_exits(std::vector<level_exit> &e)
 {
     e.clear();
@@ -3026,15 +3040,7 @@ static void _find_all_level_exits(std::vector<level_exit> &e)
         if (!in_bounds(*ri))
             continue;
 
-        const dungeon_feature_type gridc = grd(*ri);
-
-        // All types of stairs.
-        if (is_stair(gridc))
-            e.push_back(level_exit(*ri, false));
-
-        // Teleportation and shaft traps.
-        const trap_type tt = get_trap_type(*ri);
-        if (tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
+        if (_is_level_exit(*ri))
             e.push_back(level_exit(*ri, false));
     }
 }
@@ -3043,7 +3049,6 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
                                          std::vector<level_exit> &e,
                                          bool reset = false)
 {
-
     if (e.empty() || reset)
         _find_all_level_exits(e);
 
@@ -3293,11 +3298,12 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
 static bool _pacified_leave_level(monsters *mon, std::vector<level_exit> e,
                                   int e_index)
 {
-    // If a pacified monster is leaving the level, and has reached its
-    // goal, handle it here.
+    // If a pacified monster is leaving the level, and has reached an
+    // exit (whether that exit was its target or not), handle it here.
     // Likewise, if a pacified monster is far enough away from the
     // player, make it leave the level.
-    if (e_index != -1 && mon->pos() == e[e_index].target
+    if (_is_level_exit(mon->pos())
+        || (e_index != -1 && mon->pos() == e[e_index].target)
         || grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 2)
     {
         make_mons_leave_level(mon);
