@@ -689,9 +689,6 @@ bool butchery(int which_corpse)
                 success = true;
                 first_corpse = false;
             }
-
-//            if (!butcher_all && !bottle_all)
-//                break;
         }
     }
 
@@ -842,9 +839,7 @@ bool eat_food(int slot)
     return (prompt_eat_inventory_item(slot));
 }
 
-/*
- *     END PUBLIC FUNCTIONS
- */
+//     END PUBLIC FUNCTIONS
 
 static bool _player_has_enough_food()
 {
@@ -1587,11 +1582,12 @@ int prompt_eat_chunks()
 
             const bool contam = is_contaminated(*item);
             const bool bad    = _is_bad_food(*item);
-            // Excempt undead from auto-eating since:
+            // Exempt undead from auto-eating since:
             //  * Mummies don't eat.
             //  * Vampire feeding takes a lot more time than eating a chunk
             //    and may have unintended consequences.
-            //  * Ghouls may want to wait until chunks become rotten.
+            //  * Ghouls may want to wait until chunks become rotten
+            //    or until they have some hp rot to heal.
             if (easy_eat && !bad && !contam)
             {
                 // If this chunk is safe to eat, just do so without prompting.

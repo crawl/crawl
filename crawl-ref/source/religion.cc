@@ -7105,7 +7105,7 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
             || holiness != MH_NATURAL && holiness != MH_HOLY);
 }
 
-int get_tension(god_type god)
+int get_tension(god_type god, bool count_travelling)
 {
     ASSERT(god != GOD_NO_GOD);
 
@@ -7125,7 +7125,7 @@ int get_tension(god_type god)
             if (!nearby_monster && !mons_wont_attack(mons))
                 nearby_monster = true;
         }
-        else
+        else if (count_travelling)
         {
             // Is the monster trying to get somewhere nearby?
             coord_def    target;

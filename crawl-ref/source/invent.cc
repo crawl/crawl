@@ -1036,10 +1036,9 @@ static bool _item_class_selected(const item_def &i, int selector)
             return (true);
 
         for (int eq = 0; eq < NUM_EQUIP; eq++)
-        {
              if (you.equip[eq] == i.link)
                  return (true);
-        }
+
         return (false);
     }
     default:
@@ -1281,7 +1280,7 @@ std::vector<SelItem> prompt_invent_items(
             ret = letter_to_index( keyin );
 
             if (!is_valid_item( you.inv[ret] ))
-                mpr( "You do not have any such object." );
+                mpr("You do not have any such object.");
             else
                 break;
         }

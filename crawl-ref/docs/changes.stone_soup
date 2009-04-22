@@ -42,7 +42,7 @@ Characters
 * Transformations cause worn equipment to be melded rather than removed.
 * Overhaul nutrition values and duration for Vampires feeding on corpses.
 * Vampires can no longer heal via potions of blood or non-fresh corpses.
-* Vampires recover lost attributes depending on blood level.
+* Vampires recover lost stats depending on blood level.
 * Draining of the experience pool is now reduced by life protection.
 * Merfolk can swim in heavy armour, albeit with doubled armour penalty.
 * Player and monster nagas no longer flounder or lose stealth in shallow water.
@@ -50,6 +50,7 @@ Characters
 * Pure spellcasters don't start with a weapon anymore.
 * Tweak starting choice restrictions.
 * Going into berserk rage doubles Health, ending it halves Health.
+* Added the slow healing mutation, affecting hitpoints and stat regeneration.
 
 Monsters
 --------
@@ -91,6 +92,7 @@ Interface
 * Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
 * Switch off autopickup and autoswap if you see a monster turn invisible.
 * Killing an invisible monster reactivates autopickup.
+* Added ally pickup mode for items dropped by player and allies.
 * Shops use shopping cart behaviour.
 * Wizard commands can be used from the wizard help screen.
 * Allow quivering/firing of wielded missiles and wielded weapons of returning.
@@ -132,6 +134,7 @@ Items
 * Decks of punishment are no longer randomly generated.
 * Removing rings of levitation or invisibility no longer cancels the effect.
 * Identify the Horn of Geryon when wielding it.
+* Skeletons rot away in inventory at the same rate as on the floor.
 
 Gods
 ----

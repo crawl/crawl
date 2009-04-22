@@ -392,6 +392,18 @@ Xom pokes at a nearby @staircase@.
 
 Xom alters the dungeon around you.
 %%%%
+Xom boring death
+
+Xom yawns loudly!
+
+"Boring in life, boring in death..."
+
+"What!? That's it?"
+
+Xom sighs, "I guess I need a new plaything now."
+
+"Hmm? Did I miss something?"
+%%%%
 # Xom laughing
 # (Currently only used post-game in response to "You die...")
 Xom laughter

@@ -1941,7 +1941,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     // the hydra some more.
     //
     // Also returns true if the hydra's last head was cut off, in which
-    // case nothing more should be done to the last hydra.
+    // case nothing more should be done to the hydra.
     if (decapitate_hydra(damage_done))
         return (!defender->alive());
 
@@ -2274,7 +2274,7 @@ enum chaos_type
 };
 
 // XXX: We might want to vary the probabilities for the various effects
-// based on whether the source is weapon of chaos or a monster with
+// based on whether the source is a weapon of chaos or a monster with
 // AF_CHAOS.
 void melee_attack::chaos_affects_defender()
 {
@@ -2298,7 +2298,7 @@ void melee_attack::chaos_affects_defender()
     if (is_shifter)
         shifter_chance = 0;
 
-    // A chaos self-attack increased the chance of certain effects,
+    // A chaos self-attack increases the chance of certain effects,
     // due to a short-circuit/feedback/resonance/whatever.
     if (attacker == defender)
     {
@@ -2695,10 +2695,8 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
         {
             // Last item which we're sure belonged to the monster.
             for (unsigned int i = 0; i < items.size(); i++)
-            {
                 if (items[i] == si.link())
                     last_item = si.link();
-            }
         }
     }
 }
@@ -2922,8 +2920,7 @@ int melee_attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_VAMPIRICISM:
-            if (defender->atype() != ACT_PLAYER
-                && defender_as_monster()->is_summoned())
+            if (defender->is_summoned())
             {
                 susceptible = false;
                 break;
@@ -2969,8 +2966,8 @@ int melee_attack::random_chaos_brand()
     case SPWPN_VAMPIRICISM:     brand_name += "vampiricism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
     // ranged weapon brands
-    case SPWPN_FLAME:           brand_name += "(flame)"; break;
-    case SPWPN_FROST:           brand_name += "(frost)"; break;
+    case SPWPN_FLAME:           brand_name += "flame"; break;
+    case SPWPN_FROST:           brand_name += "frost"; break;
 
     // both ranged and non-ranged
     case SPWPN_CHAOS:           brand_name += "chaos"; break;
@@ -4753,10 +4750,6 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (defender->atype() != ACT_PLAYER)
             break;
 
-        // Only use this attack sometimes.
-        if (!one_chance_in(3))
-            break;
-
         if (expose_player_to_element(BEAM_STEAL_FOOD, 10) && needs_message)
         {
             mprf("%s steals some of your food!",
@@ -5283,7 +5276,7 @@ static inline int player_weapon_str_weight()
 {
     const item_def* weapon = you.weapon();
 
-    // unarmed, weighted slightly towards dex -- would have been more,
+    // Unarmed, weighted slightly towards dex -- would have been more,
     // but then we'd be punishing Trolls and Ghouls who are strong and
     // get special unarmed bonuses.
     if (!weapon)

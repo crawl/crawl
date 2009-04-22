@@ -3134,7 +3134,7 @@ static bool _death_is_funny(const kill_method_type killed_by)
 {
     switch (killed_by)
     {
-    // The less original deaths are boring.
+    // The less original deaths are considered boring.
     case KILLED_BY_MONSTER:
     case KILLED_BY_BEAM:
     case KILLED_BY_CLOUD:
@@ -3142,6 +3142,7 @@ static bool _death_is_funny(const kill_method_type killed_by)
     case KILLED_BY_BURNING:
     case KILLED_BY_SELF_AIMED:
     case KILLED_BY_SOMETHING:
+    case KILLED_BY_TRAP:
         return (false);
     default:
         // All others are fun (says Xom).
@@ -3154,6 +3155,22 @@ void xom_death_message(const kill_method_type killed_by)
     if (you.religion != GOD_XOM && (!you.worshipped[GOD_XOM] || coinflip()))
         return;
 
-    if (_death_is_funny(killed_by) || you.hp < -1 * random2(10))
+    const int death_tension = get_tension(GOD_XOM, false);
+
+    // "Normal" deaths with only down to -2 hp and comparatively low tension
+    // are considered particularly boring.
+    if (!_death_is_funny(killed_by) && you.hp >= -1 * random2(3)
+        && death_tension <= random2(10))
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("boring death").c_str());
+    }
+    // Unusual methods of dying, really low hp, or high tension make
+    // for funny deaths.
+    else if (_death_is_funny(killed_by) || you.hp <= -10
+             || death_tension >= 20)
+    {
         god_speaks(GOD_XOM, _get_xom_speech("laughter").c_str());
+    }
+
+    // All others just get ignored by Xom.
 }

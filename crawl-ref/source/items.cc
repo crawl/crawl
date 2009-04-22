@@ -154,7 +154,7 @@ static int _cull_items(void)
 
     // XXX: Not the prettiest of messages, but the player
     // deserves to know whenever this kicks in. -- bwr
-    mpr( "Too many items on level, removing some.", MSGCH_WARN );
+    mpr("Too many items on level, removing some.", MSGCH_WARN);
 
     // Rules:
     //  1. Don't cleanup anything nearby the player
@@ -170,12 +170,12 @@ static int _cull_items(void)
 
     // 2. Avoid shops by avoiding (0,5..9).
     // 3. Avoid monster inventory by iterating over the dungeon grid.
-    for ( rectangle_iterator ri(1); ri; ++ri )
+    for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if ( grid_distance( you.pos(), *ri ) <= 9 )
+        if (grid_distance( you.pos(), *ri ) <= 9)
             continue;
 
-        for ( stack_iterator si(*ri); si; ++si )
+        for (stack_iterator si(*ri); si; ++si)
         {
             if (_item_ok_to_clean(si->index()) && x_chance_in_y(15, 100))
             {
@@ -260,7 +260,7 @@ bool dec_inv_item_quantity( int obj, int amount, bool suppress_burden )
         you.inv[obj].quantity -= amount;
     }
 
-    if ( !suppress_burden )
+    if (!suppress_burden)
         burden_change();
 
     return (ret);
@@ -576,7 +576,7 @@ void item_was_destroyed(const item_def &item, int cause)
 
 void lose_item_stack( const coord_def& where )
 {
-    for ( stack_iterator si(where); si; ++si )
+    for (stack_iterator si(where); si; ++si)
     {
         if (is_valid_item( *si )) // FIXME is this check necessary?
         {
@@ -589,7 +589,7 @@ void lose_item_stack( const coord_def& where )
 
 void destroy_item_stack( int x, int y, int cause )
 {
-    for ( stack_iterator si(coord_def(x,y)); si; ++si )
+    for (stack_iterator si(coord_def(x,y)); si; ++si)
     {
         if (is_valid_item( *si )) // FIXME is this check necessary?
         {
@@ -609,7 +609,7 @@ static int _count_nonsquelched_items( int obj )
 {
     int result = 0;
 
-    for ( stack_iterator si(obj); si; ++si )
+    for (stack_iterator si(obj); si; ++si)
         if (!_invisible_to_player(*si))
             ++result;
 
@@ -628,10 +628,10 @@ void item_list_on_square( std::vector<const item_def*>& items,
                                     || _count_nonsquelched_items(obj));
 
     // Loop through the items.
-    for ( stack_iterator si(obj); si; ++si )
+    for (stack_iterator si(obj); si; ++si)
     {
         // Add them to the items list if they qualify.
-        if ( !have_nonsquelched || !_invisible_to_player(*si) )
+        if (!have_nonsquelched || !_invisible_to_player(*si))
             items.push_back( & (*si) );
     }
 }
@@ -704,7 +704,7 @@ int item_name_specialness(const item_def& item)
     // You can tell something is an artefact, because it'll have a
     // description which rules out anything else.
     // XXX: Fixedarts and unrandarts might upset the apple-cart, though.
-    if ( is_artefact(item) )
+    if (is_artefact(item))
         return 2;
 
     return 0;
@@ -1520,7 +1520,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     {
         mpr("You cannot pick up the net that holds you!");
         // Fake a successful pickup (return 1), so we can continue to pick up
-        // anything that might be on this square.
+        // anything else that might be on this square.
         return (1);
     }
 
@@ -2003,7 +2003,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     if (grid_destroys_items(my_grid))
     {
-        if ( !silenced(you.pos()) )
+        if (!silenced(you.pos()))
             mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
 
         item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
@@ -2198,14 +2198,14 @@ void drop()
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
         // in order to prevent misleading messages when dropping
         // 15 of 25 arrows inscribed with {!d}.
-        if ( si.quantity && si.quantity != item_quant )
+        if (si.quantity && si.quantity != item_quant)
             const_cast<item_def*>(si.item)->quantity = si.quantity;
 
         // Check if we can add it to the multidrop list.
         bool warning_ok = check_warning_inscriptions(*(si.item), OPER_DROP);
 
         // Restore the item quantity if we mangled it.
-        if ( item_quant != si.item->quantity )
+        if (item_quant != si.item->quantity)
             const_cast<item_def*>(si.item)->quantity = item_quant;
 
         if (warning_ok)
@@ -2234,16 +2234,16 @@ static void _autoinscribe_item( item_def& item )
 {
     // If there's an inscription already, do nothing - except
     // for automatically generated inscriptions
-    if ( !item.inscription.empty() && item.inscription != "god gift")
+    if (!item.inscription.empty() && item.inscription != "god gift")
         return;
     const std::string old_inscription = item.inscription;
     item.inscription.clear();
 
     std::string iname = _autopickup_item_name(item);
 
-    for ( unsigned i = 0; i < Options.autoinscriptions.size(); ++i )
+    for (unsigned i = 0; i < Options.autoinscriptions.size(); ++i)
     {
-        if ( Options.autoinscriptions[i].first.matches(iname) )
+        if (Options.autoinscriptions[i].first.matches(iname))
         {
             // Don't autoinscribe dropped items on ground with
             // "=g".  If the item matches a rule which adds "=g",
@@ -2259,9 +2259,9 @@ static void _autoinscribe_item( item_def& item )
             item.inscription += str;
         }
     }
-    if ( !old_inscription.empty() )
+    if (!old_inscription.empty())
     {
-        if ( item.inscription.empty() )
+        if (item.inscription.empty())
             item.inscription = old_inscription;
         else
             item.inscription = old_inscription + ", " + item.inscription;
@@ -2270,7 +2270,7 @@ static void _autoinscribe_item( item_def& item )
 
 static void _autoinscribe_floor_items()
 {
-    for ( stack_iterator si(you.pos()); si; ++si )
+    for (stack_iterator si(you.pos()); si; ++si)
         _autoinscribe_item( *si );
 }
 
@@ -2462,8 +2462,8 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
 {
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-            for ( stack_iterator si(coord_def(x,y)); si; ++si )
-                if (is_valid_item( *si)
+            for (stack_iterator si(coord_def(x,y)); si; ++si)
+                if (is_valid_item(*si)
                     && si->base_type == cls && si->sub_type == sub_type)
                 {
                     return (& (*si));

@@ -1057,7 +1057,7 @@ static int l_item_puton(lua_State *ls)
     if (!item || !in_inventory(*item))
         return (0);
 
-    lua_pushboolean(ls, puton_ring(item->link, false));
+    lua_pushboolean(ls, puton_ring(item->link));
     return (1);
 }
 

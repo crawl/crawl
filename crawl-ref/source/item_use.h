@@ -79,7 +79,7 @@ void examine_object(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool puton_ring(int slot = -1, bool prompt_finger = true);
+bool puton_ring(int slot = -1);
 void jewellery_remove_effects(item_def &item, bool mesg = true);
 
 // called from: transfor
@@ -159,7 +159,7 @@ void wield_effects(int item_wield_2, bool showMsgs);
 void use_randart( unsigned char item_wield_2 );
 void use_randart(item_def &item, bool unmeld = false);
 
-bool puton_item(int slot, bool prompt_finger = true);
+bool puton_item(int slot);
 
 bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);

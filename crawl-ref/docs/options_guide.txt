@@ -983,6 +983,11 @@ easy_open = true
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
 
+equip_unequip = false
+        If this is true, 'W'ear will also allow you to 'T'ake off worn
+        armour, and vice versa, and the same is true for 'P'utting on/
+        'R'emoving jewellery.
+
 easy_confirm = (none | safe)
         Make confirmation questions easier to answer:
            none = force capitals on Y/N questions

@@ -385,10 +385,9 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     if (which_stat == STAT_ALL)
     {
         for (unsigned char loopy = STAT_STRENGTH; loopy < NUM_STATS; ++loopy)
-        {
             if (restore_stat(loopy, stat_gain, suppress_msg))
                 stat_restored = true;
-        }
+
         return (stat_restored);                // early return {dlb}
     }
 

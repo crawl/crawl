@@ -443,12 +443,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             || target_class == OBJ_FOOD
                && you.inv[i].base_type == OBJ_CORPSES)
         {
+            // Conservation doesn't help against harpies stealing food.
             if (flavour != BEAM_STEAL_FOOD
                 && player_item_conserve() && !one_chance_in(10))
             {
                 continue;
             }
 
+            // Loop through all items in the stack.
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
                 if (x_chance_in_y(strength, 100))
@@ -470,6 +472,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if (!num_dest)
         return (false);
 
+    // Message handled elsewhere.
     if (flavour == BEAM_STEAL_FOOD)
         return (true);
 

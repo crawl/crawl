@@ -1196,7 +1196,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 if (item.sub_type != ARM_NAGA_BARDING)
                 {
                     if (!quiet)
-                        mpr( "You can't wear that!" );
+                        mpr("You can't wear that!");
 
                     return (false);
                 }
@@ -1206,7 +1206,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 if (item.sub_type != ARM_CENTAUR_BARDING)
                 {
                     if (!quiet)
-                        mpr( "You can't wear that!" );
+                        mpr("You can't wear that!");
 
                     return (false);
                 }
@@ -1216,7 +1216,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 if (player_in_water() && item.sub_type == ARM_BOOTS)
                 {
                     if (!quiet)
-                        mpr( "You don't currently have feet!" );
+                        mpr("You don't currently have feet!");
 
                     return (false);
                 }
@@ -1226,7 +1226,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                     || item.sub_type == ARM_CENTAUR_BARDING)
                 {
                     if (!quiet)
-                        mpr( "You can't wear barding!" );
+                        mpr("You can't wear barding!");
 
                     return (false);
                 }
@@ -1241,7 +1241,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             if (player_mutation_level(MUT_HORNS))
             {
                 if (!quiet)
-                    mpr( "You can't wear that with your horns!" );
+                    mpr("You can't wear that with your horns!");
 
                 return (false);
             }
@@ -1249,7 +1249,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             if (player_mutation_level(MUT_BEAK))
             {
                 if (!quiet)
-                    mpr( "You can't wear that with your beak!" );
+                    mpr("You can't wear that with your beak!");
 
                 return (false);
             }
@@ -1259,7 +1259,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             if (you.has_claws(false) >= 3)
             {
                 if (!quiet)
-                    mpr( "You can't wear gloves with your huge claws!" );
+                    mpr("You can't wear gloves with your huge claws!");
 
                 return (false);
             }
@@ -1272,7 +1272,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 && !check_armour_size( item, SIZE_BIG ))
             {
                 if (!quiet)
-                   mpr( "That armour doesn't fit your wings." );
+                   mpr("That armour doesn't fit your wings.");
 
                 return (false);
             }
@@ -1289,7 +1289,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             || item.sub_type == ARM_CENTAUR_BARDING)
         {
             if (!quiet)
-               mpr( "You can't wear barding in your current form!" );
+               mpr("You can't wear barding in your current form!");
 
             return (false);
         }
@@ -1724,9 +1724,9 @@ bool is_blessed_blade(const item_def &item)
 bool is_blessed_blade_convertible(const item_def &item)
 {
     return (!is_artefact(item)
-        && (item.base_type == OBJ_WEAPONS
-            && (is_demonic(item)
-                || weapon_skill(item) == SK_LONG_BLADES)));
+            && (item.base_type == OBJ_WEAPONS
+                && (is_demonic(item)
+                    || weapon_skill(item) == SK_LONG_BLADES)));
 }
 
 bool convert2good(item_def &item, bool allow_blessed)
@@ -2069,7 +2069,7 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
         && player_is_unholy())
     {
         if (!quiet)
-            mpr( "This weapon will not allow you to wield it." );
+            mpr("This weapon will not allow you to wield it.");
 
         return (false);
     }

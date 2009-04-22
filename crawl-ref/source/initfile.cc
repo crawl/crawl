@@ -726,6 +726,7 @@ void game_options::reset_options()
     show_uncursed          = true;
     easy_open              = true;
     easy_unequip           = true;
+    equip_unequip          = false;
     easy_butcher           = true;
     always_confirm_butcher = false;
     chunks_autopickup      = true;
@@ -916,25 +917,25 @@ void game_options::reset_options()
     tile_window_col      = MAP_YELLOW;
 
     // font selection
-    tile_font_crt_file = "VeraMono.ttf";
-    tile_font_crt_size = 0;
-    tile_font_stat_file = "VeraMono.ttf";
-    tile_font_stat_size = 0;
-    tile_font_msg_file = "VeraMono.ttf";
-    tile_font_msg_size = 0;
-    tile_font_tip_file = "VeraMono.ttf";
-    tile_font_tip_size = 0;
-    tile_font_lbl_file = "Vera.ttf";
-    tile_font_lbl_size = 0;
+    tile_font_crt_file   = "VeraMono.ttf";
+    tile_font_crt_size   = 0;
+    tile_font_stat_file  = "VeraMono.ttf";
+    tile_font_stat_size  = 0;
+    tile_font_msg_file   = "VeraMono.ttf";
+    tile_font_msg_size   = 0;
+    tile_font_tip_file   = "VeraMono.ttf";
+    tile_font_tip_size   = 0;
+    tile_font_lbl_file   = "Vera.ttf";
+    tile_font_lbl_size   = 0;
 
     // window layout
-    tile_key_repeat = true;
-    tile_full_screen = SCREENMODE_AUTO;
-    tile_window_width = 0;
-    tile_window_height = 0;
-    tile_map_pixels = 0;
-    tile_tooltip_ms = 500;
-    tile_tag_pref = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
+    tile_key_repeat      = true;
+    tile_full_screen     = SCREENMODE_AUTO;
+    tile_window_width    = 0;
+    tile_window_height   = 0;
+    tile_map_pixels      = 0;
+    tile_tooltip_ms      = 500;
+    tile_tag_pref        = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
 #endif
 
     // map each colour to itself as default
@@ -1510,8 +1511,10 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             {
 #ifdef CLUA_BINDINGS
                 if (luacode.run(clua))
+                {
                     mprf(MSGCH_ERROR, "Lua error: %s",
                          luacode.orig_error().c_str());
+                }
                 luacode.clear();
 #endif
             }
@@ -2143,6 +2146,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
     else BOOL_OPTION(easy_open);
     else BOOL_OPTION(easy_unequip);
+    else BOOL_OPTION(equip_unequip);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else BOOL_OPTION(easy_butcher);
@@ -3159,11 +3163,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "constant")
     {
         if (variables.find(field) == variables.end())
+        {
             report_error(make_stringf("No variable named '%s' to make "
                                       "constant", field.c_str()));
+        }
         else if (constants.find(field) != constants.end())
+        {
             report_error(make_stringf("'%s' is already a constant",
                                       field.c_str()));
+        }
         else
             constants.insert(field);
     }

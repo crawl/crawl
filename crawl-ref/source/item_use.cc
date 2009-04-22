@@ -726,7 +726,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
                 if (!was_known)
                 {
-                    // Xom loves when you ID a distortion weapon this way,
+                    // Xom loves it when you ID a distortion weapon this way,
                     // and even more so if he gifted the weapon himself.
                     god_type god;
                     if (origin_is_god_gift(item, &god) && god == GOD_XOM)
@@ -1055,7 +1055,15 @@ bool do_wear_armour(int item, bool quiet)
     }
 
     if (wearing_slot(item))
-        return (!takeoff_armour(item));
+    {
+        if (Options.equip_unequip)
+            return (!takeoff_armour(item));
+        else
+        {
+            mpr("You're already wearing that object!");
+            return (false);
+        }
+    }
 
     // if you're wielding something,
     if (you.weapon()
@@ -1105,11 +1113,11 @@ bool do_wear_armour(int item, bool quiet)
     }
 
     if ((slot == EQ_CLOAK
-         || slot == EQ_HELMET
-         || slot == EQ_GLOVES
-         || slot == EQ_BOOTS
-         || slot == EQ_SHIELD
-         || slot == EQ_BODY_ARMOUR)
+           || slot == EQ_HELMET
+           || slot == EQ_GLOVES
+           || slot == EQ_BOOTS
+           || slot == EQ_SHIELD
+           || slot == EQ_BODY_ARMOUR)
         && you.equip[slot] != -1)
     {
         if (!takeoff_armour(you.equip[slot]))
@@ -2006,14 +2014,14 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         poisoned = true;
     }
 
-    const bool exploding = ammo_brand == SPMSL_EXPLODING;
-    const bool penetrating = !exploding
-                             && (bow_brand  == SPWPN_PENETRATION
-                                 || ammo_brand == SPMSL_PENETRATION);
-    const bool silver = ammo_brand == SPMSL_SILVER;
-    const bool disperses = ammo_brand == SPMSL_DISPERSAL;
-    const bool shadow = bow_brand  == SPWPN_SHADOW
-                        || ammo_brand == SPMSL_SHADOW;
+    const bool exploding    = ammo_brand == SPMSL_EXPLODING;
+    const bool penetrating  = (!exploding
+                               && (bow_brand  == SPWPN_PENETRATION
+                                   || ammo_brand == SPMSL_PENETRATION));
+    const bool silver       = (ammo_brand == SPMSL_SILVER);
+    const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
+    const bool shadow       = (bow_brand  == SPWPN_SHADOW
+                               || ammo_brand == SPMSL_SHADOW);
 
     ASSERT(!exploding || !is_artefact(item));
 
@@ -2988,7 +2996,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         bow_brand == SPWPN_CHAOS || ammo_brand_known);
     }
 
-    if (ammo_brand ==  SPMSL_SHADOW || bow_brand == SPWPN_SHADOW)
+    if (ammo_brand == SPMSL_SHADOW || bow_brand == SPWPN_SHADOW)
     {
         did_god_conduct(DID_NECROMANCY, 2,
                         bow_brand == SPWPN_SHADOW || ammo_brand_known);
@@ -3477,7 +3485,7 @@ static bool _swap_rings(int ring_slot)
     return (true);
 }
 
-bool puton_item(int item_slot, bool prompt_finger)
+bool puton_item(int item_slot)
 {
     item_def& item = you.inv[item_slot];
 
@@ -3486,7 +3494,13 @@ bool puton_item(int item_slot, bool prompt_finger)
         || item_slot == you.equip[EQ_AMULET])
     {
         // "Putting on" an equipped item means taking it off.
-        return (!remove_ring(item_slot));
+        if (Options.equip_unequip)
+            return (!remove_ring(item_slot));
+        else
+        {
+            mpr("You're already wearing that object!");
+            return (false);
+        }
     }
 
     if (item_slot == you.equip[EQ_WEAPON])
@@ -3549,27 +3563,12 @@ bool puton_item(int item_slot, bool prompt_finger)
     }
     else
     {
-        // First ring goes on left hand if we're choosing automatically.
+        // First ring always goes on left hand.
         hand_used = EQ_LEFT_RING;
 
+        // ... unless we're already wearing a ring on the left hand.
         if (lring && !rring)
             hand_used = EQ_RIGHT_RING;
-        else if (rring && !lring)
-            hand_used = EQ_LEFT_RING;
-        else if (prompt_finger) // both free; both busy has been handled
-        {
-            mpr("Put on which hand (l or r)?", MSGCH_PROMPT);
-            int keyin = get_ch();
-            switch (keyin)
-            {
-            case 'l': hand_used = EQ_LEFT_RING;  break;
-            case 'r': hand_used = EQ_RIGHT_RING; break;
-            case ESCAPE: return (false);
-            default:
-                mpr("You don't have such a hand!");
-                return (false);
-            }
-        }
     }
 
     // Actually equip the item.
@@ -3585,7 +3584,7 @@ bool puton_item(int item_slot, bool prompt_finger)
     return (true);
 }
 
-bool puton_ring(int slot, bool prompt_finger)
+bool puton_ring(int slot)
 {
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
     {
@@ -3619,7 +3618,7 @@ bool puton_ring(int slot, bool prompt_finger)
     if (prompt_failed(item_slot))
         return (false);
 
-    return puton_item(item_slot, prompt_finger);
+    return puton_item(item_slot);
 }
 
 void jewellery_remove_effects(item_def &item, bool mesg)
@@ -3914,12 +3913,16 @@ void zap_wand(int slot)
             targ_mode = TARG_ANY;
             break;
 
-        case WAND_HASTING:
         case WAND_HEALING:
+            if (you.religion == GOD_ELYVILON)
+            {
+                targ_mode = TARG_ANY;
+                break;
+            }
+            // else intentional fall-through
+        case WAND_HASTING:
         case WAND_INVISIBILITY:
-            targ_mode = (wand.sub_type == WAND_HEALING
-                            && you.religion == GOD_ELYVILON) ?
-                                TARG_ANY : TARG_FRIEND;
+            targ_mode = TARG_FRIEND;
             break;
 
         default:
@@ -5506,7 +5509,7 @@ void tile_item_use(int idx)
                     remove_ring(idx);
             }
             else if (check_warning_inscriptions(item, OPER_PUTON))
-                puton_ring(idx, false);
+                puton_ring(idx);
             return;
 
         case OBJ_POTIONS:

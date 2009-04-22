@@ -856,7 +856,7 @@ enum feature_property_type
     FPROP_SANCTUARY_2 = (1 << 2),
     FPROP_BLOODY      = (1 << 3),
     FPROP_VAULT       = (1 << 4),
-    FPROP_HIGHLIGHT   = (1 << 5)
+    FPROP_HIGHLIGHT   = (1 << 5)  // Highlight grids on the X map for debugging.
     // NOTE: Bloody floor and sanctuary are exclusive.
 };
 
@@ -3054,7 +3054,7 @@ enum montravel_target_type
     MTRAV_PLAYER,      // Travelling to reach the player.
     MTRAV_PATROL,      // Travelling to reach the patrol point.
     MTRAV_SIREN,       // Sirens travelling towards deep water.
-    MTRAV_WALL,        // Earthworms travelling towards a wall.
+    MTRAV_WALL,        // Rock worms travelling towards a wall.
     MTRAV_UNREACHABLE, // Not travelling because target is unreachable.
     MTRAV_KNOWN_UNREACHABLE // As above, and the player knows this.
 };

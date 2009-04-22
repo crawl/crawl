@@ -258,7 +258,7 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(25))
             spells[0] = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))
-            spells[0] = SPELL_ENERGY_BOLT;  // eye of daevas
+            spells[0] = SPELL_ENERGY_BOLT;  // eye of devastation
 
         if (one_chance_in(25))
             spells[1] = SPELL_STEAM_BALL;

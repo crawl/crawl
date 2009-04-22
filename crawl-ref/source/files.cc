@@ -1039,7 +1039,7 @@ static void _do_lost_items(level_area_type old_level_type)
             continue;
 
         // Item is in player intentory, so it's not lost.
-        if (item.pos.x == -1 && item.pos.y == -1)
+        if (item.pos == coord_def(-1,-1))
             continue;
 
         item_was_lost(item);
@@ -1633,14 +1633,14 @@ void _load_ghost(void)
     fclose(gfile);
 
 #if DEBUG_DIAGNOSTICS
-    mpr( "Loaded ghost.", MSGCH_DIAGNOSTICS );
+    mpr("Loaded ghost.", MSGCH_DIAGNOSTICS);
 #endif
 
     // Remove bones file - ghosts are hardly permanent.
     unlink(cha_fil.c_str());
 
     // Translate ghost to monster and place.
-    for (int imn = 0; imn < MAX_MONSTERS - 10 && !ghosts.empty(); imn++)
+    for (int imn = 0; imn < MAX_MONSTERS - 10 && !ghosts.empty(); ++imn)
     {
         if (menv[imn].type != -1)
             continue;

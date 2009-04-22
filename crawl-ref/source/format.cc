@@ -89,7 +89,7 @@ formatted_string formatted_string::parse_string(
         bool (*process)(const std::string &tag),
         int main_colour)
 {
-    // Safe assumption, that incoming color is LIGHTGREY
+    // main_colour will usually be LIGHTGREY (default).
     std::vector<int> colour_stack;
     colour_stack.push_back(main_colour);
 

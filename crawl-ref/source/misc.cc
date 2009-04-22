@@ -145,7 +145,7 @@ void turn_corpse_into_skeleton(item_def &item)
         item.plus = MONS_RAT;
 
     item.sub_type = CORPSE_SKELETON;
-    item.special  = 200;
+    item.special  = 200; // reset rotting counter
     item.colour   = LIGHTGREY;
 }
 

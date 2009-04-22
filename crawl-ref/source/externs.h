@@ -1966,6 +1966,7 @@ public:
     bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
+    bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        easy_butcher;    // autoswap to butchering tool
     bool        always_confirm_butcher; // even if only one corpse
     bool        chunks_autopickup; // Autopickup chunks after butchering

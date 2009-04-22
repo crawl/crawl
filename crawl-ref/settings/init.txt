@@ -214,10 +214,11 @@ stash_filter = ring of hunger, amulet of inaccuracy
 
 ##### 4-i	Command Enhancements ##################
 #
-# auto_list    = false
-# easy_open    = false
-# easy_unequip = false
-# easy_confirm = (none | safe)
+# auto_list     = false
+# easy_open     = false
+# easy_unequip  = false
+# equip_unequip = true
+# easy_confirm  = (none | safe)
 # allow_self_target      = (yes | no | prompt)
 # easy_butcher           = false
 # always_confirm_butcher = true

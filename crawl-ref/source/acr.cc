@@ -1580,7 +1580,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_WEAR_JEWELLERY:
-        puton_ring(-1, false);
+        puton_ring(-1);
         break;
 
     case CMD_ADJUST_INVENTORY:
