@@ -1056,10 +1056,9 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             || wpn.sub_type == WPN_BLOWGUN))
     {
         // Upsizing Snakes to Brown Snakes as the base class for using
-        // the really big sticks (so bonus applies really only to trolls,
-        // ogres, and most importantly ogre magi).  Still it's unlikely
-        // any character is strong enough to bother lugging a few of
-        // these around.  -- bwr
+        // the really big sticks (so bonus applies really only to trolls
+        // and ogres).  Still, it's unlikely any character is strong
+        // enough to bother lugging a few of these around. - bwr
 
         if (item_mass(wpn) < 300)
             mon = MONS_SNAKE;
@@ -1098,7 +1097,6 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         mprf("You create %s snake%s!",
              count > 1 ? "some" : "a",
              count > 1 ? "s" : "");
-
         return (true);
     }
 

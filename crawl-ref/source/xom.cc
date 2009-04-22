@@ -851,7 +851,7 @@ static bool _choose_chaos_upgrade(const monsters* mon)
 
     // God gifts from good gods will be protected by their god from
     // being given chaos weapons, while other gods won't mind the help
-    // in their servants killing the player.
+    // in their servants' killing the player.
     if (is_good_god(mon->god))
        return (false);
 

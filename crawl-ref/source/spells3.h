@@ -10,7 +10,7 @@
 #ifndef SPELLS3_H
 #define SPELLS3_H
 
-#include "itemprop.h"  // from _raise_corpse()
+#include "itemprop.h"  // from _raise_remains()
 
 struct dist;
 struct bolt;
