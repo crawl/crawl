@@ -1015,9 +1015,9 @@ static bool _xom_do_potion()
     while (true)
     {
         pot = static_cast<potion_type>(
-                random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED,
-                              POT_MIGHT, POT_INVISIBILITY, POT_BERSERK_RAGE,
-                              POT_EXPERIENCE, -1));
+                random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_MAGIC,
+                              POT_SPEED, POT_MIGHT, POT_INVISIBILITY,
+                              POT_BERSERK_RAGE, POT_EXPERIENCE, -1));
 
         bool has_effect = true;
         // Don't pick something that won't have an effect.
@@ -1033,6 +1033,10 @@ static bool _xom_do_potion()
             // else fall through
         case POT_HEAL_WOUNDS:
             if (you.hp == you.hp_max && player_rotted() == 0)
+                has_effect = false;
+            break;
+        case POT_MAGIC:
+            if (you.magic_points == you.max_magic_points)
                 has_effect = false;
             break;
         case POT_BERSERK_RAGE:
