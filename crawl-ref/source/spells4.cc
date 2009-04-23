@@ -1239,7 +1239,6 @@ void cast_fulsome_distillation(int pow)
     switch (mitm[corpse].plus)
     {
     case MONS_GIANT_BAT:             // extracting batty behaviour : 1
-    case MONS_UNSEEN_HORROR:         // extracting batty behaviour : 7
     case MONS_GIANT_BLOWFLY:         // extracting batty behaviour : 5
         pot_type = POT_CONFUSION;
         break;
