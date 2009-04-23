@@ -388,18 +388,18 @@ bool is_grid_dangerous(int grid)
                 || (grid == DNGN_DEEP_WATER && !player_likes_water())));
 }
 
-bool player_in_mappable_area( void )
+bool player_in_mappable_area(void)
 {
     return (!testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
             && !testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE));
 }
 
-bool player_in_branch( int branch )
+bool player_in_branch(int branch)
 {
     return (you.level_type == LEVEL_DUNGEON && you.where_are_you == branch);
 }
 
-bool player_in_hell( void )
+bool player_in_hell(void)
 {
     // No real reason except to draw someone's attention here if they
     // mess with the branch enum.

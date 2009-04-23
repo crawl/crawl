@@ -28,8 +28,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                           bool force, bool swapping = false );
 
 bool player_in_mappable_area(void);
-bool player_in_branch( int branch );
-bool player_in_hell( void );
+bool player_in_branch(int branch);
+bool player_in_hell(void);
 
 int get_player_wielded_weapon(void);
 bool berserk_check_wielded_weapon(void);
