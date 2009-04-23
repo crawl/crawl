@@ -3516,8 +3516,8 @@ void level_change(bool skip_attribute_increase)
         }
 
         // add hp and mp adjustments - GDL
-        inc_max_hp( hp_adjust );
-        inc_max_mp( mp_adjust );
+        inc_max_hp(hp_adjust);
+        inc_max_mp(mp_adjust);
 
         deflate_hp(you.hp_max, false);
 
@@ -3546,7 +3546,7 @@ void level_change(bool skip_attribute_increase)
         learned_something_new(TUT_NEW_LEVEL);
     }
 
-    redraw_skill( you.your_name, player_title() );
+    redraw_skill(you.your_name, player_title());
 }
 
 // Here's a question for you: does the ordering of mods make a difference?

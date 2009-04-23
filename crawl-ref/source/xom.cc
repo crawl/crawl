@@ -1080,6 +1080,7 @@ static bool _xom_do_potion()
 
         rc = true;
     }
+
     return (rc);
 }
 

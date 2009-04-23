@@ -84,7 +84,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         // only fix rot when healed to full
         if (you.hp == you.hp_max)
         {
-            unrot_hp( (2 + random2avg(5, 2)) / factor );
+            unrot_hp((2 + random2avg(5, 2)) / factor);
             set_hp(you.hp_max, false);
         }
         break;
@@ -121,12 +121,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             }
             else
             {
-                mpr("Blech - this tastes like blood!");
+                mpr("Yuck - this tastes like blood!");
                 if (x_chance_in_y(herbivorous + 1, 4))
                 {
                     // Full herbivores always become ill from blood.
                     disease_player(50 + random2(100));
-                    xom_is_stimulated(32/xom_factor);
+                    xom_is_stimulated(32 / xom_factor);
                 }
                 else
                     lessen_hunger(value, true);
@@ -136,7 +136,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_SPEED:
-        haste_player( (40 + random2(pow)) / factor );
+        haste_player((40 + random2(pow)) / factor);
         break;
 
     case POT_MIGHT:
@@ -308,7 +308,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         {
             mpr("You feel more experienced!");
 
-            you.experience = 1 + exp_needed( 2 + you.experience_level );
+            you.experience = 1 + exp_needed(2 + you.experience_level);
             level_change();
         }
         else
