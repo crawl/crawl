@@ -414,7 +414,7 @@ void run_macro(const char *macroname = NULL);
 
 int player_ghost_base_movement_speed();
 
-int count_worn_ego( int which_ego );
-int stat_modifier( stat_type stat );
+int count_worn_ego(int which_ego);
+int stat_modifier(stat_type stat);
 
 #endif

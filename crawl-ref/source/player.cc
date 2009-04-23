@@ -5562,7 +5562,7 @@ bool rot_player(int amount)
     return (true);
 }
 
-int count_worn_ego( int which_ego )
+int count_worn_ego(int which_ego)
 {
     int result = 0;
     for (int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot)
@@ -5591,7 +5591,7 @@ static int _strength_modifier()
     result += 3 * count_worn_ego(SPARM_STRENGTH);
 
     // rings of strength
-    result += player_equip( EQ_RINGS_PLUS, RING_STRENGTH );
+    result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
 
     // randarts of strength
     result += scan_randarts(RAP_STRENGTH);
@@ -5603,7 +5603,7 @@ static int _strength_modifier()
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
 
     // transformations
-    switch ( you.attribute[ATTR_TRANSFORMATION] )
+    switch (you.attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_STATUE:          result +=  2; break;
     case TRAN_DRAGON:          result += 10; break;
@@ -5626,7 +5626,7 @@ static int _int_modifier()
     result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
     // rings of intelligence
-    result += player_equip( EQ_RINGS_PLUS, RING_INTELLIGENCE );
+    result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
     // randarts of intelligence
     result += scan_randarts(RAP_INTELLIGENCE);
@@ -5649,7 +5649,7 @@ static int _dex_modifier()
     result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
     // rings of dexterity
-    result += player_equip( EQ_RINGS_PLUS, RING_DEXTERITY );
+    result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
 
     // randarts of dexterity
     result += scan_randarts(RAP_DEXTERITY);
@@ -5667,13 +5667,13 @@ static int _dex_modifier()
     const int yellow_modifier[]   = { 0,  0, -1, -2 };
     const int red2_modifier[]     = { 0,  0, -1, -2 };
 
-    result -= grey2_modifier[player_mutation_level(MUT_GREY2_SCALES)];
-    result -= metallic_modifier[player_mutation_level(MUT_METALLIC_SCALES)];
-    result -= yellow_modifier[player_mutation_level(MUT_YELLOW_SCALES)];
-    result -= red2_modifier[player_mutation_level(MUT_RED2_SCALES)];
+    result += grey2_modifier[player_mutation_level(MUT_GREY2_SCALES)];
+    result += metallic_modifier[player_mutation_level(MUT_METALLIC_SCALES)];
+    result += yellow_modifier[player_mutation_level(MUT_YELLOW_SCALES)];
+    result += red2_modifier[player_mutation_level(MUT_RED2_SCALES)];
 
     // transformations
-    switch ( you.attribute[ATTR_TRANSFORMATION] )
+    switch (you.attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_SPIDER: result +=  5; break;
     case TRAN_STATUE: result -=  2; break;
@@ -5684,7 +5684,7 @@ static int _dex_modifier()
     return (result);
 }
 
-int stat_modifier( stat_type stat )
+int stat_modifier(stat_type stat)
 {
     switch (stat)
     {
