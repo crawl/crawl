@@ -121,7 +121,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             }
             else
             {
-                mpr("Yuck - this tastes like blood!");
+                mpr("Yuck - this tastes like blood.");
                 if (x_chance_in_y(herbivorous + 1, 4))
                 {
                     // Full herbivores always become ill from blood.
