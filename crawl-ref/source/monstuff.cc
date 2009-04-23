@@ -3304,7 +3304,7 @@ static bool _pacified_leave_level(monsters *mon, std::vector<level_exit> e,
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
         || (e_index != -1 && mon->pos() == e[e_index].target)
-        || grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 2)
+        || grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 4)
     {
         make_mons_leave_level(mon);
         return (true);
