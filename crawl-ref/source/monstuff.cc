@@ -3787,10 +3787,10 @@ static void _arena_set_foe(monsters *mons)
         if (!other->alive() || mons_aligned(mind, i))
             continue;
 
-        // Don't fight test spawners, since they're only pseduo-monsters
-        // placed to spawn real monsters, plus they're impossible to kill.
-        // But test spawners can fight each other, to give them a target o
-        // spawn against.
+        // Don't fight test spawners, since they're only pseudo-monsters
+        // placed to spawn real monsters, plus they're impossible to
+        // kill.  But test spawners can fight each other, to give them a
+        // target to spawn against.
         if (other->type == MONS_TEST_SPAWNER
             && mons->type != MONS_TEST_SPAWNER)
         {
