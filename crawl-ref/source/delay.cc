@@ -1917,9 +1917,9 @@ void autotoggle_autopickup(bool off)
 {
     if (off)
     {
-        if (Options.autopickup_on)
+        if (Options.autopickup_on > 0)
         {
-            Options.autopickup_on = false;
+            Options.autopickup_on = -1;
             mprf(MSGCH_WARN,
                 "Deactivating autopickup; reactivate with <w>Ctrl+A</w>.");
         }
@@ -1929,9 +1929,9 @@ void autotoggle_autopickup(bool off)
             Options.tut_seen_invisible = you.num_turns;
         }
     }
-    else if (!Options.autopickup_on)
+    else if (Options.autopickup_on < 0) // was turned off automatically
     {
-        Options.autopickup_on = true;
+        Options.autopickup_on = 1;
         mprf(MSGCH_WARN, "Reactivating autopickup.");
     }
 }

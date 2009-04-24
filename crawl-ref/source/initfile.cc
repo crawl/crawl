@@ -684,7 +684,7 @@ void game_options::reset_options()
 
     verbose_monster_pane = true;
 
-    autopickup_on = true;
+    autopickup_on    = 1;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     show_more_prompt = true;
 
@@ -2108,7 +2108,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #endif
     else BOOL_OPTION(use_old_selection_order);
-    else BOOL_OPTION_NAMED("default_autopickup", autopickup_on);
+    else if (key == "default_autopickup")
+    {
+        if (_read_bool(field, true))
+            autopickup_on = 1;
+        else
+            autopickup_on = 0;
+    }
     else if (key == "default_friendly_pickup")
     {
         if (field == "none")

@@ -1010,7 +1010,6 @@ static bool _player_is_dead()
 
 static bool _xom_do_potion()
 {
-    bool rc = false;
     potion_type pot = POT_HEALING;
     while (true)
     {
@@ -1018,6 +1017,9 @@ static bool _xom_do_potion()
                 random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_MAGIC,
                               POT_SPEED, POT_MIGHT, POT_INVISIBILITY,
                               POT_BERSERK_RAGE, POT_EXPERIENCE, -1));
+
+        if (pot == POT_EXPERIENCE && !one_chance_in(6))
+            pot = POT_BERSERK_RAGE;
 
         bool has_effect = true;
         // Don't pick something that won't have an effect.
@@ -1054,38 +1056,30 @@ static bool _xom_do_potion()
             break;
     }
 
-    if (pot == POT_EXPERIENCE && !one_chance_in(6))
-        pot = POT_BERSERK_RAGE;
+    god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
 
-    if (pot != POT_BERSERK_RAGE || you.can_go_berserk(false))
+    if (pot == POT_BERSERK_RAGE)
+        you.berserk_penalty = NO_BERSERK_PENALTY;
+
+    // Take a note.
+    std::string potion_msg = "potion effect ";
+    switch (pot)
     {
-        god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
-
-        if (pot == POT_BERSERK_RAGE)
-            you.berserk_penalty = NO_BERSERK_PENALTY;
-
-        // Take a note.
-        std::string potion_msg = "potion effect ";
-        switch (pot)
-        {
-        case POT_HEALING:       potion_msg += "(healing)"; break;
-        case POT_HEAL_WOUNDS:   potion_msg += "(heal wounds)"; break;
-        case POT_SPEED:         potion_msg += "(speed)"; break;
-        case POT_MIGHT:         potion_msg += "(might)"; break;
-        case POT_INVISIBILITY:  potion_msg += "(invisibility)"; break;
-        case POT_BERSERK_RAGE:  potion_msg += "(berserk)"; break;
-        case POT_EXPERIENCE:    potion_msg += "(experience)"; break;
-        default:                potion_msg += "(other)"; break;
-        }
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                       potion_msg.c_str()), true);
-
-        potion_effect(pot, 150);
-
-        rc = true;
+    case POT_HEALING:       potion_msg += "(healing)"; break;
+    case POT_HEAL_WOUNDS:   potion_msg += "(heal wounds)"; break;
+    case POT_MAGIC:         potion_msg += "(magic)"; break;
+    case POT_SPEED:         potion_msg += "(speed)"; break;
+    case POT_MIGHT:         potion_msg += "(might)"; break;
+    case POT_INVISIBILITY:  potion_msg += "(invisibility)"; break;
+    case POT_BERSERK_RAGE:  potion_msg += "(berserk)"; break;
+    case POT_EXPERIENCE:    potion_msg += "(experience)"; break;
+    default:                potion_msg += "(other)"; break;
     }
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
 
-    return (rc);
+    potion_effect(pot, 150);
+
+    return (true);
 }
 
 static bool _xom_confuse_monsters(int sever)
@@ -1638,7 +1632,7 @@ static bool _xom_is_good(int sever, int tension)
     // This series of random calls produces a poisson-looking
     // distribution: initial hump, plus a long-ish tail.
 
-    // Don't make the player go berserk if there's no danger.
+    // Don't make the player go berserk etc. if there's no danger.
     if (tension > random2(3) && x_chance_in_y(2, sever))
         done = _xom_do_potion();
     else if (x_chance_in_y(3, sever))
@@ -2167,6 +2161,7 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
+    bool flavour_only = false;
     MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, level, cause_str, NH_DEFAULT,
                   lethality_margin, hand_str, can_plural);
 }

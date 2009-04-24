@@ -4948,18 +4948,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
                                                  : "and vanishes!" );
 
                 if (!player_monster_visible(mon))
-                {
-                    // Also turn off autopickup.
-                    Options.autopickup_on = false;
-                    mpr("Deactivating autopickup; reactivate with Ctrl-A.",
-                        MSGCH_WARN);
-
-                    if (Options.tutorial_left)
-                    {
-                        learned_something_new(TUT_INVISIBLE_DANGER);
-                        Options.tut_seen_invisible = you.num_turns;
-                    }
-                }
+                    autotoggle_autopickup(true);
             }
 
             obvious_effect = true;

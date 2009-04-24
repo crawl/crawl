@@ -2350,7 +2350,7 @@ bool can_autopickup()
     // [ds] Checking for autopickups == 0 is a bad idea because
     // autopickup is still possible with inscriptions and
     // pickup_thrown.
-    if (!Options.autopickup_on)
+    if (Options.autopickup_on <= 0)
         return (false);
 
     if (you.flight_mode() == FL_LEVITATE)
