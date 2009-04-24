@@ -4589,8 +4589,8 @@ static void _maybe_set_patrol_route(monsters *monster)
     }
 }
 
-// Check whether there's a monster of the same alignment adjacent to the
-// given monster in at least one of three given directions (relative to
+// Check whether there's a monster of the same type and alignment adjacent
+// to the given monster in at least one of three given directions (relative to
 // the monster position).
 static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
                                coord_def c)
@@ -4613,7 +4613,7 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
             continue;
 
         // Hostile monsters of normal intelligence only move aside for
-        // monsters of the same type.
+        // monsters of the same genus.
         if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack_real(mon)
             && mons_genus(mon->type) != mons_genus(ally->type))
         {
@@ -4807,7 +4807,13 @@ static void _handle_movement(monsters *monster)
 
     if (mons_wall_shielded(monster))
     {
-        if (mmov.x != 0 && mmov.y != 0)
+        // The rock worm will try to move along through rock for as long as
+        // possible. If the player is walking through a corridor, for example,
+        // moving along in the wall beside him is much preferable to actually
+        // leaving the wall.
+        // This might cause the rock worm to take detours but it still
+        // comes off as smarter than otherwise.
+        if (mmov.x != 0 && mmov.y != 0) // diagonal movement
         {
             bool updown    = false;
             bool leftright = false;
@@ -4816,7 +4822,7 @@ static void _handle_movement(monsters *monster)
             if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
                 updown = true;
 
-                      t = monster->pos() + coord_def(0, mmov.y);
+            t = monster->pos() + coord_def(0, mmov.y);
             if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
                 leftright = true;
 
@@ -4833,7 +4839,7 @@ static void _handle_movement(monsters *monster)
             if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
                 left = true;
 
-                      t = monster->pos() + coord_def(1, mmov.y);
+            t = monster->pos() + coord_def(1, mmov.y);
             if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
                 right = true;
 
@@ -4850,7 +4856,7 @@ static void _handle_movement(monsters *monster)
             if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
                 up = true;
 
-                      t = monster->pos() + coord_def(mmov.x, 1);
+            t = monster->pos() + coord_def(mmov.x, 1);
             if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
                 down = true;
 
@@ -4869,7 +4875,7 @@ static void _handle_movement(monsters *monster)
     // First, check whether the monster is smart enough to even consider
     // this.
     if ((newpos == you.pos()
-         || mgrd(newpos) != NON_MONSTER && monster->foe == mgrd(newpos))
+           || mgrd(newpos) != NON_MONSTER && monster->foe == mgrd(newpos))
         && mons_intel(monster) >= I_ANIMAL
         && !mons_is_confused(monster) && !mons_is_caught(monster)
         && !monster->has_ench(ENCH_BERSERK))
@@ -4938,8 +4944,8 @@ static void _handle_movement(monsters *monster)
             }
             else if (good_move[1][mmov.y+1]
                      && (_allied_monster_at(monster, coord_def(-1, -mmov.y),
-                                           coord_def(0, -mmov.x),
-                                           coord_def(1, -mmov.x))
+                                            coord_def(0, -mmov.y),
+                                            coord_def(1, -mmov.y))
                          || mons_intel(monster) >= I_NORMAL
                             && !mons_wont_attack_real(monster)
                             && _ranged_allied_monster_in_dir(monster,
