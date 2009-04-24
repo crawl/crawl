@@ -1130,13 +1130,6 @@ static void _input()
     crawl_state.clear_god_acting();
 }
 
-static bool _toggle_flag( bool* flag, const char* flagname )
-{
-    *flag = !(*flag);
-    mprf( "%s is now %s.", flagname, (*flag) ? "on" : "off" );
-    return *flag;
-}
-
 static bool _stairs_check_mesmerised()
 {
     if (you.duration[DUR_MESMERISED] && !you.confused())

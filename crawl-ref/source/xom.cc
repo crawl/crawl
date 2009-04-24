@@ -2161,7 +2161,6 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    bool flavour_only = false;
     MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, level, cause_str, NH_DEFAULT,
                   lethality_margin, hand_str, can_plural);
 }
