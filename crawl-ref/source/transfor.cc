@@ -167,8 +167,10 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
 
         bool unequip = (e == EQ_WEAPON || !meld);
 
-        mprf("%s %s", equip->name(DESC_CAP_YOUR).c_str(),
-             (unequip ? "falls away!" : "melds into your body."));
+        mprf("%s %s%s %s", equip->name(DESC_CAP_YOUR).c_str(),
+             unequip ? "fall" : "meld",
+             equip->quantity > 1 ? "" : "s",
+             unequip ? "away!" : "into your body.");
 
         _unwear_equipment_slot(e);
 
