@@ -2171,7 +2171,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             1,
             "<h>Game Saving and Quitting:\n"
             "<w>S</w> : Save game and exit\n"
-            "<w>Ctrl-X</w> : save and eXit without query\n"
+            "<w>Ctrl-S</w> : save and eXit without query\n"
             "<w>Ctrl-Q</w> : Quit without saving\n",
             true, true, _cmdhelp_textfilter);
 
@@ -2199,7 +2199,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map (<w>X?</w> for help)\n"
-            "<w>V</w>   : list monsters and items in sight\n"
+            "<w>Ctrl-X</w> : list monsters, items, features in sight\n"
             "<w>Ctrl-O</w> : show dungeon Overview\n"
             "<w>Ctrl-A</w> : toggle auto-pickup\n"
             "<w>Ctrl-T</w> : change ally pickup behaviour\n",
@@ -2319,9 +2319,10 @@ static void _add_formatted_tutorial_help(column_composer &cols)
             "<w>i</w> : list inventory (select item to view it)\n"
             "<w>g</w> : pick up item from ground (also <w>,</w>)\n"
             "<w>d</w> : drop item\n"
-            "<w>X</w> : show map of the whole level\n"
             "<w><<</w> or <w>></w> : ascend/descend the stairs\n"
             "<w>Ctrl-P</w> : show previous messages\n"
+            "<w>X</w> : show map of the whole level\n"
+            "<w>Ctrl-X</w> : list monsters, items, features in sight\n"
             "\n"
             "<h>Targeting (for spells and missiles)\n"
             "Use <w>+</w> (or <w>=</w>) and <w>-</w> to cycle between\n"
@@ -2432,7 +2433,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>F</w>      : combat stats with fsim_kit\n"
                        "<w>Ctrl-F</w> : combat stats (monster vs PC)\n"
                        "<w>Ctrl-I</w> : item generation stats\n"
-                       "\n"
+                       "<w>O</w>      : measure exploration time\n"
                        "\n"
                        "<w>?</w>      : list wizard commands\n",
                        true, true);

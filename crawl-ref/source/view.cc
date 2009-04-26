@@ -965,7 +965,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     }
 }
 
-static void _handle_seen_interrupt(monsters* monster)
+void handle_seen_interrupt(monsters* monster)
 {
     if (mons_is_unknown_mimic(monster))
         return;
@@ -981,7 +981,7 @@ static void _handle_seen_interrupt(monsters* monster)
     if (!mons_is_safe(monster)
         && !mons_class_flag(monster->type, M_NO_EXP_GAIN))
     {
-        interrupt_activity( AI_SEE_MONSTER, aid );
+        interrupt_activity(AI_SEE_MONSTER, aid);
     }
     seen_monster( monster );
 }
@@ -1002,13 +1002,13 @@ void flush_comes_into_view()
         return;
     }
 
-    _handle_seen_interrupt(mon);
+    handle_seen_interrupt(mon);
 }
 
 void handle_monster_shouts(monsters* monster, bool force)
 {
-    if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
-        return;
+//     if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
+//         return;
 
     // Friendly or neutral monsters don't shout.
     if (!force && (mons_friendly(monster) || mons_neutral(monster)))
@@ -1182,8 +1182,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         else if (param == "SOUND")
             channel = MSGCH_SOUND;
 
-        // Monster must come up from being submerged if it wants to
-        // shout.
+        // Monster must come up from being submerged if it wants to shout.
         if (mons_is_submerged(monster))
         {
             if (!monster->del_ench(ENCH_SUBMERGED))
@@ -1196,7 +1195,7 @@ void handle_monster_shouts(monsters* monster, bool force)
             {
                 monster->seen_context = "bursts forth shouting";
                 // Give interrupt message before shout message.
-                _handle_seen_interrupt(monster);
+                handle_seen_interrupt(monster);
             }
         }
 
@@ -1207,7 +1206,13 @@ void handle_monster_shouts(monsters* monster, bool force)
 
             // Otherwise it can move away with no feedback.
             if (you.can_see(monster))
+            {
+/*
+                if (!(monster->flags & MF_WAS_IN_VIEW))
+                    handle_seen_interrupt(monster);
+*/
                 seen_monster(monster);
+            }
         }
     }
 
@@ -1323,7 +1328,7 @@ void update_monsters_in_view()
             else if (player_monster_visible(monster))
             {
                 if (!(monster->flags & MF_WAS_IN_VIEW) && you.turn_is_over)
-                    _handle_seen_interrupt(monster);
+                    handle_seen_interrupt(monster);
 
                 seen_monster(monster);
             }

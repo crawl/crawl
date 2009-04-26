@@ -2139,8 +2139,15 @@ void wizard_heal(bool super_heal)
 
 void wizard_set_hunger_state()
 {
-    mpr("Set hunger state to s(T)arving, (N)ear starving, "
-        "(H)ungry, (S)atiated, (F)ull or (E)ngorged?", MSGCH_PROMPT);
+    std::string hunger_prompt =
+        "Set hunger state to s(T)arving, (N)ear starving, (H)ungry";
+    if (you.species == SP_GHOUL)
+        hunger_prompt += " or (S)atiated?";
+    else
+        hunger_prompt += ", (S)atiated, (F)ull or (E)ngorged?";
+
+    mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
+
     const int c = tolower(getch());
 
     // Values taken from food.cc.
@@ -2169,7 +2176,7 @@ void wizard_spawn_control()
 
     if (c == 'c')
     {
-        mprf(MSGCH_PROMPT, "Set monster spawn rate to what? (now %d) ",
+        mprf(MSGCH_PROMPT, "Set monster spawn rate to what? (now %d, lower value = higher rate) ",
              env.spawn_random_rate);
 
         if (!cancelable_get_line(specs, sizeof(specs)))
@@ -5104,10 +5111,9 @@ void wizard_dismiss_all_monsters(bool force_all)
 
 static void _debug_kill_traps()
 {
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-            if (grid_is_trap(grd[x][y], true))
-                grd[x][y] = DNGN_FLOOR;
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (grid_is_trap(grd(*ri), true))
+            grd(*ri) = DNGN_FLOOR;
 }
 
 static int _debug_time_explore()
@@ -5161,7 +5167,7 @@ static void _debug_destroy_doors()
 void debug_test_explore()
 {
     wizard_dismiss_all_monsters(true);
-    _debug_kill_traps();
+    _debug_kill_traps(); // doesn't work? (jpeg)
     _debug_destroy_doors();
 
     forget_map(100);

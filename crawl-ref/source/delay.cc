@@ -1880,8 +1880,10 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             else if (at.context.find("leaps out") != std::string::npos)
             {
                 if (mon->type == MONS_TRAPDOOR_SPIDER)
+                {
                     text += " leaps out from its hiding place under the "
                             "floor!";
+                }
                 else
                     text += " leaps out from hiding!";
             }

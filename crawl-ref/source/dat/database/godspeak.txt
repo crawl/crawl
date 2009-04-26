@@ -320,7 +320,7 @@ You feel watched.
 
 Everything around seems to assume a strange transparency.
 
-All the walls suddenly lose part of their structure.
+The walls suddenly lose part of their structure.
 
 Xom alters the dungeon around you.
 %%%%

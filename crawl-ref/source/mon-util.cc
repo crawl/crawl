@@ -6851,7 +6851,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = "thin air";
                 else if (type == MONS_TRAPDOOR_SPIDER)
                     seen_context = "leaps out";
-                else if (monster_habitable_grid(this, DNGN_FLOOR))
+                else if (!monster_habitable_grid(this, DNGN_FLOOR))
                     seen_context = "bursts forth";
                 else
                     seen_context = "surfaces";

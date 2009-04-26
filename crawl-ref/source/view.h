@@ -219,6 +219,7 @@ void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
 void calc_show_los();
 void viewwindow(bool draw_it, bool do_updates);
 void update_monsters_in_view();
+void handle_seen_interrupt(monsters* monster);
 void flush_comes_into_view();
 
 struct ray_def;

@@ -437,10 +437,6 @@ cloak
 
 A cloth cloak.
 %%%%
-club noquote
-
-A heavy piece of wood, to be held or thrown.
-%%%%
 club
 
 A heavy piece of wood, to be held or thrown.
