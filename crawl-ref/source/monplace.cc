@@ -724,7 +724,6 @@ int place_monster(mgen_data mg, bool force_pos)
 #ifdef DEBUG_MON_CREATION
     mpr("in place_monster()", MSGCH_DIAGNOSTICS);
 #endif
-//     mg.proximity = PROX_NEAR_STAIRS;
 
     int tries = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
@@ -784,7 +783,7 @@ int place_monster(mgen_data mg, bool force_pos)
     {
         tries = 0;
 
-        // Try to pick position that is
+        // Try to pick a position that is
         // a) not occupied
         // b) compatible
         // c) in the 'correct' proximity to the player

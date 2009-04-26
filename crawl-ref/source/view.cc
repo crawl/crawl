@@ -1007,8 +1007,8 @@ void flush_comes_into_view()
 
 void handle_monster_shouts(monsters* monster, bool force)
 {
-//     if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
-//         return;
+    if (!force && x_chance_in_y(you.skills[SK_STEALTH], 30))
+        return;
 
     // Friendly or neutral monsters don't shout.
     if (!force && (mons_friendly(monster) || mons_neutral(monster)))
@@ -1207,10 +1207,8 @@ void handle_monster_shouts(monsters* monster, bool force)
             // Otherwise it can move away with no feedback.
             if (you.can_see(monster))
             {
-/*
                 if (!(monster->flags & MF_WAS_IN_VIEW))
                     handle_seen_interrupt(monster);
-*/
                 seen_monster(monster);
             }
         }
