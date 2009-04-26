@@ -274,9 +274,18 @@ Building Tiles versions
 * All platforms require the same prerequisites listed in the other
   sections above for building each of these platforms.
 
-* The Linux and Mac OS X builds additionally require libpng.  The Mac OS X
-  version expects it to be installed via fink in /sw.  If this is not the
-  case, then you should edit PNG_INCLUDE and PNG_LIB in makefile.x11.
+* All platforms additionally require the development versions of the following
+  software packages installed.
+
+    * SDL (http://www.libsdl.org/download-1.2.php)
+    * SDL_image (http://www.libsdl.org/projects/SDL_image/)
+    * libpng (http://www.libpng.org/pub/png/libpng.html)
+    * Freetype 2 (http://www.freetype.org/download.html)
+
+  On Mac OS X, these are expected to be installed via fink in /sw.  On Linux,
+  these can be installed via a package manager.  On Windows, they should be
+  installed, compiled, and the headers and libs placed in a location that the
+  compiler can find them via its default include and library paths.
 
 * If you want both ASCII and Tiles binaries you need to compile them
   separately, rename one of them, and copy them into the same Crawl
