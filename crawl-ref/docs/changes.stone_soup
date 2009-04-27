@@ -86,6 +86,7 @@ Interface
 ---------
 * Store message history across saves.
 * Some message condensation for identical messages.
+* Changed quick save command to 'Ctrl-S' (was Ctrl-X).
 * Added stat_colour option to highlight dangerously low stats.
 * New option: Automatically set travel exclusions for statues and oklob plants.
 * Limit travel exclusions to line of sight.
@@ -101,7 +102,7 @@ Interface
 * Added an option to make menu colours apply to shops.
 * Use menu colours for announcements of items found while travelling.
 * Pressing Esc at -More- automatically clears all queued -More- prompts.
-* Improved monster/item view command ('V'), allowing travel to items, features.
+* New monster/item view command ('Ctrl-X'), allowing travel to items, features.
 * Add FAQ to help screen ('?Q').
 * Purchases and donations are noted.
 * The database search also prints armour base AC/EV and weapon plusses.

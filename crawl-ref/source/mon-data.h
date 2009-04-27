@@ -798,7 +798,7 @@ static monsterentry mondata[] = {
     MONS_HELL_HOG, 'h', LIGHTRED, "hell-hog",
     M_SPELLCASTER | M_EVIL,
     MR_NO_FLAGS,
-    0, 10, MONS_HELL_HOG, MONS_HELL_HOG, MH_DEMONIC, -3,
+    0, 10, MONS_HOG, MONS_HELL_HOG, MH_DEMONIC, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 5, 0 },
     2, 9, MST_HELL_HOG, CE_CLEAN, Z_NOZOMBIE, S_SILENT, I_ANIMAL,

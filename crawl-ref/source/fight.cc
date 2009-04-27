@@ -1769,7 +1769,14 @@ int melee_attack::player_weapon_type_modify(int damage)
         else
         {
             attack_verb = "spit";
-            verb_degree = " like a pig";
+            if (defender->atype() == ACT_MONSTER
+                && defender_visible
+                && mons_genus(defender_as_monster()->type) == MONS_HOG)
+            {
+                verb_degree = " like the proverbial pig";
+            }
+            else
+                verb_degree = " like a pig";
         }
         break;
 
