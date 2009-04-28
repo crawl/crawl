@@ -2718,7 +2718,7 @@ void debug_item_scan( void )
                 _dump_item( mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj] );
             }
 
-            // Check that item knows what stack it's in
+            // Check that item knows what stack it's in.
             if (mitm[obj].pos != *ri)
             {
                 mprf(MSGCH_ERROR,"Item position incorrect at (%d,%d)!",
@@ -5483,7 +5483,7 @@ void wizard_give_monster_item(monsters *mon)
         return;
     }
 
-    // Item is gone from player's inventory
+    // Item is gone from player's inventory.
     dec_inv_item_quantity(player_slot, item.quantity);
 
     if ((mon->flags & MF_HARD_RESET) && !(item.flags & ISFLAG_SUMMONED))

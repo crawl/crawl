@@ -1018,9 +1018,9 @@ static void _build_layout_skeleton(int level_number, int level_type,
 static int _num_items_wanted(int level_number)
 {
     if (level_number > 5 && one_chance_in(500 - 5 * level_number))
-        return 10 + random2avg( 90, 2 );  // rich level!
+        return (10 + random2avg(90, 2)); // rich level!
     else
-        return 3 + roll_dice( 3, 11 );
+        return (3 + roll_dice(3, 11));
 }
 
 
@@ -1051,14 +1051,14 @@ static void _fixup_walls()
     // If part of vaults -> walls depend on level.
     // If part of crypt -> all walls stone.
 
-    if (player_in_branch( BRANCH_DIS )
-        || player_in_branch( BRANCH_VAULTS )
-        || player_in_branch( BRANCH_CRYPT ))
+    if (player_in_branch(BRANCH_DIS)
+        || player_in_branch(BRANCH_VAULTS)
+        || player_in_branch(BRANCH_CRYPT))
     {
         // Always the case with Dis {dlb}
         dungeon_feature_type vault_wall = DNGN_METAL_WALL;
 
-        if (player_in_branch( BRANCH_VAULTS ))
+        if (player_in_branch(BRANCH_VAULTS))
         {
             vault_wall = DNGN_ROCK_WALL;
             const int bdepth = player_branch_depth();
@@ -1072,10 +1072,8 @@ static void _fixup_walls()
             if (bdepth > 6 && one_chance_in(10))
                 vault_wall = DNGN_GREEN_CRYSTAL_WALL;
         }
-        else if (player_in_branch( BRANCH_CRYPT ))
-        {
+        else if (player_in_branch(BRANCH_CRYPT))
             vault_wall = DNGN_STONE_WALL;
-        }
 
         _replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,vault_wall,MMT_NO_WALL);
     }

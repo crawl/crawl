@@ -490,7 +490,7 @@ void unlink_item( int dest )
         mpr("BUG WARNING: Item didn't seem to be linked at all.",
             MSGCH_ERROR);
 #endif
-}                               // end unlink_item()
+}
 
 void destroy_item( item_def &item, bool never_created )
 {
@@ -1715,7 +1715,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     you.turn_is_over = true;
 
     return (retval);
-}                               // end move_item_to_player()
+}
 
 void mark_items_non_pickup_at(const coord_def &pos)
 {
@@ -1898,7 +1898,7 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
     }
 
     return (true);
-}                               // end copy_item_to_grid()
+}
 
 
 //---------------------------------------------------------------

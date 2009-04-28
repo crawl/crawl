@@ -1125,8 +1125,8 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         give_item(id, mg.power, summoned);
 
-        // Dancing swords *always* have a weapon. Fail to
-        // create them otherwise.
+        // Dancing weapons *always* have a weapon. Fail to create them
+        // otherwise.
         const item_def* wpn = menv[id].weapon();
         if (!wpn)
         {
@@ -1136,9 +1136,7 @@ static int _place_monster_aux(const mgen_data &mg,
             return (-1);
         }
         else
-        {
             menv[id].colour = wpn->colour;
-        }
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
