@@ -234,6 +234,8 @@ Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
 
+"First here, now there."
+
 "This might be better!"
 %%%%
 Xom teleportation journey
@@ -249,6 +251,8 @@ Xom twists space around you.
 Xom confusion
 
 "Heh heh heh..."
+
+Xom's power touches on your mind for a moment.
 
 Xom titters.
 %%%%
