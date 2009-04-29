@@ -1839,7 +1839,7 @@ void show_skills()
 const char *skill_name(int which_skill)
 {
     return (skills[which_skill][0]);
-}                               // end skill_name()
+}
 
 int str_to_skill(const std::string &skill)
 {
