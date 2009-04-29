@@ -1255,10 +1255,10 @@ int player_res_magic(void)
     rm += scan_randarts(RAP_MAGIC);
 
     // armour
-    rm += 30 * player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE );
+    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE);
 
     // rings of magic resistance
-    rm += 40 * player_equip( EQ_RINGS, RING_PROTECTION_FROM_MAGIC );
+    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
 
     // Enchantment skill
     rm += 2 * you.skills[SK_ENCHANTMENTS];
@@ -1274,7 +1274,7 @@ int player_res_magic(void)
     if (you.duration[DUR_LOWERED_MR])
         rm /= 2;
 
-    return rm;
+    return (rm);
 }
 
 bool player_can_smell()
