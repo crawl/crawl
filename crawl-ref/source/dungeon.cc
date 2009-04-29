@@ -3567,7 +3567,7 @@ static void _builder_items(int level_number, char level_type, int items_wanted)
             {
                 mitm[item_no].plus    = 0;
                 mitm[item_no].plus2   = 0;
-                mitm[item_no].flags   = 0;   // no id, no race/desc, no curse
+                mitm[item_no].flags   = 0; // no id, no race/desc, no curse
                 mitm[item_no].special = 0; // no ego type
             }
         }
