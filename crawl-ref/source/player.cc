@@ -4254,7 +4254,7 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             }
         }
     }
-    else if (player_genus( GENPC_DWARVEN, speci ))
+    else if (player_genus(GENPC_DWARVEN, speci))
     {
         if (adj)  // doesn't care about species/genus
             res = "Dwarven";

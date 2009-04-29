@@ -844,7 +844,7 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
-            || you.species == SP_OGRE || you.species == SP_TROLL)
+            || player_genus(GENPC_OGRE) || you.species == SP_TROLL)
         {
             item.sub_type = FOOD_MEAT_RATION;
         }

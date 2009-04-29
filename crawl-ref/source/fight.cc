@@ -206,7 +206,7 @@ int calc_heavy_armour_penalty( bool random_factor )
                 heavy_armour++;
             break;
         case ARM_LARGE_SHIELD:
-            if (you.species == SP_OGRE || you.species == SP_TROLL
+            if (player_genus(GENPC_OGRE) || you.species == SP_TROLL
                 || player_genus(GENPC_DRACONIAN))
             {
                 if (you.skills[SK_SHIELDS] < maybe_random2(13, random_factor))

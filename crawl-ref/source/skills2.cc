@@ -2001,7 +2001,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
             break;
 
         case SK_SPELLCASTING:
-            if (species == SP_OGRE)
+            if (player_genus(GENPC_OGRE))
             {
                 result = "Ogre-Mage";
                 break;
