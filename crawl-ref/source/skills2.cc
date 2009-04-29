@@ -1990,7 +1990,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         case SK_INVOCATIONS:
             if (god == GOD_NO_GOD)
                 result = atheist_inv_titles[skill_rank];
-            else if (god == GOD_TROG || god == GOD_XOM
+            else if (god == GOD_XOM || god == GOD_VEHUMET || god == GOD_TROG
                      || god == GOD_NEMELEX_XOBEH)
             {
                 // don't care about Invocations
