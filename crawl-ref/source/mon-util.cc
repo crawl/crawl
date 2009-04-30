@@ -3120,39 +3120,36 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
 static bool _ms_los_spell( spell_type monspell )
 {
-    switch (monspell)
-    {
-    case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_GREATER_DEMON:
-    case SPELL_SUMMON_UNDEAD:
-    case SPELL_SUMMON_UFETUBUS:
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_SUMMON_DRAKES:
-    case SPELL_SUMMON_MUSHROOMS:
-    case SPELL_SUMMON_ICE_BEAST:
+    if (monspell == SPELL_SMITING || spell_typematch(monspell, SPTYP_SUMMONING))
         return (true);
 
-    default:
-        return (false);
-    }
+    return (false);
 }
 
 
-static bool _ms_ranged_spell( spell_type monspell, bool attack_only )
+static bool _ms_ranged_spell( spell_type monspell, bool attack_only = false,
+                              bool ench_too = true)
 {
-    // These spells are ranged, but aren't direct attack spells.
-    if (!attack_only && _ms_los_spell(monspell))
+    // Check for Smiting specially, so it's not filtered along
+    // with the summon spells.
+    if (attack_only && monspell == SPELL_SMITING)
         return (true);
+
+    // These spells are ranged, but aren't direct attack spells.
+    if (_ms_los_spell(monspell))
+        return (!attack_only);
 
     switch (monspell)
     {
     case SPELL_NO_SPELL:
+    case SPELL_CANTRIP:
     case SPELL_HASTE:
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
     case SPELL_TELEPORT_SELF:
     case SPELL_INVISIBILITY:
     case SPELL_BLINK:
+    case SPELL_BERSERKER_RAGE:
         return (false);
 
     // The animation spells don't work through transparent walls and thus
@@ -3161,7 +3158,14 @@ static bool _ms_ranged_spell( spell_type monspell, bool attack_only )
     case SPELL_ANIMATE_SKELETON:
         return (!attack_only);
 
+    case SPELL_CONFUSE:
+    case SPELL_SLOW:
+    case SPELL_PARALYSE:
+    case SPELL_TELEPORT_OTHER:
+        return (ench_too);
+
     default:
+        // All conjurations count as ranged spells.
         return (true);
     }
 }
@@ -3218,7 +3222,8 @@ bool mons_has_los_attack(const monsters *mon)
     return (false);
 }
 
-bool mons_has_ranged_spell( const monsters *mon, bool attack_only )
+bool mons_has_ranged_spell( const monsters *mon, bool attack_only,
+                            bool ench_too )
 {
     const int mclass = mon->type;
 
@@ -3229,7 +3234,7 @@ bool mons_has_ranged_spell( const monsters *mon, bool attack_only )
     if (mons_class_flag( mclass, M_SPELLCASTER ))
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-            if (_ms_ranged_spell( mon->spells[i], attack_only ))
+            if (_ms_ranged_spell( mon->spells[i], attack_only, ench_too ))
                 return (true);
     }
 
@@ -4022,8 +4027,8 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 bool monsters::can_throw_large_rocks() const
 {
     return (type == MONS_STONE_GIANT
-        || ::mons_species(this->type) == MONS_CYCLOPS
-        || ::mons_species(this->type) == MONS_OGRE);
+            || ::mons_species(this->type) == MONS_CYCLOPS
+            || ::mons_species(this->type) == MONS_OGRE);
 }
 
 bool monsters::has_spell_of_type(unsigned disciplines) const
@@ -4045,9 +4050,12 @@ bool monsters::can_use_missile(const item_def &item) const
     // launcher. The opposite is okay, and sufficient wandering will
     // hopefully take the monster to a stack of appropriate missiles.
 
-    // Prevent monsters that have conjurations / summonings from
-    // grabbing missiles.
-    if (has_spell_of_type(SPTYP_CONJURATION | SPTYP_SUMMONING))
+    // Prevent monsters that have conjurations from grabbing missiles.
+    if (has_spell_of_type(SPTYP_CONJURATION))
+        return (false);
+
+    // Same for summonings, but make an exception for friendlies.
+    if (!mons_friendly(this) && has_spell_of_type(SPTYP_SUMMONING))
         return (false);
 
     // Blademasters don't want to throw stuff.
@@ -4516,8 +4524,35 @@ bool monsters::drop_item(int eslot, int near)
     return (true);
 }
 
+// We don't want monsters to pick up ammunition that cancels out with
+// the launcher brand or that is identical to the launcher brand,
+// the latter in hope of another monster wandering by who may want to
+// use the ammo in question.
+static bool _compatible_launcher_ammo_brands(item_def *launcher,
+                                             const item_def *ammo)
+{
+    const int bow_brand  = get_weapon_brand(*launcher);
+    const int ammo_brand = get_ammo_brand(*ammo);
+
+    switch (ammo_brand)
+    {
+    case SPMSL_FLAME:
+    case SPMSL_FROST:
+        return (bow_brand != SPWPN_FLAME && bow_brand != SPWPN_FROST);
+    case SPMSL_CHAOS:
+        return (bow_brand != SPWPN_CHAOS);
+    default:
+        return (true);
+    }
+}
+
 bool monsters::pickup_launcher(item_def &launch, int near)
 {
+    // Don't allow monsters to switch to another type of launcher
+    // as that would require them to also drop their ammunition
+    // and then try to find ammunition for their new launcher.
+    // However, they may switch to another launcher if they're
+    // out of ammo. (jpeg)
     const int mdam_rating = mons_weapon_damage_rating(launch);
     const missile_type mt = fires_ammo_type(launch);
     int eslot = -1;
@@ -4528,15 +4563,20 @@ bool monsters::pickup_launcher(item_def &launch, int near)
             if (!is_range_weapon(*elaunch))
                 continue;
 
-            return (fires_ammo_type(*elaunch) == mt
-                    && mons_weapon_damage_rating(*elaunch) < mdam_rating
+            return ((fires_ammo_type(*elaunch) == mt || !missiles())
+                    && (mons_weapon_damage_rating(*elaunch) < mdam_rating
+                        || mons_weapon_damage_rating(*elaunch) == mdam_rating
+                           && get_weapon_brand(*elaunch) == SPWPN_NORMAL
+                           && get_weapon_brand(launch) != SPWPN_NORMAL
+                           && _compatible_launcher_ammo_brands(&launch,
+                                                               missiles()))
                     && drop_item(i, near) && pickup(launch, i, near));
         }
         else
             eslot = i;
     }
 
-    return (eslot == -1? false : pickup(launch, eslot, near));
+    return (eslot == -1 ? false : pickup(launch, eslot, near));
 }
 
 static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
@@ -4566,6 +4606,25 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
     return (false);
 }
 
+static int _ego_damage_bonus(item_def &item)
+{
+    switch (get_weapon_brand(item))
+    {
+    case SPWPN_NORMAL:      return 0;
+    case SPWPN_PROTECTION:  return 1;
+    default:                return 2;
+    case SPWPN_VORPAL:      return 3;
+    }
+}
+
+static bool _item_race_matches_monster(const item_def &item, monsters *mons)
+{
+    return (get_equip_race(item) == ISFLAG_ELVEN
+                && mons_genus(mons->type) == MONS_ELF
+            || get_equip_race(item) == ISFLAG_ORCISH
+                && mons_genus(mons->type) == MONS_ORC);
+}
+
 bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
     const bool dual_wielding = mons_wields_two_weapons(this);
@@ -4579,7 +4638,8 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
             return pickup(item, MSLOT_ALT_WEAPON, near);
     }
 
-    const int mdam_rating = mons_weapon_damage_rating(item);
+    const int new_wpn_dam = mons_weapon_damage_rating(item)
+                            + _ego_damage_bonus(item);
     int eslot = -1;
     item_def *weap;
 
@@ -4610,13 +4670,37 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
             // If we get here, the weapon is a melee weapon.
             // If the new weapon is better than the current one and not cursed,
             // replace it. Otherwise, give up.
-            if (mons_weapon_damage_rating(*weap) < mdam_rating
-                && !weap->cursed())
+            const int old_wpn_dam = mons_weapon_damage_rating(*weap)
+                                    + _ego_damage_bonus(*weap);
+
+            bool new_wpn_better = (new_wpn_dam > old_wpn_dam);
+            if (new_wpn_dam == old_wpn_dam)
+            {
+                // Use shopping value as a crude estimate of resistances etc.
+                // XXX: This is not really logical as many properties don't
+                //      apply to monsters (e.g. levitation, blink, berserk).
+                // For simplicity, don't apply this check to secondary weapons
+                // for dual wielding monsters.
+                int oldval = item_value(*weap, true);
+                int newval = item_value(item, true);
+
+                // Vastly prefer matching racial type.
+                if (_item_race_matches_monster(*weap, this))
+                    oldval *= 2;
+                if (_item_race_matches_monster(item, this))
+                    newval *= 2;
+
+                if (newval > oldval)
+                    new_wpn_better = true;
+            }
+
+            if (new_wpn_better && !weap->cursed())
             {
                 if (!dual_wielding
                     || i == MSLOT_WEAPON
-                    || mons_weapon_damage_rating(*weap)
-                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON)))
+                    || old_wpn_dam
+                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON))
+                         + _ego_damage_bonus(*mslot_item(MSLOT_WEAPON)))
                 {
                     eslot = i;
                     if (!dual_wielding)
@@ -4710,14 +4794,6 @@ bool monsters::wants_weapon(const item_def &weap) const
     }
 
     return (true);
-}
-
-static bool _item_race_matches_monster(const item_def &item, monsters *mons)
-{
-    return (get_equip_race(item) == ISFLAG_ELVEN
-                && mons_genus(mons->type) == MONS_ELF
-            || get_equip_race(item) == ISFLAG_ORCISH
-                && mons_genus(mons->type) == MONS_ORC);
 }
 
 bool monsters::wants_armour(const item_def &item) const
@@ -4832,8 +4908,8 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
                 // Use shopping value as a crude estimate of resistances etc.
                 // XXX: This is not really logical as many properties don't
                 //      apply to monsters (e.g. levitation, blink, berserk).
-                int oldval = item_value(*existing_armour);
-                int newval = item_value(item);
+                int oldval = item_value(*existing_armour, true);
+                int newval = item_value(item, true);
 
                 // Vastly prefer matching racial type.
                 if (_item_race_matches_monster(*existing_armour, this))
@@ -4892,7 +4968,9 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
         else // None of these exceptions hold for throwing nets.
         {
             // Spellcasters should not waste time with ammunition.
-            if (mons_has_ranged_spell(this, true))
+            // Neither summons nor hostile enchantments are counted for
+            // this purpose.
+            if (mons_has_ranged_spell(this, true, false))
                 return (false);
 
             // Monsters in a fight will only pick up missiles if doing so
@@ -4920,7 +4998,6 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
             launch = mslot_item(static_cast<mon_inv_type>(i));
             if (launch)
             {
-                const int bow_brand = get_weapon_brand(*launch);
                 const int item_brand = get_ammo_brand(item);
                 // If this ammunition is better, drop the old ones.
                 // Don't upgrade to ammunition whose brand cancels the
@@ -4932,9 +5009,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
                         || item.plus >= miss->plus
                            && get_ammo_brand(*miss) == SPMSL_NORMAL
                            && item_brand != SPMSL_NORMAL
-                           && (bow_brand != SPWPN_FLAME
-                               || item_brand == SPMSL_POISONED)
-                           && bow_brand != SPWPN_FROST))
+                           &&_compatible_launcher_ammo_brands(launch, miss)))
                 {
                     if (!drop_item(MSLOT_MISSILE, near))
                         return (false);
