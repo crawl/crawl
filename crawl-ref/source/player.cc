@@ -2997,7 +2997,7 @@ void level_change(bool skip_attribute_increase)
         if (new_exp <= you.max_level)
         {
             mprf(MSGCH_INTRINSIC_GAIN,
-                 "Welcome back to level %d!", new_exp );
+                 "Welcome back to level %d!", new_exp);
             if (!skip_more)
                 more();
 
@@ -3035,8 +3035,8 @@ void level_change(bool skip_attribute_increase)
                 brek = 4 + random2(4);      // up from 3 + rand(4) -- bwr
 
             you.experience_level = new_exp;
-            inc_hp( brek, true );
-            inc_mp( 1, true );
+            inc_hp(brek, true);
+            inc_mp(1, true);
 
             switch (you.species)
             {
@@ -3054,9 +3054,9 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 3))
                 {
-                    modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                             : STAT_DEXTERITY), 1, false,
-                                 "level gain");
+                    modify_stat((coinflip() ? STAT_INTELLIGENCE
+                                            : STAT_DEXTERITY), 1, false,
+                                "level gain");
                 }
                 break;
 
@@ -3080,9 +3080,9 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                             : STAT_DEXTERITY), 1, false,
-                                 "level gain");
+                    modify_stat((coinflip() ? STAT_INTELLIGENCE
+                                            : STAT_DEXTERITY), 1, false,
+                                "level gain");
                 }
                 break;
 
@@ -3393,9 +3393,9 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 5))
                 {
-                    modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                             : STAT_DEXTERITY), 1, false,
-                                 "level gain");
+                    modify_stat((coinflip() ? STAT_INTELLIGENCE
+                                            : STAT_DEXTERITY), 1, false,
+                                "level gain");
                 }
                 break;
 
@@ -3412,9 +3412,9 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat( (coinflip() ? STAT_DEXTERITY
-                                             : STAT_STRENGTH), 1, false,
-                                 "level gain");
+                    modify_stat((coinflip() ? STAT_DEXTERITY
+                                            : STAT_STRENGTH), 1, false,
+                                "level gain");
                 }
                 break;
 
