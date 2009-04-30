@@ -3132,9 +3132,9 @@ void level_change(bool skip_attribute_increase)
             case SP_KOBOLD:
                 if (!(you.experience_level % 5))
                 {
-                    modify_stat( (coinflip() ? STAT_STRENGTH
-                                             : STAT_DEXTERITY), 1, false,
-                                 "level gain");
+                    modify_stat((coinflip() ? STAT_STRENGTH
+                                            : STAT_DEXTERITY), 1, false,
+                                "level gain");
                 }
 
                 if (you.experience_level < 17)
@@ -3351,9 +3351,9 @@ void level_change(bool skip_attribute_increase)
             case SP_CENTAUR:
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat( (coinflip() ? STAT_DEXTERITY
-                                             : STAT_STRENGTH), 1, false,
-                                 "level gain");
+                    modify_stat((coinflip() ? STAT_DEXTERITY
+                                            : STAT_STRENGTH), 1, false,
+                                "level gain");
                 }
 
                 // lowered because of HD raise -- bwr
