@@ -4701,7 +4701,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                                   ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
     std::string verb;
 
-    switch(cause.base_type)
+    switch (cause.base_type)
     {
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
@@ -6145,7 +6145,7 @@ int player::body_weight() const
         end(0);
     }
 
-    switch(attribute[ATTR_TRANSFORMATION])
+    switch (attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_STATUE:
         weight *= 2;

@@ -2484,7 +2484,7 @@ bool mons_is_summoned(const monsters *m, int *duration, int *summon_type)
     if (summon_type != NULL)
         *summon_type = summ.degree;
 
-    switch(summ.degree)
+    switch (summ.degree)
     {
     // Temporarily dancing weapons are really there.
     case SPELL_TUKIMAS_DANCE:
@@ -3714,7 +3714,7 @@ int monsters::body_weight() const
     if (weight == 0 && !mons_is_insubstantial(type))
     {
         const monsterentry *entry = get_monster_data(mclass);
-        switch(entry->size)
+        switch (entry->size)
         {
         case SIZE_TINY:
             weight = 150;
@@ -3746,7 +3746,7 @@ int monsters::body_weight() const
             end(0);
         }
 
-        switch(mclass)
+        switch (mclass)
         {
         case MONS_IRON_DEVIL:
             weight += 550;
@@ -3787,7 +3787,7 @@ int monsters::body_weight() const
             break;
         }
 
-        switch(monster_symbols[mclass].glyph)
+        switch (monster_symbols[mclass].glyph)
         {
         case 'L':
             weight /= 2;
@@ -4845,7 +4845,7 @@ mon_inv_type equip_slot_to_mslot(equipment_type eq)
 
 mon_inv_type item_to_mslot(const item_def &item)
 {
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
         return MSLOT_WEAPON;
@@ -5470,7 +5470,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
-    switch(get_mon_shape(this))
+    switch (get_mon_shape(this))
     {
     case MON_SHAPE_CENTAUR:
     case MON_SHAPE_NAGA:
@@ -5533,7 +5533,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_ORB:
-        switch(type)
+        switch (type)
         {
             case MONS_GIANT_SPORE:
                 str = "rhizome";
@@ -5589,7 +5589,7 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
-    switch(get_mon_shape(this))
+    switch (get_mon_shape(this))
     {
     case MON_SHAPE_INSECT:
     case MON_SHAPE_INSECT_WINGED:
@@ -5703,7 +5703,7 @@ std::string monsters::arm_name(bool plural, bool *can_plural) const
         *can_plural = true;
 
     std::string str;
-    switch(mons_genus(type))
+    switch (mons_genus(type))
     {
     case MONS_NAGA:
     case MONS_DRACONIAN: str = "scaled arm"; break;
@@ -7881,7 +7881,7 @@ bool monsters::do_shaft()
     // the monster isn't standing over a shaft.
     if (get_trap_type(this->pos()) != TRAP_SHAFT)
     {
-        switch(grd(pos()))
+        switch (grd(pos()))
         {
         case DNGN_FLOOR:
         case DNGN_OPEN_DOOR:
@@ -8800,7 +8800,7 @@ mon_body_shape get_mon_shape(const int type)
     if (type == MONS_CHAOS_SPAWN)
         return static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1));
 
-    switch(mons_char(type))
+    switch (mons_char(type))
     {
     case 'a': // ants and cockroaches
         return(MON_SHAPE_INSECT);

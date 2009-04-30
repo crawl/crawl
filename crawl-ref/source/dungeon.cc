@@ -4527,7 +4527,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             item_level = spec.level;
         else
         {
-            switch(spec.level)
+            switch (spec.level)
             {
             case ISPEC_GOOD:
                 item_level = 5 + item_level * 2;

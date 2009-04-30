@@ -704,7 +704,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
                                   ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
     std::string verb;
 
-    switch(cause.base_type)
+    switch (cause.base_type)
     {
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:

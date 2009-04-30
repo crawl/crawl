@@ -455,7 +455,7 @@ static void unixcurses_defkeys( void )
 
 int unixcurses_get_vi_key(int keyin)
 {
-    switch(keyin)
+    switch (keyin)
     {
     // 1001..1009: passed without change
     case 1031: return 1007;

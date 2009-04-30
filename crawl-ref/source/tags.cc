@@ -653,7 +653,7 @@ void tag_write(tag_type tagID, FILE* outf)
 {
     std::vector<unsigned char> buf;
     writer th(&buf);
-    switch(tagID)
+    switch (tagID)
     {
     case TAG_YOU:            tag_construct_you(th);            break;
     case TAG_YOU_ITEMS:      tag_construct_you_items(th);      break;
@@ -754,9 +754,9 @@ tag_type tag_read(FILE *fp, char minorVersion)
 // (currently none).
 void tag_missing(int tag, char minorVersion)
 {
-    UNUSED( minorVersion );
+    UNUSED(minorVersion);
 
-    switch(tag)
+    switch (tag)
     {
         case TAG_LEVEL_ATTITUDE:
             tag_missing_level_attitude();
@@ -821,7 +821,7 @@ void tag_set_expected(char tags[], int fileType)
 // --------------------------- player tags (foo.sav) -------------------- //
 static void tag_construct_you(writer &th)
 {
-    int i,j;
+    int i, j;
 
     marshallString(th, you.your_name, 30);
 
@@ -2254,7 +2254,7 @@ void tag_missing_level_attitude()
 
         menv[i].foe = MHITNOT;
 
-        switch(menv[i].behaviour)
+        switch (menv[i].behaviour)
         {
             case 0:         // old BEH_SLEEP
                 new_beh = BEH_SLEEP;    // don't wake sleepers

@@ -132,7 +132,7 @@ void print_description(const describe_info &inf)
 
 const char* jewellery_base_ability_string(int subtype)
 {
-    switch(subtype)
+    switch (subtype)
     {
     case RING_REGENERATION:      return "Regen";
     case RING_SUSTAIN_ABILITIES: return "SustAb";

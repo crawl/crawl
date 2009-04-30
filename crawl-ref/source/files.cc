@@ -1921,7 +1921,7 @@ static bool _determine_ghost_version( FILE *ghostFile,
 static void _restore_ghost_version( FILE *ghostFile,
                                     char majorVersion, char minorVersion )
 {
-    switch(majorVersion)
+    switch (majorVersion)
     {
     case TAG_MAJOR_VERSION:
         _restore_tagged_file(ghostFile, TAGTYPE_GHOST, minorVersion);

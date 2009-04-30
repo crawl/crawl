@@ -649,7 +649,7 @@ void cgotoxy(int x, int y, int region)
 {
     ASSERT(x >= 1);
     ASSERT(y >= 1);
-    switch(region)
+    switch (region)
     {
     case GOTO_MLIST:
         ASSERT(x <= crawl_view.mlistsz.x);

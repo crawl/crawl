@@ -319,7 +319,7 @@ static formatted_string _tut_starting_info(unsigned int width)
 #ifdef TUTORIAL_DEBUG
 static std::string _tut_debug_list(int event)
 {
-    switch(event)
+    switch (event)
     {
     case TUT_SEEN_FIRST_OBJECT:
         return "seen first object";
@@ -983,7 +983,7 @@ void tutorial_healing_reminder()
 // first time.
 void taken_new_item(unsigned char item_type)
 {
-    switch(item_type)
+    switch (item_type)
     {
       case OBJ_WANDS:
           learned_something_new(TUT_SEEN_WAND);
@@ -1149,7 +1149,7 @@ static bool _advise_use_wand()
         }
 
         // Can it be used to fight?
-        switch(obj.sub_type)
+        switch (obj.sub_type)
         {
         case WAND_FLAME:
         case WAND_FROST:
@@ -2439,7 +2439,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_NEW_ABILITY:
-        switch(you.religion)
+        switch (you.religion)
         {
         // Gods where first granted ability is active.
         case GOD_KIKUBAAQUDGHA: case GOD_YREDELEMNUL: case GOD_NEMELEX_XOBEH:
@@ -3736,7 +3736,7 @@ static void _tutorial_describe_cloud(int x, int y)
         ostr << "is ";
 
     bool need_cloud = false;
-    switch(ctype)
+    switch (ctype)
     {
     case CLOUD_BLACK_SMOKE:
     case CLOUD_GREY_SMOKE:

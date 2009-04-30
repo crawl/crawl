@@ -54,7 +54,7 @@ struct global_level_info
 
 static int _mons_misc_level(int mcls)
 {
-    switch(mons_char(mcls))
+    switch (mons_char(mcls))
     {
     case '&':
         return 35;
@@ -78,7 +78,7 @@ static int _mons_misc_level(int mcls)
     if (mons_is_unique(mcls))
         return (mons_type_hit_dice(mcls) * 14 / 10 + 1);
 
-    switch(mcls)
+    switch (mcls)
     {
     case MONS_HUMAN:
     case MONS_ELF:

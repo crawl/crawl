@@ -862,7 +862,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
 {
     int pow;
 
-    switch(killer)
+    switch (killer)
     {
         // Mummy killed by trap or something other than the player or
         // another monster, so no curse.
@@ -876,7 +876,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
             break;
     }
 
-    switch(monster->type)
+    switch (monster->type)
     {
         case MONS_MUMMY:          pow = 1; break;
         case MONS_GUARDIAN_MUMMY: pow = 3; break;

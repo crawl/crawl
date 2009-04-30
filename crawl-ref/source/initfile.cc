@@ -3491,7 +3491,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
         }
 
         //.take action according to the cmd chosen
-        switch(o)
+        switch (o)
         {
         case CLO_SCORES:
         case CLO_TSCORES:

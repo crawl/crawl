@@ -1540,7 +1540,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 static void _scale_draconian_breath(bolt& beam, int drac_type)
 {
     int scaling = 100;
-    switch(drac_type)
+    switch (drac_type)
     {
     case MONS_RED_DRACONIAN:
         beam.name       = "searing blast";

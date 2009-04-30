@@ -2751,7 +2751,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
 
     if (you.level_type == LEVEL_DUNGEON)
     {
-        switch(you.where_are_you)
+        switch (you.where_are_you)
         {
             case BRANCH_SLIME_PITS:
                 if (grid == DNGN_ROCK_WALL)

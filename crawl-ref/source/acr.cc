@@ -726,7 +726,7 @@ static void _recharge_rods()
 
 static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 {
-    switch(cmd)
+    switch (cmd)
     {
     // Informational commands
     case CMD_LOOK_AROUND:
@@ -1073,7 +1073,7 @@ static void _input()
         delta.turns_total++;
         delta.elapsed_total += you.time_taken;
 
-        switch(you.running)
+        switch (you.running)
         {
         case RMODE_INTERLEVEL:
             delta.turns_interlevel++;

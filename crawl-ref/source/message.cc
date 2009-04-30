@@ -434,7 +434,7 @@ void mpr(const char *inf, msg_channel_type channel, int param)
 
     if (crawl_state.arena)
     {
-        switch(channel)
+        switch (channel)
         {
         case MSGCH_PROMPT:
         case MSGCH_GOD:

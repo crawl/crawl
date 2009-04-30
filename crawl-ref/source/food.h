@@ -77,7 +77,7 @@ void set_hunger(int new_hunger_level, bool suppress_msg);
 /* ***********************************************************************
  * called from: delay.cc
  * *********************************************************************** */
-void weapon_switch( int targ );
+void weapon_switch(int targ);
 
 bool is_poisonous(const item_def &food);
 bool is_mutagenic(const item_def &food);

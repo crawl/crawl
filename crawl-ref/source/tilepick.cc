@@ -1081,7 +1081,7 @@ static int _tileidx_monster(int mon_idx, bool detected)
 
 static int _tileidx_fixed_artefact(int special)
 {
-    switch(special)
+    switch (special)
     {
     case SPWPN_SINGING_SWORD:       return TILE_SPWPN_SINGING_SWORD;
     case SPWPN_WRATH_OF_TROG:       return TILE_SPWPN_WRATH_OF_TROG;
@@ -1392,7 +1392,7 @@ static int _tileidx_weapon(const item_def &item)
 static int _tileidx_missile(const item_def &item)
 {
     int brand = item.special;
-    switch(item.sub_type)
+    switch (item.sub_type)
     {
     case MI_STONE:        return TILE_MI_STONE;
     case MI_ARROW:        return TILE_MI_ARROW;
@@ -1420,7 +1420,7 @@ static int _tileidx_armour_base(const item_def &item)
 {
     int race  = item.flags & ISFLAG_RACIAL_MASK;
     int type  = item.sub_type;
-    switch(type)
+    switch (type)
     {
     case ARM_ROBE:
         return TILE_ARM_ROBE;
@@ -1947,7 +1947,7 @@ static int _tileidx_rune(const item_def &item)
 
 static int _tileidx_misc(const item_def &item)
 {
-    switch(item.sub_type)
+    switch (item.sub_type)
     {
     case MISC_BOTTLED_EFREET:
         return TILE_MISC_BOTTLED_EFREET;
@@ -2759,7 +2759,7 @@ static int _draconian_colour(int race, int level)
 {
     if (level < 0) // hack:monster
     {
-        switch(race)
+        switch (race)
         {
         case MONS_DRACONIAN:        return 0;
         case MONS_BLACK_DRACONIAN:  return 1;
@@ -2774,7 +2774,7 @@ static int _draconian_colour(int race, int level)
     }
     if (level < 7)
         return 0;
-    switch(race)
+    switch (race)
     {
     case SP_BLACK_DRACONIAN:   return 1;
     case SP_YELLOW_DRACONIAN:  return 2;
@@ -2800,7 +2800,7 @@ void tilep_race_default(int race, int gender, int level, int *parts)
     else
         hair = TILEP_HAIR_LONG_BLACK;
 
-    switch(race)
+    switch (race)
     {
         case SP_HUMAN:
             result = TILEP_BASE_HUMAN;
@@ -2947,7 +2947,7 @@ void tilep_job_default(int job, int gender, int *parts)
     parts[TILEP_PART_HAND2] = 0;
     parts[TILEP_PART_HELM]  = 0;
 
-    switch(job)
+    switch (job)
     {
         case JOB_FIGHTER:
             parts[TILEP_PART_BODY]  = TILEP_SHOW_EQUIP;
@@ -3326,7 +3326,7 @@ int tilep_equ_weapon(const item_def &item)
 
     if (item.base_type == OBJ_MISCELLANY)
     {
-        switch(item.sub_type)
+        switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
         case MISC_AIR_ELEMENTAL_FAN:          return TILEP_HAND1_FAN;
@@ -3361,7 +3361,7 @@ int tilep_equ_weapon(const item_def &item)
 
     if (is_fixed_artefact( item ))
     {
-        switch(item.special)
+        switch (item.special)
         {
             case SPWPN_SINGING_SWORD:       return TILEP_HAND1_SINGING_SWORD;
             case SPWPN_WRATH_OF_TROG:       return TILEP_HAND1_AXE_TROG;
@@ -3550,7 +3550,7 @@ int tilep_equ_armour(const item_def &item)
     {
 
     case ARM_ROBE:
-        switch(item.colour)
+        switch (item.colour)
         {
             // We've got a zillion robes; let's use 'em!
             case BLACK:       return TILEP_BODY_ROBE_BLACK_RED;

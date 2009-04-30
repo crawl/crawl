@@ -5337,7 +5337,7 @@ static inline int calc_stat_to_dam_base( void )
 
 static void stab_message(actor *defender, int stab_bonus)
 {
-    switch(stab_bonus)
+    switch (stab_bonus)
     {
     case 3:     // big melee, monster surrounded/not paying attention
         if (coinflip())

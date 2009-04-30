@@ -2762,7 +2762,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
 
     int *order;
 
-    switch(spec.base_type)
+    switch (spec.base_type)
     {
     case OBJ_ARMOUR:
         order = armour_order;

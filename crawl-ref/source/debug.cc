@@ -303,7 +303,7 @@ void wizard_change_species( void )
             you.demon_pow[i] -= prev_muts[i];
     }
 
-    switch(sp)
+    switch (sp)
     {
     case SP_GREEN_DRACONIAN:
         if (you.experience_level >= 7)
@@ -654,7 +654,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         }
     }
 
-    switch(you.level_type)
+    switch (you.level_type)
     {
     case LEVEL_LABYRINTH:
         if (down)
@@ -1627,7 +1627,7 @@ bool get_item_by_name(item_def *item, char* specs,
         if (jewellery_is_amulet(*item))
             break;
 
-        switch(item->sub_type)
+        switch (item->sub_type)
         {
         case RING_SLAYING:
             item->plus2 = 5;
@@ -1771,7 +1771,7 @@ static void _tweak_randart(item_def &item)
         return;
 
     int val;
-    switch(_prop_type[choice])
+    switch (_prop_type[choice])
     {
     case RAP_VAL_BOOL:
         mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[choice],
@@ -3518,7 +3518,7 @@ static void _debug_rap_stats(FILE *ostat)
             {
                 num_props++;
                 all_props[j]++;
-                switch(good_or_bad[j])
+                switch (good_or_bad[j])
                 {
                 case -1:
                     num_bad_props++;
@@ -5419,9 +5419,9 @@ void wizard_give_monster_item(monsters *mon)
     // Shouldn't we be using MONUSE_MAGIC_ITEMS?
     if (item_use == MONUSE_STARTING_EQUIPMENT
         && item.base_type != OBJ_CORPSES
-        && !mons_is_unique( mon->type ))
+        && !mons_is_unique(mon->type))
     {
-        switch(mon_slot)
+        switch (mon_slot)
         {
         case MSLOT_WEAPON:
         case MSLOT_ALT_WEAPON:

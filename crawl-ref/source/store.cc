@@ -290,7 +290,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
     type  = other.type;
     flags = other.flags;
 
-    switch(type)
+    switch (type)
     {
     case SV_NONE:
         break;
@@ -592,7 +592,7 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
         else \
         { \
             ASSERT(!(flags & SFLAG_CONST_TYPE)); \
-            switch(type) \
+            switch (type) \
             { \
             case SV_BOOL: \
                 field = (_type) val.boolean; \
@@ -850,7 +850,7 @@ CrawlStoreValue::operator bool() const
 }
 
 #define CONST_INT_CAST() \
-    switch(type) \
+    switch (type) \
     { \
     case SV_BYTE: \
         return get_byte(); \
@@ -964,7 +964,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const item_def &_val)
 ///////////////////////////////////////////////////
 // Non-assignment operators which affect the lvalue
 #define INT_OPERATOR_UNARY(op) \
-    switch(type) \
+    switch (type) \
     { \
     case SV_BYTE: \
     { \
@@ -1162,7 +1162,7 @@ void CrawlHashTable::assert_validity() const
         ASSERT(val.type != SV_NONE);
         ASSERT(!(val.flags & SFLAG_UNSET));
 
-        switch(val.type)
+        switch (val.type)
         {
         case SV_STR:
         case SV_COORD:
@@ -1439,7 +1439,7 @@ void CrawlVector::assert_validity() const
         if (val.type == SV_NONE || (val.flags & SFLAG_UNSET))
             continue;
 
-        switch(val.type)
+        switch (val.type)
         {
         case SV_STR:
         case SV_COORD:

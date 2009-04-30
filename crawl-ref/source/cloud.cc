@@ -45,7 +45,7 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
 
 static bool _killer_whose_match(kill_category whose, killer_type killer)
 {
-    switch(whose)
+    switch (whose)
     {
         case KC_YOU:
             return (killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF);
@@ -676,7 +676,7 @@ std::string cloud_name(cloud_type type)
 
 kill_category cloud_struct::killer_to_whose(killer_type killer)
 {
-    switch(killer)
+    switch (killer)
     {
         case KILL_YOU:
         case KILL_YOU_MISSILE:
@@ -696,7 +696,7 @@ kill_category cloud_struct::killer_to_whose(killer_type killer)
 
 killer_type cloud_struct::whose_to_killer(kill_category whose)
 {
-    switch(whose)
+    switch (whose)
     {
         case KC_YOU:         return(KILL_YOU_MISSILE);
         case KC_FRIENDLY:    return(KILL_MON_MISSILE);
@@ -717,7 +717,7 @@ void cloud_struct::set_killer(killer_type _killer)
     killer = _killer;
     whose  = killer_to_whose(killer);
 
-    switch(killer)
+    switch (killer)
     {
         case KILL_YOU:
             killer = KILL_YOU_MISSILE;
@@ -801,7 +801,7 @@ int num_fogs_for_place(int level_number, const level_id &place)
     if (level_number == -1)
         level_number = place.absdepth();
 
-    switch(place.level_type)
+    switch (place.level_type)
     {
     case LEVEL_DUNGEON:
     {
@@ -836,7 +836,7 @@ fog_machine_data random_fog_for_place(int level_number, const level_id &place)
     if (level_number == -1)
         level_number = place.absdepth();
 
-    switch(place.level_type)
+    switch (place.level_type)
     {
     case LEVEL_DUNGEON:
     {

@@ -1069,7 +1069,7 @@ static bool _species_is_undead( const species_type speci )
 
 undead_state_type get_undead_state(const species_type sp)
 {
-    switch(sp)
+    switch (sp)
     {
     case SP_MUMMY:
         return US_UNDEAD;

@@ -1772,7 +1772,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
     char  amnt     = 1;
     char  mod      = 0;
 
-    switch(mutat)
+    switch (mutat)
     {
     case MUT_GREY2_SCALES:
         if (cur_level == 0 || cur_level == 2)
