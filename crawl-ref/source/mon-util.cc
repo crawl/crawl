@@ -4044,22 +4044,30 @@ bool monsters::has_spell_of_type(unsigned disciplines) const
     return (false);
 }
 
+static bool _needs_ranged_attack(const monsters *mon)
+{
+    // Prevent monsters that have conjurations from grabbing missiles.
+    if (mon->has_spell_of_type(SPTYP_CONJURATION))
+        return (false);
+
+    // Same for summonings, but make an exception for friendlies.
+    if (!mons_friendly(mon) && mon->has_spell_of_type(SPTYP_SUMMONING))
+        return (false);
+
+    // Blademasters don't want to throw stuff.
+    if (mon->type == MONS_DEEP_ELF_BLADEMASTER)
+        return (false);
+
+    return (true);
+}
+
 bool monsters::can_use_missile(const item_def &item) const
 {
     // Don't allow monsters to pick up missiles without the corresponding
     // launcher. The opposite is okay, and sufficient wandering will
     // hopefully take the monster to a stack of appropriate missiles.
 
-    // Prevent monsters that have conjurations from grabbing missiles.
-    if (has_spell_of_type(SPTYP_CONJURATION))
-        return (false);
-
-    // Same for summonings, but make an exception for friendlies.
-    if (!mons_friendly(this) && has_spell_of_type(SPTYP_SUMMONING))
-        return (false);
-
-    // Blademasters don't want to throw stuff.
-    if (type == MONS_DEEP_ELF_BLADEMASTER)
+    if (!_needs_ranged_attack(this))
         return (false);
 
     if (item.base_type == OBJ_WEAPONS
@@ -4067,6 +4075,10 @@ bool monsters::can_use_missile(const item_def &item) const
     {
         return (is_throwable(this, item));
     }
+
+    // Darts and stones are allowed even without launcher.
+    if (item.sub_type == MI_DART || item.sub_type == MI_STONE)
+        return (true);
 
     item_def *launch;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
@@ -4548,6 +4560,11 @@ static bool _compatible_launcher_ammo_brands(item_def *launcher,
 
 bool monsters::pickup_launcher(item_def &launch, int near)
 {
+    // Don't allow monsters to pick up launchers that would also
+    // refuse to pick up the matching ammo.
+    if (!_needs_ranged_attack(this))
+        return (false);
+
     // Don't allow monsters to switch to another type of launcher
     // as that would require them to also drop their ammunition
     // and then try to find ammunition for their new launcher.
@@ -4735,10 +4752,12 @@ static int _q_adj_damage(int damage, int qty)
 bool monsters::pickup_throwable_weapon(item_def &item, int near)
 {
     const mon_inv_type slot = item_to_mslot(item);
-    // If it's a meele weapon then pickup_melee_weapon() already rejected
+
+    // If it's a melee weapon then pickup_melee_weapon() already rejected
     // it, even though it can also be thrown.
     if (slot == MSLOT_WEAPON)
         return (false);
+
     ASSERT(slot == MSLOT_MISSILE);
 
     // If occupied, don't pick up a throwable weapons if it would just

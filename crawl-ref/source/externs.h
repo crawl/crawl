@@ -1550,6 +1550,7 @@ public:
     int action_energy(energy_use_type et) const;
 
     bool do_shaft();
+    bool has_spell_of_type(unsigned) const;
 
 private:
     void init_with(const monsters &mons);
@@ -1572,7 +1573,6 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-    bool has_spell_of_type(unsigned) const;
 };
 
 struct cloud_struct
