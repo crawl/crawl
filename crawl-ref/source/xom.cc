@@ -2311,8 +2311,8 @@ static bool _move_stair(coord_def stair_pos, bool away)
     bool stairs_moved = false;
     if (away)
     {
-        // If the staircase starts out under the player first shove it onto
-        // a neighbouring grid.
+        // If the staircase starts out under the player, first shove it
+        // onto a neighbouring grid.
         if (stair_pos == you.pos())
         {
             coord_def new_pos(stair_pos);
@@ -2453,6 +2453,7 @@ static bool _move_stair(coord_def stair_pos, bool away)
              stair_str.c_str());
         return (stairs_moved);
     }
+
     return (true);
 }
 
@@ -2485,11 +2486,18 @@ static bool _repel_stairs()
 
     // Don't mention staircases if there aren't any nearby.
     std::string stair_msg = _get_xom_speech("repel stairs");
-    if (!real_stairs && stair_msg.find("@staircase@") != std::string::npos)
+    if (stair_msg.find("@staircase@") != std::string::npos)
     {
-        std::string feat_name = "gate";
-        if (grid_is_escape_hatch(grd(stairs_avail[0])))
-            feat_name = "escape hatch";
+        std::string feat_name;
+        if (!real_stairs)
+        {
+            if (grid_is_escape_hatch(grd(stairs_avail[0])))
+                feat_name = "escape hatch";
+            else
+                feat_name = "gate";
+        }
+        else
+            feat_name = "staircase";
         stair_msg = replace_all(stair_msg, "@staircase@", feat_name);
     }
 
@@ -2669,9 +2677,10 @@ static bool _xom_is_bad(int sever, int tension)
             if (scan_randarts(RAP_PREVENT_TELEPORTATION))
                 return (false);
 
-            // This is not particularly exciting if the level is already fully
-            // explored (presumably cleared). If Xom is feeling nasty this
-            // is likelier to happen if the level is unexplored.
+            // This is not particularly exciting if the level is already
+            // fully explored (presumably cleared).  If Xom is feeling
+            // nasty, this is likelier to happen if the level is
+            // unexplored.
             const int explored = _exploration_estimate(true);
             if (nasty && explored >= 50 && coinflip()
                 || explored >= 80 + random2(20))
