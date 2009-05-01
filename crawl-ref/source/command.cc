@@ -2171,7 +2171,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             1,
             "<h>Game Saving and Quitting:\n"
             "<w>S</w> : Save game and exit\n"
-            "<w>Ctrl-S</w> : save and eXit without query\n"
+            "<w>Ctrl-S</w> : Save and exit without query\n"
             "<w>Ctrl-Q</w> : Quit without saving\n",
             true, true, _cmdhelp_textfilter);
 
