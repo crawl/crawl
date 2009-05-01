@@ -2982,6 +2982,9 @@ void level_change(bool skip_attribute_increase)
             skip_more = true;
         }
 
+        const int old_hp = you.hp;
+        const int old_maxhp = you.hp_max;
+
         int hp_adjust = 0;
         int mp_adjust = 0;
 
@@ -3521,6 +3524,7 @@ void level_change(bool skip_attribute_increase)
 
         deflate_hp(you.hp_max, false);
 
+        you.hp = old_hp * you.hp_max / old_maxhp;
         you.magic_points = std::max(0, you.magic_points);
 
         // Get "real" values for note-taking, i.e. ignore Berserk,
