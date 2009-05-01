@@ -2102,7 +2102,7 @@ void melee_attack::calc_elemental_brand_damage( beam_type flavour,
             "%s %s %s%s",
             atk_name(DESC_CAP_THE).c_str(),
             attacker->conj_verb(verb).c_str(),
-            def_name(DESC_NOCAP_THE).c_str(),
+            mons_defender_name().c_str(),
             special_attack_punctuation().c_str());
     }
 }
@@ -2142,7 +2142,7 @@ void melee_attack::drain_defender()
                     "%s %s %s!",
                     atk_name(DESC_CAP_THE).c_str(),
                     attacker->conj_verb("drain").c_str(),
-                    def_name(DESC_NOCAP_THE).c_str());
+                    mons_defender_name().c_str());
         }
 
         attacker->god_conduct(DID_NECROMANCY, 2);
@@ -3329,10 +3329,10 @@ bool melee_attack::chop_hydra_head( int dam,
         {
             if (defender_visible)
             {
-                mprf( "%s %s %s's last head off!",
-                      atk_name(DESC_CAP_THE).c_str(),
-                      attacker->conj_verb(verb).c_str(),
-                      def_name(DESC_NOCAP_THE).c_str() );
+                mprf("%s %s %s's last head off!",
+                     atk_name(DESC_CAP_THE).c_str(),
+                     attacker->conj_verb(verb).c_str(),
+                     def_name(DESC_NOCAP_THE).c_str());
             }
             defender_as_monster()->number--;
 
@@ -3348,10 +3348,10 @@ bool melee_attack::chop_hydra_head( int dam,
         {
             if (defender_visible)
             {
-                mprf( "%s %s one of %s's heads off!",
-                      atk_name(DESC_CAP_THE).c_str(),
-                      attacker->conj_verb(verb).c_str(),
-                      def_name(DESC_NOCAP_THE).c_str() );
+                mprf("%s %s one of %s's heads off!",
+                     atk_name(DESC_CAP_THE).c_str(),
+                     attacker->conj_verb(verb).c_str(),
+                     def_name(DESC_NOCAP_THE).c_str());
             }
             defender_as_monster()->number--;
 
@@ -4094,7 +4094,7 @@ bool melee_attack::mons_attack_warded_off()
         {
             mprf("%s tries to attack %s, but flinches away.",
                  atk_name(DESC_CAP_THE).c_str(),
-                 def_name(DESC_NOCAP_THE).c_str());
+                 mons_defender_name().c_str());
         }
         return (true);
     }
@@ -4104,7 +4104,7 @@ bool melee_attack::mons_attack_warded_off()
 
 int melee_attack::mons_attk_delay()
 {
-    return (weapon? property(*weapon, PWPN_SPEED) : 0);
+    return (weapon ? property(*weapon, PWPN_SPEED) : 0);
 }
 
 bool melee_attack::attack_shield_blocked(bool verbose)
@@ -4419,7 +4419,7 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
             {
                 mprf("%s poisons %s!",
                      atk_name(DESC_CAP_THE).c_str(),
-                     def_name(DESC_NOCAP_THE).c_str());
+                     mons_defender_name().c_str());
             }
         }
 
@@ -4575,10 +4575,12 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
         if (needs_message && special_damage)
         {
-            mprf("%s %s %s!",
+            mprf("%s %s %s%s",
                  atk_name(DESC_CAP_THE).c_str(),
                  attacker->conj_verb("freeze").c_str(),
-                 def_name(DESC_NOCAP_THE).c_str());
+                 mons_defender_name().c_str(),
+                 special_attack_punctuation().c_str());
+
         }
         break;
 
@@ -4599,7 +4601,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             mprf("%s %s %s%s",
                  atk_name(DESC_CAP_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
-                 def_name(DESC_NOCAP_THE).c_str(),
+                 mons_defender_name().c_str(),
                  special_attack_punctuation().c_str());
         }
 
@@ -4738,7 +4740,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             mprf("%s %s %s!",
                  atk_name(DESC_CAP_THE).c_str(),
                  attacker->conj_verb("infuriate").c_str(),
-                 def_name(DESC_NOCAP_THE).c_str());
+                 mons_defender_name().c_str());
         }
 
         defender->go_berserk(false);
