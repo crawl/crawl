@@ -995,6 +995,20 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
     return (true);
 }
 
+static bool _blocked_ray(const coord_def &where)
+{
+    ray_def ray;
+    find_ray(you.pos(), where, true, ray, 0, true);
+    ray.advance_through(where);
+
+    while (ray.pos() != where)
+    {
+        if (grd(ray.pos()) <= DNGN_MINMOVE)
+            return (true);
+        ray.advance_through(where);
+    }
+    return (false);
+}
 
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
@@ -1665,9 +1679,9 @@ void direction(dist& moves, targeting_type restricts,
 
 #ifdef USE_TILE
         // Tiles always need a beam redraw if show_beam is true (and valid...)
-        if (need_beam_redraw
-            || show_beam && find_ray(you.pos(), moves.target,
-                                     true, ray, 0, true) )
+        bool _draw_beam = find_ray(you.pos(), moves.target, true, ray, 0, true)
+                          && show_beam && !_blocked_ray(moves.target);
+        if (need_beam_redraw || _draw_beam)
         {
 #else
         if (need_beam_redraw)
@@ -1969,6 +1983,9 @@ static bool _find_mlist( const coord_def& where, int idx, bool need_path,
     if (!_mons_is_valid_target(mon, TARG_ANY, range))
         return (false);
 
+    if (need_path && _blocked_ray(mon->pos()))
+        return (false);
+
     const monsters *monl = mlist[real_idx].m_mon;
     extern mon_attitude_type mons_attitude(const monsters *m);
 
@@ -2017,6 +2034,9 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
         return (false);
 
     if (!_mons_is_valid_target(mon, mode, range))
+        return (false);
+
+    if (need_path && _blocked_ray(mon->pos()))
         return (false);
 
     // Now compare target modes.
