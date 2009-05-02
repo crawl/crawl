@@ -808,7 +808,10 @@ bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
         canned_msg(MSG_TOO_BERSERK);
     else
     {
-        slot = prompt_invent_item( mesg.c_str(), MT_INVLIST, OBJ_ARMOUR,
+        int selector = OBJ_ARMOUR;
+        if (oper == OPER_TAKEOFF && !Options.equip_unequip)
+            selector = OSEL_WORN_ARMOUR;
+        slot = prompt_invent_item( mesg.c_str(), MT_INVLIST, selector,
                                    true, true, true, 0, -1, NULL,
                                    oper );
 
@@ -1158,24 +1161,29 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (item_cursed(invitem))
-    {
-        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
-        {
-            if (item == you.equip[i])
-            {
-                mprf("%s is stuck to your body!",
-                     invitem.name(DESC_CAP_YOUR).c_str());
-                return (false);
-            }
-        }
-    }
-
     const equipment_type slot = get_armour_slot(invitem);
     if (!you_tran_can_wear(invitem) && invitem.link == you.equip[slot])
     {
         mprf("%s is melded into your body!",
              invitem.name(DESC_CAP_YOUR).c_str());
+        return (false);
+    }
+
+    if (!wearing_slot(item))
+    {
+        if (Options.equip_unequip)
+            return do_wear_armour(item, true);
+        else
+        {
+            mpr("You aren't wearing that object!");
+            return (false);
+        }
+    }
+
+    // If we get here, we're wearing the item.
+    if (item_cursed(invitem))
+    {
+        mprf("%s is stuck to your body!", invitem.name(DESC_CAP_YOUR).c_str());
         return (false);
     }
 
@@ -1202,12 +1210,6 @@ bool takeoff_armour(int item)
                 mpr("Your cloak prevents you from removing the armour.");
                 return (false);
             }
-        }
-
-        if (item != you.equip[EQ_BODY_ARMOUR])
-        {
-            mpr("You aren't wearing that!");
-            return (false);
         }
     }
     else

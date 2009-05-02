@@ -983,6 +983,9 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OBJ_ARMOUR:
         return (itype == OBJ_ARMOUR && you_tran_can_wear(i));
 
+    case OSEL_WORN_ARMOUR:
+        return (itype == OBJ_ARMOUR && item_is_equipped(i));
+
     case OSEL_UNIDENT:
         return !fully_identified(i);
 
