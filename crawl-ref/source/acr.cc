@@ -1522,7 +1522,12 @@ void process_command( command_type cmd )
         break;
 
     case CMD_EVOKE:
-        if (!evoke_wielded())
+        if (!evoke_item())
+            flush_input_buffer( FLUSH_ON_FAILURE );
+        break;
+
+    case CMD_EVOKE_WIELDED:
+        if (!evoke_item(you.equip[EQ_WEAPON]))
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 

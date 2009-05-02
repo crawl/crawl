@@ -23,6 +23,9 @@ REVISION("$Rev$");
 #include "cloud.h"
 #include "command.h"
 #include "debug.h"
+#ifdef USE_TILE
+#include "decks.h"
+#endif
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
@@ -5435,17 +5438,19 @@ void tile_item_use(int idx)
         case OBJ_STAVES:
         case OBJ_MISCELLANY:
             // Wield any unwielded item of these types.
-            if (!equipped)
+            if (!equipped
+                && (item.base_type != OBJ_MISCELLANY || is_deck(item)
+                    || item.sub_type == MISC_LANTERN_OF_SHADOWS))
             {
                 if (check_warning_inscriptions(item, OPER_WIELD))
                     wield_weapon(true, idx);
                 return;
             }
             // Evoke misc. items and rods.
-            if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
+            if (item_is_evokable(item))
             {
                 if (check_warning_inscriptions(item, OPER_EVOKE))
-                    evoke_wielded();
+                    evoke_item(idx);
                 return;
             }
             // Unwield staves or weapons.

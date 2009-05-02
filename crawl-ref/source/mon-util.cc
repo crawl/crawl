@@ -5068,8 +5068,8 @@ bool monsters::pickup_wand(item_def &item, int near)
     if ((mons_is_holy(this) || is_good_god(god)) && is_evil_item(item))
         return (false);
 
-    // If you already have a charged wand, don't bother.  Otherwise,
-    // replace with a charged one.
+    // If a monster already has a charged wand, don't bother.
+    // Otherwise, replace with a charged one.
     if (item_def *wand = mslot_item(MSLOT_WAND))
     {
         if (wand->plus > 0)

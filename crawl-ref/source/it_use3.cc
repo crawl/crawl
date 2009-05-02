@@ -27,6 +27,7 @@ REVISION("$Rev$");
 #include "food.h"
 #include "invent.h"
 #include "items.h"
+#include "item_use.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -432,41 +433,93 @@ static bool evoke_sceptre_of_asmodeus()
     return (rc);
 }
 
-// Returns true if item successfully evoked.
-bool evoke_wielded()
+static bool _efreet_flask()
 {
-    int power = 0;
+    bool friendly = x_chance_in_y(10 + you.skills[SK_EVOCATIONS] / 3, 20);
 
-    int pract = 0; // By how much Evocations is practised.
-    bool did_work = false;  // Used for default "nothing happens" message.
+    mpr("You open the flask...");
 
-    const int wield = you.equip[EQ_WEAPON];
+    const int monster =
+        create_monster(
+            mgen_data(MONS_EFREET,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      0, 0, you.pos(),
+                      MHITYOU, MG_FORCE_BEH));
 
+    if (monster != -1)
+    {
+        mpr("...and a huge efreet comes out.");
+
+        if (player_angers_monster(&menv[monster]))
+            friendly = false;
+
+        if (silenced(you.pos()))
+        {
+            mpr(friendly ? "It nods graciously at you."
+                         : "It snaps in your direction!", MSGCH_TALK_VISUAL);
+        }
+        else
+        {
+            mpr(friendly ? "\"Thank you for releasing me!\""
+                         : "It howls insanely!", MSGCH_TALK);
+        }
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+    return (true);
+}
+
+bool evoke_item(int slot)
+{
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg( MSG_TOO_BERSERK );
         return (false);
     }
-    else if (!you.weapon())
-    {
-        mpr("You aren't wielding anything!");
-        crawl_state.zero_turns_taken();
-        return (false);
-    }
 
-    item_def& wpn = *you.weapon();
-    bool unevokable = false;
+    if (slot == -1)
+    {
+        slot = prompt_invent_item( "Evoke which item? (* to show all)",
+                                   MT_INVLIST,
+                                   OSEL_EVOKABLE, true, true, true, 0, -1,
+                                   NULL, OPER_EVOKE );
+
+        if (prompt_failed(slot))
+            return (false);
+    }
+    ASSERT (slot >= 0);
+
+    const bool wielded = (you.equip[EQ_WEAPON] == slot);
+
+    item_def& item = you.inv[slot];
+    // Also handles messages.
+    if (!item_is_evokable(item, false, true))
+        return (false);
 
     // Check inscriptions.
-    if (!check_warning_inscriptions(wpn, OPER_EVOKE))
+    if (!check_warning_inscriptions(item, OPER_EVOKE))
         return (false);
 
-    switch (wpn.base_type)
+    int power = 0;
+    int pract = 0; // By how much Evocations is practised.
+    bool did_work = false;  // Used for default "nothing happens" message.
+    bool unevokable = false;
+
+    switch (item.base_type)
     {
+    case OBJ_WANDS:
+        zap_wand(slot);
+        return (true);
+
     case OBJ_WEAPONS:
-        if (get_weapon_brand(wpn) == SPWPN_REACHING)
+        ASSERT(wielded);
+
+        if (get_weapon_brand(item) == SPWPN_REACHING)
         {
-            if (_reaching_weapon_attack(wpn))
+            if (_reaching_weapon_attack(item))
             {
                 pract = 0;
                 did_work = true;
@@ -474,9 +527,9 @@ bool evoke_wielded()
             else
                 return (false);
         }
-        else if (is_fixed_artefact(wpn))
+        else if (is_fixed_artefact(item))
         {
-            switch (wpn.special)
+            switch (item.special)
             {
             case SPWPN_STAFF_OF_DISPATER:
                 if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true)
@@ -559,16 +612,18 @@ bool evoke_wielded()
         break;
 
     case OBJ_STAVES:
-        if (item_is_rod( wpn ))
+        ASSERT(wielded);
+
+        if (item_is_rod( item ))
         {
-            pract = staff_spell( wield );
+            pract = staff_spell( slot );
             // [ds] Early exit, no turns are lost.
             if (pract == -1)
                 return (false);
 
             did_work = true;  // staff_spell() will handle messages
         }
-        else if (wpn.sub_type == STAFF_CHANNELING)
+        else if (item.sub_type == STAFF_CHANNELING)
         {
             if (you.magic_points < you.max_magic_points
                 && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
@@ -579,13 +634,13 @@ bool evoke_wielded()
                 pract = 1;
                 did_work = true;
 
-                if (!item_type_known(wpn))
+                if (!item_type_known(item))
                 {
-                    set_ident_type( OBJ_STAVES, wpn.sub_type, ID_KNOWN_TYPE );
-                    set_ident_flags( wpn, ISFLAG_KNOW_TYPE );
+                    set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
+                    set_ident_flags( item, ISFLAG_KNOW_TYPE );
 
                     mprf("You are wielding %s.",
-                         wpn.name(DESC_NOCAP_A).c_str());
+                         item.name(DESC_NOCAP_A).c_str());
 
                     more();
 
@@ -602,14 +657,15 @@ bool evoke_wielded()
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if (is_deck(wpn))
+        if (is_deck(item))
         {
-            evoke_deck(wpn);
+            ASSERT(wielded);
+            evoke_deck(item);
             pract = 1;
             break;
         }
 
-        switch (wpn.sub_type)
+        switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:
             if (_efreet_flask())
@@ -699,45 +755,6 @@ bool evoke_wielded()
         crawl_state.zero_turns_taken();
 
     return (did_work);
-}                               // end evoke_wielded()
-
-static bool _efreet_flask()
-{
-    bool friendly = x_chance_in_y(10 + you.skills[SK_EVOCATIONS] / 3, 20);
-
-    mpr("You open the flask...");
-
-    const int monster =
-        create_monster(
-            mgen_data(MONS_EFREET,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      0, 0, you.pos(),
-                      MHITYOU, MG_FORCE_BEH));
-
-    if (monster != -1)
-    {
-        mpr("...and a huge efreet comes out.");
-
-        if (player_angers_monster(&menv[monster]))
-            friendly = false;
-
-        if (silenced(you.pos()))
-        {
-            mpr(friendly ? "It nods graciously at you."
-                         : "It snaps in your direction!", MSGCH_TALK_VISUAL);
-        }
-        else
-        {
-            mpr(friendly ? "\"Thank you for releasing me!\""
-                         : "It howls insanely!", MSGCH_TALK);
-        }
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-    return (true);
 }
 
 static bool _ball_of_seeing(void)

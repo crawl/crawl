@@ -29,7 +29,7 @@ void tome_of_power(int slot);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool evoke_wielded();
+bool evoke_item(int slot = -1);
 
 
 // last updated 12may2000 {dlb}

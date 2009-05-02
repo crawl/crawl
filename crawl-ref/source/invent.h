@@ -28,7 +28,8 @@ enum object_selector
     OSEL_VAMP_EAT  =  -8,
     OSEL_DRAW_DECK =  -9,
     OSEL_THROWABLE = -10,
-    OSEL_BUTCHERY  = -11
+    OSEL_BUTCHERY  = -11,
+    OSEL_EVOKABLE  = -12
 };
 
 #define PROMPT_ABORT        -1
@@ -232,5 +233,8 @@ void init_item_sort_comparators(item_sort_comparators &list,
                                 const std::string &set);
 
 bool prompt_failed(int retval, std::string msg = "");
+
+bool item_is_evokable(const item_def &item, bool known = false,
+                      bool msg = false);
 
 #endif

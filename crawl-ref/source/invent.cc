@@ -459,6 +459,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any items that might be thrown or fired.");
     case OSEL_BUTCHERY:
         return("You aren't carrying any sharp implements.");
+    case OSEL_EVOKABLE:
+        return("You aren't carrying any items that can be evoked.");
     }
 
     return("You aren't carrying any such object.");
@@ -1016,6 +1018,9 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     case OSEL_RECHARGE:
         return (item_is_rechargeable(i, true));
+
+    case OSEL_EVOKABLE:
+        return (item_is_evokable(i, true));
 
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
@@ -1688,4 +1693,102 @@ bool prompt_failed(int retval, std::string msg)
     crawl_state.cancel_cmd_repeat();
 
     return (true);
+}
+
+bool item_is_evokable(const item_def &item, bool known, bool msg)
+{
+    const bool wielded = (you.equip[EQ_WEAPON] == item.link);
+
+    switch (item.base_type)
+    {
+    case OBJ_WANDS:
+        if (item.plus2 == ZAPCOUNT_EMPTY)
+        {
+            if (msg)
+                mpr("This wand has no charges.");
+            return (false);
+        }
+        return (true);
+
+    case OBJ_WEAPONS:
+        if (!wielded && !msg)
+            return (false);
+
+        if (get_weapon_brand(item) == SPWPN_REACHING
+            && item_type_known(item))
+        {
+            if (!wielded)
+            {
+                if (msg)
+                    mpr("That item can only be evoked when wielded.");
+                return (false);
+            }
+            return (true);
+        }
+
+        if (is_fixed_artefact(item))
+        {
+            switch (item.special)
+            {
+            case SPWPN_SCEPTRE_OF_ASMODEUS:
+            case SPWPN_STAFF_OF_WUCAD_MU:
+            case SPWPN_STAFF_OF_DISPATER:
+            case SPWPN_STAFF_OF_OLGREB:
+                if (!wielded)
+                {
+                    if (msg)
+                        mpr("That item can only be evoked when wielded.");
+                    return (false);
+                }
+                return (true);
+
+            default:
+                return (false);
+            }
+        }
+        if (msg)
+            mpr("That item cannot be evoked!");
+        return (false);
+
+    case OBJ_STAVES:
+        if (item_is_rod(item)
+            || !known && !item_type_known(item)
+            || item.sub_type == STAFF_CHANNELING
+               && item_type_known(item))
+        {
+            if (!wielded)
+            {
+                if (msg)
+                    mpr("That item can only be evoked when wielded.");
+                return (false);
+            }
+            return (true);
+        }
+        if (msg)
+            mpr("That item cannot be evoked!");
+        return (false);
+
+    case OBJ_MISCELLANY:
+        if (is_deck(item))
+        {
+            if (!wielded)
+            {
+                if (msg)
+                    mpr("That item can only be evoked when wielded.");
+                return (false);
+            }
+            return (true);
+        }
+
+        if (item.sub_type != MISC_LANTERN_OF_SHADOWS
+            && item.sub_type != MISC_EMPTY_EBONY_CASKET)
+        {
+            return (true);
+        }
+        // else fall through
+    default:
+        if (msg)
+            mpr("That item cannot be evoked!");
+        return (false);
+    }
 }
