@@ -298,11 +298,11 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_b
 TAGS: ziggurat_pillar centered
-SHUFFLE: w> / l> / nb / c> / bx
+SHUFFLE: wb / lb / nb / cb / bx
 MAP
  www
 wwwww
-ww<ww
+wwbww
 wwwww
  www
 ENDMAP
