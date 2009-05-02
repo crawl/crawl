@@ -2609,9 +2609,48 @@ static int monster_get(lua_State *ls)
     return (0);
 }
 
-// We currently permit no set operations on monsters
+static const char *_monster_behaviour_names[] = {
+    "sleep",
+    "wander",
+    "seek",
+    "flee",
+    "cornered",
+    "panic",
+    "lurk"
+};
+
+static beh_type behaviour_by_name(const std::string &name) {
+    ASSERT(ARRAYSZ(_monster_behaviour_names) == NUM_BEHAVIOURS);
+    for (unsigned i = 0; i < ARRAYSZ(_monster_behaviour_names); ++i)
+        if (name == _monster_behaviour_names[i])
+            return static_cast<beh_type>(i);
+    return NUM_BEHAVIOURS;
+}
+
 static int monster_set(lua_State *ls)
 {
+    // Changing monster behaviour is for the dungeon builder only,
+    // never for user scripts.
+    ASSERT_DLUA;
+
+    MonsterWrap *mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE);
+    if (!mw || !mw->mons)
+        return (0);
+
+    const char *attr = luaL_checkstring(ls, 2);
+    if (!attr)
+        return (0);
+
+    if (!strcmp(attr, "beh")) {
+        const beh_type beh =
+            lua_isnumber(ls, 3) ?
+            static_cast<beh_type>(lua_tonumber(ls, 3)) :
+            lua_isstring(ls, 3) ? behaviour_by_name(lua_tostring(ls, 3)) :
+            NUM_BEHAVIOURS;
+        if (beh != NUM_BEHAVIOURS)
+            mw->mons->behaviour = beh;
+    }
+
     return (0);
 }
 
@@ -2675,6 +2714,30 @@ void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
     *de = devent;
 }
 
+static int mons_behaviour(lua_State *ls) {
+    if (lua_gettop(ls) < 1)
+        return (0);
+
+    if (lua_isnumber(ls, 1)) {
+        lua_pushvalue(ls, 1);
+        return (1);
+    }
+    else if (lua_isstring(ls, 1)) {
+        const beh_type beh = behaviour_by_name(lua_tostring(ls, 1));
+        if (beh != NUM_BEHAVIOURS) {
+            lua_pushnumber(ls, beh);
+            return (1);
+        }
+    }
+    return (0);
+}
+
+static const struct luaL_reg mons_lib[] =
+{
+    { "behaviour", mons_behaviour },
+    { NULL, NULL }
+};
+
 void luaopen_monsters(lua_State *ls)
 {
     luaL_newmetatable(ls, MONS_METATABLE);
@@ -2688,6 +2751,8 @@ void luaopen_monsters(lua_State *ls)
 
     // Pop the metatable off the stack.
     lua_pop(ls, 1);
+
+    luaL_openlib(ls, "mons", mons_lib, 0);
 }
 
 //////////////////////////////////////////////////////////////////////
