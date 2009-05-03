@@ -1668,6 +1668,7 @@ void process_command( command_type cmd )
     }
 
     case CMD_CAST_SPELL:
+    case CMD_FORCE_CAST_SPELL:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
            canned_msg(MSG_PRESENT_FORM);
@@ -1684,7 +1685,7 @@ void process_command( command_type cmd )
 
         if (Options.tutorial_left)
             Options.tut_spell_counter++;
-        if (!cast_a_spell())
+        if (!cast_a_spell(cmd == CMD_CAST_SPELL))
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 

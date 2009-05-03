@@ -462,7 +462,7 @@ static void _adjust_ability(void)
 
         const int keyin = get_ch();
 
-        if ( keyin == '?' || keyin == '*' )
+        if (keyin == '?' || keyin == '*')
         {
             selected = choose_ability_menu(talents);
         }
@@ -477,7 +477,7 @@ static void _adjust_ability(void)
             // Try to find the hotkey.
             for (unsigned int i = 0; i < talents.size(); ++i)
             {
-                if ( talents[i].hotkey == keyin )
+                if (talents[i].hotkey == keyin)
                 {
                     selected = static_cast<int>(i);
                     break;
@@ -485,7 +485,7 @@ static void _adjust_ability(void)
             }
 
             // If we can't, cancel out.
-            if ( selected < 0 )
+            if (selected < 0)
             {
                 mpr("No such ability.");
                 return;
@@ -2145,7 +2145,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Other Gameplay Actions:\n"
             "<w>a</w> : use special Ability (<w>a!</w> for help)\n"
             "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n"
-            "<w>z</w> : cast a spell\n"
+            "<w>z</w> : cast a spell, fails if no visible monsters in range\n"
+            "<w>Z</w> : cast a spell\n"
             "<w>I</w> : list all spells\n"
             "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
             "<w>`</w> : re-do previous command\n"
@@ -2220,7 +2221,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     interact +=
             " (tries floor first)\n"
             "<w>q</w> : Quaff a potion\n"
-            "<w>Z</w> : Zap a wand\n"
             "<w>r</w> : Read a scroll or book\n"
             "<w>M</w> : Memorise a spell from a book\n"
             "<w>w</w> : Wield an item ( <w>-</w> for none)\n"
@@ -2303,7 +2303,7 @@ static void _add_formatted_tutorial_help(column_composer &cols)
             "with the wielded weapon or barehanded.\n"
             "For ranged attacks use either\n"
             "<w>f</w> to launch missiles (like arrows)\n"
-            "<w>z</w> to cast spells (<w>z?</w> lists spells).\n",
+            "<w>z</w>/<w>Z</w> to cast spells (<w>z?</w> lists spells).\n",
 
     cols.add_formatted(
             0, text.str(),

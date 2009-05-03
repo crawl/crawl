@@ -43,7 +43,8 @@ g, ,      CMD_PICKUP
 i         CMD_DISPLAY_INVENTORY
 q         CMD_QUAFF
 r         CMD_READ
-v         CMD_EVOKE
+v         CMD_EVOKE_WIELDED
+V         CMD_EVOKE
 w         CMD_WIELD_WEAPON
 F         CMD_THROW_ITEM_NO_QUIVER
 M         CMD_MEMORISE_SPELL
@@ -52,12 +53,12 @@ Q         CMD_QUIVER_ITEM
 R         CMD_REMOVE_JEWELLERY
 T         CMD_REMOVE_ARMOUR
 W         CMD_WEAR_ARMOUR
-Z         CMD_ZAP_WAND
 =         CMD_ADJUST_INVENTORY
 {         CMD_INSCRIBE_ITEM
 (         CMD_CYCLE_QUIVER_FORWARD
 )         CMD_CYCLE_QUIVER_BACKWARD
 '         CMD_WEAPON_SWAP
+          CMD_ZAP_WAND (deprecated, now uses CMD_EVOKE_ITEM instead)
 
 Dungeon interaction
 -------------------
@@ -67,17 +68,16 @@ s, .      CMD_SEARCH, CMD_MOVE_NOWHERE  (same command)
 5         CMD_REST             (rest/search 100 turns)
 t         CMD_SHOUT
 x         CMD_LOOK_AROUND
-V         CMD_FULL_VIEW
+X         CMD_DISPLAY_MAP
+^X        CMD_FULL_VIEW
 z         CMD_CAST_SPELL
 C         CMD_CLOSE_DOOR
 ^E        CMD_FORGET_STASH
 ^F        CMD_SEARCH_STASHES
 G, ^G     CMD_INTERLEVEL_TRAVEL
 O         CMD_OPEN_DOOR
-^S        CMD_MARK_STASH
 ^T        CMD_TOGGLE_FRIENDLY_PICKUP
 ^W        CMD_FIX_WAYPOINT
-X         CMD_DISPLAY_MAP
 <         CMD_GO_UPSTAIRS
 >         CMD_GO_DOWNSTAIRS
 ;         CMD_INSPECT_FLOOR
@@ -112,7 +112,7 @@ Meta-commands
 ^Q        CMD_QUIT
 ^R        CMD_REDRAW_SCREEN
 S         CMD_SAVE_GAME
-^X        CMD_SAVE_GAME_NOW
+^S        CMD_SAVE_GAME_NOW
 ^Z        CMD_SUSPEND_GAME
 &         CMD_WIZARD            (issuing wiz-mode commands)
 :         CMD_MAKE_NOTE

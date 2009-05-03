@@ -46,7 +46,8 @@ enum spret_type
     SPRET_SUCCESS
 };
 
-int list_spells(bool toggle_with_I = true, bool viewing = false);
+int list_spells(bool toggle_with_I = true, bool viewing = false,
+                int minRange = -1);
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false);
@@ -63,7 +64,7 @@ void exercise_spell( spell_type spell_ex, bool spc, bool divide );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool cast_a_spell( void );
+bool cast_a_spell( bool check_range );
 
 bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );
 
