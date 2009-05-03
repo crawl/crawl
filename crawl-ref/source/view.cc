@@ -1325,9 +1325,7 @@ void update_monsters_in_view()
             }
             else if (player_monster_visible(monster))
             {
-                if (!(monster->flags & MF_WAS_IN_VIEW) && you.turn_is_over)
-                    handle_seen_interrupt(monster);
-
+                handle_seen_interrupt(monster);
                 seen_monster(monster);
             }
             else
