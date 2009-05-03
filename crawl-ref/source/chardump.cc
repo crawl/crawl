@@ -283,7 +283,7 @@ static void _sdump_visits(dump_params &par)
 
     text += make_stringf("You %svisited %ld branch",
                          have.c_str(), branches_visited.size());
-    if (branches_visited.size() > 1)
+    if (branches_visited.size() != 1)
         text += "es";
     text += make_stringf(" of the dungeon, and %s %ld of its levels.\n",
                          seen.c_str(), branches_total.levels_seen);
