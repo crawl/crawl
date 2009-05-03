@@ -969,8 +969,6 @@ static void _input()
 
     handle_delay();
 
-    _center_cursor();
-
     if (you_are_delayed() && current_delay_action() != DELAY_MACRO_PROCESS_KEY)
     {
         if (you.time_taken)
@@ -996,6 +994,12 @@ static void _input()
     {
         flush_prev_message();
 
+        clear_macro_process_key_delay();
+
+        crawl_state.waiting_for_command = true;
+        c_input_reset(true);
+
+        _center_cursor();
         // Enable the cursor to read input. The cursor stays on while
         // the command is being processed, so subsidiary prompts
         // shouldn't need to turn it on explicitly.
@@ -1004,12 +1008,6 @@ static void _input()
 #else
         cursor_control con(true);
 #endif
-
-        clear_macro_process_key_delay();
-
-        crawl_state.waiting_for_command = true;
-        c_input_reset(true);
-
         const command_type cmd = _get_next_cmd();
 
         crawl_state.waiting_for_command = false;
