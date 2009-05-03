@@ -8,6 +8,8 @@ Fighting
 
 Apart from making you more proficient in hand-to-hand combat, Fighting
 also increases your maximum hitpoints.
+Fighting can be trained up to level 2 by attacking plants or fungi,
+afterwards only real opponents count.
 %%%%
 Short Blades
 

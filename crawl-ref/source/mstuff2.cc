@@ -1138,7 +1138,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
     }
 
     if (player_monster_visible(monster) && now_visible)
-        seen_monster(monster);
+        handle_seen_interrupt(monster);
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);
@@ -2583,7 +2583,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
     mark_interesting_monst(&mon, mon.behaviour);
     if (you.can_see(&mon))
     {
-        seen_monster(&mon);
+        handle_seen_interrupt(&mon);
         viewwindow(true, false);
     }
 

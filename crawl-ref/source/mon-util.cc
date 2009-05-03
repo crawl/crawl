@@ -6843,7 +6843,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 autotoggle_autopickup(false);
             }
 
-            seen_monster(this);
+            handle_seen_interrupt(this);
         }
         break;
 

@@ -809,7 +809,7 @@ bool mons_speaks_msg(monsters *monster, const std::string &msg,
         else
         {
             if (you.can_see(monster))
-                seen_monster(monster);
+                handle_seen_interrupt(monster);
             mpr(line.c_str(), msg_type);
         }
     }
