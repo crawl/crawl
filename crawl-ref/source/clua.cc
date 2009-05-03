@@ -2644,7 +2644,7 @@ static int monster_set(lua_State *ls)
     if (!strcmp(attr, "beh")) {
         const beh_type beh =
             lua_isnumber(ls, 3) ?
-            static_cast<beh_type>(lua_tonumber(ls, 3)) :
+            static_cast<beh_type>(luaL_checkint(ls, 3)) :
             lua_isstring(ls, 3) ? behaviour_by_name(lua_tostring(ls, 3)) :
             NUM_BEHAVIOURS;
         if (beh != NUM_BEHAVIOURS)
