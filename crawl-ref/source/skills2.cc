@@ -610,18 +610,18 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // undefined
      100,                       // undefined
      (70 * 130) / 100,          // SK_SPELLCASTING
-     180,                       // SK_CONJURATIONS
-     180,                       // SK_ENCHANTMENTS
-     180,                       // SK_SUMMONINGS
-     180,                       // SK_NECROMANCY
-     180,                       // SK_TRANSLOCATIONS
-     180,                       // SK_TRANSMUTATIONS
-     180,                       // SK_DIVINATIONS
-     180,                       // SK_FIRE_MAGIC
-     180,                       // SK_ICE_MAGIC
-     180,                       // SK_AIR_MAGIC
-     180,                       // SK_EARTH_MAGIC
-     180,                       // SK_POISON_MAGIC
+     160,                       // SK_CONJURATIONS
+     160,                       // SK_ENCHANTMENTS
+     160,                       // SK_SUMMONINGS
+     160,                       // SK_NECROMANCY
+     160,                       // SK_TRANSLOCATIONS
+     160,                       // SK_TRANSMUTATIONS
+     160,                       // SK_DIVINATIONS
+     160,                       // SK_FIRE_MAGIC
+     160,                       // SK_ICE_MAGIC
+     160,                       // SK_AIR_MAGIC
+     160,                       // SK_EARTH_MAGIC
+     160,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (180 * 75) / 100,          // SK_EVOCATIONS
     },
