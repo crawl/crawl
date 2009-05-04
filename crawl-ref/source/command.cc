@@ -2121,13 +2121,13 @@ static void _add_formatted_keyhelp(column_composer &cols)
         "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
         "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
         "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<lightgrey>/</lightgrey> : wands (<w>Z</w>ap)\n"
+        "<lightgrey>/</lightgrey> : wands (e<w>V</w>oke)\n"
         "<lightcyan>";
 
     get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
     item_types += static_cast<char>(ch);
     item_types +=
-        "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>z</w>ap)\n"
+        "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise, <w>z</w>ap, <w>Z</w>ap)\n"
         "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
         "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"
         "<yellow>$</yellow> : gold (<w>$</w> counts gold)\n"
@@ -2145,8 +2145,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Other Gameplay Actions:\n"
             "<w>a</w> : use special Ability (<w>a!</w> for help)\n"
             "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n"
-            "<w>z</w> : cast a spell, fails if no visible monsters in range\n"
-            "<w>Z</w> : cast a spell\n"
+            "<w>z</w> : cast spell, abort without targets\n"
+            "<w>Z</w> : cast spell, no matter what\n"
             "<w>I</w> : list all spells\n"
             "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
             "<w>`</w> : re-do previous command\n"
@@ -2200,7 +2200,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map (<w>X?</w> for help)\n"
-            "<w>Ctrl-X</w> : list monsters, items, features in sight\n"
+            "<w>Ctrl-X</w> : list monsters, items, features in view\n"
             "<w>Ctrl-O</w> : show dungeon Overview\n"
             "<w>Ctrl-A</w> : toggle auto-pickup\n"
             "<w>Ctrl-T</w> : change ally pickup behaviour\n",
@@ -2227,13 +2227,13 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>'</w> : wield item a, or switch to b \n"
             "    (use <w>=</w> to assign slots)\n"
             "<w>v</w> : eVoke power of wielded item\n"
-            "<w>V</w> : eVoke power of an item in inventory\n"
+            "<w>V</w> : eVoke wand\n"
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
             "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n";
-
-    cols.add_formatted(
-            1, interact,
-            true, true, _cmdhelp_textfilter);
+      
+            cols.add_formatted(
+                  1, interact,
+                  true, true, _cmdhelp_textfilter);
 
     interact =
             "<h>Item Interaction (floor):\n"
