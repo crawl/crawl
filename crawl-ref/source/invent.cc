@@ -1324,9 +1324,9 @@ static int _digit_to_index( char digit, operation_types oper )
         {
             const std::string& r(you.inv[i].inscription);
             // Note that r.size() is unsigned.
-            for ( unsigned int j = 0; j + 2 < r.size(); ++j )
+            for (unsigned int j = 0; j + 2 < r.size(); ++j)
             {
-                if ( r[j] == '@'
+                if (r[j] == '@'
                      && (r[j+1] == iletter || r[j+1] == '*')
                      && r[j+2] == digit )
                 {
@@ -1344,7 +1344,7 @@ bool has_warning_inscription(const item_def& item,
     const char iletter = static_cast<char>(oper);
 
     const std::string& r(item.inscription);
-    for ( unsigned int i = 0; i + 1 < r.size(); ++i )
+    for (unsigned int i = 0; i + 1 < r.size(); ++i)
     {
         if (r[i] == '!')
         {
@@ -1352,6 +1352,11 @@ bool has_warning_inscription(const item_def& item,
                 return (true);
             else if (oper == OPER_ZAP && r[i+1] == 'z') // for the 0.3.4. keys
                 return (true);
+            else if (oper == OPER_EVOKE
+                     && (r[i+1] == 'V' || tolower(r[i+1]) == 'z'))
+            {
+                return (true);
+            }
         }
     }
 

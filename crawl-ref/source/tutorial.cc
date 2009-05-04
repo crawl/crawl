@@ -21,6 +21,7 @@ REVISION("$Rev$");
 #include "abl-show.h"
 #include "cloud.h"
 #include "command.h"
+#include "decks.h"
 #include "describe.h"
 #include "food.h"
 #include "format.h"
@@ -176,12 +177,14 @@ bool pick_tutorial()
             // Did the player recently see a monster turn invisible?
             Options.tut_seen_invisible = 0;
 
-            Options.random_pick = true; // random choice of starting spellbook
+            Options.random_pick = false;
+            if (!Options.book || Options.book == SBT_SUMM)
+                Options.book = SBT_RANDOM;
             Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
             return (true);
         }
 
-        if (keyn == CK_BKSP || keyn == ' ')
+        if (keyn == CK_BKSP || keyn == ' ' || keyn == ESCAPE)
         {
             // In this case, undo previous choices.
             you.species    = SP_UNKNOWN;
@@ -1489,7 +1492,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "type "
 #endif
-                "<w>Z</w> to zap it.";
+                "<w>V</w> to evoke it.";
         break;
 
     case TUT_SEEN_SPBOOK:
@@ -1716,13 +1719,13 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "This is a curious object indeed. You can play around with "
                 "it to find out what it does by "
 #ifdef USE_TILE
-                "clicking on it once to <w>w</w>ield it, and a second time "
-                "to e<w>v</w>oke "
+                "clicking on it to e<w>V</w>oke "
 #else
-                "<w>w</w>ielding and e<w>v</w>oking "
+                "e<w>v</w>oking "
 #endif
-                "it. As usually, selecting it from your <w>i</w>nventory "
-                "might give you more information.";
+                "it. Some items need to be wielded first before you can "
+                "e<w>v</w>oke them. As usually, selecting it from your "
+                "<w>i</w>nventory might give you more information.";
         break;
 
     case TUT_SEEN_STAFF:
@@ -3436,12 +3439,21 @@ void tutorial_describe_item(const item_def &item)
             break;
 
        case OBJ_MISCELLANY:
-            ostr << "Miscellaneous items sometimes harbour magical powers. Try "
-                    "<w>w</w>ielding and e<w>v</w>oking it"
+            if (is_deck(item))
+            {
+                ostr << "Decks of cards are powerful magical items. Try "
+                        "<w>w</w>ielding and e<w>v</w>oking it"
 #ifdef USE_TILE
-                    ", either of which can be done by clicking on it"
+                        ", either of which can be done by clicking on it"
 #endif
-                    ".";
+                        ". You can read about the effect of a card by "
+                        "searching the game's database with <w>?/c</w>.";
+            }
+            else
+            {
+                ostr << "Miscellaneous items sometimes harbour magical powers "
+                        "that can be harnessed by e<w>V</w>oking the item.";
+            }
 
             Options.tutorial_events[TUT_SEEN_MISC] = false;
             break;

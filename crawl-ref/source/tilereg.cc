@@ -1739,7 +1739,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 }
                 break;
             case OBJ_WANDS:
-                tip += "Zap (Z)";
+                tip += "Evoke (V)";
                 if (wielded)
                     tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 break;
