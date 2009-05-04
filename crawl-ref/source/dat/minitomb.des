@@ -173,7 +173,7 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    minitomb_the_hunt_dp
-WEIGHT:  60
+WEIGHT:  10
 ORIENT:  encompass
 TAGS:    minitomb no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
@@ -203,12 +203,12 @@ MONS:    mummy
 MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
          generate_awake big kobold zombie / nothing w:20
 MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
-KFEAT:   ~ = dart trap w:20 / axe trap / net trap / needle trap / alarm trap / \
-             floor w:40
+KFEAT:   ~ = dart trap w:20 / axe trap w:2 / net trap / needle trap / \
+             alarm trap / floor w:40
 KFEAT:   T = alarm trap w:20 / net trap / floor w:70
 KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
 COLOUR:  ^ = red
-KFEAT:   W = dart trap / axe trap w:1 / floor w:20
+KFEAT:   W = dart trap / floor w:20
 : minitomb_setup_features(_G)
 MAP
            cccccccccccccccccccc
