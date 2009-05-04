@@ -76,8 +76,9 @@ static bool _surge_identify_boosters(spell_type spell)
             int num_unknown = 0;
             for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
             {
-                if (you.equip[i] != -1 &&
-                    !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
+                if (player_wearing_slot(i)
+                    && !item_ident(you.inv[you.equip[i]],
+                                   ISFLAG_KNOW_PROPERTIES))
                 {
                     ++num_unknown;
                 }
@@ -201,6 +202,7 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     {
     case SPELL_APPORTATION:
     case SPELL_PROJECTED_NOISE:
+    case SPELL_CONJURE_FLAME:
         // These don't target monsters.
         return (false);
     default:
@@ -610,7 +612,8 @@ static int _get_dist_to_nearest_monster()
         if (!in_bounds(*ri))
             continue;
 
-        if (!see_grid(*ri))
+        // Can we see (and reach) the grid?
+        if (!see_grid_no_trans(*ri))
             continue;
 
         const monsters *mon = monster_at(*ri);
@@ -622,6 +625,10 @@ static int _get_dist_to_nearest_monster()
         {
             continue;
         }
+
+        // Plants/fungi don't count.
+        if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            continue;
 
         if (mons_wont_attack(mon))
             continue;
@@ -665,13 +672,16 @@ bool cast_a_spell(bool check_range)
 
     const int minRange = (check_range ? _get_dist_to_nearest_monster() : -1);
 
-    int keyin = 0;              // silence stupid compilers
+    int keyin = (check_range ? 0 : '?');
 
     while (true)
     {
-        mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
+        if (keyin == 0)
+        {
+            mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
 
-        keyin = get_ch();
+            keyin = get_ch();
+        }
 
         if (keyin == '?' || keyin == '*')
         {
@@ -685,6 +695,8 @@ bool cast_a_spell(bool check_range)
                 break;
             else
                 mesclr();
+
+            keyin = 0;
         }
         else
             break;

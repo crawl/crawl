@@ -58,7 +58,7 @@ W         CMD_WEAR_ARMOUR
 (         CMD_CYCLE_QUIVER_FORWARD
 )         CMD_CYCLE_QUIVER_BACKWARD
 '         CMD_WEAPON_SWAP
-          CMD_ZAP_WAND (deprecated, now uses CMD_EVOKE_ITEM instead)
+          CMD_ZAP_WAND (deprecated, now uses CMD_EVOKE instead)
 
 Dungeon interaction
 -------------------
