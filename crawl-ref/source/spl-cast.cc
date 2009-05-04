@@ -670,7 +670,7 @@ bool cast_a_spell(bool check_range)
         return (false);
     }
 
-    const int minRange = (check_range ? _get_dist_to_nearest_monster() : -1);
+    const int minRange = _get_dist_to_nearest_monster();
 
     int keyin = (check_range ? 0 : '?');
 
@@ -730,7 +730,7 @@ bool cast_a_spell(bool check_range)
         return (false);
     }
 
-    if (_spell_no_hostile_in_range(spell, minRange))
+    if (check_range && _spell_no_hostile_in_range(spell, minRange))
     {
         mpr("There are no visible monsters within range! (Use <w>Z</w> to cast anyway.)");
         return (false);

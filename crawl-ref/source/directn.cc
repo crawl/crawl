@@ -881,13 +881,22 @@ range_view_annotator::range_view_annotator(int range)
     {
         // Save and replace grid colours. -1 means unchanged.
         orig_colours.init(-1);
+        orig_item_colours.init(-1);
         const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
             if (grid_distance(you.pos(), *ri) > range)
             {
-                orig_colours(*ri - you.pos() + offset) = env.grid_colours(*ri);
+                const coord_def showpos = *ri - you.pos() + offset;
+
+                orig_colours(showpos) = env.grid_colours(*ri);
                 env.grid_colours(*ri) = DARKGREY;
+
+                if (igrd(*ri) != NON_ITEM)
+                {
+                    orig_item_colours(showpos) = mitm[igrd(*ri)].colour;
+                    mitm[igrd(*ri)].colour = DARKGREY;
+                }
             }
         }
 
@@ -927,9 +936,15 @@ void range_view_annotator::restore_state()
     for (c.x = 0; c.x < ENV_SHOW_DIAMETER; ++c.x)
         for (c.y = 0; c.y < ENV_SHOW_DIAMETER; ++c.y)
         {
-            const int old_colour = orig_colours(c);
+            const coord_def pos = you.pos() + c - offset;
+
+            int old_colour = orig_colours(c);
             if (old_colour != -1)
-                env.grid_colours(you.pos() + c - offset) = old_colour;
+                env.grid_colours(pos) = old_colour;
+
+            old_colour = orig_item_colours(c);
+            if (old_colour != -1 && igrd(pos) != NON_ITEM)
+                mitm[igrd(pos)].colour = old_colour;
         }
 
     // Restore monster colours.

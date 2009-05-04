@@ -1462,7 +1462,7 @@ static int _get_item_dngn_code(const item_def &item)
 inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 {
     const item_def &eitem = mitm[igrd(gp)];
-    unsigned short &ecol = env.show_col(ep);
+    unsigned short &ecol  = env.show_col(ep);
 
     const dungeon_feature_type grid = grd(gp);
     if (Options.feature_item_brand && is_critical_feature(grid))
@@ -1491,11 +1491,12 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 void item_grid()
 {
     const coord_def c(crawl_view.glosc());
+    const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
     for (radius_iterator ri(c, LOS_RADIUS, true, false); ri; ++ri)
     {
         if (igrd(*ri) != NON_ITEM)
         {
-            const coord_def ep = *ri - c + coord_def(9, 9);
+            const coord_def ep = *ri - c + offset;
             if (env.show(ep))
                 _update_item_grid(*ri, ep);
         }

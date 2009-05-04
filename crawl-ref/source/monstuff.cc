@@ -4408,32 +4408,30 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
     return (false);
 }
 
-// Choose nearest monster as a foe.  (Used for berserking monsters.)
+// Choose random nearest monster as a foe.  (Used for berserking monsters.)
 void _set_nearest_monster_foe(monsters *mon)
 {
     const bool friendly = mons_friendly_real(mon);
     const bool neutral  = mons_neutral(mon);
 
-    std::vector<coord_def> d;
-    d.push_back(coord_def(-1,-1));
-    d.push_back(coord_def( 0,-1));
-    d.push_back(coord_def( 1,-1));
-    d.push_back(coord_def(-1, 0));
-    d.push_back(coord_def( 1, 0));
-    d.push_back(coord_def(-1, 1));
-    d.push_back(coord_def( 0, 1));
-    d.push_back(coord_def( 1, 1));
-
-    // Search the eight possible directions in random order, with increasing
-    // distance from the monster.
-    std::random_shuffle(d.begin(), d.end(), random2);
     for (int k = 1; k <= LOS_RADIUS; ++k)
-        for (unsigned int i = 0; i < d.size(); i++)
-        {
-            const coord_def p = mon->pos() + coord_def(k*d[i].x, k*d[i].y);
-            if (_mons_check_set_foe(mon, p, friendly, neutral))
-                return;
-        }
+    {
+        int count = 0;
+        bool success = false;
+        for (int i = -k; i <= k; ++i)
+            for (int j = -k; j <= k; (abs(i) == k ? j++ : j += 2*k))
+            {
+                const coord_def p = mon->pos() + coord_def(i, j);
+                if (one_chance_in(++count)
+                    && _mons_check_set_foe(mon, p, friendly, neutral))
+                {
+                    success = true;
+                }
+            }
+
+        if (success)
+            break;
+    }
 }
 
 // The default suitable() function for choose_random_nearby_monster().
