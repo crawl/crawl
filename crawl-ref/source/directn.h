@@ -25,9 +25,6 @@ public:
     virtual void restore_state();
 private:
     bool do_anything;
-    FixedArray<int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> orig_colours;
-    FixedArray<int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> orig_item_colours;
-    int orig_mon_colours[MAX_MONSTERS];
 };
 
 class crawl_view_buffer

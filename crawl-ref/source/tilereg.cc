@@ -1198,7 +1198,7 @@ void DungeonRegion::add_text_tag(text_tag_type type, const std::string &tag,
 void DungeonRegion::add_overlay(const coord_def &gc, int idx)
 {
     tile_overlay over;
-    over.gc = gc;
+    over.gc  = gc;
     over.idx = idx;
 
     m_overlays.push_back(over);

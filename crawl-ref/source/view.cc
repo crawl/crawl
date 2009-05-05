@@ -5356,6 +5356,15 @@ void viewwindow(bool draw_it, bool do_updates)
                         see_grid(gc) ? real_colour(flash_colour)
                                      : DARKGREY;
                 }
+                else if (Options.target_range > 0 && buffy[bufcount]
+                         && (grid_distance(you.pos(), gc) > Options.target_range
+                             || !see_grid(gc)))
+                {
+                    buffy[bufcount + 1] = DARKGREY;
+#ifdef USE_TILE
+                    tileb[bufcount + 1] |= TILE_FLAG_UNSEEN;
+#endif
+                }
 
                 bufcount += 2;
             }

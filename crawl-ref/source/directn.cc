@@ -879,43 +879,9 @@ range_view_annotator::range_view_annotator(int range)
 
     if (do_anything)
     {
-        // Save and replace grid colours. -1 means unchanged.
-        orig_colours.init(-1);
-        orig_item_colours.init(-1);
-        const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
-        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        {
-            if (grid_distance(you.pos(), *ri) > range)
-            {
-                const coord_def showpos = *ri - you.pos() + offset;
-
-                orig_colours(showpos) = env.grid_colours(*ri);
-                env.grid_colours(*ri) = DARKGREY;
-
-                if (igrd(*ri) != NON_ITEM)
-                {
-                    orig_item_colours(showpos) = mitm[igrd(*ri)].colour;
-                    mitm[igrd(*ri)].colour = DARKGREY;
-                }
-            }
-        }
-
-        // Save and replace monster colours.
-        for (int i = 0; i < MAX_MONSTERS; ++i)
-        {
-            if (menv[i].alive()
-                && grid_distance(menv[i].pos(), you.pos()) > range
-                && you.can_see(&menv[i]))
-            {
-                orig_mon_colours[i] = menv[i].colour;
-                menv[i].colour = DARKGREY;
-            }
-            else
-                orig_mon_colours[i] = -1;
-        }
-
+        Options.target_range = range;
         // Repaint.
-        viewwindow(true, false);
+//         viewwindow(true, false);
     }
 }
 
@@ -930,28 +896,7 @@ void range_view_annotator::restore_state()
     if (!do_anything)
         return;
 
-    // Restore grid colours.
-    coord_def c;
-    const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
-    for (c.x = 0; c.x < ENV_SHOW_DIAMETER; ++c.x)
-        for (c.y = 0; c.y < ENV_SHOW_DIAMETER; ++c.y)
-        {
-            const coord_def pos = you.pos() + c - offset;
-
-            int old_colour = orig_colours(c);
-            if (old_colour != -1)
-                env.grid_colours(pos) = old_colour;
-
-            old_colour = orig_item_colours(c);
-            if (old_colour != -1 && igrd(pos) != NON_ITEM)
-                mitm[igrd(pos)].colour = old_colour;
-        }
-
-    // Restore monster colours.
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-        if (orig_mon_colours[i] != -1)
-            menv[i].colour = orig_mon_colours[i];
-
+    Options.target_range = 0;
     do_anything = false;
 }
 

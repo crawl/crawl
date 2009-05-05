@@ -1998,6 +1998,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background;      // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
+    int         target_range; // for whether targeting is out of range
 
     bool        use_old_selection_order; // use old order of species/classes in
                                          // selection screen
@@ -2272,7 +2273,7 @@ private:
     string_map               aliases;
     string_map               variables;
     std::set<std::string>    constants; // Variables that can't be changed
-    std::set<std::string>    included; // Files we've included already.
+    std::set<std::string>    included;  // Files we've included already.
 
 public:
     // Convenience accessors for the second-class options in named_options.

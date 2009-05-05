@@ -3791,7 +3791,7 @@ int tilep_equ_helm(const item_def &item)
                     return TILEP_HELM_FHELM_EVIL;
                 case THELM_DESC_VISORED:
                     return TILEP_HELM_FHELM_GRAY3;
-                case THELM_DESC_JEWELLED:
+                case THELM_DESC_GOLDEN:
                     return TILEP_HELM_FULL_GOLD;
             }
     }

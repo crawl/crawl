@@ -1257,7 +1257,7 @@ std::string item_def::name_aux(description_level_type desc,
                     (dhelm == THELM_DESC_PLUMED)   ? "plumed "  :
                     (dhelm == THELM_DESC_SPIKED)   ? "spiked "  :
                     (dhelm == THELM_DESC_VISORED)  ? "visored " :
-                    (dhelm == THELM_DESC_JEWELLED) ? "jewelled "
+                    (dhelm == THELM_DESC_GOLDEN)   ? "golden "
                                                    : "buggy ");
         }
 

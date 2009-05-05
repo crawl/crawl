@@ -712,28 +712,47 @@ static void _initialise_branch_depths()
     branches[BRANCH_TOMB].startdepth           = random_range(2, 3);
 }
 
+static int _get_random_porridge_desc()
+{
+    return PDESCQ(PDQ_GLUGGY, one_chance_in(3) ? PDC_BROWN
+                                               : PDC_WHITE);
+}
+
 static int _get_random_coagulated_blood_desc()
 {
     potion_description_qualifier_type qualifier = PDQ_NONE;
-    switch (random2(4))
+    while (true)
     {
-    case 0:
-        qualifier = PDQ_GLUGGY;
-        break;
-    case 1:
-        qualifier = PDQ_LUMPY;
-        break;
-    case 2:
-        qualifier = PDQ_SEDIMENTED;
-        break;
-    case 3:
-        qualifier = PDQ_VISCOUS;
-        break;
+        switch (random2(4))
+        {
+        case 0:
+            qualifier = PDQ_GLUGGY;
+            break;
+        case 1:
+            qualifier = PDQ_LUMPY;
+            break;
+        case 2:
+            qualifier = PDQ_SEDIMENTED;
+            break;
+        case 3:
+            qualifier = PDQ_VISCOUS;
+            break;
+        }
+        potion_description_colour_type colour = (coinflip() ? PDC_RED
+                                                            : PDC_BROWN);
+
+        int desc = PDESCQ(qualifier, colour);
+
+        if (you.item_description[IDESC_POTIONS][POT_BLOOD] != desc)
+            return desc;
     }
+}
 
-    potion_description_colour_type colour = (coinflip() ? PDC_RED : PDC_BROWN);
-
-    return PDESCQ(qualifier, colour);
+static int _get_random_blood_desc()
+{
+    return PDESCQ(coinflip() ? PDQ_NONE :
+                  coinflip() ? PDQ_VISCOUS
+                             : PDQ_SEDIMENTED, PDC_RED);
 }
 
 void initialise_item_descriptions()
@@ -741,20 +760,20 @@ void initialise_item_descriptions()
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
-        = PDESCQ(PDQ_GLUGGY, PDC_WHITE);
-
     you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
-    you.item_description[IDESC_POTIONS][POT_BLOOD] = PDESCS(PDC_RED);
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
+        = _get_random_porridge_desc();
+    you.item_description[IDESC_POTIONS][POT_BLOOD]
+        = _get_random_blood_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
         = _get_random_coagulated_blood_desc();
 
     // The order here must match that of IDESC in describe.h
-    // (I don't really know about scrolls, which is why I left the height value.)
-    const int max_item_number[6] = { NUM_WANDS, NUM_POTIONS,
-                                     you.item_description.height(),
+    const int max_item_number[6] = { NUM_WANDS,
+                                     NUM_POTIONS,
+                                     NUM_SCROLLS,
                                      NUM_JEWELLERY,
-                                     you.item_description.height(),
+                                     NUM_SCROLLS,
                                      NUM_STAVES };
 
     for (int i = 0; i < NUM_IDESC; i++)
@@ -769,8 +788,8 @@ void initialise_item_descriptions()
             // Pick a new description until it's good.
             while (true)
             {
-                // The numbers below are always secondary * primary.
-                // (See itemname.cc.)
+                // The numbers below are always secondary * primary,
+                // except for scrolls. (See itemname.cc.)
                 switch (i)
                 {
                 case IDESC_WANDS: // wands
@@ -783,7 +802,7 @@ void initialise_item_descriptions()
                     you.item_description[i][j] = _random_potion_description();
                     break;
 
-                case IDESC_SCROLLS: // scrolls
+                case IDESC_SCROLLS: // scrolls: random seed for the name
                 case IDESC_SCROLLS_II:
                     you.item_description[i][j] = random2(151);
                     break;
@@ -803,7 +822,7 @@ void initialise_item_descriptions()
 
                 // Test whether we've used this description before.
                 // Don't have p < j because some are preassigned.
-                for (int p = 0; p < you.item_description.height(); p++)
+                for (int p = 0; p < max_item_number[i]; p++)
                 {
                     if (p == j)
                         continue;
