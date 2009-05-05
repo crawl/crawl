@@ -140,9 +140,16 @@ function ziggurat_build_level(e)
 
   local depth = zig().depth
 
-  -- XXX: This is a placeholder!
-  local generate_awake = depth > 9 and crawl.random2(30) < depth
+  -- Deeper levels can have all monsters awake.
+  -- Does never happen at depths 1-4; does always happen at depths 25-27.
+  local generate_awake = depth > 4 + crawl.random2(21)
   zig().monster_hook = generate_awake and ziggurat_awaken_all
+
+  -- Deeper levels may block controlled teleports.
+  -- Does never happen at depths 1-6; does always happen at depths 25-27.
+  if depth > 6 + crawl.random2(19) then
+    dgn.change_level_flags("no_tele_control")
+  end
 
   if builder then
     return ziggurat_builder_map[builder](e)
