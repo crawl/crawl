@@ -1096,7 +1096,7 @@ int player_hunger_rate(void)
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
-    if (you.duration[DUR_REGENERATION] > 0)
+    if (you.duration[DUR_REGENERATION])
         hunger += 4;
 
     // Moved here from acr.cc... maintaining the >= 40 behaviour.
@@ -1269,6 +1269,10 @@ int player_res_magic(void)
     // transformations
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
         rm += 50;
+
+    // Trog's Hand
+    if (you.attribute[ATTR_DIVINE_REGENERATION])
+        rm += 70;
 
     // Enchantment effect
     if (you.duration[DUR_LOWERED_MR])

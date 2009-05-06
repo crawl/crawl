@@ -249,7 +249,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Trog
     { "go berserk at will",
-      "call upon Trog for regeneration",
+      "call upon Trog for regeneration and magic resistance",
       "",
       "call in reinforcements",
       "" },
@@ -335,7 +335,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Trog
     { "go berserk at will",
-      "call upon Trog for regeneration",
+      "call upon Trog for regeneration and magic resistance",
       "",
       "call in reinforcements",
       "" },
@@ -879,6 +879,15 @@ static void _inc_penance(god_type god, int val)
         // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
+        // Neither does Trog's regeneration or magic resistance.
+        else if (god == GOD_TROG)
+        {
+            if (you.duration[DUR_REGENERATION]
+                && you.attribute[ATTR_DIVINE_REGENERATION])
+            {
+                remove_regen(true);
+            }
+        }
         // Neither does Zin's divine stamina.
         else if (god == GOD_ZIN)
         {

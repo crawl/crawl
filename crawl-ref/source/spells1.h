@@ -54,7 +54,8 @@ void abjuration(int pow);
 void cast_fly(int power);
 
 void cast_insulation(int power);
-void cast_regen(int pow);
+void remove_regen(bool divine_ability = false);
+void cast_regen(int pow, bool divine_ability = false);
 void cast_resist_poison(int power);
 void cast_swiftness(int power);
 void cast_teleport_control(int power);

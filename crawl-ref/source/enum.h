@@ -111,7 +111,7 @@ enum ability_type
 
 enum activity_interrupt_type
 {
-    AI_FORCE_INTERRUPT  = 0,        // Forcibly kills any activity that can be
+    AI_FORCE_INTERRUPT = 0,         // Forcibly kills any activity that can be
                                     // interrupted.
     AI_KEYPRESS,
     AI_FULL_HP,                     // Player is fully healed
@@ -141,7 +141,8 @@ enum actor_type
 
 enum attribute_type
 {
-    ATTR_DIVINE_LIGHTNING_PROTECTION,  //    0
+    ATTR_DIVINE_LIGHTNING_PROTECTION,
+    ATTR_DIVINE_REGENERATION,
     ATTR_DIVINE_DEATH_CHANNEL,
     ATTR_TRANSFORMATION,
     ATTR_CARD_COUNTDOWN,

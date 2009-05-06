@@ -1682,7 +1682,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TROG_REGENERATION:
         // Trog abilities don't use or train invocations.
-        cast_regen(you.piety/2);
+        cast_regen(you.piety / 2, true);
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:

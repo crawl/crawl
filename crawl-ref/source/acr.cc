@@ -2073,10 +2073,12 @@ static void _decrement_durations()
                           coinflip(),
                           "Your deflect missiles spell is about to expire...");
 
-    _decrement_a_duration(DUR_REGENERATION,
-                          "Your skin stops crawling.",
-                          coinflip(),
-                          "Your skin is crawling a little less now.");
+    if (_decrement_a_duration(DUR_REGENERATION,
+                              NULL, coinflip(),
+                              "Your skin is crawling a little less now."))
+    {
+        remove_regen(you.attribute[ATTR_DIVINE_REGENERATION]);
+    }
 
     if (you.duration[DUR_PRAYER] > 1)
         you.duration[DUR_PRAYER]--;
@@ -2199,7 +2201,7 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_CONDENSATION_SHIELD))
         remove_condensation_shield();
 
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && player_res_cold() < 0)
+    if (you.duration[DUR_CONDENSATION_SHIELD] && player_res_cold() < 0)
     {
         mpr("You feel very cold.");
         ouch(2 + random2avg(13, 2), NON_MONSTER, KILLED_BY_FREEZING);
@@ -2318,11 +2320,8 @@ static void _decrement_durations()
             }
         }
 
-        if (you.duration[DUR_PARALYSIS] == 0
-            && you.duration[DUR_PETRIFIED] == 0)
-        {
+        if (!you.duration[DUR_PARALYSIS] && !you.duration[DUR_PETRIFIED])
             mpr("You are exhausted.", MSGCH_WARN);
-        }
 
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
@@ -2351,7 +2350,7 @@ static void _decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT]
+    if (you.duration[DUR_BACKLIGHT] && !--you.duration[DUR_BACKLIGHT]
         && !you.backlit())
     {
         mpr("You are no longer glowing.", MSGCH_DURATION);

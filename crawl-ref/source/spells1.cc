@@ -1301,10 +1301,27 @@ void deflection(int pow)
                        "You feel very safe from missiles.");
 }
 
-void cast_regen(int pow)
+void remove_regen(bool divine_ability)
+{
+    mpr("Your skin stops crawling.", MSGCH_DURATION);
+    you.duration[DUR_REGENERATION] = 0;
+    if (divine_ability)
+    {
+        mpr("You feel less resistant to magic.", MSGCH_DURATION);
+        you.attribute[ATTR_DIVINE_REGENERATION] = 0;
+    }
+}
+
+void cast_regen(int pow, bool divine_ability)
 {
     _increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
                        "Your skin crawls.");
+
+    if (divine_ability)
+    {
+        mpr("You feel resistant to magic.");
+        you.attribute[ATTR_DIVINE_REGENERATION] = 1;
+    }
 }
 
 void cast_berserk(void)
