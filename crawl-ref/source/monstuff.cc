@@ -1967,7 +1967,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                 relax++;
 
             if (relax > 50)
-                return (simple_monster_message( monster, " shudders."));
+                return (simple_monster_message(monster, " shudders."));
         }
         while (tries-- && (!_valid_morph(monster, targetc)
                            || _is_poly_power_unsuitable(power, source_power,
@@ -1975,7 +1975,10 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     }
 
     if (!_valid_morph(monster, targetc))
-        return simple_monster_message(monster, " looks momentarily different.");
+    {
+        return (simple_monster_message(monster,
+                                       " looks momentarily different."));
+    }
 
     // Messaging.
     bool can_see     = you.can_see(monster);
@@ -2035,6 +2038,15 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER
                            | MF_HONORARY_UNDEAD | MF_KNOWN_MIMIC);
 
+    god_type god =
+        (player_will_anger_monster(targetc)
+            || (you.religion == GOD_BEOGH
+                && mons_species(targetc) != MONS_ORC)) ? GOD_NO_GOD
+                                                       : monster->god;
+
+    if (god == GOD_NO_GOD)
+        flags &= ~MF_GOD_GIFT;
+
     std::string name;
 
     // Preserve the names of uniques and named monsters.
@@ -2062,9 +2074,9 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
             name = name.substr(0, the_pos);
     }
 
-    const int  old_hp     = monster->hit_points;
-    const int  old_hp_max = monster->max_hit_points;
-    const bool old_mon_caught = mons_is_caught(monster);
+    const int  old_hp             = monster->hit_points;
+    const int  old_hp_max         = monster->max_hit_points;
+    const bool old_mon_caught     = mons_is_caught(monster);
     const char old_ench_countdown = monster->ench_countdown;
 
     mon_enchant abj       = monster->get_ench(ENCH_ABJ);
@@ -2080,10 +2092,11 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->base_monster = MONS_PROGRAM_BUG;
     monster->number       = 0;
 
-    // Note: define_monster() will clear out all enchantments! -- bwr
-    define_monster( monster_index(monster) );
+    // Note: define_monster() will clear out all enchantments! - bwr
+    define_monster(monster_index(monster));
 
     monster->flags = flags;
+    monster->god   = god;
     monster->mname = name;
 
     monster->add_ench(abj);
