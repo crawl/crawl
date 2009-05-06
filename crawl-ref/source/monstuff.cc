@@ -2038,15 +2038,6 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER
                            | MF_HONORARY_UNDEAD | MF_KNOWN_MIMIC);
 
-    god_type god =
-        (player_will_anger_monster(targetc)
-            || (you.religion == GOD_BEOGH
-                && mons_species(targetc) != MONS_ORC)) ? GOD_NO_GOD
-                                                       : monster->god;
-
-    if (god == GOD_NO_GOD)
-        flags &= ~MF_GOD_GIFT;
-
     std::string name;
 
     // Preserve the names of uniques and named monsters.
@@ -2074,6 +2065,20 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
             name = name.substr(0, the_pos);
     }
 
+    const monster_type real_targetc =
+        (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER)) ? MONS_GLOWING_SHAPESHIFTER :
+        (monster->has_ench(ENCH_SHAPESHIFTER))         ? MONS_SHAPESHIFTER
+                                                       : targetc;
+
+    const god_type god =
+        (player_will_anger_monster(real_targetc)
+            || (you.religion == GOD_BEOGH
+                && mons_species(real_targetc) != MONS_ORC)) ? GOD_NO_GOD
+                                                            : monster->god;
+
+    if (god == GOD_NO_GOD)
+        flags &= ~MF_GOD_GIFT;
+
     const int  old_hp             = monster->hit_points;
     const int  old_hp_max         = monster->max_hit_points;
     const bool old_mon_caught     = mons_is_caught(monster);
@@ -2095,9 +2100,9 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // Note: define_monster() will clear out all enchantments! - bwr
     define_monster(monster_index(monster));
 
+    monster->mname = name;
     monster->flags = flags;
     monster->god   = god;
-    monster->mname = name;
 
     monster->add_ench(abj);
     monster->add_ench(charm);
