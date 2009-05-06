@@ -20,7 +20,7 @@ struct generic_cost
     int base, add, rolls;
 
     generic_cost(int num)
-        : base(num), add(num == 0? 0 : (num + 1) / 2 + 1), rolls(1)
+        : base(num), add(num == 0 ? 0 : (num + 1) / 2 + 1), rolls(1)
     {
     }
     generic_cost(int num, int _add, int _rolls = 1)

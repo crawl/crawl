@@ -129,7 +129,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, ABIL_SIF_MUNA_FORGET_SPELL,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Trog
-    { ABIL_TROG_BERSERK, ABIL_TROG_REGENERATION, ABIL_NON_ABILITY,
+    { ABIL_TROG_BERSERK, ABIL_TROG_REGEN_MR, ABIL_NON_ABILITY,
       ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
     { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
@@ -271,7 +271,8 @@ static const ability_def Ability_List[] =
     // Trog
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks", 0, 0, 10, 0, ABFLAG_NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
-    { ABIL_TROG_REGENERATION, "Trog's Hand", 0, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_TROG_REGEN_MR, "Trog's Hand",
+      0, 0, 50, generic_cost::range(2, 3), ABFLAG_NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
       0, 0, 100, generic_cost::range(5, 6), ABFLAG_NONE },
 
@@ -678,7 +679,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 30 - you.piety;       // starts at 0%
         break;
 
-    case ABIL_TROG_REGENERATION:         // piety >= 50
+    case ABIL_TROG_REGEN_MR:            // piety >= 50
         invoc = true;
         failure = 80 - you.piety;       // starts at 30%
         break;
@@ -1680,7 +1681,7 @@ static bool _do_ability(const ability_def& abil)
         go_berserk(true);
         break;
 
-    case ABIL_TROG_REGENERATION:
+    case ABIL_TROG_REGEN_MR:
         // Trog abilities don't use or train invocations.
         cast_regen(you.piety / 2, true);
         break;
@@ -2489,5 +2490,5 @@ static void _lugonu_bends_space()
 
 int generic_cost::cost() const
 {
-    return base + (add > 0 ? random2avg(add, rolls) : 0);
+    return (base + (add > 0 ? random2avg(add, rolls) : 0));
 }
