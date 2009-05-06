@@ -953,8 +953,6 @@ void game_options::reset_options()
     for (int i = 0; i < NUM_MESSAGE_CHANNELS; i++)
         channels[i] = MSGCOL_DEFAULT;
 
-    int target_range = 0;
-
     // Clear vector options.
     dump_order.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
