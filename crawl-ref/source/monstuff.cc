@@ -8518,7 +8518,7 @@ static bool _monster_move(monsters *monster)
 
         // If we're following the player through stairs, the only valid
         // movement is towards the player. -- bwr
-        if (testbits( monster->flags, MF_TAKING_STAIRS ))
+        if (testbits(monster->flags, MF_TAKING_STAIRS))
         {
             const delay_type delay = current_delay_action();
             if (delay != DELAY_ASCENDING_STAIRS
@@ -8584,10 +8584,10 @@ static bool _monster_move(monsters *monster)
     }
 
     if (mmov.x || mmov.y || (monster->confused() && one_chance_in(6)))
-        return _do_move_monster(monster, mmov);
+        return (_do_move_monster(monster, mmov));
 
-    return ret;
-}                               // end monster_move()
+    return (ret);
+}
 
 static void _mons_in_cloud(monsters *monster)
 {
@@ -8884,7 +8884,7 @@ bool heal_monster(monsters * patient, int health_boost,
     }
 
     return (success);
-}                               // end heal_monster()
+}
 
 static spell_type _map_wand_to_mspell(int wand_type)
 {
