@@ -31,6 +31,7 @@ Levels
 * Fixed KMONS not accepting comma-separated list of alternative monsters.
 * Tweaked most of the oklob vaults to make them less dangerous.
 * Allow bazaars outside of the main dungeon.
+* For timed portal vault alerts, give directional feedback.
 
 Characters
 ----------
@@ -84,13 +85,17 @@ Monsters
 
 Interface
 ---------
+* New command for evoking inventory items ('V'), replaces wand zapping ('Z').
+* Casting spells with 'z' aborts without prompt if no monsters are in range.
+* Casting spells with 'z?' or the new 'Z' allows casting in any case.
+* Changed quick save command to 'Ctrl-S' (was Ctrl-X).
+* Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
+* New monster/item view command ('Ctrl-X'), allowing travel to items, features.
 * Store message history across saves.
 * Some message condensation for identical messages.
-* Changed quick save command to 'Ctrl-S' (was Ctrl-X).
 * Added stat_colour option to highlight dangerously low stats.
 * New option: Automatically set travel exclusions for statues and oklob plants.
 * Limit travel exclusions to line of sight.
-* Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
 * Switch off autopickup and autoswap if you see a monster turn invisible.
 * Killing an invisible monster reactivates autopickup.
 * Added ally pickup mode for items dropped by player and allies.
@@ -102,7 +107,6 @@ Interface
 * Added an option to make menu colours apply to shops.
 * Use menu colours for announcements of items found while travelling.
 * Pressing Esc at -More- automatically clears all queued -More- prompts.
-* New monster/item view command ('Ctrl-X'), allowing travel to items, features.
 * Add FAQ to help screen ('?Q').
 * Purchases and donations are noted.
 * The database search also prints armour base AC/EV and weapon plusses.
@@ -121,7 +125,7 @@ Items
 * Missile enchantment decreases chance of destruction on impact.
 * Freezing weapons can slow cold-blooded monsters.
 * The staff of channeling trains Evocations.
-* Potions of magic no longer increase maximal magic points.
+* Potions of magic no longer increase maximal magic points and are less rare.
 * Item descriptions mention enchantment/charging limits.
 * Randarts get their known properties autoinscribed.
 * Randarts are noted as identified even if the plusses are still unknown.
@@ -145,6 +149,7 @@ Gods
 * Cleansing Flame centers on the player and deals less damage.
 * Killing a holy being is sometimes avenged by TSO.
 * Split Elyvilon's healing powers in "heal self" and "heal other" versions.
+* Evyvilon's Lesser Healing Other does not cost piety anymore.
 * Move Divine Robustness from Zin to Elyvilon, replacing Incredible Healing.
 * Make Zin's retribution-summoned plagues permanent.
 * Sif Muna no longer gifts Kiku/Vehumet specific books, spells still possible.
@@ -172,7 +177,7 @@ Tiles
 
 Miscellaneous
 -------------
-* Greatly reduced spell ranges (both player and monster), mostly capped by LOS.
+* Greatly reduced spell ranges (both player and monster).
 * For most bolts, hitting a monster reduces range by one.
 * Added arena mode to watch monsters fighting other monsters.
 * Fixed crashes involving "invisible/unmoving" monsters.
