@@ -882,11 +882,8 @@ static void _inc_penance(god_type god, int val)
         // Neither does Trog's regeneration or magic resistance.
         else if (god == GOD_TROG)
         {
-            if (you.duration[DUR_REGENERATION]
-                && you.attribute[ATTR_DIVINE_REGENERATION])
-            {
+            if (you.attribute[ATTR_DIVINE_REGENERATION])
                 remove_regen(true);
-            }
         }
         // Neither does Zin's divine stamina.
         else if (god == GOD_ZIN)
