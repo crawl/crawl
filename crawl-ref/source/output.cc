@@ -642,7 +642,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     {
         int color = _dur_colour( BLUE, dur_expiring(DUR_REGENERATION) );
         out.push_back(status_light(color,
-            you.attribute[ATTR_DIVINE_REGENERATION] ? "Regen MR+" : "Regen"));
+            you.attribute[ATTR_DIVINE_REGENERATION] ? "Regen MR" : "Regen"));
     }
 
     if (you.duration[DUR_INSULATION])
