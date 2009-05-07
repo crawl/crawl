@@ -884,6 +884,8 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.attribute[ATTR_DIVINE_REGENERATION])
                 remove_regen(true);
+
+            _make_god_gifts_disappear(); // only on level
         }
         // Neither does Zin's divine stamina.
         else if (god == GOD_ZIN)
