@@ -2957,7 +2957,8 @@ std::string _status_mut_abilities()
                 if (level == 3)
                     current = "shaggy fur";
                 break;
-            default: break;
+            default:
+                break;
         }
 
         if (!current.empty())
