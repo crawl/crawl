@@ -752,7 +752,7 @@ void macro_add_query( void )
     mesclr();
     mpr("(m)acro, keymap "
         "[(k) default, (x) level-map, (t)argeting, (c)onfirm, m(e)nu], "
-        "(s)ave?",
+        "(s)ave? ",
         MSGCH_PROMPT);
     input = m_getch();
     input = tolower( input );
@@ -816,7 +816,7 @@ void macro_add_query( void )
     if (mapref[key].size() > 0)
     {
         mprf(MSGCH_WARN, "Current Action: %s", vtostr(mapref[key]).c_str());
-        mpr( "Do you wish to (r)edefine, (c)lear, or (a)bort?", MSGCH_PROMPT );
+        mpr("Do you wish to (r)edefine, (c)lear, or (a)bort? ", MSGCH_PROMPT);
 
         input = m_getch();
 

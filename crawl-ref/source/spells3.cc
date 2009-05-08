@@ -2004,7 +2004,7 @@ int portal()
         return 1;
     }
 
-    mpr("Which direction ('<' for up, '>' for down, 'x' to quit)?",
+    mpr("Which direction ('<' for up, '>' for down, 'x' to quit)? ",
         MSGCH_PROMPT);
 
     int dir_sign = 0;
@@ -2036,7 +2036,7 @@ int portal()
         }
     }
 
-    mpr("How many levels (1 - 9, 'x' to quit)?", MSGCH_PROMPT);
+    mpr("How many levels (1 - 9, 'x' to quit)? ", MSGCH_PROMPT);
 
     int amount = 0;
     while (amount == 0)

@@ -1283,7 +1283,7 @@ void wizard_create_spec_object()
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)
-            dummy.number = _debug_prompt_for_int("How many heads?", false);
+            dummy.number = _debug_prompt_for_int("How many heads? ", false);
 
         if (fill_out_corpse(&dummy, mitm[thing_created], true) == -1)
         {
@@ -2142,9 +2142,10 @@ void wizard_set_hunger_state()
     std::string hunger_prompt =
         "Set hunger state to s(T)arving, (N)ear starving, (H)ungry";
     if (you.species == SP_GHOUL)
-        hunger_prompt += " or (S)atiated?";
+        hunger_prompt += " or (S)atiated";
     else
-        hunger_prompt += ", (S)atiated, (F)ull or (E)ngorged?";
+        hunger_prompt += ", (S)atiated, (F)ull or (E)ngorged";
+    hunger_prompt += "? ";
 
     mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
 
@@ -2546,7 +2547,7 @@ void debug_stethoscope(int mon)
     {
         mpr("Which monster?", MSGCH_PROMPT);
 
-        direction( stth );
+        direction(stth);
 
         if (!stth.isValid)
             return;
@@ -5190,7 +5191,7 @@ extern void force_monster_shout(monsters* monster);
 
 void debug_make_monster_shout(monsters* mon)
 {
-    mpr("Make the monster (S)hout or (T)alk?", MSGCH_PROMPT);
+    mpr("Make the monster (S)hout or (T)alk? ", MSGCH_PROMPT);
 
     char type = (char) getchm(KMC_DEFAULT);
     type = tolower(type);
@@ -5253,7 +5254,7 @@ static bool _force_suitable(const monsters *mon)
 
 void wizard_apply_monster_blessing(monsters* mon)
 {
-    mpr("Apply blessing of (B)eogh, The (S)hining One, or (R)andomly?",
+    mpr("Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? ",
         MSGCH_PROMPT);
 
     char type = (char) getchm(KMC_DEFAULT);

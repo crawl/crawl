@@ -144,10 +144,10 @@ void player_quiver::empty_quiver(ammo_t ammo_type)
 
 void choose_item_for_quiver()
 {
-    int slot = prompt_invent_item( "Quiver which item? (- for none, * to show all)",
-                                   MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, '-',
-                                   you.equip[EQ_WEAPON], NULL, OPER_QUIVER );
+    int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
+                                  MT_INVLIST,
+                                  OSEL_THROWABLE, true, true, true, '-',
+                                  you.equip[EQ_WEAPON], NULL, OPER_QUIVER);
 
     if (prompt_failed(slot))
         return;

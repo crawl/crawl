@@ -3002,8 +3002,8 @@ static void _open_door(coord_def move, bool check_confused)
     }
     else
     {
-        mpr("Which direction?", MSGCH_PROMPT);
-        direction( door_move, DIR_DIR );
+        mpr("Which direction? ", MSGCH_PROMPT);
+        direction(door_move, DIR_DIR);
 
         if (!door_move.isValid)
             return;
@@ -3154,8 +3154,9 @@ static void _close_door(coord_def move)
 
     if (move.origin())
     {
-        mpr("Which direction?", MSGCH_PROMPT);
-        direction( door_move, DIR_DIR );
+        mpr("Which direction? ", MSGCH_PROMPT);
+        direction(door_move, DIR_DIR);
+
         if (!door_move.isValid)
             return;
     }

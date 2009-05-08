@@ -1149,7 +1149,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
                 return (SPRET_ABORT);
         }
         else if (dir == DIR_DIR)
-            mpr(prompt ? prompt : "Which direction?", MSGCH_PROMPT);
+            mpr(prompt ? prompt : "Which direction? ", MSGCH_PROMPT);
 
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));

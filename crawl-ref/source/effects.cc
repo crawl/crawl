@@ -2108,7 +2108,7 @@ void yell(bool force)
         mpr( "                   w - Wait here.           f - Follow me.");
    }
     mprf(" Anything else - Stay silent%s.",
-         one_chance_in(20)? " (and be thought a fool)" : "");
+         one_chance_in(20) ? " (and be thought a fool)" : "");
 
     unsigned char keyn = get_ch();
     mesclr();

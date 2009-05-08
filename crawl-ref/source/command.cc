@@ -285,9 +285,9 @@ static void _print_version(void)
 
 void adjust(void)
 {
-    mpr( "Adjust (i)tems, (s)pells, or (a)bilities?", MSGCH_PROMPT );
+    mpr("Adjust (i)tems, (s)pells, or (a)bilities? ", MSGCH_PROMPT);
 
-    const int keyin = tolower( get_ch() );
+    const int keyin = tolower(get_ch());
 
     if (keyin == 'i')
         _adjust_item();
@@ -296,10 +296,10 @@ void adjust(void)
     else if (keyin == 'a')
         _adjust_ability();
     else if (keyin == ESCAPE)
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
     else
-        canned_msg( MSG_HUH );
-}                               // end adjust()
+        canned_msg(MSG_HUH);
+}
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 {
@@ -351,20 +351,20 @@ static void _adjust_item(void)
         return;
     }
 
-    from_slot = prompt_invent_item( "Adjust which item?", MT_INVLIST, -1 );
+    from_slot = prompt_invent_item("Adjust which item?", MT_INVLIST, -1);
     if (prompt_failed(from_slot))
         return;
 
     mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
-    to_slot = prompt_invent_item( "Adjust to which letter?",
-                                  MT_INVLIST,
-                                  -1,
-                                  false,
-                                  false );
+    to_slot = prompt_invent_item("Adjust to which letter? ",
+                                 MT_INVLIST,
+                                 -1,
+                                 false,
+                                 false);
     if (to_slot == PROMPT_ABORT)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -380,7 +380,7 @@ static void _adjust_spells(void)
     }
 
     // Select starting slot
-    mpr("Adjust which spell?", MSGCH_PROMPT);
+    mpr("Adjust which spell? ", MSGCH_PROMPT);
 
     int keyin = 0;
     if (Options.auto_list)
@@ -394,7 +394,7 @@ static void _adjust_spells(void)
 
     if (!isalpha(keyin))
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -413,9 +413,9 @@ static void _adjust_spells(void)
 
     // Select target slot.
     keyin = 0;
-    while ( !isalpha(keyin) )
+    while (!isalpha(keyin))
     {
-        mpr( "Adjust to which letter?", MSGCH_PROMPT );
+        mpr("Adjust to which letter? ", MSGCH_PROMPT);
         keyin = get_ch();
         if (keyin == ESCAPE)
         {
@@ -427,7 +427,7 @@ static void _adjust_spells(void)
     }
 
     const int input_2 = keyin;
-    const int index_2 = letter_to_index( keyin );
+    const int index_2 = letter_to_index(keyin);
 
     // swap references in the letter table:
     const int tmp = you.spell_letter_table[index_2];
@@ -442,34 +442,32 @@ static void _adjust_spells(void)
 
     if (spell != SPELL_NO_SPELL)
         mprf("%c - %s", input_1, spell_title(spell) );
-}                               // end _adjust_spells()
+}
 
 static void _adjust_ability(void)
 {
     const std::vector<talent> talents = your_talents(false);
 
-    if ( talents.empty() )
+    if (talents.empty())
     {
         mpr("You don't currently have any abilities.");
         return;
     }
 
     int selected = -1;
-    while ( selected < 0 )
+    while (selected < 0)
     {
-        msg::streams(MSGCH_PROMPT) << "Adjust which ability? (? or * to list)"
+        msg::streams(MSGCH_PROMPT) << "Adjust which ability? (? or * to list) "
                                    << std::endl;
 
         const int keyin = get_ch();
 
         if (keyin == '?' || keyin == '*')
-        {
             selected = choose_ability_menu(talents);
-        }
         else if (keyin == ESCAPE || keyin == ' ' ||
                  keyin == '\r' || keyin == '\n')
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return;
         }
         else if (isalpha(keyin))
@@ -500,18 +498,18 @@ static void _adjust_ability(void)
 
     const int index1 = letter_to_index(talents[selected].hotkey);
 
-    msg::streams(MSGCH_PROMPT) << "Adjust to which letter?" << std::endl;
+    msg::streams(MSGCH_PROMPT) << "Adjust to which letter? " << std::endl;
 
     const int keyin = get_ch();
 
-    if ( !isalpha(keyin) )
+    if (!isalpha(keyin))
     {
         canned_msg(MSG_HUH);
         return;
     }
 
     const int index2 = letter_to_index(keyin);
-    if ( index1 == index2 )
+    if (index1 == index2)
     {
         mpr("That would be singularly pointless.");
         return;
@@ -519,9 +517,9 @@ static void _adjust_ability(void)
 
     // See if we moved something out.
     bool printed_message = false;
-    for ( unsigned int i = 0; i < talents.size(); ++i )
+    for (unsigned int i = 0; i < talents.size(); ++i)
     {
-        if ( talents[i].hotkey == keyin )
+        if (talents[i].hotkey == keyin)
         {
             msg::stream << "Swapping with: "
                         << static_cast<char>(keyin) << " - "
@@ -542,7 +540,7 @@ static void _adjust_ability(void)
     ability_type tmp = you.ability_letter_table[index2];
     you.ability_letter_table[index2] = you.ability_letter_table[index1];
     you.ability_letter_table[index1] = tmp;
-}                               // end _adjust_ability()
+}
 
 void list_armour()
 {
@@ -1507,7 +1505,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     if (!error_inout.empty())
         mpr(error_inout.c_str(), MSGCH_PROMPT);
     mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od, "
-        "(A)bility, (B)ranch, or (C)ard?", MSGCH_PROMPT);
+        "(A)bility, (B)ranch, or (C)ard? ", MSGCH_PROMPT);
 
     int ch = toupper(getch());
     std::string    type;

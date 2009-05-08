@@ -1236,7 +1236,7 @@ game_start:
 
         if (_check_saved_game())
         {
-            cprintf(EOL "Do you really want to overwrite your old game?");
+            cprintf(EOL "Do you really want to overwrite your old game? ");
             char c = getch();
             if (c != 'Y' && c != 'y')
             {
