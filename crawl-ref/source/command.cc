@@ -2228,7 +2228,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>V</w> : eVoke wand\n"
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
             "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n";
-      
+
             cols.add_formatted(
                   1, interact,
                   true, true, _cmdhelp_textfilter);
