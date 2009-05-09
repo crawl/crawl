@@ -973,7 +973,8 @@ static void _grab_followers()
         if (fmenv->type == MONS_PLAYER_GHOST
             && fmenv->hit_points < fmenv->max_hit_points / 2)
         {
-            mpr("The ghost fades into the shadows.");
+            if (player_monster_visible(fmenv))
+                mpr("The ghost fades into the shadows.");
             monster_teleport(fmenv, true);
         }
     }

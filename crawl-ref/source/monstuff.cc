@@ -2805,9 +2805,12 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     _handle_behaviour(mon);
     ASSERT(in_bounds(mon->target) || mon->target.origin());
 
-    // If it woke up, it might shout.
-    if (was_sleeping && !mons_is_sleeping(mon) && allow_shout)
+    // If it woke up and you're its new foe, it might shout.
+    if (was_sleeping && !mons_is_sleeping(mon) && allow_shout
+        && mon->foe == MHITYOU && !mons_wont_attack(mon))
+    {
         handle_monster_shouts(mon);
+    }
 
     const bool wasLurking =
         (old_behaviour == BEH_LURK && !mons_is_lurking(mon));

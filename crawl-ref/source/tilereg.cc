@@ -542,6 +542,9 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
         m_buf_main.add(TILE_MESH, x, y);
 
+    if (bg & TILE_FLAG_OOR && (bg != TILE_FLAG_OOR || fg))
+        m_buf_main.add(TILE_OOR_MESH, x, y);
+
     if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
         m_buf_main.add(TILE_MAGIC_MAP_MESH, x, y);
 

@@ -2733,7 +2733,7 @@ static bool _xom_is_bad(int sever, int tension)
             done = _xom_polymorph_nearby_monster(false);
             badness = 3;
         }
-        else if ((!nasty || tension > 0) && x_chance_in_y(11, sever))
+        else if (tension > 0 && x_chance_in_y(11, sever))
         {
             done = _repel_stairs();
             badness = (you.duration[DUR_REPEL_STAIRS_CLIMB] ? 3 : 2);

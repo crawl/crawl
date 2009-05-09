@@ -1268,7 +1268,8 @@ void monster_grid(bool do_updates)
                                || mons_is_wandering(monster))
                 && check_awaken(monster))
             {
-                behaviour_event(monster, ME_ALERT, MHITYOU);
+                behaviour_event(monster, ME_ALERT, MHITYOU, you.pos(), false);
+                handle_monster_shouts(monster);
             }
 
             // [enne] - It's possible that mgrd and monster->x/y are out of
@@ -5362,7 +5363,9 @@ void viewwindow(bool draw_it, bool do_updates)
                 {
                     buffy[bufcount + 1] = DARKGREY;
 #ifdef USE_TILE
-                    tileb[bufcount + 1] |= TILE_FLAG_UNSEEN;
+//                     tileb[bufcount + 1] |= TILE_FLAG_UNSEEN;
+                    if (see_grid(gc))
+                        tileb[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
                 }
 

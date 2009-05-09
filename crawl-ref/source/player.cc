@@ -6198,7 +6198,7 @@ std::string player::shout_verb() const
         return "squeak";
     default: // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
-        if ( level <= 1)
+        if (level <= 1)
             return "shout";
         else if (level == 2)
             return "yell";

@@ -61,6 +61,7 @@ flame FLAME
 may_stab_brand MAY_STAB_BRAND
 stab_brand STAB_BRAND
 out_of_sight MESH
+out_of_range OOR_MESH
 magicmap MAGIC_MAP_MESH
 something_under SOMETHING_UNDER
 error ERROR
