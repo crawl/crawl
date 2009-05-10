@@ -21,12 +21,16 @@ DEPTH:   D:5-9
 SHUFFLE: 23, 34
 MONS:    rat / nothing, grey rat / nothing
 MONS:    green rat / nothing, orange rat / w:40 rat
+ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
+ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
+SUBST:   d = d....
+SUBST:   e = e.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx343.xx.xxxxxxxx.334433xxxxxxxxx23...xx
-xx.222...xxxxxxxx..224422xxxxxx1111...xxx
-x..111..xxxxxxxxx..111111.xxx.111...xxxxx
+xxxxxxxxxx.eexxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx343dxx.xxxxxxxxd334433xxxxxxxxx23..exx
+xxd222...xxxxxxxx..224422xxxxxx1111...xxx
+xd.111..xxxxxxxxx..111111.xxx.111...xxxxx
 xx.111..xxxxxxxxxx.11111..x......xxxxxxxx
 xxxx..xx.x.xxxxxx.xx..........xxxxxxxxxxx
 xxxxx.xxx.x..x.xx.x.xx....x.xxxxxxxxxxxxx
