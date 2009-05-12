@@ -20,7 +20,7 @@ Breaks saves compatibility.
 
 Levels
 ------
-* New portal vaults (Sewer, Ice Cave, Minitomb), and many new vaults.
+* New portal vaults (Sewer, Ice Cave, Minitomb, Ziggurat), and many new vaults.
 * Self-changing labyrinths (mappable but subject to map rot).
 * Teleporting within a labyrinth always sends you away from the exit.
 * The Orcish Mines are now completely interconnected via the branch bottom.
@@ -87,7 +87,7 @@ Interface
 ---------
 * New command for evoking inventory items ('V'), replaces wand zapping ('Z').
 * Casting spells with 'z' aborts without prompt if no monsters are in range.
-* Casting spells with 'z?' or the new 'Z' allows casting in any case.
+* Casting spells with the new 'Z' allows casting in any case.
 * Changed quick save command to 'Ctrl-S' (was Ctrl-X).
 * Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
 * New monster/item view command ('Ctrl-X'), allowing travel to items, features.

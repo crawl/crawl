@@ -3252,7 +3252,7 @@ static monster_type _choose_unique_by_depth(int step)
         break;
     case 1: // depth <= 7
         ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
-                            MONS_EDMUND, -1);
+                            MONS_EDMUND, MONS_PRINCE_RIBBIT, -1);
         break;
     case 2: // depth <= 9
         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
@@ -3260,27 +3260,27 @@ static monster_type _choose_unique_by_depth(int step)
         break;
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
-                            MONS_MICHAEL, MONS_PRINCE_RIBBIT, -1);
+                            MONS_MICHAEL, MONS_EUSTACHIO, MONS_SONJA, -1);
         break;
     case 4: // depth <= 16
         ret = random_choose(MONS_URUG, MONS_MICHAEL, MONS_JOSEPH, MONS_SNORG,
                             MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
-                            MONS_NORBERT, MONS_JOZEF, MONS_AZRAEL,
-                            MONS_EUSTACHIO, MONS_SONJA, MONS_NESSOS, -1);
+                            MONS_NORBERT, MONS_JOZEF, MONS_EUSTACHIO,
+                            MONS_SONJA, MONS_AZRAEL, MONS_NESSOS, -1);
         break;
     case 5: // depth <= 19
         ret = random_choose(MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE,
                             MONS_HAROLD, MONS_NORBERT, MONS_JOZEF, MONS_AGNES,
                             MONS_MAUD, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
-                            MONS_AZRAEL, MONS_EUSTACHIO, MONS_NERGALLE,
-                            MONS_SONJA, MONS_NESSOS, -1);
+                            MONS_AZRAEL, MONS_NESSOS, MONS_NERGALLE,
+                            MONS_ROXANNE, MONS_SAINT_ROKA, -1);
         break;
     case 6: // depth > 19
     default:
         ret = random_choose(MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
                             MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_XTAHUA,
                             MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY,
-                            MONS_BORIS, MONS_ROXANNE, MONS_NERGALLE,
+                            MONS_BORIS, MONS_NERGALLE, MONS_ROXANNE,
                             MONS_SAINT_ROKA, -1);
     }
 

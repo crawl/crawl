@@ -5363,7 +5363,6 @@ void viewwindow(bool draw_it, bool do_updates)
                 {
                     buffy[bufcount + 1] = DARKGREY;
 #ifdef USE_TILE
-//                     tileb[bufcount + 1] |= TILE_FLAG_UNSEEN;
                     if (see_grid(gc))
                         tileb[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
