@@ -1983,7 +1983,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     if (item_dropped == you.equip[EQ_WEAPON]
         && quant_drop >= you.inv[item_dropped].quantity)
     {
-        if (!unwield_item())
+        if (!wield_weapon(true, PROMPT_GOT_SPECIAL))
             return (false);
         canned_msg( MSG_EMPTY_HANDED );
     }

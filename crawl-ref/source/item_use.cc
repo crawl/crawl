@@ -2407,7 +2407,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        unwield_item();
+        if (!wield_weapon(true, PROMPT_GOT_SPECIAL))
+            return (false);
+
         unwielded = true;
     }
 
