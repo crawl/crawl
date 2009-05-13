@@ -815,9 +815,9 @@ static bool _is_chaos_upgradeable(const item_def &item,
     }
     else
     {
-        // If the weapon is a launcher and the monster is either out
-        // of ammo or is carrying javelins then don't bother upgrading
-        // launcher.
+        // If the weapon is a launcher, and the monster is either out
+        // of ammo or is carrying javelins, then don't bother upgrading
+        // the launcher.
         if (is_range_weapon(item)
             && (mon->inv[MSLOT_MISSILE] == NON_ITEM
                 || !has_launcher(mitm[mon->inv[MSLOT_MISSILE]])))

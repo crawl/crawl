@@ -972,7 +972,7 @@ There are many skills related to magic, the principal one being
 Spellcasting. This determines the number of Magic available and higher
 Spellcasting helps at several places when spells are involved. Next
 there are several general areas (Conjuration, Enchantment, Summoning,
-Necromancy, Translocation, Transmigration and Divination) as well as
+Necromancy, Translocation, Transmutation and Divination) as well as
 several elemental areas (Fire, Ice, Air and Earth) and, finally, Poison.
 A particular spell can belong to (and thus train) up to three areas.
 Being good in the areas of a spell will improve the casting chance and,
@@ -1936,18 +1936,19 @@ Reavers are warriors who learn the magics of destruction in order to
 complement their deadliness in hand combat.
 
 
-Magicians: These are not a job by itself, but a type of jobs, including
-Wizards, Conjurers, Enchanters, Summoners, Necromancers, various
-Elementalists, Venom Mages, Transmuters and Warpers. Magicians are
-the best at using magic. They start with a knife, a robe and a book
-of spells which should see them through the first several levels.
+Magicians: A magician is not a job by itself, but a type of job,
+including Wizards, Conjurers, Enchanters, Summoners, Necromancers,
+various Elementalists, Venom Mages, Transmuters and Warpers. Magicians
+are the best at using magic. Among other things, they start with a robe
+and a book of spells which should see them through the first several
+levels.
 
 Wizards:
 --------
 A Wizard is a magician who does not specialise in any area of magic.
-Wizards start with a variety of magical skills and with either
-Magic Dart or Summon Small Mammals in memory, depending on their
-starting book.
+Wizards start with a variety of magical skills and with either Magic
+Dart or Summon Small Mammals in memory, depending on their starting
+book.
 
 Conjurers:
 ----------
@@ -1962,9 +1963,8 @@ Although not as directly powerful as conjurations, high-level
 enchantments offer a wide range of very handy effects. The Enchanter
 begins with lightly enchanted weapons and armour, but no direct damage
 spell (since enchantments do not deal with direct attacks). Instead,
-they begin with the Corona spell and some enchanted darts, which
-should help them out until they can use the higher level enchantment
-spells.
+they begin with the Corona spell and some enchanted darts, which should
+help them out until they can use the higher level enchantment spells.
 
 Summoners:
 ----------
@@ -1986,7 +1986,7 @@ long distances and positioning themselves precisely.
 
 Transmuters:
 ------------
-Transmuters specialise in transmigration magic, and can cause strange
+Transmuters specialise in transmutation magic, and can cause strange
 changes in themselves and others.
 
 Elementalists:
@@ -2018,8 +2018,8 @@ The Stalker is an Assassin who has trained in the use of poison magic.
 
 Thieves:
 --------
-The Thief is one of the trickiest jobs to play. Thieves start out
-with a large variety of useful skills, and need to use all of them to
+The Thief is one of the trickiest jobs to play. Thieves start out with
+a large variety of useful skills, and need to use all of them to
 survive. They enter the Dungeon with a short sword, a hand crossbow,
 some darts and light armour.
 
