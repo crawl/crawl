@@ -87,7 +87,7 @@ There are several different types of items:
 
  - Wands (/), Scrolls (?) and Potions (!) can be very valuable, but have
    limited uses (scrolls and potions can only be used once each, wands contain
-   only a certain number of charges). Wands are 'Z'apped, scrolls are 'r'ead
+   only a certain number of charges). Wands are e'V'oked, scrolls are 'r'ead
    and potions are 'q'uaffed. Unfortunately, you won't at first know what a
    wand, scroll or potion does; it will only be described by its physical
    appearance. But once you have used, for example, a potion of healing, you
@@ -141,10 +141,11 @@ To survive, you will need to develop a few basic tactics:
 
 Before long, you'll probably end up dead.
 
-Death in Crawl is permanent; you cannot just reload a saved game and start again
-where you left off. The 'S' (save) command exists only to let you leave a game
-part-way through and come back to it later. Quitting ('Ctrl-Q') lets you commit
-suicide if you can't even be bothered to help your character escape alive.
+Death in Crawl is permanent; you cannot just reload a saved game and start
+again where you left off. The 'S' (save) command exists only to let you leave
+a game part-way through and come back to it later. Quitting ('Ctrl-Q') lets 
+you commit suicide if you can't even be bothered to help your character escape
+alive.
 
 Well, that's it for the quick-start guide. This should help you through your
 first few games, but Crawl is extremely (some would say excessively) complex

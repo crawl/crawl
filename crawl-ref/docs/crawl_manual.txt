@@ -594,7 +594,7 @@ displayed, and what commands there are to use them:
 %       food            (use 'e'at; also 'c'hop up corpses)
 ?       scrolls         (use 'r'ead)
 !       potions         (use 'q'uaff)
-/       wands           (use 'Z'ap)
+/       wands           (use 'V' to evoke)
 =       rings           (use 'P'ut on and 'R'emove)
 "       amulets         (use 'P'ut on and 'R'emove)
 \ or |  staves, rods    (use 'w'ield for staves; 'v' for evoking rods)
@@ -834,10 +834,10 @@ identify a wand to find out how many uses it has left. This can be
 done with a scroll of identify; characters with a good Evocations
 skill may also deduce the number of charges simply upon zapping the
 wand. Wands are aimed in the same way as missile weapons, and you can
-invoke the power of a wand by 'Z'apping it. See section I for targeting.
-There are also a number of wands that may be useful to zap at yourself,
-but it is usually prudent to know what you're zapping at yourself before
-you do so.
+invoke the power of a wand by evoking it with 'V'. See section I for
+targeting. There are also a number of wands that may be useful to
+evoke at yourself, but it is usually prudent to know what you are
+evoking before you do so.
 
 =" Rings and Amulets
 --------------------
@@ -881,9 +881,15 @@ Most books contain magical spells which your character may be able to
 learn. You can read a book with the 'r' command, which lets you access
 a description of each spell, or memorise spells from it with the 'M'
 command. Use 'z' to cast previously memorised spells. For spells
-demanding a target, the comments on using missile weapons apply. You
-can also press 'I' to just have a look at all spells memorised. Note
-that '=' allows you to change what spells are assigned to what keys.
+demanding a target, the comments on using missile weapons apply. Many
+spells have a limited range and casting will be aborted if there are
+no potential targets within this range. If this case, neither magic nor
+time are expended. If, for whatever reason, you want to cast the spell
+nonetheless, you can use the 'Z' command.
+You can also press 'I' to just have a look at all spells memorised.
+From this screen, you can read the descriptions of the spells and check
+various details about your casting abilities. Note that '=' allows you
+to change what spells are assigned to what keys.
 
 Some books have other special effects, and powerful spellbooks have
 been known to resent the attentions of incompetent magicians.
@@ -938,11 +944,11 @@ character of these species might find a Centaur or Naga barding.
 
 Artefacts
 ---------
-Weapons, armour and jewellery items can be artefacts. These come in two
-flavours: predefined artefacts ('fixedarts'), and randomly created ones
-('randarts'). Artefacts will always carry unusual names, for example
-"golden sword" or "shimmering scale mail". Also, artefacts cannot
-be modified in any way, including enchantments.
+Weapons, armour, jewellery and spellbooks can be artefacts. These come
+in two flavours: predefined artefacts ('fixedarts'), and randomly 
+created ones ('randarts'). Artefacts will always carry unusual names,
+for example "golden sword" or "shimmering scale mail". Also, artefacts
+cannot be modified in any way, including enchantments.
 
 Apart from that, otherwise mundane items can get one special property.
 These are called 'ego items', and examples are: boots of running, a
@@ -2269,7 +2275,7 @@ level map, interlevel travel) also have help menus via '?' on their own.
 
 Saving games:
     S                   Save game with query and exit.
-    Ctrl-X              Save game without query and exit.
+    Ctrl-S              Save game without query and exit.
     Ctrl-Q              Quit without saving (you're asked before).
 
 Movement:
@@ -2316,6 +2322,9 @@ Dungeon interaction:
     ;                   Examine occupied tile, also causes auto-pickup.
     x                   Examine surroundings, see below. Has '?' help.
     X                   Examine level map, see below. Has help on '?'.
+    Ctrl-X              Lists all monsters, items and features in sight.
+                        You may read their descriptions and travel to
+                        an item or feature.
     Ctrl-O              Show dungeon overview (branches, shops, etc.).
     !                   Annotate current level: you can enter any
                         string.
@@ -2350,9 +2359,6 @@ Character information:
     ]                   Shows a restricted inventory, only containing
                         worn, wielded and quivered items.
     I                   Show list of memorised spells.
-    V                   Lists all monsters, items and features in sight.
-                        You may read their descriptions and travel to
-                        an item or feature.
     %                   Show resistances and general character overview:
                         health, experience, money, gear, and
                         status, mutations, abilities (the latter three
@@ -2378,13 +2384,14 @@ Item interaction (inventory):
     q                   Quaff a potion.
     e                   Eat food (tries floor first, inventory next).
                         In the eating prompt, e is synonymous to y.
-    Z                   Zap a wand.
     r                   Read a scroll or book.
     M                   Memorise a spell from a book.
     w                   Wield an item ( - for none).
     '                   Wield item a, or switch to b.
     v                   Evoke power of wielded item. Also used to attack
                         non-adjacent monsters with weapons of reaching.
+    V                   Evoke an item from the inventory. This includes
+                        using of wands.
     W                   Wear armour. Also allows to take off armour.
     T                   Take off armour.
     P                   Put on jewellery. Also allows to remove it.
@@ -2415,7 +2422,12 @@ Item interaction (floor):
 Other game-playing commands:
     a                   Use special ability.
     p                   Pray (or renew an existing prayer).
-    z                   Cast a spell.
+    z                   Cast a spell. Should the spell demand monsters as
+                        target but there are none within range, casting 
+                        will be stopped. In this case, neither turns nor
+                        magic are used. If you want to cast the spell 
+                        nonetheless, use Z.
+    Z                   Cast a spell, regardless of range limitations.
     I                   List spells.
     t                   Tell commands to allies, or shout (with tt).
     Ctrl-A              Toggle autopickup. Note that encounters with

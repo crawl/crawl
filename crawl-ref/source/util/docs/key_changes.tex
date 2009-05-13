@@ -37,8 +37,33 @@
 \begin{document}
 
 \begin{center}\textbf{\LARGE
-\dungeon\ \crawl: Important changes in 0.4
+\dungeon\ \crawl: Important interface changes
 }\end{center}
+
+\subsection*{Command key changes introduced in 0.5}
+
+There have been some command key changes in 0.5. There is no macrofile this time; you may have to resort to macros on your own. 
+(This is probably only needed to interchange the \key{Z} and \key{V} commands if you refuse to learn that wands are nowadays
+activated with \key{V}.)
+
+\begin{center}
+\begin{tabular}{ll}
+key          & new command \\ \hline
+\key{V}      & evokes items in inventory like \textbf{wands} (was \key{Z}) \\
+\key{Z}      & cast a spell even if no monster is withing range \\
+\key{z}      & cast a spell (as before) but abort if no monster is within range \\
+\key{Ctrl-X} & lists monsters, items and features in sight \\
+\key{Ctrl-S} & saves game without prompt (was \key{Ctrl-X}) \\
+\\
+\multicolumn{2}{l}{On the level map (\key{X}):} \\
+\key{e}      & set/remove travel exclusion (was \key{Ctrl-X}) \\
+\key{E}      & cycle travel exclusions (was \key{x})
+\end{tabular}
+\end{center}
+
+\newpage
+
+\subsection*{Command key changes introduced in 0.4}
 
 In DCSS 0.4, for better ergonomics, many key bindings were changed. Also,
 a small number of new commands were introduced. The tables below list all 
@@ -110,6 +135,8 @@ appropriate ammunition) and then firing. \key{F} also lets you select an
 item to be thrown, but this command does not affect the quiver.
 
 \newpage
+
+\subsection*{Other interface changes introduced in 0.4}
 
 The colours of many monsters have been changed. Most notably, there are
 no darkgrey monsters anymore. In case darkgrey is actually better visible 
