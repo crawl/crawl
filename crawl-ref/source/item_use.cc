@@ -4040,6 +4040,7 @@ void zap_wand(int slot)
 
         mprf("This wand has %d charge%s left.",
              wand.plus, wand.plus == 1 ? "" : "s");
+
         set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
     }
 

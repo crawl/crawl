@@ -1941,19 +1941,22 @@ bool recharge_wand(int item_slot)
                     wand.plus,
                     std::min(charge_gain * 3,
                              wand.plus +
-                             1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 )));
+                             1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
 
             const bool charged = (new_charges > wand.plus);
 
             std::string desc;
+
             if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
             {
-                snprintf(info, INFO_SIZE, " and now has %d charges", new_charges);
+                snprintf(info, INFO_SIZE, " and now has %d charge%s",
+                         new_charges, new_charges == 1 ? "" : "s");
                 desc = info;
             }
+
             mprf("%s %s for a moment%s.",
                  wand.name(DESC_CAP_YOUR).c_str(),
-                 charged? "glows" : "flickers",
+                 charged ? "glows" : "flickers",
                  desc.c_str());
 
             wand.plus = new_charges;
