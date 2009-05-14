@@ -135,8 +135,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
       ABIL_NEMELEX_MARK_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
-    { ABIL_ELYVILON_LESSER_HEALING_SELF, ABIL_ELYVILON_PURIFICATION,
-      ABIL_ELYVILON_GREATER_HEALING_SELF, ABIL_ELYVILON_RESTORATION,
+    { ABIL_ELYVILON_LESSER_HEALING_OTHERS, ABIL_ELYVILON_PURIFICATION,
+      ABIL_ELYVILON_GREATER_HEALING_OTHERS, ABIL_ELYVILON_RESTORATION,
       ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE, ABIL_LUGONU_BANISH,
@@ -2190,16 +2190,16 @@ std::vector<talent> your_talents(bool check_confused)
                 if (abil != ABIL_NON_ABILITY)
                 {
                     _add_talent(talents, abil, check_confused);
-                    if (abil == ABIL_ELYVILON_LESSER_HEALING_SELF)
+                    if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
                     {
                         _add_talent(talents,
-                                    ABIL_ELYVILON_LESSER_HEALING_OTHERS,
+                                    ABIL_ELYVILON_LESSER_HEALING_SELF,
                                     check_confused);
                     }
-                    else if (abil == ABIL_ELYVILON_GREATER_HEALING_SELF)
+                    else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
                     {
                         _add_talent(talents,
-                                    ABIL_ELYVILON_GREATER_HEALING_OTHERS,
+                                    ABIL_ELYVILON_GREATER_HEALING_SELF,
                                     check_confused);
                     }
                 }
@@ -2364,8 +2364,8 @@ void set_god_ability_slots()
     // Finally, add in current god's invocations in traditional slots.
     int num = 0;
 
-    if (you.religion == GOD_ELYVILON)
-        _set_god_ability_helper(ABIL_ELYVILON_DESTROY_WEAPONS, 'a' + num++);
+//     if (you.religion == GOD_ELYVILON)
+//         _set_god_ability_helper(ABIL_ELYVILON_DESTROY_WEAPONS, 'a' + num++);
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
@@ -2377,15 +2377,15 @@ void set_god_ability_slots()
             if (you.religion == GOD_ELYVILON)
             {
                 if (god_abilities[you.religion][i]
-                        == ABIL_ELYVILON_LESSER_HEALING_SELF)
+                        == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
                 {
-                    _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_OTHERS,
+                    _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_SELF,
                                             'a' + num++);
                 }
                 else if (god_abilities[you.religion][i]
-                            == ABIL_ELYVILON_GREATER_HEALING_SELF)
+                            == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
                 {
-                    _set_god_ability_helper(ABIL_ELYVILON_GREATER_HEALING_OTHERS,
+                    _set_god_ability_helper(ABIL_ELYVILON_GREATER_HEALING_SELF,
                                             'a' + num++);
                 }
             }

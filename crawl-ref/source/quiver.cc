@@ -326,7 +326,7 @@ void player_quiver::_maybe_fill_empty_slot()
         // to be cleared. Else, any already quivered item is valid and we
         // don't need to do anything else.
         if (m_last_used_of_type[slot].link == you.equip[EQ_WEAPON]
-            && you.equip[EQ_WEAPON] == -1)
+            && you.equip[EQ_WEAPON] != -1)
         {
             unquiver_weapon = true;
         }
