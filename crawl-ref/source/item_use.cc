@@ -4963,16 +4963,12 @@ void read_scroll(int slot)
         break;
 
     case SCR_IMMOLATION:
-    {
         mpr("The scroll explodes in your hands!");
-        // We do this here to prevent it from blowing itself up.
-        set_ident_type(scroll, ID_KNOWN_TYPE);
-        dec_inv_item_quantity(item_slot, 1);
 
+        // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
         immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);
         bad_effect = true;
         break;
-    }
 
     case SCR_CURSE_WEAPON:
         if (!you.weapon()
@@ -5175,8 +5171,7 @@ void read_scroll(int slot)
                                          : ID_TRIED_TYPE);
 
     // Finally, destroy and identify the scroll.
-    // Scrolls of immolation were already destroyed earlier.
-    if (which_scroll != SCR_PAPER && which_scroll != SCR_IMMOLATION)
+    if (which_scroll != SCR_PAPER)
     {
         if (id_the_scroll)
             set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes

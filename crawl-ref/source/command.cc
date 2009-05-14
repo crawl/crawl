@@ -59,8 +59,6 @@ static void _adjust_spells(void);
 static void _adjust_ability(void);
 
 static const char *features[] = {
-    "Stash-tracking",
-
 #ifdef CLUA_BINDINGS
     "Lua user scripts",
 #endif
@@ -106,7 +104,7 @@ static std::string _get_version_information(void)
 #endif
                 result += VERSION_DETAIL ").";
 
-    result += "\n\n";
+    result += "\n";
 
     return (result);
 }
@@ -122,7 +120,6 @@ static std::string _get_version_features(void)
         result += features[i];
         result += EOL;
     }
-    result += "\n";
 
     return (result);
 }
@@ -229,7 +226,7 @@ static void _print_version(void)
     cmd_version.add_text(_get_version_features());
     cmd_version.add_text(_get_version_changes());
 
-    std::string fname = "034_changes.txt";
+    std::string fname = "key_changes.txt";
     // Read in information about changes in comparison to the latest version.
     FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
 

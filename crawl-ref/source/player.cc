@@ -3950,7 +3950,7 @@ void display_char_status()
     }
 
     _output_expiring_message(DUR_ICY_ARMOUR,
-                             "You are protected by an icy shield.");
+                             "You are protected by an icy armour.");
 
     _output_expiring_message(DUR_REPEL_MISSILES,
                              "You are protected from missiles.");

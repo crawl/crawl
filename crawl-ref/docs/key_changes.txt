@@ -1,0 +1,97 @@
+    DUNGEON CRAWL: Important interface changes
+    ==========================================
+
+Command key changes introduced in 0.5
+-------------------------------------
+There have been some command key changes in 0.5. There is no macrofile this
+time; you may have to resort to macros on your own. (This is probably only
+needed to interchange the Z and V commands if you refuse to learn that wands
+are nowadays activated with V.)
+            key        new command
+            V          evokes items in inventory like wands (was Z)
+            Z          cast a spell even if no monster is withing range
+            z          cast a spell (as before) but abort if no monster is
+                       within range
+            Ctrl-X     lists monsters, items and features in sight
+            Ctrl-S     saves game without prompt (was Ctrl-X)
+            On the level map (X):
+            e          set/remove travel exclusion (was Ctrl-X)
+            E          cycle travel exclusions (was x)
+
+
+
+Command key changes introduced in 0.4
+-------------------------------------
+In DCSS 0.4, for better ergonomics, many key bindings were changed. Also, a
+small number of new commands were introduced. The tables below list all of
+these. If you have been playing an older version and want to restore the old
+key set, do so by adding this line to the init.txt file:
+  additional_macro_file = 034_command_keys.txt
+
+The command for examining items (was v) is gone. Bring up the inventory and
+press the key matching an item’s slot in order to examine it.
+When chopping up a single corpse on the ground, there is no longer any prompt.
+You will only be prompted if there are two or more corpses. When answering this
+prompt, you can use the following shortcuts: c means yes, so you can press
+cccc. . . to chop up all corpses in one place, or you can just hit a to butcher
+of corpses on a square.
+
+The * Direction and Ctrl-Direction keys now both open and close doors.
+                 key         new command
+                             read message (only used for online play)
+                 !           annotate level (read annotations with Ctrl-O;
+                             annotations with an ! prompt when entering the level)
+                 (           cycle ammunition
+                 Q           quiver item
+                 ‘           redo previous command
+                 0           repeat next command
+                 V           verbose list of monsters in sight
+                 Ctrl-T      toggle ally pickup mode (only for permanent allies)
+                 Ctrl-D      add macro (a new synonym for ∼)
+                 new key     command                   old key
+                 z           cast spell                was Z
+                 Z           zap wand                  was z
+                 o           auto-explore              was Ctrl-O
+                 Ctrl-O      dungeon overview          was O
+                 O           open door                 was o
+                 C           close door                was c
+                 c           chop up                   was D, dissect
+                 E           show experience           was C
+                 v           evoke                     was E
+                 F           manually throw            was t
+                 t           tell/yell                 was !
+                 Ctrl-V      Tiles settings            was Ctrl-Q
+                 Ctrl-Q      quit                      was Q
+
+There are additional changes to the targeting interface:
+The functions of ! and . have been swapped. So firing with . will now stop at
+the target, whereas ! will shoot further if the target was missed (and Enter,
+Del, Space still behave as in 0.3.4).
+You can now target using the monster list as well; Ctrl-L toggles this option.
+You may quiver an item, meaning that you will preferably fire this ammunition
+(and keep doing so even if you run out of it temporarily). Quivering is done
+via Q (quiver the currently fired item) or fi (choose an item and quiver it) or
+also by using ( (cycling appropriate ammunition) and then firing. F also lets
+you select an item to be thrown, but this command does not affect the quiver.
+
+Other interface changes introduced in 0.4
+-----------------------------------------
+The colours of many monsters have been changed. Most notably, there are no
+darkgrey monsters anymore. In case darkgrey is actually better visible than
+blue on your system, you can swap these colours using the line
+    colour.blue = darkgrey
+in init.txt. Apart from that, more dangerous monsters are now generally
+displayed in lighter colours.
+
+We are content that all of these changes are genuine improvements. Should your
+brain be hardwired to the old settings, you can effectively enforce the 0.3.4
+state by using the following options:
+    include                            = 034_monster_glyphs.txt
+    additional_macro_file              = 034_command_keys.txt
+    always_confirm_butcher             = true
+
+Note that the header of init.txt contains these lines. (It contains some more
+options for using other old settings.) The options are commented out, so you
+just need to remove the # in front in order to activate them. You can choose to
+use only part of these options. In case you decide to use the old keyset, be
+aware that D and d are synonyms for ’yes’ in the butcher interface.
