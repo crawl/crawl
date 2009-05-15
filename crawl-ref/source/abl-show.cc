@@ -110,7 +110,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
       ABIL_KIKU_ENSLAVE_UNDEAD, ABIL_NON_ABILITY, ABIL_KIKU_INVOKE_DEATH },
     // Yredelemnul
-    { ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_RECALL_UNDEAD,
+    { ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_RECALL_UNDEAD_SLAVES,
       ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
     // Xom
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
@@ -242,7 +242,7 @@ static const ability_def Ability_List[] =
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains", 1, 0, 100, 0, ABFLAG_NONE },
-    { ABIL_YRED_RECALL_UNDEAD, "Recall Undead Slaves",
+    { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
       2, 0, 50, 0, ABFLAG_NONE },
     { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 3, 0, 100, 1, ABFLAG_NONE },
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, ABFLAG_NONE },
@@ -714,7 +714,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 40 - you.intel - you.skills[SK_INVOCATIONS];
         break;
 
-    case ABIL_YRED_RECALL_UNDEAD:
+    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
         invoc = true;
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1543,9 +1543,9 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
-    case ABIL_YRED_RECALL_UNDEAD:
+    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
         recall(1);
-        exercise(SK_INVOCATIONS, 2 + random2(4));
+        exercise(SK_INVOCATIONS, 1);
         break;
 
     case ABIL_YRED_ANIMATE_DEAD:
