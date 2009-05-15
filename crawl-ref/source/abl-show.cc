@@ -1078,7 +1078,7 @@ static bool _do_ability(const ability_def& abil)
     dist spd;
 
     // Note: the costs will not be applied until after this switch
-    // statement... it's assumed that only failures have returned! -- bwr
+    // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
     {
     case ABIL_MUMMY_RESTORATION:
@@ -1163,10 +1163,10 @@ static bool _do_ability(const ability_def& abil)
         power = (abil.ability == ABIL_EVOKE_MAPPING) ?
             you.skills[SK_EVOCATIONS] : you.experience_level;
 
-        if ( magic_mapping(  3 + roll_dice( 2,
-                             (abil.ability == ABIL_EVOKE_MAPPING) ? power :
-                             power + player_mutation_level(MUT_MAPPING) * 10),
-                             40 + roll_dice( 2, power), true) )
+        if (magic_mapping(3 + roll_dice(2,
+                          (abil.ability == ABIL_EVOKE_MAPPING) ? power :
+                          power + player_mutation_level(MUT_MAPPING) * 10),
+                          40 + roll_dice( 2, power), true))
         {
             mpr("You sense your surroundings.");
         }
@@ -1174,18 +1174,18 @@ static bool _do_ability(const ability_def& abil)
             mpr("You feel momentarily disoriented.");
 
         if (abil.ability == ABIL_EVOKE_MAPPING)
-            exercise( SK_EVOCATIONS, 1 );
+            exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
     case ABIL_TELEPORTATION:          // teleport mut
         if (player_mutation_level(MUT_TELEPORT_AT_WILL) == 3)
-            you_teleport_now( true, true ); // instant and to new area of Abyss
+            you_teleport_now(true, true); // instant and to new area of Abyss
         else
             you_teleport();
 
         if (abil.ability == ABIL_EVOKE_TELEPORTATION)
-            exercise( SK_EVOCATIONS, 1 );
+            exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_BREATHE_FIRE:
@@ -1303,7 +1303,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
-        // FIXME This is not the best way to do stuff, because
+        // FIXME: This is not the best way to do stuff, because
         // you have a chance of failing the evocation test, in
         // which case you'll lose MP, etc.
         // We should add a pre-failure-test check in general.
@@ -1324,13 +1324,13 @@ static bool _do_ability(const ability_def& abil)
 
     // Fly (kenku) - eventually becomes permanent (see acr.cc).
     case ABIL_FLY:
-        cast_fly( you.experience_level * 4 );
+        cast_fly(you.experience_level * 4);
 
         if (you.experience_level > 14)
             mpr("You feel very comfortable in the air.");
         break;
 
-    // Fly (Draconians, or anything else with wings)
+    // Fly (Draconians, or anything else with wings).
     case ABIL_FLY_II:
         if (you.duration[DUR_EXHAUSTED])
         {
@@ -1423,7 +1423,7 @@ static bool _do_ability(const ability_def& abil)
 
         potion_effect(POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5);
         contaminate_player( 1 + random2(3), true );
-        exercise( SK_EVOCATIONS, 1 );
+        exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:
@@ -1433,7 +1433,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
         potion_effect(POT_LEVITATION, 2 * you.skills[SK_EVOCATIONS] + 30);
-        exercise( SK_EVOCATIONS, 1 );
+        exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_STOP_LEVITATING:
@@ -1466,7 +1466,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
         // up to (60 + 40)/2 = 50
-        const int pow = ( 2*skill_bump(SK_INVOCATIONS) + you.piety / 5 ) / 2;
+        const int pow = (2*skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
         start_delay(DELAY_RECITE, 3, pow, you.hp);
 
         exercise(SK_INVOCATIONS, 2);
