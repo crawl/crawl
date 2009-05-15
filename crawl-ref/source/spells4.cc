@@ -1875,9 +1875,7 @@ void remove_divine_shield()
 // recasting simply resets those two values (to better values, presumably)
 void cast_divine_shield()
 {
-    if (you.duration[DUR_DIVINE_SHIELD])
-        mpr("Your divine shield is renewed.");
-    else
+    if (!you.duration[DUR_DIVINE_SHIELD])
     {
         if (you.shield()
             || you.duration[DUR_FIRE_SHIELD]
@@ -1889,11 +1887,14 @@ void cast_divine_shield()
         else
             mpr("A divine shield forms around you!");
     }
+    else
+        mpr("Your divine shield is renewed.");
+
     you.redraw_armour_class = true;
 
     // duration of complete shield bonus from 35 to 80 turns
-    you.duration[DUR_DIVINE_SHIELD]
-       = 35 + (you.skills[SK_SHIELDS] + you.skills[SK_INVOCATIONS]*4)/3;
+    you.duration[DUR_DIVINE_SHIELD] =
+       35 + (you.skills[SK_SHIELDS] + you.skills[SK_INVOCATIONS]*4)/3;
 
     // shield bonus up to 8
     you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
