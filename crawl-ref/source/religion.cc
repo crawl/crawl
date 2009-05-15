@@ -2747,13 +2747,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (victim->attitude != ATT_HOSTILE
-                    || testbits(victim->flags, MF_CREATED_FRIENDLY)
-                    || testbits(victim->flags, MF_WAS_NEUTRAL))
+                if (victim->attitude == ATT_HOSTILE
+                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
-                    penance = level * 3;
-                    piety_change = -level * 3;
+                    break;
                 }
+
+                penance = level * 3;
+                piety_change = -level * 3;
                 retval = true;
                 break;
 
@@ -2813,12 +2815,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (testbits(victim->flags, MF_CREATED_FRIENDLY)
-                    || testbits(victim->flags, MF_WAS_NEUTRAL))
+                if (!testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
-                    penance = level * 3;
-                    piety_change = -level * 3;
+                    break;
                 }
+
+                penance = level * 3;
+                piety_change = -level * 3;
                 retval = true;
                 break;
 
