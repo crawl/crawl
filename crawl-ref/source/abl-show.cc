@@ -1299,7 +1299,7 @@ static bool _do_ability(const ability_def& abil)
         random_blink(true);
 
         if (abil.ability == ABIL_EVOKE_BLINK)
-            exercise( SK_EVOCATIONS, 1 );
+            exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
@@ -1312,17 +1312,17 @@ static bool _do_ability(const ability_def& abil)
             mpr("You're too hungry to berserk.");
             return (false);
         }
-        else if ( !you.can_go_berserk(true) )
+        else if (!you.can_go_berserk(true))
             return (false);
 
         // only exercise if berserk succeeds
         // because of the test above, this should always happen,
-        // but I'm leaving it in -- haranp
-        if ( go_berserk(true) )
-            exercise( SK_EVOCATIONS, 1 );
+        // but I'm leaving it in - haranp
+        if (go_berserk(true))
+            exercise(SK_EVOCATIONS, 1);
         break;
 
-    // Fly (kenku) -- eventually becomes permanent (see acr.cc).
+    // Fly (kenku) - eventually becomes permanent (see acr.cc).
     case ABIL_FLY:
         cast_fly( you.experience_level * 4 );
 
@@ -1343,9 +1343,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
         else
-        {
-            cast_fly( you.experience_level * 2 );
-        }
+            cast_fly(you.experience_level * 2);
         break;
 
     // DEMONIC POWERS:
