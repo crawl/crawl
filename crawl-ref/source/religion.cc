@@ -2455,15 +2455,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                                        "just this once.");
                     break;
                 }
+
                 if (thing_done == DID_ATTACK_HOLY
-                    && (victim->attitude != ATT_HOSTILE
-                        || testbits(victim->flags, MF_CREATED_FRIENDLY)
-                        || testbits(victim->flags, MF_WAS_NEUTRAL)))
+                    && (victim->attitude == ATT_HOSTILE
+                        && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                        && !testbits(victim->flags, MF_WAS_NEUTRAL)))
                 {
-                    piety_change = -level;
-                    penance = level * ((you.religion == GOD_SHINING_ONE) ? 2
-                                                                         : 1);
+                    break;
                 }
+
+                piety_change = -level;
+                penance = level * ((you.religion == GOD_SHINING_ONE) ? 2
+                                                                     : 1);
                 retval = true;
                 break;
             default:
