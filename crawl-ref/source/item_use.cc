@@ -196,7 +196,7 @@ static bool _valid_weapon_swap(const item_def &item)
         return (false);
     }
 
-    // Boneshards.
+    // Bone Shards.
     if (item.base_type == OBJ_CORPSES)
     {
         return (item.sub_type == CORPSE_SKELETON
