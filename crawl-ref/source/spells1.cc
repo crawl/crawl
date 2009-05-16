@@ -690,7 +690,8 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
 static int _healing_spell(int healed, bool divine_ability,
-                          const coord_def& where, targ_mode_type mode)
+                          const coord_def& where, bool not_self,
+                          targ_mode_type mode)
 {
     ASSERT(healed >= 1);
 
@@ -717,6 +718,12 @@ static int _healing_spell(int healed, bool divine_ability,
 
     if (spd.target == you.pos())
     {
+        if (not_self)
+        {
+            mpr("You can only heal others!");
+            return (-1);
+        }
+
         mpr("You are healed.");
         inc_hp(healed, false);
         return (1);
@@ -797,11 +804,11 @@ static int _healing_spell(int healed, bool divine_ability,
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
 int cast_healing(int pow, bool divine_ability, const coord_def& where,
-                 targ_mode_type mode)
+                 bool not_self, targ_mode_type mode)
 {
     pow = std::min(50, pow);
     return (_healing_spell(pow + roll_dice(2, pow) - 2, divine_ability, where,
-                           mode));
+                           not_self, mode));
 }
 
 void remove_divine_vigour()

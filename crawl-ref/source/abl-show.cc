@@ -1704,8 +1704,9 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     {
         const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
+
         if (cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6), true,
-                         self ? you.pos() : coord_def(0,0),
+                         self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_HOSTILE) < 0)
         {
             return (false);
@@ -1723,8 +1724,9 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     {
         const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
+
         if (cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3), true,
-                         self ? you.pos() : coord_def(0,0),
+                         self ? you.pos() : coord_def(0, 0), !self,
                          self ? TARG_NUM_MODES : TARG_HOSTILE) < 0)
         {
             return (false);
@@ -1753,6 +1755,7 @@ static bool _do_ability(const ability_def& abil)
             mpr("You aren't in the Abyss!");
             return (false);       // Don't incur costs.
         }
+
         banished(DNGN_EXIT_ABYSS);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
@@ -1772,11 +1775,13 @@ static bool _do_ability(const ability_def& abil)
             mpr("You cannot banish yourself!");
             return (false);
         }
+
         if (!zapping(ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
                      true))
         {
             return (false);
         }
+
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 
