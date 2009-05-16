@@ -302,7 +302,7 @@ Fully restore your Strength, Dexterity and Intelligence, and heal a large amount
 %%%%
 Divine Vigour
 
-Depending on your Invocations skill, heal a large amount of, and temporarily increase, your hit points.
+Depending on your Invocations skill, restore a large amount of, and temporarily increase, both your hit points and your magic points.
 %%%%
 # Lugonu
 Depart the Abyss

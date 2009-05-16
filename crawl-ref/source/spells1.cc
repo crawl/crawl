@@ -817,6 +817,7 @@ void remove_divine_vigour()
     you.duration[DUR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     calc_hp();
+    calc_mp();
 }
 
 bool cast_divine_vigour()
@@ -830,11 +831,14 @@ bool cast_divine_vigour()
 
         const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/6);
         const int old_hp_max = you.hp_max;
+        const int old_mp_max = you.max_magic_points;
         you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
         you.duration[DUR_DIVINE_VIGOUR]
             = 40 + (you.skills[SK_INVOCATIONS]*5)/2;
         calc_hp();
         inc_hp(you.hp_max - old_hp_max, false);
+        calc_mp();
+        inc_mp(you.max_magic_points - old_mp_max, false);
 
         success = true;
     }

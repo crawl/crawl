@@ -4771,8 +4771,7 @@ void dec_mp(int mp_loss)
 
     you.magic_points -= mp_loss;
 
-    if (you.magic_points < 0)
-        you.magic_points = 0;
+    you.magic_points = std::max(0, you.magic_points);
 
     if (Options.magic_point_warning
         && you.magic_points < (you.max_magic_points
@@ -4845,7 +4844,7 @@ void inc_mp(int mp_gain, bool max_too)
     you.magic_points += mp_gain;
 
     if (max_too)
-        inc_max_mp( mp_gain );
+        inc_max_mp(mp_gain);
 
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
@@ -5091,8 +5090,9 @@ int get_real_mp(bool include_items)
         enp += player_magical_power();
 
     // Analogous to ROBUST/FRAIL
-    enp *= (10 + player_mutation_level(MUT_HIGH_MAGIC)
-               - player_mutation_level(MUT_LOW_MAGIC));
+    enp *= 10 + player_mutation_level(MUT_HIGH_MAGIC)
+              + you.attribute[ATTR_DIVINE_VIGOUR]
+              - player_mutation_level(MUT_LOW_MAGIC);
     enp /= 10;
 
     if (enp > 50)

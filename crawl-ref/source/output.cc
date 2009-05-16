@@ -281,6 +281,12 @@ static void _print_stats_mp(int x, int y)
 {
     // Calculate colour
     short mp_colour = HUD_VALUE_COLOUR;
+
+    const bool boosted = you.duration[DUR_DIVINE_VIGOUR];
+
+    if (boosted)
+        mp_colour = LIGHTBLUE;
+    else
     {
         int mp_percent = (you.max_magic_points == 0
                           ? 100
@@ -294,8 +300,11 @@ static void _print_stats_mp(int x, int y)
     cgotoxy(x+8, y, GOTO_STAT);
     textcolor(mp_colour);
     cprintf("%d", you.magic_points);
-    textcolor(HUD_VALUE_COLOUR);
-    cprintf("/%d", you.max_magic_points );
+    if (!boosted)
+        textcolor(HUD_VALUE_COLOUR);
+    cprintf("/%d", you.max_magic_points);
+    if (boosted)
+        textcolor(HUD_VALUE_COLOUR);
 
     int col = _count_digits(you.magic_points)
               + _count_digits(you.max_magic_points) + 1;
@@ -334,12 +343,12 @@ static void _print_stats_hp(int x, int y)
     textcolor(HUD_CAPTION_COLOUR);
     cprintf(max_max_hp != you.hp_max ? "HP: " : "Health: ");
     textcolor(hp_colour);
-    cprintf( "%d", you.hp );
+    cprintf("%d", you.hp);
     if (!boosted)
         textcolor(HUD_VALUE_COLOUR);
-    cprintf( "/%d", you.hp_max );
+    cprintf("/%d", you.hp_max);
     if (max_max_hp != you.hp_max)
-        cprintf( " (%d)", max_max_hp );
+        cprintf(" (%d)", max_max_hp);
     if (boosted)
         textcolor(HUD_VALUE_COLOUR);
 
@@ -1871,12 +1880,13 @@ static std::vector<formatted_string> _get_overview_stats()
     // 4 columns
     column_composer cols1(4, 18, 28, 40);
 
-    const bool boosted = you.duration[DUR_DIVINE_VIGOUR]
-                             || you.duration[DUR_BERSERKER];
+    const bool boosted_hp = you.duration[DUR_DIVINE_VIGOUR]
+                               || you.duration[DUR_BERSERKER];
+    const bool boosted_mp = you.duration[DUR_DIVINE_VIGOUR];
 
     if (!player_rotted())
     {
-        if (boosted)
+        if (boosted_hp)
         {
             snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d</lightblue>",
                      you.hp, you.hp_max);
@@ -1886,7 +1896,7 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     else
     {
-        if (boosted)
+        if (boosted_hp)
         {
             snprintf(buf, sizeof buf, "HP <lightblue>%3d/%d (%d)</lightblue>",
                      you.hp, you.hp_max, get_real_hp(true, true));
@@ -1899,8 +1909,16 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     cols1.add_formatted(0, buf, false);
 
-    snprintf(buf, sizeof buf, "MP %3d/%d",
-             you.magic_points, you.max_magic_points);
+    if (boosted_mp)
+    {
+        snprintf(buf, sizeof buf, "MP <lightblue>%3d/%d</lightblue>",
+                 you.magic_points, you.max_magic_points);
+    }
+    else
+    {
+        snprintf(buf, sizeof buf, "MP %3d/%d",
+                 you.magic_points, you.max_magic_points);
+    }
     cols1.add_formatted(0, buf, false);
 
     snprintf(buf, sizeof buf, "Gold %d", you.gold);

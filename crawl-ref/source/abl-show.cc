@@ -290,7 +290,7 @@ static const ability_def Ability_List[] =
     { ABIL_ELYVILON_GREATER_HEALING_OTHERS, "Greater Healing",
       2, 0, 250, 2, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_CONF_OK },
-    { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour", 6, 0, 600, 5,
+    { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour", 0, 0, 600, 6,
       ABFLAG_CONF_OK },
 
     // Lugonu
