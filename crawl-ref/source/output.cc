@@ -2344,7 +2344,7 @@ std::string _status_mut_abilities()
         status.push_back("mighty");
 
     if (you.duration[DUR_DIVINE_VIGOUR])
-        status.push_back("divinely robust");
+        status.push_back("divinely vigorous");
 
     if (you.duration[DUR_DIVINE_STAMINA])
         status.push_back("divinely fortified");

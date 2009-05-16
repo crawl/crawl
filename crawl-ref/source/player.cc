@@ -4040,7 +4040,7 @@ void display_char_status()
         mpr("You are mighty.");
 
     if (you.duration[DUR_DIVINE_VIGOUR])
-        mpr("You are divinely robust.");
+        mpr("You are divinely vigorous.");
 
     if (you.duration[DUR_DIVINE_STAMINA])
         mpr("You are divinely fortified.");
