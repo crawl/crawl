@@ -564,7 +564,7 @@ void full_describe_view()
     desc_menu.allow_toggle = true;
 
     // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (list_mons.size() + list_items.size() > 52
+    if (list_mons.size() + list_items.size() + list_features.size() > 52
         && (desc_menu.maxpagesize() > 52 || desc_menu.maxpagesize() == 0))
     {
         desc_menu.set_maxpagesize(52);

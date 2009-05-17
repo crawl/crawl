@@ -652,6 +652,9 @@ void init_travel_terrain_check(bool check_race_equip)
         _set_pass_feature(DNGN_TRAP_MECHANICAL, trav);
         // Shafts can also be levitated over.
         _set_pass_feature(DNGN_TRAP_NATURAL, trav);
+
+        if (!player_can_open_doors())
+            _set_pass_feature(DNGN_CLOSED_DOOR, IMPASSABLE);
     }
     else
     {

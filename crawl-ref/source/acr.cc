@@ -2924,7 +2924,7 @@ static void _open_door(coord_def move, bool check_confused)
 {
     ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (!player_can_open_doors())
     {
         mpr("You can't open doors in your present form.");
         return;

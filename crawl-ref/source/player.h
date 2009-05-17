@@ -326,6 +326,10 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const item_def &cause, bool removed = false);
 
+/* ***********************************************************************
+ * called from: acr - travel
+ * *********************************************************************** */
+bool player_can_open_doors();
 
 // last updated 19may2000 {dlb}
 /* ***********************************************************************

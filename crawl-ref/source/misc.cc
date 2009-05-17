@@ -238,6 +238,19 @@ static void _long_sort(CrawlVector &vec)
     }
 }
 
+static void _compare_blood_quantity(item_def &stack, int timer_size)
+{
+    if (timer_size != stack.quantity)
+    {
+        mprf(MSGCH_WARN,
+             "ERROR: blood potion quantity (%d) doesn't match timer (%d)",
+             stack.quantity, timer_size);
+
+        // sanity measure
+        stack.quantity = timer_size;
+    }
+}
+
 void maybe_coagulate_blood_potions_floor(int obj)
 {
     item_def &blood = mitm[obj];
@@ -251,7 +264,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     ASSERT(props.exists("timer"));
     CrawlVector &timer = props["timer"].get_vector();
     ASSERT(!timer.empty());
-    ASSERT(timer.size() == blood.quantity);
+    _compare_blood_quantity(blood, timer.size());
 
     // blood.sub_type could be POT_BLOOD or POT_BLOOD_COAGULATED
     // -> need different handling
@@ -364,7 +377,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
             timer.push_back(val);
         }
         dec_mitm_item_quantity(obj, rot_count);
-        ASSERT(timer.size() == blood.quantity);
+        _compare_blood_quantity(blood, timer.size());
         return;
     }
 
@@ -404,7 +417,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
         move_item_to_grid(&o, blood.pos);
 
     dec_mitm_item_quantity(obj, rot_count + coag_count);
-    ASSERT(timer.size() == blood.quantity);
+    _compare_blood_quantity(blood, timer.size());
 }
 
 // Prints messages for blood potions coagulating in inventory (coagulate = true)
@@ -455,7 +468,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     ASSERT(props.exists("timer"));
     CrawlVector &timer = props["timer"].get_vector();
-    ASSERT(timer.size() == blood.quantity);
+    _compare_blood_quantity(blood, timer.size());
     ASSERT(!timer.empty());
 
     // blood.sub_type could be POT_BLOOD or POT_BLOOD_COAGULATED
@@ -516,7 +529,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             destroy_item(blood);
         }
         else
-            ASSERT(blood.quantity == timer.size());
+            _compare_blood_quantity(blood, timer.size());
 
         return (true);
     }
@@ -563,7 +576,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             }
             else
             {
-                ASSERT(timer.size() == blood.quantity);
+                _compare_blood_quantity(blood, timer.size());
                 if (!knew_blood)
                     mpr(blood.name(DESC_INVENTORY).c_str());
             }
@@ -607,7 +620,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         }
         blood.quantity -= rot_count;
         // Stack still exists because of coag_count.
-        ASSERT(timer.size() == blood.quantity);
+        _compare_blood_quantity(blood, timer.size());
 
         if (!knew_coag)
             mpr(blood.name(DESC_INVENTORY).c_str());
@@ -651,7 +664,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         props_new.assert_validity();
 
         blood.quantity -= coag_count + rot_count;
-        ASSERT(timer.size() == blood.quantity);
+        _compare_blood_quantity(blood, timer.size());
 
         if (!knew_blood)
             mpr(blood.name(DESC_INVENTORY).c_str());
@@ -690,7 +703,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             inc_mitm_item_quantity(o, coag_count);
             ASSERT(timer2.size() == mitm[o].quantity);
             dec_inv_item_quantity(blood.link, rot_count + coag_count);
-            ASSERT(timer.size() == blood.quantity);
+            _compare_blood_quantity(blood, timer.size());
             if (!knew_blood)
                 mpr(blood.name(DESC_INVENTORY).c_str());
 
@@ -742,7 +755,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     }
     else
     {
-        ASSERT(timer.size() == blood.quantity);
+        _compare_blood_quantity(blood, timer.size());
         if (!knew_blood)
             mpr(blood.name(DESC_INVENTORY).c_str());
     }

@@ -4418,7 +4418,11 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         item_def &item(mitm[item_made]);
         item.pos = where;
         if (is_stackable_item(item) && spec.qty > 0)
+        {
             item.quantity = spec.qty;
+            if (is_blood_potion(item))
+                init_stack_blood_potions(item);
+        }
 
         if (spec.plus >= 0 && item.base_type == OBJ_BOOKS
             && item.sub_type == BOOK_MANUAL)

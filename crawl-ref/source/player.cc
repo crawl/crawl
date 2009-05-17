@@ -427,6 +427,12 @@ bool player_is_swimming()
     return (you.swimming());
 }
 
+bool player_can_open_doors()
+{
+    // Bats can't close/open doors.
+    return (you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT);
+}
+
 bool player_under_penance(void)
 {
     if (you.religion != GOD_NO_GOD)
