@@ -4267,7 +4267,7 @@ static void _handle_behaviour(monsters *mon)
 
                     e_index = _mons_find_nearest_level_exit(mon, e);
 
-                    if (e_index == -1 && one_chance_in(20))
+                    if (e_index == -1 || one_chance_in(20))
                         e_index = _mons_find_nearest_level_exit(mon, e, true);
 
                     if (e_index != -1)
