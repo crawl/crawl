@@ -807,7 +807,7 @@ unsigned int item_value( item_def item, bool ident )
 
         if (item_type_known(item))
         {
-            switch (get_weapon_brand( item ))
+            switch (get_weapon_brand(item))
             {
             case SPWPN_NORMAL:
             default:            // randart
@@ -879,7 +879,7 @@ unsigned int item_value( item_def item, bool ident )
             valued /= 10;
         }
 
-        if (item_ident( item, ISFLAG_KNOW_PLUSES ))
+        if (item_ident(item, ISFLAG_KNOW_PLUSES))
         {
             if (item.plus >= 0)
             {
@@ -902,7 +902,6 @@ unsigned int item_value( item_def item, bool ident )
 
                 if (valued < 1)
                     valued = 1;
-                //break;
             }
 
             if (item.plus2 < 0)
@@ -915,10 +914,10 @@ unsigned int item_value( item_def item, bool ident )
             }
         }
 
-        if (is_random_artefact( item ))
+        if (is_random_artefact(item))
         {
             if (item_type_known(item))
-                valued += (7 * randart_value( item ));
+                valued += (7 * randart_value(item));
             else
                 valued += 50;
         }
@@ -964,7 +963,7 @@ unsigned int item_value( item_def item, bool ident )
 
         if (item_type_known(item))
         {
-            switch (get_ammo_brand( item ))
+            switch (get_ammo_brand(item))
             {
             case SPMSL_NORMAL:
             default:
@@ -1009,7 +1008,7 @@ unsigned int item_value( item_def item, bool ident )
             valued /= 10;
         }
 
-        if (item_ident( item, ISFLAG_KNOW_PLUSES ))
+        if (item_ident(item, ISFLAG_KNOW_PLUSES))
         {
             if (item.plus >= 0)
                 valued += (item.plus * 2);
