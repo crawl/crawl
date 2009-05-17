@@ -3872,7 +3872,6 @@ static bool _destroyed_valuable_weapon(int value, int type)
         return (true);
 
     // Medium valuable items are more likely to net piety at low piety.
-    // This includes missiles in sufficiently large quantities.
     if (random2(value) >= random2(100)
         && one_chance_in(1 + you.piety / 50))
     {
@@ -3915,7 +3914,8 @@ bool ely_destroy_weapons()
             continue;
         }
 
-        const int value = item_value(item, true);
+        // item_value() multiplies by quantity.
+        const int value = item_value(item, true) / item.quantity;
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
 #endif
@@ -6303,7 +6303,8 @@ static void _give_sac_group_feedback(int which)
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
-    // item_value() multiplies by quantity
+
+    // item_value() multiplies by quantity.
     const int value = item_value(item) / item.quantity;
 
     switch (you.religion)

@@ -940,7 +940,6 @@ unsigned int item_value( item_def item, bool ident )
         {
         case MI_DART:
         case MI_STONE:
-        case MI_LARGE_ROCK:
         case MI_NONE:
             valued++;
             break;
@@ -949,6 +948,7 @@ unsigned int item_value( item_def item, bool ident )
         case MI_BOLT:
             valued += 2;
             break;
+        case MI_LARGE_ROCK:
         case MI_JAVELIN:
             valued += 8;
             break;
