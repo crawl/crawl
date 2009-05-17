@@ -2125,8 +2125,8 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         int disc = 1 << i;
         if (god_dislikes_spell_discipline(disc, god))
             continue;
-        int junk1 = 0, junk2 = 0;
 
+        int junk1 = 0, junk2 = 0;
         std::vector<spell_type> spell_list;
         _get_spell_list(spell_list, disc, disc, god, !completely_random,
                         junk1, junk2, !completely_random);
