@@ -3867,7 +3867,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
 // Evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
 {
-    // Artefacts (incl. most randarts).
+    // Artefacts, including most randarts.
     if (random2(value) >= random2(250))
         return (true);
 
