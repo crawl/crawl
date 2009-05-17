@@ -3874,7 +3874,7 @@ static bool _destroyed_valuable_weapon(int value, int type)
     // Medium valuable items are more likely to net piety at low piety.
     // This includes missiles in sufficiently large quantities.
     if (random2(value) >= random2(100)
-        && one_chance_in(1 + you.piety/50))
+        && one_chance_in(1 + you.piety / 50))
     {
         return (true);
     }
@@ -3884,7 +3884,7 @@ static bool _destroyed_valuable_weapon(int value, int type)
         return (false);
 
     // Weapons, on the other hand, are always acceptable to boost low piety.
-    if (you.piety < 30 || player_under_penance())
+    if (you.piety < piety_breakpoint(0) || player_under_penance())
         return (true);
 
     return (false);
@@ -3914,7 +3914,7 @@ bool ely_destroy_weapons()
             continue;
         }
 
-        const int value = item_value( item, true );
+        const int value = item_value(item, true);
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
 #endif
