@@ -3883,7 +3883,8 @@ static bool _destroyed_valuable_weapon(int value, int type)
     if (type == OBJ_MISSILES)
         return (false);
 
-    // Weapons, on the other hand, are always acceptable to boost low piety.
+    // Weapons, on the other hand, are always acceptable to boost low
+    // piety.
     if (you.piety < piety_breakpoint(0) || player_under_penance())
         return (true);
 
