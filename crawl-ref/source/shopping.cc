@@ -949,6 +949,8 @@ unsigned int item_value( item_def item, bool ident )
             valued += 2;
             break;
         case MI_LARGE_ROCK:
+            valued += 7;
+            break;
         case MI_JAVELIN:
             valued += 8;
             break;
