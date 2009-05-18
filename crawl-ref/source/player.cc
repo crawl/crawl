@@ -427,10 +427,15 @@ bool player_is_swimming()
     return (you.swimming());
 }
 
+bool player_in_bat_form()
+{
+    return (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+}
+
 bool player_can_open_doors()
 {
     // Bats can't close/open doors.
-    return (you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT);
+    return !player_in_bat_form();
 }
 
 bool player_under_penance(void)
@@ -1096,7 +1101,7 @@ int player_hunger_rate(void)
 {
     int hunger = 3;
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (player_in_bat_form())
         return 1;
 
     if (you.species == SP_TROLL)
@@ -1918,7 +1923,7 @@ int player_movement_speed(void)
         // transformations
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
             mv = 8;
-        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        else if (player_in_bat_form())
             mv = 5; // but allowed minimum is six
 
         // armour
@@ -3600,7 +3605,7 @@ int check_stealth(void)
                 // Thirsty/bat-form vampires are (much) more stealthy
                 if (you.hunger_state == HS_STARVING)
                     stealth += (you.skills[SK_STEALTH] * 21);
-                else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+                else if (player_in_bat_form()
                          || you.hunger_state <= HS_NEAR_STARVING)
                 {
                     stealth += (you.skills[SK_STEALTH] * 20);
@@ -3882,8 +3887,7 @@ void display_char_status()
     {
         std::string text;
 
-        if ((you.species != SP_VAMPIRE
-                || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+        if ((you.species != SP_VAMPIRE || !player_in_bat_form())
             && dur_expiring(DUR_TRANSFORMATION))
         {
             text = "Expiring: ";

@@ -789,7 +789,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
     const int chunk_type = mons_corpse_effect(mon->type);
 
     // Now print message, need biting unless already done (never for bat form!)
-    if (needs_bite_msg && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+    if (needs_bite_msg && !player_in_bat_form())
     {
         mprf( "You bite %s, and draw %s blood!",
               mon->name(DESC_NOCAP_THE, true).c_str(),
@@ -809,7 +809,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
             heal += 1 + random2(damage);
 
         // Decrease healing when done in bat form.
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        if (player_in_bat_form())
             heal /= 2;
 
         if (heal > 0)
@@ -829,7 +829,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
             food_value = 15 + random2avg(29, 2);
 
         // Bats get a rather less nutrition out of it.
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        if (player_in_bat_form())
             food_value /= 2;
 
         lessen_hunger(food_value, false);
@@ -1691,8 +1691,8 @@ int melee_attack::player_weapon_type_modify(int damage)
     // All weak hits look the same, except for when the player
     // has a non-weapon in hand.  -- bwr
     // Exception: vampire bats only _bite_ to allow for drawing blood
-    if (damage < HIT_WEAK && (you.species != SP_VAMPIRE
-        || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT))
+    if (damage < HIT_WEAK
+        && (you.species != SP_VAMPIRE || !player_in_bat_form()))
     {
         if (weap_type != WPN_UNKNOWN)
             attack_verb = "hit";
@@ -3145,7 +3145,7 @@ bool melee_attack::apply_damage_brand()
     {
         // Vampire bat form -- why the special handling?
         if (attacker->atype() == ACT_PLAYER && you.species == SP_VAMPIRE
-            && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+            && player_in_bat_form())
         {
             _player_vampire_draws_blood(defender_as_monster(), damage_done);
             break;
@@ -3892,10 +3892,9 @@ int melee_attack::player_unarmed_speed()
     if (you.burden_state == BS_UNENCUMBERED
         && one_chance_in(heavy_armour_penalty + 1))
     {
-        const bool is_bat = (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
         unarmed_delay =
-            std::max(10 - you.skills[SK_UNARMED_COMBAT] / (is_bat ? 3 : 5),
-                     min_delay);
+            std::max(10 - you.skills[SK_UNARMED_COMBAT]
+                        / (player_in_bat_form() ? 3 : 5), min_delay);
     }
 
     return (unarmed_delay);
@@ -3970,7 +3969,7 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage += player_mutation_level(MUT_CLAWS) * 2;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (player_in_bat_form())
     {
         // Bats really don't do a lot of damage.
         damage += you.skills[SK_UNARMED_COMBAT]/5;

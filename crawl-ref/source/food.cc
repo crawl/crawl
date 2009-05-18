@@ -968,7 +968,7 @@ bool food_change(bool suppress_message)
                     you.duration[DUR_TRANSFORMATION] = 2;
                 }
             }
-            else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+            else if (player_in_bat_form()
                      && you.duration[DUR_TRANSFORMATION] > 5)
             {
                 print_stats();

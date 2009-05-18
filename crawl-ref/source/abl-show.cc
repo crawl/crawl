@@ -943,7 +943,7 @@ static bool _activate_talent(const talent& tal)
         }
     }
     else if (tal.which == ABIL_END_TRANSFORMATION
-             && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+             && player_in_bat_form()
              && you.dex <= 5)
     {
         mpr("Turning back with such low dexterity would be fatal!", MSGCH_WARN);

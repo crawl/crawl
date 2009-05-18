@@ -1332,6 +1332,12 @@ bool player_can_memorise(const item_def &book)
 
 bool learn_spell(int book)
 {
+    if (player_in_bat_form())
+    {
+        canned_msg(MSG_PRESENT_FORM);
+        return (false);
+    }
+
     int chance = 0;
     int levels_needed = 0;
     int index;

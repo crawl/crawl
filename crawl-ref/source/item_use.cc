@@ -843,7 +843,7 @@ static bool cloak_is_being_removed( void )
 //---------------------------------------------------------------
 void wear_armour(int slot) // slot is for tiles
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (player_in_bat_form())
     {
         mpr("You can't wear anything in your present form.");
         return;
@@ -3346,12 +3346,12 @@ void jewellery_wear_effects(item_def &item)
     mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-static int prompt_ring_to_remove(int new_ring)
+static int _prompt_ring_to_remove(int new_ring)
 {
-    const item_def &left  = you.inv[you.equip[EQ_LEFT_RING]];
-    const item_def &right = you.inv[you.equip[EQ_RIGHT_RING]];
+    const item_def *left  = you.slot_item(EQ_LEFT_RING);
+    const item_def *right = you.slot_item(EQ_RIGHT_RING);
 
-    if (item_cursed(left) && item_cursed(right))
+    if (item_cursed(*left) && item_cursed(*right))
     {
         mprf("You're already wearing two cursed rings!");
         return (-1);
@@ -3360,27 +3360,29 @@ static int prompt_ring_to_remove(int new_ring)
     mesclr();
     mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
 
-    char lslot = index_to_letter(left.link);
-    char rslot = index_to_letter(right.link);
+    const char lslot = index_to_letter(left->link);
+    const char rslot = index_to_letter(right->link);
 
     mprf(MSGCH_PROMPT,
-         "You're wearing two rings. Remove which one? (%c/%c/Esc)",
+         "You're wearing two rings. Remove which one? (%c/%c/<</>/Esc)",
          lslot, rslot);
 
-    mprf(" %s", left.name(DESC_INVENTORY).c_str());
-    mprf(" %s", right.name(DESC_INVENTORY).c_str());
+    mprf(" < or %s", left->name(DESC_INVENTORY).c_str());
+    mprf(" > or %s", right->name(DESC_INVENTORY).c_str());
 
     int c;
     do
         c = getch();
-    while (c != lslot && c != rslot && c != ESCAPE && c != ' ');
+    while (c != lslot && c != rslot && c != '<' && c != '>'
+           && c != ESCAPE && c != ' ');
 
     mesclr();
 
     if (c == ESCAPE || c == ' ')
         return (-1);
 
-    const int eqslot = (c == lslot) ? EQ_LEFT_RING : EQ_RIGHT_RING;
+    const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
+                                                : EQ_RIGHT_RING;
 
     if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
         return (-1);
@@ -3471,8 +3473,32 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 // Does not do amulets.
 static bool _swap_rings(int ring_slot)
 {
-    // Ask the player which existing ring is persona non grata.
-    int unwanted = prompt_ring_to_remove(ring_slot);
+    const item_def* lring = you.slot_item(EQ_LEFT_RING);
+    const item_def* rring = you.slot_item(EQ_RIGHT_RING);
+
+    if (item_cursed(*lring) && item_cursed(*rring))
+    {
+        mprf("You're already wearing two cursed rings!");
+        return (false);
+    }
+
+    int unwanted;
+
+    // Don't prompt if both rings are of the same type.
+    if (lring->sub_type == rring->sub_type
+        && !is_artefact(*lring) && !is_artefact(*rring))
+    {
+        if (item_cursed(*lring))
+            unwanted = you.equip[EQ_RIGHT_RING];
+        else
+            unwanted = you.equip[EQ_LEFT_RING];
+    }
+    else
+    {
+        // Ask the player which existing ring is persona non grata.
+        unwanted = _prompt_ring_to_remove(ring_slot);
+    }
+
     if (unwanted == -1)
     {
         canned_msg(MSG_OK);
@@ -3593,7 +3619,7 @@ bool puton_item(int item_slot)
 
 bool puton_ring(int slot)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (player_in_bat_form())
     {
         mpr("You can't put on anything in your present form.");
         return (false);
@@ -3701,7 +3727,7 @@ void jewellery_remove_effects(item_def &item, bool mesg)
 
 bool remove_ring(int slot, bool announce)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (player_in_bat_form())
     {
         mpr("You can't wear or remove anything in your present form.");
         return (false);
@@ -3844,6 +3870,12 @@ int _max_wand_range()
 
 void zap_wand(int slot)
 {
+    if (player_in_bat_form())
+    {
+        canned_msg(MSG_PRESENT_FORM);
+        return;
+    }
+
     bolt beam;
     dist zap_wand;
     int item_slot;
@@ -4102,7 +4134,7 @@ void drink(int slot)
         return;
     }
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (player_in_bat_form())
     {
        canned_msg(MSG_PRESENT_FORM);
        return;
@@ -4785,6 +4817,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (player_in_bat_form())
+    {
+        canned_msg(MSG_PRESENT_FORM);
+        return;
+    }
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -5464,6 +5502,11 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_ARMOUR:
+            if (player_in_bat_form())
+            {
+                mpr("You can't wear or remove anything in your present form.");
+                return;
+            }
             if (equipped && !equipped_weapon)
             {
                 if (check_warning_inscriptions(item, OPER_TAKEOFF))

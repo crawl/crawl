@@ -198,6 +198,7 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     if (minRange < 0)
         return (false);
 
+    bool bonus = 0;
     switch (spell)
     {
     case SPELL_APPORTATION:
@@ -205,6 +206,13 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_CONJURE_FLAME:
         // These don't target monsters.
         return (false);
+    case SPELL_MEPHITIC_CLOUD:
+    case SPELL_FIREBALL:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+        // Increase range by one due to cloud radius.
+        bonus = 1;
+        break;
     default:
         break;
     }
@@ -217,7 +225,7 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     if (range < 0)
         return (false);
 
-    if (range < minRange)
+    if (range + bonus < minRange)
         return (true);
 
     return (false);

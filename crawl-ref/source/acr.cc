@@ -1563,7 +1563,7 @@ void process_command( command_type cmd )
 
     case CMD_REMOVE_ARMOUR:
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        if (player_in_bat_form())
         {
             mpr("You can't wear or remove anything in your present form.");
             break;
@@ -1588,21 +1588,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_MEMORISE_SPELL:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-           canned_msg(MSG_PRESENT_FORM);
-           break;
-        }
         if (!learn_spell())
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 
     case CMD_ZAP_WAND:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-           canned_msg(MSG_PRESENT_FORM);
-           break;
-        }
         zap_wand();
         break;
 
@@ -1644,11 +1634,6 @@ void process_command( command_type cmd )
         break;
 
     case CMD_READ:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-           canned_msg(MSG_PRESENT_FORM);
-           break;
-        }
         read_scroll();
         break;
 
@@ -1669,7 +1654,7 @@ void process_command( command_type cmd )
 
     case CMD_CAST_SPELL:
     case CMD_FORCE_CAST_SPELL:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        if (player_in_bat_form())
         {
            canned_msg(MSG_PRESENT_FORM);
            break;
@@ -2152,8 +2137,7 @@ static void _decrement_durations()
     }
 
     // Vampire bat transformations are permanent (until ended).
-    if (you.species != SP_VAMPIRE
-        || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
+    if (you.species != SP_VAMPIRE || !player_in_bat_form()
         || you.duration[DUR_TRANSFORMATION] <= 5)
     {
         if (_decrement_a_duration(DUR_TRANSFORMATION, NULL, random2(3),
@@ -3113,7 +3097,7 @@ static void _open_door(coord_def move, bool check_confused)
 
 static void _close_door(coord_def move)
 {
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    if (player_in_bat_form())
     {
         mpr("You can't close doors in your present form.");
         return;

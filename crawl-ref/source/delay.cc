@@ -828,8 +828,7 @@ void handle_delay( void )
     if (delay.type == DELAY_FEED_VAMPIRE)
     {
         if (you.hunger_state == HS_ENGORGED
-            || you.hunger_state > HS_SATIATED
-               && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+            || you.hunger_state > HS_SATIATED && player_in_bat_form())
         {
             // Messages handled in _food_change() in food.cc.
             stop_delay();
