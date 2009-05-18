@@ -206,6 +206,7 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_CONJURE_FLAME:
         // These don't target monsters.
         return (false);
+    case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_FREEZING_CLOUD:
