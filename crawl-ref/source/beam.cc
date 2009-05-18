@@ -1840,8 +1840,8 @@ void bolt::affect_cell()
             }
         }
 
-        // Note that this can change the ray position
-        // and the solidity of the wall.
+        // Note that this can change the ray position and the solidity
+        // of the wall.
         hit_wall();
     }
 
@@ -4466,12 +4466,12 @@ void bolt::affect_monster(monsters* mon)
     {
         if (YOU_KILL(thrower) && final > 0)
         {
-            // It's not the player's fault if he didn't see the monster or
-            // the monster was caught in an unexpected blast of ?immolation.
+            // It's not the player's fault if he didn't see the monster
+            // or the monster was caught in an unexpected blast of
+            // ?immolation.
             const bool okay =
                 (!you.can_see(mon)
-                 || aux_source == "reading a scroll of immolation"
-                    && !effect_known);
+                    || aux_source == "scroll of immolation" && !effect_known);
 
             if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
                 remove_sanctuary(true);

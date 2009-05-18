@@ -3216,6 +3216,7 @@ void level_change(bool skip_attribute_increase)
                         "transforming into a vampire bat.", MSGCH_INTRINSIC_GAIN);
                 }
                 break;
+
             case SP_NAGA:
                 // lower because of HD raise -- bwr
                 // if (you.experience_level < 14)
