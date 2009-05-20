@@ -1934,29 +1934,71 @@ static std::vector<formatted_string> _get_overview_stats()
     cols1.add_formatted(1, buf, false);
 
     if (you.strength == you.max_strength)
-        snprintf(buf, sizeof buf, "Str %2d", you.strength);
+    {
+        if (you.duration[DUR_DIVINE_STAMINA] || you.duration[DUR_MIGHT])
+        {
+            snprintf(buf, sizeof buf, "Str <lightblue>%2d</lightblue>",
+                     you.strength);
+        }
+        else
+            snprintf(buf, sizeof buf, "Str %2d", you.strength);
+    }
     else
     {
-        snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
-                 you.strength, you.max_strength);
+        if (you.duration[DUR_DIVINE_STAMINA] || you.duration[DUR_MIGHT])
+        {
+            snprintf(buf, sizeof buf, "Str <lightblue>%2d (%d)</lightblue>",
+                     you.strength, you.max_strength);
+        }
+        else
+            snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
+                     you.strength, you.max_strength);
     }
     cols1.add_formatted(2, buf, false);
 
     if (you.intel == you.max_intel)
-        snprintf(buf, sizeof buf, "Int %2d", you.intel);
+    {
+        if (you.duration[DUR_DIVINE_STAMINA])
+        {
+            snprintf(buf, sizeof buf, "Int <lightblue>%2d</lightblue>",
+                     you.intel);
+        }
+        else
+            snprintf(buf, sizeof buf, "Int %2d", you.intel);
+    }
     else
     {
-        snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
-                 you.intel, you.max_intel);
+        if (you.duration[DUR_DIVINE_STAMINA])
+        {
+            snprintf(buf, sizeof buf, "Int <lightblue>%2d (%d)</lightblue>",
+                     you.intel, you.max_intel);
+        }
+        else
+            snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
+                     you.intel, you.max_intel);
     }
     cols1.add_formatted(2, buf, false);
 
     if (you.dex == you.max_dex)
-        snprintf(buf, sizeof buf, "Dex %2d", you.dex);
+    {
+        if (you.duration[DUR_DIVINE_STAMINA])
+        {
+            snprintf(buf, sizeof buf, "Dex <lightblue>%2d</lightblue>",
+                     you.dex);
+        }
+        else
+            snprintf(buf, sizeof buf, "Dex %2d", you.dex);
+    }
     else
     {
-        snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
-                 you.dex, you.max_dex);
+        if (you.duration[DUR_DIVINE_STAMINA])
+        {
+            snprintf(buf, sizeof buf, "Dex <lightblue>%2d (%d)</lightblue>",
+                     you.dex, you.max_dex);
+        }
+        else
+            snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
+                     you.dex, you.max_dex);
     }
     cols1.add_formatted(2, buf, false);
 
