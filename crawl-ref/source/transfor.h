@@ -49,8 +49,9 @@ void unmeld_one_equip(equipment_type eq);
 bool transform_changed_physiology( bool phys_scales = false );
 bool transform_allows_wearing_item(const item_def& item,
                                    transformation_type transform);
-// Check your current transform
+// Check your current transformation.
 bool transform_allows_wearing_item(const item_def& item);
 bool transform_allows_wielding(transformation_type transform);
 
+void transformation_expiration_warning();
 #endif

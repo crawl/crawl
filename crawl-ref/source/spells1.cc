@@ -1202,12 +1202,18 @@ void extension(int pow)
     if (you.duration[DUR_RESIST_POISON])
         cast_resist_poison(pow);
 
-    if (you.duration[DUR_TRANSFORMATION])
+    if (you.duration[DUR_TRANSFORMATION]
+        && (you.species != SP_VAMPIRE
+            || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT))
     {
         mpr("Your transformation has been extended.");
         you.duration[DUR_TRANSFORMATION] += random2(pow);
         if (you.duration[DUR_TRANSFORMATION] > 100)
             you.duration[DUR_TRANSFORMATION] = 100;
+
+        // Give a warning if it won't last long enough for the
+        // timeout messages.
+        transformation_expiration_warning();
     }
 
     //jmf: added following

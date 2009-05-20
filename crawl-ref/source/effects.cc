@@ -1933,9 +1933,6 @@ bool recharge_wand(int item_slot)
         {
             charge_gain = wand_charge_value(wand.sub_type);
 
-            // Reinitialize zap counts.
-            wand.plus2 = ZAPCOUNT_RECHARGED;
-
             const int new_charges =
                 std::max<int>(
                     wand.plus,
@@ -1959,10 +1956,9 @@ bool recharge_wand(int item_slot)
                  charged ? "glows" : "flickers",
                  desc.c_str());
 
-            wand.plus = new_charges;
-
-            if (!charged)
-                wand.plus2 = ZAPCOUNT_MAX_CHARGED;
+            // Reinitialize zap counts.
+            wand.plus  = new_charges;
+            wand.plus2 = (charged ? ZAPCOUNT_RECHARGED : ZAPCOUNT_MAX_CHARGED);
         }
         else // It's a rod.
         {

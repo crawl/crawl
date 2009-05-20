@@ -2212,6 +2212,8 @@
      false
 },
 
+// From here on, all spells are monster-only spells.
+
 {
     SPELL_HELLFIRE_BURST, "Hellfire Burst",
      SPTYP_CONJURATION | SPTYP_FIRE,

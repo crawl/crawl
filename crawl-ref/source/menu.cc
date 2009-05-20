@@ -1467,7 +1467,7 @@ void column_composer::add_formatted(int ncol,
     // Add a blank line if necessary. Blank lines will not
     // be added at page boundaries.
     if (add_separator && col.lines && !segs.empty()
-            && (!pagesize || col.lines % pagesize))
+        && (!pagesize || col.lines % pagesize))
     {
         newlines.push_back(formatted_string());
     }
@@ -1475,10 +1475,9 @@ void column_composer::add_formatted(int ncol,
     for (unsigned i = 0, size = segs.size(); i < size; ++i)
     {
         newlines.push_back(
-                formatted_string::parse_string(
-                    segs[i],
-                    eol_ends_format,
-                    tfilt));
+                formatted_string::parse_string( segs[i],
+                                                eol_ends_format,
+                                                tfilt));
     }
 
     strip_blank_lines(newlines);
@@ -1786,7 +1785,7 @@ bool formatted_scroller::page_up()
     if (items[first_entry]->level == MEL_TITLE)
         return (false);
 
-    for ( int i = 0; i < pagesize; ++i )
+    for (int i = 0; i < pagesize; ++i)
     {
         if (first_entry == 0 || items[first_entry-1]->level == MEL_TITLE)
             break;

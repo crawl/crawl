@@ -593,10 +593,10 @@ ENDMAP
 
 ##############################################################################
 # lemuel_entrance_tunnels
-NAME: lemuel_entry_006_tunnels
-TAGS: entry no_monster_gen
-ORIENT: float
-SUBST: ? = x.
+NAME:    lemuel_entry_006_tunnels
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SUBST:   ? = x.
 SHUFFLE: {[(
 MAP
 xxx
@@ -1318,11 +1318,11 @@ ENDMAP
 
 # This is another series of entry levels, ten total. Leave the template intact
 # (but commented out). All water is deep.
-# NAME: water_fire_template
-# TAGS: entry no_monster_gen no_pool_fixup no_rotate
+# NAME:   water_fire_template
+# TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 # WEIGHT: 1
 # ORIENT: float
-# MONS: plant
+# MONS:   plant
 # MAP
 #             xxxxxxxx@xxxxxxxx
 #        xxxxxx...............xxxxxx
@@ -1348,10 +1348,10 @@ ENDMAP
 #             xxxxxxxxxxxxxxxxx
 # ENDMAP
 
-NAME: david_entry_015_a_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_a_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
-MONS: plant
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1378,12 +1378,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_b_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_b_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1410,12 +1410,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_c_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_c_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1442,12 +1442,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_d_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_d_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1474,12 +1474,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_e_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_e_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1506,12 +1506,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_f_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_f_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1538,12 +1538,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_g_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_g_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1570,12 +1570,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_h_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_h_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1602,12 +1602,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_i_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_i_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1634,12 +1634,12 @@ xx......xx+xxx+xx...x...xx+xxx+xx......xx
             xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: david_entry_015_j_water_fire
-TAGS: entry no_monster_gen no_pool_fixup no_rotate
+NAME:   david_entry_015_j_water_fire
+TAGS:   entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT: 1
 NSUBST: . = 1:d / *:.
-ITEM: stone/dart
-MONS: plant
+ITEM:   stone/dart
+MONS:   plant
 ORIENT: float
 MAP
             xxxxxxxx@xxxxxxxx
@@ -1974,10 +1974,10 @@ ENDMAP
 
 ##############################################################################
 # Sounds of Crawl: the Slurp
-NAME: david_027_sounds_slurp
-TAGS: entry no_monster_gen
-MONS: generate_awake jelly / kobold
-ITEM: dart
+NAME:    david_027_sounds_slurp
+TAGS:    entry no_monster_gen
+MONS:    generate_awake jelly / kobold
+ITEM:    dart
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   v:vxx
@@ -2001,9 +2001,9 @@ ENDMAP
 
 ##############################################################################
 # Sounds of Crawl: the Drone
-NAME: david_028_sounds_drone
-TAGS: entry no_monster_gen no_rotate
-MONS: generate_awake boring beetle / boring beetle
+NAME:    david_028_sounds_drone
+TAGS:    entry no_monster_gen no_rotate
+MONS:    generate_awake boring beetle / boring beetle
 ORIENT:  float
 SHUFFLE: {<
 MAP
@@ -3329,10 +3329,10 @@ ENDMAP
 
 ##############################################################################
 # Just another castle
-NAME: david_entry_067
-TAGS: entry no_monster_gen no_rotate
-ITEM: any, nothing, nothing
-ORIENT: float
+NAME:    david_entry_067
+TAGS:    entry no_monster_gen no_rotate
+ITEM:    any, nothing, nothing
+ORIENT:  float
 SHUFFLE: ]def
 SUBST:   c : cx
 # A test run with 50 tries had precisely one level without shallow water
@@ -3427,10 +3427,10 @@ MAP
        ......
 ENDMAP
 
-NAME: david_entry_069_c
-TAGS: entry no_monster_gen no_rotate
-ORIENT: float
-WEIGHT: 3
+NAME:    david_entry_069_c
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+WEIGHT:  3
 SHUFFLE: bxxxx
 MAP
  .......    .......
@@ -3467,13 +3467,13 @@ ENDMAP
 
 ##############################################################################
 # Caged fury
-NAME: david_entry_070
-TAGS: entry no_rotate
-MONS: w:30 nothing / giant cockroach / w:2 worm
-MONS: w:30 nothing / ooze
-MONS: w:20 nothing / jackal / rat
-MONS: w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
-      w:5 jackal / w:5 rat
+NAME:    david_entry_070
+TAGS:    entry no_rotate
+MONS:    w:30 nothing / giant cockroach / w:2 worm
+MONS:    w:30 nothing / ooze
+MONS:    w:20 nothing / jackal / rat
+MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
+         w:5 jackal / w:5 rat
 # There is a very slight chance that a jelly or an intelligent monster
 # (hobgoblin) might spawn inside near the door. This is okay; added an exit.
 ORIENT:  float
@@ -4012,8 +4012,8 @@ x.........x
 xxx@xxx@xxx
 ENDMAP
 
-NAME: matt_entry_007_b
-TAGS: entry no_monster_gen
+NAME:    matt_entry_007_b
+TAGS:    entry no_monster_gen
 ORIENT:  float
 WEIGHT:  3
 SHUFFLE: {[(<
@@ -4031,8 +4031,8 @@ x.........x
 xxx@xxx@xxx
 ENDMAP
 
-NAME: matt_entry_007_c
-TAGS: entry no_monster_gen
+NAME:    matt_entry_007_c
+TAGS:    entry no_monster_gen
 ORIENT:  float
 WEIGHT:  6
 SHUFFLE: {[(<
@@ -4056,8 +4056,8 @@ ENDMAP
 
 ##############################################################
 # Infinity Welcomes Careful Drivers
-NAME: entry_elethiomel_001
-TAGS: entry no_rotate
+NAME:    entry_elethiomel_001
+TAGS:    entry no_rotate
 ORIENT:  northwest
 SHUFFLE: [{
 SUBST:   ' : . x ':40, '=x.
@@ -4081,8 +4081,8 @@ ENDMAP
 
 ##############################################################
 # The Diamond Age, or A Young Lady's Illustrated Primer
-NAME: entry_elethiomel_002
-TAGS: entry no_monster_gen no_rotate
+NAME:    entry_elethiomel_002
+TAGS:    entry no_monster_gen no_rotate
 ORIENT:  west
 WEIGHT:  2
 MONS:    rat, goblin, giant bat, kobold
@@ -4118,9 +4118,9 @@ ENDMAP
 
 ##############################################################
 # Ruined Dwarven Fortress Basement
-NAME: entry_elethiomel_003
-TAGS: entry no_monster_gen no_rotate
-ITEM: any armour / any weapon / nothing
+NAME:    entry_elethiomel_003
+TAGS:    entry no_monster_gen no_rotate
+ITEM:    any armour / any weapon / nothing
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
@@ -4149,8 +4149,8 @@ ENDMAP
 
 ##############################################################
 # A Maze of Twisty Passages, All Alike
-NAME: entry_elethiomel_004
-TAGS: entry no_monster_gen
+NAME:    entry_elethiomel_004
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(, WXYZ
 SUBST:   W=., X=X., X=x=., Y=Y., Y=x=., Z=Z., Z=x=.
@@ -4175,8 +4175,8 @@ ENDMAP
 ##############################################################
 # It's quiet. Too quiet....
 #
-NAME: entry_elethiomel_005_a
-TAGS: entry no_monster_gen
+NAME:    entry_elethiomel_005_a
+TAGS:    entry no_monster_gen
 ORIENT:  float
 MONS:    rat / nothing, hobgoblin / goblin / nothing
 SHUFFLE: '"XY/ABVW, !?/CD
@@ -4200,8 +4200,8 @@ xxcccccc.....ccccccxx
       ccccccccc
 ENDMAP
 
-NAME: entry_elethiomel_005_b
-TAGS: entry no_monster_gen
+NAME:    entry_elethiomel_005_b
+TAGS:    entry no_monster_gen
 ORIENT:  float
 MONS:    rat / nothing, hobgoblin / goblin / nothing
 SHUFFLE: '"/AB, !?XY/CDVW
@@ -4228,8 +4228,8 @@ ENDMAP
 ##############################################################
 # Shortcut
 
-NAME: entry_elethiomel_006
-TAGS: entry
+NAME:    entry_elethiomel_006
+TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(, XY/AB
 KFEAT:   X = teleport trap
@@ -4250,8 +4250,8 @@ ENDMAP
 ##############################################################
 # Indiana Jones and the Raiders of the Lost Ark
 
-NAME: entry_elethiomel_007
-TAGS: entry
+NAME:   entry_elethiomel_007
+TAGS:   entry
 ORIENT: float
 SUBST:  ~ = ~ .:5
 # Too bad there isn't a "rolling boulder" trap.
@@ -4308,8 +4308,8 @@ ENDMAP
 
 ##############################################################
 # Pyramid
-NAME: onia_ninara_002_pyramid
-TAGS: entry no_rotate
+NAME:    onia_ninara_002_pyramid
+TAGS:    entry no_rotate
 ORIENT:  float
 SHUFFLE: ({[
 MAP
@@ -4331,8 +4331,8 @@ ENDMAP
 
 ##############################################################
 # Mini spirals
-NAME: onia_ninara_003_mini_spirals
-TAGS: entry
+NAME:    onia_ninara_003_mini_spirals
+TAGS:    entry
 ORIENT:  float
 SHUFFLE: ({[<,GT, vcxxxx
 MAP
@@ -4404,15 +4404,15 @@ NAME:    onia_ninara_005_the_zoo_common
 WEIGHT:  9
 ORIENT:  float
 SHUFFLE: 1234567
-MONS: giant gecko /giant iguana / giant lizard / giant newt / gila monster /\
-      komodo dragon
-MONS: hog / jackal / wolf / hound / war dog
-MONS: giant cockroach / giant ant / butterfly / killer bee / bumblebee /\
-      redback / giant mite
-MONS: swamp worm / lindwurm / worm / spiny worm
-MONS: swamp drake / hydra / wyvern / firedrake
-MONS: bear / polar bear / grizzly bear / black bear
-MONS: black snake / brown snake / grey snake / salamander / yellow snake
+MONS:    giant gecko /giant iguana / giant lizard / giant newt /\
+         gila monster / komodo dragon
+MONS:    hog / jackal / wolf / hound / war dog
+MONS:    giant cockroach / giant ant / butterfly / killer bee / bumblebee /\
+         redback / giant mite
+MONS:    swamp worm / lindwurm / worm / spiny worm
+MONS:    swamp drake / hydra / wyvern / firedrake
+MONS:    bear / polar bear / grizzly bear / black bear
+MONS:    black snake / brown snake / grey snake / salamander / yellow snake
 MAP
 xxxxxxxx@xxxxxxxx
 xxxxxx.G.G.xxxxxx
@@ -4750,8 +4750,8 @@ ENDMAP
 
 ##############################################################
 # Rooms in the neighbourhood.
-NAME: misc_entry_001
-TAGS: entry no_monster_gen
+NAME:   misc_entry_001
+TAGS:   entry no_monster_gen
 RTILE:  x = wall_hall
 FTILE:  . = floor_hall, ( = floor_hall, [ = floor_hall, { = floor_hall
 ORIENT: float

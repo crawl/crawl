@@ -479,7 +479,7 @@ size_type player::transform_size(int psize) const
     }
 }
 
-static void _transformation_expiration_warning()
+void transformation_expiration_warning()
 {
     if (you.duration[DUR_TRANSFORMATION]
             <= get_expiration_threshold(DUR_TRANSFORMATION))
@@ -782,7 +782,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     stop_delay();
 
     if (you.species != SP_VAMPIRE || which_trans != TRAN_BAT)
-        _transformation_expiration_warning();
+        transformation_expiration_warning();
 
     return (true);
 }

@@ -201,10 +201,14 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     bool bonus = 0;
     switch (spell)
     {
+    // These don't target monsters.
     case SPELL_APPORTATION:
     case SPELL_PROJECTED_NOISE:
     case SPELL_CONJURE_FLAME:
-        // These don't target monsters.
+    // These bounce and may be aimed elsewhere to bounce at monsters
+    // outside range (I guess).
+    case SPELL_SHOCK:
+    case SPELL_LIGHTNING_BOLT:
         return (false);
     case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
