@@ -1880,9 +1880,13 @@ static std::vector<formatted_string> _get_overview_stats()
     // 4 columns
     column_composer cols1(4, 18, 28, 40);
 
-    const bool boosted_hp = you.duration[DUR_DIVINE_VIGOUR]
-                               || you.duration[DUR_BERSERKER];
-    const bool boosted_mp = you.duration[DUR_DIVINE_VIGOUR];
+    const bool boosted_hp  = you.duration[DUR_DIVINE_VIGOUR]
+                                || you.duration[DUR_BERSERKER];
+    const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
+    const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
+                                || you.duration[DUR_MIGHT];
+    const bool boosted_int = you.duration[DUR_DIVINE_STAMINA];
+    const bool boosted_dex = you.duration[DUR_DIVINE_STAMINA];
 
     if (!player_rotted())
     {
@@ -1935,7 +1939,7 @@ static std::vector<formatted_string> _get_overview_stats()
 
     if (you.strength == you.max_strength)
     {
-        if (you.duration[DUR_DIVINE_STAMINA] || you.duration[DUR_MIGHT])
+        if (boosted_str)
         {
             snprintf(buf, sizeof buf, "Str <lightblue>%2d</lightblue>",
                      you.strength);
@@ -1945,7 +1949,7 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     else
     {
-        if (you.duration[DUR_DIVINE_STAMINA] || you.duration[DUR_MIGHT])
+        if (boosted_str)
         {
             snprintf(buf, sizeof buf, "Str <lightblue>%2d (%d)</lightblue>",
                      you.strength, you.max_strength);
@@ -1958,7 +1962,7 @@ static std::vector<formatted_string> _get_overview_stats()
 
     if (you.intel == you.max_intel)
     {
-        if (you.duration[DUR_DIVINE_STAMINA])
+        if (boosted_int)
         {
             snprintf(buf, sizeof buf, "Int <lightblue>%2d</lightblue>",
                      you.intel);
@@ -1968,7 +1972,7 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     else
     {
-        if (you.duration[DUR_DIVINE_STAMINA])
+        if (boosted_int)
         {
             snprintf(buf, sizeof buf, "Int <lightblue>%2d (%d)</lightblue>",
                      you.intel, you.max_intel);
@@ -1981,7 +1985,7 @@ static std::vector<formatted_string> _get_overview_stats()
 
     if (you.dex == you.max_dex)
     {
-        if (you.duration[DUR_DIVINE_STAMINA])
+        if (boosted_dex)
         {
             snprintf(buf, sizeof buf, "Dex <lightblue>%2d</lightblue>",
                      you.dex);
@@ -1991,7 +1995,7 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     else
     {
-        if (you.duration[DUR_DIVINE_STAMINA])
+        if (boosted_dex)
         {
             snprintf(buf, sizeof buf, "Dex <lightblue>%2d (%d)</lightblue>",
                      you.dex, you.max_dex);
