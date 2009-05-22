@@ -205,6 +205,7 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_APPORTATION:
     case SPELL_PROJECTED_NOISE:
     case SPELL_CONJURE_FLAME:
+    case SPELL_DIG:
     // These bounce and may be aimed elsewhere to bounce at monsters
     // outside range (I guess).
     case SPELL_SHOCK:
