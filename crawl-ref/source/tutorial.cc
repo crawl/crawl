@@ -56,8 +56,10 @@ REVISION("$Rev$");
 
 static species_type _get_tutorial_species(unsigned int type);
 static job_type     _get_tutorial_job(unsigned int type);
+static bool         _tutorial_feat_interesting(dungeon_feature_type feat);
 static void         _tutorial_describe_disturbance(int x, int y);
 static void         _tutorial_describe_cloud(int x, int y);
+static void         _tutorial_describe_feature(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
 
 //#define TUTORIAL_DEBUG
@@ -835,7 +837,7 @@ void tutorial_finished()
     }
     else
     {
-        int hint = random2(3);
+        int hint = random2(4);
         switch (hint)
         {
           case 0:
@@ -864,6 +866,12 @@ void tutorial_finished()
                      "themselves are set in <w>init.txt</w> or "
                      "<w>.crawlrc</w>. Crawl will complain if it can't find "
                      "either file.";
+               break;
+
+          case 3:
+               text = "You can ask other Crawl players for advice and help "
+                      "on the <w>#crawl</w> IRC (Internet Relay Chat) "
+                      "channel on freenode (<w>irc.freenode.net</w>).";
                break;
 
           default:
@@ -1429,6 +1437,37 @@ static void _new_god_conduct()
                               _get_tutorial_cols());
 }
 
+// If the player is wielding a cursed non-slicing weapon then butchery
+// isn't currently possible.
+static bool _cant_butcher()
+{
+    const item_def *wpn = you.weapon();
+
+    if (!wpn || wpn->base_type != OBJ_WEAPONS)
+        return false;
+
+    return (item_cursed(*wpn) && !can_cut_meat(*wpn));
+}
+
+static int _num_butchery_tools()
+{
+    int num = 0;
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        const item_def& tool(you.inv[i]);
+
+        if (is_valid_item( tool )
+            && tool.base_type == OBJ_WEAPONS
+            && can_cut_meat( tool ))
+        {
+            num++;
+        }
+    }
+
+    return (num);
+}
+
 #define DELAY_EVENT \
 { \
     Options.tutorial_events[seen_what] = true; \
@@ -1673,8 +1712,19 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         }
 
         text << " When a corpse is lying on the ground, you "
-                "can <w>c</w>hop it up with a sharp implement. Once "
-                "hungry you can then <w>e</w>at the resulting chunks "
+                "can <w>c</w>hop it up with a sharp implement";
+
+        if (_cant_butcher())
+            text << " (though unfortunately you can't do that right now, "
+                    "since the cursed weapon you're wielding can't slice up "
+                    "meat, and you can't let go of it to wield one that "
+                    "can)";
+        else if (_num_butchery_tools() == 0)
+            text << " (but you currently possess nothing which can do this, "
+                    "so you should pick up the first knife, dagger, sword "
+                    "or axe you find)";
+
+        text << ". Once hungry you can then <w>e</w>at the resulting chunks "
                 "(though they may not be healthy).";
 #ifdef USE_TILE
         text << " With tiles, you can also chop up any corpse that shows in "
@@ -2161,17 +2211,40 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "Curses are comparatively harmless, but they do mean that "
                 "you cannot remove cursed equipment and will have to suffer "
                 "the (possibly) bad effects until you find and read a scroll "
-                "of remove curse. Weapons and armour can also be uncursed "
-                "using the appropriate enchantment scrolls.";
+                "of remove curse (though if you're wielding a cursed "
+                "non-slicing weapon you'll be unable to <w>c</w>hop up "
+                "corpses into chunks). Weapons and armour can also be "
+                "uncursed using the appropriate enchantment scrolls.";
         break;
 
     case TUT_YOU_HUNGRY:
         text << "There are two ways to overcome hunger: food you started "
                 "with or found, and selfmade chunks from corpses. To get the "
                 "latter, all you need to do is <w>c</w>hop up a corpse "
-                "with a sharp implement. Your starting weapon will do "
-                "nicely. Try to dine on chunks in order to save permanent "
-                "food.";
+                "with a sharp implement. ";
+
+        if (_cant_butcher())
+            text << "Unfortunately you can't butcher corpses right now, "
+                    "since the cursed weapon you're wielding can't slice up "
+                    "meat, and you can't let go of it to wield one that "
+                    "can.";
+        else
+        {
+            const int num = _num_butchery_tools();
+            if (num == 0)
+                text << "However, you currently possess no sharp implements, "
+                        "so you should pick up the first knife, dagger, sword "
+                        "or axe you find. ";
+            else if (Options.tutorial_type != TUT_MAGIC_CHAR)
+                text << "Your starting weapon will do nicely. ";
+            else if (num == 1)
+                text << "The slicing weapon you picked up will do nicely. ";
+            else
+                text << "One of the slicing weapons you picked up will do "
+                        "nicely. ";
+        }
+
+        text << "Try to dine on chunks in order to save permanent food.";
 
         if (Options.tutorial_type == TUT_BERSERK_CHAR)
             text << "\nNote that you cannot Berserk while hungry or worse.";
@@ -2223,6 +2296,20 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "items to drop by pressing their inventory letter, or by "
                 "clicking on their tiles.";
 #endif
+
+        if (Options.tut_stashes)
+        {
+            text << "\n\nYou can easily find items you've left on the floor "
+                    "with the <w>Ctrl-F</w> command, which will let you "
+                    "seach for all known items in the dungeon.  For example, "
+                    "<w>Ctrl-F \"knife\"</w> will list all knives. You can "
+                    "canthen travel to one of the spots.";
+            Options.tut_stashes = false;
+        }
+
+        text << "\n\nBe warned that items that you leave on the floor can "
+                "be picked up and used by monsters.";
+
         break;
 
     case TUT_ROTTEN_FOOD:
@@ -2232,8 +2319,20 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_MAKE_CHUNKS:
-        text << "How lucky! That monster left a corpse which you can now "
-                "<w>c</w>hop up. One or more chunks will appear that you "
+       text << "How lucky! That monster left a corpse which you can now "
+                "<w>c</w>hop up";
+
+        if (_cant_butcher())
+            text << "(or which you <w>could</w> chop up if it weren't for "
+                    "the fact that you can't let go of you cursed "
+                    "non-chopping weapon)";
+        else if (_num_butchery_tools() == 0)
+            text << "(or which you <w>could</w> chop up if you had a "
+                    "chopping weapon; you should pick up the first knife, "
+                    "dagger, sword or axe you find if you want to be able "
+                    "to chop up corpses)";
+
+        text << ". One or more chunks will appear that you "
                 "can then <w>e</w>at. Beware that some chunks may be, "
                 "sometimes or always, hazardous. You can find out whether "
                 "that might be the case by "
@@ -2266,7 +2365,17 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "Hey, that monster left a corpse! If you don't need it for "
                 "food or other purposes, you can sacrifice it to "
              << god_name(you.religion)
-             << " by <w>c</w>hopping it while <w>p</w>raying.";
+             << " by <w>c</w>hopping it while <w>p</w>raying. ";
+
+        if (_cant_butcher())
+            text << "(Or you <w>could</w> sacrifice it if it weren't for "
+                    "the fact that you can't let go of you cursed "
+                    "non-chopping weapon)";
+        else if (_num_butchery_tools() == 0)
+            text << "(Or you <w>could</w> sacrifice it if you had a "
+                    "chopping weapon; you should pick up the first knife, "
+                    "dagger, sword or axe you find if you want to be able "
+                    "to chop up corpses)";
         break;
 
     case TUT_SHIFT_RUN:
@@ -3513,10 +3622,10 @@ bool tutorial_pos_interesting(int x, int y)
 {
     return (cloud_type_at(coord_def(x, y)) != CLOUD_NONE
             || _water_is_disturbed(x, y)
-            || tutorial_feat_interesting(grd[x][y]));
+            || _tutorial_feat_interesting(grd[x][y]));
 }
 
-bool tutorial_feat_interesting(dungeon_feature_type feat)
+static bool _tutorial_feat_interesting(dungeon_feature_type feat)
 {
     // Altars and branch entrances are always interesting.
     if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
@@ -3550,11 +3659,14 @@ void tutorial_describe_pos(int x, int y)
 {
     _tutorial_describe_disturbance(x, y);
     _tutorial_describe_cloud(x, y);
-    tutorial_describe_feature(grd[x][y]);
+    _tutorial_describe_feature(x, y);
 }
 
-void tutorial_describe_feature(dungeon_feature_type feat)
+static void _tutorial_describe_feature(int x, int y)
 {
+    const dungeon_feature_type feat = grd[x][y];
+    const coord_def            where(x, y);
+
     std::ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -3612,6 +3724,11 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                     "by clicking the <w>left mouse button</w> while pressing "
                     "<w>Shift</w>. ";
 #endif
+
+            if (is_travelable_stair(feat) && !travel_cache.know_stair(where))
+                ostr << "\n\nYou have not yet passed through this particular "
+                        "set of stairs. ";
+
             Options.tutorial_events[TUT_SEEN_STAIRS] = false;
             break;
 
@@ -3639,6 +3756,12 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "clicking the <w>left mouse button</w> while pressing "
                         "<w>Shift</w> instead. ";
 #endif
+                if (is_travelable_stair(feat)
+                    && !travel_cache.know_stair(where))
+                {
+                    ostr << "\n\nYou have not yet passed through this "
+                            "particular set of stairs. ";
+                }
             }
             Options.tutorial_events[TUT_SEEN_STAIRS] = false;
             break;

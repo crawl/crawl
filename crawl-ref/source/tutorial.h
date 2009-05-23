@@ -56,8 +56,6 @@ void tutorial_describe_item(const item_def &item);
 void tutorial_inscription_info(bool autoinscribe, std::string prompt);
 bool tutorial_pos_interesting(int x, int y);
 void tutorial_describe_pos(int x, int y);
-bool tutorial_feat_interesting(dungeon_feature_type feat);
-void tutorial_describe_feature(dungeon_feature_type feat);
 bool tutorial_monster_interesting(const monsters *mons);
 void tutorial_describe_monster(const monsters *mons);
 
