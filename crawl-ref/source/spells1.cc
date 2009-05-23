@@ -773,13 +773,11 @@ static int _healing_spell(int healed, bool divine_ability,
             good_god_holy_attitude_change(monster);
         else
         {
-
             simple_monster_message(monster, " turns neutral.");
             mons_pacify(monster);
 
             // Give a small piety return.
-            if (!is_summoned)
-                gain_piety(pgain);
+            gain_piety(pgain);
         }
     }
 
@@ -795,10 +793,19 @@ static int _healing_spell(int healed, bool divine_ability,
 
         if (you.religion == GOD_ELYVILON && !is_hostile)
         {
-            simple_god_message(" appreciates your healing of a fellow "
-                               "creature.");
-            if (one_chance_in(8))
-                gain_piety(1);
+            int pgain = 0;
+            if (one_chance_in(8) && you.piety < MAX_PIETY)
+                pgain = 1;
+
+            if (pgain > 0)
+                simple_god_message(" approves of your healing of a fellow "
+                                   "creature.");
+            else
+                simple_god_message(" appreciates your healing of a fellow "
+                                   "creature.");
+
+            // Give a small piety return.
+            gain_piety(pgain);
         }
     }
 
