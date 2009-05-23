@@ -864,7 +864,6 @@ unsigned int item_value( item_def item, bool ident )
             valued /= 10;
         }
 
-        // elf/dwarf
         if (get_equip_race(item) == ISFLAG_ELVEN
             || get_equip_race(item) == ISFLAG_DWARVEN)
         {
@@ -872,7 +871,6 @@ unsigned int item_value( item_def item, bool ident )
             valued /= 10;
         }
 
-        // value was "6" but comment read "orc", so I went with comment {dlb}
         if (get_equip_race(item) == ISFLAG_ORCISH)
         {
             valued *= 8;
