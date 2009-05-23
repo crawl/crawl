@@ -2748,7 +2748,6 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "flame",
         "ice",
         "poisoned",
-        "poisoned_ii",
         "curare",
         "returning",
         NULL
