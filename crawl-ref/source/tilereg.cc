@@ -1571,6 +1571,10 @@ static bool _is_true_equipped_item(item_def item)
 // apart from dropping it.
 static bool _can_use_item(const item_def &item, bool equipped)
 {
+    // There's nothing you can do with an empty box if you can't unwield it.
+    if (!equipped && item.sub_type == MISC_EMPTY_EBONY_CASKET)
+        return (false);
+
     // Vampires can drain corpses.
     if (item.base_type == OBJ_CORPSES)
     {
@@ -1691,7 +1695,6 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-            case OBJ_MISCELLANY:
                 tip += "Wield (w)";
                 if (is_throwable(&you, item))
                     tip += "\n[Ctrl-L-Click] Fire (f)";
@@ -1700,6 +1703,15 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 tip += "Unwield (w-)";
                 if (is_throwable(&you, item))
                     tip += "\n[Ctrl-L-Click] Fire (f)";
+                break;
+            case OBJ_MISCELLANY:
+                if (item.sub_type >= MISC_DECK_OF_ESCAPE
+                    && item.sub_type <= MISC_DECK_OF_DEFENCE)
+                {
+                    tip += "Wield (w)";
+                    break;
+                }
+                tip += "Evoke (V)";
                 break;
             case OBJ_MISCELLANY + EQUIP_OFFSET:
                 if (item.sub_type >= MISC_DECK_OF_ESCAPE

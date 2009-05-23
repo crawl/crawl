@@ -5491,8 +5491,8 @@ void tile_item_use(int idx)
                     evoke_item(idx);
                 return;
             }
-            // Unwield staves or weapons.
-            if (check_warning_inscriptions(item, OPER_WIELD))
+            // Unwield wielded items.
+            if (equipped && check_warning_inscriptions(item, OPER_WIELD))
                 wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
             return;
 

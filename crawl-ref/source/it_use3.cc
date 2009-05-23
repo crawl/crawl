@@ -54,13 +54,6 @@ REVISION("$Rev$");
 #include "view.h"
 #include "xom.h"
 
-static bool _ball_of_energy();
-static bool _ball_of_fixation();
-static bool _ball_of_seeing();
-static bool _box_of_beasts();
-static bool _disc_of_storms();
-static bool _efreet_flask();
-
 void special_wielded()
 {
     item_def&  weapon     = *you.weapon();
@@ -433,7 +426,7 @@ static bool evoke_sceptre_of_asmodeus()
     return (rc);
 }
 
-static bool _efreet_flask()
+static bool _efreet_flask(int slot)
 {
     bool friendly = x_chance_in_y(10 + you.skills[SK_EVOCATIONS] / 3, 20);
 
@@ -467,7 +460,326 @@ static bool _efreet_flask()
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+    dec_inv_item_quantity(slot, 1);
+
+    return (true);
+}
+
+static bool _ball_of_seeing(void)
+{
+    bool ret = false;
+
+    mpr("You gaze into the crystal ball.");
+
+    int use = (!you.confused() ? random2(you.skills[SK_EVOCATIONS] * 6)
+                               : random2(5));
+
+    if (use < 2)
+    {
+        lose_stat( STAT_INTELLIGENCE, 1, false, "using a ball of seeing");
+    }
+    else if (use < 5 && enough_mp(1, true))
+    {
+        mpr("You feel power drain from you!");
+        set_mp(0, false);
+    }
+    else if (use < 10 || you.level_type == LEVEL_LABYRINTH)
+    {
+        if (you.level_type == LEVEL_LABYRINTH)
+            mpr("You see a maze of twisty little passages, all alike.");
+        confuse_player( 10 + random2(10), false );
+    }
+    else if (use < 15 || coinflip())
+    {
+        mpr("You see nothing.");
+    }
+    else if (magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS]), true))
+    {
+        mpr("You see a map of your surroundings!");
+        ret = true;
+    }
+    else
+    {
+        mpr("You see nothing.");
+    }
+
+    return (ret);
+}
+
+static bool _disc_of_storms(void)
+{
+    const int fail_rate = (30 - you.skills[SK_EVOCATIONS]);
+    bool rc = false;
+
+    if (player_res_electricity() || x_chance_in_y(fail_rate, 100))
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else if (x_chance_in_y(fail_rate, 100))
+        mpr("The disc glows for a moment, then fades.");
+    else if (x_chance_in_y(fail_rate, 100))
+        mpr("Little bolts of electricity crackle over the disc.");
+    else
+    {
+        mpr("The disc erupts in an explosion of electricity!");
+        rc = true;
+
+        const int disc_count = roll_dice(2, 1 + you.skills[SK_EVOCATIONS] / 7);
+
+        for (int i = 0; i < disc_count; ++i)
+        {
+            bolt beam;
+            const zap_type types[] = { ZAP_LIGHTNING, ZAP_ELECTRICITY,
+                                       ZAP_ORB_OF_ELECTRICITY };
+
+            const zap_type which_zap = RANDOM_ELEMENT(types);
+
+            beam.range = you.skills[SK_EVOCATIONS]/3 + 5; // 5--14
+            beam.source = you.pos();
+            beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+
+            // Non-controlleable, so no player tracer.
+            zapping(which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam);
+
+        }
+    }
+
+    return (rc);
+}
+
+void tome_of_power(int slot)
+{
+    int powc = 5 + you.skills[SK_EVOCATIONS]
+                 + roll_dice( 5, you.skills[SK_EVOCATIONS] );
+
+    msg::stream << "The book opens to a page covered in "
+                << weird_writing() << '.' << std::endl;
+
+    set_ident_flags(you.inv[slot], ISFLAG_KNOW_TYPE);
+    you.turn_is_over = true;
+
+    if (!yesno("Read it?"))
+        return;
+
+    if (player_mutation_level(MUT_BLURRY_VISION) > 0
+        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
+    {
+        mpr("The page is too blurry for you to read.");
+        return;
+    }
+
+    mpr("You find yourself reciting the magical words!");
+    exercise( SK_EVOCATIONS, 1 );
+
+    if (x_chance_in_y(7, 50))
+    {
+        mpr("A cloud of weird smoke pours from the book's pages!");
+        big_cloud( random_smoke_type(), KC_YOU,
+                   you.pos(), 20, 10 + random2(8) );
+        xom_is_stimulated(16);
+    }
+    else if (x_chance_in_y(2, 43))
+    {
+        mpr("A cloud of choking fumes pours from the book's pages!");
+        big_cloud(CLOUD_POISON, KC_YOU, you.pos(), 20, 7 + random2(5));
+        xom_is_stimulated(64);
+    }
+    else if (x_chance_in_y(2, 41))
+    {
+        mpr("A cloud of freezing gas pours from the book's pages!");
+        big_cloud(CLOUD_COLD, KC_YOU, you.pos(), 20, 8 + random2(5));
+        xom_is_stimulated(64);
+    }
+    else if (x_chance_in_y(3, 39))
+    {
+        if (one_chance_in(5))
+        {
+            mpr("The book disappears in a mighty explosion!");
+            dec_inv_item_quantity(slot, 1);
+        }
+
+        immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
+
+        xom_is_stimulated(255);
+    }
+    else if (one_chance_in(36))
+    {
+        if (create_monster(
+                mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
+                    you.pos(), 6, 0, true)) != -1)
+        {
+            mpr("A horrible Thing appears!");
+            mpr("It doesn't look too friendly.");
+        }
+        xom_is_stimulated(255);
+    }
+    else
+    {
+        viewwindow(true, false);
+
+        int temp_rand = random2(23) + random2(you.skills[SK_EVOCATIONS] / 3);
+
+        if (temp_rand > 25)
+            temp_rand = 25;
+
+        const spell_type spell_casted =
+            ((temp_rand > 24) ? SPELL_LEHUDIBS_CRYSTAL_SPEAR :
+             (temp_rand > 21) ? SPELL_BOLT_OF_FIRE :
+             (temp_rand > 18) ? SPELL_BOLT_OF_COLD :
+             (temp_rand > 16) ? SPELL_LIGHTNING_BOLT :
+             (temp_rand > 10) ? SPELL_FIREBALL :
+             (temp_rand >  9) ? SPELL_VENOM_BOLT :
+             (temp_rand >  8) ? SPELL_BOLT_OF_DRAINING :
+             (temp_rand >  7) ? SPELL_BOLT_OF_INACCURACY :
+             (temp_rand >  6) ? SPELL_STICKY_FLAME :
+             (temp_rand >  5) ? SPELL_TELEPORT_SELF :
+             (temp_rand >  4) ? SPELL_CIGOTUVIS_DEGENERATION :
+             (temp_rand >  3) ? SPELL_POLYMORPH_OTHER :
+             (temp_rand >  2) ? SPELL_MEPHITIC_CLOUD :
+             (temp_rand >  1) ? SPELL_THROW_FLAME :
+             (temp_rand >  0) ? SPELL_THROW_FROST
+                              : SPELL_MAGIC_DART);
+
+        your_spells( spell_casted, powc, false );
+    }
+}
+
+void skill_manual(int slot)
+{
+    // Removed confirmation request because you know it's
+    // a manual in advance.
+    you.turn_is_over = true;
+    item_def& manual(you.inv[slot]);
+    const bool known = item_type_known(manual);
+    if (!known)
+        set_ident_flags( manual, ISFLAG_KNOW_TYPE );
+    const int skill = manual.plus;
+
+    mprf("You read about %s.", skill_name(skill));
+
+    exercise(skill, 500);
+
+    if (--manual.plus2 <= 0)
+    {
+        mpr("The manual crumbles into dust.");
+        dec_inv_item_quantity( slot, 1 );
+    }
+    else
+        mpr("The manual looks somewhat more worn.");
+
+    xom_is_stimulated(known ? 14 : 64);
+}
+
+static bool _box_of_beasts(item_def &box)
+{
+    bool success = false;
+
+    mpr("You open the lid...");
+
+    if (x_chance_in_y(60 + you.skills[SK_EVOCATIONS], 100))
+    {
+        monster_type beasty = MONS_PROGRAM_BUG;
+
+        // If you worship a good god, don't summon an evil beast (in
+        // this case, the hell hound).
+        do
+        {
+            int temp_rand = random2(11);
+
+            beasty = ((temp_rand == 0) ? MONS_GIANT_BAT :
+                      (temp_rand == 1) ? MONS_HOUND :
+                      (temp_rand == 2) ? MONS_JACKAL :
+                      (temp_rand == 3) ? MONS_RAT :
+                      (temp_rand == 4) ? MONS_ICE_BEAST :
+                      (temp_rand == 5) ? MONS_SNAKE :
+                      (temp_rand == 6) ? MONS_YAK :
+                      (temp_rand == 7) ? MONS_BUTTERFLY :
+                      (temp_rand == 8) ? MONS_BROWN_SNAKE :
+                      (temp_rand == 9) ? MONS_GIANT_LIZARD
+                                       : MONS_HELL_HOUND);
+        }
+        while (player_will_anger_monster(beasty));
+
+        beh_type beha = BEH_FRIENDLY;
+
+        if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
+            beha = BEH_HOSTILE;
+
+        if (create_monster(
+                mgen_data(beasty, beha, 2 + random2(4), 0,
+                          you.pos(), MHITYOU)) != -1)
+        {
+            success = true;
+
+            mpr("...and something leaps out!");
+            xom_is_stimulated(14);
+        }
+    }
+    else
+    {
+        if (!one_chance_in(6))
+            mpr("...but nothing happens.");
+        else
+        {
+            mpr("...but the box appears empty.");
+            box.sub_type = MISC_EMPTY_EBONY_CASKET;
+        }
+    }
+
+    return (success);
+}
+
+static bool _ball_of_energy(void)
+{
+    bool ret = false;
+
+    mpr("You gaze into the crystal ball.");
+
+    int use = ((!you.confused()) ? random2(you.skills[SK_EVOCATIONS] * 6)
+                                 : random2(6));
+
+    if (use < 2 || you.max_magic_points == 0)
+    {
+        lose_stat(STAT_INTELLIGENCE, 1, false, "using a ball of energy");
+    }
+    else if (use < 4 && enough_mp(1, true)
+             || you.magic_points == you.max_magic_points)
+    {
+        mpr( "You feel your power drain away!" );
+        set_mp( 0, false );
+    }
+    else if (use < 6)
+    {
+        confuse_player( 10 + random2(10), false );
+    }
+    else
+    {
+        int proportional = (you.magic_points * 100) / you.max_magic_points;
+
+        if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional
+            || one_chance_in(25))
+        {
+            mpr( "You feel your power drain away!" );
+            set_mp( 0, false );
+        }
+        else
+        {
+            mpr( "You are suffused with power!" );
+            inc_mp( 6 + roll_dice( 2, you.skills[SK_EVOCATIONS] ), false );
+
+            ret = true;
+        }
+    }
+
+    return (ret);
+}
+
+static bool _ball_of_fixation(void)
+{
+    mpr("You gaze into the crystal ball.");
+    mpr("You are mesmerised by a rainbow of scintillating colours!");
+
+    const int duration = random_range(15, 40);
+    you.duration[DUR_PARALYSIS] = duration;
+    you.duration[DUR_SLOW]      = duration;
 
     return (true);
 }
@@ -674,7 +986,7 @@ bool evoke_item(int slot)
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:
-            if (_efreet_flask())
+            if (_efreet_flask(slot))
                 pract = 2;
             break;
 
@@ -719,7 +1031,7 @@ bool evoke_item(int slot)
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (_box_of_beasts())
+            if (_box_of_beasts(item))
                 pract = 1;
             break;
 
@@ -761,323 +1073,4 @@ bool evoke_item(int slot)
         crawl_state.zero_turns_taken();
 
     return (did_work);
-}
-
-static bool _ball_of_seeing(void)
-{
-    bool ret = false;
-
-    mpr("You gaze into the crystal ball.");
-
-    int use = (!you.confused() ? random2(you.skills[SK_EVOCATIONS] * 6)
-                               : random2(5));
-
-    if (use < 2)
-    {
-        lose_stat( STAT_INTELLIGENCE, 1, false, "using a ball of seeing");
-    }
-    else if (use < 5 && enough_mp(1, true))
-    {
-        mpr("You feel power drain from you!");
-        set_mp(0, false);
-    }
-    else if (use < 10 || you.level_type == LEVEL_LABYRINTH)
-    {
-        if (you.level_type == LEVEL_LABYRINTH)
-            mpr("You see a maze of twisty little passages, all alike.");
-        confuse_player( 10 + random2(10), false );
-    }
-    else if (use < 15 || coinflip())
-    {
-        mpr("You see nothing.");
-    }
-    else if (magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS]), true))
-    {
-        mpr("You see a map of your surroundings!");
-        ret = true;
-    }
-    else
-    {
-        mpr("You see nothing.");
-    }
-
-    return (ret);
-}
-
-static bool _disc_of_storms(void)
-{
-    const int fail_rate = (30 - you.skills[SK_EVOCATIONS]);
-    bool rc = false;
-
-    if (player_res_electricity() || x_chance_in_y(fail_rate, 100))
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (x_chance_in_y(fail_rate, 100))
-        mpr("The disc glows for a moment, then fades.");
-    else if (x_chance_in_y(fail_rate, 100))
-        mpr("Little bolts of electricity crackle over the disc.");
-    else
-    {
-        mpr("The disc erupts in an explosion of electricity!");
-        rc = true;
-
-        const int disc_count = roll_dice(2, 1 + you.skills[SK_EVOCATIONS] / 7);
-
-        for (int i = 0; i < disc_count; ++i)
-        {
-            bolt beam;
-            const zap_type types[] = { ZAP_LIGHTNING, ZAP_ELECTRICITY,
-                                       ZAP_ORB_OF_ELECTRICITY };
-
-            const zap_type which_zap = RANDOM_ELEMENT(types);
-
-            beam.range = you.skills[SK_EVOCATIONS]/3 + 5; // 5--14
-            beam.source = you.pos();
-            beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
-
-            // Non-controlleable, so no player tracer.
-            zapping(which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam);
-
-        }
-    }
-
-    return (rc);
-}
-
-void tome_of_power(int slot)
-{
-    int powc = 5 + you.skills[SK_EVOCATIONS]
-                 + roll_dice( 5, you.skills[SK_EVOCATIONS] );
-
-    msg::stream << "The book opens to a page covered in "
-                << weird_writing() << '.' << std::endl;
-
-    set_ident_flags(you.inv[slot], ISFLAG_KNOW_TYPE);
-    you.turn_is_over = true;
-
-    if (!yesno("Read it?"))
-        return;
-
-    if (player_mutation_level(MUT_BLURRY_VISION) > 0
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
-    {
-        mpr("The page is too blurry for you to read.");
-        return;
-    }
-
-    mpr("You find yourself reciting the magical words!");
-    exercise( SK_EVOCATIONS, 1 );
-
-    if (x_chance_in_y(7, 50))
-    {
-        mpr("A cloud of weird smoke pours from the book's pages!");
-        big_cloud( random_smoke_type(), KC_YOU,
-                   you.pos(), 20, 10 + random2(8) );
-        xom_is_stimulated(16);
-    }
-    else if (x_chance_in_y(2, 43))
-    {
-        mpr("A cloud of choking fumes pours from the book's pages!");
-        big_cloud(CLOUD_POISON, KC_YOU, you.pos(), 20, 7 + random2(5));
-        xom_is_stimulated(64);
-    }
-    else if (x_chance_in_y(2, 41))
-    {
-        mpr("A cloud of freezing gas pours from the book's pages!");
-        big_cloud(CLOUD_COLD, KC_YOU, you.pos(), 20, 8 + random2(5));
-        xom_is_stimulated(64);
-    }
-    else if (x_chance_in_y(3, 39))
-    {
-        if (one_chance_in(5))
-        {
-            mpr("The book disappears in a mighty explosion!");
-            dec_inv_item_quantity(slot, 1);
-        }
-
-        immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
-
-        xom_is_stimulated(255);
-    }
-    else if (one_chance_in(36))
-    {
-        if (create_monster(
-                mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
-                    you.pos(), 6, 0, true)) != -1)
-        {
-            mpr("A horrible Thing appears!");
-            mpr("It doesn't look too friendly.");
-        }
-        xom_is_stimulated(255);
-    }
-    else
-    {
-        viewwindow(true, false);
-
-        int temp_rand = random2(23) + random2(you.skills[SK_EVOCATIONS] / 3);
-
-        if (temp_rand > 25)
-            temp_rand = 25;
-
-        const spell_type spell_casted =
-            ((temp_rand > 24) ? SPELL_LEHUDIBS_CRYSTAL_SPEAR :
-             (temp_rand > 21) ? SPELL_BOLT_OF_FIRE :
-             (temp_rand > 18) ? SPELL_BOLT_OF_COLD :
-             (temp_rand > 16) ? SPELL_LIGHTNING_BOLT :
-             (temp_rand > 10) ? SPELL_FIREBALL :
-             (temp_rand >  9) ? SPELL_VENOM_BOLT :
-             (temp_rand >  8) ? SPELL_BOLT_OF_DRAINING :
-             (temp_rand >  7) ? SPELL_BOLT_OF_INACCURACY :
-             (temp_rand >  6) ? SPELL_STICKY_FLAME :
-             (temp_rand >  5) ? SPELL_TELEPORT_SELF :
-             (temp_rand >  4) ? SPELL_CIGOTUVIS_DEGENERATION :
-             (temp_rand >  3) ? SPELL_POLYMORPH_OTHER :
-             (temp_rand >  2) ? SPELL_MEPHITIC_CLOUD :
-             (temp_rand >  1) ? SPELL_THROW_FLAME :
-             (temp_rand >  0) ? SPELL_THROW_FROST
-                              : SPELL_MAGIC_DART);
-
-        your_spells( spell_casted, powc, false );
-    }
-}
-
-void skill_manual(int slot)
-{
-    // Removed confirmation request because you know it's
-    // a manual in advance.
-    you.turn_is_over = true;
-    item_def& manual(you.inv[slot]);
-    const bool known = item_type_known(manual);
-    if (!known)
-        set_ident_flags( manual, ISFLAG_KNOW_TYPE );
-    const int skill = manual.plus;
-
-    mprf("You read about %s.", skill_name(skill));
-
-    exercise(skill, 500);
-
-    if (--manual.plus2 <= 0)
-    {
-        mpr("The manual crumbles into dust.");
-        dec_inv_item_quantity( slot, 1 );
-    }
-    else
-        mpr("The manual looks somewhat more worn.");
-
-    xom_is_stimulated(known ? 14 : 64);
-}
-
-static bool _box_of_beasts()
-{
-    bool success = false;
-
-    mpr("You open the lid...");
-
-    if (x_chance_in_y(60 + you.skills[SK_EVOCATIONS], 100))
-    {
-        monster_type beasty = MONS_PROGRAM_BUG;
-
-        // If you worship a good god, don't summon an evil beast (in
-        // this case, the hell hound).
-        do
-        {
-            int temp_rand = random2(11);
-
-            beasty = ((temp_rand == 0) ? MONS_GIANT_BAT :
-                      (temp_rand == 1) ? MONS_HOUND :
-                      (temp_rand == 2) ? MONS_JACKAL :
-                      (temp_rand == 3) ? MONS_RAT :
-                      (temp_rand == 4) ? MONS_ICE_BEAST :
-                      (temp_rand == 5) ? MONS_SNAKE :
-                      (temp_rand == 6) ? MONS_YAK :
-                      (temp_rand == 7) ? MONS_BUTTERFLY :
-                      (temp_rand == 8) ? MONS_BROWN_SNAKE :
-                      (temp_rand == 9) ? MONS_GIANT_LIZARD
-                                       : MONS_HELL_HOUND);
-        }
-        while (player_will_anger_monster(beasty));
-
-        beh_type beha = BEH_FRIENDLY;
-
-        if (one_chance_in(you.skills[SK_EVOCATIONS] + 5))
-            beha = BEH_HOSTILE;
-
-        if (create_monster(
-                mgen_data(beasty, beha, 2 + random2(4), 0,
-                          you.pos(), MHITYOU)) != -1)
-        {
-            success = true;
-
-            mpr("...and something leaps out!");
-            xom_is_stimulated(14);
-        }
-    }
-    else
-    {
-        if (!one_chance_in(6))
-            mpr("...but nothing happens.");
-        else
-        {
-            mpr("...but the box appears empty.");
-            you.weapon()->sub_type = MISC_EMPTY_EBONY_CASKET;
-        }
-    }
-
-    return (success);
-}
-
-static bool _ball_of_energy(void)
-{
-    bool ret = false;
-
-    mpr("You gaze into the crystal ball.");
-
-    int use = ((!you.confused()) ? random2(you.skills[SK_EVOCATIONS] * 6)
-                                 : random2(6));
-
-    if (use < 2 || you.max_magic_points == 0)
-    {
-        lose_stat(STAT_INTELLIGENCE, 1, false, "using a ball of energy");
-    }
-    else if (use < 4 && enough_mp(1, true)
-             || you.magic_points == you.max_magic_points)
-    {
-        mpr( "You feel your power drain away!" );
-        set_mp( 0, false );
-    }
-    else if (use < 6)
-    {
-        confuse_player( 10 + random2(10), false );
-    }
-    else
-    {
-        int proportional = (you.magic_points * 100) / you.max_magic_points;
-
-        if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional
-            || one_chance_in(25))
-        {
-            mpr( "You feel your power drain away!" );
-            set_mp( 0, false );
-        }
-        else
-        {
-            mpr( "You are suffused with power!" );
-            inc_mp( 6 + roll_dice( 2, you.skills[SK_EVOCATIONS] ), false );
-
-            ret = true;
-        }
-    }
-
-    return (ret);
-}
-
-static bool _ball_of_fixation(void)
-{
-    mpr("You gaze into the crystal ball.");
-    mpr("You are mesmerised by a rainbow of scintillating colours!");
-
-    const int duration = random_range(15, 40);
-    you.duration[DUR_PARALYSIS] = duration;
-    you.duration[DUR_SLOW] = duration;
-
-    return (true);
 }
