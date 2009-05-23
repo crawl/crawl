@@ -753,24 +753,33 @@ static int _healing_spell(int healed, bool divine_ability,
     bool did_something = false;
 
     if (you.religion == GOD_ELYVILON
-        && can_pacify
-        && is_hostile)
+        && can_pacify && is_hostile)
     {
         did_something = true;
-        simple_god_message(" supports your offer of peace.");
 
-        if (mons_is_holy(monster))
+        const bool is_holy     = mons_is_holy(monster);
+        const bool is_summoned = mons_is_summoned(monster);
+
+        int pgain = 0;
+        if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
+            pgain = random2(1 + random2(monster->max_hit_points / 12));
+
+        if (pgain > 0)
+            simple_god_message(" approves of your offer of peace.");
+        else
+            simple_god_message(" supports your offer of peace.");
+
+        if (is_holy)
             good_god_holy_attitude_change(monster);
         else
         {
-            const bool is_summoned = mons_is_summoned(monster);
 
             simple_monster_message(monster, " turns neutral.");
             mons_pacify(monster);
 
             // Give a small piety return.
             if (!is_summoned)
-                gain_piety(random2(1 + random2(monster->max_hit_points / 12)));
+                gain_piety(pgain);
         }
     }
 
