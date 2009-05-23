@@ -777,7 +777,8 @@ static int _healing_spell(int healed, bool divine_ability,
             mons_pacify(monster);
 
             // Give a small piety return.
-            gain_piety(pgain);
+            if (pgain > 0)
+                gain_piety(pgain);
         }
     }
 
@@ -805,7 +806,8 @@ static int _healing_spell(int healed, bool divine_ability,
                                    "creature.");
 
             // Give a small piety return.
-            gain_piety(pgain);
+            if (pgain > 0)
+                gain_piety(pgain);
         }
     }
 
