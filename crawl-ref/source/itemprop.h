@@ -368,14 +368,13 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_FLAME,
     SPMSL_FROST,
     SPMSL_POISONED,
-    SPMSL_POISONED_II,                 //    unused
-    SPMSL_CURARE,                      //    5
-    SPMSL_RETURNING,
+    SPMSL_CURARE,
+    SPMSL_RETURNING,                   //    5
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
     SPMSL_SHADOW,
-    SPMSL_DISPERSAL,                   //   10
-    SPMSL_EXPLODING,
+    SPMSL_DISPERSAL,
+    SPMSL_EXPLODING,                   //   10
     SPMSL_STEEL,
     SPMSL_SILVER
 };

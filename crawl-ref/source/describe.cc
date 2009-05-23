@@ -1142,7 +1142,6 @@ static std::string _describe_ammo( const item_def &item )
             always_destroyed = true;
             break;
         case SPMSL_POISONED:
-        case SPMSL_POISONED_II:
             description += "It is coated with poison.";
             break;
         case SPMSL_CURARE:
