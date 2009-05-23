@@ -3873,7 +3873,7 @@ static bool _destroyed_valuable_weapon(int value, int type)
 
     // Medium valuable items are more likely to net piety at low piety,
     // more so for missiles, since they're worth less as single items.
-    if (random2(value) >= random2((type == OBJ_MISSILES) ? 33 : 100)
+    if (random2(value) >= random2((type == OBJ_MISSILES) ? 10 : 100)
         && one_chance_in(1 + you.piety / 50))
     {
         return (true);
