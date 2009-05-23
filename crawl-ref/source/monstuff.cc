@@ -1733,12 +1733,12 @@ int monster_die(monsters *monster, killer_type killer,
         monster->destroy_inventory();
     }
 
-    if (!silent && !wizard && !mons_reset
+    if (!silent && !wizard && !mons_reset && corpse != -1
         && !(monster->flags & MF_KNOWN_MIMIC)
         && mons_is_shapeshifter(monster))
     {
         simple_monster_message(monster, "'s shape twists and changes "
-                               "as it dies; that was a shifter!");
+                               "as it dies.");
     }
 
     // If we kill an invisible monster reactivate autopickup.
