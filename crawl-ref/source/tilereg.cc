@@ -2596,9 +2596,9 @@ void MenuRegion::place_entries()
 {
     m_dirty = false;
 
-    const int heading_indent = 10;
-    const int tile_indent = 20;
-    const int text_indent = 58;
+    const int heading_indent  = 10;
+    const int tile_indent     = 20;
+    const int text_indent     = (Options.tile_menu_icons ? 58 : 20);
     const int max_tile_height = 32;
     const int entry_buffer = 1;
     const VColour selected_colour(50, 50, 10, 255);
@@ -2610,6 +2610,8 @@ void MenuRegion::place_entries()
         m_tile_buf[t].clear();
 
     int column = 0;
+    if (!Options.tile_menu_icons)
+        set_num_columns(1);
     const int max_columns = std::min(2, m_max_columns);
     const int column_width = mx / max_columns;
 

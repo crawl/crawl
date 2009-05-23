@@ -721,6 +721,9 @@ bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
 bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
+    if (!Options.tile_menu_icons)
+        return (false);
+
     monsters *m = (monsters*)(data);
     if (!m)
         return (false);
@@ -805,6 +808,9 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
 bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
+    if (!Options.tile_menu_icons)
+        return (false);
+
     if (!in_bounds(pos))
         return (false);
 

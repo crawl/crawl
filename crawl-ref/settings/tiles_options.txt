@@ -1,7 +1,10 @@
+# This file contains options useful only for the Tiles build of Stone Soup.
+# See init.txt on how to change the optional values.
 
 # tile_show_items = !?/%=([)X}+\_.
 
 # tile_title_screen = false
+# tile_menu_icons   = false
 
 ### The following lines define the colours of various objects within the
 ### tiles minimap. See options_guide.txt for more details.

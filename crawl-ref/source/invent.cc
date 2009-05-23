@@ -483,6 +483,9 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 #ifdef USE_TILE
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
+    if (!Options.tile_menu_icons)
+        return (false);
+
     if (quantity <= 0)
         return (false);
 
