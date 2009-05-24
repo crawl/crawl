@@ -2778,6 +2778,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "monsters killed by allies of what you'd get for killing them "
                 "yourself. You can command your allies by pressing <w>t</w> "
                 "to talk to them.";
+
+        if (!mons_att_wont_attack(monster_at(gc)->attitude))
+            text << "\n\nHowever, it is only <w>temporarily</w> friendly, "
+                    "and will become dangerous again when this friendliness "
+                    "wears off.";
         break;
 
     case TUT_SEEN_MONSTER:
@@ -4032,7 +4037,8 @@ void tutorial_describe_monster(const monsters *mons)
                 "better than to send you the same way.\n\n";
         dangerous = true;
     }
-    else
+    // Don't call friendly horrible things dangerous.
+    else if (!mons_att_wont_attack(mons->attitude))
     {
         // 8 is the default value for the note-taking of OOD monsters.
         // Since I'm too lazy to come up with any measurement of my own
@@ -4063,6 +4069,10 @@ void tutorial_describe_monster(const monsters *mons)
         ostr << "Friendly monsters will follow you around and attempt to aid "
                 "you in battle. You can order your allies by <w>t</w>alking "
                 "to them.";
+        if (!mons_att_wont_attack(mons->attitude))
+            ostr << "\n\nHowever, it is only <w>temporarily</w> friendly, "
+                    "and will become dangerous again when this friendliness "
+                    "wears off.";
     }
     else if (dangerous)
     {

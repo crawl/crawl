@@ -8929,11 +8929,17 @@ void seen_monster(monsters *monster)
     // First time we've seen this particular monster.
     monster->flags |= MF_SEEN;
 
-    if (!mons_is_mimic(monster->type) && MONST_INTERESTING(monster))
+    if (!mons_is_mimic(monster->type))
     {
-        take_note(
-            Note(NOTE_SEEN_MONSTER, monster->type, 0,
-                 monster->name(DESC_NOCAP_A, true).c_str()));
+        if (Options.tutorial_left)
+            tutorial_first_monster(*monster);
+
+        if (MONST_INTERESTING(monster))
+        {
+            take_note(
+                      Note(NOTE_SEEN_MONSTER, monster->type, 0,
+                           monster->name(DESC_NOCAP_A, true).c_str()));
+        }
     }
 }
 

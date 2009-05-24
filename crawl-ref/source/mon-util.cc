@@ -6627,7 +6627,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             patrol_point.reset();
         }
         if (you.can_see(this))
-            learned_something_new(TUT_MONSTER_FRIENDLY);
+            learned_something_new(TUT_MONSTER_FRIENDLY, pos());
         break;
 
     default:
