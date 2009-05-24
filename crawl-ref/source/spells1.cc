@@ -762,7 +762,10 @@ static int _healing_spell(int healed, bool divine_ability,
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-            pgain = random2(1 + random2(monster->max_hit_points / 12));
+        {
+            pgain = random2(1 + random2(monster->max_hit_points /
+                            (2 + you.piety / 20)));
+        }
 
         if (pgain > 0)
             simple_god_message(" approves of your offer of peace.");
@@ -799,11 +802,15 @@ static int _healing_spell(int healed, bool divine_ability,
                 pgain = 1;
 
             if (pgain > 0)
+            {
                 simple_god_message(" approves of your healing of a fellow "
                                    "creature.");
+            }
             else
+            {
                 simple_god_message(" appreciates your healing of a fellow "
                                    "creature.");
+            }
 
             // Give a small piety return.
             if (pgain > 0)
