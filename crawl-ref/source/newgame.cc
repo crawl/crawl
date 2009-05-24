@@ -1557,7 +1557,6 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_HALFLING:
         case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_OGRE:
         case SP_TROLL:
             return (CC_RESTRICTED);
         default:
