@@ -3324,7 +3324,8 @@ void tutorial_describe_item(const item_def &item)
             break;
        }
        case OBJ_WANDS:
-            ostr << "The magic within can be unleashed by <w>Z</w>apping it.";
+            ostr << "The magic within can be unleashed by evoking "
+                    "(<w>V</w>) it.";
 #ifdef USE_TILE
             ostr << " Alternatively, simply click on its tile.";
 #endif
