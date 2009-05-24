@@ -596,7 +596,7 @@ static void _pick_random_species_and_class( bool unrestricted_only )
                                      unrestricted_only))
             {
                 job_count++;
-                if (one_chance_in( job_count ))
+                if (one_chance_in(job_count))
                 {
                     species = static_cast<species_type>(sp);
                     job = static_cast<job_type>(cl);
@@ -606,7 +606,7 @@ static void _pick_random_species_and_class( bool unrestricted_only )
     }
 
     // At least one job must exist in the game, else we're in big trouble.
-    ASSERT( species != SP_UNKNOWN && job != JOB_UNKNOWN );
+    ASSERT(species != SP_UNKNOWN && job != JOB_UNKNOWN);
 
     // Return draconian variety here.
     if (species == SP_RED_DRACONIAN)
