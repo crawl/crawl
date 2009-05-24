@@ -2411,26 +2411,10 @@ bool gives_ability(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-    {
-        // unwielded weapon
-        item_def *weap = you.slot_item(EQ_WEAPON);
-        if (!weap || weap->slot != item.slot)
-            return (false);
         break;
-    }
     case OBJ_JEWELLERY:
-    {
         if (!jewellery_is_amulet(item))
         {
-            // unworn ring
-            item_def *lring = you.slot_item(EQ_LEFT_RING);
-            item_def *rring = you.slot_item(EQ_RIGHT_RING);
-            if ((!lring || lring->slot != item.slot)
-                && (!rring || rring->slot != item.slot))
-            {
-                return (false);
-            }
-
             if (item.sub_type == RING_TELEPORTATION
                 || item.sub_type == RING_LEVITATION
                 || item.sub_type == RING_INVISIBILITY)
@@ -2440,26 +2424,19 @@ bool gives_ability(const item_def &item)
         }
         else
         {
-            // unworn amulet
-            item_def *amul = you.slot_item(EQ_AMULET);
-            if (!amul || amul->slot != item.slot)
-                return (false);
-
             if (item.sub_type == AMU_RAGE)
                 return (true);
         }
         break;
-    }
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
         if (eq == EQ_NONE)
             return (false);
+        const special_armour_type ego = get_armour_ego_type(item);
 
-        // unworn armour
-        item_def *arm = you.slot_item(eq);
-        if (!arm || arm->slot != item.slot)
-            return (false);
+        if (ego == SPARM_DARKNESS || ego == SPARM_LEVITATION)
+            return (true);
         break;
     }
     default:
@@ -2486,26 +2463,10 @@ bool gives_resistance(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-    {
-        // unwielded weapon
-        item_def *weap = you.slot_item(EQ_WEAPON);
-        if (!weap || weap->slot != item.slot)
-            return (false);
         break;
-    }
     case OBJ_JEWELLERY:
-    {
         if (!jewellery_is_amulet(item))
         {
-            // unworn ring
-            const item_def *lring = you.slot_item(EQ_LEFT_RING);
-            const item_def *rring = you.slot_item(EQ_RIGHT_RING);
-            if ((!lring || lring->slot != item.slot)
-                && (!rring || rring->slot != item.slot))
-            {
-                return (false);
-            }
-
             if (item.sub_type >= RING_PROTECTION_FROM_FIRE
                    && item.sub_type <= RING_PROTECTION_FROM_COLD
                 || item.sub_type == RING_SEE_INVISIBLE
@@ -2518,27 +2479,15 @@ bool gives_resistance(const item_def &item)
         }
         else
         {
-            // unworn amulet
-            const item_def *amul = you.slot_item(EQ_AMULET);
-            if (!amul || amul->slot != item.slot)
-                return (false);
-
             if (item.sub_type != AMU_RAGE && item.sub_type != AMU_INACCURACY)
                 return (true);
         }
         break;
-    }
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
         if (eq == EQ_NONE)
             return (false);
-
-        // unworn armour
-        item_def *arm = you.slot_item(eq);
-        if (!arm || arm->slot != item.slot)
-            return (false);
-        break;
 
         const int ego = get_armour_ego_type(item);
         if (ego >= SPARM_FIRE_RESISTANCE && ego <= SPARM_SEE_INVISIBLE
@@ -2548,19 +2497,12 @@ bool gives_resistance(const item_def &item)
         }
     }
     case OBJ_STAVES:
-    {
-        // unwielded staff
-        item_def *weap = you.slot_item(EQ_WEAPON);
-        if (!weap || weap->slot != item.slot)
-            return (false);
-
         if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON
             || item.sub_type == STAFF_AIR)
         {
             return (true);
         }
         return (false);
-    }
     default:
         return (false);
     }

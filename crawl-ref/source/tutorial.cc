@@ -1595,6 +1595,12 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << "\nAs you're already trained in Axes you should stick "
                     "with these. Checking other axes can be worthwhile.";
         }
+        else if (Options.tutorial_type == TUT_MAGIC_CHAR)
+        {
+            text << "\nAs a spellslinger you don't need a weapon to fight. "
+                    "However, you should still carry at least one knife, "
+                    "dagger, sword or axe so that you can chop up corpses.";
+        }
         break;
 
     case TUT_SEEN_MISSILES:
@@ -1602,9 +1608,10 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
                 "('<w>(</w>') "
 #endif
-                "you've picked up. Darts can be thrown by hand, but other "
-                "missile types like arrows and needles require a launcher "
-                "and training in using it to be really effective. "
+                "you've picked up. Darts and throwing nets can be thrown by "
+                "by hand, but other missile types like arrows and needles "
+                "require a launcher and training in using it to be really "
+                "effective. "
 #ifdef USE_TILE
                 "<w>Right-clicking</w> on "
 #else
@@ -2303,7 +2310,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                     "with the <w>Ctrl-F</w> command, which will let you "
                     "seach for all known items in the dungeon.  For example, "
                     "<w>Ctrl-F \"knife\"</w> will list all knives. You can "
-                    "canthen travel to one of the spots.";
+                    "can then travel to one of the spots.";
             Options.tut_stashes = false;
         }
 
@@ -2538,7 +2545,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "lie, so retreat (if possible) might be the better option.";
 
         if (_advise_use_wand())
-            text << "\n\nOr you could <w>Z</w>ap a wand to deal damage.";
+            text << "\n\nOr you could evoke (<w>V</w>) a wand to deal damage.";
         break;
 
     case TUT_YOU_MUTATED:
@@ -2880,7 +2887,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "it a bit, so as to then <w>f</w>ire it at a monster.";
 
         if (Options.tutorial_type == TUT_MAGIC_CHAR)
-            text << " Note that casting spells is still very much possible.";
+            text << " Note that casting spells is still very much possible, "
+                    "as is using wands, scrolls and potions.";
+        else
+            text << " Note that using wands, scrolls and potions is still "
+                    "very much possible.";
         break;
 
     case TUT_LOAD_SAVED_GAME:
@@ -2892,6 +2903,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "also check ";
 
         std::vector<std::string> listed;
+        if (Options.tutorial_type == TUT_MAGIC_CHAR)
+            listed.push_back("your spells (<w>z?</w>)");
         if (!your_talents(false).empty())
             listed.push_back("your <w>a</w>bilities");
         if (Options.tutorial_type != TUT_MAGIC_CHAR || how_mutated())
@@ -3000,11 +3013,27 @@ static std::string _tut_target_mode(bool spells = false)
    return (result);
 }
 
-static std::string _tut_abilities()
+static std::string _tut_abilities(const item_def& item)
 {
-   return ("To do this, enter the ability menu with <w>a</w>, and then "
+   std::string str = "To do this, ";
+
+   if (!item_is_equipped(item))
+   {
+       switch(item.base_type)
+       {
+       case OBJ_WEAPONS:   str += "first <w>w</w>ield it"; break;
+       case OBJ_ARMOUR:    str += "first <w>W</w>ear it"; break;
+       case OBJ_JEWELLERY: str += "first <w>P</w>ut it on"; break;
+       default:
+           str += "<r>(BUG! this item shouldn't give an ability)</r>";
+           break;
+       }
+       str += ", then ";
+   }
+   str += "enter the ability menu with <w>a</w>, and then "
            "choose the corresponding ability. Note that such an attempt of "
-           "activation, especially by the untrained, is likely to fail.");
+           "activation, especially by the untrained, is likely to fail.";
+   return (str);
 }
 
 static std::string _tut_throw_stuff(const item_def &item)
@@ -3047,7 +3076,7 @@ void tutorial_describe_item(const item_def &item)
                     // You can activate it.
                     ostr << "When wielded, some weapons (such as this one) "
                             "offer certain abilities you can activate. ";
-                    ostr << _tut_abilities();
+                    ostr << _tut_abilities(item);
                     break;
                 }
                 else if (gives_resistance(item)
@@ -3205,6 +3234,17 @@ void tutorial_describe_item(const item_def &item)
                         "innate abilities.)";
                 wearable = false;
             }
+            else if (item.sub_type == ARM_CENTAUR_BARDING
+                     && you.species != SP_CENTAUR)
+            {
+                ostr << "Only centaurs can wear centaur barding.";
+                wearable = false;
+            }
+            else if (item.sub_type == ARM_NAGA_BARDING)
+            {
+                ostr << "Only nagas can wear naga barding.";
+                wearable = false;
+            }
             else
             {
                 ostr << "You can wear pieces of armour with <w>W</w> and take "
@@ -3217,13 +3257,21 @@ void tutorial_describe_item(const item_def &item)
             }
 
             if (Options.tutorial_type == TUT_MAGIC_CHAR
-                && !is_light_armour(item))
+                && !is_light_armour(item)
+                && get_armour_slot(item) == EQ_BODY_ARMOUR)
             {
                 ostr << "\nNote that body armour with high evasion penalties "
                         "may hinder your ability to learn and cast spells. "
                         "Light armour such as robes, leather armour or any "
                         "elven armour will be generally safe for any aspiring "
                         "spellcaster.";
+            }
+            else if (Options.tutorial_type == TUT_MAGIC_CHAR
+                     && is_shield(item))
+            {
+                ostr << "\nNote that shields will hinder you ability to "
+                        "cast spells; the larger the shield, the bigger "
+                        "the penalty.";
             }
             else if (Options.tutorial_type == TUT_RANGER_CHAR
                      && is_shield(item))
@@ -3264,11 +3312,12 @@ void tutorial_describe_item(const item_def &item)
 #endif
                             ".";
                 }
-                if (is_artefact(item) && gives_ability(item))
+                if (gives_ability(item))
                 {
-                    ostr << "\nWhen worn, some types of armour (such as this "
-                            "one) offer certain abilities you can activate. ";
-                    ostr << _tut_abilities();
+                    ostr << "\n\nWhen worn, some types of armour (such as "
+                            "this one) offer certain abilities you can "
+                            "activate. ";
+                    ostr << _tut_abilities(item);
                 }
             }
             Options.tutorial_events[TUT_SEEN_ARMOUR] = false;
@@ -3346,7 +3395,7 @@ void tutorial_describe_item(const item_def &item)
             {
                 ostr << "\n\nWhen worn, some types of jewellery (such as this "
                         "one) offer certain abilities you can activate. ";
-                ostr << _tut_abilities();
+                ostr << _tut_abilities(item);
             }
             Options.tutorial_events[TUT_SEEN_JEWELLERY] = false;
             break;
