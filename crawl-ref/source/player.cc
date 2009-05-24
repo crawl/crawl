@@ -2958,11 +2958,6 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
 
     level_change();
 
-    // Increase tutorial time-out now that it's actually
-    // become useful for a longer time.
-    if (Options.tutorial_left && you.experience_level == 7)
-        tutorial_finished();
-
     if (actual_gain != NULL)
         *actual_gain = you.experience - old_exp;
 
@@ -3567,6 +3562,11 @@ void level_change(bool skip_attribute_increase)
     }
 
     redraw_skill(you.your_name, player_title());
+
+    // Increase tutorial time-out now that it's actually
+    // become useful for a longer time.
+    if (Options.tutorial_left && you.experience_level >= 7)
+        tutorial_finished();
 }
 
 // Here's a question for you: does the ordering of mods make a difference?
