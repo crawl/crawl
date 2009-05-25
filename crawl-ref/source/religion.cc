@@ -3945,8 +3945,12 @@ bool ely_destroy_weapons()
             if (is_evil_weapon)
             {
                 // Print this is addition to the above!
-                simple_god_message(" welcomes the destruction of this evil "
-                                   "weapon.", GOD_ELYVILON);
+                simple_god_message(
+                    make_stringf(" welcomes the destruction of %s evil "
+                                 "weapon%s.",
+                                 item.quantity == 1 ? "this" : "these",
+                                 item.quantity == 1 ? ""     : "s").c_str(),
+                    GOD_ELYVILON);
             }
         }
 
@@ -4043,8 +4047,9 @@ bool trog_burn_spellbooks()
             const int duration = std::min(4 + count + random2(rarity/2), 23);
             place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
 
-            mpr(count == 1 ? "The book bursts into flames."
-                           : "The books burst into flames.", MSGCH_GOD);
+            mprf(MSGCH_GOD, "The book%s burst%s into flames.",
+                 count == 1 ? ""  : "s",
+                 count == 1 ? "s" : "");
         }
     }
 
