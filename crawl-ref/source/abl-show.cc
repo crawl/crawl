@@ -817,7 +817,7 @@ static void _print_talent_description(talent tal)
     std::string name   = get_ability_def(tal.which).name;
 
     // XXX: The suffix is necessary to distinguish between similarly
-    // named spells. Yes, this is a hack.
+    // named spells.  Yes, this is a hack.
     std::string lookup = getLongDescription(name + "ability");
     if (lookup.empty())
     {
