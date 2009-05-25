@@ -1185,6 +1185,7 @@ void load_messages(reader& inf)
         for (int k = 0; k < repeats; k++)
              mpr_store_messages(text, channel, param, colour);
     }
+    mesclr(true);
 }
 
 void replay_messages(void)
