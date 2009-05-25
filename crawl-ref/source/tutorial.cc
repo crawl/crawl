@@ -1490,12 +1490,12 @@ static std::string _describe_portal(const coord_def &gc)
 
     std::ostringstream text;
 
-    // Zigguart entrances can rarely appear as early as DL 3.
+    // Ziggurat entrances can rarely appear as early as DL 3.
     if (desc.find("zig") != std::string::npos)
     {
         text << "is a portal to a set of special levels filled with very "
                 "tough monsters; you probably shouldn't even think of going "
-                "in here.  Additionally, entering a zigguart takes a lot of "
+                "in here.  Additionally, entering a ziggurat takes a lot of "
                 "gold, a lot more than you'd have right now; don't bother "
                 "saving gold up for it, since at this point your gold is "
                 "better spent at shops buying items which can help you "
@@ -2547,12 +2547,12 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (!Options.tut_explored)
             DELAY_EVENT;
 
-        text << "Fully exploring a level and piciking up all the interesting "
+        text << "Fully exploring a level and picking up all the interesting "
                 "looking items can be tedious.  To save on this tedium you "
                 "can press <w>o</w> to auto-explore, which will "
                 "automatically explore unmapped regions, automatically pick "
                 "up interesting items, and stop if a monster or interesting "
-                "dungeon feature (stairs, altar, etc) is encountered.";
+                "dungeon feature (stairs, altar, etc.) is encountered.";
         Options.tut_explored = false;
         break;
 
@@ -2988,7 +2988,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         }
         else
         {
-            text << "Uh-oh, taht monster noticed you!  Plus, the "
+            text << "Uh-oh, that monster noticed you!  Plus, the "
                     "noise it made will alert other monsters in the "
                     "vacinity, who will come to check out what the commotion "
                     "was about.";
@@ -3004,7 +3004,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         text << m->name(DESC_CAP_THE, true) << " didn't vanish, but merely "
-                "moved onto a square which isn't in your current LOS. It "
+                "moved onto a square which isn't in your current LOS.  It "
                 "will still be there, unless something happens to it in the "
                 "short amount of time it's out of sight.";
         break;
