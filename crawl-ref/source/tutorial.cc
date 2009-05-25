@@ -2167,10 +2167,10 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << "\nTo avoid accidentally opening a door you'd rather "
                     "remain closed during travel or autoexplore, you can mark "
                     "it with an exclusion from the map view (<w>X</w>) with "
-                    "<w>ee</w> while you cursor is on the grid in question. "
-                    "Such an exclusion will prevent autotravel to ever enter "
-                    "that grid until you remove the exclusion with another "
-                    "press of <w>Xe</w>.";
+                    "<w>ee</w> while your cursor is on the grid in question. "
+                    "Such an exclusion will prevent autotravel from ever "
+                    "entering that grid until you remove the exclusion with "
+                    "another press of <w>Xe</w>.";
         }
 
         break;
@@ -2543,7 +2543,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (_cant_butcher())
         {
             text << "(Or you <w>could</w> sacrifice it if it weren't for "
-                    "the fact that you can't let go of you cursed "
+                    "the fact that you can't let go of your cursed "
                     "non-chopping weapon)";
         }
         else if (_num_butchery_tools() == 0)
