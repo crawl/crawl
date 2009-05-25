@@ -1541,7 +1541,7 @@ static std::string _describe_portal(const coord_def &gc)
 
     return (text.str());
 }
-   
+
 #define DELAY_EVENT \
 { \
     Options.tutorial_events[seen_what] = true; \
@@ -1682,10 +1682,10 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
                 "('<w>(</w>') "
 #endif
-                "you've picked up. Darts and throwing nets can be thrown by "
-                "by hand, but other missile types like arrows and needles "
-                "require a launcher and training in using it to be really "
-                "effective. "
+                "you've picked up. Missiles like darts and throwing nets "
+                "can be thrown by hand, but other missiles like arrows and "
+                "needles require a launcher and training in using it to be "
+                "really effective. "
 #ifdef USE_TILE
                 "<w>Right-clicking</w> on "
 #else
@@ -1696,8 +1696,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         if (Options.tutorial_type == TUT_RANGER_CHAR)
         {
-            text << "\nAs you're already trained in Bows you should stick"
-                    " with arrows and collect more of them in the dungeon.";
+            text << "\nAs you're already trained in Bows you should stick "
+                    "with arrows and collect more of them in the dungeon.";
         }
         else if (Options.tutorial_type == TUT_MAGIC_CHAR)
         {
@@ -1806,7 +1806,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                     "or axe you find)";
 
         text << ". Once hungry you can then <w>e</w>at the resulting chunks "
-                "(though they may not be healthy).";
+                "(though they may not be healthful).";
 #ifdef USE_TILE
         text << " With tiles, you can also chop up any corpse that shows in "
                 "the floor part of your inventory region, simply by doing a "
@@ -1855,7 +1855,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "e<w>v</w>oking "
 #endif
                 "it. Some items need to be wielded first before you can "
-                "e<w>v</w>oke them. As usually, selecting it from your "
+                "e<w>v</w>oke them. As usual, selecting it from your "
                 "<w>i</w>nventory might give you more information.";
         break;
 
@@ -1875,7 +1875,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "e<w>v</w>oking it. For the latter the power depends on "
                 "your Evocations skill.";
 #ifdef USE_TILE
-        text << "Both wielding, and evoking a wielded item can be achieved "
+        text << "Both wielding and evoking a wielded item can be achieved "
                 "by clicking on it with your <w>left mouse button</w>.";
 #endif
         text << "\nDuring the tutorial you can reread this information at "
@@ -1982,13 +1982,13 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #endif
         text << "is the entrance to a different branch of the dungeon, "
                 "which might have different terrain, level layout and "
-                "monsters than the current main branch you're in.  Branches "
+                "monsters from the current main branch you're in. Branches "
                 "can range from being up to ten levels deep to having only "
                 "a single level. They can also contain entrances to other "
                 "branches."
 
                 "\n\nThe first three branches you'll encounter are the "
-                "Temple, the Orcish Mines and the Lair.  While the Mines "
+                "Temple, the Orcish Mines and the Lair. While the Mines "
                 "and the Lair can be dangerous for the new adventurer, "
                 "the Temple is completely safe and contains a number of "
                 "altars at which you might convert to a new god.";
@@ -2029,7 +2029,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc) || (you.pos() == gc))
             DELAY_EVENT;
 
-        text << "If any items are covering stairs or an escape hatch then "
+        text << "If any items are covering stairs or an escape hatch, then "
                 "that will be indicated by highlighting the <w><<</w> or "
                 "<w>></w> symbol, instead of hiding the stair symbol with "
                 "an item glyph.";
@@ -2045,7 +2045,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc) || (you.pos() == gc))
             DELAY_EVENT;
 
-        text << "If two or more items are on a single square then the square "
+        text << "If two or more items are on a single square, then the square "
                 "will be highlighted, and the symbol for the item on the top "
                 "of the heap will be shown.";
 #endif
@@ -2060,7 +2060,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc) || (you.pos() == gc))
             DELAY_EVENT;
 
-        text << "If any items are covering a trap then that will be "
+        text << "If any items are covering a trap, then that will be "
                 "indicated by highlighting the <w>^</w> symbol, instead of "
                 "hiding the trap symbol with an item glyph.";
 #endif
@@ -2106,7 +2106,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #endif
         text << "is an altar. You can get information about it by pressing "
                 "<w>p</w> while standing on the square. Before taking up "
-                "the responding faith you'll be asked for confirmation.";
+                "the corresponding faith you'll be asked for confirmation.";
 
         if (you.religion == GOD_NO_GOD
             && Options.tutorial_type == TUT_MAGIC_CHAR)
@@ -2149,7 +2149,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "is a closed door. You can open it by walking into it. "
                 "Sometimes it is useful to close a door. Do so by pressing "
                 "<w>C</w> while standing next to it. If there are several "
-                "doors you will then be prompted for a direction. "
+                "doors, you will then be prompted for a direction. "
                 "Alternatively, you can also use <w>Ctrl-Direction</w>.";
 #ifdef USE_TILE
         text << "\nIn Tiles, the same can be achieved by clicking on an "
@@ -2178,9 +2178,9 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "recovers.\n\n"
 
                 "If you can't find all three (or any) of the down stairs "
-                "on a level you should try searching for secret doors, since "
+                "on a level, you should try searching for secret doors, since "
                 "the missing stairs might be in sections of the level blocked "
-                "off by them. If you can't find any secret doors then the "
+                "off by them. If you can't find any secret doors, then the "
                 "missing stairs are probably in sections of the level totally "
                 "disconnected from the section you're searching.";
         break;
@@ -2250,7 +2250,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_GAINED_MELEE_SKILL:
         text << "Being skilled with a particular type of weapon will make it "
-                "easier to fight with all weapons of this type and make you "
+                "easier to fight with all weapons of this type, and make you "
                 "deal more damage with them. It is generally recommended to "
                 "concentrate your efforts on one or two weapon types to become "
                 "more powerful in them. Some weapons are closely related, and "
@@ -2304,7 +2304,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
                 " or by clicking into the stats area"
 #endif
-                "), or you could quaff a potion of healing. ";
+                "), or you could quaff a potion of healing.";
         break;
 
     case TUT_YOU_POISON:
@@ -2322,7 +2322,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
                 "or by clicking onto the stats area"
 #endif
-                "), or you could quaff a potion of healing. ";
+                "), or you could quaff a potion of healing.";
         break;
 
     case TUT_YOU_ROTTING:
@@ -2332,14 +2332,14 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         learned_something_new(TUT_YOU_ENCHANTED);
         Options.tut_just_triggered = true;
 
-        text << "Ugh, your flesh is rotting!  Not only does this slowly "
+        text << "Ugh, your flesh is rotting! Not only does this slowly "
                 "reduce your HP, it also slowly reduces your <w>maximum</w> "
                 "HP (your usual maximum HP will be indicated by a number in "
                 "parentheses).\n"
                 "While you can wait it out, you'll probably want to stop "
                 "rotting as soon as possible by drinking a potion of healing, "
                 "since the longer you wait the more your maximum HP will be "
-                "reduced.  Once you've stopped rotting you can restore your "
+                "reduced. Once you've stopped rotting, you can restore your "
                 "maximum HP to normal by drinking potions of healing and heal "
                 "wounds while fully healed.";
         break;
@@ -2349,14 +2349,14 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "you cannot remove cursed equipment and will have to suffer "
                 "the (possibly) bad effects until you find and read a scroll "
                 "of remove curse (though if you're wielding a cursed "
-                "non-slicing weapon you'll be unable to <w>c</w>hop up "
+                "non-slicing weapon, you'll be unable to <w>c</w>hop up "
                 "corpses into chunks). Weapons and armour can also be "
                 "uncursed using the appropriate enchantment scrolls.";
         break;
 
     case TUT_YOU_HUNGRY:
         text << "There are two ways to overcome hunger: food you started "
-                "with or found, and selfmade chunks from corpses. To get the "
+                "with or found, and self-made chunks from corpses. To get the "
                 "latter, all you need to do is <w>c</w>hop up a corpse "
                 "with a sharp implement. ";
 
@@ -2391,7 +2391,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "You are now suffering from terrible hunger. You'll need to "
                 "<w>e</w>at something quickly, or you'll die. The safest "
                 "way to deal with this is to simply eat something from your "
-                "inventory rather than wait for a monster to leave a corpse.";
+                "inventory, rather than wait for a monster to leave a corpse.";
 
         if (Options.tutorial_type == TUT_MAGIC_CHAR)
             text << "\nNote that you cannot cast spells while starving.";
@@ -2512,7 +2512,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         if (_cant_butcher())
             text << "(Or you <w>could</w> sacrifice it if it weren't for "
-                    "the fact that you can't let go of you cursed "
+                    "the fact that you can't let go of your cursed "
                     "non-chopping weapon)";
         else if (_num_butchery_tools() == 0)
             text << "(Or you <w>could</w> sacrifice it if you had a "
@@ -2548,7 +2548,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         text << "Fully exploring a level and picking up all the interesting "
-                "looking items can be tedious.  To save on this tedium you "
+                "looking items can be tedious. To save on this tedium you "
                 "can press <w>o</w> to auto-explore, which will "
                 "automatically explore unmapped regions, automatically pick "
                 "up interesting items, and stop if a monster or interesting "
@@ -2599,7 +2599,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_NEED_HEALING:
         text << "If you're low on hitpoints or magic and there's no urgent "
-                "need to move, you can rest for a bit. Ideally you should "
+                "need to move, you can rest for a bit. Ideally, you should "
                 "retreat to an area you've already explored and cleared "
                 "of monsters before resting, since resting on the edge of "
                 "the explored terrain increases the risk of rest being "
@@ -2673,8 +2673,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "may follow you if they're standing right next to you when "
                 "you start climbing or descending the stairs. And even if "
                 "you've managed to shake them off, they'll still be there when "
-                "you come back, though, so you'll want to use a different set "
-                "of stairs when you return.";
+                "you come back, so you'll want to use a different set of "
+                "stairs when you return.";
 
         if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
             && !you.duration[DUR_EXHAUSTED]
@@ -2803,8 +2803,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             {
                 text << "Should you decide that abandoning " << old_god_name
                      << "wasn't such a smart move after all, and you'd like to "
-                        "return to your old faith you'll have to find an altar "
-                        "dedicated to " << old_god_name << " where";
+                        "return to your old faith, you'll have to find an "
+                        "altar dedicated to " << old_god_name << " where";
             }
             text << " you can re-convert, and all will be well. Otherwise "
                     "you'll have to weather this god's displeasure until all "
@@ -2819,7 +2819,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 if (is_good_god(new_god))
                 {
                     text << "Fortunately, it seems that " << old_god_name <<
-                            " didn't mind you converting to " << new_god_name
+                            " didn't mind your converting to " << new_god_name
                          << ". ";
 
                     if (old_piety > 30)
@@ -2832,7 +2832,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 else if (!god_hates_your_god(old_god))
                 {
                     text << "Fortunately, it seems that " << old_god_name <<
-                            " didn't mind you converting to " << new_god_name
+                            " didn't mind your converting to " << new_god_name
                          << ". That's because " << old_god_name << " is one of "
                             "the good gods who generally are rather forgiving "
                             "about change of faith - unless you switch over to "
@@ -2842,7 +2842,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 else
                 {
                     text << "Looks like " << old_god_name << " didn't "
-                            "appreciate you converting to " << new_god_name
+                            "appreciate your converting to " << new_god_name
                          << "! But really, changing from one of the good gods "
                             "to an evil one, what did you expect!? For any god "
                             "not on the opposing side of the faith, "
@@ -2855,7 +2855,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             else
             {
                 text << "Looks like " << old_god_name << " didn't appreciate "
-                        "you converting to " << new_god_name << "! (Actually, "
+                        "your converting to " << new_god_name << "! (Actually, "
                         "only the three good gods will sometimes be forgiving "
                         "about this kind of faithlessness.) ";
 
@@ -2910,7 +2910,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "absolutely have to follow it. Rather, you can let it run "
                 "away. Sometimes, though, it can be useful to attack a "
                 "fleeing creature by throwing something after it. If you "
-                "have any daggers or hand axes in your <w>i</w>nventory you "
+                "have any daggers or hand axes in your <w>i</w>nventory, you "
                 "can look at one of them to read an explanation of how to do "
                 "this.";
         break;
@@ -2973,24 +2973,24 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (!vis)
         {
             text << "Uh-oh, some monster noticed you, either one that's "
-                    "around a corner or one that's invisible.  Plus, the "
+                    "around a corner or one that's invisible. Plus, the "
                     "noise it made will alert other monsters in the "
-                    "vacinity, who will come to check out what the commotion "
+                    "vicinity, who will come to check out what the commotion "
                     "was about.";
         }
         else if (mons_shouts(m->type, false) == S_SILENT)
         {
-            text << "Uh-oh, that monster noticed you!  Forutnately, it "
-                    "didn't make any noise, but many mosters <w>do</w> make "
+            text << "Uh-oh, that monster noticed you! Fortunately, it "
+                    "didn't make any noise, but many monsters <w>do</w> make "
                     "noise when they notice you, which alerts other monsters "
                     "in the area, who will come to check out what the "
                     "commotion was about.";
         }
         else
         {
-            text << "Uh-oh, that monster noticed you!  Plus, the "
+            text << "Uh-oh, that monster noticed you! Plus, the "
                     "noise it made will alert other monsters in the "
-                    "vacinity, who will come to check out what the commotion "
+                    "vicinity, who will come to check out what the commotion "
                     "was about.";
         }
         break;
@@ -3004,12 +3004,12 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         text << m->name(DESC_CAP_THE, true) << " didn't vanish, but merely "
-                "moved onto a square which isn't in your current LOS.  It "
+                "moved onto a square which isn't in your current LOS. It "
                 "will still be there, unless something happens to it in the "
                 "short amount of time it's out of sight.";
         break;
     }
- 
+
     case TUT_SEEN_MONSTER:
     case TUT_SEEN_FIRST_OBJECT:
         // Handled in special functions.
@@ -3027,7 +3027,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #endif
                 ", keep moving, don't fight any of the monsters, and don't "
                 "bother picking up any items on the ground. If you're "
-                "encumbered or overburdened then lighten up your load, and if "
+                "encumbered or overburdened, then lighten up your load, and if "
                 "the monsters are closing in, try to use items of speed to get "
                 "away. Also, wherever possible, move in a direction slightly "
                 "off from a compass direction (for example, north-by-northwest "
@@ -3053,7 +3053,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "If the spellcasting success chance is high (which can be "
                 "checked by entering <w>z\?</w>) then a miscast merely means "
                 "the spell is not working, along with a harmless side effect. "
-                "However, for spells with a low success rate there's a chance "
+                "However, for spells with a low success rate, there's a chance "
                 "of contaminating yourself with magical energy, plus a chance "
                 "of an additional harmful side effect. Normally this isn't a "
                 "problem, since magical contamination bleeds off over time, "
@@ -3068,8 +3068,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "The spell you just cast made you hungrier; you can see how "
                 "hungry spells make you by entering <w>z\?!</w>. The amount of "
                 "nutrition consumed increases with the level of the spell and "
-                "decreases in dependence of your intelligence stat and your "
-                "Spellcasting skill. If both of these are high enough a spell "
+                "decreases depending on your intelligence stat and your "
+                "Spellcasting skill. If both of these are high enough, a spell "
                 "might even not cost you any nutrition at all.";
         break;
 
