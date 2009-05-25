@@ -2349,14 +2349,15 @@ void inscribe_item(item_def &item, bool proper_prompt)
     // existing inscription become an option.
     if (!proper_prompt || need_autoinscribe || is_inscribed)
     {
-        prompt = "Press (i) to ";
-        prompt += (is_inscribed ? "add to inscription"
-                                : "inscribe");
+        if (!is_inscribed)
+            prompt = "Press (i) to inscribe";
+        else
+            prompt = "Press (i) to add to or (r) to replace the inscription";
 
         if (need_autoinscribe || is_inscribed)
         {
             if (!need_autoinscribe || !is_inscribed)
-                prompt += " or ";
+                prompt += ", or ";
             else
                 prompt += ", ";
 
@@ -2398,9 +2399,14 @@ void inscribe_item(item_def &item, bool proper_prompt)
         }
         // If autoinscription is impossible, prompt for an inscription instead.
     case 'i':
+    case 'r':
     {
-        prompt = (is_inscribed ? "Add what to inscription? "
-                               : "Inscribe with what? ");
+        if (!is_inscribed)
+            prompt = "Inscribe with what? ";
+        else if (keyin == 'i')
+            prompt = "Add what to inscription? ";
+        else
+            prompt = "Replace inscription with what? ";
 
         if (proper_prompt)
             mpr(prompt.c_str(), MSGCH_PROMPT);
@@ -2424,10 +2430,15 @@ void inscribe_item(item_def &item, bool proper_prompt)
 
             if (strlen(buf) > 0)
             {
-                if (is_inscribed)
-                    item.inscription += ", ";
+                if (is_inscribed && keyin == 'r')
+                    item.inscription = std::string(buf);
+                else
+                {
+                    if (is_inscribed)
+                        item.inscription += ", ";
 
-                item.inscription += std::string(buf);
+                    item.inscription += std::string(buf);
+                }
             }
         }
         else if (proper_prompt)

@@ -1279,8 +1279,9 @@ int monster_die(monsters *monster, killer_type killer,
             if (crawl_state.arena)
                 break;
 
-            // killing triggers tutorial lesson
-            _tutorial_inspect_kill();
+            // Killing triggers tutorial lesson.
+            if (gives_xp)
+                _tutorial_inspect_kill();
 
             // Prevent summoned creatures from being good kills.
             if (bad_kill || !created_friendly && gives_xp)
