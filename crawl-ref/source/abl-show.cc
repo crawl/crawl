@@ -817,8 +817,8 @@ static void _print_talent_description(talent tal)
 
     std::string name   = get_ability_def(tal.which).name;
 
-    // The suffix is necessary to distinguish between similarly named spells.
-    // Yes, this is a hack. (XXX)
+    // XXX: The suffix is necessary to distinguish between similarly
+    // named spells. Yes, this is a hack.
     std::string lookup = getLongDescription(name + "ability");
     if (lookup.empty())
     {
@@ -1957,8 +1957,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
 
     if (Options.tutorial_left)
     {
-        // XXX This could be buggy if you manage to pick up lots and lots
-        // of abilities during the tutorial.
+        // XXX: This could be buggy if you manage to pick up lots and
+        // lots of abilities during the tutorial.
         abil_menu.set_more(tut_abilities_info());
     }
     else
@@ -2053,7 +2053,7 @@ std::vector<talent> your_talents(bool check_confused)
 {
     std::vector<talent> talents;
 
-    // Species-based abilities
+    // Species-based abilities.
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
 
