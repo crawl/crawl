@@ -59,7 +59,6 @@ REVISION("$Rev$");
 #include "tutorial.h"
 #include "view.h"
 
-
 #ifdef UNIX
 #include "libunix.h"
 #endif
@@ -281,8 +280,12 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_ELYVILON_LESSER_HEALING_SELF, "Lesser Self-Healing",
       1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
+    // XXX: Since there's only one entry for both lesser self-healing
+    // and lesser healing, and the latter comes first for purposes of
+    // the "^" screen, display that there's a piety cost for the latter,
+    // even though only the former actually has one.
     { ABIL_ELYVILON_LESSER_HEALING_OTHERS, "Lesser Healing",
-      1, 0, 100, 0, ABFLAG_CONF_OK },
+      1, 0, 100, 0, ABFLAG_PIETY | ABFLAG_CONF_OK },
     { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1,
       ABFLAG_CONF_OK },
     { ABIL_ELYVILON_GREATER_HEALING_SELF, "Greater Self-Healing",
