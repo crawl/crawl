@@ -4381,7 +4381,7 @@ static void _ely_dull_inventory_weapons()
 
         simple_god_message(
             make_stringf(" dulls %syour weapons.",
-                         num_dulled > 1 ? "" : "one of ").c_str(),
+                         num_dulled == 1 ? "one of " : "").c_str(),
             GOD_ELYVILON);
     }
 }
@@ -4729,7 +4729,7 @@ static bool _beogh_retribution()
         {
             std::ostringstream msg;
             msg << " throws "
-                << (num_created > 1 ? "implements" : "an implement")
+                << (num_created == 1 ? "an implement" : "implements")
                 << " of " << (am_orc ? "orc slaying" : "electrocution")
                 << " at you.";
             simple_god_message(msg.str().c_str(), god);
@@ -7358,10 +7358,10 @@ static void _place_delayed_monsters()
                 msg = replace_all(msg, " @an@", "");
             }
 
-            if (placed > 1)
-                msg = replace_all(msg, "@s@", "s");
-            else
+            if (placed == 1)
                 msg = replace_all(msg, "@s@", "");
+            else
+                msg = replace_all(msg, "@s@", "s");
 
             prev_god = GOD_NO_GOD;
             _delayed_done_trigger_pos.pop_front();
@@ -7376,7 +7376,7 @@ static void _place_delayed_monsters()
                 continue;
             }
 
-            // Fake it coming from simple_god_message().
+            // Fake its coming from simple_god_message().
             if (msg[0] == ' ' || msg[0] == '\'')
                 msg = god_name(mg.god) + msg;
 
