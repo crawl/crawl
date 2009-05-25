@@ -1214,9 +1214,11 @@ void handle_monster_shouts(monsters* monster, bool force)
         }
     }
 
-    const int noise_level = get_shout_noise_level(s_type);
-    if (noise_level > 0)
-        noisy(noise_level, monster->pos());
+    const int  noise_level = get_shout_noise_level(s_type);
+    const bool heard       = noisy(noise_level, monster->pos());
+
+    if (Options.tutorial_left && (heard || you.can_see(monster)))
+        learned_something_new(TUT_MONSTER_SHOUT, monster->pos());
 }
 
 #ifdef WIZARD
@@ -1623,6 +1625,9 @@ void cloud_grid(void)
 bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
 {
     bool ret = false;
+
+    if (loudness <= 0)
+        return (false);
 
     // If the origin is silenced there is no noise.
     if (silenced(where))

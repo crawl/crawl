@@ -3381,7 +3381,7 @@ void gain_piety(int pgn)
                                make_stringf("You can now %s.", pmsg).c_str());
                 }
 
-                learned_something_new(TUT_NEW_ABILITY);
+                learned_something_new(TUT_NEW_ABILITY_GOD);
             }
 
             if (you.religion == GOD_SHINING_ONE)

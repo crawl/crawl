@@ -7799,6 +7799,11 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     // this message to avoid confusion.
     if (monster->seen_context == _just_seen && !see_grid(f))
         simple_monster_message(monster, " moves out of view.");
+    else if (Options.tutorial_left && (monster->flags & MF_WAS_IN_VIEW)
+             && !see_grid(f))
+    {
+        learned_something_new(TUT_MONSTER_LEFT_LOS, monster->pos());
+    }
 
     // The seen context no longer applies if the monster is moving normally.
     monster->seen_context.clear();

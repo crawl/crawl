@@ -18,6 +18,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "abl-show.h"
 #include "beam.h"
 #include "cio.h"
 #include "cloud.h"
@@ -335,6 +336,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (you.equip[EQ_WEAPON] != -1 && !unwield_item(show_weff_messages))
         return (false);
 
+    const unsigned int old_talents = your_talents(false).size();
+
     you.equip[EQ_WEAPON] = item_slot;
 
     // Any oddness on wielding taken care of here.
@@ -345,6 +348,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Warn player about low str/dex or throwing skill.
     if (show_weff_messages)
         wield_warning();
+
+    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+        learned_something_new(TUT_NEW_ABILITY_ITEM);
 
     // Time calculations.
     you.time_taken /= 2;
@@ -3604,11 +3610,16 @@ bool puton_item(int item_slot)
             hand_used = EQ_RIGHT_RING;
     }
 
+    const unsigned int old_talents = your_talents(false).size();
+
     // Actually equip the item.
     you.equip[hand_used] = item_slot;
 
     // And calculate the effects.
     jewellery_wear_effects(item);
+
+    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+        learned_something_new(TUT_NEW_ABILITY_ITEM);
 
     // Putting on jewellery is as fast as wielding weapons.
     you.time_taken /= 2;

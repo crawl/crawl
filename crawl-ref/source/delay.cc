@@ -13,6 +13,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <string.h>
 
+#include "abl-show.h"
 #include "clua.h"
 #include "command.h"
 #include "database.h"
@@ -1417,6 +1418,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
 void armour_wear_effects(const int item_slot)
 {
+    const unsigned int old_talents = your_talents(false).size();
+
     item_def &arm = you.inv[item_slot];
 
     const bool was_known = item_type_known(arm);
@@ -1591,6 +1594,9 @@ void armour_wear_effects(const int item_slot)
 
     if (eq_slot == EQ_SHIELD)
         warn_shield_penalties();
+
+    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+        learned_something_new(TUT_NEW_ABILITY_ITEM);
 
     you.redraw_armour_class = true;
     you.redraw_evasion = true;

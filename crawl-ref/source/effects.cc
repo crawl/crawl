@@ -3104,6 +3104,7 @@ static void _rot_inventory_food(long time_delta)
     if (burden_changed_by_rot)
     {
         mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);
+        learned_something_new(TUT_ROTTEN_GONE);
         burden_change();
     }
 }

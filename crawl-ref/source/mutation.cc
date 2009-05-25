@@ -26,6 +26,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "abl-show.h"
 #include "cio.h"
 #include "defines.h"
 #include "effects.h"
@@ -2214,6 +2215,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return (false);
     ASSERT(rc == 0);
 
+    const unsigned int old_talents = your_talents(false).size();
+
     bool gain_msg = true;
     bool stat_msg = false;
 
@@ -2301,6 +2304,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
+
+    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+        learned_something_new(TUT_NEW_ABILITY_MUT);
+
     return (true);
 }
 

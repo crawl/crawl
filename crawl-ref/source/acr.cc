@@ -935,6 +935,14 @@ static void _input()
             {
                 learned_something_new(TUT_MAP_VIEW);
             }
+            else if (!you.running
+                     && Options.tutorial_events[TUT_AUTO_EXPLORE]
+                     && you.num_turns >= 700
+                     && you.hp == you.hp_max
+                     && you.magic_points == you.max_magic_points)
+            {
+                learned_something_new(TUT_AUTO_EXPLORE);
+            }
         }
         else
         {

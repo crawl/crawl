@@ -63,7 +63,7 @@ static void         _tutorial_describe_feature(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
 
 //#define TUTORIAL_DEBUG
-#define TUTORIAL_VERSION  8
+#define TUTORIAL_VERSION  9
 
 static int _get_tutorial_cols()
 {
@@ -348,7 +348,7 @@ static std::string _tut_debug_list(int event)
         return "seen first food";
     case TUT_SEEN_CARRION:
         return "seen first corpse";
-    case TUT_SEE_GOLD:
+    case TUT_SEEN_GOLD:
         return "seen first pile of gold";
     case TUT_SEEN_JEWELLERY:
         return "seen first jewellery";
@@ -362,6 +362,8 @@ static std::string _tut_debug_list(int event)
         return "seen first escape hatch";
     case TUT_SEEN_BRANCH:
         return "seen first branch entrance";
+    case TUT_SEEN_PORTAL:
+        return "seen first portal vault entrance";
     case TUT_SEEN_TRAP:
         return "encountered a trap";
     case TUT_SEEN_ALTAR:
@@ -402,6 +404,8 @@ static std::string _tut_debug_list(int event)
         return "were encumbered";
     case TUT_ROTTEN_FOOD:
         return "carried rotten food";
+    case TUT_ROTTEN_GONE:
+        return "rotten food rotted away completely";
     case TUT_NEED_HEALING:
         return "needed healing";
     case TUT_NEED_POISON_HEALING:
@@ -422,12 +426,18 @@ static std::string _tut_debug_list(int event)
         return "learned about shift-run";
     case TUT_MAP_VIEW:
         return "learned about the level map";
+    case TUT_AUTO_EXPLORE:
+        return "learned about auto-explore";
     case TUT_DONE_EXPLORE:
         return "explored a level";
     case TUT_YOU_MUTATED:
         return "caught a mutation";
-    case TUT_NEW_ABILITY:
+    case TUT_NEW_ABILITY_GOD:
         return "gained a divine ability";
+    case TUT_NEW_ABILITY_MUT:
+        return "gained a mutation-granted ability";
+    case TUT_NEW_ABILITY_ITEM:
+        return "gained an item-granted ability";
     case TUT_WIELD_WEAPON:
         return "wielded an unsuitable weapon";
     case TUT_FLEEING_MONSTER:
@@ -436,6 +446,8 @@ static std::string _tut_debug_list(int event)
         return "learned about colour brandings";
     case TUT_MONSTER_FRIENDLY:
         return "seen first friendly monster";
+    case TUT_MONSTER_SHOUT:
+        return "experienced first shouting monster";
     case TUT_CONVERT:
         return "converted to a god";
     case TUT_GOD_DISPLEASED:
@@ -450,6 +462,10 @@ static std::string _tut_debug_list(int event)
         return "player glowing from contamination";
     case TUT_STAIR_BRAND:
         return "saw stairs with objects on it";
+    case TUT_HEAP_BRAND:
+        return "saw heap of objects";
+    case TUT_TRAP_BRAND:
+        return "saw trap with objects on it";
     case TUT_YOU_RESIST:
         return "resisted some magic";
     case TUT_CAUGHT_IN_NET:
@@ -1468,6 +1484,64 @@ static int _num_butchery_tools()
     return (num);
 }
 
+static std::string _describe_portal(const coord_def &gc)
+{
+    const std::string desc = feature_description(gc);
+
+    std::ostringstream text;
+
+    // Zigguart entrances can rarely appear as early as DL 3.
+    if (desc.find("zig") != std::string::npos)
+    {
+        text << "is a portal to a set of special levels filled with very "
+                "tough monsters; you probably shouldn't even think of going "
+                "in here.  Additionally, entering a zigguart takes a lot of "
+                "gold, a lot more than you'd have right now; don't bother "
+                "saving gold up for it, since at this point your gold is "
+                "better spent at shops buying items which can help you "
+                "survive."
+
+                "\n\nIf you <w>still</w> want to enter (and somehow have "
+                "gathered enough gold to do so) ";
+    }
+    // For the sake of completeness, though it's very unlikely that a
+    // player will find a bazaar entrance before reahing XL 7.
+    else if (desc.find("bazaar") != std::string::npos)
+    {
+        text << "is a portal to an inter-dimensional bazaar filled with "
+                "shops.  It will disappear if you don't enter it soon, "
+                "so hurry.  To enter ";
+    }
+    // The sewers can appear from DL 3 to DL 6.
+    else
+    {
+        text << "is a portal to a special level where you'll have to fight "
+                "your way back to the exit through some tougher than average "
+                "monsters (the monsters around the portal should give a "
+                "good indication as to how tough), but with the reward of "
+                "some good loot.  There's no penalty for skipping it, but if "
+                "you do skip it the portal will disappear, so you have to "
+                "decide now if you want to risk it.  To enter ";
+    }
+                
+    text << "stand over the portal and press <w>></w>.  To return find "
+#ifdef USE_TILE
+        "a similar looking portal tile "
+#else
+        "another <w>\\</w> "
+#endif
+        "(though NOT the ancient stone arch you'll start out on) "
+        "and press <w><<</w>.";
+
+#ifdef USE_TILE
+    text << "\nAlternatively, clicking on your <w>left mouse button</w> "
+            "while pressing the <w>Shift key</w> will let you enter any "
+            "portal you're standing on.";
+#endif
+
+    return (text.str());
+}
+   
 #define DELAY_EVENT \
 { \
     Options.tutorial_events[seen_what] = true; \
@@ -1920,6 +1994,32 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "altars at which you might convert to a new god.";
         break;
 
+    case TUT_SEEN_PORTAL:
+        // Delay in the unlikely event that a player still in tutorial mode
+        // creates a portal with a Trowel card, since a portal vault
+        // entry's description doesn't seem to get set properly until
+        // after the vault is done being placed.
+        if (you.pos() == gc)
+            DELAY_EVENT;
+
+        text << "This ";
+#ifndef USE_TILE
+        // Is a monster blocking the view?
+        if (monster_at(gc))
+            DELAY_EVENT;
+
+        object = env.show(e);
+        colour = env.show_col(e);
+        { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
+
+        text << _colourize_glyph(colour, ch) << " ";
+#else
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
+#endif
+        text << _describe_portal(gc);
+        break;
+
     case TUT_STAIR_BRAND:
 #ifdef USE_TILE
         // XXX: How does stair branding work with tiles?
@@ -1933,6 +2033,36 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "that will be indicated by highlighting the <w><<</w> or "
                 "<w>></w> symbol, instead of hiding the stair symbol with "
                 "an item glyph.";
+#endif
+        break;
+
+    case TUT_HEAP_BRAND:
+#ifdef USE_TILE
+        // XXX: How does heap branding work with tiles?
+        return;
+#else
+        // Monster or player standing on heap.
+        if (monster_at(gc) || (you.pos() == gc))
+            DELAY_EVENT;
+
+        text << "If two or more items are on a single square then the square "
+                "will be highlighted, and the symbol for the item on the top "
+                "of the heap will be shown.";
+#endif
+        break;
+
+    case TUT_TRAP_BRAND:
+#ifdef USE_TILE
+        // XXX: How does trap branding work with tiles?
+        return;
+#else
+        // Monster or player standing on trap.
+        if (monster_at(gc) || (you.pos() == gc))
+            DELAY_EVENT;
+
+        text << "If any items are covering a trap then that will be "
+                "indicated by highlighting the <w>^</w> symbol, instead of "
+                "hiding the trap symbol with an item glyph.";
 #endif
         break;
 
@@ -2325,6 +2455,12 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "just as well <w>d</w>rop them now.";
         break;
 
+    case TUT_ROTTEN_GONE:
+        text << "One of the skeletons or rotten chunks of meat you carried "
+                "rotted away completely, or one of the rotten corpses you "
+                "carried rotted away into a skeleton.";
+        break;
+
     case TUT_MAKE_CHUNKS:
        text << "How lucky! That monster left a corpse which you can now "
                 "<w>c</w>hop up";
@@ -2405,6 +2541,19 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "Clicking with the <w>left mouse button</w> instead will let "
                 "you move there.";
 #endif
+        break;
+
+    case TUT_AUTO_EXPLORE:
+        if (!Options.tut_explored)
+            DELAY_EVENT;
+
+        text << "Fully exploring a level and piciking up all the interesting "
+                "looking items can be tedious.  To save on this tedium you "
+                "can press <w>o</w> to auto-explore, which will "
+                "automatically explore unmapped regions, automatically pick "
+                "up interesting items, and stop if a monster or interesting "
+                "dungeon feature (stairs, altar, etc) is encountered.";
+        Options.tut_explored = false;
         break;
 
     case TUT_DONE_EXPLORE:
@@ -2557,20 +2706,20 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "have three levels. Check your mutations with <w>A</w>.";
         break;
 
-    case TUT_NEW_ABILITY:
+    case TUT_NEW_ABILITY_GOD:
         switch (you.religion)
         {
         // Gods where first granted ability is active.
         case GOD_KIKUBAAQUDGHA: case GOD_YREDELEMNUL: case GOD_NEMELEX_XOBEH:
         case GOD_ZIN:           case GOD_OKAWARU:     case GOD_SIF_MUNA:
         case GOD_TROG:          case GOD_ELYVILON:    case GOD_LUGONU:
-            text << "You just gained a new ability. Press <w>a</w> to "
+            text << "You just gained a divine ability. Press <w>a</w> to "
                     "take a look at your abilities or to use one of them.";
             break;
 
         // Gods where first granted ability is passive.
         default:
-            text << "You just gained a new ability. Press <w>^</w> "
+            text << "You just gained a divine ability. Press <w>^</w> "
 #ifdef USE_TILE
                     "or press <w>Shift</w> and <w>right-click</w> on the "
                     "player tile "
@@ -2578,6 +2727,20 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                     "to take a look at your abilities.";
             break;
         }
+        break;
+
+    case TUT_NEW_ABILITY_MUT:
+        text << "That mutation granted you a new ability. Press <w>a</w> to "
+                "take a look at your abilities or to use one of them.";
+            break;
+        break;
+
+    case TUT_NEW_ABILITY_ITEM:
+        text << "That item you just equipped granted you a new ability "
+                "(un-equipping the item will remove the ability). "
+                "Press <w>a</w> to take a look at your abilities or to "
+                "use one of them.";
+            break;
         break;
 
     case TUT_CONVERT:
@@ -2768,10 +2931,15 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_MONSTER_FRIENDLY:
+    {
+        const monsters *m = monster_at(gc);
+
+        if (!m)
+            DELAY_EVENT;
+
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        if (const monsters *m = monster_at(gc))
-            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+        tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
 #endif
         text << "That monster is friendly to you and will attack your "
                 "enemies, though you'll get only half the experience for "
@@ -2779,12 +2947,69 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "yourself. You can command your allies by pressing <w>t</w> "
                 "to talk to them.";
 
-        if (!mons_att_wont_attack(monster_at(gc)->attitude))
+        if (!mons_att_wont_attack(m->attitude))
             text << "\n\nHowever, it is only <w>temporarily</w> friendly, "
                     "and will become dangerous again when this friendliness "
                     "wears off.";
         break;
+    }
 
+    case TUT_MONSTER_SHOUT:
+    {
+        const monsters* m = monster_at(gc);
+
+        if (!m)
+            DELAY_EVENT;
+
+        const bool vis = you.can_see(m);
+
+#ifdef USE_TILE
+        if (vis)
+        {
+            tiles.place_cursor(CURSOR_TUTORIAL, gc);
+            tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
+        }
+#endif
+        if (!vis)
+        {
+            text << "Uh-oh, some monster noticed you, either one that's "
+                    "around a corner or one that's invisible.  Plus, the "
+                    "noise it made will alert other monsters in the "
+                    "vacinity, who will come to check out what the commotion "
+                    "was about.";
+        }
+        else if (mons_shouts(m->type, false) == S_SILENT)
+        {
+            text << "Uh-oh, that monster noticed you!  Forutnately, it "
+                    "didn't make any noise, but many mosters <w>do</w> make "
+                    "noise when they notice you, which alerts other monsters "
+                    "in the area, who will come to check out what the "
+                    "commotion was about.";
+        }
+        else
+        {
+            text << "Uh-oh, taht monster noticed you!  Plus, the "
+                    "noise it made will alert other monsters in the "
+                    "vacinity, who will come to check out what the commotion "
+                    "was about.";
+        }
+        break;
+    }
+
+    case TUT_MONSTER_LEFT_LOS:
+    {
+        const monsters* m = monster_at(gc);
+
+        if (!m || !you.can_see(m))
+            DELAY_EVENT;
+
+        text << m->name(DESC_CAP_THE, true) << " didn't vanish, but merely "
+                "moved onto a square which isn't in your current LOS. It "
+                "will still be there, unless something happens to it in the "
+                "short amount of time it's out of sight.";
+        break;
+    }
+ 
     case TUT_SEEN_MONSTER:
     case TUT_SEEN_FIRST_OBJECT:
         // Handled in special functions.
@@ -3704,6 +3929,7 @@ static bool _tutorial_feat_interesting(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_ENTER_PORTAL_VAULT:
         return (true);
     default:
         return (false);
@@ -3828,6 +4054,11 @@ static void _tutorial_describe_feature(int x, int y)
                     "usually be unable to return right away.";
 
             Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH] = false;
+            break;
+
+       case DNGN_ENTER_PORTAL_VAULT:
+            ostr << "This " << _describe_portal(where);
+            Options.tutorial_events[TUT_SEEN_PORTAL] = false;
             break;
 
        default:
@@ -4139,15 +4370,31 @@ void tutorial_observe_cell(const coord_def& gc)
         learned_something_new(TUT_SEEN_STAIRS, gc);
     else if (is_feature('_', gc))
         learned_something_new(TUT_SEEN_ALTAR, gc);
+    else if (is_feature('^', gc))
+        learned_something_new(TUT_SEEN_TRAP, gc);
     else if (grd(gc) == DNGN_CLOSED_DOOR)
         learned_something_new(TUT_SEEN_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(TUT_SEEN_SHOP, gc);
+    else if (grd(gc) == DNGN_ENTER_PORTAL_VAULT)
+        learned_something_new(TUT_SEEN_PORTAL, gc);
 
-    if (igrd(gc) != NON_ITEM
-        && Options.feature_item_brand != CHATTR_NORMAL
-        && (is_feature('>', gc) || is_feature('<', gc)))
+    const int it = igrd(gc);
+    if (it != NON_ITEM)
     {
-        learned_something_new(TUT_STAIR_BRAND, gc);
+        const item_def& item(mitm[it]);
+
+        if (Options.feature_item_brand != CHATTR_NORMAL
+            && (is_feature('>', gc) || is_feature('<', gc)))
+        {
+            learned_something_new(TUT_STAIR_BRAND, gc);
+        }
+        else if (Options.trap_item_brand != CHATTR_NORMAL
+                 && is_feature('^', gc))
+        {
+            learned_something_new(TUT_TRAP_BRAND, gc);
+        }
+        else if (Options.heap_brand != CHATTR_NORMAL && item.link != NON_ITEM)
+            learned_something_new(TUT_HEAP_BRAND, gc);
     }
 }
