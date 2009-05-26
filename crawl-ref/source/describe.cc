@@ -2370,7 +2370,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
             if (is_inscribed)
                 prompt += "(c) to clear it";
         }
-        prompt += ". ";
+        prompt += ".";
 
         if (proper_prompt)
             mpr(prompt.c_str(), MSGCH_PROMPT);
