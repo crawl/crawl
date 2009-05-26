@@ -1559,6 +1559,12 @@ void direction(dist& moves, targeting_type restricts,
                 wizard_polymorph_monster(m);
             break;
 
+        case CMD_TARGET_WIZARD_DEBUG_MONSTER:
+            if (!you.wizard || !in_bounds(moves.target))
+                break;
+            if (monster_at(moves.target))
+                debug_stethoscope(mgrd(moves.target));
+            break;
 #endif
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target);

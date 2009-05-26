@@ -943,7 +943,6 @@ int spell_skill2type(unsigned int skill)
 static spell_desc *_seekspell(spell_type spell)
 {
     ASSERT(spell >= 0 && spell < NUM_SPELLS);
-
     const int index = spell_list[spell];
     ASSERT(index != -1);
 

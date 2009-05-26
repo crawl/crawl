@@ -1880,7 +1880,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 // speed, not a movement cost, so higher is better.
 int player_ghost_base_movement_speed()
 {
-    int speed = you.species == SP_NAGA ? 8 : 10;
+    int speed = (you.species == SP_NAGA ? 8 : 10);
 
     if (player_mutation_level(MUT_FAST))
         speed += player_mutation_level(MUT_FAST) + 1;

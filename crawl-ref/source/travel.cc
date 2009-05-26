@@ -3066,9 +3066,9 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     int gridc = grd(pos);
     level_id id = current();
 
-    for ( int i = 0; i < NUM_BRANCHES; ++i )
+    for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        if ( gridc == branches[i].entry_stairs )
+        if (gridc == branches[i].entry_stairs)
         {
             id.branch = static_cast<branch_type>(i);
             id.depth = 1;

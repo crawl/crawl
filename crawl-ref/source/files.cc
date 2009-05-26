@@ -1600,7 +1600,7 @@ void _load_ghost(void)
     if (!_determine_ghost_version(gfile, majorVersion, minorVersion))
     {
         fclose(gfile);
-#if DEBUG_DIAGNOSTICS
+#if DEBUG_BONES | DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
              "Ghost file \"%s\" seems to be invalid.", cha_fil.c_str());
         more();
@@ -1610,7 +1610,6 @@ void _load_ghost(void)
 
     if (majorVersion != TAG_MAJOR_VERSION || minorVersion > TAG_MINOR_VERSION)
     {
-
         fclose(gfile);
         unlink(cha_fil.c_str());
         return;
@@ -1623,7 +1622,7 @@ void _load_ghost(void)
     if (!feof(gfile))
     {
         fclose(gfile);
-#if DEBUG_DIAGNOSTICS
+#if DEBUG_BONES | DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Incomplete read of \"%s\".",
                   cha_fil.c_str() );
         more();
@@ -1633,7 +1632,15 @@ void _load_ghost(void)
 
     fclose(gfile);
 
-#if DEBUG_DIAGNOSTICS
+    if (!debug_check_ghosts())
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Refusing to load buggy ghost from file \"%s\"! "
+                                "Please submit a bug report.",
+             cha_fil.c_str());
+        return;
+    }
+
+#if DEBUG_BONES | DEBUG_DIAGNOSTICS
     mpr("Loaded ghost.", MSGCH_DIAGNOSTICS);
 #endif
 

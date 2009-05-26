@@ -58,6 +58,8 @@ private:
     spell_type translate_spell(spell_type playerspell) const;
 };
 
+bool debug_check_ghosts();
+
 extern std::vector<ghost_demon> ghosts;
 
 #endif

@@ -386,7 +386,7 @@ static int _debug_prompt_for_int( const char *prompt, bool nonneg )
     char *end;
     int   ret = strtol( specs, &end, 10 );
 
-    if ((ret < 0 && nonneg) || (ret == 0 && end == specs))
+    if (ret < 0 && nonneg || ret == 0 && end == specs)
         ret = (nonneg ? -1 : 0);
 
     return (ret);
@@ -2512,8 +2512,10 @@ void wizard_list_items()
             continue;
 
         if (item.link != NON_ITEM)
+        {
             mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
                  item.name(DESC_PLAIN, false, false, false).c_str() );
+        }
     }
 
     mpr(EOL);
@@ -2532,7 +2534,6 @@ void wizard_list_items()
 }
 #endif
 
-#ifdef DEBUG_DIAGNOSTICS
 // Prints a number of useful (for debugging, that is) stats on monsters.
 void debug_stethoscope(int mon)
 {
@@ -2583,7 +2584,7 @@ void debug_stethoscope(int mon)
           (mons.attitude == ATT_FRIENDLY)      ? "friendly" :
           (mons.attitude == ATT_NEUTRAL)       ? "neutral" :
           (mons.attitude == ATT_GOOD_NEUTRAL)  ? "good neutral"
-                                                  : "unknown alignment") );
+                                               : "unknown alignment") );
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
@@ -2619,7 +2620,7 @@ void debug_stethoscope(int mon)
           mons_is_cornered(&mons)        ? "cornered" :
           mons_is_panicking(&mons)       ? "panic" :
           mons_is_lurking(&mons)         ? "lurk"
-                                            : "unknown"),
+                                         : "unknown"),
          mons.behaviour,
          ((mons.foe == MHITYOU)            ? "you" :
           (mons.foe == MHITNOT)            ? "none" :
@@ -2641,6 +2642,31 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
 
+    std::ostringstream spl;
+    const monster_spells &hspell_pass = mons.spells;
+    bool found_spell = false;
+    for (int k = 0; k < NUM_MONSTER_SPELL_SLOTS; ++k)
+    {
+        if (hspell_pass[k] != SPELL_NO_SPELL)
+        {
+            if (found_spell)
+                spl << ", ";
+
+            found_spell = true;
+
+            spl << k << ": ";
+
+            if (hspell_pass[k] >= NUM_SPELLS)
+                spl << "buggy spell";
+            else
+                spl << spell_title(hspell_pass[k]);
+
+            spl << " (" << static_cast<int>(hspell_pass[k]) << ")";
+        }
+    }
+    if (found_spell)
+        mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
+
     if (mons.type == MONS_PLAYER_GHOST
         || mons.type == MONS_PANDEMONIUM_DEMON)
     {
@@ -2650,7 +2676,6 @@ void debug_stethoscope(int mon)
              ghost.damage, ghost.brand );
     }
 }
-#endif
 
 #if DEBUG_ITEM_SCAN
 static void _dump_item( const char *name, int num, const item_def &item )

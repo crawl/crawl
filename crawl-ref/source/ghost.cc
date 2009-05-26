@@ -25,6 +25,10 @@ REVISION("$Rev$");
 #include "religion.h"
 #include <vector>
 
+#define MAX_GHOST_DAMAGE     50
+#define MAX_GHOST_HP        400
+#define MAX_GHOST_EVASION    60
+
 std::vector<ghost_demon> ghosts;
 
 // Order for looking for conjurations for the 1st & 2nd spell slots,
@@ -293,12 +297,12 @@ void ghost_demon::init_random_demon()
 void ghost_demon::init_player_ghost()
 {
     name   = you.your_name;
-    max_hp = ((you.hp_max >= 400) ? 400 : you.hp_max);
+    max_hp = ((you.hp_max >= MAX_GHOST_HP) ? MAX_GHOST_HP : you.hp_max);
     ev     = player_evasion();
     ac     = player_AC();
 
-    if (ev > 60)
-        ev = 60;
+    if (ev > MAX_GHOST_EVASION)
+        ev = MAX_GHOST_EVASION;
 
     see_invis      = player_see_invis();
     resists.fire   = player_res_fire();
@@ -344,8 +348,8 @@ void ghost_demon::init_player_ghost()
 
     damage += you.strength / 4;
 
-    if (damage > 50)
-        damage = 50;
+    if (damage > MAX_GHOST_DAMAGE)
+        damage = MAX_GHOST_DAMAGE;
 
     species = you.species;
     job = you.char_class;
@@ -526,7 +530,7 @@ void ghost_demon::find_transiting_ghosts(
 
 void ghost_demon::announce_ghost(const ghost_demon &g)
 {
-#ifdef DEBUG_DIAGNOSTICS
+#if DEBUG_BONES | DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Saving ghost: %s", g.name.c_str());
 #endif
 }
@@ -588,4 +592,28 @@ int ghost_demon::n_extra_ghosts()
     }
 
     return (1 + x_chance_in_y(lev, 20) + x_chance_in_y(lev, 40));
+}
+
+// Sanity checks for some ghost values.
+bool debug_check_ghosts()
+{
+    for (unsigned int k = 0; k < ghosts.size(); ++k)
+    {
+        ghost_demon ghost = ghosts[k];
+        // Values greater than the allowed maximum signalize bugginess.
+        if (ghost.damage > MAX_GHOST_DAMAGE)
+            return (false);
+        if (ghost.max_hp > MAX_GHOST_HP)
+            return (false);
+        if (ghost.xl > 27)
+            return (false);
+        if (ghost.ev > MAX_GHOST_EVASION)
+            return (false);
+
+        // Check for non-existing spells.
+        for (int sp = 0; sp < NUM_MONSTER_SPELL_SLOTS; ++sp)
+            if (ghost.spells[sp] < 0 || ghost.spells[sp] >= NUM_SPELLS)
+                return (false);
+    }
+    return (true);
 }
