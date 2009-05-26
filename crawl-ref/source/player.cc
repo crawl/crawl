@@ -1537,7 +1537,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re++;
 
     return (re);
-}                               // end player_res_electricity()
+}
 
 // Does the player resist asphyxiation?
 bool player_res_asphyx()
@@ -2530,17 +2530,17 @@ int old_player_evasion(void)
 
     ev += scan_randarts(RAP_EVASION);
 
-    return ev;
-}                               // end player_evasion()
+    return (ev);
+}
 #endif
 
-int player_magical_power( void )
+int player_magical_power(void)
 {
     int ret = 0;
 
-    ret += 13 * player_equip(  EQ_STAFF, STAFF_POWER );
-    ret +=  9 * player_equip(  EQ_RINGS, RING_MAGICAL_POWER );
-    ret +=      scan_randarts( RAP_MAGICAL_POWER );
+    ret += 13 * player_equip(EQ_STAFF, STAFF_POWER);
+    ret +=  9 * player_equip(EQ_RINGS, RING_MAGICAL_POWER);
+    ret +=      scan_randarts(RAP_MAGICAL_POWER);
 
     return (ret);
 }
@@ -2549,21 +2549,21 @@ int player_mag_abil(bool is_weighted)
 {
     int ma = 0;
 
-    ma += 3 * player_equip( EQ_RINGS, RING_WIZARDRY );
+    ma += 3 * player_equip(EQ_RINGS, RING_WIZARDRY);
 
     // Staves
-    ma += 4 * player_equip( EQ_STAFF, STAFF_WIZARDRY );
+    ma += 4 * player_equip(EQ_STAFF, STAFF_WIZARDRY);
 
     // armour of the Archmagi (checks body armour only)
-    ma += 2 * player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI );
+    ma += 2 * player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
 
     return ((is_weighted) ? ((ma * you.intel) / 10) : ma);
-}                               // end player_mag_abil()
+}
 
 // Returns the shield the player is wearing, or NULL if none.
 item_def *player_shield()
 {
-    return you.shield();
+    return (you.shield());
 }
 
 int player_shield_class(void)   //jmf: changes for new spell
@@ -2861,8 +2861,8 @@ int burden_change(void)
                             : "You feel heavier in the air.");
     }
 
-    return you.burden;
-}                               // end burden_change()
+    return (you.burden);
+}
 
 bool you_resist_magic(int power)
 {
@@ -2963,7 +2963,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
 
     if (actual_avail_gain != NULL)
         *actual_avail_gain = you.exp_available - old_avail;
-}                               // end gain_exp()
+}
 
 void level_change(bool skip_attribute_increase)
 {
@@ -3024,11 +3024,15 @@ void level_change(bool skip_attribute_increase)
         else  // Character has gained a new level
         {
             if (new_exp == 27)
+            {
                mprf(MSGCH_INTRINSIC_GAIN,
                     "You have reached level 27, the final one!");
+            }
             else
+            {
                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
                     new_exp);
+            }
 
             if (!skip_more)
                 more();
@@ -4198,7 +4202,7 @@ void display_char_status()
 #if DEBUG_DIAGNOSTICS
     mprf("stealth: %d", ustealth);
 #endif
-}                               // end display_char_status()
+}
 
 // Does a case-sensitive lookup of the species name supplied.
 int str_to_species(const std::string &species)
@@ -4511,7 +4515,7 @@ unsigned long exp_needed(int lev)
     }
 
     return ((level - 1) * _species_exp_mod(you.species) / 10);
-}                               // end exp_needed()
+}
 
 // returns bonuses from rings of slaying, etc.
 int slaying_bonus(char which_affected)
@@ -4532,7 +4536,7 @@ int slaying_bonus(char which_affected)
     ret += std::min(you.duration[DUR_SLAYING] / 13, 6);
 
     return (ret);
-}                               // end slaying_bonus()
+}
 
 // Checks each equip slot for an evokable item (jewellery or randart).
 // Returns true if any of these has the same ability as the one handed in.
@@ -4578,7 +4582,7 @@ bool items_give_ability(const int slot, randart_prop_type abil)
 
     // none of the equipped items possesses this ability
     return (false);
-}                               // end items_give_ability()
+}
 
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where

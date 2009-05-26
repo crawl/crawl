@@ -144,7 +144,7 @@ int calc_hunger(int food_cost);
  * called from: debug - it_use3 - spells0
  * *********************************************************************** */
 int player_mag_abil(bool is_weighted);
-int player_magical_power( void );
+int player_magical_power(void);
 
 /* ***********************************************************************
  * called from: fight - misc - ouch - spells
