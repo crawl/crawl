@@ -3338,7 +3338,8 @@ void level_change(bool skip_attribute_increase)
             case SP_GREY_DRACONIAN:
                 if (you.experience_level == 7)
                 {
-                    mpr("Your scales start turning grey.", MSGCH_INTRINSIC_GAIN);
+                    mpr("Your scales start turning grey.",
+                        MSGCH_INTRINSIC_GAIN);
                     more();
                     redraw_screen();
                 }
@@ -3366,8 +3367,8 @@ void level_change(bool skip_attribute_increase)
             case SP_CENTAUR:
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat((coinflip() ? STAT_DEXTERITY
-                                            : STAT_STRENGTH), 1, false,
+                    modify_stat((coinflip() ? STAT_STRENGTH
+                                            : STAT_DEXTERITY), 1, false,
                                 "level gain");
                 }
 
@@ -3427,8 +3428,8 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat((coinflip() ? STAT_DEXTERITY
-                                            : STAT_STRENGTH), 1, false,
+                    modify_stat((coinflip() ? STAT_STRENGTH
+                                            : STAT_DEXTERITY), 1, false,
                                 "level gain");
                 }
                 break;
