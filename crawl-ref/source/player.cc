@@ -3197,7 +3197,7 @@ void level_change(bool skip_attribute_increase)
                     else
                     {
                         mpr("You can now transform into a vampire bat.",
-                            MSGCH_INTRINSIC_GAIN );
+                            MSGCH_INTRINSIC_GAIN);
                     }
                 }
                 else if (you.experience_level == 6)
@@ -3208,7 +3208,8 @@ void level_change(bool skip_attribute_increase)
                 else if (you.experience_level == 10)
                 {
                     mpr("Cursed equipment will now meld into your body when "
-                        "transforming into a vampire bat.", MSGCH_INTRINSIC_GAIN);
+                        "transforming into a vampire bat.",
+                        MSGCH_INTRINSIC_GAIN);
                 }
                 break;
 
