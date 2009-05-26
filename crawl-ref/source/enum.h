@@ -2952,11 +2952,12 @@ enum tutorial_event_type
     TUT_MAP_VIEW,
     TUT_AUTO_EXPLORE,
     TUT_DONE_EXPLORE,         // 75
+    TUT_AUTO_EXCLUSION,
     TUT_STAIR_BRAND,
     TUT_HEAP_BRAND,
     TUT_TRAP_BRAND,
-    TUT_LOAD_SAVED_GAME,
-    TUT_EVENTS_NUM           // 80
+    TUT_LOAD_SAVED_GAME,      // 80
+    TUT_EVENTS_NUM            // 81
 };
 // NOTE: For numbers higher than 85 change size of tutorial_events in externs.h.
 

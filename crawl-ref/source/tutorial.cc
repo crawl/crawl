@@ -430,6 +430,8 @@ static std::string _tut_debug_list(int event)
         return "learned about auto-explore";
     case TUT_DONE_EXPLORE:
         return "explored a level";
+    case TUT_AUTO_EXCLUSION:
+        return "learned about exclusions";
     case TUT_YOU_MUTATED:
         return "caught a mutation";
     case TUT_NEW_ABILITY_GOD:
@@ -2631,6 +2633,32 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         }
         break;
 
+    case TUT_AUTO_EXCLUSION:
+        // In the highly unlikely case the player encounters a
+        // hostile statue or oklob plant during the tutorial...
+        viewwindow(true, false);
+        if (Options.tut_explored)
+        {
+            // Hack: Reset tut_just_triggered, to force recursive calling of
+            //       learned_something_new().
+            Options.tut_just_triggered = false;
+            learned_something_new(TUT_AUTO_EXPLORE);
+            Options.tut_just_triggered = true;
+        }
+        text << "\nTo prevent autotravel or autoexplore taking you into "
+                "dangerous territory, you can set travel exclusions by "
+                "entering the map view (<w>X</w>) and then toggling the "
+                "exclusion radius on the monster position with <w>e</w>. "
+                "To make this easier some immobile monsters listed in the "
+                "<w>auto_exclude</w> option (such as this one) are considered "
+                "dangerous enough to warrant an automatic setting of an "
+                "exclusion. It will be automatically cleared if you manage to "
+                "kill the monster. You could also manually remove the "
+                "exclusion with <w>Xee</w> but unless you remove this monster "
+                "from the auto_exclude list, the exclusion will be reset the "
+                "next turn.";
+        break;
+
     case TUT_NEED_HEALING:
         text << "If you're low on hitpoints or magic and there's no urgent "
                 "need to move, you can rest for a bit. Ideally, you should "
@@ -4104,6 +4132,19 @@ static void _tutorial_describe_feature(int x, int y)
        case DNGN_ENTER_PORTAL_VAULT:
             ostr << "This " << _describe_portal(where);
             Options.tutorial_events[TUT_SEEN_PORTAL] = false;
+            break;
+
+       case DNGN_CLOSED_DOOR:
+            if (!Options.tut_explored)
+            {
+                ostr << "\nTo avoid accidentally opening a door you'd rather "
+                        "remain closed during travel or autoexplore, you can "
+                        "mark it with an exclusion from the map view "
+                        "(<w>X</w>) with <w>ee</w> while your cursor is on the "
+                        "grid in question. Such an exclusion will prevent "
+                        "autotravel from ever entering that grid until you "
+                        "remove the exclusion with another press of <w>Xe</w>.";
+            }
             break;
 
        default:
