@@ -1434,7 +1434,21 @@ void direction(dist& moves, targeting_type restricts,
             {
                 moves.target = monsfind_pos;
             }
-            else if (!skip_iter)
+            else if (skip_iter)
+            {
+                if (needs_path && !just_looking
+                    && _find_square_wrapper(moves.target, monsfind_pos, dir,
+                                            _find_monster, false, mode,
+                                            range, Options.target_wrap))
+                {
+                    mpr("All monsters which could be auto-targeted "
+                        "are covered by a wall or statue which interrupts "
+                        "your line of fire, even though it doesn't "
+                        "interrupt your line of sight.",
+                        MSGCH_PROMPT);
+                }
+            }
+            else
                 flush_input_buffer(FLUSH_ON_FAILURE);
             break;
 
