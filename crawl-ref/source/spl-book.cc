@@ -33,6 +33,7 @@ REVISION("$Rev$");
 #include "items.h"
 #include "it_use3.h"
 #include "Kills.h"
+#include "macro.h"
 #include "message.h"
 #include "player.h"
 #include "randart.h"
@@ -898,7 +899,8 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
         out.display();
 
-        keyn = c_getch();
+        //keyn = c_getch();
+        keyn = tolower(getchm(KMC_MENU));
     }
 
     return (keyn);     // try to figure out that for which this is used {dlb}
