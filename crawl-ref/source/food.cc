@@ -1662,9 +1662,8 @@ int prompt_eat_chunks()
 
 static const char *_chunk_flavour_phrase(bool likes_chunks)
 {
-    const int level = player_mutation_level(MUT_SAPROVOROUS);
-
     const char *phrase;
+    const int level = player_mutation_level(MUT_SAPROVOROUS);
 
     switch (level)
     {
