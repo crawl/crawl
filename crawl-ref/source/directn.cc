@@ -149,6 +149,9 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
             if (gc == Region::NO_CURSOR)
                 continue;
 
+            if (!map_bounds(gc))
+                continue;
+
             coord_def delta = gc - you.pos();
             if (delta.x < -1 || delta.x > 1
                 || delta.y < -1 || delta.y > 1)
@@ -160,7 +163,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
             }
 
             moves.delta = delta;
-            moves.isMe = delta.origin();
+            moves.isMe  = delta.origin();
             break;
         }
 #endif
@@ -1113,6 +1116,9 @@ void direction(dist& moves, targeting_type restricts,
             const coord_def &gc = tiles.get_cursor();
             if (gc != Region::NO_CURSOR)
             {
+                if (!map_bounds(gc))
+                    continue;
+
                 moves.target = gc;
 
                 if (key_command == CMD_TARGET_MOUSE_SELECT)
