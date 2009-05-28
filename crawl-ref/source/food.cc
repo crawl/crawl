@@ -1662,10 +1662,29 @@ int prompt_eat_chunks()
 
 static const char *_chunk_flavour_phrase(bool likes_chunks)
 {
-    const char *phrase =
-        likes_chunks ? "tastes great." : "tastes terrible.";
+    const int level = player_mutation_level(MUT_SAPROVOROUS);
 
-    if (!likes_chunks)
+    const char *phrase;
+
+    switch (level)
+    {
+    case 1:
+    case 2:
+        phrase = "tastes unpleasant.";
+        break;
+
+    case 3:
+        phrase = "tastes good.";
+        break;
+
+    default:
+        phrase = "tastes terrible.";
+        break;
+    }
+
+    if (likes_chunks)
+        phrase = "tastes great.";
+    else
     {
         const int gourmand = you.duration[DUR_GOURMAND];
         if (gourmand >= GOURMAND_MAX)
