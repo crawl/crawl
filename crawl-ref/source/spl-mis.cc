@@ -1050,7 +1050,7 @@ void MiscastEffect::_translocation(int severity)
             break;
         case 2:
             you_msg      = "You feel a wrenching sensation.";
-            mon_msg_seen = "@The monster@ jerks violently for a moment.";
+            mon_msg_seen = "@The_monster@ jerks violently for a moment.";
             break;
         case 3:
             you_msg = "You feel a strange surge of energy!";
