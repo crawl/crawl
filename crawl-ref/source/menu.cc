@@ -40,6 +40,9 @@ MenuDisplayText::MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1)
 
 void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
 {
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
     const int col = m_menu->item_colour(index, me);
     textattr(col);
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
@@ -519,6 +522,9 @@ bool Menu::process_key( int keyin )
 
 bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
 {
+    if (crawl_state.doing_prev_cmd_again)
+        return (true);
+
     int oldx = wherex(), oldy = wherey();
 
     if (titlefirst)
@@ -545,6 +551,9 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
 
 bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
 {
+    if (crawl_state.doing_prev_cmd_again)
+        return (true);
+
     int oldx = wherex(), oldy = wherey();
 
     if (titlefirst)
@@ -903,6 +912,9 @@ int Menu::get_entry_index( const MenuEntry *e ) const
 
 void Menu::draw_menu()
 {
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
     clrscr();
 
     draw_title();
@@ -981,8 +993,9 @@ bool Menu::in_page(int index) const
 
 void Menu::draw_item( int index ) const
 {
-    if (!in_page(index))
+    if (!in_page(index) || crawl_state.doing_prev_cmd_again)
         return;
+
     cgotoxy( 1, y_offset + index - first_entry );
 
     draw_index_item(index, items[index]);
@@ -990,6 +1003,9 @@ void Menu::draw_item( int index ) const
 
 void Menu::draw_index_item(int index, const MenuEntry *me) const
 {
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
     if (f_drawitem)
         (*f_drawitem)(index, me);
     else

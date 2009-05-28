@@ -306,7 +306,8 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange)
     while (true)
     {
         std::vector<MenuEntry*> sel = spell_menu.show();
-        redraw_screen();
+        if (!crawl_state.doing_prev_cmd_again)
+            redraw_screen();
         if (sel.empty())
             return 0;
 
@@ -703,7 +704,8 @@ bool cast_a_spell(bool check_range)
             if (!keyin)
                 keyin = ESCAPE;
 
-            redraw_screen();
+            if (!crawl_state.doing_prev_cmd_again)
+                redraw_screen();
 
             if (isalpha(keyin) || keyin == ESCAPE)
                 break;

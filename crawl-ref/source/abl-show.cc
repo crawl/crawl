@@ -2008,7 +2008,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
     while (true)
     {
         std::vector<MenuEntry*> sel = abil_menu.show(false);
-        redraw_screen();
+        if (!crawl_state.doing_prev_cmd_again)
+            redraw_screen();
         if (sel.empty())
             return -1;
 

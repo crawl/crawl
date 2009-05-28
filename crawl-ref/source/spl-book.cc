@@ -892,16 +892,16 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         *fs = out;
 
     int keyn = 0;
-    if (update_screen)
+    if (update_screen && !crawl_state.is_replaying_keys())
     {
         cursor_control coff(false);
         clrscr();
 
         out.display();
-
-        //keyn = c_getch();
-        keyn = tolower(getchm(KMC_MENU));
     }
+
+    if (update_screen)
+        keyn = tolower(getchm(KMC_MENU));
 
     return (keyn);     // try to figure out that for which this is used {dlb}
 }
@@ -1201,7 +1201,8 @@ int read_book( item_def &book, read_book_action_type action )
     if (book.base_type == OBJ_BOOKS)
         mark_had_book(book);
 
-    redraw_screen();
+    if (!crawl_state.is_replaying_keys())
+        redraw_screen();
 
     // Put special book effects in another function which can be called
     // from memorise as well.
@@ -1376,10 +1377,13 @@ bool learn_spell(int book)
         return (false);
 
     int spell = read_book( you.inv[book], RBOOK_MEMORISE );
-    clrscr();
 
-    mesclr(true);
-    redraw_screen();
+    if (!crawl_state.is_replaying_keys())
+    {
+        clrscr();
+        mesclr(true);
+        redraw_screen();
+    }
 
     if ( !isalpha(spell) )
     {

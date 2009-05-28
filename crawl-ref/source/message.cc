@@ -991,6 +991,9 @@ void mesclr( bool force )
     if (!any_messages() && !force)
         return;
 
+    if (crawl_state.doing_prev_cmd_again && !force)
+        return;
+
     if (!force && Options.delay_message_clear)
     {
         need_prefix = true;

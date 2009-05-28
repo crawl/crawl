@@ -896,7 +896,10 @@ unsigned char get_invent(int invent_type)
         else
             break;
     }
-    redraw_screen();
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
     return select;
 }                               // end get_invent()
 
@@ -1206,7 +1209,7 @@ std::vector<SelItem> prompt_invent_items(
     int count = -1;
     while (true)
     {
-        if (need_redraw)
+        if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
             mesclr( true );
@@ -1258,8 +1261,11 @@ std::vector<SelItem> prompt_invent_items(
 
             if (items.size())
             {
-                redraw_screen();
-                mesclr(true);
+                if (!crawl_state.doing_prev_cmd_again)
+                {
+                    redraw_screen();
+                    mesclr(true);
+                }
 
                 for (unsigned int i = 0; i < items.size(); ++i)
                     items[i].slot = letter_to_index( items[i].slot );
@@ -1566,7 +1572,7 @@ int prompt_invent_item( const char *prompt,
 
     while (true)
     {
-        if (need_redraw)
+        if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
             mesclr( true );
@@ -1624,8 +1630,11 @@ int prompt_invent_item( const char *prompt,
                 if (count)
                     *count = items[0].quantity;
 
-                redraw_screen();
-                mesclr( true );
+                if (!crawl_state.doing_prev_cmd_again)
+                {
+                    redraw_screen();
+                    mesclr( true );
+                }
             }
         }
         else if (count != NULL && isdigit( keyin ))
