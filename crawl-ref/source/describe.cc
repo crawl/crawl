@@ -2904,7 +2904,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
                  << " is incapable of using stairs.$";
     }
 
-    if (mons_is_summoned(&mons))
+    if (mons_is_summoned(&mons) && mons.type != MONS_RAKSHASA_FAKE)
     {
         inf.body << "$" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "

@@ -58,9 +58,9 @@ A:downstairs
 A: While this might be a bug, chances are the downstairs are somewhere in
 a room closed off by a secret door. If you search (with '5') in suspicious
 looking corridors and along walls near empty terrain, you will eventually
-find one. Note that most level feature three downstairs as well as three
+find one. Note that most levels feature three downstairs as well as three
 upstairs, not counting any escape hatches. If you get stuck, you might
-try another stairs from the level above.
+try another set of stairs from the level above.
 Alternatively, if you are in one of the branches, you might also have
 reached its lowest level and have to turn around to explore another one.
 Check the database ('?/b') for the number of levels per branch.
@@ -141,8 +141,8 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-A: The easiest gods to play are probably Trog (for pure fighters), Sif Muna
-(for spellcasters), Beogh (for orcs) and Xom (for general fun).
+A: The easiest gods to play are probably Trog (for pure fighters), Vehumet or
+Sif Muna (for spellcasters), Beogh (for orcs) and Xom (for general fun).
 When you reach the Temple for the first time be sure to read all gods'
 descriptions and take your time in deciding which way to go.
 %%%%
@@ -162,6 +162,7 @@ the end of prayer before chopping a corpse if need be.
 Also, casting (difficult) spells will make you hungry, but high
 Intelligence and Spellcasting will lessen this effect. If you press 'II',
 you can read about the hunger effects of your spells.
+Invocations likewise often have a Food cost.
 %%%%
 Q:ghosts
 
@@ -170,7 +171,8 @@ I keep getting murdered by my own ghosts. Can I deactivate them?
 A:ghosts
 
 A: No, you can't. On the plus side, once a ghost has been loaded onto a
-level, it won't be loaded again - unless you happen to die on that level.
+level, it won't be loaded again - unless you happen to die on that level,
+thus creating a bones file featuring more than one ghost.
 Keep in mind that you don't absolutely have to fight every monster you meet,
 and with ghosts it's even easier: they cannot leave the level they were
 created on.
@@ -303,7 +305,7 @@ into the game.
 
 Note that your idea has better chances to be accepted if you present the
 ramifications on gameplay. Since we put a lot of emphasis on the interface,
-a good proposal on how to make the game play smoother may go without much
+a good proposal on how to make the game play smoother may go in without much
 ado.
 %%%%
 Q:feature

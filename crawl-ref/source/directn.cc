@@ -3065,7 +3065,7 @@ static std::string _get_monster_desc(const monsters *mon)
     else if (mons_neutral(mon)) // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
 
-    if (mons_is_summoned(mon))
+    if (mons_is_summoned(mon) && mon->type != MONS_RAKSHASA_FAKE)
         text += pronoun + " has been summoned.\n";
 
     if (mon->haloed())
