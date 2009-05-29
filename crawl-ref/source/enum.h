@@ -2435,7 +2435,8 @@ enum pronoun_type
     PRONOUN_NOCAP,                      // 1
     PRONOUN_CAP_POSSESSIVE,             // 2
     PRONOUN_NOCAP_POSSESSIVE,           // 3
-    PRONOUN_REFLEXIVE                   // 4 (reflexive is always lowercase)
+    PRONOUN_REFLEXIVE,                  // 4 (reflexive is always lowercase)
+    PRONOUN_OBJECTIVE                   // 5 (objective is always lowercase)
 };
 
 enum randart_prop_type

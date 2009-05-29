@@ -3335,7 +3335,11 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case PRONOUN_REFLEXIVE:  // Awkward at start of sentence, always lower.
             return ((gender == 0) ? "itself"  :
                     (gender == 1) ? "himself" : "herself");
-    }
+
+        case PRONOUN_OBJECTIVE:  // Awkward at start of sentence, always lower.
+            return ((gender == 0) ? "it"  :
+                    (gender == 1) ? "him" : "her");
+     }
 
     return ("");
 }

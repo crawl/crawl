@@ -6380,6 +6380,7 @@ std::string player::pronoun(pronoun_type pro, bool) const
     case PRONOUN_CAP_POSSESSIVE:    return "Your";
     case PRONOUN_NOCAP_POSSESSIVE:  return "your";
     case PRONOUN_REFLEXIVE:         return "yourself";
+    case PRONOUN_OBJECTIVE:         return "you";
     }
 }
 

@@ -3122,7 +3122,7 @@ static std::string _get_monster_desc(const monsters *mon)
     dungeon_feature_type blocking_feat;
     if (_blocked_ray(mon->pos(), &blocking_feat))
     {
-        text += "Your line of fire to " + lowercase_string(pronoun)
+        text += "Your line of fire to " + mon->pronoun(PRONOUN_OBJECTIVE)
               + " is blocked by "
               + feature_description(blocking_feat, NUM_TRAPS, false,
                                     DESC_NOCAP_A)
