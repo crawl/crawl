@@ -1792,8 +1792,9 @@ void bolt::hit_wall()
     const dungeon_feature_type feat = grd(pos());
     ASSERT( grid_is_solid(feat) );
 
-    if (is_tracer && YOU_KILL(thrower) && flavour != BEAM_DIGGING
-        && flavour <= BEAM_LAST_REAL && pos() != target  && pos() != source
+    if (is_tracer && YOU_KILL(thrower) && in_bounds(target)
+        && pos() != target  && pos() != source
+        && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL 
         && !affects_nothing && bounces == 0 && reflections == 0
         && see_grid(target) && !grid_is_solid(grd(target)))
     {
