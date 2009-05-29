@@ -958,7 +958,8 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
     return (true);
 }
 
-static bool _blocked_ray(const coord_def &where)
+static bool _blocked_ray(const coord_def &where,
+                         dungeon_feature_type* feat = NULL)
 {
     ray_def ray;
     find_ray(you.pos(), where, true, ray, 0, true);
@@ -967,7 +968,11 @@ static bool _blocked_ray(const coord_def &where)
     while (ray.pos() != where)
     {
         if (grd(ray.pos()) <= DNGN_MINMOVE)
+        {
+            if (feat != NULL)
+                *feat = grd(ray.pos());
             return (true);
+        }
         ray.advance_through(where);
     }
     return (false);
@@ -3113,6 +3118,16 @@ static std::string _get_monster_desc(const monsters *mon)
     }
     else if (mons_enslaved_soul(mon))
         text += pronoun + " is a disembodied soul.\n";
+
+    dungeon_feature_type blocking_feat;
+    if (_blocked_ray(mon->pos(), &blocking_feat))
+    {
+        text += "Your line of fire to " + lowercase_string(pronoun)
+              + " is blocked by "
+              + feature_description(blocking_feat, NUM_TRAPS, false,
+                                    DESC_NOCAP_A)
+              + "\n";
+    }
 
     text += _mon_enchantments_string(mon);
     return text;

@@ -1792,6 +1792,41 @@ void bolt::hit_wall()
     const dungeon_feature_type feat = grd(pos());
     ASSERT( grid_is_solid(feat) );
 
+    if (is_tracer && YOU_KILL(thrower) && flavour != BEAM_DIGGING
+        && flavour <= BEAM_LAST_REAL && pos() != target  && pos() != source
+        && !affects_nothing && bounces == 0 && reflections == 0
+        && see_grid(target) && !grid_is_solid(grd(target)))
+    {
+        // Okay, with all those tests passed, this is probably an instance
+        // of the player manually targetting something whose line of fire
+        // is blocked, even though its line of sight isn't blocked.  Give
+        // a warning about this fact.
+        std::string prompt = "Your line of fire to ";
+        const monsters* mon = monster_at(target);
+
+        if (mon && you.can_see(mon))
+            prompt += mon->name(DESC_NOCAP_THE);
+        else
+        {
+            prompt += "the targeted "
+                    + feature_description(target, false, DESC_PLAIN, false);
+        }
+
+        prompt += " is blocked by "
+                + feature_description(pos(), false, DESC_NOCAP_A, false);
+
+        prompt += ". Continue anyway?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            beam_cancelled = true;
+            finish_beam();
+            return;
+        }
+
+        // Well, we warned them.
+    }
+
     if (affects_wall(feat))
         affect_wall();
     else if (is_bouncy(feat) && !in_explosion_phase)
