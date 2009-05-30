@@ -3107,8 +3107,8 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
 static void _mons_indicate_level_exit(const monsters *mon)
 {
     const dungeon_feature_type gridc = grd(mon->pos());
+    const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
 
-    // All types of stairs.
     if (is_gate(gridc))
         simple_monster_message(mon, " passes through the gate.");
     else if (is_travelable_stair(gridc))
@@ -3120,6 +3120,8 @@ static void _mons_indicate_level_exit(const monsters *mon)
                 dir == CMD_GO_DOWNSTAIRS ? "goes down"
                                          : "takes").c_str());
     }
+    else if (is_shaft && mons_flies(mon))
+        simple_monster_message(mon, " goes down the shaft.");
 }
 
 void make_mons_leave_level(monsters *mon)
