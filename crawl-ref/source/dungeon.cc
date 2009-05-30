@@ -7417,7 +7417,7 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
     if ((sroom = random_map_for_tag("special_room", true)) != NULL)
 #else
     if (one_chance_in(10)
-	    && (sroom = random_map_for_tag("special_room", true)) != NULL)
+        && (sroom = random_map_for_tag("special_room", true)) != NULL)
 #endif
     {
         int spec_room_done = random2(25);

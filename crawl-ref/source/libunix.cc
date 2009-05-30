@@ -462,23 +462,23 @@ int unixcurses_get_vi_key(int keyin)
     case 1034: return 1001;
     case 1040: return 1005;
 
-    case KEY_HOME:	return 1007;
-    case KEY_END:	return 1001;
-    case KEY_DOWN:	return 1002;
-    case KEY_UP:	return 1008;
-    case KEY_LEFT:	return 1004;
-    case KEY_RIGHT:	return 1006;
-    case KEY_NPAGE:	return 1003;
-    case KEY_PPAGE:	return 1009;
-    case KEY_A1:	return 1007;
-    case KEY_A3:	return 1009;
-    case KEY_B2:	return 1005;
-    case KEY_C1:	return 1001;
-    case KEY_C3:	return 1003;
-    case KEY_SHOME:	return 'Y';
-    case KEY_SEND:	return 'B';
-    case KEY_SLEFT:	return 'H';
-    case KEY_SRIGHT:	return 'L';
+    case KEY_HOME:   return 1007;
+    case KEY_END:    return 1001;
+    case KEY_DOWN:   return 1002;
+    case KEY_UP:     return 1008;
+    case KEY_LEFT:   return 1004;
+    case KEY_RIGHT:  return 1006;
+    case KEY_NPAGE:  return 1003;
+    case KEY_PPAGE:  return 1009;
+    case KEY_A1:     return 1007;
+    case KEY_A3:     return 1009;
+    case KEY_B2:     return 1005;
+    case KEY_C1:     return 1001;
+    case KEY_C3:     return 1003;
+    case KEY_SHOME:  return 'Y';
+    case KEY_SEND:   return 'B';
+    case KEY_SLEFT:  return 'H';
+    case KEY_SRIGHT: return 'L';
     }
     return keyin;
 }
