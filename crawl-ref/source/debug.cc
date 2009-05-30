@@ -6546,7 +6546,7 @@ void do_crash_dump()
     fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
 
     // Dumping current messages is unlikely to crash.
-    if (file != stderr)
+    if (file != stdout)
     {
         fprintf(file, EOL "Messages:" EOL);
         fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
