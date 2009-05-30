@@ -1300,12 +1300,14 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     }
 
     coord_def pos(1, 0);
-    bool      large_change = false;
+    bool      large_change  = false;
+    bool      check_ring_TC = false;
 
     if (is_controlled)
     {
         mpr("You may choose your destination (press '.' or delete to select).");
         mpr("Expect minor deviation.");
+        check_ring_TC = true;
         more();
 
         while (true)
@@ -1444,6 +1446,10 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
 
     if (large_change)
         handle_interrupted_swap(true);
+
+    // Might identify unknown ring of teleport control.
+    if (check_ring_TC)
+        maybe_id_ring_TC();
 
     return !is_controlled;
 }

@@ -3184,3 +3184,38 @@ void swap_with_monster(monsters *mon_to_swap)
             mon.del_ench(ENCH_HELD, true);
     }
 }
+
+// AutoID an equipped ring of teleport.
+// Code copied from fire/ice in spl-cast.cc
+void maybe_id_ring_TC()
+{
+    if (player_mutation_level(MUT_TELEPORT_CONTROL))
+        return;
+
+    int num_unknown = 0;
+    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+    {
+        if (player_wearing_slot(i)
+            && !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
+        {
+            ++num_unknown;
+        }
+    }
+
+    if (num_unknown != 1)
+        return;
+
+    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+        if (player_wearing_slot(i))
+        {
+            item_def& ring = you.inv[you.equip[i]];
+            if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
+                && ring.sub_type == RING_TELEPORT_CONTROL)
+            {
+                set_ident_type( ring.base_type, ring.sub_type, ID_KNOWN_TYPE );
+                set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
+                mprf("You are wearing: %s",
+                     ring.name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
+}

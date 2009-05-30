@@ -1510,6 +1510,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
 
     if (event.button == MouseEvent::LEFT)
     {
+        you.last_clicked_item = item_idx;
         if (on_floor)
         {
             if (event.mod & MOD_SHIFT)
@@ -1526,12 +1527,12 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             else
                 tile_item_use(idx);
         }
-        you.last_clicked_item = item_idx;
         // TODO enne - need to redraw inventory here?
         return CK_MOUSE_CMD;
     }
     else if (event.button == MouseEvent::RIGHT)
     {
+        you.last_clicked_item = item_idx;
         if (on_floor)
         {
             if (event.mod & MOD_SHIFT)
@@ -2831,6 +2832,12 @@ int MenuRegion::maxpagesize() const
     int more_height = (lines + 1) * m_font_entry->char_height();
 
     int pagesize = ((my - more_height) / 32) * m_max_columns;
+
+    // Upper limit for inventory menus. (jpeg)
+    // Non-inventory menus only have one column and need
+    // *really* big screens to cover more than 52 lines.
+    if (pagesize > 52)
+        return (52);
     return (pagesize);
 }
 

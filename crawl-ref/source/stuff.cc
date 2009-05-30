@@ -460,6 +460,7 @@ void untag_followers()
 
 unsigned char get_ch()
 {
+    mouse_control mc(MOUSE_MODE_MORE);
     unsigned char gotched = getch();
 
     if (gotched == 0)

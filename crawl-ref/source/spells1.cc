@@ -221,6 +221,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     {
         mpr("You may select the general direction of your translocation.");
         cast_semi_controlled_blink(100);
+        maybe_id_ring_TC();
         success = true;
     }
 #endif
