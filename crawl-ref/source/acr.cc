@@ -332,7 +332,7 @@ static void _wanderer_startup_message()
     }
 }
 
-static void _god_greeting_message( bool game_start )
+static void _god_greeting_message(bool game_start)
 {
     switch (you.religion)
     {

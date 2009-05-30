@@ -1794,7 +1794,7 @@ void bolt::hit_wall()
 
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target)
         && pos() != target  && pos() != source
-        && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL 
+        && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
         && !affects_nothing && bounces == 0 && reflections == 0
         && see_grid(target) && !grid_is_solid(grd(target)))
     {
