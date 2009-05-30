@@ -48,4 +48,6 @@ bool choose_class(void);
  * *********************************************************************** */
 void give_basic_mutations(species_type speci);
 
+bool validate_player_name(const char *name, bool verbose);
+
 #endif

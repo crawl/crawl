@@ -3294,12 +3294,17 @@ static void _enter_player_name(bool blankOK)
 
 static bool _validate_player_name(bool verbose)
 {
+    return validate_player_name(you.your_name, verbose);
+}
+
+bool validate_player_name(const char* name, bool verbose)
+{
 #if defined(DOS) || defined(WIN32CONSOLE) || defined(WIN32TILES)
     // Quick check for CON -- blows up real good under DOS/Windows.
-    if (stricmp(you.your_name, "con") == 0
-        || stricmp(you.your_name, "nul") == 0
-        || stricmp(you.your_name, "prn") == 0
-        || strnicmp(you.your_name, "LPT", 3) == 0)
+    if (stricmp(name, "con") == 0
+        || stricmp(name, "nul") == 0
+        || stricmp(name, "prn") == 0
+        || strnicmp(name, "LPT", 3) == 0)
     {
         if (verbose)
             cprintf(EOL "Sorry, that name gives your OS a headache." EOL);
@@ -3307,7 +3312,7 @@ static bool _validate_player_name(bool verbose)
     }
 #endif
 
-    for (const char *pn = you.your_name; *pn; ++pn)
+    for (const char *pn = name; *pn; ++pn)
     {
         char c = *pn;
         // Note that this includes systems which may be using the
