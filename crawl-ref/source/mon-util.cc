@@ -4547,6 +4547,11 @@ bool monsters::drop_item(int eslot, int near)
 static bool _compatible_launcher_ammo_brands(item_def *launcher,
                                              const item_def *ammo)
 {
+    // If the monster has no ammo then there's no compatibility problems
+    // to check.
+    if (ammo == NULL)
+        return (true);
+
     const int bow_brand  = get_weapon_brand(*launcher);
     const int ammo_brand = get_ammo_brand(*ammo);
 
