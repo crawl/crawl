@@ -695,7 +695,7 @@ static void _initialise_branch_depths()
     branches[BRANCH_LAIR].startdepth              = random_range(8, 13);
     branches[BRANCH_HIVE].startdepth              = random_range(11, 16);
     branches[BRANCH_SLIME_PITS].startdepth        = random_range(8, 10);
-    if ( coinflip() )
+    if (true) // always pick Swamp
     {
         branches[BRANCH_SWAMP].startdepth  = random_range(2, 7);
         branches[BRANCH_SHOALS].startdepth = -1;

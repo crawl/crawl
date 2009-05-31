@@ -862,8 +862,8 @@ int mons_standard_rare(int mcls)
     case MONS_SNAKE:
         return 80;
 
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
+//    case MONS_MERFOLK:
+//    case MONS_MERMAID:
     case MONS_FLYING_SKULL:
     case MONS_SLIME_CREATURE:
         return 75;
@@ -1665,7 +1665,7 @@ int mons_swamp_rare(int mcls)
     case MONS_KOMODO_DRAGON:
     case MONS_VERY_UGLY_THING:
     case MONS_VAPOUR:
-    case MONS_MERMAID:
+//    case MONS_MERMAID:
         return 15;
 
     case MONS_PHANTOM:
@@ -1676,7 +1676,7 @@ int mons_swamp_rare(int mcls)
     case MONS_NECROPHAGE:
         return 12;
 
-    case MONS_SIREN:
+//    case MONS_SIREN:
     case MONS_BLINK_FROG:
     case MONS_GIANT_AMOEBA:
     case MONS_GIANT_GECKO:

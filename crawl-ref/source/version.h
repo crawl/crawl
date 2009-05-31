@@ -33,10 +33,10 @@
 #define CRAWL "Dungeon Crawl Stone Soup"
 
 #define VER_NUM  "0.5"
-#define VER_QUAL "-svn"
+#define VER_QUAL ""
 
 // Undefine for official releases.
-#define DISPLAY_BUILD_REVISION
+//#define DISPLAY_BUILD_REVISION
 
 // last updated 07august2001 {mv}
 /* ***********************************************************************

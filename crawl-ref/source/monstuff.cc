@@ -1886,6 +1886,11 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_PROGRAM_BUG
         || new_mclass == MONS_SHAPESHIFTER
         || new_mclass == MONS_GLOWING_SHAPESHIFTER
+        || new_mclass == MONS_MERFOLK // inhabitants of (deactivated) Shoals
+        || new_mclass == MONS_MERMAID
+        || new_mclass == MONS_SIREN
+        || new_mclass == MONS_HARPY
+        || new_mclass == MONS_SHARK
 
         // These require manual setting of mons.base_monster to indicate
         // what they are a skeleton/zombie/simulacrum/spectral thing of,

@@ -3464,14 +3464,14 @@ static void _place_aquatic_monsters(int level_number, char level_type)
                     swimming_things[i] = MONS_SIREN;
             }
         }
-
+/*
         // Don't place sharks in the Swamp.
         if (!player_in_branch(BRANCH_SWAMP)
             && level_number >= 9 && one_chance_in(4))
         {
             swimming_things[3] = MONS_SHARK;
         }
-
+*/
         if (level_number >= 25 && one_chance_in(5))
             swimming_things[0] = MONS_WATER_ELEMENTAL;
 
