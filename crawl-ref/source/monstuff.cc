@@ -1202,8 +1202,8 @@ int monster_die(monsters *monster, killer_type killer,
     {
         if (!silent && !mons_reset)
         {
-            simple_monster_message( monster, " vapourises!",
-                                    MSGCH_MONSTER_DAMAGE,  MDAM_DEAD );
+            simple_monster_message(monster, " vapourises!",
+                                   MSGCH_MONSTER_DAMAGE,  MDAM_DEAD);
             silent = true;
         }
 
@@ -1212,6 +1212,7 @@ int monster_die(monsters *monster, killer_type killer,
             place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
         }
+
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
@@ -1228,8 +1229,8 @@ int monster_die(monsters *monster, killer_type killer,
             int w_idx = monster->inv[MSLOT_WEAPON];
             if (w_idx != NON_ITEM && !(mitm[w_idx].flags & ISFLAG_SUMMONED))
             {
-                simple_monster_message( monster, " falls from the air.",
-                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
+                simple_monster_message(monster, " falls from the air.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 silent = true;
             }
             else
@@ -1237,9 +1238,15 @@ int monster_die(monsters *monster, killer_type killer,
         }
     }
 
-    bool death_message = !silent && !did_death_message && mons_near(monster)
-                         && (player_monster_visible(monster)
-                             || crawl_state.arena);
+    const bool death_message = !silent && !did_death_message
+                                   && mons_near(monster)
+                                   && (player_monster_visible(monster)
+                                       || crawl_state.arena);
+
+    const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
+    const mon_holy_type targ_holy = mons_holiness(monster);
+    const bool anon = (killer_index == ANON_FRIENDLY_MONSTER
+                          || !invalid_monster_index(killer_index));
 
     switch (killer)
     {
@@ -1249,16 +1256,10 @@ int monster_die(monsters *monster, killer_type killer,
         {
             const bool bad_kill    = god_hates_killing(you.religion, monster);
             const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
-            const bool created_friendly =
-                testbits(monster->flags, MF_CREATED_FRIENDLY);
 
             if (death_message)
             {
-                bool passive = (killer == KILL_YOU_CONF
-                                && (killer_index == ANON_FRIENDLY_MONSTER
-                                    || !invalid_monster_index(killer_index)));
-
-                if (passive)
+                if (killer == KILL_YOU_CONF && anon)
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          monster->name(DESC_CAP_THE).c_str(),
@@ -1286,28 +1287,25 @@ int monster_die(monsters *monster, killer_type killer,
             // Prevent summoned creatures from being good kills.
             if (bad_kill || !created_friendly && gives_xp)
             {
-                if (mons_holiness(monster) == MH_NATURAL)
+                if (targ_holy == MH_NATURAL)
                 {
                     did_god_conduct(DID_KILL_LIVING,
                                     monster->hit_dice, true, monster);
-                }
 
-                if (mons_holiness(monster) == MH_UNDEAD)
+                    if (mons_is_evil(monster))
+                    {
+                        did_god_conduct(DID_KILL_NATURAL_EVIL,
+                                        monster->hit_dice, true, monster);
+                    }
+                }
+                else if (targ_holy == MH_UNDEAD)
                 {
                     did_god_conduct(DID_KILL_UNDEAD,
                                     monster->hit_dice, true, monster);
                 }
-
-                if (mons_holiness(monster) == MH_DEMONIC)
+                else if (targ_holy == MH_DEMONIC)
                 {
                     did_god_conduct(DID_KILL_DEMON,
-                                    monster->hit_dice, true, monster);
-                }
-
-                if (mons_is_evil(monster)
-                    && mons_holiness(monster) == MH_NATURAL)
-                {
-                    did_god_conduct(DID_KILL_NATURAL_EVIL,
                                     monster->hit_dice, true, monster);
                 }
 
@@ -1332,7 +1330,8 @@ int monster_die(monsters *monster, killer_type killer,
                                     monster->hit_dice, true, monster);
                 }
 
-                if (mons_is_holy(monster))
+                // Holy kills are always noticed.
+                if (targ_holy == MH_HOLY)
                 {
                     did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
@@ -1439,15 +1438,12 @@ int monster_die(monsters *monster, killer_type killer,
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
-            if (!testbits(monster->flags, MF_CREATED_FRIENDLY) && gives_xp
-                && pet_kill)
+            if (!created_friendly && gives_xp && pet_kill)
             {
                 bool notice = false;
-                const bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
 
-                const mon_holy_type targ_holy = mons_holiness(monster),
-                    attacker_holy = anon ? MH_NATURAL
-                                         : mons_holiness(&menv[killer_index]);
+                const mon_holy_type attacker_holy =
+                    anon ? MH_NATURAL : mons_holiness(&menv[killer_index]);
 
                 if (you.religion == GOD_SHINING_ONE
                     || you.religion == GOD_YREDELEMNUL
@@ -1563,7 +1559,7 @@ int monster_die(monsters *monster, killer_type killer,
                     if (you.magic_points < you.max_magic_points)
                     {
                         mpr("You feel your power returning.");
-                        inc_mp( 1 + random2(monster->hit_dice / 2), false );
+                        inc_mp(1 + random2(monster->hit_dice / 2), false);
                     }
                 }
 
@@ -1585,8 +1581,8 @@ int monster_die(monsters *monster, killer_type killer,
                     if (mon->alive() && mon->hit_points < mon->max_hit_points)
                     {
                         simple_monster_message(mon, " looks invigorated.");
-                        heal_monster( mon, 1 + random2(monster->hit_dice / 4),
-                                      false );
+                        heal_monster(mon, 1 + random2(monster->hit_dice / 4),
+                                     false);
                     }
                 }
 
@@ -1599,7 +1595,6 @@ int monster_die(monsters *monster, killer_type killer,
                 {
                     bless_follower(&menv[killer_index]);
                 }
-
             }
             break;
 
@@ -1633,7 +1628,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             // Monster goes to the Abyss.
             monster->flags |= MF_BANISHED;
-            monster->set_transit( level_id(LEVEL_ABYSS) );
+            monster->set_transit(level_id(LEVEL_ABYSS));
             in_transit = true;
             monster->destroy_inventory();
             // Make monster stop patrolling and/or travelling.
@@ -1730,7 +1725,7 @@ int monster_die(monsters *monster, killer_type killer,
     else
     {
         // Destroy the items belonging to MF_HARD_RESET monsters so they
-        // don't clutter up mitm[]
+        // don't clutter up mitm[].
         monster->destroy_inventory();
     }
 
