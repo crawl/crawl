@@ -1458,7 +1458,7 @@ int monster_die(monsters *monster, killer_type killer,
                     if (killer_holy == MH_UNDEAD)
                     {
                         const bool confused =
-                            anon ? true : !mons_friendly(killer_mon);
+                            anon ? false : !mons_friendly(killer_mon);
 
                         // Yes, these are hacks, but they make sure that
                         // confused monsters doing kills are not
@@ -1527,7 +1527,7 @@ int monster_die(monsters *monster, killer_type killer,
                     if (killer_holy == MH_UNDEAD)
                     {
                         const bool confused =
-                            anon ? true : !mons_friendly(killer_mon);
+                            anon ? false : !mons_friendly(killer_mon);
 
                         // Yes, this is a hack, but it makes sure that
                         // confused monsters doing kills are not
