@@ -1558,10 +1558,10 @@ bool player_res_asphyx()
 
 bool player_control_teleport(bool calc_unid, bool temp, bool items)
 {
-    return ( (you.duration[DUR_CONTROL_TELEPORT] && temp)
-             || (player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
-                 && items)
-             || player_mutation_level(MUT_TELEPORT_CONTROL) );
+    return ((temp && you.duration[DUR_CONTROL_TELEPORT])
+            || (items
+                && player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid))
+            || player_mutation_level(MUT_TELEPORT_CONTROL));
 }
 
 int player_res_torment(bool)

@@ -581,7 +581,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     const bool priest = mons_class_flag(monster->type, M_PRIEST);
     const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
     const bool innate = !(priest || wizard || no_silent)
-                       || (flags & SPFLAG_INNATE);
+                        || (flags & SPFLAG_INNATE);
 
     int noise;
     if (silent
