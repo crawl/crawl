@@ -14,6 +14,7 @@ are nowadays activated with V.)
                        within range
             Ctrl-X     lists monsters, items and features in sight
             Ctrl-S     saves game without prompt (was Ctrl-X)
+
             On the level map (X):
             e          set/remove travel exclusion (was Ctrl-X)
             E          cycle travel exclusions (was x)
@@ -33,7 +34,7 @@ press the key matching an item’s slot in order to examine it.
 When chopping up a single corpse on the ground, there is no longer any prompt.
 You will only be prompted if there are two or more corpses. When answering this
 prompt, you can use the following shortcuts: c means yes, so you can press
-cccc. . . to chop up all corpses in one place, or you can just hit a to butcher
+cccc... to chop up all corpses in one place, or you can just hit a to butcher
 of corpses on a square.
 
 The * Direction and Ctrl-Direction keys now both open and close doors.
@@ -47,7 +48,7 @@ The * Direction and Ctrl-Direction keys now both open and close doors.
                  0           repeat next command
                  V           verbose list of monsters in sight
                  Ctrl-T      toggle ally pickup mode (only for permanent allies)
-                 Ctrl-D      add macro (a new synonym for ∼)
+                 Ctrl-D      add macro (a new synonym for ~)
                  new key     command                   old key
                  z           cast spell                was Z
                  Z           zap wand                  was z
@@ -94,4 +95,4 @@ Note that the header of init.txt contains these lines. (It contains some more
 options for using other old settings.) The options are commented out, so you
 just need to remove the # in front in order to activate them. You can choose to
 use only part of these options. In case you decide to use the old keyset, be
-aware that D and d are synonyms for ’yes’ in the butcher interface.
+aware that D and d are synonyms for 'yes' in the butcher interface.
