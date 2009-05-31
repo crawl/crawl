@@ -16,6 +16,7 @@ REVISION("$Rev$");
 #include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "newgame.h"
 #include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -28,6 +29,8 @@ REVISION("$Rev$");
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
 #define MAX_GHOST_EVASION    60
+#define MIN_GHOST_SPEED       6
+#define MAX_GHOST_SPEED      13
 
 std::vector<ghost_demon> ghosts;
 
@@ -294,6 +297,27 @@ void ghost_demon::init_random_demon()
     }
 }
 
+// Returns the movement speed for a player ghost. Note that this is a real
+// speed, not a movement cost, so higher is better.
+static int _player_ghost_base_movement_speed()
+{
+    int speed = (you.species == SP_NAGA ? 8 : 10);
+
+    if (player_mutation_level(MUT_FAST))
+        speed += player_mutation_level(MUT_FAST) + 1;
+
+    if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
+        speed += 2;
+
+    // Cap speeds.
+    if (speed < MIN_GHOST_SPEED)
+        speed = MIN_GHOST_SPEED;
+    else if (speed > MAX_GHOST_SPEED)
+        speed = MAX_GHOST_SPEED;
+
+    return (speed);
+}
+
 void ghost_demon::init_player_ghost()
 {
     name   = you.your_name;
@@ -308,7 +332,7 @@ void ghost_demon::init_player_ghost()
     resists.fire   = player_res_fire();
     resists.cold   = player_res_cold();
     resists.elec   = player_res_electricity();
-    speed          = player_ghost_base_movement_speed();
+    speed          = _player_ghost_base_movement_speed();
 
     damage = 4;
     brand = SPWPN_NORMAL;
@@ -600,14 +624,50 @@ bool debug_check_ghosts()
     for (unsigned int k = 0; k < ghosts.size(); ++k)
     {
         ghost_demon ghost = ghosts[k];
-        // Values greater than the allowed maximum signalize bugginess.
-        if (ghost.damage > MAX_GHOST_DAMAGE)
+        // Values greater than the allowed maximum or less then the allowed
+        // minimum signalize bugginess.
+        if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
             return (false);
-        if (ghost.max_hp > MAX_GHOST_HP)
+        if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
             return (false);
-        if (ghost.xl > 27)
+        if (ghost.xl < 1 || ghost.xl > 27)
             return (false);
         if (ghost.ev > MAX_GHOST_EVASION)
+            return (false);
+        if (ghost.speed < MIN_GHOST_SPEED || ghost.speed > MAX_GHOST_SPEED)
+            return (false);
+        if (ghost.resists.fire < -3 || ghost.resists.fire > 3)
+            return (false);
+        if (ghost.resists.cold < -3 || ghost.resists.cold > 3)
+            return (false);
+        if (ghost.resists.elec < 0)
+            return (false);
+        if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_PAN_LORD_BRANDS)
+            return (false);
+        if (ghost.species < SP_HUMAN || ghost.species >= NUM_SPECIES)
+            return (false);
+        if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
+            return (false);
+        if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
+            return (false);
+        if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
+            return (false);
+        if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
+            return (false);
+
+        if (ghost.brand == SPWPN_HOLY_WRATH || is_good_god(ghost.religion))
+            return (false);
+
+        // Only Pandemonium lords cycle colours.
+        if (ghost.cycle_colours)
+            return (false);
+
+        // Name validation.
+        if (!validate_player_name(ghost.name.c_str(), false))
+            return (false);
+        if (ghost.name.length() > (kNameLen - 1) || ghost.name.length() == 0)
+            return (false);
+        if (ghost.name != trimmed_string(ghost.name))
             return (false);
 
         // Check for non-existing spells.
