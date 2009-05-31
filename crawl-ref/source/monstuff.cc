@@ -3127,10 +3127,10 @@ static void _mons_indicate_level_exit(const monsters *mon)
     }
     else if (is_shaft)
     {
-        if (mons_flies(mon))
-            simple_monster_message(mon, " goes down the shaft.");
-        else
-            simple_monster_message(mon, " jumps into the shaft.");
+        simple_monster_message(mon,
+            make_stringf(" %s the shaft.",
+                mons_flies(mon) ? "goes down"
+                                : "jumps into").c_str());
     }
 }
 
