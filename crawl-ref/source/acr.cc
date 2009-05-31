@@ -1668,6 +1668,32 @@ void process_command( command_type cmd )
            break;
         }
 
+        if (cmd == CMD_FORCE_CAST_SPELL && Options.zap_evoke_reminder)
+        {
+            bool has_wands = false;
+            for (int i = 0; i < ENDOFPACK; i++)
+            {
+                item_def &obj(you.inv[i]);
+
+                if (!is_valid_item( obj ))
+                    continue;
+
+                if (obj.base_type == OBJ_WANDS)
+                {
+                    has_wands = true;
+                    break;
+                }
+            }
+
+            if (has_wands)
+            {
+                mpr("If you want to use a wand, you need to press <w>V</w> to "
+                    "evoke it.");
+                more();
+                Options.zap_evoke_reminder = false;
+            }
+        }
+
         // Randart weapons.
         if (scan_randarts(RAP_PREVENT_SPELLCASTING))
         {

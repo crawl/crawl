@@ -830,6 +830,7 @@ bool evoke_item(int slot)
     {
     case OBJ_WANDS:
         zap_wand(slot);
+        Options.zap_evoke_reminder = false;
         return (true);
 
     case OBJ_WEAPONS:

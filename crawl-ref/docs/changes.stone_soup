@@ -170,6 +170,7 @@ Tiles
 * Support for full screen mode and for small resolutions (800x480).
 * Graphical menu improvements: some menus are clickable and show icons.
 * Mouse clicks on the map when unsafe travel one square in that direction.
+* Mouse-over item/monster descriptions.
 * Added new and improved tiles: Pandemonium lords, draconians, randart books.
 * Monster tiles include health bars.
 * Added type-specific icons for jewellery, shops, and weapon brands.

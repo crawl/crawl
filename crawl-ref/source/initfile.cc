@@ -993,6 +993,7 @@ void game_options::reset_options()
     mon_glyph_overrides.clear();
 
     rest_wait_both = false;
+    zap_evoke_reminder = true;
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -2938,6 +2939,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
     }
     else BOOL_OPTION(rest_wait_both);
+    else BOOL_OPTION(zap_evoke_reminder);
     else if (key == "dump_message_count")
     {
         // Capping is implicit

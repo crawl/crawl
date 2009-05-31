@@ -3125,8 +3125,13 @@ static void _mons_indicate_level_exit(const monsters *mon)
                 dir == CMD_GO_DOWNSTAIRS ? "goes down"
                                          : "takes").c_str());
     }
-    else if (is_shaft && mons_flies(mon))
-        simple_monster_message(mon, " goes down the shaft.");
+    else if (is_shaft)
+    {
+        if (mons_flies(mon))
+            simple_monster_message(mon, " goes down the shaft.");
+        else
+            simple_monster_message(mon, " jumps into the shaft.");
+    }
 }
 
 void make_mons_leave_level(monsters *mon)
@@ -7940,8 +7945,8 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
     {
-        if ((mons_is_fleeing(monster) || mons_is_pacified(monster))
-            && intel >= I_NORMAL)
+        if (mons_is_fleeing(monster) && intel >= I_NORMAL
+            || mons_is_pacified(monster))
         {
             return (true);
         }

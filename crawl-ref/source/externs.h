@@ -2180,6 +2180,7 @@ public:
 
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
+    bool        zap_evoke_reminder; // reminder that wands need to be e(V)oked
 
 #ifdef WIZARD
     // Parameters for fight simulations.

@@ -17,6 +17,8 @@
 # always_confirm_butcher  = true
 # target_unshifted_dirs   = true
 
+# Set the following to false to get rid of the "evoke wands" reminder.
+# zap_evoke_reminder = false
 
 # Crawl Init file
 #
