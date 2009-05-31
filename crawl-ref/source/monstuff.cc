@@ -1244,9 +1244,8 @@ int monster_die(monsters *monster, killer_type killer,
                                        || crawl_state.arena);
 
     const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
+    const bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons_holiness(monster);
-    const bool anon = (killer_index == ANON_FRIENDLY_MONSTER
-                          || !invalid_monster_index(killer_index));
 
     switch (killer)
     {
@@ -1259,7 +1258,8 @@ int monster_die(monsters *monster, killer_type killer,
 
             if (death_message)
             {
-                if (killer == KILL_YOU_CONF && anon)
+                if (killer == KILL_YOU_CONF
+                    && (anon || !invalid_monster_index(killer_index)))
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          monster->name(DESC_CAP_THE).c_str(),
@@ -1438,12 +1438,14 @@ int monster_die(monsters *monster, killer_type killer,
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
-            if (!created_friendly && gives_xp && pet_kill)
+            if (!created_friendly && gives_xp && pet_kill
+                && !invalid_monster_index(killer_index))
             {
                 bool notice = false;
 
+                monsters *attacker = &menv[killer_index];
                 const mon_holy_type attacker_holy =
-                    anon ? MH_NATURAL : mons_holiness(&menv[killer_index]);
+                    anon ? MH_NATURAL : mons_holiness(attacker);
 
                 if (you.religion == GOD_SHINING_ONE
                     || you.religion == GOD_YREDELEMNUL
@@ -1451,12 +1453,11 @@ int monster_die(monsters *monster, killer_type killer,
                     || you.religion == GOD_VEHUMET
                     || you.religion == GOD_MAKHLEB
                     || you.religion == GOD_LUGONU
-                    || !anon && mons_is_god_gift(&menv[killer_index]))
+                    || !anon && mons_is_god_gift(attacker))
                 {
                     if (attacker_holy == MH_UNDEAD)
                     {
-                        const bool confused =
-                            !mons_friendly(&menv[killer_index]);
+                        const bool confused = !mons_friendly(attacker);
 
                         // Yes, these are hacks, but they make sure that
                         // confused monsters doing kills are not
@@ -1530,7 +1531,7 @@ int monster_die(monsters *monster, killer_type killer,
                         // okay that Yredelemnul ignores kills done by
                         // confused monsters as opposed to enslaved or
                         // friendly ones. (jpeg)
-                        if (mons_friendly(&menv[killer_index]))
+                        if (mons_friendly(attacker))
                         {
                             notice |= did_god_conduct(
                                           DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
@@ -1566,23 +1567,21 @@ int monster_die(monsters *monster, killer_type killer,
                 if (you.religion == GOD_SHINING_ONE
                     && mons_is_evil_or_unholy(monster)
                     && !player_under_penance()
-                    && random2(you.piety) >= piety_breakpoint(0)
-                    && !invalid_monster_index(killer_index))
+                    && random2(you.piety) >= piety_breakpoint(0))
                 {
-                    monsters *mon = &menv[killer_index];
-
                     // Randomly bless the follower who killed.
-                    if (!one_chance_in(3) && mon->alive()
-                        && bless_follower(mon))
+                    if (!one_chance_in(3) && attacker->alive()
+                        && bless_follower(attacker))
                     {
                         break;
                     }
 
-                    if (mon->alive() && mon->hit_points < mon->max_hit_points)
+                    if (attacker->alive()
+                        && attacker->hit_points < attacker->max_hit_points)
                     {
-                        simple_monster_message(mon, " looks invigorated.");
-                        heal_monster(mon, 1 + random2(monster->hit_dice / 4),
-                                     false);
+                        simple_monster_message(attacker, " looks invigorated.");
+                        heal_monster(attacker,
+                                     1 + random2(monster->hit_dice / 4), false);
                     }
                 }
 
@@ -1590,10 +1589,9 @@ int monster_die(monsters *monster, killer_type killer,
                 if (you.religion == GOD_BEOGH
                     && random2(you.piety) >= piety_breakpoint(2)
                     && !player_under_penance()
-                    && !one_chance_in(3)
-                    && !invalid_monster_index(killer_index))
+                    && !one_chance_in(3))
                 {
-                    bless_follower(&menv[killer_index]);
+                    bless_follower(attacker);
                 }
             }
             break;
