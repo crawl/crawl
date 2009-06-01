@@ -17,6 +17,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "it_use2.h"
 #include "item_use.h"
+#include "items.h"
 #include "message.h"
 #include "misc.h"
 #include "menu.h"
@@ -1315,21 +1316,24 @@ void InventoryRegion::render()
         const coord_def min_pos(sx, sy - dy);
         const coord_def max_pos(ex, ey);
 
-        std::string desc;
-        if (floor)
+        std::string desc = "";
+        if (floor && is_valid_item(mitm[idx]))
             desc = mitm[idx].name(DESC_PLAIN);
-        else
+        else if (!floor && is_valid_item(you.inv[idx]))
             desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
 
-        m_tag_font->render_string(x, y, desc.c_str(),
-                                  min_pos, max_pos, WHITE, false, 200);
+        if (!desc.empty())
+        {
+            m_tag_font->render_string(x, y, desc.c_str(),
+                                      min_pos, max_pos, WHITE, false, 200);
+        }
     }
 }
 
 void InventoryRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
 {
     int num = c - '0';
-    assert(num >=0 && num <= 9);
+    assert(num >= 0 && num <= 9);
     int idx = TILE_NUM0 + num;
 
     m_buf_main.add(idx, x, y, ofs_x, ofs_y, false);
@@ -1626,6 +1630,9 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     {
         const item_def &item = mitm[idx];
 
+        if (!is_valid_item(item))
+            return (false);
+
         tip = "";
         if (m_items[item_idx].key)
         {
@@ -1663,6 +1670,9 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     else
     {
         const item_def &item = you.inv[idx];
+        if (!is_valid_item(item))
+            return (false);
+
         tip = item.name(DESC_INVENTORY_EQUIP);
 
         if (!display_actions)
@@ -1859,6 +1869,9 @@ bool InventoryRegion::update_alt_text(std::string &alt)
         item = &mitm[idx];
     else
         item = &you.inv[idx];
+
+    if (!is_valid_item(*item))
+        return (false);
 
     describe_info inf;
     get_item_desc(*item, inf, true);

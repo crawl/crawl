@@ -34,6 +34,7 @@ REVISION("$Rev$");
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "menu.h"
@@ -2285,6 +2286,9 @@ static bool _describe_spells(const item_def &item)
 //---------------------------------------------------------------
 void describe_item( item_def &item, bool allow_inscribe )
 {
+    if (!is_valid_item(item))
+        return;
+
     while (true)
     {
         const bool spells_shown = _show_item_description(item);

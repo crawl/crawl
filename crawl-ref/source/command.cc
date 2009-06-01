@@ -2279,7 +2279,7 @@ static void _add_formatted_tutorial_help(column_composer &cols)
         "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
         "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
         "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<darkgrey>/</darkgrey> : wands (<w>Z</w>ap)\n"
+        "<darkgrey>/</darkgrey> : wands (e<w>V</w>oke)\n"
         "<lightcyan>";
     get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
     text << static_cast<char>(ch);

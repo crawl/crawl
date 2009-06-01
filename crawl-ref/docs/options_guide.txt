@@ -70,7 +70,7 @@ The contents of this text are:
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
-                msg_condense_repeats
+                msg_condense_repeats, zap_evoke_reminder
 4-k     Missiles.
                 fire_items_start, fire_order
 4-l     Message Channels.
@@ -1410,6 +1410,12 @@ msg_condense_repeats = true
         counter) is repeated over several turns, the Show Previous Message
         command (Ctrl-P) will likewise condense them into one. For example:
             The killer bee misses you. (x5)
+
+zap_evoke_reminder = true
+        As of 0.5 wands need to be evoked rather than zapped. To smoothen
+        the transition process a message is displayed the first time the
+        player presses 'Z' while there is a wand in inventory.
+        Set this option to false to suppress said message.
 
 4-k     Missiles.
 -----------------

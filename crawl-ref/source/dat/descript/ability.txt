@@ -132,7 +132,7 @@ Randomly translocate a short distance.
 %%%%
 Evoke Berserk Rage
 
-Go berserk. Going berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, cannot berserk again, and occasionally even pass out.
+Go berserk. Going berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, evoke wands or items, or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, cannot berserk again, and occasionally even pass out.
 %%%%
 Evoke Invisibility
 
@@ -253,7 +253,7 @@ Set all spellbooks within your field of vision on fire. The fire is fuelled by T
 %%%%
 Berserk
 
-Go berserk. Going berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, and cannot berserk again. Unlike other sources of rage, depending on your piety Trog may occasionally prevent you from passing out.
+Go berserk. Going berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, evoke wands or items, or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, and cannot berserk again. Unlike other sources of rage, depending on your piety Trog may occasionally prevent you from passing out.
 %%%%
 Trog's Hand
 
