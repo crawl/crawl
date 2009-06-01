@@ -1683,14 +1683,14 @@ int melee_attack::player_weapon_type_modify(int damage)
 
     if (!weapon)
         weap_type = WPN_UNARMED;
-    else if (item_is_staff( *weapon ))
+    else if (item_is_staff(*weapon))
         weap_type = WPN_QUARTERSTAFF;
     else if (weapon->base_type == OBJ_WEAPONS)
         weap_type = weapon->sub_type;
 
     // All weak hits look the same, except for when the player
-    // has a non-weapon in hand.  -- bwr
-    // Exception: vampire bats only _bite_ to allow for drawing blood
+    // has a non-weapon in hand. - bwr
+    // Exception: vampire bats only bite to allow for drawing blood.
     if (damage < HIT_WEAK
         && (you.species != SP_VAMPIRE || !player_in_bat_form()))
     {
@@ -1759,7 +1759,10 @@ int melee_attack::player_weapon_type_modify(int damage)
         return (damage);
     }
 
-    switch (weapon ? get_damage_type(*weapon) : -1)
+    // Take normal hits into account.  If the hit is from a weapon with
+    // more than one damage type, randomly choose one damage type from
+    // it.
+    switch (weapon ? single_damage_type(*weapon) : -1)
     {
     case DAM_PIERCE:
         if (damage < HIT_MED)
@@ -1794,7 +1797,7 @@ int melee_attack::player_weapon_type_modify(int damage)
 
     case DAM_BLUDGEON:
         if (damage < HIT_MED)
-            attack_verb = one_chance_in(4)? "thump" : "sock";
+            attack_verb = one_chance_in(4) ? "thump" : "sock";
         else if (damage < HIT_STRONG)
             attack_verb = "bludgeon";
         else

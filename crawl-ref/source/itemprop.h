@@ -536,16 +536,17 @@ enum weapon_property_type
 
 enum vorpal_damage_type
 {
-    // Types of damage a weapon can do... currently assuming that anything
-    // with BLUDGEON always does "AND" with any other specified types,
-    // and and sets not including BLUDGEON are "OR".
+    // These are the types of damage a weapon can do.  You can set more
+    // than one of these.
     DAM_BASH            = 0x0000,       // non-melee weapon blugeoning
     DAM_BLUDGEON        = 0x0001,       // crushing
     DAM_SLICE           = 0x0002,       // slicing/chopping
     DAM_PIERCE          = 0x0004,       // stabbing/piercing
     DAM_WHIP            = 0x0008,       // whip slashing (no butcher)
+    DAM_MAX_TYPE        = DAM_WHIP,
 
-    // These are used for vorpal weapon desc (don't set more than one)
+    // These are used for vorpal weapon descriptions.  You shouldn't set
+    // more than one of these.
     DVORP_NONE          = 0x0000,       // used for non-melee weapons
     DVORP_CRUSHING      = 0x1000,
     DVORP_SLICING       = 0x2000,
@@ -716,9 +717,10 @@ bool is_blessed_blade_convertible(const item_def &item);
 bool convert2good(item_def &item, bool allow_blessed = true);
 bool convert2bad(item_def &item);
 
-int get_vorpal_type( const item_def &item );
-int get_damage_type( const item_def &item );
-bool does_damage_type( const item_def &item, int dam_type );
+int get_vorpal_type(const item_def &item);
+int get_damage_type(const item_def &item);
+bool does_damage_type(const item_def &item, int dam_type);
+int single_damage_type(const item_def &item);
 
 int weapon_str_weight( const item_def &wpn );
 int weapon_dex_weight( const item_def &wpn );
