@@ -557,11 +557,28 @@ static formatted_string _tutorial_map_intro()
     linebreak_string2(result, _get_tutorial_cols());
     return formatted_string::parse_block(result, false);
 }
+#endif
 
-static formatted_string _tutorial_stats_intro()
+static void _tutorial_stats_intro()
 {
     std::ostringstream istr;
 
+#ifdef USE_TILE
+    istr << "To the upper right, important properties of the character are "
+            "displayed. The most basic one is Health, shown as "
+            "<w>Health: " << you.hp << "/" << you.hp_max << "</w> "
+            "and meaning current out of maximum health points. When Health "
+            "drops to zero, you die." EOL
+            "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
+         << "</w> represents your energy for casting spells, although other "
+            "actions often draw from Magic, too." EOL
+            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity below "
+            "below provide an all-around account of the character's "
+            "attributes. Don't worry about the rest for now.";
+
+    formatted_message_history(istr.str(), MSGCH_TUTORIAL, 0,
+                              _get_tutorial_cols());
+#else
     // Note: must fill up everything to override the map
     istr << "<"
          << colour_to_str(channel_to_colour(MSGCH_TUTORIAL))
@@ -588,9 +605,10 @@ static formatted_string _tutorial_stats_intro()
             "                                      \n"
             "                                      \n";
 
-    return formatted_string::parse_block(istr.str(), false);
-}
+    formatted_string::parse_block(istr.str(), false).display();
 #endif
+}
+
 
 static void _tutorial_message_intro()
 {
@@ -665,16 +683,15 @@ void tut_starting_screen()
 #endif
         if (i == 0)
             _tut_starting_info(width).display();
+        else if (i == 1)
 #ifdef USE_TILE
-        // Skip map and stats explanation for Tiles.
-        else if (i > 0 && i < 3)
+        // Skip map explanation for Tiles.
             continue;
 #else
-        else if (i == 1)
             _tutorial_map_intro().display();
-        else if (i == 2)
-            _tutorial_stats_intro().display();
 #endif
+        else if (i == 2)
+            _tutorial_stats_intro();
         else if (i == 3)
             _tutorial_message_intro();
         else if (i == 4)
@@ -3221,6 +3238,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_LOAD_SAVED_GAME:
     {
+        viewwindow(true, false);
         text << "Welcome back! If it's been a while since you last played this "
                 "character, you should take some time to refresh your memory "
                 "of your character's progress. It is recommended to at least "

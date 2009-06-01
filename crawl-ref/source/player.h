@@ -376,6 +376,8 @@ void set_hp(int new_amount, bool max_too);
 int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
 
+int get_contamination_level();
+
 void set_mp(int new_amount, bool max_too);
 
 void contaminate_player(int change, bool controlled = false,
