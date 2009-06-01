@@ -5098,7 +5098,7 @@ int get_real_mp(bool include_items)
     return enp;
 }
 
-static int _get_contamination_level()
+int get_contamination_level()
 {
     const int glow = you.magic_contamination;
 
@@ -5123,8 +5123,11 @@ void contaminate_player(int change, bool controlled, bool status_only)
 {
     ASSERT(!crawl_state.arena);
 
+    if (status_only && !you.magic_contamination)
+        return;
+
     // get current contamination level
-    int old_level = _get_contamination_level();
+    int old_level = get_contamination_level();
     int new_level = 0;
 #if DEBUG_DIAGNOSTICS
     if (change > 0 || (change < 0 && you.magic_contamination))
@@ -5146,26 +5149,24 @@ void contaminate_player(int change, bool controlled, bool status_only)
     }
 
     // figure out new level
-    new_level = _get_contamination_level();
+    new_level = get_contamination_level();
 
     if (status_only || (new_level >= 1 && old_level == 0))
     {
-        if (new_level > 0)
+        if (new_level > 3)
         {
-            if (new_level > 3)
-            {
-                mpr( (new_level == 4) ?
-                     "Your entire body has taken on an eerie glow!" :
-                     "You are engulfed in a nimbus of crackling magics!");
-            }
-            else
-            {
-                mprf("You are %s with residual magics%s",
-                     (new_level == 3) ? "practically glowing" :
-                     (new_level == 2) ? "heavily infused"
-                                      : "contaminated",
-                     (new_level == 3) ? "!" : ".");
-            }
+            mpr( (new_level == 4) ?
+                 "Your entire body has taken on an eerie glow!" :
+                 "You are engulfed in a nimbus of crackling magics!");
+        }
+        else
+        {
+            mprf("You are %s with residual magics%s",
+                 (new_level == 3) ? "practically glowing" :
+                 (new_level == 2) ? "heavily infused" :
+                 (new_level == 1) ? "contaminated"
+                                  : "lightly contaminated",
+                 (new_level == 3) ? "!" : ".");
         }
     }
     else if (new_level != old_level)
@@ -7121,8 +7122,8 @@ bool player::can_see(const actor *target) const
 
 bool player::backlit(bool check_haloed) const
 {
-    return (_get_contamination_level() >= 1 || duration[DUR_BACKLIGHT]
-        || ((check_haloed) ? haloed() : false));
+    return (get_contamination_level() >= 1 || duration[DUR_BACKLIGHT]
+            || (check_haloed ? haloed() : false));
 }
 
 bool player::haloed() const
