@@ -26,6 +26,7 @@ REVISION("$Rev$");
 #include "food.h"
 #include "format.h"
 #include "initfile.h"
+#include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -726,10 +727,18 @@ void tutorial_death_screen()
         text = "As a Conjurer your main weapon should be offensive magic. Cast "
                "spells more often! Remember to rest when your Magic is low.";
     }
-    else if (you.religion == GOD_TROG && Options.tut_berserk_counter <= 3 )
+    else if (you.religion == GOD_TROG && Options.tut_berserk_counter <= 3
+             && !you.duration[DUR_EXHAUSTED])
     {
         text = "Don't forget to go berserk when fighting particularly "
                "difficult foes. It is risky, but makes you faster and beefier.";
+
+        if (you.hunger_state <= HS_HUNGRY)
+        {
+            text += " Berserking is impossible while hungry or worse, so make "
+                    "sure to keep some food with you that you can eat when you "
+                    "need to go berserk.";
+        }
     }
     else if (Options.tutorial_type == TUT_RANGER_CHAR
              && 2*Options.tut_throw_counter < Options.tut_melee_counter )
@@ -1226,13 +1235,11 @@ void tutorial_first_monster(const monsters &mon)
     // If the first monster is sleeping wake it
     // (highlighting is an unnecessary complication).
     if (_mons_is_highlighted(&mon))
-    {
         noisy(1, mon.pos());
-        viewwindow(true, false);
-    }
 
     stop_running();
 
+    viewwindow(true, false);
     Options.tutorial_events[TUT_SEEN_MONSTER] = false;
     Options.tutorial_left--;
     Options.tut_just_triggered = true;
@@ -1355,6 +1362,7 @@ void tutorial_first_item(const item_def &item)
 
     stop_running();
 
+    viewwindow(true, false);
     Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = false;
     Options.tutorial_left--;
     Options.tut_just_triggered = true;
@@ -1928,6 +1936,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
 #endif
+        viewwindow(true, false);
         text << "are some downstairs. You can enter the next (deeper) "
                 "level by following them down (<w>></w>). To get back to "
                 "this level again, press <w><<</w> while standing on the "
@@ -1959,6 +1968,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Escape hatch", gc);
 #endif
+        viewwindow(true, false);
         text << "are some kind of escape hatch. You can use them to "
                 "quickly leave a level with <w><<</w> and <w>></w>, "
                 "respectively "
@@ -1986,6 +1996,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
 #endif
+        viewwindow(true, false);
         text << "is the entrance to a different branch of the dungeon, "
                 "which might have different terrain, level layout and "
                 "monsters from the current main branch you're in. Branches "
@@ -2023,6 +2034,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
 #endif
+        viewwindow(true, false);
         text << _describe_portal(gc);
         break;
 
@@ -2036,6 +2048,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc) || you.pos() == gc)
             DELAY_EVENT;
 
+        viewwindow(true, false);
         text << "If any items are covering stairs or an escape hatch, then "
                 "that will be indicated by highlighting the <w><<</w> or "
                 "<w>></w> symbol, instead of hiding the stair symbol with "
@@ -2048,6 +2061,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc) || you.pos() == gc)
             DELAY_EVENT;
 
+        viewwindow(true, false);
 #ifdef USE_TILE
         text << "A small question mark on an item tile signifies that there "
                 "is at least one other item in the same heap that you may want "
@@ -2069,6 +2083,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc) || (you.pos() == gc))
             DELAY_EVENT;
 
+        viewwindow(true, false);
         text << "If any items are covering a trap, then that will be "
                 "indicated by highlighting the <w>^</w> symbol, instead of "
                 "hiding the trap symbol with an item glyph.";
@@ -2113,6 +2128,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
 #endif
+        viewwindow(true, false);
         text << "is an altar. You can get information about it by pressing "
                 "<w>p</w> while standing on the square. Before taking up "
                 "the corresponding faith you'll be asked for confirmation.";
@@ -2131,6 +2147,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc), gc);
 #endif
+        viewwindow(true, false);
         text << "That "
 #ifndef USE_TILE
              << _colourize_glyph(YELLOW, get_screen_glyph(gc)) << " "
@@ -2148,6 +2165,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Closed door", gc);
 #endif
+        viewwindow(true, false);
         if (you.num_turns < 1)
             DELAY_EVENT;
 
@@ -2164,7 +2182,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "\nIn Tiles, the same can be achieved by clicking on an "
                 "adjacent door square.";
 #endif
-        if (Options.tut_explored)
+        if (!Options.tut_explored)
         {
             text << "\nTo avoid accidentally opening a door you'd rather "
                     "remain closed during travel or autoexplore, you can mark "
@@ -2174,7 +2192,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                     "entering that grid until you remove the exclusion with "
                     "another press of <w>Xe</w>.";
         }
-
         break;
 
     case TUT_SEEN_SECRET_DOOR:
@@ -2245,7 +2262,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << "\nAlso, new experience levels let you learn more spells "
                     "(the Spellcasting skill also does this). For now, you "
                     "should try to memorise the second spell of your "
-                    "starting book with <w>Mcb</w>, which can then be zapped "
+                    "starting book with <w>Mbb</w>, which can then be zapped "
                     "with <w>zb</w>.";
 #ifdef USE_TILE
             text << " Memorising is also possible by doing a <w>left "
@@ -2300,6 +2317,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_YOU_ENCHANTED:
+        viewwindow(true, false);
         text << "Enchantments of all types can befall you temporarily. "
                 "Brief descriptions of these appear at the lower end of the "
                 "stats area. Press <w>@</w> for more details. A list of all "
@@ -2444,6 +2462,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     case TUT_HEAVY_LOAD:
         if (you.burden_state != BS_UNENCUMBERED)
         {
+            viewwindow(true, false);
             text << "It is not usually a good idea to run around encumbered; "
                     "it slows you down and increases your hunger.";
         }
@@ -2713,6 +2732,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_POSTBERSERK:
+        viewwindow(true, false);
         text << "Berserking is extremely exhausting! It burns a lot of "
                 "nutrition, and afterwards you are slowed down and "
                 "occasionally even pass out. Press <w>@</w> to see your "
@@ -2968,6 +2988,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (Options.tutorial_type != TUT_BERSERK_CHAR)
             return;
 
+        viewwindow(true, false);
         text << "Now that monster is scared of you! Note that you do not "
                 "absolutely have to follow it. Rather, you can let it run "
                 "away. Sometimes, though, it can be useful to attack a "
@@ -2983,6 +3004,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (const monsters *m = monster_at(gc))
             tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
 #endif
+        viewwindow(true, false);
         text << "That monster looks a bit unusual. You might wish to examine "
                 "it a bit more closely by "
 #ifdef USE_TILE
@@ -3034,6 +3056,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
         }
 #endif
+        viewwindow(true, false);
         if (!vis)
         {
             text << "Uh-oh, some monster noticed you, either one that's "
@@ -3067,6 +3090,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (!m || !you.can_see(m))
             DELAY_EVENT;
 
+        viewwindow(true, false);
         text << m->name(DESC_CAP_THE, true) << " didn't vanish, but merely "
                 "moved onto a square which you can't currently see. It's still "
                 "nearby, unless something happens to it in the short amount of "
@@ -3139,6 +3163,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_GLOWING:
+        viewwindow(true, false);
         text << "Uh-oh, you've accumulated so much magical contamination that "
                 "you're glowing! You usually acquire magical contamination "
                 "from using some powerful magics, like invisibility, haste "
@@ -3170,6 +3195,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_CAUGHT_IN_NET:
+        viewwindow(true, false);
         text << "While you are held in a net, you cannot move around or engage "
                 "monsters in combat. Instead, any movement you take is counted "
                 "as an attempt to struggle free from the net. With a wielded "
@@ -3792,11 +3818,27 @@ void tutorial_describe_item(const item_def &item)
             break;
 
        case OBJ_CORPSES:
+            Options.tutorial_events[TUT_SEEN_CARRION] = false;
+
+            if (item.sub_type == CORPSE_SKELETON)
+            {
+                ostr << "Skeletons can be used as components for certain "
+                        "necromantic spells. Apart from that, they are "
+                        "largely useless.";
+                if (in_inventory(item))
+                {
+                    ostr << " In the drop menu you can select all skeletons "
+                            "and rotten chunks or corpses in your inventory "
+                            "at once with <w>d&</w>.";
+                }
+                break;
+            }
+
             ostr << "Corpses lying on the floor can be <w>c</w>hopped up with "
                     "a sharp implement to produce chunks for food (though they "
                     "may not be healthy)";
 
-            if (god_likes_butchery(you.religion))
+            if (!food_is_rotten(item) && god_likes_butchery(you.religion))
             {
                 ostr << ", or as a sacrifice to "
                      << god_name(you.religion)
@@ -3807,10 +3849,16 @@ void tutorial_describe_item(const item_def &item)
             if (food_is_rotten(item))
             {
                 ostr << "Rotten corpses won't be of any use to you, though, so "
-                        "you might just as well <w>d</w>rop this. Use "
-                        "<w>d&</w> to select all skeletons and rotten chunks "
-                        "or corpses in your inventory. No god will accept such "
-                        "rotten sacrifice, either.";
+                        "you might just as well ";
+                if (!in_inventory(item))
+                    ostr << "ignore them. ";
+                else
+                {
+                    ostr << "<w>d</w>rop this. Use <w>d&</w> to select all "
+                            "skeletons and rotten chunks or corpses in your "
+                            "inventory. ";
+                }
+                ostr << "No god will accept such rotten sacrifice, either.";
             }
             else
             {
@@ -3819,21 +3867,19 @@ void tutorial_describe_item(const item_def &item)
                         "practical way to chop it up is to drop it by clicking "
                         "on it with your <w>left mouse button</w> while "
                         "<w>Shift</w> is pressed, and then repeat that command "
-                        "for the corpse tile now lying on the floor. If the "
-                        "intent is to eat the chunks (rather than offer the "
-                        "corpse), you can then press <w>Shift + right mouse "
-                        "button</w> to do that.\n"
-                        EOL;
+                        "for the corpse tile now lying on the floor.";
 #endif
-                ostr << "If there are several items in your inventory you'd "
-                        "like to drop, the most convenient way is to use the "
-                        "<w>d</w>rop menu. On a related note, butchering "
-                        "several corpses on a floor square is facilitated by "
-                        "using the <w>c</w>hop prompt where <w>c</w> is a "
-                        "valid synonym for <w>y</w>es or you can directly chop "
-                        "<w>a</w>ll corpses.";
             }
-            Options.tutorial_events[TUT_SEEN_CARRION] = false;
+            if (!in_inventory(item))
+                break;
+
+            ostr << "\n\nIf there are several items in your inventory you'd "
+                    "like to drop, the most convenient way is to use the "
+                    "<w>d</w>rop menu. On a related note, butchering "
+                    "several corpses on a floor square is facilitated by "
+                    "using the <w>c</w>hop prompt where <w>c</w> is a "
+                    "valid synonym for <w>y</w>es or you can directly chop "
+                    "<w>a</w>ll corpses.";
             break;
 
        case OBJ_STAVES:

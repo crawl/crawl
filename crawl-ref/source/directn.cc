@@ -1733,8 +1733,9 @@ void direction(dist& moves, targeting_type restricts,
 
 std::string get_terse_square_desc(const coord_def &gc)
 {
-    std::string desc;
+    std::string desc = "";
     const char *unseen_desc = "[unseen terrain]";
+
     if (gc == you.pos())
         desc = you.your_name;
     else if (!map_bounds(gc))
@@ -1763,7 +1764,10 @@ std::string get_terse_square_desc(const coord_def &gc)
             desc = mons.full_name(DESC_PLAIN, true);
     }
     else if (igrd(gc) != NON_ITEM)
-        desc = mitm[igrd(gc)].name(DESC_PLAIN);
+    {
+        if (is_valid_item(mitm[igrd(gc)]))
+            desc = mitm[igrd(gc)].name(DESC_PLAIN);
+    }
     else
         desc = feature_description(gc, false, DESC_PLAIN, false);
 
@@ -1812,7 +1816,8 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     {
         // Second priority: objects.
         // If examine_mons is true, use terse descriptions.
-        get_item_desc(mitm[oid], inf, examine_mons);
+        if (is_valid_item(mitm[oid]))
+            get_item_desc(mitm[oid], inf, examine_mons);
     }
     else
     {
