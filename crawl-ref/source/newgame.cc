@@ -680,8 +680,7 @@ static unsigned char _random_potion_description()
         // qualifiers.
     }
     while (colour == PDC_CLEAR && nature > PDQ_VISCOUS
-           || desc == PDESCS(PDC_CLEAR)
-           || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
+           || desc == PDESCS(PDC_CLEAR));
 
     return static_cast<unsigned char>(desc);
 }

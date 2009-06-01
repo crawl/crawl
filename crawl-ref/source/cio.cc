@@ -613,6 +613,8 @@ int line_reader::process_key(int ch)
         cur = buffer + pos;
         cursorto(pos);
         break;
+    case CK_MOUSE_CLICK:
+        return (-1);
     default:
         if (isprint(ch) && length < (int) bufsz - 1)
         {

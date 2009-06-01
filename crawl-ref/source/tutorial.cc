@@ -1889,7 +1889,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "e<w>v</w>oking it. For the latter the power depends on "
                 "your Evocations skill.";
 #ifdef USE_TILE
-        text << "Both wielding and evoking a wielded item can be achieved "
+        text << " Both wielding and evoking a wielded item can be achieved "
                 "by clicking on it with your <w>left mouse button</w>.";
 #endif
         text << "\nDuring the tutorial you can reread this information at "
@@ -2436,7 +2436,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "<w>e</w>at something quickly, or you'll die. The safest "
                 "way to deal with this is to simply eat something from your "
                 "inventory, rather than wait for a monster to leave a corpse. "
-                "In a pinch potions and fountains also can provide some "
+                "In a pinch, potions and fountains also can provide some "
                 "nutrition, though not as much as food.";
 
         if (Options.tutorial_type == TUT_MAGIC_CHAR)
