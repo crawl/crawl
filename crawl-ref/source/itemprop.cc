@@ -1537,31 +1537,51 @@ int weapon_rarity( int w_type )
     return (0);
 }
 
-int get_vorpal_type( const item_def &item )
+int get_vorpal_type(const item_def &item)
 {
     int ret = DVORP_NONE;
 
     if (item.base_type == OBJ_WEAPONS)
-        ret = (Weapon_prop[ Weapon_index[item.sub_type] ].dam_type & DAMV_MASK);
+        ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAMV_MASK);
 
     return (ret);
 }
 
-int get_damage_type( const item_def &item )
+int get_damage_type(const item_def &item)
 {
     int ret = DAM_BASH;
 
     if (item.base_type == OBJ_WEAPONS)
-        ret = (Weapon_prop[ Weapon_index[item.sub_type] ].dam_type & DAM_MASK);
+        ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
 
     return (ret);
 }
 
-bool does_damage_type( const item_def &item, int dam_type )
+bool does_damage_type(const item_def &item, int dam_type)
 {
-    return (get_damage_type( item ) & dam_type);
+    return (get_damage_type(item) & dam_type);
 }
 
+int single_damage_type(const item_def &item)
+{
+    int ret = get_damage_type(item);
+
+    if (ret > 0)
+    {
+        int count = 0;
+
+        for (int i = 1; i <= DAM_MAX_TYPE; i <<= 1)
+        {
+            if (!does_damage_type(item, i))
+                continue;
+
+            if (one_chance_in(++count))
+                ret = i;
+        }
+    }
+
+    return (ret);
+}
 
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size)
