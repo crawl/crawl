@@ -20,7 +20,6 @@ class formatted_string;
 enum read_book_action_type
 {
     RBOOK_USE_STAFF,
-    RBOOK_MEMORISE,
     RBOOK_READ_SPELL
 };
 
@@ -50,7 +49,7 @@ int read_book( item_def &item, read_book_action_type action );
  * called from: acr
  * *********************************************************************** */
 bool player_can_memorise(const item_def &book);
-bool learn_spell(int book = -1);
+bool learn_spell();
 
 bool player_can_read_spellbook( const item_def &book );
 

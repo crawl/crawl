@@ -1241,6 +1241,14 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     itoa( spell_difficulty( type ), sval, 10 );
     desc += sval;
 
+    if (you_cannot_memorise(type))
+    {
+        desc += "$You cannot memorise or cast this spell because you "
+                "are a ";
+        desc += lowercase_string(species_name(you.species, 0));
+        desc += ".";
+    }
+
     set_ident_flags(item, ISFLAG_IDENT_MASK);
     std::vector<std::string> books;
     std::vector<std::string> rods;

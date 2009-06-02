@@ -143,17 +143,7 @@ static std::string _spell_base_description(spell_type spell, bool grey = false)
     desc << std::setw(30) << spell_title(spell);
 
     // spell schools
-    bool already = false;
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
-    {
-        if (spell_typematch(spell, (1<<i)))
-        {
-            if (already)
-                desc << '/';
-            desc << spelltype_name(1 << i);
-            already = true;
-        }
-    }
+    desc << spell_schools_string(spell);
 
     const int so_far = desc.str().length() - (grey ? 10 : 0);
     if (so_far < 60)
@@ -2350,4 +2340,23 @@ std::string spell_range_string(spell_type spell)
                + "<darkgrey>" + std::string(maxrange - range, '.')
                + "</darkgrey>";
     }
+}
+
+std::string spell_schools_string(spell_type spell)
+{
+    std::string desc;
+
+    bool already = false;
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
+    {
+        if (spell_typematch(spell, (1<<i)))
+        {
+            if (already)
+                desc += "/";
+            desc += spelltype_name(1 << i);
+            already = true;
+        }
+    }
+
+    return (desc);
 }

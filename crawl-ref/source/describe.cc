@@ -2494,6 +2494,15 @@ void describe_spell(spell_type spelled)
 #endif
     }
 
+    if (you_cannot_memorise(spelled))
+    {
+        description += "$$";
+        description += "You cannot memorise or cast this spell because you "
+                       "are a ";
+        description += lowercase_string(species_name(you.species, 0));
+        description += ".";
+    }
+
     print_description(description);
 
     mouse_control mc(MOUSE_MODE_MORE);

@@ -15,6 +15,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <string.h>
 #include <algorithm>
+#include <iomanip>
 
 #ifdef DOS
  #include <conio.h>
@@ -814,7 +815,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         }
         else
         {
-            if (knows_spell)
+            if (you_cannot_memorise(stype))
+                colour = LIGHTRED;
+            else if (knows_spell)
                 colour = LIGHTGREY;
             else if (you.experience_level >= level_diff
                      && spell_levels >= levels_req
@@ -873,11 +876,6 @@ int spellbook_contents( item_def &book, read_book_action_type action,
     {
     case RBOOK_USE_STAFF:
         out.cprintf( "Select a spell to cast." EOL );
-        break;
-
-    case RBOOK_MEMORISE:
-        out.cprintf( "Select a spell to memorise (%d level%s available)." EOL,
-                     spell_levels, (spell_levels == 1) ? "" : "s" );
         break;
 
     case RBOOK_READ_SPELL:
@@ -1056,47 +1054,6 @@ bool is_valid_spell_in_book( const item_def &book, int spell )
 bool is_valid_spell_in_book( int splbook, int spell )
 {
     return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
-}
-
-static int _which_spellbook( void )
-{
-    int book = -1;
-    const int avail_levels = player_spell_levels();
-
-    // Knowing delayed fireball will allow Fireball to be learned for free -bwr
-    if (avail_levels < 1 && !player_has_spell(SPELL_DELAYED_FIREBALL))
-    {
-        mpr("You can't memorise any more spells yet.");
-        return (-1);
-    }
-    else if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        return (-1);
-    }
-
-    mprf("You can memorise %d more level%s of spells.",
-         avail_levels, (avail_levels > 1) ? "s" : "" );
-
-    book = prompt_invent_item("Memorise from which spellbook?", MT_INVLIST,
-                              OSEL_MEMORISE );
-    if (prompt_failed(book))
-        return (-1);
-
-    if (you.inv[book].base_type != OBJ_BOOKS
-        || you.inv[book].sub_type == BOOK_MANUAL)
-    {
-        mpr("That isn't a spellbook!");
-        return (-1);
-    }
-
-    if (you.inv[book].sub_type == BOOK_DESTRUCTION)
-    {
-        tome_of_power( book );
-        return (-1);
-    }
-
-    return (book);
 }
 
 // Returns false if the player cannot read/memorise from the book,
@@ -1333,7 +1290,256 @@ bool player_can_memorise(const item_def &book)
     return (false);
 }
 
-bool learn_spell(int book)
+static std::vector<spell_type> _get_mem_list()
+{
+    std::set<spell_type>    all_spells;
+    std::vector<spell_type> mem_spells;
+
+    bool book_errors    = false;
+    int  num_books      = 0;
+    int  num_unreadable = 0;
+
+    // Collect the list of all spells in all available spellbooks.
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& book(you.inv[i]);
+
+        if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_DESTRUCTION
+            || book.sub_type == BOOK_MANUAL)
+        {
+            continue;
+        }
+
+        num_books++;
+
+        if (!player_can_read_spellbook(book))
+        {
+            num_unreadable++;
+            continue;
+        }
+
+        mark_had_book(book);
+        set_ident_flags(book, ISFLAG_KNOW_TYPE);
+        set_ident_flags(book, ISFLAG_IDENT_MASK);
+
+        int spells_in_book = 0;
+        for (int j = 0; j < SPELLBOOK_SIZE; j++)
+        {
+            if (!is_valid_spell_in_book(book, j))
+                continue;
+
+            all_spells.insert(which_spell_in_book(book, j));
+            spells_in_book++;
+        }
+
+        if (spells_in_book == 0)
+        {
+            mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells!  Please "
+                 "file a bug report.", book.name(DESC_PLAIN).c_str());
+            book_errors = true;
+        }
+    }
+
+    if (book_errors)
+        more();
+
+    if (num_books == 0)
+    {
+        mpr("You aren't carrying any spellbooks.", MSGCH_PROMPT);
+        return (mem_spells);
+    }
+    else if (num_unreadable == num_books)
+    {
+        mpr("All of the spellbooks you're carrying are beyond your "
+            "current level of comprehension.", MSGCH_PROMPT);
+        return (mem_spells);
+    }
+    else if (all_spells.size() == 0)
+    {
+        mpr("None of the spellbooks you are carrying contain any spells.",
+            MSGCH_PROMPT);
+        return (mem_spells);
+    }
+
+    unsigned int num_known      = 0;
+    unsigned int num_race       = 0;
+    unsigned int num_low_xl     = 0;
+    unsigned int num_low_levels = 0;
+    unsigned int num_memable    = 0;
+
+    bool amnesia = false;
+
+    for (std::set<spell_type>::iterator i = all_spells.begin();
+         i != all_spells.end(); ++i)
+    {
+        const spell_type spell = *i;
+
+        if (player_knows_spell(spell))
+            num_known++;
+        else if (you_cannot_memorise(spell))
+            num_race++;
+        else
+        {
+            mem_spells.push_back(spell);
+
+            if (spell_difficulty(spell) > you.experience_level)
+                num_low_xl++;
+            else if (player_spell_levels() < spell_levels_required(spell))
+                num_low_levels++;
+            else
+            {
+                if (spell == SPELL_SELECTIVE_AMNESIA)
+                    amnesia = true;
+                num_memable++;
+            }
+        }
+    }
+
+    // You can always memorise selective amnesia.
+    if (num_memable > 0 && you.spell_no >= 21)
+    {
+        mem_spells.clear();
+
+        if (amnesia)
+        {
+            mem_spells.push_back(SPELL_SELECTIVE_AMNESIA);
+            return (mem_spells);
+        }
+
+        mpr("Your head is already too full of spells!");
+        return (mem_spells);
+    }
+
+    if (num_memable)
+        return (mem_spells);
+
+    // No spells to be memorized is indicated by an empty list.
+    mem_spells.clear();
+
+    // None of the spells can be memorized, tell the player why.
+    std::string prefix =
+        make_stringf("You cannot memorize any new spells.  Out of %u "
+                     "available spells ", all_spells.size());
+
+    std::vector<std::string> causes;
+    if (num_known)
+        causes.push_back(make_stringf("you already known %u of them",
+                                      num_known));
+    if (num_race)
+        causes.push_back(make_stringf("%u cannot be memorized because of "
+                                      "your race", num_race));
+    if (num_low_xl)
+        causes.push_back(make_stringf("%u cannot be memorized because of "
+                                      "your low experinece level",
+                                      num_low_xl));
+    if (num_low_levels)
+        causes.push_back(make_stringf("%u cannot be memorized because you "
+                                      "don't have enough free spell levels",
+                                      num_low_levels));
+
+    unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
+    if (total < all_spells.size())
+        causes.push_back(make_stringf("%u cannot be accounted for (please "
+                                      "file a bug report)",
+                                      all_spells.size() - total));
+
+    mpr_comma_separated_list(prefix, causes, ", and ", ", ", MSGCH_PROMPT);
+
+    if (num_unreadable)
+        mprf(MSGCH_PROMPT, "Additionally, %d of your spellbooks are beyond "
+             "your current level of understanding, and thus none of the "
+             "spells in them are avaible to you.");
+
+    return (mem_spells);
+}
+
+static bool _sort_mem_spells(spell_type a, spell_type b)
+{
+    if (spell_fail(a) != spell_fail(b))
+        return (spell_fail(a) < spell_fail(b));
+    if (spell_difficulty(a) != spell_difficulty(b))
+        return (spell_difficulty(a) < spell_difficulty(b));
+
+    return (stricmp(spell_title(a), spell_title(b)) < 0);
+}
+
+static spell_type _choose_mem_spell(std::vector<spell_type> &spells)
+{
+    std::sort(spells.begin(), spells.end(), _sort_mem_spells);
+
+    Menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+#ifdef USE_TILE
+    {
+        // [enne] - Hack.  Make title an item so that it's aligned.
+        MenuEntry* me =
+            new MenuEntry(
+                "    Spells                         Type          "
+                "                Success  Level",
+                MEL_ITEM);
+        me->colour = BLUE;
+        spell_menu.add_entry(me);
+    }
+#else
+    spell_menu.set_title(
+        new MenuEntry(
+            "     Spells                        Type          "
+            "                Success  Level",
+            MEL_TITLE));
+#endif
+
+    spell_menu.set_highlighter(NULL);
+    spell_menu.set_tag("spell");
+ 
+    for (unsigned int i = 0; i < spells.size(); i++)
+    {
+        const spell_type spell = spells[i];
+        const bool grey = spell_difficulty(spell) > you.experience_level
+                       || player_spell_levels() < spell_levels_required(spell);
+
+        std::ostringstream desc;
+
+        if (grey)
+            desc << "<darkgrey>";
+        desc << std::left;
+        desc << std::setw(30) << spell_title(spell);
+        desc << spell_schools_string(spell);
+
+        int so_far = desc.str().length() - (grey ? 10 : 0);
+        if (so_far < 60)
+            desc << std::string(60 - so_far, ' ');
+
+        desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
+             << spell_difficulty(spell);
+        if (grey)
+            desc << "</darkgrey>";
+
+        MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
+                                      index_to_letter(i % 52));
+        me->data = (void*) i;
+        spell_menu.add_entry(me);
+    }
+
+    while (true)
+    {
+        std::vector<MenuEntry*> sel = spell_menu.show();
+
+        if (!crawl_state.doing_prev_cmd_again)
+            redraw_screen();
+
+        if (sel.empty())
+            return (SPELL_NO_SPELL);
+
+        ASSERT(sel.size() == 1);
+
+        const spell_type spell = spells[(int) sel[0]->data];
+        ASSERT(is_valid_spell(spell));
+
+        return (spell);
+    }
+}
+
+bool learn_spell()
 {
     if (player_in_bat_form())
     {
@@ -1342,8 +1548,6 @@ bool learn_spell(int book)
     }
 
     int chance = 0;
-    int levels_needed = 0;
-    int index;
 
     int i;
     int j = 0;
@@ -1370,75 +1574,21 @@ bool learn_spell(int book)
         return (false);
     }
 
-    if (book < 0)
-        book = _which_spellbook();
+    std::vector<spell_type> spell_list = _get_mem_list();
 
-    if (book < 0) // still -1?
+    if (spell_list.empty())
         return (false);
 
-    int spell = read_book( you.inv[book], RBOOK_MEMORISE );
+    spell_type specspell = _choose_mem_spell(spell_list);
 
-    if (!crawl_state.is_replaying_keys())
-    {
-        clrscr();
-        mesclr(true);
-        redraw_screen();
-    }
-
-    if ( !isalpha(spell) )
-    {
-        canned_msg( MSG_HUH );
-        return (false);
-    }
-
-    index = letter_to_index( spell );
-
-    if (index >= SPELLBOOK_SIZE
-        || !is_valid_spell_in_book( you.inv[book], index ))
-    {
-        canned_msg( MSG_HUH );
-        return (false);
-    }
-
-    spell_type specspell = which_spell_in_book(you.inv[book], index);
-
+    // MATT
     if (specspell == SPELL_NO_SPELL)
     {
-        canned_msg( MSG_HUH );
+        canned_msg( MSG_OK );
         return (false);
     }
 
-    // You can always memorise selective amnesia:
-    if (you.spell_no >= 21 && specspell != SPELL_SELECTIVE_AMNESIA)
-    {
-        mpr("Your head is already too full of spells!");
-        return (false);
-    }
-
-    if (player_is_unholy() && spell_typematch(specspell, SPTYP_HOLY))
-    {
-        mpr("You can't use this type of magic!");
-        return (false);
-    }
-
-    if (you_cannot_memorise(specspell))
-    {
-        mpr("You cannot use this spell.");
-        return (false);
-    }
-
-    for (i = 0; i < 25; i++)
-    {
-        if (you.spells[i] == specspell)
-        {
-            mpr("You already know that spell!");
-            return (false);
-        }
-    }
-
-    levels_needed = spell_levels_required( specspell );
-
-    if (player_spell_levels() < levels_needed)
+    if (player_spell_levels() < spell_levels_required(specspell))
     {
         mpr("You can't memorise that many levels of magic yet!");
         return (false);
@@ -1488,6 +1638,7 @@ bool learn_spell(int book)
         mpr("You fail to memorise the spell.");
         you.turn_is_over = true;
 
+#if 0
         if (you.inv[ book ].sub_type == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
@@ -1509,6 +1660,7 @@ bool learn_spell(int book)
                            8, random2avg(88, 3),
                            "reading the book of Annihilations" );
         }
+#endif
 
 #ifdef WIZARD
         if (!you.wizard)

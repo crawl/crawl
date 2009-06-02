@@ -434,8 +434,6 @@ static std::string _no_selectables_message(int item_selector)
     }
     case OSEL_UNIDENT:
         return("You don't have any unidentified items.");
-    case OSEL_MEMORISE:
-        return("You aren't carrying any spellbooks.");
     case OSEL_RECHARGE:
         return("You aren't carrying any rechargeable items.");
     case OSEL_ENCH_ARM:
@@ -1017,10 +1015,6 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     case OSEL_BUTCHERY:
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
-
-    case OSEL_MEMORISE:
-        return (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL
-                && (i.sub_type != BOOK_DESTRUCTION || !item_type_known(i)));
 
     case OBJ_SCROLLS:
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
