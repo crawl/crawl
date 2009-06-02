@@ -327,7 +327,7 @@ std::string overview_description_string()
             {
                 disp += "\n<green>Branches:</green>";
                 if (crawl_state.need_save || !crawl_state.updating_scores)
-                    disp += " (use <white>G</white> to reach them)";
+                    disp += " (use <white>G</white> to reach them and <white>?/B</white> for more information)";
                 disp += EOL;
                 seen_anything = true;
             }
@@ -357,7 +357,7 @@ std::string overview_description_string()
     {
         disp += "\n<green>Altars:</green>";
         if (crawl_state.need_save || !crawl_state.updating_scores)
-            disp += " (use <white>Ctrl-F \"altar\"</white> to reach them)";
+            disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and <white>?/G</white> for information about gods)";
         disp += EOL;
         seen_anything = true;
     }
