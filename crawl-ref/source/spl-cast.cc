@@ -1214,9 +1214,14 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     const bool normal_cast = crawl_state.prev_cmd == CMD_CAST_SPELL
                           && god == GOD_NO_GOD;
 
+    // XXX: Revert to the 0.4 behaviour of spells not making any
+    // noise, since the new sound system is incomplete.
+
+#if 0
     // Make some noise if it's actually the player casting.
     if (god == GOD_NO_GOD)
         noisy( spell_noise(spell), you.pos() );
+#endif
 
     if (allow_fail)
     {

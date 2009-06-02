@@ -536,7 +536,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 {
-    bool force_silent = false;
+    // XXX: Revert to the 0.4 behaviour of monster spells not making any
+    // noise, since the new sound system is incomplete.
+    bool force_silent = true;
 
     spell_type real_spell = spell_cast;
 
