@@ -1162,6 +1162,27 @@ static bool _book_from_spell(const char* specs, item_def &item)
     return (false);
 }
 
+static void _make_all_books()
+{
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    {
+        int thing = items(0, OBJ_BOOKS, i, true, 0, MAKE_ITEM_NO_RACE,
+                          0, 0, AQ_WIZMODE);
+        if (thing == NON_ITEM)
+            continue;
+
+        move_item_to_grid(&thing, you.pos());
+
+        item_def book(mitm[thing]);
+
+        mark_had_book(book);
+        set_ident_flags(book, ISFLAG_KNOW_TYPE);
+        set_ident_flags(book, ISFLAG_IDENT_MASK);
+
+        mprf("%s", book.name(DESC_PLAIN).c_str());
+    }
+}
+
 //---------------------------------------------------------------
 //
 // create_spec_object
@@ -1294,13 +1315,22 @@ void wizard_create_spec_object()
     }
     else
     {
-        mpr("What type of item? ", MSGCH_PROMPT);
+        if (class_wanted == OBJ_BOOKS)
+            mpr("What type of item? (\"all\" for all) ", MSGCH_PROMPT);
+        else
+            mpr("What type of item? ", MSGCH_PROMPT);
         get_input_line( specs, sizeof( specs ) );
 
         std::string temp = specs;
         trim_string(temp);
         lowercase(temp);
         strcpy(specs, temp.c_str());
+
+        if (class_wanted == OBJ_BOOKS && temp == "all")
+        {
+            _make_all_books();
+            return;
+        }
 
         if (specs[0] == '\0')
         {
