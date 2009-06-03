@@ -233,9 +233,8 @@ static std::string _portal_vaults_description_string()
     std::vector<std::string> vault_names_vec;
 
     portal_vault_map_type::const_iterator ci_portals;
-    for ( ci_portals = portal_vaults_present.begin();
-          ci_portals != portal_vaults_present.end();
-          ++ci_portals )
+    for (ci_portals = portal_vaults_present.begin();
+         ci_portals != portal_vaults_present.end(); ++ci_portals)
     {
         vault_names_set.insert(ci_portals->second);
     }
@@ -252,16 +251,15 @@ static std::string _portal_vaults_description_string()
     for (unsigned int i = 0; i < vault_names_vec.size(); i++)
     {
         last_id.depth = 10000;
-        for ( ci_portals = portal_vaults_present.begin();
-              ci_portals != portal_vaults_present.end();
-              ++ci_portals )
+        for (ci_portals = portal_vaults_present.begin();
+             ci_portals != portal_vaults_present.end(); ++ci_portals)
         {
             // one line per region should be enough, they're all of
             // the form D:XX, except for labyrinth portals, of which
             // you would need 11 (at least) to have a problem.
-            if ( ci_portals->second == vault_names_vec[i] )
+            if (ci_portals->second == vault_names_vec[i])
             {
-                if ( last_id.depth == 10000 )
+                if (last_id.depth == 10000)
                 {
                     unsigned char col =
                         (unsigned char) portal_vault_colours[ci_portals->first];
@@ -276,7 +274,7 @@ static std::string _portal_vaults_description_string()
                 const level_id  lid   = ci_portals->first.id;
                 const level_pos where = ci_portals->first;
 
-                if ( lid == last_id )
+                if (lid == last_id)
                 {
                     if (!portal_vault_notes[where].empty())
                     {
@@ -302,7 +300,7 @@ static std::string _portal_vaults_description_string()
                 last_id = lid;
             }
         }
-        if ( last_id.depth != 10000 )
+        if (last_id.depth != 10000)
             disp += "\n";
     }
     return disp;
@@ -321,13 +319,16 @@ std::string overview_description_string()
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         const branch_type branch = branches[i].id;
-        if ( stair_level.find(branch) != stair_level.end() )
+        if (stair_level.find(branch) != stair_level.end())
         {
-            if ( !branchcount )
+            if (!branchcount)
             {
                 disp += "\n<green>Branches:</green>";
                 if (crawl_state.need_save || !crawl_state.updating_scores)
-                    disp += " (use <white>G</white> to reach them)";
+                {
+                    disp += " (use <white>G</white> to reach them and "
+                            "<white>?/B</white> for more information)";
+                }
                 disp += EOL;
                 seen_anything = true;
             }
@@ -344,7 +345,7 @@ std::string overview_description_string()
                 disp += "   ";
         }
     }
-    if ( branchcount && (branchcount % 4) )
+    if (branchcount && (branchcount % 4))
         disp += "\n";
 
     // remove unworthy altars from the list we show the user. Yeah,
@@ -353,32 +354,36 @@ std::string overview_description_string()
 
     // print altars
     // we loop through everything a dozen times, oh well
-    if ( !notable_altars.empty() )
+    if (!notable_altars.empty())
     {
         disp += "\n<green>Altars:</green>";
         if (crawl_state.need_save || !crawl_state.updating_scores)
-            disp += " (use <white>Ctrl-F \"altar\"</white> to reach them)";
+        {
+            disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
+                    "<white>?/G</white> for information about gods)";
+        }
         disp += EOL;
         seen_anything = true;
     }
 
     level_id last_id;
     std::map<level_pos, god_type>::const_iterator ci_altar;
-    for ( int cur_god = GOD_NO_GOD; cur_god < NUM_GODS; ++cur_god )
+    for (int cur_god = GOD_NO_GOD; cur_god < NUM_GODS; ++cur_god)
     {
-        last_id.depth = 10000;  // fake depth to be sure we don't match
-        // GOD_NO_GOD becomes your god
-        int real_god = (cur_god == GOD_NO_GOD ? you.religion : cur_god);
-        if ( cur_god == you.religion )
+        if (cur_god == you.religion)
             continue;
 
-        for ( ci_altar = notable_altars.begin();
-              ci_altar != notable_altars.end();
-              ++ci_altar )
+        last_id.depth = 10000;  // fake depth to be sure we don't match
+
+        // GOD_NO_GOD becomes your god
+        int real_god = (cur_god == GOD_NO_GOD ? you.religion : cur_god);
+
+        for (ci_altar = notable_altars.begin();
+             ci_altar != notable_altars.end(); ++ci_altar)
         {
-            if ( ci_altar->second == real_god )
+            if (ci_altar->second == real_god)
             {
-                if ( last_id.depth == 10000 )
+                if (last_id.depth == 10000)
                 {
                     disp += god_name( ci_altar->second, false );
                     disp += ": ";
@@ -386,7 +391,7 @@ std::string overview_description_string()
                 }
                 else
                 {
-                    if ( last_id == ci_altar->first.id )
+                    if (last_id == ci_altar->first.id)
                         disp += '*';
                     else
                     {
@@ -397,7 +402,7 @@ std::string overview_description_string()
                 last_id = ci_altar->first.id;
             }
         }
-        if ( last_id.depth != 10000 )
+        if (last_id.depth != 10000)
             disp += "\n";
     }
 
@@ -419,18 +424,17 @@ std::string overview_description_string()
     const int maxcolumn = get_number_of_cols() - 17;
     int column_count = 0;
 
-    for ( ci_shops = shops_present.begin();
-          ci_shops != shops_present.end();
-          ++ci_shops )
+    for (ci_shops = shops_present.begin();
+         ci_shops != shops_present.end(); ++ci_shops)
     {
-        if ( ci_shops->first.id != last_id )
+        if (ci_shops->first.id != last_id)
         {
-            if ( column_count > maxcolumn )
+            if (column_count > maxcolumn)
             {
                 disp += "\n";
                 column_count = 0;
             }
-            else if ( column_count != 0 )
+            else if (column_count != 0)
             {
                 disp += "  ";
                 ++column_count;
@@ -455,7 +459,7 @@ std::string overview_description_string()
         disp += "\n";
 
     // print portals
-    if ( !portals_present.empty() || !portal_vaults_present.empty() )
+    if (!portals_present.empty() || !portal_vaults_present.empty())
     {
         disp += "\n<green>Portals:</green>\n";
         seen_anything = true;

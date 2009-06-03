@@ -5553,7 +5553,7 @@ void tile_item_use(int idx)
                     handle_read_book(idx);
             } // else it's a spellbook
             else if (check_warning_inscriptions(item, OPER_MEMORISE))
-                learn_spell(idx);
+                learn_spell(); // offers all spells, might not be what we want
             return;
 
         case OBJ_SCROLLS:

@@ -1426,16 +1426,22 @@ static std::vector<spell_type> _get_mem_list()
         causes.push_back(make_stringf("you already known %u of them",
                                       num_known));
     if (num_race)
+    {
         causes.push_back(make_stringf("%u cannot be memorized because of "
                                       "your race", num_race));
+    }
     if (num_low_xl)
+    {
         causes.push_back(make_stringf("%u cannot be memorized because of "
                                       "your low experinece level",
                                       num_low_xl));
+    }
     if (num_low_levels)
+    {
         causes.push_back(make_stringf("%u cannot be memorized because you "
                                       "don't have enough free spell levels",
                                       num_low_levels));
+    }
 
     unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
     if (total < all_spells.size())
@@ -1490,7 +1496,7 @@ static spell_type _choose_mem_spell(std::vector<spell_type> &spells)
 
     spell_menu.set_highlighter(NULL);
     spell_menu.set_tag("spell");
- 
+
     for (unsigned int i = 0; i < spells.size(); i++)
     {
         const spell_type spell = spells[i];
