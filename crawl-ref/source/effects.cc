@@ -2977,12 +2977,24 @@ static bool _food_item_needs_time_check(item_def &item)
     return (true);
 }
 
+#define ROTTING_WARNED_KEY "rotting_warned"
+
 static void _rot_inventory_food(long time_delta)
 {
     // Update all of the corpses and food chunks in the player's
     // inventory. {should be moved elsewhere - dlb}
     bool burden_changed_by_rot = false;
     std::vector<char> rotten_items;
+
+    int num_chunks         = 0;
+    int num_chunks_rotting = 0;
+    int num_chunks_gone    = 0;
+    int num_bones          = 0;
+    int num_bones_gone     = 0;
+    int num_corpses        = 0;
+    int num_corpses_rotted = 0;
+    int num_corpses_gone   = 0;
+
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].quantity < 1)
@@ -2999,6 +3011,13 @@ static void _rot_inventory_food(long time_delta)
             continue;
         }
 
+        if (you.inv[i].base_type == OBJ_FOOD)
+            num_chunks++;
+        else if (you.inv[i].sub_type == CORPSE_SKELETON)
+            num_bones++;
+        else
+            num_corpses++;
+
         // Food item timed out -> make it disappear.
         if ((time_delta / 20) >= you.inv[i].special)
         {
@@ -3007,8 +3026,13 @@ static void _rot_inventory_food(long time_delta)
                 if (you.equip[EQ_WEAPON] == i)
                     unwield_item();
 
+                // In case time_delta >= 210
+                if (!you.inv[i].props.exists(ROTTING_WARNED_KEY))
+                    num_chunks_gone++;
+
                 destroy_item(you.inv[i]);
                 burden_changed_by_rot = true;
+
                 continue;
             }
 
@@ -3019,6 +3043,11 @@ static void _rot_inventory_food(long time_delta)
                 if (you.equip[EQ_WEAPON] == i)
                     unwield_item();
 
+                if (you.inv[i].sub_type == CORPSE_SKELETON)
+                    num_bones_gone++;
+                else
+                    num_corpses_gone++;
+
                 destroy_item(you.inv[i]);
                 burden_changed_by_rot = true;
                 continue;
@@ -3027,6 +3056,8 @@ static void _rot_inventory_food(long time_delta)
             turn_corpse_into_skeleton(you.inv[i]);
             you.wield_change      = true;
             burden_changed_by_rot = true;
+
+            num_corpses_rotted++;
             continue;
         }
 
@@ -3037,6 +3068,15 @@ static void _rot_inventory_food(long time_delta)
             && (you.inv[i].special + (time_delta / 20) >= 100))
         {
             rotten_items.push_back(index_to_letter(i));
+        }
+
+        if (you.inv[i].base_type == OBJ_FOOD && you.inv[i].special <= 10
+            && !you.inv[i].props.exists(ROTTING_WARNED_KEY))
+        {
+            // In case time_delta >= 210
+            you.inv[i].props[ROTTING_WARNED_KEY] = true;
+
+            num_chunks_rotting++;
         }
     }
 
@@ -3103,9 +3143,48 @@ static void _rot_inventory_food(long time_delta)
 
     if (burden_changed_by_rot)
     {
-        mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);
-        learned_something_new(TUT_ROTTEN_GONE);
+        if ((num_chunks_gone + num_bones_gone + num_corpses_gone) > 0)
+        {
+            std::vector<std::string> strs;
+            if (num_chunks_gone > 0)
+                strs.push_back(make_stringf("%s of the chunks of flesh",
+                                            num_chunks_gone < num_chunks ?
+                                            "some" : "all"));
+            if (num_bones_gone > 0)
+                strs.push_back(make_stringf("%s of the skeletons",
+                                            num_bones_gone < num_bones ?
+                                            "some" : "all"));
+
+            if (num_corpses_gone > 0)
+                strs.push_back(make_stringf("%s of the corpses",
+                                            num_corpses_gone < num_corpses ?
+                                            "some" : "all"));
+
+            strs[0] = upcase_first(strs[0]);
+
+            std::string line = comma_separated_line(strs.begin(), strs.end());
+            line += " in your inventory have completely rotted away.";
+            mprf("%s", line.c_str());
+        }
+
+        num_corpses -= num_corpses_gone;
+        if (num_corpses_rotted > 0)
+        {
+            mprf("%s of the %scorpses in your invetory rotted away into "
+                 "skeletons.",
+                 num_corpses_rotted < num_corpses ?  "Some" : "All",
+                 num_corpses_gone > 0 ? "remaining " : "");
+        }
         burden_change();
+    }
+
+    num_chunks -= num_chunks_gone;
+    if (num_chunks_rotting > 0)
+    {
+        mprf("%s of the %schunks of flesh in your inventory are close to "
+             "completely rotting away.",
+             num_chunks_rotting < num_chunks ? "Some" : "All",
+             num_chunks_gone > 0 ? "remaining " : "");
     }
 }
 

@@ -405,8 +405,6 @@ static std::string _tut_debug_list(int event)
         return "were encumbered";
     case TUT_ROTTEN_FOOD:
         return "carried rotten food";
-    case TUT_ROTTEN_GONE:
-        return "rotten food rotted away completely";
     case TUT_NEED_HEALING:
         return "needed healing";
     case TUT_NEED_POISON_HEALING:
@@ -2518,12 +2516,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "just as well <w>d</w>rop them now. When selecting items from "
                 "a menu, there's a shortcut (<w>&</w>) to select all skeletons "
                 "and rotten chunks or corpses in the stash at once.";
-        break;
-
-    case TUT_ROTTEN_GONE:
-        text << "One of the skeletons or rotten chunks of meat you carried "
-                "rotted away completely, or one of the rotten corpses you "
-                "carried rotted away into a skeleton.";
         break;
 
     case TUT_MAKE_CHUNKS:
