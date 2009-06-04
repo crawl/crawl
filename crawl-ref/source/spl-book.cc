@@ -1428,17 +1428,17 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         std::string species = species_name(you.species, 0);
         mprf(MSGCH_PROMPT,
-             "You cannot memorize any of the available spells because you "
+             "You cannot memorise any of the available spells because you "
              "are a %s.", lowercase_string(species).c_str());
     }
     else if (num_low_levels > 0)
-        mpr("You do not have enough free spell levels to memorize any of the "
+        mpr("You do not have enough free spell levels to memorise any of the "
             "available spells.", MSGCH_PROMPT);
     else if (num_low_xl > 0)
-        mpr("You aren't experienced enough yet to memorize any of the "
+        mpr("You aren't experienced enough yet to memorise any of the "
             "available spells.", MSGCH_PROMPT);
     else
-        mpr("You can't memorize any new spells for an unknown reason; "
+        mpr("You can't memorise any new spells for an unknown reason; "
             "please file a bug report.", MSGCH_PROMPT);
 
     if (num_unreadable)
@@ -1622,8 +1622,8 @@ bool learn_spell()
 
         sprintf(buf, "The only spellbook you have which contains that spell "
                 "is %s, a dangerous spellbook which will strike back at you "
-                "if you memorisation attempt fails.  Attempt to memorise "
-                "anyways?",
+                "if your memorisation attempt fails. Attempt to memorise "
+                "anyway?",
                 book.name(DESC_NOCAP_THE).c_str());
         if (!yesno(buf, false, 'n'))
         {
