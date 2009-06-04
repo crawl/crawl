@@ -5951,6 +5951,9 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_TROG:
+        if (you.attribute[ATTR_DIVINE_REGENERATION])
+            remove_regen(true);
+
         _make_god_gifts_hostile(false);
 
         // Penance has to come before retribution to prevent "mollify"
