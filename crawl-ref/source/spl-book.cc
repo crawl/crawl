@@ -1290,11 +1290,12 @@ bool player_can_memorise(const item_def &book)
     return (false);
 }
 
-static std::vector<spell_type> _get_mem_list()
-{
-    std::set<spell_type>    all_spells;
-    std::vector<spell_type> mem_spells;
+typedef std::vector<spell_type>   spell_list;
+typedef std::map<spell_type, int> spells_to_books;
 
+static bool _get_mem_list(spell_list &mem_spells,
+                          spells_to_books &book_hash)
+{
     bool book_errors    = false;
     int  num_books      = 0;
     int  num_unreadable = 0;
@@ -1328,8 +1329,15 @@ static std::vector<spell_type> _get_mem_list()
             if (!is_valid_spell_in_book(book, j))
                 continue;
 
-            all_spells.insert(which_spell_in_book(book, j));
+            const spell_type spell = which_spell_in_book(book, j);
+
             spells_in_book++;
+
+            // XXX: If same spell is in two different dangerous spellbooks,
+            // how to decide which one to use?
+            spells_to_books::iterator it = book_hash.find(spell);
+            if (it == book_hash.end() || is_dangerous_spellbook(it->second))
+                book_hash[spell] = book.sub_type;
         }
 
         if (spells_in_book == 0)
@@ -1346,19 +1354,19 @@ static std::vector<spell_type> _get_mem_list()
     if (num_books == 0)
     {
         mpr("You aren't carrying any spellbooks.", MSGCH_PROMPT);
-        return (mem_spells);
+        return (false);
     }
     else if (num_unreadable == num_books)
     {
         mpr("All of the spellbooks you're carrying are beyond your "
             "current level of comprehension.", MSGCH_PROMPT);
-        return (mem_spells);
+        return (false);
     }
-    else if (all_spells.size() == 0)
+    else if (book_hash.size() == 0)
     {
         mpr("None of the spellbooks you are carrying contain any spells.",
             MSGCH_PROMPT);
-        return (mem_spells);
+        return (false);
     }
 
     unsigned int num_known      = 0;
@@ -1369,10 +1377,10 @@ static std::vector<spell_type> _get_mem_list()
 
     bool amnesia = false;
 
-    for (std::set<spell_type>::iterator i = all_spells.begin();
-         i != all_spells.end(); ++i)
+    for (spells_to_books::iterator i = book_hash.begin();
+         i != book_hash.end(); ++i)
     {
-        const spell_type spell = *i;
+        const spell_type spell = i->first;
 
         if (player_knows_spell(spell))
             num_known++;
@@ -1398,62 +1406,40 @@ static std::vector<spell_type> _get_mem_list()
     // You can always memorise selective amnesia.
     if (num_memable > 0 && you.spell_no >= 21)
     {
-        mem_spells.clear();
-
         if (amnesia)
         {
+            mem_spells.clear();
             mem_spells.push_back(SPELL_SELECTIVE_AMNESIA);
-            return (mem_spells);
+            return (true);
         }
 
         mpr("Your head is already too full of spells!");
-        return (mem_spells);
+        return (false);
     }
 
     if (num_memable)
-        return (mem_spells);
-
-    // No spells to be memorised is indicated by an empty list.
-    mem_spells.clear();
-
-    // None of the spells can be memorised; tell the player why.
-    std::string prefix =
-        make_stringf("You cannot memorise any new spells. Out of %u "
-                     "available spells, ", all_spells.size());
-
-    std::vector<std::string> causes;
-    if (num_known)
-    {
-        causes.push_back(make_stringf("you already know %u of them",
-                                      num_known));
-    }
-    if (num_race)
-    {
-        causes.push_back(make_stringf("%u cannot be memorised because of "
-                                      "your race", num_race));
-    }
-    if (num_low_xl)
-    {
-        causes.push_back(make_stringf("%u cannot be memorised because of "
-                                      "your low experience level",
-                                      num_low_xl));
-    }
-    if (num_low_levels)
-    {
-        causes.push_back(make_stringf("%u cannot be memorised because you "
-                                      "don't have enough free spell levels",
-                                      num_low_levels));
-    }
+        return (true);
 
     unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
-    if (total < all_spells.size())
-    {
-        causes.push_back(make_stringf("%u cannot be accounted for (please "
-                                      "file a bug report)",
-                                      all_spells.size() - total));
-    }
 
-    mpr_comma_separated_list(prefix, causes, " and ", ", ", MSGCH_PROMPT);
+    if (num_known == total)
+        mpr("You already know all available spells.", MSGCH_PROMPT);
+    else if (num_race == total || (num_known + num_race) == total)
+    {
+        std::string species = species_name(you.species, 0);
+        mprf(MSGCH_PROMPT,
+             "You cannot memorize any of the available spells because you "
+             "are a %s.", lowercase_string(species).c_str());
+    }
+    else if (num_low_levels > 0)
+        mpr("You do not have enough free spell levels to memorize any of the "
+            "available spells.", MSGCH_PROMPT);
+    else if (num_low_xl > 0)
+        mpr("You aren't experienced enough yet to memorize any of the "
+            "available spells.", MSGCH_PROMPT);
+    else
+        mpr("You can't memorize any new spells for an unknown reason; "
+            "please file a bug report.", MSGCH_PROMPT);
 
     if (num_unreadable)
     {
@@ -1462,7 +1448,7 @@ static std::vector<spell_type> _get_mem_list()
              "spells in them are available to you.", num_unreadable);
     }
 
-    return (mem_spells);
+    return (false);
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
@@ -1475,7 +1461,8 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     return (stricmp(spell_title(a), spell_title(b)) < 0);
 }
 
-static spell_type _choose_mem_spell(std::vector<spell_type> &spells)
+static spell_type _choose_mem_spell(spell_list &spells,
+                                    spells_to_books &book_hash)
 {
     std::sort(spells.begin(), spells.end(), _sort_mem_spells);
 
@@ -1509,15 +1496,21 @@ static spell_type _choose_mem_spell(std::vector<spell_type> &spells)
         const bool grey = spell_difficulty(spell) > you.experience_level
                        || player_spell_levels() < spell_levels_required(spell);
 
+        spells_to_books::iterator it = book_hash.find(spell);
+        const bool red = is_dangerous_spellbook(it->second);
+
         std::ostringstream desc;
 
         if (grey)
             desc << "<darkgrey>";
+        else if (red)
+            desc << "<lightred>";
+
         desc << std::left;
         desc << std::setw(30) << spell_title(spell);
         desc << spell_schools_string(spell);
 
-        int so_far = desc.str().length() - (grey ? 10 : 0);
+        int so_far = desc.str().length() - ( (grey || red) ? 10 : 0);
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
 
@@ -1525,6 +1518,8 @@ static spell_type _choose_mem_spell(std::vector<spell_type> &spells)
              << spell_difficulty(spell);
         if (grey)
             desc << "</darkgrey>";
+        else if (red)
+            desc << "</lightred>";
 
         MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
                                       index_to_letter(i % 52));
@@ -1559,8 +1554,6 @@ bool learn_spell()
         return (false);
     }
 
-    int chance = 0;
-
     int i;
     int j = 0;
 
@@ -1586,12 +1579,13 @@ bool learn_spell()
         return (false);
     }
 
-    std::vector<spell_type> spell_list = _get_mem_list();
+    spell_list      mem_spells;
+    spells_to_books book_hash;
 
-    if (spell_list.empty())
+    if (!_get_mem_list(mem_spells, book_hash))
         return (false);
 
-    spell_type specspell = _choose_mem_spell(spell_list);
+    spell_type specspell = _choose_mem_spell(mem_spells, book_hash);
 
     // MATT
     if (specspell == SPELL_NO_SPELL)
@@ -1612,7 +1606,32 @@ bool learn_spell()
         return (false);
     }
 
-    chance = spell_fail(specspell);
+    int chance = spell_fail(specspell);
+
+    spells_to_books::iterator it = book_hash.find(specspell);
+
+    if (chance > 0 && is_dangerous_spellbook(it->second))
+    {
+        item_def book;
+        book.base_type = OBJ_BOOKS;
+        book.sub_type  = it->second;
+        book.quantity  = 1;
+        book.flags    |= ISFLAG_IDENT_MASK;
+
+        char buf[180];
+
+        sprintf(buf, "The only spellbook you have which contains that spell "
+                "is %s, a dangerous spellbook which will strike back at you "
+                "if you memorisation attempt fails.  Attempt to memorise "
+                "anyways?",
+                book.name(DESC_NOCAP_THE).c_str());
+        if (!yesno(buf, false, 'n'))
+        {
+            canned_msg( MSG_OK );
+            return (false);
+        }
+    }
+
     const int temp_rand1 = random2(3);
     const int temp_rand2 = random2(4);
 
@@ -1650,29 +1669,27 @@ bool learn_spell()
         mpr("You fail to memorise the spell.");
         you.turn_is_over = true;
 
-#if 0
-        if (you.inv[ book ].sub_type == BOOK_NECRONOMICON)
+        if (it->second == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_NECROMANCY,
                            8, random2avg(88, 3),
                            "reading the Necronomicon" );
         }
-        else if (you.inv[ book ].sub_type == BOOK_DEMONOLOGY)
+        else if (it->second == BOOK_DEMONOLOGY)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_SUMMONING,
                            7, random2avg(88, 3),
                            "reading the book of Demonology" );
         }
-        else if (you.inv[ book ].sub_type == BOOK_ANNIHILATIONS)
+        else if (it->second == BOOK_ANNIHILATIONS)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_CONJURATION,
                            8, random2avg(88, 3),
                            "reading the book of Annihilations" );
         }
-#endif
 
 #ifdef WIZARD
         if (!you.wizard)
@@ -2908,4 +2925,24 @@ bool book_has_title(const item_def &book)
 
     return (book.props.exists("is_named")
             && book.props["is_named"].get_bool() == true);
+}
+
+bool is_dangerous_spellbook(const int book_type)
+{
+    switch(book_type)
+    {
+    case BOOK_NECRONOMICON:
+    case BOOK_DEMONOLOGY:
+    case BOOK_ANNIHILATIONS:
+        return (true);
+    default:
+        break;
+    }
+    return (false);
+}
+
+bool is_dangerous_spellbook(const item_def &book)
+{
+    ASSERT(book.base_type == OBJ_BOOKS);
+    return is_dangerous_spellbook(book.sub_type);
 }

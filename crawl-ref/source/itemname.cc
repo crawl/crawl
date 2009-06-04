@@ -2452,7 +2452,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
 
     case OBJ_BOOKS:
         // The Tome of Destruction is certainly risky.
-        return (item.sub_type == BOOK_DESTRUCTION);
+        return (item.sub_type == BOOK_DESTRUCTION
+                || is_dangerous_spellbook(item));
 
     default:
         return (false);

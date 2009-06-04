@@ -160,8 +160,7 @@ A crossbow bolt.
 %%%%
 book of air
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of annihilations
 
@@ -171,51 +170,45 @@ book. It is sought after by sorcerers, for it allows the gifted and
 resourceful to command destruction with the ease of a twinkle.  Feeble
 wizards, however, may well meet their doom when trying to read this
 opus.
+
+WARNING: If you fail in an attempt to memorize a spell from this book,
+the book will lash out at you.
 %%%%
 book of callings
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of cantrips
 
-A book of magic spells. Unlike most of the other grimoires,
-this one can be toyed with.
+A book of magic spells.
 %%%%
 book of changes
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of card effects
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of charms
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of clouds
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of conjurations
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of control
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of death
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of demonology
 
@@ -225,161 +218,133 @@ to unleash them unto this unsuspecting world. Many wizards have proven
 too weak to stand the power of this tome. You are not sure whether you
 hear the screams of the countless victims, which have been eaten,
 maimed and raped by the demons. Or do you scream yet?
+
+WARNING: If you fail in an attempt to memorize a spell from this book,
+the book will lash out at you.
 %%%%
 book of divinations
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of enchantments
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of envenomations
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of fixed level
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of fixed theme
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of fire
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of flames
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of frost
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of geomancy
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of healing
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of hinderance
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of ice
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of minor magic
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of morphology
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of necromancy
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of party tricks
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of power
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of practical magic
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of spatial translocations
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of stalking
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of summonings
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of surveyances
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of the earth
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of the sky
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of the tempests
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of the warp
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of transfigurations
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of tukima
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of unlife
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of war chants
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 book of wizardry
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 bottled efreet
 
@@ -800,8 +765,7 @@ A filling ration of dried and preserved meats.
 %%%%
 monster manual
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%
 morningstar
 
@@ -830,6 +794,9 @@ An extremely rare book, powerful and sinister. Its binding is made from
 delicate skin of unknown provenance. Many foolhardy magicians have tried
 to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
+
+WARNING: If you fail in an attempt to memorize a spell from this book,
+the book will lash out at you.
 %%%%
 needle
 
@@ -1639,6 +1606,5 @@ A conical cloth hat.
 %%%%
 young poisoner's handbook
 
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
+A book of magic spells.
 %%%%

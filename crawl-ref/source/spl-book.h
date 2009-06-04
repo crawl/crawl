@@ -78,4 +78,7 @@ bool make_book_theme_randart(item_def &book,
 void make_book_Roxanne_special(item_def *book);
 
 bool book_has_title(const item_def &book);
+
+bool is_dangerous_spellbook(const item_def &book);
+bool is_dangerous_spellbook(const int book_type);
 #endif
