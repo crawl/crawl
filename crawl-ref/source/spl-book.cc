@@ -1334,7 +1334,7 @@ static std::vector<spell_type> _get_mem_list()
 
         if (spells_in_book == 0)
         {
-            mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells!  Please "
+            mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
                  "file a bug report.", book.name(DESC_PLAIN).c_str());
             book_errors = true;
         }
@@ -1413,48 +1413,54 @@ static std::vector<spell_type> _get_mem_list()
     if (num_memable)
         return (mem_spells);
 
-    // No spells to be memorized is indicated by an empty list.
+    // No spells to be memorised is indicated by an empty list.
     mem_spells.clear();
 
-    // None of the spells can be memorized, tell the player why.
+    // None of the spells can be memorised; tell the player why.
     std::string prefix =
-        make_stringf("You cannot memorize any new spells.  Out of %u "
-                     "available spells ", all_spells.size());
+        make_stringf("You cannot memorise any new spells. Out of %u "
+                     "available spells, ", all_spells.size());
 
     std::vector<std::string> causes;
     if (num_known)
-        causes.push_back(make_stringf("you already known %u of them",
+    {
+        causes.push_back(make_stringf("you already know %u of them",
                                       num_known));
+    }
     if (num_race)
     {
-        causes.push_back(make_stringf("%u cannot be memorized because of "
+        causes.push_back(make_stringf("%u cannot be memorised because of "
                                       "your race", num_race));
     }
     if (num_low_xl)
     {
-        causes.push_back(make_stringf("%u cannot be memorized because of "
-                                      "your low experinece level",
+        causes.push_back(make_stringf("%u cannot be memorised because of "
+                                      "your low experience level",
                                       num_low_xl));
     }
     if (num_low_levels)
     {
-        causes.push_back(make_stringf("%u cannot be memorized because you "
+        causes.push_back(make_stringf("%u cannot be memorised because you "
                                       "don't have enough free spell levels",
                                       num_low_levels));
     }
 
     unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
     if (total < all_spells.size())
+    {
         causes.push_back(make_stringf("%u cannot be accounted for (please "
                                       "file a bug report)",
                                       all_spells.size() - total));
+    }
 
-    mpr_comma_separated_list(prefix, causes, ", and ", ", ", MSGCH_PROMPT);
+    mpr_comma_separated_list(prefix, causes, " and ", ", ", MSGCH_PROMPT);
 
     if (num_unreadable)
-        mprf(MSGCH_PROMPT, "Additionally, %d of your spellbooks are beyond "
+    {
+        mprf(MSGCH_PROMPT, "Additionally, %u of your spellbooks are beyond "
              "your current level of understanding, and thus none of the "
-             "spells in them are avaible to you.");
+             "spells in them are available to you.", num_unreadable);
+    }
 
     return (mem_spells);
 }
