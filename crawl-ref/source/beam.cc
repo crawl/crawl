@@ -1793,7 +1793,7 @@ void bolt::hit_wall()
     ASSERT( grid_is_solid(feat) );
 
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target)
-        && pos() != target  && pos() != source
+        && pos() != target  && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
         && !affects_nothing && bounces == 0 && reflections == 0
         && see_grid(target) && !grid_is_solid(grd(target)))
