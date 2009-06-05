@@ -34,6 +34,7 @@ default-depth: D:8-27
 
 ##############################################################################
 # Minivault balancer
+#
 NAME: mini_dummy
 DEPTH: 1-50, !D:8-27
 TAGS: dummy
@@ -46,6 +47,7 @@ ENDMAP
 # Small areas with translucent rock (glass) columns which you can duck
 # behind, but still see the monster you're ducking from (and they can
 # still see you)
+#
 NAME:  glass_columns_a
 DEPTH: D, Elf, Crypt
 WEIGHT: 5
@@ -87,6 +89,7 @@ ENDMAP
 
 ##########################################################
 # A feature encased in glass, for flavour.
+#
 NAME:  feat_on_display
 DEPTH: D, Elf, Crypt, Vault
 SUBST: ? = TUl
@@ -101,6 +104,7 @@ ENDMAP
 
 #######################################################################
 # An item encased in glass.  If the player wants it, it can be dug out.
+#
 NAME:   item_on_display_a
 DEPTH:  D, Elf, Crypt, Vault
 WEIGHT: 9
@@ -116,6 +120,7 @@ ENDMAP
 
 #####################################################################
 # A good item encased in transparent stone.
+#
 NAME:   item_on_display_b
 DEPTH:  D, Elf, Crypt, Vault
 WEIGHT: 1
@@ -132,6 +137,7 @@ ENDMAP
 #####################################################################
 # Identical in feature and content to item_on_display_b, only that it
 # contains within an unseen horror, by due.
+#
 NAME:   unseen_surprise_small
 WEIGHT: 1
 TAGS:   no_wall_fixup
@@ -185,7 +191,7 @@ ENDMAP
 
 ##############################################################################
 # Sigmund's army
-# Sigmund has been educating the suppressed masses in guerrilla warfare.
+# Sigmund has been educating the oppressed masses in guerrilla warfare.
 #
 NAME:    sigmund_army
 DEPTH:   D:2-6
@@ -417,6 +423,7 @@ ENDMAP
 #############################################################################
 # Oklob assault
 # statistically, three oklobs
+#
 NAME:    oklob_1
 DEPTH:   D:16-27, Lair:4-
 TAGS:    allow_dup
@@ -457,7 +464,7 @@ xxxxxxxxxx
 ENDMAP
 
 ###################################
-#don't you wish you knew apportation?
+# Don't you wish you knew apportation?
 #
 NAME: baited_tele_trap
 DEPTH: !Temple, !Slime
@@ -471,6 +478,7 @@ ENDMAP
 # Closed beehive
 #
 # Should work without explicit floor margin (dp)
+#
 NAME:  hive_lemuel
 DEPTH: D:9-27,Hive:*
 MONS:  killer bee, yellow wasp, red wasp, spiny worm
@@ -660,7 +668,7 @@ ENDMAP
 
 ##############################################################################
 # Greed's colour
-
+#
 NAME:    david_greed
 WEIGHT:  4
 DEPTH:   D:10-26, Vault, Elf
@@ -805,11 +813,12 @@ ENDMAP
 # The marker affects find_connected_range() so that each door opens and
 # closes separately rather than all of them joining together into a huge
 # gate that opens all at once.
-NAME: minivault_9
-TAGS: allow_dup
-DEPTH: D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
+#
+NAME:   minivault_9
+TAGS:   allow_dup
+DEPTH:  D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST: X = =
+SUBST:  X = =
 MAP
 XXXXXXXXXX
 XxXXXXXXXX
@@ -1350,11 +1359,13 @@ ENDMAP
 ##############################################################################
 # Supply closet (Lemuel)
 #
-NAME:  supply_closet
-DEPTH: D:1-9
-TAGS:  no_monster_gen allow_dup
-ITEM:  potion of water w:20 / bread ration / meat ration / arrow / bolt / spear / any potion w:5
-SUBST: ? = +=
+NAME:   supply_closet
+DEPTH:  D:1-9
+TAGS:   no_monster_gen allow_dup
+ITEM:   potion of water w:20 / bread ration / meat ration / arrow /\
+        bolt / spear / any potion w:5
+NSUBST: x = 1:= / *:x
+SUBST:  = = +===
 MAP
 ......
 .x?xx.
@@ -1528,10 +1539,10 @@ ENDMAP
 ##############################
 # Secret library minivault
 #
-NAME:  library
-DEPTH: 1-27
-TAGS:  mini_float allow_dup
-ITEM:  any book w:20 / any scroll / nothing
+NAME:   library
+DEPTH:  1-27
+TAGS:   mini_float allow_dup
+ITEM:   any book w:20 / any scroll / nothing
 MAP
 x=xx
 xddx
@@ -1541,7 +1552,7 @@ ENDMAP
 
 #############################################################################
 # Small statue alley (Eino)
-
+#
 NAME:   small_statue_alley_a
 TAGS:   uniq_statue_alley
 DEPTH:  D:10-20
@@ -1583,7 +1594,7 @@ ENDMAP
 
 #############################################################################
 # Doghouse (Eino)
-
+#
 NAME:    doghouse
 DEPTH:   D:4-8
 SHUFFLE: 1?T
@@ -1603,7 +1614,7 @@ ENDMAP
 
 #############################################################################
 # Small intersection with statues (Eino)
-
+#
 NAME:    small_statue_intersection
 DEPTH:   D:2-26, Elf, Crypt
 TAGS:    mini_float allow_dup no_hmirror no_vmirror
@@ -1618,7 +1629,7 @@ ENDMAP
 #############################################################################
 # Small chambers for nice items (Eino)
 # not necessarily versions of the same vault
-
+#
 NAME:   small_chamber_a
 TAGS:   mini_float allow_dup
 DEPTH:  D:4-27
@@ -1656,11 +1667,11 @@ x...x
 xxxxx
 ENDMAP
 
-
 #######################################
 # There's a sword stuck inside a stone. Some knights are milling around
 # wondering how to get it out. If you had both Shatter and Apportation,
 # you could become the monarch! Or not..... (by Shiori)
+#
 NAME:   sword_in_stone
 TAGS:   mini_float patrolling
 DEPTH:  5-26, !Lair, !Orc, !Tomb
@@ -1732,7 +1743,6 @@ MAP
 ...........
 ENDMAP
 
-
 ################################################################################
 # Some earlyish demon minivaults by Eino. 
 # The difficulty of most low-tier demons is severely inflated by the time the
@@ -1740,7 +1750,7 @@ ENDMAP
 # challenging and flavourful.
 
 ### Red devils (4) can use weapons and armour.
-
+#
 NAME:    armed_red_devil_minivault
 TAGS:    patrolling mini_float
 KMASK:   l = no_monster_gen
@@ -1820,4 +1830,18 @@ xxxxxx.xxxxxx
 xxxxxx..xxxxx
 xxxxxxx.....@
 xxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+# Statue in the mist (Lemuel)
+#
+NAME:    statue_in_the_mist
+MONS:    orange crystal statue / silver statue / ice statue
+DEPTH:   9-
+MARKER:  G = lua:fog_machine { cloud_type= "grey smoke", \
+             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
+             size = 3, walk_dist = 2, spread_rate= 25 }
+SHUFFLE: G111
+MAP
+G
 ENDMAP
