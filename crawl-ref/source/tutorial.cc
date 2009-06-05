@@ -213,6 +213,19 @@ bool pick_tutorial()
     return (false);
 }
 
+void tutorial_load_game()
+{
+    if (!Options.tutorial_left)
+        return;
+
+    learned_something_new(TUT_LOAD_SAVED_GAME);
+
+    // Reinitialise counters for explore, stash search and travelling.
+    Options.tut_explored = Options.tutorial_events[TUT_AUTO_EXPLORE];
+    Options.tut_stashes  = true;
+    Options.tut_travel   = true;
+}
+
 void print_tutorial_menu(unsigned int type)
 {
     char letter = 'a' + type;
@@ -607,7 +620,6 @@ static void _tutorial_stats_intro()
 #endif
 }
 
-
 static void _tutorial_message_intro()
 {
     std::string result;
@@ -709,7 +721,12 @@ void tut_starting_screen()
 
         if (i < MAX_INFO)
         {
+#ifndef USE_TILE
             ch = c_getch();
+#else
+            mouse_control mc(MOUSE_MODE_MORE);
+            ch = getch();
+#endif
             redraw_screen();
             if (ch == ESCAPE)
                 break;
@@ -765,18 +782,35 @@ void tutorial_death_screen()
     else
     {
         int hint = random2(6);
+
+        bool skip_first_hint = false;
         // If a character has been unusually busy with projectiles and spells
         // give some other hint rather than the first one.
         if (hint == 0 && Options.tut_throw_counter + Options.tut_spell_counter
                           >= Options.tut_melee_counter)
         {
-            hint = random2(5)+1;
+            hint = random2(5) + 1;
+            skip_first_hint = true;
         }
         // FIXME: The hints below could be somewhat less random, so that e.g.
         // the message for fighting several monsters in a corridor only happens
         // if there's more than one monster around and you're not in a corridor,
         // or the one about using consumable objects only if you actually have
         // any (useful or unidentified) scrolls/wands/potions.
+
+        if (hint == 5)
+        {
+            std::vector<monsters*> visible =
+                get_nearby_monsters(false, true, true, false);
+
+            if (visible.size() < 2)
+            {
+                if (skip_first_hint)
+                    hint = random2(4) + 1;
+                else
+                    hint = random2(5);
+            }
+        }
 
         switch (hint)
         {
@@ -1230,31 +1264,32 @@ void tutorial_first_monster(const monsters &mon)
 {
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
     {
-        if (get_mons_colour(&mon) != mon.colour)
+        if (Options.tut_just_triggered)
+            return;
+
+        if (_mons_is_highlighted(&mon))
             learned_something_new(TUT_MONSTER_BRAND, mon.pos());
         if (mons_friendly(&mon))
             learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
 
-        if (!Options.tut_just_triggered
-            && one_chance_in(4)
-            && you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
-            && !you.duration[DUR_EXHAUSTED]
-            && you.hunger_state >= HS_SATIATED)
+        if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
+            && !you.duration[DUR_EXHAUSTED] && you.hunger_state >= HS_SATIATED
+            && one_chance_in(4))
         {
             learned_something_new(TUT_CAN_BERSERK);
         }
         return;
     }
 
-    // XXX: Crude hack (and doesn't really work either):
-    // If the first monster is sleeping wake it
-    // (highlighting is an unnecessary complication).
     if (_mons_is_highlighted(&mon))
-        noisy(1, mon.pos());
-
+    {
+        // Make first monster notice player, so we can explain the brand
+        // some time later.
+        monsters *m = monster_at(mon.pos());
+        behaviour_event( m, ME_ALERT, MHITYOU, you.pos() );
+    }
     stop_running();
 
-    viewwindow(true, false);
     Options.tutorial_events[TUT_SEEN_MONSTER] = false;
     Options.tutorial_left--;
     Options.tut_just_triggered = true;
@@ -1300,6 +1335,7 @@ void tutorial_first_monster(const monsters &mon)
             "death by misclicking.";
 #endif
 
+    viewwindow(true, false);
     formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
 
     if (Options.tutorial_type == TUT_RANGER_CHAR)
@@ -1348,7 +1384,7 @@ void tutorial_first_monster(const monsters &mon)
                                   _get_tutorial_cols());
     }
 
-    if (get_mons_colour(&mon) != mon.colour)
+    if (_mons_is_highlighted(&mon))
         learned_something_new(TUT_MONSTER_BRAND, mon.pos());
     if (mons_friendly(&mon))
         learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
@@ -1377,7 +1413,6 @@ void tutorial_first_item(const item_def &item)
 
     stop_running();
 
-    viewwindow(true, false);
     Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = false;
     Options.tutorial_left--;
     Options.tut_just_triggered = true;
@@ -1395,6 +1430,8 @@ void tutorial_first_item(const item_def &item)
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
     tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_CAP_A), gc);
 #endif
+
+    viewwindow(true, false);
     text += "is an item. If you move there and press <w>g</w> or "
             "<w>,</w> you will pick it up. "
 #ifndef USE_TILE
@@ -1575,6 +1612,45 @@ static std::string _describe_portal(const coord_def &gc)
     return; \
 }
 
+// Really rare or important events should get a comment even if
+// learned_something_new() was already triggered this turn.
+static bool _rare_tutorial_event(tutorial_event_type event)
+{
+    switch (event)
+    {
+    case TUT_SEEN_SECRET_DOOR:
+    case TUT_KILLED_MONSTER:
+    case TUT_NEW_LEVEL:
+    case TUT_YOU_ENCHANTED:
+    case TUT_YOU_SICK:
+    case TUT_YOU_POISON:
+    case TUT_YOU_ROTTING:
+    case TUT_YOU_CURSED:
+    case TUT_YOU_HUNGRY:
+    case TUT_YOU_STARVING:
+    case TUT_NEED_POISON_HEALING:
+    case TUT_INVISIBLE_DANGER:
+    case TUT_NEED_HEALING_INVIS:
+    case TUT_ABYSS:
+    case TUT_RUN_AWAY:
+    case TUT_RETREAT_CASTER:
+    case TUT_YOU_MUTATED:
+    case TUT_NEW_ABILITY_GOD:
+    case TUT_NEW_ABILITY_MUT:
+    case TUT_NEW_ABILITY_ITEM:
+    case TUT_CONVERT:
+    case TUT_GOD_DISPLEASED:
+    case TUT_EXCOMMUNICATE:
+    case TUT_GLOWING:
+    case TUT_CAUGHT_IN_NET:
+    case TUT_GAINED_MAGICAL_SKILL:
+    case TUT_CHOOSE_STAT:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 // Here most of the tutorial messages for various triggers are handled.
 void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 {
@@ -1583,7 +1659,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         return;
 
     // Don't trigger twice in the same turn.
-    if (Options.tut_just_triggered)
+    if (Options.tut_just_triggered && !_rare_tutorial_event(seen_what))
         return;
 
     std::ostringstream text;
@@ -1778,7 +1854,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
                 " or by clicking on it with your <w>left mouse button</w>"
 #endif
-                ".";
+                ". However, it is usually best to conserve rations and fruit "
+                "until you are hungry or even starving.";
         break;
 
     case TUT_SEEN_CARRION:
@@ -2054,16 +2131,15 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_STAIR_BRAND:
-#ifdef USE_TILE
-        text << "A small question mark on a stair tile signifies that there "
-                "are items in that position that you may want to check out.";
-        break;
-#else
         // Monster or player standing on stairs.
         if (monster_at(gc) || you.pos() == gc)
             DELAY_EVENT;
 
         viewwindow(true, false);
+#ifdef USE_TILE
+        text << "A small question mark on a stair tile signifies that there "
+                "are items in that position that you may want to check out.";
+#else
         text << "If any items are covering stairs or an escape hatch, then "
                 "that will be indicated by highlighting the <w><<</w> or "
                 "<w>></w> symbol, instead of hiding the stair symbol with "
@@ -2176,13 +2252,14 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_SEEN_DOOR:
+        if (you.num_turns < 1)
+            DELAY_EVENT;
+
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Closed door", gc);
 #endif
         viewwindow(true, false);
-        if (you.num_turns < 1)
-            DELAY_EVENT;
 
         text << "That "
 #ifndef USE_TILE
@@ -2398,6 +2475,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_YOU_CURSED:
+        viewwindow(true, false);
         text << "Curses are comparatively harmless, but they do mean that "
                 "you cannot remove cursed equipment and will have to suffer "
                 "the (possibly) bad effects until you find and read a scroll "
@@ -2475,9 +2553,9 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_HEAVY_LOAD:
+        viewwindow(true, false);
         if (you.burden_state != BS_UNENCUMBERED)
         {
-            viewwindow(true, false);
             text << "It is not usually a good idea to run around encumbered; "
                     "it slows you down and increases your hunger.";
         }

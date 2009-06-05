@@ -28,6 +28,7 @@ void load_tutorial(reader& inf);
 void init_tutorial_options(void);
 
 bool pick_tutorial(void);
+void tutorial_load_game(void);
 void print_tutorial_menu(unsigned int type);
 void tutorial_zap_secret_doors(void);
 
@@ -58,6 +59,5 @@ bool tutorial_pos_interesting(int x, int y);
 void tutorial_describe_pos(int x, int y);
 bool tutorial_monster_interesting(const monsters *mons);
 void tutorial_describe_monster(const monsters *mons);
-
 
 #endif

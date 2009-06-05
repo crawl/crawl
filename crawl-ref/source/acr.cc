@@ -267,6 +267,8 @@ int main( int argc, char *argv[] )
     // Warn player about their weapon, if unsuitable.
     wield_warning(false);
 
+    _prep_input();
+
     if (game_start)
     {
         if (Options.tutorial_left)
@@ -274,9 +276,7 @@ int main( int argc, char *argv[] )
         _take_starting_note();
     }
     else
-        learned_something_new(TUT_LOAD_SAVED_GAME);
-
-    _prep_input();
+        tutorial_load_game();
 
     // Catch up on any experience levels we did not assign last time. This
     // can happen if Crawl sees SIGHUP while it is waiting for the player
@@ -421,9 +421,6 @@ static void _startup_tutorial()
 {
     // Don't allow triggering at game start.
     Options.tut_just_triggered = true;
-
-    // Print stats and everything.
-    _prep_input();
 
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the tutorial intro, or Escape to skip it."
