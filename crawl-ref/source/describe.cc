@@ -1220,7 +1220,7 @@ static std::string _describe_ammo( const item_def &item )
 
     if (always_destroyed)
         description += "$It will always be destroyed upon impact.";
-    else
+    else if (item.sub_type != MI_THROWING_NET)
         append_missile_info(description);
 
     if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus >= MAX_WPN_ENCHANT)
@@ -2839,12 +2839,12 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
-        if (you.is_undead == US_ALIVE)
+        if (you.is_undead == US_ALIVE && !mons_wont_attack(&mons))
             inf.body << "$It wants to drink your blood!$";
         break;
 
     case MONS_REAPER:
-        if (you.is_undead == US_ALIVE)
+        if (you.is_undead == US_ALIVE && !mons_wont_attack(&mons))
             inf.body <<  "$It has come for your soul!$";
         break;
 

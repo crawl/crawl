@@ -56,11 +56,8 @@
    exp_mod: see give_adjusted_experience() in monstuff.cc
    - the experience given for killing this monster is calculated something
    like this:
-     experience = hp_max * HD * HD * exp_mod / 10
-   I think.
 
-   Actually it is
-    experience = (16 + maxhp) * HD * HD * exp_mod * (100 + diff) * speed
+    experience = (16 + maxhp) * HD * HD * exp_mod * (100 + diff. score) * speed
                  / 100000
     with a minimum of 1, and maximum 15000 (jpeg)
 
@@ -4031,7 +4028,7 @@ static monsterentry mondata[] = {
     MONS_ILSUIW, 'm', GREEN, "Ilsuiw",
     M_UNIQUE | M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
     MR_RES_POISON | MR_RES_COLD,
-    500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 90,
+    500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 2, 4, 0 },
     5, 18, MST_ILSUIW, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL,
@@ -4065,7 +4062,7 @@ static monsterentry mondata[] = {
     M_UNIQUE | M_SPELLCASTER | M_SEE_INVIS | M_EVIL | M_ACTUAL_SPELLS
         | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_FIRE | MR_RES_COLD,
-    600, 12, MONS_ORC, MONS_ORC, MH_NATURAL, 50,
+    600, 12, MONS_ORC, MONS_ORC, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 2, 3, 0 },
     9, 11, MST_ORC_SORCERER, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH,
@@ -4078,8 +4075,8 @@ static monsterentry mondata[] = {
         | M_SPEAKS,
     MR_NO_FLAGS,
     600, 15, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
-    { {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 4, 7, 0 },
+    { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 18, 4, 7, 20 },
     3, 10, MST_DAEVA, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL,
     HT_LAND, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 },
@@ -4415,7 +4412,7 @@ static monsterentry mondata[] = {
     MONS_EUSTACHIO, '@', GREEN, "Eustachio",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    550, 20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 24,
+    550, 20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 0, 0, 40 },
     0, 13, MST_EUSTACHIO, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL,

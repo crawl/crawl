@@ -1384,7 +1384,8 @@ static bool _do_description(std::string key, std::string type,
                     append_armour_stats(desc, mitm[thing_created]);
                     desc += "$";
                 }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
+                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES)
+                         && mitm[thing_created].sub_type != MI_THROWING_NET)
                 {
                     append_missile_info(desc);
                     desc += "$";
