@@ -276,6 +276,95 @@ xxxxxxxxxx...........'''''................
 xxxxxxxxxxxx...........................         
 ENDMAP
 
+##############################################################################
+# Firewalk I (Lemuel)
+#
+# To reach the Temple, you just have to walk straight. Note that the
+# frequency of the flames is low enough that you have to spend a fair
+# amount of time off the path to get hit by one. And at this depth 
+# they should not be fatal to anyone. -LP
+#
+NAME:    temple_firewalk
+TAGS:    temple_entry uniq_firewalk no_item_gen no_monster_gen
+ORIENT:  float
+WEIGHT:  3
+ITEM:    nothing, nothing, nothing
+SHUFFLE: def
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 3, delay = 20, start_clouds = 1, \
+             size = 1, walk_dist = 1, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 39, start_clouds = 1, \
+             size = 1, walk_dist = 1, spread_rate= 0 }
+MARKER:  f = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 5, delay = 47, start_clouds = 1, \
+             size = 1, walk_dist = 1, spread_rate= 0 }
+MAP
+xxxxxxxG@Gxxxxxxx
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x...............x
+x...............x
+x.e..f.....d..e.x
+x...............x
+x...............x
+x...............x
+x.f..d.....e..f.x
+x...............x
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x.......0.......x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Firewalk II (Lemuel)
+#
+# A second version, with the safe path marked. Personally I don't think 
+# it's necessary, but it does make it harder to kill yourself. -LP
+#
+NAME:    temple_firewalk_marked
+TAGS:    temple_entry uniq_firewalk no_item_gen no_monster_gen
+WEIGHT:  7
+ORIENT:  float
+ITEM:    nothing, nothing, nothing, nothing
+SHUFFLE: def
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+              pow_min = 2, pow_max = 3, delay = 39, start_clouds = 1, \
+              size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "flame", \
+              pow_min = 2, pow_max = 5, delay = 59, start_clouds = 1, \
+              size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  f = lua:fog_machine { cloud_type = "flame", \
+              pow_min = 2, pow_max = 7, delay = 79, start_clouds = 1, \
+              size = 1, walk_dist = 2, spread_rate= 0 }
+COLOUR:  g = yellow
+MAP
+xxxxxxxG@Gxxxxxxx
+x...f..ggg....e.x
+x......ggg......x
+x.d....ggg..f...x
+x......ggg......x
+x...e..ggg....d.x
+x......ggg......x
+x.e....ggg..d...x
+x......ggg......x
+x...f..ggg....e.x
+x......ggg......x
+x.f....ggg..e...x
+x......ggg......x
+x...d..ggg....f.x
+x......ggg......x
+x.d....ggg..f...x
+x......ggg......x
+x...e..gOg....d.x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
 
 ##############################################################################
 # Temple maps
