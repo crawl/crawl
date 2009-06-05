@@ -129,6 +129,60 @@ MAP
 .....
 ENDMAP
 
+#####################################################################
+# Identical in feature and content to item_on_display_b, only that it
+# contains within an unseen horror, by due.
+NAME:   unseen_surprise_small
+WEIGHT: 1
+TAGS:   no_wall_fixup
+DEPTH:  D:8-27, Elf, Crypt, Vault
+KMONS:  a = generate_awake unseen_horror
+KITEM:  a = | / *
+MAP
+.....
+.mmm.
+.mam.
+.mmm.
+.....
+ENDMAP
+
+################################################################
+# Unseen surprise! by due (and dpeg).
+#
+NAME:   due_unseen_surprise
+DEPTH:  D, Elf, Crypt, Vault
+TAGS:   no_wall_fixup
+: if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
+SUBST:  a = %
+SUBST:  b = %**
+: else
+KFEAT:  a = .
+KFEAT:  b = .
+# Two versions for loot.
+: if crawl.coinflip() == 0 then
+KITEM: a = * / %
+KITEM: b = *
+: else
+KITEM: a = % / | w:1
+KITEM: b = |
+: end
+# Expected value of unseen horrors depends on depth:
+: local wt = (you.absdepth()-10) * (you.absdepth()-10)
+: kmons("a = generate_awake unseen horror w:" .. wt .. " / nothing w:40")
+KMONS: b = generate_awake unseen horror
+: end
+MAP
+........@
+.........
+..mmmmm..
+..maaam..
+..mabam..
+..maaam..
+..mmmmm..
+.........
+.........
+ENDMAP
+
 ##############################################################################
 # Sigmund's army
 # Sigmund has been educating the suppressed masses in guerrilla warfare.
