@@ -1223,7 +1223,7 @@ MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
              size = 1, walk_dist = 1, spread_rate= 33 }
 KMONS:   O = skeletal dragon
-KITEM:   O = decaying rune
+KFEAT:   O = O
 SUBST:   ? = ? ! w
 KMONS:   ? = big fish zombie
 KMONS:   ! = swamp worm zombie
