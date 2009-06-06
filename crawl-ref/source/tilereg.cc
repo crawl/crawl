@@ -2625,8 +2625,8 @@ void MenuRegion::place_entries()
     const int heading_indent  = 10;
     const int tile_indent     = 20;
     const int text_indent     = (Options.tile_menu_icons ? 58 : 20);
-    const int max_tile_height = 32;
-    const int entry_buffer = 1;
+    const int max_tile_height = (Options.tile_menu_icons ? 32 : 0);
+    const int entry_buffer    = 1;
     const VColour selected_colour(50, 50, 10, 255);
 
     m_font_buf.clear();
@@ -2668,7 +2668,7 @@ void MenuRegion::place_entries()
             column++;
         }
 
-        int text_width = m_font_entry->string_width(m_entries[i].text);
+        int text_width  = m_font_entry->string_width(m_entries[i].text);
         int text_height = m_font_entry->char_height();
 
         if (m_entries[i].heading)
@@ -2714,7 +2714,8 @@ void MenuRegion::place_entries()
 
             int text_sy = m_entries[i].sy;
             text_sy += (entry_height - m_font_entry->char_height()) / 2;
-            if (text_sx + text_width > entry_start + column_width)
+            if (Options.tile_menu_icons
+                && text_sx + text_width > entry_start + column_width)
             {
                 // [enne] - Ugh, hack.  Maybe MenuEntry could specify the
                 // presence and length of this substring?
@@ -2841,10 +2842,14 @@ int MenuRegion::maxpagesize() const
     // It would be better to make menus use a dynamic number of items per page,
     // but it'd require a lot more refactoring of menu.cc to handle that.
 
-    int lines = count_linebreaks(m_more);
-    int more_height = (lines + 1) * m_font_entry->char_height();
+    const int lines = count_linebreaks(m_more);
+    const int more_height = (lines + 1) * m_font_entry->char_height();
 
-    int pagesize = ((my - more_height) / 32) * m_max_columns;
+    // Similar to the definition of max_entry_height in place_entries().
+    const int div = (Options.tile_menu_icons ? 32
+                                             : m_font_entry->char_height());
+
+    const int pagesize = ((my - more_height) / div) * m_max_columns;
 
     // Upper limit for inventory menus. (jpeg)
     // Non-inventory menus only have one column and need

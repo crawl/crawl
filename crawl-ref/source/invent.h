@@ -236,6 +236,6 @@ void init_item_sort_comparators(item_sort_comparators &list,
 bool prompt_failed(int retval, std::string msg = "");
 
 bool item_is_evokable(const item_def &item, bool known = false,
-                      bool msg = false);
+                      bool all_wands = false, bool msg = false);
 
 #endif

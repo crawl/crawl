@@ -326,7 +326,8 @@ InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
       title_annotate(NULL)
 {
-    mdisplay->set_num_columns(2);
+    if (Options.tile_menu_icons)
+        mdisplay->set_num_columns(2);
 }
 
 // Returns vector of item_def pointers to each item_def in the given
@@ -647,8 +648,14 @@ bool sort_item_identified(const InvEntry *a)
     return !item_type_known(*(a->item));
 }
 
+bool sort_item_charged(const InvEntry *a)
+{
+    return (a->item->base_type != OBJ_WANDS
+            || !item_is_evokable(*(a->item), true));
+}
+
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
-                                  const item_sort_comparators *cmps)
+                                   const item_sort_comparators *cmps)
 {
     for (item_sort_comparators::const_iterator i = cmps->begin();
          i != cmps->end(); ++i)
@@ -695,6 +702,7 @@ void init_item_sort_comparators(item_sort_comparators &list,
           { "art",       compare_item<bool, sort_item_art> },
           { "equipped",  compare_item<bool, sort_item_equipped> },
           { "identified",compare_item<bool, sort_item_identified> },
+          { "charged",   compare_item<bool, sort_item_charged>},
           { "qty",       compare_item<int, sort_item_qty> },
           { "slot",      compare_item<int, sort_item_slot> },
           { "freshness", compare_item<int, sort_item_freshness> }
@@ -1029,7 +1037,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (item_is_rechargeable(i, true));
 
     case OSEL_EVOKABLE:
-        return (item_is_evokable(i, true));
+        return (item_is_evokable(i, true, true));
 
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
@@ -1715,13 +1723,17 @@ bool prompt_failed(int retval, std::string msg)
     return (true);
 }
 
-bool item_is_evokable(const item_def &item, bool known, bool msg)
+bool item_is_evokable(const item_def &item, bool known, bool all_wands,
+                      bool msg)
 {
     const bool wielded = (you.equip[EQ_WEAPON] == item.link);
 
     switch (item.base_type)
     {
     case OBJ_WANDS:
+        if (all_wands)
+            return (true);
+
         if (item.plus2 == ZAPCOUNT_EMPTY)
         {
             if (msg)
