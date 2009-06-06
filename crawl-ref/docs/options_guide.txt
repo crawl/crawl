@@ -1152,6 +1152,11 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           basename and qualname, then non-chunk food items will be
           sorted between the non-rotting and rotting chunks.
 
+        * charged:
+          Makes wands known or assumed to have some charges left appear
+          before wands known to be empty; irrelevant for all other item
+          types.
+
         You can ask for a descending order sort by prefixing one or more
         sort criteria with > as:
              sort_menus = true : basename, >qty

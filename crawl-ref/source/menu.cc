@@ -1347,7 +1347,7 @@ void slider_menu::new_selection(int nsel)
 {
     if (nsel < 0)
     {
-        if ( !is_set(MF_NOWRAP) )
+        if (!is_set(MF_NOWRAP))
         {
             do
             {
@@ -1360,7 +1360,7 @@ void slider_menu::new_selection(int nsel)
     }
     if (nsel >= static_cast<int>(items.size()))
     {
-        if ( !is_set(MF_NOWRAP) )
+        if (!is_set(MF_NOWRAP))
         {
             do
             {
@@ -1620,12 +1620,12 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
     size_t loc = 0;
     int xpos = 0;
     int breakcount = 0;
-    while ( loc < s.size() )
+    while (loc < s.size())
     {
-        if ( s[loc] == '<' )    // tag
+        if (s[loc] == '<')    // tag
         {
             // << escape
-            if ( loc + 1 < s.size() && s[loc+1] == '<' )
+            if (loc + 1 < s.size() && s[loc+1] == '<')
             {
                 ++xpos;
                 loc += 2;
@@ -1633,24 +1633,24 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
                 continue;
             }
             // skip tag
-            while ( loc < s.size() && s[loc] != '>' )
+            while (loc < s.size() && s[loc] != '>')
                 ++loc;
             ++loc;
         }
         else
         {
             // user-forced newline
-            if ( s[loc] == '\n' )
+            if (s[loc] == '\n')
                 xpos = 0;
             // soft linebreak
-            else if ( s[loc] == ' ' && xpos > wrapcol )
+            else if (s[loc] == ' ' && xpos > wrapcol)
             {
                 s.replace(loc, 1, "\n");
                 xpos = 0;
                 ++breakcount;
             }
             // hard linebreak
-            else if ( xpos > maxcol )
+            else if (xpos > maxcol)
             {
                 s.insert(loc, "\n");
                 xpos = 0;
@@ -1691,7 +1691,7 @@ int linebreak_string2( std::string& s, int maxcol )
         else
         {
             // user-forced newline, or one we just stuffed in
-            if ( s[loc] == '\n' )
+            if (s[loc] == '\n')
             {
                 xpos = 0;
                 spaceloc = 0;
@@ -1700,7 +1700,7 @@ int linebreak_string2( std::string& s, int maxcol )
             }
 
             // force a wrap?
-            if ( xpos >= maxcol )
+            if (xpos >= maxcol)
             {
                 if (spaceloc)
                 {
@@ -1717,7 +1717,7 @@ int linebreak_string2( std::string& s, int maxcol )
             }
 
             // save possible linebreak location
-            if ( s[loc] == ' ' && xpos > 0)
+            if (s[loc] == ' ' && xpos > 0)
             {
                 spaceloc = loc;
             }

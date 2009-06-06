@@ -814,7 +814,7 @@ bool evoke_item(int slot)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, false, true))
+    if (!item_is_evokable(item, false, false, true))
         return (false);
 
     // Check inscriptions.
