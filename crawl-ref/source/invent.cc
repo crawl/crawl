@@ -326,7 +326,9 @@ InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
       title_annotate(NULL)
 {
+#ifdef USE_TILE
     if (Options.tile_menu_icons)
+#endif
         mdisplay->set_num_columns(2);
 }
 
