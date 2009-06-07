@@ -1924,6 +1924,11 @@ bool in_los(const coord_def& pos)
 
 static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
 {
+    // Monster types that you can't gain experience from don't count as
+    // monsters.
+    if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        return (false);
+
     // Unknown mimics don't count as monsters, either.
     if (mons_is_mimic(mon->type)
         && !(mon->flags & MF_KNOWN_MIMIC))
@@ -1934,10 +1939,10 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
     // Don't usually target unseen monsters...
     if (!player_monster_visible(mon))
     {
-        // ... unless it creates a "disturbance in the water".
+        // ...unless it creates a "disturbance in the water".
         // Since you can't see the monster, assume it's not a friend.
-        // Also don't target submerged monsters if there are other targets
-        // in sight. (This might be too restrictive.)
+        // Also, don't target submerged monsters if there are other
+        // targets in sight.  (This might be too restrictive.)
         return (mode != TARG_FRIEND
                 && _mon_submerged_in_water(mon)
                 && i_feel_safe(false, false, true, range));
