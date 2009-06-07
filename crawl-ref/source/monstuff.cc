@@ -1028,7 +1028,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
 }
 
 void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
-                        bool summoned, int summon_type)
+                        bool summoned)
 {
     // Chaos spawn always leave behind a cloud of chaos.
     if (monster->type == MONS_CHAOS_SPAWN)
@@ -1131,7 +1131,7 @@ int monster_die(monsters *monster, killer_type killer,
                        monster->full_name(DESC_NOCAP_A).c_str()));
     }
 
-    // From time to time Trog gives you a little bonus
+    // From time to time Trog gives you a little bonus.
     if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
     {
         if (you.religion == GOD_TROG
@@ -1411,8 +1411,8 @@ int monster_die(monsters *monster, killer_type killer,
             break;
         }
 
-        case KILL_MON:          // Monster kills in combat
-        case KILL_MON_MISSILE:  // Monster kills by missile or beam
+        case KILL_MON:          // Monster kills in combat.
+        case KILL_MON_MISSILE:  // Monster kills by missile or beam.
             if (!silent)
             {
                 simple_monster_message(monster,
@@ -1436,7 +1436,7 @@ int monster_die(monsters *monster, killer_type killer,
             }
 
             // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being done_good kills. Only
+            // prevent summoned creatures from being done_good kills.  Only
             // affects creatures which were friendly when summoned.
             if (!created_friendly && gives_xp && pet_kill
                 && (anon || !invalid_monster_index(killer_index)))
@@ -1608,13 +1608,14 @@ int monster_die(monsters *monster, killer_type killer,
             break;
 
         case KILL_RESET:
-            // Monster doesn't die, just goes back to wherever it came from
+            // Monster doesn't die, just goes back to wherever it came from.
             // This must only be called by monsters running out of time (or
-            // abjuration), because it uses the beam variables! Or does it???
+            // abjuration), because it uses the beam variables!  Or does it???
+            // Pacified monsters leave the level when this happens.
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
-            if (!monster->needs_transit())
+            if (mons_is_pacified(monster) || !monster->needs_transit())
             {
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
@@ -1642,7 +1643,7 @@ int monster_die(monsters *monster, killer_type killer,
             break;
     }
 
-    // Make sure Boris has a foe to address
+    // Make sure Boris has a foe to address.
     if (monster->foe == MHITNOT)
     {
         if (!mons_wont_attack(monster) && !crawl_state.arena)
@@ -1674,7 +1675,7 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     if (!wizard && !submerged)
-        _monster_die_cloud(monster, !mons_reset, silent, summoned, summon_type);
+        _monster_die_cloud(monster, !mons_reset, silent, summoned);
 
     int corpse = -1;
     if (!mons_reset)
