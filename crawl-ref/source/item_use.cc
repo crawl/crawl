@@ -24,9 +24,7 @@ REVISION("$Rev$");
 #include "cloud.h"
 #include "command.h"
 #include "debug.h"
-#ifdef USE_TILE
 #include "decks.h"
-#endif
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
