@@ -2918,48 +2918,47 @@ enum tutorial_event_type
     TUT_NEW_ABILITY_ITEM,     // 40
     TUT_FLEEING_MONSTER,
     TUT_ROTTEN_FOOD,
-    TUT_ROTTEN_GONE,
     TUT_CONVERT,
-    TUT_GOD_DISPLEASED,       // 45
-    TUT_EXCOMMUNICATE,
+    TUT_GOD_DISPLEASED,
+    TUT_EXCOMMUNICATE,        // 45
     TUT_SPELL_MISCAST,
     TUT_SPELL_HUNGER,
     TUT_GLOWING,
-    TUT_YOU_RESIST,           // 50
+    TUT_YOU_RESIST,
     // status changes
-    TUT_YOU_ENCHANTED,
+    TUT_YOU_ENCHANTED,        // 50
     TUT_YOU_SICK,
     TUT_YOU_POISON,
     TUT_YOU_ROTTING,
-    TUT_YOU_CURSED,           // 55
-    TUT_YOU_HUNGRY,
+    TUT_YOU_CURSED,
+    TUT_YOU_HUNGRY,           // 55
     TUT_YOU_STARVING,
     TUT_YOU_MUTATED,
     TUT_CAN_BERSERK,
-    TUT_POSTBERSERK,          // 60
-    TUT_CAUGHT_IN_NET,
+    TUT_POSTBERSERK,
+    TUT_CAUGHT_IN_NET,        // 60
     // warning
     TUT_RUN_AWAY,
     TUT_RETREAT_CASTER,
     TUT_WIELD_WEAPON,
-    TUT_NEED_HEALING,         // 65
-    TUT_NEED_POISON_HEALING,
+    TUT_NEED_HEALING,
+    TUT_NEED_POISON_HEALING,  // 65
     TUT_INVISIBLE_DANGER,
     TUT_NEED_HEALING_INVIS,
     TUT_ABYSS,
     // interface
-    TUT_MULTI_PICKUP,         // 70
-    TUT_HEAVY_LOAD,
+    TUT_MULTI_PICKUP,
+    TUT_HEAVY_LOAD,           // 70
     TUT_SHIFT_RUN,
     TUT_MAP_VIEW,
     TUT_AUTO_EXPLORE,
-    TUT_DONE_EXPLORE,         // 75
-    TUT_AUTO_EXCLUSION,
+    TUT_DONE_EXPLORE,
+    TUT_AUTO_EXCLUSION,       // 75
     TUT_STAIR_BRAND,
     TUT_HEAP_BRAND,
     TUT_TRAP_BRAND,
-    TUT_LOAD_SAVED_GAME,      // 80
-    TUT_EVENTS_NUM            // 81
+    TUT_LOAD_SAVED_GAME,
+    TUT_EVENTS_NUM            // 80
 };
 // NOTE: For numbers higher than 85 change size of tutorial_events in externs.h.
 
