@@ -2877,8 +2877,9 @@ void losight(env_show_grid &sh,
                 dungeon_feature_type dfeat = grid_appearance(gr, real);
 
                 // if this cell is opaque...
+                // ... or something you can see but not walk through ...
                 if (grid_is_opaque(dfeat)
-                    || clear_walls_block && grid_is_wall(dfeat))
+                    || clear_walls_block && dfeat < DNGN_MINMOVE)
                 {
                     // then block the appropriate rays
                     for (unsigned int i = 0; i < num_words; ++i)

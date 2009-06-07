@@ -2324,7 +2324,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
             return (true);
 
         // If the monster is on a visible square which is on the other
-        // side of one or more translucent from the player, then it
+        // side of one or more translucent walls from the player, then it
         // can only blink through translucent walls if the end point
         // is either not visible to the player, or there are at least
         // as many translucent walls between the player and the end

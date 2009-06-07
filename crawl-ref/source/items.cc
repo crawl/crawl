@@ -1959,7 +1959,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
             {
                 mpr("You will have to take that off first.");
             }
-            else
+            else if (check_warning_inscriptions(you.inv[item_dropped],
+                                                OPER_TAKEOFF))
             {
                 // If we take off the item, cue up the item being dropped
                 if (takeoff_armour( item_dropped ))
