@@ -4312,7 +4312,7 @@ std::string melee_attack::mons_weapon_desc()
         const item_def wpn = *weapon;
         if (get_weapon_brand(wpn) == SPWPN_REACHING)
         {
-            if ( grid_distance(attacker->pos(), defender->pos()) == 2 )
+            if (grid_distance(attacker->pos(), defender->pos()) == 2)
                 result += " from afar";
         }
 

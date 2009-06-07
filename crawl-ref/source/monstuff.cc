@@ -5977,10 +5977,18 @@ static bool _handle_reaching(monsters *monster)
     {
         if (monster->foe == MHITYOU)
         {
+            const coord_def delta = monster->pos() - you.pos();
+            const int x_middle = std::max(monster->pos().x, you.pos().x)
+                                    - (abs(delta.x) / 2);
+            const int y_middle = std::max(monster->pos().y, you.pos().y)
+                                    - (abs(delta.y) / 2);
+            const coord_def middle(x_middle, y_middle);
+
             // This check isn't redundant -- player may be invisible.
             if (monster->target == you.pos()
-                && see_grid_no_trans(monster->pos())
-                && grid_distance(monster->pos(), you.pos()) == 2)
+                && grid_distance(monster->pos(), you.pos()) == 2
+                && (see_grid_no_trans(monster->pos())
+                    || grd(middle) > DNGN_MAX_NONREACH))
             {
                 ret = true;
                 monster_attack(monster, false);

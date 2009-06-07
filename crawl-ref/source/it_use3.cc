@@ -256,17 +256,26 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     }
 
     const coord_def delta = beam.target - you.pos();
-    const int x_distance = abs(delta.x);
-    const int y_distance = abs(delta.y);
+    const int x_distance  = abs(delta.x);
+    const int y_distance  = abs(delta.y);
     monsters* mons = monster_at(beam.target);
+
+    const int x_middle = std::max(beam.target.x, you.pos().x)
+                            - (x_distance / 2);
+    const int y_middle = std::max(beam.target.y, you.pos().y)
+                            - (y_distance / 2);
+    const coord_def middle(x_middle, y_middle);
 
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
         return (false);
     }
-    else if (!see_grid_no_trans(beam.target))
+    else if (!see_grid_no_trans(beam.target)
+             && grd(middle) <= DNGN_MAX_NONREACH)
     {
+        // Might also be a granite statue/orcish idol which you
+        // can reach _past_.
         mpr("There's a wall in the way.");
         return (false);
     }
@@ -285,12 +294,6 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     // If we're attacking more than a space away...
     if (x_distance > 1 || y_distance > 1)
     {
-        const int x_middle = std::max(beam.target.x, you.pos().x)
-            - (x_distance / 2);
-        const int y_middle = std::max(beam.target.y, you.pos().y)
-            - (y_distance / 2);
-        const coord_def middle(x_middle, y_middle);
-
         bool success = false;
         // If either the x or the y is the same, we should check for
         // a monster:
