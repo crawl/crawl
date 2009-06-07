@@ -313,7 +313,7 @@ void travel_exclude::set_exclude_show()
 {
     // ignores clouds
     feature_grid fgrid = _map_to_grid(pos);
-    losight(show, fgrid, pos, false, true);
+    losight(show, fgrid, pos, false, true, true);
     uptodate = true;
 }
 
@@ -323,20 +323,26 @@ void init_exclusion_los()
         curr_excludes[i].set_exclude_show();
 }
 
+// Updating is useless if exclusions always use full radius.
 void update_exclusion_los(const coord_def &p)
 {
+/*
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
         if (!curr_excludes[i].uptodate
             && (curr_excludes[i].pos - p).abs() <= LOS_RADIUS * LOS_RADIUS)
         {
             curr_excludes[i].set_exclude_show();
         }
+*/
 }
 
+// Updating is useless if exclusions always use full radius.
 void mark_all_excludes_non_updated()
 {
+/*
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
         curr_excludes[i].uptodate = false;
+*/
 }
 
 static bool _is_excluded(const coord_def &p,

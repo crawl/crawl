@@ -808,7 +808,10 @@ bool evoke_item(int slot)
         if (prompt_failed(slot))
             return (false);
     }
-    ASSERT (slot >= 0);
+    else if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
+        return (false);
+
+    ASSERT(slot >= 0);
 
     const bool wielded = (you.equip[EQ_WEAPON] == slot);
 
@@ -817,13 +820,9 @@ bool evoke_item(int slot)
     if (!item_is_evokable(item, false, false, true))
         return (false);
 
-    // Check inscriptions.
-    if (!check_warning_inscriptions(item, OPER_EVOKE))
-        return (false);
-
     int power = 0;
     int pract = 0; // By how much Evocations is practised.
-    bool did_work = false;  // Used for default "nothing happens" message.
+    bool did_work   = false;  // Used for default "nothing happens" message.
     bool unevokable = false;
 
     switch (item.base_type)

@@ -96,7 +96,6 @@ Interface
 * Some message condensation for identical messages.
 * Added stat_colour option to highlight dangerously low stats.
 * New option: Automatically set travel exclusions for statues and oklob plants.
-* Limit travel exclusions to line of sight.
 * Switch off autopickup and autoswap if you see a monster turn invisible.
 * Killing an invisible monster reactivates autopickup.
 * Added ally pickup mode for items dropped by player and allies.

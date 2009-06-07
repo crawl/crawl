@@ -181,9 +181,12 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
         return (true);
 
-    // Misc. items need to be wielded to be evoked.
-    if (item.base_type == OBJ_MISCELLANY && item.sub_type != MISC_RUNE_OF_ZOT)
+    // Some misc. items need to be wielded to be evoked.
+    if (is_deck(item) || item.base_type == OBJ_MISCELLANY
+                         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
+    {
         return (true);
+    }
 
     // Some missiles need to be wielded for spells.
     if (item.base_type == OBJ_MISSILES)
@@ -5424,23 +5427,11 @@ void tile_item_use_secondary(int idx)
         if (check_warning_inscriptions(item, OPER_FIRE))
             fire_thing(idx); // fire weapons
     }
-    else if (item.base_type == OBJ_MISCELLANY
-             || item.base_type == OBJ_STAVES
-                && item_is_rod(item)) // unwield rods/misc. items
-    {
-        if (you.equip[EQ_WEAPON] == idx
-            && check_warning_inscriptions(item, OPER_WIELD))
-        {
-            wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
-        }
-    }
-    else if (you.equip[EQ_WEAPON] == idx
-             && check_warning_inscriptions(item, OPER_WIELD))
+    else if (you.equip[EQ_WEAPON] == idx)
     {
         wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
     }
-    else if (_valid_weapon_swap(item)
-             && check_warning_inscriptions(item, OPER_WIELD))
+    else if (_valid_weapon_swap(item))
     {
         // secondary wield for several spells and such
         wield_weapon(true, idx); // wield
@@ -5473,37 +5464,36 @@ void tile_item_use(int idx)
         && (item.base_type == OBJ_ARMOUR
             || item.base_type == OBJ_JEWELLERY))
     {
-        if (!check_warning_inscriptions(item, OPER_WIELD))
-            return;
-
         wield_weapon(true, PROMPT_GOT_SPECIAL);
         return;
     }
 
+    const int type = item.base_type;
+
     // Use it
-    switch (item.base_type)
+    switch (type)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
         case OBJ_MISCELLANY:
+        case OBJ_WANDS:
             // Wield any unwielded item of these types.
             if (!equipped
-                && (item.base_type != OBJ_MISCELLANY || is_deck(item)
-                    || item.sub_type == MISC_LANTERN_OF_SHADOWS))
+                && (type == OBJ_WEAPONS || type == OBJ_STAVES || is_deck(item)
+                    || type == OBJ_MISCELLANY
+                       && item.sub_type == MISC_LANTERN_OF_SHADOWS))
             {
-                if (check_warning_inscriptions(item, OPER_WIELD))
-                    wield_weapon(true, idx);
+                wield_weapon(true, idx);
                 return;
             }
-            // Evoke misc. items and rods.
+            // Evoke misc. items, rods, or wands.
             if (item_is_evokable(item))
             {
-                if (check_warning_inscriptions(item, OPER_EVOKE))
-                    evoke_item(idx);
+                evoke_item(idx);
                 return;
             }
             // Unwield wielded items.
-            if (equipped && check_warning_inscriptions(item, OPER_WIELD))
+            if (equipped)
                 wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
             return;
 
@@ -5525,11 +5515,6 @@ void tile_item_use(int idx)
             }
             else if (check_warning_inscriptions(item, OPER_WEAR))
                 wear_armour(idx);
-            return;
-
-        case OBJ_WANDS:
-            if (check_warning_inscriptions(item, OPER_ZAP))
-                zap_wand(idx);
             return;
 
         case OBJ_CORPSES:

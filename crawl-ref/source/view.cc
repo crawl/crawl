@@ -2823,7 +2823,8 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 // done by updating with a second array.
 void losight(env_show_grid &sh,
              feature_grid &gr, const coord_def& center,
-             bool clear_walls_block, bool ignore_clouds)
+             bool clear_walls_block, bool ignore_clouds,
+             bool full_radius)
 {
     raycast();
     const int x_p = center.x;
@@ -2835,7 +2836,7 @@ void losight(env_show_grid &sh,
     // clear out sh
     sh.init(0);
 
-    if (crawl_state.arena || crawl_state.arena_suspended)
+    if (full_radius || crawl_state.arena || crawl_state.arena_suspended)
     {
         for (int y = -ENV_SHOW_OFFSET; y <= ENV_SHOW_OFFSET; ++y)
             for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
