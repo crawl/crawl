@@ -14,7 +14,7 @@ SVN_PRESYNC     = ''
 
 SVN             = 'svn'
 
-BUILDS          = [ Proc.new { build_win32 }, 
+BUILDS          = [ Proc.new { build_win32 },
                     Proc.new { build_dos } ].reverse
 
 W32MAKE         = 'mingw32-make'
@@ -59,7 +59,7 @@ end
 
 def full_checkout
   puts "#{SVN} co #{SVN_URL} #{SVN_CO_DIR}"
-  system "#{SVN} co #{SVN_URL} #{SVN_CO_DIR}" or 
+  system "#{SVN} co #{SVN_URL} #{SVN_CO_DIR}" or
           raise "#{SVN} co failed: #$?"
   Dir.chdir SVN_CO_DIR
 end
@@ -167,7 +167,7 @@ end
 
 def build_win32
   setup_w32make_env
-  
+
   puts "\nBuilding stone_soup (non-debug) for #{release_version} release!"
   system( %{#{W32MAKE} -f makefile.mgw DOYACC=y "EXTRA_FLAGS=-O2 } +
          %{-DCLUA_BINDINGS -DREGEX_PCRE -DDEBUG -DWIZARD" } +
@@ -203,7 +203,7 @@ def makezip(path, name, exe)
   end
   Zip::ZipFile.open( zipname, Zip::ZipFile::CREATE ) do |zip|
     zip.dir.mkdir(name)
-    
+
     zip.dir.chdir name
 
     # The exe itself
@@ -211,7 +211,7 @@ def makezip(path, name, exe)
 
     # Add base documentation
     zip.add [ 'CREDITS', 'licence.txt', 'readme.txt' ] + Dir['README*']
-    
+
     # Add base config
     zip.add [ 'init.txt', 'macro.txt' ]
 

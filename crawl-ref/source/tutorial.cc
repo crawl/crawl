@@ -2063,9 +2063,9 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         viewwindow(true, false);
         text << "are some kind of escape hatch. You can use them to "
                 "quickly leave a level with <w><<</w> and <w>></w>, "
-                "respectively "
+                "respectively"
 #ifdef USE_TILE
-                "(or by using your <w>left mouse button</w> in combination "
+                " (or by using your <w>left mouse button</w> in combination "
                 "with the <w>Shift key</w>)"
 #endif
                 ", but will usually be unable to return right away.";

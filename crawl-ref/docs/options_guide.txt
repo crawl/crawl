@@ -832,8 +832,7 @@ tc_exclude_circle = red
                      etc.
           disconnected: squares which cannot be reached without leaving
                         the level
-          excluded: the colour for the centre of travel exclusions
-                    ('e')
+          excluded: the colour for the centre of travel exclusions ('e')
           excluded_circle: the colour for travel exclusions apart from
                            centre
 
@@ -924,7 +923,8 @@ auto_exclude = <list of monster names>
         travel exclusion is set centered on this monster, meaning
         autoexplore won't ever bring you in its line of sight. If the
         monster dies or wakes up while you are in sight, this exclusion
-        is automatically removed again.
+        is automatically removed again. Otherwise, you can remove an
+        exclusion that is no longer valid with Xee.
 
 4-h     Stashes.
 ----------------
