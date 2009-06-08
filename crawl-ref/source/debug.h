@@ -69,7 +69,7 @@ void wizard_create_spec_monster_name(void);
 void wizard_create_spec_object(void);
 void wizard_tweak_object(void);
 void wizard_make_object_randart(void);
-void wizard_value_randart();
+void wizard_value_artefact();
 void wizard_uncurse_item();
 void wizard_create_all_artefacts();
 void wizard_heal(bool super_heal);

@@ -403,9 +403,9 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
 
         if (is_random_artefact(item))
         {
-            prop_str += randart_known_wpn_property(item, RAP_STRENGTH);
-            prop_int += randart_known_wpn_property(item, RAP_INTELLIGENCE);
-            prop_dex += randart_known_wpn_property(item, RAP_DEXTERITY);
+            prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
+            prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
+            prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
         }
 
         // Since there might be multiple items whose effects cancel each other

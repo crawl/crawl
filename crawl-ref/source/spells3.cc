@@ -1244,7 +1244,7 @@ bool allow_control_teleport(bool quiet)
 
 void you_teleport(void)
 {
-    if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
         mpr("You feel a weird sense of stasis.");
     else if (you.duration[DUR_TELEPORT])
     {
@@ -1271,7 +1271,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
                           && player_control_teleport()
                           && allow_control_teleport());
 
-    if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
     {
         mpr("You feel a strange sense of stasis.");
         return (false);

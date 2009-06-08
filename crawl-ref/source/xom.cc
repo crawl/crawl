@@ -562,7 +562,7 @@ static void _try_brand_switch(const int item_index)
     }
 
     if (is_random_artefact(item))
-        randart_set_property(item, RAP_BRAND, brand);
+        artefact_set_property(item, ARTP_BRAND, brand);
     else
         item.special = brand;
 }
@@ -940,10 +940,10 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
 
     if (is_random_artefact(item))
     {
-        randart_set_property(item, RAP_BRAND, brand);
+        artefact_set_property(item, ARTP_BRAND, brand);
 
         if (seen)
-            randart_wpn_learn_prop(item, RAP_BRAND);
+            artefact_wpn_learn_prop(item, ARTP_BRAND);
     }
     else
     {
@@ -1667,7 +1667,7 @@ static bool _xom_is_good(int sever, int tension)
     else if (x_chance_in_y(11, sever) && you.level_type != LEVEL_ABYSS)
     {
         // Try something else if teleportation is impossible.
-        if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+        if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
             return (false);
 
         // This is not very interesting if the level is already fully
@@ -2674,7 +2674,7 @@ static bool _xom_is_bad(int sever, int tension)
         else if (x_chance_in_y(7, sever) && you.level_type != LEVEL_ABYSS)
         {
             // Try something else if teleportation is impossible.
-            if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+            if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
                 return (false);
 
             // This is not particularly exciting if the level is already

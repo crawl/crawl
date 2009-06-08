@@ -2300,7 +2300,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     name += bookname;
 
-    set_randart_name(book, name);
+    set_artefact_name(book, name);
 
     return (true);
 }
@@ -2899,7 +2899,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         }
     }
 
-    set_randart_name(book, name);
+    set_artefact_name(book, name);
 
     book.plus  = disc1;
     book.plus2 = disc2;

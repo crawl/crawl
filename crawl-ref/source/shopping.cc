@@ -264,8 +264,8 @@ static bool _in_a_shop( int shopidx )
         for (unsigned int i = 0; i < stock.size(); i++)
         {
             item_def& item = mitm[stock[i]];
-            if (Options.autoinscribe_randarts && is_random_artefact(item))
-                item.inscription = randart_auto_inscription(item);
+            if (Options.autoinscribe_artefacts && is_random_artefact(item))
+                item.inscription = artefact_auto_inscription(item);
         }
 
         // Deselect all.
@@ -515,97 +515,97 @@ static bool _purchase( int shop, int item_got, int cost, bool id )
 // be returning just over 30 right now.  Note that this isn't used
 // as a multiple, its used in the old ring way: 7 * ret is added to
 // the price of the artefact. -- bwr
-int randart_value( const item_def &item )
+int artefact_value( const item_def &item )
 {
     ASSERT( is_random_artefact( item ) );
 
     int ret = 10;
-    randart_properties_t prop;
-    randart_wpn_properties( item, prop );
+    artefact_properties_t prop;
+    artefact_wpn_properties( item, prop );
 
     // Brands are already accounted for via existing ego checks
 
     // This should probably be more complex... but this isn't so bad:
-    ret += 3 * prop[ RAP_AC ] + 3 * prop[ RAP_EVASION ]
-            + 3 * prop[ RAP_ACCURACY ] + 3 * prop[ RAP_DAMAGE ]
-            + 6 * prop[ RAP_STRENGTH ] + 6 * prop[ RAP_INTELLIGENCE ]
-            + 6 * prop[ RAP_DEXTERITY ];
+    ret += 3 * prop[ ARTP_AC ] + 3 * prop[ ARTP_EVASION ]
+            + 3 * prop[ ARTP_ACCURACY ] + 3 * prop[ ARTP_DAMAGE ]
+            + 6 * prop[ ARTP_STRENGTH ] + 6 * prop[ ARTP_INTELLIGENCE ]
+            + 6 * prop[ ARTP_DEXTERITY ];
 
     // These resistances have meaningful levels
-    if (prop[ RAP_FIRE ] > 0)
-        ret += 5 + 5 * (prop[ RAP_FIRE ] * prop[ RAP_FIRE ]);
-    else if (prop[ RAP_FIRE ] < 0)
+    if (prop[ ARTP_FIRE ] > 0)
+        ret += 5 + 5 * (prop[ ARTP_FIRE ] * prop[ ARTP_FIRE ]);
+    else if (prop[ ARTP_FIRE ] < 0)
         ret -= 10;
 
-    if (prop[ RAP_COLD ] > 0)
-        ret += 5 + 5 * (prop[ RAP_COLD ] * prop[ RAP_COLD ]);
-    else if (prop[ RAP_COLD ] < 0)
+    if (prop[ ARTP_COLD ] > 0)
+        ret += 5 + 5 * (prop[ ARTP_COLD ] * prop[ ARTP_COLD ]);
+    else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
     // These normally come alone or in resist/susceptible pairs...
     // we're making items a bit more expensive if they have both positive.
-    if (prop[ RAP_FIRE ] > 0 && prop[ RAP_COLD ] > 0)
+    if (prop[ ARTP_FIRE ] > 0 && prop[ ARTP_COLD ] > 0)
         ret += 20;
 
-    if (prop[ RAP_NEGATIVE_ENERGY ] > 0)
-        ret += 5 + 5 * (prop[RAP_NEGATIVE_ENERGY] * prop[RAP_NEGATIVE_ENERGY]);
+    if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
+        ret += 5 + 5 * (prop[ARTP_NEGATIVE_ENERGY] * prop[ARTP_NEGATIVE_ENERGY]);
 
     // only one meaningful level:
-    if (prop[ RAP_POISON ])
+    if (prop[ ARTP_POISON ])
         ret += 15;
 
     // only one meaningful level (hard to get):
-    if (prop[ RAP_ELECTRICITY ])
+    if (prop[ ARTP_ELECTRICITY ])
         ret += 30;
 
     // magic resistance is from 35-100
-    if (prop[ RAP_MAGIC ])
-        ret += 5 + prop[ RAP_MAGIC ] / 15;
+    if (prop[ ARTP_MAGIC ])
+        ret += 5 + prop[ ARTP_MAGIC ] / 15;
 
-    if (prop[ RAP_EYESIGHT ])
+    if (prop[ ARTP_EYESIGHT ])
         ret += 10;
 
     // abilities:
-    if (prop[ RAP_LEVITATE ])
+    if (prop[ ARTP_LEVITATE ])
         ret += 3;
 
-    if (prop[ RAP_BLINK ])
+    if (prop[ ARTP_BLINK ])
         ret += 3;
 
-    if (prop[ RAP_CAN_TELEPORT ])
+    if (prop[ ARTP_CAN_TELEPORT ])
         ret += 5;
 
-    if (prop[ RAP_BERSERK ])
+    if (prop[ ARTP_BERSERK ])
         ret += 5;
 
-    if (prop[ RAP_MAPPING ])
+    if (prop[ ARTP_MAPPING ])
         ret += 15;
 
-    if (prop[ RAP_INVISIBLE ])
+    if (prop[ ARTP_INVISIBLE ])
         ret += 20;
 
-    if (prop[ RAP_ANGRY ])
+    if (prop[ ARTP_ANGRY ])
         ret -= 3;
 
-    if (prop[ RAP_CAUSE_TELEPORTATION ])
+    if (prop[ ARTP_CAUSE_TELEPORTATION ])
         ret -= 3;
 
-    if (prop[ RAP_NOISES ])
+    if (prop[ ARTP_NOISES ])
         ret -= 5;
 
-    if (prop[ RAP_PREVENT_TELEPORTATION ])
+    if (prop[ ARTP_PREVENT_TELEPORTATION ])
         ret -= 8;
 
-    if (prop[ RAP_PREVENT_SPELLCASTING ])
+    if (prop[ ARTP_PREVENT_SPELLCASTING ])
         ret -= 10;
 
     // ranges from 2-5
-    if (prop[ RAP_MUTAGENIC ])
-        ret -= (5 + 3 * prop[ RAP_MUTAGENIC ]);
+    if (prop[ ARTP_MUTAGENIC ])
+        ret -= (5 + 3 * prop[ ARTP_MUTAGENIC ]);
 
     // ranges from 1-3
-    if (prop[ RAP_METABOLISM ])
-        ret -= (2 * prop[ RAP_METABOLISM ]);
+    if (prop[ ARTP_METABOLISM ])
+        ret -= (2 * prop[ ARTP_METABOLISM ]);
 
     return ((ret > 0) ? ret : 0);
 }
@@ -915,7 +915,7 @@ unsigned int item_value( item_def item, bool ident )
         if (is_random_artefact(item))
         {
             if (item_type_known(item))
-                valued += (7 * randart_value(item));
+                valued += (7 * artefact_value(item));
             else
                 valued += 50;
         }
@@ -1228,7 +1228,7 @@ unsigned int item_value( item_def item, bool ident )
         if (is_random_artefact( item ))
         {
             if (item_type_known(item))
-                valued += (7 * randart_value( item ));
+                valued += (7 * artefact_value( item ));
             else
                 valued += 50;
         }
@@ -1597,9 +1597,9 @@ unsigned int item_value( item_def item, bool ident )
                 // in this branch we're guaranteed to know
                 // the item type!
                 if (valued < 0)
-                    valued = randart_value( item ) - 5;
+                    valued = artefact_value( item ) - 5;
                 else
-                    valued += randart_value( item );
+                    valued += artefact_value( item );
             }
 
             valued *= 7;

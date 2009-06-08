@@ -457,7 +457,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'S': wizard_set_skill_level();              break;
     case 'A': wizard_set_all_skills();               break;
     case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE);   break;
-    case 'v': wizard_value_randart();                break;
+    case 'v': wizard_value_artefact();                break;
     case '+': wizard_make_object_randart();          break;
     case '|': wizard_create_all_artefacts();         break;
     case 'C': wizard_uncurse_item();                 break;
@@ -1666,7 +1666,7 @@ void process_command( command_type cmd )
         }
 
         // Randart weapons.
-        if (scan_randarts(RAP_PREVENT_SPELLCASTING))
+        if (scan_artefacts(ARTP_PREVENT_SPELLCASTING))
         {
             mpr("Something interferes with your magic!");
             flush_input_buffer( FLUSH_ON_FAILURE );

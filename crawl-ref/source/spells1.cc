@@ -77,7 +77,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
     }
 
     // yes, there is a logic to this ordering {dlb}:
-    if (scan_randarts(RAP_PREVENT_TELEPORTATION) && !wizard_blink)
+    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION) && !wizard_blink)
         mpr("You feel a weird sense of stasis.");
     else if (you.level_type == LEVEL_ABYSS
              && _abyss_blocks_teleport(high_level_controlled_blink)
@@ -199,7 +199,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     bool success = false;
     coord_def target;
 
-    if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
         mpr("You feel a weird sense of stasis.");
     else if (you.level_type == LEVEL_ABYSS
              && !override_abyss && !one_chance_in(3))
@@ -454,8 +454,8 @@ void identify(int power, int item_slot)
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        if (Options.autoinscribe_randarts && is_random_artefact(item))
-            add_autoinscription( item, randart_auto_inscription(item));
+        if (Options.autoinscribe_artefacts && is_random_artefact(item))
+            add_autoinscription( item, artefact_auto_inscription(item));
 
         // For scrolls, now id the scroll, unless already known.
         if (power == -1

@@ -1680,7 +1680,7 @@ bool get_item_by_name(item_def *item, char* specs,
 }
 
 #ifdef WIZARD
-const char* _prop_name[RAP_NUM_PROPERTIES] = {
+const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Brand",
     "AC",
     "EV",
@@ -1714,42 +1714,42 @@ const char* _prop_name[RAP_NUM_PROPERTIES] = {
     "MP"
 };
 
-#define RAP_VAL_BOOL 0
-#define RAP_VAL_POS  1
-#define RAP_VAL_ANY  2
+#define ARTP_VAL_BOOL 0
+#define ARTP_VAL_POS  1
+#define ARTP_VAL_ANY  2
 
-char _prop_type[RAP_NUM_PROPERTIES] = {
-    RAP_VAL_POS,  //BRAND
-    RAP_VAL_ANY,  //AC
-    RAP_VAL_ANY,  //EVASION
-    RAP_VAL_ANY,  //STRENGTH
-    RAP_VAL_ANY,  //INTELLIGENCE
-    RAP_VAL_ANY,  //DEXTERITY
-    RAP_VAL_ANY,  //FIRE
-    RAP_VAL_ANY,  //COLD
-    RAP_VAL_BOOL, //ELECTRICITY
-    RAP_VAL_BOOL, //POISON
-    RAP_VAL_BOOL, //NEGATIVE_ENERGY
-    RAP_VAL_POS,  //MAGIC
-    RAP_VAL_BOOL, //EYESIGHT
-    RAP_VAL_BOOL, //INVISIBLE
-    RAP_VAL_BOOL, //LEVITATE
-    RAP_VAL_BOOL, //BLINK
-    RAP_VAL_BOOL, //CAN_TELEPORT
-    RAP_VAL_BOOL, //BERSERK
-    RAP_VAL_BOOL, //MAPPING
-    RAP_VAL_POS,  //NOISES
-    RAP_VAL_BOOL, //PREVENT_SPELLCASTING
-    RAP_VAL_BOOL, //CAUSE_TELEPORTATION
-    RAP_VAL_BOOL, //PREVENT_TELEPORTATION
-    RAP_VAL_POS,  //ANGRY
-    RAP_VAL_POS,  //METABOLISM
-    RAP_VAL_POS,  //MUTAGENIC
-    RAP_VAL_ANY,  //ACCURACY
-    RAP_VAL_ANY,  //DAMAGE
-    RAP_VAL_POS,  //CURSED
-    RAP_VAL_ANY,  //STEALTH
-    RAP_VAL_ANY   //MAGICAL_POWER
+char _prop_type[ARTP_NUM_PROPERTIES] = {
+    ARTP_VAL_POS,  //BRAND
+    ARTP_VAL_ANY,  //AC
+    ARTP_VAL_ANY,  //EVASION
+    ARTP_VAL_ANY,  //STRENGTH
+    ARTP_VAL_ANY,  //INTELLIGENCE
+    ARTP_VAL_ANY,  //DEXTERITY
+    ARTP_VAL_ANY,  //FIRE
+    ARTP_VAL_ANY,  //COLD
+    ARTP_VAL_BOOL, //ELECTRICITY
+    ARTP_VAL_BOOL, //POISON
+    ARTP_VAL_BOOL, //NEGATIVE_ENERGY
+    ARTP_VAL_POS,  //MAGIC
+    ARTP_VAL_BOOL, //EYESIGHT
+    ARTP_VAL_BOOL, //INVISIBLE
+    ARTP_VAL_BOOL, //LEVITATE
+    ARTP_VAL_BOOL, //BLINK
+    ARTP_VAL_BOOL, //CAN_TELEPORT
+    ARTP_VAL_BOOL, //BERSERK
+    ARTP_VAL_BOOL, //MAPPING
+    ARTP_VAL_POS,  //NOISES
+    ARTP_VAL_BOOL, //PREVENT_SPELLCASTING
+    ARTP_VAL_BOOL, //CAUSE_TELEPORTATION
+    ARTP_VAL_BOOL, //PREVENT_TELEPORTATION
+    ARTP_VAL_POS,  //ANGRY
+    ARTP_VAL_POS,  //METABOLISM
+    ARTP_VAL_POS,  //MUTAGENIC
+    ARTP_VAL_ANY,  //ACCURACY
+    ARTP_VAL_ANY,  //DAMAGE
+    ARTP_VAL_POS,  //CURSED
+    ARTP_VAL_ANY,  //STEALTH
+    ARTP_VAL_ANY   //MAGICAL_POWER
 };
 
 static void _tweak_randart(item_def &item)
@@ -1761,12 +1761,12 @@ static void _tweak_randart(item_def &item)
         return;
     }
 
-    randart_properties_t props;
-    randart_wpn_properties(item, props);
+    artefact_properties_t props;
+    artefact_wpn_properties(item, props);
 
     std::string prompt = "";
 
-    for (int i = 0; i < RAP_NUM_PROPERTIES; ++i)
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
         if (i % 8 == 0 && i != 0)
             prompt += "\n";
@@ -1803,14 +1803,14 @@ static void _tweak_randart(item_def &item)
     int val;
     switch (_prop_type[choice])
     {
-    case RAP_VAL_BOOL:
+    case ARTP_VAL_BOOL:
         mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[choice],
              props[choice] ? "off" : "on");
-        randart_set_property(item, static_cast<randart_prop_type>(choice),
-                             !props[choice]);
+        artefact_set_property(item, static_cast<artefact_prop_type>(choice),
+                              !props[choice]);
         break;
 
-    case RAP_VAL_POS:
+    case ARTP_VAL_POS:
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[choice], props[choice]);
         val = _debug_prompt_for_int("New value? ", true);
 
@@ -1820,14 +1820,14 @@ static void _tweak_randart(item_def &item)
                  _prop_name[choice]);
             return;
         }
-        randart_set_property(item, static_cast<randart_prop_type>(choice),
-                             val);
+        artefact_set_property(item, static_cast<artefact_prop_type>(choice),
+                              val);
         break;
-    case RAP_VAL_ANY:
+    case ARTP_VAL_ANY:
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[choice], props[choice]);
         val = _debug_prompt_for_int("New value? ", false);
-        randart_set_property(item, static_cast<randart_prop_type>(choice),
-                             val);
+        artefact_set_property(item, static_cast<artefact_prop_type>(choice),
+                              val);
         break;
     }
 }
@@ -1961,7 +1961,7 @@ static bool _make_book_randart(item_def &book)
         return make_book_theme_randart(book);
 }
 
-void wizard_value_randart()
+void wizard_value_artefact()
 {
     int i = prompt_invent_item( "Value of which randart?", MT_INVLIST, -1 );
 
@@ -1970,7 +1970,7 @@ void wizard_value_randart()
         if (!is_random_artefact( you.inv[i] ))
             mpr("That item is not an artefact!");
         else
-            mprf("randart val: %d", randart_value(you.inv[i]));
+            mprf("randart val: %d", artefact_value(you.inv[i]));
     }
 }
 
@@ -2061,7 +2061,7 @@ void wizard_make_object_randart()
         }
 
         if (item_is_equipped(item))
-            unuse_randart(item);
+            unuse_artefact(item);
 
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;
@@ -2097,15 +2097,15 @@ void wizard_make_object_randart()
         return;
     }
 
-    if (Options.autoinscribe_randarts)
+    if (Options.autoinscribe_artefacts)
     {
         add_autoinscription(item,
-                            randart_auto_inscription(you.inv[i]));
+                            artefact_auto_inscription(you.inv[i]));
     }
 
     // If equipped, apply new randart benefits.
     if (item_is_equipped(item))
-        use_randart(item);
+        use_artefact(item);
 
     mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
@@ -3490,44 +3490,44 @@ static void _debug_rap_stats(FILE *ostat)
 
     // -1 = always bad, 1 = always good, 0 = depends on value
     const int good_or_bad[] = {
-         1, //RAP_BRAND
-         0, //RAP_AC
-         0, //RAP_EVASION
-         0, //RAP_STRENGTH
-         0, //RAP_INTELLIGENCE
-         0, //RAP_DEXTERITY
-         0, //RAP_FIRE
-         0, //RAP_COLD
-         1, //RAP_ELECTRICITY
-         1, //RAP_POISON
-         1, //RAP_NEGATIVE_ENERGY
-         1, //RAP_MAGIC
-         1, //RAP_EYESIGHT
-         1, //RAP_INVISIBLE
-         1, //RAP_LEVITATE
-         1, //RAP_BLINK
-         1, //RAP_CAN_TELEPORT
-         1, //RAP_BERSERK
-         1, //RAP_MAPPING
-        -1, //RAP_NOISES
-        -1, //RAP_PREVENT_SPELLCASTING
-        -1, //RAP_CAUSE_TELEPORTATION
-        -1, //RAP_PREVENT_TELEPORTATION
-        -1, //RAP_ANGRY
-        -1, //RAP_METABOLISM
-        -1, //RAP_MUTAGENIC
-         0, //RAP_ACCURACY
-         0, //RAP_DAMAGE
-        -1, //RAP_CURSED
-         0, //RAP_STEALTH
-         0  //RAP_MAGICAL_POWER
+         1, //ARTP_BRAND
+         0, //ARTP_AC
+         0, //ARTP_EVASION
+         0, //ARTP_STRENGTH
+         0, //ARTP_INTELLIGENCE
+         0, //ARTP_DEXTERITY
+         0, //ARTP_FIRE
+         0, //ARTP_COLD
+         1, //ARTP_ELECTRICITY
+         1, //ARTP_POISON
+         1, //ARTP_NEGATIVE_ENERGY
+         1, //ARTP_MAGIC
+         1, //ARTP_EYESIGHT
+         1, //ARTP_INVISIBLE
+         1, //ARTP_LEVITATE
+         1, //ARTP_BLINK
+         1, //ARTP_CAN_TELEPORT
+         1, //ARTP_BERSERK
+         1, //ARTP_MAPPING
+        -1, //ARTP_NOISES
+        -1, //ARTP_PREVENT_SPELLCASTING
+        -1, //ARTP_CAUSE_TELEPORTATION
+        -1, //ARTP_PREVENT_TELEPORTATION
+        -1, //ARTP_ANGRY
+        -1, //ARTP_METABOLISM
+        -1, //ARTP_MUTAGENIC
+         0, //ARTP_ACCURACY
+         0, //ARTP_DAMAGE
+        -1, //ARTP_CURSED
+         0, //ARTP_STEALTH
+         0  //ARTP_MAGICAL_POWER
     };
 
     // No bounds checking to speed things up a bit.
-    int all_props[RAP_NUM_PROPERTIES];
-    int good_props[RAP_NUM_PROPERTIES];
-    int bad_props[RAP_NUM_PROPERTIES];
-    for (i = 0; i < RAP_NUM_PROPERTIES; ++i)
+    int all_props[ARTP_NUM_PROPERTIES];
+    int good_props[ARTP_NUM_PROPERTIES];
+    int bad_props[ARTP_NUM_PROPERTIES];
+    for (i = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
         all_props[i] = 0;
         good_props[i] = 0;
@@ -3541,7 +3541,7 @@ static void _debug_rap_stats(FILE *ostat)
 
     int num_randarts = 0, bad_randarts = 0;
 
-    randart_properties_t proprt;
+    artefact_properties_t proprt;
 
     for (i = 0; i < RANDART_SEED_MASK; ++i)
     {
@@ -3556,7 +3556,7 @@ static void _debug_rap_stats(FILE *ostat)
 
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
-        randart_wpn_properties( item, proprt );
+        artefact_wpn_properties( item, proprt );
         if (randart_is_bad(item, proprt))
         {
             bad_randarts++;
@@ -3564,10 +3564,10 @@ static void _debug_rap_stats(FILE *ostat)
         }
 
         num_randarts++;
-        proprt[RAP_CURSED] = 0;
+        proprt[ARTP_CURSED] = 0;
 
         int num_props = 0, num_good_props = 0, num_bad_props = 0;
-        for (int j = 0; j < RAP_NUM_PROPERTIES; ++j)
+        for (int j = 0; j < ARTP_NUM_PROPERTIES; ++j)
         {
             const int val = proprt[j];
             if (val)
@@ -3633,43 +3633,43 @@ static void _debug_rap_stats(FILE *ostat)
             (float) total_balance_props / (float) num_randarts);
 
     const char* rap_names[] = {
-        "RAP_BRAND",
-        "RAP_AC",
-        "RAP_EVASION",
-        "RAP_STRENGTH",
-        "RAP_INTELLIGENCE",
-        "RAP_DEXTERITY",
-        "RAP_FIRE",
-        "RAP_COLD",
-        "RAP_ELECTRICITY",
-        "RAP_POISON",
-        "RAP_NEGATIVE_ENERGY",
-        "RAP_MAGIC",
-        "RAP_EYESIGHT",
-        "RAP_INVISIBLE",
-        "RAP_LEVITATE",
-        "RAP_BLINK",
-        "RAP_CAN_TELEPORT",
-        "RAP_BERSERK",
-        "RAP_MAPPING",
-        "RAP_NOISES",
-        "RAP_PREVENT_SPELLCASTING",
-        "RAP_CAUSE_TELEPORTATION",
-        "RAP_PREVENT_TELEPORTATION",
-        "RAP_ANGRY",
-        "RAP_METABOLISM",
-        "RAP_MUTAGENIC",
-        "RAP_ACCURACY",
-        "RAP_DAMAGE",
-        "RAP_CURSED",
-        "RAP_STEALTH",
-        "RAP_MAGICAL_POWER"
+        "ARTP_BRAND",
+        "ARTP_AC",
+        "ARTP_EVASION",
+        "ARTP_STRENGTH",
+        "ARTP_INTELLIGENCE",
+        "ARTP_DEXTERITY",
+        "ARTP_FIRE",
+        "ARTP_COLD",
+        "ARTP_ELECTRICITY",
+        "ARTP_POISON",
+        "ARTP_NEGATIVE_ENERGY",
+        "ARTP_MAGIC",
+        "ARTP_EYESIGHT",
+        "ARTP_INVISIBLE",
+        "ARTP_LEVITATE",
+        "ARTP_BLINK",
+        "ARTP_CAN_TELEPORT",
+        "ARTP_BERSERK",
+        "ARTP_MAPPING",
+        "ARTP_NOISES",
+        "ARTP_PREVENT_SPELLCASTING",
+        "ARTP_CAUSE_TELEPORTATION",
+        "ARTP_PREVENT_TELEPORTATION",
+        "ARTP_ANGRY",
+        "ARTP_METABOLISM",
+        "ARTP_MUTAGENIC",
+        "ARTP_ACCURACY",
+        "ARTP_DAMAGE",
+        "ARTP_CURSED",
+        "ARTP_STEALTH",
+        "ARTP_MAGICAL_POWER"
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");
     fprintf(ostat, "                           --------------------\n");
 
-    for (i = 0; i < RAP_NUM_PROPERTIES; ++i)
+    for (i = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
         if (all_props[i] == 0)
             continue;

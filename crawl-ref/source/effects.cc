@@ -1661,14 +1661,14 @@ bool acquirement(object_class_type class_wanted, int agent,
             if ((agent == GOD_TROG || agent == GOD_OKAWARU)
                 && is_random_artefact(doodad))
             {
-                randart_properties_t  proprt;
-                randart_wpn_properties( doodad, proprt );
+                artefact_properties_t  proprt;
+                artefact_wpn_properties( doodad, proprt );
 
                 // Check vs. stats. positive stats will automatically fall
                 // through.  As will negative stats that won't kill you.
-                if (-proprt[RAP_STRENGTH] >= you.strength
-                    || -proprt[RAP_INTELLIGENCE] >= you.intel
-                    || -proprt[RAP_DEXTERITY] >= you.dex)
+                if (-proprt[ARTP_STRENGTH] >= you.strength
+                    || -proprt[ARTP_INTELLIGENCE] >= you.intel
+                    || -proprt[ARTP_DEXTERITY] >= you.dex)
                 {
                     // Try again.
                     destroy_item(thing_created);
@@ -1856,7 +1856,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 {
                     // Give another name that takes god gift into account;
                     // artefact books already do that.
-                    thing.props["randart_name"].get_string() =
+                    thing.props["artefact_name"].get_string() =
                         artefact_name(thing, false);
                 }
             }
@@ -3282,15 +3282,15 @@ void handle_time(long time_delta)
     }
 
     bool mutagenic_randart = false;
-    if (const int randart_glow = scan_randarts(RAP_MUTAGENIC))
+    if (const int artefact_glow = scan_artefacts(ARTP_MUTAGENIC))
     {
         // Reduced randart glow. Note that one randart will contribute
-        // 2 - 5 units of glow to randart_glow. A randart with a mutagen
+        // 2 - 5 units of glow to artefact_glow. A randart with a mutagen
         // index of 2 does about 0.58 points of contamination per turn.
         // A randart with a mutagen index of 5 does about 0.7 points of
         // contamination per turn.
 
-        const int mean_glow   = 500 + randart_glow * 40;
+        const int mean_glow   = 500 + artefact_glow * 40;
         const int actual_glow = mean_glow / 2 + random2(mean_glow);
         added_contamination += div_rand_round(actual_glow, 1000);
         mutagenic_randart = true;

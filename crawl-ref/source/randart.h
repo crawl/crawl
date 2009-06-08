@@ -14,7 +14,7 @@
 
 // used in files.cc, newgame.cc, randart.cc {dlb}
 #define NO_UNRANDARTS 59
-#define RA_PROPERTIES RAP_NUM_PROPERTIES
+#define RA_PROPERTIES ARTP_NUM_PROPERTIES
 
 // Reserving the upper bits for later expansion/versioning.
 #define RANDART_SEED_MASK  0x00ffffff
@@ -39,8 +39,8 @@ std::string get_artefact_name( const item_def &item );
 /* ***********************************************************************
  * called from: spl-book
  * *********************************************************************** */
-void set_randart_name( item_def &item, const std::string &name );
-void set_randart_appearance( item_def &item, const std::string &appear );
+void set_artefact_name( item_def &item, const std::string &name );
+void set_artefact_appearance( item_def &item, const std::string &appear );
 
 /* ***********************************************************************
  * called from: effects
@@ -59,36 +59,37 @@ bool does_unrandart_exist(int whun);
  * *********************************************************************** */
 int find_okay_unrandart(unsigned char aclass, unsigned char atype = OBJ_RANDOM);
 
-typedef FixedVector< int, RA_PROPERTIES >  randart_properties_t;
-typedef FixedVector< bool, RA_PROPERTIES > randart_known_props_t;
+typedef FixedVector< int, RA_PROPERTIES >  artefact_properties_t;
+typedef FixedVector< bool, RA_PROPERTIES > artefact_known_props_t;
 
 /* ***********************************************************************
  * called from: describe - fight - it_use2 - item_use - player
  * *********************************************************************** */
-void randart_desc_properties( const item_def &item,
-                              randart_properties_t &proprt,
-                              randart_known_props_t &known,
-                              bool force_fake_props = false);
+void artefact_desc_properties( const item_def &item,
+                               artefact_properties_t &proprt,
+                               artefact_known_props_t &known,
+                               bool force_fake_props = false);
 
-void randart_wpn_properties( const item_def &item,
-                             randart_properties_t &proprt,
-                             randart_known_props_t &known );
+void artefact_wpn_properties( const item_def &item,
+                              artefact_properties_t &proprt,
+                              artefact_known_props_t &known );
 
-void randart_wpn_properties( const item_def &item,
-                             randart_properties_t &proprt );
+void artefact_wpn_properties( const item_def &item,
+                              artefact_properties_t &proprt );
 
-int randart_wpn_property( const item_def &item, randart_prop_type prop,
-                          bool &known );
+int artefact_wpn_property( const item_def &item, artefact_prop_type prop,
+                           bool &known );
 
-int randart_wpn_property( const item_def &item, randart_prop_type prop );
+int artefact_wpn_property( const item_def &item, artefact_prop_type prop );
 
-int randart_known_wpn_property( const item_def &item, randart_prop_type prop );
+int artefact_known_wpn_property( const item_def &item,
+                                 artefact_prop_type prop );
 
-int randart_wpn_num_props( const item_def &item );
-int randart_wpn_num_props( const randart_properties_t &proprt );
+int artefact_wpn_num_props( const item_def &item );
+int artefact_wpn_num_props( const artefact_properties_t &proprt );
 
-void randart_wpn_learn_prop( item_def &item, randart_prop_type prop );
-bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop );
+void artefact_wpn_learn_prop( item_def &item, artefact_prop_type prop );
+bool artefact_wpn_known_prop( const item_def &item, artefact_prop_type prop );
 
 /* ***********************************************************************
  * called from: dungeon
@@ -103,7 +104,7 @@ bool make_item_unrandart( item_def &item, int unrand_index );
  * called from: randart - debug
  * *********************************************************************** */
 bool randart_is_bad( const item_def &item );
-bool randart_is_bad( const item_def &item, randart_properties_t &proprt );
+bool randart_is_bad( const item_def &item, artefact_properties_t &proprt );
 
 /* ***********************************************************************
  * called from: files - newgame
@@ -119,11 +120,11 @@ int find_unrandart_index(const item_def &item);
 /* ***********************************************************************
  * called from: debug
  * *********************************************************************** */
-void randart_set_properties( item_def             &item,
-                             randart_properties_t &proprt );
-void randart_set_property( item_def          &item,
-                           randart_prop_type  prop,
-                           int                val );
+void artefact_set_properties( item_def              &item,
+                              artefact_properties_t &proprt );
+void artefact_set_property( item_def           &item,
+                            artefact_prop_type  prop,
+                            int                 val );
 
 /* ***********************************************************************
  * called from: mapdef

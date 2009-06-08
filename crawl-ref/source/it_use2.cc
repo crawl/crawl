@@ -451,7 +451,7 @@ bool unwield_item(bool showMsgs)
         const int brand = get_weapon_brand( item );
 
         if (is_random_artefact( item ))
-            unuse_randart(item);
+            unuse_artefact(item);
 
         if (brand != SPWPN_NORMAL)
         {
@@ -620,55 +620,55 @@ void unwear_armour(int slot)
     }
 
     if (is_random_artefact(item))
-        unuse_randart(item);
+        unuse_artefact(item);
 }
 
-void unuse_randart(const item_def &item)
+void unuse_artefact(const item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
 
-    randart_properties_t proprt;
-    randart_known_props_t known;
-    randart_wpn_properties( item, proprt, known );
+    artefact_properties_t proprt;
+    artefact_known_props_t known;
+    artefact_wpn_properties( item, proprt, known );
 
-    if (proprt[RAP_AC])
+    if (proprt[ARTP_AC])
     {
         you.redraw_armour_class = true;
-        if (!known[RAP_AC])
+        if (!known[ARTP_AC])
         {
             mprf("You feel less %s.",
-                 proprt[RAP_AC] > 0? "well-protected" : "vulnerable");
+                 proprt[ARTP_AC] > 0? "well-protected" : "vulnerable");
         }
     }
 
-    if (proprt[RAP_EVASION])
+    if (proprt[ARTP_EVASION])
     {
         you.redraw_evasion = true;
-        if (!known[RAP_EVASION])
+        if (!known[ARTP_EVASION])
         {
             mprf("You feel less %s.",
-                 proprt[RAP_EVASION] > 0? "nimble" : "awkward");
+                 proprt[ARTP_EVASION] > 0? "nimble" : "awkward");
         }
     }
 
-    if (proprt[RAP_MAGICAL_POWER])
+    if (proprt[ARTP_MAGICAL_POWER])
     {
         you.redraw_magic_points = true;
-        if (!known[RAP_MAGICAL_POWER])
+        if (!known[ARTP_MAGICAL_POWER])
         {
             mprf("You feel your mana capacity %s.",
-                 proprt[RAP_MAGICAL_POWER] > 0 ? "decrease" : "increase");
+                 proprt[ARTP_MAGICAL_POWER] > 0 ? "decrease" : "increase");
         }
     }
 
     // Modify ability scores; always output messages.
-    modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     false, item,
+    modify_stat( STAT_STRENGTH,     -proprt[ARTP_STRENGTH],     false, item,
                  true);
-    modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], false, item,
+    modify_stat( STAT_INTELLIGENCE, -proprt[ARTP_INTELLIGENCE], false, item,
                  true);
-    modify_stat( STAT_DEXTERITY,    -proprt[RAP_DEXTERITY],    false, item,
+    modify_stat( STAT_DEXTERITY,    -proprt[ARTP_DEXTERITY],    false, item,
                  true);
 
-    if (proprt[RAP_NOISES] != 0)
+    if (proprt[ARTP_NOISES] != 0)
         you.special_wield = SPWLD_NONE;
 }

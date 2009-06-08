@@ -2227,18 +2227,18 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 
     // Evocations from items.
-    if (scan_randarts(RAP_BLINK))
+    if (scan_artefacts(ARTP_BLINK))
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
 
-    if (wearing_amulet(AMU_RAGE) || scan_randarts(RAP_BERSERK))
+    if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (scan_randarts( RAP_MAPPING ))
+    if (scan_artefacts( ARTP_MAPPING ))
         _add_talent(talents, ABIL_EVOKE_MAPPING, check_confused);
 
     if (player_equip( EQ_RINGS, RING_INVISIBILITY )
         || player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_DARKNESS )
-        || scan_randarts( RAP_INVISIBLE ))
+        || scan_artefacts( ARTP_INVISIBLE ))
     {
         // Now you can only turn invisibility off if you have an
         // activatable item.  Wands and potions will have to time
@@ -2252,7 +2252,7 @@ std::vector<talent> your_talents(bool check_confused)
     // Note: This ability only applies to this counter.
     if (player_equip( EQ_RINGS, RING_LEVITATION )
         || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION )
-        || scan_randarts( RAP_LEVITATE ))
+        || scan_artefacts( ARTP_LEVITATE ))
     {
         // Has no effect on permanently flying Kenku.
         if (!you.permanent_flight())
@@ -2268,7 +2268,7 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     if (player_equip( EQ_RINGS, RING_TELEPORTATION )
-        || scan_randarts( RAP_CAN_TELEPORT ))
+        || scan_artefacts( ARTP_CAN_TELEPORT ))
     {
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
     }

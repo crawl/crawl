@@ -160,15 +160,15 @@ const char* jewellery_base_ability_string(int subtype)
 struct property_annotators
 {
     const char* name;
-    randart_prop_type prop;
+    artefact_prop_type prop;
     int spell_out;              // 0: "+3", 1: "+++", 2: value doesn't matter
 };
 
 static std::vector<std::string> _randart_propnames( const item_def& item )
 {
-    randart_properties_t  proprt;
-    randart_known_props_t known;
-    randart_desc_properties( item, proprt, known, true );
+    artefact_properties_t  proprt;
+    artefact_known_props_t known;
+    artefact_desc_properties( item, proprt, known, true );
 
     std::vector<std::string> propnames;
 
@@ -177,48 +177,48 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
-        { "-CAST",  RAP_PREVENT_SPELLCASTING,  2 },
-        { "-TELE",  RAP_PREVENT_TELEPORTATION, 2 },
-        { "MUT",    RAP_MUTAGENIC,             2 }, // handled specially
-        { "*Rage",  RAP_ANGRY,                 2 },
-        { "*TELE",  RAP_CAUSE_TELEPORTATION,   2 },
-        { "Hunger", RAP_METABOLISM,            2 }, // handled specially
-        { "Noisy",  RAP_NOISES,                2 },
+        { "-CAST",  ARTP_PREVENT_SPELLCASTING,  2 },
+        { "-TELE",  ARTP_PREVENT_TELEPORTATION, 2 },
+        { "MUT",    ARTP_MUTAGENIC,             2 }, // handled specially
+        { "*Rage",  ARTP_ANGRY,                 2 },
+        { "*TELE",  ARTP_CAUSE_TELEPORTATION,   2 },
+        { "Hunger", ARTP_METABOLISM,            2 }, // handled specially
+        { "Noisy",  ARTP_NOISES,                2 },
 
         // Evokable abilities come second
-        { "+Blink", RAP_BLINK,                 2 },
-        { "+Tele",  RAP_CAN_TELEPORT,          2 },
-        { "+Rage",  RAP_BERSERK,               2 },
-        { "+Inv",   RAP_INVISIBLE,             2 },
-        { "+Lev",   RAP_LEVITATE,              2 },
-        { "+Map",   RAP_MAPPING,               2 },
+        { "+Blink", ARTP_BLINK,                 2 },
+        { "+Tele",  ARTP_CAN_TELEPORT,          2 },
+        { "+Rage",  ARTP_BERSERK,               2 },
+        { "+Inv",   ARTP_INVISIBLE,             2 },
+        { "+Lev",   ARTP_LEVITATE,              2 },
+        { "+Map",   ARTP_MAPPING,               2 },
 
         // Resists, also really important
-        { "rElec",  RAP_ELECTRICITY,           2 },
-        { "rPois",  RAP_POISON,                2 },
-        { "rF",     RAP_FIRE,                  1 },
-        { "rC",     RAP_COLD,                  1 },
-        { "rN",     RAP_NEGATIVE_ENERGY,       1 },
-        { "MR",     RAP_MAGIC,                 2 },
+        { "rElec",  ARTP_ELECTRICITY,           2 },
+        { "rPois",  ARTP_POISON,                2 },
+        { "rF",     ARTP_FIRE,                  1 },
+        { "rC",     ARTP_COLD,                  1 },
+        { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
+        { "MR",     ARTP_MAGIC,                 2 },
 
         // Quantitative attributes
-        { "AC",     RAP_AC,                    0 },
-        { "EV",     RAP_EVASION,               0 },
-        { "Str",    RAP_STRENGTH,              0 },
-        { "Dex",    RAP_DEXTERITY,             0 },
-        { "Int",    RAP_INTELLIGENCE,          0 },
-        { "Acc",    RAP_ACCURACY,              0 },
-        { "Dam",    RAP_DAMAGE,                0 },
+        { "AC",     ARTP_AC,                    0 },
+        { "EV",     ARTP_EVASION,               0 },
+        { "Str",    ARTP_STRENGTH,              0 },
+        { "Dex",    ARTP_DEXTERITY,             0 },
+        { "Int",    ARTP_INTELLIGENCE,          0 },
+        { "Acc",    ARTP_ACCURACY,              0 },
+        { "Dam",    ARTP_DAMAGE,                0 },
 
         // Qualitative attributes
-        { "MP",     RAP_MAGICAL_POWER,         0 },
-        { "SInv",   RAP_EYESIGHT,              2 },
-        { "Stlth",  RAP_STEALTH,               2 }, // handled specially
-        { "Curse",  RAP_CURSED,                2 },
+        { "MP",     ARTP_MAGICAL_POWER,         0 },
+        { "SInv",   ARTP_EYESIGHT,              2 },
+        { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
+        { "Curse",  ARTP_CURSED,                2 },
     };
 
     // For randart jewellery, note the base jewellery type if it's not
-    // covered by randart_desc_properties()
+    // covered by artefact_desc_properties()
     if (item.base_type == OBJ_JEWELLERY
         && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
@@ -238,7 +238,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
             // ... and another one for adding a comma if needed.
             for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
                 if (known_proprt(propanns[i].prop)
-                    && propanns[i].prop != RAP_BRAND)
+                    && propanns[i].prop != ARTP_BRAND)
                 {
                     ego += ",";
                     break;
@@ -258,14 +258,14 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
             if (item.base_type == OBJ_JEWELLERY)
             {
                 if (item.sub_type == RING_FIRE
-                    && (propanns[i].prop == RAP_FIRE && val == 1
-                        || propanns[i].prop == RAP_COLD && val == -1))
+                    && (propanns[i].prop == ARTP_FIRE && val == 1
+                        || propanns[i].prop == ARTP_COLD && val == -1))
                 {
                     continue;
                 }
                 if (item.sub_type == RING_ICE
-                    && (propanns[i].prop == RAP_COLD && val == 1
-                        || propanns[i].prop == RAP_FIRE && val == -1))
+                    && (propanns[i].prop == ARTP_COLD && val == 1
+                        || propanns[i].prop == ARTP_FIRE && val == -1))
                 {
                     continue;
                 }
@@ -285,19 +285,19 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
                 break;
             }
             case 2: // e.g. rPois or SInv
-                if (propanns[i].prop == RAP_CURSED && val < 1)
+                if (propanns[i].prop == ARTP_CURSED && val < 1)
                     continue;
 
                 work << propanns[i].name;
 
                 // these need special handling, so we don't give anything away
-                if (propanns[i].prop == RAP_METABOLISM && val > 2
-                    || propanns[i].prop == RAP_MUTAGENIC && val > 3
-                    || propanns[i].prop == RAP_STEALTH && val > 20)
+                if (propanns[i].prop == ARTP_METABOLISM && val > 2
+                    || propanns[i].prop == ARTP_MUTAGENIC && val > 3
+                    || propanns[i].prop == ARTP_STEALTH && val > 20)
                 {
                     work << "+";
                 }
-                else if (propanns[i].prop == RAP_STEALTH && val < 0)
+                else if (propanns[i].prop == ARTP_STEALTH && val < 0)
                 {
                     if (val < -20)
                         work << "--";
@@ -314,7 +314,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 }
 
 // Remove randart auto-inscription.  Do it once for each property
-// string, rather than the return value of randart_auto_inscription(),
+// string, rather than the return value of artefact_auto_inscription(),
 // in case more information about the randart has been learned since
 // the last auto-inscription.
 static void _trim_randart_inscrip( item_def& item )
@@ -329,7 +329,7 @@ static void _trim_randart_inscrip( item_def& item )
     trim_string(item.inscription);
 }
 
-std::string randart_auto_inscription( const item_def& item )
+std::string artefact_auto_inscription( const item_def& item )
 {
     if (item.base_type == OBJ_BOOKS)
         return ("");
@@ -358,7 +358,7 @@ void add_autoinscription( item_def &item, std::string ainscrip)
 
 struct property_descriptor
 {
-    randart_prop_type property;
+    artefact_prop_type property;
     const char* desc;           // If it contains %d, will be replaced by value.
     bool is_graded_resist;
 };
@@ -367,47 +367,47 @@ static std::string _randart_descrip( const item_def &item )
 {
     std::string description;
 
-    randart_properties_t  proprt;
-    randart_known_props_t known;
-    randart_desc_properties( item, proprt, known );
+    artefact_properties_t  proprt;
+    artefact_known_props_t known;
+    artefact_desc_properties( item, proprt, known );
 
     const property_descriptor propdescs[] = {
-        { RAP_AC, "It affects your AC (%d).", false },
-        { RAP_EVASION, "It affects your evasion (%d).", false},
-        { RAP_STRENGTH, "It affects your strength (%d).", false},
-        { RAP_INTELLIGENCE, "It affects your intelligence (%d).", false},
-        { RAP_DEXTERITY, "It affects your dexterity (%d).", false},
-        { RAP_ACCURACY, "It affects your accuracy (%d).", false},
-        { RAP_DAMAGE, "It affects your damage-dealing abilities (%d).", false},
-        { RAP_FIRE, "fire", true},
-        { RAP_COLD, "cold", true},
-        { RAP_ELECTRICITY, "It insulates you from electricity.", false},
-        { RAP_POISON, "It protects you from poison.", false},
-        { RAP_NEGATIVE_ENERGY, "negative energy", true},
-        { RAP_MAGIC, "It increases your resistance to enchantments.", false},
-        { RAP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
-        { RAP_EYESIGHT, "It enhances your eyesight.", false},
-        { RAP_INVISIBLE, "It lets you turn invisible.", false},
-        { RAP_LEVITATE, "It lets you levitate.", false},
-        { RAP_BLINK, "It lets you blink.", false},
-        { RAP_CAN_TELEPORT, "It lets you teleport.", false},
-        { RAP_BERSERK, "It lets you go berserk.", false},
-        { RAP_MAPPING, "It lets you sense your surroundings.", false},
-        { RAP_NOISES, "It makes noises.", false},
-        { RAP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
-        { RAP_CAUSE_TELEPORTATION, "It causes teleportation.", false},
-        { RAP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
+        { ARTP_AC, "It affects your AC (%d).", false },
+        { ARTP_EVASION, "It affects your evasion (%d).", false},
+        { ARTP_STRENGTH, "It affects your strength (%d).", false},
+        { ARTP_INTELLIGENCE, "It affects your intelligence (%d).", false},
+        { ARTP_DEXTERITY, "It affects your dexterity (%d).", false},
+        { ARTP_ACCURACY, "It affects your accuracy (%d).", false},
+        { ARTP_DAMAGE, "It affects your damage-dealing abilities (%d).", false},
+        { ARTP_FIRE, "fire", true},
+        { ARTP_COLD, "cold", true},
+        { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
+        { ARTP_POISON, "It protects you from poison.", false},
+        { ARTP_NEGATIVE_ENERGY, "negative energy", true},
+        { ARTP_MAGIC, "It increases your resistance to enchantments.", false},
+        { ARTP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
+        { ARTP_EYESIGHT, "It enhances your eyesight.", false},
+        { ARTP_INVISIBLE, "It lets you turn invisible.", false},
+        { ARTP_LEVITATE, "It lets you levitate.", false},
+        { ARTP_BLINK, "It lets you blink.", false},
+        { ARTP_CAN_TELEPORT, "It lets you teleport.", false},
+        { ARTP_BERSERK, "It lets you go berserk.", false},
+        { ARTP_MAPPING, "It lets you sense your surroundings.", false},
+        { ARTP_NOISES, "It makes noises.", false},
+        { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
+        { ARTP_CAUSE_TELEPORTATION, "It causes teleportation.", false},
+        { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
-        { RAP_ANGRY,  "It makes you angry.", false},
-        { RAP_CURSED, "It may recurse itself.", false}
+        { ARTP_ANGRY,  "It makes you angry.", false},
+        { ARTP_CURSED, "It may recurse itself.", false}
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
     {
         if (known_proprt(propdescs[i].property))
         {
-            // Only randarts with RAP_CURSED > 0 may recurse themselves.
-            if (propdescs[i].property == RAP_CURSED
+            // Only randarts with ARTP_CURSED > 0 may recurse themselves.
+            if (propdescs[i].property == ARTP_CURSED
                 && proprt[propdescs[i].property] < 1)
             {
                 continue;
@@ -444,17 +444,17 @@ static std::string _randart_descrip( const item_def &item )
     }
 
     // Some special cases which don't fit into the above.
-    if (known_proprt( RAP_METABOLISM ))
+    if (known_proprt( ARTP_METABOLISM ))
     {
-        if (proprt[ RAP_METABOLISM ] >= 3)
+        if (proprt[ ARTP_METABOLISM ] >= 3)
             description += "$It greatly speeds your metabolism.";
-        else if (proprt[ RAP_METABOLISM ])
+        else if (proprt[ ARTP_METABOLISM ])
             description += "$It speeds your metabolism. ";
     }
 
-    if (known_proprt( RAP_STEALTH ))
+    if (known_proprt( ARTP_STEALTH ))
     {
-        const int stval = proprt[RAP_STEALTH];
+        const int stval = proprt[ARTP_STEALTH];
         char buf[80];
         snprintf(buf, sizeof buf, "$It makes you %s%s stealthy.",
                  (stval < -20 || stval > 20) ? "much " : "",
@@ -462,9 +462,9 @@ static std::string _randart_descrip( const item_def &item )
         description += buf;
     }
 
-    if (known_proprt( RAP_MUTAGENIC ))
+    if (known_proprt( ARTP_MUTAGENIC ))
     {
-        if (proprt[ RAP_MUTAGENIC ] > 3)
+        if (proprt[ ARTP_MUTAGENIC ] > 3)
             description += "$It glows with mutagenic radiation.";
         else
             description += "$It emits mutagenic radiation.";
@@ -2335,7 +2335,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
     bool need_autoinscribe = false;
     if (is_random_artefact(item))
     {
-        ainscrip = randart_auto_inscription(item);
+        ainscrip = artefact_auto_inscription(item);
         if (!ainscrip.empty()
             && (!is_inscribed
                 || item.inscription.find(ainscrip) == std::string::npos))

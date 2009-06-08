@@ -1033,7 +1033,7 @@ int player_teleport(bool calc_unid)
         && you.weapon()->base_type == OBJ_WEAPONS
         && is_random_artefact(*you.weapon()))
     {
-        tp += scan_randarts(RAP_CAUSE_TELEPORTATION, calc_unid);
+        tp += scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
     }
 
     return tp;
@@ -1179,7 +1179,7 @@ int player_hunger_rate(void)
         hunger += player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR );
 
     // randarts
-    hunger += scan_randarts(RAP_METABOLISM);
+    hunger += scan_artefacts(ARTP_METABOLISM);
 
     // burden
     hunger += you.burden_state;
@@ -1263,7 +1263,7 @@ int player_res_magic(void)
     }
 
     // randarts
-    rm += scan_randarts(RAP_MAGIC);
+    rm += scan_artefacts(ARTP_MAGIC);
 
     // armour
     rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE);
@@ -1331,7 +1331,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
 
         // randart weapons:
-        rf += scan_randarts(RAP_FIRE, calc_unid);
+        rf += scan_artefacts(ARTP_FIRE, calc_unid);
     }
 
     // species:
@@ -1441,7 +1441,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
 
         // randart weapons:
-        rc += scan_randarts(RAP_COLD, calc_unid);
+        rc += scan_artefacts(ARTP_COLD, calc_unid);
     }
 
     // mutations:
@@ -1525,7 +1525,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR );
 
         // randart weapons:
-        re += scan_randarts(RAP_ELECTRICITY, calc_unid);
+        re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
     }
 
     // species:
@@ -1601,7 +1601,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR );
 
         // randart weapons:
-        rp += scan_randarts(RAP_POISON, calc_unid);
+        rp += scan_artefacts(ARTP_POISON, calc_unid);
     }
 
     // mutations:
@@ -1865,7 +1865,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
         // randart wpns
-        pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
+        pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
     }
 
     // undead/demonic power
@@ -2063,7 +2063,7 @@ int player_AC(void)
     if (player_equip_ego_type( EQ_SHIELD, SPARM_PROTECTION ))
         AC += 300;
 
-    AC += scan_randarts(RAP_AC) * 100;
+    AC += scan_artefacts(ARTP_AC) * 100;
 
     if (you.duration[DUR_ICY_ARMOUR])
         AC += 400 + 100 * you.skills[SK_ICE_MAGIC] / 3;         // max 13
@@ -2364,7 +2364,7 @@ int player_evasion()
         ev -= 2;
 
     ev += player_equip( EQ_RINGS_PLUS, RING_EVASION );
-    ev += scan_randarts( RAP_EVASION );
+    ev += scan_artefacts( ARTP_EVASION );
 
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS ))
         ev -= 2;
@@ -2506,7 +2506,7 @@ int old_player_evasion(void)
         break;
     }
 
-    ev += scan_randarts(RAP_EVASION);
+    ev += scan_artefacts(ARTP_EVASION);
 
     return (ev);
 }
@@ -2518,7 +2518,7 @@ int player_magical_power(void)
 
     ret += 13 * player_equip(EQ_STAFF, STAFF_POWER);
     ret +=  9 * player_equip(EQ_RINGS, RING_MAGICAL_POWER);
-    ret +=      scan_randarts(RAP_MAGICAL_POWER);
+    ret +=      scan_artefacts(ARTP_MAGICAL_POWER);
 
     return (ret);
 }
@@ -2597,7 +2597,7 @@ int player_see_invis(bool calc_unid)
         si++;
 
     // randart wpns
-    int artefacts = scan_randarts(RAP_EYESIGHT, calc_unid);
+    int artefacts = scan_artefacts(ARTP_EYESIGHT, calc_unid);
 
     if (artefacts > 0)
         si += artefacts;
@@ -3641,7 +3641,7 @@ int check_stealth(void)
     if ( you.duration[DUR_STEALTH] )
         stealth += 80;
 
-    stealth += scan_randarts( RAP_STEALTH );
+    stealth += scan_artefacts( ARTP_STEALTH );
 
     if (player_is_airborne())
         stealth += 10;
@@ -4503,12 +4503,12 @@ int slaying_bonus(char which_affected)
     if (which_affected == PWPN_HIT)
     {
         ret += player_equip( EQ_RINGS_PLUS, RING_SLAYING );
-        ret += scan_randarts(RAP_ACCURACY);
+        ret += scan_artefacts(ARTP_ACCURACY);
     }
     else if (which_affected == PWPN_DAMAGE)
     {
         ret += player_equip( EQ_RINGS_PLUS2, RING_SLAYING );
-        ret += scan_randarts(RAP_DAMAGE);
+        ret += scan_artefacts(ARTP_DAMAGE);
     }
 
     ret += std::min(you.duration[DUR_SLAYING] / 13, 6);
@@ -4518,7 +4518,7 @@ int slaying_bonus(char which_affected)
 
 // Checks each equip slot for an evokable item (jewellery or randart).
 // Returns true if any of these has the same ability as the one handed in.
-bool items_give_ability(const int slot, randart_prop_type abil)
+bool items_give_ability(const int slot, artefact_prop_type abil)
 {
     for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
@@ -4537,16 +4537,16 @@ bool items_give_ability(const int slot, randart_prop_type abil)
 
         if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING)
         {
-            if (abil == RAP_LEVITATE && you.inv[eq].sub_type == RING_LEVITATION)
+            if (abil == ARTP_LEVITATE && you.inv[eq].sub_type == RING_LEVITATION)
                 return (true);
-            if (abil == RAP_CAN_TELEPORT && you.inv[eq].sub_type == RING_TELEPORTATION)
+            if (abil == ARTP_CAN_TELEPORT && you.inv[eq].sub_type == RING_TELEPORTATION)
                 return (true);
-            if (abil == RAP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
+            if (abil == ARTP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
                 return (true);
         }
         else if (eq == EQ_AMULET)
         {
-            if (abil == RAP_BERSERK && you.inv[eq].sub_type == AMU_RAGE)
+            if (abil == ARTP_BERSERK && you.inv[eq].sub_type == AMU_RAGE)
                 return (true);
         }
 
@@ -4554,7 +4554,7 @@ bool items_give_ability(const int slot, randart_prop_type abil)
         if (!is_random_artefact( you.inv[ eq ] ))
             continue;
 
-        if (randart_wpn_property(you.inv[ eq ], abil))
+        if (artefact_wpn_property(you.inv[ eq ], abil))
             return (true);
     }
 
@@ -4565,7 +4565,7 @@ bool items_give_ability(const int slot, randart_prop_type abil)
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where
 // possible.
-int scan_randarts(randart_prop_type which_property, bool calc_unid)
+int scan_artefacts(artefact_prop_type which_property, bool calc_unid)
 {
     int retval = 0;
 
@@ -4590,7 +4590,7 @@ int scan_randarts(randart_prop_type which_property, bool calc_unid)
             continue;
         }
 
-        retval += randart_wpn_property( you.inv[ eq ], which_property );
+        retval += artefact_wpn_property( you.inv[ eq ], which_property );
     }
 
     return (retval);
@@ -5598,7 +5598,7 @@ static int _strength_modifier()
     result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
 
     // randarts of strength
-    result += scan_randarts(RAP_STRENGTH);
+    result += scan_artefacts(ARTP_STRENGTH);
 
     // mutations
     result += player_mutation_level(MUT_STRONG)
@@ -5633,7 +5633,7 @@ static int _int_modifier()
     result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
     // randarts of intelligence
-    result += scan_randarts(RAP_INTELLIGENCE);
+    result += scan_artefacts(ARTP_INTELLIGENCE);
 
     // mutations
     result += player_mutation_level(MUT_CLEVER)
@@ -5656,7 +5656,7 @@ static int _dex_modifier()
     result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
 
     // randarts of dexterity
-    result += scan_randarts(RAP_DEXTERITY);
+    result += scan_artefacts(ARTP_DEXTERITY);
 
     // mutations
     result += player_mutation_level(MUT_AGILE)
@@ -6488,7 +6488,7 @@ bool player::cannot_fight() const
     return (false);
 }
 
-// If you have a randart equipped that has the RAP_ANGRY property,
+// If you have a randart equipped that has the ARTP_ANGRY property,
 // there's a 1/20 chance of it becoming activated whenever you
 // attack a monster. (Same as the berserk mutation at level 1.)
 // The probabilities for actually going berserk are cumulative!
@@ -6503,7 +6503,7 @@ static bool _equipment_make_berserk()
          if (!is_random_artefact(*item))
              continue;
 
-         if (randart_wpn_property(*item, RAP_ANGRY) && one_chance_in(20))
+         if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(20))
              return (true);
     }
 

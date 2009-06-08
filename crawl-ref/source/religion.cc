@@ -3537,7 +3537,7 @@ bool is_chaotic_item(const item_def& item)
         break;
     }
 
-    if (is_random_artefact(item) && randart_wpn_property(item, RAP_MUTAGENIC))
+    if (is_random_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
         retval = true;
 
     return (retval);

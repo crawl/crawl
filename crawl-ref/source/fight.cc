@@ -377,7 +377,7 @@ void melee_attack::init_attack()
     if (weapon && weapon->base_type == OBJ_WEAPONS
         && is_random_artefact( *weapon ))
     {
-        randart_wpn_properties( *weapon, art_props );
+        artefact_wpn_properties( *weapon, art_props );
     }
 
     wpn_skill = weapon ? weapon_skill( *weapon ) : SK_UNARMED_COMBAT;
@@ -529,8 +529,8 @@ bool melee_attack::is_water_attack(const actor *attk,
 void melee_attack::check_autoberserk()
 {
     if (weapon
-        && art_props[RAP_ANGRY] >= 1
-        && !one_chance_in(1 + art_props[RAP_ANGRY]))
+        && art_props[ARTP_ANGRY] >= 1
+        && !one_chance_in(1 + art_props[ARTP_ANGRY]))
     {
         attacker->go_berserk(false);
     }
@@ -2252,7 +2252,7 @@ bool melee_attack::distortion_affects_defender()
             // the player goes to Abyss, while the weapon object is
             // still in memory.
             if (is_random_artefact(*weapon))
-                randart_wpn_learn_prop(*weapon, RAP_BRAND);
+                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
             else
                 set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
         }
@@ -3008,7 +3008,7 @@ bool melee_attack::apply_damage_brand()
     if (weapon)
     {
         if (is_random_artefact(*weapon))
-            brand_was_known = randart_known_wpn_property(*weapon, RAP_BRAND);
+            brand_was_known = artefact_known_wpn_property(*weapon, ARTP_BRAND);
         else
             brand_was_known = item_type_known(*weapon);
     }
@@ -3289,7 +3289,7 @@ bool melee_attack::apply_damage_brand()
         && !is_unrandom_artefact(*weapon) && !is_fixed_artefact(*weapon))
     {
         if (is_random_artefact(*weapon))
-            randart_wpn_learn_prop(*weapon, RAP_BRAND);
+            artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
         else
             set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
     }

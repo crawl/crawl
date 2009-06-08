@@ -918,7 +918,7 @@ int get_weapon_brand( const item_def &item )
     }
     else if (is_random_artefact( item ))
     {
-        return (randart_wpn_property( item, RAP_BRAND ));
+        return (artefact_wpn_property( item, ARTP_BRAND ));
     }
 
     return (item.special);
@@ -2467,9 +2467,12 @@ bool gives_ability(const item_def &item)
         return (false);
 
     // Check for evokable randart properties.
-    for (int rap = RAP_INVISIBLE; rap <= RAP_MAPPING; rap++)
-        if (randart_wpn_property( item, static_cast<randart_prop_type>(rap) ))
+    for (int rap = ARTP_INVISIBLE; rap <= ARTP_MAPPING; rap++)
+        if (artefact_wpn_property( item,
+                                   static_cast<artefact_prop_type>(rap) ))
+        {
             return (true);
+        }
 
     return (false);
 }
@@ -2531,13 +2534,16 @@ bool gives_resistance(const item_def &item)
         return (false);
 
     // Check for randart resistances.
-    for (int rap = RAP_FIRE; rap <= RAP_CAN_TELEPORT; rap++)
+    for (int rap = ARTP_FIRE; rap <= ARTP_CAN_TELEPORT; rap++)
     {
-        if (rap == RAP_MAGIC || rap >= RAP_INVISIBLE && rap != RAP_CAN_TELEPORT)
+        if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE && rap != ARTP_CAN_TELEPORT)
             continue;
 
-        if (randart_wpn_property( item, static_cast<randart_prop_type>(rap) ))
+        if (artefact_wpn_property( item,
+                                   static_cast<artefact_prop_type>(rap) ))
+        {
             return (true);
+        }
     }
 
     return (false);

@@ -2761,12 +2761,12 @@ inscribed. See options_guide.txt for details. Some examples are
   autoinscribe = royal jell:=g
   autoinscribe = wand of healing:!v
 
-Randart autoinscriptions
+Artefacts autoinscriptions
 ------------------------
-Many players use inscriptions for properties of random artefacts. This
-makes browsing the inventory or stashes easier. Crawl provides a scheme
-for automatic inscription (you can switch this off using the option
-autoinscribe_randarts=false).
+Many players use inscriptions for properties of artefacts. This makes
+browsing the inventory or stashes easier. Crawl provides a scheme for
+automatic inscription (you can switch this off using the option
+autoinscribe_artefacts=false).
 
 Here, one has to negotiate between two concurrent objectives: terseness
 for better use of limited line lengths versus verboseness for easier

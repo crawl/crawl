@@ -13,7 +13,7 @@
 #include "externs.h"
 #include "itemname.h"
 
-int randart_value( const item_def &item );
+int artefact_value( const item_def &item );
 
 // ident == true overrides the item ident level and gives the price
 // as if the item was fully id'd

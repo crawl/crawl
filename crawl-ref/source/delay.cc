@@ -1434,8 +1434,8 @@ void armour_wear_effects(const int item_slot)
 
     if (!was_known)
     {
-        if (Options.autoinscribe_randarts && is_random_artefact(arm))
-            add_autoinscription( arm, randart_auto_inscription(arm));
+        if (Options.autoinscribe_artefacts && is_random_artefact(arm))
+            add_autoinscription( arm, artefact_auto_inscription(arm));
     }
     if (!melded)
         mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
@@ -1565,7 +1565,7 @@ void armour_wear_effects(const int item_slot)
     }
 
     if (is_random_artefact(arm))
-        use_randart(arm, melded);
+        use_artefact(arm, melded);
 
     if (item_cursed(arm) && !melded)
     {

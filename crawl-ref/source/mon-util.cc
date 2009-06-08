@@ -342,7 +342,7 @@ bool mons_class_flag(int mc, int bf)
 }
 
 static int _scan_mon_inv_randarts(const monsters *mon,
-                                  randart_prop_type ra_prop)
+                                  artefact_prop_type ra_prop)
 {
     int ret = 0;
 
@@ -356,25 +356,25 @@ static int _scan_mon_inv_randarts(const monsters *mon,
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
             && is_random_artefact(mitm[weapon]))
         {
-            ret += randart_wpn_property(mitm[weapon], ra_prop);
+            ret += artefact_wpn_property(mitm[weapon], ra_prop);
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
             && is_random_artefact(mitm[second]))
         {
-            ret += randart_wpn_property(mitm[second], ra_prop);
+            ret += artefact_wpn_property(mitm[second], ra_prop);
         }
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
             && is_random_artefact(mitm[armour]))
         {
-            ret += randart_wpn_property(mitm[armour], ra_prop);
+            ret += artefact_wpn_property(mitm[armour], ra_prop);
         }
 
         if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR
             && is_random_artefact(mitm[shield]))
         {
-            ret += randart_wpn_property(mitm[shield], ra_prop);
+            ret += artefact_wpn_property(mitm[shield], ra_prop);
         }
     }
 
@@ -844,7 +844,7 @@ bool mons_see_invis(const monsters *mon)
         return (mon->ghost->see_invis);
     else if (mons_class_flag(mon->type, M_SEE_INVIS))
         return (true);
-    else if (_scan_mon_inv_randarts(mon, RAP_EYESIGHT) > 0)
+    else if (_scan_mon_inv_randarts(mon, ARTP_EYESIGHT) > 0)
         return (true);
 
     return (false);
@@ -1142,7 +1142,7 @@ int mons_resist_magic( const monsters *mon )
         u = mon->hit_dice * -u * 4 / 3;
 
     // Randarts have a multiplicative effect.
-    u *= (_scan_mon_inv_randarts( mon, RAP_MAGIC ) + 100);
+    u *= (_scan_mon_inv_randarts( mon, ARTP_MAGIC ) + 100);
     u /= 100;
 
     // ego armour resistance
@@ -1222,7 +1222,7 @@ int mons_res_elec(const monsters *mon)
     // Don't bother checking equipment if the monster can't use it.
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts(mon, RAP_ELECTRICITY);
+        u += _scan_mon_inv_randarts(mon, ARTP_ELECTRICITY);
 
         // No ego armour, but storm dragon.
         const int armour = mon->inv[MSLOT_ARMOUR];
@@ -1258,7 +1258,7 @@ int mons_res_poison(const monsters *mon)
 
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts( mon, RAP_POISON );
+        u += _scan_mon_inv_randarts( mon, ARTP_POISON );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
@@ -1315,7 +1315,7 @@ int mons_res_fire(const monsters *mon)
 
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts(mon, RAP_FIRE);
+        u += _scan_mon_inv_randarts(mon, ARTP_FIRE);
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
@@ -1360,7 +1360,7 @@ int mons_res_cold(const monsters *mon)
 
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts(mon, RAP_COLD);
+        u += _scan_mon_inv_randarts(mon, ARTP_COLD);
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
@@ -1423,7 +1423,7 @@ int mons_res_negative_energy(const monsters *mon)
 
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts(mon, RAP_NEGATIVE_ENERGY);
+        u += _scan_mon_inv_randarts(mon, ARTP_NEGATIVE_ENERGY);
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
@@ -1513,7 +1513,7 @@ flight_type mons_flies(const monsters *mon, bool randarts)
         ret = mons_class_flies(mon->type);
 
     if (randarts && ret == FL_NONE
-        && _scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0)
+        && _scan_mon_inv_randarts(mon, ARTP_LEVITATE) > 0)
     {
         ret = FL_LEVITATE;
     }
@@ -4179,7 +4179,7 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
         if (message_given)
         {
             if (is_random_artefact(item))
-                randart_wpn_learn_prop(item, RAP_BRAND);
+                artefact_wpn_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
         }
@@ -4278,7 +4278,7 @@ void monsters::unequip_weapon(item_def &item, int near, bool msg)
         if (message_given)
         {
             if (is_random_artefact(item))
-                randart_wpn_learn_prop(item, RAP_BRAND);
+                artefact_wpn_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
         }

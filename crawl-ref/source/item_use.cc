@@ -444,7 +444,7 @@ int item_special_wield_effect(const item_def &item)
 
     int i_eff = SPWPN_NORMAL;
     if (is_random_artefact( item ))
-        i_eff = randart_wpn_property(item, RAP_BRAND);
+        i_eff = artefact_wpn_property(item, ARTP_BRAND);
     else
         i_eff = item.special;
 
@@ -552,14 +552,14 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         if (artefact)
         {
-            special = randart_wpn_property(item, RAP_BRAND);
-            use_randart(item_wield_2);
+            special = artefact_wpn_property(item, ARTP_BRAND);
+            use_artefact(item_wield_2);
             if (!was_known)
             {
                 item.flags |= ISFLAG_NOTED_ID;
 
-                if (Options.autoinscribe_randarts)
-                    add_autoinscription(item, randart_auto_inscription(item));
+                if (Options.autoinscribe_artefacts)
+                    add_autoinscription(item, artefact_auto_inscription(item));
 
                 // Make a note of it.
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
@@ -3132,7 +3132,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
 void jewellery_wear_effects(item_def &item)
 {
     item_type_id_state_type ident        = ID_TRIED_TYPE;
-    randart_prop_type       fake_rap     = RAP_NUM_PROPERTIES;
+    artefact_prop_type       fake_rap     = ARTP_NUM_PROPERTIES;
     bool                    learn_pluses = false;
 
     // Randart jewellery shouldn't auto-ID just because the base type
@@ -3183,7 +3183,7 @@ void jewellery_wear_effects(item_def &item)
         {
             mpr("You become transparent for a moment.");
             if (artefact)
-                fake_rap = RAP_INVISIBLE;
+                fake_rap = ARTP_INVISIBLE;
             else
                 ident = ID_KNOWN_TYPE;
         }
@@ -3207,7 +3207,7 @@ void jewellery_wear_effects(item_def &item)
             modify_stat(STAT_STRENGTH, item.plus, false, item);
 
             if (artefact)
-                fake_rap = RAP_STRENGTH;
+                fake_rap = ARTP_STRENGTH;
             else
                 ident = ID_KNOWN_TYPE;
 
@@ -3221,7 +3221,7 @@ void jewellery_wear_effects(item_def &item)
             modify_stat(STAT_DEXTERITY, item.plus, false, item);
 
             if (artefact)
-                fake_rap = RAP_DEXTERITY;
+                fake_rap = ARTP_DEXTERITY;
             else
                 ident = ID_KNOWN_TYPE;
 
@@ -3235,7 +3235,7 @@ void jewellery_wear_effects(item_def &item)
             modify_stat(STAT_INTELLIGENCE, item.plus, false, item);
 
             if (artefact)
-                fake_rap = RAP_INTELLIGENCE;
+                fake_rap = ARTP_INTELLIGENCE;
             else
                 ident = ID_KNOWN_TYPE;
 
@@ -3247,42 +3247,42 @@ void jewellery_wear_effects(item_def &item)
         mpr("You feel your mana capacity increase.");
         calc_mp();
         if (artefact)
-            fake_rap = RAP_MAGICAL_POWER;
+            fake_rap = ARTP_MAGICAL_POWER;
         else
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_LEVITATION:
-        if (!scan_randarts(RAP_LEVITATE))
+        if (!scan_artefacts(ARTP_LEVITATE))
         {
             if (player_is_airborne())
                 mpr("You feel vaguely more buoyant than before.");
             else
                 mpr("You feel buoyant.");
             if (artefact)
-                fake_rap = RAP_LEVITATE;
+                fake_rap = ARTP_LEVITATE;
             else
                 ident = ID_KNOWN_TYPE;
         }
         break;
 
     case RING_TELEPORTATION:
-        if (!scan_randarts(RAP_CAN_TELEPORT))
+        if (!scan_artefacts(ARTP_CAN_TELEPORT))
         {
             mpr("You feel slightly jumpy.");
             if (artefact)
-                fake_rap = RAP_CAUSE_TELEPORTATION;
+                fake_rap = ARTP_CAUSE_TELEPORTATION;
             else
                 ident = ID_KNOWN_TYPE;
         }
         break;
 
     case AMU_RAGE:
-        if (!scan_randarts(RAP_BERSERK))
+        if (!scan_artefacts(ARTP_BERSERK))
         {
             mpr("You feel a brief urge to hack something to bits.");
             if (artefact)
-                fake_rap = RAP_BERSERK;
+                fake_rap = ARTP_BERSERK;
             else
                 ident = ID_KNOWN_TYPE;
         }
@@ -3306,13 +3306,13 @@ void jewellery_wear_effects(item_def &item)
     // so we don't allow them to make the base types known.
     if (artefact)
     {
-        use_randart(item);
+        use_artefact(item);
 
         if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
 
-        if (fake_rap != RAP_NUM_PROPERTIES)
-            randart_wpn_learn_prop(item, fake_rap);
+        if (fake_rap != ARTP_NUM_PROPERTIES)
+            artefact_wpn_learn_prop(item, fake_rap);
 
         if (!item.props.exists("jewellery_tried")
             || !item.props["jewellery_tried"].get_bool())
@@ -3431,9 +3431,9 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 
     if (is_random_artefact(item))
     {
-        prop_str += randart_known_wpn_property(item, RAP_STRENGTH);
-        prop_int += randart_known_wpn_property(item, RAP_INTELLIGENCE);
-        prop_dex += randart_known_wpn_property(item, RAP_DEXTERITY);
+        prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
+        prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
+        prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
     }
 
     if (remove)
@@ -3730,7 +3730,7 @@ void jewellery_remove_effects(item_def &item, bool mesg)
     }
 
     if (is_random_artefact(item))
-        unuse_randart(item);
+        unuse_artefact(item);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();
@@ -5251,12 +5251,12 @@ void examine_object(void)
     mesclr(true);
 }                               // end original_name()
 
-void use_randart(unsigned char item_wield_2)
+void use_artefact(unsigned char item_wield_2)
 {
-    use_randart( you.inv[ item_wield_2 ] );
+    use_artefact( you.inv[ item_wield_2 ] );
 }
 
-void use_randart(item_def &item, bool unmeld)
+void use_artefact(item_def &item, bool unmeld)
 {
 #define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
 
@@ -5265,102 +5265,102 @@ void use_randart(item_def &item, bool unmeld)
     const bool alreadyknown = item_type_known(item);
     const bool dangerous    = player_in_a_dangerous_place();
 
-    randart_properties_t  proprt;
-    randart_known_props_t known;
-    randart_wpn_properties( item, proprt, known );
+    artefact_properties_t  proprt;
+    artefact_known_props_t known;
+    artefact_wpn_properties( item, proprt, known );
 
     // Only give property messages for previously unknown properties.
-    if (proprt[RAP_AC])
+    if (proprt[ARTP_AC])
     {
         you.redraw_armour_class = true;
-        if (!known[RAP_AC])
+        if (!known[ARTP_AC])
         {
-            mprf("You feel %s.", proprt[RAP_AC] > 0?
+            mprf("You feel %s.", proprt[ARTP_AC] > 0?
                  "well-protected" : "more vulnerable");
-            randart_wpn_learn_prop(item, RAP_AC);
+            artefact_wpn_learn_prop(item, ARTP_AC);
         }
     }
 
-    if (proprt[RAP_EVASION])
+    if (proprt[ARTP_EVASION])
     {
         you.redraw_evasion = true;
-        if (!known[RAP_EVASION])
+        if (!known[ARTP_EVASION])
         {
-            mprf("You feel somewhat %s.", proprt[RAP_EVASION] > 0?
+            mprf("You feel somewhat %s.", proprt[ARTP_EVASION] > 0?
                  "nimbler" : "more awkward");
-            randart_wpn_learn_prop(item, RAP_EVASION);
+            artefact_wpn_learn_prop(item, ARTP_EVASION);
         }
     }
 
-    if (proprt[RAP_MAGICAL_POWER])
+    if (proprt[ARTP_MAGICAL_POWER])
     {
         you.redraw_magic_points = true;
-        if (!known[RAP_MAGICAL_POWER])
+        if (!known[ARTP_MAGICAL_POWER])
         {
             mprf("You feel your mana capacity %s.",
-                 proprt[RAP_MAGICAL_POWER] > 0? "increase" : "decrease");
-            randart_wpn_learn_prop(item, RAP_MAGICAL_POWER);
+                 proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
+            artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
         }
     }
 
     // Modify ability scores.
     // Output result even when identified (because of potential fatality).
-    modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     false, item );
-    modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false, item );
-    modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false, item );
+    modify_stat( STAT_STRENGTH,     proprt[ARTP_STRENGTH],     false, item );
+    modify_stat( STAT_INTELLIGENCE, proprt[ARTP_INTELLIGENCE], false, item );
+    modify_stat( STAT_DEXTERITY,    proprt[ARTP_DEXTERITY],    false, item );
 
-    const randart_prop_type stat_props[3] =
-        {RAP_STRENGTH, RAP_INTELLIGENCE, RAP_DEXTERITY};
+    const artefact_prop_type stat_props[3] =
+        {ARTP_STRENGTH, ARTP_INTELLIGENCE, ARTP_DEXTERITY};
 
     for (int i = 0; i < 3; i++)
         if (unknown_proprt(stat_props[i]))
-            randart_wpn_learn_prop(item, stat_props[i]);
+            artefact_wpn_learn_prop(item, stat_props[i]);
 
     // For evokable stuff, check whether other equipped items yield
     // the same ability.  If not, and if the ability granted hasn't
     // already been discovered, give a message.
-    if (unknown_proprt(RAP_LEVITATE)
-        && !items_give_ability(item.link, RAP_LEVITATE))
+    if (unknown_proprt(ARTP_LEVITATE)
+        && !items_give_ability(item.link, ARTP_LEVITATE))
     {
         if (player_is_airborne())
             mpr("You feel vaguely more buoyant than before.");
         else
             mpr("You feel buoyant.");
-        randart_wpn_learn_prop(item, RAP_LEVITATE);
+        artefact_wpn_learn_prop(item, ARTP_LEVITATE);
     }
 
-    if (unknown_proprt(RAP_INVISIBLE) && !you.duration[DUR_INVIS])
+    if (unknown_proprt(ARTP_INVISIBLE) && !you.duration[DUR_INVIS])
     {
         mpr("You become transparent for a moment.");
-        randart_wpn_learn_prop(item, RAP_INVISIBLE);
+        artefact_wpn_learn_prop(item, ARTP_INVISIBLE);
     }
 
-    if (unknown_proprt(RAP_CAN_TELEPORT)
-        && !items_give_ability(item.link, RAP_CAN_TELEPORT))
+    if (unknown_proprt(ARTP_CAN_TELEPORT)
+        && !items_give_ability(item.link, ARTP_CAN_TELEPORT))
     {
         mpr("You feel slightly jumpy.");
-        randart_wpn_learn_prop(item, RAP_CAN_TELEPORT);
+        artefact_wpn_learn_prop(item, ARTP_CAN_TELEPORT);
     }
 
-    if (unknown_proprt(RAP_BERSERK)
-        && !items_give_ability(item.link, RAP_BERSERK))
+    if (unknown_proprt(ARTP_BERSERK)
+        && !items_give_ability(item.link, ARTP_BERSERK))
     {
         mpr("You feel a brief urge to hack something to bits.");
-        randart_wpn_learn_prop(item, RAP_BERSERK);
+        artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
-    if (!unmeld && !item_cursed(item) && proprt[RAP_CURSED] > 0
-         && one_chance_in(proprt[RAP_CURSED]))
+    if (!unmeld && !item_cursed(item) && proprt[ARTP_CURSED] > 0
+         && one_chance_in(proprt[ARTP_CURSED]))
     {
         do_curse_item( item, false );
-        randart_wpn_learn_prop(item, RAP_CURSED);
+        artefact_wpn_learn_prop(item, ARTP_CURSED);
     }
 
-    if (proprt[RAP_NOISES])
+    if (proprt[ARTP_NOISES])
         you.special_wield = SPWLD_NOISE;
 
-    if (!alreadyknown && Options.autoinscribe_randarts)
-        add_autoinscription(item, randart_auto_inscription(item));
+    if (!alreadyknown && Options.autoinscribe_artefacts)
+        add_autoinscription(item, artefact_auto_inscription(item));
 
     if (!alreadyknown && dangerous)
     {

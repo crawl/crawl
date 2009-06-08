@@ -109,7 +109,7 @@ public:
     bool      hand_half_bonus;
 
     // If weapon is a randart, its properties.
-    randart_properties_t art_props;
+    artefact_properties_t art_props;
 
     // Attack messages
     std::string attack_verb, verb_degree;

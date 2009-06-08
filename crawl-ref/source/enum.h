@@ -2439,40 +2439,40 @@ enum pronoun_type
     PRONOUN_OBJECTIVE                   // 5 (objective is always lowercase)
 };
 
-enum randart_prop_type
+enum artefact_prop_type
 {
-    RAP_BRAND,                         //    0
-    RAP_AC,
-    RAP_EVASION,
-    RAP_STRENGTH,
-    RAP_INTELLIGENCE,
-    RAP_DEXTERITY,                     //    5
-    RAP_FIRE,
-    RAP_COLD,
-    RAP_ELECTRICITY,
-    RAP_POISON,
-    RAP_NEGATIVE_ENERGY,               //   10
-    RAP_MAGIC,
-    RAP_EYESIGHT,
-    RAP_INVISIBLE,
-    RAP_LEVITATE,
-    RAP_BLINK,                         //   15
-    RAP_CAN_TELEPORT,
-    RAP_BERSERK,
-    RAP_MAPPING,
-    RAP_NOISES,
-    RAP_PREVENT_SPELLCASTING,          //   20
-    RAP_CAUSE_TELEPORTATION,
-    RAP_PREVENT_TELEPORTATION,
-    RAP_ANGRY,
-    RAP_METABOLISM,
-    RAP_MUTAGENIC,                     //   25
-    RAP_ACCURACY,
-    RAP_DAMAGE,
-    RAP_CURSED,
-    RAP_STEALTH,
-    RAP_MAGICAL_POWER,                 //   30
-    RAP_NUM_PROPERTIES
+    ARTP_BRAND,                         //    0
+    ARTP_AC,
+    ARTP_EVASION,
+    ARTP_STRENGTH,
+    ARTP_INTELLIGENCE,
+    ARTP_DEXTERITY,                     //    5
+    ARTP_FIRE,
+    ARTP_COLD,
+    ARTP_ELECTRICITY,
+    ARTP_POISON,
+    ARTP_NEGATIVE_ENERGY,               //   10
+    ARTP_MAGIC,
+    ARTP_EYESIGHT,
+    ARTP_INVISIBLE,
+    ARTP_LEVITATE,
+    ARTP_BLINK,                         //   15
+    ARTP_CAN_TELEPORT,
+    ARTP_BERSERK,
+    ARTP_MAPPING,
+    ARTP_NOISES,
+    ARTP_PREVENT_SPELLCASTING,          //   20
+    ARTP_CAUSE_TELEPORTATION,
+    ARTP_PREVENT_TELEPORTATION,
+    ARTP_ANGRY,
+    ARTP_METABOLISM,
+    ARTP_MUTAGENIC,                     //   25
+    ARTP_ACCURACY,
+    ARTP_DAMAGE,
+    ARTP_CURSED,
+    ARTP_STEALTH,
+    ARTP_MAGICAL_POWER,                 //   30
+    ARTP_NUM_PROPERTIES
 };
 
 enum score_format_type
