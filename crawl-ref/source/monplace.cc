@@ -2502,8 +2502,8 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
 
     int good_count = 0;
 
-    for ( radius_iterator ri(where, radius, true, false, !allow_centre);
-          ri; ++ri)
+    for (radius_iterator ri(where, radius, true, false, !allow_centre);
+         ri; ++ri)
     {
         bool success = false;
 

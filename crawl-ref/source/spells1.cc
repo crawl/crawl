@@ -138,9 +138,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                     continue;
             }
 
-            // Wizard blink can move past translucent walls.
             if (see_grid_no_trans(beam.target))
+            {
+                // Grid in los, no problem.
                 break;
+            }
             else if (trans_wall_blocking( beam.target ))
             {
                 // Wizard blink can move past translucent walls.
