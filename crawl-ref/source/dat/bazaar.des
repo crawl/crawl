@@ -1264,3 +1264,42 @@ xxxxxxxxxxx...C...xxxxxxxxxxx
 xxxxxxxxxxxx.....xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+#############################################
+# butterfly bazaar (due)
+# ~3.75 shops
+NAME:     bazaar_due_butterfly
+TAGS:     bazaar allow_dup no_rotate
+ORIENT:   encompass
+SHUFFLE:  AEST
+NSUBST:   A = 1:A / 1:B / 1:C / 1:D
+SUBST:    E=>, S=T, T:TUV, D=ABC.
+KFEAT:    A = armour shop / weapon shop / wand shop
+KFEAT:    B = general shop / food shop
+KFEAT:    C = scroll shop / book shop / distillery shop
+SHUFFLE:  '"
+SUBST:    '=+, "==
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xE..xxxxxxx...xx.......xx...xxxxxxx..Ex
+xxx...xxxxx.T.''...A...''.T.xxxxx...xxx
+xxxxx.+...+...xx.......xx...+...+.xxxxx
+xxxxxxx...xxxxxxxxx+xxxxxxxxx...xxxxxxx
+xxxxxxxxx.".xxxxxxx.xxxxxxx.".xxxxxxxxx
+xxxxxxxxxxx....xxxx.xxxxx...xxxxxxxxxxx
+x...xx.S.xxxxx.."xx+xx"...xxx.S.xx...xx
+x...xx...xxxxxxxx.....xxxxxxx...xx...xx
+x...xxx+xxxxxxxxx.....xxxxxxxx+xxx...xx
+x.A.+...........+..<..+..........+.A.xx
+x...xxx+xxxxxxxxx.....xxxxxxxx+xxx...xx
+x...xx...xxxxxxxx.....xxxxxxx...xx...xx
+x...xx.S.xxxx..."xx+xx"...xxx.S.xx...xx
+xxxxxxxxxxx...xxxxx.xxxxx...xxxxxxxxxxx
+xxxxxxxxx...xxxxxxx.xxxxxxx...xxxxxxxxx
+xxxxxxx.".xxxxxxxxx+xxxxxxxxx.".xxxxxxx
+xxxxx...xxx...xx.......xx...xxx...xxxxx
+xxx.+.....+.T.''...A...''.T.+.....+.xxx
+xE..xxxxxxx...xx.......xx...xxxxxxx..Ex
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
