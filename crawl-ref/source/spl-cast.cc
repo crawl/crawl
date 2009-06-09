@@ -669,12 +669,6 @@ bool cast_a_spell(bool check_range)
         return (false);
     }
 
-    if (you.magic_points < 1)
-    {
-        mpr("You don't have enough magic to cast spells.");
-        return (false);
-    }
-
     const int minRange = _get_dist_to_nearest_monster();
 
     int keyin = (check_range ? 0 : '?');
