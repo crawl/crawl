@@ -199,6 +199,7 @@ bool pick_tutorial()
         switch (keyn)
         {
         case CK_BKSP:
+        case ESCAPE:
             choose_race();
             return (false);
         case ' ':
