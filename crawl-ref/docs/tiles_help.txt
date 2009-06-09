@@ -11,13 +11,13 @@ case but to run the console version instead or switch to a different machine.
 
                   Tiles mouseclick item interaction
 
-If you're playing with Tiles compiled, you'll find several shortcuts to 
-regular commands using mouseclicks. 
+If you're playing with Tiles compiled, you'll find several shortcuts to
+regular commands using mouseclicks.
 
 
 PLAYER AVATAR
 
-left mouseclick            Pick up items on ground ('g' command). 
+left mouseclick            Pick up items on ground ('g' command).
                            A second click will take you to the pickup menu.
 
 right mouseclick           Character overview ('%' command).
@@ -31,31 +31,31 @@ INVENTORY MANAGEMENT
 
 left mouseclick            Execute the most common action for this item type.
 
-  weapons:        wield    ('w')
-  misc. items:    wield    ('w')
-  armour:         Wear     ('W')
-  food:           eat      ('e')
-  scroll, manual: read     ('r')
-  potion:         quaff    ('q')
-  jewellery:      Put on   ('P')
-  spellbook:      Memorise ('M')
-  missiles:       fire     ('f')
-  corpse:         eat      ('e'), for Vampires
+  weapon, deck:      wield    ('w')
+  armour:            Wear     ('W')
+  food:              eat      ('e')
+  scroll, manual:    read     ('r')
+  potion:            quaff    ('q')
+  jewellery:         Put on   ('P')
+  spellbook:         Memorise ('M')
+  missiles:          fire     ('f')
+  wand, misc. item:  evoke    ('V')
+  corpse:            eat      ('e'), for Vampires
 
 wielded items:
-  rod:            evoke    ('v')
-  misc. item:     evoke    ('v')
-  weapon, staff:  unwield  ('w-')
-  armour,
-  jewellery:      unwield  ('w-')
+  rod, deck:         evoke    ('v')
+  weapon, staff:     unwield  ('w-')
+  armour, jewellery: unwield  ('w-')
   others, as non-wielded
 
 worn items:
-  armour:         Take off ('T')
-  jewellery:      Remove   ('R')
+  armour:            Take off ('T')
+  jewellery:         Remove   ('R')
 
 Sometimes alternative denominators are used such as "draw a card"
 instead of evoke for decks of cards, or "drink blood" instead of eat.
+
+mouse-over                 Display item description in message area.
 
 right mouseclick           Display item information ('i' + item slot).
 
@@ -63,12 +63,12 @@ Shift + left mouseclick    Drop item ('d').
 
 Shift + right mouseclick   Execute secondary action for some item types.
 
-  weapon:         fire    ('f')
-  non-weapon:     wield   ('w'), if corresponding spells memorised
+  weapon:            fire    ('f'), if throwable
+  non-weapon:        wield   ('w'), if corresponding spells memorised
 
 wielded items:
-  weapon:         fire    ('f')
-  anything else:  unwield ('w-')
+  weapon:            fire    ('f')
+  anything else:     unwield ('w-')
 
 
 NON-INVENTORY ITEM MANAGEMENT
@@ -79,15 +79,18 @@ right mouseclick           Display item information.
 
 Shift + left mouseclick    'c'hop up this corpse.
 
-Shift + right mouseclick   'e'at this food item.
+Shift + right mouseclick   'e'at this food item, drain this corpse.
 
 
 MAP INTERACTION
 
+mouse-over                 Display item/monster description in message area.
+
 left mouseclick            Move to adjacent square.
-                           Autotravel to reachable square if currently safe.
-                           Swap places with an adjacent ally.
                            Attack, if adjacent non-friendly monster.
+                           Swap places with an adjacent ally.
+                           Autotravel to reachable square if currently safe.
+                           Move one step closer to targeted grid, if unsafe.
 
 right mouseclick           Display grid information ('xv').
 
@@ -114,10 +117,7 @@ any mouseclick             Search / Rest for a while ('5')
 
 MENU INTERACTION
 
-any click on tiles         Select item.
+left mouseclick on line    Select item, inventory menus only.
 left mouseclick            Scroll to next page.
 right mouseclick           Escape (quit menu).
 
-At inscription prompt:
-left mouseclick            Autoinscribe artefact (where applicable).
-right mouseclick           Escape (quit menu).
