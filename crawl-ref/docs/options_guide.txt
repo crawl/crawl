@@ -200,7 +200,6 @@ are as follows:
    weapon              = hand axe, for Berserkers
    book                = random, for Conjurers
 and, for Tiles,
-   tile_show_items     = !?/%=([)x}+\_.
    tile_tag_pref       = tutorial
 
 0-c     Aliases and variables.
