@@ -5646,30 +5646,32 @@ bool _give_items_skills()
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Knife and armor or robe.
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // Equipment. Dagger, and armour or robe.
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                               ARM_LEATHER_ARMOUR, ARM_ROBE);
+
         // Choice of lesser wands, 15 charges plus wand of random
         // effects: confusion, enslavement, slowing, magic dart, frost,
         // flame; OR a rod of striking, 8 charges and no random effects.
         if (!_choose_wand())
             return (false);
 
-        // If a supporting wand was chosen, hand out a dagger instead of
-        // the knife.
-        if (you.inv[3].sub_type == WAND_CONFUSION
-            || you.inv[3].sub_type == WAND_ENSLAVEMENT)
+        // If an offensive wand or the rod of striking was chosen,
+        // don't hand out a weapon.
+        if (you.inv[3].base_type != OBJ_WANDS
+            || you.inv[3].sub_type != WAND_CONFUSION
+               && you.inv[3].sub_type != WAND_ENSLAVEMENT)
         {
-            you.inv[0].sub_type = WPN_DAGGER;
+            _newgame_clear_item(0);
         }
 
         // Skills
-        you.skills[SK_EVOCATIONS] = 4;
+        you.skills[SK_EVOCATIONS]  = 4;
         you.skills[SK_TRAPS_DOORS] = 3;
-        you.skills[SK_DODGING] = 2;
-        you.skills[SK_FIGHTING] = 1;
-        you.skills[SK_STEALTH] = 1;
+        you.skills[SK_DODGING]     = 2;
+        you.skills[SK_FIGHTING]    = 1;
+        you.skills[SK_STEALTH]     = 1;
         break;
 
     default:
