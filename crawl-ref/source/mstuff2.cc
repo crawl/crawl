@@ -536,9 +536,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 {
-    // XXX: Revert to the 0.4 behaviour of monster spells not making any
-    // noise, since the new sound system is incomplete.
-    bool force_silent = true;
+    bool force_silent = false;
 
     spell_type real_spell = spell_cast;
 
@@ -712,6 +710,10 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         else if (!msg.empty())
             break;
     }
+
+    // XXX: Revert to the 0.4 behaviour of monster spells not making any
+    // noise, since the new sound system is incomplete.
+    noise = 0;
 
     if (msg.empty())
     {
