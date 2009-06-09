@@ -105,7 +105,6 @@ Crawl gladly and gratuitously uses the following open source packages:
 * The PCRE library for regular expressions, see docs/pcre_license.txt.
 * The Mersenne Twister for random number generation, docs/mt19937.txt.
 * The SQLite library as database engine; it is properly public domain.
-* The ReST light markup language for the documentation.
 
 
 5. How you can help
@@ -115,9 +114,9 @@ of ways to do so:
 
 * Playtesting.
 At any time, there will be bugs -- playing and reporting these is a great help.
-There is a beta server around hosting the most recent version of the current
-code; http://crawl.akrasiac.org/ links to it. Besides finding bugs, ideas on
-how to improve interface or gameplay are welcome as well.
+There is a beta server at http://crawl.develz.org. Besides pointing out bugs, 
+new ideas on how to improve interface or gameplay are welcome. You can mention 
+them at the homepage, http://crawl-ref.sourceforge.net.
 
 * Vault making.
 Crawl uses many hand-drawn (but often randomised) maps. Making them is fun and
