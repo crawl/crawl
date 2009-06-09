@@ -3178,7 +3178,7 @@ static void _rot_inventory_food(long time_delta)
             }
             else
                 msg += "completely or partially ";
-                
+
             msg += "rotted away.";
             mprf(MSGCH_ROTTEN_MEAT, "%s", msg.c_str());
         }
