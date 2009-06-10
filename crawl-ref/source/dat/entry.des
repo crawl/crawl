@@ -180,8 +180,8 @@ ENDMAP
 # Players can safely watch at the clouds. Autoexplore will not run into
 # the chambers, players have to search for the secret door. Likewise,
 # all exits are secret except for the safe one.
-# This vault is great. I've seen players marvel at it. If need be, we 
-# may delegate it to another branch, where we less caution measures are 
+# This vault is great. I've seen players marvel at it. If need be, we
+# may delegate it to another branch, where less caution measures are
 # demanded. But I'd like to keep it on D:1 (dp).
 NAME:    elemental_entry
 TAGS:    entry no_monster_gen
