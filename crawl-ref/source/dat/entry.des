@@ -180,61 +180,61 @@ ENDMAP
 # Players can safely watch at the clouds. Autoexplore will not run into
 # the chambers, players have to search for the secret door. Likewise,
 # all exits are secret except for the safe one.
-# This vault is great. If need be, we may delegate it to another branch,
-# where we less caution measures are demanded (dp).
-NAME:   elemental_entry
-TAGS:   entry no_monster_gen
-ORIENT: float
-MARKER: A = lua:fog_machine { \
-            pow_max = 20, delay_min = 50, delay_max = 300, \
-            size = 12, start_clouds = 1, \
-            cloud_type = "noxious fumes" }
-SUBST:  A=a ,  a=aaam
-FTILE:  a=floor_slime
-COLOUR: a=lightgreen
-SUBST:  a=.
-MARKER: W = lua:fog_machine{\
-            pow_max = 20, delay_min = 50, delay_max = 300, \
-            size = 12, start_clouds = 1, \
-            cloud_type = "freezing vapour"}
-SUBST:  W=w
-MARKER: F= lua:fog_machine {\
-            pow_max = 20, delay_min = 50, delay_max = 300, \
-            size = 12, start_clouds = 1, \
-            cloud_type = "flame"}
-SUBST:  F=f
-FTILE:  f=floor_rough_red
-COLOUR: f=red
-SUBST:  f=lll.
-MARKER: E= lua:fog_machine{\
-            pow_max = 20, delay_min = 50, delay_max = 300, \
-            size = 12, start_clouds = 1, \
-            cloud_type = "black smoke"}
-SUBST:  E=e , e=cxbveeee
-FTILE:  e=floor_orc
-COLOUR: e= brown
-SUBST:  e=.
-MONS:   butterfly
+# This vault is great. I've seen players marvel at it. If need be, we
+# may delegate it to another branch, where less caution measures are
+# demanded. But I'd like to keep it on D:1 (dp).
+NAME:    elemental_entry
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MARKER:  A = lua:fog_machine { \
+             pow_max = 20, delay_min = 50, delay_max = 300, \
+             size = 12, start_clouds = 1, \
+             cloud_type = "noxious fumes" }
+SUBST:   A=a ,  a=aaam
+FTILE:   a=floor_slime
+COLOUR:  a=lightgreen
+SUBST:   a=.
+MARKER:  W = lua:fog_machine{\
+             pow_max = 20, delay_min = 50, delay_max = 300, \
+             size = 12, start_clouds = 1, \
+             cloud_type = "freezing vapour"}
+SUBST:   W=w
+MARKER:  F= lua:fog_machine {\
+             pow_max = 20, delay_min = 50, delay_max = 300, \
+             size = 12, start_clouds = 1, \
+             cloud_type = "flame"}
+SUBST:   F=f
+FTILE:   f=floor_rough_red
+COLOUR:  f=red
+SUBST:   f=lll.
+MARKER:  E= lua:fog_machine{\
+             pow_max = 20, delay_min = 50, delay_max = 300, \
+             size = 12, start_clouds = 1, \
+             cloud_type = "black smoke"}
+SUBST:   E=e , e=cxbveeee
+FTILE:   e=floor_orc
+COLOUR:  e= brown
+SUBST:   e=.
 SHUFFLE: XZ
 NSUBST:  Z= ) / ]
-NSUBST: X= ( / [
+NSUBST:  X= ( / [
 MAP
       ccc===ccc
      cc..aaa..cc
      c.aaaAaaa.c
      c..aaaaa..c
      cc...a...cc
- ccccccccn=ncccccccc
-cc..ccccc1.1ccccc..cc
+ cccccccnn=nnccccccc
+cc..ccccc...ccccc..cc
 c.w..ccccc+ccccc..f.c
-c.ww.cccX...Zccc.ff.c
+c.ww.nccX...Zccn.ff.c
 =www.nwc.....cln.fff=
 =wWww=.+..{..+.=ffFf=
 =www.nwc.....cln.fff=
-c.ww.cccZ...Xccc.ff.c
+c.ww.nccZ...Xccn.ff.c
 c.w..ccccc+ccccc..f.c
 cc..cccccG.Gccccc..cc
- ccccccccn=ncccccccc
+ cccccccnn+nnccccccc
      cc...e...cc
      c..eeeee..c
      c.eeeEeee.c
@@ -513,7 +513,10 @@ NAME:    lemuel_entry_005_a
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {}
-WEIGHT:  2
+COLOUR:  ' : brown / white
+FTILE:   ' = floor_dirt
+SUBST:   ' = .
+WEIGHT:  4
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxx{.......}xxxxx
@@ -523,10 +526,10 @@ xwwxx.........xxxxx
 xwwwx.........xxxxx
 xxwwx.........xxxxx
 xxwwww........xxxxx
-xxxwwwwww.w...xxxxx
-xxxxwwwww.wwwwxxxxx
-xxxxxwwww.wwwwwwxxx
-xxxxx...w.wwwwwwwxx
+xxxwwwwww'w...xxxxx
+xxxxwwwww'wwwwxxxxx
+xxxxxwwww'wwwwwwxxx
+xxxxx...w'wwwwwwwxx
 xxxxx........wwwwxx
 xxxxx.........xwwwx
 xxxxx.........xxwwx
@@ -538,7 +541,7 @@ ENDMAP
 NAME:    lemuel_entry_005_b
 TAGS:    entry no_monster_gen
 ORIENT:  float
-WEIGHT:  7
+WEIGHT:  3
 SHUFFLE: {}, XYZ
 SUBST:   X=W, Y=w, Z=w
 MAP
@@ -569,7 +572,7 @@ TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {}, ABC
 SUBST:   A:=, B:x, C:x
-WEIGHT:  1
+WEIGHT:  3
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxWA{.......}xxxxx
@@ -1045,7 +1048,7 @@ cccccccccccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################
-# Three leaves mockup
+# Three leaves temple mockup
 NAME:    david_entry_008_temple
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
@@ -1799,7 +1802,7 @@ ENDMAP
 NAME:    david_021_tetris
 TAGS:    entry
 ORIENT:  float
-SHUFFLE: ba
+SHUFFLE: bbba
 MAP
           x.@.x
          xx...xx
@@ -1864,6 +1867,8 @@ ENDMAP
 NAME:   david_023_snail
 TAGS:   entry no_monster_gen no_rotate
 ORIENT: float
+NSUBST: . = 1:d / *:.
+ITEM:   stone / dart
 MAP
          xxxxxxxxxxxxxxxxx
       xxxxxxxx.......xxxxxxx
@@ -1947,7 +1952,7 @@ ITEM:    nothing / ring of hunger / \
 ITEM:    nothing / choko / pear / apple / sausage / banana / any scroll
 SHUFFLE: dD1AB/yyyyy, eE2FG/yyyyy, AB, FG
 SUBST:   y=x, A==, B=x, D=., F==, G=x, E=.
-SUBST:   ' : cxxxv, " : cxxxv
+SUBST:   ' : Wlncxxxv, " : Wlncxxxv
 MAP
 .........................
 .......xxxxx+xxxxx.......
@@ -2139,7 +2144,7 @@ xxxxxxxxxxxxxxxxx..@....'''
 ENDMAP
 
 ##############################################################################
-# Arbitrary entries
+# Arbitrary 3
 #
 NAME:    david_entry_033_a
 TAGS:    entry
@@ -2470,21 +2475,24 @@ ENDMAP
 NAME:    david_entry_040
 TAGS:    entry
 ORIENT:  float
-SHUFFLE: {[(
 MONS:    plant
+SHUFFLE: 1x
+SUBST:   x = '
 FTILE:   ' = floor_grass, 1 = floor_grass, { = floor_grass
 FTILE:   . = floor_grass / floor_normal
-SUBST:   . = .:140 d
+COLOUR:  ' = green
+COLOUR:  . = green / none
+SUBST:   ' = .:140 d
 KITEM:   d : apple / apricot / pear / apricot / orange / banana / \
              strawberry / lemon
 KFEAT:   d = .
 MAP
   .....
- .'...'.
+ .x...x.
  '1'''1'
 ..''{''..
  '1'''1'
- .'...'.
+ .x...x.
   .....
 ENDMAP
 
@@ -2749,7 +2757,7 @@ TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: C{! / B(' / V["
 SUBST:   C=., !=@
-SHUFFLE: B('/ zzz, V[" / yyy
+SHUFFLE: B(' / zzz, V[" / yyy
 SUBST:   z=x, y=x, B=., '==, V=., "==
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
@@ -3363,7 +3371,7 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Prison with walls (not Napalm Death)
+# Prison
 NAME:    david_entry_068
 TAGS:    entry no_monster_gen
 ORIENT:  float
@@ -3714,8 +3722,57 @@ ENDMAP
 
 ##############################################################################
 # Triangle
-NAME:   erik_entry_002
+NAME:   erik_entry_002_a
 TAGS:   entry
+WEIGHT: 4
+ORIENT: float
+MAP
+            xxx
+            x(x
+          xxx[xxx
+          x.+{+.x
+        xxx.xxx.xxx
+        x.+x+.+x+.x
+        x@xxx@xxx@x  
+ENDMAP
+
+NAME:   erik_entry_002_b
+WEIGHT: 3
+TAGS:   entry
+ORIENT: float
+MAP
+            xxx
+            x(x
+          xxx[xxx
+          x.+{+.x
+        xxx.xxx.xxx
+        x.+x+.+x+.x
+      xxx.xxx.xxx.xxx
+      x.+x+.+x+.+x+.x
+      x@xxx@xxx@xxx@x  
+ENDMAP
+
+NAME:   erik_entry_002_c
+TAGS:   entry
+WEIGHT: 2
+ORIENT: float
+MAP
+            xxx
+            x(x
+          xxx[xxx
+          x.+{+.x
+        xxx.xxx.xxx
+        x.+x+.+x+.x
+      xxx.xxx.xxx.xxx
+      x.+x+.+x+.+x+.x
+    xxx.xxx.xxx.xxx.xxx
+    x.+x+.+x+.+x+.+x+.x
+    x@xxx@xxx@xxx@xxx@x  
+ENDMAP
+
+NAME:   erik_entry_002_d
+TAGS:   entry
+WEIGHT: 1
 ORIENT: float
 MAP
             xxx
@@ -3730,9 +3787,7 @@ MAP
     x.+x+.+x+.+x+.+x+.x
   xxx.xxx.xxx.xxx.xxx.xxx
   x.+x+.+x+.+x+.+x+.+x+.x
-xxx.xxx.xxx.xxx.xxx.xxx.xxx
-x.+x+.+x+.+x+.+x+.+x+.+x+.x
-x@xxx@xxx@xxx@xxx@xxx@xxx@x
+  x@xxx@xxx@xxx@xxx@xxx@x
 ENDMAP
 
 ##############################################################################
@@ -3992,7 +4047,6 @@ ENDMAP
 
 ##############################################################################
 # Tucked-away holy place
-#
 NAME:    matt_entry_007_a
 TAGS:    entry no_monster_gen
 ORIENT:  float
@@ -4050,6 +4104,7 @@ x.........x
 xxx@xxx@xxx
 ENDMAP
 
+
 ##############################################################################
 # Elethiomel's entry vaults
 ##############################################################################
@@ -4061,7 +4116,7 @@ TAGS:    entry no_rotate
 ORIENT:  northwest
 SHUFFLE: [{
 SUBST:   ' : . x ':40, '=x.
-SUBST:   c : cxxx, [ = [ T
+SUBST:   c : cxxx, [ = [T
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx....xxxxxxxxxxxxxxx....xx..xxx.''xxxxxx
@@ -4174,7 +4229,6 @@ ENDMAP
 
 ##############################################################
 # It's quiet. Too quiet....
-#
 NAME:    entry_elethiomel_005_a
 TAGS:    entry no_monster_gen
 ORIENT:  float
@@ -4227,7 +4281,6 @@ ENDMAP
 
 ##############################################################
 # Shortcut
-
 NAME:    entry_elethiomel_006
 TAGS:    entry
 ORIENT:  float
@@ -4249,7 +4302,6 @@ ENDMAP
 
 ##############################################################
 # Indiana Jones and the Raiders of the Lost Ark
-
 NAME:   entry_elethiomel_007
 TAGS:   entry
 ORIENT: float
@@ -4311,7 +4363,7 @@ ENDMAP
 NAME:    onia_ninara_002_pyramid
 TAGS:    entry no_rotate
 ORIENT:  float
-SHUFFLE: ({[
+SHUFFLE: xxxcvlw
 MAP
         .........
        .....x.....
@@ -4399,7 +4451,9 @@ ENDMAP
 
 ##############################################################
 # The zoo
-#
+# With low chance (10%), the monsters spell Crawl or crawl.
+# This is considered harmless and not ASCII art. Don't hand
+# in other vaults where monsters spell other words, though :)
 NAME:    onia_ninara_005_the_zoo_common
 WEIGHT:  9
 ORIENT:  float
@@ -4505,7 +4559,6 @@ ENDMAP
 ##############################################################
 # It's all downhill from here
 # A few cavern-like entry vaults, nothing fancy..
-#
 NAME:     entry_eino_001_a
 TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northwest
@@ -4560,7 +4613,6 @@ ENDMAP
 
 ##############################################################
 # It just gets worse - caverns 2
-#
 NAME:     entry_eino_002_a
 TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northwest

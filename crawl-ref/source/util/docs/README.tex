@@ -1,7 +1,7 @@
 \documentclass[a4paper,10pt]{article}
 
 \usepackage{palatino}
-\usepackage{mathpazo}           % optional [sc] fuer real small caps
+\usepackage{mathpazo}           % optional [sc] for small caps
 \usepackage[left=3cm,top=3cm,right=3cm,bottom=2cm,nohead,nofoot]{geometry}
 
 \usepackage{graphicx}
@@ -63,9 +63,8 @@ If you'd like to dive in immediately, your best bets are to either
 start up a game and choose one of the tutorials (press \key{Ctrl-T} 
 when asked for species), or print \key{quickstart.pdf} (in the 
 \key{docs} directory). Studious readers might want to browse the 
-manual  (see below). Note that you can read both the quickstart 
-text and the manual in-game; pressing \key{?} brings up a menu for 
-that.
+manual (see below). Note that you can read both the quickstart text 
+and the manual in-game; pressing \key{?} brings up a menu for that.
 
 \para
 
@@ -90,7 +89,7 @@ Unfortunately, it is not yet possible to combine tiles and Internet play.
 \subsection*{The most important files}
 
 \begin{minipage}[t]{7cm}
-The file \key{crawl.exe} (just \key{crawl} if on Unix) in \crawl's main 
+The file \key{crawl.exe} (just \key{./crawl} if on Unix) in \crawl's main 
 folder starts the game.
 \\ \\
 The \key{settings} directory contains \key{init.txt}, the options file for
@@ -165,7 +164,7 @@ The \textbf{PCRE} library for regular expressions, see
 The \textbf{Mersenne Twister} for random number generation, 
     \key{docs/mt19937.txt}.\\
 The \textbf{SQLite} library as database engine; it is properly public domain.\\
-The \textbf{ReST} light markup language for the documentation.
+% The \textbf{ReST} light markup language for the documentation.
 
 \subsection*{How you can help}
 
@@ -176,9 +175,10 @@ of ways to do so:
 
 \textbf{Playtesting:}
 At any time, there will be bugs --- playing and reporting these is a great 
-help. There is a beta server around hosting the most recent version of the 
-current code; \key{http://crawl.akrasiac.org} links to it. Besides finding bugs, ideas on 
-how to improve interface or gameplay are welcome as well.
+help. There is a beta server at \key{http://crawl.develz.org} hosting the most 
+recent version of the code. Besides pointing out bugs, you are also welcome to
+bring up ideas on how to improve interface or gameplay. Bugs and new ideas can 
+be added and discussed on the homepage, \key{http://crawl-ref.sourceforge.net}.
 
 \para
 
