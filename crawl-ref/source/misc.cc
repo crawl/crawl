@@ -420,39 +420,32 @@ void maybe_coagulate_blood_potions_floor(int obj)
     _compare_blood_quantity(blood, timer.size());
 }
 
+static std::string _get_desc_quantity(const int quant, const int total)
+{
+    if (total == quant)
+        return "Your";
+    else if (quant == 1)
+        return "One of your";
+    else if (quant == 2)
+        return "Two of your";
+    else if (quant >= (total * 3) / 4)
+        return "Most of your";
+    else
+        return "Some of your";
+}
+
 // Prints messages for blood potions coagulating in inventory (coagulate = true)
 // or whenever potions are cursed into potions of decay (coagulate = false).
 static void _potion_stack_changed_message(item_def &potion, int num_changed,
-                                          bool coagulate = true)
+                                          std::string verb)
 {
     ASSERT(num_changed > 0);
-    if (coagulate)
-        ASSERT(potion.sub_type == POT_BLOOD);
 
-    std::string msg;
-    if (potion.quantity == num_changed)
-        msg = "Your ";
-    else if (num_changed == 1)
-        msg = "One of your ";
-    else if (num_changed == 2)
-        msg = "Two of your ";
-    else if (num_changed >= (potion.quantity * 3) / 4)
-        msg = "Most of your ";
-    else
-        msg = "Some of your ";
-
-    msg += potion.name(DESC_PLAIN, false);
-
-    if (coagulate)
-        msg += " coagulate";
-    else
-        msg += " decay";
-
-    if (num_changed == 1)
-        msg += "s";
-    msg += ".";
-
-    mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
+    verb = replace_all(verb, "%s", num_changed == 1 ? "s" : "");
+    mprf(MSGCH_ROTTEN_MEAT, "%s %s %s.",
+         _get_desc_quantity(num_changed, potion.quantity).c_str(),
+         potion.name(DESC_PLAIN, false).c_str(),
+         verb.c_str());
 }
 
 // Returns true if "equipment weighs less" message needed.
@@ -518,9 +511,23 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     you.wield_change  = true;
     you.redraw_quiver = true;
 
-    if (!coag_count) // Some potions rotted away.
+    const bool knew_coag  = (get_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED)
+                                == ID_KNOWN_TYPE);
+
+    if (!coag_count) // Some potions rotted away, but none coagulated.
     {
+        // Only coagulated blood can rot.
+        ASSERT(blood.sub_type == POT_BLOOD_COAGULATED);
+        _potion_stack_changed_message(blood, rot_count, "rot%s away");
         blood.quantity -= rot_count;
+
+        if (!knew_coag)
+        {
+            set_ident_type( OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE );
+            if (blood.quantity >= 1)
+                mpr(blood.name(DESC_INVENTORY).c_str());
+        }
+
         if (blood.quantity < 1)
         {
             if (you.equip[EQ_WEAPON] == blood.link)
@@ -537,11 +544,10 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // Coagulated blood cannot coagulate any further...
     ASSERT(blood.sub_type == POT_BLOOD);
 
-    bool knew_blood = get_ident_type(OBJ_POTIONS, POT_BLOOD) == ID_KNOWN_TYPE;
-    bool knew_coag  = (get_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED)
-                           == ID_KNOWN_TYPE);
+    const bool knew_blood = get_ident_type(OBJ_POTIONS, POT_BLOOD)
+                                == ID_KNOWN_TYPE;
 
-    _potion_stack_changed_message(blood, coag_count);
+    _potion_stack_changed_message(blood, coag_count, "coagulate%s");
 
     // Identify both blood and coagulated blood, if necessary.
     if (!knew_blood)
@@ -948,7 +954,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
 
     // Output decay message.
     if (need_msg && get_ident_type(OBJ_POTIONS, POT_DECAY) == ID_KNOWN_TYPE)
-        _potion_stack_changed_message(potion, amount, false);
+        _potion_stack_changed_message(potion, amount, "decay%s");
 
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;

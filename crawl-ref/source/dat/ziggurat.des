@@ -51,18 +51,18 @@ SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
 COLOUR:  ' = cyan
-FTILE:  ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
+FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
 SUBST:   '=. , ;=. , _=.
 : ziggurat_portal(_G)
 MAP
-   ..'..   
-  ..'W'..  
- ..'WwW'.. 
+   ..'..
+  ..'W'..
+ ..'WwW'..
 ..'WwwwW'..
 .'WwwOwwW'.
 ..'WwwwW'..
- ..'WwW'.. 
-  ..'W'..  
+ ..'WwW'..
+  ..'W'..
    ..'..
 ENDMAP
 
@@ -151,7 +151,7 @@ ENDMAP
 
 NAME:    enter_shallow_ziggurat_d
 CHANCE:  50
-TAGS:    chance_shallow_zig 
+TAGS:    chance_shallow_zig
 MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
@@ -199,14 +199,14 @@ FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
 SUBST:   '=. , ;=. , _=.
 : ziggurat_portal(_G)
 MAP
-   ..'..   
-  ..'W'..  
- ..'WwW'.. 
+   ..'..
+  ..'W'..
+ ..'WwW'..
 ..'WwwwW'..
 .'WwwOwwW'.
 ..'WwwwW'..
- ..'WwW'.. 
-  ..'W'..  
+ ..'WwW'..
+  ..'W'..
    ..'..
 ENDMAP
 
@@ -261,7 +261,7 @@ default-depth:
 #######################################################################
 # Pillars for ziggurats.
 # Ziggurat pillars are handled specially in ziggurat.lua. In particular:
-# - ziggurat pillars do not need allow_dup. The pillar map is never 
+# - ziggurat pillars do not need allow_dup. The pillar map is never
 #   registered as used.
 # - ziggurat pillars cannot use map markers.
 #######################################################################
@@ -276,7 +276,7 @@ NAME: ziggurat_pillar_b
 TAGS: ziggurat_pillar
 SUBST: c : cxvb
 MAP
-c 
+c
 cc
 ENDMAP
 

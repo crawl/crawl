@@ -9,7 +9,7 @@
 #
 # Flavour: white colours, ice monsters, appropriate clouds.
 # The escape is at the start. The player can back away if s/he decides
-# some challenges are too much to handle. 
+# some challenges are too much to handle.
 #
 ###############################################################################
 
@@ -20,7 +20,7 @@ function ice_cave_portal(e)
     "grim and arctic fury. You note that the archway is melting away."
 
   local timeout_turns = crawl.random_range(1200, 1700)
-  
+
   local messager =
     timed_msg {
       visible = true,
@@ -236,7 +236,7 @@ xxx.xxx
 xxx+xxx
 ENDMAP
 
-NAME:   portal_ice_cave_ice_statue_001
+NAME:   portal_ice_cave_entry_ice_statue_001
 TAGS:   uniq_ice_cave
 DEPTH:  D:14-24
 ORIENT: float
@@ -254,7 +254,7 @@ x.....x
 xxx+xxx
 ENDMAP
 
-NAME:   portal_ice_cave_ice_statue_002
+NAME:   portal_ice_cave_entry_ice_statue_002
 TAGS:   uniq_ice_cave
 DEPTH:  14-24
 ORIENT: float
