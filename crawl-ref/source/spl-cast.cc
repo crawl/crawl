@@ -732,7 +732,14 @@ bool cast_a_spell(bool check_range)
 
     if (check_range && _spell_no_hostile_in_range(spell, minRange))
     {
+        // Abort if there are no hostiles within range, but flash the range
+        // markers for about half a second.
+        Options.target_range = _calc_spell_range(spell);
+        viewwindow(true, false);
         mpr("There are no visible monsters within range! (Use <w>Z</w> to cast anyway.)");
+        delay(500);
+        Options.target_range = 0;
+        viewwindow(true, false);
         return (false);
     }
 
