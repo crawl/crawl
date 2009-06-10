@@ -1122,15 +1122,20 @@ void handle_monster_shouts(monsters* monster, bool force)
         msg = getShoutString(default_msg_key, suffix);
     else if (msg.empty())
     {
+        // NOTE: Use the hardcoded glyph rather than that returned
+        // by mons_char(), since the result of mons_char() can be
+        // changed by user settings.
+        char mchar = get_monster_data(monster->type)->showchar;
+
         // See if there's a shout for all monsters using the
         // same glyph/symbol
         std::string glyph_key = "'";
 
         // Database keys are case-insensitve.
-        if (isupper(mons_char(monster->type)))
+        if (isupper(mchar))
             glyph_key += "cap-";
 
-        glyph_key += mons_char(monster->type);
+        glyph_key += mchar;
         glyph_key += "'";
         msg = getShoutString(glyph_key, suffix);
 
