@@ -1523,7 +1523,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
                                       index_to_letter(i % 52));
-        me->data = (void*) i;
+        me->data = &spells[i];
         spell_menu.add_entry(me);
     }
 
@@ -1539,7 +1539,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         ASSERT(sel.size() == 1);
 
-        const spell_type spell = spells[(int) sel[0]->data];
+        const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
         ASSERT(is_valid_spell(spell));
 
         return (spell);
