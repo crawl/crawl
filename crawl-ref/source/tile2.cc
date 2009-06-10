@@ -167,7 +167,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_SHOALS:
-        flv.wall = TILE_WALL_YELLOW_ROCK;
+        flv.wall  = TILE_WALL_YELLOW_ROCK;
         flv.floor = TILE_FLOOR_SAND_STONE;
         return;
 

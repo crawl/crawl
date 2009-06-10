@@ -190,11 +190,23 @@ local function clamp_in_bounds(x, y)
 end
 
 local function set_tiles_for_place(place)
-  local rock = dgn.lev_rocktile(place)
-  dgn.change_rock_tile(rock)
+--  local rock  = dgn.lev_rocktile(place)
+--  local floor = dgn.lev_floortile(place)
+  local tileset = {
+    blue      = "wall_zot_blue",
+    red       = "wall_zot_red",
+    lightblue = "wall_zot_cyan",
+    magenta   = "wall_zot_magenta",
+    green     = "wall_zot_green",
+    white     = "wall_vault"
+  }
 
-  local floor = dgn.lev_floortile(place)
-  dgn.change_floor_tile(floor)
+  local wall = tileset[ziggurat_wall_colour()]
+  if (wall == nil) then
+    wall = "wall_vault"
+  end
+  dgn.change_rock_tile(wall)
+  dgn.change_floor_tile("floor_vault")
 end
 
 local function set_floor_colour(colour)
