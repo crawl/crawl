@@ -3493,6 +3493,8 @@ static bool _swap_rings(int ring_slot)
 
     // Don't prompt if both rings are of the same type.
     if (lring->sub_type == rring->sub_type
+        && lring->plus == rring->plus
+        && lring->plus2 == rring->plus2
         && !is_artefact(*lring) && !is_artefact(*rring))
     {
         if (item_cursed(*lring))
