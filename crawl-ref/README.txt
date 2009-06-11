@@ -105,6 +105,7 @@ Crawl gladly and gratuitously uses the following open source packages:
 * The PCRE library for regular expressions, see docs/pcre_license.txt.
 * The Mersenne Twister for random number generation, docs/mt19937.txt.
 * The SQLite library as database engine; it is properly public domain.
+* The SDL and SDL_image libraries under the LGPL 2.1 license: docs/lgpl.txt.
 
 
 5. How you can help
