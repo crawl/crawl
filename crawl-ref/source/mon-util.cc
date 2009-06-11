@@ -6591,26 +6591,30 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             if (type == MONS_AIR_ELEMENTAL)
             {
                 mprf("%s merges itself into the air.",
-                     name(DESC_CAP_A, true).c_str() );
+                     name(DESC_CAP_A, true).c_str());
             }
             else if (type == MONS_TRAPDOOR_SPIDER)
             {
                 mprf("%s hides itself under the floor.",
-                     name(DESC_CAP_A, true).c_str() );
+                     name(DESC_CAP_A, true).c_str());
             }
             else if (seen_context == "surfaces"
                      || seen_context == "bursts forth"
                      || seen_context == "emerges")
             {
-                // The monster surfaced and submerged in the same turn without
-                // doing anything else.
+                // The monster surfaced and submerged in the same turn
+                // without doing anything else.
                 interrupt_activity(AI_SEE_MONSTER,
                                    activity_interrupt_data(this,
                                                            "surfaced"));
             }
             else if (crawl_state.arena)
-                mprf("%s submerges.", name(DESC_CAP_A, true).c_str() );
+                mprf("%s submerges.", name(DESC_CAP_A, true).c_str());
         }
+
+        // Pacified monsters leave the level when they submerge.
+        if (mons_is_pacified(this))
+            make_mons_leave_level(this);
         break;
 
     case ENCH_CONFUSION:
@@ -6631,8 +6635,8 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         if (is_patrolling())
         {
-            // Enslaved monsters stop patrolling and forget their patrol point,
-            // they're supposed to follow you now.
+            // Enslaved monsters stop patrolling and forget their patrol
+            // point; they're supposed to follow you now.
             patrol_point.reset();
         }
         if (you.can_see(this))
