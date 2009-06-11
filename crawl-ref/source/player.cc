@@ -1086,13 +1086,17 @@ int player_regen()
             rr += 10;
     }
 
-    // Slow heal mutation.  Applied last.
-    // Each level reduces your natural healing by one third.
+    // Slow heal mutation.  Each level reduces your natural healing by
+    // one third.
     if (player_mutation_level(MUT_SLOW_HEALING) > 0)
     {
         rr *= 3 - player_mutation_level(MUT_SLOW_HEALING);
         rr /= 3;
     }
+
+    // Trog's Hand.  This overrides all healing reduction above.
+    if (you.attribute[ATTR_DIVINE_REGENERATION])
+        rr = std::max(100, rr);
 
     return (rr);
 }
