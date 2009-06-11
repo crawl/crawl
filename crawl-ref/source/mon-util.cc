@@ -6585,8 +6585,10 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_SUBMERGED:
         mons_clear_trapping_net(this);
-        // XXX: What if the monster was invisible before submerging?
-        if (!quiet && you.can_see(this))
+
+        // Don't worry about invisibility.  You should be able to see if
+        // something has submerged.
+        if (!quiet && mons_near(this))
         {
             if (type == MONS_AIR_ELEMENTAL)
             {
