@@ -1985,7 +1985,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
         {
             MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
                                           MEL_ITEM, 1, talents[i].hotkey);
-            me->data = reinterpret_cast<void*>(numbers+i);
+            me->data = &numbers[i];
             abil_menu.add_entry(me);
         }
     }
@@ -1999,7 +1999,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
             {
                 MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
                                               MEL_ITEM, 1, talents[i].hotkey);
-                me->data = reinterpret_cast<void*>(numbers+i);
+                me->data = &numbers[i];
                 abil_menu.add_entry(me);
             }
         }
@@ -2015,12 +2015,12 @@ int choose_ability_menu(const std::vector<talent>& talents)
 
         ASSERT(sel.size() == 1);
         ASSERT(sel[0]->hotkeys.size() == 1);
-        int selected = *(reinterpret_cast<int*>(sel[0]->data));
+        int selected = *(static_cast<int*>(sel[0]->data));
 
         if (abil_menu.menu_action == Menu::ACT_EXAMINE)
             _print_talent_description(talents[selected]);
         else
-            return (*(reinterpret_cast<int*>(sel[0]->data)));
+            return (*(static_cast<int*>(sel[0]->data)));
     }
 }
 
