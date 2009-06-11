@@ -1065,8 +1065,7 @@ int player_regen()
 
     // Before applying other effects, make sure that there's something
     // to heal.
-    if (rr < 1)
-        rr = 1;
+    rr = std::max(1, rr);
 
     // Healing depending on satiation.
     // The better-fed you are, the faster you heal.
@@ -1094,9 +1093,9 @@ int player_regen()
         rr /= 3;
     }
 
-    // Trog's Hand.  This overrides all healing reduction above.
+    // Trog's Hand.  This overrides everything above.
     if (you.attribute[ATTR_DIVINE_REGENERATION])
-        rr = std::max(100, rr);
+        rr = 100;
 
     return (rr);
 }
