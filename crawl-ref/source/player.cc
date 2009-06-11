@@ -1050,8 +1050,11 @@ int player_regen()
     rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
 
     // Spell.
-    if (you.duration[DUR_REGENERATION])
+    if (you.duration[DUR_REGENERATION]
+        && !you.attribute[ATTR_DIVINE_REGENERATION])
+    {
         rr += 100;
+    }
 
     // Troll leather (except for trolls).
     if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
@@ -1093,9 +1096,9 @@ int player_regen()
         rr /= 3;
     }
 
-    // Trog's Hand.  This overrides everything above.
+    // Trog's Hand.  This overrides the slow healing effect.
     if (you.attribute[ATTR_DIVINE_REGENERATION])
-        rr = 100;
+        rr += 100;
 
     return (rr);
 }

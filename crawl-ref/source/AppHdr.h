@@ -326,7 +326,7 @@
 // =========================================================================
 //  Game Play Defines
 // =========================================================================
-// number of back messages saved during play (currently none saved into files)
+// number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
 
 // clamp time between command inputs at 5 minutes when reporting play time.
@@ -370,7 +370,7 @@
 
 // bwr: set this to non-zero if you want to know the pluses, "runed" status
 // of the monster's weapons in the hiscore file.
-// #define HISCORE_WEAPON_DETAIL   1
+#define HISCORE_WEAPON_DETAIL   1
 
 // ====================== -----------------------------------------------------
 //jmf: end of new defines
