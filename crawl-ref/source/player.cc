@@ -1096,7 +1096,7 @@ int player_regen()
         rr /= 3;
     }
 
-    // Trog's Hand.  This overrides the slow healing effect.
+    // Trog's Hand.  This circumvents the slow healing effect.
     if (you.attribute[ATTR_DIVINE_REGENERATION])
         rr += 100;
 

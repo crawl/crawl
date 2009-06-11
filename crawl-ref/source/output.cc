@@ -752,10 +752,14 @@ static void _get_status_lights(std::vector<status_light>& out)
 
     if (you.magic_contamination || you.backlit(false))
     {
-        int color = you.magic_contamination > 5
-            ? _bad_ench_colour( you.magic_contamination, 15, 25 )
-            : LIGHTBLUE;
-        out.push_back(status_light(color, "Glow"));
+        int colour = LIGHTBLUE;
+        if (you.magic_contamination > 0)
+        {
+            colour = (you.magic_contamination > 5
+                        ? _bad_ench_colour( you.magic_contamination, 15, 25 )
+                        : DARKGREY);
+        }
+        out.push_back(status_light(colour, "Glow"));
     }
 
     if (you.duration[DUR_SWIFTNESS])

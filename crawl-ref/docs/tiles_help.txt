@@ -31,26 +31,26 @@ INVENTORY MANAGEMENT
 
 left mouseclick            Execute the most common action for this item type.
 
-  weapon, deck:      wield    ('w')
-  armour:            Wear     ('W')
-  food:              eat      ('e')
-  scroll, manual:    read     ('r')
-  potion:            quaff    ('q')
-  jewellery:         Put on   ('P')
-  spellbook:         Memorise ('M')
-  missiles:          fire     ('f')
-  wand, misc. item:  evoke    ('V')
-  corpse:            eat      ('e'), for Vampires
+    weapon, deck:          wield    ('w')
+    armour:                Wear     ('W')
+    food:                  eat      ('e')
+    scroll, manual:        read     ('r')
+    potion:                quaff    ('q')
+    jewellery:             Put on   ('P')
+    spellbook:             Memorise ('M')
+    missiles:              fire     ('f')
+    wand, misc. item:      evoke    ('V')
+    corpse:                eat      ('e'), for Vampires
 
-wielded items:
-  rod, deck:         evoke    ('v')
-  weapon, staff:     unwield  ('w-')
-  armour, jewellery: unwield  ('w-')
-  others, as non-wielded
+  wielded items:
+    rod, deck:             evoke    ('v')
+    weapon, staff:         unwield  ('w-')
+    armour, jewellery:     unwield  ('w-')
+    others                 as non-wielded
 
-worn items:
-  armour:            Take off ('T')
-  jewellery:         Remove   ('R')
+  worn items:
+    armour:                Take off ('T')
+    jewellery:             Remove   ('R')
 
 Sometimes alternative denominators are used such as "draw a card"
 instead of evoke for decks of cards, or "drink blood" instead of eat.
@@ -63,12 +63,12 @@ Shift + left mouseclick    Drop item ('d').
 
 Shift + right mouseclick   Execute secondary action for some item types.
 
-  weapon:            fire    ('f'), if throwable
-  non-weapon:        wield   ('w'), if corresponding spells memorised
+    weapon:                fire    ('f'), if throwable
+    non-weapon:            wield   ('w'), if corresponding spells memorised
 
-wielded items:
-  weapon:            fire    ('f')
-  anything else:     unwield ('w-')
+  wielded items:
+    weapon:                fire    ('f')
+    anything else:         unwield ('w-')
 
 
 NON-INVENTORY ITEM MANAGEMENT
