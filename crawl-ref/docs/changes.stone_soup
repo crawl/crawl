@@ -189,6 +189,7 @@ Miscellaneous
 * Flying can be cancelled.
 * Petrify is an Enchantment/Earth spell.
 * Lee's Rapid Deconstruction deals great damage to petrified monsters.
+* Removed stash_tracking option, just track all stashes.
 * Rewrite and clean up of (among others) beam, trap, and mutations code.
 * Store code revision in save files for easier bug tracking.
 * Many useful new wizard commands.

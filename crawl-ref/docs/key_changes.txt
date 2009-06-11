@@ -9,7 +9,7 @@ needed to interchange the Z and V commands if you refuse to learn that wands
 are nowadays activated with V.)
             key        new command
             V          evokes items in inventory like wands (was Z)
-            Z          cast a spell even if no monster is withing range
+            Z          cast a spell even if no monster is within range
             z          cast a spell (as before) but abort if no monster is
                        within range
             Ctrl-X     lists monsters, items and features in sight

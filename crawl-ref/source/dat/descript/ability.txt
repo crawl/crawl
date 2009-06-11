@@ -257,7 +257,7 @@ Go berserk. Going berserk greatly, if temporarily, increases your hit points and
 %%%%
 Trog's Hand
 
-Invoke a powerful regeneration ability which stacks with all other sources. This will also increase protection from magical effects.
+Invoke a powerful regeneration ability which stacks with all other sources and even allows otherwise non-healing species to regenerate. This will also increase protection from magical effects.
 %%%%
 Brothers in Arms
 
