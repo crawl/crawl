@@ -4205,13 +4205,6 @@ void bolt::tracer_affect_monster(monsters* mon)
         return;
     }
 
-    // Ignore self-detonating monsters.
-    if (mons_self_destructs(mon))
-    {
-        apply_hit_funcs(mon, 0);
-        return;
-    }
-
     if (is_enchantment())
         tracer_enchantment_affect_monster(mon);
     else
