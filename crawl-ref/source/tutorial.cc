@@ -3252,15 +3252,28 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_GLOWING:
         viewwindow(true, false);
-        text << "Uh-oh, you've accumulated so much magical contamination that "
-                "you're glowing! You usually acquire magical contamination "
-                "from using some powerful magics, like invisibility, haste "
-                "or potions of resistance. This normally isn't a problem as "
-                "contamination slowly bleeds off on its own, but it seems that "
-                "you've accumulated so much contamination over a short amount "
-                "of time that it can have nasty effects, such as mutate you "
-                "or deal direct damage. In addition, glowing is going to make "
-                "you much more noticeable.";
+        text << "You've accumulated so much magical contamination that you're "
+                "glowing! You usually acquire magical contamination from using "
+                "some powerful magics, like invisibility, haste or potions of "
+                "resistance. ";
+
+        if (you.magic_contamination < 5)
+        {
+            text << "As long as the status only shows in grey nothing will "
+                    "actually happen as a result of it, but as you continue "
+                    "suffusing yourself with magical contamination you'll "
+                    "eventually start glowing for real, which ";
+        }
+        else
+        {
+            text << "This normally isn't a problem as contamination slowly "
+                    "bleeds off on its own, but it seems that you've "
+                    "accumulated so much contamination over a short amount of "
+                    "time that it ";
+        }
+        text << "can have nasty effects, such as mutate you or deal direct "
+                "damage. In addition, glowing is going to make you much more "
+                "noticeable.";
         break;
 
     case TUT_YOU_RESIST:
