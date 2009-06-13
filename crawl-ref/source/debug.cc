@@ -2329,6 +2329,12 @@ void wizard_create_feature_number()
         && (feat_num = atoi(specs)))
     {
         dungeon_feature_type feat = static_cast<dungeon_feature_type>(feat_num);
+        if (feat == DNGN_ENTER_SHOP)
+        {
+            debug_make_shop();
+            return;
+        }
+
         dungeon_terrain_changed(you.pos(), feat, false);
 #ifdef USE_TILE
         env.tile_flv(you.pos()).special = 0;
@@ -2378,6 +2384,12 @@ void wizard_create_feature_name()
                                          MSGCH_DIAGNOSTICS);
                 return;
             }
+        }
+
+        if (feat == DNGN_ENTER_SHOP)
+        {
+            debug_make_shop();
+            return;
         }
 
         mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",

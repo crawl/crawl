@@ -1279,6 +1279,7 @@ mlist_allow_alternate_layout = false
         Display the monster list wherever Crawl may find space on
         your console display, usually to the left of the map, rather
         than using the fixed position below the stat area.
+        This option is not supported in the tiles build.
 
 mlist_targetting = false
         Using the monster list you can directly target monsters in
@@ -1645,7 +1646,8 @@ tile_key_repeat = true
 
 tile_tooltip_ms = 500
          The number of milliseconds before a tooltip appears when hovering the
-         mouse over part of the screen.
+         mouse over part of the screen. Setting this option to 0 will
+         deactivate the tooltips entirely.
 
 tile_window_width  = 0
 tile_window_height = 0

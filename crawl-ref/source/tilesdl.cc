@@ -178,6 +178,7 @@ void TilesFramework::draw_title()
     m_active_layer = LAYER_TITLE;
     set_need_redraw();
 
+    mouse_control mc(MOUSE_MODE_MORE);
     getch();
 }
 
@@ -253,7 +254,7 @@ bool TilesFramework::initialise()
 
     if (Options.tile_key_repeat)
     {
-        int delay = SDL_DEFAULT_REPEAT_DELAY;
+        int delay    = SDL_DEFAULT_REPEAT_DELAY;
         int interval = SDL_DEFAULT_REPEAT_INTERVAL;
         if (SDL_EnableKeyRepeat(delay, interval) != 0)
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
@@ -281,7 +282,7 @@ bool TilesFramework::initialise()
     }
     else
     {
-        m_windowsz.x = std::max(800, m_screen_width - 100);
+        m_windowsz.x = std::max(800, m_screen_width  - 100);
         m_windowsz.y = std::max(480, m_screen_height - 100);
     }
 
@@ -707,7 +708,7 @@ static unsigned int _timer_callback(unsigned int ticks)
     event.type = SDL_USEREVENT;
     SDL_PushEvent(&event);
 
-    unsigned int res = std::max(30, Options.tile_tooltip_ms);
+    unsigned int res = Options.tile_tooltip_ms;
     return res;
 }
 
@@ -746,7 +747,7 @@ int TilesFramework::getch_ck()
     const unsigned int ticks_per_redraw = 50;
     unsigned int last_redraw_tick = 0;
 
-    unsigned int res = std::max(30, Options.tile_tooltip_ms);
+    unsigned int res = Options.tile_tooltip_ms;
     SDL_SetTimer(res, &_timer_callback);
 
     if (m_need_redraw)
@@ -791,7 +792,7 @@ int TilesFramework::getch_ck()
             {
             case SDL_KEYDOWN:
                 m_key_mod |= _get_modifiers(event.key.keysym);
-                key = _translate_keysym(event.key.keysym);
+                key        = _translate_keysym(event.key.keysym);
                 m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
@@ -840,9 +841,9 @@ int TilesFramework::getch_ck()
                 {
                     MouseEvent mouse_event;
                     _translate_event(event.button, mouse_event);
-                    m_buttons_held &= ~(mouse_event.button);
+                    m_buttons_held  &= ~(mouse_event.button);
                     mouse_event.held = m_buttons_held;
-                    mouse_event.mod = m_key_mod;
+                    mouse_event.mod  = m_key_mod;
                     key = handle_mouse(mouse_event);
                     m_last_tick_moved = ticks;
                 }
@@ -852,9 +853,9 @@ int TilesFramework::getch_ck()
                 {
                     MouseEvent mouse_event;
                     _translate_event(event.button, mouse_event);
-                    m_buttons_held |= mouse_event.button;
+                    m_buttons_held  |= mouse_event.button;
                     mouse_event.held = m_buttons_held;
-                    mouse_event.mod = m_key_mod;
+                    mouse_event.mod  = m_key_mod;
                     key = handle_mouse(mouse_event);
                     m_last_tick_moved = ticks;
                 }
