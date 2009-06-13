@@ -2105,7 +2105,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->god   = god;
 
     // Keep spells for named monsters.
-    if (name.empty())
+    if (!name.empty())
         monster->spells = spl;
 
     monster->add_ench(abj);
