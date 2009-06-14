@@ -5185,11 +5185,11 @@ void contaminate_player(int change, bool controlled, bool status_only)
             xom_is_stimulated(new_level * 32);
     }
 
-    if (new_level >= 1)
-        learned_something_new(TUT_GLOWING);
-
     if (status_only)
         return;
+
+    if (you.magic_contamination > 0)
+        learned_something_new(TUT_GLOWING);
 
     // Zin doesn't like mutations or mutagenic radiation.
     if (you.religion == GOD_ZIN)

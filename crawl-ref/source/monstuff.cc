@@ -2085,6 +2085,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                                               ENCH_SHAPESHIFTER);
     mon_enchant summon    = monster->get_ench(ENCH_SUMMON);
     mon_enchant tp        = monster->get_ench(ENCH_TP);
+    monster_spells spl    = monster->spells;
 
     // deal with mons_sec
     monster->type         = targetc;
@@ -2097,6 +2098,10 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->mname = name;
     monster->flags = flags;
     monster->god   = god;
+
+    // Keep spells for named monsters.
+    if (!name.empty())
+        monster->spells = spl;
 
     monster->add_ench(abj);
     monster->add_ench(charm);

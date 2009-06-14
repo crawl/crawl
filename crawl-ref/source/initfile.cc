@@ -895,6 +895,7 @@ void game_options::reset_options()
     strcpy(tile_show_items, "!?/%=([)x}+\\_.");
     tile_title_screen    = true;
     tile_menu_icons      = true;
+
     // minimap colours
     tile_player_col      = MAP_WHITE;
     tile_monster_col     = MAP_RED;
@@ -930,13 +931,15 @@ void game_options::reset_options()
     tile_font_lbl_size   = 0;
 
     // window layout
-    tile_key_repeat      = true;
-    tile_full_screen     = SCREENMODE_AUTO;
-    tile_window_width    = 0;
-    tile_window_height   = 0;
-    tile_map_pixels      = 0;
-    tile_tooltip_ms      = 500;
-    tile_tag_pref        = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
+    tile_full_screen      = SCREENMODE_AUTO;
+    tile_window_width     = 0;
+    tile_window_height    = 0;
+    tile_map_pixels       = 0;
+    tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
+
+    // delays
+    tile_key_repeat_delay = 200;
+    tile_tooltip_ms       = 500;
 #endif
 
     // map each colour to itself as default
@@ -1590,18 +1593,17 @@ void game_options::fixup_options()
 
 static int _str_to_killcategory(const std::string &s)
 {
-   static const char *kc[] = {
-       "you",
-       "friend",
-       "other",
-   };
+    static const char *kc[] = {
+        "you",
+        "friend",
+        "other",
+    };
 
-   for (unsigned i = 0; i < sizeof(kc) / sizeof(*kc); ++i)
-   {
-       if (s == kc[i])
-           return i;
-   }
-   return -1;
+    for (unsigned i = 0; i < sizeof(kc) / sizeof(*kc); ++i)
+        if (s == kc[i])
+            return i;
+
+    return -1;
 }
 
 void game_options::do_kill_map(const std::string &from, const std::string &to)
@@ -2009,7 +2011,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries"
-        && key != "include" && key != "bindkey")
+        && key != "include" && key != "bindkey"
+        && key.find("font") == std::string::npos)
     {
         lowercase( field );
     }
@@ -3151,7 +3154,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tile_font_lbl_file = field;
     }
     else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
-    else BOOL_OPTION(tile_key_repeat);
+    else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
     else INT_OPTION(tile_window_width, 1, INT_MAX);

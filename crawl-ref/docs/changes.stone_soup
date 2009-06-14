@@ -1,4 +1,4 @@
-Stone Soup 0.5.0 (200906??)
+Stone Soup 0.5.0 (20090612)
 ---------------------------
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
@@ -23,11 +23,11 @@ Levels
 * New portal vaults (Sewer, Ice Cave, Minitomb, Ziggurat), and many new vaults.
 * Self-changing labyrinths (mappable but subject to map rot).
 * Teleporting within a labyrinth always sends you away from the exit.
-* The Orcish Mines are now completely interconnected via the branch bottom.
+* The Orcish Mines are completely interconnected via the branch bottom.
 * Shortened Hive to two levels.
 * Ghosts may no longer appear in the Ecumenical Temple.
-* Traps now remember how much ammunition they have.
-* Branch descriptions now mention depth and whether they contain a rune.
+* Traps remember how much ammunition they have.
+* Branch descriptions mention depth and whether they contain a rune.
 * Fixed KMONS not accepting comma-separated list of alternative monsters.
 * Tweaked most of the oklob vaults to make them less dangerous.
 * Allow bazaars outside of the main dungeon.
@@ -44,10 +44,10 @@ Characters
 * Overhaul nutrition values and duration for Vampires feeding on corpses.
 * Vampires can no longer heal via potions of blood or non-fresh corpses.
 * Vampires recover lost stats depending on blood level.
-* Draining of the experience pool is now reduced by life protection.
+* Draining of the experience pool is reduced by life protection.
 * Merfolk can swim in heavy armour, albeit with doubled armour penalty.
 * Player and monster nagas no longer flounder or lose stealth in shallow water.
-* Secondary unarmed attacks now wake sleeping monsters.
+* Secondary unarmed attacks wake sleeping monsters.
 * Pure spellcasters don't start with a weapon anymore.
 * Tweak starting choice restrictions.
 * Going into berserk rage doubles Health, ending it halves Health.
@@ -98,7 +98,7 @@ Interface
 * New option: Automatically set travel exclusions for statues and oklob plants.
 * Switch off autopickup and autoswap if you see a monster turn invisible.
 * Killing an invisible monster reactivates autopickup.
-* Added ally pickup mode for items dropped by player and allies.
+* Added ally pickup mode for items dropped by either player or allies.
 * Shops use shopping cart behaviour.
 * Wizard commands can be used from the wizard help screen.
 * Allow quivering/firing of wielded missiles and wielded weapons of returning.
@@ -107,14 +107,14 @@ Interface
 * Added an option to make menu colours apply to shops.
 * Use menu colours for announcements of items found while travelling.
 * Pressing Esc at -More- automatically clears all queued -More- prompts.
-* Add FAQ to help screen ('?Q').
+* Added FAQ to help screen ('?Q').
 * Purchases and donations are noted.
 * The database search also prints armour base AC/EV and weapon plusses.
 * Add spells and books to book/spell descriptions when searching the database.
 * Ability and card descriptions are searchable in the database ('?/').
 * Allow wishing for specific fixed and randarts in wizard mode ('o' command).
 * Add food item based hunger descriptions to spells.
-* "Glow" status now appears as soon as contamination effects become possible.
+* "Glow" status is grey for harmless contamination, yellow for dangerous levels.
 
 Items
 -----
@@ -125,7 +125,7 @@ Items
 * Missile enchantment decreases chance of destruction on impact.
 * Freezing weapons can slow cold-blooded monsters.
 * The staff of channeling trains Evocations.
-* Potions of magic no longer increase maximal magic points and are less rare.
+* Potions of magic no longer increase maximal magic points and are more common.
 * Item descriptions mention enchantment/charging limits.
 * Randarts get their known properties autoinscribed.
 * Randarts are noted as identified even if the plusses are still unknown.
@@ -148,13 +148,13 @@ Gods
 * Xom is more active and more useful in combat.
 * Cleansing Flame centers on the player and deals less damage.
 * Killing a holy being is sometimes avenged by TSO.
-* Split Elyvilon's healing powers in "heal self" and "heal other" versions.
-* Evyvilon's Lesser Healing Other does not cost piety anymore.
+* Split Elyvilon's healing powers into "heal self" and "heal other" versions.
+* Evyvilon's Lesser Healing (for pacification) does not cost piety anymore.
 * Move Divine Robustness from Zin to Elyvilon, replacing Incredible Healing.
 * Make Zin's retribution-summoned plagues permanent.
 * Sif Muna no longer gifts Kiku/Vehumet specific books, spells still possible.
 * Trog accepts kills of demons.
-* Trog's Hand now provides magic resistance as well as regeneration.
+* Trog's Hand provides magic resistance as well as regeneration.
 * Vehumet accepts undead killing for you.
 * Beogh no longer accepts butchery but likes prayer over orcish remains.
 * Beogh accepts more kinds of kills.
@@ -189,9 +189,10 @@ Miscellaneous
 * Flying can be cancelled.
 * Petrify is an Enchantment/Earth spell.
 * Lee's Rapid Deconstruction deals great damage to petrified monsters.
+* Removed stash_tracking option, always track all stashes.
 * Rewrite and clean up of (among others) beam, trap, and mutations code.
 * Store code revision in save files for easier bug tracking.
-* Many useful new wizard commands.
+* Many useful new wizard mode commands.
 
 
 Stone Soup 0.4.5 (20090114)

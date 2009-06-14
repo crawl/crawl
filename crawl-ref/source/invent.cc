@@ -218,7 +218,7 @@ std::string InvEntry::get_text() const
     if (Options.show_inventory_weights)
     {
         const int mass = item_mass(*item) * item->quantity;
-        tstr << std::setw(get_number_of_cols() - tstr.str().length() - 1)
+        tstr << std::setw(get_number_of_cols() - tstr.str().length() - 2)
              << std::right
              << make_stringf("(%.1f aum)", BURDEN_TO_AUM * mass);
     }
