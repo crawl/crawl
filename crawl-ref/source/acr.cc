@@ -3451,6 +3451,10 @@ static bool _initialise(void)
 #endif
 
 #ifdef USE_TILE
+    // Override inventory weights options for tiled menus.
+    if (Options.tile_menu_icons && Options.show_inventory_weights)
+        Options.show_inventory_weights = false;
+
     tiles.resize();
 #endif
 

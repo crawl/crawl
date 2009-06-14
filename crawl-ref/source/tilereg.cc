@@ -10,6 +10,7 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#include <cmath>
 #include "cio.h"
 #include "debug.h"
 #include "describe.h"
@@ -2663,7 +2664,7 @@ void MenuRegion::place_entries()
             continue;
         }
 
-        if (height + max_entry_height > end_height)
+        if (height + max_entry_height > end_height && column <= max_columns)
         {
             height = 0;
             column++;
@@ -2715,6 +2716,8 @@ void MenuRegion::place_entries()
 
             int text_sy = m_entries[i].sy;
             text_sy += (entry_height - m_font_entry->char_height()) / 2;
+            // Split menu entries that don't fit into a single lines into two
+            // lines.
             if (Options.tile_menu_icons
                 && text_sx + text_width > entry_start + column_width)
             {
@@ -2848,7 +2851,7 @@ int MenuRegion::maxpagesize() const
 
     // Similar to the definition of max_entry_height in place_entries().
     const int div = (Options.tile_menu_icons ? 32
-                                             : m_font_entry->char_height());
+                                             : m_font_entry->char_height() + 1);
 
     const int pagesize = ((my - more_height) / div) * m_max_columns;
 

@@ -744,7 +744,7 @@ int TilesFramework::getch_ck()
 
     int key = 0;
 
-    const unsigned int ticks_per_redraw = 50;
+    const unsigned int ticks_per_redraw = 80;
     unsigned int last_redraw_tick = 0;
 
     unsigned int res = Options.tile_tooltip_ms;

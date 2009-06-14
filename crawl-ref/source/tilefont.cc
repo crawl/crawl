@@ -89,23 +89,21 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
 
     // Get maximum advance
     m_max_advance = coord_def(0,0);
-    int ascender = face->ascender >> 6;
-    int min_y = 100000;
-    int max_y = 0;
+    int ascender  = face->ascender >> 6;
+    int min_y     = 100000;
+    int max_y     = 0;
     int max_width = 0;
-    m_min_offset = 0;
+    m_min_offset  = 0;
     m_glyphs = new GlyphInfo[256];
     for (unsigned int c = 0; c < 256; c++)
     {
-        m_glyphs[c].offset = 0;
+        m_glyphs[c].offset  = 0;
         m_glyphs[c].advance = 0;
         m_glyphs[c].renderable = false;
 
         FT_Int glyph_index = FT_Get_Char_Index(face, c);
         if (!glyph_index)
-        {
             continue;
-        }
 
         error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER);
         ASSERT(!error);
@@ -116,13 +114,13 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
 
         m_max_advance.x = std::max(m_max_advance.x, advance);
 
-        int bmp_width = bmp->width;
-        int bmp_top = ascender - face->glyph->bitmap_top;
+        int bmp_width  = bmp->width;
+        int bmp_top    = ascender - face->glyph->bitmap_top;
         int bmp_bottom = ascender + bmp->rows - face->glyph->bitmap_top;
         if (outl)
         {
-            bmp_width += 2;
-            bmp_top -= 1;
+            bmp_width  += 2;
+            bmp_top    -= 1;
             bmp_bottom += 1;
         }
 
@@ -130,9 +128,9 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
         min_y = std::min(min_y, bmp_top);
         max_y = std::max(max_y, bmp_bottom);
 
-        m_glyphs[c].offset = face->glyph->bitmap_left;
+        m_glyphs[c].offset  = face->glyph->bitmap_left;
         m_glyphs[c].advance = advance;
-        m_glyphs[c].width = bmp_width;
+        m_glyphs[c].width   = bmp_width;
 
         m_min_offset = std::min((char)m_min_offset, m_glyphs[c].offset);
     }
@@ -142,9 +140,9 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
     // heights on the characters we care about to get better values for the
     // text height and the ascender.
     m_max_advance.y = max_y - min_y;
-    ascender -= min_y;
+    ascender       -= min_y;
 
-    int max_height = m_max_advance.y;
+    int max_height  = m_max_advance.y;
 
     // Grow character size to power of 2
     coord_def charsz(1,1);
@@ -157,8 +155,8 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
     // Having to blow out 8-bit alpha values into full 32-bit textures is
     // kind of frustrating, but not all OpenGL implementations support the
     // "esoteric" ALPHA8 format and it's not like this texture is very large.
-    unsigned int width = 16 * charsz.x;
-    unsigned int height = 16 * charsz.y;
+    unsigned int   width  = 16 * charsz.x;
+    unsigned int   height = 16 * charsz.y;
     unsigned char *pixels = new unsigned char[4 * width * height];
     memset(pixels, 0, sizeof(unsigned char) * 4 * width * height);
 
@@ -462,10 +460,9 @@ unsigned int FTFont::string_height(const char *text)
 {
     int height = 1;
     for (const char *itr = text; (*itr); itr++)
-    {
         if (*itr == '\n')
             height++;
-    }
+
     return char_height() * height;
 }
 
