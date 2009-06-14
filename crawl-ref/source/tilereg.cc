@@ -1230,7 +1230,8 @@ bool InventoryTile::empty() const
     return (idx == -1);
 }
 
-InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y) :
+InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font,
+                                 int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
     m_flavour(NULL),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),

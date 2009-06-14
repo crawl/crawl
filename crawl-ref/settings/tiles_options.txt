@@ -30,26 +30,25 @@
 # tile_excl_centre     = darkblue
 # tile_window_col      = yellow
 
-# tile_key_repeat = false
-
-# tile_tooltip_ms = 500
+# tile_key_repeat_delay = 200
+# tile_tooltip_ms       = 500
 
 # tile_tag_pref = enemy
 
 ### Note: setting window, map, or font sizes to '0' implies auto-sizing.
 
-# tile_window_width = 1024
+# tile_window_width  = 1024
 # tile_window_height = 768
-# tile_map_pixels = 4
-# tile_full_screen = true
+# tile_map_pixels    = 4
+# tile_full_screen   = true
 
-# tile_font_crt_file = VeraMono.ttf
-# tile_font_crt_size = 15
+# tile_font_crt_file  = VeraMono.ttf
+# tile_font_crt_size  = 15
 # tile_font_stat_file = VeraMono.ttf
 # tile_font_stat_size = 16
-# tile_font_msg_file = VeraMono.ttf
-# tile_font_msg_size = 14
-# tile_font_tip_file = VeraMono.ttf
-# tile_font_tip_size = 15
-# tile_font_lbl_file = Vera.ttf
-# tile_font_lbl_size = 14
+# tile_font_msg_file  = VeraMono.ttf
+# tile_font_msg_size  = 14
+# tile_font_tip_file  = VeraMono.ttf
+# tile_font_tip_size  = 15
+# tile_font_lbl_file  = Vera.ttf
+# tile_font_lbl_size  = 14

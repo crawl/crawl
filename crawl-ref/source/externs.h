@@ -2226,7 +2226,7 @@ public:
     int         tile_font_lbl_size;
     std::string tile_font_tip_file;
     int         tile_font_tip_size;
-    bool        tile_key_repeat;
+    int         tile_key_repeat_delay;
     screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;

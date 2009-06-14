@@ -150,13 +150,13 @@ void TilesFramework::shutdown()
     delete m_region_menu;
     delete m_region_title;
 
-    m_region_tile = NULL;
-    m_region_stat = NULL;
-    m_region_msg = NULL;
-    m_region_map = NULL;
-    m_region_inv = NULL;
-    m_region_crt = NULL;
-    m_region_menu = NULL;
+    m_region_tile  = NULL;
+    m_region_stat  = NULL;
+    m_region_msg   = NULL;
+    m_region_map   = NULL;
+    m_region_inv   = NULL;
+    m_region_crt   = NULL;
+    m_region_menu  = NULL;
     m_region_title = NULL;
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
@@ -252,9 +252,9 @@ bool TilesFramework::initialise()
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
-    if (Options.tile_key_repeat)
+    if (Options.tile_key_repeat_delay > 0)
     {
-        int delay    = SDL_DEFAULT_REPEAT_DELAY;
+        int delay    = Options.tile_key_repeat_delay;
         int interval = SDL_DEFAULT_REPEAT_INTERVAL;
         if (SDL_EnableKeyRepeat(delay, interval) != 0)
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
@@ -1098,12 +1098,10 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
         inv_col = m_region_stat->sx;
 
     m_region_inv->place(inv_col, m_region_map->ey, 0);
-    m_region_inv->resize_to_fit(m_windowsz.x -
-                                     m_region_inv->sx,
-                                     m_windowsz.y -
-                                     m_region_inv->sy);
+    m_region_inv->resize_to_fit(m_windowsz.x - m_region_inv->sx,
+                                m_windowsz.y - m_region_inv->sy);
     m_region_inv->resize(std::min(13, (int)m_region_inv->mx),
-                              std::min(6, (int)m_region_inv->my));
+                         std::min( 6, (int)m_region_inv->my));
 
     int self_inv_y = m_windowsz.y - m_region_inv->wy - margin;
     m_region_inv->place(inv_col, self_inv_y, 0);

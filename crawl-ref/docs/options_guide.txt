@@ -1640,35 +1640,58 @@ the dungeon level.
                            tile_floor_col and tile_item_col, only)
    tile_window_col       - colour of the rectangular view window
 
-tile_key_repeat = true
-         Whether or not to repeat key presses when they are held down.
-         By default, keys will repeat.
+tile_key_repeat_delay = 200
+        If you hold down a key, there's a delay until the presses key will
+        take action. This option controls this delay, in milliseconds. If it
+        is set to 0 key presses will never repeat.
 
 tile_tooltip_ms = 500
-         The number of milliseconds before a tooltip appears when hovering the
-         mouse over part of the screen. Setting this option to 0 will
-         deactivate the tooltips entirely.
+        The number of milliseconds before a tooltip appears when hovering the
+        mouse over part of the screen. Setting this option to 0 will
+        deactivate the tooltips entirely.
+
+tile_tag_pref = (none| named | enemy | tutorial )
+        This option defaults to "enemy" normally and "tutorial" in tutorial
+        modes.  This setting determines which monsters receive text tag
+            none     - turns off all tags.
+            named    - shows names of all named monsters, ally or enemy
+            enemy    - shows names of named enemy monsters
+            tutorial - shows names of all monsters not yet killed this game
+                       and of named enemy monsters
+        Examples for named monsters are uniques and ghosts.
 
 tile_window_width  = 0
 tile_window_height = 0
-         The width and height of the window, in pixels.  If set to zero, it
-         will auto-size the window.
+        The width and height of the window, in pixels.  If set to zero, it
+        will auto-size the window.
 
 tile_map_pixels = 4
-         The number of pixels each minimap square should take up.
+        The number of pixels each minimap square should take up.
 
 tile_full_screen = false
-         Setting this option to true will start Crawl in full screen mode.
+        Setting this option to true will start Crawl in full screen mode.
 
-tile_tag_pref = (none | tutorial | named | enemy)
-         This option defaults to "enemy" normally and "tutorial" in tutorial
-         modes.  This settings determines which monsters receive text tag
-         labels above them, describing what kind of monster they are.
-         The "none" option turns off all tags.  The "tutorial" option
-         shows the name of all monsters that the player has only killed
-         a few times.  The "named" options shows the names for all monsters
-         with names, friendly and enemy.  The "enemy" option only shows the
-         name of enemy monsters with names (such as uniques and ghosts.)
+tile_font_crt_file  = VeraMono.ttf
+tile_font_stat_file = VeraMono.ttf
+tile_font_msg_file  = VeraMono.ttf
+tile_font_tip_file  = VeraMono.ttf
+tile_font_lbl_file  = Vera.ttf
+        Fonts used in various sections of the screen. If you want to use
+        another font, you'll have to place the corresponding *.ttf file into
+        the dat/tiles/ folder.
+        Screen regions are as follows:
+            crt  - non-map screens (menus, message history, etc.)
+            stat - stat area (hit points, AC, etc.)
+            msg  - message area
+            tip  - tooltips (mouseover information)
+            lbl  - item/monster names in inventory/main map
+
+tile_font_crt_size  = 15
+tile_font_stat_size = 16
+tile_font_msg_size  = 14
+tile_font_tip_size  = 15
+tile_font_lbl_size  = 14
+        Font size for the screen regions listed above.
 
 5-  Character Dump.
 ===================
