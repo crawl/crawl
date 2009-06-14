@@ -114,6 +114,7 @@ struct bolt
     bool        is_tracer;       // is this a tracer?
     bool        aimed_at_feet;   // this was aimed at self!
     bool        msg_generated;   // an appropriate msg was already mpr'd
+    bool        passed_target;   // Beam progressed beyond target.
     bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
     bool        smart_monster;   // tracer firer can guess at other mons. resists?
     bool        can_see_invis;   // tracer firer can see invisible?

@@ -1792,11 +1792,11 @@ void bolt::hit_wall()
     const dungeon_feature_type feat = grd(pos());
     ASSERT( grid_is_solid(feat) );
 
-    if (is_tracer && YOU_KILL(thrower) && in_bounds(target)
+    if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
         && pos() != target  && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
-        && !affects_nothing && bounces == 0 && reflections == 0
-        && see_grid(target) && !grid_is_solid(grd(target)))
+        && bounces == 0 && reflections == 0 && see_grid(target)
+        && !grid_is_solid(grd(target)))
     {
         // Okay, with all those tests passed, this is probably an instance
         // of the player manually targetting something whose line of fire
@@ -2021,8 +2021,12 @@ void bolt::do_fire()
         if (beam_cancelled)
             return;
 
-        if (stop_at_target() && pos() == target)
-            break;
+        if (pos() == target)
+        {
+            passed_target = true;
+            if (stop_at_target())
+                break;
+        }
 
         ASSERT(!grid_is_solid(grd(pos()))
                || (is_tracer && affects_wall(grd(pos()))));
@@ -5514,10 +5518,11 @@ bolt::bolt() : range(-2), type('*'),
                range_funcs(), damage_funcs(), hit_funcs(),
                obvious_effect(false), seen(false), path_taken(), range_used(0),
                is_tracer(false), aimed_at_feet(false), msg_generated(false),
-               in_explosion_phase(false), smart_monster(false),
-               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
-               chose_ray(false), beam_cancelled(false), dont_stop_player(false),
-               bounces(false), bounce_pos(), reflections(0), reflector(-1)
+               passed_target(false), in_explosion_phase(false),
+               smart_monster(false), can_see_invis(false),
+               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
+               beam_cancelled(false), dont_stop_player(false), bounces(false),
+               bounce_pos(), reflections(0), reflector(-1)
 {
 }
 
