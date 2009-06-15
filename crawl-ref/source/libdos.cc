@@ -1,6 +1,7 @@
 /*
  *  File:       libdos.cc
  *  Summary:    Functions for DOS support.
+ *              Needed by makefile.dos.
  *  Written by: Darshan Shaligram
  *
  *  Added for Crawl Reference by dshaligram on Wed Nov 22 08:41:20 2006 UTC

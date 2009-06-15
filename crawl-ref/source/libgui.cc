@@ -1,6 +1,7 @@
 /*
  *  File:       libgui.cc
  *  Summary:    Functions that any display port needs to implement.
+ *              Needed by makefile_tiles.mgw and makefile_tiles.unix.
  *  Written by: M.Itakura
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
@@ -92,8 +93,8 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.msgp.x = 1;
     geom.msgp.y = 1;
 
-    geom.mlistp.x = 1;
-    geom.mlistp.y = 1;
+    geom.mlistp.x  = 1;
+    geom.mlistp.y  = 1;
     geom.mlistsz.x = 0;
     geom.mlistsz.y = 0;
 

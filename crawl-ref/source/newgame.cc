@@ -3219,6 +3219,7 @@ static bool _read_player_name( char *name, int len,
                 return (true);
             }
         }
+
         // Go back and prompt the user.
     }
 }
@@ -3275,12 +3276,13 @@ static void _enter_player_name(bool blankOK)
             // If the player wants out, we bail out.
             if (!_read_player_name(name, kNameLen, existing_chars, char_menu))
                 end(0);
-
+#if 0
 #ifdef USE_TILE
+            // What's this supposed to achieve? (jpeg)
             clrscr();
             cgotoxy(1, 1);
 #endif
-
+#endif
             // Laboriously trim the damn thing.
             std::string read_name = name;
             trim_string(read_name);
@@ -3289,7 +3291,7 @@ static void _enter_player_name(bool blankOK)
         }
     }
     while (ask_name = !_is_good_name(you.your_name, blankOK, true));
-}                               // end enter_player_name()
+}
 
 static bool _validate_player_name(bool verbose)
 {
@@ -3316,7 +3318,7 @@ bool validate_player_name(const char* name, bool verbose)
         char c = *pn;
         // Note that this includes systems which may be using the
         // packaging system.  The packaging system is very simple
-        // and doesn't take the time to escape every characters that
+        // and doesn't take the time to escape every character that
         // might be a problem for some random shell or OS... so we
         // play it very conservative here.  -- bwr
         if (!isalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')

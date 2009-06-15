@@ -70,6 +70,7 @@ bool mon_enemies_around(const monsters *monster);
 void find_features(const std::vector<coord_def>& features,
         unsigned char feature, std::vector<coord_def> *found);
 
+void clear_rays_on_exit();
 void losight(env_show_grid &sh, feature_grid &gr,
              const coord_def& center, bool clear_walls_block = false,
              bool ignore_clouds = false, bool full_radius = false);

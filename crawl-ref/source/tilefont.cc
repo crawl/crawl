@@ -94,7 +94,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
     int max_y     = 0;
     int max_width = 0;
     m_min_offset  = 0;
-    m_glyphs = new GlyphInfo[256];
+    m_glyphs      = new GlyphInfo[256];
     for (unsigned int c = 0; c < 256; c++)
     {
         m_glyphs[c].offset  = 0;
@@ -212,7 +212,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
                 {
                     bool x_valid = x >= 0 && x < bmp->width;
                     bool y_valid = y >= 0 && y < bmp->rows;
-                    bool valid = x_valid && y_valid;
+                    bool valid   = x_valid && y_valid;
                     unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
 
                     unsigned char edge = 0;
@@ -222,7 +222,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
                         edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
                     if (y_valid && x < bmp->width - 1)
                         edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
-                    if (x_valid && y < bmp->width - 1)
+                    if (x_valid && y < bmp->rows - 1)
                         edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
 
                     unsigned int idx = offset_x+x+1 + (offset_y+y+1) * width;

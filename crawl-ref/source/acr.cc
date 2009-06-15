@@ -286,6 +286,8 @@ int main( int argc, char *argv[] )
     while (true)
         _input();
 
+    clear_globals_on_exit();
+
     return 0;
 }
 
@@ -1005,12 +1007,13 @@ static void _input()
         c_input_reset(true);
 
         _center_cursor();
-        // Enable the cursor to read input. The cursor stays on while
-        // the command is being processed, so subsidiary prompts
-        // shouldn't need to turn it on explicitly.
+
 #ifdef USE_TILE
         cursor_control con(false);
 #else
+        // Enable the cursor to read input. The cursor stays on while
+        // the command is being processed, so subsidiary prompts
+        // shouldn't need to turn it on explicitly.
         cursor_control con(true);
 #endif
         const command_type cmd = _get_next_cmd();
@@ -2561,8 +2564,11 @@ void world_reacts()
     }
 
 #ifdef USE_TILE
-    tiles.clear_text_tags(TAG_TUTORIAL);
-    tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+    if (Options.tutorial_left)
+    {
+        tiles.clear_text_tags(TAG_TUTORIAL);
+        tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+    }
 #endif
 
     if (you.num_turns != -1)

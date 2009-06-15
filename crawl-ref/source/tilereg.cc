@@ -10,7 +10,6 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
-#include <cmath>
 #include "cio.h"
 #include "debug.h"
 #include "describe.h"
@@ -429,7 +428,7 @@ void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
         TILEP_PART_HELM,
-        TILEP_PART_DRCHEAD // 15
+        TILEP_PART_DRCHEAD  // 15
     };
 
     int flags[TILEP_PART_MAX];
@@ -1195,7 +1194,7 @@ void DungeonRegion::add_text_tag(text_tag_type type, const std::string &tag,
 {
     TextTag t;
     t.tag = tag;
-    t.gc = gc;
+    t.gc  = gc;
 
     m_tags[type].push_back(t);
 }
@@ -1244,6 +1243,7 @@ InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font,
 InventoryRegion::~InventoryRegion()
 {
     delete[] m_flavour;
+    m_flavour = NULL;
 }
 
 void InventoryRegion::clear()
@@ -1365,9 +1365,12 @@ void InventoryRegion::pack_buffers()
 
             if (item.flag & TILEI_FLAG_FLOOR)
             {
+                if (i >= (unsigned int) mx * my)
+                    break;
+
                 int num_floor = tile_dngn_count(env.tile_default.floor);
                 m_buf_dngn.add(env.tile_default.floor
-                         + m_flavour[i] % num_floor, x, y);
+                                + m_flavour[i] % num_floor, x, y);
             }
             else
                 m_buf_dngn.add(TILE_ITEM_SLOT, x, y);
@@ -2167,8 +2170,8 @@ TextRegion::TextRegion(FTFont *font) :
 
 void TextRegion::on_resize()
 {
-    delete cbuf;
-    delete abuf;
+    delete[] cbuf;
+    delete[] abuf;
 
     int size = mx * my;
     cbuf = new unsigned char[size];
@@ -2296,13 +2299,14 @@ void TextRegion::cgotoxy(int x, int y)
     print_x = x-1;
     print_y = y-1;
 
+#if 0
     if (cursor_region != NULL && cursor_flag)
     {
         cursor_x = -1;
         cursor_y = -1;
         cursor_region = NULL;
     }
-
+#endif
     if (cursor_flag)
     {
         cursor_x = print_x;
@@ -2462,7 +2466,7 @@ void MessageRegion::render()
     {
         idx = cursor_x + mx * cursor_y;
         char_back = cbuf[idx];
-        col_back = abuf[idx];
+        col_back  = abuf[idx];
 
         cbuf[idx] = '_';
         abuf[idx] = WHITE;

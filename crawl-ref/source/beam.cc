@@ -5522,7 +5522,7 @@ bolt::bolt() : range(-2), type('*'),
                smart_monster(false), can_see_invis(false),
                attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
                beam_cancelled(false), dont_stop_player(false), bounces(false),
-               bounce_pos(), reflections(0), reflector(-1)
+               bounce_pos(), reflections(0), reflector(-1), auto_hit(false)
 {
 }
 
@@ -5717,4 +5717,13 @@ std::string beam_type_name(beam_type type)
     }
     DEBUGSTR("unknown beam type");
     return("UNKNOWN");
+}
+
+void clear_zap_info_on_exit()
+{
+    for (unsigned int i = 0; i < NUM_BEAMS; ++i)
+    {
+        delete zap_data[i].damage;
+        delete zap_data[i].tohit;
+    }
 }
