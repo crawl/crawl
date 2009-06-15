@@ -240,6 +240,8 @@
 		7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
 		93B134650F25595F007DB230 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134610F255926007DB230 /* version.cc */; };
 		93B134C30F256113007DB230 /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134C20F256113007DB230 /* arena.cc */; };
+		D274ABB20FE66CFA00C9C1AE /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274ABB00FE66CFA00C9C1AE /* spl-mis.cc */; };
+		D274ABB90FE66D2400C9C1AE /* crash-u.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274ABB50FE66D2400C9C1AE /* crash-u.cc */; };
 		D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
 		D2AE25EF0DA2624E00E15489 /* crawl in Resources */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
 		D2AE25F90DA262DD00E15489 /* crawl in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
@@ -618,6 +620,10 @@
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B134610F255926007DB230 /* version.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = version.cc; sourceTree = SOURCE_ROOT; };
 		93B134C20F256113007DB230 /* arena.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arena.cc; sourceTree = "<group>"; };
+		D274ABB00FE66CFA00C9C1AE /* spl-mis.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-mis.cc"; sourceTree = "<group>"; };
+		D274ABB10FE66CFA00C9C1AE /* spl-mis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-mis.h"; sourceTree = "<group>"; };
+		D274ABB50FE66D2400C9C1AE /* crash-u.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "crash-u.cc"; sourceTree = "<group>"; };
+		D274ABB70FE66D2400C9C1AE /* crash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crash.h; sourceTree = "<group>"; };
 		D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Crawl.icns; path = mac/Crawl.icns; sourceTree = "<group>"; };
 		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
 		D2F271F60DA1C58C00445FE9 /* Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -784,6 +790,8 @@
 				7B237E560A8EC9D000580F30 /* clua.h */,
 				7B237E040A8EC9D000580F30 /* command.cc */,
 				7B237E440A8EC9D000580F30 /* command.h */,
+				D274ABB50FE66D2400C9C1AE /* crash-u.cc */,
+				D274ABB70FE66D2400C9C1AE /* crash.h */,
 				7B973FFB0BE3AA8400AAE35B /* database.cc */,
 				7B973FFC0BE3AA8400AAE35B /* database.h */,
 				7B237E680A8EC9D000580F30 /* debug.cc */,
@@ -913,6 +921,8 @@
 				7B237E300A8EC9D000580F30 /* spl-book.h */,
 				7B237E2F0A8EC9D000580F30 /* spl-cast.cc */,
 				7B237E2E0A8EC9D000580F30 /* spl-cast.h */,
+				D274ABB00FE66CFA00C9C1AE /* spl-mis.cc */,
+				D274ABB10FE66CFA00C9C1AE /* spl-mis.h */,
 				7B237E070A8EC9D000580F30 /* spl-util.cc */,
 				7B237E060A8EC9D000580F30 /* spl-util.h */,
 				7B237E200A8EC9D000580F30 /* stash.cc */,
@@ -1263,6 +1273,8 @@
 				7B4896620CD3A5D2004A5F43 /* mgrow.cc in Sources */,
 				6232EBE20DACA55C004F7E9C /* quiver.cc in Sources */,
 				93B134650F25595F007DB230 /* version.cc in Sources */,
+				D274ABB20FE66CFA00C9C1AE /* spl-mis.cc in Sources */,
+				D274ABB90FE66D2400C9C1AE /* crash-u.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
