@@ -198,15 +198,13 @@ bool GenericTexture::load_texture(const char *filename,
 
     bool success = false;
     if (!proc || proc(pixels, new_width, new_height))
-    {
         success |= load_texture(pixels, new_width, new_height, mip_opt);
-    }
 
     // If conversion has occurred, delete converted data.
     if (pixels != img->pixels)
-        delete pixels;
+        delete[] pixels;
 
-    m_orig_width = img->w;
+    m_orig_width  = img->w;
     m_orig_height = img->h;
 
     SDL_FreeSurface(img);

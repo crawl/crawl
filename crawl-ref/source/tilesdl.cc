@@ -351,8 +351,6 @@ bool TilesFramework::initialise()
 int TilesFramework::load_font(const char *font_file, int font_size,
                               bool default_on_fail, bool outline)
 {
-    FTFont *font = new FTFont();
-
     for (unsigned int i = 0; i < m_fonts.size(); i++)
     {
         font_info &finfo = m_fonts[i];
@@ -362,6 +360,8 @@ int TilesFramework::load_font(const char *font_file, int font_size,
             return i;
         }
     }
+
+    FTFont *font = new FTFont();
 
     if (!font->load_font(font_file, font_size, outline))
     {
@@ -373,9 +373,9 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     }
 
     font_info finfo;
+    finfo.font = font;
     finfo.name = font_file;
     finfo.size = font_size;
-    finfo.font = font;
     finfo.outline = outline;
     m_fonts.push_back(finfo);
 
@@ -744,7 +744,7 @@ int TilesFramework::getch_ck()
 
     int key = 0;
 
-    const unsigned int ticks_per_redraw = 50;
+    const unsigned int ticks_per_redraw = 80;
     unsigned int last_redraw_tick = 0;
 
     unsigned int res = Options.tile_tooltip_ms;

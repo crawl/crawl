@@ -1838,14 +1838,21 @@ const int sh_yo = 9;
 int los_radius_squared = 8*8 + 1;
 
 unsigned long* los_blockrays = NULL;
-unsigned long* dead_rays = NULL;
-unsigned long* smoke_rays = NULL;
+unsigned long* dead_rays     = NULL;
+unsigned long* smoke_rays    = NULL;
 std::vector<short> ray_coord_x;
 std::vector<short> ray_coord_y;
 std::vector<short> compressed_ray_x;
 std::vector<short> compressed_ray_y;
 std::vector<int> raylengths;
 std::vector<ray_def> fullrays;
+
+void clear_rays_on_exit()
+{
+    delete[] dead_rays;
+    delete[] smoke_rays;
+    delete[] los_blockrays;
+}
 
 void setLOSRadius(int newLR)
 {
@@ -2355,9 +2362,9 @@ static void _create_blockrays()
 
     int cur_offset = 0;
 
-    for ( unsigned int ray = 0; ray < raylengths.size(); ++ray )
+    for (unsigned int ray = 0; ray < raylengths.size(); ++ray)
     {
-        for ( int i = 0; i < raylengths[ray]; ++i )
+        for (int i = 0; i < raylengths[ray]; ++i)
         {
             // every cell blocks...
             unsigned long* const inptr = full_los_blockrays +
@@ -2365,7 +2372,7 @@ static void _create_blockrays()
                  ray_coord_y[i + cur_offset]) * num_words;
 
             // ...all following cellrays
-            for ( int j = i+1; j < raylengths[ray]; ++j )
+            for (int j = i+1; j < raylengths[ray]; ++j)
                 _set_bit_in_long_array( inptr, j + cur_offset );
 
         }
@@ -2383,18 +2390,18 @@ static void _create_blockrays()
     // we want to only keep the cellrays from nondupe_cellrays.
     compressed_ray_x.resize(num_nondupe_rays);
     compressed_ray_y.resize(num_nondupe_rays);
-    for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
+    for (unsigned int i = 0; i < num_nondupe_rays; ++i)
     {
         compressed_ray_x[i] = ray_coord_x[nondupe_cellrays[i]];
         compressed_ray_y[i] = ray_coord_y[nondupe_cellrays[i]];
     }
     unsigned long* oldptr = full_los_blockrays;
     unsigned long* newptr = los_blockrays;
-    for ( int x = 0; x <= LOS_MAX_RANGE_X; ++x )
-        for ( int y = 0; y <= LOS_MAX_RANGE_Y; ++y )
+    for (int x = 0; x <= LOS_MAX_RANGE_X; ++x)
+        for (int y = 0; y <= LOS_MAX_RANGE_Y; ++y)
         {
-            for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
-                if ( get_bit_in_long_array(oldptr, nondupe_cellrays[i]) )
+            for (unsigned int i = 0; i < num_nondupe_rays; ++i)
+                if (get_bit_in_long_array(oldptr, nondupe_cellrays[i]))
                     _set_bit_in_long_array(newptr, i);
 
             oldptr += num_words;
@@ -2402,9 +2409,9 @@ static void _create_blockrays()
         }
 
     // we can throw away full_los_blockrays now
-    delete [] full_los_blockrays;
+    delete[] full_los_blockrays;
 
-    dead_rays = new unsigned long[num_nondupe_words];
+    dead_rays  = new unsigned long[num_nondupe_words];
     smoke_rays = new unsigned long[num_nondupe_words];
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2416,7 +2423,7 @@ static void _create_blockrays()
 static int _gcd( int x, int y )
 {
     int tmp;
-    while ( y != 0 )
+    while (y != 0)
     {
         x %= y;
         tmp = x;
@@ -2436,7 +2443,7 @@ bool complexity_lt( const std::pair<int,int>& lhs,
 void raycast()
 {
     static bool done_raycast = false;
-    if ( done_raycast )
+    if (done_raycast)
         return;
 
     // Creating all rays for first quadrant
@@ -2896,7 +2903,7 @@ void losight(env_show_grid &sh,
                     // block rays which have already seen a cloud
                     for (unsigned int i = 0; i < num_words; ++i)
                     {
-                        dead_rays[i] |= (smoke_rays[i] & inptr[i]);
+                        dead_rays[i]  |= (smoke_rays[i] & inptr[i]);
                         smoke_rays[i] |= inptr[i];
                     }
                 }
@@ -2934,6 +2941,10 @@ void losight(env_show_grid &sh,
 
     // [dshaligram] The player's current position is always visible.
     sh[sh_xo][sh_yo] = gr[x_p][y_p];
+
+    *dead_rays     = NULL;
+    *smoke_rays    = NULL;
+    *los_blockrays = NULL;
 }
 
 
@@ -5743,7 +5754,8 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
-    hudsz = coord_def(HUD_WIDTH, HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0));
+    hudsz  = coord_def(HUD_WIDTH,
+                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0));
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);

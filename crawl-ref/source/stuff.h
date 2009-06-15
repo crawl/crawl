@@ -134,6 +134,7 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 
 void cio_init();
 void cio_cleanup();
+void clear_globals_on_exit();
 void end(int exit_code, bool print_err = false,
          const char *message = NULL, ...);
 

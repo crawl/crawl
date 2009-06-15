@@ -5,7 +5,8 @@ REVISION("$Rev$");
 
 /*
  *  File:       libw32c.cc
- *  Summary:    Functions for windows32 console mode support
+ *  Summary:    Functions for windows32 console mode support.
+ *              Needed by makefile.mgw.
  *  Written by: Gordon Lipford
  *
  *  Modified for Crawl Reference by $Author$ on $Date$

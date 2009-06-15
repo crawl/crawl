@@ -788,6 +788,7 @@ void full_describe_view()
         // Unset show_glyph for other menus.
         InvEntry *me = new InvEntry(list_items[0]);
         me->set_show_glyph(false);
+        delete me;
     }
 #else
     // Clear cursor placement.

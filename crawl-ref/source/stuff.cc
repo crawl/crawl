@@ -9,6 +9,7 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#include "beam.h"
 #include "cio.h"
 #include "database.h"
 #include "directn.h"
@@ -734,8 +735,15 @@ void cio_cleanup()
 #endif
 
     msg::deinitialise_mpr_streams();
-
+    clear_globals_on_exit();
     crawl_state.io_inited = false;
+}
+
+// Clear some globally defined variables.
+void clear_globals_on_exit()
+{
+    clear_rays_on_exit();
+    clear_zap_info_on_exit();
 }
 
 void end(int exit_code, bool print_error, const char *format, ...)

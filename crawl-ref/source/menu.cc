@@ -212,6 +212,8 @@ Menu::~Menu()
     for (int i = 0, count = items.size(); i < count; ++i)
         delete items[i];
     delete title;
+    if (title2)
+        delete title2;
     delete highlighter;
     delete mdisplay;
 }
