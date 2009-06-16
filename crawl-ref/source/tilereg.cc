@@ -323,15 +323,13 @@ static void _load_doll_data(const char *fn, dolls_data *doll)
     else
     {
         memset(fbuf, 0, sizeof(fbuf));
-        int cur = 0;
-        if (fscanf(fp, "%s", fbuf) != EOF)
+        if (fscanf(fp, "%s", fbuf) == EOF)
         {
-#if 0
-            mpr("Read MODE.");
-            if (strcmp(fbuf, "MODE=LOADING") == 0)
-                mode0 = TILEP_M_LOADING;
-#endif
+            // We're currently not interested in the MODE setting. (jpeg)
+            fclose(fp);
+            return;
         }
+        int cur = 0;
         if (fscanf(fp, "%s", fbuf) != EOF)
         {
             if (strncmp(fbuf, "NUM=", 4) == 0)
@@ -932,6 +930,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     if (mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
         || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR)
     {
         if (event.event == MouseEvent::MOVE)

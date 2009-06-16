@@ -3283,34 +3283,6 @@ void tilep_scan_parts(char *fbuf, int *parts)
             else
                 parts[p] = idx2;
         }
-/*
-        if (p == TILEP_PART_BASE)
-        {
-            int p0 = (parts[p]-1) & (0xfe);
-            if (((1-idx) & 1) == 1)
-                p0++;
-            parts[p] = p0 + 1;
-        }
-        else if (idx == TILEP_SHOW_EQUIP)
-            parts[p] = TILEP_SHOW_EQUIP;
-        else
-            parts[p] = 0;
-*/
-/*
-        else if (idx < TILE_MAIN_MAX)
-            parts[p] = TILE_MAIN_MAX;
-        else if (idx >= TILEP_PLAYER_MAX)
-            parts[p] = TILEP_PLAYER_MAX - 1;
-        else if (idx < 0)
-            parts[p] = 0;
-        // TODO enne - is this right? did the old count end at idx not just subtotal?
-        else if (idx >= tile_player_part_count[p])
-            parts[p] = tile_player_part_count[p] - 1;
-//          else if (idx > tilep_parts_total[p]) // bound it
-//              parts[p] = tilep_parts_total[p];
-        else
-            parts[p] = idx;
-*/
     }
 }
 
