@@ -101,9 +101,9 @@
 
    Some currently unused properties follow, then:
 
-   First string: is appended to the unrandart's 'V' description when id'd.
+   First string: is appended to the unrandart's description when id'd.
 
-   Second string: replaces the thing at the start of a 'V' description.
+   Second string: replaces the thing at the start of a description.
    If empty, uses the description of the unrandart's base type. Note: the
    base type of a piece of unrandart jewellery is relevant to its function, so
    don't obscure it unnecessarily.
@@ -844,7 +844,11 @@
 ,
 /* 39 */
 {
-    "spear of Voo-Doo", "ebony spear",
+    // Was "spear of Voo-Doo". In the African origin, there is a distinction
+    // between voodoo and bo, the latter dealing with curses, witchcraft and
+    // spells designed to do harm. Priests (or rather sorcerors) of bo are
+    // called botono.
+    "spear of the Botono", "ebony spear",
         OBJ_WEAPONS, WPN_SPEAR, +2, +10, DARKGREY,
     {
         SPWPN_VAMPIRICISM, 0, 0, 0, 0, 0,
@@ -1230,6 +1234,27 @@
         "",
         ""
 },
+
+/* 60 */
+{
+    // A play on the spell of the same name. 
+    // Colour taken from crystal walls.
+    "Lehudib's crystal spear", "crystal spear",
+        OBJ_WEAPONS, WPN_SPEAR, +6, +6, GREEN,
+    {
+        SPWPN_RETURNING, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 1, 0, 0, 0,          // noise
+        0, 0, 0, 0, 0,
+        0, 0
+    }
+    ,
+        "Presumably this relic led to the invention of the famous spell.",
+        "",
+        ""
+},
+
 
 /* This is a dummy. */
 {
