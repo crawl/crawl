@@ -859,6 +859,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     if (mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
         || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR)
     {
         if (event.event == MouseEvent::MOVE)

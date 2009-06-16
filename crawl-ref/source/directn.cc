@@ -1027,7 +1027,8 @@ void direction(dist& moves, targeting_type restricts,
     }
 
     cursor_control con(!Options.use_fake_cursor);
-    mouse_control mc(MOUSE_MODE_TARGET);
+    mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
+                                                 : MOUSE_MODE_TARGET);
     range_view_annotator rva(range);
 
     int dir = 0;
@@ -1130,18 +1131,19 @@ void direction(dist& moves, targeting_type restricts,
                 if (key_command == CMD_TARGET_MOUSE_SELECT)
                 {
                     key_command = CMD_TARGET_SELECT;
-
+// Do we really need this? (jpeg)
+// Looks like the redrawing routine already handles it.
+#if 0
                     if (needs_path && range > 0)
                     {
                         ray_def raycopy = ray;
                         int l = 0;
-                        while (raycopy.pos() != moves.target && l < range)
-                        {
-                            l++;
+                        while (raycopy.pos() != moves.target && range > l++)
                             raycopy.advance_through(moves.target);
-                        }
+
                         moves.target = raycopy.pos();
                     }
+#endif
                 }
             }
             else
@@ -1176,8 +1178,8 @@ void direction(dist& moves, targeting_type restricts,
         }
 
         bool need_beam_redraw = false;
-        bool force_redraw = false;
-        bool loop_done = false;
+        bool force_redraw     = false;
+        bool loop_done        = false;
 
         coord_def old_target = moves.target;
         if (skip_iter)

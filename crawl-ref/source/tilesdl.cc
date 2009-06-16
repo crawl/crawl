@@ -597,10 +597,10 @@ static int _translate_keysym(SDL_keysym &keysym)
     }
 
     // Alt does not get baked into keycodes like shift and ctrl, so handle it.
-    int key_offset = (mod & MOD_ALT) ? 3000 : 0;
+    const int key_offset = (mod & MOD_ALT) ? 3000 : 0;
 
-    bool is_ascii = ((keysym.unicode & 0xFF80) == 0);
-    return is_ascii ? (keysym.unicode & 0x7F) + key_offset : 0;
+    const bool is_ascii = ((keysym.unicode & 0xFF80) == 0);
+    return (is_ascii ? (keysym.unicode & 0x7F) + key_offset : 0);
 }
 
 
@@ -709,7 +709,7 @@ static unsigned int _timer_callback(unsigned int ticks)
     SDL_PushEvent(&event);
 
     unsigned int res = Options.tile_tooltip_ms;
-    return res;
+    return (res);
 }
 
 // Convenience struct for holding mouse location on screen.
@@ -733,7 +733,6 @@ struct cursor_loc
     int cx, cy;
 };
 
-
 int TilesFramework::getch_ck()
 {
     flush_prev_message();
@@ -744,11 +743,14 @@ int TilesFramework::getch_ck()
 
     int key = 0;
 
-    const unsigned int ticks_per_redraw = 80;
+    const unsigned int ticks_per_redraw = 100;
     unsigned int last_redraw_tick = 0;
 
     unsigned int res = Options.tile_tooltip_ms;
     SDL_SetTimer(res, &_timer_callback);
+
+    m_tooltip.clear();
+    m_region_msg->alt_text().clear();
 
     if (m_need_redraw)
     {
@@ -756,35 +758,43 @@ int TilesFramework::getch_ck()
         last_redraw_tick = SDL_GetTicks();
     }
 
+    // Don't update tool tips etc. in targetting mode.
+    const bool mouse_target_mode
+                = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
+                   || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
+
     while (!key)
     {
         unsigned int ticks = 0;
 
         if (SDL_WaitEvent(&event))
         {
-            ticks = SDL_GetTicks();
-
-            last_loc = cur_loc;
-
-            if (event.type != SDL_USEREVENT)
+            if (!mouse_target_mode)
             {
-                tiles.clear_text_tags(TAG_CELL_DESC);
-                m_region_msg->alt_text().clear();
-            }
+                ticks = SDL_GetTicks();
 
-            // TODO enne - need to find a better time to decide when
-            // to generate a tip or some way to say "yes, but unchanged".
-            if (ticks > m_last_tick_moved)
-            {
-                m_region_msg->alt_text().clear();
-                for (unsigned int i = 0;
-                    i < m_layers[m_active_layer].m_regions.size(); i++)
+                last_loc = cur_loc;
+
+                if (event.type != SDL_USEREVENT)
                 {
-                    Region *reg = m_layers[m_active_layer].m_regions[i];
-                    if (!reg->inside(m_mouse.x, m_mouse.y))
-                        continue;
-                    if (reg->update_alt_text(m_region_msg->alt_text()))
-                        break;
+                    tiles.clear_text_tags(TAG_CELL_DESC);
+                    m_region_msg->alt_text().clear();
+                }
+
+                // TODO enne - need to find a better time to decide when
+                // to generate a tip or some way to say "yes, but unchanged".
+                if (tip_loc != cur_loc && ticks > m_last_tick_moved)
+                {
+                    m_region_msg->alt_text().clear();
+                    for (unsigned int i = 0;
+                         i < m_layers[m_active_layer].m_regions.size(); ++i)
+                    {
+                        Region *reg = m_layers[m_active_layer].m_regions[i];
+                        if (!reg->inside(m_mouse.x, m_mouse.y))
+                            continue;
+                        if (reg->update_alt_text(m_region_msg->alt_text()))
+                            break;
+                    }
                 }
             }
 
@@ -819,7 +829,7 @@ int TilesFramework::getch_ck()
                     MouseEvent mouse_event;
                     _translate_event(event.motion, mouse_event);
                     mouse_event.held = m_buttons_held;
-                    mouse_event.mod = m_key_mod;
+                    mouse_event.mod  = m_key_mod;
                     key = handle_mouse(mouse_event);
 
                     // find mouse location
@@ -880,42 +890,53 @@ int TilesFramework::getch_ck()
             }
         }
 
-        bool timeout = ((ticks - m_last_tick_moved
-                         > (unsigned int)Options.tile_tooltip_ms)
-                         && ticks > m_last_tick_moved);
-        if (timeout)
-            tip_loc = cur_loc;
-
-        if (tip_loc == cur_loc)
+        if (mouse_target_mode)
         {
-            tiles.clear_text_tags(TAG_CELL_DESC);
-            if (m_tooltip.empty())
-            {
-                for (unsigned int i = 0;
-                    i < m_layers[m_active_layer].m_regions.size(); i++)
-                {
-                    Region *reg = m_layers[m_active_layer].m_regions[i];
-                    if (!reg->inside(m_mouse.x, m_mouse.y))
-                        continue;
-                    if (reg->update_tip_text(m_tooltip))
-                        break;
-                }
-                m_need_redraw = true;
-            }
+            if (get_cursor() == you.pos())
+                redraw();
         }
         else
         {
-            if (last_loc != cur_loc)
-                m_need_redraw = true;
+            const bool timeout = (ticks > m_last_tick_moved
+                                  && (ticks - m_last_tick_moved
+                                      > (unsigned int)Options.tile_tooltip_ms));
 
-            m_tooltip.clear();
-            tip_loc.reset();
-        }
+            if (timeout)
+                tip_loc = cur_loc;
 
-        if ((ticks - last_redraw_tick > ticks_per_redraw) || need_redraw())
-        {
-            redraw();
-            last_redraw_tick = ticks;
+            if (tip_loc == cur_loc)
+            {
+                tiles.clear_text_tags(TAG_CELL_DESC);
+                if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
+                {
+                    for (unsigned int i = 0;
+                         i < m_layers[m_active_layer].m_regions.size(); ++i)
+                    {
+                        Region *reg = m_layers[m_active_layer].m_regions[i];
+                        if (!reg->inside(m_mouse.x, m_mouse.y))
+                            continue;
+                        if (reg->update_tip_text(m_tooltip))
+                            break;
+                    }
+                    m_need_redraw = true;
+                }
+            }
+            else
+            {
+// Don't redraw the cursor if we're just zooming by.
+#if 0
+                if (last_loc != cur_loc)
+                    m_need_redraw = true;
+#endif
+                m_tooltip.clear();
+                tip_loc.reset();
+            }
+
+            if ((ticks - last_redraw_tick > ticks_per_redraw) || need_redraw())
+            {
+                redraw();
+                last_redraw_tick = ticks;
+            }
         }
     }
 
@@ -1209,7 +1230,7 @@ void TilesFramework::redraw()
         m_layers[m_active_layer].m_regions[i]->render();
 
     // Draw tooltip
-    if (!m_tooltip.empty())
+    if (Options.tile_tooltip_ms > 0 && !m_tooltip.empty())
     {
         const coord_def min_pos(0, 0);
         FTFont *font = m_fonts[m_tip_font].font;
