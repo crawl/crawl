@@ -56,10 +56,10 @@ void VertBuffer<PTVert>::draw() const
     ASSERT(m_tex);
 
     GLState state;
-    state.array_vertex = true;
+    state.array_vertex   = true;
     state.array_texcoord = true;
-    state.blend = true;
-    state.texture = true;
+    state.blend          = true;
+    state.texture        = true;
     GLStateManager::set(state);
 
     m_tex->bind();
@@ -80,8 +80,8 @@ void VertBuffer<PCVert>::draw() const
     GLState state;
     state.array_vertex = true;
     state.array_colour = true;
-    state.blend = true;
-    state.texture = false;
+    state.blend        = true;
+    state.texture      = false;
     GLStateManager::set(state);
 
     glVertexPointer(2, GL_FLOAT, sizeof(Vert), &(*this)[0].pos_x);
@@ -99,11 +99,11 @@ void VertBuffer<PTCVert>::draw() const
     ASSERT(m_tex);
 
     GLState state;
-    state.array_vertex = true;
+    state.array_vertex   = true;
     state.array_texcoord = true;
-    state.array_colour = true;
-    state.blend = true;
-    state.texture = true;
+    state.array_colour   = true;
+    state.blend          = true;
+    state.texture        = true;
     GLStateManager::set(state);
 
     m_tex->bind();

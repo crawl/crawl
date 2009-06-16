@@ -209,7 +209,10 @@ TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_
     dx = tile_x;
     dy = tile_y;
     m_tag_font = tag_font;
+#if 0
+    // Not needed? (jpeg)
     m_dirty = true;
+#endif
 }
 
 TileRegion::~TileRegion()
@@ -789,15 +792,15 @@ void DungeonRegion::render()
 
             const char *str = m_tags[t][i].tag.c_str();
 
-            int width = m_tag_font->string_width(str);
+            int width    = m_tag_font->string_width(str);
             tag_def &def = tag_show(ep);
 
             const int buffer = 2;
 
-            def.left = -width / 2 - buffer;
-            def.right = width / 2 + buffer;
-            def.text = str;
-            def.type = t;
+            def.left  = -width / 2 - buffer;
+            def.right =  width / 2 + buffer;
+            def.text  = str;
+            def.type  = t;
 
             total_tags++;
         }
@@ -1354,8 +1357,10 @@ void InventoryRegion::update_slot(int slot, InventoryTile &desc)
     }
 
     m_items[slot] = desc;
-
+#if 0
+    // Not needed? (jpeg)
     m_dirty = true;
+#endif
 }
 
 void InventoryRegion::render()
@@ -1532,7 +1537,7 @@ void InventoryRegion::pack_buffers()
 unsigned int InventoryRegion::cursor_index() const
 {
     ASSERT(m_cursor != NO_CURSOR);
-    return m_cursor.x + m_cursor.y * mx;
+    return (m_cursor.x + m_cursor.y * mx);
 }
 
 void InventoryRegion::place_cursor(const coord_def &cursor)
@@ -1540,7 +1545,10 @@ void InventoryRegion::place_cursor(const coord_def &cursor)
     if (m_cursor != NO_CURSOR && cursor_index() < m_items.size())
     {
         m_items[cursor_index()].flag &= ~TILEI_FLAG_CURSOR;
+#if 0
+        // Not needed? (jpeg)
         m_dirty = true;
+#endif
     }
 
     if (m_cursor != cursor)
@@ -2067,7 +2075,10 @@ void MapRegion::recenter()
     // adjust offsets to center map
     ox = (wx - dx * (m_max_gx - m_min_gx)) / 2;
     oy = (wy - dy * (m_max_gy - m_min_gy)) / 2;
+#if 0
+    // Not needed? (jpeg)
     m_dirty = true;
+#endif
 }
 
 void MapRegion::set(int gx, int gy, map_feature f)
@@ -2100,7 +2111,6 @@ void MapRegion::update_bounds()
     m_max_gy = 0;
 
     for (int x = min_gx; x <= max_gx; x++)
-    {
         for (int y = min_gy; y <= max_gy; y++)
         {
             map_feature f = (map_feature)m_buf[x + y * mx];
@@ -2112,16 +2122,18 @@ void MapRegion::update_bounds()
             m_min_gy = std::min(m_min_gy, y);
             m_max_gy = std::max(m_max_gy, y);
         }
-    }
 
     recenter();
+#if 0
+    // Not needed? (jpeg)
     m_dirty = true;
+#endif
 }
 
 void MapRegion::set_window(const coord_def &start, const coord_def &end)
 {
     m_win_start = start;
-    m_win_end = end;
+    m_win_end   = end;
 
     m_dirty = true;
 }
@@ -2421,7 +2433,7 @@ void TextRegion::render()
         int idx = cursor_x + mx * cursor_y;
 
         unsigned char char_back = cbuf[idx];
-        unsigned char col_back = abuf[idx];
+        unsigned char col_back  = abuf[idx];
 
         cbuf[idx] = '_';
         abuf[idx] = WHITE;
@@ -2778,7 +2790,7 @@ void MenuRegion::place_entries()
                     // NOTE: This is not perfect. Tiles will be drawn
                     // sorted by texture first, e.g. you can never draw
                     // a dungeon tile over a monster tile.
-                    int tile = m_entries[i].tiles[t].tile;
+                    int tile      = m_entries[i].tiles[t].tile;
                     TextureID tex = m_entries[i].tiles[t].tex;
                     m_tile_buf[tex].add_unscaled(tile, m_entries[i].sx,
                                                  m_entries[i].sy);
@@ -2792,8 +2804,8 @@ void MenuRegion::place_entries()
 
             int text_sy = m_entries[i].sy;
             text_sy += (entry_height - m_font_entry->char_height()) / 2;
-            // Split menu entries that don't fit into a single lines into two
-            // lines.
+            // Split menu entries that don't fit into a single lines into
+            // two lines.
             if (Options.tile_menu_icons
                 && text_sx + text_width > entry_start + column_width)
             {
@@ -2913,6 +2925,8 @@ void MenuRegion::set_entry(int idx, const std::string &str, int colour,
 
 void MenuRegion::on_resize()
 {
+    // Probably needed, even though for me nothing went wrong when
+    // I commented it out. (jpeg)
     m_dirty = true;
 }
 
@@ -2926,6 +2940,8 @@ int MenuRegion::maxpagesize() const
     const int more_height = (lines + 1) * m_font_entry->char_height();
 
     // Similar to the definition of max_entry_height in place_entries().
+    // HACK: Increasing height by 1 to make sure all items actually fit
+    //       on the page, though this introduces a few too many empty lines.
     const int div = (Options.tile_menu_icons ? 32
                                              : m_font_entry->char_height() + 1);
 
@@ -2949,7 +2965,10 @@ void MenuRegion::set_more(const formatted_string &more)
 {
     m_more.clear();
     m_more += more;
+#if 0
+    // Not needed? (jpeg)
     m_dirty = true;
+#endif
 }
 
 TitleRegion::TitleRegion(int width, int height) :
