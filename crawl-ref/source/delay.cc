@@ -1847,12 +1847,8 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         else
         {
             ASSERT(mon->seen_context != "just seen");
-            // If the monster is in the auto_exclude list, automatically
-            // set an exclusion.
-            if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
-                toggle_exclude(mon->pos());
-
             std::string text = mon->full_name(DESC_CAP_A);
+            set_auto_exclude(mon);
 
             if (starts_with(at.context, "open"))
                 text += " " + at.context;

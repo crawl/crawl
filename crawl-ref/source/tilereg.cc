@@ -742,7 +742,6 @@ void DungeonRegion::render()
     // Draw text tags.
     // TODO enne - be more intelligent about not covering stuff up
     for (int y = 0; y < ENV_SHOW_DIAMETER; y++)
-    {
         for (int x = 0; x < ENV_SHOW_DIAMETER; x++)
         {
             coord_def ep(x, y);
@@ -762,7 +761,6 @@ void DungeonRegion::render()
             m_tag_font->render_string(pc.x, pc.y, def.text,
                                       min_pos, max_pos, WHITE, false);
         }
-    }
 }
 
 void DungeonRegion::clear()
@@ -1958,7 +1956,6 @@ void MapRegion::pack_buffers()
     m_buf_lines.clear();
 
     for (int x = m_min_gx; x <= m_max_gx; x++)
-    {
         for (int y = m_min_gy; y <= m_max_gy; y++)
         {
             map_feature f = (map_feature)m_buf[x + y * mx];
@@ -1968,7 +1965,6 @@ void MapRegion::pack_buffers()
             float pos_y = y - m_min_gy;
             m_buf_map.add(pos_x, pos_y, pos_x + 1, pos_y + 1, map_colours[c]);
         }
-    }
 
     // Draw window box.
     if (m_win_start.x == -1 && m_win_end.x == -1)
