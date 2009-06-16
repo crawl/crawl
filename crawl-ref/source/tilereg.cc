@@ -14,6 +14,7 @@ REVISION("$Rev$");
 #include "cio.h"
 #include "debug.h"
 #include "describe.h"
+#include "files.h"
 #include "food.h"
 #include "itemname.h"
 #include "it_use2.h"
@@ -289,25 +290,98 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
         m_buf_dngn.add(TILE_RAY_OUT_OF_RANGE, x, y);
 }
 
-void DungeonRegion::pack_player(int x, int y)
+// static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
+//                             int *mode, int *cur)
+static void _load_doll_data(const char *fn, dolls_data *doll)
+{
+    char fbuf[1024];
+    FILE *fp  = NULL;
+
+    std::string dollsTxtString = datafile_path(fn, false, true);
+    const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
+                            "dolls.txt" : dollsTxtString.c_str();
+
+    if ( (fp = fopen(dollsTxt, "r")) == NULL )
+    {
+        mpr("File not found.");
+        // File doesn't exist.  By default, use equipment defaults.
+        // This will be saved out (if possible).
+
+        // Don't take gender too seriously.  -- Enne
+        tilep_race_default(you.species, coinflip() ? 1 : 0,
+                           you.experience_level, doll->parts);
+
+        doll->parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
+
+#if 0
+        // For some reason I can't reset this although it's used identically
+        // elsewhere. (jpeg)
+        for (unsigned int j = 0; j < TILEP_PART_MAX; ++j)
+            doll->parts[j] = TILEP_SHOW_EQUIP;
+#endif
+    }
+    else
+    {
+        memset(fbuf, 0, sizeof(fbuf));
+        int cur = 0;
+        if (fscanf(fp, "%s", fbuf) != EOF)
+        {
+#if 0
+            mpr("Read MODE.");
+            if (strcmp(fbuf, "MODE=LOADING") == 0)
+                mode0 = TILEP_M_LOADING;
+#endif
+        }
+        if (fscanf(fp, "%s", fbuf) != EOF)
+        {
+            if (strncmp(fbuf, "NUM=", 4) == 0)
+            {
+                sscanf(fbuf, "NUM=%d", &cur);
+                if (cur < 0 || cur > 10)
+                    cur = 0;
+            }
+        }
+
+        int count = 0;
+        while (fscanf(fp, "%s", fbuf) != EOF)
+        {
+            if (cur == count++)
+            {
+                tilep_scan_parts(fbuf, doll->parts);
+                break;
+            }
+        }
+        if (cur >= count)
+        {
+            mprf(MSGCH_WARN, "Doll %d could not be found in '%s'.",
+                             cur, dollsTxt);
+        }
+
+        fclose(fp);
+    }
+}
+
+static dolls_data player_doll;
+
+void init_player_doll()
 {
     dolls_data default_doll;
-    dolls_data player_doll;
-    dolls_data result;
 
-    for (int i = 0; i < TILEP_PART_MAX; i++)
+    for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
         default_doll.parts[i] = TILEP_SHOW_EQUIP;
 
-    int gender = you.your_name[0] % 2;
+    int gender = coinflip();
 
     tilep_race_default(you.species, gender, you.experience_level,
                        default_doll.parts);
 
-    result = default_doll;
+    _load_doll_data("dolls.txt", &default_doll);
+    player_doll = default_doll;
+}
 
-    result.parts[TILEP_PART_BASE]    = default_doll.parts[TILEP_PART_BASE];
-    result.parts[TILEP_PART_DRCHEAD] = default_doll.parts[TILEP_PART_DRCHEAD];
-    result.parts[TILEP_PART_DRCWING] = default_doll.parts[TILEP_PART_DRCWING];
+void DungeonRegion::pack_player(int x, int y)
+{
+    dolls_data result = player_doll;
 
     const bool halo = inside_halo(you.pos());
     result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
@@ -740,7 +814,6 @@ void DungeonRegion::render()
     // Draw text tags.
     // TODO enne - be more intelligent about not covering stuff up
     for (int y = 0; y < ENV_SHOW_DIAMETER; y++)
-    {
         for (int x = 0; x < ENV_SHOW_DIAMETER; x++)
         {
             coord_def ep(x, y);
@@ -760,7 +833,6 @@ void DungeonRegion::render()
             m_tag_font->render_string(pc.x, pc.y, def.text,
                                       min_pos, max_pos, WHITE, false);
         }
-    }
 }
 
 void DungeonRegion::clear()

@@ -3435,6 +3435,8 @@ static bool _initialise(void)
     if (Options.tile_menu_icons && Options.show_inventory_weights)
         Options.show_inventory_weights = false;
 
+    init_player_doll();
+
     tiles.resize();
 #endif
 

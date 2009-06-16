@@ -440,5 +440,6 @@ protected:
     VertBuffer<PTVert> m_buf;
 };
 
+void init_player_doll();
 #endif
 #endif

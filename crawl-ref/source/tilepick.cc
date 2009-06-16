@@ -2716,9 +2716,7 @@ static inline void _finalize_tile(unsigned int *tile,
 
 void tilep_calc_flags(const int parts[], int flag[])
 {
-    int i;
-
-    for (i = 0; i < TILEP_PART_MAX; i++)
+    for (unsigned i = 0; i < TILEP_PART_MAX; i++)
          flag[i] = TILEP_FLAG_NORMAL;
 
     if (parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_HELM_OFS)
@@ -2865,16 +2863,20 @@ void tilep_race_default(int race, int gender, int level, int *parts)
         case SP_PURPLE_DRACONIAN:
         case SP_MOTTLED_DRACONIAN:
         case SP_PALE_DRACONIAN:
+        {
+            const int colour_offset = _draconian_colour(race, level);
+            result = TILEP_BASE_DRACONIAN + colour_offset * 2;
             hair = 0;
+            int st = tile_player_part_start[TILEP_PART_DRCHEAD];
+            parts[TILEP_PART_DRCHEAD] = st + colour_offset;
+
             if (player_mutation_level(MUT_BIG_WINGS))
             {
-                int st = tile_player_part_start[TILEP_PART_DRCWING];
-                parts[TILEP_PART_DRCWING] = st + _draconian_colour(race, level);
+                st = tile_player_part_start[TILEP_PART_DRCWING];
+                parts[TILEP_PART_DRCWING] = st + colour_offset;
             }
-
-            result = TILEP_BASE_DRACONIAN + _draconian_colour(race, level) * 2;
             break;
-
+        }
         case SP_CENTAUR:
             result = TILEP_BASE_CENTAUR;
             break;
@@ -2930,6 +2932,7 @@ void tilep_race_default(int race, int gender, int level, int *parts)
 
     if (gender == TILEP_GENDER_MALE)
         result++;
+
     parts[TILEP_PART_BASE]   = result;
     parts[TILEP_PART_HAIR]   = hair;
     parts[TILEP_PART_BEARD]  = beard;
@@ -3251,7 +3254,6 @@ void tilep_scan_parts(char *fbuf, int *parts)
     int ccount = 0;
     for (int i = 0; parts_saved[i] != -1; i++)
     {
-        int idx;
         ccount = 0;
         int p = parts_saved[i];
 
@@ -3264,7 +3266,24 @@ void tilep_scan_parts(char *fbuf, int *parts)
         ibuf[ccount] = '\0';
         gcount++;
 
-        idx = tilep_str_to_part(ibuf);
+        int idx = tilep_str_to_part(ibuf);
+        if (p == TILEP_PART_BASE)
+            parts[p] += idx % 2;
+        else if (idx == 0)
+            parts[p] = 0;
+        else if (idx == TILEP_SHOW_EQUIP)
+            continue;
+        else if (idx > tile_player_part_count[p])
+            parts[p] = tile_player_part_start[p];
+        else
+        {
+            int idx2 = tile_player_part_start[p] + idx - 1;
+            if (idx2 < TILE_MAIN_MAX || idx2 >= TILEP_PLAYER_MAX)
+                parts[p] = TILEP_SHOW_EQUIP;
+            else
+                parts[p] = idx2;
+        }
+/*
         if (p == TILEP_PART_BASE)
         {
             int p0 = (parts[p]-1) & (0xfe);
@@ -3274,13 +3293,24 @@ void tilep_scan_parts(char *fbuf, int *parts)
         }
         else if (idx == TILEP_SHOW_EQUIP)
             parts[p] = TILEP_SHOW_EQUIP;
+        else
+            parts[p] = 0;
+*/
+/*
+        else if (idx < TILE_MAIN_MAX)
+            parts[p] = TILE_MAIN_MAX;
+        else if (idx >= TILEP_PLAYER_MAX)
+            parts[p] = TILEP_PLAYER_MAX - 1;
         else if (idx < 0)
             parts[p] = 0;
         // TODO enne - is this right? did the old count end at idx not just subtotal?
-        else if (idx > tile_player_part_count[p])
-            parts[p] = tile_player_part_count[p];
+        else if (idx >= tile_player_part_count[p])
+            parts[p] = tile_player_part_count[p] - 1;
+//          else if (idx > tilep_parts_total[p]) // bound it
+//              parts[p] = tilep_parts_total[p];
         else
             parts[p] = idx;
+*/
     }
 }
 
