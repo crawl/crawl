@@ -2679,7 +2679,9 @@ void set_auto_exclude(const monsters *mon)
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
         toggle_exclude(mon->pos());
+#ifdef USE_TILE
         viewwindow(true, false);
+#endif
         learned_something_new(TUT_AUTO_EXCLUSION, mon->pos());
     }
 }
@@ -2689,7 +2691,12 @@ void set_auto_exclude(const monsters *mon)
 void remove_auto_exclude(const monsters *mon, bool sleepy)
 {
     if (need_auto_exclude(mon, sleepy) && is_exclude_root(mon->pos()))
+    {
         toggle_exclude(mon->pos());
+#ifdef USE_TILE
+        viewwindow(true, false);
+#endif
+    }
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
