@@ -2933,9 +2933,12 @@ void tilep_race_default(int race, int gender, int level, int *parts)
     if (gender == TILEP_GENDER_MALE)
         result++;
 
-    parts[TILEP_PART_BASE]   = result;
-    parts[TILEP_PART_HAIR]   = hair;
-    parts[TILEP_PART_BEARD]  = beard;
+    parts[TILEP_PART_BASE] = result;
+    //Don't overwrite doll parts defined elsewhere.
+    if (parts[TILEP_PART_HAIR] == TILEP_SHOW_EQUIP)
+        parts[TILEP_PART_HAIR]   = hair;
+    if (parts[TILEP_PART_BEARD] == TILEP_SHOW_EQUIP)
+        parts[TILEP_PART_BEARD]  = beard;
     parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
 }
 

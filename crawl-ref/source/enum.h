@@ -537,6 +537,12 @@ enum command_type
 
     CMD_ANNOTATE_LEVEL,
 
+#ifdef USE_TILE
+    CMD_EDIT_PLAYER_TILE,
+    CMD_MIN_TILE = CMD_EDIT_PLAYER_TILE,
+    CMD_MAX_TILE = CMD_MIN_TILE,
+#endif
+
     // Repeat previous command
     CMD_PREV_CMD_AGAIN,
 
@@ -658,11 +664,6 @@ enum command_type
     CMD_TARGET_MOUSE_SELECT,
     CMD_TARGET_HELP,
     CMD_MAX_TARGET = CMD_TARGET_HELP,
-
-#ifdef USE_TILE
-    CMD_MIN_TILE,
-    CMD_MAX_TILE = CMD_MIN_TILE - 1,
-#endif
 
     // Disable/enable -more- prompts.
     CMD_DISABLE_MORE,

@@ -293,6 +293,9 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
         m_buf_dngn.add(TILE_RAY_OUT_OF_RANGE, x, y);
 }
 
+static dolls_data player_doll;
+static int gender = -1;
+
 // static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
 //                             int *mode, int *cur)
 static void _load_doll_data(const char *fn, dolls_data *doll)
@@ -306,15 +309,12 @@ static void _load_doll_data(const char *fn, dolls_data *doll)
 
     if ( (fp = fopen(dollsTxt, "r")) == NULL )
     {
-        mpr("File not found.");
         // File doesn't exist.  By default, use equipment defaults.
         // This will be saved out (if possible).
 
         // Don't take gender too seriously.  -- Enne
-        tilep_race_default(you.species, coinflip() ? 1 : 0,
+        tilep_race_default(you.species, coinflip(),
                            you.experience_level, doll->parts);
-
-        doll->parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
 
 #if 0
         // For some reason I can't reset this although it's used identically
@@ -326,19 +326,23 @@ static void _load_doll_data(const char *fn, dolls_data *doll)
     else
     {
         memset(fbuf, 0, sizeof(fbuf));
-        if (fscanf(fp, "%s", fbuf) == EOF)
+        if (fscanf(fp, "%s", fbuf) != EOF)
         {
-            // We're currently not interested in the MODE setting. (jpeg)
-            fclose(fp);
-            return;
+            if (strcmp(fbuf, "MODE=DEFAULT") == 0)
+            {
+                tilep_job_default(you.char_class, gender, doll->parts);
+                fclose(fp);
+                return;
+            }
+            // else loading
         }
-        int cur = 0;
+        int cur = 0; // # of current doll
         if (fscanf(fp, "%s", fbuf) != EOF)
         {
             if (strncmp(fbuf, "NUM=", 4) == 0)
             {
                 sscanf(fbuf, "NUM=%d", &cur);
-                if (cur < 0 || cur > 10)
+                if (cur < 0 || cur >= 10)
                     cur = 0;
             }
         }
@@ -349,6 +353,7 @@ static void _load_doll_data(const char *fn, dolls_data *doll)
             if (cur == count++)
             {
                 tilep_scan_parts(fbuf, doll->parts);
+                gender = doll->parts[TILEP_PART_BASE] % 2;
                 break;
             }
         }
@@ -362,8 +367,6 @@ static void _load_doll_data(const char *fn, dolls_data *doll)
     }
 }
 
-static dolls_data player_doll;
-
 void init_player_doll()
 {
     dolls_data default_doll;
@@ -371,13 +374,39 @@ void init_player_doll()
     for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
         default_doll.parts[i] = TILEP_SHOW_EQUIP;
 
-    int gender = coinflip();
+    _load_doll_data("dolls.txt", &default_doll);
+
+    if (gender == -1)
+        gender = coinflip();
 
     tilep_race_default(you.species, gender, you.experience_level,
                        default_doll.parts);
 
-    _load_doll_data("dolls.txt", &default_doll);
     player_doll = default_doll;
+}
+
+void TilePlayerEdit()
+{
+    // TODO: Prompt for (D)efault job, or 0-9 for specific dolls,
+    //       alternatively (C)reate dolls.txt (if missing).
+    // * Read content from dolls.txt.
+    // * If (D) and MODE=DEFAULT, nothing to be done.
+    // * If (#) and NUM=#, nothing to be done.
+    // * If MODE != DEFAULT or NUM != #, save file back to disk with
+    //   MODE/NUM modified, then call _load_doll_data().
+    // * If dolls.txt missing, possibly (C)reate the file with
+    //   dummy values (MODE=DEFAULT, 10 variable dolls).
+
+    mpr("Sorry, this command has not yet been implemented.");
+
+    // TODO 2: Allow saving back of customized dolls.
+    // * Use pack_player (split into 2 methods) to fill the (C)urrent equipment.
+    // * Create (R)andom equipment for player doll.
+    // * (S)ave current doll to slot 0-9, prompt to overwrite non-empty slots?
+    //   With empty == consisting only of *** or 000 after the first two
+    //   colons.
+
+    // TODO 3: Change to proper menu.
 }
 
 void DungeonRegion::pack_player(int x, int y)
@@ -520,7 +549,7 @@ void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
     for (int i = 0; i < TILEP_PART_MAX; i++)
     {
         int p = p_order[i];
-        if (!doll.parts[p])
+        if (!doll.parts[p] || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
         int ymax = TILE_Y;

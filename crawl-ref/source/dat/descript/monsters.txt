@@ -567,12 +567,7 @@ One of the race of elves which inhabits this dreary cave.
 %%%%
 ettin
 
-"But he had not been long in his hiding-hole, before the awful Ettin came in; and no sooner was he in, than he was heard crying:
-'Snouk but and snouk ben,
-I find the smell of an earthly man,
-Be he living, or be he dead,
-His heart this night shall kitchen my bread.'"
-    -Joseph Jacobs, _The Red Ettin_
+A two-headed giant.
 %%%%
 eye of devastation
 

@@ -1198,7 +1198,15 @@ void handle_monster_shouts(monsters* monster, bool force)
 
             if (you.can_see(monster))
             {
-                monster->seen_context = "bursts forth shouting";
+                if (monster->type == MONS_AIR_ELEMENTAL)
+                    monster->seen_context = "thin air";
+                else if (monster->type == MONS_TRAPDOOR_SPIDER)
+                    monster->seen_context = "leaps out";
+                else if (!monster_habitable_grid(monster, DNGN_FLOOR))
+                    monster->seen_context = "bursts forth shouting";
+                else
+                    monster->seen_context = "surfaces";
+
                 // Give interrupt message before shout message.
                 handle_seen_interrupt(monster);
             }

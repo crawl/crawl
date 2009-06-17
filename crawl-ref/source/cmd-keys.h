@@ -1,3 +1,6 @@
+#ifdef USE_TILE
+{'-', CMD_EDIT_PLAYER_TILE},
+#endif
 {'b', CMD_MOVE_DOWN_LEFT},
 {'h', CMD_MOVE_LEFT},
 {'j', CMD_MOVE_DOWN},

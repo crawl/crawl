@@ -362,6 +362,9 @@ void wizard_change_species( void )
         break;
     }
 
+#ifdef USE_TILE
+    init_player_doll();
+#endif
     redraw_screen();
 }
 #endif

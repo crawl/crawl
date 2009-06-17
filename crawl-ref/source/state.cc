@@ -14,6 +14,7 @@ REVISION("$Rev$");
 #include "delay.h"
 #include "directn.h"
 #include "macro.h"
+#include "misc.h"
 #include "menu.h" // For print_formatted_paragraph()
 #include "message.h"
 #include "mon-util.h"
@@ -195,6 +196,8 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 #ifndef DEBUG_DIAGNOSTICS
         if (at.context == "newly seen")
         {
+            set_auto_exclude(mon);
+
             std::string text = get_monster_equipment_desc(mon, false);
             text += " comes into view.";
             print_formatted_paragraph(text, MSGCH_WARN);

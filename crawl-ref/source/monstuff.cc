@@ -8936,11 +8936,7 @@ void seen_monster(monsters *monster)
 {
     // If the monster is in the auto_exclude list, automatically
     // set an exclusion.
-    if (need_auto_exclude(monster) && !is_exclude_root(monster->pos()))
-    {
-        toggle_exclude(monster->pos());
-        learned_something_new(TUT_AUTO_EXCLUSION, monster->pos());
-    }
+    set_auto_exclude(monster);
 
     // Monster was viewed this turn
     monster->flags |= MF_WAS_IN_VIEW;
