@@ -1239,12 +1239,12 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     const bool death_message = !silent && !did_death_message
-                                   && mons_near(monster)
-                                   && (player_monster_visible(monster)
-                                       || crawl_state.arena);
+                               && mons_near(monster)
+                               && (player_monster_visible(monster)
+                                   || crawl_state.arena);
 
     const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
-    const bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
+          bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons_holiness(monster);
 
     switch (killer)
@@ -1444,6 +1444,11 @@ int monster_die(monsters *monster, killer_type killer,
                 bool notice = false;
 
                 monsters *killer_mon = &menv[killer_index];
+                // If the killer is already dead treat it like an anonymous
+                // monster.
+                if (killer_mon->type == -1)
+                    anon = true;
+
                 const mon_holy_type killer_holy =
                     anon ? MH_NATURAL : mons_holiness(killer_mon);
 
