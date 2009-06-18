@@ -1255,6 +1255,27 @@
         ""
 },
 
+/* 61 */
+{
+    "ratskin cloak", "motley cloak",
+        OBJ_ARMOUR, ARM_CLOAK, +1, 0, LIGHTRED,
+    {
+        0, 0, 0, 0, -1, -1,     // int, dex
+        0, 0, 0, 1, 1, 0,       // life prot, pois
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0
+    }
+    ,
+        "An enchantress with a magic loom and way too much time on "
+        "her hands stitched this cloak from the hides of hundreds "
+        "of rats, most of them orange. It's a bit awkward to wear "
+        "and looks rather foolish, but it provides excellent protection "
+        "from rats of all kinds.",
+        "",
+        ""
+},
 
 /* This is a dummy. */
 {
