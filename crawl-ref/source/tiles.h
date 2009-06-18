@@ -194,8 +194,8 @@ enum
 
 enum
 {
-    TILEP_GENDER_MALE   = 0,
-    TILEP_GENDER_FEMALE = 1,
+    TILEP_GENDER_FEMALE = 0,
+    TILEP_GENDER_MALE   = 1,
     TILEP_SHOW_EQUIP    = 0x1000
 };
 

@@ -63,10 +63,6 @@ static macromap *all_maps[] =
     &Keymaps[KMC_TARGETING],
     &Keymaps[KMC_CONFIRM],
 
-#ifdef USE_TILE
-    &Keymaps[KMC_TILE],
-#endif
-
     &Macros,
 };
 
@@ -1106,17 +1102,6 @@ command_type key_to_command(int key, KeymapContext context)
     key_to_cmd_map           &key_map = _keys_to_cmds[context];
     key_to_cmd_map::iterator it       = key_map.find(key);
 
-#if 0
-#ifdef USE_TILE
-    if (context != KMC_TILE && it == key_map.end())
-    {
-        context = KMC_TILE;
-        key_map = _keys_to_cmds[KMC_TILE];
-        it      = key_map.find(key);
-    }
-#endif
-#endif
-
     if (it == key_map.end())
         return CMD_NO_CMD;
 
@@ -1145,12 +1130,6 @@ int command_to_key(command_type cmd)
 
 KeymapContext context_for_command(command_type cmd)
 {
-#if 0
-#ifdef USE_TILE
-    if (cmd >= CMD_MIN_TILE && cmd <= CMD_MAX_TILE)
-        return KMC_TILE;
-#endif
-#endif
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
         return KMC_DEFAULT;
 

@@ -2731,20 +2731,23 @@ void tilep_calc_flags(const int parts[], int flag[])
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;
     }
-
-    if (parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
-        || parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1)
+    else if (parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
+             || parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1)
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
     }
-
-    if (parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER
-        || parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER + 1)
+    else if (parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER
+             || parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER + 1)
     {
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+    }
+    else if (parts[TILEP_PART_BASE] >= TILEP_BASE_DRACONIAN
+             && parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_WHITE + 1)
+    {
+        flag[TILEP_PART_HAIR] = flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
     }
 }
 

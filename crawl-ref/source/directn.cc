@@ -261,12 +261,10 @@ static const char *target_mode_help_text(int mode)
     }
 }
 
-static void draw_ray_glyph(const coord_def &pos, int colour,
-                           int glych, int mcol, bool in_range)
+#ifndef USE_TILE
+static void _draw_ray_glyph(const coord_def &pos, int colour,
+                            int glych, int mcol, bool in_range)
 {
-#ifdef USE_TILE
-    tile_place_ray(pos, in_range);
-#else
     if (const monsters *mons = monster_at(pos))
     {
         if (mons->alive() && player_monster_visible(mons))
@@ -279,8 +277,8 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
     cgotoxy(vp.x, vp.y, GOTO_DNGN);
     textcolor( real_colour(colour) );
     putch(glych);
-#endif
 }
+#endif
 
 // Unseen monsters in shallow water show a "strange disturbance".
 // (Unless flying!)
@@ -1649,8 +1647,8 @@ void direction(dist& moves, targeting_type restricts,
         if (old_target != moves.target)
         {
             have_moved = true;
-            show_beam = show_beam && find_ray(you.pos(), moves.target,
-                                              true, ray, 0, true);
+            show_beam  = show_beam && find_ray(you.pos(), moves.target,
+                                               true, ray, 0, true);
         }
 
         if (force_redraw)
@@ -1673,13 +1671,17 @@ void direction(dist& moves, targeting_type restricts,
 
 #ifdef USE_TILE
         // Tiles always need a beam redraw if show_beam is true (and valid...)
-        bool _draw_beam = find_ray(you.pos(), moves.target, true, ray, 0, true)
-                          && show_beam && !_blocked_ray(moves.target);
-        if (need_beam_redraw || _draw_beam)
+        if (!need_beam_redraw)
         {
-#else
+            need_beam_redraw = show_beam
+                               && find_ray(you.pos(), moves.target, true, ray,
+                                           0, true)
+                               && !_blocked_ray(moves.target);
+        }
+#endif
         if (need_beam_redraw)
         {
+#ifndef USE_TILE
             viewwindow(true, false);
 #endif
             if (show_beam
@@ -1700,25 +1702,27 @@ void direction(dist& moves, targeting_type restricts,
 
                         const bool in_range = (range < 0)
                             || grid_distance(raycopy.pos(), you.pos()) <= range;
+#ifdef USE_TILE
+                        tile_place_ray(raycopy.pos(), in_range);
+#else
                         const int bcol = in_range ? MAGENTA : DARKGREY;
-
-                        draw_ray_glyph(raycopy.pos(), bcol, '*',
-                                       bcol | COLFLAG_REVERSE, in_range);
+                        _draw_ray_glyph(raycopy.pos(), bcol, '*',
+                                        bcol | COLFLAG_REVERSE, in_range);
+#endif
                     }
                     raycopy.advance_through(moves.target);
                 }
                 textcolor(LIGHTGREY);
 #ifdef USE_TILE
-                const bool in_range = (range < 0)
-                    || grid_distance(raycopy.pos(), you.pos()) <= range;
-                draw_ray_glyph(moves.target, MAGENTA, '*',
-                               MAGENTA | COLFLAG_REVERSE, in_range);
-            }
-            viewwindow(true, false);
-#else
-            }
+                const bool in_range
+                        = (range < 0
+                           || grid_distance(raycopy.pos(), you.pos()) <= range);
+                tile_place_ray(moves.target, in_range);
 #endif
-
+            }
+#ifdef USE_TILE
+            viewwindow(true, false);
+#endif
         }
         skip_iter = false;      // Only skip one iteration at most.
     }
@@ -1862,7 +1866,7 @@ void full_describe_square(const coord_def &c)
 
 static void _extend_move_to_edge(dist &moves)
 {
-    if ( moves.delta.origin() )
+    if (moves.delta.origin())
         return;
 
     // Now the tricky bit - extend the target x,y out to map edge.
@@ -3496,8 +3500,8 @@ int targeting_behaviour::get_key()
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
-    return unmangle_direction_keys( getchm(KMC_TARGETING), KMC_TARGETING,
-                                    false, false);
+    return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
+                                   false, false);
 }
 
 command_type targeting_behaviour::get_command(int key)

@@ -1461,10 +1461,6 @@ enum KeymapContext
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
 
-#ifdef USE_TILE
-    KMC_TILE,            // For context_for_command()
-#endif
-
     KMC_CONTEXT_COUNT,   // Must always be the last real context
 
     KMC_NONE
