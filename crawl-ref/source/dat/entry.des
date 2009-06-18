@@ -4822,3 +4822,41 @@ xx...xx   xx+xx   xx...xx
          xx...xx
           xxxxx
 ENDMAP
+
+###########################################################
+# eye to eye with the dorky (Lordsloth)
+#
+NAME:    two_stooges
+TAGS:    entry no_rotate no_monster_gen no_item_gen
+: if crawl.one_chance_in(4) then
+SUBST:   [ = l, ( = l
+: end
+SUBST:   ' : l...'
+SUBST:   ' = l.
+SUBST:   l : lllWw
+SUBST:   n : nv
+SUBST:   v : vvvc
+SHUFFLE: 12
+KMONS:   1 = Ijyb, human
+KMONS:   2 = Psyche, human
+KFEAT:   1 = .
+KFEAT:   2 = .
+MAP
+.....................
+.....................
+..vvvvnnnnnnnnnvvvv..
+..vllllll[{(llllllv..
+..vlllllll.lllllllv..
+..vllll''...''llllv..
+..vll'.........'llv..
+..vl'...........'lv..
+..vl.............lv..
+..vmm..G.vvv.G..mmv..
+..v1m...........m2v..
+..vvvvvvv+++vvvvvvv..
+...vv...........vv...
+ ..vv...........vv..
+ ...vvv.......vvv...
+   ...vv+++++vv...
+    .............
+ENDMAP
