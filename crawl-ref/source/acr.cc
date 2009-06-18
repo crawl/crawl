@@ -1328,7 +1328,6 @@ static void _print_friendly_pickup_setting(bool was_changed)
 void process_command( command_type cmd )
 {
     apply_berserk_penalty = true;
-    mprf("cmd: %d", cmd);
     switch (cmd)
     {
 #ifdef USE_TILE

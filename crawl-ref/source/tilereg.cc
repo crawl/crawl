@@ -20,6 +20,7 @@ REVISION("$Rev$");
 #include "it_use2.h"
 #include "item_use.h"
 #include "items.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "menu.h"
@@ -342,7 +343,7 @@ static void _load_doll_data(const char *fn, dolls_data *doll)
             if (strncmp(fbuf, "NUM=", 4) == 0)
             {
                 sscanf(fbuf, "NUM=%d", &cur);
-                if (cur < 0 || cur >= 10)
+                if (cur < 0 || cur > 10)
                     cur = 0;
             }
         }
@@ -374,6 +375,7 @@ void init_player_doll()
     for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
         default_doll.parts[i] = TILEP_SHOW_EQUIP;
 
+    mpr("loaded equipment");
     _load_doll_data("dolls.txt", &default_doll);
 
     if (gender == -1)
@@ -397,7 +399,37 @@ void TilePlayerEdit()
     // * If dolls.txt missing, possibly (C)reate the file with
     //   dummy values (MODE=DEFAULT, 10 variable dolls).
 
-    mpr("Sorry, this command has not yet been implemented.");
+    mpr("Pick (d)efault doll for job, use (e)quipment settings, or (l)oad "
+        "from file?");
+
+    char ch = (char) getchm(KMC_DEFAULT);
+         ch = tolower(ch);
+
+    dolls_data default_doll;
+
+    for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
+         default_doll.parts[i] = TILEP_SHOW_EQUIP;
+
+    tilep_race_default(you.species, gender,
+                       you.experience_level, default_doll.parts);
+
+    mpr("loaded equipment");
+    if (ch == 'd')
+    {
+        tilep_job_default(you.char_class, gender, default_doll.parts);
+    }
+    else if (ch == 'e')
+    {
+        // nothing to be done
+    }
+    else if (ch == 'l')
+    {
+        _load_doll_data("dolls.txt", &default_doll);
+    }
+    else
+        return;
+
+    player_doll = default_doll;
 
     // TODO 2: Allow saving back of customized dolls.
     // * Use pack_player (split into 2 methods) to fill the (C)urrent equipment.

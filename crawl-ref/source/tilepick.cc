@@ -2934,7 +2934,7 @@ void tilep_race_default(int race, int gender, int level, int *parts)
         result++;
 
     parts[TILEP_PART_BASE] = result;
-    //Don't overwrite doll parts defined elsewhere.
+    // Don't overwrite doll parts defined elsewhere.
     if (parts[TILEP_PART_HAIR] == TILEP_SHOW_EQUIP)
         parts[TILEP_PART_HAIR]   = hair;
     if (parts[TILEP_PART_BEARD] == TILEP_SHOW_EQUIP)
@@ -3296,12 +3296,12 @@ void tilep_print_parts(char *fbuf, int *parts)
 {
     int i;
     char *ptr = fbuf;
-    for (i = 0; parts_saved[i] != -1; i++)
+    for (i = 0; parts_saved[i] != -1; ++i)
     {
         int p = parts_saved[i];
         if (p == TILEP_PART_BASE) // 0:female  1:male
         {
-            sprintf(ptr, "%03d", parts[p]%2);
+            sprintf(ptr, "%03d", parts[p] % 2);
             ptr += 3;
         }
         else
