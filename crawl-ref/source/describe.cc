@@ -3373,12 +3373,11 @@ static void _detailed_god_description(god_type which_god)
                      "works best on natural beasts, worse on humanoids of "
                      "your species, worse on other humanoids, and worst of "
                      "all on demons and undead. Whether it succeeds or not, "
-                     "piety, food and magic are still spent. If it does "
-                     "succeed, the monster is healed and you gain half of "
-                     "its experience value and possibly some piety. "
-                     "Otherwise, the monster is unaffected and you gain "
-                     "nothing. Pacified monsters try to leave the level as "
-                     "quickly as possible.";
+                     "all costs are spent. If it does succeed, the monster "
+                     "is healed and you gain half of its experience value "
+                     "and possibly some piety. Otherwise, the monster is "
+                     "unaffected and you gain nothing. Pacified monsters "
+                     "try to leave the level.";
             break;
 
         case GOD_NEMELEX_XOBEH:
