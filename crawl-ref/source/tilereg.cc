@@ -401,20 +401,16 @@ void init_player_doll()
     default_doll[0].parts[TILEP_PART_BASE]
         = tilep_species_to_base_tile(you.species, you.experience_level);
 
-    mprf("gender 1: %d", gender);
     int mode = TILEP_MODE_LOADING;
     int cur  = 0;
     _load_doll_data("dolls.txt", default_doll, 1, &mode, &cur);
-    mprf("gender 2: %d", gender);
 
     if (gender == -1)
         gender = coinflip();
 
-    mprf("gender 3: %d", gender);
     tilep_race_default(you.species, gender, you.experience_level,
                        default_doll[0].parts);
 
-    mprf("gender 4: %d", gender);
     player_doll = default_doll[0];
 }
 
@@ -570,7 +566,6 @@ void TilePlayerEdit()
     for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
          equip_doll.parts[i] = TILEP_SHOW_EQUIP;
 
-    mprf("gender: %d", gender);
     tilep_race_default(you.species, gender,
                        you.experience_level, equip_doll.parts);
 
