@@ -439,6 +439,5 @@ protected:
     GenericTexture m_img;
     VertBuffer<PTVert> m_buf;
 };
-
 #endif
 #endif

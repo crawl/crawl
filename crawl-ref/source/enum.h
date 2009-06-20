@@ -537,6 +537,12 @@ enum command_type
 
     CMD_ANNOTATE_LEVEL,
 
+#ifdef USE_TILE
+    CMD_EDIT_PLAYER_TILE,
+    CMD_MIN_TILE = CMD_EDIT_PLAYER_TILE,
+    CMD_MAX_TILE = CMD_MIN_TILE,
+#endif
+
     // Repeat previous command
     CMD_PREV_CMD_AGAIN,
 
@@ -658,11 +664,6 @@ enum command_type
     CMD_TARGET_MOUSE_SELECT,
     CMD_TARGET_HELP,
     CMD_MAX_TARGET = CMD_TARGET_HELP,
-
-#ifdef USE_TILE
-    CMD_MIN_TILE,
-    CMD_MAX_TILE = CMD_MIN_TILE - 1,
-#endif
 
     // Disable/enable -more- prompts.
     CMD_DISABLE_MORE,
@@ -1459,10 +1460,6 @@ enum KeymapContext
     KMC_TARGETING,       // Only during 'x' and other targeting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
-
-#ifdef USE_TILE
-    KMC_TILE,            // For context_for_command()
-#endif
 
     KMC_CONTEXT_COUNT,   // Must always be the last real context
 

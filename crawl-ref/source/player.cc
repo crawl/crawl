@@ -3088,10 +3088,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MOUNTAIN_DWARF:
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 14)
-                //     hp_adjust++;
-
                 if (!(you.experience_level % 2))
                     hp_adjust++;
 
@@ -3202,10 +3198,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_NAGA:
-                // lower because of HD raise -- bwr
-                // if (you.experience_level < 14)
-                //     hp_adjust++;
-
                 hp_adjust++;
 
                 if (!(you.experience_level % 4))
@@ -3249,6 +3241,9 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level == 7)
                 {
+#ifdef USE_TILE
+                    init_player_doll();
+#endif
                     switch (you.species)
                     {
                     case SP_RED_DRACONIAN:
@@ -3267,19 +3262,24 @@ void level_change(bool skip_attribute_increase)
                         break;
 
                     case SP_YELLOW_DRACONIAN:
-                        mpr("Your scales start taking on a golden yellow colour.", MSGCH_INTRINSIC_GAIN);
+                        mpr("Your scales start taking on a golden yellow colour.",
+                            MSGCH_INTRINSIC_GAIN);
                         break;
                     case SP_BLACK_DRACONIAN:
-                        mpr("Your scales start turning black.", MSGCH_INTRINSIC_GAIN);
+                        mpr("Your scales start turning black.",
+                            MSGCH_INTRINSIC_GAIN);
                         break;
                     case SP_PURPLE_DRACONIAN:
-                        mpr("Your scales start taking on a rich purple colour.", MSGCH_INTRINSIC_GAIN);
+                        mpr("Your scales start taking on a rich purple colour.",
+                            MSGCH_INTRINSIC_GAIN);
                         break;
                     case SP_MOTTLED_DRACONIAN:
-                        mpr("Your scales start taking on a weird mottled pattern.", MSGCH_INTRINSIC_GAIN);
+                        mpr("Your scales start taking on a weird mottled pattern.",
+                            MSGCH_INTRINSIC_GAIN);
                         break;
                     case SP_PALE_DRACONIAN:
-                        mpr("Your scales start fading to a pale grey colour.", MSGCH_INTRINSIC_GAIN);
+                        mpr("Your scales start fading to a pale grey colour.",
+                            MSGCH_INTRINSIC_GAIN);
                         break;
                     case SP_BASE_DRACONIAN:
                         mpr("");
@@ -3326,6 +3326,9 @@ void level_change(bool skip_attribute_increase)
             case SP_GREY_DRACONIAN:
                 if (you.experience_level == 7)
                 {
+#ifdef USE_TILE
+                    init_player_doll();
+#endif
                     mpr("Your scales start turning grey.",
                         MSGCH_INTRINSIC_GAIN);
                     more();

@@ -362,6 +362,9 @@ void wizard_change_species( void )
         break;
     }
 
+#ifdef USE_TILE
+    init_player_doll();
+#endif
     redraw_screen();
 }
 #endif
@@ -5952,18 +5955,24 @@ void debug_miscast( int target_index )
     MiscastEffect *miscast;
 
     if (spell != SPELL_NO_SPELL)
+    {
         miscast = new MiscastEffect(target, target_index, spell, pow, fail,
                                     "", nothing);
+    }
     else
     {
         if (level != -1)
+        {
             miscast = new MiscastEffect(target, target_index, school,
                                         level, "wizard testing miscast",
                                         nothing);
+        }
         else
+        {
             miscast = new MiscastEffect(target, target_index, school,
                                         pow, fail, "wizard testing miscast",
                                         nothing);
+        }
     }
     // Merely creating the miscast object causes one miscast effect to
     // happen.
@@ -6366,8 +6375,10 @@ static void _debug_marker_scan()
         map_marker_type type = marker->get_type();
 
         if (type < MAT_FEATURE || type >= NUM_MAP_MARKER_TYPES)
+        {
             mprf(MSGCH_ERROR, "Makrer #%d at (%d, %d) has invalid type %d",
                  i, marker->pos.x, marker->pos.y, (int) type);
+        }
 
         if (!in_bounds(marker->pos))
         {

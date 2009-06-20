@@ -1,3 +1,13 @@
+Stone Soup 0.5.1 (2009????)
+---------------------------
+
+* Fix crashes related to giant spores.
+* Fix erroneous "blocked line of fire" warnings.
+* Fix missing items in Tiles inventory.
+* Tiles: Allow selection of player dolls.
+* Add missing tiles options to the options guide (docs/, '?&' command).
+* Speed-up for the Tiles version.
+
 Stone Soup 0.5.0 (20090612)
 ---------------------------
 

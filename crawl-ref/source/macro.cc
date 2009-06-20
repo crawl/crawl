@@ -63,10 +63,6 @@ static macromap *all_maps[] =
     &Keymaps[KMC_TARGETING],
     &Keymaps[KMC_CONFIRM],
 
-#ifdef USE_TILE
-    &Keymaps[KMC_TILE],
-#endif
-
     &Macros,
 };
 
@@ -1134,11 +1130,6 @@ int command_to_key(command_type cmd)
 
 KeymapContext context_for_command(command_type cmd)
 {
-#ifdef USE_TILE
-    if (cmd >= CMD_MIN_TILE && cmd <= CMD_MAX_TILE)
-        return KMC_TILE;
-#endif
-
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
         return KMC_DEFAULT;
 

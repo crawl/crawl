@@ -660,14 +660,14 @@ void list_weapons(void)
     mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
 
     // Print out the swap slots.
-    for (int i = 0; i <= 1; i++)
+    for (int i = 0; i <= 1; ++i)
     {
         // We'll avoid repeating the current weapon for these slots,
         // in order to keep things clean.
         if (weapon_id == i)
             continue;
 
-        if ( i == 0 )
+        if (i == 0)
             wstring = "Primary   : ";
         else
             wstring = "Secondary : ";
@@ -724,8 +724,8 @@ void list_weapons(void)
     if (colour == MSGCOL_BLACK)
         colour = menu_colour(wstring, "", "equip");
 
-    mpr( wstring.c_str(), MSGCH_EQUIPMENT, colour );
-}                               // end list_weapons()
+    mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
+}
 
 static bool _cmdhelp_textfilter(const std::string &tag)
 {
@@ -2161,7 +2161,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
             "<w>~</w> : add macro (also <w>Ctrl-D</w>)\n"
             "<w>=</w> : reassign inventory/spell letters\n"
+// No online play for tiles, so this replacement is reasonable. (jpeg)
+#ifdef USE_TILE
+            "<w>-</w> : select player doll"
+#else
             "<w>_</w> : read messages (online play only)"
+#endif
             " \n",
             true, true, _cmdhelp_textfilter);
 

@@ -788,6 +788,9 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_INSCRIBE_ITEM:
     case CMD_MAKE_NOTE:
     case CMD_CYCLE_QUIVER_FORWARD:
+#ifdef USE_TILE
+    case CMD_EDIT_PLAYER_TILE:
+#endif
         mpr("You can't repeat that command.");
         return (false);
 
@@ -1325,9 +1328,14 @@ static void _print_friendly_pickup_setting(bool was_changed)
 void process_command( command_type cmd )
 {
     apply_berserk_penalty = true;
-
     switch (cmd)
     {
+#ifdef USE_TILE
+    case CMD_EDIT_PLAYER_TILE:
+        TilePlayerEdit();
+        break;
+#endif
+
     case CMD_OPEN_DOOR_UP_RIGHT:   _open_door( 1, -1); break;
     case CMD_OPEN_DOOR_UP:         _open_door( 0, -1); break;
     case CMD_OPEN_DOOR_UP_LEFT:    _open_door(-1, -1); break;
@@ -3460,6 +3468,8 @@ static bool _initialise(void)
     // Override inventory weights options for tiled menus.
     if (Options.tile_menu_icons && Options.show_inventory_weights)
         Options.show_inventory_weights = false;
+
+    init_player_doll();
 
     tiles.resize();
 #endif

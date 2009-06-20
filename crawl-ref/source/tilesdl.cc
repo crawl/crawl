@@ -743,7 +743,12 @@ int TilesFramework::getch_ck()
 
     int key = 0;
 
-    const unsigned int ticks_per_redraw = 100;
+    // When moving the mouse via cursor when targeting update more often.
+    // For beams, the beam drawing already handles this, and when not targeting
+    // the normal drawing routines handle it.
+    const unsigned int ticks_per_redraw
+        = (mouse_control::current_mode() == MOUSE_MODE_TARGET ? 50 : 100);
+
     unsigned int last_redraw_tick = 0;
 
     unsigned int res = Options.tile_tooltip_ms;
