@@ -2169,7 +2169,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
             "<w>~</w> : add macro (also <w>Ctrl-D</w>)\n"
             "<w>=</w> : reassign inventory/spell letters\n"
+// No online play for tiles, so this replacement is reasonable. (jpeg)
+#ifdef USE_TILE
+            "<w>-</w> : select player doll"
+#else
             "<w>_</w> : read messages (online play only)"
+#endif
             " \n",
             true, true, _cmdhelp_textfilter);
 

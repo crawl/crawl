@@ -298,9 +298,17 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
 static dolls_data player_doll;
 static int gender = -1;
 
-// static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
-//                             int *mode, int *cur)
-static void _load_doll_data(const char *fn, dolls_data *dolls, int max)
+enum tile_doll_mode
+{
+    TILEP_MODE_EQUIP   = 0,  // draw doll based on equipment
+    TILEP_MODE_LOADING = 1,  // draw doll based on dolls.txt definitions
+    TILEP_MODE_DEFAULT = 2   // draw doll based on job specific definitions
+};
+
+// Loads player doll definitions from (by default) dolls.txt.
+// Returns true if file found, else false.
+static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
+                            int *mode, int *cur)
 {
     char fbuf[1024];
     FILE *fp  = NULL;
@@ -311,57 +319,60 @@ static void _load_doll_data(const char *fn, dolls_data *dolls, int max)
 
     if ( (fp = fopen(dollsTxt, "r")) == NULL )
     {
-        // File doesn't exist.  By default, use equipment defaults.
-        // This will be saved out (if possible).
-
-        // Sanity, in case this hasn't been done before.
-        for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
-            dolls[0].parts[i] = TILEP_SHOW_EQUIP;
-
-        // Don't take gender too seriously.  -- Enne
-        tilep_race_default(you.species, gender,
-                           you.experience_level, dolls[0].parts);
+        // File doesn't exist. By default, use equipment settings.
+        *mode = TILEP_MODE_EQUIP;
+        return (false);
     }
     else
     {
         memset(fbuf, 0, sizeof(fbuf));
+        // Read mode from file.
         if (fscanf(fp, "%s", fbuf) != EOF)
         {
-            if (max == 1 && strcmp(fbuf, "MODE=DEFAULT") == 0)
-            {
-                tilep_job_default(you.char_class, gender, dolls[0].parts);
-                fclose(fp);
-                return;
-            }
-            // else loading
+            if (strcmp(fbuf, "MODE=DEFAULT") == 0)
+                *mode = (int) TILEP_MODE_DEFAULT;
+            else if (strcmp(fbuf, "MODE=EQUIP") == 0)
+                *mode = TILEP_MODE_EQUIP; // Nothing else to be done.
         }
-        int cur = 0; // # of current doll
+        // Read current doll from file.
         if (fscanf(fp, "%s", fbuf) != EOF)
         {
-            if (max == 1 && strncmp(fbuf, "NUM=", 4) == 0)
+            if (strncmp(fbuf, "NUM=", 4) == 0)
             {
-                sscanf(fbuf, "NUM=%d", &cur);
-                if (cur < 0 || cur >= NUM_MAX_DOLLS)
-                    cur = 0;
+                sscanf(fbuf, "NUM=%d", cur);
+                if (*cur < 0 || *cur >= NUM_MAX_DOLLS)
+                    *cur = 0;
             }
         }
 
-        if (max == 1) // Load only one doll, namely no. cur.
+        if (max == 1)
         {
+            // Load only one doll, either the one defined by NUM or
+            // use the default/equipment setting.
+            if (*mode != TILEP_MODE_LOADING)
+            {
+                if (*mode == TILEP_MODE_DEFAULT)
+                    tilep_job_default(you.char_class, gender, dolls[0].parts);
+
+                // If we don't need to load a doll, return now.
+                fclose(fp);
+                return (true);
+            }
+
             int count = 0;
             while (fscanf(fp, "%s", fbuf) != EOF)
             {
-                if (cur == count++)
+                if (*cur == count++)
                 {
                     tilep_scan_parts(fbuf, dolls[0].parts);
                     gender = dolls[0].parts[TILEP_PART_BASE] % 2;
                     break;
                 }
             }
-            if (cur >= count)
+            if (*cur >= count)
             {
                 mprf(MSGCH_WARN, "Doll %d could not be found in '%s'.",
-                                 cur, dollsTxt);
+                                 *cur, dollsTxt);
             }
         }
         else // Load up to max dolls from file.
@@ -374,6 +385,7 @@ static void _load_doll_data(const char *fn, dolls_data *dolls, int max)
         }
 
         fclose(fp);
+        return (true);
     }
 }
 
@@ -387,7 +399,9 @@ void init_player_doll()
     if (gender == -1)
         gender = coinflip();
 
-    _load_doll_data("dolls.txt", default_doll, 1);
+    int mode = TILEP_MODE_LOADING;
+    int cur  = 0;
+    _load_doll_data("dolls.txt", default_doll, 1, &mode, &cur);
 
     tilep_race_default(you.species, gender, you.experience_level,
                        default_doll[0].parts);
@@ -430,108 +444,6 @@ static void _create_random_doll(dolls_data &rdoll)
     // Only male dolls get a chance at a beard.
     if (rdoll.parts[TILEP_PART_BASE] % 2 == 1 && one_chance_in(4))
         _fill_doll_part(rdoll, TILEP_PART_BEARD);
-}
-
-void TilePlayerEdit()
-{
-    // TODO: Prompt for (D)efault job, or 0-9 for specific dolls,
-    //       alternatively (C)reate dolls.txt (if missing).
-    // * Read content from dolls.txt.
-    // * If (D) and MODE=DEFAULT, nothing to be done.
-    // * If (#) and NUM=#, nothing to be done.
-    // * If MODE != DEFAULT or NUM != #, save file back to disk with
-    //   MODE/NUM modified, then call _load_doll_data().
-    // * If dolls.txt missing, possibly (C)reate the file with
-    //   dummy values (MODE=DEFAULT, 10 variable dolls).
-
-    dolls_data equip_doll;
-    dolls_data default_doll;
-    dolls_data dolls[NUM_MAX_DOLLS];
-
-    for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
-         equip_doll.parts[i] = TILEP_SHOW_EQUIP;
-
-    tilep_race_default(you.species, gender,
-                       you.experience_level, equip_doll.parts);
-
-    bool done_default = false;
-    bool loaded       = false;
-    char old_ch       = 'x'; // for saving current doll (d/e) into file
-    while (true)
-    {
-        mpr("Pick (d)efault doll for job, use (e)quipment settings, roll a "
-            "(r)andom doll, or load doll (0-9) from file?", MSGCH_PROMPT);
-
-        char ch = (char) getchm(KMC_DEFAULT);
-             ch = tolower(ch);
-
-        bool finish = false;
-        if (ch == 'd')
-        {
-            if (!done_default)
-            {
-                default_doll = equip_doll;
-                tilep_job_default(you.char_class, gender, default_doll.parts);
-                done_default = true;
-            }
-            player_doll = default_doll;
-        }
-        else if (ch == 'e')
-        {
-            player_doll = equip_doll;
-            // nothing else to be done
-        }
-        else if (ch == 'r')
-        {
-            dolls_data random_doll = equip_doll;
-            _create_random_doll(random_doll);
-            player_doll = random_doll;
-        }
-        else if (ch == 's')
-        {
-            mpr("I'm sorry, you can't save your settings yet.");
-            continue;
-        }
-        else if (ch >= '0' && ch <= '9')
-        {
-            // HACK until I can find the proper function.
-            int num = ch - '0';
-            ASSERT(num >= 0 && num <= 9);
-            if (num < 0 || num >= NUM_MAX_DOLLS)
-                finish = true;
-            else
-            {
-                if (!loaded)
-                {
-                    for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
-                        dolls[i] = equip_doll;
-
-                    // This'll have to be replaced by "load doll 0..9".
-                    _load_doll_data("dolls.txt", dolls, NUM_MAX_DOLLS);
-                    loaded = true;
-                }
-                player_doll = dolls[num];
-            }
-        }
-        else
-            finish = true;
-
-        mesclr();
-
-        if (finish)
-            break;
-
-        old_ch = ch;
-        viewwindow(true, false);
-    }
-    // TODO 2: Allow saving back of customized dolls.
-    // * Use pack_player (split into 2 methods) to fill the (C)urrent equipment.
-    // * Create (R)andom equipment for player doll.
-    // * (S)ave current doll to slot 0-9, prompt to overwrite non-empty slots?
-    //   With empty == consisting only of *** or 000 after the first two
-    //   colons.
-
-    // TODO 3: Change to proper menu.
 }
 
 void _fill_doll_equipment(dolls_data &result)
@@ -634,6 +546,178 @@ void _fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_DRCWING] = 0;
     if (result.parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
         result.parts[TILEP_PART_DRCHEAD] = 0;
+}
+
+// Allow player to choose between up to 10 premade dolls, or replace them
+// with the job default, using current equipment, or a random doll.
+// If the player makes any changes while browsing the selections, i.e.
+// overwrites a slot or changes the mode, these changes are saved back
+// into dolls.txt.
+// TODO: Change to proper menu.
+void TilePlayerEdit()
+{
+    // Initialize equipment setting.
+    dolls_data equip_doll;
+    for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
+         equip_doll.parts[i] = TILEP_SHOW_EQUIP;
+
+    tilep_race_default(you.species, gender,
+                       you.experience_level, equip_doll.parts);
+
+    // Initialize job default.
+    dolls_data default_doll = equip_doll;
+    tilep_job_default(you.char_class, gender, default_doll.parts);
+
+    // Read predefined dolls from file.
+    dolls_data dolls[NUM_MAX_DOLLS];
+    for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
+         dolls[i] = equip_doll;
+
+    int old_mode = TILEP_MODE_LOADING;
+    int old_num  = -1;
+    const bool found_file = _load_doll_data("dolls.txt", dolls, NUM_MAX_DOLLS,
+                                            &old_mode, &old_num);
+    int mode = old_mode;
+    int num  = old_num;
+
+    bool display_num   = (found_file && mode == TILEP_MODE_LOADING);
+    bool dolls_changed = false;
+    bool did_random    = false;
+
+    while (true)
+    {
+        // Offer a list of choices.
+        std::vector<std::string> prompt;
+        prompt.push_back("Pick (d)efault doll for job, use (e)quipment settings");
+        prompt.push_back("roll a (r)andom doll");
+        if (found_file)
+            prompt.push_back("load doll (0-9) from file");
+        if (did_random || mode != TILEP_MODE_LOADING)
+            prompt.push_back("(s)ave current doll");
+
+        std::string current = "";
+        bool need_braces = false;
+        if (did_random || mode != TILEP_MODE_LOADING)
+        {
+            current = (did_random                 ? "random" :
+                       mode == TILEP_MODE_EQUIP   ? "equipment" :
+                       mode == TILEP_MODE_DEFAULT ? "default" : "buggy");
+
+            need_braces = true;
+        }
+
+        if (display_num)
+        {
+            snprintf(info, INFO_SIZE, "doll %d", num);
+            if (need_braces)
+                current += " [";
+            current += info;
+            if (need_braces)
+                current += "]";
+        }
+
+        mprf(MSGCH_PROMPT, "%s? (Current: %s)",
+             comma_separated_line(prompt.begin(),
+                                  prompt.end(), ", or ", ", ").c_str(),
+             current.c_str());
+
+        char ch = (char) getchm(KMC_DEFAULT);
+             ch = tolower(ch);
+
+        bool finish = false;
+        did_random  = false;
+        if (ch == 'd')
+        {
+            player_doll = default_doll;
+            mode        = TILEP_MODE_DEFAULT;
+        }
+        else if (ch == 'e')
+        {
+            player_doll = equip_doll;
+            mode        = TILEP_MODE_EQUIP;
+        }
+        else if (ch == 'r')
+        {
+            dolls_data random_doll = equip_doll;
+            _create_random_doll(random_doll);
+            player_doll = random_doll;
+            did_random  = true;
+        }
+        else if (ch == 's')
+        {
+            mpr("Save current doll to what slot? (0-9)", MSGCH_PROMPT);
+            const char ch2 = (char) getchm(KMC_DEFAULT);
+            if (ch2 >= '0' && ch2 <= '9')
+            {
+                const int slot = ch2 - '0';
+                ASSERT(slot >= 0 && slot <= 9);
+
+                // Translate TILEP_SHOW_EQUIP according to equipment.
+                _fill_doll_equipment(player_doll);
+                dolls[slot]   = player_doll;
+                num           = slot;
+                did_random    = false;
+                dolls_changed = true;
+                display_num   = true;
+                mprf("Doll saved to slot %d.", slot);
+            }
+            else
+                mpr("Doll not saved.");
+            more();
+        }
+        else if (ch >= '0' && ch <= '9')
+        {
+            // HACK until I can find the proper function.
+            num = ch - '0';
+            ASSERT(num >= 0 && num <= 9);
+            ASSERT(num < NUM_MAX_DOLLS);
+
+            player_doll = dolls[num];
+            mode        = TILEP_MODE_LOADING;
+            display_num = true;
+        }
+        else // All other input exits the loop.
+            finish = true;
+
+        mesclr();
+
+        if (finish)
+        {
+            // No changes, nothing to be saved.
+            if (!dolls_changed && mode == old_mode && num == old_num)
+                break;
+
+            // Save mode, num, and all dolls into dolls.txt.
+            std::string dollsTxtString = datafile_path("dolls.txt", false, true);
+            const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
+                                    "dolls.txt" : dollsTxtString.c_str();
+
+            FILE *fp = NULL;
+            if ( (fp = fopen(dollsTxt, "w+")) != NULL )
+            {
+                fprintf(fp, "MODE=%s\n",
+                            (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
+                            (mode == TILEP_MODE_LOADING) ? "LOADING"
+                                                         : "DEFAULT");
+
+                fprintf(fp, "NUM=%02d\n", num == -1 ? 0 : num);
+
+                char fbuf[80];
+                for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
+                {
+                    tilep_print_parts(fbuf, dolls[i].parts);
+                    fprintf(fp, "%s\n", fbuf);
+                }
+                fclose(fp);
+            }
+            else
+                mprf(MSGCH_ERROR, "Could not write into file '%s'.", dollsTxt);
+
+            break;
+        }
+
+        viewwindow(true, false);
+    }
 }
 
 void DungeonRegion::pack_player(int x, int y)

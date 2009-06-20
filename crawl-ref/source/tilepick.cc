@@ -3215,7 +3215,7 @@ void tilep_part_to_str(int number, char *buf)
         //normal 2 digits
         buf[0] = '0' + (number/100) % 10;
         buf[1] = '0' + (number/ 10) % 10;
-        buf[2] = '0' +  number % 10;
+        buf[2] = '0' +  number      % 10;
     }
     buf[3] ='\0';
 }
@@ -3229,7 +3229,7 @@ int tilep_str_to_part(char *str)
     if (str[0] == '*')
         return TILEP_SHOW_EQUIP;
 
-    //normal 2 digits
+    //normal 3 digits
     return atoi(str);
 }
 
@@ -3297,21 +3297,25 @@ void tilep_scan_parts(char *fbuf, int *parts)
  */
 void tilep_print_parts(char *fbuf, int *parts)
 {
-    int i;
     char *ptr = fbuf;
-    for (i = 0; parts_saved[i] != -1; ++i)
+    for (unsigned i = 0; parts_saved[i] != -1; ++i)
     {
         int p = parts_saved[i];
-        if (p == TILEP_PART_BASE) // 0:female  1:male
-        {
+        if (p == TILEP_PART_BASE) // 0: female  1:male
             sprintf(ptr, "%03d", parts[p] % 2);
-            ptr += 3;
-        }
         else
         {
-            tilep_part_to_str(parts[p], ptr);
-            ptr += 3;
+            int idx = parts[p];
+            if (idx != 0 && idx != TILEP_SHOW_EQUIP)
+            {
+                idx = parts[p] - tile_player_part_start[p] + 1;
+                if (idx < 0 || idx > tile_player_part_count[p])
+                    idx = 0;
+            }
+            tilep_part_to_str(idx, ptr);
         }
+        ptr += 3;
+
         *ptr = ':';
         ptr++;
     }
