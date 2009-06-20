@@ -2640,7 +2640,8 @@ Encumbered      Your load is heavy enough to slow you down. You also
                 need more food than when walking around encumbered. Try
                 to avoid this!
 Overloaded      You carry too much to do anything sensible. Drop stuff!
-Conf            You are confused. Actions may not work properly.
+Conf            You are confused. Actions may not work properly. Wait it
+                out or drink a potion of healing for immediate cure.
 Fast            All of your actions are twice as fast (this can cause
                 magic contamination).
 Swift           You move at a somewhat higher speed. This only means
@@ -2657,40 +2658,46 @@ BWpn            Some characters have a breath weapon (like Nagas or
 Invis           You are invisible. This can cause glowing, if used too
                 much.
 Tele            You are about to teleport, i.e. feeling "unstable".
+                If you are about to teleport, another teleport (by any
+                source) will cancel it.
 Lev             You levitate, i.e. hover a few inches above the ground.
                 While enough to cross water and lava, movement is not
                 completely controlled. It will usually time out.
-                Levitation provides a speed bonus to swiftness.
 Fly             You fly, gaining the benefits of levitation with none of
                 the drawbacks. This is only accessible for experienced
                 Kenku, lucky Draconians, characters using Dragon form,
-                or those levitating while wearing an amulet of
-                controlled flight.
+                or those levitating and wearing an amulet of controlled 
+                flight. Flying provides a speed bonus to swiftness.
 Held            You are held in a net: you cannot move freely and
                 will instead only try to fight your way out of the net.
 Bhld            You are beheld: you cannot move away from the monster(s)
                 beholding you.
-Fire            You are plagued with sticky fire. It will time out.
+Fire            You are plagued with sticky fire. It will time out,
+                probably burning scrolls in the process. Drop the most
+                important ones!
 Regen           You regenerate: hit points will increase at an
                 unnaturally fast rate. This is only shown for temporary
                 regeneration.
 Glow            You glow from mutagenic radiation: you can mutate
-                anytime soon - usually with a bad outcome.
+                anytime soon - usually with a bad outcome. The colour
+                indicates the severity: the first level (grey) is only
+                a warning - no mutation will occur from this.
 RMsl            You repel missiles, i.e. there's a good chance to evade
                 them.
 DMsl            You deflect missiles, i.e. there's a great chance to
                 evade them. Still, this protection is not bulletproof.
 Rot             This is a very harmful, necromantic ailment. You will
-                lose maximum hit points over time. Only potions, wands
-                and certain abilities restore these. The rotting itself
-                is cured with potions of healing or by waiting it out.
+                lose maximum hit points over time. Only healing potions
+                and wands or and certain abilities restore these. The 
+                rotting itself is cured with potions of healing or by 
+                waiting it out.
 Ins             You are insulated, i.e. immune to electric shocks.
 Touch           Your hands are glowing, and any monster you touch might
                 become confused.
 Blade           You are bonded with your blade, so it strikes more
                 accurately.
 -MR             You are vulnerable to magic.
-
+MR              You are more resistant to magic.
 There are several more enchantment messages for various spells. The
 description of the spell causing the enchantment will explain these.
 
