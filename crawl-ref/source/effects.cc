@@ -2987,7 +2987,6 @@ static void _rot_inventory_food(long time_delta)
     std::vector<char> rotten_items;
 
     int num_chunks         = 0;
-    int num_chunks_rotting = 0;
     int num_chunks_gone    = 0;
     int num_bones          = 0;
     int num_bones_gone     = 0;
@@ -3070,15 +3069,6 @@ static void _rot_inventory_food(long time_delta)
             && (item.special + (time_delta / 20) >= 100))
         {
             rotten_items.push_back(index_to_letter(i));
-        }
-
-        if (item.base_type == OBJ_FOOD && you.inv[i].special <= 10
-            && !item.props.exists(ROTTING_WARNED_KEY))
-        {
-            // In case time_delta >= 220
-            item.props[ROTTING_WARNED_KEY] = true;
-
-            num_chunks_rotting++;
         }
     }
 
@@ -3183,16 +3173,6 @@ static void _rot_inventory_food(long time_delta)
             mprf(MSGCH_ROTTEN_MEAT, "%s", msg.c_str());
         }
         burden_change();
-    }
-
-    num_chunks -= num_chunks_gone;
-    if (num_chunks_rotting > 0)
-    {
-        mprf(MSGCH_ROTTEN_MEAT,
-             "%s of the %schunks of flesh in your inventory are close to "
-             "completely rotting away.",
-             num_chunks_rotting < num_chunks ? "Some" : "All",
-             num_chunks_gone > 0 ? "remaining " : "");
     }
 }
 
