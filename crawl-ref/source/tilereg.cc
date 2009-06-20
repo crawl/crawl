@@ -10,7 +10,6 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
-#include <cmath>
 #include "cio.h"
 #include "debug.h"
 #include "describe.h"
@@ -351,6 +350,9 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
             // use the default/equipment setting.
             if (*mode != TILEP_MODE_LOADING)
             {
+                if (gender == -1)
+                    gender = coinflip();
+
                 if (*mode == TILEP_MODE_DEFAULT)
                     tilep_job_default(you.char_class, gender, dolls[0].parts);
 
@@ -365,7 +367,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
                 if (*cur == count++)
                 {
                     tilep_scan_parts(fbuf, dolls[0].parts);
-                    gender = dolls[0].parts[TILEP_PART_BASE] % 2;
+                    gender = get_gender_from_tile(dolls[0].parts);
                     break;
                 }
             }
@@ -396,12 +398,15 @@ void init_player_doll()
     for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
         default_doll[0].parts[i] = TILEP_SHOW_EQUIP;
 
-    if (gender == -1)
-        gender = coinflip();
+    default_doll[0].parts[TILEP_PART_BASE]
+        = tilep_species_to_base_tile(you.species, you.experience_level);
 
     int mode = TILEP_MODE_LOADING;
     int cur  = 0;
     _load_doll_data("dolls.txt", default_doll, 1, &mode, &cur);
+
+    if (gender == -1)
+        gender = coinflip();
 
     tilep_race_default(you.species, gender, you.experience_level,
                        default_doll[0].parts);
@@ -678,6 +683,8 @@ void TilePlayerEdit()
         }
         else // All other input exits the loop.
             finish = true;
+
+        gender = get_gender_from_tile(player_doll.parts);
 
         mesclr();
 
@@ -2277,7 +2284,6 @@ void MapRegion::pack_buffers()
     m_buf_lines.clear();
 
     for (int x = m_min_gx; x <= m_max_gx; x++)
-    {
         for (int y = m_min_gy; y <= m_max_gy; y++)
         {
             map_feature f = (map_feature)m_buf[x + y * mx];
@@ -2287,7 +2293,6 @@ void MapRegion::pack_buffers()
             float pos_y = y - m_min_gy;
             m_buf_map.add(pos_x, pos_y, pos_x + 1, pos_y + 1, map_colours[c]);
         }
-    }
 
     // Draw window box.
     if (m_win_start.x == -1 && m_win_end.x == -1)

@@ -57,7 +57,10 @@ int tileidx_monster_base(const monsters *mon, bool detected = false);
 int tileidx_monster(const monsters *mon, bool detected = false);
 
 // Player tile related
-void tilep_race_default(int race, int gender, int level, int *parts);
+int get_gender_from_tile(int parts[]);
+int tilep_species_to_base_tile(int sp = you.species,
+                               int level = you.experience_level);
+void tilep_race_default(int sp, int gender, int level, int *parts);
 void tilep_job_default(int job, int gender, int *parts);
 void tilep_calc_flags(const int parts[], int flag[]);
 
