@@ -2215,6 +2215,7 @@ public:
     char        tile_excluded_col;
     char        tile_excl_centre_col;
     char        tile_window_col;
+    // font settings
     std::string tile_font_crt_file;
     int         tile_font_crt_size;
     std::string tile_font_msg_file;
@@ -2225,11 +2226,14 @@ public:
     int         tile_font_lbl_size;
     std::string tile_font_tip_file;
     int         tile_font_tip_size;
-    int         tile_key_repeat_delay;
+    // window settings
     screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;
     int         tile_map_pixels;
+    // display settings
+    int         tile_update_rate;
+    int         tile_key_repeat_delay;
     int         tile_tooltip_ms;
     tag_pref    tile_tag_pref;
 #endif

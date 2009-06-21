@@ -1008,8 +1008,12 @@ struct tag_def
     char type;
 };
 
+// #define DEBUG_TILES_REDRAW
 void DungeonRegion::render()
 {
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering DungeonRegion\n");
+#endif
     if (m_dirty)
     {
         pack_buffers();
@@ -1629,6 +1633,9 @@ void InventoryRegion::render()
     if (m_buf_dngn.empty() && m_buf_main.empty())
         return;
 
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering InventoryRegion\n");
+#endif
     set_transform();
     m_buf_dngn.draw();
     m_buf_main.draw();
@@ -2312,6 +2319,9 @@ void MapRegion::render()
     if (m_min_gx > m_max_gx || m_min_gy > m_max_gy)
         return;
 
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering MapRegion\n");
+#endif
     if (m_dirty)
     {
         pack_buffers();
@@ -2609,8 +2619,9 @@ void TextRegion::clear_to_end_of_line()
 
 void TextRegion::putch(unsigned char ch)
 {
+    // special case: check for '0' char: map to space
     if (ch == 0)
-        ch=32;
+        ch = ' ';
     addstr_aux((char *)&ch, 1);
 }
 
@@ -2681,6 +2692,9 @@ void TextRegion::_setcursortype(int curstype)
 
 void TextRegion::render()
 {
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering TextRegion\n");
+#endif
     if (this == TextRegion::cursor_region && cursor_x > 0 && cursor_y > 0)
     {
         int idx = cursor_x + mx * cursor_y;
@@ -2786,6 +2800,9 @@ struct box_vert
 
 void MessageRegion::render()
 {
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering MessageRegion\n");
+#endif
     int idx = -1;
     unsigned char char_back = 0;
     unsigned char col_back = 0;
@@ -3122,6 +3139,9 @@ void MenuRegion::place_entries()
 
 void MenuRegion::render()
 {
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering MenuRegion\n");
+#endif
     if (m_dirty)
         place_entries();
 
@@ -3271,6 +3291,9 @@ TitleRegion::TitleRegion(int width, int height) :
 
 void TitleRegion::render()
 {
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering TitleRegion\n");
+#endif
     set_transform();
     m_buf.draw();
 }

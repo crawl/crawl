@@ -415,7 +415,7 @@ int line_reader::read_line(bool clear_previous)
     if (history)
         history->go_end();
 
-    for ( ; ; )
+    while (true)
     {
         int ch = getchm(c_getch);
 
@@ -514,8 +514,8 @@ int line_reader::process_key(int ch)
         if (!history)
             break;
 
-        const std::string *text =
-                    ch == CK_UP ? history->prev() : history->next();
+        const std::string *text = (ch == CK_UP) ? history->prev()
+                                                : history->next();
 
         if (text)
         {

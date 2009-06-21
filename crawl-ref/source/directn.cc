@@ -523,8 +523,6 @@ void full_describe_view()
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
-    // FIXME: Need different title for the opposite toggle:
-    // "Visible Monsters/Items (select for more detail, '!' to examine):"
     std::string title = "";
     std::string action = "";
     if (!list_mons.empty())
@@ -1067,6 +1065,7 @@ void direction(dist& moves, targeting_type restricts,
     }
 
     bool show_prompt = true;
+    bool moved_with_keys = true;
 
     while (true)
     {
@@ -1084,7 +1083,6 @@ void direction(dist& moves, targeting_type restricts,
             {
                 terse_describe_square(moves.target);
             }
-
             show_prompt = false;
         }
 
@@ -1097,7 +1095,9 @@ void direction(dist& moves, targeting_type restricts,
         moves.isEndpoint    = false;
         moves.choseRay      = false;
 
-        cursorxy( grid2viewX(moves.target.x), grid2viewY(moves.target.y) );
+        // This probably is called too often for Tiles. (jpeg)
+        if (moved_with_keys)
+            cursorxy(grid2viewX(moves.target.x), grid2viewY(moves.target.y));
 
         command_type key_command;
 
@@ -1118,6 +1118,7 @@ void direction(dist& moves, targeting_type restricts,
         if (key_command == CMD_TARGET_MOUSE_MOVE
             || key_command == CMD_TARGET_MOUSE_SELECT)
         {
+            moved_with_keys = false;
             const coord_def &gc = tiles.get_cursor();
             if (gc != Region::NO_CURSOR)
             {
@@ -1149,6 +1150,8 @@ void direction(dist& moves, targeting_type restricts,
                 key_command = CMD_NO_CMD;
             }
         }
+        else
+            moved_with_keys = true;
 #endif
 
         if (target_unshifted && moves.target == you.pos()
@@ -1205,7 +1208,7 @@ void direction(dist& moves, targeting_type restricts,
 
         switch (key_command)
         {
-            // standard movement
+        // standard movement
         case CMD_TARGET_DOWN_LEFT:
         case CMD_TARGET_DOWN:
         case CMD_TARGET_DOWN_RIGHT:
@@ -1612,7 +1615,7 @@ void direction(dist& moves, targeting_type restricts,
         }
 
         flush_prev_message();
-        if (loop_done == true)
+        if (loop_done)
         {
             // Confirm that the loop is really done. If it is,
             // break out. If not, just continue looping.
@@ -1643,12 +1646,15 @@ void direction(dist& moves, targeting_type restricts,
         }
 
         bool have_moved = false;
-
         if (old_target != moves.target)
         {
             have_moved = true;
-            show_beam  = show_beam && find_ray(you.pos(), moves.target,
-                                               true, ray, 0, true);
+
+            if (show_beam)
+            {
+                show_beam = find_ray(you.pos(), moves.target,
+                                     true, ray, 0, true);
+            }
         }
 
         if (force_redraw)

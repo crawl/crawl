@@ -935,11 +935,12 @@ void game_options::reset_options()
     tile_window_width     = 0;
     tile_window_height    = 0;
     tile_map_pixels       = 0;
-    tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
 
     // delays
+    tile_update_rate      = 1000;
     tile_key_repeat_delay = 200;
     tile_tooltip_ms       = 500;
+    tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
 #endif
 
     // map each colour to itself as default
@@ -3161,6 +3162,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_window_height, 1, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
+    else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else if (key == "tile_tag_pref")
     {
         tile_tag_pref = string2tag_pref(field.c_str());

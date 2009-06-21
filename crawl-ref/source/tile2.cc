@@ -186,11 +186,12 @@ void tile_init_default_flavour()
     tile_default_flv(you.level_type, you.where_are_you, env.tile_default);
 }
 
+// FIXME: Needs to be updated whenever the order of clouds or monsters changes.
 int get_clean_map_idx(int tile_idx)
 {
     int idx = tile_idx & TILE_FLAG_MASK;
     if (idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_PURP_SMOKE
-        || idx >= TILEP_MONS_SHADOW && idx <= TILEP_MONS_WATER_ELEMENTAL
+        || idx >= TILEP_MONS_PANDEMONIUM_DEMON && idx <= TILEP_MONS_TEST_SPAWNER
         || idx >= TILEP_MCACHE_START)
     {
         return 0;
