@@ -743,11 +743,16 @@ int TilesFramework::getch_ck()
 
     int key = 0;
 
+    // Don't update tool tips etc. in targetting mode.
+    const bool mouse_target_mode
+                = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
+                   || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
+
     // When moving the mouse via cursor when targeting update more often.
     // For beams, the beam drawing already handles this, and when not targeting
     // the normal drawing routines handle it.
-    const unsigned int ticks_per_redraw
-        = (mouse_control::current_mode() == MOUSE_MODE_TARGET ? 50 : 100);
+    const unsigned int ticks_per_cursor_redraw = (mouse_target_mode ? 100 : 30);
+    const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 
     unsigned int last_redraw_tick = 0;
 
@@ -757,29 +762,22 @@ int TilesFramework::getch_ck()
     m_tooltip.clear();
     m_region_msg->alt_text().clear();
 
-    if (m_need_redraw)
+    if (need_redraw())
     {
         redraw();
         last_redraw_tick = SDL_GetTicks();
     }
 
-    // Don't update tool tips etc. in targetting mode.
-    const bool mouse_target_mode
-                = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
-                   || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
-
     while (!key)
     {
         unsigned int ticks = 0;
+        last_loc = cur_loc;
 
         if (SDL_WaitEvent(&event))
         {
+            ticks = SDL_GetTicks();
             if (!mouse_target_mode)
             {
-                ticks = SDL_GetTicks();
-
-                last_loc = cur_loc;
-
                 if (event.type != SDL_USEREVENT)
                 {
                     tiles.clear_text_tags(TAG_CELL_DESC);
@@ -798,7 +796,10 @@ int TilesFramework::getch_ck()
                         if (!reg->inside(m_mouse.x, m_mouse.y))
                             continue;
                         if (reg->update_alt_text(m_region_msg->alt_text()))
+                        {
+                            set_need_redraw();
                             break;
+                        }
                     }
                 }
             }
@@ -895,10 +896,15 @@ int TilesFramework::getch_ck()
             }
         }
 
-        if (mouse_target_mode)
+        if (mouse_target_mode
+            || mouse_control::current_mode() == MOUSE_MODE_TARGET)
         {
+            // For some reason not handled in direction().
             if (get_cursor() == you.pos())
+            {
                 redraw();
+                last_redraw_tick = ticks;
+            }
         }
         else
         {
@@ -907,10 +913,8 @@ int TilesFramework::getch_ck()
                                       > (unsigned int)Options.tile_tooltip_ms));
 
             if (timeout)
-                tip_loc = cur_loc;
-
-            if (tip_loc == cur_loc)
             {
+                tip_loc = cur_loc;
                 tiles.clear_text_tags(TAG_CELL_DESC);
                 if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
                 {
@@ -921,23 +925,30 @@ int TilesFramework::getch_ck()
                         if (!reg->inside(m_mouse.x, m_mouse.y))
                             continue;
                         if (reg->update_tip_text(m_tooltip))
+                        {
+                            set_need_redraw();
                             break;
+                        }
                     }
-                    m_need_redraw = true;
                 }
             }
             else
             {
-// Don't redraw the cursor if we're just zooming by.
-#if 0
-                if (last_loc != cur_loc)
-                    m_need_redraw = true;
-#endif
+                // Don't redraw the cursor if we're just zooming by.
+                if (last_loc != cur_loc
+                    && ticks > last_redraw_tick
+                    && ticks - last_redraw_tick > ticks_per_cursor_redraw)
+                {
+                    set_need_redraw();
+                }
+
                 m_tooltip.clear();
                 tip_loc.reset();
             }
 
-            if ((ticks - last_redraw_tick > ticks_per_redraw) || need_redraw())
+            if (need_redraw()
+                || ticks > last_redraw_tick
+                   && ticks - last_redraw_tick > ticks_per_screen_redraw)
             {
                 redraw();
                 last_redraw_tick = ticks;
@@ -945,16 +956,19 @@ int TilesFramework::getch_ck()
         }
     }
 
+    // We got some input, so we'll probably have to redraw something.
+    set_need_redraw();
+
     SDL_SetTimer(0, NULL);
 
     return key;
 }
 
-static const int map_margin = 2;
+static const int map_margin      = 2;
 static const int map_stat_buffer = 4;
-static const int crt_width = 80;
-static const int crt_height = 30;
-static const int margin = 4;
+static const int crt_width       = 80;
+static const int crt_height      = 30;
+static const int margin          = 4;
 
 void TilesFramework::do_layout()
 {
@@ -1158,7 +1172,8 @@ void TilesFramework::clrscr()
     cgotoxy(1,1);
 }
 
-void TilesFramework::message_out(int which_line, int colour, const char *s, int firstcol, bool newline)
+void TilesFramework::message_out(int which_line, int colour, const char *s,
+                                 int firstcol, bool newline)
 {
     if (!firstcol)
         firstcol = Options.delay_message_clear ? 2 : 1;
@@ -1221,8 +1236,14 @@ void TilesFramework::cgotoxy(int x, int y, int region)
     TextRegion::cgotoxy(x, y);
 }
 
+// #define DEBUG_TILES_REDRAW
 void TilesFramework::redraw()
 {
+#ifdef DEBUG_TILES_REDRAW
+//     if (!m_need_redraw)
+//         return;
+    cprintf("\nredrawing tiles");
+#endif
     m_need_redraw = false;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1231,7 +1252,7 @@ void TilesFramework::redraw()
     glLoadIdentity();
     glScalef(m_viewsc.x, m_viewsc.y, 1.0f);
 
-    for (unsigned int i = 0; i < m_layers[m_active_layer].m_regions.size(); i++)
+    for (unsigned int i = 0; i < m_layers[m_active_layer].m_regions.size(); ++i)
         m_layers[m_active_layer].m_regions[i]->render();
 
     // Draw tooltip

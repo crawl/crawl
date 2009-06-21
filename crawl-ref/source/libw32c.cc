@@ -129,9 +129,9 @@ static DWORD crawlColorData[16] =
 
 void writeChar(char c)
 {
-    if ( c == '\t' )
+    if (c == '\t')
     {
-        for ( int i = 0; i < 8; ++i )
+        for (int i = 0; i < 8; ++i)
             writeChar(' ');
         return;
     }
@@ -172,7 +172,7 @@ void writeChar(char c)
 
         if (chy < 0)
             chsx = cx;
-        chy = cy;
+        chy  = cy;
         chex = cx;
 
         // if we're not buffering, flush
@@ -182,7 +182,8 @@ void writeChar(char c)
 
     // update x position
     cx += 1;
-    if (cx >= screensize.X) cx = screensize.X - 1;
+    if (cx >= screensize.X)
+        cx = screensize.X - 1;
 }
 
 void enable_smart_cursor(bool cursor)
