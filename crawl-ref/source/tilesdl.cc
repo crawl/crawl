@@ -786,7 +786,8 @@ int TilesFramework::getch_ck()
 
                 // TODO enne - need to find a better time to decide when
                 // to generate a tip or some way to say "yes, but unchanged".
-                if (tip_loc != cur_loc && ticks > m_last_tick_moved)
+                if (tip_loc != cur_loc && ticks > m_last_tick_moved
+                    && ticks - last_redraw_tick > ticks_per_cursor_redraw)
                 {
                     m_region_msg->alt_text().clear();
                     for (unsigned int i = 0;
@@ -1055,7 +1056,7 @@ void TilesFramework::do_layout()
     {
         m_region_msg->resize_to_fit(m_region_tile->wx,
                                     m_windowsz.y - m_region_msg->sy);
-        int msg_y = std::min(Options.msg_max_height, (int)m_region_msg->my);
+        int msg_y = std::min(Options.msg_max_height, (int) m_region_msg->my);
         m_region_msg->resize(m_region_msg->mx, msg_y);
 
         m_region_msg->ex = m_region_tile->ex;
@@ -1240,8 +1241,6 @@ void TilesFramework::cgotoxy(int x, int y, int region)
 void TilesFramework::redraw()
 {
 #ifdef DEBUG_TILES_REDRAW
-//     if (!m_need_redraw)
-//         return;
     cprintf("\nredrawing tiles");
 #endif
     m_need_redraw = false;
