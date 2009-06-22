@@ -659,3 +659,45 @@ xxWWW..**xxxxxx*....x..xxxxx
   xxWWWWxxxxxxxxxxxx
   WWWWxxx
 ENDMAP
+
+##############################################################################
+# Slaugherhouse (Zaba)
+#
+# Butchers have either knives or hand axes.  They have some chance of opening
+# the doors so animals can go for a walk, that's intended.
+#
+NAME:   slaughterhouse
+DEPTH:  Lair:7-, D:11-18
+FLAGS:  no_monster_gen
+ORIENT: float
+WEIGHT: 5
+MARKER: F = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 4, size_buildup_amnt = 4, \
+                size_buildup_time = 25, cloud_type = "freezing vapour" \
+            }
+MONS:   death yak w:5 / sheep w:3 / yak w:7
+MONS:   generate_awake human ; knife | hand axe
+SUBST:  F=d, 2=2.
+ITEM:   meat ration w:5 / sausage / nothing 
+MAP
+ cccccc       ccccccc
+ cddddcxxxxxxxxcddddc
+ cdFdd+..+..+..+ddFdc
+ cddddcxxx..xxxcddddc
+ cccccc..x..x..cccccc
+.........x2.x.........
+.nnnnnn..x..x..nnnnnn.
+.n1111nxxx..xxxn1111n.
+.n1111+..+..+..+1111n.
+.n1111nxxx..xxxn1111n.
+.nnnnnn..x..x..nnnnnn.
+.........x.2x.........
+ xxxxxx..x..x..xxxxxx
+ x...2xxxx..xxxx2...x
+ x..2.+..+..+..+.2..x
+ x...2xxxx..xxxx2...x
+ xxxxxx  x..x  xxxxxx
+         x++x
+          @.
+ENDMAP
