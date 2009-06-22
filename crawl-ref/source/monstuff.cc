@@ -1443,11 +1443,9 @@ int monster_die(monsters *monster, killer_type killer,
             {
                 bool notice = false;
 
-                monsters *killer_mon;
+                monsters *killer_mon = &menv[killer_index];
                 if (!anon)
                 {
-                    killer_mon = &menv[killer_index];
-
                     // If the killer is already dead treat it like an
                     // anonymous monster.
                     if (killer_mon->type == -1)
