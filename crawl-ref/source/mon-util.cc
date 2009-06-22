@@ -8284,9 +8284,9 @@ mon_enchant mon_enchant::operator + (const mon_enchant &other) const
 
 killer_type mon_enchant::killer() const
 {
-    return (who == KC_YOU?       KILL_YOU :
-            who == KC_FRIENDLY?  KILL_MON :
-            KILL_MISC);
+    return (who == KC_YOU      ? KILL_YOU :
+            who == KC_FRIENDLY ? KILL_MON
+                               : KILL_MISC);
 }
 
 int mon_enchant::kill_agent() const
