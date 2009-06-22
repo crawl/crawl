@@ -1632,11 +1632,18 @@ void _load_ghost(void)
 
     fclose(gfile);
 
+    // FIXME: This message will have to be shortened again as trunk reaches
+    //        0.6 state and players using old bones becomes increasingly less
+    //        likely.
     if (!debug_check_ghosts())
     {
-        mprf(MSGCH_DIAGNOSTICS, "Refusing to load buggy ghost from file \"%s\"! "
-                                "Please submit a bug report.",
+        mprf(MSGCH_DIAGNOSTICS,
+             "Refusing to load buggy ghost from file \"%s\"! "
+             "Note that all bones files from 0.4.x are invalid, so you should "
+             "delete them. If this is a newer ghost, please submit a bug "
+             "report.",
              cha_fil.c_str());
+
         return;
     }
 
@@ -1861,6 +1868,17 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major, char &mino
     {
         *reason = make_stringf("Major version mismatch: %d (want %d).",
                                major, TAG_MAJOR_VERSION);
+        return (false);
+    }
+
+    // NOTE: This is a hacky replacement for what should have been caught
+    // by MAJOR_VERSION above. Once the next major version update happens
+    // (preferably when saves break with 0.5 -> 0.6) this check will need
+    // to be removed.
+    if (minor < TAG_MINOR_RELIGION)
+    {
+        *reason = "Sorry, but 0.4.x save and bones files are incompatible "
+                  "with 0.5!";
         return (false);
     }
 
