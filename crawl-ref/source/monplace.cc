@@ -2443,12 +2443,15 @@ int create_monster(mgen_data mg, bool fail_msg)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
         mg.pos = find_newmons_square(montype, mg.pos);
+
         // Gods other than Xom will try to avoid placing their monsters
         // directly in harm's way.
         if (mg.god != GOD_NO_GOD && mg.god != GOD_XOM)
         {
             monsters dummy;
-            dummy.type         = mg.cls;
+            // If the type isn't known yet assume no resists or anything.
+            dummy.type         = (mg.cls == RANDOM_MONSTER) ? MONS_HUMAN
+                                                            : mg.cls;
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
 
