@@ -1696,7 +1696,7 @@ static bool _xom_is_good(int sever, int tension)
         // Take a note.
         static char tele_buf[80];
         snprintf(tele_buf, sizeof(tele_buf),
-                 "XOM: %d-stop teleportation journey%s", count,
+                 "%d-stop teleportation journey%s", count,
 #ifdef NOTE_DEBUG_XOM
                  player_in_a_dangerous_place() ? " (dangerous)" : // see below
 #endif
