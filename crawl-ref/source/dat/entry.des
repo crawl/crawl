@@ -2963,7 +2963,7 @@ ENDMAP
 # Just another altar on DL:1
 #
 NAME:    david_entry_057_a_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 MONS:    gnoll
@@ -2986,7 +2986,7 @@ A.xcccccccccccx
 ENDMAP
 
 NAME:    david_entry_057_b_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
@@ -3009,7 +3009,7 @@ MAP
 ENDMAP
 
 NAME:    david_entry_057_c_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
@@ -3032,7 +3032,7 @@ MAP
 ENDMAP
 
 NAME:    david_entry_057_d_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
@@ -3517,7 +3517,7 @@ ENDMAP
 # will then bring Stealth and Evasion as well.
 #
 NAME:    david_entry_071
-TAGS:    entry no_rotate
+TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
 MONS:    goblin ; stone
 MONS:    hobgoblin ; stone
@@ -4361,7 +4361,7 @@ ENDMAP
 ##############################################################
 # Pyramid
 NAME:    onia_ninara_002_pyramid
-TAGS:    entry no_rotate
+TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
 SHUFFLE: xxxcvlw
 MAP
