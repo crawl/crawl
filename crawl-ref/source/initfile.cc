@@ -3158,8 +3158,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
-    else INT_OPTION(tile_window_width, 1, INT_MAX);
-    else INT_OPTION(tile_window_height, 1, INT_MAX);
+    else INT_OPTION(tile_window_width, 0, INT_MAX);
+    else INT_OPTION(tile_window_height, 0, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);

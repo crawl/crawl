@@ -225,7 +225,7 @@ bool TilesFramework::initialise()
 
     {
         const SDL_VideoInfo* video_info = SDL_GetVideoInfo();
-        m_screen_width = video_info->current_w;
+        m_screen_width  = video_info->current_w;
         m_screen_height = video_info->current_h;
     }
 
@@ -254,8 +254,8 @@ bool TilesFramework::initialise()
 
     if (Options.tile_key_repeat_delay > 0)
     {
-        int delay    = Options.tile_key_repeat_delay;
-        int interval = SDL_DEFAULT_REPEAT_INTERVAL;
+        const int delay    = Options.tile_key_repeat_delay;
+        const int interval = SDL_DEFAULT_REPEAT_INTERVAL;
         if (SDL_EnableKeyRepeat(delay, interval) != 0)
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
     }
@@ -979,7 +979,9 @@ void TilesFramework::do_layout()
 
     crawl_view.viewsz.x = Options.view_max_width;
     crawl_view.viewsz.y = Options.view_max_height;
-    crawl_view.msgsz.x = crt_width;
+    crawl_view.msgsz.x  = crt_width;
+    // What *does* msgsz.y get set to? (jpeg)
+    crawl_view.msgsz.y  = crt_height - crawl_view.viewsz.y;
 
     // Initial sizes.
     m_region_tile->dx = m_viewsc.x;

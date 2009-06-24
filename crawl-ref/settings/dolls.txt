@@ -1,5 +1,9 @@
 MODE=EQUIP
 NUM=00
+#Legend:
+#***:equipment/123:index/000:none
+#Shadow/Gender/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet
+#--:Sex:Clk:Bts:Leg:Bdy:Glv:Wpn:Shd:Hai:Brd:Hlm
 001:001:***:011:034:092:***:023:034:017:000:063
 001:001:***:009:002:040:016:077:***:023:009:040
 001:000:***:014:017:046:020:048:***:010:000:041

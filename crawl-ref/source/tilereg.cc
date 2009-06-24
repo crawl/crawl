@@ -364,6 +364,9 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
             int count = 0;
             while (fscanf(fp, "%s", fbuf) != EOF)
             {
+                if (fbuf[0] == '#') // Skip comment lines.
+                    continue;
+
                 if (*cur == count++)
                 {
                     tilep_scan_parts(fbuf, dolls[0].parts);
@@ -379,10 +382,12 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
         }
         else // Load up to max dolls from file.
         {
-            for (int count = 0; count < max && fscanf(fp, "%s", fbuf) != EOF;
-                 ++count)
+            for (int count = 0; count < max && fscanf(fp, "%s", fbuf) != EOF; )
             {
-                tilep_scan_parts(fbuf, dolls[count].parts);
+                if (fbuf[0] == '#') // Skip comment lines.
+                    continue;
+
+                tilep_scan_parts(fbuf, dolls[count++].parts);
             }
         }
 
@@ -708,6 +713,12 @@ void TilePlayerEdit()
                                                          : "DEFAULT");
 
                 fprintf(fp, "NUM=%02d\n", num == -1 ? 0 : num);
+
+                // Print some explanatory comments. May contain no spaces!
+                fprintf(fp, "#Legend:\n");
+                fprintf(fp, "#***:equipment/123:index/000:none\n");
+                fprintf(fp, "#Shadow/Gender/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet\n");
+                fprintf(fp, "#--:Sex:Clk:Bts:Leg:Bdy:Glv:Wpn:Shd:Hai:Brd:Hlm\n");
 
                 char fbuf[80];
                 for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
