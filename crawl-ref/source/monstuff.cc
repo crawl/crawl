@@ -2095,7 +2095,12 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                                               ENCH_SHAPESHIFTER);
     mon_enchant summon    = monster->get_ench(ENCH_SUMMON);
     mon_enchant tp        = monster->get_ench(ENCH_TP);
+
     monster_spells spl    = monster->spells;
+    const bool need_save_spells
+            = (!name.empty()
+               && (!mons_class_flag(monster->type, M_SPELLCASTER)
+                   || mons_class_flag(monster->type, M_ACTUAL_SPELLS)));
 
     // deal with mons_sec
     monster->type         = targetc;
@@ -2109,9 +2114,17 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->flags = flags;
     monster->god   = god;
 
-    // Keep spells for named monsters.
-    if (!name.empty())
+    // Keep spells for named monsters, but don't override innate ones
+    // for dragons and the like. This means that Sigmund polymorphed
+    // into a goblin will still cast spells, but if he ends up as a
+    // swamp drake he'll breathe fumes and, if polymorphed further,
+    // won't remember his spells anymore.
+    if (need_save_spells
+        && (!mons_class_flag(monster->type, M_SPELLCASTER)
+            || mons_class_flag(monster->type, M_ACTUAL_SPELLS)))
+    {
         monster->spells = spl;
+    }
 
     monster->add_ench(abj);
     monster->add_ench(charm);
@@ -6345,6 +6358,15 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
     return (msp[5] == spell);
 }
 
+static bool _mon_has_spells(monsters *monster)
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (monster->spells[i] != SPELL_NO_SPELL)
+            return (true);
+
+    return (false);
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -6359,6 +6381,15 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
 
+    // A polymorphed unique will retain his or her spells even in another
+    // form. If the new form has the SPELLCASTER flag, casting happens as
+    // normally, otherwise we need to enforce it, but it only happens with
+    // a 50% chance.
+    const bool spellcasting_poly
+            = !mons_class_flag(monster->type, M_SPELLCASTER)
+              && mons_class_flag(monster->type, M_SPEAKS)
+              && _mon_has_spells(monster);
+
     if (is_sanctuary(monster->pos()) && !mons_wont_attack(monster))
         return (false);
 
@@ -6366,6 +6397,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     if (mons_is_sleeping(monster)
         || mons_is_submerged(monster)
         || !mons_class_flag(monster->type, M_SPELLCASTER)
+           && !spellcasting_poly
            && draco_breath == SPELL_NO_SPELL)
     {
         return (false);
@@ -6381,7 +6413,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     god_type god = (priest || !(priest || wizard)) ? monster->god : GOD_NO_GOD;
 
     if (silenced(monster->pos())
-        && (priest || wizard
+        && (priest || wizard || spellcasting_poly
             || mons_class_flag(monster->type, M_SPELL_NO_SILENT)))
     {
         return (false);
@@ -6405,6 +6437,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     {
         return (false);
     }
+    else if (spellcasting_poly && coinflip()) // 50% chance of not casting
+        return (false);
     else
     {
         spell_type spell_cast = SPELL_NO_SPELL;

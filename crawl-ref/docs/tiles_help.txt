@@ -9,6 +9,36 @@ It has been tested successfully with cards as old as the i865.  Unfortunately,
 it has been known to be slow on the i810 and there is little to be done in that
 case but to run the console version instead or switch to a different machine.
 
+You can try tweaking a number of options to see whether performance improves:
+
+tile_title_screen = false
+    For weak drivers, the title screen can take a long time to load. If this
+    bothers you, you can easily deactivate it.
+
+travel_delay = -1
+    This setting suppresses redrawing until travelling is finished or
+    interrupted.
+
+tile_update_rate = 1000
+    By default, the screen gets redrawn at least every 1000 milliseconds,
+    more often if you take actions that change the display. You could try
+    cranking up this value, though this may lead to updating taking too long.
+
+tile_tooltip_ms = 0
+    Deactivating the tooltips means there's less stuff to draw every time.
+
+clear_map = false
+    Not having to redraw remembered monsters outside your line of sight
+    takes some load off the redrawing routines.
+
+tile_window_width   = 1024
+tile_window_height  = 768
+    The larger the map area the more cells there are to redraw each turn.
+    If you've got a large display showing way more than the necessary 17x17
+    grids of the map, you could try specifying a lower resolution.
+
+
+
                   Tiles mouseclick item interaction
 
 If you're playing with Tiles compiled, you'll find several shortcuts to
