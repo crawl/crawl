@@ -10,9 +10,12 @@
 ### Entry vaults to ziggurats##########################################
 #
 # Chances for Ziggurat portals are as follows:
-# among D:3-20   -- 0.5%
+# among D:3-20   -- 1%
 # among D:21-27  -- 5%
 # in a Pan level -- 8%
+#
+# Please use a priority of 51 for all Ziggurat entry vaults.
+
 
 # Dummy for the trowel card
 NAME:   enter_the_ziggurat
@@ -26,8 +29,8 @@ ENDMAP
 default-depth: D:21-27
 
 NAME:   enter_ziggurat_a
-CHANCE: 5%
-TAGS:   chance_zig
+CHANCE: 51 : 5%
+TAGS:   chance_zig extra allow_dup luniq_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -45,8 +48,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-CHANCE: 5%
-TAGS:    chance_zig no_pool_fixup
+CHANCE:  51 : 5%
+TAGS:    chance_zig extra allow_dup luniq_zig no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
@@ -67,8 +70,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
-CHANCE:  5%
-TAGS:    chance_zig
+CHANCE:  51 : 5%
+TAGS:    chance_zig extra allow_dup luniq_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -89,8 +92,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_d
-CHANCE:  5%
-TAGS:    chance_zig
+CHANCE:  51 : 5%
+TAGS:    chance_zig extra allow_dup luniq_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -114,8 +117,8 @@ ENDMAP
 default-depth: D:3-20
 
 NAME:   enter_shallow_ziggurat_a
-CHANCE: 50
-TAGS:   chance_shallow_zig
+CHANCE: 51 : 1%
+TAGS:   chance_shallow_zig extra luniq_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -133,8 +136,8 @@ MAP
 ENDMAP
 
 NAME:    enter_shallow_ziggurat_c
-CHANCE:  50
-TAGS:    chance_shallow_zig
+CHANCE:  51 : 1%
+TAGS:    chance_shallow_zig extra luniq_zig
 MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
@@ -150,8 +153,8 @@ MAP
 ENDMAP
 
 NAME:    enter_shallow_ziggurat_d
-CHANCE:  50
-TAGS:    chance_shallow_zig
+CHANCE:  51 : 1%
+TAGS:    chance_shallow_zig extra luniq_zig
 MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
@@ -170,8 +173,8 @@ ENDMAP
 default-depth: Pan
 
 NAME:   enter_ziggurat_pan_a
-CHANCE: 8%
-TAGS:   chance_pan_zig
+CHANCE: 51 : 8%
+TAGS:   chance_pan_zig extra allow_dup luniq_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -189,8 +192,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_pan_b
-CHANCE:  8%
-TAGS:    chance_pan_zig no_pool_fixup
+CHANCE:  51 : 8%
+TAGS:    chance_pan_zig extra allow_dup luniq_zig no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
@@ -211,8 +214,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_pan_c
-CHANCE:  8%
-TAGS:    chance_pan_zig
+CHANCE:  51 : 8%
+TAGS:    chance_pan_zig extra allow_dup luniq_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -233,8 +236,8 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_pan_d
-CHANCE:  8%
-TAGS:    chance_pan_zig
+CHANCE:  51 : 8%
+TAGS:    chance_pan_zig extra allow_dup luniq_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -382,4 +385,3 @@ NAME: ziggurat1
 : ziggurat_level(_G)
 MAP
 ENDMAP
-

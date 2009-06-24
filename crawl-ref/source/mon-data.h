@@ -691,7 +691,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GNOLL, 'g', YELLOW, "gnoll",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     750, 10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

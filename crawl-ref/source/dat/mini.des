@@ -34,6 +34,7 @@ default-depth: D:8-27
 
 ##############################################################################
 # Minivault balancer
+#
 NAME: mini_dummy
 DEPTH: 1-50, !D:8-27
 TAGS: dummy
@@ -46,8 +47,10 @@ ENDMAP
 # Small areas with translucent rock (glass) columns which you can duck
 # behind, but still see the monster you're ducking from (and they can
 # still see you)
-NAME:  glass_columns_a
-DEPTH: D, Elf, Crypt
+#
+NAME:   glass_columns_a
+DEPTH:  D, Elf, Crypt
+TAGS:   extra luniq_mini
 WEIGHT: 5
 MAP
 .....
@@ -57,8 +60,9 @@ MAP
 .....
 ENDMAP
 
-NAME:  glass_columns_b
-DEPTH: D, Elf, Crypt
+NAME:   glass_columns_b
+DEPTH:  D, Elf, Crypt
+TAGS:   extra luniq_mini
 WEIGHT: 3
 MAP
 .......
@@ -70,8 +74,9 @@ MAP
 .......
 ENDMAP
 
-NAME:  glass_columns_c
-DEPTH: D, Elf, Crypt
+NAME:   glass_columns_c
+DEPTH:  D, Elf, Crypt
+TAGS:   extra luniq_mini
 WEIGHT: 2
 MAP
 .........
@@ -87,8 +92,10 @@ ENDMAP
 
 ##########################################################
 # A feature encased in glass, for flavour.
+#
 NAME:  feat_on_display
 DEPTH: D, Elf, Crypt, Vault
+TAGS:  extra luniq_mini
 SUBST: ? = TUl
 TAGS:  no_monster_gen no_item_gen
 MAP
@@ -101,8 +108,10 @@ ENDMAP
 
 #######################################################################
 # An item encased in glass.  If the player wants it, it can be dug out.
+#
 NAME:   item_on_display_a
 DEPTH:  D, Elf, Crypt, Vault
+TAGS:   extra luniq_mini
 WEIGHT: 9
 SUBST:  % = %%%*
 TAGS:   no_monster_gen no_item_gen
@@ -116,8 +125,10 @@ ENDMAP
 
 #####################################################################
 # A good item encased in transparent stone.
+#
 NAME:   item_on_display_b
 DEPTH:  D, Elf, Crypt, Vault
+TAGS:   extra luniq_mini
 WEIGHT: 1
 SUBST:  * = ***|
 TAGS:   no_monster_gen no_item_gen
@@ -129,12 +140,68 @@ MAP
 .....
 ENDMAP
 
+#####################################################################
+# Identical in feature and content to item_on_display_b, only that it
+# contains within an unseen horror, by due.
+#
+NAME:   unseen_surprise_small
+WEIGHT: 1
+TAGS:   no_wall_fixup extra luniq_mini
+DEPTH:  D:8-27, Elf, Crypt, Vault
+KMONS:  a = generate_awake unseen_horror
+KITEM:  a = | / *
+MAP
+.....
+.mmm.
+.mam.
+.mmm.
+.....
+ENDMAP
+
+################################################################
+# Unseen surprise! by due (and dpeg).
+#
+NAME:   due_unseen_surprise
+DEPTH:  D, Elf, Crypt, Vault
+TAGS:   no_wall_fixup extra luniq_mini
+: if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
+SUBST:  a = %
+SUBST:  b = %**
+: else
+KFEAT:  a = .
+KFEAT:  b = .
+# Two versions for loot.
+: if crawl.coinflip() == 0 then
+KITEM: a = * / %
+KITEM: b = *
+: else
+KITEM: a = % / | w:1
+KITEM: b = |
+: end
+# Expected value of unseen horrors depends on depth:
+: local wt = (you.absdepth()-10) * (you.absdepth()-10)
+: kmons("a = generate_awake unseen horror w:" .. wt .. " / nothing w:40")
+KMONS: b = generate_awake unseen horror
+: end
+MAP
+........@
+.........
+..mmmmm..
+..maaam..
+..mabam..
+..maaam..
+..mmmmm..
+.........
+.........
+ENDMAP
+
 ##############################################################################
 # Sigmund's army
-# Sigmund has been educating the suppressed masses in guerrilla warfare.
+# Sigmund has been educating the oppressed masses in guerrilla warfare.
 #
 NAME:    sigmund_army
 DEPTH:   D:2-6
+TAGS:    extra luniq_mini
 MONS:    gnoll;scythe.robe, hobgoblin;scythe.robe, orc;scythe.robe
 SUBST:   n = 1:20 n:5
 KMONS:   n = Sigmund, gnoll;scythe.robe / hobgoblin;scythe.robe / orc;scythe.robe
@@ -155,7 +222,7 @@ ENDMAP
 #
 NAME:    jars
 DEPTH:   D:4-14
-TAGS:    mini_float
+TAGS:    mini_float extra luniq_mini
 SHUFFLE: 11%
 : if you.absdepth() >7 then
 MONS:    killer bee / nothing w:5
@@ -176,7 +243,7 @@ ENDMAP
 #
 NAME:  fungi_pond__lemuel
 DEPTH: D:8-20, Lair
-TAGS:  allow_dup
+TAGS:  allow_dup extra luniq_mini
 MONS:  fungus, wandering mushroom
 SUBST: 1 = . 1 2:4
 SUBST: ? : w..
@@ -363,6 +430,7 @@ ENDMAP
 #############################################################################
 # Oklob assault
 # statistically, three oklobs
+#
 NAME:    oklob_1
 DEPTH:   D:16-27, Lair:4-
 TAGS:    allow_dup
@@ -403,7 +471,7 @@ xxxxxxxxxx
 ENDMAP
 
 ###################################
-#don't you wish you knew apportation?
+# Don't you wish you knew apportation?
 #
 NAME: baited_tele_trap
 DEPTH: !Temple, !Slime
@@ -417,6 +485,7 @@ ENDMAP
 # Closed beehive
 #
 # Should work without explicit floor margin (dp)
+#
 NAME:  hive_lemuel
 DEPTH: D:9-27,Hive:*
 MONS:  killer bee, yellow wasp, red wasp, spiny worm
@@ -606,7 +675,7 @@ ENDMAP
 
 ##############################################################################
 # Greed's colour
-
+#
 NAME:    david_greed
 WEIGHT:  4
 DEPTH:   D:10-26, Vault, Elf
@@ -631,7 +700,7 @@ ENDMAP
 ##############################################################################
 
 NAME: minivault_1
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 ..xxxx=xxx..
@@ -650,7 +719,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_4
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 ....xwxx....
@@ -669,7 +738,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_5
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .x.xxxxxxxx.
@@ -751,11 +820,12 @@ ENDMAP
 # The marker affects find_connected_range() so that each door opens and
 # closes separately rather than all of them joining together into a huge
 # gate that opens all at once.
-NAME: minivault_9
-TAGS: allow_dup
-DEPTH: D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
+#
+NAME:   minivault_9
+TAGS:   allow_dup
+DEPTH:  D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST: X = =
+SUBST:  X = =
 MAP
 XXXXXXXXXX
 XxXXXXXXXX
@@ -772,7 +842,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_10
-TAGS: mini_float
+TAGS: mini_float extra luniq_mini
 MAP
 xxxx  xxxx
 x**x  x**x
@@ -789,7 +859,8 @@ ENDMAP
 ###################################
 # Multicoloured onion
 #
-NAME: minivault_11
+NAME:    minivault_11
+TAGS:    extra luniq_mini
 SHUFFLE: bcva
 MAP
 ............
@@ -857,7 +928,7 @@ ENDMAP
 # Water cross
 #
 NAME: minivault_14
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .wwwww.wwww.
@@ -877,6 +948,7 @@ ENDMAP
 # Lava pond
 #
 NAME:  minivault_15
+TAGS:  extra luniq_mini
 KMONS: 1 = silver statue / ice statue
 KFEAT: 1 = <
 MAP
@@ -894,7 +966,7 @@ ENDMAP
 ###################################
 
 NAME:    minivault_16
-TAGS:    allow_dup
+TAGS:    allow_dup extra luniq_mini
 WEIGHT:  40
 # as this replaces the former statue only minivaults
 SHUFFLE: G111
@@ -916,7 +988,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_19
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .xx......xx.
@@ -935,7 +1007,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_20
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .xxxx..xxxx.
@@ -954,7 +1026,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_21
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .~xxxxxxxx~.
@@ -973,7 +1045,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_22
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 SUBST: $ : $ *:5
 MAP
 ............
@@ -993,7 +1065,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_23
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 x.x.x.x.x.x.
 .x.x.x.x.x.x
@@ -1012,7 +1084,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_24
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 ....xxxx....
@@ -1031,7 +1103,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_25
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 SHUFFLE: XY
 SUBST: X=x, Y=+
 MAP
@@ -1052,7 +1124,7 @@ ENDMAP
 ###################################
 
 NAME:    minivault_25_ag
-TAGS:    allow_dup
+TAGS:    allow_dup extra luniq_mini
 SHUFFLE: XY, ABCDE
 SUBST:   X=x, Y=+
 SUBST:   A=?, B=%%%*, C=T, D=0009, E=89
@@ -1074,7 +1146,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_26
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 c..........c
 .c...cc...c.
@@ -1093,7 +1165,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_27
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .x.xxxxxxxx.
@@ -1179,7 +1251,7 @@ ENDMAP
 #
 NAME:  solitary_fountain
 DEPTH: D, Elf, Vault
-TAGS:  allow_dup
+TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
 MAP
 .....
@@ -1193,7 +1265,7 @@ ENDMAP
 # Fountainhead
 #
 NAME:  fountainhead
-TAGS:  allow_dup
+TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
 MAP
 ..............
@@ -1296,11 +1368,13 @@ ENDMAP
 ##############################################################################
 # Supply closet (Lemuel)
 #
-NAME:  supply_closet
-DEPTH: D:1-9
-TAGS:  no_monster_gen allow_dup
-ITEM:  potion of water w:20 / bread ration / meat ration / arrow / bolt / spear / any potion w:5
-SUBST: ? = +=
+NAME:   supply_closet
+DEPTH:  D:1-9
+TAGS:   no_monster_gen allow_dup extra luniq_mini
+ITEM:   potion of water w:20 / bread ration / meat ration / arrow /\
+        bolt / spear / any potion w:5
+NSUBST: x = 1:= / *:x
+SUBST:  = = +===
 MAP
 ......
 .x?xx.
@@ -1314,6 +1388,7 @@ ENDMAP
 # Columned hall (Lemuel)
 #
 NAME: columns_hall
+TAGS: extra luniq_mini
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 @...........................@
@@ -1474,10 +1549,10 @@ ENDMAP
 ##############################
 # Secret library minivault
 #
-NAME:  library
-DEPTH: 1-27
-TAGS:  mini_float allow_dup
-ITEM:  any book w:20 / any scroll / nothing
+NAME:   library
+DEPTH:  1-27
+TAGS:   mini_float allow_dup extra luniq_mini
+ITEM:   any book w:20 / any scroll / nothing
 MAP
 x=xx
 xddx
@@ -1487,9 +1562,9 @@ ENDMAP
 
 #############################################################################
 # Small statue alley (Eino)
-
+#
 NAME:   small_statue_alley_a
-TAGS:   uniq_statue_alley
+TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  D:10-20
 WEIGHT: 7
 MAP
@@ -1502,7 +1577,7 @@ xcccccxxx
 ENDMAP
 
 NAME:   small_statue_alley_b
-TAGS:   uniq_statue_alley
+TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  D:3-10
 WEIGHT: 2
 MAP
@@ -1515,7 +1590,7 @@ xcccccxxx
 ENDMAP
 
 NAME:   small_statue_alley_c
-TAGS:   uniq_statue_alley
+TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  Orc
 WEIGHT: 1
 MAP
@@ -1529,9 +1604,10 @@ ENDMAP
 
 #############################################################################
 # Doghouse (Eino)
-
+#
 NAME:    doghouse
 DEPTH:   D:4-8
+TAGS:    extra luniq_mini
 SHUFFLE: 1?T
 SUBST:   T : T V:2
 SUBST:   ? : 1:2 .
@@ -1549,10 +1625,10 @@ ENDMAP
 
 #############################################################################
 # Small intersection with statues (Eino)
-
+#
 NAME:    small_statue_intersection
 DEPTH:   D:2-26, Elf, Crypt
-TAGS:    mini_float allow_dup no_hmirror no_vmirror
+TAGS:    mini_float allow_dup no_hmirror no_vmirror extra luniq_mini
 MAP
 xx.xx
 xG.Gx
@@ -1564,9 +1640,9 @@ ENDMAP
 #############################################################################
 # Small chambers for nice items (Eino)
 # not necessarily versions of the same vault
-
+#
 NAME:   small_chamber_a
-TAGS:   mini_float allow_dup
+TAGS:   mini_float allow_dup extra luniq_mini
 DEPTH:  D:4-27
 MAP
  xxxxx
@@ -1578,7 +1654,7 @@ xx...xx
 ENDMAP
 
 NAME:   small_chamber_b
-TAGS:   mini_float
+TAGS:   mini_float extra luniq_mini
 DEPTH:  D:8-27, Elf, Vault, Crypt
 MAP
 xxxxxxx
@@ -1592,7 +1668,7 @@ xxT.Txx
 ENDMAP
 
 NAME:   tiny_chamber_a
-TAGS:   mini_float allow_dup
+TAGS:   mini_float allow_dup extra luniq_mini
 DEPTH:  D:2-27, Elf, Vault, Crypt
 MAP
 xxxxx
@@ -1602,16 +1678,17 @@ x...x
 xxxxx
 ENDMAP
 
-
 #######################################
 # There's a sword stuck inside a stone. Some knights are milling around
 # wondering how to get it out. If you had both Shatter and Apportation,
 # you could become the monarch! Or not..... (by Shiori)
+#
 NAME:   sword_in_stone
 TAGS:   mini_float patrolling
 DEPTH:  5-26, !Lair, !Orc, !Tomb
 NSUBST: k = 4=k / *= .:19 k:1
-KITEM:  S = good_item long sword / good_item great sword / w:1 good_item katana
+KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
+            good_item triple sword / good_item double sword 
 KFEAT:  S = teleport trap
 NSUBST: n = n/cbn
 : if you.absdepth() < 10 then
@@ -1678,7 +1755,6 @@ MAP
 ...........
 ENDMAP
 
-
 ################################################################################
 # Some earlyish demon minivaults by Eino. 
 # The difficulty of most low-tier demons is severely inflated by the time the
@@ -1686,7 +1762,7 @@ ENDMAP
 # challenging and flavourful.
 
 ### Red devils (4) can use weapons and armour.
-
+#
 NAME:    armed_red_devil_minivault
 TAGS:    patrolling mini_float
 KMASK:   l = no_monster_gen
@@ -1766,4 +1842,573 @@ xxxxxx.xxxxxx
 xxxxxx..xxxxx
 xxxxxxx.....@
 xxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+# Statue in the mist (Lemuel)
+#
+NAME:    statue_in_the_mist
+TAGS:    extra luniq_mini
+MONS:    orange crystal statue / silver statue / ice statue
+DEPTH:   9-
+MARKER:  G = lua:fog_machine { cloud_type= "grey smoke", \
+             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
+             size = 3, walk_dist = 2, spread_rate= 25 }
+SHUFFLE: G111
+MAP
+G
+ENDMAP
+
+#######################################
+# Flamethrowers (Lemuel)
+#
+# No item generation for the sake of autoexplore.
+#
+NAME:   flamethrower_hall
+DEPTH:  D:9-27, Vault, Elf, Geh
+TAGS:   layout_rooms layout_city no_item_gen
+MARKER: * = lua:fog_machine { cloud_type="flame", \
+            pow_min = 25, pow_max = 50, delay = 150, \
+            size = 2, walk_dist = 0, spread_rate= 40 }
+COLOUR: * = red
+SUBST:  * = .
+SUBST:  $ : $$c
+MAP
+ccccccccccccccccccccccc
+ccxxx*xxxxx*xxxxx*xxxxc
+Gcxxx.xxxxx.xxxxx.xxxxc
+ccccc.ccccc.ccccc.ccccc
+c.................+$$$c
++.................+$$$c
+c.................+$$$c
+cc.ccccc.ccccc.cccccccc
+Gc.xxxxx.xxxxx.xxxxxxxc
+cc*xxxxx*xxxxx*xxxxxxxc
+ccccccccccccccccccccccc
+ENDMAP
+
+#####################################################
+# A number of flamethrower vaults (Lemuel)
+#
+# This next bunch are "flamethrowers" -- flame appears at the end of the
+# little corridor and a couple turns later spreads out of it. If you see 
+# fire, get clear!
+# Again, these rely on statues to halt autoexplore.
+# Yes, you can cook monsters with it, but (1) you may get burned yourself
+# and (2) no XP if it kills them.
+#
+NAME:   flamethrower_3
+DEPTH:  D:12-27, Vault, Elf, Geh
+TAGS:   allow_dup
+MARKER: * = lua:fog_machine { cloud_type="flame", \
+            pow_min = 20, pow_max = 40, delay = 150, \
+            size = 1, walk_dist = 0, spread_rate= 75 }
+COLOUR: * = red
+SUBST:  * = .
+MAP
+.....
+cc.cc
+cc.cc
+cc.cc
+ c*c
+ ccc
+  c
+ENDMAP
+
+NAME:   flamethrower_2
+DEPTH:  D:5-27, Vault, Elf, Geh
+MARKER: * = lua:fog_machine { cloud_type="flame", \
+            pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
+            size = 1, walk_dist = 0, spread_rate= 75 }
+COLOUR: n = red
+SUBST:  * = .
+MAP
+...........
+.xxxx.xxxx.
+.xxxx.xxxx.
+.xxxx*xxxx.
+.xxxnnnxxx.
+...*nGn*...
+.xxxnnnxxx.
+.xxxx*xxxx.
+.xxxx.xxxx.
+.xxxx.xxxx.
+...........
+ENDMAP
+
+NAME:   flamethrower_1
+DEPTH:  D:5-27, Vault, Elf, Geh
+TAGS:   layout_rooms layout_city
+MARKER: * = lua:fog_machine { cloud_type="flame", \
+            pow_min = 20, pow_max = 40, delay = 150, \
+            size = 1, walk_dist = 0, spread_rate= 75 }
+COLOUR: * = red
+SUBST:  * = .
+MAP
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
+xxxxxxGxxxxxx
+.............
+@...........@
+.............
+xxxxxx.xxxxxx
+xxxxxx.xxxxxx
+xxxxxx.xxxxxx
+xxxxxx*xxxxxx
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
+ENDMAP
+
+##############################################
+# Old faithful (Lemuel)
+#
+# Little wisps of steam around the lava, and then occasionally a big
+# eruption. No statue needed here - the steam does very little damage.
+#
+NAME:   old_faithful
+DEPTH:  D, Lair, Geh
+TAGS:   uniq_geyser no_monster_gen
+MONS:   nothing,nothing
+MARKER: 1 = lua:fog_machine { cloud_type="steam", \
+            pow_min = 2, pow_max = 5, delay = 25, \
+            size = 1, walk_dist = 3, spread_rate= 10 }
+MARKER: 2 = lua:fog_machine { cloud_type="steam", \
+            pow_min = 10, pow_max = 20, delay = 750, \
+            size = 10, walk_dist = 1, spread_rate= 75 }
+SUBST:  1 = l, 2 = l
+SUBST:  l = l w:20
+SUBST:  ? : w. , ! : w. , & : w.
+MAP
+.......?.......
+......&?.......
+.......??......
+..&&&&???......
+&&&&?wwwww.....
+&&?wwwwwwwww&&.
+.wwwwwlwwwwwww&
+..&wwl1lwwwww&&
+...wwwl2lwww&&.
+....wwwlww&&...
+..!!wwwww......
+..!!!www.......
+.!!!!w!.....!..
+..!!!w.....!!!.
+...!!.......!!.
+ENDMAP
+
+##############################################
+# Another geyser (Lemuel)
+#
+NAME:   another_geyser
+DEPTH:  D, Lair
+TAGS:   uniq_geyser no_monster_gen layout_rooms
+MONS:   nothing,nothing
+MARKER: 1 = lua:fog_machine { cloud_type="steam", \
+            pow_min = 2, pow_max = 5, delay = 25, \
+            size = 3, walk_dist = 3, spread_rate= 20 }
+MARKER: 2 = lua:fog_machine { cloud_type="steam", \
+            pow_min = 15, pow_max = 30, delay = 750, \
+            size = 12, walk_dist = 1, spread_rate= 99 }
+SUBST:  1 = l, 2 = l
+SUBST:  l = lw
+SUBST:  ? : wlx
+MAP
+  .......
+....www....
+...wwwww...
+xxxxxwxxxxx
+xxxxxwwxxxx
+xxxxxxxwxxx
+xxxxxxxwxxx
+xx??xxwxxxx
+xx??lw1wxxx
+xxxxxlwwwxx
+xxxxxl2xxxx
+xxxxxxxxxxx
+ENDMAP
+
+#########################################################
+# Ice Spiral I (Lemuel)
+#
+# There is a path to the center that the freezing clouds never appear on.
+# It's pretty obvious. -LP
+#
+NAME:    ice_spiral
+WEIGHT:  1
+ORIENT:  float
+TAGS:    no_item_gen no_monster_gen
+MONS:    ice beast / nothing
+ITEM:    nothing, nothing
+SHUFFLE: 1ef
+SUBST:   + : +=
+SUBST:   * : *$
+SUBST:   * = ***.|
+MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 2, pow_max = 4, delay = 17, start_clouds = 1, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 2, pow_max = 4, delay = 19, start_clouds = 1, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  f = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 2, pow_max = 4, delay = 23, start_clouds = 1, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MAP
+mG++Gmmmmmmmmmmmmmmmmmm
+m......f..1..1...e...fm
+m....1...f..e..f...1..m
+m......e..............m
+m....f...............em
+m......1..............m
+m....1.....e.1.f......m
+m...........f.e.1....1m
+m......e..............m
+m....e......***.......m
+m......1....***.f....fm
+m.....................m
+m....f1..e1.f..1e.....m
+m....................em
+m.....................m
+m.....................m
+m....................1m
+mf..1..e..f..e..f..e..m
+mmmmmmmmmmmmmmmmmmmmmmm
+ENDMAP
+
+#########################################################
+# Ice Spiral II (Lemuel)
+#
+# Wait for the freezing cloud to disappear, then run to the next gap, then
+# wait. It creates an agreeable sense of tension. -LP
+#
+NAME:    ice_spiral_2
+ORIENT:  float
+DEPTH:   D:5-27, Vault
+TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
+MONS:    nothing
+ITEM:    nothing, nothing
+SHUFFLE: Bb/Mm/Mm/Mm
+COLOUR:  B = blue
+SUBST:   M=. , m=n, B=. , b=c
+SUBST:   + : +=
+SUBST:   * : *$
+MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
+              pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
+              size = 1, walk_dist = 0, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
+              pow_min = 9, pow_max = 9, delay = 200, start_clouds = 1, \
+              size = 1, walk_dist = 0, spread_rate= 0 }
+MAP
+mG+Gmmmmmmmmmmmmmmmmm
+mBBB111B111BeeeeeeeBm
+mmmmmmmmmmmmmmmmmmmBm
+m*****eeeeeee111B111m
+mmmmmmmmmmmmmmmmmmmmm
+ENDMAP
+
+#################################################################
+# Nasty fountain (Lemuel)
+#
+NAME:  nasty_fountain
+DEPTH: D:11-27, Crypt, Tar
+TAGS:  allow_dup
+MARKER: Y = lua:fog_machine { cloud_type = "foul pestilence", \
+             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MAP
+Y
+ENDMAP
+
+################################################################
+# Flame loot I (Lemuel)
+#
+NAME:   flame_loot_1
+DEPTH:  D, Elf, Vault, Zot
+ITEM:   nothing
+SUBST:  * = *.
+SUBST:  * : *$
+MARKER: d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MAP
+ccccc...ccccc
+ccccc...ccccc
+ccccc.d.ccccc
+ccccc...ccccc
+ccccc...ccccc
+.....***.....
+..d..***..d..
+.....***.....
+ccccc...ccccc
+ccccc...ccccc
+ccccc.d.ccccc
+ccccc...ccccc
+ccccc...ccccc
+ENDMAP
+
+#################################################################
+# Flame loot II (Lemuel)
+#
+NAME:   Flame_loot_2
+DEPTH:  D:9-27
+ORIENT: float
+ITEM:   nothing
+SUBST:  * = |**...
+SUBST:  * : *$
+SUBST:  L = ll.
+MONS:   molten gargoyle / firedrake / lindwurm / nothing w:20
+MARKER: d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MAP
+ccccc...ccccc
+ccccc...ccccc
+ccccc...ccccc
+ccccc.d.ccccc
+ccccc...ccccc
+ccccc...ccccc
+ccccc.d.ccccc
+ccccc...ccccc
+ccccc...ccccc
+ccccc...ccccc
+c...LLlLL...c
+c..LLlllLL..c
+c.LLll*llLL.c
+cLLll***llLLc
+cLll**1**llLc
+cLlll***lllLc
+cLLlll*lllLLc
+c.LLlllllLL.c
+c..LLlllLL..c
+ccccccccccccc
+ENDMAP
+
+#################################################################
+# Freeze loot (Lemuel)
+# High T&D skill or a means of detecting secret doors is helpful here....
+#
+NAME:    freeze_loot_1
+DEPTH:   D:12-27, Crypt
+SUBST:   * : **$
+SUBST:   * = **|
+NSUBST:  n = 1:= / *:n
+MONS:    nothing, nothing, nothing, nothing
+SHUFFLE: 1234
+MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 1, pow_max = 10, delay = 85, \
+             size = 1, walk_dist = 2, spread_rate= 20 }
+MARKER:  2 = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 1, pow_max = 10, delay = 95, \
+             size = 1, walk_dist = 2, spread_rate= 20 }
+MARKER:  3 = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 1, pow_max = 10, delay = 105, \
+             size = 1, walk_dist = 2, spread_rate= 20 }
+MARKER:  4 = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 1, pow_max = 10, delay = 115, \
+             size = 1, walk_dist = 2, spread_rate= 20 }
+SUBST:   1=w, 2=w, 3=w, 4=w
+MAP
+   .wwwww.
+ .wwwwwwwww.
+ wwwww1wwwww
+.wwcnnnnncww.
+wwwn..F..nwww
+ww2n.***.nwww
+wwwn.***.n4ww
+wwwn..F..nwww
+.wwcnnnnncww.
+ wwwww3wwwww
+ .wwwwwwwww.
+   .wwwww.
+ENDMAP
+
+#################################################################
+# Flames and gold (Lemuel)
+# No safe path in this one -- just got to take your chances!
+# 
+NAME:   flames_and_gold
+DEPTH:  D:16-27
+WEIGHT: 2
+TAGS:   no_item_gen
+ITEM:   nothing, nothing, nothing
+NSUBST: . = 4:d / 4:e / 4:f / *:.
+MARKER: d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 29, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER: e = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 31, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER: f = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 37, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MAP
+.............
+.............
+.............
+.............
+......$......
+.....$$$.....
+....$$G$$....
+.....$$$.....
+......$......
+.............
+.............
+.............
+.............
+ENDMAP
+
+#################################################################
+# Firewalk III (Lemuel)
+#
+NAME:    firewalk_3
+TAGS:    uniq_firewalk
+WEIGHT:  2
+ORIENT:  float
+ITEM:    nothing, nothing, nothing
+SHUFFLE: def
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 39, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 6, delay = 59, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MARKER:  f = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 8, delay = 79, start_clouds = 1, \
+             size = 1, walk_dist = 2, spread_rate= 0 }
+MAP
+xxxxxxxG@Gxxxxxxx
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x...............x
+x...............x
+x.e..f.....d..e.x
+x...............x
+x...............x
+x...............x
+x.f..d.....e..f.x
+x...............x
+x...............x
+x...............x
+x.d..e.....f..d.x
+x...............x
+x...............x
+x......$$$......x
+x.e.f..$$$..d.e.x
+x......$$$......x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+#################################################################
+# Flame stairs (Lemuel)
+#
+NAME:    flame_stairs_1
+DEPTH:   D:9-27, Elf, Vault, Zot
+ITEM:    nothing
+SHUFFLE: {[ / ]}
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MAP
+cc@@@cc
+cc...cc
+cc...cc
+cc.d.cc
+cc...cc
+cc...cc
+c.....c
+c.....c
+c.....c
+c{...[c
+ccccccc
+ENDMAP
+
+#################################################################
+# Freeze stairs (Lemuel)
+#
+NAME:    freeze_stairs_1
+DEPTH:   D:9-27, Elf, Vault, Zot
+ITEM:    nothing
+SHUFFLE: {[ / ]}
+MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0 }
+MAP
+cc@@@cc
+cc...cc
+cc...cc
+cc.d.cc
+cc...cc
+cc...cc
+cc...cc
+cc...cc
+c.....c
+c.....c
+c.....c
+c{...[c
+ccccccc
+ENDMAP
+
+#################################################################
+# Spider temple (Joshua)
+#
+NAME:    spider_temple
+DEPTH:   D:20-26
+TAGS:	 no_rotate
+MONS:    naga mage / naga w:5 / naga skeleton w:2
+MONS:    wolf spider w:7 / giant mite w:3
+MONS:    oklob plant
+MONS:    jelly
+MONS:    trapdoor spider / wolf spider
+MONS:    guardian naga
+MONS:    curse skull
+# Randomise wall type: in 50% of maps, you cannot dig to the stairs.
+SUBST:   x : xxxxxxvvvccb
+# Hints at the important secret doors (red colour). On the one hand, we
+# may be too nice here; on the other hand, that's spoily information.
+# (red blood tiles at the claws)
+COLOUR:  ' = red
+FTILE:   ' = floor_rough_red
+SUBST:   ' = .
+# With 25% chance, have lava and curse skull instead of water and oklobs:
+SUBST:   w : Ww.
+SUBST:   w = W.
+SHUFFLE: wU3 / wU3 / wU3 / l7L
+SUBST:   L = l
+# The legs are coloured and contain 10 spider monsters:
+COLOUR:  " : white / yellow / brown
+NSUBST:  " = 10:5 / *:"
+SUBST:   " = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx"""""""xxxxxxxxxxxxxx""""""xxxxx
+xxxxx"xxxxxx"xxx..}...xxx"xxxxx"xxxxx
+xxxxx=xxxxxxx"xx...)..xx"xxxxxx=xxxxx
+xxxxx'xxxxxxxx"x..]...x"xxxxxxx'xxxxx
+xx"""""""xxxxxx=......=xxxxx"""""""xx
+x"xxxxxxx"xxwWxxxx+xxxxxW.x"xxxxxxx"x
+xx"xxxxxxx=..wWWw.1...wWW.=xxxxxxx"xx
+xxx"xxxxxxx.4WWW.2.2.WWWW.xxxxxxx"xxx
+xxxx"xxxxxx..wWWw.W3WWWWw.xxxxxx"xxxx
+xxxxx"xxxxx.1.wWWW3U3WWw2.xxxxx"xxxxx
+xxxxxx=xxxx2.1.wWWW3WWw12.xxxx=xxxxxx
+xxxxxx'xxxx.2.wWWWWWWw....xxxx'xxxxxx
+x"""""""""=x..WW....WW...x="""""""""x
+x"xxxxxxxxxxxxW...1...Wxxxxxxxxxxxx"x
+x"xxx""""""""+W.4...4.W+""""""""xxx"x
+x""='"xxxxxxxxxm.....mxxxxxxxxx"'=""x
+xxxxx"x........x+xxxxx........x"xxxxx
+....x"x........xWWWWWx........x"x....
+....x"x........xxxxxWx........x"x....
+....x"xx.......xxxWWWx.......xx"x....
+....xx"xx.....xxxx+xxxx.....xx"xx....
+.....xx"xx....x.......x....xx"xx.....
+......xx"xx...x..262..x...xx"xx......
+.......xx=xx..mx.....xm..xx=xx.......
+........xx'x...xm+++mx...x'xx........
+..................@..................
 ENDMAP
