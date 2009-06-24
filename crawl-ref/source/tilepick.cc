@@ -2708,6 +2708,8 @@ static inline void _finalize_tile(unsigned int *tile,
         (*tile) = wall_flv;
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
         (*tile) = orig + std::min((int)special_flv, 3);
+    else if (orig == TILE_DNGN_LAVA)
+        (*tile) = orig + random2(tile_dngn_count(orig));
     else if (orig < TILE_DNGN_MAX)
         (*tile) = orig + (special_flv % tile_dngn_count(orig));
 
