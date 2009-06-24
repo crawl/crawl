@@ -1,18 +1,18 @@
 ##############################################################################
 #
-# The Miniature Tomb (Zaba)
+# The Ossuary, a Tomb en miniature (Zaba)
 #
 #
-# The Tomb en miniature tries to pose an unusual early challenge: many traps
-# and slow monsters, making the player choose between pressing on towards the
-# loot or leaving the vault.
+# The Ossuary tries to pose an unusual early challenge: many traps and slow 
+# monsters, making the player choose between pressing on towards the loot or
+# leaving the vault.
 #
 # Flavour: Mini versions of Tomb:* and otherwise crypt like.
 #
 ##############################################################################
 
 {{
-function minitomb_portal(e)
+function ossuary_portal(e)
  local timeout_turns = crawl.random_range(1500, 2000)
 
   local messager =
@@ -32,7 +32,7 @@ function minitomb_portal(e)
         disappear = "The staircase has disappeared completely beneath the sand.",
         desc = "A sand-covered staircase",
         entity = 'staircase',
-        dst = "minitomb",
+        dst = "ossuary",
         dstorigin = "in a tomb",
         overmap = "sand-covered staircase",
         turns = timeout_turns,
@@ -43,9 +43,9 @@ function minitomb_portal(e)
 end
 
 -- Use the following line in destination maps after all SUBSTs
--- : minitomb_setup_features(_G)
+-- : ossuary_setup_features(_G)
 -- Note that the function also defines < to be the exit portal.
-function minitomb_setup_features(e)
+function ossuary_setup_features(e)
         e.kfeat("< = exit_portal_vault")
         e.colour("< = yellow")
         e.lrockcol("white")
@@ -59,13 +59,13 @@ end
 #### Portal entry vaults.
 default-depth: D:4-8
 
-NAME:   enter_minitomb_1
-TAGS:   uniq_minitomb no_monster_gen
+NAME:   enter_ossuary_1
+TAGS:   uniq_ossuary no_monster_gen
 SUBST:  . = . Y:7
 COLOUR: Y = yellow
 FTILE:  Y = floor_tomb
 SUBST:  Y = .
-: minitomb_portal(_G)
+: ossuary_portal(_G)
 MAP
 .....
 .....
@@ -74,12 +74,12 @@ MAP
 .....
 ENDMAP
 
-NAME:   enter_minitomb_2
-TAGS:   uniq_minitomb no_monster_gen
+NAME:   enter_ossuary_2
+TAGS:   uniq_ossuary no_monster_gen
 COLOUR: ' = yellow
 FTILE:  ' = floor_tomb
 SUBST:  ' = .
-: minitomb_portal(_G)
+: ossuary_portal(_G)
 MAP
 .......
 .cc=cc.
@@ -90,8 +90,8 @@ MAP
 .......
 ENDMAP
 
-NAME:   enter_minitomb_3
-TAGS:   uniq_minitomb no_monster_gen
+NAME:   enter_ossuary_3
+TAGS:   uniq_ossuary no_monster_gen
 SUBST:  . = Y .
 COLOUR: Y = yellow
 FTILE:  Y = floor_tomb
@@ -100,20 +100,20 @@ MONS:   rat zombie / jackal zombie / worm zombie
 MONS:   kobold zombie / goblin zombie / hobgoblin zombie
 MONS:   orc zombie / gnoll zombie / human zombie
 SUBST:  . = .:100 11 2 3
-: minitomb_portal(_G)
+: ossuary_portal(_G)
 MAP
 ...
 .O.
 ...
 ENDMAP
 
-NAME:   enter_minitomb_4
-TAGS:   uniq_minitomb no_monster_gen
+NAME:   enter_ossuary_4
+TAGS:   uniq_ossuary no_monster_gen
 COLOUR: 1 = yellow, ' = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
 FTILE:  1 = floor_tomb, ' = floor_tomb, x = floor_tomb, O = floor_tomb
 RTILE:  x = wall_tomb
-: minitomb_portal(_G)
+: ossuary_portal(_G)
 MAP
 .........
 .xxxxxxx.
@@ -131,10 +131,10 @@ ENDMAP
 # Reset default depth to prevent random generation of portal vaults.
 default-depth:
 
-NAME:    minitomb_1
+NAME:    ossuary_1
 WEIGHT:  60
 ORIENT:  encompass
-TAGS:    minitomb no_item_gen no_monster_gen no_rotate
+TAGS:    ossuary no_item_gen no_monster_gen no_rotate
 SHUFFLE: dwyz
 SUBST:   w=2, y=2
 NSUBST:  z= 1:1 / *:3
@@ -147,7 +147,7 @@ MONS:    rat zombie / jackal zombie / snake zombie / goblin zombie / \
          hobgoblin zombie / kobold zombie / big kobold zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    kobold zombie / orc zombie / hobgoblin zombie
-: minitomb_setup_features(_G)
+: ossuary_setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 x.........<A.........x
@@ -172,10 +172,10 @@ x....................x
 xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    minitomb_the_hunt_dp
+NAME:    ossuary_the_hunt_dp
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    minitomb no_item_gen no_monster_gen
+TAGS:    ossuary no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
 # Most of the loot helps right here, if need be.
 ITEM:    potion of healing / potion of heal wounds / potion of speed / \
@@ -209,7 +209,7 @@ KFEAT:   T = alarm trap w:20 / net trap / floor w:70
 KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
 COLOUR:  ^ = red
 KFEAT:   W = dart trap / floor w:20
-: minitomb_setup_features(_G)
+: ossuary_setup_features(_G)
 MAP
            cccccccccccccccccccc
    ccccccccc3c3c3c3c3c3c3cddddccc
@@ -224,10 +224,10 @@ cc1.....WW~~~~~~~~~~~~~~~~^.....cc
            cccccccccccccccccccc
 ENDMAP
 
-NAME:    minitomb_crypta
+NAME:    ossuary_crypta
 WEIGHT:  30
 ORIENT:  encompass
-TAGS:    minitomb no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    mummy
 MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
@@ -257,7 +257,7 @@ NSUBST:  . = 6:^ / *:.
 KFEAT:   ^ = alarm trap / floor w:20
 SUBST:   = : =+
 SUBST:   = = =+
-: minitomb_setup_features(_G)
+: ossuary_setup_features(_G)
 MAP
           vvv
         vvv1vvv
@@ -281,13 +281,13 @@ ccc.c   ccc+ccc   c.ccc
          ccccc
 ENDMAP
 
-NAME:    minitomb_2
+NAME:    ossuary_2
 # Generally have rooms full of either monsters or traps. To protect the
 # monsters, all doors are secret, no alarm traps, and mostly needle
 # traps.
 WEIGHT:  30
 ORIENT:  encompass
-TAGS:    minitomb no_item_gen no_monster_gen no_rotate
+TAGS:    ossuary no_item_gen no_monster_gen no_rotate
 KFEAT:   ~ = dart trap w:1 / arrow trap w:1 / needle trap
 KFEAT:   ^ = dart trap / arrow trap
 # Number of 1's is 53, number of ~'s is 57.
@@ -315,7 +315,7 @@ ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
 MONS:    snake zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / brown snake zombie / gnoll zombie / nothing
 MONS:    mummy
-: minitomb_setup_features(_G)
+: ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
 c<11H~~~G1111F~~~E111c
@@ -340,10 +340,10 @@ c~~~c...cddddc...c.z<c
 cccccccccccccccccccccc
 ENDMAP
 
-NAME:    minitomb_3
+NAME:    ossuary_3
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    minitomb no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
 # zombies should be awake, so they march downwards in a line
 MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
          generate_awake hobgoblin zombie / generate_awake gnoll zombie
@@ -352,7 +352,7 @@ MONS:    orc zombie / kobold zombie / big kobold zombie / hobgoblin zombie
 # loot: 24 items
 ITEM:    nothing / any scroll w:5 / any potion
 KFEAT:   ^ = alarm trap
-: minitomb_setup_features(_G)
+: ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
 cccc.....2222.....cccc

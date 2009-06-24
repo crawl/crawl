@@ -44,8 +44,8 @@ use:
  layout.des   - level layout code that has been moved from dungeon.cc and
                 rewritten in Lua.
  mini.des     - minivaults (no ORIENT line at all)
- minitomb.des - the minitomb portal vault
  orc.des      - orcish mine entrances, orc only vaults
+ ossuary.des  - the ossuary portal vault
  pan.des      - vaults of the Pan demon lords, Pan minivaults
  rooms.des    - special monster rooms, such as orc, kobold and jelly rooms
  sewer.des    - the sewer portal vault
