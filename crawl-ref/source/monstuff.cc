@@ -4908,13 +4908,15 @@ static void _handle_movement(monsters *monster)
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check
     // whether we first need to take a step to the side to make sure the
-    // reinforcement can follow through.
+    // reinforcement can follow through. Only do this with 50% chance,
+    // though, so it's not completely predictable.
 
     // First, check whether the monster is smart enough to even consider
     // this.
     if ((newpos == you.pos()
            || mgrd(newpos) != NON_MONSTER && monster->foe == mgrd(newpos))
         && mons_intel(monster) >= I_ANIMAL
+        && coinflip()
         && !mons_is_confused(monster) && !mons_is_caught(monster)
         && !monster->has_ench(ENCH_BERSERK))
     {
