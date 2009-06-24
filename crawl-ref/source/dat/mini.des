@@ -48,8 +48,9 @@ ENDMAP
 # behind, but still see the monster you're ducking from (and they can
 # still see you)
 #
-NAME:  glass_columns_a
-DEPTH: D, Elf, Crypt
+NAME:   glass_columns_a
+DEPTH:  D, Elf, Crypt
+TAGS:   extra luniq_mini
 WEIGHT: 5
 MAP
 .....
@@ -59,8 +60,9 @@ MAP
 .....
 ENDMAP
 
-NAME:  glass_columns_b
-DEPTH: D, Elf, Crypt
+NAME:   glass_columns_b
+DEPTH:  D, Elf, Crypt
+TAGS:   extra luniq_mini
 WEIGHT: 3
 MAP
 .......
@@ -72,8 +74,9 @@ MAP
 .......
 ENDMAP
 
-NAME:  glass_columns_c
-DEPTH: D, Elf, Crypt
+NAME:   glass_columns_c
+DEPTH:  D, Elf, Crypt
+TAGS:   extra luniq_mini
 WEIGHT: 2
 MAP
 .........
@@ -92,6 +95,7 @@ ENDMAP
 #
 NAME:  feat_on_display
 DEPTH: D, Elf, Crypt, Vault
+TAGS:  extra luniq_mini
 SUBST: ? = TUl
 TAGS:  no_monster_gen no_item_gen
 MAP
@@ -107,6 +111,7 @@ ENDMAP
 #
 NAME:   item_on_display_a
 DEPTH:  D, Elf, Crypt, Vault
+TAGS:   extra luniq_mini
 WEIGHT: 9
 SUBST:  % = %%%*
 TAGS:   no_monster_gen no_item_gen
@@ -123,6 +128,7 @@ ENDMAP
 #
 NAME:   item_on_display_b
 DEPTH:  D, Elf, Crypt, Vault
+TAGS:   extra luniq_mini
 WEIGHT: 1
 SUBST:  * = ***|
 TAGS:   no_monster_gen no_item_gen
@@ -140,7 +146,7 @@ ENDMAP
 #
 NAME:   unseen_surprise_small
 WEIGHT: 1
-TAGS:   no_wall_fixup
+TAGS:   no_wall_fixup extra luniq_mini
 DEPTH:  D:8-27, Elf, Crypt, Vault
 KMONS:  a = generate_awake unseen_horror
 KITEM:  a = | / *
@@ -157,7 +163,7 @@ ENDMAP
 #
 NAME:   due_unseen_surprise
 DEPTH:  D, Elf, Crypt, Vault
-TAGS:   no_wall_fixup
+TAGS:   no_wall_fixup extra luniq_mini
 : if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
 SUBST:  a = %
 SUBST:  b = %**
@@ -195,6 +201,7 @@ ENDMAP
 #
 NAME:    sigmund_army
 DEPTH:   D:2-6
+TAGS:    extra luniq_mini
 MONS:    gnoll;scythe.robe, hobgoblin;scythe.robe, orc;scythe.robe
 SUBST:   n = 1:20 n:5
 KMONS:   n = Sigmund, gnoll;scythe.robe / hobgoblin;scythe.robe / orc;scythe.robe
@@ -215,7 +222,7 @@ ENDMAP
 #
 NAME:    jars
 DEPTH:   D:4-14
-TAGS:    mini_float
+TAGS:    mini_float extra luniq_mini
 SHUFFLE: 11%
 : if you.absdepth() >7 then
 MONS:    killer bee / nothing w:5
@@ -236,7 +243,7 @@ ENDMAP
 #
 NAME:  fungi_pond__lemuel
 DEPTH: D:8-20, Lair
-TAGS:  allow_dup
+TAGS:  allow_dup extra luniq_mini
 MONS:  fungus, wandering mushroom
 SUBST: 1 = . 1 2:4
 SUBST: ? : w..
@@ -693,7 +700,7 @@ ENDMAP
 ##############################################################################
 
 NAME: minivault_1
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 ..xxxx=xxx..
@@ -712,7 +719,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_4
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 ....xwxx....
@@ -731,7 +738,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_5
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .x.xxxxxxxx.
@@ -835,7 +842,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_10
-TAGS: mini_float
+TAGS: mini_float extra luniq_mini
 MAP
 xxxx  xxxx
 x**x  x**x
@@ -852,7 +859,8 @@ ENDMAP
 ###################################
 # Multicoloured onion
 #
-NAME: minivault_11
+NAME:    minivault_11
+TAGS:    extra luniq_mini
 SHUFFLE: bcva
 MAP
 ............
@@ -920,7 +928,7 @@ ENDMAP
 # Water cross
 #
 NAME: minivault_14
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .wwwww.wwww.
@@ -940,6 +948,7 @@ ENDMAP
 # Lava pond
 #
 NAME:  minivault_15
+TAGS:  extra luniq_mini
 KMONS: 1 = silver statue / ice statue
 KFEAT: 1 = <
 MAP
@@ -957,7 +966,7 @@ ENDMAP
 ###################################
 
 NAME:    minivault_16
-TAGS:    allow_dup
+TAGS:    allow_dup extra luniq_mini
 WEIGHT:  40
 # as this replaces the former statue only minivaults
 SHUFFLE: G111
@@ -979,7 +988,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_19
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .xx......xx.
@@ -998,7 +1007,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_20
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .xxxx..xxxx.
@@ -1017,7 +1026,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_21
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .~xxxxxxxx~.
@@ -1036,7 +1045,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_22
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 SUBST: $ : $ *:5
 MAP
 ............
@@ -1056,7 +1065,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_23
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 x.x.x.x.x.x.
 .x.x.x.x.x.x
@@ -1075,7 +1084,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_24
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 ....xxxx....
@@ -1094,7 +1103,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_25
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 SHUFFLE: XY
 SUBST: X=x, Y=+
 MAP
@@ -1115,7 +1124,7 @@ ENDMAP
 ###################################
 
 NAME:    minivault_25_ag
-TAGS:    allow_dup
+TAGS:    allow_dup extra luniq_mini
 SHUFFLE: XY, ABCDE
 SUBST:   X=x, Y=+
 SUBST:   A=?, B=%%%*, C=T, D=0009, E=89
@@ -1137,7 +1146,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_26
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 c..........c
 .c...cc...c.
@@ -1156,7 +1165,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_27
-TAGS: allow_dup
+TAGS: allow_dup extra luniq_mini
 MAP
 ............
 .x.xxxxxxxx.
@@ -1242,7 +1251,7 @@ ENDMAP
 #
 NAME:  solitary_fountain
 DEPTH: D, Elf, Vault
-TAGS:  allow_dup
+TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
 MAP
 .....
@@ -1256,7 +1265,7 @@ ENDMAP
 # Fountainhead
 #
 NAME:  fountainhead
-TAGS:  allow_dup
+TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
 MAP
 ..............
@@ -1361,7 +1370,7 @@ ENDMAP
 #
 NAME:   supply_closet
 DEPTH:  D:1-9
-TAGS:   no_monster_gen allow_dup
+TAGS:   no_monster_gen allow_dup extra luniq_mini
 ITEM:   potion of water w:20 / bread ration / meat ration / arrow /\
         bolt / spear / any potion w:5
 NSUBST: x = 1:= / *:x
@@ -1379,6 +1388,7 @@ ENDMAP
 # Columned hall (Lemuel)
 #
 NAME: columns_hall
+TAGS: extra luniq_mini
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 @...........................@
@@ -1541,7 +1551,7 @@ ENDMAP
 #
 NAME:   library
 DEPTH:  1-27
-TAGS:   mini_float allow_dup
+TAGS:   mini_float allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
 x=xx
@@ -1554,7 +1564,7 @@ ENDMAP
 # Small statue alley (Eino)
 #
 NAME:   small_statue_alley_a
-TAGS:   uniq_statue_alley
+TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  D:10-20
 WEIGHT: 7
 MAP
@@ -1567,7 +1577,7 @@ xcccccxxx
 ENDMAP
 
 NAME:   small_statue_alley_b
-TAGS:   uniq_statue_alley
+TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  D:3-10
 WEIGHT: 2
 MAP
@@ -1580,7 +1590,7 @@ xcccccxxx
 ENDMAP
 
 NAME:   small_statue_alley_c
-TAGS:   uniq_statue_alley
+TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  Orc
 WEIGHT: 1
 MAP
@@ -1597,6 +1607,7 @@ ENDMAP
 #
 NAME:    doghouse
 DEPTH:   D:4-8
+TAGS:    extra luniq_mini
 SHUFFLE: 1?T
 SUBST:   T : T V:2
 SUBST:   ? : 1:2 .
@@ -1617,7 +1628,7 @@ ENDMAP
 #
 NAME:    small_statue_intersection
 DEPTH:   D:2-26, Elf, Crypt
-TAGS:    mini_float allow_dup no_hmirror no_vmirror
+TAGS:    mini_float allow_dup no_hmirror no_vmirror extra luniq_mini
 MAP
 xx.xx
 xG.Gx
@@ -1631,7 +1642,7 @@ ENDMAP
 # not necessarily versions of the same vault
 #
 NAME:   small_chamber_a
-TAGS:   mini_float allow_dup
+TAGS:   mini_float allow_dup extra luniq_mini
 DEPTH:  D:4-27
 MAP
  xxxxx
@@ -1643,7 +1654,7 @@ xx...xx
 ENDMAP
 
 NAME:   small_chamber_b
-TAGS:   mini_float
+TAGS:   mini_float extra luniq_mini
 DEPTH:  D:8-27, Elf, Vault, Crypt
 MAP
 xxxxxxx
@@ -1657,7 +1668,7 @@ xxT.Txx
 ENDMAP
 
 NAME:   tiny_chamber_a
-TAGS:   mini_float allow_dup
+TAGS:   mini_float allow_dup extra luniq_mini
 DEPTH:  D:2-27, Elf, Vault, Crypt
 MAP
 xxxxx
@@ -1676,7 +1687,8 @@ NAME:   sword_in_stone
 TAGS:   mini_float patrolling
 DEPTH:  5-26, !Lair, !Orc, !Tomb
 NSUBST: k = 4=k / *= .:19 k:1
-KITEM:  S = good_item long sword / good_item great sword / w:1 good_item katana
+KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
+            good_item triple sword / good_item double sword 
 KFEAT:  S = teleport trap
 NSUBST: n = n/cbn
 : if you.absdepth() < 10 then
@@ -1836,6 +1848,7 @@ ENDMAP
 # Statue in the mist (Lemuel)
 #
 NAME:    statue_in_the_mist
+TAGS:    extra luniq_mini
 MONS:    orange crystal statue / silver statue / ice statue
 DEPTH:   9-
 MARKER:  G = lua:fog_machine { cloud_type= "grey smoke", \

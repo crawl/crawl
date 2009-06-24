@@ -118,7 +118,7 @@ default-depth: D:3-20
 
 NAME:   enter_shallow_ziggurat_a
 CHANCE: 51 : 1%
-TAGS:   chance_shallow_zig extra
+TAGS:   chance_shallow_zig extra luniq_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -137,7 +137,7 @@ ENDMAP
 
 NAME:    enter_shallow_ziggurat_c
 CHANCE:  51 : 1%
-TAGS:    chance_shallow_zig extra
+TAGS:    chance_shallow_zig extra luniq_zig
 MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
@@ -154,7 +154,7 @@ ENDMAP
 
 NAME:    enter_shallow_ziggurat_d
 CHANCE:  51 : 1%
-TAGS:    chance_shallow_zig extra
+TAGS:    chance_shallow_zig extra luniq_zig
 MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
