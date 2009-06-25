@@ -586,10 +586,10 @@ ITEM:     (list of items, separated by comma)
             will result in an error.  Trying to give an ego to something which
             can't accept an ego will also result in an error.
           * "unrand:item_name" will make a given unrandom by a given name,
-            like "long sword fixed:singing_sword".  Omit any apostrophes
-            in the name (e.g, fixed:vampires_tooth).  If the name has
+            like "long sword unrand:singing_sword".  Omit any apostrophes
+            in the name (e.g, unrand:vampires_tooth).  If the name has
             something between double quotes then use that string (e.g,
-            fixed:bloodbane). If the unique already exists, the base item
+            unrand:bloodbane). If the unique already exists, the base item
             will be given instead.
 
             WARNING: While checks are done to make sure that an armour ego
