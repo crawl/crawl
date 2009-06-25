@@ -6,6 +6,8 @@
 dngn_unseen DNGN_UNSEEN
 
 
+# Multiple tile definitions are STATIC, that is they may change between
+# saves but are otherwise fixed.
 wall/brick_brown0 WALL_NORMAL
 wall/brick_brown1
 wall/brick_brown2
@@ -180,11 +182,11 @@ floor/rough_red3
 floor/floor_sand_stone0 FLOOR_SAND_STONE
 floor/floor_sand_stone1
 floor/floor_sand_stone2
-floor/floor_sand_stone3 
-floor/floor_sand_stone4 
-floor/floor_sand_stone5 
-floor/floor_sand_stone6 
-floor/floor_sand_stone7 
+floor/floor_sand_stone3
+floor/floor_sand_stone4
+floor/floor_sand_stone5
+floor/floor_sand_stone6
+floor/floor_sand_stone7
 
 wall/wall_yellow_rock0 WALL_YELLOW_ROCK
 wall/wall_yellow_rock1
@@ -206,7 +208,7 @@ floor/grass1
 floor/grass2
 
 floor/grass_n HALO_GRASS
-floor/grass_ne 
+floor/grass_ne
 floor/grass_e
 floor/grass_se
 floor/grass_s
@@ -301,7 +303,7 @@ floor/dirt1
 floor/dirt2
 
 floor/dirt_n HALO_DIRT
-floor/dirt_ne 
+floor/dirt_ne
 floor/dirt_e
 floor/dirt_se
 floor/dirt_s
@@ -309,17 +311,6 @@ floor/dirt_sw
 floor/dirt_w
 floor/dirt_nw
 floor/dirt_full
-
-floor/lava0 DNGN_LAVA
-floor/lava1
-floor/lava2
-floor/lava3
-dngn_deep_water DNGN_DEEP_WATER
-dngn_shallow_water DNGN_SHALLOW_WATER
-dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
-dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
-dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
-dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 
 wall/stone2_gray0 DNGN_STONE_WALL
 wall/stone2_gray1
@@ -342,9 +333,6 @@ gate_open_right DNGN_GATE_OPEN_RIGHT
 dngn_orcish_idol DNGN_ORCISH_IDOL
 dngn_granite_statue DNGN_GRANITE_STATUE
 
-%rim 1
-dngn_enter_hell DNGN_ENTER_HELL
-%rim 0
 dngn_branch_stairs DNGN_BRANCH_STAIRS
 dngn_trap_dart DNGN_TRAP_DART
 dngn_trap_arrow DNGN_TRAP_ARROW
@@ -381,6 +369,22 @@ shop_potions SHOP_POTIONS
 dngn_abandoned_shop DNGN_ABANDONED_SHOP
 %sdir dc-dngn
 
+## from here on multiple tile definitions are CHANGEABLE, i.e. they may
+## change from turn to turn
+floor/lava0 DNGN_LAVA
+floor/lava1
+floor/lava2
+floor/lava3
+dngn_deep_water DNGN_DEEP_WATER
+dngn_shallow_water DNGN_SHALLOW_WATER
+dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
+dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
+dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
+dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
+
+%rim 1
+dngn_enter_hell DNGN_ENTER_HELL
+%rim 0
 dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_dis DNGN_ENTER_DIS
 dngn_enter_gehenna DNGN_ENTER_GEHENNA
@@ -389,11 +393,14 @@ dngn_enter_tartarus DNGN_ENTER_TARTARUS
 
 dngn_enter_abyss DNGN_ENTER_ABYSS
 dngn_exit DNGN_EXIT_ABYSS
+dngn_exit_flickering
 
 dngn_stone_arch DNGN_STONE_ARCH
 dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
 dngn_portal DNGN_PORTAL
+dngn_portal_rotated
 dngn_exit DNGN_EXIT_PANDEMONIUM
+dngn_exit_flickering
 %rim 1
 dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 %rim 0
@@ -401,28 +408,39 @@ dngn_enter DNGN_ENTER
 %rim 1
 dngn_return DNGN_RETURN
 %rim 0
+
+%sdir dc-dngn/altars
 dngn_altar_zin DNGN_ALTAR_ZIN
 dngn_altar_shining_one DNGN_ALTAR_SHINING_ONE
 dngn_altar_kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
 dngn_altar_yredelemnul DNGN_ALTAR_YREDELEMNUL
-dngn_altar_xom DNGN_ALTAR_XOM
+dngn_altar_xom_blue DNGN_ALTAR_XOM
+dngn_altar_xom_green
+dngn_altar_xom_pink
+dngn_altar_xom_red
+dngn_altar_xom_turquoise
+dngn_altar_xom_yellow
 dngn_altar_vehumet DNGN_ALTAR_VEHUMET
 dngn_altar_okawaru DNGN_ALTAR_OKAWARU
 dngn_altar_makhleb DNGN_ALTAR_MAKHLEB
+dngn_altar_makhleb_flipped
 dngn_altar_sif_muna DNGN_ALTAR_SIF_MUNA
 dngn_altar_trog DNGN_ALTAR_TROG
 dngn_altar_nemelex_xobeh DNGN_ALTAR_NEMELEX_XOBEH
 dngn_altar_elyvilon DNGN_ALTAR_ELYVILON
 dngn_altar_lugonu DNGN_ALTAR_LUGONU
 dngn_altar_beogh DNGN_ALTAR_BEOGH
+
+%sdir dc-dngn
 dngn_blue_fountain DNGN_BLUE_FOUNTAIN
 dngn_sparkling_fountain DNGN_SPARKLING_FOUNTAIN
 dngn_blood_fountain DNGN_BLOOD_FOUNTAIN
 dngn_dry_fountain DNGN_DRY_FOUNTAIN
 
-## Miscellaneous entries that get drawn on the background
+## Miscellaneous entries that get drawn on the background.
+## Flavour is fixed again.
 dc-misc/blood_red BLOOD
-dc-misc/blood_red1 
+dc-misc/blood_red1
 dc-misc/blood_red2
 dc-misc/blood_red3
 dc-misc/blood_red4

@@ -14,21 +14,23 @@ urand_jihad URAND_JIHAD
 urand_fiery_devil URAND_FIERY_DEVIL
 urand_doom_knight URAND_DOOM_KNIGHT
 urand_eos URAND_EOS
-urand_voo_doo URAND_VOO_DOO
+urand_botono URAND_BOTONO
 urand_octopus_king URAND_OCTOPUS_KING
 urand_arga URAND_ARGA
 urand_elemental URAND_ELEMENTAL
 urand_sniper URAND_SNIPER
-urand_erchidel URAND_ERCHIDEL
+urand_piercer URAND_PIERCER
 urand_plutonium URAND_PLUTONIUM
 urand_undeadhunter URAND_UNDEADHUNTER
+urand_crystal_spear URAND_CRYSTAL_SPEAR
 %rim 1
-urand_blowgun URAND_BLOWGUN
+urand_blowgun URAND_BLOWGUN_ASSASSIN
 urand_serpent_scourge URAND_SERPENT_SCOURGE
 urand_wyrmbane URAND_WYRMBANE
 urand_spriggans_knife URAND_SPRIGGANS_KNIFE
 urand_knife_of_accuracy URAND_KNIFE_OF_ACCURACY
 %rim 0
+
 %sdir item/armour/artefact
 urand_ignorance URAND_IGNORANCE
 urand_augmentation URAND_AUGMENTATION
@@ -37,7 +39,7 @@ urand_bullseye URAND_BULLSEYE
 urand_dyrovepreva URAND_DYROVEPREVA
 urand_misfortune URAND_MISFORTUNE
 urand_flash URAND_FLASH
-urand_assassin URAND_ASSASSIN
+urand_assassin URAND_BOOTS_ASSASSIN
 urand_lear URAND_LEAR
 urand_zhor URAND_ZHOR
 urand_salamander URAND_SALAMANDER
@@ -51,11 +53,14 @@ urand_dragon_king URAND_DRAGON_KING
 urand_alchemist URAND_ALCHEMIST
 urand_fencer URAND_FENCER
 urand_starlight URAND_STARLIGHT
+urand_ratskin_cloak URAND_RATSKIN_CLOAK
+
 %sdir item/ring/artefact
 urand_shadows URAND_SHADOWS
 urand_shaolin URAND_SHAOLIN
 urand_robustness URAND_ROBUSTNESS
 urand_mage URAND_MAGE
+
 %sdir item/amulet/artefact
 urand_cekugob URAND_CEKUGOB
 urand_four_winds URAND_FOUR_WINDS

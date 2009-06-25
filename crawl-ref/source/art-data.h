@@ -654,7 +654,7 @@
 /* 38: UNRAND_WYRMBANE */
 {
     "Wyrmbane", "scale-covered lance", 
-    OBJ_WEAPONS, WPN_SPEAR, +9, +6, GREEN, 
+    OBJ_WEAPONS, WPN_SPEAR, +9, +6, LIGHTGREEN, 
     {
         SPWPN_DRAGON_SLAYING, 5, 0, 0, 0, 0, 
         1, 0, 0, 1, 0, 0, 
@@ -758,7 +758,7 @@
     "Lehudib's crystal spear", "crystal spear", 
     OBJ_WEAPONS, WPN_SPEAR, +6, +6, GREEN, 
     {
-        SPWPN_NORMAL, 0, 0, 0, 0, 0, 
+        SPWPN_NORMAL, 0, 0, 0, 3, 0, 
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
@@ -767,7 +767,7 @@
     },
     "", 
     "", 
-    "Presumably this relic led to the invention of the famous spell.", 
+    "Presumably this relic led to the invention of the famous spell, or maybe the other way around.", 
 },
 
 /* 45: UNRAND_IGNORANCE */

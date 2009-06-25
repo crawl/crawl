@@ -739,6 +739,7 @@ i-rod_venom ROD_VENOM
 #OBJ_ORBS
 %sdir item/misc
 misc_orb ORB
+misc_orb2
 
 #OBJ_MISCELLANY
 misc_bottle MISC_BOTTLED_EFREET

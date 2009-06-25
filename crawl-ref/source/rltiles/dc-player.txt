@@ -28,14 +28,10 @@ mummy_f MUMMY
 mummy_m
 naga_f NAGA
 naga_m
-gnome_f GNOME
-gnome_m
 ogre_f OGRE
 ogre_m
 troll_f TROLL
 troll_m
-ogre_mage_f OGRE_MAGE
-ogre_mage_m
 draconian_f DRACONIAN
 draconian_m
 draconian_black_f DRACONIAN_BLACK
@@ -104,6 +100,7 @@ sticky_flame STICKY_FLAME
 ###Cloak
 %parts_ctg CLOAK
 %sdir player/cloak
+ratskin RATSKIN_CLOAK
 red RED
 blue BLUE
 magenta MAGENTA
@@ -215,6 +212,7 @@ robe_rainbow ROBE_RAINBOW
 gandalf_g GANDALF_G
 saruman SARUMAN
 robe_black_hood ROBE_BLACK_HOOD
+robe_of_night ROBE_OF_NIGHT
 monk_blue MONK_BLUE
 monk_black MONK_BLACK
 dress_green DRESS_GREEN
@@ -233,6 +231,7 @@ robe_brown2 ROBE_BROWN2
 robe_green_gold ROBE_GREEN_GOLD
 robe_brown3 ROBE_BROWN3
 robe_gray2 ROBE_GRAY2
+# dresses
 robe_misfortune ROBE_MISFORTUNE
 dress_white DRESS_WHITE
 arwen ARWEN
@@ -345,7 +344,6 @@ vanhel1
 
 maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
-robe_of_night ROBE_OF_NIGHT
 %end
 
 
@@ -394,22 +392,23 @@ zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
-wucad_mu WUCAD_MU
 dire_lajatang DIRE_LAJATANG
-wyrmbane WYRMBANE
 spriggans_knife SPRIGGANS_KNIFE
-eos EOS
 ## blunt
-serpent_scourge SERPENT_SCOURGE
+wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
 mace_of_brilliance MACE_OF_BRILLIANCE
 undeadhunter UNDEADHUNTER
+eos EOS
+serpent_scourge SERPENT_SCOURGE
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
-voodoo VOODOO
+botono BOTONO
 finisher FINISHER
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
+wyrmbane WYRMBANE
+crystal_spear CRYSTAL_SPEAR
 ## staves
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS

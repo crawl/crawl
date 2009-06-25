@@ -410,7 +410,7 @@ NAME:    Wyrmbane
 APPEAR:  scale-covered lance
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
 PLUS:    +9/+6
-COLOUR:  GREEN
+COLOUR:  LIGHTGREEN
 BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
@@ -473,7 +473,8 @@ APPEAR:   crystal spear
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +6/+6
 COLOUR:   GREEN
-DESC_END: Presumably this relic led to the invention of the famous spell.
+INT:      3
+DESC_END: Presumably this relic led to the invention of the famous spell, or maybe the other way around.
 
 NAME:   shield of Ignorance
 APPEAR: dull large shield

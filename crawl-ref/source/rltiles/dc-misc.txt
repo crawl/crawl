@@ -38,7 +38,7 @@ unseen_item UNSEEN_ITEM
 unseen_monster UNSEEN_CORPSE
 %corpse 0
 %back none
-dc-dngn/dngn_altar UNSEEN_ALTAR
+dc-dngn/altars/dngn_altar UNSEEN_ALTAR
 dc-dngn/dngn_entrance UNSEEN_ENTRANCE
 
 %back none
