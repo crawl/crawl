@@ -17,6 +17,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "database.h"
@@ -38,7 +39,6 @@ REVISION("$Rev$");
 #include "monstuff.h"
 #include "overmap.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
@@ -61,7 +61,7 @@ void special_wielded()
     const int  old_plus2  = weapon.plus2;
     const char old_colour = weapon.colour;
 
-    switch (you.special_wield)
+    switch (you.unrand_reacts)
     {
     case SPWLD_SING:
     case SPWLD_NOISE:
@@ -70,7 +70,7 @@ void special_wielded()
         {
             std::string msg;
 
-            if (you.special_wield == SPWLD_SING)
+            if (you.unrand_reacts == SPWLD_SING)
             {
                 msg = getSpeakString("Singing Sword");
                 if (!msg.empty())
@@ -130,7 +130,7 @@ void special_wielded()
 
             if (msg.empty()) // give default noises
             {
-                if (you.special_wield == SPWLD_SING)
+                if (you.unrand_reacts == SPWLD_SING)
                     msg = "@The_weapon@ sings.";
                 else
                 {
@@ -849,7 +849,7 @@ bool evoke_item(int slot)
             else
                 return (false);
         }
-        else if (is_fixed_artefact(item))
+        else if (is_unrandom_artefact(item))
         {
             switch (item.special)
             {

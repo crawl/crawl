@@ -109,7 +109,7 @@ ENDMAP
 NAME:    old_forge
 DEPTH:   D:4-12
 ORIENT:  float
-KITEM:   ? = long sword fixed:singing_sword, damaged short sword, \
+KITEM:   ? = long sword unrand:singing_sword, damaged short sword, \
              damaged long sword, damaged hand axe
 KITEM:   ! = damaged executioner's axe, damaged short sword, \
              damaged long sword, damaged morningstar

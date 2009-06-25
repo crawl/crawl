@@ -41,7 +41,7 @@ enum tag_file_type   // file types supported by tag system
 enum tag_major_version
 {
     TAG_MAJOR_START   = 5,
-    TAG_MAJOR_VERSION = 5
+    TAG_MAJOR_VERSION = 6
 };
 
 // Minor version will be reset to zero when major version changes.
@@ -63,7 +63,8 @@ enum tag_minor_version
     TAG_MINOR_SVNREV   = 13,     // Added SVN revision
     TAG_MINOR_PORTEXT  = 14,     // Keep track of portal vault extensions.
     TAG_MINOR_RELIGION = 15,     // Keep track of ghosts' religions.
-    TAG_MINOR_VERSION  = 15      // Current version.  (Keep equal to max.)
+    TAG_MINOR_ARTEFACT = 16,     // Turned fixed arts into unrandarts.
+    TAG_MINOR_VERSION  = 16      // Current version.  (Keep equal to max.)
 };
 
 

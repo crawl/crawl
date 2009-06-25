@@ -324,6 +324,14 @@ $(FSQLLIBA):
 	cd $(SQLSRC) && $(MAKE)
 
 #############################################################################
+# Build unrandart data
+artefact.h: art-data.txt
+	util/art-data.pl
+
+art-data.h: art-data.txt util/art-data.pl
+	util/art-data.pl
+
+#############################################################################
 # Packaging a source tarball for release
 #
 

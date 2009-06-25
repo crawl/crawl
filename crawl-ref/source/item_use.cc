@@ -19,6 +19,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "beam.h"
 #include "cio.h"
 #include "cloud.h"
@@ -48,7 +49,6 @@ REVISION("$Rev$");
 #include "ouch.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills.h"
@@ -506,7 +506,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
             you.current_vision -= 2;
             setLOSRadius(you.current_vision);
-            you.special_wield = SPWLD_SHADOW;
+            you.unrand_reacts = SPWLD_SHADOW;
         }
         else if (item.sub_type == MISC_HORN_OF_GERYON)
             set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -759,8 +759,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
             default:
                 break;
             }
-            if (is_fixed_artefact(item))
-                you.special_wield = item_special_wield_effect(item);
+            if (is_unrandom_artefact(item))
+                you.unrand_reacts = item_special_wield_effect(item);
         }
 
         if (item_cursed(item))
@@ -5360,7 +5360,7 @@ void use_artefact(item_def &item, bool unmeld)
     }
 
     if (proprt[ARTP_NOISES])
-        you.special_wield = SPWLD_NOISE;
+        you.unrand_reacts = SPWLD_NOISE;
 
     if (!alreadyknown && Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(item));

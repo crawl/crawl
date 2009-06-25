@@ -19,6 +19,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "delay.h"
@@ -37,7 +38,6 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "spells4.h"
 #include "spl-mis.h"
@@ -1598,7 +1598,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     if (wpn == -1
         || you.inv[wpn].base_type != OBJ_WEAPONS
         || is_range_weapon(you.inv[wpn])
-        || is_fixed_artefact(you.inv[wpn]))
+        || is_special_unrandom_artefact(you.inv[wpn]))
     {
         success = false;
     }

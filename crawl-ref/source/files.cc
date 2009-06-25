@@ -43,6 +43,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "clua.h"
@@ -69,7 +70,6 @@ REVISION("$Rev$");
 #include "overmap.h"
 #include "place.h"
 #include "player.h"
-#include "randart.h"
 #include "skills2.h"
 #include "stash.h"
 #include "state.h"

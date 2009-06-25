@@ -23,6 +23,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "decks.h"
 #include "describe.h"
 #include "food.h"
@@ -38,7 +39,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -1263,7 +1263,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         buff << item_base_name(*this);
 
-        if (know_ego)
+        if (know_ego && !is_artefact(*this))
         {
             const special_armour_type sparm = get_armour_ego_type( *this );
 
@@ -2238,13 +2238,8 @@ static char retlet( int sed )
 
 bool is_interesting_item( const item_def& item )
 {
-    if (fully_identified(item)
-        && (is_random_artefact(item)
-            || is_unrandom_artefact(item)
-            || is_fixed_artefact(item)))
-    {
+    if (fully_identified(item) && is_artefact(item))
         return (true);
-    }
 
     const std::string iname = menu_colour_item_prefix(item, false) + " "
                               + item.name(DESC_PLAIN);

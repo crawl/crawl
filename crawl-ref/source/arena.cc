@@ -11,6 +11,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 #include "arena.h"
+#include "artefact.h"
 #include "chardump.h"
 #include "cio.h"
 #include "command.h"
@@ -28,7 +29,6 @@ REVISION("$Rev$");
 #include "monplace.h"
 #include "mstuff2.h"
 #include "output.h"
-#include "randart.h"
 #include "skills2.h"
 #include "spl-mis.h"
 #include "spl-util.h"

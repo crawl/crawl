@@ -16,6 +16,7 @@ REVISION("$Rev$");
 #include <cstdlib>
 #include <algorithm>
 
+#include "artefact.h"
 #include "branch.h"
 #include "describe.h"
 #include "directn.h"
@@ -33,7 +34,6 @@ REVISION("$Rev$");
 #include "monplace.h"
 #include "mon-util.h"
 #include "place.h"
-#include "randart.h"
 #include "stuff.h"
 #include "tags.h"
 
@@ -2843,7 +2843,7 @@ item_spec item_list::parse_single_spec(std::string s)
         return (result);
     }
 
-    std::string fixed_str = strip_tag_prefix(s, "fixed:");
+    std::string unrand_str = strip_tag_prefix(s, "unrand:");
 
     if (strip_tag(s, "good_item"))
         result.level = MAKE_GOOD_ITEM;
@@ -2949,14 +2949,15 @@ item_spec item_list::parse_single_spec(std::string s)
     if (!error.empty())
         return (result);
 
-    if (!fixed_str.empty())
+    if (!unrand_str.empty())
     {
-        result.ego = get_fixedart_num(fixed_str.c_str());
+        result.ego = get_unrandart_num(unrand_str.c_str());
         if (result.ego == SPWPN_NORMAL)
         {
-            error = make_stringf("Unknown fixed art: %s", fixed_str.c_str());
+            error = make_stringf("Unknown unrand art: %s", unrand_str.c_str());
             return result;
         }
+        result.ego = -result.ego;
         return result;
     }
 

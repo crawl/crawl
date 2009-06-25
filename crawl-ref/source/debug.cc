@@ -27,6 +27,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "branch.h"
 #include "chardump.h"
@@ -67,7 +68,6 @@ REVISION("$Rev$");
 #include "place.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
@@ -1465,54 +1465,24 @@ bool get_item_by_name(item_def *item, char* specs,
                     type_wanted = item->sub_type;
                 break;
 
+            // Search for a matching unrandart.
             case OBJ_WEAPONS:
-            {
-                // Try for fixed artefacts matching the name.
-                unique_item_status_type exists;
-                for (unsigned which = SPWPN_START_FIXEDARTS;
-                     which <= SPWPN_END_FIXEDARTS; which++)
-                {
-                    exists = get_unique_item_status(OBJ_WEAPONS, which);
-                    make_item_fixed_artefact(*item, false, which);
-                    strcpy(obj_name, item->name(DESC_PLAIN).c_str());
-
-                    ptr = strstr( strlwr(obj_name), specs );
-                    if (ptr != NULL)
-                    {
-                        if (create_for_real)
-                            mpr(obj_name);
-                        return(true);
-                    }
-                    else
-                    {
-                        set_unique_item_status(OBJ_WEAPONS, which, exists);
-                        do_uncurse_item(*item);
-                        item->props.clear();
-                    }
-                }
-            }
-            // intentional fall-through for the unrandarts
             case OBJ_ARMOUR:
             case OBJ_JEWELLERY:
             {
-                bool exists;
                 for (int unrand = 0; unrand < NO_UNRANDARTS; unrand++)
                 {
-                    exists = does_unrandart_exist( unrand );
-                    make_item_unrandart(*item, unrand);
-                    strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+                    int index = unrand + UNRAND_START;
+                    unrandart_entry* entry = get_unrand_entry(index);
 
-                    ptr = strstr( strlwr(obj_name), specs );
+                    ptr = strcasestr( entry->name, specs );
                     if (ptr != NULL && item->base_type == class_wanted)
                     {
                         if (create_for_real)
-                            mpr(obj_name);
+                            mpr(entry->name);
+                        make_item_unrandart(*item, index);
                         return(true);
                     }
-
-                    set_unrandart_exist(unrand, exists);
-                    do_uncurse_item(*item);
-                    item->props.clear();
                 }
 
                 // Reset base type to class_wanted, if nothing found.
@@ -1810,7 +1780,7 @@ static void _tweak_randart(item_def &item)
         mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[choice],
              props[choice] ? "off" : "on");
         artefact_set_property(item, static_cast<artefact_prop_type>(choice),
-                              !props[choice]);
+                             !props[choice]);
         break;
 
     case ARTP_VAL_POS:
@@ -1824,13 +1794,13 @@ static void _tweak_randart(item_def &item)
             return;
         }
         artefact_set_property(item, static_cast<artefact_prop_type>(choice),
-                              val);
+                             val);
         break;
     case ARTP_VAL_ANY:
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[choice], props[choice]);
         val = _debug_prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(choice),
-                              val);
+                             val);
         break;
     }
 }
@@ -1979,42 +1949,28 @@ void wizard_value_artefact()
 
 void wizard_create_all_artefacts()
 {
-    // Create all unrandarts. Start at 1; the unrandart at 0 is a dummy.
-    for (int i = 1; i < NO_UNRANDARTS; ++i)
+    // Create all unrandarts.
+    for (int i = 0; i < NO_UNRANDARTS; ++i)
     {
+        const int              index = i + UNRAND_START;
+        const unrandart_entry* entry = get_unrand_entry(index);
+
+        // Skip dummy entries.
+        if (entry->base_type == OBJ_UNASSIGNED)
+            continue;
+
         int islot = get_item_slot();
         if (islot == NON_ITEM)
             break;
 
         item_def& item = mitm[islot];
-        make_item_unrandart(item, i);
+        make_item_unrandart(item, index);
         item.quantity = 1;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
                                         << std::endl;
         move_item_to_grid(&islot, you.pos());
-    }
-
-    // Create all fixed artefacts.
-    for (int i = SPWPN_START_FIXEDARTS; i < SPWPN_START_NOGEN_FIXEDARTS; ++i)
-    {
-        int islot = get_item_slot();
-        if (islot == NON_ITEM)
-            break;
-
-        item_def& item = mitm[islot];
-        if (make_item_fixed_artefact(item, false, i))
-        {
-            item.quantity = 1;
-            item_colour(item);
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
-            move_item_to_grid( &islot, you.pos() );
-
-            msg::streams(MSGCH_DIAGNOSTICS) << "Made "
-                                            << item.name(DESC_NOCAP_A)
-                                            << std::endl;
-        }
     }
 
     // Create Horn of Geryon
@@ -2884,19 +2840,18 @@ void debug_item_scan( void )
         else if ((mitm[i].base_type == OBJ_WEAPONS
                     && (abs(mitm[i].plus) > 30
                         || abs(mitm[i].plus2) > 30
-                        || !is_random_artefact( mitm[i] )
-                           && mitm[i].special >= 30
-                           && mitm[i].special < 181))
+                        || !is_artefact( mitm[i] )
+                           && mitm[i].special >= NUM_SPECIAL_WEAPONS))
 
                  || (mitm[i].base_type == OBJ_MISSILES
                      && (abs(mitm[i].plus) > 25
-                         || !is_random_artefact( mitm[i] )
-                            && mitm[i].special >= 30))
+                         || !is_artefact( mitm[i] )
+                            && mitm[i].special >= NUM_SPECIAL_MISSILES))
 
                  || (mitm[i].base_type == OBJ_ARMOUR
                      && (abs(mitm[i].plus) > 25
-                         || !is_random_artefact( mitm[i] )
-                            && mitm[i].special >= 30)))
+                         || !is_artefact( mitm[i] )
+                            && mitm[i].special >= NUM_SPECIAL_ARMOURS)))
         {
             mpr("Bad plus or special value:", MSGCH_ERROR);
             _dump_item( name, i, mitm[i] );
@@ -5106,7 +5061,6 @@ static void _vanish_orig_eq(monsters* mons)
         if (item.orig_place != 0 || item.orig_monnum != 0
             || !item.inscription.empty()
             || is_unrandom_artefact(item)
-            || is_fixed_artefact(item)
             || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN | ISFLAG_NOTED_GET
                               | ISFLAG_BEEN_IN_INV) ) )
         {

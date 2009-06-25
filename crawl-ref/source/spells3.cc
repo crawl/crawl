@@ -20,6 +20,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abyss.h"
+#include "artefact.h"
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
@@ -41,7 +42,6 @@ REVISION("$Rev$");
 #include "place.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "spells1.h"
 #include "spells4.h"

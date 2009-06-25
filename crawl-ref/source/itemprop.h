@@ -116,31 +116,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_SHADOW,       // unused
     SPWPN_DEBUG_RANDART = 25,          //   25
     NUM_SPECIAL_WEAPONS,
-    SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
-
-    // everything above this point is a special artefact wield:
-    SPWPN_START_FIXEDARTS = 181,
-
-    SPWPN_SINGING_SWORD = SPWPN_START_FIXEDARTS,
-    SPWPN_WRATH_OF_TROG,
-    SPWPN_SCYTHE_OF_CURSES,
-    SPWPN_MACE_OF_VARIABILITY,
-    SPWPN_GLAIVE_OF_PRUNE,
-    SPWPN_SCEPTRE_OF_TORMENT,
-    SPWPN_SWORD_OF_ZONGULDROK,
-    SPWPN_SWORD_OF_POWER,
-    SPWPN_STAFF_OF_OLGREB,
-    SPWPN_VAMPIRES_TOOTH,
-    SPWPN_STAFF_OF_WUCAD_MU,
-
-    // these three are not generated randomly {dlb}
-    SPWPN_START_NOGEN_FIXEDARTS,
-
-    SPWPN_SWORD_OF_CEREBOV = SPWPN_START_NOGEN_FIXEDARTS,
-    SPWPN_STAFF_OF_DISPATER,
-    SPWPN_SCEPTRE_OF_ASMODEUS,
-
-    SPWPN_END_FIXEDARTS = SPWPN_SCEPTRE_OF_ASMODEUS
+    SPWPN_DUMMY_CRUSHING         // ONLY TEMPORARY USAGE -- converts to VORPAL
 };
 
 enum corpse_type
@@ -358,7 +334,8 @@ enum special_armour_type
     SPARM_POSITIVE_ENERGY,
     SPARM_ARCHMAGI,
     SPARM_PRESERVATION,
-    SPARM_REFLECTION                   //   19
+    SPARM_REFLECTION,
+    NUM_SPECIAL_ARMOURS                //   20
 };
 
 enum special_missile_type // to separate from weapons in general {dlb}
@@ -376,7 +353,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_DISPERSAL,
     SPMSL_EXPLODING,                   //   10
     SPMSL_STEEL,
-    SPMSL_SILVER
+    SPMSL_SILVER,
+    NUM_SPECIAL_MISSILES               //   12
 };
 
 enum special_ring_type // jewellery mitm[].special values
@@ -662,6 +640,7 @@ equipment_type get_armour_slot( const item_def &item );
 equipment_type get_armour_slot( armour_type arm );
 
 bool jewellery_is_amulet( const item_def &item );
+bool jewellery_is_amulet( int sub_type );
 bool check_jewellery_size( const item_def &item, size_type size );
 
 bool  hide2armour( item_def &item );
@@ -769,6 +748,7 @@ bool gives_ability(const item_def &item);
 bool gives_resistance(const item_def &item);
 int item_mass(const item_def &item);
 size_type item_size(const item_def &item);
+equipment_type get_item_slot(object_class_type type, int sub_type);
 
 bool is_colourful_item(const item_def &item);
 

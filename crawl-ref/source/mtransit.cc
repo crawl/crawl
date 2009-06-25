@@ -13,12 +13,12 @@ REVISION("$Rev$");
 
 #include "mtransit.h"
 
+#include "artefact.h"
 #include "dungeon.h"
 #include "items.h"
 #include "monplace.h"
 #include "mon-util.h"
 #include "monstuff.h"
-#include "randart.h"
 #include "stuff.h"
 
 #define MAX_LOST 100
@@ -52,7 +52,7 @@ static void cull_lost_mons(m_transit_list &mlist, int how_many)
 
 static void cull_lost_items(i_transit_list &ilist, int how_many)
 {
-    // First pass, drop non-artifacts.
+    // First pass, drop non-artefacts.
     for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
     {
         i_transit_list::iterator finger = i++;
@@ -82,7 +82,8 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
     {
         i_transit_list::iterator finger = i++;
-        if (is_unrandom_artefact(*finger))
+        if (is_unrandom_artefact(*finger)
+            && !is_special_unrandom_artefact(*finger))
         {
             ilist.erase(finger);
 

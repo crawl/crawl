@@ -32,6 +32,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "command.h"
@@ -52,7 +53,6 @@ REVISION("$Rev$");
 #include "misc.h"
 #include "place.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"

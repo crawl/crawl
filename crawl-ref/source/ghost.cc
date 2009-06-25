@@ -13,11 +13,11 @@ REVISION("$Rev$");
 
 #include "ghost.h"
 
+#include "artefact.h"
 #include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "newgame.h"
-#include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "mtransit.h"

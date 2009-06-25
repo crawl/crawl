@@ -11,6 +11,7 @@ REVISION("$Rev$");
 
 #include <algorithm>
 
+#include "artefact.h"
 #include "beam.h"
 #include "branch.h"
 #include "database.h"
@@ -29,7 +30,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "spells1.h"
 #include "spells2.h"
@@ -536,7 +536,7 @@ static void _try_brand_switch(const int item_index)
     if (item.base_type != OBJ_WEAPONS || is_range_weapon(item))
         return;
 
-    if (is_unrandom_artefact(item) || is_fixed_artefact(item))
+    if (is_unrandom_artefact(item))
         return;
 
     // Only do it some of the time.
@@ -775,7 +775,7 @@ static bool _is_chaos_upgradeable(const item_def &item,
 {
     // Since Xom is a god he is capable of changing randarts, but not
     // other artifacts.
-    if (is_artefact(item) && !is_random_artefact(item))
+    if (is_unrandom_artefact(item))
        return (false);
 
     // Only upgrade permanent items, since the player should get a
@@ -914,7 +914,7 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
 {
     ASSERT(item.base_type == OBJ_MISSILES
            || item.base_type == OBJ_WEAPONS);
-    ASSERT(!is_unrandom_artefact(item) && !is_fixed_artefact(item));
+    ASSERT(!is_unrandom_artefact(item));
 
     bool seen = false;
     if (mon && you.can_see(mon) && item.base_type == OBJ_WEAPONS)
@@ -3074,7 +3074,7 @@ void xom_check_lost_item(const item_def& item)
 {
     if (item.base_type == OBJ_ORBS)
         xom_is_stimulated(255, "Xom laughs nastily.", true);
-    else if (is_fixed_artefact(item))
+    else if (is_special_unrandom_artefact(item))
         xom_is_stimulated(128, "Xom snickers.", true);
     else if (is_rune(item))
     {
@@ -3119,7 +3119,7 @@ void xom_check_destroyed_item(const item_def& item, int cause)
         xom_is_stimulated(255, "Xom laughs nastily.", true);
         return;
     }
-    else if (is_fixed_artefact(item))
+    else if (is_special_unrandom_artefact(item))
         xom_is_stimulated(128, "Xom snickers.", true);
     else if (is_rune(item))
     {

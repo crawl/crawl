@@ -12,7 +12,7 @@
 
 
 #include "externs.h"
-#include "randart.h"
+#include "artefact.h"
 #include "mon-util.h"
 
 enum unarmed_attack_type

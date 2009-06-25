@@ -18,6 +18,7 @@ REVISION("$Rev$");
 #include <algorithm>
 
 #include "abyss.h"
+#include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -44,7 +45,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "place.h"
 #include "player.h"
-#include "randart.h"
 #include "spells3.h"
 #include "spl-book.h"
 #include "state.h"

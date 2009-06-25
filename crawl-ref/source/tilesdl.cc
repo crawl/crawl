@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#include "artefact.h"
 #include "cio.h"
 #include "itemname.h"
 #include "items.h"
@@ -9,7 +10,6 @@ REVISION("$Rev$");
 #include "message.h"
 #include "mon-util.h"
 #include "player.h"
-#include "randart.h"
 #include "state.h"
 #include "stuff.h"
 #include "tiles.h"
@@ -1344,11 +1344,8 @@ int tile_known_weapon_brand(const item_def item)
 
     if (item.base_type == OBJ_WEAPONS)
     {
-        if (!is_fixed_artefact(item)
-            && get_weapon_brand(item) != SPWPN_NORMAL)
-        {
+        if (get_weapon_brand(item) != SPWPN_NORMAL)
             return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
-        }
     }
     else if (item.base_type == OBJ_MISSILES)
     {

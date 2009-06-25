@@ -168,6 +168,9 @@ const int MAX_WPN_ENCHANT = 9;
 const int MAX_ARM_ENCHANT = 8;
 const int MAX_SEC_ENCHANT = 2;
 
+// Size of unique_items in player class
+#define MAX_UNRANDARTS 100
+
 // some shortcuts:
 #define menv   env.mons
 #define mitm   env.item

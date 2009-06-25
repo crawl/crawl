@@ -3,6 +3,7 @@
 OBJECTS = \
 abl-show.o \
 abyss.o \
+artefact.o \
 acr.o \
 arena.o \
 beam.o \
@@ -62,7 +63,6 @@ overmap.o \
 place.o \
 player.o \
 quiver.o \
-randart.o \
 religion.o \
 shopping.o \
 skills.o \

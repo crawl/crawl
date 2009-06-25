@@ -63,6 +63,7 @@
 REVISION("$Rev$");
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "branch.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -77,7 +78,6 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "mtransit.h"
 #include "quiver.h"
-#include "randart.h"
 #include "skills.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -837,7 +837,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.char_direction);
     marshallByte(th, you.your_level);
     marshallByte(th, you.is_undead);
-    marshallByte(th, you.special_wield);
+    marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
     marshallShort(th, you.sage_bonus_skill);
     marshallLong(th, you.sage_bonus_degree);
@@ -1065,12 +1065,6 @@ static void tag_construct_you_items(writer &th)
     marshallShort(th, NUM_SPELLS);
     for (j = 0; j < NUM_SPELLS; ++j)
         marshallByte(th,you.seen_spell[j]);
-
-    // how many unrandarts?
-    marshallShort(th, NO_UNRANDARTS);
-
-    for (j = 0; j < NO_UNRANDARTS; ++j)
-        marshallBoolean(th, does_unrandart_exist(j));
 }
 
 static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
@@ -1253,7 +1247,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.char_direction    = static_cast<game_direction_type>(unmarshallByte(th));
     you.your_level        = unmarshallByte(th);
     you.is_undead         = static_cast<undead_state_type>(unmarshallByte(th));
-    you.special_wield     = unmarshallByte(th);
+    you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
     you.sage_bonus_skill  = static_cast<skill_type>(unmarshallShort(th));
     you.sage_bonus_degree = unmarshallLong(th);
@@ -1513,6 +1507,11 @@ static void tag_read_you_items(reader &th, char minorVersion)
             static_cast<unique_item_status_type>(unmarshallByte(th));
     }
 
+    // # of unrandarts could certainly change.
+    // If it does, the new ones won't exist yet - zero them out.
+    for (; j < NO_UNRANDARTS; j++)
+        you.unique_items[j] = UNIQ_NOT_EXISTS;
+
     // how many books?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
@@ -1522,16 +1521,6 @@ static void tag_read_you_items(reader &th, char minorVersion)
     count_s = unmarshallShort(th);
     for (j = 0; j < count_s; ++j)
         you.seen_spell[j] = unmarshallByte(th);
-
-    // how many unrandarts?
-    count_s = unmarshallShort(th);
-    for (j = 0; j < count_s; ++j)
-        set_unrandart_exist(j, unmarshallBoolean(th));
-
-    // # of unrandarts could certainly change.
-    // If it does, the new ones won't exist yet - zero them out.
-    for (; j < NO_UNRANDARTS; j++)
-        set_unrandart_exist(j, false);
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)

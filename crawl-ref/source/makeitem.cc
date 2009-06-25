@@ -15,6 +15,7 @@ REVISION("$Rev$");
 #include "externs.h"
 #include "makeitem.h"
 
+#include "artefact.h"
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -26,7 +27,6 @@ REVISION("$Rev$");
 #include "misc.h"
 #include "mon-util.h"
 #include "player.h"
-#include "randart.h"
 #include "spl-book.h"
 #include "stuff.h"
 #include "travel.h"
@@ -349,9 +349,8 @@ void item_colour(item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (is_unrandom_artefact( item ) || is_fixed_artefact( item ))
-            break;              // unrandarts and fixed arts already coloured
-
+        if (is_unrandom_artefact(item))
+            break;              // unrandarts already coloured
 
         if (is_demonic( item ))
             item.colour = random_uncommon_colour();
@@ -883,6 +882,26 @@ static weapon_type _determine_weapon_subtype(int item_level)
     return rc;
 }
 
+static bool _try_make_item_special_unrand(item_def& item, int force_type,
+                                          int item_level)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Making special unrand artefact.");
+#endif
+
+    bool abyss = item_level == level_id(LEVEL_ABYSS).absdepth();
+    int idx = find_okay_unrandart(item.base_type, force_type,
+                                  UNRANDPSEC_SPECIAL, abyss);
+
+    if (idx != -1)
+    {
+        if (make_item_unrandart(item, idx))
+            return (true);
+    }
+
+    return (false);
+}
+
 // Return whether we made an artefact.
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level)
@@ -897,7 +916,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             && you.level_type != LEVEL_PANDEMONIUM
             && one_chance_in(50))
         {
-            const int idx = find_okay_unrandart(OBJ_WEAPONS, force_type);
+            const int idx = find_okay_unrandart(OBJ_WEAPONS, force_type,
+                                                UNRANDSPEC_NORMAL);
             if (idx != -1)
             {
                 make_item_unrandart(item, idx);
@@ -936,18 +956,12 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         return (true);
     }
 
-    // If it isn't an artefact yet, try to make a fixed artefact.
+    // If it isn't an artefact yet, try to make a special unrand artefact.
     if (item_level > 6
         && one_chance_in(12)
         && x_chance_in_y(31 + item_level * 3, 3000))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Making fixed artefact.");
-#endif
-        if (make_item_fixed_artefact(
-                item,
-                (item_level == level_id(LEVEL_ABYSS).absdepth()) ))
-            return (true);
+        return _try_make_item_special_unrand(item, force_type, item_level);
     }
 
     return (false);
@@ -1528,7 +1542,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         return;
     }
 
-    ASSERT(!is_fixed_artefact(item) && !is_random_artefact(item));
+    ASSERT(!is_artefact(item));
 
     // Artefacts handled, let's make a normal item.
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
@@ -1828,7 +1842,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             && one_chance_in(50))
         {
             // The old generation code did not respect force_type here.
-            const int idx = find_okay_unrandart(OBJ_ARMOUR, force_type);
+            const int idx = find_okay_unrandart(OBJ_ARMOUR, force_type,
+                                                UNRANDSPEC_NORMAL);
             if (idx != -1)
             {
                 make_item_unrandart(item, idx);
@@ -1872,6 +1887,14 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
 
         return (true);
+    }
+
+    // If it isn't an artefact yet, try to make a special unrand artefact.
+    if (item_level > 6
+        && one_chance_in(12)
+        && x_chance_in_y(31 + item_level * 3, 3000))
+    {
+        return _try_make_item_special_unrand(item, force_type, item_level);
     }
 
     return (false);
@@ -2079,7 +2102,8 @@ static special_armour_type _determine_armour_ego(const item_def& item,
 }
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
-                                  int force_type, int item_level, int item_race)
+                                  int force_type, int item_level,
+                                  int item_race)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -2588,7 +2612,8 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
         // The old generation code did not respect force_type here.
-        const int idx = find_okay_unrandart(OBJ_JEWELLERY, force_type);
+        const int idx = find_okay_unrandart(OBJ_JEWELLERY, force_type,
+                                            UNRANDSPEC_NORMAL);
         if (idx != -1)
         {
             make_item_unrandart(item, idx);
@@ -2629,7 +2654,8 @@ static int _determine_ring_plus(int subtype)
 }
 
 static void _generate_jewellery_item(item_def& item, bool allow_uniques,
-                                     int force_type, int item_level, int agent)
+                                     int force_type, int item_level,
+                                     int agent)
 {
     if (allow_uniques
         && _try_make_jewellery_unrandart(item, force_type, item_level))
@@ -2683,6 +2709,13 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
+    }
+    // If it isn't an artefact yet, try to make a special unrand artefact.
+    else if (item_level > 6
+             && one_chance_in(12)
+             && x_chance_in_y(31 + item_level * 3, 3000))
+    {
+        _try_make_item_special_unrand(item, force_type, item_level);
     }
     else if (item.sub_type == RING_HUNGER || item.sub_type == RING_TELEPORTATION
              || one_chance_in(50))
@@ -2771,7 +2804,7 @@ int items(int allow_uniques,       // not just true-false,
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
 
-    if (force_ego > 0)
+    if (force_ego != 0)
         allow_uniques = false;
     item.special = force_ego;
 
@@ -2814,11 +2847,12 @@ int items(int allow_uniques,       // not just true-false,
 
     item.quantity = 1;          // generally the case
 
-    if (force_ego >= SPWPN_START_FIXEDARTS && force_ego <= SPWPN_END_FIXEDARTS)
+    if (force_ego < SP_FORBID_EGO)
     {
-        if (get_unique_item_status(OBJ_WEAPONS, force_ego) == UNIQ_NOT_EXISTS)
+        force_ego = -force_ego;
+        if (get_unique_item_status(force_ego) == UNIQ_NOT_EXISTS)
         {
-            make_item_fixed_artefact(mitm[p], false, force_ego);
+            make_item_unrandart(mitm[p], force_ego);
             return (p);
         }
         // the base item otherwise
@@ -2874,7 +2908,6 @@ int items(int allow_uniques,       // not just true-false,
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
         item.sub_type = force_type;
-        set_unique_item_status(OBJ_ORBS, item.sub_type, UNIQ_EXISTS);
         break;
 
     case OBJ_MISCELLANY:
@@ -2958,7 +2991,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return (false);
 
-    if (visibly_branded || is_random_artefact(item))
+    if (visibly_branded || is_artefact(item))
         return (true);
 
     if ((item.plus || item.plus2)
@@ -2981,7 +3014,7 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return (false);
 
-    if (visibly_branded || is_random_artefact(item))
+    if (visibly_branded || is_artefact(item))
         return (true);
 
     if (item.plus && !one_chance_in(3))
@@ -3701,17 +3734,17 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_CEREBOV:
         force_item = true;
-        make_item_fixed_artefact( item, false, SPWPN_SWORD_OF_CEREBOV );
+        make_item_unrandart( item, SPWPN_SWORD_OF_CEREBOV );
         break;
 
     case MONS_DISPATER:
         force_item = true;
-        make_item_fixed_artefact( item, false, SPWPN_STAFF_OF_DISPATER );
+        make_item_unrandart( item, SPWPN_STAFF_OF_DISPATER );
         break;
 
     case MONS_ASMODEUS:
         force_item = true;
-        make_item_fixed_artefact( item, false, SPWPN_SCEPTRE_OF_ASMODEUS );
+        make_item_unrandart( item, SPWPN_SCEPTRE_OF_ASMODEUS );
         break;
 
     case MONS_GERYON:

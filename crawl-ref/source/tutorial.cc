@@ -19,6 +19,7 @@ REVISION("$Rev$");
 #include "tutorial.h"
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "cloud.h"
 #include "command.h"
 #include "decks.h"
@@ -41,7 +42,6 @@ REVISION("$Rev$");
 #include "newgame.h"
 #include "output.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"

@@ -167,6 +167,8 @@ enum attribute_type
     ATTR_MISC_SPENDING,        // Spending for things like ziggurats.
     ATTR_RND_LVL_BOOKS,        // Bitfield of level-type randart spellbooks
                                // player has seen.
+    ATTR_NOISES,               // A noisy artefact is equipped.
+    ATTR_SHADOWS,              // Lantern of shadows effect.
     NUM_ATTRIBUTES
 };
 

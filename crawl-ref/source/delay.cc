@@ -14,6 +14,7 @@ REVISION("$Rev$");
 #include <string.h>
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "clua.h"
 #include "command.h"
 #include "database.h"
@@ -36,7 +37,6 @@ REVISION("$Rev$");
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "spells4.h"
 #include "spl-util.h"
@@ -1425,7 +1425,7 @@ void armour_wear_effects(const int item_slot)
     const bool was_known = item_type_known(arm);
 
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK);
-    if (is_random_artefact(arm))
+    if (is_artefact(arm))
         arm.flags |= ISFLAG_NOTED_ID;
 
     const equipment_type eq_slot = get_armour_slot(arm);
@@ -1434,7 +1434,7 @@ void armour_wear_effects(const int item_slot)
 
     if (!was_known)
     {
-        if (Options.autoinscribe_artefacts && is_random_artefact(arm))
+        if (Options.autoinscribe_artefacts && is_artefact(arm))
             add_autoinscription( arm, artefact_auto_inscription(arm));
     }
     if (!melded)
@@ -1564,7 +1564,7 @@ void armour_wear_effects(const int item_slot)
         }
     }
 
-    if (is_random_artefact(arm))
+    if (is_artefact(arm))
         use_artefact(arm, melded);
 
     if (item_cursed(arm) && !melded)

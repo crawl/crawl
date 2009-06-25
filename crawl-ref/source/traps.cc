@@ -14,6 +14,7 @@ REVISION("$Rev$");
 
 #include <algorithm>
 
+#include "artefact.h"
 #include "beam.h"
 #include "branch.h"
 #include "delay.h"
@@ -32,7 +33,6 @@ REVISION("$Rev$");
 #include "ouch.h"
 #include "place.h"
 #include "player.h"
-#include "randart.h"
 #include "skills.h"
 #include "spells3.h"
 #include "spl-mis.h"

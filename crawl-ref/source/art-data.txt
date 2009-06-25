@@ -1,0 +1,792 @@
+# This file contains the definitions of undrandarts (and what used to be
+# fixed artefacts).  util/art-data.pl translates this file into
+# art-data.h, and also updates the enumeration and NO_UNRANDARTS in
+# unrand.h
+#
+# Each artefact definition is separated by one or more blanks lines.
+#
+# Each artefact definition must have the NAME, APPEAR, OBJ and COLOUR
+# fields.
+#
+# The name and appearance of each unrandart must be unique.
+# 
+# Changing the name of an unrand will change it's automatically
+# generated enumeration, unless its enumeration is forced with ENUM.
+#
+# "ENUM: FOO" can be used to force the enumeration for an unrand to be
+# "UNRAND_FOO", for cases where the automatically generated enumarations
+# of different unrands conflict.
+#
+# Add new artefact definitions at the end of the file; doing so should cause
+# no problems with save-file compatibilty, but for tile builds it will
+# cause a shift of remembered tiles (since each new unrandart needs its
+# own tiles).  Changing the order of the definitions will likely cause
+# strange behaviour in games saved previous to the change, and deleting
+# definitions will break savefile compatibility.
+
+# This entry must always be first.
+ENUM:   DUMMY1
+NAME:   DUMMY UNRANDART 1
+APPEAR: DUMMY UNRANDART 1
+OBJ:    OBJ_UNASSIGNED/250
+PLUS:   250/250
+COLOUR: BLACK
+
+####################### First come the old fixed arts.
+
+NAME:    Singing Sword
+APPEAR:  golden long sword
+OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
+PLUS:    +7/+7
+COLOUR:  YELLOW
+DESC_ID: This blessed weapon loves nothing more than to sing to its owner,
+         whether they want it to or not.
+
+NAME:    Wrath of Trog
+APPEAR:  bloodstained battleaxe
+OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
+PLUS:    +3/+11
+COLOUR:  RED
+DESC_ID: This was the favourite weapon of the old god Trog, before it was 
+         lost one day. It induces a bloodthirsty berserker rage in anyone 
+         who uses it to strike another.
+
+NAME:    Mace of Variability
+APPEAR:  shimmering mace
+OBJ:     OBJ_WEAPONS/WPN_MACE
+PLUS:    0/0   # Set on generation
+COLOUR:  BLACK # Set on generation
+DESC_ID: It is rather unreliable.
+
+NAME:    Glaive of Prune
+APPEAR:  purple glaive
+OBJ:     OBJ_WEAPONS/WPN_GLAIVE
+PLUS:    0/+12
+COLOUR:  MAGENTA
+DESC_ID: It is the creation of a mad god, and carries a curse which 
+         transforms anyone possessing it into a prune. Fortunately, the 
+         curse works very slowly, and one can use it briefly with no
+         consequences worse than slightly purple skin and a few wrinkles.
+
+NAME:    Sword of Power
+APPEAR:  chunky great sword
+OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+PLUS:    0/0 # Set on wield
+COLOUR:  RED
+DESC_ID: It rewards the powerful with power and the meek with weakness.
+
+NAME:    Staff of Olgreb
+APPEAR:  green glowing staff
+OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:    0/0 # Set on wield
+COLOUR:  GREEN
+BRAND:   SPWPN_VENOM
+POISON:  true
+DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
+         before he met his fate somewhere within these dungeons. It
+         increases the ability of its wielder to use venomous magic, and
+         carries magical powers which can be evoked.
+
+NAME:    Staff of Wucad Mu
+APPEAR:  ephemeral quarterstaff
+OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:    0/0 # Set on wield
+COLOUR:  BROWN
+DESC_ID: Its power varies in proportion to its wielder's intelligence.
+         Using it can be a bit risky.
+
+NAME:    Vampire's Tooth
+APPEAR:  ivory dagger
+OBJ:     OBJ_WEAPONS/WPN_DAGGER
+PLUS:    +3/+4
+COLOUR:  WHITE
+BRAND:   SPWPN_VAMPIRICISM
+DESC_ID: It is lethally vampiric.
+
+NAME:    Scythe of Curses
+APPEAR:  warped scythe
+OBJ:     OBJ_WEAPONS/WPN_SCYTHE
+PLUS:    +13/+13
+COLOUR:  DARKGREY
+CURSED:  -1 
+DESC_ID: This weapon carries a terrible and highly irritating curse.
+
+NAME:    Sceptre of Torment
+APPEAR:  jewelled golden mace
+OBJ:     OBJ_WEAPONS/WPN_MACE
+PLUS:    +7/+6
+COLOUR:  YELLOW
+DESC_ID: This truly accursed weapon is an instrument of Hell.
+
+NAME:    Sword of Zonguldrok
+APPEAR:  bone long sword
+OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
+PLUS:    +9/+9
+COLOUR:  LIGHTGREY
+DESC_ID: This dreadful weapon is used at the user's peril.
+
+NAME:   Sword of Cerebov
+APPEAR: great serpentine sword
+OBJ:    OBJ_WEAPONS/WPN_GREAT_SWORD
+PLUS:   +6/+6
+COLOUR: YELLOW
+BRAND:  SPWPN_FLAMING
+CURSED: -1
+DESC:   Eerie flames cover its twisted blade.
+
+NAME:    Staff of Dispater
+APPEAR:  golden staff
+OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:    +4/+4
+COLOUR:  YELLOW
+DESC_ID: This legendary item can unleash the fury of Hell.
+
+NAME:    Sceptre of Asmodeus
+APPEAR:  ruby sceptre
+OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:    +7/+7
+COLOUR:  RED
+DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
+
+##################### End of old fixed arts.
+
+NAME:    long sword "Bloodbane"
+APPEAR:  blackened long sword
+OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
+PLUS:    +7/+8
+COLOUR:  DARKGREY
+BRAND:   SPWPN_VORPAL
+BERSERK: true
+ANGRY:   true
+STEALTH: -20                  
+
+NAME:   scimitar of Flaming Death
+APPEAR: smoking scimitar
+OBJ:    OBJ_WEAPONS/WPN_SCIMITAR
+PLUS:   +7/+5
+COLOUR: RED
+BRAND:  SPWPN_FLAMING
+FIRE:   2
+COLD:   -1
+POISON: true
+MAGIC:  20
+
+NAME:    mace of Brilliance
+APPEAR:  brightly glowing mace
+OBJ:     OBJ_WEAPONS/WPN_MACE
+PLUS:    +5/+5
+COLOUR:  WHITE
+BRAND:   SPWPN_HOLY_WRATH
+AC:      5
+INT:     5
+LIFE:    true
+SEEINV:  true
+STEALTH: -20                                  
+
+NAME:   demon blade "Leech"
+APPEAR: runed demon blade
+OBJ:    OBJ_WEAPONS/WPN_DEMON_BLADE
+PLUS:   +13/+4
+COLOUR: MAGENTA
+BRAND:  SPWPN_VAMPIRICISM
+EV:     -1
+STR:    -1
+INT:    -1
+DEX:    -1
+LIFE:   true
+CURSED: 4
+
+NAME:   dagger of Chilly Death
+APPEAR: sapphire dagger
+OBJ:    OBJ_WEAPONS/WPN_DAGGER
+PLUS:   +5/+7
+COLOUR: LIGHTBLUE
+BRAND:  SPWPN_FREEZING
+FIRE:   -1
+COLD:   2
+POISON: true
+MAGIC:  20
+DESC:   A dagger made of one huge piece of sapphire.
+
+NAME:     dagger "Morg"
+APPEAR:   rusty dagger
+OBJ:      OBJ_WEAPONS/WPN_DAGGER
+PLUS:     -1/+4
+COLOUR:   LIGHTRED
+BRAND:    SPWPN_PAIN
+INT:      5
+MAGIC:    30
+DESC:     An ugly rusty dagger. 
+DESC_END: Many years ago it was the property of a powerful mage called Boris.
+          He got lost in the Dungeon while seeking the Orb. 
+
+NAME:   scythe "Finisher"
+APPEAR: blackened scythe
+OBJ:    OBJ_WEAPONS/WPN_SCYTHE
+PLUS:   +3/+5
+COLOUR: DARKGREY
+BRAND:  SPWPN_SPEED
+STR:    3
+CURSED: -1
+DESC:   A long and sharp scythe, specially modified for combat purposes.
+
+NAME:   sling "Punk"
+APPEAR: blue sling
+OBJ:    OBJ_WEAPONS/WPN_SLING
+PLUS:   +9/+12
+COLOUR: LIGHTBLUE
+BRAND:  SPWPN_FROST
+COLD:   1
+DESC:   A sling made of weird blue leather.
+
+ENUM:     KRISHNA
+NAME:     bow of Krishna "Sharnga"
+APPEAR:   golden bow
+OBJ:      OBJ_WEAPONS/WPN_BOW
+PLUS:     +8/+8
+COLOUR:   YELLOW
+BRAND:    SPWPN_SPEED
+DEX:      3
+SEEINV:   true
+DESC:     A wonderful golden bow. 
+DESC_END: It once belonged to a foreign god. It works best with special
+          arrows which are not generally available.
+
+NAME:   giant club "Skullcrusher"
+APPEAR: brutal giant club
+OBJ:    OBJ_WEAPONS/WPN_GIANT_CLUB
+PLUS:   +0/+5
+COLOUR: BROWN
+BRAND:  SPWPN_SPEED
+STR:    5
+
+NAME:     glaive of the Guard
+APPEAR:   polished glaive
+OBJ:      OBJ_WEAPONS/WPN_GLAIVE
+PLUS:     +5/+8
+COLOUR:   LIGHTCYAN
+BRAND:    SPWPN_ELECTROCUTION
+AC:       5
+SEEINV:   true
+BERSERK:  true
+DESC_END: This weapon once belonged to Gar Dogh, the guard of a king's
+          treasures. According to legend he was lost somewhere in the Dungeon.
+
+NAME:     sword of Jihad
+APPEAR:   crystal sword
+OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
+PLUS:     +12/+10
+COLOUR:   WHITE
+BRAND:    SPWPN_HOLY_WRATH
+EV:       3
+LIFE:     true
+MAGIC:    20
+ANGRY:    true
+STEALTH:  -50                                  
+DESC_END: This sword was The Shining One's gift to a worshipper.
+DESC:     A long sword made of one huge piece of crystal.
+
+NAME:   crossbow "Hellfire"
+APPEAR: flaming crossbow
+OBJ:    OBJ_WEAPONS/WPN_CROSSBOW
+PLUS:   +6/+9
+COLOUR: LIGHTRED
+BRAND:  SPWPN_FLAME
+FIRE:   2
+COLD:   -1
+MAGIC:  40
+DESC:   A flaming crossbow, forged in the fires of the Hells.
+
+NAME:    sword of the Doom Knight
+APPEAR:  adamantine great sword
+OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+PLUS:    +13/+13
+COLOUR:  BLUE
+BRAND:   SPWPN_PAIN
+MAGIC:   50
+NOSPELL: true
+DESC:    An adamantine great sword.
+
+NAME:    "Eos"
+APPEAR:  encrusted morningstar
+OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
+PLUS:    +5/+5
+COLOUR:  LIGHTCYAN
+BRAND:   SPWPN_ELECTROCUTION
+ELEC:    true
+SEEINV:  true
+NOTELEP: true
+
+# Was "spear of Voo-Doo". In the African origin, there is a distinction
+# between voodoo and bo, the latter dealing with curses, witchcraft and
+# spells designed to do harm. Priests (or rather sorcerors) of bo are
+# called botono.
+NAME:     spear of the Botono
+APPEAR:   ebony spear
+OBJ:      OBJ_WEAPONS/WPN_SPEAR
+PLUS:     +2/+10
+COLOUR:   DARKGREY
+BRAND:    SPWPN_VAMPIRICISM
+POISON:   true
+LIFE:     true
+NOISES:   true
+STEALTH:  -30                  
+DESC_END: A really dark and malign artefact, which no wise man would even touch.
+
+NAME:     trident of the Octopus King
+APPEAR:   mangy trident
+OBJ:      OBJ_WEAPONS/WPN_TRIDENT
+PLUS:     +10/+4
+COLOUR:   CYAN
+BRAND:    SPWPN_VENOM
+ELEC:     true
+POISON:   true
+MAGIC:    50
+DESC_END: This trident was stolen many years ago from the Octopus King's
+          garden by a really unimportant and already dead man. But beware
+          of the Octopus King's wrath!
+
+NAME:   mithril axe "Arga"
+APPEAR: mithril axe
+OBJ:    OBJ_WEAPONS/WPN_WAR_AXE
+PLUS:   +10/+6
+COLOUR: WHITE
+BRAND:  SPWPN_SPEED
+STR:    2
+MAGIC:  30
+DESC:   A beautiful mithril axe, probably lost by some dwarven hero.
+
+NAME:     Elemental Staff
+APPEAR:   black staff
+OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:     +3/+1
+COLOUR:   DARKGREY
+BRAND:    SPWPN_PROTECTION
+FIRE:     2
+COLD:     2
+MAGIC:    60
+NOISES:   true
+METAB:    2
+DESC_END: This powerful staff used to belong to the leader of the Guild of
+          Five Elements.
+
+NAME:   hand crossbow "Sniper"
+APPEAR: black crossbow
+OBJ:    OBJ_WEAPONS/WPN_HAND_CROSSBOW
+PLUS:   +10/+0
+COLOUR: DARKGREY
+BRAND:  SPWPN_VENOM
+SEEINV: true
+DESC:   A hand crossbow made of some black material.
+
+NAME:   longbow "Piercer"
+APPEAR: very long metal bow
+OBJ:    OBJ_WEAPONS/WPN_LONGBOW
+PLUS:   +2/+10
+COLOUR: CYAN
+BRAND:  SPWPN_VORPAL
+EV:     -2
+DESC:   An exceptionally large metal longbow.
+
+ENUM:    BLOWGUN_ASSASSIN
+NAME:    blowgun of the Assassin
+APPEAR:  tiny blowgun
+OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
+PLUS:    +6/+6
+COLOUR:  WHITE
+INV:     true
+STEALTH: 60                   
+DESC:    It is designed for easy concealment, but still packs a nasty punch.
+
+NAME:    Wyrmbane
+APPEAR:  scale-covered lance
+OBJ:     OBJ_WEAPONS/WPN_SPEAR
+PLUS:    +9/+6
+COLOUR:  GREEN
+BRAND:   SPWPN_DRAGON_SLAYING
+AC:      5
+FIRE:    1
+POISON:  true
+BERSERK: true
+
+NAME:     Spriggan's Knife
+APPEAR:   dainty little knife
+OBJ:      OBJ_WEAPONS/WPN_KNIFE
+PLUS:     +4/+10
+COLOUR:   LIGHTCYAN
+EV:       4
+DEX:      4
+MAGIC:    20
+STEALTH:  50 
+DESC:     A dainty little knife.
+DESC_END: This knife was made by Spriggans, or for Spriggans, or possibly
+          from Spriggans. Anyway, it's in some way associated with those
+          fey folk.
+
+NAME:    plutonium sword
+APPEAR:  glowing long sword
+OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
+PLUS:    +12/+16
+COLOUR:  LIGHTGREEN
+MUTATE:  6
+CURSED:  1
+STEALTH: -20                  
+DESC:    A long sword made of weird glowing metal.
+
+NAME:   great mace "Undeadhunter"
+APPEAR: great steel mace
+OBJ:    OBJ_WEAPONS/WPN_GREAT_MACE
+PLUS:   +7/+7
+COLOUR: LIGHTGREY
+BRAND:  SPWPN_HOLY_WRATH
+LIFE:   true
+
+NAME:    whip "Serpent-Scourge"
+APPEAR:  forked whip
+OBJ:     OBJ_WEAPONS/WPN_WHIP
+PLUS:    +5/+10
+COLOUR:  DARKGREY
+BRAND:   SPWPN_VENOM
+POISON:  true
+DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'
+         deadly grey snakes.
+
+NAME:     knife of Accuracy
+APPEAR:   thin dagger
+OBJ:      OBJ_WEAPONS/WPN_DAGGER
+PLUS:     +27/-1
+COLOUR:   LIGHTCYAN
+DESC_END: It is almost unerringly accurate.
+
+# A play on the spell of the same name.  Colour taken from crystal walls.
+ENUM:     CRYSTAL_SPEAR
+NAME:     Lehudib's crystal spear
+APPEAR:   crystal spear
+OBJ:      OBJ_WEAPONS/WPN_SPEAR
+PLUS:     +6/+6
+COLOUR:   GREEN
+DESC_END: Presumably this relic led to the invention of the famous spell.
+
+NAME:   shield of Ignorance
+APPEAR: dull large shield
+OBJ:    OBJ_ARMOUR/ARM_LARGE_SHIELD
+PLUS:   +5
+COLOUR: BROWN
+AC:     2
+EV:     2
+INT:    -6
+LIFE:   true
+CURSED: 3
+
+NAME:   robe of Augmentation
+APPEAR: silk robe
+OBJ:    OBJ_ARMOUR/ARM_ROBE
+PLUS:   +4
+COLOUR: LIGHTRED
+STR:    2
+INT:    2
+DEX:    2
+DESC:   A robe made of the finest silk.
+
+NAME:     cloak of the Thief
+APPEAR:   tattered cloak
+OBJ:      OBJ_ARMOUR/ARM_CLOAK
+PLUS:     +1
+COLOUR:   DARKGREY
+EV:       2
+DEX:      2
+SEEINV:   true
+INV:      true
+LEV:      true
+DAM:      -3
+STEALTH:  60                   
+DESC_END: It allows its wearer to excel in the arts of thievery.
+
+NAME:   shield "Bullseye"
+APPEAR: round shield
+OBJ:    OBJ_ARMOUR/ARM_SHIELD
+PLUS:   +10
+COLOUR: RED
+EV:     -5
+
+NAME:   crown of Dyrovepreva
+APPEAR: jewelled bronze crown
+OBJ:    OBJ_ARMOUR/ARM_CAP
+PLUS:   +3
+COLOUR: BROWN
+INT:    2
+ELEC:   true
+SEEINV: true
+METAB:  1
+DESC:   A large crown of dull bronze, set with a dazzling array of gemstones.
+
+NAME:     robe of Misfortune
+APPEAR:   fabulously ornate robe
+OBJ:      OBJ_ARMOUR/ARM_ROBE
+PLUS:     -5
+COLOUR:   MAGENTA
+EV:       -4
+STR:      -2
+INT:      -2
+DEX:      -2
+NOSPELL:  true
+RND_TELE: true
+MUTATE:   5
+CURSED:   1
+STEALTH:  -80                  
+DESC:     A splendid flowing robe of fur and silk.
+
+NAME:     cloak of Flash
+APPEAR:   vibrating cloak
+OBJ:      OBJ_ARMOUR/ARM_CLOAK
+PLUS:     +3
+COLOUR:   RED
+EV:       4
+LEV:      true
+CANTELEP: true
+DESC:     A vibrating cloak.
+
+ENUM:     BOOTS_ASSASSIN
+NAME:     boots of the Assassin
+APPEAR:   soft boots
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+PLUS:     +2
+COLOUR:   BROWN
+DEX:      3
+INV:      true
+STEALTH:  80                   
+DESC:     Some soft boots.
+DESC_END: These boots were specially designed by the Assassin's Guild.
+
+ENUM:    LEARS
+NAME:    Lear's chain mail
+APPEAR:  golden chain mail
+OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
+PLUS:    -1
+COLOUR:  YELLOW
+DEX:     -3
+NOSPELL: true
+CURSED:  -1
+DESC:    A chain mail made of pure gold.
+
+NAME:   skin of Zhor
+APPEAR: smelly skin
+OBJ:    OBJ_ARMOUR/ARM_ANIMAL_SKIN
+PLUS:   +4
+COLOUR: BROWN
+COLD:   2
+DESC:   The skin of some strange animal.
+
+ENUM:    SALAMANDER
+NAME:    salamander hide armour
+APPEAR:  red leather armour
+OBJ:     OBJ_ARMOUR/ARM_LEATHER_ARMOUR
+PLUS:    +3
+COLOUR:  RED
+FIRE:    2
+BERSERK: true
+DESC:    A leather armour made of a salamander's skin.
+
+NAME:   gauntlets of War
+APPEAR: thick gauntlets
+OBJ:    OBJ_ARMOUR/ARM_GLOVES
+PLUS:   +3
+COLOUR: BROWN
+ACC:    3
+DAM:    3
+
+NAME:   shield of Resistance
+APPEAR: bronze shield
+OBJ:    OBJ_ARMOUR/ARM_SHIELD
+PLUS:   +3
+COLOUR: LIGHTRED
+FIRE:   1
+COLD:   1
+MAGIC:  40
+DESC:   A bronze shield.
+
+NAME:    robe of Folly
+APPEAR:  dull robe
+OBJ:     OBJ_ARMOUR/ARM_ROBE
+PLUS:    -1
+COLOUR:  LIGHTGREY
+INT:     -5
+NOSPELL: true
+CURSED:  2
+DESC:    A dull grey robe.
+
+ENUM:    MAXWELL
+NAME:    Maxwell's patent armour
+APPEAR:  weird-looking armour
+OBJ:     OBJ_ARMOUR/ARM_PLATE_MAIL
+PLUS:    +10
+COLOUR:  LIGHTGREEN
+NOSPELL: true
+NOTELEP: true
+CURSED:  -1
+DESC:    A weird-looking armour.
+
+NAME:   mask of the Dragon
+APPEAR: blue mask
+OBJ:    OBJ_ARMOUR/ARM_CAP
+COLOUR: BLUE
+MAGIC:  40
+SEEINV: true
+ACC:    2
+DAM:    2
+DESC:   A blue mask.
+
+NAME:     robe of Night
+APPEAR:   black robe
+OBJ:      OBJ_ARMOUR/ARM_ROBE
+PLUS:     +4
+COLOUR:   DARKGREY
+MAGIC:    30
+SEEINV:   true
+INV:      true
+STEALTH:  50                   
+DESC:     A long black robe made of strange glossy material.
+DESC_END: According to legend, this robe was the gift of Ratri the Goddess
+          of the Night to one of her followers.
+
+NAME:   armour of the Dragon King
+APPEAR: shiny dragon armour
+OBJ:    OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
+PLUS:   +5
+COLOUR: YELLOW
+MAGIC:  50
+
+NAME:   hat of the Alchemist
+APPEAR: dirty hat
+OBJ:    OBJ_ARMOUR/ARM_WIZARD_HAT
+PLUS:   +2
+COLOUR: MAGENTA
+FIRE:   1
+COLD:   1
+ELEC:   true
+MAGIC:  30
+DESC:   A dirty hat.
+
+NAME:   Fencer's gloves
+APPEAR: silk gloves
+OBJ:    OBJ_ARMOUR/ARM_GLOVES
+PLUS:   +2
+COLOUR: WHITE
+EV:     3
+DEX:    3
+ACC:    5
+DESC:   A pair of gloves made of white silk.
+
+NAME:     cloak of Starlight
+APPEAR:   phosphorescent cloak
+OBJ:      OBJ_ARMOUR/ARM_CLOAK
+COLOUR:   WHITE
+EV:       4
+COLD:     1
+ELEC:     true
+STEALTH:  -30             
+DESC_END: A cloak woven of pure light beams.
+DESC:     A phosphorescent cloak.
+
+NAME:     ratskin cloak
+APPEAR:   motley cloak
+OBJ:      OBJ_ARMOUR/ARM_CLOAK
+PLUS:     +1
+COLOUR:   LIGHTRED
+INT:      -1
+DEX:      -1
+LIFE:     true
+POISON:   true
+DESC_END: An enchantress with a magic loom and way too much time on
+          her hands stitched this cloak from the hides of hundreds
+          of rats, most of them orange. It's a bit awkward to wear
+          and looks rather foolish, but it provides excellent protection
+          from rats of all kinds.
+
+NAME:    amulet of the Air
+APPEAR:  sky-blue amulet
+OBJ:     OBJ_JEWELLERY/AMU_CONTROLLED_FLIGHT
+COLOUR:  LIGHTCYAN
+EV:      3
+ELEC:    true
+LEV:     true
+STEALTH: 50                   
+DESC:    A sky-blue amulet.
+
+NAME:    ring of Shadows
+APPEAR:  black ring
+OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
+COLOUR:  DARKGREY
+EV:      4
+LIFE:    true
+SEEINV:  true
+ACC:     -3
+STEALTH: 40                   
+
+NAME:    amulet of Cekugob
+APPEAR:  crystal amulet
+OBJ:     OBJ_JEWELLERY/AMU_WARDING
+COLOUR:  LIGHTGREY
+AC:      1
+EV:      1
+ELEC:    true
+POISON:  true
+LIFE:    true
+NOTELEP: true
+METAB:   2
+
+NAME:   amulet of the Four Winds
+APPEAR: jade amulet
+OBJ:    OBJ_JEWELLERY/AMU_CLARITY
+COLOUR: LIGHTGREEN
+LIFE:   true
+MAGIC:  100
+
+NAME:    necklace of Bloodlust
+APPEAR:  blood-stained necklace
+OBJ:     OBJ_JEWELLERY/AMU_RAGE
+COLOUR:  RED
+STR:     2
+INT:     -2
+MAGIC:   30
+ANGRY:   true
+DAM:     3
+CURSED:  3
+STEALTH: -20                  
+
+NAME:   ring of Shaolin
+APPEAR: jade ring
+OBJ:    OBJ_JEWELLERY/RING_EVASION
+PLUS:   +8
+COLOUR: LIGHTGREEN
+
+NAME:   ring of Robustness
+APPEAR: steel ring
+OBJ:    OBJ_JEWELLERY/RING_PROTECTION
+PLUS:   +8
+COLOUR: LIGHTGREY
+
+NAME:   ring of the Mage
+APPEAR: sapphire ring
+OBJ:    OBJ_JEWELLERY/RING_WIZARDRY
+COLOUR: LIGHTBLUE
+INT:    3
+MAGIC:  50
+
+NAME:     brooch of Shielding
+APPEAR:   shield-shaped amulet
+OBJ:      OBJ_JEWELLERY/AMU_WARDING
+COLOUR:   LIGHTBLUE
+AC:       4
+EV:       4
+DESC:     A shield-shaped amulet.
+DESC_END: Back in the good old days, every adventurer had one of these 
+          handy devices. That, and a pony.
+
+# This entry must alway be last.
+ENUM:   DUMMY2
+NAME:   DUMMY UNRANDART 2
+APPEAR: DUMMY UNRANDART 2
+OBJ:    OBJ_UNASSIGNED/250
+PLUS:   250/250
+COLOUR: BLACK

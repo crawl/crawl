@@ -25,6 +25,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "arena.h"
+#include "artefact.h"
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
@@ -53,7 +54,6 @@ REVISION("$Rev$");
 #include "place.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
@@ -179,18 +179,10 @@ static int _cull_items(void)
         {
             if (_item_ok_to_clean(si->index()) && x_chance_in_y(15, 100))
             {
-                if (is_fixed_artefact(*si))
+                if (is_unrandom_artefact(*si))
                 {
                     // 7. Move uniques to abyss.
-                    set_unique_item_status( OBJ_WEAPONS, si->special,
-                                            UNIQ_LOST_IN_ABYSS );
-                }
-                else if (is_unrandom_artefact(*si))
-                {
-                    // 9. Unmark unrandart.
-                    const int z = find_unrandart_index(*si);
-                    if (z != -1)
-                        set_unrandart_exist(z, false);
+                    set_unique_item_status(*si, UNIQ_LOST_IN_ABYSS);
                 }
 
                 if (first_cleaned == NON_ITEM)
@@ -499,17 +491,8 @@ void destroy_item( item_def &item, bool never_created )
 
     if (never_created)
     {
-        if (is_fixed_artefact(item))
-        {
-            set_unique_item_status(item.base_type, item.special,
-                                   UNIQ_NOT_EXISTS);
-        }
-        else if (is_unrandom_artefact(item))
-        {
-            const int unrand = find_unrandart_index(item);
-            if (unrand != -1)
-                set_unrandart_exist( unrand, false );
-        }
+        if (is_unrandom_artefact(item))
+            set_unique_item_status(item, UNIQ_NOT_EXISTS);
     }
 
     item.clear();
@@ -533,16 +516,8 @@ static void _handle_gone_item(const item_def &item)
         && place_type(item.orig_place) == LEVEL_ABYSS
         && !(item.flags & ISFLAG_BEEN_IN_INV))
     {
-        if (item.base_type == OBJ_ORBS)
-        {
-            set_unique_item_status(OBJ_ORBS, item.sub_type,
-                                   UNIQ_LOST_IN_ABYSS);
-        }
-        else if (is_fixed_artefact(item))
-        {
-            set_unique_item_status(OBJ_WEAPONS, item.special,
-                                   UNIQ_LOST_IN_ABYSS);
-        }
+        if (is_unrandom_artefact(item))
+            set_unique_item_status(item, UNIQ_LOST_IN_ABYSS);
     }
 
     if (is_rune(item))

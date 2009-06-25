@@ -28,6 +28,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "debug.h"
 #include "describe.h"
 #include "hiscores.h"
@@ -44,7 +45,6 @@ REVISION("$Rev$");
 #include "overmap.h"
 #include "place.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
@@ -671,8 +671,7 @@ static bool _dump_item_origin(const item_def &item, int value)
         return (true);
 
     if (fs(IODS_ARTEFACTS)
-        && (is_random_artefact(item) || is_fixed_artefact(item))
-        && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        && is_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
         return (true);
     }

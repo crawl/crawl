@@ -25,6 +25,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "cio.h"
 #include "debug.h"
 #include "decks.h"
@@ -43,7 +44,6 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "newgame.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spells3.h"
@@ -472,13 +472,20 @@ static std::string _randart_descrip( const item_def &item )
 
     if (is_unrandom_artefact( item ))
     {
-        const char *desc = unrandart_descrip( 0, item );
-        if (desc[0] != 0)
+        const char *desc    = unrandart_descrip( 0, item );
+        const char *desc_id = unrandart_descrip( 1, item );
+
+        if (item_type_known(item) && desc_id[0] != '\0')
+        {
+            description += "$$";
+            description += desc_id;
+        }
+        else if (desc[0] != '\0')
         {
             description += "$$";
             description += desc;
         }
-    }
+     }
 
     return description;
 }
@@ -723,238 +730,152 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 
     description = "";
 
-    if (is_fixed_artefact( item ))
-    {
-        if (item_ident( item, ISFLAG_KNOW_PROPERTIES ) && item.special)
-        {
-            description += "$$";
-            switch (item.special)
-            {
-            case SPWPN_SINGING_SWORD:
-                description += "This blessed weapon loves nothing more "
-                    "than to sing to its owner, "
-                    "whether they want it to or not.";
-                break;
-            case SPWPN_WRATH_OF_TROG:
-                description += "This was the favourite weapon of "
-                    "the old god Trog, before it was lost one day. "
-                    "It induces a bloodthirsty berserker rage in "
-                    "anyone who uses it to strike another.";
-                break;
-            case SPWPN_SCYTHE_OF_CURSES:
-                description += "This weapon carries a "
-                    "terrible and highly irritating curse.";
-                break;
-            case SPWPN_MACE_OF_VARIABILITY:
-                description += "It is rather unreliable.";
-                break;
-            case SPWPN_GLAIVE_OF_PRUNE:
-                description += "It is the creation of a mad god, and "
-                    "carries a curse which transforms anyone "
-                    "possessing it into a prune. Fortunately, "
-                    "the curse works very slowly, and one can "
-                    "use it briefly with no consequences "
-                    "worse than slightly purple skin and a few wrinkles.";
-                break;
-            case SPWPN_SCEPTRE_OF_TORMENT:
-                description += "This truly accursed weapon is "
-                    "an instrument of Hell.";
-                break;
-            case SPWPN_SWORD_OF_ZONGULDROK:
-                description += "This dreadful weapon is used "
-                    "at the user's peril.";
-                break;
-            case SPWPN_SWORD_OF_CEREBOV:
-                description += "Eerie flames cover its twisted blade.";
-                break;
-            case SPWPN_STAFF_OF_DISPATER:
-                description += "This legendary item can unleash "
-                    "the fury of Hell.";
-                break;
-            case SPWPN_SCEPTRE_OF_ASMODEUS:
-                description += "It carries some of the powers of "
-                    "the arch-fiend Asmodeus.";
-                break;
-            case SPWPN_SWORD_OF_POWER:
-                description += "It rewards the powerful with power "
-                    "and the meek with weakness.";
-                break;
-            case SPWPN_STAFF_OF_OLGREB:
-                description += "It was the magical weapon wielded by the "
-                    "mighty wizard Olgreb before he met his "
-                    "fate somewhere within these dungeons. It "
-                    "grants its wielder resistance to the "
-                    "effects of poison and increases their "
-                    "ability to use venomous magic, and "
-                    "carries magical powers which can be evoked.";
-                break;
-            case SPWPN_VAMPIRES_TOOTH:
-                description += "It is lethally vampiric.";
-                break;
-            case SPWPN_STAFF_OF_WUCAD_MU:
-                description += "Its power varies in proportion to "
-                    "its wielder's intelligence. "
-                    "Using it can be a bit risky.";
-                break;
-            }
-            description += "$";
-        }
-        else if (item_type_known(item))
-        {
-            // We know it's an artefact type weapon, but not what it does.
-            description += "$This weapon may have some hidden properties.";
-        }
-    }
-
     if (verbose)
         append_weapon_stats(description, item);
 
-    if (!is_fixed_artefact( item ))
+    int spec_ench = get_weapon_brand( item );
+
+    if (!is_random_artefact( item ) && !verbose)
+        spec_ench = SPWPN_NORMAL;
+
+    // special weapon descrip
+    if (spec_ench != SPWPN_NORMAL && item_type_known(item))
     {
-        int spec_ench = get_weapon_brand( item );
+        description += "$$";
 
-        if (!is_random_artefact( item ) && !verbose)
-            spec_ench = SPWPN_NORMAL;
+        switch (spec_ench)
+        {
+        case SPWPN_FLAMING:
+            description += "It emits flame when wielded, "
+                "causing extra injury to most foes "
+                "and up to double damage against "
+                "particularly susceptible opponents.";
+            break;
+        case SPWPN_FREEZING:
+            description += "It has been specially enchanted to "
+                "freeze those struck by it, causing "
+                "extra injury to most foes and "
+                "up to double damage against "
+                "particularly susceptible opponents.";
+            break;
+        case SPWPN_HOLY_WRATH:
+            description += "It has been blessed by the Shining One "
+                "to cause great damage to the undead and the unholy "
+                "creatures of Hell or Pandemonium.";
+            break;
+        case SPWPN_ELECTROCUTION:
+            description += "Occasionally upon striking a foe "
+                "it will discharge some electrical energy "
+                "and cause terrible harm.";
+            break;
+        case SPWPN_ORC_SLAYING:
+            description += "It is especially effective against "
+                "all of orcish descent.";
+            break;
+        case SPWPN_DRAGON_SLAYING:
+            description += "This legendary weapon is deadly to all "
+                "dragonkind. It also provides some protection from the "
+                "breath attacks of dragons and other creatures.";
+            break;
+        case SPWPN_VENOM:
+            if (is_range_weapon(item))
+                description += "It poisons the unbranded ammo it fires.";
+            else
+                description += "It poisons the flesh of those it strikes.";
+            break;
+        case SPWPN_PROTECTION:
+            description += "It protects the one who wields it against "
+                "injury (+5 to AC).";
+            break;
+        case SPWPN_DRAINING:
+            description += "A truly terrible weapon, "
+                "it drains the life of those it strikes.";
+            break;
+        case SPWPN_SPEED:
+            description += "Attacks with this weapon take half as long "
+                "as usual.";
+            break;
+        case SPWPN_VORPAL:
+            if (is_range_weapon(item))
+            {
+                description += "Any ";
+                description += ammo_name( item );
+                description += " fired from it inflicts extra damage.";
+            }
+            else
+            {
+                description += "It inflicts extra damage upon "
+                    "your enemies.";
+            }
+            break;
+        case SPWPN_FLAME:
+            description += "It turns projectiles fired from it into "
+                "bolts of flame.";
+            break;
+        case SPWPN_FROST:
+            description += "It turns projectiles fired from it into "
+                "bolts of frost.";
+            break;
+        case SPWPN_CHAOS:
+            if (is_range_weapon(item))
+            {
+                description += "Each time it fires it turns the launched "
+                    "projectile into a different, random type of bolt.";
+            }
+            else
+            {
+                description += "Each time it hits an enemy it has a "
+                    "different, random effect.";
+            }
+            break;
+        case SPWPN_VAMPIRICISM:
+            description += "It inflicts no extra harm, "
+                "but heals its wielder somewhat when "
+                "it strikes a living foe.";
+            break;
+        case SPWPN_PAIN:
+            description += "In the hands of one skilled in "
+                "necromantic magic it inflicts "
+                "extra damage on living creatures.";
+            break;
+        case SPWPN_DISTORTION:
+            description += "It warps and distorts space around it. "
+                "Unwielding it can cause banishment or high damage.";
+            break;
+        case SPWPN_REACHING:
+            description += "It can be evoked to extend its reach.";
+            break;
+        case SPWPN_RETURNING:
+            description += "A skilled user can throw it in such a way "
+                "that it will return to its owner.";
+            break;
+        case SPWPN_PENETRATION:
+            description += "Ammo fired by it will pass through the "
+                "targets it hits, potentially hitting all targets in "
+                "its path until it reaches maximum range.";
+            break;
+        case SPWPN_SHADOW:
+            description += "If ammo fired by it kills a monster, "
+                "causing it to leave a corpse, the corpse will be "
+                "animated as a zombie friendly to the one who fired it.";
+            break;
+        }
+    }
 
-        // special weapon descrip
-        if (spec_ench != SPWPN_NORMAL && item_type_known(item))
+    if (is_artefact( item ))
+    {
+        std::string rand_desc = _randart_descrip( item );
+        if (!rand_desc.empty())
         {
             description += "$$";
-
-            switch (spec_ench)
-            {
-            case SPWPN_FLAMING:
-                description += "It emits flame when wielded, "
-                    "causing extra injury to most foes "
-                    "and up to double damage against "
-                    "particularly susceptible opponents.";
-                break;
-            case SPWPN_FREEZING:
-                description += "It has been specially enchanted to "
-                    "freeze those struck by it, causing "
-                    "extra injury to most foes and "
-                    "up to double damage against "
-                    "particularly susceptible opponents.";
-                break;
-            case SPWPN_HOLY_WRATH:
-                description += "It has been blessed by the Shining One "
-                    "to cause great damage to the undead and the unholy "
-                    "creatures of Hell or Pandemonium.";
-                break;
-            case SPWPN_ELECTROCUTION:
-                description += "Occasionally upon striking a foe "
-                    "it will discharge some electrical energy "
-                    "and cause terrible harm.";
-                break;
-            case SPWPN_ORC_SLAYING:
-                description += "It is especially effective against "
-                    "all of orcish descent.";
-                break;
-            case SPWPN_DRAGON_SLAYING:
-                description += "This legendary weapon is deadly to all "
-                    "dragonkind. It also provides some protection from the "
-                    "breath attacks of dragons and other creatures.";
-                break;
-            case SPWPN_VENOM:
-                if (is_range_weapon(item))
-                    description += "It poisons the unbranded ammo it fires.";
-                else
-                    description += "It poisons the flesh of those it strikes.";
-                break;
-            case SPWPN_PROTECTION:
-                description += "It protects the one who wields it against "
-                    "injury (+5 to AC).";
-                break;
-            case SPWPN_DRAINING:
-                description += "A truly terrible weapon, "
-                    "it drains the life of those it strikes.";
-                break;
-            case SPWPN_SPEED:
-                description += "Attacks with this weapon take half as long "
-                    "as usual.";
-                break;
-            case SPWPN_VORPAL:
-                if (is_range_weapon(item))
-                {
-                    description += "Any ";
-                    description += ammo_name( item );
-                    description += " fired from it inflicts extra damage.";
-                }
-                else
-                {
-                    description += "It inflicts extra damage upon "
-                        "your enemies.";
-                }
-                break;
-            case SPWPN_FLAME:
-                description += "It turns projectiles fired from it into "
-                    "bolts of flame.";
-                break;
-            case SPWPN_FROST:
-                description += "It turns projectiles fired from it into "
-                    "bolts of frost.";
-                break;
-            case SPWPN_CHAOS:
-                if (is_range_weapon(item))
-                {
-                    description += "Each time it fires it turns the launched "
-                        "projectile into a different, random type of bolt.";
-                }
-                else
-                {
-                    description += "Each time it hits an enemy it has a "
-                        "different, random effect.";
-                }
-                break;
-            case SPWPN_VAMPIRICISM:
-                description += "It inflicts no extra harm, "
-                    "but heals its wielder somewhat when "
-                    "it strikes a living foe.";
-                break;
-            case SPWPN_PAIN:
-                description += "In the hands of one skilled in "
-                    "necromantic magic it inflicts "
-                    "extra damage on living creatures.";
-                break;
-            case SPWPN_DISTORTION:
-                description += "It warps and distorts space around it. "
-                    "Unwielding it can cause banishment or high damage.";
-                break;
-            case SPWPN_REACHING:
-                description += "It can be evoked to extend its reach.";
-                break;
-            case SPWPN_RETURNING:
-                description += "A skilled user can throw it in such a way "
-                    "that it will return to its owner.";
-                break;
-            case SPWPN_PENETRATION:
-                description += "Ammo fired by it will pass through the "
-                    "targets it hits, potentially hitting all targets in "
-                    "its path until it reaches maximum range.";
-                break;
-            case SPWPN_SHADOW:
-                description += "If ammo fired by it kills a monster, "
-                    "causing it to leave a corpse, the corpse will be "
-                    "animated as a zombie friendly to the one who fired it.";
-                break;
-            }
+            description += rand_desc;
         }
 
-        if (is_random_artefact( item ))
+        // Can't happen, right? (XXX)
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
+            && item_type_known(item))
         {
-            std::string rand_desc = _randart_descrip( item );
-            if (!rand_desc.empty())
-            {
-                description += "$$";
-                description += rand_desc;
-            }
-
-            // Can't happen, right? (XXX)
-            if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
-                && item_type_known(item))
-            {
-                description += "$This weapon may have some hidden properties.";
-            }
+            description += "$This weapon may have some hidden properties.";
         }
     }
 
@@ -1749,27 +1670,16 @@ std::string get_item_description( const item_def &item, bool verbose,
 #endif
 
     if (is_unrandom_artefact( item )
-        && strlen(unrandart_descrip(1, item)) != 0)
+        && strlen(unrandart_descrip(2, item)) != 0)
     {
         description << "$$";
-        description << unrandart_descrip(1, item);
+        description << unrandart_descrip(2, item);
         description << "$";
     }
 
-    if (is_fixed_artefact(item) && item_type_known(item))
-    {
-        // Known fixed artifacts are handled elsewhere.
-    }
-    else if (verbose && is_fixed_artefact(item))
-    {
-        description << "$$";
-        description << article_a(item.name(DESC_CAP_A, true,
-                                           false, false), false);
-        description << ".$";
-    }
-    else if (verbose || (item.base_type != OBJ_WEAPONS
-                         && item.base_type != OBJ_ARMOUR
-                         && item.base_type != OBJ_BOOKS))
+    if (verbose || (item.base_type != OBJ_WEAPONS
+                    && item.base_type != OBJ_ARMOUR
+                    && item.base_type != OBJ_BOOKS))
     {
         description << "$$";
 

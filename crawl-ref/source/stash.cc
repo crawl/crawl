@@ -9,6 +9,7 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
@@ -32,7 +33,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "overmap.h"
 #include "place.h"
-#include "randart.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"

@@ -21,6 +21,7 @@ REVISION("$Rev$");
  #include <conio.h>
 #endif
 
+#include "artefact.h"
 #include "externs.h"
 #include "cio.h"
 #include "database.h"
@@ -37,7 +38,6 @@ REVISION("$Rev$");
 #include "macro.h"
 #include "message.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-cast.h"

@@ -16,6 +16,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "delay.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -25,7 +26,6 @@ REVISION("$Rev$");
 #include "misc.h"
 #include "output.h"
 #include "player.h"
-#include "randart.h"
 #include "skills2.h"
 #include "state.h"
 #include "stuff.h"
@@ -401,7 +401,7 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
             }
         }
 
-        if (is_random_artefact(item))
+        if (is_artefact(item))
         {
             prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
             prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);

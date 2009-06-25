@@ -1,5 +1,5 @@
 /*
- *  File:       randart.cc
+ *  File:       artefact.cc
  *  Summary:    Random and unrandom artefact functions.
  *  Written by: Linley Henzell
  *
@@ -9,7 +9,7 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
-#include "randart.h"
+#include "artefact.h"
 
 #include <cstdlib>
 #include <climits>
@@ -34,8 +34,6 @@ REVISION("$Rev$");
 #define ARTEFACT_PROPS_KEY  "artefact_props"
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
-
-static const char* _get_fixedart_name(const item_def &item);
 
 // The initial generation of a randart is very simple - it occurs in
 // dungeon.cc and consists of giving it a few random things - plus &
@@ -292,48 +290,13 @@ static std::string _replace_name_parts(const std::string name_in,
 
 // Remember: disallow unrandart creation in Abyss/Pan.
 
-// The following unrandart bits were taken from $pellbinder's mon-util
-// code (see mon-util.h & mon-util.cc) and modified (LRH).  They're in
-// randart.cc and not randart.h because they're only used in this code
-// module.
-
-struct unrandart_entry
-{
-    const char *name;        // true name of unrandart (max 31 chars)
-    const char *unid_name;   // un-id'd name of unrandart (max 31 chars)
-
-    object_class_type ura_cl;        // class of ura
-    int ura_ty;        // type of ura
-    int ura_pl;        // plus of ura
-    int ura_pl2;       // plus2 of ura
-    int ura_col;       // colour of ura
-    short prpty[RA_PROPERTIES];
-
-    // special description added to 'v' command output (max 31 chars)
-    const char *spec_descrip1;
-    // special description added to 'v' command output (max 31 chars)
-    const char *spec_descrip2;
-    // special description added to 'v' command output (max 31 chars)
-    const char *spec_descrip3;
-};
-
 static unrandart_entry unranddata[] = {
-#include "unrand.h"
+#include "art-data.h"
 };
 
 static FixedVector < bool, NO_UNRANDARTS > unrandart_exist;
 
 static unrandart_entry *_seekunrandart( const item_def &item );
-
-void set_unrandart_exist(int whun, bool is_exist)
-{
-    unrandart_exist[whun] = is_exist;
-}
-
-bool does_unrandart_exist(int whun)
-{
-    return (unrandart_exist[whun]);
-}
 
 bool is_known_artefact( const item_def &item )
 {
@@ -345,13 +308,13 @@ bool is_known_artefact( const item_def &item )
 
 bool is_artefact( const item_def &item )
 {
-    return (is_random_artefact(item) || is_fixed_artefact(item));
+    return (item.flags & ISFLAG_ARTEFACT_MASK);
 }
 
-// returns true is item is a pure randart or an unrandart
+// returns true is item is a pure randart
 bool is_random_artefact( const item_def &item )
 {
-    return (item.flags & ISFLAG_ARTEFACT_MASK);
+    return (item.flags & ISFLAG_RANDART);
 }
 
 // returns true if item in an unrandart
@@ -360,39 +323,37 @@ bool is_unrandom_artefact( const item_def &item )
     return (item.flags & ISFLAG_UNRANDART);
 }
 
-// returns true if item is one of the original fixed artefacts
-bool is_fixed_artefact( const item_def &item )
+bool is_special_unrandom_artefact( const item_def &item )
 {
-    if (!is_random_artefact( item )
-        && item.base_type == OBJ_WEAPONS
-        && item.special >= SPWPN_START_FIXEDARTS)
-    {
-        return (true);
-    }
-
-    return (false);
+    return (item.flags & ISFLAG_UNRANDART
+            && get_unrand_specialness(item.special) == UNRANDPSEC_SPECIAL);
 }
 
-unique_item_status_type get_unique_item_status( object_class_type base_type,
-                                                int art )
+unique_item_status_type get_unique_item_status(const item_def& item)
 {
-    if (base_type == OBJ_WEAPONS
-        && art >= SPWPN_START_FIXEDARTS && art < SPWPN_START_NOGEN_FIXEDARTS)
-    {
-        return (you.unique_items[art - SPWPN_START_FIXEDARTS]);
-    }
-    else
-        return (UNIQ_NOT_EXISTS);
+    if (item.flags & ISFLAG_UNRANDART)
+        return get_unique_item_status(item.special);
+
+    return (UNIQ_NOT_EXISTS);
 }
 
-void set_unique_item_status( object_class_type base_type, int art,
-                             unique_item_status_type status )
+unique_item_status_type get_unique_item_status( int art )
 {
-    if (base_type == OBJ_WEAPONS
-        && art >= SPWPN_START_FIXEDARTS && art < SPWPN_START_NOGEN_FIXEDARTS)
-    {
-        you.unique_items[art - SPWPN_START_FIXEDARTS] = status;
-    }
+    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    return (you.unique_items[art - UNRAND_START]);
+}
+
+void set_unique_item_status(const item_def& item,
+                            unique_item_status_type status )
+{
+    if (item.flags & ISFLAG_UNRANDART)
+        set_unique_item_status(item.special, status);
+}
+
+void set_unique_item_status( int art, unique_item_status_type status )
+{
+    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    you.unique_items[art - UNRAND_START] = status;
 }
 
 static long _calc_seed( const item_def &item )
@@ -652,7 +613,7 @@ static int _randart_add_one_property( const item_def &item,
     return (negench ? -1 : 1);
 }
 
-void static _get_randart_properties(const item_def        &item,
+void static _get_randart_properties(const item_def &item,
                                     artefact_properties_t &proprt)
 {
     const object_class_type aclass = item.base_type;
@@ -1171,7 +1132,7 @@ static bool _redo_book(item_def &book)
     return (false);
 }
 
-static bool _init_randart_book(item_def &book)
+static bool _init_artefact_book(item_def &book)
 {
     ASSERT(book.sub_type == BOOK_RANDART_LEVEL
            || book.sub_type == BOOK_RANDART_THEME);
@@ -1208,36 +1169,36 @@ static bool _init_randart_book(item_def &book)
     return (book_good);
 }
 
-static bool _init_randart_properties(item_def &item)
+static bool _init_artefact_properties(item_def &item)
 {
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
     CrawlHashTable &props = item.props;
     if (!props.exists( ARTEFACT_PROPS_KEY ))
-        props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(RA_PROPERTIES);
+        props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
 
     CrawlVector &rap = props[ARTEFACT_PROPS_KEY];
-    rap.set_max_size(RA_PROPERTIES);
+    rap.set_max_size(ART_PROPERTIES);
 
-    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = (short) 0;
 
     if (is_unrandom_artefact( item ))
     {
         const unrandart_entry *unrand = _seekunrandart( item );
 
-        for (int i = 0; i < RA_PROPERTIES; i++)
+        for (int i = 0; i < ART_PROPERTIES; i++)
             rap[i] = (short) unrand->prpty[i];
 
         return (true);
     }
 
     if (item.base_type == OBJ_BOOKS)
-        return _init_randart_book(item);
+        return _init_artefact_book(item);
 
     artefact_properties_t prop;
     _get_randart_properties(item, prop);
 
-    for (int i = 0; i < RA_PROPERTIES; i++)
+    for (int i = 0; i < ART_PROPERTIES; i++)
     {
         if (i == ARTP_CURSED && prop[i] < 0)
         {
@@ -1250,28 +1211,28 @@ static bool _init_randart_properties(item_def &item)
     return (true);
 }
 
-void artefact_wpn_properties( const item_def         &item,
-                              artefact_properties_t  &proprt,
-                              artefact_known_props_t &known)
+void artefact_wpn_properties( const item_def &item,
+                             artefact_properties_t  &proprt,
+                             artefact_known_props_t &known)
 {
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
     ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
 
     const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
     ASSERT( _val.get_type() == SV_VEC );
     const CrawlVector &known_vec = _val.get_vector();
     ASSERT( known_vec.get_type()     == SV_BOOL );
-    ASSERT( known_vec.size()         == RA_PROPERTIES);
-    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
+    ASSERT( known_vec.size()         == ART_PROPERTIES);
+    ASSERT( known_vec.get_max_size() == ART_PROPERTIES);
 
     if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
     {
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        for (vec_size i = 0; i < ART_PROPERTIES; i++)
             known[i] = (bool) true;
     }
     else
     {
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        for (vec_size i = 0; i < ART_PROPERTIES; i++)
             known[i] = known_vec[i];
     }
 
@@ -1279,17 +1240,17 @@ void artefact_wpn_properties( const item_def         &item,
     {
         const CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
         ASSERT( rap_vec.get_type()     == SV_SHORT );
-        ASSERT( rap_vec.size()         == RA_PROPERTIES);
-        ASSERT( rap_vec.get_max_size() == RA_PROPERTIES);
+        ASSERT( rap_vec.size()         == ART_PROPERTIES);
+        ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
 
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        for (vec_size i = 0; i < ART_PROPERTIES; i++)
             proprt[i] = rap_vec[i].get_short();
     }
     else if (is_unrandom_artefact( item ))
     {
         const unrandart_entry *unrand = _seekunrandart( item );
 
-        for (int i = 0; i < RA_PROPERTIES; i++)
+        for (int i = 0; i < ART_PROPERTIES; i++)
             proprt[i] = (short) unrand->prpty[i];
     }
     else
@@ -1362,14 +1323,14 @@ int artefact_wpn_num_props( const artefact_properties_t &proprt )
 
 void artefact_wpn_learn_prop( item_def &item, artefact_prop_type prop )
 {
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
     ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
     CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
     ASSERT( _val.get_type() == SV_VEC );
     CrawlVector &known_vec = _val.get_vector();
     ASSERT( known_vec.get_type()     == SV_BOOL );
-    ASSERT( known_vec.size()         == RA_PROPERTIES);
-    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
+    ASSERT( known_vec.size()         == ART_PROPERTIES);
+    ASSERT( known_vec.get_max_size() == ART_PROPERTIES);
 
     if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
         return;
@@ -1433,9 +1394,6 @@ std::string artefact_name(const item_def &item, bool appearance)
            || item.base_type == OBJ_ARMOUR
            || item.base_type == OBJ_JEWELLERY
            || item.base_type == OBJ_BOOKS);
-
-    if (is_fixed_artefact( item ))
-        return _get_fixedart_name( item );
 
     if (is_unrandom_artefact( item ))
     {
@@ -1564,51 +1522,40 @@ std::string get_artefact_name( const item_def &item )
 
 void set_artefact_name( item_def &item, const std::string &name )
 {
-    ASSERT( is_random_artefact( item ));
+    ASSERT( is_artefact( item ));
     ASSERT( !name.empty() );
     item.props[ARTEFACT_NAME_KEY].get_string() = name;
 }
 
 void set_artefact_appearance( item_def &item, const std::string &appear )
 {
-    ASSERT( is_random_artefact( item ));
+    ASSERT( is_artefact( item ));
     ASSERT( !appear.empty() );
     item.props[ARTEFACT_APPEAR_KEY].get_string() = appear;
 }
 
 int find_unrandart_index(const item_def& artefact)
 {
-    for (int i = 0; i < NO_UNRANDARTS; i++)
-    {
-        const unrandart_entry& candidate = unranddata[i];
-        if (candidate.ura_cl == artefact.base_type
-            && candidate.ura_ty == artefact.sub_type
-            && candidate.ura_pl == artefact.plus
-            && candidate.ura_pl2 == artefact.plus2
-            && candidate.ura_col == artefact.colour)
-        {
-            return i;
-        }
-    }
+    return (artefact.special);
+}
 
-    return (-1);
+unrandart_entry* get_unrand_entry(int unrand_index)
+{
+    unrand_index -= UNRAND_START;
+
+    if (unrand_index <= -1 || unrand_index >= NO_UNRANDARTS)
+        return &unranddata[0];  // dummy unrandart
+    else
+        return &unranddata[unrand_index];
 }
 
 static unrandart_entry *_seekunrandart( const item_def &item )
 {
-    const int idx = find_unrandart_index(item);
-    if (idx == -1)
-        return &unranddata[0];  // dummy unrandart
-    else
-        return &unranddata[idx];
+    return get_unrand_entry(item.special);
 }
 
-int find_unrandart_index(int item_number)
-{
-    return find_unrandart_index(mitm[item_number]);
-}
-
-int find_okay_unrandart(unsigned char aclass, unsigned char atype)
+int find_okay_unrandart(unsigned char aclass, unsigned char atype,
+                        unrand_special_type specialness, bool in_abyss)
 {
     int ret = -1;
 
@@ -1616,298 +1563,82 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype)
     // base_type and sub_type.
     for (int i = 0, count = 0; i < NO_UNRANDARTS; i++)
     {
-        if (unranddata[i].ura_cl == aclass
-            && !does_unrandart_exist(i)
-            && (atype == OBJ_RANDOM || unranddata[i].ura_ty == atype))
-        {
-            count++;
+        const int              index = i + UNRAND_START;
+        const unrandart_entry* entry = &unranddata[i];
 
-            if (one_chance_in(count))
-                ret = i;
+        // Skip dummy entries.
+        if (entry->base_type == OBJ_UNASSIGNED)
+            continue;
+
+        const unique_item_status_type status =
+            get_unique_item_status(index);
+
+        if (in_abyss && status != UNIQ_LOST_IN_ABYSS
+            || !in_abyss && status != UNIQ_NOT_EXISTS)
+        {
+            continue;
         }
+
+        // Never randomly generated until lost in the abyss.
+        if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
+            && index >= SPWPN_START_NOGEN_FIXEDARTS
+            && index <= SPWPN_END_FIXEDARTS)
+        {
+            continue;
+        }
+
+        if (entry->base_type != aclass
+            || (atype != OBJ_RANDOM && entry->sub_type != atype))
+        {
+            continue;
+        }
+
+        if (specialness != UNRANDSPEC_EITHER &&
+            specialness != get_unrand_specialness(index))
+        {
+            continue;
+        }
+
+        count++;
+
+        if (one_chance_in(count))
+            ret = index;
     }
 
     return (ret);
 }
 
-struct fixedart_setting
+unrand_special_type get_unrand_specialness(int unrand_index)
 {
-    int which;
-    const char* name;
-    const char* appearance;
-    object_class_type base;
-    int subtype;
-    int acc;
-    int dam;
-    int colour;
-    bool curse;
-};
-
-const fixedart_setting fixedarts[] = {
-
+    if (unrand_index >= UNRAND_SINGING_SWORD
+        && unrand_index <= UNRAND_ASMODEUS)
     {
-        SPWPN_SINGING_SWORD,
-        "Singing Sword",
-        "golden long sword",
-        OBJ_WEAPONS,
-        WPN_LONG_SWORD,
-        7,
-        7,
-        YELLOW,
-        false
-    },
-
-    {
-        SPWPN_WRATH_OF_TROG,
-        "Wrath of Trog",
-        "bloodstained battleaxe",
-        OBJ_WEAPONS,
-        WPN_BATTLEAXE,
-        3,
-        11,
-        RED,
-        false
-    },
-
-    {
-        SPWPN_SCYTHE_OF_CURSES,
-        "Scythe of Curses",
-        "warped scythe",
-        OBJ_WEAPONS,
-        WPN_SCYTHE,
-        13,
-        13,
-        DARKGREY,
-        true
-    },
-
-    {
-        SPWPN_MACE_OF_VARIABILITY,
-        "Mace of Variability",
-        "shimmering mace",
-        OBJ_WEAPONS,
-        WPN_MACE,
-        random2(16) - 4,
-        random2(16) - 4,
-        random_colour(),
-        false
-    },
-
-    {
-        SPWPN_GLAIVE_OF_PRUNE,
-        "Glaive of Prune",
-        "purple glaive",
-        OBJ_WEAPONS,
-        WPN_GLAIVE,
-        0,
-        12,
-        MAGENTA,
-        false
-    },
-
-    {
-        SPWPN_SCEPTRE_OF_TORMENT,
-        "Sceptre of Torment",
-        "jewelled golden mace",
-        OBJ_WEAPONS,
-        WPN_MACE,
-        7,
-        6,
-        YELLOW,
-        false
-    },
-
-    {
-        SPWPN_SWORD_OF_ZONGULDROK,
-        "Sword of Zonguldrok",
-        "bone long sword",
-        OBJ_WEAPONS,
-        WPN_LONG_SWORD,
-        9,
-        9,
-        LIGHTGREY,
-        false
-    },
-
-    {
-        SPWPN_SWORD_OF_POWER,
-        "Sword of Power",
-        "chunky great sword",
-        OBJ_WEAPONS,
-        WPN_GREAT_SWORD,
-        0, // set on wield
-        0, // set on wield
-        RED,
-        false
-    },
-
-    {
-        SPWPN_STAFF_OF_OLGREB,
-        "Staff of Olgreb",
-        "green glowing staff",
-        OBJ_WEAPONS,
-        WPN_QUARTERSTAFF,
-        0, // set on wield
-        0, // set on wield
-        GREEN,
-        false
-    },
-
-    {
-        SPWPN_VAMPIRES_TOOTH,
-        "Vampire's Tooth",
-        "ivory dagger",
-        OBJ_WEAPONS,
-        WPN_DAGGER,
-        3,
-        4,
-        WHITE,
-        false
-    },
-
-    {
-        SPWPN_STAFF_OF_WUCAD_MU,
-        "Staff of Wucad Mu",
-        "ephemeral quarterstaff",
-        OBJ_WEAPONS,
-        WPN_QUARTERSTAFF,
-        0, // set on wield
-        0, // set on wield
-        BROWN,
-        false
-    },
-
-    {
-        SPWPN_SWORD_OF_CEREBOV,
-        "Sword of Cerebov",
-        "great serpentine sword",
-        OBJ_WEAPONS,
-        WPN_GREAT_SWORD,
-        6,
-        6,
-        YELLOW,
-        true
-    },
-
-    {
-        SPWPN_STAFF_OF_DISPATER,
-        "Staff of Dispater",
-        "golden staff",
-        OBJ_WEAPONS,
-        WPN_QUARTERSTAFF,
-        4,
-        4,
-        YELLOW,
-        false
-    },
-
-    {
-        SPWPN_SCEPTRE_OF_ASMODEUS,
-        "Sceptre of Asmodeus",
-        "ruby sceptre",
-        OBJ_WEAPONS,
-        WPN_QUARTERSTAFF,
-        7,
-        7,
-        RED,
-        false
+        return (UNRANDPSEC_SPECIAL);
     }
-};
-
-static const char* _get_fixedart_name(const item_def &item)
-{
-    // Find the appropriate fixed artefact.
-    for (unsigned int i = 0; i < ARRAYSZ(fixedarts); ++i)
-    {
-        if (fixedarts[i].which == item.special)
-        {
-            const fixedart_setting *fixed = &fixedarts[i];
-            return (item_type_known(item) ? fixed->name : fixed->appearance);
-        }
-    }
-    return (item_type_known(item) ? "Unnamed Artefact" : "buggy fixedart");
+    return (UNRANDSPEC_NORMAL);
 }
 
-int get_fixedart_num( const char *name )
+unrand_special_type get_unrand_specialness(const item_def &item)
 {
-    for (unsigned int i = 0; i < ARRAYSZ(fixedarts); ++i)
+    return get_unrand_specialness(item.special);
+}
+
+int get_unrandart_num( const char *name )
+{
+    std::string quoted = "\"";
+    quoted += name;
+    quoted += "\"";
+
+    for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
     {
-        std::string art = fixedarts[i].name;
+        std::string art = unranddata[i].name;
+        art = replace_all(art, " ", "_");
+        art = replace_all(art, "'", "");
         lowercase(art);
-        if (replace_all(art, " ", "_") == name)
-            return fixedarts[i].which;
+        if (art == name || art.find(quoted) != std::string::npos)
+            return (UNRAND_START + i);
     }
     return SPWPN_NORMAL;
-}
-
-// which == 0 (default) gives random fixed artefact.
-// Returns true if successful.
-bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
-{
-    const bool force = (which != 0);
-    const fixedart_setting *fixedart = NULL;
-
-    if (!force)
-    {
-        which = SPWPN_START_FIXEDARTS
-                + random2(SPWPN_START_NOGEN_FIXEDARTS - SPWPN_START_FIXEDARTS);
-    }
-
-    const unique_item_status_type status =
-        get_unique_item_status( OBJ_WEAPONS, which );
-
-    if (!force
-        && (status == UNIQ_EXISTS
-            || in_abyss && status == UNIQ_NOT_EXISTS
-            || !in_abyss && status == UNIQ_LOST_IN_ABYSS))
-    {
-        return (false);
-    }
-
-    // Find the appropriate fixed artefact.
-    for (unsigned int i = 0; i < ARRAYSZ(fixedarts); ++i)
-    {
-        if (fixedarts[i].which == which)
-        {
-            fixedart = &fixedarts[i];
-            break;
-        }
-    }
-
-    // None found?
-    if (fixedart == NULL)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_ERROR, "Couldn't find fixed artefact %d", which);
-#endif
-        return (false);
-    }
-
-    // If we get here, we've made the artefact
-    item.base_type = fixedart->base;
-    item.sub_type  = fixedart->subtype;
-    item.plus      = fixedart->acc;
-    item.plus2     = fixedart->dam;
-    item.colour    = fixedart->colour;
-    item.special   = which;
-    item.quantity  = 1;
-
-    // get true artefact name
-    ASSERT(!item.props.exists( ARTEFACT_NAME_KEY ));
-    item.props[ARTEFACT_NAME_KEY].get_string() = fixedart->name;
-
-    // get artefact appearance
-    ASSERT(!item.props.exists( ARTEFACT_APPEAR_KEY ));
-    item.props[ARTEFACT_APPEAR_KEY].get_string() = fixedart->appearance;
-
-    if (fixedart->curse)
-        do_curse_item(item);
-
-    // Items originally generated in the abyss and not found will be
-    // shifted to "lost in abyss", and will only be found there. -- bwr
-    set_unique_item_status( OBJ_WEAPONS, which, UNIQ_EXISTS );
-
-    return (true);
 }
 
 static bool _randart_is_redundant( const item_def &item,
@@ -2094,17 +1825,17 @@ bool make_item_blessed_blade( item_def &item )
     item.flags |= ISFLAG_RANDART;
 
     ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
-    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
+    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
     CrawlVector &known = item.props[KNOWN_PROPS_KEY];
-    known.set_max_size(RA_PROPERTIES);
-    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+    known.set_max_size(ART_PROPERTIES);
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
         known[i] = (bool) false;
 
     ASSERT(!item.props.exists( ARTEFACT_PROPS_KEY ));
-    item.props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(RA_PROPERTIES);
+    item.props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
     CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY];
-    rap.set_max_size(RA_PROPERTIES);
-    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+    rap.set_max_size(ART_PROPERTIES);
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = (short) 0;
 
     // blessed blade of the Shining One
@@ -2157,10 +1888,10 @@ bool make_item_randart( item_def &item )
     ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
     ASSERT(!item.props.exists( ARTEFACT_NAME_KEY ));
     ASSERT(!item.props.exists( ARTEFACT_APPEAR_KEY ));
-    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
+    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
     CrawlVector &known = item.props[KNOWN_PROPS_KEY];
-    known.set_max_size(RA_PROPERTIES);
-    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+    known.set_max_size(ART_PROPERTIES);
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
         known[i] = (bool) false;
 
     item.flags |= ISFLAG_RANDART;
@@ -2172,7 +1903,7 @@ bool make_item_randart( item_def &item )
     {
         item.special = (random_int() & RANDART_SEED_MASK);
         // Now that we found something, initialize the props array.
-        if (!_init_randart_properties(item))
+        if (!_init_artefact_properties(item))
         {
             // Something went wrong that no amount of changing
             // item.special will fix.
@@ -2203,34 +1934,31 @@ bool make_item_randart( item_def &item )
 
 bool make_item_unrandart( item_def &item, int unrand_index )
 {
+    ASSERT(unrand_index > UNRAND_START);
+    ASSERT(unrand_index < (UNRAND_START + NO_UNRANDARTS));
+
     if (!item.props.exists( KNOWN_PROPS_KEY ))
     {
-        item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
+        item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
         CrawlVector &known = item.props[KNOWN_PROPS_KEY];
-        known.set_max_size(RA_PROPERTIES);
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        known.set_max_size(ART_PROPERTIES);
+        for (vec_size i = 0; i < ART_PROPERTIES; i++)
             known[i] = (bool) false;
     }
 
-    const unrandart_entry *unrand = &unranddata[unrand_index];
-    item.base_type = unrand->ura_cl;
-    item.sub_type  = unrand->ura_ty;
-    item.plus      = unrand->ura_pl;
-    item.plus2     = unrand->ura_pl2;
-    item.colour    = unrand->ura_col;
+    const unrandart_entry *unrand = &unranddata[unrand_index - UNRAND_START];
+    item.base_type = unrand->base_type;
+    item.sub_type  = unrand->sub_type;
+    item.plus      = unrand->plus;
+    item.plus2     = unrand->plus2;
+    item.colour    = unrand->colour;
 
     item.flags |= ISFLAG_UNRANDART;
-    _init_randart_properties(item);
+    _init_artefact_properties(item);
 
-    item.special = unrand->prpty[ARTP_BRAND];
-    if (item.special != 0)
-    {
+    item.special = unrand_index;
+    if (unrand->prpty[ARTP_BRAND] != 0)
         do_curse_item( item );
-
-        // If the property doesn't allow for recursing, clear it now.
-        if (item.special < 0)
-            item.special = 0;
-    }
 
     // get true artefact name
     ASSERT(!item.props.exists( ARTEFACT_NAME_KEY ));
@@ -2240,7 +1968,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     ASSERT(!item.props.exists( ARTEFACT_APPEAR_KEY ));
     item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
 
-    set_unrandart_exist( unrand_index, true );
+    set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
     return (true);
 }
@@ -2251,9 +1979,9 @@ const char *unrandart_descrip( int which_descrip, const item_def &item )
     // for randarts.
     const unrandart_entry *unrand = _seekunrandart( item );
 
-    return ((which_descrip == 0) ? unrand->spec_descrip1 :
-            (which_descrip == 1) ? unrand->spec_descrip2 :
-            (which_descrip == 2) ? unrand->spec_descrip3
+    return ((which_descrip == 0) ? unrand->desc :
+            (which_descrip == 1) ? unrand->desc_id :
+            (which_descrip == 2) ? unrand->desc_end
                                  : "Unknown.");
 }
 
@@ -2261,15 +1989,14 @@ void artefact_set_properties( item_def              &item,
                               artefact_properties_t &proprt )
 {
     ASSERT( is_random_artefact( item ) );
-    ASSERT( !is_unrandom_artefact ( item ) );
     ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
 
     CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
     ASSERT( rap_vec.get_type()     == SV_SHORT );
-    ASSERT( rap_vec.size()         == RA_PROPERTIES);
-    ASSERT( rap_vec.get_max_size() == RA_PROPERTIES);
+    ASSERT( rap_vec.size()         == ART_PROPERTIES);
+    ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
 
-    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap_vec[i].get_short() = proprt[i];
 }
 
@@ -2278,13 +2005,12 @@ void artefact_set_property( item_def          &item,
                             int                val )
 {
     ASSERT( is_random_artefact( item ) );
-    ASSERT( !is_unrandom_artefact ( item ) );
     ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
 
     CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
     ASSERT( rap_vec.get_type()     == SV_SHORT );
-    ASSERT( rap_vec.size()         == RA_PROPERTIES);
-    ASSERT( rap_vec.get_max_size() == RA_PROPERTIES);
+    ASSERT( rap_vec.size()         == ART_PROPERTIES);
+    ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
 
     rap_vec[prop].get_short() = val;
 }

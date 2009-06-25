@@ -25,6 +25,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "database.h"
 #include "debug.h"
@@ -43,7 +44,6 @@ REVISION("$Rev$");
 #include "mstuff2.h"
 #include "mtransit.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "shopping.h" // for item values
 #include "spells3.h"
@@ -354,25 +354,25 @@ static int _scan_mon_inv_randarts(const monsters *mon,
         const int shield = mon->inv[MSLOT_SHIELD];
 
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
-            && is_random_artefact(mitm[weapon]))
+            && is_artefact(mitm[weapon]))
         {
             ret += artefact_wpn_property(mitm[weapon], ra_prop);
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_random_artefact(mitm[second]))
+            && is_artefact(mitm[second]))
         {
             ret += artefact_wpn_property(mitm[second], ra_prop);
         }
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-            && is_random_artefact(mitm[armour]))
+            && is_artefact(mitm[armour]))
         {
             ret += artefact_wpn_property(mitm[armour], ra_prop);
         }
 
         if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR
-            && is_random_artefact(mitm[shield]))
+            && is_artefact(mitm[shield]))
         {
             ret += artefact_wpn_property(mitm[shield], ra_prop);
         }
@@ -3983,8 +3983,8 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
     if (type == MONS_DANCING_WEAPON)
         return (false);
 
-    // Monsters can't use fixed artefacts.
-    if (is_fixed_artefact(item) && !crawl_state.arena)
+    // Monsters can't use unrandarts with special effects.
+    if (is_special_unrandom_artefact(item) && !crawl_state.arena)
         return (false);
 
     // Wimpy monsters (e.g. kobold, goblin) can't use halberds, etc.
@@ -4178,7 +4178,7 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
 
         if (message_given)
         {
-            if (is_random_artefact(item))
+            if (is_artefact(item) && !is_special_unrandom_artefact(item))
                 artefact_wpn_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
@@ -4277,7 +4277,7 @@ void monsters::unequip_weapon(item_def &item, int near, bool msg)
         }
         if (message_given)
         {
-            if (is_random_artefact(item))
+            if (is_artefact(item) && !is_special_unrandom_artefact(item))
                 artefact_wpn_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
@@ -4617,7 +4617,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
     if (monster->type == MONS_SIGMUND)
         return (weapon.sub_type == WPN_SCYTHE);
 
-    if (is_fixed_artefact(weapon))
+    if (is_unrandom_artefact(weapon))
     {
         switch (weapon.special)
         {

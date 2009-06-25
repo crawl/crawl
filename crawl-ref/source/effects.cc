@@ -18,6 +18,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "decks.h"
@@ -44,7 +45,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
@@ -1646,7 +1646,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             {
                 int brand = get_weapon_brand(doodad);
                 if (brand == SPWPN_PAIN
-                    || is_fixed_artefact(doodad)
+                    || is_unrandom_artefact(doodad)
                        && (doodad.special == SPWPN_WRATH_OF_TROG
                            || doodad.special == SPWPN_STAFF_OF_WUCAD_MU))
                 {
@@ -1659,7 +1659,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             // MT - Check: god-gifted weapons and armour shouldn't kill you.
             // Except Xom.
             if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-                && is_random_artefact(doodad))
+                && is_artefact(doodad))
             {
                 artefact_properties_t  proprt;
                 artefact_wpn_properties( doodad, proprt );
@@ -1758,7 +1758,6 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
         }
         else if (thing.base_type == OBJ_WEAPONS
-                 && !is_fixed_artefact(thing)
                  && !is_unrandom_artefact(thing))
         {
             // HACK: Make unwieldable weapons wieldable.
@@ -1773,11 +1772,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                     int brand = get_weapon_brand(thing);
                     if (brand == SPWPN_HOLY_WRATH)
                     {
-                        if (!is_random_artefact(thing))
-                        {
-                            set_item_ego_type(thing, OBJ_WEAPONS, SPWPN_VORPAL);
-                        }
-                        else
+                        if (is_random_artefact(thing))
                         {
                             // Keep resetting seed until it's good.
                             for (; brand == SPWPN_HOLY_WRATH;
@@ -1785,6 +1780,10 @@ bool acquirement(object_class_type class_wanted, int agent,
                             {
                                 make_item_randart(thing);
                             }
+                        }
+                        else
+                        {
+                            set_item_ego_type(thing, OBJ_WEAPONS, SPWPN_VORPAL);
                         }
                     }
                 }
@@ -1833,7 +1832,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 // More damage, less accuracy.
                 thing.plus  -= plusmod;
                 thing.plus2 += plusmod;
-                if (!is_random_artefact(thing))
+                if (!is_artefact(thing))
                     thing.plus = std::max(static_cast<int>(thing.plus), 0);
             }
             else if (agent == GOD_OKAWARU)
@@ -1841,26 +1840,14 @@ bool acquirement(object_class_type class_wanted, int agent,
                 // More accuracy, less damage.
                 thing.plus  += plusmod;
                 thing.plus2 -= plusmod;
-                if (!is_random_artefact(thing))
+                if (!is_artefact(thing))
                     thing.plus2 = std::max(static_cast<int>(thing.plus2), 0);
             }
         }
 
         if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
-        {
             thing.inscription = "god gift";
-            if (is_random_artefact(thing))
-            {
-                if (!is_unrandom_artefact(thing)
-                    && thing.base_type != OBJ_BOOKS)
-                {
-                    // Give another name that takes god gift into account;
-                    // artefact books already do that.
-                    thing.props["artefact_name"].get_string() =
-                        artefact_name(thing, false);
-                }
-            }
-        }
+
         move_item_to_grid( &thing_created, you.pos() );
 
         // This should never actually be NON_ITEM because of the way
@@ -3437,7 +3424,7 @@ void handle_time(long time_delta)
     // Exercise stealth skill:
     else if (you.burden_state == BS_UNENCUMBERED
              && !you.duration[DUR_BERSERKER]
-             && you.special_wield != SPWLD_SHADOW)
+             && you.unrand_reacts != SPWLD_SHADOW)
     {
         // Diminishing returns for stealth training by waiting.
         if ((you.equip[EQ_BODY_ARMOUR] == -1

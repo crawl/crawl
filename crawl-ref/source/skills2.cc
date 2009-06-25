@@ -23,6 +23,7 @@ REVISION("$Rev$");
  #include <conio.h>
 #endif
 
+#include "artefact.h"
 #include "cio.h"
 #include "describe.h"
 #include "externs.h"
@@ -30,7 +31,6 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "menu.h"
 #include "player.h"
-#include "randart.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"

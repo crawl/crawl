@@ -18,6 +18,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abyss.h"
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "debug.h"
@@ -42,7 +43,6 @@ REVISION("$Rev$");
 #include "ouch.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "spells1.h"

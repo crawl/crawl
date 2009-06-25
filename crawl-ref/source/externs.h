@@ -755,7 +755,7 @@ public:
 
   runrest running;            // Nonzero if running/traveling.
 
-  char special_wield;
+  unsigned short unrand_reacts;
 
   double elapsed_time;        // total amount of elapsed time in the game
 
@@ -863,7 +863,7 @@ public:
   int  exp_available;
 
   FixedArray<unsigned char, 6, 50> item_description;
-  FixedVector<unique_item_status_type, 50> unique_items;
+  FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedVector<bool, NUM_MONSTERS> unique_creatures;
 
   // NOTE: The kills member is a pointer to a KillMaster object,

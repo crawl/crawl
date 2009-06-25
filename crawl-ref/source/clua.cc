@@ -14,6 +14,7 @@ REVISION("$Rev$");
 #include "clua.h"
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "command.h"
 #include "chardump.h"
 #include "cio.h"
@@ -39,7 +40,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "output.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-util.h"
@@ -1539,7 +1539,7 @@ static int l_item_artefact(lua_State *ls)
         return (0);
 
     lua_pushboolean(ls, item_ident(*item, ISFLAG_KNOW_PROPERTIES)
-                && (is_random_artefact(*item) || is_fixed_artefact(*item)));
+                && is_artefact(*item));
     return (1);
 }
 

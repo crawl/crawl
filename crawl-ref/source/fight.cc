@@ -22,6 +22,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "database.h"
@@ -46,7 +47,6 @@ REVISION("$Rev$");
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "spells1.h"
@@ -1883,7 +1883,7 @@ void melee_attack::player_check_weapon_effects()
                 did_god_conduct(DID_UNHOLY, 1);
         }
 
-        if (is_fixed_artefact(*weapon))
+        if (is_unrandom_artefact(*weapon))
         {
             switch (weapon->special)
             {
@@ -2245,7 +2245,7 @@ bool melee_attack::distortion_affects_defender()
 
         if (defender->atype() == ACT_PLAYER && attacker_visible
             && weapon != NULL && !is_unrandom_artefact(*weapon)
-            && !is_fixed_artefact(*weapon))
+            && !is_special_unrandom_artefact(*weapon))
         {
             // If the player is being sent to the Abyss by being attacked
             // with a distortion weapon, then we have to ID it before
@@ -3191,7 +3191,7 @@ bool melee_attack::apply_damage_brand()
         int hp_boost = 0;
 
         // Thus is probably more valuable on larger weapons?
-        if (weapon && is_fixed_artefact(*weapon)
+        if (weapon && is_unrandom_artefact(*weapon)
             && weapon->special == SPWPN_VAMPIRES_TOOTH)
         {
             hp_boost = damage_done;
@@ -3285,10 +3285,9 @@ bool melee_attack::apply_damage_brand()
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();
 
-    if (obvious_effect && attacker_visible && weapon != NULL
-        && !is_unrandom_artefact(*weapon) && !is_fixed_artefact(*weapon))
+    if (obvious_effect && attacker_visible && weapon != NULL)
     {
-        if (is_random_artefact(*weapon))
+        if (is_artefact(*weapon))
             artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
         else
             set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);

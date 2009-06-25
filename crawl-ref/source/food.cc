@@ -23,6 +23,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
@@ -42,7 +43,6 @@ REVISION("$Rev$");
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spells2.h"
@@ -231,7 +231,7 @@ static bool _find_butchering_implement(int &butcher_tool)
             && can_wield( &tool )
             // Don't even suggest autocursing items.
             // Note that unknown autocursing is OK.
-            && (!is_random_artefact(tool)
+            && (!is_artefact(tool)
                 || (artefact_known_wpn_property(tool, ARTP_CURSED) <= 0)))
         {
             if (Options.easy_butcher

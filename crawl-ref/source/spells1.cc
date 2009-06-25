@@ -20,6 +20,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abyss.h"
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "describe.h"
@@ -35,7 +36,6 @@ REVISION("$Rev$");
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spells2.h"
@@ -456,7 +456,7 @@ void identify(int power, int item_slot)
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        if (Options.autoinscribe_artefacts && is_random_artefact(item))
+        if (Options.autoinscribe_artefacts && is_artefact(item))
             add_autoinscription( item, artefact_auto_inscription(item));
 
         // For scrolls, now id the scroll, unless already known.

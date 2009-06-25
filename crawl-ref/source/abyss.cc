@@ -16,6 +16,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "cloud.h"
 #include "makeitem.h"
 #include "mapmark.h"
@@ -28,7 +29,6 @@ REVISION("$Rev$");
 #include "dungeon.h"
 #include "items.h"
 #include "lev-pand.h"
-#include "randart.h"
 #include "stuff.h"
 #include "spells3.h"
 #include "terrain.h"

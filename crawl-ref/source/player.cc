@@ -24,6 +24,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "cloud.h"
@@ -49,7 +50,6 @@ REVISION("$Rev$");
 #include "output.h"
 #include "place.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
@@ -953,9 +953,6 @@ int player_equip_ego_type( int slot, int special )
     switch (slot)
     {
     case EQ_WEAPON:
-        // This actually checks against the "branding", so it will catch
-        // randart brands, but not fixed artefacts.  -- bwr
-
         // Hands can have more than just weapons.
         wpn = you.equip[EQ_WEAPON];
         if (wpn != -1
@@ -1005,6 +1002,78 @@ int player_equip_ego_type( int slot, int special )
     return (ret);
 }
 
+// Return's true if the indicated unrandart is equipped
+// [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
+// and armour type-id on wield/wear.
+bool player_equip_unrand(int unrand_index)
+{
+    unrandart_entry* entry = get_unrand_entry(unrand_index);
+    equipment_type   slot  = get_item_slot(entry->base_type,
+                                           entry->sub_type);
+
+    if (!you_tran_can_wear(slot))
+        return (false);
+
+    int it;
+
+    switch (slot)
+    {
+    case EQ_WEAPON:
+        // Hands can have more than just weapons.
+        it = you.equip[EQ_WEAPON];
+        if (it != -1
+            && you.inv[it].base_type == OBJ_WEAPONS
+            && is_unrandom_artefact(you.inv[it])
+            && you.inv[it].special == unrand_index)
+        {
+            return (true);
+        }
+        break;
+
+    case EQ_RINGS:
+        it = you.equip[EQ_LEFT_RING];
+        if (it != -1
+            && is_unrandom_artefact(you.inv[it])
+            && you.inv[it].special == unrand_index)
+        {
+            return (true);
+        }
+
+        it = you.equip[EQ_RIGHT_RING];
+        if (it != -1
+            && is_unrandom_artefact(you.inv[it])
+            && you.inv[it].special == unrand_index)
+        {
+            return (true);
+        }
+        break;
+  
+    case EQ_NONE:
+    case EQ_STAFF:
+    case EQ_LEFT_RING:
+    case EQ_RIGHT_RING:
+    case EQ_RINGS_PLUS:
+    case EQ_RINGS_PLUS2:
+    case EQ_ALL_ARMOUR:
+        // no unrandarts for these slots.
+        break;
+
+    default:
+        // Check a specific slot.
+        it = you.equip[slot];
+        if (it != -1
+            && is_unrandom_artefact(you.inv[it])
+            && you.inv[it].special == unrand_index)
+        {
+            return (true);
+        }
+        break;
+    }
+
+    return (false);
+}
+
+
 int player_damage_type( void )
 {
     return you.damage_type();
@@ -1031,7 +1100,7 @@ int player_teleport(bool calc_unid)
     // randart weapons only
     if (you.weapon()
         && you.weapon()->base_type == OBJ_WEAPONS
-        && is_random_artefact(*you.weapon()))
+        && is_artefact(*you.weapon()))
     {
         tp += scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
     }
@@ -1171,13 +1240,19 @@ int player_hunger_rate(void)
     // weapon ego types
     if (you.species != SP_VAMPIRE)
     {
-        hunger += 6 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM );
-        hunger += 9 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRES_TOOTH );
+        if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
+        {
+              hunger += 6;
+              hunger += 3 * player_equip_unrand( SPWPN_VAMPIRES_TOOTH );
+        }
     }
     else
     {
-        hunger += 1 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM );
-        hunger += 2 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRES_TOOTH );
+        if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
+        {
+            hunger += 1;
+            hunger += 1 * player_equip_unrand( SPWPN_VAMPIRES_TOOTH );
+        }
     }
 
     // troll leather armour
@@ -1591,14 +1666,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         // Staves
         rp += player_equip( EQ_STAFF, STAFF_POISON, calc_unid );
 
-        // the staff of Olgreb:
-        if (you.weapon()
-            && you.weapon()->base_type == OBJ_WEAPONS
-            && you.weapon()->special == SPWPN_STAFF_OF_OLGREB)
-        {
-            rp++;
-        }
-
         // ego armour:
         rp += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE );
 
@@ -1789,12 +1856,8 @@ int player_spec_poison()
     // Staves
     sp += player_equip( EQ_STAFF, STAFF_POISON );
 
-    if (you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
-        && you.weapon()->special == SPWPN_STAFF_OF_OLGREB)
-    {
+    if (player_equip_unrand(SPWPN_STAFF_OF_OLGREB))
         sp++;
-    }
 
     return sp;
 }
@@ -3574,7 +3637,7 @@ int check_stealth(void)
         return (1000);
 #endif
 
-    if (you.special_wield == SPWLD_SHADOW || you.duration[DUR_BERSERKER])
+    if (you.unrand_reacts == SPWLD_SHADOW || you.duration[DUR_BERSERKER])
         return (0);
 
     int stealth = you.dex * 3;
@@ -4560,7 +4623,7 @@ bool items_give_ability(const int slot, artefact_prop_type abil)
         }
 
         // other items are not evokable
-        if (!is_random_artefact( you.inv[ eq ] ))
+        if (!is_artefact( you.inv[ eq ] ))
             continue;
 
         if (artefact_wpn_property(you.inv[ eq ], abil))
@@ -4589,7 +4652,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid)
         if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
             continue;
 
-        if (!is_random_artefact( you.inv[ eq ] ))
+        if (!is_artefact( you.inv[ eq ] ))
             continue;
 
         // Ignore unidentified items [TileCrawl dump enhancements].
@@ -5849,7 +5912,7 @@ void player::init()
     disease         = 0;
     elapsed_time    = 0;
     rotting         = 0;
-    special_wield   = SPWLD_NONE;
+    unrand_reacts   = SPWLD_NONE;
     synch_time      = 0;
 
     magic_contamination = 0;
@@ -5930,9 +5993,6 @@ void player::init()
     had_book.init(false);
 
     unique_items.init(UNIQ_NOT_EXISTS);
-
-    for (int i = 0; i < NO_UNRANDARTS; i++)
-        set_unrandart_exist(i, false);
 
     skills.init(0);
     skill_points.init(0);
@@ -6509,7 +6569,7 @@ static bool _equipment_make_berserk()
          if (!item)
              continue;
 
-         if (!is_random_artefact(*item))
+         if (!is_artefact(*item))
              continue;
 
          if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(20))

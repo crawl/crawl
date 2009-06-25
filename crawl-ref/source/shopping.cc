@@ -22,6 +22,7 @@ REVISION("$Rev$");
 #endif
 
 #include "externs.h"
+#include "artefact.h"
 #include "cio.h"
 #include "describe.h"
 #include "food.h"
@@ -35,7 +36,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "overmap.h"
 #include "player.h"
-#include "randart.h"
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
@@ -264,7 +264,7 @@ static bool _in_a_shop( int shopidx )
         for (unsigned int i = 0; i < stock.size(); i++)
         {
             item_def& item = mitm[stock[i]];
-            if (Options.autoinscribe_artefacts && is_random_artefact(item))
+            if (Options.autoinscribe_artefacts && is_artefact(item))
                 item.inscription = artefact_auto_inscription(item);
         }
 
@@ -517,7 +517,7 @@ static bool _purchase( int shop, int item_got, int cost, bool id )
 // the price of the artefact. -- bwr
 int artefact_value( const item_def &item )
 {
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
 
     int ret = 10;
     artefact_properties_t prop;
@@ -621,7 +621,7 @@ unsigned int item_value( item_def item, bool ident )
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (is_fixed_artefact( item ))
+        if (is_unrandom_artefact( item ))
         {
             if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
             {
@@ -912,7 +912,7 @@ unsigned int item_value( item_def item, bool ident )
             }
         }
 
-        if (is_random_artefact(item))
+        if (is_artefact(item))
         {
             if (item_type_known(item))
                 valued += (7 * artefact_value(item));
@@ -1225,7 +1225,7 @@ unsigned int item_value( item_def item, bool ident )
             }
         }
 
-        if (is_random_artefact( item ))
+        if (is_artefact( item ))
         {
             if (item_type_known(item))
                 valued += (7 * artefact_value( item ));
@@ -1592,7 +1592,7 @@ unsigned int item_value( item_def item, bool ident )
                 // got to do delusion!
             }
 
-            if (is_random_artefact(item))
+            if (is_artefact(item))
             {
                 // in this branch we're guaranteed to know
                 // the item type!

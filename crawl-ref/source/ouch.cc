@@ -36,6 +36,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "chardump.h"
 #include "delay.h"
 #include "files.h"
@@ -53,7 +54,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "output.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"

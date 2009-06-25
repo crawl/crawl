@@ -16,6 +16,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "effects.h"
 #include "food.h"
@@ -26,7 +27,6 @@ REVISION("$Rev$");
 #include "mutation.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spells2.h"
@@ -407,7 +407,7 @@ bool unwield_item(bool showMsgs)
         return (false);
 
     you.equip[EQ_WEAPON] = -1;
-    you.special_wield    = SPWLD_NONE;
+    you.unrand_reacts    = SPWLD_NONE;
     you.wield_change     = true;
     you.m_quiver->on_weapon_changed();
 
@@ -419,7 +419,7 @@ bool unwield_item(bool showMsgs)
     }
     else if (item.base_type == OBJ_WEAPONS)
     {
-        if (is_fixed_artefact( item ))
+        if (is_unrandom_artefact( item ))
         {
             switch (item.special)
             {
@@ -670,5 +670,5 @@ void unuse_artefact(const item_def &item)
                  true);
 
     if (proprt[ARTP_NOISES] != 0)
-        you.special_wield = SPWLD_NONE;
+        you.unrand_reacts = SPWLD_NONE;
 }

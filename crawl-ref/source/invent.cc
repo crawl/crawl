@@ -23,6 +23,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "clua.h"
 #include "decks.h"
 #include "describe.h"
@@ -39,7 +40,6 @@ REVISION("$Rev$");
 #include "view.h"
 #include "menu.h"
 #include "mon-util.h"
-#include "randart.h"
 #include "state.h"
 
 #include "tiles.h"
@@ -1754,7 +1754,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             return (true);
         }
 
-        if (is_fixed_artefact(item))
+        if (is_unrandom_artefact(item))
         {
             switch (item.special)
             {

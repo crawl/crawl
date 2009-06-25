@@ -25,6 +25,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abl-show.h"
+#include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -59,7 +60,6 @@ REVISION("$Rev$");
 #include "output.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "spells1.h"
@@ -3537,7 +3537,7 @@ bool is_chaotic_item(const item_def& item)
         break;
     }
 
-    if (is_random_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+    if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
         retval = true;
 
     return (retval);

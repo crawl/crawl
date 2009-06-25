@@ -24,6 +24,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "abyss.h"
+#include "artefact.h"
 #include "beam.h"
 #include "database.h"
 #include "decks.h"
@@ -43,7 +44,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"

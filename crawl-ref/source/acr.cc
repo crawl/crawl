@@ -45,6 +45,7 @@ REVISION("$Rev$");
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "artefact.h"
 #include "arena.h"
 #include "branch.h"
 #include "chardump.h"
@@ -91,7 +92,6 @@ REVISION("$Rev$");
 #include "overmap.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills.h"
@@ -2582,7 +2582,7 @@ void world_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth );
 #endif
 
-    if (you.special_wield != SPWLD_NONE)
+    if (you.unrand_reacts != SPWLD_NONE)
         special_wielded();
 
     if (!crawl_state.arena && one_chance_in(10))
@@ -4075,6 +4075,14 @@ static void _compile_time_asserts()
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c7);
+
+    // Make sure there's enough room in you.unique_items to hold all
+    // the unrandarts.
+    COMPILE_CHECK(NO_UNRANDARTS < MAX_UNRANDARTS, c8);
+
+    // Non-artefact brands and unrandart indexes both go into
+    // item.special, so make sure they don't overlap.
+    COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START, c9);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

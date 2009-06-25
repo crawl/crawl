@@ -22,6 +22,7 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "arena.h"
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "database.h"
@@ -49,7 +50,6 @@ REVISION("$Rev$");
 #include "mstuff2.h"
 #include "notes.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "spl-mis.h"
 #include "spl-util.h"

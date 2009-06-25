@@ -22,6 +22,7 @@ REVISION("$Rev$");
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "decks.h"
 #include "food.h"
 #include "invent.h"
@@ -34,7 +35,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "player.h"
 #include "quiver.h"
-#include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
@@ -880,9 +880,7 @@ void set_helmet_random_desc( item_def &item )
 //
 bool set_item_ego_type( item_def &item, int item_type, int ego_type )
 {
-    if (item.base_type == item_type
-        && !is_random_artefact( item )
-        && !is_fixed_artefact( item ))
+    if (item.base_type == item_type && !is_artefact(item))
     {
         item.special = ego_type;
         return (true);
@@ -899,27 +897,8 @@ int get_weapon_brand( const item_def &item )
     if (item.base_type != OBJ_WEAPONS)
         return (SPWPN_NORMAL);
 
-    if (is_fixed_artefact( item ))
-    {
-        switch (item.special)
-        {
-        case SPWPN_SWORD_OF_CEREBOV:
-            return (SPWPN_FLAMING);
-
-        case SPWPN_STAFF_OF_OLGREB:
-            return (SPWPN_VENOM);
-
-        case SPWPN_VAMPIRES_TOOTH:
-            return (SPWPN_VAMPIRICISM);
-
-        default:
-            return (SPWPN_NORMAL);
-        }
-    }
-    else if (is_random_artefact( item ))
-    {
+    if (is_artefact( item ))
         return (artefact_wpn_property( item, ARTP_BRAND ));
-    }
 
     return (item.special);
 }
@@ -1113,6 +1092,11 @@ bool jewellery_is_amulet( const item_def &item )
     ASSERT( item.base_type == OBJ_JEWELLERY );
 
     return (item.sub_type >= AMU_RAGE);
+}
+
+bool jewellery_is_amulet( int sub_type )
+{
+    return (sub_type >= AMU_RAGE);
 }
 
 bool check_jewellery_size( const item_def &item, size_type size )
@@ -2468,11 +2452,8 @@ bool gives_ability(const item_def &item)
 
     // Check for evokable randart properties.
     for (int rap = ARTP_INVISIBLE; rap <= ARTP_MAPPING; rap++)
-        if (artefact_wpn_property( item,
-                                   static_cast<artefact_prop_type>(rap) ))
-        {
+        if (artefact_wpn_property( item, static_cast<artefact_prop_type>(rap) ))
             return (true);
-        }
 
     return (false);
 }
@@ -2539,11 +2520,8 @@ bool gives_resistance(const item_def &item)
         if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE && rap != ARTP_CAN_TELEPORT)
             continue;
 
-        if (artefact_wpn_property( item,
-                                   static_cast<artefact_prop_type>(rap) ))
-        {
+        if (artefact_wpn_property( item, static_cast<artefact_prop_type>(rap) ))
             return (true);
-        }
     }
 
     return (false);
@@ -2726,6 +2704,28 @@ size_type item_size(const item_def &item)
         size = SIZE_HUGE;
 
     return (static_cast<size_type>(size));
+}
+
+equipment_type get_item_slot(object_class_type type, int sub_type)
+{
+    switch(type)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+    case OBJ_MISCELLANY:
+        return (EQ_WEAPON);
+
+    case OBJ_ARMOUR:
+        return get_armour_slot(static_cast<armour_type>(sub_type));
+
+    case OBJ_JEWELLERY:
+        return (jewellery_is_amulet(sub_type) ? EQ_AMULET : EQ_RINGS);
+
+    default:
+        break;
+    }
+
+    return (EQ_NONE);
 }
 
 // Returns true if we might be interested in dumping the colour.

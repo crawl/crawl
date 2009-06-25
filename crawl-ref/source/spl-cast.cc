@@ -584,7 +584,7 @@ int spell_enhancement( unsigned int typeflags )
     if (typeflags & SPTYP_AIR)
         enhanced += player_spec_air() - player_spec_earth();
 
-    if (you.special_wield == SPWLD_SHADOW)
+    if (you.unrand_reacts == SPWLD_SHADOW)
         enhanced -= 2;
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
