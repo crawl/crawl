@@ -1294,11 +1294,13 @@ typedef std::vector<spell_type>   spell_list;
 typedef std::map<spell_type, int> spells_to_books;
 
 static bool _get_mem_list(spell_list &mem_spells,
-                          spells_to_books &book_hash)
+                          spells_to_books &book_hash,
+                          unsigned int &num_unreadable,
+                          unsigned int &num_race)
 {
-    bool book_errors    = false;
-    int  num_books      = 0;
-    int  num_unreadable = 0;
+    bool          book_errors    = false;
+    unsigned int  num_books      = 0;
+                  num_unreadable = 0;
 
     // Collect the list of all spells in all available spellbooks.
     for (int i = 0; i < ENDOFPACK; i++)
@@ -1370,7 +1372,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     unsigned int num_known      = 0;
-    unsigned int num_race       = 0;
+                 num_race       = 0;
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
@@ -1462,7 +1464,9 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
 }
 
 static spell_type _choose_mem_spell(spell_list &spells,
-                                    spells_to_books &book_hash)
+                                    spells_to_books &book_hash,
+                                    unsigned long num_unreadable,
+                                    unsigned long num_race)
 {
     std::sort(spells.begin(), spells.end(), _sort_mem_spells);
 
@@ -1489,6 +1493,21 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     spell_menu.set_highlighter(NULL);
     spell_menu.set_tag("spell");
+
+    std::string more_str = make_stringf("%d spell level%s left",
+                                        player_spell_levels(),
+                                        player_spell_levels() > 1 ? "s" : "");
+
+    if (num_unreadable > 0)
+        more_str += make_stringf(", %u unreadable spellbook%s",
+                                 num_unreadable,
+                                 num_unreadable > 1 ? "s" : "");
+
+    if (num_race > 0)
+        more_str += make_stringf(", %u spell%s unmemorizable", num_race,
+                                 num_race > 1 ? "s" : "");
+
+    spell_menu.set_more(formatted_string(more_str));
 
     for (unsigned int i = 0; i < spells.size(); i++)
     {
@@ -1582,10 +1601,13 @@ bool learn_spell()
     spell_list      mem_spells;
     spells_to_books book_hash;
 
-    if (!_get_mem_list(mem_spells, book_hash))
+    unsigned int num_unreadable, num_race;
+
+    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
         return (false);
 
-    spell_type specspell = _choose_mem_spell(mem_spells, book_hash);
+    spell_type specspell = _choose_mem_spell(mem_spells, book_hash,
+                                             num_unreadable, num_race);
 
     // MATT
     if (specspell == SPELL_NO_SPELL)
@@ -1649,7 +1671,11 @@ bool learn_spell()
           (temp_rand2 == 2) ? "learn"
                             : "absorb"));
 
-    snprintf(info, INFO_SIZE, "Memorise %s?", spell_title(specspell));
+    snprintf(info, INFO_SIZE,
+             "Memorise %s, consuming %d spell level%s and leaving %d?",
+             spell_title(specspell), spell_levels_required(specspell),
+             spell_levels_required(specspell) > 1 ? "s" : "",
+             player_spell_levels() - spell_levels_required(specspell));
     if ( !yesno(info, true, 'n', false) )
     {
         canned_msg( MSG_OK );
