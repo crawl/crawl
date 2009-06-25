@@ -1647,8 +1647,8 @@ bool acquirement(object_class_type class_wanted, int agent,
                 int brand = get_weapon_brand(doodad);
                 if (brand == SPWPN_PAIN
                     || is_unrandom_artefact(doodad)
-                       && (doodad.special == SPWPN_WRATH_OF_TROG
-                           || doodad.special == SPWPN_STAFF_OF_WUCAD_MU))
+                       && (doodad.special == UNRAND_TROG
+                           || doodad.special == UNRAND_WUCAD_MU))
                 {
                     destroy_item(thing_created, true);
                     thing_created = NON_ITEM;

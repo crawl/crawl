@@ -1581,8 +1581,7 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype,
 
         // Never randomly generated until lost in the abyss.
         if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
-            && index >= SPWPN_START_NOGEN_FIXEDARTS
-            && index <= SPWPN_END_FIXEDARTS)
+            && index >= UNRAND_CEREBOV && index <= UNRAND_ASMODEUS)
         {
             continue;
         }

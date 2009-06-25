@@ -451,31 +451,31 @@ int item_special_wield_effect(const item_def &item)
 
     switch (i_eff)
     {
-    case SPWPN_SINGING_SWORD:
+    case UNRAND_SINGING_SWORD:
         return (SPWLD_SING);
 
-    case SPWPN_WRATH_OF_TROG:
+    case UNRAND_TROG:
         return (SPWLD_TROG);
 
-    case SPWPN_SCYTHE_OF_CURSES:
+    case UNRAND_CURSES:
         return (SPWLD_CURSE);
 
-    case SPWPN_MACE_OF_VARIABILITY:
+    case UNRAND_VARIABILITY:
         return (SPWLD_VARIABLE);
 
-    case SPWPN_SCEPTRE_OF_TORMENT:
+    case UNRAND_TORMENT:
         return (SPWLD_TORMENT);
 
-    case SPWPN_SWORD_OF_ZONGULDROK:
+    case UNRAND_ZONGULDROK:
         return (SPWLD_ZONGULDROK);
 
-    case SPWPN_SWORD_OF_POWER:
+    case UNRAND_POWER:
         return (SPWLD_POWER);
 
-    case SPWPN_STAFF_OF_OLGREB:
+    case UNRAND_OLGREB:
         return (SPWLD_OLGREB);
 
-    case SPWPN_STAFF_OF_WUCAD_MU:
+    case UNRAND_WUCAD_MU:
         return (SPWLD_WUCAD_MU);
 
     default:
@@ -577,7 +577,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
             {
                 switch (special)
                 {
-                case SPWPN_SWORD_OF_CEREBOV:
                 case SPWPN_FLAMING:
                     mpr("It bursts into flame!");
                     break;
@@ -667,7 +666,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     mpr("It is briefly surrounded by shifting shadows.");
                     break;
 
-                case SPWPN_SINGING_SWORD:
+                case UNRAND_SINGING_SWORD:
                     if (!was_known)
                     {
                         mprf(MSGCH_TALK, "%s says, "
@@ -678,38 +677,38 @@ void wield_effects(int item_wield_2, bool showMsgs)
                         mpr("The Singing Sword hums in delight!", MSGCH_TALK);
                     break;
 
-                case SPWPN_WRATH_OF_TROG:
+                case UNRAND_TROG:
                     mpr("You feel bloodthirsty!");
                     break;
 
-                case SPWPN_SCYTHE_OF_CURSES:
+                case UNRAND_CURSES:
                     mpr("A shiver runs down your spine.");
                     break;
 
-                case SPWPN_GLAIVE_OF_PRUNE:
+                case UNRAND_PRUNE:
                     mpr("You feel pruney.");
                     break;
 
-                case SPWPN_SCEPTRE_OF_TORMENT:
+                case UNRAND_TORMENT:
                     mpr("A terribly searing pain shoots up your arm!");
                     break;
 
-                case SPWPN_SWORD_OF_ZONGULDROK:
+                case UNRAND_ZONGULDROK:
                     mpr("You sense an extremely unholy aura.");
                     break;
 
-                case SPWPN_SWORD_OF_POWER:
+                case UNRAND_POWER:
                     mpr("You sense an aura of extreme power.");
                     break;
 
-                case SPWPN_STAFF_OF_OLGREB:
+                case UNRAND_OLGREB:
                     if (player_can_smell())
                         mpr("You smell chlorine.");
                     else
                         mpr("The staff glows slightly green.");
                     break;
 
-                case SPWPN_VAMPIRES_TOOTH:
+                case UNRAND_VAMPIRES_TOOTH:
                     if (you.is_undead != US_UNDEAD)
                     {
                         mpr("You feel a strange hunger, and smell blood in "
@@ -746,12 +745,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 }
                 break;
 
-            case SPWPN_SCYTHE_OF_CURSES:
+            case UNRAND_CURSES:
                 if (!item_cursed(item) && one_chance_in(3))
                     do_curse_item(item, false);
                 break;
 
-            case SPWPN_STAFF_OF_WUCAD_MU:
+            case UNRAND_WUCAD_MU:
                 MiscastEffect(&you, WIELD_MISCAST, SPTYP_DIVINATION, 9, 90,
                               "the Staff of Wucad Mu" );
                 break;
@@ -768,7 +767,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             mpr("It sticks to your hand!");
             int amusement = 16;
             if (!known_cursed
-                && !(was_known && special == SPWPN_SCYTHE_OF_CURSES))
+                && !(was_known && special == UNRAND_CURSES))
             {
                 amusement *= 2;
                 god_type god;

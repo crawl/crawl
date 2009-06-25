@@ -4621,11 +4621,11 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
     {
         switch (weapon.special)
         {
-        case SPWPN_SCEPTRE_OF_ASMODEUS:
+        case UNRAND_ASMODEUS:
             return (monster->type == MONS_ASMODEUS);
-        case SPWPN_STAFF_OF_DISPATER:
+        case UNRAND_DISPATER:
             return (monster->type == MONS_DISPATER);
-        case SPWPN_SWORD_OF_CEREBOV:
+        case UNRAND_CEREBOV:
             return (monster->type == MONS_CEREBOV);
         }
     }

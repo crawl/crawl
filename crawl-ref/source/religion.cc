@@ -3458,9 +3458,9 @@ bool is_evil_item(const item_def& item)
         const int item_eff = item_special_wield_effect(item);
 
         retval = (is_demonic(item)
-                  || item.special == SPWPN_SCEPTRE_OF_ASMODEUS
-                  || item.special == SPWPN_STAFF_OF_DISPATER
-                  || item.special == SPWPN_SWORD_OF_CEREBOV
+                  || item.special == UNRAND_ASMODEUS
+                  || item.special == UNRAND_DISPATER
+                  || item.special == UNRAND_CEREBOV
                   || item_eff == SPWLD_CURSE
                   || item_eff == SPWLD_TORMENT
                   || item_eff == SPWLD_ZONGULDROK

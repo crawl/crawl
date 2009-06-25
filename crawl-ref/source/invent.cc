@@ -1758,10 +1758,10 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         {
             switch (item.special)
             {
-            case SPWPN_SCEPTRE_OF_ASMODEUS:
-            case SPWPN_STAFF_OF_WUCAD_MU:
-            case SPWPN_STAFF_OF_DISPATER:
-            case SPWPN_STAFF_OF_OLGREB:
+            case UNRAND_ASMODEUS:
+            case UNRAND_WUCAD_MU:
+            case UNRAND_DISPATER:
+            case UNRAND_OLGREB:
                 if (!wielded)
                 {
                     if (msg)

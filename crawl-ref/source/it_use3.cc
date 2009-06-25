@@ -853,7 +853,7 @@ bool evoke_item(int slot)
         {
             switch (item.special)
             {
-            case SPWPN_STAFF_OF_DISPATER:
+            case UNRAND_DISPATER:
                 if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true)
                     || !enough_mp(5, true))
                 {
@@ -872,7 +872,7 @@ bool evoke_item(int slot)
                 did_work = true;
                 break;
 
-            case SPWPN_SCEPTRE_OF_ASMODEUS:
+            case UNRAND_ASMODEUS:
                 if (evoke_sceptre_of_asmodeus())
                 {
                     make_hungry(200, false, true);
@@ -881,7 +881,7 @@ bool evoke_item(int slot)
                 }
                 break;
 
-            case SPWPN_STAFF_OF_OLGREB:
+            case UNRAND_OLGREB:
                 if (!enough_mp( 4, true )
                     || you.skills[SK_EVOCATIONS] < random2(6))
                 {
@@ -901,7 +901,7 @@ bool evoke_item(int slot)
                     your_spells( SPELL_VENOM_BOLT, power, false );
                 break;
 
-            case SPWPN_STAFF_OF_WUCAD_MU:
+            case UNRAND_WUCAD_MU:
                 if (you.magic_points == you.max_magic_points
                     || you.skills[SK_EVOCATIONS] < random2(25))
                 {

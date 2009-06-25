@@ -1243,7 +1243,7 @@ int player_hunger_rate(void)
         if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
         {
               hunger += 6;
-              hunger += 3 * player_equip_unrand( SPWPN_VAMPIRES_TOOTH );
+              hunger += 3 * player_equip_unrand( UNRAND_VAMPIRES_TOOTH );
         }
     }
     else
@@ -1251,7 +1251,7 @@ int player_hunger_rate(void)
         if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
         {
             hunger += 1;
-            hunger += 1 * player_equip_unrand( SPWPN_VAMPIRES_TOOTH );
+            hunger += 1 * player_equip_unrand( UNRAND_VAMPIRES_TOOTH );
         }
     }
 
@@ -1856,7 +1856,7 @@ int player_spec_poison()
     // Staves
     sp += player_equip( EQ_STAFF, STAFF_POISON );
 
-    if (player_equip_unrand(SPWPN_STAFF_OF_OLGREB))
+    if (player_equip_unrand(UNRAND_OLGREB))
         sp++;
 
     return sp;

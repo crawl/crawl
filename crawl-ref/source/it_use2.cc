@@ -423,19 +423,19 @@ bool unwield_item(bool showMsgs)
         {
             switch (item.special)
             {
-            case SPWPN_SINGING_SWORD:
+            case UNRAND_SINGING_SWORD:
                 if (showMsgs)
                     mpr("The Singing Sword sighs.", MSGCH_TALK);
                 break;
-            case SPWPN_WRATH_OF_TROG:
+            case UNRAND_TROG:
                 if (showMsgs)
                     mpr("You feel less violent.");
                 break;
-            case SPWPN_STAFF_OF_OLGREB:
+            case UNRAND_OLGREB:
                 item.plus  = 0;
                 item.plus2 = 0;
                 break;
-            case SPWPN_STAFF_OF_WUCAD_MU:
+            case UNRAND_WUCAD_MU:
                 item.plus  = 0;
                 item.plus2 = 0;
                 MiscastEffect( &you, WIELD_MISCAST, SPTYP_DIVINATION, 9, 90,
@@ -459,7 +459,6 @@ bool unwield_item(bool showMsgs)
 
             switch (brand)
             {
-            case SPWPN_SWORD_OF_CEREBOV:
             case SPWPN_FLAMING:
                 if (showMsgs)
                     mprf("%s stops flaming.", msg.c_str());

@@ -1083,20 +1083,20 @@ static int _tileidx_unrand_artefact(int idx)
 {
     switch (idx)
     {
-    case SPWPN_SINGING_SWORD:       return TILE_SPWPN_SINGING_SWORD;
-    case SPWPN_WRATH_OF_TROG:       return TILE_SPWPN_WRATH_OF_TROG;
-    case SPWPN_SCYTHE_OF_CURSES:    return TILE_SPWPN_SCYTHE_OF_CURSES;
-    case SPWPN_MACE_OF_VARIABILITY: return TILE_SPWPN_MACE_OF_VARIABILITY;
-    case SPWPN_GLAIVE_OF_PRUNE:     return TILE_SPWPN_GLAIVE_OF_PRUNE;
-    case SPWPN_SCEPTRE_OF_TORMENT:  return TILE_SPWPN_SCEPTRE_OF_TORMENT;
-    case SPWPN_SWORD_OF_ZONGULDROK: return TILE_SPWPN_SWORD_OF_ZONGULDROK;
-    case SPWPN_SWORD_OF_CEREBOV:    return TILE_SPWPN_SWORD_OF_CEREBOV;
-    case SPWPN_STAFF_OF_DISPATER:   return TILE_SPWPN_STAFF_OF_DISPATER;
-    case SPWPN_SCEPTRE_OF_ASMODEUS: return TILE_SPWPN_SCEPTRE_OF_ASMODEUS;
-    case SPWPN_SWORD_OF_POWER:      return TILE_SPWPN_SWORD_OF_POWER;
-    case SPWPN_STAFF_OF_OLGREB:     return TILE_SPWPN_STAFF_OF_OLGREB;
-    case SPWPN_VAMPIRES_TOOTH:      return TILE_SPWPN_VAMPIRES_TOOTH;
-    case SPWPN_STAFF_OF_WUCAD_MU:   return TILE_SPWPN_STAFF_OF_WUCAD_MU;
+    case UNRAND_SINGING_SWORD:  return TILE_SPWPN_SINGING_SWORD;
+    case UNRAND_TROG:           return TILE_SPWPN_WRATH_OF_TROG;
+    case UNRAND_CURSES:         return TILE_SPWPN_SCYTHE_OF_CURSES;
+    case UNRAND_VARIABILITY:    return TILE_SPWPN_MACE_OF_VARIABILITY;
+    case UNRAND_PRUNE:          return TILE_SPWPN_GLAIVE_OF_PRUNE;
+    case UNRAND_TORMENT:        return TILE_SPWPN_SCEPTRE_OF_TORMENT;
+    case UNRAND_ZONGULDROK:     return TILE_SPWPN_SWORD_OF_ZONGULDROK;
+    case UNRAND_CEREBOV:        return TILE_SPWPN_SWORD_OF_CEREBOV;
+    case UNRAND_DISPATER:       return TILE_SPWPN_STAFF_OF_DISPATER;
+    case UNRAND_ASMODEUS:       return TILE_SPWPN_SCEPTRE_OF_ASMODEUS;
+    case UNRAND_POWER:          return TILE_SPWPN_SWORD_OF_POWER;
+    case UNRAND_OLGREB:         return TILE_SPWPN_STAFF_OF_OLGREB;
+    case UNRAND_VAMPIRES_TOOTH: return TILE_SPWPN_VAMPIRES_TOOTH;
+    case UNRAND_WUCAD_MU:       return TILE_SPWPN_STAFF_OF_WUCAD_MU;
 
     case UNRAND_BLOODBANE:        return TILE_URAND_BLOODBANE;
     case UNRAND_SHADOWS:          return TILE_URAND_SHADOWS;
@@ -3391,48 +3391,49 @@ int tilep_equ_weapon(const item_def &item)
     {
         switch (find_unrandart_index(item))
         {
-            case SPWPN_SINGING_SWORD:       return TILEP_HAND1_SINGING_SWORD;
-            case SPWPN_WRATH_OF_TROG:       return TILEP_HAND1_AXE_TROG;
-            case SPWPN_SCYTHE_OF_CURSES:    return TILEP_HAND1_FINISHER;
-            case SPWPN_MACE_OF_VARIABILITY: return TILEP_HAND1_MACE_OF_VARIABILITY;
-            case SPWPN_GLAIVE_OF_PRUNE:     return TILEP_HAND1_GLAIVE_OF_PRUNE;
-            case SPWPN_SCEPTRE_OF_TORMENT:  return TILEP_HAND1_MACE_RUBY;
-            case SPWPN_SWORD_OF_ZONGULDROK: return TILEP_HAND1_ZONGULDROK;
-            case SPWPN_SWORD_OF_CEREBOV:    return TILEP_HAND1_SWORD_TWIST;
-            case SPWPN_STAFF_OF_DISPATER:   return TILEP_HAND1_DISPATER;
-            case SPWPN_SCEPTRE_OF_ASMODEUS: return TILEP_HAND1_ASMODEUS;
-            case SPWPN_STAFF_OF_OLGREB:     return TILEP_HAND1_OLGREB;
-            case SPWPN_SWORD_OF_POWER:      return TILEP_HAND1_SWORD_OF_POWER;
-            case SPWPN_VAMPIRES_TOOTH:      return TILEP_HAND1_VAMPIRES_TOOTH;
-            case SPWPN_STAFF_OF_WUCAD_MU:   return TILEP_HAND1_WUCAD_MU;
+            case UNRAND_SINGING_SWORD:  return TILEP_HAND1_SINGING_SWORD;
+            case UNRAND_TROG:           return TILEP_HAND1_AXE_TROG;
+            case UNRAND_CURSES:         return TILEP_HAND1_FINISHER;
+            case UNRAND_VARIABILITY:    return TILEP_HAND1_MACE_OF_VARIABILITY;
+            case UNRAND_PRUNE:          return TILEP_HAND1_GLAIVE_OF_PRUNE;
+            case UNRAND_TORMENT:        return TILEP_HAND1_MACE_RUBY;
+            case UNRAND_ZONGULDROK:     return TILEP_HAND1_ZONGULDROK;
+            case UNRAND_CEREBOV:        return TILEP_HAND1_SWORD_TWIST;
+            case UNRAND_DISPATER:       return TILEP_HAND1_DISPATER;
+            case UNRAND_ASMODEUS:       return TILEP_HAND1_ASMODEUS;
+            case UNRAND_OLGREB:         return TILEP_HAND1_OLGREB;
+            case UNRAND_POWER:          return TILEP_HAND1_SWORD_OF_POWER;
+            case UNRAND_VAMPIRES_TOOTH: return TILEP_HAND1_VAMPIRES_TOOTH;
+            case UNRAND_WUCAD_MU:       return TILEP_HAND1_WUCAD_MU;
 
-            case UNRAND_BLOODBANE:          return TILEP_HAND1_BLOODBANE;
-            case UNRAND_FLAMING_DEATH:      return TILEP_HAND1_FLAMING_DEATH;
-            case UNRAND_BRILLIANCE:         return TILEP_HAND1_MACE_OF_BRILLIANCE;
-            case UNRAND_LEECH:              return TILEP_HAND1_LEECH;
-            case UNRAND_CHILLY_DEATH:       return TILEP_HAND1_CHILLY_DEATH;
-            case UNRAND_MORG:               return TILEP_HAND1_MORG;
-            case UNRAND_FINISHER:           return TILEP_HAND1_FINISHER;
-            case UNRAND_PUNK:               return TILEP_HAND1_PUNK;
-            case UNRAND_KRISHNA:            return TILEP_HAND1_KRISHNA;
-            case UNRAND_SKULLCRUSHER:       return TILEP_HAND1_GIANT_CLUB_SLANT;
-            case UNRAND_GUARD:              return TILEP_HAND1_GLAIVE_OF_THE_GUARD;
-            case UNRAND_JIHAD:              return TILEP_HAND1_JIHAD;
-            case UNRAND_HELLFIRE:           return TILEP_HAND1_FIERY_DEVIL;
-            case UNRAND_DOOM_KNIGHT:        return TILEP_HAND1_DOOM_KNIGHT;
-            case UNRAND_EOS:                return TILEP_HAND1_EOS;
-            case UNRAND_BOTONO:             return TILEP_HAND1_VOODOO;
-            case UNRAND_OCTOPUS_KING:       return TILEP_HAND1_TRIDENT_OCTOPUS_KING;
-            case UNRAND_ARGA:               return TILEP_HAND1_ARGA;
-            case UNRAND_ELEMENTAL_STAFF:    return TILEP_HAND1_ELEMENTAL_STAFF;
-            case UNRAND_SNIPER:             return TILEP_HAND1_SNIPER;
-            case UNRAND_PLUTONIUM_SWORD:    return TILEP_HAND1_PLUTONIUM_SWORD;
-            case UNRAND_BLOWGUN_ASSASSIN:   return TILEP_HAND1_BLOWGUN_ASSASSIN;
-            case UNRAND_WYRMBANE:           return TILEP_HAND1_WYRMBANE;
-            case UNRAND_SPRIGGANS_KNIFE:    return TILEP_HAND1_SPRIGGANS_KNIFE;
-            case UNRAND_SERPENT_SCOURGE:    return TILEP_HAND1_SERPENT_SCOURGE;
-            case UNRAND_ACCURACY:           return TILEP_HAND1_KNIFE_OF_ACCURACY;
-            case UNRAND_PIERCER:            return TILEP_HAND1_GREAT_BOW;
+            case UNRAND_BLOODBANE:      return TILEP_HAND1_BLOODBANE;
+            case UNRAND_FLAMING_DEATH:  return TILEP_HAND1_FLAMING_DEATH;
+            case UNRAND_BRILLIANCE:     return TILEP_HAND1_MACE_OF_BRILLIANCE;
+            case UNRAND_LEECH:          return TILEP_HAND1_LEECH;
+            case UNRAND_CHILLY_DEATH:   return TILEP_HAND1_CHILLY_DEATH;
+            case UNRAND_MORG:           return TILEP_HAND1_MORG;
+            case UNRAND_FINISHER:       return TILEP_HAND1_FINISHER;
+            case UNRAND_PUNK:           return TILEP_HAND1_PUNK;
+            case UNRAND_KRISHNA:        return TILEP_HAND1_KRISHNA;
+            case UNRAND_SKULLCRUSHER:   return TILEP_HAND1_GIANT_CLUB_SLANT;
+            case UNRAND_GUARD:          return TILEP_HAND1_GLAIVE_OF_THE_GUARD;
+            case UNRAND_JIHAD:          return TILEP_HAND1_JIHAD;
+            case UNRAND_HELLFIRE:       return TILEP_HAND1_FIERY_DEVIL;
+            case UNRAND_DOOM_KNIGHT:    return TILEP_HAND1_DOOM_KNIGHT;
+            case UNRAND_EOS:            return TILEP_HAND1_EOS;
+            case UNRAND_BOTONO:         return TILEP_HAND1_VOODOO;
+            case UNRAND_OCTOPUS_KING:   return TILEP_HAND1_TRIDENT_OCTOPUS_KING;
+
+            case UNRAND_ARGA:             return TILEP_HAND1_ARGA;
+            case UNRAND_ELEMENTAL_STAFF:  return TILEP_HAND1_ELEMENTAL_STAFF;
+            case UNRAND_SNIPER:           return TILEP_HAND1_SNIPER;
+            case UNRAND_PLUTONIUM_SWORD:  return TILEP_HAND1_PLUTONIUM_SWORD;
+            case UNRAND_BLOWGUN_ASSASSIN: return TILEP_HAND1_BLOWGUN_ASSASSIN;
+            case UNRAND_WYRMBANE:         return TILEP_HAND1_WYRMBANE;
+            case UNRAND_SPRIGGANS_KNIFE:  return TILEP_HAND1_SPRIGGANS_KNIFE;
+            case UNRAND_SERPENT_SCOURGE:  return TILEP_HAND1_SERPENT_SCOURGE;
+            case UNRAND_ACCURACY:         return TILEP_HAND1_KNIFE_OF_ACCURACY;
+            case UNRAND_PIERCER:          return TILEP_HAND1_GREAT_BOW;
         }
     }
 

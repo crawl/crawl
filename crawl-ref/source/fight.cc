@@ -1887,9 +1887,9 @@ void melee_attack::player_check_weapon_effects()
         {
             switch (weapon->special)
             {
-            case SPWPN_SCEPTRE_OF_ASMODEUS:
-            case SPWPN_STAFF_OF_DISPATER:
-            case SPWPN_SWORD_OF_CEREBOV:
+            case UNRAND_ASMODEUS:
+            case UNRAND_DISPATER:
+            case UNRAND_CEREBOV:
                 did_god_conduct(DID_UNHOLY, 3);
                 break;
             default:
@@ -2112,7 +2112,7 @@ void melee_attack::calc_elemental_brand_damage( beam_type flavour,
 
 int melee_attack::fire_res_apply_cerebov_downgrade(int res)
 {
-    if (weapon && weapon->special == SPWPN_SWORD_OF_CEREBOV)
+    if (weapon && weapon->special == UNRAND_CEREBOV)
         --res;
 
     return (res);
@@ -3103,7 +3103,6 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_VENOM:
-    case SPWPN_STAFF_OF_OLGREB:
         if (!one_chance_in(4))
         {
             int old_poison;
@@ -3192,7 +3191,7 @@ bool melee_attack::apply_damage_brand()
 
         // Thus is probably more valuable on larger weapons?
         if (weapon && is_unrandom_artefact(*weapon)
-            && weapon->special == SPWPN_VAMPIRES_TOOTH)
+            && weapon->special == UNRAND_VAMPIRES_TOOTH)
         {
             hp_boost = damage_done;
         }

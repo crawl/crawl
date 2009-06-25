@@ -627,34 +627,34 @@ unsigned int item_value( item_def item, bool ident )
             {
                 switch (item.special)
                 {
-                case SPWPN_SWORD_OF_CEREBOV:
+                case UNRAND_CEREBOV:
                     valued += 2000;
                     break;
 
-                case SPWPN_SCEPTRE_OF_ASMODEUS:
+                case UNRAND_ASMODEUS:
                     valued += 1500;
                     break;
 
-                case SPWPN_SWORD_OF_ZONGULDROK:
+                case UNRAND_ZONGULDROK:
                     valued += 1250;
                     break;
 
-                case SPWPN_SCEPTRE_OF_TORMENT:
-                case SPWPN_SINGING_SWORD:
-                case SPWPN_STAFF_OF_DISPATER:
+                case UNRAND_TORMENT:
+                case UNRAND_SINGING_SWORD:
+                case UNRAND_DISPATER:
                     valued += 1200;
                     break;
 
-                case SPWPN_GLAIVE_OF_PRUNE:
-                case SPWPN_WRATH_OF_TROG:
+                case UNRAND_PRUNE:
+                case UNRAND_TROG:
                     valued += 1000;
                     break;
 
-                case SPWPN_SCYTHE_OF_CURSES:
+                case UNRAND_CURSES:
                     valued += 800;
                     break;
 
-                case SPWPN_MACE_OF_VARIABILITY:
+                case UNRAND_VARIABILITY:
                     valued += 700;
                     break;
 

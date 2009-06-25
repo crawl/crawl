@@ -3734,17 +3734,16 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_CEREBOV:
         force_item = true;
-        make_item_unrandart( item, SPWPN_SWORD_OF_CEREBOV );
-        break;
+        make_item_unrandart( item, UNRAND_CEREBOV ); break;
 
     case MONS_DISPATER:
         force_item = true;
-        make_item_unrandart( item, SPWPN_STAFF_OF_DISPATER );
+        make_item_unrandart( item, UNRAND_DISPATER );
         break;
 
     case MONS_ASMODEUS:
         force_item = true;
-        make_item_unrandart( item, SPWPN_SCEPTRE_OF_ASMODEUS );
+        make_item_unrandart( item, UNRAND_ASMODEUS );
         break;
 
     case MONS_GERYON:
