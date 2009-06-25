@@ -341,7 +341,8 @@ namespace arena
         std::string arena_place = strip_tag_prefix(spec, "arena_place:");
         if (!arena_place.empty())
         {
-            try {
+            try
+            {
                 place = level_id::parse_level_id(arena_place);
             }
             catch (const std::string &err)
@@ -350,12 +351,17 @@ namespace arena
                                    arena_place.c_str(),
                                    err.c_str());
             }
+
             if (place.level_type == LEVEL_LABYRINTH)
+            {
                 throw (std::string("Can't set arena place to the "
                                    "labyrinth."));
+            }
             else if (place.level_type == LEVEL_PORTAL_VAULT)
+            {
                 throw (std::string("Can't set arena place to a portal "
                                    "vault."));
+            }
         }
 
         std::string glyphs = strip_tag_prefix(spec, "ban_glyphs:");

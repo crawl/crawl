@@ -5,7 +5,7 @@ entertainment.  It can be invoked on the command line like this:
     crawl -arena "kobold v goblin"
 
 Which will cause one kobold to fight one goblin, with crawl shutting down once
-one of them has won.  To be considered valid, a monster's name has to fully 
+one of them has won.  To be considered valid, a monster's name has to fully
 match its definition, e.g. "Blork the orc" rather than simply "Blork".
 
 To make them fight for three rounds you can do:
@@ -25,7 +25,7 @@ will give team A a rat and a cockroach and team B a kobold and a goblin; a
 victory is declared when all of one team is dead and at lest one member of the
 other team is still alive.
 
-Some monsters have a band (that is, a group of monsters) that will be 
+Some monsters have a band (that is, a group of monsters) that will be
 generated with them during normal play. You can use the suffix "band" to
 make a monster appear with its band (if one exists).  For example:
 
@@ -49,6 +49,9 @@ For example:
 
 will choose two random monsters from the 10th level of the Lair and pit them
 against three random monsters from the 7th level of the Vaults.
+The branches need to use the official abbreviations also used e.g. in the
+overmap (Ctrl-O): D, Temple, Orc, Elf, Lair, Swamp, Shoal, Slime, Snake, Hive,
+Vault, Blade, Crypt, Tomb, Hell, Dis, Geh, Coc, Tar, Zot.
 
 To let the game pick monsters completely at random, use "random" as a
 monster name. If you use the tag random_uniques all monsters thus chosen
@@ -146,11 +149,11 @@ The parameters include:
       Creatures spell (including test spawners) then arena cycles through
       the list of valid monsters, rather than taking rarity into account.
 
-* random_uniques: If the team is made up of random monsters 
-      (e.g. "random v random") the chosen monsters will be uniques. Also, 
+* random_uniques: If the team is made up of random monsters
+      (e.g. "random v random") the chosen monsters will be uniques. Also,
       any monster using Shadow Creatures will summon uniques.
 
-* "ban_gylphs:ABC" prevents monsters with the listed ASCII glyphs from
+* "ban_glyphs:ABC" prevents monsters with the listed ASCII glyphs from
       being placed in the arena.  For instance, "ban_glyphs:&C" prevents
       demon lords and giants/cyclopses/titans/etc from being placed.
 

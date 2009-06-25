@@ -394,6 +394,9 @@ WEIGHT:   (number with 10 being default)
 
 PLACE:    Used to specify certain special levels. Existing special levels
           include most branch ends.
+          The branches need to use the official abbreviations also used e.g. in
+          the overmap (Ctrl-O): D, Temple, Orc, Elf, Lair, Swamp, Shoal, Slime,
+          Snake, Hive, Vault, Blade, Crypt, Tomb, Hell, Dis, Geh, Coc, Tar, Zot.
 
           PLACE can also be used to specify arbitrary places, like D:3, which
           will force the map (or one of the maps with PLACE: D:3) to be picked
