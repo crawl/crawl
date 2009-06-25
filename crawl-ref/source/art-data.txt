@@ -3,14 +3,14 @@
 # art-data.h, and also updates the enumeration and NO_UNRANDARTS in
 # unrand.h
 #
-# Each artefact definition is separated by one or more blanks lines.
+# Each artefact definition is separated by one or more blank lines.
 #
 # Each artefact definition must have the NAME, APPEAR, OBJ and COLOUR
 # fields.
 #
 # The name and appearance of each unrandart must be unique.
 #
-# Changing the name of an unrand will change it's automatically
+# Changing the name of an unrand will change its automatically
 # generated enumeration, unless its enumeration is forced with ENUM.
 #
 # "ENUM: FOO" can be used to force the enumeration for an unrand to be
@@ -792,7 +792,7 @@ DESC:     A shield-shaped amulet.
 DESC_END: Back in the good old days, every adventurer had one of these
           handy devices. That, and a pony.
 
-# This entry must alway be last.
+# This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
 APPEAR: DUMMY UNRANDART 2
