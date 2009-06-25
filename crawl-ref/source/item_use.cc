@@ -444,7 +444,9 @@ int item_special_wield_effect(const item_def &item)
         return (SPWLD_NONE);
 
     int i_eff = SPWPN_NORMAL;
-    if (is_random_artefact( item ))
+    if (is_special_unrandom_artefact( item ))
+        i_eff = item.special;
+    else if (is_artefact( item ))
         i_eff = artefact_wpn_property(item, ARTP_BRAND);
     else
         i_eff = item.special;
@@ -491,7 +493,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
     unsigned char special = 0;
 
     item_def &item = you.inv[item_wield_2];
-    const bool artefact     = is_random_artefact(item);
+    const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);
 
     // And here we finally get to the special effects of wielding. {dlb}
@@ -553,7 +555,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         if (artefact)
         {
-            special = artefact_wpn_property(item, ARTP_BRAND);
+            if (!is_special_unrandom_artefact(item))
+                special = artefact_wpn_property(item, ARTP_BRAND);
             use_artefact(item_wield_2);
             if (!was_known)
             {
@@ -3138,7 +3141,7 @@ void jewellery_wear_effects(item_def &item)
     // Randart jewellery shouldn't auto-ID just because the base type
     // is known. Somehow the player should still be told, preferably
     // by message. (jpeg)
-    const bool artefact     = is_random_artefact(item);
+    const bool artefact     = is_artefact(item);
     const bool known_pluses = item_ident(item, ISFLAG_KNOW_PLUSES);
     const bool known_cursed = item_known_cursed(item);
     const bool known_bad    = (item_type_known(item)
@@ -3429,7 +3432,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         }
     }
 
-    if (is_random_artefact(item))
+    if (is_artefact(item))
     {
         prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
         prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
@@ -3731,7 +3734,7 @@ void jewellery_remove_effects(item_def &item, bool mesg)
         break;
     }
 
-    if (is_random_artefact(item))
+    if (is_artefact(item))
         unuse_artefact(item);
 
     // Must occur after ring is removed. -- bwr
@@ -5262,7 +5265,7 @@ void use_artefact(item_def &item, bool unmeld)
 {
 #define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
 
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
 
     const bool alreadyknown = item_type_known(item);
     const bool dangerous    = player_in_a_dangerous_place();

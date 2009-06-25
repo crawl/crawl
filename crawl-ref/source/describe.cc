@@ -735,7 +735,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 
     int spec_ench = get_weapon_brand( item );
 
-    if (!is_random_artefact( item ) && !verbose)
+    if (!is_artefact( item ) && !verbose)
         spec_ench = SPWPN_NORMAL;
 
     // special weapon descrip
@@ -1272,7 +1272,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         }
     }
 
-    if (is_random_artefact( item ))
+    if (is_artefact( item ))
     {
         std::string rand_desc = _randart_descrip( item );
         if (!rand_desc.empty())
@@ -1351,7 +1351,7 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
 
     description.reserve(200);
 
-    if ((verbose || is_random_artefact( item ))
+    if ((verbose || is_artefact( item ))
         && item_ident( item, ISFLAG_KNOW_PLUSES ))
     {
         // Explicit description of ring power (useful for randarts)
@@ -1359,7 +1359,7 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
         // in the case that its zero, just to avoid confusion. -- bwr
         if (item.plus != 0
             || item.sub_type == RING_SLAYING && item.plus2 != 0
-            || is_random_artefact( item ))
+            || is_artefact( item ))
         {
             switch (item.sub_type)
             {
@@ -1422,8 +1422,8 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
         }
     }
 
-    // Randart properties.
-    if (is_random_artefact( item ))
+    // Artefact properties.
+    if (is_artefact( item ))
     {
         std::string rand_desc = _randart_descrip( item );
         if (!rand_desc.empty())
@@ -2243,7 +2243,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
     // Only allow autoinscription if we don't have all the text
     // already.
     bool need_autoinscribe = false;
-    if (is_random_artefact(item))
+    if (is_artefact(item))
     {
         ainscrip = artefact_auto_inscription(item);
         if (!ainscrip.empty()

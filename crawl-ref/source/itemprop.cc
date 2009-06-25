@@ -906,7 +906,7 @@ int get_weapon_brand( const item_def &item )
 int get_ammo_brand( const item_def &item )
 {
     // No artefact arrows yet. -- bwr
-    if (item.base_type != OBJ_MISSILES || is_random_artefact( item ))
+    if (item.base_type != OBJ_MISSILES || is_artefact( item ))
         return (SPMSL_NORMAL);
 
     return (item.special);
@@ -915,11 +915,8 @@ int get_ammo_brand( const item_def &item )
 special_armour_type get_armour_ego_type( const item_def &item )
 {
     // Artefact armours have no ego type, must look up powers separately.
-    if (item.base_type != OBJ_ARMOUR
-        || (is_random_artefact( item ) && !is_unrandom_artefact( item )))
-    {
+    if (item.base_type != OBJ_ARMOUR || is_artefact( item ))
         return (SPARM_NORMAL);
-    }
 
     return (static_cast<special_armour_type>(item.special));
 }
@@ -2447,7 +2444,7 @@ bool gives_ability(const item_def &item)
         return (false);
     }
 
-    if (!is_random_artefact(item))
+    if (!is_artefact(item))
         return (false);
 
     // Check for evokable randart properties.
@@ -2511,7 +2508,7 @@ bool gives_resistance(const item_def &item)
         return (false);
     }
 
-    if (!is_random_artefact(item))
+    if (!is_artefact(item))
         return (false);
 
     // Check for randart resistances.

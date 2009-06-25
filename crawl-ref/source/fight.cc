@@ -375,7 +375,7 @@ void melee_attack::init_attack()
     damage_brand = attacker->damage_brand(attack_number);
 
     if (weapon && weapon->base_type == OBJ_WEAPONS
-        && is_random_artefact( *weapon ))
+        && is_artefact( *weapon ))
     {
         artefact_wpn_properties( *weapon, art_props );
     }
@@ -2251,7 +2251,7 @@ bool melee_attack::distortion_affects_defender()
             // with a distortion weapon, then we have to ID it before
             // the player goes to Abyss, while the weapon object is
             // still in memory.
-            if (is_random_artefact(*weapon))
+            if (is_artefact(*weapon))
                 artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
             else
                 set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
@@ -3007,7 +3007,7 @@ bool melee_attack::apply_damage_brand()
 
     if (weapon)
     {
-        if (is_random_artefact(*weapon))
+        if (is_artefact(*weapon))
             brand_was_known = artefact_known_wpn_property(*weapon, ARTP_BRAND);
         else
             brand_was_known = item_type_known(*weapon);

@@ -1820,8 +1820,7 @@ void wizard_tweak_object(void)
     if (item == you.equip[EQ_WEAPON])
         you.wield_change = true;
 
-    const bool is_art = is_artefact(you.inv[item])
-        && !is_unrandom_artefact(you.inv[item]);
+    const bool is_art = is_artefact(you.inv[item]);
 
     while (true)
     {
@@ -2001,6 +2000,12 @@ void wizard_make_object_randart()
         return;
 
     item_def &item(you.inv[i]);
+
+    if (is_unrandom_artefact(item))
+    {
+        mpr("That item is already an unrandom artefact.");
+        return;
+    }
 
     if (!_item_type_can_be_artefact(item.base_type))
     {

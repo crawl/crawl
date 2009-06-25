@@ -450,7 +450,7 @@ bool unwield_item(bool showMsgs)
 
         const int brand = get_weapon_brand( item );
 
-        if (is_random_artefact( item ))
+        if (is_artefact( item ))
             unuse_artefact(item);
 
         if (brand != SPWPN_NORMAL)
@@ -618,13 +618,13 @@ void unwear_armour(int slot)
         break;
     }
 
-    if (is_random_artefact(item))
+    if (is_artefact(item))
         unuse_artefact(item);
 }
 
 void unuse_artefact(const item_def &item)
 {
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
 
     artefact_properties_t proprt;
     artefact_known_props_t known;

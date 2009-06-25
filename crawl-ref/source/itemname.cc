@@ -1195,7 +1195,7 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "pair of ";
 
         // When asking for the base item name, randartism is ignored.
-        if (is_random_artefact(*this) && !basename && !dbname)
+        if (is_artefact(*this) && !basename && !dbname)
         {
             buff << get_artefact_name(*this);
             break;
@@ -1429,7 +1429,7 @@ std::string item_def::name_aux(description_level_type desc,
             break;
         }
 
-        const bool is_randart = is_random_artefact(*this);
+        const bool is_randart = is_artefact(*this);
 
         if (know_curse)
         {
@@ -1647,7 +1647,7 @@ std::string item_def::name_aux(description_level_type desc,
 
     // Disambiguation.
     if (!terse && !basename && !dbname && know_type
-        && !is_random_artefact(*this))
+        && !is_artefact(*this))
     {
         switch (this->base_type)
         {
