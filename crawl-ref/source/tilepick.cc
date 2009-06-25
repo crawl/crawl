@@ -1141,13 +1141,12 @@ static int _tileidx_unrand_artefact(int idx)
     case UNRAND_ELEMENTAL_STAFF:  return TILE_URAND_ELEMENTAL;
     case UNRAND_SNIPER:           return TILE_URAND_SNIPER;
     case UNRAND_NIGHT:            return TILE_URAND_NIGHT;
-    case UNRAND_PLUTONIUM:        return TILE_URAND_PLUTONIUM;
+    case UNRAND_PLUTONIUM_SWORD:  return TILE_URAND_PLUTONIUM;
     case UNRAND_UNDEADHUNTER:     return TILE_URAND_UNDEADHUNTER;
     case UNRAND_DRAGON_KING:      return TILE_URAND_DRAGON_KING;
     case UNRAND_ALCHEMIST:        return TILE_URAND_ALCHEMIST;
-    case UNRAND_FENCER:           return TILE_URAND_FENCER;
+    case UNRAND_FENCERS_GLOVES:   return TILE_URAND_FENCER;
     case UNRAND_MAGE:             return TILE_URAND_MAGE;
-    case UNRAND_BLOWGUN_ASSASSIN: return TILE_URAND_BLOWGUN;
     case UNRAND_WYRMBANE:         return TILE_URAND_WYRMBANE;
     case UNRAND_SPRIGGANS_KNIFE:  return TILE_URAND_SPRIGGANS_KNIFE;
     case UNRAND_STARLIGHT:        return TILE_URAND_STARLIGHT;
@@ -3406,61 +3405,34 @@ int tilep_equ_weapon(const item_def &item)
             case SPWPN_SWORD_OF_POWER:      return TILEP_HAND1_SWORD_OF_POWER;
             case SPWPN_VAMPIRES_TOOTH:      return TILEP_HAND1_VAMPIRES_TOOTH;
             case SPWPN_STAFF_OF_WUCAD_MU:   return TILEP_HAND1_WUCAD_MU;
-            // Bloodbane
-            case UNRAND_BLOODBANE:  return TILEP_HAND1_BLOODBANE;
-            // Flaming Death
-            case UNRAND_FLAMING_DEATH:  return TILEP_HAND1_FLAMING_DEATH;
-            // mace of Brilliance
-            case UNRAND_BRILLIANCE:  return TILEP_HAND1_MACE_OF_BRILLIANCE;
-            // demon blade Leech
-            case UNRAND_LEECH: return TILEP_HAND1_LEECH;
-            // dagger of Chilly Death
-            case UNRAND_CHILLY_DEATH: return TILEP_HAND1_CHILLY_DEATH;
-            // dagger "Morg"
-            case UNRAND_MORG: return TILEP_HAND1_MORG;
-            // scythe "Finisher"
-            case UNRAND_FINISHER: return TILEP_HAND1_FINISHER;
-            // sling "Punk
-            case UNRAND_PUNK: return TILEP_HAND1_PUNK;
-            // bow of Krishna
-            case UNRAND_KRISHNA: return TILEP_HAND1_KRISHNA;
-            // giant club "Skullcrusher"
-            case UNRAND_SKULLCRUSHER: return TILEP_HAND1_GIANT_CLUB_SLANT;
-            // glaive of the Guard
-            case UNRAND_GUARD: return TILEP_HAND1_GLAIVE_OF_THE_GUARD;
-            // sword of Jihad
-            case UNRAND_JIHAD: return TILEP_HAND1_JIHAD;
-            // crossbow "Fiery Devil"
-            case UNRAND_HELLFIRE: return TILEP_HAND1_FIERY_DEVIL;
-            // sword of Doom Knight
-            case UNRAND_DOOM_KNIGHT: return TILEP_HAND1_DOOM_KNIGHT;
-            // Eos
-            case UNRAND_EOS: return TILEP_HAND1_EOS;
-            // spear of Voo-Doo
-            case UNRAND_BOTONO: return TILEP_HAND1_VOODOO;
-            // trident of the Octopus king
-            case UNRAND_OCTOPUS_KING: return TILEP_HAND1_TRIDENT_OCTOPUS_KING;
-            // mithril axe "Arga"
-            case UNRAND_ARGA: return TILEP_HAND1_ARGA;
-            // Elemental Staff
-            case UNRAND_ELEMENTAL_STAFF: return TILEP_HAND1_ELEMENTAL_STAFF;
-            // hand crossbow "Sniper"
-            case UNRAND_SNIPER: return TILEP_HAND1_SNIPER;
-            // plutonium sword
-            case UNRAND_PLUTONIUM: return TILEP_HAND1_PLUTONIUM_SWORD;
-            // blowgun of the Assassin
-            case UNRAND_BLOWGUN_ASSASSIN: return TILEP_HAND1_BLOWGUN_ASSASSIN;
-            // Wyrmbane
-            case UNRAND_WYRMBANE: return TILEP_HAND1_WYRMBANE;
-            // Spriggan's Knife
-            case UNRAND_SPRIGGANS_KINFE: return TILEP_HAND1_SPRIGGANS_KNIFE;
-            // whip "Serpent Scourge"
-            case UNRAND_SERPENT_SCOURGE: return TILEP_HAND1_SERPENT_SCOURGE;
-            // knife of Accuracy
-            case UNRAND_ACCURACY: return TILEP_HAND1_KNIFE_OF_ACCURACY;
-            // bow "Erchidel"
-            // XXX: What happened to this unrand?
-            //case UNRAND_: return TILEP_HAND1_GREAT_BOW;
+
+            case UNRAND_BLOODBANE:          return TILEP_HAND1_BLOODBANE;
+            case UNRAND_FLAMING_DEATH:      return TILEP_HAND1_FLAMING_DEATH;
+            case UNRAND_BRILLIANCE:         return TILEP_HAND1_MACE_OF_BRILLIANCE;
+            case UNRAND_LEECH:              return TILEP_HAND1_LEECH;
+            case UNRAND_CHILLY_DEATH:       return TILEP_HAND1_CHILLY_DEATH;
+            case UNRAND_MORG:               return TILEP_HAND1_MORG;
+            case UNRAND_FINISHER:           return TILEP_HAND1_FINISHER;
+            case UNRAND_PUNK:               return TILEP_HAND1_PUNK;
+            case UNRAND_KRISHNA:            return TILEP_HAND1_KRISHNA;
+            case UNRAND_SKULLCRUSHER:       return TILEP_HAND1_GIANT_CLUB_SLANT;
+            case UNRAND_GUARD:              return TILEP_HAND1_GLAIVE_OF_THE_GUARD;
+            case UNRAND_JIHAD:              return TILEP_HAND1_JIHAD;
+            case UNRAND_HELLFIRE:           return TILEP_HAND1_FIERY_DEVIL;
+            case UNRAND_DOOM_KNIGHT:        return TILEP_HAND1_DOOM_KNIGHT;
+            case UNRAND_EOS:                return TILEP_HAND1_EOS;
+            case UNRAND_BOTONO:             return TILEP_HAND1_VOODOO;
+            case UNRAND_OCTOPUS_KING:       return TILEP_HAND1_TRIDENT_OCTOPUS_KING;
+            case UNRAND_ARGA:               return TILEP_HAND1_ARGA;
+            case UNRAND_ELEMENTAL_STAFF:    return TILEP_HAND1_ELEMENTAL_STAFF;
+            case UNRAND_SNIPER:             return TILEP_HAND1_SNIPER;
+            case UNRAND_PLUTONIUM_SWORD:    return TILEP_HAND1_PLUTONIUM_SWORD;
+            case UNRAND_BLOWGUN_ASSASSIN:   return TILEP_HAND1_BLOWGUN_ASSASSIN;
+            case UNRAND_WYRMBANE:           return TILEP_HAND1_WYRMBANE;
+            case UNRAND_SPRIGGANS_KNIFE:    return TILEP_HAND1_SPRIGGANS_KNIFE;
+            case UNRAND_SERPENT_SCOURGE:    return TILEP_HAND1_SERPENT_SCOURGE;
+            case UNRAND_ACCURACY:           return TILEP_HAND1_KNIFE_OF_ACCURACY;
+            case UNRAND_PIERCER:            return TILEP_HAND1_GREAT_BOW;
         }
     }
 

@@ -534,7 +534,7 @@ sub write_enums
 
     if (@enum_list != @all_artefacts)
     {
-        print "Enumeartion list changed.\n";
+        print "Enumeration list changed.\n";
         $changed = 1;
     }
     else
@@ -544,7 +544,7 @@ sub write_enums
         {
             if ($enum_list[$i] ne "UNRAND_$all_artefacts[$i]->{_ENUM}")
             {
-                print "Enumeartion list changed.\n";
+                print "Enumeration list changed.\n";
                 $changed = 1;
                 last;
             }

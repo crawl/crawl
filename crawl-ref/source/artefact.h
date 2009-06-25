@@ -102,14 +102,14 @@ enum unrand_type
     UNRAND_MISFORTUNE,       // robe of Misfortune
     UNRAND_FLASH,            // cloak of Flash
     UNRAND_BOOTS_ASSASSIN,   // boots of the Assassin
-    UNRAND_LEARS,            // Lear's chain mail
+    UNRAND_LEAR,             // Lear's chain mail
     UNRAND_ZHOR,             // skin of Zhor
     UNRAND_SALAMANDER,       // salamander hide armour
     UNRAND_WAR,              // gauntlets of War
     UNRAND_RESISTANCE,       // shield of Resistance
     UNRAND_FOLLY,            // robe of Folly
     UNRAND_MAXWELL,          // Maxwell's patent armour
-    UNRAND_DRAGON,           // mask of the Dragon
+    UNRAND_DRAGONMASK,       // mask of the Dragon
     UNRAND_NIGHT,            // robe of Night
     UNRAND_DRAGON_KING,      // armour of the Dragon King
     UNRAND_ALCHEMIST,        // hat of the Alchemist

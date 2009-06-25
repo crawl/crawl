@@ -9,13 +9,13 @@
 # fields.
 #
 # The name and appearance of each unrandart must be unique.
-# 
+#
 # Changing the name of an unrand will change it's automatically
 # generated enumeration, unless its enumeration is forced with ENUM.
 #
 # "ENUM: FOO" can be used to force the enumeration for an unrand to be
-# "UNRAND_FOO", for cases where the automatically generated enumarations
-# of different unrands conflict.
+# "UNRAND_FOO", for cases where the automatically generated enumerations
+# of different unrandarts conflict.
 #
 # Add new artefact definitions at the end of the file; doing so should cause
 # no problems with save-file compatibilty, but for tile builds it will
@@ -23,6 +23,14 @@
 # own tiles).  Changing the order of the definitions will likely cause
 # strange behaviour in games saved previous to the change, and deleting
 # definitions will break savefile compatibility.
+#
+# Each unrandart needs two tiles, one item tile and one equipment tile for the
+# player doll. The former needs to be placed into rltiles/item and defined in
+# dc-item.txt, the latter in the appropriate player/ subfolder and defined in
+# dc-player.txt. In tilepick.cc the unrandart must then be assigned to the tile
+# name defined in the dc-***.txt.
+# For a start, placeholders (e.g. reference to the base type tiles) are fine,
+# but they'll eventually need to be replaced with proper tiles.
 
 # This entry must always be first.
 ENUM:   DUMMY1
@@ -47,8 +55,8 @@ APPEAR:  bloodstained battleaxe
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
 PLUS:    +3/+11
 COLOUR:  RED
-DESC_ID: This was the favourite weapon of the old god Trog, before it was 
-         lost one day. It induces a bloodthirsty berserker rage in anyone 
+DESC_ID: This was the favourite weapon of the old god Trog, before it was
+         lost one day. It induces a bloodthirsty berserker rage in anyone
          who uses it to strike another.
 
 NAME:    Mace of Variability
@@ -63,8 +71,8 @@ APPEAR:  purple glaive
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
 PLUS:    0/+12
 COLOUR:  MAGENTA
-DESC_ID: It is the creation of a mad god, and carries a curse which 
-         transforms anyone possessing it into a prune. Fortunately, the 
+DESC_ID: It is the creation of a mad god, and carries a curse which
+         transforms anyone possessing it into a prune. Fortunately, the
          curse works very slowly, and one can use it briefly with no
          consequences worse than slightly purple skin and a few wrinkles.
 
@@ -108,7 +116,7 @@ APPEAR:  warped scythe
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +13/+13
 COLOUR:  DARKGREY
-CURSED:  -1 
+CURSED:  -1
 DESC_ID: This weapon carries a terrible and highly irritating curse.
 
 NAME:    Sceptre of Torment
@@ -158,7 +166,7 @@ COLOUR:  DARKGREY
 BRAND:   SPWPN_VORPAL
 BERSERK: true
 ANGRY:   true
-STEALTH: -20                  
+STEALTH: -20
 
 NAME:   scimitar of Flaming Death
 APPEAR: smoking scimitar
@@ -181,7 +189,7 @@ AC:      5
 INT:     5
 LIFE:    true
 SEEINV:  true
-STEALTH: -20                                  
+STEALTH: -20
 
 NAME:   demon blade "Leech"
 APPEAR: runed demon blade
@@ -216,9 +224,9 @@ COLOUR:   LIGHTRED
 BRAND:    SPWPN_PAIN
 INT:      5
 MAGIC:    30
-DESC:     An ugly rusty dagger. 
+DESC:     An ugly rusty dagger.
 DESC_END: Many years ago it was the property of a powerful mage called Boris.
-          He got lost in the Dungeon while seeking the Orb. 
+          He got lost in the Dungeon while seeking the Orb.
 
 NAME:   scythe "Finisher"
 APPEAR: blackened scythe
@@ -248,7 +256,7 @@ COLOUR:   YELLOW
 BRAND:    SPWPN_SPEED
 DEX:      3
 SEEINV:   true
-DESC:     A wonderful golden bow. 
+DESC:     A wonderful golden bow.
 DESC_END: It once belonged to a foreign god. It works best with special
           arrows which are not generally available.
 
@@ -282,7 +290,7 @@ EV:       3
 LIFE:     true
 MAGIC:    20
 ANGRY:    true
-STEALTH:  -50                                  
+STEALTH:  -50
 DESC_END: This sword was The Shining One's gift to a worshipper.
 DESC:     A long sword made of one huge piece of crystal.
 
@@ -330,7 +338,7 @@ BRAND:    SPWPN_VAMPIRICISM
 POISON:   true
 LIFE:     true
 NOISES:   true
-STEALTH:  -30                  
+STEALTH:  -30
 DESC_END: A really dark and malign artefact, which no wise man would even touch.
 
 NAME:     trident of the Octopus King
@@ -395,7 +403,7 @@ OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
 PLUS:    +6/+6
 COLOUR:  WHITE
 INV:     true
-STEALTH: 60                   
+STEALTH: 60
 DESC:    It is designed for easy concealment, but still packs a nasty punch.
 
 NAME:    Wyrmbane
@@ -417,7 +425,7 @@ COLOUR:   LIGHTCYAN
 EV:       4
 DEX:      4
 MAGIC:    20
-STEALTH:  50 
+STEALTH:  50
 DESC:     A dainty little knife.
 DESC_END: This knife was made by Spriggans, or for Spriggans, or possibly
           from Spriggans. Anyway, it's in some way associated with those
@@ -430,7 +438,7 @@ PLUS:    +12/+16
 COLOUR:  LIGHTGREEN
 MUTATE:  6
 CURSED:  1
-STEALTH: -20                  
+STEALTH: -20
 DESC:    A long sword made of weird glowing metal.
 
 NAME:   great mace "Undeadhunter"
@@ -499,7 +507,7 @@ SEEINV:   true
 INV:      true
 LEV:      true
 DAM:      -3
-STEALTH:  60                   
+STEALTH:  60
 DESC_END: It allows its wearer to excel in the arts of thievery.
 
 NAME:   shield "Bullseye"
@@ -533,7 +541,7 @@ NOSPELL:  true
 RND_TELE: true
 MUTATE:   5
 CURSED:   1
-STEALTH:  -80                  
+STEALTH:  -80
 DESC:     A splendid flowing robe of fur and silk.
 
 NAME:     cloak of Flash
@@ -554,11 +562,11 @@ PLUS:     +2
 COLOUR:   BROWN
 DEX:      3
 INV:      true
-STEALTH:  80                   
+STEALTH:  80
 DESC:     Some soft boots.
 DESC_END: These boots were specially designed by the Assassin's Guild.
 
-ENUM:    LEARS
+ENUM:    LEAR
 NAME:    Lear's chain mail
 APPEAR:  golden chain mail
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
@@ -626,6 +634,7 @@ NOTELEP: true
 CURSED:  -1
 DESC:    A weird-looking armour.
 
+ENUM:   DRAGONMASK
 NAME:   mask of the Dragon
 APPEAR: blue mask
 OBJ:    OBJ_ARMOUR/ARM_CAP
@@ -644,7 +653,7 @@ COLOUR:   DARKGREY
 MAGIC:    30
 SEEINV:   true
 INV:      true
-STEALTH:  50                   
+STEALTH:  50
 DESC:     A long black robe made of strange glossy material.
 DESC_END: According to legend, this robe was the gift of Ratri the Goddess
           of the Night to one of her followers.
@@ -684,7 +693,7 @@ COLOUR:   WHITE
 EV:       4
 COLD:     1
 ELEC:     true
-STEALTH:  -30             
+STEALTH:  -30
 DESC_END: A cloak woven of pure light beams.
 DESC:     A phosphorescent cloak.
 
@@ -710,7 +719,7 @@ COLOUR:  LIGHTCYAN
 EV:      3
 ELEC:    true
 LEV:     true
-STEALTH: 50                   
+STEALTH: 50
 DESC:    A sky-blue amulet.
 
 NAME:    ring of Shadows
@@ -721,7 +730,7 @@ EV:      4
 LIFE:    true
 SEEINV:  true
 ACC:     -3
-STEALTH: 40                   
+STEALTH: 40
 
 NAME:    amulet of Cekugob
 APPEAR:  crystal amulet
@@ -752,7 +761,7 @@ MAGIC:   30
 ANGRY:   true
 DAM:     3
 CURSED:  3
-STEALTH: -20                  
+STEALTH: -20
 
 NAME:   ring of Shaolin
 APPEAR: jade ring
@@ -780,7 +789,7 @@ COLOUR:   LIGHTBLUE
 AC:       4
 EV:       4
 DESC:     A shield-shaped amulet.
-DESC_END: Back in the good old days, every adventurer had one of these 
+DESC_END: Back in the good old days, every adventurer had one of these
           handy devices. That, and a pony.
 
 # This entry must alway be last.

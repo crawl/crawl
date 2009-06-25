@@ -906,7 +906,7 @@
     "These boots were specially designed by the Assassin's Guild.", 
 },
 
-/* 53: UNRAND_LEARS */
+/* 53: UNRAND_LEAR */
 {
     "Lear's chain mail", "golden chain mail", 
     OBJ_ARMOUR, ARM_CHAIN_MAIL, -1, 0, YELLOW, 
@@ -1025,7 +1025,7 @@
     "", 
 },
 
-/* 60: UNRAND_DRAGON */
+/* 60: UNRAND_DRAGONMASK */
 {
     "mask of the Dragon", "blue mask", 
     OBJ_ARMOUR, ARM_CAP, 0, 0, BLUE, 
