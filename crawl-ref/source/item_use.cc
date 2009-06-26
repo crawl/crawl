@@ -553,6 +553,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
 
+        special = item.special;
+
         if (artefact)
         {
             if (!is_special_unrandom_artefact(item))
@@ -570,8 +572,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
                                origin_desc(item).c_str()));
             }
         }
-        else
-            special = item.special;
 
         if (special != SPWPN_NORMAL)
         {
