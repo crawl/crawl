@@ -211,6 +211,8 @@ MONS:    mummy, patrolling guardian mummy, patrolling greater mummy
 MONS:    large zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
+SUBST:   F = G:100 F:1
+KMONS:   F = orange crystal statue / silver statue / ice statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx

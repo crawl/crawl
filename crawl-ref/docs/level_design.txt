@@ -193,25 +193,20 @@ Features
      in order.
  C - Random Altar.
 
- F - Usually a Granite Statue, but may be Orange or Silver or Ice (1 in 100)
  G - Granite statue (does nothing) - you can see through but not walk through.
      Also, sight-based effects like smiting work past granite statues, as does
      apportation.
+
+     NOTE: F used to put down a granite Statue most of the time but occasionally
+     Orange or Silver or Ice statues (1 in 100). You can reproduce this by using
+     F on the map together with
+     SUBST:   F = G:100 F:1
+     KMONS:   F = orange crystal statue / silver statue / ice statue
 
  T - Water fountain
  U - Magic fountain
  V - Permanently dry fountain
  Y - Blood fountain (use sparingly!)
-
-Note: Due to the level maker having seen incremental improvements over the
-years, there are some inconsistencies. For examples, dangerous statues (ice,
-orange, silver) are now genuine monsters. In particular, you might see many
-older vaults still using the deprecated 'H' and 'S' glyphs which should
-otherwise be dispensed with.
-
-Similarly, most of the other feature glyphs can be replaced with KFEAT:
-lines. The same goes for some item glyphs ('R', 'Z') which could be replaced
-by KITEM: lines.
 
 Items
 -----
@@ -220,10 +215,14 @@ Items
  * - higher level item (good)
  | - acquirement-level item (almost guaranteed excellent)
  O - place an appropriate rune here. For portal vaults, place the portal here.
- P - maybe place a rune here (50%)
- R - honeycomb (2/3) or royal jelly (1/3)
  Z - the Orb of Zot
  d-k - item array item. See section below on ITEM: arrays for more info.
+
+NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
+      2/3 chance or else a royal jelly) symbols have been deprecated. You can
+      (and should) produce the desired behaviour using
+      SUBST: P = O..
+      KITEM: R = w:2 honeycomb / w:1 royal jelly
 
 Monsters
 --------

@@ -169,6 +169,7 @@ MONS:    steam dragon / mottled dragon / swamp drake
 MONS:    w:20 giant iguana / komodo dragon / giant gecko / giant lizard / nothing
 SUBST:   ? = x.c
 SHUFFLE: %*RO
+KITEM:   R = w:2 honeycomb / w:1 royal jelly
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

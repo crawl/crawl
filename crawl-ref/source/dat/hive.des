@@ -22,6 +22,7 @@ ENDMAP
 NAME: david_hive_1
 TAGS: hive_entry
 MONS: queen bee, killer bee, killer bee larva
+KITEM: R = w:2 honeycomb / w:1 royal jelly
 ORIENT: float
 MAP
 ............
@@ -181,8 +182,9 @@ MONS:      killer bee / killer bee larva w:2
 MONS:      queen bee / killer bee w:2
 MONS:      oklob plant / plant w:1
 MONS:      plant / nothing
+KITEM:     R = w:2 honeycomb / w:1 royal jelly
 KMONS:     R = killer bee / killer bee larva w:2
-KFEAT:     R = R
+KFEAT:     R = .
 KMONS:     M = plant
 KMONS:     N = plant
 KFEAT:     M = *
@@ -476,6 +478,7 @@ PLACE:  Hive:2
 ORIENT: encompass
 MONS:   queen bee, killer bee, killer bee larva, plant, yellow wasp
 MONS:   random, random
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

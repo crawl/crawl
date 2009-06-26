@@ -4702,17 +4702,6 @@ static bool _dgn_place_one_monster( const vault_placement &place,
     return (false);
 }
 
-static monster_type _random_evil_statue()
-{
-    switch (random2(3))
-    {
-    case 0: return MONS_ORANGE_STATUE;
-    case 1: return MONS_SILVER_STATUE;
-    case 2: return MONS_ICE_STATUE;
-    }
-    return (MONS_PROGRAM_BUG);
-}
-
 // Grr, keep this in sync with vault_grid.
 dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
 {
@@ -4819,12 +4808,6 @@ static void _vault_grid( vault_placement &place,
         return;
     }
 
-    if (vgrid == 'F' && one_chance_in(100))
-    {
-        vgrid = '.';
-        create_monster(mgen_data::hostile_at(_random_evil_statue(), where));
-    }
-
     // First, set base tile for grids {dlb}:
     grd(where)  = ((vgrid == -1)  ? grd(where) :
                    (vgrid == 'x') ? DNGN_ROCK_WALL :
@@ -4854,7 +4837,6 @@ static void _vault_grid( vault_placement &place,
                    static_cast<dungeon_feature_type>(
                        DNGN_ALTAR_FIRST_GOD + place.altar_count) :// see below
                    (vgrid == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
-                   (vgrid == 'F') ? DNGN_GRANITE_STATUE :
                    (vgrid == 'I') ? DNGN_ORCISH_IDOL :
                    (vgrid == 'G') ? DNGN_GRANITE_STATUE :
                    (vgrid == 'T') ? DNGN_FOUNTAIN_BLUE :
@@ -4893,12 +4875,10 @@ static void _vault_grid( vault_placement &place,
     // yes, I know this is a bit ugly ... {dlb}
     switch (vgrid)
     {
-        case 'R':
         case '$':
         case '%':
         case '*':
         case '|':
-        case 'P':                   // possible rune
         case 'O':                   // definite rune
         case 'Z':                   // definite orb
         {
@@ -4906,16 +4886,9 @@ static void _vault_grid( vault_placement &place,
             object_class_type which_class = OBJ_RANDOM;
             unsigned char which_type = OBJ_RANDOM;
             int which_depth;
-            bool possible_rune = one_chance_in(3);      // lame, I know {dlb}
             int spec = 250;
 
-            if (vgrid == 'R')
-            {
-                which_class = OBJ_FOOD;
-                which_type = (one_chance_in(3) ? FOOD_ROYAL_JELLY
-                                               : FOOD_HONEYCOMB);
-            }
-            else if (vgrid == '$')
+            if (vgrid == '$')
             {
                 which_class = OBJ_GOLD;
                 which_type = OBJ_RANDOM;
@@ -4930,14 +4903,12 @@ static void _vault_grid( vault_placement &place,
                 which_class = OBJ_ORBS;
                 which_type = ORB_ZOT;
             }
-            else if (vgrid == '|'
-                    || (vgrid == 'P' && (!possible_rune || place.num_runes > 0))
-                    || (vgrid == 'O' && place.num_runes > 0))
+            else if (vgrid == '|' || (vgrid == 'O' && place.num_runes > 0))
             {
                 which_class = RANDOM_ELEMENT(_acquirement_item_classes);
                 which_type = OBJ_RANDOM;
             }
-            else              // for 'P' (1 out of 3 times) {dlb}
+            else
             {
                 if (place.rune_subst != -1)
                 {
@@ -4970,7 +4941,7 @@ static void _vault_grid( vault_placement &place,
             }
 
             which_depth = place.level_number;
-            if (vgrid == '|' || vgrid == 'P' || vgrid == 'O' || vgrid == 'Z')
+            if (vgrid == '|' || vgrid == 'O' || vgrid == 'Z')
                 which_depth = MAKE_GOOD_ITEM;
             else if (vgrid == '*')
                 which_depth = 5 + (place.level_number * 2);

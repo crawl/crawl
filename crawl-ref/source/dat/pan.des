@@ -262,6 +262,7 @@ ENDMAP
 NAME: rand_demon_4
 TAGS: pan allow_dup
 MONS: pandemonium demon, any demon, any demon
+SUBST: P = O..
 MAP
 ............
 .xxxxxxxxx..
@@ -282,6 +283,7 @@ ENDMAP
 NAME: rand_demon_5
 TAGS: pan allow_dup
 MONS: pandemonium demon, any demon, any demon
+SUBST: P = O..
 MAP
 ............
 ...xxxxxx...
@@ -362,6 +364,7 @@ ENDMAP
 NAME: rand_demon_9
 TAGS: pan allow_dup
 MONS: pandemonium demon, any demon, greater demon
+SUBST: P = O..
 MAP
 ............
 .xxxxxxxxxx.

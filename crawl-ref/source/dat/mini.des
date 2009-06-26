@@ -493,6 +493,7 @@ SUBST: ? : .w
 SUBST: 1 = 1 a:2
 SUBST: 1 : 1:15 2 3:2 4:1
 SUBST: * : * R:3
+KITEM: R = w:2 honeycomb / w:1 royal jelly
 MAP
   ????????
  ??????????
@@ -778,6 +779,7 @@ ENDMAP
 NAME: minivault_7
 TAGS: allow_dup
 MONS: patrolling queen bee, patrolling killer bee, killer bee larva
+KITEM: R = w:2 honeycomb / w:1 royal jelly
 MAP
 ............
 ....aaaa....
@@ -799,6 +801,8 @@ ENDMAP
 NAME: minivault_8
 TAGS: allow_dup
 MONS: patrolling molten gargoyle
+SUBST: F = G:100 F:1
+KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 x.x.x.x.x.x.
 .c.c.c.c.c.x
@@ -909,6 +913,8 @@ KITEM: A = gold / nothing
 KITEM: B = gold / nothing
 KITEM: C = gold / nothing
 KITEM: D = gold / nothing
+SUBST: F = G:100 F:1
+KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
@@ -1567,6 +1573,8 @@ NAME:   small_statue_alley_a
 TAGS:   uniq_statue_alley extra luniq_mini
 DEPTH:  D:10-20
 WEIGHT: 7
+SUBST:  F = G:100 F:1
+KMONS:  F = orange crystal statue / silver statue / ice statue
 MAP
 xxxcccccx
 ...G...G@
