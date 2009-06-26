@@ -14,10 +14,10 @@ my %field_type = (
     ACC      => "num",
     ANGRY    => "num",
     APPEAR   => "str",
-    BERSERK  => "num",
-    BLINK    => "num",
+    BERSERK  => "bool",
+    BLINK    => "bool",
     BRAND    => "enum",
-    CANTELEP => "num",
+    CANTELEP => "bool",
     COLD     => "num",
     COLOUR   => "enum",
     CURSED   => "num",
@@ -26,25 +26,25 @@ my %field_type = (
     DESC_END => "str",
     DESC_ID  => "str",
     DEX      => "num",
-    ELEC     => "num",
+    ELEC     => "bool",
     EV       => "num",
     FIRE     => "num",
     INT      => "num",
-    INV      => "num",
-    LEV      => "num",
-    LIFE     => "num",
+    INV      => "bool",
+    LEV      => "bool",
+    LIFE     => "bool",
     MAGIC    => "num",
-    MAPPING  => "num",
+    MAPPING  => "bool",
     METAB    => "num",
     MP       => "num",
     MUTATE   => "num",
     NAME     => "str",
-    NOISES   => "num",
-    NOSPELL  => "num",
-    NOTELEP  => "num",
-    POISON   => "num",
-    RND_TELE => "num",
-    SEEINV   => "num",
+    NOISES   => "bool",
+    NOSPELL  => "bool",
+    NOTELEP  => "bool",
+    POISON   => "bool",
+    RND_TELE => "bool",
+    SEEINV   => "bool",
     STEALTH  => "num",
     STR      => "num",
 
@@ -136,7 +136,7 @@ sub finish_art
             {
                 $artefact->{$field} = "";
             }
-            elsif($type eq "num")
+            elsif($type eq "num" || $type eq "bool")
             {
                 $artefact->{$field} = "0";
             }
@@ -203,11 +203,6 @@ sub process_line
         return;
     }
 
-    if ($value eq "true" && $field_type{$field} eq "num")
-    {
-        $value = "1";
-    }
-
     $artefact->{_PREV_FIELD} = $field;
     $artefact->{$field}      = $value;
 
@@ -217,7 +212,33 @@ sub process_line
         return;
     }
 
-    if ($field eq "OBJ")
+    if ($field eq "BOOL")
+    {
+        my @parts = split(/\s*,\s*/, $value);
+        my $part;
+        foreach $part (@parts)
+        {
+            my $up = uc($part);
+            if ($up eq "CURSED")
+            {
+                # Start out cursed, but don't re-curse.
+                $artefact->{CURSED} = -1;
+            }
+            elsif (!exists($field_type{$up}))
+            {
+                error($artefact, "Unknown bool '$part'");
+            }
+            elsif ($field_type{$up} ne "bool")
+            {
+                error($artefact, "'$part' is not a boolean");
+            }
+            else
+            {
+                $artefact->{$up} = 1;
+            }
+        }
+    }
+    elsif ($field eq "OBJ")
     {
         my @parts = split(m!/!, $value);
 
@@ -271,6 +292,12 @@ sub process_line
         if (!exists($field_type{$field}) || $field =~ /^[a-z]/)
         {
             error($artefact, "No such field as '$field'");
+            return;
+        }
+
+        if ($field_type{$field} eq "bool")
+        {
+            error($artefact, "'$field' should be expressed using BOOL");
             return;
         }
 

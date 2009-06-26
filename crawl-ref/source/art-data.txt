@@ -13,9 +13,6 @@
 # Changing the name of an unrand will change its automatically
 # generated enumeration, unless its enumeration is forced with ENUM.
 #
-# "ENUM: FOO" can be used to force the enumeration for an unrand to be
-# "UNRAND_FOO", for cases where the automatically generated enumerations
-# of different unrandarts conflict.
 #
 # Add new artefact definitions at the end of the file; doing so should cause
 # no problems with save-file compatibilty, but for tile builds it will
@@ -31,6 +28,82 @@
 # name defined in the dc-***.txt.
 # For a start, placeholders (e.g. reference to the base type tiles) are fine,
 # but they'll eventually need to be replaced with proper tiles.
+
+#############################################################################
+
+# Explanation of unusual fields:
+
+# BOOL: Turn certain boolean properties of the artefact on, with the list
+# of properties separated by commas.  The list includes:
+#
+# * berserk:  Lets wearer evoke berserking ability.
+# * blink:    Lets wearer evoke the blink ability.
+# * cantelep: Lets wearer evoke the teleport ability.
+# * cursed:   Item is generated cursed.
+# * elec:     Grants electrical resistance.
+# * inv:      Lets wearer evoke invisibility ability.
+# * lev:      Lets wearer evoke levitation ability.
+# * life:     Grants negative energy resistance.
+# * mapping:  Lets wearer evoke magic mapping ability.
+# * noises:   Weapon makes noises.
+# * nospell:  Prevents wearer from casting spells.
+# * notelep:  Prevents wearer from teleporting or blinking.
+# * poison:   Grants poison resistance.
+# * rnd_tele: Induces random teleportation.
+# * seeinv:   Lets wearer see invisible.
+
+# ENUM: Forces the artefacts enumaration literal to something specific.
+# For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO".  The
+# default enumeration is determined as follows:
+#
+# 1) If there's a string between double quotes, use that.
+# 2) If #1 doesn't apply and the name contains " of " or " of the ",
+#    use what's after that.
+# 3) If neither #1 no #2 apply, use the full name.
+# 4) Remove approstrophes, change spaces and dashes to underscores,
+#    uppercase the whole thing, and add "UNRAND_" to the front.
+
+# OBJ: The enumerations of the base type and sub type of the artefact,
+# separated by a dash.  E.g., OBJ_WEAPONS/WPN_SWORD
+
+# PLUS: The pluses of artefact.  For an object with two pluses,
+# is specified with "plus/plus2".  For an object with just one plus,
+# is specified with "plus".
+
+#####
+
+# Explanation of normal fields:
+
+# AC:       Armour class modifier (for non-armour artefacts)
+# ACC:      Accuracy modifier (for non-weapon artefacts)
+# ANGRY     Each time the wielder of the weapon strikes a victim there's
+#           a chance of the wielder going berserk, with the chance
+#           increasing with the value of ANGRY.
+# APPEAR:   Unidentified appearence of artifact.
+# COLD:     Cold resistance/vulnerability.
+# COLOUR:   The colour of the artifact, as listed in defines.h
+# CURSED:   The artefact has a one-in-num chance of becoming cursed each
+#           time its equipped.
+# DAM:      Damage modifier (for non-weapon artefacts)
+# DESC:     Description which replaces the database (dat/descript/items.txt)
+#           description of the item.
+# DESC_ID:  Description which replaces the database desc or DESC when the
+#           artefact is identified.
+# DESC_END: String which goes at the end of the artefacts description, if
+#           the item is identified.
+# DEX:      Dexterity modifier.
+# EV:       Evasion modifier.
+# FIRE:     Fire reistance/vulnerability.
+# INT:      Intelligence modifier.
+# MAGIC:    Magic resistance modifier.
+# METAB:    Hunger modifier.
+# MP:       Mana capacity modifier.
+# NAME:     Name of artefact when identified.
+# MUTATE:   Gives artifact mutagenic glow.
+# STEALTH:  Stealth modifier.
+# STR:      Strenght modifier.
+
+#################################################################3
 
 # This entry must always be first.
 ENUM:   DUMMY1
@@ -89,7 +162,7 @@ OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    0/0 # Set on wield
 COLOUR:  GREEN
 BRAND:   SPWPN_VENOM
-POISON:  true
+BOOL:    poison
 DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
          before he met his fate somewhere within these dungeons. It
          increases the ability of its wielder to use venomous magic, and
@@ -116,7 +189,7 @@ APPEAR:  warped scythe
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +13/+13
 COLOUR:  DARKGREY
-CURSED:  -1
+BOOL:    cursed
 DESC_ID: This weapon carries a terrible and highly irritating curse.
 
 NAME:    Sceptre of Torment
@@ -139,7 +212,7 @@ OBJ:    OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:   +6/+6
 COLOUR: YELLOW
 BRAND:  SPWPN_FLAMING
-CURSED: -1
+BOOL:   cursed
 DESC:   Eerie flames cover its twisted blade.
 
 NAME:    Staff of Dispater
@@ -164,8 +237,8 @@ OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +7/+8
 COLOUR:  DARKGREY
 BRAND:   SPWPN_VORPAL
-BERSERK: true
-ANGRY:   true
+ANGRY:   1
+BOOL:    berserk
 STEALTH: -20
 
 NAME:   scimitar of Flaming Death
@@ -176,7 +249,7 @@ COLOUR: RED
 BRAND:  SPWPN_FLAMING
 FIRE:   2
 COLD:   -1
-POISON: true
+BOOL:   poison
 MAGIC:  20
 
 NAME:    mace of Brilliance
@@ -187,9 +260,8 @@ COLOUR:  WHITE
 BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
-LIFE:    true
-SEEINV:  true
 STEALTH: -20
+BOOL:    life, seeinv
 
 NAME:   demon blade "Leech"
 APPEAR: runed demon blade
@@ -201,7 +273,7 @@ EV:     -1
 STR:    -1
 INT:    -1
 DEX:    -1
-LIFE:   true
+BOOL:   life
 CURSED: 4
 
 NAME:   dagger of Chilly Death
@@ -212,8 +284,8 @@ COLOUR: LIGHTBLUE
 BRAND:  SPWPN_FREEZING
 FIRE:   -1
 COLD:   2
-POISON: true
 MAGIC:  20
+BOOL:   poison
 DESC:   A dagger made of one huge piece of sapphire.
 
 NAME:     dagger "Morg"
@@ -235,7 +307,7 @@ PLUS:   +3/+5
 COLOUR: DARKGREY
 BRAND:  SPWPN_SPEED
 STR:    3
-CURSED: -1
+BOOL:   cursed
 DESC:   A long and sharp scythe, specially modified for combat purposes.
 
 NAME:   sling "Punk"
@@ -255,7 +327,7 @@ PLUS:     +8/+8
 COLOUR:   YELLOW
 BRAND:    SPWPN_SPEED
 DEX:      3
-SEEINV:   true
+BOOL:     seeinv
 DESC:     A wonderful golden bow.
 DESC_END: It once belonged to a foreign god. It works best with special
           arrows which are not generally available.
@@ -275,8 +347,7 @@ PLUS:     +5/+8
 COLOUR:   LIGHTCYAN
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
-SEEINV:   true
-BERSERK:  true
+BOOL:     seeinv, berserk
 DESC_END: This weapon once belonged to Gar Dogh, the guard of a king's
           treasures. According to legend he was lost somewhere in the Dungeon.
 
@@ -287,9 +358,9 @@ PLUS:     +12/+10
 COLOUR:   WHITE
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
-LIFE:     true
+ANGRY:    1
+BOOL:     life
 MAGIC:    20
-ANGRY:    true
 STEALTH:  -50
 DESC_END: This sword was The Shining One's gift to a worshipper.
 DESC:     A long sword made of one huge piece of crystal.
@@ -312,7 +383,7 @@ PLUS:    +13/+13
 COLOUR:  BLUE
 BRAND:   SPWPN_PAIN
 MAGIC:   50
-NOSPELL: true
+BOOL:    nospell
 DESC:    An adamantine great sword.
 
 NAME:    "Eos"
@@ -321,9 +392,7 @@ OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
 PLUS:    +5/+5
 COLOUR:  LIGHTCYAN
 BRAND:   SPWPN_ELECTROCUTION
-ELEC:    true
-SEEINV:  true
-NOTELEP: true
+BOOL:    elec, seeinv, notelep
 
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
 # between voodoo and bo, the latter dealing with curses, witchcraft and
@@ -335,10 +404,8 @@ OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +2/+10
 COLOUR:   DARKGREY
 BRAND:    SPWPN_VAMPIRICISM
-POISON:   true
-LIFE:     true
-NOISES:   true
 STEALTH:  -30
+BOOL:     poison, life, noises
 DESC_END: A really dark and malign artefact, which no wise man would even touch.
 
 NAME:     trident of the Octopus King
@@ -347,8 +414,7 @@ OBJ:      OBJ_WEAPONS/WPN_TRIDENT
 PLUS:     +10/+4
 COLOUR:   CYAN
 BRAND:    SPWPN_VENOM
-ELEC:     true
-POISON:   true
+BOOL:     elec, poison
 MAGIC:    50
 DESC_END: This trident was stolen many years ago from the Octopus King's
           garden by a really unimportant and already dead man. But beware
@@ -373,8 +439,8 @@ BRAND:    SPWPN_PROTECTION
 FIRE:     2
 COLD:     2
 MAGIC:    60
-NOISES:   true
 METAB:    2
+BOOL:     noises
 DESC_END: This powerful staff used to belong to the leader of the Guild of
           Five Elements.
 
@@ -384,7 +450,7 @@ OBJ:    OBJ_WEAPONS/WPN_HAND_CROSSBOW
 PLUS:   +10/+0
 COLOUR: DARKGREY
 BRAND:  SPWPN_VENOM
-SEEINV: true
+BOOL:   seeinv
 DESC:   A hand crossbow made of some black material.
 
 NAME:   longbow "Piercer"
@@ -402,8 +468,8 @@ APPEAR:  tiny blowgun
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
 PLUS:    +6/+6
 COLOUR:  WHITE
-INV:     true
 STEALTH: 60
+BOOL:    inv
 DESC:    It is designed for easy concealment, but still packs a nasty punch.
 
 NAME:    Wyrmbane
@@ -414,8 +480,7 @@ COLOUR:  LIGHTGREEN
 BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
-POISON:  true
-BERSERK: true
+BOOL:    poison, berserk
 
 NAME:     Spriggan's Knife
 APPEAR:   dainty little knife
@@ -447,7 +512,7 @@ OBJ:    OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:   +7/+7
 COLOUR: LIGHTGREY
 BRAND:  SPWPN_HOLY_WRATH
-LIFE:   true
+BOOL:   life
 
 NAME:    whip "Serpent-Scourge"
 APPEAR:  forked whip
@@ -455,7 +520,7 @@ OBJ:     OBJ_WEAPONS/WPN_WHIP
 PLUS:    +5/+10
 COLOUR:  DARKGREY
 BRAND:   SPWPN_VENOM
-POISON:  true
+BOOL:    poison
 DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'
          deadly grey snakes.
 
@@ -484,7 +549,7 @@ COLOUR: BROWN
 AC:     2
 EV:     2
 INT:    -6
-LIFE:   true
+BOOL:   life
 CURSED: 3
 
 NAME:   robe of Augmentation
@@ -504,11 +569,9 @@ PLUS:     +1
 COLOUR:   DARKGREY
 EV:       2
 DEX:      2
-SEEINV:   true
-INV:      true
-LEV:      true
 DAM:      -3
 STEALTH:  60
+BOOL:     seeinv, inv, lev
 DESC_END: It allows its wearer to excel in the arts of thievery.
 
 NAME:   shield "Bullseye"
@@ -524,9 +587,8 @@ OBJ:    OBJ_ARMOUR/ARM_CAP
 PLUS:   +3
 COLOUR: BROWN
 INT:    2
-ELEC:   true
-SEEINV: true
 METAB:  1
+BOOL:   elec, seeinv
 DESC:   A large crown of dull bronze, set with a dazzling array of gemstones.
 
 NAME:     robe of Misfortune
@@ -538,11 +600,10 @@ EV:       -4
 STR:      -2
 INT:      -2
 DEX:      -2
-NOSPELL:  true
-RND_TELE: true
 MUTATE:   5
 CURSED:   1
 STEALTH:  -80
+BOOL:     nospell, rnd_tele
 DESC:     A splendid flowing robe of fur and silk.
 
 NAME:     cloak of Flash
@@ -551,8 +612,7 @@ OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
 COLOUR:   RED
 EV:       4
-LEV:      true
-CANTELEP: true
+BOOL:     lev, cantelep
 DESC:     A vibrating cloak.
 
 ENUM:     BOOTS_ASSASSIN
@@ -562,8 +622,8 @@ OBJ:      OBJ_ARMOUR/ARM_BOOTS
 PLUS:     +2
 COLOUR:   BROWN
 DEX:      3
-INV:      true
 STEALTH:  80
+BOOL:     inv
 DESC:     Some soft boots.
 DESC_END: These boots were specially designed by the Assassin's Guild.
 
@@ -574,8 +634,7 @@ OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 PLUS:    -1
 COLOUR:  YELLOW
 DEX:     -3
-NOSPELL: true
-CURSED:  -1
+BOOL:    nospell, cursed
 DESC:    A chain mail made of pure gold.
 
 NAME:   skin of Zhor
@@ -593,7 +652,7 @@ OBJ:     OBJ_ARMOUR/ARM_LEATHER_ARMOUR
 PLUS:    +3
 COLOUR:  RED
 FIRE:    2
-BERSERK: true
+BOOL:    berserk
 DESC:    A leather armour made of a salamander's skin.
 
 NAME:   gauntlets of War
@@ -620,8 +679,8 @@ OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    -1
 COLOUR:  LIGHTGREY
 INT:     -5
-NOSPELL: true
 CURSED:  2
+BOOL:    nospell
 DESC:    A dull grey robe.
 
 ENUM:    MAXWELL
@@ -630,9 +689,7 @@ APPEAR:  weird-looking armour
 OBJ:     OBJ_ARMOUR/ARM_PLATE_MAIL
 PLUS:    +10
 COLOUR:  LIGHTGREEN
-NOSPELL: true
-NOTELEP: true
-CURSED:  -1
+BOOL:    nospell, notelep, cursed
 DESC:    A weird-looking armour.
 
 ENUM:   DRAGONMASK
@@ -641,9 +698,9 @@ APPEAR: blue mask
 OBJ:    OBJ_ARMOUR/ARM_CAP
 COLOUR: BLUE
 MAGIC:  40
-SEEINV: true
 ACC:    2
 DAM:    2
+BOOL:   seeinv
 DESC:   A blue mask.
 
 NAME:     robe of Night
@@ -652,9 +709,8 @@ OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +4
 COLOUR:   DARKGREY
 MAGIC:    30
-SEEINV:   true
-INV:      true
 STEALTH:  50
+BOOL:     seeinv, inv
 DESC:     A long black robe made of strange glossy material.
 DESC_END: According to legend, this robe was the gift of Ratri the Goddess
           of the Night to one of her followers.
@@ -673,8 +729,8 @@ PLUS:   +2
 COLOUR: MAGENTA
 FIRE:   1
 COLD:   1
-ELEC:   true
 MAGIC:  30
+BOOL:   elec
 DESC:   A dirty hat.
 
 NAME:   Fencer's gloves
@@ -693,8 +749,8 @@ OBJ:      OBJ_ARMOUR/ARM_CLOAK
 COLOUR:   WHITE
 EV:       4
 COLD:     1
-ELEC:     true
 STEALTH:  -30
+BOOL:     elec
 DESC_END: A cloak woven of pure light beams.
 DESC:     A phosphorescent cloak.
 
@@ -705,8 +761,7 @@ PLUS:     +1
 COLOUR:   LIGHTRED
 INT:      -1
 DEX:      -1
-LIFE:     true
-POISON:   true
+BOOL:     life, poison
 DESC_END: An enchantress with a magic loom and way too much time on
           her hands stitched this cloak from the hides of hundreds
           of rats, most of them orange. It's a bit awkward to wear
@@ -718,9 +773,8 @@ APPEAR:  sky-blue amulet
 OBJ:     OBJ_JEWELLERY/AMU_CONTROLLED_FLIGHT
 COLOUR:  LIGHTCYAN
 EV:      3
-ELEC:    true
-LEV:     true
 STEALTH: 50
+BOOL:    elec, lev
 DESC:    A sky-blue amulet.
 
 NAME:    ring of Shadows
@@ -728,9 +782,8 @@ APPEAR:  black ring
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
 COLOUR:  DARKGREY
 EV:      4
-LIFE:    true
-SEEINV:  true
 ACC:     -3
+BOOL:    life, seeinv
 STEALTH: 40
 
 NAME:    amulet of Cekugob
@@ -739,17 +792,14 @@ OBJ:     OBJ_JEWELLERY/AMU_WARDING
 COLOUR:  LIGHTGREY
 AC:      1
 EV:      1
-ELEC:    true
-POISON:  true
-LIFE:    true
-NOTELEP: true
 METAB:   2
+BOOL:    elec, poison, life, notelep
 
 NAME:   amulet of the Four Winds
 APPEAR: jade amulet
 OBJ:    OBJ_JEWELLERY/AMU_CLARITY
 COLOUR: LIGHTGREEN
-LIFE:   true
+BOOL:   life
 MAGIC:  100
 
 NAME:    necklace of Bloodlust
@@ -759,7 +809,7 @@ COLOUR:  RED
 STR:     2
 INT:     -2
 MAGIC:   30
-ANGRY:   true
+ANGRY:   1
 DAM:     3
 CURSED:  3
 STEALTH: -20
