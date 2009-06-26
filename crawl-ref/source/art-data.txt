@@ -52,7 +52,7 @@
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 
-# ENUM: Forces the artefacts enumaration literal to something specific.
+# ENUM: Forces the artefact's enumeration literal to something specific.
 # For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO".  The
 # default enumeration is determined as follows:
 #
@@ -60,7 +60,7 @@
 # 2) If #1 doesn't apply and the name contains " of " or " of the ",
 #    use what's after that.
 # 3) If neither #1 no #2 apply, use the full name.
-# 4) Remove approstrophes, change spaces and dashes to underscores,
+# 4) Remove apostrophes, change spaces and dashes to underscores,
 #    uppercase the whole thing, and add "UNRAND_" to the front.
 
 # OBJ: The enumerations of the base type and sub type of the artefact,
@@ -74,26 +74,26 @@
 
 # Explanation of normal fields:
 
-# AC:       Armour class modifier (for non-armour artefacts)
-# ACC:      Accuracy modifier (for non-weapon artefacts)
+# AC:       Armour class modifier (for non-armour artefacts).
+# ACC:      Accuracy modifier (for non-weapon artefacts).
 # ANGRY     Each time the wielder of the weapon strikes a victim there's
 #           a chance of the wielder going berserk, with the chance
 #           increasing with the value of ANGRY.
-# APPEAR:   Unidentified appearence of artifact.
+# APPEAR:   Unidentified appearance of artifact.
 # COLD:     Cold resistance/vulnerability.
-# COLOUR:   The colour of the artifact, as listed in defines.h
+# COLOUR:   The colour of the artifact, as listed in defines.h.
 # CURSED:   The artefact has a one-in-num chance of becoming cursed each
-#           time its equipped.
-# DAM:      Damage modifier (for non-weapon artefacts)
+#           time it's equipped.
+# DAM:      Damage modifier (for non-weapon artefacts).
 # DESC:     Description which replaces the database (dat/descript/items.txt)
 #           description of the item.
 # DESC_ID:  Description which replaces the database desc or DESC when the
 #           artefact is identified.
-# DESC_END: String which goes at the end of the artefacts description, if
+# DESC_END: String which goes at the end of the artefact's description, if
 #           the item is identified.
 # DEX:      Dexterity modifier.
 # EV:       Evasion modifier.
-# FIRE:     Fire reistance/vulnerability.
+# FIRE:     Fire resistance/vulnerability.
 # INT:      Intelligence modifier.
 # MAGIC:    Magic resistance modifier.
 # METAB:    Hunger modifier.
