@@ -85,7 +85,7 @@ RLTILES = rltiles
 
 EXTRA_INCLUDES += -I$(RLTILES)
 
-TILEDEFS = dngn main player
+TILEDEFS = dngn main player unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
 TILEDEFOBJS = $(TILEDEFPRES:%=%.o)
 TILEDEFSRCS = $(TILEDEFPRES:%=%.cc)

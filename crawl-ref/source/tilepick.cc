@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "tiles.h"
 #include "tilemcache.h"
 #include "tiledef-dngn.h"
+#include "tiledef-unrand.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -1081,90 +1082,11 @@ static int _tileidx_monster(int mon_idx, bool detected)
 
 static int _tileidx_unrand_artefact(int idx)
 {
-    switch (idx)
-    {
-    case UNRAND_SINGING_SWORD:  return TILE_SPWPN_SINGING_SWORD;
-    case UNRAND_TROG:           return TILE_SPWPN_WRATH_OF_TROG;
-    case UNRAND_CURSES:         return TILE_SPWPN_SCYTHE_OF_CURSES;
-    case UNRAND_VARIABILITY:    return TILE_SPWPN_MACE_OF_VARIABILITY;
-    case UNRAND_PRUNE:          return TILE_SPWPN_GLAIVE_OF_PRUNE;
-    case UNRAND_TORMENT:        return TILE_SPWPN_SCEPTRE_OF_TORMENT;
-    case UNRAND_ZONGULDROK:     return TILE_SPWPN_SWORD_OF_ZONGULDROK;
-    case UNRAND_CEREBOV:        return TILE_SPWPN_SWORD_OF_CEREBOV;
-    case UNRAND_DISPATER:       return TILE_SPWPN_STAFF_OF_DISPATER;
-    case UNRAND_ASMODEUS:       return TILE_SPWPN_SCEPTRE_OF_ASMODEUS;
-    case UNRAND_POWER:          return TILE_SPWPN_SWORD_OF_POWER;
-    case UNRAND_OLGREB:         return TILE_SPWPN_STAFF_OF_OLGREB;
-    case UNRAND_VAMPIRES_TOOTH: return TILE_SPWPN_VAMPIRES_TOOTH;
-    case UNRAND_WUCAD_MU:       return TILE_SPWPN_STAFF_OF_WUCAD_MU;
+    const int tile = unrandart_to_tile(idx);
+    if (tile != -1)
+        return tile;
 
-    // Weapons
-    case UNRAND_BLOODBANE:        return TILE_URAND_BLOODBANE;
-    case UNRAND_FLAMING_DEATH:    return TILE_URAND_FLAMING_DEATH;
-    case UNRAND_BRILLIANCE:       return TILE_URAND_BRILLIANCE;
-    case UNRAND_LEECH:            return TILE_URAND_LEECH;
-    case UNRAND_CHILLY_DEATH:     return TILE_URAND_CHILLY_DEATH;
-    case UNRAND_MORG:             return TILE_URAND_MORG;
-    case UNRAND_FINISHER:         return TILE_URAND_FINISHER;
-    case UNRAND_PUNK:             return TILE_URAND_PUNK;
-    case UNRAND_KRISHNA:          return TILE_URAND_KRISHNA;
-    case UNRAND_SKULLCRUSHER:     return TILE_URAND_SKULLCRUSHER;
-    case UNRAND_BLOWGUN_ASSASSIN: return TILE_URAND_BLOWGUN_ASSASSIN;
-    case UNRAND_GUARD:            return TILE_URAND_GUARD;
-    case UNRAND_JIHAD:            return TILE_URAND_JIHAD;
-    case UNRAND_DOOM_KNIGHT:      return TILE_URAND_DOOM_KNIGHT;
-    case UNRAND_EOS:              return TILE_URAND_EOS;
-    case UNRAND_BOTONO:           return TILE_URAND_BOTONO;
-    case UNRAND_OCTOPUS_KING:     return TILE_URAND_OCTOPUS_KING;
-    case UNRAND_ARGA:             return TILE_URAND_ARGA;
-    case UNRAND_ELEMENTAL_STAFF:  return TILE_URAND_ELEMENTAL;
-    case UNRAND_SNIPER:           return TILE_URAND_SNIPER;
-    case UNRAND_PLUTONIUM_SWORD:  return TILE_URAND_PLUTONIUM;
-    case UNRAND_UNDEADHUNTER:     return TILE_URAND_UNDEADHUNTER;
-    case UNRAND_WYRMBANE:         return TILE_URAND_WYRMBANE;
-    case UNRAND_SPRIGGANS_KNIFE:  return TILE_URAND_SPRIGGANS_KNIFE;
-    case UNRAND_SERPENT_SCOURGE:  return TILE_URAND_SERPENT_SCOURGE;
-    case UNRAND_ACCURACY:         return TILE_URAND_KNIFE_OF_ACCURACY;
-    case UNRAND_HELLFIRE:         return TILE_URAND_FIERY_DEVIL;
-    case UNRAND_PIERCER:          return TILE_URAND_PIERCER;
-    case UNRAND_CRYSTAL_SPEAR:    return TILE_URAND_CRYSTAL_SPEAR;
-
-    // Armour
-    case UNRAND_IGNORANCE:        return TILE_URAND_IGNORANCE;
-    case UNRAND_AUGMENTATION:     return TILE_URAND_AUGMENTATION;
-    case UNRAND_THIEF:            return TILE_URAND_THIEF;
-    case UNRAND_BULLSEYE:         return TILE_URAND_BULLSEYE;
-    case UNRAND_DYROVEPREVA:      return TILE_URAND_DYROVEPREVA;
-    case UNRAND_MISFORTUNE:       return TILE_URAND_MISFORTUNE;
-    case UNRAND_FLASH:            return TILE_URAND_FLASH;
-    case UNRAND_LEAR:             return TILE_URAND_LEAR;
-    case UNRAND_ZHOR:             return TILE_URAND_ZHOR;
-    case UNRAND_SALAMANDER:       return TILE_URAND_SALAMANDER;
-    case UNRAND_WAR:              return TILE_URAND_WAR;
-    case UNRAND_RESISTANCE:       return TILE_URAND_RESISTANCE;
-    case UNRAND_FOLLY:            return TILE_URAND_FOLLY;
-    case UNRAND_MAXWELL:          return TILE_URAND_MAXWELL;
-    case UNRAND_DRAGONMASK:       return TILE_URAND_DRAGONMASK;
-    case UNRAND_NIGHT:            return TILE_URAND_NIGHT;
-    case UNRAND_DRAGON_KING:      return TILE_URAND_DRAGON_KING;
-    case UNRAND_ALCHEMIST:        return TILE_URAND_ALCHEMIST;
-    case UNRAND_FENCERS_GLOVES:   return TILE_URAND_FENCER;
-    case UNRAND_BOOTS_ASSASSIN:   return TILE_URAND_BOOTS_ASSASSIN;
-    case UNRAND_STARLIGHT:        return TILE_URAND_STARLIGHT;
-    case UNRAND_RATSKIN_CLOAK:    return TILE_URAND_RATSKIN_CLOAK;
-
-    // Jewellery
-    case UNRAND_SHADOWS:          return TILE_URAND_SHADOWS;
-    case UNRAND_AIR:              return TILE_URAND_AIR;
-    case UNRAND_CEKUGOB:          return TILE_URAND_CEKUGOB;
-    case UNRAND_FOUR_WINDS:       return TILE_URAND_FOUR_WINDS;
-    case UNRAND_BLOODLUST:        return TILE_URAND_BLOODLUST;
-    case UNRAND_SHAOLIN:          return TILE_URAND_SHAOLIN;
-    case UNRAND_ROBUSTNESS:       return TILE_URAND_ROBUSTNESS;
-    case UNRAND_MAGE:             return TILE_URAND_MAGE;
-    case UNRAND_SHIELDING:        return TILE_URAND_BROOCH_OF_SHIELDING;
-    default: return TILE_TODO;
-    }
+    return TILE_TODO;
 }
 
 static int _get_etype(const item_def &item)
@@ -3529,7 +3451,7 @@ int tilep_equ_armour(const item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        switch (find_unrandart_index(item) + 1)
+        switch (find_unrandart_index(item))
         {
             case UNRAND_AUGMENTATION:   return TILEP_BODY_ROBE_WHITE_BLUE;
             case UNRAND_MISFORTUNE:     return TILEP_BODY_ROBE_MISFORTUNE;
@@ -3612,7 +3534,7 @@ int tilep_equ_shield(const item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        switch (find_unrandart_index(item) + 1)
+        switch (find_unrandart_index(item))
         {
             case UNRAND_IGNORANCE:  return TILEP_HAND2_SHIELD_OF_IGNORANCE;
             case UNRAND_BULLSEYE:   return TILEP_HAND2_BULLSEYE;
@@ -3640,7 +3562,7 @@ int tilep_equ_cloak(const item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        switch (find_unrandart_index(item) + 1)
+        switch (find_unrandart_index(item))
         {
             case UNRAND_RATSKIN_CLOAK:  return TILEP_CLOAK_RATSKIN_CLOAK;
             default: break;
@@ -3678,7 +3600,7 @@ int tilep_equ_helm(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        switch (find_unrandart_index(item) + 1)
+        switch (find_unrandart_index(item))
         {
             case UNRAND_DYROVEPREVA:    return TILEP_HELM_DYROVEPREVA;
             case UNRAND_DRAGONMASK:     return TILEP_HELM_ART_DRAGONHELM;
@@ -3810,7 +3732,7 @@ int tilep_equ_gloves(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        switch (find_unrandart_index(item) + 1)
+        switch (find_unrandart_index(item))
         {
             case UNRAND_WAR:            return TILEP_ARM_GLOVE_BLACK;
             case UNRAND_FENCERS_GLOVES: return TILEP_ARM_GLOVE_WHITE;
@@ -3866,7 +3788,7 @@ int tilep_equ_boots(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        switch (find_unrandart_index(item) + 1)
+        switch (find_unrandart_index(item))
         {
             case UNRAND_BOOTS_ASSASSIN: return TILEP_BOOTS_MIDDLE_GRAY;
             default: break;

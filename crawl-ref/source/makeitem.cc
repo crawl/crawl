@@ -891,7 +891,7 @@ static bool _try_make_item_special_unrand(item_def& item, int force_type,
 
     bool abyss = item_level == level_id(LEVEL_ABYSS).absdepth();
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  UNRANDPSEC_SPECIAL, abyss);
+                                  UNRANDSPEC_SPECIAL, abyss);
 
     if (idx != -1)
     {

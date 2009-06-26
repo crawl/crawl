@@ -24,7 +24,7 @@ enum unrand_special_type
 {
     UNRANDSPEC_EITHER,
     UNRANDSPEC_NORMAL,
-    UNRANDPSEC_SPECIAL
+    UNRANDSPEC_SPECIAL
 };
 
 // NOTE: This enumeration is automatically generated from art-data.txt

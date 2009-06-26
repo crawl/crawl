@@ -326,7 +326,7 @@ bool is_unrandom_artefact( const item_def &item )
 bool is_special_unrandom_artefact( const item_def &item )
 {
     return (item.flags & ISFLAG_UNRANDART
-            && get_unrand_specialness(item.special) == UNRANDPSEC_SPECIAL);
+            && get_unrand_specialness(item.special) == UNRANDSPEC_SPECIAL);
 }
 
 unique_item_status_type get_unique_item_status(const item_def& item)
@@ -1612,7 +1612,7 @@ unrand_special_type get_unrand_specialness(int unrand_index)
     if (unrand_index >= UNRAND_SINGING_SWORD
         && unrand_index <= UNRAND_ASMODEUS)
     {
-        return (UNRANDPSEC_SPECIAL);
+        return (UNRANDSPEC_SPECIAL);
     }
     return (UNRANDSPEC_NORMAL);
 }

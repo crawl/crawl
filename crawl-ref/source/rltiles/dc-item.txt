@@ -13,28 +13,8 @@
 # with respect to variations and will not share variations with the base
 # equipment.  See tilepick.cc for more details.
 
-#####OBJ_WEAPONS
-#####ARTIFACTS
-%sdir item/weapon/artefact
-spwpn_singing_sword SPWPN_SINGING_SWORD
-spwpn_wrath_of_trog SPWPN_WRATH_OF_TROG
-spwpn_scythe_of_curses SPWPN_SCYTHE_OF_CURSES
-spwpn_mace_of_variability SPWPN_MACE_OF_VARIABILITY
-spwpn_glaive_of_prune SPWPN_GLAIVE_OF_PRUNE
-%rim 1
-spwpn_sceptre_of_torment SPWPN_SCEPTRE_OF_TORMENT
-spwpn_sword_of_zonguldrok SPWPN_SWORD_OF_ZONGULDROK
-spwpn_sword_of_cerebov SPWPN_SWORD_OF_CEREBOV
-spwpn_staff_of_dispater SPWPN_STAFF_OF_DISPATER
-spwpn_sceptre_of_asmodeus SPWPN_SCEPTRE_OF_ASMODEUS
-spwpn_sword_of_power SPWPN_SWORD_OF_POWER
-%rim 0
-spwpn_staff_of_olgreb SPWPN_STAFF_OF_OLGREB
-spwpn_vampires_tooth SPWPN_VAMPIRES_TOOTH
-spwpn_wucad_mu SPWPN_STAFF_OF_WUCAD_MU
-
-##### Unrandom artifacts
-%include dc-urand.txt
+##### Artefacts (fixed and unrandart)
+%include dc-unrand.txt
 
 #####NORMAL
 %sdir item/weapon

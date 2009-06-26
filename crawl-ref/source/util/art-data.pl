@@ -7,7 +7,7 @@ my @errors        = ();
 my @all_artefacts = ();
 my %used_names    = ();
 my %used_appears  = ();
-my %used_enums   = ();
+my %used_enums    = ();
 
 my %field_type = (
     AC       => "num",
@@ -22,9 +22,6 @@ my %field_type = (
     COLOUR   => "enum",
     CURSED   => "num",
     DAM      => "num",
-    DESC     => "str",
-    DESC_END => "str",
-    DESC_ID  => "str",
     DEX      => "num",
     ELEC     => "bool",
     EV       => "num",
@@ -47,6 +44,12 @@ my %field_type = (
     SEEINV   => "bool",
     STEALTH  => "num",
     STR      => "num",
+
+    DESC     => "str",
+    DESC_END => "str",
+    DESC_ID  => "str",
+    TILE     => "str",
+    TILERIM  => "bool",
 
     plus      => "num",
     plus2     => "num",
@@ -76,7 +79,7 @@ sub error
 
     $msg .= $str;
 
-    $artefact->{_ERRROR} = 1;
+    $artefact->{_ERROR} = 1;
 
     push(@errors, $msg);
 }
@@ -356,7 +359,7 @@ sub process_line
     {
         if (exists($artefact->{NAME}))
         {
-            eror($artefact, "ENUM must be before NAME");
+            error($artefact, "ENUM must be before NAME");
             return;
         }
         $enum = "$value";
@@ -629,6 +632,142 @@ sub write_enums
     close(ENUM_OUT);
 }
 
+sub write_tiles
+{
+    my $tilefile = "dc-unrand.txt";
+    print "Updating $tilefile...\n";
+
+    die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
+    unless (open(TILES, ">$tilefile"))
+    {
+        die "Couldn't open '$tilefile' for writing: $!\n";
+    }
+
+    my %art_by_type = ();
+    foreach my $artefact (@all_artefacts)
+    {
+        next if ($artefact->{NAME} =~ /DUMMY/);
+
+        if ($artefact->{TILE} eq "")
+        {
+            print STDERR "No tile defined for '$artefact->{NAME}'\n";
+            next;
+        }
+
+        # The path always has the form /item/$folder/artefact.
+        my $type   = $artefact->{base_type} || "";
+        my $folder = "";
+        if ($type eq "OBJ_WEAPONS")
+        {
+            $folder = "weapon";
+        }
+        elsif ($type eq "OBJ_ARMOUR")
+        {
+            $folder = "armour";
+        }
+        elsif ($type eq "OBJ_JEWELLERY")
+        {
+            if ($artefact->{sub_type} =~ /RING_/)
+            {
+                $folder = "ring";
+            }
+            else
+            {
+                $folder = "amulet";
+            }
+        }
+        else
+        {
+            next;
+        }
+
+        my $definition = "$artefact->{TILE} UNRAND_$artefact->{_ENUM}";
+        my $needrim    = ($artefact->{TILERIM} ? "1" : "0");
+        if (defined $art_by_type{$folder})
+        {
+            if (defined $art_by_type{$folder}{$needrim})
+            {
+                push @{$art_by_type{$folder}{$needrim}}, $definition;
+            }
+            else
+            {
+                $art_by_type{$folder}{$needrim} = [$definition];
+            }
+        }
+        else
+        {
+            $art_by_type{$folder} = {$needrim => [$definition]};
+        }
+    }
+
+    # Output the tile definitions sorted by type (and thus path).
+    foreach my $type (keys %art_by_type)
+    {
+        print TILES "%sdir item/$type/artefact\n";
+
+        foreach my $needrim (sort keys %{$art_by_type{$type}})
+        {
+            print TILES "%rim 1\n" if ($needrim);
+            foreach my $def (@{$art_by_type{$type}{$needrim}})
+            {
+                print TILES "$def\n";
+            }
+            print TILES "%rim 0\n" if ($needrim);
+        }
+        print TILES "\n";
+    }
+    close(TILES);
+
+    # Create tiledef-unrand.cc for the function unrandart_to_tile().
+    # Should we also create tiledef-unrand.h this way?
+    $tilefile = "tiledef-unrand.cc";
+    print "Updating $tilefile...\n";
+
+    die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
+    unless (open(TILES, ">$tilefile"))
+    {
+        die "Couldn't open '$tilefile' for writing: $!\n";
+    }
+
+    print TILES << "HEADER_END";
+// This file has been automatically generated.
+
+#include "AppHdr.h"
+#include "tiledef-unrand.h"
+
+#include "artefact.h"
+#include "tiledef-main.h"
+
+int unrandart_to_tile(int unrand)
+{
+    switch (unrand)
+    {
+HEADER_END
+
+    my $longest_enum = 0;
+    foreach my $artefact (@all_artefacts)
+    {
+        my $enum = $artefact->{_ENUM};
+        my $len  = length($enum);
+        $longest_enum = $len if ($len > $longest_enum);
+    }
+    $longest_enum += length("UNRAND_");
+
+    foreach my $artefact (@all_artefacts)
+    {
+        next if ($artefact->{NAME} =~ /DUMMY/);
+        next if ($artefact->{TILE} eq "");
+
+        my $enum = "UNRAND_$artefact->{_ENUM}";
+        print TILES (" " x 4) . "case $enum:"
+            . " " x ($longest_enum - length($enum) + 2) . "return TILE_$enum;\n";
+    }
+    print TILES (" " x 4) . "default: return -1;\n";
+    print TILES (" " x 4) . "}\n";
+    print TILES "}\n\n";
+    close(TILES);
+}
+
 ###############################################################3
 ###############################################################3
 ###############################################################3
@@ -703,5 +842,8 @@ if (@errors > 0)
 
 write_data();
 write_enums();
+
+chdir("rltiles");
+write_tiles();
 
 exit (0);
