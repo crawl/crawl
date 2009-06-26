@@ -1936,6 +1936,8 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     ASSERT(unrand_index > UNRAND_START);
     ASSERT(unrand_index < (UNRAND_START + NO_UNRANDARTS));
 
+    item.special = unrand_index;
+
     if (!item.props.exists( KNOWN_PROPS_KEY ))
     {
         item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
@@ -1955,7 +1957,6 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     item.flags |= ISFLAG_UNRANDART;
     _init_artefact_properties(item);
 
-    item.special = unrand_index;
     if (unrand->prpty[ARTP_BRAND] != 0)
         do_curse_item( item );
 
