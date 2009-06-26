@@ -470,23 +470,6 @@ static std::string _randart_descrip( const item_def &item )
             description += "$It emits mutagenic radiation.";
     }
 
-    if (is_unrandom_artefact( item ))
-    {
-        const char *desc    = unrandart_descrip( 0, item );
-        const char *desc_id = unrandart_descrip( 1, item );
-
-        if (item_type_known(item) && desc_id[0] != '\0')
-        {
-            description += "$$";
-            description += desc_id;
-        }
-        else if (desc[0] != '\0')
-        {
-            description += "$$";
-            description += desc;
-        }
-     }
-
     return description;
 }
 #undef known_proprt
@@ -1669,14 +1652,6 @@ std::string get_item_description( const item_def &item, bool verbose,
     }
 #endif
 
-    if (is_unrandom_artefact( item )
-        && strlen(unrandart_descrip(2, item)) != 0)
-    {
-        description << "$$";
-        description << unrandart_descrip(2, item);
-        description << "$";
-    }
-
     if (verbose || (item.base_type != OBJ_WEAPONS
                     && item.base_type != OBJ_ARMOUR
                     && item.base_type != OBJ_BOOKS))
@@ -1688,6 +1663,18 @@ std::string get_item_description( const item_def &item, bool verbose,
             description << "["
                         << item.name(DESC_DBNAME, true, false, false)
                         << "]";
+        }
+        else if (is_unrandom_artefact(item)
+                 && (unrandart_descrip(0, item)[0] != '\0'
+                     || unrandart_descrip(1, item)[1] != '\0'))
+        {
+            const char *desc    = unrandart_descrip( 0, item );
+            const char *desc_id = unrandart_descrip( 1, item );
+
+            if (item_type_known(item) && desc_id[0] != '\0')
+                description << desc_id << "$";
+            else if (desc[0] != '\0')
+                description << desc << "$";
         }
         else
         {
@@ -1961,6 +1948,13 @@ std::string get_item_description( const item_def &item, bool verbose,
     default:
         DEBUGSTR("Bad item class");
         description << "$This item should not exist. Mayday! Mayday!";
+    }
+
+    if (is_unrandom_artefact( item )
+        && strlen(unrandart_descrip(2, item)) != 0)
+    {
+        description << "$$";
+        description << unrandart_descrip(2, item);
     }
 
     if (!verbose && item_known_cursed( item ))
