@@ -115,7 +115,7 @@ white WHITE
 
 ###Boots
 %parts_ctg BOOTS
-%sdir player/boot
+%sdir player/boots
 
 short_red SHORT_RED
 short_purple SHORT_PURPLE
@@ -153,7 +153,7 @@ centaur_barding_red CENTAUR_BARDING_RED
 
 ### Body armour
 %parts_ctg LEG
-%sdir player/leg
+%sdir player/legs
 
 bikini_red BIKINI_RED
 loincloth_red LOINCLOTH_RED
@@ -349,7 +349,7 @@ lears_chain_mail LEARS_CHAIN_MAIL
 
 ### Arms
 %parts_ctg ARM
-%sdir player/arm
+%sdir player/gloves
 glove_red GLOVE_RED
 glove_gray GLOVE_GRAY
 glove_white GLOVE_WHITE
@@ -482,14 +482,14 @@ black_whip BLACK_WHIP
 hammer3 HAMMER
 hammer HAMMER1
 hammer2 HAMMER2
-frail_stick FRAIL_STICK
-frail_ball FRAIL
-frail_spike SPIKED_FRAIL
-frail_stick_slant GREAT_FRAIL
-frail_ball2 FRAIL_BALL2
-frail_balls FRAIL_BALLS
-frail_ball3 FRAIL_BALL3
-frail_ball4 FRAIL_BALL4
+flail_stick FLAIL_STICK
+flail_ball FLAIL
+flail_spike SPIKED_FLAIL
+flail_stick_slant GREAT_FLAIL
+flail_ball2 FLAIL_BALL2
+flail_balls FLAIL_BALLS
+flail_ball3 FLAIL_BALL3
+flail_ball4 FLAIL_BALL4
 nunchaku NUNCHAKU
 
 ## polearms
@@ -580,7 +580,7 @@ crossbow4 CROSSBOW4
 blowgun BLOWGUN
 
 ##missiles
-dirt DIRT
+dart DART
 
 ## misc
 bone_lantern BONE_LANTERN

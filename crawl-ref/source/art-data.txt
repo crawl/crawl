@@ -26,32 +26,39 @@
 #
 # ####### TILES #############################
 #
-# Each unrandart needs two tiles, one item tile and one equipment tile for the
-# player doll. For the former, you can define the image file within this
-# file using the keyword TILE. The files are assumed to be png and the syntax
-# does not include the file type. The artefacts' base type decides where a
-# tile needs to be placed. These are as follows:
+# Each unrandart needs at the very least an item tile, and weapons and armour
+# also need an equipment tile for the player doll. For the former, you can
+# define the image file within this file using the keyword TILE. The files are
+# assumed to be png and the syntax does not include the file type. The
+# artefacts' base type decides where a tile needs to be placed. These are as
+# follows:
 #     Weapons: rltiles/item/weapon/artefact
 #     Armour:  rltiles/item/armour/artefact
 #     Rings:   rltiles/item/ring/artefact
 #     Amulets: rltiles/item/amulet/artefact
 #
-# For a start, placeholders (e.g. the base type tiles) are fine, but they'll
-# eventually need to be replaced with proper tiles.
 # If the tile requires a black outline (because it would be hard to see
-# otherwise) add "BOOL: tilerim". Otherwise the image is used without
-# modification.
+# otherwise) add "tilerim" to the artefact's boolean properties. Otherwise
+# the image is used without modification.
 #
 # For the equipment tile, place the tile into the appropriate subfolder of
-# player/ subfolder and define it in dc-player.txt. You'll also need to assign
-# these tiles to the corresponding artefacts in tilepick.cc, using the keyword
-# "TILEP_" plus the equipment slot (as defined by the most recent "parts_ctg"
-# in dc-player.txt) plus the actual definition, e.g. TILEP_CLOAK_RATSKIN_CLOAK.
-# To find the places where you'll need to add your new tile, simply search
-# tilepick.cc for another artefact of the same base type. If no special tile
-# has been defined the code will fall through to tiles according to the
-# base type and colour.
+# rltiles/player/ and define it in rltiles/dc-player.txt as well as here, using
+# the keyword TILE_EQ. Tiles are sorted into folders by equipment slot:
+#     Weapons:     rltiles/player/hand1/artefact
+#     Body armour: rltiles/player/body
+#     Boots:       rltiles/player/boots
+#     Cloaks:      rltiles/player/cloak
+#     Gloves:      rltiles/player/gloves
+#     Shields:     rltiles/player/hand2
+#     Helms, caps: rltiles/player/head
 #
+# Rings and amulets are too small to be displayed with the player doll.
+#
+# To begin with, placeholders (e.g. the base type tiles) are fine, but they'll
+# eventually need to be replaced with proper tiles, though this is less of a
+# problem for the equipment tiles.
+# No checks are made for whether path or files actually exist. However, if that
+# is not the case the tile compilation will fail.
 
 #############################################################################
 
@@ -126,11 +133,13 @@
 # NAME:     Name of artefact when identified.
 # MUTATE:   Gives artifact mutagenic glow.
 # STEALTH:  Stealth modifier.
-# STR:      Strenght modifier.
+# STR:      Strength modifier.
 # TILE:     The file containing the artefact's tile, with file type png.
 #           See Tiles section above.
+# TILE_EQ:  The file containing the equipment tile for the player doll as
+#           defined in rltiles/dc-player.txt. See Tiles section above.
 
-#################################################################3
+##################################################################
 
 # This entry must always be first.
 ENUM:   DUMMY1
@@ -148,6 +157,7 @@ OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +7/+7
 COLOUR:  YELLOW
 TILE:    spwpn_singing_sword
+TILE_EQ: singing_sword
 DESC_ID: This blessed weapon loves nothing more than to sing to its owner,
          whether they want it to or not.
 
@@ -157,6 +167,7 @@ OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
 PLUS:    +3/+11
 COLOUR:  RED
 TILE:    spwpn_wrath_of_trog
+TILE_EQ: axe_trog
 DESC_ID: This was the favourite weapon of the old god Trog, before it was
          lost one day. It induces a bloodthirsty berserker rage in anyone
          who uses it to strike another.
@@ -167,6 +178,7 @@ OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    0/0   # Set on generation
 COLOUR:  BLACK # Set on generation
 TILE:    spwpn_mace_of_variability
+TILE_EQ: mace_of_variability
 DESC_ID: It is rather unreliable.
 
 NAME:    Glaive of Prune
@@ -175,6 +187,7 @@ OBJ:     OBJ_WEAPONS/WPN_GLAIVE
 PLUS:    0/+12
 COLOUR:  MAGENTA
 TILE:    spwpn_glaive_of_prune
+TILE_EQ: glaive_of_prune
 DESC_ID: It is the creation of a mad god, and carries a curse which
          transforms anyone possessing it into a prune. Fortunately, the
          curse works very slowly, and one can use it briefly with no
@@ -186,6 +199,7 @@ OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    0/0 # Set on wield
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
+TILE_EQ: sword_of_power
 BOOL:    tilerim
 DESC_ID: It rewards the powerful with power and the meek with weakness.
 
@@ -195,6 +209,7 @@ OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    0/0 # Set on wield
 COLOUR:  GREEN
 TILE:    spwpn_staff_of_olgreb
+TILE_EQ: olgreb
 BRAND:   SPWPN_VENOM
 BOOL:    poison
 DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
@@ -208,6 +223,7 @@ OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    0/0 # Set on wield
 COLOUR:  BROWN
 TILE:    spwpn_wucad_mu
+TILE_EQ: wucad_mu
 DESC_ID: Its power varies in proportion to its wielder's intelligence.
          Using it can be a bit risky.
 
@@ -217,6 +233,7 @@ OBJ:     OBJ_WEAPONS/WPN_DAGGER
 PLUS:    +3/+4
 COLOUR:  WHITE
 TILE:    spwpn_vampires_tooth
+TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRICISM
 DESC_ID: It is lethally vampiric.
 
@@ -226,6 +243,7 @@ OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +13/+13
 COLOUR:  DARKGREY
 TILE:    spwpn_scythe_of_curses
+TILE_EQ: finisher
 BOOL:    cursed
 DESC_ID: This weapon carries a terrible and highly irritating curse.
 
@@ -235,6 +253,7 @@ OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    +7/+6
 COLOUR:  YELLOW
 TILE:    spwpn_sceptre_of_torment
+TILE_EQ: mace_ruby
 BOOL:    tilerim
 DESC_ID: This truly accursed weapon is an instrument of Hell.
 
@@ -244,6 +263,7 @@ OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +9/+9
 COLOUR:  LIGHTGREY
 TILE:    spwpn_sword_of_zonguldrok
+TILE_EQ: zonguldrok
 BOOL:    tilerim
 DESC_ID: This dreadful weapon is used at the user's peril.
 
@@ -253,6 +273,7 @@ OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +6/+6
 COLOUR:  YELLOW
 TILE:    spwpn_sword_of_cerebov
+TILE_EQ: sword_twist
 BRAND:   SPWPN_FLAMING
 BOOL:    cursed, tilerim
 DESC:    Eerie flames cover its twisted blade.
@@ -263,6 +284,7 @@ OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    +4/+4
 COLOUR:  YELLOW
 TILE:    spwpn_staff_of_dispater
+TILE_EQ: dispater
 BOOL:    tilerim
 DESC_ID: This legendary item can unleash the fury of Hell.
 
@@ -272,6 +294,7 @@ OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    +7/+7
 COLOUR:  RED
 TILE:    spwpn_sceptre_of_asmodeus
+TILE_EQ: asmodeus
 BOOL:    tilerim
 DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
 
@@ -283,6 +306,7 @@ OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +7/+8
 COLOUR:  DARKGREY
 TILE:    urand_bloodbane
+TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
 ANGRY:   1
 BOOL:    berserk
@@ -294,6 +318,7 @@ OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
 PLUS:    +7/+5
 COLOUR:  RED
 TILE:    urand_flaming_death
+TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
@@ -306,6 +331,7 @@ OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    +5/+5
 COLOUR:  WHITE
 TILE:    urand_brilliance
+TILE_EQ: mace_of_brilliance
 BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
@@ -318,6 +344,7 @@ OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +13/+4
 COLOUR:  MAGENTA
 TILE:    urand_leech
+TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRICISM
 EV:      -1
 STR:     -1
@@ -332,6 +359,7 @@ OBJ:     OBJ_WEAPONS/WPN_DAGGER
 PLUS:    +5/+7
 COLOUR:  LIGHTBLUE
 TILE:    urand_chilly_death
+TILE_EQ: chilly_death
 BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
@@ -345,6 +373,7 @@ OBJ:      OBJ_WEAPONS/WPN_DAGGER
 PLUS:     -1/+4
 COLOUR:   LIGHTRED
 TILE:     urand_morg
+TILE_EQ:  morg
 BRAND:    SPWPN_PAIN
 INT:      5
 MAGIC:    30
@@ -358,6 +387,7 @@ OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +3/+5
 COLOUR:  DARKGREY
 TILE:    urand_finisher
+TILE_EQ: finisher
 BRAND:   SPWPN_SPEED
 STR:     3
 BOOL:    cursed
@@ -369,6 +399,7 @@ OBJ:     OBJ_WEAPONS/WPN_SLING
 PLUS:    +9/+12
 COLOUR:  LIGHTBLUE
 TILE:    urand_punk
+TILE_EQ: punk
 BRAND:   SPWPN_FROST
 COLD:    1
 DESC:    A sling made of weird blue leather.
@@ -380,6 +411,7 @@ OBJ:      OBJ_WEAPONS/WPN_BOW
 PLUS:     +8/+8
 COLOUR:   YELLOW
 TILE:     urand_krishna
+TILE_EQ:  krishna
 BRAND:    SPWPN_SPEED
 DEX:      3
 BOOL:     seeinv
@@ -393,6 +425,7 @@ OBJ:     OBJ_WEAPONS/WPN_GIANT_CLUB
 PLUS:    +0/+5
 COLOUR:  BROWN
 TILE:    urand_skullcrusher
+TILE_EQ: giant_club_slant
 BRAND:   SPWPN_SPEED
 STR:     5
 
@@ -402,6 +435,7 @@ OBJ:      OBJ_WEAPONS/WPN_GLAIVE
 PLUS:     +5/+8
 COLOUR:   LIGHTCYAN
 TILE:     urand_guard
+TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 BOOL:     seeinv, berserk
@@ -414,6 +448,7 @@ OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:     +12/+10
 COLOUR:   WHITE
 TILE:     urand_jihad
+TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 MAGIC:    20
@@ -428,7 +463,8 @@ APPEAR:  flaming crossbow
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +6/+9
 COLOUR:  LIGHTRED
-TILE:    urand_fiery_devil
+TILE:    urand_hellfire
+TILE_EQ: crossbow_fire
 BRAND:   SPWPN_FLAME
 FIRE:    2
 COLD:    -1
@@ -441,6 +477,7 @@ OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +13/+13
 COLOUR:  BLUE
 TILE:    urand_doom_knight
+TILE_EQ: doom_knight
 BRAND:   SPWPN_PAIN
 MAGIC:   50
 BOOL:    nospell
@@ -452,6 +489,7 @@ OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
 PLUS:    +5/+5
 COLOUR:  LIGHTCYAN
 TILE:    urand_eos
+TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
 BOOL:    elec, seeinv, notelep
 
@@ -465,6 +503,7 @@ OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +2/+10
 COLOUR:   DARKGREY
 TILE:     urand_botono
+TILE_EQ:  botono
 BRAND:    SPWPN_VAMPIRICISM
 STEALTH:  -30
 BOOL:     poison, life, noises
@@ -476,6 +515,7 @@ OBJ:      OBJ_WEAPONS/WPN_TRIDENT
 PLUS:     +10/+4
 COLOUR:   CYAN
 TILE:     urand_octopus_king
+TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
 BOOL:     elec, poison
 MAGIC:    50
@@ -483,16 +523,17 @@ DESC_END: This trident was stolen many years ago from the Octopus King's
           garden by a really unimportant and already dead man. But beware
           of the Octopus King's wrath!
 
-NAME:   mithril axe "Arga"
-APPEAR: mithril axe
-OBJ:    OBJ_WEAPONS/WPN_WAR_AXE
-PLUS:   +10/+6
-COLOUR: WHITE
-TILE:   urand_arga
-BRAND:  SPWPN_SPEED
-STR:    2
-MAGIC:  30
-DESC:   A beautiful mithril axe, probably lost by some dwarven hero.
+NAME:    mithril axe "Arga"
+APPEAR:  mithril axe
+OBJ:     OBJ_WEAPONS/WPN_WAR_AXE
+PLUS:    +10/+6
+COLOUR:  WHITE
+TILE:    urand_arga
+TILE_EQ: arga
+BRAND:   SPWPN_SPEED
+STR:     2
+MAGIC:   30
+DESC:    A beautiful mithril axe, probably lost by some dwarven hero.
 
 NAME:     Elemental Staff
 APPEAR:   black staff
@@ -500,6 +541,7 @@ OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:     +3/+1
 COLOUR:   DARKGREY
 TILE:     urand_elemental
+TILE_EQ:  elemental_staff
 BRAND:    SPWPN_PROTECTION
 FIRE:     2
 COLD:     2
@@ -515,6 +557,7 @@ OBJ:     OBJ_WEAPONS/WPN_HAND_CROSSBOW
 PLUS:    +10/+0
 COLOUR:  DARKGREY
 TILE:    urand_sniper
+TILE_EQ: sniper
 BRAND:   SPWPN_VENOM
 BOOL:    seeinv
 DESC:    A hand crossbow made of some black material.
@@ -525,6 +568,7 @@ OBJ:     OBJ_WEAPONS/WPN_LONGBOW
 PLUS:    +2/+10
 COLOUR:  CYAN
 TILE:    urand_piercer
+TILE_EQ: great_bow
 BRAND:   SPWPN_VORPAL
 EV:      -2
 DESC:    An exceptionally large metal longbow.
@@ -536,6 +580,7 @@ OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
 PLUS:    +6/+6
 COLOUR:  WHITE
 TILE:    urand_blowgun
+TILE_EQ: blowgun
 STEALTH: 60
 BOOL:    inv, tilerim
 DESC:    It is designed for easy concealment, but still packs a nasty punch.
@@ -546,6 +591,7 @@ OBJ:     OBJ_WEAPONS/WPN_SPEAR
 PLUS:    +9/+6
 COLOUR:  LIGHTGREEN
 TILE:    urand_wyrmbane
+TILE_EQ: wyrmbane
 BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
@@ -557,6 +603,7 @@ OBJ:      OBJ_WEAPONS/WPN_KNIFE
 PLUS:     +4/+10
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
+TILE_EQ:  spriggans_knife
 BOOL:     tilerim
 EV:       4
 DEX:      4
@@ -573,6 +620,7 @@ OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +12/+16
 COLOUR:  LIGHTGREEN
 TILE:    urand_plutonium
+TILE_EQ: plutonium_sword
 MUTATE:  6
 CURSED:  1
 STEALTH: -20
@@ -584,6 +632,7 @@ OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:    +7/+7
 COLOUR:  LIGHTGREY
 TILE:    urand_undeadhunter
+TILE_EQ: undeadhunter
 BRAND:   SPWPN_HOLY_WRATH
 BOOL:    life
 
@@ -593,6 +642,7 @@ OBJ:     OBJ_WEAPONS/WPN_WHIP
 PLUS:    +5/+10
 COLOUR:  DARKGREY
 TILE:    urand_serpent_scourge
+TILE_EQ: serpent_scourge
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
 DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'
@@ -604,6 +654,7 @@ OBJ:      OBJ_WEAPONS/WPN_DAGGER
 PLUS:     +27/-1
 COLOUR:   LIGHTCYAN
 TILE:     urand_knife_of_accuracy
+TILE_EQ:  knife_of_accuracy
 BOOL:     tilerim
 DESC_END: It is almost unerringly accurate.
 
@@ -615,6 +666,7 @@ OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +6/+6
 COLOUR:   GREEN
 TILE:     urand_crystal_spear
+TILE_EQ:  crystal_spear
 INT:      3
 DESC_END: Presumably this relic led to the invention of the famous spell, or maybe the other way around.
 
@@ -624,6 +676,7 @@ OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +5
 COLOUR:  BROWN
 TILE:    urand_ignorance
+TILE_EQ: shield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
@@ -636,6 +689,7 @@ OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    +4
 COLOUR:  LIGHTRED
 TILE:    urand_augmentation
+TILE_EQ: robe_white_blue
 STR:     2
 INT:     2
 DEX:     2
@@ -647,6 +701,7 @@ OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +1
 COLOUR:   DARKGREY
 TILE:     urand_thief
+TILE_EQ:  black
 EV:       2
 DEX:      2
 DAM:      -3
@@ -660,6 +715,7 @@ OBJ:     OBJ_ARMOUR/ARM_SHIELD
 PLUS:    +10
 COLOUR:  RED
 TILE:    urand_bullseye
+TILE_EQ: bullseye
 EV:      -5
 
 NAME:    crown of Dyrovepreva
@@ -668,6 +724,7 @@ OBJ:     OBJ_ARMOUR/ARM_CAP
 PLUS:    +3
 COLOUR:  BROWN
 TILE:    urand_dyrovepreva
+TILE_EQ: dyrovepreva
 INT:     2
 METAB:   1
 BOOL:    elec, seeinv
@@ -679,6 +736,7 @@ OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     -5
 COLOUR:   MAGENTA
 TILE:     urand_misfortune
+TILE_EQ:  robe_misfortune
 EV:       -4
 STR:      -2
 INT:      -2
@@ -695,6 +753,7 @@ OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
 COLOUR:   RED
 TILE:     urand_flash
+TILE_EQ:  red
 EV:       4
 BOOL:     lev, cantelep
 DESC:     A vibrating cloak.
@@ -706,6 +765,7 @@ OBJ:      OBJ_ARMOUR/ARM_BOOTS
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
+TILE_EQ:  middle_gray
 DEX:      3
 STEALTH:  80
 BOOL:     inv
@@ -719,6 +779,7 @@ OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 PLUS:    -1
 COLOUR:  YELLOW
 TILE:    urand_lear
+TILE_EQ: lears_chain_mail
 DEX:     -3
 BOOL:    cursed, nospell
 DESC:    A chain mail made of pure gold.
@@ -729,6 +790,7 @@ OBJ:     OBJ_ARMOUR/ARM_ANIMAL_SKIN
 PLUS:    +4
 COLOUR:  BROWN
 TILE:    urand_zhor
+TILE_EQ: zhor
 COLD:    2
 DESC:    The skin of some strange animal.
 
@@ -739,29 +801,32 @@ OBJ:     OBJ_ARMOUR/ARM_LEATHER_ARMOUR
 PLUS:    +3
 COLOUR:  RED
 TILE:    urand_salamander
+TILE_EQ: leather_red
 FIRE:    2
 BOOL:    berserk
 DESC:    A leather armour made of a salamander's skin.
 
-NAME:   gauntlets of War
-APPEAR: thick gauntlets
-OBJ:    OBJ_ARMOUR/ARM_GLOVES
-PLUS:   +3
-COLOUR: BROWN
-TILE:   urand_war
-ACC:    3
-DAM:    3
+NAME:    gauntlets of War
+APPEAR:  thick gauntlets
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    +3
+COLOUR:  BROWN
+TILE:    urand_war
+TILE_EQ: glove_black
+ACC:     3
+DAM:     3
 
-NAME:   shield of Resistance
-APPEAR: bronze shield
-OBJ:    OBJ_ARMOUR/ARM_SHIELD
-PLUS:   +3
-COLOUR: LIGHTRED
-TILE:   urand_resistance
-FIRE:   1
-COLD:   1
-MAGIC:  40
-DESC:   A bronze shield.
+NAME:    shield of Resistance
+APPEAR:  bronze shield
+OBJ:     OBJ_ARMOUR/ARM_SHIELD
+PLUS:    +3
+COLOUR:  LIGHTRED
+TILE:    urand_resistance
+TILE_EQ: shield_of_resistance
+FIRE:    1
+COLD:    1
+MAGIC:   40
+DESC:    A bronze shield.
 
 NAME:    robe of Folly
 APPEAR:  dull robe
@@ -769,6 +834,7 @@ OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    -1
 COLOUR:  LIGHTGREY
 TILE:    urand_folly
+TILE_EQ: robe_red2
 INT:     -5
 CURSED:  2
 BOOL:    nospell
@@ -781,6 +847,7 @@ OBJ:     OBJ_ARMOUR/ARM_PLATE_MAIL
 PLUS:    +10
 COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
+TILE_EQ: maxwell
 BOOL:    nospell, notelep, cursed
 DESC:    A weird-looking armour.
 
@@ -790,6 +857,7 @@ APPEAR:  blue mask
 OBJ:     OBJ_ARMOUR/ARM_CAP
 COLOUR:  BLUE
 TILE:    urand_dragonmask
+TILE_EQ: art_dragonhelm
 MAGIC:   40
 ACC:     2
 DAM:     2
@@ -802,6 +870,7 @@ OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +4
 COLOUR:   DARKGREY
 TILE:     urand_night
+TILE_EQ:  robe_of_night
 MAGIC:    30
 STEALTH:  50
 BOOL:     seeinv, inv
@@ -815,6 +884,7 @@ OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
 PLUS:    +5
 COLOUR:  YELLOW
 TILE:    urand_dragon_king
+TILE_EQ: dragonarm_gold
 MAGIC:   50
 
 NAME:    hat of the Alchemist
@@ -823,6 +893,7 @@ OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
 PLUS:    +2
 COLOUR:  MAGENTA
 TILE:    urand_alchemist
+TILE_EQ: turban_purple
 FIRE:    1
 COLD:    1
 MAGIC:   30
@@ -835,6 +906,7 @@ OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +2
 COLOUR:  WHITE
 TILE:    urand_fencer
+TILE_EQ: glove_white
 EV:      3
 DEX:     3
 ACC:     5
@@ -845,6 +917,7 @@ APPEAR:   phosphorescent cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 COLOUR:   WHITE
 TILE:     urand_starlight
+TILE_EQ:  white
 EV:       4
 COLD:     1
 STEALTH:  -30
@@ -858,6 +931,7 @@ OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +1
 COLOUR:   LIGHTRED
 TILE:     urand_ratskin_cloak
+TILE_EQ:  ratskin
 INT:      -1
 DEX:      -1
 BOOL:     life, poison

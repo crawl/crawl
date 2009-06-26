@@ -693,15 +693,15 @@ mcache_ghost::mcache_ghost(const monsters *mon)
     {
     case SK_MACES_FLAILS:
         if (dam > 30)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_FRAIL;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_FLAIL;
         else if (dam > 25)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_MACE;
         else if (dam > 20)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SPIKED_FRAIL;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SPIKED_FLAIL;
         else if (dam > 15)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_MORNINGSTAR;
         else if (dam > 10)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_FRAIL;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_FLAIL;
         else if (dam > 5)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_MACE;
         else

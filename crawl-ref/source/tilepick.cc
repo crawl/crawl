@@ -3323,52 +3323,9 @@ int tilep_equ_weapon(const item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        switch (find_unrandart_index(item))
-        {
-            case UNRAND_SINGING_SWORD:  return TILEP_HAND1_SINGING_SWORD;
-            case UNRAND_TROG:           return TILEP_HAND1_AXE_TROG;
-            case UNRAND_CURSES:         return TILEP_HAND1_FINISHER;
-            case UNRAND_VARIABILITY:    return TILEP_HAND1_MACE_OF_VARIABILITY;
-            case UNRAND_PRUNE:          return TILEP_HAND1_GLAIVE_OF_PRUNE;
-            case UNRAND_TORMENT:        return TILEP_HAND1_MACE_RUBY;
-            case UNRAND_ZONGULDROK:     return TILEP_HAND1_ZONGULDROK;
-            case UNRAND_CEREBOV:        return TILEP_HAND1_SWORD_TWIST;
-            case UNRAND_DISPATER:       return TILEP_HAND1_DISPATER;
-            case UNRAND_ASMODEUS:       return TILEP_HAND1_ASMODEUS;
-            case UNRAND_OLGREB:         return TILEP_HAND1_OLGREB;
-            case UNRAND_POWER:          return TILEP_HAND1_SWORD_OF_POWER;
-            case UNRAND_VAMPIRES_TOOTH: return TILEP_HAND1_VAMPIRES_TOOTH;
-            case UNRAND_WUCAD_MU:       return TILEP_HAND1_WUCAD_MU;
-
-            case UNRAND_BLOODBANE:          return TILEP_HAND1_BLOODBANE;
-            case UNRAND_FLAMING_DEATH:      return TILEP_HAND1_FLAMING_DEATH;
-            case UNRAND_BRILLIANCE:         return TILEP_HAND1_MACE_OF_BRILLIANCE;
-            case UNRAND_LEECH:              return TILEP_HAND1_LEECH;
-            case UNRAND_CHILLY_DEATH:       return TILEP_HAND1_CHILLY_DEATH;
-            case UNRAND_MORG:               return TILEP_HAND1_MORG;
-            case UNRAND_FINISHER:           return TILEP_HAND1_FINISHER;
-            case UNRAND_PUNK:               return TILEP_HAND1_PUNK;
-            case UNRAND_KRISHNA:            return TILEP_HAND1_KRISHNA;
-            case UNRAND_SKULLCRUSHER:       return TILEP_HAND1_GIANT_CLUB_SLANT;
-            case UNRAND_GUARD:              return TILEP_HAND1_GLAIVE_OF_THE_GUARD;
-            case UNRAND_JIHAD:              return TILEP_HAND1_JIHAD;
-            case UNRAND_HELLFIRE:           return TILEP_HAND1_FIERY_DEVIL;
-            case UNRAND_DOOM_KNIGHT:        return TILEP_HAND1_DOOM_KNIGHT;
-            case UNRAND_EOS:                return TILEP_HAND1_EOS;
-            case UNRAND_BOTONO:             return TILEP_HAND1_BOTONO;
-            case UNRAND_OCTOPUS_KING:       return TILEP_HAND1_TRIDENT_OCTOPUS_KING;
-            case UNRAND_ARGA:               return TILEP_HAND1_ARGA;
-            case UNRAND_ELEMENTAL_STAFF:    return TILEP_HAND1_ELEMENTAL_STAFF;
-            case UNRAND_SNIPER:             return TILEP_HAND1_SNIPER;
-            case UNRAND_PLUTONIUM_SWORD:    return TILEP_HAND1_PLUTONIUM_SWORD;
-            case UNRAND_BLOWGUN_ASSASSIN:   return TILEP_HAND1_BLOWGUN_ASSASSIN;
-            case UNRAND_WYRMBANE:           return TILEP_HAND1_WYRMBANE;
-            case UNRAND_SPRIGGANS_KNIFE:    return TILEP_HAND1_SPRIGGANS_KNIFE;
-            case UNRAND_SERPENT_SCOURGE:    return TILEP_HAND1_SERPENT_SCOURGE;
-            case UNRAND_ACCURACY:           return TILEP_HAND1_KNIFE_OF_ACCURACY;
-            case UNRAND_PIERCER:            return TILEP_HAND1_GREAT_BOW;
-            case UNRAND_CRYSTAL_SPEAR:      return TILEP_HAND1_CRYSTAL_SPEAR;
-        }
+        const int tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile != -1)
+            return tile;
     }
 
     switch (item.sub_type)
@@ -3377,9 +3334,9 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_CLUB:              return TILEP_HAND1_CLUB_SLANT;
     case WPN_MACE:              return TILEP_HAND1_MACE;
     case WPN_GREAT_MACE:        return TILEP_HAND1_GREAT_MACE;
-    case WPN_FLAIL:             return TILEP_HAND1_FRAIL;
-    case WPN_SPIKED_FLAIL:      return TILEP_HAND1_SPIKED_FRAIL;
-    case WPN_DIRE_FLAIL:        return TILEP_HAND1_GREAT_FRAIL;
+    case WPN_FLAIL:             return TILEP_HAND1_FLAIL;
+    case WPN_SPIKED_FLAIL:      return TILEP_HAND1_SPIKED_FLAIL;
+    case WPN_DIRE_FLAIL:        return TILEP_HAND1_GREAT_FLAIL;
     case WPN_MORNINGSTAR:       return TILEP_HAND1_MORNINGSTAR;
     case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
@@ -3451,18 +3408,9 @@ int tilep_equ_armour(const item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        switch (find_unrandart_index(item))
-        {
-            case UNRAND_AUGMENTATION:   return TILEP_BODY_ROBE_WHITE_BLUE;
-            case UNRAND_MISFORTUNE:     return TILEP_BODY_ROBE_MISFORTUNE;
-            case UNRAND_LEAR:           return TILEP_BODY_LEARS_CHAIN_MAIL;
-            case UNRAND_ZHOR:           return TILEP_BODY_ZHOR;
-            case UNRAND_SALAMANDER:     return TILEP_BODY_LEATHER_RED;
-            case UNRAND_FOLLY:          return TILEP_BODY_ROBE_RED2;
-            case UNRAND_MAXWELL:        return TILEP_BODY_MAXWELL;
-            case UNRAND_NIGHT:          return TILEP_BODY_ROBE_OF_NIGHT;
-            default: break;
-        }
+        const int tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile != -1)
+            return tile;
     }
 
     switch (item.sub_type)
@@ -3534,13 +3482,9 @@ int tilep_equ_shield(const item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        switch (find_unrandart_index(item))
-        {
-            case UNRAND_IGNORANCE:  return TILEP_HAND2_SHIELD_OF_IGNORANCE;
-            case UNRAND_BULLSEYE:   return TILEP_HAND2_BULLSEYE;
-            case UNRAND_RESISTANCE: return TILEP_HAND2_SHIELD_OF_RESISTANCE;
-            default: break;
-        }
+        const int tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile != -1)
+            return tile;
     }
 
     switch (item.sub_type)
@@ -3562,11 +3506,9 @@ int tilep_equ_cloak(const item_def &item)
 
     if (is_unrandom_artefact( item ))
     {
-        switch (find_unrandart_index(item))
-        {
-            case UNRAND_RATSKIN_CLOAK:  return TILEP_CLOAK_RATSKIN_CLOAK;
-            default: break;
-        }
+        const int tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile != -1)
+            return tile;
     }
 
     switch (item.colour)
@@ -3600,13 +3542,9 @@ int tilep_equ_helm(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        switch (find_unrandart_index(item))
-        {
-            case UNRAND_DYROVEPREVA:    return TILEP_HELM_DYROVEPREVA;
-            case UNRAND_DRAGONMASK:     return TILEP_HELM_ART_DRAGONHELM;
-            case UNRAND_ALCHEMIST:      return TILEP_HELM_TURBAN_PURPLE;
-            default: break;
-        }
+        const int tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile != -1)
+            return tile;
 
         // Although there shouldn't be any, just in case
         // unhandled artefacts fall through to defaults...
@@ -3732,11 +3670,9 @@ int tilep_equ_gloves(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        switch (find_unrandart_index(item))
-        {
-            case UNRAND_WAR:            return TILEP_ARM_GLOVE_BLACK;
-            case UNRAND_FENCERS_GLOVES: return TILEP_ARM_GLOVE_WHITE;
-        }
+        const int tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile != -1)
+            return tile;
     }
 
     switch (_get_etype(item))
@@ -3788,11 +3724,9 @@ int tilep_equ_boots(const item_def &item)
 
     if (is_unrandom_artefact(item))
     {
-        switch (find_unrandart_index(item))
-        {
-            case UNRAND_BOOTS_ASSASSIN: return TILEP_BOOTS_MIDDLE_GRAY;
-            default: break;
-        }
+        const int tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile != -1)
+            return tile;
     }
 
     switch (etype)
