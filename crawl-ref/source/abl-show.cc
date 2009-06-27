@@ -2164,7 +2164,7 @@ std::vector<talent> your_talents(bool check_confused)
     if (player_mutation_level(MUT_SMITE))
         _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused);
 
-    if (you.duration[DUR_TRANSFORMATION])
+    if (you.duration[DUR_TRANSFORMATION] && you.attribute[ATTR_TRANSFORMATION]!=TRAN_PIG)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
 
     if (player_mutation_level(MUT_BLINK))

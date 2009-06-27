@@ -2492,6 +2492,7 @@ int tileidx_player(int job)
         case '#': ch = TILEP_MONS_VAPOUR;      break;
         case 'S': ch = TILEP_MONS_LAVA_SNAKE;  break;
         case 'b': ch = TILEP_MONS_GIANT_BAT;   break;
+        case 'h': ch = TILEP_MONS_HOG;         break;
     }
 
     if (player_is_airborne())

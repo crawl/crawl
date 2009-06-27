@@ -235,30 +235,31 @@ enum beam_type                  // beam[].flavour
     BEAM_BLINK,
     BEAM_PETRIFY,
     BEAM_BACKLIGHT,
-    BEAM_SLEEP,                   // 45
+    BEAM_PORKALATOR,              // 45
+    BEAM_SLEEP,
     BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
 
     // new beams for evaporate
     BEAM_POTION_STINKING_CLOUD,
     BEAM_POTION_POISON,
     BEAM_POTION_MIASMA,
-    BEAM_POTION_STEAM,
-    BEAM_POTION_FIRE,             // 50
+    BEAM_POTION_STEAM,            // 50
+    BEAM_POTION_FIRE,
     BEAM_POTION_COLD,
     BEAM_POTION_BLACK_SMOKE,
     BEAM_POTION_GREY_SMOKE,
-    BEAM_POTION_BLUE_SMOKE,
-    BEAM_POTION_PURP_SMOKE,       // 55
+    BEAM_POTION_BLUE_SMOKE,       // 55
+    BEAM_POTION_PURP_SMOKE,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
 
     // For getting the visual effect of a beam.
-    BEAM_VISUAL,                  // 57
+    BEAM_VISUAL,
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
-    BEAM_STEAL_FOOD,              // 59: Pseudo-beam for harpies stealing food.
+    BEAM_STEAL_FOOD,              // 60: Pseudo-beam for harpies stealing food.
 
     NUM_BEAMS
 };
@@ -2018,6 +2019,7 @@ enum monster_type                      // (int) menv[].type
     MONS_NESSOS,
     MONS_LERNAEAN_HYDRA,
     MONS_DISSOLUTION,                  // 460
+    MONS_KIRKE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2222,6 +2224,7 @@ enum mon_spellbook_type
     MST_ILSUIW,
     MST_PRINCE_RIBBIT,                 // 145
     MST_NESSOS,
+    MST_KIRKE,
     MST_GERYON = 150,
     MST_DISPATER,
     MST_ASMODEUS,
@@ -2808,9 +2811,10 @@ enum spell_type
     SPELL_FIRE_BREATH,
     SPELL_COLD_BREATH,                 // 195
     SPELL_DRACONIAN_BREATH,
-    SPELL_WATER_ELEMENTALS,            // 197
+    SPELL_WATER_ELEMENTALS,
+    SPELL_PORKALATOR,                  //  198
 
-    NUM_SPELLS                         // 198
+    NUM_SPELLS                         // 199
 };
 
 enum slot_select_mode

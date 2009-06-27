@@ -3269,19 +3269,20 @@ static monster_type _choose_unique_by_depth(int step)
                             MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
                             MONS_ROXANNE, MONS_RUPERT, MONS_NORBERT, MONS_JOZEF,
                             MONS_AZRAEL, MONS_NESSOS, MONS_AGNES,
-                            MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, -1);
+                            MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE, -1);
         break;
     case 5: // depth <= 19
         ret = random_choose(MONS_SNORG, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
                             MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_NORRIS,
                             MONS_AZRAEL, MONS_NESSOS, MONS_NERGALLE,
-                            MONS_ROXANNE, MONS_SAINT_ROKA, -1);
+                            MONS_ROXANNE, MONS_SAINT_ROKA, MONS_KIRKE, -1);
         break;
     case 6: // depth > 19
     default:
         ret = random_choose(MONS_FRANCIS, MONS_FRANCES, MONS_WAYNE, MONS_DUANE,
                             MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK,
-                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, -1);
+                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA,
+                            MONS_KIRKE, -1);
     }
 
     return static_cast<monster_type>(ret);

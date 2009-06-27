@@ -1696,6 +1696,7 @@ int melee_attack::player_weapon_type_modify(int damage)
         {
         case TRAN_SPIDER:
         case TRAN_BAT:
+        case TRAN_PIG:
             if (damage < HIT_STRONG)
                 attack_verb = "bite";
             else

@@ -2057,6 +2057,14 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.is_beam     = true;
         break;
 
+    case SPELL_PORKALATOR:
+        beam.name     = "0";
+        beam.type     = 0;
+        beam.flavour  = BEAM_PORKALATOR;
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
+        break;
+
     default:
         if (!is_valid_spell(real_spell))
             DEBUGSTR("Invalid spell #%d cast by %s", (int) real_spell,

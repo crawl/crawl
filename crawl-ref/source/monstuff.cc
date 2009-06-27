@@ -58,6 +58,7 @@ REVISION("$Rev$");
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transfor.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -1068,6 +1069,39 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
     }
 }
 
+static void _hogs_to_humans()
+{
+    // Simplification: if, in a rare event, another hog which was not created
+    // as a part of Kirke's band happens to be on the level, the player can't
+    // tell them apart anyway.
+    // On the other hand, hogs which left the level are too far away to be
+    // affected by the magic of Kirke's death.
+    int any = 0;
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (monster->type == MONS_HOG)
+        {
+            monster->type = MONS_HUMAN;
+            monster->attitude = ATT_GOOD_NEUTRAL;
+            monster->flags |= MF_WAS_NEUTRAL;
+            behaviour_event(monster, ME_EVAL);
+
+            any++;
+        }
+    }
+
+    if (any==1)
+        mpr("No longer under Kirke's spell, the hog turns into a human!");
+    else if (any>1)
+        mpr("No longer under Kirke's spell, all hogs revert to their human form!");
+
+    // Revert the player as well.
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+        untransform();
+}
+
 int monster_die(monsters *monster, killer_type killer,
                 int killer_index, bool silent, bool wizard)
 {
@@ -1677,6 +1711,10 @@ int monster_die(monsters *monster, killer_type killer,
         // Now that Boris is dead, he's a valid target for monster
         // creation again. -- bwr
         you.unique_creatures[monster->type] = false;
+    }
+    else if (monster->type == MONS_KIRKE && !in_transit)
+    {
+        _hogs_to_humans();
     }
     else if (!mons_is_summoned(monster))
     {

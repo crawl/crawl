@@ -56,9 +56,10 @@ bool transform_allows_wearing_item(const item_def& item,
 
     if (item.base_type == OBJ_JEWELLERY)
     {
-        // Everything but bats can wear all jewellery; bats can
+        // Everything but bats can wear all jewellery; bats and pigs can
         // only wear amulets.
-        if (transform == TRAN_BAT && !jewellery_is_amulet(item))
+        if ((transform == TRAN_BAT || transform == TRAN_PIG)
+            && !jewellery_is_amulet(item))
             rc = false;
     }
     else
@@ -78,6 +79,7 @@ bool transform_allows_wearing_item(const item_def& item,
         // Some can't wear anything.
         case TRAN_DRAGON:
         case TRAN_BAT:
+        case TRAN_PIG:
             rc = false;
             break;
 
@@ -470,6 +472,8 @@ size_type player::transform_size(int psize) const
     case TRAN_SPIDER:
     case TRAN_BAT:
         return SIZE_TINY;
+    case TRAN_PIG:
+        return SIZE_SMALL;
     case TRAN_ICE_BEAST:
         return SIZE_LARGE;
     case TRAN_DRAGON:
@@ -530,8 +534,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
         {
             if (just_check)
                 return (true);
-
-            mpr("You extend your transformation's duration.");
+            
+            if (which_trans==TRAN_PIG)
+                mpr("You feel you'll be a pig longer.");
+            else
+                mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] += random2(pow);
 
             if (you.duration[DUR_TRANSFORMATION] > 100)
@@ -541,7 +548,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         }
         else
         {
-            if (!force)
+            if (!force && which_trans!=TRAN_PIG)
                 mpr("You cannot extend your transformation any further!");
             return (false);
         }
@@ -589,7 +596,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    if (_check_for_cursed_equipment(rem_stuff, which_trans, force))
+    if (_check_for_cursed_equipment(rem_stuff, which_trans, force) && which_trans!=TRAN_PIG)
         return (_abort_or_fizzle(just_check));
 
     int str = 0, dex = 0, symbol = '@', colour = LIGHTGREY, xhp = 0, dur = 0;
@@ -673,14 +680,28 @@ bool transform(int pow, transformation_type which_trans, bool force,
             msg = "You turn into a bat.";
         break;
 
+    case TRAN_PIG:
+        tran_name = "pig";
+        symbol    = 'h';
+        colour    = RED;
+        dur       = pow;
+        msg       = "You have been turned into a pig!";
+        break;
+
     case TRAN_NONE:
     case NUM_TRANSFORMATIONS:
         break;
     }
 
-    if (check_transformation_stat_loss(rem_stuff, force,
-                                       std::max(-str, 0), std::max(-dex, 0)))
-    {
+    if (check_transformation_stat_loss(rem_stuff, force || which_trans == TRAN_PIG,
+                                       std::max(-str, 0), std::max(-dex,0)))
+    {   // would have died to stat loss
+        if (which_trans == TRAN_PIG)
+        {   // no easy way around this!
+            mpr("A dreadful feeling locks you in place!");
+            if (you.duration[DUR_PARALYSIS]<10)
+                you.duration[DUR_PARALYSIS]=10;
+        }
         return (_abort_or_fizzle(just_check));
     }
 
@@ -877,6 +898,10 @@ void untransform(bool skip_wielding)
         modify_stat(STAT_STRENGTH, -3, true,
                     "losing the lich transformation" );
         you.is_undead = US_ALIVE;
+        break;
+
+    case TRAN_PIG:
+        mpr( "Your transformation has ended.", MSGCH_DURATION );
         break;
 
     default:

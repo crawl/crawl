@@ -408,7 +408,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
 ///////////////////////////////////////////////////
 
-// XXX: Always getting maximal vampiric drain is harcoded in
+// XXX: Always getting maximal vampiric drain is hardcoded in
 // melee_attack::apply_damage_brand()
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -470,7 +470,7 @@ static void _ZONGULDROK_world_reacts(item_def *item)
         did_god_conduct(DID_NECROMANCY, 1);
     }
 }
-  
+
 static void _ZONGULDROK_melee_effect(item_def* weapon, actor* attacker,
                                      actor* defender, bool mondied)
 {

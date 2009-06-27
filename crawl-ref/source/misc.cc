@@ -3017,6 +3017,7 @@ std::string your_hand(bool plural)
         result = "hand";
         break;
     case TRAN_SPIDER:
+    case TRAN_PIG:
         result = "front leg";
         break;
     case TRAN_DRAGON:

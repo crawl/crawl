@@ -2569,6 +2569,9 @@ std::string _status_mut_abilities()
         case TRAN_LICH:
             text += "\nYou are in lich-form.";
             break;
+        case TRAN_PIG:
+            text += "\nYou are a filthy swine.";
+            break;
         }
         if ((you.species != SP_VAMPIRE
                 || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)

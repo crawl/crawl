@@ -256,6 +256,9 @@ static void _sdump_transform(dump_params &par)
         case TRAN_LICH:
             text += "You " + verb + " in lich-form.";
             break;
+        case TRAN_PIG:
+            text += "You " + verb + " a filthy swine.";
+            break;
         }
 
         text += "\n\n";

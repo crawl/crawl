@@ -1670,7 +1670,8 @@ void process_command( command_type cmd )
 
     case CMD_CAST_SPELL:
     case CMD_FORCE_CAST_SPELL:
-        if (player_in_bat_form())
+        if (player_in_bat_form()
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
         {
            canned_msg(MSG_PRESENT_FORM);
            break;
@@ -4077,7 +4078,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 31              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 107    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 160          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 198             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 199             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c7);

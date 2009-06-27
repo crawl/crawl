@@ -25,6 +25,7 @@ enum transformation_type
     TRAN_DRAGON,                       //    5
     TRAN_LICH,
     TRAN_BAT,
+    TRAN_PIG,
     NUM_TRANSFORMATIONS                // must remain last member {dlb}
 };
 

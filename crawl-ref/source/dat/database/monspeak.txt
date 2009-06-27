@@ -1800,6 +1800,37 @@ _Jozef_rare_
 @The_monster@ screams @at_foe@, "Die!  I've got more contracts today."
 ## END Jozef ##
 %%%%
+# an enchantress, lover of Odysseus
+Kirke
+
+VISUAL:@The_monster@ splashes a potion @at_foe@.
+
+VISUAL:@The_monster@ throws some @strange@ powder @at_foe@.
+
+@The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
+
+@The_monster@ holds her sides and says @to_foe@, "You'll eat dirt beneath my feet."
+
+# "moly" is a magic herb, mentioned only in Kirke's myth (as an antidote to
+# Kirke's potions) and in the English interjection.
+@The_monster@ whispers @to_foe@, "Not even holy moly will save you."
+
+@The_monster@ says, "Can we stop fighting?  I have some good wine for you..." @player_only@
+
+@The_monster@ shouts @at_foe@, "You pig!  I'll make you look the way you deserve."
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+%%%%
+strange
+
+strange
+
+weird
+
+mysterious
+### END Kirke ###
+%%%%
 # A powerful sorceress, guarding the ORB
 Margery
 

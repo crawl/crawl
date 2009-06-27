@@ -1043,6 +1043,17 @@
       }
     },
 
+    {  MST_KIRKE,
+      {
+       SPELL_PORKALATOR,
+       SPELL_SLOW,
+       SPELL_SUMMON_UGLY_THING,
+       SPELL_SUMMON_ICE_BEAST,
+       SPELL_BACKLIGHT,
+       SPELL_INVISIBILITY
+      }
+    },
+
     {  MST_GERYON,
       {
        SPELL_SUMMON_BEAST,
