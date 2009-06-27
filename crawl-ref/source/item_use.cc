@@ -625,12 +625,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     mpr("It is briefly surrounded by shifting shadows.");
                     break;
 
-                case SPWPN_NORMAL:
-                    break;
-
                 default:
-                    mprf(MSGCH_ERROR, "Unknown weapon brand %d, please file"
-                         "a bug report", special);
                     break;
                 }
             }
