@@ -153,7 +153,7 @@ void shadow_lantern_effect()
         did_god_conduct(DID_NECROMANCY, 1);
     }
 }
- 
+
 void unrand_reacts()
 {
     item_def*  weapon     = you.weapon();
@@ -717,7 +717,7 @@ bool evoke_item(int slot)
 #if DEBUG // Used only by an assert
     const bool wielded = (you.equip[EQ_WEAPON] == slot);
 #endif /* DEBUG */
-    
+
     item_def& item = you.inv[slot];
     // Also handles messages.
     if (!item_is_evokable(item, false, false, true))

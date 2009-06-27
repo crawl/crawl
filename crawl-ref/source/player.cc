@@ -1047,7 +1047,7 @@ bool player_equip_unrand(int unrand_index)
             return (true);
         }
         break;
-  
+
     case EQ_NONE:
     case EQ_STAFF:
     case EQ_LEFT_RING:
