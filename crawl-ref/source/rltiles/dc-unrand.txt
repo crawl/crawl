@@ -47,7 +47,7 @@ urand_krishna UNRAND_KRISHNA
 urand_skullcrusher UNRAND_SKULLCRUSHER
 urand_guard UNRAND_GUARD
 urand_jihad UNRAND_JIHAD
-urand_fiery_devil UNRAND_HELLFIRE
+urand_hellfire UNRAND_HELLFIRE
 urand_doom_knight UNRAND_DOOM_KNIGHT
 urand_eos UNRAND_EOS
 urand_botono UNRAND_BOTONO

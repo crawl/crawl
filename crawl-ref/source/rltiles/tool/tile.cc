@@ -8,15 +8,15 @@ tile::tile() : m_width(0), m_height(0), m_pixels(NULL), m_shrink(true)
 {
 }
 
-tile::tile(const tile &img, const char *enumname, const char *parts_ctg) : 
+tile::tile(const tile &img, const char *enumnam, const char *parts) :
     m_width(0), m_height(0), m_pixels(NULL)
 {
     copy(img);
 
-    if (enumname)
-        m_enumname = enumname;
-    if (parts_ctg)
-        m_parts_ctg = parts_ctg;
+    if (enumnam)
+        m_enumname = enumnam;
+    if (parts)
+        m_parts_ctg = parts;
 }
 
 tile::~tile()
@@ -28,7 +28,7 @@ void tile::unload()
 {
     delete[] m_pixels;
     m_pixels = NULL;
-    m_width = m_height = 0;
+    m_width  = m_height = 0;
 }
 
 bool tile::valid() const
@@ -66,15 +66,15 @@ bool tile::shrink()
     return m_shrink;
 }
 
-void tile::set_shrink(bool shrink)
+void tile::set_shrink(bool new_shrink)
 {
-    m_shrink = shrink;
+    m_shrink = new_shrink;
 }
 
 void tile::resize(int new_width, int new_height)
 {
     delete[] m_pixels;
-    m_width = new_width;
+    m_width  = new_width;
     m_height = new_height;
 
     m_pixels = NULL;
@@ -92,7 +92,7 @@ void tile::add_rim(const tile_colour &rim)
     {
         for (unsigned int x = 0; x < m_width; x++)
         {
-            flags[x + y * m_width] = ((get_pixel(x, y).a > 0) && 
+            flags[x + y * m_width] = ((get_pixel(x, y).a > 0) &&
                 (get_pixel(x,y) != rim));
         }
     }
@@ -148,14 +148,14 @@ static int corpse_cut_height(int x, int width, int height)
 
 // Adapted from rltiles' cp_monst_32 and then ruthlessly rewritten for clarity.
 // rltiles can be found at http://rltiles.sourceforge.net
-void tile::corpsify(int corpse_width, int corpse_height, 
+void tile::corpsify(int corpse_width, int corpse_height,
     int cut_separate, int cut_height, const tile_colour &wound)
 {
     int wound_height = std::min(2, cut_height);
 
     // Make a temporary backup
     tile orig(*this);
-   
+
     resize(corpse_width, corpse_height);
     fill(tile_colour::transparent);
 
@@ -275,7 +275,7 @@ void tile::corpsify(int corpse_width, int corpse_height,
 void tile::copy(const tile &img)
 {
     unload();
-    
+
     m_width = img.m_width;
     m_height = img.m_height;
     m_filename = img.m_filename;
@@ -292,13 +292,13 @@ bool tile::compose(const tile &img)
     if (!valid())
     {
         fprintf(stderr, "Error: can't compose onto an unloaded image.\n");
-        return false;
+        return (false);
     }
 
     if (!img.valid())
     {
         fprintf(stderr, "Error: can't compose from an unloaded image.\n");
-        return false;
+        return (false);
     }
 
     if (m_width != img.m_width || m_height != img.m_height)
@@ -306,7 +306,7 @@ bool tile::compose(const tile &img)
         fprintf(stderr, "Error: can't compose with mismatched dimensions. "
             "(%d, %d) onto (%d, %d)\n", img.m_width, img.m_height, m_width,
             m_height);
-        return false;
+        return (false);
     }
 
     for (unsigned int i = 0; i < m_width * m_height; i += 1)
@@ -320,23 +320,19 @@ bool tile::compose(const tile &img)
         dest->a = (src->a * 255    + dest->a * (255 - src->a)) / 255;
     }
 
-    return true;
+    return (true);
 }
 
-bool tile::load(const std::string &filename)
+bool tile::load(const std::string &new_filename)
 {
-    m_filename = filename;
+    m_filename = new_filename;
 
     if (m_pixels)
-    {
         unload();
-    }
 
-    SDL_Surface *img = IMG_Load(filename.c_str());
+    SDL_Surface *img = IMG_Load(new_filename.c_str());
     if (!img)
-    {
-        return false;
-    }
+        return (false);
 
     m_width = img->w;
     m_height = img->h;
@@ -369,12 +365,12 @@ bool tile::load(const std::string &filename)
     {
         SDL_LockSurface(img);
 
-        int dest = 0; 
+        int dest = 0;
         for (int y = 0; y < img->h; y++)
         {
             for (int x = 0; x < img->w; x++)
             {
-                unsigned char *p = (unsigned char*)img->pixels 
+                unsigned char *p = (unsigned char*)img->pixels
                                    + y*img->pitch + x*bpp;
 
                 unsigned int pixel;
@@ -399,7 +395,7 @@ bool tile::load(const std::string &filename)
                     assert(!"Invalid bpp");
                     SDL_UnlockSurface(img);
                     SDL_FreeSurface(img);
-                    return false;
+                    return (false);
                 }
 
                 SDL_GetRGBA(pixel, img->format, &m_pixels[dest].r,
@@ -416,31 +412,25 @@ bool tile::load(const std::string &filename)
 
     replace_colour(tile_colour::background, tile_colour::transparent);
 
-    return true;
+    return (true);
 }
 
-void tile::fill(const tile_colour &fill)
+void tile::fill(const tile_colour &col)
 {
     for (int y = 0; y < m_height; y++)
-    {
         for (int x = 0; x < m_width; x++)
-        {
-            get_pixel(x, y) = fill;
-        }
-    }
+            get_pixel(x, y) = col;
 }
 
 void tile::replace_colour(tile_colour &find, tile_colour &replace)
 {
     for (int y = 0; y < m_height; y++)
-    {
         for (int x = 0; x < m_width; x++)
         {
             tile_colour &p = get_pixel(x, y);
             if (p == find)
                 p = replace;
         }
-    }
 }
 
 tile_colour &tile::get_pixel(unsigned int x, unsigned int y)
@@ -449,11 +439,11 @@ tile_colour &tile::get_pixel(unsigned int x, unsigned int y)
     return m_pixels[x + y * m_width];
 }
 
-void tile::get_bounding_box(int &x0, int &y0, int &width, int &height)
+void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
 {
     if (!valid())
     {
-        x0 = y0 = width = height = 0;
+        x0 = y0 = w = h = 0;
         return;
     }
 
@@ -464,9 +454,8 @@ void tile::get_bounding_box(int &x0, int &y0, int &width, int &height)
     {
         bool found = false;
         for (unsigned int y = y0; !found && y < y1; y++)
-        {
             found |= (get_pixel(x0, y).a > 0);
-        }
+
         if (found)
             break;
         x0++;
@@ -476,9 +465,8 @@ void tile::get_bounding_box(int &x0, int &y0, int &width, int &height)
     {
         bool found = false;
         for (unsigned int y = y0; !found && y < y1; y++)
-        {
             found |= (get_pixel(x1, y).a > 0);
-        }
+
         if (found)
             break;
         x1--;
@@ -488,9 +476,8 @@ void tile::get_bounding_box(int &x0, int &y0, int &width, int &height)
     {
         bool found = false;
         for (unsigned int x = x0; !found && x < x1; x++)
-        {
             found |= (get_pixel(x, y0).a > 0);
-        }
+
         if (found)
             break;
         y0++;
@@ -500,14 +487,13 @@ void tile::get_bounding_box(int &x0, int &y0, int &width, int &height)
     {
         bool found = false;
         for (unsigned int x = x0; !found && x < x1; x++)
-        {
             found |= (get_pixel(x, y1).a > 0);
-        }
+
         if (found)
             break;
         y1--;
     }
 
-    width = x1 - x0 + 1;
-    height = y1 - y0 + 1;
+    w = x1 - x0 + 1;
+    h = y1 - y0 + 1;
 }

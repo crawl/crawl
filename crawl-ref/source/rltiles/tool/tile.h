@@ -8,12 +8,11 @@ class tile
 {
 public:
     tile();
-    tile(const tile &img, const char *enumname = NULL,
-        const char *parts_ctg = NULL);
+    tile(const tile &img, const char *enumnam = NULL, const char *parts = NULL);
     virtual ~tile();
 
-    bool load(const std::string &filename);
-    bool load(const std::string &filename, const std::string &enumname);
+    bool load(const std::string &new_filename);
+    bool load(const std::string &new_filename, const std::string &new_enumname);
 
     void unload();
     bool valid() const;
@@ -22,14 +21,14 @@ public:
 
     void add_rim(const tile_colour &rim);
     void corpsify();
-    void corpsify(int corpse_width, int corpse_height, 
+    void corpsify(int corpse_width, int corpse_height,
         int cut_separate, int cut_height, const tile_colour &wound);
 
     void copy(const tile &img);
     bool compose(const tile &img);
 
     void replace_colour(tile_colour &find, tile_colour &replace);
-    void fill(const tile_colour &fill);
+    void fill(const tile_colour &col);
 
     const std::string &filename();
     const std::string &enumname();
@@ -37,9 +36,9 @@ public:
     int width();
     int height();
     bool shrink();
-    void set_shrink(bool shrink);
+    void set_shrink(bool new_shrink);
 
-    void get_bounding_box(int &x0, int &y0, int &width, int &height);
+    void get_bounding_box(int &x0, int &y0, int &w, int &h);
 
     tile_colour &get_pixel(unsigned int x, unsigned int y);
 protected:
