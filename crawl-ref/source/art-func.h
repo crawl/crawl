@@ -11,7 +11,7 @@
  * non-standard unrandarts use and put them into the unranddata structs
  * in art-data.h, so the function names must have the form of
  * _UNRAND_ENUM_func_name() in order to be recognized.
- */ 
+ */
 
 #ifdef ART_FUNC_H
 #error "art-func.h included twice!"
@@ -189,7 +189,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
 
 ////////////////////////////////////////////////////
 
-// XXX: Staff giving a boost to poison spells is hardocded in
+// XXX: Staff giving a boost to poison spells is hardcoded in
 // player_spec_poison()
 
 static void _olgreb_pluses(item_def *item)
@@ -408,7 +408,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
 ///////////////////////////////////////////////////
 
-// XXX: Always getting maximal vampiric drain is harcoded in 
+// XXX: Always getting maximal vampiric drain is harcoded in
 // melee_attack::apply_damage_brand()
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
