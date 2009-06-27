@@ -149,7 +149,8 @@
 #           See Tiles section above.
 # TILE_EQ:  The file containing the equipment tile for the player doll as
 #           defined in rltiles/dc-player.txt. See Tiles section above.
-# VALUE:    Modifies the value returned by item_value()
+# VALUE:    item_value() will return this number instead of doing automatic
+#           calculations to determine the value.
 
 ##################################################################
 
