@@ -3,11 +3,13 @@
 use strict;
 
 my $line_num      = 0;
+my @warnings      = ();
 my @errors        = ();
 my @all_artefacts = ();
 my %used_names    = ();
 my %used_appears  = ();
 my %used_enums    = ();
+my %found_funcs   = ();
 
 my %field_type = (
     AC       => "num",
@@ -18,6 +20,7 @@ my %field_type = (
     BLINK    => "bool",
     BRAND    => "enum",
     CANTELEP => "bool",
+    CHAOTIC  => "bool",
     COLD     => "num",
     COLOUR   => "enum",
     CURSED   => "num",
@@ -25,7 +28,9 @@ my %field_type = (
     DEX      => "num",
     ELEC     => "bool",
     EV       => "num",
+    EVIL     => "bool",
     FIRE     => "num",
+    HOLY     => "bool",
     INT      => "num",
     INV      => "bool",
     LEV      => "bool",
@@ -42,8 +47,10 @@ my %field_type = (
     POISON   => "bool",
     RND_TELE => "bool",
     SEEINV   => "bool",
+    SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
+    VALUE    => "num",
 
     DESC     => "str",
     DESC_END => "str",
@@ -51,6 +58,14 @@ my %field_type = (
     TILE     => "str",
     TILE_EQ  => "str",
     TILERIM  => "bool",
+
+    flags     => "flags",
+
+    equip_func        => "func",
+    unequip_func      => "func",
+    world_reacts_func => "func",
+    melee_effect_func => "func",
+    evoke_func        => "func",
 
     plus      => "num",
     plus2     => "num",
@@ -111,6 +126,10 @@ sub finish_art
     $artefact->{base_type} ||= "";
     $artefact->{sub_type}  ||= "";
 
+    # Handled later
+    $artefact->{flags} = "";
+
+    # Default ego.
     if (!exists($artefact->{BRAND}))
     {
         my $type = $artefact->{base_type} || "";
@@ -129,6 +148,35 @@ sub finish_art
         }
     }
 
+    # Fill in function pointers.
+    my $enum = $artefact->{_ENUM};
+    my $funcs;
+    if ($found_funcs{$enum})
+    {
+        $funcs = $found_funcs{$enum};
+        delete($found_funcs{$enum});
+    }
+    else
+    {
+        $funcs = {};
+    }
+
+    foreach my $func_name ("equip", "unequip", "world_reacts", "melee_effect",
+                           "evoke")
+    {
+        my $val;
+        if ($funcs->{$func_name})
+        {
+            $val = "_${enum}_$func_name";
+        }
+        else
+        {
+            $val = "NULL";
+        }
+        $artefact->{"${func_name}_func"} = $val;
+    }
+
+    # Default values.
     my $field;
     foreach $field (@field_list)
     {
@@ -158,6 +206,28 @@ sub finish_art
             error($artefact, "Field '$field' not defined");
         }
     }
+
+    my $flags = "";
+    my $flag;
+    foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC")
+    {
+        if ($artefact->{$flag})
+        {
+            $flags .= "UNRAND_FLAG_$flag | ";
+        }
+    }
+
+    if ($flags eq "")
+    {
+        $flags = "UNRAND_FLAG_NONE";
+    }
+    else
+    {
+        chop($flags);
+        chop($flags);
+        chop($flags);
+    }
+    $artefact->{flags} = $flags;
 
     delete($artefact->{_FINISHING});
     $artefact->{_FINISHED} = 1;
@@ -382,7 +452,8 @@ sub process_line
 
 my @art_order = (
     "NAME", "APPEAR", "\n",
-    "base_type", "sub_type", "plus", "plus2", "COLOUR",
+    "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
+    "flags",
 
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
@@ -393,7 +464,10 @@ my @art_order = (
 
     "DESC", "\n",
     "DESC_ID", "\n",
-    "DESC_END"
+    "DESC_END", "\n",
+
+    "equip_func", "unequip_func", "world_reacts_func", "melee_effect_func",
+    "evoke_func"
 );
 
 sub art_to_str
@@ -480,6 +554,10 @@ sub write_data
 
 #ifdef ART_DATA_H
 #error "art-data.h included twice!"
+#endif
+
+#ifndef ART_FUNC_H
+#error "art-func.h must be included before art-data.h"
 #endif
 
 #define ART_DATA_H
@@ -899,6 +977,93 @@ HEADER_END
     close(TILES);
 }
 
+my %valid_func = (
+    equip        => 1,
+    unequip      => 1,
+    world_reacts => 1,
+    melee_effect => 1,
+    evoke        => 1
+);
+
+sub read_funcs
+{
+    unless(open(INPUT, "<art-func.h"))
+    {
+        die "Couldn't open art-func.h for reading: $!\n";
+    }
+
+    while(<INPUT>)
+    {
+        if (/^static .* _([A-Z_]+)_(\S+)\s*\(/)
+        {
+            my $enum = $1;
+            my $func = $2;
+
+            if (!$valid_func{$func})
+            {
+                push(@warnings, "Unrecognized func '$func' for artefact " .
+                                "'$enum'");
+                next;
+            }
+
+            $found_funcs{$enum} ||= {};
+            my $func_list = $found_funcs{$enum};
+
+            $func_list->{$func} = 1;
+        }
+    }
+    close(INPUT);
+}
+
+sub read_data
+{
+    unless(open(INPUT, "<art-data.txt"))
+    {
+        die "Couldn't open art-data.txt for reading: $!\n";
+    }
+
+    my $prev_line = "";
+    my $curr_art  = {};
+
+    while (<INPUT>)
+    {
+        chomp;
+        $line_num++;
+
+        # Skip comment-only lines
+        next if (/^#/);
+
+        # Strip comments.
+        s/#.*//;
+
+        # Strip trailing whitspace; leading whitespace indicates the
+        # continuation of a string field.
+        s/\s*$//;
+
+        if ($_ =~ /^\s*$/)
+        {
+            if ($prev_line !~ /^\s*$/)
+            {
+                finish_art($curr_art);
+                push(@all_artefacts, $curr_art);
+                $curr_art = {};
+            }
+        }
+        else
+        {
+            process_line($curr_art, $_);
+        }
+        $prev_line = $_;
+    }
+    close(INPUT);
+
+    if (keys(%$curr_art) > 0)
+    {
+        finish_art($curr_art);
+        push(@all_artefacts, $curr_art);
+    }
+}
+
 ###############################################################3
 ###############################################################3
 ###############################################################3
@@ -907,56 +1072,37 @@ chdir("..")     if (-e "../art-data.txt");
 chdir("source") if (-e "source/art-data.txt");
 
 die "Couldn't find art-data.txt\n" unless (-e "art-data.txt");
+die "Couldn't find art-func.h\n"   unless (-e "art-func.h");
 die "Couldn't find artefact.h\n"   unless (-e "artefact.h");
 die "Can't read art-data.txt\n"    unless (-r "art-data.txt");
+die "Can't read art-func.h\n"      unless (-r "art-func.h");
 die "Can't read artefact.h\n"      unless (-r "artefact.h");
 die "Can't write to artefact.h\n"  unless (-w "artefact.h");
 die "Can't write to art-data.h\n"  if (-e "art-data.h" && !-w "art-data.h");
 
-unless(open(INPUT, "<art-data.txt"))
+read_funcs();
+read_data();
+
+if (keys(%found_funcs) > 0)
 {
-    die "Couldn't open art-data.txt for reading: $!\n";
+    my $key;
+    foreach $key (keys(%found_funcs))
+    {
+        push(@warnings, "Funcs for unknown artefact enum $key: " .
+                        join(", ", keys(%{$found_funcs{$key}})));
+    }
 }
 
-my $prev_line = "";
-my $curr_art  = {};
-
-while (<INPUT>)
+if (@warnings > 0)
 {
-    chomp;
-    $line_num++;
+    print STDERR "Warning(s):\n";
 
-    # Skip comment-only lines
-    next if (/^#/);
-
-    # Strip comments.
-    s/#.*//;
-
-    # Strip trailing whitspace; leading whitespace indicates the
-    # continuation of a string field.
-    s/\s*$//;
-
-    if ($_ =~ /^\s*$/)
+    my $warn;
+    foreach $warn (@warnings)
     {
-        if ($prev_line !~ /^\s*$/)
-        {
-            finish_art($curr_art);
-            push(@all_artefacts, $curr_art);
-            $curr_art = {};
-        }
+        print STDERR "$warn\n";
     }
-    else
-    {
-        process_line($curr_art, $_);
-    }
-    $prev_line = $_;
-}
-close(INPUT);
-
-if (keys(%$curr_art) > 0)
-{
-    finish_art($curr_art);
-    push(@all_artefacts, $curr_art);
+    print STDERR "\n";
 }
 
 if (@errors > 0)

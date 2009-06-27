@@ -12,6 +12,10 @@
 
 #include "externs.h"
 
+// Artefacts which make noise can use this key to use a different
+// speech database key than the default.
+#define ART_NOISE_KEY "art_noise_key"
+
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
 #define NO_UNRANDARTS 76
 
@@ -111,6 +115,15 @@ enum unrand_type
     UNRAND_LAST = UNRAND_DUMMY2
 };
 
+enum unrand_flag_type
+{
+    UNRAND_FLAG_NONE    = 0x00,
+    UNRAND_FLAG_SPECIAL = 0x01,
+    UNRAND_FLAG_HOLY    = 0x02,
+    UNRAND_FLAG_EVIL    = 0x04,
+    UNRAND_FLAG_CHAOTIC = 0x08
+};
+
 // The following unrandart bits were taken from $pellbinder's mon-util
 // code (see mon-util.h & mon-util.cc) and modified (LRH).
 struct unrandart_entry
@@ -118,11 +131,15 @@ struct unrandart_entry
     const char *name;        // true name of unrandart (max 31 chars)
     const char *unid_name;   // un-id'd name of unrandart (max 31 chars)
 
-    object_class_type base_type;        // class of ura
-    int sub_type;        // type of ura
-    int plus;        // plus of ura
-    int plus2;       // plus2 of ura
-    int colour;       // colour of ura
+    object_class_type base_type;
+    unsigned char     sub_type;
+    short             plus;
+    short             plus2;
+    unsigned char     colour;       // colour of ura
+
+    short         value;
+    unsigned char flags;
+
     short prpty[ART_PROPERTIES];
 
     // special description added to 'v' command output (max 31 chars)
@@ -131,6 +148,14 @@ struct unrandart_entry
     const char *desc_id;
     // special description added to 'v' command output (max 31 chars)
     const char *desc_end;
+
+    void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
+    void (*unequip_func)(const item_def* item, bool* show_msgs);
+    void (*world_reacts_func)(item_def* item);
+    void (*melee_effects_func)(item_def* item, actor* attacker,
+                               actor* defender, bool mondied);
+    bool (*evoke_func)(item_def *item, int* pract, bool* did_work,
+                       bool* unevokable);
 };
 
 bool is_known_artefact( const item_def &item );

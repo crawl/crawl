@@ -29,6 +29,7 @@ REVISION("$Rev$");
 #include "religion.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "view.h" // Elemental colours for unrandarts
 
 #define KNOWN_PROPS_KEY     "artefact_known_props"
 #define ARTEFACT_PROPS_KEY  "artefact_props"
@@ -290,11 +291,12 @@ static std::string _replace_name_parts(const std::string name_in,
 
 // Remember: disallow unrandart creation in Abyss/Pan.
 
+// Functions defined in art-func.h are referenced in art-data.h
+#include "art-func.h"
+
 static unrandart_entry unranddata[] = {
 #include "art-data.h"
 };
-
-static FixedVector < bool, NO_UNRANDARTS > unrandart_exist;
 
 static unrandart_entry *_seekunrandart( const item_def &item );
 
@@ -326,7 +328,7 @@ bool is_unrandom_artefact( const item_def &item )
 bool is_special_unrandom_artefact( const item_def &item )
 {
     return (item.flags & ISFLAG_UNRANDART
-            && get_unrand_specialness(item.special) == UNRANDSPEC_SPECIAL);
+            && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL));
 }
 
 unique_item_status_type get_unique_item_status(const item_def& item)
@@ -1609,16 +1611,20 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype,
 
 unrand_special_type get_unrand_specialness(int unrand_index)
 {
-    if (unrand_index >= UNRAND_SINGING_SWORD
-        && unrand_index <= UNRAND_ASMODEUS)
+    if (unrand_index < UNRAND_START || unrand_index > UNRAND_LAST)
     {
-        return (UNRANDSPEC_SPECIAL);
+        return (UNRANDSPEC_NORMAL);
     }
+
+    if (unranddata[unrand_index].flags & UNRAND_FLAG_SPECIAL)
+        return (UNRANDSPEC_SPECIAL);
+
     return (UNRANDSPEC_NORMAL);
 }
 
 unrand_special_type get_unrand_specialness(const item_def &item)
 {
+    ASSERT(is_unrandom_artefact(item));
     return get_unrand_specialness(item.special);
 }
 
@@ -1970,6 +1976,12 @@ bool make_item_unrandart( item_def &item, int unrand_index )
 
     set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
+    if (unrand_index == UNRAND_VARIABILITY)
+    {
+        item.plus  = random_range(-4, 16);
+        item.plus2 = random_range(-4, 16);
+    }
+
     return (true);
 }
 
@@ -1988,7 +2000,7 @@ const char *unrandart_descrip( int which_descrip, const item_def &item )
 void artefact_set_properties( item_def              &item,
                               artefact_properties_t &proprt )
 {
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
     ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
 
     CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
@@ -2004,7 +2016,7 @@ void artefact_set_property( item_def          &item,
                             artefact_prop_type prop,
                             int                val )
 {
-    ASSERT( is_random_artefact( item ) );
+    ASSERT( is_artefact( item ) );
     ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
 
     CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();

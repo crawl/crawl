@@ -105,11 +105,13 @@ public:
     item_def  *weapon;
     int       damage_brand;  // Can be special even if unarmed (transforms)
     int       wpn_skill, hands;
-    int       spwld;         // Special wield effects?
     bool      hand_half_bonus;
 
-    // If weapon is a randart, its properties.
+    // If weapon is an artefact, its properties.
     artefact_properties_t art_props;
+
+    // If a weapon is an unrandart, its unrandart entry.
+    unrandart_entry *unrand_entry;
 
     // Attack messages
     std::string attack_verb, verb_degree;
@@ -157,7 +159,7 @@ private:
     bool is_water_attack(const actor *, const actor *) const;
     void check_hand_half_bonus_eligible();
     void check_autoberserk();
-    void check_special_wield_effects();
+    bool check_unrand_effects(bool mondied = false);
     void emit_nodmg_hit_message();
     void identify_mimic(actor *mon);
 

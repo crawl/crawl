@@ -34,9 +34,8 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h"
 #include "monplace.h"
-#include "monstuff.h"
+#include "misc.h"
 #include "overmap.h"
 #include "player.h"
 #include "religion.h"
@@ -44,198 +43,136 @@ REVISION("$Rev$");
 #include "skills2.h"
 #include "spells1.h"
 #include "spells2.h"
-#include "spells3.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
 #include "xom.h"
 
-void special_wielded()
+// TODO: Let artefacts besides weapons generate noise.
+void noisy_equipment()
 {
-    item_def&  weapon     = *you.weapon();
-    const int  old_plus   = weapon.plus;
-    const int  old_plus2  = weapon.plus2;
-    const char old_colour = weapon.colour;
-
-    switch (you.unrand_reacts)
-    {
-    case SPWLD_SING:
-    case SPWLD_NOISE:
-    {
-        if (!silenced(you.pos()) && one_chance_in(20))
-        {
-            std::string msg;
-
-            if (you.unrand_reacts == SPWLD_SING)
-            {
-                msg = getSpeakString("Singing Sword");
-                if (!msg.empty())
-                {
-                    // "Your Singing Sword" sounds disrespectful
-                    // (as if there could be more than one!)
-                    msg = replace_all(msg, "@Your_weapon@", "@The_weapon@");
-                    msg = replace_all(msg, "@your_weapon@", "@the_weapon@");
-                }
-            }
-            else // SPWLD_NOISE
-            {
-                msg = getSpeakString("noisy weapon");
-                if (!msg.empty())
-                {
-                    msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
-                    msg = replace_all(msg, "@your_weapon@", "your @weapon@");
-                }
-            }
-
-            // Set appropriate channel (will usually be TALK).
-            msg_channel_type channel = MSGCH_TALK;
-
-            // Disallow anything with VISUAL in it.
-            if (!msg.empty() && msg.find("VISUAL") != std::string::npos)
-                msg = "";
-
-            if (!msg.empty())
-            {
-                std::string param = "";
-                std::string::size_type pos = msg.find(":");
-
-                if (pos != std::string::npos)
-                    param = msg.substr(0, pos);
-
-                if (!param.empty())
-                {
-                    bool match = true;
-
-                    if (param == "DANGER")
-                        channel = MSGCH_DANGER;
-                    else if (param == "WARN")
-                        channel = MSGCH_WARN;
-                    else if (param == "SOUND")
-                        channel = MSGCH_SOUND;
-                    else if (param == "PLAIN")
-                        channel = MSGCH_PLAIN;
-                    else if (param == "SPELL" || param == "ENCHANT")
-                        msg = ""; // disallow these as well, channel stays TALK
-                    else if (param != "TALK")
-                        match = false;
-
-                    if (match && !msg.empty())
-                        msg = msg.substr(pos + 1);
-                }
-            }
-
-            if (msg.empty()) // give default noises
-            {
-                if (you.unrand_reacts == SPWLD_SING)
-                    msg = "@The_weapon@ sings.";
-                else
-                {
-                    channel = MSGCH_SOUND;
-                    msg = "You hear a strange noise.";
-                }
-            }
-
-            // replace weapon references
-            msg = replace_all(msg, "@The_weapon@", "The @weapon@");
-            msg = replace_all(msg, "@the_weapon@", "the @weapon@");
-            msg = replace_all(msg, "@weapon@", weapon.name(DESC_BASENAME));
-            // replace references to player name and god
-            msg = replace_all(msg, "@player_name@", you.your_name);
-            msg = replace_all(msg, "@player_god@",
-                              you.religion == GOD_NO_GOD ? "atheism"
-                                : god_name(you.religion, coinflip()));
-
-            mpr(msg.c_str(), channel);
-
-            noisy(25, you.pos());
-        }
-        break;
-    }
-
-    case SPWLD_CURSE:
-        if (one_chance_in(30))
-            curse_an_item(false);
-        break;
-
-    case SPWLD_VARIABLE:
-        do_uncurse_item(weapon);
-
-        if (x_chance_in_y(2, 5))
-            weapon.plus  += (coinflip() ? +1 : -1);
-
-        if (x_chance_in_y(2, 5))
-            weapon.plus2 += (coinflip() ? +1 : -1);
-
-        if (weapon.plus < -4)
-            weapon.plus = -4;
-        else if (weapon.plus > 16)
-            weapon.plus = 16;
-
-        if (weapon.plus2 < -4)
-            weapon.plus2 = -4;
-        else if (weapon.plus2 > 16)
-            weapon.plus2 = 16;
-
-        weapon.colour = random_colour();
-        break;
-
-    case SPWLD_TORMENT:
-        if (one_chance_in(200))
-        {
-            torment(TORMENT_SPWLD, you.pos());
-            did_god_conduct(DID_UNHOLY, 1);
-        }
-        break;
-
-    case SPWLD_ZONGULDROK:
-        if (one_chance_in(5))
-        {
-            animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU);
-            did_god_conduct(DID_NECROMANCY, 1);
-        }
-        break;
-
-    case SPWLD_POWER:
-        weapon.plus  = stepdown_value( -4 + (you.hp / 5), 4, 4, 4, 20 );
-        weapon.plus2 = weapon.plus;
-        break;
-
-    case SPWLD_OLGREB:
-        // Giving Olgreb's staff a little lift since staves of poison have
-        // been made better. -- bwr
-        weapon.plus  = you.skills[SK_POISON_MAGIC] / 3;
-        weapon.plus2 = weapon.plus;
-        break;
-
-    case SPWLD_WUCAD_MU:
-        weapon.plus  = std::min(you.intel - 3, 22);
-        weapon.plus2 = std::min(you.intel / 2, 13);
-        break;
-
-    case SPWLD_SHADOW:
-        if (x_chance_in_y(player_spec_death() + 1, 8))
-        {
-            create_monster(
-                mgen_data(MONS_SHADOW, BEH_FRIENDLY, 2, 0, you.pos(), MHITYOU));
-            did_god_conduct(DID_NECROMANCY, 1);
-        }
-        break;
-
-    //case SPWLD_PRUNE:
-    default:
+    if (silenced(you.pos()) || !one_chance_in(20))
         return;
+
+    std::string msg;
+
+    const item_def* weapon = you.weapon();
+
+    if (weapon && weapon->props.exists(ART_NOISE_KEY))
+    {
+        const std::string key = weapon->props[ART_NOISE_KEY];
+        msg = getSpeakString(key);
+        if (!msg.empty())
+        {
+            // "Your Singing Sword" sounds disrespectful
+            // (as if there could be more than one!)
+            msg = replace_all(msg, "@Your_weapon@", "@The_weapon@");
+            msg = replace_all(msg, "@your_weapon@", "@the_weapon@");
+        }
+    }
+    else
+    {
+        msg = getSpeakString("noisy weapon");
+        if (!msg.empty())
+        {
+            msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
+            msg = replace_all(msg, "@your_weapon@", "your @weapon@");
+        }
     }
 
-    if (old_plus != weapon.plus
-        || old_plus2 != weapon.plus2
-        || old_colour != weapon.colour)
+    // Set appropriate channel (will usually be TALK).
+    msg_channel_type channel = MSGCH_TALK;
+
+    // Disallow anything with VISUAL in it.
+    if (!msg.empty() && msg.find("VISUAL") != std::string::npos)
+        msg = "";
+
+    if (!msg.empty())
     {
-        you.wield_change = true;
+        std::string param = "";
+        std::string::size_type pos = msg.find(":");
+
+        if (pos != std::string::npos)
+            param = msg.substr(0, pos);
+
+        if (!param.empty())
+        {
+            bool match = true;
+
+            if (param == "DANGER")
+                channel = MSGCH_DANGER;
+            else if (param == "WARN")
+                channel = MSGCH_WARN;
+            else if (param == "SOUND")
+                channel = MSGCH_SOUND;
+            else if (param == "PLAIN")
+                channel = MSGCH_PLAIN;
+            else if (param == "SPELL" || param == "ENCHANT")
+                msg = ""; // disallow these as well, channel stays TALK
+            else if (param != "TALK")
+                match = false;
+
+            if (match && !msg.empty())
+                msg = msg.substr(pos + 1);
+        }
     }
+
+    if (msg.empty()) // give default noises
+    {
+        channel = MSGCH_SOUND;
+        msg = "You hear a strange noise.";
+    }
+
+    // replace weapon references
+    if (weapon)
+    {
+        msg = replace_all(msg, "@The_weapon@", "The @weapon@");
+        msg = replace_all(msg, "@the_weapon@", "the @weapon@");
+        msg = replace_all(msg, "@weapon@", weapon->name(DESC_BASENAME));
+    }
+    // replace references to player name and god
+    msg = replace_all(msg, "@player_name@", you.your_name);
+    msg = replace_all(msg, "@player_god@",
+                      you.religion == GOD_NO_GOD ? "atheism"
+                      : god_name(you.religion, coinflip()));
+
+    mpr(msg.c_str(), channel);
+
+    noisy(25, you.pos());
+}
+
+void shadow_lantern_effect()
+{
+    if (x_chance_in_y(player_spec_death() + 1, 8))
+    {
+        create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, 2, 0, you.pos(),
+                                 MHITYOU));
+        did_god_conduct(DID_NECROMANCY, 1);
+    }
+}
+ 
+void unrand_reacts()
+{
+    item_def*  weapon     = you.weapon();
+    const int  old_plus   = weapon ? weapon->plus   : 0;
+    const int  old_plus2  = weapon ? weapon->plus2  : 0;
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        if (you.unrand_reacts & (1 << i))
+        {
+            item_def&        item  = you.inv[you.equip[i]];
+            unrandart_entry* entry = get_unrand_entry(item.special);
+
+            entry->world_reacts_func(&item);
+        }
+    }
+
+    if (weapon && (old_plus != weapon->plus || old_plus2 != weapon->plus2))
+        you.wield_change = true;
 }
 
 static bool _reaching_weapon_attack(const item_def& wpn)
@@ -387,45 +324,6 @@ static bool evoke_horn_of_geryon()
             mgen_data::hostile_at(MONS_BEAST,
                 you.pos(), 4, 0, true));
     }
-    return (rc);
-}
-
-static bool evoke_sceptre_of_asmodeus()
-{
-    bool rc = true;
-    if (one_chance_in(21))
-        rc = false;
-    else if (one_chance_in(20))
-    {
-        // Summon devils, maybe a Fiend.
-        const monster_type mon = (one_chance_in(4) ? MONS_FIEND :
-                                     summon_any_demon(DEMON_COMMON));
-        const bool good_summon = create_monster(
-                                     mgen_data::hostile_at(mon,
-                                         you.pos(), 6, 0, true)) != -1;
-
-        if (good_summon)
-        {
-            if (mon == MONS_FIEND)
-                mpr("\"Your arrogance condemns you, mortal!\"");
-            else
-                mpr("The Sceptre summons one of its servants.");
-        }
-        else
-            mpr("The air shimmers briefly.");
-    }
-    else
-    {
-        // Cast a destructive spell.
-        const spell_type spl = static_cast<spell_type>(
-            random_choose_weighted(114, SPELL_BOLT_OF_FIRE,
-                                   57,  SPELL_LIGHTNING_BOLT,
-                                   57,  SPELL_BOLT_OF_DRAINING,
-                                   12,  SPELL_HELLFIRE,
-                                   0));
-        your_spells(spl, you.skills[SK_EVOCATIONS] * 8, false);
-    }
-
     return (rc);
 }
 
@@ -825,12 +723,20 @@ bool evoke_item(int slot)
     if (!item_is_evokable(item, false, false, true))
         return (false);
 
-    int power = 0;
     int pract = 0; // By how much Evocations is practised.
     bool did_work   = false;  // Used for default "nothing happens" message.
     bool unevokable = false;
 
-    switch (item.base_type)
+    const unrandart_entry *entry = is_unrandom_artefact(item)
+        ? get_unrand_entry(item.special) : NULL;
+
+    if (entry && entry->evoke_func)
+    {
+        ASSERT(item_is_equipped(item));
+        if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
+            return (did_work);
+    }
+    else switch (item.base_type)
     {
     case OBJ_WANDS:
         zap_wand(slot);
@@ -843,91 +749,11 @@ bool evoke_item(int slot)
         {
             if (_reaching_weapon_attack(item))
             {
-                pract = 0;
+                pract    = 0;
                 did_work = true;
             }
             else
                 return (false);
-        }
-        else if (is_unrandom_artefact(item))
-        {
-            switch (item.special)
-            {
-            case UNRAND_DISPATER:
-                if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true)
-                    || !enough_mp(5, true))
-                {
-                    break;
-                }
-
-                mpr("You feel the staff feeding on your energy!");
-
-                dec_hp( 5 + random2avg(19, 2), false, "Staff of Dispater" );
-                dec_mp( 2 + random2avg(5, 2) );
-                make_hungry(100, false, true);
-
-                power = you.skills[SK_EVOCATIONS] * 8;
-                your_spells( SPELL_HELLFIRE, power, false );
-                pract = (coinflip() ? 2 : 1);
-                did_work = true;
-                break;
-
-            case UNRAND_ASMODEUS:
-                if (evoke_sceptre_of_asmodeus())
-                {
-                    make_hungry(200, false, true);
-                    did_work = true;
-                    pract = 1;
-                }
-                break;
-
-            case UNRAND_OLGREB:
-                if (!enough_mp( 4, true )
-                    || you.skills[SK_EVOCATIONS] < random2(6))
-                {
-                    break;
-                }
-
-                dec_mp(4);
-                make_hungry(50, false, true);
-                pract = 1;
-                did_work = true;
-
-                power = 10 + you.skills[SK_EVOCATIONS] * 8;
-
-                your_spells( SPELL_OLGREBS_TOXIC_RADIANCE, power, false );
-
-                if (x_chance_in_y(you.skills[SK_EVOCATIONS] + 1, 10))
-                    your_spells( SPELL_VENOM_BOLT, power, false );
-                break;
-
-            case UNRAND_WUCAD_MU:
-                if (you.magic_points == you.max_magic_points
-                    || you.skills[SK_EVOCATIONS] < random2(25))
-                {
-                    break;
-                }
-
-                mpr("Magical energy flows into your mind!");
-
-                inc_mp( 3 + random2(5) + you.skills[SK_EVOCATIONS] / 3, false );
-                make_hungry(50, false, true);
-                pract = 1;
-                did_work = true;
-
-                if (one_chance_in(3))
-                {
-                    // NH_NEVER prevents "nothing happens" messages.
-                    MiscastEffect( &you, NON_MONSTER, SPTYP_DIVINATION,
-                                   random2(9), random2(70),
-                                   "the Staff of Wucad Mu", NH_NEVER );
-                }
-                break;
-
-            default:
-                unevokable = true;
-                break;
-            }
         }
         else
             unevokable = true;

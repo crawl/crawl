@@ -1,7 +1,9 @@
 # This file contains the definitions of undrandarts (and what used to be
 # fixed artefacts).  util/art-data.pl translates this file into
 # art-data.h, and also updates the enumeration and NO_UNRANDARTS in
-# unrand.h
+# artefact.h.  C/C++ functions which give unrandarts non-standard
+# behaviour are in art-func.h; util/art-data.pl scans art-func.h and
+# puts the function names found into art-data.h
 #
 # Each artefact definition is separated by one or more blank lines.
 #
@@ -70,8 +72,11 @@
 # * berserk:  Lets wearer evoke berserking ability.
 # * blink:    Lets wearer evoke the blink ability.
 # * cantelep: Lets wearer evoke the teleport ability.
+# * chaotic:  Is treated as a chaotic item.
 # * cursed:   Item is generated cursed.
 # * elec:     Grants electrical resistance.
+# * evil:     Is treated as an evil item.
+# * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * lev:      Lets wearer evoke levitation ability.
 # * life:     Grants negative energy resistance.
@@ -82,6 +87,10 @@
 # * poison:   Grants poison resistance.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
+# * special:  Artefact is "special": can't be picked up by monsters,
+#             can't be affected by Tukima's Dance, generated less
+#             frequently than normal randarts, can be generated in the
+#             Abyss if its been lost elsewhere.
 # * tilerim:  Adds a black outline to the tile, see above section.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
@@ -113,7 +122,9 @@
 #           increasing with the value of ANGRY.
 # APPEAR:   Unidentified appearance of artifact.
 # COLD:     Cold resistance/vulnerability.
-# COLOUR:   The colour of the artifact, as listed in defines.h.
+# COLOUR:   The colour of the artifact, either as listed in defines.h
+#           (e.g., LIGHTRED) or as listed under element_type in view.h
+#           (e.g., ETC_FIRE)
 # CURSED:   The artefact has a one-in-num chance of becoming cursed each
 #           time it's equipped.
 # DAM:      Damage modifier (for non-weapon artefacts).
@@ -138,6 +149,7 @@
 #           See Tiles section above.
 # TILE_EQ:  The file containing the equipment tile for the player doll as
 #           defined in rltiles/dc-player.txt. See Tiles section above.
+# VALUE:    Modifies the value returned by item_value()
 
 ##################################################################
 
@@ -158,6 +170,8 @@ PLUS:    +7/+7
 COLOUR:  YELLOW
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
+VALUE:   1200
+BOOL:    noises, special
 DESC_ID: This blessed weapon loves nothing more than to sing to its owner,
          whether they want it to or not.
 
@@ -168,6 +182,8 @@ PLUS:    +3/+11
 COLOUR:  RED
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
+VALUE:   1000
+BOOL:    special
 DESC_ID: This was the favourite weapon of the old god Trog, before it was
          lost one day. It induces a bloodthirsty berserker rage in anyone
          who uses it to strike another.
@@ -176,9 +192,11 @@ NAME:    Mace of Variability
 APPEAR:  shimmering mace
 OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    0/0   # Set on generation
-COLOUR:  BLACK # Set on generation
+COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
+VALUE:   700
+BOOL:    special
 DESC_ID: It is rather unreliable.
 
 NAME:    Glaive of Prune
@@ -188,6 +206,8 @@ PLUS:    0/+12
 COLOUR:  MAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
+VALUE:   1000
+BOOL:    special
 DESC_ID: It is the creation of a mad god, and carries a curse which
          transforms anyone possessing it into a prune. Fortunately, the
          curse works very slowly, and one can use it briefly with no
@@ -200,7 +220,8 @@ PLUS:    0/0 # Set on wield
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
-BOOL:    tilerim
+VALUE:   1000
+BOOL:    tilerim, special
 DESC_ID: It rewards the powerful with power and the meek with weakness.
 
 NAME:    Staff of Olgreb
@@ -210,8 +231,9 @@ PLUS:    0/0 # Set on wield
 COLOUR:  GREEN
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
+VALUE:   1000
 BRAND:   SPWPN_VENOM
-BOOL:    poison
+BOOL:    poison, special
 DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
          before he met his fate somewhere within these dungeons. It
          increases the ability of its wielder to use venomous magic, and
@@ -224,6 +246,8 @@ PLUS:    0/0 # Set on wield
 COLOUR:  BROWN
 TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu
+VALUE:   1000
+BOOL:    special
 DESC_ID: Its power varies in proportion to its wielder's intelligence.
          Using it can be a bit risky.
 
@@ -235,6 +259,8 @@ COLOUR:  WHITE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRICISM
+VALUE:   1000
+BOOL:    special
 DESC_ID: It is lethally vampiric.
 
 NAME:    Scythe of Curses
@@ -244,7 +270,9 @@ PLUS:    +13/+13
 COLOUR:  DARKGREY
 TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
-BOOL:    cursed
+VALUE:   800
+CURSED:  3
+BOOL:    special, evil
 DESC_ID: This weapon carries a terrible and highly irritating curse.
 
 NAME:    Sceptre of Torment
@@ -254,7 +282,8 @@ PLUS:    +7/+6
 COLOUR:  YELLOW
 TILE:    spwpn_sceptre_of_torment
 TILE_EQ: mace_ruby
-BOOL:    tilerim
+VALUE:   1200
+BOOL:    tilerim, special, evil
 DESC_ID: This truly accursed weapon is an instrument of Hell.
 
 NAME:    Sword of Zonguldrok
@@ -264,7 +293,8 @@ PLUS:    +9/+9
 COLOUR:  LIGHTGREY
 TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
-BOOL:    tilerim
+VALUE:   1250
+BOOL:    tilerim, special, evil
 DESC_ID: This dreadful weapon is used at the user's peril.
 
 NAME:    Sword of Cerebov
@@ -274,8 +304,9 @@ PLUS:    +6/+6
 COLOUR:  YELLOW
 TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
+VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    cursed, tilerim
+BOOL:    cursed, tilerim, special, evil
 DESC:    Eerie flames cover its twisted blade.
 
 NAME:    Staff of Dispater
@@ -285,7 +316,8 @@ PLUS:    +4/+4
 COLOUR:  YELLOW
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
-BOOL:    tilerim
+VALUE:   1200
+BOOL:    tilerim, special, evil
 DESC_ID: This legendary item can unleash the fury of Hell.
 
 NAME:    Sceptre of Asmodeus
@@ -295,7 +327,8 @@ PLUS:    +7/+7
 COLOUR:  RED
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
-BOOL:    tilerim
+VALUE:   1500
+BOOL:    tilerim, special, evil
 DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
 
 ##################### End of old fixed arts.

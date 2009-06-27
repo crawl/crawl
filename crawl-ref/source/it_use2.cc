@@ -407,51 +407,24 @@ bool unwield_item(bool showMsgs)
         return (false);
 
     you.equip[EQ_WEAPON] = -1;
-    you.unrand_reacts    = SPWLD_NONE;
     you.wield_change     = true;
     you.m_quiver->on_weapon_changed();
+
+    // Call this first, so that the unrandart func can set showMsgs to
+    // false if it does its own message handling.
+    if (is_artefact( item ))
+        unuse_artefact(item, &showMsgs);
 
     if (item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_LANTERN_OF_SHADOWS )
     {
         you.current_vision += 2;
         setLOSRadius(you.current_vision);
+        you.attribute[ATTR_SHADOWS] = 0;
     }
     else if (item.base_type == OBJ_WEAPONS)
     {
-        if (is_unrandom_artefact( item ))
-        {
-            switch (item.special)
-            {
-            case UNRAND_SINGING_SWORD:
-                if (showMsgs)
-                    mpr("The Singing Sword sighs.", MSGCH_TALK);
-                break;
-            case UNRAND_TROG:
-                if (showMsgs)
-                    mpr("You feel less violent.");
-                break;
-            case UNRAND_OLGREB:
-                item.plus  = 0;
-                item.plus2 = 0;
-                break;
-            case UNRAND_WUCAD_MU:
-                item.plus  = 0;
-                item.plus2 = 0;
-                MiscastEffect( &you, WIELD_MISCAST, SPTYP_DIVINATION, 9, 90,
-                               "the Staff of Wucad Mu" );
-                break;
-            default:
-                break;
-            }
-
-            return (true);
-        }
-
         const int brand = get_weapon_brand( item );
-
-        if (is_artefact( item ))
-            unuse_artefact(item);
 
         if (brand != SPWPN_NORMAL)
         {
@@ -622,7 +595,7 @@ void unwear_armour(int slot)
         unuse_artefact(item);
 }
 
-void unuse_artefact(const item_def &item)
+void unuse_artefact(const item_def &item, bool *show_msgs)
 {
     ASSERT( is_artefact( item ) );
 
@@ -669,5 +642,19 @@ void unuse_artefact(const item_def &item)
                  true);
 
     if (proprt[ARTP_NOISES] != 0)
-        you.unrand_reacts = SPWLD_NONE;
+        you.attribute[ATTR_NOISES]  = 0;
+
+    if (is_unrandom_artefact( item ))
+    {
+        const unrandart_entry *entry = get_unrand_entry(item.special);
+
+        if (entry->unequip_func)
+            entry->unequip_func(&item, show_msgs);
+
+        if (entry->world_reacts_func)
+        {
+            equipment_type eq = get_item_slot(item.base_type, item.sub_type);
+            you.unrand_reacts &= ~(1 << eq);
+        }
+    }
 }

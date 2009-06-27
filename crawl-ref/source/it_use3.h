@@ -36,7 +36,8 @@ bool evoke_item(int slot = -1);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void special_wielded();
-
+void noisy_equipment();
+void shadow_lantern_effect();
+void unrand_reacts();
 
 #endif

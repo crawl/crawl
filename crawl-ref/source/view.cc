@@ -1432,7 +1432,7 @@ bool check_awaken(monsters* monster)
     if (player_light_armour(true)
         && you.can_see(monster) // to avoid leaking information
         && you.burden_state == BS_UNENCUMBERED
-        && you.unrand_reacts != SPWLD_SHADOW
+        && !you.attribute[ATTR_SHADOWS]
         && !mons_wont_attack(monster)
         && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
             // If invisible, training happens much more rarely.
@@ -4966,7 +4966,7 @@ std::string screenshot( bool fullscreen )
 
 static int _viewmap_flash_colour()
 {
-    if (you.unrand_reacts == SPWLD_SHADOW)
+    if (you.attribute[ATTR_SHADOWS])
         return (DARKGREY);
     else if (you.duration[DUR_BERSERKER])
         return (RED);

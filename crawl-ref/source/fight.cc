@@ -347,9 +347,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
       to_hit(0), base_damage(0), potential_damage(0), damage_done(0),
       special_damage(0), aux_damage(0), stab_attempt(false), stab_bonus(0),
       weapon(NULL), damage_brand(SPWPN_NORMAL),
-      wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
-      spwld(SPWLD_NONE), hand_half_bonus(false),
-      art_props(0), attack_verb("bug"), verb_degree(),
+      wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE), hand_half_bonus(false),
+      art_props(0), unrand_entry(NULL), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), unarmed_attack(),
       shield(NULL), defender_shield(NULL),
       heavy_armour_penalty(0), can_do_unarmed(false),
@@ -378,14 +377,13 @@ void melee_attack::init_attack()
         && is_artefact( *weapon ))
     {
         artefact_wpn_properties( *weapon, art_props );
+        if (is_unrandom_artefact( *weapon ))
+            unrand_entry = get_unrand_entry(weapon->special);
     }
 
     wpn_skill = weapon ? weapon_skill( *weapon ) : SK_UNARMED_COMBAT;
     if (weapon)
-    {
         hands = hands_reqd( *weapon, attacker->body_size() );
-        spwld = item_special_wield_effect( *weapon );
-    }
 
     shield = attacker->shield();
     if (defender)
@@ -536,25 +534,15 @@ void melee_attack::check_autoberserk()
     }
 }
 
-void melee_attack::check_special_wield_effects()
+bool melee_attack::check_unrand_effects(bool mondied)
 {
-    switch (spwld)
+    if (unrand_entry && unrand_entry->melee_effects_func)
     {
-    case SPWLD_TROG:
-        if (coinflip())
-            attacker->go_berserk(false);
-        break;
-
-    case SPWLD_WUCAD_MU:
-        if (one_chance_in(9))
-        {
-            MiscastEffect(attacker, MELEE_MISCAST, SPTYP_DIVINATION,
-                          random2(9), random2(70), "the Staff of Wucad Mu");
-        }
-        break;
-    default:
-        break;
+        unrand_entry->melee_effects_func(weapon, attacker, defender, mondied);
+        return (!defender->alive());
     }
+
+    return (false);
 }
 
 void melee_attack::identify_mimic(actor *act)
@@ -596,8 +584,6 @@ bool melee_attack::attack()
 
     // The attacker loses nutrition.
     attacker->make_hungry(3, true);
-
-    check_special_wield_effects();
 
     // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
@@ -1864,38 +1850,12 @@ void melee_attack::player_exercise_combat_skills()
 
 void melee_attack::player_check_weapon_effects()
 {
-    if (spwld == SPWLD_TORMENT && coinflip())
+    if (weapon && weapon->base_type == OBJ_WEAPONS)
     {
-        torment(TORMENT_SPWLD, you.pos());
-        did_god_conduct(DID_UNHOLY, 5);
-    }
-
-    if (spwld == SPWLD_ZONGULDROK || spwld == SPWLD_CURSE)
-        did_god_conduct(DID_NECROMANCY, 3);
-
-    if (weapon)
-    {
-        if (weapon->base_type == OBJ_WEAPONS)
-        {
-            if (is_holy_item(*weapon))
-                did_god_conduct(DID_HOLY, 1);
-            else if (is_demonic(*weapon))
-                did_god_conduct(DID_UNHOLY, 1);
-        }
-
-        if (is_unrandom_artefact(*weapon))
-        {
-            switch (weapon->special)
-            {
-            case UNRAND_ASMODEUS:
-            case UNRAND_DISPATER:
-            case UNRAND_CEREBOV:
-                did_god_conduct(DID_UNHOLY, 3);
-                break;
-            default:
-                break;
-            }
-        }
+        if (is_holy_item(*weapon))
+            did_god_conduct(DID_HOLY, 1);
+        else if (is_demonic(*weapon))
+            did_god_conduct(DID_UNHOLY, 1);
     }
 }
 
@@ -1903,6 +1863,8 @@ void melee_attack::player_check_weapon_effects()
 bool melee_attack::player_monattk_hit_effects(bool mondied)
 {
     player_check_weapon_effects();
+
+    mondied = check_unrand_effects(mondied) || mondied;
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
@@ -4866,6 +4828,9 @@ void melee_attack::mons_perform_attack_rounds()
                 }
             }
         }
+
+        if (check_unrand_effects())
+            break;
 
         if (damage_done < 1 && this_round_hit && !shield_blocked)
             mons_announce_dud_hit(attk);

@@ -363,23 +363,6 @@ enum special_ring_type // jewellery mitm[].special values
     SPRING_UNRANDART = 201
 };
 
-enum special_wield_type                     // you.special_wield
-{
-    SPWLD_NONE,                        //    0
-    SPWLD_SING,
-    SPWLD_TROG,
-    SPWLD_CURSE,
-    SPWLD_VARIABLE,                    //    4
-    SPWLD_PRUNE, //    5 - implicit in it_use3::special_wielded() {dlb}
-    SPWLD_TORMENT,                     //    6
-    SPWLD_ZONGULDROK,
-    SPWLD_POWER,
-    SPWLD_WUCAD_MU,                    //    9
-    SPWLD_OLGREB,                      //   10
-    SPWLD_SHADOW = 50,                 //   50
-    SPWLD_NOISE //   further differentiation useless -> removed (jpeg)
-};
-
 enum stave_type
 {
     // staves

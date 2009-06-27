@@ -291,10 +291,7 @@ $(FSQLLIBA):
 
 #############################################################################
 # Build unrandart data
-artefact.h: art-data.txt
-	util/art-data.pl
-
-art-data.h: art-data.txt util/art-data.pl
+art-data.h: art-data.txt util/art-data.pl art-func.h
 	util/art-data.pl
 
 #############################################################################

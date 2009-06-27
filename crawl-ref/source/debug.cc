@@ -1370,6 +1370,14 @@ void wizard_create_spec_object()
     }
 }
 
+static std::string _art_val_str(const item_def& item)
+{
+    ASSERT(is_artefact(item));
+
+    return make_stringf("art val: %d, item val: %d",
+                        artefact_value(item), item_value(item, true));
+}
+
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted, bool create_for_real)
 {
@@ -1478,9 +1486,12 @@ bool get_item_by_name(item_def *item, char* specs,
                     ptr = strcasestr( entry->name, specs );
                     if (ptr != NULL && item->base_type == class_wanted)
                     {
-                        if (create_for_real)
-                            mpr(entry->name);
                         make_item_unrandart(*item, index);
+                        if (create_for_real)
+                        {
+                            mprf("%s (%s)", entry->name,
+                                 _art_val_str(*item).c_str());
+                        }
                         return(true);
                     }
                 }
@@ -1935,14 +1946,15 @@ static bool _make_book_randart(item_def &book)
 
 void wizard_value_artefact()
 {
-    int i = prompt_invent_item( "Value of which randart?", MT_INVLIST, -1 );
+    int i = prompt_invent_item( "Value of which artefact?", MT_INVLIST, -1 );
 
     if (!prompt_failed(i))
     {
-        if (!is_random_artefact( you.inv[i] ))
+        const item_def& item(you.inv[i]);
+        if (!is_artefact(item))
             mpr("That item is not an artefact!");
         else
-            mprf("randart val: %d", artefact_value(you.inv[i]));
+            mpr(_art_val_str(item).c_str());
     }
 }
 
@@ -1968,6 +1980,7 @@ void wizard_create_all_artefacts()
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_NOCAP_A)
+                                        << " (" << _art_val_str(item) << ")"
                                         << std::endl;
         move_item_to_grid(&islot, you.pos());
     }

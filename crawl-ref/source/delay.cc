@@ -1565,7 +1565,7 @@ void armour_wear_effects(const int item_slot)
     }
 
     if (is_artefact(arm))
-        use_artefact(arm, melded);
+        use_artefact(arm, NULL, melded);
 
     if (item_cursed(arm) && !melded)
     {

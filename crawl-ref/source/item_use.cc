@@ -438,53 +438,6 @@ void warn_shield_penalties()
     }
 }
 
-int item_special_wield_effect(const item_def &item)
-{
-    if (item.base_type != OBJ_WEAPONS || !is_artefact(item))
-        return (SPWLD_NONE);
-
-    int i_eff = SPWPN_NORMAL;
-    if (is_special_unrandom_artefact( item ))
-        i_eff = item.special;
-    else if (is_artefact( item ))
-        i_eff = artefact_wpn_property(item, ARTP_BRAND);
-    else
-        i_eff = item.special;
-
-    switch (i_eff)
-    {
-    case UNRAND_SINGING_SWORD:
-        return (SPWLD_SING);
-
-    case UNRAND_TROG:
-        return (SPWLD_TROG);
-
-    case UNRAND_CURSES:
-        return (SPWLD_CURSE);
-
-    case UNRAND_VARIABILITY:
-        return (SPWLD_VARIABLE);
-
-    case UNRAND_TORMENT:
-        return (SPWLD_TORMENT);
-
-    case UNRAND_ZONGULDROK:
-        return (SPWLD_ZONGULDROK);
-
-    case UNRAND_POWER:
-        return (SPWLD_POWER);
-
-    case UNRAND_OLGREB:
-        return (SPWLD_OLGREB);
-
-    case UNRAND_WUCAD_MU:
-        return (SPWLD_WUCAD_MU);
-
-    default:
-        return (SPWLD_NONE);
-    }
-}
-
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
@@ -508,7 +461,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
             you.current_vision -= 2;
             setLOSRadius(you.current_vision);
-            you.unrand_reacts = SPWLD_SHADOW;
+            you.attribute[ATTR_SHADOWS] = 1;
         }
         else if (item.sub_type == MISC_HORN_OF_GERYON)
             set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -545,11 +498,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 mpr("You really shouldn't be using a chaotic item like this.");
         }
 
-        const bool was_known = item_type_known(item);
+        // Call unrandrt equip func before item is identified.
+        if (artefact)
+            use_artefact(item_wield_2, &showMsgs);
 
-        // Only used for Singing Sword introducing itself
-        // (could be extended to other talking weapons...)
-        const std::string old_desc = item.name(DESC_CAP_THE);
+        const bool was_known      = item_type_known(item);
+              bool known_recurser = false;
 
         set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
 
@@ -557,9 +511,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         if (artefact)
         {
-            if (!is_special_unrandom_artefact(item))
-                special = artefact_wpn_property(item, ARTP_BRAND);
-            use_artefact(item_wield_2);
+            special = artefact_wpn_property(item, ARTP_BRAND);
+
             if (!was_known)
             {
                 item.flags |= ISFLAG_NOTED_ID;
@@ -571,6 +524,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                                origin_desc(item).c_str()));
             }
+            else
+                known_recurser = artefact_known_wpn_property(item,
+                                                             ARTP_CURSED);
         }
 
         if (special != SPWPN_NORMAL)
@@ -669,59 +625,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     mpr("It is briefly surrounded by shifting shadows.");
                     break;
 
-                case UNRAND_SINGING_SWORD:
-                    if (!was_known)
-                    {
-                        mprf(MSGCH_TALK, "%s says, "
-                             "\"Hi! I'm the Singing Sword!\"",
-                             old_desc.c_str());
-                    }
-                    else
-                        mpr("The Singing Sword hums in delight!", MSGCH_TALK);
-                    break;
-
-                case UNRAND_TROG:
-                    mpr("You feel bloodthirsty!");
-                    break;
-
-                case UNRAND_CURSES:
-                    mpr("A shiver runs down your spine.");
-                    break;
-
-                case UNRAND_PRUNE:
-                    mpr("You feel pruney.");
-                    break;
-
-                case UNRAND_TORMENT:
-                    mpr("A terribly searing pain shoots up your arm!");
-                    break;
-
-                case UNRAND_ZONGULDROK:
-                    mpr("You sense an extremely unholy aura.");
-                    break;
-
-                case UNRAND_POWER:
-                    mpr("You sense an aura of extreme power.");
-                    break;
-
-                case UNRAND_OLGREB:
-                    if (player_can_smell())
-                        mpr("You smell chlorine.");
-                    else
-                        mpr("The staff glows slightly green.");
-                    break;
-
-                case UNRAND_VAMPIRES_TOOTH:
-                    if (you.is_undead != US_UNDEAD)
-                    {
-                        mpr("You feel a strange hunger, and smell blood in "
-                            "the air...");
-                    }
-                    else
-                        mpr("You feel strangely empty.");
+                case SPWPN_NORMAL:
                     break;
 
                 default:
+                    mprf(MSGCH_ERROR, "Unknown weapon brand %d, please file"
+                         "a bug report", special);
                     break;
                 }
             }
@@ -748,29 +657,16 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 }
                 break;
 
-            case UNRAND_CURSES:
-                if (!item_cursed(item) && one_chance_in(3))
-                    do_curse_item(item, false);
-                break;
-
-            case UNRAND_WUCAD_MU:
-                MiscastEffect(&you, WIELD_MISCAST, SPTYP_DIVINATION, 9, 90,
-                              "the Staff of Wucad Mu" );
-                break;
-
             default:
                 break;
             }
-            if (is_unrandom_artefact(item))
-                you.unrand_reacts = item_special_wield_effect(item);
         }
 
         if (item_cursed(item))
         {
             mpr("It sticks to your hand!");
             int amusement = 16;
-            if (!known_cursed
-                && !(was_known && special == UNRAND_CURSES))
+            if (!known_cursed && !known_recurser)
             {
                 amusement *= 2;
                 god_type god;
@@ -3735,7 +3631,7 @@ void jewellery_remove_effects(item_def &item, bool mesg)
     }
 
     if (is_artefact(item))
-        unuse_artefact(item);
+        unuse_artefact(item, &mesg);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();
@@ -5256,16 +5152,32 @@ void examine_object(void)
     mesclr(true);
 }                               // end original_name()
 
-void use_artefact(unsigned char item_wield_2)
+void use_artefact(unsigned char item_wield_2, bool *show_msgs)
 {
-    use_artefact( you.inv[ item_wield_2 ] );
+    use_artefact( you.inv[ item_wield_2 ], show_msgs );
 }
 
-void use_artefact(item_def &item, bool unmeld)
+void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 {
 #define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
 
     ASSERT( is_artefact( item ) );
+
+    // Call unrandart equip function first, so that it can modify the
+    // artefact's properties before they're applied.
+    if (is_unrandom_artefact( item ))
+    {
+        const unrandart_entry *entry = get_unrand_entry(item.special);
+
+        if (entry->equip_func)
+            entry->equip_func(&item, show_msgs, unmeld);
+
+        if (entry->world_reacts_func)
+        {
+            equipment_type eq = get_item_slot(item.base_type, item.sub_type);
+            you.unrand_reacts |= (1 << eq);
+        }
+    }
 
     const bool alreadyknown = item_type_known(item);
     const bool dangerous    = player_in_a_dangerous_place();
@@ -5362,7 +5274,7 @@ void use_artefact(item_def &item, bool unmeld)
     }
 
     if (proprt[ARTP_NOISES])
-        you.unrand_reacts = SPWLD_NOISE;
+        you.attribute[ATTR_NOISES] = 1;
 
     if (!alreadyknown && Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(item));

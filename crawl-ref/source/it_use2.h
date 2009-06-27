@@ -17,7 +17,7 @@
 bool potion_effect(potion_type pot_eff, int pow,
                    bool drank_it = false, bool was_known = true);
 
-void unuse_artefact(const item_def &item);
+void unuse_artefact(const item_def &item, bool *show_msgs = NULL);
 void unwear_armour(int slot);
 bool unwield_item(bool showMsgs = true);
 

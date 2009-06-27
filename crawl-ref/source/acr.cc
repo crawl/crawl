@@ -2582,8 +2582,14 @@ void world_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth );
 #endif
 
-    if (you.unrand_reacts != SPWLD_NONE)
-        special_wielded();
+    if (you.attribute[ATTR_NOISES])
+        noisy_equipment();
+
+    if (you.attribute[ATTR_SHADOWS])
+        shadow_lantern_effect();
+
+    if (you.unrand_reacts != 0)
+        unrand_reacts();
 
     if (!crawl_state.arena && one_chance_in(10))
     {

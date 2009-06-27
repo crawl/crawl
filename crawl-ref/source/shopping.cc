@@ -618,55 +618,16 @@ unsigned int item_value( item_def item, bool ident )
 
     int valued = 0;
 
+    if (is_unrandom_artefact( item ) &&
+        item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+    {
+        const unrandart_entry *entry = get_unrand_entry(item.special);
+        valued += entry->value;
+    }
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (is_unrandom_artefact( item ))
-        {
-            if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
-            {
-                switch (item.special)
-                {
-                case UNRAND_CEREBOV:
-                    valued += 2000;
-                    break;
-
-                case UNRAND_ASMODEUS:
-                    valued += 1500;
-                    break;
-
-                case UNRAND_ZONGULDROK:
-                    valued += 1250;
-                    break;
-
-                case UNRAND_TORMENT:
-                case UNRAND_SINGING_SWORD:
-                case UNRAND_DISPATER:
-                    valued += 1200;
-                    break;
-
-                case UNRAND_PRUNE:
-                case UNRAND_TROG:
-                    valued += 1000;
-                    break;
-
-                case UNRAND_CURSES:
-                    valued += 800;
-                    break;
-
-                case UNRAND_VARIABILITY:
-                    valued += 700;
-                    break;
-
-                default:
-                    valued += 1000;
-                    break;
-                }
-                break;
-            }
-
-        }                       // end uniques
-
         switch (item.sub_type)
         {
         case WPN_CLUB:

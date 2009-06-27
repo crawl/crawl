@@ -1722,6 +1722,24 @@ bool prompt_failed(int retval, std::string msg)
 bool item_is_evokable(const item_def &item, bool known, bool all_wands,
                       bool msg)
 {
+    if (is_unrandom_artefact(item))
+    {
+        const unrandart_entry* entry = get_unrand_entry(item.special);
+
+        if (entry->evoke_func && item_type_known(item))
+        {
+
+            if (item_is_equipped(item))
+                return (true);
+
+            if (msg)
+                mpr("That item can only be evoked when wielded.");
+
+            return (false);
+        }
+        // Unrandart might still be evokable (e.g., reaching)
+    }
+
     const bool wielded = (you.equip[EQ_WEAPON] == item.link);
 
     switch (item.base_type)
@@ -1754,26 +1772,6 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
             return (true);
         }
 
-        if (is_unrandom_artefact(item))
-        {
-            switch (item.special)
-            {
-            case UNRAND_ASMODEUS:
-            case UNRAND_WUCAD_MU:
-            case UNRAND_DISPATER:
-            case UNRAND_OLGREB:
-                if (!wielded)
-                {
-                    if (msg)
-                        mpr("That item can only be evoked when wielded.");
-                    return (false);
-                }
-                return (true);
-
-            default:
-                return (false);
-            }
-        }
         if (msg)
             mpr("That item cannot be evoked!");
         return (false);

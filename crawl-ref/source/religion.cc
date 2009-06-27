@@ -3424,6 +3424,14 @@ bool is_holy_item(const item_def& item)
 {
     bool retval = false;
 
+    if (is_unrandom_artefact(item))
+    {
+        unrandart_entry* entry = get_unrand_entry(item.special);
+
+        if (entry->flags & UNRAND_FLAG_HOLY )
+            return (true);
+    }
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -3450,20 +3458,21 @@ bool is_evil_item(const item_def& item)
 {
     bool retval = false;
 
+    if (is_unrandom_artefact(item))
+    {
+        unrandart_entry* entry = get_unrand_entry(item.special);
+
+        if (entry->flags & UNRAND_FLAG_EVIL)
+            return (true);
+    }
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        const int item_eff = item_special_wield_effect(item);
 
         retval = (is_demonic(item)
-                  || item.special == UNRAND_ASMODEUS
-                  || item.special == UNRAND_DISPATER
-                  || item.special == UNRAND_CEREBOV
-                  || item_eff == SPWLD_CURSE
-                  || item_eff == SPWLD_TORMENT
-                  || item_eff == SPWLD_ZONGULDROK
                   || item_brand == SPWPN_DRAINING
                   || item_brand == SPWPN_PAIN
                   || item_brand == SPWPN_VAMPIRICISM
@@ -3506,6 +3515,14 @@ bool is_evil_item(const item_def& item)
 bool is_chaotic_item(const item_def& item)
 {
     bool retval = false;
+
+    if (is_unrandom_artefact(item))
+    {
+        unrandart_entry* entry = get_unrand_entry(item.special);
+
+        if (entry->flags & UNRAND_FLAG_CHAOTIC)
+            return (true);
+    }
 
     switch (item.base_type)
     {

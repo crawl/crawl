@@ -1241,18 +1241,12 @@ int player_hunger_rate(void)
     if (you.species != SP_VAMPIRE)
     {
         if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
-        {
               hunger += 6;
-              hunger += 3 * player_equip_unrand( UNRAND_VAMPIRES_TOOTH );
-        }
     }
     else
     {
         if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
-        {
             hunger += 1;
-            hunger += 1 * player_equip_unrand( UNRAND_VAMPIRES_TOOTH );
-        }
     }
 
     // troll leather armour
@@ -3637,7 +3631,7 @@ int check_stealth(void)
         return (1000);
 #endif
 
-    if (you.unrand_reacts == SPWLD_SHADOW || you.duration[DUR_BERSERKER])
+    if (you.attribute[ATTR_SHADOWS] || you.duration[DUR_BERSERKER])
         return (0);
 
     int stealth = you.dex * 3;
@@ -5912,7 +5906,7 @@ void player::init()
     disease         = 0;
     elapsed_time    = 0;
     rotting         = 0;
-    unrand_reacts   = SPWLD_NONE;
+    unrand_reacts   = 0;
     synch_time      = 0;
 
     magic_contamination = 0;

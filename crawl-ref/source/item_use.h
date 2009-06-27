@@ -156,8 +156,8 @@ void wield_effects(int item_wield_2, bool showMsgs);
 /* ***********************************************************************
  * called from: delay.cc item_use.cc it_use2.cc
  * *********************************************************************** */
-void use_artefact( unsigned char item_wield_2 );
-void use_artefact(item_def &item, bool unmeld = false);
+void use_artefact( unsigned char item_wield_2, bool *show_msgs = NULL);
+void use_artefact(item_def &item, bool *show_msgs = NULL, bool unmeld = false);
 
 bool puton_item(int slot);
 
@@ -180,8 +180,6 @@ int launcher_final_speed(const item_def &launcher,
                          const item_def *shield);
 
 void warn_shield_penalties();
-
-int item_special_wield_effect(const item_def &item);
 
 bool wearing_slot(int inv_slot);
 
