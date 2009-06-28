@@ -559,7 +559,6 @@ MAP
  !xxxxxxx!
 ENDMAP
 
-
 ##################################################
 # Some deep elves on a diplomatic mission (Shiori)
 # They have brought some of their enchanted armaments as gifts
@@ -589,4 +588,48 @@ xXX.65556Xx
 xxXX.6.6XXx
 xxxXX..XXxx
  xxxx@@@xx
+ENDMAP
+
+############################################################
+# Orc chapel by nrook
+#
+NAME:    orc_chapel
+DEPTH:   Orc:2
+#PLACE:   Orc:2
+CHANCE:  100:10000
+TAGS:    no_monster_gen mini_float
+MONS:    orc priest
+MONS:    orc; nothing
+MONS:    orc
+MONS:    orc warrior
+MONS:    orc wizard
+: if you.absdepth() < 6 then
+SUBST:   o = 2:10 3:10 4:1 5:1 .:2
+# on average, only one more orc will appear here
+SUBST:   q = 2:10 3:10 4:1 5:1 .:550
+: else
+SUBST:   o = 3:10 4:4  5:4 1:2 .:2
+# around four more orcs will appear from q glyphs
+SUBST:   q = 2:4  3:10 4:2 5:2 .:36
+: end
+KFEAT:   A = altar_beogh
+MAP
+        ...
+     xxxx=xxxx     
+     xI..A..Ix     
+xxxxxxxx.1.xxxxxxxx
+x......xmmmx......x
+x.................x
+x..xxxxx...xxxxx..x
+x...qoq.....qoq...x
+x..xxxxx...xxxxx..x
+x...qoq.....qoq...x
+x..xxxxx...xxxxx..x
+x...qoq.....qoq...x
+x..xxxxx...xxxxx..x
+x.................x
+xxxxxxxx+++xxxxxxxx
+      xI...$x      
+      xx+++xx      
+        ...        
 ENDMAP

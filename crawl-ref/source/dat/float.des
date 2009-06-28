@@ -703,3 +703,56 @@ MAP
          x++x
           @.
 ENDMAP
+
+#
+NAME:   bailey_6
+#ORIENT: encompass
+#TAGS:   bailey
+TAGS:   no_pool_fixup
+MONS:   orc warrior ; crossbow . bolt
+MONS:   orc knight ; halberd ego:reaching
+MONS:   orc warlord
+SUBST:  W : w..
+KFEAT:  T = teleport trap
+SUBST:  X = I G
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xA........................................x
+x.........................................x
+x.........................................x
+x.........................................x
+x.........................................x
+x.........................................x
+x......WwwwwwWWWWWWWWWWWWWWWWWwwwwwW......x
+x......wwc1cwwWWWWWWWWWWWWWWWwwc1cww......x
+x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
+x......w1.T.1wWWWWWWWWWWWWWWWw1.T.1w......x
+x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
+x......wwc1cwwWWWWWWcccWWWWWWwwc1cww......x
+x......WwwwwwWWWWcccccccccWWWWwwwwwW......x
+x......WWWWWWWWWccWWWWWWWccWWWWWWWWW......x
+x......WWWWWWWWccWWc=c=cWWccWWWWWWWW......x
+x......WWWWWWWWcWWcc2c2ccWWcWWWWWWWW......x
+x......WWWWWWWccWcccccccccWccWWWWWWW......x
+x......WWWWWWWccW=2c.3.c2=WccWWWWWWW......x
+x......WWWWWWWccWccc3X3cccWccWWWWWWW......x
+x......WWWWWWWccW=2c.3.c2=WccWWWWWWW......x
+x......WWWWWWWccWccc+++cccWccWWWWWWW......x
+x......WWWWWWWccWWcc...ccWWcWWWWWWWW......x
+x......WWWWWWWWWWWcc+++cWWccWWWWWWWW......x
+x......WWWWWWWWWWWccWWWWWccWWWWWWWWW......x
+x......WwwwwwWWWWWccWWWWccWWWWwwwwww......x
+x......wwc1cwwWWWWcccccccWWWWwwc1cww......x
+x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
+x......w1.T.1wWWWWWWWWWWWWWWWw1.T.1w......x
+x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
+x......wwc1cwwWWWWWWWWWWWWWWWwwc1cww......x
+x......WwwwwwWWWWWWWWWWWWWWWWWwwwwwW......x
+x.........................................x
+x.........................................x
+x.........................................x
+x.........................................x
+x.........................................x
+x........................................<x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
