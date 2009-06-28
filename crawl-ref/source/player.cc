@@ -3125,6 +3125,7 @@ void level_change(bool skip_attribute_increase)
             case SP_DEEP_ELF:
                 if (you.experience_level < 17)
                     hp_adjust--;
+
                 if (!(you.experience_level % 3))
                     hp_adjust--;
 
@@ -3168,6 +3169,7 @@ void level_change(bool skip_attribute_increase)
                         MSGCH_INTRINSIC_GAIN);
                     perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1);
                 }
+
                 if (!(you.experience_level % 4))
                 {
                     modify_stat(coinflip() ? STAT_STRENGTH
@@ -3286,6 +3288,7 @@ void level_change(bool skip_attribute_increase)
 
             case SP_OGRE:
                 hp_adjust++;
+
                 if (!(you.experience_level % 3))
                     modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
@@ -3318,10 +3321,9 @@ void level_change(bool skip_attribute_increase)
                     case SP_GREEN_DRACONIAN:
                         mpr("Your scales start taking on a green colour.",
                             MSGCH_INTRINSIC_GAIN);
-                        // green dracos get this at level 7
+                        // Green draconians get this at level 7.
                         perma_mutate(MUT_POISON_RESISTANCE, 1);
                         break;
-
                     case SP_YELLOW_DRACONIAN:
                         mpr("Your scales start taking on a golden yellow colour.",
                             MSGCH_INTRINSIC_GAIN);
@@ -3399,6 +3401,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 3))
                 {
                     hp_adjust++;
+
                     if (you.experience_level > 7)
                         hp_adjust++;
                 }
@@ -3617,8 +3620,8 @@ void level_change(bool skip_attribute_increase)
 
     redraw_skill(you.your_name, player_title());
 
-    // Increase tutorial time-out now that it's actually
-    // become useful for a longer time.
+    // Increase tutorial time-out now that it's actually become useful
+    // for a longer time.
     if (Options.tutorial_left && you.experience_level >= 7)
         tutorial_finished();
 }
