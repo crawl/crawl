@@ -168,7 +168,7 @@ NAME:    Singing Sword
 APPEAR:  golden long sword
 OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +7/+7
-COLOUR:  YELLOW
+COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
 VALUE:   1200
@@ -180,7 +180,7 @@ NAME:    Wrath of Trog
 APPEAR:  bloodstained battleaxe
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
 PLUS:    +3/+11
-COLOUR:  RED
+COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
 VALUE:   1000
@@ -229,7 +229,7 @@ NAME:    Staff of Olgreb
 APPEAR:  green glowing staff
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    0/0 # Set on wield
-COLOUR:  GREEN
+COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
@@ -244,7 +244,7 @@ NAME:    Staff of Wucad Mu
 APPEAR:  ephemeral quarterstaff
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    0/0 # Set on wield
-COLOUR:  BROWN
+COLOUR:  ETC_MAGIC
 TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu
 VALUE:   1000
@@ -256,7 +256,7 @@ NAME:    Vampire's Tooth
 APPEAR:  ivory dagger
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
 PLUS:    +3/+4
-COLOUR:  WHITE
+COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRICISM
@@ -268,7 +268,7 @@ NAME:    Scythe of Curses
 APPEAR:  warped scythe
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +13/+13
-COLOUR:  DARKGREY
+COLOUR:  ETC_NECRO
 TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
 VALUE:   800
@@ -280,7 +280,7 @@ NAME:    Sceptre of Torment
 APPEAR:  jewelled golden mace
 OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    +7/+6
-COLOUR:  YELLOW
+COLOUR:  ETC_GOLD
 TILE:    spwpn_sceptre_of_torment
 TILE_EQ: mace_ruby
 VALUE:   1200
@@ -291,7 +291,7 @@ NAME:    Sword of Zonguldrok
 APPEAR:  bone long sword
 OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +9/+9
-COLOUR:  LIGHTGREY
+COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
 VALUE:   1250
@@ -302,7 +302,7 @@ NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +6/+6
-COLOUR:  YELLOW
+COLOUR:  ETC_FIRE
 TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
@@ -314,7 +314,7 @@ NAME:    Staff of Dispater
 APPEAR:  golden staff
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    +4/+4
-COLOUR:  YELLOW
+COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
@@ -325,7 +325,7 @@ NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    +7/+7
-COLOUR:  RED
+COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
@@ -338,7 +338,7 @@ NAME:    long sword "Bloodbane"
 APPEAR:  blackened long sword
 OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +7/+8
-COLOUR:  DARKGREY
+COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
@@ -350,7 +350,7 @@ NAME:    scimitar of Flaming Death
 APPEAR:  smoking scimitar
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
 PLUS:    +7/+5
-COLOUR:  RED
+COLOUR:  ETC_FIRE
 TILE:    urand_flaming_death
 TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
@@ -363,7 +363,7 @@ NAME:    mace of Brilliance
 APPEAR:  brightly glowing mace
 OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    +5/+5
-COLOUR:  WHITE
+COLOUR:  ETC_HOLY
 TILE:    urand_brilliance
 TILE_EQ: mace_of_brilliance
 BRAND:   SPWPN_HOLY_WRATH
@@ -391,7 +391,7 @@ NAME:    dagger of Chilly Death
 APPEAR:  sapphire dagger
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
 PLUS:    +5/+7
-COLOUR:  LIGHTBLUE
+COLOUR:  ETC_ICE
 TILE:    urand_chilly_death
 TILE_EQ: chilly_death
 BRAND:   SPWPN_FREEZING
@@ -419,7 +419,7 @@ NAME:    scythe "Finisher"
 APPEAR:  blackened scythe
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +3/+5
-COLOUR:  DARKGREY
+COLOUR:  ETC_DARK
 TILE:    urand_finisher
 TILE_EQ: finisher
 BRAND:   SPWPN_SPEED
@@ -431,7 +431,7 @@ NAME:    sling "Punk"
 APPEAR:  blue sling
 OBJ:     OBJ_WEAPONS/WPN_SLING
 PLUS:    +9/+12
-COLOUR:  LIGHTBLUE
+COLOUR:  ETC_ICE
 TILE:    urand_punk
 TILE_EQ: punk
 BRAND:   SPWPN_FROST
@@ -443,7 +443,7 @@ NAME:     bow of Krishna "Sharnga"
 APPEAR:   golden bow
 OBJ:      OBJ_WEAPONS/WPN_BOW
 PLUS:     +8/+8
-COLOUR:   YELLOW
+COLOUR:   ETC_GOLD
 TILE:     urand_krishna
 TILE_EQ:  krishna
 BRAND:    SPWPN_SPEED
@@ -467,7 +467,7 @@ NAME:     glaive of the Guard
 APPEAR:   polished glaive
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
 PLUS:     +5/+8
-COLOUR:   LIGHTCYAN
+COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
@@ -480,7 +480,7 @@ NAME:     sword of Jihad
 APPEAR:   crystal sword
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:     +12/+10
-COLOUR:   WHITE
+COLOUR:   ETC_HOLY
 TILE:     urand_jihad
 TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
@@ -496,7 +496,7 @@ NAME:    crossbow "Hellfire"
 APPEAR:  flaming crossbow
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +6/+9
-COLOUR:  LIGHTRED
+COLOUR:  ETC_FIRE
 TILE:    urand_hellfire
 TILE_EQ: crossbow_fire
 BRAND:   SPWPN_FLAME
@@ -521,7 +521,7 @@ NAME:    "Eos"
 APPEAR:  encrusted morningstar
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
 PLUS:    +5/+5
-COLOUR:  LIGHTCYAN
+COLOUR:  ETC_JEWEL
 TILE:    urand_eos
 TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
@@ -535,7 +535,7 @@ NAME:     spear of the Botono
 APPEAR:   ebony spear
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +2/+10
-COLOUR:   DARKGREY
+COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
 TILE_EQ:  botono
 BRAND:    SPWPN_VAMPIRICISM
@@ -547,7 +547,7 @@ NAME:     trident of the Octopus King
 APPEAR:   mangy trident
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
 PLUS:     +10/+4
-COLOUR:   CYAN
+COLOUR:   ETC_WATER
 TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
@@ -589,7 +589,7 @@ NAME:    hand crossbow "Sniper"
 APPEAR:  black crossbow
 OBJ:     OBJ_WEAPONS/WPN_HAND_CROSSBOW
 PLUS:    +10/+0
-COLOUR:  DARKGREY
+COLOUR:  ETC_DARK
 TILE:    urand_sniper
 TILE_EQ: sniper
 BRAND:   SPWPN_VENOM
@@ -652,7 +652,7 @@ NAME:    plutonium sword
 APPEAR:  glowing long sword
 OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +12/+16
-COLOUR:  LIGHTGREEN
+COLOUR:  ETC_RANDOM
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
 MUTATE:  6
@@ -733,7 +733,7 @@ NAME:     cloak of the Thief
 APPEAR:   tattered cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +1
-COLOUR:   DARKGREY
+COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
 EV:       2
@@ -756,7 +756,7 @@ NAME:    crown of Dyrovepreva
 APPEAR:  jewelled bronze crown
 OBJ:     OBJ_ARMOUR/ARM_CAP
 PLUS:    +3
-COLOUR:  BROWN
+COLOUR:  ETC_JEWEL
 TILE:    urand_dyrovepreva
 TILE_EQ: dyrovepreva
 INT:     2
@@ -785,7 +785,7 @@ NAME:     cloak of Flash
 APPEAR:   vibrating cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
-COLOUR:   RED
+COLOUR:   ETC_GILA
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
@@ -811,7 +811,7 @@ NAME:    Lear's chain mail
 APPEAR:  golden chain mail
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 PLUS:    -1
-COLOUR:  YELLOW
+COLOUR:  ETC_GOLD
 TILE:    urand_lear
 TILE_EQ: lears_chain_mail
 DEX:     -3
@@ -833,7 +833,7 @@ NAME:    salamander hide armour
 APPEAR:  red leather armour
 OBJ:     OBJ_ARMOUR/ARM_LEATHER_ARMOUR
 PLUS:    +3
-COLOUR:  RED
+COLOUR:  ETC_FIRE
 TILE:    urand_salamander
 TILE_EQ: leather_red
 FIRE:    2
@@ -889,7 +889,7 @@ ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
 APPEAR:  blue mask
 OBJ:     OBJ_ARMOUR/ARM_CAP
-COLOUR:  BLUE
+COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
 TILE_EQ: art_dragonhelm
 MAGIC:   40
@@ -902,7 +902,7 @@ NAME:     robe of Night
 APPEAR:   black robe
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +4
-COLOUR:   DARKGREY
+COLOUR:   ETC_DARK
 TILE:     urand_night
 TILE_EQ:  robe_of_night
 MAGIC:    30
@@ -916,7 +916,7 @@ NAME:    armour of the Dragon King
 APPEAR:  shiny dragon armour
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
 PLUS:    +5
-COLOUR:  YELLOW
+COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
 TILE_EQ: dragonarm_gold
 MAGIC:   50
@@ -949,7 +949,7 @@ DESC:    A pair of gloves made of white silk.
 NAME:     cloak of Starlight
 APPEAR:   phosphorescent cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
-COLOUR:   WHITE
+COLOUR:   ETC_ICE
 TILE:     urand_starlight
 TILE_EQ:  white
 EV:       4
@@ -963,7 +963,7 @@ NAME:     ratskin cloak
 APPEAR:   motley cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +1
-COLOUR:   LIGHTRED
+COLOUR:   ETC_BEOGH
 TILE:     urand_ratskin_cloak
 TILE_EQ:  ratskin
 INT:      -1
@@ -978,7 +978,7 @@ DESC_END: An enchantress with a magic loom and way too much time on
 NAME:    amulet of the Air
 APPEAR:  sky-blue amulet
 OBJ:     OBJ_JEWELLERY/AMU_CONTROLLED_FLIGHT
-COLOUR:  LIGHTCYAN
+COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
 EV:      3
 STEALTH: 50
@@ -988,7 +988,7 @@ DESC:    A sky-blue amulet.
 NAME:    ring of Shadows
 APPEAR:  black ring
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
-COLOUR:  DARKGREY
+COLOUR:  ETC_DARK
 TILE:    urand_shadows
 EV:      4
 ACC:     -3
@@ -1008,7 +1008,7 @@ METAB:   2
 NAME:    amulet of the Four Winds
 APPEAR:  jade amulet
 OBJ:     OBJ_JEWELLERY/AMU_CLARITY
-COLOUR:  LIGHTGREEN
+COLOUR:  ETC_POISON
 TILE:    urand_four_winds
 BOOL:    life
 MAGIC:   100
@@ -1016,7 +1016,7 @@ MAGIC:   100
 NAME:    necklace of Bloodlust
 APPEAR:  blood-stained necklace
 OBJ:     OBJ_JEWELLERY/AMU_RAGE
-COLOUR:  RED
+COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
 STR:     2
 INT:     -2
@@ -1030,7 +1030,7 @@ NAME:    ring of Shaolin
 APPEAR:  jade ring
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
-COLOUR:  LIGHTGREEN
+COLOUR:  ETC_POISON
 TILE:    urand_shaolin
 
 NAME:    ring of Robustness
@@ -1043,7 +1043,7 @@ TILE:    urand_robustness
 NAME:    ring of the Mage
 APPEAR:  sapphire ring
 OBJ:     OBJ_JEWELLERY/RING_WIZARDRY
-COLOUR:  LIGHTBLUE
+COLOUR:  ETC_ENCHANT
 TILE:    urand_mage
 INT:     3
 MAGIC:   50
@@ -1051,7 +1051,7 @@ MAGIC:   50
 NAME:     brooch of Shielding
 APPEAR:   shield-shaped amulet
 OBJ:      OBJ_JEWELLERY/AMU_WARDING
-COLOUR:   LIGHTBLUE
+COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
 AC:       4
 EV:       4
