@@ -1526,7 +1526,7 @@ w:1
 VISUAL:@The_monster@ polishes @possessive@ monocle.
 
 %%%%
-# A war dog -breeding gnoll
+# A war dog-breeding gnoll
 Grum
 
 @_Grum_common_@
@@ -1540,7 +1540,7 @@ VISUAL:@The_monster@ bares his teeth.
 
 @The_monster@ grunts.
 
-@The_monster@ says @at_foe@, "Me and my dogs will have a feast tonight.."
+@The_monster@ says @at_foe@, "Me and my dogs will have a feast tonight..."
 
 @The_monster@ says @at_foe@, "You look like good eating."
 %%%%
