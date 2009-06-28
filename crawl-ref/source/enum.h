@@ -2020,6 +2020,7 @@ enum monster_type                      // (int) menv[].type
     MONS_LERNAEAN_HYDRA,
     MONS_DISSOLUTION,                  // 460
     MONS_KIRKE,
+    MONS_GRUM,
 
     // Testing monsters
     MONS_TEST_SPAWNER,

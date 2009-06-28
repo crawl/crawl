@@ -1526,6 +1526,10 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band = BAND_GNOLLS;
         band_size = (coinflip() ? 3 : 2);
         break;
+    case MONS_GRUM:
+        band = BAND_WAR_DOGS;
+        band_size = 2 + random2(3);
+        break;
     case MONS_BUMBLEBEE:
         band = BAND_BUMBLEBEES;
         band_size = 2 + random2(4);

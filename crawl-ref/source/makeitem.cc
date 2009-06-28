@@ -3285,6 +3285,17 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         break;
 
+    case MONS_GRUM:
+        force_item = true; // guaranteed reaching
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_SPEAR, WPN_WHIP, WPN_WHIP,
+                                      WPN_HALBERD, WPN_GLAIVE, -1);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
+        item.plus  += -2 + random2(4);
+        item.plus2 += -1 + random2(2);
+        break;
+
     case MONS_ORC:
     case MONS_ORC_PRIEST:
         item_race = MAKE_ITEM_ORCISH;
@@ -4163,6 +4174,7 @@ void give_armour(monsters *mon, int level)
     case MONS_EDMUND:
     case MONS_RUPERT:
     case MONS_WAYNE:
+    case MONS_GRUM:
     {
         item.base_type = OBJ_ARMOUR;
 

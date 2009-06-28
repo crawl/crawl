@@ -3256,12 +3256,12 @@ static monster_type _choose_unique_by_depth(int step)
         break;
     case 2: // depth <= 9
         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
-                            MONS_EROLCHA, MONS_PRINCE_RIBBIT, -1);
+                            MONS_EROLCHA, MONS_PRINCE_RIBBIT, MONS_GRUM, -1);
         break;
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
                             MONS_MICHAEL, MONS_EUSTACHIO, MONS_SONJA,
-                            MONS_JOSEPH, MONS_ERICA, MONS_JOSEPHINE,
+                            MONS_JOSEPH, MONS_ERICA, MONS_JOSEPHINE, MONS_GRUM,
                             MONS_HAROLD, MONS_NORBERT, MONS_JOZEF, -1);
         break;
     case 4: // depth <= 16
@@ -3281,8 +3281,7 @@ static monster_type _choose_unique_by_depth(int step)
     default:
         ret = random_choose(MONS_FRANCIS, MONS_FRANCES, MONS_WAYNE, MONS_DUANE,
                             MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK,
-                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA,
-                            MONS_KIRKE, -1);
+                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, -1);
     }
 
     return static_cast<monster_type>(ret);

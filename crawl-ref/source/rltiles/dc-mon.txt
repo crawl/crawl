@@ -492,6 +492,7 @@ wandering_mushroom MONS_WANDERING_MUSHROOM
 ## Goblins ('g')
 %sdir dc-mon/unique
 ijyb MONS_IJYB
+grum MONS_GRUM
 %sdir dc-mon
 goblin MONS_GOBLIN
 hobgoblin MONS_HOBGOBLIN

@@ -898,6 +898,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // non-human uniques
     case MONS_IJYB:
         return TILEP_MONS_IJYB;
+    case MONS_GRUM:
+        return TILEP_MONS_GRUM;
     case MONS_URUG:
         return TILEP_MONS_URUG;
     case MONS_EROLCHA:
