@@ -2992,9 +2992,9 @@ bool melee_attack::apply_damage_brand()
     switch (brand)
     {
     case SPWPN_FLAMING:
-        res = fire_res_apply_cerebov_downgrade( defender->res_fire() );
-        calc_elemental_brand_damage( BEAM_FIRE, res,
-                                     defender->is_icy()? "melt" : "burn");
+        res = fire_res_apply_cerebov_downgrade(defender->res_fire());
+        calc_elemental_brand_damage(BEAM_FIRE, res,
+                                    defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
         break;
 
@@ -4545,6 +4545,8 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                  special_attack_punctuation().c_str());
 
         }
+
+        defender->expose_to_element(BEAM_COLD, 2);
         break;
 
     case AF_ELEC:
