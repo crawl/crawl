@@ -532,7 +532,7 @@ BOOL:    elec, seeinv, notelep
 
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
 # between voodoo and bo, the latter dealing with curses, witchcraft and
-# spells designed to do harm. Priests (or rather sorcerors) of bo are
+# spells designed to do harm. Priests (or rather sorcerers) of bo are
 # called botono.
 NAME:     spear of the Botono
 APPEAR:   ebony spear
