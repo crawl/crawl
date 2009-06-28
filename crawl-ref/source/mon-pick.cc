@@ -93,7 +93,7 @@ static int _mons_misc_level(int mcls)
     case MONS_ANT_LARVA:
         return 10;
 
-    case MONS_ELECTRICAL_EEL:
+    case MONS_ELECTRIC_EEL:
     case MONS_LAVA_FISH:
     case MONS_LAVA_SNAKE:
     case MONS_LAVA_WORM:
@@ -614,7 +614,7 @@ int mons_standard_level(int mcls)
     case MONS_SCORPION:
         return 8;
 
-    case MONS_BROWN_SNAKE:
+    case MONS_WATER_MOCCASIN:
     case MONS_CENTAUR:
     case MONS_ICE_BEAST:
     case MONS_IMP:
@@ -809,7 +809,7 @@ int mons_standard_level(int mcls)
         return 33;
 
     case MONS_BIG_FISH:
-    case MONS_ELECTRICAL_EEL:
+    case MONS_ELECTRIC_EEL:
     case MONS_GIANT_GOLDFISH:
     case MONS_JELLYFISH:
     case MONS_LAVA_FISH:
@@ -829,7 +829,7 @@ int mons_standard_rare(int mcls)
     switch (mcls)
     {
     case MONS_BIG_FISH:
-    case MONS_ELECTRICAL_EEL:
+    case MONS_ELECTRIC_EEL:
     case MONS_GIANT_GOLDFISH:
     case MONS_JELLYFISH:
     case MONS_LAVA_FISH:
@@ -962,7 +962,7 @@ int mons_standard_rare(int mcls)
         return 32;
 
     case MONS_ARMOUR_MIMIC:
-    case MONS_BROWN_SNAKE:
+    case MONS_WATER_MOCCASIN:
     case MONS_DRAGON:
     case MONS_ETTIN:
     case MONS_FIRE_VORTEX:
@@ -1360,7 +1360,7 @@ int mons_lair_level(int mcls)
         mlev += 4;
         break;
 
-    case MONS_BROWN_SNAKE:
+    case MONS_WATER_MOCCASIN:
     case MONS_BUTTERFLY:
     case MONS_GIANT_BEETLE:
     case MONS_GIANT_SLUG:
@@ -1386,7 +1386,7 @@ int mons_lair_level(int mcls)
         mlev += 6;
         break;
 
-    case MONS_BLACK_SNAKE:
+    case MONS_BLACK_MAMBA:
     case MONS_BRAIN_WORM:
     case MONS_BUMBLEBEE:
     case MONS_FIREDRAKE:
@@ -1435,7 +1435,7 @@ int mons_lair_rare(int mcls)
     case MONS_QUOKKA:
         return 99;
 
-    case MONS_BROWN_SNAKE:
+    case MONS_WATER_MOCCASIN:
     case MONS_GIANT_LIZARD:
         return 90;
 
@@ -1472,7 +1472,7 @@ int mons_lair_rare(int mcls)
     case MONS_YAK:
         return 50;
 
-    case MONS_BLACK_SNAKE:
+    case MONS_BLACK_MAMBA:
         return 47;
 
     case MONS_BLINK_FROG:
@@ -1577,7 +1577,7 @@ int mons_swamp_level(int mcls)
         mlev += 2;
         break;
 
-    case MONS_BROWN_SNAKE:
+    case MONS_WATER_MOCCASIN:
     case MONS_HUNGRY_GHOST:
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_JELLY:
@@ -1646,7 +1646,7 @@ int mons_swamp_rare(int mcls)
     case MONS_INSUBSTANTIAL_WISP:
         return 43;
 
-    case MONS_BROWN_SNAKE:
+    case MONS_WATER_MOCCASIN:
         return 33;
 
     case MONS_RED_WASP:
@@ -1796,9 +1796,9 @@ int mons_pitsnake_level(int mcls)
         mlev++;
         break;
 
-    case MONS_BROWN_SNAKE:
-    case MONS_BLACK_SNAKE:
-    case MONS_YELLOW_SNAKE:
+    case MONS_WATER_MOCCASIN:
+    case MONS_BLACK_MAMBA:
+    case MONS_VIPER:
     case MONS_GREY_SNAKE:
     case MONS_NAGA:
         mlev += 2;
@@ -1829,10 +1829,10 @@ int mons_pitsnake_rare(int mcls)
     switch (mcls)
     {
     case MONS_SNAKE:
-    case MONS_BROWN_SNAKE:
+    case MONS_WATER_MOCCASIN:
         return 99;
 
-    case MONS_BLACK_SNAKE:
+    case MONS_BLACK_MAMBA:
         return 72;
 
     case MONS_NAGA:
@@ -1842,7 +1842,7 @@ int mons_pitsnake_rare(int mcls)
     case MONS_NAGA_MAGE:
         return 34;
 
-    case MONS_YELLOW_SNAKE:
+    case MONS_VIPER:
     case MONS_GREY_SNAKE:
         return 32;
 

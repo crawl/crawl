@@ -583,7 +583,7 @@ TAGS:   allow_dup no_monster_gen no_item_gen mini_float
 MONS:   w:5 death drake / ice dragon / dragon / swamp dragon
 MONS:   swamp dragon / hydra / grey snake
 MONS:   swamp drake / w:20 spiny frog / w:20 komodo dragon /\
-        w:20 gila monster / w:20 black snake
+        w:20 gila monster / w:20 black mamba
 : if you.absdepth() >= 18 then
 SUBST:  M = 1:1 2:9 3:20
 : elseif you.absdepth() >= 13 then
@@ -817,7 +817,7 @@ MONS:   cyclops,stone giant
 SUBST:  1 = 1.
 SUBST:  W = W:2 w
 SUBST:  . = . w:3
-KMONS:  W = giant goldfish/big fish/electrical eel
+KMONS:  W = giant goldfish/big fish/electric eel
 KFEAT:  W = w
 MAP
 wwwww......11......wwwww

@@ -598,7 +598,7 @@ SUBST:   W : mvbG
 SUBST:   W = w
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
-KMONS:   1 = giant goldfish / electrical eel / big fish
+KMONS:   1 = giant goldfish / electric eel / big fish
 : else
 SUBST:   W = w
 :end

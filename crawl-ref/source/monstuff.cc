@@ -5588,7 +5588,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         }
         break;
 
-    case MONS_ELECTRICAL_EEL:
+    case MONS_ELECTRIC_EEL:
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 

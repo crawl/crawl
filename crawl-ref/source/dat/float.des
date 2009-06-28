@@ -533,9 +533,9 @@ KFEAT: G = x / . / w / W
 KFEAT: H = . / W
 KMONS: D = Plant / w:200 nothing
 KMONS: E = w:2 slime creature / swamp worm / giant blowfly /\
-           w:2 giant mosquito / w:1 electrical eel / w:1000 nothing
+           w:2 giant mosquito / w:1 electric eel / w:1000 nothing
 KMONS: F = w:2 slime creature / swamp worm / giant blowfly /\
-           w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
+           w:2 giant mosquito / w:2 electric eel / w:1000 nothing
 KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
 KITEM: H = any good_item / any potion / w:20 nothing / gold
 MAP
@@ -567,7 +567,7 @@ DEPTH:   D:10-13, Lair, Snake
 ORIENT:  float
 MONS:    giant gecko / giant newt, giant lizard, giant iguana
 MONS:    firedrake / swamp drake
-MONS:    snake, brown snake, yellow snake
+MONS:    snake, water moccasin, viper
 SUBST:   4 = 34
 SUBST:   3 = 3:20 2
 SUBST:   2 = 2:20 1

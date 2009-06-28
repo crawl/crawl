@@ -375,7 +375,7 @@ ENDMAP
 NAME:  lemuel_troublesome_eels
 DEPTH: Hive:*
 KFEAT: X = deep_water
-KMONS: X = electrical eel
+KMONS: X = electric eel
 SUBST: W=w1.
 SUBST: . = 1:1 .
 SUBST: 1 = 1 .:5

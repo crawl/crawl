@@ -889,7 +889,7 @@ Other symbols:
 --------------
 #   earth elemental, fire elemental, and vapour
 {   water elemental
-;   all fish, and electrical eel
+;   all fish, and electric eel
 @   all humans, (glowing) shapeshifter, and Killer Klown
 &   all pandemonium lords
 *   ball lightning, and orb of fire

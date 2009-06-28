@@ -352,9 +352,9 @@ black draconian
 
 Before you stands a draconian.
 %%%%
-black snake
+black mamba
 
-A large black snake.
+A large black tropical snake with the deadliest of all venoms.
 %%%%
 blink frog
 
@@ -384,9 +384,9 @@ brown ooze
 
 A viscous liquid, flowing along the floor in search of organic matter to corrode.
 %%%%
-brown snake
+water moccasin
 
-A large brown snake.
+A largish venomous brown snake. It usually lives near water, and is an able swimmer.
 %%%%
 bumblebee
 
@@ -557,7 +557,7 @@ electric golem
 
 An animated figure made completely of electricity.
 %%%%
-electrical eel
+electric eel
 
 A small and slimy eel, crackling with electrical discharge.
 %%%%
@@ -1485,9 +1485,9 @@ yellow draconian
 
 Before you stands a draconian.
 %%%%
-yellow snake
+viper
 
-A large yellow tubular reptile.
+A yellow-scaled snake with a painful venom. It's not as fast as some other snakes, but still fairly quick.
 %%%%
 yellow wasp
 

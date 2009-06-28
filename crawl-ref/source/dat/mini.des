@@ -852,8 +852,8 @@ xxxx  xxxx
 x**x  x**x
 x**+..+**x
 xx+x..x+xx
-  ......  
-  ......  
+  ......
+  ......
 xx+x..x+xx
 x**+..+**x
 x**x  x**x
@@ -1412,8 +1412,8 @@ ENDMAP
 #DEPTH:   D:8-13
 #TAGS:    no_monster_gen no_pool_fixup
 #KMONS:   1 = centaur
-#KMONS:   2 = brown snake
-#KMONS:   3 = electrical eel
+#KMONS:   2 = water moccasin
+#KMONS:   3 = electric eel
 #ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
 #SHUFFLE: !;
 #SUBST:   " = .:80 W:30
@@ -1454,7 +1454,7 @@ ENDMAP
 #KFEAT:   | = W / .
 #KFEAT:   d = W / .
 #KFEAT:   e = W / .
-#KFEAT:   2 = W 
+#KFEAT:   2 = W
 #SUBST:   ; = .:80 W:30
 #SUBST:   " = .:80 W:30
 #SUBST:   ! = w:20 W ? c
@@ -1696,7 +1696,7 @@ TAGS:   mini_float patrolling
 DEPTH:  5-26, !Lair, !Orc, !Tomb
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
-            good_item triple sword / good_item double sword 
+            good_item triple sword / good_item double sword
 KFEAT:  S = teleport trap
 NSUBST: n = n/cbn
 : if you.absdepth() < 10 then
@@ -1764,7 +1764,7 @@ MAP
 ENDMAP
 
 ################################################################################
-# Some earlyish demon minivaults by Eino. 
+# Some earlyish demon minivaults by Eino.
 # The difficulty of most low-tier demons is severely inflated by the time the
 # player gets to meet them. Here (using default depth) they aspire to be both
 # challenging and flavourful.
@@ -1899,7 +1899,7 @@ ENDMAP
 # A number of flamethrower vaults (Lemuel)
 #
 # This next bunch are "flamethrowers" -- flame appears at the end of the
-# little corridor and a couple turns later spreads out of it. If you see 
+# little corridor and a couple turns later spreads out of it. If you see
 # fire, get clear!
 # Again, these rely on statues to halt autoexplore.
 # Yes, you can cook monsters with it, but (1) you may get burned yourself
@@ -2236,7 +2236,7 @@ ENDMAP
 #################################################################
 # Flames and gold (Lemuel)
 # No safe path in this one -- just got to take your chances!
-# 
+#
 NAME:   flames_and_gold
 DEPTH:  D:16-27
 WEIGHT: 2

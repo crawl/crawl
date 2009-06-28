@@ -2572,10 +2572,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_BROWN_SNAKE, 'S', BROWN, "brown snake",
+    MONS_WATER_MOCCASIN, 'S', BROWN, "water moccasin",
     M_COLD_BLOOD,
     MR_RES_POISON,
-    300, 10, MONS_SNAKE, MONS_BROWN_SNAKE, MH_NATURAL, -3,
+    300, 10, MONS_SNAKE, MONS_WATER_MOCCASIN, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 3, 5, 0 },
     2, 15, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_INSECT,
@@ -2583,10 +2583,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_BLACK_SNAKE, 'S', BLUE, "black snake",
+    MONS_BLACK_MAMBA, 'S', BLUE, "black mamba",
     M_COLD_BLOOD,
     MR_RES_POISON,
-    500, 12, MONS_SNAKE, MONS_BLACK_SNAKE, MH_NATURAL, -3,
+    500, 12, MONS_SNAKE, MONS_BLACK_MAMBA, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     4, 15, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_INSECT,
@@ -2594,10 +2594,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_YELLOW_SNAKE, 'S', YELLOW, "yellow snake",
+    MONS_VIPER, 'S', YELLOW, "viper",
     M_COLD_BLOOD,
     MR_RES_POISON,
-    400, 10, MONS_SNAKE, MONS_YELLOW_SNAKE, MH_NATURAL, -3,
+    400, 10, MONS_SNAKE, MONS_VIPER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 3, 5, 0 },
     4, 14, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_INSECT,
@@ -2948,10 +2948,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_ELECTRICAL_EEL, ';', LIGHTBLUE, "electrical eel",
+    MONS_ELECTRIC_EEL, ';', LIGHTBLUE, "electric eel",
     M_COLD_BLOOD | M_SPECIAL_ABILITY,
     MR_RES_ELEC,
-    0, 10, MONS_ELECTRICAL_EEL, MONS_ELECTRICAL_EEL, MH_NATURAL, -3,
+    0, 10, MONS_ELECTRIC_EEL, MONS_ELECTRIC_EEL, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
     1, 15, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL,

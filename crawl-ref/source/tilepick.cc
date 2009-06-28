@@ -617,12 +617,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_SMALL_SNAKE;
     case MONS_SNAKE:
         return TILEP_MONS_SNAKE;
-    case MONS_BROWN_SNAKE:
-        return TILEP_MONS_BROWN_SNAKE;
-    case MONS_BLACK_SNAKE:
-        return TILEP_MONS_BLACK_SNAKE;
-    case MONS_YELLOW_SNAKE:
-        return TILEP_MONS_YELLOW_SNAKE;
+    case MONS_WATER_MOCCASIN:
+        return TILEP_MONS_WATER_MOCCASIN;
+    case MONS_BLACK_MAMBA:
+        return TILEP_MONS_BLACK_MAMBA;
+    case MONS_VIPER:
+        return TILEP_MONS_VIPER;
     case MONS_GREY_SNAKE:
         return TILEP_MONS_GREY_SNAKE;
 
@@ -699,8 +699,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_BIG_FISH;
     case MONS_GIANT_GOLDFISH:
         return TILEP_MONS_GIANT_GOLDFISH;
-    case MONS_ELECTRICAL_EEL:
-        return TILEP_MONS_ELECTRICAL_EEL;
+    case MONS_ELECTRIC_EEL:
+        return TILEP_MONS_ELECTRIC_EEL;
     case MONS_SHARK:
         return TILEP_MONS_SHARK;
     case MONS_JELLYFISH:
@@ -1786,12 +1786,12 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_SMALL_SNAKE;
     case MONS_SNAKE:
         return TILE_CORPSE_SNAKE;
-    case MONS_BROWN_SNAKE:
-        return TILE_CORPSE_BROWN_SNAKE;
-    case MONS_BLACK_SNAKE:
-        return TILE_CORPSE_BLACK_SNAKE;
-    case MONS_YELLOW_SNAKE:
-        return TILE_CORPSE_YELLOW_SNAKE;
+    case MONS_WATER_MOCCASIN:
+        return TILE_CORPSE_WATER_MOCCASIN;
+    case MONS_BLACK_MAMBA:
+        return TILE_CORPSE_BLACK_MAMBA;
+    case MONS_VIPER:
+        return TILE_CORPSE_VIPER;
     case MONS_GREY_SNAKE:
         return TILE_CORPSE_GREY_SNAKE;
     case MONS_TROLL:

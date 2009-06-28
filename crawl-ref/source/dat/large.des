@@ -994,7 +994,7 @@ ITEM:    ring of teleportation
 ITEM:    royal jelly / honeycomb w:20 / nothing w:30
 ITEM:    scroll of teleportation
 KFEAT:   T = teleport trap
-KMONS:   w = electrical eel / jellyfish / nothing w:120
+KMONS:   w = electric eel / jellyfish / nothing w:120
 KFEAT:   w = w
 KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 /\
              nothing w:50

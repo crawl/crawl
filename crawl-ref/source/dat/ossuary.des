@@ -313,7 +313,7 @@ NSUBST:  K = 1:= / *:c
 # loot: 12 items
 ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
 MONS:    snake zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
-MONS:    big kobold zombie / brown snake zombie / gnoll zombie / nothing
+MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
 : ossuary_setup_features(_G)
 MAP

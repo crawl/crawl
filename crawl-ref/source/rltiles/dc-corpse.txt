@@ -75,12 +75,12 @@ queen_ant CORPSE_QUEEN_ANT /* Q */
 queen_bee CORPSE_QUEEN_BEE /* Q */
 
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-black_snake CORPSE_BLACK_SNAKE /* S */
-brown_snake CORPSE_BROWN_SNAKE /* S */
+black_mamba CORPSE_BLACK_MAMBA /* S */
+water_moccasin CORPSE_WATER_MOCCASIN /* S */
 grey_snake CORPSE_GREY_SNAKE /* S */
 small_snake CORPSE_SMALL_SNAKE /* S */
 snake CORPSE_SNAKE /* S */
-yellow_snake CORPSE_YELLOW_SNAKE /* S */
+viper CORPSE_VIPER /* S */
 
 %sdir dc-mon
 deep_troll CORPSE_DEEP_TROLL /* T */

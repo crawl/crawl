@@ -1725,7 +1725,7 @@ enum monster_type                      // (int) menv[].type
     MONS_AIR_ELEMENTAL,                //  125
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
-    MONS_BROWN_SNAKE,
+    MONS_WATER_MOCCASIN,
     MONS_GIANT_LIZARD,
     MONS_SPECTRAL_WARRIOR,             //  130
     MONS_PULSATING_LUMP,
@@ -1751,7 +1751,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GREY_RAT,
     MONS_GREEN_RAT,
     MONS_ORANGE_RAT,
-    MONS_BLACK_SNAKE,
+    MONS_BLACK_MAMBA,
     MONS_SHEEP,                        //  155
     MONS_GHOUL,
     MONS_HOG,
@@ -1763,7 +1763,7 @@ enum monster_type                      // (int) menv[].type
     MONS_FROST_GIANT,
     MONS_FIREDRAKE,
     MONS_SHADOW_DRAGON,                //  165
-    MONS_YELLOW_SNAKE,
+    MONS_VIPER,
     MONS_GREY_SNAKE,
     MONS_DEEP_TROLL,
     MONS_GIANT_BLOWFLY,
@@ -1993,7 +1993,7 @@ enum monster_type                      // (int) menv[].type
     // Water monsters:
     MONS_BIG_FISH = 430,               //  430
     MONS_GIANT_GOLDFISH,
-    MONS_ELECTRICAL_EEL,
+    MONS_ELECTRIC_EEL,
     MONS_JELLYFISH,
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435

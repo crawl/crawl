@@ -75,7 +75,7 @@ mon_glyph = gila monster : black
 # snakes and nagas
 mon_glyph = small snake : lightgreen
 mon_glyph = snake : green
-mon_glyph = black snake : darkgrey
+mon_glyph = black mamba : darkgrey
 mon_glyph = greater naga : red
 mon_glyph = naga mage : lightred
 
@@ -205,7 +205,7 @@ mon_glyph = Frederick : darkgrey
 # snakes and naga
 # small snake             lightgreen     green
 # snake                   green          lightgreen
-# black snake             darkgrey       blue
+# black mamba             darkgrey       blue
 # greater naga            red            lightred
 # naga mage               lightred       red
 #

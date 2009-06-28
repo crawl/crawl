@@ -83,7 +83,7 @@ moth_of_wrath MONS_MOTH_OF_WRATH
 ## Aquatics (';')
 big_fish MONS_BIG_FISH
 giant_goldfish MONS_GIANT_GOLDFISH
-electrical_eel MONS_ELECTRICAL_EEL
+electric_eel MONS_ELECTRIC_EEL
 lava_fish MONS_LAVA_FISH
 shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
@@ -113,11 +113,11 @@ queen_bee MONS_QUEEN_BEE
 ## Snakes ('S')
 small_snake MONS_SMALL_SNAKE
 snake MONS_SNAKE
-black_snake MONS_BLACK_SNAKE
-brown_snake MONS_BROWN_SNAKE
+black_mamba MONS_BLACK_MAMBA
+water_moccasin MONS_WATER_MOCCASIN
 grey_snake MONS_GREY_SNAKE
 lava_snake MONS_LAVA_SNAKE
-yellow_snake MONS_YELLOW_SNAKE
+viper MONS_VIPER
 salamander MONS_SALAMANDER
 
 ## Bears ('U')

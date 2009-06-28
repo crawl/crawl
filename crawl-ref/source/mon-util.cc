@@ -3583,7 +3583,7 @@ bool monsters::wants_submerge() const
         return (_foe == NULL || !can_see(_foe));
     }
 
-    const bool has_ranged_attack = (type == MONS_ELECTRICAL_EEL
+    const bool has_ranged_attack = (type == MONS_ELECTRIC_EEL
                                     || type == MONS_LAVA_SNAKE
                                     || mons_genus(type) == MONS_MERMAID
                                        && you.species != SP_MERFOLK);
@@ -7372,7 +7372,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         const dungeon_feature_type grid = grd(pos());
 
         // Badly injured monsters prefer to stay submerged...
-        // electrical eels and lava snakes have ranged attacks
+        // electric eels and lava snakes have ranged attacks
         // and are more likely to surface.  -- bwr
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
@@ -7385,7 +7385,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 del_ench(ENCH_SUBMERGED);
             break;
         }
-        else if (((type == MONS_ELECTRICAL_EEL || type == MONS_LAVA_SNAKE)
+        else if (((type == MONS_ELECTRIC_EEL || type == MONS_LAVA_SNAKE)
                   && (one_chance_in(50) || (mons_near(this)
                                             && hit_points == max_hit_points
                                             && !one_chance_in(10))))
@@ -8966,7 +8966,7 @@ mon_body_shape get_mon_shape(const int type)
     case 'Z': // constructed type, not enough info to determine shape
         return(MON_SHAPE_MISC);
     case ';': // Fish and eels
-        if (type == MONS_ELECTRICAL_EEL)
+        if (type == MONS_ELECTRIC_EEL)
             return(MON_SHAPE_SNAKE);
         else
             return (MON_SHAPE_FISH);

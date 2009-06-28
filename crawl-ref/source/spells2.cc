@@ -1024,7 +1024,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             if (one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25)))
                 || get_ammo_brand(wpn) == SPMSL_POISONED)
             {
-                mon = x_chance_in_y(pow / 3, 100) ? MONS_BROWN_SNAKE
+                mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
                                                   : MONS_SNAKE;
             }
             else
@@ -1055,7 +1055,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             || wpn.sub_type == WPN_GLAIVE
             || wpn.sub_type == WPN_BLOWGUN))
     {
-        // Upsizing Snakes to Brown Snakes as the base class for using
+        // Upsizing Snakes to Water Moccasins as the base class for using
         // the really big sticks (so bonus applies really only to trolls
         // and ogres).  Still, it's unlikely any character is strong
         // enough to bother lugging a few of these around. - bwr
@@ -1063,16 +1063,16 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         if (item_mass(wpn) < 300)
             mon = MONS_SNAKE;
         else
-            mon = MONS_BROWN_SNAKE;
+            mon = MONS_WATER_MOCCASIN;
 
         if (pow > 20 && one_chance_in(3))
-            mon = MONS_BROWN_SNAKE;
+            mon = MONS_WATER_MOCCASIN;
 
         if (pow > 40 && one_chance_in(3))
-            mon = MONS_YELLOW_SNAKE;
+            mon = MONS_VIPER;
 
         if (pow > 70 && one_chance_in(3))
-            mon = MONS_BLACK_SNAKE;
+            mon = MONS_BLACK_MAMBA;
 
         if (pow > 90 && one_chance_in(3))
             mon = MONS_GREY_SNAKE;
