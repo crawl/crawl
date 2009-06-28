@@ -284,9 +284,6 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
         mpr("The Singing Sword hums in delight!", MSGCH_TALK);
 
     *show_msgs = false;
-
-    // Make noisy_equipment() use a special speech database key.
-    item->props[ART_NOISE_KEY] = "Singing Sword";
 }
 
 static void _SINGING_SWORD_unequip(const item_def *item, bool *show_msgs)

@@ -12,10 +12,6 @@
 
 #include "externs.h"
 
-// Artefacts which make noise can use this key to use a different
-// speech database key than the default.
-#define ART_NOISE_KEY "art_noise_key"
-
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
 #define NO_UNRANDARTS 76
 

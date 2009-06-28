@@ -4,8 +4,10 @@
 # messages, and adding new ones really easy.
 #
 # wpnnoise.txt contains the messages of randart weapons with
-# the noise property and of the Singing Sword, one of
-# Crawl's fixed artefacts.
+# the noise property and of the noisy unrandart weapons,
+# like the Singing Sword.  To make an entry for a noisy
+# unrandart weapon, make the entry's key exactly the same as
+# the weapon's name, but all lower case.
 #
 # For an explanation of how to read wpnnoise.txt and how to
 # add new messages, see monster_speech.txt in the docs

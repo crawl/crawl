@@ -61,10 +61,11 @@ void noisy_equipment()
 
     const item_def* weapon = you.weapon();
 
-    if (weapon && weapon->props.exists(ART_NOISE_KEY))
+    if (weapon && is_unrandom_artefact(*weapon))
     {
-        const std::string key = weapon->props[ART_NOISE_KEY];
-        msg = getSpeakString(key);
+        std::string name = weapon->name(DESC_PLAIN, false, true, false, false,
+                                        ISFLAG_IDENT_MASK);
+        msg = getSpeakString(name.c_str());
         if (!msg.empty())
         {
             // "Your Singing Sword" sounds disrespectful
@@ -73,7 +74,8 @@ void noisy_equipment()
             msg = replace_all(msg, "@your_weapon@", "@the_weapon@");
         }
     }
-    else
+
+    if (msg.empty())
     {
         msg = getSpeakString("noisy weapon");
         if (!msg.empty())

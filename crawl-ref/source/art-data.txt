@@ -81,7 +81,10 @@
 # * lev:      Lets wearer evoke levitation ability.
 # * life:     Grants negative energy resistance.
 # * mapping:  Lets wearer evoke magic mapping ability.
-# * noises:   Weapon makes noises.
+# * noises:   Weapon makes noises.  Can be given its own set of noises by
+#             making an entry in dat/database/wpnnoise.txt, with the
+#             entry's key exactly the same as the weapon's name, but all
+#             lowercase.
 # * nospell:  Prevents wearer from casting spells.
 # * notelep:  Prevents wearer from teleporting or blinking.
 # * poison:   Grants poison resistance.
