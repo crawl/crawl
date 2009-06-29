@@ -43,6 +43,8 @@ int bestroll(int max, int rolls);
 int roll_dice(int num, int size);
 void scale_dice(dice_def &dice, int threshold = 24);
 
+int binomial_generator(unsigned n_trials, unsigned trial_prob);
+
 // Various ways to iterate over things.
 
 // stack_iterator guarantees validity so long as you don't manually

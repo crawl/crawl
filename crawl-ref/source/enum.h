@@ -1239,6 +1239,7 @@ enum enchant_type
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
     ENCH_LOWERED_MR,
+    ENCH_SLOWLY_DYING,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -1795,7 +1796,8 @@ enum monster_type                      // (int) menv[].type
     MONS_MERMAID,
     MONS_SIREN,                        //  195
     MONS_FLAMING_CORPSE,
-    MONS_HARPY,                        //  197
+    MONS_HARPY,
+    MONS_TOADSTOOL,                    //  198
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,

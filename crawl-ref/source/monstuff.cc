@@ -2704,7 +2704,8 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
         {
             // (Plain) plants and fungi cannot fight back.
-            if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
+            if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT
+                || mon->type == MONS_TOADSTOOL)
                 return;
 
             mon->foe = src;

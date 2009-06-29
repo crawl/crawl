@@ -666,6 +666,17 @@ static monsterentry mondata[] = {
     HT_LAND, 10, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_TINY
 },
 
+{
+    MONS_TOADSTOOL, 'f', BROWN, "toadstool",
+    M_NO_EXP_GAIN | M_STATIONARY,
+    MR_RES_POISON,
+    0, 10, MONS_PLANT, MONS_TOADSTOOL, MH_PLANT, MAG_IMMUNE,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 2,2, 0 },
+    1, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT,
+    HT_LAND, 10, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_TINY
+},
+
 // goblins ('g')
 {
     MONS_GOBLIN, 'g', LIGHTGREY, "goblin",

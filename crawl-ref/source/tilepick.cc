@@ -198,6 +198,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_FUNGUS;
     case MONS_WANDERING_MUSHROOM:
         return TILEP_MONS_WANDERING_MUSHROOM;
+    case MONS_TOADSTOOL:
+        return TILEP_MONS_FUNGUS;
 
     // goblins ('g')
     case MONS_GOBLIN:

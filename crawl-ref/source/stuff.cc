@@ -689,6 +689,21 @@ int random2limit(int max, int limit)
     return (sum);
 }
 
+// Generate samples from a binomial distribution with n_trials and trial_prob
+// probability of success per trial. trial_prob is a integer less than 100
+// representing the % chancee of success.
+// This just evaluates all n trials, there is probably an efficient way of
+// doing this but I'm not much of a statistician. -CAO
+int binomial_generator(unsigned n_trials, unsigned trial_prob)
+{
+    int count = 0;
+    for (unsigned i = 0; i < n_trials; ++i)
+        if (::x_chance_in_y(trial_prob, 100))
+            count++;
+
+    return count;
+}
+
 void cio_init()
 {
     crawl_state.io_inited = true;

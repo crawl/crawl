@@ -7105,6 +7105,13 @@ void monsters::timeout_enchantments(int levels)
             del_ench(i->first);
             break;
 
+        case ENCH_SLOWLY_DYING:
+        {
+            const int actdur = speed_to_duration(speed)*levels;
+            if (lose_ench_duration(i->first, actdur))
+                monster_die(this,KILL_MISC,-1,true);
+            break;
+        }
         default:
             break;
         }
@@ -7479,6 +7486,18 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // This should only be used for ball lightning -- bwr
         if (decay_enchantment(me))
             hit_points = -1;
+        break;
+
+    case ENCH_SLOWLY_DYING:
+
+        // If you are no longer dying you must be dead
+        if (decay_enchantment(me))
+        {
+            if (see_grid(this->position))
+                mprf("A nearby %s withers and dies.", this->name(DESC_PLAIN, false).c_str());
+
+            monster_die(this,KILL_MISC,-1,true);
+        }
         break;
 
     case ENCH_GLOWING_SHAPESHIFTER:     // This ench never runs out!
@@ -8211,7 +8230,7 @@ static const char *enchant_names[] =
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "bug"
+    "decay", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -8357,6 +8376,11 @@ int mon_enchant::calc_duration(const monsters *mons,
     case ENCH_SHORT_LIVED:
         cturn = 1000 / _mod_speed(200, mons->speed);
         break;
+    case ENCH_SLOWLY_DYING:
+        // This may be a little too direct but the randomization at the end
+        // of this function is excessive for corpse mold. -cao
+        return (2*FRESHEST_CORPSE + random2(10)) * speed_to_duration(mons->speed)
+                * mons->speed/10;
     case ENCH_ABJ:
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);

@@ -15,6 +15,9 @@ REVISION("$Rev$");
 #include <string.h>
 #include <stdio.h>
 #include <algorithm>
+#include <queue>
+#include <set>
+#include <cmath>
 
 #include "externs.h"
 
@@ -3733,6 +3736,202 @@ static void _maybe_restart_fountain_flow(const coord_def& where,
    }
 }
 
+// Spawn a ring of mushrooms around the input corpse (radius=1).
+// Could try different radii/check for largest available but doesn't right now.
+// Maybe there should be a message for this.
+static int _mushroom_ring(item_def &corpse)
+{
+    ::adjacent_iterator adj(corpse.pos);
+
+    int spawned_count=0;
+    for ( ; adj; ++adj)
+    {
+        if (mons_class_can_pass(MONS_TOADSTOOL, grd(*adj))
+            && !actor_at(*adj))
+        {
+            const int mushroom = create_monster(
+                        mgen_data(MONS_TOADSTOOL,
+                                  BEH_HOSTILE,
+                                  0,
+                                  0,
+                                  *adj,
+                                  MHITNOT,
+                                  MG_FORCE_PLACE,
+                                  GOD_NO_GOD,
+                                  MONS_PROGRAM_BUG,
+                                  0,
+                                  corpse.colour),
+                                  false);
+
+            if (mushroom != -1)
+                spawned_count++;
+        }
+    }
+    return spawned_count;
+}
+
+// Try to spawn 'target_count' mushrooms around the position of 'corpse'.
+// Returns the number of mushrooms actually spawned.
+// Mushrooms radiate outwards from the corpse following bfs with 8-connectivity.
+// Could change the expansion pattern by using a priority queue for
+// sequencing (priority = distance from origin under some metric).
+int spawn_corpse_mushrooms(item_def &corpse, int target_count = 1)
+{
+    if (target_count == 0)
+        return 0;
+
+    int x_offset[] = {-1,-1,-1, 0, 0, 1, 1, 1};
+    int y_offset[] = {-1, 0, 1,-1, 1,-1, 0, 1};
+
+
+    int placed_targets = 0;
+
+    std::queue<coord_def> fringe;
+    std::set<int> visited_indices;
+
+    // Slight chance of spawning a ring of mushrooms around the corpse (and
+    // skeletonizing it) if the corpse square is unoccupied.
+    if (!actor_at(corpse.pos) && one_chance_in(100))
+    {
+        if (see_grid(corpse.pos))
+            mpr("A ring of toadstools grow before your very eyes.");
+
+        corpse.special = 0;
+        return _mushroom_ring(corpse);
+    }
+
+    // Can't figure out how to query the size of the xdim of the grid but who
+    // cares.
+    visited_indices.insert(10000*corpse.pos.y + corpse.pos.x);
+    fringe.push(corpse.pos);
+
+    while (!fringe.empty())
+    {
+        coord_def current = fringe.front();
+
+        fringe.pop();
+
+        actor * occupant = NULL;
+        // is this square occupied by a non mushroom?
+        if((occupant = actor_at(current))
+           && occupant->mons_species() != MONS_TOADSTOOL)
+        {
+            continue;
+        }
+
+        if (!occupant)
+        {
+            const int mushroom = create_monster(
+                        mgen_data(MONS_TOADSTOOL,
+                                  BEH_HOSTILE,
+                                  0,
+                                  0,
+                                  current,
+                                  MHITNOT,
+                                  MG_FORCE_PLACE,
+                                  GOD_NO_GOD,
+                                  MONS_PROGRAM_BUG,
+                                  0,
+                                  corpse.colour),
+                                  false);
+
+            if (mushroom != -1)
+            {
+                placed_targets++;
+                if (see_grid(current))
+                {
+                    if (see_grid(corpse.pos))
+                        mpr("A toadstool grows from a nearby corpse.");
+                    else
+                        mpr("A toadstool springs up from the ground.");
+                }
+            }
+            else
+                continue;
+        }
+
+        // We're done here if we place the desired number of mushrooms.
+        if (placed_targets == target_count)
+            break;
+
+        // Randomize the order in which children are processed to a certain
+        // extent.
+        int idx = rand() % 8;
+
+        for (int count = 0; count < 8; ++count)
+        {
+            idx= (idx + 1) % 8;
+            coord_def temp(current.x + x_offset[idx], current.y + y_offset[idx]);
+
+            int index = temp.x + temp.y * 10000;
+
+            if (visited_indices.find(index) == visited_indices.end()
+                && in_bounds(temp)
+                && mons_class_can_pass(MONS_TOADSTOOL, grd(temp)))
+            {
+
+                visited_indices.insert(index);
+                fringe.push(temp);
+            }
+        }
+    }
+
+    return placed_targets;
+}
+
+
+// Randomly decide whether or not to spawn a mushroom over the given corpse
+// Assumption: this is called before the rotting away logic in update_corpses.
+// Some conditions in this function may set the corpse timer to 0, assuming
+// that the corpse will be turned into a skeleton/destroyed on this update.
+static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
+{
+    // We won't spawn a mushroom within 10 turns of the corpse being created
+    // or rotting away.
+    int low_threshold  = 5;
+    int high_threshold = FRESHEST_CORPSE - 5;
+
+    if (corpse.special < low_threshold)
+        return;
+
+    int spawn_time = (rot_time > corpse.special ? corpse.special : rot_time);
+
+    if (spawn_time > high_threshold)
+        spawn_time = high_threshold;
+
+    // So we're going to spawn one or more mushrooms over the lifetime of a
+    // corpse here. For convenience we follow a binomial distribution. I think
+    // the most useful analysis is in terms of the probability of a corpse
+    // producing no mushrooms, although trial probability should just be hard
+    // coded once a value is agreed on.
+
+
+    // Expect this many trials over a corpse's lifetime since this function
+    // is called once for every 10 units of rot_time.
+    int step_size = 10;
+    float total_trials = (high_threshold - low_threshold) / step_size;
+
+    // chance of producing no mushrooms
+    float p_failure = .5;
+
+    float trial_prob_f = 1 - powf(p_failure,1.0f/total_trials);
+
+    // The chance of producing mushrooms depends on the weight of the
+    // corpse involved. Humans weigh 550 so we will take that as the
+    // base factor here.
+    float weight_factor = item_mass(corpse)/550.0f;
+
+    trial_prob_f *= weight_factor;
+
+    int trial_prob = static_cast<int>(100*trial_prob_f);
+
+    int current_trials = spawn_time/step_size;
+
+    int success_count = binomial_generator(current_trials, trial_prob);
+
+    spawn_corpse_mushrooms(corpse, success_count);
+}
+
 //---------------------------------------------------------------
 //
 // update_corpses
@@ -3761,6 +3960,9 @@ void update_corpses(double elapsedTime)
             maybe_coagulate_blood_potions_floor(c);
             continue;
         }
+
+        if (it.sub_type == CORPSE_BODY)
+            _maybe_spawn_mushroom(it, rot_time);
 
         if (rot_time >= it.special && !is_being_butchered(it))
         {
