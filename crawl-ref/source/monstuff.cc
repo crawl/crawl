@@ -1144,7 +1144,8 @@ int monster_die(monsters *monster, killer_type killer,
     bool in_transit          = false;
 
 #ifdef DGL_MILESTONES
-    _check_kill_milestone(monster, killer, killer_index);
+    if (!crawl_state.arena)
+        _check_kill_milestone(monster, killer, killer_index);
 #endif
 
     // Award experience for suicide if the suicide was caused by the
@@ -2706,7 +2707,9 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             // (Plain) plants and fungi cannot fight back.
             if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT
                 || mon->type == MONS_TOADSTOOL)
+            {
                 return;
+            }
 
             mon->foe = src;
 

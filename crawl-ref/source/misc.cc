@@ -2137,7 +2137,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     leaving_level_now();
 
 #ifdef DGL_MILESTONES
-    if (!force_stair)
+    if (!force_stair && !crawl_state.arena)
     {
         // Not entirely accurate - the player could die before
         // reaching the Abyss.

@@ -347,9 +347,9 @@ dngn_trap_zot DNGN_TRAP_ZOT
 dngn_trap_needle DNGN_TRAP_NEEDLE
 dngn_trap_shaft DNGN_TRAP_SHAFT
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
-rock_stairs_down DNGN_ROCK_STAIRS_DOWN
+escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
-rock_stairs_up DNGN_ROCK_STAIRS_UP
+escape_hatch_up DNGN_ESCAPE_HATCH_UP
 
 %sdir dc-dngn/shops
 ##dngn_enter_shop DNGN_ENTER_SHOP

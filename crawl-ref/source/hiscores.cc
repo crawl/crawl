@@ -2076,7 +2076,6 @@ std::string xlog_fields::xlog_line() const
 // Milestones
 
 #ifdef DGL_MILESTONES
-
 void mark_milestone(const std::string &type, const std::string &milestone)
 {
     const std::string milestone_file = Options.save_dir + "milestones.txt";
@@ -2092,7 +2091,6 @@ void mark_milestone(const std::string &type, const std::string &milestone)
         lk_close(fp, "a", milestone_file);
     }
 }
-
 #endif // DGL_MILESTONES
 
 #ifdef DGL_WHEREIS

@@ -194,12 +194,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_DEEP_ELF_MASTER_ARCHER;
 
     // fungi ('f')
+    case MONS_TOADSTOOL:
+        return TILEP_MONS_TOADSTOOL;
     case MONS_FUNGUS:
         return TILEP_MONS_FUNGUS;
     case MONS_WANDERING_MUSHROOM:
         return TILEP_MONS_WANDERING_MUSHROOM;
-    case MONS_TOADSTOOL:
-        return TILEP_MONS_FUNGUS;
 
     // goblins ('g')
     case MONS_GOBLIN:
@@ -2332,13 +2332,13 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_STONE_STAIRS_DOWN_III:
         return TILE_DNGN_STONE_STAIRS_DOWN;
     case DNGN_ESCAPE_HATCH_DOWN:
-        return TILE_DNGN_ROCK_STAIRS_DOWN;
+        return TILE_DNGN_ESCAPE_HATCH_DOWN;
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return TILE_DNGN_STONE_STAIRS_UP;
     case DNGN_ESCAPE_HATCH_UP:
-        return TILE_DNGN_ROCK_STAIRS_UP;
+        return TILE_DNGN_ESCAPE_HATCH_UP;
     case DNGN_ENTER_DIS:
         return TILE_DNGN_ENTER_DIS;
     case DNGN_ENTER_GEHENNA:

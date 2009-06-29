@@ -429,6 +429,9 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
 void Note::check_milestone() const
 {
 #ifdef DGL_MILESTONES
+    if (crawl_state.arena)
+        return;
+
     if (type == NOTE_DUNGEON_LEVEL_CHANGE)
     {
         const int br = place_branch(packed_place),
