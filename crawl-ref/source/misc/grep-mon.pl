@@ -47,6 +47,6 @@ close(FILE);
 
 my @mons = split(/^},/m, $content);
 
-my @matches = grep(/$ARGV[0]/, @mons);
+my @matches = grep(/$ARGV[0]/s, @mons);
 
 print join("},", @matches) . "\n";
