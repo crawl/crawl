@@ -3903,7 +3903,7 @@ bool monsters::can_wield(const item_def& item, bool ignore_curse,
                          bool ignore_transform) const
 {
     // Monsters can only wield weapons or go unarmed (OBJ_UNASSIGNED
-    // means unarmed)
+    // means unarmed).
     if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_UNASSIGNED)
         return (false);
 
@@ -3940,7 +3940,7 @@ bool monsters::can_wield(const item_def& item, bool ignore_curse,
 
     // If we're already wielding it, then of course we can wield it.
     if (&item == weap1 || &item == weap2)
-        return(true);
+        return (true);
 
     // Barehanded needs two hands.
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
@@ -3951,7 +3951,7 @@ bool monsters::can_wield(const item_def& item, bool ignore_curse,
     {
         ASSERT(!(weap1 && weap2));
 
-        if (!ignore_shield && two_handed)
+        if (two_handed && !ignore_shield)
             return (false);
 
         _shield = &mitm[inv[MSLOT_SHIELD]];
