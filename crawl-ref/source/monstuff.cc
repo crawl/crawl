@@ -1477,7 +1477,7 @@ int monster_die(monsters *monster, killer_type killer,
             {
                 bool notice = false;
 
-                monsters *killer_mon;
+                monsters *killer_mon = NULL;
                 if (!anon)
                 {
                     killer_mon = &menv[killer_index];
@@ -6561,7 +6561,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     if (ms_low_hitpoint_cast(monster, hspell_pass[i])
                         && one_chance_in(++found_spell))
                     {
-                        spell_cast = hspell_pass[i];
+                        spell_cast  = hspell_pass[i];
                         finalAnswer = true;
                     }
                 }

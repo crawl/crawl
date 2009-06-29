@@ -1663,7 +1663,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         break;
 
     case MONS_KIRKE:
-        band_size = 3 + random2(5);
+        band_size = 2 + random2(3);
     case MONS_HOG:
         band = BAND_HOGS;
         band_size += 1 + random2(3);

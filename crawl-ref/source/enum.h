@@ -2810,12 +2810,12 @@ enum spell_type
     SPELL_ACID_SPLASH,
     SPELL_STICKY_FLAME_SPLASH,
     SPELL_FIRE_BREATH,
-    SPELL_COLD_BREATH,                 // 195
+    SPELL_COLD_BREATH,                 //  195
     SPELL_DRACONIAN_BREATH,
     SPELL_WATER_ELEMENTALS,
     SPELL_PORKALATOR,                  //  198
 
-    NUM_SPELLS                         // 199
+    NUM_SPELLS                         //  199
 };
 
 enum slot_select_mode

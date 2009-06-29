@@ -281,6 +281,7 @@ jessica MONS_JESSICA
 joseph MONS_JOSEPH
 josephine MONS_JOSEPHINE
 jozef MONS_JOZEF
+kirke MONS_KIRKE
 louise MONS_LOUISE
 margery MONS_MARGERY
 maud MONS_MAUD
@@ -584,5 +585,17 @@ draco-job-zealot DRACO_ZEALOT
 test_spawner MONS_TEST_SPAWNER
 
 dc-misc/unseen PLAYER
+
+## Transformations
+%sdir dc-mon/animals
+giant_bat TRAN_BAT
+wolf_spider TRAN_SPIDER
+hog_player TRAN_PIG
+%sdir dc-mon
+ice_beast TRAN_ICE_BEAST
+stone_golem TRAN_STATUE
+dragon TRAN_DRAGON
+lich TRAN_LICH
+
 dc-misc/unseen_monster MONS_UNKNOWN
 dc-misc/unseen_monster MCACHE_START

@@ -1037,6 +1037,44 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     {
         pbolt.target = monster->pos();
     }
+    else if (spell_cast == SPELL_PORKALATOR && one_chance_in(3))
+    {
+        int target   = -1;
+        int count    = 0;
+        monster_type hog_type = MONS_HOG;
+        for (int i = 0; i < MAX_MONSTERS; i++)
+        {
+            monsters *targ = &menv[i];
+
+            if (!mon_can_see_monster(monster, targ))
+                continue;
+
+            hog_type = MONS_HOG;
+            if (mons_holiness(targ) == MH_DEMONIC)
+                hog_type = MONS_HELL_HOG;
+            else if (mons_holiness(targ) != MH_NATURAL)
+                continue;
+
+            if (targ->type != hog_type
+                && mons_atts_aligned(monster->attitude, targ->attitude)
+                && mons_power(hog_type) + random2(4) >= mons_power(targ->type)
+                && (!mons_class_flag(targ->type, M_SPELLCASTER) || coinflip)
+                && one_chance_in(++count))
+            {
+                target = i;
+            }
+        }
+
+        if (target != -1)
+        {
+            monsters *targ = &menv[target];
+            pbolt.target = targ->pos();
+            mprf("Porkalator: targetting %s instead",
+                 targ->name(DESC_PLAIN).c_str());
+            monster_polymorph(targ, hog_type);
+        }
+        // else target remains as specified
+    }
 }
 
 bool monster_random_space(const monsters *monster, coord_def& target,

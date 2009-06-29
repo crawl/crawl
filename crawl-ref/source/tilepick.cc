@@ -31,6 +31,7 @@ REVISION("$Rev$");
 #include "tilemcache.h"
 #include "tiledef-dngn.h"
 #include "tiledef-unrand.h"
+#include "transfor.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -995,6 +996,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_MARGERY;
     case MONS_EUSTACHIO:
         return TILEP_MONS_EUSTACHIO;
+    case MONS_KIRKE:
+        return TILEP_MONS_KIRKE;
 
     // unique major demons ('&')
     case MONS_MNOLEG:
@@ -2484,17 +2487,17 @@ int tileidx_player(int job)
     int ch = TILEP_PLAYER;
 
     // Handle shapechange first
-    switch (you.symbol)
+    switch (you.attribute[ATTR_TRANSFORMATION])
     {
-        case 's': ch = TILEP_MONS_WOLF_SPIDER; break;
-        case 'I': ch = TILEP_MONS_ICE_BEAST;   break;
-        case '8': ch = TILEP_MONS_STONE_GOLEM; break;
-        case 'D': ch = TILEP_MONS_DRAGON;      break;
-        case 'L': ch = TILEP_MONS_LICH;        break;
-        case '#': ch = TILEP_MONS_VAPOUR;      break;
-        case 'S': ch = TILEP_MONS_LAVA_SNAKE;  break;
-        case 'b': ch = TILEP_MONS_GIANT_BAT;   break;
-        case 'h': ch = TILEP_MONS_HOG;         break;
+        // animals
+        case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
+        case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
+        case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
+        // non-animals
+        case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
+        case TRAN_STATUE:    ch = TILEP_TRAN_STATUE;    break;
+        case TRAN_DRAGON:    ch = TILEP_TRAN_DRAGON;    break;
+        case TRAN_LICH:      ch = TILEP_TRAN_LICH;      break;
     }
 
     if (player_is_airborne())
