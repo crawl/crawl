@@ -2704,12 +2704,10 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             || ((wontAttack != sourceWontAttack || isSmart)
                 && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
         {
-            // (Plain) plants and fungi cannot fight back.
-            if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT
-                || mon->type == MONS_TOADSTOOL)
-            {
+            // Monster types that you can't gain experience from cannot
+            // fight back.
+            if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
                 return;
-            }
 
             mon->foe = src;
 
@@ -4424,7 +4422,7 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_CORNERED:
-            // Plants or nonliving monsters cannot fight back.
+            // Plants and nonliving monsters cannot fight back.
             if (mons_class_holiness(mon->type) == MH_PLANT
                 || mons_class_holiness(mon->type) == MH_NONLIVING)
             {
