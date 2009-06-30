@@ -1058,7 +1058,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
             if (targ->type != hog_type
                 && mons_atts_aligned(monster->attitude, targ->attitude)
                 && mons_power(hog_type) + random2(4) >= mons_power(targ->type)
-                && (!mons_class_flag(targ->type, M_SPELLCASTER) || coinflip)
+                && (!mons_class_flag(targ->type, M_SPELLCASTER) || coinflip())
                 && one_chance_in(++count))
             {
                 target = i;
