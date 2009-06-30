@@ -133,8 +133,8 @@
      SIZE_LITTLE,            // spriggans
      SIZE_SMALL,             // halflings/kobolds
      SIZE_MEDIUM,            // humans/elves/dwarves
-     SIZE_LARGE,             // trolls/ogres
-     SIZE_BIG,               // large quadrupeds/centaurs/nagas
+     SIZE_LARGE,             // trolls/ogres/centaurs/nagas
+     SIZE_BIG,               // large quadrupeds
      SIZE_GIANT,             // giants
      SIZE_HUGE,              // dragons
 
@@ -255,7 +255,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 3, 5, 0 },
     3, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL,
-    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -266,7 +266,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 3, 5, 0 },
     4, 8, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SHOUT, I_HIGH,
-    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -277,7 +277,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     4, 4, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL,
-    HT_LAND, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -288,7 +288,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 3, 5, 0 },
     5, 5, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SHOUT, I_HIGH,
-    HT_LAND, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    HT_LAND, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 // draconians ('d')
@@ -2359,7 +2359,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 5, 3, 0 },
     6, 9, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL,
-    HT_LAND, 9, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 9, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -2393,7 +2393,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 3, 5, 0 },
     6, 10, MST_NAGA, CE_POISONOUS, Z_BIG, S_SHOUT, I_NORMAL,
-    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -2404,7 +2404,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     6, 14, MST_GUARDIAN_NAGA, CE_MUTAGEN_RANDOM, Z_BIG, S_SHOUT, I_HIGH,
-    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_BIG
+    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_LARGE
 },
 
 {
@@ -2415,7 +2415,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     6, 10, MST_NAGA_MAGE, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_NORMAL,
-    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -2426,7 +2426,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 28}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 9, 2, 0 },
     6, 10, MST_NAGA, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_NORMAL,
-    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -2438,7 +2438,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 15, 3, 5, 0 },
     6, 10, MST_NAGA_MAGE, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_HIGH,
-    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 // ogres ('O')
@@ -2661,7 +2661,7 @@ static monsterentry mondata[] = {
       {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK },
     { 10, 3, 5, 0 },
     6, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL,
-    HT_LAND, 10, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_BIG
+    HT_LAND, 10, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_LARGE
 },
 
 // bears ('U')
@@ -3627,7 +3627,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_FIRE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 3, 5, 0 },
     5, 12, MST_BALRUG, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH,
-    HT_LAND, 12, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 12, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
@@ -3878,7 +3878,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 3, 5, 0 },
     4, 8, MST_NESSOS, CE_CLEAN, Z_NOZOMBIE, S_SHOUT, I_HIGH,
-    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 15, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 },
 
 {
