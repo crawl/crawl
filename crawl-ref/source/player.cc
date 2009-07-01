@@ -1498,11 +1498,11 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
     if (items)
     {
-        // rings of fire resistance/fire
+        // rings of cold resistance/ice
         rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
         rc += player_equip( EQ_RINGS, RING_ICE, calc_unid );
 
-        // rings of ice
+        // rings of fire
         rc -= player_equip( EQ_RINGS, RING_FIRE, calc_unid );
 
         // Staves

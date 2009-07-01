@@ -18,6 +18,7 @@ REVISION("$Rev$");
 #ifdef USE_TILE
  #include "monstuff.h"
  #include "mon-util.h"
+ #include "newgame.h"
 #endif
 #include "player.h"
 #ifdef USE_TILE
@@ -710,14 +711,16 @@ void Menu::select_items(int key, int qty)
     cgotoxy( x, y );
 }
 
-MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monsters* mon, int hotkey) :
+MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monsters* mon,
+                                   int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
     data = (void*)mon;
     quantity = 1;
 }
 
-FeatureMenuEntry::FeatureMenuEntry(const std::string &str, const coord_def p, int hotkey) :
+FeatureMenuEntry::FeatureMenuEntry(const std::string &str, const coord_def p,
+                                   int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
     pos      = p;
@@ -725,6 +728,12 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str, const coord_def p, in
 }
 
 #ifdef USE_TILE
+PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
+    MenuEntry(str, MEL_ITEM, 1)
+{
+    quantity = 1;
+}
+
 bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     return (false);
@@ -753,7 +762,6 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         item_def item = mitm[m->inv[MSLOT_WEAPON]];
         tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
         tileset.push_back(tile_def(TILE_ANIMATED_WEAPON, TEX_DEFAULT));
-
     }
     else if (mons_is_mimic(m->type))
         tileset.push_back(tile_def(tileidx_monster_base(m), TEX_DEFAULT));
@@ -829,6 +837,84 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
                                TEX_DUNGEON));
     if (is_travelable_stair(grd(pos)) && !travel_cache.know_stair(pos))
         tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
+
+    return (true);
+}
+
+bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+{
+    if (!Options.tile_menu_icons)
+        return (false);
+
+    const player_save_info &player = *static_cast<player_save_info*>( data );
+
+    dolls_data equip_doll;
+    for (unsigned int j = 0; j < TILEP_PART_MAX; ++j)
+        equip_doll.parts[j] = TILEP_SHOW_EQUIP;
+
+    const int gender = TILEP_GENDER_MALE;
+    tilep_race_default(player.species, gender, player.experience_level,
+                       equip_doll.parts);
+
+    int job = get_class_by_name(player.class_name.c_str());
+    if (job == -1)
+        job = JOB_FIGHTER;
+
+    tilep_job_default(job, gender, equip_doll.parts);
+
+    // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
+    int p_order[TILEP_PART_MAX] =
+    {
+        TILEP_PART_SHADOW,  //  0
+        TILEP_PART_HALO,
+        TILEP_PART_ENCH,
+        TILEP_PART_DRCWING,
+        TILEP_PART_CLOAK,
+        TILEP_PART_BASE,    //  5
+        TILEP_PART_BOOTS,
+        TILEP_PART_LEG,
+        TILEP_PART_BODY,
+        TILEP_PART_ARM,
+        TILEP_PART_HAND1,   // 10
+        TILEP_PART_HAND2,
+        TILEP_PART_HAIR,
+        TILEP_PART_BEARD,
+        TILEP_PART_HELM,
+        TILEP_PART_DRCHEAD  // 15
+    };
+
+    int flags[TILEP_PART_MAX];
+    tilep_calc_flags(equip_doll.parts, flags);
+
+    // For skirts, boots go under the leg armour.  For pants, they go over.
+    if (equip_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
+    {
+        p_order[6] = TILEP_PART_BOOTS;
+        p_order[7] = TILEP_PART_LEG;
+    }
+
+    for (int i = 0; i < TILEP_PART_MAX; ++i)
+    {
+        const int p   = p_order[i];
+        const int idx = equip_doll.parts[p];
+        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        ASSERT(idx >= TILE_MAIN_MAX && idx < TILEP_PLAYER_MAX);
+
+#if 0
+        // FIXME: Is there any way to make this work with tile_def?
+        int ymax = TILE_Y;
+
+        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
+            || flags[p] == TILEP_FLAG_CUT_NAGA)
+        {
+            ymax = 18;
+        }
+        buf->add(doll.parts[p], x, y, 0, 0, true, ymax);
+#endif
+        tileset.push_back(tile_def(idx, TEX_PLAYER));
+    }
 
     return (true);
 }
@@ -1073,8 +1159,8 @@ bool Menu::line_up()
 /////////////////////////////////////////////////////////////////
 // slider_menu
 
-slider_menu::slider_menu(int fl)
-    : Menu(fl), less(), starty(1), endy(get_number_of_lines()),
+slider_menu::slider_menu(int fl, bool text_only)
+    : Menu(fl, "", text_only), less(), starty(1), endy(get_number_of_lines()),
       selected(0), need_less(true), need_more(true), oldselect(0),
       lastkey(0), search()
 {
@@ -1352,9 +1438,7 @@ void slider_menu::new_selection(int nsel)
         if (!is_set(MF_NOWRAP))
         {
             do
-            {
                 nsel += items.size();
-            }
             while ( nsel < 0 );
         }
         else

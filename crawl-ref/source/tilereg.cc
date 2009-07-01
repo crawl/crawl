@@ -456,7 +456,7 @@ static void _create_random_doll(dolls_data &rdoll)
         _fill_doll_part(rdoll, TILEP_PART_BEARD);
 }
 
-void _fill_doll_equipment(dolls_data &result)
+static void _fill_doll_equipment(dolls_data &result)
 {
     // Main hand.
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
@@ -3009,7 +3009,7 @@ void MenuRegion::place_entries()
     int column = 0;
     if (!Options.tile_menu_icons)
         set_num_columns(1);
-    const int max_columns = std::min(2, m_max_columns);
+    const int max_columns  = std::min(2, m_max_columns);
     const int column_width = mx / max_columns;
 
     int lines = count_linebreaks(m_more);

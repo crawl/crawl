@@ -172,6 +172,16 @@ public:
 #endif
 };
 
+#ifdef USE_TILE
+class PlayerMenuEntry : public MenuEntry
+{
+public:
+    PlayerMenuEntry(const std::string &str);
+
+    virtual bool get_tiles(std::vector<tile_def>& tileset) const;
+};
+#endif
+
 class FeatureMenuEntry : public MenuEntry
 {
 public:
@@ -413,7 +423,7 @@ class slider_menu : public Menu
 {
 public:
     // Multiselect would be awkward to implement.
-    slider_menu(int flags = MF_SINGLESELECT | MF_NOWRAP);
+    slider_menu(int flags = MF_SINGLESELECT | MF_NOWRAP, bool text_only = true);
     void display();
     std::vector<MenuEntry *> show();
 

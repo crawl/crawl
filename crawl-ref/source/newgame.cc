@@ -3230,7 +3230,7 @@ static void _enter_player_name(bool blankOK)
     bool ask_name = true;
     char *name = you.your_name;
     std::vector<player_save_info> existing_chars;
-    slider_menu char_menu;
+    slider_menu char_menu(MF_SINGLESELECT | MF_NOWRAP, false);
 
     if (you.your_name[0] != 0)
         ask_name = false;
@@ -3240,29 +3240,32 @@ static void _enter_player_name(bool blankOK)
         existing_chars = find_saved_characters();
         if (existing_chars.empty())
         {
-             cgotoxy(1,12);
-             formatted_string::parse_string(
-                "  If you've never been here before, you might want to try out" EOL
-                "  the Dungeon Crawl tutorial. To do this, press "
-                "<white>Ctrl-T</white> on the next" EOL
-                "  screen.").display();
+            cgotoxy(1,12);
+            formatted_string::parse_string(
+               "  If you've never been here before, you might want to try out" EOL
+               "  the Dungeon Crawl tutorial. To do this, press "
+               "<white>Ctrl-T</white> on the next" EOL
+               "  screen.").display();
         }
         else
         {
-             MenuEntry *title = new MenuEntry("Or choose an existing character:");
-             title->colour = LIGHTCYAN;
-             char_menu.set_title( title );
-             for (unsigned int i = 0; i < existing_chars.size(); ++i)
-             {
-                 std::string desc = " " + existing_chars[i].short_desc();
-                 if (static_cast<int>(desc.length()) >= get_number_of_cols())
-                     desc = desc.substr(0, get_number_of_cols() - 1);
+            MenuEntry *title = new MenuEntry("Or choose an existing character:");
+            title->colour = LIGHTCYAN;
+            char_menu.set_title( title );
+            for (unsigned int i = 0; i < existing_chars.size(); ++i)
+            {
+                std::string desc = " " + existing_chars[i].short_desc();
+                if (static_cast<int>(desc.length()) >= get_number_of_cols())
+                    desc = desc.substr(0, get_number_of_cols() - 1);
 
-                 MenuEntry *me = new MenuEntry(desc);
-                 me->data = &existing_chars[i];
-                 char_menu.add_entry(me);
-             }
-             char_menu.set_flags(MF_NOWRAP | MF_SINGLESELECT);
+#ifdef USE_TILE
+                MenuEntry *me = new PlayerMenuEntry(desc);
+#else
+                MenuEntry *me = new MenuEntry(desc);
+#endif
+                me->data = &existing_chars[i];
+                char_menu.add_entry(me);
+            }
         }
     }
 
