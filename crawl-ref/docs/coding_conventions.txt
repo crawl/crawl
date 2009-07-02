@@ -22,21 +22,21 @@ Empty lines don't need any spacing at all.
 Methods
 -------
 
-If the parameter list of a method runs longer than a line length (80 columns), 
+If the parameter list of a method runs longer than a line length (80 columns),
 the remaining parameters are usually indented in the lines below.
 
-  static void replace_area( int sx, int sy, int ex, int ey,
-                            dungeon_feature_type replace,
-                            dungeon_feature_type feature, unsigned mapmask)
-  {
-       [...]
-  }
+    static void replace_area(int sx, int sy, int ex, int ey,
+                             dungeon_feature_type replace,
+                             dungeon_feature_type feature, unsigned mapmask)
+    {
+        [...]
+    }
 
 The same is true when a method is called:
 
         // place guardian {dlb}:
-        mons_place( MONS_GUARDIAN_NAGA, BEH_SLEEP, MHITNOT, true, 
-                    sr.x1 + random2( sr.x2 - sr.x1 ), 
+        mons_place( MONS_GUARDIAN_NAGA, BEH_SLEEP, MHITNOT, true,
+                    sr.x1 + random2( sr.x2 - sr.x1 ),
                     sr.y1 + random2( sr.y2 - sr.y1 ) );
 
 
@@ -67,7 +67,7 @@ This probably seems obvious for simple ifs ...
             return (false);
         }
 
-Space allowing, logical connectives of different precedence should use nested 
+Space allowing, logical connectives of different precedence should use nested
 indenting.
 
     case ABIL_MAPPING:          // Sense surroundings mutation
@@ -80,8 +80,8 @@ indenting.
             return (false);
         }
 
-If a logical connective needs to be distributed over several lines, 
-the conjunction/disjunction operators (&&, ||) should be placed at the 
+If a logical connective needs to be distributed over several lines,
+the conjunction/disjunction operators (&&, ||) should be placed at the
 beginning of the new line rather than at the end of the old one.
 
     else if (you.mutation[mutat] >= 3
@@ -92,8 +92,8 @@ beginning of the new line rather than at the end of the old one.
         return (false);
     }
 
-Since conjunctions (&&) take precedence over disjunctions (||), pure 
-conjunctive logical connectives don't need to be bracketed, unless this is 
+Since conjunctions (&&) take precedence over disjunctions (||), pure
+conjunctive logical connectives don't need to be bracketed, unless this is
 absolutely vital for understanding. (Nested indenting helps here.)
 
     if (you.skills[SK_ICE_MAGIC] > you.skills[SK_FIRE_MAGIC]
@@ -136,7 +136,7 @@ Comparisons using the ? shortcut may be indented ...
 C) Variable naming
 ------------------
 
-When naming variables, use underscores_as_spaces instead of mixedCase.  Other 
+When naming variables, use underscores_as_spaces instead of mixedCase.  Other
 conventions are pointed out by example, below.
 
 Global variables are capitalized and underscored.
@@ -145,7 +145,7 @@ Warning: there are currently many globals which don't do this.
   int Some_Global_Variable;
 
 Internal functions are prefixed with underscores.
-Warning: This is a new convention, so much code doesn't follow it. 
+Warning: This is a new convention, so much code doesn't follow it.
 
   static void _remove_from_inventory(item_def* item);
 
@@ -186,7 +186,7 @@ But structures tend to use underscores
   struct coord_def
   {
       // - Simple structures don't need the "m_" prefixes
-      int x, y;	
+      int x, y;
   };
 
 
@@ -207,7 +207,7 @@ braces. These can sometimes be omitted, as long as the underlying logic isn't
 changed, of course. The following assumes that the conditions are followed by
 single statements.
 
-If both the condition itself and the conditional code are single line 
+If both the condition itself and the conditional code are single line
 statements, the braces may be omitted.
 
     if (item != NULL)
@@ -233,7 +233,7 @@ Otherwise, place braces.
                        you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG);
     }
 
-Also place braces if this is only the case because of one or more comment 
+Also place braces if this is only the case because of one or more comment
 lines.
 
         for (j = 0; j < num_to_make; j++)
@@ -246,26 +246,26 @@ lines.
 In the case of nested if-conditionals, try to combine the conditions, e.g.
 instead of
 
-   if (A)
-   {
-       if (B)
-           do_something();
-   }
+    if (A)
+    {
+        if (B)
+            do_something();
+    }
 
 use
 
-   if (A && B)
-       do_something();
+    if (A && B)
+        do_something();
 
 Place braces as per the conventions above.
 
-Else, whenever if-conditional nesting can't be avoided, always use braces. I 
+Else, whenever if-conditional nesting can't be avoided, always use braces. I
 could't find an example where that isn't already necessary for logical reasons,
 so these should be really rare.
 
-In a row of if-else if-statements or in a switch-case loop, the optional braces 
-should be used if the bigger part of statements needs braces for logical 
-reasons or because of one of the conventions above. Otherwise, they may be 
+In a row of if-else if-statements or in a switch-case loop, the optional braces
+should be used if the bigger part of statements needs braces for logical
+reasons or because of one of the conventions above. Otherwise, they may be
 omitted.
 
     if (mons_neutral(monster))
@@ -280,19 +280,19 @@ omitted.
     else
         prefixes.push_back("hostile");
 
-When for-loops are nested and the outer loop has no further statements, the 
+When for-loops are nested and the outer loop has no further statements, the
 braces may be omitted.
 
-  for (int x = 0; x < GXM; x++)
-      for (int y = 0; y < GYM; y++)
-      {
-          if (grd[x][y] == DNGN_LAVA)
-              lava_spaces++;
-          if (grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == NGN_SHALLOW_WATER)
-              water_spaces++;
-      }
+    for (int x = 0; x < GXM; x++)
+        for (int y = 0; y < GYM; y++)
+        {
+            if (grd[x][y] == DNGN_LAVA)
+                lava_spaces++;
+            if (grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == NGN_SHALLOW_WATER)
+                water_spaces++;
+        }
 
-The same is true for combined for- and if-conditionals as long as all 
+The same is true for combined for- and if-conditionals as long as all
 statements fill less than four lines.
 
     for (i = 0; i < MAX_SHOPS; i++)
@@ -309,10 +309,10 @@ If the order of if- and for-conditionals is reversed, however, place braces.
     }
 
 
-If there are more than three nested statements with optional bracing, use braces 
+If there are more than three nested statements with optional bracing, use braces
 to roughly divide them into halves. (See example below.)
 
-Should such nested code be followed by code other than a closing brace, 
+Should such nested code be followed by code other than a closing brace,
 leave a free line between them.
 
     for (int y = 1; y < GYM; ++y)
@@ -328,8 +328,8 @@ leave a free line between them.
 E) Commenting
 -------------
 
-If you feel that a method is complicated enough to be difficult to understand, 
-or has restrictions or effects that might not be obvious, add explanatory 
+If you feel that a method is complicated enough to be difficult to understand,
+or has restrictions or effects that might not be obvious, add explanatory
 comments before it. You may sign your comments if you wish to.
 
   // Note that this function *completely* blocks messaging for monsters
