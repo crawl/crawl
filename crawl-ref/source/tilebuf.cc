@@ -142,16 +142,19 @@ TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer<PTVert>(t, GL_QUADS)
 {
 }
 
-void TileBuffer::add_unscaled(int idx, float x, float y)
+void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
 {
     const tile_info &inf = ((TilesTexture*)m_tex)->get_info(idx);
 
     float pos_sx = x + inf.offset_x;
     float pos_sy = y + inf.offset_y;
     float pos_ex = pos_sx + (inf.ex - inf.sx);
-    float pos_ey = pos_sy + (inf.ey - inf.sy);
+    int ey = inf.ey;
+    if (ymax > 0)
+        ey = std::min(inf.sy + ymax - inf.offset_y, ey);
+    float pos_ey = pos_sy + (ey - inf.sy);
 
-    float fwidth = m_tex->width();
+    float fwidth  = m_tex->width();
     float fheight = m_tex->height();
 
     float tex_sx = inf.sx / fwidth;

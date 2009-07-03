@@ -847,20 +847,7 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         return (false);
 
     const player_save_info &player = *static_cast<player_save_info*>( data );
-
-    dolls_data equip_doll;
-    for (unsigned int j = 0; j < TILEP_PART_MAX; ++j)
-        equip_doll.parts[j] = TILEP_SHOW_EQUIP;
-
-    const int gender = TILEP_GENDER_MALE;
-    tilep_race_default(player.species, gender, player.experience_level,
-                       equip_doll.parts);
-
-    int job = get_class_by_name(player.class_name.c_str());
-    if (job == -1)
-        job = JOB_FIGHTER;
-
-    tilep_job_default(job, gender, equip_doll.parts);
+    dolls_data equip_doll = player.doll;
 
     // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
     int p_order[TILEP_PART_MAX] =
@@ -902,8 +889,6 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
         ASSERT(idx >= TILE_MAIN_MAX && idx < TILEP_PLAYER_MAX);
 
-#if 0
-        // FIXME: Is there any way to make this work with tile_def?
         int ymax = TILE_Y;
 
         if (flags[p] == TILEP_FLAG_CUT_CENTAUR
@@ -911,9 +896,8 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         {
             ymax = 18;
         }
-        buf->add(doll.parts[p], x, y, 0, 0, true, ymax);
-#endif
-        tileset.push_back(tile_def(idx, TEX_PLAYER));
+
+        tileset.push_back(tile_def(idx, TEX_PLAYER, ymax));
     }
 
     return (true);

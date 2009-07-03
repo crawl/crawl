@@ -630,32 +630,26 @@ By default, only two of the item brands are active (and set to reverse):
    heap_brand, feature_item_brand
 They can be deactivated by setting them to "none".
 
-friend_brand = none
-        Brand friends in some way. This is very helpful for summoners.
-        E.g.
-             friend_brand = hi:green
-        shows friends with a green background. If the friend is itself
-        green, it'll show up as black on green.
+friend_brand = hi:green
+        Brand friends in some way. This is very helpful for summoners. The
+        default setting shows friends with a green background. If the friend is
+        itself green, it'll show up as black on green.
 
-neutral_brand = none
+neutral_brand = hi:lightgrey
         Brand neutral monsters in some way. Useful both to get out of
         a neutral monster's path, and to avoid accidentally killing it.
-        E.g.
-             neutral_brand = hi:darkgrey
-        shows neutrals with a dark grey background. Since there are
-        no darkgrey monster glyphs anymore, this works fine.
+        The default setting shows neutrals with a dark grey background. Since
+        there are no darkgrey monster glyphs anymore, this works fine.
 
-stab_brand = none
+stab_brand = hi:blue
         Some deities object to you stabbing monsters. Certain jobs
         specialise in stabbing monsters. Still other characters are
         happy if they spot a monster before the monster spots them. In
         all these cases, it helps to identify monsters that are unaware
         of the character (and hence susceptible to being stabbed) without
-        using the 'x' command. All the normal 'brand' options apply. For
-        example
-             stab_brand = hi:blue
+        using the 'x' command. All the normal 'brand' options apply.
 
-may_stab_brand = none
+may_stab_brand = hi:yellow
         Stabbing may be possible even if the monster is not asleep (if
         it's confused or distracted, for instance). This option brands
         monsters that you *might* be able to stab.
@@ -669,7 +663,7 @@ feature_item_brand = reverse
         are hidden by the feature symbol and the feature symbol is
         branded.
 
-trap_item_brand = none
+trap_item_brand = reverse
         Brands traps that would otherwise be hidden by items. If you
         use this brand, the items on the square are hidden by the trap
         symbol (^) and the trap symbol is branded.

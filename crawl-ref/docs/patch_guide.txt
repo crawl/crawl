@@ -56,13 +56,15 @@ Main steps
     You may want to apply the patch against the unmodified folder to test
     whether everything worked correctly.
 
-7.) Upload the patch on the patch tracker of Sourceforge. Here it is immensely
-    helpful if you give a summary of what the patch is about. If you created
-    it in response to a bug report or feature request, mention the id, and you
-    might also want to post a reply in said item pointing out your new patch.
-    Please also mention the revision/version you used for patching, e.g. 0.5
-    or r10078, and anything you think still may need to be improved or
-    modified.
+7.) Upload the patch on the patch tracker of Sourceforge at
+    http://sourceforge.net/tracker/?group_id=143991&atid=757515.
+
+    Here it is immensely helpful if you give a summary of what the patch is
+    about. If you created it in response to a bug report or feature request,
+    mention the id, and you might also want to post a reply in said item
+    pointing out your new patch. Please also mention the revision/version you
+    used for patching, e.g. 0.5 or r10078, and anything you think may still
+    need to be improved or modified.
 
     Thank you! :D
 

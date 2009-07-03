@@ -655,6 +655,9 @@ void game_options::reset_options()
 #if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH)
     morgue_dir = "morgue/";
 #endif
+
+    macro_dir = "settings/";
+
     additional_macro_files.clear();
 
     player_name.clear();
@@ -877,15 +880,15 @@ void game_options::reset_options()
     sc_entries             = 0;
     sc_format              = -1;
 
-    friend_brand       = CHATTR_NORMAL;
-    neutral_brand      = CHATTR_NORMAL;
-    stab_brand         = CHATTR_NORMAL;
-    may_stab_brand     = CHATTR_NORMAL;
+    friend_brand       = CHATTR_HILITE | (GREEN << 8);
+    neutral_brand      = CHATTR_HILITE | (LIGHTGREY << 8);
+    stab_brand         = CHATTR_HILITE | (BLUE << 8);
+    may_stab_brand     = CHATTR_HILITE | (YELLOW << 8);
     heap_brand         = CHATTR_REVERSE;
     feature_item_brand = CHATTR_REVERSE;
-    trap_item_brand    = CHATTR_NORMAL;
+    trap_item_brand    = CHATTR_REVERSE;
 
-    no_dark_brand    = true;
+    no_dark_brand      = true;
 
 #ifdef WIZARD
     wiz_mode         = WIZ_NO;
@@ -3404,6 +3407,7 @@ enum commandline_option_type {
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_ARENA,
+    CLO_HELP,
 
     CLO_NOPS
 };
@@ -3411,7 +3415,7 @@ enum commandline_option_type {
 static const char *cmd_ops[] = {
     "scores", "name", "species", "job", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena"
+    "mapstat", "arena", "help"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3462,7 +3466,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             return (false);
         }
 
-        // look for match (now we also except --scores)
+        // Look for match (we accept both -option and --option).
         if (arg[1] == '-')
             arg = &arg[2];
         else
@@ -3470,10 +3474,12 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
         int o;
         for (o = 0; o < num_cmd_ops; o++)
-        {
-             if (stricmp(cmd_ops[o], arg) == 0)
-                 break;
-        }
+            if (stricmp(cmd_ops[o], arg) == 0)
+                break;
+
+        // Print the list of commandline options for "--help".
+        if (o == CLO_HELP)
+            return (false);
 
         if (o == num_cmd_ops)
         {
@@ -3482,22 +3488,22 @@ bool parse_args( int argc, char **argv, bool rc_only )
             return (false);
         }
 
-        // disallow options specified more than once.
+        // Disallow options specified more than once.
         if (arg_seen[o] == true)
             return (false);
 
-        // set arg to 'seen'
+        // Set arg to 'seen'.
         arg_seen[o] = true;
 
-        // partially parse next argument
+        // Partially parse next argument.
         bool next_is_param = false;
-        if (next_arg != NULL)
+        if (next_arg != NULL
+            && (next_arg[0] != '-' || strlen(next_arg) == 1))
         {
-            if (next_arg[0] != '-' || strlen(next_arg) == 1)
-                next_is_param = true;
+            next_is_param = true;
         }
 
-        //.take action according to the cmd chosen
+        // Take action according to the cmd chosen.
         switch (o)
         {
         case CLO_SCORES:
@@ -3614,7 +3620,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             break;
 
         case CLO_RCDIR:
-            // Always parse
+            // Always parse.
             if (!next_is_param)
                 return (false);
 
@@ -3623,7 +3629,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             break;
 
         case CLO_DIR:
-            // ALWAYS PARSE
+            // Always parse.
             if (!next_is_param)
                 return (false);
 
@@ -3632,16 +3638,20 @@ bool parse_args( int argc, char **argv, bool rc_only )
             break;
 
         case CLO_RC:
-            // ALWAYS PARSE
+            // Always parse.
             if (!next_is_param)
                 return (false);
 
             SysEnv.crawl_rc = next_arg;
             nextUsed = true;
             break;
-        } // end switch -- which option?
 
-        // update position
+        case CLO_HELP:
+            // Shouldn't happen.
+            return (false);
+        }
+
+        // Update position.
         current++;
         if (nextUsed)
             current++;

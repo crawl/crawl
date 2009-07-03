@@ -8,6 +8,8 @@
 #ifndef TILEBUF_H
 #define TILEBUF_H
 
+#include "tiles.h"
+
 class FTFont;
 class formatted_string;
 class GenericTexture;
@@ -90,7 +92,7 @@ class TileBuffer : public VertBuffer<PTVert>
 public:
     TileBuffer(const TilesTexture *tex = NULL);
 
-    void add_unscaled(int idx, float x, float y);
+    void add_unscaled(int idx, float x, float y, int ymax = TILE_Y);
     void add(int idx, int x, int y, int ox = 0, int oy = 0, bool centre = true, int ymax = -1);
 
 

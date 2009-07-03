@@ -3074,7 +3074,10 @@ void MenuRegion::place_entries()
                     int tile      = m_entries[i].tiles[t].tile;
                     TextureID tex = m_entries[i].tiles[t].tex;
                     m_tile_buf[tex].add_unscaled(tile, m_entries[i].sx,
-                                                 m_entries[i].sy);
+                                                 m_entries[i].sy,
+                                                 m_entries[i].tiles[t].ymax);
+//                     m_tile_buf[tex].add(tile, m_entries[i].sx, m_entries[i].sy,
+//                                         0, 0, true, TILE_Y);
                 }
             }
             else
@@ -3085,7 +3088,7 @@ void MenuRegion::place_entries()
 
             int text_sy = m_entries[i].sy;
             text_sy += (entry_height - m_font_entry->char_height()) / 2;
-            // Split menu entries that don't fit into a single lines into
+            // Split menu entries that don't fit into a single line into
             // two lines.
             if (Options.tile_menu_icons
                 && text_sx + text_width > entry_start + column_width)

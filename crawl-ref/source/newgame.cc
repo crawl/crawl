@@ -2854,7 +2854,7 @@ static void _jobs_stat_init(job_type which_job)
 
     case JOB_WANDERER:          s =  2; i =  2; d =  2; hp = 11; mp = 1; break;
 
-    case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; mp = 0; break;
+    case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; mp = 1; break;
     default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
     }
 
@@ -3259,6 +3259,22 @@ static void _enter_player_name(bool blankOK)
                     desc = desc.substr(0, get_number_of_cols() - 1);
 
 #ifdef USE_TILE
+                dolls_data equip_doll;
+                for (unsigned int j = 0; j < TILEP_PART_MAX; ++j)
+                    equip_doll.parts[j] = TILEP_SHOW_EQUIP;
+
+                const int gender = TILEP_GENDER_MALE;
+                tilep_race_default(existing_chars[i].species, gender,
+                                   existing_chars[i].experience_level,
+                                   equip_doll.parts);
+
+                int job = get_class_by_name(existing_chars[i].class_name.c_str());
+                if (job == -1)
+                    job = JOB_FIGHTER;
+
+                tilep_job_default(job, gender, equip_doll.parts);
+                existing_chars[i].doll = equip_doll;
+
                 MenuEntry *me = new PlayerMenuEntry(desc);
 #else
                 MenuEntry *me = new MenuEntry(desc);

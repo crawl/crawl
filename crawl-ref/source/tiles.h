@@ -23,13 +23,6 @@ enum tag_version
     TILETAG_CURRENT    = 72
 };
 
-struct dolls_data
-{
-    dolls_data() { memset(parts, 0, sizeof(parts)); }
-
-    int parts[TILEP_PART_MAX];
-};
-
 struct demon_data
 {
     demon_data() { head = body = wings = 0; }

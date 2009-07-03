@@ -128,13 +128,13 @@ drop_filter = useless_item
 
 ##### 4-d	Branding ##############################
 #
-friend_brand       = hi:green
-neutral_brand      = hi:lightgrey
-stab_brand         = hi:blue
-may_stab_brand     = hi:yellow
-heap_brand         = reverse
-feature_item_brand = reverse
-trap_item_brand    = reverse
+# friend_brand       = hi:green
+# neutral_brand      = hi:lightgrey
+# stab_brand         = hi:blue
+# may_stab_brand     = hi:yellow
+# heap_brand         = reverse
+# feature_item_brand = reverse
+# trap_item_brand    = reverse
 
 ##### 4-e	Level Map Functions ###################
 #

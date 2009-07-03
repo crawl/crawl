@@ -20,10 +20,12 @@ enum TextureID
 
 struct tile_def
 {
-    tile_def(int _tile, TextureID _tex) : tile(_tile), tex(_tex) {}
+    tile_def(int _tile, TextureID _tex, int _ymax = TILE_Y)
+            : tile(_tile), tex(_tex), ymax(_ymax){}
 
     int tile;
     TextureID tex;
+    int ymax;
 };
 
 class GenericTexture
@@ -100,10 +102,10 @@ inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
 {
     const tile_info &inf = get_info(idx);
 
-    float fwidth = m_width;
+    float fwidth  = m_width;
     float fheight = m_height;
 
-    // center tiles on x, but allow taller tiles to extend upwards
+    // Centre tiles on x, but allow taller tiles to extend upwards.
     int size_ox = centre ? TILE_X / 2 - inf.width / 2 : 0;
     int size_oy = centre ? TILE_Y - inf.height : 0;
 
@@ -111,8 +113,8 @@ inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
     if (ymax > 0)
         ey = std::min(inf.sy + ymax - inf.offset_y, ey);
 
-    pos_sx += (ofs_x + inf.offset_x + size_ox) / (float)TILE_X;
-    pos_sy += (ofs_y + inf.offset_y + size_oy) / (float)TILE_Y;
+    pos_sx += (ofs_x + inf.offset_x + size_ox) / (float) TILE_X;
+    pos_sy += (ofs_y + inf.offset_y + size_oy) / (float) TILE_Y;
     pos_ex = pos_sx + (inf.ex - inf.sx) / (float)TILE_X;
     pos_ey = pos_sy + (ey - inf.sy) / (float)TILE_Y;
 
@@ -121,6 +123,5 @@ inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
     tex_ex = inf.ex / fwidth;
     tex_ey = ey / fheight;
 }
-
 
 #endif
