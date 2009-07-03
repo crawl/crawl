@@ -1,0 +1,119 @@
+Steps to a Successful Release
+-----------------------------
+The following is a step-by-step guide for how to preceed through the releasing
+process. For minor releases (0.X.y), steps 0 and 1 have already been done, so
+for those the list begins with step 2.
+
+0.  Delay branching as long as possible
+    Try to delay additions that forseeably won't make it into the next version
+    until the release is not too far off. Once trunk has been branched, you
+    have to commit all important changes twice, and it's easy to forget one
+    of them.
+
+    At the same time if something big does get introduced it's better to branch
+    before doing so seeing how otherwise you'll have to later turn it off in
+    branch before the release.
+    Thus, you'll need to branch as early as necessary and as lte as possible.
+
+1.  Branch trunk into the new version
+    svn cp https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/trunk
+    https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/branches/stone_soup-0.X
+
+2.  Update version information
+    version.h: Set VER_NUM = 0.X, VER_QUAL = empty.
+    Undefine DISPLAY_BUILD_REVISION (not needed for official distributions).
+
+3.  Modify branch as needed
+    Turn off all features that are not balanced or finished enough to make it
+    into the release. This can be a bit of a hassle, so do try to avoid this in
+    the first place. (See 0.)
+
+4.  Wait and fix some bugs
+    Wait at least a week for some last minute bug reports. When fixing bugs
+    concentrate on the important ones (crashes and gamebreakers), but you
+    might also want to handle the trivial ones for extra polishing.
+    If you add any last minute feature or bug fixes doublecheck everything,
+    so you don't accidentally introduce new bug, and wait at least another
+    day for potential bug reports to roll in.
+
+    Reread the entire documentation to make sure it's up to date.
+    Also update the change log!
+
+5.  Sanity testing
+    Build the binaries (preferably on all platforms) to see if the code
+    compiles correctly, then run some basic sanity tests including at least
+    the following:
+        * start a new game (both prechosen and random)
+        * saving/loading
+        * being killed
+        * level creation for all branches/portal vaults (using &~, &L)
+        * accessing all help screens (including the ? submenus)
+
+    If you want to be thorough, play a tutorial for each of the three character
+    builds. This way, you get to test melee, spellcasting, and ranged combat,
+    and at the same time you can check that the information handed out during
+    the tutorial is up to date.
+
+6.  Package the source tarball and zip
+    On Linux, run "make package-source" in the source tree to create the source
+    tarball and zip. Extract the resulting packages into different folders,
+    compile their source and run the basic sanity tests. Also check whether
+    the doc, settings and dat subfolders contain all relevant files.
+
+7.  Tag the release
+    svn cp https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/branches/stone_soup-0.X
+    https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/tags/stone_soup-0.X
+
+    The tags are some sort of frozen state of the source for all releases, so
+    this is the last step you take before the actual release. All further
+    changes either make it into the next (minor) version, or, if they are
+    important bug fixes and happen before the release took place, have to be
+    merged into trunk AND branch AND the corresponding tag.
+
+8.  Create a new release on Sourceforge
+    Requires SF permissions for file releases.
+
+    The release is generally named by the version number, i.e. 0.X.
+    Once it is created, edit the new release:
+        * Paste change log and notes into the corresponding fields.
+        * Set status to Hidden.
+    Use an older release as a guideline (but don't actually modify it!)
+
+    See https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download
+    for some rough explanation of this and some of the following steps.
+
+9.  Checkout the release tag
+    svn co https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/tags/stone_soup-0.X
+
+    Do a clean checkout into a new folder, so you don't get any compilation
+    stuff into the distribution. Package the source (as described in 6.) and
+    build the binaries. If you want you can do some more sanity testing but it
+    shouldn't be necessary anymore.
+
+10. Upload the files to Sourceforge
+    For this, you could use rsync (on Linux) or FTP.
+    See https://sourceforge.net/apps/trac/sourceforge/wiki/File%20management%20service
+    for reference. Compare the file sizes to make sure the upload went
+    correctly.
+
+11. Edit the release (again)
+    On Sourceforge edit the release, select the files you just uploaded, then
+    change their properties. Again, use an older release for reference.
+    Change release status to Active.
+
+12. Update the homepage
+    ssh -t username,crawl-ref@shell.sourceforge.net create
+
+    Go to /home/groups/c/cr/crawl-ref/htdocs.
+    Paste the changelog into a newly created 0.X.txt
+    Modify index.html to update the version number (the link will always point
+    to the most recent release) and add a new news item. For the latter, use
+    <a href="0.X.txt">text</a> as a link to the change log.
+
+13. Announce the release
+    Post a release announcement to rec.games.roguelike.misc and
+    rec.games.roguelike.announce. Also send an email over crawl-ref-discuss.
+    If you want you can also write a news item on Sourceforge.
+
+14. Lean back and enjoy the excitement
+    -- until the first bug reports roll in. ;)
