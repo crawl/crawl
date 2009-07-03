@@ -432,7 +432,17 @@ We're working on a solution for this problem, but in the meantime you can try
 to see whether tweaking some options will improve performance. See
 docs/tiles_help.txt for details. If things are still too laggy after all of
 that, you'll have to either continue playing 0.4.5 until the problem has been
-solved, or you could try the non-graphical console version. Sorry!
+solved, or you could try the non-graphical console version.
+
+We'd like to apologize for the grief that this has caused some players, but we
+hope that it's understandable that making this change in 0.5 has allowed a lot
+of graphical improvements: Uniques get on-screen names. All monsters get health
+bars. Graphical menus. Full screen mode. Eee PC support.
+None of those things would have been possible in previous tiles versions. On
+top of that, if you have an adequate driver 0.5 can often be faster than 0.4,
+because the GPU can easily do the work that used to take the CPU a lot of time.
+
+At any rate, it'll be fixed.  Just be patient.  :)
 %%%%
 Q:tiles online
 
