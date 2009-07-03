@@ -199,22 +199,22 @@ slim. Still, here are a few general hints:
 %%%%
 Q:randart
 
-What do the terms "randart", "fixedart" and "egoitem" signify?
+What do the terms "randart", "unrandart" and "egoitem" signify?
 %%%%
 A:randart
 
 A: Apart from the standard items you'll find lying around in the dungeon,
-you might also stumble upon artefacts which come in three varieties:
+you might also stumble upon artefacts which come in two varieties:
 
 * randart: a random artefact, usually a weapon or type of armour with
   random properties such as conferring resistances or abilities
 * unrandart: an artefact that looks like a randart but is really
-  predefined. There's no further difference except that players "in the know"
-  can recognize such an item by its special description and/or colour.
-* fixedart: an artefact that does not use the random artefact properties but
-  instead has unique hardcoded effects and descriptions.
+  predefined. While a few (formerly known as "fixed artefacts") have
+  special hardcoded effects, for most there's no further difference except
+  that players "in the know" can recognize such an item by its special
+  description and/or colour/tile.
 
-None of the three types can be enchanted or branded, neither temporarily nor
+Neither of the types can be enchanted or branded, neither temporarily nor
 permanently. There is another type of special item that pops up a bit more
 often:
 
