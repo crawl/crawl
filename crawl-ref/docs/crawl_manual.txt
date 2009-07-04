@@ -947,9 +947,9 @@ Artefacts
 ---------
 Weapons, armour, jewellery and spellbooks can be artefacts. These come
 in two flavours: randomly created artefacts ('randarts') and predefined
-ones ('unrandarts'), . Artefacts will always carry unusual names, for
-example "golden sword" or "shimmering scale mail". Also, artefacts
-cannot be modified in any way, including enchantments.
+ones ('unrandarts'). Artefacts will always carry unusual names, such as
+"golden sword" or "shimmering scale mail". Also, artefacts cannot be
+modified in any way, including enchantments.
 
 Apart from that, otherwise mundane items can get one special property.
 These are called 'ego items', and examples are: boots of running, a
@@ -965,8 +965,8 @@ or negative enchantment, though):
 - leather armours, animal skins: dyed;
 - other armours: embroidered.
 
-Normal and ego helmets can both have extra decorations ("winged", "plumed",
-etc).
+Normal and ego helmets can both have extra decorations ("winged",
+"plumed", etc.).
 
 ------------------------------------------------------------------------
 H.                      SPELLCASTING
@@ -2117,11 +2117,11 @@ Unarmed Combat is a special fighting skill. It allows your character to
 make a powerful attack when unarmed and also to make special secondary
 attacks (and increases the power of those attacks for characters who get
 them anyway). You can practise Unarmed Combat by attacking empty-handed,
-and it is also exercised when you make a secondary attack (a kick, punch
-etc). Unarmed combat is particularly difficult to use in combination
-with heavy armour or shields or very big weapons. As with Fighting, the
-first two levels of this skill can be obtained by training it against
-plants and fungi.
+and it is also exercised when you make a secondary attack (a kick,
+punch, etc.). Unarmed combat is particularly difficult to use in
+combination with heavy armour or shields or very big weapons. As with
+Fighting, the first two levels of this skill can be obtained by training
+it against plants and fungi.
 
 Ranged combat skills:
 ---------------------
