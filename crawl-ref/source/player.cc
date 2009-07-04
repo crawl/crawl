@@ -327,6 +327,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     command_type stair_dir = grid_stair_direction(new_grid);
 
     if (stepped && stair_dir != CMD_NO_CMD
+        && new_grid != DNGN_ENTER_SHOP
         && you.duration[DUR_REPEL_STAIRS_MOVE])
     {
         int pct;

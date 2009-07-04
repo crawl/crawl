@@ -1,0 +1,134 @@
+How to Write a Patch
+====================
+
+The following is a rough guide on how to write patches to the code. It is
+meant to make writing patches easier to inexperienced programmers, but
+following these steps does not guarantee that any patch will actually be
+accepted - that depends entirely on content.
+
+Also, we're talking about Stonesoup here, but the principle could be applied to
+any other program as well. :)
+
+Required tools
+--------------
+At the very least you'll need the source code, and some helpful programs like
+diff and grep. The latter come preinstalled with Unix, whereas Windows users
+will have to download and install them. This may be a bit of work, but is
+totally worth it if you're programming a lot. You can get them at e.g.
+    http://gnuwin32.sourceforge.net/packages/diffutils.htm
+    http://gnuwin32.sourceforge.net/packages/grep.htm
+
+Main steps
+----------
+0.) If you're not interested in coding or have no intention of compiling the
+    game, you can still submit patches for the documentation, descriptions
+    or vaults. In that case, simply ignore the steps relating to compilation
+    and coding. You don't even need the source code for that, instead you can
+    simply use the binary distributation that also contains the relevant
+    text files.
+
+1.) Get the source code, either from the most recent release
+    (http://sourceforge.net/projects/crawl-ref/files/) or use SVN to get the
+    current trunk:
+    svn co https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/trunk/crawl-ref trunk
+
+2.) Compile the code. To do this you might have to install a compiler and/or
+    additional libraries. See INSTALL.txt for details. If you have any
+    questions, you can ask for help on crawl-ref-discuss@lists.sourceforge.net.
+
+3.) Once you've got everything set up, you should copy the folder containing
+    the files you're going to change, i.e. docs/, dat/descript/ or the entire
+    source/ folder, as appropriate. This is done so you can later easily create
+    the patch against the original version.
+
+4.) Now you can start tweaking the code. Depending on your coding background
+    you may want to experiment with smaller changes first. If you intend to
+    submit the patch to the dev team, please skim coding_conventions.txt.
+    Following these guidelines will save us some time later when integrating
+    the patch.
+
+5.) Compile again to test your changes.
+
+6.) Once everything works as it should, you can use diff or git to create a
+    patch out of the differences between the two folders, e.g.
+    diff -ur trunk-orig trunk-new > mypatch.diff
+
+    You may want to apply the patch against the unmodified folder to test
+    whether everything worked correctly.
+
+7.) Upload the patch on the patch tracker of Sourceforge at
+    http://sourceforge.net/tracker/?group_id=143991&atid=757515.
+
+    Here it is immensely helpful if you give a summary of what the patch is
+    about. If you created it in response to a bug report or feature request,
+    mention the id, and you might also want to post a reply in said item
+    pointing out your new patch. Please also mention the revision/version you
+    used for patching, e.g. 0.5 or r10078, and anything you think may still
+    need to be improved or modified.
+
+    Thank you! :D
+
+
+Tips
+----
+Tip 1:  The code is rougly divided into files according to functionality that
+        is reflected in the file names, so monstuff.cc, mon-util.cc and
+        mstuff2.cc all handle code relating to monsters, while spl-data.h,
+        spl-cast.cc and spells2.cc deal with spells. Note that related code can
+        still be found in other files, too, but these are a good starting point.
+
+Tip 2:  Start out with the simple, generic stuff where you only have to copy
+        and minimally tweak existing code, and only once that works move on to
+        the more complicated implementations.
+
+Tip 3:  Use grep to find all occurences of a similar instance of the same type
+        as the one you're implementing, e.g.
+            grep GOD_ELYVILON *.cc  when adding a new god, or
+            grep SCR_FOG *.cc  when adding a new scroll.
+
+        That way you'll be able to repurpose a lot of code for your new
+        implementation, and it also helps cut down on coding errors.
+
+
+Example
+-------
+I want to add a spell that creates some kind of clouds. The first similar spell
+I can think of is Mephitic Cloud. I know that this spell is defined as
+SPELL_MEPHITIC_CLOUD (and if I didn't know I could find out by grepping for
+"Mephitic Cloud"), so I type (within the source folder)
+    grep SPELL_MEPHITIC_CLOUD *.h   and
+    grep SPELL_MEPHITIC_CLOUD *.cc
+
+... which tells me that code regarding this spell turns up in enum.h (its
+declaration), mon-spll.h (monsters "casting" the spell), spl-data.h (the
+definition), and ghost.cc (monster spell), it_use3.cc (some kind of misc.
+item, maybe), mstuff2.cc (helpfully with a comment mentioning swamp
+drakes), spl-book.cc (spellbooks that contain this spell), and spl-cast.cc
+(actually casting the spell).
+
+That gives me some ideas on where to start looking at code to duplicate
+for my new spell. I'd start out with the basics, the declaration and
+definition, copying all values from Mephitic Cloud and only changing the
+SPELL_xxxx tag. Then I add the new spell to the list in spl-cast.cc, at which
+point I'll also notice that Mephitic Cloud uses a function called
+stinking_cloud() and that various other cloud spells (helpfully sorted by
+effect type) use functions like cast_big_c() and others. Using grep I can
+quickly find out that both functions are declared in spells1.h, meaning their
+definitions can be found in spells1.cc.
+
+stinking_cloud() contains a definition of a beam that defines damage and
+such. The various properties are not self-explanatory but they're also not
+totally obscure, so you should be able to find out a lot about them by just
+fiddling with the values. In particular, beam.flavour is set to something
+called BEAM_POTION_STINKING_CLOUD which looks interesting enough to check
+out, so I grep the source (*.h and *.cc) for all occurences and have a look
+at all files this turns up. And so on.
+
+Evaluating and prioritising the findings takes some experience with the source
+code but even if you have no idea what the files are likely to contain using
+grep still greatly reduces the number of files you have to look at. To find
+the code you're interested in search the files for the same keyword you used
+for grepping.
+
+Good luck with your patch! If you have any questions, don't hesitate to ask.
+Thank you for your support!

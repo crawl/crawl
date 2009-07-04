@@ -4,11 +4,14 @@ Stone Soup 0.5.1 (2009????)
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
 * Speed-up for the Tiles version.
-* Fix crashes related to giant spores.
-* Fix erroneous "blocked line of fire" warnings.
-* Fix missing items in Tiles inventory.
+* Fixed crashes related to giant spores.
+* Fixed summoning decks giving permanent summons at low power.
+* Fixed erroneous "blocked line of fire" warnings.
+* Fixed missing items in Tiles inventory menus.
+* Fixed Xom's repel stairs effect moving shops.
 * Really allow uniques to retain their spells when polymorphed.
-* Tiles: Allow selection of player dolls.
+* Artificers start with 1 MP.
+* Tiles: Re-allow selection of player dolls.
 * Add missing tiles options to the options guide (docs/, '?&' command).
 
 Stone Soup 0.5.0 (20090612)

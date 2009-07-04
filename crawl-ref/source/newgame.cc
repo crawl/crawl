@@ -2854,7 +2854,7 @@ static void _jobs_stat_init(job_type which_job)
 
     case JOB_WANDERER:          s =  2; i =  2; d =  2; hp = 11; mp = 1; break;
 
-    case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; mp = 0; break;
+    case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; mp = 1; break;
     default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
     }
 

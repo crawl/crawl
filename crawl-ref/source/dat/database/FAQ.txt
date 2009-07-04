@@ -345,6 +345,9 @@ your suggestions under Feature Requests and wait for people to become
 enthusiastic and give feedback before you submit a patch. If you want,
 you can also write a patch that implements an existing FR or fixes a bug.
 
+If you'd like to write a patch but don't know how to go about it,
+patch_guide.txt in the docs/ folder is the file for you.
+
 We really appreciate your help!
 %%%%
 Q:help
@@ -411,6 +414,36 @@ the change log in docs/changes.stone_soup.
 ##############################################
 # Questions about the Tiles version
 ##############################################
+Q:tiles lag
+
+The tiles version is awfully slow on Windows! What can I do to improve that?
+%%%%
+A:tiles lag
+
+First, we're really sorry about that! Stonesoup 0.5 was tested on several
+systems and the gigantic lag on some Windows systems was completely unexpected.
+
+Crawl 0.5 renders graphics using OpenGL and SDL. For most video cards, this
+should be faster than the 0.4 version. However, the default driver that ships
+with Windows is extremely slow. If you are having performance problems, be sure
+to update your video card driver as a first step.
+
+We're working on a solution for this problem, but in the meantime you can try
+to see whether tweaking some options will improve performance. See
+docs/tiles_help.txt for details. If things are still too laggy after all of
+that, you'll have to either continue playing 0.4.5 until the problem has been
+solved, or you could try the non-graphical console version.
+
+We'd like to apologize for the grief that this has caused some players, but we
+hope that it's understandable that making this change in 0.5 has allowed a lot
+of graphical improvements: Uniques get on-screen names. All monsters get health
+bars. Graphical menus. Full screen mode. Eee PC support.
+None of those things would have been possible in previous tiles versions. On
+top of that, if you have an adequate driver 0.5 can often be faster than 0.4,
+because the GPU can easily do the work that used to take the CPU a lot of time.
+
+At any rate, it'll be fixed.  Just be patient.  :)
+%%%%
 Q:tiles online
 
 Can I play Tiles online?
@@ -456,4 +489,19 @@ A:tiles options
 
 A: Yes. Play around with the options in settings/tiles_options.txt until
 you are satisfied.
+%%%%
+Q:tiles doll
+
+Why can I no longer change the look of my character?
+%%%%
+A:tiles doll
+
+That feature got broken when we transitioned to openGL and needs to be
+reimplemented. It will come back, but we can't say, when.
+
+In the meantime we've implemented a really basic menu (still '-') that lets
+you choose between the default look according to job, equipment mode and one
+of a number of predefined dolls.
+
+Sorry about that!
 %%%%
