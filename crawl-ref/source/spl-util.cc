@@ -974,13 +974,12 @@ int spell_power_cap(spell_type spell)
     return (_seekspell(spell)->power_cap);
 }
 
-// Sandblast range is 1 if not wielding rocks, 1-2 if you are.
-// For targetting purposes, of course, be optimistic about range.
+// Sandblast range is 1 if not wielding rocks, 2 if you are.
 static int _sandblast_range(int pow, bool real_cast)
 {
     int res = 1;
 
-    if (wielding_rocks() && (!real_cast || coinflip()))
+    if (wielding_rocks())
         res = 2;
 
     return (res);

@@ -946,7 +946,7 @@ character of these species might find a Centaur or Naga barding.
 Artefacts
 ---------
 Weapons, armour, jewellery and spellbooks can be artefacts. These come
-in two flavours: predefined artefacts ('fixedarts'), and randomly 
+in two flavours: predefined artefacts ('fixedarts'), and randomly
 created ones ('randarts'). Artefacts will always carry unusual names,
 for example "golden sword" or "shimmering scale mail". Also, artefacts
 cannot be modified in any way, including enchantments.
@@ -2426,9 +2426,9 @@ Other game-playing commands:
     a                   Use special ability.
     p                   Pray (or renew an existing prayer).
     z                   Cast a spell. Should the spell demand monsters as
-                        target but there are none within range, casting 
+                        target but there are none within range, casting
                         will be stopped. In this case, neither turns nor
-                        magic are used. If you want to cast the spell 
+                        magic are used. If you want to cast the spell
                         nonetheless, use Z.
     Z                   Cast a spell, regardless of range limitations.
     I                   List spells.
@@ -2666,12 +2666,12 @@ Lev             You levitate, i.e. hover a few inches above the ground.
 Fly             You fly, gaining the benefits of levitation with none of
                 the drawbacks. This is only accessible for experienced
                 Kenku, lucky Draconians, characters using Dragon form,
-                or those levitating and wearing an amulet of controlled 
+                or those levitating and wearing an amulet of controlled
                 flight. Flying provides a speed bonus to swiftness.
 Held            You are held in a net: you cannot move freely and
                 will instead only try to fight your way out of the net.
-Bhld            You are beheld: you cannot move away from the monster(s)
-                beholding you.
+Mesm            You are mesmerised: you cannot move away from the monster(s)
+                mesmerising you.
 Fire            You are plagued with sticky fire. It will time out,
                 probably burning scrolls in the process. Drop the most
                 important ones!
@@ -2688,8 +2688,8 @@ DMsl            You deflect missiles, i.e. there's a great chance to
                 evade them. Still, this protection is not bulletproof.
 Rot             This is a very harmful, necromantic ailment. You will
                 lose maximum hit points over time. Only healing potions
-                and wands or and certain abilities restore these. The 
-                rotting itself is cured with potions of healing or by 
+                and wands or and certain abilities restore these. The
+                rotting itself is cured with potions of healing or by
                 waiting it out.
 Ins             You are insulated, i.e. immune to electric shocks.
 Touch           Your hands are glowing, and any monster you touch might

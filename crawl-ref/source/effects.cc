@@ -589,7 +589,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
                const char *cause, bool see_source)
 {
     bool statLowered = false;   // must initialize to false {dlb}
-    char *ptr_stat = NULL;
+    char *ptr_stat   = NULL;
     bool *ptr_redraw = NULL;
     char newValue = 0;          // holds new value, for comparison to old {dlb}
 
@@ -3055,7 +3055,8 @@ static void _rot_inventory_food(long time_delta)
             }
 
             turn_corpse_into_skeleton(item);
-            you.wield_change      = true;
+            if (you.equip[EQ_WEAPON] == i)
+                you.wield_change = true;
             burden_changed_by_rot = true;
 
             num_corpses_rotted++;
@@ -3069,6 +3070,8 @@ static void _rot_inventory_food(long time_delta)
             && (item.special + (time_delta / 20) >= 100))
         {
             rotten_items.push_back(index_to_letter(i));
+            if (you.equip[EQ_WEAPON] == i)
+                you.wield_change = true;
         }
     }
 

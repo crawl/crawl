@@ -3158,10 +3158,18 @@ void jewellery_wear_effects(item_def &item)
     case RING_SUSTAIN_ABILITIES:
     case RING_SUSTENANCE:
     case RING_SLAYING:
-    case RING_SEE_INVISIBLE:
     case RING_WIZARDRY:
     case RING_REGENERATION:
     case RING_TELEPORT_CONTROL:
+        break;
+
+    case RING_SEE_INVISIBLE:
+        // We might have to turn autopickup back on again.
+        // TODO: Check all monsters in LOS. If any of them are invisible
+        //       (and thus become visible once the ring is worn), the ring
+        //       should be autoidentified.
+        if (item_type_known(item))
+            autotoggle_autopickup(false);
         break;
 
     case RING_PROTECTION:
@@ -3435,6 +3443,14 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         prop_str += randart_known_wpn_property(item, RAP_STRENGTH);
         prop_int += randart_known_wpn_property(item, RAP_INTELLIGENCE);
         prop_dex += randart_known_wpn_property(item, RAP_DEXTERITY);
+
+        if (!remove && randart_known_wpn_property(item, RAP_EYESIGHT))
+        {
+            // We might have to turn autopickup back on again.
+            // This is not optimal, in that it could also happen if we do
+            // not know the property (in which case it should become known).
+            autotoggle_autopickup(false);
+        }
     }
 
     if (remove)

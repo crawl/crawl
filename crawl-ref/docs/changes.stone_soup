@@ -11,7 +11,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed Xom's repel stairs effect moving shops.
 * Really allow uniques to retain their spells when polymorphed.
 * Artificers start with 1 MP.
-* Tiles: Re-allow selection of player dolls.
+* Tiles: Re-allow selection of player dolls ('-' command).
 * Add missing tiles options to the options guide (docs/, '?&' command).
 
 Stone Soup 0.5.0 (20090612)
