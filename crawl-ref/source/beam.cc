@@ -2647,6 +2647,7 @@ bool poison_monster(monsters *monster, kill_category who, int levels,
                                    old_pois.degree > 0 ? " looks even sicker."
                                                        : " is poisoned.");
         }
+        behaviour_event(monster, ME_ANNOY, (who == KC_YOU) ? MHITYOU : MHITNOT);
     }
 
     // Finally, take care of deity preferences.
@@ -5065,10 +5066,8 @@ int bolt::range_used_on_hit(const actor* victim) const
         return (used);
 
     for (unsigned int i = 0; i < range_funcs.size(); ++i)
-    {
         if ( (*range_funcs[i])(*this, victim, used) )
             break;
-    }
 
     return (used);
 }

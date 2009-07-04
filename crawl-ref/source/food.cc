@@ -251,11 +251,13 @@ static bool _find_butchering_implement(int &butcher_tool)
 
     if (!potential_candidate)
     {
-        mpr("You don't carry any weapon that could be used for butchering.");
+        mpr("You don't carry any weapon you could use for butchering.");
         if (Options.tutorial_left)
+        {
             mpr("You should pick up the first knife, dagger, sword or axe "
                 "you find so you can use it to butcher corpses.",
                 MSGCH_TUTORIAL);
+        }
 
         return (false);
     }
@@ -295,11 +297,16 @@ static bool _find_butchering_implement(int &butcher_tool)
 
     if (is_valid_item(you.inv[item_slot])
         && you.inv[item_slot].base_type == OBJ_WEAPONS
-        && can_cut_meat(you.inv[item_slot])
-        && can_wield(&you.inv[item_slot]))
+        && can_cut_meat(you.inv[item_slot]))
     {
-        butcher_tool = item_slot;
-        return (true);
+        if (can_wield(&you.inv[item_slot]))
+        {
+            butcher_tool = item_slot;
+            return (true);
+        }
+
+        mpr("You can't wield this item!");
+        return (false);
     }
 
     mpr("That item isn't sharp enough!");

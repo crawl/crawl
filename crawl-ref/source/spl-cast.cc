@@ -2302,7 +2302,7 @@ static int _power_to_barcount( int power )
 int spell_power_bars( spell_type spell )
 {
     const int cap = spell_power_cap(spell);
-    if ( cap == 0 )
+    if (cap == 0)
         return -1;
     const int power = std::min(calc_spell_power(spell, true), cap);
     return _power_to_barcount(power);

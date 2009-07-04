@@ -349,7 +349,15 @@ void cast_see_invisible(int pow)
     if (player_see_invis())
         mpr("Nothing seems to happen.");
     else
+    {
         mpr("Your vision seems to sharpen.");
+
+        // We might have to turn autopickup back on again.
+        // TODO: Once the spell times out we might want to check all monsters
+        //       in LOS for invisibility and turn autopickup off again, if
+        //       needed.
+        autotoggle_autopickup(false);
+    }
 
     // No message if you already are under the spell.
     you.duration[DUR_SEE_INVISIBLE] += 10 + random2(2 + (pow / 2));
@@ -1821,7 +1829,7 @@ bool wielding_rocks()
 
 bool cast_sandblast(int pow, bolt &beam)
 {
-    const bool big = wielding_rocks();
+    const bool big     = wielding_rocks();
     const bool success = zapping(big ? ZAP_SANDBLAST
                                      : ZAP_SMALL_SANDBLAST, pow, beam, true);
 

@@ -28,6 +28,7 @@ REVISION("$Rev$");
 
 #include "abl-show.h"
 #include "cio.h"
+#include "delay.h"
 #include "defines.h"
 #include "effects.h"
 #include "format.h"
@@ -1978,7 +1979,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     };
 
     for (unsigned i = 0; i < ARRAYSZ(simple_conflict); ++i)
-    {
         for (int j = 0; j < 2; ++j)
         {
             // If we have one of the pair, delete a level of the other,
@@ -1991,7 +1991,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                 return (1);     // Nothing more to do.
             }
         }
-    }
 
     return (0);
 }
@@ -2192,10 +2191,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
             // Breathe poison replaces spit poison (so it takes the slot).
             for (int i = 0; i < 52; ++i)
-            {
                 if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
                     you.ability_letter_table[i] = ABIL_BREATHE_POISON;
-            }
         }
     }
 
@@ -2270,6 +2267,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         {
             remove_one_equip(EQ_HELMET, false, true);
         }
+        break;
+
+    case MUT_ACUTE_VISION:
+        // We might have to turn autopickup back on again.
+        mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
+        gain_msg = false;
+        autotoggle_autopickup(false);
         break;
 
     default:

@@ -3026,7 +3026,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
 void jewellery_wear_effects(item_def &item)
 {
     item_type_id_state_type ident        = ID_TRIED_TYPE;
-    artefact_prop_type       fake_rap     = ARTP_NUM_PROPERTIES;
+    artefact_prop_type      fake_rap     = ARTP_NUM_PROPERTIES;
     bool                    learn_pluses = false;
 
     // Randart jewellery shouldn't auto-ID just because the base type
@@ -3051,10 +3051,18 @@ void jewellery_wear_effects(item_def &item)
     case RING_SUSTAIN_ABILITIES:
     case RING_SUSTENANCE:
     case RING_SLAYING:
-    case RING_SEE_INVISIBLE:
     case RING_WIZARDRY:
     case RING_REGENERATION:
     case RING_TELEPORT_CONTROL:
+        break;
+
+    case RING_SEE_INVISIBLE:
+        // We might have to turn autopickup back on again.
+        // TODO: Check all monsters in LOS. If any of them are invisible
+        //       (and thus become visible once the ring is worn), the ring
+        //       should be autoidentified.
+        if (item_type_known(item))
+            autotoggle_autopickup(false);
         break;
 
     case RING_PROTECTION:
@@ -3328,6 +3336,14 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
         prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
         prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
+
+        if (!remove && artefact_known_wpn_property(item, ARTP_EYESIGHT))
+        {
+            // We might have to turn autopickup back on again.
+            // This is not optimal, in that it could also happen if we do
+            // not know the property (in which case it should become known).
+            autotoggle_autopickup(false);
+        }
     }
 
     if (remove)
