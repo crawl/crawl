@@ -60,8 +60,8 @@
    This is the fun stuff. Necromancy is a mixed bag of many and various
    different kinds of spells, with a few common themes:
    -Differentiation of living, dead and undead. Some necromancy affects only
-   the living (pain, vampiric draining etc), some affects only the dead
-   (animate dead, twisted resurrection etc), and some affects only undead
+   the living (pain, vampiric draining, etc.), some affects only the dead
+   (animate dead, twisted resurrection, etc.), and some affects only undead
    (dispel and control undead).
    -Actual or potential harm: eg risk in Death's Door, hp loss with Pain,
    disease with summon greater undead, etc. Also loss of potential experience

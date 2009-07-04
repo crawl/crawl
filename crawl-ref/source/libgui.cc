@@ -194,7 +194,7 @@ void get_input_line_gui(char *const buff, int len)
             k = prev;
             break;
 
-        // Escape conversion. (for ^H, etc)
+        // Escape conversion. (for ^H, etc.)
         case CONTROL('V'):
             kin = getch();
             // fallthrough

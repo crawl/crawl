@@ -148,7 +148,7 @@ void ghost_demon::init_random_demon()
 {
     name = make_name(random_int(), false);
 
-    // hp - could be defined below (as could ev, AC etc). Oh well, too late:
+    // hp - could be defined below (as could ev, AC, etc.). Oh well, too late:
     max_hp = 100 + roll_dice( 3, 50 );
 
     ev = 5 + random2(20);

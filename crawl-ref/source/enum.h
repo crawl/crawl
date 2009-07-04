@@ -2476,7 +2476,7 @@ enum score_format_type
 {
     SCORE_TERSE,                // one line
     SCORE_REGULAR,              // two lines (name, cause, blank)
-    SCORE_VERBOSE               // everything (dates, times, god, etc)
+    SCORE_VERBOSE               // everything (dates, times, god, etc.)
 };
 
 enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()

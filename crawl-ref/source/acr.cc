@@ -308,7 +308,7 @@ static void _show_commandline_options_help()
     puts("Command line options override init file options, which override");
     puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
     puts("");
-    puts("Highscore list options: (Can be redirected to more, etc)");
+    puts("Highscore list options: (Can be redirected to more, etc.)");
     puts("  -scores [N]            highscore list");
     puts("  -tscores [N]           terse highscore list");
     puts("  -vscores [N]           verbose highscore list");

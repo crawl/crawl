@@ -31,7 +31,7 @@ public:
     FixedVector<TilesTexture, TEX_MAX> m_textures;
 };
 
-// Windows and internal regions (text, dungeon, map, etc)
+// Windows and internal regions (text, dungeon, map, etc.)
 class MouseEvent;
 
 class Region
