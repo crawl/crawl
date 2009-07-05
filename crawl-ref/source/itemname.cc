@@ -2562,6 +2562,10 @@ bool is_useless_item(const item_def &item, bool temp)
                                      && you.hunger_state <= HS_SATIATED)
                     || you.religion == GOD_TROG);
 
+        case AMU_THE_GOURMAND:
+            return ((player_mutation_level(MUT_HERBIVOROUS) == 3)
+                       || you.species == SP_MUMMY);
+
         case RING_LIFE_PROTECTION:
             return (player_prot_life(false, temp, false) == 3);
 
