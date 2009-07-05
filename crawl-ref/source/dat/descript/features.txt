@@ -35,41 +35,25 @@ A gate leading to another region of Pandemonium
 %%%%
 A one-way gate leading to the halls of Pandemonium
 
-Tales about successful loots of these netherworlds are rare. Even the
-strongest and most experienced characters can die there. On the other hand,
-these halls contain several runes and lots of valuable items. It is much
-easier to get in than to get out.
+Tales about successful loots of these netherworlds are rare. Even the strongest and most experienced characters can die there. On the other hand, these halls contain several runes and lots of valuable items. It is much easier to get in than to get out.
 %%%%
 A gate to the Realm of Zot
 
-Zot is the final stage as its deepest level houses the infamous Orb of Zot.
-Both the Orb and this Realm have a fearsome and questionable reputation but
-one piece of information seems to be for certain: the monsters inhabiting
-this area and protecting the orb are strong and strange -- some of them nowhere
-encountered but here.
+Zot is the final stage as its deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have a fearsome and questionable reputation but one piece of information seems to be for certain: the monsters inhabiting this area and protecting the orb are strong and strange -- some of them nowhere encountered but here.
 %%%%
 A gateway to a bazaar
 
-Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place
-to place. Bazaars feature a number of different shops and often have better
-stock than the sedentary ones, sometimes even at a bargain.
-Once you hear the clinking of coins, be sure to hurry up and find the
-impromptu marketplace before the caravan moves on!
+Aside from the vendors who've set up their stores at various places in the dungeon, there are others trying to make a living by traveling from place to place. Bazaars feature a number of different shops and often have better stock than the sedentary ones, sometimes even at a bargain. Once you hear the clinking of coins, be sure to hurry up and find the impromptu marketplace before the caravan moves on!
 
-Also be warned that their nomadic lifestyle has taught these sellers to
-appropriate any items an adventurer might leave behind, and then leave
-quickly, probably to sell them elsewhere.
+Also be warned that their nomadic lifestyle has taught these sellers to appropriate any items an adventurer might leave behind, and then leave quickly, probably to sell them elsewhere.
 %%%%
 A gateway leading out of the Abyss
 
-A gateway out of this accursed place, shimmering and shifting in the
-impermanent landscape.
+A gateway out of this accursed place, shimmering and shifting in the impermanent landscape.
 %%%%
 A gateway to Gehenna
 
-You can feel the heat. Gehenna seems to be made out of nothing but flames,
-lava and hellfire.
+You can feel the heat. Gehenna seems to be made out of nothing but flames, lava and hellfire.
 %%%%
 A gateway to Hell
 %%%%
@@ -87,11 +71,7 @@ From the frost-bitten lands, a cold chill touches your soul.
 %%%%
 A glowing drain
 
-Every settlement brings forth the unpleasant sewers and drains, ignored by
-most but hideaways for others. Old tales speak of dangerous creatures,
-bathing in disgustingly smelling green water, preying on each other without mercy.
-The tales also allude to valuable items left by daring and unfortunate
-visitors, left to grow mildew in the damp caverns.
+Every settlement brings forth the unpleasant sewers and drains, ignored by most but hideaways for others. Old tales speak of dangerous creatures, bathing in disgustingly smelling green water, preying on each other without mercy. The tales also allude to valuable items left by daring and unfortunate visitors, left to grow mildew in the damp caverns.
 %%%%
 A glowing golden altar of the Shining One
 %%%%
@@ -101,9 +81,7 @@ A granite statue
 %%%%
 A labyrinth entrance
 
-A gateway to an intricate maze designed by subtle and malicious minds,
-its exit guarded by a fearsome monster, where many a hapless
-adventurer has lost his way and starved to death.
+A gateway to an intricate maze designed by subtle and malicious minds, its exit guarded by a fearsome monster, where many a hapless adventurer has lost his way and starved to death.
 %%%%
 A magical trap
 %%%%
@@ -113,13 +91,11 @@ A natural trap
 %%%%
 A metal wall
 
-A wall of bluish-grey metal. As every dungeon electrician knows, this
-stuff will ground.
+A wall of bluish-grey metal. As every dungeon electrician knows, this stuff will ground.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
-A one-way gate to a demon-haunted realm, riven by chaos, its very substance
-impermanent and whimsical, filled with creatures out of nightmare.
+A one-way gate to a demon-haunted realm, riven by chaos, its very substance impermanent and whimsical, filled with creatures out of nightmare.
 %%%%
 A rock wall
 %%%%
@@ -127,10 +103,7 @@ A roughly hewn altar of Beogh
 %%%%
 A sand-covered staircase
 
-You can make out a staircase leading downwards into a small tomb. Sand
-surrounds the staircase and is continuously pouring onto it. Before long
-the staircase will be gone. They say that some distant relatives of the
-pharaohs were entombed here.
+You can make out a staircase leading downwards into a small tomb. Sand surrounds the staircase and is continuously pouring onto it. Before long the staircase will be gone. They say that some distant relatives of the pharaohs were entombed here.
 %%%%
 A shimmering altar of Xom
 %%%%
@@ -138,17 +111,13 @@ A shining altar of Vehumet
 %%%%
 A shop
 
-A shop in the dungeon, beyond sight of the world above, manned by a
-secretive and reclusive shopkeeper who cannot be bargained with,
-grants no refunds, and is interested in nothing you may have to sell.
-Some shops hawk antiques of unknown provenance, and offer little hint
-as to the quality or nature of their goods.
+A shop in the dungeon, beyond sight of the world above, manned by a secretive and reclusive shopkeeper who cannot be bargained with, grants no refunds, and is interested in nothing you may have to sell. Some shops hawk antiques of unknown provenance, and offer little hint as to the quality or nature of their goods.
 %%%%
 A silver altar of Elyvilon
 %%%%
 A slime covered rock wall
 
-This rock wall is thickly coated with bright green slime.  Ewwwwww.
+This rock wall is thickly coated with bright green slime. Ewwwwww.
 %%%%
 A sparkling altar of Nemelex Xobeh
 %%%%
@@ -166,14 +135,11 @@ A staircase to the Crypt
 %%%%
 A staircase to the Ecumenical Temple
 
-An entrance to the Temple of the Gods, a place of peace, and a refuge
-from the insanity of the dungeon.
+An entrance to the Temple of the Gods, a place of peace, and a refuge from the insanity of the dungeon.
 %%%%
 A staircase to the Elven Halls
 
-A wide stair down to the murky depths of the halls of the deep elves,
-skilled warriors with blades and bows, and fearsome sorcerers and
-magicians.
+A wide stair down to the murky depths of the halls of the deep elves, skilled warriors with blades and bows, and fearsome sorcerers and magicians.
 %%%%
 A staircase to the Hall of Blades
 %%%%
@@ -185,20 +151,15 @@ A staircase to the Lair
 %%%%
 A staircase to the Orcish Mines
 
-An entrance to the mines of the orcs, filled with their gold, but
-treacherous and easy to get trapped in.
+An entrance to the mines of the orcs, filled with their gold, but treacherous and easy to get trapped in.
 %%%%
 A staircase to the Shoals
 
-Here be the Shoals: exotic underground beaches, salty spray and
-creatures that bite, stab and maul.
+Here be the Shoals: exotic underground beaches, salty spray and creatures that bite, stab and maul.
 %%%%
 A staircase to the Slime Pits
 
-An entrance to the amorphous realm of acids, jellies and slimes.
-Any trace of intelligent beings has long been dissolved. Still,
-there are rumours of great treasures deep down, hidden safely away
-in secret chambers without door or window for acid to leak in.
+An entrance to the amorphous realm of acids, jellies and slimes. Any trace of intelligent beings has long been dissolved. Still, there are rumours of great treasures deep down, hidden safely away in secret chambers without door or window for acid to leak in.
 %%%%
 A staircase to the Snake Pit
 
@@ -206,13 +167,11 @@ Here is the way to the place of the serpent, the lair of the naga.
 %%%%
 A staircase to the Swamp
 
-A stair to a swampy waste land, complete with ooze, muck, flies and
-large slavering carnivorous monsters.
+A stair to a swampy waste land, complete with ooze, muck, flies and large slavering carnivorous monsters.
 %%%%
 A staircase to the Tomb
 
-A way to the Tomb of the Ancients, a place of damnation, of horrors
-animated by the vilest necromancy.
+A way to the Tomb of the Ancients, a place of damnation, of horrors animated by the vilest necromancy.
 %%%%
 A staircase to the Vaults
 %%%%
@@ -240,10 +199,7 @@ For some reason, some dungeon walls, like this one, have been made of this polis
 %%%%
 A wall of solid wax
 
-These walls are built by bees. Occasionally a dungeon architect will
-manipulate bees into building wax walls for aesthetic reasons. (Theirs,
-not the bees'.) They are susceptible to fire and will melt and burn, given
-sufficient heat.
+These walls are built by bees. Occasionally a dungeon architect will manipulate bees into building wax walls for aesthetic reasons. (Theirs, not the bees'.) They are susceptible to fire and will melt and burn, given sufficient heat.
 %%%%
 A wall of the weird stuff which makes up Pandemonium
 %%%%
@@ -259,9 +215,7 @@ A spring-loaded one-way escape hatch set in the ceiling.
 %%%%
 An escape hatch in the floor
 
-A spring-loaded one-way escape hatch set in the dungeon floor,
-allowing the adventurer beset by adversaries to exchange the perils of
-this level for the perils of the next.
+A spring-loaded one-way escape hatch set in the dungeon floor, allowing the adventurer beset by adversaries to exchange the perils of this level for the perils of the next.
 %%%%
 An iron altar of Okawaru
 %%%%
@@ -281,10 +235,7 @@ Floor
 %%%%
 Some deep water
 
-This water is as deep as it is dangerous. No sane traveller would try to set
-foot into it, apart from those who fly or swim. Let it be a warning for you:
-many confused adventurers found their death at the depths, and an untimely
-end of levitation drowned even more hopeful trespassers.
+This water is as deep as it is dangerous. No sane traveller would try to set foot into it, apart from those who fly or swim. Let it be a warning for you: many confused adventurers found their death at the depths, and an untimely end of levitation drowned even more hopeful trespassers.
 %%%%
 Some lava
 
