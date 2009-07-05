@@ -3385,6 +3385,10 @@ static int _prompt_ring_to_remove(int new_ring)
     mprf(" < or %s", left->name(DESC_INVENTORY).c_str());
     mprf(" > or %s", right->name(DESC_INVENTORY).c_str());
 
+    // Deactivate choice from tile inventory.
+    // FIXME: We need to be able to get the choice (item letter)
+    //        *without* the choice taking action by itself!
+    mouse_control mc(MOUSE_MODE_MORE);
     int c;
     do
         c = getch();
