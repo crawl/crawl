@@ -2564,6 +2564,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_THE_GOURMAND:
             return ((player_mutation_level(MUT_HERBIVOROUS) == 3)
+                       || player_mutation_level(MUT_GOURMAND)
                        || you.species == SP_MUMMY);
 
         case RING_LIFE_PROTECTION:
