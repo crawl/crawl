@@ -231,7 +231,7 @@ stash_filter = ring of hunger, amulet of inaccuracy
 # easy_exit_menu         = false
 # msg_condense_repeats   = false
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
-sort_menus = inv: true : equipped, freshness
+sort_menus = inv: true : equipped, freshness, charged
 
 
 ##### 4-j	Messages and Display Enhancements #####
