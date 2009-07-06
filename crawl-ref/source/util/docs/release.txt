@@ -13,7 +13,7 @@ for those the list begins with step 2.
     At the same time if something big does get introduced it's better to branch
     before doing so seeing how otherwise you'll have to later turn it off in
     branch before the release.
-    Thus, you'll need to branch as early as necessary and as lte as possible.
+    Thus, you'll need to branch as early as necessary and as late as possible.
 
 1.  Branch trunk into the new version
     svn cp https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/trunk
