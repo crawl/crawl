@@ -120,16 +120,16 @@ xWWW..
 xW'...
 ENDMAP
 
-NAME:    portal_sewer_entry_c
-TAGS:    uniq_sewer no_monster_gen
+NAME:   portal_sewer_entry_c
+TAGS:   uniq_sewer no_monster_gen
 : sewer_portal(_G)
-NSUBST:  c = 2:= / 2:n / *:c
-NSUBST:  W = 8:1 / *:W
-SUBST:   1 = 111W
-KMONS:   1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
+NSUBST: c = 2:= / 2:n / *:c
+NSUBST: W = 8:1 / *:W
+SUBST:  1 = 111W
+KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
              giant cockroach / giant mite / worm w:3
-KFEAT:   1 = W
-COLOUR:  W = green / cyan w:5
+KFEAT:  1 = W
+COLOUR: W = green / cyan w:5
 MAP
 .........
 .ccccccc.
@@ -141,7 +141,17 @@ MAP
 .........
 ENDMAP
 
-
+NAME:	portal_sewer_entry_d
+TAGS:   uniq_sewer
+: sewer_portal(_G)
+KMONS:  1 = big fish
+KFEAT:  1 = W
+COLOUR: W = green / cyan w:5
+MAP
+xxxxxxxxxx
+xWOW1WWWWW@
+xxxxxxxxxx
+ENDMAP
 
 # The actual portal vaults #####################################
 default-depth:
@@ -187,13 +197,13 @@ xxxxxxxxcwccCCCCCCCCCvvVCCCCxxxxxxC*CCCxxxxxxxxx
 xxxxxxxxcwwcxxxxxxxxCCCvvvvCCCCxxCCvvvCxxxxxxxxx
 xxxxxxxxccwcxxxxxxxxxxCCCCvvvvCCCCvvvvCxxxxxxxxx
 xxxxxxxxxcwccxxxxxxxxxxxxCCCCvvvvvvvvvCxxxxxxxxx
-xxcwcxxxccwwcxxxxxxxxxxxxxxxCCCCCCCCCCCxxxxxxxxx
-xxcwcxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxcwxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxcwxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxwxxxxcWwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxwxxxccWwWccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxwxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxccwwcxxxxxxxxxxxxxxxCCCCCCCCCCCxxxxxxxxx
+xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcWwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxccWwWccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxc<..WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxccc.Www'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
