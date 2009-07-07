@@ -1528,24 +1528,31 @@ static int _tileidx_food(const item_def &item)
 // Parameter mon already holds the corpse type (monster species).
 static int _tileidx_corpse(int mon)
 {
-  switch (mon)
-  {
+    switch (mon)
+    {
+    // insects ('a')
     case MONS_GIANT_COCKROACH:
         return TILE_CORPSE_GIANT_COCKROACH;
     case MONS_GIANT_ANT:
         return TILE_CORPSE_GIANT_ANT;
     case MONS_SOLDIER_ANT:
         return TILE_CORPSE_SOLDIER_ANT;
+
+    // batty monsters ('b')
     case MONS_GIANT_BAT:
         return TILE_CORPSE_GIANT_BAT;
     case MONS_BUTTERFLY:
         return TILE_CORPSE_BUTTERFLY;
+
+    // centaurs ('c')
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
         return TILE_CORPSE_CENTAUR;
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
         return TILE_CORPSE_YAKTAUR;
+
+    // draconians ('d')
     case MONS_DRACONIAN:
         return TILE_CORPSE_DRACONIAN_BROWN;
     case MONS_BLACK_DRACONIAN:
@@ -1572,6 +1579,8 @@ static int _tileidx_corpse(int mon)
     case MONS_DRACONIAN_KNIGHT:
     case MONS_DRACONIAN_SCORCHER:
         return TILE_CORPSE_DRACONIAN_BROWN;
+
+    // elves ('e')
     case MONS_ELF:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
@@ -1588,12 +1597,16 @@ static int _tileidx_corpse(int mon)
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_DEATH_MAGE:
         return TILE_CORPSE_ELF;
+
+    // goblins ('g')
     case MONS_GOBLIN:
         return TILE_CORPSE_GOBLIN;
     case MONS_HOBGOBLIN:
         return TILE_CORPSE_HOBGOBLIN;
     case MONS_GNOLL:
         return TILE_CORPSE_GNOLL;
+
+    // hounds ('h')
     case MONS_JACKAL:
         return TILE_CORPSE_JACKAL;
     case MONS_HOUND:
@@ -1606,16 +1619,22 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_WAR_DOG;
     case MONS_HOG:
         return TILE_CORPSE_HOG;
+
+    // slugs ('j')
     case MONS_ELEPHANT_SLUG:
         return TILE_CORPSE_ELEPHANT_SLUG;
     case MONS_GIANT_SLUG:
         return TILE_CORPSE_GIANT_SLUG;
     case MONS_GIANT_SNAIL:
         return TILE_CORPSE_GIANT_SNAIL;
+
+    // bees ('k')
     case MONS_KILLER_BEE:
         return TILE_CORPSE_KILLER_BEE;
     case MONS_BUMBLEBEE:
         return TILE_CORPSE_BUMBLEBEE;
+
+    // lizards ('l')
     case MONS_GIANT_NEWT:
         return TILE_CORPSE_GIANT_NEWT;
     case MONS_GIANT_GECKO:
@@ -1628,6 +1647,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
         return TILE_CORPSE_KOMODO_DRAGON;
+
+    // drakes (also 'l')
     case MONS_SWAMP_DRAKE:
         return TILE_CORPSE_SWAMP_DRAKE;
     case MONS_FIREDRAKE:
@@ -1636,14 +1657,22 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_LINDWURM;
     case MONS_DEATH_DRAKE:
         return TILE_CORPSE_DEATH_DRAKE;
+
+    // merfolk ('m')
     case MONS_MERFOLK:
         return TILE_CORPSE_MERFOLK_FIGHTER;
     case MONS_MERMAID:
         return TILE_CORPSE_MERMAID;
+    case MONS_SIREN:
+        return TILE_CORPSE_SIREN;
+
+    // rotting monsters ('n')
     case MONS_NECROPHAGE:
         return TILE_CORPSE_NECROPHAGE;
     case MONS_GHOUL:
         return TILE_CORPSE_GHOUL;
+
+    // orcs ('o')
     case MONS_ORC:
     case MONS_ORC_WIZARD:
     case MONS_ORC_PRIEST:
@@ -1653,6 +1682,8 @@ static int _tileidx_corpse(int mon)
     case MONS_ORC_SORCERER:
     case MONS_ORC_HIGH_PRIEST:
         return TILE_CORPSE_ORC;
+
+    // rodents ('r')
     case MONS_RAT:
         return TILE_CORPSE_RAT;
     case MONS_QUOKKA:
@@ -1663,6 +1694,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_GREEN_RAT;
     case MONS_ORANGE_RAT:
         return TILE_CORPSE_ORANGE_RAT;
+
+    // spiders ('s')
     case MONS_GIANT_MITE:
         return TILE_CORPSE_GIANT_MITE;
     case MONS_GIANT_CENTIPEDE:
@@ -1671,42 +1704,54 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_SCORPION;
     case MONS_WOLF_SPIDER:
         return TILE_CORPSE_WOLF_SPIDER;
-    case MONS_REDBACK:
-        return TILE_CORPSE_REDBACK;
     case MONS_TRAPDOOR_SPIDER:
         return TILE_CORPSE_TRAPDOOR_SPIDER;
+    case MONS_REDBACK:
+        return TILE_CORPSE_REDBACK;
+
+    // minotaur ('t')
     case MONS_MINOTAUR:
         return TILE_CORPSE_MINOTAUR;
+
+    // ugly things ('u')
     case MONS_UGLY_THING:
         return TILE_CORPSE_UGLY_THING;
     case MONS_VERY_UGLY_THING:
         return TILE_CORPSE_VERY_UGLY_THING;
+
+    // worms ('w')
     case MONS_KILLER_BEE_LARVA:
         return TILE_CORPSE_KILLER_BEE_LARVA;
-    case MONS_WORM:
-        return TILE_CORPSE_WORM;
     case MONS_ANT_LARVA:
         return TILE_CORPSE_ANT_LARVA;
+    case MONS_WORM:
+        return TILE_CORPSE_WORM;
     case MONS_BRAIN_WORM:
         return TILE_CORPSE_BRAIN_WORM;
-    case MONS_SPINY_WORM:
-        return TILE_CORPSE_SPINY_WORM;
     case MONS_SWAMP_WORM:
         return TILE_CORPSE_SWAMP_WORM;
-    case MONS_YELLOW_WASP:
-        return TILE_CORPSE_YELLOW_WASP;
+    case MONS_SPINY_WORM:
+        return TILE_CORPSE_SPINY_WORM;
+
+    // wasps ('y')
     case MONS_GIANT_MOSQUITO:
         return TILE_CORPSE_GIANT_MOSQUITO;
     case MONS_GIANT_BLOWFLY:
         return TILE_CORPSE_GIANT_BLOWFLY;
+    case MONS_YELLOW_WASP:
+        return TILE_CORPSE_YELLOW_WASP;
     case MONS_RED_WASP:
         return TILE_CORPSE_RED_WASP;
+
+    // beetles ('B')
     case MONS_GIANT_BEETLE:
         return TILE_CORPSE_GIANT_BEETLE;
     case MONS_BOULDER_BEETLE:
         return TILE_CORPSE_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:
         return TILE_CORPSE_BORING_BEETLE;
+
+    // giants ('C')
     case MONS_HILL_GIANT:
         return TILE_CORPSE_HILL_GIANT;
     case MONS_ETTIN:
@@ -1721,6 +1766,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_STONE_GIANT;
     case MONS_TITAN:
         return TILE_CORPSE_TITAN;
+
+    // dragons ('D')
     case MONS_WYVERN:
         return TILE_CORPSE_WYVERN;
     case MONS_DRAGON:
@@ -1745,6 +1792,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_GOLDEN_DRAGON;
     case MONS_SHADOW_DRAGON:
         return TILE_CORPSE_SHADOW_DRAGON;
+
+    // frogs ('F')
     case MONS_GIANT_FROG:
         return TILE_CORPSE_GIANT_FROG;
     case MONS_GIANT_BROWN_FROG:
@@ -1753,6 +1802,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_SPINY_FROG;
     case MONS_BLINK_FROG:
         return TILE_CORPSE_BLINK_FROG;
+
+    // eyes ('G')
     case MONS_GIANT_EYEBALL:
         return TILE_CORPSE_GIANT_EYEBALL;
     case MONS_EYE_OF_DRAINING:
@@ -1761,46 +1812,64 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_GIANT_ORANGE_BRAIN;
     case MONS_GREAT_ORB_OF_EYES:
         return TILE_CORPSE_GREAT_ORB_OF_EYES;
+
+    // hybrids ('H')
     case MONS_HIPPOGRIFF:
         return TILE_CORPSE_HIPPOGRIFF;
     case MONS_MANTICORE:
         return TILE_CORPSE_MANTICORE;
     case MONS_GRIFFON:
         return TILE_CORPSE_GRIFFON;
+    case MONS_HARPY:
+        return TILE_CORPSE_HARPY;
+
+    // jellies ('J')
     case MONS_GIANT_AMOEBA:
         return TILE_CORPSE_GIANT_AMOEBA;
+
+    // kobolds ('K')
     case MONS_KOBOLD:
         return TILE_CORPSE_KOBOLD;
     case MONS_BIG_KOBOLD:
         return TILE_CORPSE_BIG_KOBOLD;
-    case MONS_KOBOLD_DEMONOLOGIST:
-        return TILE_CORPSE_KOBOLD;
+
+    // nagas ('N')
     case MONS_NAGA:
-    case MONS_GUARDIAN_NAGA:
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
         return TILE_CORPSE_NAGA;
+    case MONS_GUARDIAN_NAGA:
+        return TILE_CORPSE_GUARDIAN_NAGA;
+
+    // ogres ('O')
     case MONS_OGRE:
+    case MONS_OGRE_MAGE:
         return TILE_CORPSE_OGRE;
     case MONS_TWO_HEADED_OGRE:
         return TILE_CORPSE_TWO_HEADED_OGRE;
+
+    // queen insects ('Q')
     case MONS_QUEEN_BEE:
         return TILE_CORPSE_QUEEN_BEE;
     case MONS_QUEEN_ANT:
         return TILE_CORPSE_QUEEN_ANT;
+
+    // snakes ('S')
     case MONS_SMALL_SNAKE:
         return TILE_CORPSE_SMALL_SNAKE;
     case MONS_SNAKE:
         return TILE_CORPSE_SNAKE;
+    case MONS_GREY_SNAKE:
+        return TILE_CORPSE_GREY_SNAKE;
     case MONS_WATER_MOCCASIN:
         return TILE_CORPSE_WATER_MOCCASIN;
     case MONS_BLACK_MAMBA:
         return TILE_CORPSE_BLACK_MAMBA;
     case MONS_VIPER:
         return TILE_CORPSE_VIPER;
-    case MONS_GREY_SNAKE:
-        return TILE_CORPSE_GREY_SNAKE;
+
+    // trolls ('T')
     case MONS_TROLL:
         return TILE_CORPSE_TROLL;
     case MONS_ROCK_TROLL:
@@ -1809,6 +1878,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_IRON_TROLL;
     case MONS_DEEP_TROLL:
         return TILE_CORPSE_DEEP_TROLL;
+
+    // bears ('U')
     case MONS_BEAR:
         return TILE_CORPSE_BEAR;
     case MONS_GRIZZLY_BEAR:
@@ -1817,12 +1888,16 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_POLAR_BEAR;
     case MONS_BLACK_BEAR:
         return TILE_CORPSE_BLACK_BEAR;
+
+    // cattle ('Y')
     case MONS_SHEEP:
         return TILE_CORPSE_SHEEP;
     case MONS_YAK:
         return TILE_CORPSE_YAK;
     case MONS_DEATH_YAK:
         return TILE_CORPSE_DEATH_YAK;
+
+    // humans ('@')
     case MONS_HUMAN:
     case MONS_HELL_KNIGHT:
     case MONS_NECROMANCER:
@@ -1832,13 +1907,10 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
-    case MONS_POLYPHEMUS:
-        return TILE_CORPSE_CYCLOPS;
+
     default:
         return TILE_ERROR;
-  }
-
-  return TILE_ERROR;
+    }
 }
 
 static int _tileidx_rune(const item_def &item)
@@ -3204,6 +3276,8 @@ const int parts_saved[] ={
     TILEP_PART_HAIR,
     TILEP_PART_BEARD,
     TILEP_PART_HELM,
+    TILEP_PART_HALO,
+    TILEP_PART_ENCH,
     -1
 };
 
@@ -3216,13 +3290,13 @@ void tilep_scan_parts(char *fbuf, int *parts)
 
     int gcount = 0;
     int ccount = 0;
-    for (int i = 0; parts_saved[i] != -1; i++)
+    for (int i = 0; parts_saved[i] != -1; ++i)
     {
         ccount = 0;
         int p = parts_saved[i];
 
         while (fbuf[gcount] != ':' && fbuf[gcount] != '\n'
-               && ccount < 4 && gcount < 48)
+               && ccount < 4 && gcount < (i+1)*4)
         {
             ibuf[ccount++] = fbuf[gcount++];
         }
@@ -3253,11 +3327,14 @@ void tilep_scan_parts(char *fbuf, int *parts)
 /*
  * format-print parts
  */
-void tilep_print_parts(char *fbuf, int *parts)
+void tilep_print_parts(char *fbuf, int *parts, bool check_halo)
 {
     char *ptr = fbuf;
     for (unsigned i = 0; parts_saved[i] != -1; ++i)
     {
+        if (!check_halo && parts_saved[i] == TILEP_PART_HALO)
+            break;
+
         int p = parts_saved[i];
         if (p == TILEP_PART_BASE) // 0: female  1: male
             sprintf(ptr, "%03d", get_gender_from_tile(parts));

@@ -13,6 +13,40 @@
 #include "externs.h"
 #include "itemprop.h"
 
+#ifdef USE_TILE
+// This used to be in tiles.h. (jpeg)
+#include "tiledef-main.h"
+#include "tiledef-dngn.h"
+#include "tiledef-player.h"
+
+struct dolls_data
+{
+    dolls_data() { memset(parts, 0, sizeof(parts)); }
+
+    int parts[TILEP_PART_MAX];
+};
+#endif
+
+struct player_save_info
+{
+    std::string name;
+    unsigned long experience;
+    int experience_level;
+    bool wizard;
+    species_type species;
+    std::string class_name;
+    god_type religion;
+#ifdef USE_TILE
+    dolls_data doll;
+//     int floor_tile;
+    bool held_in_net;
+#endif
+
+    player_save_info operator=(const player& rhs);
+    bool operator<(const player_save_info& rhs) const;
+    std::string short_desc() const;
+};
+
 class monsters;
 struct item_def;
 

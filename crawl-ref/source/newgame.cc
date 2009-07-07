@@ -3259,22 +3259,6 @@ static void _enter_player_name(bool blankOK)
                     desc = desc.substr(0, get_number_of_cols() - 1);
 
 #ifdef USE_TILE
-                dolls_data equip_doll;
-                for (unsigned int j = 0; j < TILEP_PART_MAX; ++j)
-                    equip_doll.parts[j] = TILEP_SHOW_EQUIP;
-
-                const int gender = TILEP_GENDER_MALE;
-                tilep_race_default(existing_chars[i].species, gender,
-                                   existing_chars[i].experience_level,
-                                   equip_doll.parts);
-
-                int job = get_class_by_name(existing_chars[i].class_name.c_str());
-                if (job == -1)
-                    job = JOB_FIGHTER;
-
-                tilep_job_default(job, gender, equip_doll.parts);
-                existing_chars[i].doll = equip_doll;
-
                 MenuEntry *me = new PlayerMenuEntry(desc);
 #else
                 MenuEntry *me = new MenuEntry(desc);
@@ -3295,13 +3279,7 @@ static void _enter_player_name(bool blankOK)
             // If the player wants out, we bail out.
             if (!_read_player_name(name, kNameLen, existing_chars, char_menu))
                 end(0);
-#if 0
-#ifdef USE_TILE
-            // What's this supposed to achieve? (jpeg)
-            clrscr();
-            cgotoxy(1, 1);
-#endif
-#endif
+
             // Laboriously trim the damn thing.
             std::string read_name = name;
             trim_string(read_name);

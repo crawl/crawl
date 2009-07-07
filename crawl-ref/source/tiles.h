@@ -61,7 +61,7 @@ void tilep_part_to_str(int number, char *buf);
 int  tilep_str_to_part(char *str);
 
 void tilep_scan_parts(char *fbuf, int *parts);
-void tilep_print_parts(char *fbuf, int *parts);
+void tilep_print_parts(char *fbuf, int *parts, bool check_halo = false);
 
 int tilep_equ_weapon(const item_def &item);
 int tilep_equ_shield(const item_def &item);
@@ -123,6 +123,7 @@ void TileNewLevel(bool first_time);
 // edit player tile
 void TilePlayerEdit();
 void init_player_doll();
+void save_doll_file(FILE *dollf);
 
 int item_unid_type(const item_def &item);
 int tile_known_weapon_brand(const item_def item);

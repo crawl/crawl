@@ -1,216 +1,233 @@
-### dungeon crawl monster corpses
+### Dungeon Crawl monster corpses
+### (only lists monsters that actually leave a corpse)
 
 %sdir dc-mon
 
 %corpse 1
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER /* @ */
-hell_knight CORPSE_HELL_KNIGHT /* @ */
-human CORPSE_HUMAN /* @ */
-necromancer CORPSE_NECROMANCER /* @ */
-shapeshifter CORPSE_SHAPESHIFTER /* @ */
-wizard CORPSE_WIZARD /* @ */
 
+### Animals
 %sdir dc-mon/animals
-%back dc-misc/blood_green
-boring_beetle CORPSE_BORING_BEETLE /* B */
-boulder_beetle CORPSE_BOULDER_BEETLE /* B */
-giant_beetle CORPSE_GIANT_BEETLE /* B */
 
+## Insects ('a')
+%back dc-misc/blood_green
+giant_cockroach CORPSE_GIANT_COCKROACH
+giant_ant CORPSE_GIANT_ANT
+soldier_ant CORPSE_SOLDIER_ANT
+
+## Batty monsters ('b')
+butterfly CORPSE_BUTTERFLY
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+giant_bat CORPSE_GIANT_BAT
+
+## Hounds ('h')
+jackal CORPSE_JACKAL
+hound CORPSE_HOUND
+warg CORPSE_WARG
+war_dog CORPSE_WAR_DOG
+wolf CORPSE_WOLF
+hog CORPSE_HOG
+
+## Bees ('k')
+%back dc-misc/blood_green
+bumblebee CORPSE_BUMBLEBEE
+killer_bee CORPSE_KILLER_BEE
+
+## Lizards ('l')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+giant_newt CORPSE_GIANT_NEWT
+giant_gecko CORPSE_GIANT_GECKO
+giant_iguana CORPSE_GIANT_IGUANA
+giant_lizard CORPSE_GIANT_LIZARD
+gila_monster CORPSE_GILA_MONSTER
+komodo_dragon CORPSE_KOMODO_DRAGON
+
+## Slugs ('j')
+%back dc-misc/blood_green
+elephant_slug CORPSE_ELEPHANT_SLUG
+giant_slug CORPSE_GIANT_SLUG
+giant_snail CORPSE_GIANT_SNAIL
+
+## Rodents ('r')
+rat CORPSE_RAT
+quokka CORPSE_QUOKKA
+grey_rat CORPSE_GREY_RAT
+green_rat CORPSE_GREEN_RAT
+orange_rat CORPSE_ORANGE_RAT
+
+## Spiders ('s')
+%back dc-misc/blood_green
+giant_centipede CORPSE_GIANT_CENTIPEDE
+giant_mite CORPSE_GIANT_MITE
+scorpion CORPSE_SCORPION
+wolf_spider CORPSE_WOLF_SPIDER
+trapdoor_spider CORPSE_TRAPDOOR_SPIDER
+redback CORPSE_REDBACK
+
+## Worms ('w')
+%sdir dc-mon/animals
+killer_bee_larva CORPSE_ANT_LARVA
+killer_bee_larva CORPSE_KILLER_BEE_LARVA
+worm CORPSE_WORM
+swamp_worm CORPSE_SWAMP_WORM
+spiny_worm CORPSE_SPINY_WORM
+brain_worm CORPSE_BRAIN_WORM
+
+## Wasps ('y')
+giant_blowfly CORPSE_GIANT_BLOWFLY
+giant_mosquito CORPSE_GIANT_MOSQUITO
+yellow_wasp CORPSE_YELLOW_WASP
+red_wasp CORPSE_RED_WASP
+
+## Beetles ('B')
+%back dc-misc/blood_green
+giant_beetle CORPSE_GIANT_BEETLE
+boring_beetle CORPSE_BORING_BEETLE
+boulder_beetle CORPSE_BOULDER_BEETLE
+
+## Frogs ('F')
+giant_frog CORPSE_GIANT_FROG
+giant_brown_frog CORPSE_GIANT_BROWN_FROG
+blink_frog CORPSE_BLINK_FROG
+spiny_frog CORPSE_SPINY_FROG
+
+## Queen insects ('Q')
+%back dc-misc/blood_green
+queen_ant CORPSE_QUEEN_ANT
+queen_bee CORPSE_QUEEN_BEE
+
+## Snakes ('S')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+small_snake CORPSE_SMALL_SNAKE
+snake CORPSE_SNAKE
+black_mamba CORPSE_BLACK_MAMBA
+water_moccasin CORPSE_WATER_MOCCASIN
+grey_snake CORPSE_GREY_SNAKE
+viper CORPSE_VIPER
+
+## Bears ('U')
+bear CORPSE_BEAR
+black_bear CORPSE_BLACK_BEAR
+grizzly_bear CORPSE_GRIZZLY_BEAR
+polar_bear CORPSE_POLAR_BEAR
+
+## Cattle ('Y')
+sheep CORPSE_SHEEP
+yak CORPSE_YAK
+death_yak CORPSE_DEATH_YAK
+
+
+### Non-animals
+%sdir dc-mon
+
+## Centaurs ('c')
+centaur CORPSE_CENTAUR
+yaktaur CORPSE_YAKTAUR
+
+## Elves ('e')
+elf CORPSE_ELF
+
+## Goblins ('g')
+goblin CORPSE_GOBLIN
+hobgoblin CORPSE_HOBGOBLIN
+gnoll CORPSE_GNOLL
+
+## Merfolk ('m')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+merfolk_fighter_water CORPSE_MERFOLK_FIGHTER
+mermaid_water CORPSE_MERMAID
+siren_water CORPSE_SIREN
+
+## Rotting monsters ('n')
+%back dc-misc/blood_green
+necrophage CORPSE_NECROPHAGE
+ghoul CORPSE_GHOUL
+
+## Orcs ('o')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+orc CORPSE_ORC
+
+## Minotaur ('t')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+minotaur CORPSE_MINOTAUR
+
+## Ugly things ('u')
+%sdir dc-mon/demons
+ugly_thing CORPSE_UGLY_THING
+very_ugly_thing CORPSE_VERY_UGLY_THING
+
+## Giants ('C')
 %sdir dc-mon
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-cyclops CORPSE_CYCLOPS /* C */
-fire_giant CORPSE_FIRE_GIANT /* C */
-frost_giant CORPSE_FROST_GIANT /* C */
-hill_giant CORPSE_HILL_GIANT /* C */
+hill_giant CORPSE_HILL_GIANT
 ettin CORPSE_ETTIN
-stone_giant CORPSE_STONE_GIANT /* C */
-titan CORPSE_TITAN /* C */
+cyclops CORPSE_CYCLOPS
+fire_giant CORPSE_FIRE_GIANT
+frost_giant CORPSE_FROST_GIANT
+stone_giant CORPSE_STONE_GIANT
+titan CORPSE_TITAN
 
-dragon CORPSE_DRAGON /* D */
-golden_dragon CORPSE_GOLDEN_DRAGON /* D */
-hydra5 CORPSE_HYDRA /* D */
-ice_dragon CORPSE_ICE_DRAGON /* D */
-iron_dragon CORPSE_IRON_DRAGON /* D */
-quicksilver_dragon CORPSE_QUICKSILVER_DRAGON /* D */
-shadow_dragon CORPSE_SHADOW_DRAGON /* D */
-storm_dragon CORPSE_STORM_DRAGON /* D */
-swamp_dragon CORPSE_SWAMP_DRAGON /* D */
-wyvern CORPSE_WYVERN /* D */
+## Drakes ('l')
+swamp_drake CORPSE_SWAMP_DRAKE
+firedrake CORPSE_FIREDRAKE
+lindwurm CORPSE_LINDWURM
+death_drake CORPSE_DEATH_DRAKE
 
-%sdir dc-mon/animals
-blink_frog CORPSE_BLINK_FROG /* F */
-giant_brown_frog CORPSE_GIANT_BROWN_FROG /* F */
-giant_frog CORPSE_GIANT_FROG /* F */
-spiny_frog CORPSE_SPINY_FROG /* F */
+## Dragons ('D')
+wyvern CORPSE_WYVERN
+dragon CORPSE_DRAGON
+hydra5 CORPSE_HYDRA
+steam_dragon CORPSE_STEAM_DRAGON
+ice_dragon CORPSE_ICE_DRAGON
+swamp_dragon CORPSE_SWAMP_DRAGON
+mottled_dragon CORPSE_MOTTLED_DRAGON
+quicksilver_dragon CORPSE_QUICKSILVER_DRAGON
+iron_dragon CORPSE_IRON_DRAGON
+storm_dragon CORPSE_STORM_DRAGON
+golden_dragon CORPSE_GOLDEN_DRAGON
+shadow_dragon CORPSE_SHADOW_DRAGON
 
-%sdir dc-mon
-eye_of_draining CORPSE_EYE_OF_DRAINING /* G */
-giant_eyeball CORPSE_GIANT_EYEBALL /* G */
-giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN /* G */
-great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES /* G */
+## Eyes ('G')
+giant_eyeball CORPSE_GIANT_EYEBALL
+eye_of_draining CORPSE_EYE_OF_DRAINING
+giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
+great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
 
-griffon CORPSE_GRIFFON /* H */
-hippogriff CORPSE_HIPPOGRIFF /* H */
+## Hybrids ('H')
+hippogriff CORPSE_HIPPOGRIFF
+griffon CORPSE_GRIFFON
+manticore CORPSE_MANTICORE
+harpy CORPSE_HARPY
 
-giant_amoeba CORPSE_GIANT_AMOEBA /* J */
+## Jellies ('J')
+giant_amoeba CORPSE_GIANT_AMOEBA
 
+## Kobolds ('K')
 %back dc-misc/blood_green
-kobold CORPSE_KOBOLD /* K */
+kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD
 
+## Nagas ('N')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-greater_naga CORPSE_GREATER_NAGA /* N */
-guardian_naga CORPSE_GUARDIAN_NAGA /* N */
-naga CORPSE_NAGA /* N */
-###naga_mage CORPSE_NAGA_MAGE /* N */
-###naga_warrior CORPSE_NAGA_WARRIOR /* N */
+naga CORPSE_NAGA
+guardian_naga CORPSE_GUARDIAN_NAGA
 
-ogre CORPSE_OGRE /* O */
-two_headed_ogre CORPSE_TWO_HEADED_OGRE /* O */
+## Ogres ('O')
+ogre CORPSE_OGRE
+two_headed_ogre CORPSE_TWO_HEADED_OGRE
 
-%sdir dc-mon/animals
-%back dc-misc/blood_green
-queen_ant CORPSE_QUEEN_ANT /* Q */
-queen_bee CORPSE_QUEEN_BEE /* Q */
+## Trolls ('T')
+troll CORPSE_TROLL
+rock_troll CORPSE_ROCK_TROLL
+iron_troll CORPSE_IRON_TROLL
+deep_troll CORPSE_DEEP_TROLL
 
+## Human shaped ('@')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-black_mamba CORPSE_BLACK_MAMBA /* S */
-water_moccasin CORPSE_WATER_MOCCASIN /* S */
-grey_snake CORPSE_GREY_SNAKE /* S */
-small_snake CORPSE_SMALL_SNAKE /* S */
-snake CORPSE_SNAKE /* S */
-viper CORPSE_VIPER /* S */
+human CORPSE_HUMAN
+shapeshifter CORPSE_SHAPESHIFTER
+glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 
-%sdir dc-mon
-deep_troll CORPSE_DEEP_TROLL /* T */
-iron_troll CORPSE_IRON_TROLL /* T */
-rock_troll CORPSE_ROCK_TROLL /* T */
-troll CORPSE_TROLL /* T */
-
-%sdir dc-mon/animals
-bear CORPSE_BEAR /* U */
-black_bear CORPSE_BLACK_BEAR /* U */
-grizzly_bear CORPSE_GRIZZLY_BEAR /* U */
-polar_bear CORPSE_POLAR_BEAR /* U */
-
-death_yak CORPSE_DEATH_YAK /* Y */
-sheep CORPSE_SHEEP /* Y */
-yak CORPSE_YAK /* Y */
-
-%sdir dc-mon/animals
-%back dc-misc/blood_green
-giant_ant CORPSE_GIANT_ANT /* a */
-giant_cockroach CORPSE_GIANT_COCKROACH /* a */
-soldier_ant CORPSE_SOLDIER_ANT /* a */
-
-butterfly CORPSE_BUTTERFLY /* b */
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-giant_bat CORPSE_GIANT_BAT /* b */
-
-%sdir dc-mon
-centaur CORPSE_CENTAUR /* c */
-###centaur_warrior CORPSE_CENTAUR_WARRIOR /* c */
-yaktaur CORPSE_YAKTAUR /* c */
-###yaktaur_captain CORPSE_YAKTAUR_CAPTAIN /* c */
-
-firedrake CORPSE_FIREDRAKE /* d */
-lindwurm CORPSE_LINDWURM /* d */
-mottled_dragon CORPSE_MOTTLED_DRAGON /* d */
-steam_dragon CORPSE_STEAM_DRAGON /* d */
-swamp_drake CORPSE_SWAMP_DRAKE /* d */
-death_drake CORPSE_DEATH_DRAKE /* d */
-
-##deep_elf_annihilator CORPSE_DEEP_ELF_ANNIHILATOR /* e */
-##deep_elf_conjurer CORPSE_DEEP_ELF_CONJURER /* e */
-##deep_elf_death_mage CORPSE_DEEP_ELF_DEATH_MAGE /* e */
-##deep_elf_demonologist CORPSE_DEEP_ELF_DEMONOLOGIST /* e */
-##deep_elf_fighter CORPSE_DEEP_ELF_FIGHTER /* e */
-##deep_elf_high_priest CORPSE_DEEP_ELF_HIGH_PRIEST /* e */
-##deep_elf_knight CORPSE_DEEP_ELF_KNIGHT /* e */
-##deep_elf_mage CORPSE_DEEP_ELF_MAGE /* e */
-##deep_elf_priest CORPSE_DEEP_ELF_PRIEST /* e */
-##deep_elf_soldier CORPSE_DEEP_ELF_SOLDIER /* e */
-##deep_elf_sorcerer CORPSE_DEEP_ELF_SORCERER /* e */
-##deep_elf_summoner CORPSE_DEEP_ELF_SUMMONER /* e */
-elf CORPSE_ELF /* e */
-
-gnoll CORPSE_GNOLL /* g */
-goblin CORPSE_GOBLIN /* g */
-hobgoblin CORPSE_HOBGOBLIN /* g */
-
-%sdir dc-mon/animals
-jackal CORPSE_JACKAL /* h */
-hog CORPSE_HOG /* h */
-hound CORPSE_HOUND /* h */
-warg CORPSE_WARG /* h */
-war_dog CORPSE_WAR_DOG /* h */
-wolf CORPSE_WOLF /* h */
-
-%back dc-misc/blood_green
-bumblebee CORPSE_BUMBLEBEE /* k */
-killer_bee CORPSE_KILLER_BEE /* k */
-
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-giant_gecko CORPSE_GIANT_GECKO /* l */
-giant_iguana CORPSE_GIANT_IGUANA /* l */
-giant_lizard CORPSE_GIANT_LIZARD /* l */
-giant_newt CORPSE_GIANT_NEWT /* l */
-gila_monster CORPSE_GILA_MONSTER /* l */
-komodo_dragon CORPSE_KOMODO_DRAGON /* l */
-
-%back dc-misc/blood_green
-elephant_slug CORPSE_ELEPHANT_SLUG /* m */
-giant_slug CORPSE_GIANT_SLUG /* m */
-giant_snail CORPSE_GIANT_SNAIL /* m */
-%sdir dc-mon
-manticore CORPSE_MANTICORE /* m */
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-minotaur CORPSE_MINOTAUR /* m */
-
-%back dc-misc/blood_green
-ghoul CORPSE_GHOUL /* n */
-necrophage CORPSE_NECROPHAGE /* n */
-
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-orc CORPSE_ORC /* o */
-###orc_high_priest CORPSE_ORC_HIGH_PRIEST /* o */
-###orc_priest CORPSE_ORC_PRIEST /* o */
-###orc_sorcerer CORPSE_ORC_SORCERER /* o */
-###orc_warlord CORPSE_ORC_WARLORD /* o */
-
-%sdir dc-mon/animals
-green_rat CORPSE_GREEN_RAT /* r */
-grey_rat CORPSE_GREY_RAT /* r */
-orange_rat CORPSE_ORANGE_RAT /* r */
-quokka CORPSE_QUOKKA /* r */
-rat CORPSE_RAT /* r */
-
-%back dc-misc/blood_green
-giant_centipede CORPSE_GIANT_CENTIPEDE /* s */
-giant_mite CORPSE_GIANT_MITE /* s */
-redback CORPSE_REDBACK /* s */
-scorpion CORPSE_SCORPION /* s */
-wolf_spider CORPSE_WOLF_SPIDER /* s */
-trapdoor_spider CORPSE_TRAPDOOR_SPIDER /* s */
-
-%sdir dc-mon/demons
-ugly_thing CORPSE_UGLY_THING /* u */
-very_ugly_thing CORPSE_VERY_UGLY_THING /* u */
-
-%sdir dc-mon/animals
-killer_bee_larva CORPSE_ANT_LARVA /* w */
-brain_worm CORPSE_BRAIN_WORM /* w */
-killer_bee_larva CORPSE_KILLER_BEE_LARVA /* w */
-spiny_worm CORPSE_SPINY_WORM /* w */
-swamp_worm CORPSE_SWAMP_WORM /* w */
-worm CORPSE_WORM /* w */
-
-giant_blowfly CORPSE_GIANT_BLOWFLY /* y */
-giant_mosquito CORPSE_GIANT_MOSQUITO /* y */
-red_wasp CORPSE_RED_WASP /* y */
-yellow_wasp CORPSE_YELLOW_WASP /* y */
-
+## Draconians ('d')
 %sdir player
 %start
 %compose drcwing/drcwing_black
@@ -271,10 +288,5 @@ yellow_wasp CORPSE_YELLOW_WASP /* y */
 %compose base/draconian_gold_f
 %compose drchead/drchead_yellow
 %finish CORPSE_DRACONIAN_YELLOW
-
-%sdir dc-mon
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-mermaid_water CORPSE_MERMAID
-merfolk_fighter_water CORPSE_MERFOLK_FIGHTER
 
 %corpse 0

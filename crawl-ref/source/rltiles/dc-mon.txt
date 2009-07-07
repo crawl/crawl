@@ -74,9 +74,9 @@ brain_worm MONS_BRAIN_WORM
 rock_worm MONS_ROCK_WORM
 
 ## Flying insects ('y')
-yellow_wasp MONS_YELLOW_WASP
 giant_blowfly MONS_GIANT_BLOWFLY
 giant_mosquito MONS_GIANT_MOSQUITO
+yellow_wasp MONS_YELLOW_WASP
 red_wasp MONS_RED_WASP
 moth_of_wrath MONS_MOTH_OF_WRATH
 
@@ -366,8 +366,8 @@ eye_of_devastation MONS_EYE_OF_DEVASTATION
 hippogriff MONS_HIPPOGRIFF
 manticore MONS_MANTICORE
 griffon MONS_GRIFFON
-sphinx MONS_SPHINX
 harpy MONS_HARPY
+sphinx MONS_SPHINX
 
 ## Ice beast only
 ice_beast MONS_ICE_BEAST /*'I'*/

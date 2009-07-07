@@ -267,7 +267,7 @@ TilesTexture::TilesTexture() :
 
 void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
 {
-    m_tile_max = tile_max;
+    m_tile_max  = tile_max;
     m_info_func = info_func;
 }
 

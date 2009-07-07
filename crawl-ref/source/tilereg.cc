@@ -558,6 +558,37 @@ static void _fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_DRCHEAD] = 0;
 }
 
+// Writes equipment information into per-character doll file.
+void save_doll_file(FILE *dollf)
+{
+    ASSERT(dollf);
+
+    dolls_data result = player_doll;
+
+    const bool halo = inside_halo(you.pos());
+    result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
+    result.parts[TILEP_PART_ENCH] =
+        (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
+
+    _fill_doll_equipment(result);
+
+    // Write into file.
+    char fbuf[80];
+    tilep_print_parts(fbuf, result.parts, true);
+    fprintf(dollf, "%s\n", fbuf);
+
+//     const coord_def c = you.pos();
+//     int feat = tileidx_feature(grd(c), c.x, c.y);
+//     if (feat == TILE_FLOOR_NORMAL)
+//         feat = env.tile_flv(c).floor;
+//     else if (feat == TILE_WALL_NORMAL)
+//         feat = env.tile_flv(c).wall;
+//     fprintf(dollf, "floor=%d\n", feat);
+
+    if (you.attribute[ATTR_HELD] > 0)
+        fprintf(dollf, "net\n");
+}
+
 // Allow player to choose between up to 10 premade dolls, or replace them
 // with the job default, using current equipment, or a random doll.
 // If the player makes any changes while browsing the selections, i.e.
@@ -3330,8 +3361,12 @@ bool ImageManager::load_textures()
     if (!m_textures[TEX_PLAYER].load_texture("player.png", mip))
         return (false);
 
+    if (!m_textures[TEX_DEFAULT].load_texture("main.png", mip))
+        return (false);
+
     m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
     m_textures[TEX_PLAYER].set_info(TILEP_PLAYER_MAX, &tile_player_info);
+    m_textures[TEX_DEFAULT].set_info(TILE_MAIN_MAX, &tile_main_info);
 
     return (true);
 }

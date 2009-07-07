@@ -65,6 +65,7 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "mstuff2.h"
 #include "mtransit.h"
+#include "newgame.h"
 #include "notes.h"
 #include "output.h"
 #include "overmap.h"
@@ -191,8 +192,8 @@ player_save_info read_character_info(const std::string &savefile)
         fromfile = you;
         you.copy_from(backup);
     }
-
     fclose(charf);
+
     return fromfile;
 }
 
@@ -602,6 +603,57 @@ std::string get_savedir_path(const std::string &shortpath)
 #endif
 }
 
+#ifdef USE_TILE
+static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
+{
+    dolls_data equip_doll;
+    for (unsigned int j = 0; j < TILEP_PART_MAX; ++j)
+        equip_doll.parts[j] = TILEP_SHOW_EQUIP;
+
+    equip_doll.parts[TILEP_PART_BASE]
+        = tilep_species_to_base_tile(p.species, p.experience_level);
+
+    bool success = false;
+
+    FILE *fdoll = fopen(dollfile.c_str(), "r");
+    if (fdoll)
+    {
+        char fbuf[1024];
+        memset(fbuf, 0, sizeof(fbuf));
+        if (fscanf(fdoll, "%s", fbuf) != EOF)
+        {
+            tilep_scan_parts(fbuf, equip_doll.parts);
+            tilep_race_default(p.species,
+                               get_gender_from_tile(equip_doll.parts),
+                               p.experience_level,
+                               equip_doll.parts);
+            success = true;
+
+            while (fscanf(fdoll, "%s", fbuf) != EOF)
+            {
+                if (strcmp(fbuf, "net") == 0)
+                    p.held_in_net = true;
+//                 else if (strncmp(fbuf, "floor=", 6) == 0)
+//                     sscanf(fbuf, "floor=%d", &p.floor_tile);
+            }
+        }
+        fclose(fdoll);
+    }
+
+    if (!success) // Use default doll instead.
+    {
+        int job = get_class_by_name(p.class_name.c_str());
+        if (job == -1)
+            job = JOB_FIGHTER;
+
+        int gender = coinflip();
+        tilep_job_default(job, gender, equip_doll.parts);
+    }
+    p.doll = equip_doll;
+}
+#endif
+
+
 /*
  * Returns a list of the names of characters that are already saved for the
  * current user.
@@ -646,9 +698,33 @@ std::vector<player_save_info> find_saved_characters()
 #endif
         if (is_save_file_name(filename))
         {
-            player_save_info p=read_character_info(get_savedir_path(filename));
+            const std::string path = get_savedir_path(filename);
+            player_save_info p = read_character_info(path);
             if (!p.name.empty())
+            {
+#ifdef USE_TILE
+                if (Options.tile_menu_icons)
+                {
+                    const std::string dollname = basename + ".tdl";
+ #ifdef LOAD_UNPACKAGE_CMD
+                    snprintf( cmd_buff, sizeof(cmd_buff),
+                              UNPACK_SPECIFIC_FILE_CMD,
+                              zipname.c_str(),
+                              dir.c_str(),
+                              dollname.c_str() );
+                    system(cmd_buff);
+ #endif
+                    const std::string dollpath = get_savedir_path(dollname);
+                    _fill_player_doll(p, dollpath);
+ #ifdef LOAD_UNPACKAGE_CMD
+                    // Throw away doll file.
+                    if (file_exists(dollpath.c_str()))
+                        unlink( dollpath.c_str() );
+ #endif
+                }
+#endif
                 chars.push_back(p);
+            }
         }
 
 #ifdef LOAD_UNPACKAGE_CMD
@@ -1516,6 +1592,26 @@ void save_game(bool leave_game, const char *farewellmsg)
         fclose(msgf);
         DO_CHMOD_PRIVATE(msgFile.c_str());
     }
+
+    /* tile dolls (empty for ASCII)*/
+    std::string dollFile = get_savedir_filename(you.your_name, "", "tdl");
+#ifdef USE_TILE
+    // Save the current equipment into a file.
+    FILE *dollf = fopen(dollFile.c_str(), "w+");
+    if (dollf)
+    {
+        save_doll_file(dollf);
+        fclose(dollf);
+        DO_CHMOD_PRIVATE(dollFile.c_str());
+    }
+#else
+    // Don't overwrite old tile dolls.
+    if (!file_exists(dollFile))
+    {
+        FILE *dollf = fopen(dollFile.c_str(), "wb");
+        fclose(dollf);
+    }
+#endif
 
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
     FILE *charf = fopen(charFile.c_str(), "wb");

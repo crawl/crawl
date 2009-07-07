@@ -50,11 +50,11 @@ REVISION("$Rev$");
 
 id_arr type_ids;
 
-static bool is_random_name_space( char let );
-static bool is_random_name_vowel( char let );
+static bool _is_random_name_space( char let );
+static bool _is_random_name_vowel( char let );
 
-static char retvow(int sed);
-static char retlet(int sed);
+static char _random_vowel(int seed);
+static char _random_cons(int seed);
 
 bool is_vowel( const char chr )
 {
@@ -1946,16 +1946,16 @@ bool check_item_knowledge(bool quiet)
 
 
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
-std::string make_name( unsigned long seed, bool all_cap )
+std::string make_name(unsigned long seed, bool all_cap, int maxlen, char start)
 {
     char name[ITEMNAME_SIZE];
-    int  numb[17];
+    int  numb[17]; // contains the random seeds used for the name
 
     int i = 0;
-    bool want_vowel = false;
-    bool has_space = false;
+    bool want_vowel = false; // Keep track of whether we want a vowel next.
+    bool has_space  = false; // Keep track of whether the name contains a space.
 
-    for (i = 0; i < ITEMNAME_SIZE; i++)
+    for (i = 0; i < ITEMNAME_SIZE; ++i)
         name[i] = '\0';
 
     const int var1 = (seed & 0xFF);
@@ -1983,14 +1983,20 @@ std::string make_name( unsigned long seed, bool all_cap )
 
     int len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
 
-    if (all_cap)
+    if (all_cap)   // scrolls have longer names
         len += 6;
+
+    if (maxlen != -1 && len > maxlen)
+        len = maxlen;
+
+    ASSERT(len > 0);
+    ASSERT(len <= ITEMNAME_SIZE);
 
     int j = numb[3] % 17;
     const int k = numb[4] % 17;
-    int count = 0;
 
-    for (i = 0; i < len; i++)
+    int count = 0;
+    for (i = 0; i < len; ++i)
     {
         j = (j + 1) % 17;
         if (j == 0)
@@ -2000,57 +2006,75 @@ std::string make_name( unsigned long seed, bool all_cap )
                 break;
         }
 
-        if (!has_space && i > 5 && i < len - 4
-            && (numb[(k + 10 * j) % 17] % 5) != 3)
+        if (i == 0 && start != 0)
         {
+            // Start the name with a predefined letter.
+            name[i] = start;
+            want_vowel = _is_random_name_vowel(start);
+        }
+        else if (!has_space && i > 5 && i < len - 4
+                 && (numb[(k + 10 * j) % 17] % 5) != 3) // 4/5 chance of a space
+        {
+            // Hand out a space.
             want_vowel = true;
             name[i] = ' ';
         }
         else if (i > 0
-            && (want_vowel
-                || (i > 1
-                    && is_random_name_vowel( name[i - 1] )
-                    && !is_random_name_vowel( name[i - 2] )
-                    && (numb[(k + 4 * j) % 17] % 5) <= 1 )))
+                 && (want_vowel
+                     || (i > 1
+                         && _is_random_name_vowel( name[i - 1] )
+                         && !_is_random_name_vowel( name[i - 2] )
+                         && (numb[(k + 4 * j) % 17] % 5) <= 1 ))) // 2/5 chance
         {
+            // Place a vowel.
             want_vowel = true;
-            name[i] = retvow( numb[(k + 7 * j) % 17] );
+            name[i] = _random_vowel( numb[(k + 7 * j) % 17] );
 
-            if (is_random_name_space( name[i] ))
+            if (_is_random_name_space( name[i] ))
             {
-                if (i == 0)
+                if (i == 0) // Shouldn't happen.
                 {
                     want_vowel = false;
-                    name[i] = retlet( numb[(k + 14 * j) % 17] );
+                    name[i]    = _random_cons( numb[(k + 14 * j) % 17] );
                 }
                 else if (len < 7
-                        || i <= 2 || i >= len - 3
-                        || is_random_name_space( name[i - 1] )
-                        || (i > 1 && is_random_name_space( name[i - 2] ))
-                        || (i > 2
-                            && !is_random_name_vowel( name[i - 1] )
-                            && !is_random_name_vowel( name[i - 2] )))
+                         || i <= 2 || i >= len - 3
+                         || _is_random_name_space( name[i - 1] )
+                         || (i > 1 && _is_random_name_space( name[i - 2] ))
+                         || i > 2
+                            && !_is_random_name_vowel( name[i - 1] )
+                            && !_is_random_name_vowel( name[i - 2] ))
                 {
+                    // Replace the space with something else if ...
+                    // * the name is really short
+                    // * we're close to the begin/end of the name
+                    // * we just got a space, or
+                    // * the last two letters were consonants
                     i--;
                     continue;
                 }
             }
             else if (i > 1
-                    && name[i] == name[i - 1]
-                    && (name[i] == 'y' || name[i] == 'i'
-                        || (numb[(k + 12 * j) % 17] % 5) <= 1))
+                     && name[i] == name[i - 1]
+                     && (name[i] == 'y' || name[i] == 'i'
+                         || (numb[(k + 12 * j) % 17] % 5) <= 1))
             {
+                // Replace the vowel with something else if the previous
+                // letter was the same, and it's a 'y', 'i' or with 2/5 chance.
                 i--;
                 continue;
             }
         }
-        else
+        else // We want a consonant.
         {
+            // Use one of number of predefined letter combinations.
             if ((len > 3 || i != 0)
-                && (numb[(k + 13 * j) % 17] % 7) <= 1
-                && (i < len - 2 || (i > 0 && !is_random_name_space(name[i - 1]))))
+                && (numb[(k + 13 * j) % 17] % 7) <= 1 // 2/7 chance
+                && (i < len - 2
+                    || i > 0 && !_is_random_name_space(name[i - 1])))
             {
-                const bool beg = ((i < 1) || is_random_name_space(name[i - 1]));
+                // Are we at start or end of the (sub) name?
+                const bool beg = (i < 1 || _is_random_name_space(name[i - 1]));
                 const bool end = (i >= len - 2);
 
                 const int first = (beg ?  0 : (end ? 14 :  0));
@@ -2059,6 +2083,11 @@ std::string make_name( unsigned long seed, bool all_cap )
                 const int num = last - first;
 
                 i++;
+
+                // Pick a random combination of consonants from the set below.
+                //   begin  -> [0,27]
+                //   middle -> [0,67]
+                //   end    -> [14,56]
 
                 switch (numb[(k + 11 * j) % 17] % num + first)
                 {
@@ -2138,50 +2167,53 @@ std::string make_name( unsigned long seed, bool all_cap )
                     break;
                 }
             }
-            else
+            else // Place a single letter instead.
             {
                 if (i == 0)
                 {
+                    // Start with any letter.
                     name[i] = 'a' + (numb[(k + 8 * j) % 17] % 26);
-                    want_vowel = is_random_name_vowel( name[i] );
+                    want_vowel = _is_random_name_vowel( name[i] );
                 }
                 else
                 {
-                    name[i] = retlet( numb[(k + 3 * j) % 17] );
+                    // Pick a random consonant.
+                    name[i] = _random_cons( numb[(k + 3 * j) % 17] );
                 }
             }
         }
 
+        // No letter chosen?
         if (name[i] == '\0')
         {
             i--;
             continue;
         }
 
-        if (want_vowel && !is_random_name_vowel( name[i] )
-            || (!want_vowel && is_random_name_vowel( name[i] )))
+        // Picked wrong type?
+        if (want_vowel && !_is_random_name_vowel( name[i] )
+            || !want_vowel && _is_random_name_vowel( name[i] ))
         {
             i--;
             continue;
         }
 
-        if (is_random_name_space( name[i] ))
+        if (_is_random_name_space( name[i] ))
             has_space = true;
 
-        if (!is_random_name_vowel( name[i] ))
-            want_vowel = true;
-        else
-            want_vowel = false;
+        // If we just got a vowel, we want a consonant next, and vice versa.
+        want_vowel = !_is_random_name_vowel(name[i]);
     }
 
-    // catch break and try to give a final letter
+    // Catch break and try to give a final letter.
     if (i > 0
-        && !is_random_name_space( name[i - 1] )
+        && !_is_random_name_space( name[i - 1] )
         && name[i - 1] != 'y'
-        && is_random_name_vowel( name[i - 1] )
+        && _is_random_name_vowel( name[i - 1] )
         && (count > 9 || (i < 8 && numb[16] % 3)))
     {
-        name[i] = retlet( numb[j] );
+        // 2/3 chance of ending in a consonant
+        name[i] = _random_cons( numb[j] );
     }
 
     len = strlen( name );
@@ -2200,6 +2232,7 @@ std::string make_name( unsigned long seed, bool all_cap )
         }
     }
 
+    // Fallback if the name was too short.
     if (len < 4)
     {
         strcpy(name, "plog");
@@ -2211,29 +2244,34 @@ std::string make_name( unsigned long seed, bool all_cap )
             name[i] = toupper( name[i] );
 
     return name;
-}                               // end make_name()
+}
 
-bool is_random_name_space(char let)
+static bool _is_random_name_space(char let)
 {
     return (let == ' ');
 }
 
-static bool is_random_name_vowel( char let )
+// Returns true for vowels, 'y' or space.
+static bool _is_random_name_vowel( char let )
 {
     return (let == 'a' || let == 'e' || let == 'i' || let == 'o' || let == 'u'
             || let == 'y' || let == ' ');
-}                               // end is_random_name_vowel()
+}
 
-static char retvow( int sed )
+// Returns a random vowel (a, e, i, o, u with equal probability) or space
+// or 'y' with lower chances.
+static char _random_vowel( int seed )
 {
     static const char vowels[] = "aeiouaeiouaeiouy  ";
-    return (vowels[ sed % (sizeof(vowels) - 1) ]);
-}                               // end retvow()
+    return (vowels[ seed % (sizeof(vowels) - 1) ]);
+}
 
-static char retlet( int sed )
+// Returns a random consonant with not quite equal probability.
+// Does not include 'y'.
+static char _random_cons( int seed )
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
-    return (consonants[ sed % (sizeof(consonants) - 1) ]);
+    return (consonants[ seed % (sizeof(consonants) - 1) ]);
 }
 
 bool is_interesting_item( const item_def& item )

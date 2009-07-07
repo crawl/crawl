@@ -11,6 +11,7 @@
 
 #include "AppHdr.h"
 #include "format.h"
+#include "player.h"
 #include "tilebuf.h"
 #include "tiletex.h"
 #include "tiles.h"

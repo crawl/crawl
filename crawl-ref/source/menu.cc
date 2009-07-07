@@ -849,6 +849,10 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     const player_save_info &player = *static_cast<player_save_info*>( data );
     dolls_data equip_doll = player.doll;
 
+//     int feat = player.floor_tile;
+//     if (feat > 0 && feat < TILE_MAIN_MAX)
+//         tileset.push_back(tile_def(feat, TEX_DUNGEON));
+
     // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
     int p_order[TILEP_PART_MAX] =
     {
@@ -899,6 +903,9 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
         tileset.push_back(tile_def(idx, TEX_PLAYER, ymax));
     }
+
+    if (player.held_in_net)
+        tileset.push_back(tile_def(TILE_TRAP_NET, TEX_DEFAULT));
 
     return (true);
 }
