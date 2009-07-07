@@ -1314,7 +1314,7 @@ static std::string _verbose_info(const monsters* m)
                 || mons_holiness(m) == MH_NONLIVING 
                 || mons_holiness(m) == MH_PLANT)
             {
-                return(" (resting)");
+                return(" (dormant)");
             }
             else
                 return(" (sleeping)");
