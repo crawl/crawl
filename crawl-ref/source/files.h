@@ -12,6 +12,7 @@
 
 #include "externs.h"
 #include "FixAry.h"
+#include "player.h"
 #include <stdio.h>
 #include <string>
 #include <vector>
