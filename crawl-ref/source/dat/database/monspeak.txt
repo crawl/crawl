@@ -2367,6 +2367,36 @@ VISUAL:@The_monster@ sucks her thumb.
 @The_monster@ whispers @to_foe@, "Hold me, thrill me, kiss me, kill me."
 ## END Psyche ##
 %%%%
+# A teased troll
+Purgy
+
+@_Purgy_common_@
+
+w:5
+@_Purgy_rare_@
+%%%%
+_Purgy_common_
+
+@The_monster@ snarls @at_foe@, "Go! Away!"
+
+VISUAL:@The_monster@ looks around nervously.
+
+@The_monster@ hisses menacingly.
+
+@The_monster@ snarls @at_foe@, "My home! Leave!"
+%%%%
+_Purgy_rare_
+
+VISUAL:@The_monster@ grits it's teeth.
+
+VISUAL:@The_monster@ clenches it's claws.
+
+@The_monster@ hisses @at_foe@, "I bites!"
+
+@The_monster@ pleads @to_foe@, "Don't hit me!"
+
+VISUAL:@The_monster@ looks very sad for a moment.
+%%%%
 # A crazy adventurer
 Rupert
 

@@ -2023,6 +2023,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DISSOLUTION,                  // 460
     MONS_KIRKE,
     MONS_GRUM,
+    MONS_PURGY,
 
     // Testing monsters
     MONS_TEST_SPAWNER,

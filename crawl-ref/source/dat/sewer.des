@@ -285,12 +285,14 @@ ENDMAP
 ############################################################################
 # The hardest one, and most rare (1 out of 10). Loot is good items.
 #
-NAME:     sewer_lizard
+NAME:     sewer_big_baddie
 TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
 : sewer_colours(_G)
 : sewer_random_monster_list(_G)
-MONS:     giant lizard
+SUBST:    2 = 23
+KMONS:    2 = giant lizard
+KMONS:    3 = Purgy, giant lizard
 ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     giant bat / giant mosquito w:2
 MAP
@@ -299,18 +301,18 @@ xxcccccccxxxxxxxxxxxxxxxx
 xcc$*|*$ccxxxxxxxxxxxxxxx
 xc..$*$..cxxxxxxxxxxxxxxx
 xc.......cxxxxxxxxxxxxxxx
-xc...1...cxxxxxxxxxxxxxxx
+xc...2...cxxxxxxxxxxxxxxx
 xc.......cxxxxxxxxxxxxxxx
 xc.......cxxxxxxxxxxxxxxx
 xcc.....ccxxxxxxxxxxxxxxx
 xxccc.cccxxxxxcccccccxxxx
-xxxxc.cxxxxxxcc2.2..ccxxx
-xxxxc.cxxxxxcc2..w...ccxx
+xxxxc.cxxxxxxcc1.1..ccxxx
+xxxxc.cxxxxxcc1..w...ccxx
 xxxxc.ccccccc...www...ccx
 xxxxc..........wwwww.A.cx
-xxxxc.ccccccc2..www...ccx
+xxxxc.ccccccc1..www...ccx
 xxxxc.cxxxxxcc...w...ccxx
-xxxxc.cxxxxxxcc2....ccxxx
+xxxxc.cxxxxxxcc1....ccxxx
 xxxxc.cxxxxxxxcccccccxxxx
 xxxxc.cxxxxxxxxxxxxxxxxxx
 xxxxc.cxxxxxxxxxxxxxxxxxx

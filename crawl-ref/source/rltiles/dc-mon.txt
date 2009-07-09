@@ -429,6 +429,7 @@ oklob_plant MONS_OKLOB_PLANT
 
 ## Trolls ('T')
 %sdir dc-mon/unique
+purgy MONS_PURGY
 snorg MONS_SNORG
 %sdir dc-mon
 troll MONS_TROLL
