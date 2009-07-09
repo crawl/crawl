@@ -2387,11 +2387,11 @@ VISUAL:@The_monster@ looks around nervously.
 %%%%
 _Purgy_rare_
 
-VISUAL:@The_monster@ grits it's teeth.
+VISUAL:@The_monster@ grits its teeth.
 
-VISUAL:@The_monster@ clenches it's claws.
+VISUAL:@The_monster@ clenches its claws.
 
-@The_monster@ hisses @at_foe@, "I bites!"
+@The_monster@ hisses @at_foe@, "I bite!"
 
 @The_monster@ pleads @to_foe@, "Don't hit me!"
 
