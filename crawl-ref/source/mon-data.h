@@ -3881,7 +3881,7 @@ static monsterentry mondata[] = {
 
 // non-human uniques
 {
-    MONS_NESSOS, 'c', DARKGREY, "Nessos",
+    MONS_NESSOS, 'c', MAGENTA, "Nessos",
     M_UNIQUE | M_WARM_BLOOD  | M_SPELLCASTER | M_ACTUAL_SPELLS | M_EVIL
         | M_SPEAKS,
     MR_NO_FLAGS,
@@ -4118,7 +4118,7 @@ static monsterentry mondata[] = {
 
 {
     // Snorg can go berserk.
-    MONS_SNORG, 'T', GREEN, "Snorg",
+    MONS_SNORG, 'T', LIGHTGREEN, "Snorg",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     1500, 25, MONS_TROLL, MONS_TROLL, MH_NATURAL, -6,
@@ -4130,7 +4130,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_PURGY, 'T', LIGHTGREEN, "Purgy",
+    MONS_PURGY, 'T', GREEN, "Purgy",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_TROLL, MONS_TROLL, MH_NATURAL, -2,
