@@ -3428,7 +3428,7 @@ bool is_holy_item(const item_def& item)
     {
         unrandart_entry* entry = get_unrand_entry(item.special);
 
-        if (entry->flags & UNRAND_FLAG_HOLY )
+        if (entry->flags & UNRAND_FLAG_HOLY)
             return (true);
     }
 
