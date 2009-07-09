@@ -416,9 +416,7 @@ mutation_def mutation_defs[] = {
       "fast"
     },
     { MUT_ACUTE_VISION,               2,  1, false, false,
-      {"You have supernaturally acute eyesight.",
-       "You have supernaturally acute eyesight.",
-       "You have supernaturally acute eyesight."},
+      {"You have supernaturally acute eyesight.", "", ""},
 
       {"Your vision sharpens.",
        "Your vision sharpens.",
@@ -462,8 +460,8 @@ mutation_def mutation_defs[] = {
     },
     { MUT_SPIT_POISON,                8,  3, false, false,
       {"You can spit poison.",
-       "You can spit poison.",
-       "You can spit poison."},
+       "You can spit moderately strong poison.",
+       "You can spit strong poison."},
 
       {"There is a nasty taste in your mouth for a moment.",
        "There is a nasty taste in your mouth for a moment.",

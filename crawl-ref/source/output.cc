@@ -2840,7 +2840,8 @@ std::string _status_mut_abilities()
                 current = info;
                 break;
             case MUT_SPIT_POISON:
-                current = "spit poison";
+                snprintf(info, INFO_SIZE, "spit poison %d", level);
+                current = info;
                 break;
             case MUT_MAPPING:
                 snprintf(info, INFO_SIZE, "sense surroundings %d", level);
