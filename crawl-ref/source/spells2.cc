@@ -929,7 +929,6 @@ bool cast_summon_butterflies(int pow, god_type god)
     return (success);
 }
 
-//jmf: beefed up higher-level casting of this (formerly lame) spell
 bool cast_summon_small_mammals(int pow, god_type god)
 {
     bool success = false;
@@ -937,15 +936,11 @@ bool cast_summon_small_mammals(int pow, god_type god)
     monster_type mon = MONS_PROGRAM_BUG;
 
     int count = 0;
-    const int count_max = std::max(1, std::min(5, pow / 16));
+    const int count_max = 2;
 
-    int pow_left = pow + 1;
-
-    while (pow_left > 0 && count < count_max)
+    do  
     {
-        const int pow_spent = random2(pow_left) + 1;
-
-        switch (pow_spent)
+        switch (random2(pow+1))
         {
         case 75: case 74: case 38:
             mon = MONS_ORANGE_RAT;
@@ -968,9 +963,8 @@ bool cast_summon_small_mammals(int pow, god_type god)
         // If you worship a good god, don't summon an evil small mammal
         // (in this case, the orange rat).
         if (player_will_anger_monster(mon))
-            continue;
+            mon = MONS_GREEN_RAT;
 
-        pow_left -= pow_spent;
         count++;
 
         if (create_monster(
@@ -981,7 +975,8 @@ bool cast_summon_small_mammals(int pow, god_type god)
         {
             success = true;
         }
-    }
+
+    } while (random2(pow+1) > 32 && count < count_max);
 
     return (success);
 }
