@@ -2679,7 +2679,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 remove_auto_exclude(mon, true);
         }
 
-        // A bit of code to make Project Noise actually do
+        // A bit of code to make Projected Noise actually do
         // something again.  Basically, dumb monsters and
         // monsters who aren't otherwise occupied will at
         // least consider the (apparent) source of the noise
