@@ -3105,6 +3105,9 @@ static std::string _get_monster_desc(const monsters *mon)
     if (mon->haloed())
         text += pronoun + " is illuminated by a divine halo.\n";
 
+    if (mons_intel(mon) <= I_PLANT)
+        text += pronoun + " is mindless.\n";
+
     // Give an indication of monsters being capable of seeing/sensing
     // invisible creatures.
     if (mons_behaviour_perceptible(mon) && !mons_is_sleeping(mon)
