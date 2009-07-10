@@ -4816,6 +4816,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
     }
 
     case BEAM_ENSLAVE_SOUL:
+    {
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
              "HD: %d; pow: %d", mon->hit_dice, ench_power);
@@ -4827,13 +4828,20 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             return (MON_OTHER);
         }
 
-        if (mon->hit_dice >= random2(ench_power / 2))
-            return (MON_RESIST);
+        // The monster can be no more than lightly wounded/damaged,
+        // using the formula from monstuff.cc:mons_get_damage_level().
+        if (mon->hit_points <= (mon->max_hit_points * 3) / 4)
+        {
+            simple_monster_message(mon, "'s soul is too badly injured.");
+            return (MON_OTHER);
+        }
 
         obvious_effect = true;
-        mon->flags |= MF_ENSLAVED_SOUL;
+        const int duration = 1 + you.skills[SK_INVOCATIONS] / 2;
+        mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, KC_YOU, duration * 10));
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return (MON_AFFECTED);
+    }
 
     case BEAM_ENSLAVE_DEMON:
 #if DEBUG_DIAGNOSTICS

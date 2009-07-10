@@ -209,7 +209,11 @@ Heal hit points by draining the life force of the living monsters surrounding yo
 %%%%
 Enslave Soul
 
-Mark a monster's living soul as yours, once the monster dies. The soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment. However, you can only enslave one soul at any given time. Note that enslaved souls, whether twisted or intact, can follow you beyond the level they were created on.
+Mark a monster's living soul as ripe for the taking. Once the marked monster dies, its soul will be yours.
+
+The soul will retain at least some of the monster's innate healing ability and faculties, and sometimes even the monster's equipment. However, only one soul can be enslaved at a time. Also, only a relatively uninjured monster can have its soul marked, and the duration of the mark is dependent on Invocations skill.
+
+Note that enslaved souls, whether twisted or intact, can follow you beyond the level they were created on.
 %%%%
 # Okawaru
 Might

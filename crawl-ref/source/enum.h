@@ -1239,6 +1239,7 @@ enum enchant_type
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
     ENCH_LOWERED_MR,
+    ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
 
     // Update enchantment names in mon-util.cc when adding or removing
@@ -2100,8 +2101,7 @@ enum monster_flag_type
                                      // currently used for abominations created
                                      // via Twisted Resurrection
     MF_ENSLAVED_SOUL      = 0x8000,  // An undead monster soul enslaved by
-                                     // Yredelemnul's power, or the natural
-                                     // monster from whom the soul is taken
+                                     // Yredelemnul's power
 
     MF_NAME_SUFFIX        = 0x10000, // mname is a suffix.
     MF_NAME_NO_THE        = 0x20000, // mname is a prefix with no "the"
