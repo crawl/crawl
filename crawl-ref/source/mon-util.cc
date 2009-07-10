@@ -982,8 +982,7 @@ bool mons_can_use_stairs(const monsters *mon)
 
 bool mons_enslaved_body_and_soul(const monsters *mon)
 {
-    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
-        && mons_holiness(mon) == MH_NATURAL);
+    return (mon->has_ench(ENCH_SOUL_RIPE));
 }
 
 bool mons_enslaved_twisted_soul(const monsters *mon)
@@ -6989,6 +6988,14 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_SOUL_RIPE:
+        if (!quiet)
+        {
+            simple_monster_message(this,
+                                   "'s soul is no longer ripe for the taking.");
+        }
+        break;
+
     default:
         break;
     }
@@ -7076,7 +7083,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED:
         case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
-        case ENCH_LOWERED_MR:
+        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -7210,6 +7217,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_MR:
+    case ENCH_SOUL_RIPE:
         decay_enchantment(me);
         break;
 
@@ -8211,7 +8219,7 @@ static const char *enchant_names[] =
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "bug"
+    "soul-ripe", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
