@@ -1983,9 +1983,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                         "by magic or mundane means.";
                 }
                 else
-                {
                     description << "$$It is an ancient artefact.";
-                }
             }
         }
     }
