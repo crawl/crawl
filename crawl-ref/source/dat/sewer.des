@@ -143,7 +143,7 @@ MAP
 ENDMAP
 
 NAME:	portal_sewer_entry_d
-TAGS:   uniq_sewer
+TAGS:   uniq_sewer no_monster_gen
 : sewer_portal(_G)
 KMONS:  1 = big fish
 KFEAT:  1 = W
