@@ -6430,7 +6430,7 @@ void offer_items()
             return;
         }
 
-        if (!yesno("Do you wish to part with half of your money?", true, 'n'))
+        if (!yesno("Do you wish to donate half of your money?", true, 'n'))
             return;
 
         const int donation_cost = (you.gold / 2) + 1;
