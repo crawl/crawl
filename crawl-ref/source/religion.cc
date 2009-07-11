@@ -4193,7 +4193,7 @@ static bool _tso_retribution()
 
 static void _zin_remove_good_mutations()
 {
-    if (!how_mutated() || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+    if (!how_mutated())
         return;
 
     bool success = false;
@@ -4204,8 +4204,11 @@ static void _zin_remove_good_mutations()
 
     for (int i = 7; i >= 0; --i)
     {
-        if (i <= random2(10) && delete_mutation(RANDOM_GOOD_MUTATION, failMsg))
+        if (i <= random2(10)
+            && delete_mutation(RANDOM_GOOD_MUTATION, failMsg, false, true))
+        {
             success = true;
+        }
         else
             failMsg = false;
     }
@@ -4224,13 +4227,9 @@ static bool _zin_retribution()
 
     int punishment = random2(10);
 
-    // If not mutated or can't unmutate, do something else instead.
-    if (punishment > 7
-        && (!how_mutated()
-            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
-    {
+    // If not mutated, do something else instead.
+    if (punishment > 7 && !how_mutated())
         punishment = random2(8);
-    }
 
     switch (punishment)
     {
