@@ -3153,11 +3153,11 @@ static std::string _religion_help( god_type god )
     switch (god)
     {
     case GOD_ZIN:
-        result += "Pray at one of " + god_name(god)
-               +  "'s altars to part with your money.";
+        result += "You can pray at an altar to donate your money.";
         break;
 
     case GOD_SHINING_ONE:
+        result += "You can pray at an altar to sacrifice evil items.";
         if (you.haloed())
         {
             int halo_size = halo_radius();
@@ -3200,10 +3200,10 @@ static std::string _religion_help( god_type god )
         break;
 
     case GOD_VEHUMET:
-        if (you.piety >= 50)
+        if (you.piety >= piety_breakpoint(1))
         {
-            result += "Vehumet assists you in casting Conjurations"
-                      " and Summonings.";
+            result += god_name(god) + " assists you in casting "
+                      "Conjurations and Summonings.";
         }
         break;
 
