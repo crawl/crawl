@@ -3,7 +3,7 @@ Stone Soup 0.5.1 (2009????)
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
-* Speed-up for the Tiles version.
+* Improved performance for the Tiles version.
 * Fixed crashes related to giant spores.
 * Fixed summoning decks giving permanent summons at low power.
 * Fixed erroneous "blocked line of fire" warnings.
@@ -11,8 +11,11 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed Xom's repel stairs effect moving shops.
 * Really allow uniques to retain their spells when polymorphed.
 * Artificers start with 1 MP.
+* Prompt before allowing TSO/Lugonu to bless your weapon.
+* Vampiric Draining/Drain Life deal damage to summons again, but don't heal.
 * Tiles: Re-allow selection of player dolls ('-' command).
 * Add missing tiles options to the options guide (docs/, '?&' command).
+* Document tiles lags in tiles_help.txt and in the in-game FAQ ('?Q' command).
 
 Stone Soup 0.5.0 (20090612)
 ---------------------------
