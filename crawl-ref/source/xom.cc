@@ -1459,8 +1459,7 @@ static bool _xom_give_mutations(bool good)
 {
     bool rc = false;
 
-    if (you.can_safely_mutate()
-        && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
+    if (you.can_safely_mutate())
     {
         const char* lookup = (good ? "good mutations" : "random mutations");
         god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
@@ -2859,7 +2858,7 @@ static void _handle_accidental_death(const int orig_hp,
         mutation_type bad = dex_muts[i];
 
         while (you.dex <= 0 && you.mutation[bad] > orig_mutation[bad])
-            delete_mutation(bad, true, true);
+            delete_mutation(bad, true, true, true);
     }
     while (you.dex <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] <
@@ -2872,7 +2871,7 @@ static void _handle_accidental_death(const int orig_hp,
            && you.mutation[MUT_FLEXIBLE_WEAK] >
                   orig_mutation[MUT_FLEXIBLE_WEAK])
     {
-        delete_mutation(MUT_FLEXIBLE_WEAK, true, true);
+        delete_mutation(MUT_FLEXIBLE_WEAK, true, true, true);
     }
     while (you.strength <= 0
            && you.mutation[MUT_STRONG_STIFF] <

@@ -2048,18 +2048,21 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (!force_mutation)
     {
         // God gifts override all sources of mutation resistance other
-        // than the mutation resistance mutation and divine protection,
-        // and stat gain potions override all sources of mutation
-        // resistance other than the mutation resistance mutation.
-        if (wearing_amulet(AMU_RESIST_MUTATION)
-                && !one_chance_in(10) && !god_gift && !stat_gain_potion
-            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-            || player_mutation_level(MUT_MUTATION_RESISTANCE)
-               && !one_chance_in(3))
+        // than divine protection, and stat gain potions override all
+        // sources of mutation resistance other than the mutation
+        // resistance mutation.
+        if (!god_gift)
         {
-            if (failMsg)
-                mpr("You feel odd for a moment.", MSGCH_MUTATION);
-            return (false);
+            if (wearing_amulet(AMU_RESIST_MUTATION)
+                    && !one_chance_in(10) && !stat_gain_potion
+                || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+                || player_mutation_level(MUT_MUTATION_RESISTANCE)
+                    && !one_chance_in(3))
+            {
+                if (failMsg)
+                    mpr("You feel odd for a moment.", MSGCH_MUTATION);
+                return (false);
+            }
         }
 
         // Zin's protection.
@@ -2314,7 +2317,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 }
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg,
-                     bool force_mutation, bool non_fatal)
+                     bool force_mutation, bool god_gift,
+                     bool non_fatal)
 {
     ASSERT(!non_fatal || _is_random(which_mutation));
 
@@ -2322,13 +2326,16 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
     if (!force_mutation)
     {
-        if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
-            && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                || coinflip()))
+        if (!god_gift)
         {
-            if (failMsg)
-                mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
-            return (false);
+            if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
+                && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+                    || coinflip()))
+            {
+                if (failMsg)
+                    mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
+                return (false);
+            }
         }
     }
 

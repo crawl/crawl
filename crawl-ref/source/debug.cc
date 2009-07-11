@@ -3969,7 +3969,7 @@ bool wizard_add_mutation()
         else
         {
             for (int i = 0; i < -levels; ++i)
-                if (delete_mutation(mutat, true, force))
+                if (delete_mutation(mutat, true, force, god_gift))
                     success = true;
         }
     }
