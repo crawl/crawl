@@ -626,7 +626,7 @@
 
 {
     SPELL_SUMMON_SMALL_MAMMALS, "Summon Small Mammals",
-     SPTYP_SUMMONING ,
+     SPTYP_SUMMONING,
      SPFLAG_BATTLE,
      1,
      80,
