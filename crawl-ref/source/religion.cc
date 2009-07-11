@@ -6083,70 +6083,71 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     item_def& wpn = *you.weapon();
 
-    // Only bless melee weapons.
-    if (!is_artefact(wpn) && !is_range_weapon(wpn))
-    {
-        you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
+    // Only bless non-artefact melee weapons.
+    if (is_artefact(wpn) || is_range_weapon(wpn))
+        return (false);
 
-        set_equip_desc(wpn, ISFLAG_GLOWING);
-        set_item_ego_type(wpn, OBJ_WEAPONS, brand);
-        wpn.colour = colour;
+    if (!yesno("Do you wish to have your weapon blessed?", true, 'n'))
+        return (false);
 
-        const bool is_cursed = item_cursed(wpn);
+    you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
+    set_equip_desc(wpn, ISFLAG_GLOWING);
+    set_item_ego_type(wpn, OBJ_WEAPONS, brand);
+    wpn.colour = colour;
+
+    const bool is_cursed = item_cursed(wpn);
+
+    enchant_weapon(ENCHANT_TO_HIT, true, wpn);
+
+    if (coinflip())
         enchant_weapon(ENCHANT_TO_HIT, true, wpn);
 
-        if (coinflip())
-            enchant_weapon(ENCHANT_TO_HIT, true, wpn);
+    enchant_weapon(ENCHANT_TO_DAM, true, wpn);
 
+    if (coinflip())
         enchant_weapon(ENCHANT_TO_DAM, true, wpn);
 
-        if (coinflip())
-            enchant_weapon(ENCHANT_TO_DAM, true, wpn);
+    if (is_cursed)
+        do_uncurse_item(wpn);
 
-        if (is_cursed)
-            do_uncurse_item(wpn);
+    if (god == GOD_SHINING_ONE)
+    {
+        convert2good(wpn);
 
-        if (god == GOD_SHINING_ONE)
+        if (is_blessed_blade_convertible(wpn))
         {
-            convert2good(wpn);
-
-            if (is_blessed_blade_convertible(wpn))
-            {
-                origin_acquired(wpn, GOD_SHINING_ONE);
-                make_item_blessed_blade(wpn);
-            }
-
-            burden_change();
+            origin_acquired(wpn, GOD_SHINING_ONE);
+            make_item_blessed_blade(wpn);
         }
 
-        you.wield_change = true;
-        you.num_gifts[god]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-
-        you.flash_colour = colour;
-        viewwindow(true, false);
-
-        mpr("Your weapon shines brightly!", MSGCH_GOD);
-        simple_god_message(" booms: Use this gift wisely!");
-
-        if (god == GOD_SHINING_ONE)
-        {
-            holy_word(100, HOLY_WORD_TSO, you.pos(), true);
-#ifndef USE_TILE
-            delay(1000);
-#endif
-
-            // Un-bloodify surrounding squares.
-            for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
-                if (is_bloodcovered(*ri))
-                    env.map(*ri).property &= ~(FPROP_BLOODY);
-        }
-
-        return (true);
+        burden_change();
     }
 
-    return (false);
+    you.wield_change = true;
+    you.num_gifts[god]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    you.flash_colour = colour;
+    viewwindow(true, false);
+
+    mpr("Your weapon shines brightly!", MSGCH_GOD);
+    simple_god_message(" booms: Use this gift wisely!");
+
+    if (god == GOD_SHINING_ONE)
+    {
+        holy_word(100, HOLY_WORD_TSO, you.pos(), true);
+#ifndef USE_TILE
+        delay(1000);
+#endif
+
+        // Un-bloodify surrounding squares.
+        for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
+            if (is_bloodcovered(*ri))
+                env.map(*ri).property &= ~(FPROP_BLOODY);
+    }
+
+    return (true);
 }
 
 static void _replace(std::string& s,
