@@ -188,9 +188,9 @@ static bool _may_overwrite_feature(const dungeon_feature_type grid,
     if (!grid_is_opaque(grid)
         && grid != DNGN_FLOOR
         && grid != DNGN_SHALLOW_WATER
-        && grid != DNGN_CLOSED_DOOR
         && grid != DNGN_OPEN_DOOR
-        && grid != DNGN_SECRET_DOOR)
+        && grid != DNGN_SECRET_DOOR
+        && !grid_is_closed_door(grid))
     {
         return (false);
     }

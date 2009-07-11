@@ -1181,6 +1181,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
             case DNGN_SECRET_DOOR:      // oughtn't happen
             case DNGN_CLOSED_DOOR:      // open the door
+            case DNGN_DETECTED_SECRET_DOOR:
+                // Once opened, former secret doors become normal doors.
                 grd(pass) = DNGN_OPEN_DOOR;
                 break;
             }

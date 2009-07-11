@@ -188,6 +188,16 @@ bool grid_is_solid(const coord_def &c)
     return (grid_is_solid(grd(c)));
 }
 
+bool grid_is_closed_door(dungeon_feature_type grid)
+{
+    return (grid == DNGN_CLOSED_DOOR || grid == DNGN_DETECTED_SECRET_DOOR);
+}
+
+bool grid_is_secret_door(dungeon_feature_type grid)
+{
+    return (grid == DNGN_SECRET_DOOR || grid == DNGN_DETECTED_SECRET_DOOR);
+}
+
 bool grid_is_rock(dungeon_feature_type grid)
 {
     return (grid == DNGN_ORCISH_IDOL

@@ -5,6 +5,11 @@ A bloodstained altar of Trog
 %%%%
 A burning altar of Makhleb
 %%%%
+A closed detected secret door
+
+A wooden door, cunningly hidden. It used to be a secret door but at least for you it's not a secret anymore.
+To open it, try simply walking into it, or press 'O'.
+%%%%
 A closed door
 
 A wooden door. To open it, try simply walking into it, or press 'O'.

@@ -3065,7 +3065,7 @@ bool monster_pathfind::mons_traversable(const coord_def p)
         return (false);
 
     // Monsters that can't open doors won't be able to pass them.
-    if (grd(p) == DNGN_CLOSED_DOOR || grd(p) == DNGN_SECRET_DOOR)
+    if (grid_is_closed_door(grd(p)) || grd(p) == DNGN_SECRET_DOOR)
     {
         if (mons_is_zombified(mons))
         {
@@ -3120,7 +3120,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (grd(npos) == DNGN_CLOSED_DOOR || grd(npos) == DNGN_SECRET_DOOR)
+    if (grid_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR)
         return 2;
 
     const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)

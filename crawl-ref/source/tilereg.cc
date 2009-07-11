@@ -265,14 +265,14 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
         m_buf_dngn.add(flv.floor, x, y);
     }
 
-    if (bg & TILE_FLAG_BLOOD)
+    m_buf_dngn.add(bg_idx, x, y);
+
+    if (bg & TILE_FLAG_BLOOD && bg_idx > TILE_DNGN_UNSEEN)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
         int offset = flv.special % tile_dngn_count(TILE_BLOOD);
         m_buf_dngn.add(TILE_BLOOD + offset, x, y);
     }
-
-    m_buf_dngn.add(bg_idx, x, y);
 
     if (bg & TILE_FLAG_HALO)
         m_buf_dngn.add(TILE_HALO, x, y);
@@ -576,14 +576,6 @@ void save_doll_file(FILE *dollf)
     char fbuf[80];
     tilep_print_parts(fbuf, result.parts, true);
     fprintf(dollf, "%s\n", fbuf);
-
-//     const coord_def c = you.pos();
-//     int feat = tileidx_feature(grd(c), c.x, c.y);
-//     if (feat == TILE_FLOOR_NORMAL)
-//         feat = env.tile_flv(c).floor;
-//     else if (feat == TILE_WALL_NORMAL)
-//         feat = env.tile_flv(c).wall;
-//     fprintf(dollf, "floor=%d\n", feat);
 
     if (you.attribute[ATTR_HELD] > 0)
         fprintf(dollf, "net\n");

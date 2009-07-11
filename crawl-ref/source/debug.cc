@@ -5197,7 +5197,7 @@ static void _debug_destroy_doors()
         for (int x = 0; x < GXM; ++x)
         {
             const dungeon_feature_type feat = grd[x][y];
-            if (feat == DNGN_CLOSED_DOOR || feat == DNGN_SECRET_DOOR)
+            if (feat == DNGN_SECRET_DOOR || grid_is_closed_door(feat))
                 grd[x][y] = DNGN_FLOOR;
         }
 }
@@ -6959,6 +6959,7 @@ static bool mg_do_build_level(int niters)
                 switch (grd[x][y])
                 {
                 case DNGN_SECRET_DOOR:
+                case DNGN_DETECTED_SECRET_DOOR: // paranoia
                     grd[x][y] = DNGN_CLOSED_DOOR;
                     break;
                 default:

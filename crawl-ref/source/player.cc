@@ -6058,7 +6058,6 @@ player_save_info player_save_info::operator=(const player& rhs)
     class_name       = rhs.class_name;
     religion         = rhs.religion;
 #ifdef USE_TILE
-//     floor_tile       = 0;
     held_in_net      = false;
 #endif
 

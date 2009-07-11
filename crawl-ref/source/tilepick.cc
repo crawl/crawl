@@ -2347,6 +2347,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_STONE_WALL:
         return TILE_DNGN_STONE_WALL;
     case DNGN_CLOSED_DOOR:
+    case DNGN_DETECTED_SECRET_DOOR: // same tile
         return TILE_DNGN_CLOSED_DOOR;
     case DNGN_METAL_WALL:
         return TILE_DNGN_METAL_WALL;
@@ -3954,7 +3955,7 @@ void tile_init_flavour(const coord_def &gc)
         env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
     }
 
-    if (grd(gc) == DNGN_CLOSED_DOOR || grd(gc) == DNGN_OPEN_DOOR)
+    if (grd(gc) == DNGN_OPEN_DOOR || grid_is_closed_door(grd(gc)))
     {
         // Check for horizontal gates.
 

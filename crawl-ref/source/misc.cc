@@ -2993,7 +2993,10 @@ void reveal_secret_door(const coord_def& p)
     ASSERT(grd(p) == DNGN_SECRET_DOOR);
 
     dungeon_feature_type door = grid_secret_door_appearance(p);
-    grd(p) = grid_is_opaque(door) ? DNGN_CLOSED_DOOR : DNGN_OPEN_DOOR;
+    // Former secret doors become known but are still hidden to monsters
+    // until opened.
+    grd(p) = grid_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
+                                  : DNGN_OPEN_DOOR;
     viewwindow(true, false);
     learned_something_new(TUT_SEEN_SECRET_DOOR, p);
 }

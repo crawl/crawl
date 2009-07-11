@@ -38,7 +38,6 @@ struct player_save_info
     god_type religion;
 #ifdef USE_TILE
     dolls_data doll;
-//     int floor_tile;
     bool held_in_net;
 #endif
 

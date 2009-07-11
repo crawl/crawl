@@ -4734,7 +4734,7 @@ mon_resist_type bolt::try_enchant_monster(monsters *mon)
     {
         if (mons_immune_magic(mon))
             return (MON_UNAFFECTED);
-        
+
         if (flavour != BEAM_POLYMORPH || !mons_is_shapeshifter(mon))
             if (check_mons_resist_magic(mon, ench_power))
                 return (MON_RESIST);
@@ -5426,7 +5426,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     // Check to see if we're blocked by a wall.
     if (grid_is_wall(dngn_feat)
         || dngn_feat == DNGN_SECRET_DOOR
-        || dngn_feat == DNGN_CLOSED_DOOR)
+        || grid_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue
         // (e.g. Lee's Rapid Deconstruction) - in this case, ignore

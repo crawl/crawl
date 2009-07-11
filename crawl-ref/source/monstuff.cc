@@ -8116,8 +8116,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     bool was_seen   = false;
 
     std::set<coord_def> all_door;
-    find_connected_range(pos, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR,
-                         all_door);
+    find_connected_range(pos, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
     for (std::set<coord_def>::iterator i = all_door.begin();
@@ -8511,7 +8510,7 @@ static bool _monster_move(monsters *monster)
     // Normal/smart monsters know about secret doors
     // (they _live_ in the dungeon!)
     if (grd(newpos) == DNGN_CLOSED_DOOR
-        || grd(newpos) == DNGN_SECRET_DOOR && mons_intel(monster) >= I_NORMAL)
+        || grid_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
     {
         if (mons_is_zombified(monster))
         {
@@ -8530,10 +8529,11 @@ static bool _monster_move(monsters *monster)
     } // endif - secret/closed doors
 
     // Jellies eat doors.  Yum!
+    // (Jellies don't realize secret doors make good eating.)
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
-        && mons_itemuse(monster) == MONUSE_EATS_ITEMS
-        // Doors with permarock marker cannot be eaten.
-        && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL))
+         && mons_itemuse(monster) == MONUSE_EATS_ITEMS
+         // Doors with permarock marker cannot be eaten.
+         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL))
     {
         grd(newpos) = DNGN_FLOOR;
 

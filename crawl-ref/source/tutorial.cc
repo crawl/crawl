@@ -4283,6 +4283,7 @@ static void _tutorial_describe_feature(int x, int y)
             break;
 
        case DNGN_CLOSED_DOOR:
+       case DNGN_DETECTED_SECRET_DOOR:
             if (!Options.tut_explored)
             {
                 ostr << "\nTo avoid accidentally opening a door you'd rather "
@@ -4609,7 +4610,7 @@ void tutorial_observe_cell(const coord_def& gc)
         learned_something_new(TUT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(TUT_SEEN_TRAP, gc);
-    else if (grd(gc) == DNGN_CLOSED_DOOR)
+    else if (grid_is_closed_door(grd(gc)))
         learned_something_new(TUT_SEEN_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(TUT_SEEN_SHOP, gc);

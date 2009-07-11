@@ -633,8 +633,6 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
             {
                 if (strcmp(fbuf, "net") == 0)
                     p.held_in_net = true;
-//                 else if (strncmp(fbuf, "floor=", 6) == 0)
-//                     sscanf(fbuf, "floor=%d", &p.floor_tile);
             }
         }
         fclose(fdoll);

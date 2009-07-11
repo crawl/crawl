@@ -368,13 +368,13 @@ static int _exploration_estimate(bool seen_only = false)
         }
 
         bool open = true;
-        if (grid_is_solid(grd(pos)) && grd(pos) != DNGN_CLOSED_DOOR)
+        if (grid_is_solid(grd(pos)) && !grid_is_closed_door(grd(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
-                                        || grd(*ai) == DNGN_CLOSED_DOOR))
+                                        || grid_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;

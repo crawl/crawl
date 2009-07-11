@@ -2598,6 +2598,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("unnaturally hard rock wall");
     case DNGN_CLOSED_DOOR:
         return ("closed door");
+    case DNGN_DETECTED_SECRET_DOOR:
+        return ("detected secret door");
     case DNGN_METAL_WALL:
         return ("metal wall");
     case DNGN_GREEN_CRYSTAL_WALL:
@@ -2881,7 +2883,7 @@ std::string feature_description(const coord_def& where, bool bloody,
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
 
-    if (grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
+    if (grid == DNGN_OPEN_DOOR || grid_is_closed_door(grid))
     {
         std::set<coord_def> all_door;
         find_connected_identical(where, grd(where), all_door);
@@ -2890,6 +2892,8 @@ std::string feature_description(const coord_def& where, bool bloody,
 
         std::string desc = adj;
         desc += (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
+        if (grid == DNGN_DETECTED_SECRET_DOOR)
+            desc += "detected secret ";
         desc += noun;
 
         if (bloody)

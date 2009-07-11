@@ -208,7 +208,7 @@ inline bool is_trap(const coord_def& c)
 // This is done, so traps etc. will usually be circumvented where possible.
 inline int feature_traverse_cost(dungeon_feature_type feature)
 {
-    if (feature == DNGN_SHALLOW_WATER || feature == DNGN_CLOSED_DOOR)
+    if (feature == DNGN_SHALLOW_WATER || grid_is_closed_door(feature))
         return 2;
     else if (grid_is_trap(feature))
         return 3;
@@ -654,7 +654,10 @@ void init_travel_terrain_check(bool check_race_equip)
         _set_pass_feature(DNGN_TRAP_NATURAL, trav);
 
         if (!player_can_open_doors())
+        {
             _set_pass_feature(DNGN_CLOSED_DOOR, IMPASSABLE);
+            _set_pass_feature(DNGN_DETECTED_SECRET_DOOR, IMPASSABLE);
+        }
     }
     else
     {
@@ -695,6 +698,7 @@ void initialise_travel()
     }
     // A few special cases...
     traversable_terrain[DNGN_CLOSED_DOOR] =
+    traversable_terrain[DNGN_DETECTED_SECRET_DOOR] =
     traversable_terrain[DNGN_SHALLOW_WATER] = TRAVERSABLE;
 }
 

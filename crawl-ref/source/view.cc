@@ -3915,13 +3915,13 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         bool open = true;
 
-        if (grid_is_solid(grd(*ri)) && grd(*ri) != DNGN_CLOSED_DOOR)
+        if (grid_is_solid(grd(*ri)) && !grid_is_closed_door(grd(*ri)))
         {
             open = false;
             for (adjacent_iterator ai(*ri); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
-                                        || grd(*ai) == DNGN_CLOSED_DOOR))
+                                        || grid_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;
@@ -4223,6 +4223,7 @@ void init_feature_table( void )
             break;
 
         case DNGN_CLOSED_DOOR:
+        case DNGN_DETECTED_SECRET_DOOR:
             Feature[i].dchar   = DCHAR_DOOR_CLOSED;
             Feature[i].colour  = LIGHTGREY;
             Feature[i].minimap = MF_DOOR;

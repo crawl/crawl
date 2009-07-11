@@ -2951,7 +2951,8 @@ static void _open_door(coord_def move, bool check_confused)
     // If there's only one door to open, don't ask.
     if ((!check_confused || !you.confused()) && move.origin())
     {
-        if (_check_adjacent(DNGN_CLOSED_DOOR, move) == 0)
+        if (_check_adjacent(DNGN_CLOSED_DOOR, move) == 0
+            && _check_adjacent(DNGN_DETECTED_SECRET_DOOR, move) == 0)
         {
             mpr("There's nothing to open.");
             return;
@@ -3024,7 +3025,7 @@ static void _open_door(coord_def move, bool check_confused)
         const dungeon_feature_type feat =
             in_bounds(doorpos) ? grd(doorpos) : DNGN_UNSEEN;
 
-        if (feat != DNGN_CLOSED_DOOR)
+        if (!grid_is_closed_door(feat))
         {
             switch (feat)
             {
@@ -3039,7 +3040,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    if (grd(doorpos) == DNGN_CLOSED_DOOR)
+    if (grid_is_closed_door(grd(doorpos)))
     {
         std::set<coord_def> all_door;
         find_connected_range(doorpos, DNGN_CLOSED_DOOR,
@@ -3256,6 +3257,7 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
+            // Once opened, formerly secret doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
             // Even if some of the door is out of LOS once it's closed (or even
             // if some of it is out of LOS when it's open), we want the entire
@@ -3283,6 +3285,7 @@ static void _close_door(coord_def move)
         switch (feat)
         {
         case DNGN_CLOSED_DOOR:
+        case DNGN_DETECTED_SECRET_DOOR:
             mpr("It's already closed!"); break;
         default:
             mpr("There isn't anything that you can close there!"); break;
@@ -3690,7 +3693,7 @@ static void _move_player(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open && !attacking)
+    if (Options.easy_open && !attacking && grid_is_closed_door(targ_grid))
     {
         _open_door(move.x, move.y, false);
         you.prev_move = move;

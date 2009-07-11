@@ -227,6 +227,7 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
         break;
 
     case DNGN_CLOSED_DOOR:
+    case DNGN_DETECTED_SECRET_DOOR:
     case DNGN_OPEN_DOOR:
         if (see_grid(where))
             mpr("A door shatters!");
@@ -1658,6 +1659,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
     case DNGN_OPEN_DOOR:
     case DNGN_CLOSED_DOOR:
+    case DNGN_DETECTED_SECRET_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
         grd(spd.target) = DNGN_FLOOR;
 

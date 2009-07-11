@@ -1719,7 +1719,7 @@ static void _check_doors()
     for (int x = 1; x < GXM-1; x++)
         for (int y = 1; y < GYM-1; y++)
         {
-            if (grd[x][y] != DNGN_CLOSED_DOOR)
+            if (!grid_is_closed_door(grd[x][y]))
                 continue;
 
             int solid_count = 0;
@@ -1736,7 +1736,8 @@ static void _check_doors()
             if (grid_is_solid( grd[x][y + 1] ))
                 solid_count++;
 
-            grd[x][y] = ((solid_count < 2) ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
+            grd[x][y] = (solid_count < 2 ? DNGN_FLOOR
+                                         : DNGN_CLOSED_DOOR);
         }
 }
 
@@ -3136,8 +3137,8 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
 static int _good_door_spot(int x, int y)
 {
-    if ((!grid_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM)
-        || grd[x][y] == DNGN_CLOSED_DOOR)
+    if (!grid_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM
+        || grid_is_closed_door(grd[x][y]))
     {
         return 1;
     }
@@ -3931,7 +3932,7 @@ static void _dig_vault_loose( vault_placement &place,
 static bool _grid_needs_exit(int x, int y)
 {
     return (!grid_is_solid(x, y)
-            || grd[x][y] == DNGN_CLOSED_DOOR
+            || grid_is_closed_door(grd[x][y])
             || grd[x][y] == DNGN_SECRET_DOOR);
 }
 

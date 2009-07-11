@@ -946,16 +946,17 @@ enum dungeon_feature_type
 {
     DNGN_UNSEEN,                       //    0
     DNGN_CLOSED_DOOR,
+    DNGN_DETECTED_SECRET_DOOR,
     DNGN_SECRET_DOOR,
     DNGN_WAX_WALL,
-    DNGN_METAL_WALL,
-    DNGN_GREEN_CRYSTAL_WALL,           //    5
+    DNGN_METAL_WALL,                   //    5
+    DNGN_GREEN_CRYSTAL_WALL,
     DNGN_ROCK_WALL,
     DNGN_STONE_WALL,
-    DNGN_PERMAROCK_WALL,               //    8 - for undiggable walls
-    DNGN_CLEAR_ROCK_WALL,              //    9 - Transparent
-    DNGN_CLEAR_STONE_WALL,             //   10 - Transparent
-    DNGN_CLEAR_PERMAROCK_WALL,         //   11 - Transparent
+    DNGN_PERMAROCK_WALL,               //    9 - for undiggable walls
+    DNGN_CLEAR_ROCK_WALL,              //   10 - transparent walls
+    DNGN_CLEAR_STONE_WALL,
+    DNGN_CLEAR_PERMAROCK_WALL,
 
     // Lowest/highest grid value which is a wall.
     DNGN_MINWALL = DNGN_WAX_WALL,
@@ -975,7 +976,7 @@ enum dungeon_feature_type
     DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
 
     // Can be seen through and reached past.
-    DNGN_ORCISH_IDOL = 12,
+    DNGN_ORCISH_IDOL = 15,
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED,
 
