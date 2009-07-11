@@ -3405,10 +3405,10 @@ void gain_piety(int pgn)
 
     if (you.piety > 160 && old_piety <= 160)
     {
-        if ((you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
-            && you.num_gifts[you.religion] == 0)
+        if (you.num_gifts[you.religion] == 0)
         {
-            simple_god_message( " will now bless your weapon at an altar... once.");
+            if (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+                simple_god_message(" will now bless your weapon at an altar... once.");
         }
 
         // When you gain piety of more than 160, you get another chance
@@ -4097,10 +4097,10 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety <= 160 && old_piety > 160
-            && (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
             && you.num_gifts[you.religion] == 0)
         {
-            simple_god_message(" is no longer ready to bless your weapon.");
+            if (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+                simple_god_message(" is no longer ready to bless your weapon.");
         }
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
@@ -6110,7 +6110,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         you.flash_colour = colour;
         viewwindow(true, false);
 
-        mprf(MSGCH_GOD, "Your weapon shines brightly!");
+        mpr("Your weapon shines brightly!", MSGCH_GOD);
         simple_god_message(" booms: Use this gift wisely!");
 
         if (god == GOD_SHINING_ONE)
