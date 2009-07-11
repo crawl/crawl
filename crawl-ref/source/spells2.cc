@@ -679,8 +679,7 @@ void drain_life(int pow)
 
         if (!monster->alive()
             || mons_holiness(monster) != MH_NATURAL
-            || mons_res_negative_energy(monster)
-            || mons_is_summoned(monster))
+            || mons_res_negative_energy(monster))
         {
             continue;
         }
@@ -692,7 +691,8 @@ void drain_life(int pow)
 
             const int hurted = 3 + random2(7) + random2(pow);
             behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
-            hp_gain += hurted;
+            if (!mons_is_summoned(monster))
+                hp_gain += hurted;
 
             monster->hurt(&you, hurted);
 
@@ -770,8 +770,8 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
-        const bool mons_was_summoned = mons_is_summoned(monster);    
-        
+        const bool mons_was_summoned = mons_is_summoned(monster);
+
         monster->hurt(&you, hp_gain);
 
         if (monster->alive())
