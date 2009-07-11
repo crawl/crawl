@@ -420,7 +420,7 @@ This spell conjures forth a great cloud of lethal gasses.
 %%%%
 Polymorph Other
 
-This spell randomly alters the form of another creature.
+This spell randomly alters the form of another creature. It is especially effective against shape-changing creatures.
 %%%%
 Portal
 
