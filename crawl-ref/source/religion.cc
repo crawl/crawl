@@ -1137,7 +1137,7 @@ static void _give_nemelex_gift()
         return;
 
     // Nemelex will give at least one gift early.
-    if (you.num_gifts[GOD_NEMELEX_XOBEH] == 0
+    if (!you.num_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
            && !you.attribute[ATTR_CARD_COUNTDOWN])
@@ -1920,7 +1920,7 @@ static void _do_god_gift(bool prayed_for)
                     more();
 
                     _inc_gift_timeout(30 + random2avg(19, 2));
-                    you.num_gifts[ you.religion ]++;
+                    you.num_gifts[you.religion]++;
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 break;
@@ -2034,7 +2034,7 @@ static void _do_god_gift(bool prayed_for)
                         more();
 
                         _inc_gift_timeout(40 + random2avg(19, 2));
-                        you.num_gifts[ you.religion ]++;
+                        you.num_gifts[you.religion]++;
                         take_note(Note(NOTE_GOD_GIFT, you.religion));
                     }
 
@@ -2048,10 +2048,10 @@ static void _do_god_gift(bool prayed_for)
     }                           // end of gift giving
 
 #if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
-    if (old_gifts < you.num_gifts[ you.religion ])
+    if (old_gifts < you.num_gifts[you.religion])
     {
         mprf(MSGCH_DIAGNOSTICS, "Total number of gifts from this god: %d",
-             you.num_gifts[ you.religion ] );
+             you.num_gifts[you.religion]);
     }
 #endif
 }
@@ -3405,7 +3405,7 @@ void gain_piety(int pgn)
 
     if (you.piety > 160 && old_piety <= 160)
     {
-        if (you.num_gifts[you.religion] == 0)
+        if (!you.num_gifts[you.religion])
         {
             if (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
                 simple_god_message(" will now bless your weapon at an altar... once.");
@@ -4114,7 +4114,7 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety <= 160 && old_piety > 160
-            && you.num_gifts[you.religion] == 0)
+            && !you.num_gifts[you.religion])
         {
             if (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
                 simple_god_message(" is no longer ready to bless your weapon.");
