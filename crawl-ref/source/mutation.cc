@@ -2312,73 +2312,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     return (true);
 }
 
-bool delete_mutation(mutation_type which_mutation, bool failMsg,
-                     bool force_mutation, bool god_gift,
-                     bool non_fatal)
+static bool _delete_single_mutation_level(mutation_type mutat)
 {
-    ASSERT(!non_fatal || _is_random(which_mutation));
-
-    mutation_type mutat = which_mutation;
-
-    if (!force_mutation)
-    {
-        if (!god_gift)
-        {
-            if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
-                && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                    || coinflip()))
-            {
-                if (failMsg)
-                    mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
-                return (false);
-            }
-        }
-    }
-
-    if (which_mutation == RANDOM_MUTATION
-        || which_mutation == RANDOM_XOM_MUTATION
-        || which_mutation == RANDOM_GOOD_MUTATION
-        || which_mutation == RANDOM_BAD_MUTATION)
-    {
-        while (true)
-        {
-            if (one_chance_in(1000))
-                return (false);
-
-            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
-
-            if (you.mutation[mutat] == 0
-                && mutat != MUT_STRONG
-                && mutat != MUT_CLEVER
-                && mutat != MUT_AGILE
-                && mutat != MUT_WEAK
-                && mutat != MUT_DOPEY
-                && mutat != MUT_CLUMSY)
-            {
-                continue;
-            }
-
-            if (!_accept_mutation(mutat, true, non_fatal, true))
-                continue;
-
-            if (you.demon_pow[mutat] >= you.mutation[mutat])
-                continue;
-
-            const mutation_def& mdef = get_mutation_def(mutat);
-
-            if (random2(10) >= mdef.rarity)
-                continue;
-
-            bool mismatch = (which_mutation == RANDOM_GOOD_MUTATION && mdef.bad)
-                || (which_mutation == RANDOM_BAD_MUTATION && !mdef.bad);
-
-            if (mismatch && !one_chance_in(10))
-                continue;
-
-            break;
-        }
-    }
-
     if (you.mutation[mutat] == 0)
         return (false);
 
@@ -2448,9 +2383,80 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         calc_mp();
 
     take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
+
     return (true);
 }
 
+bool delete_mutation(mutation_type which_mutation, bool failMsg,
+                     bool force_mutation, bool god_gift,
+                     bool non_fatal)
+{
+    ASSERT(!non_fatal || _is_random(which_mutation));
+
+    mutation_type mutat = which_mutation;
+
+    if (!force_mutation)
+    {
+        if (!god_gift)
+        {
+            if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 1
+                && (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
+                    || coinflip()))
+            {
+                if (failMsg)
+                    mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
+                return (false);
+            }
+        }
+    }
+
+    if (which_mutation == RANDOM_MUTATION
+        || which_mutation == RANDOM_XOM_MUTATION
+        || which_mutation == RANDOM_GOOD_MUTATION
+        || which_mutation == RANDOM_BAD_MUTATION)
+    {
+        while (true)
+        {
+            if (one_chance_in(1000))
+                return (false);
+
+            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
+
+            if (you.mutation[mutat] == 0
+                && mutat != MUT_STRONG
+                && mutat != MUT_CLEVER
+                && mutat != MUT_AGILE
+                && mutat != MUT_WEAK
+                && mutat != MUT_DOPEY
+                && mutat != MUT_CLUMSY)
+            {
+                continue;
+            }
+
+            if (!_accept_mutation(mutat, true, non_fatal, true))
+                continue;
+
+            if (you.demon_pow[mutat] >= you.mutation[mutat])
+                continue;
+
+            const mutation_def& mdef = get_mutation_def(mutat);
+
+            if (random2(10) >= mdef.rarity)
+                continue;
+
+            const bool mismatch =
+                (which_mutation == RANDOM_GOOD_MUTATION && mdef.bad)
+                    || (which_mutation == RANDOM_BAD_MUTATION && !mdef.bad);
+
+            if (mismatch && !one_chance_in(10))
+                continue;
+
+            break;
+        }
+    }
+
+    return (_delete_single_mutation_level(mutat));
+}
 static int _body_covered()
 {
     // Check how much of your body is covered by scales, etc.
