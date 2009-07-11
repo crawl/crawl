@@ -2457,6 +2457,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
     return (_delete_single_mutation_level(mutat));
 }
+
 static int _body_covered()
 {
     // Check how much of your body is covered by scales, etc.
