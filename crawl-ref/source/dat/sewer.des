@@ -122,6 +122,7 @@ ENDMAP
 
 NAME:   portal_sewer_entry_c
 TAGS:   uniq_sewer no_monster_gen
+WEIGHT: 4
 : sewer_portal(_G)
 NSUBST: c = 2:= / 2:n / *:c
 NSUBST: W = 8:1 / *:W
