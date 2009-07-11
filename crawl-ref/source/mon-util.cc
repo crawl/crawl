@@ -2185,7 +2185,13 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     if ((mon.flags & MF_KNOWN_MIMIC) && mons_is_shapeshifter(&mon))
-        result += " shaped shifter";
+    {
+        // If momentarily in original form, don't display "shaped shifter".
+        if (mons_genus(mon.type) != MONS_SHAPESHIFTER) 
+        {
+            result += " shaped shifter";
+        }
+    }
 
     // All done.
     return result;
@@ -7809,6 +7815,12 @@ bool monsters::mutate()
 {
     if (!can_mutate())
         return (false);
+
+    if (this->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        return (monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER));
+
+    if (this->has_ench(ENCH_SHAPESHIFTER))
+        return (monster_polymorph(this, MONS_SHAPESHIFTER));
 
     return (monster_polymorph(this, RANDOM_MONSTER));
 }

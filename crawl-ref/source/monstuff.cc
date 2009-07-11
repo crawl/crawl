@@ -1926,8 +1926,6 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         || mons_class_flag( new_mclass, M_NO_EXP_GAIN ) // not helpless
         || new_mclass == mons_species( monster->type )  // must be different
         || new_mclass == MONS_PROGRAM_BUG
-        || new_mclass == MONS_SHAPESHIFTER
-        || new_mclass == MONS_GLOWING_SHAPESHIFTER
 
         // These require manual setting of mons.base_monster to indicate
         // what they are a skeleton/zombie/simulacrum/spectral thing of,

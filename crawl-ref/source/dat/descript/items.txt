@@ -1577,7 +1577,8 @@ A magical device which can render a creature immobile.
 wand of polymorph other
 
 A magical device which causes a creature to be transmogrified into
-another form. It doesn't work on you, so don't even try.
+another form. It is especially effective against shape-changing
+creatures. It doesn't work on you, so don't even try.
 %%%%
 wand of random effects
 
