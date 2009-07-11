@@ -752,8 +752,7 @@ bool vampiric_drain(int pow, const dist &vmove)
         }
 
         if (mons_holiness(monster) != MH_NATURAL
-            || mons_res_negative_energy(monster)
-            || mons_is_summoned(monster))
+            || mons_res_negative_energy(monster))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
@@ -771,6 +770,8 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
+        const bool mons_was_summoned = mons_is_summoned(monster);    
+        
         monster->hurt(&you, hp_gain);
 
         if (monster->alive())
@@ -778,7 +779,7 @@ bool vampiric_drain(int pow, const dist &vmove)
 
         hp_gain /= 2;
 
-        if (hp_gain)
+        if (hp_gain && !mons_was_summoned)
         {
             mpr("You feel life coursing into your body.");
             inc_hp(hp_gain, false);
