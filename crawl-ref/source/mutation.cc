@@ -1314,6 +1314,7 @@ formatted_string describe_mutations()
 
     case SP_GHOUL:
         result += "Your body is rotting away." EOL;
+        result += "You have sharp claws for hands." EOL;
         have_any = true;
         break;
 

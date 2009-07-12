@@ -629,9 +629,6 @@ bool you_can_wear(int eq, bool special_armour)
     if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
         return (false);
 
-    if (you.species == SP_GHOUL && eq == EQ_GLOVES)
-        return (false);
-
     if (eq == EQ_HELMET && (player_mutation_level(MUT_HORNS)
                             || player_mutation_level(MUT_BEAK)))
     {
@@ -7064,8 +7061,10 @@ int player::has_claws(bool allow_tran) const
     }
 
     // these are the only other sources for claws
-    if (species == SP_TROLL || species == SP_GHOUL)
+    if (species == SP_TROLL)
         return (3);
+    if (species == SP_GHOUL)
+        return (1);
 
     return (player_mutation_level(MUT_CLAWS));
 }
