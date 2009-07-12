@@ -81,6 +81,8 @@ static HANDLE inbuf = NULL;
 static HANDLE outbuf = NULL;
 static int current_color = -1;
 static bool cursor_is_enabled = false;
+static CONSOLE_CURSOR_INFO initial_cci;
+static bool have_initial_cci = false;
 // dirty line (sx,ex,y)
 static int chsx = 0, chex = 0, chy = -1;
 // cursor position (start at 0,0 --> 1,1)
@@ -365,6 +367,10 @@ void init_libw32c(void)
     GetConsoleTitle( oldTitle, 78 );
     SetConsoleTitle( CRAWL " " VERSION );
 
+    // Use the initial Windows setting for cursor size if it exists.
+    // TODO: Respect changing cursor size manually while Crawl is running.
+    have_initial_cci = GetConsoleCursorInfo( outbuf, &initial_cci );
+
 #ifdef __MINGW32__
     install_sighandlers();
 #endif
@@ -402,6 +408,7 @@ void init_libw32c(void)
 
     if (OutputCP != PREFERRED_CODEPAGE)
         SetConsoleOutputCP(PREFERRED_CODEPAGE);
+
 }
 
 void deinit_libw32c(void)
@@ -450,7 +457,9 @@ void _setcursortype_internal(bool curstype)
     if (curstype == cursor_is_enabled)
         return;
 
-    cci.dwSize = 5;
+    cci.dwSize = have_initial_cci && initial_cci.dwSize ? initial_cci.dwSize
+                                                        : 5;
+
     cci.bVisible = curstype? TRUE : FALSE;
     cursor_is_enabled = curstype;
     SetConsoleCursorInfo( outbuf, &cci );
