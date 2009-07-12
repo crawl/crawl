@@ -100,6 +100,7 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 bool divine_retribution(god_type god);
 
 bool zin_sustenance(bool actual = true);
+bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);
 bool beogh_water_walk();
 void good_god_holy_attitude_change(monsters *holy);

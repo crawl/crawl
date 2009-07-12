@@ -225,6 +225,7 @@ static const ability_def Ability_List[] =
     { ABIL_ZIN_RECITE, "Recite", 3, 0, 120, 0, ABFLAG_DELAY },
     { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
+    { ABIL_ZIN_CURE_ALL_MUTATIONS, "Cure All Mutations", 0, 0, 0, 0, ABFLAG_NONE },
 
     // The Shining One
     { ABIL_TSO_DIVINE_SHIELD, "Divine Shield", 3, 0, 50, 2, ABFLAG_NONE },
@@ -1482,6 +1483,10 @@ static bool _do_ability(const ability_def& abil)
             exercise(SK_INVOCATIONS, 5 + random2(8));
         break;
 
+    case ABIL_ZIN_CURE_ALL_MUTATIONS:
+        zin_remove_all_mutations();
+        break;
+
     case ABIL_TSO_DIVINE_SHIELD:
         cast_divine_shield();
         exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
@@ -2208,21 +2213,29 @@ std::vector<talent> your_talents(bool check_confused)
                 }
             }
         }
+
+        if (you.religion == GOD_ZIN
+            && !you.num_gifts[GOD_ZIN]
+            && you.piety > 160)
+        {
+                _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS,
+                            check_confused);
+        }
     }
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced( you.pos() ))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
-    //jmf: Check for breath weapons -- they're exclusive of each other, I hope!
-    //     Make better come ones first.
+    //jmf: Check for breath weapons - they're exclusive of each other, I hope!
+    //     Make better ones come first.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
         || player_mutation_level(MUT_BREATHE_FLAMES))
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);
     }
 
-    // Checking for unreleased delayed Fireball.
+    // Checking for unreleased Delayed Fireball.
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 
