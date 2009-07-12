@@ -809,7 +809,7 @@ VISUAL:@The_monster@ seems to be having trouble coordinating all eight of @posse
 %%%%
 centipede
 
-VISUAL:@The_monster@ waves its antennae.
+VISUAL:@The_monster@ waves @possessive@ antennae.
 %%%%
 default confused centipede
 
@@ -2757,7 +2757,7 @@ VISUAL:@The_monster@ splits into many small globs of multi-coloured light, then 
 
 VISUAL:@The_monster@ briefly grows a face disturbingly similar to your own.
 
-@The_monster@ ululates chillingly with its many mouths.
+@The_monster@ ululates chillingly with @possessive@ many mouths.
 
 @The_monster@ gibbers incoherently in a cacophony of voices.
 %%%%
@@ -3015,7 +3015,7 @@ good_god_neutral_holy_being_reaction
 
 @The_monster@ is calmed by your holy aura.
 
-@The_monster@ relaxes its fighting stance.
+@The_monster@ relaxes @possessive@ fighting stance.
 
 @The_monster@ salutes you.
 %%%%
@@ -3031,7 +3031,7 @@ good_god_nonneutral_holy_being_reaction
 
 @The_monster@ ignores your imperfect holy aura.
 
-@The_monster@ frowns, and retains its fighting stance.
+@The_monster@ frowns, and retains @possessive@ fighting stance.
 
 @The_monster@ refuses to salute you.
 %%%%
