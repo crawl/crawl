@@ -1314,7 +1314,8 @@ formatted_string describe_mutations()
 
     case SP_GHOUL:
         result += "Your body is rotting away." EOL;
-        result += "You have sharp claws for hands." EOL;
+        result += mutation_name(MUT_CLAWS, -1, true);
+        result += EOL;
         have_any = true;
         break;
 
@@ -2523,8 +2524,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         (you.species == SP_TROLL || you.species == SP_GHOUL))
     {
         innate = true;
-        if (you.species == SP_TROLL)
-            result = troll_claw_descrip[level];
+        result = troll_claw_descrip[level];
     }
 
     if ((mut == MUT_FAST || mut == MUT_BREATHE_POISON)
