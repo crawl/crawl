@@ -562,7 +562,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
         failure = 45 - (2 * you.experience_level);
         break;
-        // end species abilties (some mutagenic)
+        // end species abilities (some mutagenic)
 
         // begin demonic powers {dlb}
     case ABIL_THROW_FLAME:
