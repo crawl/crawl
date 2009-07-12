@@ -167,6 +167,10 @@ Sanctuary
 
 For a short duration gain safety in a divine refuge. While you are inside the sanctuary, monsters will not attack you, but the protection will disappear at once should you breach the divine peace.
 %%%%
+Cure All Mutations
+
+Cure all your mutations.
+%%%%
 # The Shining One
 Divine Shield
 
