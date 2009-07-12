@@ -2288,6 +2288,8 @@ bool is_light_armour( const item_def &item )
     case ARM_ROBE:
     case ARM_ANIMAL_SKIN:
     case ARM_LEATHER_ARMOUR:
+    case ARM_TROLL_HIDE:
+    case ARM_TROLL_LEATHER_ARMOUR:
     case ARM_STEAM_DRAGON_HIDE:
     case ARM_STEAM_DRAGON_ARMOUR:
     case ARM_MOTTLED_DRAGON_HIDE:
