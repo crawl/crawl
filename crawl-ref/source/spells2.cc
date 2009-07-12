@@ -977,7 +977,8 @@ bool cast_summon_small_mammals(int pow, god_type god)
             success = true;
         }
 
-    } while (random2(pow+1) > 32 && count < count_max);
+    }
+    while (random2(pow+1) > 32 && count < count_max);
 
     return (success);
 }
