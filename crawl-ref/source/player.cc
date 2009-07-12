@@ -7049,7 +7049,7 @@ int player::has_claws(bool allow_tran) const
     {
         // these transformations bring claws with them
         if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
-            return 3;
+            return (3);
 
         // transformations other than these will override claws
         if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE

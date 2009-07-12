@@ -1314,7 +1314,7 @@ formatted_string describe_mutations()
 
     case SP_GHOUL:
         result += "Your body is rotting away." EOL;
-        result += mutation_name(MUT_CLAWS, -1, true);
+        result += mutation_name(MUT_CLAWS, you.has_claws(false));
         result += EOL;
         have_any = true;
         break;
