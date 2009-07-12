@@ -11,8 +11,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed missing items in Tiles inventory menus.
 * Fixed Xom's repel stairs effect moving shops.
 * Really allow uniques to retain their spells when polymorphed.
-* Adjust Yredelemnul's Enslave Soul to put time and woundedness limits on
-  marked souls instead of using random resistance checks.
+* Adjust Yredelemnul's Enslave Soul to no longer use random resistance checks.
 * Zin gets a power to once per game cure a follower of all mutations.
 * Artificers start with 1 MP.
 * Prompt before allowing TSO/Lugonu to bless your weapon.
