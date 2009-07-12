@@ -175,18 +175,18 @@ bool trap_def::is_known(const actor* act) const
 
 
 // Returns the number of a net on a given square.
-// If trapped only stationary ones are counted
+// If trapped, only stationary ones are counted
 // otherwise the first net found is returned.
 int get_trapping_net(const coord_def& where, bool trapped)
 {
     for (stack_iterator si(where); si; ++si)
     {
-         if (si->base_type == OBJ_MISSILES
-             && si->sub_type == MI_THROWING_NET
-             && (!trapped || item_is_stationary(*si)))
-         {
-             return (si->index());
-         }
+        if (si->base_type == OBJ_MISSILES
+            && si->sub_type == MI_THROWING_NET
+            && (!trapped || item_is_stationary(*si)))
+        {
+            return (si->index());
+        }
     }
     return (NON_ITEM);
 }
