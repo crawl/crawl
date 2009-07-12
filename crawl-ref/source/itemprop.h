@@ -404,8 +404,8 @@ enum weapon_type
     WPN_FLAIL,
     WPN_MORNINGSTAR,                   //    5
     WPN_SPIKED_FLAIL,
-    WPN_EVENINGSTAR,
     WPN_DIRE_FLAIL,
+    WPN_EVENINGSTAR,
     WPN_GREAT_MACE,
 
     WPN_DAGGER,                        //   10
