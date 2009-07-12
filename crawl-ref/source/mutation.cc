@@ -2458,6 +2458,17 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
     return (_delete_single_mutation_level(mutat));
 }
 
+bool delete_all_mutations()
+{
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        while (_delete_single_mutation_level(static_cast<mutation_type>(i)))
+            ;
+    }
+
+    return (!how_mutated());
+}
+
 static int _body_covered()
 {
     // Check how much of your body is covered by scales, etc.

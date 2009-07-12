@@ -849,6 +849,23 @@ bool zin_sustenance(bool actual)
             && (!actual || you.hunger_state == HS_STARVING));
 }
 
+bool zin_remove_all_mutations()
+{
+    if (!how_mutated())
+    {
+        mpr("You have no mutations to be cured!");
+        return (false);
+    }
+
+    you.num_gifts[GOD_ZIN]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    simple_god_message(" draws all chaos from your body!");
+    delete_all_mutations();
+
+    return (true);
+}
+
 bool yred_injury_mirror(bool actual)
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
@@ -3407,8 +3424,13 @@ void gain_piety(int pgn)
     {
         if (!you.num_gifts[you.religion])
         {
-            if (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+            if (you.religion == GOD_ZIN)
+                simple_god_message(" will now cure all your mutations... once.");
+            else if (you.religion == GOD_SHINING_ONE
+                    || you.religion == GOD_LUGONU)
+            {
                 simple_god_message(" will now bless your weapon at an altar... once.");
+            }
         }
 
         // When you gain piety of more than 160, you get another chance
@@ -4116,8 +4138,13 @@ void lose_piety(int pgn)
         if (you.piety <= 160 && old_piety > 160
             && !you.num_gifts[you.religion])
         {
-            if (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+            if (you.religion == GOD_ZIN)
+                simple_god_message(" is no longer ready to cure all your mutations.");
+            else if (you.religion == GOD_SHINING_ONE
+                    || you.religion == GOD_LUGONU)
+            {
                 simple_god_message(" is no longer ready to bless your weapon.");
+            }
         }
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)

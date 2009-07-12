@@ -47,6 +47,8 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
                      bool force_mutation = false, bool god_gift = false,
                      bool non_fatal = false);
 
+bool delete_all_mutations();
+
 std::string mutation_name(mutation_type which_mutat, int level = -1,
                           bool colour = false);
 
