@@ -5,6 +5,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
 * Improved performance for the Tiles version.
 * Fixed crashes related to giant spores.
+* Fixed monsters refusing to enter or attack into grids on the map edge.
 * Fixed summoning decks giving permanent summons at low power.
 * Fixed erroneous "blocked line of fire" warnings.
 * Fixed missing items in Tiles inventory menus.

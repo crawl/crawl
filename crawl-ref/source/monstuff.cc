@@ -4809,7 +4809,7 @@ static void _handle_movement(monsters *monster)
     }
 
     // Bounds check: don't let fleeing monsters try to run off the grid.
-    const coord_def s = monster->target + mmov;
+    const coord_def s = monster->pos() + mmov;
     if (!in_bounds_x(s.x))
         mmov.x = 0;
     if (!in_bounds_y(s.y))
