@@ -2523,7 +2523,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         (you.species == SP_TROLL || you.species == SP_GHOUL))
     {
         innate = true;
-        result = troll_claw_descrip[level];
+        if (you.species == SP_TROLL)
+            result = troll_claw_descrip[level];
     }
 
     if ((mut == MUT_FAST || mut == MUT_BREATHE_POISON)
