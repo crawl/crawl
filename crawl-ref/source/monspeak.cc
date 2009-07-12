@@ -502,11 +502,11 @@ bool mons_speaks(monsters *monster)
     }
 #endif
 
-    const bool no_foe      = foe == NULL;
+    const bool no_foe      = (foe == NULL);
     const bool no_player   = crawl_state.arena
                              || (!mons_wont_attack(monster)
                                  && (!foe || foe->atype() != ACT_PLAYER));
-    const bool mon_foe     = m_foe != NULL;
+    const bool mon_foe     = (m_foe != NULL);
     const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);
     const bool named_foe   = !no_foe
         && (!mon_foe || (m_foe->is_named()

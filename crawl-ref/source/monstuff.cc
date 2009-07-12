@@ -1133,7 +1133,8 @@ int monster_die(monsters *monster, killer_type killer,
                                                 &summon_type);
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
-    const bool gives_xp      = !summoned;
+    const bool gives_xp      = (!summoned && !mons_class_flag(monster->type,
+                                                              M_NO_EXP_GAIN));
 
     const bool drop_items    = !hard_reset;
 

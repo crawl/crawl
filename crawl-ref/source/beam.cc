@@ -2924,7 +2924,7 @@ void bolt::drop_object()
         if (item->sub_type == MI_THROWING_NET)
         {
             monsters* m = monster_at(pos());
-            // Player or monster on position is caught in net.
+            // Player or monster at position is caught in net.
             if (you.pos() == pos() && you.attribute[ATTR_HELD]
                 || m && mons_is_caught(m))
             {
@@ -2933,7 +2933,6 @@ void bolt::drop_object()
                     set_item_stationary(*item);
             }
         }
-
         copy_item_to_grid(*item, pos(), 1);
     }
 }
@@ -3442,7 +3441,7 @@ bool bolt::misses_player()
         return (false);
 
     const int dodge = player_evasion();
-    int real_tohit = hit;
+    int real_tohit  = hit;
 
     // Monsters shooting at an invisible player are very inaccurate.
     if (you.invisible() && !can_see_invis)
