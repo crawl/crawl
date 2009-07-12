@@ -7132,7 +7132,7 @@ int player::has_claws(bool allow_tran) const
 
     // these are the only other sources for claws
     if (species == SP_TROLL)
-        return (3);        
+        return (3);
     if (species == SP_GHOUL)
         return (1);
 
