@@ -1453,7 +1453,7 @@ _Eustachio_rare_
 
 @The_monster@ yells @at_foe@, "Perjured traitor, DIE!"
 
-VISUAL:@The_monster@ twirls his moustache.
+VISUAL:@The_monster@ twirls @possessive@ moustache.
 
 # doesn't really work if there are no summons nearby
 #VISUAL:@The_monster@ strokes his familiar.
@@ -1536,7 +1536,7 @@ w:2
 %%%%
 _Grum_common_
 
-VISUAL:@The_monster@ bares his teeth.
+VISUAL:@The_monster@ bares @possessive@ teeth.
 
 @The_monster@ grunts.
 
@@ -1766,7 +1766,7 @@ VISUAL:@The_monster@ grins evilly.
 
 VISUAL:@The_monster@ grins malevolently.
 
-VISUAL:@The_monster@ grinds her teeth.
+VISUAL:@The_monster@ grinds @possessive@ teeth.
 
 @The_monster@ laughs insanely.
 
@@ -1833,7 +1833,7 @@ VISUAL:@The_monster@ throws some @strange@ powder @at_foe@.
 
 @The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
 
-@The_monster@ holds her sides and says @to_foe@, "You'll eat dirt beneath my feet."
+@The_monster@ holds @possessive@ sides and says @to_foe@, "You'll eat dirt beneath my feet."
 
 # "moly" is a magic herb, mentioned only in Kirke's myth (as an antidote to
 # Kirke's potions) and in the English interjection.
@@ -2101,7 +2101,7 @@ w:3
 %%%%
 _Nessos_common_
 
-@The_monster@ pounds the earth with his hooves.
+@The_monster@ pounds the earth with @possessive@ hooves.
 
 @The_monster@ intently looks at you, slowly moving @possessive@ tail.
 
@@ -2126,7 +2126,7 @@ w:1
 @The_monster@ says, "I schooled the Big Guy. You'll be no problem."
 
 w:1
-@The_monster@ tries to tell you a complicated story about hydras, his blood, and marriage.
+@The_monster@ tries to tell you a complicated story about hydras, @possessive@ blood, and marriage.
 
 ## END NESSOS
 %%%%
@@ -2249,11 +2249,11 @@ _Polyphemus_common_
 # In the movie, I hear he speaks stupidly, as an unintelligent brute
 # would. This speech is a compromise, as it reflects neither. :)
 
-VISUAL:@The_monster@ glares at @foe@ with his lone eye.
+VISUAL:@The_monster@ glares at @foe@ with @possessive@ lone eye.
 
-VISUAL:@The_monster@ wildly rolls his eye at @foe@.
+VISUAL:@The_monster@ wildly rolls @possessive@ eye at @foe@.
 
-@The_monster@ @shouts@ loudly for his pets to attack!
+@The_monster@ @shouts@ loudly for @possessive@ pets to attack!
 
 @The_monster@ @shouts@ @at_foe@, "You will make a great snack!"
 
@@ -2263,7 +2263,7 @@ VISUAL:@The_monster@ wildly rolls his eye at @foe@.
 %%%%
 _Polyphemus_rare_
 
-VISUAL:@The_monster@ seems to be sizing @foe@ up for his next meal.
+VISUAL:@The_monster@ seems to be sizing @foe@ up for @possessive@ next meal.
 
 VISUAL:@The_monster@ stomps at the @surface@ furiously.
 
@@ -2351,7 +2351,7 @@ VISUAL:@The_monster@ stares at @foe@ for a moment.
 
 VISUAL:@The_monster@ bursts into tears.
 
-VISUAL:@The_monster@ sucks her thumb.
+VISUAL:@The_monster@ sucks @possessive@ thumb.
 
 @The_monster@ screams @at_foe@, "YOU ARE VIOLATING AREA SECURITY!!!"
 
@@ -2387,9 +2387,9 @@ VISUAL:@The_monster@ looks around nervously.
 %%%%
 _Purgy_rare_
 
-VISUAL:@The_monster@ grits its teeth.
+VISUAL:@The_monster@ grits @possessive@ teeth.
 
-VISUAL:@The_monster@ clenches its claws.
+VISUAL:@The_monster@ clenches @possessive@ claws.
 
 @The_monster@ hisses @at_foe@, "I bite!"
 
@@ -2558,7 +2558,7 @@ _Sigmund_common_
 w:20
 @The_monster@ laughs crazily.
 
-VISUAL:@The_monster@ grinds his teeth.
+VISUAL:@The_monster@ grinds @possessive@ teeth.
 
 @The_monster@ says @to_foe@, "Don't worry, I'll kill you fast."
 
@@ -2607,11 +2607,11 @@ _Sonja_common_
 
 @The_monster@ shouts @at_foe@, "Too slow!"
 
-VISUAL:@The_monster@ twirls her cape.
+VISUAL:@The_monster@ twirls @possessive@ cape.
 
 VISUAL:@The_monster@ bows elegantly.
 
-VISUAL:@The_monster@ plants her feet in a plie.
+VISUAL:@The_monster@ plants @possessive@ feet in a plie.
 %%%%
 _Sonja_rare_
 
