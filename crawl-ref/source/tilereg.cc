@@ -265,14 +265,14 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
         m_buf_dngn.add(flv.floor, x, y);
     }
 
-    if (bg & TILE_FLAG_BLOOD)
+    m_buf_dngn.add(bg_idx, x, y);
+
+    if ((bg & TILE_FLAG_BLOOD) && bg_idx > TILE_DNGN_UNSEEN)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
         int offset = flv.special % tile_dngn_count(TILE_BLOOD);
         m_buf_dngn.add(TILE_BLOOD + offset, x, y);
     }
-
-    m_buf_dngn.add(bg_idx, x, y);
 
     if (bg & TILE_FLAG_HALO)
         m_buf_dngn.add(TILE_HALO, x, y);
