@@ -3154,6 +3154,14 @@ static std::string _religion_help( god_type god )
     {
     case GOD_ZIN:
         result += "You can pray at an altar to donate your money.";
+        if (!player_under_penance() && you.piety > 160
+            && !you.num_gifts[god])
+        {
+            if (!result.empty())
+                result += " ";
+
+            result += "You can have all your mutations cured.";
+        }
         break;
 
     case GOD_SHINING_ONE:
