@@ -190,6 +190,15 @@ function util.exists(list, pred)
   return false
 end
 
+function util.contains(haystack, needle)
+  for _, value in ipairs(haystack) do
+    if value == needle then
+      return true
+    end
+  end
+  return false
+end
+
 function util.random_from(list)
   return list[ crawl.random2(#list) + 1 ]
 end

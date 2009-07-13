@@ -132,7 +132,18 @@ function ziggurat_awaken_all(mons)
   mons.beh = beh_wander
 end
 
+function ziggurat_milestone()
+  local depth = zig().depth
+  if util.contains({ 1, 9, 15, 21, 24, 27 }, depth) then
+    crawl.mark_milestone(depth < 27 and "br.enter" or "br.end",
+                         (depth == 1 and "entered a Ziggurat" or
+                           ("reached level " .. depth .. " of a Ziggurat"))
+                           .. ".")
+  end
+end
+
 function ziggurat_build_level(e)
+  ziggurat_milestone()
   if zig().depth == 1 then
     e.welcome("You land on top of a ziggurat so tall you cannot make out the ground.")
   end

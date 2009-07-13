@@ -22,6 +22,7 @@ REVISION("$Rev$");
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"
+#include "hiscores.h"
 #include "initfile.h"
 #include "items.h"
 #include "luadgn.h"
@@ -3091,6 +3092,15 @@ LUAFN(_crawl_args)
     return dlua_stringtable(ls, SysEnv.cmd_args);
 }
 
+LUAFN(_crawl_milestone)
+{
+#ifdef DGL_MILESTONES
+    mark_milestone(luaL_checkstring(ls, 1),
+                   luaL_checkstring(ls, 2));
+#endif
+    return (0);
+}
+
 #ifdef UNIX
 LUAFN(_crawl_millis)
 {
@@ -3109,6 +3119,7 @@ LUAFN(_crawl_millis)
 static const struct luaL_reg crawl_lib[] =
 {
     { "args", _crawl_args },
+    { "mark_milestone", _crawl_milestone },
 #ifdef UNIX
     { "millis", _crawl_millis },
 #endif

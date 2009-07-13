@@ -2078,6 +2078,8 @@ std::string xlog_fields::xlog_line() const
 #ifdef DGL_MILESTONES
 void mark_milestone(const std::string &type, const std::string &milestone)
 {
+    if (crawl_state.arena)
+        return;
     const std::string milestone_file = Options.save_dir + "milestones.txt";
     if (FILE *fp = lk_open("a", milestone_file))
     {
