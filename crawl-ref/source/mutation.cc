@@ -2041,6 +2041,16 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 {
     ASSERT(!non_fatal || _is_random(which_mutation));
 
+    if (!god_gift)
+    {
+        const god_type god =
+            (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                          : GOD_NO_GOD;
+
+        if (god != GOD_NO_GOD)
+            god_gift = true;
+    }
+
     if (demonspawn)
         force_mutation = true;
 
@@ -2208,6 +2218,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return (true);
     if (rc == -1)
         return (false);
+
     ASSERT(rc == 0);
 
     const unsigned int old_talents = your_talents(false).size();
@@ -2393,6 +2404,16 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                      bool non_fatal)
 {
     ASSERT(!non_fatal || _is_random(which_mutation));
+
+    if (!god_gift)
+    {
+        const god_type god =
+            (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                          : GOD_NO_GOD;
+
+        if (god != GOD_NO_GOD)
+            god_gift = true;
+    }
 
     mutation_type mutat = which_mutation;
 
