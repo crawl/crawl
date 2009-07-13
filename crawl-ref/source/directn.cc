@@ -2558,26 +2558,26 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("dart trap");
         case TRAP_ARROW:
             return ("arrow trap");
+        case TRAP_NEEDLE:
+            return ("needle trap");
+        case TRAP_BOLT:
+            return ("bolt trap");
         case TRAP_SPEAR:
             return ("spear trap");
         case TRAP_AXE:
             return ("axe trap");
-        case TRAP_TELEPORT:
-            return ("teleportation trap");
-        case TRAP_ALARM:
-            return ("alarm trap");
         case TRAP_BLADE:
             return ("blade trap");
-        case TRAP_BOLT:
-            return ("bolt trap");
         case TRAP_NET:
             return ("net trap");
-        case TRAP_ZOT:
-            return ("Zot trap");
-        case TRAP_NEEDLE:
-            return ("needle trap");
+        case TRAP_ALARM:
+            return ("alarm trap");
         case TRAP_SHAFT:
             return ("shaft");
+        case TRAP_TELEPORT:
+            return ("teleportation trap");
+        case TRAP_ZOT:
+            return ("Zot trap");
         default:
             error_message_to_player();
             return ("undefined trap");

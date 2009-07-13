@@ -1,7 +1,10 @@
 ### Dungeon Crawl monster corpses
 ### (only lists monsters that actually leave a corpse)
 
-%sdir dc-mon
+### All corpses get a background blood stain, either red or green.
+### - red, if the monster might leave red spatters elsewhere
+###   (meaning it has blood a vampire can drink, even if poisonous)
+### - green, otherwise.
 
 %corpse 1
 
@@ -48,6 +51,7 @@ giant_slug CORPSE_GIANT_SLUG
 giant_snail CORPSE_GIANT_SNAIL
 
 ## Rodents ('r')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 rat CORPSE_RAT
 quokka CORPSE_QUOKKA
 grey_rat CORPSE_GREY_RAT
@@ -79,12 +83,12 @@ yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 
 ## Beetles ('B')
-%back dc-misc/blood_green
 giant_beetle CORPSE_GIANT_BEETLE
 boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 
 ## Frogs ('F')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_frog CORPSE_GIANT_FROG
 giant_brown_frog CORPSE_GIANT_BROWN_FROG
 blink_frog CORPSE_BLINK_FROG
@@ -132,7 +136,6 @@ hobgoblin CORPSE_HOBGOBLIN
 gnoll CORPSE_GNOLL
 
 ## Merfolk ('m')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 merfolk_fighter_water CORPSE_MERFOLK_FIGHTER
 mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
@@ -147,7 +150,6 @@ ghoul CORPSE_GHOUL
 orc CORPSE_ORC
 
 ## Minotaur ('t')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 minotaur CORPSE_MINOTAUR
 
 ## Ugly things ('u')
@@ -157,7 +159,6 @@ very_ugly_thing CORPSE_VERY_UGLY_THING
 
 ## Giants ('C')
 %sdir dc-mon
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 hill_giant CORPSE_HILL_GIANT
 ettin CORPSE_ETTIN
 cyclops CORPSE_CYCLOPS
@@ -187,10 +188,12 @@ golden_dragon CORPSE_GOLDEN_DRAGON
 shadow_dragon CORPSE_SHADOW_DRAGON
 
 ## Eyes ('G')
+%back dc-misc/blood_green
 giant_eyeball CORPSE_GIANT_EYEBALL
 eye_of_draining CORPSE_EYE_OF_DRAINING
-giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 
 ## Hybrids ('H')
 hippogriff CORPSE_HIPPOGRIFF
@@ -199,15 +202,15 @@ manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 
 ## Jellies ('J')
+%back dc-misc/blood_green
 giant_amoeba CORPSE_GIANT_AMOEBA
 
 ## Kobolds ('K')
-%back dc-misc/blood_green
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD
 
 ## Nagas ('N')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 naga CORPSE_NAGA
 guardian_naga CORPSE_GUARDIAN_NAGA
 
@@ -222,13 +225,14 @@ iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 human CORPSE_HUMAN
+%back dc-misc/blood_green
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 
 ## Draconians ('d')
 %sdir player
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 %start
 %compose drcwing/drcwing_black
 %compose base/draconian_black_m

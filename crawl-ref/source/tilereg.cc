@@ -259,38 +259,46 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
 void DungeonRegion::pack_background(unsigned int bg, int x, int y)
 {
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
+
     if (bg_idx >= TILE_DNGN_WAX_WALL)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
         m_buf_dngn.add(flv.floor, x, y);
     }
-
     m_buf_dngn.add(bg_idx, x, y);
 
-    if (bg & TILE_FLAG_BLOOD && bg_idx > TILE_DNGN_UNSEEN)
+    if (bg & TILE_FLAG_WAS_SECRET)
+        m_buf_dngn.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
+
+    if (bg_idx > TILE_DNGN_UNSEEN)
     {
-        tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
-        int offset = flv.special % tile_dngn_count(TILE_BLOOD);
-        m_buf_dngn.add(TILE_BLOOD + offset, x, y);
+        if (bg & TILE_FLAG_BLOOD)
+        {
+            tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
+            int offset = flv.special % tile_dngn_count(TILE_BLOOD);
+            m_buf_dngn.add(TILE_BLOOD + offset, x, y);
+        }
+
+        if (bg & TILE_FLAG_HALO)
+            m_buf_dngn.add(TILE_HALO, x, y);
+
+        if (!(bg & TILE_FLAG_UNSEEN))
+        {
+            if (bg & TILE_FLAG_SANCTUARY)
+                m_buf_dngn.add(TILE_SANCTUARY, x, y);
+
+            // Apply the travel exclusion under the foreground if the cell is
+            // visible.  It will be applied later if the cell is unseen.
+            if (bg & TILE_FLAG_EXCL_CTR)
+                m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
+            else if (bg & TILE_FLAG_TRAV_EXCL)
+                m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
+        }
+        if (bg & TILE_FLAG_RAY)
+            m_buf_dngn.add(TILE_RAY, x, y);
+        else if (bg & TILE_FLAG_RAY_OOR)
+            m_buf_dngn.add(TILE_RAY_OUT_OF_RANGE, x, y);
     }
-
-    if (bg & TILE_FLAG_HALO)
-        m_buf_dngn.add(TILE_HALO, x, y);
-
-    if (bg & TILE_FLAG_SANCTUARY && !(bg & TILE_FLAG_UNSEEN))
-        m_buf_dngn.add(TILE_SANCTUARY, x, y);
-
-    // Apply the travel exclusion under the foreground if the cell is
-    // visible.  It will be applied later if the cell is unseen.
-    if (bg & TILE_FLAG_EXCL_CTR && !(bg & TILE_FLAG_UNSEEN))
-        m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
-    else if (bg & TILE_FLAG_TRAV_EXCL && !(bg & TILE_FLAG_UNSEEN))
-        m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
-
-    if (bg & TILE_FLAG_RAY)
-        m_buf_dngn.add(TILE_RAY, x, y);
-    else if (bg & TILE_FLAG_RAY_OOR)
-        m_buf_dngn.add(TILE_RAY_OUT_OF_RANGE, x, y);
 }
 
 #define NUM_MAX_DOLLS   10
@@ -975,8 +983,8 @@ void DungeonRegion::pack_buffers()
         return;
 
     int tile = 0;
-    for (int y = 0; y < crawl_view.viewsz.y; y++)
-        for (int x = 0; x < crawl_view.viewsz.x; x++)
+    for (int y = 0; y < crawl_view.viewsz.y; ++y)
+        for (int x = 0; x < crawl_view.viewsz.x; ++x)
         {
             unsigned int bg = m_tileb[tile + 1];
             unsigned int fg = m_tileb[tile];

@@ -90,6 +90,7 @@ REVISION("$Rev$");
 // Item offering messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
+// Text between [] only appears if the item already glows.
 // <> and </> are replaced with colors.
 // First message is if there's no piety gain; second is if piety gain is
 // one; third is if piety gain is more than one.
@@ -115,7 +116,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // TSO
     {
-        " faintly glow% and disappear%.",
+        " glow% a dingy golden colour and disappear%.",
         " glow% a golden colour and disappear%.",
         " glow% a brilliant golden colour and disappear%.",
     },
@@ -157,9 +158,9 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Sif Muna
     {
-        " & gone without a glow.",
-        " glow% faintly for a moment, and & gone.",
-        " glow% for a moment, and & gone.",
+        " & gone without a[dditional] glow.",
+        " glow% slightly [brighter ]for a moment, and & gone.",
+        " glow% [brighter ]for a moment, and & gone.",
     },
     // Trog
     {
@@ -169,8 +170,8 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Nemelex
     {
-        " disappear% without a glow.",
-        " glow% slightly and disappear%.",
+        " disappear% without a[dditional] glow.",
+        " glow% slightly [brighter ]and disappear%.",
         " glow% with a rainbow of weird colours and disappear%.",
     },
     // Elyvilon (no sacrifices, but used for weapon destruction)
@@ -6191,10 +6192,30 @@ static void _replace(std::string& s,
     }
 }
 
+static void _erase_between(std::string& s,
+                           const std::string &left,
+                           const std::string &right)
+{
+    std::string::size_type left_pos;
+    std::string::size_type right_pos;
+
+    while ((left_pos = s.find(left)) != std::string::npos
+           && (right_pos = s.find(right, left_pos + left.size())) != std::string::npos)
+        s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
+}
+
 static void _print_sacrifice_message(god_type god, const item_def &item,
                                      piety_gain_t piety_gain, bool your)
 {
     std::string msg(_Sacrifice_Messages[god][piety_gain]);
+    std::string itname = item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE);
+    if (itname.find("glowing") != std::string::npos)
+    {
+        _replace(msg, "[", "");
+        _replace(msg, "]", "");
+    }
+    else
+        _erase_between(msg, "[", "]");
     _replace(msg, "%", (item.quantity == 1? "s" : ""));
     _replace(msg, "&", (item.quantity == 1? "is" : "are"));
     const char *tag_start, *tag_end;
@@ -6214,7 +6235,7 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
         break;
     }
 
-    msg.insert(0, item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE));
+    msg.insert(0, itname);
     msg = tag_start + msg + tag_end;
 
     formatted_message_history(msg, MSGCH_GOD);

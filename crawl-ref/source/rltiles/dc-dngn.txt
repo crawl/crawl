@@ -322,6 +322,8 @@ wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL
 wall/dngn_wax_wall DNGN_WAX_WALL
 wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
 
+## doors
+dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
 gate_closed_middle DNGN_GATE_CLOSED_MIDDLE
@@ -330,26 +332,33 @@ dngn_open_door DNGN_OPEN_DOOR
 gate_open_left DNGN_GATE_OPEN_LEFT
 gate_open_middle DNGN_GATE_OPEN_MIDDLE
 gate_open_right DNGN_GATE_OPEN_RIGHT
+
 dngn_orcish_idol DNGN_ORCISH_IDOL
 dngn_granite_statue DNGN_GRANITE_STATUE
 
-dngn_branch_stairs DNGN_BRANCH_STAIRS
+## traps
 dngn_trap_dart DNGN_TRAP_DART
 dngn_trap_arrow DNGN_TRAP_ARROW
+dngn_trap_needle DNGN_TRAP_NEEDLE
+dngn_trap_bolt DNGN_TRAP_BOLT
 dngn_trap_spear DNGN_TRAP_SPEAR
 dngn_trap_axe DNGN_TRAP_AXE
-dngn_trap_teleport DNGN_TRAP_TELEPORT
-dngn_trap_alarm DNGN_TRAP_ALARM
 dngn_trap_blade DNGN_TRAP_BLADE
-dngn_trap_bolt DNGN_TRAP_BOLT
 dngn_trap_net DNGN_TRAP_NET
-dngn_trap_zot DNGN_TRAP_ZOT
-dngn_trap_needle DNGN_TRAP_NEEDLE
+dngn_trap_alarm DNGN_TRAP_ALARM
 dngn_trap_shaft DNGN_TRAP_SHAFT
+dngn_trap_teleport DNGN_TRAP_TELEPORT
+dngn_trap_zot DNGN_TRAP_ZOT
+
+## stairs
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
-escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
+escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
 escape_hatch_up DNGN_ESCAPE_HATCH_UP
+dngn_enter DNGN_ENTER
+%rim 1
+dngn_return DNGN_RETURN
+%rim 0
 
 %sdir dc-dngn/shops
 ##dngn_enter_shop DNGN_ENTER_SHOP
@@ -375,6 +384,8 @@ floor/lava0 DNGN_LAVA
 floor/lava1
 floor/lava2
 floor/lava3
+
+## water
 dngn_deep_water DNGN_DEEP_WATER
 dngn_shallow_water DNGN_SHALLOW_WATER
 dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
@@ -403,10 +414,6 @@ dngn_exit DNGN_EXIT_PANDEMONIUM
 dngn_exit_flickering
 %rim 1
 dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
-%rim 0
-dngn_enter DNGN_ENTER
-%rim 1
-dngn_return DNGN_RETURN
 %rim 0
 
 %sdir dc-dngn/altars

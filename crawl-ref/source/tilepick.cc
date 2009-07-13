@@ -2339,7 +2339,13 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_PERMAROCK_WALL:
         return TILE_WALL_NORMAL;
     case DNGN_SECRET_DOOR:
-        return (unsigned int) grid_secret_door_appearance(coord_def(gx, gy));
+    case DNGN_DETECTED_SECRET_DOOR:
+    {
+        const dungeon_feature_type appear
+                = grid_secret_door_appearance(coord_def(gx, gy));
+        ASSERT(!grid_is_secret_door(appear));
+        return tileidx_feature((int) appear, gx, gy);
+    }
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
     case DNGN_CLEAR_PERMAROCK_WALL:
@@ -2347,7 +2353,6 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_STONE_WALL:
         return TILE_DNGN_STONE_WALL;
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR: // same tile
         return TILE_DNGN_CLOSED_DOOR;
     case DNGN_METAL_WALL:
         return TILE_DNGN_METAL_WALL;
@@ -3924,8 +3929,8 @@ void tile_clear_flavour()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        env.tile_flv(*ri).floor = 0;
-        env.tile_flv(*ri).wall = 0;
+        env.tile_flv(*ri).floor   = 0;
+        env.tile_flv(*ri).wall    = 0;
         env.tile_flv(*ri).special = 0;
     }
 }
@@ -3983,7 +3988,7 @@ void tile_init_flavour(const coord_def &gc)
         else
             env.tile_flv(gc).special = 0;
     }
-    else if (grd(gc) == DNGN_SECRET_DOOR)
+    else if (grid_is_secret_door(grd(gc)))
         env.tile_flv(gc).special = 0;
     else if (!env.tile_flv(gc).special)
         env.tile_flv(gc).special = random2(256);
@@ -4196,8 +4201,8 @@ void tile_floor_halo(dungeon_feature_type target, int tile)
     // Generally the tiles don't fit with a north to the right or left
     // of a south tile.  What we really want to do is to separate the
     // two regions, by making 1 a SPECIAL_SE and 2 a SPECIAL_NW tile.
-    for (int y = 0; y < GYM - 1; y++)
-        for (int x = 0; x < GXM - 1; x++)
+    for (int y = 0; y < GYM - 1; ++y)
+        for (int x = 0; x < GXM - 1; ++x)
         {
             int this_spc = env.tile_flv[x][y].floor - tile;
             if (this_spc < 0 || this_spc > 8)
@@ -4244,7 +4249,7 @@ void tile_draw_floor()
         for (int cx = 0; cx < env.tile_fg.width(); cx++)
         {
             const coord_def ep(cx+1, cy+1);
-            const coord_def gc = view2grid(show2view(ep));
+            const coord_def gc = show2grid(ep);
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
             int object = show_appearance(ep);
@@ -4252,11 +4257,15 @@ void tile_draw_floor()
             {
                 bg = tileidx_feature(object, gc.x, gc.y);
 
-                if (in_bounds(gc)
-                    && is_travelable_stair((dungeon_feature_type)object)
-                    && !travel_cache.know_stair(gc))
+                if (in_bounds(gc))
                 {
-                    bg |= TILE_FLAG_NEW_STAIR;
+                    if (object == DNGN_DETECTED_SECRET_DOOR)
+                        bg |= TILE_FLAG_WAS_SECRET;
+                    else if (is_travelable_stair((dungeon_feature_type)object)
+                             && !travel_cache.know_stair(gc))
+                    {
+                        bg |= TILE_FLAG_NEW_STAIR;
+                    }
                 }
             }
 
