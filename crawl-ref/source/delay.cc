@@ -1089,9 +1089,7 @@ static void _finish_delay(const delay_queue_item &delay)
         const equipment_type slot = get_armour_slot(you.inv[delay.parm1]);
 
         if (slot == EQ_BODY_ARMOUR)
-        {
             you.equip[EQ_BODY_ARMOUR] = -1;
-        }
         else
         {
             switch (slot)
@@ -1116,6 +1114,7 @@ static void _finish_delay(const delay_queue_item &delay)
         you.redraw_evasion = true;
         break;
     }
+
     case DELAY_EAT:
         mprf("You finish eating.");
         // For chunks, warn the player if they're not getting much
@@ -1153,6 +1152,7 @@ static void _finish_delay(const delay_queue_item &delay)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         break;
     }
+
     case DELAY_MEMORISE:
         mpr("You finish memorising.");
         add_spell_to_memory(static_cast<spell_type>(delay.parm1));
