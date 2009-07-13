@@ -274,7 +274,6 @@ static bool _find_butchering_implement(int &butcher_tool)
     }
     else if (item_slot == PROMPT_GOT_SPECIAL)
     {
-
         if (you.has_claws()
             || transform_can_butcher_barehanded(
                     static_cast<transformation_type>(
