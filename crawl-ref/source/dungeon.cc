@@ -819,13 +819,21 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 #endif
 }
 
-static bool _ensure_vault_placed(bool vault_success)
+static bool _ensure_vault_placed(bool vault_success,
+                                 bool disable_further_vaults)
 {
     if (!vault_success)
         dgn_level_vetoed = true;
-    else
+    else if (disable_further_vaults)
         can_create_vault = false;
     return (vault_success);
+}
+
+static bool _ensure_vault_placed_ex( bool vault_success, const map_def *vault )
+{
+    return _ensure_vault_placed( vault_success,
+                                 (!vault->has_tag("extra")
+                                  && vault->orient == MAP_ENCOMPASS) );
 }
 
 static coord_def _find_level_feature(int feat)
@@ -2301,7 +2309,7 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
                 end(1, false, "Failed to find Pandemonium level %s!\n",
                     pandemon_level_names[which_demon]);
 
-            _ensure_vault_placed( _build_vaults(level_number, vault) );
+            _ensure_vault_placed( _build_vaults(level_number, vault), true );
         }
         else
         {
@@ -2372,7 +2380,7 @@ static void _portal_vault_level(int level_number)
         vault = random_map_for_tag(level_name, false);
 
     if (vault)
-        _ensure_vault_placed( _build_vaults(level_number, vault) );
+        _ensure_vault_placed( _build_vaults(level_number, vault), true );
     else
     {
         _plan_main(level_number, 0);
@@ -2438,7 +2446,7 @@ static builder_rc_type _builder_by_branch(int level_number)
     if (vault)
     {
         dgn_Build_Method += " random_map_for_place";
-        _ensure_vault_placed( _build_vaults(level_number, vault) );
+        _ensure_vault_placed_ex( _build_vaults(level_number, vault), vault );
         return BUILD_SKIP;
     }
 
@@ -2531,7 +2539,7 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     if (vault)
     {
         dgn_Build_Method += " normal_random_map_for_place";
-        _ensure_vault_placed( _build_vaults(level_number, vault) );
+        _ensure_vault_placed_ex( _build_vaults(level_number, vault), vault );
         return BUILD_SKIP;
     }
 
@@ -5954,7 +5962,7 @@ static char _plan_1(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success);
+    _ensure_vault_placed(success, false);
 
     return 0;
 }
@@ -5968,7 +5976,7 @@ static char _plan_2(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success);
+    _ensure_vault_placed(success, false);
 
     return 0;
 }
@@ -6202,7 +6210,7 @@ static char _plan_6(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success);
+    _ensure_vault_placed(success, false);
 
     // This "back door" is often one of the easier ways to get out of
     // pandemonium... the easiest is to use the banish spell.

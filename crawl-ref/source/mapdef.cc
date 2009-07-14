@@ -1993,7 +1993,7 @@ void map_def::fixup()
     if (orient == MAP_NONE)
     {
         orient = MAP_FLOAT;
-        tags += " minivault";
+        tags += " minivault ";
     }
 }
 
