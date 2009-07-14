@@ -3000,9 +3000,9 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     return (false);
 }
 
-// Opens doors and . If either move_x or
-// move_y are non-zero, the pair carries a specific direction for the door
-// to be opened (eg if you type ctrl + dir).
+// Opens doors and may also handle untrapping/attacking etc.
+// If either move_x or move_y are non-zero, the pair carries a specific
+// direction for the door to be opened (eg if you type ctrl + dir).
 static void _open_door(coord_def move, bool check_confused)
 {
     ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
