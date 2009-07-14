@@ -223,6 +223,7 @@ bool grid_is_water(dungeon_feature_type grid)
 {
     return (grid == DNGN_SHALLOW_WATER
             || grid == DNGN_DEEP_WATER
+            || grid == DNGN_OPEN_SEA
             || grid == DNGN_WATER_RESERVED);
 }
 

@@ -976,6 +976,8 @@ enum dungeon_feature_type
     // Highest grid value which can't be reached through.
     DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
 
+    DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
+
     // Can be seen through and reached past.
     DNGN_ORCISH_IDOL = 15,
     DNGN_GRANITE_STATUE = 21,          //   21

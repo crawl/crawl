@@ -143,8 +143,8 @@ rectangle_iterator::rectangle_iterator( int x_border_dist, int y_border_dist )
     if (y_border_dist < 0)
         y_border_dist = x_border_dist;
 
-    topleft.set( x_border_dist, y_border_dist );
-    bottomright.set( GXM - x_border_dist - 1, GYM - y_border_dist - 1 );
+    topleft.set(x_border_dist, y_border_dist);
+    bottomright.set(GXM - x_border_dist - 1, GYM - y_border_dist - 1);
     current = topleft;
 }
 
@@ -245,12 +245,12 @@ void radius_iterator::step_back()
     const int miny = std::max(Y_BOUND_1+1, center.y - radius);
 
     location.x--;
-    if ( location.x < minx )
+    if (location.x < minx)
     {
         location.x = maxx;
         location.y--;
-        if ( location.y < miny )
-            iter_done = true;   // hmm
+        if (location.y < miny)
+            iter_done = true;
     }
 }
 

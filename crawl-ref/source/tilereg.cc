@@ -2336,7 +2336,7 @@ void MapRegion::pack_buffers()
         for (int y = m_min_gy; y <= m_max_gy; y++)
         {
             map_feature f = (map_feature)m_buf[x + y * mx];
-            map_colour c = m_colours[f];
+            map_colour c  = m_colours[f];
 
             float pos_x = x - m_min_gx;
             float pos_y = y - m_min_gy;

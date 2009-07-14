@@ -2596,6 +2596,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("rock wall");
     case DNGN_PERMAROCK_WALL:
         return ("unnaturally hard rock wall");
+    case DNGN_OPEN_SEA:
+        return ("open sea");
     case DNGN_CLOSED_DOOR:
         return ("closed door");
     case DNGN_DETECTED_SECRET_DOOR:
@@ -2900,6 +2902,16 @@ std::string feature_description(const coord_def& where, bool bloody,
             desc += ", spattered with blood";
 
         return thing_do_grammar(dtype, add_stop, false, desc);
+    }
+
+    if (grid == DNGN_OPEN_SEA)
+    {
+        switch (dtype)
+        {
+        case DESC_CAP_A:   dtype = DESC_CAP_THE;   break;
+        case DESC_NOCAP_A: dtype = DESC_NOCAP_THE; break;
+        default: break;
+        }
     }
 
     switch (grid)

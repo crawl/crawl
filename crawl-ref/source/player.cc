@@ -2944,7 +2944,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
                                 && chance_forgotten < 100);
     const int radius = (use_lab_check && you.species == SP_MINOTAUR) ? 40*40
                                                                      : 25*25;
-    for (rectangle_iterator ri(1); ri; ++ri)
+    for (rectangle_iterator ri(0); ri; ++ri)
     {
         if (!see_grid(*ri)
             && (force || x_chance_in_y(chance_forgotten, 100)

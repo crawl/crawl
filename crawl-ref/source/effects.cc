@@ -2273,7 +2273,7 @@ bool vitrify_area(int radius)
 
         if (grid == DNGN_ROCK_WALL
             || grid == DNGN_STONE_WALL
-            || grid == DNGN_PERMAROCK_WALL )
+            || grid == DNGN_PERMAROCK_WALL)
         {
             grd(*ri) = static_cast<dungeon_feature_type>(grid + clear_plus);
             set_terrain_changed(ri->x, ri->y);

@@ -2338,6 +2338,8 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_ROCK_WALL:
     case DNGN_PERMAROCK_WALL:
         return TILE_WALL_NORMAL;
+    case DNGN_OPEN_SEA:
+        return TILE_DNGN_OPEN_SEA;
     case DNGN_SECRET_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
     {

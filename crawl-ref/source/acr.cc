@@ -3627,15 +3627,15 @@ static void _move_player(coord_def move)
     {
         for (unsigned int i = 0; i < you.mesmerised_by.size(); ++i)
         {
-             monsters& mon = menv[you.mesmerised_by[i]];
-             int olddist = grid_distance(you.pos(), mon.pos());
-             int newdist = grid_distance(targ, mon.pos());
+            monsters& mon = menv[you.mesmerised_by[i]];
+            int olddist = grid_distance(you.pos(), mon.pos());
+            int newdist = grid_distance(targ, mon.pos());
 
-             if (olddist < newdist)
-             {
-                 beholder = &mon;
-                 break;
-             }
+            if (olddist < newdist)
+            {
+                beholder = &mon;
+                break;
+            }
         }
     }
 
@@ -3700,10 +3700,14 @@ static void _move_player(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
+        if (grd(targ) == DNGN_OPEN_SEA)
+            mpr("You can't go out to sea!");
+
         stop_running();
         move.reset();
         you.turn_is_over = false;
         crawl_state.cancel_cmd_repeat();
+        return;
     }
     else if (beholder && !attacking)
     {
@@ -3724,21 +3728,21 @@ static void _move_player(coord_def move)
             you.pet_target = MHITNOT;
 
 #if DEBUG_DIAGNOSTICS
-        mpr( "Shifting.", MSGCH_DIAGNOSTICS );
+        mpr("Shifting.", MSGCH_DIAGNOSTICS);
         int j = 0;
         for (int i = 0; i < MAX_ITEMS; ++i)
             if (is_valid_item( mitm[i] ))
                 ++j;
 
-        mprf( MSGCH_DIAGNOSTICS, "Number of items present: %d", j );
+        mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
 
         j = 0;
         for (int i = 0; i < MAX_MONSTERS; ++i)
             if (menv[i].type != -1)
                 ++j;
 
-        mprf( MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
-        mprf( MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
+        mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
+        mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
 #endif
     }
 

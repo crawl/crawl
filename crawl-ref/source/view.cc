@@ -3872,16 +3872,19 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         return (false);
     }
 
-    if (map_radius > 50 && map_radius != 1000)
-        map_radius = 50;
-    else if (map_radius < 5)
-        map_radius = 5;
+    const bool wizard_map = (you.wizard && map_radius == 1000);
+
+    if (!wizard_map)
+    {
+        if (map_radius > 50)
+            map_radius = 50;
+        else if (map_radius < 5)
+            map_radius = 5;
+    }
 
     // now gradually weaker with distance:
-    const int pfar = (map_radius * 7) / 10;
+    const int pfar     = (map_radius * 7) / 10;
     const int very_far = (map_radius * 9) / 10;
-
-    const bool wizard_map = (you.wizard && map_radius == 1000);
 
     bool did_map = false;
     for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
@@ -3889,13 +3892,16 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (proportion < 100 && random2(100) >= proportion)
             continue;       // note that proportion can be over 100
 
-        const int dist = grid_distance( you.pos(), *ri );
+        if (!wizard_map)
+        {
+            const int dist = grid_distance( you.pos(), *ri );
 
-        if (dist > pfar && one_chance_in(3))
-            continue;
+            if (dist > pfar && one_chance_in(3))
+                continue;
 
-        if (dist > very_far && coinflip())
-            continue;
+            if (dist > very_far && coinflip())
+                continue;
+        }
 
         if (is_terrain_changed(*ri))
             clear_envmap_grid(*ri);
@@ -4066,6 +4072,7 @@ bool grid_see_grid(const coord_def& p1, const coord_def& p2,
                                true, true));
 }
 
+// For order and meaning of symbols, see dungeon_char_type in enum.h.
 static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
 {
     // CSET_ASCII
@@ -4215,6 +4222,15 @@ void init_feature_table( void )
             Feature[i].minimap      = MF_WALL;
             break;
 
+        case DNGN_OPEN_SEA:
+#ifdef USE_TILE
+            Feature[i].dchar        = DCHAR_WAVY;
+#else
+            Feature[i].dchar        = DCHAR_WALL;
+#endif
+            Feature[i].colour       = BLUE;
+            Feature[i].minimap      = MF_WATER;
+            break;
 
         case DNGN_OPEN_DOOR:
             Feature[i].dchar   = DCHAR_DOOR_OPEN;

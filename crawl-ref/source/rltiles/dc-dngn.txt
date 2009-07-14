@@ -386,6 +386,7 @@ floor/lava2
 floor/lava3
 
 ## water
+dngn_open_sea DNGN_OPEN_SEA
 dngn_deep_water DNGN_DEEP_WATER
 dngn_shallow_water DNGN_SHALLOW_WATER
 dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE

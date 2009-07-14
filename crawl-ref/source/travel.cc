@@ -2262,7 +2262,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                     if (!msg.empty())
                     {
                         msg += "Go there anyway?";
-                        if (!yesno(msg.c_str()))
+                        if (!yesno(msg.c_str(), true))
                             return (ID_CANCEL);
                     }
 #endif
