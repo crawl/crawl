@@ -435,8 +435,9 @@ bool player_in_bat_form()
 
 bool player_can_open_doors()
 {
-    // Bats can't close/open doors.
-    return !player_in_bat_form();
+    // Bats and pigs can't open/close doors.
+    return (you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
+            && you.attribute[ATTR_TRANSFORMATION] != TRAN_PIG);
 }
 
 bool player_under_penance(void)
