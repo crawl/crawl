@@ -612,6 +612,17 @@ ENDMAP
 # Swamp specific non-ending vaults
 ##############################################################################
 
+# The only Swamp entry... mist leaking from the stairs.
+NAME:   swamp_mist
+TAGS:   swamp_entry
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MAP
+O
+ENDMAP
+
+
 ##############################################################################
 # Snake Pit specific non-ending vaults
 ##############################################################################
@@ -620,7 +631,6 @@ ENDMAP
 # Shoals specific non-ending vaults
 ##############################################################################
 
- 
 ###########################
 # Shoal Ruins - nothing special, just some flavor (Enne)
 # Appear rarely.
@@ -654,7 +664,7 @@ SUBST:  ' = ' 1:5
 SUBST:  . = . 2:1
 SUBST:  ' = .
 MAP
- ''''''''' 
+ '''''''''
 '''xx+xx'''
 ''xx...xx''
 'xx.....xx'
@@ -664,7 +674,7 @@ MAP
 'xx.....xx'
 ''xx...xx''
 '''xxxxx'''
- ''''''''' 
+ '''''''''
 ENDMAP
 
 NAME:   overgrown_statue
@@ -707,7 +717,6 @@ MAP
  ..W.. 
   ...  
 ENDMAP
-
 
 ##############################################################################
 # Slime Pit specific non-ending vaults
@@ -968,7 +977,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-
 ################################################################################
 # Snake Pit: the hunt
 #
@@ -1087,7 +1095,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-
 ################################################################################
 # Swamp:5 standard
 #
@@ -1152,4 +1159,60 @@ MAP
    "cccO.lld3ccc"
     ""cccccccc""
       """"""""
+ENDMAP
+
+##################################################################
+# Alternative swamp end, by Lemuel
+#
+NAME:    swamp_pestilence
+PLACE:   Swamp:5
+TAGS:    no_pool_fixup
+ORIENT:  southeast
+MONS:    spectral swamp dragon / spectral hydra
+MONS:    hydra zombie / swamp dragon zombie
+MONS:    spectral swamp drake / swamp drake zombie
+MONS:    death drake / plant / w:5 oklob plant
+MONS:    insubstantial wisp
+MONS:    phantom
+SHUFFLE: OX
+MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
+             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
+             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+KMONS:   O = skeletal dragon
+KFEAT:   O = O
+SUBST:   ? = ? ! w
+KMONS:   ? = big fish zombie
+KMONS:   ! = swamp worm zombie
+KFEAT:   ? = deep_water
+KFEAT:   ! = deep_water
+SUBST:   X=. , Y:w , 6=66. , 1=13 , .=W... , "=xc , '=.wW
+MAP
+    ?w......w?w"xx     xx
+    w?ww..ww?wwc"xx   xxx
+    "wWWwww?w?cc"xxx xxxx
+   '""cWw?w?ccc"xxxxxxxxx
+   'x"c..wwcccc"""xxxxxxx
+   xxxc...ccccccccccc"xxx
+  xxx"cc....cccc6666c"xxx
+  xxx"cc....cccO6666cc"xx
+ xxxxcccc...cc6666665c"xx
+  x'"cccc...ccc666666ccxx
+   'cc1Xcc...cc6666666cxx
+   xc211ccc..cccc5.666c"x
+   ccc2.1cc.Y.cccc..6cc"x
+   '"c.1.ccc...ccc...cc"x
+   'xcc.1.ccc...cc....cxx
+   'x"c2.21ccc..ccc5.ccxx
+   xxxcc...ccc..c....c"xx
+   xxx"cc.1.2c...5.cccxxx
+   xxxx"c2......?wcc""xxx
+  xxxxxxccc2.wwwwcc""xxxx
+  xxxxxxx"cc?w?wcc""xxxxx
+  xxxxxxxx"cc4wcc"xxxxxxx
+ xxxxxxxxxx"cccc"xxxxxxxx
+xxxxxxxxxxxxx""xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
