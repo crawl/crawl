@@ -610,3 +610,185 @@ xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##########################################################################
+# Eino's temples
+NAME:    temple_eino_001
+PLACE:   Temple
+TAGS:    no_pool_fixup
+ORIENT:  encompass
+SHUFFLE: {([
+SHUFFLE: Lw
+SHUFFLE: 12
+SUBST:   L = l
+MONS:    plant, fungus
+KFEAT:   - = .
+COLOUR:  - = fire
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbbbbb-l-bbbbb-l-bbbbbbbb
+bbbbbbbnnnb-l-bnnnbbbbbbbb
+bbbb111...bnnnb...LLLbbbbb
+bbb111..B.G...G.B..LLLbbbb
+bbb11.......B.......LLbbbb
+bbb1.................Lbbbb
+b-n....................n-b
+bln.B................B.nlb
+b-n....................n-b
+bbbbG.......[........Gbbbb
+bb-n..................n-bb
+bbln.B....T.{.T.....B.nlbb
+bb-n..................n-bb
+bbbbG.......(........Gbbbb
+b-n....................n-b
+bln.B................B.nlb
+b-n....................n-b
+bbbw.................2bbbb
+bbbww.......B.......22bbbb
+bbbwww..B.G...G.B..222bbbb
+bbbbwww...bnnnb...222bbbbb
+bbbbbbbnnnb-l-bnnnbbbbbbbb
+bbbbbbb-l-bbbbb-l-bbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbb
+ENDMAP
+
+NAME:    temple_eino_002
+PLACE:   Temple
+TAGS:    no_pool_fixup
+ORIENT:  encompass
+SHUFFLE: {([
+MAP
+ccccccccccccccccccccccccccccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwww...wwwwwwwwwwwwwwc
+cwwwwwwwwwwwww..B..wwwwwwwwwwwwwc
+cwwwwwwwwwww.........wwwwwwwwwwwc
+cwwwwwwwwww..B.....B..wwwwwwwwwwc
+cwwwwwwwwwww.........wwwwwwwwwwwc
+cwwwwwwwwwww...www...wwwwwwwwwwwc
+cwwwwwwwwww...wwwww...wwwwwwwwwwc
+cwwwwwwwww...ww...ww...wwwwwwwwwc
+cwwwwwwwww......B......wwwwwwwwwc
+cwwwwwwww..B.........B..wwwwwwwwc
+cwwwwwwwww...www.......wwwwwwwwwc
+cwwwwwwwwwwwwwwww...wwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwww...wwwwwwwwwwwc
+cwqwwwwwwwwwwwwwwww...wwwwwwwwwwc
+cqwwwwwwwwwwwwwwwww...wwwwwwwwwwc
+cwwwwwwwwwwwwwwwww...wwwwwwwwwwwc
+cwwwwwwwwwwwwwwww...wwwwwwwwwwwwc
+cwwwwwwwwww...........wwwwwwwwwwc
+cwwwwwwwww..G.{.[.(.G..wwwwwwwwwc
+cwwwwwwwwww...........wwwwwwwwwwc
+cwwwwwwwwwwww...wwwwwwwwwwwwwwwwc
+cwwwwwwwwwww...wwwwwwwwwwwwwwwwwc
+cwwwwwwwwww...wwwwwwwwwwwwwwwwwwc
+cwwwwwwwwww...wwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwww...wwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwww...wwwwwwwwwwwwwwwwc
+cwwwwwwwww.......www...wwwwwwwwwc
+cwwwwwwww..B.........B..wwwwwwwwc
+cwwwwwwwww......B......wwwwwwwwwc
+cwwwwwwwww...ww...ww...wwwwwwwwwc
+cwwwwwwwwww...wwwww...wwwwwwwwwwc
+cwwwwwwwwwww...www...wwwwwwwwwwwc
+cwwwwwwwwwww.........wwwwwwwwwwwc
+cwwwwwwwwww..B.....B..wwwwwwwwwwc
+cwwwwwwwwwww.........wwwwwwwwwwwc
+cwwwwwwwwwwwww..B..wwwwwwwwwwwwwc
+cwwwwwwwwwwwwww...wwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:    temple_eino_003
+PLACE:   Temple
+ORIENT:  encompass
+SHUFFLE: {([
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbbbb...bb.....bb...bbbbbb
+bbbbbb.B...bbbbb...B.bbbbbb
+bbbbbb...bbbbbbbbb...bbbbbb
+bbbbbbbbb.bbbbbbb.bbbbbbbbb
+bbbbbbbbbb.bbbbb.bbbbbbbbbb
+bbbbbbbbbbb.bbb.bbbbbbbbbbb
+b...bbbbbbbb...bbbbbbbb...b
+b.B.bbbbbbbb.B.bbbbbbbb.B.b
+b...bbbbbbbb...bbbbbbbb...b
+bb.b.bbbbbbbb.bbbbbbbb.b.bb
+bb.bb.bbbbbbb.bbbbbbb.bb.bb
+b.bbbb.bbbbb...bbbbb.bbbb.b
+b.bbbbb.bbbb.[.bbbb.bbbbb.b
+b.bbbbbb...b...b...bbbbbb.b
+b.bbbbbb.B...{...B.bbbbbb.b
+b.bbbbbb...b...b...bbbbbb.b
+b.bbbbb.bbbb.(.bbbb.bbbbb.b
+b.bbbb.bbbbb...bbbbb.bbb.bb
+bb.bb.bbbbbbb.bbbbbbb.bb.bb
+bb.b.bbbbbbbb.bbbbbbbb.b.bb
+b...bbbbbbbb...bbbbbbbb...b
+b.B.bbbbbbbb.B.bbbbbbbb.B.b
+b...bbbbbbbb...bbbbbbbb...b
+bbbbbbbbbbb.bbb.bbbbbbbbbbb
+bbbbbbbbbb.bbbbb.bbbbbbbbbb
+bbbbbbbbb.bbbbbbb.bbbbbbbbb
+bbbbbb...bbbbbbbbb...bbbbbb
+bbbbbb.B..bbbbbb...B.bbbbbb
+bbbbbb...b......bb...bbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbb
+ENDMAP
+
+NAME:    temple_eino_004
+PLACE:   Temple
+ORIENT:  encompass
+SHUFFLE: {([
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbb.B.bbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
+bbbbbbbbbbbbbb.b.b.bbbbbbbbbbbbbb
+bbbbbbbbbbbbb.bb.bb.bbbbbbbbbbbbb
+bbbbbbbbbbbb.bbb.bbb.bbbbbbbbbbbb
+bbbbbbbbbbb.bbbb.bbbb.bbbbbbbbbbb
+bbbbbbbb...bbbbb.bbbbb...bbbbbbbb
+bbbbbbbb.B.bbbbb.bbbbb.B.bbbbbbbb
+bbbbbbbb...bbbb...bbbb...bbbbbbbb
+bbbbbbb.bbb.bbb.B.bbb.bbb.bbbbbbb
+bbbbbb.bbbbb.bb...bb.bbbbb.bbbbbb
+bbbbb.bbbbbbb.bb.bb.bbbbbbb.bbbbb
+bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
+b...bbbbbb...bb.[.bb...bbbbbb...b
+b.B........B.........B........B.b
+b...bbbbbb...bb{.(bb...bbbbbb...b
+bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
+bbbbb.bbbbbbb.bb.bb.bbbbbbb.bbbbb
+bbbbbb.bbbbb.bb...bb.bbbbb.bbbbbb
+bbbbbbb.bbb.bbb.B.bbb.bbb.bbbbbbb
+bbbbbbbb...bbbb...bbbb...bbbbbbbb
+bbbbbbbb.B.bbbbb.bbbbb.B.bbbbbbbb
+bbbbbbbb...bbbbb.bbbbb...bbbbbbbb
+bbbbbbbbbbb.bbbb.bbbb.bbbbbbbbbbb
+bbbbbbbbbbbb.bbb.bbb.bbbbbbbbbbbb
+bbbbbbbbbbbbb..b.bb.bbbbbbbbbbbbb
+bbbbbbbbbbbbbb.b.b.bbbbbbbbbbbbbb
+bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbb.B.bbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+ENDMAP
