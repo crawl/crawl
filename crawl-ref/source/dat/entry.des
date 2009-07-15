@@ -219,7 +219,7 @@ SHUFFLE: XZ
 NSUBST:  Z= ) / ]
 NSUBST:  X= ( / [
 MAP
-      ccc===ccc
+      cccc=cccc
      cc..aaa..cc
      c.aaaAaaa.c
      c..aaaaa..c
@@ -228,9 +228,9 @@ MAP
 cc..ccccc...ccccc..cc
 c.w..ccccc+ccccc..f.c
 c.ww.nccX...Zccn.ff.c
-=www.nwc.....cln.fff=
+cwww.nwc.....cln.fffc
 =wWww=.+..{..+.=ffFf=
-=www.nwc.....cln.fff=
+cwww.nwc.....cln.fffc
 c.ww.nccZ...Xccn.ff.c
 c.w..ccccc+ccccc..f.c
 cc..cccccG.Gccccc..cc
