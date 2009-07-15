@@ -753,7 +753,7 @@ void clear_macro_process_key_delay()
         _pop_delay();
 }
 
-void handle_delay( void )
+void handle_delay()
 {
     if (!you_are_delayed())
         return;
@@ -1414,6 +1414,12 @@ static void _finish_delay(const delay_queue_item &delay)
 #ifdef USE_TILE
     tiles.update_inventory();
 #endif
+}
+
+void finish_last_delay()
+{
+    delay_queue_item &delay = you.delay_queue.front();
+    _finish_delay(delay);
 }
 
 void armour_wear_effects(const int item_slot)

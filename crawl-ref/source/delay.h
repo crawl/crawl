@@ -72,6 +72,7 @@ bool you_are_delayed();
 delay_type current_delay_action();
 int check_recital_audience();
 void handle_delay();
+void finish_last_delay();
 
 bool is_run_delay(int delay);
 bool is_being_butchered(const item_def &item, bool just_first = true);

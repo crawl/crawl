@@ -319,17 +319,22 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     if (can_butcher)
         return (true);
 
-    // At least one of these has to be true, else what are we doing here?
+    // At least one of these has to be true, else what are we doing
+    // here?
     ASSERT(removed_gloves || wpn_switch);
 
     // If you can butcher by taking off your gloves, don't prompt.
     if (removed_gloves)
     {
-        // Actually take off the gloves; this creates a
-        // delay. We assume later on that gloves have a 1-turn
-        // takeoff delay!
+        // Actually take off the gloves; this creates a delay.  We
+        // assume later on that gloves have a 1-turn takeoff delay!
         if (!takeoff_armour(you.equip[EQ_GLOVES]))
             return (false);
+
+        // Ensure that the gloves are taken off by now by finishing the
+        // DELAY_ARMOUR_OFF delay started by takeoff_armour() above.
+        // FIXME: get rid of this hack!
+        finish_last_delay();
     }
 
     if (wpn_switch)
@@ -558,8 +563,11 @@ bool butchery(int which_corpse)
     if (!can_butcher)
     {
         // Try to find a butchering implement.
-        if (!_find_butchering_implement(butcher_tool))
-            return (false);
+        if (!gloved_butcher)
+        {
+            if (!_find_butchering_implement(butcher_tool))
+                return (false);
+        }
 
         if (butcher_tool == -1 && gloved_butcher)
             removed_gloves = true;
