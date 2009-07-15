@@ -3870,7 +3870,7 @@ static monsterentry mondata[] = {
 
 // non-human uniques
 {
-    MONS_NESSOS, 'c', DARKGREY, "Nessos",
+    MONS_NESSOS, 'c', MAGENTA, "Nessos",
     M_UNIQUE | M_WARM_BLOOD  | M_SPELLCASTER | M_ACTUAL_SPELLS | M_EVIL
         | M_SPEAKS,
     MR_NO_FLAGS,
