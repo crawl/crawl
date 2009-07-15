@@ -296,8 +296,8 @@ static void _show_commandline_options_help()
     puts("Command line options:");
     puts("  -help            prints this list of options");
     puts("  -name <string>   character name");
-    puts("  -race <arg>      preselect race (by letter, abbreviation, or name)");
-    puts("  -class <arg>     preselect class (by letter, abbreviation, or name)");
+    puts("  -species <arg>   preselect race (by letter, abbreviation, or name)");
+    puts("  -job <arg>       preselect class (by letter, abbreviation, or name)");
     puts("  -plain           don't use IBM extended characters");
     puts("  -dir <path>      crawl directory");
     puts("  -rc <file>       init file name");
@@ -2947,18 +2947,84 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
-// Opens doors and handles some aspects of untrapping. If either move_x or
-// move_y are non-zero, the pair carries a specific direction for the door
-// to be opened (eg if you type ctrl + dir).
+// Handles some aspects of untrapping. Returns false if the target is a
+// closed door that will need to be opened.
+static bool _untrap_target(const coord_def move, bool check_confused)
+{
+    const coord_def target = you.pos() + move;
+    monsters* mon = monster_at(target);
+    if (mon && player_can_hit_monster(mon))
+    {
+        if (mons_is_caught(mon) && mons_friendly(mon)
+            && player_can_open_doors() && !you.confused())
+        {
+            const std::string prompt =
+                make_stringf("Do you want to try to take the net off %s?",
+                             mon->name(DESC_NOCAP_THE).c_str());
+
+            if (yesno(prompt.c_str(), true, 'n'))
+            {
+                remove_net_from(mon);
+                return (true);
+            }
+        }
+
+        you.turn_is_over = true;
+        you_attack(mon->mindex(), true);
+
+        if (you.berserk_penalty != NO_BERSERK_PENALTY)
+            you.berserk_penalty = 0;
+
+        return (true);
+    }
+
+    if (find_trap(target) && grd(target) != DNGN_UNDISCOVERED_TRAP)
+    {
+        if (!you.confused())
+        {
+            if (!player_can_open_doors())
+            {
+                mpr("You can't disarm traps in your present form.");
+                return (true);
+            }
+            if (env.cgrid(target) != EMPTY_CLOUD)
+            {
+                mpr("You can't get to that trap right now.");
+                return (true);
+            }
+        }
+
+        // If you're confused, you may attempt it and stumble into the trap.
+        disarm_trap(target);
+        return (true);
+    }
+
+    const dungeon_feature_type feat = grd(target);
+    if (feat != DNGN_CLOSED_DOOR || you.confused())
+    {
+        switch (feat)
+        {
+        case DNGN_OPEN_DOOR:
+            _close_door(move); // for convenience
+            return (true);
+        default:
+            mpr("You swing at nothing.");
+            make_hungry(3, true);
+            you.turn_is_over = true;
+            return (true);
+        }
+    }
+
+    // Else it's a closed door and needs further handling.
+    return (false);
+}
+
+// Opens doors and may also handle untrapping/attacking etc.
+// If either move_x or move_y are non-zero, the pair carries a specific
+// direction for the door to be opened (eg if you type ctrl + dir).
 static void _open_door(coord_def move, bool check_confused)
 {
     ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
-
-    if (!player_can_open_doors())
-    {
-        mpr("You can't open doors in your present form.");
-        return;
-    }
 
     if (you.attribute[ATTR_HELD])
     {
@@ -2967,183 +3033,173 @@ static void _open_door(coord_def move, bool check_confused)
         return;
     }
 
-    // If there's only one door to open, don't ask.
-    if ((!check_confused || !you.confused()) && move.origin())
+    // The player used Ctrl + dir or a variant thereof.
+    if (!move.origin())
     {
-        if (_check_adjacent(DNGN_CLOSED_DOOR, move) == 0)
+        if (check_confused && you.confused() && !one_chance_in(3))
         {
-            mpr("There's nothing to open.");
-            return;
+            do
+            {
+                move.x = random2(3) - 1;
+                move.y = random2(3) - 1;
+            }
+            while (move.origin());
         }
+        if (_untrap_target(move, check_confused))
+            return;
     }
 
-    if (check_confused && you.confused() && !one_chance_in(3))
+    // If we get here, the player either hasn't picked a direction yet
+    // or the chosen direction actually contains a closed door.
+
+    if (!player_can_open_doors())
     {
-        move.x = random2(3) - 1;
-        move.y = random2(3) - 1;
+        mpr("You can't open doors in your present form.");
+        return;
     }
 
     dist door_move;
-    door_move.delta = move;
-    coord_def doorpos;
 
-    if (!move.origin())
+    // The player hasn't picked a direction yet.
+    if (move.origin())
     {
-        doorpos = you.pos() + move;
+        const int num = _check_adjacent(DNGN_CLOSED_DOOR, move);
 
-        monsters* mon = monster_at(doorpos);
-
-        if (mon && player_can_hit_monster(mon))
+        if (num == 0)
         {
-            if (mons_is_caught(mon))
-            {
-                const std::string prompt =
-                    make_stringf("Do you want to try to take the net off %s?",
-                                 mon->name(DESC_NOCAP_THE).c_str());
-
-                if (yesno(prompt.c_str(), true, 'n'))
-                {
-                    remove_net_from(mon);
-                    return;
-                }
-
-            }
-
-            you.turn_is_over = true;
-            you_attack(mon->mindex(), true);
-
-            if (you.berserk_penalty != NO_BERSERK_PENALTY)
-                you.berserk_penalty = 0;
-
+            mpr("There's nothing to open nearby.");
             return;
         }
 
-        if (find_trap(doorpos) && grd(doorpos) != DNGN_UNDISCOVERED_TRAP)
-        {
-            if (env.cgrid(doorpos) != EMPTY_CLOUD)
-            {
-                mpr("You can't get to that trap right now.");
-                return;
-            }
-
-            disarm_trap(doorpos);
-            return;
-        }
-    }
-    else
-    {
-        mpr("Which direction? ", MSGCH_PROMPT);
-        direction(door_move, DIR_DIR);
-
-        if (!door_move.isValid)
-            return;
-
-        doorpos = you.pos() + door_move.delta;
-
-        const dungeon_feature_type feat =
-            in_bounds(doorpos) ? grd(doorpos) : DNGN_UNSEEN;
-
-        if (feat != DNGN_CLOSED_DOOR)
-        {
-            switch (feat)
-            {
-            case DNGN_OPEN_DOOR:
-                mpr("It's already open!"); break;
-            default:
-                mpr("There isn't anything that you can open there!");
-                break;
-            }
-            // Don't lose a turn.
-            return;
-        }
-    }
-
-    if (grd(doorpos) == DNGN_CLOSED_DOOR)
-    {
-        std::set<coord_def> all_door;
-        find_connected_range(doorpos, DNGN_CLOSED_DOOR,
-                             DNGN_SECRET_DOOR, all_door);
-        const char *adj, *noun;
-        get_door_description(all_door.size(), &adj, &noun);
-
-        int skill = you.dex +
-            (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
-
-        if (you.duration[DUR_BERSERKER])
-        {
-            // XXX: Better flavour for larger doors?
-            if (silenced(you.pos()))
-                mprf("The %s%s flies open!", adj, noun);
-            else
-            {
-                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!",
-                     adj, noun);
-                noisy(15, you.pos());
-            }
-        }
-        else if (one_chance_in(skill) && !silenced(you.pos()))
-        {
-            mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
-                 adj, noun);
-            noisy(10, you.pos());
-        }
+        // If there's only one door to open, don't ask.
+        if (num == 1)
+            door_move.delta = move;
         else
         {
-            const char* verb =
-                player_is_airborne() ? "reach down and open" : "open";
-            mprf( "You %s the %s%s.", verb, adj, noun );
-        }
+            mpr("Which direction? ", MSGCH_PROMPT);
+            direction(door_move, DIR_DIR);
 
-        bool seen_secret = false;
-        std::vector<coord_def> excludes;
-        for (std::set<coord_def>::iterator i = all_door.begin();
-             i != all_door.end(); ++i)
-        {
-            const coord_def& dc = *i;
-            // Even if some of the door is out of LOS, we want the entire
-            // door to be updated.  Hitting this case requires a really big
-            // door!
-            if (is_terrain_seen(dc))
-            {
-                set_envmap_obj(dc, DNGN_OPEN_DOOR);
-#ifdef USE_TILE
-                env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
-#endif
-                if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
-                {
-                    seen_secret = true;
-                    dungeon_feature_type secret
-                        = grid_secret_door_appearance(dc);
-                    mprf("That %s was a secret door!",
-                         feature_description(secret, NUM_TRAPS, false,
-                                             DESC_PLAIN, false).c_str());
-                }
-            }
-            grd(dc) = DNGN_OPEN_DOOR;
-            if (is_excluded(dc))
-                excludes.push_back(dc);
+            if (!door_move.isValid)
+                return;
         }
-        if (!excludes.empty())
-        {
-            mark_all_excludes_non_updated();
-            for (unsigned int i = 0; i < excludes.size(); ++i)
-                update_exclusion_los(excludes[i]);
-        }
-        you.turn_is_over = true;
     }
-    else if (grd(doorpos) == DNGN_OPEN_DOOR)
-        _close_door(move); // for convenience
+    else
+        door_move.delta = move;
+
+    if (check_confused && you.confused() && !one_chance_in(3))
+    {
+        do
+        {
+            door_move.delta.x = random2(3) - 1;
+            door_move.delta.y = random2(3) - 1;
+        }
+        while (door_move.delta.origin());
+    }
+    ASSERT(door_move.isValid);
+
+    // We got a valid direction.
+    const coord_def doorpos = you.pos() + door_move.delta;
+    const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
+                                                          : DNGN_UNSEEN);
+
+    if (feat != DNGN_CLOSED_DOOR)
+    {
+        if (you.confused())
+        {
+            mpr("You swing at nothing.");
+            make_hungry(3, true);
+            you.turn_is_over = true;
+            return;
+        }
+        switch (feat)
+        {
+        case DNGN_OPEN_DOOR:
+            mpr("It's already open!");
+            break;
+        default:
+            mpr("There isn't anything that you can open there!");
+            break;
+        }
+        // Don't lose a turn.
+        return;
+    }
+
+    // Finally, open the closed door!
+    std::set<coord_def> all_door;
+    find_connected_range(doorpos, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, all_door);
+    const char *adj, *noun;
+    get_door_description(all_door.size(), &adj, &noun);
+
+    int skill = you.dex
+                + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+
+    if (you.duration[DUR_BERSERKER])
+    {
+        // XXX: Better flavour for larger doors?
+        if (silenced(you.pos()))
+            mprf("The %s%s flies open!", adj, noun);
+        else
+        {
+            mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+            noisy(15, you.pos());
+        }
+    }
+    else if (one_chance_in(skill) && !silenced(you.pos()))
+    {
+        mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
+             adj, noun);
+        noisy(10, you.pos());
+    }
     else
     {
-        mpr("You swing at nothing.");
-        make_hungry(3, true);
-        you.turn_is_over = true;
+        const char* verb = (player_is_airborne() ? "reach down and open"
+                                                 : "open");
+        mprf("You %s the %s%s.", verb, adj, noun);
     }
+
+    bool seen_secret = false;
+    std::vector<coord_def> excludes;
+    for (std::set<coord_def>::iterator i = all_door.begin();
+         i != all_door.end(); ++i)
+    {
+        const coord_def& dc = *i;
+        // Even if some of the door is out of LOS, we want the entire
+        // door to be updated.  Hitting this case requires a really big
+        // door!
+        if (is_terrain_seen(dc))
+        {
+            set_envmap_obj(dc, DNGN_OPEN_DOOR);
+#ifdef USE_TILE
+            env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
+#endif
+            if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
+            {
+                seen_secret = true;
+                dungeon_feature_type secret
+                    = grid_secret_door_appearance(dc);
+                mprf("That %s was a secret door!",
+                     feature_description(secret, NUM_TRAPS, false,
+                                         DESC_PLAIN, false).c_str());
+            }
+        }
+        grd(dc) = DNGN_OPEN_DOOR;
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+    }
+
+    if (!excludes.empty())
+    {
+        mark_all_excludes_non_updated();
+        for (unsigned int i = 0; i < excludes.size(); ++i)
+            update_exclusion_los(excludes[i]);
+    }
+
+    you.turn_is_over = true;
 }
 
 static void _close_door(coord_def move)
 {
-    if (player_in_bat_form())
+    if (!player_can_open_doors())
     {
         mpr("You can't close doors in your present form.");
         return;
@@ -3156,39 +3212,41 @@ static void _close_door(coord_def move)
     }
 
     dist door_move;
-    coord_def doorpos;
 
-    // If there's only one door to close, don't ask.
-    if (!you.confused() && move.origin())
+    // The player hasn't yet told us a direction.
+    if (move.origin())
     {
+        // If there's only one door to close, don't ask.
         int num = _check_adjacent(DNGN_OPEN_DOOR, move);
         if (num == 0)
         {
-            mpr("There's nothing to close.");
+            mpr("There's nothing to close nearby.");
             return;
         }
-        else if (num == 1 && move.origin())
+        else if (num == 1)
         {
-            mpr("You can't close doors on yourself!");
-            return;
+            door_move.delta = move;
+        }
+        else
+        {
+            mpr("Which direction? ", MSGCH_PROMPT);
+            direction(door_move, DIR_DIR);
+
+            if (!door_move.isValid)
+                return;
         }
     }
+    else
+        door_move.delta = move;
 
     if (you.confused() && !one_chance_in(3))
     {
-        move.x = random2(3) - 1;
-        move.y = random2(3) - 1;
-    }
-
-    door_move.delta = move;
-
-    if (move.origin())
-    {
-        mpr("Which direction? ", MSGCH_PROMPT);
-        direction(door_move, DIR_DIR);
-
-        if (!door_move.isValid)
-            return;
+        do
+        {
+            door_move.delta.x = random2(3) - 1;
+            door_move.delta.y = random2(3) - 1;
+        }
+        while (door_move.delta.origin());
     }
 
     if (door_move.delta.origin())
@@ -3197,10 +3255,9 @@ static void _close_door(coord_def move)
         return;
     }
 
-    doorpos = you.pos() + door_move.delta;
-
-    const dungeon_feature_type feat =
-        in_bounds(doorpos) ? grd(doorpos) : DNGN_UNSEEN;
+    const coord_def doorpos = you.pos() + door_move.delta;
+    const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
+                                                          : DNGN_UNSEEN);
 
     if (feat == DNGN_OPEN_DOOR)
     {
@@ -3240,8 +3297,8 @@ static void _close_door(coord_def move)
             }
         }
 
-        int skill = you.dex +
-            (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+        int skill = you.dex
+                    + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.duration[DUR_BERSERKER])
         {
@@ -3267,7 +3324,8 @@ static void _close_door(coord_def move)
         {
             const char* verb = player_is_airborne() ? "reach down and close"
                                                     : "close";
-            mprf( "You %s the %s%s.", verb, adj, noun );
+
+            mprf("You %s the %s%s.", verb, adj, noun);
         }
 
         std::vector<coord_def> excludes;
@@ -3275,7 +3333,9 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
+            // Once opened, formerly secret doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
+
             // Even if some of the door is out of LOS once it's closed (or even
             // if some of it is out of LOS when it's open), we want the entire
             // door to be updated.
@@ -3297,14 +3357,18 @@ static void _close_door(coord_def move)
         }
         you.turn_is_over = true;
     }
+    else if (you.confused())
+        _open_door(door_move.delta);
     else
     {
         switch (feat)
         {
         case DNGN_CLOSED_DOOR:
-            mpr("It's already closed!"); break;
+            mpr("It's already closed!");
+            break;
         default:
-            mpr("There isn't anything that you can close there!"); break;
+            mpr("There isn't anything that you can close there!");
+            break;
         }
     }
 }
