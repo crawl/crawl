@@ -296,8 +296,8 @@ static void _show_commandline_options_help()
     puts("Command line options:");
     puts("  -help            prints this list of options");
     puts("  -name <string>   character name");
-    puts("  -race <arg>      preselect race (by letter, abbreviation, or name)");
-    puts("  -class <arg>     preselect class (by letter, abbreviation, or name)");
+    puts("  -species <arg>   preselect race (by letter, abbreviation, or name)");
+    puts("  -job <arg>       preselect class (by letter, abbreviation, or name)");
     puts("  -plain           don't use IBM extended characters");
     puts("  -dir <path>      crawl directory");
     puts("  -rc <file>       init file name");

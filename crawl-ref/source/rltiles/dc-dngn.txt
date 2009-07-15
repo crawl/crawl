@@ -387,12 +387,19 @@ floor/lava3
 
 ## water
 dngn_open_sea DNGN_OPEN_SEA
+dngn_open_sea2
 dngn_deep_water DNGN_DEEP_WATER
+dngn_deep_water2
 dngn_shallow_water DNGN_SHALLOW_WATER
+dngn_shallow_water2
 dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
+dngn_shallow_water_disturbance2
 dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
+dngn_deep_water_murky2
 dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
+dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
+dngn_shallow_water_murky_disturbance2
 
 %rim 1
 dngn_enter_hell DNGN_ENTER_HELL
@@ -411,8 +418,6 @@ dngn_stone_arch DNGN_STONE_ARCH
 dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
 dngn_portal DNGN_PORTAL
 dngn_portal_rotated
-dngn_exit DNGN_EXIT_PANDEMONIUM
-dngn_exit_flickering
 %rim 1
 dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 %rim 0
@@ -441,8 +446,11 @@ dngn_altar_beogh DNGN_ALTAR_BEOGH
 
 %sdir dc-dngn
 dngn_blue_fountain DNGN_BLUE_FOUNTAIN
+dngn_blue_fountain2
 dngn_sparkling_fountain DNGN_SPARKLING_FOUNTAIN
+dngn_sparkling_fountain2
 dngn_blood_fountain DNGN_BLOOD_FOUNTAIN
+dngn_blood_fountain2
 dngn_dry_fountain DNGN_DRY_FOUNTAIN
 
 ## Miscellaneous entries that get drawn on the background.

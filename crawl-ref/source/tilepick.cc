@@ -2388,7 +2388,7 @@ int tileidx_feature(int object, int gx, int gy)
             monsters *mon = &menv[mgrd[gx][gy]];
             // Add disturbance to tile.
             if (mons_is_submerged(mon))
-                t++;
+                t+=2;
         }
         return (t);
     }
@@ -2433,13 +2433,12 @@ int tileidx_feature(int object, int gx, int gy)
         return TILE_DNGN_ENTER_ABYSS;
     case DNGN_EXIT_ABYSS:
     case DNGN_EXIT_HELL:
+    case DNGN_EXIT_PANDEMONIUM:
        return TILE_DNGN_EXIT_ABYSS;
     case DNGN_STONE_ARCH:
         return TILE_DNGN_STONE_ARCH;
     case DNGN_ENTER_PANDEMONIUM:
         return TILE_DNGN_ENTER_PANDEMONIUM;
-    case DNGN_EXIT_PANDEMONIUM:
-        return TILE_DNGN_EXIT_PANDEMONIUM;
     case DNGN_TRANSIT_PANDEMONIUM:
         return TILE_DNGN_TRANSIT_PANDEMONIUM;
     case DNGN_ENTER_ORCISH_MINES:
