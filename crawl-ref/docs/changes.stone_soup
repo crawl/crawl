@@ -11,6 +11,8 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed erroneous "blocked line of fire" warnings.
 * Fixed missing items in Tiles inventory menus.
 * Fixed Xom's repel stairs effect moving shops.
+* Fixed certain incorporeal monsters flying instead of levitating.
+* Fixed inconvenient electrical eels in entry vaults.
 * Really allow uniques to retain their spells when polymorphed.
 * Improve Yredelemnul's Enslave Soul, no longer uses random resistance checks.
 * Zin gets a power to once per game cure a follower of all mutations.
@@ -18,6 +20,9 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Prompt before allowing TSO/Lugonu to bless your weapon.
 * Vampiric Draining/Drain Life deal damage to summons again, but don't heal.
 * Troll hide and armour count as light armour.
+* Let ghouls wear gloves.
+* Wearing a visored helmet prevents biting attacks.
+* Some new vaults.
 * Tiles: Re-allow selection of player dolls ('-' command).
 * Add missing tiles options to the options guide (docs/, '?&' command).
 * Document tiles lags in tiles_help.txt and in the in-game FAQ ('?Q' command).
