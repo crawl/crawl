@@ -4812,14 +4812,14 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
         // The monster can be no more than lightly wounded/damaged,
         // using the formula from monstuff.cc:mons_get_damage_level().
-        if (mon->hit_points <= (mon->max_hit_points * 3) / 4)
+        if (mon->hit_points <= mon->max_hit_points * 3 / 4)
         {
             simple_monster_message(mon, "'s soul is too badly injured.");
             return (MON_OTHER);
         }
 
         obvious_effect = true;
-        const int duration = (you.skills[SK_INVOCATIONS] * 3) / 4 + 1;
+        const int duration = you.skills[SK_INVOCATIONS] * 3 / 4 + 1;
         mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, KC_YOU, duration * 10));
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return (MON_AFFECTED);
