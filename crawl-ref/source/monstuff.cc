@@ -2541,8 +2541,8 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
     return (swap);
 }
 
-void mons_get_damage_level( const monsters* monster, std::string& desc,
-                            mon_dam_level_type& dam_level )
+void mons_get_damage_level(const monsters* monster, std::string& desc,
+                           mon_dam_level_type& dam_level)
 {
     if (monster->hit_points <= monster->max_hit_points / 6)
     {
@@ -2562,7 +2562,7 @@ void mons_get_damage_level( const monsters* monster, std::string& desc,
         desc += "heavily ";
         dam_level = MDAM_HEAVILY_DAMAGED;
     }
-    else if (monster->hit_points <= (monster->max_hit_points * 3) / 4)
+    else if (monster->hit_points <= monster->max_hit_points * 3 / 4)
     {
         desc += "moderately ";
         dam_level = MDAM_MODERATELY_DAMAGED;
