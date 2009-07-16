@@ -1048,8 +1048,14 @@ static int _ammo_count(const item_def *launcher)
             continue;
 
         const item_def &item = you.inv[i];
-        if (item.base_type == OBJ_MISSILES && item.sub_type == mt)
+        if (item.base_type != OBJ_MISSILES)
+            continue;
+
+        if (item.sub_type == mt
+            || mt == MI_STONE && item.sub_type == MI_SLING_BULLET)
+        {
             count += item.quantity;
+        }
     }
 
     return (count);

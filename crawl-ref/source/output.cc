@@ -1310,8 +1310,8 @@ static std::string _verbose_info(const monsters* m)
             return(" (fleeing)");
         if (mons_is_sleeping(m))
         {
-            if (mons_holiness(m) == MH_UNDEAD 
-                || mons_holiness(m) == MH_NONLIVING 
+            if (mons_holiness(m) == MH_UNDEAD
+                || mons_holiness(m) == MH_NONLIVING
                 || mons_holiness(m) == MH_PLANT)
             {
                 return(" (dormant)");
@@ -1768,14 +1768,14 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         if (you.equip[ e_order[i] ] != -1)
         {
-            const int item_idx    = you.equip[e_order[i]];
-            const item_def& item  = you.inv[item_idx];
-            const bool not_melded = player_wearing_slot(e_order[i]);
+            // The player has something equipped.
+            const int item_idx   = you.equip[e_order[i]];
+            const item_def& item = you.inv[item_idx];
+            const bool melded    = !player_wearing_slot(e_order[i]);
 
             // Colour melded equipment dark grey.
-            const char* colname   =
-                not_melded ? colour_to_str(item.colour).c_str()
-                           : "darkgrey";
+            const char* colname  = melded ? "darkgrey"
+                                          : colour_to_str(item.colour).c_str();
 
             const char equip_char = index_to_letter(item_idx);
 
@@ -1784,7 +1784,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      slot,
                      equip_char,
                      colname,
-                     not_melded ? "" : "melded ",
+                     melded ? "melded " : "",
                      item.name(DESC_PLAIN, true).substr(0,42).c_str(),
                      colname);
             equip_chars.push_back(equip_char);
@@ -1819,7 +1819,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (!you_can_wear(e_order[i]))
         {
             snprintf(buf, sizeof buf,
-                     "<lightgrey>(%s restricted)</lightgrey>", slot_name_lwr);
+                     "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr);
         }
         else
         {

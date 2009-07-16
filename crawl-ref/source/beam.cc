@@ -3530,7 +3530,7 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    if ((has_saving_throw() || flavour == BEAM_POLYMORPH)
+    if (has_saving_throw() && flavour != BEAM_POLYMORPH
         && you_resist_magic(ench_power))
     {
         // You resisted it.
@@ -4628,8 +4628,6 @@ bool bolt::has_saving_throw() const
     if (aimed_at_feet)
         return (false);
 
-    bool rc = true;
-
     switch (flavour)
     {
     case BEAM_HASTE:
@@ -4638,12 +4636,10 @@ bool bolt::has_saving_throw() const
     case BEAM_DISPEL_UNDEAD:
     case BEAM_ENSLAVE_SOUL:     // has a different saving throw
     case BEAM_ENSLAVE_DEMON:    // ditto
-        rc = false;
-        break;
+        return (false);
     default:
-        break;
+        return (true);
     }
-    return rc;
 }
 
 bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
