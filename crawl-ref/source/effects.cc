@@ -1994,6 +1994,10 @@ static void _set_friendly_foes(bool allow_patrol = false)
         if (!mon->alive() || !mons_near(mon) || !mons_friendly_real(mon))
             continue;
 
+        // Berserking monsters cannot be ordered around.
+        if (mon->has_ench(ENCH_BERSERK))
+            continue;
+
         mon->foe = (allow_patrol && mon->is_patrolling() ? MHITNOT
                                                          : you.pet_target);
     }
@@ -2005,6 +2009,10 @@ static void _set_allies_patrol_point(bool clear = false)
     {
         monsters *mon(&menv[i]);
         if (!mon->alive() || !mons_near(mon) || !mons_friendly_real(mon))
+            continue;
+
+        // Berserking monsters cannot be ordered around.
+        if (mon->has_ench(ENCH_BERSERK))
             continue;
 
         mon->patrol_point = (clear ? coord_def(0, 0) : mon->pos());
