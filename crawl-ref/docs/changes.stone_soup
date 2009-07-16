@@ -25,6 +25,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Some new vaults.
 * Tiles: Re-allow selection of player dolls ('-' command).
 * Add missing tiles options to the options guide (docs/, '?&' command).
+* Use clearer tiles for disturbances in shallow water.
 * Document tiles lags in tiles_help.txt and in the in-game FAQ ('?Q' command).
 
 Stone Soup 0.5.0 (20090612)
