@@ -271,7 +271,7 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
     {
         if (bg & TILE_FLAG_WAS_SECRET)
             m_buf_dngn.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
-        
+
         if (bg & TILE_FLAG_BLOOD)
         {
             tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
@@ -860,12 +860,18 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     {
         if (tile_dngn_equal(TILE_DNGN_LAVA, bg_idx))
             m_buf_main.add(TILE_MASK_LAVA, x, y);
-        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER, bg_idx) ||
-             tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_DISTURBANCE, bg_idx))
+        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER, bg_idx)
+                 || tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_DISTURBANCE,
+                                    bg_idx))
+        {
             m_buf_main.add(TILE_MASK_SHALLOW_WATER, x, y);
-        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY, bg_idx) ||
-             tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY_DISTURBANCE, bg_idx))
+        }
+        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY, bg_idx)
+                 || tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY_DISTURBANCE,
+                                    bg_idx))
+        {
             m_buf_main.add(TILE_MASK_SHALLOW_WATER_MURKY, x, y);
+        }
         else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER, bg_idx))
             m_buf_main.add(TILE_MASK_DEEP_WATER, x, y);
         else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER_MURKY, bg_idx))
