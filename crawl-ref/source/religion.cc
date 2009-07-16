@@ -5458,8 +5458,8 @@ static bool _yred_slaves_abandon_you()
                 const int hd = monster->hit_dice;
 
                 // During penance, followers get a saving throw.
-                if (random2((you.piety - you.penance[GOD_YREDELEMNUL])/18)
-                    + random2(you.skills[SK_INVOCATIONS]-6)
+                if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
+                    + random2(you.skills[SK_INVOCATIONS] - 6)
                     > random2(hd) + hd + random2(5))
                 {
                     continue;
@@ -5542,8 +5542,8 @@ static bool _beogh_followers_abandon_you()
                     const int hd = monster->hit_dice;
 
                     // During penance, followers get a saving throw.
-                    if (random2((you.piety - you.penance[GOD_BEOGH])/18)
-                        + random2(you.skills[SK_INVOCATIONS]-6)
+                    if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
+                        + random2(you.skills[SK_INVOCATIONS] - 6)
                         > random2(hd) + hd + random2(5))
                     {
                         continue;
