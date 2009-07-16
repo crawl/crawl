@@ -5767,8 +5767,8 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
     const bool twisted =
-        !unrestricted ? x_chance_in_y(you.skills[SK_INVOCATIONS] * 20 / 9 + 20,
-                                      100)
+        !unrestricted ? !x_chance_in_y(you.skills[SK_INVOCATIONS] * 20 / 9 + 20,
+                                       100)
                       : false;
     int corps = -1;
 
