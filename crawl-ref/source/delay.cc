@@ -1357,6 +1357,7 @@ static void _finish_delay(const delay_queue_item &delay)
             handle_interrupted_swap(true);
         break;
     }
+
     case DELAY_DROP_ITEM:
         // Note:  checking if item is droppable is assumed to
         // be done before setting up this delay... this includes

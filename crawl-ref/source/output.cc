@@ -2086,7 +2086,6 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
-
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
 
     snprintf(buf, sizeof buf,
@@ -2133,9 +2132,9 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rward = (wearing_amulet(AMU_WARDING, calc_unid)
                        || you.religion == GOD_VEHUMET && !player_under_penance()
                           && you.piety >= piety_breakpoint(2));
-    const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
-    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
-    const int rclar = wearing_amulet(AMU_CLARITY, calc_unid);
+    const int rcons = player_item_conserve(calc_unid);
+    const int rcorr = player_res_acid(calc_unid);
+    const int rclar = player_mental_clarity(calc_unid);
     snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
              "%sWarding    : %s\n"
