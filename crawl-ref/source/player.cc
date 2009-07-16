@@ -1473,8 +1473,14 @@ int player_res_acid(bool calc_unid, bool items)
         res += player_mutation_level(MUT_YELLOW_SCALES) * 2 / 3;
     }
 
-    if (items && wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
-        res++;
+    if (items)
+    {
+        if (wearing_amulet(AMU_RESIST_CORROSION, calc_unid))
+            res++;
+
+        if (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION))
+            res++;
+    }
 
     return (res);
 }
@@ -4313,12 +4319,6 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
     return res;
 }
 
-bool player_res_corrosion(bool calc_unid)
-{
-    return (player_equip(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
-            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
-}
-
 bool player_item_conserve(bool calc_unid)
 {
     return (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
@@ -6632,7 +6632,7 @@ int player::warding() const
         && piety >= piety_breakpoint(2))
     {
         // Clamp piety at 160 and scale that down to a max of 30.
-        const int wardpiety = piety > 160? 160 : piety;
+        const int wardpiety = piety > 160 ? 160 : piety;
         return (wardpiety * 3 / 16);
     }
 

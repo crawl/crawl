@@ -169,7 +169,6 @@ int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true);
 
-bool player_res_corrosion(bool calc_unid = true);
 bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 
