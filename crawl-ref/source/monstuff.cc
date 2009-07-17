@@ -3802,8 +3802,10 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
         bool need_target = true;
 
         if (!can_move)
+        {
             can_move = (mons_amphibious(mon))
                 ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
+        }
 
         if (mon->is_travelling())
             need_target = _handle_monster_travelling(mon, can_move);
@@ -7663,7 +7665,7 @@ static bool _handle_pickup(monsters *monster)
             }
             else
             {
-                // shouldn't be much trouble to digest a huge pile of gold!
+                // Shouldn't be much trouble to digest a huge pile of gold!
                 if (quant > 500)
                     quant = 500 + roll_dice( 2, (quant - 500) / 2 );
 
@@ -7707,17 +7709,16 @@ static bool _handle_pickup(monsters *monster)
     // Note: Monsters only look at stuff near the top of stacks.
     // XXX: Need to put in something so that monster picks up multiple items
     // (eg ammunition) identical to those it's carrying.
-    // Monsters may now pick up several items in the same turn, though with
-    // reducing chances. (jpeg)
-    bool success = false;
+    // Monsters may now pick up up to two items in the same turn. (jpeg)
+    int count_pickup = 0;
     for (stack_iterator si(monster->pos()); si; ++si)
     {
         if (monster->pickup_item(*si, monster_nearby))
-            success = true;
-        if (coinflip())
+            count_pickup++;
+        if (count_pickup > 1 || coinflip())
             break;
     }
-    return (success);
+    return (count_pickup > 0);
 }
 
 static void _jelly_grows(monsters *monster)
@@ -8151,6 +8152,10 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // Bounds check: don't consider moving out of grid!
     if (!in_bounds(targ))
+        return (false);
+
+    // No monster may enter the open sea.
+    if (grd(targ) == DNGN_OPEN_SEA)
         return (false);
 
     // Non-friendly and non-good neutral monsters won't enter

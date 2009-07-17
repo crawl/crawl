@@ -190,7 +190,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt,
              bool needs_tracer, const char* msg)
 {
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power );
+    mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power);
 #endif
 
     pbolt.thrower = KILL_YOU_MISSILE;
@@ -2029,7 +2029,7 @@ void bolt::do_fire()
         }
 
         ASSERT(!grid_is_solid(grd(pos()))
-               || (is_tracer && affects_wall(grd(pos()))));
+               || is_tracer && affects_wall(grd(pos())));
 
         const bool was_seen = seen;
         if (!was_seen && range > 0 && !invisible() && see_grid(pos()))
@@ -3530,7 +3530,7 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    if (has_saving_throw() && flavour != BEAM_POLYMORPH
+    if (flavour != BEAM_POLYMORPH && has_saving_throw()
         && you_resist_magic(ench_power))
     {
         // You resisted it.
@@ -4130,8 +4130,7 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
         if (friend_info.count == 1 && !friend_info.dont_stop
             || foe_info.count == 1 && !foe_info.dont_stop)
         {
-            const bool on_target = (target == mon->pos());
-            if (stop_attack_prompt(mon, true, on_target))
+            if (stop_attack_prompt(mon, true, target))
             {
                 beam_cancelled = true;
                 finish_beam();
@@ -4182,7 +4181,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
         return;
 
     // Check only if actual damage.
-    if (final > 0)
+    if (!is_tracer && final > 0)
     {
         for (unsigned int i = 0; i < messages.size(); ++i)
             mpr(messages[i].c_str(), MSGCH_MONSTER_DAMAGE);
@@ -5039,6 +5038,10 @@ int bolt::range_used_on_hit(const actor* victim) const
         used = 0;
     else
         used = 1;
+
+    // Assume we didn't hit, after all.
+    if (is_tracer && used == BEAM_STOP)
+        return 1;
 
     if (in_explosion_phase)
         return (used);

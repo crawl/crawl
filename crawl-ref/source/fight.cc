@@ -579,7 +579,7 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
-        if (stop_attack_prompt(defender_as_monster(), false, false))
+        if (stop_attack_prompt(defender_as_monster(), false, attacker->pos()))
         {
             cancel_attack = true;
             return (false);
@@ -1194,7 +1194,7 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
             // no biting with visored helmet
-            if (you.equip[EQ_HELMET] != -1 
+            if (you.equip[EQ_HELMET] != -1
                 && (get_helmet_desc((you.inv[you.equip[EQ_HELMET]])) == THELM_DESC_VISORED))
             {
                 continue;
@@ -3796,6 +3796,14 @@ int melee_attack::player_to_hit(bool random_factor)
 
 void melee_attack::player_stab_check()
 {
+    // Unknown mimics cannot be stabbed.
+    if (mons_is_unknown_mimic(defender_as_monster()))
+    {
+        stab_attempt = false;
+        stab_bonus = 0;
+        return;
+    }
+
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, defender);
     stab_attempt = (uat != UCAT_NO_ATTACK);
     const bool roll_needed = (uat != UCAT_SLEEPING && uat != UCAT_PARALYSED);
@@ -3806,7 +3814,9 @@ void melee_attack::player_stab_check()
 
     switch (uat)
     {
-    case UCAT_NO_ATTACK:  stab_bonus = 0; break;
+    case UCAT_NO_ATTACK:
+        stab_bonus = 0;
+        break;
     case UCAT_HELD_IN_NET:
     case UCAT_PETRIFYING:
     case UCAT_PETRIFIED:
@@ -3819,7 +3829,9 @@ void melee_attack::player_stab_check()
     case UCAT_FLEEING:
         stab_bonus = 2;
         break;
-    case UCAT_DISTRACTED: stab_bonus = 3; break;
+    case UCAT_DISTRACTED:
+        stab_bonus = 3;
+        break;
     }
 
     // See if we need to roll against dexterity / stabbing.

@@ -2246,6 +2246,14 @@ static bool _xom_chaos_upgrade_nearby_monster()
 
 static bool _xom_player_confusion_effect(int sever)
 {
+    if (!_xom_feels_nasty())
+    {
+        // Don't confuse the player if standing next to lava or deep water.
+        for (adjacent_iterator ai; ai; ++ai)
+            if (in_bounds(*ai) && is_grid_dangerous(grd(*ai)))
+                return (false);
+    }
+
     bool rc = false;
 
     // Looks like this will *always* succeed?

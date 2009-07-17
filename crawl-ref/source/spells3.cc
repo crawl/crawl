@@ -199,7 +199,7 @@ bool cast_smiting(int power, const coord_def& where)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(m, false, false);
+    const bool success = !stop_attack_prompt(m, false, you.pos());
 
     if (success)
     {
@@ -240,7 +240,7 @@ int airstrike(int power, dist &beam)
         god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
-        success = !stop_attack_prompt(monster, false, false);
+        success = !stop_attack_prompt(monster, false, you.pos());
 
         if (success)
         {

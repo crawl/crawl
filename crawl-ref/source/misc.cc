@@ -3035,7 +3035,7 @@ std::string your_hand(bool plural)
 }
 
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
-                        bool beam_target)
+                        coord_def beam_target)
 {
     ASSERT(!crawl_state.arena);
 
@@ -3045,6 +3045,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     bool retval = false;
     bool prompt = false;
 
+    const bool mon_target    = (beam_target == mon->pos());
     const bool inSanctuary   = (is_sanctuary(you.pos())
                                 || is_sanctuary(mon->pos()));
     const bool wontAttack    = mons_wont_attack(mon);
@@ -3059,13 +3060,34 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     if (isFriendly)
     {
         // Listed in the form: "your rat", "Blork the orc".
-        snprintf(info, INFO_SIZE, "Really %s %s%s?",
-                 (beam_attack) ? (beam_target) ? "fire at"
-                                               : "fire through"
-                               : "attack",
-                 mon->name(DESC_NOCAP_THE).c_str(),
-                 (inSanctuary) ? ", despite your sanctuary"
-                               : "");
+        std::string verb = "";
+        bool need_mon_name = true;
+        if (beam_attack)
+        {
+            verb = "fire ";
+            if (mon_target)
+                verb += "at ";
+            else if (you.pos() < beam_target && beam_target < mon->pos()
+                     || you.pos() > beam_target && beam_target > mon->pos())
+            {
+                verb += "in " + mon->name(DESC_NOCAP_THE) + "'s direction";
+                need_mon_name = false;
+            }
+            else
+            {
+                verb += "through ";
+            }
+        }
+        else
+            verb = "attack ";
+
+        if (need_mon_name)
+            verb += mon->name(DESC_NOCAP_THE);
+
+        snprintf(info, INFO_SIZE, "Really %s%s?",
+                 verb.c_str(),
+                 (inSanctuary) ? ", despite your sanctuary" : "");
+
         prompt = true;
     }
     else if (inSanctuary || wontAttack
@@ -3075,8 +3097,8 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                 && !tso_unchivalric_attack_safe_monster(mon))
     {
         snprintf(info, INFO_SIZE, "Really %s the %s%s%s%s%s?",
-                 (beam_attack) ? (beam_target) ? "fire at"
-                                               : "fire through"
+                 (beam_attack) ? (mon_target) ? "fire at"
+                                              : "fire through"
                                : "attack",
                  (isUnchivalric) ? "helpless "
                                  : "",
