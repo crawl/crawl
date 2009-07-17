@@ -140,10 +140,19 @@ bool monster_habitable_grid(int monster_class,
                             dungeon_feature_type actual_grid,
                             int flies, bool paralysed)
 {
+    // No monster may be placed on open sea.
+    if (actual_grid == DNGN_OPEN_SEA)
+        return (false);
+
     const dungeon_feature_type grid_preferred =
         habitat2grid(mons_class_primary_habitat(monster_class));
     const dungeon_feature_type grid_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(monster_class));
+
+    // Special check for fire elementals since their habitat is floor which
+    // is generally considered compatible with shallow water.
+    if (monster_class == MONS_FIRE_ELEMENTAL && grid_is_watery(actual_grid))
+        return (false);
 
     if (grid_compatible(grid_preferred, actual_grid)
         || (grid_nonpreferred != grid_preferred
@@ -1014,10 +1023,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     ASSERT(mgrd(fpos) == NON_MONSTER);
 
-    if (crawl_state.arena)
+    if (crawl_state.arena
+        && arena_veto_place_monster(mg, first_band_member, fpos))
     {
-        if (arena_veto_place_monster(mg, first_band_member, fpos))
-            return (-1);
+        return (-1);
     }
 
     // Now, actually create the monster. (Wheeee!)

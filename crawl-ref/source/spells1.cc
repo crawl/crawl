@@ -138,7 +138,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                     continue;
             }
 
-            if (see_grid_no_trans(beam.target))
+            if (!wizard_blink && grd(beam.target) == DNGN_OPEN_SEA)
+            {
+                mesclr();
+                mpr("You can't blink into the sea!");
+            }
+            else if (see_grid_no_trans(beam.target))
             {
                 // Grid in los, no problem.
                 break;

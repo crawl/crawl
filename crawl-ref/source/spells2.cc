@@ -725,7 +725,7 @@ bool vampiric_drain(int pow, const dist &vmove)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(monster, false, false);
+    const bool success = !stop_attack_prompt(monster, false, you.pos());
 
     if (success)
     {
@@ -804,7 +804,7 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(monster, false, false);
+    const bool success = !stop_attack_prompt(monster, false, you.pos());
 
     if (success)
     {

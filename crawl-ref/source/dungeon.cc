@@ -3345,6 +3345,13 @@ static monster_type _pick_unique(int lev)
          (lev <= 19) ? _choose_unique_by_depth(5) :
                        _choose_unique_by_depth(6));
 
+    // Azrael may not be created in the Swamp or Shoals.
+    if (which_unique == MONS_AZRAEL
+        && (player_in_branch(BRANCH_SWAMP) || player_in_branch(BRANCH_SHOALS)))
+    {
+        return MONS_PROGRAM_BUG;
+    }
+
     // If applicable, replace it with one of the uniques appearing
     // only in some branches.
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))

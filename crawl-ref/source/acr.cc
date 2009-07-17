@@ -3077,7 +3077,6 @@ static void _open_door(coord_def move, bool check_confused)
         }
         while (door_move.delta.origin());
     }
-    ASSERT(door_move.isValid);
 
     // We got a valid direction.
     const coord_def doorpos = you.pos() + door_move.delta;

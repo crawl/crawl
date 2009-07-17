@@ -200,10 +200,8 @@ bool pick_tutorial()
         {
         case CK_BKSP:
         case ESCAPE:
-            choose_race();
             return (false);
         case ' ':
-            choose_class();
             return (false);
         case 'X':
             cprintf(EOL "Goodbye!");
