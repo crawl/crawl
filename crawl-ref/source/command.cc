@@ -131,7 +131,7 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
 static std::string _get_version_changes(void)
 {
     // Attempts to print "Highlights" of the latest version.
-    FILE* fp = fopen(datafile_path("changes.stone_soup", false).c_str(), "r");
+    FILE* fp = fopen(datafile_path("changelog.txt", false).c_str(), "r");
     if (!fp)
         return "";
 
@@ -186,13 +186,13 @@ static std::string _get_version_changes(void)
     if (start)
     {
         result += EOL;
-        result += "For a more complete list of changes, see changes.stone_soup "
+        result += "For a more complete list of changes, see changelog.txt "
                   "in the " EOL
                   "/docs folder.";
     }
     else
     {
-        result += "For a list of changes, see changes.stone_soup in the /docs "
+        result += "For a list of changes, see changelog.txt in the /docs "
                   "folder.";
     }
 

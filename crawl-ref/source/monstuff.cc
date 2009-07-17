@@ -8154,10 +8154,6 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     if (!in_bounds(targ))
         return (false);
 
-    // No monster may enter the open sea.
-    if (grd(targ) == DNGN_OPEN_SEA)
-        return (false);
-
     // Non-friendly and non-good neutral monsters won't enter
     // sanctuaries.
     if (!mons_wont_attack(monster)

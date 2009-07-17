@@ -140,10 +140,6 @@ bool monster_habitable_grid(int monster_class,
                             dungeon_feature_type actual_grid,
                             int flies, bool paralysed)
 {
-    // No monster may be placed on open sea.
-    if (actual_grid == DNGN_OPEN_SEA)
-        return (false);
-
     const dungeon_feature_type grid_preferred =
         habitat2grid(mons_class_primary_habitat(monster_class));
     const dungeon_feature_type grid_nonpreferred =
