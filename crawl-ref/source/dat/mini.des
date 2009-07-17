@@ -2315,7 +2315,7 @@ ENDMAP
 # Flame stairs (Lemuel)
 #
 NAME:    flame_stairs_1
-DEPTH:   D:9-27, Elf, Vault, Zot
+DEPTH:   D:9-26, Elf:2-6, Vault, Zot:1-4
 ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
@@ -2339,7 +2339,7 @@ ENDMAP
 # Freeze stairs (Lemuel)
 #
 NAME:    freeze_stairs_1
-DEPTH:   D:9-27, Elf, Vault, Zot
+DEPTH:   D:9-26, Elf:2-6, Vault, Zot:1-4
 ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
