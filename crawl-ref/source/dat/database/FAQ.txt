@@ -412,7 +412,7 @@ A:changes
 
 A: The (admittedly highly subjective) highlights of the last major release are
 listed along with the version information under '?v'. For more details, check
-out the change log in docs/changes.stone_soup.
+out changelog.txt in the docs/ folder.
 %%%%
 ##############################################
 # Questions about the Tiles version
