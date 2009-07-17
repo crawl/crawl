@@ -1021,7 +1021,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OBJ_WEAPONS:
     case OSEL_WIELD:
         return (itype == OBJ_WEAPONS || itype == OBJ_STAVES
-                || itype == OBJ_MISCELLANY);
+                || (itype == OBJ_MISCELLANY && i.sub_type != MISC_RUNE_OF_ZOT));
 
     case OSEL_BUTCHERY:
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
