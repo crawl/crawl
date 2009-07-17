@@ -534,7 +534,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         {
             if (just_check)
                 return (true);
-            
+
             if (which_trans==TRAN_PIG)
                 mpr("You feel you'll be a pig longer.");
             else

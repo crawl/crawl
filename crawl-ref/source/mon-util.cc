@@ -2187,7 +2187,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if ((mon.flags & MF_KNOWN_MIMIC) && mons_is_shapeshifter(&mon))
     {
         // If momentarily in original form, don't display "shaped shifter".
-        if (mons_genus(mon.type) != MONS_SHAPESHIFTER) 
+        if (mons_genus(mon.type) != MONS_SHAPESHIFTER)
         {
             result += " shaped shifter";
         }
