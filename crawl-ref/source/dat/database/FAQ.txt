@@ -363,6 +363,9 @@ much appreciated. These are:
 * monster/item/spell descriptions (see dat/descript/)
 * tiles (For this you'll need the source code, check the rltiles/ folder.)
 
+Also, if you'd like to write a patch but don't know how to go about it, read
+patch_guide.txt in the docs/ folder.
+
 If you've got some cool addition, you can send it over the mailing list, or
 post it as a SourceForge item. You can also help us by giving feedback on
 the most recent version or trunk (available via SVN, Windows binaries
@@ -382,7 +385,7 @@ Windows binaries from the same site. Note that trunk may be buggy, and that
 many changes will invalidate your saved games. If that doesn't bother you,
 go ahead and play!
 Be sure to leave some feedback/suggestions/bug reports on the SourceForge
-trackers. When doing so please mention the version (r????) you're
+trackers. When doing so please mention the version (r?????) you're
 currently playing in case the bug's already been fixed or the feature
 already implemented.
 %%%%
@@ -407,9 +410,9 @@ What did you change in the most recent version?
 %%%%
 A:changes
 
-A: The (admittedly highly subjective) highlights of the release are listed
-along with the version information under '?v'. For more details, check out
-the change log in docs/changes.stone_soup.
+A: The (admittedly highly subjective) highlights of the last major release are
+listed along with the version information under '?v'. For more details, check
+out the change log in docs/changes.stone_soup.
 %%%%
 ##############################################
 # Questions about the Tiles version
@@ -453,6 +456,7 @@ A:tiles online
 A: Sadly, no, that's not possible at the moment. We are planning to change
 that but so far we haven't even decided how to go about it, and so it's
 still far off.
+
 If you can, do give the console version a try: playing online is certainly
 worth it.
 %%%%
@@ -488,7 +492,7 @@ Is there a way to modify the size of the tiles screen, the font etc?
 A:tiles options
 
 A: Yes. Play around with the options in settings/tiles_options.txt until
-you are satisfied.
+you are satisfied. See docs/options_guide.txt for some explanations.
 %%%%
 Q:tiles doll
 
