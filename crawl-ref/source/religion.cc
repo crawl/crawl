@@ -930,7 +930,7 @@ bool jiyva_grant_jelly(bool actual)
             && (!actual || you.duration[DUR_PRAYER]));
 }
 
-bool jiyva_remove_bad_mutations()
+bool jiyva_remove_bad_mutation()
 {
     if (!how_mutated())
     {
@@ -957,7 +957,7 @@ bool jiyva_remove_bad_mutations()
         mutation_type mutat = RANDOM_ELEMENT(bad_muts);
 
         if (you.mutation[mutat] > 0)
-            done = delete_mutation(mutat);
+            done = delete_mutation(mutat, true, false, true);
     }
 
     if (!done)

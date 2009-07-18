@@ -146,7 +146,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY },
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATIONS }
+      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -325,7 +325,7 @@ static const ability_def Ability_List[] =
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, ABFLAG_NONE },
     { ABIL_JIYVA_JELLY_SHIELD, "Jelly Shield", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_JIYVA_SLIMIFY, "Slimify", 4, 0, 100, 3, ABFLAG_NONE },
-    { ABIL_JIYVA_CURE_BAD_MUTATIONS, "Cure Bad Mutations",
+    { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       8, 0, 200, 15, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
@@ -759,7 +759,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
-    case ABIL_JIYVA_CURE_BAD_MUTATIONS:
+    case ABIL_JIYVA_CURE_BAD_MUTATION:
         invoc = true;
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1934,8 +1934,8 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 
-    case ABIL_JIYVA_CURE_BAD_MUTATIONS:
-        if (jiyva_remove_bad_mutations())
+    case ABIL_JIYVA_CURE_BAD_MUTATION:
+        if (jiyva_remove_bad_mutation())
             exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
