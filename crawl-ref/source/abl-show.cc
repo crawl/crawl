@@ -1895,7 +1895,7 @@ static bool _do_ability(const ability_def& abil)
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')
             && yesno("Are you sure you won't change your mind later?",
-                     false, 'n' ))
+                     false, 'n'))
         {
             excommunication();
         }
@@ -2219,8 +2219,7 @@ std::vector<talent> your_talents(bool check_confused)
             && !you.num_gifts[GOD_ZIN]
             && you.piety > 160)
         {
-                _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS,
-                            check_confused);
+            _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS, check_confused);
         }
     }
 
