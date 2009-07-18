@@ -5408,7 +5408,8 @@ static dungeon_feature_type _pick_an_altar()
             }
             while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH
                    || altar_type == DNGN_ALTAR_LUGONU
-                   || altar_type == DNGN_ALTAR_BEOGH);
+                   || altar_type == DNGN_ALTAR_BEOGH
+                   || altar_type == DNGN_ALTAR_JIYVA);
             break;
         }
     }
