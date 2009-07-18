@@ -2070,13 +2070,13 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
         else if (targetc == MONS_PULSATING_LUMP)
             str_polymon = " degenerates into ";
         else if (you.religion == GOD_JIYVA
-                 && (targetc == MONS_OOZE
+                 && (targetc == MONS_DEATH_OOZE
+                     || targetc == MONS_OOZE
                      || targetc == MONS_JELLY
                      || targetc == MONS_BROWN_OOZE
-                     || targetc == MONS_ACID_BLOB
-                     || targetc == MONS_GIANT_AMOEBA
                      || targetc == MONS_SLIME_CREATURE
-                     || targetc == MONS_DEATH_OOZE
+                     || targetc == MONS_GIANT_AMOEBA
+                     || targetc == MONS_ACID_BLOB
                      || targetc == MONS_AZURE_JELLY))
         {
             // Message used for the Slimify ability.

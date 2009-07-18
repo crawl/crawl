@@ -4895,10 +4895,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         obvious_effect = true;
 
         if (mons_holiness(mon) == MH_UNDEAD)
-        {
             monster_polymorph(mon, MONS_DEATH_OOZE);
-            mon->attitude = ATT_STRICT_NEUTRAL;
-        }
         else
         {
             const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
@@ -4909,13 +4906,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
                 mon->add_ench(ENCH_EATS_ITEMS);
             }
             else if (x >= 3 && x < 5)
-            {
                 monster_polymorph(mon, MONS_JELLY);
-            }
             else if (x >= 5 && x < 7)
-            {
                 monster_polymorph(mon, MONS_BROWN_OOZE);
-            }
             else if (x >= 7 && x <= 11)
             {
                 if (coinflip())
@@ -4936,9 +4929,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
                 else
                     monster_polymorph(mon, MONS_AZURE_JELLY);
             }
-            mon->attitude = ATT_STRICT_NEUTRAL;
         }
-        return(MON_AFFECTED);
+        mon->attitude = ATT_STRICT_NEUTRAL;
+        return (MON_AFFECTED);
 
     case BEAM_PAIN:             // pain/agony
         if (simple_monster_message(mon, " convulses in agony!"))

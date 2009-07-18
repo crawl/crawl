@@ -5138,7 +5138,7 @@ static bool _jiyva_retribution()
 {
     const god_type god = GOD_JIYVA;
 
-    if (you.is_undead || one_chance_in(4))
+    if (!you.can_safely_mutate() || one_chance_in(4))
     {
         const monster_type slimes[] = {
                 MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
@@ -5178,7 +5178,7 @@ static bool _jiyva_retribution()
     return (true);
 }
 
-bool divine_retribution( god_type god )
+bool divine_retribution(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
