@@ -90,9 +90,9 @@ static void _jobs_stat_init(job_type which_job);
 static void _opening_screen(void);
 static void _species_stat_init(species_type which_species);
 
-static void _give_random_potion( int slot );
-static void _give_random_secondary_armour( int slot );
-static bool _give_wanderer_weapon( int slot, int wpn_skill );
+static void _give_random_potion(int slot);
+static void _give_random_secondary_armour(int slot);
+static bool _give_wanderer_weapon(int slot, int wpn_skill);
 static void _create_wanderer(void);
 static bool _give_items_skills(void);
 
@@ -904,12 +904,12 @@ static void _racialise_starting_equipment()
                         || you.inv[i].base_type != OBJ_ARMOUR
                         || get_armour_slot(you.inv[i]) != EQ_BODY_ARMOUR))
                 {
-                    set_equip_race( you.inv[i], ISFLAG_ELVEN );
+                    set_equip_race(you.inv[i], ISFLAG_ELVEN);
                 }
                 else if (player_genus(GENPC_DWARVEN))
-                    set_equip_race( you.inv[i], ISFLAG_DWARVEN );
+                    set_equip_race(you.inv[i], ISFLAG_DWARVEN);
                 else if (you.species == SP_HILL_ORC)
-                    set_equip_race( you.inv[i], ISFLAG_ORCISH );
+                    set_equip_race(you.inv[i], ISFLAG_ORCISH);
             }
         }
     }
@@ -3337,7 +3337,7 @@ bool validate_player_name(const char* name, bool verbose)
     return (true);
 }
 
-static void _give_random_potion( int slot )
+static void _give_random_potion(int slot)
 {
     // If you can't quaff, you don't care.
     if (you.is_undead == US_UNDEAD)
@@ -3358,38 +3358,38 @@ static void _give_random_potion( int slot )
     case 0:
     case 1:
     case 2:
-        you.inv[ slot ].sub_type = POT_HEALING;
+        you.inv[slot].sub_type = POT_HEALING;
         break;
     case 3:
     case 4:
-        you.inv[ slot ].sub_type = POT_HEAL_WOUNDS;
+        you.inv[slot].sub_type = POT_HEAL_WOUNDS;
         break;
     case 5:
-        you.inv[ slot ].sub_type = POT_SPEED;
+        you.inv[slot].sub_type = POT_SPEED;
         break;
     case 6:
-        you.inv[ slot ].sub_type = POT_MIGHT;
+        you.inv[slot].sub_type = POT_MIGHT;
         break;
     case 7:
-        you.inv[ slot ].sub_type = POT_BERSERK_RAGE;
+        you.inv[slot].sub_type = POT_BERSERK_RAGE;
         break;
     }
 }
 
-static void _give_random_secondary_armour( int slot )
+static void _give_random_secondary_armour(int slot)
 {
-    you.inv[ slot ].quantity  = 1;
-    you.inv[ slot ].base_type = OBJ_ARMOUR;
-    you.inv[ slot ].special   = 0;
-    you.inv[ slot ].plus      = 0;
-    you.inv[ slot ].plus2     = 0;
+    you.inv[slot].quantity  = 1;
+    you.inv[slot].base_type = OBJ_ARMOUR;
+    you.inv[slot].special   = 0;
+    you.inv[slot].plus      = 0;
+    you.inv[slot].plus2     = 0;
 
     switch (random2(4))
     {
     case 0:
         if (you_can_wear(EQ_BOOTS))
         {
-            you.inv[ slot ].sub_type = ARM_BOOTS;
+            you.inv[slot].sub_type = ARM_BOOTS;
             you.equip[EQ_BOOTS] = slot;
             break;
         }
@@ -3397,7 +3397,7 @@ static void _give_random_secondary_armour( int slot )
     case 1:
         if (you_can_wear(EQ_HELMET))
         {
-            you.inv[ slot ].sub_type = ARM_HELMET;
+            you.inv[slot].sub_type = ARM_HELMET;
             you.equip[EQ_HELMET] = slot;
             break;
         }
@@ -3405,55 +3405,55 @@ static void _give_random_secondary_armour( int slot )
     case 2:
         if (you_can_wear(EQ_GLOVES))
         {
-            you.inv[ slot ].sub_type = ARM_GLOVES;
+            you.inv[slot].sub_type = ARM_GLOVES;
             you.equip[EQ_GLOVES] = slot;
             break;
         }
         // else fall through
     case 3: // Anyone can wear this.
-        you.inv[ slot ].sub_type = ARM_CLOAK;
+        you.inv[slot].sub_type = ARM_CLOAK;
         you.equip[EQ_CLOAK] = slot;
         break;
     }
 }
 
 // Returns true if a "good" weapon is given.
-static bool _give_wanderer_weapon( int slot, int wpn_skill )
+static bool _give_wanderer_weapon(int slot, int wpn_skill)
 {
     bool ret = false;
 
-    // Slot's always zero, but we pass it anyways.
+    // Slot's always zero, but we pass it anyway.
 
     // We'll also re-fill the template, all this for later possible
     // safe reuse of code in the future.
-    you.inv[ slot ].quantity  = 1;
-    you.inv[ slot ].base_type = OBJ_WEAPONS;
-    you.inv[ slot ].plus      = 0;
-    you.inv[ slot ].plus2     = 0;
-    you.inv[ slot ].special   = 0;
+    you.inv[slot].quantity  = 1;
+    you.inv[slot].base_type = OBJ_WEAPONS;
+    you.inv[slot].plus      = 0;
+    you.inv[slot].plus2     = 0;
+    you.inv[slot].special   = 0;
 
     // Now fill in the type according to the random wpn_skill.
     switch (wpn_skill)
     {
     case SK_MACES_FLAILS:
-        you.inv[ slot ].sub_type = WPN_CLUB;
+        you.inv[slot].sub_type = WPN_CLUB;
         break;
 
     case SK_POLEARMS:
-        you.inv[ slot ].sub_type = WPN_SPEAR;
+        you.inv[slot].sub_type = WPN_SPEAR;
         break;
 
     case SK_SHORT_BLADES:
-        you.inv[ slot ].sub_type = WPN_DAGGER;
+        you.inv[slot].sub_type = WPN_DAGGER;
         break;
 
     case SK_AXES:
-        you.inv[ slot ].sub_type = WPN_HAND_AXE;
+        you.inv[slot].sub_type = WPN_HAND_AXE;
         ret = true;
         break;
 
     case SK_STAVES:
-        you.inv[ slot ].sub_type = WPN_QUARTERSTAFF;
+        you.inv[slot].sub_type = WPN_QUARTERSTAFF;
         ret = true;
         break;
 
@@ -3462,8 +3462,8 @@ static bool _give_wanderer_weapon( int slot, int wpn_skill )
         // All long swords are too good for a starting character...
         // Especially this class where we have to be careful about
         // giving away anything good at all.
-        // We default here if the character only has fighting skill. -- bwr
-        you.inv[ slot ].sub_type = WPN_SHORT_SWORD;
+        // We default here if the character only has fighting skill. - bwr
+        you.inv[slot].sub_type = WPN_SHORT_SWORD;
         ret = true;
         break;
     }
@@ -3552,7 +3552,6 @@ static void _newgame_clear_item(int slot)
             you.equip[i] = -1;
 }
 
-//
 // The idea behind wanderers is a class that has various different
 // random skills that's a challenge to play... not a class that can
 // be continually rerolled to gain the ideal character.  To maintain
@@ -3561,8 +3560,7 @@ static void _newgame_clear_item(int slot)
 // spellbooks ever, and the bows and xbows down below might be too
 // much... so pretty much things should be removed rather than
 // added here. -- bwr
-//
-static void _create_wanderer( void )
+static void _create_wanderer(void)
 {
     const skill_type util_skills[] =
         { SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
@@ -3607,9 +3605,7 @@ static void _create_wanderer( void )
     for (int i = 0; i < 2; i++)
     {
         do
-        {
             skill = RANDOM_ELEMENT(util_skills);
-        }
         while (you.skills[skill] >= 2);
 
         you.skills[skill]++;
@@ -3618,22 +3614,18 @@ static void _create_wanderer( void )
     for (int i = 0; i < 3; i++)
     {
         do
-        {
             skill = RANDOM_ELEMENT(fight_util_skills);
-        }
         while (you.skills[skill] >= 2);
 
         you.skills[skill]++;
     }
 
-    // Spell skills are possible past this point, but we won't
-    // allow two levels of any of them. -- bwr
+    // Spell skills are possible past this point, but we won't allow two
+    // levels of any of them. - bwr
     for (int i = 0; i < 3; i++)
     {
         do
-        {
             skill = RANDOM_ELEMENT(not_rare_skills);
-        }
         while (you.skills[skill] >= 2
                || (skill >= SK_SPELLCASTING && you.skills[skill] > 0));
 
@@ -3643,22 +3635,18 @@ static void _create_wanderer( void )
     for (int i = 0; i < 2; i++)
     {
         do
-        {
             skill = RANDOM_ELEMENT(all_skills);
-        }
         while (you.skills[skill] >= 2
                || (skill >= SK_SPELLCASTING && you.skills[skill] > 0));
 
         you.skills[skill]++;
     }
 
-    // Demigods can't use invocations so we'll swap it for something else
-    if (you.species == SP_DEMIGOD && you.skills[ SK_INVOCATIONS ])
+    // Demigods can't use invocations, so we'll swap it for something else.
+    if (you.species == SP_DEMIGOD && you.skills[SK_INVOCATIONS])
     {
         do
-        {
             skill = RANDOM_ELEMENT(all_skills);
-        }
         while (you.skills[skill] > 0);
 
         you.skills[skill] = you.skills[SK_INVOCATIONS];
@@ -3666,12 +3654,10 @@ static void _create_wanderer( void )
     }
 
     // Some species cannot wear real armour.
-    if (you.skills[ SK_ARMOUR ] && !you_can_wear(EQ_BODY_ARMOUR))
+    if (you.skills[SK_ARMOUR] && !you_can_wear(EQ_BODY_ARMOUR))
     {
         do
-        {
             skill = RANDOM_ELEMENT(all_skills);
-        }
         while (you.skills[skill] > 0);
 
         you.skills[skill] = you.skills[SK_ARMOUR];
@@ -3725,7 +3711,7 @@ static void _create_wanderer( void )
 
     // Wanderers have at least seen one type of potion, and if they
     // don't get anything else good, they'll get to keep this one...
-    // Note:  even if this is taken away, the knowledge of the potion
+    // Note: Even if this is taken away, the knowledge of the potion
     // type is still given to the character.
     _give_random_potion(3);
 
@@ -3744,18 +3730,16 @@ static void _create_wanderer( void )
             you.inv[3].quantity = 0;            // remove potion
         }
         else
-        {
             _give_random_secondary_armour(5);
-        }
 
         // Remove potion if good weapon is given.
-        if (_give_wanderer_weapon( 0, wpn_skill ))
+        if (_give_wanderer_weapon(0, wpn_skill))
             you.inv[3].quantity = 0;
     }
     else
     {
         // Generic wanderer
-        _give_wanderer_weapon( 0, wpn_skill );
+        _give_wanderer_weapon(0, wpn_skill);
         _give_random_secondary_armour(5);
     }
 
