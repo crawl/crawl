@@ -4958,7 +4958,7 @@ static bool _nemelex_retribution()
     return (true);
 }
 
-bool divine_retribution( god_type god )
+bool divine_retribution(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
