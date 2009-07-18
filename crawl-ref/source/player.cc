@@ -3824,10 +3824,11 @@ void jiyva_stat_action()
         (*base_statp[stat_up_choice])++;
         (*base_statp[stat_down_choice])--;
 
-        mprf(MSGCH_GOD, "Jiyva's power touches on your attributes.");
-             you.redraw_strength     = true;
-             you.redraw_intelligence = true;
-             you.redraw_dexterity    = true;
+        simple_god_message("'s power touches on your attributes.");
+
+        you.redraw_strength     = true;
+        you.redraw_intelligence = true;
+        you.redraw_dexterity    = true;
 
         burden_change();
     }

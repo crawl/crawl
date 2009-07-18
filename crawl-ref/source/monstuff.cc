@@ -7816,29 +7816,30 @@ static bool _handle_pickup(monsters *monster)
                     && random2(you.piety) > 50
                     && one_chance_in(4))
                 {
-                    bool success = false;
-                    if (!you.is_undead)
+                    if (you.can_safely_mutate())
                     {
                         simple_god_message(" alters your body.");
                         more();
 
+                        bool success = false;
                         const int rand = random2(100);
+
                         if (rand < 40)
                             success = mutate(RANDOM_MUTATION);
                         else if (rand < 60)
                             success = delete_mutation(RANDOM_MUTATION);
                         else
                             success = mutate(RANDOM_GOOD_MUTATION);
-                    }
 
-                    if (success)
-                    {
-                        timeout = (100 + roll_dice(2, 4));
-                        you.num_gifts[you.religion]++;
-                        take_note(Note(NOTE_GOD_GIFT, you.religion));
+                        if (success)
+                        {
+                            timeout = (100 + roll_dice(2, 4));
+                            you.num_gifts[you.religion]++;
+                            take_note(Note(NOTE_GOD_GIFT, you.religion));
+                        }
+                        else
+                            mpr("You feel as though nothing has changed.");
                     }
-                    else
-                        mpr("You feel as though nothing has changed.");
                 }
             }
 

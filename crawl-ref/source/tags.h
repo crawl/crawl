@@ -64,7 +64,7 @@ enum tag_minor_version
     TAG_MINOR_PORTEXT  = 14,     // Keep track of portal vault extensions.
     TAG_MINOR_RELIGION = 15,     // Keep track of ghosts' religions.
     TAG_MINOR_ARTEFACT = 16,     // Turned fixed arts into unrandarts.
-    TAG_MINOR_JIYVA    = 17,     // Addes some player bits for Jiyva.
+    TAG_MINOR_JIYVA    = 17,     // Added some player bits for Jiyva.
     TAG_MINOR_VERSION  = 17      // Current version.  (Keep equal to max.)
 };
 
