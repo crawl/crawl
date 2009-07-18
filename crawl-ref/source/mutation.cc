@@ -2142,7 +2142,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
                 return (false);
             else
                 return (delete_mutation(RANDOM_MUTATION, failMsg,
-                                        force_mutation, non_fatal));
+                                        force_mutation, false, non_fatal));
         }
     }
 
@@ -2401,7 +2401,7 @@ static bool _delete_single_mutation_level(mutation_type mutat)
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg,
                      bool force_mutation, bool god_gift,
-                     bool non_fatal)
+                     bool disallow_mismatch, bool non_fatal)
 {
     ASSERT(!non_fatal || _is_random(which_mutation));
 
@@ -2470,7 +2470,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                 (which_mutation == RANDOM_GOOD_MUTATION && mdef.bad)
                     || (which_mutation == RANDOM_BAD_MUTATION && !mdef.bad);
 
-            if (mismatch && !one_chance_in(10))
+            if (mismatch && (disallow_mismatch || !one_chance_in(10)))
                 continue;
 
             break;

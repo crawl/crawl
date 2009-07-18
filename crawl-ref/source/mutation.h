@@ -45,7 +45,7 @@ formatted_string describe_mutations();
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
                      bool force_mutation = false, bool god_gift = false,
-                     bool non_fatal = false);
+                     bool disallow_mismatch = false, bool non_fatal = false);
 
 bool delete_all_mutations();
 
