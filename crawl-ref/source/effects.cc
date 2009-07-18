@@ -3466,7 +3466,6 @@ void handle_time(long time_delta)
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
-        int created;
         for (int num_jellies = total_jellies; num_jellies > 0; num_jellies--)
         {
             //Spread jellies around the level

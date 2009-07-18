@@ -628,16 +628,12 @@ bool mons_is_icy(int mc)
             || mc == MONS_ICE_STATUE);
 }
 
-// Monsters consider as "slime" for Jiyva.
+// Monsters considered as "slime" for Jiyva.
 bool mons_is_slime(const monsters *mon)
 {
-    if (mons_genus(mon->type) == MONS_JELLY
-        || mons_genus(mon->type) == MONS_GIANT_EYEBALL
-        || mons_genus(mon->type) == MONS_GIANT_ORANGE_BRAIN)
-    {
-        return (true);
-    }
-    return (false);
+    return (mons_genus(mon->type) == MONS_JELLY
+            || mons_genus(mon->type) == MONS_GIANT_EYEBALL
+            || mons_genus(mon->type) == MONS_GIANT_ORANGE_BRAIN);
 }
 
 bool mons_eats_items(const monsters *mon)

@@ -975,7 +975,6 @@ void slime_conversion(monsters* monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
-
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
         if (!player_under_penance())

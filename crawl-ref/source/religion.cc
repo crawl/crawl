@@ -195,7 +195,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     // Jiyva
     {
         " slowly dissolve% into ooze.",
-        " dissolve% into ooze .",
+        " dissolve% into ooze.",
         " disappear% with a satisfied slurp.",
     }
 };
