@@ -2456,6 +2456,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
        return TILE_DNGN_ENTER;
+
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -2474,6 +2475,8 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
        return TILE_DNGN_PORTAL;
+
+    // altars
     case DNGN_ALTAR_ZIN:
         return TILE_DNGN_ALTAR_ZIN;
     case DNGN_ALTAR_SHINING_ONE:
@@ -2502,6 +2505,9 @@ int tileidx_feature(int object, int gx, int gy)
         return TILE_DNGN_ALTAR_LUGONU;
     case DNGN_ALTAR_BEOGH:
         return TILE_DNGN_ALTAR_BEOGH;
+    case DNGN_ALTAR_JIYVA:
+        return TILE_DNGN_ALTAR_JIYVA;
+
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:

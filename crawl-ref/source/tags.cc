@@ -826,6 +826,7 @@ static void tag_construct_you(writer &th)
     marshallString(th, you.your_name, 30);
 
     marshallByte(th, you.religion);
+    marshallString(th, you.second_god_name);
     marshallByte(th, you.piety);
     marshallByte(th, you.rotting);
     marshallByte(th, you.symbol);
@@ -867,6 +868,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.strength);
     marshallByte(th, you.intel);
     marshallByte(th, you.dex);
+    marshallByte(th, you.last_chosen);
     marshallByte(th, you.hit_points_regeneration);
     marshallByte(th, you.magic_points_regeneration);
 
@@ -1236,6 +1238,10 @@ static void tag_read_you(reader &th, char minorVersion)
     unmarshallCString(th, you.your_name, 30);
 
     you.religion          = static_cast<god_type>(unmarshallByte(th));
+
+    if (minorVersion >= TAG_MINOR_JIYVA)
+        you.second_god_name = unmarshallString(th);
+
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
     you.symbol            = unmarshallByte(th);
@@ -1282,6 +1288,10 @@ static void tag_read_you(reader &th, char minorVersion)
     you.strength                  = unmarshallByte(th);
     you.intel                     = unmarshallByte(th);
     you.dex                       = unmarshallByte(th);
+
+    if (minorVersion >= TAG_MINOR_JIYVA)
+        you.last_chosen = (stat_type) unmarshallByte(th);
+
     you.hit_points_regeneration   = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
 

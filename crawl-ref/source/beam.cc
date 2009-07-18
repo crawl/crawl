@@ -1265,6 +1265,21 @@ const zap_info zap_data[] = {
         false,
         false,
         false
+    },
+
+    {
+        ZAP_SLIME,
+        "0",
+        100,
+        NULL,
+        NULL,
+        GREEN,
+        true,
+        BEAM_SLIME,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
     }
 };
 
@@ -4699,6 +4714,11 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
               || (mons_holiness(mon) == MH_NATURAL && mon->type != MONS_HOG);
         break;
 
+    case BEAM_SLIME:
+        rc = (mons_holiness(mon) == MH_NATURAL
+              || mons_holiness(mon) == MH_UNDEAD);
+        break;
+
     default:
         break;
     }
@@ -4867,6 +4887,58 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             mon->add_ench(ENCH_CHARM);
         behaviour_event(mon, ME_ALERT, MHITNOT);
         return (MON_AFFECTED);
+
+    case BEAM_SLIME:
+        if (mon->hit_dice * 8 / 2 >= random2(ench_power))
+            return (MON_RESIST);
+
+        obvious_effect = true;
+
+        if (mons_holiness(mon) == MH_UNDEAD)
+        {
+            monster_polymorph(mon, MONS_DEATH_OOZE);
+            mon->attitude = ATT_STRICT_NEUTRAL;
+        }
+        else
+        {
+            const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
+
+            if (x < 3)
+            {
+                monster_polymorph(mon, MONS_OOZE);
+                mon->add_ench(ENCH_EATS_ITEMS);
+            }
+            else if (x >= 3 && x < 5)
+            {
+                monster_polymorph(mon, MONS_JELLY);
+            }
+            else if (x >= 5 && x < 7)
+            {
+                monster_polymorph(mon, MONS_BROWN_OOZE);
+            }
+            else if (x >= 7 && x <= 11)
+            {
+                if (coinflip())
+                {
+                    monster_polymorph(mon, MONS_SLIME_CREATURE);
+                    mon->add_ench(ENCH_EATS_ITEMS);
+                }
+                else
+                {
+                    monster_polymorph(mon, MONS_GIANT_AMOEBA);
+                    mon->add_ench(ENCH_EATS_ITEMS);
+                }
+            }
+            else
+            {
+                if (coinflip())
+                    monster_polymorph(mon, MONS_ACID_BLOB);
+                else
+                    monster_polymorph(mon, MONS_AZURE_JELLY);
+            }
+            mon->attitude = ATT_STRICT_NEUTRAL;
+        }
+        return(MON_AFFECTED);
 
     case BEAM_PAIN:             // pain/agony
         if (simple_monster_message(mon, " convulses in agony!"))
@@ -5735,13 +5807,14 @@ std::string beam_type_name(beam_type type)
     case BEAM_PETRIFY:              return("petrify");
     case BEAM_BACKLIGHT:            return("backlight");
     case BEAM_SLEEP:                return("sleep");
+    case BEAM_SLIME:                return("slime");
     case BEAM_PORKALATOR:           return("porkalator");
     case BEAM_POTION_BLACK_SMOKE:   return("black smoke");
     case BEAM_POTION_GREY_SMOKE:    return("grey smoke");
     case BEAM_POTION_BLUE_SMOKE:    return("blue smoke");
     case BEAM_POTION_PURP_SMOKE:    return("purple smoke");
     case BEAM_POTION_RANDOM:        return("random potion");
-    case BEAM_VISUAL:               return ("visual effects");
+    case BEAM_VISUAL:               return("visual effects");
     case BEAM_TORMENT_DAMAGE:       return("torment damage");
     case BEAM_STEAL_FOOD:           return("steal food");
 

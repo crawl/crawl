@@ -451,6 +451,7 @@ dngn_altar_nemelex_xobeh DNGN_ALTAR_NEMELEX_XOBEH
 dngn_altar_elyvilon DNGN_ALTAR_ELYVILON
 dngn_altar_lugonu DNGN_ALTAR_LUGONU
 dngn_altar_beogh DNGN_ALTAR_BEOGH
+dngn_altar_jiyva DNGN_ALTAR_JIYVA
 
 %sdir dc-dngn
 dngn_blue_fountain DNGN_BLUE_FOUNTAIN

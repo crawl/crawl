@@ -965,6 +965,27 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     }
 }
 
+void slime_conversion(monsters* monster)
+{
+    if (you.religion == GOD_JIYVA && mons_is_slime(monster)
+        && !mons_is_summoned(monster)
+        && !mons_is_shapeshifter(monster)
+        && !mons_neutral(monster)
+        && !mons_friendly(monster)
+        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
+        && mons_player_visible(monster) && !mons_is_sleeping(monster)
+        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+
+    {
+        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
+        if (!player_under_penance())
+        {
+            jiyva_convert_slime(monster);
+            stop_running();
+        }
+    }
+}
+
 void handle_seen_interrupt(monsters* monster)
 {
     if (mons_is_unknown_mimic(monster))
@@ -1312,6 +1333,7 @@ void monster_grid(bool do_updates)
 
             _good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
+            slime_conversion(monster);
         }
     }
 }
@@ -2997,6 +3019,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_ALTAR_ELYVILON:
         case DNGN_ALTAR_LUGONU:
         case DNGN_ALTAR_BEOGH:
+        case DNGN_ALTAR_JIYVA:
             return (true);
         default:
             return (false);
@@ -4702,6 +4725,15 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = ETC_BEOGH;
+            Feature[i].minimap     = MF_FEATURE;
+            break;
+
+        case DNGN_ALTAR_JIYVA:
+            Feature[i].colour      = ETC_SLIME;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
+            Feature[i].seen_colour = ETC_SLIME;
             Feature[i].minimap     = MF_FEATURE;
             break;
 

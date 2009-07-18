@@ -700,6 +700,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
             case ATT_HOSTILE:      data.behaviour = BEH_FRIENDLY; break;
             case ATT_GOOD_NEUTRAL:
             case ATT_NEUTRAL:
+            case ATT_STRICT_NEUTRAL:
                 data.behaviour = BEH_NEUTRAL;
             break;
         }

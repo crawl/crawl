@@ -2601,11 +2601,12 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
          mons.name(DESC_CAP_THE, true).c_str(),
          i, mons.type, mons.pos().x, mons.pos().y,
-         ((mons.attitude == ATT_HOSTILE)       ? "hostile" :
-          (mons.attitude == ATT_FRIENDLY)      ? "friendly" :
-          (mons.attitude == ATT_NEUTRAL)       ? "neutral" :
-          (mons.attitude == ATT_GOOD_NEUTRAL)  ? "good neutral"
-                                               : "unknown alignment") );
+         ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
+          (mons.attitude == ATT_FRIENDLY)       ? "friendly" :
+          (mons.attitude == ATT_NEUTRAL)        ? "neutral" :
+          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral":
+          (mons.attitude == ATT_STRICT_NEUTRAL) ? "strictly neutral"
+                                                : "unknown alignment") );
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,

@@ -382,6 +382,9 @@ static void _god_greeting_message(bool game_start)
     case GOD_BEOGH:
         simple_god_message(" says: Drown the unbelievers in a sea of blood!");
         break;
+    case GOD_JIYVA:
+        god_speaks(you.religion, "Slime for the Slime God!");
+        break;
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:

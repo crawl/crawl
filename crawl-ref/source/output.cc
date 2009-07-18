@@ -1029,7 +1029,12 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
     nowrap_eol_cprintf("Level %d %s", you.experience_level,
                        species_name(you.species,you.experience_level).c_str());
     if (you.religion != GOD_NO_GOD)
-        nowrap_eol_cprintf(" of %s", god_name(you.religion).c_str());
+    {
+        nowrap_eol_cprintf(" of %s",
+                           you.religion == GOD_JIYVA ? god_name_jiyva(true).c_str()
+                                                     : god_name(you.religion).c_str());
+    }
+
     clear_to_end_of_line();
 
     textcolor( LIGHTGREY );
@@ -1319,8 +1324,12 @@ static std::string _verbose_info(const monsters* m)
             else
                 return(" (sleeping)");
         }
-        if (mons_is_wandering(m) && !mons_is_batty(m))
+        if (mons_is_wandering(m) && !mons_is_batty(m)
+            && !(m->attitude == ATT_STRICT_NEUTRAL))
+        {
+            // Labeling strictly neutral monsters as fellow slimes is more important.
             return(" (wandering)");
+        }
         if (m->foe == MHITNOT && !mons_is_batty(m) && !mons_neutral(m)
             && !mons_friendly(m))
         {
@@ -1409,6 +1418,10 @@ void monster_pane_info::to_string( int count, std::string& desc,
         //out << " (neutral)";
         desc_color = BROWN;
         break;
+    case ATT_STRICT_NEUTRAL:
+         out << " (fellow slime)";
+         desc_color = BROWN;
+         break;
     case ATT_HOSTILE:
         // out << " (hostile)";
         desc_color = LIGHTGREY;

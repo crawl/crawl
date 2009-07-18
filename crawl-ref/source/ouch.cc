@@ -39,6 +39,7 @@ REVISION("$Rev$");
 #include "artefact.h"
 #include "chardump.h"
 #include "delay.h"
+#include "effects.h"
 #include "files.h"
 #include "fight.h"
 #include "hiscores.h"
@@ -50,6 +51,7 @@ REVISION("$Rev$");
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
+#include "monplace.h"
 #include "monstuff.h"
 #include "notes.h"
 #include "output.h"
@@ -259,6 +261,7 @@ void splash_with_acid(int acid_strength, bool corrode_items)
             _item_corrode(you.equip[slot]);
     }
 
+
     if (dam > 0)
     {
         const int post_res_dam = dam * player_acid_resist_factor() / 100;
@@ -309,6 +312,9 @@ void _item_corrode(int slot)
 #endif
         return;
     }
+
+    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety, MAX_PIETY))
+        return;
 
     int how_rusty = ((item.base_type == OBJ_WEAPONS) ? item.plus2 : item.plus);
     // Already very rusty.
@@ -828,6 +834,65 @@ static void _yred_mirrors_injury(int dam, int death_source)
     }
 }
 
+static void _maybe_spawn_jellies(int dam, const char* aux,
+                                  kill_method_type death_type, int death_source)
+{
+    // We need to exclude acid damage and similar things or this function
+    // will crash later.
+    if (death_source == NON_MONSTER)
+        return;
+
+    monster_type mons;
+    const monster_type jellies[] = {
+                MONS_ACID_BLOB, MONS_AZURE_JELLY,
+                MONS_DEATH_OOZE
+            };
+
+    // Exclude torment damage
+    char *ptr = strstr(aux, "torment");
+    if (you.religion == GOD_JIYVA && you.piety >= 160 && ptr == NULL)
+    {
+        int how_many = 0;
+        if (dam >= you.hp_max * 0.75)
+            how_many = random2(4) + 2;
+        else if(dam >= you.hp_max / 2)
+            how_many = random2(2) + 2;
+        else if(dam >= you.hp_max / 4)
+            how_many = random2(1) + 1;
+
+        if (how_many > 0)
+        {
+            if (x_chance_in_y(how_many, 8)
+                && !lose_stat(STAT_STRENGTH, 1, true, "spawning slimes"))
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+                return;
+            }
+
+            int count_created = 0;
+            for (int i = 0; i < how_many; ++i)
+            {
+                mons = RANDOM_ELEMENT(jellies);
+                mgen_data mg (mons, BEH_STRICT_NEUTRAL, 0, 0, you.pos(),
+                              MHITNOT, 0, GOD_JIYVA);
+
+                if (create_monster(mg) != -1)
+                    count_created++;
+            }
+
+            if (count_created > 0)
+            {
+                mprf("You shudder from the %s and a %s!",
+                     death_type == KILLED_BY_MONSTER ? "blow" : "blast",
+                     count_created > 1 ? "flood of jellies pours out from you"
+                                       : "jelly pops out");
+            }
+        }
+    }
+}
+
+
+
 static void _wizard_restore_life()
 {
     if (you.hp <= 0)
@@ -932,6 +997,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                       Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
 
             _yred_mirrors_injury(dam, death_source);
+            _maybe_spawn_jellies(dam, aux, death_type, death_source);
 
             return;
         } // else hp <= 0

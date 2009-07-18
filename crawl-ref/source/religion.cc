@@ -191,6 +191,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " slowly crumble% into the ground.",
         " crumble% into the ground.",
         " disintegrate% into the ground.",
+    },
+    // Jiyva
+    {
+        " slowly dissolve% into ooze.",
+        " dissolve% into ooze .",
+        " disappear% with a satisfied slurp.",
     }
 };
 
@@ -277,7 +283,14 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" }
+      "walk on water" },
+    // Jiyva
+    {  "request a jelly",
+       "",
+       "",
+       "turn your enemies to slime",
+       "call upon Jiyva to remove your harmful mutations"
+    }
 };
 
 const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
@@ -363,7 +376,14 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" }
+      "walk on water" },
+    // Jiyva
+    { "request a jelly",
+      "summon a protective jelly shield via prayer",
+      "",
+      "turn your foes to slime",
+      "call upon Jiyva to remove bad mutations"
+    }
 };
 
 static bool _holy_beings_attitude_change();
@@ -448,7 +468,8 @@ bool is_chaotic_god(god_type god)
 {
     return (god == GOD_XOM
             || god == GOD_MAKHLEB
-            || god == GOD_LUGONU);
+            || god == GOD_LUGONU
+            || god == GOD_JIYVA);
 }
 
 bool is_priest_god(god_type god)
@@ -504,6 +525,14 @@ std::string get_god_likes(god_type which_god, bool verbose)
         snprintf(info, INFO_SIZE, "you destroy weapons (especially evil ones)%s",
                  verbose ? " via the <w>a</w> command (inscribe items with "
                            "<w>!D</w> to prevent their accidental destruction)"
+                         : "");
+
+        likes.push_back(info);
+        break;
+
+    case GOD_JIYVA:
+        snprintf(info, INFO_SIZE, "you sacrifice items%s",
+                 verbose ? " by allowing slimes to consume them"
                          : "");
 
         likes.push_back(info);
@@ -742,6 +771,10 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you attack allied orcs");
         break;
 
+    case GOD_JIYVA:
+        dislikes.push_back("you attack your fellow slimes");
+        break;
+
     default:
         break;
     }
@@ -787,6 +820,10 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     case GOD_BEOGH:
         dislikes.push_back("you desecrate orcish remains");
         dislikes.push_back("you destroy orcish idols");
+        break;
+
+    case GOD_JIYVA:
+        dislikes.push_back("you kill slimes");
         break;
 
     default:
@@ -884,6 +921,13 @@ static bool _need_water_walking()
 {
     return (!player_is_airborne() && you.species != SP_MERFOLK
             && grd(you.pos()) == DNGN_DEEP_WATER);
+}
+
+bool jiyva_grant_jelly(bool actual)
+{
+    return (you.religion == GOD_JIYVA && !player_under_penance()
+            && you.piety >= piety_breakpoint(2)
+            && (!actual || you.duration[DUR_PRAYER]));
 }
 
 static void _inc_penance(god_type god, int val)
@@ -1294,6 +1338,21 @@ bool is_orcish_follower(const monsters* mon)
             && mon->attitude == ATT_FRIENDLY
             && mons_is_god_gift(mon, GOD_BEOGH));
 }
+
+bool _has_jelly()
+{
+    ASSERT(you.religion == GOD_JIYVA);
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (mons_is_god_gift(monster, GOD_JIYVA))
+            return (true);
+    }
+
+    return (false);
+}
+
 
 bool is_good_lawful_follower(const monsters* mon)
 {
@@ -1880,9 +1939,9 @@ static void _do_god_gift(bool prayed_for)
 {
     ASSERT(you.religion != GOD_NO_GOD);
 
-    // Zin worshippers are the only ones who can pray to ask Zin for
-    // stuff.
-    if (prayed_for != (you.religion == GOD_ZIN))
+    // Zin and Jiyva worshippers are the only ones who can pray to ask their
+    // god for stuff.
+    if (prayed_for != (you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
         return;
 
     god_acting gdact;
@@ -1894,7 +1953,7 @@ static void _do_god_gift(bool prayed_for)
     // Consider a gift if we don't have a timeout and weren't already
     // praying when we prayed.
     if (!player_under_penance() && !you.gift_timeout
-        || (prayed_for && you.religion == GOD_ZIN))
+        || (prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
     {
         bool success = false;
 
@@ -1975,6 +2034,50 @@ static void _do_god_gift(bool prayed_for)
 
                 _delayed_monster_done(" grants you @an@ undead servant@s@!",
                                       "", _delayed_gift_callback);
+            }
+            break;
+
+       case GOD_JIYVA:
+            if (prayed_for && jiyva_grant_jelly())
+            {
+                int jelly_count = 0;
+                for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+                {
+                    int item = igrd(*ri);
+
+                    if (item != NON_ITEM)
+                    {
+                        for (stack_iterator si(*ri); si; ++si)
+                            if (si != NON_ITEM && one_chance_in(7))
+                                jelly_count++;
+                    }
+                }
+
+                if (jelly_count >= 1)
+                {
+                    int count_created = 0;
+                    for (; jelly_count > 0; --jelly_count)
+                    {
+                        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0,
+                                     you.pos(), MHITNOT, 0, GOD_JIYVA);
+
+                        if (create_monster(mg) != -1)
+                            count_created++;
+
+                        // Sanity check: Stop if spawning further jellies
+                        // would excommunicate us.
+                        if (you.piety - (count_created+1) * 5 <= 0)
+                            break;
+                    }
+
+                    if (count_created > 0)
+                    {
+                        mprf(MSGCH_PRAY, "%s!",
+                             count_created > 1 ? "Some jellies appear"
+                                               : "A jelly appears");
+                    }
+                    you.piety -= 5 * count_created;
+                }
             }
             break;
 
@@ -2152,6 +2255,9 @@ static bool _god_accepts_prayer(god_type god)
     case GOD_YREDELEMNUL:
         return (yred_injury_mirror(false));
 
+    case GOD_JIYVA:
+        return (jiyva_grant_jelly(false));
+
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
         return (true);
@@ -2251,7 +2357,7 @@ void pray()
     }
 
     if (you.religion == GOD_ZIN || you.religion == GOD_BEOGH
-        || you.religion == GOD_NEMELEX_XOBEH)
+        || you.religion == GOD_NEMELEX_XOBEH || you.religion == GOD_JIYVA)
     {
         you.duration[DUR_PRAYER] = 1;
     }
@@ -2301,6 +2407,12 @@ std::string god_name( god_type which_god, bool long_name )
     case GOD_ELYVILON: return (long_name ? "Elyvilon the Healer" : "Elyvilon");
     case GOD_LUGONU:   return (long_name ? "Lugonu the Unformed" : "Lugonu");
     case GOD_BEOGH:    return (long_name ? "Beogh the Brigand" : "Beogh");
+    case GOD_JIYVA:
+        if (long_name)
+        {
+            return god_name_jiyva(true) + " the Shapeless";
+        }
+        return god_name_jiyva(false);
 
     case GOD_XOM:
         if (!long_name)
@@ -2325,6 +2437,15 @@ std::string god_name( god_type which_god, bool long_name )
     case NUM_GODS: return "Buggy";
     }
     return ("");
+}
+
+std::string god_name_jiyva(bool second_name)
+{
+    std::string name = "Jiyva";
+    if (second_name)
+        name += " " + you.second_god_name;
+
+    return (name);
 }
 
 god_type string_to_god(const char *_name, bool exact)
@@ -2535,6 +2656,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+       case DID_KILL_SLIME:
+            if (you.religion == GOD_JIYVA)
+            {
+                retval = true;
+                piety_change = -level;
+                penance = level * 2;
+            }
+            break;
+
         case DID_ATTACK_NEUTRAL:
             switch (you.religion)
             {
@@ -2557,6 +2687,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
                 piety_change = -(level/2 + 1);
                 retval = true;
+                break;
+
+            case GOD_JIYVA:
+                if (mons_is_slime(victim))
+                {
+                    piety_change = -(level/2 + 3);
+                    penance = level/2 + 3;
+                    retval = true;
+                }
                 break;
 
             default:
@@ -3167,7 +3306,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Chaos",
                 "Desecrate Orcish Remains", "Destroy Orcish Idol",
-                "Create Life"
+                "Create Life", "Kill Slime"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
@@ -4974,6 +5113,51 @@ static bool _nemelex_retribution()
     return (true);
 }
 
+static bool _jiyva_retribution()
+{
+    const god_type god = GOD_JIYVA;
+
+    if (you.is_undead || one_chance_in(4)
+        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+    {
+        const monster_type slimes[] = {
+                MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
+                MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES,
+                MONS_GIANT_SPORE, MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
+                MONS_JELLY, MONS_BROWN_OOZE, MONS_ACID_BLOB, MONS_AZURE_JELLY,
+                MONS_DEATH_OOZE, MONS_SLIME_CREATURE
+            };
+
+        const int how_many = 1 + (you.experience_level / 10) + random2(3);
+
+        bool success = false;
+        for (int i = 0; i < how_many; ++i)
+        {
+            const monster_type mon = RANDOM_ELEMENT(slimes);
+
+            if (create_monster(
+                    mgen_data::hostile_at( static_cast<monster_type>(mon),
+                    you.pos(), 0, 0, true, god)) != -1)
+            {
+                success = true;
+            }
+        }
+
+        if (success)
+            god_speaks(god, "Some slimes ooze up out of the ground!");
+        else
+            simple_god_message("The ground quivers slightly.");
+    }
+    else
+    {
+        const int mutat = 1 + random2(4);
+        god_speaks(god, "You feel Jiyva alter your body.");
+        for (int i = 0; i < mutat; ++i)
+            mutate(RANDOM_BAD_MUTATION, true, true, true);
+    }
+    return (true);
+}
+
 bool divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
@@ -5008,6 +5192,7 @@ bool divine_retribution( god_type god )
     case GOD_NEMELEX_XOBEH: do_more = _nemelex_retribution(); break;
     case GOD_SIF_MUNA:      do_more = _sif_muna_retribution(); break;
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
+    case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
 
     default:
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION
@@ -5934,6 +6119,38 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     behaviour_event(orc, ME_ALERT, MHITNOT);
 }
 
+void jiyva_convert_slime(monsters* slime)
+{
+    ASSERT(mons_is_slime(slime));
+
+    if (you.can_see(slime))
+    {
+        if (mons_genus(slime->type) == MONS_GIANT_EYEBALL)
+        {
+            mprf(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
+                            "then relaxes.",
+            slime->name(DESC_CAP_THE).c_str());
+        }
+        else
+        {
+            mprf(MSGCH_GOD, "%s trembles before you.",
+                 slime->name(DESC_CAP_THE).c_str());
+        }
+    }
+    slime->attitude = ATT_STRICT_NEUTRAL;
+    slime->flags   |= MF_WAS_NEUTRAL;
+    slime->god      = GOD_JIYVA;
+
+    if (mons_itemuse(slime) != MONUSE_EATS_ITEMS)
+    {
+        slime->add_ench(ENCH_EATS_ITEMS);
+        mprf(MSGCH_MONSTER_ENCHANT, "%s looks hungrier.",
+             slime->name(DESC_CAP_THE).c_str());
+    }
+
+    mons_make_god_gift(slime, GOD_JIYVA);
+}
+
 void excommunication(god_type new_god)
 {
     const god_type old_god = you.religion;
@@ -6099,6 +6316,14 @@ void excommunication(god_type new_god)
 
             _make_god_gifts_hostile(false);
         }
+        break;
+
+    case GOD_JIYVA:
+        for (int i = 0; i < 3; i++)
+            mutate(RANDOM_BAD_MUTATION);
+
+        _make_god_gifts_hostile(false);
+        _inc_penance(old_god, 30);
         break;
 
     default:
@@ -6309,7 +6534,12 @@ bool god_hates_attacking_friend(god_type god, int species)
         case GOD_OKAWARU:
             return (true);
         case GOD_BEOGH: // added penance to avoid killings for loot
-            return (species == MONS_ORC);
+            return (mons_genus(species) == MONS_ORC);
+        case GOD_JIYVA:
+             return (mons_genus(species) == MONS_JELLY
+                     || mons_genus(species) == MONS_GIANT_EYEBALL
+                     || species == MONS_GIANT_SPORE
+                     || species == MONS_GIANT_ORANGE_BRAIN);
 
         default:
             return (false);
@@ -6804,6 +7034,33 @@ void god_pitch(god_type which_god)
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
         gain_piety(20);         // allow instant access to first power
 
+    // Complimentary jelly upon joining
+    if (you.religion == GOD_JIYVA && !_has_jelly())
+    {
+        monster_type mon = MONS_JELLY;
+        mgen_data mg(mon, BEH_STRICT_NEUTRAL, 0, 0, you.pos(), MHITNOT, 0,
+                     GOD_JIYVA);
+
+        _delayed_monster(mg);
+        simple_god_message(" grants you a jelly!");
+
+        if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
+        {
+            const level_id target(BRANCH_SLIME_PITS, 6);
+            bool done = apply_to_level(target, true, slime_vault_to_floor);
+            if (done)
+            {
+                if (silenced(you.pos()))
+                {
+                    mpr("An unexplained breeze blows through the dungeon.",
+                        MSGCH_GOD);
+                }
+                else
+                    mpr("You hear the sound of toppling stones.", MSGCH_GOD);
+            }
+        }
+    }
+
     redraw_skill(you.your_name, player_title());
 
     learned_something_new(TUT_CONVERT);
@@ -7050,31 +7307,30 @@ void handle_god_time()
         {
         case GOD_XOM:
             xom_tick();
-            break;
+            return;
 
         // These gods like long-standing worshippers.
         case GOD_ELYVILON:
             if (_need_free_piety() && one_chance_in(20))
                 gain_piety(1);
-            break;
+            return;
 
         case GOD_SHINING_ONE:
             if (_need_free_piety() && one_chance_in(15))
                 gain_piety(1);
-            break;
+            return;
 
         case GOD_ZIN:
             if (_need_free_piety() && one_chance_in(12))
                 gain_piety(1);
-            break;
+            return;
 
+        // All the rest will excommunicate you if piety goes below 1.
         case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
             if (one_chance_in(17))
                 lose_piety(1);
-            if (you.piety < 1)
-                excommunication();
             break;
 
         // These gods accept corpses, so they time-out faster.
@@ -7082,8 +7338,6 @@ void handle_god_time()
         case GOD_TROG:
             if (one_chance_in(14))
                 lose_piety(1);
-            if (you.piety < 1)
-                excommunication();
             break;
 
         case GOD_MAKHLEB:
@@ -7091,8 +7345,6 @@ void handle_god_time()
         case GOD_LUGONU:
             if (one_chance_in(16))
                 lose_piety(1);
-            if (you.piety < 1)
-                excommunication();
             break;
 
         case GOD_SIF_MUNA:
@@ -7101,8 +7353,6 @@ void handle_god_time()
             // it's practically impossible to get Master of Arcane status.
             if (one_chance_in(100))
                 lose_piety(1);
-            if (you.piety < 1)
-                excommunication();
             break;
 
         case GOD_NEMELEX_XOBEH:
@@ -7111,13 +7361,19 @@ void handle_god_time()
                 lose_piety(1);
             if (you.attribute[ATTR_CARD_COUNTDOWN] > 0 && coinflip())
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
-            if (you.piety < 1)
-                excommunication();
+            break;
+
+        case GOD_JIYVA:
+            if (one_chance_in(20))
+                lose_piety(1);
             break;
 
         default:
             DEBUGSTR("Bad god, no bishop!");
+            return;
         }
+        if (you.piety < 1)
+            excommunication();
     }
 }
 
@@ -7156,6 +7412,9 @@ int god_colour(god_type god) // mv - added
 
     case GOD_SIF_MUNA:
         return(LIGHTBLUE);
+
+    case GOD_JIYVA:
+        return(GREEN);
 
     case GOD_NO_GOD:
     case NUM_GODS:

@@ -64,6 +64,7 @@ void init_feature_table();
 void init_monsters_seens();
 
 void beogh_follower_convert(monsters *monster, bool orc_hit = false);
+void slime_conversion(monsters *monster);
 bool mons_near(const monsters *monster, unsigned short foe = MHITYOU);
 bool mon_enemies_around(const monsters *monster);
 

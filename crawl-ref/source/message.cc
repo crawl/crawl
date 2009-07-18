@@ -238,6 +238,9 @@ static char god_message_altar_colour( god_type god )
     case GOD_LUGONU:
         return (LIGHTRED);
 
+    case GOD_JIYVA:
+        return (coinflip() ? GREEN : LIGHTGREEN);
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:

@@ -628,6 +628,24 @@ bool mons_is_icy(int mc)
             || mc == MONS_ICE_STATUE);
 }
 
+// Monsters consider as "slime" for Jiyva.
+bool mons_is_slime(const monsters *mon)
+{
+    if (mons_genus(mon->type) == MONS_JELLY
+        || mons_genus(mon->type) == MONS_GIANT_EYEBALL
+        || mons_genus(mon->type) == MONS_GIANT_ORANGE_BRAIN)
+    {
+        return (true);
+    }
+    return (false);
+}
+
+bool mons_eats_items(const monsters *mon)
+{
+    return (mons_itemuse(mon) == MONUSE_EATS_ITEMS
+            || mon->has_ench(ENCH_EATS_ITEMS));
+}
+
 bool mons_is_skeletal(int mc)
 {
     return (mc == MONS_SKELETON_SMALL
@@ -2558,12 +2576,18 @@ bool mons_friendly_real(const monsters *m)
 bool mons_neutral(const monsters *m)
 {
     return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL)
-            || m->attitude == ATT_GOOD_NEUTRAL);
+            || m->attitude == ATT_GOOD_NEUTRAL
+            || m->attitude == ATT_STRICT_NEUTRAL);
 }
 
 bool mons_good_neutral(const monsters *m)
 {
     return (m->attitude == ATT_GOOD_NEUTRAL);
+}
+
+bool mons_strict_neutral(const monsters *m)
+{
+    return (m->attitude == ATT_STRICT_NEUTRAL);
 }
 
 bool mons_is_pacified(const monsters *m)
@@ -2573,17 +2597,17 @@ bool mons_is_pacified(const monsters *m)
 
 bool mons_wont_attack(const monsters *m)
 {
-    return (mons_friendly(m) || mons_good_neutral(m));
+    return (mons_friendly(m) || mons_good_neutral(m) || mons_strict_neutral(m));
 }
 
 bool mons_wont_attack_real(const monsters *m)
 {
-    return (mons_friendly_real(m) || mons_good_neutral(m));
+    return (mons_friendly_real(m) || mons_good_neutral(m) || mons_strict_neutral(m));
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
-    return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL);
+    return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_STRICT_NEUTRAL);
 }
 
 mon_attitude_type mons_attitude(const monsters *m)
@@ -2592,6 +2616,8 @@ mon_attitude_type mons_attitude(const monsters *m)
         return ATT_FRIENDLY;
     else if (mons_good_neutral(m))
         return ATT_GOOD_NEUTRAL;
+    else if (mons_strict_neutral(m))
+        return ATT_STRICT_NEUTRAL;
     else if (mons_neutral(m))
         return ATT_NEUTRAL;
     else
@@ -7541,6 +7567,9 @@ void monsters::apply_enchantment(const mon_enchant &me)
         del_ench(ENCH_SLEEPY);
         break;
 
+    case ENCH_EATS_ITEMS:
+         break;
+
     default:
         break;
     }
@@ -8254,7 +8283,7 @@ static const char *enchant_names[] =
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "soul-ripe", "decay", "bug"
+    "soul-ripe", "decay", "hungry", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

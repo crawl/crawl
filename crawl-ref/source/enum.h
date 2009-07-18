@@ -103,10 +103,14 @@ enum ability_type
     ABIL_NEMELEX_STACK_FIVE,
     ABIL_BEOGH_SMITING,
     ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
+    ABIL_JIYVA_CALL_JELLY,
+    ABIL_JIYVA_JELLY_SHIELD,               // 240
+    ABIL_JIYVA_SLIMIFY,
+    ABIL_JIYVA_BAD_MUT_REMOVE,
 
-    ABIL_TRAN_BAT = 240,
+    ABIL_TRAN_BAT = 244,
     ABIL_HARM_PROTECTION,
-    ABIL_HARM_PROTECTION_II,                //  242
+    ABIL_HARM_PROTECTION_II,                //  246
     ABIL_RENOUNCE_RELIGION = 250            //  250
 };
 
@@ -237,6 +241,7 @@ enum beam_type                  // beam[].flavour
     BEAM_PETRIFY,
     BEAM_BACKLIGHT,
     BEAM_PORKALATOR,              // 45
+    BEAM_SLIME,
     BEAM_SLEEP,
     BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
 
@@ -732,6 +737,7 @@ enum conduct_type
     DID_DESECRATE_ORCISH_REMAINS,       // Beogh
     DID_DESTROY_ORCISH_IDOL,            // Beogh
     DID_CREATE_LIFE,                    // unused
+    DID_KILL_SLIME,                     // Jiyva
 
     NUM_CONDUCTS
 };
@@ -1097,7 +1103,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_ELYVILON,               //  191
     DNGN_ALTAR_LUGONU,
     DNGN_ALTAR_BEOGH,
-    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_BEOGH,
+    DNGN_ALTAR_JIYVA,
+    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_JIYVA,
 
     DNGN_FOUNTAIN_BLUE = 200,          //  200
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1245,6 +1252,7 @@ enum enchant_type
     ENCH_LOWERED_MR,
     ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
+    ENCH_EATS_ITEMS,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -1336,6 +1344,7 @@ enum god_type
     GOD_ELYVILON,
     GOD_LUGONU,
     GOD_BEOGH,
+    GOD_JIYVA,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -2063,6 +2072,7 @@ enum beh_type
     BEH_CHARMED,                       //  hostile-but-charmed; creation only
     BEH_FRIENDLY,                      //  used during creation only
     BEH_GOOD_NEUTRAL,                  //  creation only
+    BEH_STRICT_NEUTRAL,
     BEH_NEUTRAL,                       //  creation only
     BEH_HOSTILE,                       //  creation only
     BEH_GUARD                          //  creation only - monster is guard
@@ -2073,6 +2083,7 @@ enum mon_attitude_type
     ATT_HOSTILE,                       // 0, default in most cases
     ATT_NEUTRAL,                       // neutral
     ATT_GOOD_NEUTRAL,                  // neutral, but won't attack friendlies
+    ATT_STRICT_NEUTRAL,                // neutral, won't attack player. Used by Jiyva.
     ATT_FRIENDLY                       // created friendly (or tamed?)
 };
 
@@ -2095,7 +2106,8 @@ enum monster_flag_type
     MF_ATT_CHANGE_ATTEMPT = 0x400,   // Saw player and attitude changed (or
                                      // not); currently used for holy beings
                                      // (good god worshippers -> neutral)
-                                     // and orcs (Beogh worshippers -> friendly)
+                                     // orcs (Beogh worshippers -> friendly),
+                                     // and slimes (Jiyva worshippers -> neutral)
     MF_WAS_IN_VIEW        = 0x800,   // Was in view during previous turn.
 
     MF_BAND_MEMBER        = 0x1000,  // Created as a member of a band
@@ -3070,6 +3082,7 @@ enum zap_type
     ZAP_PETRIFY,
     ZAP_ENSLAVE_SOUL,
     ZAP_CHAOS,
+    ZAP_SLIME,
     NUM_ZAPS
 };
 

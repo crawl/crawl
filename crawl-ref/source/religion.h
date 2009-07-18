@@ -58,6 +58,7 @@ bool is_priest_god(god_type god);
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
+std::string god_name_jiyva(bool second_name = false);
 god_type string_to_god(const char *name, bool exact = true);
 
 std::string get_god_powers(god_type which_god);
@@ -102,6 +103,7 @@ bool divine_retribution(god_type god);
 bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);
+bool jiyva_grant_jelly(bool actual = true);
 bool beogh_water_walk();
 void good_god_holy_attitude_change(monsters *holy);
 void good_god_holy_fail_attitude_change(monsters *holy);
@@ -109,6 +111,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
 void beogh_convert_orc(monsters *orc, bool emergency,
                        bool converted_by_follower = false);
+void jiyva_convert_slime(monsters* slime);
 bool is_holy_item(const item_def& item);
 bool is_evil_item(const item_def& item);
 bool is_chaotic_item(const item_def& item);

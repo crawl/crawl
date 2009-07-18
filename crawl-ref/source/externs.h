@@ -793,6 +793,7 @@ public:
   char max_strength;
   char max_intel;
   char max_dex;
+  stat_type last_chosen;
 
   char hunger_state;
 
@@ -915,6 +916,7 @@ public:
   FixedVector<unsigned char, 30> branch_stairs;
 
   god_type religion;
+  std::string second_god_name; // Random second name of Jiyva
   unsigned char piety;
   unsigned char piety_hysteresis;       // amount of stored-up docking
   unsigned char gift_timeout;

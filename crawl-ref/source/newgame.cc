@@ -95,6 +95,7 @@ static void _give_random_secondary_armour(int slot);
 static bool _give_wanderer_weapon(int slot, int wpn_skill);
 static void _create_wanderer(void);
 static bool _give_items_skills(void);
+static void _fix_up_god_name(void);
 
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
@@ -1377,6 +1378,9 @@ game_start:
 
     _initialise_branch_depths();
     init_level_connectivity();
+
+    //Generate the second name of Jiyva
+    _fix_up_god_name();
 
     _save_newgame_options();
     return (true);
@@ -2860,6 +2864,10 @@ static void _jobs_stat_init(job_type which_job)
 
     modify_all_stats( s, i, d );
 
+    // Used for Jiyva's stat swapping if the player has not reached
+    // experience level 3.
+    you.last_chosen = (stat_type) random2(NUM_STATS);
+
     set_hp( hp, true );
     set_mp( mp, true );
 }
@@ -4294,6 +4302,17 @@ bool _needs_butchering_tool()
 
     return (true);
 }
+
+static void _fix_up_god_name()
+{
+    do
+        you.second_god_name = make_name(random_int(), false, 8, 'J');
+    while (strncmp(you.second_god_name.c_str(), "J", 1) != 0);
+
+    you.second_god_name = replace_all(you.second_god_name, " ", "");
+}
+
+
 
 static startup_wand_type _wand_to_start(int wand, bool is_rod)
 {

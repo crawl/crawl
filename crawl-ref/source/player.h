@@ -36,6 +36,7 @@ struct player_save_info
     species_type species;
     std::string class_name;
     god_type religion;
+    std::string second_god_name;
 #ifdef USE_TILE
     dolls_data doll;
     bool held_in_net;
@@ -285,6 +286,7 @@ bool player_knows_spell(int spell);
  * called from: effects
  * *********************************************************************** */
 int player_sust_abil(bool calc_unid = true);
+void jiyva_stat_action();
 
 
 /* ***********************************************************************

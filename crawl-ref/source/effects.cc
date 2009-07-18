@@ -3460,6 +3460,58 @@ void handle_time(long time_delta)
         if (one_chance_in(10))
             change_labyrinth();
     }
+
+    if (you.religion == GOD_JIYVA && !player_under_penance()
+        && one_chance_in(10))
+    {
+        int total_jellies = 1 + random2(5);
+        bool success = false;
+        int created;
+        for (int num_jellies = total_jellies; num_jellies > 0; num_jellies--)
+        {
+            //Spread jellies around the level
+            coord_def newpos;
+            do
+            {
+                newpos.set( random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
+                            random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1) );
+            }
+            while (grd(newpos) != DNGN_FLOOR
+                       && grd(newpos) != DNGN_SHALLOW_WATER
+                   || monster_at(newpos)
+                   || env.cgrid(newpos) != EMPTY_CLOUD);
+
+            mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, newpos,
+                         MHITNOT, 0, GOD_JIYVA);
+
+            if (create_monster(mg) != -1)
+                success = true;
+        }
+
+        if (success && !silenced(you.pos()))
+        {
+            switch (random2(3))
+            {
+                case 0:
+                    simple_god_message(" gurgles merrily.");
+                    break;
+                case 1:
+                    mprf(MSGCH_SOUND, "You hear %s splatter%s.",
+                         total_jellies > 1 ? "a series of" : "a",
+                         total_jellies > 1 ? "s" : "");
+                    break;
+                case 2:
+                    simple_god_message(" says: Divide and consume!");
+                    break;
+            }
+        }
+    }
+
+    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety / 4, MAX_PIETY)
+        && !player_under_penance())
+    {
+        jiyva_stat_action();
+    }
 }
 
 // Move monsters around to fake them walking around while player was

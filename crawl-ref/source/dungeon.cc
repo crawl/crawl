@@ -4681,6 +4681,9 @@ int dgn_place_monster(mons_spec &mspec,
         case ATT_GOOD_NEUTRAL:
             mg.behaviour = BEH_GOOD_NEUTRAL;
             break;
+        case ATT_STRICT_NEUTRAL:
+            mg.behaviour = BEH_STRICT_NEUTRAL;
+            break;
         default:
             break;
         }
@@ -5341,7 +5344,7 @@ static dungeon_feature_type _pick_an_altar()
         || player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
         || you.level_type == LEVEL_LABYRINTH)
     {
-        // No extra altars in Temple, none at all in Slime Pits or Labyrinth.
+        // No extra altars in Temple, none at all in Labyrinth.
         altar_type = DNGN_FLOOR;
     }
     else if (you.level_type == LEVEL_DUNGEON && !one_chance_in(5))
@@ -5386,6 +5389,10 @@ static dungeon_feature_type _pick_an_altar()
                           (temp_rand == 1) ? DNGN_ALTAR_SIF_MUNA :
                           (temp_rand == 2) ? DNGN_ALTAR_XOM
                                            : DNGN_ALTAR_MAKHLEB);
+            break;
+
+        case BRANCH_SLIME_PITS:
+            altar_type = DNGN_ALTAR_JIYVA;
             break;
 
         case BRANCH_TOMB:

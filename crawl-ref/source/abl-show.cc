@@ -41,6 +41,7 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "monplace.h"
 #include "monstuff.h"
+#include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
@@ -142,7 +143,10 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_LUGONU_CORRUPT, ABIL_LUGONU_ABYSS_ENTER },
     // Beogh
     { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING, ABIL_NON_ABILITY,
-      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY }
+      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY },
+    // Jiyva
+    { ABIL_JIYVA_CALL_JELLY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_BAD_MUT_REMOVE }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -315,6 +319,13 @@ static const ability_def Ability_List[] =
       3, 0, 80, generic_cost::fixed(3), ABFLAG_NONE },
     { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
       2, 0, 50, 0, ABFLAG_NONE },
+
+    // Jiyva
+    { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, ABFLAG_NONE },
+    { ABIL_JIYVA_JELLY_SHIELD, "Jelly Shield", 0, 0, 0, 0, ABFLAG_PIETY },
+    { ABIL_JIYVA_SLIMIFY, "Slimify", 4, 0, 100, 3, ABFLAG_NONE },
+    { ABIL_JIYVA_BAD_MUT_REMOVE, "Mutation Removal",
+      8, 0, 200, 15, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -658,6 +669,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
+    case ABIL_JIYVA_CALL_JELLY:
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
@@ -705,6 +717,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BEND_SPACE:
+    case ABIL_JIYVA_SLIMIFY:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
@@ -745,6 +758,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
+    case ABIL_JIYVA_BAD_MUT_REMOVE:
         invoc = true;
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1885,6 +1899,82 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
+    case ABIL_JIYVA_CALL_JELLY:
+    {
+        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, you.pos(),
+                     MHITNOT, 0, GOD_JIYVA);
+
+        if (create_monster(mg) == -1)
+            return (false);
+
+        exercise(SK_INVOCATIONS, 1 + random2(3));
+        break;
+    }
+    case ABIL_JIYVA_JELLY_SHIELD:
+        // Prayer effect
+        break;
+
+    case ABIL_JIYVA_SLIMIFY:
+        beam.range = LOS_RADIUS;
+        if (!spell_direction(spd, beam))
+            return (false);
+
+        if (beam.target == you.pos())
+        {
+            mpr("You cannot slime yourself!");
+            return (false);
+        }
+        if (!zapping(ZAP_SLIME, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
+                     true))
+        {
+            return (false);
+        }
+        exercise(SK_INVOCATIONS, 3 + random2(5));
+        break;
+
+    case ABIL_JIYVA_BAD_MUT_REMOVE:
+    {
+        // Removes a bad mutation from the player.
+        // delete_mutation(RANDOM_BAD_MUTATION) defaults to removing
+        // a random mutation if the player has no bad mutations
+        // so any newly added bad mutations need to be included here.
+
+        const mutation_type bad[] = {
+               MUT_HERBIVOROUS, MUT_CARNIVOROUS,
+               MUT_FRAIL, MUT_SLOW_HEALING,
+               MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY,
+               MUT_CLUMSY, MUT_DEFORMED, MUT_TELEPORT,
+               MUT_SCREAM, MUT_BERSERK, MUT_BLURRY_VISION,
+               MUT_LOW_MAGIC, MUT_DETERIORATION
+            };
+
+        if (!how_mutated())
+        {
+            mpr("You have no mutations to remove.");
+            return (false);
+        }
+
+        bool done = false;
+        for (int tries = 0; !done && tries < 100; tries++)
+        {
+            mutation_type mutat = RANDOM_ELEMENT(bad);
+            if (you.mutation[mutat] > 0)
+                done = delete_mutation(mutat);
+        }
+
+
+        if (done)
+        {
+            mpr("You feel cleansed.");
+            exercise(SK_INVOCATIONS, 5 + random2(5));
+        }
+        else
+        {
+            mpr("Nothing seems to happen.");
+            return (false);
+        }
+        break;
+    }
     case ABIL_HARM_PROTECTION:
     case ABIL_HARM_PROTECTION_II:
         // Activated via prayer elsewhere.

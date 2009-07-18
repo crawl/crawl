@@ -1197,6 +1197,9 @@ static int _place_monster_aux(const mgen_data &mg,
         if (mg.behaviour == BEH_NEUTRAL)
             menv[id].attitude = ATT_NEUTRAL;
 
+        if (mg.behaviour == BEH_STRICT_NEUTRAL)
+            menv[id].attitude = ATT_STRICT_NEUTRAL;
+
         menv[id].behaviour = BEH_WANDER;
     }
 
@@ -2230,8 +2233,11 @@ int mons_place(mgen_data mg)
         if (mg.behaviour == BEH_FRIENDLY)
             creation->flags |= MF_CREATED_FRIENDLY;
 
-        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL)
+        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL
+            || mg.behaviour == BEH_STRICT_NEUTRAL)
+        {
             creation->flags |= MF_WAS_NEUTRAL;
+        }
 
         if (mg.behaviour == BEH_CHARMED)
         {

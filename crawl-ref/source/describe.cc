@@ -3207,7 +3207,11 @@ const char *divine_title[NUM_GODS][8] =
 
     //  Beogh -- messiah theme
     {"Apostate",           "Messenger",             "Proselytiser",             "Priest",
-     "Missionary",         "Evangelist",            "Apostle",                  "Messiah"}
+     "Missionary",         "Evangelist",            "Apostle",                  "Messiah"},
+
+    //  Jiyva -- slime and jelly theme
+    {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
+     "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"}
 };
 
 static int _piety_level()
@@ -3539,6 +3543,16 @@ void describe_god( god_type which_god, bool give_title )
                 buf += " mirrors your injuries on your foes during prayer.";
                 _print_final_god_abil_desc(which_god, buf,
                                            ABIL_YRED_INJURY_MIRROR);
+            }
+        }
+        else if (which_god == GOD_JIYVA)
+        {
+            if (jiyva_grant_jelly(false))
+            {
+                have_any = true;
+                std::string buf = "You can pray to create a jelly shield.";
+                _print_final_god_abil_desc(which_god, buf,
+                                           ABIL_JIYVA_JELLY_SHIELD);
             }
         }
 

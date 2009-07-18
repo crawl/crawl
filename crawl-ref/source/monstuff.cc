@@ -47,6 +47,7 @@ REVISION("$Rev$");
 #include "monspeak.h"
 #include "mon-pick.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "mstuff2.h"
 #include "notes.h"
 #include "player.h"
@@ -78,6 +79,7 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monsters *monster);
 static spell_type _map_wand_to_mspell(int wand_type);
+static bool _is_item_jelly_edible(const item_def &item);
 
 static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
                           bool potentially_blocking);
@@ -759,6 +761,21 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
     return (false);
 }
 
+static bool _remove_jiyva_altars()
+{
+    bool success = false;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_ALTAR_JIYVA)
+        {
+            grd(*ri) = DNGN_FLOOR;
+            success = true;
+        }
+    }
+
+    return (success);
+}
+
 static bool _slime_pit_unlock(bool silent)
 {
     unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);
@@ -792,6 +809,9 @@ static bool _slime_pit_unlock(bool silent)
                 MSGCH_MONSTER_ENCHANT);
         }
     }
+
+     apply_to_all_dungeons(_remove_jiyva_altars);
+     mpr("With infernal noise, the power ruling this place vanishes!");
 
     return (true);
 }
@@ -1370,6 +1390,12 @@ int monster_die(monsters *monster, killer_type killer,
                 if (targ_holy == MH_HOLY)
                 {
                     did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
+                                    true, monster);
+                }
+
+                if (mons_is_slime(monster))
+                {
+                    did_god_conduct(DID_KILL_SLIME, monster->hit_dice,
                                     true, monster);
                 }
             }
@@ -2043,6 +2069,19 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
             str_polymon = " changes into ";
         else if (targetc == MONS_PULSATING_LUMP)
             str_polymon = " degenerates into ";
+        else if (you.religion == GOD_JIYVA
+                 && (targetc == MONS_OOZE
+                     || targetc == MONS_JELLY
+                     || targetc == MONS_BROWN_OOZE
+                     || targetc == MONS_ACID_BLOB
+                     || targetc == MONS_GIANT_AMOEBA
+                     || targetc == MONS_SLIME_CREATURE
+                     || targetc == MONS_DEATH_OOZE
+                     || targetc == MONS_AZURE_JELLY))
+        {
+            // Message used for the Slimify ability.
+            str_polymon = " quivers uncontrollably and liquefies into ";
+        }
         else
             str_polymon = " evaporates and reforms as ";
 
@@ -2335,6 +2374,34 @@ static void _set_random_target(monsters* mon)
         mon->target = newtarget;
         break;
     }
+}
+
+static void _set_random_slime_target(monsters* mon)
+{
+    // Strictly neutral slimes will go for the nearest item
+    int item_idx;
+    coord_def orig_target = mon->target;
+
+    for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false); ri; ++ri)
+    {
+        item_idx = igrd(*ri);
+        if (item_idx != NON_ITEM)
+        {
+            for (stack_iterator si(*ri); si; ++si)
+            {
+                item_def& item(*si);
+
+                if (_is_item_jelly_edible(item))
+                {
+                    mon->target = *ri;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (mon->target == mon->pos() || mon->target == you.pos())
+        _set_random_target(mon);
 }
 
 // allow_adjacent:  allow target to be adjacent to origin.
@@ -4358,6 +4425,12 @@ static void _handle_behaviour(monsters *mon)
 
                 if (_pacified_leave_level(mon, e, e_index))
                     return;
+            }
+
+            if (mons_strict_neutral(mon) && mons_is_slime(mon)
+                && you.religion == GOD_JIYVA)
+            {
+                _set_random_slime_target(mon);
             }
 
             // Is our foe in LOS?
@@ -7323,11 +7396,12 @@ static void _handle_monster_move(monsters *monster)
 
         if (igrd(monster->pos()) != NON_ITEM
             && (mons_itemuse(monster) == MONUSE_WEAPONS_ARMOUR
-                || mons_itemuse(monster) == MONUSE_EATS_ITEMS))
+                || mons_eats_items(monster)))
         {
             // Keep neutral and charmed monsters from picking up stuff.
             // Same for friendlies if friendly_pickup is set to "none".
             if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
+                || (you.religion == GOD_JIYVA && mons_is_slime(monster))
                 && (!mons_friendly(monster)
                     || you.friendly_pickup > FRIENDLY_PICKUP_NONE))
             {
@@ -7662,10 +7736,10 @@ static bool _handle_pickup(monsters *monster)
 
     const bool monster_nearby = mons_near(monster);
 
-    if (mons_itemuse(monster) == MONUSE_EATS_ITEMS)
+    if (mons_eats_items(monster))
     {
-        // Friendly jellies won't eat.
-        if (monster->attitude != ATT_HOSTILE)
+        // Friendly jellies won't eat (unless worshiping Jiyva).
+        if (monster->attitude != ATT_HOSTILE && you.religion != GOD_JIYVA)
             return (false);
 
         int  hps_gained = 0;
@@ -7712,6 +7786,61 @@ static bool _handle_pickup(monsters *monster)
 
                 hps_gained += quant / 10 + 1;
                 eaten++;
+            }
+
+            if (you.religion == GOD_JIYVA)
+            {
+                const item_def& item = *si;
+                const int value      = item_value(item) / item.quantity;
+                const int quantity   = item.quantity;
+
+                int pg = 0;
+                int timeout = 0;
+                for (int m = 0; m < quantity; m++)
+                {
+                    if (x_chance_in_y(value/2 + 1, 30 + you.piety/4))
+                    {
+                        if (timeout <= 0)
+                            pg += random2(item_value(item)/6);
+                        else
+                            timeout -= value/5;
+                    }
+                }
+
+                if (pg > 0)
+                {
+                    mprf(MSGCH_GOD, "Jiyva appreciates your sacrifice.");
+                    gain_piety(pg);
+                }
+
+                if (you.piety > 80
+                    && random2(you.piety) > 50
+                    && one_chance_in(4))
+                {
+                    bool success = false;
+                    if (!you.is_undead)
+                    {
+                        simple_god_message(" alters your body.");
+                        more();
+
+                        const int rand = random2(100);
+                        if (rand < 40)
+                            success = mutate(RANDOM_MUTATION);
+                        else if (rand < 60)
+                            success = delete_mutation(RANDOM_MUTATION);
+                        else
+                            success = mutate(RANDOM_GOOD_MUTATION);
+                    }
+
+                    if (success)
+                    {
+                        timeout = (100 + roll_dice(2, 4));
+                        you.num_gifts[you.religion]++;
+                        take_note(Note(NOTE_GOD_GIFT, you.religion));
+                    }
+                    else
+                        mpr("You feel as though nothing has changed.");
+                }
             }
 
             if (quant >= si->quantity)

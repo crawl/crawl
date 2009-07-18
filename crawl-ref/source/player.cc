@@ -21,6 +21,7 @@ REVISION("$Rev$");
 #include <ctype.h>
 
 #include <sstream>
+#include <algorithm>
 
 #include "externs.h"
 
@@ -1553,6 +1554,9 @@ int player_res_acid(bool calc_unid, bool items)
         if (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION))
             res++;
     }
+
+    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety, MAX_PIETY))
+        res++;
 
     return (res);
 }
@@ -3770,18 +3774,62 @@ static void _attribute_increase()
         case 's':
         case 'S':
             modify_stat(STAT_STRENGTH, 1, false, "level gain");
+            you.last_chosen = STAT_STRENGTH;
             return;
 
         case 'i':
         case 'I':
             modify_stat(STAT_INTELLIGENCE, 1, false, "level gain");
+            you.last_chosen = STAT_INTELLIGENCE;
             return;
 
         case 'd':
         case 'D':
             modify_stat(STAT_DEXTERITY, 1, false, "level gain");
+            you.last_chosen = STAT_DEXTERITY;
             return;
         }
+    }
+}
+
+// Rearrange stats, biased towards the stat chosen last at level up.
+void jiyva_stat_action()
+{
+    char* max_statp[]  = { &you.max_strength, &you.max_intel, &you.max_dex };
+    char* base_statp[] = { &you.strength, &you.intel, &you.dex };
+    int incremented_weight[] = {1, 1, 1};
+    int decremented_weight[3];
+    int stat_up_choice;
+    int stat_down_choice;
+
+    incremented_weight[you.last_chosen] = 2;
+
+    for (int x = 0; x < 3; ++x)
+         decremented_weight[x] = std::min(10, std::max(0, *max_statp[x] - 7));
+
+    stat_up_choice = choose_random_weighted(incremented_weight,
+                                            incremented_weight + 3);
+    stat_down_choice = choose_random_weighted(decremented_weight,
+                                              decremented_weight + 3);
+
+    if (stat_up_choice != stat_down_choice)
+    {
+        // We have a stat change noticeable to the player at this point.
+        // This could be lethal if the player currently has 1 in a stat
+        // but has a max stat of something higher -- perhaps we should
+        // check for that?
+
+        (*max_statp[stat_up_choice])++;
+        (*max_statp[stat_down_choice])--;
+        (*base_statp[stat_up_choice])++;
+        (*base_statp[stat_down_choice])--;
+
+        mprf(MSGCH_GOD, "Jiyva's power touches on your attributes.");
+             you.redraw_strength     = true;
+             you.redraw_intelligence = true;
+             you.redraw_dexterity    = true;
+
+        burden_change();
     }
 }
 
@@ -4417,6 +4465,9 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
     case AMU_CLARITY:
         return (player_mutation_level(MUT_CLARITY) > 0);
     case AMU_RESIST_CORROSION:
+        if (you.religion == GOD_JIYVA && you.piety > piety_breakpoint(2))
+            return (true);
+        // else fall-through
     case AMU_CONSERVATION:
         return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0);
     case AMU_THE_GOURMAND:
@@ -6057,6 +6108,7 @@ player_save_info player_save_info::operator=(const player& rhs)
     species          = rhs.species;
     class_name       = rhs.class_name;
     religion         = rhs.religion;
+    second_god_name  = rhs.second_god_name;
 #ifdef USE_TILE
     held_in_net      = false;
 #endif
@@ -6077,7 +6129,9 @@ std::string player_save_info::short_desc() const
          << species_name(species, experience_level) << ' '
          << class_name;
 
-    if (religion != GOD_NO_GOD)
+    if (religion == GOD_JIYVA)
+        desc << " of " << god_name_jiyva(true);
+    else if (religion != GOD_NO_GOD)
         desc << " of " << god_name(religion);
 
 #ifdef WIZARD

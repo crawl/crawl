@@ -1504,6 +1504,9 @@ void direction(dist& moves, targeting_type restricts,
                     m->flags |= MF_WAS_NEUTRAL;
                     break;
                 case ATT_GOOD_NEUTRAL:
+                    m->attitude = ATT_STRICT_NEUTRAL;
+                    break;
+                case ATT_STRICT_NEUTRAL:
                     m->attitude = ATT_NEUTRAL;
                     break;
                 case ATT_NEUTRAL:
@@ -2763,6 +2766,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("corrupted altar of Lugonu");
     case DNGN_ALTAR_BEOGH:
         return ("roughly hewn altar of Beogh");
+    case DNGN_ALTAR_JIYVA:
+        return ("viscous altar of Jiyva");
     case DNGN_FOUNTAIN_BLUE:
         return ("fountain of clear blue water");
     case DNGN_FOUNTAIN_SPARKLING:
