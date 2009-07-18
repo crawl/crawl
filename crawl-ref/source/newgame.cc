@@ -3639,7 +3639,7 @@ static void _create_wanderer(void)
         you.skills[skill]++;
     }
 
-    // Demigods can't use invocations so we'll swap it for something else
+    // Demigods can't use invocations, so we'll swap it for something else.
     if (you.species == SP_DEMIGOD && you.skills[SK_INVOCATIONS])
     {
         do
@@ -3708,7 +3708,7 @@ static void _create_wanderer(void)
 
     // Wanderers have at least seen one type of potion, and if they
     // don't get anything else good, they'll get to keep this one...
-    // Note:  even if this is taken away, the knowledge of the potion
+    // Note: Even if this is taken away, the knowledge of the potion
     // type is still given to the character.
     _give_random_potion(3);
 
