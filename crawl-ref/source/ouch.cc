@@ -849,7 +849,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
             };
 
     // Exclude torment damage
-    char *ptr = strstr(aux, "torment");
+    const char *ptr = strstr(aux, "torment");
     if (you.religion == GOD_JIYVA && you.piety >= 160 && ptr == NULL)
     {
         int how_many = 0;
