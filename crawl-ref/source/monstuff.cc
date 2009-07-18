@@ -7808,7 +7808,7 @@ static bool _handle_pickup(monsters *monster)
 
                 if (pg > 0)
                 {
-                    mprf(MSGCH_GOD, "Jiyva appreciates your sacrifice.");
+                    simple_god_message(" appreciates your sacrifice.");
                     gain_piety(pg);
                 }
 

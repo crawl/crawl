@@ -6358,7 +6358,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_JIYVA:
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; ++i)
             mutate(RANDOM_BAD_MUTATION);
 
         _make_god_gifts_hostile(false);
