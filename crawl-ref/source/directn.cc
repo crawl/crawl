@@ -875,13 +875,12 @@ crawl_exit_hook::~crawl_exit_hook()
 
 range_view_annotator::range_view_annotator(int range)
 {
-    do_anything = (range >= 0);
-
-    if (do_anything)
+    if (range >= 0)
     {
-        Options.target_range = range;
-        // Repaint.
-//         viewwindow(true, false);
+#ifndef USE_TILE
+        if (Options.target_range != -1)
+#endif
+            Options.target_range = range;
     }
 }
 
@@ -893,11 +892,7 @@ range_view_annotator::~range_view_annotator()
 
 void range_view_annotator::restore_state()
 {
-    if (!do_anything)
-        return;
-
     Options.target_range = 0;
-    do_anything = false;
 }
 
 bool _dist_ok(const dist& moves, int range, targ_mode_type mode,

@@ -5155,8 +5155,7 @@ static bool _jiyva_retribution()
 {
     const god_type god = GOD_JIYVA;
 
-    if (you.is_undead || one_chance_in(4)
-        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+    if (you.is_undead || one_chance_in(4))
     {
         const monster_type slimes[] = {
                 MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,

@@ -117,6 +117,7 @@ drop_filter = useless_item
 # target_los_first = false
 # default_target = false
 # target_unshifted_dirs = true
+# darken_beyond_range = false
 
 ##### 4-c	Passive Sightings #####################
 #
