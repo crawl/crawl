@@ -4434,8 +4434,10 @@ static void _zin_remove_good_mutations()
 
     for (int i = 7; i >= 0; --i)
     {
+        // Ensure that only good mutations are removed.
         if (i <= random2(10)
-            && delete_mutation(RANDOM_GOOD_MUTATION, failMsg, false, true))
+            && delete_mutation(RANDOM_GOOD_MUTATION, failMsg, false, true,
+                               true))
         {
             success = true;
         }

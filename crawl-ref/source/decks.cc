@@ -2195,7 +2195,8 @@ static void _experience_card(int power, deck_rarity_type rarity)
 
 static void _remove_bad_mutation()
 {
-    if (!delete_mutation(RANDOM_BAD_MUTATION, false))
+    // Ensure that only bad mutations are removed.
+    if (!delete_mutation(RANDOM_BAD_MUTATION, false, false, false, true))
         mpr("You feel transcendent for a moment.");
 }
 
