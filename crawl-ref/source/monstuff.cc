@@ -7819,7 +7819,6 @@ static bool _handle_pickup(monsters *monster)
                     if (you.can_safely_mutate())
                     {
                         simple_god_message(" alters your body.");
-                        more();
 
                         bool success = false;
                         const int rand = random2(100);
