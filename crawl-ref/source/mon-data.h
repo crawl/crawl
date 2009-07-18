@@ -3988,7 +3988,7 @@ static monsterentry mondata[] = {
 {
     MONS_DISSOLUTION, 'J', LIGHTMAGENTA, "Dissolution",
     M_UNIQUE | M_NO_SKELETON | M_SENSE_INVIS | M_ACID_SPLASH | M_BURROWS
-        | M_SPEAKS,
+        | M_PRIEST | M_SPEAKS,
     MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 11, MONS_JELLY, MONS_DISSOLUTION, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },

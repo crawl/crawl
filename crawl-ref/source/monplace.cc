@@ -1058,6 +1058,7 @@ static int _place_monster_aux(const mgen_data &mg,
         case MONS_MUMMY:
         case MONS_DRACONIAN:
         case MONS_ELF:
+        case MONS_JELLY:
             menv[id].god = GOD_NAMELESS;
             break;
         default:
