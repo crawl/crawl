@@ -930,6 +930,44 @@ bool jiyva_grant_jelly(bool actual)
             && (!actual || you.duration[DUR_PRAYER]));
 }
 
+bool jiyva_remove_bad_mutations()
+{
+    if (!how_mutated())
+    {
+        mpr("You have no bad mutations to be cured!");
+        return (false);
+    }
+
+    // delete_mutation(RANDOM_BAD_MUTATION) defaults to removing a
+    // random mutation if the player has no bad mutations, so any newly
+    // added bad mutations need to be included here.
+
+    const mutation_type bad[] = {
+        MUT_HERBIVOROUS, MUT_CARNIVOROUS, MUT_FRAIL, MUT_SLOW_HEALING,
+        MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY, MUT_DEFORMED,
+        MUT_TELEPORT, MUT_SCREAM, MUT_BERSERK, MUT_BLURRY_VISION,
+        MUT_LOW_MAGIC, MUT_DETERIORATION
+    };
+
+    bool done = false;
+    for (int tries = 0; !done && tries < 100; tries++)
+    {
+        mutation_type mutat = RANDOM_ELEMENT(bad);
+        if (you.mutation[mutat] > 0)
+            done = delete_mutation(mutat);
+    }
+
+    if (!done)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (false);
+    }
+
+    mpr("You feel cleansed.");
+
+    return (true);
+}
+
 static void _inc_penance(god_type god, int val)
 {
     if (you.penance[god] == 0 && val > 0)

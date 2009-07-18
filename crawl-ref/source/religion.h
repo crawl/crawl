@@ -104,6 +104,7 @@ bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);
 bool jiyva_grant_jelly(bool actual = true);
+bool jiyva_remove_bad_mutations();
 bool beogh_water_walk();
 void good_god_holy_attitude_change(monsters *holy);
 void good_god_holy_fail_attitude_change(monsters *holy);

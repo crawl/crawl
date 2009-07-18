@@ -146,7 +146,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY },
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_BAD_MUT_REMOVE }
+      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATIONS }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -325,7 +325,7 @@ static const ability_def Ability_List[] =
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, ABFLAG_NONE },
     { ABIL_JIYVA_JELLY_SHIELD, "Jelly Shield", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_JIYVA_SLIMIFY, "Slimify", 4, 0, 100, 3, ABFLAG_NONE },
-    { ABIL_JIYVA_BAD_MUT_REMOVE, "Mutation Removal",
+    { ABIL_JIYVA_CURE_BAD_MUTATIONS, "Cure Bad Mutations",
       8, 0, 200, 15, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
@@ -759,7 +759,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
-    case ABIL_JIYVA_BAD_MUT_REMOVE:
+    case ABIL_JIYVA_CURE_BAD_MUTATIONS:
         invoc = true;
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1911,8 +1911,9 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 1 + random2(3));
         break;
     }
+
     case ABIL_JIYVA_JELLY_SHIELD:
-        // Prayer effect
+        // Activated via prayer elsewhere.
         break;
 
     case ABIL_JIYVA_SLIMIFY:
@@ -1922,7 +1923,7 @@ static bool _do_ability(const ability_def& abil)
 
         if (beam.target == you.pos())
         {
-            mpr("You cannot slime yourself!");
+            mpr("You cannot slimify yourself!");
             return (false);
         }
         if (!zapping(ZAP_SLIME, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
@@ -1933,49 +1934,11 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
 
-    case ABIL_JIYVA_BAD_MUT_REMOVE:
-    {
-        // Removes a bad mutation from the player.
-        // delete_mutation(RANDOM_BAD_MUTATION) defaults to removing
-        // a random mutation if the player has no bad mutations
-        // so any newly added bad mutations need to be included here.
-
-        const mutation_type bad[] = {
-               MUT_HERBIVOROUS, MUT_CARNIVOROUS,
-               MUT_FRAIL, MUT_SLOW_HEALING,
-               MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY,
-               MUT_CLUMSY, MUT_DEFORMED, MUT_TELEPORT,
-               MUT_SCREAM, MUT_BERSERK, MUT_BLURRY_VISION,
-               MUT_LOW_MAGIC, MUT_DETERIORATION
-            };
-
-        if (!how_mutated())
-        {
-            mpr("You have no mutations to remove.");
-            return (false);
-        }
-
-        bool done = false;
-        for (int tries = 0; !done && tries < 100; tries++)
-        {
-            mutation_type mutat = RANDOM_ELEMENT(bad);
-            if (you.mutation[mutat] > 0)
-                done = delete_mutation(mutat);
-        }
-
-
-        if (done)
-        {
-            mpr("You feel cleansed.");
+    case ABIL_JIYVA_CURE_BAD_MUTATIONS:
+        if (jiyva_remove_bad_mutations())
             exercise(SK_INVOCATIONS, 5 + random2(5));
-        }
-        else
-        {
-            mpr("Nothing seems to happen.");
-            return (false);
-        }
         break;
-    }
+
     case ABIL_HARM_PROTECTION:
     case ABIL_HARM_PROTECTION_II:
         // Activated via prayer elsewhere.
@@ -1985,7 +1948,7 @@ static bool _do_ability(const ability_def& abil)
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')
             && yesno("Are you sure you won't change your mind later?",
-                     false, 'n' ))
+                     false, 'n'))
         {
             excommunication();
         }
@@ -2309,8 +2272,7 @@ std::vector<talent> your_talents(bool check_confused)
             && !you.num_gifts[GOD_ZIN]
             && you.piety > 160)
         {
-                _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS,
-                            check_confused);
+            _add_talent(talents, ABIL_ZIN_CURE_ALL_MUTATIONS, check_confused);
         }
     }
 
