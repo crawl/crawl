@@ -1900,7 +1900,7 @@ void MiscastEffect::_transmutation(int severity)
             if (target->atype() == ACT_PLAYER)
             {
                 you_msg = "You feel very strange.";
-                delete_mutation(RANDOM_MUTATION, true, false, false,
+                delete_mutation(RANDOM_MUTATION, true, false, false, false,
                                 lethality_margin > 0);
             }
             _ouch(5 + random2avg(23, 2));
