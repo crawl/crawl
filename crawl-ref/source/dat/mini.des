@@ -393,7 +393,7 @@ ENDMAP
 # Another Ice Statue vault
 #
 NAME:  ice2_lemuel
-DEPTH: D:12-27, Lair, Swamp, Coc
+DEPTH: D:12-26, Lair, Swamp, Coc
 TAGS:  no_pool_fixup no_monster_gen
 SUBST: T = TU
 SUBST: W = w:20 W .:5
@@ -880,7 +880,8 @@ ENDMAP
 ###################################
 # Closed-box minivault
 #
-NAME: minivault_12
+NAME:  minivault_12
+DEPTH: D:8-26
 MAP
 ............
 .xxxxxxxxxx.
@@ -1025,8 +1026,9 @@ ENDMAP
 
 ###################################
 
-NAME: minivault_21
-TAGS: allow_dup extra luniq_mini
+NAME:  minivault_21
+TAGS:  allow_dup extra luniq_mini
+DEPTH: D:8-26
 MAP
 ............
 .~xxxxxxxx~.
