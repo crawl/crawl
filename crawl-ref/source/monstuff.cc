@@ -2378,7 +2378,7 @@ static void _set_random_target(monsters* mon)
 
 static void _set_random_slime_target(monsters* mon)
 {
-    // Strictly neutral slimes will go for the nearest item
+    // Strictly neutral slimes will go for the nearest item.
     int item_idx;
     coord_def orig_target = mon->target;
 
@@ -7737,7 +7737,7 @@ static bool _handle_pickup(monsters *monster)
 
     if (mons_eats_items(monster))
     {
-        // Friendly jellies won't eat (unless worshiping Jiyva).
+        // Friendly jellies won't eat (unless worshipping Jiyva).
         if (monster->attitude != ATT_HOSTILE && you.religion != GOD_JIYVA)
             return (false);
 
@@ -7825,11 +7825,20 @@ static bool _handle_pickup(monsters *monster)
                         const int rand = random2(100);
 
                         if (rand < 40)
-                            success = mutate(RANDOM_MUTATION);
+                        {
+                            success = mutate(RANDOM_MUTATION, true, false,
+                                             true);
+                        }
                         else if (rand < 60)
-                            success = delete_mutation(RANDOM_MUTATION);
+                        {
+                            success = delete_mutation(RANDOM_MUTATION, true,
+                                                      false, true);
+                        }
                         else
-                            success = mutate(RANDOM_GOOD_MUTATION);
+                        {
+                            success = mutate(RANDOM_GOOD_MUTATION, true, false,
+                                             true);
+                        }
 
                         if (success)
                         {

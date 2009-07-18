@@ -939,7 +939,7 @@ bool jiyva_remove_bad_mutation()
     }
 
     // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, false, false, true, true))
+    if (!delete_mutation(RANDOM_BAD_MUTATION, true, false, true, true))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
@@ -5173,7 +5173,7 @@ static bool _jiyva_retribution()
         const int mutat = 1 + random2(4);
         god_speaks(god, "You feel Jiyva alter your body.");
         for (int i = 0; i < mutat; ++i)
-            mutate(RANDOM_BAD_MUTATION, true, true, true);
+            mutate(RANDOM_BAD_MUTATION, true, false, true);
     }
     return (true);
 }
@@ -6340,7 +6340,7 @@ void excommunication(god_type new_god)
 
     case GOD_JIYVA:
         for (int i = 0; i < 3; ++i)
-            mutate(RANDOM_BAD_MUTATION);
+            mutate(RANDOM_BAD_MUTATION, true, false, true);
 
         _make_god_gifts_hostile(false);
         _inc_penance(old_god, 30);

@@ -965,7 +965,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     }
 }
 
-void slime_conversion(monsters* monster)
+void slime_convert(monsters* monster)
 {
     if (you.religion == GOD_JIYVA && mons_is_slime(monster)
         && !mons_is_summoned(monster)
@@ -1332,7 +1332,7 @@ void monster_grid(bool do_updates)
 
             _good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
-            slime_conversion(monster);
+            slime_convert(monster);
         }
     }
 }
