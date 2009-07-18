@@ -286,9 +286,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "walk on water" },
     // Jiyva
     {  "request a jelly",
+       "summon a protective jelly shield via prayer",
        "",
-       "",
-       "turn your enemies to slime",
+       "turn your foes to slime",
        "call upon Jiyva to remove your harmful mutations"
     }
 };
@@ -382,7 +382,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a protective jelly shield via prayer",
       "",
       "turn your foes to slime",
-      "call upon Jiyva to remove bad mutations"
+      "call upon Jiyva to remove your harmful mutations"
     }
 };
 
@@ -942,17 +942,18 @@ bool jiyva_remove_bad_mutations()
     // random mutation if the player has no bad mutations, so any newly
     // added bad mutations need to be included here.
 
-    const mutation_type bad[] = {
-        MUT_HERBIVOROUS, MUT_CARNIVOROUS, MUT_FRAIL, MUT_SLOW_HEALING,
-        MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY, MUT_DEFORMED,
-        MUT_TELEPORT, MUT_SCREAM, MUT_BERSERK, MUT_BLURRY_VISION,
-        MUT_LOW_MAGIC, MUT_DETERIORATION
+    const mutation_type bad_muts[] = {
+        MUT_HERBIVOROUS,   MUT_CARNIVOROUS,     MUT_FRAIL,
+        MUT_SLOW_HEALING,  MUT_FAST_METABOLISM, MUT_WEAK,
+        MUT_DOPEY,         MUT_CLUMSY,          MUT_DEFORMED,
+        MUT_TELEPORT,      MUT_SCREAM,          MUT_BERSERK,
+        MUT_BLURRY_VISION, MUT_LOW_MAGIC,       MUT_DETERIORATION
     };
 
     bool done = false;
     for (int tries = 0; !done && tries < 100; tries++)
     {
-        mutation_type mutat = RANDOM_ELEMENT(bad);
+        mutation_type mutat = RANDOM_ELEMENT(bad_muts);
         if (you.mutation[mutat] > 0)
             done = delete_mutation(mutat);
     }
@@ -964,7 +965,6 @@ bool jiyva_remove_bad_mutations()
     }
 
     mpr("You feel cleansed.");
-
     return (true);
 }
 
