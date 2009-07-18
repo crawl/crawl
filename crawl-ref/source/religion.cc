@@ -951,9 +951,11 @@ bool jiyva_remove_bad_mutations()
     };
 
     bool done = false;
-    for (int tries = 0; !done && tries < 100; tries++)
+
+    for (int tries = 0; !done && tries < 100; ++tries)
     {
         mutation_type mutat = RANDOM_ELEMENT(bad_muts);
+
         if (you.mutation[mutat] > 0)
             done = delete_mutation(mutat);
     }
