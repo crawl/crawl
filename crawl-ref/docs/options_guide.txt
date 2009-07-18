@@ -586,6 +586,12 @@ target_unshifted_dirs = false
         If you use target_unshifted_dirs, default_target will be
         automatically disabled.
 
+darken_beyond_range = true
+        If set to true, everything beyond range when targeting will be
+        coloured grey. Setting this to false will also suppress the brief
+        flash if there are no visible monsters within range, both for
+        ASCII and the Tiles version.
+
 4-c     Passive Sightings (detected or remembered entities).
 -----------------------------------------------------------
 
