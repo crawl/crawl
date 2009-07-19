@@ -1,4 +1,3 @@
-
 /*
  *  File:       tags.cc
  *  Summary:    Auxilary functions to make savefile versioning simpler.
