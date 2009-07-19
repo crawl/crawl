@@ -1685,6 +1685,25 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     return (true);
 }
 
+static bool _check_carrying_orb()
+{
+    // We never picked up the Orb, no problem.
+    if (you.char_direction != GDT_ASCENDING)
+        return (true);
+
+    // So we did pick up the Orb. Now check whether we're carrying it.
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (is_valid_item( you.inv[i] )
+            && you.inv[i].base_type == OBJ_ORBS
+            && you.inv[i].sub_type == ORB_ZOT)
+        {
+            return (true);
+        }
+    }
+    return (yes_or_no("You're not carrying the Orb! Leave anyway"));
+}
+
 void up_stairs(dungeon_feature_type force_stair,
                entry_cause_type entry_cause)
 {
@@ -1746,7 +1765,8 @@ void up_stairs(dungeon_feature_type force_stair,
         && !destination_override.is_valid();
 
     if (leaving_dungeon
-        && !yesno("Are you sure you want to leave the Dungeon?", false, 'n'))
+        && (!yesno("Are you sure you want to leave the Dungeon?", false, 'n')
+            || !_check_carrying_orb()))
     {
         mpr("Alright, then stay!");
         return;
