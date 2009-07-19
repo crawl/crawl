@@ -485,21 +485,21 @@ static int _translate_keysym(SDL_keysym &keysym)
     // handled.
 
     const int shift_offset = CK_SHIFT_UP - CK_UP;
-    const int ctrl_offset = CK_CTRL_UP - CK_UP;
+    const int ctrl_offset  = CK_CTRL_UP - CK_UP;
 
     int mod = 0;
     if (keysym.mod & KMOD_SHIFT)
         mod |= MOD_SHIFT;
     if (keysym.mod & KMOD_CTRL)
         mod |= MOD_CTRL;
-    if (keysym.mod & KMOD_ALT)
+    if (keysym.mod & KMOD_LALT)
         mod |= MOD_ALT;
 
     // This is arbitrary, but here's the current mappings.
     // 0-256: ASCII, Crawl arrow keys
     // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers
     // 1k-3k: Non-ASCII with modifiers other than just shift or just ctrl.
-    // 3k+  : ASCII with the alt modifier.
+    // 3k+  : ASCII with the left alt modifier.
 
     int offset = mod ? 1000 + 256 * mod : 0;
     int numpad_offset = 0;
