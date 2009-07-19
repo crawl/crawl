@@ -392,6 +392,7 @@ static bool _chaotic_beings_attitude_change();
 static bool _magic_users_attitude_change();
 static bool _yred_slaves_abandon_you();
 static bool _beogh_followers_abandon_you();
+static bool _jiyva_slimes_abandon_you();
 static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);
 static bool _beogh_idol_revenge();
@@ -5165,7 +5166,7 @@ static bool _jiyva_retribution()
             const monster_type mon = RANDOM_ELEMENT(slimes);
 
             if (create_monster(
-                    mgen_data::hostile_at( static_cast<monster_type>(mon),
+                    mgen_data::hostile_at(static_cast<monster_type>(mon),
                     you.pos(), 0, 0, true, god)) != -1)
             {
                 success = true;
@@ -5180,7 +5181,9 @@ static bool _jiyva_retribution()
     else
     {
         const int mutat = 1 + random2(4);
+
         god_speaks(god, "You feel Jiyva alter your body.");
+
         for (int i = 0; i < mutat; ++i)
             mutate(RANDOM_BAD_MUTATION, true, false, true);
     }
@@ -5663,6 +5666,33 @@ static bool _beogh_followers_on_level_abandon_you()
     return (success);
 }
 
+static bool _jiyva_slimes_on_level_abandon_you()
+{
+    bool success = false;
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (is_fellow_slime(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Slime abandoning: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            monster->attitude = ATT_HOSTILE;
+            behaviour_event(monster, ME_ALERT, MHITYOU);
+            // For now WAS_NEUTRAL stays.
+
+            success = true;
+        }
+    }
+
+    return (success);
+}
+
 static bool _yred_souls_disappear()
 {
     return (apply_to_all_dungeons(_yred_enslaved_souls_on_level_disappear));
@@ -5819,6 +5849,21 @@ static bool _beogh_followers_abandon_you()
         }
 
         chan << std::endl;
+
+        return (true);
+    }
+
+    return (false);
+}
+
+// Upon excommunication, ex-Jiyvaites lose all their fellow slimes.
+static bool _jiyva_slimes_abandon_you()
+{
+    if (apply_to_all_dungeons(_jiyva_slimes_on_level_abandon_you))
+    {
+        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
+
+        chan << "All of your fellow slimes turn on you." << std::endl;
 
         return (true);
     }
@@ -6347,11 +6392,14 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_JIYVA:
-        for (int i = 0; i < 3; ++i)
+        _jiyva_slimes_abandon_you();
+
+        god_speaks(old_god, "You feel Jiyva alter your body.");
+
+        for (int i = 0; i < 4; ++i)
             mutate(RANDOM_BAD_MUTATION, true, false, true);
 
         _inc_penance(old_god, 30);
-        _make_god_gifts_hostile(false);
         break;
 
     default:
