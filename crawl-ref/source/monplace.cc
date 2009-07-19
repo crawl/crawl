@@ -1080,6 +1080,9 @@ static int _place_monster_aux(const mgen_data &mg,
         if (!one_chance_in(7))
             menv[id].god = GOD_BEOGH;
     }
+    // The royal jelly belongs to Jiyva.
+    else if (mg.cls == MONS_ROYAL_JELLY)
+        menv[id].god = GOD_JIYVA;
     // Angels and Daevas belong to TSO, but 1 out of 7 in the Abyss are
     // adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
