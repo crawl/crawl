@@ -286,7 +286,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "walk on water" },
     // Jiyva
     {  "request a jelly",
-       "summon a protective jelly shield via prayer",
+       "",
        "",
        "turn your foes to slime",
        "call upon Jiyva to remove your harmful mutations"
@@ -379,7 +379,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "walk on water" },
     // Jiyva
     { "request a jelly",
-      "summon a protective jelly shield via prayer",
+      "",
       "",
       "turn your foes to slime",
       "call upon Jiyva to remove your harmful mutations"
