@@ -6394,10 +6394,13 @@ void excommunication(god_type new_god)
     case GOD_JIYVA:
         _jiyva_slimes_abandon_you();
 
-        god_speaks(old_god, "You feel Jiyva alter your body.");
+        if (you.can_safely_mutate())
+        {
+            god_speaks(old_god, "You feel Jiyva alter your body.");
 
-        for (int i = 0; i < 4; ++i)
-            mutate(RANDOM_BAD_MUTATION, true, false, true);
+            for (int i = 0; i < 4; ++i)
+                mutate(RANDOM_BAD_MUTATION, true, false, true);
+        }
 
         _inc_penance(old_god, 30);
         break;
