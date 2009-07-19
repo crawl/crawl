@@ -2657,6 +2657,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                             && !mons_is_summoned(monster)
                             && !mons_is_shapeshifter(monster))
                     {
+                        monster->god = GOD_NO_GOD;
                         mons_make_god_gift(monster, is_good_god(you.religion) ?
                                            GOD_SHINING_ONE : GOD_BEOGH);
                     }
