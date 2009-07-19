@@ -351,6 +351,7 @@ dngn_trap_teleport DNGN_TRAP_TELEPORT
 dngn_trap_zot DNGN_TRAP_ZOT
 
 ## stairs
+%sdir dc-dngn/gateways
 stone_stairs_down DNGN_STONE_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
@@ -409,12 +410,12 @@ dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
 
+%sdir dc-dngn/gateways
 %rim 1
 dngn_enter_hell DNGN_ENTER_HELL
 dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 dngn_enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
-dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_dis DNGN_ENTER_DIS
 dngn_enter_gehenna DNGN_ENTER_GEHENNA
 dngn_enter_cocytus DNGN_ENTER_COCYTUS
@@ -425,6 +426,7 @@ dngn_exit DNGN_EXIT_ABYSS
 dngn_exit_flickering
 
 dngn_stone_arch DNGN_STONE_ARCH
+dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
 dngn_portal DNGN_PORTAL
 dngn_portal_rotated

@@ -1687,7 +1687,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
 
 static bool _check_carrying_orb()
 {
-    // We never picked up the Orb, all's okay.
+    // We never picked up the Orb, no problem.
     if (you.char_direction != GDT_ASCENDING)
         return (true);
 

@@ -1219,6 +1219,28 @@ game_start:
 
     strcpy( you.class_name, get_class_name(you.char_class) );
 
+    if (Options.random_pick)
+    {
+        // For completely random combinations (!, #, or Options.random_pick)
+        // reroll characters until the player accepts one of them or quits.
+        clrscr();
+
+        std::string specs = species_name(you.species, you.experience_level);
+        if (specs.length() > 79)
+            specs = specs.substr(0, 79);
+
+        cprintf( "You are a%s %s %s." EOL,
+                 (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
+                 you.class_name );
+
+        cprintf(EOL "Do you want to play this combination? (ynq) [y]");
+        char c = getch();
+        if (c == ESCAPE || tolower(c) == 'q')
+            end(0);
+        if (tolower(c) == 'n')
+            goto game_start;
+    }
+
     // New: pick name _after_ race and class choices.
     if (you.your_name[0] == 0)
     {
@@ -1249,27 +1271,6 @@ game_start:
                 return (false);
             }
         }
-    }
-    else if (Options.random_pick)
-    {
-        // For completely random combinations (!, #, or Options.random_pick)
-        // reroll characters until the player accepts one of them or quits.
-        clrscr();
-
-        std::string specs = species_name(you.species, you.experience_level);
-        if (specs.length() > 79)
-            specs = specs.substr(0, 79);
-
-        cprintf( "You are a%s %s %s." EOL,
-                 (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
-                 you.class_name );
-
-        cprintf(EOL "Do you want to play this combination? (ynq) [y]");
-        char c = getch();
-        if (c == ESCAPE || tolower(c) == 'q')
-            end(0);
-        if (tolower(c) == 'n')
-            goto game_start;
     }
 
 
