@@ -3256,5 +3256,5 @@ void nemelex_shuffle_decks()
         success = true;
 
     if (success)
-        god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex chuckle.");
+        god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex Xobeh chuckle.");
 }
