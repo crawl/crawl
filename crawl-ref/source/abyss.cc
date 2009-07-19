@@ -29,6 +29,7 @@ REVISION("$Rev$");
 #include "dungeon.h"
 #include "items.h"
 #include "lev-pand.h"
+#include "religion.h"
 #include "stuff.h"
 #include "spells3.h"
 #include "terrain.h"

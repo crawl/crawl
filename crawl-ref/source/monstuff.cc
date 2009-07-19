@@ -828,13 +828,13 @@ static bool _slime_vault_to_glass(bool silent)
 
     if (silenced(you.pos()))
     {
-        god_speaks("With an infernal shudder, the power ruling this place "
-                   "vanishes!", GOD_JIYVA);
+        god_speaks(GOD_JIYVA, "With an infernal shudder, the power ruling "
+                   "this place vanishes!");
     }
     else
     {
-        god_speaks("With infernal noise, the power ruling this place "
-                   "vanishes!", GOD_JIYVA);
+        god_speaks(GOD_JIYVA, "With infernal noise, the power ruling this "
+                   "place vanishes!");
     }
 
     return (true);
