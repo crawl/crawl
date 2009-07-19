@@ -167,13 +167,13 @@ ENDMAP
 ###############################################################################
 # Safe 2
 NAME:    bzr_entry_005
-TAGS:    bzr_entry allow_dup
+TAGS:    bzr_entry allow_dup mini_float
 SHUFFLE: wwlW
 MARKER:  O = lua:bazaar_portal()
 MAP
  wwwww
 wwwwwww
-ww<O>ww
+ww<O>ww@
 wwwwwww
  wwwww
 ENDMAP
