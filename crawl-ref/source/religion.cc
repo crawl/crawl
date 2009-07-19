@@ -1358,6 +1358,13 @@ bool is_orcish_follower(const monsters* mon)
             && mons_is_god_gift(mon, GOD_BEOGH));
 }
 
+bool is_fellow_slime(const monsters* mon)
+{
+    return (mon->alive() && mons_is_slime(mon)
+            && mon->attitude == ATT_STRICT_NEUTRAL
+            && mons_is_god_gift(mon, GOD_JIYVA));
+}
+
 bool _has_jelly()
 {
     ASSERT(you.religion == GOD_JIYVA);
@@ -1391,6 +1398,8 @@ bool is_follower(const monsters* mon)
         return is_undead_slave(mon);
     else if (you.religion == GOD_BEOGH)
         return is_orcish_follower(mon);
+    else if (you.religion == GOD_JIYVA)
+        return is_fellow_slime(mon);
     else if (you.religion == GOD_ZIN)
         return is_good_lawful_follower(mon);
     else if (is_good_god(you.religion))
@@ -6342,8 +6351,8 @@ void excommunication(god_type new_god)
         for (int i = 0; i < 3; ++i)
             mutate(RANDOM_BAD_MUTATION, true, false, true);
 
-        _make_god_gifts_hostile(false);
         _inc_penance(old_god, 30);
+        _make_god_gifts_hostile(false);
         break;
 
     default:

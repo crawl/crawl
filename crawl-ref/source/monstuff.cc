@@ -810,8 +810,18 @@ static bool _slime_pit_unlock(bool silent)
         }
     }
 
-     apply_to_all_dungeons(_remove_jiyva_altars);
-     mpr("With infernal noise, the power ruling this place vanishes!");
+    apply_to_all_dungeons(_remove_jiyva_altars);
+
+    if (!silenced(you.pos()))
+    {
+        mpr("With infernal noise, the power ruling this place vanishes!",
+            MSGCH_MONSTER_ENCHANT);
+    }
+    else
+    {
+        mpr("With an infernal shudder, the power ruling this place vanishes!",
+            MSGCH_MONSTER_ENCHANT);
+    }
 
     return (true);
 }

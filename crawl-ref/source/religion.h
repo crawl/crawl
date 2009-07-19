@@ -154,6 +154,7 @@ bool mons_is_god_gift(const monsters *mon, god_type god = you.religion);
 bool is_undead_slave(const monsters* mon);
 bool is_yred_undead_slave(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);
+bool is_fellow_slime(const monsters* mon);
 bool is_good_lawful_follower(const monsters* mon);
 bool is_good_follower(const monsters* mon);
 bool is_follower(const monsters* mon);
