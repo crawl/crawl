@@ -164,7 +164,7 @@ enum attribute_type
     ATTR_UNIQUE_RUNES,
     ATTR_DEMONIC_RUNES,
     ATTR_ABYSSAL_RUNES,
-    ATTR_RUNES_IN_ZOT,
+    ATTR_RUNES_IN_ZOT,         // Unused but needed for save file compatibility.
     ATTR_WEAPON_SWAP_INTERRUPTED,
     ATTR_GOLD_FOUND,
     ATTR_PURCHASES,            // Gold amount spent at shops.

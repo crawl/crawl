@@ -1867,9 +1867,8 @@ void up_stairs(dungeon_feature_type force_stair,
         && branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB)
     {
         int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
-            + you.attribute[ATTR_DEMONIC_RUNES]
-            + you.attribute[ATTR_ABYSSAL_RUNES]
-            - you.attribute[ATTR_RUNES_IN_ZOT];
+                          + you.attribute[ATTR_DEMONIC_RUNES]
+                          + you.attribute[ATTR_ABYSSAL_RUNES];
 
         if (runes_avail < NUMBER_OF_RUNES_NEEDED)
             xom_is_stimulated(255, "Xom snickers loudly.", true);
