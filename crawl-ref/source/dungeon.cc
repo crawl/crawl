@@ -5340,8 +5340,7 @@ static dungeon_feature_type _pick_an_altar()
     dungeon_feature_type altar_type;
     int temp_rand;              // probability determination {dlb}
 
-    if (player_in_branch( BRANCH_SLIME_PITS )
-        || player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
+    if (player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
         || you.level_type == LEVEL_LABYRINTH)
     {
         // No extra altars in Temple, none at all in Labyrinth.
