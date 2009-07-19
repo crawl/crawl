@@ -305,8 +305,7 @@ static void _generate_area(const coord_def& topleft,
                 }
                 while (grd(*ri) == DNGN_ALTAR_ZIN
                        || grd(*ri) == DNGN_ALTAR_SHINING_ONE
-                       || grd(*ri) == DNGN_ALTAR_ELYVILON
-                       || grd(*ri) == DNGN_ALTAR_JIYVA);
+                       || grd(*ri) == DNGN_ALTAR_ELYVILON);
 
                 // Lugonu has a flat 50% chance of corrupting the altar.
                 if (coinflip())
