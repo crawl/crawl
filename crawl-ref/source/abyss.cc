@@ -301,7 +301,7 @@ static void _generate_area(const coord_def& topleft,
                 do
                 {
                     grd(*ri) = static_cast<dungeon_feature_type>(
-                        DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
+                        DNGN_ALTAR_ZIN + random2(NUM_GODS - 1));
                 }
                 while (grd(*ri) == DNGN_ALTAR_ZIN
                        || grd(*ri) == DNGN_ALTAR_SHINING_ONE
