@@ -1722,7 +1722,7 @@ int exper_value(const monsters *monster)
     return (x_val);
 }
 
-void mons_load_spells( monsters *mon, mon_spellbook_type book )
+void mons_load_spells(monsters *mon, mon_spellbook_type book)
 {
     mon->load_spells(book);
 }
@@ -8025,10 +8025,10 @@ void monsters::lose_energy(energy_use_type et, int div, int mult)
 static inline monster_type _royal_jelly_ejectable_monster()
 {
     return static_cast<monster_type>(
-        random_choose( MONS_ACID_BLOB,
-                       MONS_AZURE_JELLY,
-                       MONS_DEATH_OOZE,
-                       -1 ) );
+        random_choose(MONS_ACID_BLOB,
+                      MONS_AZURE_JELLY,
+                      MONS_DEATH_OOZE,
+                      -1));
 }
 
 bool monsters::can_drink_potion(potion_type ptype) const

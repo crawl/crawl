@@ -680,7 +680,7 @@ unsigned mons_char(int mc);
 int mons_class_colour(int mc);
 int mons_colour(const monsters *mon);
 
-void mons_load_spells( monsters *mon, mon_spellbook_type book );
+void mons_load_spells(monsters *mon, mon_spellbook_type book);
 
 monster_type random_draconian_monster_species();
 
