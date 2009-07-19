@@ -857,7 +857,7 @@ void dec_penance(god_type god, int val)
             const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
 
             simple_god_message(
-                make_stringf("seems mollified%s.",
+                make_stringf(" seems mollified%s.",
                              dead_jiyva ? ", and vanishes" : "").c_str(),
                 god);
 
