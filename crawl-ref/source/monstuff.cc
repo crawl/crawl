@@ -766,12 +766,18 @@ static bool _slime_pit_unlock(bool silent)
     if (!silent)
     {
         for (int x = 0; x < GXM && !in_los; ++x)
+        {
             for (int y = 0; y < GYM; ++y)
-                if (grd[x][y] == DNGN_STONE_WALL && see_grid(x, y))
+            {
+                if ((grd[x][y] == DNGN_STONE_WALL
+                        || grd[x][y] == DNGN_CLEAR_ROCK_WALL)
+                    && see_grid(x, y))
                 {
                     in_los = true;
                     break;
                 }
+            }
+        }
     }
 
     replace_area_wrapper(DNGN_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
