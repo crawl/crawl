@@ -4239,7 +4239,7 @@ static void _tutorial_describe_feature(int x, int y)
             {
                 ostr << "These stairs lead out of the dungeon. Following them "
                         "will end the game. The only way to win is to "
-                        "transport the fabled orb of Zot outside.";
+                        "transport the fabled Orb of Zot outside.";
             }
             else
             {
