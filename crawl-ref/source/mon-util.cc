@@ -8082,7 +8082,7 @@ void monsters::lose_energy(energy_use_type et, int div, int mult)
     speed_increment -= energy_loss;
 }
 
-static inline monster_type _royal_jelly_ejectable_monster()
+monster_type royal_jelly_ejectable_monster()
 {
     return static_cast<monster_type>(
         random_choose(MONS_ACID_BLOB,
@@ -8229,14 +8229,14 @@ void monsters::react_to_damage(int damage, beam_type flavour)
         int spawned = 0;
         for (int i = 0; i < tospawn; ++i)
         {
-            const monster_type jelly = _royal_jelly_ejectable_monster();
+            const monster_type jelly = royal_jelly_ejectable_monster();
             coord_def jpos = find_newmons_square_contiguous(jelly, pos());
             if (!in_bounds(jpos))
                 continue;
 
             const int nmons = mons_place(
                                   mgen_data(jelly, beha, 0, 0,
-                                            jpos, foe));
+                                            jpos, foe, 0, god));
 
             if (nmons != -1 && nmons != NON_MONSTER)
             {
