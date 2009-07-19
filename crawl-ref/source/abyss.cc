@@ -44,11 +44,11 @@ const coord_def abyss_center(45,35);
 
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.
-static bool _place_feature_near( const coord_def &centre,
-                                 int radius,
-                                 dungeon_feature_type candidate,
-                                 dungeon_feature_type replacement,
-                                 int tries, bool not_seen = false )
+static bool _place_feature_near(const coord_def &centre,
+                                int radius,
+                                dungeon_feature_type candidate,
+                                dungeon_feature_type replacement,
+                                int tries, bool not_seen = false)
 {
     const int radius2 = radius * radius + 1;
     for (int i = 0; i < tries; ++i)
