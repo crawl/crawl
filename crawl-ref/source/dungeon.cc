@@ -8310,10 +8310,8 @@ static bool _fixup_interlevel_connectivity()
     if (at_branch_bottom())
     {
         for (int i = 0; i < 3; i++)
-        {
             if (!region_connected[up_region[i]])
                 return (false);
-        }
     }
 
     // Sanity check that we're not duplicating stairs.

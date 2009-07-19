@@ -703,6 +703,11 @@ std::vector<player_save_info> find_saved_characters()
 #ifdef USE_TILE
                 if (Options.tile_menu_icons)
                 {
+ #ifndef LOAD_UNPACKAGE_CMD
+        std::string basename =
+            filename.substr(0,
+                            filename.length() - strlen(".sav"));
+ #endif
                     const std::string dollname = basename + ".tdl";
  #ifdef LOAD_UNPACKAGE_CMD
                     snprintf( cmd_buff, sizeof(cmd_buff),
