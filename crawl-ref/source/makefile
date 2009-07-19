@@ -11,11 +11,16 @@ MAKEFILE ?= makefile.unix
 #MAKEFILE ?= makefile_tiles.mgw
 #MAKEFILE ?= makefile_tiles.unix
 
+#These are for cross-compiling purposes on crawl.develz.org, here for convenience:
+
+#MAKEFILE ?= makefile.mgw_unix
+#MAKEFILE ?= makefile_tiles.mgw_unix
+
 # number of concurrent jobs -- good value is (#_of_CPUs * 2) + 1
 #     cuts build time a lot on multi-cpu machines
 # Note: do not use enable this for builds of the tiles version.
 #OTHER=-j2
-
+                                                          
 all:
 	$(MAKE) $(OTHER) -f $(MAKEFILE)
 
