@@ -1200,7 +1200,7 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
             // no biting with visored helmet
-            if (you.equip[EQ_HELMET] != -1 
+            if (you.equip[EQ_HELMET] != -1
                 && (get_helmet_desc((you.inv[you.equip[EQ_HELMET]])) == THELM_DESC_VISORED))
             {
                 continue;

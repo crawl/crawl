@@ -816,7 +816,7 @@ bool evoke_item(int slot)
 #if DEBUG // variable only used in assert.
     const bool wielded = (you.equip[EQ_WEAPON] == slot);
 #endif
-    
+
     item_def& item = you.inv[slot];
     // Also handles messages.
     if (!item_is_evokable(item, false, false, true))

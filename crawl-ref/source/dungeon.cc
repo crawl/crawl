@@ -5044,7 +5044,7 @@ static void _vault_grid( vault_placement &place,
                      "else; please file a bug report.",
                      mons_type_name(monster_type_thing.mid,
                                     DESC_CAP_THE).c_str());
-                // Force it to be generated anyways.
+                // Force it to be generated anyway.
                 you.unique_creatures[monster_type_thing.mid] = false;
             }
         }
@@ -5336,8 +5336,8 @@ static dungeon_feature_type _pick_an_altar()
     dungeon_feature_type altar_type;
     int temp_rand;              // probability determination {dlb}
 
-    if (player_in_branch( BRANCH_SLIME_PITS )
-        || player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
+    if (player_in_branch(BRANCH_SLIME_PITS)
+        || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || you.level_type == LEVEL_LABYRINTH)
     {
         // No extra altars in Temple, none at all in Slime Pits or Labyrinth.
