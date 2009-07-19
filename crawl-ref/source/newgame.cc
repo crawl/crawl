@@ -4312,8 +4312,6 @@ static void _fix_up_god_name()
     you.second_god_name = replace_all(you.second_god_name, " ", "");
 }
 
-
-
 static startup_wand_type _wand_to_start(int wand, bool is_rod)
 {
     if (!is_rod)
