@@ -842,15 +842,15 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     if (death_source == NON_MONSTER)
         return;
 
-    monster_type mons;
+    monster_type mon;
     const monster_type jellies[] = {
                 MONS_ACID_BLOB, MONS_AZURE_JELLY,
                 MONS_DEATH_OOZE
             };
 
-    // Exclude torment damage
+    // Exclude torment damage.
     const char *ptr = strstr(aux, "torment");
-    if (you.religion == GOD_JIYVA && you.piety >= 160 && ptr == NULL)
+    if (you.religion == GOD_JIYVA && you.piety > 160 && ptr == NULL)
     {
         int how_many = 0;
         if (dam >= you.hp_max * 0.75)
@@ -872,9 +872,9 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
             int count_created = 0;
             for (int i = 0; i < how_many; ++i)
             {
-                mons = RANDOM_ELEMENT(jellies);
-                mgen_data mg (mons, BEH_STRICT_NEUTRAL, 0, 0, you.pos(),
-                              MHITNOT, 0, GOD_JIYVA);
+                mon = RANDOM_ELEMENT(jellies);
+                mgen_data mg(mon, BEH_STRICT_NEUTRAL, 0, 0, you.pos(),
+                             MHITNOT, 0, GOD_JIYVA);
 
                 if (create_monster(mg) != -1)
                     count_created++;

@@ -7054,7 +7054,7 @@ void god_pitch(god_type which_god)
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
         gain_piety(20);         // allow instant access to first power
 
-    // Complimentary jelly upon joining
+    // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA && !_has_jelly())
     {
         monster_type mon = MONS_JELLY;
