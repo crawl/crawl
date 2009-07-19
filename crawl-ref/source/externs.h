@@ -836,6 +836,7 @@ public:
   FixedVector<spell_type, 25> spells;
   char spell_no;
   game_direction_type char_direction;
+  bool opened_zot;
 
   unsigned short pet_target;
 

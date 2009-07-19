@@ -63,9 +63,12 @@ enum tag_minor_version
     TAG_MINOR_SVNREV   = 13,     // Added SVN revision
     TAG_MINOR_PORTEXT  = 14,     // Keep track of portal vault extensions.
     TAG_MINOR_RELIGION = 15,     // Keep track of ghosts' religions.
+    // XXX: Release 0.5 -> switch to major version 6
+    // Does that mean we can remove all the above minor version checks?
     TAG_MINOR_ARTEFACT = 16,     // Turned fixed arts into unrandarts.
     TAG_MINOR_JIYVA    = 17,     // Added some player bits for Jiyva.
-    TAG_MINOR_VERSION  = 17      // Current version.  (Keep equal to max.)
+    TAG_MINOR_ZOT_OPEN = 18,     // Remember whether Zot was opened.
+    TAG_MINOR_VERSION  = 18      // Current version.  (Keep equal to max.)
 };
 
 

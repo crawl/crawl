@@ -2448,7 +2448,6 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_ENTER_VAULTS:
     case DNGN_ENTER_CRYPT:
     case DNGN_ENTER_HALL_OF_BLADES:
-    case DNGN_ENTER_ZOT:
     case DNGN_ENTER_TEMPLE:
     case DNGN_ENTER_SNAKE_PIT:
     case DNGN_ENTER_ELVEN_HALLS:
@@ -2456,6 +2455,11 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
        return TILE_DNGN_ENTER;
+
+    case DNGN_ENTER_ZOT:
+        if (you.opened_zot)
+            return TILE_DNGN_ENTER_ZOT_OPEN;
+        return TILE_DNGN_ENTER_ZOT_CLOSED;
 
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
@@ -2662,6 +2666,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case '\\': fg = TILE_STAFF_OFFSET; break;
         case '^': bg = TILE_DNGN_TRAP_ZOT; break;
         case '_':
+        case 220:
         case 131: fg = TILE_UNSEEN_ALTAR; break;
         case '~': fg = TILE_UNSEEN_ITEM; break;
         case '{':
@@ -2672,6 +2677,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case 128: //old
         case 254: bg = TILE_DNGN_CLOSED_DOOR; break;
         case 129: bg = TILE_DNGN_RETURN; break;
+        case 239:
         case 132: fg = TILE_UNSEEN_ENTRANCE; break;
         case 136: bg = TILE_DNGN_ENTER; break;
         case 141: bg = TILE_DNGN_LAVA; break;

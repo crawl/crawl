@@ -6015,6 +6015,7 @@ void player::init()
     entry_cause_god = GOD_NO_GOD;
     where_are_you   = BRANCH_MAIN_DUNGEON;
     char_direction  = GDT_DESCENDING;
+    opened_zot      = false;
 
     prev_targ  = MHITNOT;
     pet_target = MHITNOT;

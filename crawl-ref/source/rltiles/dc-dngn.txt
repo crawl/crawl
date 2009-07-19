@@ -411,6 +411,8 @@ dngn_shallow_water_murky_disturbance2
 
 %rim 1
 dngn_enter_hell DNGN_ENTER_HELL
+dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
+dngn_enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
 dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_dis DNGN_ENTER_DIS

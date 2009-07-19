@@ -2117,7 +2117,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             mpr("You fall through a shaft!");
     }
 
-    if (stair_find == DNGN_ENTER_ZOT)
+    if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
     {
         const int num_runes = runes_in_pack();
 
@@ -2135,6 +2135,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             }
             return;
         }
+        // TODO: This needs a better message!
+        mpr("The gate opens wide!");
+        you.opened_zot = true;
     }
 
     // Bail if any markers veto the move.
