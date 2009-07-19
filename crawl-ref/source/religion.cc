@@ -852,9 +852,15 @@ void dec_penance(god_type god, int val)
 #endif
         if (you.penance[god] <= val)
         {
-            simple_god_message(" seems mollified.", god);
-            take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
+
+            simple_god_message(
+                make_stringf("seems mollified%s.",
+                             god == GOD_JIYVA && jiyva_is_dead() ?
+                                 ", and vanishes" : "").c_str(),
+                god);
+
+            take_note(Note(NOTE_MOLLIFY_GOD, god));
 
             // TSO's halo is once more available.
             if (god == GOD_SHINING_ONE && you.religion == god
@@ -922,6 +928,12 @@ static bool _need_water_walking()
 {
     return (!player_is_airborne() && you.species != SP_MERFOLK
             && grd(you.pos()) == DNGN_DEEP_WATER);
+}
+
+bool jiyva_is_dead()
+{
+    return (you.royal_jelly_dead
+            && you.religion != GOD_JIYVA && !you.penance[GOD_JIYVA]);
 }
 
 bool jiyva_grant_jelly(bool actual)
@@ -5194,6 +5206,9 @@ bool divine_retribution(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
+    if (god == GOD_JIYVA && jiyva_is_dead())
+        return (false);
+
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
     // hate.
@@ -7113,30 +7128,19 @@ void god_pitch(god_type which_god)
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
         gain_piety(20);         // allow instant access to first power
 
-    // Complimentary jelly upon joining.
-    if (you.religion == GOD_JIYVA && !_has_jelly())
+    // Complimentary jelly upon joining for the first time.
+    if (you.religion == GOD_JIYVA && you.worshipped[GOD_JIYVA] == 1)
     {
-        monster_type mon = MONS_JELLY;
-        mgen_data mg(mon, BEH_STRICT_NEUTRAL, 0, 0, you.pos(), MHITNOT, 0,
-                     GOD_JIYVA);
+        slime_vault_change(false);
 
-        _delayed_monster(mg);
-        simple_god_message(" grants you a jelly!");
-
-        if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
+        if (!_has_jelly())
         {
-            const level_id target(BRANCH_SLIME_PITS, 6);
-            bool done = apply_to_level(target, true, slime_vault_to_floor);
-            if (done)
-            {
-                if (silenced(you.pos()))
-                {
-                    mpr("An unexplained breeze blows through the dungeon.",
-                        MSGCH_GOD);
-                }
-                else
-                    mpr("You hear the sound of toppling stones.", MSGCH_GOD);
-            }
+            monster_type mon = MONS_JELLY;
+            mgen_data mg(mon, BEH_STRICT_NEUTRAL, 0, 0, you.pos(), MHITNOT, 0,
+                         GOD_JIYVA);
+
+            _delayed_monster(mg);
+            simple_god_message(" grants you a jelly!");
         }
     }
 

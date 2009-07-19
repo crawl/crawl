@@ -6009,13 +6009,14 @@ void player::init()
 
     spell_no = 0;
 
-    your_level      = 0;
-    level_type      = LEVEL_DUNGEON;
-    entry_cause     = EC_SELF_EXPLICIT;
-    entry_cause_god = GOD_NO_GOD;
-    where_are_you   = BRANCH_MAIN_DUNGEON;
-    char_direction  = GDT_DESCENDING;
-    opened_zot      = false;
+    your_level       = 0;
+    level_type       = LEVEL_DUNGEON;
+    entry_cause      = EC_SELF_EXPLICIT;
+    entry_cause_god  = GOD_NO_GOD;
+    where_are_you    = BRANCH_MAIN_DUNGEON;
+    char_direction   = GDT_DESCENDING;
+    opened_zot       = false;
+    royal_jelly_dead = false;
 
     prev_targ  = MHITNOT;
     pet_target = MHITNOT;

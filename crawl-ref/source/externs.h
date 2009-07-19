@@ -837,6 +837,7 @@ public:
   char spell_no;
   game_direction_type char_direction;
   bool opened_zot;
+  bool royal_jelly_dead;
 
   unsigned short pet_target;
 

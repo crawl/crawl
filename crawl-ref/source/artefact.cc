@@ -46,6 +46,9 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     if (which_god == GOD_NO_GOD)
         return (false);
 
+    if (which_god == GOD_JIYVA && jiyva_is_dead())
+        return (false);
+
     // First check the item's base_type and sub_type, then check the
     // item's brand and other randart properties.
     bool type_bad = false;

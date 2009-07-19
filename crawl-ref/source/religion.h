@@ -103,6 +103,7 @@ bool divine_retribution(god_type god);
 bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);
+bool jiyva_is_dead();
 bool jiyva_grant_jelly(bool actual = true);
 bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();

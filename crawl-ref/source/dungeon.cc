@@ -45,6 +45,7 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "place.h"
 #include "player.h"
+#include "religion.h"
 #include "spells3.h"
 #include "spl-book.h"
 #include "state.h"
@@ -4894,6 +4895,9 @@ static void _vault_grid( vault_placement &place,
                    (vgrid == '\0')? DNGN_ROCK_WALL
                                   : DNGN_FLOOR); // includes everything else
 
+    if (grd(where) == DNGN_ALTAR_JIYVA && jiyva_is_dead())
+        grd(where) = DNGN_FLOOR;
+
     // then, handle oddball grids {dlb}:
     switch (vgrid)
     {
@@ -5048,7 +5052,7 @@ static void _vault_grid( vault_placement &place,
                      "else; please file a bug report.",
                      mons_type_name(monster_type_thing.mid,
                                     DESC_CAP_THE).c_str());
-                // Force it to be generated anyways.
+                // Force it to be generated anyway.
                 you.unique_creatures[monster_type_thing.mid] = false;
             }
         }
@@ -5340,7 +5344,7 @@ static dungeon_feature_type _pick_an_altar()
     dungeon_feature_type altar_type;
     int temp_rand;              // probability determination {dlb}
 
-    if (player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
+    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || you.level_type == LEVEL_LABYRINTH)
     {
         // No extra altars in Temple, none at all in Labyrinth.
@@ -5391,7 +5395,7 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_SLIME_PITS:
-            altar_type = DNGN_ALTAR_JIYVA;
+            altar_type = jiyva_is_dead() ? DNGN_FLOOR : DNGN_ALTAR_JIYVA;
             break;
 
         case BRANCH_TOMB:

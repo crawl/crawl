@@ -2532,6 +2532,10 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
         {
             // Might get GOD_NO_GOD and no altar.
             god_type rgod = static_cast<god_type>(random2(NUM_GODS));
+
+            if (rgod == GOD_JIYVA && jiyva_is_dead())
+                rgod = GOD_NO_GOD;
+
             grd(you.pos()) = altar_for_god(rgod);
 
             if (grd(you.pos()) != DNGN_FLOOR)

@@ -1157,21 +1157,6 @@ static void _spatter_neighbours(const coord_def& where, int chance)
     }
 }
 
-bool slime_vault_to_floor()
-{
-    bool success = false;
-
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_STONE_WALL)
-        {
-            grd(*ri) = DNGN_FLOOR;
-            success = true;
-        }
-    }
-    return (success);
-}
-
 void generate_random_blood_spatter_on_level()
 {
     int startprob;
@@ -2458,27 +2443,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     static int times_entered = 0;
 
-    if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6)
-        && you.religion == GOD_JIYVA)
+    if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
     {
-        const level_id target(BRANCH_SLIME_PITS, 6);
         if (times_entered == 0)
-        {
-            if (apply_to_level(target, true, slime_vault_to_floor))
-            {
-                if (!silenced(you.pos()))
-                {
-                    mpr("You hear the sound of toppling stones.",
-                        MSGCH_MONSTER_ENCHANT);
-                }
-                else
-                {
-                    mpr("An unexplained breeze blows through the dungeon.",
-                        MSGCH_MONSTER_ENCHANT);
-                }
-            }
-            times_entered++;
-        }
+            slime_vault_change(jiyva_is_dead());
+
+        times_entered++;
     }
 
     // Clear list of beholding monsters.

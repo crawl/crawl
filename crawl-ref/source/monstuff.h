@@ -96,6 +96,8 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
 int place_monster_corpse(const monsters *monster, bool silent,
                          bool force = false);
 
+void slime_vault_change(bool glass);
+
 void mons_check_pool(monsters *monster, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
 

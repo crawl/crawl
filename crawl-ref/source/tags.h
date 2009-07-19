@@ -68,7 +68,8 @@ enum tag_minor_version
     TAG_MINOR_ARTEFACT = 16,     // Turned fixed arts into unrandarts.
     TAG_MINOR_JIYVA    = 17,     // Added some player bits for Jiyva.
     TAG_MINOR_ZOT_OPEN = 18,     // Remember whether Zot was opened.
-    TAG_MINOR_VERSION  = 18      // Current version.  (Keep equal to max.)
+    TAG_MINOR_JELLY    = 19,     // Remember whether the royal jelly is dead.
+    TAG_MINOR_VERSION  = 19      // Current version.  (Keep equal to max.)
 };
 
 

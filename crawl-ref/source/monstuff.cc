@@ -776,21 +776,35 @@ static bool _remove_jiyva_altars()
     return (success);
 }
 
-static bool _slime_pit_unlock(bool silent)
+static bool _slime_vault_in_los()
+{
+    bool in_los = false;
+
+    for (int x = 0; x < GXM && !in_los; ++x)
+    {
+        for (int y = 0; y < GYM; ++y)
+        {
+            if ((grd[x][y] == DNGN_STONE_WALL
+                    || grd[x][y] == DNGN_CLEAR_STONE_WALL)
+                && see_grid(x, y))
+            {
+                in_los = true;
+                break;
+            }
+        }
+    }
+
+    return (in_los);
+}
+
+static bool _slime_vault_to_glass(bool silent)
 {
     unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);
 
     bool in_los = false;
+
     if (!silent)
-    {
-        for (int x = 0; x < GXM && !in_los; ++x)
-            for (int y = 0; y < GYM; ++y)
-                if (grd[x][y] == DNGN_STONE_WALL && see_grid(x, y))
-                {
-                    in_los = true;
-                    break;
-                }
-    }
+        in_los = _slime_vault_in_los();
 
     replace_area_wrapper(DNGN_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
     // In case it was already vitrified, but then it's less noticeable.
@@ -812,27 +826,81 @@ static bool _slime_pit_unlock(bool silent)
 
     apply_to_all_dungeons(_remove_jiyva_altars);
 
-    if (!silenced(you.pos()))
+    if (silenced(you.pos()))
     {
-        mpr("With infernal noise, the power ruling this place vanishes!",
+        mpr("With an infernal shudder, the power ruling this place vanishes!",
             MSGCH_MONSTER_ENCHANT);
     }
     else
     {
-        mpr("With an infernal shudder, the power ruling this place vanishes!",
+        mpr("With infernal noise, the power ruling this place vanishes!",
             MSGCH_MONSTER_ENCHANT);
     }
 
     return (true);
 }
 
-static bool _slime_pit_unlock_offlevel()
+static bool _slime_vault_to_glass_offlevel()
 {
-    return _slime_pit_unlock(true);
+    return _slime_vault_to_glass(true);
 }
-static bool _slime_pit_unlock_onlevel()
+
+static bool _slime_vault_to_glass_onlevel()
 {
-    return _slime_pit_unlock(false);
+    return _slime_vault_to_glass(false);
+}
+
+static bool _slime_vault_to_floor(bool silent)
+{
+    unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);
+
+    bool in_los = false;
+
+    if (!silent)
+        in_los = _slime_vault_in_los();
+
+    replace_area_wrapper(DNGN_STONE_WALL, DNGN_FLOOR);
+    // In case it was already vitrified, but then it's less noticeable.
+    replace_area_wrapper(DNGN_CLEAR_STONE_WALL, DNGN_FLOOR);
+
+    if (silenced(you.pos()))
+        mpr("An unexplained breeze blows through the dungeon.", MSGCH_GOD);
+    else
+        mpr("You hear the sound of toppling stones.", MSGCH_GOD);
+
+    return (true);
+}
+
+static bool _slime_vault_to_floor_offlevel()
+{
+    return _slime_vault_to_floor(true);
+}
+
+static bool _slime_vault_to_floor_onlevel()
+{
+    return _slime_vault_to_floor(false);
+}
+
+void slime_vault_change(bool glass)
+{
+    const level_id target(BRANCH_SLIME_PITS, 6);
+    if (is_existing_level(target))
+    {
+        if (glass)
+        {
+            apply_to_level(target, true,
+                           target == level_id::current() ?
+                               _slime_vault_to_glass_onlevel :
+                               _slime_vault_to_glass_offlevel);
+        }
+        else
+        {
+            apply_to_level(target, true,
+                           target == level_id::current() ?
+                               _slime_vault_to_floor_onlevel :
+                               _slime_vault_to_floor_offlevel);
+        }
+    }
 }
 
 static void _fire_monster_death_event(monsters *monster,
@@ -877,15 +945,10 @@ static void _fire_monster_death_event(monsters *monster,
     // has to kill whatever it polymorphed into.
     if (type == MONS_ROYAL_JELLY && !polymorph)
     {
-        const level_id target(BRANCH_SLIME_PITS, 6);
-        if (is_existing_level(target))
-        {
-            apply_to_level(
-                target,
-                true,
-                target == level_id::current() ? _slime_pit_unlock_onlevel
-                                              : _slime_pit_unlock_offlevel);
-        }
+        you.royal_jelly_dead = true;
+
+        if (jiyva_is_dead())
+            slime_vault_change(true);
     }
 }
 
