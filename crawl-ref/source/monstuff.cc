@@ -761,21 +761,6 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
     return (false);
 }
 
-static bool _remove_jiyva_altars()
-{
-    bool success = false;
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_ALTAR_JIYVA)
-        {
-            grd(*ri) = DNGN_FLOOR;
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
 static bool _slime_vault_in_los()
 {
     bool in_los = false;
@@ -824,7 +809,7 @@ static bool _slime_vault_to_glass(bool silent)
         }
     }
 
-    apply_to_all_dungeons(_remove_jiyva_altars);
+    remove_all_jiyva_altars();
 
     if (silenced(you.pos()))
     {

@@ -854,11 +854,15 @@ void dec_penance(god_type god, int val)
         {
             you.penance[god] = 0;
 
+            const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
+
             simple_god_message(
                 make_stringf("seems mollified%s.",
-                             god == GOD_JIYVA && jiyva_is_dead() ?
-                                 ", and vanishes" : "").c_str(),
+                             dead_jiyva ? ", and vanishes" : "").c_str(),
                 god);
+
+            if (dead_jiyva)
+                remove_all_jiyva_altars();
 
             take_note(Note(NOTE_MOLLIFY_GOD, god));
 
@@ -930,12 +934,6 @@ static bool _need_water_walking()
             && grd(you.pos()) == DNGN_DEEP_WATER);
 }
 
-bool jiyva_is_dead()
-{
-    return (you.royal_jelly_dead
-            && you.religion != GOD_JIYVA && !you.penance[GOD_JIYVA]);
-}
-
 bool jiyva_grant_jelly(bool actual)
 {
     return (you.religion == GOD_JIYVA && !player_under_penance()
@@ -960,6 +958,32 @@ bool jiyva_remove_bad_mutation()
 
     mpr("You feel cleansed.");
     return (true);
+}
+
+bool jiyva_is_dead()
+{
+    return (you.royal_jelly_dead
+            && you.religion != GOD_JIYVA && !you.penance[GOD_JIYVA]);
+}
+
+static bool _remove_jiyva_altars()
+{
+    bool success = false;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_ALTAR_JIYVA)
+        {
+            grd(*ri) = DNGN_FLOOR;
+            success = true;
+        }
+    }
+
+    return (success);
+}
+
+bool remove_all_jiyva_altars()
+{
+    return (apply_to_all_dungeons(_remove_jiyva_altars));
 }
 
 static void _inc_penance(god_type god, int val)
