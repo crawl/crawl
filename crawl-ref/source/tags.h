@@ -63,7 +63,9 @@ enum tag_minor_version
     TAG_MINOR_SVNREV   = 13,     // Added SVN revision
     TAG_MINOR_PORTEXT  = 14,     // Keep track of portal vault extensions.
     TAG_MINOR_RELIGION = 15,     // Keep track of ghosts' religions.
-    TAG_MINOR_VERSION  = 15      // Current version.  (Keep equal to max.)
+    // Release 0.5.
+    TAG_MINOR_ZOT_OPEN = 16,     // Open Zot for good the first time you enter.
+    TAG_MINOR_VERSION  = 16      // Current version.  (Keep equal to max.)
 };
 
 

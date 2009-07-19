@@ -3065,8 +3065,7 @@ static void _xom_check_less_runes(int runes_gone)
 
     int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
                        + you.attribute[ATTR_DEMONIC_RUNES]
-                       + you.attribute[ATTR_ABYSSAL_RUNES]
-                       - you.attribute[ATTR_RUNES_IN_ZOT];
+                       + you.attribute[ATTR_ABYSSAL_RUNES];
     int was_avail = runes_avail + runes_gone;
 
     // No longer enough available runes to get into Zot.

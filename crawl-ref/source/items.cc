@@ -274,9 +274,6 @@ bool dec_mitm_item_quantity( int obj, int amount )
     if (mitm[obj].quantity <= amount)
         amount = mitm[obj].quantity;
 
-    if (player_in_branch(BRANCH_HALL_OF_ZOT) && is_rune(mitm[obj]))
-        you.attribute[ATTR_RUNES_IN_ZOT] -= amount;
-
     if (mitm[obj].quantity == amount)
     {
         destroy_item( obj );
@@ -307,9 +304,6 @@ void inc_inv_item_quantity( int obj, int amount, bool suppress_burden )
 
 void inc_mitm_item_quantity( int obj, int amount )
 {
-    if (player_in_branch(BRANCH_HALL_OF_ZOT) && is_rune(mitm[obj]))
-        you.attribute[ATTR_RUNES_IN_ZOT] += amount;
-
     mitm[obj].quantity += amount;
 }
 
@@ -556,9 +550,6 @@ static void _handle_gone_item(const item_def &item)
             else
                 you.attribute[ATTR_DEMONIC_RUNES] -= item.quantity;
         }
-
-        if (player_in_branch(BRANCH_HALL_OF_ZOT) && !in_inventory(item))
-            you.attribute[ATTR_RUNES_IN_ZOT] -= item.quantity;
     }
 }
 
@@ -1794,18 +1785,8 @@ bool move_item_to_grid( int *const obj, const coord_def& p )
     item.link = igrd(p);
     igrd(p) = ob;
 
-    if (is_rune(item))
-    {
-        if (player_in_branch(BRANCH_HALL_OF_ZOT))
-            you.attribute[ATTR_RUNES_IN_ZOT] += item.quantity;
-    }
-    else if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
-    {
+    if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
         set_branch_flags(BFLAG_HAS_ORB);
-    }
-
-//     if (see_grid(p))
-//        StashTrack.update_stash(p);
 
     return (true);
 }

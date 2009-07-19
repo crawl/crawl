@@ -1845,16 +1845,20 @@ void up_stairs(dungeon_feature_type force_stair,
 
     viewwindow(true, true);
 
-    // Left Zot without enough runes to get back in (probably because
-    // of dropping some runes within Zot), but need to get back in Zot
-    // to get the Orb?  Xom finds that funny.
+    // Left Zot without enough runes to get back in (because they were
+    // destroyed), but need to get back in Zot to get the Orb?
+    // Xom finds that funny.
     if (stair_find == DNGN_RETURN_FROM_ZOT
         && branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB)
     {
         int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
-            + you.attribute[ATTR_DEMONIC_RUNES]
-            + you.attribute[ATTR_ABYSSAL_RUNES]
-            - you.attribute[ATTR_RUNES_IN_ZOT];
+                          + you.attribute[ATTR_DEMONIC_RUNES]
+                          + you.attribute[ATTR_ABYSSAL_RUNES];
+
+        // In case we've loaded an older save file where opening Zot
+        // wasn't marked.
+        if (!you.opened_zot)
+            you.opened_zot = true;
 
         if (runes_avail < NUMBER_OF_RUNES_NEEDED)
             xom_is_stimulated(255, "Xom snickers loudly.", true);
@@ -2102,7 +2106,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             mpr("You fall through a shaft!");
     }
 
-    if (stair_find == DNGN_ENTER_ZOT)
+    if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
     {
         const int num_runes = runes_in_pack();
 
@@ -2120,6 +2124,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             }
             return;
         }
+        // TODO: This needs a better message!
+        mpr("The gate opens wide!");
+        you.opened_zot = true;
     }
 
     // Bail if any markers veto the move.

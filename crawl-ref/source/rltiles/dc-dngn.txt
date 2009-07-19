@@ -180,11 +180,11 @@ floor/rough_red3
 floor/floor_sand_stone0 FLOOR_SAND_STONE
 floor/floor_sand_stone1
 floor/floor_sand_stone2
-floor/floor_sand_stone3 
-floor/floor_sand_stone4 
-floor/floor_sand_stone5 
-floor/floor_sand_stone6 
-floor/floor_sand_stone7 
+floor/floor_sand_stone3
+floor/floor_sand_stone4
+floor/floor_sand_stone5
+floor/floor_sand_stone6
+floor/floor_sand_stone7
 
 wall/wall_yellow_rock0 WALL_YELLOW_ROCK
 wall/wall_yellow_rock1
@@ -206,7 +206,7 @@ floor/grass1
 floor/grass2
 
 floor/grass_n HALO_GRASS
-floor/grass_ne 
+floor/grass_ne
 floor/grass_e
 floor/grass_se
 floor/grass_s
@@ -301,7 +301,7 @@ floor/dirt1
 floor/dirt2
 
 floor/dirt_n HALO_DIRT
-floor/dirt_ne 
+floor/dirt_ne
 floor/dirt_e
 floor/dirt_se
 floor/dirt_s
@@ -344,8 +344,8 @@ dngn_granite_statue DNGN_GRANITE_STATUE
 
 %rim 1
 dngn_enter_hell DNGN_ENTER_HELL
+dngn_enter_zot DNGN_ENTER_ZOT
 %rim 0
-dngn_branch_stairs DNGN_BRANCH_STAIRS
 dngn_trap_dart DNGN_TRAP_DART
 dngn_trap_arrow DNGN_TRAP_ARROW
 dngn_trap_spear DNGN_TRAP_SPEAR
@@ -422,7 +422,7 @@ dngn_dry_fountain DNGN_DRY_FOUNTAIN
 
 ## Miscellaneous entries that get drawn on the background
 dc-misc/blood_red BLOOD
-dc-misc/blood_red1 
+dc-misc/blood_red1
 dc-misc/blood_red2
 dc-misc/blood_red3
 dc-misc/blood_red4

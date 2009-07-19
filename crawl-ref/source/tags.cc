@@ -1,3 +1,4 @@
+
 /*
  *  File:       tags.cc
  *  Summary:    Auxilary functions to make savefile versioning simpler.
@@ -835,6 +836,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.max_level);
     marshallByte(th, you.where_are_you);
     marshallByte(th, you.char_direction);
+    marshallByte(th, you.opened_zot);
     marshallByte(th, you.your_level);
     marshallByte(th, you.is_undead);
     marshallByte(th, you.special_wield);
@@ -1251,6 +1253,9 @@ static void tag_read_you(reader &th, char minorVersion)
     you.max_level         = unmarshallByte(th);
     you.where_are_you     = static_cast<branch_type>( unmarshallByte(th) );
     you.char_direction    = static_cast<game_direction_type>(unmarshallByte(th));
+    if (minorVersion >= TAG_MINOR_ZOT_OPEN)
+        you.opened_zot = (bool) unmarshallByte(th);
+
     you.your_level        = unmarshallByte(th);
     you.is_undead         = static_cast<undead_state_type>(unmarshallByte(th));
     you.special_wield     = unmarshallByte(th);
