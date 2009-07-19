@@ -1379,7 +1379,7 @@ game_start:
     _initialise_branch_depths();
     init_level_connectivity();
 
-    //Generate the second name of Jiyva
+    // Generate the second name of Jiyva
     _fix_up_god_name();
 
     _save_newgame_options();
