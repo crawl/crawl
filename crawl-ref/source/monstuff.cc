@@ -3300,10 +3300,12 @@ static void _mons_indicate_level_exit(const monsters *mon)
     {
         command_type dir = grid_stair_direction(gridc);
         simple_monster_message(mon,
-            make_stringf(" %s the stairs.",
+            make_stringf(" %s the %s.",
                 dir == CMD_GO_UPSTAIRS   ? "goes up" :
                 dir == CMD_GO_DOWNSTAIRS ? "goes down"
-                                         : "takes").c_str());
+                                         : "takes",
+                is_escape_hatch(gridc)   ? "escape hatch"
+                                         : "stairs").c_str());
     }
     else if (is_shaft)
     {
