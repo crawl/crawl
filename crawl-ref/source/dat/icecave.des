@@ -163,6 +163,12 @@ function ice_cave_caverns_natural_giant_monster_set(e)
 end
 }}
 
+# Add a milestone for entering the Ice Cave.
+{{
+function ice_cave_milestone(e)
+  crawl.mark_milestone("br.enter", "entered an Ice Cave.")
+end
+}}
 
 # Entries ##########################################
 
@@ -297,6 +303,7 @@ SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
 : ice_cave_random_monster_list_natural_giant(_G)
+: ice_cave_milestone(_G)
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
 MONS:    frost giant
@@ -375,6 +382,7 @@ SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
 : dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
+: ice_cave_milestone(_G)
 MONS:    ice beast
 MONS:    ice dragon
 MONS:    ice beast generate_awake
@@ -436,6 +444,7 @@ KFEAT:   - = floor w:9 / alarm trap w:1
 COLOUR:  - = white
 : ice_cave_colours(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
+: ice_cave_milestone(_G)
 MONS:    ice beast
 MONS:    white imp
 MONS:    freezing wraith
@@ -520,6 +529,7 @@ KFEAT:   ! = .
 ice_cave_colours(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil / nothing")
+ice_cave_milestone(_G)
 }}
 MONS:    white imp / ufetubus
 MONS:    ice devil / blue devil w:3
@@ -602,6 +612,7 @@ SUBST: - = x
 SUBST: _ = w
 : end
 : ice_cave_colours(_G)
+: ice_cave_milestone(_G)
 # Two different populations: undead/demon and natural/giant.
 : if crawl.coinflip() then
 : ice_cave_random_monster_list_undead_demon(_G)
@@ -696,6 +707,7 @@ SUBST: . = .:40 !:1
 : place_fog(_G, "freezing vapour", 25)
 KFEAT: ! = .
 : ice_cave_colours(_G)
+: ice_cave_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx..xxwwwwxxx.x.'x-.x5..5xxwwwwwxxx1...x.Wxxxxxx15415.xxxxxx......xxxx
