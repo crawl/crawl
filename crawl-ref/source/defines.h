@@ -289,5 +289,6 @@ enum mouse_mode
     MOUSE_MODE_MACRO
 };
 
+#define PI 3.14159265359f
 
 #endif

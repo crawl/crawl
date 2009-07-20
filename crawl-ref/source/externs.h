@@ -1079,6 +1079,7 @@ public:
     bool can_safely_mutate() const;
     bool can_bleed() const;
     bool mutate();
+    void backlight();
     void banish(const std::string &who = "");
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false, bool abyss_shift = false);

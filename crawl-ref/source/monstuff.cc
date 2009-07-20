@@ -4197,13 +4197,14 @@ static void _handle_behaviour(monsters *mon)
     if (isFriendly
         && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-        && !mon->has_ench(ENCH_BERSERK))
+       && !mon->has_ench(ENCH_BERSERK)
+       && mon->mons_species() != MONS_GIANT_SPORE )
     {
         mon->foe = you.pet_target;
     }
 
     // Instead, berserkers attack nearest monsters.
-    if (mon->has_ench(ENCH_BERSERK)
+    if ((mon->has_ench(ENCH_BERSERK) || mon->mons_species() == MONS_GIANT_SPORE)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
         // Intelligent monsters prefer to attack the player,

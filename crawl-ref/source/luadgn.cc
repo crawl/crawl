@@ -1395,10 +1395,10 @@ const char *dngn_feature_names[] =
     "altar_yredelemnul", "altar_xom", "altar_vehumet",
     "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
     "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
-    "altar_beogh", "altar_jiyva", "", "", "", "", "", "fountain_blue",
-    "fountain_sparkling", "fountain_blood", "dry_fountain_blue",
-    "dry_fountain_sparkling", "dry_fountain_blood", "permadry_fountain",
-    "abandoned_shop"
+    "altar_beogh", "altar_jiyva", "altar_feawn", "", "", "", "",
+    "fountain_blue", "fountain_sparkling", "fountain_blood",
+    "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
+    "permadry_fountain", "abandoned_shop"
 };
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)

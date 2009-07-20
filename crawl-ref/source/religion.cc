@@ -290,7 +290,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
        "",
        "turn your foes to slime",
        "call upon Jiyva to remove your harmful mutations"
-    }
+    },
+    // Feawn
+    { "call sunshine",
+      "cause a ring of plants to grow",
+      "control the weather",
+      "spawn explosive spores",
+      "induce evolution"}
 };
 
 const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
@@ -383,7 +389,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "turn your foes to slime",
       "call upon Jiyva to remove your harmful mutations"
-    }
+    },
+      // Feawn
+      { "call sunshine",
+        "cause a ring of plants to grow",
+        "control the weather",
+        "spawn explosive spores",
+        "induce evolution"}
 };
 
 static bool _holy_beings_attitude_change();
@@ -504,6 +516,12 @@ std::string get_god_likes(god_type which_god, bool verbose)
     {
     case GOD_SIF_MUNA:
         likes.push_back("you train your various spell casting skills");
+        break;
+
+    case GOD_FEAWN:
+        snprintf(info,INFO_SIZE,"you promote decomposition%s",
+                 verbose ? " via the <w>f</w> command" : "");
+        likes.push_back(info);
         break;
 
     case GOD_TROG:
@@ -774,6 +792,12 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     case GOD_JIYVA:
         dislikes.push_back("you attack your fellow slimes");
+        break;
+
+    case GOD_FEAWN:
+        dislikes.push_back("you destroy plants");
+        dislikes.push_back("allied flora die");
+        dislikes.push_back("you practice necromancy");
         break;
 
     default:
@@ -2478,6 +2502,7 @@ std::string god_name( god_type which_god, bool long_name )
             return god_name_jiyva(true) + " the Shapeless";
         }
         return god_name_jiyva(false);
+    case GOD_FEAWN:    return (long_name ? "Feawn the Arborial" : "Feawn");
 
     case GOD_XOM:
         if (!long_name)
@@ -2653,6 +2678,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_NECROMANCY:
         case DID_UNHOLY:
+            if (you.religion == GOD_FEAWN && known)
+            {
+                piety_change = -level;
+                penance = level;
+                retval = true;
+            }
+            else
+            {
+                simple_god_message(" forgives your blasphemy, just this once.");
+                break;
+            }
+
         case DID_ATTACK_HOLY:
             switch (you.religion)
             {
@@ -5180,6 +5217,7 @@ static bool _nemelex_retribution()
     return (true);
 }
 
+
 static bool _jiyva_retribution()
 {
     const god_type god = GOD_JIYVA;
@@ -5226,6 +5264,12 @@ static bool _jiyva_retribution()
     return (true);
 }
 
+static bool _feawn_retribution()
+{
+    // to be implemented -CAO
+    return true;
+}
+
 bool divine_retribution(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
@@ -5264,6 +5308,7 @@ bool divine_retribution(god_type god)
     case GOD_SIF_MUNA:      do_more = _sif_muna_retribution(); break;
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
+    case GOD_FEAWN:         do_more = _feawn_retribution(); break;
 
     default:
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION
@@ -7475,6 +7520,11 @@ void handle_god_time()
                 lose_piety(1);
             break;
 
+        case GOD_FEAWN:
+            // Feawn's piety is stable over time but we need a case here to
+            // avoid the error message below.
+            break;
+
         default:
             DEBUGSTR("Bad god, no bishop!");
             return;
@@ -7500,6 +7550,7 @@ int god_colour(god_type god) // mv - added
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
     case GOD_OKAWARU:
+    case GOD_FEAWN:
         return(CYAN);
 
     case GOD_YREDELEMNUL:

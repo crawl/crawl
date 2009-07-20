@@ -2733,6 +2733,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("staircase back to the Crypt");
     case DNGN_RETURN_FROM_ZOT:
         return ("gate leading back out of this place");
+
+    // altars
     case DNGN_ALTAR_ZIN:
         return ("glowing white marble altar of Zin");
     case DNGN_ALTAR_SHINING_ONE:
@@ -2763,6 +2765,9 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("roughly hewn altar of Beogh");
     case DNGN_ALTAR_JIYVA:
         return ("viscous altar of Jiyva");
+    case DNGN_ALTAR_FEAWN:
+        return ("blossoming altar of Feawn");
+
     case DNGN_FOUNTAIN_BLUE:
         return ("fountain of clear blue water");
     case DNGN_FOUNTAIN_SPARKLING:
@@ -3146,7 +3151,7 @@ static std::string _get_monster_desc(const monsters *mon)
                 text += pronoun + " is looking in ";
                 std::string name = foe->atype() == ACT_PLAYER
                                   ? "your" : (foe->name(DESC_NOCAP_THE) + "'s");
-                text += name + "general direction.\n";
+                text += name + " general direction.\n";
             }
         }
         else if (!foe || mons_is_fleeing(mon))

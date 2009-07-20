@@ -16,6 +16,7 @@ REVISION("$Rev$");
 #include <string.h>
 #include <sstream>
 #include <algorithm>
+#include <queue>
 
 #include "externs.h"
 
@@ -1722,4 +1723,689 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
+}
+
+// Turns corpses in LOS into skeletons and grows toadstools on them.
+// returns the number of corpses consumed
+int fungal_bloom()
+{
+    int seen_mushrooms=0;
+    int seen_corpses=0;
+
+    int processed_count=0;
+    for(radius_iterator i(you.position, LOS_RADIUS);i;++i)
+    {
+        // going to ignore squares that are already occupied by non-fungi
+        if(actor_at(*i) && !actor_at(*i)->mons_species() == MONS_TOADSTOOL)
+            continue;
+
+
+        for(stack_iterator j(*i); j; ++j)
+        {
+            bool corpse_on_pos = false;
+            if(j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
+            {
+                corpse_on_pos = true;
+                int trial_prob = mushroom_prob(*j);
+
+                processed_count++;
+                int target_count = 1 + binomial_generator(20,trial_prob);
+
+                int seen_per;
+                spawn_corpse_mushrooms(*j, target_count, seen_per, true);
+
+                seen_mushrooms += seen_per;
+
+                // either turn this corpse into a skeleton or destroy it
+                if(mons_skeleton(j->plus))
+                    turn_corpse_into_skeleton(*j);
+                else
+                    destroy_item(j->index());
+            }
+
+            if(corpse_on_pos && see_grid(*i))
+                seen_corpses++;
+
+        }
+    }
+
+
+    if(seen_mushrooms > 0)
+    {
+        std::string base=seen_mushrooms >  1 ? "Some toadstools" : "A toadstool";
+
+        // we obviously saw some corpses since we only processed squares in LOS
+        if(seen_corpses>1)
+        {
+            mprf("%s grow from nearby corpses.", base.c_str());
+        }
+        else
+            mprf("%s grow from a nearby corpse.", base.c_str());
+    }
+
+
+    return processed_count;
+}
+
+int create_plant(coord_def & target)
+{
+    if(actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target) ))
+        return 0;
+
+    const int plant = create_monster(mgen_data
+                                     (MONS_PLANT,
+                                      BEH_FRIENDLY,
+                                      0,
+                                      0,
+                                      target,
+                                      MHITNOT,
+                                      MG_FORCE_PLACE, GOD_FEAWN));
+
+
+    if(plant != -1 && see_grid(target) )
+        mpr("A plant grows up from the ground.");
+
+    return plant != -1;
+}
+
+bool sunlight()
+{
+
+    int c_size = 5;
+    int x_offset[] = {-1, 0, 0, 0, 1};
+    int y_offset[] = { 0,-1, 0, 1, 0};
+
+    dist spelld;
+
+    bolt temp_bolt;
+
+    temp_bolt.colour = YELLOW;
+    direction( spelld, DIR_TARGET, TARG_ENEMY, LOS_RADIUS, false, false,
+               false, true, "Select sunlight destination", NULL,
+               true);
+
+    if(!spelld.isValid)
+        return false;
+
+    coord_def base = spelld.target;
+
+    int evap_count=0;
+    int plant_count=0;
+
+    // uncomfortable level of code duplication here but the explosion code in
+    // bolt subjects the input radius to r*(r+1) for the threshold and
+    // since r is an integer we can never get just the 4-connected neighbors.
+    // Anyway the bolt code doesn't seem to be well set up to handle the
+    // 'occasional plant' gimmick.
+    for(int i=0;i<c_size;i++)
+    {
+        coord_def target=base;
+        target.x+=x_offset[i];
+        target.y+=y_offset[i];
+
+        if(!in_bounds(target) || grid_is_solid(grd(target)))
+            continue;
+
+        temp_bolt.explosion_draw_cell(target);
+
+        actor * victim = actor_at(target);
+
+        // If this is a water square we will evaporate it
+        dungeon_feature_type ftype = grd(target);
+
+        switch (int(ftype))
+        {
+        case DNGN_SHALLOW_WATER:
+            ftype=DNGN_FLOOR;
+            break;
+
+        case DNGN_DEEP_WATER:
+            ftype = DNGN_SHALLOW_WATER;
+            break;
+        }
+        if(grd(target)!=ftype)
+        {
+            grd(target) = ftype;
+            if(see_grid(target))
+                evap_count++;
+        }
+
+        monsters * monster_vic = monster_at(target);
+
+        // Pop submerged status (this may be a little too nice
+        // because it will affect trapdoor spiders not just fish).
+        if(monster_vic)
+            monster_vic->del_ench(ENCH_SUBMERGED);
+
+        if(victim)
+        {
+            if(!monster_vic)
+                you.backlight();
+            else
+                backlight_monsters(target,1,0);
+        }
+        else if(one_chance_in(100)
+                && ftype  >= DNGN_FLOOR_MIN
+                && ftype  <= DNGN_FLOOR_MAX )
+        {
+            // create a plant.
+            int plant=create_monster(mgen_data
+                                 (MONS_PLANT,
+                                  BEH_HOSTILE,
+                                  0,
+                                  0,
+                                  target,
+                                  MHITNOT,
+                                  MG_FORCE_PLACE, GOD_FEAWN));
+
+            if(plant!=-1 && see_grid(target))
+            {
+                plant_count++;
+            }
+        }
+    }
+    delay(50);
+
+    update_screen();
+
+    if(plant_count)
+        mprf("%s grows in the sunlight.",
+             (plant_count > 1 ? "Some plants": "A plant"));
+
+    if(evap_count)
+        mprf("Some water evaporates in the bright sunlight.");
+
+    return true;
+}
+
+template<typename T>
+bool less_second(const T & left, const T & right)
+{
+    return left.second < right.second;
+}
+
+typedef std::pair<coord_def, int> point_distance;
+
+// dfs starting at origin, find the distance from the origin to the targets
+// (not leaving LOS, not crossing monsters or solid walls) and store that in
+// distances
+void path_distance(coord_def & origin,
+                   std::vector<coord_def> & targets,
+                   std::vector<int> & distances)
+{
+    std::set<unsigned> exclusion;
+    std::queue<point_distance> fringe;
+    fringe.push(point_distance(origin,0));
+
+    int idx=origin.x+origin.y*X_WIDTH;
+    exclusion.insert(idx);
+
+    while(!fringe.empty() )
+    {
+        point_distance current = fringe.front();
+        fringe.pop();
+
+
+        // did we hit a target?
+        for(unsigned i=0;i<targets.size();i++)
+        {
+            if(current.first == targets[i])
+            {
+                distances[i]=current.second;
+                break;
+            }
+        }
+
+        for(adjacent_iterator adj_it(current.first); adj_it;++adj_it)
+        {
+           idx=adj_it->x+adj_it->y*X_WIDTH;
+           if(see_grid(*adj_it)
+              && !grid_is_solid(env.grid(*adj_it))
+              && exclusion.insert(idx).second)
+           {
+               monsters * temp = monster_at(*adj_it);
+               if(!temp || (temp->attitude==ATT_HOSTILE
+                            && temp->mons_species()!=MONS_PLANT
+                            && temp->mons_species()!=MONS_TOADSTOOL
+                            && temp->mons_species()!=MONS_FUNGUS))
+               {
+
+                   fringe.push(point_distance(*adj_it, current.second+1));
+               }
+           }
+        }
+    } // end while
+}
+
+// so we are basically going to compute point to point distance between
+// the points of origin and the end points (origins and targets respecitvely)
+// We will return a vector consisting of the minimum distances along one
+// dimension of the distance matrix.
+void point_point(std::vector<coord_def> & origins,
+                 std::vector<coord_def> & targets,
+                 bool origin_to_target,
+                 std::vector<int> & distances)
+{
+
+    distances.clear();
+    // consider a matrix where the points of origin form the rows and
+    // the target points form the column, we want to take the minimum along
+    // one of those dimensions.
+    if(origin_to_target)
+        distances.resize(origins.size(), INT_MAX);
+    else
+        distances.resize(targets.size(), INT_MAX);
+
+    std::vector<int> current_distances(targets.size(),0);
+    for(unsigned i=0;i<origins.size();i++)
+    {
+
+        for(unsigned j=0;j<current_distances.size();j++)
+            current_distances[j]=INT_MAX;
+
+        path_distance(origins[i], targets, current_distances);
+
+        // so we got the distance from a point of origin to one of the
+        // targets. What should we do with it?
+        if(origin_to_target)
+        {
+            // the minimum of current_distances is points(i)
+            int min_dist=current_distances[0];
+            for(unsigned j=1;i<current_distances.size();i++)
+            {
+                if(current_distances[j] < min_dist)
+                    min_dist = current_distances[j];
+            }
+            distances[i]=min_dist;
+        }
+        else
+        {
+            for(unsigned j=0;j< targets.size();j++)
+            {
+                if(i==0)
+                    distances[j]=current_distances[j];
+                else
+                {
+                    if(current_distances[j] < distances[j])
+                        distances[j] = current_distances[j];
+                }
+            }
+        }
+    }
+}
+
+// So the idea is we want to decide which adjacent tiles are in the most 'danger'
+// We claim danger is proportional to the minimum distances from the point to a
+// (hostile) monster. This function carries out at most 8 depth-first searches
+// to calculate the distances in question. In practice it should be called for
+// at most 7 searches since 8 (all adjacent free, > 8 monsters in view) can be
+// special cased easily.
+bool prioritize_adjacent(coord_def & target, std::vector<coord_def> & candidates)
+{
+    radius_iterator los_it(target, LOS_RADIUS, true, true, true);
+
+    std::vector<coord_def> mons_positions;
+    // collect hostile monster positions in LOS
+    for( ; los_it; ++los_it)
+    {
+        monsters * hostile = monster_at(*los_it);
+
+        if(hostile && hostile->attitude == ATT_HOSTILE)
+            mons_positions.push_back(hostile->pos());
+    }
+
+    mprf("foudn %d hostiles", mons_positions.size());
+
+    if(mons_positions.empty())
+    {
+        std::random_shuffle(candidates.begin(), candidates.end());
+        return true;
+    }
+
+    bool squares_to_monsters = mons_positions.size() > candidates.size();
+
+    std::vector<int> distances;
+
+    // So the idea is we will search from either possible plant locations to
+    // monsters or from monsters to possible plant locations, but honestly the
+    // implementation is unnecessarily tense and doing plants to monsters all
+    // the time would be fine. Yet I'm reluctant to change it because it does
+    // work.
+    if(squares_to_monsters)
+        point_point(candidates, mons_positions, squares_to_monsters, distances);
+    else
+        point_point(mons_positions, candidates, squares_to_monsters, distances);
+
+    std::vector<point_distance> possible_moves(candidates.size());
+
+    for(unsigned i=0;i<possible_moves.size();i++)
+    {
+        possible_moves[i].first = candidates[i];
+        possible_moves[i].second = distances[i];
+    }
+
+    std::sort(possible_moves.begin(), possible_moves.end(), less_second<point_distance>);
+
+    for(unsigned i=0;i<candidates.size();i++)
+        candidates[i]=possible_moves[i].first;
+
+    return true;
+}
+
+// Create a ring or partial ring around the caster
+// User is prompted to select a stack of fruit then plants are placed on open
+// squares adjacent to the caster, of course 1 piece of fruit is consumed per
+// plant so a complete ring may not be formed.
+bool plant_ring_from_fruit()
+{
+    int possible_count;
+    int created_count=0;
+    int rc = prompt_invent_item("Use which fruit?",
+                                MT_INVLIST,
+                                OSEL_FRUIT,
+                                true,
+                                true,
+                                true,
+                                '\0',
+                                -1,
+                                &possible_count);
+
+    if(prompt_failed(rc))
+        return 0;
+
+    std::vector<coord_def> adjacent;
+
+    for(adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
+    {
+        if(mons_class_can_pass(MONS_PLANT, env.grid(*adj_it))
+           && !actor_at(*adj_it))
+            adjacent.push_back(*adj_it);
+    }
+
+    if(int(adjacent.size()) > possible_count)
+    {
+        prioritize_adjacent(you.pos(), adjacent);
+
+        //::update_screen();
+    }
+
+    unsigned target_count = possible_count < int(adjacent.size()) ? possible_count : adjacent.size();
+
+    for(unsigned i=0;i<target_count;i++)
+    {
+        if(create_plant(adjacent[i]))
+            created_count++;
+    }
+
+    dec_inv_item_quantity(rc, created_count);
+
+    return created_count;
+}
+
+
+// Creates a circle of water around the target (radius is approximately 2)
+// Turns normal floor tiles into shallow water and turns (unoccupied) shallow
+// water into deep water.
+// Chance of spawning plants or fungus on unoccupied dry floor tiles outside
+// of the rainfall area
+// Returns the number of plants/fungus created
+int rain(coord_def & target)
+{
+    radius_iterator rad(target, LOS_RADIUS, true, true, true);
+
+    int spawned_count=0;
+    for (; rad; ++rad)
+    {
+        // adjusting the shape of the rainfall slightly to make it look nicer.
+        // I want a threshold of 2.5 on the euclidean distance so a threshold
+        // of 6 prior to the sqrt is close enough.
+        int rain_thresh=6;
+        coord_def local=*rad-target;
+
+        dungeon_feature_type ftype = grd(*rad);
+
+        if(local.abs() > rain_thresh)
+        {
+            // maybe spawn a plant on (dry, open) squares that are in LOS but
+            // outside the rainfall area.
+            // In open space there are 213 squares in LOS, and we are
+            // going to drop water on (25-4) of those, so if we want x plants
+            // to spawn on average in open space the trial probability should
+            // be x/192
+
+            if(x_chance_in_y(5,192)
+               && !actor_at(*rad)
+               && ftype  >= DNGN_FLOOR_MIN
+               && ftype  <= DNGN_FLOOR_MAX )
+            {
+                int plant=create_monster(mgen_data
+                                     (coinflip() ? MONS_PLANT : MONS_FUNGUS,
+                                      BEH_HOSTILE,
+                                      0,
+                                      0,
+                                      *rad,
+                                      MHITNOT,
+                                      MG_FORCE_PLACE, GOD_FEAWN));
+
+                if(plant!=-1)
+                    spawned_count++;
+            }
+
+            continue;
+        }
+
+        // Turn regular floor squares only into shallow water
+        if(ftype>=DNGN_FLOOR_MIN && ftype<=DNGN_FLOOR_MAX)
+        {
+            grd(*rad) = DNGN_SHALLOW_WATER;
+            // Remove blood stains as well
+            env.map(*rad).property &= ~(FPROP_BLOODY);
+        }
+        // We can also turn shallow water into deep water, but we're just going
+        // to skip cases where there is something on the shallow water.
+        // Destroying items will probably annoy people and insta-killing
+        // monsters is clearly out of the question.
+        else if(!actor_at(*rad)
+           && igrd(*rad) == NON_ITEM
+           && ftype == DNGN_SHALLOW_WATER)
+        {
+            grd(*rad) = DNGN_DEEP_WATER;
+        }
+    }
+
+    if(spawned_count>0)
+    {
+        mprf("%s grow in the rain.",
+             (spawned_count > 1 ? "Some plants" : "A plant"));
+    }
+
+    return spawned_count;
+}
+
+
+void corpse_spores()
+{
+    radius_iterator rad(you.pos(),LOS_RADIUS, true,true,true);
+
+    for( ; rad; ++rad)
+    {
+        for(stack_iterator stack_it(*rad); stack_it; ++stack_it)
+        {
+            if(stack_it->base_type == OBJ_CORPSES
+               && stack_it->sub_type == CORPSE_BODY)
+            {
+
+                create_monster(mgen_data
+                             (MONS_GIANT_SPORE,
+                              BEH_FRIENDLY,
+                              0,
+                              0,
+                              *rad,
+                              MHITNOT,
+                              MG_FORCE_PLACE));
+
+
+                if(mons_skeleton(stack_it->plus))
+                    turn_corpse_into_skeleton(*stack_it);
+                else
+                    destroy_item(stack_it->index());
+
+                break;
+            }
+
+        }
+
+    }
+}
+
+typedef std::pair<monsters *, int> monster_cost;
+
+struct lesser_second
+{
+    bool operator()(const monster_cost & left, const monster_cost & right)
+    {
+        // explicitly making this comparison unstable. I'm not clear on the
+        // complete implications of this but it should be ok for a heap.
+        if(left.second == right.second)
+            return coinflip();
+
+        return left.second < right.second;
+    }
+
+};
+
+bool evolve_flora()
+{
+    int needed_fruit = 2;
+
+
+    std::priority_queue<monster_cost,
+                        std::vector<monster_cost>,
+                        lesser_second > available_targets;
+
+    int points=15;
+    int plant_cost = 10;
+    int toadstool_cost = 1;
+    int fungus_cost = 5;
+
+    radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true);
+    for ( ; rad; ++rad)
+    {
+        monsters * target=monster_at(*rad);
+        int cost=0;
+
+        if(!target)
+            continue;
+
+        switch(target->mons_species())
+        {
+        case MONS_PLANT:
+            cost = plant_cost;
+
+            break;
+        case MONS_FUNGUS:
+            cost = fungus_cost;
+            break;
+
+        case MONS_TOADSTOOL:
+            cost = toadstool_cost;
+            break;
+
+        };
+        if(cost!=0)
+            available_targets.push(std::pair<monsters * ,int>(target,cost));
+    }
+
+    if(available_targets.empty() )
+        return false;
+
+    int rc;
+    int available_count;
+
+    rc = prompt_invent_item("Use which fruit (must have at least 2)?",
+                            MT_INVLIST, OSEL_SOME_FRUIT, true, true, true,
+                           '\0', -1, &available_count);
+
+    if(prompt_failed(rc))
+        return false;
+
+    dec_inv_item_quantity(rc, needed_fruit);
+
+    int plants_evolved = 0;
+    int toadstools_evolved = 0;
+    int fungi_evolved = 0;
+
+    while(!available_targets.empty() && points > 0)
+    {
+        monster_cost current_target = available_targets.top();
+
+        monsters * current_plant = current_target.first;
+        available_targets.pop();
+
+        // can we afford this thing?
+        if(current_target.second > points)
+            continue;
+
+        points-=current_target.second;
+
+        int base_species = current_plant->mons_species();
+        coord_def target_square = current_plant->pos();
+
+        // remove the original plant
+        monster_die(current_plant, KILL_MISC, NON_MONSTER, true);
+
+        monster_type new_species;
+        switch(base_species)
+        {
+        case MONS_PLANT:
+            new_species = MONS_OKLOB_PLANT;
+            plants_evolved++;
+            break;
+
+        case MONS_FUNGUS:
+            new_species = MONS_WANDERING_MUSHROOM;
+            fungi_evolved++;
+            break;
+
+        case MONS_TOADSTOOL:
+            new_species = MONS_FUNGUS;
+            toadstools_evolved++;
+            break;
+        };
+
+        rc=create_monster(mgen_data(new_species,
+                                    BEH_FRIENDLY, 0, 0, target_square,
+                                    MHITNOT, MG_FORCE_PLACE, GOD_FEAWN));
+
+
+        // we can potentially upgrade toadstools a second time
+        if(base_species == MONS_TOADSTOOL && rc != -1)
+            available_targets.push(monster_cost(&env.mons[rc], fungus_cost));
+    }
+
+    // messaging...
+    if(plants_evolved > 0)
+    {
+        mprf("%s can now spit acid.",
+             (plants_evolved == 1 ? "A plant" : "Some plants"));
+    }
+
+    if(toadstools_evolved>0)
+    {
+        bool plural = toadstools_evolved > 1;
+        std::string plural_s = toadstools_evolved > 1 ? "s" : "";
+
+        mprf("%s toadstool%s gain%s stability.", (plural ? "Some" : "A"),
+              plural_s.c_str(), plural_s.c_str() );
+    }
+
+    if(fungi_evolved > 0)
+    {
+        bool multiple = fungi_evolved > 1;
+        mprf("The fungal %s can now pick up %s mycelia and move.",
+             (multiple ? "colonies" : "colony"),
+             (multiple ? "their" : "its"));
+    }
+
+    return true;
 }

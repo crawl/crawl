@@ -3211,7 +3211,12 @@ const char *divine_title[NUM_GODS][8] =
 
     //  Jiyva -- slime and jelly theme
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
-     "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"}
+     "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
+
+    // Feawn -- nature theme, titles could use some work but the progression
+    // is generally from nature lover to walking disaster. -CAO
+    {"Walking Fertilizer", "Green %s",              "Tree Hugger",              "Conservationist",
+     "Floral Guardian",    "Eco-Terrorist",         "Green Death",              "Force of Nature"}
 };
 
 static int _piety_level()

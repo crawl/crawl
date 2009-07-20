@@ -146,7 +146,10 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY },
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION }
+      ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION },
+    // Feawn
+    {ABIL_FEAWN_SUNLIGHT, ABIL_FEAWN_PLANT_RING, ABIL_FEAWN_RAIN,
+     ABIL_FEAWN_SPAWN_SPORES, ABIL_FEAWN_EVOLUTION },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -327,6 +330,15 @@ static const ability_def Ability_List[] =
     { ABIL_JIYVA_SLIMIFY, "Slimify", 4, 0, 100, 3, ABFLAG_NONE },
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       8, 0, 200, 15, ABFLAG_NONE },
+
+    // Feawn
+    { ABIL_FEAWN_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_FEAWN_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_FEAWN_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_NONE},
+    { ABIL_FEAWN_RAIN, "Rain", 4, 0, 100, 2, ABFLAG_NONE},
+    { ABIL_FEAWN_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
+    { ABIL_FEAWN_EVOLUTION, "Evolution", 4, 0, 50, 2, ABFLAG_NONE},
+
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -671,12 +683,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_JIYVA_CALL_JELLY:
+    case ABIL_FEAWN_SUNLIGHT:
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
 
     // destroying stuff doesn't train anything
     case ABIL_ELYVILON_DESTROY_WEAPONS:
+    case ABIL_FEAWN_FUNGAL_BLOOM:
         invoc = true;
         failure = 0;
         break;
@@ -719,6 +733,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_JIYVA_SLIMIFY:
+    case ABIL_FEAWN_PLANT_RING:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
@@ -739,6 +754,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+    case ABIL_FEAWN_SPAWN_SPORES:
+    case ABIL_FEAWN_RAIN:
     case ABIL_YRED_DRAIN_LIFE:
         invoc = true;
         failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
@@ -749,6 +766,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
+    case ABIL_FEAWN_EVOLUTION:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1892,6 +1910,57 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 1);
         break;
 
+    case ABIL_FEAWN_FUNGAL_BLOOM:
+    {
+        int count = fungal_bloom();
+
+        // We are following the blood god sacrifice piety gain model, given as:
+        // if (random2(level + 10) > 5)
+        //    piety_change = 1;
+        //  where level = 10
+        // so the chance of gaining 1 piety from a corpse sacrifice to a blood
+        // god is (14/20 == 70/100)
+
+        int piety_gain = binomial_generator(count,70);
+
+        gain_piety(piety_gain);
+        break;
+    }
+    case ABIL_FEAWN_SUNLIGHT:
+
+        if(!sunlight())
+            return false;
+
+        exercise(SK_INVOCATIONS, 2 + random2(3));
+        break;
+
+    case ABIL_FEAWN_PLANT_RING:
+        if(!plant_ring_from_fruit())
+            return false;
+
+        exercise(SK_INVOCATIONS, 2 + random2(3));
+        break;
+
+    case ABIL_FEAWN_RAIN:
+
+        rain(you.pos() );
+
+        exercise(SK_INVOCATIONS, 2 + random2(3));
+        break;
+
+    case ABIL_FEAWN_SPAWN_SPORES:
+        corpse_spores();
+
+        exercise(SK_INVOCATIONS, 2 + random2(3));
+        break;
+
+    case ABIL_FEAWN_EVOLUTION:
+        if(!evolve_flora())
+            return false;
+
+        exercise(SK_INVOCATIONS, 2 + random2(3));
+        break;
+
     case ABIL_TRAN_BAT:
         if (!transform(100, TRAN_BAT))
         {
@@ -1955,6 +2024,7 @@ static bool _do_ability(const ability_def& abil)
         else
             canned_msg(MSG_OK);
         break;
+
 
     case ABIL_NON_ABILITY:
         mpr("Sorry, you can't do that.");
@@ -2237,6 +2307,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused);
     else if (you.religion == GOD_TROG)
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
+    else if (you.religion == GOD_FEAWN)
+        _add_talent(talents, ABIL_FEAWN_FUNGAL_BLOOM, check_confused);
 
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require

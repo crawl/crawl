@@ -2331,6 +2331,30 @@ bool can_cut_meat(const item_def &item)
     return (does_damage_type(item, DAM_SLICE));
 }
 
+bool is_fruit(const item_def & item)
+{
+    if(item.base_type != OBJ_FOOD)
+        return false;
+
+    switch (item.sub_type)
+    {
+    case FOOD_APPLE:
+    case FOOD_APRICOT:
+    case FOOD_BANANA:
+    case FOOD_CHOKO:
+    case FOOD_GRAPE:
+    case FOOD_LEMON:
+    case FOOD_LYCHEE:
+    case FOOD_ORANGE:
+    case FOOD_PEAR:
+    case FOOD_RAMBUTAN:
+    case FOOD_STRAWBERRY:
+    case FOOD_SULTANA:
+        return true;
+    };
+
+    return false;
+}
 bool food_is_rotten(const item_def &item)
 {
     return (item.special < 100) && (item.base_type == OBJ_CORPSES

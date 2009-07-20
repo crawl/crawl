@@ -2439,6 +2439,10 @@ static int _player_likes_food_type(int type)
 // be eaten (respecting species and mutations set).
 bool is_inedible(const item_def &item)
 {
+    // Mummies don't eat.
+    if (you.is_undead == US_UNDEAD)
+        return (true);
+
     if (food_is_rotten(item)
         && !player_mutation_level(MUT_SAPROVOROUS))
     {
@@ -2466,6 +2470,10 @@ bool is_inedible(const item_def &item)
 // still be edible or even delicious.
 bool is_preferred_food(const item_def &food)
 {
+    // Mummies don't eat.
+    if (you.is_undead == US_UNDEAD)
+        return (false);
+
     // Vampires don't really have a preferred food type, but they really
     // like blood potions.
     if (you.species == SP_VAMPIRE)

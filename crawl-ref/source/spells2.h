@@ -28,6 +28,20 @@ int detect_traps(int pow);
 void cast_refrigeration(int pow);
 void cast_toxic_radiance(void);
 void drain_life(int pow);
+
+int fungal_bloom();
+int create_plant(coord_def & target);
+//bool plant_from_fruit();
+bool sunlight();
+
+
+bool plant_ring_from_fruit();
+
+int rain(coord_def & target);
+void corpse_spores();
+bool evolve_flora();
+
+
 bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery = false);
 

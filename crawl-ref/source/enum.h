@@ -107,11 +107,17 @@ enum ability_type
     ABIL_JIYVA_JELLY_SHIELD,                // 240
     ABIL_JIYVA_SLIMIFY,
     ABIL_JIYVA_CURE_BAD_MUTATION,
+    ABIL_FEAWN_FUNGAL_BLOOM,
+    ABIL_FEAWN_SUNLIGHT,
+    ABIL_FEAWN_RAIN,                        // 245
+    ABIL_FEAWN_PLANT_RING,
+    ABIL_FEAWN_SPAWN_SPORES,
+    ABIL_FEAWN_EVOLUTION,
 
-    ABIL_TRAN_BAT = 244,
+    ABIL_TRAN_BAT = 250,
     ABIL_HARM_PROTECTION,
-    ABIL_HARM_PROTECTION_II,                //  246
-    ABIL_RENOUNCE_RELIGION = 250            //  250
+    ABIL_HARM_PROTECTION_II,                //  252
+    ABIL_RENOUNCE_RELIGION = 260            //  260
 };
 
 enum activity_interrupt_type
@@ -1104,7 +1110,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_LUGONU,
     DNGN_ALTAR_BEOGH,
     DNGN_ALTAR_JIYVA,
-    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_JIYVA,
+    DNGN_ALTAR_FEAWN,
+    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_FEAWN,
 
     DNGN_FOUNTAIN_BLUE = 200,          //  200
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1344,7 +1351,8 @@ enum god_type
     GOD_ELYVILON,
     GOD_LUGONU,
     GOD_BEOGH,
-    GOD_JIYVA,
+    GOD_JIYVA,                         //   15
+    GOD_FEAWN,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

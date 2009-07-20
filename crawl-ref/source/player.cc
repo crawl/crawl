@@ -7265,6 +7265,32 @@ bool player::backlit(bool check_haloed) const
             || (check_haloed ? haloed() : false));
 }
 
+// This is the imperative version.
+void player::backlight()
+{
+    if (!you.duration[DUR_INVIS])
+    {
+        if (you.duration[DUR_BACKLIGHT])
+            mpr("You glow brighter.");
+        else
+            mpr("You are outlined in light.");
+
+        you.duration[DUR_BACKLIGHT] += random_range(15, 35);
+        if (you.duration[DUR_BACKLIGHT] > 250)
+            you.duration[DUR_BACKLIGHT] = 250;
+    }
+    else
+    {
+        mpr("You feel strangely conspicuous.");
+
+        you.duration[DUR_BACKLIGHT] += random_range(3, 5);
+        if (you.duration[DUR_BACKLIGHT] > 250)
+            you.duration[DUR_BACKLIGHT] = 250;
+
+
+    }
+}
+
 bool player::haloed() const
 {
     return (halo_radius());

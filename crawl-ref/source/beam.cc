@@ -3586,29 +3586,8 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_BACKLIGHT:
-        if (!you.duration[DUR_INVIS])
-        {
-            if (you.duration[DUR_BACKLIGHT])
-                mpr("You glow brighter.");
-            else
-                mpr("You are outlined in light.");
-
-            you.duration[DUR_BACKLIGHT] += random_range(15, 35);
-            if (you.duration[DUR_BACKLIGHT] > 250)
-                you.duration[DUR_BACKLIGHT] = 250;
-
-            obvious_effect = true;
-        }
-        else
-        {
-            mpr("You feel strangely conspicuous.");
-
-            you.duration[DUR_BACKLIGHT] += random_range(3, 5);
-            if (you.duration[DUR_BACKLIGHT] > 250)
-                you.duration[DUR_BACKLIGHT] = 250;
-
-            obvious_effect = true;
-        }
+        you.backlight();
+        obvious_effect = true;
         break;
 
     case BEAM_POLYMORPH:
@@ -4096,6 +4075,21 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
+    // Worshippers of Feawn may shoot past friendly plants.
+    if (!is_explosion && !is_enchantment()
+        && this->attitude == ATT_FRIENDLY
+        && you.religion == GOD_FEAWN
+        && mons_genus(mon->mons_species()) == MONS_PLANT
+        && mon->mons_species() != MONS_GIANT_SPORE
+        && mon->attitude == ATT_FRIENDLY)
+    {
+        // FIXME: Messaging is kind of problematic here.
+        if (!is_tracer)
+            simple_god_message(" protects your plant from harm.", GOD_FEAWN);
+        return (false);
+    }
+
+
     // preac: damage before AC modifier
     // postac: damage after AC modifier
     // final: damage after AC and resists
@@ -4192,6 +4186,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
         {
             foe_info.power += 2 * final * mons_power(mon->type) / preac;
             foe_info.count++;
+
         }
         else
         {

@@ -997,6 +997,16 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OBJ_ARMOUR:
         return (itype == OBJ_ARMOUR && you_tran_can_wear(i));
 
+    case OSEL_FRUIT:
+        return is_fruit(i);
+
+        // This is really dumb. I don't want to talk about it. -cao
+    case OSEL_SOME_FRUIT:
+
+        return is_fruit(i) && i.quantity >= 2;
+
+
+
     case OSEL_WORN_ARMOUR:
         return (itype == OBJ_ARMOUR && item_is_equipped(i));
 

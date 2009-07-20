@@ -3019,6 +3019,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_ALTAR_LUGONU:
         case DNGN_ALTAR_BEOGH:
         case DNGN_ALTAR_JIYVA:
+        case DNGN_ALTAR_FEAWN:
             return (true);
         default:
             return (false);
@@ -4710,11 +4711,11 @@ void init_feature_table( void )
             break;
 
         case DNGN_ALTAR_LUGONU:
-            Feature[i].colour      = GREEN;
+            Feature[i].colour      = MAGENTA;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
-            Feature[i].seen_colour = GREEN;
+            Feature[i].seen_colour = MAGENTA;
             Feature[i].minimap     = MF_FEATURE;
             break;
 
@@ -4733,6 +4734,15 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = ETC_SLIME;
+            Feature[i].minimap     = MF_FEATURE;
+            break;
+
+        case DNGN_ALTAR_FEAWN:
+            Feature[i].colour      = GREEN;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
+            Feature[i].seen_colour = GREEN;
             Feature[i].minimap     = MF_FEATURE;
             break;
 

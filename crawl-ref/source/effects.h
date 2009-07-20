@@ -48,6 +48,13 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
 bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
                const item_def &cause, bool removed, bool force = false);
 
+// called from spells2 -cao
+int mushroom_prob(item_def & corpse);
+
+int spawn_corpse_mushrooms(item_def &corpse,
+                           int target_count,
+                           int & seen_targers,
+                           bool distance_as_time = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
