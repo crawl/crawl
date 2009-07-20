@@ -2578,7 +2578,7 @@ int item_mass(const item_def &item)
 
         if (brand == SPMSL_SILVER)
             unit_mass *= 2;
-        else if(brand == SPMSL_STEEL)
+        else if (brand == SPMSL_STEEL)
             unit_mass *= 3;
         break;
     }

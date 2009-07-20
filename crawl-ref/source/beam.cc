@@ -132,13 +132,14 @@ kill_category bolt::whose_kill() const
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-void zap_animation(int colour, const monsters *mon, bool force)
+static void _zap_animation(int colour, const monsters *mon = NULL,
+                           bool force = false)
 {
     coord_def p = you.pos();
 
     if (mon)
     {
-        if (!force && !player_monster_visible( mon ))
+        if (!force && !player_monster_visible(mon))
             return;
 
         p = mon->pos();
@@ -158,7 +159,6 @@ void zap_animation(int colour, const monsters *mon, bool force)
 #ifdef USE_TILE
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
-
         view_update();
         cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
@@ -170,7 +170,7 @@ void zap_animation(int colour, const monsters *mon, bool force)
 }
 
 // Special front function for zap_animation to interpret enchantment flavours.
-static void _ench_animation( int flavour, const monsters *mon, bool force )
+static void _ench_animation(int flavour, const monsters *mon, bool force)
 {
     const int elem = (flavour == BEAM_HEALING)       ? ETC_HEAL :
                      (flavour == BEAM_PAIN)          ? ETC_UNHOLY :
@@ -183,7 +183,7 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
                         || flavour == BEAM_BLINK)    ? ETC_WARP
                                                      : ETC_ENCHANT;
 
-    zap_animation(element_colour(elem), mon, force);
+    _zap_animation(element_colour(elem), mon, force);
 }
 
 // If needs_tracer is true, we need to check the beam path for friendly
@@ -1603,7 +1603,12 @@ void bolt::draw(const coord_def& p)
 
 #ifdef USE_TILE
     if (tile_beam == -1)
-        tile_beam = tileidx_bolt(*this);
+    {
+        if (effect_known)
+            tile_beam = tileidx_bolt(*this);
+        else
+            tile_beam = tileidx_zap(ETC_MAGIC);
+    }
 
     if (tile_beam != -1 && in_los_bounds(drawpos))
     {
@@ -3576,7 +3581,10 @@ void bolt::affect_player_enchantment()
     }
 
     // You didn't resist it.
-    _ench_animation( real_flavour );
+    if (effect_known)
+        _ench_animation(real_flavour);
+    else
+        _zap_animation(-1);
 
     bool nasty = true, nice = false;
 
@@ -4273,7 +4281,10 @@ void bolt::enchantment_affect_monster(monsters* mon)
 
     // Doing this here so that the player gets to see monsters
     // "flicker and vanish" when turning invisible....
-    _ench_animation( real_flavour, mon );
+    if (effect_known)
+        _ench_animation( real_flavour, mon );
+    else
+        _zap_animation(-1, mon, false);
 
     // Try to hit the monster with the enchantment.
     const mon_resist_type ench_result = try_enchant_monster(mon);

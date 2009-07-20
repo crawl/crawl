@@ -2690,7 +2690,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
 
 int tileidx_bolt(const bolt &bolt)
 {
-    int col = bolt.colour;
+    const int col = bolt.colour;
     return tileidx_zap(col);
 }
 

@@ -3479,8 +3479,8 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
                  mon->name(DESC_PLAIN, true).c_str());
             _first_attack_was_friendly[midx] = true;
         }
-        else if(_first_attack_conduct[midx]
-           || _first_attack_was_friendly[midx])
+        else if (_first_attack_conduct[midx]
+                 || _first_attack_was_friendly[midx])
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
             _first_attack_was_friendly[midx] = true;

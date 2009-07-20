@@ -851,9 +851,9 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
         int how_many = 0;
         if (dam >= you.hp_max * 0.75)
             how_many = random2(4) + 2;
-        else if(dam >= you.hp_max / 2)
+        else if (dam >= you.hp_max / 2)
             how_many = random2(2) + 2;
-        else if(dam >= you.hp_max / 4)
+        else if (dam >= you.hp_max / 4)
             how_many = random2(1) + 1;
 
         if (how_many > 0)

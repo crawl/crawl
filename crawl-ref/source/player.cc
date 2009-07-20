@@ -7141,8 +7141,8 @@ void player::paralyse(actor *who, int str)
 
     int &paralysis(duration[DUR_PARALYSIS]);
 
-    mprf( "You %s the ability to move!",
-          paralysis ? "still haven't" : "suddenly lose" );
+    mprf("You %s the ability to move!",
+         paralysis ? "still haven't" : "suddenly lose");
 
     if (str > paralysis && (paralysis < 3 || one_chance_in(paralysis)))
         paralysis = str;
@@ -7157,8 +7157,8 @@ void player::petrify(actor *who, int str)
 
     int &petrif(duration[DUR_PETRIFIED]);
 
-    mprf( "You %s the ability to move!",
-          petrif ? "still haven't" : "suddenly lose" );
+    mprf("You %s the ability to move!",
+         petrif ? "still haven't" : "suddenly lose");
 
     if (str > petrif && (petrif < 3 || one_chance_in(petrif)))
         petrif = str;

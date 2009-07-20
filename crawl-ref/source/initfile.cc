@@ -1856,7 +1856,7 @@ static void _bindkey(std::string field)
     }
     else if (key_str.length() == 2)
     {
-        if(key_str[0] != '^')
+        if (key_str[0] != '^')
         {
             mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
                  key_str.c_str(), field.c_str());
@@ -3178,7 +3178,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #endif
 
-    else if(key == "bindkey")
+    else if (key == "bindkey")
     {
         _bindkey(field);
     }
