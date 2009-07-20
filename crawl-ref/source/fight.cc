@@ -3752,7 +3752,7 @@ int melee_attack::player_to_hit(bool random_factor)
             your_to_hit += maybe_random2(you.dex, random_factor);
         }
 
-        switch ( you.attribute[ATTR_TRANSFORMATION] )
+        switch (you.attribute[ATTR_TRANSFORMATION])
         {
         case TRAN_SPIDER:
             your_to_hit += maybe_random2(10, random_factor);

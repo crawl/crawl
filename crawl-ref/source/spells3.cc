@@ -93,8 +93,9 @@ bool cast_selective_amnesia(bool force)
         return (false);
     }
 
-    if (!force &&
-        random2(you.skills[SK_SPELLCASTING]) < random2(spell_difficulty(spell)))
+    if (!force
+        && random2(you.skills[SK_SPELLCASTING])
+           < random2(spell_difficulty(spell)))
     {
         mpr("Oops! This spell sure is a blunt instrument.");
         forget_map(20 + random2(50));

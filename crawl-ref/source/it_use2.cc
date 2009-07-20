@@ -514,7 +514,7 @@ bool unwield_item(bool showMsgs)
             if (you.duration[DUR_WEAPON_BRAND])
             {
                 you.duration[DUR_WEAPON_BRAND] = 0;
-                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
+                set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
 
                 // We're letting this through even if hiding messages.
                 mpr("Your branding evaporates.");

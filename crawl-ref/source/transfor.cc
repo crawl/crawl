@@ -332,7 +332,6 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
             return (true);
         }
     }
-
     return (false);
 }
 
@@ -398,6 +397,15 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
             case RING_DEXTERITY:    prop_dex += item.plus; break;
             case RING_INTELLIGENCE: prop_int += item.plus; break;
             default:                                       break;
+            }
+        }
+        else if (item.base_type == OBJ_ARMOUR)
+        {
+            switch (get_armour_ego_type( item ))
+            {
+            case SPARM_STRENGTH:     prop_str += 3; break;
+            case SPARM_DEXTERITY:    prop_dex += 3; break;
+            case SPARM_INTELLIGENCE: prop_int += 3; break;
             }
         }
 

@@ -131,7 +131,8 @@ kill_category bolt::whose_kill() const
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _zap_animation(int colour, const monsters *mon, bool force)
+static void _zap_animation(int colour, const monsters *mon = NULL,
+                           bool force = false)
 {
     coord_def p = you.pos();
 

@@ -6218,18 +6218,11 @@ int player::damage_type(int)
     const int wpn = equip[ EQ_WEAPON ];
 
     if (wpn != -1)
-    {
         return (get_vorpal_type(inv[wpn]));
-    }
-    else if (equip[EQ_GLOVES] == -1
-             && attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-    {
+    else if (attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
         return (DVORP_SLICING);
-    }
     else if (has_usable_claws())
-    {
         return (DVORP_CLAWING);
-    }
 
     return (DVORP_CRUSHING);
 }
@@ -6241,7 +6234,7 @@ int player::damage_brand(int)
 
     if (wpn != -1)
     {
-        if ( !is_range_weapon(inv[wpn]) )
+        if (!is_range_weapon(inv[wpn]))
             ret = get_weapon_brand( inv[wpn] );
     }
     else if (duration[DUR_CONFUSING_TOUCH])
