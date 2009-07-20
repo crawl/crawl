@@ -904,7 +904,7 @@ static bool _is_level_corrupted()
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }
 
-static bool _is_level_incorruptible()
+bool is_level_incorruptible()
 {
     if (_is_level_corrupted())
     {
@@ -932,7 +932,7 @@ static void _corrupt_choose_colours()
 
 bool lugonu_corrupt_level(int power)
 {
-    if (_is_level_incorruptible())
+    if (is_level_incorruptible())
         return (false);
 
     mprf(MSGCH_GOD, "Lugonu's Hand of Corruption reaches out!");

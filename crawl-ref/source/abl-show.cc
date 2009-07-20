@@ -963,6 +963,182 @@ bool activate_ability()
     return _activate_talent(talents[selected]);
 }
 
+// Check prerequisites for a number of abilities.
+// Abort any attempt if these cannot be met, without losing the turn.
+// TODO: Many more cases need to be added!
+static bool _check_ability_possible(const ability_def& abil,
+                                    bool hungerCheck = true)
+{
+    // Don't insta-starve the player.
+    // (Happens at 100, losing consciousness possible from 500 downward.)
+    if (hungerCheck && you.species != SP_VAMPIRE)
+    {
+        const int expected_hunger = you.hunger - abil.food_cost * 2;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "hunger: %d, max. food_cost: %d, expected hunger: %d",
+             you.hunger, abil.food_cost * 2, expected_hunger);
+#endif
+        // Safety margin for natural hunger, mutations etc.
+        if (expected_hunger <= 150)
+        {
+            mpr("You're too hungry.");
+            return (false);
+        }
+    }
+
+    switch (abil.ability)
+    {
+    case ABIL_ZIN_RECITE:
+    {
+        const int result = check_recital_audience();
+        if (result < 0)
+        {
+            mpr("There's no appreciative audience!");
+            return (false);
+        }
+        else if (result < 1)
+        {
+            mpr("There's no-one here to preach to!");
+            return (false);
+        }
+        return (true);
+    }
+    case ABIL_ZIN_CURE_ALL_MUTATIONS:
+        return (how_mutated());
+
+    case ABIL_ZIN_SANCTUARY:
+        if (env.sanctuary_time)
+        {
+            mpr("There's already a sanctuary in place on this level.");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_ELYVILON_PURIFICATION:
+        if (!you.disease && !you.rotting && !you.duration[DUR_POISONING]
+            && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
+            && !you.duration[DUR_PARALYSIS] && !you.duration[DUR_PETRIFIED])
+        {
+            mpr("Nothing ails you!");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_ELYVILON_RESTORATION:
+    case ABIL_MUMMY_RESTORATION:
+        if (you.strength == you.max_strength
+            && you.intel == you.max_intel
+            && you.dex == you.max_dex
+            && (abil.ability == ABIL_MUMMY_RESTORATION || !player_rotted()))
+        {
+            mprf("You don't need to restore your stats%s!",
+                 abil.ability == ABIL_ELYVILON_RESTORATION ? " or hit points"
+                                                           : "");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_LUGONU_ABYSS_EXIT:
+        if (you.level_type != LEVEL_ABYSS)
+        {
+            mpr("You aren't in the Abyss!");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_LUGONU_CORRUPT:
+        return (!is_level_incorruptible());
+
+    case ABIL_LUGONU_ABYSS_ENTER:
+        if (you.level_type == LEVEL_ABYSS)
+        {
+            mpr("You're already here!");
+            return (false);
+        }
+        else if (you.level_type == LEVEL_PANDEMONIUM)
+        {
+            mpr("That doesn't work from Pandemonium.");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_SIF_MUNA_FORGET_SPELL:
+        if (you.spell_no == 0)
+        {
+            mpr("You don't know any spells.");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_SPIT_POISON:
+    case ABIL_BREATHE_FIRE:
+    case ABIL_BREATHE_FROST:
+    case ABIL_BREATHE_POISON:
+    case ABIL_BREATHE_LIGHTNING:
+    case ABIL_BREATHE_POWER:
+    case ABIL_BREATHE_STICKY_FLAME:
+    case ABIL_BREATHE_STEAM:
+        if (you.duration[DUR_BREATH_WEAPON])
+        {
+            canned_msg(MSG_CANNOT_DO_YET);
+            return (false);
+        }
+        return (true);
+
+    case ABIL_EVOKE_BERSERK:
+    case ABIL_TROG_BERSERK:
+        if (you.hunger_state < HS_SATIATED)
+        {
+            mpr("You're too hungry to berserk.");
+            return (false);
+        }
+        return (you.can_go_berserk(true) && berserk_check_wielded_weapon());
+
+    case ABIL_MAPPING:
+        if (player_mutation_level(MUT_MAPPING) < 3
+            && (you.level_type == LEVEL_PANDEMONIUM
+                || !player_in_mappable_area()))
+        {
+            mpr("You feel momentarily disoriented.");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_FLY_II:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to fly.");
+            return (false);
+        }
+        else if (you.burden_state != BS_UNENCUMBERED)
+        {
+            mpr("You're carrying too much weight to fly.");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_TORMENT:
+        if (you.is_undead)
+        {
+            mpr("The unliving cannot use this ability.");
+            return (false);
+        }
+        return (true);
+
+    case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
+        if (you.hunger_state < HS_SATIATED)
+        {
+            mpr("You're too hungry to turn invisible.");
+            return (false);
+        }
+        return (true);
+
+    default:
+        return (true);
+    }
+}
+
 static bool _activate_talent(const talent& tal)
 {
     // Doing these would outright kill the player due to stat drain.
@@ -1029,40 +1205,13 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
-    if (!enough_hp( abil.hp_cost, false ))
+    if (!enough_hp(abil.hp_cost, false))
     {
         crawl_state.zero_turns_taken();
         return (false);
     }
 
-    if (tal.which == ABIL_ZIN_SANCTUARY && env.sanctuary_time)
-    {
-        mpr("There's already a sanctuary in place on this level.");
-        crawl_state.zero_turns_taken();
-        return (false);
-    }
-
-    // Don't insta-starve the player.
-    // (Happens at 100, losing consciousness possible from 500 downward.)
-    if (hungerCheck && you.species != SP_VAMPIRE)
-    {
-        const int expected_hunger = you.hunger - abil.food_cost * 2;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "hunger: %d, max. food_cost: %d, expected hunger: %d",
-             you.hunger, abil.food_cost * 2, expected_hunger);
-#endif
-        // Safety margin for natural hunger, mutations etc.
-        if (expected_hunger <= 150)
-        {
-            mpr("You're too hungry.");
-            crawl_state.zero_turns_taken();
-            return (false);
-        }
-    }
-
-    if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
-        && !berserk_check_wielded_weapon())
+    if (!_check_ability_possible(abil, hungerCheck))
     {
         crawl_state.zero_turns_taken();
         return (false);
@@ -1159,12 +1308,6 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation
     {
-        if (you.duration[DUR_BREATH_WEAPON])
-        {
-            canned_msg(MSG_CANNOT_DO_YET);
-            return (false);
-        }
-
         const int pow = you.experience_level
                         + player_mutation_level(MUT_SPIT_POISON) * 5
                         + (you.species == SP_NAGA) * 10;
@@ -1184,15 +1327,6 @@ static bool _do_ability(const ability_def& abil)
     }
     case ABIL_EVOKE_MAPPING:    // Randarts
     case ABIL_MAPPING:          // Sense surroundings mutation
-        if (abil.ability == ABIL_MAPPING
-            && player_mutation_level(MUT_MAPPING) < 3
-            && (you.level_type == LEVEL_PANDEMONIUM
-                || !player_in_mappable_area()))
-        {
-            mpr("You feel momentarily disoriented.");
-            return (false);
-        }
-
         power = (abil.ability == ABIL_EVOKE_MAPPING) ?
             you.skills[SK_EVOCATIONS] : you.experience_level;
 
@@ -1229,17 +1363,9 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
-        if (you.duration[DUR_BREATH_WEAPON] && abil.ability != ABIL_SPIT_ACID)
-        {
-            canned_msg(MSG_CANNOT_DO_YET);
+        beam.range = _calc_breath_ability_range(abil.ability);
+        if (!spell_direction(abild, beam))
             return (false);
-        }
-        else
-        {
-            beam.range = _calc_breath_ability_range(abil.ability);
-            if (!spell_direction(abild, beam))
-                return (false);
-        }
 
         switch (abil.ability)
         {
@@ -1336,20 +1462,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
-        // FIXME: This is not the best way to do stuff, because
-        // you have a chance of failing the evocation test, in
-        // which case you'll lose MP, etc.
-        // We should add a pre-failure-test check in general.
-        if (you.hunger_state < HS_SATIATED)
-        {
-            mpr("You're too hungry to berserk.");
-            return (false);
-        }
-        else if (!you.can_go_berserk(true))
-            return (false);
-
-        // only exercise if berserk succeeds
-        // because of the test above, this should always happen,
+        // Only exercise if berserk succeeds.
+        // Because of the test above, this should always happen,
         // but I'm leaving it in - haranp
         if (go_berserk(true))
             exercise(SK_EVOCATIONS, 1);
@@ -1365,18 +1479,7 @@ static bool _do_ability(const ability_def& abil)
 
     // Fly (Draconians, or anything else with wings).
     case ABIL_FLY_II:
-        if (you.duration[DUR_EXHAUSTED])
-        {
-            mpr("You're too exhausted to fly.");
-            return (false);
-        }
-        else if (you.burden_state != BS_UNENCUMBERED)
-        {
-            mpr("You're carrying too much weight to fly.");
-            return (false);
-        }
-        else
-            cast_fly(you.experience_level * 2);
+        cast_fly(you.experience_level * 2);
         break;
 
     // DEMONIC POWERS:
@@ -1395,12 +1498,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TORMENT:
-        if (you.is_undead)
-        {
-            mpr("The unliving cannot use this ability.");
-            return (false);
-        }
-
         torment(TORMENT_GENERIC, you.pos());
         break;
 
@@ -1448,12 +1545,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
-        if (you.hunger_state < HS_SATIATED)
-        {
-            mpr("You're too hungry to turn invisible.");
-            return (false);
-        }
-
         potion_effect(POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5);
         contaminate_player( 1 + random2(3), true );
         exercise(SK_EVOCATIONS, 1);
@@ -1487,17 +1578,6 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ZIN_RECITE:
     {
-        int result = check_recital_audience();
-        if (result < 0)
-        {
-            mpr("There's no appreciative audience!");
-            return (false);
-        }
-        else if (result < 1)
-        {
-            mpr("There's no-one here to preach to!");
-            return (false);
-        }
         // up to (60 + 40)/2 = 50
         const int pow = (2*skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
         start_delay(DELAY_RECITE, 3, pow, you.hp);
@@ -1707,12 +1787,6 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TROG_BERSERK:
         // Trog abilities don't use or train invocations.
-        if (you.hunger_state < HS_SATIATED)
-        {
-            mpr("You're too hungry to berserk.");
-            return (false);
-        }
-
         go_berserk(true);
         break;
 
@@ -1729,7 +1803,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
-        cast_selective_amnesia(true);
+        if (!cast_selective_amnesia(true))
+            return (false);
         break;
 
     case ABIL_ELYVILON_DESTROY_WEAPONS:
@@ -1787,12 +1862,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        if (you.level_type != LEVEL_ABYSS)
-        {
-            mpr("You aren't in the Abyss!");
-            return (false);       // Don't incur costs.
-        }
-
         banished(DNGN_EXIT_ABYSS);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
@@ -1830,17 +1899,6 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_LUGONU_ABYSS_ENTER:
     {
-        if (you.level_type == LEVEL_ABYSS)
-        {
-            mpr("You're already here.");
-            return (false);
-        }
-        else if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("That doesn't work from Pandemonium.");
-            return (false);
-        }
-
         // Move permanent hp/mp loss from leaving to entering the Abyss. (jpeg)
         const int maxloss = std::max(2, div_rand_round(you.hp_max, 30));
         // Lose permanent HP
@@ -1927,7 +1985,6 @@ static bool _do_ability(const ability_def& abil)
         break;
     }
     case ABIL_FEAWN_SUNLIGHT:
-
         if (!sunlight())
             return (false);
 
@@ -1942,7 +1999,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_FEAWN_RAIN:
-        rain(you.pos() );
+        rain(you.pos());
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;

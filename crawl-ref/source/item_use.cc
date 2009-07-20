@@ -224,7 +224,7 @@ static bool _valid_weapon_swap(const item_def &item)
 // If force is true, don't check weapon inscriptions.
 // (Assuming the player was already prompted for that.)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force)
+                  bool force, bool show_unwield_msg)
 {
     if (inv_count() < 1)
     {
@@ -304,7 +304,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             if (!unwield_item(show_weff_messages))
                 return (false);
 
-            canned_msg(MSG_EMPTY_HANDED);
+            if (show_unwield_msg)
+                canned_msg(MSG_EMPTY_HANDED);
 
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;
@@ -2220,8 +2221,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // Items that get a temporary brand from a player spell lose the
     // brand as soon as the player lets go of the item.  Can't call
     // unwield_item() yet since the beam might get canceled.
-    if (you.duration[DUR_WEAPON_BRAND] && projected == LRET_THROWN)
-        set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
+    if (you.duration[DUR_WEAPON_BRAND] && projected != LRET_LAUNCHED
+        && throw_2 == you.equip[EQ_WEAPON])
+    {
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
+    }
 
     std::string ammo_name;
     setup_missile_beam(&you, pbolt, item, ammo_name, returning);
@@ -2307,7 +2311,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        if (!wield_weapon(true, PROMPT_GOT_SPECIAL))
+        if (!wield_weapon(true, PROMPT_GOT_SPECIAL, true, false, false))
             return (false);
 
         unwielded = true;
