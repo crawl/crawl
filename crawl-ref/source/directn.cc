@@ -3130,7 +3130,7 @@ static std::string _get_monster_desc(const monsters *mon)
                 text += pronoun + " is looking in ";
                 std::string name = foe->atype() == ACT_PLAYER
                                   ? "your" : (foe->name(DESC_NOCAP_THE) + "'s");
-                text += name + "general direction.\n";
+                text += name + " general direction.\n";
             }
         }
         else if (!foe || mons_is_fleeing(mon))
