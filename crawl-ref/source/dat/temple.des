@@ -325,6 +325,7 @@ NAME:   three_leaves__temple
 PLACE:  Temple
 TAGS:   no_rotate
 ORIENT: encompass
+WEIGHT: 4
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxbbbxxxxxxxxxxxxxxxbbbxxxxxxx
@@ -624,6 +625,7 @@ SUBST:   L = l
 MONS:    plant, fungus
 KFEAT:   - = .
 COLOUR:  - = fire
+COLOUR:  b = red
 MAP
 bbbbbbbbbbbbbbbbbbbbbbbbbb
 bbbbbbb-l-bbbbb-l-bbbbbbbb
@@ -719,44 +721,48 @@ NAME:    temple_eino_003
 PLACE:   Temple
 ORIENT:  encompass
 SHUFFLE: {([
+WEIGHT:  3
 MAP
-bbbbbbbbbbbbbbbbbbbbbbbbbbb
-bbbbbb...bb.....bb...bbbbbb
-bbbbbb.B...bbbbb...B.bbbbbb
-bbbbbb...bbbbbbbbb...bbbbbb
-bbbbbbbbb.bbbbbbb.bbbbbbbbb
-bbbbbbbbbb.bbbbb.bbbbbbbbbb
-bbbbbbbbbbb.bbb.bbbbbbbbbbb
-b...bbbbbbbb...bbbbbbbb...b
-b.B.bbbbbbbb.B.bbbbbbbb.B.b
-b...bbbbbbbb...bbbbbbbb...b
-bb.b.bbbbbbbb.bbbbbbbb.b.bb
-bb.bb.bbbbbbb.bbbbbbb.bb.bb
-b.bbbb.bbbbb...bbbbb.bbbb.b
-b.bbbbb.bbbb.[.bbbb.bbbbb.b
-b.bbbbbb...b...b...bbbbbb.b
-b.bbbbbb.B...{...B.bbbbbb.b
-b.bbbbbb...b...b...bbbbbb.b
-b.bbbbb.bbbb.(.bbbb.bbbbb.b
-b.bbbb.bbbbb...bbbbb.bbb.bb
-bb.bb.bbbbbbb.bbbbbbb.bb.bb
-bb.b.bbbbbbbb.bbbbbbbb.b.bb
-b...bbbbbbbb...bbbbbbbb...b
-b.B.bbbbbbbb.B.bbbbbbbb.B.b
-b...bbbbbbbb...bbbbbbbb...b
-bbbbbbbbbbb.bbb.bbbbbbbbbbb
-bbbbbbbbbb.bbbbb.bbbbbbbbbb
-bbbbbbbbb.bbbbbbb.bbbbbbbbb
-bbbbbb...bbbbbbbbb...bbbbbb
-bbbbbb.B..bbbbbb...B.bbbbbb
-bbbbbb...b......bb...bbbbbb
-bbbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbb...bbbbbbbbbbbbb
+bbbbbbb...b..bbb..b...bbbbbbb
+bbbbbbb.B..bbbbbbb..B.bbbbbbb
+bbbbbbb...bbbbbbbbb...bbbbbbb
+bbbbbbbbbb.bbbbbbb.bbbbbbbbbb
+bbbbbbbbbbb.bbbbb.bbbbbbbbbbb
+bbbbbbbbbbbb.bbb.bbbbbbbbbbbb
+bb...bbbbbbbb...bbbbbbbb...bb
+bb.B.bbbbbbbb.B.bbbbbbbb.B.bb
+bb...bbbbbbbb...bbbbbbbb...bb
+bbb.b.bbbbbbbb.bbbbbbbb.b.bbb
+bbb.bb.bbbbbbb.bbbbbbb.bb.bbb
+bb.bbbb.bbbbb...bbbbb.bbbb.bb
+bb.bbbbb.bbbb.[.bbbb.bbbbb.bb
+b.bbbbbbb...b...b...bbbbbbb.b
+b.bbbbbbb.B...{...B.bbbbbbb.b
+b.bbbbbbb...b...b...bbbbbbb.b
+bb.bbbbb.bbbb.(.bbbb.bbbbb.bb
+bb.bbbb.bbbbb...bbbbb.bbbb.bb
+bbb.bb.bbbbbbb.bbbbbbb.bb.bbb
+bbb.b.bbbbbbbb.bbbbbbbb.b.bbb
+bb...bbbbbbbb...bbbbbbbb...bb
+bb.B.bbbbbbbb.B.bbbbbbbb.B.bb
+bb...bbbbbbbb...bbbbbbbb...bb
+bbbbbbbbbbbb.bbb.bbbbbbbbbbbb
+bbbbbbbbbbb.bbbbb.bbbbbbbbbbb
+bbbbbbbbbb.bbbbbbb.bbbbbbbbbb
+bbbbbbb...bbbbbbbbb...bbbbbbb
+bbbbbbb.B..bbbbbbb..B.bbbbbbb
+bbbbbbb...b..bbb..b...bbbbbbb
+bbbbbbbbbbbbb...bbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
 NAME:    temple_eino_004
 PLACE:   Temple
 ORIENT:  encompass
 SHUFFLE: {([
+WEIGHT:  3
 MAP
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
