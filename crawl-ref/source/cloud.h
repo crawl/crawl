@@ -55,10 +55,12 @@ void manage_clouds(void);
 
 bool is_opaque_cloud(unsigned char cloud_idx);
 int steam_cloud_damage(const cloud_struct &cloud);
+int steam_cloud_damage(int decay);
 
 cloud_type beam2cloud(beam_type flavour);
 beam_type cloud2beam(cloud_type flavour);
 
+int  max_cloud_damage(cloud_type cl_type, int power = -1);
 void in_a_cloud(void);
 
 std::string cloud_name(cloud_type type);

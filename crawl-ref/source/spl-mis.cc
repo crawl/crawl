@@ -541,6 +541,18 @@ bool MiscastEffect::_explosion()
     return (true);
 }
 
+bool MiscastEffect::_big_cloud(cloud_type cl_type, int power, int size,
+                               int spread_rate)
+{
+    if (avoid_lethal( 2 * max_cloud_damage(cl_type, power) ))
+        return (false);
+
+    do_msg(true);
+    big_cloud(cl_type, kc, kt, target->pos(), power, size, spread_rate);
+
+    return (true);
+}
+
 bool MiscastEffect::_lose_stat(unsigned char which_stat,
                                unsigned char stat_loss)
 {
@@ -828,9 +840,7 @@ void MiscastEffect::_conjuration(int severity)
             mon_msg_seen   = "Smoke pours from @the_monster@'s @hands@!";
             mon_msg_unseen = "Smoke appears from out of nowhere!";
 
-            do_msg();
-            big_cloud(CLOUD_GREY_SMOKE, kc, kt, target->pos(), 20,
-                      7 + random2(7));
+            _big_cloud(CLOUD_GREY_SMOKE, 20, 7 + random2(7));
             break;
         case 1:
             you_msg      = "A wave of violent energy washes through your body!";
@@ -1998,9 +2008,7 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen   = "Smoke pours from @the_monster@'s @hands@!";
             mon_msg_unseen = "Smoke appears out of nowhere!";
 
-            do_msg();
-            big_cloud(random_smoke_type(), kc, kt, target->pos(), 20,
-                      7 + random2(7));
+            _big_cloud(random_smoke_type(), 20, 7 + random2(7));
             break;
 
         case 1:
@@ -2230,8 +2238,7 @@ void MiscastEffect::_ice(int severity)
             mon_msg_seen   = "Freezing gasses pour from @the_monster@'s "
                              "@hands@!";
 
-            do_msg();
-            big_cloud(CLOUD_COLD, kc, kt, target->pos(), 20, 8 + random2(4));
+            _big_cloud(CLOUD_COLD, 20, 8 + random2(4));
             break;
         }
         break;
@@ -2525,8 +2532,7 @@ void MiscastEffect::_air(int severity)
                              "@hands@!";
             mon_msg_unseen = "Noxious gasses appear from out of thin air!";
 
-            do_msg();
-            big_cloud(CLOUD_STINK, kc, kt, target->pos(), 20, 9 + random2(4));
+            _big_cloud(CLOUD_STINK, 20, 9 + random2(4));
             break;
         }
         break;
@@ -2557,14 +2563,12 @@ void MiscastEffect::_air(int severity)
                              "@hands@!";
             mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
 
-            do_msg();
-            big_cloud(CLOUD_POISON, kc, kt, target->pos(), 20, 8 + random2(5));
+            _big_cloud(CLOUD_POISON, 20, 8 + random2(5));
             break;
         }
     }
 }
 
-// XXX MATT
 void MiscastEffect::_poison(int severity)
 {
     switch (severity)
@@ -2665,8 +2669,7 @@ void MiscastEffect::_poison(int severity)
                              "@hands@!";
             mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
 
-            do_msg();
-            big_cloud(CLOUD_STINK, kc, kt, target->pos(), 20, 8 + random2(5));
+            _big_cloud(CLOUD_STINK, 20, 8 + random2(5));
             break;
 
         case 2:
@@ -2697,8 +2700,7 @@ void MiscastEffect::_poison(int severity)
                              "@hands@!";
             mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
 
-            do_msg();
-            big_cloud(CLOUD_POISON, kc, kt, target->pos(), 20, 7 + random2(7));
+            _big_cloud(CLOUD_POISON, 20, 7 + random2(7));
             break;
         case 2:
             if (player_res_poison())

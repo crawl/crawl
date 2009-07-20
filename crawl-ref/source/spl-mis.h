@@ -124,6 +124,8 @@ private:
     void do_msg(bool suppress_nothing_happens = false);
     bool _ouch(int dam, beam_type flavour = BEAM_NONE);
     bool _explosion();
+    bool _big_cloud(cloud_type cl_type, int pow, int size,
+                    int spread_rate = -1);
     bool _lose_stat(unsigned char which_stat, unsigned char stat_loss);
     void _potion_effect(int pot_eff, int pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
