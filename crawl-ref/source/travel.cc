@@ -796,6 +796,19 @@ bool is_travelable_stair(dungeon_feature_type gridc)
     }
 }
 
+// Returns true if the given dungeon feature is an escape hatch.
+bool is_escape_hatch(dungeon_feature_type gridc)
+{
+    switch (gridc)
+    {
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_ESCAPE_HATCH_UP:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 // Returns true if the given dungeon feature can be considered a gate.
 bool is_gate(dungeon_feature_type gridc)
 {
