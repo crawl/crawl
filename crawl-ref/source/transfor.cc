@@ -59,8 +59,10 @@ bool transform_allows_wearing_item(const item_def& item,
         // Everything but bats can wear all jewellery; bats and pigs can
         // only wear amulets.
         if ((transform == TRAN_BAT || transform == TRAN_PIG)
-            && !jewellery_is_amulet(item))
+             && !jewellery_is_amulet(item))
+        {
             rc = false;
+        }
     }
     else
     {
@@ -334,7 +336,6 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
             return (true);
         }
     }
-
     return (false);
 }
 
@@ -400,6 +401,15 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
             case RING_DEXTERITY:    prop_dex += item.plus; break;
             case RING_INTELLIGENCE: prop_int += item.plus; break;
             default:                                       break;
+            }
+        }
+        else if (item.base_type == OBJ_ARMOUR)
+        {
+            switch (get_armour_ego_type( item ))
+            {
+            case SPARM_STRENGTH:     prop_str += 3; break;
+            case SPARM_DEXTERITY:    prop_dex += 3; break;
+            case SPARM_INTELLIGENCE: prop_int += 3; break;
             }
         }
 
