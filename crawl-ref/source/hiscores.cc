@@ -2079,6 +2079,8 @@ std::string xlog_fields::xlog_line() const
 
 void mark_milestone(const std::string &type, const std::string &milestone)
 {
+    if (crawl_state.arena || !crawl_state.need_save)
+        return;
     const std::string milestone_file = Options.save_dir + "milestones.txt";
     if (FILE *fp = lk_open("a", milestone_file))
     {
