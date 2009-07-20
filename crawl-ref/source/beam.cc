@@ -158,6 +158,7 @@ void zap_animation(int colour, const monsters *mon, bool force)
 #ifdef USE_TILE
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
+
         view_update();
         cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
@@ -4186,7 +4187,6 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
         {
             foe_info.power += 2 * final * mons_power(mon->type) / preac;
             foe_info.count++;
-
         }
         else
         {

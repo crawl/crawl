@@ -2394,7 +2394,7 @@ int tileidx_feature(int object, int gx, int gy)
     }
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
-       return TILE_FLOOR_NORMAL;
+        return TILE_FLOOR_NORMAL;
     case DNGN_ENTER_HELL:
         return TILE_DNGN_ENTER_HELL;
     case DNGN_OPEN_DOOR:
@@ -2434,7 +2434,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_EXIT_ABYSS:
     case DNGN_EXIT_HELL:
     case DNGN_EXIT_PANDEMONIUM:
-       return TILE_DNGN_EXIT_ABYSS;
+        return TILE_DNGN_EXIT_ABYSS;
     case DNGN_STONE_ARCH:
         return TILE_DNGN_STONE_ARCH;
     case DNGN_ENTER_PANDEMONIUM:
@@ -2454,7 +2454,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
-       return TILE_DNGN_ENTER;
+        return TILE_DNGN_ENTER;
 
     case DNGN_ENTER_ZOT:
         if (you.opened_zot)
@@ -2475,10 +2475,10 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
-       return TILE_DNGN_RETURN;
+        return TILE_DNGN_RETURN;
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
-       return TILE_DNGN_PORTAL;
+        return TILE_DNGN_PORTAL;
 
     // altars
     case DNGN_ALTAR_ZIN:
@@ -2524,7 +2524,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_DRY_FOUNTAIN_SPARKLING:
     case DNGN_DRY_FOUNTAIN_BLOOD:
     case DNGN_PERMADRY_FOUNTAIN:
-       return TILE_DNGN_DRY_FOUNTAIN;
+        return TILE_DNGN_DRY_FOUNTAIN;
     }
 
     return TILE_DNGN_ERROR;

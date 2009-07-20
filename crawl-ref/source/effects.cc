@@ -1994,7 +1994,9 @@ static void _set_friendly_foes(bool allow_patrol = false)
         if (!mon->alive() || !mons_near(mon) || !mons_friendly_real(mon)
             || mon->has_ench(ENCH_BERSERK)
             || mon->mons_species() == MONS_GIANT_SPORE)
+        {
             continue;
+        }
 
         // Berserking monsters cannot be ordered around.
         if (mon->has_ench(ENCH_BERSERK))
@@ -3820,17 +3822,17 @@ static int _arc_decomposition(const coord_def & pos, int n_arcs)
 {
     float theta = atan2(pos.y, pos.x);
 
-    if(pos.x == 0 && pos.y != 0)
+    if (pos.x == 0 && pos.y != 0)
         theta = pos.y > 0 ? PI / 2 : -PI / 2;
 
-    if(theta < 0)
+    if (theta < 0)
         theta += 2*PI;
 
     float arc_angle = 2*PI / n_arcs;
 
     theta += arc_angle / 2.0f;
 
-    if(theta >= 2*PI)
+    if (theta >= 2*PI)
         theta -= 2*PI;
 
     return static_cast<int> (theta / arc_angle);
@@ -3880,15 +3882,15 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
 
         int idx = current.first.x + current.first.y * X_WIDTH;
 
-        if(!visited_indices.insert(idx).second)
+        if (!visited_indices.insert(idx).second)
             continue;
 
         // we're done here once we hit a point that is farther away from the
         // origin than our maximum permissible radius.
-        if(current.second > max_distance)
+        if (current.second > max_distance)
             break;
 
-        if(current.second > max_visited)
+        if (current.second > max_visited)
             max_visited = current.second;
 
         float current_distance =current.second ? sqrtf(current.second + 1) : 0;
@@ -3898,7 +3900,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
         // We don't include radius 0 as an option. This is also a good place
         // to check if the squares is already occupied since we want to search
         // past occupied squares but don't want to place toadstools on them.
-        if(bound > 0 && !actor_at(current.first))
+        if (bound > 0 && !actor_at(current.first))
         {
             radius_points[bound - 1].push_back(current.first);
         }
@@ -3916,15 +3918,17 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
             // constraint, in general we don't want parts of a ring to be
             // connected via a higher radius since rings were supposedly
             // created by outwards expansion.
-            if(temp.second < max_visited)
+            if (temp.second < max_visited)
                 continue;
 
             idx = temp.first.x + temp.first.y * X_WIDTH;
 
-            if(visited_indices.find(idx) == visited_indices.end()
-               && in_bounds(temp.first)
-               && mons_class_can_pass(MONS_TOADSTOOL, grd(temp.first)))
+            if (visited_indices.find(idx) == visited_indices.end()
+                && in_bounds(temp.first)
+                && mons_class_can_pass(MONS_TOADSTOOL, grd(temp.first)))
+            {
                 fringe.push(temp);
+            }
         }
 
     }
@@ -3947,20 +3951,21 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
     {
         chosen_idx = chosen_idx % max_radius;
 
-       if(chosen_idx >= min_idx
-          && radius_points[chosen_idx].size() >= min_spawn)
-            break;
+        if (chosen_idx >= min_idx
+            && radius_points[chosen_idx].size() >= min_spawn)
+        {
+           break;
+        }
     }
 
     // Couldn't find enough valid points at any radius?
-    if(radius_points[chosen_idx].size() < min_spawn)
+    if (radius_points[chosen_idx].size() < min_spawn)
         return 0;
 
     std::random_shuffle(radius_points[chosen_idx].begin(),
                         radius_points[chosen_idx].end());
 
     int target_amount = radius_points[chosen_idx].size();
-
     int spawned_count = 0;
 
     float target_arc_len=2*sqrtf(2.0f);
@@ -3980,10 +3985,8 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
         int direction = _arc_decomposition(radius_points[chosen_idx].at(i)
                                            - origin.first, n_arcs);
 
-        if(arc_counts[direction] <= 0)
+        if (arc_counts[direction]-- <= 0)
             continue;
-
-        arc_counts[direction]--;
 
         const int mushroom = create_monster(
                              mgen_data(MONS_TOADSTOOL,
@@ -3997,10 +4000,10 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
                                        corpse.colour),
                                        false);
 
-        if(mushroom != -1)
+        if (mushroom != -1)
         {
             spawned_count++;
-            if(see_grid(radius_points[chosen_idx].at(i)))
+            if (see_grid(radius_points[chosen_idx].at(i)))
                 seen_count++;
         }
     }
@@ -4039,12 +4042,12 @@ int spawn_corpse_mushrooms(item_def &corpse,
         // give up and just place a toadstool on top of the corpse (probably)
         int res=_mushroom_ring(corpse, ring_seen);
 
-        if(res)
+        if (res)
         {
             corpse.special=0;
-            if(see_grid(corpse.pos))
+            if (see_grid(corpse.pos))
                 mpr("A ring of toadstools grow before your very eyes.");
-            else if(ring_seen > 1)
+            else if (ring_seen > 1)
                 mpr("Some toadstools grow in a peculiar arc.");
             else if (ring_seen >0)
                 mpr("A toadstool grows.");
@@ -4067,8 +4070,8 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         actor * occupant = NULL;
         // is this square occupied by a non mushroom?
-        if((occupant = actor_at(current))
-           && occupant->mons_species() != MONS_TOADSTOOL)
+        if ((occupant = actor_at(current))
+            && occupant->mons_species() != MONS_TOADSTOOL)
         {
             continue;
         }
@@ -4095,7 +4098,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
                 // (this condition means we got called from fungal_bloom or
                 // similar and are creating a lot of toadstools at once that
                 // should die off quickly).
-                if(distance_as_time)
+                if (distance_as_time)
                 {
                     coord_def offset = corpse.pos - current;
 
@@ -4207,11 +4210,11 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
     int seen_spawns;
     spawn_corpse_mushrooms(corpse, success_count, seen_spawns);
 
-    if(seen_spawns > 0)
+    if (seen_spawns > 0)
     {
         std::string base = seen_spawns > 1 ? "Some toadstools" : "A toadstool";
 
-        if(see_grid(corpse.pos))
+        if (see_grid(corpse.pos))
             mprf("%s grows from a nearby corpse.", base.c_str());
         else
             mprf("%s springs up from the ground.", base.c_str());

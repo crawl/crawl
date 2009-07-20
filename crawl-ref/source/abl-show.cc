@@ -1928,21 +1928,20 @@ static bool _do_ability(const ability_def& abil)
     }
     case ABIL_FEAWN_SUNLIGHT:
 
-        if(!sunlight())
-            return false;
+        if (!sunlight())
+            return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_FEAWN_PLANT_RING:
-        if(!plant_ring_from_fruit())
-            return false;
+        if (!plant_ring_from_fruit())
+            return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_FEAWN_RAIN:
-
         rain(you.pos() );
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
@@ -1955,8 +1954,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_FEAWN_EVOLUTION:
-        if(!evolve_flora())
-            return false;
+        if (!evolve_flora())
+            return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;

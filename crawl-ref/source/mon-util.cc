@@ -2569,7 +2569,6 @@ bool mons_friendly_real(const monsters *m)
     return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
 }
 
-
 bool mons_neutral(const monsters *m)
 {
     return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL)

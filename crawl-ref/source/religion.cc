@@ -520,7 +520,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_FEAWN:
         snprintf(info,INFO_SIZE,"you promote decomposition%s",
-                 verbose ? " via the <w>f</w> command" : "");
+                 verbose ? " via the <w>a</w> command" : "");
         likes.push_back(info);
         break;
 
@@ -2678,17 +2678,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_NECROMANCY:
         case DID_UNHOLY:
-            if (you.religion == GOD_FEAWN && known)
+            if (you.religion == GOD_FEAWN)
             {
-                piety_change = -level;
-                penance = level;
-                retval = true;
-            }
-            else
-            {
-                simple_god_message(" forgives your blasphemy, just this once.");
+                if (known)
+                {
+                    piety_change = -level;
+                    penance = level;
+                    retval = true;
+                }
+                else
+                {
+                    simple_god_message(" forgives your blasphemy, just this once.");
+                }
                 break;
             }
+            // else fall-through
 
         case DID_ATTACK_HOLY:
             switch (you.religion)
@@ -5216,7 +5220,6 @@ static bool _nemelex_retribution()
     draw_from_deck_of_punishment();
     return (true);
 }
-
 
 static bool _jiyva_retribution()
 {

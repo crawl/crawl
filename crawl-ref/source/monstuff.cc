@@ -4197,8 +4197,8 @@ static void _handle_behaviour(monsters *mon)
     if (isFriendly
         && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-       && !mon->has_ench(ENCH_BERSERK)
-       && mon->mons_species() != MONS_GIANT_SPORE )
+        && !mon->has_ench(ENCH_BERSERK)
+        && mon->mons_species() != MONS_GIANT_SPORE )
     {
         mon->foe = you.pet_target;
     }

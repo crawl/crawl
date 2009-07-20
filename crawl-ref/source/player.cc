@@ -7286,8 +7286,6 @@ void player::backlight()
         you.duration[DUR_BACKLIGHT] += random_range(3, 5);
         if (you.duration[DUR_BACKLIGHT] > 250)
             you.duration[DUR_BACKLIGHT] = 250;
-
-
     }
 }
 

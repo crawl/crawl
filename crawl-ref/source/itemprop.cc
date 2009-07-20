@@ -2333,8 +2333,8 @@ bool can_cut_meat(const item_def &item)
 
 bool is_fruit(const item_def & item)
 {
-    if(item.base_type != OBJ_FOOD)
-        return false;
+    if (item.base_type != OBJ_FOOD)
+        return (false);
 
     switch (item.sub_type)
     {
@@ -2350,10 +2350,10 @@ bool is_fruit(const item_def & item)
     case FOOD_RAMBUTAN:
     case FOOD_STRAWBERRY:
     case FOOD_SULTANA:
-        return true;
+        return (true);
     };
 
-    return false;
+    return (false);
 }
 bool food_is_rotten(const item_def &item)
 {
