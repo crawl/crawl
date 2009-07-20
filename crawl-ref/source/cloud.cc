@@ -235,7 +235,11 @@ void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
 
 int steam_cloud_damage(const cloud_struct &cloud)
 {
-    int decay = cloud.decay;
+    return steam_cloud_damage(cloud.decay);
+}
+ 
+int steam_cloud_damage(int decay)
+{
     decay = std::min(decay, 60);
     decay = std::max(decay, 10);
 
@@ -429,6 +433,90 @@ beam_type cloud2beam(cloud_type flavour)
     }
 }
 
+// NOTE: Keep in sync with in_a_cloud()
+int max_cloud_damage(cloud_type cl_type, int power)
+{
+    int speed  = player_speed();
+    int dam    = 0;
+    int resist = 0;
+
+    switch (cl_type)
+    {
+    case CLOUD_FIRE:
+        if (you.duration[DUR_FIRE_SHIELD])
+            return (0);
+        resist = player_res_fire();
+
+        // Intentional fall-throuigh
+    case CLOUD_COLD:
+        if (cl_type == CLOUD_COLD)
+            resist = player_res_cold();
+
+        if (resist <= 0)
+        {
+            dam += 32 * speed / 10;
+
+            if (resist < 0)
+                dam += 16 * speed / 10;
+        }
+        else
+        {
+            dam += 32 * speed / 10;
+            dam /= (1 + resist * resist);
+        }
+        break;
+
+    case CLOUD_STINK:
+        if (player_res_poison())
+            return (0);
+
+        dam += 2 * speed / 10;
+        break;
+
+    case CLOUD_POISON:
+        if (player_res_poison())
+            return (0);
+
+        dam += 9 * speed / 10;
+        break;
+
+    case CLOUD_STEAM:
+    {
+        ASSERT(power >= 0);
+
+        if (player_res_steam() > 0 || power == 0)
+            return (0);
+
+        const int base_dam = steam_cloud_damage(power * 10);
+        dam += (base_dam - 1) * speed / 10;
+
+        const int res_fire = player_res_fire();
+        if (res_fire < 0)
+            dam += base_dam / 2 * speed / 10;
+        else if (res_fire)
+            dam /= 1 + (res_fire / 2);
+
+        break;
+    }
+
+    case CLOUD_MIASMA:
+        if (player_prot_life() >= 3)
+            return (0);
+
+        dam += 11 * speed / 10;
+
+        break;
+    default:
+        break;
+    }
+
+    if (dam < 0)
+        dam = 0;
+
+    return (dam);
+}
+
+// NOTE: Keep in sync with max_cloud_damage()
 void in_a_cloud()
 {
     int cl = env.cgrid(you.pos());
