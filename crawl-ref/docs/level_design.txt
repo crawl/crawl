@@ -1502,6 +1502,28 @@ You can then use this line in the map definition to execute the lua block:
 You can also set env.spawn_random_rate() to have monsters generated from the
 list during play.
 
+Milestones for portal vaults
+----------------------------
+
+This example is from icecave.des, defined in the lua preludes:
+
+{{
+function ice_cave_milestone(e)
+  crawl.mark_milestone("br.enter", "entered an Ice Cave.")
+end
+}}
+
+The function is called from each of the destination map definitions:
+
+: ice_cave_milestone(_G)
+
+This marks down entering the portal vault in the milestones. When the portal
+is entered, the destination map is chosen and the call to crawl.mark_milestone
+is executed along with the rest of the map definition.
+
+Adding milestones in a .des does have the slight catch of creating multiple
+milestones if the map fails validation for some reason, so it's best used
+in maps that will never fail validation.
 
 I.    Lua reference
 ===================
@@ -1808,7 +1830,8 @@ provide utility methods.
 mpr, mesclr, random2, coinflip, one_chance_in, redraw_screen,
 input_line, c_input_line, getch, kbhit, flush_input, sendkeys,
 playsound, runmacro, bindkey, setopt, msgch_num, msgch_name, regex,
-message_filter, trim, split, game_started, err_trace, args
+message_filter, trim, split, game_started, err_trace, args,
+mark_milestone
 
 
 Lua API - character information

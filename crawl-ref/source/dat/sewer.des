@@ -78,6 +78,13 @@ function sewer_random_monster_list(e)
 end
 }}
 
+# Add the milestone.
+{{
+function sewer_milestone(e)
+  crawl.mark_milestone("br.enter", "entered a Sewer.")
+end
+}}
+
 # Basic sewer entries ##########################################
 default-depth: D:3-6
 
@@ -174,6 +181,7 @@ SUBST:    ' = .W
 SUBST:    ? = .x
 : sewer_colours(_G)
 : sewer_random_monster_list(_G)
+: sewer_milestone(_G)
 # some fresh water for the kobolds
 KFEAT:    Y = deep_water
 KFEAT:    y = shallow_water
@@ -242,6 +250,7 @@ WEIGHT:   30
 SUBST:    - = W..
 : sewer_colours(_G)
 : sewer_random_monster_list(_G)
+: sewer_milestone(_G)
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
 MONS:     giant newt / small snake w:5 / \
@@ -291,6 +300,7 @@ TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
 : sewer_colours(_G)
 : sewer_random_monster_list(_G)
+: sewer_milestone(_G)
 MONS:     giant lizard
 ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     giant bat / giant mosquito w:2
@@ -350,6 +360,7 @@ COLOUR:   ? = lightgreen
 SUBST:    - = W..
 : sewer_colours(_G)
 : sewer_random_monster_list(_G)
+: sewer_milestone(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
 MONS:     giant bat / giant mosquito w:2 / nothing w:2

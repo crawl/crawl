@@ -21,7 +21,7 @@ function minitomb_portal(e)
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
       messages = time_messages(timeout_turns,
-          "Nearby sand pours into $F{the}.",      
+          "Nearby sand pours into $F{the}.",
           "Nearby sand pours into $F{the}, lightly covering it.",
           "Nearby sand pours into $F{the}, greatly covering it.",
           "Nearby sand pours into $F{the}, almost completely blocking access.")
@@ -55,6 +55,12 @@ function minitomb_setup_features(e)
 end
 }}
 
+# Add the milestone.
+{{
+function minitomb_milestone(e)
+  crawl.mark_milestone("br.enter", "entered a Minitomb.")
+end
+}}
 
 #### Portal entry vaults.
 default-depth: D:4-8
@@ -148,6 +154,7 @@ MONS:    rat zombie / jackal zombie / snake zombie / goblin zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    kobold zombie / orc zombie / hobgoblin zombie
 : minitomb_setup_features(_G)
+: minitomb_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 x.........<A.........x
@@ -210,6 +217,7 @@ KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
 COLOUR:  ^ = red
 KFEAT:   W = dart trap / floor w:20
 : minitomb_setup_features(_G)
+: minitomb_milestone(_G)
 MAP
            cccccccccccccccccccc
    ccccccccc3c3c3c3c3c3c3cddddccc
@@ -258,6 +266,7 @@ KFEAT:   ^ = alarm trap / floor w:20
 SUBST:   = : =+
 SUBST:   = = =+
 : minitomb_setup_features(_G)
+: minitomb_milestone(_G)
 MAP
           vvv
         vvv1vvv
@@ -316,6 +325,7 @@ MONS:    snake zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / brown snake zombie / gnoll zombie / nothing
 MONS:    mummy
 : minitomb_setup_features(_G)
+: minitomb_milestone(_G)
 MAP
 cccccccccccccccccccccc
 c<11H~~~G1111F~~~E111c
@@ -353,6 +363,7 @@ MONS:    orc zombie / kobold zombie / big kobold zombie / hobgoblin zombie
 ITEM:    nothing / any scroll w:5 / any potion
 KFEAT:   ^ = alarm trap
 : minitomb_setup_features(_G)
+: minitomb_milestone(_G)
 MAP
 cccccccccccccccccccccc
 cccc.....2222.....cccc
