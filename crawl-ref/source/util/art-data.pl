@@ -64,13 +64,20 @@ my %field_type = (
     equip_func        => "func",
     unequip_func      => "func",
     world_reacts_func => "func",
+    fight_func_func   => "func",
     melee_effect_func => "func",
+    launch_func       => "func",
     evoke_func        => "func",
 
     plus      => "num",
     plus2     => "num",
     base_type => "enum",
     sub_type  => "enum"
+);
+
+my %union_name = (
+    melee_effect => "fight_func",
+    launch       => "fight_func"
 );
 
 my @field_list = keys(%field_type);
@@ -161,13 +168,13 @@ sub finish_art
         $funcs = {};
     }
 
-    foreach my $func_name ("equip", "unequip", "world_reacts", "melee_effect",
+    foreach my $func_name ("equip", "unequip", "world_reacts", "fight_func",
                            "evoke")
     {
         my $val;
         if ($funcs->{$func_name})
         {
-            $val = "_${enum}_$func_name";
+            $val = "_${enum}_" . $funcs->{$func_name};
         }
         else
         {
@@ -195,6 +202,10 @@ sub finish_art
             elsif($type eq "enum")
             {
                 error($artefact, "No enumeration for field '$field'");
+            }
+            elsif($type eq "func")
+            {
+                $artefact->{$field} = "NULL";
             }
             else
             {
@@ -466,7 +477,7 @@ my @art_order = (
     "DESC_ID", "\n",
     "DESC_END", "\n",
 
-    "equip_func", "unequip_func", "world_reacts_func", "melee_effect_func",
+    "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",
     "evoke_func"
 );
 
@@ -478,9 +489,10 @@ sub art_to_str
 
     my $str = "{\n    ";
 
-    my $part;
-    foreach $part (@art_order)
+    for (my $i = 0; $i < @art_order; $i++)
     {
+        my $part = $art_order[$i];
+
         if (length($part) == 1)
         {
             if ($part eq "{")
@@ -502,6 +514,14 @@ sub art_to_str
             next;
         }
 
+        my $bracketed = 0;
+        if ($part =~ /^{(.*)/)
+        {
+            $part = $1;
+            $str .= "{ ";
+            $bracketed = 1;
+        }
+
         if (!defined($field_type{$part}))
         {
             print STDERR "No field type for part '$part'\n";
@@ -518,6 +538,9 @@ sub art_to_str
         {
             $str .= $artefact->{$part};
         }
+
+        $str .= " }" if ($bracketed);
+
         $str .= ", ";
     }
 
@@ -1009,7 +1032,8 @@ sub read_funcs
             $found_funcs{$enum} ||= {};
             my $func_list = $found_funcs{$enum};
 
-            $func_list->{$func} = 1;
+            my $key = $union_name{$func} || $func;
+            $func_list->{$key} = $func;
         }
     }
     close(INPUT);

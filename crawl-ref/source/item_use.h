@@ -165,7 +165,7 @@ bool puton_item(int slot);
 bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
-void setup_missile_beam(const actor *actor, bolt &beam, item_def &item,
+bool setup_missile_beam(const actor *actor, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning);
 
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,

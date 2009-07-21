@@ -1849,7 +1849,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
+bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning)
 {
     dungeon_char_type zapsym = DCHAR_SPACE;
@@ -1901,9 +1901,29 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.can_see_invis = agent->can_see_invisible();
 
-    const item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
+    item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
     if (launcher && !item.launched_by(*launcher))
         launcher = NULL;
+
+    const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
+        ? get_unrand_entry(launcher->special) : NULL;
+
+    if (entry && entry->fight_func.launch)
+    {
+        setup_missile_type sm =
+            entry->fight_func.launch(launcher, &beam, &ammo_name,
+                                     &returning);
+
+        switch(sm)
+        {
+        case SM_CONTINUE:
+            break;
+        case SM_FINISHED:
+            return (false);
+        case SM_CANCEL:
+            return (true);
+        }
+    }
 
     int bow_brand = SPWPN_NORMAL;
     if (launcher != NULL)
@@ -2073,6 +2093,8 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_name = article_a(ammo_name, true);
     else
         ammo_name = "the " + ammo_name;
+
+    return (false);
 }
 
 // XXX This is a bit too generous, as it lets the player determine
@@ -2228,7 +2250,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
 
     std::string ammo_name;
-    setup_missile_beam(&you, pbolt, item, ammo_name, returning);
+
+    if (setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+    {
+        you.turn_is_over = false;
+        return (false);
+    }
 
     // Did we know the ammo's brand before throwing it?
     const bool ammo_brand_known = item_type_known(thrown);

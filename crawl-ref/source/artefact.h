@@ -12,6 +12,8 @@
 
 #include "externs.h"
 
+class bolt;
+
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
 #define NO_UNRANDARTS 76
 
@@ -120,6 +122,13 @@ enum unrand_flag_type
     UNRAND_FLAG_CHAOTIC = 0x08
 };
 
+enum setup_missile_type
+{
+    SM_CONTINUE,
+    SM_FINISHED,
+    SM_CANCEL
+};
+
 // The following unrandart bits were taken from $pellbinder's mon-util
 // code (see mon-util.h & mon-util.cc) and modified (LRH).
 struct unrandart_entry
@@ -148,8 +157,15 @@ struct unrandart_entry
     void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
     void (*unequip_func)(const item_def* item, bool* show_msgs);
     void (*world_reacts_func)(item_def* item);
-    void (*melee_effects_func)(item_def* item, actor* attacker,
-                               actor* defender, bool mondied);
+    // An item can't be a melee weapon and launcher at the same time, so have
+    // the functions relevant to those item types share a union.
+    union
+    {
+        void (*melee_effects)(item_def* item, actor* attacker,
+                              actor* defender, bool mondied);
+        setup_missile_type (*launch)(item_def* item, bolt* beam,
+                                     std::string* ammo_name, bool* returning);
+    } fight_func;
     bool (*evoke_func)(item_def *item, int* pract, bool* did_work,
                        bool* unevokable);
 };

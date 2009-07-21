@@ -536,9 +536,14 @@ void melee_attack::check_autoberserk()
 
 bool melee_attack::check_unrand_effects(bool mondied)
 {
-    if (unrand_entry && unrand_entry->melee_effects_func)
+    // If bashing the defender with a wielded unrandart launcher, don't use
+    // unrand_entry->fight_func, since that's the function used for
+    // launched missiles.
+    if (unrand_entry && unrand_entry->fight_func.melee_effects
+        && fires_ammo_type(*weapon) == MI_NONE)
     {
-        unrand_entry->melee_effects_func(weapon, attacker, defender, mondied);
+        unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
+                                               mondied);
         return (!defender->alive());
     }
 

@@ -1242,10 +1242,12 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     if (mons_friendly(monster))
         item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
-    setup_missile_beam(monster, pbolt, item, ammo_name, returning);
-
     // FIXME we should actually determine a sensible range here
     pbolt.range         = LOS_RADIUS;
+
+    if (setup_missile_beam(monster, pbolt, item, ammo_name, returning))
+        return (false);
+
     pbolt.aimed_at_spot = returning;
 
     const launch_retval projected =

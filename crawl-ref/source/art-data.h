@@ -42,7 +42,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 2: UNRAND_SINGING_SWORD */
@@ -61,7 +61,7 @@
     "", 
     "This blessed weapon loves nothing more than to sing to its owner, whether they want it to or not.", 
     "", 
-    _SINGING_SWORD_equip, _SINGING_SWORD_unequip, NULL, NULL, NULL, 
+    _SINGING_SWORD_equip, _SINGING_SWORD_unequip, NULL, { NULL }, NULL, 
 },
 
 /* 3: UNRAND_TROG */
@@ -80,7 +80,7 @@
     "", 
     "This was the favourite weapon of the old god Trog, before it was lost one day. It induces a bloodthirsty berserker rage in anyone who uses it to strike another.", 
     "", 
-    _TROG_equip, _TROG_unequip, NULL, _TROG_melee_effect, NULL, 
+    _TROG_equip, _TROG_unequip, NULL, { _TROG_melee_effect }, NULL, 
 },
 
 /* 4: UNRAND_VARIABILITY */
@@ -99,7 +99,7 @@
     "", 
     "It is rather unreliable.", 
     "", 
-    NULL, NULL, _VARIABILITY_world_reacts, NULL, NULL, 
+    NULL, NULL, _VARIABILITY_world_reacts, { NULL }, NULL, 
 },
 
 /* 5: UNRAND_PRUNE */
@@ -118,7 +118,7 @@
     "", 
     "It is the creation of a mad god, and carries a curse which transforms anyone possessing it into a prune. Fortunately, the curse works very slowly, and one can use it briefly with no consequences worse than slightly purple skin and a few wrinkles.", 
     "", 
-    _PRUNE_equip, NULL, NULL, NULL, NULL, 
+    _PRUNE_equip, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 6: UNRAND_POWER */
@@ -137,7 +137,7 @@
     "", 
     "It rewards the powerful with power and the meek with weakness.", 
     "", 
-    _POWER_equip, NULL, _POWER_world_reacts, NULL, NULL, 
+    _POWER_equip, NULL, _POWER_world_reacts, { NULL }, NULL, 
 },
 
 /* 7: UNRAND_OLGREB */
@@ -156,7 +156,7 @@
     "", 
     "It was the magical weapon wielded by the mighty wizard Olgreb before he met his fate somewhere within these dungeons. It increases the ability of its wielder to use venomous magic, and carries magical powers which can be evoked.", 
     "", 
-    _OLGREB_equip, _OLGREB_unequip, _OLGREB_world_reacts, NULL, _OLGREB_evoke, 
+    _OLGREB_equip, _OLGREB_unequip, _OLGREB_world_reacts, { NULL }, _OLGREB_evoke, 
 },
 
 /* 8: UNRAND_WUCAD_MU */
@@ -175,7 +175,7 @@
     "", 
     "Its power varies in proportion to its wielder's intelligence. Using it can be a bit risky.", 
     "", 
-    _WUCAD_MU_equip, _WUCAD_MU_unequip, _WUCAD_MU_world_reacts, _WUCAD_MU_melee_effect, _WUCAD_MU_evoke, 
+    _WUCAD_MU_equip, _WUCAD_MU_unequip, _WUCAD_MU_world_reacts, { _WUCAD_MU_melee_effect }, _WUCAD_MU_evoke, 
 },
 
 /* 9: UNRAND_VAMPIRES_TOOTH */
@@ -194,7 +194,7 @@
     "", 
     "It is lethally vampiric.", 
     "", 
-    _VAMPIRES_TOOTH_equip, NULL, NULL, NULL, NULL, 
+    _VAMPIRES_TOOTH_equip, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 10: UNRAND_CURSES */
@@ -213,7 +213,7 @@
     "", 
     "This weapon carries a terrible and highly irritating curse.", 
     "", 
-    _CURSES_equip, NULL, _CURSES_world_reacts, _CURSES_melee_effect, NULL, 
+    _CURSES_equip, NULL, _CURSES_world_reacts, { _CURSES_melee_effect }, NULL, 
 },
 
 /* 11: UNRAND_TORMENT */
@@ -232,7 +232,7 @@
     "", 
     "This truly accursed weapon is an instrument of Hell.", 
     "", 
-    _TORMENT_equip, NULL, _TORMENT_world_reacts, _TORMENT_melee_effect, NULL, 
+    _TORMENT_equip, NULL, _TORMENT_world_reacts, { _TORMENT_melee_effect }, NULL, 
 },
 
 /* 12: UNRAND_ZONGULDROK */
@@ -251,7 +251,7 @@
     "", 
     "This dreadful weapon is used at the user's peril.", 
     "", 
-    _ZONGULDROK_equip, NULL, _ZONGULDROK_world_reacts, _ZONGULDROK_melee_effect, NULL, 
+    _ZONGULDROK_equip, NULL, _ZONGULDROK_world_reacts, { _ZONGULDROK_melee_effect }, NULL, 
 },
 
 /* 13: UNRAND_CEREBOV */
@@ -270,7 +270,7 @@
     "Eerie flames cover its twisted blade.", 
     "", 
     "", 
-    NULL, NULL, NULL, _CEREBOV_melee_effect, NULL, 
+    NULL, NULL, NULL, { _CEREBOV_melee_effect }, NULL, 
 },
 
 /* 14: UNRAND_DISPATER */
@@ -289,7 +289,7 @@
     "", 
     "This legendary item can unleash the fury of Hell.", 
     "", 
-    NULL, NULL, NULL, _DISPATER_melee_effect, _DISPATER_evoke, 
+    NULL, NULL, NULL, { _DISPATER_melee_effect }, _DISPATER_evoke, 
 },
 
 /* 15: UNRAND_ASMODEUS */
@@ -308,7 +308,7 @@
     "", 
     "It carries some of the powers of the arch-fiend Asmodeus.", 
     "", 
-    NULL, NULL, NULL, _ASMODEUS_melee_effect, _ASMODEUS_evoke, 
+    NULL, NULL, NULL, { _ASMODEUS_melee_effect }, _ASMODEUS_evoke, 
 },
 
 /* 16: UNRAND_BLOODBANE */
@@ -327,7 +327,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 17: UNRAND_FLAMING_DEATH */
@@ -346,7 +346,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 18: UNRAND_BRILLIANCE */
@@ -365,7 +365,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 19: UNRAND_LEECH */
@@ -384,7 +384,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 20: UNRAND_CHILLY_DEATH */
@@ -403,7 +403,7 @@
     "A dagger made of one huge piece of sapphire.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 21: UNRAND_MORG */
@@ -422,7 +422,7 @@
     "An ugly rusty dagger.", 
     "", 
     "Many years ago it was the property of a powerful mage called Boris. He got lost in the Dungeon while seeking the Orb.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 22: UNRAND_FINISHER */
@@ -441,7 +441,7 @@
     "A long and sharp scythe, specially modified for combat purposes.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 23: UNRAND_PUNK */
@@ -460,7 +460,7 @@
     "A sling made of weird blue leather.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 24: UNRAND_KRISHNA */
@@ -479,7 +479,7 @@
     "A wonderful golden bow.", 
     "", 
     "It once belonged to a foreign god. It works best with special arrows which are not generally available.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 25: UNRAND_SKULLCRUSHER */
@@ -498,7 +498,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 26: UNRAND_GUARD */
@@ -517,7 +517,7 @@
     "", 
     "", 
     "This weapon once belonged to Gar Dogh, the guard of a king's treasures. According to legend he was lost somewhere in the Dungeon.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 27: UNRAND_JIHAD */
@@ -536,7 +536,7 @@
     "A long sword made of one huge piece of crystal.", 
     "", 
     "This sword was The Shining One's gift to a worshipper.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 28: UNRAND_HELLFIRE */
@@ -555,7 +555,7 @@
     "A flaming crossbow, forged in the fires of the Hells.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 29: UNRAND_DOOM_KNIGHT */
@@ -574,7 +574,7 @@
     "An adamantine great sword.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 30: UNRAND_EOS */
@@ -593,7 +593,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 31: UNRAND_BOTONO */
@@ -612,7 +612,7 @@
     "", 
     "", 
     "A really dark and malign artefact, which no wise man would even touch.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 32: UNRAND_OCTOPUS_KING */
@@ -631,7 +631,7 @@
     "", 
     "", 
     "This trident was stolen many years ago from the Octopus King's garden by a really unimportant and already dead man. But beware of the Octopus King's wrath!", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 33: UNRAND_ARGA */
@@ -650,7 +650,7 @@
     "A beautiful mithril axe, probably lost by some dwarven hero.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 34: UNRAND_ELEMENTAL_STAFF */
@@ -669,7 +669,7 @@
     "", 
     "", 
     "This powerful staff used to belong to the leader of the Guild of Five Elements.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 35: UNRAND_SNIPER */
@@ -688,7 +688,7 @@
     "A hand crossbow made of some black material.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 36: UNRAND_PIERCER */
@@ -707,7 +707,7 @@
     "An exceptionally large metal longbow.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 37: UNRAND_BLOWGUN_ASSASSIN */
@@ -726,7 +726,7 @@
     "It is designed for easy concealment, but still packs a nasty punch.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 38: UNRAND_WYRMBANE */
@@ -745,7 +745,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 39: UNRAND_SPRIGGANS_KNIFE */
@@ -764,7 +764,7 @@
     "A dainty little knife.", 
     "", 
     "This knife was made by Spriggans, or for Spriggans, or possibly from Spriggans. Anyway, it's in some way associated with those fey folk.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 40: UNRAND_PLUTONIUM_SWORD */
@@ -783,7 +783,7 @@
     "A long sword made of weird glowing metal.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 41: UNRAND_UNDEADHUNTER */
@@ -802,7 +802,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 42: UNRAND_SERPENT_SCOURGE */
@@ -821,7 +821,7 @@
     "", 
     "A double-ended whip made from the cured hides of the Lair of Beasts' deadly grey snakes.", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 43: UNRAND_ACCURACY */
@@ -840,7 +840,7 @@
     "", 
     "", 
     "It is almost unerringly accurate.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 44: UNRAND_CRYSTAL_SPEAR */
@@ -859,7 +859,7 @@
     "", 
     "", 
     "Presumably this relic led to the invention of the famous spell, or maybe the other way around.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 45: UNRAND_IGNORANCE */
@@ -878,7 +878,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 46: UNRAND_AUGMENTATION */
@@ -897,7 +897,7 @@
     "A robe made of the finest silk.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 47: UNRAND_THIEF */
@@ -916,7 +916,7 @@
     "", 
     "", 
     "It allows its wearer to excel in the arts of thievery.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 48: UNRAND_BULLSEYE */
@@ -935,7 +935,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 49: UNRAND_DYROVEPREVA */
@@ -954,7 +954,7 @@
     "A large crown of dull bronze, set with a dazzling array of gemstones.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 50: UNRAND_MISFORTUNE */
@@ -973,7 +973,7 @@
     "A splendid flowing robe of fur and silk.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 51: UNRAND_FLASH */
@@ -992,7 +992,7 @@
     "A vibrating cloak.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 52: UNRAND_BOOTS_ASSASSIN */
@@ -1011,7 +1011,7 @@
     "Some soft boots.", 
     "", 
     "These boots were specially designed by the Assassin's Guild.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 53: UNRAND_LEAR */
@@ -1030,7 +1030,7 @@
     "A chain mail made of pure gold.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 54: UNRAND_ZHOR */
@@ -1049,7 +1049,7 @@
     "The skin of some strange animal.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 55: UNRAND_SALAMANDER */
@@ -1068,7 +1068,7 @@
     "A leather armour made of a salamander's skin.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 56: UNRAND_WAR */
@@ -1087,7 +1087,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 57: UNRAND_RESISTANCE */
@@ -1106,7 +1106,7 @@
     "A bronze shield.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 58: UNRAND_FOLLY */
@@ -1125,7 +1125,7 @@
     "A dull grey robe.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 59: UNRAND_MAXWELL */
@@ -1144,7 +1144,7 @@
     "A weird-looking armour.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 60: UNRAND_DRAGONMASK */
@@ -1163,7 +1163,7 @@
     "A blue mask.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 61: UNRAND_NIGHT */
@@ -1182,7 +1182,7 @@
     "A long black robe made of strange glossy material.", 
     "", 
     "According to legend, this robe was the gift of Ratri the Goddess of the Night to one of her followers.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 62: UNRAND_DRAGON_KING */
@@ -1201,7 +1201,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 63: UNRAND_ALCHEMIST */
@@ -1220,7 +1220,7 @@
     "A dirty hat.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 64: UNRAND_FENCERS_GLOVES */
@@ -1239,7 +1239,7 @@
     "A pair of gloves made of white silk.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 65: UNRAND_STARLIGHT */
@@ -1258,7 +1258,7 @@
     "A phosphorescent cloak.", 
     "", 
     "A cloak woven of pure light beams.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 66: UNRAND_RATSKIN_CLOAK */
@@ -1277,7 +1277,7 @@
     "", 
     "", 
     "An enchantress with a magic loom and way too much time on her hands stitched this cloak from the hides of hundreds of rats, most of them orange. It's a bit awkward to wear and looks rather foolish, but it provides excellent protection from rats of all kinds.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 67: UNRAND_AIR */
@@ -1296,7 +1296,7 @@
     "A sky-blue amulet.", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 68: UNRAND_SHADOWS */
@@ -1315,7 +1315,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 69: UNRAND_CEKUGOB */
@@ -1334,7 +1334,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 70: UNRAND_FOUR_WINDS */
@@ -1353,7 +1353,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 71: UNRAND_BLOODLUST */
@@ -1372,7 +1372,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 72: UNRAND_SHAOLIN */
@@ -1391,7 +1391,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 73: UNRAND_ROBUSTNESS */
@@ -1410,7 +1410,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 74: UNRAND_MAGE */
@@ -1429,7 +1429,7 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 75: UNRAND_SHIELDING */
@@ -1448,7 +1448,7 @@
     "A shield-shaped amulet.", 
     "", 
     "Back in the good old days, every adventurer had one of these handy devices. That, and a pony.", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
 /* 76: UNRAND_DUMMY2 */
@@ -1467,6 +1467,6 @@
     "", 
     "", 
     "", 
-    NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, { NULL }, NULL, 
 },
 
