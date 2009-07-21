@@ -112,7 +112,9 @@
     #define USE_MORE_SECURE_SEED
 
     // Use POSIX regular expressions
+    #ifndef REGEX_PCRE
     #define REGEX_POSIX
+    #endif
 
     // If you have libpcre, you can use that instead of POSIX regexes -
     // uncomment the line below and add -lpcre to your makefile.

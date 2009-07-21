@@ -6605,10 +6605,10 @@ void do_crash_dump()
     fprintf(file, "dlua stack:" EOL);
     print_dlua_stack();
 
-    // Lastly try to dump the Lua persistant data and the contents of the Lua
+    // Lastly try to dump the Lua persistent data and the contents of the Lua
     // markers, since actually running Lua code has the greatest chance of
     // crashing.
-    fprintf(file, "Lua persistant data:" EOL);
+    fprintf(file, "Lua persistent data:" EOL);
     fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
     _debug_dump_lua_persist(file);
     fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL EOL);

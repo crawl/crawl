@@ -3519,9 +3519,10 @@ void melee_attack::player_apply_staff_damage()
         break;
 
     default:
-        mpr("You're wielding some staff I've never heard of! (fight.cc)");
+        mpr("You're wielding some staff I've never heard of! (fight.cc)",
+            MSGCH_ERROR);
         break;
-    } // end switch
+    }
 
     if (special_damage > 0)
     {

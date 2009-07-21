@@ -461,8 +461,10 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
         throw make_stringf("\"%s\" is an absolute path.", path.c_str());
 
     if (path.find("..") != std::string::npos)
+    {
         throw make_stringf("\"%s\" contains \"..\" sequences.",
                            path.c_str());
+    }
 #endif
 
     // Path is okay.

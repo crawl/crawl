@@ -1808,7 +1808,6 @@ int create_plant(coord_def & target)
 
 bool sunlight()
 {
-
     int c_size = 5;
     int x_offset[] = {-1, 0, 0, 0, 1};
     int y_offset[] = { 0,-1, 0, 1, 0};
@@ -1872,19 +1871,22 @@ bool sunlight()
                 evap_count++;
         }
 
-        monsters *monster_vic = monster_at(target);
+        monsters *mons = monster_at(target);
 
-        // Pop submerged status (this may be a little too nice
-        // because it will affect trapdoor spiders, not just fish).
-        if (monster_vic)
-            monster_vic->del_ench(ENCH_SUBMERGED);
+        // Pop submerged status.
+        if (mons && mons_habitat(mons) == HT_WATER)
+        {
+            mons->del_ench(ENCH_SUBMERGED);
+            if (ftype == DNGN_FLOOR)
+                mons->add_ench(mon_enchant(ENCH_AQUATIC_LAND, 0, KC_YOU));
+        }
 
         if (victim)
         {
-            if (!monster_vic)
+            if (!mons)
                 you.backlight();
             else
-                backlight_monsters(target,1,0);
+                backlight_monsters(target, 1, 0);
         }
         else if (one_chance_in(100)
                  && ftype >= DNGN_FLOOR_MIN
@@ -2150,10 +2152,8 @@ bool plant_ring_from_fruit()
 // Returns the number of plants/fungus created
 int rain(coord_def & target)
 {
-    radius_iterator rad(target, LOS_RADIUS, true, true, true);
-
     int spawned_count = 0;
-    for (; rad; ++rad)
+    for (radius_iterator rad(target, LOS_RADIUS, true, true, true); rad; ++rad)
     {
         // Adjusting the shape of the rainfall slightly to make it look nicer.
         // I want a threshold of 2.5 on the euclidean distance so a threshold
@@ -2197,6 +2197,10 @@ int rain(coord_def & target)
             grd(*rad) = DNGN_SHALLOW_WATER;
             // Remove blood stains as well
             env.map(*rad).property &= ~(FPROP_BLOODY);
+
+            monsters *mon = monster_at(*rad);
+            if (mon && mon->has_ench(ENCH_AQUATIC_LAND))
+                mon->del_ench(ENCH_AQUATIC_LAND);
         }
         // We can also turn shallow water into deep water, but we're just going
         // to skip cases where there is something on the shallow water.
@@ -2342,9 +2346,11 @@ bool evolve_flora()
         coord_def target_square = current_plant->pos();
 
         // Remove the original plant.
+        // XXX: Why do we destroy the old and create a new plant
+        //      rather than simply upgrade the old plant?
         monster_die(current_plant, KILL_MISC, NON_MONSTER, true);
 
-        monster_type new_species;
+        monster_type new_species = MONS_PLANT;
         switch (base_species)
         {
         case MONS_PLANT:

@@ -815,7 +815,7 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 
         default:
             continue;
-        } // switch
+        }
 
         // Two different items going into the same slot indicate that
         // this and further items weren't equipment the monster died
@@ -825,10 +825,10 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->pickup_item(mitm[objl], false, true);
-    } // while
+    }
 }
 
-static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
+static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            unsigned short hitting, god_type god, bool actual,
                            int* mon_index)
 {
@@ -851,45 +851,50 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
 
     // Headless hydras cannot be raised, sorry.
     if (zombie_type == MONS_HYDRA && number == 0)
+    {
+        if (see_grid(pos))
+        {
+            mpr("The zero-headed hydra corpse sways and immediately "
+                "collapses!");
+        }
         return (false);
+    }
 
     monster_type mon = MONS_PROGRAM_BUG;
 
     if (item.sub_type == CORPSE_BODY)
     {
-        mon = (mons_zombie_size(item.plus) == Z_SMALL) ?
-                MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
+        mon = (mons_zombie_size(item.plus) == Z_SMALL) ? MONS_ZOMBIE_SMALL
+                                                       : MONS_ZOMBIE_LARGE;
     }
     else
     {
-        mon = (mons_zombie_size(item.plus) == Z_SMALL) ?
-                MONS_SKELETON_SMALL : MONS_SKELETON_LARGE;
+        mon = (mons_zombie_size(item.plus) == Z_SMALL) ? MONS_SKELETON_SMALL
+                                                       : MONS_SKELETON_LARGE;
     }
 
-    const int monster = create_monster(
+    int monster = create_monster(
                             mgen_data(mon, beha,
-                                      0, 0, a, hitting,
+                                      0, 0, pos, hitting,
                                       0, god,
                                       zombie_type, number));
 
     if (mon_index != NULL)
         *mon_index = monster;
 
-    if (monster != -1)
-    {
-        const int monnum = item.orig_monnum - 1;
+    if (monster == -1)
+        return (false);
 
-        if (is_named_corpse(item))
-            name_zombie(&menv[monster], monnum, get_corpse_name(item));
+    const int monnum = item.orig_monnum - 1;
 
-        equip_undead(a, corps, monster, monnum);
+    if (is_named_corpse(item))
+        name_zombie(&menv[monster], monnum, get_corpse_name(item));
 
-        destroy_item(corps);
+    equip_undead(pos, corps, monster, monnum);
 
-        return (true);
-    }
+    destroy_item(corps);
 
-    return (false);
+    return (true);
 }
 
 // Note that quiet will *not* suppress the message about a corpse

@@ -1252,18 +1252,19 @@ enum enchant_type
     ENCH_SLEEPY,         // Monster can't wake until this wears off.
     ENCH_FATIGUE,        // Post-berserk fatigue.
     ENCH_HELD,           // Caught in a net.
-    ENCH_BATTLE_FRENZY,  // 25 -- Monster is in a battle frenzy
+    ENCH_BATTLE_FRENZY,                //   25 -- Monster is in a battle frenzy
     ENCH_NEUTRAL,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
     ENCH_LOWERED_MR,
-    ENCH_SOUL_RIPE,
+    ENCH_SOUL_RIPE,                    //   30
     ENCH_SLOWLY_DYING,
     ENCH_EATS_ITEMS,
+    ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
-    NUM_ENCHANTMENTS
+    NUM_ENCHANTMENTS                   //    34
 };
 
 enum enchant_retval

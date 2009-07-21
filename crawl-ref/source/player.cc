@@ -1950,7 +1950,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     return (pl);
 }
 
-// New player movement speed system... allows for a bit more that
+// New player movement speed system... allows for a bit more than
 // "player runs fast" and "player walks slow" in that the speed is
 // actually calculated (allowing for centaurs to get a bonus from
 // swiftness and other such things).  Levels of the mutation now

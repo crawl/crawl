@@ -7261,6 +7261,27 @@ void monsters::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me, false);
         break;
 
+    case ENCH_AQUATIC_LAND:
+        // Aquatic monsters lose hit points every turn they spend on dry land.
+        ASSERT(mons_habitat(this) == HT_WATER
+               && !grid_is_watery( grd(pos()) ));
+
+        // Zombies don't take damage from flopping about on land.
+        if (mons_is_zombified(this))
+            break;
+
+        // We don't have a reasonable agent to give.
+        // Don't clean up the monster in order to credit properly.
+        hurt(NULL, 1 + random2(5), BEAM_NONE, false);
+
+        // Credit the kill.
+        if (hit_points < 1)
+        {
+            monster_die(this, me.killer(), me.kill_agent());
+            break;
+        }
+        break;
+
     case ENCH_HELD:
     {
         if (mons_is_stationary(this) || mons_cannot_act(this)
@@ -7900,7 +7921,18 @@ void monsters::apply_location_effects(const coord_def &oldpos)
     if (oldpos != pos())
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
-    // monsters stepping on traps:
+    if (alive() && has_ench(ENCH_AQUATIC_LAND))
+    {
+        if (!grid_is_watery( grd(pos()) ))
+            simple_monster_message(this, " flops around on dry land!");
+        else if (!grid_is_watery( grd(oldpos) ))
+        {
+            simple_monster_message(this, " dives back into the water!");
+            del_ench(ENCH_AQUATIC_LAND);
+        }
+    }
+
+    // Monsters stepping on traps:
     trap_def* ptrap = find_trap(pos());
     if (ptrap)
         ptrap->trigger(*this);
@@ -8055,7 +8087,7 @@ int monsters::action_energy(energy_use_type et) const
             // (HT_AMPHIBIOUS_LAND, such as hydras) and those that
             // favour water (HT_AMPHIBIOUS_WATER, such as merfolk), but
             // that's something we can think about.
-            if (mons_class_amphibious(type))
+            if (mons_amphibious(this))
                 return div_rand_round(mu.swim * 7, 10);
             else
                 return mu.swim;
@@ -8279,7 +8311,7 @@ static const char *enchant_names[] =
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "soul-ripe", "decay", "hungry", "bug"
+    "soul-ripe", "decay", "hungry", "flopping", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

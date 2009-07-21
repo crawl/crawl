@@ -3963,8 +3963,8 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
 
         if (!can_move)
         {
-            can_move = (mons_amphibious(mon))
-                ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
+            can_move = (mons_amphibious(mon) ? DNGN_DEEP_WATER
+                                             : DNGN_SHALLOW_WATER);
         }
 
         if (mon->is_travelling())
@@ -8624,7 +8624,7 @@ static bool _monster_move(monsters *monster)
     if (monster->type == MONS_TRAPDOOR_SPIDER)
     {
         if (mons_is_submerged(monster))
-           return (false);
+            return (false);
 
         // Trapdoor spiders hide if they can't see their foe.
         // (Note that friendly trapdoor spiders will thus hide even
@@ -8681,6 +8681,50 @@ static bool _monster_move(monsters *monster)
             }
         }
         return (false);
+    }
+
+    // If a water monster is currently flopping around on land, it cannot
+    // really control where it wants to move, though there's a 50% chance
+    // of flopping into an adjacent water grid.
+    if (monster->has_ench(ENCH_AQUATIC_LAND))
+    {
+        std::vector<coord_def> adj_water;
+        std::vector<coord_def> adj_move;
+        for (adjacent_iterator ai(monster->pos()); ai; ++ai)
+        {
+            if (!grid_is_solid(*ai))
+            {
+                adj_move.push_back(*ai);
+                if (grid_is_watery(grd(*ai)))
+                    adj_water.push_back(*ai);
+            }
+        }
+        if (adj_move.empty())
+        {
+            simple_monster_message(monster, " flops around on dry land!");
+            return (false);
+        }
+
+        std::vector<coord_def> moves = adj_water;
+        if (adj_water.empty() || coinflip())
+            moves = adj_move;
+
+        coord_def newpos = monster->pos();
+        int count = 0;
+        for (unsigned int i = 0; i < moves.size(); ++i)
+            if (one_chance_in(++count))
+                newpos = moves[i];
+
+        const monsters *mon2 = monster_at(newpos);
+        if (newpos == you.pos() && mons_wont_attack(monster)
+            || (mon2 && mons_wont_attack(monster) == mons_wont_attack(mon2)))
+        {
+
+            simple_monster_message(monster, " flops around on dry land!");
+            return (false);
+        }
+
+        return _do_move_monster(monster, newpos - monster->pos());
     }
 
     // Let's not even bother with this if mmov is zero.
