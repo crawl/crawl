@@ -17,12 +17,13 @@ public:
     void unload();
     bool valid() const;
 
-    void resize(int new_width, int new_height);
+    void resize(unsigned int new_width, unsigned int new_height);
 
     void add_rim(const tile_colour &rim);
     void corpsify();
-    void corpsify(int corpse_width, int corpse_height,
-        int cut_separate, int cut_height, const tile_colour &wound);
+    void corpsify(unsigned int corpse_width, unsigned int corpse_height,
+                  unsigned int cut_separate, unsigned int cut_height,
+                  const tile_colour &wound);
 
     void copy(const tile &img);
     bool compose(const tile &img);
@@ -42,8 +43,8 @@ public:
 
     tile_colour &get_pixel(unsigned int x, unsigned int y);
 protected:
-    int m_width;
-    int m_height;
+    unsigned int m_width;
+    unsigned int m_height;
     std::string m_filename;
     std::string m_enumname;
     std::string m_parts_ctg;

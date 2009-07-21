@@ -69,6 +69,7 @@ REVISION("$Rev$");
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spells1.h"
 #include "spells3.h"
 #include "stash.h"
 #include "state.h"
@@ -1479,13 +1480,16 @@ static int runes_in_pack(std::vector<int> &runes)
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (is_valid_item( you.inv[i] )
+        if (is_valid_item(you.inv[i])
             && you.inv[i].base_type == OBJ_MISCELLANY
             && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
         {
             num_runes += you.inv[i].quantity;
-            for (int q = 1; runes.size() < 3 && q < you.inv[i].quantity; ++q)
-                runes.push_back(you.inv[i].plus);
+            for (int q = 1;
+                 runes.size() < 3 && q <= you.inv[i].quantity; ++q)
+            {
+                runes.push_back(i);
+            }
         }
     }
 
@@ -2133,17 +2137,46 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             switch (NUMBER_OF_RUNES_NEEDED)
             {
             case 1:
-                mpr("You need a Rune to enter this place.");
+                mpr("You need a rune to enter this place.");
                 break;
 
             default:
-                mprf( "You need at least %d Runes to enter this place.",
-                      NUMBER_OF_RUNES_NEEDED );
+                mprf("You need at least %d runes to enter this place.",
+                     NUMBER_OF_RUNES_NEEDED);
             }
             return;
         }
-        // TODO: This needs a better message!
-        mpr("The gate opens wide!");
+
+        ASSERT(runes.size() >= 3);
+
+        mprf("You insert %s into the lock.",
+             you.inv[runes[0]].name(DESC_NOCAP_THE).c_str());
+#ifdef USE_TILE
+        tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
+        update_screen();
+#else
+        you.flash_colour = LIGHTGREEN;
+        viewwindow(true, false);
+#endif
+        mpr("The lock glows an eerie green colour!");
+        more();
+
+        mprf("You insert %s into the lock.",
+             you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
+        big_cloud(CLOUD_PURP_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
+        viewwindow(true, false);
+        mpr("Heavy smoke blows from the lock!");
+        more();
+
+        mprf("You insert %s into the lock.",
+             you.inv[runes[2]].name(DESC_NOCAP_THE).c_str());
+
+        if (silenced(you.pos()))
+            mpr("The gate opens wide!");
+        else
+            mpr("With a loud hiss the gate opens wide!");
+        more();
+
         you.opened_zot = true;
     }
 

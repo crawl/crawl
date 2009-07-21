@@ -71,7 +71,7 @@ void tile::set_shrink(bool new_shrink)
     m_shrink = new_shrink;
 }
 
-void tile::resize(int new_width, int new_height)
+void tile::resize(unsigned int new_width, unsigned int new_height)
 {
     delete[] m_pixels;
     m_width  = new_width;
@@ -126,11 +126,12 @@ void tile::corpsify()
     int separate_x = 3;
     int separate_y = 4;
 
-    // force all corpses into 32x32, even if bigger.
+    // Force all corpses into 32x32, even if bigger.
     corpsify(32, 32, separate_x, separate_y, red_blood);
 }
 
-static int corpse_cut_height(int x, int width, int height)
+static unsigned int _corpse_cut_height(unsigned int x, unsigned int width,
+                                       unsigned int height)
 {
     unsigned int cy = height / 2 + 2;
 
@@ -148,10 +149,11 @@ static int corpse_cut_height(int x, int width, int height)
 
 // Adapted from rltiles' cp_monst_32 and then ruthlessly rewritten for clarity.
 // rltiles can be found at http://rltiles.sourceforge.net
-void tile::corpsify(int corpse_width, int corpse_height,
-    int cut_separate, int cut_height, const tile_colour &wound)
+void tile::corpsify(unsigned int corpse_width, unsigned int corpse_height,
+                    unsigned int cut_separate, unsigned int cut_height,
+                    const tile_colour &wound)
 {
-    int wound_height = std::min(2, cut_height);
+    unsigned int wound_height = std::min(2, (int) cut_height);
 
     // Make a temporary backup
     tile orig(*this);
@@ -182,11 +184,11 @@ void tile::corpsify(int corpse_width, int corpse_height,
     // Amount to scale height by to fake a projection.
     float height_proj = 2.0f;
 
-    for (int y = 0; y < corpse_height; y++)
-    {
-        for (int x = 0; x < corpse_width; x++)
+    for (unsigned int y = 0; y < corpse_height; y++)
+        for (unsigned int x = 0; x < corpse_width; x++)
         {
-            int cy = corpse_cut_height(x, corpse_width, corpse_height);
+            unsigned int cy = _corpse_cut_height(x, corpse_width,
+                                                    corpse_height);
             if (y > cy - cut_height && y <= cy)
                 continue;
 
@@ -220,29 +222,26 @@ void tile::corpsify(int corpse_width, int corpse_height,
             get_pixel(x,y) = mapped;
             flags(x, y) = true;
         }
-    }
 
     // Add some colour to the cut wound
-    for (int x = 0; x < corpse_width; x++)
+    for (unsigned int x = 0; x < corpse_width; x++)
     {
-        unsigned int cy = corpse_cut_height(x, corpse_width, corpse_height);
-        if (flags(x, cy-cut_height))
+        unsigned int cy = _corpse_cut_height(x, corpse_width, corpse_height);
+        if (flags(x, cy - cut_height))
         {
             unsigned int start = cy - cut_height + 1;
-            for (int y = start; y < start + wound_height; y++)
-            {
+            for (unsigned int y = start; y < start + wound_height; y++)
                 get_pixel(x, y) = wound;
-            }
         }
     }
 
     // Add diagonal shadowing...
-    for (int y = 1; y < corpse_height; y++)
+    for (unsigned int y = 1; y < corpse_height; y++)
     {
         for (int x = 1; x < corpse_width; x++)
         {
-            if (!flags(x, y) && flags(x-1, y-1) &&
-                get_pixel(x,y) == tile_colour::transparent)
+            if (!flags(x, y) && flags(x-1, y-1)
+                && get_pixel(x,y) == tile_colour::transparent)
             {
                 get_pixel(x, y) = tile_colour::black;
             }
@@ -250,24 +249,22 @@ void tile::corpsify(int corpse_width, int corpse_height,
     }
 
     // Extend shadow...
-    for (int y = 3; y < corpse_height; y++)
-    {
-        for (int x = 3; x < corpse_width; x++)
+    for (unsigned int y = 3; y < corpse_height; y++)
+        for (unsigned int x = 3; x < corpse_width; x++)
         {
             // Extend shadow if there are two real pixels along
             // the diagonal.  Also, don't extend if the top or
             // left pixel is not filled in.  This prevents lone
             // shadow pixels only connected via diagonals.
 
-            if (get_pixel(x-1,y-1) == tile_colour::black &&
-                flags(x-2, y-2) && flags(x-3, y-3) &&
-                get_pixel(x-1, y) == tile_colour::black &&
-                get_pixel(x, y-1) == tile_colour::black)
+            if (get_pixel(x-1,y-1) == tile_colour::black
+                && flags(x-2, y-2) && flags(x-3, y-3)
+                && get_pixel(x-1, y) == tile_colour::black
+                && get_pixel(x, y-1) == tile_colour::black)
             {
                 get_pixel(x, y) = tile_colour::black;
             }
         }
-    }
 
     delete[] flags;
 }

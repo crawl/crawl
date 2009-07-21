@@ -1,5 +1,6 @@
 #include "tile_page.h"
 #include "tile_colour.h"
+#include <stdio.h>
 #include <string.h>
 #include "tile.h"
 
@@ -82,7 +83,7 @@ bool tile_page::place_images()
         m_texcoords.push_back(ycur);
         m_texcoords.push_back(xcur + tilew);
         m_texcoords.push_back(ycur + tileh);
-        
+
         // Only add downwards, stretching out xmax as we go.
         xmax = std::max(xmax, xcur + (int)tilew);
         xcur = xmin;
