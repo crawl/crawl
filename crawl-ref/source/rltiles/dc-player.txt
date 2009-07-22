@@ -866,4 +866,5 @@ drchead_red RED
 drchead_white WHITE
 %end
 
+effect/net_trap TRAP_NET
 dc-misc/error ERROR

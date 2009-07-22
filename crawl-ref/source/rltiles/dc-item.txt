@@ -228,7 +228,6 @@ effect/throwing_net4 MI_THROWING_NET4
 effect/throwing_net5 MI_THROWING_NET5
 effect/throwing_net6 MI_THROWING_NET6
 effect/throwing_net7 MI_THROWING_NET7
-effect/net_trap TRAP_NET
 
 item/gem/rock MI_LARGE_ROCK
 effect/rock0 MI_LARGE_ROCK0

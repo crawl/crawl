@@ -901,7 +901,7 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     }
 
     if (player.held_in_net)
-        tileset.push_back(tile_def(TILE_TRAP_NET, TEX_DEFAULT));
+        tileset.push_back(tile_def(TILEP_TRAP_NET, TEX_PLAYER));
 
     return (true);
 }

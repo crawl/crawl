@@ -13,9 +13,6 @@ dc-dngn/dngn_unseen
 ## Corpse
 %include dc-corpse.txt
 
-####PLAYER 
-####include dc-jobs.txt
-
 #### Effects, etc.
 %include dc-misc.txt
 

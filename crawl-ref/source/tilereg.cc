@@ -879,7 +879,7 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_main.add(TILE_TRAP_NET, x, y);
+        m_buf_doll.add(TILEP_TRAP_NET, x, y);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
@@ -3369,12 +3369,8 @@ bool ImageManager::load_textures()
     if (!m_textures[TEX_PLAYER].load_texture("player.png", mip))
         return (false);
 
-    if (!m_textures[TEX_DEFAULT].load_texture("main.png", mip))
-        return (false);
-
     m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
     m_textures[TEX_PLAYER].set_info(TILEP_PLAYER_MAX, &tile_player_info);
-    m_textures[TEX_DEFAULT].set_info(TILE_MAIN_MAX, &tile_main_info);
 
     return (true);
 }
