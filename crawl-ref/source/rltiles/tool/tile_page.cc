@@ -25,13 +25,13 @@ bool tile_page::place_images()
     m_offsets.clear();
     m_texcoords.clear();
 
-    unsigned int ymin, ycur, ymax;
-    unsigned int xmin, xcur, xmax;
+    int ymin, ycur, ymax;
+    int xmin, xcur, xmax;
     ymin = ycur = ymax = xmin = xcur = xmax = 0;
 
     for (unsigned int i = 0; i < m_tiles.size(); i++)
     {
-        unsigned int ofs_x, ofs_y, tilew, tileh;
+        int ofs_x, ofs_y, tilew, tileh;
         if (m_tiles[i]->shrink())
             m_tiles[i]->get_bounding_box(ofs_x, ofs_y, tilew, tileh);
         else

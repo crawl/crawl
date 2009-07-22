@@ -23,6 +23,5 @@ public:
 };
 
 bool write_png(const char *filename, tile_colour *pixels,
-    int width, int height);
-
+               unsigned int width, unsigned int height);
 #endif

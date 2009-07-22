@@ -34,7 +34,7 @@ bool tile_list_processor::load_image(tile &img, const char *filename)
 
     char temp[1024];
 
-    const int num_ext = 3;
+    const unsigned int num_ext = 3;
     const char *ext[3] =
     {
         ".png",
@@ -64,8 +64,6 @@ bool tile_list_processor::load_image(tile &img, const char *filename)
 
 bool tile_list_processor::process_list(const char *list_file)
 {
-    int line = 1;
-
     std::ifstream input(list_file);
     if (!input.is_open())
     {
@@ -75,6 +73,7 @@ bool tile_list_processor::process_list(const char *list_file)
 
     const size_t bufsize = 1024;
     char read_line[bufsize];
+    int line     = 1;
     bool success = true;
     while (!input.getline(read_line, bufsize).eof())
         success &= process_line(read_line, list_file, line++);
@@ -225,7 +224,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 if (!load_image(*img, m_args[i]))
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
-                       "'%s'.\n", list_file, line, m_args[i]);
+                                    "'%s'.\n", list_file, line, m_args[i]);
                     return (false);
                 }
                 m_back.push_back(img);
@@ -237,7 +236,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             if (!m_composing)
             {
                 fprintf(stderr, "Error (%s:%d): not composing yet.\n",
-                    list_file, line);
+                        list_file, line);
                 return (false);
             }
 
@@ -246,7 +245,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 tile img;
                 if (!load_image(img, m_args[1]))
                 {
-                    fprintf(stderr, "Error(%s:%d): couldn't load image
+                    fprintf(stderr, "Error(%s:%d): couldn't load image "
                                     "'%s'.\n", list_file, line, m_args[1]);
                     return (false);
                 }
@@ -306,8 +305,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             if (m_back.size() > 0)
             {
-                unsigned int psuedo_rand = m_page.m_tiles.size() * 54321;
-                tile *back = m_back[psuedo_rand % m_back.size()];
+                const unsigned int pseudo_rand = m_page.m_tiles.size() * 54321;
+                tile *back = m_back[pseudo_rand % m_back.size()];
                 tile img(*back);
                 if (!img.compose(m_compose))
                 {
@@ -440,8 +439,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             if (m_corpsify)
                 m_compose.corpsify();
 
-            unsigned int psuedo_rand = m_page.m_tiles.size() * 54321;
-            tile *back = m_back[psuedo_rand % m_back.size()];
+            const unsigned int pseudo_rand = m_page.m_tiles.size() * 54321;
+            tile *back = m_back[pseudo_rand % m_back.size()];
             img.copy(*back);
             if (!img.compose(m_compose))
             {
@@ -467,7 +466,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         if (m_rim && !m_corpsify)
             img.add_rim(tile_colour::black);
 
-        // push tile onto tile page
+        // Push tile onto tile page.
         add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
     }
 
@@ -514,7 +513,7 @@ bool tile_list_processor::write_data()
     std::string ctg_max = m_prefix;
     ctg_max += "_PART_MAX";
 
-    // write image page
+    // Write image page.
     {
         if (!m_page.place_images())
             return (false);
@@ -527,7 +526,7 @@ bool tile_list_processor::write_data()
 
     int *part_min = NULL;
 
-    // write "tiledef-%name.h"
+    // Write "tiledef-%name.h"
     {
         char filename[1024];
         sprintf(filename, "tiledef-%s.h", lcname.c_str());
@@ -582,7 +581,7 @@ bool tile_list_processor::write_data()
 
             if (!parts_ctg.empty())
             {
-                int idx;
+                unsigned int idx;
                 for (idx = 0; idx < m_categories.size(); idx++)
                     if (parts_ctg == m_categories[idx])
                         break;
@@ -721,8 +720,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "\ntypedef std::pair<const char*, int> _tile_pair;\n\n");
 
         fprintf(fp, "_tile_pair %s_map_pairs[] =\n"
-                    "{\n",
-                lcname.c_str());
+                    "{\n", lcname.c_str());
 
         typedef std::map<std::string, int> sort_map;
         sort_map table;
@@ -832,7 +830,8 @@ bool tile_list_processor::write_data()
             }
             else if (parts_ctg.empty())
             {
-                fprintf(fp, "<td>%s_%s</td>", m_prefix.c_str(),
+                fprintf(fp, "<td>%s_%s</td>",
+                        m_prefix.c_str(),
                         m_page.m_tiles[i]->enumname().c_str());
             }
             else

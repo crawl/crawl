@@ -9,7 +9,7 @@ tile::tile() : m_width(0), m_height(0), m_pixels(NULL), m_shrink(true)
 }
 
 tile::tile(const tile &img, const char *enumnam, const char *parts) :
-    m_width(0), m_height(0), m_pixels(NULL)
+           m_width(0), m_height(0), m_pixels(NULL)
 {
     copy(img);
 
@@ -71,7 +71,7 @@ void tile::set_shrink(bool new_shrink)
     m_shrink = new_shrink;
 }
 
-void tile::resize(unsigned int new_width, unsigned int new_height)
+void tile::resize(int new_width, int new_height)
 {
     delete[] m_pixels;
     m_width  = new_width;
@@ -88,15 +88,15 @@ void tile::resize(unsigned int new_width, unsigned int new_height)
 void tile::add_rim(const tile_colour &rim)
 {
     bool *flags = new bool[m_width * m_height];
-    for (unsigned int y = 0; y < m_height; y++)
-        for (unsigned int x = 0; x < m_width; x++)
+    for (int y = 0; y < m_height; y++)
+        for (int x = 0; x < m_width; x++)
         {
-            flags[x + y * m_width] = ((get_pixel(x, y).a > 0) &&
-                (get_pixel(x,y) != rim));
+            flags[x + y * m_width] =
+                (get_pixel(x, y).a > 0 && get_pixel(x,y) != rim);
         }
 
-    for (unsigned int y = 0; y < m_height; y++)
-        for (unsigned int x = 0; x < m_width; x++)
+    for (int y = 0; y < m_height; y++)
+        for (int x = 0; x < m_width; x++)
         {
             if (flags[x + y * m_width])
                 continue;
@@ -119,21 +119,20 @@ void tile::corpsify()
     // TODO enne - use blood variations
     tile_colour red_blood(0, 0, 32, 255);
 
-    int separate_x = 3;
-    int separate_y = 4;
+    const int separate_x = 3;
+    const int separate_y = 4;
 
     // Force all corpses into 32x32, even if bigger.
     corpsify(32, 32, separate_x, separate_y, red_blood);
 }
 
-static unsigned int _corpse_cut_height(unsigned int x, unsigned int width,
-                                       unsigned int height)
+static int _corpse_cut_height(int x, int width, int height)
 {
     unsigned int cy = height / 2 + 2;
 
     // Make the cut bend upwards in the middle
-    int limit1 = width / 8;
-    int limit2 = width / 3;
+    const int limit1 = width / 8;
+    const int limit2 = width / 3;
 
     if (x < limit1 || x >= width - limit1)
         cy += 2;
@@ -145,12 +144,9 @@ static unsigned int _corpse_cut_height(unsigned int x, unsigned int width,
 
 // Adapted from rltiles' cp_monst_32 and then ruthlessly rewritten for clarity.
 // rltiles can be found at http://rltiles.sourceforge.net
-void tile::corpsify(unsigned int corpse_width, unsigned int corpse_height,
-                    unsigned int cut_separate, unsigned int cut_height,
-                    const tile_colour &wound)
+void tile::corpsify(int corpse_width, int corpse_height,
+                    int cut_separate, int cut_height, const tile_colour &wound)
 {
-    unsigned int wound_height = std::min(2, (int) cut_height);
-
     // Make a temporary backup
     tile orig(*this);
 
@@ -164,34 +160,32 @@ void tile::corpsify(unsigned int corpse_width, unsigned int corpse_height,
 #define flags(x,y) (flags[((x) + (y) * corpse_width)])
 
     // Find extents
-    unsigned int xmin, ymin, bbwidth, bbheight;
+    int xmin, ymin, bbwidth, bbheight;
     orig.get_bounding_box(xmin, ymin, bbwidth, bbheight);
 
-    unsigned int xmax = xmin + bbwidth - 1;
-    unsigned int ymax = ymin + bbheight - 1;
-    unsigned int centerx = (xmax + xmin) / 2;
-    unsigned int centery = (ymax + ymin) / 2;
+    const int xmax = xmin + bbwidth - 1;
+    const int ymax = ymin + bbheight - 1;
+    const int centerx = (xmax + xmin) / 2;
+    const int centery = (ymax + ymin) / 2;
 
     // Use maximum scale in case aspect ratios differ.
-    float width_scale  = (float)m_width / (float)corpse_width;
-    float height_scale = (float)m_height / (float)corpse_height;
-    float image_scale  = std::max(width_scale, height_scale);
+    const float width_scale  = (float)m_width / (float)corpse_width;
+    const float height_scale = (float)m_height / (float)corpse_height;
+    const float image_scale  = std::max(width_scale, height_scale);
 
     // Amount to scale height by to fake a projection.
-    float height_proj = 2.0f;
+    const float height_proj = 2.0f;
 
-    for (unsigned int y = 0; y < corpse_height; y++)
-        for (unsigned int x = 0; x < corpse_width; x++)
+    for (int y = 0; y < corpse_height; y++)
+        for (int x = 0; x < corpse_width; x++)
         {
-            unsigned int cy = _corpse_cut_height(x, corpse_width,
-                                                    corpse_height);
+            const int cy = _corpse_cut_height(x, corpse_width, corpse_height);
             if (y > cy - cut_height && y <= cy)
                 continue;
 
             // map new center to old center, including image scale
-            unsigned int x1 = (int)((x - m_width/2)*image_scale) + centerx;
-            unsigned int y1 = (int)((y - m_height/2)*height_proj*image_scale)
-                                + centery;
+            int x1 = (int)((x - m_width/2)*image_scale) + centerx;
+            int y1 = (int)((y - m_height/2)*height_proj*image_scale) + centery;
 
             if (y >= cy)
             {
@@ -220,21 +214,22 @@ void tile::corpsify(unsigned int corpse_width, unsigned int corpse_height,
             flags(x, y) = true;
         }
 
-    // Add some colour to the cut wound
-    for (unsigned int x = 0; x < corpse_width; x++)
+    const int wound_height = std::min(2, cut_height);
+
+    // Add some colour to the cut wound.
+    for (int x = 0; x < corpse_width; x++)
     {
-        unsigned int cy = _corpse_cut_height(x, corpse_width, corpse_height);
+        int cy = _corpse_cut_height(x, corpse_width, corpse_height);
         if (flags(x, cy - cut_height))
         {
-            unsigned int start = cy - cut_height + 1;
-            for (unsigned int y = start; y < start + wound_height; y++)
+            const int start = cy - cut_height + 1;
+            for (int y = start; y < start + wound_height; y++)
                 get_pixel(x, y) = wound;
         }
     }
 
     // Add diagonal shadowing...
-    for (unsigned int y = 1; y < corpse_height; y++)
-    {
+    for (int y = 1; y < corpse_height; y++)
         for (int x = 1; x < corpse_width; x++)
         {
             if (!flags(x, y) && flags(x-1, y-1)
@@ -243,11 +238,10 @@ void tile::corpsify(unsigned int corpse_width, unsigned int corpse_height,
                 get_pixel(x, y) = tile_colour::black;
             }
         }
-    }
 
     // Extend shadow...
-    for (unsigned int y = 3; y < corpse_height; y++)
-        for (unsigned int x = 3; x < corpse_width; x++)
+    for (int y = 3; y < corpse_height; y++)
+        for (int x = 3; x < corpse_width; x++)
         {
             // Extend shadow if there are two real pixels along
             // the diagonal.  Also, don't extend if the top or
@@ -299,11 +293,11 @@ bool tile::compose(const tile &img)
     {
         fprintf(stderr, "Error: can't compose with mismatched dimensions. "
                         "(%d, %d) onto (%d, %d)\n",
-                        img.m_width, img.m_height, m_width, m_height);
+                img.m_width, img.m_height, m_width, m_height);
         return (false);
     }
 
-    for (unsigned int i = 0; i < m_width * m_height; i += 1)
+    for (int i = 0; i < m_width * m_height; i += 1)
     {
         const tile_colour *src = &img.m_pixels[i];
         tile_colour *dest = &m_pixels[i];
@@ -331,19 +325,18 @@ bool tile::load(const std::string &new_filename)
     m_width  = img->w;
     m_height = img->h;
 
-    // blow out all formats to non-palettised RGBA.
+    // Blow out all formats to non-palettised RGBA.
     m_pixels = new tile_colour[m_width * m_height];
-    unsigned int bpp = img->format->BytesPerPixel;
+    const unsigned int bpp = img->format->BytesPerPixel;
     if (bpp == 1)
     {
         SDL_Palette *pal = img->format->palette;
         assert(pal);
         assert(pal->colors);
 
-        int src = 0;
+        int src  = 0;
         int dest = 0;
         for (int y = 0; y < img->h; y++)
-        {
             for (int x = 0; x < img->w; x++)
             {
                 int index = ((unsigned char*)img->pixels)[src++];
@@ -353,7 +346,6 @@ bool tile::load(const std::string &new_filename)
                 m_pixels[dest].a = (index != img->format->colorkey ? 255 : 0);
                 dest++;
             }
-        }
     }
     else
     {
@@ -361,7 +353,6 @@ bool tile::load(const std::string &new_filename)
 
         int dest = 0;
         for (int y = 0; y < img->h; y++)
-        {
             for (int x = 0; x < img->w; x++)
             {
                 unsigned char *p = (unsigned char*)img->pixels
@@ -397,7 +388,6 @@ bool tile::load(const std::string &new_filename)
                             &m_pixels[dest].a);
                 dest++;
             }
-        }
 
         SDL_UnlockSurface(img);
     }
@@ -411,15 +401,15 @@ bool tile::load(const std::string &new_filename)
 
 void tile::fill(const tile_colour &col)
 {
-    for (unsigned int y = 0; y < m_height; y++)
-        for (unsigned int x = 0; x < m_width; x++)
+    for (int y = 0; y < m_height; y++)
+        for (int x = 0; x < m_width; x++)
             get_pixel(x, y) = col;
 }
 
 void tile::replace_colour(tile_colour &find, tile_colour &replace)
 {
-    for (unsigned int y = 0; y < m_height; y++)
-        for (unsigned int x = 0; x < m_width; x++)
+    for (int y = 0; y < m_height; y++)
+        for (int x = 0; x < m_width; x++)
         {
             tile_colour &p = get_pixel(x, y);
             if (p == find)
@@ -433,8 +423,7 @@ tile_colour &tile::get_pixel(unsigned int x, unsigned int y)
     return m_pixels[x + y * m_width];
 }
 
-void tile::get_bounding_box(unsigned int &x0, unsigned int &y0,
-                            unsigned int &w, unsigned int &h)
+void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
 {
     if (!valid())
     {

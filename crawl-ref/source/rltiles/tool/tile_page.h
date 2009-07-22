@@ -18,8 +18,8 @@ public:
     std::vector<int> m_texcoords;
     std::vector<int> m_offsets;
 protected:
-    unsigned int m_width;
-    unsigned int m_height;
+    int m_width;
+    int m_height;
 };
 
 #endif

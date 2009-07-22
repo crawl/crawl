@@ -29,7 +29,7 @@ const tile_colour &tile_colour::operator=(const tile_colour &rhs)
 }
 
 bool write_png(const char *filename, tile_colour *pixels,
-    int width, int height)
+               unsigned int width, unsigned int height)
 {
     FILE *fp = fopen(filename, "wb");
     if (!fp)
@@ -52,11 +52,11 @@ bool write_png(const char *filename, tile_colour *pixels,
 
     png_init_io(png_ptr, fp);
 
-    int bit_depth = 8;
-    int colour_type = PNG_COLOR_TYPE_RGB_ALPHA;
-    int interlace_type = PNG_INTERLACE_NONE;
+    int bit_depth        = 8;
+    int colour_type      = PNG_COLOR_TYPE_RGB_ALPHA;
+    int interlace_type   = PNG_INTERLACE_NONE;
     int compression_type = PNG_COMPRESSION_TYPE_DEFAULT;
-    int filter_method = PNG_FILTER_TYPE_DEFAULT;
+    int filter_method    = PNG_FILTER_TYPE_DEFAULT;
     png_set_IHDR(png_ptr, info_ptr, width, height,
                  bit_depth, colour_type, interlace_type,
                  compression_type, filter_method);
@@ -77,3 +77,5 @@ bool write_png(const char *filename, tile_colour *pixels,
 
     return (true);
 }
+
+
