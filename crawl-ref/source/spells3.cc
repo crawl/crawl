@@ -815,7 +815,7 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 
         default:
             continue;
-        } // switch
+        }
 
         // Two different items going into the same slot indicate that
         // this and further items weren't equipment the monster died
@@ -825,10 +825,10 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->pickup_item(mitm[objl], false, true);
-    } // while
+    }
 }
 
-static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
+static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            unsigned short hitting, god_type god, bool actual,
                            int* mon_index)
 {
@@ -851,7 +851,14 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
 
     // Headless hydras cannot be raised, sorry.
     if (zombie_type == MONS_HYDRA && number == 0)
+    {
+        if (see_grid(pos))
+        {
+            mpr("The zero-headed hydra corpse sways and immediately "
+                "collapses!");
+        }
         return (false);
+    }
 
     monster_type mon = MONS_PROGRAM_BUG;
 

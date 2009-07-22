@@ -1473,7 +1473,7 @@ static void set_entry_cause(entry_cause_type default_cause,
     }
 }
 
-static int runes_in_pack()
+static int runes_in_pack(std::vector<int> &runes)
 {
     int num_runes = 0;
 
@@ -1484,6 +1484,8 @@ static int runes_in_pack()
             && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
         {
             num_runes += you.inv[i].quantity;
+            for (int q = 1; runes.size() < 3 && q < you.inv[i].quantity; ++q)
+                runes.push_back(you.inv[i].plus);
         }
     }
 
@@ -2128,7 +2130,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
     {
-        const int num_runes = runes_in_pack();
+        std::vector<int> runes;
+        const int num_runes = runes_in_pack(runes);
 
         if (num_runes < NUMBER_OF_RUNES_NEEDED)
         {

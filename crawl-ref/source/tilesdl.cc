@@ -232,11 +232,16 @@ bool TilesFramework::initialise()
     SDL_EnableUNICODE(true);
 
     SDL_WM_SetCaption(CRAWL " " VERSION, CRAWL);
-#ifdef WIN32TILES
-    const char *icon_name = "dat/tiles/stone_soup_icon-win32.png";
-#else
-    const char *icon_name = "dat/tiles/stone_soup_icon-32x32.png";
+    const char *icon_name =
+#ifdef DATA_DIR_PATH
+            DATA_DIR_PATH
 #endif
+#ifdef WIN32TILES
+            "dat/tiles/stone_soup_icon-win32.png";
+#else
+            "dat/tiles/stone_soup_icon-32x32.png";
+#endif
+
     SDL_Surface *icon = IMG_Load(icon_name);
     if (!icon)
     {

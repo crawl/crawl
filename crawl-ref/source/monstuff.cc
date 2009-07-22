@@ -3811,8 +3811,8 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
 
         if (!can_move)
         {
-            can_move = (mons_amphibious(mon))
-                ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
+            can_move = (mons_amphibious(mon) ? DNGN_DEEP_WATER
+                                             : DNGN_SHALLOW_WATER);
         }
 
         if (mon->is_travelling())
@@ -8390,7 +8390,7 @@ static bool _monster_move(monsters *monster)
     if (monster->type == MONS_TRAPDOOR_SPIDER)
     {
         if (mons_is_submerged(monster))
-           return (false);
+            return (false);
 
         // Trapdoor spiders hide if they can't see their foe.
         // (Note that friendly trapdoor spiders will thus hide even

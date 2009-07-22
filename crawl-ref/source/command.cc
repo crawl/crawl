@@ -1655,8 +1655,8 @@ static bool _find_description(bool &again, std::string& error_inout)
         else
         {
             error_inout  = "No matching ";
-            error_inout += type;
-            error_inout += "s.";
+            error_inout += pluralise(type);
+            error_inout += ".";
         }
         return (false);
     }
