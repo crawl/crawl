@@ -3420,8 +3420,7 @@ void melee_attack::player_sustain_passive_damage()
 
 int melee_attack::player_staff_damage(int skill)
 {
-    return roll_dice(3,
-                     1 + (you.skills[skill] + you.skills[SK_EVOCATIONS]) / 2);
+    return roll_dice(1, 1 + you.skills[skill] + you.skills[SK_EVOCATIONS]);
 }
 
 void melee_attack::emit_nodmg_hit_message()
@@ -3486,8 +3485,9 @@ void melee_attack::player_apply_staff_damage()
 
     case STAFF_EARTH:
         special_damage = player_staff_damage(SK_EARTH_MAGIC);
+        special_damage = player_apply_monster_ac(special_damage);
 
-        if (special_damage)
+        if (special_damage > 0)
         {
             special_damage_message =
                 make_stringf(
