@@ -905,7 +905,9 @@ void turn_corpse_into_blood_potions(item_def &item)
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(!food_is_rotten(item));
 
-    const int mons_class = item.plus;
+    item_def corpse = item;
+    const int mons_class = corpse.plus;
+
     ASSERT(can_bottle_blood_from_corpse(mons_class));
 
     item.base_type = OBJ_POTIONS;
@@ -922,7 +924,7 @@ void turn_corpse_into_blood_potions(item_def &item)
 
     // Happens after the blood has been bottled.
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
-        _create_monster_hide(item);
+        _create_monster_hide(corpse);
 }
 
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
