@@ -1161,9 +1161,14 @@ static void _hogs_to_humans()
         monsters *monster = &menv[i];
         if (monster->type == MONS_HOG)
         {
+            // A monster changing factions while in the arena messes up
+            // arena book-keeping.
+            if (!crawl_state.arena)
+            {
+                monster->attitude = ATT_GOOD_NEUTRAL;
+                monster->flags |= MF_WAS_NEUTRAL;
+            }
             monster->type = MONS_HUMAN;
-            monster->attitude = ATT_GOOD_NEUTRAL;
-            monster->flags |= MF_WAS_NEUTRAL;
             behaviour_event(monster, ME_EVAL);
 
             any++;

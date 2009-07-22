@@ -1023,7 +1023,10 @@ bool arena_veto_random_monster(monster_type type)
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
                               const coord_def& pos)
 {
-    if (mg.abjuration_duration > 0)
+    // If the first band member makes it past the summon throttle cut,
+    // let all of the rest of its band in too regardless of the summon
+    // throttle.
+    if (mg.abjuration_duration > 0 && first_band_member)
     {
         if (mg.behaviour == BEH_FRIENDLY
             && arena::faction_a.active_members > arena::summon_throttle)
@@ -1053,7 +1056,14 @@ void arena_placed_monster(monsters *monster)
         arena::faction_b.active_members++;
         arena::faction_a.won = false;
     }
-
+    else
+    {
+        mprf(MSGCH_ERROR, "Placed neutral (%d) monster %s",
+             (int) monster->attitude,
+             monster->name(DESC_PLAIN, true).c_str());
+        more();
+    }
+ 
     if (monster->type == MONS_TEST_SPAWNER)
     {
         if (monster->attitude == ATT_FRIENDLY)
