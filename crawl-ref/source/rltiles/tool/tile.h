@@ -39,7 +39,8 @@ public:
     bool shrink();
     void set_shrink(bool new_shrink);
 
-    void get_bounding_box(int &x0, int &y0, int &w, int &h);
+    void get_bounding_box(unsigned int &x0, unsigned int &y0,
+                          unsigned int &w, unsigned int &h);
 
     tile_colour &get_pixel(unsigned int x, unsigned int y);
 protected:

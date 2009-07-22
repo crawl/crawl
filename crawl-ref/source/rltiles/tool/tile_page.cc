@@ -11,9 +11,8 @@ tile_page::tile_page() : m_width(1024), m_height(0)
 tile_page::~tile_page()
 {
     for (unsigned int i = 0; i < m_tiles.size(); i++)
-    {
         delete m_tiles[i];
-    }
+
     m_tiles.clear();
     m_counts.clear();
 }
@@ -26,17 +25,15 @@ bool tile_page::place_images()
     m_offsets.clear();
     m_texcoords.clear();
 
-    int ymin, ycur, ymax;
-    int xmin, xcur, xmax;
+    unsigned int ymin, ycur, ymax;
+    unsigned int xmin, xcur, xmax;
     ymin = ycur = ymax = xmin = xcur = xmax = 0;
 
     for (unsigned int i = 0; i < m_tiles.size(); i++)
     {
-        int ofs_x, ofs_y, tilew, tileh;
+        unsigned int ofs_x, ofs_y, tilew, tileh;
         if (m_tiles[i]->shrink())
-        {
             m_tiles[i]->get_bounding_box(ofs_x, ofs_y, tilew, tileh);
-        }
         else
         {
             ofs_x = 0;
@@ -72,9 +69,7 @@ bool tile_page::place_images()
             }
 
             if (ycur == ymin)
-            {
                 ymax = std::max(ymin + (int)tileh, ymax);
-            }
         }
 
         m_height = ymax;
@@ -90,7 +85,7 @@ bool tile_page::place_images()
         ycur += tileh;
     }
 
-    return true;
+    return (true);
 }
 
 bool tile_page::write_image(const char *filename)
@@ -98,7 +93,7 @@ bool tile_page::write_image(const char *filename)
     if (m_width * m_height <= 0)
     {
         fprintf(stderr, "Error: failed to write image.  No images placed?\n");
-        return false;
+        return (false);
     }
 
     tile_colour *pixels = new tile_colour[m_width * m_height];
@@ -114,15 +109,14 @@ bool tile_page::write_image(const char *filename)
         int wy = ey - sy;
         int ofs_x = m_offsets[i*4];
         int ofs_y = m_offsets[i*4+1];
+
         for (int y = 0; y < wy; y++)
-        {
             for (int x = 0; x < wx; x++)
             {
                 tile_colour &dest = pixels[(sx+x) + (sy+y)*m_width];
                 tile_colour &src = m_tiles[i]->get_pixel(ofs_x+x, ofs_y+y);
                 dest = src;
             }
-        }
     }
 
     bool success = write_png(filename, pixels, m_width, m_height);
