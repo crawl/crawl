@@ -8597,6 +8597,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@player", "@foe");
         msg = replace_all(msg, "@Player", "@Foe");
 
+        msg = replace_all(msg, "@foe_possessive@", "your");
         msg = replace_all(msg, "@foe@", "you");
         msg = replace_all(msg, "@Foe@", "You");
 
@@ -8617,6 +8618,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                 && !crawl_state.arena)
             {
                 foe_name = foe->name(DESC_NOCAP_YOUR);
+                const std::string::size_type pos = foe_name.find("'");
+                if (pos != std::string::npos)
+                    foe_name = foe_name.substr(0, pos);
             }
             else
                 foe_name = foe->name(DESC_NOCAP_THE);
@@ -8633,6 +8637,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, " @at_foe@", " at @foe@");
         msg = replace_all(msg, "@foe,@",    "@foe@,");
 
+        msg = replace_all(msg, "@foe_possessive@", "@foe@'s");
         msg = replace_all(msg, "@foe@", foe_name);
         msg = replace_all(msg, "@Foe@", upcase_first(foe_name));
 

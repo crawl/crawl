@@ -560,7 +560,8 @@ is present then it will only be used on priestly monsters or god gift monsters.
 "@Foe@" or "@foe@" will be replaced with "You" or "you" if directed at the
 player, or if directed at another monster be the same as "@The_monster@" or
 "@the_monster@", but with the foe monster's name rather than the speaking
-monster's name
+monster's name.  "@foe_possessive@" will be replaced with "your" if directed
+at the player, or expanded like "@foe@'s" if directed at a monster.
 
 If you want to indicate which monster a message is directed at, you can put in
 "@to_foe@" or "@at_foe@" to fill in the foe name when the message is directed
