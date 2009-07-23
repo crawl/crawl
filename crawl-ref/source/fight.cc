@@ -3420,7 +3420,7 @@ void melee_attack::player_sustain_passive_damage()
 
 int melee_attack::player_staff_damage(int skill)
 {
-    return roll_dice(3, (1 + you.skills[skill] + you.skills[SK_EVOCATIONS])/2);
+    return (random2(5*(you.skills[skill] + you.skills[SK_EVOCATIONS])/4));
 }
 
 void melee_attack::emit_nodmg_hit_message()
@@ -3439,9 +3439,7 @@ void melee_attack::player_apply_staff_damage()
     if (!weapon || !item_is_staff(*weapon))
         return;
 
-    const int staff_cost = 2;
-    if (you.magic_points < staff_cost
-        || random2(15) > you.skills[SK_EVOCATIONS])
+    if (random2(15) > you.skills[SK_EVOCATIONS])
     {
         return;
     }
@@ -3566,8 +3564,6 @@ void melee_attack::player_apply_staff_damage()
 
     if (special_damage > 0)
     {
-        dec_mp(staff_cost);
-
         if (!item_type_known(*weapon))
         {
             set_ident_flags( *weapon, ISFLAG_KNOW_TYPE );
