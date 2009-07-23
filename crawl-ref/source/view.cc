@@ -3930,7 +3930,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             clear_envmap_grid(*ri);
 
 #ifdef USE_TILE
-        if (!wizard_map && is_terrain_known(*ri))
+        if (!wizard_map && is_terrain_known(*ri)
+            && !(env.map(*ri).flags & MAP_MAGIC_MAPPED_FLAG))
         {
             // Can't use set_envmap_obj because that would
             // overwrite the gmap.

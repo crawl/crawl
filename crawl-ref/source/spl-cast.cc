@@ -2352,9 +2352,8 @@ std::string spell_range_string(spell_type spell)
         return "N/A";
     else
     {
-        return std::string("@") + std::string(range, '.')
-               + "<darkgrey>" + std::string(maxrange - range, '.')
-               + "</darkgrey>";
+        return std::string("@") + std::string(range - 1, '-')
+               + std::string(">") + std::string(maxrange - range, '.');
     }
 }
 

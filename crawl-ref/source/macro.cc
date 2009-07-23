@@ -11,8 +11,8 @@
  *   - For generic game code, #define getch() getchm().
  *   - getchm() works by reading characters from an internal
  *     buffer. If none are available, new characters are read into
- *     the buffer with getch_mul().
- *   - getch_mul() reads at least one character, but will read more
+ *     the buffer with _getch_mul().
+ *   - _getch_mul() reads at least one character, but will read more
  *     if available (determined using kbhit(), which should be defined
  *     in the platform specific libraries).
  *   - Before adding the characters read into the buffer, any macros
@@ -624,7 +624,7 @@ void macro_save()
  * Reads as many keypresses as are available (waiting for at least one),
  * and returns them as a single keyseq.
  */
-static keyseq getch_mul( int (*rgetch)() = NULL )
+static keyseq _getch_mul( int (*rgetch)() = NULL )
 {
     keyseq keys;
     int    a;
@@ -633,7 +633,7 @@ static keyseq getch_mul( int (*rgetch)() = NULL )
     // get new keys from the user.
     if (crawl_state.is_replaying_keys())
     {
-        mpr("(Key replay ran out of keys)");
+        mpr("(Key replay ran out of keys)", MSGCH_ERROR);
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
     }
@@ -646,9 +646,7 @@ static keyseq getch_mul( int (*rgetch)() = NULL )
     // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
     while (kbhit() || a == 0)
-    {
         keys.push_back( a = rgetch() );
-    }
 
     return (keys);
 }
@@ -672,7 +670,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
         return (a);
 
     // Read some keys...
-    keyseq keys = getch_mul(rgetch);
+    keyseq keys = _getch_mul(rgetch);
     if (mc == KMC_NONE)
         macro_buf_add(keys);
     else
@@ -690,7 +688,7 @@ int getch_with_command_macros( void )
     if (Buffer.size() == 0)
     {
         // Read some keys...
-        keyseq keys = getch_mul();
+        keyseq keys = _getch_mul();
         // ... and add them into the buffer (apply keymaps)
         macro_buf_add_long( keys );
 
@@ -805,7 +803,7 @@ void macro_add_query( void )
 
     keyseq key;
     mouse_control mc(MOUSE_MODE_MACRO);
-    key = getch_mul();
+    key = _getch_mul();
 
     cprintf( "%s" EOL, (vtostr( key )).c_str() ); // echo key to screen
 
@@ -832,22 +830,18 @@ void macro_add_query( void )
 
     mpr( "Input Macro Action: ", MSGCH_PROMPT );
 
-    // Using getch_mul() here isn't very useful...  We'd like the
+    // Using _getch_mul() here isn't very useful...  We'd like the
     // flexibility to define multicharacter macros without having
     // to resort to editing files and restarting the game.  -- bwr
-    // keyseq act = getch_mul();
+    // keyseq act = _getch_mul();
 
     char    buff[4096];
     get_input_line(buff, sizeof buff);
 
     if (Options.macro_meta_entry)
-    {
         macro_add( mapref, key, parse_keyseq(buff) );
-    }
     else
-    {
         macro_add( mapref, key, buff );
-    }
 
     redraw_screen();
 }
@@ -1039,7 +1033,7 @@ void init_keybindings()
     int i;
 
     for (i = 0; _command_name_list[i].cmd != CMD_NO_CMD
-             && _command_name_list[i].name != NULL; i++)
+                && _command_name_list[i].name != NULL; i++)
     {
         command_name &data = _command_name_list[i];
 
