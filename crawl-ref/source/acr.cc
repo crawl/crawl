@@ -3656,6 +3656,30 @@ static void _move_player(coord_def move)
     // When confused, sometimes make a random move
     if (you.confused())
     {
+        dungeon_feature_type dangerous = DNGN_FLOOR;
+        for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+        {
+            if (is_grid_dangerous(grd(*ai))
+                && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
+            {
+                dangerous = grd(*ai);
+            }
+        }
+        if (dangerous != DNGN_FLOOR)
+        {
+            std::string prompt = "Are you sure you want to move while confused "
+                                 "and next to ";
+                        prompt += (dangerous == DNGN_LAVA ? "lava"
+                                                          : "deep water");
+                        prompt += "? ";
+
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+        }
+
         if (!one_chance_in(3))
         {
             move.x = random2(3) - 1;

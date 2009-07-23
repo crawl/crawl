@@ -2192,7 +2192,7 @@
      SPFLAG_TARGET | SPFLAG_BATTLE,
      2,
      50,
-     4, 8,
+     LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
      false,
