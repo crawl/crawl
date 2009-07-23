@@ -2007,7 +2007,7 @@ VISUAL:@The_monster@ grins evilly.
 
 VISUAL:@The_monster@ seems to say something.
 
-VISUAL:@The_monster@ says something you can't hear.  It was probably not a compliment.
+VISUAL:@The_monster@ says something you can't hear.  It was probably not a compliment. @player_only@
 ## END silenced Murray ##
 %%%%
 # ugly orc sorceress
@@ -2048,7 +2048,7 @@ _Nessos_common_
 
 @The_monster@ pounds the earth with his hooves.
 
-@The_monster@ intently looks at you, slowly moving @possessive@ tail.
+@The_monster@ intently looks at @foe@, slowly moving @possessive@ tail.
 
 @The_monster@ stands on @possessive@ hind legs for a moment.
 
@@ -2071,7 +2071,7 @@ w:1
 @The_monster@ says, "I schooled the Big Guy. You'll be no problem."
 
 w:1
-@The_monster@ tries to tell you a complicated story about hydras, his blood, and marriage.
+@The_monster@ tries to tell @foe@ a complicated story about hydras, his blood, and marriage.
 
 ## END NESSOS
 %%%%
@@ -2767,7 +2767,7 @@ _Killer_Klown_rare_
 
 @The_monster@ honks.
 
-VISUAL:@The_monster@ pantomimes your execution.
+VISUAL:@The_monster@ pantomimes @foe_possessive@ execution.
 
 VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
