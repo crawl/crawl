@@ -22,6 +22,13 @@ extern int unixcurses_get_vi_key(int keyin);
 
 static keycode_type _numpad2vi(keycode_type key)
 {
+    switch(key)
+    {
+    case CK_UP:    key = 'k'; break;
+    case CK_DOWN:  key = 'j'; break;
+    case CK_LEFT:  key = 'h'; break;
+    case CK_RIGHT: key = 'l'; break;
+    }
     if (key >= '1' && key <= '9')
     {
         const char *vikeys = "bjnh.lyku";

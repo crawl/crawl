@@ -500,7 +500,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     // handled.
 
     const int shift_offset = CK_SHIFT_UP - CK_UP;
-    const int ctrl_offset = CK_CTRL_UP - CK_UP;
+    const int ctrl_offset  = CK_CTRL_UP - CK_UP;
 
     int mod = 0;
     if (keysym.mod & KMOD_SHIFT)
