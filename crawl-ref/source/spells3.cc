@@ -1308,6 +1308,9 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     coord_def pos(1, 0);
     bool      large_change  = false;
     bool      check_ring_TC = false;
+#ifdef USE_TILE
+    const dungeon_feature_type old_grid = grd(you.pos());
+#endif
 
     if (is_controlled)
     {
@@ -1456,6 +1459,18 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     // Might identify unknown ring of teleport control.
     if (check_ring_TC)
         maybe_id_ring_TC();
+
+#ifdef USE_TILE
+    if (you.species == SP_MERFOLK)
+    {
+        const dungeon_feature_type new_grid = grd(you.pos());
+        if (grid_is_water(old_grid) && !grid_is_water(new_grid)
+            || !grid_is_water(old_grid) && grid_is_water(new_grid))
+        {
+            init_player_doll();
+        }
+    }
+#endif
 
     return !is_controlled;
 }

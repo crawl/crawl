@@ -226,6 +226,9 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
         }
     }
 
+#ifdef USE_TILE
+    bool need_doll_update = false;
+#endif
     // Only consider terrain if player is not levitating.
     if (!player_is_airborne())
     {
@@ -253,11 +256,17 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                     mpr("Your legs become a tail as you dive into the water.");
 
                 merfolk_start_swimming();
+#ifdef USE_TILE
+                need_doll_update = true;
+#endif
             }
             else if (!grid_is_water(new_grid) && grid_is_water(old_grid))
             {
                 unmeld_one_equip(EQ_BOOTS);
                 you.redraw_evasion = true;
+#ifdef USE_TILE
+                need_doll_update = true;
+#endif
             }
         }
 
@@ -309,6 +318,10 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 
     // Move the player to new location.
     you.moveto(p);
+#ifdef USE_TILE
+    if (need_doll_update)
+        init_player_doll();
+#endif
 
     viewwindow( true, false );
 
