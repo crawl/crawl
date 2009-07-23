@@ -633,7 +633,7 @@ static keyseq _getch_mul( int (*rgetch)() = NULL )
     // get new keys from the user.
     if (crawl_state.is_replaying_keys())
     {
-        mpr(MSGCH_ERROR, "(Key replay ran out of keys)");
+        mpr("(Key replay ran out of keys)", MSGCH_ERROR);
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
     }

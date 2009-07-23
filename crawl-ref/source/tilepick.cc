@@ -2649,7 +2649,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case '[':
         case ']': fg = TILE_UNSEEN_ARMOUR; break;
         case '\\': fg = TILE_STAFF_OFFSET; break;
-        case '^': bg = TILE_DNGN_TRAP_ZOT; break;
+        case '^': bg = TILE_DNGN_TRAP_ARROW; break;
         case '_':
         case 220:
         case 131: fg = TILE_UNSEEN_ALTAR; break;
