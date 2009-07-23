@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "tile_list_processor.h"
 
 int main(int argc, char **argv)

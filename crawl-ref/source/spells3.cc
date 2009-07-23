@@ -603,11 +603,11 @@ bool cast_summon_horrible_things(int pow, god_type god)
 
     // No more than 8 summons.
     how_many_small = std::min(8, how_many_small);
-    how_many_big = std::min(8, how_many_big);
+    how_many_big   = std::min(8, how_many_big);
 
     int count = 0;
 
-    while (how_many_big > 0)
+    while (how_many_big-- > 0)
     {
         const int monster =
             create_monster(
@@ -619,13 +619,11 @@ bool cast_summon_horrible_things(int pow, god_type god)
         if (monster != -1)
         {
             count++;
-            how_many_big--;
-
             player_angers_monster(&menv[monster]);
         }
     }
 
-    while (how_many_small > 0)
+    while (how_many_small-- > 0)
     {
         const int monster =
             create_monster(
@@ -637,8 +635,6 @@ bool cast_summon_horrible_things(int pow, god_type god)
         if (monster != -1)
         {
             count++;
-            how_many_small--;
-
             player_angers_monster(&menv[monster]);
         }
     }
@@ -875,7 +871,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     const int monster = create_monster(
                             mgen_data(mon, beha,
-                                      0, 0, a, hitting,
+                                      0, 0, pos, hitting,
                                       0, god,
                                       zombie_type, number));
 
@@ -889,7 +885,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         if (is_named_corpse(item))
             name_zombie(&menv[monster], monnum, get_corpse_name(item));
 
-        equip_undead(a, corps, monster, monnum);
+        equip_undead(pos, corps, monster, monnum);
 
         destroy_item(corps);
 

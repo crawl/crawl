@@ -575,6 +575,16 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE,
               0, 0, GOD_XOM);
 
+    if (grid_destroys_items(grd(you.pos())))
+    {
+        if (!silenced(you.pos()))
+            mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
+
+        simple_god_message(" snickers.", GOD_XOM);
+        destroy_item(thing_created, true);
+        thing_created = NON_ITEM;
+    }
+
     if (thing_created == NON_ITEM)
     {
         god_speaks(GOD_XOM, "\"No, never mind.\"");
@@ -597,6 +607,9 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 
 static void _xom_acquirement(object_class_type force_class)
 {
+    if (grid_destroys_items(grd(you.pos())))
+        return;
+
     god_acting gdact(GOD_XOM);
 
     int item_index = NON_ITEM;
@@ -1689,7 +1702,8 @@ static bool _xom_is_good(int sever, int tension)
             if (one_chance_in(10))
                 break;
         }
-        while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
+        while (x_chance_in_y(3, 4) || count > 7 + random2(5)
+               || player_in_a_dangerous_place());
         maybe_update_stashes();
 
         // Take a note.
@@ -2708,7 +2722,8 @@ static bool _xom_is_bad(int sever, int tension)
                 you_teleport_now(false);
                 more();
             }
-            while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
+            while (count > 7 + random2(5)
+                   || x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
             badness = player_in_a_dangerous_place() ? 3 : 1;
             maybe_update_stashes();
 
