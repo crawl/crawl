@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "macro.h"
 #include "menu.h"
+#include "misc.h"
 #include "message.h"
 #include "monstuff.h"
 #include "mstuff2.h"
@@ -1181,6 +1182,15 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
                              testbits(flags, SPFLAG_NOT_SELF)))
         {
             return (SPRET_ABORT);
+        }
+
+        if (spd.isMe && spell == SPELL_MEPHITIC_CLOUD)
+        {
+            if (i_feel_safe(false, false, true, 1)
+                && !yesno("Really target yourself?", false, 'n'))
+            {
+                return (SPRET_ABORT);
+            }
         }
 
         beam.range = _calc_spell_range(spell, powc, true);
