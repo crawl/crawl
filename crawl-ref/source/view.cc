@@ -821,6 +821,9 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!clear_detected_monsters && is_envmap_detected_mons(p))
             continue;
 
+        if (env.map(p).flags & MAP_MAGIC_MAPPED_FLAG)
+            continue;
+
         set_envmap_obj(p, is_terrain_known(p)? grd(p) : DNGN_UNSEEN);
         set_envmap_detected_mons(p, false);
         set_envmap_detected_item(p, false);

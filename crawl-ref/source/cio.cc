@@ -22,7 +22,7 @@ extern int unixcurses_get_vi_key(int keyin);
 
 static keycode_type _numpad2vi(keycode_type key)
 {
-    switch(key)
+    switch (key)
     {
     case CK_UP:    key = 'k'; break;
     case CK_DOWN:  key = 'j'; break;
