@@ -99,7 +99,7 @@ int detect_items(int pow)
             set_envmap_detected_item(*ri);
 #ifdef USE_TILE
             // Don't replace previously seen items with an unseen one.
-            if (!is_terrain_seen(*ri))
+            if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
                 env.tile_bk_fg[ri->x][ri->y] = TILE_UNSEEN_ITEM;
 #endif
         }

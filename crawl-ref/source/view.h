@@ -163,6 +163,7 @@ inline bool is_terrain_changed( const coord_def& c ) {
     return is_terrain_changed(c.x,c.y);
 }
 bool is_terrain_known(const coord_def &p);
+bool is_terrain_mapped(const coord_def &p);
 bool is_notable_terrain(dungeon_feature_type ftype);
 
 inline bool is_terrain_seen(const coord_def &c)

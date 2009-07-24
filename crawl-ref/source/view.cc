@@ -255,6 +255,11 @@ bool is_terrain_changed( int x, int y )
     return (env.map[x][y].flags & MAP_CHANGED_FLAG);
 }
 
+bool is_terrain_mapped(const coord_def &p)
+{
+    return (env.map(p).flags & MAP_MAGIC_MAPPED_FLAG);
+}
+
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed( int x, int y )
 {
@@ -821,7 +826,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!clear_detected_monsters && is_envmap_detected_mons(p))
             continue;
 
-        if (env.map(p).flags & MAP_MAGIC_MAPPED_FLAG)
+        if (is_terrain_mapped(p))
             continue;
 
         set_envmap_obj(p, is_terrain_known(p)? grd(p) : DNGN_UNSEEN);
@@ -3933,8 +3938,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             clear_envmap_grid(*ri);
 
 #ifdef USE_TILE
-        if (!wizard_map && is_terrain_known(*ri)
-            && !(env.map(*ri).flags & MAP_MAGIC_MAPPED_FLAG))
+        if (!wizard_map && is_terrain_known(*ri) && !is_terrain_mapped(*ri))
         {
             // Can't use set_envmap_obj because that would
             // overwrite the gmap.
