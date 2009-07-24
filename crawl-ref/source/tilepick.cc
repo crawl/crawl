@@ -2645,6 +2645,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case '<': bg = TILE_DNGN_STONE_STAIRS_UP; break;
         case '=': fg = TILE_RING_NORMAL_OFFSET + 1; break;
         case '>': bg = TILE_DNGN_STONE_STAIRS_DOWN; break;
+        case '~':
         case '?': fg = TILE_UNSEEN_ITEM; break;
         case '[':
         case ']': fg = TILE_UNSEEN_ARMOUR; break;
@@ -2653,10 +2654,10 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case '_':
         case 220:
         case 131: fg = TILE_UNSEEN_ALTAR; break;
-        case '~': fg = TILE_UNSEEN_ITEM; break;
         case '{':
         case 247:
         case 135: bg = TILE_DNGN_DEEP_WATER; break;
+        case 244:
         case 133: bg = TILE_DNGN_BLUE_FOUNTAIN; break;
         case '}': fg = TILE_MISC_CRYSTAL_BALL_OF_SEEING; break;
         case 128: //old
@@ -4397,8 +4398,8 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     const coord_def gc(gx, gy);
     const coord_def ep = view2show(grid2view(gc));
 
-    int t  = _tileidx_monster(idx, detected);
-    int t0 = t & TILE_FLAG_MASK;
+    int t    = _tileidx_monster(idx, detected);
+    int t0   = t & TILE_FLAG_MASK;
     int flag = t & (~TILE_FLAG_MASK);
 
     if (mons_is_mimic(menv[idx].type))
@@ -4406,7 +4407,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         const monsters *mon = &menv[idx];
         if (!mons_is_known_mimic(mon))
         {
-            // if necessary add item brand
+            // If necessary add item brand.
             if (igrd(gc) != NON_ITEM)
             {
                 if (foreground)
@@ -4428,7 +4429,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     }
     else if (menv[idx].holiness() == MH_PLANT)
     {
-        // if necessary add item brand
+        // If necessary add item brand.
         if (igrd(gc) != NON_ITEM)
         {
             if (foreground)
@@ -4481,6 +4482,21 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     }
     else
     {
+        // Retain the magic mapped terrain, but don't give away the real
+        // features either.
+        if (is_terrain_mapped(gc))
+        {
+            unsigned int feature = grd(gc);
+
+            unsigned int grid_symbol;
+            unsigned short grid_color;
+            get_item_symbol(feature, &grid_symbol, &grid_color);
+
+            unsigned int fg;
+            unsigned int bg;
+            tileidx_unseen(fg, bg, grid_symbol, gc);
+            env.tile_bk_bg(gc) = bg;
+        }
         env.tile_bk_fg(gc) = t0;
     }
 }
