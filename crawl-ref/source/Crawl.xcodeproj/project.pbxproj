@@ -1949,6 +1949,7 @@
 					DB_NDBM,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
@@ -1996,6 +1997,7 @@
 					LUA_USE_READLINE,
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_PEDANTIC = NO;
 				PRODUCT_NAME = lua;
 			};
@@ -2009,6 +2011,7 @@
 					LUA_USE_READLINE,
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_PEDANTIC = NO;
 				PRODUCT_NAME = lua;
 			};
@@ -2022,6 +2025,7 @@
 					LUA_USE_READLINE,
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_PEDANTIC = NO;
 				PRODUCT_NAME = lua;
 			};
@@ -2035,6 +2039,7 @@
 					LUA_USE_READLINE,
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_PEDANTIC = NO;
 				PRODUCT_NAME = lua;
 			};
@@ -2057,6 +2062,7 @@
 					FULLDEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
@@ -2117,6 +2123,7 @@
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
@@ -2176,6 +2183,7 @@
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
@@ -2448,6 +2456,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-O";
@@ -2474,6 +2483,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-O";
@@ -2501,6 +2511,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-O";
@@ -2525,6 +2536,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = "-O";

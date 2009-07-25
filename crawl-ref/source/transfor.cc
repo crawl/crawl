@@ -410,6 +410,7 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
             case SPARM_STRENGTH:     prop_str += 3; break;
             case SPARM_DEXTERITY:    prop_dex += 3; break;
             case SPARM_INTELLIGENCE: prop_int += 3; break;
+            default:                                break;
             }
         }
 
