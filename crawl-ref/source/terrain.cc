@@ -68,15 +68,30 @@ bool grid_is_stone_stair(dungeon_feature_type grid)
 bool grid_is_staircase(dungeon_feature_type grid)
 {
     if (grid_is_stone_stair(grid))
+    {
+        // Make up staircases in hell appear as gates.
+        if (player_in_hell())
+        {
+            switch (grid)
+            {
+                case DNGN_STONE_STAIRS_UP_I:
+                case DNGN_STONE_STAIRS_UP_II:
+                case DNGN_STONE_STAIRS_UP_III:
+                    return (false);
+                default:
+                    return (true);
+            }
+        }
         return (true);
+    }
 
     // All branch entries/exits are staircases, except for Zot.
     if (grid == DNGN_ENTER_ZOT || grid == DNGN_RETURN_FROM_ZOT)
         return (false);
 
     return (grid >= DNGN_ENTER_FIRST_BRANCH && grid <= DNGN_ENTER_LAST_BRANCH
-            ||   grid >= DNGN_RETURN_FROM_FIRST_BRANCH
-              && grid <= DNGN_RETURN_FROM_LAST_BRANCH);
+            || grid >= DNGN_RETURN_FROM_FIRST_BRANCH
+               && grid <= DNGN_RETURN_FROM_LAST_BRANCH);
 }
 
 bool grid_is_escape_hatch(dungeon_feature_type grid)

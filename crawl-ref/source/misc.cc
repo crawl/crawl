@@ -1309,11 +1309,19 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
                      (player_is_airborne() ? "float" : "slide"));
         }
     }
+    else if (is_gate(stair))
+    {
+        mprf("You %s %s through the gate.",
+             you.flight_mode() == FL_FLY ? "fly" :
+                   (player_is_airborne() ? "float" : "go"),
+             going_up ? "up" : "down");
+    }
     else
     {
-        mprf("You %s %swards.", you.flight_mode() == FL_FLY ? "fly" :
-                                    (player_is_airborne() ? "float" : "climb"),
-                                        going_up ? "up" : "down");
+        mprf("You %s %swards.",
+             you.flight_mode() == FL_FLY ? "fly" :
+                   (player_is_airborne() ? "float" : "climb"),
+             going_up ? "up" : "down");
     }
 }
 
@@ -1755,12 +1763,16 @@ void up_stairs(dungeon_feature_type force_stair,
             fall_where = "through the gate";
 
         mprf("In your confused state, you trip and fall back %s.", fall_where);
-        ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
+        if (!grid_is_staircase(stair_find))
+            ouch(1, NON_MONSTER, KILLED_BY_FALLING_THROUGH_GATE);
+        else
+            ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
         you.turn_is_over = true;
         return;
     }
 
-    if (you.burden_state == BS_OVERLOADED && !grid_is_escape_hatch(stair_find))
+    if (you.burden_state == BS_OVERLOADED && !grid_is_escape_hatch(stair_find)
+        && !is_gate(stair_find))
     {
         mpr("You are carrying too much to climb upwards.");
         you.turn_is_over = true;
@@ -1842,9 +1854,9 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const dungeon_feature_type stair_taken = stair_find;
 
-    if (you.flight_mode() == FL_LEVITATE)
+    if (you.flight_mode() == FL_LEVITATE && !is_gate(stair_find))
         mpr("You float upwards... And bob straight up to the ceiling!");
-    else if (you.flight_mode() == FL_FLY)
+    else if (you.flight_mode() == FL_FLY && !is_gate(stair_find))
         mpr("You fly upwards.");
     else
         climb_message(stair_find, true, old_level_type);
@@ -2279,7 +2291,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mprf("In your confused state, you trip and fall %s.", fall_where);
         // Note that this only does damage; it doesn't cancel the level
         // transition.
-        ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
+        if (!grid_is_staircase(stair_find))
+            ouch(1, NON_MONSTER, KILLED_BY_FALLING_THROUGH_GATE);
+        else
+            ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
     }
 
     dungeon_feature_type stair_taken = stair_find;

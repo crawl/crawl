@@ -416,10 +416,12 @@ dngn_enter_hell DNGN_ENTER_HELL
 dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 dngn_enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
+dngn_return_zot DNGN_RETURN_ZOT
 dngn_enter_dis DNGN_ENTER_DIS
 dngn_enter_gehenna DNGN_ENTER_GEHENNA
 dngn_enter_cocytus DNGN_ENTER_COCYTUS
 dngn_enter_tartarus DNGN_ENTER_TARTARUS
+dngn_return_hell DNGN_RETURN_HELL
 
 dngn_enter_abyss DNGN_ENTER_ABYSS
 dngn_exit DNGN_EXIT_ABYSS

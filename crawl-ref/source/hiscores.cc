@@ -427,7 +427,8 @@ static const char *kill_method_names[] =
     "wild_magic", "xom", "statue", "rotting", "targeting", "spore",
     "tso_smiting", "petrification", "unknown", "something",
     "falling_down_stairs", "acid", "curare", "melting", "bleeding",
-    "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed"
+    "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
+    "falling_through_gate"
 };
 
 const char *kill_method_name(kill_method_type kmt)
@@ -1733,6 +1734,11 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_FALLING_DOWN_STAIRS:
         desc += terse? "fell downstairs" : "Fell down a flight of stairs";
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_FALLING_THROUGH_GATE:
+        desc += terse? "fell through a gate" : "Fell down through a gate";
         needs_damage = true;
         break;
 

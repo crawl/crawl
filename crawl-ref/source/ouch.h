@@ -56,6 +56,7 @@ enum kill_method_type
     KILLED_BY_BOUNCE,                  // 35
     KILLED_BY_REFLECTION,
     KILLED_BY_SELF_AIMED,
+    KILLED_BY_FALLING_THROUGH_GATE,
 
     NUM_KILLBY
 };

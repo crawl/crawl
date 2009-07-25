@@ -749,7 +749,8 @@ static void _xom_checks_damage(kill_method_type death_type,
             xom_is_stimulated(amusement);
             return;
         }
-        else if (death_type == KILLED_BY_FALLING_DOWN_STAIRS)
+        else if (death_type == KILLED_BY_FALLING_DOWN_STAIRS
+                 || death_type == KILLED_BY_FALLING_THROUGH_GATE)
         {
             // Xom thinks falling down the stairs is hilarious.
             xom_is_stimulated(255);

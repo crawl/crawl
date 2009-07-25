@@ -2416,6 +2416,8 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
+        if (player_in_hell())
+            return TILE_DNGN_RETURN_HELL;
         return TILE_DNGN_STONE_STAIRS_UP;
     case DNGN_ESCAPE_HATCH_UP:
         return TILE_DNGN_ESCAPE_HATCH_UP;
@@ -2466,7 +2468,6 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
-    case DNGN_RETURN_FROM_ZOT:
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_ELVEN_HALLS:
@@ -2474,6 +2475,8 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
         return TILE_DNGN_RETURN;
+    case DNGN_RETURN_FROM_ZOT:
+        return TILE_DNGN_RETURN_ZOT;
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
         return TILE_DNGN_PORTAL;

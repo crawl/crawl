@@ -1462,8 +1462,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
                 if (coinflip()
                     && slide_feature_over(you.pos(), coord_def(-1, -1), false))
                 {
-                    mprf("%s slides away from you right after you %s through "
-                         "it!", stair_str.c_str(), verb.c_str());
+                    mprf("%s slides away from you right after you %s it!",
+                         stair_str.c_str(), verb.c_str());
                 }
 
                 if (coinflip())

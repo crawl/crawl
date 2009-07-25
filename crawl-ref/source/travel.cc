@@ -810,6 +810,20 @@ bool is_escape_hatch(dungeon_feature_type gridc)
 // Returns true if the given dungeon feature can be considered a gate.
 bool is_gate(dungeon_feature_type gridc)
 {
+    // Make up staircases in hell appear as gates.
+    if (player_in_hell())
+    {
+        switch (gridc)
+        {
+        case DNGN_STONE_STAIRS_UP_I:
+        case DNGN_STONE_STAIRS_UP_II:
+        case DNGN_STONE_STAIRS_UP_III:
+            return (true);
+        default:
+            break;
+        }
+    }
+
     switch (gridc)
     {
     case DNGN_ENTER_ABYSS:
@@ -823,6 +837,7 @@ bool is_gate(dungeon_feature_type gridc)
     case DNGN_ENTER_ZOT:
     case DNGN_RETURN_FROM_ZOT:
     case DNGN_ENTER_HELL:
+    case DNGN_EXIT_HELL:
     case DNGN_ENTER_DIS:
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
