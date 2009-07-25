@@ -5,7 +5,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
 * Improved performance for the Tiles version.
 * Fixed crashes related to giant spores.
-* Fixed Summon Horrible Thing sometimes hanging or crashing.
+* Fixed Summon Horrible Things sometimes hanging or crashing.
 * Fixed monsters refusing to enter or attack into grids on the map edge.
 * Fixed minivaults not being placed.
 * Fixed inconvenient electrical eels in entry vaults.
