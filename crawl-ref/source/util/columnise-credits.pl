@@ -6,7 +6,8 @@ use warnings;
 my $NAMEHEAD = qr/contributed to .*Stone Soup:\s*$/;
 
 binmode STDOUT, ':utf8';
-open my $inf, '<:utf8', 'CREDITS' or die "Unable to read CREDITS: $!\n";
+open my $inf, '<:utf8', 'CREDITS.txt'
+    or die "Unable to read CREDITS.txt: $!\n";
 my @text = <$inf>;
 close $inf;
 

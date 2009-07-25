@@ -18,25 +18,25 @@ contributed to Dungeon Crawl Stone Soup:
 Warwick Allison              R. Dan Henry              Dylan O'Donnell
 Juha Arpiainen               Benoit Hudson             Stefan O'Rear
 Roy Axenov                   Iainuki                   Yuuma Oohara
-Max Bane                     Ilyak                     Charles Otto
-Bill Beher                   Mitsuhiro Itakura         Erik Piper
-Alexander Beisig             Eino Keskitalo            Lemuel Pitkin
-Erik Inge Bolsø              Jarmo Kielosto            Derek Ray
-Peter Borgmann               Kornel Kisielewicz        Remsleep
-Adam Borowski                Vambola Kotkas            David Rosen
-Terje Bø                     Vsevolod Kozlov           Sebastian Salmagh
-Jude (due) Brown             Ryan Kusnery              Brett Scarborouam
-Aaron Curtis                 Jukka Kuusisto            Darshan Shaligram
-Denzi                        Maciej Lapinski           Robert Shimmin
-Rachel Elizabeth Dillon      Jordan Lewis              Sigurd
-Mike Drinen                  Icy Lich                  Edgar Simo
-Kieron Dunbar                Jesse Luehrs              Solf
-Christopher Evenstar         Markus Maier              Johan Strandell
-Ben Goetter                  Arien Malec               Roman Sêk
-Rob Grant                    Paul Maloney              Marc H. Thoben
-John Greenberg               Shawn M Moore             Matt Titus
-GreyKnight                   Eva Myers                 Robert Vollmert
-Joshua Gross                 Wille Mäntylä             Steven Wheeler
+Max Bane                     Ilyak                     Erik Piper
+Bill Beher                   Mitsuhiro Itakura         Lemuel Pitkin
+Alexander Beisig             Eino Keskitalo            Derek Ray
+Erik Inge Bolsø              Jarmo Kielosto            Remsleep
+Peter Borgmann               Kornel Kisielewicz        David Rose
+Adam Borowski                Vambola Kotkas            Sebastian Salman
+Trent W. Buck                Vsevolod Kozlov           Brett Scarborough
+Terje Bø                     Ryan Kusnery              Darshan Shaligram
+Aaron Curtis                 Jukka Kuusisto            Robert Shimmin
+Denzi                        Maciej Lapinski           Sigurd
+Rachel Elizabeth Dillon      Jordan Lewis              Edgar Simo
+Mike Drinen                  Icy Lich                  Solf
+Kieron Dunbar                Jesse Luehrs              Johan Strandell
+Christopher Evenstar         Markus Maier              Roman Sêk
+Ben Goetter                  Arien Malec               Marc H. Thoben
+Rob Grant                    Shawn M Moore             Matt Titus
+John Greenberg               Eva Myers                 Robert Vollmert
+GreyKnight                   Wille Mäntylä             Steven Wheeler
 Shayne Halvorson             Onia Ninara               Jeremey Wilson
 Ciaran Hamilton              Erkki Nurmi               Yelve Yakut
 Chris Hamons                 nyra                      Zooko
+
