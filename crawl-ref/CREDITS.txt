@@ -15,15 +15,16 @@ Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Benoit Hudson             Stefan O'Rear
-Juha Arpiainen               Iainuki                   Yuuma Oohara
-Roy Axenov                   Ilyak                     Erik Piper
-Max Bane                     Mitsuhiro Itakura         Lemuel Pitkin
-Bill Beher                   Eino Keskitalo            Derek Ray
-Alexander Beisig             Jarmo Kielosto            Remsleep
-Erik Inge Bolsø              Kornel Kisielewicz        David Rose
-Peter Borgmann               Vambola Kotkas            Sebastian Salman
-Adam Borowski                Vsevolod Kozlov           Brett Scarborough
+Warwick Allison              R. Dan Henry              Dylan O'Donnell
+Juha Arpiainen               Benoit Hudson             Stefan O'Rear
+Roy Axenov                   Iainuki                   Yuuma Oohara
+Max Bane                     Ilyak                     Erik Piper
+Bill Beher                   Mitsuhiro Itakura         Lemuel Pitkin
+Alexander Beisig             Eino Keskitalo            Derek Ray
+Erik Inge Bolsø              Jarmo Kielosto            Remsleep
+Peter Borgmann               Kornel Kisielewicz        David Rose
+Adam Borowski                Vambola Kotkas            Sebastian Salman
+Trent W. Buck                Vsevolod Kozlov           Brett Scarborough
 Terje Bø                     Ryan Kusnery              Darshan Shaligram
 Aaron Curtis                 Jukka Kuusisto            Robert Shimmin
 Denzi                        Maciej Lapinski           Sigurd
@@ -38,4 +39,4 @@ GreyKnight                   Wille Mäntylä             Steven Wheeler
 Shayne Halvorson             Onia Ninara               Jeremey Wilson
 Ciaran Hamilton              Erkki Nurmi               Yelve Yakut
 Chris Hamons                 nyra                      Zooko
-R. Dan Henry                 Dylan O'Donnell
+

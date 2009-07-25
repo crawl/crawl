@@ -12,15 +12,18 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed summoning decks giving permanent summons at low power.
 * Fixed erroneous "blocked line of fire" warnings.
 * Fixed missing items in Tiles inventory menus.
+* Fixed 'C' closing one out of several adjacent doors without prompting.
 * Fixed Xom's repel stairs effect moving shops.
 * Fixed Xom gifts not being destroyed in deep water.
-* Fixed magic mapping not showing altars/gates in the Tiles version.
+* Fixed magic mapping bugs in the Tiles version.
 * Fixed AltGr not being recognized in Windows Tiles version.
 * Fixed misbehaviour for temporary weapon brands and throwing.
 * Fixed Blade Hands not counting as slicing while wearing melded gloves.
+* Fixed berserking allies taking orders from 'ta'.
+* Fixed random blinking sometimes placing the player in dangerous clouds.
 * Fixed certain incorporeal monsters flying instead of levitating.
 * Staff of earth damage is reduced by AC.
-* The elemental staves' melee effects cost 2 mp again.
+* Lowered damage output for elemental staves.
 * Once entered, the gate to Zot remains open even without carrying runes.
 * Add some fancy messaging when opening the gate to Zot.
 * Prompt before moving when confused and next to lava or deep water.
@@ -35,11 +38,15 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Vampiric Draining/Drain Life deal damage to summons again, but don't heal.
 * Wielding stones for Sandblast now guarantees a range of 2.
 * Change Portal Projectile range to full LOS.
+* Limit the number of items a monster may pick up to two per turn.
+* Unknown mimics are no longer stabbable.
 * Turn autopickup back on if you gain see invisible, even temporarily.
 * Polymorph other always polymorphs shapeshifters whose form isn't magic immune.
 * Troll hide and armour count as light armour.
 * Let ghouls wear gloves again.
 * Wearing a visored helmet prevents biting attacks.
+* Allow players to reroll already named random character combinations.
+* Improved error messages when trying to load pre-0.5 save files or ghosts.
 * Some new vaults.
 * Tiles: Re-allow selection of player dolls ('-' command).
 * Add missing tiles options to the options guide (docs/, '?&' command).
