@@ -4098,7 +4098,6 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
         return (false);
     }
 
-
     // preac: damage before AC modifier
     // postac: damage after AC modifier
     // final: damage after AC and resists

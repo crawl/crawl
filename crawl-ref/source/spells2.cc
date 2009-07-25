@@ -2173,8 +2173,8 @@ int rain(coord_def & target)
             // be x/192
             if (x_chance_in_y(5, 192)
                 && !actor_at(*rad)
-                && ftype  >= DNGN_FLOOR_MIN
-                && ftype  <= DNGN_FLOOR_MAX)
+                && ftype >= DNGN_FLOOR_MIN
+                && ftype <= DNGN_FLOOR_MAX)
             {
                 const int plant = create_monster(mgen_data
                                      (coinflip() ? MONS_PLANT : MONS_FUNGUS,

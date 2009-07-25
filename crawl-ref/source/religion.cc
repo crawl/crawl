@@ -285,18 +285,19 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "recall your orcish followers",
       "walk on water" },
     // Jiyva
-    {  "request a jelly",
-       "",
-       "",
-       "turn your foes to slime",
-       "call upon Jiyva to remove your harmful mutations"
+    { "request a jelly",
+      "",
+      "",
+      "turn your foes to slime",
+      "call upon Jiyva to remove your harmful mutations"
     },
     // Feawn
     { "call sunshine",
       "cause a ring of plants to grow",
       "control the weather",
       "spawn explosive spores",
-      "induce evolution"}
+      "induce evolution"
+    }
 };
 
 const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
@@ -390,12 +391,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "turn your foes to slime",
       "call upon Jiyva to remove your harmful mutations"
     },
-      // Feawn
-      { "call sunshine",
-        "cause a ring of plants to grow",
-        "control the weather",
-        "spawn explosive spores",
-        "induce evolution"}
+    // Feawn
+    { "call sunshine",
+      "cause a ring of plants to grow",
+      "control the weather",
+      "spawn explosive spores",
+      "induce evolution"
+    }
 };
 
 static bool _holy_beings_attitude_change();
@@ -2474,7 +2476,7 @@ void end_prayer(void)
     you.duration[DUR_PRAYER] = 0;
 }
 
-std::string god_name( god_type which_god, bool long_name )
+std::string god_name(god_type which_god, bool long_name)
 {
     switch (which_god)
     {
@@ -2497,13 +2499,11 @@ std::string god_name( god_type which_god, bool long_name )
     case GOD_LUGONU:   return (long_name ? "Lugonu the Unformed" : "Lugonu");
     case GOD_BEOGH:    return (long_name ? "Beogh the Brigand" : "Beogh");
     case GOD_JIYVA:
-        if (long_name)
-        {
-            return god_name_jiyva(true) + " the Shapeless";
-        }
-        return god_name_jiyva(false);
+    {
+        return (long_name ? god_name_jiyva(true) + " the Shapeless"
+                          : god_name_jiyva(false));
+    }
     case GOD_FEAWN:    return (long_name ? "Feawn the Arborial" : "Feawn");
-
     case GOD_XOM:
         if (!long_name)
             return "Xom";
@@ -2688,7 +2688,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
                 else
                 {
-                    simple_god_message(" forgives your blasphemy, just this once.");
+                    simple_god_message(" forgives your blasphemy, just this "
+                                       "once.");
                 }
                 break;
             }
@@ -5270,7 +5271,7 @@ static bool _jiyva_retribution()
 static bool _feawn_retribution()
 {
     // to be implemented -CAO
-    return true;
+    return (true);
 }
 
 bool divine_retribution(god_type god)
@@ -7532,6 +7533,7 @@ void handle_god_time()
             DEBUGSTR("Bad god, no bishop!");
             return;
         }
+
         if (you.piety < 1)
             excommunication();
     }
@@ -7554,7 +7556,7 @@ int god_colour(god_type god) // mv - added
     case GOD_ELYVILON:
     case GOD_OKAWARU:
     case GOD_FEAWN:
-        return(CYAN);
+        return (CYAN);
 
     case GOD_YREDELEMNUL:
     case GOD_KIKUBAAQUDGHA:
@@ -7563,19 +7565,19 @@ int god_colour(god_type god) // mv - added
     case GOD_TROG:
     case GOD_BEOGH:
     case GOD_LUGONU:
-        return(LIGHTRED);
+        return (LIGHTRED);
 
     case GOD_XOM:
-        return(YELLOW);
+        return (YELLOW);
 
     case GOD_NEMELEX_XOBEH:
-        return(LIGHTMAGENTA);
+        return (LIGHTMAGENTA);
 
     case GOD_SIF_MUNA:
-        return(LIGHTBLUE);
+        return (LIGHTBLUE);
 
     case GOD_JIYVA:
-        return(GREEN);
+        return (GREEN);
 
     case GOD_NO_GOD:
     case NUM_GODS:
@@ -7585,7 +7587,7 @@ int god_colour(god_type god) // mv - added
         break;
     }
 
-    return(YELLOW);
+    return (YELLOW);
 }
 
 int piety_rank(int piety)
