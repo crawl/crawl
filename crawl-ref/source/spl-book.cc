@@ -1735,10 +1735,10 @@ static bool _compare_spells(spell_type a, spell_type b)
                 b_type = spelltype_name(mask);
         }
         ASSERT(a_type != NULL && b_type != NULL);
-        return (strcmp(a_type, b_type));
+        return (strcmp(a_type, b_type) < 0);
     }
 
-    return (strcmp(spell_title(a), spell_title(b)));
+    return (strcmp(spell_title(a), spell_title(b)) < 0);
 }
 
 bool is_memorised(spell_type spell)

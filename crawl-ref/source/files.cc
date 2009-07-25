@@ -622,13 +622,13 @@ std::vector<player_save_info> find_saved_characters()
     for (unsigned int i = 0; i < allfiles.size(); ++i)
     {
         std::string filename = allfiles[i];
+
+        std::string::size_type point_pos = filename.find_last_of('.');
+        std::string basename = filename.substr(0, point_pos);
+
 #ifdef LOAD_UNPACKAGE_CMD
         if (!is_packed_save(filename))
             continue;
-
-        std::string basename =
-            filename.substr(0,
-                            filename.length() - strlen(PACKAGE_SUFFIX));
 
         const std::string zipname = get_savedir_path(basename);
 

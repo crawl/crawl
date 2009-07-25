@@ -1406,7 +1406,12 @@ static std::string _describe_armour( const item_def &item, bool verbose )
     if (!is_known_artefact(item))
     {
         const int max_ench = armour_max_enchant(item);
-        if (item.plus < max_ench || !item_ident( item, ISFLAG_KNOW_PLUSES ))
+        if (armour_is_hide(item))
+        {
+            description += "$Enchanting it will turn it into a suit of "
+                           "magical armour.";
+        }
+        else if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
             description += "$It can be maximally enchanted to +";
             _append_value(description, max_ench, false);

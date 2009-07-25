@@ -781,7 +781,7 @@ const char* spelltype_short_name( int which_spelltype )
     case SPTYP_ICE:
         return ("Ice");
     case SPTYP_TRANSMUTATION:
-        return ("Tmgr");
+        return ("Trmt");
     case SPTYP_NECROMANCY:
         return ("Necr");
     case SPTYP_HOLY:
