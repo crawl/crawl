@@ -258,8 +258,9 @@ static int _push_delay(const delay_queue_item &delay)
     {
         if (_is_parent_delay( i->type ))
         {
+            size_t pos = i - you.delay_queue.begin();
             you.delay_queue.insert(i, delay);
-            return (i - you.delay_queue.begin());
+            return (pos);
         }
     }
     you.delay_queue.push_back( delay );
