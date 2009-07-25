@@ -29,6 +29,9 @@ end
 function cleanup_ziggurat()
   return one_way_stair {
     onclimb = function()
+                crawl.mark_milestone("zig.exit",
+                                     "left a Ziggurat at level " ..
+                                       zig().depth .. ".")
                 dgn.persist.ziggurat = { }
               end,
     dstplace = zig().origin_level
@@ -134,12 +137,10 @@ end
 
 function ziggurat_milestone()
   local depth = zig().depth
-  if util.contains({ 1, 9, 15, 21, 24, 27 }, depth) then
-    crawl.mark_milestone(depth < 27 and "br.enter" or "br.end",
+  crawl.mark_milestone(depth == 1 and "zig.enter" or "zig",
                          (depth == 1 and "entered a Ziggurat" or
                            ("reached level " .. depth .. " of a Ziggurat"))
                            .. ".")
-  end
 end
 
 function ziggurat_build_level(e)
