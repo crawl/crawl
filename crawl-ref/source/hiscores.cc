@@ -43,6 +43,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "Kills.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
@@ -521,6 +522,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     num_turns         = se.num_turns;
     num_diff_runes    = se.num_diff_runes;
     num_runes         = se.num_runes;
+    kills             = se.kills;
+    maxed_skills      = se.maxed_skills;
 }
 
 bool scorefile_entry::parse(const std::string &line)
@@ -617,6 +620,9 @@ void scorefile_entry::init_with_fields()
 
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
+
+    kills = fields->long_field("kills");
+    maxed_skills = fields->str_field("maxskills");
 }
 
 void scorefile_entry::set_base_xlog_fields() const
@@ -679,6 +685,10 @@ void scorefile_entry::set_base_xlog_fields() const
 
     if (num_runes)
         fields->add_field("nrune", "%d", num_runes);
+
+    fields->add_field("kills", "%ld", kills);
+    if (!maxed_skills.empty())
+        fields->add_field("maxskills", "%s", maxed_skills.c_str());
 }
 
 void scorefile_entry::set_score_fields() const
@@ -874,6 +884,8 @@ void scorefile_entry::reset()
     num_turns            = -1;
     num_diff_runes       = 0;
     num_runes            = 0;
+    kills                = 0L;
+    maxed_skills.clear();
 }
 
 static int _award_modified_experience()
@@ -1022,6 +1034,17 @@ void scorefile_entry::init()
     lvl            = you.experience_level;
     best_skill     = ::best_skill( SK_FIGHTING, NUM_SKILLS - 1, 99 );
     best_skill_lvl = you.skills[ best_skill ];
+
+    // Note all skills at level 27.
+    for (int sk = 0; sk < NUM_SKILLS; ++sk) {
+        if (you.skills[sk] == 27) {
+            if (!maxed_skills.empty())
+                maxed_skills += ",";
+            maxed_skills += skill_name(sk);
+        }
+    }
+
+    kills            = you.kills->total_kills();
 
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;

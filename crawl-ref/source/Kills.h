@@ -176,6 +176,8 @@ public:
     // Number of kills, any category.
     long num_kills(const monsters *mon) const;
 
+    long total_kills() const;
+
     std::string kill_info() const;
 private:
     const char *category_name(kill_category kc) const;

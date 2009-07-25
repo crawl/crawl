@@ -38,6 +38,7 @@ REVISION("$Rev$");
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "hiscores.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
@@ -6316,6 +6317,7 @@ void excommunication(god_type new_god)
 {
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
+    ASSERT(old_god != GOD_NO_GOD);
 
     const bool was_haloed = you.haloed();
     const int  old_piety  = you.piety;
@@ -6333,6 +6335,10 @@ void excommunication(god_type new_god)
 
     mpr("You have lost your religion!");
     more();
+
+#ifdef DGL_MILESTONES
+    mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
+#endif
 
     if (god_hates_your_god(old_god, new_god))
     {
@@ -7141,6 +7147,12 @@ void god_pitch(god_type which_god)
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
+
+#ifdef DGL_MILESTONES
+    mark_milestone("god.worship", "became a worshipper of "
+                   + god_name(you.religion) + ".");
+#endif
+
     simple_god_message(
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());

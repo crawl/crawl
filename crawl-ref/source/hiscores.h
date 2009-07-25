@@ -117,6 +117,9 @@ public:
     long        num_turns;          // number of turns taken
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
+    long        kills;              // number of monsters killed
+    std::string maxed_skills;       // comma-separated list of skills
+                                    // at level 27
 
     mutable std::auto_ptr<xlog_fields> fields;
 

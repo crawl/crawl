@@ -107,6 +107,21 @@ void KillMaster::record_kill(const monsters *mon, int killer, bool ispet)
     categorized_kills[kc].record_kill(mon);
 }
 
+long KillMaster::total_kills() const
+{
+    long grandtotal = 0L;
+    for (int i = KC_YOU; i < KC_NCATEGORIES; ++i)
+    {
+        if (categorized_kills[i].empty())
+            continue;
+
+        std::vector<kill_exp> kills;
+        long count = categorized_kills[i].get_kills(kills);
+        grandtotal += count;
+    }
+    return (grandtotal);
+}
+
 std::string KillMaster::kill_info() const
 {
     if (empty())
