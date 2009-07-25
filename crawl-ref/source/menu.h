@@ -62,8 +62,9 @@ int menu_colour(const std::string &itemtext,
                 const std::string &prefix = "",
                 const std::string &tag = "");
 
-struct MenuEntry
+class MenuEntry
 {
+public:
     std::string tag;
     std::string text;
     int quantity, selected_qty;
@@ -148,7 +149,7 @@ struct MenuEntry
 #endif
 };
 
-struct ToggleableMenuEntry : public MenuEntry
+class ToggleableMenuEntry : public MenuEntry
 {
 public:
     std::string alt_text;

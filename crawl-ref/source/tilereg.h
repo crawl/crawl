@@ -33,7 +33,7 @@ public:
 };
 
 // Windows and internal regions (text, dungeon, map, etc.)
-class MouseEvent;
+struct MouseEvent;
 
 class Region
 {
