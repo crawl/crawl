@@ -1793,18 +1793,21 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     int tries = 0;
     do
     {
-        if (!random_near_space(victim->pos(), pos, false, true, no_sanct))
+        if (!random_near_space(victim->pos(), pos, false, true, false,
+                               no_sanct))
+        {
             return (false);
-    } while (!victim->is_habitable(pos) && tries++ < 100);
+        }
+    }
+    while (!victim->is_habitable(pos) && tries++ < 100);
 
     if (!victim->is_habitable(pos))
         return (false);
 
     tries = 0;
     do
-    {
-        random_near_space(victim->pos(), pos2, false, true, no_sanct);
-    } while (!victim->is_habitable(pos2) && tries++ < 100);
+        random_near_space(victim->pos(), pos2, false, true, false, no_sanct);
+    while (!victim->is_habitable(pos2) && tries++ < 100);
 
     if (!victim->is_habitable(pos2))
         return (false);

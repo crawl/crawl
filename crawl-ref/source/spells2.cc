@@ -1692,7 +1692,7 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
         bool found = false;
         for (int j = 0; j < 10; ++j)
         {
-            if (random_near_space(you.pos(), target, true, true)
+            if (random_near_space(you.pos(), target, true, true, false)
                 && distance(you.pos(), target) <= 5)
             {
                 found = true;

@@ -498,7 +498,7 @@ void identify(int power, int item_slot)
 // Returns whether the spell was actually cast.
 bool conjure_flame(int pow, const coord_def& where)
 {
-    // FIXME: this would be better handled by a flag to enforce max range.
+    // FIXME: This would be better handled by a flag to enforce max range.
     if (grid_distance(where, you.pos()) > spell_range(SPELL_CONJURE_FLAME,
                                                       pow, true)
         || !in_bounds(where))
@@ -515,7 +515,10 @@ bool conjure_flame(int pow, const coord_def& where)
 
     if (grid_is_solid(where))
     {
-        mpr("You can't ignite solid rock!");
+        if (grd(where) == DNGN_WAX_WALL)
+            mpr("The flames aren't hot enough to melt wax walls!");
+        else
+            mpr("You can't ignite solid rock!");
         return (false);
     }
 

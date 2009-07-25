@@ -402,16 +402,37 @@
     //
     // PACKAGE_SUFFIX is used when the package file name is needed
     //
+
+/*
+    FIXME: Unless sanitized elsewhere in the codebase, a specially crafted
+           save directory or character name will allow arbitrary code execution
+           with escalated privileges (namely, with group "games").
+    FIXME: replace system(3) with fork(2) and execve(2).
+*/
+
     // Comment these lines out if you want to leave the save files uncompressed.
+    #define SAVE_PACKAGE_ZIP
+//     #define SAVE_PACKAGE_TAR
+
+#ifdef SAVE_PACKAGE_ZIP
+    #define PACKAGE_SUFFIX      ".zip"
     #define SAVE_PACKAGE_CMD    "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
     #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d %s"
+#else
+#ifdef SAVE_PACKAGE_TAR
+    #define PACKAGE_SUFFIX      ".tgz"
+
+    // The --absolute-names switch is only there to suppress noise on
+    // stdout. All the paths are removed later by --transform.
+    #define SAVE_PACKAGE_CMD "tar -zcf %s.tgz --remove-files --absolute-names --transform=s:.*/:: %s.*"
+    #define LOAD_UNPACKAGE_CMD "tar -zxf %s.tgz -C %s"
+#endif
+#endif
 
 #ifdef SAVE_PACKAGE_CMD
     // This is used to unpack specific files from the archive.
     #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
 #endif
-
-    #define PACKAGE_SUFFIX      ".zip"
 
     // This defines the chmod permissions for score and bones files.
     #define SHARED_FILES_CHMOD_PRIVATE  0664

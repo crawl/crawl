@@ -1937,7 +1937,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     // walls nearby.
     coord_def target;
     bool found = false;
-    for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
+    for (int i = 0; i < (pow*pow) / 500 + 1; ++i)
     {
         // Find a space near our base point...
         // First try to find a random square not adjacent to the basepoint,

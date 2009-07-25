@@ -2471,7 +2471,7 @@ static void _set_random_slime_target(monsters* mon)
 // restrict_LOS:    restrict target to be within PLAYER line of sight.
 bool random_near_space(const coord_def& origin, coord_def& target,
                        bool allow_adjacent, bool restrict_LOS,
-                       bool forbid_sanctuary)
+                       bool forbid_dangerous, bool forbid_sanctuary)
 {
     // This might involve ray tracing (via num_feats_between()), so
     // cache results to avoid duplicating ray traces.
@@ -2515,6 +2515,18 @@ bool random_near_space(const coord_def& origin, coord_def& target,
             || forbid_sanctuary && is_sanctuary(target))
         {
             continue;
+        }
+
+        // Don't pick grids that contain a dangerous cloud.
+        if (forbid_dangerous)
+        {
+            const int cloud = env.cgrid(target);
+
+            if (cloud != EMPTY_CLOUD
+                && is_damaging_cloud(env.cloud[cloud].type, true))
+            {
+                continue;
+            }
         }
 
         if (!trans_wall_block && !origin_is_player)
