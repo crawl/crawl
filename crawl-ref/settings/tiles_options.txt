@@ -30,7 +30,7 @@
 # tile_excl_centre      = darkblue
 # tile_window_col       = yellow
 
-# If Crawl's response rate is top slow, try increasing the update rate.
+# If Crawl's response rate is too slow, try increasing the update rate.
 # tile_update_rate      = 1000
 
 # tile_key_repeat_delay = 200
