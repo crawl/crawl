@@ -2504,7 +2504,7 @@ std::string god_name(god_type which_god, bool long_name)
         return (long_name ? god_name_jiyva(true) + " the Shapeless"
                           : god_name_jiyva(false));
     }
-    case GOD_FEAWN:    return (long_name ? "Feawn the Arborial" : "Feawn");
+    case GOD_FEAWN:    return (long_name ? "Feawn the Arboreal" : "Feawn");
     case GOD_XOM:
         if (!long_name)
             return "Xom";
