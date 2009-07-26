@@ -7,6 +7,7 @@ REVISION("$Rev$");
 #include "items.h"
 #include "itemprop.h"
 #include "files.h"
+#include "macro.h"
 #include "message.h"
 #include "mon-util.h"
 #include "player.h"
@@ -825,6 +826,14 @@ int TilesFramework::getch_ck()
             case SDL_KEYDOWN:
                 m_key_mod |= _get_modifiers(event.key.keysym);
                 key        = _translate_keysym(event.key.keysym);
+                if (m_key_mod == MOD_ALT
+                    && key_to_command(key, KMC_DEFAULT) == CMD_NO_CMD)
+                {
+                    // If the Alt key is pressed and the command is invalid,
+                    // try clearing the Alt key in case it got stuck in
+                    // the stupid Windows/SDL bug with Alt-Tab.
+                    m_key_mod &= ~MOD_ALT;
+                }
                 m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
