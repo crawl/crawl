@@ -881,6 +881,11 @@ void dec_penance(god_type god, int val)
         {
             you.penance[god] = 0;
 
+#ifdef DGL_MILESTONES
+            mark_milestone("god.mollify",
+                           "mollified " + god_name(god) + ".");
+#endif
+
             const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
 
             simple_god_message(
