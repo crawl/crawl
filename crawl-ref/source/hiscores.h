@@ -120,6 +120,9 @@ public:
     long        kills;              // number of monsters killed
     std::string maxed_skills;       // comma-separated list of skills
                                     // at level 27
+    int         gold;               // Remaining gold.
+    int         gold_found;         // Gold found.
+    int         gold_spent;         // Gold spent shopping.
 
     mutable std::auto_ptr<xlog_fields> fields;
 
