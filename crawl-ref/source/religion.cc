@@ -814,6 +814,10 @@ void dec_penance(god_type god, int val)
 #endif
         if (you.penance[god] <= val)
         {
+#ifdef DGL_MILESTONES
+            mark_milestone("god.mollify",
+                           "mollified " + god_name(god) + ".");
+#endif
             simple_god_message(" seems mollified.", god);
             take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
