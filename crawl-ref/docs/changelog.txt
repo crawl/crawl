@@ -48,6 +48,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Allow players to reroll already named random character combinations.
 * Improved error messages when trying to load pre-0.5 save files or ghosts.
 * Some new vaults.
+* Add new milestones for the CAO tournament.
 * Tiles: Re-allow selection of player dolls ('-' command).
 * Add missing tiles options to the options guide (docs/, '?&' command).
 * Use clearer tiles for disturbances in shallow water.

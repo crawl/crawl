@@ -1,0 +1,241 @@
+ Option Changes from DCSS 0.4.5 to DCSS 0.5
+
+1- Starting Screen:
+Changed settings:
+  'race' setting is now named 'species'
+  'class' setting is now named 'job'
+
+Added settings:
+  wand, for Artificers
+
+Add to your config file:
+# species = (Human |...| Vampire | random)
+# job     = (Fighter |...| Wanderer | random)
+# wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
+
+
+3- Lua files:
+
+Removed files:
+  lua/eat.lua
+
+
+4-a Picking up and Dropping
+
+Changed defaults settings:
+  drop_filter
+  default_friendly_pickup, added new mode 'player'
+
+Add to your config file:
+drop_filter = useless_item
+# default_friendly_pickup = (none | friend | player | all)
+
+
+4-f Viewport options:
+
+Added settings:
+  verbose_monster_pane
+
+Add to your config file:
+# verbose_monster_pane = false
+
+
+4-g Travel:
+Added settings:
+  auto_exclude
+
+Add to your config file:
+auto_exclude = oklob plant,silver statue,orange crystal statue,ice statue
+auto_exclude = curse skull,roxanne
+
+
+4-h Stashes:
+Removed settings:
+  stash_tracking
+
+Add to your config file:
+# 14 filters out corpses
+# stash_filter = 14
+
+stash_filter = scroll of curse armour, scroll of curse weapon, scroll of noise
+stash_filter = scroll of immolation, scroll of random uselessness
+stash_filter = scroll of paper
+
+stash_filter = ring of hunger, amulet of inaccuracy
+
+
+4-i Command Enhancements:
+Added settings:
+  prefer_safe_chunks
+  easy_eat_chunks
+  easy_eat_gourmand
+  easy_eat_contaminated
+
+Add to your config file:
+# prefer_safe_chunks     = false
+# easy_eat_chunks        = true
+# easy_eat_gourmand      = true
+# easy_eat_contaminated  = true
+
+Changed settings:
+  equip_unequip, now defaults to false
+  sort_menus, new mode 'charged'
+
+Add to your config file:
+# sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
+sort_menus = inv: true : equipped, freshness, charged
+
+
+4-j Message and Display Improvements:
+Removed settings:
+  menu_colour_prefix_id
+
+Added settings:
+  stat_colour
+  menu_colour_shops
+  zap_evoke_reminder
+
+Add to your config file:
+# stat_colour = 1:lightred, 3:red
+# menu_colour_shops = false
+# Set the following to false to get rid of the "evoke wands" reminder.
+# zap_evoke_reminder = false
+
+Changed settings:
+  menu_colour_prefix_class, now defaults to true
+
+Changed some of the standard colours:
+#   lightred   = causes rot                        ($rot-inducing)
+#   magenta    = dangerous to use, mutagenic       ($dangerous, $mutagenic)
+#   red        = considered "evil" by your deity   ($evil)
+
+
+4-m Inscriptions:
+Added settings:
+  autoinscribe_randarts
+
+Add to your config file:
+# autoinscribe_randarts = false
+# autoinscribe = royal jell:=g
+autoinscribe = distortion:!w
+
+
+4-o Tiles Options:
+Changed settings:
+  'title_screen' is now named 'tile_title_screen'
+
+Added settings:
+  tile_menu_icons
+  tile_window_col
+  tile_key_repeat
+  tile_tooltip_ms
+  tile_window_width
+  tile_window_height
+  tile_map_pixels
+  tile_full_screen
+  tile_tag_pref
+  tile_font_crt_file
+  tile_font_crt_size
+  tile_font_stat_file
+  tile_font_stat_size
+  tile_font_msg_file
+  tile_font_msg_size
+  tile_font_tip_file
+  tile_font_tip_size
+  tile_font_lbl_file
+  tile_font_lbl_size
+
+Add to tiles_options.txt:
+# tile_window_col       = yellow
+# tile_menu_icons   = false
+# tile_tag_pref = enemy
+# tile_key_repeat = false
+# tile_tooltip_ms = 500
+
+### Note: setting window, map or font sizes to '0' implies auto-sizing.
+
+# tile_full_screen    = true
+# tile_window_width   = 1024
+# tile_window_height  = 768
+# tile_map_pixels     = 4
+
+# tile_font_crt_file = VeraMono.ttf
+# tile_font_crt_size = 15
+# tile_font_stat_file = VeraMono.ttf
+# tile_font_stat_size = 16
+# tile_font_msg_file = VeraMono.ttf
+# tile_font_msg_size = 14
+# tile_font_tip_file = VeraMono.ttf
+# tile_font_tip_size = 15
+# tile_font_lbl_file = Vera.ttf
+# tile_font_lbl_size = 14
+
+
+
+5-a Items and Kills:
+Added settings:
+  dump_book_spells
+
+Add to your config file:
+# dump_book_spells = false
+
+
+5-b Notes:
+Added settings:
+  note_xom_effects
+
+Add to your config file:
+#note_xom_effects = false
+
+Changed settings:
+  note_all_skill_levels, defaults to false
+  note_skill_max, defaults to true
+  note_all_spells, defaults to true
+  note_xom_effects, defaults to true
+
+
+6-a Miscellaneous (All OS):
+Added settings (used to be a command-line option):
+  pizza
+
+Add to your config file:
+# pizza            = Sausage
+
+
+6-c Unix settings:
+  use_fake_cursor, now defaults to true
+
+
+Changes in other settings files
+-------------------------------
+(~ = changed, + = added, - = removed)
+
+034_command_keys.txt:
+bindkey = [t]  CMD_FIRE instead of CMD_THROW_ITEM_NO_QUIVER
+
+
+034_monster_glyphs.txt:
++ mon_glyph = small simulacrum : white
++ mon_glyph = large simulacrum : white
+
+
+autopickup_exceptions.txt:
+- ae = inedible (removed since inedible are part of useless_item now)
+
+menu_colours.txt:
++ menu = darkgrey:(melded)
+- : elseif options.menu_colour_prefix_class then
+~ menu = $dangerous:.*dangerous_item.*
+~ menu = red: cursed
+
+
+messages.txt:
+~ multiple replacements of:
+  lightred with $danger
+  yellow with $warning
+  darkgrey with $boring
+
+
+standard_colours.txt:
+~ changes in accordance with message colouring comments from init.txt
+

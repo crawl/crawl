@@ -645,9 +645,10 @@ void game_options::reset_options()
     reset_startup_options();
 
 #if defined(SAVE_DIR_PATH)
-    save_dir  = SAVE_DIR_PATH;
-#elif !defined(DOS)
-    save_dir = "saves/";
+    save_dir   = SAVE_DIR_PATH "/saves/";
+    morgue_dir = SAVE_DIR_PATH "/morgue/";
+ #elif !defined(DOS)
+    save_dir   = "saves/";
 #else
     save_dir.clear();
 #endif

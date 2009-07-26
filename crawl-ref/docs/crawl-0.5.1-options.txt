@@ -1,0 +1,27 @@
+ Option Changes from DCSS 0.5 to DCSS 0.5.1
+
+4-d     Branding
+
+Changed settings:
+  New defaults for
+  friend_brand = hi:green
+  neutral_brand = hi:lightgrey
+  stab_brand = hi:blue
+  may_stab_brand = hi:yellow
+  trap_item_brand = reverse
+
+
+4-o Tiles Options:
+Changed settings:
+  'tile_key_repeat' (boolean) is now named 'tile_key_repeat_delay' (number)
+
+Added settings:
+  tile_update_rate
+
+Add to tiles_options.txt:
+# If Crawl's response rate is too slow, try increasing the update rate.
+# tile_update_rate      = 1000
+# tile_key_repeat_delay = 200
+
+Many tiles options were lacking explanations in options_guide.txt, that has
+been fixed.

@@ -14,13 +14,13 @@ The contents of this text are:
 0-c     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, use_old_selection_order,
-                weapon, book, chaos_knight, death_knight, priest,
+                weapon, book, wand, chaos_knight, death_knight, priest,
                 species, job, random_pick, good_random
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
                 stash.lua, wield.lua, kills.lua, runrest.lua,
-                gearset.lua, eat.lua, pickup.lua, trapwalk.lua
+                gearset.lua, pickup.lua, trapwalk.lua
 4-  Interface.
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
@@ -267,6 +267,11 @@ book = (flame | fire | ice | cold | summ | summoning | random)
         Several spellcasting jobs can choose their starting
         spellbook. Note flame=fire and ice=cold and summ=summoning.
 
+wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
+        Artificers can start with either a wand of random effects and another
+        wand out of enslavement, confusion, magic darts, frost, or flame, or
+        with a rod of striking.
+
 chaos_knight = (Xom | Makhleb | random)
 
 death_knight = (necromancy | Yredelemnul | random)
@@ -353,7 +358,6 @@ The available stock Lua scripts are
   gearset.lua   -- provides commands for switching of complete sets via
                    macro.
                    New macroable functions: rememberkit, swapkit
-  eat.lua       -- prompts to eat chunks in inventory.
   pickup.lua    -- allows autopickup of a butchering tool if you don't
                    already have one.
   trapwalk.lua  -- allows travel to cross certain traps if you have
