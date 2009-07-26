@@ -622,6 +622,10 @@ void scorefile_entry::init_with_fields()
 
     kills = fields->long_field("kills");
     maxed_skills = fields->str_field("maxskills");
+
+    gold       = fields->int_field("gold");
+    gold_found = fields->int_field("goldfound");
+    gold_spent = fields->int_field("goldspent");
 }
 
 void scorefile_entry::set_base_xlog_fields() const
@@ -688,6 +692,10 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("kills", "%ld", kills);
     if (!maxed_skills.empty())
         fields->add_field("maxskills", "%s", maxed_skills.c_str());
+
+    fields->add_field("gold", "%d", gold);
+    fields->add_field("goldfound", "%d", gold_found);
+    fields->add_field("goldspent", "%d", gold_spent);
 }
 
 void scorefile_entry::set_score_fields() const
@@ -885,6 +893,9 @@ void scorefile_entry::reset()
     num_runes            = 0;
     kills                = 0L;
     maxed_skills.clear();
+    gold                 = 0;
+    gold_found           = 0;
+    gold_spent           = 0;
 }
 
 static int _award_modified_experience()
@@ -1074,6 +1085,10 @@ void scorefile_entry::init()
         real_time = -1;
 
     num_turns = you.num_turns;
+
+    gold       = you.gold;
+    gold_found = you.attribute[ATTR_GOLD_FOUND];
+    gold_spent = you.attribute[ATTR_PURCHASES];
 
 #ifdef WIZARD
     wiz_mode = (you.wizard ? 1 : 0);
