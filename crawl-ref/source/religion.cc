@@ -2145,7 +2145,7 @@ static void _do_god_gift(bool prayed_for)
                     }
                 }
 
-                if (jelly_count >= 1)
+                if (jelly_count > 0)
                 {
                     int count_created = 0;
                     for (; jelly_count > 0; --jelly_count)
@@ -7211,10 +7211,11 @@ void god_pitch(god_type which_god)
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
         gain_piety(20);         // allow instant access to first power
 
-    // Complimentary jelly upon joining for the first time.
-    if (you.religion == GOD_JIYVA && you.worshipped[GOD_JIYVA] == 1)
+    // Complimentary jelly upon joining.
+    if (you.religion == GOD_JIYVA)
     {
-        slime_vault_change(false);
+        if (you.worshipped[GOD_JIYVA] == 1)
+            slime_vault_change(false);
 
         if (!_has_jelly())
         {
