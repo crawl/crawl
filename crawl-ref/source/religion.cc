@@ -5257,10 +5257,8 @@ static bool _jiyva_retribution()
             }
         }
 
-        if (success)
-            god_speaks(god, "Some slimes ooze up out of the ground!");
-        else
-            simple_god_message("The ground quivers slightly.");
+        god_speaks(god, success ? "Some slimes ooze up out of the ground!"
+                                : "The ground quivers slightly.");
     }
     else
     {
@@ -5271,6 +5269,7 @@ static bool _jiyva_retribution()
         for (int i = 0; i < mutat; ++i)
             mutate(RANDOM_BAD_MUTATION, true, false, true);
     }
+
     return (true);
 }
 
