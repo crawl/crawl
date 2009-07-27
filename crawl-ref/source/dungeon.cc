@@ -2819,10 +2819,10 @@ static bool _shaft_is_in_corridor(const coord_def& c)
     const coord_def adjs[] = { coord_def(-1,0), coord_def(1,0),
                                coord_def(0,-1), coord_def(0,1) };
 
-    for ( unsigned int i = 0; i < ARRAYSZ(adjs); ++i )
+    for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
     {
         const coord_def spot = c + adjs[i];
-        if ( !inside_level_bounds(spot) || grd(spot) < DNGN_SHALLOW_WATER )
+        if (!inside_level_bounds(spot) || grd(spot) < DNGN_SHALLOW_WATER)
             return (true);
     }
     return (false);
@@ -2857,7 +2857,7 @@ static void _place_traps(int level_number)
         if (ts.type == TRAP_SHAFT && level_number <= 7)
         {
             // Disallow shaft construction in corridors!
-            if ( _shaft_is_in_corridor(ts.pos) )
+            if (_shaft_is_in_corridor(ts.pos))
             {
                 // Choose again!
                 ts.type = random_trap_for_place(level_number);
@@ -4842,8 +4842,8 @@ static void _vault_grid( vault_placement &place,
         {
             const trap_type trap =
                 (f.trap == TRAP_INDEPTH)
-                ? random_trap_for_place(place.level_number)
-                : static_cast<trap_type>(f.trap);
+                    ? random_trap_for_place(place.level_number)
+                    : static_cast<trap_type>(f.trap);
 
             place_specific_trap(where, trap);
         }
@@ -7507,7 +7507,8 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
 {
-    if (spec_type == TRAP_RANDOM || spec_type == TRAP_NONTELEPORT)
+    if (spec_type == TRAP_RANDOM || spec_type == TRAP_NONTELEPORT
+        || spec_type == TRAP_SHAFT && !is_valid_shaft_level())
     {
         trap_type forbidden1 = NUM_TRAPS;
         trap_type forbidden2 = NUM_TRAPS;
@@ -7521,9 +7522,7 @@ bool place_specific_trap(const coord_def& where, trap_type spec_type)
             forbidden1 = TRAP_SHAFT;
 
         do
-        {
             spec_type = static_cast<trap_type>( random2(NUM_TRAPS) );
-        }
         while (spec_type == forbidden1 || spec_type == forbidden2);
     }
 
