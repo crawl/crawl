@@ -2264,6 +2264,8 @@ void melee_attack::chaos_affects_defender()
 {
     const bool mon        = defender->atype() == ACT_MONSTER;
     const bool immune     = mon && mons_immune_magic(defender_as_monster());
+    const bool is_natural = mon && mons_holiness(defender_as_monster())
+                                       == MH_NATURAL;
     const bool is_shifter = mon && mons_is_shapeshifter(defender_as_monster());
     const bool can_clone  = mon && !mons_is_holy(defender_as_monster())
                             && mons_clonable(defender_as_monster(), true);
@@ -2271,11 +2273,11 @@ void melee_attack::chaos_affects_defender()
                                            && !immune);
     const bool can_rage   = defender->can_go_berserk();
 
-    int clone_chance   = can_clone        ?  1 : 0;
-    int poly_chance    = can_poly         ?  1 : 0;
-    int poly_up_chance = can_poly  && mon ?  1 : 0;
-    int shifter_chance = can_poly  && mon ?  1 : 0;
-    int rage_chance    = can_rage         ? 10 : 0;
+    int clone_chance   = can_clone                      ?  1 : 0;
+    int poly_chance    = can_poly                       ?  1 : 0;
+    int poly_up_chance = can_poly                && mon ?  1 : 0;
+    int shifter_chance = can_poly  && is_natural && mon ?  1 : 0;
+    int rage_chance    = can_rage                       ? 10 : 0;
     int miscast_chance = 10;
 
     // Already a shifter?
