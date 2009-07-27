@@ -5300,6 +5300,9 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
         if (extra_careful)
             return (true);
 
+        if (mons_intel(monster) >= I_ANIMAL && mons_res_fire(monster) < 0)
+            return (true);
+
         if (monster->hit_points >= 15 + random2avg(46, 5))
             return (false);
         break;
@@ -5307,10 +5310,16 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
     case CLOUD_STINK:
         if (mons_res_poison(monster) > 0)
             return (false);
+
         if (extra_careful)
             return (true);
+
+        if (mons_intel(monster) >= I_ANIMAL && mons_res_poison(monster) < 0)
+            return (true);
+
         if (x_chance_in_y(monster->hit_dice - 1, 5))
             return (false);
+
         if (monster->hit_points >= random2avg(19, 2))
             return (false);
         break;
@@ -5322,6 +5331,9 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
         if (extra_careful)
             return (true);
 
+        if (mons_intel(monster) >= I_ANIMAL && mons_res_cold(monster) < 0)
+            return (true);
+
         if (monster->hit_points >= 15 + random2avg(46, 5))
             return (false);
         break;
@@ -5331,6 +5343,9 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
             return (false);
 
         if (extra_careful)
+            return (true);
+
+        if (mons_intel(monster) >= I_ANIMAL && mons_res_poison(monster) < 0)
             return (true);
 
         if (monster->hit_points >= random2avg(37, 4))
