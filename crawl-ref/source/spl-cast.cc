@@ -2283,12 +2283,13 @@ static unsigned int _breakpoint_rank(int val, const int breakpoints[],
     unsigned int result = 0;
     while (result < num_breakpoints && val >= breakpoints[result])
         ++result;
+
     return result;
 }
 
 const char* spell_hunger_string( spell_type spell )
 {
-    if ( you.is_undead == US_UNDEAD )
+    if (you.is_undead == US_UNDEAD)
         return "N/A";
 
     const int hunger = spell_hunger(spell);

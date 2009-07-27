@@ -276,7 +276,7 @@ mutation_def mutation_defs[] = {
       "cold resistance"
     },
     { MUT_SHOCK_RESISTANCE,           2,  1, false, false,
-      {"You are immune to electric shocks.", "", ""},
+      {"You are resistant to electric shocks.", "", ""},
       {"You feel insulated.", "", ""},
       {"You feel conductive.", "", ""},
 

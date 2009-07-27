@@ -1273,11 +1273,8 @@ bool is_valid_shaft_level(const level_id &place)
         return (false);
 
     // Disallow shafts on the first two levels.
-    if (place == BRANCH_MAIN_DUNGEON
-        && you.your_level < 2)
-    {
+    if (place == BRANCH_MAIN_DUNGEON && you.your_level < 2)
         return (false);
-    }
 
     // Don't generate shafts in branches where teleport control
     // is prevented.  Prevents player from going down levels without
@@ -1330,7 +1327,7 @@ level_id generic_shaft_dest(level_pos lpos)
     // be created during level generation time.
     // Include level 27 of the main dungeon here, but don't restrict
     // shaft creation (so don't set branch.dangerous_bottom_level).
-    if ((branch.dangerous_bottom_level)
+    if (branch.dangerous_bottom_level
         && lid.depth == branch.depth
         && (branch.depth - curr_depth) > 1)
     {
