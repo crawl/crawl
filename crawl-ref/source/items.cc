@@ -1967,7 +1967,6 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     {
         if (!wield_weapon(true, PROMPT_GOT_SPECIAL))
             return (false);
-        canned_msg( MSG_EMPTY_HANDED );
     }
 
     const dungeon_feature_type my_grid = grd(you.pos());
