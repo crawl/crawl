@@ -209,7 +209,7 @@ mutation_def mutation_defs[] = {
     },
 
     { MUT_POISON_RESISTANCE,          4,  1, false, false,
-      {"Your system is immune to poisons.", "", ""},
+      {"Your system is resistant to poisons.", "", ""},
       {"You feel healthy.", "",  ""},
       {"You feel a little less healthy.", "", ""},
 
