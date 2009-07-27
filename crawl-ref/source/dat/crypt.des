@@ -635,10 +635,10 @@ SUBST:   J = G:750 6
 SUBST:   K = G:550 6
 SUBST:   L = G:300 6
 SUBST:   - = T
-SUBST:   _ = F 6 ^:30 .:30
-SUBST:   T = ^ .
+SUBST:   _ = F 6 ~:30 .:30
+SUBST:   T = ~ .
 SUBST:   t = ~ .:50
-SUBST:   ' = ^ ':200
+SUBST:   ' = ~ ':200
 SUBST:   ' = 5 .:100  
 SUBST:   2 = 2 1:2 .
 SUBST:   1 = 1 2:3 .
@@ -737,10 +737,10 @@ SUBST:   Q=', q=c, R=T, r=+, S=T, s=+
 SHUFFLE: ])}def
 SUBST:   d=", e=", f="
 #
-SUBST:   T = ^ .
-SUBST:   ' = ^ ':100
+SUBST:   T = ~ .
+SUBST:   ' = ~ ':100
 SUBST:   ' = 1:5 2:5 3:1 .:89
-SUBST:   " = ^ ":50
+SUBST:   " = ~ ":50
 SUBST:   " = 2:3 3:1 .:96
 #
 # Number of ' symbols is 211+3=214, hence statistically in the lower 
@@ -838,7 +838,7 @@ TAGS:    no_rotate
 #
 SUBST:   ' : " $ ':80
 SUBST:   ' = " $
-SUBST:   " = ^:1 .
+SUBST:   " = ~:1 .
 SUBST:   $ = *:2 |:1 $:17
 #
 MONS:    mummy, guardian mummy, mummy priest, greater mummy
