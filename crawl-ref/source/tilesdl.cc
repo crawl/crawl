@@ -822,6 +822,16 @@ int TilesFramework::getch_ck()
 
             switch (event.type)
             {
+            case SDL_ACTIVEEVENT:
+                // When game gains focus back then set mod state clean
+                // to get rid of stupid Windows/SDL bug with Alt-Tab.
+                if (event.active.gain != 0)
+                {
+                    SDL_SetModState(KMOD_NONE);
+                    set_need_redraw();
+                }
+                break;
+
             case SDL_KEYDOWN:
                 m_key_mod |= _get_modifiers(event.key.keysym);
                 key        = _translate_keysym(event.key.keysym);

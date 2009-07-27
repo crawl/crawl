@@ -17,6 +17,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed Xom gifts not being destroyed in deep water.
 * Fixed magic mapping bugs in the Tiles version.
 * Fixed AltGr not being recognized in Windows Tiles version.
+* Fixed Alt-Tab sometimes locking the Alt key on Windows.
 * Fixed misbehaviour for temporary weapon brands and throwing.
 * Fixed Blade Hands not counting as slicing while wearing melded gloves.
 * Fixed berserking allies taking orders from 'ta'.

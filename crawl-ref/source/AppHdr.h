@@ -410,29 +410,25 @@
     FIXME: replace system(3) with fork(2) and execve(2).
 */
 
-    // Comment these lines out if you want to leave the save files uncompressed.
-    #define SAVE_PACKAGE_ZIP
-//     #define SAVE_PACKAGE_TAR
+    // The default behaviour is to compress with zip.
+    // To use GNU tar instead, define SAVE_PACKAGE_TAR.
+    // To avoid compression entirely, define SAVE_PACKAGE_NONE.
+    #ifndef SAVE_PACKAGE_NONE
+    #ifdef SAVE_PACKAGE_TAR
+      // The --absolute-names switch is only there to suppress noise on stdout.
+      // All the paths are removed later by --transform.
+      #define PACKAGE_SUFFIX ".tgz"
+      #define SAVE_PACKAGE_CMD "tar -zcf %s.tgz --remove-files --absolute-names --transform=s:.*/:: %s.*"
+      #define LOAD_UNPACKAGE_CMD "tar -zxf %s.tgz -C %s"
+    #else
+      #define PACKAGE_SUFFIX ".zip"
+      #define SAVE_PACKAGE_CMD "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
+      #define LOAD_UNPACKAGE_CMD "/usr/bin/unzip -q -o %s.zip -d %s"
+    #endif
 
-#ifdef SAVE_PACKAGE_ZIP
-    #define PACKAGE_SUFFIX      ".zip"
-    #define SAVE_PACKAGE_CMD    "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
-    #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d %s"
-#else
-#ifdef SAVE_PACKAGE_TAR
-    #define PACKAGE_SUFFIX      ".tgz"
-
-    // The --absolute-names switch is only there to suppress noise on
-    // stdout. All the paths are removed later by --transform.
-    #define SAVE_PACKAGE_CMD "tar -zcf %s.tgz --remove-files --absolute-names --transform=s:.*/:: %s.*"
-    #define LOAD_UNPACKAGE_CMD "tar -zxf %s.tgz -C %s"
-#endif
-#endif
-
-#ifdef SAVE_PACKAGE_CMD
-    // This is used to unpack specific files from the archive.
+    // This is used to unpack a specific file from the archive.
     #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
-#endif
+    #endif
 
     // This defines the chmod permissions for score and bones files.
     #define SHARED_FILES_CHMOD_PRIVATE  0664
