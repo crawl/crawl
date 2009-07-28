@@ -1319,6 +1319,18 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             show_map(pos, false);
             redraw_screen();
 
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+            // If we've received a HUP signal then the user can't choose a
+            // location, so cancel the teleport.
+            if (crawl_state.seen_hups)
+            {
+                mpr("Controlled teleport interrupted by HUP signal, "
+                    "cancelling teleport.", MSGCH_ERROR);
+                you.turn_is_over = false;
+                return (false);
+            }
+#endif
+
 #if DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif

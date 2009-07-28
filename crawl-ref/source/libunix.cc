@@ -31,6 +31,7 @@ REVISION("$Rev$");
 #include "defines.h"
 
 #include "cio.h"
+#include "delay.h"
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
@@ -330,27 +331,60 @@ static void handle_hangup(int)
     if (crawl_state.seen_hups++)
         return;
 
+    interrupt_activity( AI_FORCE_INTERRUPT );
+
+#ifdef USE_TILE
+    // XXX: Will a tiles build ever need to handle the HUP signal?
+    sighup_save_and_exit();
+#elif defined(USE_CURSES)
+    // When using Curses, closing stdin will cause any Curses call blocking
+    // on key-presses to immediately return, including any call that was
+    // still blocking in the main thread when the HUP signal was caught.
+    // This should guarantee that the main thread will un-stall and
+    // will eventually return to _input() in acr.cc, which will then
+    // call sighup_save_and_exit().
+    //
+    // The point to all this is that if a user is playing a game on a
+    // remote server and disconnects at a --more-- prompt, that when
+    // the player reconnects the code behind the more() call will execute
+    // before the disconnected game is saved, thus (for example) preventing
+    // the hack of avoiding excomunication consesquences because of the
+    // more() after "You have lost your religion!"
+    fclose(stdin);
+#else
+     #error "Must use either Curses or tiles on Unix"
+#endif
+}
+
+void sighup_save_and_exit()
+{
+    if (crawl_state.seen_hups == 0)
+    {
+        mpr("sighup_save_and_exit() called without a HUP signal; please"
+            "file a bug report", MSGCH_ERROR);
+        return;
+    }
+
     if (crawl_state.saving_game || crawl_state.updating_scores)
         return;
 
     crawl_state.saving_game = true;
     if (crawl_state.need_save)
     {
+        mpr("Received HUP signal, saved and exited game.", MSGCH_ERROR);
+
         // Clean up all the hooks.
         for (unsigned i = 0; i < crawl_state.exit_hooks.size(); ++i)
             crawl_state.exit_hooks[i]->restore_state();
 
         crawl_state.exit_hooks.clear();
 
-        // save_game(true) also exits, saving us the trouble of doing so.
-        save_game(true);
+        // save_game(true) exits from the game. The "true" is also required
+        // to save changes to the current level.
+        save_game(true, "Received HUP signal, saved game.");
     }
     else
-    {
-        // CROAK! No attempt to clean up curses. This is probably not an
-        // issue since the term has gone away.
-        exit(1);
-    }
+        end(0, false, "Received HUP signal, game already saved.");
 }
 #endif // SIGHUP_SAVE
 
@@ -807,6 +841,10 @@ void get_input_line_from_curses( char *const buff, int len )
     echo();
     wgetnstr( stdscr, buff, len );
     noecho();
+
+    // Don't return a partial string if a HUP signal interrupted things.
+    if (crawl_state.seen_hups)
+        buff[0] = '\0';
 }
 
 int clrscr()

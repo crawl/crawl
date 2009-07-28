@@ -3475,6 +3475,16 @@ void show_map( coord_def &spec_place, bool travel_mode )
 
     while (map_alive)
     {
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+        // If we've received a HUP signal then the user can't choose a
+        // location, so indicate this by returning an invalid position.
+        if (crawl_state.seen_hups)
+        {
+            spec_place = coord_def(-1, -1);
+            return;
+        }
+#endif
+
         start_y = screen_y - half_screen;
 
         move_x = move_y = 0;

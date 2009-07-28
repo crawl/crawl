@@ -1572,7 +1572,18 @@ bool acquirement(object_class_type class_wanted, int agent,
                 canned_msg(MSG_OK);
                 return (false);
             }
-            break;
+
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+            // If we've gotten a HUP signal then the player will be unable
+            // to make a selection.
+            if (crawl_state.seen_hups)
+            {
+                mpr("Acquirement interrupted by HUP signal.", MSGCH_ERROR);
+                you.turn_is_over = false;
+                return (false);
+            }
+#endif
+           break;
         }
     }
 

@@ -138,6 +138,19 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
     {
         const command_type key_command = beh->get_command();
 
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+        // If we've received a HUP signal then the user can't choose a
+        // target.
+        if (crawl_state.seen_hups)
+        {
+            moves.isValid  = false;
+            moves.isCancel = true;
+
+            mpr("Targetting interrupted by HUP signal.", MSGCH_ERROR);
+            return;
+        }
+#endif
+
 #ifdef USE_TILE
         if (key_command == CMD_TARGET_MOUSE_MOVE)
         {
@@ -1069,6 +1082,19 @@ void direction(dist& moves, targeting_type restricts,
 
     while (true)
     {
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+        // If we've received a HUP signal then the user can't choose a
+        // target.
+        if (crawl_state.seen_hups)
+        {
+            moves.isValid  = false;
+            moves.isCancel = true;
+
+            mpr("Targetting interrupted by HUP signal.", MSGCH_ERROR);
+            return;
+        }
+#endif
+
         bool allow_out_of_range = false;
 
         // Prompts might get scrolled off if you have too few lines available.
