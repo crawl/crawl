@@ -2602,9 +2602,7 @@ static void _curse_card(int power, deck_rarity_type rarity)
     {
         // Curse an average of four items.
         do
-        {
             curse_an_item(false);
-        }
         while (!one_chance_in(4));
     }
     else
@@ -2657,7 +2655,12 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                             && !mons_is_summoned(monster)
                             && !mons_is_shapeshifter(monster))
                     {
+                        // Prevent assertion if the monster was
+                        // previously worshipping a different god,
+                        // rather than already worshipping your god or
+                        // being an atheist.
                         monster->god = GOD_NO_GOD;
+
                         mons_make_god_gift(monster, is_good_god(you.religion) ?
                                            GOD_SHINING_ONE : GOD_BEOGH);
                     }
