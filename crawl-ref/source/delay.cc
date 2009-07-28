@@ -829,8 +829,15 @@ void handle_delay()
     // XXX: need to handle passwall when monster digs -- bwr
     if (delay.type == DELAY_FEED_VAMPIRE)
     {
+        // Vampires stop feeding if ...
+        // * engorged ("alive")
+        // * bat form runs out due to becoming full
+        // * corpse becomes poisonous as the Vampire loses poison resistance
         if (you.hunger_state == HS_ENGORGED
-            || you.hunger_state > HS_SATIATED && player_in_bat_form())
+            || you.hunger_state > HS_SATIATED && player_in_bat_form()
+            || you.hunger_state >= HS_SATIATED
+               && is_valid_item(mitm[delay.parm1])
+               && is_poisonous(mitm[delay.parm1]))
         {
             // Messages handled in _food_change() in food.cc.
             stop_delay();

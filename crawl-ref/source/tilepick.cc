@@ -4408,19 +4408,20 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     else
     {
         // Retain the magic mapped terrain, but don't give away the real
-        // features either.
+        // features.
         if (is_terrain_mapped(gc))
         {
             unsigned int feature = grd(gc);
 
             unsigned int grid_symbol;
-            unsigned short grid_color;
-            get_item_symbol(feature, &grid_symbol, &grid_color);
+            unsigned short grid_colour;
+            get_item_symbol(feature, &grid_symbol, &grid_colour);
 
             unsigned int fg;
             unsigned int bg;
             tileidx_unseen(fg, bg, grid_symbol, gc);
             env.tile_bk_bg(gc) = bg;
+//             env.tile_bk_bg(gc) = fg;
         }
         env.tile_bk_fg(gc) = t0;
     }
