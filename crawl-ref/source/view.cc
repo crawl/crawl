@@ -826,19 +826,38 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!clear_detected_monsters && is_envmap_detected_mons(p))
             continue;
 
-        if (is_terrain_mapped(p))
+#ifdef USE_TILE
+        if (is_terrain_mapped(p) && !is_envmap_detected_mons(p))
             continue;
+#endif
 
-        set_envmap_obj(p, is_terrain_known(p)? grd(p) : DNGN_UNSEEN);
+        set_envmap_obj(p, is_terrain_seen(p) || is_terrain_mapped(p)
+                ? grd(p) : DNGN_UNSEEN);
         set_envmap_detected_mons(p, false);
         set_envmap_detected_item(p, false);
 
 #ifdef USE_TILE
-        set_envmap_obj(p, is_terrain_known(p)? grd(p) : DNGN_UNSEEN);
-        env.tile_bk_fg(p) = 0;
-        env.tile_bk_bg(p) = is_terrain_known(p) ?
-            tile_idx_unseen_terrain(p.x, p.y, grd(p)) :
-            tileidx_feature(DNGN_UNSEEN, p.x, p.y);
+        if (is_terrain_mapped(p))
+        {
+            unsigned int feature = grd(p);
+
+            unsigned int grid_symbol;
+            unsigned short grid_colour;
+            get_item_symbol(feature, &grid_symbol, &grid_colour);
+
+            unsigned int fg;
+            unsigned int bg;
+            tileidx_unseen(fg, bg, grid_symbol, p);
+            env.tile_bk_bg(p) = bg;
+            env.tile_bk_fg(p) = fg;
+        }
+        else
+        {
+            env.tile_bk_bg(p) = is_terrain_seen(p) ?
+                tile_idx_unseen_terrain(p.x, p.y, grd(p)) :
+                tileidx_feature(DNGN_UNSEEN, p.x, p.y);
+            env.tile_bk_fg(p) = 0;
+        }
 #endif
     }
 }
@@ -3971,17 +3990,34 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (is_terrain_changed(*ri))
             clear_envmap_grid(*ri);
 
+#if 0
 #ifdef USE_TILE
         if (!wizard_map && is_terrain_known(*ri) && !is_terrain_mapped(*ri))
         {
             // Can't use set_envmap_obj because that would
             // overwrite the gmap.
-            env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
-                                                          grd(*ri));
+            if (is_terrain_seen(*ri))
+            {
+                env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
+                                                              grd(*ri));
+            }
+            else
+            {
+                unsigned int feature = grd(*ri);
+                unsigned int grid_symbol;
+                unsigned short grid_color;
+                get_item_symbol(feature, &grid_symbol, &grid_color);
+
+                unsigned int fg;
+                unsigned int bg;
+                tileidx_unseen(fg, bg, grid_symbol, *ri);
+                env.tile_bk_bg(*ri) = bg;
+            }
         }
 #endif
+#endif
 
-        if (!wizard_map && (is_terrain_known(*ri) || is_terrain_seen(*ri)))
+        if (!wizard_map && (is_terrain_seen(*ri) || is_terrain_mapped(*ri)))
             continue;
 
         bool open = true;
@@ -4006,7 +4042,15 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 set_envmap_obj(*ri, grd(*ri));
 
             if (wizard_map)
+            {
                 set_terrain_seen(*ri);
+#ifdef USE_TILE
+                // Can't use set_envmap_obj because that would
+                // overwrite the gmap.
+                env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
+                                                              grd(*ri));
+#endif
+            }
             else
                 set_terrain_mapped(*ri);
 
