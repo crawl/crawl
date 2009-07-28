@@ -1029,7 +1029,7 @@ void reset_more_autoclear()
 
 void more(bool user_forced)
 {
-    if (crawl_state.game_crashed)
+    if (crawl_state.game_crashed || crawl_state.seen_hups)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS

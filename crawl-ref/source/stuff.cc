@@ -790,7 +790,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
     }
 
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(DGL_PAUSE_AFTER_ERROR)
-    if (exit_code && !crawl_state.arena)
+    if (exit_code && !crawl_state.arena && !crawl_state.seen_hups)
     {
         fprintf(stderr, "Hit Enter to continue...\n");
         getchar();
@@ -1080,12 +1080,21 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
 
         int tmp = getchm(KMC_CONFIRM);
 
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+        // Prevent infinite loop if Curses HUP signal handling happens;
+        // if there is no safe answer, then just save-and-exit immediately,
+        // since there's no way to know if it would be better to return
+        // true or false.
+        if (crawl_state.seen_hups && !safeanswer)
+            sighup_save_and_exit();
+#endif
+
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;
 
         if (safeanswer
             && (tmp == ' ' || tmp == ESCAPE || tmp == CONTROL('G')
-                || tmp == '\r' || tmp == '\n'))
+                || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
         {
             tmp = safeanswer;
         }
@@ -1181,8 +1190,11 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
 
         int tmp = getchm(KMC_CONFIRM);
 
-        if (tmp == CK_ESCAPE || tmp == CONTROL('G') || tmp == 'q' || tmp == 'Q')
+        if (tmp == CK_ESCAPE || tmp == CONTROL('G') || tmp == 'q' || tmp == 'Q'
+            || crawl_state.seen_hups)
+        {
             return -1;
+        }
 
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
             tmp = safeanswer;

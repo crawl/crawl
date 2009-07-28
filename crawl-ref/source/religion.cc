@@ -6561,6 +6561,7 @@ void excommunication(god_type new_god)
     redraw_skill(you.your_name, player_title());
 
     mpr("You have lost your religion!");
+    more();
 
 #ifdef DGL_MILESTONES
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
@@ -7389,6 +7390,7 @@ void god_pitch(god_type which_god)
     simple_god_message(
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
+    more();
 
     // When you start worshipping a good god, you make all non-hostile
     // evil and unholy beings hostile; when you start worshipping Zin,

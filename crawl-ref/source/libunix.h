@@ -68,6 +68,10 @@ inline bool is_smart_cursor_enabled() { return (false); }
 
 void set_mouse_enabled(bool enabled);
 
+#if defined(SIGHUP_SAVE) && defined(USE_UNIX_SIGNALS)
+void sighup_save_and_exit();
+#endif
+
 #ifndef _LIBUNIX_IMPLEMENTATION
 /* Some stuff from curses, to remove compiling warnings.. */
 extern "C"

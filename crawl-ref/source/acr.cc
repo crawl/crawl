@@ -885,6 +885,11 @@ static void _center_cursor()
 //
 static void _input()
 {
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+    if (crawl_state.seen_hups)
+        sighup_save_and_exit();
+#endif
+
     crawl_state.clear_mon_acting();
 
     religion_turn_start();
@@ -1028,6 +1033,11 @@ static void _input()
         cursor_control con(true);
 #endif
         const command_type cmd = _get_next_cmd();
+
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+        if (crawl_state.seen_hups)
+            sighup_save_and_exit();
+#endif
 
         crawl_state.waiting_for_command = false;
 
@@ -2479,6 +2489,7 @@ static void _check_banished()
         if (you.level_type != LEVEL_ABYSS)
         {
             mpr("You are cast into the Abyss!");
+            more();
             banished(DNGN_ENTER_ABYSS, you.banished_by);
         }
         you.banished_by.clear();
