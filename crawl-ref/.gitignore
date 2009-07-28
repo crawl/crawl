@@ -12,18 +12,19 @@ err.txt
 map.dump
 mapgen.log
 \#*
+.#*
 TAGS
 
 arena.result
 
 # Tile copied files
-crawl-ref/source/dat/tiles/dngn.png
-crawl-ref/source/dat/tiles/main.png
-crawl-ref/source/dat/tiles/player.png
+source/dat/tiles/dngn.png
+source/dat/tiles/main.png
+source/dat/tiles/player.png
 
 # The Crawl executable.
-crawl-ref/source/crawl
+source/crawl
 
 # Level-compiler generated files.
-crawl-ref/source/util/*.cc
-crawl-ref/source/util/*.h
+source/util/*.cc
+source/util/*.h
