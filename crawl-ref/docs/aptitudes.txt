@@ -12,7 +12,7 @@ If you consider figuring out such things yourself to be fun, stop reading
 now. Otherwise, just go ahead. The lower a value, the better the aptitude.
 100 is the Human standard. Please note that many things affect how quick a
 character will actually learn a skill. Thus the numbers below are good
-enough for comparisons among specis, but not necessarily among skills.
+enough for comparisons among species, but not necessarily among skills.
 
 The abbreviations used for the skills are:
 

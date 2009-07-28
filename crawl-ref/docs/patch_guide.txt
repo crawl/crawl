@@ -125,9 +125,9 @@ out, so I grep the source (*.h and *.cc) for all occurences and have a look
 at all files this turns up. And so on.
 
 Evaluating and prioritising the findings takes some experience with the source
-code but even if you have no idea what the files are likely to contain using
+code but even if you have no idea what the files are likely to contain, using
 grep still greatly reduces the number of files you have to look at. To find
-the code you're interested in search the files for the same keyword you used
+the code you're interested in, search the files for the same keyword you used
 for grepping.
 
 Good luck with your patch! If you have any questions, don't hesitate to ask.
