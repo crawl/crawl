@@ -34,13 +34,12 @@ int create_plant(coord_def & target);
 //bool plant_from_fruit();
 bool sunlight();
 
-
+bool prioritise_adjacent(coord_def & target, std::vector<coord_def> & candidates);
 bool plant_ring_from_fruit();
 
 int rain(coord_def & target);
-void corpse_spores();
+int corpse_spores(beh_type behavior = BEH_FRIENDLY);
 bool evolve_flora();
-
 
 bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery = false);
