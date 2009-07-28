@@ -117,6 +117,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
                  || brand == SPWPN_VAMPIRICISM
+                 || is_demonic(item)
                  || randart_wpn_property(item, RAP_CURSED) != 0))
     {
         return (false);
@@ -178,6 +179,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
         if (randart_wpn_property(item, RAP_MAGICAL_POWER))
             return (false);
+        break;
 
     default:
         break;
