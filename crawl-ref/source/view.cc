@@ -3990,33 +3990,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (is_terrain_changed(*ri))
             clear_envmap_grid(*ri);
 
-#if 0
-#ifdef USE_TILE
-        if (!wizard_map && is_terrain_known(*ri) && !is_terrain_mapped(*ri))
-        {
-            // Can't use set_envmap_obj because that would
-            // overwrite the gmap.
-            if (is_terrain_seen(*ri))
-            {
-                env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
-                                                              grd(*ri));
-            }
-            else
-            {
-                unsigned int feature = grd(*ri);
-                unsigned int grid_symbol;
-                unsigned short grid_color;
-                get_item_symbol(feature, &grid_symbol, &grid_color);
-
-                unsigned int fg;
-                unsigned int bg;
-                tileidx_unseen(fg, bg, grid_symbol, *ri);
-                env.tile_bk_bg(*ri) = bg;
-            }
-        }
-#endif
-#endif
-
         if (!wizard_map && (is_terrain_seen(*ri) || is_terrain_mapped(*ri)))
             continue;
 
