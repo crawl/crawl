@@ -1,4 +1,4 @@
-Stone Soup 0.5.1 (2009????)
+Stone Soup 0.5.1 (20090728)
 ---------------------------
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
@@ -23,6 +23,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed berserking allies taking orders from 'ta'.
 * Fixed random blinking sometimes placing the player in dangerous clouds.
 * Fixed certain incorporeal monsters flying instead of levitating.
+* Fixed server disconnects at --More-- prompts allowing to avoid retribution.
 * Staff of earth damage is reduced by AC.
 * Lowered damage output for elemental staves.
 * Once entered, the gate to Zot remains open even without carrying runes.
@@ -52,7 +53,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Add new milestones for the CAO tournament.
 * Tiles: Re-allow selection of player dolls ('-' command).
 * Add missing tiles options to the options guide (docs/, '?&' command).
-* Use clearer tiles for disturbances in shallow water.
+* Improve tiles for escape hatches and disturbances in shallow water.
 * Document tiles lags in tiles_help.txt and in the in-game FAQ ('?Q' command).
 
 Stone Soup 0.5.0 (20090612)

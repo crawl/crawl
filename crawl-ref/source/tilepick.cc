@@ -2406,13 +2406,13 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_STONE_STAIRS_DOWN_III:
         return TILE_DNGN_STONE_STAIRS_DOWN;
     case DNGN_ESCAPE_HATCH_DOWN:
-        return TILE_DNGN_ROCK_STAIRS_DOWN;
+        return TILE_DNGN_ESCAPE_HATCH_DOWN;
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return TILE_DNGN_STONE_STAIRS_UP;
     case DNGN_ESCAPE_HATCH_UP:
-        return TILE_DNGN_ROCK_STAIRS_UP;
+        return TILE_DNGN_ESCAPE_HATCH_UP;
     case DNGN_ENTER_DIS:
         return TILE_DNGN_ENTER_DIS;
     case DNGN_ENTER_GEHENNA:
@@ -4483,19 +4483,20 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     else
     {
         // Retain the magic mapped terrain, but don't give away the real
-        // features either.
+        // features.
         if (is_terrain_mapped(gc))
         {
             unsigned int feature = grd(gc);
 
             unsigned int grid_symbol;
-            unsigned short grid_color;
-            get_item_symbol(feature, &grid_symbol, &grid_color);
+            unsigned short grid_colour;
+            get_item_symbol(feature, &grid_symbol, &grid_colour);
 
             unsigned int fg;
             unsigned int bg;
             tileidx_unseen(fg, bg, grid_symbol, gc);
             env.tile_bk_bg(gc) = bg;
+//             env.tile_bk_bg(gc) = fg;
         }
         env.tile_bk_fg(gc) = t0;
     }

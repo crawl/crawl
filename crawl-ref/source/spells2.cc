@@ -197,9 +197,12 @@ int detect_creatures(int pow, bool telepathic)
     {
         if (monsters *mon = monster_at(*ri))
         {
-            creatures_found++;
-
-            _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
+            // If you can see the monster, don't "detect" it elsewhere.
+            if (!mons_near(mon) || !player_monster_visible(mon))
+            {
+                creatures_found++;
+                _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
+            }
 
             // Assuming that highly intelligent spellcasters can
             // detect scrying. -- bwr
