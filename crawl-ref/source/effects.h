@@ -56,6 +56,20 @@ int spawn_corpse_mushrooms(item_def &corpse,
                            int & seen_targers,
                            bool distance_as_time = false);
 
+struct mgen_data;
+int place_ring(std::vector<coord_def> & ring_points,
+                coord_def & origin,
+                mgen_data & prototype,
+                int n_arcs,
+                int arc_occupancy,
+                int & seen_count);
+
+// Collect lists of points that are within LOS (under the given env map),
+// unoccupied, and not solid (walls/statues).
+void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
+                           coord_def & origin, env_show_grid & losgrid);
+
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: item_use - spell - spells

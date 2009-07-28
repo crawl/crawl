@@ -522,7 +522,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_FEAWN:
-        snprintf(info,INFO_SIZE,"you promote decomposition%s",
+        snprintf(info,INFO_SIZE, "you promote decomposition%s",
                  verbose ? " via the <w>a</w> command" : "");
         likes.push_back(info);
         break;
@@ -798,9 +798,9 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_FEAWN:
-        dislikes.push_back("you destroy plants");
+        dislikes.push_back("you or your allies destroy plants");
         dislikes.push_back("allied flora die");
-        dislikes.push_back("you practice necromancy");
+        dislikes.push_back("you use necromancy");
         break;
 
     default:
@@ -1434,6 +1434,12 @@ bool is_fellow_slime(const monsters* mon)
             && mons_is_god_gift(mon, GOD_JIYVA));
 }
 
+bool is_neutral_plant(const monsters* mon)
+{
+    return (mon->alive() && mons_is_plant(mon)
+            && mon->attitude == ATT_GOOD_NEUTRAL);
+}
+
 bool _has_jelly()
 {
     ASSERT(you.religion == GOD_JIYVA);
@@ -1447,7 +1453,6 @@ bool _has_jelly()
 
     return (false);
 }
-
 
 bool is_good_lawful_follower(const monsters* mon)
 {
@@ -1469,6 +1474,8 @@ bool is_follower(const monsters* mon)
         return is_orcish_follower(mon);
     else if (you.religion == GOD_JIYVA)
         return is_fellow_slime(mon);
+    else if (you.religion == GOD_FEAWN)
+        return is_neutral_plant(mon);
     else if (you.religion == GOD_ZIN)
         return is_good_lawful_follower(mon);
     else if (is_good_god(you.religion))
@@ -2683,7 +2690,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_NECROMANCY:
-        case DID_UNHOLY:
             if (you.religion == GOD_FEAWN)
             {
                 if (known)
@@ -2694,13 +2700,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
                 else
                 {
-                    simple_god_message(" forgives your blasphemy, just this "
-                                       "once.");
+                    simple_god_message(" forgives your inadvertent necromancy, "
+                                       "just this once.");
                 }
                 break;
             }
             // else fall-through
 
+        case DID_UNHOLY:
         case DID_ATTACK_HOLY:
             switch (you.religion)
             {
@@ -2778,6 +2785,16 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+       case DID_KILL_PLANT:
+       case DID_ALLY_KILLED_PLANT:
+           // Piety loss but no penance for killing a plant.
+           if (you.religion == GOD_FEAWN)
+           {
+               retval = true;
+               piety_change = -level;
+           }
+           break;
+
         case DID_ATTACK_NEUTRAL:
             switch (you.religion)
             {
@@ -2791,6 +2808,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
                 penance = level/2 + 1;
                 // deliberate fall through
+
             case GOD_ZIN:
                 if (!known)
                 {
@@ -2837,16 +2855,30 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_ELYVILON: // healer god cares more about this
+                // Converted allies (marked as TSOites) can be martyrs.
+                if (victim->god == GOD_SHINING_ONE)
+                    break;
+
                 if (player_under_penance())
                     penance = 1;  // if already under penance smaller bonus
                 else
                     penance = level;
                 // fall through
-            case GOD_ZIN: // in contrast to TSO, who doesn't mind martyrs
+
+            case GOD_ZIN:
+                // Converted allies (marked as TSOites) can be martyrs.
+                if (victim->god == GOD_SHINING_ONE)
+                    break;
+
+            case GOD_FEAWN: // plant god only cares about plants
+                if (!mons_is_plant(victim))
+                    break;
+
             case GOD_OKAWARU:
                 piety_change = -level;
                 retval = true;
                 break;
+
             default:
                 break;
             }
@@ -5275,7 +5307,110 @@ static bool _jiyva_retribution()
 
 static bool _feawn_retribution()
 {
-    // to be implemented -CAO
+    const god_type god = GOD_FEAWN;
+
+    // We have 3 forms of retribution, but players under penance will be
+    // spared the 'you are now surrounded by oklob plants, please die' one.
+    const int retribution_options = you.religion == GOD_FEAWN ? 2 : 3;
+
+    switch (random2(retribution_options))
+    {
+    case 0:
+        // Try and spawn some hostile giant spores, if none are created
+        // fall through to the elemental miscast effects.
+        if (corpse_spores(BEH_HOSTILE))
+        {
+            simple_god_message(" produces spores.", GOD_FEAWN);
+            break;
+        }
+    case 1:
+    {
+        // Elemental miscast effects.
+        simple_god_message(" invokes the elements against you.", GOD_FEAWN);
+
+        spschool_flag_type stype = SPTYP_NONE;
+        switch (random2(4))
+        {
+        case 0:
+            stype= SPTYP_ICE;
+            break;
+        case 1:
+            stype = SPTYP_EARTH;
+            break;
+        case 2:
+            stype = SPTYP_FIRE;
+            break;
+        case 3:
+            stype = SPTYP_AIR;
+            break;
+        };
+        MiscastEffect(&you, -god, stype, 5 + you.experience_level,
+                      random2avg(88, 3), "the wrath of Feawn");
+        break;
+    }
+    case 2:
+        // We are going to spawn some oklobs but first we need to find
+        // out a little about the situation.
+        std::vector<std::vector<coord_def> > radius_points;
+        collect_radius_points(radius_points,you.pos(),env.no_trans_show);
+
+        unsigned free_thresh = 30;
+
+        mgen_data temp(MONS_OKLOB_PLANT,
+                       BEH_HOSTILE, 0, 0,
+                       coord_def(),
+                       MHITNOT,
+                       MG_FORCE_PLACE,
+                       GOD_FEAWN);
+
+        // If we have a lot of space to work with (the circle with
+        // radius 6 is substantially unoccupied), we can do something
+        // flashy.
+        if (radius_points[5].size() > free_thresh)
+        {
+            int seen_count;
+
+            temp.cls = MONS_PLANT;
+
+            place_ring(radius_points[0],
+                       you.pos(),
+                       temp,
+                       1, radius_points[0].size(),
+                       seen_count);
+
+            temp.cls = MONS_OKLOB_PLANT;
+
+            place_ring(radius_points[5],
+                       you.pos(),
+                       temp,
+                       random_range(3, 8), 1,
+                       seen_count);
+        }
+        // Otherwise we do something with the nearest neighbors
+        // (assuming the player isn't already surrounded).
+        else if (!radius_points[0].empty())
+        {
+            unsigned target_count = random_range(2, 8);
+            if (target_count < radius_points[0].size())
+                prioritise_adjacent(you.pos(), radius_points[0]);
+            else
+                target_count = radius_points[0].size();
+
+            unsigned i = radius_points[0].size() - target_count;
+
+            for(; i < radius_points[0].size(); ++i)
+            {
+                temp.pos = radius_points[0].at(i);
+                temp.cls = coinflip() ?
+                           MONS_WANDERING_MUSHROOM : MONS_OKLOB_PLANT;
+
+                create_monster(temp,false);
+            }
+
+            god_speaks(god, "Plants grow around you in an ominous manner.");
+            return (false);
+        }
+    }
     return (true);
 }
 
@@ -5400,12 +5535,12 @@ static bool _holy_beings_on_level_attitude_change()
         }
     }
 
-    return success;
+    return (success);
 }
 
 static bool _holy_beings_attitude_change()
 {
-    return apply_to_all_dungeons(_holy_beings_on_level_attitude_change);
+    return (apply_to_all_dungeons(_holy_beings_on_level_attitude_change));
 }
 
 static bool _evil_beings_on_level_attitude_change()
@@ -5440,12 +5575,12 @@ static bool _evil_beings_on_level_attitude_change()
         }
     }
 
-    return success;
+    return (success);
 }
 
 static bool _evil_beings_attitude_change()
 {
-    return apply_to_all_dungeons(_evil_beings_on_level_attitude_change);
+    return (apply_to_all_dungeons(_evil_beings_on_level_attitude_change));
 }
 
 static bool _chaotic_beings_on_level_attitude_change()
@@ -5479,12 +5614,12 @@ static bool _chaotic_beings_on_level_attitude_change()
         }
     }
 
-    return success;
+    return (success);
 }
 
 static bool _chaotic_beings_attitude_change()
 {
-    return apply_to_all_dungeons(_chaotic_beings_on_level_attitude_change);
+    return (apply_to_all_dungeons(_chaotic_beings_on_level_attitude_change));
 }
 
 static bool _magic_users_on_level_attitude_change()
@@ -5518,12 +5653,12 @@ static bool _magic_users_on_level_attitude_change()
         }
     }
 
-    return success;
+    return (success);
 }
 
 static bool _magic_users_attitude_change()
 {
-    return apply_to_all_dungeons(_magic_users_on_level_attitude_change);
+    return (apply_to_all_dungeons(_magic_users_on_level_attitude_change));
 }
 
 // Make summoned (temporary) god gifts disappear on penance or when
@@ -5859,6 +5994,70 @@ static bool _yred_slaves_abandon_you()
                 simple_god_message(" reclaims some of your granted undead slaves!");
         }
 
+        return (true);
+    }
+
+    return (false);
+}
+
+static bool _feawn_plants_on_level_hostile()
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (monster->alive()
+            && mons_is_plant(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Plant hostility: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            // You can potentially turn an oklob or whatever neutral
+            // again by going back to Feawn.
+            if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
+                monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
+
+            monster->attitude = ATT_HOSTILE;
+            monster->del_ench(ENCH_CHARM, true);
+            behaviour_event(monster, ME_ALERT, MHITYOU);
+            // For now WAS_NEUTRAL stays.
+        }
+    }
+
+    return (true);
+}
+
+static bool _feawn_plants_hostile()
+{
+    if (apply_to_all_dungeons(_feawn_plants_on_level_hostile))
+    {
+        mpr("The plants of the dungeon turn on you!", MSGCH_GOD);
+        return (true);
+    }
+
+    return (false);
+}
+
+static bool _feawn_plants_on_level_neutral()
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+
+        feawn_neutralise_plant(monster);
+    }
+
+    return (true);
+}
+
+static bool _feawn_plants_neutral()
+{
+    if (apply_to_all_dungeons(_feawn_plants_on_level_neutral))
+    {
+        mpr("The plants of the dungeon cease their hostilities." , MSGCH_GOD);
         return (true);
     }
 
@@ -6285,6 +6484,25 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     behaviour_event(orc, ME_ALERT, MHITNOT);
 }
 
+void feawn_neutralise_plant(monsters *plant)
+{
+    if (plant->type != MONS_OKLOB_PLANT
+        && plant->type != MONS_WANDERING_MUSHROOM
+        && !testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
+    {
+        return;
+    }
+
+    if (you.can_see(plant))
+    {
+        mprf(MSGCH_GOD, "%s ignores you.",
+             plant->name(DESC_CAP_THE).c_str());
+    }
+
+    plant->attitude = ATT_GOOD_NEUTRAL;
+    plant->flags   |= MF_WAS_NEUTRAL;
+}
+
 void jiyva_convert_slime(monsters* slime)
 {
     ASSERT(mons_is_slime(slime));
@@ -6303,9 +6521,9 @@ void jiyva_convert_slime(monsters* slime)
                  slime->name(DESC_CAP_THE).c_str());
         }
     }
+
     slime->attitude = ATT_STRICT_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
-    slime->god      = GOD_JIYVA;
 
     if (mons_itemuse(slime) != MONUSE_EATS_ITEMS)
     {
@@ -6313,6 +6531,11 @@ void jiyva_convert_slime(monsters* slime)
         mprf(MSGCH_MONSTER_ENCHANT, "%s looks hungrier.",
              slime->name(DESC_CAP_THE).c_str());
     }
+
+    // Prevent assertion if the slime was previously worshipping a
+    // different god, rather than already worshipping Jiyva or being an
+    // atheist.
+    slime->god = GOD_NO_GOD;
 
     mons_make_god_gift(slime, GOD_JIYVA);
 }
@@ -6500,6 +6723,11 @@ void excommunication(god_type new_god)
         }
 
         _inc_penance(old_god, 30);
+        break;
+    case GOD_FEAWN:
+        _feawn_plants_hostile();
+        _inc_penance(old_god, 30);
+        divine_retribution(old_god);
         break;
 
     default:
@@ -6712,11 +6940,9 @@ bool god_hates_attacking_friend(god_type god, int species)
         case GOD_BEOGH: // added penance to avoid killings for loot
             return (mons_genus(species) == MONS_ORC);
         case GOD_JIYVA:
-             return (mons_genus(species) == MONS_JELLY
-                     || mons_genus(species) == MONS_GIANT_EYEBALL
-                     || species == MONS_GIANT_SPORE
-                     || species == MONS_GIANT_ORANGE_BRAIN);
-
+            return (mons_class_is_slime(species));
+        case GOD_FEAWN:
+            return (mons_class_is_plant(species));
         default:
             return (false);
     }
@@ -7071,6 +7297,10 @@ bool player_can_join_god(god_type which_god)
     if (player_is_unholy() && is_good_god(which_god))
         return (false);
 
+    // Feawn hates undead, but will accept demonspawn.
+    if (which_god == GOD_FEAWN && you.holiness() == MH_UNDEAD)
+        return (false);
+
     if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
         return (false);
 
@@ -7183,6 +7413,12 @@ void god_pitch(god_type which_god)
         mpr("You can now call upon Trog to burn spellbooks in your "
             "surroundings.", MSGCH_GOD);
     }
+    else if (you.religion == GOD_FEAWN)
+    {
+        mpr("You can call upon Feawn to speed up the decay of corpses.",
+            MSGCH_GOD);
+        _feawn_plants_neutral();
+    }
 
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
@@ -7293,7 +7529,10 @@ bool god_hates_killing(god_type god, const monsters* mon)
             break;
     }
 
-    return retval;
+    if (god == GOD_FEAWN)
+        retval = (mons_is_plant(mon));
+
+    return (retval);
 }
 
 bool god_likes_butchery(god_type god)

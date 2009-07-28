@@ -184,6 +184,16 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return (false);
         break;
 
+    case GOD_FEAWN:
+        // Anti-necromancy god: nothing involving necromancy or
+        // necromantic spell use.
+        if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
+             || brand == SPWPN_VAMPIRICISM)
+        {
+            return (false);
+        }
+        break;
+
     default:
         break;
     }

@@ -1971,6 +1971,9 @@ bool recall(char type_recalled)
         if (!mons_friendly(monster))
             continue;
 
+        if (mons_class_is_stationary(monster->type))
+            continue;
+
         if (!monster_habitable_grid(monster, DNGN_FLOOR))
             continue;
 

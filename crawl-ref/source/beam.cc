@@ -4084,17 +4084,37 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
-    // Worshippers of Feawn may shoot past friendly plants.
-    if (!is_explosion && !is_enchantment()
-        && this->attitude == ATT_FRIENDLY
-        && you.religion == GOD_FEAWN
-        && mons_genus(mon->mons_species()) == MONS_PLANT
-        && mon->mons_species() != MONS_GIANT_SPORE
-        && mon->attitude == ATT_FRIENDLY)
+    // Feawn worshippers can fire through monsters of the same alignment.
+    // This means Feawn-worshipping players can fire through allied plants,
+    // and also means that feawn worshiping oklob plants can fire through
+    // plants with the same attitude.
+    bool originator_worships_feawn=false;
+
+    // Checking beam_source to decide whether the player or a monster
+    // fired the beam (so we can check their religion).  This is complicated
+    // by the fact that this beam may in fact be an explosion caused by a
+    // miscast effect.  In that case the value of beam_source may be negative
+    // (god induced miscast) or greater than NON_MONSTER (various other miscast
+    // sources).  So we check whether or not this is an explosion, and also the
+    // range of beam_source before attempting to reference env.mons with it.
+    // -cao
+    if (!is_explosion && this->beam_source == NON_MONSTER)
+        originator_worships_feawn = (you.religion == GOD_FEAWN);
+    else if (!is_explosion && beam_source >= 0 && beam_source < MAX_MONSTERS)
+        originator_worships_feawn = (env.mons[beam_source].god == GOD_FEAWN);
+
+    if (!is_enchantment()
+        && attitude == mon->attitude
+        && originator_worships_feawn
+        && mons_is_plant(mon))
     {
-        // FIXME: Messaging is kind of problematic here.
         if (!is_tracer)
-            simple_god_message(" protects your plant from harm.", GOD_FEAWN);
+        {
+            // FIXME: Could use a better message, something about dodging that
+            // doesn't sound excessively weird would be nice.
+            mprf(MSGCH_GOD, "Feawn protects %s plant from harm.",
+                 attitude == ATT_FRIENDLY ? "your" : "a");
+        }
         return (false);
     }
 
@@ -4580,6 +4600,14 @@ void bolt::affect_monster(monsters* mon)
 
     update_hurt_or_helped(mon);
     enable_attack_conducts(conducts);
+
+    // We'll say giant spore explosions don't trigger the ally attack conduct
+    // for Feawn worshipers.  Mostly because you can accidentally blow up a
+    // group of 8 plants and get placed under penance until the end of time
+    // otherwise.  I'd prefer to do this elsewhere but the beam information
+    // goes out of scope. -cao
+    if (you.religion == GOD_FEAWN && flavour == BEAM_SPORE)
+        conducts[0].enabled = false;
 
     // The beam hit.
     if (mons_near(mon))

@@ -1456,6 +1456,12 @@ int monster_die(monsters *monster, killer_type killer,
                                     true, monster);
                 }
 
+                if (mons_is_plant(monster))
+                {
+                    did_god_conduct(DID_KILL_PLANT, monster->hit_dice,
+                                    true, monster);
+                }
+
                 if (mons_is_slime(monster))
                 {
                     did_god_conduct(DID_KILL_SLIME, monster->hit_dice,
@@ -1553,10 +1559,15 @@ int monster_die(monsters *monster, killer_type killer,
             // No piety loss if god gifts killed by other monsters.
             // Also, dancing weapons aren't really friendlies.
             if (mons_friendly(monster)
-                && !mons_is_god_gift(monster)
                 && monster->type != MONS_DANCING_WEAPON)
             {
                 did_god_conduct(DID_FRIEND_DIED, 1 + (monster->hit_dice / 2),
+                                true, monster);
+            }
+
+            if (pet_kill && mons_is_plant(monster))
+            {
+                did_god_conduct(DID_ALLY_KILLED_PLANT, 1 + (monster->hit_dice / 2),
                                 true, monster);
             }
 
@@ -2846,9 +2857,19 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
         {
             // Monster types that you can't gain experience from cannot
-            // fight back.
-            if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            // fight back, so don't bother having them do so.  If you
+            // worship Feawn, create a ring of friendly plants, and try
+            // to break out of the ring by killing a plant, you'll get
+            // a warning prompt and penance only once.  Without the
+            // hostility check, the plant will remain friendly until it
+            // dies, and you'll get a warning prompt and penance once
+            // *per hit*.  This may not be the best way to address the
+            // issue, though. -cao
+            if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
+                && mon->attitude != ATT_FRIENDLY)
+            {
                 return;
+            }
 
             mon->foe = src;
 

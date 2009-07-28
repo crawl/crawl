@@ -2749,7 +2749,8 @@ bool need_auto_exclude(const monsters *mon, bool sleepy)
 
     for (unsigned i = 0; i < Options.auto_exclude.size(); ++i)
         if (Options.auto_exclude[i].matches(name)
-            && _mon_needs_auto_exclude(mon, sleepy))
+            && _mon_needs_auto_exclude(mon, sleepy)
+            && mon->attitude == ATT_HOSTILE)
         {
             return (true);
         }

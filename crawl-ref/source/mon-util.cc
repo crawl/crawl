@@ -629,11 +629,31 @@ bool mons_is_icy(int mc)
 }
 
 // Monsters considered as "slime" for Jiyva.
+bool mons_class_is_slime(int mc)
+{
+    return (mons_genus(mc) == MONS_JELLY
+            || mons_genus(mc) == MONS_GIANT_EYEBALL
+            || mons_genus(mc) == MONS_GIANT_ORANGE_BRAIN);
+}
+
 bool mons_is_slime(const monsters *mon)
 {
-    return (mons_genus(mon->type) == MONS_JELLY
-            || mons_genus(mon->type) == MONS_GIANT_EYEBALL
-            || mons_genus(mon->type) == MONS_GIANT_ORANGE_BRAIN);
+    return (mons_class_is_slime(mon->type));
+}
+
+// Monsters Feawn cares about - plants and fungi except for giant spores
+// and toadstools.
+bool mons_class_is_plant(int mc)
+{
+    return (mc != MONS_GIANT_SPORE
+               && mc != MONS_TOADSTOOL
+               && (mons_genus(mc) == MONS_PLANT
+                   || mons_genus(mc) == MONS_FUNGUS));
+}
+
+bool mons_is_plant(const monsters *mon)
+{
+    return (mons_class_is_plant(mon->type));
 }
 
 bool mons_eats_items(const monsters *mon)

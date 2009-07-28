@@ -1992,7 +1992,6 @@ static void _set_friendly_foes(bool allow_patrol = false)
     {
         monsters *mon(&menv[i]);
         if (!mon->alive() || !mons_near(mon) || !mons_friendly_real(mon)
-            || mon->has_ench(ENCH_BERSERK)
             || mon->mons_species() == MONS_GIANT_SPORE)
         {
             continue;
@@ -3808,13 +3807,13 @@ template<typename T>
 struct greater_second
 {
     // The stl priority queue is a max queue and uses < as the default
-    // comparison. We want a min queue so we have to use a > operation here.
+    // comparison.  We want a min queue so we have to use a > operation
+    // here.
     bool operator()(const T & left, const T & right)
     {
-        return left.second > right.second;
+        return (left.second > right.second);
     }
 };
-
 
 // Basically we want to break a circle into n_arcs equal sized arcs and find
 // out which arc the input point pos falls on.
@@ -3826,196 +3825,205 @@ static int _arc_decomposition(const coord_def & pos, int n_arcs)
         theta = pos.y > 0 ? PI / 2 : -PI / 2;
 
     if (theta < 0)
-        theta += 2*PI;
+        theta += 2 * PI;
 
-    float arc_angle = 2*PI / n_arcs;
+    float arc_angle = 2 * PI / n_arcs;
 
     theta += arc_angle / 2.0f;
 
-    if (theta >= 2*PI)
-        theta -= 2*PI;
+    if (theta >= 2 * PI)
+        theta -= 2 * PI;
 
     return static_cast<int> (theta / arc_angle);
 }
 
-// Place a partial ring of toadstools around the given corpse. returns the
-// number of mushrooms spawned. A return of 0 indicates no mushrooms were
-// placed -> some sort of failure mode was reached.
-static int _mushroom_ring(item_def &corpse, int & seen_count)
+int place_ring(std::vector<coord_def> & ring_points,
+                coord_def & origin,
+                mgen_data & prototype,
+                int n_arcs,
+                int arc_occupancy,
+                int & seen_count)
 {
+    std::random_shuffle(ring_points.begin(),
+                        ring_points.end());
 
-    // minimum number of mushrooms spawned on a given ring
-    unsigned min_spawn = 2;
-
-    // highest radius we will allow. 8 is LOS
-    const int max_radius = LOS_RADIUS;
-
+    int target_amount = ring_points.size();
+    int spawned_count = 0;
     seen_count = 0;
 
-    // Just want to associate a point with a distance here for convenience
+    std::vector<int> arc_counts(n_arcs, arc_occupancy);
+
+    for (unsigned i = 0;
+         spawned_count < target_amount && i < ring_points.size();
+         i++)
+    {
+        int direction = _arc_decomposition(ring_points.at(i)
+                                           - origin, n_arcs);
+
+        if (arc_counts[direction]-- <= 0)
+            continue;
+
+        prototype.pos = ring_points.at(i);
+
+        const int mushroom = create_monster(prototype, false);
+
+        if (mushroom != -1)
+        {
+            spawned_count++;
+            if (see_grid(ring_points.at(i)))
+                seen_count++;
+        }
+    }
+
+    return (spawned_count);
+}
+
+// Collect lists of points that are within LOS (under the given env map),
+// unoccupied, and not solid (walls/statues).
+void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
+                           coord_def & origin, env_show_grid & losgrid)
+{
+
+    radius_points.clear();
+    radius_points.resize(LOS_RADIUS);
+
+    // Just want to associate a point with a distance here for convenience.
     typedef std::pair<coord_def, int> coord_dist;
 
-
     // Using a priority queue because squares don't make very good circles at
-    // larger radii.
-    // Generally we will visit points in order of distance to the origin
-    // (not path distance) under distance=sqrt(x^2+y^2-1);
+    // larger radii.  We will visit points in order of increasing euclidean
+    // distance from the origin (not path distance).
     std::priority_queue<coord_dist,
                         std::vector<coord_dist>,
                         greater_second<coord_dist> > fringe;
 
-    coord_dist origin(corpse.pos, 0);
-
-    fringe.push(origin);
+    fringe.push(coord_dist(origin, 0));
 
     std::set<int> visited_indices;
 
-    int max_distance = max_radius * max_radius - 1;
+    int current_r = 1;
+    int current_thresh = current_r * (current_r + 1);
 
-    std::vector<coord_def> radius_points[max_radius];
+    int max_distance = LOS_RADIUS * LOS_RADIUS;
 
-    int max_visited = 0;
     while (!fringe.empty())
     {
         coord_dist current = fringe.top();
-        fringe.pop();
-
-        int idx = current.first.x + current.first.y * X_WIDTH;
-
-        if (!visited_indices.insert(idx).second)
-            continue;
-
-        // we're done here once we hit a point that is farther away from the
+        // We're done here once we hit a point that is farther away from the
         // origin than our maximum permissible radius.
         if (current.second > max_distance)
             break;
 
-        if (current.second > max_visited)
-            max_visited = current.second;
+        fringe.pop();
 
-        float current_distance =current.second ? sqrtf(current.second + 1) : 0;
 
-        int bound = static_cast<int> (current_distance + 0.5);
+        int idx = current.first.x + current.first.y * X_WIDTH;
+        if (!visited_indices.insert(idx).second)
+            continue;
 
-        // We don't include radius 0 as an option. This is also a good place
-        // to check if the squares is already occupied since we want to search
-        // past occupied squares but don't want to place toadstools on them.
-        if (bound > 0 && !actor_at(current.first))
+        while (current.second > current_thresh)
         {
-            radius_points[bound - 1].push_back(current.first);
+            current_r++;
+            current_thresh = current_r * (current_r + 1);
         }
+
+        // We don't include radius 0.  This is also a good place to check if
+        // the squares are already occupied since we want to search past
+        // occupied squares but don't want to consider them valid targets.
+        if (current.second && !actor_at(current.first))
+            radius_points[current_r - 1].push_back(current.first);
 
         for (adjacent_iterator i(current.first); i; ++i)
         {
             coord_dist temp(*i, current.second);
 
-            coord_def local = temp.first - origin.first;
-
-            temp.second = local.x * local.x + local.y * local.y - 1;
-
-            // Don't link to nodes with a smaller absolute distance from the
-            // origin than the current node. This is some sort of connectivity
-            // constraint, in general we don't want parts of a ring to be
-            // connected via a higher radius since rings were supposedly
-            // created by outwards expansion.
-            if (temp.second < max_visited)
+            // If the grid is out of LOS, skip it.
+            if (!see_grid(losgrid, origin, temp.first))
                 continue;
+
+            coord_def local = temp.first - origin;
+
+            temp.second = local.abs();
 
             idx = temp.first.x + temp.first.y * X_WIDTH;
 
             if (visited_indices.find(idx) == visited_indices.end()
                 && in_bounds(temp.first)
-                && mons_class_can_pass(MONS_TOADSTOOL, grd(temp.first)))
+                && !grid_is_solid(temp.first))
             {
                 fringe.push(temp);
             }
         }
 
     }
+}
+
+// Place a partial ring of toadstools around the given corpse.  Returns
+// the number of mushrooms spawned.  A return of 0 indicates no
+// mushrooms were placed -> some sort of failure mode was reached.
+static int _mushroom_ring(item_def &corpse, int & seen_count)
+{
+    // minimum number of mushrooms spawned on a given ring
+    unsigned min_spawn = 2;
+
+    seen_count = 0;
+
+    std::vector<std::vector<coord_def> > radius_points;
+
+    env_show_grid losgrid;
+    losight(losgrid, grd, corpse.pos, true);
+
+    collect_radius_points(radius_points,corpse.pos, losgrid);
 
     // So what we have done so far is collect the set of points at each radius
     // reachable from the origin with (somewhat constrained) 8 connectivity,
     // now we will choose one of those radii and spawn mushrooms at some
     // of the points along it.
+    int chosen_idx = random2(LOS_RADIUS);
 
-    int chosen_idx = random2(max_radius);
-
-    // Excluding radius 1 rings because they don't look particularly good
-    // (or at least they don't look good with target_arc_len=2sqrt(2)
-    // they look ok with arc_len=2, but that doesn't seem very good for
-    // higher radii, maybe there should be a more complicated relationship
-    // between radius and target arc length, but whatever).
-    int min_idx=1;
-
-    for (int i = 2; i < max_radius; i++, chosen_idx++)
+    unsigned max_size = 0;
+    for (unsigned i = 0; i < LOS_RADIUS; ++i)
     {
-        chosen_idx = chosen_idx % max_radius;
-
-        if (chosen_idx >= min_idx
-            && radius_points[chosen_idx].size() >= min_spawn)
+        if (radius_points[i].size() >= max_size)
         {
-           break;
+            max_size = radius_points[i].size();
+            chosen_idx = i;
         }
     }
 
-    // Couldn't find enough valid points at any radius?
+    chosen_idx = random2(chosen_idx + 1);
+
+    // Not enough valid points?
     if (radius_points[chosen_idx].size() < min_spawn)
-        return 0;
+        return (0);
 
-    std::random_shuffle(radius_points[chosen_idx].begin(),
-                        radius_points[chosen_idx].end());
+    mgen_data temp(MONS_TOADSTOOL,
+                  BEH_HOSTILE, 0, 0,
+                  coord_def(),
+                  MHITNOT,
+                  MG_FORCE_PLACE,
+                  GOD_NO_GOD,
+                  MONS_PROGRAM_BUG,
+                  0,
+                  corpse.colour);
 
-    int target_amount = radius_points[chosen_idx].size();
-    int spawned_count = 0;
+    float target_arc_len = 2 * sqrtf(2.0f);
 
-    float target_arc_len=2*sqrtf(2.0f);
-    //float target_arc_len = 2;
-
-    int n_arcs = static_cast<int> (ceilf(2*PI * (chosen_idx + 1)
+    int n_arcs = static_cast<int> (ceilf(2 * PI * (chosen_idx + 1)
                                    / target_arc_len));
 
-    int mushrooms_per_arc = 1;
+    int spawned_count = place_ring(radius_points[chosen_idx], corpse.pos, temp,
+                                   n_arcs, 1, seen_count);
 
-    std::vector<int> arc_counts(n_arcs, mushrooms_per_arc);
-
-    for (unsigned i = 0;
-         spawned_count < target_amount && i < radius_points[chosen_idx].size();
-         i++)
-    {
-        int direction = _arc_decomposition(radius_points[chosen_idx].at(i)
-                                           - origin.first, n_arcs);
-
-        if (arc_counts[direction]-- <= 0)
-            continue;
-
-        const int mushroom = create_monster(
-                             mgen_data(MONS_TOADSTOOL,
-                                       BEH_HOSTILE, 0, 0,
-                                       radius_points[chosen_idx].at(i),
-                                       MHITNOT,
-                                       MG_FORCE_PLACE,
-                                       GOD_NO_GOD,
-                                       MONS_PROGRAM_BUG,
-                                       0,
-                                       corpse.colour),
-                                       false);
-
-        if (mushroom != -1)
-        {
-            spawned_count++;
-            if (see_grid(radius_points[chosen_idx].at(i)))
-                seen_count++;
-        }
-    }
-
-    return spawned_count;
+    return (spawned_count);
 }
 
-// Try to spawn 'target_count' mushrooms around the position of 'corpse'.
-// Returns the number of mushrooms actually spawned.
-// Mushrooms radiate outwards from the corpse following bfs with 8-connectivity.
-// Could change the expansion pattern by using a priority queue for
-// sequencing (priority = distance from origin under some metric).
+// Try to spawn 'target_count' mushrooms around the position of
+// 'corpse'.  Returns the number of mushrooms actually spawned.
+// Mushrooms radiate outwards from the corpse following bfs with
+// 8-connectivity.  Could change the expansion pattern by using a
+// priority queue for sequencing (priority = distance from origin under
+// some metric).
 int spawn_corpse_mushrooms(item_def &corpse,
                            int target_count,
                            int & seen_targets,
@@ -4025,7 +4033,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
     if (target_count == 0)
         return 0;
 
-    int c_size=8;
+    int c_size = 8;
     int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
     int placed_targets = 0;
@@ -4034,32 +4042,32 @@ int spawn_corpse_mushrooms(item_def &corpse,
     std::set<int> visited_indices;
 
     // Slight chance of spawning a ring of mushrooms around the corpse (and
-    // skeletonizing it) if the corpse square is unoccupied.
+    // skeletonising it) if the corpse square is unoccupied.
     if (!actor_at(corpse.pos) && one_chance_in(100))
     {
         int ring_seen;
         // It's possible no reasonable ring can be found, in that case we'll
-        // give up and just place a toadstool on top of the corpse (probably)
-        int res=_mushroom_ring(corpse, ring_seen);
+        // give up and just place a toadstool on top of the corpse (probably).
+        int res = _mushroom_ring(corpse, ring_seen);
 
         if (res)
         {
-            corpse.special=0;
+            corpse.special = 0;
+
             if (see_grid(corpse.pos))
                 mpr("A ring of toadstools grow before your very eyes.");
             else if (ring_seen > 1)
                 mpr("Some toadstools grow in a peculiar arc.");
-            else if (ring_seen >0)
+            else if (ring_seen > 0)
                 mpr("A toadstool grows.");
 
             seen_targets = -1;
 
-
-            return res;
+            return (res);
         }
     }
 
-    visited_indices.insert(X_WIDTH*corpse.pos.y + corpse.pos.x);
+    visited_indices.insert(X_WIDTH * corpse.pos.y + corpse.pos.x);
     fringe.push(corpse.pos);
 
     while (!fringe.empty())
@@ -4069,7 +4077,8 @@ int spawn_corpse_mushrooms(item_def &corpse,
         fringe.pop();
 
         actor * occupant = NULL;
-        // is this square occupied by a non mushroom?
+
+        // Is this square occupied by a non mushroom?
         if ((occupant = actor_at(current))
             && occupant->mons_species() != MONS_TOADSTOOL)
         {
@@ -4102,7 +4111,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
                 {
                     coord_def offset = corpse.pos - current;
 
-                    int dist = static_cast<int> (sqrtf(offset.abs()) + 0.5);
+                    int dist = static_cast<int>(sqrtf(offset.abs()) + 0.5);
 
                     int time_left = random2(8) + dist * 8 + 1;
 
@@ -4116,24 +4125,22 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
                 placed_targets++;
                 if (see_grid(current))
-                {
                     seen_targets++;
-                }
             }
             else
                 continue;
         }
 
-        // We're done here if we place the desired number of mushrooms.
+        // We're done here if we placed the desired number of mushrooms.
         if (placed_targets == target_count)
             break;
 
-        // wish adjacent_iterator had a random traversal
+        // Wish adjacent_iterator had a random traversal.
         std::random_shuffle(permutation, permutation+c_size);
 
         for (int count = 0; count < c_size; ++count)
         {
-            coord_def temp=current + Compass[permutation[count]];
+            coord_def temp = current + Compass[permutation[count]];
 
             int index = temp.x + temp.y * X_WIDTH;
 
@@ -4148,12 +4155,12 @@ int spawn_corpse_mushrooms(item_def &corpse,
         }
     }
 
-    return placed_targets;
+    return (placed_targets);
 }
 
 int mushroom_prob(item_def & corpse)
 {
-    int low_threshold  = 5;
+    int low_threshold = 5;
     int high_threshold = FRESHEST_CORPSE - 5;
 
     // Expect this many trials over a corpse's lifetime since this function
@@ -4161,32 +4168,32 @@ int mushroom_prob(item_def & corpse)
     int step_size = 10;
     float total_trials = (high_threshold - low_threshold) / step_size;
 
-    // chance of producing no mushrooms (not really because of weight_factor
-    // below)
-    float p_failure = .5;
+    // Chance of producing no mushrooms (not really because of weight_factor
+    // below).
+    float p_failure = 0.5f;
 
     float trial_prob_f = 1 - powf(p_failure, 1.0f / total_trials);
 
     // The chance of producing mushrooms depends on the weight of the
-    // corpse involved. Humans weigh 550 so we will take that as the
+    // corpse involved.  Humans weigh 550 so we will take that as the
     // base factor here.
-    float weight_factor = item_mass(corpse)/550.0f;
+    float weight_factor = item_mass(corpse) / 550.0f;
 
     trial_prob_f *= weight_factor;
 
-    int trial_prob = static_cast<int> (100* trial_prob_f );
+    int trial_prob = static_cast<int>(100 * trial_prob_f);
 
-    return trial_prob;
+    return (trial_prob);
 }
 
-
-// Randomly decide whether or not to spawn a mushroom over the given corpse
-// Assumption: this is called before the rotting away logic in update_corpses.
-// Some conditions in this function may set the corpse timer to 0, assuming
-// that the corpse will be turned into a skeleton/destroyed on this update.
+// Randomly decide whether or not to spawn a mushroom over the given
+// corpse.  Assumption: this is called before the rotting away logic in
+// update_corpses.  Some conditions in this function may set the corpse
+// timer to 0, assuming that the corpse will be turned into a
+// skeleton/destroyed on this update.
 static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 {
-    // We won't spawn a mushroom within 10 turns of the corpse being created
+    // We won't spawn a mushroom within 10 turns of the corpse's being created
     // or rotting away.
     int low_threshold  = 5;
     int high_threshold = FRESHEST_CORPSE - 5;

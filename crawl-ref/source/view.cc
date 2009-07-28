@@ -993,6 +993,29 @@ void slime_convert(monsters* monster)
     }
 }
 
+void feawn_neutralise(monsters* monster)
+{
+    if (you.religion == GOD_FEAWN && mons_is_plant(monster)
+        && !mons_is_summoned(monster)
+        && !mons_wont_attack(monster)
+        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
+    {
+        if (!player_under_penance())
+        {
+            // We must call remove_auto_exclude before neutralizing the
+            // plant because remove_auto_exclude only removes exclusions
+            // it thinks were caused by auto-exclude, and
+            // auto-exclusions now check for ATT_HOSTILE.  Oh, what a
+            // tangled web, etc.
+            remove_auto_exclude(monster, false);
+
+            monster->flags |= MF_ATT_CHANGE_ATTEMPT;
+            feawn_neutralise_plant(monster);
+            stop_running();
+        }
+    }
+}
+
 void handle_seen_interrupt(monsters* monster)
 {
     if (mons_is_unknown_mimic(monster))
@@ -1341,6 +1364,7 @@ void monster_grid(bool do_updates)
             _good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
             slime_convert(monster);
+            feawn_neutralise(monster);
         }
     }
 }

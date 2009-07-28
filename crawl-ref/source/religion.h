@@ -115,6 +115,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
 void beogh_convert_orc(monsters *orc, bool emergency,
                        bool converted_by_follower = false);
 void jiyva_convert_slime(monsters* slime);
+void feawn_neutralise_plant(monsters *plant);
 bool is_holy_item(const item_def& item);
 bool is_evil_item(const item_def& item);
 bool is_chaotic_item(const item_def& item);
@@ -157,6 +158,7 @@ bool is_undead_slave(const monsters* mon);
 bool is_yred_undead_slave(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);
 bool is_fellow_slime(const monsters* mon);
+bool is_neutral_plant(const monsters* mon);
 bool is_good_lawful_follower(const monsters* mon);
 bool is_good_follower(const monsters* mon);
 bool is_follower(const monsters* mon);

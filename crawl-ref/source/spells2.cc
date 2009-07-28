@@ -2038,7 +2038,7 @@ void point_point(std::vector<coord_def> & origins,
 // to calculate the distances in question. In practice it should be called for
 // at most 7 searches since 8 (all adjacent free, > 8 monsters in view) can be
 // special cased easily.
-bool prioritize_adjacent(coord_def & target, std::vector<coord_def> & candidates)
+bool prioritise_adjacent(coord_def & target, std::vector<coord_def> & candidates)
 {
     radius_iterator los_it(target, LOS_RADIUS, true, true, true);
 
@@ -2051,8 +2051,6 @@ bool prioritize_adjacent(coord_def & target, std::vector<coord_def> & candidates
         if (hostile && hostile->attitude == ATT_HOSTILE)
             mons_positions.push_back(hostile->pos());
     }
-
-    mprf("found %d hostiles", mons_positions.size());
 
     if (mons_positions.empty())
     {
@@ -2125,9 +2123,7 @@ bool plant_ring_from_fruit()
 
     if ((int) adjacent.size() > possible_count)
     {
-        prioritize_adjacent(you.pos(), adjacent);
-
-        //::update_screen();
+        prioritise_adjacent(you.pos(), adjacent);
     }
 
     unsigned target_count =
@@ -2224,8 +2220,13 @@ int rain(coord_def & target)
     return (spawned_count);
 }
 
-void corpse_spores()
+// Destroy corpses in the player's LOS (first corpse on a stack only)
+// and make 1 giant spore per corpse.  Spores are given the input as
+// their starting behavior; the function returns the number of corpses
+// processed.
+int corpse_spores(beh_type behavior)
 {
+    int count = 0;
     for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true); rad;
          ++rad)
     {
@@ -2234,9 +2235,10 @@ void corpse_spores()
             if (stack_it->base_type == OBJ_CORPSES
                 && stack_it->sub_type == CORPSE_BODY)
             {
+                count++;
 
                 create_monster(mgen_data(MONS_GIANT_SPORE,
-                                         BEH_FRIENDLY,
+                                         behavior,
                                          0,
                                          0,
                                          *rad,
@@ -2253,6 +2255,8 @@ void corpse_spores()
             }
         }
     }
+
+    return (count);
 }
 
 typedef std::pair<monsters *, int> monster_cost;
@@ -2343,12 +2347,6 @@ bool evolve_flora()
         points -= current_target.second;
 
         int base_species = current_plant->mons_species();
-        coord_def target_square = current_plant->pos();
-
-        // Remove the original plant.
-        // XXX: Why do we destroy the old and create a new plant
-        //      rather than simply upgrade the old plant?
-        monster_die(current_plant, KILL_MISC, NON_MONSTER, true);
 
         monster_type new_species = MONS_PLANT;
         switch (base_species)
@@ -2369,9 +2367,11 @@ bool evolve_flora()
             break;
         };
 
-        rc = create_monster(mgen_data(new_species,
-                                      BEH_FRIENDLY, 0, 0, target_square,
-                                      MHITNOT, MG_FORCE_PLACE, GOD_FEAWN));
+        current_plant->upgrade_type(new_species, true, true);
+
+        current_plant->god = GOD_FEAWN;
+        current_plant->attitude = ATT_FRIENDLY;
+        current_plant->flags |= MF_CREATED_FRIENDLY;
 
         // We can potentially upgrade toadstools a second time.
         if (base_species == MONS_TOADSTOOL && rc != -1)

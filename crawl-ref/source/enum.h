@@ -744,6 +744,8 @@ enum conduct_type
     DID_DESTROY_ORCISH_IDOL,            // Beogh
     DID_CREATE_LIFE,                    // unused
     DID_KILL_SLIME,                     // Jiyva
+    DID_KILL_PLANT,                     // Feawn
+    DID_ALLY_KILLED_PLANT,              // Feawn
 
     NUM_CONDUCTS
 };
