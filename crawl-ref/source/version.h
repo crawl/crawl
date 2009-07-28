@@ -32,7 +32,7 @@
 
 #define CRAWL "Dungeon Crawl Stone Soup"
 
-#define VER_NUM  "0.5"
+#define VER_NUM  "0.5.1"
 #define VER_QUAL ""
 
 // Undefine for official releases.

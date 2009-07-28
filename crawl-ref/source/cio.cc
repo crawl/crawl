@@ -22,12 +22,24 @@ extern int unixcurses_get_vi_key(int keyin);
 
 static keycode_type _numpad2vi(keycode_type key)
 {
+#ifndef USE_TILE
+    key = unixcurses_get_vi_key(key);
+#endif
     switch(key)
     {
     case CK_UP:    key = 'k'; break;
     case CK_DOWN:  key = 'j'; break;
     case CK_LEFT:  key = 'h'; break;
     case CK_RIGHT: key = 'l'; break;
+    case 1001:     key = 'b'; break;
+    case 1002:     key = 'j'; break;
+    case 1003:     key = 'n'; break;
+    case 1004:     key = 'h'; break;
+    case 1005:     key = '.'; break;
+    case 1006:     key = 'l'; break;
+    case 1007:     key = 'y'; break;
+    case 1008:     key = 'k'; break;
+    case 1009:     key = 'u'; break;
     }
     if (key >= '1' && key <= '9')
     {

@@ -1,6 +1,80 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20071202 for Dungeon Crawl Stone Soup 0.3.3.)
+(Last updated on 20090728 for Dungeon Crawl Stone Soup 0.5.1.)
+
+Getting DCSS to run
+-------------------
+
+This file describes how to compile a runtime executable of DCSS from the
+source code. If you're trying to compile Crawl yourself, skip ahead to the
+next section, "Building Dungeon Crawl Stone Soup".
+
+If, however, you're having trouble getting a precompiled binary to run:
+
+1) Check whether you've downloaded and extracted the correct version.
+
+    Platform        Tiles?          Download package
+    --------        ------          ----------------
+    Windows         yes             stone_soup-VERSION-tiles-win32.zip
+    Windows         no              stone_soup-VERSION-win32.zip
+    Mac/OSX         yes             stone_soup-VERSION-tiles-osx.zip
+                                    or stone_soup-VERSION-tiles-osx-app.dmg
+    Mac/OSX         no              stone_soup-VERSION-osx.zip
+                                    or stone_soup-VERSION-osx-app.dmg
+    DOS             no              stone_soup-VERSION-dos.zip
+    Source code     yes             stone_soup-VERSION-src.zip
+                                    or stone_soup-VERSION-src.tbz2
+
+2) Try removing/renaming your saves/ directory in case older saves aren't
+   recognized anymore.
+
+3) If you're playing on a Mac, maybe the following instructions (provided
+   by atastypie) will help you:
+
+   * Download Stone Soup 0.5.x Tiles binaries for OS X.
+   * Extract to your Desktop.
+   * Download Fink 0.9.0.
+   * Mount the Fink image.
+   * Run the Fink installer from the image.
+   * It will ask for your administrator password. Type it and hit Enter.
+   * Start Terminal.
+   * Type "sudo apt-get install libpng3 freetype2 sdl sdl-image".
+   * It will ask for your administrator password. Type it and hit Enter.
+   * Type "cd Desktop/ston" => Tab => Enter. Hitting Tab will auto-complete
+     the folder name.
+     (This is again assuming you extracted Crawl 0.5.x onto your Desktop.)
+   * Type "./crawl_tiles".
+
+   Edit: This all assumes you have developer tools / xcode installed off of
+         your OSX cd like I do. If you don't, and you get through all this and
+         it still doesn't work, install it. It will be in the Tools directory
+         of your Leopard install disc. This shouldn't be a requirement to just
+         run the game, though.
+
+   Also, some players reported error message like the following:
+
+      dyld: Library not loaded: /sw/lib/libpng12.0.dylib
+      Referenced from:
+      /PATH/stone_soup-0.5-tiles-osx/crawl_tiles
+      Reason: image not found
+      Trace/BPT trap
+      logout
+
+      [Process completed]
+
+   ... to which atastypie (again!) replied:
+
+   The missing PNG error occurs if you try and run the tiles version by
+   double clicking on it. You actually need to run X11 -> open a terminal
+   -> go to the crawl directory -> ./crawl_tiles"
+
+
+If you still can't get Crawl to run, you can ask for further help on
+rec.games.roguelike.misc. Please try to be as detailed as possible about any
+error messages you're getting.
+
+The rest of the file deals with compiling from the source.
+
 
 Building Dungeon Crawl Stone Soup
 ---------------------------------
@@ -256,17 +330,20 @@ Building for DOS (djgpp)
 
 * When the build is done, crawl.exe should be in the source directory.
 
+
 Building Tiles versions
 -----------------------
 
 * For Windows builds, run
-         make MAKEFILE=makefile_tiles.mgw
+        make MAKEFILE=makefile_tiles.mgw
+
+  See the next section for step-by-step instructions.
 
 * For Linux builds, run
-         make MAKEFILE=makefile_tiles.unix
+        make MAKEFILE=makefile_tiles.unix
 
 * For Mac OS X builds, run
-         make MAKEFILE=makefile_tiles.unix OSX=y
+        make MAKEFILE=makefile_tiles.unix OSX=y
 
 * If you compiled the ASCII binary before you'll need to run make clean
   before running make.
@@ -290,6 +367,61 @@ Building Tiles versions
 * If you want both ASCII and Tiles binaries you need to compile them
   separately, rename one of them, and copy them into the same Crawl
   directory.
+
+
+Building Tiles on Windows (MinGW)
+---------------------------------
+The following instructions were submitted by zebez.
+
+The following assumes you have a working install of MinGW and is only tested
+on 4.4.0. See "Building on Windows (MinGW)" above to find out where to get it.
+
+You need:
+* freetype-2.3.5-1-bin.zip
+  (http://gnuwin32.sourceforge.net/packages/freetype.htm)
+
+Get the Binaries zip file.
+Extract it to your MinGW folder.
+In your MinGW include/ folder go into "freetype2" and move "freetype" to your
+MinGW include/ folder. Delete the "freetyp2" folder.
+
+* libpng-1.2.37-bin.zip
+* libpng-1.2.37-lib.zip
+* zlib-1.2.3-lib.zip
+  (http://sourceforge.net/projects/gnuwin32/files/)
+
+Extract them your MinGW folder.
+
+* SDL-devel-1.2.13-mingw32.tar.gz
+  (http://www.libsdl.org/download-1.2.php)
+
+Extract to your MinGW folder.
+If there is a folder named SDL-1.2.13 in your MinGW folder now, move all its
+contents to your MinGW root folder.
+
+* SDL_image-devel-1.2.7-VC9.zip
+  (http://www.libsdl.org/projects/SDL_image/)
+
+Extract to your MinGW folder.
+If there is a folder named SDL_image-1.2.7 in your MinGW folder now, move all
+its contents to your MinGW root folder.
+Move these dll files from your MinGW lib/ folder to your MinGW bin/ folder:
+libpng12-0.dll, SDL_image.dll and zlib1.dll.
+
+Then run, from Stonesoup source folder:
+    mingw32-make -f makefile_tiles.mgw install
+
+After a while it should have compiled to source/rel/. Now to actually run it
+you need to copy these dlls from MinGW bin/ to the source/rel/ folder:
+freetype6.dll, SDL.dll, libpng12-0.dll, SDL_image.dll and zlib1.dll.
+
+Depending on your compiler options you might also need libgcc_s_dw2-1.dll,
+also from the MinGW bin/ folder. You can disable the latter by adding
+-static-libgcc to the compiler options in the makefile.
+
+You can suppress the compilation warnings by adding
+-Wno-parentheses -Wno-array-bounds to the makefile. You'll still get some
+warnings, but everything should work fine.
 
 *****************************************************************************
 Data files
