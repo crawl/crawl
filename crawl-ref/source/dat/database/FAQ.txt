@@ -131,6 +131,7 @@ type you are already highly skilled with to another one that you have no
 skill in is a waste of time. The brands may greatly differ in damage output
 but you can get a good idea by bashing a few comparatively harmless
 monsters with each and comparing the results.
+
 Of the enchantments, the second value (damage) is usually more important
 than the first (accuracy) unless you hardly ever manage to hit with a
 weapon.
@@ -384,6 +385,7 @@ the next version) online on http://crawl.develz.org, or you can download
 Windows binaries from the same site. Note that trunk may be buggy, and that
 many changes will invalidate your saved games. If that doesn't bother you,
 go ahead and play!
+
 Be sure to leave some feedback/suggestions/bug reports on the SourceForge
 trackers. When doing so please mention the version (r?????) you're
 currently playing in case the bug's already been fixed or the feature

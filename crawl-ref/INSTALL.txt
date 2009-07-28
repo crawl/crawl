@@ -34,6 +34,7 @@ If, however, you're having trouble getting a precompiled binary to run:
    * Download Stone Soup 0.5.x Tiles binaries for OS X.
    * Extract to your Desktop.
    * Download Fink 0.9.0.
+     (http://www.finkproject.org/download/index.php?phpLang=en)
    * Mount the Fink image.
    * Run the Fink installer from the image.
    * It will ask for your administrator password. Type it and hit Enter.
@@ -66,7 +67,7 @@ If, however, you're having trouble getting a precompiled binary to run:
 
    The missing PNG error occurs if you try and run the tiles version by
    double clicking on it. You actually need to run X11 -> open a terminal
-   -> go to the crawl directory -> ./crawl_tiles"
+   -> go to the crawl directory -> ./crawl_tiles
 
 
 If you still can't get Crawl to run, you can ask for further help on
