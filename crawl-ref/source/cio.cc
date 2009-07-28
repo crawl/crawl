@@ -25,7 +25,7 @@ static keycode_type _numpad2vi(keycode_type key)
 #ifndef USE_TILE
     key = unixcurses_get_vi_key(key);
 #endif
-    switch(key)
+    switch (key)
     {
     case CK_UP:    key = 'k'; break;
     case CK_DOWN:  key = 'j'; break;
