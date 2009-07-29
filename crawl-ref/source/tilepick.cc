@@ -2710,7 +2710,8 @@ int tileidx_zap(int colour)
 static inline void _finalize_tile(unsigned int *tile,
                                   unsigned char wall_flv,
                                   unsigned char floor_flv,
-                                  unsigned char special_flv)
+                                  unsigned char special_flv,
+                                  coord_def gc)
 {
     int orig = (*tile) & TILE_FLAG_MASK;
     int flag = (*tile) & (~TILE_FLAG_MASK);
@@ -2732,14 +2733,12 @@ static inline void _finalize_tile(unsigned int *tile,
         (*tile) = wall_flv;
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
         (*tile) = orig + std::min((int)special_flv, 3);
-    else if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD)
-    {
-        // Tiles may change from turn to turn.
-        (*tile) = orig + random2(tile_dngn_count(orig));
-    }
     else if (orig < TILE_DNGN_MAX)
     {
-        // Tile flavour is fixed.
+        // Some tiles may change from turn to turn, but only if in view.
+        if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD && see_grid(gc))
+            env.tile_flv(gc).special = random2(256);
+
         (*tile) = orig + (special_flv % tile_dngn_count(orig));
     }
 
@@ -4489,7 +4488,8 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 special_flv = env.tile_flv(gc).special;
             }
 
-            _finalize_tile(&tileb[count+1], wall_flv, floor_flv, special_flv);
+            _finalize_tile(&tileb[count+1], wall_flv, floor_flv, special_flv,
+                           gc);
 
             if (is_excluded(gc))
             {

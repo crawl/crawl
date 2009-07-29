@@ -33,7 +33,7 @@ for those the list begins with step 2.
     concentrate on the important ones (crashes and gamebreakers), but you
     might also want to handle the trivial ones for extra polishing.
     If you add any last minute feature or bug fixes doublecheck everything,
-    so you don't accidentally introduce new bug, and wait at least another
+    so you don't accidentally introduce new bugs, and wait at least another
     day for potential bug reports to roll in.
 
     Reread the entire documentation to make sure it's up to date.
