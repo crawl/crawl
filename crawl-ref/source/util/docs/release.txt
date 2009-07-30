@@ -70,19 +70,7 @@ for those the list begins with step 2.
     important bug fixes and happen before the release took place, have to be
     merged into trunk AND branch AND the corresponding tag.
 
-8.  Create a new release on Sourceforge
-    Requires SF permissions for file releases.
-
-    The release is generally named by the version number, i.e. 0.X.
-    Once it is created, edit the new release:
-        * Paste change log and notes into the corresponding fields.
-        * Set status to Hidden.
-    Use an older release as a guideline (but don't actually modify it!)
-
-    See https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download
-    for some rough explanation of this and some of the following steps.
-
-9.  Checkout the release tag
+8.  Checkout the release tag
     svn co https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/tags/stone_soup-0.X
 
     Do a clean checkout into a new folder, so you don't get any compilation
@@ -90,18 +78,33 @@ for those the list begins with step 2.
     build the binaries. If you want you can do some more sanity testing but it
     shouldn't be necessary anymore.
 
-10. Upload the files to Sourceforge
-    For this, you could use rsync (on Linux) or FTP.
+9.  Upload the files to Sourceforge
+    Probably requires SF permissions for file releases.
+
+    You could use for example rsync (on Linux) or FTP.
     See https://sourceforge.net/apps/trac/sourceforge/wiki/File%20management%20service
     for reference. Compare the file sizes to make sure the upload went
     correctly.
 
-11. Edit the release (again)
-    On Sourceforge edit the release, select the files you just uploaded, then
-    change their properties. Again, use an older release for reference.
-    Change release status to Active.
+    If using rsync, the correct command is:
+    rsync -avP -e ssh FILENAME USERNAME,crawl-ref@frs.sourceforge.net:/home/frs/project/c/cr/crawl-ref/
 
-12. Update the homepage
+10. Create a new release in Sourceforge's file release system
+    Requires SF permissions for file releases.
+
+    * Click on Project Admin -> File Manager
+    * Create a new folder under "Stone Soup" named by version number -> 0.X.y
+    * Right-click on the uploaded files to Cut and later Paste them into the
+      newly created folder.
+    * Click on a file to change its settings.
+    * Mark a file as default for a given platform, so the "Download Now" link
+      can refer the user to the most fitting file for their system.
+
+    You can use an older release as a guideline (but don't actually modify it!)
+    See https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download
+    for some more detailed explanations.
+
+11. Update the homepage
     ssh -t username,crawl-ref@shell.sourceforge.net create
 
     Go to /home/groups/c/cr/crawl-ref/htdocs.
@@ -110,10 +113,10 @@ for those the list begins with step 2.
     to the most recent release) and add a new news item. For the latter, use
     <a href="0.X.txt">text</a> as a link to the change log.
 
-13. Announce the release
+12. Announce the release
     Post a release announcement to rec.games.roguelike.misc and
     rec.games.roguelike.announce. Also send an email over crawl-ref-discuss.
     If you want you can also write a news item on Sourceforge.
 
-14. Lean back and enjoy the excitement
+13. Lean back and enjoy the excitement
     -- until the first bug reports roll in. ;)
