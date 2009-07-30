@@ -3451,7 +3451,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Chaos",
                 "Desecrate Orcish Remains", "Destroy Orcish Idol",
-                "Create Life", "Kill Slime"
+                "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
