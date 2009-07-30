@@ -3073,7 +3073,8 @@ void xom_acts(bool niceness, int sever, int tension)
 
 static void _xom_check_less_runes(int runes_gone)
 {
-    if (player_in_branch(BRANCH_HALL_OF_ZOT)
+    if (you.opened_zot
+        || player_in_branch(BRANCH_HALL_OF_ZOT)
         || !(branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB))
     {
         return;
