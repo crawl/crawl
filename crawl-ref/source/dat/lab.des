@@ -231,7 +231,7 @@ ENDMAP
 # One layer of floor space *must* surround the minivault, or the player could
 # be trapped in the labyrinth (the dummy is exempt from this requirement).
 #
-# These minivaults can be placed anywhere onto the labyrinth, making for 
+# These minivaults can be placed anywhere onto the labyrinth, making for
 # easier navigation (as the number of connections increases) but can also add
 # to confusion or despair (use teleportation very sparingly, and abstain from
 # unthematic monster sets).
@@ -267,7 +267,7 @@ MAP
 .......
 ..b.b..
 .bb.bb.
-...F...
+...T...
 .bb.bb.
 ..b.b..
 .......
