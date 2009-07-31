@@ -523,6 +523,9 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     num_runes         = se.num_runes;
     kills             = se.kills;
     maxed_skills      = se.maxed_skills;
+    gold              = se.gold;
+    gold_spent        = se.gold_spent;
+    gold_found        = se.gold_found;
 }
 
 bool scorefile_entry::parse(const std::string &line)
