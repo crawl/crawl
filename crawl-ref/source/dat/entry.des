@@ -567,7 +567,7 @@ ENDMAP
 
 # Notes: chances are high that there is a shallow water path. Even if
 # there is none, you can always see the door on the other side.
-NAME: lemuel_005_c
+NAME:    lemuel_005_c
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {}, ABC
@@ -2148,7 +2148,7 @@ ENDMAP
 # Arbitrary 3
 #
 NAME:    david_entry_033_a
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: TV
 WEIGHT:  5
@@ -2169,7 +2169,7 @@ xxxx..x..xxxx
 ENDMAP
 
 NAME:   david_entry_033_b
-TAGS:   entry
+TAGS:   entry no_monster_gen
 ORIENT: float
 WEIGHT: 5
 MAP
@@ -2649,7 +2649,7 @@ ENDMAP
 ##############################################################################
 # Just another court
 NAME:    david_entry_047
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(, TVG
 MAP
@@ -2729,7 +2729,7 @@ ENDMAP
 ##############################################################################
 # For rent
 NAME:    david_entry_050
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: [>, {(, T), TcGv, XY
 SUBST:   ':.x, X=+=x, Y=+=x
@@ -2832,7 +2832,7 @@ ENDMAP
 ##############################################################################
 # Refuge
 NAME:   david_entry_054
-TAGS:   entry
+TAGS:   entry no_monster_gen
 ORIENT: float
 SUBST:  c:xxxc, %:%.T, T:TGv.
 MAP
@@ -3079,7 +3079,7 @@ ENDMAP
 ##############################################################################
 # Simpleton II
 NAME:    david_entry_059
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 ITEM:    nothing, nothing
 SHUFFLE: =+, TVG, {[
@@ -3477,7 +3477,7 @@ ENDMAP
 ##############################################################################
 # Caged fury
 NAME:    david_entry_070
-TAGS:    entry no_rotate
+TAGS:    entry no_rotate no_monster_gen
 MONS:    w:30 nothing / giant cockroach / w:2 worm
 MONS:    w:30 nothing / ooze
 MONS:    w:20 nothing / jackal / rat
@@ -3614,7 +3614,7 @@ ENDMAP
 # From Cave to Minitemple
 #
 NAME:    erik_entry_001_a
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 WEIGHT:  1
 SHUFFLE: {[(
@@ -3641,7 +3641,7 @@ cccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    erik_entry_001_b
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 MONS:    gnoll
 WEIGHT:  2
@@ -3668,7 +3668,7 @@ cccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    erik_entry_001_c
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 MONS:    centaur, orc
 WEIGHT:  2
@@ -3695,7 +3695,7 @@ cccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    erik_entry_001_d
-TAGS:    entry
+TAGS:    entry no_monster_gen
 WEIGHT:  2
 ORIENT:  float
 MONS:    orc
