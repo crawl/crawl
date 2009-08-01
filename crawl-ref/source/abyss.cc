@@ -800,7 +800,7 @@ static bool _is_crowded_square(const coord_def &c)
 static bool _is_sealed_square(const coord_def &c)
 {
     for (adjacent_iterator ai(c); ai; ++ai)
-        if ( !grid_is_opaque(grd(c)) )
+        if ( !grid_is_opaque(grd(*ai)) )
             return (false);
 
     return (true);
