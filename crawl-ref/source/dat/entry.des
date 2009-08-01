@@ -50,7 +50,7 @@ KFEAT:   T = net trap
 # it had an unnerving effect on me the one time it happened by chance
 # ("Ack! Now I'm trapped too! Help!") so I coded it in. ^.^
 NSUBST:  M = 2=E / *=M E:2
-KFEAT:   E = shaft trap
+KFEAT:   E = teleport trap
 KFEAT:   M = shallow_water
 KFEAT:   N = shallow_water
 KFEAT:   O = shallow_water
