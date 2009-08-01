@@ -262,7 +262,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_002
 TAGS:   uniq_ice_cave
-DEPTH:  14-24
+DEPTH:  D:14-24
 ORIENT: float
 : ice_cave_portal(_G)
 MONS:   ice statue
