@@ -1025,6 +1025,7 @@ TAGS:    entry no_rotate
 ORIENT:  float
 SHUFFLE: {[(, cxxx
 SUBST:   T = TVVVV
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccc@ccccccccccccccc
 cccc......................cccc
@@ -1107,6 +1108,7 @@ SUBST:    X = = c:2
 SUBST:    Y=c, Z=c
 SUBST:    ?=c., !=ccc.
 SHUFFLE:  cxxx
+KMASK:    T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[!.!c...cc.??...c?....................c
@@ -2148,10 +2150,11 @@ ENDMAP
 # Arbitrary 3
 #
 NAME:    david_entry_033_a
-TAGS:    entry no_monster_gen
+TAGS:    entry
 ORIENT:  float
 SHUFFLE: TV
 WEIGHT:  5
+KMASK:   T = no_monster_gen
 MAP
   xx..@..xx
  xx...x...xx
@@ -2169,9 +2172,10 @@ xxxx..x..xxxx
 ENDMAP
 
 NAME:   david_entry_033_b
-TAGS:   entry no_monster_gen
+TAGS:   entry
 ORIENT: float
 WEIGHT: 5
+KMASK:  T = no_monster_gen
 MAP
   xx..@..xx
  xx...x...xx
@@ -2649,9 +2653,10 @@ ENDMAP
 ##############################################################################
 # Just another court
 NAME:    david_entry_047
-TAGS:    entry no_monster_gen
+TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(, TVG
+KMASK:   T = no_monster_gen
 MAP
 xxxxx.@.xxxxx
 x...........x
@@ -2729,10 +2734,11 @@ ENDMAP
 ##############################################################################
 # For rent
 NAME:    david_entry_050
-TAGS:    entry no_monster_gen
+TAGS:    entry
 ORIENT:  float
 SHUFFLE: [>, {(, T), TcGv, XY
 SUBST:   ':.x, X=+=x, Y=+=x
+KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxxxxxxxxxx..@
 x'''''''xxxxxxxxxx...
@@ -2832,9 +2838,10 @@ ENDMAP
 ##############################################################################
 # Refuge
 NAME:   david_entry_054
-TAGS:   entry no_monster_gen
+TAGS:   entry
 ORIENT: float
 SUBST:  c:xxxc, %:%.T, T:TGv.
+KMASK:  T = no_monster_gen
 MAP
 .....................
 .....................
@@ -3079,11 +3086,12 @@ ENDMAP
 ##############################################################################
 # Simpleton II
 NAME:    david_entry_059
-TAGS:    entry no_monster_gen
+TAGS:    entry
 ORIENT:  float
 ITEM:    nothing, nothing
 SHUFFLE: =+, TVG, {[
 SUBST:   c:cxx
+KMASK:   T = no_monster_gen
 MAP
 xx@...@xxxxxxxx
 xx+xxx+xxxxxxxx
@@ -3477,7 +3485,7 @@ ENDMAP
 ##############################################################################
 # Caged fury
 NAME:    david_entry_070
-TAGS:    entry no_rotate no_monster_gen
+TAGS:    entry no_rotate
 MONS:    w:30 nothing / giant cockroach / w:2 worm
 MONS:    w:30 nothing / ooze
 MONS:    w:20 nothing / jackal / rat
@@ -3495,6 +3503,7 @@ SUBST:   a=mx, b=mx, c=mx, d=mx, e=mx
 SUBST:   A:mx, B:mx, C:mx, D:mx, E:mx
 SUBST:   ===++
 SHUFFLE: xc, 123
+KMASK:   T = no_monster_gen
 MAP
 .................
 .xxxxxxxxxxxxxxx.
@@ -3614,12 +3623,13 @@ ENDMAP
 # From Cave to Minitemple
 #
 NAME:    erik_entry_001_a
-TAGS:    entry no_monster_gen
+TAGS:    entry
 ORIENT:  float
 WEIGHT:  1
 SHUFFLE: {[(
 SUBST:   X : x:20 G:4 l:1
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3641,12 +3651,13 @@ cccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    erik_entry_001_b
-TAGS:    entry no_monster_gen
+TAGS:    entry
 ORIENT:  float
 MONS:    gnoll
 WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3668,12 +3679,13 @@ cccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    erik_entry_001_c
-TAGS:    entry no_monster_gen
+TAGS:    entry
 ORIENT:  float
 MONS:    centaur, orc
 WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3695,12 +3707,13 @@ cccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    erik_entry_001_d
-TAGS:    entry no_monster_gen
+TAGS:    entry
 WEIGHT:  2
 ORIENT:  float
 MONS:    orc
 SHUFFLE: {[(
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3911,6 +3924,7 @@ NAME:    matt_entry_002
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: TV
+KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxx@xxxxxxxxxx
 x..x.............x..x
@@ -4760,6 +4774,7 @@ KFEAT:   Z = w
 KMASK:   Z = no_monster_gen
 SHUFFLE: TTV
 WEIGHT:  5
+KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 x.....................x
