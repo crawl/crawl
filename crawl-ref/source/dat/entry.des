@@ -567,7 +567,7 @@ ENDMAP
 
 # Notes: chances are high that there is a shallow water path. Even if
 # there is none, you can always see the door on the other side.
-NAME: lemuel_005_c
+NAME:    lemuel_005_c
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {}, ABC
@@ -1025,6 +1025,7 @@ TAGS:    entry no_rotate
 ORIENT:  float
 SHUFFLE: {[(, cxxx
 SUBST:   T = TVVVV
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccc@ccccccccccccccc
 cccc......................cccc
@@ -1107,6 +1108,7 @@ SUBST:    X = = c:2
 SUBST:    Y=c, Z=c
 SUBST:    ?=c., !=ccc.
 SHUFFLE:  cxxx
+KMASK:    T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[!.!c...cc.??...c?....................c
@@ -2152,6 +2154,7 @@ TAGS:    entry
 ORIENT:  float
 SHUFFLE: TV
 WEIGHT:  5
+KMASK:   T = no_monster_gen
 MAP
   xx..@..xx
  xx...x...xx
@@ -2172,6 +2175,7 @@ NAME:   david_entry_033_b
 TAGS:   entry
 ORIENT: float
 WEIGHT: 5
+KMASK:  T = no_monster_gen
 MAP
   xx..@..xx
  xx...x...xx
@@ -2652,6 +2656,7 @@ NAME:    david_entry_047
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(, TVG
+KMASK:   T = no_monster_gen
 MAP
 xxxxx.@.xxxxx
 x...........x
@@ -2733,6 +2738,7 @@ TAGS:    entry
 ORIENT:  float
 SHUFFLE: [>, {(, T), TcGv, XY
 SUBST:   ':.x, X=+=x, Y=+=x
+KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxxxxxxxxxx..@
 x'''''''xxxxxxxxxx...
@@ -2835,6 +2841,7 @@ NAME:   david_entry_054
 TAGS:   entry
 ORIENT: float
 SUBST:  c:xxxc, %:%.T, T:TGv.
+KMASK:  T = no_monster_gen
 MAP
 .....................
 .....................
@@ -2964,7 +2971,7 @@ ENDMAP
 # Just another altar on DL:1
 #
 NAME:    david_entry_057_a_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 MONS:    gnoll
@@ -2987,7 +2994,7 @@ A.xcccccccccccx
 ENDMAP
 
 NAME:    david_entry_057_b_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
@@ -3010,7 +3017,7 @@ MAP
 ENDMAP
 
 NAME:    david_entry_057_c_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
@@ -3033,7 +3040,7 @@ MAP
 ENDMAP
 
 NAME:    david_entry_057_d_altar
-TAGS:    entry
+TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
@@ -3084,6 +3091,7 @@ ORIENT:  float
 ITEM:    nothing, nothing
 SHUFFLE: =+, TVG, {[
 SUBST:   c:cxx
+KMASK:   T = no_monster_gen
 MAP
 xx@...@xxxxxxxx
 xx+xxx+xxxxxxxx
@@ -3495,6 +3503,7 @@ SUBST:   a=mx, b=mx, c=mx, d=mx, e=mx
 SUBST:   A:mx, B:mx, C:mx, D:mx, E:mx
 SUBST:   ===++
 SHUFFLE: xc, 123
+KMASK:   T = no_monster_gen
 MAP
 .................
 .xxxxxxxxxxxxxxx.
@@ -3518,7 +3527,7 @@ ENDMAP
 # will then bring Stealth and Evasion as well.
 #
 NAME:    david_entry_071
-TAGS:    entry no_rotate
+TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
 MONS:    goblin ; stone
 MONS:    hobgoblin ; stone
@@ -3620,6 +3629,7 @@ WEIGHT:  1
 SHUFFLE: {[(
 SUBST:   X : x:20 G:4 l:1
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3647,6 +3657,7 @@ MONS:    gnoll
 WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3674,6 +3685,7 @@ MONS:    centaur, orc
 WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3701,6 +3713,7 @@ ORIENT:  float
 MONS:    orc
 SHUFFLE: {[(
 SUBST:   c : cxxx
+KMASK:   T = no_monster_gen
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c[c..c...cc......c.....................c
@@ -3911,6 +3924,7 @@ NAME:    matt_entry_002
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: TV
+KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxx@xxxxxxxxxx
 x..x.............x..x
@@ -4362,7 +4376,7 @@ ENDMAP
 ##############################################################
 # Pyramid
 NAME:    onia_ninara_002_pyramid
-TAGS:    entry no_rotate
+TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
 SHUFFLE: xxxcvlw
 MAP
@@ -4760,6 +4774,7 @@ KFEAT:   Z = w
 KMASK:   Z = no_monster_gen
 SHUFFLE: TTV
 WEIGHT:  5
+KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 x.....................x
