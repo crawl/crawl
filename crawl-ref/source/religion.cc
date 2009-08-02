@@ -215,7 +215,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "You and your allies can gain power from killing evil.",
       "call upon the Shining One for a divine shield",
       "",
-      "hurl blasts of cleansing flame",
+      "channel blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "recall your undead slaves",
@@ -315,7 +315,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "You and your allies can no longer gain power from killing evil.",
       "call upon the Shining One for a divine shield",
       "",
-      "hurl blasts of cleansing flame",
+      "channel blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "recall your undead slaves",
