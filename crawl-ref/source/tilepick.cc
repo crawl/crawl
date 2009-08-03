@@ -2671,7 +2671,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case '^': bg = TILE_DNGN_TRAP_ARROW; break;
         case '_':
         case 220:
-        case 131: fg = TILE_UNSEEN_ALTAR; break;
+        case 131: bg = TILE_DNGN_UNSEEN_ALTAR; break;
         case '{':
         case 247:
         case 135: bg = TILE_DNGN_DEEP_WATER; break;
@@ -2682,7 +2682,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case 254: bg = TILE_DNGN_CLOSED_DOOR; break;
         case 129: bg = TILE_DNGN_RETURN; break;
         case 239:
-        case 132: fg = TILE_UNSEEN_ENTRANCE; break;
+        case 132: bg = TILE_DNGN_UNSEEN_ENTRANCE; break;
         case 136: bg = TILE_DNGN_ENTER; break;
         case 141: bg = TILE_DNGN_LAVA; break;
     }

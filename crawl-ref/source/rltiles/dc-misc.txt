@@ -38,10 +38,7 @@ unseen_item UNSEEN_ITEM
 unseen_monster UNSEEN_CORPSE
 %corpse 0
 %back none
-dc-dngn/altars/dngn_altar UNSEEN_ALTAR
-dc-dngn/gateways/dngn_entrance UNSEEN_ENTRANCE
 
-%back none
 mask_deep_water MASK_DEEP_WATER
 mask_shallow_water MASK_SHALLOW_WATER
 mask_deep_water_murky MASK_DEEP_WATER_MURKY

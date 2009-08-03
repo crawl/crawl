@@ -1700,7 +1700,7 @@ static bool _xom_is_good(int sever, int tension)
             if (one_chance_in(10))
                 break;
         }
-        while (x_chance_in_y(3, 4) || count > 7 + random2(5)
+        while (x_chance_in_y(3, 4) || count <= 7 + random2(5)
                || player_in_a_dangerous_place());
         maybe_update_stashes();
 
@@ -2720,7 +2720,7 @@ static bool _xom_is_bad(int sever, int tension)
                 you_teleport_now(false);
                 more();
             }
-            while (count > 7 + random2(5)
+            while (count <= 7 + random2(5)
                    || x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
             badness = player_in_a_dangerous_place() ? 3 : 1;
             maybe_update_stashes();

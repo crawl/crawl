@@ -411,6 +411,7 @@ dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
 
 %sdir dc-dngn/gateways
+dngn_entrance DNGN_UNSEEN_ENTRANCE
 %rim 1
 dngn_enter_hell DNGN_ENTER_HELL
 dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
@@ -437,6 +438,7 @@ dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 %rim 0
 
 %sdir dc-dngn/altars
+dngn_altar DNGN_UNSEEN_ALTAR
 dngn_altar_zin DNGN_ALTAR_ZIN
 dngn_altar_shining_one DNGN_ALTAR_SHINING_ONE
 dngn_altar_kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
