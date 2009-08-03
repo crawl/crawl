@@ -199,7 +199,7 @@ ENDMAP
 # dungeon.
 
 NAME: rand_demon_1
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, random, random, random, random, random
 MAP
 ............
@@ -219,7 +219,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_2
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, greater demon, common demon
 MONS: common demon, random, random
 MAP
@@ -240,7 +240,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_3
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, common demon, common demon
 MAP
 ............
@@ -260,7 +260,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_4
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, any demon, any demon
 MAP
 ............
@@ -280,7 +280,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_5
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, any demon, any demon
 MAP
 ............
@@ -300,7 +300,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_6
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, any demon, any demon
 MAP
 ............
@@ -320,7 +320,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_7
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, any demon, greater demon
 MAP
 ............
@@ -340,7 +340,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_8
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, greater demon, any demon
 MAP
 ............
@@ -360,7 +360,7 @@ ENDMAP
 ###################################
 
 NAME: rand_demon_9
-TAGS: pan allow_dup
+TAGS: pan allow_dup mini_float
 MONS: pandemonium demon, any demon, greater demon
 MAP
 ............
@@ -380,7 +380,7 @@ ENDMAP
 ###################################
 
 NAME:    lemuel_draining_boxes
-TAGS:    pan
+TAGS:    pan mini_float
 MONS:    pandemonium demon, eye of draining, any demon
 SHUFFLE: aA/bB/cC/dD/eE/fF, eE/gG, fF/hH
 SUBST:   a=m, b=m, c=m, d=m, e=m, f=m, g=., h=.
@@ -417,7 +417,7 @@ ENDMAP
 ###################################
 
 NAME:  lemuel_hellion_island
-TAGS:  pan
+TAGS:  pan mini_float
 MONS:  pandemonium demon, hellion
 SUBST: L=l.
 MAP
