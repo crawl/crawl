@@ -1697,11 +1697,10 @@ static bool _xom_is_good(int sever, int tension)
             count++;
             you_teleport_now(false);
             more();
-            if (one_chance_in(10))
+            if (one_chance_in(10) || count >= 7 + random2(5))
                 break;
         }
-        while (x_chance_in_y(3, 4) || count <= 7 + random2(5)
-               || player_in_a_dangerous_place());
+        while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
         maybe_update_stashes();
 
         // Take a note.
@@ -2716,14 +2715,15 @@ static bool _xom_is_bad(int sever, int tension)
             int count = 0;
             do
             {
-                count++;
                 you_teleport_now(false);
                 more();
+                if (count++ >= 7 + random2(5))
+                    break;
             }
-            while (count <= 7 + random2(5)
-                   || x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
-            badness = player_in_a_dangerous_place() ? 3 : 1;
+            while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
             maybe_update_stashes();
+
+            badness = player_in_a_dangerous_place() ? 3 : 1;
 
             // Take a note.
             static char tele_buf[80];
