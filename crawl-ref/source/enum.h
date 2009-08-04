@@ -2415,6 +2415,7 @@ enum operation_types
     OPER_EVOKE    = 'v',
     OPER_DESTROY  = 'D',
     OPER_QUIVER   = 'Q',
+    OPER_ATTACK   = 'a',
     OPER_ANY      = 0
 };
 

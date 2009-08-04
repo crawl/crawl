@@ -3664,6 +3664,7 @@ bool monsters::floundering() const
 {
     const dungeon_feature_type grid = grd(pos());
     return (grid_is_water(grid)
+            && !cannot_fight()
             // Can't use monster_habitable_grid() because that'll return
             // true for non-water monsters in shallow water.
             && mons_primary_habitat(this) != HT_WATER

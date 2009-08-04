@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "delay.h"
 #include "effects.h"
 #include "food.h"
+#include "invent.h"
 #include "it_use2.h"
 #include "items.h"
 #include "itemname.h"
@@ -5089,28 +5090,46 @@ int melee_attack::mons_to_hit()
 
 static bool wielded_weapon_check(const item_def *weapon)
 {
-    bool result = true;
+    bool weapon_warning  = false;
+    bool unarmed_warning = false;
+
+    if (weapon)
+    {
+        if (has_warning_inscription(*weapon, OPER_ATTACK)
+            || weapon->base_type != OBJ_STAVES
+               && (weapon->base_type != OBJ_WEAPONS
+                   || is_range_weapon(*weapon)))
+        {
+            weapon_warning = true;
+        }
+    }
+    else if (you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
+             && you_tran_can_wear(EQ_WEAPON))
+    {
+        unarmed_warning = true;
+    }
+
     if (!you.received_weapon_warning && !you.confused()
-        && (weapon && weapon->base_type != OBJ_STAVES
-               && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon))
-            || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-               && you_tran_can_wear(EQ_WEAPON)))
+        && (weapon_warning || unarmed_warning))
     {
         std::string prompt  = "Really attack while ";
-        if (!weapon)
+        if (unarmed_warning)
             prompt += "being unarmed?";
         else
             prompt += "wielding " + weapon->name(DESC_NOCAP_YOUR) + "? ";
 
-        result = yesno(prompt.c_str(), true, 'n');
+        const bool result = yesno(prompt.c_str(), true, 'n');
 
         learned_something_new(TUT_WIELD_WEAPON); // for tutorial Rangers
 
         // Don't warn again if you decide to continue your attack.
         if (result)
             you.received_weapon_warning = true;
+
+        return (result);
     }
-    return (result);
+
+    return (true);
 }
 
 // Returns true if you hit the monster.
