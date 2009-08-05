@@ -3723,7 +3723,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (!melee_only)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_BLOWGUN;
+            item.sub_type  = WPN_BLOWGUN;
             item_race = MAKE_ITEM_NO_RACE;
             break;
         }
@@ -3732,9 +3732,10 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.sub_type = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
         set_item_ego_type(item, OBJ_WEAPONS,
-                          random_choose(SPWPN_VENOM,       SPWPN_DRAINING,
-                                        SPWPN_VAMPIRICISM, SPWPN_DISTORTION,
-                                        SPWPN_NORMAL,      -1));
+                          random_choose_weighted(3, SPWPN_DISTORTION,
+                                                 2, SPWPN_VENOM,
+                                                 1, SPWPN_DRAINING,
+                                                 0));
         break;
 
     case MONS_EUSTACHIO:
@@ -3857,17 +3858,27 @@ static void _give_ammo(monsters *mon, int level,
 
         if (xitt == MI_NEEDLE)
         {
-            set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                              _got_curare_roll(level) ? SPMSL_CURARE
-                                                      : SPMSL_POISONED);
+            if (mon->type == MONS_SONJA)
+            {
+                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                  SPMSL_CURARE);
 
-            if (get_ammo_brand( mitm[thing_created] ) == SPMSL_CURARE)
-                mitm[thing_created].quantity = random_range(2, 8);
+                mitm[thing_created].quantity = random_range(4, 10);
+            }
+            else
+            {
+                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                  _got_curare_roll(level) ? SPMSL_CURARE
+                                                          : SPMSL_POISONED);
+
+                if (get_ammo_brand( mitm[thing_created] ) == SPMSL_CURARE)
+                    mitm[thing_created].quantity = random_range(2, 8);
+            }
         }
         else
         {
             // Sanity check to avoid useless brands.
-            const int bow_brand = get_weapon_brand(*launcher);
+            const int bow_brand  = get_weapon_brand(*launcher);
             const int ammo_brand = get_ammo_brand(mitm[thing_created]);
             if (ammo_brand != SPMSL_NORMAL
                 && (bow_brand == SPWPN_FLAME || bow_brand == SPWPN_FROST))
@@ -4371,6 +4382,7 @@ void give_item(int mid, int level_number, bool mons_summoned)
     const item_make_species_type item_race = _give_weapon(mons, level_number);
 
     _give_ammo(mons, level_number, item_race, mons_summoned);
+
     give_armour(mons, 1 + level_number / 2);
     give_shield(mons, 1 + level_number / 2);
 }
