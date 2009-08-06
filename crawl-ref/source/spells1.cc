@@ -818,10 +818,7 @@ static int _healing_spell(int healed, bool divine_ability,
                                    "creature.");
             }
             else
-            {
-                simple_god_message(" appreciates your healing of a fellow "
-                                   "creature.");
-            }
+                mpr(" appreciates your healing of a fellow creature.");
 
             // Give a small piety return.
             if (pgain > 0)
