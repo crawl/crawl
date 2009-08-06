@@ -1718,280 +1718,277 @@ bool acquirement(object_class_type class_wanted, int agent,
         // that acquirement happened. -- bwr
         return (true);
     }
-    else
+
+    int quant = 1;
+    for (int item_tries = 0; item_tries < 40; item_tries++)
     {
-        int quant = 1;
-        for (int item_tries = 0; item_tries < 40; item_tries++)
+        int type_wanted = _find_acquirement_subtype(class_wanted, quant, agent);
+
+        // Clobber class_wanted for vampires.
+        if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
+            class_wanted = OBJ_POTIONS;
+
+        // Don't generate randart books in items(), we do that
+        // ourselves.
+        int want_arts = (class_wanted == OBJ_BOOKS ? 0 : 1);
+
+        thing_created = items( want_arts, class_wanted, type_wanted, true,
+                               MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE,
+                               0, 0, agent );
+
+        if (thing_created == NON_ITEM)
+            continue;
+
+        item_def &doodad(mitm[thing_created]);
+
+        // For mundane armour, try to change the subtype to something
+        // matching a currently unfilled equipment slot.
+        if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad)
+            && get_armour_ego_type(doodad) == SPARM_NORMAL)
         {
-            int type_wanted = _find_acquirement_subtype(class_wanted, quant,
-                                                        agent);
+            _try_give_mundane_armour(doodad);
+            if (agent == GOD_OKAWARU && doodad.plus < 0)
+                doodad.plus = 0;
+        }
 
-            // Clobber class_wanted for vampires.
-            if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
-                class_wanted = OBJ_POTIONS;
+        if (doodad.base_type == OBJ_WEAPONS
+               && !can_wield(&doodad, false, true)
+            || doodad.base_type == OBJ_ARMOUR
+               && !can_wear_armour(doodad, false, true))
+        {
+            destroy_item(thing_created, true);
+            thing_created = NON_ITEM;
+            continue;
+        }
 
-            // Don't generate randart books in items(), we do that
-            // ourselves.
-            int want_arts = (class_wanted == OBJ_BOOKS ? 0 : 1);
+        // Only TSO gifts blessed blades, and currently not through
+        // acquirement, but make sure of this anyway.
+        if (agent != GOD_SHINING_ONE && is_blessed_blade(doodad))
+        {
+            destroy_item(thing_created, true);
+            thing_created = NON_ITEM;
+            continue;
+        }
 
-            thing_created = items( want_arts, class_wanted, type_wanted, true,
-                                   MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE,
-                                   0, 0, agent );
-
-            if (thing_created == NON_ITEM)
-                continue;
-
-            item_def &doodad(mitm[thing_created]);
-
-            // For mundane armour, try to change the subtype to something
-            // matching a currently unfilled equipment slot.
-            if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad)
-                && get_armour_ego_type(doodad) == SPARM_NORMAL)
-            {
-                _try_give_mundane_armour(doodad);
-                if (agent == GOD_OKAWARU && doodad.plus < 0)
-                    doodad.plus = 0;
-            }
-
-            if (doodad.base_type == OBJ_WEAPONS
-                   && !can_wield(&doodad, false, true)
-                || doodad.base_type == OBJ_ARMOUR
-                   && !can_wear_armour(doodad, false, true))
-            {
-                destroy_item(thing_created, true);
-                thing_created = NON_ITEM;
-                continue;
-            }
-
-            // Only TSO gifts blessed blades, and currently not through
-            // acquirement, but make sure of this anyway.
-            if (agent != GOD_SHINING_ONE && is_blessed_blade(doodad))
+        // Trog does not gift the Wrath of Trog, nor weapons of pain
+        // (which work together with Necromantic magic).
+        if (agent == GOD_TROG)
+        {
+            int brand = get_weapon_brand(doodad);
+            if (brand == SPWPN_PAIN
+                || is_unrandom_artefact(doodad)
+                   && (doodad.special == UNRAND_TROG
+                       || doodad.special == UNRAND_WUCAD_MU))
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
                 continue;
             }
+        }
 
-            // Trog does not gift the Wrath of Trog, nor weapons of pain
-            // (which work together with Necromantic magic).
-            if (agent == GOD_TROG)
+        // MT - Check: god-gifted weapons and armour shouldn't kill you.
+        // Except Xom.
+        if ((agent == GOD_TROG || agent == GOD_OKAWARU)
+            && is_artefact(doodad))
+        {
+            artefact_properties_t  proprt;
+            artefact_wpn_properties( doodad, proprt );
+
+            // Check vs. stats. positive stats will automatically fall
+            // through.  As will negative stats that won't kill you.
+            if (-proprt[ARTP_STRENGTH] >= you.strength
+                || -proprt[ARTP_INTELLIGENCE] >= you.intel
+                || -proprt[ARTP_DEXTERITY] >= you.dex)
             {
-                int brand = get_weapon_brand(doodad);
-                if (brand == SPWPN_PAIN
-                    || is_unrandom_artefact(doodad)
-                       && (doodad.special == UNRAND_TROG
-                           || doodad.special == UNRAND_WUCAD_MU))
-                {
-                    destroy_item(thing_created, true);
-                    thing_created = NON_ITEM;
-                    continue;
-                }
-            }
-
-            // MT - Check: god-gifted weapons and armour shouldn't kill you.
-            // Except Xom.
-            if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-                && is_artefact(doodad))
-            {
-                artefact_properties_t  proprt;
-                artefact_wpn_properties( doodad, proprt );
-
-                // Check vs. stats. positive stats will automatically fall
-                // through.  As will negative stats that won't kill you.
-                if (-proprt[ARTP_STRENGTH] >= you.strength
-                    || -proprt[ARTP_INTELLIGENCE] >= you.intel
-                    || -proprt[ARTP_DEXTERITY] >= you.dex)
-                {
-                    // Try again.
-                    destroy_item(thing_created);
-                    thing_created = NON_ITEM;
-                    continue;
-                }
-            }
-
-            // Sif Muna shouldn't gift Vehumet or Kiku's special books.
-            // (The spells therein are still fair game for randart books.)
-            if (agent == GOD_SIF_MUNA
-                && doodad.sub_type >= MIN_GOD_ONLY_BOOK
-                && doodad.sub_type <= MAX_GOD_ONLY_BOOK)
-            {
-                ASSERT(doodad.base_type == OBJ_BOOKS);
-
                 // Try again.
                 destroy_item(thing_created);
                 thing_created = NON_ITEM;
                 continue;
             }
-            break;
         }
 
-        if (thing_created == NON_ITEM)
+        // Sif Muna shouldn't gift Vehumet or Kiku's special books.
+        // (The spells therein are still fair game for randart books.)
+        if (agent == GOD_SIF_MUNA
+            && doodad.sub_type >= MIN_GOD_ONLY_BOOK
+            && doodad.sub_type <= MAX_GOD_ONLY_BOOK)
+        {
+            ASSERT(doodad.base_type == OBJ_BOOKS);
+
+            // Try again.
+            destroy_item(thing_created);
+            thing_created = NON_ITEM;
+            continue;
+        }
+        break;
+    }
+
+    if (thing_created == NON_ITEM)
+    {
+        if (!quiet)
+            mpr("The demon of the infinite void smiles upon you.");
+        *item_index = NON_ITEM;
+        return (false);
+    }
+
+    // Easier to read this way.
+    item_def& thing(mitm[thing_created]);
+
+    // Give some more gold.
+    if (class_wanted == OBJ_GOLD)
+        thing.quantity += 150;
+    else if (quant > 1)
+        thing.quantity = quant;
+
+    if (is_blood_potion(thing))
+        init_stack_blood_potions(thing);
+
+    // Remove curse flag from item.
+    do_uncurse_item(thing);
+
+    if (thing.base_type == OBJ_BOOKS)
+    {
+        if (!_do_book_acquirement(thing, agent))
         {
             if (!quiet)
                 mpr("The demon of the infinite void smiles upon you.");
             *item_index = NON_ITEM;
+            destroy_item(thing, true);
             return (false);
         }
-
-        // Easier to read this way.
-        item_def& thing(mitm[thing_created]);
-
-        // Give some more gold.
-        if (class_wanted == OBJ_GOLD)
-            thing.quantity += 150;
-        else if (quant > 1)
-            thing.quantity = quant;
-
-        if (is_blood_potion(thing))
-            init_stack_blood_potions(thing);
-
-        // Remove curse flag from item.
-        do_uncurse_item(thing);
-
-        if (thing.base_type == OBJ_BOOKS)
+        mark_had_book(thing);
+    }
+    else if (thing.base_type == OBJ_JEWELLERY)
+    {
+        switch (thing.sub_type)
         {
-            if (!_do_book_acquirement(thing, agent))
-            {
-                if (!quiet)
-                    mpr("The demon of the infinite void smiles upon you.");
-                *item_index = NON_ITEM;
-                destroy_item(thing, true);
-                return (false);
-            }
-            mark_had_book(thing);
+        case RING_SLAYING:
+            // Make sure plus to damage is >= 1.
+            thing.plus2 = std::max(abs(thing.plus2), 1);
+            // fall through...
+
+        case RING_PROTECTION:
+        case RING_STRENGTH:
+        case RING_INTELLIGENCE:
+        case RING_DEXTERITY:
+        case RING_EVASION:
+            // Make sure plus is >= 1.
+            thing.plus = std::max(abs(thing.plus), 1);
+            break;
+
+        case RING_HUNGER:
+        case AMU_INACCURACY:
+            // These are the only truly bad pieces of jewellery.
+            if (!one_chance_in(9))
+                make_item_randart(thing);
+            break;
+
+        default:
+            break;
         }
-        else if (thing.base_type == OBJ_JEWELLERY)
+    }
+    else if (thing.base_type == OBJ_WEAPONS
+             && !is_unrandom_artefact(thing))
+    {
+        // HACK: Make unwieldable weapons wieldable.
+        // Note: messing with fixed artefacts is probably very bad.
+        switch (you.species)
         {
-            switch (thing.sub_type)
-            {
-            case RING_SLAYING:
-                // Make sure plus to damage is >= 1.
-                thing.plus2 = std::max(abs(thing.plus2), 1);
-                // fall through...
-
-            case RING_PROTECTION:
-            case RING_STRENGTH:
-            case RING_INTELLIGENCE:
-            case RING_DEXTERITY:
-            case RING_EVASION:
-                // Make sure plus is >= 1.
-                thing.plus = std::max(abs(thing.plus), 1);
-                break;
-
-            case RING_HUNGER:
-            case AMU_INACCURACY:
-                // These are the only truly bad pieces of jewellery.
-                if (!one_chance_in(9))
-                    make_item_randart(thing);
-                break;
-
-            default:
-                break;
-            }
-        }
-        else if (thing.base_type == OBJ_WEAPONS
-                 && !is_unrandom_artefact(thing))
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
         {
-            // HACK: Make unwieldable weapons wieldable.
-            // Note: messing with fixed artefacts is probably very bad.
-            switch (you.species)
+            int brand = get_weapon_brand(thing);
+            if (brand == SPWPN_HOLY_WRATH)
             {
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
+                if (is_random_artefact(thing))
                 {
-                    int brand = get_weapon_brand(thing);
-                    if (brand == SPWPN_HOLY_WRATH)
+                    // Keep resetting seed until it's good.
+                    for (; brand == SPWPN_HOLY_WRATH;
+                         brand = get_weapon_brand(thing))
                     {
-                        if (is_random_artefact(thing))
-                        {
-                            // Keep resetting seed until it's good.
-                            for (; brand == SPWPN_HOLY_WRATH;
-                                  brand = get_weapon_brand(thing))
-                            {
-                                make_item_randart(thing);
-                            }
-                        }
-                        else
-                        {
-                            set_item_ego_type(thing, OBJ_WEAPONS, SPWPN_VORPAL);
-                        }
+                        make_item_randart(thing);
                     }
                 }
-                break;
-
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-                switch (thing.sub_type)
+                else
                 {
-                case WPN_LONGBOW:
-                    thing.sub_type = WPN_BOW;
-                    break;
-
-                case WPN_GREAT_SWORD:
-                case WPN_TRIPLE_SWORD:
-                    thing.sub_type = (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
-                    break;
-
-                case WPN_GREAT_MACE:
-                case WPN_DIRE_FLAIL:
-                    thing.sub_type = (coinflip() ? WPN_MACE : WPN_FLAIL);
-                    break;
-
-                case WPN_BATTLEAXE:
-                case WPN_EXECUTIONERS_AXE:
-                    thing.sub_type = (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
-                    break;
-
-                case WPN_HALBERD:
-                case WPN_GLAIVE:
-                case WPN_SCYTHE:
-                case WPN_BARDICHE:
-                    thing.sub_type = (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
-                    break;
+                    set_item_ego_type(thing, OBJ_WEAPONS, SPWPN_VORPAL);
                 }
-                break;
-
-            default:
-                break;
             }
-
-            int plusmod = random2(4);
-            if (agent == GOD_TROG)
-            {
-                // More damage, less accuracy.
-                thing.plus  -= plusmod;
-                thing.plus2 += plusmod;
-                if (!is_artefact(thing))
-                    thing.plus = std::max(static_cast<int>(thing.plus), 0);
-            }
-            else if (agent == GOD_OKAWARU)
-            {
-                // More accuracy, less damage.
-                thing.plus  += plusmod;
-                thing.plus2 -= plusmod;
-                if (!is_artefact(thing))
-                    thing.plus2 = std::max(static_cast<int>(thing.plus2), 0);
-            }
+            break;
         }
 
-        if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
-            thing.inscription = "god gift";
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+            switch (thing.sub_type)
+            {
+            case WPN_LONGBOW:
+                thing.sub_type = WPN_BOW;
+                break;
 
-        move_item_to_grid( &thing_created, you.pos() );
+            case WPN_GREAT_SWORD:
+            case WPN_TRIPLE_SWORD:
+                thing.sub_type = (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
+                break;
 
-        // This should never actually be NON_ITEM because of the way
-        // move_item_to_grid works (doesn't create a new item ever),
-        // but we're checking it anyways. -- bwr
-        if (thing_created != NON_ITEM)
+            case WPN_GREAT_MACE:
+            case WPN_DIRE_FLAIL:
+                thing.sub_type = (coinflip() ? WPN_MACE : WPN_FLAIL);
+                break;
+
+            case WPN_BATTLEAXE:
+            case WPN_EXECUTIONERS_AXE:
+                thing.sub_type = (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
+                break;
+
+            case WPN_HALBERD:
+            case WPN_GLAIVE:
+            case WPN_SCYTHE:
+            case WPN_BARDICHE:
+                thing.sub_type = (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
+                break;
+            }
+            break;
+
+        default:
+            break;
+        }
+
+        int plusmod = random2(4);
+        if (agent == GOD_TROG)
         {
-            if (!quiet)
-                canned_msg(MSG_SOMETHING_APPEARS);
+            // More damage, less accuracy.
+            thing.plus  -= plusmod;
+            thing.plus2 += plusmod;
+            if (!is_artefact(thing))
+                thing.plus = std::max(static_cast<int>(thing.plus), 0);
         }
-        *item_index = thing_created;
+        else if (agent == GOD_OKAWARU)
+        {
+            // More accuracy, less damage.
+            thing.plus  += plusmod;
+            thing.plus2 -= plusmod;
+            if (!is_artefact(thing))
+                thing.plus2 = std::max(static_cast<int>(thing.plus2), 0);
+        }
     }
+
+    if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
+        thing.inscription = "god gift";
+
+    move_item_to_grid( &thing_created, you.pos() );
+
+    // This should never actually be NON_ITEM because of the way
+    // move_item_to_grid works (doesn't create a new item ever),
+    // but we're checking it anyways. -- bwr
+    if (thing_created != NON_ITEM)
+    {
+        if (!quiet)
+            canned_msg(MSG_SOMETHING_APPEARS);
+    }
+    *item_index = thing_created;
 
     // Well, the item may have fallen in the drink, but the intent is
     // that acquirement happened. -- bwr
