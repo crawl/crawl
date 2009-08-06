@@ -818,7 +818,10 @@ static int _healing_spell(int healed, bool divine_ability,
                                    "creature.");
             }
             else
-                mpr(" appreciates your healing of a fellow creature.");
+            {
+                mpr("Elyvilon appreciates your healing of a fellow "
+                    "creature.");
+            }
 
             // Give a small piety return.
             if (pgain > 0)
