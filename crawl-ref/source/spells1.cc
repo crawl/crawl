@@ -781,7 +781,7 @@ static int _healing_spell(int healed, bool divine_ability,
         if (pgain > 0)
             simple_god_message(" approves of your offer of peace.");
         else
-            simple_god_message(" supports your offer of peace.");
+            mpr("Elyvilon supports your offer of peace.");
 
         if (is_holy)
             good_god_holy_attitude_change(monster);
