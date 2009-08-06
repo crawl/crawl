@@ -874,15 +874,9 @@ static armour_type _random_nonbody_armour_type()
 const int max_has_value = 100;
 typedef FixedVector<int, max_has_value> has_vector;
 
-static armour_type _acquirement_armour_subtype()
+static armour_type _pick_wearable_armour(const armour_type arm)
 {
-    // Increasing the representation of the non-body armour
-    // slots here to make up for the fact that there's only
-    // one type of item for most of them. -- bwr
-    //
-    // NUM_ARMOURS is body armour and handled below
-    armour_type result = (coinflip()) ? NUM_ARMOURS
-                                      : _random_nonbody_armour_type();
+    armour_type result = arm;
 
     // Some species specific fitting problems.
     // FIXME: switch to the cleaner logic in can_wear_armour()
@@ -901,45 +895,45 @@ static armour_type _acquirement_armour_subtype()
     case SP_PALE_DRACONIAN:
     case SP_BASE_DRACONIAN:
     case SP_SPRIGGAN:
-        if (result == ARM_GLOVES
-            || result == ARM_BOOTS
-            || result == ARM_CENTAUR_BARDING
-            || result == ARM_NAGA_BARDING)
+        if (arm == ARM_GLOVES
+            || arm == ARM_BOOTS
+            || arm == ARM_CENTAUR_BARDING
+            || arm == ARM_NAGA_BARDING)
         {
             result = ARM_ROBE;  // no heavy armour
         }
-        else if (result == ARM_SHIELD)
+        else if (arm == ARM_SHIELD)
         {
             if (you.species == SP_SPRIGGAN)
                 result = ARM_BUCKLER;
             else if (coinflip()) // giant races: 50/50 shield/large shield
                 result = ARM_LARGE_SHIELD;
         }
-        else if (result == NUM_ARMOURS)
+        else if (arm == NUM_ARMOURS)
         {
             result = ARM_ROBE;  // no heavy armour, see below
         }
         break;
 
     case SP_NAGA:
-        if (result == ARM_BOOTS || result == ARM_CENTAUR_BARDING)
+        if (arm == ARM_BOOTS || arm == ARM_CENTAUR_BARDING)
             result = ARM_NAGA_BARDING;
         break;
 
     case SP_CENTAUR:
-        if (result == ARM_BOOTS || result == ARM_NAGA_BARDING)
+        if (arm == ARM_BOOTS || arm == ARM_NAGA_BARDING)
             result = ARM_CENTAUR_BARDING;
         break;
 
     default:
-        if (result == ARM_CENTAUR_BARDING || result == ARM_NAGA_BARDING)
+        if (arm == ARM_CENTAUR_BARDING || arm == ARM_NAGA_BARDING)
             result = ARM_BOOTS;
         break;
     }
 
     // Mutation specific problems (horns allow caps).
-    if (result == ARM_BOOTS && !player_has_feet()
-        || result == ARM_GLOVES && you.has_claws(false) >= 3)
+    if (arm == ARM_BOOTS && !player_has_feet()
+        || arm == ARM_GLOVES && you.has_claws(false) >= 3)
     {
         result = NUM_ARMOURS;
     }
@@ -949,11 +943,59 @@ static armour_type _acquirement_armour_subtype()
     // that can't wear helmets.
     // We check for the mutation directly to avoid acquirement fiddles
     // with vampires.
-    if (result == ARM_HELMET
+    if (arm == ARM_HELMET
         && (!you_can_wear(EQ_HELMET) || you.mutation[MUT_HORNS]))
     {
         result = coinflip()? ARM_CAP : ARM_WIZARD_HAT;
     }
+    return (result);
+}
+
+static armour_type _acquirement_armour_subtype(bool okawaru)
+{
+    // Increasing the representation of the non-body armour
+    // slots here to make up for the fact that there's only
+    // one type of item for most of them. -- bwr
+    //
+    // NUM_ARMOURS is body armour and handled below
+    armour_type result = NUM_ARMOURS;
+
+    if (okawaru)
+    {
+        if (coinflip())
+            result = _random_nonbody_armour_type();
+    }
+    else
+    {
+        static const equipment_type armour_slots[] =
+            {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS   };
+
+        equipment_type picked = EQ_BODY_ARMOUR;
+        const int num_slots = ARRAYSZ(armour_slots);
+        // Start count at 1, for body armour (already picked).
+        for (int i = 0, count = 1; i < num_slots; ++i)
+            if (you_can_wear(armour_slots[i], true) && one_chance_in(++count))
+                picked = armour_slots[i];
+
+        switch (picked)
+        {
+        case EQ_SHIELD:
+            result = ARM_SHIELD; break;
+        case EQ_CLOAK:
+            result = ARM_CLOAK; break;
+        case EQ_HELMET:
+            result = ARM_HELMET; break;
+        case EQ_GLOVES:
+            result = ARM_GLOVES; break;
+        case EQ_BOOTS:
+            result = ARM_BOOTS; break;
+        default:
+        case EQ_BODY_ARMOUR:
+            result = NUM_ARMOURS; break;
+        }
+    }
+
+    result = _pick_wearable_armour(result);
 
     // Now we'll randomly pick a body armour up to plate mail (light
     // only in the case of robes or animal skins).  Unlike before, now
@@ -980,7 +1022,7 @@ static armour_type _acquirement_armour_subtype()
                 result = ARM_ANIMAL_SKIN;
         }
 
-        // everyone can wear things made from hides
+        // Everyone can wear things made from hides.
         if (one_chance_in(20))
         {
             result = static_cast<armour_type>(
@@ -997,6 +1039,61 @@ static armour_type _acquirement_armour_subtype()
     }
 
     return (result);
+}
+
+// If armour acquirement turned up a non-ego non-artefact armour item,
+// see whether the player has any unfilled equipment slots. If so,
+// hand out a mundane (and possibly negatively enchanted) item of that
+// type. Otherwise, keep the original armour.
+static void _try_give_mundane_armour(item_def &arm)
+{
+    static const equipment_type armour_slots[] =
+        {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS   };
+
+    equipment_type picked = EQ_BODY_ARMOUR;
+    const int num_slots = ARRAYSZ(armour_slots);
+    for (int i = 0, count = 0; i < num_slots; ++i)
+    {
+        if (!you_can_wear(armour_slots[i]))
+            continue;
+
+        if (you.equip[armour_slots[i]] != -1)
+            continue;
+
+        if (one_chance_in(++count))
+            picked = armour_slots[i];
+    }
+
+    // All available secondary slots already filled.
+    if (picked == EQ_BODY_ARMOUR)
+        return;
+
+    armour_type result = NUM_ARMOURS;
+    switch (picked)
+    {
+    case EQ_SHIELD:
+        result = ARM_SHIELD; break;
+    case EQ_CLOAK:
+        result = ARM_CLOAK; break;
+    case EQ_HELMET:
+        result = ARM_HELMET; break;
+    case EQ_GLOVES:
+        result = ARM_GLOVES; break;
+    case EQ_BOOTS:
+        result = ARM_BOOTS; break;
+    default:
+        return;
+    }
+    // Clear the description flag.
+    set_equip_desc(arm, ISFLAG_NO_DESC);
+    arm.sub_type = _pick_wearable_armour(result);
+    arm.plus = random2(5) - 2;
+
+    int max_ench = armour_max_enchant(arm);
+    if (arm.plus > max_ench)
+        arm.plus = max_ench;
+    else if (arm.plus < -max_ench)
+        arm.plus = -max_ench;
 }
 
 // Write results into arguments.
@@ -1260,7 +1357,7 @@ static int _acquirement_misc_subtype()
 }
 
 static int _find_acquirement_subtype(object_class_type class_wanted,
-                                     int &quantity)
+                                     int &quantity, int agent = -1)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
@@ -1294,7 +1391,12 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
         case OBJ_WEAPONS:  type_wanted = _acquirement_weapon_subtype();  break;
         case OBJ_MISSILES: type_wanted = _acquirement_missile_subtype(); break;
-        case OBJ_ARMOUR:   type_wanted = _acquirement_armour_subtype();  break;
+        case OBJ_ARMOUR:
+        {
+            const bool okawaru = (agent == GOD_OKAWARU);
+            type_wanted = _acquirement_armour_subtype(okawaru);
+            break;
+        }
         case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype();  break;
         case OBJ_STAVES: type_wanted = _acquirement_staff_subtype(already_has);
             break;
@@ -1611,13 +1713,18 @@ bool acquirement(object_class_type class_wanted, int agent,
         }
 
         *item_index = NON_ITEM;
+
+        // Well, the item may have fallen in the drink, but the intent is
+        // that acquirement happened. -- bwr
+        return (true);
     }
     else
     {
         int quant = 1;
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
-            int type_wanted = _find_acquirement_subtype(class_wanted, quant);
+            int type_wanted = _find_acquirement_subtype(class_wanted, quant,
+                                                        agent);
 
             // Clobber class_wanted for vampires.
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
@@ -1635,6 +1742,17 @@ bool acquirement(object_class_type class_wanted, int agent,
                 continue;
 
             item_def &doodad(mitm[thing_created]);
+
+            // For mundane armour, try to change the subtype to something
+            // matching a currently unfilled equipment slot.
+            if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad)
+                && get_armour_ego_type(doodad) == SPARM_NORMAL)
+            {
+                _try_give_mundane_armour(doodad);
+                if (agent == GOD_OKAWARU && doodad.plus < 0)
+                    doodad.plus = 0;
+            }
+
             if (doodad.base_type == OBJ_WEAPONS
                    && !can_wield(&doodad, false, true)
                 || doodad.base_type == OBJ_ARMOUR

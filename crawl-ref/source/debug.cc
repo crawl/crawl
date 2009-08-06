@@ -3451,6 +3451,8 @@ static void _debug_acquirement_stats(FILE *ostat)
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
     }
     fprintf(ostat, "----------------------\n");
+
+    mpr("Results written into 'items.stat'.");
 }
 
 static void _debug_rap_stats(FILE *ostat)
@@ -3672,6 +3674,7 @@ static void _debug_rap_stats(FILE *ostat)
     }
 
     fprintf(ostat, "\n-----------------------------------------\n\n");
+    mpr("Results written into 'items.stat'.");
 }
 
 void debug_item_statistics( void )
