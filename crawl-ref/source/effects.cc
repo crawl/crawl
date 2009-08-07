@@ -663,7 +663,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
 
     // finish outputting message: {dlb}
     msg += ".";
-    mpr(msg.c_str());
+    mpr(msg.c_str(), statLowered ? MSGCH_WARN : MSGCH_PLAIN);
 
     if (newValue < 1)
     {

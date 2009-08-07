@@ -3307,11 +3307,12 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         if (is_artefact(item))
             num_arts++;
+        else if (type == OBJ_ARMOUR) // Exclude artefacts when counting egos.
+            ego_quants[get_armour_ego_type(item)]++;
 
+        // Include artefacts for weapon brands.
         if (type == OBJ_WEAPONS)
             ego_quants[get_weapon_brand(item)]++;
-        else if (type == OBJ_ARMOUR)
-            ego_quants[get_armour_ego_type(item)]++;
 
         destroy_item(item_index, true);
 
