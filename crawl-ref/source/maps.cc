@@ -106,6 +106,8 @@ static int write_vault(map_def &mdef,
         if (!resolve_map(place.map))
             continue;
 
+        // Must set size here, or minivaults will not be placed correctly.
+        place.size = place.map.size();
         place.orient = apply_vault_definition(place.map,
                                               place, check_place);
 
