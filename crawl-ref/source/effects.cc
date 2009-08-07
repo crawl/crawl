@@ -932,8 +932,8 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     }
 
     // Mutation specific problems (horns allow caps).
-    if (arm == ARM_BOOTS && !player_has_feet()
-        || arm == ARM_GLOVES && you.has_claws(false) >= 3)
+    if (result == ARM_BOOTS && !player_has_feet()
+        || result == ARM_GLOVES && you.has_claws(false) >= 3)
     {
         result = NUM_ARMOURS;
     }
@@ -982,13 +982,13 @@ static armour_type _acquirement_armour_subtype(bool okawaru)
         case EQ_SHIELD:
             result = ARM_SHIELD; break;
         case EQ_CLOAK:
-            result = ARM_CLOAK; break;
+            result = ARM_CLOAK;  break;
         case EQ_HELMET:
             result = ARM_HELMET; break;
         case EQ_GLOVES:
             result = ARM_GLOVES; break;
         case EQ_BOOTS:
-            result = ARM_BOOTS; break;
+            result = ARM_BOOTS;  break;
         default:
         case EQ_BODY_ARMOUR:
             result = NUM_ARMOURS; break;
@@ -1045,16 +1045,16 @@ static armour_type _acquirement_armour_subtype(bool okawaru)
 // see whether the player has any unfilled equipment slots. If so,
 // hand out a mundane (and possibly negatively enchanted) item of that
 // type. Otherwise, keep the original armour.
-static void _try_give_mundane_armour(item_def &arm)
+static bool _try_give_mundane_armour(item_def &arm)
 {
     static const equipment_type armour_slots[] =
-        {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS   };
+        {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
 
     equipment_type picked = EQ_BODY_ARMOUR;
     const int num_slots = ARRAYSZ(armour_slots);
     for (int i = 0, count = 0; i < num_slots; ++i)
     {
-        if (!you_can_wear(armour_slots[i]))
+        if (!you_can_wear(armour_slots[i], true))
             continue;
 
         if (you.equip[armour_slots[i]] != -1)
@@ -1066,7 +1066,7 @@ static void _try_give_mundane_armour(item_def &arm)
 
     // All available secondary slots already filled.
     if (picked == EQ_BODY_ARMOUR)
-        return;
+        return (false);
 
     armour_type result = NUM_ARMOURS;
     switch (picked)
@@ -1074,26 +1074,28 @@ static void _try_give_mundane_armour(item_def &arm)
     case EQ_SHIELD:
         result = ARM_SHIELD; break;
     case EQ_CLOAK:
-        result = ARM_CLOAK; break;
+        result = ARM_CLOAK;  break;
     case EQ_HELMET:
         result = ARM_HELMET; break;
     case EQ_GLOVES:
         result = ARM_GLOVES; break;
     case EQ_BOOTS:
-        result = ARM_BOOTS; break;
+        result = ARM_BOOTS;  break;
     default:
-        return;
+        return (false);
     }
     // Clear the description flag.
     set_equip_desc(arm, ISFLAG_NO_DESC);
     arm.sub_type = _pick_wearable_armour(result);
     arm.plus = random2(5) - 2;
 
-    int max_ench = armour_max_enchant(arm);
+    const int max_ench = armour_max_enchant(arm);
     if (arm.plus > max_ench)
         arm.plus = max_ench;
     else if (arm.plus < -max_ench)
         arm.plus = -max_ench;
+
+    return (true);
 }
 
 // Write results into arguments.
@@ -1743,12 +1745,57 @@ bool acquirement(object_class_type class_wanted, int agent,
 
         // For mundane armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
-        if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad)
-            && get_armour_ego_type(doodad) == SPARM_NORMAL)
+        if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad))
         {
-            _try_give_mundane_armour(doodad);
-            if (agent == GOD_OKAWARU && doodad.plus < 0)
-                doodad.plus = 0;
+            const equipment_type eq = get_armour_slot(doodad);
+
+            // Don't try to replace an item if it would already fill a
+            // currently unfilled secondary armour slot.
+            if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1)
+            {
+                const special_armour_type sparm = get_armour_ego_type(doodad);
+                bool mundane_check = (sparm == SPARM_NORMAL);
+
+                // If the created item is an ego item, check whether we're
+                // already wearing an item with this ego in the same slot, and
+                // whether the enchantment is worse than that of the current
+                // item. (For armour, only consider items of the same subtype.)
+                // If so, try filling an unfilled equipment slot after all.
+                if (!mundane_check)
+                {
+                    if (you.equip[eq] != -1
+                        && (eq != EQ_BODY_ARMOUR
+                            || doodad.sub_type == you.inv[you.equip[eq]].sub_type)
+                        && sparm == get_armour_ego_type(you.inv[you.equip[eq]])
+                        && doodad.plus <= you.inv[you.equip[eq]].plus)
+                    {
+                        // Ego type is cleared later.
+                        mundane_check = true;
+                    }
+                }
+
+                if (mundane_check)
+                {
+                    if (_try_give_mundane_armour(doodad))
+                    {
+                        // Make sure the item is mundane.
+                        doodad.special = SPARM_NORMAL;
+
+                        // Okawaru shouldn't hand out negatively enchanted
+                        // mundane items.
+                        if (agent == GOD_OKAWARU && doodad.plus < 0)
+                            doodad.plus = 0;
+                    }
+                    else if (eq != EQ_BODY_ARMOUR && one_chance_in(5))
+                    {
+                        // If there weren't any unfilled slots, there's a 20%
+                        // chance for non-body armour to roll again.
+                        destroy_item(thing_created, true);
+                        thing_created = NON_ITEM;
+                        continue;
+                    }
+                }
+            }
         }
 
         if (doodad.base_type == OBJ_WEAPONS
