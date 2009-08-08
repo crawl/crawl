@@ -2098,7 +2098,7 @@ static void _do_god_gift(bool prayed_for)
                 {
                     success = acquirement(OBJ_ARMOUR, you.religion);
                     // Okawaru charges extra for armour acquirements.
-                    _inc_gift_timeout(20 + random2avg(15, 2));
+                    _inc_gift_timeout(25 + random2avg(15, 2));
                 }
 
                 if (success)

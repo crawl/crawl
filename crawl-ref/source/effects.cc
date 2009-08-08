@@ -951,7 +951,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     return (result);
 }
 
-static armour_type _acquirement_armour_subtype(bool okawaru)
+static armour_type _acquirement_armour_subtype(bool divine)
 {
     // Increasing the representation of the non-body armour
     // slots here to make up for the fact that there's only
@@ -960,7 +960,7 @@ static armour_type _acquirement_armour_subtype(bool okawaru)
     // NUM_ARMOURS is body armour and handled below
     armour_type result = NUM_ARMOURS;
 
-    if (okawaru)
+    if (divine)
     {
         if (coinflip())
             result = _random_nonbody_armour_type();
@@ -1008,7 +1008,7 @@ static armour_type _acquirement_armour_subtype(bool okawaru)
             result = coinflip() ? ARM_ROBE : ARM_ANIMAL_SKIN;
         else
         {
-            if (okawaru)
+            if (divine)
             {
                 const armour_type armours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
                                                 ARM_RING_MAIL, ARM_SCALE_MAIL,
@@ -1442,8 +1442,8 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         case OBJ_MISSILES: type_wanted = _acquirement_missile_subtype(); break;
         case OBJ_ARMOUR:
         {
-            const bool okawaru = (agent == GOD_OKAWARU);
-            type_wanted = _acquirement_armour_subtype(okawaru);
+            const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
+            type_wanted = _acquirement_armour_subtype(divine);
             break;
         }
         case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype();  break;
@@ -1577,9 +1577,11 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 other_weights += weight;
         }
 
-        // Count magic skills double to bias against manuals
+        // If someone has 25% or more magic skills, never give manuals.
+        // Otherwise, count magic skills double to bias against manuals
         // for magic users.
-        if (x_chance_in_y(other_weights, 2*magic_weights + other_weights))
+        if (magic_weights * 3 < other_weights
+            && x_chance_in_y(other_weights, 2*magic_weights + other_weights))
         {
             choice = BOOK_MANUAL;
             if (magic_weights > 0)
@@ -1662,8 +1664,22 @@ static bool _do_book_acquirement(item_def &book, int agent)
             }
 
             int skill = you.skills[i];
+
+            if (skill == 27)
+            {
+                weights[i] = 0;
+                continue;
+            }
+
             int w = (skill < 12) ? skill + 3
                                  : std::max(0, 25 - skill);
+
+            // Give a bonus for some highly sought after skills.
+            if (i == SK_FIGHTING || i == SK_ARMOUR || i == SK_SPELLCASTING
+                || i == SK_INVOCATIONS || i == SK_EVOCATIONS)
+            {
+                w += 5;
+            }
 
             // If we don't have any magic skills, make non-magic skills
             // more likely.
@@ -1808,7 +1824,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 // whether the enchantment is worse than that of the current
                 // item. (For armour, only consider items of the same subtype.)
                 // If so, try filling an unfilled equipment slot after all.
-                if (!mundane_check)
+                if (!mundane_check && agent != GOD_XOM)
                 {
                     if (you.equip[eq] != -1
                         && (eq != EQ_BODY_ARMOUR
@@ -1832,8 +1848,11 @@ bool acquirement(object_class_type class_wanted, int agent,
                         // mundane items.
                         if (agent == GOD_OKAWARU && doodad.plus < 0)
                             doodad.plus = 0;
+                        else if (agent == GOD_XOM && doodad.plus > 0)
+                            doodad.plus *= -1;
                     }
-                    else if (eq != EQ_BODY_ARMOUR && one_chance_in(5))
+                    else if (eq != EQ_BODY_ARMOUR && agent != GOD_XOM
+                             && one_chance_in(5))
                     {
                         // If there weren't any unfilled slots, there's a 20%
                         // chance for non-body armour to roll again.
