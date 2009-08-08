@@ -237,9 +237,6 @@ int artefact_wpn_property( const item_def &item, artefact_prop_type prop );
 int artefact_known_wpn_property( const item_def &item,
                                  artefact_prop_type prop );
 
-int artefact_wpn_num_props( const item_def &item );
-int artefact_wpn_num_props( const artefact_properties_t &proprt );
-
 void artefact_wpn_learn_prop( item_def &item, artefact_prop_type prop );
 bool artefact_wpn_known_prop( const item_def &item, artefact_prop_type prop );
 

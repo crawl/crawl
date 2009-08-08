@@ -1003,23 +1003,50 @@ static armour_type _acquirement_armour_subtype(bool okawaru)
     // hides.  -- bwr
     if (result == NUM_ARMOURS || result == ARM_ROBE)
     {
-        // start with normal base armour
+        // Start with normal base armour.
         if (result == ARM_ROBE)
             result = coinflip() ? ARM_ROBE : ARM_ANIMAL_SKIN;
         else
         {
-            const armour_type armours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                            ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                            ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
-                                            ARM_BANDED_MAIL, ARM_PLATE_MAIL };
+            if (okawaru)
+            {
+                const armour_type armours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                                ARM_RING_MAIL, ARM_SCALE_MAIL,
+                                                ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
+                                                ARM_BANDED_MAIL, ARM_PLATE_MAIL };
 
-            result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
+                result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
 
-            if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
-                result = ARM_CRYSTAL_PLATE_MAIL;
+                if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
+                    result = ARM_CRYSTAL_PLATE_MAIL;
 
-            if (one_chance_in(10))
-                result = ARM_ANIMAL_SKIN;
+                if (one_chance_in(10))
+                    result = ARM_ANIMAL_SKIN;
+            }
+            else
+            {
+                const armour_type armours[] =
+                    { ARM_ANIMAL_SKIN, ARM_ROBE, ARM_LEATHER_ARMOUR,
+                      ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL,
+                      ARM_BANDED_MAIL, ARM_SPLINT_MAIL, ARM_PLATE_MAIL,
+                      ARM_CRYSTAL_PLATE_MAIL };
+
+                const int num_arms = ARRAYSZ(armours);
+
+                // Weight sub types relative to (armour skill + 3).
+                // Actually, the AC improvement is not linear, and we might
+                // also want to take into account Dodging/Stealth and Strength,
+                // but this is definitely better than the random chance above.
+                const int skill = std::min(27, you.skills[SK_ARMOUR] + 3);
+                int total = 0;
+                for (int i = 0; i < num_arms; ++i)
+                {
+                    const int weight = std::max(1, 27 - abs(skill - i*3));
+                    total += weight;
+                    if (x_chance_in_y(weight, total))
+                        result = armours[i];
+                }
+            }
         }
 
         // Everyone can wear things made from hides.
@@ -1059,6 +1086,26 @@ static bool _try_give_mundane_armour(item_def &arm)
 
         if (you.equip[armour_slots[i]] != -1)
             continue;
+
+        // Consider shield slot filled in some cases.
+        if (armour_slots[i] == EQ_SHIELD)
+        {
+            if (you.equip[EQ_WEAPON] == -1)
+            {
+                if (you.skills[SK_UNARMED_COMBAT] > random2(8))
+                    continue;
+            }
+            else
+            {
+                const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
+                const hands_reqd_type hand = hands_reqd(weapon, player_size());
+                if (hand == HANDS_TWO || item_is_rod(weapon)
+                    || is_range_weapon(weapon))
+                {
+                    continue;
+                }
+            }
+        }
 
         if (one_chance_in(++count))
             picked = armour_slots[i];

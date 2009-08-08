@@ -36,6 +36,8 @@ REVISION("$Rev$");
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 
+static int _artefact_num_props( const artefact_properties_t &proprt );
+
 // The initial generation of a randart is very simple - it occurs in
 // dungeon.cc and consists of giving it a few random things - plus &
 // plus2 mainly.
@@ -562,73 +564,114 @@ inline static void _randart_propset( artefact_properties_t &p,
 static int _randart_add_one_property( const item_def &item,
                                       artefact_properties_t &proprt )
 {
-    // This function assumes that no properties have been added to this
-    // randart yet.
-
+    // This function assumes that at least some properties are still possible.
     const object_class_type cl = item.base_type;
-    const int ty = item.sub_type;
-
-    // 0 - ac, 1 - ev, 2 - str, 3 - int, 4 - dex
-    int prop;
-    int skip = -1;
-
-    // Determine if we need to skip any of the above.
-    if (cl == OBJ_ARMOUR || cl == OBJ_JEWELLERY && ty == RING_PROTECTION)
-        skip = 0;
-    else if (cl == OBJ_JEWELLERY && ty == RING_EVASION)
-        skip = 1;
-    else if (cl == OBJ_JEWELLERY && ty == RING_STRENGTH)
-        skip = 2;
-    else if (cl == OBJ_JEWELLERY && ty == RING_INTELLIGENCE)
-        skip = 3;
-    else if (cl == OBJ_JEWELLERY && ty == RING_DEXTERITY)
-        skip = 4;
-
-    // Pick a random enchantment, taking into account the skipped index.
-    if (skip >= 0)
-    {
-        prop = random2(4);
-        if (prop >= skip)
-            prop++;
-    }
-    else
-    {
-        prop = random2(5);
-    }
+    const int               ty = item.sub_type;
 
     const bool negench = one_chance_in(4);
 
-    switch (prop)
+    const artefact_prop_type artprops[] = { ARTP_AC, ARTP_EVASION,
+                                            ARTP_STRENGTH, ARTP_INTELLIGENCE,
+                                            ARTP_DEXTERITY };
+
+    do
     {
-    default:
-    case 0:
-        _randart_propset(proprt, ARTP_AC,
-                         1 + random2(3) + random2(3) + random2(3),
-                         negench);
-        break;
-    case 1:
-        _randart_propset(proprt, ARTP_EVASION,
-                         1 + random2(3) + random2(3) + random2(3),
-                         negench);
-        break;
-    case 2:
-        _randart_propset(proprt, ARTP_STRENGTH,
-                         1 + random2(3) + random2(3),
-                         negench);
-        break;
-    case 3:
-        _randart_propset(proprt, ARTP_INTELLIGENCE,
-                         1 + random2(3) + random2(3),
-                         negench);
-        break;
-    case 4:
-        _randart_propset(proprt, ARTP_DEXTERITY,
-                         1 + random2(3) + random2(3),
-                         negench);
-        break;
+        int prop = RANDOM_ELEMENT(artprops);
+
+        if (proprt[prop] != 0)
+            continue;
+
+        switch (prop)
+        {
+        case ARTP_AC:
+            if (cl == OBJ_ARMOUR
+                || cl == OBJ_JEWELLERY && ty == RING_PROTECTION)
+            {
+                continue;
+            }
+            _randart_propset(proprt, ARTP_AC,
+                             1 + random2(3) + random2(3) + random2(3),
+                             negench);
+            break;
+
+        case ARTP_EVASION:
+            if (cl == OBJ_JEWELLERY && ty == RING_EVASION)
+                continue;
+
+            _randart_propset(proprt, ARTP_EVASION,
+                             1 + random2(3) + random2(3) + random2(3),
+                             negench);
+            break;
+
+        case ARTP_STRENGTH:
+            if (cl == OBJ_JEWELLERY && ty == RING_STRENGTH)
+                continue;
+
+            _randart_propset(proprt, ARTP_STRENGTH,
+                             1 + random2(3) + random2(3),
+                             negench);
+            break;
+
+        case ARTP_INTELLIGENCE:
+            if (cl == OBJ_JEWELLERY && ty == RING_INTELLIGENCE)
+                continue;
+
+            _randart_propset(proprt, ARTP_INTELLIGENCE,
+                             1 + random2(3) + random2(3),
+                             negench);
+            break;
+
+        case ARTP_DEXTERITY:
+            if (cl == OBJ_JEWELLERY && ty == RING_DEXTERITY)
+                continue;
+
+            _randart_propset(proprt, ARTP_DEXTERITY,
+                             1 + random2(3) + random2(3),
+                             negench);
+            break;
+        }
     }
+    while (false);
 
     return (negench ? -1 : 1);
+}
+
+// An artefact will pass this check if it has any non-stat properties, and
+// also if it has enough stat (AC, EV, Str, Dex, Int, Acc, Dam) properties.
+static bool _check_stat_props( const artefact_properties_t &proprt )
+{
+    int num_stats   = 0;
+    int num_acc_dam = 0;
+
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; i++)
+    {
+        if (i == ARTP_CURSED)
+            continue;
+
+        if (proprt[i] == 0)
+            continue;
+
+        if (i >= ARTP_AC && i <= ARTP_DEXTERITY)
+            num_stats++;
+        else if (i >= ARTP_ACCURACY && i <= ARTP_DAMAGE)
+            num_acc_dam++;
+        else
+            return (true);
+    }
+
+    num_stats += num_acc_dam;
+
+    // If an artefact has no properties at all, something is wrong.
+    if (num_stats == 0)
+        return (false);
+
+    // Artefacts with two of more stat-only properties are fine.
+    if (num_stats >= 2)
+        return (true);
+
+    // If an artefact has exactly one stat property, we might want to add
+    // some more. (50% chance if it's Acc/Dam, else always.)
+    return (num_acc_dam > 0 || coinflip());
 }
 
 void static _get_randart_properties(const item_def &item,
@@ -654,7 +697,7 @@ void static _get_randart_properties(const item_def &item,
 
     proprt.init(0);
 
-    if (aclass == OBJ_WEAPONS) // only weapons get brands, of course
+    if (aclass == OBJ_WEAPONS) // Only weapons get brands, of course.
     {
         proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(15);        // brand
 
@@ -688,7 +731,7 @@ void static _get_randart_properties(const item_def &item,
         if (proprt[ARTP_BRAND] == SPWPN_PROTECTION)
             proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection
 
-        // if this happens, things might get broken - bwr
+        // If this happens, things might get broken. - bwr
         if (proprt[ARTP_BRAND] == SPWPN_SPEED && atype == WPN_QUICK_BLADE)
             proprt[ARTP_BRAND] = SPWPN_NORMAL;
 
@@ -701,9 +744,9 @@ void static _get_randart_properties(const item_def &item,
                 int tmp = random2(20);
 
                 proprt[ARTP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
-                                    (tmp >= 14) ? SPWPN_PROTECTION :
-                                    (tmp >= 10) ? SPWPN_VENOM
-                                                : SPWPN_VORPAL + random2(3);
+                                     (tmp >= 14) ? SPWPN_PROTECTION :
+                                     (tmp >= 10) ? SPWPN_VENOM
+                                                 : SPWPN_VORPAL + random2(3);
 
                 if (atype == WPN_BLOWGUN
                     && proprt[ARTP_BRAND] != SPWPN_SPEED
@@ -1113,8 +1156,14 @@ void static _get_randart_properties(const item_def &item,
         }
     }
 
-    if (artefact_wpn_num_props(proprt) == 0)
+    // "Boring" artefacts (no properties, or only one stat property)
+    // get an additional property, or maybe two of them.
+    if (!_check_stat_props(proprt))
+    {
         power_level += _randart_add_one_property(item, proprt);
+        if (coinflip())
+            power_level += _randart_add_one_property(item, proprt);
+    }
 
     if ((power_level < 2 && one_chance_in(5)) || one_chance_in(30))
     {
@@ -1320,20 +1369,13 @@ int artefact_known_wpn_property( const item_def &item,
         return (0);
 }
 
-int artefact_wpn_num_props( const item_def &item )
-{
-    artefact_properties_t proprt;
-    artefact_wpn_properties( item, proprt );
-
-    return artefact_wpn_num_props( proprt );
-}
-
-int artefact_wpn_num_props( const artefact_properties_t &proprt )
+int _artefact_num_props( const artefact_properties_t &proprt )
 {
     int num = 0;
 
+    // Count all properties, but exclude self-cursing.
     for (int i = 0; i < ARTP_NUM_PROPERTIES; i++)
-        if (proprt[i] != 0)
+        if (proprt[i] != 0 && i != ARTP_CURSED)
             num++;
 
     return num;
@@ -1818,7 +1860,7 @@ bool randart_is_bad( const item_def &item, artefact_properties_t &proprt )
     if (item.base_type == OBJ_BOOKS)
         return (false);
 
-    if (artefact_wpn_num_props( proprt ) == 0)
+    if (_artefact_num_props( proprt ) == 0)
         return (true);
 
     return (_randart_is_redundant( item, proprt )
