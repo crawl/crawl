@@ -1405,6 +1405,50 @@ static int _acquirement_misc_subtype()
     return (result);
 }
 
+static int _acquirement_wand_subtype()
+{
+    int picked = NUM_WANDS;
+
+    int total = 0;
+    for (int type = 0; type < NUM_WANDS; ++type)
+    {
+        int w = 0;
+
+        // First, weight according to usefulness.
+        // (The numbers are approximately percentages.)
+        switch (type)
+        {
+        case WAND_HASTING:
+        case WAND_HEALING:
+            w = 15; break;
+        case WAND_TELEPORTATION:
+        case WAND_FIREBALL:
+            w = 10; break;
+        case WAND_INVISIBILITY:
+        case WAND_DIGGING:
+        case WAND_DISINTEGRATION:
+        case WAND_POLYMORPH_OTHER:
+            w = 7; break;
+        case WAND_FIRE:
+        case WAND_COLD:
+        case WAND_LIGHTNING:
+            w = 5; break;
+        default:
+            w = 1; break;
+        }
+
+        // Unknown wands get another huge weight bonus.
+        if (get_ident_type(OBJ_WANDS, type) == ID_UNKNOWN_TYPE)
+            w += 10;
+
+        total += w;
+        if (x_chance_in_y(w, total))
+            picked = type;
+    }
+
+    return (picked);
+}
+
 static int _find_acquirement_subtype(object_class_type class_wanted,
                                      int &quantity, int agent = -1)
 {
@@ -1446,10 +1490,11 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             type_wanted = _acquirement_armour_subtype(divine);
             break;
         }
-        case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype();  break;
-        case OBJ_STAVES: type_wanted = _acquirement_staff_subtype(already_has);
+        case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype(); break;
+        case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
+        case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
             break;
-        case OBJ_JEWELLERY: type_wanted = _acquirement_jewellery_subtype();
+        case OBJ_JEWELLERY:  type_wanted = _acquirement_jewellery_subtype();
             break;
         default: break;         // gold, books
         }
@@ -1720,21 +1765,22 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mpr( "[a] Weapon  [b] Armour  [c] Jewellery      [d] Book" );
-        mpr( "[e] Staff   [f] Food    [g] Miscellaneous  [h] Gold" );
+        mpr("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
+        mpr("[e] Staff   [f] Wand    [g] Miscellaneous  [h] Food  [i] Gold");
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower( get_ch() );
         switch (keyin)
         {
-        case 'a': class_wanted = OBJ_WEAPONS;    break;
-        case 'b': class_wanted = OBJ_ARMOUR;     break;
-        case 'c': class_wanted = OBJ_JEWELLERY;  break;
-        case 'd': class_wanted = OBJ_BOOKS;      break;
-        case 'e': class_wanted = OBJ_STAVES;     break;
-        case 'f': class_wanted = OBJ_FOOD;       break;
-        case 'g': class_wanted = OBJ_MISCELLANY; break;
-        case 'h': class_wanted = OBJ_GOLD;       break;
+        case 'a': case ')':            class_wanted = OBJ_WEAPONS;    break;
+        case 'b': case '[':  case ']': class_wanted = OBJ_ARMOUR;     break;
+        case 'c': case '=':  case '"': class_wanted = OBJ_JEWELLERY;  break;
+        case 'd': case '+':  case ':': class_wanted = OBJ_BOOKS;      break;
+        case 'e': case '\\': case '|': class_wanted = OBJ_STAVES;     break;
+        case 'f': case '/':            class_wanted = OBJ_WANDS;      break;
+        case 'g': case '}':  case '{': class_wanted = OBJ_MISCELLANY; break;
+        case 'h': case '%':            class_wanted = OBJ_FOOD;       break;
+        case 'i': case '$':            class_wanted = OBJ_GOLD;       break;
         default:
             // Lets wizards escape out of accidently choosing acquirement.
             if (agent == AQ_WIZMODE)
@@ -1950,6 +1996,8 @@ bool acquirement(object_class_type class_wanted, int agent,
     // Give some more gold.
     if (class_wanted == OBJ_GOLD)
         thing.quantity += 150;
+    else if (class_wanted == OBJ_WANDS)
+        thing.plus = std::max((int) thing.plus, 3 + random2(3));
     else if (quant > 1)
         thing.quantity = quant;
 

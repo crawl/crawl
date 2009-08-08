@@ -759,7 +759,7 @@ static bool _xom_give_item(int power)
     {
         const object_class_type types[] = {
             OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
-            OBJ_STAVES,  OBJ_FOOD,   OBJ_MISCELLANY, OBJ_GOLD
+            OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_FOOD,  OBJ_GOLD
         };
         god_acting gdact(GOD_XOM);
         _xom_acquirement(RANDOM_ELEMENT(types));
