@@ -2499,7 +2499,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
     {
         if (times_entered == 0)
-            slime_vault_change(jiyva_is_dead());
+        {
+            if (you.religion == GOD_JIYVA)
+                slime_vault_change(false);
+            else if (jiyva_is_dead())
+                slime_vault_change(true);
+        }
 
         times_entered++;
     }
