@@ -1005,7 +1005,22 @@ static armour_type _acquirement_armour_subtype(bool divine)
     {
         // Start with normal base armour.
         if (result == ARM_ROBE)
-            result = coinflip() ? ARM_ROBE : ARM_ANIMAL_SKIN;
+        {
+            // Animal skins don't get egos, so make them less likely.
+            result = (one_chance_in(4) ? ARM_ANIMAL_SKIN : ARM_ROBE);
+
+            // Armour-restricted species get a bonus chance at troll/dragon
+            // armour. (In total, the chance is almost 10%.)
+            if (one_chance_in(20))
+            {
+                result = static_cast<armour_type>(
+                    random_choose_weighted(3, ARM_TROLL_LEATHER_ARMOUR,
+                                           3, ARM_STEAM_DRAGON_ARMOUR,
+                                           1, ARM_SWAMP_DRAGON_ARMOUR,
+                                           1, ARM_DRAGON_ARMOUR,
+                                           0));
+            }
+        }
         else
         {
             if (divine)
@@ -1020,7 +1035,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
                     result = ARM_CRYSTAL_PLATE_MAIL;
 
-                if (one_chance_in(10))
+                if (one_chance_in(12))
                     result = ARM_ANIMAL_SKIN;
             }
             else
@@ -1863,14 +1878,15 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1)
             {
                 const special_armour_type sparm = get_armour_ego_type(doodad);
-                bool mundane_check = (sparm == SPARM_NORMAL);
+                bool is_mundane   = (sparm == SPARM_NORMAL);
+                bool is_redundant = false;
 
                 // If the created item is an ego item, check whether we're
                 // already wearing an item with this ego in the same slot, and
                 // whether the enchantment is worse than that of the current
                 // item. (For armour, only consider items of the same subtype.)
                 // If so, try filling an unfilled equipment slot after all.
-                if (!mundane_check && agent != GOD_XOM)
+                if (!is_mundane && agent != GOD_XOM)
                 {
                     if (you.equip[eq] != -1
                         && (eq != EQ_BODY_ARMOUR
@@ -1879,11 +1895,11 @@ bool acquirement(object_class_type class_wanted, int agent,
                         && doodad.plus <= you.inv[you.equip[eq]].plus)
                     {
                         // Ego type is cleared later.
-                        mundane_check = true;
+                        is_redundant = true;
                     }
                 }
 
-                if (mundane_check)
+                if (is_mundane || is_redundant)
                 {
                     if (_try_give_mundane_armour(doodad))
                     {
@@ -1897,11 +1913,10 @@ bool acquirement(object_class_type class_wanted, int agent,
                         else if (agent == GOD_XOM && doodad.plus > 0)
                             doodad.plus *= -1;
                     }
-                    else if (eq != EQ_BODY_ARMOUR && agent != GOD_XOM
-                             && one_chance_in(5))
+                    else if (is_mundane && agent != GOD_XOM && one_chance_in(3))
                     {
-                        // If there weren't any unfilled slots, there's a 20%
-                        // chance for non-body armour to roll again.
+                        // If the item is mundane and there aren't any
+                        // unfilled slots, we might want to roll again.
                         destroy_item(thing_created, true);
                         thing_created = NON_ITEM;
                         continue;
