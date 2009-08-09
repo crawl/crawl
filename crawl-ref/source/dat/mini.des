@@ -1261,6 +1261,8 @@ NAME:  solitary_fountain
 DEPTH: D, Elf, Vault
 TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
+KMASK: T = no_monster_gen
+KMASK: U = no_monster_gen
 MAP
 .....
 .....
@@ -1622,6 +1624,7 @@ SHUFFLE: 1?T
 SUBST:   T : T V:2
 SUBST:   ? : 1:2 .
 MONS:    hound / w:1 nothing / w:2 jackal
+KMASK:   T = no_monster_gen
 MAP
 .......
 .xx+xx.

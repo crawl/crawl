@@ -65,6 +65,8 @@ NAME:   temple_fountains
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : T:30 U
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
 MAP
 ...?...
 .......
@@ -109,6 +111,8 @@ TAGS:   temple_entry
 ORIENT: float
 SUBST:  c:cxxx
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
 MAP
 cccccccccc
 ccccmmmmmc
@@ -126,6 +130,8 @@ ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
 MAP
 ccccccccccc
 cccmmmmmccc
@@ -143,6 +149,8 @@ ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
 MAP
 ccccccccc
 cccmmmmmc
@@ -157,11 +165,13 @@ ENDMAP
 
 NAME:   temple_secret_doors_d
 WEIGHT: 1
-TAGS:   temple_entry 
+TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
 MAP
 ccccccccccc
 cccmmmmmccc
@@ -181,6 +191,8 @@ ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
 MAP
 cccccc@cccccc
 cccccc.cccccc
@@ -264,16 +276,16 @@ MAP
 .......''''!!!!!!!!!???????!!!!!!!!!''''........
 .......'''!!!!!!!!!????O????!!!!!!!!!'''........
 .......''''!!!!!!!!!???????!!!!!!!!!''''........
-.......'''''!!!!!!!!!?????!!!!!!!!!'''''....... 
-x.......'''''!!!!!!!!!???!!!!!!!!!'''''........ 
-x........'''''!!!!!!!!!?!!!!!!!!!'''''......... 
-xx._......'''''!!!!!!!!!!!!!!!!!'''''.........  
-xxxxm......'''''''!!!!!!!!!!!'''''''..........  
-xxxxxm......''''''''!!!!!!!''''''''..........   
-xxxx1m_........'''''''!!!'''''''.............   
-xxxxxxm_..........'''''''''''...............    
-xxxxxxxxxx...........'''''................      
-xxxxxxxxxxxx...........................         
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''.......
+x.......'''''!!!!!!!!!???!!!!!!!!!'''''........
+x........'''''!!!!!!!!!?!!!!!!!!!'''''.........
+xx._......'''''!!!!!!!!!!!!!!!!!'''''.........
+xxxxm......'''''''!!!!!!!!!!!'''''''..........
+xxxxxm......''''''''!!!!!!!''''''''..........
+xxxx1m_........'''''''!!!'''''''.............
+xxxxxxm_..........'''''''''''...............
+xxxxxxxxxx...........'''''................
+xxxxxxxxxxxx...........................
 ENDMAP
 
 ##############################################################################
@@ -281,7 +293,7 @@ ENDMAP
 #
 # To reach the Temple, you just have to walk straight. Note that the
 # frequency of the flames is low enough that you have to spend a fair
-# amount of time off the path to get hit by one. And at this depth 
+# amount of time off the path to get hit by one. And at this depth
 # they should not be fatal to anyone. -LP
 #
 NAME:    temple_firewalk
@@ -324,7 +336,7 @@ ENDMAP
 ###############################################################################
 # Firewalk II (Lemuel)
 #
-# A second version, with the safe path marked. Personally I don't think 
+# A second version, with the safe path marked. Personally I don't think
 # it's necessary, but it does make it harder to kill yourself. -LP
 #
 NAME:    temple_firewalk_marked

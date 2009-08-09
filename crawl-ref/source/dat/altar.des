@@ -1,5 +1,5 @@
 ###############################################################################
-# altar.des: This is the place where minivaults (and floating vaults) 
+# altar.des: This is the place where minivaults (and floating vaults)
 #            containing altars should go. Vaults particular to a specific
 #            branch (Beogh altar minivaults for Orc:*, for example), may
 #            go in the corresponding des-file. A few entry vaults contain
@@ -122,17 +122,17 @@ TAGS:   no_monster_gen no_rotate
 TAGS:   no_monster_gen no_pool_fixup no_rotate
 : end
 MAP
-   .........   
-  ...wwwww...  
- ..wwwwwwwww.. 
+   .........
+  ...wwwww...
+ ..wwwwwwwww..
 ..wwwwwwwwwww..
 .wwwwwwwwwwwww.
 .wwwwwwCwwwwww.
 .wwwwwwwwwwwww.
 ..wwwwwwwwwww..
  .wwwwwwwww..
- ...wwwww... 
-   ........  
+ ...wwwww...
+   ........
 ENDMAP
 
 NAME:   lemuel_altar_in_water2
@@ -208,7 +208,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:  lemuel_tele_altar
-DEPTH: D:2-18, Vault 
+DEPTH: D:2-18, Vault
 SUBST: Y = X x
 KFEAT: X = teleport trap
 MAP
@@ -258,6 +258,7 @@ NAME:   lemuel_upstairs_altar
 DEPTH:  D:2-12, Vault, Elf, Crypt
 ORIENT: float
 SUBST:  T:T., )=)}], c:ccx
+KMASK:  T = no_monster_gen
 MAP
 ccccccc
 cT...Tc
@@ -282,14 +283,14 @@ MONS:  patrolling Angel
 KFEAT: C = altar_elyvilon / altar_zin / altar_shining_one
 MAP
    .....
-  ..xmx..  
- ..xx>xx.. 
+  ..xmx..
+ ..xx>xx..
 ..xxx.xxx..
 .xxxx1xxxx.
 .m>..C..>m.
 .xxxx.xxxx.
 ..xxx.xxx..
- ..xx>xx.. 
+ ..xx>xx..
   ..xmx..
    .....
 ENDMAP
@@ -308,17 +309,17 @@ SUBST: C = C P:1
 KFEAT: C = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
 MAP
-  ..LLllLL.... 
+  ..LLllLL....
   .LllllllLLL..
 ..Lll323lllLLL.
 .LLl32123lllLL.
 .LLl33C33llLL..
 ..Lll323llLL...
 ..LLll3llL.....
-...LLlllL...   
-....LLLL....   
-   ..LLLLL..   
-   ....LLLL.   
+...LLlllL...
+....LLLL....
+   ..LLLLL..
+   ....LLLL.
 ENDMAP
 
 NAME:  david_defended_altar_orc
@@ -377,12 +378,12 @@ xxxxwwwwwwwwxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
 
-# The mix of deep and shallow water is intended to keep the centaurs from 
+# The mix of deep and shallow water is intended to keep the centaurs from
 # escaping without requiring the player to be able to cross deep water.
 NAME:  lemuel_centaur_altar
 DEPTH: D:7-20, Shoal, Lair
 TAGS:  no_pool_fixup no_monster_gen
-MONS:  centaur
+MONS:  patrolling centaur
 MAP
 xxxxxxxxxxxxx
 xxxxxxxxxxwxx
