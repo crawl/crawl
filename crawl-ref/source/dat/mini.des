@@ -848,8 +848,8 @@ xxxx  xxxx
 x**x  x**x
 x**+..+**x
 xx+x..x+xx
-  ......  
-  ......  
+  ......
+  ......
 xx+x..x+xx
 x**+..+**x
 x**x  x**x
@@ -1255,6 +1255,8 @@ NAME:  solitary_fountain
 DEPTH: D, Elf, Vault
 TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
+KMASK: T = no_monster_gen
+KMASK: U = no_monster_gen
 MAP
 .....
 .....
@@ -1614,6 +1616,7 @@ SHUFFLE: 1?T
 SUBST:   T : T V:2
 SUBST:   ? : 1:2 .
 MONS:    hound / w:1 nothing / w:2 jackal
+KMASK:   T = no_monster_gen
 MAP
 .......
 .xx+xx.
@@ -1690,7 +1693,7 @@ TAGS:   mini_float patrolling
 DEPTH:  5-26, !Lair, !Orc, !Tomb
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
-            good_item triple sword / good_item double sword 
+            good_item triple sword / good_item double sword
 KFEAT:  S = teleport trap
 NSUBST: n = n/cbn
 : if you.absdepth() < 10 then
@@ -1758,7 +1761,7 @@ MAP
 ENDMAP
 
 ################################################################################
-# Some earlyish demon minivaults by Eino. 
+# Some earlyish demon minivaults by Eino.
 # The difficulty of most low-tier demons is severely inflated by the time the
 # player gets to meet them. Here (using default depth) they aspire to be both
 # challenging and flavourful.
