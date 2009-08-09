@@ -2170,7 +2170,7 @@ static void _do_god_gift(bool prayed_for)
 
                         // Sanity check: Stop if spawning further jellies
                         // would excommunicate us.
-                        if (you.piety - (count_created+1) * 5 <= 0)
+                        if (you.piety - (count_created + 1) * 5 <= 0)
                             break;
                     }
 
@@ -2180,7 +2180,8 @@ static void _do_god_gift(bool prayed_for)
                              count_created > 1 ? "Some jellies appear"
                                                : "A jelly appears");
                     }
-                    you.piety -= 5 * count_created;
+
+                    lose_piety(5 * count_created);
                 }
             }
             break;
