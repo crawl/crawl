@@ -2698,7 +2698,8 @@ int tileidx_bolt(const bolt &bolt)
 
 int tileidx_zap(int colour)
 {
-    int col = colour;
+    int col = (colour == ETC_MAGIC ? element_colour(ETC_MAGIC) : colour);
+
     if (col > 8)
         col -= 8;
     if (col < 1)

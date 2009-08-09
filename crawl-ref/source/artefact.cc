@@ -638,7 +638,8 @@ static int _randart_add_one_property( const item_def &item,
 
 // An artefact will pass this check if it has any non-stat properties, and
 // also if it has enough stat (AC, EV, Str, Dex, Int, Acc, Dam) properties.
-static bool _check_stat_props( const artefact_properties_t &proprt )
+// Returns how many (more) stat properties we need to add.
+static int _need_bonus_stat_props( const artefact_properties_t &proprt )
 {
     int num_stats   = 0;
     int num_acc_dam = 0;
@@ -656,22 +657,25 @@ static bool _check_stat_props( const artefact_properties_t &proprt )
         else if (i >= ARTP_ACCURACY && i <= ARTP_DAMAGE)
             num_acc_dam++;
         else
-            return (true);
+            return (0);
     }
 
     num_stats += num_acc_dam;
 
     // If an artefact has no properties at all, something is wrong.
     if (num_stats == 0)
-        return (false);
+        return (2);
 
     // Artefacts with two of more stat-only properties are fine.
     if (num_stats >= 2)
-        return (true);
+        return (0);
 
     // If an artefact has exactly one stat property, we might want to add
-    // some more. (50% chance if it's Acc/Dam, else always.)
-    return (num_acc_dam > 0 || coinflip());
+    // some more. (66% chance if it's Acc/Dam, else always.)
+    if (num_acc_dam > 0)
+        return (random2(3));
+
+    return (1 + random2(2));
 }
 
 void static _get_randart_properties(const item_def &item,
@@ -1158,12 +1162,9 @@ void static _get_randart_properties(const item_def &item,
 
     // "Boring" artefacts (no properties, or only one stat property)
     // get an additional property, or maybe two of them.
-    if (!_check_stat_props(proprt))
-    {
+    int add_prop = _need_bonus_stat_props(proprt);
+    while (0 < add_prop--)
         power_level += _randart_add_one_property(item, proprt);
-        if (coinflip())
-            power_level += _randart_add_one_property(item, proprt);
-    }
 
     if ((power_level < 2 && one_chance_in(5)) || one_chance_in(30))
     {
