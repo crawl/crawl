@@ -4033,6 +4033,18 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_MENKAURE, 'M', MAGENTA, "Menkaure",
+    M_UNIQUE | M_SPEAKS | M_SEE_INVIS | M_EVIL | M_SPELLCASTER 
+        | M_ACTUAL_SPELLS,
+    MR_RES_POISON | MR_VUL_FIRE | MR_RES_COLD,
+    0, 20, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, -5,
+    { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 3, 5, 3, 0 },
+    3, 6, MST_MENKAURE, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_NORMAL,
+    HT_LAND, 6, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_MEDIUM
+},
+
+{
     // May be re-spawned after his death.
     MONS_BORIS, 'L', RED, "Boris",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_EVIL

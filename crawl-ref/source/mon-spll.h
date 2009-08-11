@@ -999,6 +999,17 @@
       }
     },
 
+    { MST_MENKAURE,
+      {
+       SPELL_PAIN,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     { MST_EUSTACHIO,
       {
        SPELL_SUMMON_SMALL_MAMMALS,

@@ -957,6 +957,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
 
     switch (monster->type)
     {
+        case MONS_MENKAURE:
         case MONS_MUMMY:          pow = 1; break;
         case MONS_GUARDIAN_MUMMY: pow = 3; break;
         case MONS_MUMMY_PRIEST:   pow = 8; break;
@@ -990,7 +991,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     if (!target->alive())
         return;
 
-    if (monster->type == MONS_MUMMY && YOU_KILL(killer))
+    if ((monster->type == MONS_MUMMY || monster->type == MONS_MENKAURE) && YOU_KILL(killer))
         curse_an_item(true);
     else
     {
