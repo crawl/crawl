@@ -387,3 +387,92 @@ ccc$ddccc.<A.cccdd$ccc
 cccccccccccccccccccccc
 ENDMAP
 
+# Guardian mummies are a clue, and actually quite a scary threat.
+NAME:    minitomb_due_mausoleum
+WEIGHT:  5
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+MONS:    orc skeleton / kobold skeleton / \
+         hobgoblin skeleton / gnoll skeleton
+MONS:    guardian mummy
+MONS:    mummy
+# Loot: 22 items.
+ITEM:    any scroll / any potion
+KITEM:   x = any scroll / any potion
+KMONS:   x = guardian mummy
+: minitomb_setup_features(_G)
+: minitomb_milestone(_G)
+MAP
+ccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccc
+cc.........................cc
+cc.<..........1..........<.cc
+cc.......ccccc+ccccc.......cc
+cc......cc3...1...3cc......cc
+cc.....cc...cc=cc...cc.....cc
+cc....cc...codddoc...cc....cc
+cc....c...codddddoc...c....cc
+cc...1+3..=ddd<xdd=..3+1...cc
+cc....c...codddddoc...c....cc
+cc....cc...codddoc...cc....cc
+cc.....cc...cc=cc...cc.....cc
+cc......cc3...1...3cc......cc
+cc.......ccccc+ccccc.......cc
+cc.<..........1..........<.cc
+cc.........................cc
+ccccccccccccc111ccccccccccccc
+ccccccccccccc111ccccccccccccc
+ccccccccccccc111ccccccccccccc
+ccccccccccccc111ccccccccccccc
+ccccccccccccc+++ccccccccccccc
+cccccccccccc.....cccccccccccc
+ccccccccccc.......ccccccccccc
+cccccccc2o...<.A...o2cccccccc
+ccccccccccc.......ccccccccccc
+cccccccccccc.....cccccccccccc
+ccccccccccccc...ccccccccccccc
+ccccccccccccccocccccccccccccc
+cccccccccccccc2cccccccccccccc
+ccccccccccccccccccccccccccccc
+ENDMAP
+
+# INDY: Oh, rats! ... He hates rats. He's scared to death of 'em.
+NAME:    minitomb_due_small_catacomb
+WEIGHT:  10
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen
+ITEM:    any scroll / any potion
+MONS:    kobold skeleton / goblin skeleton / gnoll skeleton / \
+         orc skeleton
+# Loot: 10-19
+# Guaranteed 10 items and 10 mummies, two in hidden rooms.
+# 50/50 chance of loot for each of the eleven rats in the rat room.
+KITEM:   x = any scroll / any potion
+KMONS:   x = mummy
+KFEAT:   ^ = dart trap / arrow trap
+KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
+KMONS:   y = rat skeleton
+: minitomb_setup_features(_G)
+: minitomb_milestone(_G)
+MAP
+           ccc
+         cccxccccc                 
+       ccc....+.^c      cccccc     
+      cc.1.ccccc.c     cc.+^.cc    
+     cc..cc   cc+cc   cc..cc..cc   
+    cc.^cc   cc...ccccc..cccc.1ccc 
+ccc cc+cc    c+.x.+...1.cc  cc...cc
+cAccc...cc   cc...cccxccc    ccc.cc
+c..+.^1.+c    cc+cc ccc   ccc cc+cc
+c<ccc...cc   cc..cc   cccccxccc...c
+ccc cc+cc   cc^1=cc  cc..+.^..+.x.+
+     c.cc  cc..cc.cc c.1ccccccc...c
+     c^cc cc..cccc.ccc.cc     cc+cc
+     c..cccc+cc  cc.cc+cc      ccc 
+     cc1.cc...cccccc=yyyccccc      
+      cc.+..x..+...+yyyyy+.^cc     
+       cccc...cccxcccyyyccc..cc    
+          cc=cc ccc cc+cc cc1.ccccc  
+           cxc       ccc   cc...=xc 
+           ccc              ccccccc                                 
+ENDMAP
