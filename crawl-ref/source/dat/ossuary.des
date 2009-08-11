@@ -456,11 +456,11 @@ KMONS:   y = rat skeleton
 : ossuary_milestone(_G)
 MAP
            ccc
-         cccxccccc                 
-       ccc....+.^c      cccccc     
-      cc.1.ccccc.c     cc.+^.cc    
-     cc..cc   cc+cc   cc..cc..cc   
-    cc.^cc   cc...ccccc..cccc.1ccc 
+         cccxccccc
+       ccc....+.^c      cccccc
+      cc.1.ccccc.c     cc.+^.cc
+     cc..cc   cc+cc   cc..cc..cc
+    cc.^cc   cc...ccccc..cccc.1ccc
 ccc cc+cc    c+.x.+...1.cc  cc...cc
 cAccc...cc   cc...cccxccc    ccc.cc
 c..+.^1.+c    cc+cc ccc   ccc cc+cc
@@ -468,13 +468,13 @@ c<ccc...cc   cc..cc   cccccxccc...c
 ccc cc+cc   cc^1=cc  cc..+.^..+.x.+
      c.cc  cc..cc.cc c.1ccccccc...c
      c^cc cc..cccc.ccc.cc     cc+cc
-     c..cccc+cc  cc.cc+cc      ccc 
-     cc1.cc...cccccc=yyyccccc      
-      cc.+..x..+...+yyyyy+.^cc     
-       cccc...cccxcccyyyccc..cc    
-          cc=cc ccc cc+cc cc1.ccccc  
-           cxc       ccc   cc...=xc 
-           ccc              ccccccc                                 
+     c..cccc+cc  cc.cc+cc      ccc
+     cc1.cc...cccccc=yyyccccc
+      cc.+..x..+...+yyyyy+.^cc
+       cccc...cccxcccyyyccc..cc
+          cc=cc ccc cc+cc cc1.ccccc
+           cxc       ccc   cc...=xc
+           ccc              ccccccc
 ENDMAP
 
 # Menkaures's pyramid
@@ -487,7 +487,7 @@ MONS:    kobold zombie / gnoll zombie / orc zombie / rat zombie / \
 MONS:    kobold skeleton / gnoll skeleton / orc skeleton / rat skeleton / \
          goblin skeleton / hobgoblin skeleton
 MONS:    mummy
-MONS:    Menkaure, mummy
+KMONS:   4 = Menkaure, mummy
 # Loot: 1-16 items
 ITEM:    any scroll / any potion / w:5 nothing
 KFEAT:   ^ = arrow trap / dart trap / alarm trap
@@ -497,9 +497,9 @@ NSUBST:  ' = 2:m / 25:1 / 25:2 / 30:^ / .
 : ossuary_setup_features(_G)
 : ossuary_milestone(_G)
 MAP
-                            cc  
-                           cccc  
-                          cccccc  
+                            cc
+                           cccc
+                          cccccc
                          cc''''cc
                         cc''cc''cc
                        cc''cccc''cc
