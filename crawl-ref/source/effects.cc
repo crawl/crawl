@@ -1430,31 +1430,39 @@ static int _acquirement_wand_subtype()
         int w = 0;
 
         // First, weight according to usefulness.
-        // (The numbers are approximately percentages.)
         switch (type)
         {
-        case WAND_HASTING:
+        case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
         case WAND_HEALING:
-            w = 15; break;
-        case WAND_TELEPORTATION:
-        case WAND_FIREBALL:
-            w = 10; break;
+            w = 25; break;
+        case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
         case WAND_INVISIBILITY:
-        case WAND_DIGGING:
-        case WAND_DISINTEGRATION:
-        case WAND_POLYMORPH_OTHER:
-            w = 7; break;
-        case WAND_FIRE:
+            w = 15; break;
+        case WAND_FIRE:             // each 5.7%, group unknown each 9.3%
         case WAND_COLD:
         case WAND_LIGHTNING:
+        case WAND_DRAINING:
+            w = 8; break;
+        case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
+        case WAND_FIREBALL:
+        case WAND_DISINTEGRATION:
+        case WAND_POLYMORPH_OTHER:
             w = 5; break;
+        case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
+        case WAND_FROST:
+        case WAND_CONFUSION:
+        case WAND_PARALYSIS:
+        case WAND_SLOWING:
+        case WAND_ENSLAVEMENT:
+        case WAND_MAGIC_DARTS:
+        case WAND_RANDOM_EFFECTS:
         default:
             w = 1; break;
         }
 
         // Unknown wands get another huge weight bonus.
         if (get_ident_type(OBJ_WANDS, type) == ID_UNKNOWN_TYPE)
-            w += 10;
+            w *= 2;
 
         total += w;
         if (x_chance_in_y(w, total))
