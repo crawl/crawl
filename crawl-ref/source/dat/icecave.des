@@ -174,7 +174,7 @@ end
 
 NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   uniq_ice_cave
-DEPTH:  D:16-24, Lair:6-
+DEPTH:  D:16-20, Lair:6-
 ORIENT: float
 : ice_cave_portal(_G)
 COLOUR: X = white
@@ -202,7 +202,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   uniq_ice_cave
-DEPTH:  D:14-24
+DEPTH:  D:14-20
 ORIENT: float
 : ice_cave_portal(_G)
 COLOUR: X = white
@@ -224,7 +224,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_demonic_guard
 TAGS:   uniq_ice_cave
-DEPTH:  D:14-24
+DEPTH:  D:14-20
 ORIENT: float
 : ice_cave_portal(_G)
 COLOUR: x = white
@@ -244,7 +244,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_001
 TAGS:   uniq_ice_cave
-DEPTH:  D:14-24
+DEPTH:  D:14-20
 ORIENT: float
 : ice_cave_portal(_G)
 COLOUR: x = white
@@ -262,7 +262,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_002
 TAGS:   uniq_ice_cave
-DEPTH:  D:14-24
+DEPTH:  D:14-20
 ORIENT: float
 : ice_cave_portal(_G)
 MONS:   ice statue
@@ -286,19 +286,20 @@ ENDMAP
 ############################################################################
 # small caves
 #
-# All start with a similar ice statue arrangement. These have the starting
-# point near the exit, so you can always retreat; a middle point where there
-# is some loot; and the end, where there is a big challenge and some major
-# loot. Ideally weaker characters attempt to overcome the midpoint and then
-# go back to dungeon, and strong characters can try to clear the whole cave.
+# All have the starting point next to the exit, so you can always retreat;
+# a middle point/area where there is some loot; and the end, where there is a
+# bigger challenge and some major loot. Ideally weaker characters attempt
+# to overcome the midpoint and then go back to dungeon, and strong characters
+# can try to clear the whole cave.
 
-# Foes: animals + frost giant & the ice statues.
+# Foes: animals + frost giant & an ice statue.
 # Loot: heavy weapons and rC gear wearable by big races,
 #       plus some useful potions in the freezer.
 NAME:    ice_cave_small_01
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  8
+# Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
@@ -344,16 +345,16 @@ xxxxx............xxxwwwwxxxxxxxxxxxwwwxxxx......xxxx
 xxxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...xxxxxxxxx
 xxwwxxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxxxxxxxxxx
 xxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxx
-xxwwwwwwwwwwwwwwwwwx'xxxxxxxxxxxxxxx....xxxxxxxxxxxx
-xxwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxx........xxxxxxxxxx
-xxwwxxxxxxxxxxxwwxxx'xxxxxxxxxxxx...........xxxxxxxx
-x"xxxxxxxxxxxxxxwxx'xxxxxx"xxxxx..............xxxxxx
-xx"xxxxxxxxxxxxxxx'xxxxxxx""""x................xxxxx
-xxx"xxxxxxxxxxxxx'xxxxxxx"xxxx......2...2......xxxxx
-xxx"xxxxxxxxxxxxx''xxxxx"xxx''xx...1..2..1....xxxxxx
-xxxx""xxxxxxxxxxxxx'xxx"xxx'xxxxx.....1......xxxxxxx
-xxxxxx""""xxxxxxxxxx'xx"xxx'xxwwxx..........xxxxxxxx
-xxxxxxxxxx"xxxxxxxxx'xxx"xxx'xxwwxx5x....x5xxxxxxxxx
+xxwwwwwwwwwwwwwwwwwx'xxxxxxxxxxxxxxx5...xxxxxxxxxxxx
+xxwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxxx.......xxxxxxxxxx
+xxwwxxxxxxxxxxxwwxxx'xxxxxxxxxxxxxxxx.......xxxxxxxx
+x"xxxxxxxxxxxxxxwxx'xxxxxx"xxxxxxxxxxx....2...xxxxxx
+xx"xxxxxxxxxxxxxxx'xxxxxxx""""x..xxxxxxx2......xxxxx
+xxx"xxxxxxxxxxxxx'xxxxxxx"xxxx.......xxx.......xxxxx
+xxx"xxxxxxxxxxxxx''xxxxx"xxx''xx......21x.....xxxxxx
+xxxx""xxxxxxxxxxxxx'xxx"xxx'xxxxx....1..2....xxxxxxx
+xxxxxx""""xxxxxxxxxx'xx"xxx'xxwwxx.1......1.xxxxxxxx
+xxxxxxxxxx"xxxxxxxxx'xxx"xxx'xxwwxx.x....x.xxxxxxxxx
 xxxxxxxxx"xxxxxxxxx'xxx"xxxxx'xxwwxxxx..xxxxxxxxxxxx
 xxxxxxx""xxxxxxxxx'xxx"xxxxxx'xxxwwxxx..xxxwwxxxxxxx
 xxxxxx"xxxxxxxxxxx''xxx"xxxxxx'xxwwxx..xxxwwxxxxxxxx
@@ -363,21 +364,22 @@ xxx"xxxxxxxxxxxxxxxxx'xxxx"x'xxxxwwxx...xxwwxxxxxxxx
 xxx"xxxxxxxxxxxxxxxxx'xxxxx2xxxxxwwxxx44.xwwxxxxxxxx
 xxx"xxxxxxxxxxxxxxxxx'x..x.xxxxxwwxxxx4.4xxwwxxxxxxx
 xx"xxxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xxxwwxxxxxxx
-xx"xxxxxxxxxxxxxxxx..xhxhx.xxxxwwwxxx...xxxwwwxxxxxx
+xx"xxxxxxxxxxxxxxxx.1xhxhx.xxxxwwwxxx...xxxwwwxxxxxx
 x"xxxxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xxxwwxxxxxx
-xx"xxxxxxxxx"xxxxxxx......xxxxxwwxx...A...xxxwxxxxxx
+xx"xxxxxxxxx"xxxxxxx1.....xxxxxwwxx...A...xxxwxxxxxx
 xxx"""xxx"""x""xxx""xxxxxxxxxxxwwxx.......xxwwxxxxxx
 xxxxxx"""xxxxxx"""xxxxxxxxxxxxxwwxxx..<..xxxwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwxxxx...xxxwwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# Foes: ice beasts, ice dragons & the ice statues.
+# Foes: ice beasts, ice dragons & ice statues.
 # Loot: some gold, jewellery (approximately three rings).
 NAME:    ice_cave_small_02
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  8
+# Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
@@ -398,12 +400,12 @@ xxxxxxxxxxxxxxxxxxxxxx..xxxxxxx...2..xxxx
 xxxxwwwxxxxxxxxxxxxxxxxx.xxxx$$.2....dexx
 xxwwwwwxxxxxxxxxxxxxx..xx.xx$$$$....deddx
 xwwwwwwwwwwxxxxxxxxx.xx..xx$$$$$$..deddxx
-xxxwwwwwwwwwwwxxxxx..xxxxxxxx$$$$$$$"xx'x
+xxxwwwwwwwwwwwxxxxx..xxxxxxxx$$$$$$$xxx'x
 xwwwwwwwwwwwxxxxxx11xxxxwwwxxxxxxxxxxwx'x
 xxxxwwwwwwxxxxx...1xxwwwwwwwwwwwwwwwwwwxx
 xxxxxwwwxxxx......xxwwwwwwwwwwwwwwwwwwwxx
 xxxxxwxxxx...xxxxxxxxxxxxxxxxxxxwwwwwwxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx"x'xxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxx'xxxx
 xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
 xxxxxx....xxxxxxxxxxxxxxxxxxx"""x..$$xxxx
 xxxx........xxxxxxxx""xxxxx""xxx.xxx$xxxx
@@ -416,14 +418,14 @@ xxx...1.1.1.....xxx'xxx''xxxxx''x'x'xx"xx
 xwxx..........xxxxxx'''xx'xxx'xx'x'xx"xxx
 xwwxx4x....x4xxxxxxxxxxxxx''$xxxxxxx"xxxx
 xxwwxxxx..xxxxxxxxxxxxxxxxx$$$xxxx""xxxxx
-xxxwwxxx..xxxxxxxxxxxxxxxxx$$$$xx"xxxxxxx
-xxxwwxx..xxxxxxxxxxxxxxxxxxx$$"xxx"xxxxxx
-xxxwxx..xxxxxxxxxxxxxxxxxxxxxxx"x"xxxxxxx
-xxxwwx...xxxxxxxxxxxxxxxxxxxxxxx"xxxxxxxx
-xxxwwxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxwwxxx33.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxwwxxxx3.3xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxwwxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxwwxxx..xxxxxxxxxxxxxx"xx$$$$xx"xxxxxxx
+xxxwwxx..xxxxxxxxxxxxxx"x""x$$"xxx"xxxxxx
+xxxwxx..xxxxxxxxxxxxxxx"xxxxxxx"x"xxxxxxx
+xxxwwx...x""x"xxxxxxxxxx"xxxxxxx"xxxxxxxx
+xxxwwxx...xx"x""xxxxxxxxx"xxxxxxxxxxxxxxx
+xxxwwxxx33.xxxxx""xxxxx""xxxxxxxxxxxxxxxx
+xxwwxxxx3.3xxxxxxx"""x"xxxxxxxxxxxxxxxxxx
+xxwwxxx...xxxxxxxxxxx"xxxxxxxxxxxxxxxxxxx
 xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwxx...A...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -433,15 +435,15 @@ xwwxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# Foes: mostly in the undead vein & the ice statues.
+# Foes: mostly in the undead vein, plus a necromancer and an ice statue.
 # Loot: ice magic loot, gear of cold resistance (one piece).
 NAME:    ice_cave_small_03
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  8
 KFEAT:   _ = altar_kikubaaqudgha
-KFEAT:   - = floor w:9 / alarm trap w:1
-COLOUR:  - = white
+SUBST:   - = ........-
+KFEAT:   - = alarm trap
 : ice_cave_colours(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
 : ice_cave_milestone(_G)
@@ -451,8 +453,9 @@ MONS:    freezing wraith
 MONS:    human simulacrum / elf simulacrum / orc simulacrum / \
          draconian simulacrum w:5 / ogre simulacrum w:5 / \
          centaur simulacrum w:5 / troll simulacrum w:5 / naga simulacrum w:5
-MONS:    necromancer ; robe ego:cold_resistance . wand of cold / \
-         necromancer ; robe ego:cold_resistance . wand of fire
+MONS:    necromancer / necromancer ; robe ego:cold_resistance / \
+         necromancer ; robe ego:cold_resistance . wand of fire / \
+         necromancer ; robe ego:cold_resistance . wand of fireball
 MONS:    polar bear simulacrum w:3 generate_awake / \
          wolf simulacrum generate_awake / \
          yak simulacrum generate_awake
@@ -479,27 +482,27 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxwwwxxxxxx....xxxxwxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxwwwwwxxx.......xxwxxxxxxxxxxxxxxxx
 xxwwxxxxxxxxxxxxxxwwwxxx...xxx..xxxxxxxxxxxxxxxxxxxx
-xxxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxxx..xxxxxxxxxxxx
-xxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxx....xxxxxxxxxxxx
-xxwwwxxxxxxxxxxwwxxxx3..xxx...xxxx........xxxxxxxxxx
-xxwwxx.G...G.xxwwxx..33xxxx..xxxx...........xxxxxxxx
-xxxxx.........xxwx....xxxxx...xx..............xxxxxx
-xxdx....2_.24..xxx..xxxxxxxx...................xxxxx
-xx*+...4.44..2..xx...xxxxxxxx.......2...2......xxxxx
-xxdx..4.423.342.xxx.33xxxxxxxxxx...1..2..1....xxxxxx
-xxxxx.4..3.324xxxxxxx3..xxxxxxxxx.....1......xxxxxxx
+xxxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxxxxxxxxxxxxxxxxx
+xxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxxxxxxxxxxxxxxxxxx
+xxwwwxxxxxxxxxxwwxxxx3..xxx...xxxxxxxxxxxxxxxxxxxxxx
+xxwwxx.G...G.xxwwxx..33xxxx..xxxxxxxxxxxxxxxxxxxxxxx
+xxxxx.........xxwx....xxxxx...xxxxxxx...xxxxxxxxxxxx
+xxdx....2_424..xxx..xxxxxxxx....xxx...2....xxxxxxxxx
+xx*+.....44..2..xx...xxxxxxxx.......2.1.2...xxxxxxxx
+xxdx....423.342.xxx.33xxxxxxxxxx...1.....1...xxxxxxx
+xxxxx..4...324xxxxxxx3..xxxxxxxxx............xxxxxxx
 xxxxxxxG4.2G...xxxxxxxx...xxxxwwxx2........2xxxxxxxx
-xxxxxxxxxxxx....xxxxxxxx....xxxwwxx7x....x7xxxxxxxxx
+xxxxxxxxxxxx....xxxxxxxx....xxxwwxx1x....x1xxxxxxxxx
 xxxxxxxxxxxxxx...xx.xxxxxx....xxwwxxxx..xxxxxxxxxxxx
 xxxxxxxxxxxx....xx...xxxxxxx...xxwwxxx..xxxwwxxxxxxx
 xxxxxlm..xxx..xxx..x..xxxxxxxx..xwwxx..xxxwwxxxxxxxx
 xxxxxxxx+xxxx.....xxx.....xxx..xxwxx..xxxwwxxxxxxxxx
-xxxxx444544xxxxxxxx...3.......xxxwwx...xxwwxxxxxxxxx
-xxxx.444444.xxxxxx.....3..3...xxxwwxx...xxwwxxxxxxxx
-xxx..xgdegx..xxxxx..3...3.....xxxwwxxx.66xwwxxxxxxxx
-xx...xxffxx...xxxxx...3..3.3..xxwwxxxx6.6xxwwxxxxxxx
-xx....xxxx...xxxxxxx.........xxxwwxxx...xxxwwxxxxxxx
-xxxx.........xxxxxxxxx.....xxxxwwwxxx...xxxwwwxxxxxx
+xxxxx444544xxx...xxxxx........xxxwwx...xxwwxxxxxxxxx
+xxxx.444444.xxxxxxxxx..3..3...xxxwwxx...xxwwxxxxxxxx
+xxx..xgdegx..xxxxxx*%...3.....xxxwwxxx.66xwwxxxxxxxx
+xx...xxffxx...xxxxx*%....3.3..xxwwxxxx6.6xxwwxxxxxxx
+xx....xxxx...xxxxxxxxx.......xxxwwxxx...xxxwwxxxxxxx
+xxxx.........xxxxxxxxxxx...xxxxwwwxxx...xxxwwwxxxxxx
 xxxx...7....xxxxxxxxxxxxx..xxxwwwxxx.....xxxwwxxxxxx
 xxxxx------xxxxxxxxxxxxxxxx..xxwwxx...A...xxxwxxxxxx
 xxxxxx----xxxxxx...xxxxxxxx...xwwxx.......xxwwxxxxxx
@@ -508,7 +511,7 @@ xxxxxxx.......xxxxxx....xxxxxxwwwxxxx...xxxwwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# Foes: ice & blue devils, white imps & ufetubi, the ice statues.
+# Foes: ice & blue devils, white imps & ufetubi, an ice statue.
 # Loot: weapons and/or armour.
 NAME:    ice_cave_small_04
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
@@ -525,6 +528,12 @@ KFEAT:   ! = .
 NSUBST:  . = 3:! / *:.
 : place_fog(_G, "freezing vapour", 30)
 KFEAT:   ! = .
+# The random ones weren't placed near the entrance, though.
+SUBST:   - = .
+# Still more fog, in the water this time.
+NSUBST:  w = 3:! / *:w
+: place_fog(_G, "freezing vapour", 50)
+KFEAT:   ! = w
 {{
 ice_cave_colours(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
@@ -561,34 +570,34 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx........xxxxxxxxxxx
-xxxxxx....xxxxxxxxxxxx...xxx....xxxxxxxxx
-xxxx........xxxxxxxxx..xxx4xxx...xxxxxxxx
-xxx...........xxxxxx...xx44..xxxx..xxxxxx
-xx....1..1......xxxxx...xx.....xx...xxxxx
-x...1......1.....xxxxx........dxxx..xxxxx
-x............1...xxx.....xx..dxx...xxxxxx
-xx......1..1....xx.....xxxxxxxx...xxxxxxx
-xxx.................xxxxxxxxxx...xxxxxxxx
-xwxx..........x...xxxxxxxxxxq..xxxxxxxxxx
-xwwxx3x....x3xxxxxxxxxx....Q..xxxxxxxxxxx
-xxwwxxxx..xxxxxxxxxx......QqQ..xxxxxxxxxx
-xxxwwxxx..xxxwwxxx....xx.........xxxxxxxx
-xxxwwxx..xxxwwxx.....xx..xxxx..z...xxxxxx
-xxxwxx..xxxwwxx4.b.x.....N..x...Z...xxxxx
-xxxwwx...xxwwxx..B.xxx..n.N.xx.ZzZ..4xxxx
-xxxwwxx...xxwwx4BbB..xx..N...xx.......xxx
-xxxwwxxx...xwwxx.........x.n........4xxxx
-xxwwxxxx...xxwwxx...xxx..x..xxx.....xxxxx
-xxwwxxx...xxxwwxxxxxx....x.....x..xxxxxxx
-xxxxxxx...xxxwwwxxx.....mx.....xxxxxxxxxx
-xwwxxx.....xxxwwxxxx.xx.M.m..xxxxxxxxxxxx
-xwwxx...A...xxxwxxxxxx.M.M.xxxxxxxxxxxxxx
-xwwxx.......xxwwxx...xxx.xxx...xxxxxxxxxx
-xwwxxx..<..xxxwwxx.e.........f.xxxxxxxxxx
-xwwxxxx...xxxwwwxx...xx*|*xx...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx...xxx....xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx..xxx4xxx...xxxxxxxx
+xxxxxx...xxxxxxxxxxx...xx44..xxxx..xxxxxx
+xxxx..1..1...xxxxxxxx...xx.....xx...xxxxx
+xxx.1......1...xxxxxxx........dxxx..xxxxx
+xxx..........1..xxxx.....xx..dxx...xxxxxx
+xxx..1..1..1....xx.....xxxxxxxx...xxxxxxx
+xxxx................xxxxxxxxxx...xxxxxxxx
+xxxxx.........x...xxxxxxxxxxq..xxxxxxxxxx
+xxxxx1x....x3xxxxxxxxxx....Q..xxxxxxxxxxx
+xxxxxxxx..xxxxwwwxxx......QqQ..xxxxxxxxxx
+xxxxxxxx..xxxwwxxx....xx.........xxxxxxxx
+xxxxxxx..xxxwwxx.....xx..xxxx..z...xxxxxx
+xxxxxx..xxxwwxx4.b.x.....N..x...Z...xxxxx
+xxxxxx...xxwwxx..B.xxx..n.N.xx.ZzZ..4xxxx
+xxxxxxx...xxwwx4BbB..xx..N...xx.......xxx
+xxxxxxxx.-.xwwxx.........x.n........4xxxx
+xxxxxxxx---xxwwxx...xxx..x..xxx.....xxxxx
+xxxxxxx---xxwwwwxxxxx....x.....x..xxxxxxx
+xxxxxxx---xxwwwwwwx.....mx.....xxxxxxxxxx
+xxxxxx-----xxwwwwwxx.xx.M.m..xxxxxxxxxxxx
+xxxxx---A---xxwwwccccc.M.M.cccccxxxxxxxxx
+xxxxx-------xwwwwc...ccc.ccc...cxxxxxxxxx
+xxxxxx--<--xxwwwwc.e.........f.cxxxxxxxxx
+xxxxxxx---xxwwwwwc...cc*|*cc...cxxxxxxxxx
+xxxxxxxxxxxxxxxxxcccccccccccccccxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
 
 ############################################################################
 # sprawling caverns
@@ -669,13 +678,11 @@ NAME:   ice_cave_caverns_02
 TAGS:   ice_cave no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
-# Some layout randomization.
-: if crawl.coinflip() then
-SUBST: '=x , -=.
-: else
-SUBST: '=. , -=x
-: end
 # Two different populations: undead/demon and natural/giant.
+# The fog generators are placed differently - the natural population
+# doesn't have enough cold resistance for many clouds. The ';' placeholder
+# symbol gives the natural monsters some safety padding from generator
+# placement.
 : if crawl.coinflip() then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
@@ -685,6 +692,12 @@ ITEM: book of ice / book of unlife / staff of cold / staff of death / \
       nothing w:30
 ITEM: ring of ice / ring of protection from fire / ring of life protection / \
       wand of cold / wand of draining / nothing
+# Take out ';' safety padding.
+SUBST: ; = .
+# Place the fog generators:
+SUBST: . = .:40 !:1
+: place_fog(_G, "freezing vapour", 25)
+KFEAT: ! = .
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
@@ -697,40 +710,48 @@ ITEM: book of ice / \
       longbow ego:frost good_item no_uniq / nothing w:20
 ITEM: ring of ice / ring of protection from fire / wand of cold / \
       arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
-# As the clouds kill natural creatures off, don't place the predetermined
-# generators.
-SUBST: ! = .
+# Place the fog generators. The predetermined ones are mild.
+: place_fog(_G, "freezing vapour", 5)
+# Place a few random, mild ones.
+SUBST: . = .:60 !:1
+: place_fog(_G, "freezing vapour", 10)
+KFEAT: ! = .
+SUBST: ; = .
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
-# Traps and colours:
-SUBST: . = .:40 !:1
-: place_fog(_G, "freezing vapour", 25)
-KFEAT: ! = .
+# The ':' provides fog-free zone near the entrance.
+SUBST: : = .
+# Some layout randomization.
+: if crawl.coinflip() then
+SUBST: '=x , -=.
+: else
+SUBST: '=. , -=x
+: end
 : ice_cave_colours(_G)
 : ice_cave_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx..xxwwwwxxx.x.'x-.x5..5xxwwwwwxxx1...x.Wxxxxxx15415.xxxxxx......xxxx
-xx.<.xwwwwxx...x.x.x.x15.5xxwwxxx'''..x.xxWWxx15xx5.41.xxxx..xxx...xxx
-xxx..xxwwxx..xxx-.'xx.xx5.1xxxx'''xxx.-xxxxWWWxxxxxx....x...xxx..U..xx
-xxx.A.xxwx..xxxwxxxwwwwxxx1.x'''xxwwx---xxxxWWwxwwwxxx'...xxxxxx...xxx
-xxx...xwwxx...xxxxxwwwwwxx..'xxxxxxxxxx--xxwwwwwwwxx*.xxxxxxxxx..xxxxx
-xxx...xxwxxxx..xx1-'xxwwxxx--xxxxx'''x--xxwwwwwwwxx.x*xxxx..xxxx..xxxx
-xxxx.11xwwxx1.x.1.1.2xxwx---xx.*.*.xx..xxxwwwwwwwwww-x-x..xx.x..xxxxxx
-xxx11.xxwwwxxx1xxxxx1.xxxx--x.g.T.g.xxx..xwwwwwwwwx-xx..xxxxx.xxxxxxxx
-xxxx..xwwwwwxx2..1x11..xxxx-...*.*..xx...xxwwwwwwx'...xxxxxxxxxxxxxxxx
-xxxxx.xxwxxxxxxxxx.xxx..xwxx...xxxxxxxxx..xxwwwxxx.-xxxxxxxxxxxxxxxxxx
-xxxxx..xxxx.x....xxxx...xxwxxx.-xwwwxxx1xxxxwwwxx..xxxxxxxxxxxxxxxxxxx
-x*x$xx..xx.*..-'..xxxxx..xxx''.-xwwwx15xxxwwwwxxxx..xxxxxxxxxxxxxxxxxx
-xx$x.xx..xx..xxxx..xwwxxx..''xx--xxxx115xxwwwwwxxxx...xxxxxxxxxxxxxxxx
-x$x..x.!..xx..xxx..xwwwwxx--xxxx-xx.1.xxxwwwwwwxxxxx....xxxxxxxxxxxxxx
-xx.xx.x..xxx..xx...xxwwwwxx1.xxxx...xxxxxwwwwwwxxxxxx.2.2.xxxxxxxxxxxx
-xxxxxx..xxxx...xx.3.xxwwxx'-.1x'''xxxxxwwwwwwwwxxxxxx.54.2.xxxxxxxxxxx
-xxxxx..xxxx...xxxx...xxxx..x..''xxxxxxwwwwwwwxxxx$$x.2465...xxxxxxxxxx
-xxxx5.5xx...xxxx.x.xxxxx...x.xxxxxxwwwwwwwwxxxxdf$$.......xx.xxxxxxxxx
-xxxx..xx...xxwwxx|x.xx...xx.xxxxxwwwwwwwwwwwxxed|$$$...xxxxxx..xxxxxxx
-xxxx122...xxwwwwxx....xxxxxxxxxxwwwwwwwwwwwwwxxfe|$$$$.xxxxxxxx....xxx
-xxxxx1..xxxwwwwwxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx...<x
+xx::xxwwwwxxx.x.'x-;x5;;5xxwwwwwxxx1;;;x;Wxxxxxx15415;xxxxxx......xxxx
+xx:<:xwwwwxx...x.x;x;x15;5xxwwxxx''';;x;xxWWxx15xx5;41;xxxx..xxx...xxx
+xxx::xxwwxx..xxx-;'xx;xx5;1xxxx'''xxx.-xxxxWWWxxxxxx;;;;x...xxx..U..xx
+xxx:A:xxwx..xxxwxxxwwwwxxx1;x'''xxwwx---xxxxWWwxwwwxxx'...xxxxxx...xxx
+xxx:::xwwxx;;;xxxxxwwwwwxx;;'xxxxxxxxxx--xxwwwwwwwxx*.xxxxxxxxx..xxxxx
+xxx:::xxwxxxx;;xx1-'xxwwxxx--xxxxx'''x--xxwwwwwwwxx.x*xxxx..xxxx..xxxx
+xxxx:11xwwxx1;x;1;1;2xxwx---xx.*.*.xx..xxxwwwwwwwwww-x-x..xx.x..xxxxxx
+xxx11:xxwwwxxx1xxxxx1;xxxx--x.g.T.g.xxx;;xwwwwwwwwx-xx..xxxxx.xxxxxxxx
+xxxx::xwwwwwxx2;;1x11;;xxxx-...*.*..xx;;;xxwwwwwwx'...xxxxxxxxxxxxxxxx
+xxxxx:xxwxxxxxxxxx;xxx;;xwxx...xxxxxxxxx;;xxwwwxxx.-xxxxxxxxxxxxxxxxxx
+xxxxx;;xxxx.x....xxxx;;;xxwxxx.-xwwwxxx1xxxxwwwxx..xxxxxxxxxxxxxxxxxxx
+x*x$xx..xx.*..-'..xxxxx..xxx''.-xwwwx15xxxwwwwxxxx;;xxxxxxxxxxxxxxxxxx
+xx$x.xx..xx..xxxx..xwwxxx;;''xx--xxxx115xxwwwwwxxxx;;;xxxxxxxxxxxxxxxx
+x$x..x.!..xx..xxx..xwwwwxx--xxxx-xx;1;xxxwwwwwwxxxxx;;;;xxxxxxxxxxxxxx
+xx.xx;x;;xxx..xx...xxwwwwxx1;xxxx.;;xxxxxwwwwwwxxxxxx;2;2;xxxxxxxxxxxx
+xxxxxx;;xxxx...xx.3.xxwwxx'-;1x'''xxxxxwwwwwwwwxxxxxx;54;2;xxxxxxxxxxx
+xxxxx;;xxxx...xxxx...xxxx;;x;;''xxxxxxwwwwwwwxxxx$$x;2475;;;xxxxxxxxxx
+xxxx5;5xx...xxxx.x.xxxxx..;x;xxxxxxwwwwwwwwxxxxdf$$;;;;;;;xx;xxxxxxxxx
+xxxx;;xx;..xxwwxx|x.xx...xx;xxxxxwwwwwwwwwwwxxed|$$$;;;xxxxxx..xxxxxxx
+xxxx122;;.xxwwwwxx....xxxxxxxxxxwwwwwwwwwwwwwxxfe|$$$$.xxxxxxxx....xxx
+xxxxx1;;xxxwwwwwxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx...<x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -738,13 +759,9 @@ NAME: ice_cave_caverns_03
 TAGS: ice_cave no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
-# A bit of layout randomization for the middle part.
-: if crawl.coinflip() then
-SUBST: '=x , -=.
-: else
-SUBST: '=. , -=x
-: end
 # Two different populations: undead/demon and natural/giant.
+# Different fog generator generation according to population,
+# as the natural monsters can't stomach the clouds.
 : if crawl.coinflip() then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
@@ -754,6 +771,14 @@ ITEM: book of ice / book of unlife / staff of cold / staff of death / \
       nothing w:30
 ITEM: ring of ice / ring of protection from fire / ring of life protection / \
       wand of cold / wand of draining / nothing
+# Place fog generators.
+SUBST: 3 = 3!
+: place_fog(_G, "freezing vapour", 25)
+KFEAT: ! = .
+SUBST: ; = .
+SUBST: . = .:100 !:1
+: place_fog(_G, "freezing vapour", 15)
+KFEAT: ! = .
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
@@ -766,54 +791,63 @@ ITEM: book of ice / \
       longbow ego:frost good_item no_uniq / nothing w:20
 ITEM: ring of ice / ring of protection from fire / wand of cold / \
       arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+# Place fog generators.
+SUBST: 3 = 3!
+: place_fog(_G, "freezing vapour", 20)
+KFEAT: ! = .
+SUBST: . = .:100 !:1
+: place_fog(_G, "freezing vapour", 8)
+KFEAT: ! = .
+SUBST: ; = .
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
-# Traps and colours:
-SUBST: 3 = 3!
-: place_fog(_G, "freezing vapour", 25)
-KFEAT: ! = .
-SUBST: . = .:100 ":1
-SUBST: " = !
-: place_fog(_G, "freezing vapour", 10)
-KFEAT: ! = .
+# The ':' provides a fog-free zone near the entrance.
+SUBST: : = .
+# A bit of layout randomization for the middle part.
+: if crawl.coinflip() then
+SUBST: '=x , -=.
+: else
+SUBST: '=. , -=x
+: end
 : ice_cave_colours(_G)
+: ice_cave_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.x.xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.U.x$xxxxxxxx...xx...xxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwxxx.xxx$x..x...xx...xx.55xxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxwwwwxWWWxxxxxxx..x..xxxxxxxxxx.554xxx
-xxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxWwWxWW.xxxxx..xxwwwwwwxx.2525x
-xxxxxxxxxxxxxxxxxxxxxwwxxxxxxxxxWWWWxW..xx..xxwwwwwwwwxx427.x
-xxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxWWxwWwxx...xxxwwwwwwwxxx..5xxx
-xxxxxxxxxxxxxxxxxxxxwwwwwxxx.WWxxxxwwwxxxxxwwwwwwxxxxx...xxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.U.x$xxxxxxxx...xx;;;xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwxxx.xxx$x..x...xx...xx;55xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxwwwwxWWWxxxxxxx..x..xxxxxxxxxx;554xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxWwWxWW.xxxxx..xxwwwwwwxx;2525x
+xxxxxxxxxxxxxxxxxxxxxwwxxxxxxxxxWWWWxW..xx..xxwwwwwwwwxx427;x
+xxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxWWxwWwxx...xxxwwwwwwwxxx;;5xxx
+xxxxxxxxxxxxxxxxxxxxwwwwwxxx.WWxxxxwwwxxxxxwwwwwwxxxxx;;;xxxx
 xxxxxxxxxxxxxxxxxxxxxxwwwxx."xxxwwwwwxwwxwwwxxxxxxx....xxxxxx
-xxxxxxxxxxxxxxxx....xxxwwwxx..xxxwwwwwwwwwwxx<..!x...xx.xfxxx
-xxxxxxxxxxxxxx...xx...xxxwwxx..xxxxwwwwwwwwxxxx....xxxxxex|xx
-xxxxxxxxxxxx.44x.xxxx...xxwx..xxxxxxwwxwxwwwwxxxxxxxxxxdx$xdx
-xxxxxxxxxxx.4.xxx$xxxx...xwxx"..xxxxxwwwwwxwwwxxxxxxxxxx|xexx
-xxxxxxxxxx...xxx$xxx...xxxwwxxx..xxxwwwxxwwwwxwxxxxxxxxxxfxxx
-xxxxxxxxxxx....xxxx5.xxxwwwwxx...xxxxxwwwwwwwxxxxxxxxxxxxxxxx
-xxxxxxxxxx.x.xxxxx51.5xxwwwwxxxx..xxxxxwwxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx...xxxxxxx15.5xxwwxxx'''".xxxxwwxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx..xxxxxxxxxxx5.1xxxx''xxxx.-xxxxwwwxxxxxxxxxxxxxxxxxx
-xxxxxxx.1xxxxxxxxxxxxxx..x'''xxxxx---xxxwwwwxxxxxxxxxxxxxxxxx
-xxxxxxxx.11xxxxxxxxxxxx..''xxxxx'xxx--xxxwwwwxxxxxxxxxxxxxxxx
-xxxxxxxxxx1.xx.xxxxxxxxx--xxxxx''''--xxxwwwwwwxxxxxxxxxxxxxxx
-xxxxxxxxx..x......xxxx---xx.*.*.xx..xxxxwwwwwwwwxxxxxxxxxxxxx
-xxxxxxxxxxx.xxxxx..xxxx--x.g.T.g.xxx..xxxwwwwxxxxxxxxxxxxxxxx
-xxxxxxxxxxx2..2x....xxxx-...*.*..xx...xxwwwwwwxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx.xxx.1xxxx...xxxxxxxxx..xxwwwxxxxxxxxxxxxxxxxx
-xxxxxxxx.x...'xxxx.1.xxxxxx.-xxxxxxx1xxxxwwwxxxxxxxxxxxxxxxxx
-xxxxxxx.*66-x..xxxxx11xxxx'.--x---15xxxwwwwxxxxxxxxxxxxxxxxxx
-xxx..<xx..xxxx..xxxxxx..''xx-x-xxx115xxwwwwwxxxxxxxxxxxxxxxxx
-xxA..xxxx..xxx..xxxxxxx--xxxx-xx.11xxxwwwwwwxxxxxxxxxxxxxxxxx
-xx....xxx..xx...xxxxxxxx1.xxx-...xxxxxwwwwwwxxxxxxxxxxxxxxxxx
-xx...xxxx...xx.3.xxxxxxxx.1x'''xxxxxwwwwwwwwxxxxxxxxxxxxxxxxx
-xx..xxxx21.xxxx...xxxx..x..''xxxxxxwwwwwwwxxxxxxxxxxxxxxxxxxx
-x...xx.12xxxx.x.xxxxx...x.xxxxxxwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
-x..xx...xxxxxx|x.xx...xx.xxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxx
-x......xxxxxxxx....xxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
-xx...xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx;...xxxwwwxx..xxxwwwwwwwwwwxx<..!x...xx.xfxxx
+xxxxxxxxxxxxxx;;;xx...xxxwwxx..xxxxwwwwwwwwxxxx....xxxxxex|xx
+xxxxxxxxxxxx;44x;xxxx...xxwx..xxxxxxwwxwxwwwwxxxxxxxxxxdx$xdx
+xxxxxxxxxxx;4;xxx$xxxx;;;xwxx"..xxxxxwwwwwxwwwxxxxxxxxxx|xexx
+xxxxxxxxxx;;;xxx$xxx;;;xxxwwxxx..xxxwwwxxwwwwxwxxxxxxxxxxfxxx
+xxxxxxxxxxx;;..xxxx5;xxxwwwwxx...xxxxxwwwwwwwxxxxxxxxxxxxxxxx
+xxxxxxxxxx.x.xxxxx51;5xxwwwwxxxx..xxxxxwwxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx;;;xxxxxxx15;5xxwwxxx'''".xxxxwwxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx;;xxxxxxxxxxx5;1xxxx''xxxx.-xxxxwwwxxxxxxxxxxxxxxxxxx
+xxxxxxx;1xxxxxxxxxxxxxx;;x'''xxxxx---xxxwwwwxxxxxxxxxxxxxxxxx
+xxxxxxxx;11xxxxxxxxxxxx;;''xxxxx'xxx--xxxwwwwxxxxxxxxxxxxxxxx
+xxxxxxxxxx1;xx.xxxxxxxxx--xxxxx''''--xxxwwwwwwxxxxxxxxxxxxxxx
+xxxxxxxxx;;x;;....xxxx---xx.*.*.xx..xxxxwwwwwwwwxxxxxxxxxxxxx
+xxxxxxxxxxx;xxxxx.;xxxx--x.g.T.g.xxx..xxxwwwwxxxxxxxxxxxxxxxx
+xxxxxxxxxxx2;;2x;;;;xxxx-...*.*..xx.;;xxwwwwwwxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx;xxx;1xxxx...xxxxxxxxx;;xxwwwxxxxxxxxxxxxxxxxx
+xxxxxxxx.x;;;'xxxx;1;xxxxxx.-xxxxxxx1xxxxwwwxxxxxxxxxxxxxxxxx
+xxxxxxx;*66-x..xxxxx11xxxx'.--x---15xxxwwwwxxxxxxxxxxxxxxxxxx
+xxx::<xx;;xxxx..xxxxxx;;''xx-x-xxx115xxwwwwwxxxxxxxxxxxxxxxxx
+xxA::xxxx;.xxx..xxxxxxx--xxxx-xx.11xxxwwwwwwxxxxxxxxxxxxxxxxx
+xx::::xxx;,xx...xxxxxxxx1;xxx-;;;xxxxxwwwwwwxxxxxxxxxxxxxxxxx
+xx:::xxxx;;;xx.3.xxxxxxxx;1x'''xxxxxwwwwwwwwxxxxxxxxxxxxxxxxx
+xx::xxxx21;xxxx...xxxx..x;;''xxxxxxwwwwwwwxxxxxxxxxxxxxxxxxxx
+x:::xx;12xxxx.x.xxxxx...x;xxxxxxwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
+x::xx;;;xxxxxx|x.xx...xx;xxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxx
+x:::..;xxxxxxxx....xxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
+xx:..xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
