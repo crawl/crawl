@@ -3301,13 +3301,12 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {gdl}
 
-    case MONS_TERENCE:
     case MONS_DRACONIAN:
     case MONS_DRACONIAN_ZEALOT:
         if (!one_chance_in(5))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = random_choose_weighted(
+            item.sub_type  = random_choose_weighted(
                 30, WPN_DAGGER,      30, WPN_CLUB,
                 27, WPN_FLAIL,       24, WPN_HAND_AXE,
                 20, WPN_HAMMER,      20, WPN_SHORT_SWORD,
@@ -3319,6 +3318,19 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         else
             return (item_race);
+        break;
+
+    case MONS_TERENCE:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted( 30, WPN_FLAIL,
+                                                 20, WPN_HAND_AXE,
+                                                 20, WPN_SHORT_SWORD,
+                                                 20, WPN_MACE,
+                                                 10, WPN_TRIDENT,
+                                                 10, WPN_FALCHION,
+                                                 10, WPN_MORNINGSTAR,
+                                                  3, WPN_SPIKED_FLAIL,
+                                                  0);
         break;
 
     case MONS_DEEP_ELF_FIGHTER:
