@@ -484,6 +484,18 @@ void do_curse_item( item_def &item, bool quiet )
     if (item.flags & ISFLAG_CURSED)
         return;
 
+    // Holy weapons cannot be cursed.
+    if (item.base_type == OBJ_WEAPONS
+        && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+    {
+        if (!quiet)
+        {
+            mprf("Your %s glows golden for a moment.",
+                 item.name(DESC_PLAIN).c_str());
+        }
+        return;
+    }
+
     if (!quiet)
     {
         mprf("Your %s glows black for a moment.",

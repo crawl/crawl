@@ -413,7 +413,7 @@ static void _god_smites_you(god_type god, const char *message = NULL,
 static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
 static bool _tso_holy_revenge();
-static void _altar_prayer();
+static bool _altar_prayer();
 static bool _god_likes_item(god_type god, const item_def& item);
 static void _dock_piety(int piety_loss, int penance);
 static bool _make_god_gifts_disappear(bool level_only = true);
@@ -1839,7 +1839,7 @@ bool bless_follower(monsters *follower,
                         _beogh_blessing_reinforcements();
 
                     _delayed_monster_done("Beogh blesses you with "
-                                         "reinforcements.", "");
+                                          "reinforcements.", "");
 
                     // Return true, even though the reinforcements might
                     // not be placed.
@@ -2387,6 +2387,7 @@ void pray()
 
     const bool was_praying = !!you.duration[DUR_PRAYER];
 
+    bool something_happened = false;
     const god_type altar_god = grid_altar_god(grd(you.pos()));
     if (altar_god != GOD_NO_GOD)
     {
@@ -2399,7 +2400,7 @@ void pray()
 
         if (you.religion != GOD_NO_GOD && altar_god == you.religion)
         {
-            _altar_prayer();
+            something_happened = _altar_prayer();
         }
         else if (altar_god != GOD_NO_GOD)
         {
@@ -2427,8 +2428,11 @@ void pray()
     }
     else if (!_god_accepts_prayer(you.religion))
     {
-        simple_god_message(" ignores your prayer.");
-        you.turn_is_over = false;
+        if (!something_happened)
+        {
+            simple_god_message(" ignores your prayer.");
+            you.turn_is_over = false;
+        }
         return;
     }
 
@@ -3721,7 +3725,10 @@ void gain_piety(int pgn)
             else if (you.religion == GOD_SHINING_ONE
                     || you.religion == GOD_LUGONU)
             {
-                simple_god_message(" will now bless your weapon at an altar... once.");
+                mprf("%s will now %s your weapon at an altar... once.",
+                     god_name(you.religion).c_str(),
+                     you.religion == GOD_SHINING_ONE ? "bless" : "corrupt",
+                     MSGCH_GOD, you.religion);
             }
         }
 
@@ -6760,6 +6767,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
+    std::string old_name = wpn.name(DESC_NOCAP_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
@@ -6794,7 +6802,14 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.wield_change = true;
     you.num_gifts[god]++;
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    std::string desc  = old_name + " ";
+                desc += (god == GOD_SHINING_ONE ? "blessed by the Shining One" :
+                         god == GOD_LUGONU      ? "corrupted by Lugonu"
+                                                : "touched by the gods");
+
+    take_note(Note(NOTE_ID_ITEM, 0, 0,
+              wpn.name(DESC_NOCAP_A).c_str(), desc.c_str()));
+    wpn.flags |= ISFLAG_NOTED_ID;
 
     you.flash_colour = colour;
     viewwindow(true, false);
@@ -6881,15 +6896,17 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     formatted_message_history(msg, MSGCH_GOD);
 }
 
-static void _altar_prayer()
+static bool _altar_prayer()
 {
     // Different message from when first joining a religion.
     mpr("You prostrate yourself in front of the altar and pray.");
 
     if (you.religion == GOD_XOM)
-        return;
+        return (false);
 
     god_acting gdact;
+
+    bool did_bless = false;
 
     // TSO blesses weapons with holy wrath, and long blades specially.
     if (you.religion == GOD_SHINING_ONE
@@ -6903,7 +6920,8 @@ static void _altar_prayer()
             && (get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH
                 || is_blessed_blade_convertible(you.inv[wpn])))
         {
-            _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW);
+            did_bless = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
+                                      YELLOW);
         }
     }
 
@@ -6916,10 +6934,12 @@ static void _altar_prayer()
         const int wpn = get_player_wielded_weapon();
 
         if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_DISTORTION)
-            _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, RED);
+            did_bless = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, RED);
     }
 
     offer_items();
+
+    return (did_bless);
 }
 
 bool god_hates_attacking_friend(god_type god, const actor *fr)

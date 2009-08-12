@@ -3709,7 +3709,15 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_DONALD:
     case MONS_JOSEPHINE:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_DAGGER;
+        item.sub_type  = WPN_DAGGER;
+
+        if (mon->type == MONS_PSYCHE)
+        {
+            set_item_ego_type(item, OBJ_WEAPONS,
+                              random_choose_weighted(3, SPWPN_CHAOS,
+                                                     1, SPWPN_DISTORTION,
+                                                     0));
+        }
         break;
 
     case MONS_AGNES:
@@ -4162,7 +4170,6 @@ void give_armour(monsters *mon, int level)
     case MONS_JOZEF:
     case MONS_NORBERT:
     case MONS_PSYCHE:
-    case MONS_TERENCE:
         if (x_chance_in_y(2, 5))
         {
             item.base_type = OBJ_ARMOUR;
@@ -4175,6 +4182,14 @@ void give_armour(monsters *mon, int level)
         }
         else
             return;
+        break;
+
+    case MONS_TERENCE:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = random_choose_weighted(1, ARM_RING_MAIL,
+                                               3, ARM_SCALE_MAIL,
+                                               2, ARM_CHAIN_MAIL,
+                                               0);
         break;
 
     case MONS_URUG:
