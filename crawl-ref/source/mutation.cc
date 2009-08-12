@@ -2702,8 +2702,7 @@ void demonspawn()
                 howm = 1;
             }
 
-            if (you.religion != GOD_VEHUMET && you.religion != GOD_MAKHLEB
-                && one_chance_in(11))
+            if (you.religion != GOD_MAKHLEB && one_chance_in(11))
             {
                 whichm = MUT_DEATH_STRENGTH;
                 howm = 1;
