@@ -3106,11 +3106,10 @@ void level_change(bool skip_attribute_increase)
                     new_exp);
             }
 
-            if (!skip_more)
-                more();
-
             if (!(new_exp % 3) && !skip_attribute_increase)
                 _attribute_increase();
+            else if (!skip_more)
+                more();
 
             // No more prompts for this XL past this point.
 
