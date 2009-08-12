@@ -437,8 +437,6 @@ static int _scan_mon_inv_items(const monsters *mon,
 
 static bool _mons_has_undrinkable_potion(const monsters *mon)
 {
-    bool ret = false;
-
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
         const int potion = mon->inv[MSLOT_POTION];
@@ -449,11 +447,11 @@ static bool _mons_has_undrinkable_potion(const monsters *mon)
                 static_cast<potion_type>(mitm[potion].sub_type);
 
             if (!mon->can_drink_potion(ptype))
-                ret = true;
+                return (true);
         }
     }
 
-    return (ret);
+    return (false);
 }
 
 int mons_unusable_items(const monsters *mon)
@@ -3615,6 +3613,7 @@ bool monsters::floundering() const
 {
     const dungeon_feature_type grid = grd(pos());
     return (grid_is_water(grid)
+            && !cannot_fight()
             // Can't use monster_habitable_grid() because that'll return
             // true for non-water monsters in shallow water.
             && mons_primary_habitat(this) != HT_WATER
@@ -8039,7 +8038,7 @@ bool monsters::can_drink_potion(potion_type ptype) const
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
         if (mons_is_skeletal(type) || mons_is_insubstantial(type)
-            || mons_species() == MONS_LICH || mons_species() == MONS_MUMMY)
+            || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY)
         {
             return (false);
         }

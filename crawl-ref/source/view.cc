@@ -521,11 +521,19 @@ static void _get_symbol( const coord_def& where,
                 }
             }
 
-            if (object < NUM_REAL_FEATURES && inside_halo(where)
+            if (object < NUM_REAL_FEATURES
                 && (object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX
                     || object == DNGN_UNDISCOVERED_TRAP))
             {
-                *colour = YELLOW | colmask;
+                if (inside_halo(where))
+                {
+                    if (silenced(where))
+                        *colour = LIGHTCYAN | colmask;
+                    else
+                        *colour = YELLOW | colmask;
+                }
+                else if (silenced(where))
+                    *colour = CYAN | colmask;
             }
         }
 

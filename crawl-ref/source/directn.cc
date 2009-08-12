@@ -3411,7 +3411,12 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #endif
 
     if (is_sanctuary(where))
-        mpr("This square lies inside a sanctuary.");
+    {
+        mprf("This square lies inside a sanctuary%s.",
+             silenced(where) ? ", and is shrouded in silence" : "");
+    }
+    else if (silenced(where))
+        mpr("This square is shrouded in silence.");
 
     if (env.cgrid(where) != EMPTY_CLOUD)
     {

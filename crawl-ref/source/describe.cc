@@ -2022,7 +2022,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                 "$Damage rating: 7    Accuracy rating: +6    "
                 "Attack delay: 120%";
 
-            description << "$$It falls into the 'staves' category.";
+            description << "$$It falls into the 'Staves' category.";
         }
         break;
 

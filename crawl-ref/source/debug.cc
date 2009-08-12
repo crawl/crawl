@@ -3301,11 +3301,12 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         if (is_artefact(item))
             num_arts++;
+        else if (type == OBJ_ARMOUR) // Exclude artefacts when counting egos.
+            ego_quants[get_armour_ego_type(item)]++;
 
+        // Include artefacts for weapon brands.
         if (type == OBJ_WEAPONS)
             ego_quants[get_weapon_brand(item)]++;
-        else if (type == OBJ_ARMOUR)
-            ego_quants[get_armour_ego_type(item)]++;
 
         destroy_item(item_index, true);
 
@@ -3445,6 +3446,8 @@ static void _debug_acquirement_stats(FILE *ostat)
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
     }
     fprintf(ostat, "----------------------\n");
+
+    mpr("Results written into 'items.stat'.");
 }
 
 static void _debug_rap_stats(FILE *ostat)
@@ -3666,6 +3669,7 @@ static void _debug_rap_stats(FILE *ostat)
     }
 
     fprintf(ostat, "\n-----------------------------------------\n\n");
+    mpr("Results written into 'items.stat'.");
 }
 
 void debug_item_statistics( void )

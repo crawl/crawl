@@ -2606,8 +2606,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-// Use an attribute counter for how many demonic mutations a demonspawn
-// has.
+// Use an attribute counter for how many demonic mutations a demonspawn has.
 void demonspawn()
 {
     mutation_type whichm = NUM_MUTATIONS;
@@ -2710,7 +2709,11 @@ void demonspawn()
                 howm = 1;
             }
 
-            if (you.religion != GOD_SIF_MUNA && one_chance_in(11))
+            // Theoretically, you could use this with Trog (for rods and
+            // some misc. items), but in general it's going to be much more
+            // useful for someone capable of casting spells.
+            if (you.religion != GOD_TROG
+                && you.religion != GOD_SIF_MUNA && one_chance_in(11))
             {
                 whichm = MUT_CHANNEL_HELL;
                 howm = 1;
