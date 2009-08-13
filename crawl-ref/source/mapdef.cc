@@ -2407,27 +2407,33 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
         { MONS_SPECTRAL_THING,   MONS_SPECTRAL_THING },
     };
 
-    const int mod = ends_with(s, zombie_types);
+    int mod = ends_with(s, zombie_types);
     if (!mod)
     {
-        const std::string &spectre = "spectral ";
+        const std::string spectre("spectral ");
         if (s.find(spectre) == 0)
         {
+            mod = ends_with(" spectre", zombie_types);
             s = s.substr(spectre.length());
-            spec.mid = MONS_SPECTRAL_THING;
-            spec.monbase = get_monster_by_name(s, true);
-            if (!mons_zombie_size(spec.monbase))
-                spec.mid = MONS_PROGRAM_BUG;
+        }
+        else
+        {
+            spec.mid = MONS_PROGRAM_BUG;
             return;
         }
-        spec.mid = MONS_PROGRAM_BUG;
-        return;
+    }
+    else
+    {
+        s = s.substr(0, s.length() - strlen(zombie_types[mod - 1]));
     }
 
-    s = s.substr(0, s.length() - strlen(zombie_types[mod - 1]));
     trim_string(s);
 
-    spec.monbase = get_monster_by_name(s, true);
+    mons_spec base_monster = mons_by_name(s);
+    if (base_monster.mid < 0)
+        base_monster.mid = MONS_PROGRAM_BUG;
+    spec.monbase = static_cast<monster_type>(base_monster.mid);
+    spec.number = base_monster.number;
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
@@ -2604,7 +2610,7 @@ mons_spec mons_list::mons_by_name(std::string name) const
     if (name == "large abomination")
         return (MONS_ABOMINATION_LARGE);
 
-    if (ends_with(name, "-headed hydra"))
+    if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
         return get_hydra_spec(name);
 
     mons_spec spec;
