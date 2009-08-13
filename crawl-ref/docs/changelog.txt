@@ -1,3 +1,82 @@
+Stone Soup 0.6
+--------------
+* Two new gods: Jiyva, god of slime, and Feawn, god of plants.
+* Added scroll of silence.
+* Several new uniques.
+* Round all aptitudes to multiples of 10.
+* Armour acquirement is more likely to fill secondary slots.
+* Book acquirement doesn't give manuals to spellcasting specialists anymore.
+* Added wands as an acquirement option.
+* Detected secret doors are still unknown to stupid monsters.
+* Let toadstools grow on corpses.
+* All worms are mindless and cannot be pacified.
+* Abort some teleportation attempts with -TELE without losing the turn.
+* Weapons of holy wrath cannot be cursed.
+* Reduce the chances for artefacts with only one stat property.
+* Add !a inscription to prompt when attacking with this wielded item.
+* Upgrade equipment of Sonja, Psyche and Terence.
+* Add some tiles "animations" whenever the screen is redrawn.
+* Unrandarts and randarts now share the same, cleaner coding structure.
+* More vaults.
+
+Stone Soup 0.5.1 (20090728)
+---------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+
+* Improved performance for the Tiles version.
+* Fixed crashes related to giant spores.
+* Fixed Summon Horrible Things sometimes hanging or crashing.
+* Fixed monsters refusing to enter or attack into grids on the map edge.
+* Fixed minivaults not being placed.
+* Fixed inconvenient electrical eels in entry vaults.
+* Fixed summoning decks giving permanent summons at low power.
+* Fixed erroneous "blocked line of fire" warnings.
+* Fixed missing items in Tiles inventory menus.
+* Fixed 'C' closing one out of several adjacent doors without prompting.
+* Fixed Xom's repel stairs effect moving shops.
+* Fixed Xom gifts not being destroyed in deep water.
+* Fixed magic mapping bugs in the Tiles version.
+* Fixed AltGr not being recognized in Windows Tiles version.
+* Fixed Alt-Tab sometimes locking the Alt key on Windows.
+* Fixed misbehaviour for temporary weapon brands and throwing.
+* Fixed Blade Hands not counting as slicing while wearing melded gloves.
+* Fixed berserking allies taking orders from 'ta'.
+* Fixed random blinking sometimes placing the player in dangerous clouds.
+* Fixed certain incorporeal monsters flying instead of levitating.
+* Fixed server disconnects at --More-- prompts allowing to avoid retribution.
+* Staff of earth damage is reduced by AC.
+* Lowered damage output for elemental staves.
+* Once entered, the gate to Zot remains open even without carrying runes.
+* Add some fancy messaging when opening the gate to Zot.
+* Prompt before moving when confused and next to lava or deep water.
+* Check some abilities' requirements before rolling the success check.
+* Consider armour properties in fatal stat loss check before transforming.
+* Really allow uniques to retain their spells when polymorphed.
+* Improve Yredelemnul's Enslave Soul, no longer uses random resistance checks.
+* Mutation attacks disregard magic resistance again.
+* Zin gets a power to once per game cure a follower of all mutations.
+* Artificers start with 1 MP.
+* Prompt before allowing TSO/Lugonu to bless your weapon.
+* Vampiric Draining/Drain Life deal damage to summons again, but don't heal.
+* Wielding stones for Sandblast now guarantees a range of 2.
+* Change Portal Projectile range to full LOS.
+* Limit the number of items a monster may pick up to two per turn.
+* Unknown mimics are no longer stabbable.
+* Turn autopickup back on if you gain see invisible, even temporarily.
+* Polymorph other always polymorphs shapeshifters whose form isn't magic immune.
+* Troll hide and armour count as light armour.
+* Let ghouls wear gloves again.
+* Wearing a visored helmet prevents biting attacks.
+* Allow players to reroll already named random character combinations.
+* Improved error messages when trying to load pre-0.5 save files or ghosts.
+* Some new vaults.
+* Add new milestones for the CAO tournament.
+* Tiles: Re-allow selection of player dolls ('-' command).
+* Add missing tiles options to the options guide (docs/, '?&' command).
+* Improve tiles for escape hatches and disturbances in shallow water.
+* Document tiles lags in tiles_help.txt and in the in-game FAQ ('?Q' command).
+
 Stone Soup 0.5.0 (20090612)
 ---------------------------
 
