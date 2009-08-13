@@ -129,19 +129,6 @@
 
 
 {
-    SPELL_IDENTIFY, "Identify",
-     SPTYP_DIVINATION,
-     SPFLAG_NONE,
-     6,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_TELEPORT_SELF, "Teleport Self",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE,
@@ -165,19 +152,6 @@
      NULL,
      false,
      false
-},
-
-{
-    SPELL_REMOVE_CURSE, "Remove Curse",
-     SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
-     5,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
 },
 
 {
@@ -612,19 +586,6 @@
 },
 
 {
-    SPELL_DETECT_CURSE, "Detect Curse",
-     SPTYP_DIVINATION,
-     SPFLAG_NONE,
-     3,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_SUMMON_SMALL_MAMMALS, "Summon Small Mammals",
      SPTYP_SUMMONING,
      SPFLAG_BATTLE,
@@ -819,19 +780,6 @@
      NULL,
      true,
      false
-},
-
-{
-    SPELL_MAGIC_MAPPING, "Magic Mapping",
-     SPTYP_DIVINATION | SPTYP_EARTH,
-     SPFLAG_MAPPING,
-     4,
-     45,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
 },
 
 {

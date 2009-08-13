@@ -172,7 +172,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_TRAPS,
      SPELL_DETECT_ITEMS,
-     SPELL_MAGIC_MAPPING,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -193,11 +193,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // 12 - Book of Enchantments (fourth one)
     {SPELL_LEVITATION,
      SPELL_SELECTIVE_AMNESIA,
-     SPELL_REMOVE_CURSE,
      SPELL_CAUSE_FEAR,
      SPELL_EXTENSION,
      SPELL_DEFLECT_MISSILES,
      SPELL_HASTE,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -269,10 +269,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // 19 - Book of Practical Magic
     {SPELL_PROJECTED_NOISE,
-     SPELL_DETECT_CURSE,
      SPELL_SELECTIVE_AMNESIA,
      SPELL_DIG,
-     SPELL_REMOVE_CURSE,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -359,10 +359,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_CREATURES,
      SPELL_DETECT_ITEMS,
-     SPELL_DETECT_CURSE,
      SPELL_SEE_INVISIBLE,
      SPELL_FORESCRY,
-     SPELL_IDENTIFY,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -446,11 +446,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // 35 - Book of Earth
     {SPELL_MAXWELLS_SILVER_HAMMER,
-     SPELL_MAGIC_MAPPING,
      SPELL_DIG,
      SPELL_STATUE_FORM,
      SPELL_BOLT_OF_IRON,
      SPELL_SHATTER,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL
      },
@@ -458,11 +458,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // 36 - Book of Wizardry
     {SPELL_DETECT_CREATURES,
      SPELL_SUMMON_ELEMENTAL,
-     SPELL_MAGIC_MAPPING,
      SPELL_TELEPORT_SELF,
      SPELL_FIREBALL,
-     SPELL_IDENTIFY,
      SPELL_HASTE,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -692,7 +692,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_TRAPS,
      SPELL_DETECT_ITEMS,
-     SPELL_MAGIC_MAPPING,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,

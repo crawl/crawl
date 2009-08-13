@@ -420,6 +420,58 @@ Spell definitions cut from the code:
      true
 },
 
+{
+    SPELL_IDENTIFY, "Identify",
+     SPTYP_DIVINATION,
+     SPFLAG_NONE,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_REMOVE_CURSE, "Remove Curse",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_NONE,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DETECT_CURSE, "Detect Curse",
+     SPTYP_DIVINATION,
+     SPFLAG_NONE,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_MAGIC_MAPPING, "Magic Mapping",
+     SPTYP_DIVINATION | SPTYP_EARTH,
+     SPFLAG_MAPPING,
+     4,
+     45,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
 Spell descriptions cut from the code:
 
 [Cure Poison and Abjuration are duplicates of existing spells and are omitted.]
@@ -510,4 +562,20 @@ This spell causes the flesh of all those near the caster to rot. It will affect 
 Detect Magic
 
 This spell probes one or more items lying nearby for enchantment. An experienced diviner may glean additional information.
+%%%%
+Detect Curse
+
+This spell alerts the caster to the presence of curses on his or her possessions.
+%%%%
+Identify
+
+This spell allows the caster to determine the properties of an otherwise inscrutable magic item.
+%%%%
+Magic Mapping
+
+This spell reveals details about the caster's surroundings.
+%%%%
+Remove Curse
+
+This spell removes curses from any items which are being used by the caster.
 %%%%

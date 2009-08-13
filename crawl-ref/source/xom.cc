@@ -60,11 +60,14 @@ REVISION("$Rev$");
 // I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
 
+// Define fake magic mapping spell to keep the old behaviour.
+#define FAKE_SPELL_MAGIC_MAPPING    SPELL_NO_SPELL
+
 // Spells to be cast at tension 0 (no or only low-level monsters around),
 // mostly flavour.
 static const spell_type _xom_nontension_spells[] =
 {
-    SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS, SPELL_SUMMON_BUTTERFLIES,
+    FAKE_SPELL_MAGIC_MAPPING, SPELL_DETECT_ITEMS, SPELL_SUMMON_BUTTERFLIES,
     SPELL_DETECT_CREATURES, SPELL_FLY, SPELL_SPIDER_FORM,
     SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_NECROMUTATION
 };
@@ -491,7 +494,7 @@ static bool _xom_makes_you_cast_random_spell(int sever, int tension)
         spellenum = std::min(nxomspells, std::max(3 + coinflip(), spellenum));
         spell     = _xom_nontension_spells[random2(spellenum)];
 
-        if (spell == SPELL_MAGIC_MAPPING || spell == SPELL_DETECT_ITEMS)
+        if (spell == FAKE_SPELL_MAGIC_MAPPING || spell == SPELL_DETECT_ITEMS)
         {
             // If the level is already mostly explored, there's
             // a chance we might try something else.
@@ -500,6 +503,30 @@ static bool _xom_makes_you_cast_random_spell(int sever, int tension)
                 return (false);
         }
     }
+
+    // Handle magic mapping specially, now it's no longer a spell.
+    if (spell == FAKE_SPELL_MAGIC_MAPPING)
+    {
+        if (you.level_type == LEVEL_PANDEMONIUM)
+            return (false);
+
+        god_speaks(GOD_XOM, _get_xom_speech("spell effect").c_str());
+
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
+        mprf(MSGCH_DIAGNOSTICS,
+             "_xom_makes_you_cast_random_spell(); spell: %d, spellenum: %d",
+             spell, spellenum);
+#endif
+
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, "magic mapping"),
+                  true);
+
+        const int power = stepdown_value( sever, 10, 10, 40, 45 );
+        magic_mapping( 5 + power, 50 + random2avg( power * 2, 2 ), false );
+
+        return (true);
+    }
+
     // Don't attempt to cast spells the undead cannot memorise.
     if (you_cannot_memorise(spell))
         return (false);

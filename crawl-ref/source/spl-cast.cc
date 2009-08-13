@@ -2067,18 +2067,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     // Utility spells.
-    case SPELL_DETECT_CURSE:
-        detect_curse(false);
-        break;
-
-    case SPELL_REMOVE_CURSE:
-        remove_curse(false);
-        break;
-
-    case SPELL_IDENTIFY:
-        identify(powc);
-        break;
-
     case SPELL_DETECT_SECRET_DOORS:
         if (_can_cast_detect())
             cast_detect_secret_doors(powc);
@@ -2119,16 +2107,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             mpr("You detect creatures!");
         break;
     }
-
-    case SPELL_MAGIC_MAPPING:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-            mpr("Your Earth magic cannot map Pandemonium.");
-        else
-        {
-            powc = stepdown_value( powc, 10, 10, 40, 45 );
-            magic_mapping( 5 + powc, 50 + random2avg( powc * 2, 2 ), false );
-        }
-        break;
 
     case SPELL_PROJECTED_NOISE:
         project_noise();

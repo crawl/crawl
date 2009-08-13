@@ -174,10 +174,6 @@ Detect Creatures
 
 This spell allows the caster to detect any creatures within a certain radius.
 %%%%
-Detect Curse
-
-This spell alerts the caster to the presence of curses on his or her possessions.
-%%%%
 Detect Items
 
 This spell detects any items lying about the caster's general vicinity.
@@ -302,10 +298,6 @@ Ice Storm
 
 This spell conjures forth a raging blizzard of ice, sleet and freezing gasses.
 %%%%
-Identify
-
-This spell allows the caster to determine the properties of an otherwise inscrutable magic item.
-%%%%
 Ignite Poison
 
 This spell attempts to convert all poison within the caster's view into liquid flame. It is very effective against poisonous creatures or those carrying poison potions. It is also an amazingly painful way to eliminate poison from one's own system.
@@ -349,10 +341,6 @@ This spell hurls a mighty bolt of lightning. Although this spell inflicts less d
 Magic Dart
 
 This spell hurls a small bolt of magical energy.
-%%%%
-Magic Mapping
-
-This spell reveals details about the caster's surroundings.
 %%%%
 Mass Confusion
 
@@ -441,10 +429,6 @@ This spell is greatly prized by summoners and necromancers, as it allows the cas
 Regeneration
 
 This spell dramatically but temporarily increases the caster's recuperative abilities, while also increasing the rate of food consumption.
-%%%%
-Remove Curse
-
-This spell removes curses from any items which are being used by the caster.
 %%%%
 Repel Missiles
 

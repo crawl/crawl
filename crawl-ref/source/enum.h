@@ -2049,7 +2049,7 @@ enum monster_type                      // (int) menv[].type
     MONS_KIRKE,
     MONS_GRUM,
     MONS_PURGY,
-    MONS_MENKAURE, 
+    MONS_MENKAURE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2661,10 +2661,8 @@ enum species_type
 enum spell_type
 {
     SPELL_NO_SPELL,                    //    0
-    SPELL_IDENTIFY,
     SPELL_TELEPORT_SELF,
     SPELL_CAUSE_FEAR,
-    SPELL_REMOVE_CURSE,
     SPELL_MAGIC_DART,                  //    5
     SPELL_FIREBALL,
     SPELL_APPORTATION,
@@ -2697,7 +2695,6 @@ enum spell_type
     SPELL_SELECTIVE_AMNESIA,
     SPELL_MASS_CONFUSION,              //   35
     SPELL_SMITING,
-    SPELL_DETECT_CURSE,
     SPELL_SUMMON_SMALL_MAMMALS,
     SPELL_ABJURATION,
     SPELL_SUMMON_SCORPIONS,            //   40
@@ -2713,7 +2710,6 @@ enum spell_type
     SPELL_SUMMON_SWARM,                //   50
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_ENSLAVEMENT,
-    SPELL_MAGIC_MAPPING,
     SPELL_ANIMATE_DEAD,
     SPELL_PAIN,                        //   55
     SPELL_EXTENSION,
