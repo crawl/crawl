@@ -1086,6 +1086,14 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return (true);
 
+    case ABIL_EVOKE_BLINK:
+        if (scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        {
+            return (yesno("You cannot teleport right now. Try anyway?",
+                          true, 'n'));
+        }
+        return (true);
+
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         if (you.hunger_state < HS_SATIATED)

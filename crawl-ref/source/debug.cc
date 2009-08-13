@@ -1816,6 +1816,9 @@ static void _tweak_randart(item_def &item)
                              val);
         break;
     }
+
+    if (Options.autoinscribe_artefacts)
+        item.inscription = artefact_auto_inscription(item);
 }
 
 void wizard_tweak_object(void)
@@ -2077,10 +2080,7 @@ void wizard_make_object_randart()
     }
 
     if (Options.autoinscribe_artefacts)
-    {
-        add_autoinscription(item,
-                            artefact_auto_inscription(you.inv[i]));
-    }
+        add_autoinscription(item, artefact_auto_inscription(you.inv[i]));
 
     // If equipped, apply new randart benefits.
     if (item_is_equipped(item))

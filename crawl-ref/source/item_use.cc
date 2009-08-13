@@ -3932,7 +3932,7 @@ void zap_wand(int slot)
     }
 
     int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
-        _wand_range(type_zapped) : _max_wand_range();
+                        _wand_range(type_zapped) : _max_wand_range();
     message_current_target();
     direction(zap_wand, DIR_NONE, targ_mode, tracer_range);
 
@@ -3940,6 +3940,14 @@ void zap_wand(int slot)
     {
         if (zap_wand.isCancel)
             canned_msg(MSG_OK);
+        return;
+    }
+
+    if (alreadyknown && wand.sub_type == WAND_TELEPORTATION
+        && zap_wand.target == you.pos()
+        && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+    {
+        mpr("You cannot teleport right now.");
         return;
     }
 
@@ -4838,6 +4846,16 @@ void read_scroll(int slot)
 
     // Decrement and handle inventory if any scroll other than paper {dlb}:
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    const bool alreadyknown = item_type_known(scroll);
+
+    if (alreadyknown
+        && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
+        && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+    {
+        mpr("You cannot teleport right now.");
+        return;
+    }
+
     if (which_scroll != SCR_PAPER
         && (which_scroll != SCR_IMMOLATION || you.confused()))
     {
@@ -4845,8 +4863,7 @@ void read_scroll(int slot)
         // Actual removal of scroll done afterwards. -- bwr
     }
 
-    const bool alreadyknown = item_type_known(scroll);
-    const bool dangerous    = player_in_a_dangerous_place();
+    const bool dangerous = player_in_a_dangerous_place();
 
     // Scrolls of paper are also exempted from this handling {dlb}:
     if (which_scroll != SCR_PAPER)

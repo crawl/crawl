@@ -279,7 +279,16 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange)
     {
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
-        if (!viewing)
+
+        // If an equipped artefact prevents teleportation, the following spells
+        // cannot be cast.
+        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
+                 || spell == SPELL_TELEPORT_SELF)
+             && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        {
+            grey = true;
+        }
+        else if (!viewing)
         {
             if (spell_mana(spell) > you.magic_points
                 || _spell_no_hostile_in_range(spell, minRange))
@@ -1127,6 +1136,14 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     // succeeded must be performed after the switch().
     if (!wiz_cast && _spell_is_uncastable(spell))
         return (SPRET_ABORT);
+
+    if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
+           || spell == SPELL_TELEPORT_SELF)
+        && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)
+        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
+    {
+        return (SPRET_ABORT);
+    }
 
     const unsigned int flags = get_spell_flags(spell);
 
