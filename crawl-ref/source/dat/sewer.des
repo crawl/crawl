@@ -239,24 +239,28 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################################
-# This one can be tough; you'll be in the water when the giant frogs notice you.
-# More rare (3 out of 10 sewers are this).
+# A fairly watery vault with (usually) two giant frogs in the end.
+# More rare (3 out of 10 sewers).
 # Loot are good items, and often a scroll of blinking.
 #
 NAME:     sewer_island
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 WEIGHT:   30
-SUBST:    - = W..
-: sewer_colours(_G)
-: sewer_random_monster_list(_G)
-: sewer_milestone(_G)
+SUBST:    - = WWW.
+SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
 MONS:     giant newt / small snake w:5 / \
           generate_awake giant newt / generate_awake small snake w:5 / \
           snake w:4 / nothing w:4
-MONS:     giant frog / nothing w:2
+NSUBST:   ! = 2:! / *:w
+KFEAT:    ! = w
+COLOUR:   ! = green
+KMONS:    ! = giant frog / nothing w:2
+: sewer_colours(_G)
+: sewer_random_monster_list(_G)
+: sewer_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccxxxxxx
@@ -265,18 +269,18 @@ xc1WWW-ccccccccccccccccccccccc1WWW1cxxxxxx
 xc1WwWWcxxxxxxxxxxxxxxxxxxxxxc1WwW.cxxxxxx
 xc1WwwWcxxxxxxxxxxxxxxxxxxxxxc.WwW.cxxxxxx
 xc.WwW1cxxxxxccccccccxxxxxxxxc.WwW-cxxxxxx
-xc.WwwWcxxccccwwwwwwccccxxxxxc-WwW-cxxxxxx
-xc.Wwwwccccwwwwwwwwww2.ccxxxxc-WwW-cxxxxxx
-xc-Wwwwccwwwwwwwwwwwwww2ccxxxc-WwW-cxxxxxx
-xc-Wwwwcwwwwwwwwwwwwwwwwwcccxc-WwW-cxxxxxx
-xc-Wwwwwwwwwwwwww.*.wwwwwwwcxc-WwW-cxxxxxx
-xc-WwWwWWWwwwwww.*|*.wwwwwwcxc-WwW-cxxxxxx
-xc-WwWWWwwWwwwwww.d.wwwwwwwccc-WwW.cxxxxxx
-xc-WwWWwwwwWwWwWWwwwwwwwwwwwcc-WwW.cxxxxxx
-xc-WwWWWwwwwWWWwwwwwwwwwwwwccc.WwW.cxxxxxx
-xc-WwWWWwwwwWWwwwwwwwwWwwwccxc.WwW.cxxxxxx
-xc-WwW.WwwwwwwwwwwwwwWwwwccxxc-WwW.cxxxxxx
-xc.WwW.WwwwwwWWwwwwwwwwccccccc-WwW-cxxxxxx
+xc.WwwWcxxcccc!!!!!!ccccxxxxxc-WwW-cxxxxxx
+xc.Wwwwccccwwwwwwwww!!!ccxxxxc-WwW-cxxxxxx
+xc-WwwwccwwwWwwwwwwwwww!ccxxxc-WwW-cxxxxxx
+xc-WwwwcwwWW<-wwwwwwwwww!ccxxc-WwW-cxxxxxx
+xc-Wwwwwwww-..-ww.--wwwww!cxxc-WwW-cxxxxxx
+xc-WwWwwWww---.-.*.--wwwwwcxxc-WwW-cxxxxxx
+xc-WwWWWwWww-.--*|*.wwwwwwcxxc-WwW.cxxxxxx
+xc-WwWWwwwWww.---d-wwwwwwwcxxc-WwW.cxxxxxx
+xc-WwWWWwwwW------wwwwwwwwcxxc.WwW.cxxxxxx
+xc-WwWWWwwwwW---wwwwwwWwwccxxc.WwW.cxxxxxx
+xc-WwW.WwwwwwwwwwwwwwWwwwcxxxc-WwW.cxxxxxx
+xc.WwW.WwwwwwWWwwwwwwwWccccccc-WwW-cxxxxxx
 xc.WwWW..WWWWwwWwWW.........---Www-cxxxxxx
 xc.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW-cxxxxxx
 xc.WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.cxxxxxx
