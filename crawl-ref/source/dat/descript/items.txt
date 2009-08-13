@@ -1296,6 +1296,14 @@ beings in the vicinity. Also, the magical resistances of the reader and
 nearby beings are halved for a short duration. The latter effect does
 not apply to beings fully immune to magic.
 %%%%
+scroll of silence
+
+This scroll eliminates all sound near the reader. This makes reading
+scrolls, casting spells, praying or yelling in the reader's vicinity 
+impossible. (Applies to reader too, of course.) This silence will not 
+hide your presence, since its oppressive, unnatural effect will almost 
+certainly alert any living creature that something is very wrong.
+%%%%
 scythe
 
 A farm implement, usually unsuited to combat.

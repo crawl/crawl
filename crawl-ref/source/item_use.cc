@@ -56,6 +56,7 @@ REVISION("$Rev$");
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
+#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
@@ -5172,6 +5173,10 @@ void read_scroll(int slot)
             did_god_conduct(DID_HOLY, 10, item_type_known(scroll));
         break;
     }
+
+    case SCR_SILENCE:
+        cast_silence(25);
+        break;
 
     case SCR_VULNERABILITY:
         _vulnerability_scroll();

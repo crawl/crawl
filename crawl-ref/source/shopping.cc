@@ -1413,6 +1413,7 @@ unsigned int item_value( item_def item, bool ident )
                 break;
             case SCR_TORMENT:
             case SCR_HOLY_WORD:
+            case SCR_SILENCE:
             case SCR_VULNERABILITY:
                 valued += 75;
                 break;

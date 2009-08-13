@@ -309,6 +309,7 @@ enum scroll_type
     SCR_ENCHANT_WEAPON_III,
     SCR_HOLY_WORD,
     SCR_VULNERABILITY,
+    SCR_SILENCE,                       //   25
     NUM_SCROLLS
 };
 

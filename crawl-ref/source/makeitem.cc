@@ -2453,15 +2453,16 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 321, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
 
                 // Medium-level scrolls
-                160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
-                160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
-                160, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
-                160, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
+                140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
+                140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
+                140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
+                140, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
+                140, (depth_mod < 4 ? SCR_PAPER :         SCR_SILENCE),
 
                 // High-level scrolls
-                160, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
-                160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
-                160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
+                140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
+                140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
+                140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
                 0);
         }
         while (agent == GOD_XOM && _is_boring_item(OBJ_SCROLLS, item.sub_type));
@@ -2472,7 +2473,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
         || item.sub_type == SCR_ENCHANT_WEAPON_III
         || item.sub_type == SCR_ACQUIREMENT
         || item.sub_type == SCR_TORMENT
-        || item.sub_type == SCR_HOLY_WORD)
+        || item.sub_type == SCR_HOLY_WORD
+        || item.sub_type == SCR_SILENCE)
     {
         item.quantity = 1;
     }
