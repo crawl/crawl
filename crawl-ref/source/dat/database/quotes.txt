@@ -359,7 +359,7 @@ come to pass."
 "A snake, with mottles rare,
 Surveyed my chamber floor,
 In feature as the worm before,
-But ringed with power."	
+But ringed with power."
     -Emily Dickinson, "In Winter In My Room"
 %%%%
 __cap-T_suffix
@@ -595,7 +595,7 @@ giant frog
 
  Oh baby, telephone
  And tell me I'm your own."
-    -Ida Emerson and Joseph E. Howard, "Hello My Baby!"	
+    -Ida Emerson and Joseph E. Howard, "Hello My Baby!"
 %%%%
 gnoll
 
@@ -723,7 +723,18 @@ phantom
 player ghost
 
 "Know thyself."
-        -Inscription in the pronaos of the Temple of Apollo at Delphi	
+        -Inscription in the pronaos of the Temple of Apollo at Delphi
+%%%%
+Prince Ribbit
+
+"Princess! youngest princess!
+ Open the door for me!
+ Dost thou not know what thou saidst to me
+
+ Yesterday by the cool waters of the fountain?
+ Princess, youngest princess!
+ Open the door for me!"
+    -Brothers Grimmm (Margaret Hunt), _The Frog King, or Iron Henry_
 %%%%
 program bug
 
