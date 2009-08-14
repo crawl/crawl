@@ -2183,7 +2183,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 void exercise_spell( spell_type spell, bool spc, bool success )
 {
     // (!success) reduces skill increase for miscast spells
-    int ndx = 0;
     int skill;
     int exer = 0;
     int exer_norm = 0;
@@ -2206,11 +2205,23 @@ void exercise_spell( spell_type spell, bool spc, bool success )
         skillcount += 4 + random2(10);
 
     const int diff = spell_difficulty(spell);
-    for (ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
+
+    // Fill all disciplines into a vector, then shuffle the vector, and
+    // train in that random order. That way, small xp pools don't always
+    // train exclusively the first skill.
+    std::vector<int> disc;
+    for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
         if (!spell_typematch( spell, 1 << ndx ))
             continue;
 
+        disc.push_back(ndx);
+    }
+    std::random_shuffle(disc.begin(), disc.end());
+
+    for (unsigned int k = 0; k < disc.size(); ++k)
+    {
+        int ndx = disc[k];
         skill = spell_type2skill( 1 << ndx );
         workout = (random2(1 + diff) / skillcount);
 
