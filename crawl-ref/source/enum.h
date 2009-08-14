@@ -1199,7 +1199,7 @@ enum duration_type
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
     DUR_DEFLECT_MISSILES,
-    DUR_FORESCRY,
+    DUR_PHASE_SHIFT,
     DUR_SEE_INVISIBLE,
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
     DUR_SILENCE,
@@ -2795,7 +2795,7 @@ enum spell_type
     SPELL_MASS_SLEEP,
     SPELL_DETECT_SECRET_DOORS,
     SPELL_SEE_INVISIBLE,
-    SPELL_FORESCRY,
+    SPELL_PHASE_SHIFT,
     SPELL_SUMMON_BUTTERFLIES,          //  140
     SPELL_WARP_BRAND,
     SPELL_SILENCE,

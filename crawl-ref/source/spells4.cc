@@ -329,18 +329,18 @@ void cast_shatter(int pow)
         mpr("Ka-crash!", MSGCH_SOUND);
 }
 
-// Cast_forescry: raises evasion (by 8 currently) via Divinations.
-void cast_forescry(int pow)
+// Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
+void cast_phase_shift(int pow)
 {
-    if (!you.duration[DUR_FORESCRY])
-        mpr("You begin to receive glimpses of the immediate future...");
+    if (!you.duration[DUR_PHASE_SHIFT])
+        mpr("You begin to phase in and out of the material plane...");
     else
-        mpr("Your vision of the future intensifies.");
+        mpr("Your phasing becomes more pronounced.");
 
-    you.duration[DUR_FORESCRY] += 5 + random2(pow);
+    you.duration[DUR_PHASE_SHIFT] += 5 + random2(pow);
 
-    if (you.duration[DUR_FORESCRY] > 30)
-        you.duration[DUR_FORESCRY] = 30;
+    if (you.duration[DUR_PHASE_SHIFT] > 30)
+        you.duration[DUR_PHASE_SHIFT] = 30;
 
     you.redraw_evasion = true;
 }

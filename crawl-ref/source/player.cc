@@ -2451,7 +2451,7 @@ int player_evasion()
     if (dodge_bonus > 0)                // always a bonus
         ev += dodge_bonus;
 
-    if (you.duration[DUR_FORESCRY])
+    if (you.duration[DUR_PHASE_SHIFT])
         ev += 8;
 
     if (you.duration[DUR_STONEMAIL])
@@ -2558,7 +2558,7 @@ int old_player_evasion(void)
     if (you.duration[DUR_STONEMAIL])
         ev -= 2;
 
-    if (you.duration[DUR_FORESCRY])
+    if (you.duration[DUR_PHASE_SHIFT])
         ev += 8;                //jmf: is this a reasonable value?
 
     int emod = 0;
@@ -3889,7 +3889,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_HASTE:
     // The following are not shown in the status lines.
     case DUR_ICY_ARMOUR:
-    case DUR_FORESCRY:
+    case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
         return (6);
@@ -4141,7 +4141,8 @@ void display_char_status()
 
     _output_expiring_message(DUR_DEATH_CHANNEL, "You are channeling the dead.");
 
-    _output_expiring_message(DUR_FORESCRY, "You are forewarned.");
+    _output_expiring_message(DUR_PHASE_SHIFT,
+                             "You phase in and out of the material plane.");
 
     _output_expiring_message(DUR_SILENCE, "You radiate silence.");
 

@@ -4778,7 +4778,7 @@ static const char* dur_names[NUM_DURATIONS] =
     "transformation",
     "death channel",
     "deflect missiles",
-    "forescry",
+    "phase shift",
     "see invisible",
     "weapon brand",
     "silence",

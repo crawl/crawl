@@ -1142,7 +1142,7 @@ void antimagic()
         DUR_MIGHT, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
         DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
-        DUR_FORESCRY, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
+        DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
         DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
         DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE, DUR_PETRIFIED
@@ -1256,8 +1256,8 @@ void extension(int pow)
     if (you.duration[DUR_STONESKIN])
         cast_stoneskin(pow);
 
-    if (you.duration[DUR_FORESCRY])
-        cast_forescry(pow);
+    if (you.duration[DUR_PHASE_SHIFT])
+        cast_phase_shift(pow);
 
     if (you.duration[DUR_SEE_INVISIBLE])
         cast_see_invisible(pow);

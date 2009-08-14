@@ -2015,8 +2015,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         ice_armour(powc, false);
         break;
 
-    case SPELL_FORESCRY:
-        cast_forescry(powc);
+    case SPELL_PHASE_SHIFT:
+        cast_phase_shift(powc);
         break;
 
     case SPELL_SILENCE:

@@ -193,11 +193,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // 12 - Book of Enchantments (fourth one)
     {SPELL_LEVITATION,
      SPELL_SELECTIVE_AMNESIA,
+     SPELL_SEE_INVISIBLE,
      SPELL_CAUSE_FEAR,
      SPELL_EXTENSION,
      SPELL_DEFLECT_MISSILES,
      SPELL_HASTE,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
@@ -359,8 +359,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_CREATURES,
      SPELL_DETECT_ITEMS,
-     SPELL_SEE_INVISIBLE,
-     SPELL_FORESCRY,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -368,11 +368,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // 28 - Book of the Warp
     {SPELL_BANISHMENT,
+     SPELL_PHASE_SHIFT,
      SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
      SPELL_PORTAL,
      SPELL_CONTROLLED_BLINK,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },

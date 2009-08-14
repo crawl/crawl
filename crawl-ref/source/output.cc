@@ -490,7 +490,7 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     cgotoxy(x+4, y, GOTO_STAT);
-    textcolor(you.duration[DUR_FORESCRY] ? LIGHTBLUE : HUD_VALUE_COLOUR);
+    textcolor(you.duration[DUR_PHASE_SHIFT] ? LIGHTBLUE : HUD_VALUE_COLOUR);
     cprintf( "%2d ", player_evasion() );
 }
 
@@ -2396,8 +2396,8 @@ std::string _status_mut_abilities()
         status.push_back(_get_expiration_string(DUR_DEATH_CHANNEL,
                                                 "death channel"));
     }
-    if (you.duration[DUR_FORESCRY])
-        status.push_back(_get_expiration_string(DUR_FORESCRY, "forewarned"));
+    if (you.duration[DUR_PHASE_SHIFT])
+        status.push_back(_get_expiration_string(DUR_PHASE_SHIFT, "phasing"));
 
     if (you.duration[DUR_SILENCE])
         status.push_back(_get_expiration_string(DUR_SILENCE, "silence"));

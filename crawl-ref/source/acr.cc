@@ -2204,10 +2204,10 @@ static void _decrement_durations()
         burden_change();
     }
 
-    if (_decrement_a_duration(DUR_FORESCRY,
-                              "You feel firmly rooted in the present.",
+    if (_decrement_a_duration(DUR_PHASE_SHIFT,
+                              "You feel completely stable again.",
                               coinflip(),
-                              "Your vision of the future begins to falter."))
+                              "Your phasing is about to run out."))
     {
         you.redraw_evasion = true;
     }

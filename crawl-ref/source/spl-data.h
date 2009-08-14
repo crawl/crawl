@@ -1876,7 +1876,7 @@
 
 {
     SPELL_SEE_INVISIBLE, "See Invisible",
-     SPTYP_ENCHANTMENT | SPTYP_DIVINATION,
+     SPTYP_ENCHANTMENT,
      SPFLAG_HELPFUL,
      4,
      200,
@@ -1888,8 +1888,8 @@
 },
 
 {
-    SPELL_FORESCRY, "Forescry",
-     SPTYP_DIVINATION,
+    SPELL_PHASE_SHIFT, "Phase Shift",
+     SPTYP_TRANSLOCATION,
      SPFLAG_HELPFUL,
      5,
      200,

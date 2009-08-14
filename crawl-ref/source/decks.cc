@@ -1882,35 +1882,35 @@ static void _metamorphosis_card(int power, deck_rarity_type rarity)
 static void _helm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
-    bool do_forescry  = false;
-    bool do_stoneskin = false;
-    bool do_shield    = false;
+    bool do_phaseshift = false;
+    bool do_stoneskin  = false;
+    bool do_shield     = false;
     int num_resists = 0;
 
     // Chances are cumulative.
     if (power_level >= 2)
     {
-        if (coinflip()) do_forescry  = true;
-        if (coinflip()) do_stoneskin = true;
-        if (coinflip()) do_shield    = true;
+        if (coinflip()) do_phaseshift = true;
+        if (coinflip()) do_stoneskin  = true;
+        if (coinflip()) do_shield     = true;
         num_resists = random2(4);
     }
     if (power_level >= 1)
     {
-        if (coinflip()) do_forescry  = true;
-        if (coinflip()) do_stoneskin = true;
-        if (coinflip()) do_shield    = true;
+        if (coinflip()) do_phaseshift = true;
+        if (coinflip()) do_stoneskin  = true;
+        if (coinflip()) do_shield     = true;
     }
     if (power_level >= 0)
     {
         if (coinflip())
-            do_forescry = true;
+            do_phaseshift = true;
         else
-            do_stoneskin = true;
+            do_stoneskin  = true;
     }
 
-    if (do_forescry)
-        cast_forescry( random2(power/4) );
+    if (do_phaseshift)
+        cast_phase_shift( random2(power/4) );
     if (do_stoneskin)
         cast_stoneskin( random2(power/4) );
     if (num_resists)

@@ -250,10 +250,6 @@ Flight
 
 This spell grants to the caster the ability to fly through the air.
 %%%%
-Forescry
-
-This spell makes the caster aware of the immediate future; while not far enough to predict the result of a fight, it does give the caster ample time to get out of the way of a punch (reflexes allowing).
-%%%%
 Fragmentation
 
 This spell creates a concussive explosion within a large body of rock (or other hard material), to the detriment of any who happen to be standing nearby.
@@ -389,6 +385,10 @@ This spell tunes the caster's body such that it can instantly pass through solid
 Petrify
 
 This spell attempts to petrify a monster. If successful, the monster is slowed down for a while until it is temporarily turned into stone. In this state, a monster will take less damage upon being hit.
+%%%%
+Phase Shift
+
+This spell causes the caster to sporadically phase in and out of the material plane, causing blows to occasionally pass through.
 %%%%
 Poison Ammunition
 

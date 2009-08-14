@@ -29,7 +29,7 @@ void cast_detect_secret_doors(int pow);
 void cast_discharge(int pow);
 bool cast_evaporate(int pow, bolt& beem, int potion);
 void cast_fulsome_distillation(int pow);
-void cast_forescry(int pow);
+void cast_phase_shift(int pow);
 bool cast_fragmentation(int powc, const dist& spd);
 bool cast_apportation(int powc, const coord_def& where);
 void cast_ignite_poison(int pow);
