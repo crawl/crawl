@@ -2207,8 +2207,8 @@ void exercise_spell( spell_type spell, bool spc, bool success )
     const int diff = spell_difficulty(spell);
 
     // Fill all disciplines into a vector, then shuffle the vector, and
-    // train in that random order. That way, small xp pools don't always
-    // train exclusively the first skill.
+    // exercise skills in that random order. That way, small xp pools
+    // don't always train exclusively the first skill.
     std::vector<int> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
