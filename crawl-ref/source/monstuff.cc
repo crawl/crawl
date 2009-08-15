@@ -9092,7 +9092,7 @@ static void _mons_in_cloud(monsters *monster)
 
     case CLOUD_STEAM:
     {
-        // couldn't be bothered coding for armour of res fire
+        // FIXME: couldn't be bothered coding for armour of res fire
 
         simple_monster_message(monster, " is engulfed in steam!");
 
