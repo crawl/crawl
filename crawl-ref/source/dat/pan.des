@@ -2,6 +2,13 @@
 # pan.des: Minivaults particular to Pan, and the lairs of the Pan Demon Lords
 ##############################################################################
 
+# The generic pan lord warning message.
+
+{{
+function pan_lord_warning(e)
+  crawl.mpr("Be careful! A famous pandemonium lord has residence here!", "warning")
+end
+}}
 
 ##############################################################################
 # Pan Demon Lairs
@@ -22,6 +29,8 @@ ORIENT:    northeast
 LFLOORCOL: yellow
 LROCKCOL:  red
 MONS:      patrolling Mnoleg, neqoxec
+: crawl.mpr("The air here is shimmering with an eerie glow.")
+: pan_lord_warning(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -66,6 +75,8 @@ LFLOORCOL: lightgrey
 TAGS:      no_rotate
 LROCKCOL:  white
 MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
+: crawl.mpr("You sense a powerful magical presence. It is not pleased.")
+: pan_lord_warning(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -113,6 +124,8 @@ MONS:      patrolling Cerebov, Balrug, Pit Fiend
 # you might not want to teleport too much on this level - unless you can
 # reliably teleport away again.
 #
+: crawl.mpr("Searing heat pours from the floors and walls of this place.")
+: pan_lord_warning(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -156,6 +169,8 @@ ORIENT:    southwest
 LFLOORCOL: darkgrey
 LROCKCOL:  darkgrey
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
+: crawl.mpr("Shadowy figures dance across your vision.")
+: pan_lord_warning(_G)
 MAP
 xxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
 xxxx..............................x
