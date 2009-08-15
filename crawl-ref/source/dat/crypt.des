@@ -588,6 +588,7 @@ NAME:   david_glass_crypt
 ORIENT: float
 TAGS:   no_item_gen no_rotate
 PLACE:  Crypt:5
+SUBST:  m : mn
 MONS:   lich / ancient lich
 MONS:   skeletal dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
