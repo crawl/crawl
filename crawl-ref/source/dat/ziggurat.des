@@ -170,11 +170,14 @@ MAP
 ENDMAP
 
 ### Pan entry vaults to ziggurats #############################################
+#
+# These can occur more than once, so no luniq_zig here.
+
 default-depth: Pan
 
 NAME:   enter_ziggurat_pan_a
 CHANCE: 51 : 8%
-TAGS:   chance_pan_zig extra allow_dup luniq_zig
+TAGS:   chance_pan_zig extra allow_dup
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -193,7 +196,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_pan_b
 CHANCE:  51 : 8%
-TAGS:    chance_pan_zig extra allow_dup luniq_zig no_pool_fixup
+TAGS:    chance_pan_zig extra allow_dup no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
@@ -215,7 +218,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_pan_c
 CHANCE:  51 : 8%
-TAGS:    chance_pan_zig extra allow_dup luniq_zig
+TAGS:    chance_pan_zig extra allow_dup
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -237,7 +240,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_pan_d
 CHANCE:  51 : 8%
-TAGS:    chance_pan_zig extra allow_dup luniq_zig
+TAGS:    chance_pan_zig extra allow_dup
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
