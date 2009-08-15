@@ -1045,7 +1045,7 @@ _player_ghost_rare_
 # Unique monsters
 #######################################
 %%%%
-# She is trying to get money and treasure
+############ AGNES ### She is trying to get money and treasure
 Agnes
 
 @_Agnes_common_@
@@ -1082,7 +1082,7 @@ _Agnes_rare_
 
 ## END Agnes ##
 %%%%
-# efreet
+############ AZRAEL ### efreet
 Azrael
 
 @_Azrael_common_@
@@ -1121,7 +1121,7 @@ _Azrael_rare_
 VISUAL:@The_monster@ whirls about in circles.
 ## END Azrael ##
 %%%%
-# In case Blork ends up polymorphed.
+############ BLORK ### In case Blork ends up polymorphed.
 Blork
 
 @Blork the orc@
@@ -1177,7 +1177,7 @@ _Blork_rare_
 @The_monster@ screams @at_foe@, "I'll drink your blood!  Soon!"
 ## END Blork the orc ##
 %%%%
-# An ancient lich
+############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
 
 @_Boris_common_@
@@ -1285,7 +1285,7 @@ Boris unsummoned
 @The_monster@ says, "You can't fire me, I quit!"
 ## END Boris ##
 %%%%
-# a sentient jelly who used to be human a long time ago
+############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
 
 @dissolution_common@
@@ -1335,7 +1335,7 @@ w:2
 @The_monster@ says, "There is a problem solver and its name is Dissolver!"
 ## END Dissolution ##
 %%%%
-# An adventurer hating competition
+############ DONALD ### An adventurer hating competition
 Donald
 
 @_hostile_adventurer_@
@@ -1345,12 +1345,12 @@ Duane
 
 @_mercenary_guard_@
 %%%%
-# A mercenary guarding the dungeon
+############ EDMUND ### A mercenary guarding the dungeon
 Edmund
 
 @_mercenary_guard_@
 %%%%
-# A wild tempered adventuress
+############ ERICA ### A wild tempered adventuress
 Erica
 
 @_Erica_common_@
@@ -1386,7 +1386,7 @@ VISUAL:@The_monster@ drinks a potion.
 @The_monster@ screams @at_foe@, "Coming here was suicide!  For you!"
 ## END Erica ##
 %%%%
-# An ugly ogre
+############ EROLCHA ### An ugly ogre capable of casting
 Erolcha
 
 @_Erolcha_common_@
@@ -1423,7 +1423,7 @@ _Erolcha_rare_
 @The_monster@ screams @at_foe@, "Erolcha angry!"
 ## END Erolcha ##
 %%%%
-# apprentice summoner, has funny ideas about honour
+############ EUSTACHIO ### apprentice summoner, has funny ideas about honour
 Eustachio
 
 @_Eustachio_common_@
@@ -1463,7 +1463,7 @@ SPELL:@The_monster@ calls on the powers of Hell!
 @The_monster@ brags, "I can call spirits from the vast deeps."
 ## END Eustachio ##
 %%%%
-# A mercenary guarding the dungeon
+############ FRANCES ### A mercenary guarding the dungeon
 Frances
 
 @_mercenary_guard_@
@@ -1517,7 +1517,7 @@ _Francis_rare_
 
 ## END Francis ##
 %%%%
-# A mercenary guarding the dungeon
+############ FREDERICK ### A mercenary guarding the dungeon
 Frederick
 
 @_mercenary_guard_@
@@ -1526,7 +1526,7 @@ w:1
 VISUAL:@The_monster@ polishes @possessive@ monocle.
 
 %%%%
-# A war dog-breeding gnoll
+############ GRUM ### A war dog-breeding gnoll
 Grum
 
 @_Grum_common_@
@@ -1549,8 +1549,9 @@ _Grum_rare_
 @The_monster@ shouts, "Attack!"
 
 @The_monster@ says, "You're dog chow, @player_name@!"
+## END Grum ##
 %%%%
-# A twisted goblin
+############ IJYB ### A twisted goblin
 Ijyb
 
 @_Ijyb_common_@
@@ -1590,7 +1591,7 @@ _Ijyb_rare_
 @The_monster@ screams @at_foe@, "I no like you!"
 ## END Ijyb ##
 %%%%
-# A middle aged man, hired to kill you. He is in a hurry.
+############ HAROLD ### A middle aged man, hired to kill you. He is in a hurry.
 Harold
 
 @_Harold_common_@
@@ -1633,7 +1634,7 @@ _Harold_rare_
 @The_monster@ says @to_foe@, "Mine is not to reason why.  Mine's to do, yours to die."
 ## END Harold ##
 %%%%
-# a pretty merfolk witch
+############ ILSUIW ### a pretty merfolk witch
 Ilsuiw
 
 @_Ilsuiw_common_@
@@ -1684,7 +1685,7 @@ sea-chanty
 melody
 ## END Ilsuiw ##
 %%%%
-# A sorceress disturbed by player
+############ JESSICA ### A sorceress disturbed by player
 Jessica
 
 @_Jessica_common_@
@@ -1717,9 +1718,9 @@ _Jessica_rare_
 @The_monster@ shouts @at_foe@, "Stop bothering me, or I'll kill you!"
 
 @The_monster@ shouts @at_foe@, "You are a ghastly nuisance!"
-
 ## END Jessica ##
 %%%%
+############ JOSEPH ### Hired to kill you
 Joseph
 
 @_Joseph_common_@
@@ -1759,7 +1760,7 @@ _Joseph_rare_
 @The_monster@ shouts @at_foe@, "Wow!"
 ## END Joseph ##
 %%%%
-# An ugly old witch looking for someone to kill
+############ JOSEPHINE ### An ugly old witch looking for someone to kill
 Josephine
 
 VISUAL:@The_monster@ grins evilly.
@@ -1781,7 +1782,7 @@ VISUAL:@The_monster@ grinds @possessive@ teeth.
 @The_monster@ screams @at_foe@, "I'll use your head as a decoration in my hut!"
 ## END Josephine ##
 %%%%
-# A bounty hunter
+############ JOZEF ### A bounty hunter
 Jozef
 
 @_Jozef_common_@
@@ -1824,7 +1825,7 @@ _Jozef_rare_
 @The_monster@ screams @at_foe@, "Die!  I've got more contracts today."
 ## END Jozef ##
 %%%%
-# an enchantress, lover of Odysseus
+############ KIRKE ### an enchantress, lover of Odysseus
 Kirke
 
 VISUAL:@The_monster@ splashes a potion @at_foe@.
@@ -1855,7 +1856,13 @@ weird
 mysterious
 ### END Kirke ###
 %%%%
-# A powerful sorceress, guarding the ORB
+############ LOUISE ### A mercenary guarding the dungeon
+Louise
+
+@_mercenary_guard_@
+### END Louise
+%%%%
+############ MARGERY ### A powerful sorceress, guarding the ORB
 Margery
 
 @_Margery_common_@
@@ -1932,12 +1939,7 @@ VISUAL:@The_monster@ looks very self-confident.
 @The_monster@ screams, "The ORB is only a tale, but I will kill you anyway!" @player_only@
 ## END Margery
 %%%%
-# A mercenary guarding the dungeon
-Louise
-
-@_mercenary_guard_@
-%%%%
-# A warrior princess looking for the sword "Entarex".
+############ MAUD ### A warrior princess looking for the sword "Entarex".
 Maud
 
 @_Maud_common_@
@@ -1975,7 +1977,40 @@ _Maud_rare_
 
 ## END Maud ##
 %%%%
-# Loner spell-caster
+############ MENKAURE ### A mummy whose rest you've disturbed
+Menkaure
+
+@_Menkaure_common_@
+
+w:2
+@_Menkaure_rare_@
+%%%%
+_Menkaure_common_
+
+VISUAL:@The_monster@'s bandages flutter.
+
+@The_monster@ whispers in an indecipherable tongue.
+
+@The_monster@ @wails@, "Why can't you leave me to my rest?"
+%%%%
+_Menkaure_rare_
+
+VISUAL:@The_monster@ forgets how to to speak, silenced by the ages.
+
+VISUAL:@The_monster@ gestures ominously @at_foe@.
+
+@The_monster@ shouts @at_foe@, "You disturbed my rest! Die!"
+
+@The_monster@ says @to_foe@, "From dust you came, to dust you will return."
+
+@The_monster@ shouts @at_foe@, "The sands of time shall wipe you from history!"
+
+@The_monster@ shouts @at_foe@, "The curse of the Pharaohs be upon you!"
+
+VISUAL:@The_monster@ draws the symbol "Udjat" in the dust.
+## END Menkaure ##
+%%%%
+############ MICHAEL ### Loner spell-caster
 Michael
 
 @_Michael_common_@
@@ -2011,7 +2046,7 @@ VISUAL:@The_monster@ shakes with wrath.
 @The_monster@ screams @at_foe@, "I want to be alone!"
 
 %%%%
-# A disembodied skull.
+############ MURRAY ### A disembodied skull.
 Murray
 
 @_Murray_common_@
@@ -2065,7 +2100,7 @@ VISUAL:@The_monster@ seems to say something.
 VISUAL:@The_monster@ says something you can't hear.  It was probably not a compliment. @player_only@
 ## END silenced Murray ##
 %%%%
-# ugly orc sorceress
+############ NERGALLE ### ugly orc sorceress
 Nergalle
 
 @_Nergalle_common_@
@@ -2091,7 +2126,7 @@ _Nergalle_rare_
 @The_monster@ blows @possessive@ nose.
 ## END Nergalle ##
 %%%%
-# evil centaur
+############ NESSOS ### evil centaur
 Nessos
 
 @_Nessos_common_@
@@ -2127,10 +2162,9 @@ w:1
 
 w:1
 @The_monster@ tries to tell @foe@ a complicated story about hydras, @possessive@ blood, and marriage.
-
 ## END NESSOS
 %%%%
-# A skilled warrior looking for some fame.  More kills = more fame.
+############ NORBERT ### A skilled warrior looking for some fame.  More kills = more fame.
 Norbert
 
 @_Norbert_common_@
@@ -2170,7 +2204,7 @@ _Norbert_rare_
 
 ## END Norbert ##
 %%%%
-# An enlightened but crazy man
+############ NORRIS ### An enlightened but crazy man
 Norris
 
 @_Norris_common_@
@@ -2233,7 +2267,7 @@ VISUAL:@The_monster@ looks very balanced.
 @The_monster@ screams @at_foe@, "Blow your mind!"
 ## END Norris ##
 %%%%
-# The King of the Cyclopes from Homer's Odyssey!
+############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
 # (A cyclops watching over a herd of yaks.)
 Polyphemus
 
@@ -2275,6 +2309,7 @@ VISUAL:@The_monster@ looks around for something heavy to throw at @foe@.
 @The_monster@ says @to_foe@, "@foe_genus@ for dinner? Sounds delicious!"
 ## END Polyphemus ##
 %%%%
+############ PRINCE RIBBIT ### Prince turned into frog
 Prince Ribbit
 
 @_Prince_Ribbit_common_@
@@ -2311,7 +2346,7 @@ w:1
 small bird
 ## END Prince Ribbit ##
 %%%%
-# An insane sorceress
+############ PSYCHE ### An insane sorceress
 Psyche
 
 @_Psyche_common_@
@@ -2367,7 +2402,7 @@ VISUAL:@The_monster@ sucks @possessive@ thumb.
 @The_monster@ whispers @to_foe@, "Hold me, thrill me, kiss me, kill me."
 ## END Psyche ##
 %%%%
-# A teased troll
+############ PURGED ### A teased troll
 Purgy
 
 @_Purgy_common_@
@@ -2397,7 +2432,7 @@ VISUAL:@The_monster@ clenches @possessive@ claws.
 
 VISUAL:@The_monster@ looks very sad for a moment.
 %%%%
-# A crazy adventurer
+############ RUPERT ### A crazy adventurer
 Rupert
 
 @_Rupert_common_@
@@ -2432,7 +2467,7 @@ _Rupert_rare_
 @The_monster@ screams @at_foe@, "Red!  No, blue!"
 ## END Rupert ##
 %%%%
-# a sapphire statue of an earth mage
+############ ROXANNE ### a sapphire statue of an earth mage
 Roxanne
 
 @_Roxanne_common_@
@@ -2497,7 +2532,7 @@ w:5
 @The_monster@ says @to_foe@, "Don't just stand there! You can move, can't you?"
 ## END Roxanne ##
 %%%%
-# orc warlord
+############ SAINT ROKA ### orc warlord
 # Only used if the player is not a Hill Orc.
 Saint Roka
 
@@ -2545,7 +2580,7 @@ w:1
 @The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!"
 ## END Saint Roka ##
 %%%%
-# Mad old wizard
+############ SIGMUND ### Mad old wizard
 Sigmund
 
 @_Sigmund_common_@
@@ -2593,7 +2628,7 @@ VISUAL:@The_monster@ tries to bite @foe@.
 @The_monster@ whispers @to_foe@, "You'll know eternity soon."
 ## END Sigmund ##
 %%%%
-# female kobold assassin
+############ SONJA ### female kobold assassin
 Sonja
 
 @_Sonja_common_@
@@ -2626,7 +2661,7 @@ _Sonja_rare_
 @The_monster@ says @to_foe@, "Someone hired me to kill you, but I'm not supposed to say who."
 ## END Sonja ##
 %%%%
-# A fighter who likes to kill
+############ TERENCE ### A fighter who likes to kill
 Terence
 
 @_Terence_common_@
@@ -2670,7 +2705,7 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
-# An orc hired to kill you
+############ URUG ### An orc hired to kill you
 Urug
 
 # some chance of generic orc speech
@@ -2700,12 +2735,12 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ screams @at_foe@, "I love blood!"
 ## END Urug ##
 %%%%
-# An adventurer hating competition
+############ WAYNE ### An adventurer hating competition
 Wayne
 
 @_hostile_adventurer_@
 %%%%
-# An ancient dragon
+############ XTAHUA ### An ancient dragon
 Xtahua
 
 @_Xtahua_common_@
