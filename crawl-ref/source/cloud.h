@@ -60,6 +60,7 @@ int steam_cloud_damage(int decay);
 cloud_type beam2cloud(beam_type flavour);
 beam_type cloud2beam(cloud_type flavour);
 
+int resist_fraction(int resist, int bonus_res = 0);
 int  max_cloud_damage(cloud_type cl_type, int power = -1);
 void in_a_cloud(void);
 

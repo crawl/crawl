@@ -2045,10 +2045,6 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     const bool monster = (defender->atype() == ACT_MONSTER);
 
-    // Check if this is a resist that pretends to be boolean for damage
-    // purposes.  Only electricity and sticky flame (napalm) do this at
-    // the moment; raw poison damage uses the normal formula.
-    int res_base = (is_boolean_resist(flavour) ? 2 : 1);
     const int resistible_fraction = get_resistible_fraction(flavour);
 
     int resistible = rawdamage * resistible_fraction / 100;
@@ -2059,7 +2055,19 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
         if (monster && res >= 3)
             resistible = 0;
         else
-            resistible /= res_base + res * res;
+        {
+            // Check if this is a resist that pretends to be boolean for damage
+            // purposes.  Only electricity and sticky flame (napalm) do this at
+            // the moment; raw poison damage uses the normal formula.
+            const int bonus_res = (is_boolean_resist(flavour) ? 1 : 0);
+
+            // Use a new formula for players, but keep the old, more effective
+            // for monsters.
+            if (monster)
+                resistible /= 1 + bonus_res + res * res;
+            else
+                resistible /= resist_fraction(res, bonus_res);
+        }
     }
     else if (res < 0)
         resistible = resistible * (ranged? 15 : 20) / 10;
@@ -3033,9 +3041,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        if (defender->airborne())
-            break;
-        else if (defender->res_elec() > 0)
+        if (defender->airborne() || defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
         {

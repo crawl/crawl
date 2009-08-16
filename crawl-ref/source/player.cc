@@ -5527,12 +5527,12 @@ void dec_napalm_player()
         {
             ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10,
                  NON_MONSTER, KILLED_BY_BURNING);
-        }
 
-        if (res_fire < 0)
-        {
-            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10,
-                 NON_MONSTER, KILLED_BY_BURNING);
+            if (res_fire < 0)
+            {
+                ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10,
+                     NON_MONSTER, KILLED_BY_BURNING);
+            }
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)

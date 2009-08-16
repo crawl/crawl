@@ -237,7 +237,7 @@ int steam_cloud_damage(const cloud_struct &cloud)
 {
     return steam_cloud_damage(cloud.decay);
 }
- 
+
 int steam_cloud_damage(int decay)
 {
     decay = std::min(decay, 60);
@@ -433,6 +433,17 @@ beam_type cloud2beam(cloud_type flavour)
     }
 }
 
+// Returns by how much damage gets divided due to elemental resistances.
+// Damage is reduced to, level 1 -> 1/2, level 2 -> 1/3, level 3 -> 1/5, or
+// for "boolean" attacks (which use bonus_res = 1, sticky flame/electricity)
+// to level 1 -> 1/3, level 2 -> 1/4, or level 3 -> 1/6.
+// With the old formula (1 + resist * resist) this used to be
+// 1/2, 1/5, 1/10 (normal) and 1/3, 1/6, 1/11 (boolean), respectively.
+int resist_fraction(int resist, int bonus_res)
+{
+    return ((3*resist + 1)/2 + bonus_res);
+}
+
 // NOTE: Keep in sync with in_a_cloud()
 int max_cloud_damage(cloud_type cl_type, int power)
 {
@@ -462,7 +473,7 @@ int max_cloud_damage(cloud_type cl_type, int power)
         else
         {
             dam += 32 * speed / 10;
-            dam /= (1 + resist * resist);
+            dam /= resist_fraction(resist);
         }
         break;
 
@@ -554,7 +565,7 @@ void in_a_cloud()
         {
             canned_msg(MSG_YOU_RESIST);
             hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
-            hurted /= (1 + resist * resist);
+            hurted /= resist_fraction(resist);
             ouch(hurted, cl, KILLED_BY_CLOUD, "flame");
         }
         expose_player_to_element(BEAM_FIRE, 7);
@@ -602,7 +613,7 @@ void in_a_cloud()
         {
             canned_msg(MSG_YOU_RESIST);
             hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
-            hurted /= (1 + resist * resist);
+            hurted /= resist_fraction(resist);
             ouch(hurted, cl, KILLED_BY_CLOUD, "freezing vapour");
         }
         expose_player_to_element(BEAM_COLD, 7);
