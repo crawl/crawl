@@ -388,7 +388,7 @@ This spell attempts to petrify a monster. If successful, the monster is slowed d
 %%%%
 Phase Shift
 
-This spell causes the caster to sporadically phase in and out of the material plane, causing blows to occasionally pass through.
+This spell allows the caster to phase in and out of the material plane, allowing them to occasionally avoid blows entirely.
 %%%%
 Poison Ammunition
 

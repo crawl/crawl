@@ -4142,7 +4142,7 @@ void display_char_status()
     _output_expiring_message(DUR_DEATH_CHANNEL, "You are channeling the dead.");
 
     _output_expiring_message(DUR_PHASE_SHIFT,
-                             "You phase in and out of the material plane.");
+                             "You are out of phase with the material plane.");
 
     _output_expiring_message(DUR_SILENCE, "You radiate silence.");
 

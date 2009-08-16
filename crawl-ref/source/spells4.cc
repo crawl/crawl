@@ -333,9 +333,9 @@ void cast_shatter(int pow)
 void cast_phase_shift(int pow)
 {
     if (!you.duration[DUR_PHASE_SHIFT])
-        mpr("You begin to phase in and out of the material plane...");
+        mpr("You feel the strange sensation of being on two planes at once.");
     else
-        mpr("Your phasing becomes more pronounced.");
+        mpr("Your feel the material plane grow further away.");
 
     you.duration[DUR_PHASE_SHIFT] += 5 + random2(pow);
 

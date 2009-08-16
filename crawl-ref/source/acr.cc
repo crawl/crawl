@@ -2205,9 +2205,9 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_PHASE_SHIFT,
-                              "You feel completely stable again.",
-                              coinflip(),
-                              "Your phasing is about to run out."))
+                    "You are firmly grounded in the material plane once more.",
+                    coinflip(),
+                    "You feel closer to the material plane."))
     {
         you.redraw_evasion = true;
     }
