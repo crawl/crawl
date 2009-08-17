@@ -593,6 +593,8 @@ MONS:   lich / ancient lich
 MONS:   skeletal dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
 KFEAT:  ^ = alarm trap
+SUBST:  F = G:100 F:1
+KMONS:  F = orange crystal statue / silver statue / ice statue
 MAP
 .....................
 .....................
