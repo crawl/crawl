@@ -392,47 +392,54 @@ NAME:    ossuary_due_mausoleum
 WEIGHT:  5
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
-MONS:    orc skeleton / kobold skeleton / \
-         hobgoblin skeleton / gnoll skeleton
-MONS:    guardian mummy
+MONS:    orc skeleton / kobold skeleton / gnoll skeleton / orc skeleton
 MONS:    mummy
-# Loot: 22 items.
+MONS:    patrolling guardian mummy
+# Loot: 22-30 items, now with added early loot!
 ITEM:    any scroll / any potion
+ITEM:    any scroll / any potion / nothing
 KITEM:   x = any scroll / any potion
 KMONS:   x = guardian mummy
 : ossuary_setup_features(_G)
 : ossuary_milestone(_G)
+: crawl.mpr("You feel the presence of a powerful and evil guardian...", "warning")
 MAP
 ccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccc
-cc.........................cc
-cc.<..........1..........<.cc
-cc.......ccccc+ccccc.......cc
-cc......cc3...1...3cc......cc
+cc1.1...................1.1cc
+cc.<.....................<.cc
+cc1.1....ccccc+ccccc....1.1cc
+cc......cc.........cc......cc
 cc.....cc...cc=cc...cc.....cc
-cc....cc...codddoc...cc....cc
-cc....c...codddddoc...c....cc
-cc...1+3..=ddd<xdd=..3+1...cc
-cc....c...codddddoc...c....cc
-cc....cc...codddoc...cc....cc
+cc....cc...cmdxdmc...cc....cc
+cc....c...cmdddddmc...c....cc
+cc....+...=ddd<ddd=...+....cc
+cc....c...cmdddddmc...c....cc
+cc....cc...cmdddmc...cc....cc
 cc.....cc...cc=cc...cc.....cc
-cc......cc3...1...3cc......cc
-cc.......ccccc+ccccc.......cc
-cc.<..........1..........<.cc
-cc.........................cc
+cc......cc.........cc......cc
+cc1.1....ccccc+ccccc....1.1cc
+cc.<.....................<.cc
+cc1.1...................1.1cc
+ccccccccccccc+++ccccccccccccc
+ccccccccccccc...ccccccccccccc
+ccccccccccee+.2.+eecccccccccc
+cccccccccceec111ceecccccccccc
 ccccccccccccc111ccccccccccccc
 ccccccccccccc111ccccccccccccc
-ccccccccccccc111ccccccccccccc
-ccccccccccccc111ccccccccccccc
+ccccccccccccc...ccccccccccccc
+ccccccccccccc...ccccccccccccc
+ccccccccccccc...ccccccccccccc
+ccccccccccccc...ccccccccccccc
 ccccccccccccc+++ccccccccccccc
 cccccccccccc.....cccccccccccc
 ccccccccccc.......ccccccccccc
-cccccccc2o...<.A...o2cccccccc
+cccccccc3o...<.A...o3cccccccc
 ccccccccccc.......ccccccccccc
 cccccccccccc.....cccccccccccc
 ccccccccccccc...ccccccccccccc
 ccccccccccccccocccccccccccccc
-cccccccccccccc2cccccccccccccc
+cccccccccccccc3cccccccccccccc
 ccccccccccccccccccccccccccccc
 ENDMAP
 
