@@ -396,7 +396,7 @@ std::string pluralise(const std::string &name,
         // ending with sh (except fish, which are caught in the previous check).
         return name + "es";
     }
-    else if (ends_with(name, "um"))
+    else if (ends_with(name, "simulacrum"))
     {
         // simulacrum -> simulacra
         return name.substr(0, name.length() - 2) + "a";

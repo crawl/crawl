@@ -1363,9 +1363,17 @@ void monster_pane_info::to_string( int count, std::string& desc,
     }
     else
     {
-        // Don't differentiate between dancing weapons, mimics, or draconians
+        // Don't pluralise uniques, ever.  Multiple copies of the same unique
+        // are unlikely in the dungeon currently, but quite common in the
+        // arena.  This prevens "4 Gra", etc. {due}
+        if (mons_is_unique(m_mon->type))
+        {
+            out << count << " "
+                << m_mon->name(DESC_PLAIN);
+        }
+        // Don't differentiate between dancing weapons, mimics or draconians
         // of different types.
-        if (m_fullname
+        else if (m_fullname
             && m_mon->type != MONS_DANCING_WEAPON
             && mons_genus(m_mon->type) != MONS_DRACONIAN
             && !mons_is_mimic(m_mon->type)
