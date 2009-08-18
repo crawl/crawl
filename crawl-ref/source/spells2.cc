@@ -2262,59 +2262,77 @@ int corpse_spores(beh_type behavior)
     return (count);
 }
 
-typedef std::pair<monsters *, int> monster_cost;
-
-struct lesser_second
+struct monster_conversion
 {
-    bool operator()(const monster_cost & left, const monster_cost & right)
-    {
-        // Explicitly making this comparison unstable. I'm not clear on the
-        // complete implications of this but it should be ok for a heap.
-        if (left.second == right.second)
-            return coinflip();
-
-        return (left.second < right.second);
-    }
+    monsters * base_monster;
+    int cost;
+    monster_type new_type;
 };
+
+bool operator<(const monster_conversion & left,
+               const monster_conversion & right)
+{
+    if(left.cost == right.cost)
+        return coinflip();
+    return left.cost < right.cost;
+}
+
+// Given a monster (well it should be a plant/fungus) see if evolve_flora can
+// upgrade it, and set up a monster_conversion structure for it.  Returns true
+// (and fills in possible_monster) if input an be upgraded, and returns false
+// otherwise.
+bool _possible_evolution(monsters * input,
+        monster_conversion & possible_monster)
+{
+    int plant_cost = 10;
+    int toadstool_cost = 1;
+    int fungus_cost = 5;
+
+    possible_monster.base_monster = input;
+    switch (input->mons_species())
+    {
+    case MONS_PLANT:
+        possible_monster.cost = plant_cost;
+        possible_monster.new_type = MONS_OKLOB_PLANT;
+        break;
+
+    case MONS_FUNGUS:
+        possible_monster.cost = fungus_cost;
+        possible_monster.new_type = MONS_WANDERING_MUSHROOM;
+        break;
+
+    case MONS_TOADSTOOL:
+        possible_monster.cost = toadstool_cost;
+        possible_monster.new_type = MONS_FUNGUS;
+        break;
+
+    default:
+        return false;
+
+    }
+
+    return true;
+}
 
 bool evolve_flora()
 {
     int needed_fruit = 2;
 
-    std::priority_queue<monster_cost,
-                        std::vector<monster_cost>,
-                        lesser_second > available_targets;
+    std::priority_queue<monster_conversion, std::vector<monster_conversion> >
+                        available_targets;
 
-    int points         = 15;
-    int plant_cost     = 10;
-    int toadstool_cost =  1;
-    int fungus_cost    =  5;
+    int points = 15;
+    monster_conversion temp_conversion;
 
-    for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true); rad;
-         ++rad)
+    for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true);
+         rad; ++rad)
     {
         monsters * target = monster_at(*rad);
         if (!target)
             continue;
 
-        int cost = 0;
-        switch (target->mons_species())
-        {
-        case MONS_PLANT:
-            cost = plant_cost;
-            break;
-
-        case MONS_FUNGUS:
-            cost = fungus_cost;
-            break;
-
-        case MONS_TOADSTOOL:
-            cost = toadstool_cost;
-            break;
-        };
-
-        if (cost != 0)
-            available_targets.push(std::pair<monsters *, int>(target, cost));
+        if (_possible_evolution(target, temp_conversion))
+            available_targets.push(temp_conversion);
     }
 
     if (available_targets.empty())
@@ -2324,85 +2342,84 @@ bool evolve_flora()
     int available_count;
 
     rc = prompt_invent_item("Use which fruit (must have at least 2)?",
-                            MT_INVLIST, OSEL_SOME_FRUIT, true, true, true,
-                            '\0', -1, &available_count);
+             MT_INVLIST, OSEL_SOME_FRUIT, true, true, true, '\0', -1,
+             &available_count);
 
     if (prompt_failed(rc))
         return (false);
 
     dec_inv_item_quantity(rc, needed_fruit);
 
-    int plants_evolved     = 0;
+    int plants_evolved = 0;
     int toadstools_evolved = 0;
-    int fungi_evolved      = 0;
+    int fungi_evolved = 0;
 
     while (!available_targets.empty() && points > 0)
     {
-        monster_cost current_target = available_targets.top();
+        monster_conversion current_target = available_targets.top();
 
-        monsters * current_plant = current_target.first;
+        monsters * current_plant = current_target.base_monster;
         available_targets.pop();
 
         // Can we afford this thing?
-        if (current_target.second > points)
+        if (current_target.cost > points)
             continue;
 
-        points -= current_target.second;
+        points -= current_target.cost;
 
-        int base_species = current_plant->mons_species();
-
-        monster_type new_species = MONS_PLANT;
-        switch (base_species)
+        switch (current_plant->mons_species())
         {
         case MONS_PLANT:
-            new_species = MONS_OKLOB_PLANT;
             plants_evolved++;
             break;
 
         case MONS_FUNGUS:
-            new_species = MONS_WANDERING_MUSHROOM;
             fungi_evolved++;
             break;
 
         case MONS_TOADSTOOL:
-            new_species = MONS_FUNGUS;
             toadstools_evolved++;
             break;
         };
 
-        current_plant->upgrade_type(new_species, true, true);
-
+        current_plant->upgrade_type(current_target.new_type, true, true);
         current_plant->god = GOD_FEAWN;
         current_plant->attitude = ATT_FRIENDLY;
         current_plant->flags |= MF_CREATED_FRIENDLY;
 
-        // We can potentially upgrade toadstools a second time.
-        if (base_species == MONS_TOADSTOOL && rc != -1)
-            available_targets.push(monster_cost(&env.mons[rc], fungus_cost));
+        // Try to remove slowly dying in case we are upgrading a toadstool.
+        current_plant->del_ench(ENCH_SLOWLY_DYING);
+
+        // Maybe we can upgrade it again?
+        if (_possible_evolution(current_plant, temp_conversion)
+            && temp_conversion.cost <= points)
+        {
+            available_targets.push(temp_conversion);
+        }
     }
 
     // messaging...
     if (plants_evolved > 0)
     {
         mprf("%s can now spit acid.",
-             (plants_evolved == 1 ? "A plant" : "Some plants"));
+             (plants_evolved > 1 ? "Some plants" : "A plant"));
     }
 
-    if (toadstools_evolved>0)
+    if (toadstools_evolved > 0)
     {
-        const bool plural          = toadstools_evolved > 1;
+        const bool plural = toadstools_evolved > 1;
         mprf("%s toadstool%s gain%s stability.",
              (plural ? "Some" : "A"),
-             (plural ? "s" : ""),
-             (plural ? ""  : "s"));
+             (plural ? "s"    : ""),
+             (plural ? ""     : "s"));
     }
 
     if (fungi_evolved > 0)
     {
-        const bool multiple = fungi_evolved > 1;
+        const bool plural = fungi_evolved > 1;
         mprf("The fungal %s can now pick up %s mycelia and move.",
-             (multiple ? "colonies" : "colony"),
-             (multiple ? "their" : "its"));
+             (plural ? "colonies" : "colony"),
+             (plural ? "their"    : "its"));
     }
 
     return (true);
