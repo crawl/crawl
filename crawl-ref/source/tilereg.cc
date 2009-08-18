@@ -3334,7 +3334,7 @@ void DollEditRegion::render()
         int x = left_gutter + i;
         int y = doll_line;
 
-        if (m_doll_idx == i)
+        if (m_mode == TILEP_MODE_LOADING && m_doll_idx == i)
             m_tile_buf.add(TILEP_CURSOR, x, y);
 
         dolls_data temp = m_dolls[i];
@@ -3366,6 +3366,21 @@ void DollEditRegion::render()
 
     m_shape_buf.add(left_gutter, edit_doll_line, left_gutter + 2, edit_doll_line + 2, grey);
     m_shape_buf.add(left_gutter + 3, edit_doll_line, left_gutter + 4, edit_doll_line + 1, grey);
+    m_shape_buf.add(left_gutter + 5, edit_doll_line, left_gutter + 6, edit_doll_line + 1, grey);
+    m_shape_buf.add(left_gutter + 7, edit_doll_line, left_gutter + 8, edit_doll_line + 1, grey);
+    {
+        // Describe the three middle tiles.
+        float tile_name_x = (left_gutter + 2.5) * 32.0f;
+        float tile_name_y = (edit_doll_line + 1) * 32.0f;
+        m_font_buf.add("Current", VColour::white, tile_name_x, tile_name_y);
+        tile_name_x = (left_gutter + 5) * 32.0f;
+        tile_name_y = (edit_doll_line + 1) * 32.0f;
+        m_font_buf.add("Equip", VColour::white, tile_name_x, tile_name_y);
+        tile_name_x = (left_gutter + 6.8) * 32.0f;
+        tile_name_y = (edit_doll_line + 1) * 32.0f;
+        m_font_buf.add("Default", VColour::white, tile_name_x, tile_name_y);
+    }
+
 
     set_transform();
     m_shape_buf.draw();
@@ -3376,6 +3391,17 @@ void DollEditRegion::render()
     glScalef(64, 64, 1);
     m_cur_buf.draw();
 
+    {
+        dolls_data temp;
+        for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
+             temp.parts[i] = TILEP_SHOW_EQUIP;
+        _fill_doll_equipment(temp);
+        pack_doll_buf(m_cur_buf, temp, 2, 0);
+
+        temp = m_job_default;
+        _fill_doll_equipment(temp);
+        pack_doll_buf(m_cur_buf, temp, 4, 0);
+    }
     glLoadIdentity();
     glTranslatef(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
     glScalef(32, 32, 1);
@@ -3398,7 +3424,7 @@ void DollEditRegion::render()
     m_font_buf.add(item_str, VColour::white, item_name_x, item_name_y);
 
     std::string doll_name;
-    doll_name = make_stringf("Doll %d / %d", m_doll_idx + 1, NUM_MAX_DOLLS);
+    doll_name = make_stringf("Doll index %d / %d", m_doll_idx, NUM_MAX_DOLLS - 1);
     float doll_name_x = left_gutter * 32.0f;
     float doll_name_y = (doll_line + 1) * 32.0f;
     m_font_buf.add(doll_name, VColour::white, doll_name_x, doll_name_y);
@@ -3413,16 +3439,10 @@ void DollEditRegion::render()
     doll_name_y += m_font->char_height() * 2.0f;
     m_font_buf.add(doll_name, VColour::white, doll_name_x, doll_name_y);
 
-    // Add current doll information:
-
-    std::string info_str;
-    float info_x = info_offset * 32.0f;
-    float info_y = 0.0f;
-
     // FIXME - this should be generated in rltiles
-    const char *cat_name[TILEP_PART_MAX] = 
+    const char *cat_name[TILEP_PART_MAX] =
     {
-        "Species",
+        "Base",
         "Shadow",
         "Halo",
         "Ench",
@@ -3430,7 +3450,7 @@ void DollEditRegion::render()
         "Boots",
         "Legs",
         "Body",
-        "Arm",
+        "Gloves",
         "LHand",
         "RHand",
         "Hair",
@@ -3439,6 +3459,11 @@ void DollEditRegion::render()
         "DrcWing",
         "DrcHead"
     };
+
+    // Add current doll information:
+    std::string info_str;
+    float info_x = info_offset * 32.0f;
+    float info_y = 0.0f + m_font->char_height();
 
     for (int i = 0 ; i < TILEP_PART_MAX; i++)
     {
@@ -3458,6 +3483,22 @@ void DollEditRegion::render()
             info_str = make_stringf("%2s%9s: %3d/%3d", sel, cat_name[i], disp, maxp);
         m_font_buf.add(info_str, VColour::white, info_x, info_y);
         info_y += m_font->char_height();
+    }
+
+    // List the most important commands. (Hopefully the rest will be
+    // self-explanatory.)
+    {
+        const int height = m_font->char_height();
+        const float start_y = doll_name_y + height * 3;
+        const int width = m_font->char_width();
+        const float start_x = width * 10;
+        m_font_buf.add("Commands:", VColour::white, 0.0f, start_y);
+        m_font_buf.add("Change doll mode    m", VColour::white, start_x, start_y);
+        m_font_buf.add("Toggle equipment    *", VColour::white, start_x, start_y + height * 1);
+        m_font_buf.add("Copy doll           Ctrl-c", VColour::white, start_x, start_y + height * 2);
+        m_font_buf.add("Paste copied doll   Ctrl-v", VColour::white, start_x, start_y + height * 3);
+        m_font_buf.add("Randomize doll      Ctrl-r", VColour::white, start_x, start_y + height * 4);
+        m_font_buf.add("Quit menu           q, Escape", VColour::white, start_x, start_y + height * 5);
     }
 
     m_font_buf.draw();
@@ -3493,7 +3534,7 @@ void DollEditRegion::run()
         m_doll_idx = 0;
     }
 
-    bool update_part_idx = true; 
+    bool update_part_idx = true;
 
     command_type cmd;
     do
@@ -3577,9 +3618,7 @@ void DollEditRegion::run()
             break;
         case CMD_DOLL_TOGGLE_EQUIP_ALL:
             for (int i = 0; i < TILEP_PART_MAX; i++)
-            {
                 m_dolls[m_doll_idx].parts[i] = TILEP_SHOW_EQUIP;
-            }
             break;
         case CMD_DOLL_CLASS_DEFAULT:
             m_dolls[m_doll_idx] = m_job_default;
@@ -3587,7 +3626,12 @@ void DollEditRegion::run()
         case CMD_DOLL_CHANGE_MODE:
             m_mode = (tile_doll_mode)(((int)m_mode + 1) % TILEP_MODE_MAX);
         default:
-            break;    
+            if (key == '0')
+                m_doll_idx = 0;
+            else if (key >= '1' && key <= '9')
+                m_doll_idx = key - '1' + 1;
+            ASSERT(m_doll_idx < NUM_MAX_DOLLS);
+            break;
         }
     }
     while (cmd != CMD_DOLL_QUIT);
@@ -3620,7 +3664,7 @@ ImageManager::~ImageManager()
 
 bool ImageManager::load_textures(bool need_mips)
 {
-    GenericTexture::MipMapOptions mip = need_mips ? 
+    GenericTexture::MipMapOptions mip = need_mips ?
         GenericTexture::MIPMAP_CREATE : GenericTexture::MIPMAP_NONE;
     if (!m_textures[TEX_DUNGEON].load_texture("dngn.png", mip))
         return (false);
