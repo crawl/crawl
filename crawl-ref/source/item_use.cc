@@ -4667,7 +4667,11 @@ static void handle_read_book(int item_slot)
             return;
         }
 
-        describe_spell(spell);
+        describe_spell(spell, &book);
+
+        // Player memorised spell which was being looked at.
+        if (you.turn_is_over)
+            return;
     }
 }
 

@@ -49,7 +49,10 @@ int read_book( item_def &item, read_book_action_type action );
  * called from: acr
  * *********************************************************************** */
 bool player_can_memorise(const item_def &book);
+bool can_learn_spell(bool silent = false);
 bool learn_spell();
+bool learn_spell(spell_type spell, const item_def &book,
+                 bool is_safest_book);
 
 bool player_can_read_spellbook( const item_def &book );
 

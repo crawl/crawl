@@ -32,6 +32,7 @@ REVISION("$Rev$");
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2184,7 +2185,7 @@ static bool _describe_spells(const item_def &item)
     if (nthing == SPELL_NO_SPELL)
         return (false);
 
-    describe_spell( nthing );
+    describe_spell( nthing, &item );
     return (true);
 }
 
@@ -2202,13 +2203,23 @@ void describe_item( item_def &item, bool allow_inscribe )
 
     while (true)
     {
+        // Memorised spell while reading a spellbook.
+        if (you.turn_is_over)
+            return;
+
         const bool spells_shown = _show_item_description(item);
 
         if (spells_shown)
         {
             cgotoxy(1, wherey());
             textcolor(LIGHTGREY);
-            cprintf("Select a spell to read its description.");
+
+            if (item.base_type == OBJ_BOOKS && in_inventory(item))
+                cprintf("Select a spell to read its description or to "
+                        "memorize it.");
+            else
+                cprintf("Select a spell to read its description.");
+
             if (_describe_spells(item))
                 continue;
             return;
@@ -2383,7 +2394,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
 // Describes (most) every spell in the game.
 //
 //---------------------------------------------------------------
-void describe_spell(spell_type spelled)
+void describe_spell(spell_type spelled, const item_def* item)
 {
     std::string description;
 
@@ -2405,6 +2416,7 @@ void describe_spell(spell_type spelled)
 #endif
     }
 
+    bool can_mem = false;
     if (you_cannot_memorise(spelled))
     {
         description += "$$";
@@ -2413,13 +2425,27 @@ void describe_spell(spell_type spelled)
         description += lowercase_string(species_name(you.species, 0));
         description += ".";
     }
+    else if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+    {
+        can_mem = true;
+        description += "$$";
+        description += "(M)emorise this spell.";
+    }
 
     print_description(description);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    if (getch() == 0)
-        getch();
+    char ch;
+    if ((ch = getch()) == 0)
+        ch = getch();
+
+    if (can_mem && toupper(ch) == 'M')
+    {
+        if (!learn_spell(spelled, *item, false) || !you.turn_is_over)
+            more();
+        redraw_screen();
+    }
 }
 
 static std::string _describe_draconian_role(const monsters *mon)
