@@ -3618,9 +3618,10 @@ ImageManager::~ImageManager()
     unload_textures();
 }
 
-bool ImageManager::load_textures()
+bool ImageManager::load_textures(bool need_mips)
 {
-    GenericTexture::MipMapOptions mip = GenericTexture::MIPMAP_CREATE;
+    GenericTexture::MipMapOptions mip = need_mips ? 
+        GenericTexture::MIPMAP_CREATE : GenericTexture::MIPMAP_NONE;
     if (!m_textures[TEX_DUNGEON].load_texture("dngn.png", mip))
         return (false);
 

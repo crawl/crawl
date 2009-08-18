@@ -25,7 +25,7 @@ public:
     ImageManager();
     virtual ~ImageManager();
 
-    bool load_textures();
+    bool load_textures(bool need_mips);
     bool load_item_texture();
     void unload_textures();
 
