@@ -680,6 +680,28 @@ enum command_type
     CMD_TARGET_HELP,
     CMD_MAX_TARGET = CMD_TARGET_HELP,
 
+#ifdef USE_TILE
+    // Tile doll editing screen
+    CMD_DOLL_RANDOMIZE,
+    CMD_MIN_DOLL = CMD_DOLL_RANDOMIZE,
+    CMD_DOLL_SELECT_NEXT_DOLL,
+    CMD_DOLL_SELECT_PREV_DOLL,
+    CMD_DOLL_SELECT_NEXT_PART,
+    CMD_DOLL_SELECT_PREV_PART,
+    CMD_DOLL_CHANGE_PART_NEXT,
+    CMD_DOLL_CHANGE_PART_PREV,
+    CMD_DOLL_COPY,
+    CMD_DOLL_PASTE,
+    CMD_DOLL_TAKE_OFF,
+    CMD_DOLL_TAKE_OFF_ALL,
+    CMD_DOLL_TOGGLE_EQUIP,
+    CMD_DOLL_TOGGLE_EQUIP_ALL,
+    CMD_DOLL_CLASS_DEFAULT,
+    CMD_DOLL_CHANGE_MODE,
+    CMD_DOLL_QUIT,
+    CMD_MAX_DOLL = CMD_DOLL_QUIT,
+#endif
+
     // Disable/enable -more- prompts.
     CMD_DISABLE_MORE,
     CMD_MIN_SYNTHETIC = CMD_DISABLE_MORE,
@@ -1489,6 +1511,9 @@ enum KeymapContext
     KMC_TARGETING,       // Only during 'x' and other targeting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
+#ifdef USE_TILE
+    KMC_DOLL,            // For the tiles doll menu editing screen
+#endif
 
     KMC_CONTEXT_COUNT,   // Must always be the last real context
 

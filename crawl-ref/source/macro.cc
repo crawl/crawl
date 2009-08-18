@@ -1133,6 +1133,11 @@ KeymapContext context_for_command(command_type cmd)
     if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
         return KMC_TARGETING;
 
+#ifdef USE_TILE
+    if (cmd >= CMD_MIN_DOLL && cmd <= CMD_MAX_DOLL)
+        return KMC_DOLL;
+#endif
+
     return KMC_NONE;
 }
 

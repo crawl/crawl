@@ -301,21 +301,49 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
     }
 }
 
-#define NUM_MAX_DOLLS   10
 static dolls_data player_doll;
 static int gender = -1;
 
-enum tile_doll_mode
+// Saves player doll definitions into dolls.txt.
+// Returns true if successful, else false.
+static bool _save_doll_data(int mode, int num, const dolls_data* dolls)
 {
-    TILEP_MODE_EQUIP   = 0,  // draw doll based on equipment
-    TILEP_MODE_LOADING = 1,  // draw doll based on dolls.txt definitions
-    TILEP_MODE_DEFAULT = 2   // draw doll based on job specific definitions
-};
+    // Save mode, num, and all dolls into dolls.txt.
+    std::string dollsTxtString = datafile_path("dolls.txt", false, true);
+    const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
+                            "dolls.txt" : dollsTxtString.c_str();
+
+    FILE *fp = NULL;
+    if ( (fp = fopen(dollsTxt, "w+")) != NULL )
+    {
+        fprintf(fp, "MODE=%s\n",
+                    (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
+                    (mode == TILEP_MODE_LOADING) ? "LOADING"
+                                                 : "DEFAULT");
+
+        fprintf(fp, "NUM=%02d\n", num == -1 ? 0 : num);
+
+        char fbuf[80];
+        for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
+        {
+            tilep_print_parts(fbuf, dolls[i]);
+            fprintf(fp, "%s\n", fbuf);
+        }
+        fclose(fp);
+
+        return (true);
+    }
+    else
+    {
+        mprf(MSGCH_ERROR, "Could not write into file '%s'.", dollsTxt);
+        return (false);
+    }
+}
 
 // Loads player doll definitions from (by default) dolls.txt.
 // Returns true if file found, else false.
 static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
-                            int *mode, int *cur)
+                            tile_doll_mode *mode, int *cur)
 {
     char fbuf[1024];
     FILE *fp  = NULL;
@@ -337,7 +365,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
         if (fscanf(fp, "%s", fbuf) != EOF)
         {
             if (strcmp(fbuf, "MODE=DEFAULT") == 0)
-                *mode = (int) TILEP_MODE_DEFAULT;
+                *mode = TILEP_MODE_DEFAULT;
             else if (strcmp(fbuf, "MODE=EQUIP") == 0)
                 *mode = TILEP_MODE_EQUIP; // Nothing else to be done.
         }
@@ -377,7 +405,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
 
                 if (*cur == count++)
                 {
-                    tilep_scan_parts(fbuf, dolls[0].parts);
+                    tilep_scan_parts(fbuf, dolls[0]);
                     gender = get_gender_from_tile(dolls[0].parts);
                     break;
                 }
@@ -395,7 +423,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
                 if (fbuf[0] == '#') // Skip comment lines.
                     continue;
 
-                tilep_scan_parts(fbuf, dolls[count++].parts);
+                tilep_scan_parts(fbuf, dolls[count++]);
             }
         }
 
@@ -406,25 +434,33 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
 
 void init_player_doll()
 {
-    dolls_data default_doll[1];
+    dolls_data dolls[NUM_MAX_DOLLS];
 
-    for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
-        default_doll[0].parts[i] = TILEP_SHOW_EQUIP;
+    for (int i = 0; i < NUM_MAX_DOLLS; i++)
+        for (int j = 0; j < TILEP_PART_MAX; j++)
+            dolls[i].parts[j] = TILEP_SHOW_EQUIP;
 
-    default_doll[0].parts[TILEP_PART_BASE]
-        = tilep_species_to_base_tile(you.species, you.experience_level);
+    tile_doll_mode mode = TILEP_MODE_LOADING;
+    int cur = 0;
+    _load_doll_data("dolls.txt", dolls, NUM_MAX_DOLLS, &mode, &cur);
 
-    int mode = TILEP_MODE_LOADING;
-    int cur  = 0;
-    _load_doll_data("dolls.txt", default_doll, 1, &mode, &cur);
+    if (mode == TILEP_MODE_LOADING)
+    {
+        player_doll = dolls[cur];
+        return;
+    }
 
     if (gender == -1)
         gender = coinflip();
 
-    tilep_race_default(you.species, gender, you.experience_level,
-                       default_doll[0].parts);
+    for (int i = 0; i < TILEP_PART_MAX; i++)
+        player_doll.parts[i] = TILEP_SHOW_EQUIP;
+    tilep_race_default(you.species, gender, you.experience_level, player_doll.parts);
 
-    player_doll = default_doll[0];
+    if (mode == TILEP_MODE_EQUIP)
+        return;
+
+    tilep_job_default(you.char_class, gender, player_doll.parts);
 }
 
 static int _get_random_doll_part(int p)
@@ -466,6 +502,15 @@ static void _create_random_doll(dolls_data &rdoll)
 
 static void _fill_doll_equipment(dolls_data &result)
 {
+    // Base tile.
+    if (result.parts[TILEP_PART_BASE] == TILEP_SHOW_EQUIP)
+    {
+        if (gender == -1)
+            gender = get_gender_from_tile(player_doll.parts);
+        tilep_race_default(you.species, gender, you.experience_level,
+                           result.parts);
+    }
+
     // Main hand.
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
     {
@@ -556,14 +601,25 @@ static void _fill_doll_equipment(dolls_data &result)
         else
             result.parts[TILEP_PART_ARM] = 0;
     }
+    // Halo.
+    if (result.parts[TILEP_PART_HALO] == TILEP_SHOW_EQUIP)
+    {
+        const bool halo = inside_halo(you.pos());
+        result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
+    }
+    // Enchantments.
+    if (result.parts[TILEP_PART_ENCH] == TILEP_SHOW_EQUIP)
+    {
+        result.parts[TILEP_PART_ENCH] =
+            (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
+    }
 
     // Various other slots.
-    if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)
-        result.parts[TILEP_PART_LEG] = 0;
-    if (result.parts[TILEP_PART_DRCWING] == TILEP_SHOW_EQUIP)
-        result.parts[TILEP_PART_DRCWING] = 0;
-    if (result.parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
-        result.parts[TILEP_PART_DRCHEAD] = 0;
+    for (int i = 0; i < TILEP_PART_MAX; i++)
+    {
+        if (result.parts[i] == TILEP_SHOW_EQUIP)
+            result.parts[i] = 0;
+    }
 }
 
 // Writes equipment information into per-character doll file.
@@ -572,217 +628,25 @@ void save_doll_file(FILE *dollf)
     ASSERT(dollf);
 
     dolls_data result = player_doll;
-
-    const bool halo = inside_halo(you.pos());
-    result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
-    result.parts[TILEP_PART_ENCH] =
-        (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
-
     _fill_doll_equipment(result);
 
     // Write into file.
     char fbuf[80];
-    tilep_print_parts(fbuf, result.parts, true);
+    tilep_print_parts(fbuf, result);
     fprintf(dollf, "%s\n", fbuf);
 
     if (you.attribute[ATTR_HELD] > 0)
         fprintf(dollf, "net\n");
 }
 
-// Allow player to choose between up to 10 premade dolls, or replace them
-// with the job default, using current equipment, or a random doll.
-// If the player makes any changes while browsing the selections, i.e.
-// overwrites a slot or changes the mode, these changes are saved back
-// into dolls.txt.
-// TODO: Change to proper menu.
-void TilePlayerEdit()
-{
-    // Initialize equipment setting.
-    dolls_data equip_doll;
-    for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
-         equip_doll.parts[i] = TILEP_SHOW_EQUIP;
-
-    tilep_race_default(you.species, gender,
-                       you.experience_level, equip_doll.parts);
-
-    // Initialize job default.
-    dolls_data default_doll = equip_doll;
-    tilep_job_default(you.char_class, gender, default_doll.parts);
-
-    // Read predefined dolls from file.
-    dolls_data dolls[NUM_MAX_DOLLS];
-    for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
-         dolls[i] = equip_doll;
-
-    int old_mode = TILEP_MODE_LOADING;
-    int old_num  = -1;
-    const bool found_file = _load_doll_data("dolls.txt", dolls, NUM_MAX_DOLLS,
-                                            &old_mode, &old_num);
-    int mode = old_mode;
-    int num  = old_num;
-
-    bool display_num   = (found_file && mode == TILEP_MODE_LOADING);
-    bool dolls_changed = false;
-    bool did_random    = false;
-
-    while (true)
-    {
-        // Offer a list of choices.
-        std::vector<std::string> prompt;
-        prompt.push_back("Pick (d)efault doll for job, use (e)quipment settings");
-        prompt.push_back("roll a (r)andom doll");
-        if (found_file)
-            prompt.push_back("load doll (0-9) from file");
-        if (did_random || mode != TILEP_MODE_LOADING)
-            prompt.push_back("(s)ave current doll");
-
-        std::string current = "";
-        bool need_braces = false;
-        if (did_random || mode != TILEP_MODE_LOADING)
-        {
-            current = (did_random                 ? "random" :
-                       mode == TILEP_MODE_EQUIP   ? "equipment" :
-                       mode == TILEP_MODE_DEFAULT ? "default" : "buggy");
-
-            need_braces = true;
-        }
-
-        if (display_num)
-        {
-            snprintf(info, INFO_SIZE, "doll %d", num);
-            if (need_braces)
-                current += " [";
-            current += info;
-            if (need_braces)
-                current += "]";
-        }
-
-        mprf(MSGCH_PROMPT, "%s? (Current: %s)",
-             comma_separated_line(prompt.begin(),
-                                  prompt.end(), ", or ", ", ").c_str(),
-             current.c_str());
-
-        char ch = (char) getchm(KMC_DEFAULT);
-             ch = tolower(ch);
-
-        bool finish = false;
-        did_random  = false;
-        if (ch == 'd')
-        {
-            player_doll = default_doll;
-            mode        = TILEP_MODE_DEFAULT;
-        }
-        else if (ch == 'e')
-        {
-            player_doll = equip_doll;
-            mode        = TILEP_MODE_EQUIP;
-        }
-        else if (ch == 'r')
-        {
-            dolls_data random_doll = equip_doll;
-            _create_random_doll(random_doll);
-            player_doll = random_doll;
-            did_random  = true;
-        }
-        else if (ch == 's')
-        {
-            mpr("Save current doll to what slot? (0-9)", MSGCH_PROMPT);
-            const char ch2 = (char) getchm(KMC_DEFAULT);
-            if (ch2 >= '0' && ch2 <= '9')
-            {
-                const int slot = ch2 - '0';
-                ASSERT(slot >= 0 && slot <= 9);
-
-                // Translate TILEP_SHOW_EQUIP according to equipment.
-                _fill_doll_equipment(player_doll);
-                dolls[slot]   = player_doll;
-                num           = slot;
-                did_random    = false;
-                dolls_changed = true;
-                display_num   = true;
-                mprf("Doll saved to slot %d.", slot);
-            }
-            else
-                mpr("Doll not saved.");
-            more();
-        }
-        else if (ch >= '0' && ch <= '9')
-        {
-            // HACK until I can find the proper function.
-            num = ch - '0';
-            ASSERT(num >= 0 && num <= 9);
-            ASSERT(num < NUM_MAX_DOLLS);
-
-            player_doll = dolls[num];
-            mode        = TILEP_MODE_LOADING;
-            display_num = true;
-        }
-        else // All other input exits the loop.
-            finish = true;
-
-        gender = get_gender_from_tile(player_doll.parts);
-
-        mesclr();
-
-        if (finish)
-        {
-            // No changes, nothing to be saved.
-            if (!dolls_changed && mode == old_mode && num == old_num)
-                break;
-
-            // Save mode, num, and all dolls into dolls.txt.
-            std::string dollsTxtString = datafile_path("dolls.txt", false, true);
-            const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
-                                    "dolls.txt" : dollsTxtString.c_str();
-
-            FILE *fp = NULL;
-            if ( (fp = fopen(dollsTxt, "w+")) != NULL )
-            {
-                fprintf(fp, "MODE=%s\n",
-                            (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
-                            (mode == TILEP_MODE_LOADING) ? "LOADING"
-                                                         : "DEFAULT");
-
-                fprintf(fp, "NUM=%02d\n", num == -1 ? 0 : num);
-
-                // Print some explanatory comments. May contain no spaces!
-                fprintf(fp, "#Legend:\n");
-                fprintf(fp, "#***:equipment/123:index/000:none\n");
-                fprintf(fp, "#Shadow/Gender/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet\n");
-                fprintf(fp, "#--:Sex:Clk:Bts:Leg:Bdy:Glv:Wpn:Shd:Hai:Brd:Hlm\n");
-
-                char fbuf[80];
-                for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
-                {
-                    tilep_print_parts(fbuf, dolls[i].parts);
-                    fprintf(fp, "%s\n", fbuf);
-                }
-                fclose(fp);
-            }
-            else
-                mprf(MSGCH_ERROR, "Could not write into file '%s'.", dollsTxt);
-
-            break;
-        }
-
-        viewwindow(true, false);
-    }
-}
-
 void DungeonRegion::pack_player(int x, int y)
 {
     dolls_data result = player_doll;
-
-    const bool halo = inside_halo(you.pos());
-    result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
-    result.parts[TILEP_PART_ENCH] =
-        (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
-
     _fill_doll_equipment(result);
     pack_doll(result, x, y);
 }
 
-void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
+void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
 {
     int p_order[TILEP_PART_MAX] =
     {
@@ -814,9 +678,27 @@ void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
         p_order[7] = TILEP_PART_LEG;
     }
 
+    // Special case bardings from being cut off.
+    bool is_naga = (doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
+                    || doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
+    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    bool is_cent = (doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
+                    || doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
+             && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
     for (int i = 0; i < TILEP_PART_MAX; i++)
     {
         int p = p_order[i];
+
         if (!doll.parts[p] || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
@@ -828,9 +710,15 @@ void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
             ymax = 18;
         }
 
-        m_buf_doll.add(doll.parts[p], x, y, 0, 0, true, ymax);
+        buf.add(doll.parts[p], x, y, 0, 0, true, ymax);
     }
 }
+
+void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
+{
+    pack_doll_buf(m_buf_doll, doll, x, y);
+}
+
 
 void DungeonRegion::pack_mcache(mcache_entry *entry, int x, int y)
 {
@@ -2838,16 +2726,6 @@ void MessageRegion::set_overlay(bool is_overlay)
     m_overlay = is_overlay;
 }
 
-struct box_vert
-{
-    float x;
-    float y;
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
-};
-
 void MessageRegion::render()
 {
 #ifdef DEBUG_TILES_REDRAW
@@ -3349,6 +3227,386 @@ void TitleRegion::render()
 #endif
     set_transform();
     m_buf.draw();
+}
+
+void TitleRegion::run()
+{
+    mouse_control mc(MOUSE_MODE_MORE);
+    getch();
+}
+
+DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
+    m_font_buf(font)
+{
+    sx = sy = 0;
+    dx = dy = 32;
+    mx = my = 1;
+
+    m_font = font;
+
+    m_doll_idx = 0;
+    m_cat_idx = TILEP_PART_BASE;
+    m_copy_valid = false;
+
+    m_tile_buf.set_tex(&im->m_textures[TEX_PLAYER]);
+    m_cur_buf.set_tex(&im->m_textures[TEX_PLAYER]);
+}
+
+void DollEditRegion::clear()
+{
+    m_shape_buf.clear();
+    m_tile_buf.clear();
+    m_cur_buf.clear();
+    m_font_buf.clear();
+}
+
+static int _get_next_part(int cat, int part, int inc)
+{
+    // Can't increment or decrement on show equip.
+    if (part == TILEP_SHOW_EQUIP)
+    {
+        return part;
+    }
+
+    // Increment max_part by 1 to include the special value of "none".
+    int max_part = tile_player_part_count[cat] + 1;
+    int offset = tile_player_part_start[cat];
+
+    ASSERT(inc > -max_part);
+
+    // Translate the "none" value into something we can do modulo math with.
+    if (part == 0)
+    {
+        part = offset;
+        inc--;
+    }
+
+    // Valid part numbers are in the range [offset, offset + max_part - 1].
+    int ret = (part + max_part + inc - offset) % (max_part);
+
+    if (ret == max_part - 1)
+    {
+        // "none" value.
+        return 0;
+    }
+    else
+    {
+        // Otherwise, valid part number.
+        return ret + offset;
+    }
+}
+
+void DollEditRegion::render()
+{
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering DollEditRegion\n");
+#endif
+    VColour grey(128, 128, 128, 255);
+
+    m_cur_buf.clear();
+    m_tile_buf.clear();
+    m_shape_buf.clear();
+    m_font_buf.clear();
+
+    // Max items to show at once.
+    const int max_show = 9;
+
+    // Layout options (units are in 32x32 squares)
+    const int left_gutter = 2;
+    const int item_line = 2;
+    const int edit_doll_line = 5;
+    const int doll_line = 8;
+    const int info_offset =
+        left_gutter + std::max(max_show, (int)NUM_MAX_DOLLS) + 1;
+
+    const int center_x = left_gutter + max_show / 2;
+
+    // Pack current doll separately so it can be drawn repeatedly.
+    {
+        dolls_data temp = m_dolls[m_doll_idx];
+        _fill_doll_equipment(temp);
+        pack_doll_buf(m_cur_buf, temp, 0, 0);
+    }
+
+    // Draw set of dolls.
+    for (int i = 0; i < NUM_MAX_DOLLS; i++)
+    {
+        int x = left_gutter + i;
+        int y = doll_line;
+
+        if (m_doll_idx == i)
+            m_tile_buf.add(TILEP_CURSOR, x, y);
+
+        dolls_data temp = m_dolls[i];
+        _fill_doll_equipment(temp);
+        pack_doll_buf(m_tile_buf, temp, x, y);
+
+        m_shape_buf.add(x, y, x + 1, y + 1, grey);
+    }
+
+    // Draw current category of parts.
+    int max_part = tile_player_part_count[m_cat_idx];
+    int show = std::min(max_show, max_part);
+    int half_show = show / 2;
+    for (int i = -half_show; i <= show - half_show; i++)
+    {
+        int x = center_x + i;
+        int y = item_line;
+
+        if (i == 0)
+            m_tile_buf.add(TILEP_CURSOR, x, y);
+
+        int part = _get_next_part(m_cat_idx, m_part_idx, i);
+        ASSERT(part != TILEP_SHOW_EQUIP);
+        if (part)
+            m_tile_buf.add(part, x, y);
+
+        m_shape_buf.add(x, y, x + 1, y + 1, grey);
+    }
+
+    m_shape_buf.add(left_gutter, edit_doll_line, left_gutter + 2, edit_doll_line + 2, grey);
+    m_shape_buf.add(left_gutter + 3, edit_doll_line, left_gutter + 4, edit_doll_line + 1, grey);
+
+    set_transform();
+    m_shape_buf.draw();
+    m_tile_buf.draw();
+
+    glLoadIdentity();
+    glTranslatef(32 * left_gutter, 32 * edit_doll_line, 0);
+    glScalef(64, 64, 1);
+    m_cur_buf.draw();
+
+    glLoadIdentity();
+    glTranslatef(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
+    glScalef(32, 32, 1);
+    m_cur_buf.draw();
+
+    // Add text.
+    const char *part_name = "(none)";
+    if (m_part_idx == TILEP_SHOW_EQUIP)
+        part_name = "(show equip)";
+    else if (m_part_idx)
+        part_name = tile_player_name(m_part_idx);
+
+    glLoadIdentity();
+    glTranslatef(0, 0, 0);
+    glScalef(1, 1, 1);
+
+    std::string item_str = part_name;
+    float item_name_x = left_gutter * 32.0f;
+    float item_name_y = (item_line + 1) * 32.0f;
+    m_font_buf.add(item_str, VColour::white, item_name_x, item_name_y);
+
+    std::string doll_name;
+    doll_name = make_stringf("Doll %d / %d", m_doll_idx + 1, NUM_MAX_DOLLS);
+    float doll_name_x = left_gutter * 32.0f;
+    float doll_name_y = (doll_line + 1) * 32.0f;
+    m_font_buf.add(doll_name, VColour::white, doll_name_x, doll_name_y);
+
+    const char *mode_name[TILEP_MODE_MAX] =
+    {
+        "Current Equipment",
+        "Custom Doll",
+        "Job Defaults"
+    };
+    doll_name = make_stringf("Doll Mode: %s", mode_name[m_mode]);
+    doll_name_y += m_font->char_height() * 2.0f;
+    m_font_buf.add(doll_name, VColour::white, doll_name_x, doll_name_y);
+
+    // Add current doll information:
+
+    std::string info_str;
+    float info_x = info_offset * 32.0f;
+    float info_y = 0.0f;
+
+    // FIXME - this should be generated in rltiles
+    const char *cat_name[TILEP_PART_MAX] = 
+    {
+        "Species",
+        "Shadow",
+        "Halo",
+        "Ench",
+        "Cloak",
+        "Boots",
+        "Legs",
+        "Body",
+        "Arm",
+        "LHand",
+        "RHand",
+        "Hair",
+        "Beard",
+        "Helm",
+        "DrcWing",
+        "DrcHead"
+    };
+
+    for (int i = 0 ; i < TILEP_PART_MAX; i++)
+    {
+        int part = m_dolls[m_doll_idx].parts[i];
+        int disp = part;
+        if (disp)
+            disp = disp - tile_player_part_start[i] + 1;
+        int maxp = tile_player_part_count[i];
+
+        const char *sel = (m_cat_idx == i) ? "->" : "  ";
+
+        if (part == TILEP_SHOW_EQUIP)
+            info_str = make_stringf("%2s%9s: (show equip)", sel, cat_name[i]);
+        else if (!part)
+            info_str = make_stringf("%2s%9s: (none)", sel, cat_name[i]);
+        else
+            info_str = make_stringf("%2s%9s: %3d/%3d", sel, cat_name[i], disp, maxp);
+        m_font_buf.add(info_str, VColour::white, info_x, info_y);
+        info_y += m_font->char_height();
+    }
+
+    m_font_buf.draw();
+}
+
+int DollEditRegion::handle_mouse(MouseEvent &event)
+{
+    return 0;
+}
+
+void DollEditRegion::run()
+{
+    // Initialize equipment setting.
+    dolls_data equip_doll;
+    for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
+         equip_doll.parts[i] = TILEP_SHOW_EQUIP;
+
+    // Initialize job default.
+    m_job_default = equip_doll;
+    tilep_race_default(you.species, gender,
+                       you.experience_level, m_job_default.parts);
+    tilep_job_default(you.char_class, gender, m_job_default.parts);
+
+    // Read predefined dolls from file.
+    for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
+         m_dolls[i] = equip_doll;
+
+    m_mode = TILEP_MODE_LOADING;
+    m_doll_idx = -1;
+
+    if (!_load_doll_data("dolls.txt", m_dolls, NUM_MAX_DOLLS, &m_mode, &m_doll_idx))
+    {
+        m_doll_idx = 0;
+    }
+
+    bool update_part_idx = true; 
+
+    command_type cmd;
+    do
+    {
+        if (update_part_idx)
+        {
+            m_part_idx = m_dolls[m_doll_idx].parts[m_cat_idx];
+            if (m_part_idx == TILEP_SHOW_EQUIP)
+                m_part_idx = 0;
+            update_part_idx = false;
+        }
+
+        int key = getchm(KMC_DOLL);
+        cmd = key_to_command(key, KMC_DOLL);
+
+        switch (cmd)
+        {
+        case CMD_DOLL_RANDOMIZE:
+            _create_random_doll(m_dolls[m_doll_idx]);
+            break;
+        case CMD_DOLL_SELECT_NEXT_DOLL:
+            m_doll_idx = (m_doll_idx + 1) % NUM_MAX_DOLLS;
+            update_part_idx = true;
+            break;
+        case CMD_DOLL_SELECT_PREV_DOLL:
+            m_doll_idx = (m_doll_idx + NUM_MAX_DOLLS - 1) % NUM_MAX_DOLLS;
+            update_part_idx = true;
+            break;
+        case CMD_DOLL_SELECT_NEXT_PART:
+            m_cat_idx = (m_cat_idx + 1) % TILEP_PART_MAX;
+            update_part_idx = true;
+            break;
+        case CMD_DOLL_SELECT_PREV_PART:
+            m_cat_idx = (m_cat_idx + TILEP_PART_MAX - 1) % TILEP_PART_MAX;
+            update_part_idx = true;
+            break;
+        case CMD_DOLL_CHANGE_PART_NEXT:
+            m_part_idx = _get_next_part(m_cat_idx, m_part_idx, 1);
+            if (m_dolls[m_doll_idx].parts[m_cat_idx] != TILEP_SHOW_EQUIP)
+                m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
+            break;
+        case CMD_DOLL_CHANGE_PART_PREV:
+            m_part_idx = _get_next_part(m_cat_idx, m_part_idx, -1);
+            if (m_dolls[m_doll_idx].parts[m_cat_idx] != TILEP_SHOW_EQUIP)
+                m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
+            break;
+        case CMD_DOLL_COPY:
+            m_doll_copy = m_dolls[m_doll_idx];
+            m_copy_valid = true;
+            break;
+        case CMD_DOLL_PASTE:
+            if (m_copy_valid)
+                m_dolls[m_doll_idx] = m_doll_copy;
+            break;
+        case CMD_DOLL_TAKE_OFF:
+            m_part_idx = 0;
+            m_dolls[m_doll_idx].parts[m_cat_idx] = 0;
+            break;
+        case CMD_DOLL_TAKE_OFF_ALL:
+            for (int i = 0; i < TILEP_PART_MAX; i++)
+            {
+                switch (i)
+                {
+                case TILEP_PART_BASE:
+                case TILEP_PART_SHADOW:
+                case TILEP_PART_HALO:
+                case TILEP_PART_ENCH:
+                case TILEP_PART_DRCWING:
+                case TILEP_PART_DRCHEAD:
+                    break;
+                default:
+                    m_dolls[m_doll_idx].parts[i] = 0;
+                };
+            }
+            break;
+        case CMD_DOLL_TOGGLE_EQUIP:
+            if (m_dolls[m_doll_idx].parts[m_cat_idx] == TILEP_SHOW_EQUIP)
+                m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
+            else
+                m_dolls[m_doll_idx].parts[m_cat_idx] = TILEP_SHOW_EQUIP;
+            break;
+        case CMD_DOLL_TOGGLE_EQUIP_ALL:
+            for (int i = 0; i < TILEP_PART_MAX; i++)
+            {
+                m_dolls[m_doll_idx].parts[i] = TILEP_SHOW_EQUIP;
+            }
+            break;
+        case CMD_DOLL_CLASS_DEFAULT:
+            m_dolls[m_doll_idx] = m_job_default;
+            break;
+        case CMD_DOLL_CHANGE_MODE:
+            m_mode = (tile_doll_mode)(((int)m_mode + 1) % TILEP_MODE_MAX);
+        default:
+            break;    
+        }
+    }
+    while (cmd != CMD_DOLL_QUIT);
+
+    _save_doll_data(m_mode, m_doll_idx, &m_dolls[0]);
+
+    // Update player with the current doll.
+    switch (m_mode)
+    {
+    case TILEP_MODE_LOADING:
+        player_doll = m_dolls[m_doll_idx];
+        break;
+    case TILEP_MODE_DEFAULT:
+        player_doll = m_job_default;
+        break;
+    default:
+    case TILEP_MODE_EQUIP:
+        player_doll = equip_doll;
+    }
 }
 
 ImageManager::ImageManager()

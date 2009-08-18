@@ -151,3 +151,19 @@ left mouseclick on line    Select item, inventory menus only.
 left mouseclick            Scroll to next page.
 right mouseclick           Escape (quit menu).
 
+
+DOLL EDITING
+
+Shift + left/right keys    Switch current doll.
+Ctrl + R                   Randomize current doll.
+left/right keys            Change current part.
+m                          Change current doll usage mode.
+up/down keys               Change current part category.
+Ctrl + C                   Copy current doll.
+Ctrl + V                   Paste current doll.
+t                          Remove current equipped part.
+T                          Remove all equipped parts
+*                          Toggle "show equipment".
+Ctrl + E                   Set all to show "show equipment".
+Ctrl + D                   Set current doll to job defaults.
+Escape                     Quit doll editing screen.

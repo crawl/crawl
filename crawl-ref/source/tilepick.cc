@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "tiles.h"
 #include "tilemcache.h"
 #include "tiledef-dngn.h"
+#include "tiledef-player.h"
 #include "tiledef-unrand.h"
 #include "transfor.h"
 #include "traps.h"
@@ -2826,8 +2827,12 @@ static int _draconian_colour(int race, int level)
 
 int get_gender_from_tile(int parts[])
 {
-    return ((parts[TILEP_PART_BASE]
-             - tile_player_part_start[TILEP_PART_BASE]) % 2);
+    int gender = ((parts[TILEP_PART_BASE]
+                 - tile_player_part_start[TILEP_PART_BASE]) % 2);
+
+    if (gender == TILEP_GENDER_MALE || gender == TILEP_GENDER_FEMALE)
+        return gender;
+    return TILEP_GENDER_FEMALE;
 }
 
 int tilep_species_to_base_tile(int sp, int level)
@@ -2901,10 +2906,11 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
     if (gender == -1)
         gender = get_gender_from_tile(parts);
 
-    ASSERT(gender == TILEP_GENDER_MALE || gender == TILEP_GENDER_FEMALE);
     int result = tilep_species_to_base_tile(sp, level) + gender;
     int hair   = 0;
     int beard  = 0;
+    int wing   = 0;
+    int head   = 0;
 
     if (gender == TILEP_GENDER_MALE)
         hair = TILEP_HAIR_SHORT_BLACK;
@@ -2961,12 +2967,12 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
             result = TILEP_BASE_DRACONIAN + colour_offset * 2;
             hair   = 0;
             int st = tile_player_part_start[TILEP_PART_DRCHEAD];
-            parts[TILEP_PART_DRCHEAD] = st + colour_offset;
+            head = st + colour_offset;
 
             if (player_mutation_level(MUT_BIG_WINGS))
             {
                 st = tile_player_part_start[TILEP_PART_DRCWING];
-                parts[TILEP_PART_DRCWING] = st + colour_offset;
+                wing = st + colour_offset;
             }
             break;
         }
@@ -3007,12 +3013,18 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
     }
 
     parts[TILEP_PART_BASE]   = result;
+
     // Don't overwrite doll parts defined elsewhere.
-    if (hair == 0 || parts[TILEP_PART_HAIR] == TILEP_SHOW_EQUIP)
+    if (parts[TILEP_PART_HAIR] == TILEP_SHOW_EQUIP)
         parts[TILEP_PART_HAIR] = hair;
-    if (beard == 0 || parts[TILEP_PART_BEARD] == TILEP_SHOW_EQUIP)
-        parts[TILEP_PART_BEARD]  = beard;
-    parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
+    if (parts[TILEP_PART_BEARD] == TILEP_SHOW_EQUIP)
+        parts[TILEP_PART_BEARD] = beard;
+    if (parts[TILEP_PART_SHADOW] == TILEP_SHOW_EQUIP)
+        parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
+    if (parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
+        parts[TILEP_PART_DRCHEAD] = head;
+    if (parts[TILEP_PART_DRCWING] == TILEP_SHOW_EQUIP)
+        parts[TILEP_PART_DRCWING] = wing;
 }
 
 void tilep_job_default(int job, int gender, int *parts)
@@ -3290,7 +3302,10 @@ int tilep_str_to_part(char *str)
     return atoi(str);
 }
 
-const int parts_saved[] ={
+// This order is to preserve dolls.txt integrity over multiple versions.
+// Newer entries should be added to the end before the -1 terminator.
+const int parts_saved[TILEP_PART_MAX + 1] =
+{
     TILEP_PART_SHADOW,
     TILEP_PART_BASE,
     TILEP_PART_CLOAK,
@@ -3305,13 +3320,15 @@ const int parts_saved[] ={
     TILEP_PART_HELM,
     TILEP_PART_HALO,
     TILEP_PART_ENCH,
+    TILEP_PART_DRCWING,
+    TILEP_PART_DRCHEAD,
     -1
 };
 
 /*
  * scan input line from dolls.txt
  */
-void tilep_scan_parts(char *fbuf, int *parts)
+void tilep_scan_parts(char *fbuf, dolls_data &doll)
 {
     char  ibuf[8];
 
@@ -3332,21 +3349,19 @@ void tilep_scan_parts(char *fbuf, int *parts)
         gcount++;
 
         int idx = tilep_str_to_part(ibuf);
-        if (p == TILEP_PART_BASE)
-            parts[p] = tilep_species_to_base_tile() + idx % 2;
-        else if (idx == 0)
-            parts[p] = 0;
+        if (idx == 0)
+            doll.parts[p] = 0;
         else if (idx == TILEP_SHOW_EQUIP)
-            continue;
+            doll.parts[p] = TILEP_SHOW_EQUIP;
         else if (idx > tile_player_part_count[p])
-            parts[p] = tile_player_part_start[p];
+            doll.parts[p] = tile_player_part_start[p];
         else
         {
             int idx2 = tile_player_part_start[p] + idx - 1;
             if (idx2 < TILE_MAIN_MAX || idx2 >= TILEP_PLAYER_MAX)
-                parts[p] = TILEP_SHOW_EQUIP;
+                doll.parts[p] = TILEP_SHOW_EQUIP;
             else
-                parts[p] = idx2;
+                doll.parts[p] = idx2;
         }
     }
 }
@@ -3354,28 +3369,20 @@ void tilep_scan_parts(char *fbuf, int *parts)
 /*
  * format-print parts
  */
-void tilep_print_parts(char *fbuf, int *parts, bool check_halo)
+void tilep_print_parts(char *fbuf, const dolls_data &doll)
 {
     char *ptr = fbuf;
     for (unsigned i = 0; parts_saved[i] != -1; ++i)
     {
-        if (!check_halo && parts_saved[i] == TILEP_PART_HALO)
-            break;
-
         int p = parts_saved[i];
-        if (p == TILEP_PART_BASE) // 0: female  1: male
-            sprintf(ptr, "%03d", get_gender_from_tile(parts));
-        else
+        int idx = doll.parts[p];
+        if (idx != 0 && idx != TILEP_SHOW_EQUIP)
         {
-            int idx = parts[p];
-            if (idx != 0 && idx != TILEP_SHOW_EQUIP)
-            {
-                idx = parts[p] - tile_player_part_start[p] + 1;
-                if (idx < 0 || idx > tile_player_part_count[p])
-                    idx = 0;
-            }
-            tilep_part_to_str(idx, ptr);
+            idx = doll.parts[p] - tile_player_part_start[p] + 1;
+            if (idx < 0 || idx > tile_player_part_count[p])
+                idx = 0;
         }
+        tilep_part_to_str(idx, ptr);
         ptr += 3;
 
         *ptr = ':';

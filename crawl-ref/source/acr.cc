@@ -1350,7 +1350,7 @@ void process_command( command_type cmd )
     {
 #ifdef USE_TILE
     case CMD_EDIT_PLAYER_TILE:
-        TilePlayerEdit();
+        tiles.draw_doll_edit();
         break;
 #endif
 

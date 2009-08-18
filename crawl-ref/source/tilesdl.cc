@@ -158,12 +158,6 @@ void TilesFramework::shutdown()
     m_region_crt   = NULL;
     m_region_menu  = NULL;
 
-    if (m_region_title)
-    {
-        delete m_region_title;
-        m_region_title = NULL;
-    }
-
     for (unsigned int i = 0; i < LAYER_MAX; i++)
         m_layers[i].m_regions.clear();
 
@@ -180,14 +174,27 @@ void TilesFramework::shutdown()
 
 void TilesFramework::draw_title()
 {
-    m_active_layer = LAYER_TITLE;
+    TitleRegion* reg = new TitleRegion(m_windowsz.x, m_windowsz.y);
+    use_control_region(reg);
+    delete reg;
+}
+
+void TilesFramework::draw_doll_edit()
+{
+    DollEditRegion* reg = new DollEditRegion(&m_image, m_fonts[m_msg_font].font);
+    use_control_region(reg);
+    delete reg;
+}
+
+void TilesFramework::use_control_region(ControlRegion *reg)
+{
+    m_layers[LAYER_TILE_CONTROL].m_regions.push_back(reg);
+    m_active_layer = LAYER_TILE_CONTROL;
     set_need_redraw();
 
-    mouse_control mc(MOUSE_MODE_MORE);
-    getch();
+    reg->run();
 
-    delete m_region_title;
-    m_region_title = NULL;
+    m_layers[LAYER_TILE_CONTROL].m_regions.clear();
 }
 
 void TilesFramework::calculate_default_options()
@@ -313,7 +320,7 @@ bool TilesFramework::initialise()
 
     int crt_font  = load_font(Options.tile_font_crt_file.c_str(),
                               Options.tile_font_crt_size, true, true);
-    int msg_font  = load_font(Options.tile_font_msg_file.c_str(),
+    m_msg_font    = load_font(Options.tile_font_msg_file.c_str(),
                               Options.tile_font_msg_size, true, false);
     int stat_font = load_font(Options.tile_font_stat_file.c_str(),
                               Options.tile_font_stat_size, true, false);
@@ -322,7 +329,7 @@ bool TilesFramework::initialise()
     int lbl_font  = load_font(Options.tile_font_lbl_file.c_str(),
                               Options.tile_font_lbl_size, true, true);
 
-    if (crt_font == -1 || msg_font == -1 || stat_font == -1
+    if (crt_font == -1 || m_msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || lbl_font == -1)
     {
         return (false);
@@ -334,7 +341,7 @@ bool TilesFramework::initialise()
     m_region_inv  = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
                                         TILE_X, TILE_Y);
 
-    m_region_msg  = new MessageRegion(m_fonts[msg_font].font);
+    m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
     m_region_crt  = new CRTRegion(m_fonts[crt_font].font);
     m_region_menu = new MenuRegion(&m_image, m_fonts[crt_font].font);
@@ -347,13 +354,6 @@ bool TilesFramework::initialise()
 
     m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
     m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
-
-    // Only initialize title region if we'll actually want to draw it.
-    if (Options.tile_title_screen)
-    {
-        m_region_title = new TitleRegion(m_windowsz.x, m_windowsz.y);
-        m_layers[LAYER_TITLE].m_regions.push_back(m_region_title);
-    }
 
     cgotoxy(1, 1, GOTO_CRT);
 

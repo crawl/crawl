@@ -624,7 +624,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
         memset(fbuf, 0, sizeof(fbuf));
         if (fscanf(fdoll, "%s", fbuf) != EOF)
         {
-            tilep_scan_parts(fbuf, equip_doll.parts);
+            tilep_scan_parts(fbuf, equip_doll);
             tilep_race_default(p.species,
                                get_gender_from_tile(equip_doll.parts),
                                p.experience_level,

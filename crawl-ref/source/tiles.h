@@ -60,8 +60,8 @@ void tilep_calc_flags(const int parts[], int flag[]);
 void tilep_part_to_str(int number, char *buf);
 int  tilep_str_to_part(char *str);
 
-void tilep_scan_parts(char *fbuf, int *parts);
-void tilep_print_parts(char *fbuf, int *parts, bool check_halo = false);
+void tilep_scan_parts(char *fbuf, dolls_data &doll);
+void tilep_print_parts(char *fbuf, const dolls_data &doll);
 
 int tilep_equ_weapon(const item_def &item);
 int tilep_equ_shield(const item_def &item);
@@ -121,14 +121,11 @@ int TileDrawCursor(int x, int y, int flag);
 void TileNewLevel(bool first_time);
 
 // edit player tile
-void TilePlayerEdit();
 void init_player_doll();
 void save_doll_file(FILE *dollf);
 
 int item_unid_type(const item_def &item);
 int tile_known_weapon_brand(const item_def item);
-
-void TileDrawTitle();
 
 int get_clean_map_idx(int tile_idx);
 
@@ -210,6 +207,12 @@ enum
 {
     TILE_X = 32,
     TILE_Y = 32
+};
+
+// Don't change this without also modifying the data save/load routines.
+enum
+{
+    NUM_MAX_DOLLS = 10
 };
 
 #endif

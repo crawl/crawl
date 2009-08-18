@@ -18,6 +18,7 @@ Stone Soup 0.6
 * Add some tiles "animations" whenever the screen is redrawn.
 * Unrandarts and randarts now share the same, cleaner coding structure.
 * More vaults.
+* Tiles: re-added doll editing screen ('-' command).
 
 Stone Soup 0.5.1 (20090728)
 ---------------------------

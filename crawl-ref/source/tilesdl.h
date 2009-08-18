@@ -126,13 +126,15 @@ public:
     void clear_overlays();
 
     void draw_title();
+    void draw_doll_edit();
 
     MenuRegion *get_menu() { return m_region_menu; }
 protected:
-
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
     int handle_mouse(MouseEvent &event);
+
+    void use_control_region(ControlRegion *region);
 
     // screen pixel dimensions
     coord_def m_windowsz;
@@ -147,7 +149,7 @@ protected:
     {
         LAYER_NORMAL,
         LAYER_CRT,
-        LAYER_TITLE,
+        LAYER_TILE_CONTROL,
         LAYER_MAX
     };
 
@@ -171,9 +173,6 @@ protected:
     CRTRegion *m_region_crt;
     MenuRegion *m_region_menu;
 
-    // Title layer
-    TitleRegion *m_region_title;
-
     struct font_info
     {
         std::string name;
@@ -182,6 +181,7 @@ protected:
         FTFont *font;
     };
     std::vector<font_info> m_fonts;
+    int m_msg_font;
     int m_tip_font;
 
     void do_layout();

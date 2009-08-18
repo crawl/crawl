@@ -424,13 +424,21 @@ protected:
     bool m_far_view;
 };
 
-class TitleRegion : public Region
+// An abstract tiles-only region that takes control over all input.
+class ControlRegion : public Region
+{
+public:
+    virtual void run() = 0;
+};
+
+class TitleRegion : public ControlRegion
 {
 public:
     TitleRegion(int width, int height);
 
     virtual void render();
     virtual void clear() {};
+    virtual void run();
 
     virtual int handle_mouse(MouseEvent &event) { return 0; }
 
@@ -440,5 +448,52 @@ protected:
     GenericTexture m_img;
     VertBuffer<PTVert> m_buf;
 };
+
+enum tile_doll_mode
+{
+    TILEP_MODE_EQUIP   = 0,  // draw doll based on equipment
+    TILEP_MODE_LOADING = 1,  // draw doll based on dolls.txt definitions
+    TILEP_MODE_DEFAULT = 2,  // draw doll based on job specific definitions
+    TILEP_MODE_MAX
+};
+
+class DollEditRegion : public ControlRegion
+{
+public:
+    DollEditRegion(ImageManager *im, FTFont *font);
+
+    virtual void render();
+    virtual void clear();
+    virtual void run();
+
+    virtual int handle_mouse(MouseEvent &event);
+protected:
+    virtual void on_resize() {}
+
+    // Currently edited doll index.
+    int m_doll_idx;
+    // Currently edited category of parts.
+    int m_cat_idx;
+    // Current part in current category.
+    int m_part_idx;
+
+    // Set of loaded dolls.
+    dolls_data m_dolls[NUM_MAX_DOLLS];
+
+    dolls_data m_player;
+    dolls_data m_job_default;
+    dolls_data m_doll_copy;
+    bool m_copy_valid;
+
+    tile_doll_mode m_mode;
+
+    FTFont *m_font;
+
+    ShapeBuffer m_shape_buf;
+    FontBuffer m_font_buf;
+    TileBuffer m_tile_buf;
+    TileBuffer m_cur_buf;
+};
+
 #endif
 #endif
