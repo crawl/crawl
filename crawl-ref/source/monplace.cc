@@ -959,6 +959,15 @@ int place_monster(mgen_data mg, bool force_pos)
             break;
 
         band_template.cls = band_monsters[i];
+
+        // We don't want to place a unique that has already been
+        // generated.
+        if (mons_is_unique(band_template.cls)
+            && you.unique_creatures[band_template.cls])
+        {
+            continue;
+        }
+
         const int band_id = _place_monster_aux(band_template, false);
         if (band_id != -1 && band_id != NON_MONSTER)
         {
