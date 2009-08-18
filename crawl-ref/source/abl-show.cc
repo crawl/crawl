@@ -1980,15 +1980,19 @@ static bool _do_ability(const ability_def& abil)
     {
         int count = fungal_bloom();
 
+        if (count)
+        {
+            simple_god_message(" appreciates your contribution to the ecosystem.",
+                               GOD_FEAWN);
+        }
+
         // We are following the blood god sacrifice piety gain model, given as:
         // if (random2(level + 10) > 5)
         //    piety_change = 1;
         //  where level = 10
         // so the chance of gaining 1 piety from a corpse sacrifice to a blood
         // god is (14/20 == 70/100)
-
-        int piety_gain = binomial_generator(count,70);
-
+        int piety_gain = binomial_generator(count, 70);
         gain_piety(piety_gain);
         break;
     }

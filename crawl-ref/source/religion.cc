@@ -522,7 +522,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_FEAWN:
-        snprintf(info,INFO_SIZE, "you promote decomposition%s",
+        snprintf(info, INFO_SIZE, "you promote decomposition of nearby corpses%s",
                  verbose ? " via the <w>a</w> command" : "");
         likes.push_back(info);
         break;
@@ -554,8 +554,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_JIYVA:
         snprintf(info, INFO_SIZE, "you sacrifice items%s",
-                 verbose ? " by allowing slimes to consume them"
-                         : "");
+                 verbose ? " by allowing slimes to consume them" : "");
 
         likes.push_back(info);
         break;
