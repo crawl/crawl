@@ -610,7 +610,9 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (is_notable_terrain(nfeat) && see_grid(pos))
             seen_notable_thing(nfeat, pos);
 
-        destroy_trap(pos);
+        // Don't destroy a trap which was just placed.
+        if (nfeat < DNGN_TRAP_MECHANICAL || nfeat > DNGN_UNDISCOVERED_TRAP)
+            destroy_trap(pos);
     }
 
     _dgn_check_terrain_items(pos, preserve_items);
