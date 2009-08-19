@@ -29,7 +29,8 @@ enum dgn_event_type
     DET_MONSTER_DIED    = 0x0100,
     DET_ITEM_PICKUP     = 0x0200,
     DET_ITEM_MOVED      = 0x0400,
-    DET_FEAT_CHANGE     = 0x0800
+    DET_FEAT_CHANGE     = 0x0800,
+    DET_WALL_HIT        = 0x1000
 };
 
 class dgn_event

@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "cio.h"
 #include "cloud.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "effects.h"
 #include "enum.h"
 #include "fight.h"
@@ -1848,6 +1849,17 @@ void bolt::hit_wall()
         }
 
         // Well, we warned them.
+    }
+
+    // Press trigger/switch/button in wall if hit by something solid
+    // or solid-ish.
+    if (!is_explosion && !is_tracer && !monster_at(pos())
+        && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
+    {
+        dgn_event event(DET_WALL_HIT, pos());;
+        event.arg1  = beam_source;
+
+        dungeon_events.fire_vetoable_position_event(event, target);
     }
 
     if (affects_wall(feat))

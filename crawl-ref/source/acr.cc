@@ -3007,10 +3007,27 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             _close_door(move); // for convenience
             return (true);
         default:
-            mpr("You swing at nothing.");
+        {
+            bool do_msg = true;
+
+            // Press trigger/switch/button in wall.
+            if (grid_is_solid(feat))
+            {
+                dgn_event event(DET_WALL_HIT, target);
+                event.arg1  = NON_MONSTER;
+
+                // Listener can veto the event to prevent the "You swing at
+                // nothing" message.
+                do_msg =
+                    dungeon_events.fire_vetoable_position_event(event,
+                                                                target);
+            }
+            if (do_msg)
+                mpr("You swing at nothing.");
             make_hungry(3, true);
             you.turn_is_over = true;
             return (true);
+        }
         }
     }
 
