@@ -2760,14 +2760,15 @@ void tilep_calc_flags(const int parts[], int flag[])
     if (parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
-    if (parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-        || parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1)
+    if (parts[TILEP_PART_BASE] >= TILEP_BASE_NAGA
+        && parts[TILEP_PART_BASE] < tilep_species_to_base_tile(SP_NAGA + 1))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;
     }
-    else if (parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
-             || parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1)
+    else if (parts[TILEP_PART_BASE] >= TILEP_BASE_CENTAUR
+             && parts[TILEP_PART_BASE]
+                < tilep_species_to_base_tile(SP_CENTAUR + 1))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;

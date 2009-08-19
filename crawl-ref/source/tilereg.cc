@@ -679,18 +679,22 @@ void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
     }
 
     // Special case bardings from being cut off.
-    bool is_naga = (doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
+    bool is_naga = (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_NAGA
+                    && doll.parts[TILEP_PART_BASE]
+                       < tilep_species_to_base_tile(SP_NAGA + 1));
+
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
     {
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_cent = (doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
-                    || doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    bool is_cent = (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_CENTAUR
+                    && doll.parts[TILEP_PART_BASE]
+                       < tilep_species_to_base_tile(SP_CENTAUR + 1));
+
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-             && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
     {
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -3264,13 +3268,13 @@ static int _get_next_part(int cat, int part, int inc)
 {
     // Can't increment or decrement on show equip.
     if (part == TILEP_SHOW_EQUIP)
-    {
         return part;
-    }
 
     // Increment max_part by 1 to include the special value of "none".
-    int max_part = tile_player_part_count[cat] + 1;
-    int offset = tile_player_part_start[cat];
+    // (Except for the base, for which "none" is disallowed.)
+    const int bonus = (cat == TILEP_PART_BASE ? 0 : 1);
+    const int max_part = tile_player_part_count[cat] + bonus;
+    const int offset   = tile_player_part_start[cat];
 
     ASSERT(inc > -max_part);
 
@@ -3284,7 +3288,7 @@ static int _get_next_part(int cat, int part, int inc)
     // Valid part numbers are in the range [offset, offset + max_part - 1].
     int ret = (part + max_part + inc - offset) % (max_part);
 
-    if (ret == max_part - 1)
+    if (cat != TILEP_PART_BASE && ret == max_part - 1)
     {
         // "none" value.
         return 0;
