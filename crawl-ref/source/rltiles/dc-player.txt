@@ -32,6 +32,10 @@ mummy_f MUMMY
 mummy_m
 naga_f NAGA
 naga_m
+naga_darkgreen_f
+naga_darkgreen_m
+naga_lightgreen_f
+naga_lightgreen_m
 ogre_f OGRE
 ogre_m
 troll_f TROLL
@@ -57,20 +61,32 @@ draconian_red_m
 draconian_white_f DRACONIAN_WHITE
 draconian_white_m
 
-centaur_f CENTAUR
-centaur_m
+centaur_lightgrey_f CENTAUR
+centaur_lightgrey_m
+centaur_darkgrey_f
+centaur_darkgrey_m
+centaur_darkbrown_f
+centaur_darkbrown_m
+centaur_brown_f
+centaur_brown_m
+centaur_lightbrown_f
+centaur_lightbrown_m
 demigod_f DEMIGOD
 demigod_m
 spriggan_f SPRIGGAN
 spriggan_m
 minotaur_f MINOTAUR
 minotaur_m
-demonspawn_f DEMONSPAWN
-demonspawn_m
+demonspawn_black_f DEMONSPAWN
+demonspawn_black_m
+demonspawn_red_f
+demonspawn_red_m
 ghoul_f GHOUL
 ghoul_m
-kenku_f KENKU
-kenku_m
+kenku_winged_f KENKU
+kenku_winged_m
+kenku_wingless_f
+kenku_wingless_m
 merfolk_f MERFOLK
 merfolk_m
 merfolk_water_f MERFOLK_WATER
@@ -732,6 +748,10 @@ merry MERRY
 pj PJ
 sam SAM
 pigtail_red PIGTAIL_RED
+pigtails_brown PIGTAILS_BROWN
+pigtails_yellow PIGTAILS_YELLOW
+ponytail_yellow PONYTAIL_YELLOW
+knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
 %end
