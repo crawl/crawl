@@ -1486,7 +1486,7 @@ bool get_item_by_name(item_def *item, char* specs,
                     strcpy(obj_name, entry->name);
 
                     ptr = strstr( strlwr(obj_name), specs );
-                    if (ptr != NULL && item->base_type == class_wanted)
+                    if (ptr != NULL && entry->base_type == class_wanted)
                     {
                         make_item_unrandart(*item, index);
                         if (create_for_real)
