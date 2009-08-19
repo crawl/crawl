@@ -13,7 +13,6 @@ include makefile.obj
 OBJECTS += libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o crash-u.o
 
 SDL_CFLAGS := $(shell sdl-config --cflags)
-SDL_LDFLAGS := $(shell sdl-config --libs) -lSDLmain
 
 CXX = g++
 DELETE = rm -f
@@ -27,21 +26,35 @@ LDFLAGS = -rdynamic
 # libncursesw available.
 UNICODE_GLYPHS = n
 
+# OSX vs. Linux differences:
 ifeq ($(strip $(OSX)),y)
 PNG_INCLUDE := -I/sw/include
 PNG_LIB := -L/sw/lib
 FREETYPE_INCLUDE := -I/sw/include/freetype2
 
-# 10.5 Fink bug
-FINK_OPENGL_WORKAROUND := -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
+# Note: gcc on OS X will *always* include the dynamic library
+# version of any lib if it exists in the path.  Therefore, all non-standard
+# libraries have to be linked explicitly by full path rather than searched
+# for.
+LIB_BASE := /sw/lib
+FREETYPE_LIB := $(LIB_BASE)/freetype2/lib/libfreetype.a
 
-SDL_LDFLAGS += -framework Cocoa -L/usr/X11/lib $(FINK_OPENGL_WORKAROUND)
+SW_LIB_LIST := SDL SDL_image SDLmain png tiff jpeg
+LIB_LIST := $(SW_LIB_LIST:%=$(LIB_BASE)/lib%.a) $(FREETYPE_LIB)
+
+# The list of frameworks that SDL would normally dynamically load and need to
+# be included explicitly if SDL is linked statically.
+FRAMEWORK_LIST := Cocoa Carbon AudioUnit IOKit OpenGL QuickTime
+
+EXTRA_LIBS := $(FRAMEWORK_LIST:%=-Wl,-framework,%) $(LIB_LIST) -lz
 
 EXTRA_INCLUDES += -I/sw/include
 else
 PNG_INCLUDE :=
 PNG_LIB :=
 FREETYPE_INCLUDE := -I/usr/include/freetype2
+SDL_LDFLAGS := $(shell sdl-config --libs) -lSDLmain
+EXTRA_LIBS := -lpng $(SDL_LDFLAGS) -lGL -lGLU -lSDL_image -lfreetype
 endif
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
@@ -77,7 +90,8 @@ SQLLIB   := sqlite3
 SQLLIBA  := lib$(SQLLIB).a
 FSQLLIBA := $(SQLSRC)/$(SQLLIBA)
 
-LIBDBM         := -L$(SQLSRC) -l$(SQLLIB)
+# Note: link sqlite with the full path to the .a, so OSX uses the right one.
+LIBDBM         := $(FSQLLIBA)
 EXTRA_INCLUDES += -I$(SQLSRC)
 EXTRA_DEPENDS  += $(FSQLLIBA)
 
@@ -101,7 +115,7 @@ DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 EXTRA_DEPENDS += $(DESTTILEFILES)
 
-LIB = -L$(LUASRC) -l$(LUALIB) $(LIBDBM) -lpng $(SDL_LDFLAGS) -lGL -lGLU -lSDL_image -lfreetype
+LIB = -L$(LUASRC) -l$(LUALIB) $(LIBDBM) $(EXTRA_LIBS)
 
 INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES) $(PNG_INCLUDE) $(FREETYPE_INCLUDE)
 
