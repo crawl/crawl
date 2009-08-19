@@ -1244,7 +1244,12 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 // returns appropriate trap symbol
 dungeon_feature_type trap_def::category() const
 {
-    switch (this->type)
+    return trap_category(type);
+}
+
+dungeon_feature_type trap_category(trap_type type)
+{
+    switch (type)
     {
     case TRAP_SHAFT:
         return (DNGN_TRAP_NATURAL);

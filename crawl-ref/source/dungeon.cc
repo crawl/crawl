@@ -4768,14 +4768,20 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
     if (mapsp)
     {
         const feature_spec f = mapsp->get_feat();
-        if (f.feat >= 0)
+        if (f.trap >= 0)
+        {
+            // f.feat == 1 means trap is generated known.
+            if (f.feat == 1)
+                return trap_category(static_cast<trap_type>(f.trap));
+            else
+                return (DNGN_UNDISCOVERED_TRAP);
+        }
+        else if (f.feat >= 0)
             return static_cast<dungeon_feature_type>(f.feat);
         else if (f.glyph >= 0)
             return map_feature(NULL, c, rawfeat);
         else if (f.shop >= 0)
             return (DNGN_ENTER_SHOP);
-        else if (f.trap >= 0)
-            return (DNGN_UNDISCOVERED_TRAP);
 
         return (DNGN_FLOOR);
     }
@@ -4829,7 +4835,20 @@ static void _vault_grid( vault_placement &place,
     if (mapsp)
     {
         const feature_spec f = mapsp->get_feat();
-        if (f.feat >= 0)
+        if (f.trap >= 0)
+        {
+            const trap_type trap =
+                (f.trap == TRAP_INDEPTH)
+                    ? random_trap_for_place(place.level_number)
+                    : static_cast<trap_type>(f.trap);
+
+            place_specific_trap(where, trap);
+
+            // f.feat == 1 means trap is generated known.
+            if (f.feat == 1)
+                grd(where) = trap_category(trap);
+        }
+        else if (f.feat >= 0)
         {
             grd(where) = static_cast<dungeon_feature_type>( f.feat );
             vgrid = -1;
@@ -4840,15 +4859,6 @@ static void _vault_grid( vault_placement &place,
         }
         else if (f.shop >= 0)
             place_spec_shop(place.level_number, where, f.shop);
-        else if (f.trap >= 0)
-        {
-            const trap_type trap =
-                (f.trap == TRAP_INDEPTH)
-                    ? random_trap_for_place(place.level_number)
-                    : static_cast<trap_type>(f.trap);
-
-            place_specific_trap(where, trap);
-        }
         else
             grd(where) = DNGN_FLOOR;
 

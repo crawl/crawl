@@ -35,6 +35,8 @@ bool player_caught_in_net();
 void clear_trapping_net();
 void check_net_will_hold_monster(monsters *mon);
 
+dungeon_feature_type trap_category(trap_type type);
+
 void destroy_trap(const coord_def& pos);
 trap_def* find_trap(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);

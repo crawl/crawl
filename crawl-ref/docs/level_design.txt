@@ -822,6 +822,11 @@ KFEAT:    Z = C / needle trap / antique armour shop / altar_zin
           'floor'. If you do not want to specify the type of shop, use
           'any shop' or 'random shop'.
 
+          If you want a trap to start out known to the player, add "known"
+          to the trap name:
+
+          KFEAT: A = known needle trap
+
           The placeholder used by KFEAT can be shared by KITEM and KMONS;
           see below. If the placeholder is shared, all defined Kxxxx
           operations for the placeholder are performed. Also, all Kxxx
