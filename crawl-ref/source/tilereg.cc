@@ -613,13 +613,24 @@ static void _fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_ENCH] =
             (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
+    // Draconian head/wings
+    if (player_genus(GENPC_DRACONIAN))
+    {
+        int base = 0;
+        int head = 0;
+        int wing = 0;
+        tilep_draconian_init(you.species, you.experience_level, base, head, wing);
+
+        if (result.parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
+            result.parts[TILEP_PART_DRCHEAD] = head;
+        if (result.parts[TILEP_PART_DRCWING] == TILEP_SHOW_EQUIP)
+            result.parts[TILEP_PART_DRCWING] = wing;
+    }
 
     // Various other slots.
     for (int i = 0; i < TILEP_PART_MAX; i++)
-    {
         if (result.parts[i] == TILEP_SHOW_EQUIP)
             result.parts[i] = 0;
-    }
 }
 
 // Writes equipment information into per-character doll file.
@@ -3269,7 +3280,11 @@ void DollEditRegion::clear()
 // shadow tile if it's the last species.
 static int _get_next_species_tile()
 {
-    switch (you.species)
+    int sp = you.species;
+    if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
+        sp = SP_BASE_DRACONIAN;
+
+    switch (sp)
     {
     case SP_HUMAN:
         return TILEP_BASE_ELF;
@@ -3289,17 +3304,24 @@ static int _get_next_species_tile()
     case SP_TROLL:
         return TILEP_BASE_DRACONIAN;
     case SP_BASE_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_BLACK;
+    case SP_BLACK_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_GOLD;
+    case SP_YELLOW_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_GREY;
+    case SP_GREY_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_GREEN;
+    case SP_GREEN_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_MOTTLED;
+    case SP_MOTTLED_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_PALE;
+    case SP_PALE_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_PURPLE;
+    case SP_PURPLE_DRACONIAN:
         return TILEP_BASE_DRACONIAN_RED;
     case SP_RED_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_WHITE;
     case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-        return tilep_species_to_base_tile(you.species + 1);
-    case SP_PALE_DRACONIAN:
         return TILEP_BASE_CENTAUR;
     case SP_CENTAUR:
     case SP_DEMIGOD:
@@ -3331,7 +3353,7 @@ static int _get_next_part(int cat, int part, int inc)
 
     if (cat == TILEP_PART_BASE)
     {
-        offset   = tilep_species_to_base_tile(you.species);
+        offset   = tilep_species_to_base_tile(you.species, you.experience_level);
         max_part = _get_next_species_tile() - offset;
     }
 

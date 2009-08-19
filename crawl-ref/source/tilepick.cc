@@ -2902,6 +2902,16 @@ int tilep_species_to_base_tile(int sp, int level)
     }
 }
 
+void tilep_draconian_init(int sp, int level, int &base, int &head, int &wing)
+{
+    const int colour_offset = _draconian_colour(sp, level);
+    base  = TILEP_BASE_DRACONIAN + colour_offset * 2;
+    head  = tile_player_part_start[TILEP_PART_DRCHEAD] + colour_offset;
+
+    if (player_mutation_level(MUT_BIG_WINGS))
+        wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
+}
+
 void tilep_race_default(int sp, int gender, int level, int *parts)
 {
     if (gender == -1)
@@ -2964,17 +2974,8 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
         case SP_MOTTLED_DRACONIAN:
         case SP_PALE_DRACONIAN:
         {
-            const int colour_offset = _draconian_colour(sp, level);
-            result = TILEP_BASE_DRACONIAN + colour_offset * 2;
+            tilep_draconian_init(sp, level, result, head, wing);
             hair   = 0;
-            int st = tile_player_part_start[TILEP_PART_DRCHEAD];
-            head = st + colour_offset;
-
-            if (player_mutation_level(MUT_BIG_WINGS))
-            {
-                st = tile_player_part_start[TILEP_PART_DRCWING];
-                wing = st + colour_offset;
-            }
             break;
         }
         case SP_MINOTAUR:

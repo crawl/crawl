@@ -42,13 +42,15 @@ ogre_f OGRE
 ogre_m
 troll_f TROLL
 troll_m
+
+# draconians
 draconian_f DRACONIAN
 draconian_m
 draconian_black_f DRACONIAN_BLACK
 draconian_black_m
 draconian_gold_f DRACONIAN_GOLD
 draconian_gold_m
-draconian_gray_f DRACONIAN_GRAY
+draconian_gray_f DRACONIAN_GREY
 draconian_gray_m
 draconian_green_f DRACONIAN_GREEN
 draconian_green_m
@@ -864,6 +866,7 @@ hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
 %end
 
+# draconian wings and heads, need same order as draconians
 %parts_ctg DRCWING
 %sdir player/drcwing
 drcwing_brown BROWN
