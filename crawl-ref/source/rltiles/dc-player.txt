@@ -22,6 +22,8 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
+gnome_f
+gnome_m
 halfling_f HALFLING
 halfling_m
 orc_f ORC

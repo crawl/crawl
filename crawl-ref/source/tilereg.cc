@@ -3264,6 +3264,60 @@ void DollEditRegion::clear()
     m_font_buf.clear();
 }
 
+// FIXME: Very hacky!
+// Returns the starting tile for the next species in the tiles list, or the
+// shadow tile if it's the last species.
+static int _get_next_species_tile()
+{
+    switch (you.species)
+    {
+    case SP_HUMAN:
+        return TILEP_BASE_ELF;
+    case SP_HIGH_ELF:
+    case SP_SLUDGE_ELF:
+        return TILEP_BASE_DEEP_ELF;
+    case SP_DEEP_ELF:
+        return TILEP_BASE_DWARF;
+    case SP_MOUNTAIN_DWARF:
+    case SP_HALFLING:
+    case SP_HILL_ORC:
+    case SP_KOBOLD:
+    case SP_MUMMY:
+    case SP_NAGA:
+    case SP_OGRE:
+        return tilep_species_to_base_tile(you.species + 1);
+    case SP_TROLL:
+        return TILEP_BASE_DRACONIAN;
+    case SP_BASE_DRACONIAN:
+        return TILEP_BASE_DRACONIAN_RED;
+    case SP_RED_DRACONIAN:
+    case SP_WHITE_DRACONIAN:
+    case SP_GREEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
+    case SP_GREY_DRACONIAN:
+    case SP_BLACK_DRACONIAN:
+    case SP_PURPLE_DRACONIAN:
+    case SP_MOTTLED_DRACONIAN:
+        return tilep_species_to_base_tile(you.species + 1);
+    case SP_PALE_DRACONIAN:
+        return TILEP_BASE_CENTAUR;
+    case SP_CENTAUR:
+    case SP_DEMIGOD:
+    case SP_SPRIGGAN:
+    case SP_MINOTAUR:
+    case SP_DEMONSPAWN:
+    case SP_GHOUL:
+    case SP_KENKU:
+    case SP_MERFOLK:
+    case SP_VAMPIRE:
+        return tilep_species_to_base_tile(you.species + 1);
+    case SP_DEEP_DWARF:
+        return TILEP_SHADOW_SHADOW;
+    default:
+        return TILEP_BASE_HUMAN;
+    }
+}
+
 static int _get_next_part(int cat, int part, int inc)
 {
     // Can't increment or decrement on show equip.
@@ -3272,9 +3326,14 @@ static int _get_next_part(int cat, int part, int inc)
 
     // Increment max_part by 1 to include the special value of "none".
     // (Except for the base, for which "none" is disallowed.)
-    const int bonus = (cat == TILEP_PART_BASE ? 0 : 1);
-    const int max_part = tile_player_part_count[cat] + bonus;
-    const int offset   = tile_player_part_start[cat];
+    int max_part = tile_player_part_count[cat] + 1;
+    int offset   = tile_player_part_start[cat];
+
+    if (cat == TILEP_PART_BASE)
+    {
+        offset   = tilep_species_to_base_tile(you.species);
+        max_part = _get_next_species_tile() - offset;
+    }
 
     ASSERT(inc > -max_part);
 
@@ -3350,6 +3409,9 @@ void DollEditRegion::render()
 
     // Draw current category of parts.
     int max_part = tile_player_part_count[m_cat_idx];
+    if (m_cat_idx == TILEP_PART_BASE)
+        max_part = _get_next_species_tile() - tilep_species_to_base_tile() - 1;
+
     int show = std::min(max_show, max_part);
     int half_show = show / 2;
     for (int i = -half_show; i <= show - half_show; i++)
@@ -3585,8 +3647,13 @@ void DollEditRegion::run()
             if (m_dolls[m_doll_idx].parts[m_cat_idx] != TILEP_SHOW_EQUIP)
                 m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
             break;
+        case CMD_DOLL_CONFIRM_CHOICE:
+            m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
+            break;
         case CMD_DOLL_COPY:
-            m_doll_copy = m_dolls[m_doll_idx];
+            m_doll_copy  = m_dolls[m_doll_idx];
             m_copy_valid = true;
             break;
         case CMD_DOLL_PASTE:
