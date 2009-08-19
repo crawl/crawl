@@ -1340,10 +1340,80 @@ Donald
 
 @_hostile_adventurer_@
 %%%%
-# A mercenary guarding the dungeon
+############ DOWAN ### A vain elf caster, twin brother of Duvessa
+Dowan
+
+@_Dowan_common_@
+
+w:2
+@_Dowan_rare_@
+%%%%
+_Dowan_common_
+
+VISUAL:@The_monster@ points a slender finger @at_foe@ and smirks.
+
+@The_monster@ says @to_foe@, "My weaknesses are her strengths!"
+
+@The_monster@ says @to_foe@, "Stay away from my face!"
+
+@The_monster@ says @to_foe@, "Magic and the sword, together, will defeat you." @player_only@
+ 
+%%%%
+_Dowan_rare_
+
+VISUAL:@The_monster@ throws and catches a handful of magical flame, then smirks.
+
+VISUAL:@The_monster@ robes are whipped around by a magical breeze.
+
+# Removed VISUAL - makes no sense when silenced
+@The_monster@ goes cross-eyed from fumbling a word in a spell.
+
+@The_monster@ whispers @to_foe@, "It won't be long now."
+
+@The_monster@ hisses @to_foe@, "Insulting my beauty only makes me fight harder!"
+
+@The_monster@ says @to_foe@, "Where the sword fails, magic succeeds!"
+
+@The_monster@ says @to_foe@, "There's a certain beauty in death, don't you think?"
+
+@The_monster@ laughs at you. "Don't get delusional, you can't win!"
+
+%%%%
+############ DUANE ### A mercenary guarding the dungeon
 Duane
 
 @_mercenary_guard_@
+%%%%
+############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
+Duvessa
+
+@_Duvessa_common_@
+
+w:2
+@_Duvessa_rare_@
+%%%%
+_Duvessa_common_
+
+VISUAL:@The_monster@ gestures towards you with her weapon.
+
+@The_monster@ says @to_foe@, "My weaknesses are his strengths!"
+
+@The_monster@ says @to_foe@, "Where magic fails, the sword succeeds!"
+
+@The_monster@ says @to_foe@, "When magic and the sword combine, nothing stands against them."
+
+%%%%
+_Duvessa_rare_
+
+@The_monster@ @shouts@ @to_foe@, "You can run, but you cannot escape us forever!" @player_only@
+
+@The_monster@ says @to_foe@, "I don't care about looks, I care about technique!"
+
+@The_monster@ says @to_foe@, "Did you see that move? Perfect!"
+
+@The_monster@ says @to_foe@, "Beauty is only skin deep, and my weapons penetrate much further than that."
+
+@The_monster@ says @to_foe@, "Practice, practice, practice! One day you'll be as good as me." @player_only@
 %%%%
 ############ EDMUND ### A mercenary guarding the dungeon
 Edmund

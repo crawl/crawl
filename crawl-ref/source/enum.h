@@ -2076,6 +2076,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GRUM,
     MONS_PURGY,
     MONS_MENKAURE,
+    MONS_DUVESSA,
+    MONS_DOWAN,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2283,7 +2285,8 @@ enum mon_spellbook_type
     MST_PRINCE_RIBBIT,                 // 145
     MST_NESSOS,
     MST_KIRKE,
-    MST_MENKAURE,                      // 148
+    MST_MENKAURE,
+    MST_DOWAN,
     MST_GERYON = 150,
     MST_DISPATER,
     MST_ASMODEUS,

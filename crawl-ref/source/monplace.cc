@@ -1799,6 +1799,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band = BAND_AZRAEL;
         band_size = 4 + random2(5);
         break;
+
+    case MONS_DUVESSA:
+        band = BAND_DUVESSA;
+        band_size = 1;
+        break;        
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2095,6 +2100,10 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_AZRAEL:
         mon_type = coinflip()? MONS_FIRE_ELEMENTAL : MONS_HELL_HOUND;
+        break;
+
+    case BAND_DUVESSA:
+        mon_type = MONS_DOWAN;
         break;
 
     default:

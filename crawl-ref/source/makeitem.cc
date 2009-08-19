@@ -3335,6 +3335,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                                   0);
         break;
 
+    case MONS_DUVESSA:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
@@ -3714,7 +3715,15 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_ORC_SORCERER:
     case MONS_NERGALLE:
         item_race = MAKE_ITEM_ORCISH;
-        // deliberate fall-through, I guess {dlb}
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_DAGGER;
+        break;
+
+    case MONS_DOWAN:
+        item_race = MAKE_ITEM_ELVEN;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_DAGGER;
+        break;
 
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
@@ -4081,6 +4090,7 @@ void give_shield(monsters *mon, int level)
                               level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
         break;
 
+    case MONS_DUVESSA:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
         if (one_chance_in(6))
@@ -4152,6 +4162,7 @@ void give_armour(monsters *mon, int level)
         item.sub_type = ARM_LEATHER_ARMOUR;
         break;
 
+    case MONS_DUVESSA:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:
@@ -4305,6 +4316,8 @@ void give_armour(monsters *mon, int level)
             return;
         break;
 
+    case MONS_DOWAN:
+        item_race = MAKE_ITEM_ELVEN;
     case MONS_DONALD:
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
@@ -4328,7 +4341,8 @@ void give_armour(monsters *mon, int level)
     case MONS_DRACONIAN_KNIGHT:
     case MONS_WIZARD:
     case MONS_ILSUIW:
-        item_race = MAKE_ITEM_NO_RACE;
+        if (item_race == MAKE_ITEM_RANDOM_RACE)
+            item_race = MAKE_ITEM_NO_RACE;        
         item.base_type = OBJ_ARMOUR;
         item.sub_type = ARM_ROBE;
         break;

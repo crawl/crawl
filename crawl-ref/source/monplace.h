@@ -66,6 +66,7 @@ enum band_type
     BAND_HARPIES,
     BAND_ILSUIW,
     BAND_AZRAEL,
+    BAND_DUVESSA,               // 50
     NUM_BANDS                   // always last
 };
 

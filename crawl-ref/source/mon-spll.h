@@ -1065,6 +1065,17 @@
       }
     },
 
+    {  MST_DOWAN,
+      {
+       SPELL_THROW_FROST, 
+       SPELL_BACKLIGHT, 
+       SPELL_HASTE, 
+       SPELL_THROW_FLAME, 
+       SPELL_BLINK, 
+       SPELL_MINOR_HEALING, 
+      }
+    },
+
     {  MST_GERYON,
       {
        SPELL_SUMMON_BEAST,

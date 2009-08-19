@@ -72,9 +72,17 @@ Donald
 
 An adventurer like you, trying to find the Orb.
 %%%%
+Dowan
+
+A beautiful but vain elf with an aptitude for magic and little else. His skills are the perfect complement of his twin sister Duvessa's fighting prowess.
+%%%%
 Duane
 
 An evil mercenary with unusually large ears.
+%%%%
+Duvessa
+
+A plain-looking elven fighter who is technically brilliant in many forms of combat, but over-confident because of it. She is complemented by the magical skills of her twin brother, Dowan.
 %%%%
 Edmund
 
