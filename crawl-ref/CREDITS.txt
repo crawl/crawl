@@ -1,7 +1,7 @@
 
-The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Paul Du Bois,
-Nat Lanza, Haran Pilpel, David Ploog, Johanna Ploog, David Lawrence Ramsey,
-Enne Walker) would like to thank:
+The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Paul Du Bois, 
+Eino Keskitalo, Nat Lanza, Haran Pilpel, David Ploog, Johanna Ploog, David 
+Lawrence Ramsey, Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -15,29 +15,29 @@ Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Benoit Hudson             Stefan O'Rear
-Juha Arpiainen               Iainuki                   Yuuma Oohara
-Roy Axenov                   Ilyak                     Erik Piper
-Max Bane                     Mitsuhiro Itakura         Lemuel Pitkin
-Bill Beher                   Eino Keskitalo            Derek Ray
-Alexander Beisig             Jarmo Kielosto            Remsleep
-Erik Inge Bolsø              Kornel Kisielewicz        David Rose
-Peter Borgmann               Vambola Kotkas            Sebastian Salman
-Adam Borowski                Vsevolod Kozlov           Brett Scarborough
-Trent W. Buck                Ryan Kusnery              Darshan Shaligram
-Terje Bø                     Jukka Kuusisto            Robert Shimmin
-Aaron Curtis                 Maciej Lapinski           Sigurd
-Denzi                        Jordan Lewis              Edgar Simo
-Rachel Elizabeth Dillon      Icy Lich                  Solf
-Mike Drinen                  Jesse Luehrs              Johan Strandell
-Kieron Dunbar                Markus Maier              Roman Sêk
-Christopher Evenstar         Arien Malec               Marc H. Thoben
-Ben Goetter                  Shawn M Moore             Matt Titus
-Rob Grant                    Eva Myers                 Robert Vollmert
-John Greenberg               Wille Mäntylä             Steven Wheeler
-GreyKnight                   Onia Ninara               Jeremey Wilson
-Shayne Halvorson             Erkki Nurmi               Yelve Yakut
-Ciaran Hamilton              Mattias Nyberg            Zooko
-Chris Hamons                 nyra
-R. Dan Henry                 Dylan O'Donnell
+Warwick Allison              R. Dan Henry              Stefan O'Rear
+Juha Arpiainen               Benoit Hudson             Yuuma Oohara
+Roy Axenov                   Iainuki                   Charles Otto
+Max Bane                     Ilyak                     Erik Piper
+Bill Beher                   Mitsuhiro Itakura         Lemuel Pitkin
+Alexander Beisig             Jarmo Kielosto            Derek Ray
+Erik Inge Bolsø              Kornel Kisielewicz        Remsleep
+Peter Borgmann               Vambola Kotkas            David Rose
+Adam Borowski                Vsevolod Kozlov           Sebastian Salman
+Jude Brown                   Ryan Kusnery              Brett Scarborough
+Trent W. Buck                Jukka Kuusisto            Darshan Shaligram
+Terje Bø                     Maciej Lapinski           Robert Shimmin
+Aaron Curtis                 Jordan Lewis              Sigurd
+Denzi                        Icy Lich                  Edgar Simo
+Rachel Elizabeth Dillon      Jesse Luehrs              Solf
+Mike Drinen                  Markus Maier              Johan Strandell
+Kieron Dunbar                Arien Malec               Roman Sêk
+Christopher Evenstar         Shawn M Moore             Marc H. Thoben
+Ben Goetter                  Eva Myers                 Matt Titus
+Rob Grant                    Wille Mäntylä             Robert Vollmert
+John Greenberg               Onia Ninara               Steven Wheeler
+GreyKnight                   Erkki Nurmi               Jeremey Wilson
+Shayne Halvorson             Mattias Nyberg            Yelve Yakut
+Ciaran Hamilton              nyra                      Zooko
+Chris Hamons                                           Dylan O'Donnell
 
