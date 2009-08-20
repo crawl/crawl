@@ -155,8 +155,10 @@ right mouseclick           Escape (quit menu).
 DOLL EDITING
 
 Shift + left/right keys    Switch current doll.
+0-9                        Jump to doll of numbered index.
 Ctrl + R                   Randomize current doll.
 left/right keys            Change current part.
+Enter                      Confirm current part, overriding equipment mode.
 m                          Change current doll usage mode.
 up/down keys               Change current part category.
 Ctrl + C                   Copy current doll.

@@ -323,6 +323,11 @@ static bool _save_doll_data(int mode, int num, const dolls_data* dolls)
 
         fprintf(fp, "NUM=%02d\n", num == -1 ? 0 : num);
 
+        // Print some explanatory comments. May contain no spaces!
+        fprintf(fp, "#Legend:\n");
+        fprintf(fp, "#***:equipment/123:index/000:none\n");
+        fprintf(fp, "#Shadow/Base/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet/Halo/Enchant/DrcHead/DrcWing\n");
+        fprintf(fp, "#Sh:Bse:Clk:Bts:Leg:Bdy:Glv:Wpn:Shd:Hai:Brd:Hlm:Hal:Enc:Drc:Wng\n");
         char fbuf[80];
         for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
         {
@@ -3461,12 +3466,12 @@ void DollEditRegion::render()
         float tile_name_x = (left_gutter + 2.5) * 32.0f;
         float tile_name_y = (edit_doll_line + 1) * 32.0f;
         m_font_buf.add("Current", VColour::white, tile_name_x, tile_name_y);
-        tile_name_x = (left_gutter + 5) * 32.0f;
-        tile_name_y = (edit_doll_line + 1) * 32.0f;
-        m_font_buf.add("Equip", VColour::white, tile_name_x, tile_name_y);
-        tile_name_x = (left_gutter + 6.8) * 32.0f;
+        tile_name_x = (left_gutter + 4.7) * 32.0f;
         tile_name_y = (edit_doll_line + 1) * 32.0f;
         m_font_buf.add("Default", VColour::white, tile_name_x, tile_name_y);
+        tile_name_x = (left_gutter + 7) * 32.0f;
+        tile_name_y = (edit_doll_line + 1) * 32.0f;
+        m_font_buf.add("Equip", VColour::white, tile_name_x, tile_name_y);
     }
 
 
@@ -3481,14 +3486,21 @@ void DollEditRegion::render()
 
     {
         dolls_data temp;
-        for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
-             temp.parts[i] = TILEP_SHOW_EQUIP;
+        temp = m_job_default;
         _fill_doll_equipment(temp);
         pack_doll_buf(m_cur_buf, temp, 2, 0);
 
-        temp = m_job_default;
+        for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
+            temp.parts[i] = TILEP_SHOW_EQUIP;
         _fill_doll_equipment(temp);
         pack_doll_buf(m_cur_buf, temp, 4, 0);
+
+        if (m_mode == TILEP_MODE_LOADING)
+            m_cur_buf.add(TILEP_CURSOR, 0, 0);
+        else if (m_mode == TILEP_MODE_DEFAULT)
+            m_cur_buf.add(TILEP_CURSOR, 2, 0);
+        else if (m_mode == TILEP_MODE_EQUIP)
+            m_cur_buf.add(TILEP_CURSOR, 4, 0);
     }
     glLoadIdentity();
     glTranslatef(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
@@ -3578,15 +3590,11 @@ void DollEditRegion::render()
     {
         const int height = m_font->char_height();
         const float start_y = doll_name_y + height * 3;
-        const int width = m_font->char_width();
-        const float start_x = width * 10;
-        m_font_buf.add("Commands:", VColour::white, 0.0f, start_y);
-        m_font_buf.add("Change doll mode    m", VColour::white, start_x, start_y);
-        m_font_buf.add("Toggle equipment    *", VColour::white, start_x, start_y + height * 1);
-        m_font_buf.add("Copy doll           Ctrl-c", VColour::white, start_x, start_y + height * 2);
-        m_font_buf.add("Paste copied doll   Ctrl-v", VColour::white, start_x, start_y + height * 3);
-        m_font_buf.add("Randomize doll      Ctrl-r", VColour::white, start_x, start_y + height * 4);
-        m_font_buf.add("Quit menu           q, Escape", VColour::white, start_x, start_y + height * 5);
+        m_font_buf.add("Change parts       left/right              Confirm choice      Enter", VColour::white, 0.0f, start_y);
+        m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, 0.0f, start_y + height * 1);
+        m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, 0.0f, start_y + height * 2);
+        m_font_buf.add("Change doll mode   m                       Randomize doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
+        m_font_buf.add("Quit menu          q, Escape, Ctrl-S       Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
     }
 
     m_font_buf.draw();

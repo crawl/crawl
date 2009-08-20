@@ -1,5 +1,9 @@
 MODE=EQUIP
 NUM=00
+#Legend:
+#***:equipment/123:index/000:none
+#Shadow/Base/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet/Halo/Enchant/DrcHead/DrcWing
+#Sh:Bse:Clk:Bts:Leg:Bdy:Glv:Wpn:Shd:Hai:Brd:Hlm:Hal:Enc:Drc:Wng
 ***:***:***:011:034:092:***:023:034:017:000:063:***:***:***:***
 ***:***:***:009:002:040:016:077:***:023:009:040:***:***:***:***
 ***:020:***:014:017:046:020:048:***:010:000:041:***:***:***:***
