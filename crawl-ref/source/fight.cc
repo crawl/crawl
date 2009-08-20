@@ -4286,6 +4286,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "claw",
         "punch",
         "kick",
+        "tentacle-slap",
         "tail-slap",
         "gore"
     };
