@@ -313,6 +313,7 @@ menu_colour = notes:white:Reached XP level
 
 # You can also enforce a --more-- prompt for messages
 # force_more_message = You are starting to lose your buoyancy
+force_more_message = You fall through a shaft
 
 ##### 4-k	Firing Commands #######################
 #
