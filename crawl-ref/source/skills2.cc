@@ -429,7 +429,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
       90,                       // SK_ARMOUR
      140,                       // SK_DODGING
      150,                       // SK_STEALTH
-     100,                       // SK_STABBING
+      70,                       // SK_STABBING
       80,                       // SK_SHIELDS
      100,                       // SK_TRAPS_DOORS
       90,                       // SK_UNARMED_COMBAT
@@ -441,7 +441,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      200,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
-     120,                       // SK_SUMMONINGS
+     100,                       // SK_SUMMONINGS
      100,                       // SK_NECROMANCY
      150,                       // SK_TRANSLOCATIONS
      160,                       // SK_TRANSMUTATIONS

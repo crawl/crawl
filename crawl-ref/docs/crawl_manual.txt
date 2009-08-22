@@ -1521,10 +1521,11 @@ Mountain Dwarves
   Polearms usually are too big for them to wield comfortably and so
   make quite bad weapons for Mountain Dwarves.
 
-  In general, they are rather resistant to magic than capable of dealing
-  with it. However, they are very proficient at earth and fire magics.
-  Thus, many a Mountain Dwarf started career as an elementalist in those
-  schools. They advance in levels at a similar rate to Deep Elves.
+  In general, they are not capable of dealing with magic, and are
+  suspectible to charms and enhcantments. However, they are very
+  proficient at earth and fire magics. Thus, many a Mountain Dwarf
+  started career as an elementalist in those schools. They advance in 
+  levels at a similar rate to Deep Elves.
 
 Deep Dwarves
   Deep Dwarves are a species who, unlike their Mountain Dwarf relatives,
@@ -1560,14 +1561,14 @@ Hill Orcs are Orcs from the upper world who, jealous of the riches which
 their cousins the Cave Orcs possess below the ground, descend in search
 of plunder and adventure.
 
-Hill Orcs are as robust as the Mountain Dwarves, but have very low
-reserves of magical energy. Their forte is brute-force fighting, and
-they are skilled at using most hand weapons (with the exception of short
-blades, at which they are only fair), although they are not particularly
-good at using missile weapons. They prefer to use their own weapons.
-Orcs are poor at using most types of magic, with the exception of
-conjurations, necromancy, and the elemental magic of earth, fire and
-ice. They advance in levels as quickly as Humans.
+Hill Orcs are as robust as the Mountain Dwarves, and similarly have
+trouble with magic. Their forte is brute-force fighting, and they are
+skilled at using most hand weapons (with the exception of short blades,
+at which they are only fair), although they are not particularly good at
+using missile weapons. They prefer to use their own weapons. Orcs are
+poor at using most types of magic, with the exception of conjurations,
+summoning, necromancy, and the elemental magic of earth, fire and ice.
+They advance in levels as quickly as Humans.
 
 Merfolk
 -------
