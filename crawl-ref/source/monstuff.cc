@@ -6271,7 +6271,7 @@ static bool _handle_reaching(monsters *monster)
     if (ret && !is_artefact(mitm[wpn]) && you.can_see(monster))
         set_ident_flags(mitm[wpn], ISFLAG_KNOW_TYPE);
 
-    return ret;
+    return (ret);
 }
 
 //---------------------------------------------------------------

@@ -5816,6 +5816,7 @@ bool monsters::fumbles_attack(bool verbose)
             else if (player_can_hear(this->pos()))
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
         }
+
         return (true);
     }
 

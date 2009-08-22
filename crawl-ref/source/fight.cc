@@ -4315,7 +4315,7 @@ std::string melee_attack::mons_weapon_desc()
             result += weapon->name(DESC_NOCAP_A);
         }
 
-        return result;
+        return (result);
     }
 
     return ("");
