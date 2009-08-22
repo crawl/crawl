@@ -773,6 +773,7 @@ ENDMAP
 #
 NAME:   Shoal_1
 PLACE:  Shoal:5
+TAGS:   water_ok
 WEIGHT: 0
 MONS:   cyclops, yaktaur, yaktaur captain
 MAP
@@ -812,6 +813,7 @@ ENDMAP
 #
 NAME:   Shoal_2
 PLACE:  Shoal:5
+TAGS:   water_ok
 WEIGHT: 0
 MONS:   cyclops,stone giant
 SUBST:  1 = 1.
@@ -850,6 +852,7 @@ ENDMAP
 #
 NAME:   Shoal_3
 PLACE:  Shoal:5
+TAGS:   water_ok
 WEIGHT: 0
 KMONS:  x : ice statue / orange crystal statue / silver statue
 KFEAT:  x : O
@@ -864,6 +867,7 @@ ENDMAP
 #
 NAME:   Shoal_4
 PLACE:  Shoal:5
+TAGS:   water_ok
 WEIGHT: 0
 KFEAT:  O = w
 ### KITEM: O = liquid rune of Zot
@@ -888,7 +892,7 @@ ENDMAP
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
 NAME:      shoalhut_rune
-TAGS:      shoal_rune
+TAGS:      shoal_rune water_ok
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x=, D=+
 LROCKTILE:  wall_vines
@@ -907,8 +911,8 @@ ENDMAP
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
 NAME:    shoalhut_norune
-PLACE:   Shoal:$
-TAGS:    allow_dup
+DEPTH:   Shoal:$
+TAGS:    allow_dup water_ok shoal
 SHUFFLE: ABCD
 SUBST:   A:x, B:x, C:x=, D=+
 MAP

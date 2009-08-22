@@ -30,7 +30,7 @@ int map_count();
 int map_count_for_tag(const std::string &tag, bool check_depth = false);
 
 const map_def *find_map_by_name(const std::string &name);
-const map_def *random_map_for_place(const level_id &place);
+const map_def *random_map_for_place(const level_id &place, bool minivault);
 const map_def *random_map_in_depth(const level_id &lid,
                                    bool want_minivault = false);
 const map_def *random_map_for_tag(const std::string &tag,

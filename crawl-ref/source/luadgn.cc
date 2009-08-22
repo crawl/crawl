@@ -2691,7 +2691,8 @@ LUAFN(dgn_map_in_depth)
 LUAFN(dgn_map_by_place)
 {
     const level_id lid = _lua_level_id(ls, 1);
-    return _lua_push_map(ls, random_map_for_place(lid));
+    const bool mini = _lua_boolean(ls, 2, false);
+    return _lua_push_map(ls, random_map_for_place(lid, mini));
 }
 
 LUAFN(_dgn_place_map)

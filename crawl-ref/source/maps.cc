@@ -279,10 +279,25 @@ static coord_def _find_minivault_place(
                      random_range( margin, GYM - margin - place.size.y ));
 
         if (check_place && !map_place_valid(place.map, v1, place.size))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Skipping (%d,%d): not safe to place map",
+                 v1.x, v1.y);
+#endif
             continue;
+        }
 
-        if (_connected_minivault_place(v1, place))
-            return (v1);
+        if (!_connected_minivault_place(v1, place))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Skipping (%d,%d): not a good minivault place (tags: %s)",
+                 v1.x, v1.y, place.map.tags.c_str());
+#endif
+            continue;
+        }
+        return (v1);
     }
     return (coord_def(-1, -1));
 }
@@ -445,9 +460,9 @@ public:
         return (sel == TAG || place.is_valid());
     }
 
-    static map_selector by_place(const level_id &place)
+    static map_selector by_place(const level_id &place, bool mini)
     {
-        return map_selector(map_selector::PLACE, place, "", false, false);
+        return map_selector(map_selector::PLACE, place, "", mini, false);
     }
 
     static map_selector by_depth(const level_id &place, bool mini)
@@ -490,7 +505,8 @@ bool map_selector::accept(const map_def &mapdef) const
     switch (sel)
     {
     case PLACE:
-        return (mapdef.place == place
+        return (mapdef.is_minivault() == mini
+                && mapdef.place == place
                 && !mapdef.has_tag("layout")
                 && map_matches_layout_type(mapdef)
                 && vault_unforbidden(mapdef));
@@ -680,9 +696,9 @@ static const map_def *_random_map_by_selector(const map_selector &sel)
 }
 
 // Returns a map for which PLACE: matches the given place.
-const map_def *random_map_for_place(const level_id &place)
+const map_def *random_map_for_place(const level_id &place, bool minivault)
 {
-    return _random_map_by_selector(map_selector::by_place(place));
+    return _random_map_by_selector(map_selector::by_place(place, minivault));
 }
 
 const map_def *random_map_in_depth(const level_id &place, bool want_minivault)

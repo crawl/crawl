@@ -205,7 +205,7 @@ static void _vault_grid( vault_placement &,
                          const coord_def& where,
                          bool recursive = false);
 
-static const map_def *_dgn_random_map_for_place();
+static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
@@ -2110,7 +2110,7 @@ static void _prepare_shoals(int level_number)
         {
             // Place (non-rune) minivaults on the other islands
             do
-                vault = _dgn_random_map_for_place();
+                vault = random_map_for_tag("shoal");
             while (!vault);
 
             _build_secondary_vault(level_number, vault, -1, false, true,
@@ -2374,7 +2374,7 @@ static void _portal_vault_level(int level_number)
 
     const char* level_name = trimmed_name.c_str();
 
-    const map_def *vault = random_map_for_place(level_id::current());
+    const map_def *vault = random_map_for_place(level_id::current(), false);
 
 #ifdef WIZARD
     if (!vault && you.wizard && map_count_for_tag(level_name, false) > 1)
@@ -2451,10 +2451,10 @@ static bool _place_portal_vault(int stair, const std::string &tag, int dlevel)
     return _build_secondary_vault(dlevel, vault, stair);
 }
 
-static const map_def *_dgn_random_map_for_place()
+static const map_def *_dgn_random_map_for_place(bool minivault)
 {
     const level_id lid   = level_id::current();
-    const map_def *vault = random_map_for_place(lid);
+    const map_def *vault = random_map_for_place(lid, minivault);
 
     // Disallow entry vaults for tutorial (only complicates things).
     if (!vault
@@ -2472,7 +2472,7 @@ static const map_def *_dgn_random_map_for_place()
 // otherwise.
 static builder_rc_type _builder_by_branch(int level_number)
 {
-    const map_def *vault = _dgn_random_map_for_place();
+    const map_def *vault = _dgn_random_map_for_place(false);
 
     if (vault)
     {
@@ -2530,6 +2530,10 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
     if (use_random_maps)
     {
         const map_def *vault = NULL;
+
+        if ((vault = random_map_for_place(level_id::current(), true)))
+            _build_secondary_vault(you.your_level, vault);
+
         do
         {
             vault = random_map_in_depth(level_id::current(), true);
@@ -2549,7 +2553,7 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     UNUSED( level_type );
 
     bool skipped = false;
-    const map_def *vault = _dgn_random_map_for_place();
+    const map_def *vault = _dgn_random_map_for_place(false);
 
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels.
     if (!vault && use_random_maps && can_create_vault)

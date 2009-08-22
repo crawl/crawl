@@ -192,6 +192,14 @@ void level_range::set(const std::string &br, int s, int d)
     shallowest = s;
     deepest    = d;
 
+    if (branch != NUM_BRANCHES)
+    {
+        if (shallowest == -1)
+            shallowest = branches[branch].depth;
+        if (deepest == -1)
+            deepest = branches[branch].depth;
+    }
+
     if (deepest < shallowest)
         throw make_stringf("Level-range %s:%d-%d is malformed",
                            br.c_str(), s, d);
@@ -242,6 +250,12 @@ void level_range::parse_depth_range(const std::string &s, int *l, int *h)
     {
         *l = 1;
         *h = 100;
+        return;
+    }
+
+    if (s == "$")
+    {
+        *l = *h = -1;
         return;
     }
 
