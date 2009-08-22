@@ -1522,7 +1522,7 @@ Mountain Dwarves
   make quite bad weapons for Mountain Dwarves.
 
   In general, they are not capable of dealing with magic, and are
-  suspectible to charms and enhcantments. However, they are very
+  suspectible to charms and enchantments. However, they are very
   proficient at earth and fire magics. Thus, many a Mountain Dwarf
   started career as an elementalist in those schools. They advance in 
   levels at a similar rate to Deep Elves.
