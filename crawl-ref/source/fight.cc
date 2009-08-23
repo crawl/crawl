@@ -1973,7 +1973,7 @@ void melee_attack::_monster_die(monsters* monster, killer_type killer,
 {
     const bool chaos = (damage_brand == SPWPN_CHAOS);
 
-    // Copy defender before it gets reset by monster_die()
+    // Copy defender before it gets reset by monster_die().
     monsters* def_copy = NULL;
     if (chaos)
         def_copy = new monsters(*monster);
@@ -3551,7 +3551,7 @@ bool melee_attack::player_check_monster_died()
     {
 #if DEBUG_DIAGNOSTICS
         // note: doesn't take account of special weapons, etc.
-        mprf( MSGCH_DIAGNOSTICS, "Hit for %d.", damage_done );
+        mprf(MSGCH_DIAGNOSTICS, "Hit for %d.", damage_done);
 #endif
 
         player_monattk_hit_effects(true);
