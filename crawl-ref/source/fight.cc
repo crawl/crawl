@@ -1238,8 +1238,8 @@ bool melee_attack::player_aux_unarmed()
         }
 
         // unified to-hit calculation
-        to_hit = random2( calc_your_to_hit_unarmed(uattack,
-                          damage_brand == SPWPN_VAMPIRICISM) );
+        to_hit = random2(calc_your_to_hit_unarmed(uattack,
+                         damage_brand == SPWPN_VAMPIRICISM));
 
         make_hungry(2, true);
 
@@ -2000,9 +2000,16 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
          special_damage);
 #endif
 
-    special_damage = defender->hurt(&you, special_damage);
+    special_damage = defender->hurt(&you, special_damage, BEAM_MISSILE, false);
 
-    return (!defender->alive());
+    if (!defender->alive())
+    {
+        _monster_die(defender_as_monster(), KILL_YOU, NON_MONSTER);
+
+        return (true);
+    }
+
+    return (false);
 }
 
 void melee_attack::_monster_die(monsters* monster, killer_type killer,
