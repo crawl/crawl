@@ -217,19 +217,19 @@ MARKER: d = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 1, walk_dist = 0, spread_rate= 0 }
 MAP
-cc@@@cc
-cc...cc
-cc...cc
-cc.d.cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc.{.cc
-ccccccc
+xx@@@xx
+xx...xx
+xx...xx
+xx.d.xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx.{.xx
+xxxxxxx
 ENDMAP
 
 NAME:   elf_arrival_flame
@@ -240,19 +240,19 @@ MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 1, walk_dist = 0, spread_rate= 0 }
 MAP
-cc@@@cc
-cc...cc
-cc...cc
-cc.d.cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc...cc
-cc.{.cc
-ccccccc
+xx@@@xx
+xx...xx
+xx...xx
+xx.d.xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx...xx
+xx.{.xx
+xxxxxxx
 ENDMAP
 
 ##############################################################################
