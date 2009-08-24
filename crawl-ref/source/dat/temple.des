@@ -718,42 +718,35 @@ ENDMAP
 # Eino's temples
 NAME:    temple_eino_001
 PLACE:   Temple
-TAGS:    no_pool_fixup
 ORIENT:  encompass
 SHUFFLE: {([
-SHUFFLE: Lw
-SHUFFLE: 12
-SUBST:   L = l
-MONS:    plant, fungus
-KFEAT:   - = .
-COLOUR:  - = fire
-COLOUR:  b = red
+COLOUR:  c = red
 MAP
-bbbbbbbbbbbbbbbbbbbbbbbbbb
-bbbbbbb-l-bbbbb-l-bbbbbbbb
-bbbbbbbnnnb-l-bnnnbbbbbbbb
-bbbb111...bnnnb...LLLbbbbb
-bbb111..B.G...G.B..LLLbbbb
-bbb11.......B.......LLbbbb
-bbb1.................Lbbbb
-b-n....................n-b
-bln.B................B.nlb
-b-n....................n-b
-bbbbG.......[........Gbbbb
-bb-n..................n-bb
-bbln.B....T.{.T.....B.nlbb
-bb-n..................n-bb
-bbbbG.......(........Gbbbb
-b-n....................n-b
-bln.B................B.nlb
-b-n....................n-b
-bbbw.................2bbbb
-bbbww.......B.......22bbbb
-bbbwww..B.G...G.B..222bbbb
-bbbbwww...bnnnb...222bbbbb
-bbbbbbbnnnb-l-bnnnbbbbbbbb
-bbbbbbb-l-bbbbb-l-bbbbbbbb
-bbbbbbbbbbbbbbbbbbbbbbbbbb
+ccccccccccccccccccccccccc
+cccccccclccccccclcccccccc
+cccccccl.lcclccl.lccccccc
+cccclll...c...c...lllcccc
+ccclll..c.G...G.c..lllccc
+cccll.......c.......llccc
+cccl.................lccc
+ccl...................lcc
+cl..c...............c..lc
+ccl...................lcc
+ccccG...............Gcccc
+ccc..........[........ccc
+ccl..c.....(.......c..lcc
+ccc..........{........ccc
+ccccG...............Gcccc
+ccl...................lcc
+cl..c...............c..lc
+ccl...................lcc
+cccl.................lccc
+cccll.......c.......llccc
+ccclll..c.G...G.c..lllccc
+cccclll...c...c...lllcccc
+ccccccc...cclcc...ccccccc
+cccccccclccccccclcccccccc
+ccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    temple_eino_002
