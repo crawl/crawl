@@ -3292,7 +3292,7 @@ static monster_type _choose_unique_by_depth(int step)
     {
     case 0: // depth <= 3
         ret = random_choose(MONS_TERENCE, MONS_JESSICA, MONS_IJYB,
-                            MONS_SIGMUND, MONS_DUVESSA, -1);
+                            MONS_SIGMUND, -1);
         break;
     case 1: // depth <= 7
         ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
