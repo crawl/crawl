@@ -2896,7 +2896,8 @@ enum targeting_type
 {
     DIR_NONE,
     DIR_TARGET,
-    DIR_DIR
+    DIR_DIR,
+    DIR_TARGET_OBJECT // New as of 27-August-2009, for item-targeting spells
 };
 
 enum torment_source_type

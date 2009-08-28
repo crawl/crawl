@@ -1171,10 +1171,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             targ = TARG_ANY;
 
         targeting_type dir  =
-            (testbits( flags, SPFLAG_TARGET ) ? DIR_TARGET :
-             testbits( flags, SPFLAG_GRID )   ? DIR_TARGET :
-             testbits( flags, SPFLAG_DIR )    ? DIR_DIR
-                                              : DIR_NONE);
+            ( (spell == SPELL_APPORTATION)   ? DIR_TARGET_OBJECT :
+              testbits(flags, SPFLAG_TARGET) ? DIR_TARGET        :
+              testbits(flags, SPFLAG_GRID)   ? DIR_TARGET        :
+              testbits(flags, SPFLAG_DIR)    ? DIR_DIR           :
+                                               DIR_NONE          );
 
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_EVAPORATE)

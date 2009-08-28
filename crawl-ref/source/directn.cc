@@ -1054,24 +1054,32 @@ void direction(dist& moves, targeting_type restricts,
     bool target_unshifted = Options.target_unshifted_dirs;
 
     // Find a default target.
-    if (Options.default_target && (mode == TARG_ENEMY || mode == TARG_HOSTILE))
+    if (Options.default_target)
     {
-        skip_iter = true;   // Skip first iteration...XXX mega-hack
-        if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
+        if (restricts == DIR_TARGET_OBJECT)
         {
-            const monsters *montarget = &menv[you.prev_targ];
-            if (you.can_see(montarget)
-                    // not made friendly since then
-                && (mons_attitude(montarget) == ATT_HOSTILE
-                    || mode == TARG_ENEMY && !mons_friendly(montarget))
-                && _is_target_in_range(montarget->pos(), range))
+             skip_iter = true;
+             found_autotarget = true;
+        }
+        else if (Options.default_target && (mode == TARG_ENEMY || mode == TARG_HOSTILE))
+        {
+            skip_iter = true;   // Skip first iteration...XXX mega-hack
+            if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
             {
-                found_autotarget = true;
-                moves.target = montarget->pos();
+                const monsters *montarget = &menv[you.prev_targ];
+                if (you.can_see(montarget)
+                        // not made friendly since then
+                    && (mons_attitude(montarget) == ATT_HOSTILE
+                        || mode == TARG_ENEMY && !mons_friendly(montarget))
+                    && _is_target_in_range(montarget->pos(), range))
+                {
+                    found_autotarget = true;
+                    moves.target = montarget->pos();
+                }
             }
         }
     }
-
+     
     bool show_prompt = true;
     bool moved_with_keys = true;
 
@@ -1124,14 +1132,22 @@ void direction(dist& moves, targeting_type restricts,
 
         if (skip_iter)
         {
-            if (found_autotarget)
+            if (restricts == DIR_TARGET_OBJECT)
+            {
+                key_command = CMD_TARGET_OBJ_CYCLE_FORWARD;
+            }
+            else if (found_autotarget)
+            {
                 key_command = CMD_NO_CMD;
+            }
             else
+            {
                 key_command = CMD_TARGET_CYCLE_FORWARD; // Find closest target.
+            }
         }
         else
         {
-            key_command = beh->get_command();
+                key_command = beh->get_command();
         }
 
 #ifdef USE_TILE
