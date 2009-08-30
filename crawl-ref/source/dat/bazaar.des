@@ -370,7 +370,7 @@ ENDMAP
 
 ########################################
 # Mystics
-# 2 shops
+# 2 shops, some items.
 NAME:    bazaar_mystics
 TAGS:    bazaar allow_dup
 WEIGHT:  5

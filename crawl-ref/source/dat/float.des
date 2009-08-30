@@ -235,8 +235,7 @@ ENDMAP
 NAME: traditional_vault_lemuel
 DEPTH: D:12-27, Vault
 ORIENT: float
-SUBST: 8 = 9 8
-SUBST: 9 = 9 0
+SUBST: 9 = 9 0 8:2
 SUBST: 0 = 0 .
 KFEAT: $ = ^
 KITEM: $ = gold

@@ -218,21 +218,22 @@ SUBST:   e=.
 SHUFFLE: XZ
 NSUBST:  Z= ) / ]
 NSUBST:  X= ( / [
+KFEAT:   T = teleport trap
 MAP
-      cccc=cccc
-     cc..aaa..cc
+      ccccccccc
+     ccT.aaa.Tcc
      c.aaaAaaa.c
      c..aaaaa..c
-     cc...a...cc
- cccccccnn=nnccccccc
+     ccT..a..Tcc
+ cccccccnnnnnccccccc
 cc..ccccc...ccccc..cc
-c.w..ccccc+ccccc..f.c
+cTw.Tccccc+cccccT.fTc
 c.ww.nccX...Zccn.ff.c
 cwww.nwc.....cln.fffc
-=wWww=.+..{..+.=ffFf=
+cwWwwn.+..{..+.nffFfc
 cwww.nwc.....cln.fffc
 c.ww.nccZ...Xccn.ff.c
-c.w..ccccc+ccccc..f.c
+cTw.Tccccc+cccccT.fTc
 cc..cccccG.Gccccc..cc
  cccccccnn+nnccccccc
      cc...e...cc
