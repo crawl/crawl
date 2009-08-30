@@ -6419,13 +6419,6 @@ static void _labyrinth_place_exit(const coord_def &end)
     grd(end) = DNGN_ESCAPE_HATCH_UP;
 }
 
-static void _init_minivault_placement(const map_def *vault,
-                                      vault_placement &place)
-{
-    vault_main(place, vault);
-    remember_vault_placement(LEVEL_VAULTS_KEY, place);
-}
-
 // Checks whether a given grid has at least one neighbour surrounded
 // entirely by non-floor.
 static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
@@ -6820,9 +6813,6 @@ static void _labyrinth_level(int level_number)
     // First decide if we're going to use a Lab minivault.
     const map_def *vault = random_map_for_tag("minotaur", false);
     vault_placement place;
-
-    if (vault)
-        _init_minivault_placement(vault, place);
 
     coord_def end;
     _labyrinth_build_maze(end, lab);
