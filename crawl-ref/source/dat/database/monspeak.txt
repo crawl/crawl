@@ -1394,7 +1394,7 @@ w:2
 %%%%
 _Duvessa_common_
 
-VISUAL:@The_monster@ gestures towards you with her weapon.
+VISUAL:@The_monster@ gestures towards @at_foe@ with her weapon.
 
 @The_monster@ says @to_foe@, "My weaknesses are his strengths!"
 
