@@ -670,6 +670,8 @@ Xom
 Makhleb
 
 Lugonu
+
+Jiyva
 %%%%
 evil_god
 
