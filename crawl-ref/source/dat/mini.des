@@ -1702,7 +1702,7 @@ DEPTH:  5-26, !Lair, !Orc, !Tomb
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item katana /\
             good_item triple sword / good_item double sword
-KFEAT:  S = teleport trap
+KFEAT:  S = known teleport trap
 NSUBST: n = n/cbn
 : if you.absdepth() < 10 then
 SUBST: k = AWXYZ
