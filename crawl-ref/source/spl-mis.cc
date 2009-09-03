@@ -901,22 +901,23 @@ void MiscastEffect::_conjuration(int severity)
 }
 
 static void _your_hands_glow(actor* target, std::string& you_msg,
-                             std::string& mon_msg_seen, bool pluralize)
+                             std::string& mon_msg_seen, bool pluralise)
 {
     you_msg      = "Your @hands@ ";
     mon_msg_seen = "@The_monster@'s @hands@ ";
     // No message for invisible monsters.
 
-    if (pluralize)
+    if (pluralise)
     {
-       you_msg      += "glow";
-       mon_msg_seen += "glow";
+        you_msg      += "glow";
+        mon_msg_seen += "glow";
     }
     else
     {
         you_msg      += "glows";
         mon_msg_seen += "glows";
     }
+
     you_msg      += " momentarily.";
     mon_msg_seen += " momentarily.";
 }

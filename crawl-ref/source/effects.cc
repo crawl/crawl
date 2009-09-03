@@ -2523,7 +2523,7 @@ void yell(bool force)
         mpr("Attack!");
 
     noisy(10, you.pos());
-}                               // end yell()
+}
 
 bool forget_inventory(bool quiet)
 {
@@ -3781,12 +3781,12 @@ void handle_time(long time_delta)
         bool success = false;
         for (int num_jellies = total_jellies; num_jellies > 0; num_jellies--)
         {
-            //Spread jellies around the level
+            // Spread jellies around the level.
             coord_def newpos;
             do
             {
-                newpos.set( random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
-                            random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1) );
+                newpos.set(random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
+                           random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1));
             }
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
