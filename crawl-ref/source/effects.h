@@ -51,9 +51,11 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
 // called from spells2 -cao
 int mushroom_prob(item_def & corpse);
 
+bool mushroom_spawn_message(int seen_targets, int seen_corpses);
+
 int spawn_corpse_mushrooms(item_def &corpse,
                            int target_count,
-                           int & seen_targers,
+                           int & seen_targets,
                            bool distance_as_time = false);
 
 struct mgen_data;

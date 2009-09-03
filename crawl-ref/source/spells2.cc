@@ -1738,10 +1738,9 @@ int fungal_bloom()
     int processed_count = 0;
     for (radius_iterator i(you.position, LOS_RADIUS); i; ++i)
     {
-        // going to ignore squares that are already occupied by non-fungi
+        // Ignore squares that are already occupied by non-fungi.
         if (actor_at(*i) && !actor_at(*i)->mons_species() == MONS_TOADSTOOL)
             continue;
-
 
         for (stack_iterator j(*i); j; ++j)
         {
@@ -1773,16 +1772,11 @@ int fungal_bloom()
 
     if (seen_mushrooms > 0)
     {
-        // We obviously saw some corpses since we only processed squares
+        // We obviously saw some corpses, since we only processed squares
         // in LOS.
         ASSERT(seen_corpses > 0);
 
-        mprf("%s grow%s from %snearby corpse%s.",
-             (seen_mushrooms > 1 ? "Some toadstools"
-                                   : "A toadstool"),
-             (seen_mushrooms > 1 ? "s" : ""),
-             (seen_corpses > 1)  ? "" : "a ",
-             (seen_corpses > 1)  ? "s" : "");
+        mushroom_spawn_message(seen_mushrooms, seen_corpses);
     }
 
     return (processed_count);
@@ -1791,7 +1785,7 @@ int fungal_bloom()
 int create_plant(coord_def & target)
 {
     if (actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target)))
-        return 0;
+        return (0);
 
     const int plant = create_monster(mgen_data
                                      (MONS_PLANT,
@@ -2092,15 +2086,14 @@ bool prioritise_adjacent(coord_def & target, std::vector<coord_def> & candidates
     return (true);
 }
 
-// Create a ring or partial ring around the caster.
-// User is prompted to select a stack of fruit then plants are placed on open
-// squares adjacent to the caster, of course 1 piece of fruit is consumed per
-// plant so a complete ring may not be formed.
-bool plant_ring_from_fruit()
+// Prompt the user to select a stack of fruit from their inventory.  The
+// user can optionally select only a partial stack of fruit (the count
+// variable will store the number of fruit the user wants).  Return the
+// index of the item selected in the user's inventory, or a negative
+// number if the prompt failed (user canceled or had no fruit).
+int _prompt_for_fruit(int & count, const char * prompt_string)
 {
-    int possible_count;
-    int created_count = 0;
-    int rc = prompt_invent_item("Use which fruit?",
+    int rc = prompt_invent_item(prompt_string,
                                 MT_INVLIST,
                                 OSEL_FRUIT,
                                 true,
@@ -2108,10 +2101,36 @@ bool plant_ring_from_fruit()
                                 true,
                                 '\0',
                                 -1,
-                                &possible_count);
+                                &count);
 
     if (prompt_failed(rc))
-        return 0;
+        return (rc);
+
+    // Return PROMPT_INAPPROPRIATE if the 'object selected isn't
+    // actually fruit.
+    if (!is_fruit(you.inv[rc]))
+        return (PROMPT_INAPPROPRIATE);
+
+    // Handle it if the user lies about the amount of fruit available.
+    if (count > you.inv[rc].quantity)
+        count = you.inv[rc].quantity;
+
+    return (rc);
+}
+
+// Create a ring or partial ring around the caster.  The user is
+// prompted to select a stack of fruit, and then plants are placed on open
+// squares adjacent to the user.  Of course, one piece of fruit is
+// consumed per plant, so a complete ring may not be formed.
+bool plant_ring_from_fruit()
+{
+    int possible_count;
+    int created_count = 0;
+    int rc = _prompt_for_fruit(possible_count, "Use which fruit?");
+
+    // Prompt failed?
+    if (rc < 0)
+        return (false);
 
     std::vector<coord_def> adjacent;
 
@@ -2124,39 +2143,40 @@ bool plant_ring_from_fruit()
         }
     }
 
-    if ((int) adjacent.size() > possible_count)
+    if ((int)adjacent.size() > possible_count)
     {
         prioritise_adjacent(you.pos(), adjacent);
     }
 
     unsigned target_count =
-        (possible_count < (int) adjacent.size()) ? possible_count
-                                                 : adjacent.size();
+        (possible_count < (int)adjacent.size()) ? possible_count
+                                                : adjacent.size();
 
     for (unsigned i = 0; i < target_count; ++i)
+    {
         if (create_plant(adjacent[i]))
             created_count++;
+    }
 
     dec_inv_item_quantity(rc, created_count);
 
     return (created_count);
 }
 
-
-// Creates a circle of water around the target (radius is approximately 2)
-// Turns normal floor tiles into shallow water and turns (unoccupied) shallow
-// water into deep water.
-// Chance of spawning plants or fungus on unoccupied dry floor tiles outside
-// of the rainfall area
-// Returns the number of plants/fungus created
+// Create a circle of water around the target, with a radius of
+// approximately 2.  This turns normal floor tiles into shallow water
+// and turns (unoccupied) shallow water into deep water.  There is a
+// chance of spawning plants or fungus on unoccupied dry floor tiles
+// outside of the rainfall area.  Return the number of plants/fungi
+// created.
 int rain(coord_def & target)
 {
     int spawned_count = 0;
     for (radius_iterator rad(target, LOS_RADIUS, true, true, true); rad; ++rad)
     {
-        // Adjusting the shape of the rainfall slightly to make it look nicer.
-        // I want a threshold of 2.5 on the euclidean distance so a threshold
-        // of 6 prior to the sqrt is close enough.
+        // Adjust the shape of the rainfall slightly to make it look
+        // nicer.  I want a threshold of 2.5 on the euclidean distance,
+        // so a threshold of 6 prior to the sqrt is close enough.
         int rain_thresh = 6;
         coord_def local = *rad - target;
 
@@ -2164,12 +2184,12 @@ int rain(coord_def & target)
 
         if (local.abs() > rain_thresh)
         {
-            // Maybe spawn a plant on (dry, open) squares that are in LOS but
-            // outside the rainfall area.
-            // In open space there are 213 squares in LOS, and we are
-            // going to drop water on (25-4) of those, so if we want x plants
-            // to spawn on average in open space the trial probability should
-            // be x/192
+            // Maybe spawn a plant on (dry, open) squares that are in
+            // LOS but outside the rainfall area.  In open space, there
+            // are 213 squares in LOS, and we are going to drop water on
+            // (25-4) of those, so if we want x plants to spawn on
+            // average in open space, the trial probability should be
+            // x/192.
             if (x_chance_in_y(5, 192)
                 && !actor_at(*rad)
                 && ftype >= DNGN_FLOOR_MIN
@@ -2187,24 +2207,25 @@ int rain(coord_def & target)
                 if (plant != -1)
                     spawned_count++;
             }
+
             continue;
         }
 
-        // Turn regular floor squares only into shallow water
+        // Turn regular floor squares only into shallow water.
         if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
         {
             grd(*rad) = DNGN_SHALLOW_WATER;
-            // Remove blood stains as well
+            // Remove blood stains as well.
             env.map(*rad).property &= ~(FPROP_BLOODY);
 
             monsters *mon = monster_at(*rad);
             if (mon && mon->has_ench(ENCH_AQUATIC_LAND))
                 mon->del_ench(ENCH_AQUATIC_LAND);
         }
-        // We can also turn shallow water into deep water, but we're just going
-        // to skip cases where there is something on the shallow water.
-        // Destroying items will probably annoy people and insta-killing
-        // monsters is clearly out of the question.
+        // We can also turn shallow water into deep water, but we're
+        // just going to skip cases where there is something on the
+        // shallow water.  Destroying items will probably be annoying,
+        // and insta-killing monsters is clearly out of the question.
         else if (!actor_at(*rad)
                  && igrd(*rad) == NON_ITEM
                  && ftype == DNGN_SHALLOW_WATER)
@@ -2213,7 +2234,7 @@ int rain(coord_def & target)
         }
     }
 
-    if (spawned_count>0)
+    if (spawned_count > 0)
     {
         mprf("%s grow%s in the rain.",
              (spawned_count > 1 ? "Some plants" : "A plant"),
@@ -2272,17 +2293,18 @@ struct monster_conversion
 bool operator<(const monster_conversion & left,
                const monster_conversion & right)
 {
-    if(left.cost == right.cost)
-        return coinflip();
-    return left.cost < right.cost;
+    if (left.cost == right.cost)
+        return (coinflip());
+
+    return (left.cost < right.cost);
 }
 
-// Given a monster (well it should be a plant/fungus) see if evolve_flora can
-// upgrade it, and set up a monster_conversion structure for it.  Returns true
-// (and fills in possible_monster) if input an be upgraded, and returns false
-// otherwise.
+// Given a monster (which should be a plant/fungus), see if
+// evolve_flora() can upgrade it, and set up a monster_conversion
+// structure for it.  Return true (and fill in possible_monster) if the
+// monster can be upgraded, and return false otherwise.
 bool _possible_evolution(monsters * input,
-        monster_conversion & possible_monster)
+                         monster_conversion & possible_monster)
 {
     int plant_cost = 10;
     int toadstool_cost = 1;
@@ -2307,27 +2329,45 @@ bool _possible_evolution(monsters * input,
         break;
 
     default:
-        return false;
-
+        return (false);
     }
 
-    return true;
+    return (true);
 }
 
 bool evolve_flora()
 {
-    int needed_fruit = 2;
+    int rc;
+    int available_count;
 
-    std::priority_queue<monster_conversion, std::vector<monster_conversion> >
-                        available_targets;
+    int points_per_fruit = 8;
+    int oklob_cost = 10;
 
-    int points = 15;
+    float approx_oklob_rate = float(points_per_fruit)/float(oklob_cost);
+
+    char prompt_string[100];
+    memset(prompt_string,0,100);
+    sprintf(prompt_string,"Use which fruit (%1.1f oklob plants per fruit)?",
+            approx_oklob_rate);
+
+    rc = _prompt_for_fruit(available_count, prompt_string);
+
+    // Prompt failed?
+    if (rc < 0)
+        return (false);
+
+    int points = points_per_fruit * available_count;
+    int starting_points = points;
+
+    std::priority_queue<monster_conversion> available_targets;
+
     monster_conversion temp_conversion;
 
     for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true);
          rad; ++rad)
     {
         monsters * target = monster_at(*rad);
+
         if (!target)
             continue;
 
@@ -2335,20 +2375,12 @@ bool evolve_flora()
             available_targets.push(temp_conversion);
     }
 
+    // Nothing available to upgrade.
     if (available_targets.empty())
+    {
+        mpr("No flora in sight can be evolved.");
         return (false);
-
-    int rc;
-    int available_count;
-
-    rc = prompt_invent_item("Use which fruit (must have at least 2)?",
-             MT_INVLIST, OSEL_SOME_FRUIT, true, true, true, '\0', -1,
-             &available_count);
-
-    if (prompt_failed(rc))
-        return (false);
-
-    dec_inv_item_quantity(rc, needed_fruit);
+    }
 
     int plants_evolved = 0;
     int toadstools_evolved = 0;
@@ -2387,7 +2419,8 @@ bool evolve_flora()
         current_plant->attitude = ATT_FRIENDLY;
         current_plant->flags |= MF_CREATED_FRIENDLY;
 
-        // Try to remove slowly dying in case we are upgrading a toadstool.
+        // Try to remove slowly dying in case we are upgrading a
+        // toadstool.
         current_plant->del_ench(ENCH_SLOWLY_DYING);
 
         // Maybe we can upgrade it again?
@@ -2398,29 +2431,46 @@ bool evolve_flora()
         }
     }
 
-    // messaging...
-    if (plants_evolved > 0)
+    // How many pieces of fruit did we use up?
+    int points_used = starting_points - points;
+    int fruit_used = points_used / points_per_fruit;
+    if (points_used % points_per_fruit)
+        fruit_used++;
+
+    // The player didn't have enough points to upgrade anything (probably
+    // supplied only one fruit).
+    if (!fruit_used)
     {
-        mprf("%s can now spit acid.",
-             (plants_evolved > 1 ? "Some plants" : "A plant"));
+        mpr("Not enough fruit to cause evolution.");
+        return (false);
     }
 
-    if (toadstools_evolved > 0)
-    {
-        const bool plural = toadstools_evolved > 1;
-        mprf("%s toadstool%s gain%s stability.",
-             (plural ? "Some" : "A"),
-             (plural ? "s"    : ""),
-             (plural ? ""     : "s"));
-    }
+    dec_inv_item_quantity(rc, fruit_used);
 
-    if (fungi_evolved > 0)
+    // Mention how many plants were used.
+    if (fruit_used > 1)
+        mprf("%d pieces of fruit are consumed!", fruit_used);
+    else
+        mpr("A piece of fruit is consumed!");
+
+    // Messaging for generated plants.
+    if (plants_evolved > 1)
+        mprf("%d plants can now spit acid.", plants_evolved);
+    else if (plants_evolved == 1)
+        mpr("A plant can now spit acid.");
+
+    if (toadstools_evolved > 1)
+        mprf("%d toadstools gained stability.", toadstools_evolved);
+    else if (toadstools_evolved == 1)
+        mpr("A toadstool gained stability.");
+
+    if (fungi_evolved > 1)
     {
-        const bool plural = fungi_evolved > 1;
-        mprf("The fungal %s can now pick up %s mycelia and move.",
-             (plural ? "colonies" : "colony"),
-             (plural ? "their"    : "its"));
+        mprf("%d fungal colonies can now pick up their mycelia and move.",
+             fungi_evolved);
     }
+    else if (fungi_evolved == 1)
+        mpr("A fungal colony can now pick up its mycelia and move.");
 
     return (true);
 }

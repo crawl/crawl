@@ -2944,7 +2944,7 @@ void change_labyrinth(bool msg)
             if (is_terrain_seen(*ri))
                 count_known++;
 
-        if (tries > 1 && count_known > size*size/6)
+        if (tries > 1 && count_known > size * size / 6)
             continue;
 
         // Fill a vector with wall grids that are potential targets for
@@ -4341,7 +4341,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
 {
     seen_targets = 0;
     if (target_count == 0)
-        return 0;
+        return (0);
 
     int c_size = 8;
     int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -4365,7 +4365,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
             corpse.special = 0;
 
             if (see_grid(corpse.pos))
-                mpr("A ring of toadstools grow before your very eyes.");
+                mpr("A ring of toadstools grows before your very eyes.");
             else if (ring_seen > 1)
                 mpr("Some toadstools grow in a peculiar arc.");
             else if (ring_seen > 0)
@@ -4413,10 +4413,10 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
             if (mushroom != -1)
             {
-                // Going to expliclty override the die-off timer in this case
-                // (this condition means we got called from fungal_bloom or
-                // similar and are creating a lot of toadstools at once that
-                // should die off quickly).
+                // Going to explicitly override the die-off timer in
+                // this case (this condition means we got called from
+                // fungal_bloom() or similar, and are creating a lot of
+                // toadstools at once that should die off quickly).
                 if (distance_as_time)
                 {
                     coord_def offset = corpse.pos - current;
@@ -4496,6 +4496,24 @@ int mushroom_prob(item_def & corpse)
     return (trial_prob);
 }
 
+bool mushroom_spawn_message(int seen_targets, int seen_corpses)
+{
+    if (seen_targets > 0)
+    {
+        std::string what  = seen_targets  > 1 ? "Some toadstools"
+                                              : "A toadstool";
+        std::string where = seen_corpses  > 1 ? "nearby corpses" :
+                            seen_corpses == 1 ? "a nearby corpse"
+                                              : "the ground";
+        mprf("%s grow%s from %s.",
+             what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
+
+        return (true);
+    }
+
+    return (false);
+}
+
 // Randomly decide whether or not to spawn a mushroom over the given
 // corpse.  Assumption: this is called before the rotting away logic in
 // update_corpses.  Some conditions in this function may set the corpse
@@ -4526,16 +4544,7 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 
     int seen_spawns;
     spawn_corpse_mushrooms(corpse, success_count, seen_spawns);
-
-    if (seen_spawns > 0)
-    {
-        std::string base = seen_spawns > 1 ? "Some toadstools" : "A toadstool";
-
-        if (see_grid(corpse.pos))
-            mprf("%s grows from a nearby corpse.", base.c_str());
-        else
-            mprf("%s springs up from the ground.", base.c_str());
-    }
+    mushroom_spawn_message(seen_spawns, see_grid(corpse.pos) ? 1 : 0);
 }
 
 //---------------------------------------------------------------

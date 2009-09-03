@@ -1036,8 +1036,9 @@ void feawn_neutralise(monsters* monster)
             // tangled web, etc.
             remove_auto_exclude(monster, false);
 
-            monster->flags |= MF_ATT_CHANGE_ATTEMPT;
             feawn_neutralise_plant(monster);
+            monster->flags |= MF_ATT_CHANGE_ATTEMPT;
+
             stop_running();
         }
     }

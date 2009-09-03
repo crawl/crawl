@@ -6048,29 +6048,6 @@ static bool _feawn_plants_hostile()
     return (false);
 }
 
-static bool _feawn_plants_on_level_neutral()
-{
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monsters *monster = &menv[i];
-
-        feawn_neutralise_plant(monster);
-    }
-
-    return (true);
-}
-
-static bool _feawn_plants_neutral()
-{
-    if (apply_to_all_dungeons(_feawn_plants_on_level_neutral))
-    {
-        mpr("The plants of the dungeon cease their hostilities." , MSGCH_GOD);
-        return (true);
-    }
-
-    return (false);
-}
-
 // Upon excommunication, ex-Beoghites lose all their orcish followers,
 // plus all monsters created by their priestly orcish followers.  When
 // under penance, Beoghites can lose all orcish followers in sight,
@@ -6493,9 +6470,9 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
 void feawn_neutralise_plant(monsters *plant)
 {
-    if (plant->type != MONS_OKLOB_PLANT
-        && plant->type != MONS_WANDERING_MUSHROOM
-        && !testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
+    if ((plant->type != MONS_OKLOB_PLANT
+        && plant->type != MONS_WANDERING_MUSHROOM)
+        || testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         return;
     }
@@ -7439,7 +7416,7 @@ void god_pitch(god_type which_god)
     {
         mpr("You can call upon Feawn to speed up the decay of corpses.",
             MSGCH_GOD);
-        _feawn_plants_neutral();
+        mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
     }
 
     if (you.worshipped[you.religion] < 100)

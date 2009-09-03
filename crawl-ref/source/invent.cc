@@ -1000,13 +1000,6 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_FRUIT:
         return is_fruit(i);
 
-        // This is really dumb. I don't want to talk about it. -cao
-    case OSEL_SOME_FRUIT:
-
-        return is_fruit(i) && i.quantity >= 2;
-
-
-
     case OSEL_WORN_ARMOUR:
         return (itype == OBJ_ARMOUR && item_is_equipped(i));
 
@@ -1186,8 +1179,8 @@ static unsigned char _get_invent_quant( unsigned char keyin, int &quant )
 
 // This function prompts the user for an item, handles the '?' and '*'
 // listings, and returns the inventory slot to the caller (which if
-// must_exist is true (the default) will be an assigned item, with
-// a positive quantity.
+// must_exist is true, as it is by default, will be an assigned item,
+// with a positive quantity.
 //
 // It returns PROMPT_ABORT       if the player hits escape.
 // It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
@@ -1636,7 +1629,9 @@ int prompt_invent_item( const char *prompt,
             need_getch  = false;
 
             // Don't redraw if we're just going to display another listing
-            need_redraw = (keyin != '?' && keyin != '*');
+            need_redraw = (keyin != '?' && keyin != '*')
+                          && !(count && auto_list && isdigit(keyin));
+
             need_prompt = need_redraw;
 
             if (items.size())
@@ -1658,6 +1653,9 @@ int prompt_invent_item( const char *prompt,
 
             need_prompt = false;
             need_getch  = false;
+
+            if (auto_list)
+                need_redraw = true;
         }
         else if (count == NULL && isdigit( keyin ))
         {

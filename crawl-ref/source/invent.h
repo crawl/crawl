@@ -30,13 +30,13 @@ enum object_selector
     OSEL_BUTCHERY    = -10,
     OSEL_EVOKABLE    = -11,
     OSEL_WORN_ARMOUR = -12,
-    OSEL_FRUIT       = -13,
-    OSEL_SOME_FRUIT  = -14
+    OSEL_FRUIT       = -13
 };
 
-#define PROMPT_ABORT        -1
-#define PROMPT_GOT_SPECIAL  -2
-#define PROMPT_NOTHING      -3
+#define PROMPT_ABORT         -1
+#define PROMPT_GOT_SPECIAL   -2
+#define PROMPT_NOTHING       -3
+#define PROMPT_INAPPROPRIATE -4
 
 struct SelItem
 {
