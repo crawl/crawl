@@ -363,8 +363,9 @@ void MiscastEffect::do_miscast()
     beam.target = target->pos();
     beam.use_target_as_pos = true;
 
-    all_msg = you_msg = mon_msg = mon_msg_seen = mon_msg_unseen = "";
-    msg_ch  = MSGCH_PLAIN;
+    all_msg        = you_msg = mon_msg = mon_msg_seen = mon_msg_unseen = "";
+    msg_ch         = MSGCH_PLAIN;
+    sound_loudness = 0;
 
     switch (sp_type)
     {
@@ -468,6 +469,9 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
         msg = do_mon_str_replacements(msg, target_as_monster(), S_SILENT);
 
     mpr(msg.c_str(), msg_ch);
+
+    if (msg_ch == MSGCH_SOUND)
+        noisy(sound_loudness, target->pos());
 }
 
 bool MiscastEffect::_ouch(int dam, beam_type flavour)
@@ -970,9 +974,9 @@ void MiscastEffect::_enchantment(int severity)
         case 9:
             if (neither_end_silenced())
             {
-                // XXX: Should use noisy().
-                all_msg = "You hear something strange.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear something strange.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 10;
                 return;
             }
             else if (target->atype() == ACT_PLAYER)
@@ -1223,8 +1227,9 @@ void MiscastEffect::_summoning(int severity)
         case 1:
             if (neither_end_silenced())
             {
-                all_msg = "You hear strange voices.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear strange voices.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 15;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "You feel momentarily dizzy.";
@@ -1261,9 +1266,10 @@ void MiscastEffect::_summoning(int severity)
         case 9:
             if (neither_end_silenced())
             {
-                you_msg      = "Distant voices call out to you!";
-                mon_msg_seen = "Distant voices call out to @the_monster@!";
-                msg_ch       = MSGCH_SOUND;
+                you_msg        = "Distant voices call out to you!";
+                mon_msg_seen   = "Distant voices call out to @the_monster@!";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 15;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "You feel watched.";
@@ -1339,9 +1345,11 @@ void MiscastEffect::_summoning(int severity)
 
             if (success && neither_end_silenced())
             {
-                you_msg = "A chorus of chattering voices calls out to you!";
-                mon_msg = "A chorus of chattering voices calls out!";
-                msg_ch  = MSGCH_SOUND;
+                you_msg        = "A chorus of chattering voices calls out to"
+                                 " you!";
+                mon_msg        = "A chorus of chattering voices calls out!";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 15;
             }
             do_msg();
             break;
@@ -1404,7 +1412,10 @@ void MiscastEffect::_divination_you(int severity)
             break;
         case 1:
             if (!silenced(you.pos()))
+            {
                 mpr("You hear strange voices.", MSGCH_SOUND);
+                noisy(10, you.pos());
+            }
             else
                 mpr("Your nose twitches.");
             break;
@@ -1563,8 +1574,9 @@ void MiscastEffect::_necromancy(int severity)
         case 1:
             if (neither_end_silenced())
             {
-                all_msg = "You hear strange and distant voices.";
-                msg_ch  =  MSGCH_SOUND;
+                all_msg        = "You hear strange and distant voices.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 15;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "You feel homesick.";
@@ -1992,8 +2004,9 @@ void MiscastEffect::_fire(int severity)
         case 9:
             if (neither_end_silenced())
             {
-                all_msg = "You hear a sizzling sound.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear a sizzling sound.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 10;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "You feel like you have heartburn.";
@@ -2160,8 +2173,9 @@ void MiscastEffect::_ice(int severity)
         case 9:
             if (neither_end_silenced())
             {
-                all_msg = "You hear a crackling sound.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear a crackling sound.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 10;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "A snowflake lands on your nose.";
@@ -2285,8 +2299,9 @@ void MiscastEffect::_earth(int severity)
         case 4:
             if (neither_end_silenced())
             {
-                all_msg = "You hear a distant rumble.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear a distant rumble.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 10;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "You sympathise with the stones.";
@@ -2460,8 +2475,9 @@ void MiscastEffect::_air(int severity)
         case 7:
             if (neither_end_silenced())
             {
-                all_msg = "You hear a whooshing sound.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear a whooshing sound.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 10;
             }
             else if (player_can_smell())
                 all_msg = "You smell ozone.";
@@ -2475,8 +2491,9 @@ void MiscastEffect::_air(int severity)
         case 9:
             if (neither_end_silenced())
             {
-                all_msg = "You hear a crackling sound.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear a crackling sound.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 10;
             }
             else if (player_can_smell())
                 all_msg = "You smell something musty.";
@@ -2618,8 +2635,9 @@ void MiscastEffect::_poison(int severity)
         case 9:
             if (neither_end_silenced())
             {
-                all_msg = "You hear a slurping sound.";
-                msg_ch  = MSGCH_SOUND;
+                all_msg        = "You hear a slurping sound.";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 10;
             }
             else if (you.species != SP_MUMMY)
                 you_msg = "You taste almonds.";

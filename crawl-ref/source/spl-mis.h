@@ -102,6 +102,8 @@ private:
 
     msg_channel_type msg_ch;
 
+    int  sound_loudness;
+
     int  recursion_depth;
     bool did_msg;
 
