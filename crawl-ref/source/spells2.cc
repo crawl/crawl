@@ -1225,7 +1225,6 @@ bool cast_call_canine_familiar(int pow, god_type god)
         success = true;
 
         mpr("A canine appears!");
-
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1969,7 +1968,7 @@ void path_distance(coord_def & origin,
                 }
             }
         }
-    } // end while
+    }
 }
 
 // so we are basically going to compute point to point distance between
