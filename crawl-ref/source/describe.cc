@@ -3431,9 +3431,16 @@ void describe_god( god_type which_god, bool give_title )
     if (you.religion == which_god)
     {
         // Print title based on piety.
-        cprintf( EOL "Title - " );
+        cprintf(EOL "Title - ");
         textcolor(colour);
-        std::string title = divine_title[which_god][_piety_level()];
+
+        std::string title;
+
+        if (you.penance[which_god])
+            title = divine_title[which_god][0];
+        else
+            title = divine_title[which_god][_piety_level()];
+
         title = replace_all(title, "%s",
                             species_name(you.species, 1, true, false));
 
