@@ -19,6 +19,8 @@ Stone Soup 0.6
 * Unrandarts and randarts now share the same, cleaner coding structure.
 * More vaults.
 * Tiles: re-added doll editing screen ('-' command).
+* Limit Summon Small Mammals to maximum of two mammals per casting.
+* Call Canine Familiar now only calls friendly canines.
 
 Stone Soup 0.5.1 (20090728)
 ---------------------------

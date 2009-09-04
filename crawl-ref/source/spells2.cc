@@ -1215,11 +1215,8 @@ bool cast_call_canine_familiar(int pow, god_type god)
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
-    const bool friendly = (random2(pow) > 3);
-
     if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+            mgen_data(mon, BEH_FRIENDLY,
                       dur, SPELL_CALL_CANINE_FAMILIAR,
                       you.pos(),
                       MHITYOU,
@@ -1229,8 +1226,6 @@ bool cast_call_canine_familiar(int pow, god_type god)
 
         mpr("A canine appears!");
 
-        if (!friendly)
-            mpr("It doesn't look very happy.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
