@@ -2991,9 +2991,31 @@ void bolt::affect_ground()
     if (is_tracer)
         return;
 
+    // Spore explosions might spawn a fungus.  The spore explosion
+    // covers 21 tiles in open space, so the expected number of spores
+    // produced is the x in x_chance_in_y() in the conditional below.
+    if (is_explosion && this->flavour == BEAM_SPORE
+        && x_chance_in_y(2, 21)
+        && mons_class_can_pass(MONS_FUNGUS, env.grid(pos()))
+        && !actor_at(pos()))
+    {
+        int rc = create_monster(mgen_data(MONS_FUNGUS,
+                                          BEH_HOSTILE,
+                                          0,
+                                          0,
+                                          pos(),
+                                          MHITNOT,
+                                          MG_FORCE_PLACE));
+
+        if (rc != -1 && see_grid(pos()))
+            mpr("A fungus suddenly grows.");
+    }
+
     if (affects_items)
     {
-        const int burn_power = (is_explosion) ? 5 : (is_beam) ? 3 : 2;
+        const int burn_power = is_explosion ? 5 :
+                               is_beam      ? 3
+                                            : 2;
         expose_items_to_element(flavour, pos(), burn_power);
         affect_place_clouds();
     }

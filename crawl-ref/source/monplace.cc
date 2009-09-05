@@ -1128,11 +1128,18 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_TOADSTOOL)
     {
         // This enchantment is a timer that counts down until death.
-        // These mushrooms should last longer than the lifespan of a corpse
-        // (to avoid spawning mushrooms in the same place over and over), aside
-        // from that the value is slightly randomized to avoid simultaneous
-        // die-offs of mushroom rings.
+        // It should last longer than the lifespan of a corpse, to avoid
+        // spawning mushrooms in the same place over and over.  Aside
+        // from that, the value is slightly randomised to avoid
+        // simultaneous die-offs of mushroom rings.
         menv[id].add_ench(ENCH_SLOWLY_DYING);
+    }
+
+    if (mg.cls == MONS_FUNGUS && you.your_level > 0)
+    {
+        // This enchantment causes rare production of giant spores.
+        // It's disabled on D:1 to avoid issues with entry vaults.
+        menv[id].add_ench(ENCH_SPORE_PRODUCTION);
     }
 
     if (monster_can_submerge(&menv[id], grd(fpos)) && !one_chance_in(5))

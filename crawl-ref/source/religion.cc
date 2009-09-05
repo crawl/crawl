@@ -6013,7 +6013,8 @@ static bool _feawn_plants_on_level_hostile()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && mons_is_plant(monster))
+            && (mons_is_plant(monster)
+                || monster->mons_species() == MONS_GIANT_SPORE))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Plant hostility: %s on level %d, branch %d",
@@ -6470,8 +6471,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
 void feawn_neutralise_plant(monsters *plant)
 {
-    if ((plant->type != MONS_OKLOB_PLANT
-        && plant->type != MONS_WANDERING_MUSHROOM)
+    if ((!mons_is_plant(plant) && plant->type != MONS_GIANT_SPORE)
         || testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         return;

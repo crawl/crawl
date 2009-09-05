@@ -1022,7 +1022,9 @@ void slime_convert(monsters* monster)
 
 void feawn_neutralise(monsters* monster)
 {
-    if (you.religion == GOD_FEAWN && mons_is_plant(monster)
+    if (you.religion == GOD_FEAWN
+        && (mons_is_plant(monster)
+            || monster->mons_species() == MONS_GIANT_SPORE)
         && !mons_is_summoned(monster)
         && !mons_wont_attack(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))

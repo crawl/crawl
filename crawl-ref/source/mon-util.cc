@@ -7568,7 +7568,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SLOWLY_DYING:
-
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(me))
         {
@@ -7579,6 +7578,45 @@ void monsters::apply_enchantment(const mon_enchant &me)
             }
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);
+        }
+        break;
+
+    case ENCH_SPORE_PRODUCTION:
+        // Very low chance of actually making a spore on each turn.
+        if(one_chance_in(5000))
+        {
+            int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+            std::random_shuffle(idx, idx + 8);
+
+            for (unsigned i = 0; i < 8; ++i)
+            {
+                coord_def adjacent = this->pos() + Compass[idx[i]];
+                if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
+                    && !actor_at(adjacent))
+                {
+                    beh_type created_behavior = BEH_HOSTILE;
+
+                    if (this->attitude == ATT_FRIENDLY)
+                        created_behavior = BEH_FRIENDLY;
+
+                    int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
+                                                      created_behavior,
+                                                      0,
+                                                      0,
+                                                      adjacent,
+                                                      MHITNOT,
+                                                      MG_FORCE_PLACE));
+
+                    if (rc != -1)
+                    {
+                        env.mons[rc].behaviour = BEH_WANDER;
+
+                        if (see_grid(adjacent) && see_grid(pos()))
+                            mpr("A nearby fungus spawns a giant spore.");
+                    }
+                    break;
+                }
+            }
         }
         break;
 
@@ -8332,7 +8370,7 @@ static const char *enchant_names[] =
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "soul-ripe", "decay", "hungry", "flopping", "bug"
+    "soul-ripe", "decay", "hungry", "flopping", "spore-producing", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

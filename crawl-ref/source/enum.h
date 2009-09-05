@@ -1286,10 +1286,11 @@ enum enchant_type
     ENCH_SLOWLY_DYING,
     ENCH_EATS_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
+    ENCH_SPORE_PRODUCTION,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
-    NUM_ENCHANTMENTS                   //    34
+    NUM_ENCHANTMENTS                   //    35
 };
 
 enum enchant_retval
