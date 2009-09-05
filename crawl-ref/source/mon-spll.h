@@ -33,6 +33,7 @@
        SPELL_BLINK
       }
     },
+
     {  MST_ORC_WIZARD_II,
       {
        SPELL_THROW_FLAME,
@@ -962,6 +963,19 @@
     // ---------------------
     // uniques' "spellbooks"
     // ---------------------
+
+    // Jessica is now a bit more evil-themed than before.
+    {  MST_JESSICA,
+      {
+       SPELL_PAIN, // Formerly Magic Dart.
+       SPELL_SLOW,
+       SPELL_HASTE,
+       SPELL_PAIN, // Formerly Magic Dart.
+       SPELL_BLINK,
+       SPELL_BLINK
+      }
+    },
+
 
     // Crusader theme.
     {  MST_RUPERT,

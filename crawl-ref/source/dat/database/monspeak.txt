@@ -2404,16 +2404,37 @@ _Prince_Ribbit_rare_
 @The_monster@ sighs @at_foe@, "It's not easy being green!"
 
 @The_monster@ says @to_foe@, "You're just another fly to me."
+
+VISUAL:@The_monster@ winks @at_foe@ and puckers @possessive@ lips.
 %%%%
 _frog_food_
 
 fly
 
 w:5
-bug
+butterfly
+
+moth
+
+mosquito
+
+w:2
+spider
+
+wasp
+
+centipede
+
+millipede
 
 w:1
 small bird
+
+mouse
+
+baby bat
+
+blue-tailed skink
 ## END Prince Ribbit ##
 %%%%
 ############ PSYCHE ### An insane sorceress

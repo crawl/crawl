@@ -78,7 +78,7 @@ A beautiful but vain elf with an aptitude for magic and little else. His skills 
 %%%%
 Duane
 
-An evil mercenary with unusually large ears.
+A mercenary with unusually large ears. He has been hired by someone to guard something; exactly who and what are not exactly clear.
 %%%%
 Duvessa
 
@@ -150,7 +150,7 @@ These nagas are often used as guardians by powerful creatures.
 %%%%
 Harold
 
-An evil human bounty hunter.
+A middle aged bounty hunter, hired to kill you. He is in a hurry.
 %%%%
 harpy
 
@@ -166,7 +166,7 @@ A cunning merfolk water-witch, who uses her beauty and spellcraft to draw unwitt
 %%%%
 Jessica
 
-An evil apprentice sorceress.
+An evil apprentice sorceress. She entered the dungeon hoping to find a quiet, secluded place where she could study the darker arts without being disturbed.
 %%%%
 Joseph
 
@@ -210,7 +210,7 @@ A lithe spellcaster.
 %%%%
 Maud
 
-An evil warrior who looks inexplicably like a rodent.  Looking into her eyes, you feel yourself forgetting everything else.
+A mysterious warrior princess from a far-off kingdom, on a quest to retrieve the legendary sword 'Entarex'. Countless have been the admirers who, thinking about Maud, forgot everything else.
 %%%%
 Michael
 
@@ -234,11 +234,11 @@ A black centaur warrior with a malicious look in the eyes.
 %%%%
 Norbert
 
-A skilled warrior.
+A skilled warrior, looking to further develop his reputation as a great slayer of monsters. Be warned: he defines 'monster' rather more liberally than most dictionaries.
 %%%%
 Norris
 
-A tan, fit and thoroughly evil surfer.
+A professional beach bum, all about surfing, free love and crystal healing; he has seen things that would, like, totally blow your mind, bro.
 %%%%
 Orb Guardian
 
@@ -274,7 +274,7 @@ A beautiful sapphire statue of a famous earth mage who disappeared after a catas
 %%%%
 Rupert
 
-An evil crusader.
+A mighty crusader, far less interested in converting heathens than killing them.
 %%%%
 Saint Roka
 
@@ -302,7 +302,7 @@ A graceful kobold assassin.  Admire her graceful pirouettes, thrill at her darin
 %%%%
 Terence
 
-An evil human fighter.
+A mean-looking human fighter who likes to kill, and not much else.
 %%%%
 Tiamat
 
@@ -314,7 +314,7 @@ A rude orc.
 %%%%
 Wayne
 
-A fat, evil wizard in a stupid-looking hat.
+A fat wizard wearing a stupid-looking hat.
 %%%%
 Xtahua
 

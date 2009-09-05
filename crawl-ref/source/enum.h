@@ -2296,6 +2296,7 @@ enum mon_spellbook_type
     MST_LOM_LOBON,
     MST_CEREBOV,
     MST_GLOORX_VLOQ,
+    MST_JESSICA,
 
     MST_TEST_SPAWNER = 170,
     NUM_MSTYPES,
