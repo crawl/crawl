@@ -4160,8 +4160,9 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     {
         if (!is_tracer)
         {
-            // FIXME: Could use a better message, something about dodging that
-            // doesn't sound excessively weird would be nice.
+            // FIXME: Could use a better message, something about
+            // dodging that doesn't sound excessively weird would be
+            // nice.
             mprf(MSGCH_GOD, "Feawn protects %s plant from harm.",
                  attitude == ATT_FRIENDLY ? "your" : "a");
         }

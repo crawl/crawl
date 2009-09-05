@@ -6471,7 +6471,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
 void feawn_neutralise_plant(monsters *plant)
 {
-    if ((!mons_is_plant(plant) && plant->type != MONS_GIANT_SPORE)
+    if (!mons_is_plant(plant)
         || testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         return;
