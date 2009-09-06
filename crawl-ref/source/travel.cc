@@ -551,30 +551,31 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (!ignore_terrain_knowledge && !is_terrain_known(c))
         return (false);
 
-    const bool seen = see_grid(c);
-    const int grid = ((seen || ignore_terrain_knowledge) ? grd(c)
-                                                         : get_envmap_obj(c));
+    // [dshaligram] At this point we're guaranteed to know the terrain (see
+    // check ^^^), which means we know what dungeon feature is here. Thus it's
+    // safe to use the actual dungeon feature directly.
+    const dungeon_feature_type grid = grd(c);
 
-    // FIXME: this compares to the *real* monster at the square,
-    // even if the one we've seen is different.
+    // Also make note of what's displayed on the level map for
+    // plant/fungus checks.
+    const int levelmap_object = get_envmap_obj(c);
+
+    // Travel will not voluntarily cross squares blocked by immobile monsters.
     if (!ignore_hostile
-        && (seen || grid > DNGN_START_OF_MONSTERS)
-        && _is_monster_blocked(c))
+        && levelmap_object >= DNGN_START_OF_MONSTERS
+        && _is_monster_blocked(c)
+        // _is_monster_blocked can only return true if monster_at(c) != NULL
+        && monster_at(c)->type == levelmap_object - DNGN_START_OF_MONSTERS)
     {
         return (false);
     }
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
-    if (ignore_hostile
-        && (seen || grid < NUM_REAL_FEATURES)
-        && _is_reseedable(c))
+    if (ignore_hostile && _is_reseedable(c))
     {
         return (true);
     }
-
-    if (grid >= NUM_REAL_FEATURES)
-        return (true);
 
     return (is_traversable(static_cast<dungeon_feature_type>(grid))
 #ifdef CLUA_BINDINGS
