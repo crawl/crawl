@@ -6497,6 +6497,7 @@ void jiyva_convert_slime(monsters* slime)
         {
             mprf(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
                             "then relaxes.",
+
             slime->name(DESC_CAP_THE).c_str());
         }
         else
@@ -6509,9 +6510,10 @@ void jiyva_convert_slime(monsters* slime)
     slime->attitude = ATT_STRICT_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
-    if (mons_itemuse(slime) != MONUSE_EATS_ITEMS)
+    if (!mons_eats_items(slime))
     {
-        slime->add_ench(ENCH_EATS_ITEMS);
+        slime->add_ench(ENCH_EAT_ITEMS);
+
         mprf(MSGCH_MONSTER_ENCHANT, "%s looks hungrier.",
              slime->name(DESC_CAP_THE).c_str());
     }

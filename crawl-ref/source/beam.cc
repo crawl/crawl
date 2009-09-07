@@ -4985,10 +4985,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
 
             if (x < 3)
-            {
                 monster_polymorph(mon, MONS_OOZE);
-                mon->add_ench(ENCH_EATS_ITEMS);
-            }
             else if (x >= 3 && x < 5)
                 monster_polymorph(mon, MONS_JELLY);
             else if (x >= 5 && x < 7)
@@ -4996,15 +4993,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             else if (x >= 7 && x <= 11)
             {
                 if (coinflip())
-                {
                     monster_polymorph(mon, MONS_SLIME_CREATURE);
-                    mon->add_ench(ENCH_EATS_ITEMS);
-                }
                 else
-                {
                     monster_polymorph(mon, MONS_GIANT_AMOEBA);
-                    mon->add_ench(ENCH_EATS_ITEMS);
-                }
             }
             else
             {
@@ -5014,6 +5005,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
                     monster_polymorph(mon, MONS_AZURE_JELLY);
             }
         }
+
+        if (!mons_eats_items(mon))
+            mon->add_ench(ENCH_EAT_ITEMS);
+
         mon->attitude = ATT_STRICT_NEUTRAL;
         return (MON_AFFECTED);
 

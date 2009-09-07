@@ -1284,7 +1284,7 @@ enum enchant_type
     ENCH_LOWERED_MR,
     ENCH_SOUL_RIPE,                    //   30
     ENCH_SLOWLY_DYING,
-    ENCH_EATS_ITEMS,
+    ENCH_EAT_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,
 

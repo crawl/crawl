@@ -192,13 +192,21 @@ enum habitat_type
 enum mon_itemuse_type
 {
     MONUSE_NOTHING,
-    MONUSE_EATS_ITEMS,
     MONUSE_OPEN_DOORS,
     MONUSE_STARTING_EQUIPMENT,
     MONUSE_WEAPONS_ARMOUR,
     MONUSE_MAGIC_ITEMS,
 
     NUM_MONUSE
+};
+
+enum mon_itemeat_type
+{
+    MONEAT_NOTHING,
+    MONEAT_ITEMS,
+    MONEAT_CORPSES,
+
+    NUM_MONEAT
 };
 
 // now saved in an unsigned long.
@@ -446,6 +454,7 @@ struct monsterentry
     char             speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
+    mon_itemeat_type gmon_eat;
     size_type size;
 };
 
@@ -488,6 +497,8 @@ bool mons_wall_shielded(const monsters *mon);
  * *********************************************************************** */
 mon_itemuse_type mons_class_itemuse(int mc);
 mon_itemuse_type mons_itemuse(const monsters *mon);
+mon_itemeat_type mons_class_itemeat(int mc);
+mon_itemeat_type mons_itemeat(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}
@@ -791,8 +802,8 @@ bool mons_is_slime(const monsters *mon);
 bool mons_class_is_plant(int mc);
 bool mons_is_plant(const monsters *mon);
 bool mons_eats_items(const monsters *mon);
+bool mons_eats_corpses(const monsters *mon);
 bool mons_has_lifeforce(const monsters *mon);
-bool mons_eats_corpses(const monsters *m);
 monster_type mons_genus(int mc);
 monster_type mons_species(int mc);
 

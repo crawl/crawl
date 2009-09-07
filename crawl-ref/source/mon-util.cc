@@ -656,8 +656,13 @@ bool mons_is_plant(const monsters *mon)
 
 bool mons_eats_items(const monsters *mon)
 {
-    return (mons_itemuse(mon) == MONUSE_EATS_ITEMS
-            || mon->has_ench(ENCH_EATS_ITEMS));
+    return (mons_itemeat(mon) == MONEAT_ITEMS
+            || mon->has_ench(ENCH_EAT_ITEMS));
+}
+
+bool mons_eats_corpses(const monsters *mon)
+{
+    return (mons_itemeat(mon) == MONEAT_CORPSES);
 }
 
 bool mons_is_skeletal(int mc)
@@ -940,6 +945,22 @@ mon_itemuse_type mons_itemuse(const monsters *mon)
         return (mons_class_itemuse(mons_zombie_base(mon)));
 
     return (mons_class_itemuse(mon->type));
+}
+
+mon_itemeat_type mons_class_itemeat(int mc)
+{
+    ASSERT(smc);
+    return (smc->gmon_eat);
+}
+
+mon_itemeat_type mons_itemeat(const monsters *mon)
+{
+    if (mons_enslaved_twisted_soul(mon))
+        return (MONEAT_NOTHING);
+    else if (mons_enslaved_intact_soul(mon))
+        return (mons_class_itemeat(mons_zombie_base(mon)));
+
+    return (mons_class_itemeat(mon->type));
 }
 
 int mons_class_colour(int mc)
@@ -2483,11 +2504,6 @@ bool mons_wields_two_weapons(const monsters *mon)
                                                : mon->type;
 
     return (mons_class_wields_two_weapons(montype));
-}
-
-bool mons_eats_corpses(const monsters *m)
-{
-    return (m->type == MONS_NECROPHAGE || m->type == MONS_GHOUL);
 }
 
 bool mons_self_destructs(const monsters *m)
@@ -5184,47 +5200,6 @@ bool monsters::pickup_gold(item_def &item, int near)
     return (pickup(item, MSLOT_GOLD, near));
 }
 
-bool monsters::eat_corpse(item_def &item, int near)
-{
-    if (!mons_eats_corpses(this))
-        return (false);
-
-    if (item.sub_type != CORPSE_BODY)
-        return (false);
-
-    hit_points += 1 + random2(mons_weight(item.plus)) / 100;
-
-    // Limited growth factor here -- should 77 really be the cap? {dlb}:
-    hit_points = std::min(100, hit_points);
-    max_hit_points = std::max(hit_points, max_hit_points);
-
-    if (need_message(near))
-    {
-        mprf("%s eats %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_THE).c_str());
-    }
-
-    // Assume that eating a corpse requires butchering it.
-    //
-    // Use logic from misc.cc:turn_corpse_into_chunks() and
-    // the butchery-related delays in delay.cc:stop_delay().
-
-    const int max_chunks = mons_weight(item.plus) / 150;
-
-    // Only fresh corpses bleed enough to colour the ground.
-    if (!food_is_rotten(item))
-        bleed_onto_floor(pos(), item.plus, max_chunks, true);
-
-    if (mons_skeleton(item.plus) && one_chance_in(3))
-        turn_corpse_into_skeleton(item);
-    else
-        destroy_item(item.index());
-
-    lose_pickup_energy();
-
-    return (true);
-}
-
 bool monsters::pickup_misc(item_def &item, int near)
 {
     // Never pick up runes.
@@ -5239,7 +5214,7 @@ bool monsters::pickup_misc(item_def &item, int near)
     return (pickup(item, MSLOT_MISCELLANY, near));
 }
 
-// Jellies are handled elsewhere, in _handle_pickup() in monstuff.cc.
+// Eaten items are handled elsewhere, in _handle_pickup() in monstuff.cc.
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
     // Equipping stuff can be forced when initially equipping monsters.
@@ -5312,8 +5287,6 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     // Pickup some stuff only if WANDERING.
     case OBJ_ARMOUR:
         return pickup_armour(item, near, force);
-    case OBJ_CORPSES:
-        return eat_corpse(item, near || force);
     case OBJ_MISCELLANY:
         return pickup_misc(item, near);
     case OBJ_GOLD:
@@ -7319,8 +7292,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
             break;
         }
 
-        // Handled in handle_pickup.
-        if (mons_itemuse(this) == MONUSE_EATS_ITEMS)
+        // Handled in handle_pickup().
+        if (mons_eats_items(this))
             break;
 
         // The enchantment doubles as the durability of a net
@@ -7643,7 +7616,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         del_ench(ENCH_SLEEPY);
         break;
 
-    case ENCH_EATS_ITEMS:
+    case ENCH_EAT_ITEMS:
          break;
 
     default:

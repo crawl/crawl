@@ -7510,7 +7510,7 @@ static void _handle_monster_move(monsters *monster)
 
         if (igrd(monster->pos()) != NON_ITEM
             && (mons_itemuse(monster) == MONUSE_WEAPONS_ARMOUR
-                || mons_eats_items(monster)))
+                || mons_itemeat(monster) > MONEAT_NOTHING))
         {
             // Keep neutral and charmed monsters from picking up stuff.
             // Same for friendlies if friendly_pickup is set to "none".
@@ -7836,6 +7836,199 @@ static bool _is_item_jelly_edible(const item_def &item)
     return (true);
 }
 
+// XXX: This function assumes that only jellies can eat items.
+static bool _monster_eat_item(monsters *monster, bool monster_nearby)
+{
+    if (!mons_eats_items(monster))
+        return (false);
+
+    // Friendly jellies won't eat (unless worshipping Jiyva).
+    if (monster->attitude != ATT_HOSTILE && you.religion != GOD_JIYVA)
+        return (false);
+
+    int hps_gained = 0;
+    int max_eat = roll_dice(1, 10);
+    int eaten = 0;
+    bool eaten_net = false;
+
+    for (stack_iterator si(monster->pos());
+         si && eaten < max_eat && hps_gained < 50; ++si)
+    {
+        if (!_is_item_jelly_edible(*si))
+            continue;
+
+#if DEBUG_DIAGNOSTICS || DEBUG_EATERS
+        mprf(MSGCH_DIAGNOSTICS,
+             "%s eating %s", monster->name(DESC_PLAIN, true).c_str(),
+             si->name(DESC_PLAIN).c_str());
+#endif
+
+        int quant = si->quantity;
+
+        if (si->base_type != OBJ_GOLD)
+        {
+            quant = std::min(quant, max_eat - eaten);
+
+            hps_gained += (quant * item_mass(*si)) / 20 + quant;
+            eaten += quant;
+
+            if (mons_is_caught(monster)
+                && si->base_type == OBJ_MISSILES
+                && si->sub_type == MI_THROWING_NET
+                && item_is_stationary(*si))
+            {
+                monster->del_ench(ENCH_HELD, true);
+                eaten_net = true;
+            }
+        }
+        else
+        {
+            // Shouldn't be much trouble to digest a huge pile of gold!
+            if (quant > 500)
+                quant = 500 + roll_dice(2, (quant - 500) / 2);
+
+            hps_gained += quant / 10 + 1;
+            eaten++;
+        }
+
+        if (you.religion == GOD_JIYVA)
+        {
+            const int quantity = si->quantity;
+            const int value = item_value(*si) / quantity;
+            int pg = 0;
+            int timeout = 0;
+
+            for (int m = 0; m < quantity; ++m)
+            {
+                if (x_chance_in_y(value / 2 + 1, 30 + you.piety / 4))
+                {
+                    if (timeout <= 0)
+                        pg += random2(item_value(*si) / 6);
+                    else
+                        timeout -= value / 5;
+                }
+            }
+
+            if (pg > 0)
+            {
+                simple_god_message(" appreciates your sacrifice.");
+                gain_piety(pg);
+            }
+
+            if (you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4))
+            {
+                if (you.can_safely_mutate())
+                {
+                    simple_god_message(" alters your body.");
+
+                    bool success = false;
+                    const int rand = random2(100);
+
+                    if (rand < 40)
+                        success = mutate(RANDOM_MUTATION, true, false, true);
+                    else if (rand < 60)
+                    {
+                        success = delete_mutation(RANDOM_MUTATION, true, false,
+                                                  true);
+                    }
+                    else
+                    {
+                        success = mutate(RANDOM_GOOD_MUTATION, true, false,
+                                         true);
+                    }
+
+                    if (success)
+                    {
+                        timeout = (100 + roll_dice(2, 4));
+                        you.num_gifts[you.religion]++;
+                        take_note(Note(NOTE_GOD_GIFT, you.religion));
+                    }
+                    else
+                        mpr("You feel as though nothing has changed.");
+                }
+            }
+        }
+
+        if (quant >= si->quantity)
+            item_was_destroyed(*si, monster->mindex());
+
+        dec_mitm_item_quantity(si.link(), quant);
+    }
+
+    if (eaten > 0)
+    {
+        hps_gained = std::max(hps_gained, 1);
+        hps_gained = std::min(hps_gained, 50);
+
+        // This is done manually instead of using heal_monster(),
+        // because that function doesn't work quite this way.  -- bwr
+        monster->hit_points += hps_gained;
+        monster->max_hit_points = std::max(monster->hit_points,
+                                           monster->max_hit_points);
+
+        if (player_can_hear(monster->pos()))
+        {
+            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
+                 monster_nearby ? "" : " distant");
+        }
+
+        if (eaten_net)
+            simple_monster_message(monster, " devours the net!");
+
+        _jelly_divide(monster);
+    }
+
+    return (eaten > 0);
+}
+
+static bool _monster_eat_corpse(monsters *monster, bool monster_nearby)
+{
+    if (!mons_eats_corpses(monster))
+        return (false);
+
+    int eaten = 0;
+
+    for (stack_iterator si(monster->pos()); si; ++si)
+    {
+        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+            continue;
+
+        monster->hit_points += 1 + random2(mons_weight(si->plus)) / 100;
+
+        // Limited growth factor here -- should 77 really be the cap? {dlb}:
+        monster->hit_points = std::min(100, monster->hit_points);
+        monster->max_hit_points = std::max(monster->hit_points,
+                                           monster->max_hit_points);
+
+        if (monster_nearby)
+        {
+            mprf("%s eats %s.", monster->name(DESC_CAP_THE).c_str(),
+                 si->name(DESC_NOCAP_THE).c_str());
+        }
+
+        // Assume that eating a corpse requires butchering it.
+        //
+        // Use logic from misc.cc:turn_corpse_into_chunks() and
+        // the butchery-related delays in delay.cc:stop_delay().
+
+        const int max_chunks = mons_weight(si->plus) / 150;
+
+        // Only fresh corpses bleed enough to colour the ground.
+        if (!food_is_rotten(*si))
+            bleed_onto_floor(monster->pos(), si->plus, max_chunks, true);
+
+        if (mons_skeleton(si->plus) && one_chance_in(3))
+            turn_corpse_into_skeleton(*si);
+        else
+            destroy_item(si->index());
+
+        eaten++;
+        break;
+    }
+
+    return (eaten > 0);
+}
+
 //---------------------------------------------------------------
 //
 // handle_pickup
@@ -7852,165 +8045,29 @@ static bool _handle_pickup(monsters *monster)
 
     if (mons_eats_items(monster))
     {
-        // Friendly jellies won't eat (unless worshipping Jiyva).
-        if (monster->attitude != ATT_HOSTILE && you.religion != GOD_JIYVA)
-            return (false);
-
-        int  hps_gained = 0;
-        int  max_eat    = roll_dice( 1, 10 );
-        int  eaten      = 0;
-        bool eaten_net  = false;
-
-        for (stack_iterator si(monster->pos());
-             si && eaten < max_eat && hps_gained < 50;
-             ++si)
-        {
-            if (!_is_item_jelly_edible(*si))
-                continue;
-
-#if DEBUG_DIAGNOSTICS || DEBUG_EATERS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "%s eating %s", monster->name(DESC_PLAIN, true).c_str(),
-                 si->name(DESC_PLAIN).c_str());
-#endif
-
-            int quant = si->quantity;
-
-            if (si->base_type != OBJ_GOLD)
-            {
-                quant = std::min(quant, max_eat - eaten);
-
-                hps_gained += (quant * item_mass(*si)) / 20 + quant;
-                eaten += quant;
-
-                if (mons_is_caught(monster)
-                    && si->base_type == OBJ_MISSILES
-                    && si->sub_type == MI_THROWING_NET
-                    && item_is_stationary(*si))
-                {
-                    monster->del_ench(ENCH_HELD, true);
-                    eaten_net = true;
-                }
-            }
-            else
-            {
-                // Shouldn't be much trouble to digest a huge pile of gold!
-                if (quant > 500)
-                    quant = 500 + roll_dice( 2, (quant - 500) / 2 );
-
-                hps_gained += quant / 10 + 1;
-                eaten++;
-            }
-
-            if (you.religion == GOD_JIYVA)
-            {
-                const item_def& item = *si;
-                const int value      = item_value(item) / item.quantity;
-                const int quantity   = item.quantity;
-
-                int pg = 0;
-                int timeout = 0;
-                for (int m = 0; m < quantity; m++)
-                {
-                    if (x_chance_in_y(value/2 + 1, 30 + you.piety/4))
-                    {
-                        if (timeout <= 0)
-                            pg += random2(item_value(item)/6);
-                        else
-                            timeout -= value/5;
-                    }
-                }
-
-                if (pg > 0)
-                {
-                    simple_god_message(" appreciates your sacrifice.");
-                    gain_piety(pg);
-                }
-
-                if (you.piety > 80
-                    && random2(you.piety) > 50
-                    && one_chance_in(4))
-                {
-                    if (you.can_safely_mutate())
-                    {
-                        simple_god_message(" alters your body.");
-
-                        bool success = false;
-                        const int rand = random2(100);
-
-                        if (rand < 40)
-                        {
-                            success = mutate(RANDOM_MUTATION, true, false,
-                                             true);
-                        }
-                        else if (rand < 60)
-                        {
-                            success = delete_mutation(RANDOM_MUTATION, true,
-                                                      false, true);
-                        }
-                        else
-                        {
-                            success = mutate(RANDOM_GOOD_MUTATION, true, false,
-                                             true);
-                        }
-
-                        if (success)
-                        {
-                            timeout = (100 + roll_dice(2, 4));
-                            you.num_gifts[you.religion]++;
-                            take_note(Note(NOTE_GOD_GIFT, you.religion));
-                        }
-                        else
-                            mpr("You feel as though nothing has changed.");
-                    }
-                }
-            }
-
-            if (quant >= si->quantity)
-                item_was_destroyed(*si, monster->mindex());
-
-            dec_mitm_item_quantity(si.link(), quant);
-        }
-
-        if (eaten)
-        {
-            hps_gained = std::max(hps_gained, 1);
-            hps_gained = std::min(hps_gained, 50);
-
-            // This is done manually instead of using heal_monster(),
-            // because that function doesn't work quite this way.  -- bwr
-            monster->hit_points += hps_gained;
-
-            if (monster->max_hit_points < monster->hit_points)
-                monster->max_hit_points = monster->hit_points;
-
-            if (player_can_hear(monster->pos()))
-            {
-                mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                     monster_nearby ? "" : " distant");
-            }
-
-            if (eaten_net)
-                simple_monster_message(monster, " devours the net!");
-
-            _jelly_divide(monster);
-        }
-
+        _monster_eat_item(monster, monster_nearby);
+        return (false);
+    }
+    else if (mons_eats_corpses(monster))
+    {
+        _monster_eat_corpse(monster, monster_nearby);
         return (false);
     }
 
     // Note: Monsters only look at stuff near the top of stacks.
     // XXX: Need to put in something so that monster picks up multiple items
-    // (eg ammunition) identical to those it's carrying.
+    // (e.g. ammunition) identical to those it's carrying.
     // Monsters may now pick up up to two items in the same turn. (jpeg)
     int count_pickup = 0;
     for (stack_iterator si(monster->pos()); si; ++si)
     {
         if (monster->pickup_item(*si, monster_nearby))
             count_pickup++;
+
         if (count_pickup > 1 || coinflip())
             break;
     }
+
     return (count_pickup > 0);
 }
 
@@ -8809,8 +8866,8 @@ static bool _monster_move(monsters *monster)
     // Now we know where we _can_ move.
 
     const coord_def newpos = monster->pos() + mmov;
-    // Normal/smart monsters know about secret doors
-    // (they _live_ in the dungeon!)
+    // Normal/smart monsters know about secret doors, since they live in
+    // the dungeon.
     if (grd(newpos) == DNGN_CLOSED_DOOR
         || grid_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
     {
@@ -8830,10 +8887,10 @@ static bool _monster_move(monsters *monster)
         }
     } // endif - secret/closed doors
 
-    // Jellies eat doors.  Yum!
-    // (Jellies don't realize secret doors make good eating.)
+    // Monsters that eat items (currently only jellies) also eat doors.
+    // However, they don't realize that secret doors make good eating.
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
-         && mons_itemuse(monster) == MONUSE_EATS_ITEMS
+         && mons_itemeat(monster) == MONEAT_ITEMS
          // Doors with permarock marker cannot be eaten.
          && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL))
     {
