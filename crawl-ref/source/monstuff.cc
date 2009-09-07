@@ -7517,7 +7517,7 @@ static void _handle_monster_move(monsters *monster)
             if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
                 || (you.religion == GOD_JIYVA && mons_is_slime(monster))
                 && (!mons_friendly(monster)
-                    || you.friendly_pickup > FRIENDLY_PICKUP_NONE))
+                    || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
             {
                 if (_handle_pickup(monster))
                 {
@@ -7836,7 +7836,7 @@ static bool _is_item_jelly_edible(const item_def &item)
     return (true);
 }
 
-// XXX: This function assumes that only jellies can eat items.
+// XXX: This function assumes that only jellies eat items.
 static bool _monster_eat_item(monsters *monster, bool monster_nearby)
 {
     if (!mons_eats_items(monster))
@@ -7981,6 +7981,8 @@ static bool _monster_eat_item(monsters *monster, bool monster_nearby)
     return (eaten > 0);
 }
 
+// XXX: This function assumes that only undead (which can heal from
+// eating) eat corpses.
 static bool _monster_eat_corpse(monsters *monster, bool monster_nearby)
 {
     if (!mons_eats_corpses(monster))
