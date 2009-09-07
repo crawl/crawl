@@ -132,7 +132,7 @@
      MONEAT_ITEMS,
      MONEAT_CORPSES
 
-    Monsters with MONEAT_ITEMS are capable of eating all items, while
+    Monsters with MONEAT_ITEMS are capable of eating most items, while
     monsters with MONEAT_CORPSES are capable of eating corpses.
 
    size:
