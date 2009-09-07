@@ -8038,40 +8038,44 @@ static bool _monster_eat_corpse(monsters *monster, bool monster_nearby)
 //---------------------------------------------------------------
 static bool _handle_pickup(monsters *monster)
 {
-    if (mons_itemuse(monster) < MONUSE_WEAPONS_ARMOUR
-        && mons_itemeat(monster) == MONEAT_NOTHING)
-    {
-        return (false);
-    }
-
     if (mons_is_sleeping(monster) || mons_is_submerged(monster))
         return (false);
 
     const bool monster_nearby = mons_near(monster);
-
-    if (mons_eats_items(monster))
-    {
-        if (_monster_eat_item(monster, monster_nearby))
-            return (false);
-    }
-    else if (mons_eats_corpses(monster))
-    {
-        if (_monster_eat_corpse(monster, monster_nearby))
-            return (false);
-    }
-
-    // Note: Monsters only look at stuff near the top of stacks.
-    // XXX: Need to put in something so that monster picks up multiple items
-    // (e.g. ammunition) identical to those it's carrying.
-    // Monsters may now pick up up to two items in the same turn. (jpeg)
     int count_pickup = 0;
-    for (stack_iterator si(monster->pos()); si; ++si)
-    {
-        if (monster->pickup_item(*si, monster_nearby))
-            count_pickup++;
 
-        if (count_pickup > 1 || coinflip())
-            break;
+    if (mons_itemeat(monster) != MONEAT_NOTHING)
+    {
+        if (mons_eats_items(monster))
+        {
+            if (_monster_eat_item(monster, monster_nearby))
+                return (false);
+        }
+        else if (mons_eats_corpses(monster))
+        {
+            if (_monster_eat_corpse(monster, monster_nearby))
+                return (false);
+        }
+    }
+
+    if (mons_itemuse(monster) >= MONUSE_WEAPONS_ARMOUR)
+    {
+        // Note: Monsters only look at stuff near the top of stacks.
+        //
+        // XXX: Need to put in something so that monster picks up
+        // multiple items (e.g. ammunition) identical to those it's
+        // carrying.
+        //
+        // Monsters may now pick up up to two items in the same turn.
+        // (jpeg)
+        for (stack_iterator si(monster->pos()); si; ++si)
+        {
+            if (monster->pickup_item(*si, monster_nearby))
+                count_pickup++;
+
+            if (count_pickup > 1 || coinflip())
+                break;
+        }
     }
 
     return (count_pickup > 0);
