@@ -1548,7 +1548,7 @@ void save_game(bool leave_game, const char *farewellmsg)
 
     if (system( cmd_buff ) != 0)
     {
-        cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned"
+        cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned "
                      "non-zero value!" EOL );
     }
     DO_CHMOD_PRIVATE ( (basename + PACKAGE_SUFFIX).c_str() );
