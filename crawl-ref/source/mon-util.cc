@@ -1723,11 +1723,8 @@ int exper_value(const monsters *monster)
     // Monsters who can use equipment (even if only the equipment
     // they are given) can be considerably enhanced because of
     // the way weapons work for monsters. -- bwr
-    if (item_usage == MONUSE_STARTING_EQUIPMENT
-        || item_usage == MONUSE_WEAPONS_ARMOUR)
-    {
+    if (item_usage >= MONUSE_STARTING_EQUIPMENT)
         diff += 30;
-    }
 
     // Set a reasonable range on the difficulty modifier...
     // Currently 70% - 200%. -- bwr

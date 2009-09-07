@@ -7509,7 +7509,7 @@ static void _handle_monster_move(monsters *monster)
         }
 
         if (igrd(monster->pos()) != NON_ITEM
-            && (mons_itemuse(monster) == MONUSE_WEAPONS_ARMOUR
+            && (mons_itemuse(monster) >= MONUSE_WEAPONS_ARMOUR
                 || mons_itemeat(monster) > MONEAT_NOTHING))
         {
             // Keep neutral and charmed monsters from picking up stuff.
