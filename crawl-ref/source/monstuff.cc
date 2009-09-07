@@ -8043,16 +8043,22 @@ static bool _handle_pickup(monsters *monster)
 
     const bool monster_nearby = mons_near(monster);
 
-    if (mons_eats_items(monster))
+    if (mons_itemeat(monster) > MONEAT_NOTHING)
     {
-        if (_monster_eat_item(monster, monster_nearby))
-            return (false);
+        if (mons_eats_items(monster))
+        {
+            if (_monster_eat_item(monster, monster_nearby))
+                return (false);
+        }
+        else if (mons_eats_corpses(monster))
+        {
+            if (_monster_eat_corpse(monster, monster_nearby))
+                return (false);
+        }
     }
-    else if (mons_eats_corpses(monster))
-    {
-        if (_monster_eat_corpse(monster, monster_nearby))
-            return (false);
-    }
+
+    if (mons_itemuse(monster) < MONUSE_WEAPONS_ARMOUR)
+        return (false);
 
     // Note: Monsters only look at stuff near the top of stacks.
     // XXX: Need to put in something so that monster picks up multiple items
