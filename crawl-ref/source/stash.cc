@@ -1883,7 +1883,7 @@ bool StashTracker::display_search_results(
                    << res.match;
 
         if (res.matches > 1 && res.count > 1)
-            matchtitle << " (" << res.matches << ")";
+            matchtitle << " (+" << (res.matches - 1) << ")";
 
         MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
