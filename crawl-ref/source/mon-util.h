@@ -205,6 +205,7 @@ enum mon_itemeat_type
     MONEAT_NOTHING,
     MONEAT_ITEMS,
     MONEAT_CORPSES,
+    MONEAT_FOOD,
 
     NUM_MONEAT
 };
@@ -803,6 +804,7 @@ bool mons_class_is_plant(int mc);
 bool mons_is_plant(const monsters *mon);
 bool mons_eats_items(const monsters *mon);
 bool mons_eats_corpses(const monsters *mon);
+bool mons_eats_food(const monsters *mon);
 bool mons_has_lifeforce(const monsters *mon);
 monster_type mons_genus(int mc);
 monster_type mons_species(int mc);

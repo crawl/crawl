@@ -665,6 +665,11 @@ bool mons_eats_corpses(const monsters *mon)
     return (mons_itemeat(mon) == MONEAT_CORPSES);
 }
 
+bool mons_eats_food(const monsters *mon)
+{
+    return (mons_itemeat(mon) == MONEAT_FOOD);
+}
+
 bool mons_is_skeletal(int mc)
 {
     return (mc == MONS_SKELETON_SMALL

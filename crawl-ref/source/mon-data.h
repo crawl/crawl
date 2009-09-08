@@ -130,10 +130,13 @@
 
    gmon_eat explanation:
      MONEAT_ITEMS,
-     MONEAT_CORPSES
+     MONEAT_CORPSES,
+     MONEAT_FOOD
 
-    Monsters with MONEAT_ITEMS are capable of eating most items, while
-    monsters with MONEAT_CORPSES are capable of eating corpses.
+    Monsters with MONEAT_ITEMS are capable of eating most items,
+    monsters with MONEAT_CORPSES are capable of eating corpses, and
+    monsters with MONEAT_FOOD are capable of eating food (note that
+    corpses also count as food).
 
    size:
      SIZE_TINY,              // rats/bats
@@ -2183,7 +2186,7 @@ static monsterentry mondata[] = {
        AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     2, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SCREECH, I_NORMAL,
-    HT_LAND, 25, DEFAULT_ENERGY, MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+    HT_LAND, 25, DEFAULT_ENERGY, MONUSE_NOTHING, MONEAT_FOOD, SIZE_MEDIUM
 },
 
 // ice beast ('I')

@@ -7495,19 +7495,6 @@ static void _handle_monster_move(monsters *monster)
             continue;
         }
 
-        // Harpies may eat food/corpses on the ground.
-        if (monster->type == MONS_HARPY && !mons_is_fleeing(monster)
-            && (mons_wont_attack(monster)
-                || (grid_distance(monster->pos(), you.pos()) > 1))
-            && (mons_is_wandering(monster) && one_chance_in(3)
-                || one_chance_in(5))
-            && expose_items_to_element(BEAM_STEAL_FOOD, monster->pos(), 10))
-        {
-            simple_monster_message(monster, " eats something on the ground.");
-            monster->speed_increment -= non_move_energy;
-            continue;
-        }
-
         if (igrd(monster->pos()) != NON_ITEM
             && (mons_itemuse(monster) >= MONUSE_WEAPONS_ARMOUR
                 || mons_itemeat(monster) != MONEAT_NOTHING))
@@ -7837,7 +7824,7 @@ static bool _is_item_jelly_edible(const item_def &item)
 }
 
 // XXX: This function assumes that only jellies eat items.
-static bool _monster_eat_item(monsters *monster, bool monster_nearby)
+static bool _monster_eat_item(monsters *monster, bool nearby)
 {
     if (!mons_eats_items(monster))
         return (false);
@@ -7969,7 +7956,7 @@ static bool _monster_eat_item(monsters *monster, bool monster_nearby)
         if (player_can_hear(monster->pos()))
         {
             mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 monster_nearby ? "" : " distant");
+                 nearby ? "" : " distant");
         }
 
         if (eaten_net)
@@ -7981,9 +7968,47 @@ static bool _monster_eat_item(monsters *monster, bool monster_nearby)
     return (eaten > 0);
 }
 
-// XXX: This function assumes that only undead (which can heal from
-// eating) eat corpses.
-static bool _monster_eat_corpse(monsters *monster, bool monster_nearby)
+static bool _monster_eat_single_corpse(monsters *monster, item_def& item,
+                                       bool do_heal, bool nearby)
+{
+    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
+        return (false);
+
+    if (do_heal)
+    {
+        monster->hit_points += 1 + random2(mons_weight(item.plus)) / 100;
+
+        // Limited growth factor here -- should 77 really be the cap? {dlb}:
+        monster->hit_points = std::min(100, monster->hit_points);
+        monster->max_hit_points = std::max(monster->hit_points,
+                                           monster->max_hit_points);
+    }
+
+    if (nearby)
+    {
+        mprf("%s eats %s.", monster->name(DESC_CAP_THE).c_str(),
+             item.name(DESC_NOCAP_THE).c_str());
+    }
+
+    // Assume that eating a corpse requires butchering it.  Use logic
+    // from misc.cc:turn_corpse_into_chunks() and the butchery-related
+    // delays in delay.cc:stop_delay().
+
+    const int max_chunks = mons_weight(item.plus) / 150;
+
+    // Only fresh corpses bleed enough to colour the ground.
+    if (!food_is_rotten(item))
+        bleed_onto_floor(monster->pos(), item.plus, max_chunks, true);
+
+    if (mons_skeleton(item.plus) && one_chance_in(3))
+        turn_corpse_into_skeleton(item);
+    else
+        destroy_item(item.index());
+
+    return (true);
+}
+
+static bool _monster_eat_corpse(monsters *monster, bool do_heal, bool nearby)
 {
     if (!mons_eats_corpses(monster))
         return (false);
@@ -7992,40 +8017,64 @@ static bool _monster_eat_corpse(monsters *monster, bool monster_nearby)
 
     for (stack_iterator si(monster->pos()); si; ++si)
     {
-        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+        if (_monster_eat_single_corpse(monster, *si, do_heal, nearby))
+        {
+            eaten++;
+            break;
+        }
+    }
+
+    return (eaten > 0);
+}
+
+static bool _monster_eat_food(monsters *monster, bool nearby)
+{
+    if (!mons_eats_food(monster))
+        return (false);
+
+    if (mons_is_fleeing(monster))
+        return (false);
+
+    int eaten = 0;
+
+    for (stack_iterator si(monster->pos()); si; ++si)
+    {
+        const bool is_food = (si->base_type == OBJ_FOOD);
+        const bool is_corpse = (si->base_type == OBJ_CORPSES
+                                   && si->sub_type == CORPSE_BODY);
+
+        if (!is_food && !is_corpse)
             continue;
 
-        monster->hit_points += 1 + random2(mons_weight(si->plus)) / 100;
-
-        // Limited growth factor here -- should 77 really be the cap? {dlb}:
-        monster->hit_points = std::min(100, monster->hit_points);
-        monster->max_hit_points = std::max(monster->hit_points,
-                                           monster->max_hit_points);
-
-        if (monster_nearby)
+        if ((mons_wont_attack(monster)
+                || grid_distance(monster->pos(), you.pos()) > 1)
+            && one_chance_in(3))
         {
-            mprf("%s eats %s.", monster->name(DESC_CAP_THE).c_str(),
-                 si->name(DESC_NOCAP_THE).c_str());
+            if (is_food)
+            {
+                if (nearby)
+                {
+                    mprf("%s eats %s.", monster->name(DESC_CAP_THE).c_str(),
+                         quant_name(*si, 1, DESC_NOCAP_THE).c_str());
+                }
+
+                dec_mitm_item_quantity(si.link(), 1);
+
+                eaten++;
+                break;
+            }
+            else
+            {
+                // Assume that only undead can heal from eating corpses.
+                if (_monster_eat_single_corpse(monster, *si,
+                                               monster->holiness() == MH_UNDEAD,
+                                               nearby))
+                {
+                    eaten++;
+                    break;
+                }
+            }
         }
-
-        // Assume that eating a corpse requires butchering it.
-        //
-        // Use logic from misc.cc:turn_corpse_into_chunks() and
-        // the butchery-related delays in delay.cc:stop_delay().
-
-        const int max_chunks = mons_weight(si->plus) / 150;
-
-        // Only fresh corpses bleed enough to colour the ground.
-        if (!food_is_rotten(*si))
-            bleed_onto_floor(monster->pos(), si->plus, max_chunks, true);
-
-        if (mons_skeleton(si->plus) && one_chance_in(3))
-            turn_corpse_into_skeleton(*si);
-        else
-            destroy_item(si->index());
-
-        eaten++;
-        break;
     }
 
     return (eaten > 0);
@@ -8043,19 +8092,28 @@ static bool _handle_pickup(monsters *monster)
     if (mons_is_sleeping(monster) || mons_is_submerged(monster))
         return (false);
 
-    const bool monster_nearby = mons_near(monster);
+    const bool nearby = mons_near(monster);
     int count_pickup = 0;
 
     if (mons_itemeat(monster) != MONEAT_NOTHING)
     {
         if (mons_eats_items(monster))
         {
-            if (_monster_eat_item(monster, monster_nearby))
+            if (_monster_eat_item(monster, nearby))
                 return (false);
         }
         else if (mons_eats_corpses(monster))
         {
-            if (_monster_eat_corpse(monster, monster_nearby))
+            // Assume that only undead can heal from eating corpses.
+            if (_monster_eat_corpse(monster, monster->holiness() == MH_UNDEAD,
+                                    nearby))
+            {
+                return (false);
+            }
+        }
+        else if (mons_eats_food(monster))
+        {
+            if (_monster_eat_food(monster, nearby))
                 return (false);
         }
     }
@@ -8072,7 +8130,7 @@ static bool _handle_pickup(monsters *monster)
         // (jpeg)
         for (stack_iterator si(monster->pos()); si; ++si)
         {
-            if (monster->pickup_item(*si, monster_nearby))
+            if (monster->pickup_item(*si, nearby))
                 count_pickup++;
 
             if (count_pickup > 1 || coinflip())
