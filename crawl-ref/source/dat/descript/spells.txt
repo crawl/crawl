@@ -532,7 +532,7 @@ This spell covers the caster with chunky scales of stone, the durability of whic
 %%%%
 Stoneskin
 
-This spell hardens one's skin to a degree determined by one's skill in Earth Magic. This only works on relatively normal flesh; it will aid neither the undead nor the bodily transformed. The effects of this spell are boosted if the caster is in Statue Form.
+This spell hardens one's skin to a degree determined by one's skill in Earth Magic. It only works on relatively normal flesh, and will aid neither the undead nor the bodily transformed. However, there is one exception: the effects of this spell will be boosted for casters in Statue Form.
 %%%%
 Striking
 
