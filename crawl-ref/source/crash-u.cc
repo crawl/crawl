@@ -170,7 +170,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform." EOL;
-    fprintf(stderr, msg);
-    fprintf(file, msg);
+    fprintf(stderr, "%s", msg);
+    fprintf(file, "%s", msg);
 }
 #endif
