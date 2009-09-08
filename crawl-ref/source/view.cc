@@ -6289,7 +6289,7 @@ void monster_los::check_los_beam(int dx, int dy)
             // that shooting a ray into that direction could bring us, esp.
             // as earlier grids in the ray will already have been handled, and
             // out of bounds grids are simply skipped in any LoS check.
-            if (!map_bounds(tx, ty));
+            if (!map_bounds(tx, ty))
                 continue;
 
             // Already calculated a beam to (tx, ty), don't do so again.
