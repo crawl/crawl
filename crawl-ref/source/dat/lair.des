@@ -762,6 +762,41 @@ ENDMAP
 # Slime Pit specific non-ending vaults
 ##############################################################################
 
+# Weight balancer
+NAME: slime_dummy
+TAGS: slime_entry
+MAP
+O
+ENDMAP
+
+# Slime entries featuring an altar to Jiyva
+NAME:   slime_altar_1
+TAGS:   slime_entry
+WEIGHT: 5
+KFEAT:  Z = altar_jiyva
+MAP
+....
+.OZ.
+....
+ENDMAP
+
+NAME:   slime_altar_2
+TAGS:   slime_entry
+WEIGHT: 2
+KFEAT:  Z = altar_jiyva
+SUBST:  1 : 111223
+NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
+MONS:   jelly / ooze / brown ooze / giant amoeba
+MONS:   acid blob / slime creature
+MONS:   azure jelly
+MAP
+ccccc
+c111c.
+cO1_+@
+c111c.
+ccccc
+ENDMAP
+
 ##############################################################################
 # Branch ends: Shoal, Slime Pit, Snake Pit, Swamp
 # Note that the Shoals usually have a randomised end map; predrawn maps
@@ -939,6 +974,7 @@ SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
 SUBST:   " : " .:3,  " = .c
 NSUBST:  P = O / *|
 KMASK:   | = no_monster_gen
+KFEAT:   Z = altar_jiyva
 SHUFFLE: ([{
 LFLAGS:  no_tele_control
 {{
@@ -981,7 +1017,7 @@ xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
 xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
 xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
 xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
-xxxxxxxxxxx'..................2.c.4.c....c.4.c.2....................'xxxxxxxxxxx
+xxxxxxxxxxx'..................2.c.4.c..Z.c.4.c.2....................'xxxxxxxxxxx
 xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
 xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
 xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx
