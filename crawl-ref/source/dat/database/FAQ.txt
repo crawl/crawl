@@ -215,14 +215,15 @@ you might also stumble upon artefacts which come in two varieties:
   that players "in the know" can recognize such an item by its special
   description and/or colour/tile.
 
-Neither of the types can be enchanted or branded, neither temporarily nor
+Neither of these types can be enchanted or branded, neither temporarily nor
 permanently. There is another type of special item that pops up a bit more
-often:
+frequently:
 
 * egoitem: these are ordinary items with one special property. For example,
   a short sword of venom, a cap of see invisible or boots of running. These
-  can be affected by enchanting scrolls and also by corrision and acids.
-  Weapons of this type are branded, so you cannot brand them in other ways.
+  can be affected by enchanting scrolls and also by corrosion and acids.
+  Weapons of this type are branded, and only divine intervention can change
+  the brand.
 %%%%
 Q:oklobs
 
@@ -388,7 +389,7 @@ go ahead and play!
 
 Be sure to leave some feedback/suggestions/bug reports on the SourceForge
 trackers. When doing so please mention the version (r?????) you're
-currently playing in case the bug's already been fixed or the feature
+currently playing, in case the bug's already been fixed or the feature
 already implemented.
 %%%%
 Q:interact
@@ -401,10 +402,10 @@ A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org
 you can watch games in progress, other players can watch you while you play,
 and you can kill other players' ghosts. You can even send and receive
 messages.
+Check docs/ssh_guide.txt for an explanation about how to play online.
 
-Check docs/ssh_guide.txt for an explanation about how to play online. You can
-also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the
-Something Awful forum or the rec.games.roguelike.misc newsgroup.
+You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss
+in the Something Awful forum or the rec.games.roguelike.misc newsgroup.
 %%%%
 Q:changes
 
@@ -495,19 +496,4 @@ A:tiles options
 
 A: Yes. Play around with the options in settings/tiles_options.txt until
 you are satisfied. See docs/options_guide.txt for some explanations.
-%%%%
-Q:tiles doll
-
-Why can I no longer change the look of my character?
-%%%%
-A:tiles doll
-
-That feature got broken when we transitioned to openGL and needs to be
-reimplemented. It will come back, but we can't say, when.
-
-In the meantime we've implemented a really basic menu (still '-') that lets
-you choose between the default look according to job, equipment mode and one
-of a number of predefined dolls.
-
-Sorry about that!
 %%%%
