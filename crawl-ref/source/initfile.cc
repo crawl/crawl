@@ -946,6 +946,7 @@ void game_options::reset_options()
     tile_key_repeat_delay = 200;
     tile_tooltip_ms       = 500;
     tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
+    tile_display_spells   = false;
 #endif
 
     // map each colour to itself as default

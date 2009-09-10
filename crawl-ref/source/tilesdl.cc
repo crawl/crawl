@@ -11,6 +11,7 @@ REVISION("$Rev$");
 #include "message.h"
 #include "mon-util.h"
 #include "player.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "tiles.h"
@@ -1431,12 +1432,61 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.flag |= TILEI_FLAG_FLOOR;
 }
 
-void TilesFramework::update_inventory()
+void TilesFramework::update_spells()
 {
     std::vector<InventoryTile> inv;
 
+    for (int i = 0; i < 52; ++i)
+    {
+        const char letter = index_to_letter(i);
+        const spell_type spell = get_spell_by_letter(letter);
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        InventoryTile desc;
+//         desc.tile = tileidx_spell(item);
+        desc.tile = TILE_ERROR;
+        desc.idx  = (int) spell;
+
+        // If an equipped artefact prevents teleportation, the following spells
+        // cannot be cast.
+        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
+                 || spell == SPELL_TELEPORT_SELF)
+             && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        {
+            desc.flag |= TILEI_FLAG_MELDED;
+        }
+        else if (spell_mana(spell) > you.magic_points)
+            desc.flag |= TILEI_FLAG_MELDED;
+
+        inv.push_back(desc);
+    }
+    const int mx = m_region_inv->mx;
+    const int my = m_region_inv->my;
+
+    const unsigned int max_spells = std::min(22, mx*my);
+    while (inv.size() < max_spells)
+    {
+        InventoryTile desc;
+//         if ((int)inv.size() >= max_pack_items)
+//             desc.flag |= TILEI_FLAG_INVALID;
+        inv.push_back(desc);
+    }
+    m_region_inv->update(inv.size(), &inv[0]);
+}
+
+void TilesFramework::update_inventory()
+{
     if (!Options.tile_show_items || crawl_state.arena)
         return;
+
+    if (Options.tile_display_spells)
+    {
+        update_spells();
+        return;
+    }
+
+    std::vector<InventoryTile> inv;
 
     // item.base_type <-> char conversion table
     const static char *obj_syms = ")([/%#?=!#+\\0}x";
@@ -1478,7 +1528,7 @@ void TilesFramework::update_inventory()
         }
 
         // First, normal inventory
-        for (int i = 0; i < ENDOFPACK; i++)
+        for (int i = 0; i < ENDOFPACK; ++i)
         {
             if ((int)inv.size() >= max_pack_items)
                 break;
@@ -1495,7 +1545,7 @@ void TilesFramework::update_inventory()
             _fill_item_info(desc, you.inv[i]);
             desc.idx = i;
 
-            for (int eq = 0; eq < NUM_EQUIP; eq++)
+            for (int eq = 0; eq < NUM_EQUIP; ++eq)
             {
                 if (you.equip[eq] == i)
                 {
@@ -1521,7 +1571,7 @@ void TilesFramework::update_inventory()
         {
             // Fill out part of this row.
             int fill = remaining - num_ground;
-            for (int i = 0; i < fill; i++)
+            for (int i = 0; i < fill; ++i)
             {
                 InventoryTile desc;
                 if ((int)inv.size() >= max_pack_items)

@@ -1352,6 +1352,11 @@ void process_command( command_type cmd )
     case CMD_EDIT_PLAYER_TILE:
         tiles.draw_doll_edit();
         break;
+
+    case CMD_TOGGLE_SPELL_DISPLAY:
+        Options.tile_display_spells = !Options.tile_display_spells;
+        tiles.update_inventory();
+        break;
 #endif
 
     case CMD_OPEN_DOOR_UP_RIGHT:   _open_door( 1, -1); break;

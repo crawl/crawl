@@ -106,6 +106,7 @@ public:
     void update_minimap(int gx, int gy, map_feature f);
     void clear_minimap();
     void update_minimap_bounds();
+    void update_spells();
     void update_inventory();
 
     void set_need_redraw();

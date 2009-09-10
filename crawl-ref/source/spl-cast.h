@@ -64,7 +64,7 @@ void exercise_spell( spell_type spell_ex, bool spc, bool divide );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool cast_a_spell( bool check_range );
+bool cast_a_spell( bool check_range, spell_type spell = SPELL_NO_SPELL );
 
 bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );
 

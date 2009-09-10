@@ -96,6 +96,7 @@ void get_monster_db_desc(const monsters &item, describe_info &inf,
 /* ***********************************************************************
  * called from: item_use - spl-cast
  * *********************************************************************** */
+void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled, const item_def* item = NULL);
 
 // last updated 13oct2003 {darshan}

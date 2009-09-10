@@ -28,6 +28,8 @@ REVISION("$Rev$");
 #include "player.h"
 #include "religion.h"
 #include "spells3.h"
+#include "spl-cast.h"
+#include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -1616,7 +1618,11 @@ void InventoryRegion::render()
         const coord_def max_pos(ex, ey);
 
         std::string desc = "";
-        if (floor && is_valid_item(mitm[idx]))
+        if (Options.tile_display_spells)
+        {
+            desc = spell_title((spell_type) idx);
+        }
+        else if (floor && is_valid_item(mitm[idx]))
             desc = mitm[idx].name(DESC_PLAIN);
         else if (!floor && is_valid_item(you.inv[idx]))
             desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
@@ -1784,6 +1790,26 @@ void InventoryRegion::place_cursor(const coord_def &cursor)
     m_dirty = true;
 }
 
+static int _handle_spells_mouse(MouseEvent &event, int idx, int item_idx)
+{
+    const spell_type spell = (spell_type) idx;
+    if (event.button == MouseEvent::LEFT)
+    {
+        you.last_clicked_item = item_idx;
+        if (!cast_a_spell(true, spell))
+            flush_input_buffer( FLUSH_ON_FAILURE );
+        return CK_MOUSE_CMD;
+    }
+    else if (event.button == MouseEvent::RIGHT)
+    {
+        you.last_clicked_item = item_idx;
+        describe_spell(spell);
+        redraw_screen();
+        return CK_MOUSE_CMD;
+    }
+    return 0;
+}
+
 int InventoryRegion::handle_mouse(MouseEvent &event)
 {
     int cx, cy;
@@ -1807,12 +1833,16 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     int idx = m_items[item_idx].idx;
+
+    if (m_items[item_idx].key == 0 && Options.tile_display_spells)
+        return _handle_spells_mouse(event, idx, item_idx);
+
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
     ASSERT(idx >= 0);
 
     // TODO enne - this is all really only valid for the on-screen inventory
-    // Do we subclass inventoryregion for the onscreen and offscreen versions?
+    // Do we subclass InventoryRegion for the onscreen and offscreen versions?
     char key = m_items[item_idx].key;
     if (key)
         return key;
@@ -1913,6 +1943,16 @@ static bool _can_use_item(const item_def &item, bool equipped)
     return (true);
 }
 
+void _update_spell_tip_text(std::string& tip, int flag)
+{
+    if (flag & TILEI_FLAG_MELDED)
+        tip = "You cannot cast this spell right now.";
+    else
+        tip = "[L-Click] Cast (z)";
+
+    tip += "\n[R-Click] Describe (I)";
+}
+
 bool InventoryRegion::update_tip_text(std::string& tip)
 {
     if (m_cursor == NO_CURSOR)
@@ -1928,6 +1968,12 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     // on "key" to determine if this is the crt inventory or the on screen one.
     bool display_actions = (m_items[item_idx].key == 0
                     && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
+
+    if (display_actions && Options.tile_display_spells)
+    {
+        _update_spell_tip_text(tip, m_items[item_idx].flag);
+        return (true);
+    }
 
     // TODO enne - should the command keys here respect keymaps?
 
@@ -2153,6 +2199,19 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     return (true);
 }
 
+void _update_spell_alt_text(std::string &alt, int idx)
+{
+    const spell_type spell = (spell_type) idx;
+
+    describe_info inf;
+    get_spell_desc(spell, inf);
+
+    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
+    process_description<alt_desc_proc>(proc, inf);
+
+    proc.get_string(alt);
+}
+
 bool InventoryRegion::update_alt_text(std::string &alt)
 {
     if (m_cursor == NO_CURSOR)
@@ -2167,7 +2226,13 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     {
         return (false);
     }
+
     int idx = m_items[item_idx].idx;
+    if (m_items[item_idx].key == 0 && Options.tile_display_spells)
+    {
+        _update_spell_alt_text(alt, idx);
+        return (true);
+    }
 
     const item_def *item;
     if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)

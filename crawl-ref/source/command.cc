@@ -2171,6 +2171,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>=</w> : reassign inventory/spell letters\n"
 // No online play for tiles, so this replacement is reasonable. (jpeg)
 #ifdef USE_TILE
+            "<w>_</w> : toggle inventory/spells\n"
             "<w>-</w> : select player doll"
 #else
             "<w>_</w> : read messages (online play only)"

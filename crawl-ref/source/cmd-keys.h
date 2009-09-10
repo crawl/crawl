@@ -1,5 +1,6 @@
 #ifdef USE_TILE
 {'-', CMD_EDIT_PLAYER_TILE},
+{'_', CMD_TOGGLE_SPELL_DISPLAY},
 #endif
 {'b', CMD_MOVE_DOWN_LEFT},
 {'h', CMD_MOVE_LEFT},
@@ -87,7 +88,9 @@
 {'%', CMD_RESISTS_SCREEN},
 {',', CMD_PICKUP},
 {':', CMD_MAKE_NOTE},
+#ifndef USE_TILE
 {'_', CMD_READ_MESSAGES},
+#endif
 {';', CMD_INSPECT_FLOOR},
 {'^', CMD_DISPLAY_RELIGION},
 {'#', CMD_CHARACTER_DUMP},

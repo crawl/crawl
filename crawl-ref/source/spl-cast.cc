@@ -661,7 +661,7 @@ static int _get_dist_to_nearest_monster()
 }
 
 // Returns false if spell failed, and true otherwise.
-bool cast_a_spell(bool check_range)
+bool cast_a_spell(bool check_range, spell_type spell)
 {
     if (!you.spell_no)
     {
@@ -686,51 +686,54 @@ bool cast_a_spell(bool check_range)
 
     const int minRange = _get_dist_to_nearest_monster();
 
-    int keyin = 0;
-
-    while (true)
+    if (spell == SPELL_NO_SPELL)
     {
-        if (keyin == 0)
+        int keyin = 0;
+
+        while (true)
         {
-            mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
+            if (keyin == 0)
+            {
+                mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
 
-            keyin = get_ch();
-        }
+                keyin = get_ch();
+            }
 
-        if (keyin == '?' || keyin == '*')
-        {
-            keyin = list_spells(true, false, minRange);
-            if (!keyin)
-                keyin = ESCAPE;
+            if (keyin == '?' || keyin == '*')
+            {
+                keyin = list_spells(true, false, minRange);
+                if (!keyin)
+                    keyin = ESCAPE;
 
-            if (!crawl_state.doing_prev_cmd_again)
-                redraw_screen();
+                if (!crawl_state.doing_prev_cmd_again)
+                    redraw_screen();
 
-            if (isalpha(keyin) || keyin == ESCAPE)
-                break;
+                if (isalpha(keyin) || keyin == ESCAPE)
+                    break;
+                else
+                    mesclr();
+
+                keyin = 0;
+            }
             else
-                mesclr();
-
-            keyin = 0;
+                break;
         }
-        else
-            break;
-    }
 
-    if (keyin == ESCAPE)
-    {
-        canned_msg( MSG_OK );
-        return (false);
-    }
+        if (keyin == ESCAPE)
+        {
+            canned_msg( MSG_OK );
+            return (false);
+        }
 
-    if (!isalpha(keyin))
-    {
-        mpr("You don't know that spell.");
-        crawl_state.zero_turns_taken();
-        return (false);
-    }
+        if (!isalpha(keyin))
+        {
+            mpr("You don't know that spell.");
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
 
-    const spell_type spell = get_spell_by_letter( keyin );
+        spell = get_spell_by_letter( keyin );
+    }
 
     if (spell == SPELL_NO_SPELL)
     {

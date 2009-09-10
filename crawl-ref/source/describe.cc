@@ -2387,22 +2387,16 @@ void inscribe_item(item_def &item, bool proper_prompt)
     }
 
 }
-//---------------------------------------------------------------
-//
-// describe_spell
-//
-// Describes (most) every spell in the game.
-//
-//---------------------------------------------------------------
-void describe_spell(spell_type spelled, const item_def* item)
-{
-    std::string description;
 
+bool _get_spell_description(const spell_type spell, std::string &description,
+                            const item_def* item = NULL)
+{
     description.reserve(500);
 
-    description += spell_title( spelled );
+    description  = spell_title( spell );
     description += "$$";
-    const std::string long_descrip = getLongDescription(spell_title(spelled));
+    const std::string long_descrip = getLongDescription(spell_title(spell));
+
     if (!long_descrip.empty())
         description += long_descrip;
     else
@@ -2416,8 +2410,7 @@ void describe_spell(spell_type spelled, const item_def* item)
 #endif
     }
 
-    bool can_mem = false;
-    if (you_cannot_memorise(spelled))
+    if (you_cannot_memorise(spell))
     {
         description += "$$";
         description += "You cannot memorise or cast this spell because you "
@@ -2427,12 +2420,32 @@ void describe_spell(spell_type spelled, const item_def* item)
     }
     else if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {
-        can_mem = true;
         description += "$$";
         description += "(M)emorise this spell.";
+        return (true);
     }
+    return (false);
+}
 
-    print_description(description);
+void get_spell_desc(const spell_type spell, describe_info &inf)
+{
+    std::string desc;
+    _get_spell_description(spell, desc);
+    inf.body << desc;
+}
+
+//---------------------------------------------------------------
+//
+// describe_spell
+//
+// Describes (most) every spell in the game.
+//
+//---------------------------------------------------------------
+void describe_spell(spell_type spelled, const item_def* item)
+{
+    std::string desc;
+    bool can_mem = _get_spell_description(spelled, desc, item);
+    print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
 

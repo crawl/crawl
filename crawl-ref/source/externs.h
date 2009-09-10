@@ -2112,7 +2112,7 @@ public:
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
 
-    // Some experimental improvments to explore
+    // Some experimental improvements to explore
     bool        explore_improved;
 
     std::vector<sound_mapping> sound_mappings;
@@ -2230,6 +2230,7 @@ public:
     int         tile_key_repeat_delay;
     int         tile_tooltip_ms;
     tag_pref    tile_tag_pref;
+    bool        tile_display_spells;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;
