@@ -1445,8 +1445,9 @@ void TilesFramework::update_spells()
 
         InventoryTile desc;
 //         desc.tile = tileidx_spell(item);
-        desc.tile = TILE_ERROR;
-        desc.idx  = (int) spell;
+        desc.tile     = TILE_ERROR;
+        desc.idx      = (int) spell;
+        desc.quantity = spell_difficulty(spell);
 
         // If an equipped artefact prevents teleportation, the following spells
         // cannot be cast.

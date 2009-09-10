@@ -50,6 +50,7 @@ REVISION("$Rev$");
 #include "spells3.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "spl-cast.h"
 #include "spl-util.h"
 #include "transfor.h"
 #include "tutorial.h"
@@ -1562,26 +1563,10 @@ void append_spells(std::string &desc, const item_def &item)
         for (unsigned int i = 0; i < 35 - name.length(); ++i)
              desc += " ";
 
-        name = "";
         if (item.base_type == OBJ_STAVES)
-            name += "Evocations";
+            desc += "Evocations";
         else
-        {
-            bool already = false;
-
-            for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
-            {
-                if (spell_typematch( stype, 1 << i ))
-                {
-                    if (already)
-                        name += "/" ;
-
-                    name += spelltype_name( 1 << i );
-                    already = true;
-                }
-            }
-        }
-        desc += name;
+            desc += spell_schools_string(stype);
 
         for (unsigned int i = 36; i < 65 - name.length(); ++i)
              desc += " ";
@@ -2424,6 +2409,26 @@ bool _get_spell_description(const spell_type spell, std::string &description,
         description += "(M)emorise this spell.";
         return (true);
     }
+#ifdef USE_TILE
+    else
+    {
+        const std::string schools = spell_schools_string(spell);
+        snprintf(info, INFO_SIZE,
+                 "$Level: %d        School%s:  %s    (%s)",
+                 spell_difficulty(spell),
+                 schools.find("/") != std::string::npos ? "s" : "",
+                 schools.c_str(),
+                 failure_rate_to_string(spell_fail(spell)));
+        description += info;
+
+        description += "$$Power : ";
+        description += spell_power_string(spell);
+        description += "$Range : ";
+        description += spell_range_string(spell);
+        description += "$Hunger: ";
+        description += spell_hunger_string(spell);
+    }
+#endif
     return (false);
 }
 

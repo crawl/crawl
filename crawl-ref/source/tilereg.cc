@@ -1620,7 +1620,11 @@ void InventoryRegion::render()
         std::string desc = "";
         if (Options.tile_display_spells)
         {
-            desc = spell_title((spell_type) idx);
+            const spell_type spell = (spell_type) idx;
+            snprintf(info, INFO_SIZE, "%d MP    %s    (%s)",
+                     spell_difficulty(spell), spell_title(spell),
+                     failure_rate_to_string(spell_fail(spell)));
+            desc = info;
         }
         else if (floor && is_valid_item(mitm[idx]))
             desc = mitm[idx].name(DESC_PLAIN);
