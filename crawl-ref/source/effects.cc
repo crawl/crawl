@@ -4313,14 +4313,14 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
         return (0);
 
     mgen_data temp(MONS_TOADSTOOL,
-                  BEH_HOSTILE, 0, 0,
-                  coord_def(),
-                  MHITNOT,
-                  MG_FORCE_PLACE,
-                  GOD_NO_GOD,
-                  MONS_PROGRAM_BUG,
-                  0,
-                  corpse.colour);
+                   BEH_HOSTILE, 0, 0,
+                   coord_def(),
+                   MHITNOT,
+                   MG_FORCE_PLACE,
+                   GOD_NO_GOD,
+                   MONS_PROGRAM_BUG,
+                   0,
+                   corpse.colour);
 
     float target_arc_len = 2 * sqrtf(2.0f);
 
@@ -4529,9 +4529,9 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
     // We won't spawn a mushroom within 10 turns of the corpse's being created
     // or rotting away.
     int low_threshold  = 5;
-    int high_threshold = FRESHEST_CORPSE - 5;
+    int high_threshold = FRESHEST_CORPSE - 15;
 
-    if (corpse.special < low_threshold)
+    if (corpse.special < low_threshold || corpse.special > high_threshold)
         return;
 
     int spawn_time = (rot_time > corpse.special ? corpse.special : rot_time);
@@ -4542,10 +4542,8 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
     int step_size = 10;
 
     int current_trials = spawn_time / step_size;
-
-    int trial_prob = mushroom_prob(corpse);
-
-    int success_count = binomial_generator(current_trials, trial_prob);
+    int trial_prob     = mushroom_prob(corpse);
+    int success_count  = binomial_generator(current_trials, trial_prob);
 
     int seen_spawns;
     spawn_corpse_mushrooms(corpse, success_count, seen_spawns);
