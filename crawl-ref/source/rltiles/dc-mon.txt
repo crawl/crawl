@@ -552,7 +552,9 @@ minotaur MONS_MINOTAUR /*'t'*/
 
 ## Small zombified monsters ('z')
 zombie_small MONS_ZOMBIE_SMALL
+%rim 0
 skeleton_small MONS_SKELETON_SMALL
+%rim 1
 simulacrum_small MONS_SIMULACRUM_SMALL
 skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0

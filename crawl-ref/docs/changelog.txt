@@ -15,12 +15,14 @@ Stone Soup 0.6
 * Reduce the chances for artefacts with only one stat property.
 * Add !a inscription to prompt when attacking with this wielded item.
 * Upgrade equipment of Sonja, Psyche and Terence.
-* Add some tiles "animations" whenever the screen is redrawn.
-* Unrandarts and randarts now share the same, cleaner coding structure.
+* Jessica casts Pain and is considered evil.
+* Unrandarts and fixedarts share the same, cleaner coding structure.
 * More vaults.
+* Limit Summon Small Mammals to a maximum of two mammals per casting.
+* Call Canine Familiar only calls friendly canines.
+* Add some tiles "animations" whenever the screen is redrawn.
 * Tiles: re-added doll editing screen ('-' command).
-* Limit Summon Small Mammals to maximum of two mammals per casting.
-* Call Canine Familiar now only calls friendly canines.
+* Tiles: clickable spells menu.
 
 Stone Soup 0.5.1 (20090728)
 ---------------------------

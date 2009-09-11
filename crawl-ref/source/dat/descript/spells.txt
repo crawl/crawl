@@ -560,7 +560,7 @@ This spell summons one or more giant scorpions to the caster's assistance.
 %%%%
 Summon Small Mammals
 
-This spell summons one or more small creatures to the caster's aid.
+This spell summons one or two small creatures to the caster's aid.
 %%%%
 Summon Swarm
 

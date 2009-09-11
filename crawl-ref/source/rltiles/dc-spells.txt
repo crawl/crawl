@@ -34,14 +34,9 @@ magic_dart MAGIC_DART
 
 %sdir spells/divination
 detect_creatures DETECT_CREATURES
-detect_curse DETECT_CURSE
 detect_items DETECT_ITEMS
 detect_secret_doors DETECT_SECRET_DOORS
 detect_traps DETECT_TRAPS
-forescry FORESCRY
-identify IDENTIFY
-magic_mapping MAGIC_MAPPING
-see_invisible SEE_INVISIBLE
 
 %sdir spells/earth
 bolt_of_iron BOLT_OF_IRON
@@ -55,7 +50,6 @@ shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
 stoneskin STONESKIN
-tomb_of_doroklohe TOMB_OF_DOROKLOHE
 
 %sdir spells/enchantment
 berserker_rage BERSERKER_RAGE
@@ -67,8 +61,9 @@ enslavement ENSLAVEMENT
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
-paralyse PARALYSE
+petrify PETRIFY
 projected_noise PROJECTED_NOISE
+see_invisible SEE_INVISIBLE
 selective_amnesia SELECTIVE_AMNESIA
 slow SLOW
 sure_blade SURE_BLADE
@@ -119,7 +114,7 @@ borgnjors_revivification BORGNJORS_REVIVIFICATION
 cigotuvis_degeneration CIGOTUVIS_DEGENERATION
 control_undead CONTROL_UNDEAD
 corpse_rot CORPSE_ROT
-deaths_door DEATHS_DOOR
+death_channel DEATH_CHANNEL
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
 fulsome_distillation FULSOME_DISTILLATION

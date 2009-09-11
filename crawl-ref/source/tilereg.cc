@@ -1702,7 +1702,12 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if (item.flag & TILEI_FLAG_EQUIP)
+            if (Options.tile_display_spells)
+            {
+                if (item.flag & TILEI_FLAG_MELDED)
+                    m_buf_main.add(TILE_MESH, x, y);
+            }
+            else if (item.flag & TILEI_FLAG_EQUIP)
             {
                 if (item.flag & TILEI_FLAG_CURSE)
                     m_buf_main.add(TILE_ITEM_SLOT_EQUIP_CURSED, x, y);
