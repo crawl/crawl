@@ -48,6 +48,7 @@ int tile_idx_unseen_terrain(int x, int y, int what);
 int tile_unseen_flag(const coord_def& gc);
 int tileidx_monster_base(const monsters *mon, bool detected = false);
 int tileidx_monster(const monsters *mon, bool detected = false);
+int tileidx_spell(spell_type spell);
 
 // Player tile related
 int get_gender_from_tile(int parts[]);

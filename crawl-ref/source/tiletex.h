@@ -15,6 +15,7 @@ enum TextureID
     TEX_DUNGEON, // dngn.png
     TEX_PLAYER,  // player.png
     TEX_DEFAULT, // main.png
+    TEX_GUI,     // gui.png
     TEX_MAX
 };
 

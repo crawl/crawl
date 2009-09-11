@@ -48,7 +48,7 @@ PCRELIBA := lib$(PCRELIB).a
 RLTILES = rltiles
 EXTRA_INCLUDES += -I$(RLTILES)
 
-TILEDEFS = dngn main player unrand
+TILEDEFS = dngn main player gui unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
 TILEDEFOBJS = $(TILEDEFPRES:%=%.o)
 TILEDEFSRCS = $(TILEDEFPRES:%=%.cc)
@@ -59,7 +59,8 @@ OBJECTS += $(TILEDEFOBJS)
 TILEFILES = \
     main.png \
     player.png \
-    dngn.png
+    dngn.png \
+    gui.png
 
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 

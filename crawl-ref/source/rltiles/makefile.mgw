@@ -20,7 +20,7 @@ DELETE = del /q
 TOOLDIR := tool
 TILEGEN := $(TOOLDIR)\\tilegen.elf
 
-INPUTS := main dngn player
+INPUTS := main dngn player gui
 INPUTFILES := $(INPUTS:%=dc-%.txt)
 HEADERS := $(INPUTS:%=tiledef-%.h)
 SOURCE := $(INPUTS:%=tiledef-%.cc)

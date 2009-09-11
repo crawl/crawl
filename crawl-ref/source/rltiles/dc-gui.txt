@@ -1,0 +1,14 @@
+%name gui 
+%prefix TILEG
+%startvalue 0
+
+%back none
+%rim 0
+
+# idx == 0 must be invalid
+dc-dngn/dngn_unseen
+
+%include dc-spells.txt
+
+dc-misc/todo TODO
+dc-misc/error ERROR

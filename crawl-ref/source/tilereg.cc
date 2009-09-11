@@ -3842,6 +3842,9 @@ bool ImageManager::load_textures(bool need_mips)
     if (!m_textures[TEX_PLAYER].load_texture("player.png", mip))
         return (false);
 
+    if (!m_textures[TEX_GUI].load_texture("gui.png", mip))
+        return (false);
+
     m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
     m_textures[TEX_PLAYER].set_info(TILEP_PLAYER_MAX, &tile_player_info);
 
