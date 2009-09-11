@@ -21,7 +21,6 @@ flight FLIGHT
 insulation INSULATION
 levitation LEVITATION
 lightning_bolt LIGHTNING_BOLT
-mephitic_cloud MEPHITIC_CLOUD
 repel_missiles REPEL_MISSILES
 shock SHOCK
 silence SILENCE
@@ -58,6 +57,7 @@ confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
 enslavement ENSLAVEMENT
+extension EXTENSION
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
@@ -70,8 +70,7 @@ sure_blade SURE_BLADE
 tame_beasts TAME_BEASTS
 tukimas_dance TUKIMAS_DANCE
 tukimas_vorpal_blade TUKIMAS_VORPAL_BLADE
-unknown1 UNKNOWN1
-unknown2 UNKNOWN2
+unknown UNKNOWN
 
 %sdir spells/fire
 bolt_of_fire BOLT_OF_FIRE
@@ -131,7 +130,7 @@ vampiric_draining VAMPIRIC_DRAINING
 %sdir spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
 cure_poison CURE_POISON
-mephitic_cloud2 MEPHITIC_CLOUD2
+mephitic_cloud MEPHITIC_CLOUD
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
 poison_ammunition POISON_AMMUNITION
 poison_arrow POISON_ARROW
@@ -166,10 +165,10 @@ banishment BANISHMENT
 blink BLINK
 controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
+dispersal DISPERSAL
 portal PORTAL
 teleport TELEPORT
 teleport_other TELEPORT_OTHER
-unknown UNKNOWN
 
 %sdir spells/transmigration
 alter_self ALTER_SELF

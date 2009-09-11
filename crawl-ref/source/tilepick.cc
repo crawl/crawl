@@ -2808,6 +2808,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;
     case SPELL_CAUSE_FEAR:               return TILEG_CAUSE_FEAR;
     case SPELL_TAME_BEASTS:              return TILEG_TAME_BEASTS;
+    case SPELL_EXTENSION:                return TILEG_EXTENSION;
     case SPELL_HASTE:                    return TILEG_HASTE;
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
@@ -2820,6 +2821,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_TELEPORT_OTHER:           return TILEG_TELEPORT_OTHER;
     case SPELL_TELEPORT_SELF:            return TILEG_TELEPORT;
     case SPELL_CONTROLLED_BLINK:         return TILEG_CONTROLLED_BLINK;
+    case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_PORTAL:                   return TILEG_PORTAL;
 
     // Summoning
@@ -2889,9 +2891,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_PHASE_SHIFT:
     case SPELL_WARP_BRAND:
     case SPELL_STONEMAIL:
-    // These two may already have tiles.
-    case SPELL_DISPERSAL:
-    case SPELL_EXTENSION:
         return TILEG_TODO;
 
     // --------------------------------------------

@@ -1,7 +1,3 @@
 portal projectile?
 warp brand?
 phase shift?
-
-alternative suggestions:
-banishment -> dispersal
-unknown    -> banishment
