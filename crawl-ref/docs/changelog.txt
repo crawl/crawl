@@ -10,6 +10,7 @@ Stone Soup 0.6
 * Detected secret doors are still unknown to stupid monsters.
 * Let toadstools grow on corpses.
 * All worms apart from brain worms are mindless and cannot be pacified.
+* Hungry ghosts eat corpses.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Weapons of holy wrath cannot be cursed.
 * Reduce the chances for artefacts with only one stat property.
