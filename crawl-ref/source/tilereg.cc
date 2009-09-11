@@ -41,6 +41,7 @@ REVISION("$Rev$");
 #include "tilefont.h"
 #include "tilesdl.h"
 #include "tilemcache.h"
+#include "tiledef-gui.h"
 
 #include <SDL_opengl.h>
 
@@ -1530,6 +1531,7 @@ InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font,
     m_flavour(NULL),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
+    m_buf_spells(&im->m_textures[TEX_GUI]),
     m_cursor(NO_CURSOR)
 {
 }
@@ -1545,6 +1547,7 @@ void InventoryRegion::clear()
     m_items.clear();
     m_buf_dngn.clear();
     m_buf_main.clear();
+    m_buf_spells.clear();
 }
 
 void InventoryRegion::on_resize()
@@ -1598,6 +1601,7 @@ void InventoryRegion::render()
 #endif
     set_transform();
     m_buf_dngn.draw();
+    m_buf_spells.draw();
     m_buf_main.draw();
 
     if (m_cursor != NO_CURSOR)
@@ -1652,6 +1656,7 @@ void InventoryRegion::pack_buffers()
 {
     m_buf_dngn.clear();
     m_buf_main.clear();
+    m_buf_spells.clear();
 
     // Ensure the cursor has been placed.
     place_cursor(m_cursor);
@@ -1718,7 +1723,12 @@ void InventoryRegion::pack_buffers()
                 m_buf_main.add(TILE_CURSOR, x, y);
 
             if (item.tile)
-                m_buf_main.add(item.tile, x, y);
+            {
+                if (Options.tile_display_spells)
+                    m_buf_spells.add(item.tile, x, y);
+                else
+                    m_buf_main.add(item.tile, x, y);
+            }
 
             if (item.quantity != -1)
             {
@@ -3847,6 +3857,7 @@ bool ImageManager::load_textures(bool need_mips)
 
     m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
     m_textures[TEX_PLAYER].set_info(TILEP_PLAYER_MAX, &tile_player_info);
+    m_textures[TEX_GUI].set_info(TILEG_GUI_MAX, &tile_gui_info);
 
     return (true);
 }

@@ -358,6 +358,7 @@ protected:
 
     TileBuffer m_buf_dngn;
     TileBuffer m_buf_main;
+    TileBuffer m_buf_spells;
 
     coord_def m_cursor;
 };

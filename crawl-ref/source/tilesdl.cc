@@ -1444,8 +1444,7 @@ void TilesFramework::update_spells()
             continue;
 
         InventoryTile desc;
-//         desc.tile = tileidx_spell(item);
-        desc.tile     = TILE_ERROR;
+        desc.tile     = tileidx_spell(spell);
         desc.idx      = (int) spell;
         desc.quantity = spell_difficulty(spell);
 
