@@ -11,6 +11,7 @@ REVISION("$Rev$");
 #include "message.h"
 #include "mon-util.h"
 #include "player.h"
+#include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -1468,10 +1469,19 @@ void TilesFramework::update_spells()
     while (inv.size() < max_spells)
     {
         InventoryTile desc;
-//         if ((int)inv.size() >= max_pack_items)
-//             desc.flag |= TILEI_FLAG_INVALID;
         inv.push_back(desc);
     }
+
+    if (can_learn_spell(true) && has_spells_to_memorise())
+    {
+        // FIXME: Add NUM_SPELLS to list of spells as placeholder for
+        //        memorisation tile. (Hack!)
+        InventoryTile desc;
+        desc.tile = tileidx_spell(NUM_SPELLS);
+        desc.idx  = NUM_SPELLS;
+        inv.push_back(desc);
+    }
+
     m_region_inv->update(inv.size(), &inv[0]);
 }
 

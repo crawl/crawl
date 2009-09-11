@@ -28,6 +28,7 @@ REVISION("$Rev$");
 #include "player.h"
 #include "religion.h"
 #include "spells3.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -1625,10 +1626,20 @@ void InventoryRegion::render()
         if (Options.tile_display_spells)
         {
             const spell_type spell = (spell_type) idx;
-            snprintf(info, INFO_SIZE, "%d MP    %s    (%s)",
-                     spell_difficulty(spell), spell_title(spell),
-                     failure_rate_to_string(spell_fail(spell)));
-            desc = info;
+            if (spell == NUM_SPELLS)
+            {
+                snprintf(info, INFO_SIZE, "Memorise spells (%d spell levels "
+                                          "available)",
+                         player_spell_levels());
+                desc = info;
+            }
+            else
+            {
+                snprintf(info, INFO_SIZE, "%d MP    %s    (%s)",
+                         spell_difficulty(spell), spell_title(spell),
+                         failure_rate_to_string(spell_fail(spell)));
+                desc = info;
+            }
         }
         else if (floor && is_valid_item(mitm[idx]))
             desc = mitm[idx].name(DESC_PLAIN);
@@ -1814,14 +1825,18 @@ static int _handle_spells_mouse(MouseEvent &event, int idx, int item_idx)
     const spell_type spell = (spell_type) idx;
     if (event.button == MouseEvent::LEFT)
     {
-        you.last_clicked_item = item_idx;
+        if (spell == NUM_SPELLS)
+        {
+            if (!learn_spell())
+                flush_input_buffer( FLUSH_ON_FAILURE );
+            return CK_MOUSE_CMD;
+        }
         if (!cast_a_spell(true, spell))
             flush_input_buffer( FLUSH_ON_FAILURE );
         return CK_MOUSE_CMD;
     }
-    else if (event.button == MouseEvent::RIGHT)
+    else if (spell != NUM_SPELLS && event.button == MouseEvent::RIGHT)
     {
-        you.last_clicked_item = item_idx;
         describe_spell(spell);
         redraw_screen();
         return CK_MOUSE_CMD;
@@ -1854,7 +1869,12 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
     int idx = m_items[item_idx].idx;
 
     if (m_items[item_idx].key == 0 && Options.tile_display_spells)
-        return _handle_spells_mouse(event, idx, item_idx);
+    {
+        int key = _handle_spells_mouse(event, idx, item_idx);
+        if (key != 0)
+            you.last_clicked_item = item_idx;
+        return (key);
+    }
 
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
@@ -1990,7 +2010,10 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
     if (display_actions && Options.tile_display_spells)
     {
-        _update_spell_tip_text(tip, m_items[item_idx].flag);
+        if (m_items[item_idx].idx == NUM_SPELLS)
+            tip = "Memorise spells (M)";
+        else
+            _update_spell_tip_text(tip, m_items[item_idx].flag);
         return (true);
     }
 
@@ -2222,6 +2245,11 @@ void _update_spell_alt_text(std::string &alt, int idx)
 {
     const spell_type spell = (spell_type) idx;
 
+    if (spell == NUM_SPELLS)
+    {
+        alt.clear();
+        return;
+    }
     describe_info inf;
     get_spell_desc(spell, inf);
 

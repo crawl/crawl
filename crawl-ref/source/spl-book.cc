@@ -1300,7 +1300,8 @@ typedef std::map<spell_type, int> spells_to_books;
 static bool _get_mem_list(spell_list &mem_spells,
                           spells_to_books &book_hash,
                           unsigned int &num_unreadable,
-                          unsigned int &num_race)
+                          unsigned int &num_race,
+                          bool just_check = false)
 {
     bool          book_errors    = false;
     unsigned int  num_books      = 0;
@@ -1359,19 +1360,26 @@ static bool _get_mem_list(spell_list &mem_spells,
 
     if (num_books == 0)
     {
-        mpr("You aren't carrying any spellbooks.", MSGCH_PROMPT);
+        if (!just_check)
+            mpr("You aren't carrying any spellbooks.", MSGCH_PROMPT);
         return (false);
     }
     else if (num_unreadable == num_books)
     {
-        mpr("All of the spellbooks you're carrying are beyond your "
-            "current level of comprehension.", MSGCH_PROMPT);
+        if (!just_check)
+        {
+            mpr("All of the spellbooks you're carrying are beyond your "
+                "current level of comprehension.", MSGCH_PROMPT);
+        }
         return (false);
     }
     else if (book_hash.size() == 0)
     {
-        mpr("None of the spellbooks you are carrying contain any spells.",
-            MSGCH_PROMPT);
+        if (!just_check)
+        {
+            mpr("None of the spellbooks you are carrying contain any spells.",
+                MSGCH_PROMPT);
+        }
         return (false);
     }
 
@@ -1419,12 +1427,16 @@ static bool _get_mem_list(spell_list &mem_spells,
             return (true);
         }
 
-        mpr("Your head is already too full of spells!");
+        if (!just_check)
+            mpr("Your head is already too full of spells!");
         return (false);
     }
 
     if (num_memable)
         return (true);
+
+    if (just_check)
+        return (false);
 
     unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
 
@@ -1438,14 +1450,20 @@ static bool _get_mem_list(spell_list &mem_spells,
              "are a %s.", lowercase_string(species).c_str());
     }
     else if (num_low_levels > 0)
+    {
         mpr("You do not have enough free spell levels to memorise any of the "
             "available spells.", MSGCH_PROMPT);
+    }
     else if (num_low_xl > 0)
+    {
         mpr("You aren't experienced enough yet to memorise any of the "
             "available spells.", MSGCH_PROMPT);
+    }
     else
+    {
         mpr("You can't memorise any new spells for an unknown reason; "
             "please file a bug report.", MSGCH_PROMPT);
+    }
 
     if (num_unreadable)
     {
@@ -1455,6 +1473,16 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     return (false);
+}
+
+bool has_spells_to_memorise()
+{
+    spell_list mem_spells;
+    spells_to_books book_hash;
+    unsigned int num_unreadable;
+    unsigned int num_race;
+
+    return _get_mem_list(mem_spells, book_hash, num_unreadable, num_race, true);
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)

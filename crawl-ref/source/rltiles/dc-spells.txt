@@ -175,3 +175,6 @@ unknown UNKNOWN
 alter_self ALTER_SELF
 blade_hands BLADE_HANDS
 polymorph_other POLYMORPH_OTHER
+
+%sdir spells
+memorise MEMORISE

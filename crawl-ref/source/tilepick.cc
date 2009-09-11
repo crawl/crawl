@@ -2719,6 +2719,9 @@ int tileidx_spell(spell_type spell)
     case SPELL_DEBUGGING_RAY:
         return TILEG_ERROR;
 
+    case NUM_SPELLS: // XXX: Hack!
+        return TILEG_MEMORISE;
+
     // Air
     case SPELL_SHOCK:                    return TILEG_SHOCK;
     case SPELL_SWIFTNESS:                return TILEG_SWIFTNESS;
@@ -2938,8 +2941,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_DRACONIAN_BREATH:
     case SPELL_WATER_ELEMENTALS:
     case SPELL_PORKALATOR:
-
-    case NUM_SPELLS:
     default:
         return TILE_ERROR;
     }
