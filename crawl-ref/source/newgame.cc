@@ -967,7 +967,7 @@ static void _reassess_starting_skills()
 }
 
 // Randomly boost stats a number of times.
-static void _assign_remaining_stats( int points_left )
+static void _assign_remaining_stats(int points_left)
 {
     // First spend points to get us to the minimum allowed value. -- bwr
     if (you.strength < MIN_START_STAT)
@@ -988,11 +988,11 @@ static void _assign_remaining_stats( int points_left )
         you.dex = MIN_START_STAT;
     }
 
-    // Now randomly assign the remaining points. --bwr
+    // Now randomly assign the remaining points. -- bwr
     while (points_left > 0)
     {
         // Stats that are already high will be chosen half as often.
-        switch (random2( NUM_STATS ))
+        switch (random2(NUM_STATS))
         {
         case STAT_STRENGTH:
             if (you.strength > 17 && coinflip())
