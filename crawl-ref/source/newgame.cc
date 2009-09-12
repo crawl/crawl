@@ -90,9 +90,6 @@ static void _jobs_stat_init(job_type which_job);
 static void _opening_screen(void);
 static void _species_stat_init(species_type which_species);
 
-static void _give_random_potion(int slot);
-static void _give_random_secondary_armour(int slot);
-static bool _give_wanderer_weapon(int slot, int wpn_skill);
 static void _create_wanderer(void);
 static bool _give_items_skills(void);
 static void _fix_up_god_name(void);
@@ -951,6 +948,13 @@ static void _reassess_starting_skills()
         {
             you.skill_points[i] = (skill_exp_needed(2) * sp_diff) / 100;
             you.skills[i] = 2;
+        }
+
+        // Wanderers get at least 1 level in their skills.
+        if (you.char_class == JOB_WANDERER && you.skills[i] < 1)
+        {
+            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
+            you.skills[i] = 1;
         }
 
         // Spellcasters should always have Spellcasting skill.
@@ -2857,7 +2861,16 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_VENOM_MAGE:        s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
     case JOB_NECROMANCER:       s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
 
-    case JOB_WANDERER:          s =  2; i =  2; d =  2; hp = 11; mp = 1; break;
+    case JOB_WANDERER:
+    {
+        // Wanderers get 2 points per stat as a baseline, and 4 more are
+        // randomly distributed.
+                                s =  2; i =  2; d =  2;
+
+        _assign_remaining_stats(4);
+
+                                                        hp = 11; mp = 1; break;
+    }
 
     case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; mp = 1; break;
     default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
@@ -3343,140 +3356,6 @@ bool validate_player_name(const char* name, bool verbose)
     return (true);
 }
 
-static void _give_random_potion(int slot)
-{
-    // If you can't quaff, you don't care.
-    if (you.is_undead == US_UNDEAD)
-        return;
-
-    you.inv[ slot ].quantity  = 1;
-    you.inv[ slot ].base_type = OBJ_POTIONS;
-    you.inv[ slot ].plus  = 0;
-    you.inv[ slot ].plus2 = 0;
-
-    // No Berserk for undead other than vampires.
-    int temp_rand = 8;
-    if (you.is_undead && you.species != SP_VAMPIRE)
-        temp_rand--;
-
-    switch (random2(temp_rand))
-    {
-    case 0:
-    case 1:
-    case 2:
-        you.inv[slot].sub_type = POT_HEALING;
-        break;
-    case 3:
-    case 4:
-        you.inv[slot].sub_type = POT_HEAL_WOUNDS;
-        break;
-    case 5:
-        you.inv[slot].sub_type = POT_SPEED;
-        break;
-    case 6:
-        you.inv[slot].sub_type = POT_MIGHT;
-        break;
-    case 7:
-        you.inv[slot].sub_type = POT_BERSERK_RAGE;
-        break;
-    }
-}
-
-static void _give_random_secondary_armour(int slot)
-{
-    you.inv[slot].quantity  = 1;
-    you.inv[slot].base_type = OBJ_ARMOUR;
-    you.inv[slot].special   = 0;
-    you.inv[slot].plus      = 0;
-    you.inv[slot].plus2     = 0;
-
-    switch (random2(4))
-    {
-    case 0:
-        if (you_can_wear(EQ_BOOTS))
-        {
-            you.inv[slot].sub_type = ARM_BOOTS;
-            you.equip[EQ_BOOTS] = slot;
-            break;
-        }
-        // else fall through
-    case 1:
-        if (you_can_wear(EQ_HELMET))
-        {
-            you.inv[slot].sub_type = ARM_HELMET;
-            you.equip[EQ_HELMET] = slot;
-            break;
-        }
-        // else fall through
-    case 2:
-        if (you_can_wear(EQ_GLOVES))
-        {
-            you.inv[slot].sub_type = ARM_GLOVES;
-            you.equip[EQ_GLOVES] = slot;
-            break;
-        }
-        // else fall through
-    case 3: // Anyone can wear this.
-        you.inv[slot].sub_type = ARM_CLOAK;
-        you.equip[EQ_CLOAK] = slot;
-        break;
-    }
-}
-
-// Returns true if a "good" weapon is given.
-static bool _give_wanderer_weapon(int slot, int wpn_skill)
-{
-    bool ret = false;
-
-    // Slot's always zero, but we pass it anyway.
-
-    // We'll also re-fill the template, all this for later possible
-    // safe reuse of code in the future.
-    you.inv[slot].quantity  = 1;
-    you.inv[slot].base_type = OBJ_WEAPONS;
-    you.inv[slot].plus      = 0;
-    you.inv[slot].plus2     = 0;
-    you.inv[slot].special   = 0;
-
-    // Now fill in the type according to the random wpn_skill.
-    switch (wpn_skill)
-    {
-    case SK_MACES_FLAILS:
-        you.inv[slot].sub_type = WPN_CLUB;
-        break;
-
-    case SK_POLEARMS:
-        you.inv[slot].sub_type = WPN_SPEAR;
-        break;
-
-    case SK_SHORT_BLADES:
-        you.inv[slot].sub_type = WPN_DAGGER;
-        break;
-
-    case SK_AXES:
-        you.inv[slot].sub_type = WPN_HAND_AXE;
-        ret = true;
-        break;
-
-    case SK_STAVES:
-        you.inv[slot].sub_type = WPN_QUARTERSTAFF;
-        ret = true;
-        break;
-
-    case SK_LONG_BLADES:
-    default:
-        // All long swords are too good for a starting character...
-        // Especially this class where we have to be careful about
-        // giving away anything good at all.
-        // We default here if the character only has fighting skill. - bwr
-        you.inv[slot].sub_type = WPN_SHORT_SWORD;
-        ret = true;
-        break;
-    }
-
-    return (ret);
-}
-
 static void _make_rod(item_def &item, stave_type rod_type, int ncharges)
 {
     item.base_type = OBJ_STAVES;
@@ -3545,8 +3424,85 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
         }
     }
 
-    if (eqslot != EQ_NONE)
+    if (eqslot != EQ_NONE && you.equip[eqslot] == -1)
         you.equip[eqslot] = slot;
+}
+
+// Returns true if a "good" weapon is given.
+static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
+{
+    // Darts skill also gets you some needles.
+    if (wpn_skill == SK_DARTS)
+    {
+        // Plus is set if we are getting a good item.  In that case, we
+        // get curare here.
+        if (plus)
+        {
+            _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
+                               1 + random2(4));
+            set_item_ego_type(you.inv[slot], OBJ_MISSILES, SPMSL_CURARE);
+            slot++;
+        }
+        // Otherwise, we just get some poisoned needles.
+        else
+        {
+            _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
+                               5 + roll_dice(2, 5));
+            set_item_ego_type(you.inv[slot], OBJ_MISSILES, SPMSL_POISONED);
+            slot++;
+        }
+    }
+
+    _newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+
+    // We'll also re-fill the template, all for later possible safe
+    // reuse of code in the future.
+    you.inv[slot].quantity  = 1;
+    you.inv[slot].plus      = 0;
+    you.inv[slot].plus2     = 0;
+    you.inv[slot].special   = 0;
+
+    // Now fill in the type according to the random wpn_skill.
+    switch (wpn_skill)
+    {
+    case SK_MACES_FLAILS:
+        you.inv[slot].sub_type = WPN_MACE;
+        break;
+
+    case SK_POLEARMS:
+        you.inv[slot].sub_type = WPN_SPEAR;
+        break;
+
+    case SK_SHORT_BLADES:
+        you.inv[slot].sub_type = WPN_SHORT_SWORD;
+        break;
+
+    case SK_AXES:
+        you.inv[slot].sub_type = WPN_HAND_AXE;
+        break;
+
+    case SK_STAVES:
+        you.inv[slot].sub_type = WPN_QUARTERSTAFF;
+        break;
+
+    case SK_BOWS:
+        you.inv[slot].sub_type = WPN_BOW;
+        break;
+
+    case SK_CROSSBOWS:
+        you.inv[slot].sub_type = WPN_HAND_CROSSBOW;
+        break;
+
+    case SK_DARTS:
+        you.inv[slot].sub_type = WPN_BLOWGUN;
+        break;
+    }
+
+    int offset = plus ? 1 : 0;
+    you.inv[slot].plus  = random2(plus) + offset;
+    you.inv[slot].plus2 = random2(plus) + offset;
+
+    return (true);
 }
 
 static void _newgame_clear_item(int slot)
@@ -3558,199 +3514,936 @@ static void _newgame_clear_item(int slot)
             you.equip[i] = -1;
 }
 
-// The idea behind wanderers is a class that has various different
-// random skills that's a challenge to play... not a class that can
-// be continually rerolled to gain the ideal character.  To maintain
-// this, we have to try and make sure that they typically get worse
-// equipment than any other class... this for certain means no
-// spellbooks ever, and the bows and xbows down below might be too
-// much... so pretty much things should be removed rather than
-// added here. -- bwr
+// The overall role choice for wanderers is a weighted chance based on
+// stats.
+static stat_type _wanderer_choose_role()
+{
+    int total_stats = 0;
+
+    total_stats += you.strength;
+    total_stats += you.dex;
+    total_stats += you.intel;
+
+    int target = random2(total_stats);
+
+    stat_type role;
+
+    if (target < you.strength)
+        role = STAT_STRENGTH;
+    else if (target < (you.dex + you.strength))
+        role = STAT_DEXTERITY;
+    else
+        role = STAT_INTELLIGENCE;
+
+    return (role);
+}
+
+static skill_type _apt_weighted_choice(const skill_type * skill_array,
+                                       unsigned arr_size)
+{
+    int total_apt = 0;
+
+    for (unsigned i = 0; i < arr_size; ++i)
+    {
+        int reciprocal_apt = (100 * 100) /
+                             species_skills(skill_array[i], you.species);
+        total_apt += reciprocal_apt;
+    }
+
+    unsigned probe = random2(total_apt);
+    unsigned region_covered = 0;
+
+    for (unsigned i = 0; i < arr_size; ++i)
+    {
+        int reciprocal_apt = (100 * 100) /
+                             species_skills(skill_array[i], you.species);
+        region_covered += reciprocal_apt;
+
+        if (probe < region_covered)
+            return (skill_array[i]);
+    }
+
+    return (NUM_SKILLS);
+}
+
+static skill_type _wanderer_role_skill_select(stat_type selected_role,
+                                              skill_type sk_1,
+                                              skill_type sk_2)
+{
+    skill_type selected_skill = SK_NONE;
+
+    switch((int)selected_role)
+    {
+    case STAT_DEXTERITY:
+        switch (random2(6))
+        {
+        case 0:
+        case 1:
+            selected_skill = SK_FIGHTING;
+            break;
+        case 2:
+            selected_skill = SK_DODGING;
+            break;
+        case 3:
+            selected_skill = SK_STEALTH;
+            break;
+        case 4:
+        case 5:
+            selected_skill = sk_1;
+            break;
+        }
+        break;
+
+    case STAT_STRENGTH:
+    {
+        int options = 3;
+        if (!you_can_wear(EQ_BODY_ARMOUR))
+            options--;
+
+        switch (random2(options))
+        {
+        case 0:
+            selected_skill = SK_FIGHTING;
+            break;
+        case 1:
+            selected_skill = sk_1;
+            break;
+        case 2:
+            selected_skill = SK_ARMOUR;
+            break;
+        }
+        break;
+    }
+
+    case STAT_INTELLIGENCE:
+        switch (random2(3))
+        {
+        case 0:
+            selected_skill = SK_SPELLCASTING;
+            break;
+        case 1:
+            selected_skill = sk_1;
+            break;
+        case 2:
+            selected_skill = sk_2;
+            break;
+        }
+        break;
+    }
+
+    return (selected_skill);
+}
+
+static skill_type _wanderer_role_weapon_select(stat_type role)
+{
+    skill_type skill = NUM_SKILLS;
+    const skill_type str_weapons[] =
+        { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS };
+
+    int str_size = sizeof(str_weapons) / sizeof(skill_type);
+
+    const skill_type dex_weapons[] =
+        { SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
+
+    int dex_size = sizeof(dex_weapons) / sizeof(skill_type);
+
+    const skill_type casting_schools[] =
+        { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
+          SK_TRANSMUTATIONS, SK_POISON_MAGIC, SK_CONJURATIONS,
+          SK_ENCHANTMENTS, SK_FIRE_MAGIC, SK_ICE_MAGIC,
+          SK_AIR_MAGIC, SK_EARTH_MAGIC };
+
+    int casting_size = sizeof(casting_schools) / sizeof(skill_type);
+
+    switch ((int)role)
+    {
+    case STAT_STRENGTH:
+        skill = _apt_weighted_choice(str_weapons, str_size);
+        break;
+
+    case STAT_DEXTERITY:
+        skill = _apt_weighted_choice(dex_weapons, dex_size);
+        break;
+
+    case STAT_INTELLIGENCE:
+        skill = _apt_weighted_choice(casting_schools, casting_size);
+        break;
+    }
+
+    return (skill);
+}
+
+static void _wanderer_role_skill(stat_type role, int levels)
+{
+    skill_type weapon_type = NUM_SKILLS;
+    skill_type spell2 = NUM_SKILLS;
+
+    weapon_type = _wanderer_role_weapon_select(role);
+    if (role == STAT_INTELLIGENCE)
+       spell2 = _wanderer_role_weapon_select(role);
+
+    skill_type selected_skill = NUM_SKILLS;
+    for (int i = 0; i < levels; ++i)
+    {
+        selected_skill = _wanderer_role_skill_select(role, weapon_type,
+                                                     spell2);
+        you.skills[selected_skill]++;
+    }
+
+}
+
+// Select a random skill from all skills we have at least 1 level in.
+static skill_type _weighted_skill_roll()
+{
+    int total_skill = 0;
+
+    for (unsigned i = 0; i < NUM_SKILLS; ++i)
+        total_skill += you.skills[i];
+
+    int probe = random2(total_skill);
+    int covered_region = 0;
+
+    for (unsigned i = 0; i < NUM_SKILLS; ++i)
+    {
+        covered_region += you.skills[i];
+        if (probe < covered_region)
+            return (skill_type(i));
+    }
+
+    return (NUM_SKILLS);
+}
+
+static void _give_wanderer_book(skill_type skill, int & slot)
+{
+    int book_type = BOOK_MINOR_MAGIC_I;
+    switch((int)skill)
+    {
+    case SK_SPELLCASTING:
+        switch (random2(3))
+        {
+        case 0:
+            book_type = BOOK_MINOR_MAGIC_I;
+            break;
+        case 1:
+            book_type = BOOK_MINOR_MAGIC_II;
+            break;
+        case 2:
+            book_type = BOOK_MINOR_MAGIC_III;
+            break;
+        }
+        break;
+
+    case SK_CONJURATIONS:
+        switch (random2(6))
+        {
+        case 0:
+            book_type = BOOK_MINOR_MAGIC_I;
+            break;
+
+        case 1:
+            book_type = BOOK_MINOR_MAGIC_II;
+            break;
+        case 2:
+            book_type = BOOK_CONJURATIONS_I;
+            break;
+        case 3:
+            book_type = BOOK_CONJURATIONS_II;
+            break;
+        case 4:
+            book_type = BOOK_YOUNG_POISONERS;
+            break;
+        case 5:
+            book_type = BOOK_STALKING;
+            break;
+        }
+        break;
+
+    case SK_SUMMONINGS:
+        switch (random2(2))
+        {
+        case 0:
+            book_type = BOOK_MINOR_MAGIC_III;
+            break;
+        case 1:
+            book_type = BOOK_CALLINGS;
+            break;
+        }
+        break;
+
+    case SK_NECROMANCY:
+        book_type = BOOK_NECROMANCY;
+        break;
+
+    case SK_TRANSLOCATIONS:
+        book_type = BOOK_SPATIAL_TRANSLOCATIONS;
+        break;
+
+    case SK_TRANSMUTATIONS:
+        switch (random2(2))
+        {
+        case 0:
+            book_type = BOOK_GEOMANCY;
+            break;
+        case 1:
+            book_type = BOOK_CHANGES;
+            break;
+        }
+        break;
+
+    case SK_FIRE_MAGIC:
+        switch (random2(3))
+        {
+        case 0:
+            book_type = BOOK_MINOR_MAGIC_I;
+            break;
+        case 1:
+            book_type = BOOK_FLAMES;
+            break;
+        case 2:
+            book_type = BOOK_CONJURATIONS_I;
+            break;
+        }
+        break;
+
+    case SK_ICE_MAGIC:
+        switch (random2(3))
+        {
+        case 0:
+            book_type = BOOK_MINOR_MAGIC_II;
+            break;
+        case 1:
+            book_type = BOOK_FROST;
+            break;
+        case 2:
+            book_type = BOOK_CONJURATIONS_II;
+            break;
+        }
+        break;
+
+    case SK_AIR_MAGIC:
+        book_type = BOOK_AIR;
+        break;
+
+    case SK_EARTH_MAGIC:
+        book_type = BOOK_GEOMANCY;
+        break;
+
+    case SK_POISON_MAGIC:
+        switch (random2(2))
+        {
+        case 0:
+            book_type = BOOK_STALKING;
+            break;
+        case 1:
+            book_type = BOOK_YOUNG_POISONERS;
+            break;
+        }
+        break;
+
+    case SK_ENCHANTMENTS:
+        switch (random2(2))
+        {
+        case 0:
+            book_type = BOOK_WAR_CHANTS;
+            break;
+        case 1:
+            book_type = BOOK_CHARMS;
+            break;
+        }
+        break;
+    }
+
+    _newgame_make_item(slot, EQ_NONE, OBJ_BOOKS, book_type);
+}
+
+// Players can get some consumables as a "good item".
+static void _good_potion_or_scroll(int & slot)
+{
+    int base_rand = 5;
+    // No potions for mummies.
+    if (you.is_undead == US_UNDEAD)
+        base_rand -= 3;
+    // No berserk rage for ghouls.
+    else if (you.is_undead != US_SEMI_UNDEAD)
+        base_rand--;
+
+    you.inv[slot].quantity = 1;
+    you.inv[slot].plus     = 0;
+    you.inv[slot].plus2    = 0;
+
+    switch (random2(base_rand))
+    {
+    case 0:
+        you.inv[slot].base_type = OBJ_SCROLLS;
+        you.inv[slot].sub_type  = SCR_FEAR;
+        break;
+
+    case 1:
+        you.inv[slot].base_type = OBJ_SCROLLS;
+        you.inv[slot].sub_type  = SCR_BLINKING;
+        break;
+
+    case 2:
+        you.inv[slot].base_type = OBJ_POTIONS;
+        you.inv[slot].sub_type  = POT_HEAL_WOUNDS;
+        break;
+
+    case 3:
+        you.inv[slot].base_type = OBJ_POTIONS;
+        you.inv[slot].sub_type  = POT_SPEED;
+        break;
+
+    case 4:
+        you.inv[slot].base_type = OBJ_POTIONS;
+        you.inv[slot].sub_type  = POT_BERSERK_RAGE;
+        break;
+    }
+
+    slot++;
+}
+
+// Add a specified number of healing/teleportation items to the
+// inventory.
+static void _healing_or_teleport(int quantity, int & slot)
+{
+    int healing_slot  = -1;
+    int teleport_slot = -1;
+
+    for (int i = 0; i < slot; ++i)
+    {
+        if (you.inv[i].sub_type == SCR_TELEPORTATION
+            && you.inv[i].base_type == OBJ_SCROLLS)
+        {
+            teleport_slot = i;
+        }
+        else if (you.inv[i].sub_type == POT_HEALING
+                 && you.inv[i].base_type == OBJ_POTIONS)
+        {
+            healing_slot = i;
+        }
+    }
+
+    int temp_rand = 2;
+
+    // No potions for mummies.
+    if (you.is_undead == US_UNDEAD)
+        temp_rand--;
+
+    for (int i = 0; i < quantity; ++i)
+    {
+        switch (random2(temp_rand))
+        {
+        case 0:
+            if (teleport_slot == -1)
+            {
+                teleport_slot = slot;
+                you.inv[teleport_slot].quantity  = 0;
+                you.inv[teleport_slot].base_type = OBJ_SCROLLS;
+                you.inv[teleport_slot].plus      = 0;
+                you.inv[teleport_slot].plus2     = 0;
+                you.inv[teleport_slot].sub_type  = SCR_TELEPORTATION;
+                slot++;
+            }
+            you.inv[teleport_slot].quantity++;
+            break;
+        case 1:
+            if (healing_slot == -1)
+            {
+                healing_slot = slot;
+                you.inv[healing_slot].quantity  = 0;
+                you.inv[healing_slot].base_type = OBJ_POTIONS;
+                you.inv[healing_slot].plus      = 0;
+                you.inv[healing_slot].plus2     = 0;
+                you.inv[healing_slot].sub_type  = POT_HEALING;
+                slot++;
+            }
+            you.inv[healing_slot].quantity++;
+            break;
+        }
+    }
+}
+
+// Create a random wand/rod of striking in the inventory.
+static void _wanderer_random_evokable(int & slot)
+{
+    wand_type selected_wand = WAND_ENSLAVEMENT;
+
+    switch (random2(6))
+    {
+    case 0:
+        selected_wand = WAND_ENSLAVEMENT;
+        break;
+
+    case 1:
+        selected_wand = WAND_CONFUSION;
+        break;
+
+    case 2:
+        selected_wand = WAND_FLAME;
+        break;
+
+    case 3:
+        selected_wand = WAND_FROST;
+        break;
+
+    case 4:
+        selected_wand = WAND_MAGIC_DARTS;
+        break;
+
+    case 5:
+        _make_rod(you.inv[slot], STAFF_STRIKING, 8);
+        slot++;
+        return;
+    }
+
+    _newgame_make_item(slot, EQ_NONE, OBJ_WANDS, selected_wand, -1, 1,
+                       15);
+    slot++;
+}
+
+void _wanderer_good_equipment(skill_type & skill, int & slot)
+{
+    const skill_type combined_weapon_skills[] =
+        { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
+          SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
+
+
+    int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
+
+    // Normalise the input type.
+    if (skill == SK_FIGHTING)
+    {
+        int max_sklev = 0;
+        skill_type max_skill = SK_NONE;
+
+        for (int i = 0; i < total_weapons; ++i)
+        {
+            if (you.skills[combined_weapon_skills[i]] >= max_sklev)
+            {
+                max_skill = combined_weapon_skills[i];
+                max_sklev = you.skills[max_skill];
+            }
+        }
+        skill = max_skill;
+    }
+
+    switch((int)skill)
+    {
+    case SK_MACES_FLAILS:
+    case SK_AXES:
+    case SK_POLEARMS:
+    case SK_BOWS:
+    case SK_CROSSBOWS:
+    case SK_DARTS:
+    case SK_STAVES:
+    case SK_SHORT_BLADES:
+        _give_wanderer_weapon(slot, skill, 3);
+        slot++;
+        break;
+
+    case SK_ARMOUR:
+        // Deformed races aren't given armor skill, so there's no need
+        // to worry about scale mail's not fitting.
+        _newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL);
+        slot++;
+        break;
+
+    case SK_SHIELDS:
+        _newgame_make_item(slot, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
+                           ARM_BUCKLER);
+        slot++;
+        break;
+
+    case SK_SPELLCASTING:
+    case SK_CONJURATIONS:
+    case SK_SUMMONINGS:
+    case SK_NECROMANCY:
+    case SK_TRANSLOCATIONS:
+    case SK_TRANSMUTATIONS:
+    case SK_FIRE_MAGIC:
+    case SK_ICE_MAGIC:
+    case SK_AIR_MAGIC:
+    case SK_EARTH_MAGIC:
+    case SK_POISON_MAGIC:
+    case SK_ENCHANTMENTS:
+        _give_wanderer_book(skill, slot);
+        slot++;
+        break;
+
+    case SK_DODGING:
+    case SK_STEALTH:
+    case SK_TRAPS_DOORS:
+    case SK_STABBING:
+    case SK_UNARMED_COMBAT:
+    case SK_INVOCATIONS:
+    {
+        // Random consumables: 2x random healing/teleportation and 1
+        // good potion/scroll.
+        _healing_or_teleport(2, slot);
+        _good_potion_or_scroll(slot);
+        break;
+    }
+
+    case SK_EVOCATIONS:
+        // Random wand/rod of striking.
+        _wanderer_random_evokable(slot);
+        break;
+    }
+}
+
+// The "decent" spell type item puts a spell in the player's memory.
+static void _give_wanderer_spell(skill_type skill)
+{
+    spell_type spell = SPELL_NO_SPELL;
+
+    // Doing a rejection loop for this because I am lazy.
+    while (skill == SK_SPELLCASTING || skill == SK_DIVINATIONS)
+    {
+        int value = SK_POISON_MAGIC-SK_CONJURATIONS + 1;
+        skill = skill_type(SK_CONJURATIONS + random2(value));
+    }
+
+    switch ((int)skill)
+    {
+    case SK_CONJURATIONS:
+        spell = SPELL_MAGIC_DART;
+        break;
+
+    case SK_SUMMONINGS:
+        spell = SPELL_SUMMON_SMALL_MAMMALS;
+        break;
+
+    case SK_NECROMANCY:
+        spell = SPELL_PAIN;
+        break;
+
+    case SK_TRANSLOCATIONS:
+        spell = SPELL_APPORTATION;
+        break;
+
+    case SK_TRANSMUTATIONS:
+        spell = SPELL_SANDBLAST;
+        break;
+
+    case SK_FIRE_MAGIC:
+        spell = SPELL_FLAME_TONGUE;
+        break;
+
+    case SK_ICE_MAGIC:
+        spell = SPELL_FREEZE;
+        break;
+
+    case SK_AIR_MAGIC:
+        spell = SPELL_SHOCK;
+        break;
+
+    case SK_EARTH_MAGIC:
+        spell = SPELL_SANDBLAST;
+        break;
+
+    case SK_POISON_MAGIC:
+        spell = SPELL_STING;
+        break;
+
+    case SK_ENCHANTMENTS:
+        spell = SPELL_BACKLIGHT;
+        break;
+    }
+
+    add_spell_to_memory(spell);
+}
+
+void _wanderer_decent_equipment(skill_type & skill,
+                                std::set<skill_type> & gift_skills,
+                                int & slot)
+{
+    const skill_type combined_weapon_skills[] =
+        { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
+          SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
+
+    int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
+
+    // If we already gave an item for this type, just give the player
+    // a consumable.
+    if((skill == SK_DODGING || skill == SK_STEALTH)
+        && gift_skills.find(SK_ARMOUR) != gift_skills.end())
+    {
+        skill = SK_TRAPS_DOORS;
+    }
+
+    // Give the player knowledge of only one spell.
+    if (skill >= SK_SPELLCASTING && skill <= SK_POISON_MAGIC)
+    {
+        for (unsigned i = 0; i < you.spells.size(); ++i)
+        {
+            if (you.spells[i] != SPELL_NO_SPELL)
+            {
+                skill = SK_TRAPS_DOORS;
+                break;
+            }
+        }
+    }
+
+    // If fighting comes up, give something from the highest weapon
+    // skill.
+    if (skill == SK_FIGHTING)
+    {
+        int max_sklev = 0;
+        skill_type max_skill = SK_NONE;
+
+        for (int i = 0;i < total_weapons; ++i)
+        {
+            if (you.skills[combined_weapon_skills[i]] >= max_sklev)
+            {
+                max_skill = combined_weapon_skills[i];
+                max_sklev = you.skills[max_skill];
+            }
+        }
+
+        skill = max_skill;
+    }
+
+    // Don't give a gift from the same skill twice; just default to
+    // a healing potion/teleportation scroll.
+    if (gift_skills.find(skill) != gift_skills.end())
+        skill = SK_TRAPS_DOORS;
+
+    switch((int)skill)
+    {
+    case SK_MACES_FLAILS:
+    case SK_AXES:
+    case SK_POLEARMS:
+    case SK_BOWS:
+    case SK_CROSSBOWS:
+    case SK_DARTS:
+    case SK_STAVES:
+    case SK_SHORT_BLADES:
+        _give_wanderer_weapon(slot, skill, 0);
+        slot++;
+        break;
+
+    case SK_ARMOUR:
+        _newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_RING_MAIL);
+        slot++;
+        break;
+
+    case SK_SHIELDS:
+        _newgame_make_item(slot, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER,
+                           ARM_SHIELD);
+        slot++;
+        break;
+
+    case SK_DODGING:
+    case SK_STEALTH:
+        _newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        slot++;
+        break;
+
+    case SK_SPELLCASTING:
+    case SK_CONJURATIONS:
+    case SK_SUMMONINGS:
+    case SK_NECROMANCY:
+    case SK_TRANSLOCATIONS:
+    case SK_TRANSMUTATIONS:
+    case SK_FIRE_MAGIC:
+    case SK_ICE_MAGIC:
+    case SK_AIR_MAGIC:
+    case SK_EARTH_MAGIC:
+    case SK_POISON_MAGIC:
+        _give_wanderer_spell(skill);
+        break;
+
+    case SK_TRAPS_DOORS:
+    case SK_STABBING:
+    case SK_UNARMED_COMBAT:
+    case SK_INVOCATIONS:
+    case SK_EVOCATIONS:
+        _healing_or_teleport(1, slot);
+        break;
+    }
+}
+
+// We don't actually want to send adventurers wandering naked into the
+// dungeon.
+static void _wanderer_cover_equip_holes(int & slot)
+{
+    // We are going to cover any glaring holes (no armor/no weapon) that
+    // occurred during equipment generation.
+    if (you.equip[EQ_BODY_ARMOUR] == -1)
+    {
+        _newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        slot++;
+    }
+
+    if (you.equip[EQ_WEAPON] == -1)
+    {
+        weapon_type weapon = WPN_CLUB;
+        if (you.dex > you.strength || you.skills[SK_STABBING])
+            weapon = WPN_DAGGER;
+
+        _newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, weapon);
+        slot++;
+    }
+
+    // Give a dagger if you have stabbing skill.  Maybe this is
+    // unnecessary?
+    if (you.skills[SK_STABBING])
+    {
+        bool has_dagger = false;
+
+        for (int i = 0; i < slot; ++i)
+        {
+            if (you.inv[i].base_type == OBJ_WEAPONS
+                && you.inv[i].sub_type == WPN_DAGGER)
+            {
+                has_dagger = true;
+                break;
+            }
+        }
+
+        if (!has_dagger)
+        {
+            _newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+            slot++;
+        }
+    }
+
+    // The player gets a stack of darts if they have a hand
+    // crossbow/darts skill but no blowgun.
+    bool need_darts = false;
+
+    for (int i = 0; i < slot; ++i)
+    {
+        if (you.inv[i].base_type == OBJ_WEAPONS
+            && you.inv[i].sub_type == WPN_HAND_CROSSBOW)
+        {
+            need_darts = true;
+            break;
+        }
+    }
+
+    if (!need_darts && you.skills[SK_DARTS])
+    {
+        need_darts = true;
+
+        for (int i = 0; i < slot; ++i)
+        {
+            if (you.inv[i].base_type == OBJ_WEAPONS
+                && you.inv[i].sub_type == WPN_BLOWGUN)
+            {
+                need_darts = false;
+                break;
+            }
+        }
+    }
+
+    if (need_darts)
+    {
+        _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
+                           8 + roll_dice(2, 8));
+        slot++;
+    }
+
+    // And the player needs arrows if they have a bow.
+    bool needs_arrows = false;
+
+    for (int i = 0; i < slot; ++i)
+    {
+        if (you.inv[i].base_type == OBJ_WEAPONS
+            && you.inv[i].sub_type == WPN_BOW)
+        {
+            needs_arrows = true;
+            break;
+        }
+    }
+
+    if (needs_arrows)
+    {
+        _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
+                           15 + random2avg(21, 5));
+        slot++;
+    }
+}
+
+// New style wanderers are supposed to be decent in terms of skill
+// levels/equipment, but pretty randomised.
 static void _create_wanderer(void)
 {
+    // Decide what our character roles are.
+    stat_type primary_role   = _wanderer_choose_role();
+    stat_type secondary_role = _wanderer_choose_role();
+
+    // Regardless of roles, players get a couple levels in these skills.
     const skill_type util_skills[] =
-        { SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
-          SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
-          SK_INVOCATIONS, SK_EVOCATIONS };
+        { SK_DARTS, SK_STABBING, SK_TRAPS_DOORS, SK_STEALTH,
+          SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
-    // Long swords is missing to increase its rarity because we
-    // can't give out a long sword to a starting character (they're
-    // all too good)... Staves is also removed because it's not
-    // one of the fighter options.-- bwr
-    const skill_type fight_util_skills[] =
-        { SK_FIGHTING, SK_SHORT_BLADES, SK_AXES,
-          SK_MACES_FLAILS, SK_POLEARMS,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
-          SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
-          SK_INVOCATIONS, SK_EVOCATIONS };
+    int util_size = sizeof(util_skills) / sizeof(skill_type);
 
-    const skill_type not_rare_skills[] =
-        { SK_SLINGS, SK_BOWS, SK_CROSSBOWS,
-          SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS,
-          SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
-          SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
-          SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
-          SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
-          SK_INVOCATIONS, SK_EVOCATIONS };
+    // No Invocations for demigods.
+    if (you.species == SP_DEMIGOD)
+        util_size--;
 
-    const skill_type all_skills[] =
-        { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
-          SK_DIVINATIONS, SK_POISON_MAGIC,
-          SK_SLINGS, SK_BOWS, SK_CROSSBOWS,
-          SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS,
-          SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
-          SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
-          SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
-          SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
-          SK_INVOCATIONS, SK_EVOCATIONS };
+    // Maybe too many skill levels, given the level 1 floor on skill
+    // levels for wanderers?
+    int primary_skill_levels   = 5;
+    int secondary_skill_levels = 3;
 
-    skill_type skill;
+    // Allocate main skill levels.
+    _wanderer_role_skill(primary_role, primary_skill_levels);
+    _wanderer_role_skill(secondary_role, secondary_skill_levels);
 
-    for (int i = 0; i < 2; i++)
-    {
-        do
-            skill = RANDOM_ELEMENT(util_skills);
-        while (you.skills[skill] >= 2);
+    skill_type util_skill1 = _apt_weighted_choice(util_skills, util_size);
+    skill_type util_skill2 = _apt_weighted_choice(util_skills, util_size);
 
-        you.skills[skill]++;
-    }
+    // And a couple levels of utility skills.
+    you.skills[util_skill1]++;
+    you.skills[util_skill2]++;
 
-    for (int i = 0; i < 3; i++)
-    {
-        do
-            skill = RANDOM_ELEMENT(fight_util_skills);
-        while (you.skills[skill] >= 2);
+    // Caster types maybe need more MP?
+    int mp_adjust = 0;
+    if (primary_role == STAT_INTELLIGENCE)
+        mp_adjust++;
+    if (secondary_role == STAT_INTELLIGENCE)
+        mp_adjust++;
+    set_mp(you.magic_points + mp_adjust, true);
 
-        you.skills[skill]++;
-    }
+    // Keep track of what skills we got items from, mostly to prevent
+    // giving a good and then a normal version of the same weapon.
+    std::set<skill_type> gift_skills;
 
-    // Spell skills are possible past this point, but we won't allow two
-    // levels of any of them. - bwr
-    for (int i = 0; i < 3; i++)
-    {
-        do
-            skill = RANDOM_ELEMENT(not_rare_skills);
-        while (you.skills[skill] >= 2
-               || (skill >= SK_SPELLCASTING && you.skills[skill] > 0));
+    // Wanderers get 1 good thing, a couple average things, and then
+    // 1 last stage to fill any glaring equipment holes (no clothes,
+    // etc.).
+    skill_type good_equipment = _weighted_skill_roll();
 
-        you.skills[skill]++;
-    }
+    // The first of these goes through the whole role/aptitude weighting
+    // thing again.  It's quite possible that this will give something
+    // we have no skill in.
+    stat_type selected_role = one_chance_in(3) ? secondary_role : primary_role;
+    skill_type sk_1 = SK_NONE;
+    skill_type sk_2 = SK_NONE;
 
-    for (int i = 0; i < 2; i++)
-    {
-        do
-            skill = RANDOM_ELEMENT(all_skills);
-        while (you.skills[skill] >= 2
-               || (skill >= SK_SPELLCASTING && you.skills[skill] > 0));
+    sk_1 = _wanderer_role_weapon_select(selected_role);
+    if (selected_role == STAT_INTELLIGENCE)
+        sk_2 = _wanderer_role_weapon_select(selected_role);
 
-        you.skills[skill]++;
-    }
+    skill_type decent_1 = _wanderer_role_skill_select(selected_role,
+                                                      sk_1, sk_2);
+    skill_type decent_2 = _weighted_skill_roll();
 
-    // Demigods can't use invocations, so we'll swap it for something else.
-    if (you.species == SP_DEMIGOD && you.skills[SK_INVOCATIONS])
-    {
-        do
-            skill = RANDOM_ELEMENT(all_skills);
-        while (you.skills[skill] > 0);
+    // Not even trying to put things in the same slot from game to game.
+    int equip_slot = 0;
 
-        you.skills[skill] = you.skills[SK_INVOCATIONS];
-        you.skills[SK_INVOCATIONS] = 0;
-    }
+    _wanderer_good_equipment(good_equipment, equip_slot);
+    gift_skills.insert(good_equipment);
 
-    // Some species cannot wear real armour.
-    if (you.skills[SK_ARMOUR] && !you_can_wear(EQ_BODY_ARMOUR))
-    {
-        do
-            skill = RANDOM_ELEMENT(all_skills);
-        while (you.skills[skill] > 0);
+    _wanderer_decent_equipment(decent_1, gift_skills, equip_slot);
+    gift_skills.insert(decent_1);
+    _wanderer_decent_equipment(decent_2, gift_skills, equip_slot);
+    gift_skills.insert(decent_2);
 
-        you.skills[skill] = you.skills[SK_ARMOUR];
-        you.skills[SK_ARMOUR] = 0;
-    }
-
-    int wpn_skill = SK_FIGHTING;  // preferred weapon type
-    int wpn_skill_size = 0;       // level of skill in preferred weapon type
-    int num_wpn_skills = 0;       // used to choose preferred weapon
-    int total_wpn_skills = 0;     // used to choose template
-
-    // This algorithm is the same as the one used to pick a random
-    // angry god for retribution, except that whenever a higher skill
-    // is found than the current one, we automatically take it and
-    // only consider skills at that level or higher from that point on,
-    // This should give a random wpn skill from the set of skills with
-    // the highest value. -- bwr
-    for (int i = SK_SHORT_BLADES; i <= SK_STAVES; i++)
-    {
-        if (you.skills[i] > 0)
-        {
-            total_wpn_skills++;
-
-            if (you.skills[i] > wpn_skill_size)
-            {
-                // Switch to looking in the new set of better skills.
-                num_wpn_skills = 1; // Reset to one, because it's a new set.
-                wpn_skill = i;
-                wpn_skill_size = you.skills[i];
-            }
-            else if (you.skills[i] == wpn_skill_size)
-            {
-                // Still looking at the old level...
-                num_wpn_skills++;
-                if (one_chance_in( num_wpn_skills ))
-                {
-                    wpn_skill = i;
-                    wpn_skill_size = you.skills[i];
-                }
-            }
-        }
-    }
-
-    // Let's try to make an appropriate weapon.
-    // Start with a template for a weapon.
-    _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
-
-    // And a default armour template for a robe (leaving slot 1 open for
-    // a secondary weapon).
-    _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-
-    // Wanderers have at least seen one type of potion, and if they
-    // don't get anything else good, they'll get to keep this one...
-    // Note: Even if this is taken away, the knowledge of the potion
-    // type is still given to the character.
-    _give_random_potion(3);
-
-    if (you.skills[SK_FIGHTING] || total_wpn_skills >= 3)
-    {
-        // Fighter style wanderer
-        if (you.skills[SK_ARMOUR])
-        {
-            you.inv[2].sub_type = ARM_RING_MAIL;
-            you.inv[3].quantity = 0;            // remove potion
-        }
-        else if (you.skills[SK_SHIELDS] && wpn_skill != SK_STAVES)
-        {
-            _newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
-                               ARM_BUCKLER);
-            you.inv[3].quantity = 0;            // remove potion
-        }
-        else
-            _give_random_secondary_armour(5);
-
-        // Remove potion if good weapon is given.
-        if (_give_wanderer_weapon(0, wpn_skill))
-            you.inv[3].quantity = 0;
-    }
-    else
-    {
-        // Generic wanderer
-        _give_wanderer_weapon(0, wpn_skill);
-        _give_random_secondary_armour(5);
-    }
-
-    you.equip[EQ_WEAPON] = 0;
-    you.equip[EQ_BODY_ARMOUR] = 2;
+    _wanderer_cover_equip_holes(equip_slot);
 }
 
 // choose_race returns true if the player should also pick a class.
