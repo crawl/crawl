@@ -8048,7 +8048,7 @@ static bool _monster_eat_food(monsters *monster, bool nearby)
 
         if ((mons_wont_attack(monster)
                 || grid_distance(monster->pos(), you.pos()) > 1)
-            && one_chance_in(3))
+            && coinflip())
         {
             if (is_food)
             {
