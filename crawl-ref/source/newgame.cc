@@ -3864,7 +3864,7 @@ static void _good_potion_or_scroll(int & slot)
     if (you.is_undead == US_UNDEAD)
         base_rand -= 3;
     // No berserk rage for ghouls.
-    else if (you.is_undead != US_SEMI_UNDEAD)
+    else if (you.is_undead && you.is_undead != US_SEMI_UNDEAD)
         base_rand--;
 
     you.inv[slot].quantity = 1;
