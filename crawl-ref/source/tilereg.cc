@@ -1623,7 +1623,7 @@ void InventoryRegion::render()
         const coord_def max_pos(ex, ey);
 
         std::string desc = "";
-        if (Options.tile_display_spells)
+        if (Options.tile_display != TDSP_INVENT)
         {
             const spell_type spell = (spell_type) idx;
             if (spell == NUM_SPELLS)
@@ -1633,11 +1633,22 @@ void InventoryRegion::render()
                          player_spell_levels());
                 desc = info;
             }
-            else
+            else if (Options.tile_display == TDSP_SPELLS)
             {
                 snprintf(info, INFO_SIZE, "%d MP    %s    (%s)",
-                         spell_difficulty(spell), spell_title(spell),
+                         spell_difficulty(spell),
+                         spell_title(spell),
                          failure_rate_to_string(spell_fail(spell)));
+                desc = info;
+            }
+            else // if (Options.tile_display == TDSP_MEMORISE)
+            {
+                snprintf(info, INFO_SIZE, "%s    (%s)    %d/%d spell slot%s",
+                         spell_title(spell),
+                         failure_rate_to_string(spell_fail(spell)),
+                         spell_levels_required(spell),
+                         player_spell_levels(),
+                         spell_levels_required(spell) > 1 ? "s" : "");
                 desc = info;
             }
         }
@@ -1713,7 +1724,7 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if (Options.tile_display_spells)
+            if (Options.tile_display != TDSP_INVENT)
             {
                 if (item.flag & TILEI_FLAG_MELDED)
                     m_buf_main.add(TILE_MESH, x, y);
@@ -1740,10 +1751,10 @@ void InventoryRegion::pack_buffers()
 
             if (item.tile)
             {
-                if (Options.tile_display_spells)
-                    m_buf_spells.add(item.tile, x, y);
-                else
+                if (Options.tile_display == TDSP_INVENT)
                     m_buf_main.add(item.tile, x, y);
+                else
+                    m_buf_spells.add(item.tile, x, y);
             }
 
             if (item.quantity != -1)
@@ -1827,12 +1838,33 @@ static int _handle_spells_mouse(MouseEvent &event, int idx, int item_idx)
     {
         if (spell == NUM_SPELLS)
         {
-            if (!learn_spell())
-                flush_input_buffer( FLUSH_ON_FAILURE );
+            Options.tile_display = TDSP_MEMORISE;
+            tiles.update_inventory();
             return CK_MOUSE_CMD;
         }
-        if (!cast_a_spell(true, spell))
-            flush_input_buffer( FLUSH_ON_FAILURE );
+        if (Options.tile_display == TDSP_SPELLS)
+        {
+            you.last_clicked_item = item_idx;
+            tiles.set_need_redraw();
+            if (!cast_a_spell(true, spell))
+                flush_input_buffer( FLUSH_ON_FAILURE );
+        }
+        else if (Options.tile_display == TDSP_MEMORISE)
+        {
+            you.last_clicked_item = item_idx;
+            tiles.set_need_redraw();
+            if (!learn_spell(spell))
+                flush_input_buffer( FLUSH_ON_FAILURE );
+
+//             if (!can_learn_spell(true) || !has_spells_to_memorise())
+            {
+                // Jump back to spells list. (Really, this should only happen
+                // if there aren't any other spells to memorise, but this
+                // doesn't work for some reason.)
+                Options.tile_display = TDSP_SPELLS;
+                tiles.update_inventory();
+            }
+        }
         return CK_MOUSE_CMD;
     }
     else if (spell != NUM_SPELLS && event.button == MouseEvent::RIGHT)
@@ -1868,13 +1900,8 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
 
     int idx = m_items[item_idx].idx;
 
-    if (m_items[item_idx].key == 0 && Options.tile_display_spells)
-    {
-        int key = _handle_spells_mouse(event, idx, item_idx);
-        if (key != 0)
-            you.last_clicked_item = item_idx;
-        return (key);
-    }
+    if (m_items[item_idx].key == 0 && Options.tile_display != TDSP_INVENT)
+        return _handle_spells_mouse(event, idx, item_idx);
 
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
@@ -1984,10 +2011,20 @@ static bool _can_use_item(const item_def &item, bool equipped)
 
 void _update_spell_tip_text(std::string& tip, int flag)
 {
-    if (flag & TILEI_FLAG_MELDED)
-        tip = "You cannot cast this spell right now.";
-    else
-        tip = "[L-Click] Cast (z)";
+    if (Options.tile_display == TDSP_SPELLS)
+    {
+        if (flag & TILEI_FLAG_MELDED)
+            tip = "You cannot cast this spell right now.";
+        else
+            tip = "[L-Click] Cast (z)";
+    }
+    else if (Options.tile_display == TDSP_MEMORISE)
+    {
+        if (flag & TILEI_FLAG_MELDED)
+            tip = "You don't have enough slots for this spell right now.";
+        else
+            tip = "[L-Click] Memorise (M)";
+    }
 
     tip += "\n[R-Click] Describe (I)";
 }
@@ -2008,7 +2045,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     bool display_actions = (m_items[item_idx].key == 0
                     && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
 
-    if (display_actions && Options.tile_display_spells)
+    if (display_actions && Options.tile_display != TDSP_INVENT)
     {
         if (m_items[item_idx].idx == NUM_SPELLS)
             tip = "Memorise spells (M)";
@@ -2275,7 +2312,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     }
 
     int idx = m_items[item_idx].idx;
-    if (m_items[item_idx].key == 0 && Options.tile_display_spells)
+    if (m_items[item_idx].key == 0 && Options.tile_display != TDSP_INVENT)
     {
         _update_spell_alt_text(alt, idx);
         return (true);

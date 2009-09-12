@@ -2230,7 +2230,7 @@ public:
     int         tile_key_repeat_delay;
     int         tile_tooltip_ms;
     tag_pref    tile_tag_pref;
-    bool        tile_display_spells;
+    tile_display_type  tile_display;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;

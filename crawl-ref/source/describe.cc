@@ -2460,7 +2460,7 @@ void describe_spell(spell_type spelled, const item_def* item)
 
     if (can_mem && toupper(ch) == 'M')
     {
-        if (!learn_spell(spelled, *item, false) || !you.turn_is_over)
+        if (!learn_spell(spelled, item, false) || !you.turn_is_over)
             more();
         redraw_screen();
     }

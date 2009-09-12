@@ -1456,7 +1456,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
     else if (num_low_xl > 0)
     {
-        mpr("You aren't experienced enough yet to memorise any of the "
+        mpr("You aren't experienced enough to memorise any of the "
             "available spells.", MSGCH_PROMPT);
     }
     else
@@ -1477,12 +1477,30 @@ static bool _get_mem_list(spell_list &mem_spells,
 
 bool has_spells_to_memorise()
 {
-    spell_list mem_spells;
+    spell_list      mem_spells;
     spells_to_books book_hash;
-    unsigned int num_unreadable;
-    unsigned int num_race;
+    unsigned int    num_unreadable;
+    unsigned int    num_race;
 
     return _get_mem_list(mem_spells, book_hash, num_unreadable, num_race, true);
+}
+
+std::vector<spell_type> get_mem_spell_list()
+{
+    std::vector<spell_type> spells;
+
+    spell_list      mem_spells;
+    spells_to_books book_hash;
+    unsigned int    num_unreadable;
+    unsigned int    num_race;
+
+    if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
+        return (spells);
+
+    for (unsigned int i = 0; i < mem_spells.size(); i++)
+        spells.push_back(mem_spells[i]);
+
+    return (spells);
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
@@ -1532,16 +1550,20 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                         player_spell_levels() > 1 ? "s" : "");
 
     if (num_unreadable > 0)
+    {
         more_str += make_stringf(", <lightmagenta>%u unreadable spellbook%s"
                                    "</lightmagenta>",
                                  num_unreadable,
                                  num_unreadable > 1 ? "s" : "");
+    }
 
     if (num_race > 0)
+    {
         more_str += make_stringf(", <lightred>%u spell%s unmemorizable"
                                    "</lightred>",
                                  num_race,
                                  num_race > 1 ? "s" : "");
+    }
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
@@ -1620,8 +1642,10 @@ bool can_learn_spell(bool silent)
     if (j == 0)
     {
         if (!silent)
+        {
             mpr("You can't use spell magic! I'm afraid it's scrolls only "
                 "for now.");
+        }
         return (false);
     }
 
@@ -1672,11 +1696,10 @@ bool learn_spell()
     book.quantity  = 1;
     book.flags    |= ISFLAG_IDENT_MASK;
 
-    return learn_spell(specspell, book, true);
+    return learn_spell(specspell, &book, true);
 }
 
-bool learn_spell(spell_type specspell, const item_def &book,
-                 bool is_safest_book)
+static bool _learn_spell_checks(spell_type specspell)
 {
     if (!can_learn_spell())
         return (false);
@@ -1711,10 +1734,20 @@ bool learn_spell(spell_type specspell, const item_def &book,
         mpr("You can't memorise that many levels of magic yet!");
         return (false);
     }
+    return (true);
+}
+
+
+
+bool learn_spell(spell_type specspell, const item_def *book,
+                 bool is_safest_book)
+{
+    if (!_learn_spell_checks(specspell))
+        return (false);
 
     int chance = spell_fail(specspell);
 
-    if (chance > 0 && is_dangerous_spellbook(book))
+    if (chance > 0 && book && is_dangerous_spellbook(*book))
     {
         std::string prompt;
 
@@ -1722,10 +1755,11 @@ bool learn_spell(spell_type specspell, const item_def &book,
             prompt = "The only spellbook you have which contains that spell ";
         else
             prompt = "The spellbook you are reading from ";
+
         prompt += make_stringf("is %s, a dangerous spellbook which will "
                                "strike back at you if your memorisation "
                                "attempt fails. Attempt to memorise anyway?",
-                               book.name(DESC_NOCAP_THE).c_str());
+                               book->name(DESC_NOCAP_THE).c_str());
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -1756,7 +1790,8 @@ bool learn_spell(spell_type specspell, const item_def &book,
              spell_title(specspell), spell_levels_required(specspell),
              spell_levels_required(specspell) > 1 ? "s" : "",
              player_spell_levels() - spell_levels_required(specspell));
-    if ( !yesno(info, true, 'n', false) )
+
+    if (!yesno(info, true, 'n', false))
     {
         canned_msg( MSG_OK );
         return (false);
@@ -1775,21 +1810,21 @@ bool learn_spell(spell_type specspell, const item_def &book,
         mpr("You fail to memorise the spell.");
         you.turn_is_over = true;
 
-        if (book.sub_type == BOOK_NECRONOMICON)
+        if (book->sub_type == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_NECROMANCY,
                            8, random2avg(88, 3),
                            "reading the Necronomicon" );
         }
-        else if (book.sub_type == BOOK_DEMONOLOGY)
+        else if (book->sub_type == BOOK_DEMONOLOGY)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_SUMMONING,
                            7, random2avg(88, 3),
                            "reading the book of Demonology" );
         }
-        else if (book.sub_type == BOOK_ANNIHILATIONS)
+        else if (book->sub_type == BOOK_ANNIHILATIONS)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_CONJURATION,

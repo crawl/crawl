@@ -1354,7 +1354,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_TOGGLE_SPELL_DISPLAY:
-        Options.tile_display_spells = !Options.tile_display_spells;
+        if (Options.tile_display == TDSP_SPELLS)
+            Options.tile_display = TDSP_INVENT;
+        else
+            Options.tile_display = TDSP_SPELLS;
+
         tiles.update_inventory();
         break;
 #endif

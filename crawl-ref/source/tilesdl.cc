@@ -1437,6 +1437,29 @@ void TilesFramework::update_spells()
 {
     std::vector<InventoryTile> inv;
 
+    if (Options.tile_display == TDSP_MEMORISE)
+    {
+        std::vector<spell_type> spells = get_mem_spell_list();
+        for (unsigned int i = 0; i < spells.size(); ++i)
+        {
+            const spell_type spell = spells[i];
+
+            InventoryTile desc;
+            desc.tile     = tileidx_spell(spell);
+            desc.idx      = (int) spell;
+            desc.quantity = spell_difficulty(spell);
+
+            if (spell_difficulty(spell) > you.experience_level
+                || player_spell_levels() < spell_levels_required(spell))
+            {
+                desc.flag |= TILEI_FLAG_MELDED;
+            }
+            inv.push_back(desc);
+        }
+        m_region_inv->update(inv.size(), &inv[0]);
+        return;
+    }
+
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
@@ -1490,7 +1513,7 @@ void TilesFramework::update_inventory()
     if (!Options.tile_show_items || crawl_state.arena)
         return;
 
-    if (Options.tile_display_spells)
+    if (Options.tile_display != TDSP_INVENT)
     {
         update_spells();
         return;
