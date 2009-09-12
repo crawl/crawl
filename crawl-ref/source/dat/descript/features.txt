@@ -1,13 +1,20 @@
 %%%%
 A basalt altar of Yredelemnul
+
+An altar to Yredelemnul the Dark, worked from columnar basalt.
 %%%%
 A bloodstained altar of Trog
+
+An altar to Trog the Wrathful, crudely made by what seem to be the hands of giants and covered with bloodstains.
 %%%%
 A burning altar of Makhleb
+
+An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are visible in the flames.
 %%%%
 A closed detected secret door
 
 A wooden door, cunningly hidden. It used to be a secret door but at least for you it's not a secret anymore.
+
 To open it, try simply walking into it, or press 'O'.
 %%%%
 A closed door
@@ -15,36 +22,48 @@ A closed door
 A wooden door. To open it, try simply walking into it, or press 'O'.
 %%%%
 A corrupted altar of Lugonu
+
+An altar to Lugonu the Unformed, possibly dedicated to some other power before it was irrevocably corrupted.
 %%%%
 A deep blue altar of Sif Muna
+
+An altar of the deepest blue, covered in intricate patterns and writings in long forgotten scripts, devoted to Sif Muna the Loreminder.
 %%%%
 A dry fountain
+
+A dried-up fountain that has seen better days.
 %%%%
 A fountain of clear blue water
 
-'q'uaff to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
+Press 'q' to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
 %%%%
 A fountain of blood
 
-'q'uaff to drink from this fountain, if you absolutely wish to.
+Press 'q' to drink from this fountain, if you absolutely wish to.
 %%%%
 A fountain of sparkling water
 
-'q'uaff to drink from this magic fountain. Expect magical effects, as long as it's still magic.
+Press 'q' to drink from this magic fountain. Expect magical effects, as long as it's still magic.
 %%%%
 A gate leading back out of this place
+
+This gate leads back to the dungeon. Just don't forget your runes if you intend to return.
 %%%%
 A gate leading out of Pandemonium
+
+Finally, a gate that leads back to the dungeon.
 %%%%
 A gate leading to another region of Pandemonium
+
+This gate leads to yet another region of Pandemonium. There'll always be more.
 %%%%
 A one-way gate leading to the halls of Pandemonium
 
-Tales about successful loots of these netherworlds are rare. Even the strongest and most experienced characters can die there. On the other hand, these halls contain several runes and lots of valuable items. It is much easier to get in than to get out.
+This gate leads to the endless halls of Pandemonium. Tales about successful lootings of these netherworlds are rare. Even the strongest and most experienced characters can die there. On the other hand, these halls contain several runes and lots of valuable items. It is much easier to get in than to get out.
 %%%%
 A gate to the Realm of Zot
 
-Zot is the final stage as its deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have a fearsome and questionable reputation but one piece of information seems to be for certain: the monsters inhabiting this area and protecting the orb are strong and strange -- some of them nowhere encountered but here.
+This gate leads to the Realm of Zot, the final stage of your quest as its deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have a fearsome and questionable reputation, but one piece of information seems to be for certain: The monsters inhabiting this area and protecting the Orb are strong and strange - some of them nowhere encountered but here.
 %%%%
 A gateway to a bazaar
 
@@ -61,10 +80,12 @@ A gateway to Gehenna
 You can feel the heat. Gehenna seems to be made out of nothing but flames, lava and hellfire.
 %%%%
 A gateway to Hell
+
+This gateway leads to the Vestibule of Hell. Few would go there voluntarily.
 %%%%
 A gateway to the Iron City of Dis
 
-Can you pass the test of iron?
+Who will stand the test of iron?
 %%%%
 A gateway to the decaying netherworld of Tartarus
 
@@ -79,20 +100,32 @@ A glowing drain
 Every settlement brings forth the unpleasant sewers and drains, ignored by most but hideaways for others. Old tales speak of dangerous creatures, bathing in disgustingly smelling green water, preying on each other without mercy. The tales also allude to valuable items left by daring and unfortunate visitors, left to grow mildew in the damp caverns.
 %%%%
 A glowing golden altar of the Shining One
+
+An altar to The Shining One, made from the purest gold and almost blinding in its radiance.
 %%%%
 A glowing white marble altar of Zin
+
+An altar to Zin the Law-Giver, made from white marble as pristine as Zin's followers are expected to be, and glowing gently.
 %%%%
 A granite statue
+
+Despite the hardness of the stone, this statue's features have long withered away.
 %%%%
 A labyrinth entrance
 
 A gateway to an intricate maze designed by subtle and malicious minds, its exit guarded by a fearsome monster, where many a hapless adventurer has lost his way and starved to death.
 %%%%
 A magical trap
+
+A magical device designed to harm trespassers that can't be deactivated.
 %%%%
 A mechanical trap
+
+A mechanical contraption designed to harm trespassers. A skilled adventurer can try to disarm it, though.
 %%%%
 A natural trap
+
+A natural hazard, although it looks almost as if designed to harm trespassers.
 %%%%
 A metal wall
 
@@ -103,56 +136,84 @@ A one-way gate to the infinite horrors of the Abyss
 A one-way gate to a demon-haunted realm, riven by chaos, its very substance impermanent and whimsical, filled with creatures out of nightmare.
 %%%%
 A rock wall
+
+This wall consists of simple rock.
 %%%%
 A roughly hewn altar of Beogh
+
+An altar to Beogh, unmistakably roughly hewn by orcish artisans.
 %%%%
 A sand-covered staircase
 
 You can make out a staircase leading downwards into a small tomb. Sand surrounds the staircase and is continuously pouring onto it. Before long the staircase will be gone. They say that some distant relatives of the pharaohs were entombed here.
 %%%%
 A shimmering altar of Xom
+
+This altar constantly shimmers in all visible colours and probably some invisible ones, too, matching the whims of the Xom the Unpredictable, to whom it is decicated.
 %%%%
 A shining altar of Vehumet
+
+An altar, ablaze in the lights of Iskenderun and promising great destructive powers to those who would follow Vehumet.
 %%%%
 A shop
 
 A shop in the dungeon, beyond sight of the world above, manned by a secretive and reclusive shopkeeper who cannot be bargained with, grants no refunds, and is interested in nothing you may have to sell. Some shops hawk antiques of unknown provenance, and offer little hint as to the quality or nature of their goods.
 %%%%
 A silver altar of Elyvilon
+
+An altar to Elyvilon the Healer, made from silver and topped by a sculpture of the Silver Chalice of Purification.
 %%%%
 A slime covered rock wall
 
 This rock wall is thickly coated with bright green slime. Ewwwwww.
 %%%%
 A sparkling altar of Nemelex Xobeh
+
+This altar sparkles with a lightshow brighter than any gambling den's to attract followers for Nemelex Xobeh.
 %%%%
 A staircase back to the Crypt
+
+These stairs lead back up to the Crypt.
 %%%%
 A staircase back to the Dungeon
+
+These stairs lead back up to the familiarity of the dungeon.
 %%%%
 A staircase back to the Lair
+
+These stairs lead back up to the Lair of Beasts.
 %%%%
 A staircase back to the Mines
+
+These wide stairs lead back to the Orcish Mines.
 %%%%
 A staircase back to the Vaults
+
+These stairs lead back to the mighty Vaults.
 %%%%
 A staircase to the Crypt
+
+These stairs lead to an ancient crypt. Unfortunately, not everything that was buried there had the decency to stay dead.
 %%%%
 A staircase to the Ecumenical Temple
 
-An entrance to the Temple of the Gods, a place of peace, and a refuge from the insanity of the dungeon.
+An entrance to a temple of Gods, a place of peace and refuge from the insanity of the dungeon.
 %%%%
 A staircase to the Elven Halls
 
 A wide stair down to the murky depths of the halls of the deep elves, skilled warriors with blades and bows, and fearsome sorcerers and magicians.
 %%%%
 A staircase to the Hall of Blades
+
+These stairs lead to the Hall of Blades. The steps seem to have been beaten and chipped by assaults from the animated weapons therein.
 %%%%
 A staircase to the Hive
 
-You hear an angry and manifold drone.
+You hear an angry and manifold buzzing.
 %%%%
 A staircase to the Lair
+
+These stairs lead down to the Lair of Beasts, for a change of climate.
 %%%%
 A staircase to the Orcish Mines
 
@@ -164,25 +225,31 @@ Here be the Shoals: exotic underground beaches, salty spray and creatures that b
 %%%%
 A staircase to the Slime Pits
 
-An entrance to the amorphous realm of acids, jellies and slimes. Any trace of intelligent beings has long been dissolved. Still, there are rumours of great treasures deep down, hidden safely away in secret chambers without door or window for acid to leak in.
+An entrance to the amorphous realm of acids, jellies and slimes.
 %%%%
 A staircase to the Snake Pit
 
-Here is the way to the place of the serpent, the lair of the naga.
+Here is the way to the home of the serpent, the lair of the naga.
 %%%%
 A staircase to the Swamp
 
-A stair to a swampy waste land, complete with ooze, muck, flies and large slavering carnivorous monsters.
+A stair to a swampy wasteland, complete with ooze, muck, flies and large slavering carnivorous monsters.
 %%%%
 A staircase to the Tomb
 
 A way to the Tomb of the Ancients, a place of damnation, of horrors animated by the vilest necromancy.
 %%%%
 A staircase to the Vaults
+
+These stairs lead down into the Vaults, said to be home to great treasures. They are sprinkled with spots of blood.
 %%%%
 A stone staircase leading down
+
+These stairs lead further down.
 %%%%
 A stone staircase leading up
+
+These stairs lead back up.
 %%%%
 A stone wall
 
@@ -197,6 +264,8 @@ A translucent stone wall
 A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls. It has been imbued with arcane magics which render it translucent.
 %%%%
 A trap
+
+It's a trap!
 %%%%
 A wall of green crystal
 
@@ -207,12 +276,20 @@ A wall of solid wax
 These walls are built by bees. Occasionally a dungeon architect will manipulate bees into building wax walls for aesthetic reasons. (Theirs, not the bees'.) They are susceptible to fire and will melt and burn, given sufficient heat.
 %%%%
 A wall of the weird stuff which makes up Pandemonium
+
+This wall is made from the weird stuff which makes up Pandemonium, but seems to be like rock in most other aspects.
 %%%%
 An abandoned shop
+
+This shop has been abandoned.
 %%%%
 An ancient bone altar of Kikubaaqudgha
+
+Ancient bones were piled here to form an altar to the terrible Demon-God Kikubaaqudgha.
 %%%%
 An empty arch of ancient stone
+
+A stone archway that seems to have stood here forever and doesn't seem to lead anywhere in particular.
 %%%%
 An escape hatch in the ceiling
 
@@ -223,6 +300,8 @@ An escape hatch in the floor
 A spring-loaded one-way escape hatch set in the dungeon floor, allowing the adventurer beset by adversaries to exchange the perils of this level for the perils of the next.
 %%%%
 An iron altar of Okawaru
+
+An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are surprisingly sharp.
 %%%%
 An open door
 
@@ -237,6 +316,8 @@ An unnaturally hard rock wall
 You cannot affect this wall by any means.
 %%%%
 Floor
+
+Dungeon floor.
 %%%%
 Some deep water
 
