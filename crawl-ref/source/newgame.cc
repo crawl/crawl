@@ -965,7 +965,7 @@ static void _reassess_starting_skills()
 // Randomly boost stats a number of times.
 static void _assign_remaining_stats( int points_left )
 {
-    // First spend points to get us to the minimum allowed value .-- bwr
+    // First spend points to get us to the minimum allowed value. -- bwr
     if (you.strength < MIN_START_STAT)
     {
         points_left -= (MIN_START_STAT - you.strength);
@@ -2820,7 +2820,7 @@ static void _jobs_stat_init(job_type which_job)
     int hp = 0;  // HP base
     int mp = 0;  // MP base
 
-    // Note:  Wanderers are correct, they're a challenging class. -- bwr
+    // Note: Wanderers are correct, they're a challenging class. -- bwr
     switch (which_job)
     {
     case JOB_FIGHTER:           s =  7; i =  0; d =  3; hp = 15; mp = 0; break;
