@@ -2873,10 +2873,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim->god == GOD_SHINING_ONE)
                     break;
+                // fall through
 
-            case GOD_FEAWN: // plant god only cares about plants
-                if (!mons_is_plant(victim))
+            case GOD_FEAWN: 
+                // plant god only cares about plants
+                // double-check god because of fall-throughs from other gods
+                if (you.religion == GOD_FEAWN && !mons_is_plant(victim))
                     break;
+                // fall through
 
             case GOD_OKAWARU:
                 piety_change = -level;
