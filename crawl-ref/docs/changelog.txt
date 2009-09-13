@@ -1,9 +1,12 @@
 Stone Soup 0.6
 --------------
 * Two new gods: Jiyva, god of slime, and Feawn, god of plants.
+* Shorten Lair to eight levels.
 * Added scroll of silence.
 * Several new uniques.
+* Overhaul Wanderers.
 * Round all aptitudes to multiples of 10.
+* New memorisation interface.
 * Armour acquirement is more likely to fill secondary slots.
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
 * Added wands as an acquirement option.

@@ -48,7 +48,6 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
-stonemail STONEMAIL
 stoneskin STONESKIN
 
 %sdir spells/enchantment
@@ -115,6 +114,7 @@ cigotuvis_degeneration CIGOTUVIS_DEGENERATION
 control_undead CONTROL_UNDEAD
 corpse_rot CORPSE_ROT
 death_channel DEATH_CHANNEL
+deaths_door DEATHS_DOOR
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
 fulsome_distillation FULSOME_DISTILLATION
@@ -158,6 +158,7 @@ summon_horrible_things SUMMON_HORRIBLE_THINGS
 summon_ice_beast SUMMON_ICE_BEAST
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammals SUMMON_SMALL_MAMMALS
+summon_ugly_thing SUMMON_UGLY_THING
 summon_wraiths SUMMON_WRAITHS
 
 %sdir spells/translocation
@@ -172,6 +173,7 @@ portal PORTAL
 portal_projectile PORTAL_PROJECTILE
 teleport TELEPORT
 teleport_other TELEPORT_OTHER
+warp_weapon WARP_WEAPON
 
 %sdir spells/transmigration
 alter_self ALTER_SELF

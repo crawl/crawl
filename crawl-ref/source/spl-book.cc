@@ -1485,6 +1485,16 @@ bool has_spells_to_memorise()
     return _get_mem_list(mem_spells, book_hash, num_unreadable, num_race, true);
 }
 
+static bool _sort_mem_spells(spell_type a, spell_type b)
+{
+    if (spell_fail(a) != spell_fail(b))
+        return (spell_fail(a) < spell_fail(b));
+    if (spell_difficulty(a) != spell_difficulty(b))
+        return (spell_difficulty(a) < spell_difficulty(b));
+
+    return (stricmp(spell_title(a), spell_title(b)) < 0);
+}
+
 std::vector<spell_type> get_mem_spell_list()
 {
     std::vector<spell_type> spells;
@@ -1497,20 +1507,12 @@ std::vector<spell_type> get_mem_spell_list()
     if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
         return (spells);
 
+    std::sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
+
     for (unsigned int i = 0; i < mem_spells.size(); i++)
         spells.push_back(mem_spells[i]);
 
     return (spells);
-}
-
-static bool _sort_mem_spells(spell_type a, spell_type b)
-{
-    if (spell_fail(a) != spell_fail(b))
-        return (spell_fail(a) < spell_fail(b));
-    if (spell_difficulty(a) != spell_difficulty(b))
-        return (spell_difficulty(a) < spell_difficulty(b));
-
-    return (stricmp(spell_title(a), spell_title(b)) < 0);
 }
 
 static spell_type _choose_mem_spell(spell_list &spells,

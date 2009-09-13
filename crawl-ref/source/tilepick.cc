@@ -2748,7 +2748,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_BOLT_OF_MAGMA:            return TILEG_BOLT_OF_MAGMA;
     case SPELL_FRAGMENTATION:            return TILEG_LEES_RAPID_DECONSTRUCTION;
     case SPELL_BOLT_OF_IRON:             return TILEG_BOLT_OF_IRON;
-    case SPELL_STONEMAIL:                return TILEG_STONEMAIL
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:   return TILEG_LEHUDIBS_CRYSTAL_SPEAR;
     case SPELL_SHATTER:                  return TILEG_SHATTER;
 
@@ -2824,6 +2823,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_TELEPORT_SELF:            return TILEG_TELEPORT;
     case SPELL_PHASE_SHIFT:              return TILEG_PHASE_SHIFT;
     case SPELL_CONTROLLED_BLINK:         return TILEG_CONTROLLED_BLINK;
+    case SPELL_WARP_BRAND:               return TILEG_WARP_WEAPON;
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_PORTAL:                   return TILEG_PORTAL;
 
@@ -2837,6 +2837,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_SUMMON_SCORPIONS:         return TILEG_SUMMON_SCORPIONS;
     case SPELL_SUMMON_ELEMENTAL:         return TILEG_SUMMON_ELEMENTAL;
     case SPELL_SUMMON_DEMON:             return TILEG_SUMMON_DEMON;
+    case SPELL_SUMMON_UGLY_THING:        return TILEG_SUMMON_UGLY_THING;
     case SPELL_SHADOW_CREATURES:         return TILEG_SUMMON_SHADOW_CREATURES;
     case SPELL_SUMMON_ICE_BEAST:         return TILEG_SUMMON_ICE_BEAST;
     case SPELL_DEMONIC_HORDE:            return TILEG_DEMONIC_HORDE;
@@ -2864,6 +2865,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_CONTROL_UNDEAD:           return TILEG_CONTROL_UNDEAD;
     case SPELL_BOLT_OF_DRAINING:         return TILEG_BOLT_OF_DRAINING;
     case SPELL_SYMBOL_OF_TORMENT:        return TILEG_SYMBOL_OF_TORMENT;
+    case SPELL_DEATHS_DOOR:              return TILEG_DEATHS_DOOR;
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
 
     // Transformation
@@ -2887,12 +2889,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_DETECT_ITEMS:             return TILEG_DETECT_ITEMS;
     case SPELL_DETECT_CREATURES:         return TILEG_DETECT_CREATURES;
 
-    // Spells still missing tiles:
-    case SPELL_DEATHS_DOOR:
-    case SPELL_SUMMON_UGLY_THING:
-    case SPELL_WARP_BRAND:
-        return TILEG_TODO;
-
     // --------------------------------------------
     // Rods and abilities (tiles needed for later)
     // Abilities
@@ -2902,8 +2898,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_HELLFIRE:      // Demonspawn ability
 
     // Rod-only spells
-    case SPELL_PARALYSE:
-        return TILEG_PETRIFY; // similar effect
+    case SPELL_PARALYSE:      // we could reuse Petrify for this
     case SPELL_STRIKING:
     case SPELL_BOLT_OF_INACCURACY:
     case SPELL_SUMMON_SWARM:
@@ -2911,6 +2906,7 @@ int tileidx_spell(spell_type spell)
 
     // --------------------------------------------
     // Spells that don't need icons:
+    case SPELL_STONEMAIL:     // Xom only?
     case SPELL_SUMMON_DRAGON: // Xom
     case SPELL_DISRUPT:       // in development?
     case SPELL_DISINTEGRATE:  // wand and card
