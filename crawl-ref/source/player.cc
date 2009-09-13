@@ -2320,7 +2320,7 @@ int player_evasion()
     // Some lesser armours have small penalties now (shields, barding).
     for (int i = EQ_CLOAK; i < EQ_BODY_ARMOUR; i++)
     {
-        if (you.equip[i] == -1)
+        if (!player_wearing_slot(i))
             continue;
 
         int pen = property( you.inv[ you.equip[i] ], PARM_EVASION );
@@ -2559,22 +2559,10 @@ item_def *player_shield()
 int player_shield_class(void)   //jmf: changes for new spell
 {
     int base_shield = 0;
-    const int shield = you.equip[EQ_SHIELD];
 
-    if (shield == -1)
+    if (player_wearing_slot(EQ_SHIELD))
     {
-        if (you.duration[DUR_MAGIC_SHIELD])
-            base_shield = 2 + you.skills[SK_EVOCATIONS] / 6;
-
-        if (!you.duration[DUR_FIRE_SHIELD] &&
-            you.duration[DUR_CONDENSATION_SHIELD])
-        {
-            base_shield += 2 + (you.skills[SK_ICE_MAGIC] / 6);  // max 6
-        }
-    }
-    else
-    {
-        const item_def& item = you.inv[shield];
+        const item_def& item = you.inv[you.equip[EQ_SHIELD]];
         base_shield = property(item, PARM_AC);
 
         int racial_bonus = _player_armour_racial_bonus(item) * 2 / 3;
@@ -2584,6 +2572,17 @@ int player_shield_class(void)   //jmf: changes for new spell
         base_shield /= 20;
 
         base_shield += item.plus;
+    }
+    else
+    {
+        if (you.duration[DUR_MAGIC_SHIELD])
+            base_shield = 2 + you.skills[SK_EVOCATIONS] / 6;
+
+        if (!you.duration[DUR_FIRE_SHIELD]
+            && you.duration[DUR_CONDENSATION_SHIELD])
+        {
+            base_shield += 2 + (you.skills[SK_ICE_MAGIC] / 6);  // max 6
+        }
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
@@ -6313,7 +6312,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
                             || hands_reqd(item, body_size()) == HANDS_TWO;
 
-    if (two_handed && !ignore_shield && equip[EQ_SHIELD] != -1)
+    if (two_handed && !ignore_shield && player_wearing_slot(EQ_SHIELD))
         return (false);
 
     return could_wield(item, ignore_brand, ignore_transform);

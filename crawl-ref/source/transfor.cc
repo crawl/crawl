@@ -65,7 +65,7 @@ bool transform_allows_wearing_item(const item_def& item,
     {
         // It's not jewellery, and it's worn, so it must be armour.
         const equipment_type eqslot = get_armour_slot(item);
-        const bool is_soft_helmet = is_helmet(item) && !is_hard_helmet(item);
+        const bool is_soft_helmet   = is_helmet(item) && !is_hard_helmet(item);
 
         switch (transform)
         {
@@ -143,7 +143,7 @@ static void _unwear_equipment_slot(equipment_type eqslot)
 
     if (eqslot == EQ_WEAPON)
     {
-        unwield_item();
+        unwield_item(!you.duration[DUR_BERSERKER]);
         canned_msg(MSG_EMPTY_HANDED);
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
     }
