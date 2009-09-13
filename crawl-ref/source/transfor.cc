@@ -68,7 +68,7 @@ bool transform_allows_wearing_item(const item_def& item,
     {
         // It's not jewellery, and it's worn, so it must be armour.
         const equipment_type eqslot = get_armour_slot(item);
-        const bool is_soft_helmet = is_helmet(item) && !is_hard_helmet(item);
+        const bool is_soft_helmet   = is_helmet(item) && !is_hard_helmet(item);
 
         switch (transform)
         {
@@ -147,7 +147,7 @@ static void _unwear_equipment_slot(equipment_type eqslot)
 
     if (eqslot == EQ_WEAPON)
     {
-        unwield_item();
+        unwield_item(!you.duration[DUR_BERSERKER]);
         canned_msg(MSG_EMPTY_HANDED);
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
     }
@@ -611,8 +611,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    if (_check_for_cursed_equipment(rem_stuff, which_trans, force) && which_trans!=TRAN_PIG)
+    if (which_trans != TRAN_PIG
+        && _check_for_cursed_equipment(rem_stuff, which_trans, force))
+    {
         return (_abort_or_fizzle(just_check));
+    }
 
     int str = 0, dex = 0, symbol = '@', colour = LIGHTGREY, xhp = 0, dur = 0;
     const char* tran_name = "buggy";

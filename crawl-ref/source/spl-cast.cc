@@ -235,6 +235,9 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
 
 int list_spells(bool toggle_with_I, bool viewing, int minRange)
 {
+    if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
+        toggle_with_I = false;
+
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                                 |   MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
 #ifdef USE_TILE

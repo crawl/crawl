@@ -197,7 +197,7 @@ int calc_heavy_armour_penalty( bool random_factor )
     const bool ur_armed = (you.weapon() != NULL);
     int heavy_armour = 0;
 
-    // heavy armour modifiers for shield borne
+    // Heavy armour modifiers for shield borne.
     if (player_wearing_slot(EQ_SHIELD))
     {
         switch (you.shield()->sub_type)
@@ -219,7 +219,9 @@ int calc_heavy_armour_penalty( bool random_factor )
                 {
                     if (you.skills[SK_SHIELDS] < maybe_random2(13,
                                                                random_factor))
+                    {
                         heavy_armour += maybe_random2(3, random_factor);
+                    }
                 }
             }
             break;

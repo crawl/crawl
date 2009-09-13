@@ -2930,7 +2930,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_BOLT,
     TRAP_NET,
     TRAP_ZOT,
-    TRAP_NEEDLE,
+    TRAP_NEEDLE,                       //   10
     TRAP_SHAFT,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}

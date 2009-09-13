@@ -134,8 +134,8 @@ bool remove_curse(bool suppress_msg)
     // What of artefact rings and amulets? {dlb}:
     for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; i++)
     {
-        if (you.equip[i] != -1 && item_cursed(you.inv[you.equip[i]])
-            && you_tran_can_wear(you.equip[i]))
+        // Melded equipment can also get uncursed this way.
+        if (you.equip[i] != -1 && item_cursed(you.inv[you.equip[i]]))
         {
             do_uncurse_item(you.inv[you.equip[i]]);
             success = true;
