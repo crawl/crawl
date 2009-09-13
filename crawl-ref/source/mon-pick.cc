@@ -1329,12 +1329,9 @@ int mons_lair_level(int mcls)
     case MONS_GIANT_NEWT:
     case MONS_RAT:
     case MONS_QUOKKA:
-        mlev += 0;
-        break;
-
     case MONS_GIANT_CENTIPEDE:
     case MONS_GIANT_IGUANA:
-        mlev++;
+        mlev += 0;
         break;
 
     case MONS_GIANT_FROG:
@@ -1342,12 +1339,9 @@ int mons_lair_level(int mcls)
     case MONS_GREY_RAT:
     case MONS_HOUND:
     case MONS_BLACK_BEAR:
-        mlev += 2;
-        break;
-
     case MONS_WORM:
     case MONS_WOLF:
-        mlev += 3;
+        mlev++;
         break;
 
     case MONS_FUNGUS:
@@ -1357,7 +1351,7 @@ int mons_lair_level(int mcls)
     case MONS_GREEN_RAT:
     case MONS_SCORPION:
     case MONS_SNAKE:
-        mlev += 4;
+        mlev += 2;
         break;
 
     case MONS_WATER_MOCCASIN:
@@ -1370,7 +1364,7 @@ int mons_lair_level(int mcls)
     case MONS_WAR_DOG:
     case MONS_YELLOW_WASP:
     case MONS_BEAR:
-        mlev += 5;
+        mlev += 3;
         break;
 
     case MONS_BLINK_FROG:
@@ -1383,7 +1377,7 @@ int mons_lair_level(int mcls)
     case MONS_WOLF_SPIDER:
     case MONS_YAK:
     case MONS_GRIZZLY_BEAR:
-        mlev += 6;
+        mlev += 4;
         break;
 
     case MONS_BLACK_MAMBA:
@@ -1395,7 +1389,7 @@ int mons_lair_level(int mcls)
     case MONS_WYVERN:
     case MONS_TRAPDOOR_SPIDER:
     case MONS_ROCK_WORM:
-        mlev += 7;
+        mlev += 5;
         break;
 
     case MONS_ELEPHANT_SLUG:
@@ -1404,14 +1398,14 @@ int mons_lair_level(int mcls)
     case MONS_LINDWURM:
     case MONS_REDBACK:
     case MONS_WANDERING_MUSHROOM:
-        mlev += 8;
+        mlev += 6;
         break;
 
     case MONS_BORING_BEETLE:
     case MONS_BOULDER_BEETLE:
     case MONS_DEATH_YAK:
     case MONS_SPINY_WORM:
-        mlev += 9;
+        mlev += 7;
         break;
 
     default:

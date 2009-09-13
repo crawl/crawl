@@ -184,7 +184,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       8, 'E', false, true },
 
-    { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 10, 8, 0, 0,
+    { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 8, 8, 0, 0,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
       NULL,

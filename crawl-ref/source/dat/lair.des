@@ -57,7 +57,7 @@ xxxx..@..xxxx
 ENDMAP
 
 ################################################################################
-# Lair monsters near stair 
+# Lair monsters near stair
 #
 NAME:    david_lair_3
 TAGS:    lair_entry
@@ -221,7 +221,7 @@ ORIENT: float
 SUBST:  . = G:20 B:15 .
 SUBST:  1 = 1:60 .
 SUBST:  2 = 2:60 1 .
-SUBST:  . = .:60 1:20 2:5 
+SUBST:  . = .:60 1:20 2:5
 COLOUR: G = green
 FTILE:  G = floor_grass
 SUBST:  G = .
@@ -293,7 +293,7 @@ ENDMAP
 #
 NAME:    pond_and_an_island_with_a_cottage
 ORIENT:  float
-DEPTH:   Lair:3-9
+DEPTH:   Lair:3-7
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
@@ -503,7 +503,7 @@ ENDMAP
 # Ice dragon lair with assorted imp pets
 #
 NAME:   ice_dragon_lair_bobbens
-DEPTH:  Lair:5-10
+DEPTH:  Lair:4-8
 TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
@@ -538,7 +538,7 @@ ENDMAP
 # Dragon lair embedded in wall
 #
 NAME:   dragon_lair_wall_bobbens
-DEPTH:  Lair:5-10
+DEPTH:  Lair:4-8
 TAGS:   no_monster_gen mini_float
 : if you.absdepth() >= 18 then
 MONS:   dragon
@@ -578,7 +578,7 @@ ENDMAP
 #	Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
-DEPTH:  Lair:5-10
+DEPTH:  Lair:4-8
 TAGS:   allow_dup no_monster_gen no_item_gen mini_float
 MONS:   w:5 death drake / ice dragon / dragon / swamp dragon
 MONS:   swamp dragon / hydra / grey snake
@@ -669,7 +669,7 @@ ENDMAP
 # Shoals specific non-ending vaults
 ##############################################################################
 
- 
+
 ###########################
 # Shoal Ruins - nothing special, just some flavor (Enne)
 # Appear rarely.
@@ -703,7 +703,7 @@ SUBST:  ' = ' 1:5
 SUBST:  . = . 2:1
 SUBST:  ' = .
 MAP
- ''''''''' 
+ '''''''''
 '''xx+xx'''
 ''xx...xx''
 'xx.....xx'
@@ -713,7 +713,7 @@ MAP
 'xx.....xx'
 ''xx...xx''
 '''xxxxx'''
- ''''''''' 
+ '''''''''
 ENDMAP
 
 NAME:   overgrown_statue
@@ -726,8 +726,8 @@ SUBST:  p = 1:2 .
 SUBST:  P = 1:20 .
 SUBST:  G = G 2
 MAP
-  ........  
- .......... 
+  ........
+ ..........
 ....ppp.....
 ...ppppp....
 ..ppPPPpp...
@@ -735,8 +735,8 @@ MAP
 ..ppPPPpp...
 ...ppppp....
 ....ppp.....
- .......... 
-  ........  
+ ..........
+  ........
 ENDMAP
 
 NAME:   shoals_oasis
@@ -748,13 +748,13 @@ SUBST:  W = W .
 SUBST:  w = W w
 SUBST:  _ = w
 MAP
-  ...  
- ..W.. 
+  ...
+ ..W..
 ..WwW..
 .Ww_wW.
 ..WwW..
- ..W.. 
-  ...  
+ ..W..
+  ...
 ENDMAP
 
 
