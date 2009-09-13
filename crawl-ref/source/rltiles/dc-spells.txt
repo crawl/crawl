@@ -48,6 +48,7 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
+stonemail STONEMAIL
 stoneskin STONESKIN
 
 %sdir spells/enchantment
@@ -166,7 +167,9 @@ blink BLINK
 controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
 dispersal DISPERSAL
+phase_shift PHASE_SHIFT
 portal PORTAL
+portal_projectile PORTAL_PROJECTILE
 teleport TELEPORT
 teleport_other TELEPORT_OTHER
 

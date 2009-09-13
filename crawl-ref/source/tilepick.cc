@@ -2748,6 +2748,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_BOLT_OF_MAGMA:            return TILEG_BOLT_OF_MAGMA;
     case SPELL_FRAGMENTATION:            return TILEG_LEES_RAPID_DECONSTRUCTION;
     case SPELL_BOLT_OF_IRON:             return TILEG_BOLT_OF_IRON;
+    case SPELL_STONEMAIL:                return TILEG_STONEMAIL
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:   return TILEG_LEHUDIBS_CRYSTAL_SPEAR;
     case SPELL_SHATTER:                  return TILEG_SHATTER;
 
@@ -2815,11 +2816,13 @@ int tileidx_spell(spell_type spell)
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
+    case SPELL_PORTAL_PROJECTILE:        return TILEG_PORTAL_PROJECTILE;
     case SPELL_BLINK:                    return TILEG_BLINK;
     case SPELL_BANISHMENT:               return TILEG_BANISHMENT;
     case SPELL_CONTROL_TELEPORT:         return TILEG_CONTROLLED_TELEPORT;
     case SPELL_TELEPORT_OTHER:           return TILEG_TELEPORT_OTHER;
     case SPELL_TELEPORT_SELF:            return TILEG_TELEPORT;
+    case SPELL_PHASE_SHIFT:              return TILEG_PHASE_SHIFT;
     case SPELL_CONTROLLED_BLINK:         return TILEG_CONTROLLED_BLINK;
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_PORTAL:                   return TILEG_PORTAL;
@@ -2885,12 +2888,9 @@ int tileidx_spell(spell_type spell)
     case SPELL_DETECT_CREATURES:         return TILEG_DETECT_CREATURES;
 
     // Spells still missing tiles:
-    case SPELL_PORTAL_PROJECTILE:
     case SPELL_DEATHS_DOOR:
     case SPELL_SUMMON_UGLY_THING:
-    case SPELL_PHASE_SHIFT:
     case SPELL_WARP_BRAND:
-    case SPELL_STONEMAIL:
         return TILEG_TODO;
 
     // --------------------------------------------
