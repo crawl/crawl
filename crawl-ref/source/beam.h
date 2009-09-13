@@ -215,7 +215,7 @@ private:
     // operate on the beam's current position (i.e., whatever pos()
     // returns.)
 public:
-    void affect_cell();
+    void affect_cell(bool avoid_self = false);
     void affect_wall();
     void affect_monster( monsters* m );
     void affect_player();

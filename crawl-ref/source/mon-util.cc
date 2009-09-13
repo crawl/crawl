@@ -639,14 +639,11 @@ bool mons_is_slime(const monsters *mon)
     return (mons_class_is_slime(mon->type));
 }
 
-// Monsters Feawn cares about - plants and fungi except for giant spores
-// and toadstools.
+// Plant or fungus really
 bool mons_class_is_plant(int mc)
 {
-    return (mc != MONS_GIANT_SPORE
-               && mc != MONS_TOADSTOOL
-               && (mons_genus(mc) == MONS_PLANT
-                   || mons_genus(mc) == MONS_FUNGUS));
+    return (mons_genus(mc) == MONS_PLANT
+            || mons_genus(mc) == MONS_FUNGUS);
 }
 
 bool mons_is_plant(const monsters *mon)
@@ -8493,7 +8490,7 @@ int mon_enchant::calc_duration(const monsters *mons,
         break;
     case ENCH_SLOWLY_DYING:
         // This may be a little too direct but the randomization at the end
-        // of this function is excessive for corpse mold. -cao
+        // of this function is excessive for toadstools. -cao
         return (2 * FRESHEST_CORPSE + random2(10))
                   * speed_to_duration(mons->speed) * mons->speed / 10;
     case ENCH_ABJ:

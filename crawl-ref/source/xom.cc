@@ -1052,7 +1052,7 @@ static bool _xom_do_potion()
     {
         pot = static_cast<potion_type>(
                 random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_MAGIC,
-                              POT_SPEED, POT_MIGHT, POT_INVISIBILITY,
+                              POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE, POT_INVISIBILITY,
                               POT_BERSERK_RAGE, POT_EXPERIENCE, -1));
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
@@ -1107,6 +1107,8 @@ static bool _xom_do_potion()
     case POT_MAGIC:         potion_msg += "(magic)"; break;
     case POT_SPEED:         potion_msg += "(speed)"; break;
     case POT_MIGHT:         potion_msg += "(might)"; break;
+    case POT_AGILITY:       potion_msg += "(agility)"; break;
+    case POT_BRILLIANCE:    potion_msg += "(brilliance)"; break;
     case POT_INVISIBILITY:  potion_msg += "(invisibility)"; break;
     case POT_BERSERK_RAGE:  potion_msg += "(berserk)"; break;
     case POT_EXPERIENCE:    potion_msg += "(experience)"; break;
@@ -2214,7 +2216,9 @@ static bool _xom_lose_stats()
         // will die once might wears off.
         char      vals[3] =
             {you.strength - (you.duration[DUR_MIGHT] ? 5 : 0),
-             you.dex, you.intel};
+             you.dex - (you.duration[DUR_AGILITY] ? 5 : 0),
+             you.intel - (you.duration[DUR_BRILLIANCE] ? 5 : 0)};
+
         stat_type types[3] = {STAT_STRENGTH, STAT_DEXTERITY,
                               STAT_INTELLIGENCE};
         int tries = 0;

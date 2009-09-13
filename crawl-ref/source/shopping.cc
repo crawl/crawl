@@ -1309,6 +1309,8 @@ unsigned int item_value( item_def item, bool ident )
                 valued += 30;
                 break;
             case POT_MIGHT:
+            case POT_AGILITY:
+            case POT_BRILLIANCE:
             case POT_SPEED:
                 valued += 25;
                 break;

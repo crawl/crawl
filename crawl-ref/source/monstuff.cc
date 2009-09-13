@@ -1019,9 +1019,6 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
         return (false);
     }
 
-    if (killer == KILL_MISC)
-        killer = KILL_MON;
-
     bolt beam;
     const int type = monster->type;
 
@@ -1031,7 +1028,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = monster->pos();
     beam.target       = monster->pos();
-    beam.thrower      = killer;
+    beam.thrower      = (monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON);
     beam.aux_source.clear();
 
     if (YOU_KILL(killer))
@@ -1457,7 +1454,7 @@ int monster_die(monsters *monster, killer_type killer,
                                     true, monster);
                 }
 
-                if (mons_is_plant(monster))
+                if (feawn_protects(monster))
                 {
                     did_god_conduct(DID_KILL_PLANT, monster->hit_dice,
                                     true, monster);
@@ -1566,7 +1563,7 @@ int monster_die(monsters *monster, killer_type killer,
                                 true, monster);
             }
 
-            if (pet_kill && mons_is_plant(monster))
+            if (pet_kill && feawn_protects(monster))
             {
                 did_god_conduct(DID_ALLY_KILLED_PLANT, 1 + (monster->hit_dice / 2),
                                 true, monster);
@@ -2867,7 +2864,8 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             // *per hit*.  This may not be the best way to address the
             // issue, though. -cao
             if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
-                && mon->attitude != ATT_FRIENDLY)
+                && mon->attitude != ATT_FRIENDLY
+                && mon->attitude != ATT_GOOD_NEUTRAL)
             {
                 return;
             }
@@ -7670,7 +7668,33 @@ static void _handle_monster_move(monsters *monster)
 
         if (!mons_is_caught(monster))
         {
+            if (monster->pos() + mmov == you.pos())
+            {
+                ASSERT(!crawl_state.arena);
+
+                if (!mons_friendly(monster))
+                {
+                    // If it steps into you, cancel other targets.
+                    monster->foe = MHITYOU;
+                    monster->target = you.pos();
+
+                    monster_attack(monster);
+
+                    if (mons_is_batty(monster))
+                    {
+                        monster->behaviour = BEH_WANDER;
+                        _set_random_target(monster);
+                    }
+                    DEBUG_ENERGY_USE("monster_attack()");
+                    mmov.reset();
+                    continue;
+                }
+            }
+
             // See if we move into (and fight) an unfriendly monster.
+            // FIXME: looks like the lack of a check on 'submerged' here is the
+            // reason monsters can attack submerged monsters they happen to
+            // walk into -cao
             monsters* targ = monster_at(monster->pos() + mmov);
             if (targ
                 && targ != monster
@@ -7694,29 +7718,6 @@ static void _handle_monster_move(monsters *monster)
 
                     mmov.reset();
                     DEBUG_ENERGY_USE("monsters_fight()");
-                    continue;
-                }
-            }
-
-            if (monster->pos() + mmov == you.pos())
-            {
-                ASSERT(!crawl_state.arena);
-
-                if (!mons_friendly(monster))
-                {
-                    // If it steps into you, cancel other targets.
-                    monster->foe = MHITYOU;
-                    monster->target = you.pos();
-
-                    monster_attack(monster);
-
-                    if (mons_is_batty(monster))
-                    {
-                        monster->behaviour = BEH_WANDER;
-                        _set_random_target(monster);
-                    }
-                    DEBUG_ENERGY_USE("monster_attack()");
-                    mmov.reset();
                     continue;
                 }
             }

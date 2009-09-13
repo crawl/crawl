@@ -358,6 +358,10 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
     // and Might running out at an inopportune moment.
     if (you.duration[DUR_MIGHT])
         prop_str += 5;
+    if (you.duration[DUR_BRILLIANCE])
+        prop_int += 5;
+    if (you.duration[DUR_AGILITY])
+        prop_dex += 5;
 
     if (prop_str >= you.strength
         || prop_int >= you.intel

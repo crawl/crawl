@@ -2364,6 +2364,7 @@ static bool _god_accepts_prayer(god_type god)
 
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
+    case GOD_FEAWN:
         return (true);
 
     default:
@@ -2462,6 +2463,13 @@ void pray()
             you.duration[DUR_PRAYER] *= 3;
         else if (you.piety > 70)
             you.duration[DUR_PRAYER] *= 2;
+    }
+
+    if (you.religion == GOD_FEAWN)
+    {
+        if (you.duration[DUR_SLOW] < you.duration[DUR_PRAYER])
+            slow_player(you.duration[DUR_PRAYER]);
+        mprf(MSGCH_GOD, "You feel in touch with plants.");
     }
 
     if (you.religion == GOD_ZIN || you.religion == GOD_BEOGH
@@ -2875,10 +2883,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     break;
                 // fall through
 
-            case GOD_FEAWN: 
-                // plant god only cares about plants
+            case GOD_FEAWN:
                 // double-check god because of fall-throughs from other gods
-                if (you.religion == GOD_FEAWN && !mons_is_plant(victim))
+                if (you.religion == GOD_FEAWN && !feawn_protects(victim))
                     break;
                 // fall through
 
@@ -6017,8 +6024,7 @@ static bool _feawn_plants_on_level_hostile()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && (mons_is_plant(monster)
-                || monster->mons_species() == MONS_GIANT_SPORE))
+            && mons_is_plant(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Plant hostility: %s on level %d, branch %d",
@@ -6475,20 +6481,52 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
 void feawn_neutralise_plant(monsters *plant)
 {
-    if (!mons_is_plant(plant)
+    if (!plant
+        || !feawn_neutralises(plant)
+        || plant->attitude != ATT_HOSTILE
         || testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         return;
     }
 
-    if (you.can_see(plant))
-    {
-        mprf(MSGCH_GOD, "%s ignores you.",
-             plant->name(DESC_CAP_THE).c_str());
-    }
-
     plant->attitude = ATT_GOOD_NEUTRAL;
     plant->flags   |= MF_WAS_NEUTRAL;
+}
+
+// During prayer feawn allows worshipers to walk on top of stationary plants
+// and fungi.
+bool feawn_passthrough(const monsters * target)
+{
+    return (target && you.religion == GOD_FEAWN
+            && you.duration[DUR_PRAYER]
+            && mons_is_plant(target)
+            && mons_is_stationary(target));
+}
+
+// Feawn worshipers are on the hook for most plants and fungi, but not
+// toadstools and giant spores because they die too easily.
+//
+// If feawn worshipers kill a protected monster they lose piety,
+// if they attack a friendly one they get penance,
+// if a friendly one dies they lose piety.
+bool feawn_protects_species(int mc)
+{
+    return (mons_class_is_plant(mc)
+            && mc != MONS_TOADSTOOL
+            && mc != MONS_GIANT_SPORE);
+}
+
+bool feawn_protects(const monsters * target)
+{
+    return target && feawn_protects_species(target->mons_species());
+}
+
+// Feawn neutralizes most plants and fungi but skips toadstools to prevent
+// message spam (and killing them doesn't even cause piety loss).
+bool feawn_neutralises(const monsters * target)
+{
+    return (target && mons_is_plant(target)
+            && target->mons_species() != MONS_TOADSTOOL);
 }
 
 void jiyva_convert_slime(monsters* slime)
@@ -6946,7 +6984,7 @@ bool god_hates_attacking_friend(god_type god, int species)
         case GOD_JIYVA:
             return (mons_class_is_slime(species));
         case GOD_FEAWN:
-            return (mons_class_is_plant(species));
+            return feawn_protects_species(species);
         default:
             return (false);
     }
@@ -7535,7 +7573,7 @@ bool god_hates_killing(god_type god, const monsters* mon)
     }
 
     if (god == GOD_FEAWN)
-        retval = (mons_is_plant(mon));
+        retval = (feawn_protects(mon));
 
     return (retval);
 }

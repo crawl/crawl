@@ -388,7 +388,9 @@ short _get_stat_colour(stat_type stat)
 
     // Stat is magically increased.
     if (you.duration[DUR_DIVINE_STAMINA]
-        || stat == STAT_STRENGTH && you.duration[DUR_MIGHT])
+        || stat == STAT_STRENGTH && you.duration[DUR_MIGHT]
+        || stat == STAT_INTELLIGENCE && you.duration[DUR_BRILLIANCE]
+        || stat == STAT_DEXTERITY && you.duration[DUR_AGILITY])
     {
         return (LIGHTBLUE);  // no end of effect warning
     }
@@ -1919,8 +1921,10 @@ static std::vector<formatted_string> _get_overview_stats()
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
     const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
                                 || you.duration[DUR_MIGHT];
-    const bool boosted_int = you.duration[DUR_DIVINE_STAMINA];
-    const bool boosted_dex = you.duration[DUR_DIVINE_STAMINA];
+    const bool boosted_int = you.duration[DUR_DIVINE_STAMINA]
+                                || you.duration[DUR_BRILLIANCE];
+    const bool boosted_dex = you.duration[DUR_DIVINE_STAMINA]
+                                || you.duration[DUR_AGILITY];
 
     if (!player_rotted())
     {
@@ -2421,6 +2425,12 @@ std::string _status_mut_abilities()
 
     if (you.duration[DUR_MIGHT])
         status.push_back("mighty");
+
+    if (you.duration[DUR_BRILLIANCE])
+        status.push_back("brilliance");
+
+    if (you.duration[DUR_AGILITY])
+        status.push_back("agile");
 
     if (you.duration[DUR_DIVINE_VIGOUR])
         status.push_back("divinely vigorous");

@@ -2309,6 +2309,12 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_MIGHT, "You feel a little less mighty now."))
         modify_stat(STAT_STRENGTH, -5, true, "might running out");
 
+    if (_decrement_a_duration(DUR_AGILITY, "You feel a little less agile now."))
+        modify_stat(STAT_DEXTERITY, -5, true, "agility running out");
+
+    if (_decrement_a_duration(DUR_BRILLIANCE, "You feel a little less clever now."))
+        modify_stat(STAT_INTELLIGENCE, -5, true, "brilliance running out");
+	
     if (_decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {
         //jmf: Guilty for berserking /after/ berserk.
@@ -3738,7 +3744,11 @@ static void _move_player(coord_def move)
 
     const coord_def& targ = you.pos() + move;
     const dungeon_feature_type targ_grid  =  grd(targ);
+
           monsters*      targ_monst = monster_at(targ);
+          if (feawn_passthrough(targ_monst))
+              targ_monst = NULL;
+
     const bool           targ_pass  = you.can_pass_through(targ);
 
     // You can swap places with a friendly or good neutral monster if

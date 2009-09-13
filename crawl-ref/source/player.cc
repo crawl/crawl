@@ -118,7 +118,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     // Better not be an unsubmerged monster either.
     ASSERT(swapping && mgrd(p) != NON_MONSTER
            || !swapping && (mgrd(p) == NON_MONSTER
-                            || mons_is_submerged( &menv[ mgrd(p) ])));
+                            || mons_is_submerged( &menv[ mgrd(p) ])
+                            || feawn_passthrough(&menv[mgrd(p)])));
 
     // Don't prompt if force is true.
     if (!force)
@@ -2451,6 +2452,9 @@ int player_evasion()
     if (dodge_bonus > 0)                // always a bonus
         ev += dodge_bonus;
 
+    if (you.duration[DUR_AGILITY]) 
+        ev += 5;
+
     if (you.duration[DUR_PHASE_SHIFT])
         ev += 8;
 
@@ -2620,6 +2624,9 @@ int player_magical_power(void)
 int player_mag_abil(bool is_weighted)
 {
     int ma = 0;
+
+    // Brilliance Potion
+    ma += 6 * (you.duration[DUR_BRILLIANCE] ? 1 : 0);
 
     ma += 3 * player_equip(EQ_RINGS, RING_WIZARDRY);
 
@@ -3740,6 +3747,9 @@ int check_stealth(void)
     if ( you.duration[DUR_STEALTH] )
         stealth += 80;
 
+    if (you.duration[DUR_AGILITY]) 
+        stealth += 50;
+
     stealth += scan_artefacts( ARTP_STEALTH );
 
     if (player_is_airborne())
@@ -4181,6 +4191,10 @@ void display_char_status()
 
     if (you.duration[DUR_MIGHT])
         mpr("You are mighty.");
+    if (you.duration[DUR_BRILLIANCE])
+        mpr("You are brilliant.");
+    if (you.duration[DUR_AGILITY])
+        mpr("You are agile.");
 
     if (you.duration[DUR_DIVINE_VIGOUR])
         mpr("You are divinely vigorous.");
@@ -5768,6 +5782,9 @@ static int _int_modifier()
 {
     int result = 0;
 
+    if (you.duration[DUR_BRILLIANCE])
+        result += 5;
+
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
@@ -5790,6 +5807,9 @@ static int _int_modifier()
 static int _dex_modifier()
 {
     int result = 0;
+
+    if (you.duration[DUR_AGILITY])
+        result += 5;
 
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];

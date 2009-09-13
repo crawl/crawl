@@ -566,13 +566,15 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
     if (which_stat == STAT_RANDOM)
     {
         const int might = you.duration[DUR_MIGHT] ? 5 : 0;
+        const int brilliant = you.duration[DUR_BRILLIANCE] ? 5 : 0;
+        const int agile = you.duration[DUR_AGILITY] ? 5 : 0;
 
         std::vector<unsigned char> stat_types;
         if ((you.strength - might - stat_loss) > 0)
             stat_types.push_back(STAT_STRENGTH);
-        if ((you.intel - stat_loss) > 0)
+        if ((you.intel - brilliant - stat_loss) > 0)
             stat_types.push_back(STAT_INTELLIGENCE);
-        if ((you.dex - stat_loss) > 0)
+        if ((you.dex - agile - stat_loss) > 0)
             stat_types.push_back(STAT_DEXTERITY);
 
         if (stat_types.size() == 0)

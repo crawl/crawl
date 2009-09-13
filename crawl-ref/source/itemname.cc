@@ -491,6 +491,8 @@ static const char* potion_type_name(int potiontype)
     case POT_HEAL_WOUNDS:       return "heal wounds";
     case POT_SPEED:             return "speed";
     case POT_MIGHT:             return "might";
+    case POT_AGILITY:           return "agility";
+    case POT_BRILLIANCE:        return "brilliance";
     case POT_GAIN_STRENGTH:     return "gain strength";
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
@@ -2360,6 +2362,8 @@ bool is_good_item(const item_def &item)
         case POT_MAGIC:
         case POT_BERSERK_RAGE:
         case POT_MIGHT:
+        case POT_AGILITY:
+        case POT_BRILLIANCE:
         case POT_RESTORE_ABILITIES:
             return (true);
         default:

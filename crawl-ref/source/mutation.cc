@@ -1809,11 +1809,15 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
 
     case MUT_DOPEY:
         stat_ptr = &you.intel;
+        if (you.duration[DUR_BRILLIANCE])
+            mod = -5;
         break;
 
     case MUT_STRONG_STIFF:
     case MUT_CLUMSY:
         stat_ptr = &you.dex;
+        if (you.duration[DUR_AGILITY])
+            mod = -5;
         break;
 
     default:

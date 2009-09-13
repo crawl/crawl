@@ -1885,7 +1885,7 @@ void bolt::hit_wall()
     }
 }
 
-void bolt::affect_cell()
+void bolt::affect_cell(bool avoid_self)
 {
     // Shooting through clouds affects accuracy.
     if (env.cgrid(pos()) != EMPTY_CLOUD)
@@ -1895,14 +1895,18 @@ void bolt::affect_cell()
 
     const coord_def old_pos = pos();
     const bool was_solid = grid_is_solid(grd(pos()));
+
+    bool avoid_monster = (avoid_self && this->thrower == KILL_MON_MISSILE);
+    bool avoid_player  = (avoid_self && this->thrower != KILL_MON_MISSILE);
+
     if (was_solid)
     {
         // Some special casing.
         if (monsters* mon = monster_at(pos()))
         {
-            if (can_affect_wall_monster(mon))
+            if (can_affect_wall_monster(mon) && !avoid_monster)
                 affect_monster(mon);
-            else
+            else if (!avoid_monster)
             {
                 mprf("The %s protects %s from harm.",
                      raw_feature_description(grd(mon->pos())).c_str(),
@@ -1915,16 +1919,26 @@ void bolt::affect_cell()
         hit_wall();
     }
 
-    // We don't want to hit a monster in a wall square twice.
     const bool still_wall = (was_solid && old_pos == pos());
-    if (!still_wall)
-        if (monsters* m = monster_at(pos()))
-            affect_monster(m);
 
+    bool hit_player = false;
     // If the player can ever walk through walls, this will
     // need special-casing too.
-    if (found_player())
+    if (found_player() && !avoid_player)
+    {
         affect_player();
+        hit_player = true;
+    }
+
+    // We don't want to hit a monster in a wall square twice.
+    // Also stop single target beams from affecting a monster if they already
+    // affected the player on this square. -cao
+    if ((!hit_player || this->is_beam || this->is_explosion)
+         && !still_wall && !avoid_monster)
+    {
+        if (monsters* m = monster_at(pos()) )
+            affect_monster(m);
+    }
 
     if (!grid_is_solid(grd(pos())))
         affect_ground();
@@ -2026,12 +2040,12 @@ void bolt::do_fire()
     }
 #endif
 
+    bool avoid_self = (!aimed_at_feet && (!is_explosion || !in_explosion_phase));
+
     msg_generated = false;
     if (!aimed_at_feet)
     {
         choose_ray();
-        // Take *one* step, so as not to hurt the source.
-        ray.advance_through(target);
     }
 
 #ifdef WIN32CONSOLE
@@ -2046,9 +2060,11 @@ void bolt::do_fire()
         path_taken.push_back(pos());
 
         if (!affects_nothing)
-            affect_cell();
+            affect_cell(avoid_self);
 
-        range_used++;
+        if (!avoid_self)
+            range_used++;
+
         if (range_used >= range)
             break;
 
@@ -2089,6 +2105,8 @@ void bolt::do_fire()
             ray.advance_through(target);
         else
             ray.advance(true);
+
+        avoid_self = false;
     }
 
     if (!in_bounds(pos()))
@@ -3970,6 +3988,10 @@ void bolt::affect_player()
         }
     }
 
+    // Confusion effect for spore explosions
+    if (flavour == BEAM_SPORE && hurted && you.holiness() != MH_UNDEAD)
+        potion_effect( POT_CONFUSION, 1);
+
     // handling of missiles
     if (item && item->base_type == OBJ_MISSILES)
     {
@@ -4156,7 +4178,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     if (!is_enchantment()
         && attitude == mon->attitude
         && originator_worships_feawn
-        && mons_is_plant(mon))
+        && feawn_protects(mon))
     {
         if (!is_tracer)
         {
@@ -4624,6 +4646,12 @@ void bolt::affect_monster(monsters* mon)
     // Explosions always 'hit'.
     const bool engulfs = (is_explosion || is_big_cloud);
 
+    if (engulfs && this->flavour == BEAM_SPORE
+        && mons_class_holiness(mon->type) == MH_NATURAL)
+    {
+        apply_enchantment_to_monster(mon);
+    }
+
     // Make a copy of the to-hit before we modify it.
     int beam_hit = hit;
     if (mon->invisible() && !this->can_see_invis)
@@ -4656,9 +4684,16 @@ void bolt::affect_monster(monsters* mon)
     // for Feawn worshipers.  Mostly because you can accidentally blow up a
     // group of 8 plants and get placed under penance until the end of time
     // otherwise.  I'd prefer to do this elsewhere but the beam information
-    // goes out of scope. -cao
-    if (you.religion == GOD_FEAWN && flavour == BEAM_SPORE)
+    // goes out of scope.
+    //
+    // Also exempting miscast explosions from this conduct -cao
+    if (you.religion == GOD_FEAWN
+        && (flavour == BEAM_SPORE
+            || beam_source == NON_MONSTER
+               && aux_source.find("your miscasting") != std::string::npos))
+    {
         conducts[0].enabled = false;
+    }
 
     // The beam hit.
     if (mons_near(mon))
@@ -4719,7 +4754,24 @@ void bolt::affect_monster(monsters* mon)
     if (mon->alive())
         monster_post_hit(mon, final);
     else
-        corpse = monster_die(mon, thrower, beam_source_as_target());
+    {
+        // Prevent spore explosions killing plants from being registered as
+        // a feawn misconduct. Deaths can trigger the ally dying or plant
+        // dying conducts, but spore explosions shouldn't count for either of
+        // those.
+        //
+        // FIXME: Should be a better way of doing this. For now we are just
+        // falsifying the death report... -cao
+        if(you.religion == GOD_FEAWN && this->flavour == BEAM_SPORE
+           && feawn_protects(mon))
+        {
+            if (mon->attitude==ATT_FRIENDLY)
+                mon->attitude = ATT_HOSTILE;
+            corpse = monster_die(mon, KILL_MON, beam_source_as_target());
+        }
+        else
+            corpse = monster_die(mon, thrower, beam_source_as_target());
+    }
 
     // Give the callbacks a dead-but-valid monster object.
     if (mon->type == -1)
@@ -5113,6 +5165,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         apply_bolt_petrify(mon);
         return (MON_AFFECTED);
 
+    case BEAM_SPORE:
     case BEAM_CONFUSION:
         if (!mons_class_is_confusable(mon->type))
             return (MON_UNAFFECTED);

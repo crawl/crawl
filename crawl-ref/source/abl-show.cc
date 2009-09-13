@@ -332,6 +332,7 @@ static const ability_def Ability_List[] =
       8, 0, 200, 15, ABFLAG_NONE },
 
     // Feawn
+    { ABIL_FEAWN_PLANTWALK, "Plant Walking", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_FEAWN_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_FEAWN_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
     { ABIL_FEAWN_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_NONE},
@@ -1974,6 +1975,10 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         recall(2);
         exercise(SK_INVOCATIONS, 1);
+        break;
+
+    case ABIL_FEAWN_PLANTWALK:
+        // Activated via prayer elsewhere.
         break;
 
     case ABIL_FEAWN_FUNGAL_BLOOM:

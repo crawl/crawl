@@ -162,6 +162,50 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
     }
 
+    case POT_BRILLIANCE:
+    {
+        const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
+
+        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
+             were_brilliant ? "clever" : "more clever");
+
+        if (were_brilliant)
+            contaminate_player(1, was_known);
+        else
+            modify_stat(STAT_INTELLIGENCE, 5, true, "");
+
+        you.duration[DUR_BRILLIANCE] += (35 + random2(pow)) / factor;
+
+        if (you.duration[DUR_BRILLIANCE] > 80)
+            you.duration[DUR_BRILLIANCE] = 80;
+
+        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
+        break;
+    }
+
+    case POT_AGILITY:
+    {
+        const bool were_agile = you.duration[DUR_AGILITY] > 0;
+
+        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
+             were_agile ? "agile" : "more agile");
+
+        if (were_agile)
+            contaminate_player(1, was_known);
+        else
+            modify_stat(STAT_DEXTERITY, 5, true, "");
+
+        you.duration[DUR_AGILITY] += (35 + random2(pow)) / factor;
+
+        if (you.duration[DUR_AGILITY] > 80)
+            you.duration[DUR_AGILITY] = 80;
+
+        you.redraw_evasion = true;
+
+        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
+        break;
+    }
+
     case POT_GAIN_STRENGTH:
         if (mutate(MUT_STRONG, true, false, false, true))
             learned_something_new(TUT_YOU_MUTATED);

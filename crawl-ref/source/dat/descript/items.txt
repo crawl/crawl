@@ -908,6 +908,16 @@ potion of might
 A magic potion which greatly increases the strength and physical power
 of one who drinks it.
 %%%%
+potion of brilliance
+
+A magic potion which greatly increases the intelligence and magical power
+of one who drinks it.
+%%%%
+potion of agility
+
+A magic potion which greatly increases the dexterity and evasiveness
+of one who drinks it.
+%%%%
 potion of mutation
 
 A potion which does very strange things to you.

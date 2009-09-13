@@ -1023,26 +1023,22 @@ void slime_convert(monsters* monster)
 void feawn_neutralise(monsters* monster)
 {
     if (you.religion == GOD_FEAWN
-        && (mons_is_plant(monster)
-            || monster->mons_species() == MONS_GIANT_SPORE)
-        && !mons_is_summoned(monster)
-        && !mons_wont_attack(monster)
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
+        && monster->attitude == ATT_HOSTILE
+        && feawn_neutralises(monster)
+        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
+        && !player_under_penance())
     {
-        if (!player_under_penance())
-        {
-            // We must call remove_auto_exclude before neutralizing the
-            // plant because remove_auto_exclude only removes exclusions
-            // it thinks were caused by auto-exclude, and
-            // auto-exclusions now check for ATT_HOSTILE.  Oh, what a
-            // tangled web, etc.
-            remove_auto_exclude(monster, false);
+        // We must call remove_auto_exclude before neutralizing the
+        // plant because remove_auto_exclude only removes exclusions
+        // it thinks were caused by auto-exclude, and
+        // auto-exclusions now check for ATT_HOSTILE.  Oh, what a
+        // tangled web, etc.
+        remove_auto_exclude(monster, false);
 
-            feawn_neutralise_plant(monster);
-            monster->flags |= MF_ATT_CHANGE_ATTEMPT;
+        feawn_neutralise_plant(monster);
+        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-            stop_running();
-        }
+        stop_running();
     }
 }
 
@@ -1335,7 +1331,31 @@ inline static bool _update_monster_grid(const monsters *monster)
         {
             _set_show_backup(e.x, e.y);
             env.show(e)     = DNGN_INVIS_EXPOSED;
-            env.show_col(e) = BLUE;
+
+            // Translates between colours used for shallow and deep water,
+            // if not using the normal LIGHTCYAN / BLUE. The ripple uses
+            // the deep water colour.
+            unsigned short base_colour = env.grid_colours(monster->pos());
+
+            static const unsigned short ripple_table[] =
+                {BLUE,          // BLACK        => BLUE (default)
+                 BLUE,          // BLUE         => BLUE
+                 GREEN,         // GREEN        => GREEN
+                 CYAN,          // CYAN         => CYAN
+                 RED,           // RED          => RED
+                 MAGENTA,       // MAGENTA      => MAGENTA
+                 BROWN,         // BROWN        => BROWN
+                 DARKGREY,      // LIGHTGREY    => DARKGREY
+                 DARKGREY,      // DARKGREY     => DARKGREY
+                 BLUE,          // LIGHTBLUE    => BLUE
+                 GREEN,         // LIGHTGREEN   => GREEN
+                 BLUE,          // LIGHTCYAN    => BLUE
+                 RED,           // LIGHTRED     => RED
+                 MAGENTA,       // LIGHTMAGENTA => MAGENTA
+                 BROWN,         // YELLOW       => BROWN
+                 LIGHTGREY};    // WHITE        => LIGHTGREY
+
+            env.show_col(e) = ripple_table[base_colour & 0x0f];
         }
         return (false);
     }

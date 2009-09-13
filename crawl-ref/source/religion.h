@@ -116,6 +116,10 @@ void beogh_convert_orc(monsters *orc, bool emergency,
                        bool converted_by_follower = false);
 void jiyva_convert_slime(monsters* slime);
 void feawn_neutralise_plant(monsters *plant);
+bool feawn_passthrough(const monsters * target);
+bool feawn_protects(const monsters * target);
+bool feawn_protects_species(int mc);
+bool feawn_neutralises(const monsters * target);
 bool is_holy_item(const item_def& item);
 bool is_evil_item(const item_def& item);
 bool is_chaotic_item(const item_def& item);

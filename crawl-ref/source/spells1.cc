@@ -1139,7 +1139,7 @@ void antimagic()
 {
     duration_type dur_list[] = {
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_SLOW, DUR_HASTE,
-        DUR_MIGHT, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
+        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
         DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
@@ -1180,6 +1180,18 @@ void extension(int pow)
     if (you.duration[DUR_MIGHT])
     {
         potion_effect(POT_MIGHT, pow);
+        contamination++;
+    }
+
+    if (you.duration[DUR_BRILLIANCE])
+    {
+        potion_effect(POT_BRILLIANCE, pow);
+        contamination++;
+    }
+
+    if (you.duration[DUR_AGILITY])
+    {
+        potion_effect(POT_AGILITY, pow);
         contamination++;
     }
 

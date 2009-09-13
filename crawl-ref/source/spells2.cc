@@ -1723,6 +1723,7 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
 }
 
 // Turns corpses in LOS into skeletons and grows toadstools on them.
+// Can also turn zombies into skeletons and destroy ghouls/rotting hulks
 // returns the number of corpses consumed
 int fungal_bloom()
 {
@@ -1730,11 +1731,92 @@ int fungal_bloom()
     int seen_corpses    = 0;
 
     int processed_count = 0;
+    bool kills = false;
+
     for (radius_iterator i(you.position, LOS_RADIUS); i; ++i)
     {
-        // Ignore squares that are already occupied by non-fungi.
-        if (actor_at(*i) && !actor_at(*i)->mons_species() == MONS_TOADSTOOL)
+        actor *target = actor_at(*i);
+        if (target && (target->atype() == ACT_PLAYER
+                       || target->is_summoned()))
+        {
             continue;
+        }
+
+        monsters * mons = monster_at(*i);
+
+        if (mons && mons->mons_species() != MONS_TOADSTOOL)
+        {
+            switch (mons_genus(mons->mons_species()))
+            {
+            case MONS_ZOMBIE_SMALL:
+                // Maybe turn a zombie into a skeleton.
+                if (mons_skeleton(mons_zombie_base(mons)))
+                {
+                    processed_count++;
+
+                    monster_type skele_type = MONS_SKELETON_LARGE;
+                    if (mons_zombie_size(mons_zombie_base(mons)) == Z_SMALL)
+                        skele_type = MONS_SKELETON_SMALL;
+
+                    if (mons->visible())
+                    {
+                        mprf("%s flesh rots away.",
+                        mons->name(DESC_NOCAP_ITS).c_str());
+                    }
+
+                    mons->upgrade_type(skele_type,true,true);
+                    behaviour_event(mons, ME_ALERT, MHITYOU);
+
+                    continue;
+                }
+                // Else fall through and destroy the zombie.
+                // Ghoul type monsters are always destroyed.
+            case MONS_GHOUL:
+            {
+                if (mons->visible())
+                {
+                    mprf("The %s rots away and dies.",
+                         mons->name(DESC_PLAIN).c_str());
+                }
+
+                coord_def pos = mons->pos();
+                int colour    = mons->colour;
+                int corpse    = monster_die(mons, KILL_MISC, NON_MONSTER, true);
+                kills = true;
+
+                // If a corpse didn't drop, create a toadstool.
+                // If one did drop, we will create toadstools from it as usual
+                // later on.
+                if (corpse < 0)
+                {
+                    const int mushroom = create_monster(
+                                mgen_data(MONS_TOADSTOOL,
+                                          BEH_HOSTILE,
+                                          0,
+                                          0,
+                                          pos,
+                                          MHITNOT,
+                                          MG_FORCE_PLACE,
+                                          GOD_NO_GOD,
+                                          MONS_PROGRAM_BUG,
+                                          0,
+                                          colour),
+                                          false);
+
+                    if (mushroom != -1)
+                        seen_mushrooms++;
+
+                    processed_count++;
+
+                    continue;
+                }
+                break;
+            }
+
+            default:
+                continue;
+            }
+        }
 
         for (stack_iterator j(*i); j; ++j)
         {
@@ -1766,12 +1848,11 @@ int fungal_bloom()
 
     if (seen_mushrooms > 0)
     {
-        // We obviously saw some corpses, since we only processed squares
-        // in LOS.
-        ASSERT(seen_corpses > 0);
-
         mushroom_spawn_message(seen_mushrooms, seen_corpses);
     }
+
+    if (kills)
+        mprf("That felt like a moral victory.");
 
     return (processed_count);
 }
@@ -1791,8 +1872,13 @@ int create_plant(coord_def & target)
                                       MG_FORCE_PLACE, GOD_FEAWN));
 
 
-    if (plant != -1 && see_grid(target))
-        mpr("A plant grows up from the ground.");
+    if (plant != -1)
+    {
+        env.mons[plant].flags |= MF_ATT_CHANGE_ATTEMPT;
+        if (see_grid(target))
+            mpr("A plant grows up from the ground.");
+    }
+
 
     return (plant != -1);
 }
@@ -2191,7 +2277,7 @@ int rain(coord_def & target)
             {
                 const int plant = create_monster(mgen_data
                                      (coinflip() ? MONS_PLANT : MONS_FUNGUS,
-                                      BEH_HOSTILE,
+                                      BEH_GOOD_NEUTRAL,
                                       0,
                                       0,
                                       *rad,
@@ -2255,14 +2341,16 @@ int corpse_spores(beh_type behavior)
             {
                 count++;
 
-                create_monster(mgen_data(MONS_GIANT_SPORE,
-                                         behavior,
-                                         0,
-                                         0,
-                                         *rad,
-                                         MHITNOT,
-                                         MG_FORCE_PLACE));
+                int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
+                                                  behavior,
+                                                  0,
+                                                  0,
+                                                  *rad,
+                                                  MHITNOT,
+                                                  MG_FORCE_PLACE));
 
+                if (rc!=-1)
+                    env.mons[rc].flags |= MF_ATT_CHANGE_ATTEMPT;
 
                 if (mons_skeleton(stack_it->plus))
                     turn_corpse_into_skeleton(*stack_it);
@@ -2412,6 +2500,7 @@ bool evolve_flora()
         current_plant->god = GOD_FEAWN;
         current_plant->attitude = ATT_FRIENDLY;
         current_plant->flags |= MF_CREATED_FRIENDLY;
+        current_plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
         // Try to remove slowly dying in case we are upgrading a
         // toadstool, and spore production in case we are upgrading a
