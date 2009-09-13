@@ -3115,8 +3115,8 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
 
     // Enchanted projectiles get an extra shot at avoiding
     // destruction: plus / (1 + plus) chance of survival.
-    bool destroyed = (chance == 0) ? false :
-        (one_chance_in(chance) && one_chance_in(item->plus));
+    bool destroyed = (chance == 0) ? false : (one_chance_in(chance)
+                                              && one_chance_in(item->plus + 1));
     bool hostile_grid = grid_destroys_items(grd(where));
 
     // Non-returning items thrown into item-destroying grids are always
