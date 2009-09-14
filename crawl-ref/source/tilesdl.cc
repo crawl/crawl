@@ -1332,10 +1332,10 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
         const int grid = mgrd[gx][gy];
         if (mons_friendly_real(&menv[grid]))
             f = MF_MONS_FRIENDLY;
-        else if (mons_neutral(&menv[grid]))
-            f = MF_MONS_NEUTRAL;
         else if (mons_class_flag(menv[grid].type, M_NO_EXP_GAIN))
             f = MF_MONS_NO_EXP;
+        else if (mons_neutral(&menv[grid]))
+            f = MF_MONS_NEUTRAL;
     }
     else if (f == MF_FLOOR || f == MF_MAP_FLOOR || f == MF_WATER)
     {

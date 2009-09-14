@@ -44,6 +44,7 @@ REVISION("$Rev$");
 #include "tilemcache.h"
 #include "tiledef-gui.h"
 
+#include <sys/stat.h>
 #include <SDL_opengl.h>
 
 coord_def Region::NO_CURSOR(-1, -1);
@@ -314,11 +315,18 @@ static bool _save_doll_data(int mode, int num, const dolls_data* dolls)
 {
     // Save mode, num, and all dolls into dolls.txt.
     std::string dollsTxtString = datafile_path("dolls.txt", false, true);
-    const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
-                            "dolls.txt" : dollsTxtString.c_str();
+
+    struct stat stFileInfo;
+    stat(dollsTxtString.c_str(), &stFileInfo);
+
+    // Write into the current directory instead if we didn't find the file
+    // or don't have write permissions.
+    const char *dollsTxt = (dollsTxtString.c_str()[0] == 0
+                              || !(stFileInfo.st_mode & S_IWUSR)) ? "dolls.txt"
+                            : dollsTxtString.c_str();
 
     FILE *fp = NULL;
-    if ( (fp = fopen(dollsTxt, "w+")) != NULL )
+    if ((fp = fopen(dollsTxt, "w+")) != NULL)
     {
         fprintf(fp, "MODE=%s\n",
                     (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
@@ -342,11 +350,8 @@ static bool _save_doll_data(int mode, int num, const dolls_data* dolls)
 
         return (true);
     }
-    else
-    {
-        mprf(MSGCH_ERROR, "Could not write into file '%s'.", dollsTxt);
-        return (false);
-    }
+
+    return (false);
 }
 
 // Loads player doll definitions from (by default) dolls.txt.
@@ -358,8 +363,16 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
     FILE *fp  = NULL;
 
     std::string dollsTxtString = datafile_path(fn, false, true);
-    const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
-                            "dolls.txt" : dollsTxtString.c_str();
+
+    struct stat stFileInfo;
+    stat(dollsTxtString.c_str(), &stFileInfo);
+
+    // Try to read from the current directory instead if we didn't find the
+    // file or don't have reading permissions.
+    const char *dollsTxt = (dollsTxtString.c_str()[0] == 0
+                              || !(stFileInfo.st_mode & S_IRUSR)) ? "dolls.txt"
+                            : dollsTxtString.c_str();
+
 
     if ( (fp = fopen(dollsTxt, "r")) == NULL )
     {
@@ -419,11 +432,14 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
                     break;
                 }
             }
+#if 0
+            // Probably segfaults within the tile edit menu.
             if (*cur >= count)
             {
                 mprf(MSGCH_WARN, "Doll %d could not be found in '%s'.",
                                  *cur, dollsTxt);
             }
+#endif
         }
         else // Load up to max dolls from file.
         {
