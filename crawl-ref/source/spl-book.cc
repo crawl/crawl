@@ -1301,7 +1301,8 @@ static bool _get_mem_list(spell_list &mem_spells,
                           spells_to_books &book_hash,
                           unsigned int &num_unreadable,
                           unsigned int &num_race,
-                          bool just_check = false)
+                          bool just_check = false,
+                          spell_type current_spell = SPELL_NO_SPELL)
 {
     bool          book_errors    = false;
     unsigned int  num_books      = 0;
@@ -1396,7 +1397,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         const spell_type spell = i->first;
 
-        if (player_knows_spell(spell))
+        if (spell == current_spell || player_knows_spell(spell))
             num_known++;
         else if (you_cannot_memorise(spell))
             num_race++;
@@ -1404,9 +1405,13 @@ static bool _get_mem_list(spell_list &mem_spells,
         {
             mem_spells.push_back(spell);
 
+            int avail_slots = player_spell_levels();
+            if (current_spell != SPELL_NO_SPELL)
+                avail_slots -= spell_levels_required(current_spell);
+
             if (spell_difficulty(spell) > you.experience_level)
                 num_low_xl++;
-            else if (player_spell_levels() < spell_levels_required(spell))
+            else if (avail_slots < spell_levels_required(spell))
                 num_low_levels++;
             else
             {
@@ -1475,7 +1480,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     return (false);
 }
 
-bool has_spells_to_memorise(bool silent)
+// If current_spell is a valid spell, returns whether you'll be able to
+// memorise any further spells once this one is committed to memory.
+bool has_spells_to_memorise(bool silent, int current_spell)
 {
     spell_list      mem_spells;
     spells_to_books book_hash;
@@ -1483,7 +1490,7 @@ bool has_spells_to_memorise(bool silent)
     unsigned int    num_race;
 
     return _get_mem_list(mem_spells, book_hash, num_unreadable, num_race,
-                         silent);
+                         silent, (spell_type) current_spell);
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)

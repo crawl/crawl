@@ -1864,7 +1864,8 @@ int InventoryRegion::handle_spells_mouse(MouseEvent &event, int item_idx)
             tiles.set_need_redraw();
             if (!learn_spell(spell, m_items[item_idx].special))
                 flush_input_buffer( FLUSH_ON_FAILURE );
-            else if (!can_learn_spell(true) || !has_spells_to_memorise())
+            else if (!can_learn_spell(true)
+                     || !has_spells_to_memorise(true, spell))
             {
                 // Jump back to spells list. (Really, this should only happen
                 // if there aren't any other spells to memorise, but this
@@ -2056,7 +2057,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     bool display_actions = (m_items[item_idx].key == 0
                     && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
 
-    if (display_actions && Options.tile_display != TDSP_INVENT)
+    if (Options.tile_display != TDSP_INVENT)
     {
         if (m_items[item_idx].idx == NUM_SPELLS)
         {
