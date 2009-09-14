@@ -301,6 +301,9 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     ASSERT(!crawl_state.arena);
     ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
 
+    if (type == DELAY_MEMORISE && already_learning_spell(parm1))
+        return;
+
     _interrupts_blocked = 0; // Just to be safe
 
     delay_queue_item delay;
@@ -699,6 +702,22 @@ bool player_stair_delay()
     const delay_queue_item &delay = you.delay_queue.front();
     return (delay.type == DELAY_ASCENDING_STAIRS
             || delay.type == DELAY_DESCENDING_STAIRS);
+}
+
+bool already_learning_spell(int spell)
+{
+    if (!you_are_delayed())
+        return (false);
+
+    for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
+    {
+        if (you.delay_queue[i].type != DELAY_MEMORISE)
+            continue;
+
+        if (you.delay_queue[i].parm1 == spell)
+            return (true);
+    }
+    return (false);
 }
 
 // Check whether there are monsters who might be influenced by Recite.

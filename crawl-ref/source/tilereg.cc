@@ -1864,8 +1864,7 @@ int InventoryRegion::handle_spells_mouse(MouseEvent &event, int item_idx)
             tiles.set_need_redraw();
             if (!learn_spell(spell, m_items[item_idx].special))
                 flush_input_buffer( FLUSH_ON_FAILURE );
-
-//             if (!can_learn_spell(true) || !has_spells_to_memorise())
+            else if (!can_learn_spell(true) || !has_spells_to_memorise())
             {
                 // Jump back to spells list. (Really, this should only happen
                 // if there aren't any other spells to memorise, but this

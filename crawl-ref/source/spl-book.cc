@@ -1707,6 +1707,9 @@ static bool _learn_spell_checks(spell_type specspell)
     if (!can_learn_spell())
         return (false);
 
+    if (already_learning_spell((int) specspell))
+        return (false);
+
     if (you_cannot_memorise(specspell))
     {
         mprf("You cannot memorise that spell because you are a %s.",
@@ -1767,6 +1770,8 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
                                "attempt fails. Attempt to memorise anyway?",
                                fakebook.name(DESC_NOCAP_THE).c_str());
 
+        // Deactivate choice from tile inventory.
+        mouse_control mc(MOUSE_MODE_MORE);
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg( MSG_OK );
@@ -1797,6 +1802,8 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
              spell_levels_required(specspell) > 1 ? "s" : "",
              player_spell_levels() - spell_levels_required(specspell));
 
+    // Deactivate choice from tile inventory.
+    mouse_control mc(MOUSE_MODE_MORE);
     if (!yesno(info, true, 'n', false))
     {
         canned_msg( MSG_OK );
@@ -1854,7 +1861,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
 
     return (true);
-}                               // end which_spell()
+}
 
 int count_staff_spells(const item_def &item, bool need_id)
 {
