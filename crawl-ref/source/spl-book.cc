@@ -1496,7 +1496,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     return (stricmp(spell_title(a), spell_title(b)) < 0);
 }
 
-std::vector<spell_type> get_mem_spell_list()
+std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
 {
     std::vector<spell_type> spells;
 
@@ -1511,7 +1511,13 @@ std::vector<spell_type> get_mem_spell_list()
     std::sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
     for (unsigned int i = 0; i < mem_spells.size(); i++)
-        spells.push_back(mem_spells[i]);
+    {
+        spell_type spell = mem_spells[i];
+        spells.push_back(spell);
+
+        spells_to_books::iterator it = book_hash.find(spell);
+        books.push_back(it->second);
+    }
 
     return (spells);
 }
@@ -1693,13 +1699,7 @@ bool learn_spell()
 
     spells_to_books::iterator it = book_hash.find(specspell);
 
-    item_def book;
-    book.base_type = OBJ_BOOKS;
-    book.sub_type  = it->second;
-    book.quantity  = 1;
-    book.flags    |= ISFLAG_IDENT_MASK;
-
-    return learn_spell(specspell, &book, true);
+    return learn_spell(specspell, it->second, true);
 }
 
 static bool _learn_spell_checks(spell_type specspell)
@@ -1740,15 +1740,14 @@ static bool _learn_spell_checks(spell_type specspell)
     return (true);
 }
 
-bool learn_spell(spell_type specspell, const item_def *book,
-                 bool is_safest_book)
+bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 {
     if (!_learn_spell_checks(specspell))
         return (false);
 
     int chance = spell_fail(specspell);
 
-    if (chance > 0 && book && is_dangerous_spellbook(*book))
+    if (chance > 0 && is_dangerous_spellbook(book))
     {
         std::string prompt;
 
@@ -1757,10 +1756,16 @@ bool learn_spell(spell_type specspell, const item_def *book,
         else
             prompt = "The spellbook you are reading from ";
 
+        item_def fakebook;
+        fakebook.base_type = OBJ_BOOKS;
+        fakebook.sub_type  = book;
+        fakebook.quantity  = 1;
+        fakebook.flags    |= ISFLAG_IDENT_MASK;
+
         prompt += make_stringf("is %s, a dangerous spellbook which will "
                                "strike back at you if your memorisation "
                                "attempt fails. Attempt to memorise anyway?",
-                               book->name(DESC_NOCAP_THE).c_str());
+                               fakebook.name(DESC_NOCAP_THE).c_str());
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -1811,21 +1816,21 @@ bool learn_spell(spell_type specspell, const item_def *book,
         mpr("You fail to memorise the spell.");
         you.turn_is_over = true;
 
-        if (book->sub_type == BOOK_NECRONOMICON)
+        if (book == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_NECROMANCY,
                            8, random2avg(88, 3),
                            "reading the Necronomicon" );
         }
-        else if (book->sub_type == BOOK_DEMONOLOGY)
+        else if (book == BOOK_DEMONOLOGY)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_SUMMONING,
                            7, random2avg(88, 3),
                            "reading the book of Demonology" );
         }
-        else if (book->sub_type == BOOK_ANNIHILATIONS)
+        else if (book == BOOK_ANNIHILATIONS)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
             MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_CONJURATION,

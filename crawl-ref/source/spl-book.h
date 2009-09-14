@@ -51,7 +51,7 @@ int read_book( item_def &item, read_book_action_type action );
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool learn_spell();
-bool learn_spell(spell_type spell, const item_def *book = NULL,
+bool learn_spell(spell_type spell, int book = NUM_BOOKS,
                  bool is_safest_book = true);
 
 bool player_can_read_spellbook( const item_def &book );
@@ -65,7 +65,7 @@ bool is_memorised(spell_type spell);
 
 bool you_cannot_memorise(spell_type spell);
 bool has_spells_to_memorise(bool silent = true);
-std::vector<spell_type> get_mem_spell_list();
+std::vector<spell_type> get_mem_spell_list(std::vector<int> &books);
 
 int spellbook_contents( item_def &book, read_book_action_type action,
                         formatted_string *fs = NULL );

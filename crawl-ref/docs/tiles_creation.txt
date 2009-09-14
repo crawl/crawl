@@ -6,12 +6,15 @@ image editing software (such as Photoshop or the GIMP) as well as some basic
 knowledge of how to use it. While the fancier functions can occasionally come
 in useful, simply drawing and erasing of pixels will usually suffice.
 
-You may want to download the latest source or even the trunk version. The
-source/rltiles/ directory contains all tiles used in the game, and some more
-that are currently unused. While you can create new tiles without having access
-to existing ones, it can be useful to have them around for comparison. Also,
-you'll probably want to compile them into the game to test your creations.
-(You don't have to, though.) For compiling the game, see INSTALL.txt.
+You may want to download the latest source or even the trunk version. Either
+way, the source/rltiles/ directory contains all tiles used in the game, and
+some more that are currently unused. While you can create new tiles without
+having access to existing ones, it can be useful to have them around for
+comparison. Also, you'll probably want to compile them into the game to test
+your creations. (You don't have to, though.) For compiling the game, see
+INSTALL.txt.
+If you're going to change anything in the main code you'll probably want to
+create a patch. See docs/patch_guide.txt for help with that.
 
 Crawl's tiles are png files in a format of 32x32 pixels. Larger tiles such
 as for the pandemonium demons are possible, but require additional coding and

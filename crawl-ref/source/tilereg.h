@@ -339,6 +339,7 @@ public:
     virtual void clear();
     virtual void render();
     virtual void on_resize();
+    virtual int handle_spells_mouse(MouseEvent &event, int item_idx);
     virtual int handle_mouse(MouseEvent &event);
 
     void update(int num, InventoryTile *items);

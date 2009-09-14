@@ -1443,7 +1443,8 @@ void TilesFramework::update_spells()
         const int my = m_region_inv->my;
         const unsigned int max_spells = mx * my;
 
-        std::vector<spell_type> spells = get_mem_spell_list();
+        std::vector<int>  books;
+        std::vector<spell_type> spells = get_mem_spell_list(books);
         for (unsigned int i = 0; inv.size() < max_spells && i < spells.size();
              ++i)
         {
@@ -1452,6 +1453,7 @@ void TilesFramework::update_spells()
             InventoryTile desc;
             desc.tile     = tileidx_spell(spell);
             desc.idx      = (int) spell;
+            desc.special  = books[i];
             desc.quantity = spell_difficulty(spell);
 
             if (spell_difficulty(spell) > you.experience_level

@@ -1789,7 +1789,7 @@ void InventoryRegion::pack_buffers()
                 add_quad_char('0' + c1, x, y, offset_x, offset_y);
             }
 
-            if (item.special)
+            if (Options.tile_display == TDSP_INVENT && item.special)
                 m_buf_main.add(item.special, x, y, 0, 0, false);
 
             if (item.flag & TILEI_FLAG_TRIED)
@@ -1831,9 +1831,9 @@ void InventoryRegion::place_cursor(const coord_def &cursor)
     m_dirty = true;
 }
 
-static int _handle_spells_mouse(MouseEvent &event, int idx, int item_idx)
+int InventoryRegion::handle_spells_mouse(MouseEvent &event, int item_idx)
 {
-    const spell_type spell = (spell_type) idx;
+    const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
         if (spell == NUM_SPELLS)
@@ -1862,7 +1862,7 @@ static int _handle_spells_mouse(MouseEvent &event, int idx, int item_idx)
         {
             you.last_clicked_item = item_idx;
             tiles.set_need_redraw();
-            if (!learn_spell(spell))
+            if (!learn_spell(spell, m_items[item_idx].special))
                 flush_input_buffer( FLUSH_ON_FAILURE );
 
 //             if (!can_learn_spell(true) || !has_spells_to_memorise())
@@ -1910,7 +1910,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
     int idx = m_items[item_idx].idx;
 
     if (m_items[item_idx].key == 0 && Options.tile_display != TDSP_INVENT)
-        return _handle_spells_mouse(event, idx, item_idx);
+        return handle_spells_mouse(event, item_idx);
 
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
