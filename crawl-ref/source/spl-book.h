@@ -64,7 +64,7 @@ int staff_spell( int zap_device_2 );
 bool is_memorised(spell_type spell);
 
 bool you_cannot_memorise(spell_type spell);
-bool has_spells_to_memorise();
+bool has_spells_to_memorise(bool silent = true);
 std::vector<spell_type> get_mem_spell_list();
 
 int spellbook_contents( item_def &book, read_book_action_type action,

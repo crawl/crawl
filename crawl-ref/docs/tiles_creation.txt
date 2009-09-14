@@ -1,0 +1,102 @@
+A short guide to Tiles creation
+===============================
+
+This is a short guide to creating tiles. We assume that you've got some kind of
+image editing software (such as Photoshop or the GIMP) as well as some basic
+knowledge of how to use it. While the fancier functions can occasionally come
+in useful, simply drawing and erasing of pixels will usually suffice.
+
+You may want to download the latest source or even the trunk version. The
+source/rltiles/ directory contains all tiles used in the game, and some more
+that are currently unused. While you can create new tiles without having access
+to existing ones, it can be useful to have them around for comparison. Also,
+you'll probably want to compile them into the game to test your creations.
+(You don't have to, though.) For compiling the game, see INSTALL.txt.
+
+Crawl's tiles are png files in a format of 32x32 pixels. Larger tiles such
+as for the pandemonium demons are possible, but require additional coding and
+should be used sparingly. The tile background should be transparent, but if
+your image software doesn't support png files with transparent background you
+can also submit a png or bmp with the background coloured differently from the
+rest of the tile, so we can easily remove it later.
+
+
+1.) Before setting out to draw a new tile, you may want to check out the
+    UNUSED/ directory in case there's already a tile that could be used for
+    this purpose.
+
+2.) When creating new tiles you often don't need to start from zero. A lot of
+    the time existing tiles can be repurposed to other uses. If you tweak them
+    enough no-one will even notice you cheated.
+    For example, the spell tile deaths_door.png is basically a modified version
+    of the reaper, with the hour glass copied over from the slowing potion's
+    i-slowing.png that was then changed significantly.
+
+3.) For items and monsters don't forget to add a shadow. You can use standard
+    black for this.
+
+4.) New randart weapons and armour items need not only a tile for the item
+    itself but also a smaller variant for the player doll to wield or wear.
+    To define the new artefact tiles, you'll need to modify two files:
+    source/art-data.txt, and rltiles/dc-player.txt, with the details nicely
+    described in art-data.txt.
+    If you have perl installed, run "perl art-data.pl" from source/util. If you
+    made any mistakes in modifying the two files the script will complain.
+
+    If an artefact doesn't get a special equipment tile the base type's tile
+    will be used instead.
+
+5.) Otherwise, add the tile to the relevant dc-xxxx.txt file and use the same
+    (uppercase) definition in the matching tileidx_xxxx() function in
+    tilepick.cc. Note that the latter is not necessary if you are adding tiles
+    for the player doll.
+
+    Tiles are assumed to have been placed within the rltiles/ directory
+    structure. You can use a relative path for the tile definition, or you can
+    use the %sdir command to change the current default relative path.
+
+    Use the %rim property to control whether Crawl needs to draw a black
+    outline around your tile or whether it already has one. To change the rim
+    property for your tile, use e.g.:
+        %rim 1
+        new_tile NEW_TILE
+        %rim 0
+
+6.) For humanoid monsters' tiles you may want to add a line in
+    get_weapon_offset() in tilemcache.cc to allow it to be drawn with a wielded
+    weapon.
+
+7.) New monsters may also need a unique corpse tile. In that case you'll also
+    need to modify dc-corpse.txt and add a tile in _tileidx_corpse() of
+    tilepick.cc.
+
+
+When compiling the game you may need to delete or rename the relevant tile
+section's png file, i.e. main.png (for items), player.png (for player, doll
+equipment, and monsters), dngn.png (for dungeon features) or gui.png (for
+spells), to make the changes take effect. The first step during the compilation
+will be to rebuild this file, so you can check right away whether your new tile
+was added correctly. Changes in dc-xxxx.txt automatically cause the relevant
+image files to be recreated.
+
+
+In case you'd like to draw some tiles but have run out of ideas, here's an
+incomplete (and possibly outdated) list of suggestions:
+
+* tiles of the various runes
+* zombie/skeleton tiles taking into account the monster type
+* tiles for abilities
+* alternative tiles for dungeon features to allow for "animations"
+* equipment tiles for the player doll
+* improvement of existing tiles
+etc.
+
+You can also check the SourceForge Feature Requests for tracker items
+containing the "\o/" emblem in the title. At least one of them will be a call
+for more tiles.
+
+Please submit your new tiles as a new item on our feature request or patches
+tracker, or send one of the tiles developers (ennewalker, evktalo, j-p-e-g) an
+email containing your tiles.
+
+Thanks a lot for your support!

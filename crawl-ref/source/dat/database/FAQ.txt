@@ -363,7 +363,7 @@ much appreciated. These are:
 * the maps/vaults (see dat/ folder, docs/level_design.txt)
 * monster speech (see dat/database/, docs/monster_speech.txt)
 * monster/item/spell descriptions (see dat/descript/)
-* tiles (For this you'll need the source code, check the rltiles/ folder.)
+* tiles (see source/rltiles/, docs/tiles_creation.txt)
 
 Also, if you'd like to write a patch but don't know how to go about it, read
 patch_guide.txt in the docs/ folder.
@@ -485,6 +485,8 @@ If you've created some nice new tiles or variations of existing ones you'd
 like to share you might want to send them over the mailing list or submit
 them as a SourceForge item. It's easiest for us if they are already in
 32x32 png format, preferrably zipped if there are several.
+
+See docs/tiles_creation.txt for a slightly more detailed explanation.
 
 Thanks in advance!
 %%%%

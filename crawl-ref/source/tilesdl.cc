@@ -1439,8 +1439,13 @@ void TilesFramework::update_spells()
 
     if (Options.tile_display == TDSP_MEMORISE)
     {
+        const int mx = m_region_inv->mx;
+        const int my = m_region_inv->my;
+        const unsigned int max_spells = mx * my;
+
         std::vector<spell_type> spells = get_mem_spell_list();
-        for (unsigned int i = 0; i < spells.size(); ++i)
+        for (unsigned int i = 0; inv.size() < max_spells && i < spells.size();
+             ++i)
         {
             const spell_type spell = spells[i];
 
@@ -1495,15 +1500,16 @@ void TilesFramework::update_spells()
         inv.push_back(desc);
     }
 
-    if (can_learn_spell(true) && has_spells_to_memorise())
-    {
-        // FIXME: Add NUM_SPELLS to list of spells as placeholder for
-        //        memorisation tile. (Hack!)
-        InventoryTile desc;
-        desc.tile = tileidx_spell(NUM_SPELLS);
-        desc.idx  = NUM_SPELLS;
-        inv.push_back(desc);
-    }
+    // FIXME: Add NUM_SPELLS to list of spells as placeholder for
+    //        memorisation tile. (Hack!)
+    InventoryTile desc;
+    desc.tile = tileidx_spell(NUM_SPELLS);
+    desc.idx  = NUM_SPELLS;
+
+    if (!can_learn_spell(true) || !has_spells_to_memorise())
+        desc.flag |= TILEI_FLAG_MELDED;
+
+    inv.push_back(desc);
 
     m_region_inv->update(inv.size(), &inv[0]);
 }

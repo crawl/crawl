@@ -164,15 +164,15 @@ protected:
     LayerID m_active_layer;
 
     // Normal layer
-    DungeonRegion *m_region_tile;
-    StatRegion *m_region_stat;
-    MessageRegion *m_region_msg;
-    MapRegion *m_region_map;
+    DungeonRegion   *m_region_tile;
+    StatRegion      *m_region_stat;
+    MessageRegion   *m_region_msg;
+    MapRegion       *m_region_map;
     InventoryRegion *m_region_inv;
 
     // Full-screen CRT layer
-    CRTRegion *m_region_crt;
-    MenuRegion *m_region_menu;
+    CRTRegion       *m_region_crt;
+    MenuRegion      *m_region_menu;
 
     struct font_info
     {

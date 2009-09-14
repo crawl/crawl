@@ -1475,14 +1475,15 @@ static bool _get_mem_list(spell_list &mem_spells,
     return (false);
 }
 
-bool has_spells_to_memorise()
+bool has_spells_to_memorise(bool silent)
 {
     spell_list      mem_spells;
     spells_to_books book_hash;
     unsigned int    num_unreadable;
     unsigned int    num_race;
 
-    return _get_mem_list(mem_spells, book_hash, num_unreadable, num_race, true);
+    return _get_mem_list(mem_spells, book_hash, num_unreadable, num_race,
+                         silent);
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
@@ -1738,8 +1739,6 @@ static bool _learn_spell_checks(spell_type specspell)
     }
     return (true);
 }
-
-
 
 bool learn_spell(spell_type specspell, const item_def *book,
                  bool is_safest_book)

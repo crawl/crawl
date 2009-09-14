@@ -1838,8 +1838,17 @@ static int _handle_spells_mouse(MouseEvent &event, int idx, int item_idx)
     {
         if (spell == NUM_SPELLS)
         {
-            Options.tile_display = TDSP_MEMORISE;
-            tiles.update_inventory();
+            if (can_learn_spell() && has_spells_to_memorise(false))
+            {
+                Options.tile_display = TDSP_MEMORISE;
+                tiles.update_inventory();
+            }
+            else
+            {
+                // FIXME: Doesn't work. The message still disappears instantly!
+                you.last_clicked_item = item_idx;
+                tiles.set_need_redraw();
+            }
             return CK_MOUSE_CMD;
         }
         if (Options.tile_display == TDSP_SPELLS)
@@ -1916,6 +1925,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
     if (event.button == MouseEvent::LEFT)
     {
         you.last_clicked_item = item_idx;
+        tiles.set_need_redraw();
         if (on_floor)
         {
             if (event.mod & MOD_SHIFT)
@@ -1937,13 +1947,13 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
     }
     else if (event.button == MouseEvent::RIGHT)
     {
-        you.last_clicked_item = item_idx;
         if (on_floor)
         {
             if (event.mod & MOD_SHIFT)
             {
-                tile_item_eat_floor(idx);
                 you.last_clicked_item = item_idx;
+                tiles.set_need_redraw();
+                tile_item_eat_floor(idx);
             }
             else
             {
@@ -2017,6 +2027,8 @@ void _update_spell_tip_text(std::string& tip, int flag)
             tip = "You cannot cast this spell right now.";
         else
             tip = "[L-Click] Cast (z)";
+
+        tip += "\n[R-Click] Describe (I)";
     }
     else if (Options.tile_display == TDSP_MEMORISE)
     {
@@ -2024,9 +2036,9 @@ void _update_spell_tip_text(std::string& tip, int flag)
             tip = "You don't have enough slots for this spell right now.";
         else
             tip = "[L-Click] Memorise (M)";
-    }
 
-    tip += "\n[R-Click] Describe (I)";
+        tip += "\n[R-Click] Describe";
+    }
 }
 
 bool InventoryRegion::update_tip_text(std::string& tip)
@@ -2048,7 +2060,12 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     if (display_actions && Options.tile_display != TDSP_INVENT)
     {
         if (m_items[item_idx].idx == NUM_SPELLS)
-            tip = "Memorise spells (M)";
+        {
+            if (m_items[item_idx].flag & TILEI_FLAG_MELDED)
+                tip = "You cannot learn any spells right now.";
+            else
+                tip = "Memorise spells (M)";
+        }
         else
             _update_spell_tip_text(tip, m_items[item_idx].flag);
         return (true);
@@ -2356,7 +2373,7 @@ void MapRegion::on_resize()
     delete[] m_buf;
 
     int size = mx * my;
-    m_buf = new unsigned char[size];
+    m_buf    = new unsigned char[size];
     memset(m_buf, 0, sizeof(unsigned char) * size);
 }
 
@@ -3986,8 +4003,8 @@ static void _copy_into(unsigned char *dest, unsigned char *pixels,
 
     int total_ofs_x = inf.offset_x + ofs_x;
     int total_ofs_y = inf.offset_y + ofs_y;
-    int src_height = inf.ey - inf.sy;
-    int src_width = inf.ex - inf.sx;
+    int src_height  = inf.ey - inf.sy;
+    int src_width   = inf.ex - inf.sx;
 
     if (total_ofs_x < 0)
     {

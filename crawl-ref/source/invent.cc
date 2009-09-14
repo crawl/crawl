@@ -770,8 +770,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             continue;
 
         std::string subtitle = item_class_name(i);
-#ifdef USE_TILE
-        // For Tiles, mention the class selection shortcuts.
+
+        // Mention the class selection shortcuts.
         if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
         {
             std::vector<char> glyphs;
@@ -781,13 +781,20 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
                 const std::string str = "Magical Staves and Rods"; // longest string
                 subtitle += std::string(str.length()
                                         - subtitle.length() + 1, ' ');
-                subtitle += "(select all with <w>";
+                subtitle += "(select all with ";
+#ifdef USE_TILE
+                // For some reason, this is only formatted correctly in the
+                // Tiles version.
+                subtitle += "<w>";
+#endif
                 for (unsigned int k = 0; k < glyphs.size(); ++k)
                      subtitle += glyphs[k];
-                subtitle += "</w><blue>)";
+#ifdef USE_TILE
+                subtitle += "</w><blue>";
+#endif
+                subtitle += ")";
             }
         }
-#endif
 
         add_entry( new MenuEntry( subtitle, MEL_SUBTITLE ) );
         items_in_class.clear();
