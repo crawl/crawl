@@ -488,7 +488,7 @@ deck of changes
 A deck of magical cards which induce changes in the user or his
 environment.
 
-It may contain the following cards: the Elixir, Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Potion, Focus, Shuffle, Experience, the Helix, the Sage, Water, Vitrification, the Map, Dowsing, the Spade, Trowel, the Minefield.
+It may contain the following cards: the Elixir, Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage, Water, Vitrification, the Map, Dowsing, the Spade, Trowel, the Minefield.
 %%%%
 deck of defence
 
@@ -544,7 +544,7 @@ deck of wonders
 A deck of highly mysterious and magical cards, which can permanently
 alter the drawer's physical and mental condition, for better or worse.
 
-It may contain the following cards: the Potion, Focus, Shuffle, Experience, the Helix, the Sage.
+It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage.
 %%%%
 demon blade
 
