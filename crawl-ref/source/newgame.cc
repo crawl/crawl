@@ -67,7 +67,7 @@ REVISION("$Rev$");
 
 extern std::string init_file_error;
 
-#define MIN_START_STAT       1
+#define MIN_START_STAT       3
 
 enum char_choice_restriction
 {
@@ -966,29 +966,44 @@ static void _reassess_starting_skills()
     }
 }
 
-// Randomly boost stats a number of times.
-static void _assign_remaining_stats(int points_left)
+// Make sure no stats are unacceptably low
+// (currently possible only for GhBe -- 1KB)
+static void _unfocus_stats()
 {
-    // First spend points to get us to the minimum allowed value. -- bwr
-    if (you.strength < MIN_START_STAT)
+    int needed;
+
+    if ((needed = MIN_START_STAT - you.strength) > 0)
     {
-        points_left -= (MIN_START_STAT - you.strength);
+        if (you.intel > you.dex)
+            you.intel -= needed;
+        else
+            you.dex -= needed;
+
         you.strength = MIN_START_STAT;
     }
-
-    if (you.intel < MIN_START_STAT)
+    if ((needed = MIN_START_STAT - you.intel) > 0)
     {
-        points_left -= (MIN_START_STAT - you.intel);
+        if (you.strength > you.dex)
+            you.strength -= needed;
+        else
+            you.dex -= needed;
+
         you.intel = MIN_START_STAT;
     }
-
-    if (you.dex < MIN_START_STAT)
+    if ((needed = MIN_START_STAT - you.dex) > 0)
     {
-        points_left -= (MIN_START_STAT - you.dex);
+        if (you.strength > you.intel)
+            you.strength -= needed;
+        else
+            you.intel -= needed;
+
         you.dex = MIN_START_STAT;
     }
+}
 
-    // Now randomly assign the remaining points. -- bwr
+// Randomly boost stats a number of times.
+static void _wanderer_assign_remaining_stats(int points_left)
+{
     while (points_left > 0)
     {
         // Stats that are already high will be chosen half as often.
@@ -1292,8 +1307,7 @@ game_start:
     _jobs_stat_init( you.char_class );
     _give_last_paycheck( you.char_class );
 
-    _assign_remaining_stats((you.species == SP_DEMIGOD ||
-                             you.species == SP_DEMONSPAWN) ? 15 : 8);
+    _unfocus_stats();
 
     // Needs to be done before handing out food.
     give_basic_mutations(you.species);
@@ -2734,17 +2748,17 @@ static void _give_last_paycheck(job_type which_job)
     {
     case JOB_HEALER:
     case JOB_THIEF:
-        you.gold = roll_dice(2, 100);
+        you.gold = 100;
         break;
 
     case JOB_WANDERER:
     case JOB_WARPER:
     case JOB_ASSASSIN:
-        you.gold = roll_dice(2, 50);
+        you.gold = 50;
         break;
 
     default:
-        you.gold = roll_dice(2, 20);
+        you.gold = 20;
         break;
 
     case JOB_PALADIN:
@@ -2766,14 +2780,13 @@ static void _species_stat_init(species_type which_species)
     // Note: The stats in in this list aren't intended to sum the same
     // for all races.  The fact that Mummies and Ghouls are really low
     // is considered acceptable (Mummies don't have to eat, and Ghouls
-    // are supposed to be a really hard race).  Also note that Demigods
-    // and Demonspawn get seven more random points added later. -- bwr
+    // are supposed to be a really hard race).  -- bwr
     switch (which_species)
     {
     default:                    sb =  6; ib =  6; db =  6;      break;  // 18
     case SP_HUMAN:              sb =  6; ib =  6; db =  6;      break;  // 18
-    case SP_DEMIGOD:            sb =  7; ib =  7; db =  7;      break;  // 21+7
-    case SP_DEMONSPAWN:         sb =  4; ib =  4; db =  4;      break;  // 12+7
+    case SP_DEMIGOD:            sb =  9; ib = 10; db =  9;      break;  // 28
+    case SP_DEMONSPAWN:         sb =  6; ib =  7; db =  6;      break;  // 19
 
     case SP_HIGH_ELF:           sb =  5; ib =  9; db =  8;      break;  // 22
     case SP_DEEP_ELF:           sb =  3; ib = 10; db =  8;      break;  // 21
@@ -2813,7 +2826,7 @@ static void _species_stat_init(species_type which_species)
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
     }
 
-    modify_all_stats( sb, ib, db );
+    modify_all_stats( sb+2, ib+2, db+2 );
 }
 
 static void _jobs_stat_init(job_type which_job)
@@ -2827,52 +2840,48 @@ static void _jobs_stat_init(job_type which_job)
     // Note: Wanderers are correct, they're a challenging class. -- bwr
     switch (which_job)
     {
-    case JOB_FIGHTER:           s =  7; i =  0; d =  3; hp = 15; mp = 0; break;
-    case JOB_BERSERKER:         s =  7; i = -1; d =  4; hp = 15; mp = 0; break;
-    case JOB_GLADIATOR:         s =  6; i =  0; d =  4; hp = 14; mp = 0; break;
-    case JOB_PALADIN:           s =  6; i =  2; d =  2; hp = 14; mp = 0; break;
+    case JOB_FIGHTER:           s =  8; i =  0; d =  4; hp = 15; mp = 0; break;
+    case JOB_BERSERKER:         s =  9; i = -1; d =  4; hp = 15; mp = 0; break;
+    case JOB_GLADIATOR:         s =  7; i =  0; d =  5; hp = 14; mp = 0; break;
+    case JOB_PALADIN:           s =  7; i =  2; d =  3; hp = 14; mp = 0; break;
 
-    case JOB_CRUSADER:          s =  4; i =  3; d =  3; hp = 13; mp = 1; break;
-    case JOB_DEATH_KNIGHT:      s =  4; i =  3; d =  3; hp = 13; mp = 1; break;
-    case JOB_CHAOS_KNIGHT:      s =  4; i =  3; d =  3; hp = 13; mp = 1; break;
+    case JOB_CRUSADER:          s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
+    case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 1; break;
+    case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
-    case JOB_REAVER:            s =  4; i =  4; d =  2; hp = 13; mp = 1; break;
-    case JOB_HEALER:            s =  4; i =  4; d =  2; hp = 13; mp = 1; break;
-    case JOB_PRIEST:            s =  4; i =  4; d =  2; hp = 12; mp = 1; break;
+    case JOB_REAVER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
+    case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
+    case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 12; mp = 1; break;
 
-    case JOB_ASSASSIN:          s =  2; i =  2; d =  6; hp = 12; mp = 0; break;
-    case JOB_THIEF:             s =  3; i =  2; d =  5; hp = 13; mp = 0; break;
-    case JOB_STALKER:           s =  2; i =  3; d =  5; hp = 12; mp = 1; break;
+    case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
+    case JOB_THIEF:             s =  4; i =  2; d =  6; hp = 13; mp = 0; break;
+    case JOB_STALKER:           s =  2; i =  4; d =  6; hp = 12; mp = 1; break;
 
-    case JOB_HUNTER:            s =  3; i =  3; d =  4; hp = 13; mp = 0; break;
-    case JOB_WARPER:            s =  3; i =  4; d =  3; hp = 12; mp = 1; break;
+    case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
+    case JOB_WARPER:            s =  3; i =  5; d =  4; hp = 12; mp = 1; break;
 
-    case JOB_MONK:              s =  2; i =  2; d =  6; hp = 13; mp = 0; break;
-    case JOB_TRANSMUTER:        s =  2; i =  4; d =  4; hp = 12; mp = 1; break;
+    case JOB_MONK:              s =  3; i =  2; d =  7; hp = 13; mp = 0; break;
+    case JOB_TRANSMUTER:        s =  2; i =  5; d =  5; hp = 12; mp = 1; break;
 
-    case JOB_WIZARD:            s = -1; i =  8; d =  3; hp =  8; mp = 5; break;
-    case JOB_CONJURER:          s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_ENCHANTER:         s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_FIRE_ELEMENTALIST: s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_ICE_ELEMENTALIST:  s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_AIR_ELEMENTALIST:  s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_EARTH_ELEMENTALIST:s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_SUMMONER:          s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_VENOM_MAGE:        s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
-    case JOB_NECROMANCER:       s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
+    case JOB_WIZARD:            s = -1; i = 10; d =  3; hp =  8; mp = 5; break;
+    case JOB_CONJURER:          s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_ENCHANTER:         s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_FIRE_ELEMENTALIST: s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_ICE_ELEMENTALIST:  s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_AIR_ELEMENTALIST:  s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_EARTH_ELEMENTALIST:s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_SUMMONER:          s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_VENOM_MAGE:        s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
+    case JOB_NECROMANCER:       s =  0; i =  7; d =  5; hp = 10; mp = 3; break;
 
     case JOB_WANDERER:
     {
-        // Wanderers get 2 points per stat as a baseline, and 4 more are
-        // randomly distributed.
-                                s =  2; i =  2; d =  2;
-
-        _assign_remaining_stats(4);
-
+        // Wanderers get their stats randomly distributed.
+        _wanderer_assign_remaining_stats(12);
                                                         hp = 11; mp = 1; break;
     }
 
-    case JOB_ARTIFICER:         s =  2; i =  3; d =  4; hp = 13; mp = 1; break;
+    case JOB_ARTIFICER:         s =  3; i =  4; d =  5; hp = 13; mp = 1; break;
     default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
     }
 
@@ -5250,7 +5259,6 @@ bool _give_items_skills()
 {
     char keyn;
     int weap_skill = 0;
-    int to_hit_bonus = 0;       // used for assigning primary weapons {dlb}
     int choice;                 // used for third-screen choices
 
     switch (you.char_class)
@@ -5305,8 +5313,7 @@ bool _give_items_skills()
         // Small races get stones, the others nets.
         if (player_size(PSIZE_BODY) < SIZE_MEDIUM)
         {
-            _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1,
-                               10 + roll_dice( 2, 10 ));
+            _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
         }
         else
         {
@@ -5570,7 +5577,7 @@ bool _give_items_skills()
     case JOB_CHAOS_KNIGHT:
     {
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1,
-                           1, 1 + random2(3));
+                           1, 2);
 
         if (!_choose_weapon())
             return (false);
@@ -5728,13 +5735,15 @@ bool _give_items_skills()
             you.inv[0].plus2 = 4 - you.inv[0].plus;
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE, 1, you.religion == GOD_XOM ? 1 + random2(3)
-                                                                : 0);
+                           ARM_ROBE, 1, you.religion == GOD_XOM ? 2 : 0);
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
-        you.skills[(coinflip() ? SK_ARMOUR : SK_DODGING)]++;
+        if (species_skills( SK_ARMOUR, you.species ) > species_skills( SK_DODGING, you.species ))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
         weap_skill = 2;
 
         if (you.religion == GOD_XOM)
@@ -5916,8 +5925,8 @@ bool _give_items_skills()
         case DK_YREDELEMNUL:
             you.religion = GOD_YREDELEMNUL;
             you.piety = 28;
-            you.inv[0].plus  = 1 + random2(2);
-            you.inv[0].plus2 = 3 - you.inv[0].plus;
+            you.inv[0].plus  = 2;
+            you.inv[0].plus2 = 2;
             you.skills[SK_INVOCATIONS] = 3;
             break;
         }
@@ -6003,8 +6012,7 @@ bool _give_items_skills()
 
         // One free escape.
         _newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                           10 + roll_dice( 2, 10 ));
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
 
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_ARMOUR]         = 1;
@@ -6068,7 +6076,7 @@ bool _give_items_skills()
 
         // Gets some darts - this class is difficult to start off with.
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                              8 + roll_dice( 2, 8 ), 1);
+                              16, 1);
 
         // Spriggans used to get a rod of striking, but now that anyone
         // can get one when playing an Artificer, this is no longer
@@ -6108,8 +6116,7 @@ bool _give_items_skills()
         you.equip[EQ_WEAPON] = -1;
 
         // Some sticks for sticks to snakes.
-        _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
-                           6 + roll_dice( 3, 4 ));
+        _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 12);
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
@@ -6187,9 +6194,8 @@ bool _give_items_skills()
         break;
 
     case JOB_STALKER:
-        to_hit_bonus = random2(3);
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
-                           1, 1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
+                           1, 2, 2);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
@@ -6197,10 +6203,9 @@ bool _give_items_skills()
         you.skills[SK_FIGHTING] = 1;
         you.skills[SK_SHORT_BLADES] = 1;
         you.skills[SK_POISON_MAGIC] = 1;
-        you.skills[SK_DODGING]  = 1;
+        you.skills[SK_DODGING]  = 2;
         you.skills[SK_STEALTH]  = 2;
         you.skills[SK_STABBING] = 2;
-        you.skills[SK_DODGING + random2(3)]++;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_ENCHANTMENTS] = 1;
         break;
@@ -6212,8 +6217,7 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
 
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                           10 + roll_dice( 2, 10 ));
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
 
         // Spriggans used to get a rod of striking, but now that anyone
         // can get one when playing an Artificer, this is no longer
@@ -6225,24 +6229,20 @@ bool _give_items_skills()
         you.skills[SK_FIGHTING] = 1;
         you.skills[SK_DODGING]  = 2;
         you.skills[SK_STEALTH]  = 2;
-        you.skills[SK_STABBING] = 1;
-        // Increase one of Dodging/Stealth/Stabbing by 1.
-        you.skills[SK_DODGING + random2(3)]++;
+        you.skills[SK_STABBING] = 2;
         you.skills[SK_TRAPS_DOORS] = 2;
         you.skills[SK_CROSSBOWS] = 1;
         break;
 
     case JOB_ASSASSIN:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
-                           1, 1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
+                           1, 2, 2);
         _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
-                              5 + roll_dice(2, 5));
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 10);
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
-        _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
-                              1 + random2(4));
+        _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 3);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
 
         you.skills[SK_SHORT_BLADES] = 2;
@@ -6280,21 +6280,18 @@ bool _give_items_skills()
         case SP_HILL_ORC:
         case SP_MERFOLK:
             _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                                  2);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             break;
         case SP_TROLL:
         case SP_OGRE:
             _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                                  3);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
             break;
 
         case SP_HALFLING:
         case SP_KOBOLD:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
-                               15 + random2avg(21, 5) + random2avg(15, 2));
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 30);
 
             // Wield the sling instead.
             you.equip[EQ_WEAPON] = 1;
@@ -6303,8 +6300,7 @@ bool _give_items_skills()
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
-                               15 + random2avg(21, 5));
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
 
             // Wield the crossbow instead.
             you.equip[EQ_WEAPON] = 1;
@@ -6312,8 +6308,7 @@ bool _give_items_skills()
 
         default:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
-                               15 + random2avg(21, 5));
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25);
 
             // Wield the bow instead.
             you.equip[EQ_WEAPON] = 1;

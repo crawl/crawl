@@ -3122,11 +3122,11 @@ void level_change(bool skip_attribute_increase)
             int brek = 0;
 
             if (new_exp > 21)
-                brek = (coinflip() ? 3 : 2);
+                brek = 2 + new_exp % 2;
             else if (new_exp > 12)
-                brek = 3 + random2(3);      // up from 2 + rand(3) -- bwr
+                brek = 4;                  // up from 2 + rand(3) -- bwr
             else
-                brek = 4 + random2(4);      // up from 3 + rand(4) -- bwr
+                brek = 5 + new_exp % 2;    // up from 3 + rand(4) -- bwr
 
             you.experience_level = new_exp;
             inc_hp(brek, true);
