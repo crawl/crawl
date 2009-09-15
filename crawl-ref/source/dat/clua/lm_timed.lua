@@ -49,7 +49,8 @@ function TimedMarker:activate(marker, verbose)
 end
 
 function TimedMarker:property(marker, pname)
-  return self.toll and self.toll:property(marker, pname)
+  return ((self.toll and self.toll:property(marker, pname))
+          or self.super.property(self, marker, pname))
 end
 
 function TimedMarker:disappear(marker, affect_player, x, y)
