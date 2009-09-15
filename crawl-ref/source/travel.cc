@@ -424,6 +424,7 @@ void clear_excludes()
          toggle_exclude(curr_excludes[i].pos);
 #endif
     curr_excludes.clear();
+    clear_level_exclusion_annotation();
 
     if (can_travel_interlevel())
     {
@@ -456,19 +457,20 @@ void cycle_exclude_radius(const coord_def &p)
     }
 }
 
-void toggle_exclude(const coord_def &p)
+void toggle_exclude(const coord_def &p, bool autoexcl)
 {
     if (is_exclude_root(p))
         set_exclude(p, 0);
     else
-        set_exclude(p, LOS_RADIUS);
+        set_exclude(p, LOS_RADIUS, autoexcl);
 
 #ifdef USE_TILE
     _tile_exclude_gmap_update(p);
 #endif
+    set_level_exclusion_annotation(get_exclusion_desc());
 }
 
-void set_exclude(const coord_def &p, int radius)
+void set_exclude(const coord_def &p, int radius, bool autoexcl)
 {
     // Sanity checks; excludes can be set in Pan and regular dungeon
     // levels only.
@@ -499,7 +501,12 @@ void set_exclude(const coord_def &p, int radius)
     }
     else
     {
-        curr_excludes.push_back(travel_exclude(p, radius));
+        int montype = NON_MONSTER;
+        const monsters *m = monster_at(p);
+        if (m && mons_near(m) && you.can_see(m))
+            montype = m->type;
+
+        curr_excludes.push_back(travel_exclude(p, radius, autoexcl, montype));
     }
 
     if (can_travel_interlevel())
@@ -507,6 +514,64 @@ void set_exclude(const coord_def &p, int radius)
         LevelInfo &li = travel_cache.get_level_info(level_id::current());
         li.update();
     }
+}
+
+// If a grid that was placed automatically no longer contains the original
+// monster (or it is invisible), remove the exclusion.
+void maybe_remove_autoexclusion(const coord_def &p)
+{
+    ASSERT(in_bounds(p) && see_grid(p) && is_exclude_root(p));
+
+    for (int i = 0, count = curr_excludes.size(); i < count; ++i)
+    {
+        if (curr_excludes[i].pos == p)
+        {
+            if (curr_excludes[i].autoexclude)
+            {
+                const monsters *m = monster_at(p);
+                if (!m || !you.can_see(m) || m->type != curr_excludes[i].mon)
+                {
+                    set_exclude(p, 0);
+                    set_level_exclusion_annotation(get_exclusion_desc());
+                }
+            }
+            break;
+        }
+    }
+}
+
+// Lists alls exclusions on the current level.
+std::string get_exclusion_desc()
+{
+    std::vector<std::string> monsters;
+    int count_other = 0;
+    for (int i = 0, count = curr_excludes.size(); i < count; ++i)
+    {
+        if (curr_excludes[i].mon != NON_MONSTER)
+            monsters.push_back(get_monster_data(curr_excludes[i].mon)->name);
+        else
+            count_other++;
+    }
+
+    if (count_other > 0)
+    {
+        snprintf(info, INFO_SIZE, "%d %sexclusion%s",
+                 count_other, monsters.empty() ? "" : "more ",
+                 count_other > 1 ? "s" : "");
+        monsters.push_back(info);
+    }
+    else if (monsters.empty())
+        return "";
+
+    std::string desc = "";
+    if (monsters.size() > 1 || count_other == 0)
+    {
+        snprintf(info, INFO_SIZE, "exclusion%s: ",
+                 monsters.size() > 1 ? "s" : "");
+        desc += info;
+    }
+    return (desc + comma_separated_line(monsters.begin(), monsters.end(),
+                                        ", and ", ", "));
 }
 
 static bool _is_monster_blocked(const coord_def& c)
@@ -3595,11 +3660,13 @@ void LevelInfo::save(writer& outf) const
         {
             marshallCoord(outf, excludes[i].pos);
             marshallShort(outf, excludes[i].radius);
+            marshallBoolean(outf, excludes[i].autoexclude);
+            marshallShort(outf, excludes[i].mon);
         }
     }
 }
 
-void LevelInfo::load(reader& inf)
+void LevelInfo::load(reader& inf, char minorVersion)
 {
     stairs.clear();
     int stair_count = unmarshallShort(inf);
@@ -3635,7 +3702,14 @@ void LevelInfo::load(reader& inf)
             coord_def c;
             unmarshallCoord(inf, c);
             const int radius = unmarshallShort(inf);
-            excludes.push_back(travel_exclude(c, radius));
+            bool autoexcl    = false;
+            int mon          = NON_MONSTER;
+            if (minorVersion >= TAG_ANNOTATE_EXCL)
+            {
+                autoexcl = unmarshallBoolean(inf);
+                mon      = unmarshallShort(inf);
+            }
+            excludes.push_back(travel_exclude(c, radius, autoexcl, mon));
         }
     }
 }
@@ -3897,7 +3971,7 @@ void TravelCache::save(writer& outf) const
         waypoints[wp].save(outf);
 }
 
-void TravelCache::load(reader& inf)
+void TravelCache::load(reader& inf, char minorVersion)
 {
     levels.clear();
 
@@ -3916,7 +3990,7 @@ void TravelCache::load(reader& inf)
         // Must set id before load, or travel_hell_entry will not be
         // correctly set.
         linfo.id = id;
-        linfo.load(inf);
+        linfo.load(inf, minorVersion);
         levels[id] = linfo;
     }
 

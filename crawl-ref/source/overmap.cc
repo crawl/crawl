@@ -57,6 +57,7 @@ portal_vault_map_type portal_vaults_present;
 portal_note_map_type portal_vault_notes;
 portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
+annotation_map_type level_exclusions;
 
 static void _seen_altar( god_type god, const coord_def& pos );
 static void _seen_staircase(dungeon_feature_type which_staircase,
@@ -721,14 +722,45 @@ void clear_level_annotation(level_id li)
     level_annotations.erase(li);
 }
 
-std::string get_level_annotation(level_id li)
+void set_level_exclusion_annotation(std::string str, level_id li)
+{
+    if (str.empty())
+    {
+        clear_level_exclusion_annotation(li);
+        return;
+    }
+
+    level_exclusions[li] = str;
+}
+
+void clear_level_exclusion_annotation(level_id li)
+{
+    level_exclusions.erase(li);
+}
+
+std::string get_level_annotation(level_id li, bool skip_excl)
 {
     annotation_map_type::const_iterator i = level_annotations.find(li);
 
-    if (i == level_annotations.end())
+    if (skip_excl)
+    {
+        if (i == level_annotations.end())
+            return "";
+
+        return (i->second);
+    }
+
+    annotation_map_type::const_iterator j = level_exclusions.find(li);
+
+    if (i == level_annotations.end() && j == level_exclusions.end())
         return "";
 
-    return (i->second);
+    if (i == level_annotations.end())
+        return (j->second);
+    if (j == level_annotations.end())
+        return (i->second);
+
+    return (i->second + ", " + j->second);
 }
 
 bool level_annotation_has(std::string find, level_id li)
@@ -768,7 +800,7 @@ void annotate_level()
     if (!get_level_annotation(li).empty())
     {
         mpr("Current level annotation is:", MSGCH_PROMPT);
-        mpr(get_level_annotation(li).c_str() );
+        mpr(get_level_annotation(li, true).c_str() );
     }
 
     mpr("Set level annotation to what (using ! forces prompt)? ",
@@ -780,7 +812,7 @@ void annotate_level()
 
     if (buf[0] == 0)
     {
-        if (get_level_annotation(li).length() > 0)
+        if (get_level_annotation(li, true).length() > 0)
         {
             if (!yesno("Really clear the annotation?"))
                 return;

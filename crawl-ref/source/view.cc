@@ -5336,6 +5336,9 @@ void viewwindow(bool draw_it, bool do_updates)
                 const coord_def sep = ep - coord_def(1,1);
 #endif
 
+                if (in_bounds(gc) && see_grid(gc) && is_exclude_root(gc))
+                    maybe_remove_autoexclusion(gc);
+
                 // Print tutorial messages for features in LOS.
                 if (Options.tutorial_left
                     && in_bounds(gc)

@@ -60,9 +60,12 @@ void init_travel_terrain_check(bool check_race_equip = true);
 void stop_running(void);
 void travel_init_new_level();
 void cycle_exclude_radius(const coord_def &p);
-void toggle_exclude(const coord_def &p);
-void set_exclude(const coord_def &p, int radius2);
+void toggle_exclude(const coord_def &p, bool autoexcl = false);
+void set_exclude(const coord_def &p, int radius2, bool autoexcl = false);
+void maybe_remove_autoexclusion(const coord_def &p);
+std::string get_exclusion_desc();
 void clear_excludes();
+
 unsigned char is_waypoint(const coord_def &p);
 bool is_exclude_root(const coord_def &p);
 bool is_stair(dungeon_feature_type gridc);
@@ -351,15 +354,18 @@ void mark_all_excludes_non_updated();
 
 struct travel_exclude
 {
-    coord_def     pos;       // exclusion centre
-    int           radius;    // exclusion radisu
-    env_show_grid show;      // los from exclusion centre
-    bool          uptodate;  // Is show up to date?
+    coord_def     pos;         // exclusion centre
+    int           radius;      // exclusion radius
+    bool          autoexclude; // Was set automatically.
+    int           mon;         // Monster around which exclusion is centered.
+    env_show_grid show;        // los from exclusion centre
+    bool          uptodate;    // Is show up to date?
 
     void set_exclude_show();
 
-    travel_exclude(const coord_def &p, int r = LOS_RADIUS)
-        : pos(p), radius(r)
+    travel_exclude(const coord_def &p, int r = LOS_RADIUS,
+                   bool autoexcl = false, int mons = NON_MONSTER)
+        : pos(p), radius(r), autoexclude(autoexcl), mon(mons)
     {
         set_exclude_show();
     }
@@ -378,7 +384,7 @@ struct LevelInfo
     }
 
     void save(writer&) const;
-    void load(reader&);
+    void load(reader&, char minorVersion);
 
     std::vector<stair_info> &get_stairs()
     {
@@ -490,7 +496,7 @@ public:
     void update();
 
     void save(writer&) const;
-    void load(reader&);
+    void load(reader&, char minorVersion);
 
     bool is_known_branch(unsigned char branch) const;
 

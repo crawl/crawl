@@ -1359,7 +1359,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 {
     int debris = 0;
     bool explode = false;
-    bool hole = true;
+    bool hole    = true;
     const char *what = NULL;
 
     ray_def ray;

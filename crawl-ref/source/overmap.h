@@ -25,7 +25,12 @@ void set_level_annotation(std::string str,
                           level_id li = level_id::current());
 void clear_level_annotation(level_id li = level_id::current());
 
-std::string get_level_annotation(level_id li = level_id::current());
+void set_level_exclusion_annotation(std::string str,
+                                    level_id li = level_id::current());
+void clear_level_exclusion_annotation(level_id li = level_id::current());
+
+std::string get_level_annotation(level_id li = level_id::current(),
+                                 bool skip_excl = false);
 
 bool level_annotation_has(std::string str,
                           level_id li = level_id::current());

@@ -96,6 +96,7 @@ extern std::map<level_pos, std::string> portal_vaults_present;
 extern std::map<level_pos, std::string> portal_vault_notes;
 extern std::map<level_pos, char> portal_vault_colours;
 extern std::map<level_id, std::string> level_annotations;
+extern std::map<level_id, std::string> level_exclusions;
 
 // temp file pairs used for file level cleanup
 
@@ -166,7 +167,7 @@ static void tag_construct_lost_monsters(writer &th);
 static void tag_construct_lost_items(writer &th);
 static void tag_read_you(reader &th, char minorVersion);
 static void tag_read_you_items(reader &th, char minorVersion);
-static void tag_read_you_dungeon(reader &th);
+static void tag_read_you_dungeon(reader &th, char minorVersion);
 static void tag_read_lost_monsters(reader &th);
 static void tag_read_lost_items(reader &th);
 
@@ -722,7 +723,7 @@ tag_type tag_read(FILE *fp, char minorVersion)
     {
     case TAG_YOU:            tag_read_you(th, minorVersion);            break;
     case TAG_YOU_ITEMS:      tag_read_you_items(th, minorVersion);      break;
-    case TAG_YOU_DUNGEON:    tag_read_you_dungeon(th);                  break;
+    case TAG_YOU_DUNGEON:    tag_read_you_dungeon(th, minorVersion);    break;
     case TAG_LEVEL:          tag_read_level(th, minorVersion);          break;
     case TAG_LEVEL_ITEMS:    tag_read_level_items(th, minorVersion);    break;
     case TAG_LEVEL_MONSTERS: tag_read_level_monsters(th, minorVersion); break;
@@ -1132,6 +1133,8 @@ static void tag_construct_you_dungeon(writer &th)
     marshallMap(th, portal_vault_colours,
                 marshall_level_pos, marshallByte);
     marshallMap(th, level_annotations,
+                marshall_level_id, marshallStringNoMax);
+    marshallMap(th, level_exclusions,
                 marshall_level_id, marshallStringNoMax);
 
     marshallPlaceInfo(th, you.global_info);
@@ -1575,7 +1578,7 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     return place_info;
 }
 
-static void tag_read_you_dungeon(reader &th)
+static void tag_read_you_dungeon(reader &th, char minorVersion)
 {
     // how many unique creatures?
     int count_c = unmarshallShort(th);
@@ -1615,6 +1618,12 @@ static void tag_read_you_dungeon(reader &th)
                   unmarshall_level_pos, unmarshallByte);
     unmarshallMap(th, level_annotations,
                   unmarshall_level_id, unmarshallStringNoMax);
+
+    if (minorVersion >= TAG_ANNOTATE_EXCL)
+    {
+        unmarshallMap(th, level_exclusions,
+                      unmarshall_level_id, unmarshallStringNoMax);
+    }
 
     PlaceInfo place_info = unmarshallPlaceInfo(th);
     ASSERT(place_info.is_global());

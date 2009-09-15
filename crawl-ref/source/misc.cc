@@ -2769,7 +2769,7 @@ void set_auto_exclude(const monsters *mon)
 {
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
-        toggle_exclude(mon->pos());
+        toggle_exclude(mon->pos(), true);
 #ifdef USE_TILE
         viewwindow(true, false);
 #endif

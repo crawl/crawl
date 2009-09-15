@@ -103,6 +103,11 @@ Experience card
 This card makes you more experienced.
 It is usually found in decks of changes and wonders.
 %%%%
+Wild Magic card
+
+This card causes wild magic, as if from miscasting a spell, to act upon you.
+It is usually found in the deck of wonders.
+%%%%
 the Helix card
 
 This cards changes your mutations. Higher power levels make the change more likely to be beneficial.
@@ -249,11 +254,6 @@ It is usually only found in Nemelex Xobeh's deck of punishment.
 Famine card
 
 This card starves you.
-It is usually only found in Nemelex Xobeh's deck of punishment.
-%%%%
-Wild Magic card
-
-This card causes wild magic, as if from miscasting a spell, to act upon you.
 It is usually only found in Nemelex Xobeh's deck of punishment.
 %%%%
 # deck of oddities (random card, along with a few others)

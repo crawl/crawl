@@ -1441,7 +1441,10 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
 
     if (load_mode != LOAD_VISITOR)
+    {
         dungeon_events.fire_event(DET_ENTERED_LEVEL);
+//         set_level_exclusion_annotation(get_exclusion_desc());
+    }
 
     if (load_mode == LOAD_ENTER_LEVEL)
     {
@@ -1818,7 +1821,7 @@ void restore_game(void)
     if (travelf)
     {
         reader inf(travelf);
-        travel_cache.load(inf);
+        travel_cache.load(inf, minorVersion);
         fclose(travelf);
     }
 

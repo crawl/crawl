@@ -509,7 +509,7 @@ deck of wonders
 A deck of highly mysterious and magical cards, which can permanently
 alter the drawer's physical and mental condition, for better or worse.
 
-It may contain the following cards: the Potion, Focus, Shuffle, Experience, the Helix, the Sage.
+It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage.
 %%%%
 demon blade
 
@@ -1309,9 +1309,9 @@ not apply to beings fully immune to magic.
 scroll of silence
 
 This scroll eliminates all sound near the reader. This makes reading
-scrolls, casting spells, praying or yelling in the reader's vicinity 
-impossible. (Applies to reader too, of course.) This silence will not 
-hide your presence, since its oppressive, unnatural effect will almost 
+scrolls, casting spells, praying or yelling in the reader's vicinity
+impossible. (Applies to reader too, of course.) This silence will not
+hide your presence, since its oppressive, unnatural effect will almost
 certainly alert any living creature that something is very wrong.
 %%%%
 scythe
