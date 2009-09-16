@@ -757,7 +757,7 @@ std::string get_level_annotation(level_id li, bool skip_excl)
 
     if (i == level_annotations.end())
         return (j->second);
-    if (j == level_annotations.end())
+    if (j == level_exclusions.end())
         return (i->second);
 
     return (i->second + ", " + j->second);
