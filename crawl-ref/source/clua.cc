@@ -2533,13 +2533,13 @@ MDEF(hd)
 
 static const char *_monuse_names[] =
 {
-    "nothing", "eats_items", "open_doors", "starting_equipment",
+    "nothing", "open_doors", "starting_equipment",
     "weapons_armour", "magic_items"
 };
 
 static const char *_monuse_to_str(mon_itemuse_type ityp)
 {
-    ASSERT(ARRAYSZ(_monuse_names) == NUM_MONUSE);
+    COMPILE_CHECK(ARRAYSZ(_monuse_names) == NUM_MONUSE, c1);
     return _monuse_names[ityp];
 }
 
