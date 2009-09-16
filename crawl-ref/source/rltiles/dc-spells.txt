@@ -140,7 +140,6 @@ poisonous_cloud POISONOUS_CLOUD
 resist_poison RESIST_POISON
 spider_form SPIDER_FORM
 sting STING
-summon_scorpions SUMMON_SCORPIONS
 venom_bolt VENOM_BOLT
 
 %sdir spells/summoning
@@ -156,6 +155,7 @@ summon_elemental SUMMON_ELEMENTAL
 summon_greater_demon SUMMON_GREATER_DEMON
 summon_horrible_things SUMMON_HORRIBLE_THINGS
 summon_ice_beast SUMMON_ICE_BEAST
+summon_scorpions SUMMON_SCORPIONS
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammals SUMMON_SMALL_MAMMALS
 summon_ugly_thing SUMMON_UGLY_THING
