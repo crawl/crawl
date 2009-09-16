@@ -12,11 +12,19 @@ wall/brick_brown0 WALL_NORMAL
 wall/brick_brown1
 wall/brick_brown2
 wall/brick_brown3
+wall/brick_brown4
+wall/brick_brown5
+wall/brick_brown6
+wall/brick_brown7
 floor/pebble_gray0 FLOOR_NORMAL
 floor/pebble_gray1
 floor/pebble_gray2
 floor/pebble_gray3
 floor/pebble_gray4
+floor/pebble_gray5
+floor/pebble_gray6
+floor/pebble_gray7
+floor/pebble_gray8
 
 wall/relief0 WALL_HALL
 wall/relief1
@@ -387,6 +395,7 @@ floor/lava2
 floor/lava3
 
 ## water
+%sdir dc-dngn/water
 dngn_open_sea DNGN_OPEN_SEA
 dngn_open_sea
 dngn_open_sea
@@ -409,6 +418,17 @@ dngn_shallow_water_murky
 dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
+dngn_shoals_deep_water1 SHOALS_DEEP_WATER
+dngn_shoals_deep_water2
+dngn_shoals_deep_water3
+dngn_shoals_deep_water4
+dngn_shoals_shallow_water1 SHOALS_SHALLOW_WATER
+dngn_shoals_shallow_water2
+dngn_shoals_shallow_water3
+dngn_shoals_shallow_water4
+dngn_shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
+dngn_shoals_shallow_water_disturbance2
+dngn_shoals_shallow_water_disturbance3
 
 %sdir dc-dngn/gateways
 dngn_entrance DNGN_UNSEEN_ENTRANCE

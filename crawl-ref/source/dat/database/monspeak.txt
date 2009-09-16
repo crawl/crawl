@@ -1357,7 +1357,7 @@ VISUAL:@The_monster@ points a slender finger @at_foe@ and smirks.
 @The_monster@ says @to_foe@, "Stay away from my face!"
 
 @The_monster@ says @to_foe@, "Magic and the sword, together, will defeat you." @player_only@
- 
+
 %%%%
 _Dowan_rare_
 

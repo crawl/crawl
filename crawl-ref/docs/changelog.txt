@@ -5,8 +5,11 @@ Stone Soup 0.6
 * Added scroll of silence.
 * Several new uniques.
 * Overhaul Wanderers.
+* Starting stats and equipment, and hp gain, are no longer assigned randomly.
 * Round all aptitudes to multiples of 10.
 * New memorisation interface.
+* Exclusions are displayed in the overview screen ('Ctrl-O' command).
+* Autoexclusions get removed again once the trigger monster is no longer there.
 * Armour acquirement is more likely to fill secondary slots.
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
 * Added wands as an acquirement option.
@@ -26,7 +29,7 @@ Stone Soup 0.6
 * Call Canine Familiar only calls friendly canines.
 * Add some tiles "animations" whenever the screen is redrawn.
 * Tiles: re-added doll editing screen ('-' command).
-* Tiles: clickable spells menu.
+* Tiles: added clickable spells display (toggle with '_' command).
 
 Stone Soup 0.5.1 (20090728)
 ---------------------------

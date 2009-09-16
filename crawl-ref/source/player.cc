@@ -261,7 +261,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 need_doll_update = true;
 #endif
             }
-            else if (!grid_is_water(new_grid) && grid_is_water(old_grid))
+            else if (!grid_is_water(new_grid) && grid_is_water(old_grid)
+                     && !is_grid_dangerous(new_grid))
             {
                 unmeld_one_equip(EQ_BOOTS);
                 you.redraw_evasion = true;

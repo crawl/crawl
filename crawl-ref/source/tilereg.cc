@@ -804,6 +804,10 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
             m_buf_main.add(TILE_MASK_DEEP_WATER, x, y);
         else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER_MURKY, bg_idx))
             m_buf_main.add(TILE_MASK_DEEP_WATER_MURKY, x, y);
+        else if (tile_dngn_equal(TILE_SHOALS_DEEP_WATER, bg_idx))
+            m_buf_main.add(TILE_MASK_DEEP_WATER_SHOALS, x, y);
+        else if (tile_dngn_equal(TILE_SHOALS_SHALLOW_WATER, bg_idx))
+            m_buf_main.add(TILE_MASK_SHALLOW_WATER_SHOALS, x, y);
     }
 
     if (fg & TILE_FLAG_NET)

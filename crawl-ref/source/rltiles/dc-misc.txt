@@ -43,6 +43,8 @@ mask_deep_water MASK_DEEP_WATER
 mask_shallow_water MASK_SHALLOW_WATER
 mask_deep_water_murky MASK_DEEP_WATER_MURKY
 mask_shallow_water_murky MASK_SHALLOW_WATER_MURKY
+mask_deep_water_shoals MASK_DEEP_WATER_SHOALS
+mask_shallow_water_shoals MASK_SHALLOW_WATER_SHOALS
 mask_lava MASK_LAVA
 cursor CURSOR
 cursor_red CURSOR2

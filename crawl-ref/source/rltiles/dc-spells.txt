@@ -70,7 +70,6 @@ sure_blade SURE_BLADE
 tame_beasts TAME_BEASTS
 tukimas_dance TUKIMAS_DANCE
 tukimas_vorpal_blade TUKIMAS_VORPAL_BLADE
-unknown UNKNOWN
 
 %sdir spells/fire
 bolt_of_fire BOLT_OF_FIRE
