@@ -6267,7 +6267,7 @@ void monsters::pandemon_init()
     // Don't make greased-lightning Pandemonium demons in the dungeon
     // max speed = 17). Demons in Pandemonium can be up to speed 24.
     if (you.level_type == LEVEL_DUNGEON)
-        speed = (one_chance_in(3)? 10 : 7 + roll_dice(2, 5));
+        speed = (one_chance_in(3) ? 10 : 7 + roll_dice(2, 5));
     else
         speed = (one_chance_in(3) ? 10 : 10 + roll_dice(2, 7));
 
@@ -6276,7 +6276,7 @@ void monsters::pandemon_init()
     if (you.char_direction == GDT_ASCENDING && you.level_type == LEVEL_DUNGEON)
         colour = LIGHTRED;
     else
-        colour = random_colour();        // demon's colour
+        colour = random_colour(); // demon's colour
 
     load_spells(MST_GHOST);
 }

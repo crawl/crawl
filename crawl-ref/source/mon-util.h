@@ -443,7 +443,7 @@ struct monsterentry
     // hp will be around 135 each time.
     unsigned       hpdice[4];
 
-    char AC;  // armour class
+    char AC; // armour class
     char ev; // evasion
     mon_spellbook_type sec;
     corpse_effect_type corpse_thingy;

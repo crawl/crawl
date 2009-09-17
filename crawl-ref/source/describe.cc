@@ -2586,7 +2586,7 @@ static std::string _monster_stat_description(const monsters& mon)
 {
     std::ostringstream result;
 
-    // Don't leak or duplicate resistance information for ghosts/demons.
+    // Don't leak or duplicate resistance information for demons/ghosts.
     const mon_resist_def resist =
         (mon.type == MONS_PANDEMONIUM_DEMON
          || mon.type == MONS_PLAYER_GHOST ? get_mons_class_resists(mon.type)
