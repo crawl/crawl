@@ -2586,11 +2586,11 @@ static std::string _monster_stat_description(const monsters& mon)
 {
     std::ostringstream result;
 
-    // Don't leak or duplicate resistance information for demons/ghosts.
+    // Don't leak or duplicate resistance information for ghost demon
+    // monsters.
     const mon_resist_def resist =
-        (mon.type == MONS_PANDEMONIUM_DEMON
-         || mon.type == MONS_PLAYER_GHOST ? get_mons_class_resists(mon.type)
-                                          : get_mons_resists(&mon));
+        mons_is_ghost_demon(mon.type) ? get_mons_class_resists(mon.type)
+                                      : get_mons_resists(&mon);
 
     const mon_resist_flags resists[] = {
         MR_RES_ELEC,  MR_RES_POISON, MR_RES_FIRE,
@@ -2676,8 +2676,8 @@ static std::string _monster_stat_description(const monsters& mon)
     if (mons_immune_magic(&mon))
         result << pronoun << " is immune to magical enchantments.$";
 
-    // These differ from ghost to ghost, so would be spoily.
-    if (mon.type != MONS_PANDEMONIUM_DEMON && mon.type != MONS_PLAYER_GHOST)
+    // These differ between ghost demon monsters, so would be spoily.
+    if (!mons_is_ghost_demon(mon.type))
     {
         // Seeing/sensing invisible.
         if (mons_class_flag(mon.type, M_SEE_INVIS))

@@ -2715,13 +2715,12 @@ void debug_stethoscope(int mon)
     if (found_spell)
         mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
 
-    if (mons.type == MONS_PLAYER_GHOST
-        || mons.type == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(mons.type))
     {
         ASSERT(mons.ghost.get());
         const ghost_demon &ghost = *mons.ghost;
         mprf(MSGCH_DIAGNOSTICS, "Ghost damage: %d; brand: %d",
-             ghost.damage, ghost.brand );
+             ghost.damage, ghost.brand);
     }
 }
 

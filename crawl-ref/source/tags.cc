@@ -1879,7 +1879,7 @@ static void marshall_monster(writer &th, const monsters &m)
     marshallSpells(th, m.spells);
     marshallByte(th, m.god);
 
-    if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(m.type))
     {
         // *Must* have ghost field set.
         ASSERT(m.ghost.get());
@@ -2191,7 +2191,7 @@ static void unmarshall_monster(reader &th, monsters &m)
 
     m.god = static_cast<god_type>( unmarshallByte(th) );
 
-    if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th, _tag_minor_version));
 
     m.check_speed();

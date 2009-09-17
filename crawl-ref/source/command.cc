@@ -1340,11 +1340,10 @@ static bool _do_description(std::string key, std::string type,
     else
     {
         monster_type mon_num = get_monster_by_name(key, true);
-        // Don't attempt to get more information on ghosts or
-        // pandemonium demons, as the ghost struct has not been
-        // initialised, which will cause a crash.
-        if (mon_num != MONS_PROGRAM_BUG && mon_num != MONS_PLAYER_GHOST
-            && mon_num != MONS_PANDEMONIUM_DEMON)
+        // Don't attempt to get more information on ghost demon
+        // monsters, as the ghost struct has not been initialised, which
+        // will cause a crash.
+        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num))
         {
             monsters mon;
             mon.type = mon_num;

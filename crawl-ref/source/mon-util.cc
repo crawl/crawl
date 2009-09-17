@@ -285,7 +285,7 @@ const mon_resist_def &get_mons_class_resists(int mc)
 mon_resist_def get_mons_resists(const monsters *mon)
 {
     mon_resist_def resists;
-    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(mon->type))
         resists = (mon->ghost->resists);
     else
         resists = mon_resist_def();
@@ -867,6 +867,12 @@ shout_type mons_shouts(int mc, bool demon_shout)
     return (u);
 }
 
+bool mons_is_ghost_demon(int mc)
+{
+    return (mc == MONS_PLAYER_GHOST
+            || mc == MONS_PANDEMONIUM_DEMON);
+}
+
 bool mons_is_unique(int mc)
 {
     return (mons_class_flag(mc, M_UNIQUE));
@@ -879,7 +885,7 @@ bool mons_sense_invis(const monsters *mon)
 
 bool mons_see_invis(const monsters *mon)
 {
-    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(mon->type))
         return (mon->ghost->see_invis);
     else if (mons_class_flag(mon->type, M_SEE_INVIS))
         return (true);
@@ -1142,7 +1148,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     if (attk_number < 0 || attk_number > 3 || mon->has_hydra_multi_attack())
         attk_number = 0;
 
-    if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(mc))
     {
         if (attk_number == 0)
             return (mon_attack_def::attk(mon->ghost->damage));
@@ -1553,7 +1559,7 @@ flight_type mons_flies(const monsters *mon, bool randarts)
     if (mons_enslaved_twisted_soul(mon))
         return (FL_LEVITATE);
 
-    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(mon->type))
         return (mon->ghost->fly);
 
     const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
@@ -2576,7 +2582,7 @@ int mons_offhand_weapon_index(const monsters *m)
 
 int mons_base_damage_brand(const monsters *m)
 {
-    if (m->type == MONS_PLAYER_GHOST || m->type == MONS_PANDEMONIUM_DEMON)
+    if (mons_is_ghost_demon(m->type))
         return (m->ghost->brand);
 
     return (SPWPN_NORMAL);
@@ -3905,7 +3911,7 @@ int monsters::damage_brand(int which_attack)
 
     if (!mweap)
     {
-        if (type == MONS_PLAYER_GHOST || type == MONS_PANDEMONIUM_DEMON)
+        if (mons_is_ghost_demon(type))
             return (ghost->brand);
 
         return (SPWPN_NORMAL);
