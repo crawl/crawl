@@ -256,6 +256,11 @@ Famine card
 This card starves you.
 It is usually only found in Nemelex Xobeh's deck of punishment.
 %%%%
+the Swine card
+
+This card will make you pink and rooting for truffles.
+It is usually only found in Nemelex Xobeh's deck of punishment.
+%%%%
 # deck of oddities (random card, along with a few others)
 the Bargain card
 

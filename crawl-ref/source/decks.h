@@ -115,6 +115,7 @@ enum card_type
     CARD_FEAST,
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
+    CARD_SWINE,                 // *oink*
 
     NUM_CARDS
 };

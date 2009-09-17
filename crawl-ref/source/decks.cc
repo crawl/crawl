@@ -180,6 +180,7 @@ const deck_archetype deck_of_punishment[] = {
     { CARD_DAMNATION,  {5, 5, 5} },
     { CARD_PORTAL,     {5, 5, 5} },
     { CARD_MINEFIELD,  {5, 5, 5} },
+    { CARD_SWINE,      {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -313,6 +314,7 @@ const char* card_name(card_type card)
     case CARD_WRATH:           return "Wrath";
     case CARD_WRAITH:          return "the Wraith";
     case CARD_CURSE:           return "the Curse";
+    case CARD_SWINE:           return "the Swine";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -1226,6 +1228,7 @@ static int _xom_check_card(item_def &deck, card_type card,
     case CARD_MINEFIELD:
     case CARD_FAMINE:
     case CARD_CURSE:
+    case CARD_SWINE:
         // Always hilarious.
         amusement = 255;
 
@@ -3048,6 +3051,14 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
             mpr("You feel a horrible emptiness.");
         else
             set_hunger(12000, true);
+        break;
+    
+    case CARD_SWINE:
+        if (!transform(random2(power), TRAN_PIG, true))
+        {
+            mpr("You feel like a pig.");
+            break;
+        }
         break;
 
     case NUM_CARDS:
