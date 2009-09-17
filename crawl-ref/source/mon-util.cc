@@ -1553,7 +1553,7 @@ flight_type mons_flies(const monsters *mon, bool randarts)
     if (mons_enslaved_twisted_soul(mon))
         return (FL_LEVITATE);
 
-    if (mon->type == MONS_PANDEMONIUM_DEMON && mon->ghost->fly)
+    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
         return (mon->ghost->fly);
 
     const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
@@ -3907,8 +3907,8 @@ int monsters::damage_brand(int which_attack)
     {
         if (type == MONS_PLAYER_GHOST || type == MONS_PANDEMONIUM_DEMON)
             return (ghost->brand);
-        else
-            return (SPWPN_NORMAL);
+
+        return (SPWPN_NORMAL);
     }
 
     return (!is_range_weapon(*mweap) ? get_weapon_brand(*mweap) : SPWPN_NORMAL);

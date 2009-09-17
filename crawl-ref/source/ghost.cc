@@ -387,6 +387,8 @@ void ghost_demon::init_player_ghost()
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 
+    fly = mons_class_flies(MONS_PLAYER_GHOST);
+
     add_spells();
 }
 
@@ -572,7 +574,7 @@ void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
         {
             // Bingo!
             announce_ghost(*menv[i].ghost);
-            gs.push_back( *menv[i].ghost );
+            gs.push_back(*menv[i].ghost);
             --n;
         }
     }
