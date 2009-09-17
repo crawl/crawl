@@ -1106,6 +1106,11 @@ static int _place_monster_aux(const mgen_data &mg,
     // apply it now.
     if (mg.colour != BLACK)
         menv[id].colour = mg.colour;
+    else if (mg.cls == MONS_KRAKEN)
+    {
+        menv[id].colour = random_choose(GREEN, LIGHTGREEN, LIGHTCYAN,
+                                        LIGHTBLUE, RED, LIGHTRED, MAGENTA, -1);
+    }
 
     // The return of Boris is now handled in monster_die()...
     // not setting this for Boris here allows for multiple Borises
@@ -1810,7 +1815,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
     case MONS_DUVESSA:
         band = BAND_DUVESSA;
         band_size = 1;
-        break;        
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)

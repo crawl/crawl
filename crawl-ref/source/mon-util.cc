@@ -2550,6 +2550,9 @@ bool mons_is_summoned(const monsters *m, int *duration, int *summon_type)
 
     // Clones aren't really summoned (though their equipment might be).
     case MON_SUMM_CLONE:
+    
+    // Nor are body parts.
+    case SPELL_KRAKEN_TENTACLES:
 
     // Some object which was animated, and thus not really summoned.
     case MON_SUMM_ANIMATE:
@@ -7443,7 +7446,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 del_ench(ENCH_SUBMERGED);
             break;
         }
-        else if (((type == MONS_ELECTRIC_EEL || type == MONS_LAVA_SNAKE)
+        else if (((type == MONS_ELECTRIC_EEL || type == MONS_LAVA_SNAKE || type == MONS_KRAKEN)
                   && (one_chance_in(50) || (mons_near(this)
                                             && hit_points == max_hit_points
                                             && !one_chance_in(10))))
@@ -8328,6 +8331,14 @@ void monsters::react_to_damage(int damage, beam_type flavour)
                      monnam.c_str(),
                      number_in_words(spawned).c_str());
             }
+        }
+    }
+    else if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE)
+    {
+        if (!invalid_monster_index(number)
+            && menv[number].type == MONS_KRAKEN)
+        {
+            menv[number].hurt(&you, damage, flavour);
         }
     }
 }

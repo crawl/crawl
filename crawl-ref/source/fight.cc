@@ -4280,6 +4280,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         return klown_attack[random2(num_attacks)];
     }
 
+    if (attacker->id() == MONS_KRAKEN_TENTACLE)
+        return "slap";
+
     static const char *attack_types[] =
     {
         "",

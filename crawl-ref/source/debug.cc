@@ -539,7 +539,33 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    // Need to set a name for the player ghost.
+    if (mspec.mid == MONS_KRAKEN)
+    {
+        unsigned short mid = mgrd(place);
+
+        if (mid >= MAX_MONSTERS || menv[mid].type != MONS_KRAKEN)
+        {
+            for (mid = 0; mid < MAX_MONSTERS; mid++)
+            {
+                if (menv[mid].type == MONS_KRAKEN && menv[mid].alive())
+                {
+                    menv[mid].colour = random_choose(GREEN, LIGHTGREY,
+                                                     LIGHTGREEN, LIGHTCYAN,
+                                                     LIGHTRED, YELLOW, WHITE,
+                                                     -1);
+                    return;
+                }
+            }
+        }
+        if (mid >= MAX_MONSTERS)
+        {
+            mpr("Couldn't find player kraken!");
+            return;
+        }
+    }
+
+    // FIXME: This is a bit useless, seeing how you cannot set the
+    // ghost's stats, brand or level.
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
         unsigned short mid = mgrd(place);

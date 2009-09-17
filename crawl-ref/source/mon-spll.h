@@ -210,6 +210,17 @@
       }
     },
 
+    {  MST_KRAKEN,
+      {
+       SPELL_KRAKEN_TENTACLES,
+       SPELL_KRAKEN_TENTACLES,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_ORC_SORCERER,
       {
        SPELL_BOLT_OF_FIRE,

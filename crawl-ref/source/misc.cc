@@ -2697,6 +2697,7 @@ bool mons_is_safe(const monsters *mon, bool want_move,
 
     bool is_safe = (mons_wont_attack(mon)
                     || mons_class_flag(mon->type, M_NO_EXP_GAIN)
+                       && mon->type != MONS_KRAKEN_TENTACLE
                     || mons_is_pacified(mon) && dist > 1
 #ifdef WIZARD
                     // Wizmode skill setting enforces hiddenness.

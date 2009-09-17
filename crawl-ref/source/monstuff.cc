@@ -1152,6 +1152,8 @@ static void _hogs_to_humans()
     // tell them apart anyway.
     // On the other hand, hogs which left the level are too far away to be
     // affected by the magic of Kirke's death.
+    // FIXME: If another monster was polymorphed into a hog by Kirke's
+    //        porkalator spell, they should be handled specially...
     int any = 0;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
@@ -1173,14 +1175,79 @@ static void _hogs_to_humans()
         }
     }
 
-    if (any==1)
+    if (any == 1)
         mpr("No longer under Kirke's spell, the hog turns into a human!");
-    else if (any>1)
-        mpr("No longer under Kirke's spell, all hogs revert to their human form!");
+    else if (any > 1)
+    {
+        mpr("No longer under Kirke's spell, all hogs revert to their human "
+            "form!");
+    }
 
     // Revert the player as well.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
         untransform();
+}
+
+static int _tentacle_too_far(monsters *head, monsters *tentacle)
+{
+    // The Shoals produce no disjoint bodies of water.
+    // If this ever changes, we'd need to check if the head and tentacle
+    // are still in the same pool.
+    // XXX: Actually, using Feawn's Sunlight power you can separate pools...
+    return grid_distance(head->pos(), tentacle->pos()) > LOS_RADIUS;
+}
+
+void mons_relocated(monsters *monster)
+{
+    if (monster->type == MONS_KRAKEN)
+    {
+        int headnum = monster_index(monster);
+
+        if (invalid_monster_index(headnum))
+            return;
+
+        for (int i = 0; i < MAX_MONSTERS; ++i)
+        {
+            monsters *tentacle = &menv[i];
+            if (tentacle->type == MONS_KRAKEN_TENTACLE
+                && (int) tentacle->number == headnum
+                && _tentacle_too_far(monster, tentacle))
+            {
+                monster_die(tentacle, KILL_RESET, -1, true, false);
+            }
+        }
+    }
+    else if (monster->type == MONS_KRAKEN_TENTACLE)
+    {
+        if (invalid_monster_index(monster->number)
+            || menv[monster->number].type!=MONS_KRAKEN
+            || _tentacle_too_far(&menv[monster->number], monster))
+        {
+            monster_die(monster, KILL_RESET, -1, true, false);
+        }
+    }
+}
+
+static int _destroy_tentacles(monsters *head)
+{
+    int tent = 0;
+    int headnum = monster_index(head);
+
+    if (invalid_monster_index(headnum))
+        return 0;
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (monster->type == MONS_KRAKEN_TENTACLE
+            && (int)monster->number == headnum)
+        {
+            if (mons_near(monster))
+                tent++;
+            monster->hurt(monster, INSTANT_DEATH);
+        }
+    }
+    return tent;
 }
 
 int monster_die(monsters *monster, killer_type killer,
@@ -1816,6 +1883,14 @@ int monster_die(monsters *monster, killer_type killer,
     {
         _hogs_to_humans();
     }
+    else if (monster->type == MONS_KRAKEN)
+    {
+        if (_destroy_tentacles(monster) && !in_transit)
+        {
+            mpr("The kraken is slain, and its tentacles slide "
+                "back into the water like the carrion they now are.");
+        }
+    }
     else if (!mons_is_summoned(monster))
     {
         if (mons_genus(monster->type) == MONS_MUMMY)
@@ -2426,6 +2501,8 @@ bool monster_blink(monsters *monster, bool quiet)
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);
+
+    mons_relocated(monster);
 
     return (true);
 }

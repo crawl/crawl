@@ -3515,6 +3515,8 @@ static void _place_aquatic_monsters(int level_number, char level_type)
                     swimming_things[i] = MONS_MERMAID;
                 else if (one_chance_in(8))
                     swimming_things[i] = MONS_SIREN;
+                else if (one_chance_in(20))
+                    swimming_things[i] = MONS_KRAKEN;
             }
         }
 

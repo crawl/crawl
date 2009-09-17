@@ -1991,9 +1991,10 @@ enum monster_type                      // (int) menv[].type
     MONS_ERESHKIGAL,                   //  344
 
     MONS_ANCIENT_LICH = 356,           //  356
-    MONS_OOZE,                         //  357
-
-    MONS_VAULT_GUARD = 360,            //  360
+    MONS_OOZE,
+    MONS_KRAKEN,
+    MONS_KRAKEN_TENTACLE,
+    MONS_VAULT_GUARD,                  //  360
     MONS_CURSE_SKULL,
     MONS_VAMPIRE_KNIGHT,
     MONS_VAMPIRE_MAGE,
@@ -2212,6 +2213,7 @@ enum mon_spellbook_type
     MST_GIANT_ORANGE_BRAIN,
     MST_RAKSHASA,
     MST_GREAT_ORB_OF_EYES,             //  55
+    MST_KRAKEN,
     MST_ORC_SORCERER,
     MST_STEAM_DRAGON,
     MST_HELL_KNIGHT_I    = 60,
@@ -2880,8 +2882,9 @@ enum spell_type
     SPELL_DRACONIAN_BREATH,
     SPELL_WATER_ELEMENTALS,
     SPELL_PORKALATOR,                  //  198
+    SPELL_KRAKEN_TENTACLES,
 
-    NUM_SPELLS                         //  199
+    NUM_SPELLS                         //  200
 };
 
 enum slot_select_mode

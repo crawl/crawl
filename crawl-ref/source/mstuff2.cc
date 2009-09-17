@@ -254,6 +254,48 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
+    case SPELL_KRAKEN_TENTACLES:
+    {
+        int kraken_index = monster_index(monster);
+        if (invalid_monster_index(duration))
+        {
+            mpr("Error! Kraken is not a part of the current environment!",
+                MSGCH_ERROR);
+            return;
+        }
+        sumcount2 = random2(9); // up to eight tentacles
+        if (sumcount2 == 0)
+            return;
+
+        for (sumcount = 0; sumcount < MAX_MONSTERS; ++sumcount)
+            if (menv[sumcount].type == MONS_KRAKEN_TENTACLE
+                && (int) menv[sumcount].number == kraken_index)
+            {
+                // Reduce by tentacles already placed.
+                sumcount2--;
+            }
+
+        for (sumcount = sumcount2; sumcount > 0; --sumcount)
+        {
+            // Tentacles aren't really summoned (controlled by spell_cast
+            // being passed to summon_type), so I'm not sure what the
+            // abjuration value (3) is doing there. (jpeg)
+            if (-1 == create_monster(
+                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster),
+                          3, spell_cast, monster->pos(), monster->foe, 0, god,
+                          MONS_PROGRAM_BUG, kraken_index, monster->colour,
+                          you.your_level, PROX_CLOSE_TO_PLAYER,
+                          you.level_type)))
+            {
+                sumcount2--;
+            }
+        }
+        if (sumcount2 == 1)
+            mpr("A tentacle rises from the water!");
+        else if (sumcount2 > 1)
+            mpr("Tentacles burst out of the water!");
+        return;
+    }
     case SPELL_FAKE_RAKSHASA_SUMMON:
         sumcount2 = (coinflip() ? 2 : 3);
 
@@ -992,6 +1034,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     case SPELL_CANTRIP:
     case SPELL_BERSERKER_RAGE:
     case SPELL_WATER_ELEMENTALS:
+    case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
         return;
@@ -1180,6 +1223,8 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);
+
+    mons_relocated(monster);
 
     // Teleporting mimics change form - if they reappear out of LOS, they are
     // no longer known.

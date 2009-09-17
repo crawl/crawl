@@ -199,4 +199,6 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
 // to another.
 bool mons_avoids_cloud(const monsters *monster, int cloud_num,
                        cloud_type *cl_type = NULL, bool placement = false);
+
+void mons_relocated(monsters *mons);
 #endif

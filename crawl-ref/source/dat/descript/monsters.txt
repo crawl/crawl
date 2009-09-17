@@ -925,6 +925,10 @@ komodo dragon
 
 An enormous monitor lizard. It's more than capable of preying on large animals.  Bits of fetid and rotting flesh from its last few meals are stuck in its teeth.
 %%%%
+kraken
+
+A gargantuan sea monster, capable of devouring entire ships.  It embraces them with its tentacles and draws them into the depths.  Fortunately, the tentacles are too big to embrace a small creature like you.  Wait, did I say "fortunately"?
+%%%%
 large abomination
 
 A large and hideous form, created or summoned by some arcane process.
@@ -1372,6 +1376,11 @@ A small and slimy dragon, covered in swamp muck.
 swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
+%%%%
+tentacle
+
+This mighty tentacle is a part of a kraken.
+Any damage dealt to it hurts the whole creature.
 %%%%
 tentacled monstrosity
 

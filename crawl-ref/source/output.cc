@@ -1595,7 +1595,8 @@ void get_monster_pane_info(std::vector<monster_pane_info>& mons)
     for (unsigned int i = 0; i < visible.size(); i++)
     {
         if (Options.target_zero_exp
-            || !mons_class_flag( visible[i]->type, M_NO_EXP_GAIN ))
+            || !mons_class_flag( visible[i]->type, M_NO_EXP_GAIN )
+            || visible[i]->type == MONS_KRAKEN_TENTACLE)
         {
             mons.push_back(monster_pane_info(visible[i]));
         }
