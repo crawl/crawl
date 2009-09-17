@@ -160,7 +160,7 @@ void ghost_demon::init_random_demon()
         resists.fire = random_range(1, 2);
     else
     {
-        resists.fire = 0;    // res_fire
+        resists.fire = 0; // res_fire
 
         if (one_chance_in(10))
             resists.fire = -1;
@@ -181,7 +181,7 @@ void ghost_demon::init_random_demon()
     resists.elec = one_chance_in(3);
 
     // HTH damage:
-    damage = 20 + roll_dice( 2, 20 );
+    damage = 20 + roll_dice(2, 20);
 
     // special attack type (uses weapon brand code):
     brand = SPWPN_NORMAL;

@@ -1607,7 +1607,7 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
 {
     int hrolled = 0;
 
-    for (int hroll = 0; hroll < hit_dice; hroll++)
+    for (int hroll = 0; hroll < hit_dice; ++hroll)
     {
         hrolled += random2(1 + rand_hp);
         hrolled += min_hp;
