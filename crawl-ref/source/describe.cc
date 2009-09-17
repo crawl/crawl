@@ -2837,6 +2837,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         inf.body << "$" << _describe_draconian( &mons );
         break;
     }
+
     case MONS_PLAYER_GHOST:
         inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
         break;
@@ -2856,6 +2857,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
                 "monsters who masquerade as program bugs or run around the "
                 "dungeon without a proper description to the authorities.$";
         break;
+
     default:
         break;
     }

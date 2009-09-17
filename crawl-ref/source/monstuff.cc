@@ -5643,7 +5643,8 @@ static void _handle_nearby_ability(monsters *monster)
             monster->colour = random_colour();
         break;
 
-    default: break;
+    default:
+        break;
     }
 }
 

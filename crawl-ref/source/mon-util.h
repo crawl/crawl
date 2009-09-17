@@ -520,7 +520,7 @@ bool mons_player_visible(const monsters *mon);
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(int mclass, bool demon_shout = false);
 
-bool mons_is_unique(int mclass);
+bool mons_is_unique(int mc);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

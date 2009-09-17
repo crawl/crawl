@@ -520,9 +520,10 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
         gs.push_back(player);
     }
 
-    // Pick up any other ghosts that happen to be on the level if we have space.
-    // If the player is undead, add one to the ghost quota for the level.
-    find_extra_ghosts( gs, n_extra_ghosts() + 1 - gs.size() );
+    // Pick up any other ghosts that happen to be on the level if we
+    // have space.  If the player is undead, add one to the ghost quota
+    // for the level.
+    find_extra_ghosts(gs, n_extra_ghosts() + 1 - gs.size());
 
     return (gs);
 }
