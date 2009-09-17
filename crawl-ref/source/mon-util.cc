@@ -1826,15 +1826,15 @@ void define_monster(monsters &mons)
         hd = (coinflip() ? 1 : 2);
         break;
 
-    case MONS_ZOMBIE_LARGE:
-        hd = 3 + random2(5);
-        break;
-
     case MONS_ABOMINATION_LARGE:
         hd = 8 + random2(4);
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
         col = random_colour();
+        break;
+
+    case MONS_ZOMBIE_LARGE:
+        hd = 3 + random2(5);
         break;
 
     case MONS_BEAST:
