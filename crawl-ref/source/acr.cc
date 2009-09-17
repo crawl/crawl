@@ -2314,7 +2314,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_BRILLIANCE, "You feel a little less clever now."))
         modify_stat(STAT_INTELLIGENCE, -5, true, "brilliance running out");
-	
+
     if (_decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {
         //jmf: Guilty for berserking /after/ berserk.
@@ -2362,6 +2362,22 @@ static void _decrement_durations()
 
         int dur = 12 + roll_dice(2, 12);
         you.duration[DUR_EXHAUSTED] += dur;
+
+        // While the amulet of resist slowing does prevent the post-berserk
+        // slowing, exhaustion still ends haste.
+        if (you.duration[DUR_HASTE] > 0 && wearing_amulet(AMU_RESIST_SLOW))
+        {
+            if (you.duration[DUR_HASTE > 6])
+            {
+                you.duration[DUR_HASTE] = 2 + coinflip();
+                mpr("Your extra speed is starting to run out.", MSGCH_DURATION);
+            }
+            else
+            {
+                mpr("You feel yourself slow down.", MSGCH_DURATION);
+                you.duration[DUR_HASTE] = 0;
+            }
+        }
 
         // Don't trigger too many tutorial messages.
         const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
@@ -2480,10 +2496,12 @@ static void _decrement_durations()
             you.duration[DUR_DEATHS_DOOR] = 0;
         }
         else
+        {
             _decrement_a_duration(DUR_DEATHS_DOOR,
                                   "Your life is in your own hands again!",
                                   random2(6),
                                   "Your time is quickly running out!");
+        }
     }
 
     if (_decrement_a_duration(DUR_DIVINE_VIGOUR))

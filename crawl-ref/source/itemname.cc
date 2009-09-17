@@ -2503,10 +2503,11 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (player_size(PSIZE_BODY) < SIZE_MEDIUM
-            && !check_weapon_wieldable_size(item, player_size(PSIZE_BODY)))
+        if (!check_weapon_wieldable_size(item, player_size(PSIZE_BODY, !temp))
+            && !is_throwable(&you, item))
         {
-            // Weapon is too large to be wielded.
+            // Weapon is too large (or small) to be wielded and cannot be
+            // thrown either.
             return (true);
         }
 
@@ -2520,6 +2521,21 @@ bool is_useless_item(const item_def &item, bool temp)
         case SPWPN_PAIN:
             return (temp && !you.skills[SK_NECROMANCY] && !is_artefact(item));
         }
+        return (false);
+
+    case OBJ_MISSILES:
+        // These are the same checks as in_throwable except we don't take
+        // into account launchers.
+        switch (item.sub_type)
+        {
+        case MI_LARGE_ROCK:
+            return (player_size(PSIZE_BODY, !temp) < SIZE_LARGE
+                    || !you.can_throw_large_rocks());
+        case MI_JAVELIN:
+        case MI_THROWING_NET:
+            return (player_size(PSIZE_BODY, !temp) < SIZE_MEDIUM);
+        }
+
         return (false);
 
     case OBJ_ARMOUR:

@@ -1275,8 +1275,8 @@ void wizard_create_spec_object()
         }
 
         mitm[thing_created].base_type = OBJ_GOLD;
-        mitm[thing_created].sub_type = 0;
-        mitm[thing_created].quantity = amount;
+        mitm[thing_created].sub_type  = 0;
+        mitm[thing_created].quantity  = amount;
     }
     else if (class_wanted == OBJ_CORPSES)
     {

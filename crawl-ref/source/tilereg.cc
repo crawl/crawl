@@ -1875,7 +1875,8 @@ int InventoryRegion::handle_spells_mouse(MouseEvent &event, int item_idx)
         {
             you.last_clicked_item = item_idx;
             tiles.set_need_redraw();
-            if (!cast_a_spell(true, spell))
+            // Use Z rather than z, seeing how there are no mouseclick macros.
+            if (!cast_a_spell(false, spell))
                 flush_input_buffer( FLUSH_ON_FAILURE );
         }
         else if (Options.tile_display == TDSP_MEMORISE)

@@ -800,7 +800,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     else if (sub_type == ARM_CENTAUR_BARDING)
         can_wear = (you.species == SP_CENTAUR);
     else
-        can_wear = (fit_armour_size(item, player_size()) == 0);
+    {
+        can_wear = (fit_armour_size(item,
+                        player_size(PSIZE_TORSO, ignore_temporary)) == 0);
+    }
 
     if (!can_wear)
     {
@@ -899,7 +902,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Giant races and draconians.
-    if (player_size(PSIZE_TORSO) >= SIZE_LARGE || player_genus(GENPC_DRACONIAN))
+    if (player_size(PSIZE_TORSO, ignore_temporary) >= SIZE_LARGE
+        || player_genus(GENPC_DRACONIAN))
     {
         if (sub_type >= ARM_LEATHER_ARMOUR
                && sub_type <= ARM_PLATE_MAIL
@@ -917,7 +921,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Tiny races.
-    if (player_size(PSIZE_TORSO) <= SIZE_LITTLE)
+    if (player_size(PSIZE_TORSO, ignore_temporary) <= SIZE_LITTLE)
     {
         if ((sub_type >= ARM_LEATHER_ARMOUR
                 && sub_type <= ARM_PLATE_MAIL)
