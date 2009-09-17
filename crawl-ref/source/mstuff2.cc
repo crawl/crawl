@@ -263,7 +263,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 MSGCH_ERROR);
             return;
         }
-        sumcount2 = random2(9); // up to eight tentacles
+        sumcount2 = std::max(random2(9), random2(9)); // up to eight tentacles
         if (sumcount2 == 0)
             return;
 

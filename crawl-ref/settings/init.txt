@@ -185,13 +185,6 @@ runrest_ignore_message = safely over a trap
 runrest_ignore_message = You feel.*sick
 runrest_ignore_poison  = 2:30
 runrest_ignore_monster = butterfly:1
-# acquatic monsters
-runrest_ignore_monster = fish:2
-runrest_ignore_monster = shark:2
-runrest_ignore_monster = kraken:2
-# special case for tentacled monstrosity
-runrest_ignore_monster = tentacled:8
-runrest_ignore_monster = tentacle:2
 # runrest_ignore_monster = swamp worm:3
 
 # trap_prompt = false

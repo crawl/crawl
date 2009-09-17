@@ -1220,7 +1220,7 @@ void mons_relocated(monsters *monster)
     else if (monster->type == MONS_KRAKEN_TENTACLE)
     {
         if (invalid_monster_index(monster->number)
-            || menv[monster->number].type!=MONS_KRAKEN
+            || menv[monster->number].type != MONS_KRAKEN
             || _tentacle_too_far(&menv[monster->number], monster))
         {
             monster_die(monster, KILL_RESET, -1, true, false);

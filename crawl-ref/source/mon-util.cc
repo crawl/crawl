@@ -2556,7 +2556,7 @@ bool mons_is_summoned(const monsters *m, int *duration, int *summon_type)
 
     // Clones aren't really summoned (though their equipment might be).
     case MON_SUMM_CLONE:
-    
+
     // Nor are body parts.
     case SPELL_KRAKEN_TENTACLES:
 
@@ -3189,6 +3189,11 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
 static bool _ms_los_spell( spell_type monspell )
 {
+    // True, the tentacles _are_ summoned but they are restricted to water
+    // just like the kraken is, so it makes more sense not to count them here.
+    if (SPELL_KRAKEN_TENTACLES)
+        return (false);
+
     if (monspell == SPELL_SMITING || spell_typematch(monspell, SPTYP_SUMMONING))
         return (true);
 

@@ -2703,10 +2703,14 @@ bool mons_is_safe(const monsters *mon, bool want_move,
                     // Wizmode skill setting enforces hiddenness.
                     || you.skills[SK_STEALTH] > 27 && dist > 2
 #endif
-                       // Only seen through glass walls?
-                    || !see_grid_no_trans(mon->pos())
-                       && !_mons_has_path_to_player(mon)
-                       && !mons_has_los_attack(mon));
+                       // Only seen through glass walls or within water?
+                    || (!see_grid_no_trans(mon->pos())
+                            || mons_class_habitat(mon->type) == HT_WATER
+                            || mons_class_habitat(mon->type) == HT_LAVA)
+                        && !_mons_has_path_to_player(mon)
+                        && !mons_has_los_attack(mon)
+                        && (!see_grid_no_trans(mon->pos())
+                            || !mons_has_ranged_attack(mon)));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
