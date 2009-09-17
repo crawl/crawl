@@ -210,7 +210,8 @@ void ghost_demon::init_random_demon()
 
     // Does demon fly?
     fly = (one_chance_in(3) ? FL_NONE :
-           one_chance_in(5) ? FL_LEVITATE : FL_FLY);
+           one_chance_in(5) ? FL_LEVITATE
+                            : FL_FLY);
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
