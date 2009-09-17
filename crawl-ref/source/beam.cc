@@ -1282,6 +1282,21 @@ const zap_info zap_data[] = {
         false,
         false,
         false
+    },
+    
+    {
+        ZAP_PORKALATOR,
+        "porkalator",
+        100,
+        NULL,
+        NULL,
+        RED,
+        true,
+        BEAM_PORKALATOR,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
     }
 };
 

@@ -2212,7 +2212,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         break;
 
     case SPELL_PORKALATOR:
-        beam.name     = "0";
+        beam.name     = "porkalator";
         beam.type     = 0;
         beam.flavour  = BEAM_PORKALATOR;
         beam.thrower  = KILL_MON_MISSILE;

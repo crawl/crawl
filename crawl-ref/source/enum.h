@@ -3139,6 +3139,7 @@ enum zap_type
     ZAP_ENSLAVE_SOUL,
     ZAP_CHAOS,
     ZAP_SLIME,
+    ZAP_PORKALATOR,
     NUM_ZAPS
 };
 

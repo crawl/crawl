@@ -1492,6 +1492,12 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         if (!zapping(ZAP_DEGENERATION, powc, beam, true))
             return (SPRET_ABORT);
         break;
+    
+    case SPELL_PORKALATOR:
+        // Wizard mode only.
+        if (!zapping(ZAP_PORKALATOR, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
 
     case SPELL_HELLFIRE:
         // Should only be available from
