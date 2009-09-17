@@ -6252,7 +6252,7 @@ void monsters::slow_down(actor *atk, int strength)
 
 void monsters::set_ghost(const ghost_demon &g)
 {
-    ghost.reset( new ghost_demon(g) );
+    ghost.reset(new ghost_demon(g));
     mname = ghost->name;
 }
 
