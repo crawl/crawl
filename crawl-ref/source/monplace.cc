@@ -1485,7 +1485,7 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
 static band_type _choose_band(int mon_type, int power, int &band_size)
 {
 #ifdef DEBUG_MON_CREATION
-    mpr("in choose_band()", MSGCH_DIAGNOSTICS);
+    mpr("in _choose_band()", MSGCH_DIAGNOSTICS);
 #endif
     // Band size describes the number of monsters in addition to
     // the band leader.
