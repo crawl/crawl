@@ -1894,7 +1894,7 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_UGLY_THINGS:
         mon_type = ((power > 21 && one_chance_in(4)) ?
-                                MONS_VERY_UGLY_THING : MONS_UGLY_THING);
+                       MONS_VERY_UGLY_THING : MONS_UGLY_THING);
         break;
 
     case BAND_HELL_HOUNDS:
@@ -1939,7 +1939,7 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_BALRUG:
-        mon_type = (coinflip()? MONS_NEQOXEC : MONS_ORANGE_DEMON);
+        mon_type = (coinflip() ? MONS_NEQOXEC : MONS_ORANGE_DEMON);
         break;
 
     case BAND_CACODEMON:
