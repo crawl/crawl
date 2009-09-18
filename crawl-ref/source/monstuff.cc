@@ -2077,7 +2077,7 @@ void alert_nearby_monsters(void)
     }
 }
 
-static bool _valid_morph( monsters *monster, int new_mclass )
+static bool _valid_morph(monsters *monster, int new_mclass)
 {
     const dungeon_feature_type current_tile = grd(monster->pos());
 
@@ -2095,10 +2095,10 @@ static bool _valid_morph( monsters *monster, int new_mclass )
     }
 
     // Various inappropriate polymorph targets.
-    if (mons_class_holiness( new_mclass ) != mons_holiness( monster )
-        || mons_class_flag( new_mclass, M_UNIQUE)       // no uniques
-        || mons_class_flag( new_mclass, M_NO_EXP_GAIN ) // not helpless
-        || new_mclass == mons_species( monster->type )  // must be different
+    if (mons_class_holiness(new_mclass) != mons_holiness(monster)
+        || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
+        || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
+        || new_mclass == mons_species(monster->type)  // must be different
         || new_mclass == MONS_PROGRAM_BUG
 
         // These require manual setting of mons.base_monster to indicate
@@ -2106,10 +2106,10 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         // which we currently aren't smart enough to handle.
         || mons_class_is_zombified(new_mclass)
 
-        // These shouldn't happen anyways (demons unaffected + holiness check),
-        // but if we ever do have polydemon, these will be needed:
-        || new_mclass == MONS_PLAYER_GHOST
-        || new_mclass == MONS_PANDEMONIUM_DEMON
+        // These require manual setting of the ghost demon struct to
+        // indicate their characteristics, which we currently aren't
+        // smart enough to handle.
+        || mons_is_ghost_demon(new_mclass)
 
         // Only for use by game testers or in the arena.
         || new_mclass == MONS_TEST_SPAWNER

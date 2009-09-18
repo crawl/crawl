@@ -46,7 +46,7 @@ public:
     void reset();
     void init_random_demon();
     void init_player_ghost();
-    void init_ugly_thing(bool very_ugly);
+    void init_ugly_thing(bool very_ugly, bool mutate = false);
     void ugly_thing_to_very_ugly_thing();
 
 public:

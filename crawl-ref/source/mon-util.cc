@@ -6350,6 +6350,13 @@ void monsters::uglything_init()
     colour          = ghost->colour;
 }
 
+void monsters::uglything_mutate()
+{
+    simple_monster_message(this, " mutates!");
+    ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true);
+    uglything_init();
+}
+
 bool monsters::check_set_valid_home(const coord_def &place,
                                     coord_def &chosen,
                                     int &nvalid) const
@@ -7908,15 +7915,15 @@ bool monsters::mon_see_grid(const coord_def& p, bool reach) const
 bool monsters::can_see(const actor *targ) const
 {
     if (this == targ)
-        return visible_to(targ);
+        return (visible_to(targ));
 
     if (!targ->visible_to(this))
         return (false);
 
     if (targ->atype() == ACT_PLAYER)
-        return mons_near(this);
+        return (mons_near(this));
 
-    return mon_see_grid(targ->pos());
+    return (mon_see_grid(targ->pos()));
 }
 
 bool monsters::can_mutate() const
@@ -7938,6 +7945,14 @@ bool monsters::mutate()
 {
     if (!can_mutate())
         return (false);
+
+    // Special case: Polymorphing a (very) ugly thing will mutate it
+    // into a different (very) ugly thing.
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    {
+        uglything_mutate();
+        return (true);
+    }
 
     if (this->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         return (monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER));

@@ -1332,7 +1332,9 @@ static bool _xom_polymorph_nearby_monster(bool helpful)
             bool see_old = you.can_see(mon);
             std::string old_name = mon->full_name(DESC_PLAIN);
 
-            if (one_chance_in(8) && !mons_is_shapeshifter(mon)
+            if (one_chance_in(8)
+                && !mons_is_ghost_demon(mon->type)
+                && !mons_is_shapeshifter(mon)
                 && mons_holiness(mon) == MH_NATURAL)
             {
                 mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
