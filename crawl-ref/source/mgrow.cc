@@ -81,8 +81,8 @@ mons_experience_levels::mons_experience_levels()
     }
 }
 
-static const monster_level_up *_monster_level_up_target( monster_type type,
-                                                         int hit_dice)
+static const monster_level_up *_monster_level_up_target(monster_type type,
+                                                        int hit_dice)
 {
     for (unsigned i = 0; i < ARRAYSZ(mon_grow); ++i)
     {
