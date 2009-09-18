@@ -568,7 +568,7 @@ This spell summons forth a pestilential swarm.
 %%%%
 Summon Ugly Thing
 
-This spell summons a hideous creature to the caster's aid.
+This spell summons a mutated otherworldly creature to the caster's aid.
 %%%%
 Summon Wraiths
 
