@@ -1366,6 +1366,7 @@ public:
     void pandemon_init();
     void uglything_init();
     void uglything_mutate();
+    void uglything_upgrade();
     void destroy_inventory();
     void load_spells(mon_spellbook_type spellbook);
 

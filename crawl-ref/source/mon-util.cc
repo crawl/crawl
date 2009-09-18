@@ -6352,8 +6352,13 @@ void monsters::uglything_init()
 
 void monsters::uglything_mutate()
 {
-    simple_monster_message(this, " mutates!");
     ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true);
+    uglything_init();
+}
+
+void monsters::uglything_upgrade()
+{
+    ghost->ugly_thing_to_very_ugly_thing();
     uglything_init();
 }
 
@@ -7950,6 +7955,7 @@ bool monsters::mutate()
     // into a different (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
+        simple_monster_message(this, " mutates!");
         uglything_mutate();
         return (true);
     }
