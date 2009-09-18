@@ -2680,12 +2680,15 @@ void debug_stethoscope(int mon)
          god_name(mons.god).c_str() );
 
     // Print resistances.
-    mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d",
+    mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
+                            "acid=%d sticky=%d",
          mons_res_fire( &mons ),
          mons_res_cold( &mons ),
          mons_res_elec( &mons ),
          mons_res_poison( &mons ),
-         mons_res_negative_energy( &mons ) );
+         mons_res_negative_energy( &mons ),
+         mons_res_acid( &mons ),
+         mons_res_sticky_flame( &mons ) );
 
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
