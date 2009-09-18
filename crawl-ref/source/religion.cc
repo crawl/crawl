@@ -3924,7 +3924,9 @@ bool is_chaotic_spell(spell_type spell, god_type god)
 {
     UNUSED(god);
 
-    return (spell == SPELL_POLYMORPH_OTHER || spell == SPELL_ALTER_SELF);
+    return (spell == SPELL_POLYMORPH_OTHER
+            || spell == SPELL_ALTER_SELF
+            || spell == SPELL_SUMMON_UGLY_THING);
 }
 
 // The default suitable() function for is_spellbook_type().
