@@ -730,17 +730,18 @@ bool ms_direct_nasty(spell_type monspell);
  * called from: monstuff
  * *********************************************************************** */
 
-bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell );
-bool ms_quick_get_away( const monsters *mon, spell_type monspell );
-bool ms_waste_of_time( const monsters *mon, spell_type monspell );
-bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell );
+bool ms_useful_fleeing_out_of_sight(const monsters *mon, spell_type monspell);
+bool ms_quick_get_away(const monsters *mon, spell_type monspell);
+bool ms_waste_of_time(const monsters *mon, spell_type monspell);
+bool ms_low_hitpoint_cast(const monsters *mon, spell_type monspell);
 
-bool mons_is_magic_user( const monsters *mon );
-bool mons_has_los_ability( int mclass );
+bool mons_is_magic_user(const monsters *mon);
+bool mons_has_los_ability(int mclass);
 bool mons_has_los_attack(const monsters *mon);
-bool mons_has_ranged_spell( const monsters *mon, bool attack_only = false,
-                            bool ench_too = true );
-bool mons_has_ranged_attack( const monsters *mon );
+bool mons_has_ranged_spell(const monsters *mon, bool attack_only = false,
+                           bool ench_too = true);
+bool mons_has_ranged_attack(const monsters *mon);
+bool mons_has_ranged_ability(const monsters *mon);
 
 // last updated 06mar2001 (gdl)
 /* ***********************************************************************

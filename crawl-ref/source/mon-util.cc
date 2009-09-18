@@ -3324,6 +3324,14 @@ bool mons_has_ranged_spell( const monsters *mon, bool attack_only,
     return (false);
 }
 
+bool mons_has_ranged_ability( const monsters *mon)
+{
+    if (mon->type == MONS_ELECTRIC_EEL || mon->type == MONS_LAVA_SNAKE)
+        return (true);
+
+    return (false);
+}
+
 bool mons_has_ranged_attack( const monsters *mon )
 {
     // Ugh.

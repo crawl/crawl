@@ -2704,20 +2704,22 @@ bool mons_is_safe(const monsters *mon, bool want_move,
                     || you.skills[SK_STEALTH] > 27 && dist > 2
 #endif
                        // Only seen through glass walls or within water?
+                       // Assuming that there are no water-only/lava-only
+                       // monsters capable of throwing or zapping wands.
                     || (!see_grid_no_trans(mon->pos())
                             || mons_class_habitat(mon->type) == HT_WATER
                             || mons_class_habitat(mon->type) == HT_LAVA)
                         && !_mons_has_path_to_player(mon)
                         && !mons_has_los_attack(mon)
                         && (!see_grid_no_trans(mon->pos())
-                            || !mons_has_ranged_attack(mon)));
+                            || !mons_has_ranged_ability(mon)));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
     {
         bool moving = (!you.delay_queue.empty()
-                       && is_run_delay(you.delay_queue.front().type)
-                       && you.delay_queue.front().type != DELAY_REST
+                          && is_run_delay(you.delay_queue.front().type)
+                          && you.delay_queue.front().type != DELAY_REST
                        || you.running < RMODE_NOT_RUNNING
                        || want_move);
 
