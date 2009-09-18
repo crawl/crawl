@@ -4276,12 +4276,12 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 {
     if (attacker->id() == MONS_KILLER_KLOWN && attk.type == AT_HIT)
     {
-        const int num_attacks = sizeof(klown_attack) / sizeof(klown_attack[0]);
-        return klown_attack[random2(num_attacks)];
+        const int num_attacks = sizeof(klown_attack) / sizeof(*klown_attack);
+        return (klown_attack[random2(num_attacks)]);
     }
 
     if (attacker->id() == MONS_KRAKEN_TENTACLE)
-        return "slap";
+        return ("slap");
 
     static const char *attack_types[] =
     {
@@ -4303,7 +4303,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "gore"
     };
 
-    return attack_types[attk.type];
+    return (attack_types[attk.type]);
 }
 
 std::string melee_attack::mons_weapon_desc()
