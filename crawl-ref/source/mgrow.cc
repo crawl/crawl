@@ -10,6 +10,7 @@
 REVISION("$Rev$");
 
 #include "enum.h"
+#include "ghost.h"
 #include "mgrow.h"
 #include "mon-util.h"
 #include "monstuff.h"
@@ -137,6 +138,16 @@ void monsters::upgrade_type(monster_type after, bool adjust_hd,
             max_hit_points = minhp;
             hit_points     = std::min(hit_points, max_hit_points);
         }
+    }
+
+    // An ugly thing is the only ghost demon monster that can level up.
+    // If one has leveled up to a very ugly thing, upgrade it properly.
+    //
+    // XXX: There should be a better way to do this!
+    if (type == MONS_VERY_UGLY_THING)
+    {
+        ghost->ugly_thing_to_very_ugly_thing();
+        uglything_init();
     }
 }
 

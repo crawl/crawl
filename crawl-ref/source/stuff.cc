@@ -1340,6 +1340,22 @@ unsigned char random_uncommon_colour()
     return (result);
 }
 
+unsigned char make_low_colour(unsigned char colour)
+{
+    if (colour >= 8 && colour <= 15)
+        return (colour - 8);
+
+    return (colour);
+}
+
+unsigned char make_high_colour(unsigned char colour)
+{
+    if (colour >= 0 && colour <= 7)
+        return (colour + 8);
+
+    return (colour);
+}
+
 // returns if a colour is one of the special element colours (ie not regular)
 bool is_element_colour( int col )
 {

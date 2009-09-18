@@ -194,6 +194,8 @@ bool player_can_hear(const coord_def& p);
 
 unsigned char random_colour();
 unsigned char random_uncommon_colour();
+unsigned char make_low_colour(unsigned char colour);
+unsigned char make_high_colour(unsigned char colour);
 bool is_element_colour( int col );
 int  element_colour( int element, bool no_random = false );
 

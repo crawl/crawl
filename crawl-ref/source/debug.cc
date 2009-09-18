@@ -2722,8 +2722,9 @@ void debug_stethoscope(int mon)
     {
         ASSERT(mons.ghost.get());
         const ghost_demon &ghost = *mons.ghost;
-        mprf(MSGCH_DIAGNOSTICS, "Ghost damage: %d; brand: %d",
-             ghost.damage, ghost.brand);
+        mprf(MSGCH_DIAGNOSTICS, "Ghost damage: %d; brand: %d; att_type: %d; "
+                                "att_flav: %d",
+             ghost.damage, ghost.brand, ghost.att_type, ghost.att_flav);
     }
 }
 

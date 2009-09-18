@@ -24,6 +24,7 @@ REVISION("$Rev$");
 #include "place.h"
 #include "player.h"
 #include "religion.h"
+#include "view.h"
 #include <vector>
 
 #define MAX_GHOST_DAMAGE     50
@@ -138,9 +139,12 @@ void ghost_demon::reset()
     speed            = 10;
     see_invis        = false;
     brand            = SPWPN_NORMAL;
+    att_type         = AT_HIT;
+    att_flav         = AF_PLAIN;
     resists          = mon_resist_def();
     spellcaster      = false;
     cycle_colours    = false;
+    colour           = BLACK;
     fly              = FL_NONE;
 }
 
@@ -218,6 +222,8 @@ void ghost_demon::init_random_demon()
 
     // Does demon cycle colours?
     cycle_colours = one_chance_in(10);
+
+    colour = random_colour();
 
     spells.init(SPELL_NO_SPELL);
 
@@ -387,9 +393,199 @@ void ghost_demon::init_player_ghost()
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 
+    colour = mons_class_colour(MONS_PLAYER_GHOST);
     fly = mons_class_flies(MONS_PLAYER_GHOST);
 
     add_spells();
+}
+
+static unsigned char _ugly_thing_random_colour()
+{
+    const unsigned char colours[] =
+    {
+        CYAN, GREEN, RED, LIGHTGREY, BROWN, MAGENTA
+    };
+
+    return (colours[random2(sizeof(colours) / sizeof(*colours))]);
+}
+
+static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
+{
+    mon_attack_flavour u_att_flav = AF_PLAIN;
+
+    switch (u_colour)
+    {
+    case CYAN:
+        u_att_flav = AF_ELEC;
+        break;
+
+    case GREEN:
+        u_att_flav = AF_POISON;
+        break;
+
+    case RED:
+        u_att_flav = AF_FIRE;
+        break;
+
+    case LIGHTGREY:
+        u_att_flav = AF_COLD;
+        break;
+
+    case BROWN:
+        u_att_flav = AF_ACID;
+        break;
+
+    case MAGENTA:
+        u_att_flav = AF_DISEASE;
+        break;
+
+    default:
+        break;
+    }
+
+    return (u_att_flav);
+}
+
+static mon_attack_flavour _ugly_thing_flavour_upgrade(mon_attack_flavour u_att_flav)
+{
+    switch (u_att_flav)
+    {
+    case AF_POISON:
+        u_att_flav = AF_POISON_MEDIUM;
+        break;
+
+    case AF_FIRE:
+        u_att_flav = AF_NAPALM;
+        break;
+
+    case AF_DISEASE:
+        u_att_flav = AF_ROT;
+        break;
+
+    default:
+        break;
+    }
+
+    return (u_att_flav);
+}
+
+void ghost_demon::init_ugly_thing(bool very_ugly)
+{
+    // Midpoint: 10, as in mon-data.h.
+    speed = 9 + random2(3);
+
+    // Midpoint: 10, as in mon-data.h.
+    ev = 9 + random2(3);
+
+    // Midpoint: 3, as in mon-data.h.
+    ac = 2 + random2(3);
+
+    // Midpoint: 12, as in mon-data.h.
+    damage = 11 + random2(3);
+
+    // Experience level: 8, the same as in mon-data.h.
+    xl = 8;
+
+    // Hit dice: {8, 3, 5, 0}, the same as in mon-data.h.
+    max_hp = hit_points(xl, 3, 5);
+
+    resists.elec = 0;
+    resists.poison = 0;
+    resists.fire = 0;
+    resists.cold = 0;
+    resists.acid = 0;
+    resists.sticky_flame = false;
+
+    // An ugly thing gets one random resistance.
+    ugly_thing_add_resistance();
+
+    const mon_attack_type att_types[] =
+    {
+        AT_BITE, AT_STING, AT_CLAW, AT_PUNCH, AT_KICK, AT_TENTACLE_SLAP,
+        AT_TAIL_SLAP, AT_BUTT
+    };
+
+    att_type = att_types[random2(sizeof(att_types) / sizeof(*att_types))];
+
+    // An ugly thing always gets a low-intensity colour.
+    colour = _ugly_thing_random_colour();
+
+    // Pick a compatible attack flavour for this colour.
+    att_flav = _ugly_thing_colour_to_flavour(colour);
+
+    // If this is a very ugly thing, upgrade it properly.
+    if (very_ugly)
+        ugly_thing_to_very_ugly_thing();
+}
+
+void ghost_demon::ugly_thing_to_very_ugly_thing()
+{
+    // Midpoint when added to an ugly thing: 4, as in mon-data.h.
+    ac++;
+
+    // Midpoint when added to an ugly thing: 17, as in mon-data.h.
+    damage += 5;
+
+    // Experience level when added to an ugly thing: 12, the same as in
+    // mon-data.h.
+    xl += 4;
+
+    // Hit dice when added to an ugly thing: {12, 3, 5, 0}, the same as
+    // in mon-data.h.
+    max_hp += hit_points(4, 3, 5);
+
+    // A very ugly thing always gets a high-intensity colour.
+    colour = make_high_colour(colour);
+
+    // A very ugly thing sometimes gets a stronger attack flavour.
+    if (one_chance_in(3))
+        att_flav = _ugly_thing_flavour_upgrade(att_flav);
+
+    // A very ugly thing gets one more random resistance, and another
+    // possible resistance based on its stronger attack flavour.
+    ugly_thing_add_resistance();
+}
+
+void ghost_demon::ugly_thing_add_resistance()
+{
+    int base_rand = 6;
+    if (resists.sticky_flame)
+        base_rand--;
+
+    switch (random2(base_rand))
+    {
+        case 0:
+            resists.elec++;
+            break;
+
+        case 1:
+            resists.poison++;
+            break;
+
+        case 2:
+            resists.fire++;
+            break;
+
+        case 3:
+            resists.cold++;
+            break;
+
+        case 4:
+            resists.acid++;
+            break;
+
+        case 5:
+            resists.sticky_flame = true;
+            break;
+    }
+
+    // Guarantee certain resistances for stronger attack flavours.
+    if (att_flav == AF_POISON_MEDIUM && !resists.poison)
+        resists.poison++;
+    else if (att_flav == AF_ACID && !resists.acid)
+        resists.acid++;
+    else if (att_flav == AF_NAPALM && !resists.sticky_flame)
+        resists.sticky_flame = true;
 }
 
 static spell_type search_first_list(int ignore_spell)

@@ -31,9 +31,12 @@ public:
     short max_hp, ev, ac, damage, speed;
     bool see_invis;
     brand_type brand;
+    mon_attack_type att_type;
+    mon_attack_flavour att_flav;
     mon_resist_def resists;
 
     bool spellcaster, cycle_colours;
+    unsigned char colour;
     flight_type fly;
 
     monster_spells spells;
@@ -43,6 +46,8 @@ public:
     void reset();
     void init_random_demon();
     void init_player_ghost();
+    void init_ugly_thing(bool very_ugly);
+    void ugly_thing_to_very_ugly_thing();
 
 public:
     static std::vector<ghost_demon> find_ghosts();
@@ -56,6 +61,7 @@ private:
 private:
     void add_spells();
     spell_type translate_spell(spell_type playerspell) const;
+    void ugly_thing_add_resistance();
 };
 
 bool debug_check_ghosts();

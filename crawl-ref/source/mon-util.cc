@@ -588,6 +588,9 @@ bool mons_is_chaotic(const monsters *mon)
     if (mons_is_shapeshifter(mon))
         return (true);
 
+    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
+        return (true);
+
     if (mon->has_spell(SPELL_POLYMORPH_OTHER))
         return (true);
 
@@ -869,7 +872,9 @@ shout_type mons_shouts(int mc, bool demon_shout)
 
 bool mons_is_ghost_demon(int mc)
 {
-    return (mc == MONS_PLAYER_GHOST
+    return (mc == MONS_UGLY_THING
+            || mc == MONS_VERY_UGLY_THING
+            || mc == MONS_PLAYER_GHOST
             || mc == MONS_PANDEMONIUM_DEMON);
 }
 
@@ -1151,7 +1156,11 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     if (mons_is_ghost_demon(mc))
     {
         if (attk_number == 0)
-            return (mon_attack_def::attk(mon->ghost->damage));
+        {
+            return (mon_attack_def::attk(mon->ghost->damage,
+                                         mon->ghost->att_type,
+                                         mon->ghost->att_flav));
+        }
 
         return (mon_attack_def::attk(0, AT_NONE));
     }
@@ -6261,10 +6270,12 @@ void monsters::slow_down(actor *atk, int strength)
     enchant_monster_with_flavour(this, atk, BEAM_SLOW, strength);
 }
 
-void monsters::set_ghost(const ghost_demon &g)
+void monsters::set_ghost(const ghost_demon &g, bool has_name)
 {
     ghost.reset(new ghost_demon(g));
-    mname = ghost->name;
+
+    if (has_name)
+        mname = ghost->name;
 }
 
 void monsters::pandemon_init()
@@ -6287,7 +6298,7 @@ void monsters::pandemon_init()
     if (you.char_direction == GDT_ASCENDING && you.level_type == LEVEL_DUNGEON)
         colour = LIGHTRED;
     else
-        colour = random_colour(); // demon's colour
+        colour = ghost->colour;
 
     load_spells(MST_GHOST);
 }
@@ -6308,7 +6319,7 @@ void monsters::ghost_init()
     flags           = MF_INTERESTING;
     foe             = MHITNOT;
     foe_memory      = 0;
-    colour          = mons_class_colour(MONS_PLAYER_GHOST);
+    colour          = ghost->colour;
     number          = MONS_PROGRAM_BUG;
     load_spells(MST_GHOST);
 
@@ -6317,6 +6328,18 @@ void monsters::ghost_init()
     ench_countdown = 0;
 
     find_place_to_live();
+}
+
+void monsters::uglything_init()
+{
+    hit_dice        = ghost->xl;
+    hit_points      = ghost->max_hp;
+    max_hit_points  = ghost->max_hp;
+    ac              = ghost->ac;
+    ev              = ghost->ev;
+    speed           = ghost->speed;
+    speed_increment = 70;
+    colour          = ghost->colour;
 }
 
 bool monsters::check_set_valid_home(const coord_def &place,

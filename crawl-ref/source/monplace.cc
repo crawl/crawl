@@ -1237,8 +1237,16 @@ static int _place_monster_aux(const mgen_data &mg,
     }
     menv[id].foe = mg.foe;
 
-    // Initialise pandemonium demons.
-    if (menv[id].type == MONS_PANDEMONIUM_DEMON)
+    // Initialise (very) ugly things and pandemonium demons.
+    if (menv[id].type == MONS_UGLY_THING
+        || menv[id].type == MONS_VERY_UGLY_THING)
+    {
+        ghost_demon ghost;
+        ghost.init_ugly_thing(menv[id].type == MONS_VERY_UGLY_THING);
+        menv[id].set_ghost(ghost, false);
+        menv[id].uglything_init();
+    }
+    else if (menv[id].type == MONS_PANDEMONIUM_DEMON)
     {
         ghost_demon ghost;
         ghost.init_random_demon();

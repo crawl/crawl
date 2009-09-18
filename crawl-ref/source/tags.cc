@@ -2453,11 +2453,14 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallShort(th, ghost.speed);
     marshallByte(th, ghost.see_invis);
     marshallShort(th, ghost.brand);
+    marshallShort(th, ghost.att_type);
+    marshallShort(th, ghost.att_flav);
 
     marshallResists(th, ghost.resists);
 
     marshallByte(th, ghost.spellcaster);
     marshallByte(th, ghost.cycle_colours);
+    marshallByte(th, ghost.colour);
     marshallShort(th, ghost.fly);
 
     marshallSpells(th, ghost.spells);
@@ -2486,10 +2489,20 @@ static ghost_demon unmarshallGhost(reader &th, char minorVersion)
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>( unmarshallShort(th) );
 
+    if (minorVersion >= TAG_MINOR_UGLY)
+    {
+        ghost.att_type     = static_cast<mon_attack_type>( unmarshallShort(th) );
+        ghost.att_flav     = static_cast<mon_attack_flavour>( unmarshallShort(th) );
+    }
+
     unmarshallResists(th, ghost.resists);
 
     ghost.spellcaster      = unmarshallByte(th);
     ghost.cycle_colours    = unmarshallByte(th);
+
+    if (minorVersion >= TAG_MINOR_UGLY)
+        ghost.colour       = unmarshallByte(th);
+
     ghost.fly              = static_cast<flight_type>( unmarshallShort(th) );
 
     unmarshallSpells(th, ghost.spells);

@@ -2705,8 +2705,9 @@ static std::string _monster_stat_description(const monsters& mon)
     }
 
     // Can the monster levitate/fly?
-    // This doesn't give anything away since all ghosts can fly, and
-    // for demons it's already mentioned in their flavour description.
+    // This doesn't give anything away since no (very) ugly things can
+    // fly, all ghosts can fly, and for demons it's already mentioned in
+    // their flavour description.
     const flight_type fly = mons_flies(&mon, false);
 
     if (fly != FL_NONE)

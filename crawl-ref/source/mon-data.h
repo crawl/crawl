@@ -1357,9 +1357,9 @@ static monsterentry mondata[] = {
 
 // ugly things ('u')
 {
-    MONS_UGLY_THING, 'u', BROWN, "ugly thing",
+    MONS_UGLY_THING, 'u', BLACK, "ugly thing",
     M_WARM_BLOOD,
-    mrd(MR_RES_COLD, 2),
+    MR_NO_FLAGS,
     600, 10, MONS_UGLY_THING, MONS_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
@@ -1368,14 +1368,14 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_VERY_UGLY_THING, 'u', RED, "very ugly thing",
+    MONS_VERY_UGLY_THING, 'u', BLACK, "very ugly thing",
     M_WARM_BLOOD,
-    mrd(MR_RES_COLD, 2),
+    MR_NO_FLAGS,
     750, 10, MONS_UGLY_THING, MONS_VERY_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 5, 0 },
-    4, 8, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_BIG, S_ROAR, I_ANIMAL,
-    HT_AMPHIBIOUS_LAND, 8, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
+    4, 10, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_BIG, S_ROAR, I_ANIMAL,
+    HT_AMPHIBIOUS_LAND, 10, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 
 // vortices ('v')

@@ -1361,9 +1361,10 @@ public:
     bool find_home_around(const coord_def &c, int radius);
     bool find_home_anywhere();
 
-    void set_ghost(const ghost_demon &ghost);
+    void set_ghost(const ghost_demon &ghost, bool has_name = true);
     void ghost_init();
     void pandemon_init();
+    void uglything_init();
     void destroy_inventory();
     void load_spells(mon_spellbook_type spellbook);
 
