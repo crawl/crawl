@@ -537,12 +537,12 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     // A very ugly thing always gets a high-intensity colour.
     colour = make_high_colour(colour);
 
-    // A very ugly thing sometimes gets a stronger attack flavour.
+    // A very ugly thing sometimes gets an upgraded attack flavour.
     if (one_chance_in(3))
         att_flav = _ugly_thing_flavour_upgrade(att_flav);
 
     // A very ugly thing gets one more random resistance, and another
-    // possible resistance based on its stronger attack flavour.
+    // possible resistance based on its upgraded attack flavour.
     ugly_thing_add_resistance();
 }
 
@@ -579,7 +579,8 @@ void ghost_demon::ugly_thing_add_resistance()
             break;
     }
 
-    // Guarantee certain resistances for stronger attack flavours.
+    // Guarantee certain resistances for certain attack flavours,
+    // including the upgraded ones.
     if (att_flav == AF_POISON_MEDIUM && !resists.poison)
         resists.poison++;
     else if (att_flav == AF_ACID && !resists.acid)
