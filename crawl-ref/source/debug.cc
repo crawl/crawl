@@ -2688,7 +2688,7 @@ void debug_stethoscope(int mon)
          mons_res_poison( &mons ),
          mons_res_negative_energy( &mons ),
          mons_res_acid( &mons ),
-         mons_res_sticky_flame( &mons ) );
+         mons_res_sticky_flame( &mons ) ? "1" : "0");
 
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
