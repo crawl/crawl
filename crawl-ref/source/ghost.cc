@@ -516,7 +516,8 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool mutate)
     // An ugly thing always gets a low-intensity colour.  If we're
     // mutating it, it always gets a different colour from what it had
     // before.
-    colour = _ugly_thing_random_colour(mutate ? colour : BLACK);
+    colour = _ugly_thing_random_colour(mutate ? make_low_colour(colour)
+                                              : BLACK);
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
