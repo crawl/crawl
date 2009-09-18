@@ -581,10 +581,11 @@ i-heal POT_HEALING
 i-heal-wounds POT_HEAL_WOUNDS
 i-speed POT_SPEED
 i-might POT_MIGHT
-#i-agility POT_AGILITY
 #i-brilliance POT_BRILLIANCE
-i-gain-dexterity POT_AGILITY
+#i-agility POT_AGILITY
+# placeholders, need tiles of their own!
 i-gain-intelligence POT_BRILLIANCE
+i-gain-dexterity POT_AGILITY
 i-gain-strength POT_GAIN_STRENGTH
 i-gain-dexterity POT_GAIN_DEXTERITY
 i-gain-intelligence POT_GAIN_INTELLIGENCE
