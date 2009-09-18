@@ -819,7 +819,7 @@ int get_shout_noise_level(const shout_type shout)
 }
 
 // Only beasts and chaos spawns use S_RANDOM for noise type.
-// Pandemonium lords can also get here but this is mostly used for the
+// Pandemonium lords can also get here, but this is mostly used for the
 // "says" verb used for insults.
 static bool _shout_fits_monster(int type, int shout)
 {
@@ -831,9 +831,8 @@ static bool _shout_fits_monster(int type, int shout)
     if (type == MONS_CHAOS_SPAWN)
         return (shout != S_DEMON_TAUNT);
 
-    // For demon lords almost everything is fair game.
-    // It's only used for the shouting verb ("say", "bellow", "roar", ...)
-    // anyway.
+    // For Pandemonium lords, almost everything is fair game.  It's only
+    // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
     if (type != MONS_BEAST)
         return (shout != S_BUZZ && shout != S_WHINE && shout != S_CROAK);
 
