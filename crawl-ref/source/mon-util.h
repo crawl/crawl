@@ -218,7 +218,6 @@ enum mon_resist_flags
     // resistances
     // Notes:
     // - negative energy is mostly handled via mons_res_negative_energy()
-    // - acid is handled mostly by genus (jellies) plus non-living
     MR_RES_ELEC          = (1<< 0),
     MR_RES_POISON        = (1<< 1),
     MR_RES_FIRE          = (1<< 2),
