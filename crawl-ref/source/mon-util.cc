@@ -806,6 +806,7 @@ int get_shout_noise_level(const shout_type shout)
         return 4;
     case S_SOFT:
         return 6;
+    case S_GURGLE:
     case S_LOUD:
         return 10;
     case S_SHOUT2:
@@ -8935,6 +8936,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "screeches",
         "buzzes",
         "moans",
+        "gurgles",
         "whines",
         "croaks",
         "growls",

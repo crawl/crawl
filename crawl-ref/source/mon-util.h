@@ -259,6 +259,7 @@ enum shout_type
     S_SCREECH,              // screech
     S_BUZZ,                 // buzz
     S_MOAN,                 // moan
+    S_GURGLE,               // gurgle
     S_WHINE,                // irritating whine (mosquitos)
     S_CROAK,                // frog croak
     S_GROWL,                // for bears

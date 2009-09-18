@@ -90,6 +90,14 @@ __MOAN seen
 
 SOUND:@The_monster@ gives a chilling moan.
 %%%%
+__GURGLE seen
+
+SOUND:@The_monster@ gurgles horribly!
+%%%%
+__GURGLE unseen
+
+SOUND:You hear a horrible gurgling sound!
+%%%%
 __WHINE unseen
 
 SOUND:You hear an irritating high-pitched whine.
