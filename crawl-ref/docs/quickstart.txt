@@ -143,7 +143,7 @@ Before long, you'll probably end up dead.
 
 Death in Crawl is permanent; you cannot just reload a saved game and start
 again where you left off. The 'S' (save) command exists only to let you leave
-a game part-way through and come back to it later. Quitting ('Ctrl-Q') lets 
+a game part-way through and come back to it later. Quitting ('Ctrl-Q') lets
 you commit suicide if you can't even be bothered to help your character escape
 alive.
 

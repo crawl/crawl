@@ -353,7 +353,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_MINOTAUR;
 
     // ugly things ('u')
-    case MONS_UGLY_THING :
+    case MONS_UGLY_THING:
         return TILEP_MONS_UGLY_THING ;
     case MONS_VERY_UGLY_THING:
         return TILEP_MONS_VERY_UGLY_THING;

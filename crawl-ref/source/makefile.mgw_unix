@@ -41,7 +41,7 @@ PCRELIBA := lib$(PCRELIB).a
 LIB = -static -L$(HOME)/source/mingw32/lib -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -L$(PCRESRC) -l$(PCRELIB)
 INCLUDES := -Iutil -I. -I$(HOME)/source/mingw32/include -I$(LUASRC) -I$(SQLSRC) -I$(PCRESRC)
 
-CFWARN := -Wwrite-strings 
+CFWARN := -Wwrite-strings
 
 CFOTHERS := -fsigned-char \
 		-fstrict-aliasing \
@@ -198,7 +198,7 @@ profile:	$(GAME_DEPENDS)
 		${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
 $(OPATH)/%.o: %.cc
-		${CXX} ${CFLAGS} -o $@ -c $< 
+		${CXX} ${CFLAGS} -o $@ -c $<
 
 $(OPATH)/%.o: $(UTIL)%.cc
 		$(CXX) $(YCFLAGS) -o $@ -c $<

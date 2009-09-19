@@ -1063,7 +1063,7 @@ void arena_placed_monster(monsters *monster)
              monster->name(DESC_PLAIN, true).c_str());
         more();
     }
- 
+
     if (monster->type == MONS_TEST_SPAWNER)
     {
         if (monster->attitude == ATT_FRIENDLY)

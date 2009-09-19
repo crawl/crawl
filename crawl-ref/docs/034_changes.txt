@@ -20,7 +20,7 @@ mostly in 0.4, some more in 0.5. Among them:
    Ctrl-Q    quit               (was Q)
 
 * Changed the commands for travel exclusions in the level map:
-   e         set exclusion      (was Ctrl-X) 
+   e         set exclusion      (was Ctrl-X)
    E         cycle exclusions   (was x)
 
 * Added some new commands:
@@ -50,7 +50,7 @@ mostly in 0.4, some more in 0.5. Among them:
   can be sacrificed with 'pca'.
 
 * When targeting, the functions of '!' and '.' have been swapped. Thus
-  firing with '.' will now stop at the target, whereas '!' will shoot 
+  firing with '.' will now stop at the target, whereas '!' will shoot
   further if the target was missed. Enter etc. still behave as in 0.3.4.
   You can now target using the monster list; Cltr-L toggles this option.
   You can quiver an item, meaning that you will preferably fire this

@@ -4348,7 +4348,7 @@ void give_armour(monsters *mon, int level)
     case MONS_WIZARD:
     case MONS_ILSUIW:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
-            item_race = MAKE_ITEM_NO_RACE;        
+            item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type = ARM_ROBE;
         break;

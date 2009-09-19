@@ -115,8 +115,8 @@ of ways to do so:
 
 * Playtesting.
 At any time, there will be bugs -- playing and reporting these is a great help.
-There is a beta server at http://crawl.develz.org. Besides pointing out bugs, 
-new ideas on how to improve interface or gameplay are welcome. You can mention 
+There is a beta server at http://crawl.develz.org. Besides pointing out bugs,
+new ideas on how to improve interface or gameplay are welcome. You can mention
 them at the homepage, http://crawl-ref.sourceforge.net.
 
 * Vault making.

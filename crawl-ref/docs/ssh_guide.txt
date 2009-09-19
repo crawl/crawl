@@ -2,7 +2,7 @@ Guide to online play
 ====================
 
 The following guide explains, in layman's terms, how to access server
-play for Dungeon Crawl. It is directed at Windows users as we expect 
+play for Dungeon Crawl. It is directed at Windows users as we expect
 Linux and OS/X users to have simple access to ssh.
 Written up by Archibald, with modifications by Butch.
 
@@ -23,7 +23,7 @@ allows you to do:
 So you've downloaded the latest version of Crawl Stone Soup and have
 been playing offline (or 'local') and you thoroughly enjoy it.  You
 may have noticed from the akrasiac homepage, http://crawl.akrasiac.org/
-or posts in forums that there is a way to enhance your gaming experience 
+or posts in forums that there is a way to enhance your gaming experience
 by playing 'online' using something called 'SSH'.
 
 If only you could figure out how.  Well, if like me (to begin with)
@@ -39,9 +39,9 @@ Oh look! somebody has - done just that! Great, then let's get started.
 
 1. Get the PuTTY program
 ------------------------
-Firstly you will need a means of accessing the server.  The easiest 
-and most common method is by using an SSH (Secure SHell) connection, 
-we are going to learn here how to use the 'PuTTY' terminal to do this.  
+Firstly you will need a means of accessing the server.  The easiest
+and most common method is by using an SSH (Secure SHell) connection,
+we are going to learn here how to use the 'PuTTY' terminal to do this.
 In laymans terms PuTTY is simply a small programme that acts as your
 interface between you (the player) and the server (the host).
 
@@ -51,14 +51,14 @@ In order to download PuTTY, simply click on the following link:
 As you can see, this is the homepage for 'PuTTY: A Free Telnet/SSH
 Client'.
 
-Now go to the downloads section.  Scroll down to the Windows downloads 
-section and look for the first option down - you will see that it is 
+Now go to the downloads section.  Scroll down to the Windows downloads
+section and look for the first option down - you will see that it is
 called 'PuTTY'.
 
-That's the one you want, so click on the 'putty.exe' download link and 
-choose to save it to your desktop (well, that's how I did it anyway).  
+That's the one you want, so click on the 'putty.exe' download link and
+choose to save it to your desktop (well, that's how I did it anyway).
 This should place an icon on your desktop that resembles two blue screens
-with a yellow connection/electricity bolt joining them - it should be 
+with a yellow connection/electricity bolt joining them - it should be
 named 'putty'.
 
 2. Configure PuTTY connection: SSH, port 22
@@ -80,23 +80,23 @@ IP address)'.  Here you need to type in the following:
 crawl.akrasiac.org
 
 Done that? We next need to set one option: There are five radio buttons
-underneath the 'Host Name (or IP address)' fields, called 'Connection 
+underneath the 'Host Name (or IP address)' fields, called 'Connection
 type:' Here you need to choose the SSH button; it should be highlighted
-green.  If it's not already, simply click on it so that it is green.  
+green.  If it's not already, simply click on it so that it is green.
 When SSH is selected, the Port field will automatically change to 22.
 
-Finally, enable SSH compression by using 
-Category: Connection > SSH > Protocol Options > Enable compression. 
+Finally, enable SSH compression by using
+Category: Connection > SSH > Protocol Options > Enable compression.
 It's disabled by default but helps on a busy server as akrasiac.
 
 
 3. Set controls to 'Nethack'
 ----------------------------
 Next we need to ensure our keyboard will work properly, once connected.
-So, to the left of the interface (the 'Category' tree) you need to 
-click/select the 'keyboard' option.  Doing this will change the options 
+So, to the left of the interface (the 'Category' tree) you need to
+click/select the 'keyboard' option.  Doing this will change the options
 on the right-hand side to 'Options controlling the effects of keys'.
-Mid-way down that section under 'Application keypad settings:', click on 
+Mid-way down that section under 'Application keypad settings:', click on
 the 'Nethack' radio button so it is highlighted.
 
 4. Saving these options
@@ -117,8 +117,8 @@ We're ready!  Make sure you are connected to the internet and simply
 click on 'Open' and you will have a black console screen open up and be
 asked to 'login as:', here you need to type in the word 'joshua'. This
 is the default log-in name set by the administrator to connect to CAO.
-Once entered, you will be asked to enter 'jos...@crawl.akrasiac.org.'s 
-password:' - again, type in the word 'joshua' (yes, you guessed it - the 
+Once entered, you will be asked to enter 'jos...@crawl.akrasiac.org.'s
+password:' - again, type in the word 'joshua' (yes, you guessed it - the
 default password!).
 
 The screen will refresh and you will now be presented with the
@@ -152,8 +152,8 @@ account.  The rest should be self explanatory and easy to follow.
 
 7. Playing online
 -----------------
-Each time you want to play all you have to do is open PuTTY, log-in 
-to CAO with (joshua/joshua) and then log-in with your player details.  
+Each time you want to play all you have to do is open PuTTY, log-in
+to CAO with (joshua/joshua) and then log-in with your player details.
 Dead easy!
 
 For in-game instructions hit '?' and you may need to toggle the
@@ -163,40 +163,40 @@ Happy Crawling!
 
 
 
-Below, we list steps that make logging into the server more convenient. 
+Below, we list steps that make logging into the server more convenient.
 
 8.1 Automatic 'joshua' (login)
 ------------------------------
-If you do not want to enter the user name 'joshua' every time you start 
-a new session, just go to 'Session' (the initial display) in the Category 
+If you do not want to enter the user name 'joshua' every time you start
+a new session, just go to 'Session' (the initial display) in the Category
 tree and type 'joshua@crawl.akrasiac.org' in the 'Host name (or IP address)'
-input box (as opposed to 'crawl.akrasiac.org' you typed earlier, if you 
-were following the guide). 
+input box (as opposed to 'crawl.akrasiac.org' you typed earlier, if you
+were following the guide).
 
 8.2 Automatic 'joshua' (password)
 ---------------------------------
-If you do not want to enter the password 'joshua' every time you start a 
+If you do not want to enter the password 'joshua' every time you start a
 new session, then download the file 'cao_key.ppk' from
 
 http://crawl.akrasiac.org/cao_key.ppk
 
 and put it in your PuTTY directory. Then start PuTTY, load your stored
-session and go to 'Connection' ---> 'SSH' ---> 'Auth' in the Category 
-tree.  Press the 'Browse' button near the input box labelled 'Private key 
-file for authentication', choose the 'cao_key.ppk' file you have just 
+session and go to 'Connection' ---> 'SSH' ---> 'Auth' in the Category
+tree.  Press the 'Browse' button near the input box labelled 'Private key
+file for authentication', choose the 'cao_key.ppk' file you have just
 downloaded and press the 'Open' button. Save the changes as in step 4.
 
 8.3 A shortcut for Windows
 --------------------------
-Once you are satisfied with the configuration, you may speed up things 
-further: go to your PuTTY directory and create a shortcut to putty.exe. 
-Then open the Properties of the newly created shortcut and add 
+Once you are satisfied with the configuration, you may speed up things
+further: go to your PuTTY directory and create a shortcut to putty.exe.
+Then open the Properties of the newly created shortcut and add
  -load "your_session_name"
-(including spaces and quotation marks; replace "your_session_name" by 
-"Crawl" if you followed this guide so far) to the Target object input box 
+(including spaces and quotation marks; replace "your_session_name" by
+"Crawl" if you followed this guide so far) to the Target object input box
 at the end of the path, for example,
 C:\PuTTY\putty.exe -load "Crawl"
-Now you can rename the shortcut (to for example 'CAO').  Double-clicking 
-the shortcut will immediately start your saved session.  If you followed 
-this guide from the beginning, after a while you will arrive at the DGL 
+Now you can rename the shortcut (to for example 'CAO').  Double-clicking
+the shortcut will immediately start your saved session.  If you followed
+this guide from the beginning, after a while you will arrive at the DGL
 initial display without the need to type a word.

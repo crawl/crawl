@@ -44,8 +44,8 @@ Defining keymaps works in exactly the same way. Just press 'k'
 (default), 'x' (level-map), 't' (targeting) or 'c' (confirmation)
 instead of 'm' after pressing '~'.
 
-After defining such a macro or keymap, you should test it. If you are 
-comfortable with it, you should then save the macro. To save all macros 
+After defining such a macro or keymap, you should test it. If you are
+comfortable with it, you should then save the macro. To save all macros
 and keymaps, press '~' and then 's' to save macros at the tilde prompt).
 
 
@@ -75,9 +75,9 @@ separated by empty lines.
 
 For keymaps just replace the "M:" on the first line of the definiton
 with one of the following:
-"K:"  default, 
-"K1:" level-map, 
-"K2:" targeting or 
+"K:"  default,
+"K1:" level-map,
+"K2:" targeting or
 "K3:" confirmation.
 
 

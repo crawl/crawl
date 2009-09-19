@@ -1,6 +1,6 @@
 
-The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Paul Du Bois, 
-Eino Keskitalo, Nat Lanza, Haran Pilpel, David Ploog, Johanna Ploog, David 
+The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Paul Du Bois,
+Eino Keskitalo, Nat Lanza, Haran Pilpel, David Ploog, Johanna Ploog, David
 Lawrence Ramsey, Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.

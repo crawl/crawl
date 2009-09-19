@@ -20,7 +20,7 @@ MAKEFILE ?= makefile.unix
 #     cuts build time a lot on multi-cpu machines
 # Note: do not use enable this for builds of the tiles version.
 #OTHER=-j2
-                                                          
+
 all:
 	$(MAKE) $(OTHER) -f $(MAKEFILE)
 

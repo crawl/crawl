@@ -1079,7 +1079,7 @@ void direction(dist& moves, targeting_type restricts,
             }
         }
     }
-     
+
     bool show_prompt = true;
     bool moved_with_keys = true;
 

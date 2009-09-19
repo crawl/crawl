@@ -59,7 +59,7 @@ gameplay and design, to be accessed by pressing '?Q' in the game.
 
 While Dungeon Crawl is a strict single player game, you can play on a
 server together with many others. These are the relevant webpage and
-telnet and ssh addresses (akrasiac.org is situated in Northern America, 
+telnet and ssh addresses (akrasiac.org is situated in Northern America,
 while develz.org is located in Europe):
 
     http://crawl.akrasiac.org
@@ -80,7 +80,7 @@ running and no one has lost their save file yet. :) More information
 is available at the URLs above.
 
 There is also a lively IRC channel dedicated to Crawl at ##crawl on
-freenode. You can ask for help and there will always be someone to 
+freenode. You can ask for help and there will always be someone to
 supervise your game and give hints if you happen to play on a server.
 
 
@@ -1524,7 +1524,7 @@ Mountain Dwarves
   In general, they are not capable of dealing with magic, and are
   suspectible to charms and enchantments. However, they are very
   proficient at earth and fire magics. Thus, many a Mountain Dwarf
-  started career as an elementalist in those schools. They advance in 
+  started career as an elementalist in those schools. They advance in
   levels at a similar rate to Deep Elves.
 
 Deep Dwarves
