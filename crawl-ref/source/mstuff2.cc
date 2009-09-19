@@ -2371,7 +2371,7 @@ bool orange_statue_effects(monsters *mons)
 void ugly_thing_energy_mutate(monsters *ugly)
 {
     simple_monster_message(ugly,
-        " draws power from the mutagenic energy and changes!");
+        " basks in the mutagenic energy and changes!");
     ugly->uglything_mutate();
 }
 
@@ -2405,7 +2405,7 @@ bool ugly_thing_proximity_mutate(monsters *ugly)
         if (!one_chance_in(mutate_chance + 1))
         {
             simple_monster_message(ugly,
-                " draws power from its mutagenic kin and changes!");
+                " basks in the mutagenic energy from its kin and changes!");
             ugly->uglything_mutate();
 
             return (true);
