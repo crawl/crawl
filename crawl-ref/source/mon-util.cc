@@ -6289,8 +6289,8 @@ void monsters::set_ghost(const ghost_demon &g, bool has_name)
 void monsters::pandemon_init()
 {
     hit_dice        = ghost->xl;
-    hit_points      = ghost->max_hp;
     max_hit_points  = ghost->max_hp;
+    hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
     flags           = MF_INTERESTING;
@@ -6316,8 +6316,8 @@ void monsters::ghost_init()
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
     hit_dice        = ghost->xl;
-    hit_points      = ghost->max_hp;
     max_hit_points  = ghost->max_hp;
+    hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
     speed           = ghost->speed;
@@ -6341,14 +6341,14 @@ void monsters::ghost_init()
 void monsters::uglything_init(bool only_mutate)
 {
     // If we're mutating an ugly thing, leave its experience level, hit
-    // dice and hit points as they are.
+    // dice and maximum hit points as they are.
     if (!only_mutate)
     {
         hit_dice        = ghost->xl;
-        hit_points      = ghost->max_hp;
         max_hit_points  = ghost->max_hp;
     }
 
+    hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
     speed           = ghost->speed;

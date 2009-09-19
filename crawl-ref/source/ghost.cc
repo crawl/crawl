@@ -490,7 +490,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate)
     damage = 11 + random2(3);
 
     // If we're mutating an ugly thing, leave its experience level, hit
-    // dice and hit points as they are.
+    // dice and maximum hit points as they are.
     if (!only_mutate)
     {
         // Experience level: 8, the same as in mon-data.h.
