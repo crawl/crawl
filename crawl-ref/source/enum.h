@@ -2304,6 +2304,7 @@ enum mon_spellbook_type
     MST_CEREBOV,
     MST_GLOORX_VLOQ,
     MST_JESSICA,
+    MST_BERSERK_ESCAPE,               // 165
 
     MST_TEST_SPAWNER = 170,
     NUM_MSTYPES,
