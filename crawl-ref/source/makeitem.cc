@@ -4219,6 +4219,11 @@ void give_armour(monsters *mon, int level)
                                                0);
         break;
 
+    case MONS_GRUM:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_ANIMAL_SKIN;
+        break;
+
     case MONS_URUG:
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
@@ -4227,7 +4232,6 @@ void give_armour(monsters *mon, int level)
     case MONS_EDMUND:
     case MONS_RUPERT:
     case MONS_WAYNE:
-    case MONS_GRUM:
     {
         item.base_type = OBJ_ARMOUR;
 
