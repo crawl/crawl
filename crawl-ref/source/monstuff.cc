@@ -6239,6 +6239,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         }
         break;
     }
+
     default:
         break;
     }
@@ -8819,7 +8820,7 @@ static void _find_good_alternate_move(monsters *monster,
     {
         const int FAR_AWAY = 1000000;
 
-        // Try both directions (but randomize which one is first.)
+        // Try both directions (but randomise which one is first).
         const int sdir = coinflip() ? j : -j;
         const int inc = -2 * sdir;
 

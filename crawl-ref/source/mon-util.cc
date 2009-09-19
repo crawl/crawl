@@ -7951,8 +7951,8 @@ bool monsters::mutate()
     if (!can_mutate())
         return (false);
 
-    // Special case: Polymorphing a (very) ugly thing will mutate it
-    // into a different (very) ugly thing.
+    // Polymorphing a (very) ugly thing will mutate it into a different
+    // (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
         simple_monster_message(this, " mutates!");
