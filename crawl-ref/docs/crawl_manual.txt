@@ -2090,8 +2090,8 @@ matter which weapon your character is wielding (if any). Fighting is
 also the skill that determines the number of hit points your character
 gets as they increase in levels (note that this is calculated so that
 you don't get a long run advantage by starting out with a high Fighting
-skill). The first two levels of Fighting skill can be obtained by
-training melee combat against plants and fungi.
+skill). The first level of Fighting skill can be obtained by training
+melee combat against plants and fungi.
 
 Weapon skills affect your ability to fight with specific melee weapons.
 Weapon skills include:
@@ -2126,8 +2126,8 @@ them anyway). You can practise Unarmed Combat by attacking empty-handed,
 and it is also exercised when you make a secondary attack (a kick,
 punch, etc.). Unarmed combat is particularly difficult to use in
 combination with heavy armour or shields or very big weapons. As with
-Fighting, the first two levels of this skill can be obtained by training
-it against plants and fungi.
+Fighting, the first level of this skill can be obtained by training it
+against plants and fungi.
 
 Ranged combat skills:
 ---------------------

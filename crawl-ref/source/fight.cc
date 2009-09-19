@@ -1853,10 +1853,10 @@ void melee_attack::player_exercise_combat_skills()
 {
     const bool helpless = defender->cannot_fight();
 
-    if (!helpless || you.skills[ wpn_skill ] < 2)
-        exercise( wpn_skill, 1 );
+    if (!helpless || you.skills[wpn_skill] < 1)
+        exercise(wpn_skill, 1);
 
-    if ((!helpless || you.skills[SK_FIGHTING] < 2)
+    if ((!helpless || you.skills[SK_FIGHTING] < 1)
         && one_chance_in(3))
     {
         exercise(SK_FIGHTING, 1);
@@ -3976,7 +3976,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     if (player_in_bat_form())
     {
         // Bats really don't do a lot of damage.
-        damage += you.skills[SK_UNARMED_COMBAT]/5;
+        damage += you.skills[SK_UNARMED_COMBAT] / 5;
     }
     else
         damage += you.skills[SK_UNARMED_COMBAT];
