@@ -2394,8 +2394,7 @@ bool ugly_thing_proximity_mutate(monsters *ugly)
                 if (coinflip())
                     mutate_chance++;
 
-                if (ugly->type == MONS_UGLY_THING
-                    && ugly_near->type == MONS_VERY_UGLY_THING)
+                if (ugly_near->type == MONS_VERY_UGLY_THING)
                 {
                     if (coinflip())
                         mutate_chance++;
