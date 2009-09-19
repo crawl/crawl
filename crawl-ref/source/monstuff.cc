@@ -8680,6 +8680,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     const dungeon_feature_type target_grid = grd(targ);
     const habitat_type habitat = mons_primary_habitat(monster);
 
+    // The kraken is so large it cannot enter shallow water.
+    // Its tentacles can, and will, though.
+    if (monster->type == MONS_KRAKEN && target_grid == DNGN_SHALLOW_WATER)
+        return (false);
+
     // Effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
     bool no_water = false;

@@ -708,6 +708,11 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_SHARK;
     case MONS_JELLYFISH:
         return TILEP_MONS_JELLYFISH;
+    case MONS_KRAKEN:
+        return TILEP_MONS_KRAKEN_HEAD;
+    case MONS_KRAKEN_TENTACLE:
+        return TILEP_MONS_KRAKEN_TENTACLE
+               + random2(tile_player_count(TILEP_MONS_KRAKEN_TENTACLE));
 
     // lava monsters
     case MONS_LAVA_WORM:

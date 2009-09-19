@@ -81,12 +81,22 @@ red_wasp MONS_RED_WASP
 moth_of_wrath MONS_MOTH_OF_WRATH
 
 ## Aquatics (';')
+%rim 0
 big_fish MONS_BIG_FISH
 giant_goldfish MONS_GIANT_GOLDFISH
 electric_eel MONS_ELECTRIC_EEL
 lava_fish MONS_LAVA_FISH
 shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
+## Kraken head ('X') and tentacles ('w')
+kraken_head MONS_KRAKEN_HEAD
+kraken_tentacle1 MONS_KRAKEN_TENTACLE
+kraken_tentacle2
+kraken_tentacle3
+kraken_tentacle4
+kraken_tentacle5
+kraken_tentacle6
+%rim 1
 
 ## Beetles ('B')
 giant_beetle MONS_GIANT_BEETLE

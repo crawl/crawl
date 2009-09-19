@@ -154,6 +154,10 @@ bool monster_habitable_grid(int monster_class,
     if (monster_class == MONS_FIRE_ELEMENTAL && grid_is_watery(actual_grid))
         return (false);
 
+    // Krakens are too large for shallow water.
+    if (monster_class == MONS_KRAKEN && actual_grid == DNGN_SHALLOW_WATER)
+        return (false);
+
     if (grid_compatible(grid_preferred, actual_grid)
         || (grid_nonpreferred != grid_preferred
             && grid_compatible(grid_nonpreferred, actual_grid)))
