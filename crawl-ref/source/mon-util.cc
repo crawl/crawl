@@ -585,10 +585,10 @@ bool mons_is_native_in_branch(const monsters *monster,
 
 bool mons_is_chaotic(const monsters *mon)
 {
-    if (mons_is_shapeshifter(mon))
+    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
         return (true);
 
-    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
+    if (mons_is_shapeshifter(mon))
         return (true);
 
     if (mon->has_spell(SPELL_POLYMORPH_OTHER))
@@ -7959,9 +7959,10 @@ bool monsters::mutate()
         return (true);
     }
 
+    // Polymorphing a shapeshifter will make it revert to its original
+    // form.
     if (this->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         return (monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER));
-
     if (this->has_ench(ENCH_SHAPESHIFTER))
         return (monster_polymorph(this, MONS_SHAPESHIFTER));
 

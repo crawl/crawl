@@ -4885,9 +4885,20 @@ mon_resist_type bolt::try_enchant_monster(monsters *mon)
         if (mons_immune_magic(mon))
             return (MON_UNAFFECTED);
 
-        if (flavour != BEAM_POLYMORPH || !mons_is_shapeshifter(mon))
+        // (Very) ugly things and shapeshifters will never resist
+        // polymorph beams.
+        if (flavour == BEAM_POLYMORPH
+            && (mon->type == MONS_UGLY_THING
+                || mon->type == MONS_VERY_UGLY_THING
+                || mons_is_shapeshifter(mon)))
+        {
+            ;
+        }
+        else
+        {
             if (check_mons_resist_magic(mon, ench_power))
                 return (MON_RESIST);
+        }
     }
 
     return (apply_enchantment_to_monster(mon));
