@@ -944,10 +944,10 @@ static void _reassess_starting_skills()
 
         // Vampires should always have Unarmed Combat skill.
         if (you.species == SP_VAMPIRE && i == SK_UNARMED_COMBAT
-            && you.skills[i] < 2)
+            && you.skills[i] < 1)
         {
-            you.skill_points[i] = (skill_exp_needed(2) * sp_diff) / 100;
-            you.skills[i] = 2;
+            you.skill_points[i] = (skill_exp_needed(1) * sp_diff) / 100;
+            you.skills[i] = 1;
         }
 
         // Wanderers get at least 1 level in their skills.
