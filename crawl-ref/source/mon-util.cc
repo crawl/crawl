@@ -7955,8 +7955,7 @@ bool monsters::mutate()
     // (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        simple_monster_message(this, " mutates!");
-        uglything_mutate();
+        ugly_thing_energy_mutate(this);
         return (true);
     }
 

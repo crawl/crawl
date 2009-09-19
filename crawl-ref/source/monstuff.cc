@@ -5754,6 +5754,13 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
     switch (mclass)
     {
+    case MONS_UGLY_THING:
+    case MONS_VERY_UGLY_THING:
+        // A (very) ugly thing's proximity to others of its kind can
+        // mutate it into a different (very) ugly thing.
+        used = ugly_thing_proximity_mutate(monster);
+        break;
+
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:

@@ -2368,6 +2368,54 @@ bool orange_statue_effects(monsters *mons)
     return (false);
 }
 
+void ugly_thing_energy_mutate(monsters *ugly)
+{
+    simple_monster_message(ugly,
+        " draws power from the mutagenic energy and changes!");
+    ugly->uglything_mutate();
+}
+
+bool ugly_thing_proximity_mutate(monsters *ugly)
+{
+    if (one_chance_in(10))
+    {
+        int mutate_chance = 0;
+
+        for (radius_iterator ri(ugly->pos(), 1); ri; ++ri)
+        {
+            monsters *ugly_near = monster_at(*ri);
+
+            if (ugly_near == NULL || ugly_near == ugly)
+                continue;
+
+            if (ugly_near->type == MONS_UGLY_THING
+                || ugly_near->type == MONS_VERY_UGLY_THING)
+            {
+                if (coinflip())
+                    mutate_chance++;
+
+                if (ugly->type == MONS_UGLY_THING
+                    && ugly_near->type == MONS_VERY_UGLY_THING)
+                {
+                    if (coinflip())
+                        mutate_chance++;
+                }
+            }
+        }
+
+        if (!one_chance_in(mutate_chance + 1))
+        {
+            simple_monster_message(ugly,
+                " draws power from its mutagenic kin and changes!");
+            ugly->uglything_mutate();
+
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
 bool orc_battle_cry(monsters *chief)
 {
     const actor *foe = chief->get_foe();
