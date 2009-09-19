@@ -1364,7 +1364,7 @@ public:
     void set_ghost(const ghost_demon &ghost, bool has_name = true);
     void ghost_init();
     void pandemon_init();
-    void uglything_init();
+    void uglything_init(bool only_mutate = false);
     void uglything_mutate();
     void uglything_upgrade();
     void destroy_inventory();

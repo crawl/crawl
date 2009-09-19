@@ -6338,11 +6338,17 @@ void monsters::ghost_init()
     find_place_to_live();
 }
 
-void monsters::uglything_init()
+void monsters::uglything_init(bool only_mutate)
 {
-    hit_dice        = ghost->xl;
-    hit_points      = ghost->max_hp;
-    max_hit_points  = ghost->max_hp;
+    // If we're mutating an ugly thing, leave its experience level, hit
+    // dice and hit points as they are.
+    if (!only_mutate)
+    {
+        hit_dice        = ghost->xl;
+        hit_points      = ghost->max_hp;
+        max_hit_points  = ghost->max_hp;
+    }
+
     ac              = ghost->ac;
     ev              = ghost->ev;
     speed           = ghost->speed;
@@ -6353,7 +6359,7 @@ void monsters::uglything_init()
 void monsters::uglything_mutate()
 {
     ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true);
-    uglything_init();
+    uglything_init(true);
 }
 
 void monsters::uglything_upgrade()

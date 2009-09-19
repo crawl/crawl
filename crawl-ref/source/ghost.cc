@@ -475,7 +475,7 @@ static mon_attack_flavour _ugly_thing_flavour_upgrade(mon_attack_flavour u_att_f
     return (u_att_flav);
 }
 
-void ghost_demon::init_ugly_thing(bool very_ugly, bool mutate)
+void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate)
 {
     // Midpoint: 10, as in mon-data.h.
     speed = 9 + random2(3);
@@ -489,11 +489,16 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool mutate)
     // Midpoint: 12, as in mon-data.h.
     damage = 11 + random2(3);
 
-    // Experience level: 8, the same as in mon-data.h.
-    xl = 8;
+    // If we're mutating an ugly thing, leave its experience level, hit
+    // dice and hit points as they are.
+    if (!only_mutate)
+    {
+        // Experience level: 8, the same as in mon-data.h.
+        xl = 8;
 
-    // Hit dice: {8, 3, 5, 0}, the same as in mon-data.h.
-    max_hp = hit_points(xl, 3, 5);
+        // Hit dice: {8, 3, 5, 0}, the same as in mon-data.h.
+        max_hp = hit_points(xl, 3, 5);
+    }
 
     resists.elec = 0;
     resists.poison = 0;
@@ -516,8 +521,8 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool mutate)
     // An ugly thing always gets a low-intensity colour.  If we're
     // mutating it, it always gets a different colour from what it had
     // before.
-    colour = _ugly_thing_random_colour(mutate ? make_low_colour(colour)
-                                              : BLACK);
+    colour = _ugly_thing_random_colour(only_mutate ? make_low_colour(colour)
+                                                   : BLACK);
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
