@@ -1643,23 +1643,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     return (re);
 }
 
-// Does the player resist asphyxiation?
-bool player_res_asphyx()
-{
-    // The undead are immune to asphyxiation, or so we'll assume.
-    if (you.is_undead)
-        return (true);
-
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_LICH:
-    case TRAN_STATUE:
-        return (true);
-    }
-
-    return (false);
-}
-
 bool player_control_teleport(bool calc_unid, bool temp, bool items)
 {
     return ((temp && you.duration[DUR_CONTROL_TELEPORT])
@@ -1729,6 +1712,28 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp = 1;
 
     return (rp);
+}
+
+int player_res_asphyx()
+{
+    int ra = 0;
+
+    // The undead are immune to asphyxiation, or so we'll assume.
+    if (you.is_undead)
+        ra++;
+
+    switch (you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_LICH:
+    case TRAN_STATUE:
+        ra++;
+        break;
+    }
+
+    if (ra > 1)
+        ra = 1;
+
+    return (ra);
 }
 
 int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
@@ -5401,7 +5406,7 @@ bool curare_hits_player(int death_source, int amount)
 
     int hurted = 0;
 
-    if (!player_res_asphyx())
+    if (player_res_asphyx() > 0)
     {
         hurted = roll_dice(2, 6);
 

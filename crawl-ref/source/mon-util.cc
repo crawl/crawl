@@ -1307,15 +1307,6 @@ int mons_res_elec(const monsters *mon)
     return (u);
 }
 
-bool mons_res_asphyx(const monsters *mon)
-{
-    const mon_holy_type holiness = mons_holiness(mon);
-    return (mons_is_unholy(mon)
-            || holiness == MH_NONLIVING
-            || holiness == MH_PLANT
-            || get_mons_resists(mon).asphyx > 0);
-}
-
 int mons_res_acid(const monsters *mon)
 {
     return (get_mons_resists(mon).acid);
@@ -1358,6 +1349,19 @@ int mons_res_poison(const monsters *mon)
     // Monsters can legitimately get multiple levels of poison resistance.
 
     return (u);
+}
+
+int mons_res_asphyx(const monsters *mon)
+{
+    int res = get_mons_resists(mon).asphyx;
+    const mon_holy_type holiness = mons_holiness(mon);
+    if (mons_is_unholy(mon)
+        || holiness == MH_NONLIVING
+        || holiness == MH_PLANT)
+    {
+        res += 1;
+    }
+    return (res);
 }
 
 int mons_res_sticky_flame(const monsters *mon)
@@ -3773,7 +3777,7 @@ bool monsters::can_drown() const
     // Mummies can fall apart in water or be incinerated in lava.
     // Ghouls, vampires, and demons can drown in water or lava.  Others
     // just "sink like a rock", to never be seen again.
-    return (!mons_res_asphyx(this)
+    return (mons_res_asphyx(this) > 0
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE
@@ -9272,9 +9276,9 @@ std::string get_mon_shape_str(const mon_body_shape shape)
 // mon_resist_def
 
 mon_resist_def::mon_resist_def()
-    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0),
-      asphyx(0), acid(0), sticky_flame(false), rotting(false), pierce(0),
-      slice(0), bludgeon(0)
+    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
+      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
+      bludgeon(0)
 {
 }
 
@@ -9295,9 +9299,9 @@ short mon_resist_def::get_default_res_level(int resist, short level) const
 }
 
 mon_resist_def::mon_resist_def(int flags, short level)
-    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0),
-      asphyx(0), acid(0), sticky_flame(false), rotting(false), pierce(0),
-      slice(0), bludgeon(0)
+    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
+      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
+      bludgeon(0)
 {
     for (int i = 0; i < 32; ++i)
     {
@@ -9305,30 +9309,30 @@ mon_resist_def::mon_resist_def(int flags, short level)
         switch (flags & (1 << i))
         {
         // resistances
-        case MR_RES_STEAM:    steam    =  3; break;
-        case MR_RES_ELEC:     elec     = nl; break;
-        case MR_RES_POISON:   poison   = nl; break;
-        case MR_RES_FIRE:     fire     = nl; break;
-        case MR_RES_HELLFIRE: hellfire = nl; break;
-        case MR_RES_COLD:     cold     = nl; break;
-        case MR_RES_ASPHYX:   asphyx   = nl; break;
-        case MR_RES_ACID:     acid     = nl; break;
+        case MR_RES_STEAM:    steam      =    3; break;
+        case MR_RES_ELEC:     elec       =   nl; break;
+        case MR_RES_POISON:   poison     =   nl; break;
+        case MR_RES_FIRE:     fire       =   nl; break;
+        case MR_RES_HELLFIRE: hellfire   =   nl; break;
+        case MR_RES_COLD:     cold       =   nl; break;
+        case MR_RES_ASPHYX:   asphyx     = true; break;
+        case MR_RES_ACID:     acid       =   nl; break;
 
         // vulnerabilities
-        case MR_VUL_ELEC:     elec     = -nl; break;
-        case MR_VUL_POISON:   poison   = -nl; break;
-        case MR_VUL_FIRE:     fire     = -nl; break;
-        case MR_VUL_COLD:     cold     = -nl; break;
+        case MR_VUL_ELEC:     elec       = -nl;  break;
+        case MR_VUL_POISON:   poison     = -nl;  break;
+        case MR_VUL_FIRE:     fire       = -nl;  break;
+        case MR_VUL_COLD:     cold       = -nl;  break;
 
         // resistance to certain damage types
-        case MR_RES_PIERCE:   pierce   = nl; break;
-        case MR_RES_SLICE:    slice    = nl; break;
-        case MR_RES_BLUDGEON: bludgeon = nl; break;
+        case MR_RES_PIERCE:   pierce     = nl;   break;
+        case MR_RES_SLICE:    slice      = nl;   break;
+        case MR_RES_BLUDGEON: bludgeon   = nl;   break;
 
         // vulnerability to certain damage types
-        case MR_VUL_PIERCE:   pierce   = -nl; break;
-        case MR_VUL_SLICE:    slice    = -nl; break;
-        case MR_VUL_BLUDGEON: bludgeon = -nl; break;
+        case MR_VUL_PIERCE:   pierce     = -nl;  break;
+        case MR_VUL_SLICE:    slice      = -nl;  break;
+        case MR_VUL_BLUDGEON: bludgeon   = -nl;  break;
 
         case MR_RES_STICKY_FLAME: sticky_flame = true; break;
         case MR_RES_ROTTING:      rotting      = true; break;
@@ -9345,7 +9349,7 @@ const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
     fire        += o.fire;
     cold        += o.cold;
     hellfire    += o.hellfire;
-    asphyx      += o.asphyx;
+    asphyx       = asphyx       || o.asphyx;
     acid        += o.acid;
     pierce      += o.pierce;
     slice       += o.slice;

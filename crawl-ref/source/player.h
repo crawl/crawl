@@ -245,7 +245,7 @@ bool player_control_teleport(bool calc_unid = true, bool temp = true,
 
 int player_res_magic(void);
 
-bool player_res_asphyx();
+int player_res_asphyx();
 
 /* ***********************************************************************
  * called from: beam - chardump - fight - misc - output

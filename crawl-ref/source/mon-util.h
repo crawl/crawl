@@ -383,9 +383,9 @@ struct mon_resist_def
     short steam;
     short cold;
     short hellfire;
-    short asphyx;
     short acid;
 
+    bool asphyx;
     bool sticky_flame;
     bool rotting;
 
@@ -618,12 +618,12 @@ int mons_res_elec(const monsters *mon);
 int mons_res_fire(const monsters *mon);
 int mons_res_steam(const monsters *mon);
 int mons_res_poison(const monsters *mon);
+int mons_res_asphyx(const monsters *mon);
 int mons_res_sticky_flame(const monsters *mon);
 int mons_res_rotting(const monsters *mon);
 int mons_res_acid(const monsters *mon);
 int mons_res_negative_energy(const monsters *mon);
 int mons_res_miasma(const monsters *mon);
-bool mons_res_asphyx(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}
