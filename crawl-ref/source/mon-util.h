@@ -244,7 +244,11 @@ enum mon_resist_flags
 
     // Immune to stickiness of sticky flame.
     MR_RES_STICKY_FLAME  = (1<<17),
-    MR_RES_STEAM         = (1<<18)
+
+    // Immune to rotting.
+    MR_RES_ROTTING       = (1<<18),
+
+    MR_RES_STEAM         = (1<<19)
 };
 
 enum shout_type
@@ -383,6 +387,7 @@ struct mon_resist_def
     short acid;
 
     bool sticky_flame;
+    bool rotting;
 
     // Physical damage resists (currently unused)
     short pierce;
@@ -614,6 +619,7 @@ int mons_res_fire(const monsters *mon);
 int mons_res_steam(const monsters *mon);
 int mons_res_poison(const monsters *mon);
 int mons_res_sticky_flame(const monsters *mon);
+int mons_res_rotting(const monsters *mon);
 int mons_res_acid(const monsters *mon);
 int mons_res_negative_energy(const monsters *mon);
 int mons_res_miasma(const monsters *mon);

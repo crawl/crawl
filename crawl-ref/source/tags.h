@@ -71,7 +71,8 @@ enum tag_minor_version
     TAG_MINOR_JELLY    = 19,     // Remember whether the royal jelly is dead.
     TAG_ANNOTATE_EXCL  = 20,     // Store exclusion information for annotations.
     TAG_MINOR_UGLY     = 21,     // More ghost bits for (very) ugly things.
-    TAG_MINOR_VERSION  = 21      // Current version.  (Keep equal to max.)
+    TAG_MINOR_ROTTING  = 22,     // Added monster-specific rotting resistance.
+    TAG_MINOR_VERSION  = 22      // Current version.  (Keep equal to max.)
 };
 
 

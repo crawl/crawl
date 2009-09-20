@@ -1368,6 +1368,14 @@ int mons_res_sticky_flame(const monsters *mon)
     return (res);
 }
 
+int mons_res_rotting(const monsters *mon)
+{
+    int res = get_mons_resists(mon).rotting;
+    if (mons_holiness(mon) != MH_NATURAL)
+        res += 1;
+    return (res);
+}
+
 int mons_res_steam(const monsters *mon)
 {
     int res = get_mons_resists(mon).steam;
@@ -6055,6 +6063,11 @@ int monsters::res_sticky_flame() const
     return (mons_res_sticky_flame(this));
 }
 
+int monsters::res_rotting() const
+{
+    return (mons_res_rotting(this));
+}
+
 int monsters::res_holy_energy(const actor *attacker) const
 {
     if (mons_is_evil(this))
@@ -6078,11 +6091,6 @@ int monsters::res_holy_energy(const actor *attacker) const
 int monsters::res_negative_energy() const
 {
     return (mons_res_negative_energy(this));
-}
-
-int monsters::res_rotting() const
-{
-    return (mons_holiness(this) == MH_NATURAL ? 0 : 1);
 }
 
 int monsters::res_torment() const
@@ -9265,7 +9273,7 @@ std::string get_mon_shape_str(const mon_body_shape shape)
 
 mon_resist_def::mon_resist_def()
     : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0),
-      asphyx(0), acid(0), sticky_flame(false), pierce(0),
+      asphyx(0), acid(0), sticky_flame(false), rotting(false), pierce(0),
       slice(0), bludgeon(0)
 {
 }
@@ -9288,7 +9296,7 @@ short mon_resist_def::get_default_res_level(int resist, short level) const
 
 mon_resist_def::mon_resist_def(int flags, short level)
     : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0),
-      asphyx(0), acid(0), sticky_flame(false), pierce(0),
+      asphyx(0), acid(0), sticky_flame(false), rotting(false), pierce(0),
       slice(0), bludgeon(0)
 {
     for (int i = 0; i < 32; ++i)
@@ -9323,6 +9331,7 @@ mon_resist_def::mon_resist_def(int flags, short level)
         case MR_VUL_BLUDGEON: bludgeon = -nl; break;
 
         case MR_RES_STICKY_FLAME: sticky_flame = true; break;
+        case MR_RES_ROTTING:      rotting      = true; break;
 
         default: break;
         }
@@ -9342,6 +9351,7 @@ const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
     slice       += o.slice;
     bludgeon    += o.bludgeon;
     sticky_flame = sticky_flame || o.sticky_flame;
+    rotting      = rotting      || o.rotting;
     return (*this);
 }
 

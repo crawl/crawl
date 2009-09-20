@@ -190,8 +190,9 @@ static void tag_read_ghost(reader &th, char minorVersion);
 static void marshallGhost(writer &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost(reader &th, char minorVersion);
 
-static void marshallResists(writer &, const mon_resist_def &);
-static void unmarshallResists(reader &, mon_resist_def &);
+static void marshallResists(writer &th, const mon_resist_def &res);
+static void unmarshallResists(reader &th, mon_resist_def &res,
+                              char minorVersion);
 
 static void marshallSpells(writer &, const monster_spells &);
 static void unmarshallSpells(reader &, monster_spells &);
@@ -2403,12 +2404,14 @@ static void marshallResists(writer &th, const mon_resist_def &res)
     marshallByte(th, res.asphyx);
     marshallByte(th, res.acid);
     marshallByte(th, res.sticky_flame);
+    marshallByte(th, res.rotting);
     marshallByte(th, res.pierce);
     marshallByte(th, res.slice);
     marshallByte(th, res.bludgeon);
 }
 
-static void unmarshallResists(reader &th, mon_resist_def &res)
+static void unmarshallResists(reader &th, mon_resist_def &res,
+                              char minorVersion)
 {
     res.elec         = unmarshallByte(th);
     res.poison       = unmarshallByte(th);
@@ -2419,6 +2422,10 @@ static void unmarshallResists(reader &th, mon_resist_def &res)
     res.asphyx       = unmarshallByte(th);
     res.acid         = unmarshallByte(th);
     res.sticky_flame = unmarshallByte(th);
+
+    if (minorVersion >= TAG_MINOR_ROTTING)
+        res.rotting  = unmarshallByte(th);
+
     res.pierce       = unmarshallByte(th);
     res.slice        = unmarshallByte(th);
     res.bludgeon     = unmarshallByte(th);
@@ -2495,7 +2502,7 @@ static ghost_demon unmarshallGhost(reader &th, char minorVersion)
         ghost.att_flav     = static_cast<mon_attack_flavour>( unmarshallShort(th) );
     }
 
-    unmarshallResists(th, ghost.resists);
+    unmarshallResists(th, ghost.resists, minorVersion);
 
     ghost.spellcaster      = unmarshallByte(th);
     ghost.cycle_colours    = unmarshallByte(th);
