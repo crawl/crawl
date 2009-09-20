@@ -711,6 +711,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KRAKEN:
         return TILEP_MONS_KRAKEN_HEAD;
     case MONS_KRAKEN_TENTACLE:
+        // Pick a random tentacle tile.
         return TILEP_MONS_KRAKEN_TENTACLE
                + random2(tile_player_count(TILEP_MONS_KRAKEN_TENTACLE));
 

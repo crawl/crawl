@@ -87,8 +87,8 @@ void trap_def::destroy()
 
     grd(this->pos) = DNGN_FLOOR;
     this->ammo_qty = 0;
-    this->pos = coord_def(-1,-1);
-    this->type = TRAP_UNASSIGNED;
+    this->pos      = coord_def(-1,-1);
+    this->type     = TRAP_UNASSIGNED;
 }
 
 void trap_def::hide()

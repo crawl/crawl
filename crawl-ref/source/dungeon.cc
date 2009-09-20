@@ -7308,7 +7308,7 @@ static void _chequerboard( spec_room &sr, dungeon_feature_type target,
     if (sr.br.x < sr.tl.x || sr.br.y < sr.tl.y)
         return;
 
-    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
+    for (rectangle_iterator ri(sr.tl, sr.br); ri; ++ri)
         if (grd(*ri) == target)
             grd(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
 }

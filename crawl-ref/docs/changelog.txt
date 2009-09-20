@@ -3,6 +3,7 @@ Stone Soup 0.6
 * Two new gods: Jiyva, god of slime, and Feawn, god of plants.
 * Shorten Lair to eight levels.
 * Added scroll of silence.
+* Added potions of brilliance and agility.
 * Several new uniques.
 * Overhaul Wanderers.
 * Starting stats and equipment, and hp gain, are no longer assigned randomly.
@@ -17,8 +18,13 @@ Stone Soup 0.6
 * Let toadstools grow on corpses.
 * All worms apart from brain worms are mindless and cannot be pacified.
 * Hungry ghosts eat corpses.
+* (Very) ugly things get random resistances and attack flavours.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Weapons of holy wrath cannot be cursed.
+* Post-berserk exhaustion cancels Haste, even with an amulet of remove slowing.
+* Lowered gold dragon armour's AC value.
+* Bears can go berserk.
+* Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
 * Reduce the chances for artefacts with only one stat property.
 * Add !a inscription to prompt when attacking with this wielded item.
 * Upgrade equipment of Sonja, Psyche and Terence.

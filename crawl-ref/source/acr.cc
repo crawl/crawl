@@ -1124,15 +1124,16 @@ static void _input()
             // as a resting turn, rather than "other".
             static bool prev_was_rest = false;
 
-            if (!you.delay_queue.empty() &&
-                you.delay_queue.front().type == DELAY_REST)
+            if (!you.delay_queue.empty()
+                && you.delay_queue.front().type == DELAY_REST)
+            {
                 prev_was_rest = true;
+            }
 
             if (prev_was_rest)
             {
                 delta.turns_resting++;
                 delta.elapsed_resting += you.time_taken;
-
             }
             else
             {
@@ -1140,10 +1141,11 @@ static void _input()
                 delta.elapsed_other += you.time_taken;
             }
 
-            if (you.delay_queue.empty() ||
-                you.delay_queue.front().type != DELAY_REST)
+            if (you.delay_queue.empty()
+                || you.delay_queue.front().type != DELAY_REST)
+            {
                 prev_was_rest = false;
-
+            }
             break;
         }
 
@@ -2363,22 +2365,6 @@ static void _decrement_durations()
         int dur = 12 + roll_dice(2, 12);
         you.duration[DUR_EXHAUSTED] += dur;
 
-        // While the amulet of resist slowing does prevent the post-berserk
-        // slowing, exhaustion still ends haste.
-        if (you.duration[DUR_HASTE] > 0 && wearing_amulet(AMU_RESIST_SLOW))
-        {
-            if (you.duration[DUR_HASTE > 6])
-            {
-                you.duration[DUR_HASTE] = 2 + coinflip();
-                mpr("Your extra speed is starting to run out.", MSGCH_DURATION);
-            }
-            else
-            {
-                mpr("You feel yourself slow down.", MSGCH_DURATION);
-                you.duration[DUR_HASTE] = 0;
-            }
-        }
-
         // Don't trigger too many tutorial messages.
         const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
         Options.tutorial_events[TUT_YOU_ENCHANTED] = false;
@@ -2386,7 +2372,32 @@ static void _decrement_durations()
         {
             // Don't give duplicate 'You feel yourself slow down' messages.
             no_messages nm;
-            slow_player(dur);
+
+            // While the amulet of resist slowing does prevent the post-berserk
+            // slowing, exhaustion still ends haste.
+            if (you.duration[DUR_HASTE] > 0)
+            {
+                if (wearing_amulet(AMU_RESIST_SLOW))
+                {
+                    if (you.duration[DUR_HASTE > 6])
+                    {
+                        you.duration[DUR_HASTE] = 2 + coinflip();
+                        mpr("Your extra speed is starting to run out.",
+                            MSGCH_DURATION);
+                    }
+                    else
+                    {
+                        mpr("You feel yourself slow down.", MSGCH_DURATION);
+                        you.duration[DUR_HASTE] = 0;
+                    }
+                }
+                else
+                {
+                    // Silently cancel haste, then slow player.
+                    you.duration[DUR_HASTE] = 0;
+                    slow_player(dur);
+                }
+            }
         }
 
         make_hungry(700, true);

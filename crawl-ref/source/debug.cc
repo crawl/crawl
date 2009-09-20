@@ -4627,9 +4627,9 @@ static int find_trap_slot()
 void debug_make_trap()
 {
     char requested_trap[80];
-    int trap_slot = find_trap_slot();
+    int trap_slot  = find_trap_slot();
     trap_type trap = TRAP_UNASSIGNED;
-    int gridch = grd(you.pos());
+    int gridch     = grd(you.pos());
 
     if (trap_slot == -1)
     {
@@ -4654,7 +4654,7 @@ void debug_make_trap()
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
         const trap_type tr = static_cast<trap_type>(t);
-        const char* tname = trap_name(tr);
+        const char* tname  = trap_name(tr);
         if (strstr(requested_trap, tname))
         {
             trap = tr;
@@ -5193,7 +5193,7 @@ static void _debug_kill_traps()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
         if (grid_is_trap(grd(*ri), true))
-            grd(*ri) = DNGN_FLOOR;
+            destroy_trap(*ri);
 }
 
 static int _debug_time_explore()
@@ -5247,7 +5247,7 @@ static void _debug_destroy_doors()
 void debug_test_explore()
 {
     wizard_dismiss_all_monsters(true);
-    _debug_kill_traps(); // doesn't work? (jpeg)
+    _debug_kill_traps();
     _debug_destroy_doors();
 
     forget_map(100);

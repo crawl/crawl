@@ -231,7 +231,7 @@ bool grid_is_trap(dungeon_feature_type grid, bool undiscovered_too)
 {
     return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
             || grid == DNGN_TRAP_NATURAL
-            || (undiscovered_too && grid == DNGN_UNDISCOVERED_TRAP));
+            || undiscovered_too && grid == DNGN_UNDISCOVERED_TRAP);
 }
 
 bool grid_is_water(dungeon_feature_type grid)
