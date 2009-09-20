@@ -2361,10 +2361,10 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     // Allows for handling of submerged monsters which polymorph into
     // monsters that can't submerge on this square.
-    if (sub.ench != ENCH_NONE
+    if (monster->has_ench(ENCH_SUBMERGED)
         && !monster_can_submerge(monster, grd(monster->pos())))
     {
-        monster->del_ench(sub);
+        monster->del_ench(ENCH_SUBMERGED);
     }
 
     monster->ench_countdown = old_ench_countdown;
