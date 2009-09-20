@@ -1957,6 +1957,11 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 
 /////////////////////////////////////////////////////////////////////////////
 
+// Try to avoid to let travel (including autoexplore) move the player right
+// next to a lurking (previously unseen) monster.
+// NOTE: This define should either be replaced with a proper option, or
+//       removed entirely.
+#define SAFE_EXPLORE
 void find_travel_pos(const coord_def& youpos,
                      char *move_x, char *move_y,
                      std::vector<coord_def>* features)
@@ -1974,16 +1979,60 @@ void find_travel_pos(const coord_def& youpos,
                                              : RMODE_NOT_RUNNING;
 
     const coord_def dest = tp.pathfind( rmode );
+    coord_def new_dest = dest;
 
-    if (dest.origin())
+#ifdef SAFE_EXPLORE
+    // Check whether this step puts us adjacent to any grid we haven't ever
+    // seen or any non-wall grid we cannot currently see.
+    //
+    // .tx      Moving onto t puts us adjacent to an unseen grid.
+    // ?#@      --> Pick x instead.
+
+    // Only applies to diagonal moves.
+    if (RMODE_TRAVEL && move_x != 0 && move_y != 0)
+    {
+        coord_def unseen = coord_def();
+        for (adjacent_iterator ai(dest); ai; ++ai)
+            if (!see_grid(*ai)
+                && (!is_terrain_seen(*ai) || !grid_is_wall(grd(*ai))))
+            {
+                unseen = *ai;
+                break;
+            }
+
+        if (unseen != coord_def())
+        {
+            // If so, try to use another adjacent grid that does
+            if (youpos.x == unseen.x)
+                new_dest.y = youpos.y;
+            else if (youpos.y == unseen.y)
+                new_dest.x = youpos.x;
+
+            // If the new grid cannot be entered, reset to dest.
+            if (!is_travelsafe_square(new_dest)
+                || !is_traversable(grd(new_dest)))
+            {
+                new_dest = dest;
+            }
+#ifdef DEBUG_SAFE_EXPLORE
+            mprf("youpos: (%d, %d), dest: (%d, %d), unseen: (%d, %d), "
+                 "new_dest: (%d, %d)",
+                 youpos.x, youpos.y, dest.x, dest.y, unseen.x, unseen.y,
+                 new_dest.x, new_dest.y);
+            more();
+#endif
+        }
+    }
+#endif
+    if (new_dest.origin())
     {
         if (move_x && move_y)
             you.running = RMODE_NOT_RUNNING;
     }
     else if (move_x && move_y)
     {
-        *move_x = dest.x - youpos.x;
-        *move_y = dest.y - youpos.y;
+        *move_x = new_dest.x - youpos.x;
+        *move_y = new_dest.y - youpos.y;
     }
 }
 
@@ -3603,7 +3652,7 @@ int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2)
 
 void LevelInfo::get_stairs(std::vector<coord_def> &st)
 {
-    for ( rectangle_iterator ri(1); ri; ++ri )
+    for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
         const int envc = env.map(*ri).object;
