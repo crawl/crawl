@@ -3235,10 +3235,6 @@ void bolt::affect_place_explosion_clouds()
 // A little helper function to handle the calling of ouch()...
 void bolt::internal_ouch(int dam)
 {
-    mprf("aimed_at_feet: %s, effect_known: %s",
-         aimed_at_feet ? "true" : "false",
-         effect_known ? "true" : "false");
-
     monsters *monst = NULL;
     if (!invalid_monster_index(beam_source) && menv[beam_source].type != -1)
         monst = &menv[beam_source];
