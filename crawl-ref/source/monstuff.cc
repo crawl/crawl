@@ -2317,6 +2317,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     mon_enchant neutral   = monster->get_ench(ENCH_NEUTRAL);
     mon_enchant shifter   = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                               ENCH_SHAPESHIFTER);
+    mon_enchant sub       = monster->get_ench(ENCH_SUBMERGED);
     mon_enchant summon    = monster->get_ench(ENCH_SUMMON);
     mon_enchant tp        = monster->get_ench(ENCH_TP);
 
@@ -2354,8 +2355,17 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->add_ench(charm);
     monster->add_ench(neutral);
     monster->add_ench(shifter);
+    monster->add_ench(sub);
     monster->add_ench(summon);
     monster->add_ench(tp);
+
+    // Allows for handling of submerged monsters which polymorph into
+    // monsters that can't submerge on this square.
+    if (sub.ench != ENCH_NONE
+        && !monster_can_submerge(monster, grd(monster->pos())))
+    {
+        monster->del_ench(sub);
+    }
 
     monster->ench_countdown = old_ench_countdown;
 
