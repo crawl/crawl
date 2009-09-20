@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 44;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -238,17 +238,28 @@
 		7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
 		93B134650F25595F007DB230 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134610F255926007DB230 /* version.cc */; };
 		93B134C30F256113007DB230 /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134C20F256113007DB230 /* arena.cc */; };
-		D25C91900FF0368E00D9E8AD /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C91860FF0368E00D9E8AD /* main.cc */; };
-		D25C91910FF0368E00D9E8AD /* tile.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C91870FF0368E00D9E8AD /* tile.cc */; };
-		D25C91920FF0368E00D9E8AD /* tile_colour.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C91890FF0368E00D9E8AD /* tile_colour.cc */; };
-		D25C91940FF0368E00D9E8AD /* tile_list_processor.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C918C0FF0368E00D9E8AD /* tile_list_processor.cc */; };
-		D25C91950FF0368E00D9E8AD /* tile_page.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C918E0FF0368E00D9E8AD /* tile_page.cc */; };
-		D25C92490FF03FC600D9E8AD /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D25C92480FF03FC600D9E8AD /* SDL_image.framework */; };
-		D2660C320FF078C600986331 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2660C310FF078C600986331 /* SDL.framework */; };
-		D2660CA10FF07AD600986331 /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2660CA00FF07AD600986331 /* libpng.framework */; };
-		D2660CB50FF07C2800986331 /* libpng.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2660CA00FF07AD600986331 /* libpng.framework */; };
-		D2660CB90FF07C2D00986331 /* SDL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2660C310FF078C600986331 /* SDL.framework */; };
-		D2660CBA0FF07C3100986331 /* SDL_image.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D25C92480FF03FC600D9E8AD /* SDL_image.framework */; };
+		B02C574510670C63006AC96D /* libgui.cc in Sources */ = {isa = PBXBuildFile; fileRef = B02C574310670C63006AC96D /* libgui.cc */; };
+		B02C576110670ED2006AC96D /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = B02C576010670ED2006AC96D /* SDLMain.m */; };
+		B02C57911067129A006AC96D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B02C57901067129A006AC96D /* AppKit.framework */; };
+		B090C2F210671F8900AE855D /* dngn.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EE10671F8900AE855D /* dngn.png */; };
+		B090C2F310671F8900AE855D /* gui.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EF10671F8900AE855D /* gui.png */; };
+		B090C2F410671F8900AE855D /* main.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F010671F8900AE855D /* main.png */; };
+		B090C2F510671F8900AE855D /* player.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F110671F8900AE855D /* player.png */; };
+		B0B5DF211066ED0E0020B21F /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
+		B0B5DF231066ED0E0020B21F /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
+		B0B5DF251066ED0E0020B21F /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
+		B0B5DF6A1066EE1A0020B21F /* libpng.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
+		B0B5DF6B1066EE1A0020B21F /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
+		B0B5DF6C1066EE1A0020B21F /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
+		B0B5DFCD1066F9B30020B21F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DFC91066F9A80020B21F /* OpenGL.framework */; };
+		B0B5DFE21066FA2F0020B21F /* tiledef-dngn.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD31066FA240020B21F /* tiledef-dngn.cc */; };
+		B0B5DFE31066FA2F0020B21F /* tiledef-gui.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD51066FA240020B21F /* tiledef-gui.cc */; };
+		B0B5DFE41066FA2F0020B21F /* tiledef-main.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD71066FA240020B21F /* tiledef-main.cc */; };
+		B0B5DFE51066FA2F0020B21F /* tiledef-player.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD91066FA240020B21F /* tiledef-player.cc */; };
+		B0B5DFE61066FA2F0020B21F /* tiledef-unrand.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */; };
+		B0B5E0F6106701530020B21F /* artefact.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2A72B28101173C000E1A883 /* artefact.cc */; };
+		B0B5E17F106706EE0020B21F /* Freetype2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
+		B0B5E1DC106706FD0020B21F /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
 		D2660D460FF0864B00986331 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
 		D2660D470FF0864B00986331 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
 		D2660D480FF0864B00986331 /* maps.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE60A8EC9D000580F30 /* maps.cc */; };
@@ -312,7 +323,6 @@
 		D2660D830FF0864B00986331 /* it_use2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5F0A8EC9D000580F30 /* it_use2.cc */; };
 		D2660D840FF0864B00986331 /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E610A8EC9D000580F30 /* invent.cc */; };
 		D2660D850FF0864B00986331 /* libutil.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E620A8EC9D000580F30 /* libutil.cc */; };
-		D2660D860FF0864B00986331 /* libunix.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E640A8EC9D000580F30 /* libunix.cc */; };
 		D2660D870FF0864B00986331 /* delay.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E660A8EC9D000580F30 /* delay.cc */; };
 		D2660D880FF0864B00986331 /* dungeon.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E670A8EC9D000580F30 /* dungeon.cc */; };
 		D2660D890FF0864B00986331 /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E680A8EC9D000580F30 /* debug.cc */; };
@@ -345,90 +355,6 @@
 		D2660DA50FF0864B00986331 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0EFD420BD12E9200002671 /* liblua.a */; };
 		D2660DA60FF0864B00986331 /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B07560BD13A8100F2980E /* libreadline.dylib */; };
 		D2660DA70FF0864B00986331 /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
-		D2660DA90FF0864B00986331 /* maps.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE50A8EC9D000580F30 /* maps.h */; };
-		D2660DAA0FF0864B00986331 /* mon-pick.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE70A8EC9D000580F30 /* mon-pick.h */; };
-		D2660DAB0FF0864B00986331 /* misc.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE90A8EC9D000580F30 /* misc.h */; };
-		D2660DAC0FF0864B00986331 /* initfile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DEC0A8EC9D000580F30 /* initfile.h */; };
-		D2660DAD0FF0864B00986331 /* overmap.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DED0A8EC9D000580F30 /* overmap.h */; };
-		D2660DAE0FF0864B00986331 /* output.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DEF0A8EC9D000580F30 /* output.h */; };
-		D2660DAF0FF0864B00986331 /* item_use.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF00A8EC9D000580F30 /* item_use.h */; };
-		D2660DB00FF0864B00986331 /* hiscores.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF20A8EC9D000580F30 /* hiscores.h */; };
-		D2660DB10FF0864B00986331 /* travel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF40A8EC9D000580F30 /* travel.h */; };
-		D2660DB20FF0864B00986331 /* lev-pand.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF60A8EC9D000580F30 /* lev-pand.h */; };
-		D2660DB30FF0864B00986331 /* items.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF80A8EC9D000580F30 /* items.h */; };
-		D2660DB40FF0864B00986331 /* mutation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DFA0A8EC9D000580F30 /* mutation.h */; };
-		D2660DB50FF0864B00986331 /* message.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DFD0A8EC9D000580F30 /* message.h */; };
-		D2660DB60FF0864B00986331 /* mon-util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DFE0A8EC9D000580F30 /* mon-util.h */; };
-		D2660DB70FF0864B00986331 /* it_use3.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E000A8EC9D000580F30 /* it_use3.h */; };
-		D2660DB80FF0864B00986331 /* it_use2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E020A8EC9D000580F30 /* it_use2.h */; };
-		D2660DB90FF0864B00986331 /* describe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E050A8EC9D000580F30 /* describe.h */; };
-		D2660DBA0FF0864B00986331 /* spl-util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E060A8EC9D000580F30 /* spl-util.h */; };
-		D2660DBC0FF0864B00986331 /* player.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E0A0A8EC9D000580F30 /* player.h */; };
-		D2660DBD0FF0864B00986331 /* effects.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E0C0A8EC9D000580F30 /* effects.h */; };
-		D2660DBE0FF0864B00986331 /* dungeon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E100A8EC9D000580F30 /* dungeon.h */; };
-		D2660DBF0FF0864B00986331 /* view.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E130A8EC9D000580F30 /* view.h */; };
-		D2660DC00FF0864B00986331 /* spells4.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E160A8EC9D000580F30 /* spells4.h */; };
-		D2660DC10FF0864B00986331 /* spells3.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E180A8EC9D000580F30 /* spells3.h */; };
-		D2660DC20FF0864B00986331 /* macro.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E190A8EC9D000580F30 /* macro.h */; };
-		D2660DC30FF0864B00986331 /* debug.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1A0A8EC9D000580F30 /* debug.h */; };
-		D2660DC40FF0864B00986331 /* directn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1B0A8EC9D000580F30 /* directn.h */; };
-		D2660DC50FF0864B00986331 /* decks.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1C0A8EC9D000580F30 /* decks.h */; };
-		D2660DC60FF0864B00986331 /* stuff.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1D0A8EC9D000580F30 /* stuff.h */; };
-		D2660DC70FF0864B00986331 /* stash.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1F0A8EC9D000580F30 /* stash.h */; };
-		D2660DC80FF0864B00986331 /* transfor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E210A8EC9D000580F30 /* transfor.h */; };
-		D2660DC90FF0864B00986331 /* tags.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E230A8EC9D000580F30 /* tags.h */; };
-		D2660DCA0FF0864B00986331 /* libutil.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E250A8EC9D000580F30 /* libutil.h */; };
-		D2660DCB0FF0864B00986331 /* abl-show.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E290A8EC9D000580F30 /* abl-show.h */; };
-		D2660DCC0FF0864B00986331 /* chardump.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E2B0A8EC9D000580F30 /* chardump.h */; };
-		D2660DCD0FF0864B00986331 /* beam.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E2D0A8EC9D000580F30 /* beam.h */; };
-		D2660DCE0FF0864B00986331 /* spl-cast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E2E0A8EC9D000580F30 /* spl-cast.h */; };
-		D2660DCF0FF0864B00986331 /* spl-book.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E300A8EC9D000580F30 /* spl-book.h */; };
-		D2660DD00FF0864B00986331 /* ouch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E320A8EC9D000580F30 /* ouch.h */; };
-		D2660DD10FF0864B00986331 /* newgame.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E340A8EC9D000580F30 /* newgame.h */; };
-		D2660DD20FF0864B00986331 /* menu.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E360A8EC9D000580F30 /* menu.h */; };
-		D2660DD30FF0864B00986331 /* religion.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E3A0A8EC9D000580F30 /* religion.h */; };
-		D2660DD40FF0864B00986331 /* spells2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E3D0A8EC9D000580F30 /* spells2.h */; };
-		D2660DD50FF0864B00986331 /* monstuff.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E400A8EC9D000580F30 /* monstuff.h */; };
-		D2660DD60FF0864B00986331 /* monspeak.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E420A8EC9D000580F30 /* monspeak.h */; };
-		D2660DD70FF0864B00986331 /* delay.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E430A8EC9D000580F30 /* delay.h */; };
-		D2660DD80FF0864B00986331 /* command.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E440A8EC9D000580F30 /* command.h */; };
-		D2660DD90FF0864B00986331 /* spells1.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E450A8EC9D000580F30 /* spells1.h */; };
-		D2660DDA0FF0864B00986331 /* skills2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E470A8EC9D000580F30 /* skills2.h */; };
-		D2660DDB0FF0864B00986331 /* monplace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E4C0A8EC9D000580F30 /* monplace.h */; };
-		D2660DDC0FF0864B00986331 /* Kills.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E4E0A8EC9D000580F30 /* Kills.h */; };
-		D2660DDD0FF0864B00986331 /* files.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E500A8EC9D000580F30 /* files.h */; };
-		D2660DDE0FF0864B00986331 /* fight.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E510A8EC9D000580F30 /* fight.h */; };
-		D2660DDF0FF0864B00986331 /* food.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E550A8EC9D000580F30 /* food.h */; };
-		D2660DE00FF0864B00986331 /* clua.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E560A8EC9D000580F30 /* clua.h */; };
-		D2660DE10FF0864B00986331 /* cloud.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E580A8EC9D000580F30 /* cloud.h */; };
-		D2660DE20FF0864B00986331 /* itemname.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E5B0A8EC9D000580F30 /* itemname.h */; };
-		D2660DE30FF0864B00986331 /* skills.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E5C0A8EC9D000580F30 /* skills.h */; };
-		D2660DE40FF0864B00986331 /* shopping.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E5E0A8EC9D000580F30 /* shopping.h */; };
-		D2660DE50FF0864B00986331 /* invent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E600A8EC9D000580F30 /* invent.h */; };
-		D2660DE60FF0864B00986331 /* libunix.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E630A8EC9D000580F30 /* libunix.h */; };
-		D2660DE70FF0864B00986331 /* abyss.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E650A8EC9D000580F30 /* abyss.h */; };
-		D2660DE80FF0864B00986331 /* mt19937ar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E690A8EC9D000580F30 /* mt19937ar.h */; };
-		D2660DE90FF0864B00986331 /* mstuff2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E6B0A8EC9D000580F30 /* mstuff2.h */; };
-		D2660DEA0FF0864B00986331 /* itemprop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BC222E60ABBB286003A7D9A /* itemprop.h */; };
-		D2660DEB0FF0864B00986331 /* notes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BD75A340AC214A200B74F6E /* notes.h */; };
-		D2660DEC0FF0864B00986331 /* mapdef.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B352E9E0B00183400CABB32 /* mapdef.h */; };
-		D2660DED0FF0864B00986331 /* branch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BA3DBBA0B3D90A700B5B3D7 /* branch.h */; };
-		D2660DEE0FF0864B00986331 /* mtransit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB2C0BB4CB32008DF39F /* mtransit.h */; };
-		D2660DEF0FF0864B00986331 /* tutorial.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB300BB4CB5C008DF39F /* tutorial.h */; };
-		D2660DF00FF0864B00986331 /* format.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB350BB4CB93008DF39F /* format.h */; };
-		D2660DF10FF0864B00986331 /* database.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B973FFC0BE3AA8400AAE35B /* database.h */; };
-		D2660DF20FF0864B00986331 /* makeitem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B9740060BE3AC8000AAE35B /* makeitem.h */; };
-		D2660DF30FF0864B00986331 /* cio.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF855610C9C912B00B7C520 /* cio.h */; };
-		D2660DF40FF0864B00986331 /* mapmark.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF855660C9C914D00B7C520 /* mapmark.h */; };
-		D2660DF50FF0864B00986331 /* dgnevent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556A0C9C916800B7C520 /* dgnevent.h */; };
-		D2660DF60FF0864B00986331 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
-		D2660DF70FF0864B00986331 /* mpr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B6164240C9CA8E80054B3D9 /* mpr.h */; };
-		D2660DF80FF0864B00986331 /* place.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B6164260C9CA8E80054B3D9 /* place.h */; };
-		D2660DF90FF0864B00986331 /* ray.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B6164270C9CA8E80054B3D9 /* ray.h */; };
-		D2660DFA0FF0864B00986331 /* state.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B6164280C9CA8E80054B3D9 /* state.h */; };
-		D2660DFB0FF0864B00986331 /* terrain.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B61642A0C9CA8E80054B3D9 /* terrain.h */; };
-		D2660DFC0FF0864B00986331 /* traps.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B61642C0C9CA8E80054B3D9 /* traps.h */; };
-		D2660DFD0FF0864B00986331 /* quiver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6232EBE10DACA55C004F7E9C /* quiver.h */; };
 		D2660E1E0FF0868B00986331 /* tile2.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E070FF0868B00986331 /* tile2.cc */; };
 		D2660E1F0FF0868B00986331 /* tilebuf.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E080FF0868B00986331 /* tilebuf.cc */; };
 		D2660E200FF0868B00986331 /* tilefont.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0A0FF0868B00986331 /* tilefont.cc */; };
@@ -441,8 +367,7 @@
 		D274AC5A0FE66EFC00C9C1AE /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC580FE66EFC00C9C1AE /* spl-mis.cc */; };
 		D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
 		D2A72B2A101173C000E1A883 /* artefact.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2A72B28101173C000E1A883 /* artefact.cc */; };
-		D2AE25EF0DA2624E00E15489 /* crawl in Resources */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
-		D2AE25F90DA262DD00E15489 /* crawl in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
+		D2AE25F90DA262DD00E15489 /* crawl in Copy Wrapper Script */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
 		D2F272350DA1C5AD00445FE9 /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
 		D2F2725B0DA1C61600445FE9 /* docs in Resources */ = {isa = PBXBuildFile; fileRef = D2F2723F0DA1C61600445FE9 /* docs */; };
 /* End PBXBuildFile section */
@@ -455,6 +380,13 @@
 			remoteGlobalIDString = 7B0EFD410BD12E9200002671;
 			remoteInfo = Lua;
 		};
+		B02C579D10671327006AC96D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2660D420FF0864B00986331;
+			remoteInfo = "Crawl-tiles-cmd";
+		};
 		D2660D440FF0864B00986331 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
@@ -462,26 +394,12 @@
 			remoteGlobalIDString = 7B0EFD410BD12E9200002671;
 			remoteInfo = Lua;
 		};
-		D2660E050FF0865C00986331 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D25C917D0FF0365700D9E8AD;
-			remoteInfo = tilegen;
-		};
 		D2F272360DA1C5BC00445FE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 7B0EFD410BD12E9200002671;
 			remoteInfo = Lua;
-		};
-		D2F272380DA1C5BC00445FE9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DD76FA90486AB0100D96B5E;
-			remoteInfo = "Crawl-cmd";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -579,119 +497,43 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		D2660CBE0FF07C3B00986331 /* CopyFiles */ = {
+		B090C2ED10671F5F00AE855D /* Copy Dungeon Tiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = dat/tiles;
+			dstSubfolderSpec = 7;
+			files = (
+				B090C2F210671F8900AE855D /* dngn.png in Copy Dungeon Tiles */,
+				B090C2F310671F8900AE855D /* gui.png in Copy Dungeon Tiles */,
+				B090C2F410671F8900AE855D /* main.png in Copy Dungeon Tiles */,
+				B090C2F510671F8900AE855D /* player.png in Copy Dungeon Tiles */,
+			);
+			name = "Copy Dungeon Tiles";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0B5DF681066EDFF0020B21F /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 7;
+			dstSubfolderSpec = 10;
 			files = (
-				D2660CB90FF07C2D00986331 /* SDL.framework in CopyFiles */,
-				D2660CB50FF07C2800986331 /* libpng.framework in CopyFiles */,
-				D2660CBA0FF07C3100986331 /* SDL_image.framework in CopyFiles */,
+				B0B5DF6A1066EE1A0020B21F /* libpng.framework in Copy Frameworks */,
+				B0B5DF6B1066EE1A0020B21F /* SDL_image.framework in Copy Frameworks */,
+				B0B5DF6C1066EE1A0020B21F /* SDL.framework in Copy Frameworks */,
+				B0B5E1DC106706FD0020B21F /* Freetype2.framework in Copy Frameworks */,
 			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D2660DA80FF0864B00986331 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				D2660DA90FF0864B00986331 /* maps.h in CopyFiles */,
-				D2660DAA0FF0864B00986331 /* mon-pick.h in CopyFiles */,
-				D2660DAB0FF0864B00986331 /* misc.h in CopyFiles */,
-				D2660DAC0FF0864B00986331 /* initfile.h in CopyFiles */,
-				D2660DAD0FF0864B00986331 /* overmap.h in CopyFiles */,
-				D2660DAE0FF0864B00986331 /* output.h in CopyFiles */,
-				D2660DAF0FF0864B00986331 /* item_use.h in CopyFiles */,
-				D2660DB00FF0864B00986331 /* hiscores.h in CopyFiles */,
-				D2660DB10FF0864B00986331 /* travel.h in CopyFiles */,
-				D2660DB20FF0864B00986331 /* lev-pand.h in CopyFiles */,
-				D2660DB30FF0864B00986331 /* items.h in CopyFiles */,
-				D2660DB40FF0864B00986331 /* mutation.h in CopyFiles */,
-				D2660DB50FF0864B00986331 /* message.h in CopyFiles */,
-				D2660DB60FF0864B00986331 /* mon-util.h in CopyFiles */,
-				D2660DB70FF0864B00986331 /* it_use3.h in CopyFiles */,
-				D2660DB80FF0864B00986331 /* it_use2.h in CopyFiles */,
-				D2660DB90FF0864B00986331 /* describe.h in CopyFiles */,
-				D2660DBA0FF0864B00986331 /* spl-util.h in CopyFiles */,
-				D2660DBC0FF0864B00986331 /* player.h in CopyFiles */,
-				D2660DBD0FF0864B00986331 /* effects.h in CopyFiles */,
-				D2660DBE0FF0864B00986331 /* dungeon.h in CopyFiles */,
-				D2660DBF0FF0864B00986331 /* view.h in CopyFiles */,
-				D2660DC00FF0864B00986331 /* spells4.h in CopyFiles */,
-				D2660DC10FF0864B00986331 /* spells3.h in CopyFiles */,
-				D2660DC20FF0864B00986331 /* macro.h in CopyFiles */,
-				D2660DC30FF0864B00986331 /* debug.h in CopyFiles */,
-				D2660DC40FF0864B00986331 /* directn.h in CopyFiles */,
-				D2660DC50FF0864B00986331 /* decks.h in CopyFiles */,
-				D2660DC60FF0864B00986331 /* stuff.h in CopyFiles */,
-				D2660DC70FF0864B00986331 /* stash.h in CopyFiles */,
-				D2660DC80FF0864B00986331 /* transfor.h in CopyFiles */,
-				D2660DC90FF0864B00986331 /* tags.h in CopyFiles */,
-				D2660DCA0FF0864B00986331 /* libutil.h in CopyFiles */,
-				D2660DCB0FF0864B00986331 /* abl-show.h in CopyFiles */,
-				D2660DCC0FF0864B00986331 /* chardump.h in CopyFiles */,
-				D2660DCD0FF0864B00986331 /* beam.h in CopyFiles */,
-				D2660DCE0FF0864B00986331 /* spl-cast.h in CopyFiles */,
-				D2660DCF0FF0864B00986331 /* spl-book.h in CopyFiles */,
-				D2660DD00FF0864B00986331 /* ouch.h in CopyFiles */,
-				D2660DD10FF0864B00986331 /* newgame.h in CopyFiles */,
-				D2660DD20FF0864B00986331 /* menu.h in CopyFiles */,
-				D2660DD30FF0864B00986331 /* religion.h in CopyFiles */,
-				D2660DD40FF0864B00986331 /* spells2.h in CopyFiles */,
-				D2660DD50FF0864B00986331 /* monstuff.h in CopyFiles */,
-				D2660DD60FF0864B00986331 /* monspeak.h in CopyFiles */,
-				D2660DD70FF0864B00986331 /* delay.h in CopyFiles */,
-				D2660DD80FF0864B00986331 /* command.h in CopyFiles */,
-				D2660DD90FF0864B00986331 /* spells1.h in CopyFiles */,
-				D2660DDA0FF0864B00986331 /* skills2.h in CopyFiles */,
-				D2660DDB0FF0864B00986331 /* monplace.h in CopyFiles */,
-				D2660DDC0FF0864B00986331 /* Kills.h in CopyFiles */,
-				D2660DDD0FF0864B00986331 /* files.h in CopyFiles */,
-				D2660DDE0FF0864B00986331 /* fight.h in CopyFiles */,
-				D2660DDF0FF0864B00986331 /* food.h in CopyFiles */,
-				D2660DE00FF0864B00986331 /* clua.h in CopyFiles */,
-				D2660DE10FF0864B00986331 /* cloud.h in CopyFiles */,
-				D2660DE20FF0864B00986331 /* itemname.h in CopyFiles */,
-				D2660DE30FF0864B00986331 /* skills.h in CopyFiles */,
-				D2660DE40FF0864B00986331 /* shopping.h in CopyFiles */,
-				D2660DE50FF0864B00986331 /* invent.h in CopyFiles */,
-				D2660DE60FF0864B00986331 /* libunix.h in CopyFiles */,
-				D2660DE70FF0864B00986331 /* abyss.h in CopyFiles */,
-				D2660DE80FF0864B00986331 /* mt19937ar.h in CopyFiles */,
-				D2660DE90FF0864B00986331 /* mstuff2.h in CopyFiles */,
-				D2660DEA0FF0864B00986331 /* itemprop.h in CopyFiles */,
-				D2660DEB0FF0864B00986331 /* notes.h in CopyFiles */,
-				D2660DEC0FF0864B00986331 /* mapdef.h in CopyFiles */,
-				D2660DED0FF0864B00986331 /* branch.h in CopyFiles */,
-				D2660DEE0FF0864B00986331 /* mtransit.h in CopyFiles */,
-				D2660DEF0FF0864B00986331 /* tutorial.h in CopyFiles */,
-				D2660DF00FF0864B00986331 /* format.h in CopyFiles */,
-				D2660DF10FF0864B00986331 /* database.h in CopyFiles */,
-				D2660DF20FF0864B00986331 /* makeitem.h in CopyFiles */,
-				D2660DF30FF0864B00986331 /* cio.h in CopyFiles */,
-				D2660DF40FF0864B00986331 /* mapmark.h in CopyFiles */,
-				D2660DF50FF0864B00986331 /* dgnevent.h in CopyFiles */,
-				D2660DF60FF0864B00986331 /* luadgn.h in CopyFiles */,
-				D2660DF70FF0864B00986331 /* mpr.h in CopyFiles */,
-				D2660DF80FF0864B00986331 /* place.h in CopyFiles */,
-				D2660DF90FF0864B00986331 /* ray.h in CopyFiles */,
-				D2660DFA0FF0864B00986331 /* state.h in CopyFiles */,
-				D2660DFB0FF0864B00986331 /* terrain.h in CopyFiles */,
-				D2660DFC0FF0864B00986331 /* traps.h in CopyFiles */,
-				D2660DFD0FF0864B00986331 /* quiver.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		D2AE25F30DA262B100E15489 /* CopyFiles */ = {
+		D2AE25F30DA262B100E15489 /* Copy Wrapper Script */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				D2AE25F90DA262DD00E15489 /* crawl in CopyFiles */,
+				D2AE25F90DA262DD00E15489 /* crawl in Copy Wrapper Script */,
 			);
+			name = "Copy Wrapper Script";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -934,7 +776,31 @@
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B134610F255926007DB230 /* version.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = version.cc; sourceTree = SOURCE_ROOT; };
 		93B134C20F256113007DB230 /* arena.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arena.cc; sourceTree = "<group>"; };
-		D25C917E0FF0365700D9E8AD /* tilegen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tilegen; sourceTree = BUILT_PRODUCTS_DIR; };
+		B02C574310670C63006AC96D /* libgui.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libgui.cc; sourceTree = "<group>"; };
+		B02C574410670C63006AC96D /* libgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libgui.h; sourceTree = "<group>"; };
+		B02C575F10670ED2006AC96D /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
+		B02C576010670ED2006AC96D /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
+		B02C57901067129A006AC96D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		B090C2EE10671F8900AE855D /* dngn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dngn.png; path = rltiles/dngn.png; sourceTree = "<group>"; };
+		B090C2EF10671F8900AE855D /* gui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gui.png; path = rltiles/gui.png; sourceTree = "<group>"; };
+		B090C2F010671F8900AE855D /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = rltiles/main.png; sourceTree = "<group>"; };
+		B090C2F110671F8900AE855D /* player.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = player.png; path = rltiles/player.png; sourceTree = "<group>"; };
+		B0B5DF201066ED0E0020B21F /* libpng.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng.framework; path = /Library/Frameworks/libpng.framework; sourceTree = "<absolute>"; };
+		B0B5DF221066ED0E0020B21F /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = /Library/Frameworks/SDL_image.framework; sourceTree = "<absolute>"; };
+		B0B5DF241066ED0E0020B21F /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = /Library/Frameworks/SDL.framework; sourceTree = "<absolute>"; };
+		B0B5DFC91066F9A80020B21F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		B0B5DFD21066FA240020B21F /* tiledef_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiledef_defines.h; path = rltiles/tiledef_defines.h; sourceTree = "<group>"; };
+		B0B5DFD31066FA240020B21F /* tiledef-dngn.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-dngn.cc"; path = "rltiles/tiledef-dngn.cc"; sourceTree = "<group>"; };
+		B0B5DFD41066FA240020B21F /* tiledef-dngn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-dngn.h"; path = "rltiles/tiledef-dngn.h"; sourceTree = "<group>"; };
+		B0B5DFD51066FA240020B21F /* tiledef-gui.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-gui.cc"; path = "rltiles/tiledef-gui.cc"; sourceTree = "<group>"; };
+		B0B5DFD61066FA240020B21F /* tiledef-gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-gui.h"; path = "rltiles/tiledef-gui.h"; sourceTree = "<group>"; };
+		B0B5DFD71066FA240020B21F /* tiledef-main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-main.cc"; path = "rltiles/tiledef-main.cc"; sourceTree = "<group>"; };
+		B0B5DFD81066FA240020B21F /* tiledef-main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-main.h"; path = "rltiles/tiledef-main.h"; sourceTree = "<group>"; };
+		B0B5DFD91066FA240020B21F /* tiledef-player.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-player.cc"; path = "rltiles/tiledef-player.cc"; sourceTree = "<group>"; };
+		B0B5DFDA1066FA240020B21F /* tiledef-player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-player.h"; path = "rltiles/tiledef-player.h"; sourceTree = "<group>"; };
+		B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-unrand.cc"; path = "rltiles/tiledef-unrand.cc"; sourceTree = "<group>"; };
+		B0B5DFDC1066FA240020B21F /* tiledef-unrand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-unrand.h"; path = "rltiles/tiledef-unrand.h"; sourceTree = "<group>"; };
+		B0B5E17B106706E40020B21F /* Freetype2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Freetype2.framework; path = /Library/Frameworks/Freetype2.framework; sourceTree = "<absolute>"; };
 		D25C91860FF0368E00D9E8AD /* main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cc; path = rltiles/tool/main.cc; sourceTree = "<group>"; };
 		D25C91870FF0368E00D9E8AD /* tile.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile.cc; path = rltiles/tool/tile.cc; sourceTree = "<group>"; };
 		D25C91880FF0368E00D9E8AD /* tile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tile.h; path = rltiles/tool/tile.h; sourceTree = "<group>"; };
@@ -945,12 +811,9 @@
 		D25C918D0FF0368E00D9E8AD /* tile_list_processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tile_list_processor.h; path = rltiles/tool/tile_list_processor.h; sourceTree = "<group>"; };
 		D25C918E0FF0368E00D9E8AD /* tile_page.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile_page.cc; path = rltiles/tool/tile_page.cc; sourceTree = "<group>"; };
 		D25C918F0FF0368E00D9E8AD /* tile_page.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tile_page.h; path = rltiles/tool/tile_page.h; sourceTree = "<group>"; };
-		D25C92480FF03FC600D9E8AD /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = ../../../../SDL_image.framework; sourceTree = SOURCE_ROOT; };
 		D2660C000FF0749200986331 /* dc-dngn.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-dngn.txt"; path = "rltiles/dc-dngn.txt"; sourceTree = "<group>"; };
 		D2660C010FF0749200986331 /* dc-main.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-main.txt"; path = "rltiles/dc-main.txt"; sourceTree = "<group>"; };
 		D2660C020FF0749200986331 /* dc-player.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-player.txt"; path = "rltiles/dc-player.txt"; sourceTree = "<group>"; };
-		D2660C310FF078C600986331 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../../../../SDL.framework; sourceTree = SOURCE_ROOT; };
-		D2660CA00FF07AD600986331 /* libpng.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng.framework; path = ../../../../build/Release/libpng.framework; sourceTree = SOURCE_ROOT; };
 		D2660E030FF0864B00986331 /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2660E070FF0868B00986331 /* tile2.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile2.cc; sourceTree = "<group>"; };
 		D2660E080FF0868B00986331 /* tilebuf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tilebuf.cc; sourceTree = "<group>"; };
@@ -999,16 +862,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D25C917C0FF0365700D9E8AD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D25C92490FF03FC600D9E8AD /* SDL_image.framework in Frameworks */,
-				D2660C320FF078C600986331 /* SDL.framework in Frameworks */,
-				D2660CA10FF07AD600986331 /* libpng.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D2660DA40FF0864B00986331 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1016,13 +869,12 @@
 				D2660DA50FF0864B00986331 /* liblua.a in Frameworks */,
 				D2660DA60FF0864B00986331 /* libreadline.dylib in Frameworks */,
 				D2660DA70FF0864B00986331 /* libncurses.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D2F271F40DA1C58C00445FE9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				B0B5DF211066ED0E0020B21F /* libpng.framework in Frameworks */,
+				B0B5DF231066ED0E0020B21F /* SDL_image.framework in Frameworks */,
+				B0B5DF251066ED0E0020B21F /* SDL.framework in Frameworks */,
+				B0B5DFCD1066F9B30020B21F /* OpenGL.framework in Frameworks */,
+				B0B5E17F106706EE0020B21F /* Freetype2.framework in Frameworks */,
+				B02C57911067129A006AC96D /* AppKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1063,7 +915,6 @@
 				8DD76FB20486AB0100D96B5E /* crawl */,
 				7B0EFD420BD12E9200002671 /* liblua.a */,
 				D2F271F60DA1C58C00445FE9 /* Crawl.app */,
-				D25C917E0FF0365700D9E8AD /* tilegen */,
 				D2660E030FF0864B00986331 /* crawl */,
 			);
 			name = Products;
@@ -1340,6 +1191,10 @@
 		7B352F1B0B0022C900CABB32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B090C2EE10671F8900AE855D /* dngn.png */,
+				B090C2EF10671F8900AE855D /* gui.png */,
+				B090C2F010671F8900AE855D /* main.png */,
+				B090C2F110671F8900AE855D /* player.png */,
 				D2F2723F0DA1C61600445FE9 /* docs */,
 				D2F271FE0DA1C5AD00445FE9 /* dat */,
 			);
@@ -1365,6 +1220,10 @@
 		D25C91790FF035AF00D9E8AD /* Tiles */ = {
 			isa = PBXGroup;
 			children = (
+				B02C575F10670ED2006AC96D /* SDLMain.h */,
+				B02C576010670ED2006AC96D /* SDLMain.m */,
+				B02C574310670C63006AC96D /* libgui.cc */,
+				B02C574410670C63006AC96D /* libgui.h */,
 				D2660E070FF0868B00986331 /* tile2.cc */,
 				D2660E080FF0868B00986331 /* tilebuf.cc */,
 				D2660E090FF0868B00986331 /* tilebuf.h */,
@@ -1387,6 +1246,17 @@
 		D25C917A0FF035D100D9E8AD /* rltiles */ = {
 			isa = PBXGroup;
 			children = (
+				B0B5DFD21066FA240020B21F /* tiledef_defines.h */,
+				B0B5DFD31066FA240020B21F /* tiledef-dngn.cc */,
+				B0B5DFD41066FA240020B21F /* tiledef-dngn.h */,
+				B0B5DFD51066FA240020B21F /* tiledef-gui.cc */,
+				B0B5DFD61066FA240020B21F /* tiledef-gui.h */,
+				B0B5DFD71066FA240020B21F /* tiledef-main.cc */,
+				B0B5DFD81066FA240020B21F /* tiledef-main.h */,
+				B0B5DFD91066FA240020B21F /* tiledef-player.cc */,
+				B0B5DFDA1066FA240020B21F /* tiledef-player.h */,
+				B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */,
+				B0B5DFDC1066FA240020B21F /* tiledef-unrand.h */,
 				D2660C000FF0749200986331 /* dc-dngn.txt */,
 				D2660C010FF0749200986331 /* dc-main.txt */,
 				D2660C020FF0749200986331 /* dc-player.txt */,
@@ -1415,9 +1285,12 @@
 		D25C91990FF037A000D9E8AD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D2660CA00FF07AD600986331 /* libpng.framework */,
-				D2660C310FF078C600986331 /* SDL.framework */,
-				D25C92480FF03FC600D9E8AD /* SDL_image.framework */,
+				B0B5DF201066ED0E0020B21F /* libpng.framework */,
+				B0B5DF221066ED0E0020B21F /* SDL_image.framework */,
+				B0B5DF241066ED0E0020B21F /* SDL.framework */,
+				B0B5DFC91066F9A80020B21F /* OpenGL.framework */,
+				B0B5E17B106706E40020B21F /* Freetype2.framework */,
+				B02C57901067129A006AC96D /* AppKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1503,36 +1376,17 @@
 			productReference = 8DD76FB20486AB0100D96B5E /* crawl */;
 			productType = "com.apple.product-type.tool";
 		};
-		D25C917D0FF0365700D9E8AD /* tilegen */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D25C91850FF0367000D9E8AD /* Build configuration list for PBXNativeTarget "tilegen" */;
-			buildPhases = (
-				D25C917B0FF0365700D9E8AD /* Sources */,
-				D25C917C0FF0365700D9E8AD /* Frameworks */,
-				D2660CBE0FF07C3B00986331 /* CopyFiles */,
-				D2660C700FF0793600986331 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = tilegen;
-			productName = tilegen;
-			productReference = D25C917E0FF0365700D9E8AD /* tilegen */;
-			productType = "com.apple.product-type.tool";
-		};
 		D2660D420FF0864B00986331 /* Crawl-tiles-cmd */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2660DFE0FF0864B00986331 /* Build configuration list for PBXNativeTarget "Crawl-tiles-cmd" */;
 			buildPhases = (
+				B0B5DFAD1066F8500020B21F /* Generate Tiles */,
 				D2660D450FF0864B00986331 /* Sources */,
 				D2660DA40FF0864B00986331 /* Frameworks */,
-				D2660DA80FF0864B00986331 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				D2660E060FF0865C00986331 /* PBXTargetDependency */,
 				D2660D430FF0864B00986331 /* PBXTargetDependency */,
 			);
 			name = "Crawl-tiles-cmd";
@@ -1546,16 +1400,16 @@
 			buildConfigurationList = D2F271FD0DA1C58C00445FE9 /* Build configuration list for PBXNativeTarget "Crawl" */;
 			buildPhases = (
 				D2F271F20DA1C58C00445FE9 /* Resources */,
-				D2F271F30DA1C58C00445FE9 /* Sources */,
-				D2F271F40DA1C58C00445FE9 /* Frameworks */,
-				D2AE25F10DA2626100E15489 /* ShellScript */,
-				D2AE25F30DA262B100E15489 /* CopyFiles */,
+				B090C2DB10671E3200AE855D /* Copy Crawl Executable */,
+				B090C2ED10671F5F00AE855D /* Copy Dungeon Tiles */,
+				D2AE25F30DA262B100E15489 /* Copy Wrapper Script */,
+				B0B5DF681066EDFF0020B21F /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B02C579E10671327006AC96D /* PBXTargetDependency */,
 				D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */,
-				D2F272390DA1C5BC00445FE9 /* PBXTargetDependency */,
 			);
 			name = Crawl;
 			productName = Crawl;
@@ -1568,16 +1422,15 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Crawl" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.0";
 			hasScannedForEncodings = 1;
 			mainGroup = 08FB7794FE84155DC02AAC07 /* Crawl */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				D2F271F50DA1C58C00445FE9 /* Crawl */,
 				7B0EFD410BD12E9200002671 /* Lua */,
 				8DD76FA90486AB0100D96B5E /* Crawl-cmd */,
-				D2F271F50DA1C58C00445FE9 /* Crawl */,
-				D25C917D0FF0365700D9E8AD /* tilegen */,
 				D2660D420FF0864B00986331 /* Crawl-tiles-cmd */,
 			);
 		};
@@ -1590,7 +1443,6 @@
 			files = (
 				D2F272350DA1C5AD00445FE9 /* dat in Resources */,
 				D2F2725B0DA1C61600445FE9 /* docs in Resources */,
-				D2AE25EF0DA2624E00E15489 /* crawl in Resources */,
 				D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1598,43 +1450,33 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		D2660C700FF0793600986331 /* ShellScript */ = {
+		B090C2DB10671E3200AE855D /* Copy Crawl Executable */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"$SRCROOT/rltiles/dc-main.txt",
-				"$SRCROOT/rltiles/dc-dngn.txt",
-				"$SRCROOT/rltiles/dc-player.txt",
 			);
+			name = "Copy Crawl Executable";
 			outputPaths = (
-				"$SRCROOT/rltiles/tiledef-main.cc",
-				"$SRCROOT/rltiles/tile-main.html",
-				"$SRCROOT/rltiles/tiledef-main.h",
-				"$SRCROOT/rltiles/tiledef-dngn.h",
-				"$SRCROOT/rltiles/tile-dngn.html",
-				"$SRCROOT/rltiles/tiledef-dngn.cc",
-				"$SRCROOT/rltiles/tile-player.html",
-				"$SRCROOT/rltiles/tiledef-player.cc",
-				"$SRCROOT/rltiles/tiledef-player.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\ncd $SRCROOT/rltiles\n$BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME $SRCROOT/rltiles/dc-main.txt\n$BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME $SRCROOT/rltiles/dc-dngn.txt\n$BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME $SRCROOT/rltiles/dc-player.txt\n";
+			shellScript = "cp \"$BUILT_PRODUCTS_DIR/crawl\" \"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/\"";
 		};
-		D2AE25F10DA2626100E15489 /* ShellScript */ = {
+		B0B5DFAD1066F8500020B21F /* Generate Tiles */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Generate Tiles";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Copying command-line app into application bundle.\"\n\ncp ${BUILT_PRODUCTS_DIR}/crawl ${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\n";
+			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nmake -f makefile.mac -j2\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1777,24 +1619,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D25C917B0FF0365700D9E8AD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D25C91900FF0368E00D9E8AD /* main.cc in Sources */,
-				D25C91910FF0368E00D9E8AD /* tile.cc in Sources */,
-				D25C91920FF0368E00D9E8AD /* tile_colour.cc in Sources */,
-				D25C91940FF0368E00D9E8AD /* tile_list_processor.cc in Sources */,
-				D25C91950FF0368E00D9E8AD /* tile_page.cc in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D2660D450FF0864B00986331 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				D2660D460FF0864B00986331 /* levcomp.ypp in Sources */,
 				D2660D470FF0864B00986331 /* levcomp.lpp in Sources */,
+				B02C576110670ED2006AC96D /* SDLMain.m in Sources */,
+				B0B5DFE21066FA2F0020B21F /* tiledef-dngn.cc in Sources */,
+				B0B5DFE31066FA2F0020B21F /* tiledef-gui.cc in Sources */,
+				B0B5DFE41066FA2F0020B21F /* tiledef-main.cc in Sources */,
+				B0B5DFE51066FA2F0020B21F /* tiledef-player.cc in Sources */,
+				B0B5DFE61066FA2F0020B21F /* tiledef-unrand.cc in Sources */,
+				B02C574510670C63006AC96D /* libgui.cc in Sources */,
+				D2660E240FF0868B00986331 /* tilesdl.cc in Sources */,
 				D2660D480FF0864B00986331 /* maps.cc in Sources */,
 				D2660D490FF0864B00986331 /* arena.cc in Sources */,
 				D2660D4A0FF0864B00986331 /* mon-pick.cc in Sources */,
@@ -1856,7 +1694,6 @@
 				D2660D830FF0864B00986331 /* it_use2.cc in Sources */,
 				D2660D840FF0864B00986331 /* invent.cc in Sources */,
 				D2660D850FF0864B00986331 /* libutil.cc in Sources */,
-				D2660D860FF0864B00986331 /* libunix.cc in Sources */,
 				D2660D870FF0864B00986331 /* delay.cc in Sources */,
 				D2660D880FF0864B00986331 /* dungeon.cc in Sources */,
 				D2660D890FF0864B00986331 /* debug.cc in Sources */,
@@ -1892,15 +1729,8 @@
 				D2660E210FF0868B00986331 /* tilemcache.cc in Sources */,
 				D2660E220FF0868B00986331 /* tilepick.cc in Sources */,
 				D2660E230FF0868B00986331 /* tilereg.cc in Sources */,
-				D2660E240FF0868B00986331 /* tilesdl.cc in Sources */,
 				D2660E250FF0868B00986331 /* tiletex.cc in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D2F271F30DA1C58C00445FE9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				B0B5E0F6106701530020B21F /* artefact.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1912,25 +1742,20 @@
 			target = 7B0EFD410BD12E9200002671 /* Lua */;
 			targetProxy = 7B0EFD440BD12E9E00002671 /* PBXContainerItemProxy */;
 		};
+		B02C579E10671327006AC96D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2660D420FF0864B00986331 /* Crawl-tiles-cmd */;
+			targetProxy = B02C579D10671327006AC96D /* PBXContainerItemProxy */;
+		};
 		D2660D430FF0864B00986331 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7B0EFD410BD12E9200002671 /* Lua */;
 			targetProxy = D2660D440FF0864B00986331 /* PBXContainerItemProxy */;
 		};
-		D2660E060FF0865C00986331 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D25C917D0FF0365700D9E8AD /* tilegen */;
-			targetProxy = D2660E050FF0865C00986331 /* PBXContainerItemProxy */;
-		};
 		D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7B0EFD410BD12E9200002671 /* Lua */;
 			targetProxy = D2F272360DA1C5BC00445FE9 /* PBXContainerItemProxy */;
-		};
-		D2F272390DA1C5BC00445FE9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8DD76FA90486AB0100D96B5E /* Crawl-cmd */;
-			targetProxy = D2F272380DA1C5BC00445FE9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1943,6 +1768,8 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
@@ -1955,15 +1782,14 @@
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1DEB928A08733DD80010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1985,7 +1811,8 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				WARNING_CFLAGS = "";
 			};
 			name = Development;
 		};
@@ -2052,6 +1879,8 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
@@ -2069,13 +1898,13 @@
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = NO;
 			};
 			name = Debug;
 		};
 		7B97C0200A8ECFD700CE8936 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					DEBUG,
@@ -2083,7 +1912,6 @@
 					DEBUG_ITEM_SCAN,
 					WIZARD,
 				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2105,7 +1933,8 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -2115,6 +1944,8 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
@@ -2129,20 +1960,19 @@
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
 			};
 			name = Wizard;
 		};
 		7B97C0250A8ED2AB00CE8936 /* Wizard */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					WIZARD,
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2164,20 +1994,19 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				WARNING_CFLAGS = "";
 			};
 			name = Wizard;
 		};
 		7B97C0260A8ED34400CE8936 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
@@ -2189,19 +2018,16 @@
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
 		7B97C0270A8ED34400CE8936 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2223,130 +2049,10 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
-		};
-		D25C91800FF0365900D9E8AD /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					BUILT_PRODUCTS_DIR,
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../..\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../..\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../../build/Release\"";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = (
-					"-O",
-					"-DXCODE",
-					"-DUSE_TILE",
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = tilegen;
-				USER_HEADER_SEARCH_PATHS = "~/src/SDL_image.framework/Headers ~/src/libpng-1.2.37 $(BUILD_DIR)/$(CONFIGURATION)/SDL.framework/Headers//**";
-			};
-			name = Development;
-		};
-		D25C91810FF0365900D9E8AD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					$BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../..\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../..\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				HEADER_SEARCH_PATHS = "";
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = (
-					"-O",
-					"-DXCODE",
-					"-DUSE_TILE",
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = tilegen;
-				USER_HEADER_SEARCH_PATHS = "~/src/libpng-1.2.37//** ~/src/SDL_image.framework/Headers/** ~/src/SDL.framework/Headers/**";
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		D25C91820FF0365900D9E8AD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					$BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../..\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../..\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../../build/Release\"";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = (
-					"-O",
-					"-DXCODE",
-					"-DUSE_TILE",
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = tilegen;
-				USER_HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)/SDL.framework/Headers//**";
-			};
-			name = Debug;
-		};
-		D25C91830FF0365900D9E8AD /* Wizard */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					$BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../..\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../..\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../../build/Release\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = (
-					"-O",
-					"-DXCODE",
-					"-DUSE_TILE",
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = tilegen;
-				USER_HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)/SDL.framework/Headers//**";
-			};
-			name = Wizard;
 		};
 		D2660DFF0FF0864B00986331 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -2356,42 +2062,56 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
+					USE_TILE,
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/Freetype2.framework/Headers,
+					/Library/Frameworks/SDL.framework/Headers,
+					/Library/Frameworks/SDL_image.framework/Headers,
+					/Library/Frameworks/libpng.framework/Headers,
+				);
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		D2660E000FF0864B00986331 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
+					USE_TILE,
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/Freetype2.framework/Headers,
+					/Library/Frameworks/SDL.framework/Headers,
+					/Library/Frameworks/SDL_image.framework/Headers,
+					/Library/Frameworks/libpng.framework/Headers,
+				);
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -2402,8 +2122,11 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
+					USE_TILE,
 					CLUA_BINDINGS,
 					DB_NDBM,
 					WIZARD,
@@ -2412,13 +2135,19 @@
 					FULLDEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/Freetype2.framework/Headers,
+					/Library/Frameworks/SDL.framework/Headers,
+					/Library/Frameworks/SDL_image.framework/Headers,
+					/Library/Frameworks/libpng.framework/Headers,
+				);
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = NO;
 			};
 			name = Debug;
 		};
@@ -2428,20 +2157,29 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
+					USE_TILE,
 					CLUA_BINDINGS,
 					DB_NDBM,
 					WIZARD,
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
+				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/Freetype2.framework/Headers,
+					/Library/Frameworks/SDL.framework/Headers,
+					/Library/Frameworks/SDL_image.framework/Headers,
+					/Library/Frameworks/libpng.framework/Headers,
+				);
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
 			};
 			name = Wizard;
 		};
@@ -2449,17 +2187,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_CFLAGS = "-O";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -2469,7 +2199,6 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = Crawl;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
@@ -2478,15 +2207,9 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_CFLAGS = "-O";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -2496,7 +2219,6 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = Crawl;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -2504,17 +2226,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_CFLAGS = "-O";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -2524,22 +2238,15 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = Crawl;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
 			};
 			name = Debug;
 		};
 		D2F271FC0DA1C58C00445FE9 /* Wizard */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = "Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_CFLAGS = "-O";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -2549,7 +2256,6 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = Crawl;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
 			};
 			name = Wizard;
 		};
@@ -2585,17 +2291,6 @@
 				7B0EFD480BD12EA700002671 /* Release */,
 				7B0EFD490BD12EA700002671 /* Debug */,
 				7B0EFD4A0BD12EA700002671 /* Wizard */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		D25C91850FF0367000D9E8AD /* Build configuration list for PBXNativeTarget "tilegen" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D25C91800FF0365900D9E8AD /* Development */,
-				D25C91810FF0365900D9E8AD /* Release */,
-				D25C91820FF0365900D9E8AD /* Debug */,
-				D25C91830FF0365900D9E8AD /* Wizard */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
