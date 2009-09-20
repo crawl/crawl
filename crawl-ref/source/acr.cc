@@ -2395,9 +2395,9 @@ static void _decrement_durations()
                 {
                     // Silently cancel haste, then slow player.
                     you.duration[DUR_HASTE] = 0;
-                    slow_player(dur);
                 }
             }
+            slow_player(dur);
         }
 
         make_hungry(700, true);
