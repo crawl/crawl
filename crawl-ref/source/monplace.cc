@@ -1561,6 +1561,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band_size = 2 + random2(4);
         break;
     case MONS_UGLY_THING:
+    case MONS_VERY_UGLY_THING:
         band = BAND_UGLY_THINGS;
         band_size = 2 + random2(4);
         break;
