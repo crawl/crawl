@@ -273,6 +273,48 @@ ENDMAP
 # III  Special altars
 ######################################
 
+NAME:   feawn_altar_1
+DEPTH:  D:2-7
+WEIGHT: 100
+KFEAT:  C = altar_feawn
+MONS:   plant
+MAP
+.....
+.1.1.
+..C..
+.1.1.
+.....
+ENDMAP
+
+NAME:   feawn_altar_2
+DEPTH:  D:2-7
+WEIGHT: 100
+KFEAT:  C = altar_feawn
+NSUBST: w = 2:W / *:w
+SUBST:  . = ..wW
+SUBST:  w = wwwP
+MAP
+.....
+.www.
+.wCw.
+.www.
+.....
+ENDMAP
+
+NAME:   feawn_altar_3
+DEPTH:  D:2-7
+WEIGHT: 100
+KFEAT:  C = altar_feawn
+NSUBST: b = 1:. / *:1
+MONS:   plant w:5 / fungus / nothing w:3
+MAP
+.111.
+1b1b1
+11C11
+1b1b1
+.111.
+ENDMAP
+
 NAME:  lemuel_angel_altar
 DEPTH: D:3-18, Vault
 : if you.absdepth() > 12 then
