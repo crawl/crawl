@@ -1416,7 +1416,7 @@ A chattering and shrieking minor demon.
 %%%%
 ugly thing
 
-An ugly thing. According to legend, this mutated creature is the spawn of an otherworldly wizard's breeding experiment. Yuck.
+An ugly thing. According to legend, this mutated creature is the otherworldly spawn of a wizard's breeding experiment. Yuck.
 %%%%
 unseen horror
 
@@ -1444,7 +1444,7 @@ A heavily armed and armoured guardian of the Vaults.
 %%%%
 very ugly thing
 
-A very ugly thing. According to legend, this hideously mutated creature is the spawn of an otherworldly wizard's breeding experiment. Double yuck.
+A very ugly thing. According to legend, this hideously mutated creature is the otherworldly spawn of a wizard's breeding experiment. Double yuck.
 %%%%
 wandering mushroom
 
