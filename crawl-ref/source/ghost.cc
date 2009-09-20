@@ -506,6 +506,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate)
     resists.cold = 0;
     resists.acid = 0;
     resists.sticky_flame = false;
+    resists.rotting = false;
 
     // An ugly thing gets one random resistance.
     ugly_thing_add_resistance();
@@ -562,45 +563,63 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
 
 void ghost_demon::ugly_thing_add_resistance()
 {
-    int base_rand = 6;
-    if (resists.sticky_flame)
-        base_rand--;
+    int res = 0;
 
-    switch (random2(base_rand))
+    do
     {
-        case 0:
-            resists.elec++;
-            break;
+        switch (random2(7))
+        {
+            case 0:
+                resists.elec++;
+                res++;
+                break;
 
-        case 1:
-            resists.poison++;
-            break;
+            case 1:
+                resists.poison++;
+                res++;
+                break;
 
-        case 2:
-            resists.fire++;
-            break;
+            case 2:
+                resists.fire++;
+                res++;
+                break;
 
-        case 3:
-            resists.cold++;
-            break;
+            case 3:
+                resists.cold++;
+                res++;
+                break;
 
-        case 4:
-            resists.acid++;
-            break;
+            case 4:
+                resists.acid++;
+                res++;
+                break;
 
-        case 5:
-            resists.sticky_flame = true;
-            break;
+            case 5:
+                if (!resists.sticky_flame)
+                {
+                    resists.sticky_flame = true;
+                    res++;
+                }
+                break;
+
+            case 6:
+                if (!resists.rotting)
+                {
+                    resists.rotting = true;
+                    res++;
+                }
+                break;
+        }
     }
+    while (res == 0);
 
-    // Guarantee certain resistances for certain attack flavours,
-    // including the upgraded ones.
+    // Guarantee certain resistances for upgraded attack flavours.
     if (att_flav == AF_POISON_MEDIUM && !resists.poison)
         resists.poison++;
-    else if (att_flav == AF_ACID && !resists.acid)
-        resists.acid++;
     else if (att_flav == AF_NAPALM && !resists.sticky_flame)
         resists.sticky_flame = true;
+    else if (att_flav == AF_ROT && !resists.rotting)
+        resists.rotting = true;
 }
 
 static spell_type search_first_list(int ignore_spell)
