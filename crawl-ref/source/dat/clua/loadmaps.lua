@@ -15,10 +15,10 @@ local des_files = {
 
   "arena.des",
 
-  "altar.des", "bazaar.des", "entry.des", "elf.des", "float.des", "hells.des",
-  "hive.des", "icecave.des", "lab.des", "lair.des", "large.des", "layout.des",
-  "mini.des", "ossuary.des", "orc.des", "pan.des", "sewer.des", "temple.des",
-  "vaults.des", "crypt.des", "ziggurat.des", "zot.des", "rooms.des"
+  "altar.des", "bazaar.des", "bailey.des", "entry.des", "elf.des", "float.des",
+  "hells.des", "hive.des", "icecave.des", "lab.des", "lair.des", "large.des", 
+  "layout.des", "mini.des", "ossuary.des", "orc.des", "pan.des", "sewer.des", 
+  "temple.des", "vaults.des", "crypt.des", "ziggurat.des", "zot.des", "rooms.des"
 }
 
 for _, file in ipairs(des_files) do
