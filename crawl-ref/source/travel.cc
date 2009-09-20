@@ -2002,13 +2002,18 @@ void find_travel_pos(const coord_def& youpos,
 
         if (unseen != coord_def())
         {
-            // If so, try to use another adjacent grid that does
+            // If so, try to use an orthogonally adjacent grid that is
+            // safe to enter.
             if (youpos.x == unseen.x)
                 new_dest.y = youpos.y;
             else if (youpos.y == unseen.y)
                 new_dest.x = youpos.x;
 
             // If the new grid cannot be entered, reset to dest.
+            // This means that autoexplore will still sometimes move you
+            // next to a previously unseen monster but the same would
+            // happen by manual movement, so I don't think we need to worry
+            // about this. (jpeg)
             if (!is_travelsafe_square(new_dest)
                 || !is_traversable(grd(new_dest)))
             {
