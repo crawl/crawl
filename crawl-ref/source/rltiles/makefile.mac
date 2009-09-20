@@ -1,0 +1,40 @@
+
+SDL_CFLAGS := -I/Library/Frameworks/SDL.framework/Headers -I/Library/Frameworks/SDL_image.framework/Headers
+SDL_LDFLAGS := -framework SDL -framework SDL_image
+
+PNG_CFLAGS := -I/Library/Frameworks/libpng.framework/Headers
+PNG_LDFLAGS := -framework libpng
+
+CFLAGS := -F/Library/Frameworks $(SDL_CFLAGS) $(PNG_CFLAGS)
+LDFLAGS := -F/Library/Frameworks $(SDL_LDFLAGS) $(PNG_LDFLAGS)
+
+CXX = g++ -m32
+DELETE = rm -f
+
+TOOLDIR := tool
+TILEGEN := $(TOOLDIR)/tilegen.elf
+
+INPUTS := main dngn player
+INPUTFILES := $(INPUTS:%=dc-%.txt)
+HEADERS := $(INPUTS:%=tiledef-%.h)
+SOURCE := $(INPUTS:%=tiledef-%.cc)
+IMAGES := $(INPUTS:%=%.png)
+
+BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
+OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
+
+all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
+
+tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
+	$(TILEGEN) $<
+
+clean:
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES)
+
+distclean: clean
+
+.cc.o:
+	${CXX} ${CFLAGS} -c $< -o $@
+
+$(TILEGEN): $(OBJECTS)
+	${CXX} ${LDFLAGS} $(OBJECTS) -o $@
