@@ -991,7 +991,7 @@ static monsterentry mondata[] = {
 {
     MONS_DEATH_DRAKE, 'l', LIGHTGREY, "death drake",
     M_SPELLCASTER | M_FLIES | M_EVIL | M_COLD_BLOOD,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ROTTING,
     900, 11, MONS_DRAGON, MONS_DEATH_DRAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 5, 7, 0 },
