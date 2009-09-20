@@ -2065,13 +2065,14 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
             resistible = 0;
         else
         {
-            // Check if this is a resist that pretends to be boolean for damage
-            // purposes.  Only electricity and sticky flame (napalm) do this at
-            // the moment; raw poison damage uses the normal formula.
+            // Check if this is a resist that pretends to be boolean for
+            // damage purposes.  Only electricity, miasma and sticky
+            // flame (napalm) do this at the moment; raw poison damage
+            // uses the normal formula.
             const int bonus_res = (is_boolean_resist(flavour) ? 1 : 0);
 
-            // Use a new formula for players, but keep the old, more effective
-            // for monsters.
+            // Use a new formula for players, but keep the old, more
+            // effective one for monsters.
             if (monster)
                 resistible /= 1 + bonus_res + res * res;
             else

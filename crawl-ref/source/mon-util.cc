@@ -1318,7 +1318,7 @@ bool mons_res_asphyx(const monsters *mon)
 
 int mons_res_acid(const monsters *mon)
 {
-    return get_mons_resists(mon).acid;
+    return (get_mons_resists(mon).acid);
 }
 
 int mons_res_poison(const monsters *mon)
