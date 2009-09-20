@@ -6842,15 +6842,16 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     if (god == GOD_SHINING_ONE)
     {
         holy_word(100, HOLY_WORD_TSO, you.pos(), true);
-#ifndef USE_TILE
-        delay(1000);
-#endif
 
         // Un-bloodify surrounding squares.
         for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
             if (is_bloodcovered(*ri))
                 env.map(*ri).property &= ~(FPROP_BLOODY);
     }
+
+#ifndef USE_TILE
+    delay(1000);
+#endif
 
     return (true);
 }
@@ -6956,7 +6957,7 @@ static bool _altar_prayer()
         const int wpn = get_player_wielded_weapon();
 
         if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_DISTORTION)
-            did_bless = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, RED);
+            did_bless = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
 
     offer_items();
