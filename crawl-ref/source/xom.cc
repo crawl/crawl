@@ -412,7 +412,7 @@ static bool _spell_weapon_check(const spell_type spell)
     {
     case SPELL_TUKIMAS_DANCE:
         // Requires a wielded weapon.
-        return player_weapon_wielded();
+        return (player_weapon_wielded());
     case SPELL_TUKIMAS_VORPAL_BLADE:
     case SPELL_MAXWELLS_SILVER_HAMMER:
     case SPELL_FIRE_BRAND:
