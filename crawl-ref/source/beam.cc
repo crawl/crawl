@@ -5732,9 +5732,22 @@ bool bolt::nasty_to(const monsters *mon) const
 // actively positive.
 bool bolt::nice_to(const monsters *mon) const
 {
-    return (flavour == BEAM_HASTE
-            || flavour == BEAM_HEALING
-            || flavour == BEAM_INVISIBILITY);
+    if (flavour == BEAM_HASTE
+        || flavour == BEAM_HEALING
+        || flavour == BEAM_INVISIBILITY)
+    {
+        return (true);
+    }
+
+    // Polymorphing a (very) ugly thing will mutate it into a different
+    // (very) ugly thing.
+    if (flavour == BEAM_POLYMORPH)
+    {
+        return (mon->type == MONS_UGLY_THING
+                || mon->type == MONS_VERY_UGLY_THING);
+    }
+
+    return (false);
 }
 
 ////////////////////////////////////////////////////////////////////////////
