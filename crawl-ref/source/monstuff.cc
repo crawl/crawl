@@ -3518,7 +3518,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
         // Flying monsters don't see water/lava as obstacle.
         // Also don't use pathfinding if the monster can shoot
         // across the blocking terrain, and is smart enough to
-        // realize that.
+        // realise that.
         if (!potentially_blocking && !mons_flies(mon)
             && (mons_intel(mon) < I_NORMAL
                 || mons_friendly(mon)
