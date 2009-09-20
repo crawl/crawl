@@ -1311,7 +1311,7 @@ std::vector<SelItem> prompt_invent_items(
             ret = letter_to_index( keyin );
 
             if (!is_valid_item( you.inv[ret] ))
-                mpr("You do not have any such object.");
+                mpr("You don't have any such object.");
             else
                 break;
         }
@@ -1697,7 +1697,7 @@ int prompt_invent_item( const char *prompt,
             ret = letter_to_index( keyin );
 
             if (must_exist && !is_valid_item( you.inv[ret] ))
-                mpr("You do not have any such object.");
+                mpr("You don't have any such object.");
             else if (check_warning_inscriptions( you.inv[ret], oper ))
                 break;
         }

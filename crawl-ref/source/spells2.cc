@@ -2170,7 +2170,7 @@ bool prioritise_adjacent(coord_def & target, std::vector<coord_def> & candidates
 // user can optionally select only a partial stack of fruit (the count
 // variable will store the number of fruit the user wants).  Return the
 // index of the item selected in the user's inventory, or a negative
-// number if the prompt failed (user canceled or had no fruit).
+// number if the prompt failed (user cancelled or had no fruit).
 int _prompt_for_fruit(int & count, const char * prompt_string)
 {
     int rc = prompt_invent_item(prompt_string,
