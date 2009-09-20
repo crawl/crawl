@@ -2993,9 +2993,9 @@ static monsterentry mondata[] = {
     HT_WATER, 10, DEFAULT_ENERGY, MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
 
+// A shark goes into a battle frenzy when it smells blood.
 {
     MONS_SHARK, ';', WHITE, "shark",
-    // Goes into a battle frenzy when it smells blood.
     M_COLD_BLOOD | M_BLOOD_SCENT,
     MR_NO_FLAGS,
     0, 12, MONS_SHARK, MONS_SHARK, MH_NATURAL, -3,
@@ -3005,7 +3005,7 @@ static monsterentry mondata[] = {
     HT_WATER, 10, DEFAULT_ENERGY, MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
-    // A kraken and its tentacles get a random colour at creation.
+// A kraken and its tentacles get a random colour at creation.
 {
     MONS_KRAKEN, 'X', DARKGREY, "kraken",
     M_COLD_BLOOD | M_SPELLCASTER,
