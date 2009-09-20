@@ -2938,7 +2938,7 @@ bool monster_pathfind::calc_path_to_neighbours()
         mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance,
              INFINITE_DISTANCE);
 #endif
-        // If the new distance is better than the old one (initialized with
+        // If the new distance is better than the old one (initialised with
         // INFINITE), update the position.
         if (distance < old_dist)
         {
