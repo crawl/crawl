@@ -148,7 +148,7 @@
      SIZE_GIANT,             // giants
      SIZE_HUGE,              // dragons
 
- */
+*/
 
 const mon_energy_usage DEFAULT_ENERGY;
 
