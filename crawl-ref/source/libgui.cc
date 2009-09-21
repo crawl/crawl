@@ -102,16 +102,18 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.viewsz.y = 17;
 }
 
-void putch(unsigned char chr)
+int putch(unsigned char chr)
 {
     // object's method
     TextRegion::text_mode->putch(chr);
+    return 0;
 }
 
-void putwch(unsigned chr)
+int putwch(unsigned chr)
 {
     // No unicode support.
     putch(static_cast<unsigned char>(chr));
+    return 0;
 }
 
 void writeWChar(unsigned char *ch)
@@ -241,7 +243,7 @@ void get_input_line_gui(char *const buff, int len)
     } // while (!done)
 }
 
-void cprintf(const char *format,...)
+int cprintf(const char *format,...)
 {
     char buffer[2048];          // One full screen if no control seq...
     va_list argp;
@@ -250,6 +252,7 @@ void cprintf(const char *format,...)
     va_end(argp);
     // object's method
     TextRegion::text_mode->addstr(buffer);
+    return 0;
 }
 
 void textcolor(int color)
@@ -304,8 +307,9 @@ void put_colour_ch(int colour, unsigned ch)
     putwch(ch);
 }
 
-void window(int x1, int y1, int x2, int y2)
+int window(int x1, int y1, int x2, int y2)
 {
+    return 0;
 }
 
 int getch_ck()
@@ -318,9 +322,10 @@ int getch()
     return getch_ck();
 }
 
-void clrscr()
+int clrscr()
 {
-    return (tiles.clrscr());
+    tiles.clrscr();
+    return 0;
 }
 
 void message_out(int which_line, int colour, const char *s, int firstcol, bool newline)
