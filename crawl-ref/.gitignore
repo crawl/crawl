@@ -28,3 +28,8 @@ source/crawl
 # Level-compiler generated files.
 source/util/*.cc
 source/util/*.h
+
+# Xcode cruft
+source/build
+*.pbxuser
+*.perspectivev3
