@@ -11,6 +11,15 @@ REVISION("$Rev$");
 
 #include "initfile.h"
 
+// For finding the executable's path
+#if defined ( WIN32CONSOLE ) || defined ( WIN32TILES )
+#include <windows.h>
+#elif defined ( __linux__ )
+#include <unistd.h>
+#elif defined ( __MACH__ )
+extern char **NXArgv;
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -3424,9 +3433,47 @@ static const char *cmd_ops[] = {
 const int num_cmd_ops = CLO_NOPS;
 bool arg_seen[num_cmd_ops];
 
+std::string find_executable_path()
+{
+	char tempPath[2048];
+
+	// A lot of OSes give ways to find the location of the running app's
+	// binary executable. This is useful, because argv[0] can be relative
+	// when we really need an absolute path in order to locate the game's
+	// resources.
+
+	// Faster than a memset, and counts as a null-terminated string!
+	tempPath[0] = 0;
+
+#if defined ( _MSC_VER )
+
+    int retval = GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
+
+#elif defined ( __linux__ )
+
+    int retval = readlink ( "/proc/self/exe", tempPath, sizeof(tempPath) );
+
+#elif defined ( __MACH__ )
+
+    strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
+
+#else
+
+	// We don't know how to find the executable's path on this OS.
+
+#endif
+
+	return std::string(tempPath);
+}
+
 bool parse_args( int argc, char **argv, bool rc_only )
 {
-    set_crawl_base_dir(argv[0]);
+	std::string exe_path = find_executable_path();
+
+	if (!exe_path.empty())
+		set_crawl_base_dir(exe_path.c_str());
+	else
+		set_crawl_base_dir(argv[0]);
 
     SysEnv.rcdirs.clear();
 
