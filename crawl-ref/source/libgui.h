@@ -30,11 +30,10 @@ void gui_init_view_params(crawl_view_geometry &geom);
 bool gui_get_mouse_grid_pos(coord_def &gc);
 
 /* text display */
-void clrscr(void);
 void textcolor(int color);
 int wherex();
 int wherey();
-void cprintf(const char *format,...);
+int cprintf(const char *format,...);
 void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
 int get_number_of_lines(void);
@@ -43,8 +42,8 @@ void get_input_line_gui(char *const buff, int len);
 void _setcursortype(int curstype);
 void textbackground(int bg);
 void textcolor(int col);
-void putch(unsigned char chr);
-void putwch(unsigned chr);
+int putch(unsigned char chr);
+int putwch(unsigned chr);
 void put_colour_ch(int colour, unsigned ch);
 void writeWChar(unsigned char *ch);
 
@@ -55,11 +54,11 @@ inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return false; }
 
 
-void window(int x1, int y1, int x2, int y2);
+int window(int x1, int y1, int x2, int y2);
 
-int getch();
+extern "C" int getch();
 int getch_ck();
-void clrscr();
+int clrscr();
 void message_out(int which_line, int colour, const char *s, int firstcol = 0, bool newline = true);
 void cgotoxy(int x, int y, int region = GOTO_CRT);
 void clear_message_window();
@@ -68,7 +67,7 @@ void update_screen();
 int kbhit();
 
 #ifdef UNIX
-char *strlwr(char *str);
+extern "C" char *strlwr(char *str);
 int itoa(int value, char *strptr, int radix);
 int stricmp(const char *str1, const char *str2);
 #endif
