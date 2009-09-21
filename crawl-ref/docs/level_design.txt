@@ -562,6 +562,11 @@ ITEM:     (list of items, separated by comma)
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality).
+          * "acquire" requests the use of the acquirement code itself,
+            ensuring that the player gets wearable armour, etc. You can
+            also use acquire:<god> to request that the acquired item be
+            treated as a god gift. Examples: "acquire any", "acquire armour",
+            "acquire:sif_muna book", "acquire:trog weapon".
           * "level:N" sets the object's item level (can't be used with
             "good_item").  If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the

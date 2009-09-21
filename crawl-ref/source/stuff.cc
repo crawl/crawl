@@ -1350,7 +1350,7 @@ unsigned char make_low_colour(unsigned char colour)
 
 unsigned char make_high_colour(unsigned char colour)
 {
-    if (colour >= 0 && colour <= 7)
+    if (colour <= 7)
         return (colour + 8);
 
     return (colour);

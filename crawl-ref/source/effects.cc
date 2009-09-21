@@ -1774,87 +1774,21 @@ static bool _do_book_acquirement(item_def &book, int agent)
     return (true);
 }
 
-bool acquirement(object_class_type class_wanted, int agent,
-                 bool quiet, int* item_index)
+static int _failed_acquirement(bool quiet)
 {
-    ASSERT(!crawl_state.arena);
+    if (!quiet)
+        mpr("The demon of the infinite void smiles upon you.");
+    return (NON_ITEM);
+}
+
+int acquirement_create_item(object_class_type class_wanted,
+                            int agent,
+                            bool quiet,
+                            const coord_def &pos)
+{
+    ASSERT(class_wanted != OBJ_RANDOM);
 
     int thing_created = NON_ITEM;
-
-    if (item_index == NULL)
-        item_index = &thing_created;
-
-    *item_index = NON_ITEM;
-
-    while (class_wanted == OBJ_RANDOM)
-    {
-        ASSERT(!quiet);
-        mesclr();
-        mpr("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
-        mpr("[e] Staff   [f] Wand    [g] Miscellaneous  [h] Food  [i] Gold");
-        mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
-
-        const int keyin = tolower( get_ch() );
-        switch (keyin)
-        {
-        case 'a': case ')':            class_wanted = OBJ_WEAPONS;    break;
-        case 'b': case '[':  case ']': class_wanted = OBJ_ARMOUR;     break;
-        case 'c': case '=':  case '"': class_wanted = OBJ_JEWELLERY;  break;
-        case 'd': case '+':  case ':': class_wanted = OBJ_BOOKS;      break;
-        case 'e': case '\\': case '|': class_wanted = OBJ_STAVES;     break;
-        case 'f': case '/':            class_wanted = OBJ_WANDS;      break;
-        case 'g': case '}':  case '{': class_wanted = OBJ_MISCELLANY; break;
-        case 'h': case '%':            class_wanted = OBJ_FOOD;       break;
-        case 'i': case '$':            class_wanted = OBJ_GOLD;       break;
-        default:
-            // Lets wizards escape out of accidently choosing acquirement.
-            if (agent == AQ_WIZMODE)
-            {
-                canned_msg(MSG_OK);
-                return (false);
-            }
-
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
-            // If we've gotten a HUP signal then the player will be unable
-            // to make a selection.
-            if (crawl_state.seen_hups)
-            {
-                mpr("Acquirement interrupted by HUP signal.", MSGCH_ERROR);
-                you.turn_is_over = false;
-                return (false);
-            }
-#endif
-           break;
-        }
-    }
-
-    if (grid_destroys_items(grd(you.pos())))
-    {
-        // How sad (and stupid).
-        if (!silenced(you.pos()) && !quiet)
-            mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
-
-        if (agent > GOD_NO_GOD && agent < NUM_GODS)
-        {
-            if (agent == GOD_XOM)
-                simple_god_message(" snickers.", GOD_XOM);
-            else
-            {
-                ASSERT(!"God gave gift item while player was on grid which "
-                        "destroys items.");
-                mprf(MSGCH_ERROR, "%s gave a god gift while you were on "
-                                  "terrain which destroys items.",
-                     god_name((god_type) agent).c_str());
-            }
-        }
-
-        *item_index = NON_ITEM;
-
-        // Well, the item may have fallen in the drink, but the intent is
-        // that acquirement happened. -- bwr
-        return (true);
-    }
-
     int quant = 1;
     for (int item_tries = 0; item_tries < 40; item_tries++)
     {
@@ -2008,12 +1942,7 @@ bool acquirement(object_class_type class_wanted, int agent,
     }
 
     if (thing_created == NON_ITEM)
-    {
-        if (!quiet)
-            mpr("The demon of the infinite void smiles upon you.");
-        *item_index = NON_ITEM;
-        return (false);
-    }
+        return _failed_acquirement(quiet);
 
     // Easier to read this way.
     item_def& thing(mitm[thing_created]);
@@ -2036,11 +1965,8 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         if (!_do_book_acquirement(thing, agent))
         {
-            if (!quiet)
-                mpr("The demon of the infinite void smiles upon you.");
-            *item_index = NON_ITEM;
             destroy_item(thing, true);
-            return (false);
+            return _failed_acquirement(quiet);
         }
         mark_had_book(thing);
     }
@@ -2164,21 +2090,102 @@ bool acquirement(object_class_type class_wanted, int agent,
     if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
         thing.inscription = "god gift";
 
-    move_item_to_grid( &thing_created, you.pos() );
+    move_item_to_grid( &thing_created, pos );
 
     // This should never actually be NON_ITEM because of the way
     // move_item_to_grid works (doesn't create a new item ever),
     // but we're checking it anyways. -- bwr
-    if (thing_created != NON_ITEM)
-    {
-        if (!quiet)
-            canned_msg(MSG_SOMETHING_APPEARS);
-    }
-    *item_index = thing_created;
+    if (thing_created != NON_ITEM && !quiet)
+        canned_msg(MSG_SOMETHING_APPEARS);
 
-    // Well, the item may have fallen in the drink, but the intent is
-    // that acquirement happened. -- bwr
-    return (true);
+    return (thing_created);
+}
+
+bool acquirement(object_class_type class_wanted, int agent,
+                 bool quiet, int* item_index)
+{
+    ASSERT(!crawl_state.arena);
+
+    int thing_created = NON_ITEM;
+
+    if (item_index == NULL)
+        item_index = &thing_created;
+
+    *item_index = NON_ITEM;
+
+    while (class_wanted == OBJ_RANDOM)
+    {
+        ASSERT(!quiet);
+        mesclr();
+        mpr("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
+        mpr("[e] Staff   [f] Wand    [g] Miscellaneous  [h] Food  [i] Gold");
+        mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
+
+        const int keyin = tolower( get_ch() );
+        switch (keyin)
+        {
+        case 'a': case ')':            class_wanted = OBJ_WEAPONS;    break;
+        case 'b': case '[':  case ']': class_wanted = OBJ_ARMOUR;     break;
+        case 'c': case '=':  case '"': class_wanted = OBJ_JEWELLERY;  break;
+        case 'd': case '+':  case ':': class_wanted = OBJ_BOOKS;      break;
+        case 'e': case '\\': case '|': class_wanted = OBJ_STAVES;     break;
+        case 'f': case '/':            class_wanted = OBJ_WANDS;      break;
+        case 'g': case '}':  case '{': class_wanted = OBJ_MISCELLANY; break;
+        case 'h': case '%':            class_wanted = OBJ_FOOD;       break;
+        case 'i': case '$':            class_wanted = OBJ_GOLD;       break;
+        default:
+            // Lets wizards escape out of accidently choosing acquirement.
+            if (agent == AQ_WIZMODE)
+            {
+                canned_msg(MSG_OK);
+                return (false);
+            }
+
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+            // If we've gotten a HUP signal then the player will be unable
+            // to make a selection.
+            if (crawl_state.seen_hups)
+            {
+                mpr("Acquirement interrupted by HUP signal.", MSGCH_ERROR);
+                you.turn_is_over = false;
+                return (false);
+            }
+#endif
+           break;
+        }
+    }
+
+    if (grid_destroys_items(grd(you.pos())))
+    {
+        // How sad (and stupid).
+        if (!silenced(you.pos()) && !quiet)
+            mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
+
+        if (agent > GOD_NO_GOD && agent < NUM_GODS)
+        {
+            if (agent == GOD_XOM)
+                simple_god_message(" snickers.", GOD_XOM);
+            else
+            {
+                ASSERT(!"God gave gift item while player was on grid which "
+                        "destroys items.");
+                mprf(MSGCH_ERROR, "%s gave a god gift while you were on "
+                                  "terrain which destroys items.",
+                     god_name((god_type) agent).c_str());
+            }
+        }
+
+        *item_index = NON_ITEM;
+
+        // Well, the item may have fallen in the drink, but the intent is
+        // that acquirement happened. -- bwr
+        return (true);
+    }
+
+    *item_index =
+        acquirement_create_item(class_wanted, agent, quiet, you.pos());
+
+    return (*item_index != NON_ITEM);
 }
 
 bool recharge_wand(int item_slot)

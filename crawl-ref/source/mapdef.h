@@ -411,7 +411,8 @@ enum item_spec_type
     ISPEC_GOOD    = -2,
     ISPEC_SUPERB  = -3,
     ISPEC_DAMAGED = -4,
-    ISPEC_BAD     = -5
+    ISPEC_BAD     = -5,
+    ISPEC_ACQUIREMENT = -9
 };
 
 struct item_spec
@@ -426,11 +427,13 @@ struct item_spec
     int level;
     int race;
     int qty;
+    int acquirement_source;
     level_id place;
 
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
-        race(MAKE_ITEM_RANDOM_RACE), qty(0)
+        race(MAKE_ITEM_RANDOM_RACE), qty(0), acquirement_source(0),
+        place()
     {
     }
 };
@@ -464,6 +467,7 @@ private:
     item_spec item_by_specifier(const std::string &spec);
     item_spec_slot parse_item_spec(std::string spec);
     item_spec parse_single_spec(std::string s);
+    int parse_acquirement_source(const std::string &source);
     void parse_raw_name(std::string name, item_spec &spec);
     void parse_random_by_class(std::string c, item_spec &spec);
     item_spec pick_item(item_spec_slot &slot);

@@ -34,6 +34,7 @@ REVISION("$Rev$");
 #include "monplace.h"
 #include "mon-util.h"
 #include "place.h"
+#include "religion.h"
 #include "stuff.h"
 #include "tags.h"
 
@@ -2823,6 +2824,15 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
     return 0;
 }
 
+int item_list::parse_acquirement_source(const std::string &source)
+{
+    const std::string god_name(replace_all_of(source, "_", " "));
+    const god_type god(string_to_god(god_name.c_str(), true));
+    if (god == GOD_NO_GOD)
+        error = make_stringf("unknown god name: '%s'", god_name.c_str());
+    return (god);
+}
+
 item_spec item_list::parse_single_spec(std::string s)
 {
     item_spec result;
@@ -2843,6 +2853,22 @@ item_spec item_list::parse_single_spec(std::string s)
     const int qty = strip_number_tag(s, "q:");
     if (qty != TAG_UNFOUND)
         result.qty = qty;
+
+    const std::string acquirement_source = strip_tag_prefix(s, "acquire:");
+    if (!acquirement_source.empty() || strip_tag(s, "acquire"))
+    {
+        if (!acquirement_source.empty())
+            result.acquirement_source =
+                parse_acquirement_source(acquirement_source);
+        // If requesting acquirement, must specify item base type or
+        // "any".
+        result.level = ISPEC_ACQUIREMENT;
+        if (s == "any")
+            result.base_type = OBJ_RANDOM;
+        else
+            parse_random_by_class(s, result);
+        return (result);
+    }
 
     std::string ego_str  = strip_tag_prefix(s, "ego:");
     std::string race_str = strip_tag_prefix(s, "race:");

@@ -23,6 +23,7 @@ REVISION("$Rev$");
 #include "chardump.h"
 #include "cloud.h"
 #include "defines.h"
+#include "effects.h"
 #include "enum.h"
 #include "externs.h"
 #include "directn.h"
@@ -4438,6 +4439,7 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         return;
 
     object_class_type base_type = spec.base_type;
+    bool acquire = false;
 
     if (spec.level >= 0)
         level = spec.level;
@@ -4456,6 +4458,9 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         case ISPEC_SUPERB:
             level = MAKE_GOOD_ITEM;
             break;
+        case ISPEC_ACQUIREMENT:
+            acquire = true;
+            break;
         default:
             adjust_type = false;
             break;
@@ -4465,14 +4470,22 @@ static void _dgn_place_item_explicit(const item_spec &spec,
             base_type = RANDOM_ELEMENT(_acquirement_item_classes);
     }
 
-    const int item_made = items( spec.allow_uniques, base_type,
-                                 spec.sub_type, true, level, spec.race, 0,
-                                 spec.ego );
+    const int item_made =
+        (acquire ?
+         acquirement_create_item(base_type, spec.acquirement_source,
+                                 true, where)
+         : items( spec.allow_uniques, base_type,
+                  spec.sub_type, true, level, spec.race, 0,
+                  spec.ego ));
 
     if (item_made != NON_ITEM && item_made != -1)
     {
         item_def &item(mitm[item_made]);
         item.pos = where;
+        // Remove unsuitable inscriptions such as {god gift}.
+        item.inscription.clear();
+        // And wipe item origin to remove "this is a god gift!" from there.
+        origin_reset(item);
         if (is_stackable_item(item) && spec.qty > 0)
         {
             item.quantity = spec.qty;

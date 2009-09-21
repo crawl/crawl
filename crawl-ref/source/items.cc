@@ -831,6 +831,12 @@ bool origin_known(const item_def &item)
     return (item.orig_place != 0);
 }
 
+void origin_reset(item_def &item)
+{
+    item.orig_place  = 0;
+    item.orig_monnum = 0;
+}
+
 // We have no idea where the player found this item.
 void origin_set_unknown(item_def &item)
 {
