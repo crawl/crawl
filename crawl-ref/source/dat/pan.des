@@ -524,6 +524,62 @@ MAP
    ...
 ENDMAP
 
+###################################
+
+NAME:   pan_surprise
+TAGS:   pan
+KMONS: 1 = executioner
+KITEM: 1 = executioner's axe
+# It may be a surprise for the executioner as well if the player has high
+# stealth -- an alarm trap would be found by most chars who dare Pan and thus
+# spoil the fun.
+MAP
+xxxx
+xx.x
+x1x@
+xxx
+ENDMAP
+
+###################################
+
+# Sadly, this vault works well only in text.  If we could get changing tiles,
+# it would be great, but for now, these are static.
+#
+NAME:   pan_disco_hall
+TAGS:   pan no_rotate
+ORIENT: float
+COLOUR: . = random
+COLOUR: x = random
+MONS:   col:random plant
+RTILE:  x = wall_zot_blue / wall_zot_green / wall_zot_cyan / wall_zot_red /\
+            wall_zot_magenta / wall_zot_yellow
+# alas, floor tiles are not distinguished from walls enough, commenting out:
+# FTILE: . = floor_lair / floor_dirt / floor_hive / floor_rough_red /\
+#            floor_snake / floor_swamp
+KFEAT:  _ = floor
+FTILE:  _ = floor_hall
+MAP
+                   xx@xx
+                   x1.1x
+                   x...x
+   xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+   x........................x...............x
+   x.x.x.x.x.x.x.x.x.x.x.x..x...............x
+   x........................x...............xxxxxx
+   x.x.x.x.x.x.x.x.x.x.x.x..x..............._....x
+xxxx........................................_....x
+x1.x........................................_....x
+@..........................................._....x
+x1.x........................................_....x
+xxxx........................................_....x
+   x.xxxxxxxxxxxxxxxxxxxxx..x..............._....x
+   x.x...x...x...x...x...x..x...............xxxxxx
+   x.x...x...x...x...x...x..x...............x
+   x........................x...............x
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
 ##############################################################################
 # Random vault and minivault balancers for Pan.
 
