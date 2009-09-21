@@ -892,10 +892,12 @@ inline unsigned get_brand(int col)
                                             : CHATTR_NORMAL;
 }
 
+#ifndef USE_TILE
 void textattr(int col)
 {
     textcolor(col);
 }
+#endif
 
 static int curs_fg_attr(int col)
 {
