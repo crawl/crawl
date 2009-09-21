@@ -72,6 +72,9 @@ static struct termios game_term;
     #include CURSES_INCLUDE_FILE
 #endif
 
+void unixcurses_startup();
+void unixcurses_shutdown();
+
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
@@ -323,6 +326,9 @@ static void handle_sigwinch(int)
 }
 
 #ifdef SIGHUP_SAVE
+
+void sighup_save_and_exit();
+
 /* [ds] This SIGHUP handling is primitive and far from safe, but it
  * should be better than nothing. Feel free to get rigorous on this.
  */
