@@ -9,6 +9,7 @@ Stone Soup 0.6
 * Starting stats and equipment, and hp gain, are no longer assigned randomly.
 * Round all aptitudes to multiples of 10.
 * New memorisation interface.
+* Autotravel doesn't cut corners and tries to avoid ambushes.
 * Exclusions are displayed in the overview screen ('Ctrl-O' command).
 * Autoexclusions get removed again once the trigger monster is no longer there.
 * Armour acquirement is more likely to fill secondary slots.
@@ -22,6 +23,7 @@ Stone Soup 0.6
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Weapons of holy wrath cannot be cursed.
 * Post-berserk exhaustion cancels Haste, even with an amulet of remove slowing.
+* Controlled blink causes glowing.
 * Lowered gold dragon armour's AC value.
 * Bears can go berserk.
 * Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.

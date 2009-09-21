@@ -57,6 +57,7 @@ std::string get_item_description( const item_def &item, bool verbose,
 /* ***********************************************************************
  * called from: acr - religion
  * *********************************************************************** */
+std::string god_title(god_type which_god);
 void describe_god( god_type which_god, bool give_title );
 
 void describe_feature_wide(const coord_def& pos);

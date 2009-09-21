@@ -4159,9 +4159,9 @@ void give_armour(monsters *mon, int level)
     {
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
-        item_race = MAKE_ITEM_ELVEN;
+        item_race      = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_LEATHER_ARMOUR;
+        item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
 
     case MONS_DUVESSA:

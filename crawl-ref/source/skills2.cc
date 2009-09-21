@@ -83,7 +83,7 @@ const char *skills[50][6] =
     {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Blademaster",    "Eviscerator"},
     {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster"},
     {NULL},  //  3- was: great swords {dlb}
-    {"Axes",           "Chopper",       "Cleaver",         "Hacker",          "Severer",        "Executioner"},
+    {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac"},
     {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},       //  5
     {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine"},
     {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
@@ -122,8 +122,9 @@ const char *skills[50][6] =
     {"Earth Magic",    "Digger",        "Geomancer",       "Earth Mage",      "Metallomancer",  "Petrodigitator"},
     {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Contaminator",   "Envenomancer"},
 
-    // for titles for godless characters, see below
-    {"Invocations",    "Believer",      "Agitator",        "Worldly Agent",   "Theurge",        "Avatar"},
+    // These titles apply to atheists only, worshippers of the various gods
+    // use the god titles instead, depending on piety or, in Xom's case, mood.
+    {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},        // 39
 
 /*NOTE: If more skills are added, must change ranges in level_change() in player.cc */
@@ -142,9 +143,6 @@ const char *skills[50][6] =
 
 const char *martial_arts_titles[6] =
     {"Unarmed Combat", "Insei", "Martial Artist", "Black Belt", "Sensei", "Grand Master"};
-
-const char *atheist_inv_titles[6] =
-    {"Invocations", "Unbeliever", "Agnostic", "Dissident", "Heretic", "Apostate"};
 
 // The Human aptitude set of 100 for all skills allows to define all other
 // species relative to Humans.
@@ -968,7 +966,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
       80,                       // SK_INVOCATIONS
-      70,           // SK_EVOCATIONS
+      70,                       // SK_EVOCATIONS
     },
 
     {                           // SP_MOTTLED_DRACONIAN
@@ -1990,12 +1988,16 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 
         case SK_INVOCATIONS:
             if (god == GOD_NO_GOD)
-                result = atheist_inv_titles[skill_rank];
-            else if (god == GOD_XOM || god == GOD_VEHUMET || god == GOD_TROG
-                     || god == GOD_NEMELEX_XOBEH)
+                result = skills[best_skill][skill_rank];
+            else
+                result = god_title((god_type) god);
+            break;
+
+        case SK_BOWS:
+            if (player_genus(GENPC_ELVEN, static_cast<species_type>(species)))
             {
-                // don't care about Invocations
-                result = "Prodigal";
+                result = "Master Archer";
+                break;
             }
             else
                 result = skills[best_skill][skill_rank];

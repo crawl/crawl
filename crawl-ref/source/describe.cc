@@ -3290,6 +3290,20 @@ static int _piety_level()
 
 }
 
+std::string god_title(god_type which_god)
+{
+    std::string title;
+    if (you.penance[which_god])
+        title = divine_title[which_god][0];
+    else
+        title = divine_title[which_god][_piety_level()];
+
+    title = replace_all(title, "%s",
+                        species_name(you.species, 1, true, false));
+
+    return (title);
+}
+
 static void _detailed_god_description(god_type which_god)
 {
     clrscr();
@@ -3457,16 +3471,7 @@ void describe_god( god_type which_god, bool give_title )
         cprintf(EOL "Title - ");
         textcolor(colour);
 
-        std::string title;
-
-        if (you.penance[which_god])
-            title = divine_title[which_god][0];
-        else
-            title = divine_title[which_god][_piety_level()];
-
-        title = replace_all(title, "%s",
-                            species_name(you.species, 1, true, false));
-
+        std::string title = god_title(which_god);
         cprintf("%s", title.c_str());
     }
 
