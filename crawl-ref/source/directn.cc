@@ -629,7 +629,7 @@ void full_describe_view()
 #endif
             std::vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
-            MenuEntry *me;
+            MenuEntry *me = NULL;
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
