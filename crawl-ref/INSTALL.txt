@@ -391,7 +391,7 @@ MinGW include/ folder. Delete the "freetyp2" folder.
 * zlib-1.2.3-lib.zip
   (http://sourceforge.net/projects/gnuwin32/files/)
 
-Extract them your MinGW folder.
+Extract them to your MinGW folder.
 
 * SDL-devel-1.2.13-mingw32.tar.gz
   (http://www.libsdl.org/download-1.2.php)

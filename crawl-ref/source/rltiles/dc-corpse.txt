@@ -75,6 +75,7 @@ worm CORPSE_WORM
 swamp_worm CORPSE_SWAMP_WORM
 spiny_worm CORPSE_SPINY_WORM
 brain_worm CORPSE_BRAIN_WORM
+rock_worm CORPSE_ROCK_WORM
 
 ## Wasps ('y')
 giant_blowfly CORPSE_GIANT_BLOWFLY

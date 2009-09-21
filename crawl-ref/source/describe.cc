@@ -2017,8 +2017,8 @@ static std::string _get_feature_description_wide(int feat)
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     const dungeon_feature_type feat = grd(pos);
-    std::string desc = feature_description(pos, false, DESC_CAP_A, false);
-    std::string db_name = grd(pos) == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
+    std::string db_name   = grd(pos) == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
     inf.body << desc << ".$$";
@@ -2181,7 +2181,7 @@ static bool _describe_spells(const item_def &item)
 // Describes all items in the game.
 //
 //---------------------------------------------------------------
-void describe_item( item_def &item, bool allow_inscribe )
+void describe_item( item_def &item, bool allow_inscribe, bool shopping )
 {
     if (!is_valid_item(item))
         return;
@@ -2189,7 +2189,7 @@ void describe_item( item_def &item, bool allow_inscribe )
     while (true)
     {
         // Memorised spell while reading a spellbook.
-        if (you.turn_is_over)
+        if (you.turn_is_over && !shopping)
             return;
 
         const bool spells_shown = _show_item_description(item);
@@ -2200,8 +2200,10 @@ void describe_item( item_def &item, bool allow_inscribe )
             textcolor(LIGHTGREY);
 
             if (item.base_type == OBJ_BOOKS && in_inventory(item))
+            {
                 cprintf("Select a spell to read its description or to "
                         "memorize it.");
+            }
             else
                 cprintf("Select a spell to read its description.");
 

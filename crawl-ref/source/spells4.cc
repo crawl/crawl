@@ -1968,7 +1968,13 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
 
 int cast_semi_controlled_blink(int pow)
 {
-    return apply_one_neighbouring_square(_quadrant_blink, pow);
+    int result = apply_one_neighbouring_square(_quadrant_blink, pow);
+
+    // Controlled blink causes glowing.
+    if (result)
+        contaminate_player(1, true);
+
+    return (result);
 }
 
 void cast_stoneskin(int pow)

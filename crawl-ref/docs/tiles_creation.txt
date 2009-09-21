@@ -4,7 +4,8 @@ A short guide to Tiles creation
 This is a short guide to creating tiles. We assume that you've got some kind of
 image editing software (such as Photoshop or the GIMP) as well as some basic
 knowledge of how to use it. While the fancier functions can occasionally come
-in useful, simply drawing and erasing of pixels will usually suffice.
+in useful, the simple tools for drawing, selection and erasing of pixels will
+usually suffice.
 
 You may want to download the latest source or even the trunk version. Either
 way, the source/rltiles/ directory contains all tiles used in the game, and
