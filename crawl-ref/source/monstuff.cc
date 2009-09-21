@@ -392,6 +392,11 @@ int place_monster_corpse(const monsters *monster, bool silent,
     if (!in_bounds(monster->pos()))
         return (-1);
 
+    // Don't attempt to place corpses within walls, either.
+    // Currently, this only applies to (shapeshifter) rock worms.
+    if (grid_is_wall(grd(monster->pos())))
+        return (-1);
+
     item_def corpse;
     const int corpse_class = fill_out_corpse(monster, corpse);
 

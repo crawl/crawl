@@ -123,7 +123,7 @@ bool is_stash(int x, int y)
     return (false);
 }
 
-void describe_stash(int x, int y)
+std::string get_stash_desc(int x, int y)
 {
     LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
@@ -133,9 +133,17 @@ void describe_stash(int x, int y)
         {
             const std::string desc = s->description();
             if (!desc.empty())
-                mprf(MSGCH_EXAMINE_FILTER, "[Stash: %s]", desc.c_str());
+                return ("[Stash: " + desc + "]");
         }
     }
+    return "";
+}
+
+void describe_stash(int x, int y)
+{
+    std::string desc = get_stash_desc(x, y);
+    if (!desc.empty())
+        mpr(desc.c_str(), MSGCH_EXAMINE_FILTER);
 }
 
 

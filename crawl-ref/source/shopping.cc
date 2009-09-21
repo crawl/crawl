@@ -92,13 +92,29 @@ static std::string _purchase_keys(const std::string &s)
     return (list);
 }
 
-static void _list_shop_keys(const std::string &purchasable, bool viewing)
+static void _list_shop_keys(const std::string &purchasable, bool viewing,
+                            int total_stock)
 {
+    ASSERT(total_stock > 0);
+
     char buf[200];
     const int numlines = get_number_of_lines();
     cgotoxy(1, numlines - 1, GOTO_CRT);
 
-    std::string pkeys = _purchase_keys(purchasable);
+    std::string pkeys = "";
+    if (viewing)
+    {
+        pkeys = "<w>a</w>";
+        if (total_stock > 1)
+        {
+            pkeys += "-<w>";
+            pkeys += 'a' + total_stock - 1;
+            pkeys += "</w>";
+        }
+    }
+    else
+        pkeys = _purchase_keys(purchasable);
+
     if (!pkeys.empty())
     {
         pkeys = "[" + pkeys + "] Select Item to "
@@ -287,7 +303,7 @@ static bool _in_a_shop( int shopidx )
 
         const std::string purchasable = _shop_print_stock(stock, selected, shop,
                                                           total_cost);
-        _list_shop_keys(purchasable, viewing);
+        _list_shop_keys(purchasable, viewing, stock.size());
 
         if (!total_cost)
         {
@@ -356,7 +372,7 @@ static bool _in_a_shop( int shopidx )
                 _shop_print("I'm sorry, you don't seem to have enough money.",
                             1);
             }
-            else if (!total_cost)
+            else if (!total_cost) // Nothing selected.
                 continue;
             else
             {

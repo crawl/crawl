@@ -28,6 +28,7 @@ REVISION("$Rev$");
 #include "player.h"
 #include "religion.h"
 #include "spells3.h"
+#include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -1506,13 +1507,23 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         return (false);
     if (!map_bounds(gc))
         return (false);
-    if (!see_grid(gc))
+    if (!is_terrain_seen(gc))
         return (false);
     if (you.last_clicked_grid == gc)
         return (false);
 
     describe_info inf;
-    get_square_desc(gc, inf, true);
+    if (see_grid(gc))
+        get_square_desc(gc, inf, true);
+    else if (grd(gc) != DNGN_FLOOR)
+        get_feature_desc(gc, inf);
+    else
+    {
+        // For plain floor, output the stash description.
+        std::string stash = get_stash_desc(gc.x, gc.y);
+        if (!stash.empty())
+            inf.body << "$" << stash;
+    }
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
     process_description<alt_desc_proc>(proc, inf);

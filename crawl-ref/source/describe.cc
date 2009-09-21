@@ -2127,8 +2127,8 @@ static std::string _get_feature_description_wide(int feat)
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     const dungeon_feature_type feat = grd(pos);
-    std::string desc = feature_description(pos, false, DESC_CAP_A, false);
-    std::string db_name = grd(pos) == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
+    std::string db_name   = grd(pos) == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
     inf.body << desc << ".$$";

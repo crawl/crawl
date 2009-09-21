@@ -3007,6 +3007,10 @@ bool bolt::affects_wall(dungeon_feature_type wall) const
     if (flavour == BEAM_NUKE)
         return (true);
 
+    // Lee's Rapid Deconstruction
+    if (flavour == BEAM_FRAG)
+        return (true);
+
     return (false);
 }
 
@@ -5272,8 +5276,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d",
-         pos().x, pos().y, type, colour, flavour, hit, damage.num, damage.size);
+         "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
+         pos().x, pos().y, type, colour, flavour, hit, damage.num, damage.size, r);
 #endif
 
     // make a noise

@@ -361,6 +361,7 @@ extern StashTracker StashTrack;
 void maybe_update_stashes();
 bool is_stash(int x, int y);
 inline bool is_stash( const coord_def& p ) { return is_stash(p.x, p.y); }
+std::string get_stash_desc(int x, int y);
 void describe_stash(int x, int y);
 std::vector<item_def> item_list_in_stash( coord_def pos );
 

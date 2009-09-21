@@ -2502,9 +2502,9 @@ std::string _status_mut_abilities()
         std::string help = (move_cost <   8) ? "very quick" :
                            (move_cost <  10) ? "quick" :
                            (move_cost <  13) ? "slow"
-                                             : "";
-        if (!help.empty())
-            status.push_back(help);
+                                             : "very slow";
+
+        status.push_back(help);
     }
 
     if (you.duration[DUR_SLOW] && !you.duration[DUR_HASTE])
