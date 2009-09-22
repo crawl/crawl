@@ -632,8 +632,8 @@ unsigned int item_value( item_def item, bool ident )
     // copy to mangle as necessary.
     item.flags = (ident) ? (item.flags | ISFLAG_IDENT_MASK) : (item.flags);
 
-    if (is_unrandom_artefact( item ) &&
-        item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+    if (is_unrandom_artefact( item )
+        && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
         if (entry->value != 0)

@@ -1112,6 +1112,18 @@
       }
     },
 
+    {  MST_MAURICE,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_INVISIBILITY,
+       SPELL_BLINK,
+       SPELL_NO_SPELL,
+       SPELL_TELEPORT_SELF,
+      }
+    },
+
+
     // demon lords
     {  MST_GERYON,
       {

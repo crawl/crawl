@@ -83,6 +83,7 @@ enum mon_attack_flavour
     AF_RAGE,
     AF_NAPALM,
     AF_CHAOS,
+    AF_STEAL,
     AF_STEAL_FOOD
 };
 

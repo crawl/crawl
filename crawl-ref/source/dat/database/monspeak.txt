@@ -2138,6 +2138,55 @@ _Maud_rare_
 
 ## END Maud ##
 %%%%
+############ MAURICE ### A thief.
+Maurice
+
+@_Maurice_common_@
+
+w:6
+@_Maurice_medium_@
+
+w:2
+@_Maurice_rare_@
+%%%%
+_Maurice_common_
+
+VISUAL:@The_monster@ tries to hide in the shadows.
+
+@The_monster@ shouts, "HAHA!"
+
+@The_monster@ says, "Nice gear. Can I borrow some?"
+
+@The_monster@ shouts, "Mine, all mine!"
+
+%%%%
+_Maurice_medium_
+
+VISUAL:@The_monster@ looks sneaky.
+
+@The_monster@ says, "Lost something?"
+
+@The_monster@ says, "Very interesting."
+
+@The_monster@ says, "Have you got some gold to spare?"
+%%%%
+_Maurice_rare_
+
+@The_monster@ says, "Betcha didn't see that coming, eh?"
+
+@The_monster@ says to @foe@, "Money or life? Never mind, I think I'll take both."
+
+@The_monster@ says, "Killing adventurers and taking their stuff. It's what I do."
+%%%%
+# Triggered when Maurice tries to steal something, but doesn't find anything.
+Maurice nonstealing
+
+@The_monster@ grunts, "Curses!"
+
+@The_monster@ mutters, "Now where did you hide it?"
+
+@The_monster@ groans, "What are you, a monk?"
+%%%%
 ############ MENKAURE ### A mummy whose rest you've disturbed
 Menkaure
 

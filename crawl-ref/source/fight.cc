@@ -49,6 +49,7 @@ REVISION("$Rev$");
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
+#include "shopping.h"
 #include "skills.h"
 #include "spells1.h"
 #include "spells3.h"
@@ -4508,6 +4509,150 @@ void melee_attack::splash_defender_with_acid(int strength)
         splash_monster_with_acid(strength);
 }
 
+static void _steal_item_from_player(monsters *mon)
+{
+    int steal_what  = -1;
+    int total_value = 0;
+    for (int m = 0; m < ENDOFPACK; ++m)
+    {
+        if (!is_valid_item(you.inv[m]))
+            continue;
+
+        // Cannot unequip player.
+        // TODO: Allow stealing of the wielded weapon?
+        //       Needs to be unwielded properly and should never lead to
+        //       fatal stat loss.
+        if (item_is_equipped(you.inv[m]))
+            continue;
+
+        mon_inv_type monslot = item_to_mslot(you.inv[m]);
+        if (monslot == NUM_MONSTER_SLOTS)
+            continue;
+
+        // Only try to steal stuff we can still store somewhere.
+        if (mon->inv[monslot] != NON_ITEM)
+        {
+            if (monslot == MSLOT_WEAPON
+                && mon->inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            {
+                monslot = MSLOT_ALT_WEAPON;
+            }
+            else
+                continue;
+        }
+
+        // Candidate for stealing.
+        const int value = item_value(you.inv[m], true);
+        total_value += value;
+
+        if (x_chance_in_y(value, total_value))
+            steal_what = m;
+    }
+
+    if (steal_what == -1 || you.gold > 0 && one_chance_in(10))
+    {
+        // Found no item worth stealing, try gold.
+        if (you.gold == 0)
+        {
+            if (silenced(mon->pos()))
+                return;
+
+            std::string complaint = getSpeakString("Maurice nonstealing");
+            if (!complaint.empty())
+            {
+                complaint = replace_all(complaint, "@The_monster@",
+                                        mon->name(DESC_CAP_THE));
+                mpr(complaint.c_str(), MSGCH_TALK);
+            }
+
+            bolt beem;
+            beem.source      = mon->pos();
+            beem.target      = mon->pos();
+            beem.beam_source = mon->mindex();
+
+            // Try to teleport away.
+            if (mon->has_ench(ENCH_TP))
+            {
+                mons_cast_noise(mon, beem, SPELL_BLINK);
+                monster_blink(mon);
+            }
+            else
+                mons_cast(mon, beem, SPELL_TELEPORT_SELF);
+
+            return;
+        }
+
+        const int stolen_amount = std::min(20 + random2(800), you.gold);
+        if (mon->inv[MSLOT_GOLD] != NON_ITEM)
+        {
+            // If Maurice already's got some gold, simply increase the amount.
+            mitm[mon->inv[MSLOT_GOLD]].quantity += stolen_amount;
+        }
+        else
+        {
+            // Else create a new item for this pile of gold.
+            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0, 0);
+            if (idx == NON_ITEM)
+                return;
+
+            item_def &new_item = mitm[idx];
+            new_item.base_type = OBJ_GOLD;
+            new_item.sub_type  = 0;
+            new_item.plus      = 0;
+            new_item.plus2     = 0;
+            new_item.special   = 0;
+            new_item.flags     = 0;
+            new_item.link      = NON_ITEM;
+            new_item.quantity  = stolen_amount;
+            new_item.pos.reset();
+            item_colour(new_item);
+
+            unlink_item(idx);
+
+            mon->inv[MSLOT_GOLD] = idx;
+            new_item.set_holding_monster(mon->mindex());
+        }
+        mprf("%s steals %s your gold!",
+             mon->name(DESC_CAP_THE).c_str(),
+             stolen_amount == you.gold ? "all" : "some of");
+
+        you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
+        you.gold                       -= stolen_amount;
+        return;
+    }
+
+    ASSERT(steal_what != -1);
+
+    // Create new item.
+    int index = get_item_slot(10);
+    if (index == NON_ITEM)
+        return;
+
+    item_def &new_item = mitm[index];
+
+    // Copy item.
+    new_item = you.inv[steal_what];
+
+    // Set quantity, and set the item as unlinked.
+    new_item.quantity -= random2(new_item.quantity);
+    new_item.pos.reset();
+    new_item.link = NON_ITEM;
+
+    const mon_inv_type mslot = item_to_mslot(new_item);
+
+    mprf("%s steals %s!",
+         mon->name(DESC_CAP_THE).c_str(),
+         new_item.name(DESC_NOCAP_YOUR).c_str());
+
+    unlink_item(index);
+    mon->inv[mslot] = index;
+    new_item.set_holding_monster(mon->mindex());
+    mon->equip(new_item, mslot, true);
+
+    // Item is gone from player's inventory.
+    dec_inv_item_quantity(steal_what, new_item.quantity);
+}
+
 void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 {
     // Most of this is from BWR 4.1.2.
@@ -4764,6 +4909,14 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         chaos_affects_defender();
         break;
 
+    case AF_STEAL:
+        // Ignore monsters, for now.
+        if (defender->atype() != ACT_PLAYER)
+            break;
+
+        _steal_item_from_player(attacker_as_monster());
+        break;
+
     case AF_STEAL_FOOD:
         // Monsters don't carry food.
         if (defender->atype() != ACT_PLAYER)
@@ -4918,7 +5071,8 @@ void melee_attack::mons_perform_attack_rounds()
 
             // Monsters attacking themselves don't get attack flavour.
             // The message sequences look too weird.
-            if (attacker != defender)
+            // Also, stealing attacks aren't handled until after the damage msg.
+            if (attacker != defender && attk.flavour != AF_STEAL)
                 mons_apply_attack_flavour(attk);
 
             if (!special_damage_message.empty())
@@ -5005,6 +5159,9 @@ void melee_attack::mons_perform_attack_rounds()
             // Miscast might have killed the attacker.
             if (!attacker->alive())
                 break;
+
+            if (attk.flavour == AF_STEAL)
+                mons_apply_attack_flavour(attk);
         }
 
         item_def *weap = attacker_as_monster()->mslot_item(MSLOT_WEAPON);

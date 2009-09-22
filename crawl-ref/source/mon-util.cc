@@ -4999,7 +4999,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
 
     equipment_type eq = EQ_NONE;
 
-    // Hack to allow nagas/centaurs to wear bardings. (jpeg)
+    // HACK to allow nagas/centaurs to wear bardings. (jpeg)
     switch (item.sub_type)
     {
     case ARM_NAGA_BARDING:
@@ -5013,9 +5013,13 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
             eq = EQ_BODY_ARMOUR;
         }
         break;
+    // And another hack or two...
     case ARM_WIZARD_HAT:
-        // HACK.
         if (this->type == MONS_GASTRONOK)
+            eq = EQ_BODY_ARMOUR;
+        break;
+    case ARM_CLOAK:
+        if (this->type == MONS_MAURICE)
             eq = EQ_BODY_ARMOUR;
         break;
     default:

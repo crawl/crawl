@@ -2082,9 +2082,10 @@ enum monster_type                      // (int) menv[].type
     MONS_GRUM,
     MONS_PURGY,
     MONS_MENKAURE,
-    MONS_DUVESSA,
+    MONS_DUVESSA,                      // 465
     MONS_DOWAN,
     MONS_GASTRONOK,
+    MONS_MAURICE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2307,6 +2308,7 @@ enum mon_spellbook_type
     MST_JESSICA,
     MST_BERSERK_ESCAPE,               // 165
     MST_GASTRONOK,
+    MST_MAURICE,
 
     MST_TEST_SPAWNER = 170,
     NUM_MSTYPES,

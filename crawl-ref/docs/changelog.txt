@@ -2,6 +2,7 @@ Stone Soup 0.6
 --------------
 * Two new gods: Jiyva, god of slime, and Feawn, god of plants.
 * Shorten Lair to eight levels.
+* New portal vaults: Bailey and Trove.
 * Added scroll of silence.
 * Added potions of brilliance and agility.
 * Several new uniques.

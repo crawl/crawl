@@ -5545,6 +5545,7 @@ void wizard_give_monster_item(monsters *mon)
                 mon->equip(mitm[old_eq], mon_slot, 1);
         }
         unlink_item(index);
+        destroy_item(item);
         return;
     }
 

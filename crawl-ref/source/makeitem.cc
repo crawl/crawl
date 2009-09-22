@@ -3456,7 +3456,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (!melee_only && one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_CROSSBOW;
+            item.sub_type  = WPN_CROSSBOW;
             break;
         }
         // deliberate fall-through
@@ -3748,7 +3748,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_AGNES:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_LAJATANG;
+        item.sub_type  = WPN_LAJATANG;
         if (!one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         break;
@@ -3762,9 +3762,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             break;
         }
         force_item = true;
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
+        item.sub_type  = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
         set_item_ego_type(item, OBJ_WEAPONS,
                           random_choose_weighted(3, SPWPN_DISTORTION,
                                                  2, SPWPN_VENOM,
@@ -3772,10 +3772,16 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                                  0));
         break;
 
+    case MONS_MAURICE:
+        item_race  = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
+        break;
+
     case MONS_EUSTACHIO:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = (one_chance_in(3) ? WPN_FALCHION : WPN_SABRE);
+        item.sub_type  = (one_chance_in(3) ? WPN_FALCHION : WPN_SABRE);
         break;
 
     case MONS_CEREBOV:
@@ -4329,8 +4335,16 @@ void give_armour(monsters *mon, int level)
         item.sub_type  = ARM_WIZARD_HAT;
         break;
 
+    case MONS_MAURICE:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_CLOAK;
+        force_colour   = DARKGREY;
+        break;
+
     case MONS_DOWAN:
         item_race = MAKE_ITEM_ELVEN;
+        // intentional fall-through
     case MONS_DONALD:
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
@@ -4357,13 +4371,13 @@ void give_armour(monsters *mon, int level)
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_ROBE;
+        item.sub_type  = ARM_ROBE;
         break;
 
     case MONS_TIAMAT:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_GOLD_DRAGON_ARMOUR;
+        item.sub_type  = ARM_GOLD_DRAGON_ARMOUR;
         break;
 
     case MONS_ORC_WIZARD:
@@ -4371,7 +4385,7 @@ void give_armour(monsters *mon, int level)
     case MONS_NERGALLE:
         item_race = MAKE_ITEM_ORCISH;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_ROBE;
+        item.sub_type  = ARM_ROBE;
         break;
 
     case MONS_BORIS:
@@ -4383,8 +4397,8 @@ void give_armour(monsters *mon, int level)
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_ROBE;
-        force_colour = DARKGREY; //mv: always darkgrey
+        item.sub_type  = ARM_ROBE;
+        force_colour   = DARKGREY; //mv: always darkgrey
         break;
 
     case MONS_EUSTACHIO:
@@ -4396,8 +4410,8 @@ void give_armour(monsters *mon, int level)
     case MONS_NESSOS:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_CENTAUR_BARDING;
-        force_colour = DARKGREY;
+        item.sub_type  = ARM_CENTAUR_BARDING;
+        force_colour   = DARKGREY;
         break;
 
     default:
@@ -4427,9 +4441,18 @@ void give_armour(monsters *mon, int level)
         mitm[thing_created].colour = force_colour;
 }
 
+static void _give_gold(monsters *mon, int level)
+{
+    const int idx = items(0, OBJ_GOLD, 0, true, level, 0);
+    _give_monster_item(mon, idx);
+}
+
 void give_item(int mid, int level_number, bool mons_summoned)
 {
     monsters *mons = &menv[mid];
+
+    if (mons->type == MONS_MAURICE)
+        _give_gold(mons, level_number);
 
     _give_scroll(mons, level_number);
     _give_wand(mons, level_number);

@@ -6967,7 +6967,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                         spellOK = false;
                     }
                     else if (monster->type == MONS_DAEVA
-                            && monster->god == GOD_SHINING_ONE)
+                             && monster->god == GOD_SHINING_ONE)
                     {
                         const monsters *mon = &menv[monster->foe];
 
