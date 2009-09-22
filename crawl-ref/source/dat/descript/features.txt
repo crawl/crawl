@@ -33,6 +33,10 @@ A dry fountain
 
 A dried-up fountain that has seen better days.
 %%%%
+A flagged portal
+
+Whoever built that castle on the other side, they wanted to sort their treasure undisturbed.
+%%%%
 A fountain of clear blue water
 
 Press 'q' to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
@@ -134,6 +138,18 @@ A wall of bluish-grey metal. As every dungeon electrician knows, this stuff will
 A one-way gate to the infinite horrors of the Abyss
 
 A one-way gate to a demon-haunted realm, riven by chaos, its very substance impermanent and whimsical, filled with creatures out of nightmare.
+%%%%
+A portal to a secret trove of treasure
+
+"'Stop thief! Stop thief!' There is a magic in the sound. The tradesman
+ leaves his counter, and the car-man his waggon; the butcher throws down
+ his tray; the baker his basket; the milkman his pail; the errand-boy
+ his parcels; the school-boy his marbles; the paviour his pickaxe; the
+ child his battledore. Away they run, pell-mell, helter-skelter, slap-dash:
+ tearing, yelling, screaming, knocking down the passengers as they turn
+ the corners, rousing up the dogs, and astonishing the fowls: and streets,
+ squares, and courts, re-echo with the sound."
+    -Charles Dickens, "Oliver Twist"
 %%%%
 A rock wall
 
