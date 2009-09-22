@@ -1101,6 +1101,18 @@
       }
     },
 
+    {  MST_GASTRONOK,
+      {
+       SPELL_AIRSTRIKE,
+       SPELL_SLOW,
+       SPELL_CANTRIP,
+       SPELL_MAGIC_DART,
+       SPELL_CANTRIP,
+       SPELL_SUMMON_SMALL_MAMMALS,
+      }
+    },
+
+    // demon lords
     {  MST_GERYON,
       {
        SPELL_SUMMON_BEAST,
@@ -1200,6 +1212,7 @@
       }
     },
 
+    // fake spell for monsters berserking when fleeing
     {  MST_BERSERK_ESCAPE,
       {
        SPELL_NO_SPELL,

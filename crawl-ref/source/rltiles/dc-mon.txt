@@ -44,9 +44,12 @@ gila_monster MONS_GILA_MONSTER
 komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('j')
-elephant_slug MONS_ELEPHANT_SLUG
+%sdir dc-mon/unique
+gastronok MONS_GASTRONOK
+%sdir dc-mon/animals
 giant_slug MONS_GIANT_SLUG
 giant_snail MONS_GIANT_SNAIL
+elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')
 rat MONS_RAT

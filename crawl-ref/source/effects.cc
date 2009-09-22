@@ -764,6 +764,27 @@ void direct_effect(monsters *source, spell_type spell,
         damage_taken     = 7 + random2avg(11, 2);
         break;
 
+    case SPELL_AIRSTRIKE:
+        if (def)
+            simple_monster_message(def, " is struck by the twisting air!");
+        else
+            mpr("The air twists around and strikes you!");
+
+        pbolt.name       = "airstrike";
+        pbolt.flavour    = BEAM_MISSILE;
+        pbolt.aux_source = "by the air";
+        damage_taken     = 8 + random2(random2(4) + (random2(source->hit_dice*5) / 6)
+                             + (random2(source->hit_dice*5) / 7));
+
+        if (defender->flight_mode() != FL_NONE)
+        {
+            damage_taken *= 3;
+            damage_taken /= 2;
+        }
+
+        damage_taken -= defender->armour_class();
+        break;
+
     case SPELL_BRAIN_FEED:
         if (!def)
         {

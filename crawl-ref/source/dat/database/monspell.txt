@@ -222,6 +222,14 @@ unseen priest cast
 
 You hear some strange, mumbled prayers to @God@.
 %%%%
+gastronok cast targeted
+
+@The_monster@ looks at @target@ while chanting.
+
+@The_monster@ looks at @target@ and mumbles some strange words.
+
+@The_monster@ casts a spell at @target@.
+%%%%
 wizard cast targeted
 
 @The_monster@ gestures at @target@ while chanting.
@@ -229,6 +237,16 @@ wizard cast targeted
 @The_monster@ points at @target@ and mumbles some strange words.
 
 @The_monster@ casts a spell at @target@.
+%%%%
+gastronok cast
+
+@The_monster@'s eyestalks quiver as @pronoun@ mumbles some strange words.
+
+@The_monster@ chants a spell, wobbling all the while.
+
+@The_monster@ mumbles some strange words.
+
+@The_monster@ casts a spell.
 %%%%
 wizard cast
 

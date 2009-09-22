@@ -1596,6 +1596,97 @@ w:1
 VISUAL:@The_monster@ polishes @possessive@ monocle.
 
 %%%%
+############ Gastronok ### A rather hungry wizard-slug
+# Cantrip messages:
+gastronok_self_buff
+
+@_gastronok_self_buff_@
+%%%%
+gastronok_other_buff
+
+@_gastronok_other_buff_@
+%%%%
+gastronok_debuff
+
+@_gastronok_debuff_@
+%%%%
+_gastronok_self_buff_
+
+@The_monster@ bubbles merrily.
+
+@The_monster@ glows a brilliant shade of cerise.
+
+@The_monster@ wobbles crazily.
+
+@The_monster@'s eyestalks stretch out, then return to normal size.
+%%%%
+# When targeting other monsters.
+_gastronok_other_buff_
+
+@The_monster@ wobbles.
+
+@The_monster@ slows momentarily.
+
+@The_monster@ makes a slurping sound, then looks surprised.
+%%%%
+# Slugform affecting the player.
+_gastronok_debuff_
+
+w:20
+You feel sluggish.
+
+You feel an sudden, passing aversion to salt.
+
+Your skin takes on a slight green cast.
+
+# Doesn't work for Naga and transformed Merfolk.
+# There's a hack in mstuff2.cc to prevent it from being used in those cases.
+Your legs wobble like jelly.
+
+w:5
+You feel a sudden urge to swivel your nonexistent eyestalks around.
+%%%%
+# And finally, his speech.
+Gastronok
+
+@_Gastronok_common_@
+
+w:4
+@_Gastronok_rare_@
+%%%%
+_Gastronok_common_
+
+VISUAL:@The_monster@ sloshes about.
+
+@The_monster@ gurgles, "I'll eat you, I will!"
+
+@The_monster@ gurgles, "A snack! A snack!"
+
+@The_monster@ gurgles.
+
+@The_monster@ makes a strange noise.
+
+%%%%
+_Gastronok_rare_
+
+VISUAL:@The_monster@'s mouth opens, radula flailing wildly.
+
+VISUAL:@The_monster@ is buffeted by a sudden breeze.
+
+VISUAL:@The_monster@'s eyestalks wobble, almost dislodging @possessive@ wizard hat.
+
+@The_monster@ gurgles, "You're how I like my food. Fast!"
+
+@The_monster@ gurgles, "Slow down, so I can eat you."
+
+@The_monster@ gurgles, "Are you a wizard? Wizards taste nice..."
+
+@The_monster@ gurgles, "Huuuuuuuuuuungry!"
+
+@The_monster@ gurgles, "It's true, you are what you eat."
+
+@The_monster@ gurgles, "I bet you'll be tasty."
+%%%%
 ############ GRUM ### A war dog-breeding gnoll
 Grum
 

@@ -3215,8 +3215,11 @@ static bool _ms_los_spell( spell_type monspell )
     if (SPELL_KRAKEN_TENTACLES)
         return (false);
 
-    if (monspell == SPELL_SMITING || spell_typematch(monspell, SPTYP_SUMMONING))
+    if (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE
+        || spell_typematch(monspell, SPTYP_SUMMONING))
+    {
         return (true);
+    }
 
     return (false);
 }
@@ -3227,8 +3230,11 @@ static bool _ms_ranged_spell( spell_type monspell, bool attack_only = false,
 {
     // Check for Smiting specially, so it's not filtered along
     // with the summon spells.
-    if (attack_only && monspell == SPELL_SMITING)
+    if (attack_only
+        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE))
+    {
         return (true);
+    }
 
     // These spells are ranged, but aren't direct attack spells.
     if (_ms_los_spell(monspell))
@@ -3461,7 +3467,8 @@ bool mons_has_smite_attack(const monsters *monster)
         if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
             || hspell_pass[i] == SPELL_SMITING
             || hspell_pass[i] == SPELL_HELLFIRE_BURST
-            || hspell_pass[i] == SPELL_FIRE_STORM)
+            || hspell_pass[i] == SPELL_FIRE_STORM
+            || hspell_pass[i] == SPELL_AIRSTRIKE)
         {
             return (true);
         }
@@ -5005,6 +5012,11 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
         {
             eq = EQ_BODY_ARMOUR;
         }
+        break;
+    case ARM_WIZARD_HAT:
+        // HACK.
+        if (this->type == MONS_GASTRONOK)
+            eq = EQ_BODY_ARMOUR;
         break;
     default:
         eq = get_armour_slot(item);

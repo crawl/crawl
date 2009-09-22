@@ -944,6 +944,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
             return TILEP_MONS_ILSUIW;
     case MONS_PRINCE_RIBBIT:
         return TILEP_MONS_PRINCE_RIBBIT;
+    case MONS_GASTRONOK:
+        return TILEP_MONS_GASTRONOK;
     case MONS_NERGALLE:
         return TILEP_MONS_NERGALLE;
     case MONS_SAINT_ROKA:

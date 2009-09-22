@@ -375,7 +375,6 @@ __cap-T_suffix
  A laidly Trold has dragged it there."
     -George Borrow, _Lavengro_
 %%%%
-%%%%
 Antaeus
 
 "That country was then ruled by Antaeus, son of Poseidon, who used to
@@ -405,7 +404,7 @@ Dispater
 %%%%
 Dowan
 
-"Skill and grace, the twin brother and sister, 
+"Skill and grace, the twin brother and sister,
  are dancing playfully on your finger tips."
     -Rabindranath Tagore, _Chitra, Act I, Scene IV_
 %%%%
@@ -611,6 +610,16 @@ giant frog
  Oh baby, telephone
  And tell me I'm your own."
     -Ida Emerson and Joseph E. Howard, "Hello My Baby!"
+%%%%
+giant snail
+
+"Snail, snail, slug-slow,
+ To me thy four horns show;
+ If thou dost not show me thy four,
+ I will throw thee out of the door,
+ For the crow in the gutter,
+ To eat for bread and butter."
+    -Silesian rhyme, _Notes and Queries, Number 69_, 1851.
 %%%%
 gnoll
 

@@ -128,6 +128,13 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_AIRSTRIKE);
 }
 
+// Returns true if a message referring to the player's legs makes sense.
+static bool _legs_msg_applicable()
+{
+    return (you.species != SP_NAGA
+            && (you.species != SP_MERFOLK || !player_is_swimming()));
+}
+
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise)
 {
@@ -510,6 +517,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
+    // TODO: Outsource the cantrip messages and allow specification of
+    //       special cantrip spells per monster, like for speech, both as
+    //       "self buffs" and "player enchantments".
     case SPELL_CANTRIP:
     {
         // Monster spell of uselessness, just prints a message.
@@ -528,25 +538,78 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
 
-        // Messages about the monster influencing itself.
-        const char* buff_msgs[] = { " glows brightly for a moment.",
-                                    " looks stronger.",
-                                    " becomes somewhat translucent.",
-                                    "'s eyes start to glow." };
+        if (monster->type == MONS_GASTRONOK)
+        {
+            bool has_mon_foe = !invalid_monster_index(monster->foe);
+            std::string slugform = "";
+            if (buff_only || crawl_state.arena && !has_mon_foe
+                || friendly && !has_mon_foe || coinflip())
+            {
+                slugform = getSpeakString("gastronok_self_buff");
+                if (!slugform.empty())
+                {
+                    slugform = replace_all(slugform, "@The_monster@",
+                                           monster->name(DESC_CAP_THE));
+                    mpr(slugform.c_str(), channel);
+                }
+            }
+            else if (!friendly && !has_mon_foe)
+            {
+                mons_cast_noise(monster, pbolt, spell_cast);
 
-        // Messages about the monster influencing you.
-        const char* other_msgs[] = {
-            "You feel troubled.",
-            "You feel a wave of unholy energy pass over you."
-        };
-
-        if (buff_only || crawl_state.arena || x_chance_in_y(2,3))
-            simple_monster_message(monster, RANDOM_ELEMENT(buff_msgs), channel);
-        else if (friendly)
-            simple_monster_message(monster, " shimmers for a moment.", channel);
+                // "Enchant" the player.
+                slugform = getSpeakString("gastronok_debuff");
+                if (!slugform.empty()
+                    && (slugform.find("legs") == std::string::npos
+                        || _legs_msg_applicable()))
+                {
+                    mpr(slugform.c_str());
+                }
+            }
+            else
+            {
+                // "Enchant" another monster.
+                const monsters* foe
+                    = dynamic_cast<const monsters*>(monster->get_foe());
+                slugform = getSpeakString("gastronok_other_buff");
+                if (!slugform.empty())
+                {
+                    slugform = replace_all(slugform, "@The_monster@",
+                                           foe->name(DESC_CAP_THE));
+                    mpr(slugform.c_str(), MSGCH_MONSTER_ENCHANT);
+                }
+            }
+        }
         else
-            mpr(RANDOM_ELEMENT(other_msgs));
+        {
+            // Messages about the monster influencing itself.
+            const char* buff_msgs[] = { " glows brightly for a moment.",
+                                        " looks stronger.",
+                                        " becomes somewhat translucent.",
+                                        "'s eyes start to glow." };
 
+            // Messages about the monster influencing you.
+            const char* other_msgs[] = {
+                "You feel troubled.",
+                "You feel a wave of unholy energy pass over you."
+            };
+
+            if (buff_only || crawl_state.arena || x_chance_in_y(2,3))
+            {
+                simple_monster_message(monster, RANDOM_ELEMENT(buff_msgs),
+                                       channel);
+            }
+            else if (friendly)
+            {
+                simple_monster_message(monster, " shimmers for a moment.",
+                                       channel);
+            }
+            else // "Enchant" the player.
+            {
+                mons_cast_noise(monster, pbolt, spell_cast);
+                mpr(RANDOM_ELEMENT(other_msgs));
+            }
+        }
         return;
     }
     case SPELL_BLINK_OTHER:
@@ -988,7 +1051,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     if (pbolt.target.origin())
         pbolt.target = monster->target;
 
-    // set bolt type and range
+    // Set bolt type and range.
     if (_los_free_spell(spell_cast))
     {
         pbolt.range = 0;
@@ -998,6 +1061,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
             pbolt.type = DMNBM_BRAIN_FEED;
             return;
         case SPELL_SMITING:
+        case SPELL_AIRSTRIKE:
             pbolt.type = DMNBM_SMITING;
             return;
         default:

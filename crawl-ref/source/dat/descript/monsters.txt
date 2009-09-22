@@ -120,6 +120,10 @@ Frederick
 
 A svelte fighter-mage, wearing a gold-rimmed monocle.
 %%%%
+Gastronok
+
+A voracious and surprisingly intelligent slug, devoted to eating everything and everyone he comes across, with a pointed hat perched rakishly atop his head. He acquired the hat the same way he acquired his intelligence and his knowledge of spells: by consuming their former owner, a powerful wizard.
+%%%%
 Geryon
 
 A huge, three-headed, winged arch-demon, guardian of the gates of Hell.
@@ -1396,7 +1400,7 @@ A huge animated statue made entirely from toenail clippings. Some people just ha
 %%%%
 toadstool
 
-A short-lived species of fungus typically found on or around decaying organic matter. 
+A short-lived species of fungus typically found on or around decaying organic matter.
 %%%%
 tormentor
 

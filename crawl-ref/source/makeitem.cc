@@ -3106,7 +3106,8 @@ static void _give_scroll(monsters *mon, int level)
 
 static void _give_wand(monsters *mon, int level)
 {
-    if (mons_is_unique(mon->type) && one_chance_in(5))
+    if (mons_is_unique(mon->type) && mon->type != MONS_GASTRONOK
+        && one_chance_in(5))
     {
         const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
 
@@ -4320,6 +4321,12 @@ void give_armour(monsters *mon, int level)
         }
         else
             return;
+        break;
+
+    case MONS_GASTRONOK:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_WIZARD_HAT;
         break;
 
     case MONS_DOWAN:
