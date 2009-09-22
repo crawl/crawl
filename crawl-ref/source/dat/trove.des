@@ -1,0 +1,583 @@
+##############################################################################
+#
+# Treasure Trove (by due)
+#
+# Troves are once-only (tolled) and timed portals to a treasure chamber, most
+# of which are weighted acquirement-esque towards your skills. Of course, 
+# there's a chance that you'll get rubbish (casters in an weapon/armour room
+# and melee fighters in a library), but that's kind of the point.
+#
+# Two Trove portals are 'nasty': one features vampires behind (diggable) glass,
+# and the other features two wandering shining eyes. Have a nice time!
+#
+##############################################################################
+{{
+
+function trove_portal(e)
+    local d = crawl.roll_dice
+    local entry_fee = 5 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
+    local desc_long = [[ Once upon a time, an enterprising thief and wizard, terrified of being caught committing an act of burglary, created a system of portals leading into the secret treasure troves and chambers of the rich. Too scared to loot them himself, he instead charged an extortionate fee for entry to anyone who wanted to rifle through them.
+    
+The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered.
+]]
+    local timeout_turns = crawl.random_range(1600, 2800)
+    local messager =
+        timed_msg {
+            visible = true,
+            -- $F{xxx} will be substituted with the 'entity' property of the timed
+            -- marker, or with the desc property (if entity is not set).
+            messages = time_messages(timeout_turns,
+                                     "$F{The} hums gently.",
+                                     "$F{The} dims slightly, then brightens again.",
+                                     "$F{The} flickers between here and not.",
+                                     "$F{The} flickers urgently, almost stroboscopically.")
+    }
+
+    local function stair ()
+        return timed_marker  {
+            amount = entry_fee,
+            entity = "portal",
+            toll_desc = "portal to enter a treasure trove",
+            desc = "portal to a secret trove of treasure",
+            desc_long = desc_long,
+            overmap = "Trove",
+            overmap_note = "" .. entry_fee .. " gp (slowly fading away)",
+            dst = "trove",
+            dstorigin = "in a treasure trove",
+            turns = timeout_turns,
+            msg = messager,
+            floor = "floor",
+            disappear = "The portal fades slowly, and then, between one blink and the next, disappears completely."
+        }
+    end
+    e.lua_marker("O", stair)
+    e.kfeat("O = enter_portal_vault")
+    e.colour("O = blue")
+end
+
+-- Use the following line in destination maps after all SUBSTs
+-- : trove_setup_features(_G)
+-- Note that the function also defines < to be the exit portal.
+function trove_setup_features(e)
+    e.kfeat("< = exit_portal_vault")
+    e.colour("< = blue")
+    e.lrockcol("blue")
+    e.lfloorcol("darkgrey")
+    e.lrocktile("wall_vault")
+    e.lfloortile("floor_vault")
+    crawl.mark_milestone("br.enter", "entered a treasure trove.")
+end
+
+-- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc
+-- so let's limit it to the enchant/recharge scrolls, tloc scrolls, identify scrolls, 
+-- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
+function good_scroll (e)
+    e.item([[scroll of enchant weapon i / scroll of enchant weapon ii / 
+             scroll of enchant weapon iii w:5 / scroll of vorpalise weapon w:3 /
+             scroll of enchant armour / scroll of identify w:20 /
+             scroll of magic mapping w:5 / scroll of blinking / scroll of silence w:2 /
+             scroll of recharging / scroll of acquirement w:1 / scroll of teleportation w:20 / 
+             scroll of vulnerability w:2 / scroll of holy word w:8 / scroll of fog w:8]])
+end
+
+function place_fog(e, type, strength)
+   e.lua_marker("m", fog_machine { pow_max = strength, cloud_type = type,
+                     delay_min = 50, delay_max = 300, size = 12,
+                     start_clouds = 1 } )
+end
+}}
+
+default-depth: D:7-, Elf:1-, Vault:1- 
+
+##############################################################################
+#
+# Relevant entry portals.
+#
+##############################################################################
+
+NAME:   enter_trove_0
+TAGS:   uniq_trove no_monster_gen trowel_portal
+: trove_portal(_G)
+MAP
+O
+ENDMAP
+
+NAME:   enter_trove_1
+TAGS:   uniq_trove no_monster_gen
+: trove_portal(_G)
+COLOUR: . = blue
+MAP
+...
+.O.
+...
+ENDMAP
+
+NAME:   enter_trove_2
+TAGS:   uniq_trove no_monster_gen
+: trove_portal(_G)
+COLOUR: . = blue
+COLOUR: G = blue
+MAP
+  G
+ G.G
+G.O.G
+ G.G
+  G
+ENDMAP
+
+NAME:   enter_trove_3
+TAGS:   uniq_trove no_monster_gen no_wall_fixup
+: trove_portal(_G)
+COLOUR: . = blue
+COLOUR: c = blue
+COLOUR: x = blue
+SUBST:  x = c:20 =:6
+MAP
+cxxxc
+x...x
+x.O.x 
+x...x
+cxxxc
+ENDMAP
+
+# Of course, not everyone is willing for you to take their treasure...
+NAME:   enter_trove_5
+TAGS:   uniq_trove no_monster_gen
+: trove_portal(_G)
+COLOUR: . = blue
+COLOUR: c = blue
+: if you.xl() <= 7 then
+# A pack of gnolls want the treasure more than you do!
+KMONS:  e = gnoll
+KMONS:  l = gnoll / nothing w:5
+: elseif you.xl() <= 15 then
+# Got drafted in from Vaults:8, while the mages try and close the portal down.
+KMONS:  e = vault guard 
+: elseif you.xl() <= 20 then
+# And this time he brought some friends...
+KMONS:  e = vault guard
+KMONS:  l = vault guard
+: end
+KFEAT:  e = .
+COLOUR: e = blue
+KFEAT:  l = .
+COLOUR: l = blue
+MAP
+ccccc
+c...c
+c.O.c
+c...c
+cc+cc
+cl.lc
+c.e.c
+cl.lc
+cc+cc
+  @
+ENDMAP
+
+# Someone left some gold behind for you!
+NAME:   enter_trove_6
+TAGS:   uniq_trove no_monster_gen no_wall_fixup
+: trove_portal(_G)
+MARKER: X = lua: props_marker { connected_exclude="true" }
+SUBST:  X = =
+COLOUR: = = blue
+MAP
+ccccccc
+c$$$$$c
+c$XXX$c
+c$XOX$c
+c$XXX$c
+c$$$$$c
+ccc+ccc
+   @
+ENDMAP
+
+##############################################################################
+# 
+# The portal vaults:
+#
+# Most of the vaults have 16 items of loot. Usually weighted 'd', 'e', 'f', from
+# good to "worse". Some vaults have more than 16 items: the hunter vault has 15, 
+# and the two 'nasty' vaults have 24 and 28 items respectively.
+#
+##############################################################################
+
+NAME:    trove_simple
+WEIGHT:  60
+ORIENT:  encompass
+TAGS:    trove no_item_gen no_monster_gen allow_dup
+# Loot: 16 items.
+ITEM:   any good_item
+ITEM:   acquire jewellery / any good_item w:2
+ITEM:   acquire weapon / acquire armour / any good_item w:2
+: trove_setup_features(_G)
+MAP
+xxxxxx
+xddddx
+xfeedx
+xefedx
+xdefdx
+xx++xx
+xx..xx
+xx..xx
+xx..xx
+x....x
+x.<A.x
+x....x
+xxxxxx
+ENDMAP
+
+NAME:    trove_garden
+WEIGHT:  40
+ORIENT:  encompass
+TAGS:    trove no_item_gen no_monster_gen allow_dup
+# Loot: 16 items, spread out a bit.
+KFEAT:   x = X 
+COLOUR:  o = blue
+#
+# Plants come in two pattern: regular or random. Vegetation can be thin or thick.
+# There are more plants near the river.
+SUBST:   W = w .
+: if crawl.coinflip() then
+SUBST:   " = . 1:20
+SUBST:   1 = . 1:1
+SUBST:   ' = .
+:else
+SUBST:   1 = . 
+SUBST:   " = '
+SUBST:   w = w 1:2
+NSUBST:  . = 12:M / 12:1 / *:.
+SHUFFLE: Mm
+SUBST:   M = .
+SUBST:   . = . 1:1
+SUBST:   ' = . 1:3
+:end
+#
+SUBST:   V=w. , v=w, _=.
+SUBST:   1 : 1 2
+SUBST:   2 = 1 .
+SUBST:   1 : 1 2:2 3:1
+#
+MONS:    plant col:white
+MONS:    plant col:white / plant col:blue w:6
+MONS:    plant col:white / plant col:cyan w:3 / plant col:blue w:3
+#
+ITEM:    any good_item
+ITEM:    any jewellery good_item / any good_item w:2
+ITEM:    any weapon good_item / any armour good_item / any good_item w:2
+KFEAT:   w = W
+: trove_setup_features(_G)
+: place_fog(_G, "blue smoke", 30)
+KFEAT:  m = .
+MAP
+'"WwwW'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.<
+"'"wwW"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
+."'"ww'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
+1'"'ww"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
+.1'"WwW"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
+1."'"ww'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
+.1'"'www'"'m.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
+1."'"Www"'".1.1.1.1.m.1.1.1.1.m.1.1.1.1.1.
+.1."'"ww'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
+1.1'"'wwW'".1ooooooooooooooo1.1.1.1.1.1.1.
+.1."'"wwW''1.o_____________o.1.1.1.1.1.1.1
+1.1'"'Www'm'1o_____________o1.1.1.1.1.1.1.
+.1.1'"'wwW'''o__xxxx+xxxx__o.1.m.1.1.1.1.1
+1.1."'"Www'''o__xddx_xedx__o1.1.1.1.1.1.1.
+.1.1."'"Www''o__xefx_xdex__o.1.1.1.1.1.1.1
+1.1.1."'"Ww''o__xxx=_=xxx__o1.1.1.1.1.1.1.
+.1.1.1."'"ww'o__+___1___+__o.1.m.1.1.1.1.1
+1.1.1.1'"'mwWo__xxx=_=xxx__o1.1.1.1.1.1.1.
+.1.1.1.1'"'wwo__xdfx_xdex__o.1.1.1.1.1.1.1
+1.1.1.1."'"WwoV_xdex_xdfx__o1.1.1.1.1.1.1.
+.1.1.1.1.1'"'ovvxxxx+xxxx__o.1.1.1.1.1.1.1
+1.1.1.1.1.1'"oVvV__________o1.1.1.1.1.1.1.
+.1.1.1.1.m.1'o_vvvV________o.1.m.1.1.1.1.1
+1.1.1.1.1.1.1o_vvvvvv______o1.1.1.1.1.1.1.
+.1.1.1.1.1.1.o__vvvvvvv____o.1.1.1.1.1.1.1
+1.1.1.1.1.1.1o__Vvv<_Avv___o1.1.1.1.1.1.1.
+.1.1.1.1.1.1.o____vvvvvvv__o.1.1.1.1.1.1.1
+1.1.1.1.1.1.1o________VvvvVo"'1.1.1.1.1.1.
+.1.1.1.1.1.1.ooooooooooooooo'"'1.1.1.1.1.1
+1.1.1.1.1.1.1.1.1.1.1."'"Www"'".1.1.1.1.1.
+.1.1.1.1.1.m.1.1.1.m.1.1'"'WwwW"'".1.1.1.1
+1.1.1.1.1.1.1.1.1.1.1.1.1'"'WwmW"'".1.1.1.
+.1.1.1.1.1.1.1.1.1.1.1.1.1'"'wwwW"'".1.1.1
+1.1.1.1.1.1.1.1.1.1.1.1.1.1."'"WwWw'"'1.1.
+.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1'"'wWwW"'".1
+1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1."'"WwwwW"'
+<1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1."'"WwW"
+ENDMAP
+
+# A "library", geared towards scrolls and books (either spell or manual).
+NAME:   trove_library
+WEIGHT: 30
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+: trove_setup_features(_G)
+: good_scroll(_G)
+ITEM:   acquire book
+ITEM:   acquire:sif_muna book
+MAP
+xxxxxxxxxxxxx
+xd..e...d..dx
+xx.xxx.xxx.xx
+xf.dxe.dxe.dx
+xx.xxx.xxx.xx
+xe.fxd.fxd.ex
+xx.xxx.xxx.xx
+x...........x
+xxxxx+++xxxxx
+    x...x
+    x...x
+    x...x
+   xx...xx
+   x.....x
+   x.<.A.x
+   xxxxxxx
+ENDMAP
+
+# A 'jewellery shoppe' or display cabinet.
+NAME:   trove_jewel_1
+WEIGHT: 20
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+# Loot: once again, 16 items.
+ITEM:   acquire jewellery
+COLOUR: o = blue
+: trove_setup_features(_G)
+MAP
+xxxxxxxx
+x......x
+x.<..A.x
+x......x
+xxx++xxx
+x......x
+x+o..o+x
+xdo..odx
+xdo..odx
+xdo..odx
+xdo..odx
+xdoooodx
+xddddddx
+xxxxxxxx
+ENDMAP
+
+# A simple treasure chamber.
+NAME:   trove_jewel_2
+WEIGHT: 20
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+# Loot: once again, 16 items.
+ITEM:   acquire jewellery
+COLOUR: x = blue
+: trove_setup_features(_G)
+MAP
+xxxxxxxx
+xddd+<Ax
+xdddxxxx
+xdddx
+xdddx
+xdddx
+xxxxx
+ENDMAP
+
+# A 'weapon shoppe', same template as the jewellery shop.
+NAME:   trove_weapon_1
+WEIGHT: 15
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+# Loot: once again, 16 items.
+COLOUR: o = blue
+ITEM:   acquire weapon
+: trove_setup_features(_G)
+MAP
+xxxxxxxx
+x......x
+x.<..A.x
+x......x
+xxx++xxx
+x......x
+x+o..o+x
+xdo..odx
+xdo..odx
+xdo..odx
+xdo..odx
+xdoooodx
+xddddddx
+xxxxxxxx
+ENDMAP
+
+# A simple treasure chamber.
+NAME:   trove_weapon_2
+WEIGHT: 15
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+# Loot: once again, 16 items.
+COLOUR: x = blue
+ITEM:   acquire weapon
+: trove_setup_features(_G)
+MAP
+xxxxxxxx
+xddd+<Ax
+xdddxxxx
+xdddx
+xdddx
+xdddx
+xxxxx
+ENDMAP
+
+# An 'armour shoppe', same template as the jewellery shop.
+NAME:   trove_armour_1
+WEIGHT: 15
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+# Loot: once again, 16 items.
+COLOUR: o = blue
+ITEM:   acquire armour
+: trove_setup_features(_G)
+MAP
+xxxxxxxx
+x......x
+x.<..A.x
+x......x
+xxx++xxx
+x......x
+x+o..o+x
+xdo..odx
+xdo..odx
+xdo..odx
+xdo..odx
+xdoooodx
+xddddddx
+xxxxxxxx
+ENDMAP
+
+# A simple treasure chamber.
+NAME:   trove_armour_2
+WEIGHT: 15
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+# Loot: once again, 16 items.
+COLOUR: x = blue
+ITEM:   acquire armour
+: trove_setup_features(_G)
+MAP
+xxxxxxxx
+xddd+<Ax
+xdddxxxx
+xdddx
+xdddx
+xdddx
+xxxxx
+ENDMAP
+
+# A "themed" trove.
+NAME:    trove_hunter_1
+WEIGHT:  5
+ORIENT:  encompass
+TAGS:    trove no_item_gen no_monster_gen  allow_dup
+# Loot:  15 items, this time.
+COLOUR:  x = blue
+COLOUR:  o = blue
+MONS:    storm dragon zombie
+MONS:    golden dragon zombie
+MONS:    dragon skeleton
+ITEM:    animal skin good_item / any armour good_item
+ITEM:    gold dragon hide / storm dragon hide / dragon hide / troll hide / any armour good_item
+ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item
+ITEM:    bow good_item / crossbow good_item / hand crossbow good_item / any weapon good_item
+SHUFFLE: 123
+SHUFFLE: defg
+: trove_setup_features(_G)
+MAP
+xxxxxxx
+x1x2x3x
+xooooox
+xdededx
+xfgfgfx
+xgfffgx
+xxx+xxx
+x.....x
+x.<.A.x
+x.....x
+xxxxxxx
+ENDMAP
+
+# A "nasty" monsters-behind-glass map for dpeg.
+NAME:   trove_nasty
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
+WEIGHT: 2
+COLOUR: x = blue
+COLOUR: m = blue
+COLOUR: = = blue
+# Rock is actually diggable for those people driven made by hatred.
+MONS:   vampire 
+# 24 items, just because we're feeling generous.
+ITEM:   any good_item w:10 / any 
+ITEM:   any jewellery good_item / any good_item w:2
+ITEM:   acquire weapon / acquire armour / any good_item w:2
+: trove_setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+x........................x
+x.xxxxxxxxxxxxxxxxxxxxxx.x
+x.xedd+...............<=.x
+x.xdedx.mmmmmmmmmm.xxxxxxx
+x.xddex.mmm1..1mmm.=dedddx
+x=xxxxx.mmmmmmmmmm.xededfx
+xA.................xfffedx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Another nasty vault, because dpeg asked.
+NAME:   trove_treasure_island
+ORIENT: encompass
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
+WEIGHT: 2
+COLOUR: x = blue
+COLOUR: o = blue
+COLOUR: = = blue
+MONS:  shining eye
+# 28 items, 'cos this one is *nasty*. The extra items are potions of cure mutation.
+ITEM:   any good_item w:10 / any 
+ITEM:   any jewellery good_item / any good_item w:2
+ITEM:   acquire weapon / acquire armour / any good_item w:2
+ITEM:   potion of cure mutation
+: trove_setup_features(_G)
+
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwww1wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww.wwwwwwwwwwwwww
+wwwwwwwwwwww..g.wwwwwwwwwwwww
+wwwwwwwwww...ge...wwwwwwwwwww
+wwwwwwwwww..<dded.wwwwwwwwwww
+wwwwwwwww...deedd..wwwwwwwwww
+wwwwwwww....dfAfdd..wwwwwwwww
+wwwwwwwww...ddefdd..wwwwwwwww
+wwwwwwwwww..gddd<d.wwwwwwwwww
+wwwwwwwwwww..g.dd..wwwwwwwwww
+wwwwwwwwwwwww....wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww1ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+
