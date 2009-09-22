@@ -462,6 +462,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any sharp implements.");
     case OSEL_EVOKABLE:
         return("You aren't carrying any items that can be evoked.");
+    case OSEL_FRUIT:
+        return("You aren't carrying any fruit.");
     }
 
     return("You aren't carrying any such object.");
