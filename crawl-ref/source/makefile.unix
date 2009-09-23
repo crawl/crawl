@@ -62,7 +62,7 @@ SQLLIB   := sqlite3
 SQLLIBA  := lib$(SQLLIB).a
 FSQLLIBA := $(SQLSRC)/$(SQLLIBA)
 
-LIBDBM         := -L$(SQLSRC) -l$(SQLLIB)
+LIBDBM         := $(FSQLLIBA)
 EXTRA_INCLUDES += -I$(SQLSRC)
 EXTRA_DEPENDS  += $(FSQLLIBA)
 
