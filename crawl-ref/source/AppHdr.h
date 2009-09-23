@@ -308,8 +308,10 @@
 
 
 #ifdef USE_TILE
+#ifdef __cplusplus
     #include "libgui.h"
     #include "tilesdl.h"
+#endif
 #endif
 
 // =========================================================================
@@ -464,6 +466,7 @@
 // #define NEED_SNPRINTF
 
 // Must include libutil.h here if one of the above is defined.
+#ifdef __cplusplus
 #include "libutil.h"
 
 template < class T >
@@ -474,5 +477,6 @@ inline void UNUSED(const volatile T &)
 // And now headers we want precompiled
 #include <externs.h>
 #include "version.h"
+#endif
 
 #endif
