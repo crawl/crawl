@@ -138,7 +138,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                     continue;
             }
 
-            if (!wizard_blink && grd(beam.target) == DNGN_OPEN_SEA)
+            if (grd(beam.target) == DNGN_OPEN_SEA)
             {
                 mesclr();
                 mpr("You can't blink into the sea!");
@@ -182,6 +182,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         }
         else
         {
+            // Leave a purple cloud.
+            place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
             move_player_to_grid(beam.target, false, true, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -237,6 +239,9 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         mpr("You blink.");
 
         success = true;
+
+        // Leave a purple cloud.
+        place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
         you.moveto(target);
 
         if (you.level_type == LEVEL_ABYSS)

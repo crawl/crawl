@@ -94,6 +94,7 @@ void wizard_get_religion( void );
 void wizard_set_stats( void );
 void wizard_edit_durations( void );
 void wizard_draw_card();
+void wizard_detect_creatures();
 void wizard_dismiss_all_monsters(bool force_all = false);
 void wizard_place_stairs( bool down );
 void wizard_level_travel( bool down );

@@ -21,6 +21,7 @@ REVISION("$Rev$");
 #include "arena.h"
 #include "artefact.h"
 #include "beam.h"
+#include "cloud.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"
@@ -1284,6 +1285,10 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
 
     if (player_monster_visible(monster) && now_visible)
         handle_seen_interrupt(monster);
+
+    // Leave a purple cloud.
+    place_cloud(CLOUD_PURP_SMOKE, oldplace, 1 + random2(3),
+                monster->kill_alignment());
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);

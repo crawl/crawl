@@ -2514,6 +2514,10 @@ bool monster_blink(monsters *monster, bool quiet)
     if (!monster->move_to_pos(near))
         return (false);
 
+    // Leave a purple cloud.
+    place_cloud(CLOUD_PURP_SMOKE, oldplace, 1 + random2(3),
+                monster->kill_alignment());
+
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);
 
@@ -6393,6 +6397,10 @@ static bool _handle_scroll(monsters *monster)
         return (false);
     }
 
+    // Make sure the item actually is a scroll.
+    if (mitm[monster->inv[MSLOT_SCROLL]].base_type != OBJ_SCROLLS)
+        return (false);
+
     bool                    read        = false;
     item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
     bool                    was_visible = you.can_see(monster);
@@ -6436,7 +6444,8 @@ static bool _handle_scroll(monsters *monster)
             const int mon = create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
                           0, 0, monster->pos(), monster->foe, MG_FORCE_BEH));
-            read  = true;
+
+            read = true;
             if (mon != -1)
             {
                 if (you.can_see(&menv[mon]))

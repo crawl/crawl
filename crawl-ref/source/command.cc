@@ -2407,13 +2407,14 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>o</w>/<w>%</w>    : create an object\n"
                        "<w>t</w>      : tweak object properties\n"
                        "<w>v</w>      : show gold value of an item\n"
-                       "<w>|</w>      : create all unrand/fixed artefacts\n"
+                       "<w>|</w>      : create all predefined artefacts\n"
                        "<w>+</w>      : make randart from item\n"
                        "<w>'</w>      : list items\n",
                        true, true);
 
     cols.add_formatted(1,
                        "<yellow>Monster related commands</yellow>\n"
+                       "<w>D</w>      : detect all monsters\n"
                        "<w>G</w>      : banish all monsters\n"
                        "<w>m</w>/<w>M</w>    : create monster by number/name\n"
                        "<w>\"</w>      : list monsters\n"

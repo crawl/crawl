@@ -1388,6 +1388,9 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             if (!see_grid(pos))
                 large_change = true;
 
+            // Leave a purple cloud.
+            place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+
             you.moveto(pos);
 
             // Merfolk should be able to control-tele into deep water.
@@ -1462,6 +1465,9 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             mpr("Your surroundings suddenly seem different.");
             large_change = true;
         }
+
+        // Leave a purple cloud.
+        place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
 
         you.moveto(newpos);
     }

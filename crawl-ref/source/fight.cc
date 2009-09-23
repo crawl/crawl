@@ -4511,6 +4511,7 @@ void melee_attack::splash_defender_with_acid(int strength)
 
 static void _steal_item_from_player(monsters *mon)
 {
+    mon_inv_type mslot = NUM_MONSTER_SLOTS;
     int steal_what  = -1;
     int total_value = 0;
     for (int m = 0; m < ENDOFPACK; ++m)
@@ -4527,7 +4528,16 @@ static void _steal_item_from_player(monsters *mon)
 
         mon_inv_type monslot = item_to_mslot(you.inv[m]);
         if (monslot == NUM_MONSTER_SLOTS)
-            continue;
+        {
+            // Try a related slot instead to allow for stealing of other
+            // valuable items.
+            if (you.inv[m].base_type == OBJ_BOOKS)
+                monslot = MSLOT_SCROLL;
+            else if (you.inv[m].base_type == OBJ_JEWELLERY)
+                monslot = MSLOT_MISCELLANY;
+            else
+                continue;
+        }
 
         // Only try to steal stuff we can still store somewhere.
         if (mon->inv[monslot] != NON_ITEM)
@@ -4546,7 +4556,10 @@ static void _steal_item_from_player(monsters *mon)
         total_value += value;
 
         if (x_chance_in_y(value, total_value))
+        {
             steal_what = m;
+            mslot      = monslot;
+        }
     }
 
     if (steal_what == -1 || you.gold > 0 && one_chance_in(10))
@@ -4622,6 +4635,8 @@ static void _steal_item_from_player(monsters *mon)
     }
 
     ASSERT(steal_what != -1);
+    ASSERT(mslot != NUM_MONSTER_SLOTS);
+    ASSERT(mon->inv[mslot] == NON_ITEM);
 
     // Create new item.
     int index = get_item_slot(10);
@@ -4637,8 +4652,6 @@ static void _steal_item_from_player(monsters *mon)
     new_item.quantity -= random2(new_item.quantity);
     new_item.pos.reset();
     new_item.link = NON_ITEM;
-
-    const mon_inv_type mslot = item_to_mslot(new_item);
 
     mprf("%s steals %s!",
          mon->name(DESC_CAP_THE).c_str(),

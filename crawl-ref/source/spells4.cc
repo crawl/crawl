@@ -1962,6 +1962,9 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     if (!found)
         return(0);
 
+    // Leave a purple cloud.
+    place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+
     you.moveto(target);
     return 1;
 }

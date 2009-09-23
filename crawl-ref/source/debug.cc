@@ -71,6 +71,7 @@ REVISION("$Rev$");
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spells2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
@@ -5125,6 +5126,20 @@ static void _vanish_orig_eq(monsters* mons)
     }
 }
 
+// Detects all monsters on the level, using their exact positions.
+void wizard_detect_creatures()
+{
+    const int prev_detected = count_detected_mons();
+    const int num_creatures = detect_creatures(60, true);
+
+    if (!num_creatures)
+        mpr("You detect nothing.");
+    else if (num_creatures == prev_detected)
+        mpr("You detect no further creatures.");
+    else
+        mpr("You detect creatures!");
+}
+
 // Dismisses all monsters on the level or all monsters that match a user
 // specified regex.
 void wizard_dismiss_all_monsters(bool force_all)
@@ -5262,7 +5277,6 @@ void debug_test_explore()
 
     mprf("Explore took %d turns.", explore_turns);
 }
-
 #endif
 
 #ifdef WIZARD

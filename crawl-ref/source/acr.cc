@@ -467,7 +467,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'S': wizard_set_skill_level();              break;
     case 'A': wizard_set_all_skills();               break;
     case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE);   break;
-    case 'v': wizard_value_artefact();                break;
+    case 'v': wizard_value_artefact();               break;
     case '+': wizard_make_object_randart();          break;
     case '|': wizard_create_all_artefacts();         break;
     case 'C': wizard_uncurse_item();                 break;
@@ -505,7 +505,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '^': wizard_gain_piety();                   break;
     case '_': wizard_get_religion();                 break;
     case '\'': wizard_list_items();                  break;
-    case 'd': case 'D': wizard_level_travel(true);   break;
+    case 'd': wizard_level_travel(true);             break;
+    case 'D': wizard_detect_creatures();             break;
     case 'u': case 'U': wizard_level_travel(false);  break;
     case '%': case 'o': wizard_create_spec_object(); break;
 

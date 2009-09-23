@@ -541,8 +541,8 @@ void item_colour(item_def &item)
             item.colour = (coinflip() ? MAGENTA : GREEN);
             break;
         case FOOD_CHUNK:
-            // set the appropriate colour of the meat:
-            temp_value = mons_class_colour( item.plus );
+            // Set the appropriate colour of the meat:
+            temp_value  = mons_class_colour( item.plus );
             item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
             break;
         default:
@@ -643,7 +643,7 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_SCROLLS:
-        item.colour = LIGHTGREY;
+        item.colour  = LIGHTGREY;
         item.special = you.item_description[IDESC_SCROLLS][item.sub_type];
         item.plus = you.item_description[IDESC_SCROLLS_II][item.sub_type];
         break;
@@ -669,7 +669,7 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_STAVES:
-        item.colour = BROWN;
+        item.colour  = BROWN;
         item.special = you.item_description[IDESC_STAVES][item.sub_type];
         break;
 
@@ -678,7 +678,7 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_MISCELLANY:
-        if ( is_deck(item) )
+        if (is_deck(item))
             break;
 
         switch (item.sub_type)
@@ -797,8 +797,8 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_CORPSES:
-        // set the appropriate colour of the body:
-        temp_value = mons_class_colour( item.plus );
+        // Set the appropriate colour of the body:
+        temp_value  = mons_class_colour( item.plus );
         item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
         break;
 
@@ -818,8 +818,7 @@ static bool _is_boring_item(int type, int sub_type)
     case OBJ_POTIONS:
         return (sub_type == POT_CURE_MUTATION);
     case OBJ_SCROLLS:
-        // The corresponding spells are considered "boring", so Xom
-        // shouldn't gift these scrolls either.
+        // These scrolls increase knowledge and thus reduce risk.
         switch (sub_type)
         {
         case SCR_DETECT_CURSE:
@@ -893,11 +892,8 @@ static bool _try_make_item_special_unrand(item_def& item, int force_type,
     int idx = find_okay_unrandart(item.base_type, force_type,
                                   UNRANDSPEC_SPECIAL, abyss);
 
-    if (idx != -1)
-    {
-        if (make_item_unrandart(item, idx))
-            return (true);
-    }
+    if (idx != -1 && make_item_unrandart(item, idx))
+        return (true);
 
     return (false);
 }
@@ -1182,8 +1178,8 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         return static_cast<brand_type>(item.special);
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
-    const int tries = force_good ? 5 : 1;
-    brand_type rc = SPWPN_NORMAL;
+    const int tries       = force_good ? 5 : 1;
+    brand_type rc         = SPWPN_NORMAL;
 
     for (int count = 0; count < tries && rc == SPWPN_NORMAL; ++count)
     {
@@ -2032,8 +2028,8 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_WIZARD_HAT:
         if (coinflip())
         {
-            rc = (one_chance_in(3) ?
-                  SPARM_MAGIC_RESISTANCE : SPARM_INTELLIGENCE);
+            rc = (one_chance_in(3) ? SPARM_MAGIC_RESISTANCE
+                                   : SPARM_INTELLIGENCE);
         }
         break;
 
@@ -2055,7 +2051,8 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         rc = (tmp < 200) ? SPARM_RUNNING :
              (tmp < 400) ? SPARM_LEVITATION :
              (tmp < 600) ? SPARM_STEALTH :
-             (tmp < 700) ? SPARM_COLD_RESISTANCE : SPARM_FIRE_RESISTANCE;
+             (tmp < 700) ? SPARM_COLD_RESISTANCE
+                         : SPARM_FIRE_RESISTANCE;
         break;
     }
 
@@ -2201,7 +2198,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // would be an enchanted item which somehow didn't get converted
     // into armour).
     if (force_good)
-        hide2armour(item); // What of animal hides? {dlb}
+        hide2armour(item);
 
     // Skin armours and crystal plate mail normally don't get egos, but
     // can be randarts.
@@ -2276,7 +2273,7 @@ static void _generate_wand_item(item_def& item, int force_type)
     else
         item.sub_type = _random_wand_subtype();
 
-    // generate charges randomly...
+    // Generate charges randomly...
     item.plus = random2avg(_wand_max_charges(item.sub_type), 3);
 
     // ...but 0 charges is silly
@@ -2286,14 +2283,14 @@ static void _generate_wand_item(item_def& item, int force_type)
     // plus2 tracks how many times the player has zapped it.
     // If it is -1, then the player knows it's empty.
     // If it is -2, then the player has messed with it somehow
-    // (presumably by recharging), so don't bother to display the
-    // count.
+    // (presumably by recharging), so don't bother to display
+    // the count.
     item.plus2 = 0;
 }
 
 static void _generate_food_item(item_def& item, int force_quant, int force_type)
 {
-    // determine sub_type:
+    // Determine sub_type:
     if (force_type == OBJ_RANDOM)
     {
         item.sub_type = random_choose_weighted( 250, FOOD_MEAT_RATION,
@@ -2301,23 +2298,23 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
                                                 100, FOOD_PEAR,
                                                 100, FOOD_APPLE,
                                                 100, FOOD_CHOKO,
-                                                10,  FOOD_CHEESE,
-                                                10,  FOOD_PIZZA,
-                                                10,  FOOD_SNOZZCUMBER,
-                                                10,  FOOD_APRICOT,
-                                                10,  FOOD_ORANGE,
-                                                10,  FOOD_BANANA,
-                                                10,  FOOD_STRAWBERRY,
-                                                10,  FOOD_RAMBUTAN,
-                                                10,  FOOD_LEMON,
-                                                10,  FOOD_GRAPE,
-                                                10,  FOOD_SULTANA,
-                                                10,  FOOD_LYCHEE,
-                                                10,  FOOD_BEEF_JERKY,
-                                                10,  FOOD_SAUSAGE,
-                                                5,   FOOD_HONEYCOMB,
-                                                5,   FOOD_ROYAL_JELLY,
-                                                0);
+                                                 10, FOOD_CHEESE,
+                                                 10, FOOD_PIZZA,
+                                                 10, FOOD_SNOZZCUMBER,
+                                                 10, FOOD_APRICOT,
+                                                 10, FOOD_ORANGE,
+                                                 10, FOOD_BANANA,
+                                                 10, FOOD_STRAWBERRY,
+                                                 10, FOOD_RAMBUTAN,
+                                                 10, FOOD_LEMON,
+                                                 10, FOOD_GRAPE,
+                                                 10, FOOD_SULTANA,
+                                                 10, FOOD_LYCHEE,
+                                                 10, FOOD_BEEF_JERKY,
+                                                 10, FOOD_SAUSAGE,
+                                                  5, FOOD_HONEYCOMB,
+                                                  5, FOOD_ROYAL_JELLY,
+                                                  0);
     }
     else
         item.sub_type = force_type;
@@ -2325,13 +2322,13 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     // Happens with ghoul food acquirement -- use place_chunks() outherwise
     if (item.sub_type == FOOD_CHUNK)
     {
-        // set chunk flavour (default to common dungeon rat steaks):
+        // Set chunk flavour (default to common dungeon rat steaks):
         item.plus = _choose_random_monster_corpse();
-        // set duration
+        // Set duration.
         item.special = (10 + random2(11)) * 10;
     }
 
-    // determine quantity
+    // Determine quantity.
     if (force_quant > 1)
         item.quantity = force_quant;
     else
@@ -2372,34 +2369,34 @@ static void _generate_potion_item(item_def& item, int force_type,
         int stype;
         do
         {
-            stype = random_choose_weighted( 1407, POT_HEAL_WOUNDS,
-                                            2815, POT_HEALING,
-                                            222, POT_CURE_MUTATION,
-                                            612, POT_SPEED,
-                                            612, POT_MIGHT,
-                                            612, POT_AGILITY,
-                                            612, POT_BRILLIANCE,
-                                            136, POT_BERSERK_RAGE,
-                                            340, POT_INVISIBILITY,
-                                            340, POT_LEVITATION,
-                                            340, POT_RESISTANCE,
-                                            70, POT_PORRIDGE,
-                                            111, POT_BLOOD,
-                                            38, POT_GAIN_STRENGTH,
-                                            38, POT_GAIN_DEXTERITY,
-                                            38, POT_GAIN_INTELLIGENCE,
-                                            13, POT_EXPERIENCE,
-                                            140, POT_MAGIC,
-                                            900, POT_RESTORE_ABILITIES,
-                                            648, POT_POISON,
-                                            162, POT_STRONG_POISON,
-                                            324, POT_MUTATION,
-                                            324, POT_SLOWING,
-                                            324, POT_PARALYSIS,
-                                            324, POT_CONFUSION,
-                                            278, POT_DEGENERATION,
-                                            10, POT_DECAY,
-                                            0);
+            stype = random_choose_weighted( 2815, POT_HEALING,
+                                            1407, POT_HEAL_WOUNDS,
+                                             900, POT_RESTORE_ABILITIES,
+                                             648, POT_POISON,
+                                             612, POT_SPEED,
+                                             612, POT_MIGHT,
+                                             612, POT_AGILITY,
+                                             612, POT_BRILLIANCE,
+                                             340, POT_INVISIBILITY,
+                                             340, POT_LEVITATION,
+                                             340, POT_RESISTANCE,
+                                             324, POT_MUTATION,
+                                             324, POT_SLOWING,
+                                             324, POT_PARALYSIS,
+                                             324, POT_CONFUSION,
+                                             278, POT_DEGENERATION,
+                                             222, POT_CURE_MUTATION,
+                                             162, POT_STRONG_POISON,
+                                             140, POT_MAGIC,
+                                             136, POT_BERSERK_RAGE,
+                                             111, POT_BLOOD,
+                                              70, POT_PORRIDGE,
+                                              38, POT_GAIN_STRENGTH,
+                                              38, POT_GAIN_DEXTERITY,
+                                              38, POT_GAIN_INTELLIGENCE,
+                                              13, POT_EXPERIENCE,
+                                              10, POT_DECAY,
+                                               0);
         }
         while (stype == POT_POISON && item_level < 1
                || stype == POT_STRONG_POISON && item_level < 11
@@ -2435,37 +2432,38 @@ static void _generate_scroll_item(item_def& item, int force_type,
             item.sub_type = random_choose_weighted(
                 1797, SCR_IDENTIFY,
                 1305, SCR_REMOVE_CURSE,
-                802, SCR_TELEPORTATION,
-                642, SCR_DETECT_CURSE,
-                321, SCR_FEAR,
-                321, SCR_NOISE,
-                321, SCR_MAGIC_MAPPING,
-                321, SCR_FOG,
-                321, SCR_RANDOM_USELESSNESS,
-                321, SCR_CURSE_WEAPON,
-                321, SCR_CURSE_ARMOUR,
-                321, SCR_RECHARGING,
-                321, SCR_BLINKING,
-                161, SCR_PAPER,
-                321, SCR_ENCHANT_ARMOUR,
-                321, SCR_ENCHANT_WEAPON_I,
-                321, SCR_ENCHANT_WEAPON_II,
+                 802, SCR_TELEPORTATION,
+                 642, SCR_DETECT_CURSE,
+                 321, SCR_FEAR,
+                 321, SCR_NOISE,
+                 321, SCR_MAGIC_MAPPING,
+                 321, SCR_FOG,
+                 321, SCR_RANDOM_USELESSNESS,
+                 321, SCR_CURSE_WEAPON,
+                 321, SCR_CURSE_ARMOUR,
+                 321, SCR_RECHARGING,
+                 321, SCR_BLINKING,
+                 321, SCR_ENCHANT_ARMOUR,
+                 321, SCR_ENCHANT_WEAPON_I,
+                 321, SCR_ENCHANT_WEAPON_II,
 
-                // Don't create ?oImmolation at low levels (encourage read-ID)
-                321, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
+                 // Don't create ?oImmolation at low levels (encourage read-ID).
+                 321, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
 
-                // Medium-level scrolls
-                140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
-                140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
-                140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
-                140, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
-                140, (depth_mod < 4 ? SCR_PAPER :         SCR_SILENCE),
+                 161, SCR_PAPER,
 
-                // High-level scrolls
-                140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
-                140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
-                140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
-                0);
+                 // Medium-level scrolls.
+                 140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
+                 140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
+                 140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
+                 140, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
+                 140, (depth_mod < 4 ? SCR_PAPER :         SCR_SILENCE),
+
+                 // High-level scrolls.
+                 140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
+                 140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
+                 140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
+                   0);
         }
         while (agent == GOD_XOM && _is_boring_item(OBJ_SCROLLS, item.sub_type));
     }
@@ -2810,6 +2808,7 @@ int items(int allow_uniques,       // not just true-false,
 
     if (force_ego != 0)
         allow_uniques = false;
+
     item.special = force_ego;
 
     // cap item_level unless an acquirement-level item {dlb}:
@@ -2822,18 +2821,18 @@ int items(int allow_uniques,       // not just true-false,
     else
     {
         item.base_type = static_cast<object_class_type>(
-            random_choose_weighted(5, OBJ_STAVES,
-                                   15, OBJ_BOOKS,
-                                   25, OBJ_JEWELLERY,
-                                   35, OBJ_WANDS,
-                                   70, OBJ_FOOD,
+            random_choose_weighted(  5, OBJ_STAVES,
+                                    15, OBJ_BOOKS,
+                                    25, OBJ_JEWELLERY,
+                                    35, OBJ_WANDS,
+                                    70, OBJ_FOOD,
                                    100, OBJ_ARMOUR,
                                    100, OBJ_WEAPONS,
                                    100, OBJ_POTIONS,
                                    150, OBJ_MISSILES,
                                    200, OBJ_SCROLLS,
                                    200, OBJ_GOLD,
-                                   0));
+                                     0));
 
         // misc items placement wholly dependent upon current depth {dlb}:
         if (item_level > 7 && x_chance_in_y(21 + item_level, 3500))
@@ -3107,7 +3106,7 @@ static void _give_scroll(monsters *mon, int level)
 static void _give_wand(monsters *mon, int level)
 {
     if (mons_is_unique(mon->type) && mon->type != MONS_GASTRONOK
-        && one_chance_in(5))
+        && (one_chance_in(5) || mon->type == MONS_MAURICE && one_chance_in(3)))
     {
         const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
 
@@ -3191,7 +3190,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (one_chance_in(10) && level > 1)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_BLOWGUN;
+            item.sub_type  = WPN_BLOWGUN;
             break;
         }
         // intentional fallthrough
@@ -3199,9 +3198,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (x_chance_in_y(3, 5))     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = random_choose(WPN_DAGGER,      WPN_DAGGER,
-                                          WPN_SHORT_SWORD, WPN_SHORT_SWORD,
-                                          WPN_CLUB,        -1);
+            item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
+                                           WPN_SHORT_SWORD, WPN_SHORT_SWORD,
+                                           WPN_CLUB,        -1);
         }
         else
             return (item_race);
@@ -3214,7 +3213,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (x_chance_in_y(3, 5))     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_CLUB;
+            item.sub_type  = WPN_CLUB;
         }
         else
             return (item_race);
@@ -3227,7 +3226,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (!melee_only && one_chance_in(12) && level)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_SLING;
+            item.sub_type  = WPN_SLING;
             break;
         }
         // deliberate fall through {dlb}
@@ -3236,7 +3235,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (x_chance_in_y(3, 5))     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = (coinflip() ? WPN_DAGGER : WPN_CLUB);
+            item.sub_type  = (coinflip() ? WPN_DAGGER : WPN_CLUB);
         }
         else
             return (item_race);
@@ -3285,17 +3284,17 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (!one_chance_in(5))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = random_choose(WPN_SPEAR,   WPN_SPEAR, WPN_FLAIL,
-                                          WPN_HALBERD, WPN_CLUB,  -1);
+            item.sub_type  = random_choose(WPN_SPEAR,   WPN_SPEAR, WPN_FLAIL,
+                                           WPN_HALBERD, WPN_CLUB,  -1);
         }
         break;
 
     case MONS_GRUM:
         force_item = true; // guaranteed reaching
-        item_race = MAKE_ITEM_NO_RACE;
+        item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_SPEAR, WPN_WHIP, WPN_WHIP,
-                                      WPN_HALBERD, WPN_GLAIVE, -1);
+        item.sub_type  = random_choose(WPN_SPEAR, WPN_WHIP, WPN_WHIP,
+                                       WPN_HALBERD, WPN_GLAIVE, -1);
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
         item.plus  += -2 + random2(4);
         item.plus2 += -1 + random2(2);
@@ -3346,7 +3345,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_DEEP_ELF_SOLDIER:
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(
+        item.sub_type  = random_choose_weighted(
             20, WPN_LONG_SWORD, 20, WPN_SHORT_SWORD, 14, WPN_SCIMITAR,
             14, WPN_MACE,       13, WPN_BOW,         13, WPN_HAND_CROSSBOW,
             5,  WPN_LONGBOW,
@@ -3377,7 +3376,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_DEEP_ELF_MASTER_ARCHER:
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_LONGBOW;
+        item.sub_type  = WPN_LONGBOW;
         break;
 
     case MONS_DEEP_ELF_ANNIHILATOR:
@@ -3395,10 +3394,10 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_CALLER:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
-                                      WPN_SHORT_SWORD, WPN_SABRE,
-                                      WPN_DAGGER,      WPN_WHIP,
-                                      -1);
+        item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
+                                       WPN_SHORT_SWORD, WPN_SABRE,
+                                       WPN_DAGGER,      WPN_WHIP,
+                                       -1);
         break;
 
     case MONS_ORC_WARRIOR:
@@ -3432,7 +3431,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             item_race = MAKE_ITEM_NO_RACE;
 
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(
+        item.sub_type  = random_choose_weighted(
             10, WPN_LONG_SWORD, 10, WPN_SHORT_SWORD,
             10, WPN_SCIMITAR,   10, WPN_BATTLEAXE,
             10, WPN_HAND_AXE,   10, WPN_HALBERD,
@@ -3490,15 +3489,15 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
         item.base_type = OBJ_MISSILES;
-        item.sub_type = MI_LARGE_ROCK;
+        item.sub_type  = MI_LARGE_ROCK;
         break;
 
     case MONS_TWO_HEADED_OGRE:
     case MONS_ETTIN:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
-                                          : WPN_GIANT_CLUB);
+        item.sub_type  = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
+                                           : WPN_GIANT_CLUB);
 
         if (one_chance_in(10) || mon->type == MONS_ETTIN)
         {
@@ -3513,12 +3512,12 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_SIGMUND:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_SCYTHE;
+        item.sub_type  = WPN_SCYTHE;
         break;
 
     case MONS_BALRUG:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_DEMON_WHIP;
+        item.sub_type  = WPN_DEMON_WHIP;
         break;
 
     case MONS_RED_DEVIL:
@@ -3526,8 +3525,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         {
             item_race = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = (one_chance_in(3) ? WPN_DEMON_TRIDENT
-                                              : WPN_TRIDENT);
+            item.sub_type  = (one_chance_in(3) ? WPN_DEMON_TRIDENT
+                                               : WPN_TRIDENT);
         }
         break;
 
@@ -3536,8 +3535,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_EROLCHA:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
-                                          : WPN_GIANT_CLUB);
+        item.sub_type  = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
+                                           : WPN_GIANT_CLUB);
 
         if (one_chance_in(10))
         {
@@ -3551,7 +3550,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         {
             item_race = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_TRIDENT;
+            item.sub_type  = WPN_TRIDENT;
             break;
         }
         // intentionally fall through
@@ -3561,7 +3560,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         {
             item_race = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_SPEAR;
+            item.sub_type  = WPN_SPEAR;
         }
         break;
 
@@ -3773,7 +3772,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_MAURICE:
-        item_race  = MAKE_ITEM_NO_RACE;
+        item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
         break;
@@ -3811,10 +3810,10 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         force_item = true;
         item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_GREAT_SWORD, WPN_TRIDENT,
-                                      WPN_SPEAR,       WPN_GLAIVE,
-                                      WPN_BOW,         WPN_HALBERD,
-                                      -1);
+        item.sub_type  = random_choose(WPN_GREAT_SWORD, WPN_TRIDENT,
+                                       WPN_SPEAR,       WPN_GLAIVE,
+                                       WPN_BOW,         WPN_HALBERD,
+                                       -1);
 
         set_item_ego_type(item, OBJ_WEAPONS, is_range_weapon(item) ?
                           SPWPN_FLAME : SPWPN_FLAMING);
@@ -3947,9 +3946,9 @@ static void _give_ammo(monsters *mon, int level,
         case MONS_BIG_KOBOLD:
             if (x_chance_in_y(2, 5))
             {
-                item_race = MAKE_ITEM_NO_RACE;
+                item_race  = MAKE_ITEM_NO_RACE;
                 weap_class = OBJ_MISSILES;
-                weap_type = MI_DART;
+                weap_type  = MI_DART;
                 qty = 1 + random2(5);
             }
             break;
@@ -3958,9 +3957,8 @@ static void _give_ammo(monsters *mon, int level,
             if (one_chance_in(
                     you.where_are_you == BRANCH_ORCISH_MINES? 9 : 20))
             {
-                weap_type =
-                    random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
-                qty = random_range(4, 8);
+                weap_type = random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
+                qty       = random_range(4, 8);
                 item_race = MAKE_ITEM_ORCISH;
             }
             break;
@@ -3969,7 +3967,7 @@ static void _give_ammo(monsters *mon, int level,
             if (one_chance_in(20))
             {
                 weap_type = random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
-                qty = random_range(2, 5);
+                qty       = random_range(2, 5);
                 item_race = MAKE_ITEM_ORCISH;
             }
             break;
@@ -3988,20 +3986,20 @@ static void _give_ammo(monsters *mon, int level,
                 if (coinflip())
                 {
                     weap_type = WPN_SPEAR;
-                    qty = 1 + random2(3);
+                    qty       = 1 + random2(3);
                 }
                 else
                 {
                     weap_class = OBJ_MISSILES;
                     weap_type = MI_JAVELIN;
-                    qty = 3 + random2(6);
+                    qty       = 3 + random2(6);
                 }
             }
             if (one_chance_in(6) && !mons_summoned)
             {
                 weap_class = OBJ_MISSILES;
-                weap_type = MI_THROWING_NET;
-                qty = 1;
+                weap_type  = MI_THROWING_NET;
+                qty        = 1;
                 if (one_chance_in(4))
                     qty += random2(3); // up to three nets
             }
@@ -4020,8 +4018,8 @@ static void _give_ammo(monsters *mon, int level,
                 break;
 
             weap_class = OBJ_MISSILES;
-            weap_type = MI_THROWING_NET;
-            qty = 1;
+            weap_type  = MI_THROWING_NET;
+            qty        = 1;
             if (one_chance_in(3))
                 qty++;
             if (mon->type == MONS_HAROLD || mon->type == MONS_JOZEF)
@@ -4084,10 +4082,8 @@ void give_shield(monsters *mon, int level)
 
     // If the monster is already wielding/carrying a two-handed weapon, it
     // doesn't get a shield. (Monsters always prefer raw damage to protection!)
-    if (main_weap
-           && hands_reqd(*main_weap, mon->body_size()) == HANDS_TWO
-        || alt_weap
-           && hands_reqd(*alt_weap, mon->body_size()) == HANDS_TWO)
+    if (main_weap && hands_reqd(*main_weap, mon->body_size()) == HANDS_TWO
+        || alt_weap && hands_reqd(*alt_weap, mon->body_size()) == HANDS_TWO)
     {
         return;
     }
@@ -4220,15 +4216,15 @@ void give_armour(monsters *mon, int level)
 
     case MONS_TERENCE:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random_choose_weighted(1, ARM_RING_MAIL,
-                                               3, ARM_SCALE_MAIL,
-                                               2, ARM_CHAIN_MAIL,
-                                               0);
+        item.sub_type  = random_choose_weighted(1, ARM_RING_MAIL,
+                                                3, ARM_SCALE_MAIL,
+                                                2, ARM_CHAIN_MAIL,
+                                                0);
         break;
 
     case MONS_GRUM:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_ANIMAL_SKIN;
+        item.sub_type  = ARM_ANIMAL_SKIN;
         break;
 
     case MONS_URUG:
@@ -4252,7 +4248,7 @@ void give_armour(monsters *mon, int level)
 
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
-        // being at the top has its privileges
+        // Being at the top has its privileges. :)
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         // deliberate fall through
@@ -4285,8 +4281,8 @@ void give_armour(monsters *mon, int level)
     case MONS_WIGHT:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_ROBE;
-        force_colour = WHITE; //mv: always white
+        item.sub_type  = ARM_ROBE;
+        force_colour   = WHITE;
         break;
 
     // Centaurs sometimes wear barding.
@@ -4398,7 +4394,7 @@ void give_armour(monsters *mon, int level)
     case MONS_VAMPIRE_MAGE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
-        force_colour   = DARKGREY; //mv: always darkgrey
+        force_colour   = DARKGREY;
         break;
 
     case MONS_EUSTACHIO:
@@ -4482,9 +4478,9 @@ jewellery_type get_random_ring_type()
     const jewellery_type j = _get_raw_random_ring_type();
     // Adjusted distribution here -- bwr
     if ((j == RING_INVISIBILITY
-         || j == RING_REGENERATION
-         || j == RING_TELEPORT_CONTROL
-         || j == RING_SLAYING)
+           || j == RING_REGENERATION
+           || j == RING_TELEPORT_CONTROL
+           || j == RING_SLAYING)
         && !one_chance_in(3))
     {
         return _get_raw_random_ring_type();
@@ -4591,7 +4587,7 @@ armour_type get_random_armour_type(int item_level)
             armtype = random_choose_weighted(333, ARM_SHIELD,
                                              500, ARM_BUCKLER,
                                              167, ARM_LARGE_SHIELD,
-                                             0);
+                                               0);
         }
     }
 
