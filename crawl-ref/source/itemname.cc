@@ -2604,7 +2604,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
-            return player_res_poison(false);
+            return (player_res_poison(false));
         }
 
         return (false);

@@ -4882,7 +4882,7 @@ void read_scroll(int slot)
         if (you.confused())
         {
             random_uselessness(item_slot);
-            dec_inv_item_quantity( item_slot, 1 );
+            dec_inv_item_quantity(item_slot, 1);
             return;
         }
 
