@@ -2441,7 +2441,7 @@ void ugly_thing_energy_mutate(monsters *ugly)
 
 bool ugly_thing_proximity_mutate(monsters *ugly)
 {
-    if (one_chance_in(10))
+    if (one_chance_in(9))
     {
         int mutate_chance = 0;
 
