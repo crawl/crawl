@@ -3176,9 +3176,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                 need_mon_name = false;
             }
             else
-            {
                 verb += "through ";
-            }
         }
         else
             verb = "attack ";
