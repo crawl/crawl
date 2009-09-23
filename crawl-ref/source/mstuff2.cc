@@ -138,8 +138,8 @@ static bool _legs_msg_applicable()
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise)
 {
-    // Always do setup.  It might be done already, but it doesn't
-    // hurt to do it again (cheap).
+    // Always do setup.  It might be done already, but it doesn't hurt
+    // to do it again (cheap).
     setup_mons_cast(monster, pbolt, spell_cast);
 
     // single calculation permissible {dlb}
