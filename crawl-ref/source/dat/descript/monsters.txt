@@ -158,7 +158,7 @@ A middle aged bounty hunter, hired to kill you. He is in a hurry.
 %%%%
 harpy
 
-Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their beaks or claws. It is their way to steal food from the unwary, causing many a man to starve to death.
+Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to steal food from the unwary, causing many a man to starve to death.
 %%%%
 Ijyb
 
