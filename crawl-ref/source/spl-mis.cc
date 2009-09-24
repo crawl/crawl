@@ -1946,7 +1946,7 @@ void MiscastEffect::_transmutation(int severity)
                 you_msg = "Your body is distorted in a weirdly horrible way!";
                 // We don't need messages when the mutation fails,
                 // because we give our own (which is justified anyway as
-                // you take damage.)
+                // you take damage).
                 give_bad_mutation(false, false, lethality_margin > 0);
                 if (coinflip())
                     give_bad_mutation(false, false, lethality_margin > 0);
