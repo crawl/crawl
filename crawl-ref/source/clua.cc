@@ -810,10 +810,6 @@ LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS
         || current_delay_action() == DELAY_DESCENDING_STAIRS)
 LUARET1(you_turns, number, you.num_turns)
-LUARET1(you_see_grid, boolean,
-        see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
-LUARET1(you_see_grid_no_trans, boolean,
-        see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(you_can_smell, boolean, player_can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 
@@ -928,8 +924,6 @@ static const struct luaL_reg you_lib[] =
     { "subdepth",     you_subdepth },
     { "absdepth",     you_absdepth },
 
-    { "see_grid",          you_see_grid },
-    { "see_grid_no_trans", you_see_grid_no_trans },
     { "can_smell",         you_can_smell },
     { "has_claws",         you_has_claws },
 

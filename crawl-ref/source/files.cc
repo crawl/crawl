@@ -225,7 +225,6 @@ bool get_dos_compatible_file_name(std::string *fname)
 }
 #endif
 
-
 // Returns the names of all files in the given directory. Note that the
 // filenames returned are relative to the directory.
 std::vector<std::string> get_dir_files(const std::string &dirname)
@@ -266,6 +265,17 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
 #endif
 
     return (files);
+}
+
+std::vector<std::string> get_dir_files_ext(const std::string &dir,
+                                           const std::string &ext)
+{
+    const std::vector<std::string> allfiles(get_dir_files(dir));
+    std::vector<std::string> filtered;
+    for (int i = 0, size = allfiles.size(); i < size; ++i)
+        if (ends_with(allfiles[i], ext))
+            filtered.push_back(allfiles[i]);
+    return (filtered);
 }
 
 std::string get_parent_directory(const std::string &filename)

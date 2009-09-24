@@ -3424,6 +3424,7 @@ enum commandline_option_type {
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_ARENA,
+    CLO_TEST,
     CLO_HELP,
 
     CLO_NOPS
@@ -3432,7 +3433,7 @@ enum commandline_option_type {
 static const char *cmd_ops[] = {
     "scores", "name", "species", "job", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "help"
+    "mapstat", "arena", "test", "help"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3451,28 +3452,21 @@ std::string find_executable_path()
 	tempPath[0] = 0;
 
 #if defined ( _MSC_VER )
-
     int retval = GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
-
 #elif defined ( __linux__ )
-
     int retval = readlink ( "/proc/self/exe", tempPath, sizeof(tempPath) );
-
 #elif defined ( __MACH__ )
-
     strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
-
 #else
-
 	// We don't know how to find the executable's path on this OS.
-
 #endif
-
 	return std::string(tempPath);
 }
 
 bool parse_args( int argc, char **argv, bool rc_only )
 {
+    COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS, c1);
+
 	std::string exe_path = find_executable_path();
 
 	if (!exe_path.empty())
@@ -3613,6 +3607,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 SysEnv.arena_teams = next_arg;
                 nextUsed = true;
             }
+            break;
+
+        case CLO_TEST:
+            crawl_state.test = true;
             break;
 
         case CLO_MACRO:

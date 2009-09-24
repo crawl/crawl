@@ -29,9 +29,12 @@ REVISION("$Rev$");
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "monplace.h"
+#include "place.h"
+#include "spells3.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -459,6 +462,42 @@ static int dgn_depth(lua_State *ls)
 {
     MAP(ls, 1, map);
     return dgn_depth_proc(ls, map->depths, 2);
+}
+
+// WARNING: This is a very low-level call.
+LUAFN(dgn_dbg_goto_place)
+{
+    try
+    {
+        const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
+        you.level_type = id.level_type;
+        if (id.level_type == LEVEL_DUNGEON)
+        {
+            you.where_are_you = static_cast<branch_type>(id.branch);
+            you.your_level = absdungeon_depth(id.branch, id.depth);
+        }
+    }
+    catch (const std::string &err)
+    {
+        luaL_error(ls, err.c_str());
+    }
+    return (0);
+}
+
+LUAFN(dgn_dbg_flush_map_memory)
+{
+    dgn_flush_map_memory();
+    init_level_connectivity();
+    return (0);
+}
+
+LUAFN(dgn_dbg_generate_level)
+{
+    no_messages mx;
+    env.show.init(0);
+    env.map.init(map_cell());
+    builder(you.your_level, you.level_type);
+    return (0);
 }
 
 static int dgn_place(lua_State *ls)
@@ -2934,7 +2973,7 @@ LUAFN(dgn_rtile)
 #endif
 }
 
-LUAFN(dgn_debug_dump_map)
+LUAFN(dgn_dbg_dump_map)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
     if (lua_isstring(ls, pos))
@@ -2944,6 +2983,11 @@ LUAFN(dgn_debug_dump_map)
 
 static const struct luaL_reg dgn_lib[] =
 {
+    { "dbg_goto_place", dgn_dbg_goto_place },
+    { "dbg_flush_map_memory", dgn_dbg_flush_map_memory },
+    { "dbg_generate_level", dgn_dbg_generate_level },
+    { "dbg_dump_map", dgn_dbg_dump_map },
+
     { "default_depth", dgn_default_depth },
     { "name", dgn_name },
     { "depth", dgn_depth },
@@ -3084,8 +3128,6 @@ static const struct luaL_reg dgn_lib[] =
     { "lev_floortile", dgn_lev_floortile },
     { "lev_rocktile", dgn_lev_rocktile },
 
-    { "debug_dump_map", dgn_debug_dump_map },
-
     { NULL, NULL }
 };
 
@@ -3100,6 +3142,12 @@ LUAFN(_crawl_milestone)
     mark_milestone(luaL_checkstring(ls, 1),
                    luaL_checkstring(ls, 2));
 #endif
+    return (0);
+}
+
+LUAFN(_crawl_redraw_view)
+{
+    viewwindow(true, false);
     return (0);
 }
 
@@ -3122,6 +3170,7 @@ static const struct luaL_reg crawl_lib[] =
 {
     { "args", _crawl_args },
     { "mark_milestone", _crawl_milestone },
+    { "redraw_view", _crawl_redraw_view },
 #ifdef UNIX
     { "millis", _crawl_millis },
 #endif
@@ -3266,12 +3315,46 @@ LUARET1(you_x_pos, number, you.pos().x)
 LUARET1(you_y_pos, number, you.pos().y)
 LUARET2(you_pos, number, you.pos().x, you.pos().y)
 
+// see_grid should not be exposed to user scripts. The game should
+// never disclose grid coordinates to the player. Therefore we load it
+// only into the core Lua interpreter (dlua), never into the user
+// script interpreter (clua).
+LUARET1(you_see_grid, boolean,
+        see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(you_see_grid_no_trans, boolean,
+        see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+
+LUAFN(you_moveto)
+{
+    const coord_def place(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+    ASSERT(map_bounds(place));
+    you.moveto(place);
+    return (0);
+}
+
+LUAFN(you_random_teleport)
+{
+    you_teleport_now(false, false);
+    return (0);
+}
+
+LUAFN(you_losight)
+{
+    calc_show_los();
+    return (0);
+}
+
 static const struct luaL_reg you_lib[] =
 {
     { "hear_pos", you_can_hear_pos },
     { "x_pos", you_x_pos },
     { "y_pos", you_y_pos },
     { "pos",   you_pos },
+    { "moveto", you_moveto },
+    { "see_grid",          you_see_grid },
+    { "see_grid_no_trans", you_see_grid_no_trans },
+    { "random_teleport", you_random_teleport },
+    { "losight", you_losight },
     { NULL, NULL }
 };
 

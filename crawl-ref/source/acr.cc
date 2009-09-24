@@ -53,6 +53,7 @@ REVISION("$Rev$");
 #include "cloud.h"
 #include "clua.h"
 #include "command.h"
+#include "ctest.h"
 #include "crash.h"
 #include "database.h"
 #include "debug.h"
@@ -316,6 +317,10 @@ static void _show_commandline_options_help()
     puts("");
     puts("Arena options: (Stage a tournament between various monsters.)");
     puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
+#if DEBUG_DIAGNOSTICS
+    puts("");
+    puts("  -test            run test cases in ./test");
+#endif
 }
 
 static void _wanderer_startup_message()
@@ -3507,6 +3512,20 @@ static bool _initialise(void)
         end(0, false);
     }
 #endif
+
+    if (crawl_state.test)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        crawl_tests::run_tests(true);
+        // Superfluous, just to make it clear that this is the end of
+        // the line.
+        end(0, false);
+#else
+        end(1, false, "Non-debug Crawl cannot run tests. "
+            "Please use a debug build");
+#endif
+    }
+
 
     if (crawl_state.arena)
     {

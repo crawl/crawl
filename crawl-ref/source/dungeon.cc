@@ -363,6 +363,12 @@ void level_clear_vault_memory()
     dgn_Map_Mask.init(0);
 }
 
+void dgn_flush_map_memory()
+{
+    you.uniq_map_tags.clear();
+    you.uniq_map_names.clear();
+}
+
 static void _dgn_load_colour_grid()
 {
     dgn_colour_grid.reset(new dungeon_colour_grid);

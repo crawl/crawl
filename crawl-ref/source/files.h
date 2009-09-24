@@ -39,6 +39,10 @@ bool is_absolute_path(const std::string &path);
 bool is_read_safe_path(const std::string &path);
 void assert_read_safe_path(const std::string &path) throw (std::string);
 
+std::vector<std::string> get_dir_files(const std::string &dir);
+std::vector<std::string> get_dir_files_ext(const std::string &dir,
+                                           const std::string &ext);
+
 std::string datafile_path(std::string basename,
                           bool croak_on_fail = true,
                           bool test_base_path = false);

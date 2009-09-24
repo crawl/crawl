@@ -1207,7 +1207,14 @@ void dump_map(FILE *fp, bool debug)
         for (int y = 0; y < GYM; ++y)
         {
             for (int x = 0; x < GXM; ++x)
-                fputc(grid_character_at(coord_def(x,y)), fp);
+            {
+                if (you.pos() == coord_def(x, y))
+                    fputc('@', fp);
+                else if (grd[x][y] == DNGN_FLOOR_SPECIAL)
+                    fputc('?', fp);
+                else
+                    fputc(grid_character_at(coord_def(x,y)), fp);
+            }
             fputc('\n', fp);
         }
     }

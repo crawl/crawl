@@ -332,6 +332,8 @@ void write_level_connectivity(writer &th);
 
 bool builder(int level_number, int level_type);
 
+void dgn_flush_map_memory();
+
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Set floor/wall colour based on the mons_alloc array. Used for

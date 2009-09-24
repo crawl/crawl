@@ -819,7 +819,8 @@ static void _wizard_go_to_level(const level_pos &pos)
 #else
     UNUSED(newlevel);
 #endif
-    save_game_state();
+    if (!crawl_state.test)
+        save_game_state();
     new_level();
     viewwindow(true, true);
 

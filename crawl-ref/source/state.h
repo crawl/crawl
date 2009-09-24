@@ -59,6 +59,8 @@ struct game_state
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
 
+    bool test;              // Set if we want to run self-tests and exit.
+
     bool unicode_ok;        // Is unicode support available?
 
     std::string (*glyph2strfn)(unsigned glyph);

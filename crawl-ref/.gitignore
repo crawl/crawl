@@ -7,7 +7,7 @@ morgue
 *.rej
 *.swp
 core
-debug.map
+*.map
 err.txt
 map.dump
 mapgen.log

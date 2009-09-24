@@ -12,6 +12,7 @@ chardump.o \
 cio.o \
 cloud.o \
 command.o \
+ctest.o \
 database.o \
 debug.o \
 decks.o \

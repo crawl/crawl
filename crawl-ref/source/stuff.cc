@@ -790,7 +790,8 @@ void end(int exit_code, bool print_error, const char *format, ...)
     }
 
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(DGL_PAUSE_AFTER_ERROR)
-    if (exit_code && !crawl_state.arena && !crawl_state.seen_hups)
+    if (exit_code && !crawl_state.arena
+        && !crawl_state.seen_hups && !crawl_state.test)
     {
         fprintf(stderr, "Hit Enter to continue...\n");
         getchar();
