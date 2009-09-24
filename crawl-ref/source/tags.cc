@@ -746,11 +746,12 @@ tag_type tag_read(FILE *fp, char minorVersion)
 
 
 // Older savefiles might want to call this to get a tag properly
-// initialized if it wasn't part of the savefile.
-// For now, none are supported.
+// initialised if it wasn't part of the savefile.  For now, none are
+// supported.
 
 // This function will be called AFTER all other tags for the savefile
-// are read, so everything that can be initialized should have been by now.
+// are read, so everything that can be initialised should have been by
+// now.
 
 // minorVersion is available for any child functions that need it
 // (currently none).

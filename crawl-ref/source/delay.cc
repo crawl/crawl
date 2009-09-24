@@ -1739,7 +1739,7 @@ void run_macro(const char *macroname)
 #ifdef CLUA_BINDINGS
     if (!clua)
     {
-        mpr("Lua not initialized", MSGCH_DIAGNOSTICS);
+        mpr("Lua not initialised", MSGCH_DIAGNOSTICS);
         stop_delay();
         return;
     }

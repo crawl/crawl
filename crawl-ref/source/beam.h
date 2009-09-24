@@ -243,7 +243,7 @@ public:
     void monster_post_hit(monsters* mon, int dmg);
     bool misses_player();
 
-    void initialize_fire();
+    void initialise_fire();
     void apply_beam_conducts();
     void choose_ray();
     void draw(const coord_def& p);

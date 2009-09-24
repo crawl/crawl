@@ -68,7 +68,7 @@ struct mon_spellbook
 
 mon_display monster_symbols[NUM_MONSTERS];
 
-static bool initialized_randmons = false;
+static bool initialised_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
 #include "mon-data.h"
@@ -124,7 +124,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
     }
 }
 
-static void _initialize_randmons()
+static void _initialise_randmons()
 {
     for (int i = 0; i < NUM_HABITATS; ++i)
     {
@@ -139,7 +139,7 @@ static void _initialize_randmons()
                 monsters_by_habitat[i].push_back(static_cast<monster_type>(m));
         }
     }
-    initialized_randmons = true;
+    initialised_randmons = true;
 }
 
 monster_type random_monster_at_grid(const coord_def& p)
@@ -149,8 +149,8 @@ monster_type random_monster_at_grid(const coord_def& p)
 
 monster_type random_monster_at_grid(dungeon_feature_type grid)
 {
-    if (!initialized_randmons)
-        _initialize_randmons();
+    if (!initialised_randmons)
+        _initialise_randmons();
 
     const habitat_type ht = grid2habitat(grid);
     const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
@@ -533,7 +533,7 @@ bool mons_behaviour_perceptible(const monsters *mon)
 
 // Returns true for monsters that obviously (to the player) feel
 // "thematically at home" in a branch.  Currently used for native
-// monsters recognizing traps and patrolling branch entrances.
+// monsters recognising traps and patrolling branch entrances.
 bool mons_is_native_in_branch(const monsters *monster,
                               const branch_type branch)
 {
@@ -3165,7 +3165,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         }
 
         // We'll estimate the target's resistance to magic, by first getting
-        // the actual value and then randomizing it.
+        // the actual value and then randomising it.
         int est_magic_resist = (mon->foe == MHITNOT) ? 10000 : 0;
 
         if (mon->foe != MHITNOT)
@@ -3175,7 +3175,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             else
                 est_magic_resist = mons_resist_magic(&menv[mon->foe]);
 
-            // now randomize (normal intels less accurate than high):
+            // now randomise (normal intels less accurate than high):
             if (intel == I_NORMAL)
                 est_magic_resist += random2(80) - 40;
             else

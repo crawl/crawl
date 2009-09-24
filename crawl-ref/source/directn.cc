@@ -1434,7 +1434,7 @@ void direction(dist& moves, targeting_type restricts,
                 allow_out_of_range = true;
             }
             // intentional fall-through
-        case CMD_TARGET_SELECT: // finalize current choice
+        case CMD_TARGET_SELECT: // finalise current choice
             if (!moves.isEndpoint)
             {
                 const monsters* m = monster_at(moves.target);
@@ -1666,7 +1666,7 @@ void direction(dist& moves, targeting_type restricts,
             if (_dist_ok(moves, allow_out_of_range ? -1 : range,
                          mode, may_target_self, cancel_at_self))
             {
-                // Finalize whatever is inside the loop
+                // Finalise whatever is inside the loop
                 // (moves-internal finalizations can be done later).
                 moves.choseRay = show_beam;
                 moves.ray = ray;

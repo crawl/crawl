@@ -2959,7 +2959,7 @@ int tileidx_spell(spell_type spell)
 }
 
 // Modify wall tile index depending on floor/wall flavour.
-static inline void _finalize_tile(unsigned int *tile,
+static inline void _finalise_tile(unsigned int *tile,
                                   unsigned char wall_flv,
                                   unsigned char floor_flv,
                                   unsigned char special_flv,
@@ -4415,7 +4415,7 @@ void tile_floor_halo(dungeon_feature_type target, int tile)
             }
             else if (u_spc && d_spc)
             {
-                // We know this value is already initialized and
+                // We know this value is already initialised and
                 // is necessarily in bounds.
                 int t = env.tile_flv[x][y-1].floor - tile;
                 if (t == SPECIAL_NE || t == SPECIAL_E)
@@ -4427,7 +4427,7 @@ void tile_floor_halo(dungeon_feature_type target, int tile)
             }
             else if (r_spc && l_spc)
             {
-                // We know this value is already initialized and
+                // We know this value is already initialised and
                 // is necessarily in bounds.
                 int t = env.tile_flv[x-1][y].floor - tile;
                 if (t == SPECIAL_NW || t == SPECIAL_N)
@@ -4748,7 +4748,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 special_flv = env.tile_flv(gc).special;
             }
 
-            _finalize_tile(&tileb[count+1], wall_flv, floor_flv, special_flv,
+            _finalise_tile(&tileb[count+1], wall_flv, floor_flv, special_flv,
                            gc);
 
             if (is_excluded(gc))

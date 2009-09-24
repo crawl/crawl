@@ -1973,7 +1973,7 @@ bool make_item_randart( item_def &item )
     do
     {
         item.special = (random_int() & RANDART_SEED_MASK);
-        // Now that we found something, initialize the props array.
+        // Now that we found something, initialise the props array.
         if (!_init_artefact_properties(item))
         {
             // Something went wrong that no amount of changing

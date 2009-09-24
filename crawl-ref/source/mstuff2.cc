@@ -1260,7 +1260,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         monster->type   = MONS_GOLD_MIMIC + random2(5);
         monster->colour = get_mimic_colour( monster );
 
-        // If it's changed form, you won't recognize it.
+        // If it's changed form, you won't recognise it.
         // This assumes that a non-gold mimic turning into another item of
         // the same description is really, really unlikely.
         if (old_type != MONS_GOLD_MIMIC || monster->type != MONS_GOLD_MIMIC)
@@ -1751,7 +1751,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     bolt beam;
 
-    // Initialize to some bogus values so we can catch problems.
+    // Initialise to some bogus values so we can catch problems.
     beam.name         = "****";
     beam.colour       = 1000;
     beam.hit          = -1;

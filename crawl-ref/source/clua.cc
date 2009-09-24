@@ -195,7 +195,7 @@ void CLua::set_error(int err, lua_State *ls)
     }
     if (!ls && !(ls = _state))
     {
-        error = "<LUA not initialized>";
+        error = "<LUA not initialised>";
         return;
     }
     const char *serr = lua_tostring(ls, -1);

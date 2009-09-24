@@ -462,7 +462,7 @@ void message_out(int which_line, int color, const char *s, int firstcol,
 static void unixcurses_defkeys( void )
 {
 #ifdef NCURSES_VERSION
-    // keypad 0-9 (only if the "application mode" was successfully initialized)
+    // keypad 0-9 (only if the "application mode" was successfully initialised)
     define_key("\033Op", 1000);
     define_key("\033Oq", 1001);
     define_key("\033Or", 1002);

@@ -6523,7 +6523,7 @@ bool feawn_protects(const monsters * target)
     return target && feawn_protects_species(target->mons_species());
 }
 
-// Feawn neutralizes most plants and fungi but skips toadstools to prevent
+// Feawn neutralises most plants and fungi but skips toadstools to prevent
 // message spam (and killing them doesn't even cause piety loss).
 bool feawn_neutralises(const monsters * target)
 {

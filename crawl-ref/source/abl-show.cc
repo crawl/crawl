@@ -425,7 +425,7 @@ const std::string make_cost_description(ability_type ability)
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Food";   // randomized and amount hidden from player
+        ret << "Food";   // randomised and amount hidden from player
     }
 
     if (abil.piety_cost)
@@ -433,7 +433,7 @@ const std::string make_cost_description(ability_type ability)
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Piety";  // randomized and amount hidden from player
+        ret << "Piety";  // randomised and amount hidden from player
     }
 
     if (abil.flags & ABFLAG_BREATH)

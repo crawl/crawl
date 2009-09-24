@@ -347,7 +347,7 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
                                     bool quiet, int str_loss, int dex_loss,
                                     int int_loss)
 {
-    // Initialize with additional losses, if any.
+    // Initialise with additional losses, if any.
     int prop_str = str_loss;
     int prop_dex = dex_loss;
     int prop_int = int_loss;

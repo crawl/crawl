@@ -4092,7 +4092,7 @@ runrest::runrest()
 {
 }
 
-// Initialize is only called for resting/shift-running. We should eventually
+// Initialise is only called for resting/shift-running. We should eventually
 // include travel and wrap it all in.
 void runrest::initialise(int dir, int mode)
 {

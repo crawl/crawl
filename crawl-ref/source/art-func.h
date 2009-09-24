@@ -10,7 +10,7 @@
  * util/art-data.pl scans through this file to grab the functions
  * non-standard unrandarts use and put them into the unranddata structs
  * in art-data.h, so the function names must have the form of
- * _UNRAND_ENUM_func_name() in order to be recognized.
+ * _UNRAND_ENUM_func_name() in order to be recognised.
  */
 
 #ifdef ART_FUNC_H

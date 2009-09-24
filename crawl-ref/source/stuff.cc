@@ -671,7 +671,7 @@ int roll_dice(int num, int size)
     return (ret);
 }
 
-// originally designed to randomize evasion -
+// originally designed to randomise evasion -
 // values are slightly lowered near (max) and
 // approach an upper limit somewhere near (limit/2)
 int random2limit(int max, int limit)
@@ -843,7 +843,7 @@ void redraw_screen(void)
 }
 
 // STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
-// it is a bit more extensible and optimizes the logical structure, as well
+// it is a bit more extensible and optimises the logical structure, as well
 // usage: cast_summon_swarm() cast_summon_wraiths() cast_summon_scorpions()
 //        cast_summon_horrible_things()
 // ex(1): stepdown_value (foo, 2, 2, 6, 8) replaces the following block:

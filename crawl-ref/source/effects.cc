@@ -591,7 +591,7 @@ bool forget_spell(void)
 bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
                const char *cause, bool see_source)
 {
-    bool statLowered = false;   // must initialize to false {dlb}
+    bool statLowered = false;   // must initialise to false {dlb}
     char *ptr_stat   = NULL;
     bool *ptr_redraw = NULL;
     char newValue = 0;          // holds new value, for comparison to old {dlb}
@@ -2286,7 +2286,7 @@ bool recharge_wand(int item_slot)
                  charged ? "glows" : "flickers",
                  desc.c_str());
 
-            // Reinitialize zap counts.
+            // Reinitialise zap counts.
             wand.plus  = new_charges;
             wand.plus2 = (charged ? ZAPCOUNT_RECHARGED : ZAPCOUNT_MAX_CHARGED);
         }
@@ -3628,7 +3628,7 @@ void handle_time(long time_delta)
         added_contamination--;
 
     // Only punish if contamination caused by mutagenic randarts.
-    // (Haste and invisibility already penalized earlier.)
+    // (Haste and invisibility already penalised earlier.)
     contaminate_player( added_contamination, mutagenic_randart );
 
     // Only check for badness once every other turn.

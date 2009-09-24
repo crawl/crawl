@@ -926,7 +926,7 @@ void dgn_reset_level()
     for (int i = 0; i < MAX_TRAPS; i++)
         env.trap[i].type = TRAP_UNASSIGNED;
 
-    // Initialize all items.
+    // Initialise all items.
     for (int i = 0; i < MAX_ITEMS; i++)
         init_item( i );
 
@@ -1787,7 +1787,7 @@ static void _hide_doors()
         }
 }
 
-// Places a randomized ellipse with centre (x,y) and half axes a and b.
+// Places a randomised ellipse with centre (x, y) and half axes a and b.
 static void _place_ellipse(int x, int y, int a, int b,
                            dungeon_feature_type feat, int margin)
 {

@@ -73,7 +73,7 @@ class colour_bar
           m_old_disp(-1),
           m_request_redraw_after(0)
     {
-        // m_old_disp < 0 means it's invalid and needs to be initialized.
+        // m_old_disp < 0 means it's invalid and needs to be initialised.
     }
 
     bool wants_redraw() const

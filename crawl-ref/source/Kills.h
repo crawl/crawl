@@ -58,7 +58,7 @@ public:
     kill_def(const monsters *mon);
     kill_def() : kills(0), exp(0)
     {
-        // This object just says to the world that it's uninitialized
+        // This object just says to the world that it's uninitialised
     }
 
     void save(writer&) const;

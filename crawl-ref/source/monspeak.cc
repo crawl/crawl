@@ -383,7 +383,7 @@ bool mons_speaks(monsters *monster)
     if (!force_speak)
     {
        // Invisible monster tries to remain unnoticed.  Unless they're
-       // confused, since then they're too confused to realize they
+       // confused, since then they're too confused to realise they
        // should stay silent, but only if the player can see them, so as
        // to not have to deal with cases of speaking monsters which the
        // player can't see.

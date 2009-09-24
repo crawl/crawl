@@ -477,7 +477,7 @@ static std::string _getWeightedString(DBM *database, const std::string &key,
                                       const std::string &suffix,
                                       int fixed_weight = -1)
 {
-    // We have to canonicalize the key (in case the user typed it
+    // We have to canonicalise the key (in case the user typed it
     // in and got the case wrong.)
     std::string canonical_key = key + suffix;
     lowercase(canonical_key);
@@ -599,7 +599,7 @@ static std::string _query_database(DBM *db, std::string key,
 {
     if (canonicalise_key)
     {
-        // We have to canonicalize the key (in case the user typed it
+        // We have to canonicalise the key (in case the user typed it
         // in and got the case wrong.)
         lowercase(key);
     }

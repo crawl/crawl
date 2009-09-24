@@ -188,7 +188,7 @@ void turn_corpse_into_skeleton_and_chunks(item_def &item)
     }
 }
 
-// Initialize blood potions with a vector of timers.
+// Initialise blood potions with a vector of timers.
 void init_stack_blood_potions(item_def &stack, int age)
 {
     ASSERT(is_blood_potion(stack));
@@ -917,7 +917,7 @@ void turn_corpse_into_blood_potions(item_def &item)
 
     item.quantity = num_blood_potions_from_corpse(mons_class);
 
-    // Initialize timer depending on corpse age:
+    // Initialise timer depending on corpse age:
     // almost rotting: age = 100 --> potion timer =  500 --> will coagulate soon
     // freshly killed: age = 200 --> potion timer = 2500 --> fresh !blood
     init_stack_blood_potions(item, (item.special - 100) * 20 + 500);
@@ -1164,7 +1164,7 @@ void generate_random_blood_spatter_on_level()
 {
     int startprob;
 
-    // startprob is used to initialize the chance for neighbours being
+    // startprob is used to initialise the chance for neighbours being
     // spattered, which will be decreased by 1 per recursion round.
     // We then use one_chance_in(chance) to determine whether to spatter a
     // given grid or not. Thus, startprob = 1 means that initially all
@@ -1508,8 +1508,8 @@ static int runes_in_pack(std::vector<int> &runes)
 
 bool check_annotation_exclusion_warning()
 {
-    // Players might not realize the implications of teleport
-    // mutations in the labyrinth.
+    // Players might not realise the implications of teleport mutations
+    // in the labyrinth.
     if (grd(you.pos()) == DNGN_ENTER_LABYRINTH
         && player_mutation_level(MUT_TELEPORT))
     {
@@ -2798,7 +2798,7 @@ void remove_auto_exclude(const monsters *mon, bool sleepy)
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
-// is able to recognize as being monsters (i.e. no unknown mimics or
+// is able to recognise as being monsters (i.e. no unknown mimics or
 // submerged creatures.)
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous

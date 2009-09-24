@@ -1314,7 +1314,7 @@ game_start:
     // Needs to be done before handing out food.
     give_basic_mutations(you.species);
 
-    // This function depends on stats and mutations being finalized.
+    // This function depends on stats and mutations being finalised.
     // Returns false if Backspace on god/weapon/... selection.
     if (!_give_items_skills())
     {
@@ -1386,7 +1386,7 @@ game_start:
     origin_set_inventory(origin_set_startequip);
 
     // We calculate hp and mp here; all relevant factors should be
-    // finalized by now. (GDL)
+    // finalised by now. (GDL)
     calc_hp();
     calc_mp();
 

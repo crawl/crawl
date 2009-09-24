@@ -2365,7 +2365,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     if (is_blood_potion(item) && thrown.quantity > 1)
     {
-        // Initialize thrown potion with oldest potion in stack.
+        // Initialise thrown potion with oldest potion in stack.
         long val = remove_oldest_blood_potion(thrown);
         val -= you.num_turns;
         item.props.clear();
@@ -2870,7 +2870,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
-    // FINALIZE tohit and damage
+    // FINALISE tohit and damage
     if (exHitBonus >= 0)
         pbolt.hit = baseHit + random2avg(exHitBonus + 1, 2);
     else

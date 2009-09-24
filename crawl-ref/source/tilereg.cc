@@ -3791,7 +3791,7 @@ void DollEditRegion::render()
         m_font_buf.add("Change parts       left/right              Confirm choice      Enter", VColour::white, 0.0f, start_y);
         m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, 0.0f, start_y + height * 1);
         m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, 0.0f, start_y + height * 2);
-        m_font_buf.add("Change doll mode   m                       Randomize doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
+        m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
         m_font_buf.add("Quit menu          q, Escape, Ctrl-S       Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
     }
 
@@ -3805,12 +3805,12 @@ int DollEditRegion::handle_mouse(MouseEvent &event)
 
 void DollEditRegion::run()
 {
-    // Initialize equipment setting.
+    // Initialise equipment setting.
     dolls_data equip_doll;
     for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
          equip_doll.parts[i] = TILEP_SHOW_EQUIP;
 
-    // Initialize job default.
+    // Initialise job default.
     m_job_default = equip_doll;
     tilep_race_default(you.species, gender,
                        you.experience_level, m_job_default.parts);

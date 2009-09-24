@@ -470,7 +470,7 @@ scorefile_entry::scorefile_entry(int dam, int dsource, int dtype,
 
 scorefile_entry::scorefile_entry()
 {
-    // Completely uninitialized, caveat user.
+    // Completely uninitialised, caveat user.
     reset();
 }
 

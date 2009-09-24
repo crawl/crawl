@@ -275,7 +275,7 @@ public:
     Menu(int flags = MF_MULTISELECT, const std::string& tagname = "",
          bool text_only = true);
 
-    // Initializes a Menu from a formatted_string as follows:
+    // Initialises a Menu from a formatted_string as follows:
     //
     // 1) Splits the formatted_string on EOL (this is not necessarily \n).
     // 2) Picks the most recently used non-whitespace colour as the colour

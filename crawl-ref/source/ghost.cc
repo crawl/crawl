@@ -859,8 +859,8 @@ bool debug_check_ghosts()
     for (unsigned int k = 0; k < ghosts.size(); ++k)
     {
         ghost_demon ghost = ghosts[k];
-        // Values greater than the allowed maximum or less then the allowed
-        // minimum signalize bugginess.
+        // Values greater than the allowed maximum or less then the
+        // allowed minimum signalise bugginess.
         if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
             return (false);
         if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)

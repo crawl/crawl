@@ -2327,11 +2327,11 @@ void MiscastEffect::_earth(int severity)
             break;
         case 9:
         {
-            bool               pluralized = true;
-            std::string        feet       = you.foot_name(true, &pluralized);
+            bool               pluralised = true;
+            std::string        feet       = you.foot_name(true, &pluralised);
             std::ostringstream str;
 
-            str << "Your " << feet << (pluralized ? " feel" : " feels")
+            str << "Your " << feet << (pluralised ? " feel" : " feels")
                 << " warm.";
 
             you_msg = str.str();
@@ -2448,13 +2448,13 @@ void MiscastEffect::_air(int severity)
             break;
         case 5:
         {
-            bool pluralized = true;
+            bool pluralised = true;
             if (!hand_str.empty())
-                pluralized = can_plural_hand;
+                pluralised = can_plural_hand;
             else
-                target->hand_name(true, &pluralized);
+                target->hand_name(true, &pluralised);
 
-            if (pluralized)
+            if (pluralised)
             {
                 you_msg      = "Sparks of electricity dance between your "
                                "@hands@.";

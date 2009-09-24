@@ -80,8 +80,9 @@ REVISION("$Rev$");
 #define MC_ITEM    0x01
 #define MC_MONS    0x02
 
-// Static class members must be initialized outside of the class declaration,
-// or gcc won't define them in view.o and we'll get a linking error.
+// Static class members must be initialised outside of the class
+// declaration, or gcc won't define them in view.o and we'll get a
+// linking error.
 const int monster_los::LSIZE     =  _monster_los_LSIZE;
 const int monster_los::L_VISIBLE =  1;
 const int monster_los::L_UNKNOWN =  0;
@@ -2233,7 +2234,7 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
     if (!shortest_possible)
         return (raw_advance());
 
-    // If we want to minimize the number of moves on the ray, look one
+    // If we want to minimise the number of moves on the ray, look one
     // step ahead and see if we can get a diagonal.
 
     const coord_def old(static_cast<int>(accx), static_cast<int>(accy));
@@ -4074,7 +4075,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     return (did_map);
 }
 
-// Realize that this is simply a repackaged version of
+// Realise that this is simply a repackaged version of
 // stuff::see_grid() -- make certain they correlate {dlb}:
 bool mons_near(const monsters *monster, unsigned short foe)
 {

@@ -3273,7 +3273,7 @@ const char *divine_title[NUM_GODS][8] =
 
     // Feawn -- nature theme, titles could use some work but the progression
     // is generally from nature lover to walking disaster. -CAO
-    {"Walking Fertilizer", "Green %s",              "Tree Hugger",              "Conservationist",
+    {"Walking Fertiliser", "Green %s",              "Tree Hugger",              "Conservationist",
      "Floral Guardian",    "Eco-Terrorist",         "Green Death",              "Force of Nature"}
 };
 

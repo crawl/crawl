@@ -1161,7 +1161,7 @@ static bool _xom_send_allies(int sever)
 {
     bool rc = false;
     // The number of allies is dependent on severity, though heavily
-    // randomized.
+    // randomised.
     int numdemons = sever;
     for (int i = 0; i < 3; i++)
         numdemons = random2(numdemons + 1);
@@ -2648,7 +2648,7 @@ static bool _xom_summon_hostiles(int sever)
     else
     {
         // The number of demons is dependent on severity, though heavily
-        // randomized.
+        // randomised.
         int numdemons = sever;
         for (int i = 0; i < 3; i++)
             numdemons = random2(numdemons+1);

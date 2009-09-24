@@ -358,7 +358,7 @@ static bool _in_a_shop( int shopidx )
         {
             if (!check_item_knowledge(true))
             {
-                _shop_print("You don't recognize anything yet!", 1);
+                _shop_print("You don't recognise anything yet!", 1);
                 _shop_more();
             }
         }

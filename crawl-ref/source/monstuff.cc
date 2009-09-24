@@ -9074,7 +9074,7 @@ static bool _monster_move(monsters *monster)
     } // endif - secret/closed doors
 
     // Monsters that eat items (currently only jellies) also eat doors.
-    // However, they don't realize that secret doors make good eating.
+    // However, they don't realise that secret doors make good eating.
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
          && mons_itemeat(monster) == MONEAT_ITEMS
          // Doors with permarock marker cannot be eaten.

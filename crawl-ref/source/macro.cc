@@ -346,7 +346,7 @@ static keyseq parse_keyseq( std::string s )
 }
 
 /*
- * Serializes a key sequence into a string of the format described
+ * Serialises a key sequence into a string of the format described
  * above.
  */
 static std::string vtostr( const keyseq &seq )
@@ -465,7 +465,7 @@ static void macro_buf_add_long( keyseq actions,
     // The matching starts from as early as possible, and is
     // as long as possible given the first constraint. I.e from
     // the sequence "abcdef" and macros "ab", "bcde" and "de"
-    // "ab" and "de" are recognized as macros.
+    // "ab" and "de" are recognised as macros.
 
     while (actions.size() > 0)
     {
@@ -847,7 +847,7 @@ void macro_add_query( void )
 }
 
 /*
- * Initializes the macros.
+ * Initialises the macros.
  */
 static void _read_macros_from(const char* filename)
 {

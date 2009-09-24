@@ -59,7 +59,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
     error = FT_Init_FreeType(&library);
     if (error)
     {
-        fprintf(stderr, "Failed to initialize freetype library.\n");
+        fprintf(stderr, "Failed to initialise freetype library.\n");
         return false;
     }
 

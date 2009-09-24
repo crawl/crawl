@@ -199,7 +199,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt,
     pbolt.thrower = KILL_YOU_MISSILE;
 
     // Check whether tracer goes through friendlies.
-    // NOTE: Whenever zapping() is called with a randomized value for power
+    // NOTE: Whenever zapping() is called with a randomised value for power
     // (or effect), player_tracer should be called directly with the highest
     // power possible respecting current skill, experience level, etc.
     if (needs_tracer && !player_tracer(ztype, power, pbolt))
@@ -1450,7 +1450,7 @@ bool bolt::invisible() const
     return (type == 0 || is_enchantment());
 }
 
-void bolt::initialize_fire()
+void bolt::initialise_fire()
 {
     // Fix some things which the tracer might have set.
     range_used         = 0;
@@ -2015,7 +2015,7 @@ void bolt::fire()
 
 void bolt::do_fire()
 {
-    initialize_fire();
+    initialise_fire();
 
     if (range <= range_used && range > 0)
     {
@@ -2133,7 +2133,7 @@ void bolt::do_fire()
     // enchantment is yours (and it wasn't a chaos beam, since with chaos
     // enchantments are entirely random, and if it randomly attempts
     // something which ends up having no obvious effect then the player
-    // isn't going to realize it).
+    // isn't going to realise it).
     if (!msg_generated && !obvious_effect && is_enchantment()
         && real_flavour != BEAM_CHAOS && YOU_KILL(thrower))
     {
@@ -4613,7 +4613,7 @@ void bolt::affect_monster(monsters* mon)
 
     // Player beams which hit friendlies or good neutrals will annoy
     // them and be considered naughty if they do damage (this is so as
-    // not to penalize players that fling fireballs into a melee with
+    // not to penalise players that fling fireballs into a melee with
     // fire elementals on their side - the elementals won't give a sh*t,
     // after all).
 
@@ -5759,7 +5759,7 @@ bool bolt::nice_to(const monsters *mon) const
 
 // A constructor for bolt to help guarantee that we start clean (this has
 // caused way too many bugs).  Putting it here since there's no good place to
-// put it, and it doesn't do anything other than initialize its members.
+// put it, and it doesn't do anything other than initialise its members.
 //
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).

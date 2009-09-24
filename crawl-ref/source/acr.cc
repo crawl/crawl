@@ -1688,7 +1688,7 @@ void process_command( command_type cmd )
         mpr("Move the cursor around to observe a square "
             "(v - describe square, ? - help)", MSGCH_PROMPT);
 
-        struct dist lmove;   // Will be initialized by direction().
+        struct dist lmove;   // Will be initialised by direction().
         direction(lmove, DIR_TARGET, TARG_ANY, -1, true);
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel
             && !crawl_state.arena_suspended)
@@ -2016,7 +2016,7 @@ static void _prep_input()
 
 // Decrement a single duration. Print the message if the duration runs out.
 // At midpoint (defined by get_expiration_threshold() in player.cc)
-// print midmsg and decrease duration by midloss (a randomized amount so as
+// print midmsg and decrease duration by midloss (a randomised amount so as
 // to make it impossible to know the exact remaining duration for sure).
 // NOTE: The maximum possible midloss should be smaller than midpoint,
 //       otherwise the duration may end in the same turn the warning
@@ -3632,7 +3632,7 @@ static bool _initialise(void)
 
 #ifdef USE_TILE
     tiles.initialise_items();
-    // Must re-run as the feature table wasn't initialized yet.
+    // Must re-run as the feature table wasn't initialised yet.
     TileNewLevel(newc);
 #endif
 

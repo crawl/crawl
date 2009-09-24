@@ -2521,7 +2521,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "wiz_mode")
     {
-        // wiz_mode is recognized as a legal key in all compiles -- bwr
+        // wiz_mode is recognised as a legal key in all compiles -- bwr
 #ifdef WIZARD
         if (field == "never")
             wiz_mode = WIZ_NEVER;
@@ -3490,7 +3490,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
     bool nextUsed = false;
     int ecount;
 
-    // initialize
+    // initialise
     for (int i = 0; i < num_cmd_ops; i++)
          arg_seen[i] = false;
 

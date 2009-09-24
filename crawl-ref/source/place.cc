@@ -113,7 +113,7 @@ std::string place_name( unsigned short place, bool long_name,
         char buf[200];
         if (long_name)
         {
-            // decapitalize 'the'
+            // decapitalise 'the'
             if ( result.find("The") == 0 )
                 result[0] = 't';
             snprintf( buf, sizeof buf, "Level %d of %s",

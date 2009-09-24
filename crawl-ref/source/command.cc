@@ -2112,7 +2112,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             true, true, _cmdhelp_textfilter);
 
     unsigned ch;
-    // Initialize colour to quiet some Valgrind warnings
+    // Initialise colour to quiet some Valgrind warnings.
     unsigned short colour = BLACK;
     std::string item_types =
         "\n"

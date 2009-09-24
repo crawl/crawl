@@ -297,7 +297,7 @@ void cast_chain_lightning(int pow)
 {
     bolt beam;
 
-    // initialize beam structure
+    // initialise beam structure
     beam.name           = "lightning arc";
     beam.aux_source     = "chain lightning";
     beam.beam_source    = MHITYOU;
@@ -316,7 +316,7 @@ void cast_chain_lightning(int pow)
     for (source = you.pos(); pow > 0; pow -= 8 + random2(13), source = target)
     {
         // infinity as far as this spell is concerned
-        // (Range - 1) is used because the distance is randomized and
+        // (Range - 1) is used because the distance is randomised and
         // may be shifted by one.
         int min_dist = MONSTER_LOS_RANGE - 1;
 
@@ -339,7 +339,7 @@ void cast_chain_lightning(int pow)
             if (!dist)
                 continue;
 
-            // randomize distance (arcs don't care about a couple of feet)
+            // randomise distance (arcs don't care about a couple of feet)
             dist += (random2(3) - 1);
 
             // always ignore targets further than current one
@@ -376,7 +376,7 @@ void cast_chain_lightning(int pow)
 
         if (dist)       // i.e., player was not the source
         {
-            // distance randomized (as above)
+            // distance randomised (as above)
             dist += (random2(3) - 1);
 
             // select player if only, closest, or randomly selected
