@@ -893,6 +893,11 @@ bool debug_check_ghosts()
         if (ghost.brand == SPWPN_HOLY_WRATH || is_good_god(ghost.religion))
             return (false);
 
+        // Only (very) ugly things get non-plain attack types and
+        // flavours.
+        if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
+            return (false);
+
         // Only Pandemonium lords cycle colours.
         if (ghost.cycle_colours)
             return (false);
