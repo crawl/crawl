@@ -2296,16 +2296,21 @@ static unsigned int _breakpoint_rank(int val, const int breakpoints[],
     return result;
 }
 
-const char* spell_hunger_string( spell_type spell )
+const char* spell_hunger_string(spell_type spell)
 {
     if (you.is_undead == US_UNDEAD)
-        return "N/A";
+        return ("N/A");
 
     const int hunger = spell_hunger(spell);
+
+    // Spell hunger is "Fruit" if casting the spell five times costs at
+    // most one "Fruit".
     const char* hunger_descriptions[] = {
-        "None", "Grape", "Apple", "Choko", "Ration"
+        "None", "Sultana", "Strawberry", "Choko", "Honeycomb", "Ration"
     };
-    const int breakpoints[] = { 1, 25, 150, 500 };
+
+    const int breakpoints[] = { 1, 15, 41, 121, 401 };
+
     return (hunger_descriptions[_breakpoint_rank(hunger, breakpoints,
                                                  ARRAYSZ(breakpoints))]);
 }

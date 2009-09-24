@@ -84,6 +84,6 @@ int spell_power_bars(spell_type spell);
 std::string spell_power_string(spell_type spell);
 std::string spell_range_string(spell_type spell);
 std::string spell_schools_string(spell_type spell);
-const char* spell_hunger_string( spell_type spell );
+const char* spell_hunger_string(spell_type spell);
 
 #endif
