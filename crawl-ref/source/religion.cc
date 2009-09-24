@@ -5365,7 +5365,7 @@ static bool _feawn_retribution()
             break;
         };
         MiscastEffect(&you, -god, stype, 5 + you.experience_level,
-                      random2avg(88, 3), "the wrath of Feawn");
+                      random2avg(88, 3), "the enmity of Feawn");
         break;
     }
     case 2:
