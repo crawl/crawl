@@ -238,131 +238,142 @@
 		7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
 		93B134650F25595F007DB230 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134610F255926007DB230 /* version.cc */; };
 		93B134C30F256113007DB230 /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134C20F256113007DB230 /* arena.cc */; };
-		B02C574510670C63006AC96D /* libgui.cc in Sources */ = {isa = PBXBuildFile; fileRef = B02C574310670C63006AC96D /* libgui.cc */; };
-		B02C576110670ED2006AC96D /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = B02C576010670ED2006AC96D /* SDLMain.m */; };
-		B02C57911067129A006AC96D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B02C57901067129A006AC96D /* AppKit.framework */; };
+		B032D686106C02070002D70D /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0EFD420BD12E9200002671 /* liblua.a */; };
+		B032D687106C02070002D70D /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B07560BD13A8100F2980E /* libreadline.dylib */; };
+		B032D688106C02070002D70D /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
+		B032D689106C02070002D70D /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
+		B032D68A106C02070002D70D /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
+		B032D68B106C02070002D70D /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
+		B032D68C106C02070002D70D /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DFC91066F9A80020B21F /* OpenGL.framework */; };
+		B032D68D106C02070002D70D /* Freetype2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
+		B032D68E106C02070002D70D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B02C57901067129A006AC96D /* AppKit.framework */; };
+		B032D68F106C02150002D70D /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
+		B032D690106C02150002D70D /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
+		B032D691106C02150002D70D /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = B02C576010670ED2006AC96D /* SDLMain.m */; };
+		B032D692106C02150002D70D /* tiledef-dngn.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD31066FA240020B21F /* tiledef-dngn.cc */; };
+		B032D693106C02150002D70D /* tiledef-gui.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD51066FA240020B21F /* tiledef-gui.cc */; };
+		B032D694106C02150002D70D /* tiledef-main.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD71066FA240020B21F /* tiledef-main.cc */; };
+		B032D695106C02150002D70D /* tiledef-player.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD91066FA240020B21F /* tiledef-player.cc */; };
+		B032D696106C02150002D70D /* tiledef-unrand.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */; };
+		B032D697106C02150002D70D /* libgui.cc in Sources */ = {isa = PBXBuildFile; fileRef = B02C574310670C63006AC96D /* libgui.cc */; };
+		B032D698106C02150002D70D /* tilesdl.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E120FF0868B00986331 /* tilesdl.cc */; };
+		B032D699106C02150002D70D /* maps.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE60A8EC9D000580F30 /* maps.cc */; };
+		B032D69A106C02150002D70D /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134C20F256113007DB230 /* arena.cc */; };
+		B032D69B106C02150002D70D /* mon-pick.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE80A8EC9D000580F30 /* mon-pick.cc */; };
+		B032D69C106C02150002D70D /* overmap.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DEE0A8EC9D000580F30 /* overmap.cc */; };
+		B032D69D106C02150002D70D /* initfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF10A8EC9D000580F30 /* initfile.cc */; };
+		B032D69E106C02150002D70D /* hiscores.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF30A8EC9D000580F30 /* hiscores.cc */; };
+		B032D69F106C02150002D70D /* travel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF50A8EC9D000580F30 /* travel.cc */; };
+		B032D6A0106C02150002D70D /* lev-pand.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF70A8EC9D000580F30 /* lev-pand.cc */; };
+		B032D6A1106C02150002D70D /* newgame.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF90A8EC9D000580F30 /* newgame.cc */; };
+		B032D6A2106C02150002D70D /* mutation.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFB0A8EC9D000580F30 /* mutation.cc */; };
+		B032D6A3106C02150002D70D /* misc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFC0A8EC9D000580F30 /* misc.cc */; };
+		B032D6A4106C02150002D70D /* mon-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFF0A8EC9D000580F30 /* mon-util.cc */; };
+		B032D6A5106C02150002D70D /* it_use3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E010A8EC9D000580F30 /* it_use3.cc */; };
+		B032D6A6106C02150002D70D /* itemname.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E030A8EC9D000580F30 /* itemname.cc */; };
+		B032D6A7106C02150002D70D /* command.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E040A8EC9D000580F30 /* command.cc */; };
+		B032D6A8106C02150002D70D /* spl-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E070A8EC9D000580F30 /* spl-util.cc */; };
+		B032D6A9106C02150002D70D /* player.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0B0A8EC9D000580F30 /* player.cc */; };
+		B032D6AA106C02150002D70D /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0D0A8EC9D000580F30 /* abl-show.cc */; };
+		B032D6AB106C02150002D70D /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0E0A8EC9D000580F30 /* files.cc */; };
+		B032D6AC106C02150002D70D /* directn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0F0A8EC9D000580F30 /* directn.cc */; };
+		B032D6AD106C02150002D70D /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E140A8EC9D000580F30 /* view.cc */; };
+		B032D6AE106C02150002D70D /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E150A8EC9D000580F30 /* spl-book.cc */; };
+		B032D6AF106C02150002D70D /* spells4.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E170A8EC9D000580F30 /* spells4.cc */; };
+		B032D6B0106C02150002D70D /* stuff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E1E0A8EC9D000580F30 /* stuff.cc */; };
+		B032D6B1106C02150002D70D /* stash.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E200A8EC9D000580F30 /* stash.cc */; };
+		B032D6B2106C02150002D70D /* transfor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E220A8EC9D000580F30 /* transfor.cc */; };
+		B032D6B3106C02150002D70D /* tags.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E240A8EC9D000580F30 /* tags.cc */; };
+		B032D6B4106C02150002D70D /* item_use.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E260A8EC9D000580F30 /* item_use.cc */; };
+		B032D6B5106C02150002D70D /* acr.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E270A8EC9D000580F30 /* acr.cc */; };
+		B032D6B6106C02150002D70D /* abyss.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E280A8EC9D000580F30 /* abyss.cc */; };
+		B032D6B7106C02150002D70D /* chardump.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2A0A8EC9D000580F30 /* chardump.cc */; };
+		B032D6B8106C02150002D70D /* beam.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2C0A8EC9D000580F30 /* beam.cc */; };
+		B032D6B9106C02150002D70D /* spl-cast.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2F0A8EC9D000580F30 /* spl-cast.cc */; };
+		B032D6BA106C02150002D70D /* output.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E310A8EC9D000580F30 /* output.cc */; };
+		B032D6BB106C02150002D70D /* ouch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E330A8EC9D000580F30 /* ouch.cc */; };
+		B032D6BC106C02150002D70D /* message.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E350A8EC9D000580F30 /* message.cc */; };
+		B032D6BD106C02150002D70D /* menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E370A8EC9D000580F30 /* menu.cc */; };
+		B032D6BE106C02150002D70D /* macro.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E380A8EC9D000580F30 /* macro.cc */; };
+		B032D6BF106C02150002D70D /* shopping.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E390A8EC9D000580F30 /* shopping.cc */; };
+		B032D6C0106C02150002D70D /* religion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3B0A8EC9D000580F30 /* religion.cc */; };
+		B032D6C1106C02150002D70D /* spells3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3C0A8EC9D000580F30 /* spells3.cc */; };
+		B032D6C2106C02150002D70D /* spells2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3E0A8EC9D000580F30 /* spells2.cc */; };
+		B032D6C3106C02150002D70D /* mstuff2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3F0A8EC9D000580F30 /* mstuff2.cc */; };
+		B032D6C4106C02150002D70D /* monstuff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E410A8EC9D000580F30 /* monstuff.cc */; };
+		B032D6C5106C02150002D70D /* spells1.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E460A8EC9D000580F30 /* spells1.cc */; };
+		B032D6C6106C02150002D70D /* skills2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E480A8EC9D000580F30 /* skills2.cc */; };
+		B032D6C7106C02150002D70D /* decks.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E490A8EC9D000580F30 /* decks.cc */; };
+		B032D6C8106C02150002D70D /* describe.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4A0A8EC9D000580F30 /* describe.cc */; };
+		B032D6C9106C02150002D70D /* monspeak.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4B0A8EC9D000580F30 /* monspeak.cc */; };
+		B032D6CA106C02150002D70D /* monplace.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4D0A8EC9D000580F30 /* monplace.cc */; };
+		B032D6CB106C02150002D70D /* Kills.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4F0A8EC9D000580F30 /* Kills.cc */; };
+		B032D6CC106C02150002D70D /* effects.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E520A8EC9D000580F30 /* effects.cc */; };
+		B032D6CD106C02150002D70D /* fight.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E530A8EC9D000580F30 /* fight.cc */; };
+		B032D6CE106C02150002D70D /* food.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E540A8EC9D000580F30 /* food.cc */; };
+		B032D6CF106C02150002D70D /* clua.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E570A8EC9D000580F30 /* clua.cc */; };
+		B032D6D0106C02150002D70D /* cloud.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E590A8EC9D000580F30 /* cloud.cc */; };
+		B032D6D1106C02150002D70D /* items.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5A0A8EC9D000580F30 /* items.cc */; };
+		B032D6D2106C02150002D70D /* skills.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5D0A8EC9D000580F30 /* skills.cc */; };
+		B032D6D3106C02150002D70D /* it_use2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5F0A8EC9D000580F30 /* it_use2.cc */; };
+		B032D6D4106C02150002D70D /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E610A8EC9D000580F30 /* invent.cc */; };
+		B032D6D5106C02150002D70D /* libutil.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E620A8EC9D000580F30 /* libutil.cc */; };
+		B032D6D6106C02150002D70D /* delay.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E660A8EC9D000580F30 /* delay.cc */; };
+		B032D6D7106C02150002D70D /* dungeon.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E670A8EC9D000580F30 /* dungeon.cc */; };
+		B032D6D8106C02150002D70D /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E680A8EC9D000580F30 /* debug.cc */; };
+		B032D6D9106C02150002D70D /* mt19937ar.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */; };
+		B032D6DA106C02150002D70D /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BC222E50ABBB286003A7D9A /* itemprop.cc */; };
+		B032D6DB106C02150002D70D /* notes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD75A330AC214A200B74F6E /* notes.cc */; };
+		B032D6DC106C02150002D70D /* mapdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352E9D0B00183400CABB32 /* mapdef.cc */; };
+		B032D6DD106C02150002D70D /* branch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BA3DBB90B3D90A700B5B3D7 /* branch.cc */; };
+		B032D6DE106C02150002D70D /* mtransit.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB280BB4CB0B008DF39F /* mtransit.cc */; };
+		B032D6DF106C02150002D70D /* ghost.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB2A0BB4CB1D008DF39F /* ghost.cc */; };
+		B032D6E0106C02150002D70D /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB2F0BB4CB5C008DF39F /* tutorial.cc */; };
+		B032D6E1106C02150002D70D /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB340BB4CB93008DF39F /* format.cc */; };
+		B032D6E2106C02150002D70D /* database.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B973FFB0BE3AA8400AAE35B /* database.cc */; };
+		B032D6E3106C02150002D70D /* makeitem.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B9740050BE3AC8000AAE35B /* makeitem.cc */; };
+		B032D6E4106C02150002D70D /* xom.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF15890C128CA5002C7D7A /* xom.cc */; };
+		B032D6E5106C02150002D70D /* cio.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855600C9C912B00B7C520 /* cio.cc */; };
+		B032D6E6106C02150002D70D /* mapmark.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855650C9C914D00B7C520 /* mapmark.cc */; };
+		B032D6E7106C02150002D70D /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855690C9C916800B7C520 /* dgnevent.cc */; };
+		B032D6E8106C02150002D70D /* luadgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8556E0C9C919100B7C520 /* luadgn.cc */; };
+		B032D6E9106C02150002D70D /* place.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164250C9CA8E80054B3D9 /* place.cc */; };
+		B032D6EA106C02150002D70D /* terrain.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164290C9CA8E80054B3D9 /* terrain.cc */; };
+		B032D6EB106C02150002D70D /* traps.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B61642B0C9CA8E80054B3D9 /* traps.cc */; };
+		B032D6EC106C02150002D70D /* state.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B54B51A0CA8217900612805 /* state.cc */; };
+		B032D6ED106C02150002D70D /* store.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD2221F0CC2D51300B475D8 /* store.cc */; };
+		B032D6EE106C02150002D70D /* mgrow.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B4896600CD3A5D2004A5F43 /* mgrow.cc */; };
+		B032D6EF106C02150002D70D /* quiver.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6232EBE00DACA55C004F7E9C /* quiver.cc */; };
+		B032D6F0106C02150002D70D /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134610F255926007DB230 /* version.cc */; };
+		B032D6F1106C02150002D70D /* crash-u.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC530FE66EEC00C9C1AE /* crash-u.cc */; };
+		B032D6F2106C02150002D70D /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC580FE66EFC00C9C1AE /* spl-mis.cc */; };
+		B032D6F3106C02150002D70D /* tile2.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E070FF0868B00986331 /* tile2.cc */; };
+		B032D6F4106C02150002D70D /* tilebuf.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E080FF0868B00986331 /* tilebuf.cc */; };
+		B032D6F5106C02150002D70D /* tilefont.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0A0FF0868B00986331 /* tilefont.cc */; };
+		B032D6F6106C02150002D70D /* tilemcache.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0C0FF0868B00986331 /* tilemcache.cc */; };
+		B032D6F7106C02150002D70D /* tilepick.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0E0FF0868B00986331 /* tilepick.cc */; };
+		B032D6F8106C02150002D70D /* tilereg.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0F0FF0868B00986331 /* tilereg.cc */; };
+		B032D6F9106C02150002D70D /* tiletex.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E140FF0868B00986331 /* tiletex.cc */; };
+		B032D6FA106C02150002D70D /* artefact.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2A72B28101173C000E1A883 /* artefact.cc */; };
+		B032D6FB106C02540002D70D /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
+		B032D6FC106C02540002D70D /* docs in Resources */ = {isa = PBXBuildFile; fileRef = D2F2723F0DA1C61600445FE9 /* docs */; };
+		B032D6FD106C02540002D70D /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
+		B032D700106C02930002D70D /* dngn.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EE10671F8900AE855D /* dngn.png */; };
+		B032D701106C02930002D70D /* gui.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EF10671F8900AE855D /* gui.png */; };
+		B032D702106C02930002D70D /* main.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F010671F8900AE855D /* main.png */; };
+		B032D703106C02930002D70D /* player.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F110671F8900AE855D /* player.png */; };
+		B032D704106C029D0002D70D /* libpng.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
+		B032D705106C029D0002D70D /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
+		B032D706106C029D0002D70D /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
+		B032D707106C029D0002D70D /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
 		B090C2F210671F8900AE855D /* dngn.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EE10671F8900AE855D /* dngn.png */; };
 		B090C2F310671F8900AE855D /* gui.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EF10671F8900AE855D /* gui.png */; };
 		B090C2F410671F8900AE855D /* main.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F010671F8900AE855D /* main.png */; };
 		B090C2F510671F8900AE855D /* player.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F110671F8900AE855D /* player.png */; };
-		B0B5DF211066ED0E0020B21F /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
-		B0B5DF231066ED0E0020B21F /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
-		B0B5DF251066ED0E0020B21F /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
 		B0B5DF6A1066EE1A0020B21F /* libpng.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
 		B0B5DF6B1066EE1A0020B21F /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
 		B0B5DF6C1066EE1A0020B21F /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
-		B0B5DFCD1066F9B30020B21F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DFC91066F9A80020B21F /* OpenGL.framework */; };
-		B0B5DFE21066FA2F0020B21F /* tiledef-dngn.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD31066FA240020B21F /* tiledef-dngn.cc */; };
-		B0B5DFE31066FA2F0020B21F /* tiledef-gui.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD51066FA240020B21F /* tiledef-gui.cc */; };
-		B0B5DFE41066FA2F0020B21F /* tiledef-main.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD71066FA240020B21F /* tiledef-main.cc */; };
-		B0B5DFE51066FA2F0020B21F /* tiledef-player.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFD91066FA240020B21F /* tiledef-player.cc */; };
-		B0B5DFE61066FA2F0020B21F /* tiledef-unrand.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */; };
-		B0B5E0F6106701530020B21F /* artefact.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2A72B28101173C000E1A883 /* artefact.cc */; };
-		B0B5E17F106706EE0020B21F /* Freetype2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
 		B0B5E1DC106706FD0020B21F /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
-		D2660D460FF0864B00986331 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
-		D2660D470FF0864B00986331 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
-		D2660D480FF0864B00986331 /* maps.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE60A8EC9D000580F30 /* maps.cc */; };
-		D2660D490FF0864B00986331 /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134C20F256113007DB230 /* arena.cc */; };
-		D2660D4A0FF0864B00986331 /* mon-pick.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE80A8EC9D000580F30 /* mon-pick.cc */; };
-		D2660D4B0FF0864B00986331 /* overmap.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DEE0A8EC9D000580F30 /* overmap.cc */; };
-		D2660D4C0FF0864B00986331 /* initfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF10A8EC9D000580F30 /* initfile.cc */; };
-		D2660D4D0FF0864B00986331 /* hiscores.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF30A8EC9D000580F30 /* hiscores.cc */; };
-		D2660D4E0FF0864B00986331 /* travel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF50A8EC9D000580F30 /* travel.cc */; };
-		D2660D4F0FF0864B00986331 /* lev-pand.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF70A8EC9D000580F30 /* lev-pand.cc */; };
-		D2660D500FF0864B00986331 /* newgame.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF90A8EC9D000580F30 /* newgame.cc */; };
-		D2660D510FF0864B00986331 /* mutation.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFB0A8EC9D000580F30 /* mutation.cc */; };
-		D2660D520FF0864B00986331 /* misc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFC0A8EC9D000580F30 /* misc.cc */; };
-		D2660D530FF0864B00986331 /* mon-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFF0A8EC9D000580F30 /* mon-util.cc */; };
-		D2660D540FF0864B00986331 /* it_use3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E010A8EC9D000580F30 /* it_use3.cc */; };
-		D2660D550FF0864B00986331 /* itemname.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E030A8EC9D000580F30 /* itemname.cc */; };
-		D2660D560FF0864B00986331 /* command.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E040A8EC9D000580F30 /* command.cc */; };
-		D2660D570FF0864B00986331 /* spl-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E070A8EC9D000580F30 /* spl-util.cc */; };
-		D2660D590FF0864B00986331 /* player.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0B0A8EC9D000580F30 /* player.cc */; };
-		D2660D5A0FF0864B00986331 /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0D0A8EC9D000580F30 /* abl-show.cc */; };
-		D2660D5B0FF0864B00986331 /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0E0A8EC9D000580F30 /* files.cc */; };
-		D2660D5C0FF0864B00986331 /* directn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0F0A8EC9D000580F30 /* directn.cc */; };
-		D2660D5D0FF0864B00986331 /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E140A8EC9D000580F30 /* view.cc */; };
-		D2660D5E0FF0864B00986331 /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E150A8EC9D000580F30 /* spl-book.cc */; };
-		D2660D5F0FF0864B00986331 /* spells4.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E170A8EC9D000580F30 /* spells4.cc */; };
-		D2660D600FF0864B00986331 /* stuff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E1E0A8EC9D000580F30 /* stuff.cc */; };
-		D2660D610FF0864B00986331 /* stash.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E200A8EC9D000580F30 /* stash.cc */; };
-		D2660D620FF0864B00986331 /* transfor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E220A8EC9D000580F30 /* transfor.cc */; };
-		D2660D630FF0864B00986331 /* tags.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E240A8EC9D000580F30 /* tags.cc */; };
-		D2660D640FF0864B00986331 /* item_use.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E260A8EC9D000580F30 /* item_use.cc */; };
-		D2660D650FF0864B00986331 /* acr.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E270A8EC9D000580F30 /* acr.cc */; };
-		D2660D660FF0864B00986331 /* abyss.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E280A8EC9D000580F30 /* abyss.cc */; };
-		D2660D670FF0864B00986331 /* chardump.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2A0A8EC9D000580F30 /* chardump.cc */; };
-		D2660D680FF0864B00986331 /* beam.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2C0A8EC9D000580F30 /* beam.cc */; };
-		D2660D690FF0864B00986331 /* spl-cast.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2F0A8EC9D000580F30 /* spl-cast.cc */; };
-		D2660D6A0FF0864B00986331 /* output.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E310A8EC9D000580F30 /* output.cc */; };
-		D2660D6B0FF0864B00986331 /* ouch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E330A8EC9D000580F30 /* ouch.cc */; };
-		D2660D6C0FF0864B00986331 /* message.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E350A8EC9D000580F30 /* message.cc */; };
-		D2660D6D0FF0864B00986331 /* menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E370A8EC9D000580F30 /* menu.cc */; };
-		D2660D6E0FF0864B00986331 /* macro.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E380A8EC9D000580F30 /* macro.cc */; };
-		D2660D6F0FF0864B00986331 /* shopping.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E390A8EC9D000580F30 /* shopping.cc */; };
-		D2660D700FF0864B00986331 /* religion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3B0A8EC9D000580F30 /* religion.cc */; };
-		D2660D710FF0864B00986331 /* spells3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3C0A8EC9D000580F30 /* spells3.cc */; };
-		D2660D720FF0864B00986331 /* spells2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3E0A8EC9D000580F30 /* spells2.cc */; };
-		D2660D730FF0864B00986331 /* mstuff2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3F0A8EC9D000580F30 /* mstuff2.cc */; };
-		D2660D740FF0864B00986331 /* monstuff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E410A8EC9D000580F30 /* monstuff.cc */; };
-		D2660D750FF0864B00986331 /* spells1.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E460A8EC9D000580F30 /* spells1.cc */; };
-		D2660D760FF0864B00986331 /* skills2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E480A8EC9D000580F30 /* skills2.cc */; };
-		D2660D770FF0864B00986331 /* decks.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E490A8EC9D000580F30 /* decks.cc */; };
-		D2660D780FF0864B00986331 /* describe.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4A0A8EC9D000580F30 /* describe.cc */; };
-		D2660D790FF0864B00986331 /* monspeak.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4B0A8EC9D000580F30 /* monspeak.cc */; };
-		D2660D7A0FF0864B00986331 /* monplace.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4D0A8EC9D000580F30 /* monplace.cc */; };
-		D2660D7B0FF0864B00986331 /* Kills.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4F0A8EC9D000580F30 /* Kills.cc */; };
-		D2660D7C0FF0864B00986331 /* effects.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E520A8EC9D000580F30 /* effects.cc */; };
-		D2660D7D0FF0864B00986331 /* fight.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E530A8EC9D000580F30 /* fight.cc */; };
-		D2660D7E0FF0864B00986331 /* food.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E540A8EC9D000580F30 /* food.cc */; };
-		D2660D7F0FF0864B00986331 /* clua.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E570A8EC9D000580F30 /* clua.cc */; };
-		D2660D800FF0864B00986331 /* cloud.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E590A8EC9D000580F30 /* cloud.cc */; };
-		D2660D810FF0864B00986331 /* items.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5A0A8EC9D000580F30 /* items.cc */; };
-		D2660D820FF0864B00986331 /* skills.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5D0A8EC9D000580F30 /* skills.cc */; };
-		D2660D830FF0864B00986331 /* it_use2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5F0A8EC9D000580F30 /* it_use2.cc */; };
-		D2660D840FF0864B00986331 /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E610A8EC9D000580F30 /* invent.cc */; };
-		D2660D850FF0864B00986331 /* libutil.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E620A8EC9D000580F30 /* libutil.cc */; };
-		D2660D870FF0864B00986331 /* delay.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E660A8EC9D000580F30 /* delay.cc */; };
-		D2660D880FF0864B00986331 /* dungeon.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E670A8EC9D000580F30 /* dungeon.cc */; };
-		D2660D890FF0864B00986331 /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E680A8EC9D000580F30 /* debug.cc */; };
-		D2660D8A0FF0864B00986331 /* mt19937ar.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */; };
-		D2660D8B0FF0864B00986331 /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BC222E50ABBB286003A7D9A /* itemprop.cc */; };
-		D2660D8C0FF0864B00986331 /* notes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD75A330AC214A200B74F6E /* notes.cc */; };
-		D2660D8D0FF0864B00986331 /* mapdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352E9D0B00183400CABB32 /* mapdef.cc */; };
-		D2660D8E0FF0864B00986331 /* branch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BA3DBB90B3D90A700B5B3D7 /* branch.cc */; };
-		D2660D8F0FF0864B00986331 /* mtransit.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB280BB4CB0B008DF39F /* mtransit.cc */; };
-		D2660D900FF0864B00986331 /* ghost.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB2A0BB4CB1D008DF39F /* ghost.cc */; };
-		D2660D910FF0864B00986331 /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB2F0BB4CB5C008DF39F /* tutorial.cc */; };
-		D2660D920FF0864B00986331 /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB340BB4CB93008DF39F /* format.cc */; };
-		D2660D930FF0864B00986331 /* database.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B973FFB0BE3AA8400AAE35B /* database.cc */; };
-		D2660D940FF0864B00986331 /* makeitem.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B9740050BE3AC8000AAE35B /* makeitem.cc */; };
-		D2660D950FF0864B00986331 /* xom.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF15890C128CA5002C7D7A /* xom.cc */; };
-		D2660D960FF0864B00986331 /* cio.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855600C9C912B00B7C520 /* cio.cc */; };
-		D2660D970FF0864B00986331 /* mapmark.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855650C9C914D00B7C520 /* mapmark.cc */; };
-		D2660D980FF0864B00986331 /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855690C9C916800B7C520 /* dgnevent.cc */; };
-		D2660D990FF0864B00986331 /* luadgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8556E0C9C919100B7C520 /* luadgn.cc */; };
-		D2660D9A0FF0864B00986331 /* place.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164250C9CA8E80054B3D9 /* place.cc */; };
-		D2660D9B0FF0864B00986331 /* terrain.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164290C9CA8E80054B3D9 /* terrain.cc */; };
-		D2660D9C0FF0864B00986331 /* traps.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B61642B0C9CA8E80054B3D9 /* traps.cc */; };
-		D2660D9D0FF0864B00986331 /* state.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B54B51A0CA8217900612805 /* state.cc */; };
-		D2660D9E0FF0864B00986331 /* store.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD2221F0CC2D51300B475D8 /* store.cc */; };
-		D2660D9F0FF0864B00986331 /* mgrow.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B4896600CD3A5D2004A5F43 /* mgrow.cc */; };
-		D2660DA00FF0864B00986331 /* quiver.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6232EBE00DACA55C004F7E9C /* quiver.cc */; };
-		D2660DA10FF0864B00986331 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134610F255926007DB230 /* version.cc */; };
-		D2660DA20FF0864B00986331 /* crash-u.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC530FE66EEC00C9C1AE /* crash-u.cc */; };
-		D2660DA30FF0864B00986331 /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC580FE66EFC00C9C1AE /* spl-mis.cc */; };
-		D2660DA50FF0864B00986331 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0EFD420BD12E9200002671 /* liblua.a */; };
-		D2660DA60FF0864B00986331 /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B07560BD13A8100F2980E /* libreadline.dylib */; };
-		D2660DA70FF0864B00986331 /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
-		D2660E1E0FF0868B00986331 /* tile2.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E070FF0868B00986331 /* tile2.cc */; };
-		D2660E1F0FF0868B00986331 /* tilebuf.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E080FF0868B00986331 /* tilebuf.cc */; };
-		D2660E200FF0868B00986331 /* tilefont.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0A0FF0868B00986331 /* tilefont.cc */; };
-		D2660E210FF0868B00986331 /* tilemcache.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0C0FF0868B00986331 /* tilemcache.cc */; };
-		D2660E220FF0868B00986331 /* tilepick.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0E0FF0868B00986331 /* tilepick.cc */; };
-		D2660E230FF0868B00986331 /* tilereg.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0F0FF0868B00986331 /* tilereg.cc */; };
-		D2660E240FF0868B00986331 /* tilesdl.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E120FF0868B00986331 /* tilesdl.cc */; };
-		D2660E250FF0868B00986331 /* tiletex.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E140FF0868B00986331 /* tiletex.cc */; };
 		D274AC550FE66EEC00C9C1AE /* crash-u.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC530FE66EEC00C9C1AE /* crash-u.cc */; };
 		D274AC5A0FE66EFC00C9C1AE /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC580FE66EFC00C9C1AE /* spl-mis.cc */; };
 		D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
@@ -380,14 +391,14 @@
 			remoteGlobalIDString = 7B0EFD410BD12E9200002671;
 			remoteInfo = Lua;
 		};
-		B02C579D10671327006AC96D /* PBXContainerItemProxy */ = {
+		B032D520106C019C0002D70D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2660D420FF0864B00986331;
-			remoteInfo = "Crawl-tiles-cmd";
+			remoteGlobalIDString = 8DD76FA90486AB0100D96B5E;
+			remoteInfo = "Crawl-cmd";
 		};
-		D2660D440FF0864B00986331 /* PBXContainerItemProxy */ = {
+		B032D52F106C01DB0002D70D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
@@ -496,6 +507,34 @@
 				6232EBE30DACA55C004F7E9C /* quiver.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		B032D70E106C03000002D70D /* Copy Dungeon Tiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = dat/tiles;
+			dstSubfolderSpec = 7;
+			files = (
+				B032D700106C02930002D70D /* dngn.png in Copy Dungeon Tiles */,
+				B032D701106C02930002D70D /* gui.png in Copy Dungeon Tiles */,
+				B032D702106C02930002D70D /* main.png in Copy Dungeon Tiles */,
+				B032D703106C02930002D70D /* player.png in Copy Dungeon Tiles */,
+			);
+			name = "Copy Dungeon Tiles";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B032D70F106C03000002D70D /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B032D704106C029D0002D70D /* libpng.framework in Copy Frameworks */,
+				B032D705106C029D0002D70D /* SDL_image.framework in Copy Frameworks */,
+				B032D706106C029D0002D70D /* SDL.framework in Copy Frameworks */,
+				B032D707106C029D0002D70D /* Freetype2.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B090C2ED10671F5F00AE855D /* Copy Dungeon Tiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -781,6 +820,7 @@
 		B02C575F10670ED2006AC96D /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
 		B02C576010670ED2006AC96D /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
 		B02C57901067129A006AC96D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dungeon Crawl Stone Soup.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B090C2EE10671F8900AE855D /* dngn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dngn.png; path = rltiles/dngn.png; sourceTree = "<group>"; };
 		B090C2EF10671F8900AE855D /* gui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gui.png; path = rltiles/gui.png; sourceTree = "<group>"; };
 		B090C2F010671F8900AE855D /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = rltiles/main.png; sourceTree = "<group>"; };
@@ -814,7 +854,6 @@
 		D2660C000FF0749200986331 /* dc-dngn.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-dngn.txt"; path = "rltiles/dc-dngn.txt"; sourceTree = "<group>"; };
 		D2660C010FF0749200986331 /* dc-main.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-main.txt"; path = "rltiles/dc-main.txt"; sourceTree = "<group>"; };
 		D2660C020FF0749200986331 /* dc-player.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-player.txt"; path = "rltiles/dc-player.txt"; sourceTree = "<group>"; };
-		D2660E030FF0864B00986331 /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2660E070FF0868B00986331 /* tile2.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile2.cc; sourceTree = "<group>"; };
 		D2660E080FF0868B00986331 /* tilebuf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tilebuf.cc; sourceTree = "<group>"; };
 		D2660E090FF0868B00986331 /* tilebuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tilebuf.h; sourceTree = "<group>"; };
@@ -862,19 +901,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D2660DA40FF0864B00986331 /* Frameworks */ = {
+		B032D525106C01AF0002D70D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2660DA50FF0864B00986331 /* liblua.a in Frameworks */,
-				D2660DA60FF0864B00986331 /* libreadline.dylib in Frameworks */,
-				D2660DA70FF0864B00986331 /* libncurses.dylib in Frameworks */,
-				B0B5DF211066ED0E0020B21F /* libpng.framework in Frameworks */,
-				B0B5DF231066ED0E0020B21F /* SDL_image.framework in Frameworks */,
-				B0B5DF251066ED0E0020B21F /* SDL.framework in Frameworks */,
-				B0B5DFCD1066F9B30020B21F /* OpenGL.framework in Frameworks */,
-				B0B5E17F106706EE0020B21F /* Freetype2.framework in Frameworks */,
-				B02C57911067129A006AC96D /* AppKit.framework in Frameworks */,
+				B032D686106C02070002D70D /* liblua.a in Frameworks */,
+				B032D687106C02070002D70D /* libreadline.dylib in Frameworks */,
+				B032D688106C02070002D70D /* libncurses.dylib in Frameworks */,
+				B032D689106C02070002D70D /* libpng.framework in Frameworks */,
+				B032D68A106C02070002D70D /* SDL_image.framework in Frameworks */,
+				B032D68B106C02070002D70D /* SDL.framework in Frameworks */,
+				B032D68C106C02070002D70D /* OpenGL.framework in Frameworks */,
+				B032D68D106C02070002D70D /* Freetype2.framework in Frameworks */,
+				B032D68E106C02070002D70D /* AppKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,14 +923,13 @@
 		08FB7794FE84155DC02AAC07 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				D25C91990FF037A000D9E8AD /* Frameworks */,
-				08FB7795FE84155DC02AAC07 /* Source */,
-				7B352F1B0B0022C900CABB32 /* Resources */,
-				7B3B07610BD13B1700F2980E /* Libraries */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
-				1AB674ADFE9D54B511CA2CBB /* Products */,
-				D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */,
+				D25C91990FF037A000D9E8AD /* Frameworks */,
+				7B3B07610BD13B1700F2980E /* Libraries */,
 				D2AE25EC0DA2621100E15489 /* Mac */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+				7B352F1B0B0022C900CABB32 /* Resources */,
+				08FB7795FE84155DC02AAC07 /* Source */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
@@ -915,7 +953,7 @@
 				8DD76FB20486AB0100D96B5E /* crawl */,
 				7B0EFD420BD12E9200002671 /* liblua.a */,
 				D2F271F60DA1C58C00445FE9 /* Crawl.app */,
-				D2660E030FF0864B00986331 /* crawl */,
+				B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1298,6 +1336,7 @@
 		D2AE25EC0DA2621100E15489 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */,
 				D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */,
 				D2AE25EE0DA2624E00E15489 /* crawl */,
 			);
@@ -1376,24 +1415,26 @@
 			productReference = 8DD76FB20486AB0100D96B5E /* crawl */;
 			productType = "com.apple.product-type.tool";
 		};
-		D2660D420FF0864B00986331 /* Crawl-tiles-cmd */ = {
+		B032D526106C01AF0002D70D /* Crawl Tiles */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D2660DFE0FF0864B00986331 /* Build configuration list for PBXNativeTarget "Crawl-tiles-cmd" */;
+			buildConfigurationList = B032D52E106C01AF0002D70D /* Build configuration list for PBXNativeTarget "Crawl Tiles" */;
 			buildPhases = (
-				B0B5DFAD1066F8500020B21F /* Generate Tiles */,
-				D2660D450FF0864B00986331 /* Sources */,
-				D2660DA40FF0864B00986331 /* Frameworks */,
+				B032D532106C01F10002D70D /* Generate Tiles */,
+				B032D523106C01AF0002D70D /* Resources */,
+				B032D70E106C03000002D70D /* Copy Dungeon Tiles */,
+				B032D524106C01AF0002D70D /* Sources */,
+				B032D525106C01AF0002D70D /* Frameworks */,
+				B032D70F106C03000002D70D /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				D2660D430FF0864B00986331 /* PBXTargetDependency */,
+				B032D530106C01DB0002D70D /* PBXTargetDependency */,
 			);
-			name = "Crawl-tiles-cmd";
-			productInstallPath = "$(HOME)/bin";
-			productName = Crawl;
-			productReference = D2660E030FF0864B00986331 /* crawl */;
-			productType = "com.apple.product-type.tool";
+			name = "Crawl Tiles";
+			productName = "Crawl Tiles";
+			productReference = B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */;
+			productType = "com.apple.product-type.application";
 		};
 		D2F271F50DA1C58C00445FE9 /* Crawl */ = {
 			isa = PBXNativeTarget;
@@ -1408,7 +1449,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				B02C579E10671327006AC96D /* PBXTargetDependency */,
+				B032D521106C019C0002D70D /* PBXTargetDependency */,
 				D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */,
 			);
 			name = Crawl;
@@ -1428,15 +1469,25 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				B032D526106C01AF0002D70D /* Crawl Tiles */,
 				D2F271F50DA1C58C00445FE9 /* Crawl */,
-				7B0EFD410BD12E9200002671 /* Lua */,
 				8DD76FA90486AB0100D96B5E /* Crawl-cmd */,
-				D2660D420FF0864B00986331 /* Crawl-tiles-cmd */,
+				7B0EFD410BD12E9200002671 /* Lua */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B032D523106C01AF0002D70D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B032D6FB106C02540002D70D /* dat in Resources */,
+				B032D6FC106C02540002D70D /* docs in Resources */,
+				B032D6FD106C02540002D70D /* Crawl.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2F271F20DA1C58C00445FE9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1450,6 +1501,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		B032D532106C01F10002D70D /* Generate Tiles */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Tiles";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nmake -f makefile.mac -j2\n";
+		};
 		B090C2DB10671E3200AE855D /* Copy Crawl Executable */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1463,20 +1528,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp \"$BUILT_PRODUCTS_DIR/crawl\" \"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/\"";
-		};
-		B0B5DFAD1066F8500020B21F /* Generate Tiles */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Generate Tiles";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nmake -f makefile.mac -j2\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1619,118 +1670,118 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D2660D450FF0864B00986331 /* Sources */ = {
+		B032D524106C01AF0002D70D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2660D460FF0864B00986331 /* levcomp.ypp in Sources */,
-				D2660D470FF0864B00986331 /* levcomp.lpp in Sources */,
-				B02C576110670ED2006AC96D /* SDLMain.m in Sources */,
-				B0B5DFE21066FA2F0020B21F /* tiledef-dngn.cc in Sources */,
-				B0B5DFE31066FA2F0020B21F /* tiledef-gui.cc in Sources */,
-				B0B5DFE41066FA2F0020B21F /* tiledef-main.cc in Sources */,
-				B0B5DFE51066FA2F0020B21F /* tiledef-player.cc in Sources */,
-				B0B5DFE61066FA2F0020B21F /* tiledef-unrand.cc in Sources */,
-				B02C574510670C63006AC96D /* libgui.cc in Sources */,
-				D2660E240FF0868B00986331 /* tilesdl.cc in Sources */,
-				D2660D480FF0864B00986331 /* maps.cc in Sources */,
-				D2660D490FF0864B00986331 /* arena.cc in Sources */,
-				D2660D4A0FF0864B00986331 /* mon-pick.cc in Sources */,
-				D2660D4B0FF0864B00986331 /* overmap.cc in Sources */,
-				D2660D4C0FF0864B00986331 /* initfile.cc in Sources */,
-				D2660D4D0FF0864B00986331 /* hiscores.cc in Sources */,
-				D2660D4E0FF0864B00986331 /* travel.cc in Sources */,
-				D2660D4F0FF0864B00986331 /* lev-pand.cc in Sources */,
-				D2660D500FF0864B00986331 /* newgame.cc in Sources */,
-				D2660D510FF0864B00986331 /* mutation.cc in Sources */,
-				D2660D520FF0864B00986331 /* misc.cc in Sources */,
-				D2660D530FF0864B00986331 /* mon-util.cc in Sources */,
-				D2660D540FF0864B00986331 /* it_use3.cc in Sources */,
-				D2660D550FF0864B00986331 /* itemname.cc in Sources */,
-				D2660D560FF0864B00986331 /* command.cc in Sources */,
-				D2660D570FF0864B00986331 /* spl-util.cc in Sources */,
-				D2660D590FF0864B00986331 /* player.cc in Sources */,
-				D2660D5A0FF0864B00986331 /* abl-show.cc in Sources */,
-				D2660D5B0FF0864B00986331 /* files.cc in Sources */,
-				D2660D5C0FF0864B00986331 /* directn.cc in Sources */,
-				D2660D5D0FF0864B00986331 /* view.cc in Sources */,
-				D2660D5E0FF0864B00986331 /* spl-book.cc in Sources */,
-				D2660D5F0FF0864B00986331 /* spells4.cc in Sources */,
-				D2660D600FF0864B00986331 /* stuff.cc in Sources */,
-				D2660D610FF0864B00986331 /* stash.cc in Sources */,
-				D2660D620FF0864B00986331 /* transfor.cc in Sources */,
-				D2660D630FF0864B00986331 /* tags.cc in Sources */,
-				D2660D640FF0864B00986331 /* item_use.cc in Sources */,
-				D2660D650FF0864B00986331 /* acr.cc in Sources */,
-				D2660D660FF0864B00986331 /* abyss.cc in Sources */,
-				D2660D670FF0864B00986331 /* chardump.cc in Sources */,
-				D2660D680FF0864B00986331 /* beam.cc in Sources */,
-				D2660D690FF0864B00986331 /* spl-cast.cc in Sources */,
-				D2660D6A0FF0864B00986331 /* output.cc in Sources */,
-				D2660D6B0FF0864B00986331 /* ouch.cc in Sources */,
-				D2660D6C0FF0864B00986331 /* message.cc in Sources */,
-				D2660D6D0FF0864B00986331 /* menu.cc in Sources */,
-				D2660D6E0FF0864B00986331 /* macro.cc in Sources */,
-				D2660D6F0FF0864B00986331 /* shopping.cc in Sources */,
-				D2660D700FF0864B00986331 /* religion.cc in Sources */,
-				D2660D710FF0864B00986331 /* spells3.cc in Sources */,
-				D2660D720FF0864B00986331 /* spells2.cc in Sources */,
-				D2660D730FF0864B00986331 /* mstuff2.cc in Sources */,
-				D2660D740FF0864B00986331 /* monstuff.cc in Sources */,
-				D2660D750FF0864B00986331 /* spells1.cc in Sources */,
-				D2660D760FF0864B00986331 /* skills2.cc in Sources */,
-				D2660D770FF0864B00986331 /* decks.cc in Sources */,
-				D2660D780FF0864B00986331 /* describe.cc in Sources */,
-				D2660D790FF0864B00986331 /* monspeak.cc in Sources */,
-				D2660D7A0FF0864B00986331 /* monplace.cc in Sources */,
-				D2660D7B0FF0864B00986331 /* Kills.cc in Sources */,
-				D2660D7C0FF0864B00986331 /* effects.cc in Sources */,
-				D2660D7D0FF0864B00986331 /* fight.cc in Sources */,
-				D2660D7E0FF0864B00986331 /* food.cc in Sources */,
-				D2660D7F0FF0864B00986331 /* clua.cc in Sources */,
-				D2660D800FF0864B00986331 /* cloud.cc in Sources */,
-				D2660D810FF0864B00986331 /* items.cc in Sources */,
-				D2660D820FF0864B00986331 /* skills.cc in Sources */,
-				D2660D830FF0864B00986331 /* it_use2.cc in Sources */,
-				D2660D840FF0864B00986331 /* invent.cc in Sources */,
-				D2660D850FF0864B00986331 /* libutil.cc in Sources */,
-				D2660D870FF0864B00986331 /* delay.cc in Sources */,
-				D2660D880FF0864B00986331 /* dungeon.cc in Sources */,
-				D2660D890FF0864B00986331 /* debug.cc in Sources */,
-				D2660D8A0FF0864B00986331 /* mt19937ar.cc in Sources */,
-				D2660D8B0FF0864B00986331 /* itemprop.cc in Sources */,
-				D2660D8C0FF0864B00986331 /* notes.cc in Sources */,
-				D2660D8D0FF0864B00986331 /* mapdef.cc in Sources */,
-				D2660D8E0FF0864B00986331 /* branch.cc in Sources */,
-				D2660D8F0FF0864B00986331 /* mtransit.cc in Sources */,
-				D2660D900FF0864B00986331 /* ghost.cc in Sources */,
-				D2660D910FF0864B00986331 /* tutorial.cc in Sources */,
-				D2660D920FF0864B00986331 /* format.cc in Sources */,
-				D2660D930FF0864B00986331 /* database.cc in Sources */,
-				D2660D940FF0864B00986331 /* makeitem.cc in Sources */,
-				D2660D950FF0864B00986331 /* xom.cc in Sources */,
-				D2660D960FF0864B00986331 /* cio.cc in Sources */,
-				D2660D970FF0864B00986331 /* mapmark.cc in Sources */,
-				D2660D980FF0864B00986331 /* dgnevent.cc in Sources */,
-				D2660D990FF0864B00986331 /* luadgn.cc in Sources */,
-				D2660D9A0FF0864B00986331 /* place.cc in Sources */,
-				D2660D9B0FF0864B00986331 /* terrain.cc in Sources */,
-				D2660D9C0FF0864B00986331 /* traps.cc in Sources */,
-				D2660D9D0FF0864B00986331 /* state.cc in Sources */,
-				D2660D9E0FF0864B00986331 /* store.cc in Sources */,
-				D2660D9F0FF0864B00986331 /* mgrow.cc in Sources */,
-				D2660DA00FF0864B00986331 /* quiver.cc in Sources */,
-				D2660DA10FF0864B00986331 /* version.cc in Sources */,
-				D2660DA20FF0864B00986331 /* crash-u.cc in Sources */,
-				D2660DA30FF0864B00986331 /* spl-mis.cc in Sources */,
-				D2660E1E0FF0868B00986331 /* tile2.cc in Sources */,
-				D2660E1F0FF0868B00986331 /* tilebuf.cc in Sources */,
-				D2660E200FF0868B00986331 /* tilefont.cc in Sources */,
-				D2660E210FF0868B00986331 /* tilemcache.cc in Sources */,
-				D2660E220FF0868B00986331 /* tilepick.cc in Sources */,
-				D2660E230FF0868B00986331 /* tilereg.cc in Sources */,
-				D2660E250FF0868B00986331 /* tiletex.cc in Sources */,
-				B0B5E0F6106701530020B21F /* artefact.cc in Sources */,
+				B032D68F106C02150002D70D /* levcomp.ypp in Sources */,
+				B032D690106C02150002D70D /* levcomp.lpp in Sources */,
+				B032D691106C02150002D70D /* SDLMain.m in Sources */,
+				B032D692106C02150002D70D /* tiledef-dngn.cc in Sources */,
+				B032D693106C02150002D70D /* tiledef-gui.cc in Sources */,
+				B032D694106C02150002D70D /* tiledef-main.cc in Sources */,
+				B032D695106C02150002D70D /* tiledef-player.cc in Sources */,
+				B032D696106C02150002D70D /* tiledef-unrand.cc in Sources */,
+				B032D697106C02150002D70D /* libgui.cc in Sources */,
+				B032D698106C02150002D70D /* tilesdl.cc in Sources */,
+				B032D699106C02150002D70D /* maps.cc in Sources */,
+				B032D69A106C02150002D70D /* arena.cc in Sources */,
+				B032D69B106C02150002D70D /* mon-pick.cc in Sources */,
+				B032D69C106C02150002D70D /* overmap.cc in Sources */,
+				B032D69D106C02150002D70D /* initfile.cc in Sources */,
+				B032D69E106C02150002D70D /* hiscores.cc in Sources */,
+				B032D69F106C02150002D70D /* travel.cc in Sources */,
+				B032D6A0106C02150002D70D /* lev-pand.cc in Sources */,
+				B032D6A1106C02150002D70D /* newgame.cc in Sources */,
+				B032D6A2106C02150002D70D /* mutation.cc in Sources */,
+				B032D6A3106C02150002D70D /* misc.cc in Sources */,
+				B032D6A4106C02150002D70D /* mon-util.cc in Sources */,
+				B032D6A5106C02150002D70D /* it_use3.cc in Sources */,
+				B032D6A6106C02150002D70D /* itemname.cc in Sources */,
+				B032D6A7106C02150002D70D /* command.cc in Sources */,
+				B032D6A8106C02150002D70D /* spl-util.cc in Sources */,
+				B032D6A9106C02150002D70D /* player.cc in Sources */,
+				B032D6AA106C02150002D70D /* abl-show.cc in Sources */,
+				B032D6AB106C02150002D70D /* files.cc in Sources */,
+				B032D6AC106C02150002D70D /* directn.cc in Sources */,
+				B032D6AD106C02150002D70D /* view.cc in Sources */,
+				B032D6AE106C02150002D70D /* spl-book.cc in Sources */,
+				B032D6AF106C02150002D70D /* spells4.cc in Sources */,
+				B032D6B0106C02150002D70D /* stuff.cc in Sources */,
+				B032D6B1106C02150002D70D /* stash.cc in Sources */,
+				B032D6B2106C02150002D70D /* transfor.cc in Sources */,
+				B032D6B3106C02150002D70D /* tags.cc in Sources */,
+				B032D6B4106C02150002D70D /* item_use.cc in Sources */,
+				B032D6B5106C02150002D70D /* acr.cc in Sources */,
+				B032D6B6106C02150002D70D /* abyss.cc in Sources */,
+				B032D6B7106C02150002D70D /* chardump.cc in Sources */,
+				B032D6B8106C02150002D70D /* beam.cc in Sources */,
+				B032D6B9106C02150002D70D /* spl-cast.cc in Sources */,
+				B032D6BA106C02150002D70D /* output.cc in Sources */,
+				B032D6BB106C02150002D70D /* ouch.cc in Sources */,
+				B032D6BC106C02150002D70D /* message.cc in Sources */,
+				B032D6BD106C02150002D70D /* menu.cc in Sources */,
+				B032D6BE106C02150002D70D /* macro.cc in Sources */,
+				B032D6BF106C02150002D70D /* shopping.cc in Sources */,
+				B032D6C0106C02150002D70D /* religion.cc in Sources */,
+				B032D6C1106C02150002D70D /* spells3.cc in Sources */,
+				B032D6C2106C02150002D70D /* spells2.cc in Sources */,
+				B032D6C3106C02150002D70D /* mstuff2.cc in Sources */,
+				B032D6C4106C02150002D70D /* monstuff.cc in Sources */,
+				B032D6C5106C02150002D70D /* spells1.cc in Sources */,
+				B032D6C6106C02150002D70D /* skills2.cc in Sources */,
+				B032D6C7106C02150002D70D /* decks.cc in Sources */,
+				B032D6C8106C02150002D70D /* describe.cc in Sources */,
+				B032D6C9106C02150002D70D /* monspeak.cc in Sources */,
+				B032D6CA106C02150002D70D /* monplace.cc in Sources */,
+				B032D6CB106C02150002D70D /* Kills.cc in Sources */,
+				B032D6CC106C02150002D70D /* effects.cc in Sources */,
+				B032D6CD106C02150002D70D /* fight.cc in Sources */,
+				B032D6CE106C02150002D70D /* food.cc in Sources */,
+				B032D6CF106C02150002D70D /* clua.cc in Sources */,
+				B032D6D0106C02150002D70D /* cloud.cc in Sources */,
+				B032D6D1106C02150002D70D /* items.cc in Sources */,
+				B032D6D2106C02150002D70D /* skills.cc in Sources */,
+				B032D6D3106C02150002D70D /* it_use2.cc in Sources */,
+				B032D6D4106C02150002D70D /* invent.cc in Sources */,
+				B032D6D5106C02150002D70D /* libutil.cc in Sources */,
+				B032D6D6106C02150002D70D /* delay.cc in Sources */,
+				B032D6D7106C02150002D70D /* dungeon.cc in Sources */,
+				B032D6D8106C02150002D70D /* debug.cc in Sources */,
+				B032D6D9106C02150002D70D /* mt19937ar.cc in Sources */,
+				B032D6DA106C02150002D70D /* itemprop.cc in Sources */,
+				B032D6DB106C02150002D70D /* notes.cc in Sources */,
+				B032D6DC106C02150002D70D /* mapdef.cc in Sources */,
+				B032D6DD106C02150002D70D /* branch.cc in Sources */,
+				B032D6DE106C02150002D70D /* mtransit.cc in Sources */,
+				B032D6DF106C02150002D70D /* ghost.cc in Sources */,
+				B032D6E0106C02150002D70D /* tutorial.cc in Sources */,
+				B032D6E1106C02150002D70D /* format.cc in Sources */,
+				B032D6E2106C02150002D70D /* database.cc in Sources */,
+				B032D6E3106C02150002D70D /* makeitem.cc in Sources */,
+				B032D6E4106C02150002D70D /* xom.cc in Sources */,
+				B032D6E5106C02150002D70D /* cio.cc in Sources */,
+				B032D6E6106C02150002D70D /* mapmark.cc in Sources */,
+				B032D6E7106C02150002D70D /* dgnevent.cc in Sources */,
+				B032D6E8106C02150002D70D /* luadgn.cc in Sources */,
+				B032D6E9106C02150002D70D /* place.cc in Sources */,
+				B032D6EA106C02150002D70D /* terrain.cc in Sources */,
+				B032D6EB106C02150002D70D /* traps.cc in Sources */,
+				B032D6EC106C02150002D70D /* state.cc in Sources */,
+				B032D6ED106C02150002D70D /* store.cc in Sources */,
+				B032D6EE106C02150002D70D /* mgrow.cc in Sources */,
+				B032D6EF106C02150002D70D /* quiver.cc in Sources */,
+				B032D6F0106C02150002D70D /* version.cc in Sources */,
+				B032D6F1106C02150002D70D /* crash-u.cc in Sources */,
+				B032D6F2106C02150002D70D /* spl-mis.cc in Sources */,
+				B032D6F3106C02150002D70D /* tile2.cc in Sources */,
+				B032D6F4106C02150002D70D /* tilebuf.cc in Sources */,
+				B032D6F5106C02150002D70D /* tilefont.cc in Sources */,
+				B032D6F6106C02150002D70D /* tilemcache.cc in Sources */,
+				B032D6F7106C02150002D70D /* tilepick.cc in Sources */,
+				B032D6F8106C02150002D70D /* tilereg.cc in Sources */,
+				B032D6F9106C02150002D70D /* tiletex.cc in Sources */,
+				B032D6FA106C02150002D70D /* artefact.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1742,15 +1793,15 @@
 			target = 7B0EFD410BD12E9200002671 /* Lua */;
 			targetProxy = 7B0EFD440BD12E9E00002671 /* PBXContainerItemProxy */;
 		};
-		B02C579E10671327006AC96D /* PBXTargetDependency */ = {
+		B032D521106C019C0002D70D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D2660D420FF0864B00986331 /* Crawl-tiles-cmd */;
-			targetProxy = B02C579D10671327006AC96D /* PBXContainerItemProxy */;
+			target = 8DD76FA90486AB0100D96B5E /* Crawl-cmd */;
+			targetProxy = B032D520106C019C0002D70D /* PBXContainerItemProxy */;
 		};
-		D2660D430FF0864B00986331 /* PBXTargetDependency */ = {
+		B032D530106C01DB0002D70D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7B0EFD410BD12E9200002671 /* Lua */;
-			targetProxy = D2660D440FF0864B00986331 /* PBXContainerItemProxy */;
+			targetProxy = B032D52F106C01DB0002D70D /* PBXContainerItemProxy */;
 		};
 		D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1778,6 +1829,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
@@ -2054,14 +2106,14 @@
 			};
 			name = Release;
 		};
-		D2660DFF0FF0864B00986331 /* Development */ = {
+		B032D52A106C01AF0002D70D /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2070,28 +2122,29 @@
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = 4.0;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/Freetype2.framework/Headers,
 					/Library/Frameworks/SDL.framework/Headers,
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				PRODUCT_NAME = crawl;
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Development;
 		};
-		D2660E000FF0864B00986331 /* Release */ = {
+		B032D52B106C01AF0002D70D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2101,26 +2154,28 @@
 					DB_NDBM,
 				);
 				GCC_VERSION = 4.0;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/Freetype2.framework/Headers,
 					/Library/Frameworks/SDL.framework/Headers,
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				PRODUCT_NAME = crawl;
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Release;
 		};
-		D2660E010FF0864B00986331 /* Debug */ = {
+		B032D52C106C01AF0002D70D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
@@ -2134,29 +2189,27 @@
 					DEBUG_ITEM_SCAN,
 					FULLDEBUG,
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = 4.0;
-				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/Freetype2.framework/Headers,
 					/Library/Frameworks/SDL.framework/Headers,
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				PRODUCT_NAME = crawl;
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Debug;
 		};
-		D2660E020FF0864B00986331 /* Wizard */ = {
+		B032D52D106C01AF0002D70D /* Wizard */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2169,16 +2222,17 @@
 					DEBUG_ITEM_SCAN,
 				);
 				GCC_VERSION = 4.0;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/Freetype2.framework/Headers,
 					/Library/Frameworks/SDL.framework/Headers,
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				PRODUCT_NAME = crawl;
+				INFOPLIST_FILE = "Crawl-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Wizard;
@@ -2295,13 +2349,13 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		D2660DFE0FF0864B00986331 /* Build configuration list for PBXNativeTarget "Crawl-tiles-cmd" */ = {
+		B032D52E106C01AF0002D70D /* Build configuration list for PBXNativeTarget "Crawl Tiles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D2660DFF0FF0864B00986331 /* Development */,
-				D2660E000FF0864B00986331 /* Release */,
-				D2660E010FF0864B00986331 /* Debug */,
-				D2660E020FF0864B00986331 /* Wizard */,
+				B032D52A106C01AF0002D70D /* Development */,
+				B032D52B106C01AF0002D70D /* Release */,
+				B032D52C106C01AF0002D70D /* Debug */,
+				B032D52D106C01AF0002D70D /* Wizard */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
