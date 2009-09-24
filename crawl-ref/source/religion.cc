@@ -822,7 +822,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you deliberately mutate yourself");
         dislikes.push_back("you polymorph monsters");
         dislikes.push_back("you eat the flesh of sentient beings");
-        dislikes.push_back("you use weapons or missiles of chaos");
+        dislikes.push_back("you use chaotic magic or items");
         break;
 
     case GOD_SHINING_ONE:
@@ -871,6 +871,9 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
 void dec_penance(god_type god, int val)
 {
+    if (val <= 0)
+        return;
+
     if (you.penance[god] > 0)
     {
 #if DEBUG_PIETY
@@ -897,16 +900,22 @@ void dec_penance(god_type god, int val)
 
             take_note(Note(NOTE_MOLLIFY_GOD, god));
 
-            // TSO's halo is once more available.
-            if (god == GOD_SHINING_ONE && you.religion == god
-                && you.piety >= piety_breakpoint(0))
+            if (you.religion == god)
             {
-                mpr("Your divine halo returns!");
+                // In case the best skill is Invocations, redraw the god
+                // title.
+                redraw_skill(you.your_name, player_title());
             }
 
             // Orcish bonuses are now once more effective.
             if (god == GOD_BEOGH && you.religion == god)
                  you.redraw_armour_class = true;
+            // TSO's halo is once more available.
+            else if (god == GOD_SHINING_ONE && you.religion == god
+                && you.piety >= piety_breakpoint(0))
+            {
+                mpr("Your divine halo returns!");
+            }
 
             // When you've worked through all your penance, you get
             // another chance to make hostile holy beings good neutral.
@@ -1019,15 +1028,27 @@ bool remove_all_jiyva_altars()
 
 static void _inc_penance(god_type god, int val)
 {
-    if (you.penance[god] == 0 && val > 0)
+    if (val <= 0)
+        return;
+
+    if (you.penance[god] == 0)
     {
         god_acting gdact(god, true);
 
         take_note(Note(NOTE_PENANCE, god));
 
+        you.penance[god] += val;
+        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
+                                                   you.penance[god]);
+
         // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
+        {
             you.redraw_armour_class = true;
+
+            if (_need_water_walking() && !beogh_water_walk())
+                fall_into_a_pool(you.pos(), true, grd(you.pos()));
+        }
         // Neither does Trog's regeneration or magic resistance.
         else if (god == GOD_TROG)
         {
@@ -1059,13 +1080,20 @@ static void _inc_penance(god_type god, int val)
             if (you.duration[DUR_DIVINE_VIGOUR])
                 remove_divine_vigour();
         }
+
+        if (you.religion == god)
+        {
+            // In case the best skill is Invocations, redraw the god
+            // title.
+            redraw_skill(you.your_name, player_title());
+        }
     }
-
-    you.penance[god] += val;
-    you.penance[god] = std::min<unsigned char>(MAX_PENANCE, you.penance[god]);
-
-    if (god == GOD_BEOGH && _need_water_walking() && !beogh_water_walk())
-        fall_into_a_pool( you.pos(), true, grd(you.pos()) );
+    else
+    {
+        you.penance[god] += val;
+        you.penance[god] = std::min<unsigned char>(MAX_PENANCE,
+                                                   you.penance[god]);
+    }
 }
 
 static void _inc_penance(int val)
@@ -3373,7 +3401,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                                        "act, just this once.");
                     break;
                 }
-                else
+
+                if (thing_done == DID_CAUSE_GLOWING)
                 {
                     static long last_glowing_lecture = -1L;
                     if (last_glowing_lecture != you.num_turns)
@@ -3383,6 +3412,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                         last_glowing_lecture = you.num_turns;
                     }
                 }
+
                 piety_change = -level;
                 retval = true;
             }
@@ -3582,15 +3612,15 @@ static void _dock_piety(int piety_loss, int penance)
         if (last_piety_lecture != you.num_turns)
         {
             // output guilt message:
-            mprf( "You feel%sguilty.",
-                  (piety_loss == 1) ? " a little " :
-                  (piety_loss <  5) ? " " :
-                  (piety_loss < 10) ? " very "
-                                    : " extremely " );
+            mprf("You feel%sguilty.",
+                 (piety_loss == 1) ? " a little " :
+                 (piety_loss <  5) ? " " :
+                 (piety_loss < 10) ? " very "
+                                   : " extremely ");
         }
 
         last_piety_lecture = you.num_turns;
-        lose_piety( piety_loss );
+        lose_piety(piety_loss);
     }
 
     if (you.piety < 1)
@@ -3691,6 +3721,10 @@ void gain_piety(int pgn)
         {
             take_note(Note(NOTE_GOD_POWER, you.religion, i));
 
+            // In case the best skill is Invocations, redraw the god
+            // title.
+            redraw_skill(you.your_name, player_title());
+
             const char* pmsg = god_gain_power_messages[you.religion][i];
             const char first = pmsg[0];
 
@@ -3728,6 +3762,9 @@ void gain_piety(int pgn)
 
     if (you.piety > 160 && old_piety <= 160)
     {
+        // In case the best skill is Invocations, redraw the god title.
+        redraw_skill(you.your_name, player_title());
+
         if (!you.num_gifts[you.religion])
         {
             if (you.religion == GOD_ZIN)
@@ -4449,6 +4486,10 @@ void lose_piety(int pgn)
         if (you.piety <= 160 && old_piety > 160
             && !you.num_gifts[you.religion])
         {
+            // In case the best skill is Invocations, redraw the god
+            // title.
+            redraw_skill(you.your_name, player_title());
+
             if (you.religion == GOD_ZIN)
                 simple_god_message(" is no longer ready to cure all your mutations.");
             else if (you.religion == GOD_SHINING_ONE
@@ -4463,6 +4504,10 @@ void lose_piety(int pgn)
             if (you.piety < piety_breakpoint(i)
                 && old_piety >= piety_breakpoint(i))
             {
+                // In case the best skill is Invocations, redraw the god
+                // title.
+                redraw_skill(you.your_name, player_title());
+
                 const char* pmsg = god_lose_power_messages[you.religion][i];
                 const char first = pmsg[0];
 
@@ -6588,6 +6633,7 @@ void excommunication(god_type new_god)
     you.religion = GOD_NO_GOD;
     you.piety = 0;
     you.piety_hysteresis = 0;
+
     redraw_skill(you.your_name, player_title());
 
     mpr("You have lost your religion!");

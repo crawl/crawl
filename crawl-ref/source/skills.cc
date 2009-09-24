@@ -450,7 +450,7 @@ static int _exercise2(int exsk)
         }
 
         if (best != old_best_skill || old_best_skill == exsk)
-            redraw_skill( you.your_name, player_title() );
+            redraw_skill(you.your_name, player_title());
 
         if (you.weapon() && item_is_staff( *you.weapon() ))
             maybe_identify_staff(*you.weapon());

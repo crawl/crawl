@@ -3781,7 +3781,7 @@ void wizard_set_skill_level(void)
 
             calc_total_skill_points();
 
-            redraw_skill( you.your_name, player_title() );
+            redraw_skill(you.your_name, player_title());
 
             switch (skill)
             {
@@ -3851,7 +3851,7 @@ void wizard_set_all_skills(void)
             you.skills[i] = amount;
         }
 
-        redraw_skill( you.your_name, player_title() );
+        redraw_skill(you.your_name, player_title());
 
         calc_total_skill_points();
 

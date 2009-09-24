@@ -1046,7 +1046,7 @@ void draw_border(void)
 {
     textcolor(HUD_CAPTION_COLOUR);
     clrscr();
-    redraw_skill( you.your_name, player_title() );
+    redraw_skill(you.your_name, player_title());
 
     textcolor(Options.status_caption_colour);
 

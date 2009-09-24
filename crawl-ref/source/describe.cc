@@ -3764,6 +3764,7 @@ std::string get_skill_description(int skill, bool need_title)
         }
         break;
     }
+
     case SK_INVOCATIONS:
         if (you.species == SP_DEMIGOD)
         {

@@ -939,7 +939,7 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (!_spell_is_utility_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell));
 
-    if (spell_typematch(spell, SPTYP_HOLY))
+    if (is_holy_spell(spell))
         did_god_conduct(DID_HOLY, 10 + spell_difficulty(spell));
 
     // Self-banishment gets a special exemption - you're there to spread
@@ -950,6 +950,9 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     {
         did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
     }
+
+    if (is_chaotic_spell(spell))
+        did_god_conduct(DID_CHAOS, 10 + spell_difficulty(spell));
 
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start -- bwr
