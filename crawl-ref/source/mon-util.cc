@@ -3875,7 +3875,7 @@ item_def *monsters::weapon(int which_attack)
         return NULL;
 
     // Even/odd attacks use main/offhand weapon
-    if ( which_attack > 1 )
+    if (which_attack > 1)
         which_attack &= 1;
 
     // This randomly picks one of the wielded weapons for monsters that can use
@@ -5114,17 +5114,6 @@ bool monsters::pickup_potion(item_def &item, int near)
 
     if (!this->can_drink_potion(ptype))
         return (false);
-
-    switch (ptype)
-    {
-    case POT_SPEED:
-    case POT_INVISIBILITY:
-        // If there are any item using monsters that are permanently
-        // invisible, this might have to be restricted.
-        break;
-    default:
-        return (false);
-    }
 
     return (pickup(item, MSLOT_POTION, near));
 }
@@ -8035,16 +8024,18 @@ bool monsters::can_drink_potion(potion_type ptype) const
     if (mons_class_is_stationary(this->type))
         return (false);
 
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        if (mons_is_skeletal(type) || mons_is_insubstantial(type)
-            || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY)
-        {
-            return (false);
-        }
+    if (mons_itemuse(this) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
 
-        switch (ptype)
-        {
+    // These monsters cannot drink.
+    if (mons_is_skeletal(type) || mons_is_insubstantial(type)
+        || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY)
+    {
+        return (false);
+    }
+
+    switch (ptype)
+    {
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
             return (holiness() != MH_NONLIVING
@@ -8052,11 +8043,13 @@ bool monsters::can_drink_potion(potion_type ptype) const
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
+        case POT_SPEED:
+        case POT_INVISIBILITY:
+            // If there are any item using monsters that are permanently
+            // invisible, this might have to be restricted.
+            return (true);
         default:
             break;
-        }
-
-        return (true);
     }
 
     return (false);
