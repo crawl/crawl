@@ -115,7 +115,7 @@ void init_spell_descs(void)
                 data.title);
         }
 
-        if (data.flags & SPFLAG_TARGETING_MASK)
+        if (data.flags & SPFLAG_TARGETTING_MASK)
         {
             if (data.min_range <= -1 || data.max_range <= 0)
             {
@@ -359,7 +359,7 @@ bool spell_harms_target(spell_type spell)
     if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
         return false;
 
-    if (flags & SPFLAG_TARGETING_MASK)
+    if (flags & SPFLAG_TARGETTING_MASK)
         return true;
 
     return false;
@@ -739,7 +739,7 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
 // Select a spell direction and fill dist and pbolt appropriately.
 // Return false if the user canceled, true otherwise.
 bool spell_direction( dist &spelld, bolt &pbolt,
-                      targeting_type restrict, targ_mode_type mode,
+                      targetting_type restrict, targ_mode_type mode,
                       int range,
                       bool needs_path, bool may_target_monster,
                       bool may_target_self, const char *prompt,

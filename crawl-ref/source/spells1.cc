@@ -535,7 +535,7 @@ bool conjure_flame(int pow, const coord_def& where)
         return (false);
     }
 
-    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
+    // Note that self-targetting is handled by SPFLAG_NOT_SELF.
     monsters *monster = monster_at(where);
     if (monster)
     {

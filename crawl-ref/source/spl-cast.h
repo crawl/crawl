@@ -15,11 +15,11 @@
 enum spflag_type
 {
     SPFLAG_NONE                 = 0x00000,
-    SPFLAG_DIR_OR_TARGET        = 0x00001,      // use DIR_NONE targeting
-    SPFLAG_TARGET               = 0x00002,      // use DIR_TARGET targeting
-    SPFLAG_GRID                 = 0x00004,      // use DIR_GRID targeting
-    SPFLAG_DIR                  = 0x00008,      // use DIR_DIR targeting
-    SPFLAG_TARGETING_MASK       = 0x0000f,      // used to test for targeting
+    SPFLAG_DIR_OR_TARGET        = 0x00001,      // use DIR_NONE targetting
+    SPFLAG_TARGET               = 0x00002,      // use DIR_TARGET targetting
+    SPFLAG_GRID                 = 0x00004,      // use DIR_GRID targetting
+    SPFLAG_DIR                  = 0x00008,      // use DIR_DIR targetting
+    SPFLAG_TARGETTING_MASK      = 0x0000f,      // used to test for targetting
     SPFLAG_HELPFUL              = 0x00010,      // TARG_FRIENDS used
     SPFLAG_NEUTRAL              = 0x00020,      // TARG_ANY used
     SPFLAG_NOT_SELF             = 0x00040,      // aborts on isMe

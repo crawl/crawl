@@ -117,12 +117,12 @@ static char _find_square( const coord_def& where,
                           bool need_path, int mode = TARG_ANY, int range = -1,
                           bool wrap = false, int los = LOS_ANY);
 
-static int  _targeting_cmd_to_compass( command_type command );
+static int  _targetting_cmd_to_compass( command_type command );
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
 static std::string _get_monster_desc(const monsters *mon);
 
-void direction_choose_compass( dist& moves, targeting_behaviour *beh)
+void direction_choose_compass( dist& moves, targetting_behaviour *beh)
 {
     moves.isValid       = true;
     moves.isTarget      = false;
@@ -188,7 +188,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
             break;
         }
 
-        const int i = _targeting_cmd_to_compass(key_command);
+        const int i = _targetting_cmd_to_compass(key_command);
         if (i != -1)
         {
             moves.delta = Compass[i];
@@ -206,7 +206,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
 #endif
 }
 
-static int _targeting_cmd_to_compass( command_type command )
+static int _targetting_cmd_to_compass( command_type command )
 {
     switch ( command )
     {
@@ -231,7 +231,7 @@ static int _targeting_cmd_to_compass( command_type command )
     }
 }
 
-static int _targeting_cmd_to_feature( command_type command )
+static int _targetting_cmd_to_feature( command_type command )
 {
     switch ( command )
     {
@@ -315,15 +315,15 @@ static bool _is_target_in_range(const coord_def& where, int range)
     return (grid_distance(you.pos(), where) <= range);
 }
 
-// We handle targeting for repeating commands and re-doing the
+// We handle targetting for repeating commands and re-doing the
 // previous command differently (i.e., not just letting the keys
 // stuffed into the macro buffer replay as-is) because if the player
 // targeted a monster using the movement keys and the monster then
 // moved between repetitions, then simply replaying the keys in the
 // buffer will target an empty square.
-static void _direction_again(dist& moves, targeting_type restricts,
+static void _direction_again(dist& moves, targetting_type restricts,
                              targ_mode_type mode, int range, bool just_looking,
-                             const char *prompt, targeting_behaviour *beh)
+                             const char *prompt, targetting_behaviour *beh)
 {
     moves.isValid       = false;
     moves.isTarget      = false;
@@ -983,15 +983,15 @@ static bool _blocked_ray(const coord_def &where,
     return (false);
 }
 
-void direction(dist& moves, targeting_type restricts,
+void direction(dist& moves, targetting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
                bool needs_path, bool may_target_monster,
                bool may_target_self, const char *prompt,
-               targeting_behaviour *beh, bool cancel_at_self)
+               targetting_behaviour *beh, bool cancel_at_self)
 {
     if (!beh)
     {
-        static targeting_behaviour stock_behaviour;
+        static targetting_behaviour stock_behaviour;
         beh = &stock_behaviour;
     }
     beh->just_looking = just_looking;
@@ -1254,7 +1254,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_UP_LEFT:
         case CMD_TARGET_UP:
         case CMD_TARGET_UP_RIGHT:
-            i = _targeting_cmd_to_compass(key_command);
+            i = _targetting_cmd_to_compass(key_command);
             moves.target += Compass[i];
             break;
 
@@ -1266,7 +1266,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_DIR_UP_LEFT:
         case CMD_TARGET_DIR_UP:
         case CMD_TARGET_DIR_UP_RIGHT:
-            i = _targeting_cmd_to_compass(key_command);
+            i = _targetting_cmd_to_compass(key_command);
 
             if (restricts != DIR_TARGET)
             {
@@ -1356,7 +1356,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_FIND_UPSTAIR:
         case CMD_TARGET_FIND_DOWNSTAIR:
         {
-            const int thing_to_find = _targeting_cmd_to_feature(key_command);
+            const int thing_to_find = _targetting_cmd_to_feature(key_command);
             if (_find_square_wrapper(moves.target, objfind_pos, 1,
                                      _find_feature, needs_path, thing_to_find,
                                      range, true, Options.target_los_first ?
@@ -1374,7 +1374,7 @@ void direction(dist& moves, targeting_type restricts,
 
         case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-            mprf("Targeting mode is now: %s",
+            mprf("targetting mode is now: %s",
                  (mode == TARG_ANY)     ? "any" :
                  (mode == TARG_ENEMY)   ? "enemies" :
                  (mode == TARG_HOSTILE) ? "hostiles"
@@ -1643,7 +1643,7 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_HELP:
-            show_targeting_help();
+            show_targetting_help();
             force_redraw = true;
             redraw_screen();
             mesclr(true);
@@ -3563,32 +3563,32 @@ static void _describe_cell(const coord_def& where, bool in_range)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-// targeting_behaviour
+// targetting_behaviour
 
-targeting_behaviour::targeting_behaviour(bool look_around)
+targetting_behaviour::targetting_behaviour(bool look_around)
     : just_looking(look_around), compass(false)
 {
 }
 
-targeting_behaviour::~targeting_behaviour()
+targetting_behaviour::~targetting_behaviour()
 {
 }
 
-int targeting_behaviour::get_key()
+int targetting_behaviour::get_key()
 {
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
-    return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
+    return unmangle_direction_keys(getchm(KMC_TARGETTING), KMC_TARGETTING,
                                    false, false);
 }
 
-command_type targeting_behaviour::get_command(int key)
+command_type targetting_behaviour::get_command(int key)
 {
     if (key == -1)
         key = get_key();
 
-    command_type cmd = key_to_command(key, KMC_TARGETING);
+    command_type cmd = key_to_command(key, KMC_TARGETTING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
         return (cmd);
 
@@ -3605,12 +3605,12 @@ command_type targeting_behaviour::get_command(int key)
     return (cmd);
 }
 
-bool targeting_behaviour::should_redraw()
+bool targetting_behaviour::should_redraw()
 {
     return (false);
 }
 
-void targeting_behaviour::mark_ammo_nonchosen()
+void targetting_behaviour::mark_ammo_nonchosen()
 {
     // Nothing to be done.
 }

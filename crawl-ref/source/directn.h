@@ -116,11 +116,11 @@ public:
 extern crawl_view_geometry crawl_view;
 
 // An object that modifies the behaviour of the direction prompt.
-class targeting_behaviour
+class targetting_behaviour
 {
 public:
-    targeting_behaviour(bool just_looking = false);
-    virtual ~targeting_behaviour();
+    targetting_behaviour(bool just_looking = false);
+    virtual ~targetting_behaviour();
 
     // Returns a keystroke for the prompt.
     virtual int get_key();
@@ -150,11 +150,11 @@ struct dist
     int  prev_target;   // previous target
 };
 
-void direction( dist &moves, targeting_type restricts = DIR_NONE,
+void direction( dist &moves, targetting_type restricts = DIR_NONE,
                 targ_mode_type mode = TARG_ANY, int range = -1,
                 bool just_looking = false, bool needs_path = true,
                 bool may_target_monster = true, bool may_target_self = false,
-                const char *prompt = NULL, targeting_behaviour *mod = NULL,
+                const char *prompt = NULL, targetting_behaviour *mod = NULL,
                 bool cancel_at_self = false );
 
 bool in_los_bounds(const coord_def& p);

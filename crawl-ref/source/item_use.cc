@@ -1177,7 +1177,7 @@ int get_next_fire_item(int current, int direction)
     return fire_order[0];
 }
 
-class fire_target_behaviour : public targeting_behaviour
+class fire_target_behaviour : public targetting_behaviour
 {
 public:
     fire_target_behaviour()
@@ -1187,7 +1187,7 @@ public:
         m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
     }
 
-    // targeting_behaviour API
+    // targetting_behaviour API
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw();
     virtual void mark_ammo_nonchosen();
@@ -1307,14 +1307,14 @@ command_type fire_target_behaviour::get_command(int key)
         return (CMD_NO_CMD);
     }
     case '?':
-        show_targeting_help();
+        show_targetting_help();
         redraw_screen();
         message_ammo_prompt();
         need_prompt = true;
         return (CMD_NO_CMD);
     }
 
-    return targeting_behaviour::get_command(key);
+    return targetting_behaviour::get_command(key);
 }
 
 static bool _fire_choose_item_and_target(int& slot, dist& target,
@@ -3854,7 +3854,7 @@ void zap_wand(int slot)
     dist zap_wand;
     int item_slot;
 
-    // Unless the character knows the type of the wand, the targeting
+    // Unless the character knows the type of the wand, the targetting
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_ENEMY;
 

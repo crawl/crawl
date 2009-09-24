@@ -183,7 +183,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
 
     // Targeted spells need a valid target.
-    ASSERT(!(flags & SPFLAG_TARGETING_MASK) || in_bounds(pbolt.target));
+    ASSERT(!(flags & SPFLAG_TARGETTING_MASK) || in_bounds(pbolt.target));
 #endif
 
     if (do_noise)
@@ -744,7 +744,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                               && pbolt.name[0] != '0'
                               && !pbolt.is_enchantment();
 
-    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
+    const bool targeted = (flags & SPFLAG_TARGETTING_MASK)
                            && (pbolt.target != monster->pos() || visible_beam);
 
     if (targeted)
@@ -856,7 +856,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     else if (pbolt.target == monster->pos())
         target = monster->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
-    // if they're targeting themselves.
+    // if they're targetting themselves.
     else if (monster->foe == MHITNOT && !monster->confused())
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(monster->foe)

@@ -770,9 +770,9 @@ int TilesFramework::getch_ck()
                 = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
                    || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
 
-    // When moving the mouse via cursor when targeting update more often.
-    // For beams, the beam drawing already handles this, and when not targeting
-    // the normal drawing routines handle it.
+    // When moving the mouse via cursor when targetting update more often.
+    // For beams, the beam drawing already handles this, and when not
+    // targetting the normal drawing routines handle it.
     const unsigned int ticks_per_cursor_redraw = (mouse_target_mode ? 100 : 30);
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 

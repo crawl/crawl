@@ -4269,7 +4269,7 @@ static void _handle_behaviour(monsters *mon)
             return;
         }
         // If we're not forcing monsters to attack, just make sure they're
-        // not targeting the player in arena mode.
+        // not targetting the player in arena mode.
         else if (mon->foe == MHITYOU)
             mon->foe = MHITNOT;
     }

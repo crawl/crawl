@@ -1954,7 +1954,7 @@ public:
     bool        show_more_prompt;
 
     bool        show_gold_turns; // Show gold and turns in HUD.
-    bool        show_beam;       // Show targeting beam by default.
+    bool        show_beam;       // Show targetting beam by default.
 
     long        autopickups;     // items to autopickup
     bool        show_inventory_weights; // show weights in inventory listings
@@ -1977,7 +1977,7 @@ public:
                                    // chunks if no safe ones are present
     bool        easy_eat_contaminated; // like easy_eat_gourmand, but
                                        // always active.
-    bool        default_target;  // start targeting on a real target
+    bool        default_target;  // start targetting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
@@ -1995,7 +1995,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background;      // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
-    int         target_range; // for whether targeting is out of range
+    int         target_range; // for whether targetting is out of range
 
     bool        use_old_selection_order; // use old order of species/classes in
                                          // selection screen
@@ -2138,7 +2138,7 @@ public:
     std::vector<std::string> dump_order;
 
     bool        level_map_title;    // Show title in level map
-    bool        target_zero_exp;    // If true, targeting targets zero-exp
+    bool        target_zero_exp;    // If true, targetting targets zero-exp
                                     // monsters.
     bool        target_wrap;        // Wrap around from last to first target
     bool        target_oos;         // 'x' look around can target out-of-LOS

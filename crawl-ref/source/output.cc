@@ -1494,7 +1494,7 @@ static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
     {
         int printed = 0;
 
-        // for targeting
+        // for targetting
         if (idx >= 0)
         {
             textcolor(WHITE);

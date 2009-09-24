@@ -1168,11 +1168,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     int potion = -1;
 
-    // XXX: This handles only some of the cases where spells need targeting...
+    // XXX: This handles only some of the cases where spells need targetting...
     // there are others that do their own that will be missed by this
     // (and thus will not properly ESC without cost because of it).
     // Hopefully, those will eventually be fixed. -- bwr
-    if ((flags & SPFLAG_TARGETING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
+    if ((flags & SPFLAG_TARGETTING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
@@ -1180,7 +1180,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         if (testbits(flags, SPFLAG_NEUTRAL))
             targ = TARG_ANY;
 
-        targeting_type dir  =
+        targetting_type dir  =
             ( (spell == SPELL_APPORTATION)   ? DIR_TARGET_OBJECT :
               testbits(flags, SPFLAG_TARGET) ? DIR_TARGET        :
               testbits(flags, SPFLAG_GRID)   ? DIR_TARGET        :
