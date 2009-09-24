@@ -2672,10 +2672,14 @@ void mons_clear_trapping_net(monsters *mon)
 
 bool mons_clonable(const monsters* mon, bool needs_adjacent)
 {
-    // No uniques, pandemonium lords or player ghosts.  Also, figuring
-    // out the name for the clone of a named monster isn't worth it.
-    if (mons_is_unique(mon->type) || mon->is_named() || mon->ghost.get())
+    // No uniques or ghost demon monsters.  Also, figuring out the name
+    // for the clone of a named monster isn't worth it.
+    if (mons_is_unique(mon->type)
+        || mons_is_ghost_demon(mon->type)
+        || mon->is_named())
+    {
         return (false);
+    }
 
     if (needs_adjacent)
     {

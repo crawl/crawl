@@ -286,7 +286,7 @@ mon_resist_def get_mons_resists(const monsters *mon)
 {
     mon_resist_def resists;
     if (mons_is_ghost_demon(mon->type))
-        resists = (mon->ghost->resists);
+        resists = mon->ghost->resists;
     else
         resists = mon_resist_def();
 
