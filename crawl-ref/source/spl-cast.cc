@@ -1789,9 +1789,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_POLYMORPH_OTHER:
-        // Trying is already enough, even if it fails.
-        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-
         if (!zapping(ZAP_POLYMORPH_OTHER, powc, beam, true))
             return (SPRET_ABORT);
         break;
@@ -1960,22 +1957,19 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_ALTER_SELF:
-        // Trying is already enough, even if it fails.
-        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-
         if (normal_cast)
             crawl_state.cant_cmd_repeat("You can't repeat Alter Self.");
-        if (!enough_hp( you.hp_max / 2, true ))
-        {
-            mpr( "Your body is in too poor a condition "
-                 "for this spell to function." );
 
+        if (!enough_hp(you.hp_max / 2, true))
+        {
+            mpr("Your body is in too poor a condition for this spell "
+                 "to function.");
             return (SPRET_FAIL);
         }
 
         mpr("Your body is suffused with transfigurative energy!");
 
-        set_hp( 1 + random2(you.hp), false );
+        set_hp(1 + random2(you.hp), false);
 
         if (!mutate(RANDOM_MUTATION, false))
             mpr("Odd... you don't feel any different.");
