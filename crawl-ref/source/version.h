@@ -33,7 +33,7 @@
 #define CRAWL "Dungeon Crawl Stone Soup"
 
 #define VER_NUM  "0.5"
-#define VER_QUAL "-svn"
+#define VER_QUAL "-git"
 
 // Undefine for official releases.
 #define DISPLAY_BUILD_REVISION
