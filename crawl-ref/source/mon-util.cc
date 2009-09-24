@@ -5428,8 +5428,8 @@ bool monsters::is_named() const
 
 bool monsters::has_base_name() const
 {
-    // Any non-ghost, non-Pandemonium demon that has an explicitly set name
-    // has a base name.
+    // Any non-ghost, non-Pandemonium demon that has an explicitly set
+    // name has a base name.
     return (!mname.empty() && !ghost.get());
 }
 
