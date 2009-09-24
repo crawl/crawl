@@ -2273,7 +2273,7 @@ static monsterentry mondata[] = {
     MONS_AZURE_JELLY, 'J', LIGHTBLUE, "azure jelly",
     M_NO_SKELETON | M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_COLD | MR_VUL_FIRE | MR_RES_ELEC | MR_RES_ASPHYX
-         | MR_RES_ACID,
+        | MR_RES_ACID,
     0, 11, MONS_JELLY, MONS_AZURE_JELLY, MH_NATURAL, -4,
     { {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_PLAIN, 12},
       {AT_HIT, AF_PLAIN, 12} },
