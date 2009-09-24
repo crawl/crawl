@@ -1971,7 +1971,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
         set_hp(1 + random2(you.hp), false);
 
-        if (!mutate(RANDOM_MUTATION, false))
+        if (mutate(RANDOM_MUTATION, false))
+            did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3));
+        else
             mpr("Odd... you don't feel any different.");
         break;
 
