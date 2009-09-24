@@ -514,8 +514,8 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate)
 
     const mon_attack_type att_types[] =
     {
-        AT_BITE, AT_STING, AT_CLAW, AT_PUNCH, AT_KICK, AT_TENTACLE_SLAP,
-        AT_TAIL_SLAP, AT_BUTT
+        AT_BITE, AT_STING, AT_CLAW, AT_PECK, AT_HEADBUTT, AT_PUNCH, AT_KICK,
+        AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE
     };
 
     att_type = att_types[random2(sizeof(att_types) / sizeof(*att_types))];

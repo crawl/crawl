@@ -4298,6 +4298,8 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "touch",
         "engulf",
         "claw",
+        "peck",
+        "headbutt",
         "punch",
         "kick",
         "tentacle-slap",

@@ -1173,7 +1173,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
 
     if (attk.type == AT_RANDOM)
         attk.type = static_cast<mon_attack_type>(random_range(AT_HIT,
-                                                              AT_BUTT));
+                                                              AT_GORE));
 
     if (attk.flavour == AF_KLOWN)
     {

@@ -44,11 +44,13 @@ enum mon_attack_type
     AT_TOUCH,
     AT_ENGULF,
     AT_CLAW,
+    AT_PECK,
+    AT_HEADBUTT,
     AT_PUNCH,
     AT_KICK,
     AT_TENTACLE_SLAP,
     AT_TAIL_SLAP,
-    AT_BUTT,
+    AT_GORE,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_RANDOM       // Anything but AT_SHOOT
