@@ -71,7 +71,6 @@ enum mon_attack_flavour
     AF_FIRE,
     AF_HUNGER,
     AF_MUTATE,
-    AF_BAD_MUTATE,
     AF_PARALYSE,
     AF_POISON,
     AF_POISON_NASTY,
