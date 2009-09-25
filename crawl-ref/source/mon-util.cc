@@ -504,17 +504,17 @@ bool mons_class_is_slowable(int mc)
 
 bool mons_class_is_stationary(int mc)
 {
-    return mons_class_flag(mc, M_STATIONARY);
+    return (mons_class_flag(mc, M_STATIONARY));
 }
 
 bool mons_is_stationary(const monsters *mon)
 {
-    return mons_class_is_stationary(mon->type);
+    return (mons_class_is_stationary(mon->type));
 }
 
 bool mons_is_insubstantial(int mc)
 {
-    return mons_class_flag(mc, M_INSUBSTANTIAL);
+    return (mons_class_flag(mc, M_INSUBSTANTIAL));
 }
 
 bool mons_has_blood(int mc)
@@ -3284,13 +3284,13 @@ bool mons_is_magic_user( const monsters *mon )
 
 // Returns true if the monster has an ability that only needs LOS to
 // affect the target.
-bool mons_has_los_ability( int mclass )
+bool mons_has_los_ability(int mclass)
 {
     // These two have Torment, but are handled specially.
     if (mclass == MONS_FIEND || mclass == MONS_PIT_FIEND)
         return (true);
 
-    // These eyes only need LOS, as well. (The other eyes use spells.)
+    // These eyes only need LOS, as well.  (The other eyes use spells.)
     if (mclass == MONS_GIANT_EYEBALL || mclass == MONS_EYE_OF_DRAINING)
         return (true);
 
@@ -3313,18 +3313,18 @@ bool mons_has_los_attack(const monsters *mon)
     if (mons_has_los_ability(mclass))
         return (true);
 
-    if (mons_class_flag( mclass, M_SPELLCASTER ))
+    if (mons_class_flag(mclass, M_SPELLCASTER))
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-            if (_ms_los_spell( mon->spells[i] ))
+            if (_ms_los_spell(mon->spells[i]))
                 return (true);
     }
 
     return (false);
 }
 
-bool mons_has_ranged_spell( const monsters *mon, bool attack_only,
-                            bool ench_too )
+bool mons_has_ranged_spell(const monsters *mon, bool attack_only,
+                           bool ench_too)
 {
     const int mclass = mon->type;
 
@@ -3332,17 +3332,17 @@ bool mons_has_ranged_spell( const monsters *mon, bool attack_only,
     if (mons_has_los_ability(mclass))
         return (true);
 
-    if (mons_class_flag( mclass, M_SPELLCASTER ))
+    if (mons_class_flag(mclass, M_SPELLCASTER))
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-            if (_ms_ranged_spell( mon->spells[i], attack_only, ench_too ))
+            if (_ms_ranged_spell(mon->spells[i], attack_only, ench_too))
                 return (true);
     }
 
     return (false);
 }
 
-bool mons_has_ranged_ability( const monsters *mon)
+bool mons_has_ranged_ability(const monsters *mon)
 {
     if (mon->type == MONS_ELECTRIC_EEL || mon->type == MONS_LAVA_SNAKE)
         return (true);
@@ -3350,7 +3350,7 @@ bool mons_has_ranged_ability( const monsters *mon)
     return (false);
 }
 
-bool mons_has_ranged_attack( const monsters *mon )
+bool mons_has_ranged_attack(const monsters *mon)
 {
     // Ugh.
     monsters *mnc = const_cast<monsters*>(mon);
@@ -3367,7 +3367,7 @@ bool mons_has_ranged_attack( const monsters *mon )
     if (!missile)
         return (false);
 
-    return is_launched(mnc, weapon, *missile);
+    return (is_launched(mnc, weapon, *missile));
 }
 
 
