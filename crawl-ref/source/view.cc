@@ -2312,7 +2312,7 @@ static int _shoot_ray( double accx, double accy, const double slope,
         _find_next_intercept( &accx, &accy, slope );
         curx = static_cast<int>(accx);
         cury = static_cast<int>(accy);
-        if (curx > maxrange || cury > maxrange)
+        if (curx*curx + cury*cury > los_radius_squared)
             break;
 
         // Work with the new square.
@@ -2584,8 +2584,8 @@ void raycast()
     // Changing the order a bit. We want to order by the complexity
     // of the beam, which is log(x) + log(y) ~ xy.
     std::vector<std::pair<int,int> > xyangles;
-    for ( int xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle )
-        for ( int yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle )
+    for ( int xangle = 1; xangle <= 2*LOS_MAX_RANGE; ++xangle )
+        for ( int yangle = 1; yangle <= 2*LOS_MAX_RANGE; ++yangle )
         {
             if ( _gcd(xangle, yangle) == 1 )
                 xyangles.push_back(std::pair<int,int>(xangle, yangle));
@@ -2599,9 +2599,9 @@ void raycast()
 
         const double slope = ((double)(yangle)) / xangle;
         const double rslope = ((double)(xangle)) / yangle;
-        for ( int intercept = 1; intercept <= yangle; ++intercept )
+        for ( int intercept = 1; intercept <= 2*yangle; ++intercept )
         {
-            double xstart = ((double)(intercept)) / yangle;
+            double xstart = ((double)(intercept)) / (2*yangle);
             double ystart = 1;
 
             // now move back just inside the cell
