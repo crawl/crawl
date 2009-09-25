@@ -3940,7 +3940,9 @@ int monsters::damage_type(int which_attack)
     if (!mweap)
     {
         const mon_attack_def atk = mons_attack_spec(this, which_attack);
-        return (atk.type == AT_CLAW) ? DVORP_CLAWING : DVORP_CRUSHING;
+        return ((atk.type == AT_CLAW)          ? DVORP_CLAWING :
+                (atk.type == AT_TENTACLE_SLAP) ? DVORP_TENTACLE
+                                               : DVORP_CRUSHING);
     }
 
     return (get_vorpal_type(*mweap));

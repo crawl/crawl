@@ -149,7 +149,7 @@ int effective_stat_bonus( int wepType )
 #endif
 }
 
-// Returns the to-hit for your extra unarmed.attacks.
+// Returns the to-hit for your extra unarmed attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
 static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                     bool vampiric = false)
@@ -411,7 +411,7 @@ void melee_attack::init_attack()
     }
 
     if (defender && defender->submerged())
-        unarmed_ok = false;
+        unarmed_ok = (attacker->damage_type() == DVORP_TENTACLE);
 
     miscast_level  = -1;
     miscast_type   = SPTYP_NONE;
@@ -721,6 +721,7 @@ static int _modify_blood_amount(const int damage, const int dam_type)
     switch (dam_type)
     {
     case DVORP_CRUSHING: // flails, also unarmed
+    case DVORP_TENTACLE: // unarmed, tentacles
         factor =  2;
         break;
     case DVORP_SLASHING: // whips

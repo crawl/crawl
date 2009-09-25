@@ -518,6 +518,7 @@ enum vorpal_damage_type
     DVORP_STABBING      = 0x6000,       // used for knives/daggers
 
     DVORP_CLAWING       = 0x7000,       // claw damage
+    DVORP_TENTACLE      = 0x8000,       // tentacle damage
 
     // These are shortcuts to tie vorpal/damage types for easy setting...
     // as above, setting more than one vorpal type is trouble.
