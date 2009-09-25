@@ -1215,7 +1215,7 @@ void mons_relocated(monsters *monster)
         {
             monsters *tentacle = &menv[i];
             if (tentacle->type == MONS_KRAKEN_TENTACLE
-                && (int) tentacle->number == headnum
+                && (int)tentacle->number == headnum
                 && _tentacle_too_far(monster, tentacle))
             {
                 monster_die(tentacle, KILL_RESET, -1, true, false);

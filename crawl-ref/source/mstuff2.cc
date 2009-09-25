@@ -277,7 +277,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
         for (sumcount = 0; sumcount < MAX_MONSTERS; ++sumcount)
             if (menv[sumcount].type == MONS_KRAKEN_TENTACLE
-                && (int) menv[sumcount].number == kraken_index)
+                && (int)menv[sumcount].number == kraken_index)
             {
                 // Reduce by tentacles already placed.
                 sumcount2--;
@@ -288,12 +288,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // Tentacles aren't really summoned (controlled by spell_cast
             // being passed to summon_type), so I'm not sure what the
             // abjuration value (3) is doing there. (jpeg)
-            if (-1 == create_monster(
+            if (create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster),
                           3, spell_cast, monster->pos(), monster->foe, 0, god,
                           MONS_PROGRAM_BUG, kraken_index, monster->colour,
                           you.your_level, PROX_CLOSE_TO_PLAYER,
-                          you.level_type)))
+                          you.level_type)) == -1)
             {
                 sumcount2--;
             }

@@ -3208,7 +3208,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     return (ret);
 }
 
-static bool _ms_los_spell( spell_type monspell )
+static bool _ms_los_spell(spell_type monspell)
 {
     // True, the tentacles _are_ summoned but they are restricted to water
     // just like the kraken is, so it makes more sense not to count them here.
@@ -3225,8 +3225,8 @@ static bool _ms_los_spell( spell_type monspell )
 }
 
 
-static bool _ms_ranged_spell( spell_type monspell, bool attack_only = false,
-                              bool ench_too = true)
+static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
+                             bool ench_too = true)
 {
     // Check for Smiting specially, so it's not filtered along
     // with the summon spells.
