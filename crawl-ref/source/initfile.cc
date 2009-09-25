@@ -3452,9 +3452,9 @@ std::string find_executable_path()
 	tempPath[0] = 0;
 
 #if defined ( _MSC_VER )
-    int retval = GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
+    GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
 #elif defined ( __linux__ )
-    int retval = readlink ( "/proc/self/exe", tempPath, sizeof(tempPath) );
+    readlink ( "/proc/self/exe", tempPath, sizeof(tempPath) );
 #elif defined ( __MACH__ )
     strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
 #else
