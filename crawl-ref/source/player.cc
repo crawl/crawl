@@ -6383,7 +6383,7 @@ std::string player::shout_verb() const
 
 int player::damage_type(int)
 {
-    const int wpn = equip[ EQ_WEAPON ];
+    const int wpn = equip[EQ_WEAPON];
 
     if (wpn != -1)
         return (get_vorpal_type(inv[wpn]));
@@ -6398,12 +6398,12 @@ int player::damage_type(int)
 int player::damage_brand(int)
 {
     int ret = SPWPN_NORMAL;
-    const int wpn = equip[ EQ_WEAPON ];
+    const int wpn = equip[EQ_WEAPON];
 
     if (wpn != -1)
     {
         if (!is_range_weapon(inv[wpn]))
-            ret = get_weapon_brand( inv[wpn] );
+            ret = get_weapon_brand(inv[wpn]);
     }
     else if (duration[DUR_CONFUSING_TOUCH])
         ret = SPWPN_CONFUSE;
