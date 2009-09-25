@@ -1812,7 +1812,7 @@ static const char* _player_vampire_smells_blood(int dist)
     if (dist < 16) // 4*4
         return " near-by";
 
-    if (you.hunger_state <= HS_NEAR_STARVING && dist > 64) // 8*8
+    if (you.hunger_state <= HS_NEAR_STARVING && dist > 65) // 8*8+1 (LOS)
         return " in the distance";
 
     return "";
