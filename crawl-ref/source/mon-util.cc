@@ -7932,7 +7932,7 @@ bool monsters::visible_to(const actor *looker) const
 
 bool monsters::mon_see_grid(const coord_def& p, bool reach) const
 {
-    if (distance(pos(), p) > LOS_RADIUS * LOS_RADIUS)
+    if (distance(pos(), p) > LOS_RADIUS * LOS_RADIUS + 1)
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;

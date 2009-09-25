@@ -325,7 +325,7 @@ void update_exclusion_los(const coord_def &p)
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
         if (!curr_excludes[i].uptodate
-            && (curr_excludes[i].pos - p).abs() <= LOS_RADIUS * LOS_RADIUS)
+            && (curr_excludes[i].pos - p).abs() <= LOS_RADIUS * LOS_RADIUS + 1)
         {
             curr_excludes[i].set_exclude_show();
         }

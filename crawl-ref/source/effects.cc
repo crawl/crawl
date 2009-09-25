@@ -4276,7 +4276,7 @@ void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
     int current_r = 1;
     int current_thresh = current_r * (current_r + 1);
 
-    int max_distance = LOS_RADIUS * LOS_RADIUS;
+    int max_distance = LOS_RADIUS * LOS_RADIUS + 1;
 
     while (!fringe.empty())
     {

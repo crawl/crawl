@@ -4181,7 +4181,7 @@ bool trans_wall_blocking( const coord_def &p )
 bool grid_see_grid(const coord_def& p1, const coord_def& p2,
                    dungeon_feature_type allowed)
 {
-    if (distance(p1, p2) > LOS_RADIUS * LOS_RADIUS)
+    if (distance(p1, p2) > los_radius_squared)
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
@@ -6053,7 +6053,7 @@ void monster_los::set_los_value(int x, int y, bool blocked, bool override)
 int monster_los::get_los_value(int x, int y)
 {
     // Too far away -> definitely out of sight!
-    if (distance(x, y, gridx, gridy) > LOS_RADIUS * LOS_RADIUS)
+    if (distance(x, y, gridx, gridy) > los_radius_squared)
         return (L_BLOCKED);
 
     coord_def c(x,y);
