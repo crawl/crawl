@@ -1726,12 +1726,14 @@ bool cast_sanctuary(const int power)
     viewwindow(true, false);
 
     holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
+
 #ifndef USE_TILE
+    // Allow extra time for the flash to linger.
     delay(1000);
 #endif
 
     env.sanctuary_pos  = you.pos();
-    env.sanctuary_time = 7 + you.skills[SK_INVOCATIONS]/2;
+    env.sanctuary_time = 7 + you.skills[SK_INVOCATIONS] / 2;
 
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
