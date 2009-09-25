@@ -368,7 +368,7 @@ void melee_attack::check_hand_half_bonus_eligible()
                        && !can_do_unarmed
                        && !shield
                        && weapon
-                       && !item_cursed( *weapon )
+                       && !item_cursed(*weapon)
                        && hands == HANDS_HALF);
 }
 
@@ -377,17 +377,16 @@ void melee_attack::init_attack()
     weapon       = attacker->weapon(attack_number);
     damage_brand = attacker->damage_brand(attack_number);
 
-    if (weapon && weapon->base_type == OBJ_WEAPONS
-        && is_artefact( *weapon ))
+    if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
     {
-        artefact_wpn_properties( *weapon, art_props );
-        if (is_unrandom_artefact( *weapon ))
+        artefact_wpn_properties(*weapon, art_props);
+        if (is_unrandom_artefact(*weapon))
             unrand_entry = get_unrand_entry(weapon->special);
     }
 
-    wpn_skill = weapon ? weapon_skill( *weapon ) : SK_UNARMED_COMBAT;
+    wpn_skill = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     if (weapon)
-        hands = hands_reqd( *weapon, attacker->body_size() );
+        hands = hands_reqd(*weapon, attacker->body_size());
 
     shield = attacker->shield();
     if (defender)
@@ -403,13 +402,11 @@ void melee_attack::init_attack()
     needs_message      = (attacker_visible || defender_visible);
 
     if (defender && defender->atype() == ACT_MONSTER)
-    {
         defender_starting_attitude = defender_as_monster()->temp_attitude();
-    }
     else
     {
-        // Not really, but this is used for god conducts,
-        // so hostile is fine.
+        // Not really, but this is used for god conducts, so hostile is
+        // fine.
         defender_starting_attitude = ATT_HOSTILE;
     }
 
@@ -426,14 +423,14 @@ std::string melee_attack::actor_name(const actor *a,
                                      bool actor_visible,
                                      bool actor_invisible)
 {
-    return (actor_visible? a->name(desc) : anon_name(desc, actor_invisible));
+    return (actor_visible ? a->name(desc) : anon_name(desc, actor_invisible));
 }
 
 std::string melee_attack::pronoun(const actor *a,
                                   pronoun_type pron,
                                   bool actor_visible)
 {
-    return (actor_visible? a->pronoun(pron) : anon_pronoun(pron));
+    return (actor_visible ? a->pronoun(pron) : anon_pronoun(pron));
 }
 
 std::string melee_attack::anon_pronoun(pronoun_type pron)
