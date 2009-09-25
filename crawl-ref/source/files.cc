@@ -507,6 +507,9 @@ std::string datafile_path(std::string basename,
 #else
         !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "",
 #endif
+#ifdef OSX
+        SysEnv.crawl_base + "../Resources/"
+#endif
     };
 
     const std::string prefixes[] = {
