@@ -2016,7 +2016,7 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
     const double ytarget = (static_cast<int>(*accy) + 1);
     const double xdistance = xtarget - *accx;
     const double ydistance = ytarget - *accy;
-    const double distdiff = (xdistance * slope - ydistance);
+    double distdiff = (xdistance * slope - ydistance);
 
     // exact corner
     if ( double_is_zero( distdiff ) )
@@ -2035,6 +2035,7 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
         return 2;
     }
 
+    // move to the boundary
     double traveldist;
     int rc = -1;
     if ( distdiff > 0.0 )
@@ -2048,7 +2049,11 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
         rc = 0;
     }
 
-    traveldist += EPSILON_VALUE * 10.0;
+    // and a little into the next cell, taking care
+    // not to go too far
+    if ( distdiff < 0.0 )
+        distdiff = -distdiff;
+    traveldist += std::min(EPSILON_VALUE * 10.0, 0.5 * distdiff / slope);
 
     *accx += traveldist;
     *accy += traveldist * slope;
@@ -2594,18 +2599,19 @@ void raycast()
 
         const double slope = ((double)(yangle)) / xangle;
         const double rslope = ((double)(xangle)) / yangle;
-        for ( int intercept = 0; intercept <= yangle; ++intercept )
+        for ( int intercept = 1; intercept <= yangle; ++intercept )
         {
             double xstart = ((double)(intercept)) / yangle;
-            if ( intercept == 0 )
-                xstart += EPSILON_VALUE / 10.0;
-            if ( intercept == yangle )
-                xstart -= EPSILON_VALUE / 10.0;
+            double ystart = 1;
 
+            // now move back just inside the cell
             // y should be "about to change"
-            _register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
+            xstart -= EPSILON_VALUE * xangle;
+            ystart -= EPSILON_VALUE * yangle;
+
+            _register_ray( xstart, ystart, slope );
             // also draw the identical ray in octant 2
-            _register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
+            _register_ray( ystart, xstart, rslope );
         }
     }
 
