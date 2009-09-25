@@ -3030,6 +3030,9 @@ static void _give_monster_item(monsters *mon, int thing,
                                bool force_item = false,
                                bool (monsters::*pickupfn)(item_def&, int) = NULL)
 {
+    if (thing == NON_ITEM || thing == -1)
+        return;
+
     item_def &mthing = mitm[thing];
     ASSERT(is_valid_item(mthing));
 
