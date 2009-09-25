@@ -1162,12 +1162,12 @@ void antimagic()
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
         you.duration[DUR_CONTROLLED_FLIGHT] = 1;
 
-    for ( unsigned int i = 0; i < ARRAYSZ(dur_list); ++i )
-        if ( you.duration[dur_list[i]] > 1 )
+    for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
+        if (you.duration[dur_list[i]] > 1)
             you.duration[dur_list[i]] = 1;
 
-    contaminate_player( -1 * (1 + random2(5)));
-}                               // end antimagic()
+    contaminate_player(-1 * (1 + random2(5)));
+}
 
 void extension(int pow)
 {

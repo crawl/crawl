@@ -1406,11 +1406,11 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             }
             else
             {
-                // Controlling teleport contaminates the player. -- bwr
+                // Controlling teleport contaminates the player. - bwr
                 contaminate_player(1, true);
             }
         }
-    }   // end "if is_controlled"
+    }
 
     if (!is_controlled)
     {
@@ -2032,13 +2032,13 @@ bool recall(char type_recalled)
         mpr("Nothing appears to have answered your call.");
 
     return (success);
-}                               // end recall()
+}
 
 // Restricted to main dungeon for historical reasons, probably for
 // balance: otherwise you have an instant teleport from anywhere.
 int portal()
 {
-    if (!player_in_branch( BRANCH_MAIN_DUNGEON ))
+    if (!player_in_branch(BRANCH_MAIN_DUNGEON))
     {
         mpr("This spell doesn't work here.");
         return (-1);
@@ -2050,9 +2050,9 @@ int portal()
     }
     else if (you.char_direction == GDT_ASCENDING)
     {
-        // be evil if you've got the Orb
+        // Be evil if you've got the Orb.
         mpr("An empty arch forms before you, then disappears.");
-        return 1;
+        return (1);
     }
 
     mpr("Which direction ('<' for up, '>' for down, 'x' to quit)? ",
@@ -2087,13 +2087,13 @@ int portal()
         }
     }
 
-    mpr("How many levels (1 - 9, 'x' to quit)? ", MSGCH_PROMPT);
+    mpr("How many levels (1-9, 'x' to quit)? ", MSGCH_PROMPT);
 
     int amount = 0;
     while (amount == 0)
     {
         const int keyin = getch();
-        if ( isdigit(keyin) )
+        if (isdigit(keyin))
             amount = (keyin - '0') * dir_sign;
         else if (keyin == 'x')
         {
@@ -2102,13 +2102,13 @@ int portal()
         }
     }
 
-    mpr( "You fall through a mystic portal, and materialise at the "
-         "foot of a staircase." );
+    mpr("You fall through a mystic portal, and materialise at the "
+        "foot of a staircase.");
     more();
 
     const int old_level = you.your_level;
     you.your_level = std::max(0, std::min(26, you.your_level + amount)) - 1;
-    down_stairs( old_level, DNGN_STONE_STAIRS_DOWN_I );
+    down_stairs(old_level, DNGN_STONE_STAIRS_DOWN_I);
 
     return (1);
 }
