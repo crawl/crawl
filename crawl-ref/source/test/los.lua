@@ -4,17 +4,15 @@ local FAILMAP = 'losfail.map'
 local checks = 0
 
 local function test_los()
+  -- Clear messages to prevent them accumulating and forcing a --more--
+  crawl.mesclr()
   -- Send the player to a random spot on the level.
   you.random_teleport()
 
   -- Forcibly redo LOS.
   you.losight()
 
-  -- And draw the view to keep the watcher entertained.
-  crawl.redraw_view()
-
   checks = checks + 1
-
   local you_x, you_y = you.pos()
 
   local visible_spots = { }
@@ -36,6 +34,7 @@ local function test_los()
     you.moveto(x, y)
     you.losight()
     if not you.see_grid(you_x, you_y) then
+      -- Draw the view to show the problem.
       crawl.redraw_view()
       local this_p = dgn.point(x, y)
       local you_p = dgn.point(you_x, you_y)
@@ -64,5 +63,5 @@ local function run_los_tests(depth, nlevels, tests_per_level)
 end
 
 for depth = 1, 27 do
-  run_los_tests(depth, 10, 100)
+  run_los_tests(depth, 1, 10)
 end
