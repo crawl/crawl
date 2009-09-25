@@ -210,6 +210,10 @@ bool monsters::gain_exp(int exp)
     if (holiness() != MH_NATURAL)
         return (false);
 
+    // Only monsters that you can gain XP from can level-up.
+    if (mons_class_flag(type, M_NO_EXP_GAIN))
+        return (false);
+
     // Avoid wrap-around.
     if (experience + exp < experience)
         return (false);
