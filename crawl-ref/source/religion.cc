@@ -6879,10 +6879,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
               wpn.name(DESC_NOCAP_A).c_str(), desc.c_str()));
     wpn.flags |= ISFLAG_NOTED_ID;
 
+    mpr("Your weapon shines brightly!", MSGCH_GOD);
+
     you.flash_colour = colour;
     viewwindow(true, false);
 
-    mpr("Your weapon shines brightly!", MSGCH_GOD);
     simple_god_message(" booms: Use this gift wisely!");
 
     if (god == GOD_SHINING_ONE)
@@ -6896,6 +6897,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     }
 
 #ifndef USE_TILE
+    // Allow extra time for the flash to linger.
     delay(1000);
 #endif
 
