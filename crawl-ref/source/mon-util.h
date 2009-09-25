@@ -53,7 +53,7 @@ enum mon_attack_type
     AT_GORE,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
-    AT_RANDOM       // Anything but AT_SHOOT
+    AT_RANDOM       // Anything but AT_SHOOT.
 };
 
 enum mon_attack_flavour

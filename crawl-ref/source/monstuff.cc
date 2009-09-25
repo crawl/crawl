@@ -8089,7 +8089,7 @@ static bool _monster_eat_single_corpse(monsters *monster, item_def& item,
     {
         monster->hit_points += 1 + random2(mons_weight(item.plus)) / 100;
 
-        // Limited growth factor here -- should 77 really be the cap? {dlb}:
+        // Limited growth factor here - should 77 really be the cap? {dlb}:
         monster->hit_points = std::min(100, monster->hit_points);
         monster->max_hit_points = std::max(monster->hit_points,
                                            monster->max_hit_points);
