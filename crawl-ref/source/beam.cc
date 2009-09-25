@@ -2715,7 +2715,7 @@ bool napalm_monster(monsters *monster, kill_category who, int levels,
     if (!monster->alive())
         return (false);
 
-    if (mons_res_sticky_flame(monster) > 0 || levels <= 0)
+    if (mons_res_sticky_flame(monster) || levels <= 0)
         return (false);
 
     const mon_enchant old_flame = monster->get_ench(ENCH_STICKY_FLAME);

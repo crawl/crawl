@@ -5406,7 +5406,7 @@ bool curare_hits_player(int death_source, int amount)
 
     int hurted = 0;
 
-    if (player_res_asphyx() > 0)
+    if (player_res_asphyx())
     {
         hurted = roll_dice(2, 6);
 
@@ -5508,7 +5508,7 @@ bool napalm_player(int amount)
 {
     ASSERT(!crawl_state.arena);
 
-    if (player_res_sticky_flame() > 0 || amount <= 0)
+    if (player_res_sticky_flame() || amount <= 0)
         return (false);
 
     const int old_value = you.duration[DUR_LIQUID_FLAMES];

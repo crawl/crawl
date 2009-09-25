@@ -4448,7 +4448,7 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
 
 void melee_attack::mons_do_napalm()
 {
-    if (defender->res_sticky_flame() > 0)
+    if (defender->res_sticky_flame())
         return;
 
     if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
