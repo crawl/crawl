@@ -656,13 +656,17 @@ void game_options::reset_options()
 #if defined(SAVE_DIR_PATH)
     save_dir   = SAVE_DIR_PATH "/saves/";
     morgue_dir = SAVE_DIR_PATH "/morgue/";
- #elif !defined(DOS)
+#elif defined(OSX)
+    std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;
+    save_dir   = tmp_path_base + "/saves/";
+    morgue_dir = tmp_path_base + "/morgue/";
+#elif !defined(DOS)
     save_dir   = "saves/";
 #else
     save_dir.clear();
 #endif
 
-#if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH)
+#if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(OSX)
     morgue_dir = "morgue/";
 #endif
 
