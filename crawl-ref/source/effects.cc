@@ -4007,7 +4007,7 @@ void handle_time(long time_delta)
 }
 
 // Move monsters around to fake them walking around while player was
-// off-level.
+// off-level. Also let them go back to sleep eventually.
 static void _catchup_monster_moves(monsters *mon, int turns)
 {
     // Summoned monsters might have disappeared.
@@ -4030,44 +4030,60 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     const int range = (turns * mon->speed) / 10;
     const int moves = (range > 50) ? 50 : range;
 
-    // const bool short_time = (range >= 5 + random2(10));
-    const bool long_time = (range >= (500 + roll_dice(2, 500)));
-
     const bool ranged_attack = (mons_has_ranged_spell(mon, true)
                                 || mons_has_ranged_attack(mon));
 
 #if DEBUG_DIAGNOSTICS
     // probably too annoying even for DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "mon #%d: range %d; long %d; "
+         "mon #%d: range %d; "
          "pos (%d,%d); targ %d(%d,%d); flags %ld",
-         mon->mindex(), range, long_time, mon->pos().x, mon->pos().y,
+         mon->mindex(), range, mon->pos().x, mon->pos().y,
          mon->foe, mon->target.x, mon->target.y, mon->flags );
 #endif
 
     if (range <= 0)
         return;
 
-    if (long_time
-        && (mons_is_fleeing(mon)
-            || mons_is_cornered(mon)
-            || mons_is_batty(mon)
-            || ranged_attack
-            || coinflip()))
+    // After x turns, half of the monsters will have forgotten about the
+    // player, and a quarter has gone to sleep. A given monster has a
+    // 95% chance of forgetting the player after 4*x turns, and going to
+    // sleep after 10*x turns.
+    int x;
+    switch (mons_intel(mon))
     {
-        if (!mons_is_wandering(mon))
-        {
-            mon->behaviour = BEH_WANDER;
-            mon->foe = MHITNOT;
-            mon->target = random_in_bounds();
-        }
-        else
-        {
-            // The monster will be sleeping after we move it.
-            mon->behaviour = BEH_SLEEP;
+    case I_HIGH:
+        x = 1000;
+        break;
+    case I_NORMAL:
+        x = 500;
+        break;
+    case I_ANIMAL:
+    case I_INSECT:
+        x = 250;
+        break;
+    case I_PLANT:
+        x = 125;
+        break;
+    }
+
+    bool changed = 0;
+    for  (int i = 0; i < range/x; i++) {
+        if (mon->behaviour == BEH_SLEEP)
+            break;
+        if (coinflip()) {
+            changed = 1;
+            if (coinflip()) {
+                mon->behaviour = BEH_SLEEP;
+            } else {
+                mon->behaviour = BEH_WANDER;
+                mon->foe = MHITNOT;
+                mon->target = random_in_bounds();
+            }
         }
     }
-    else if (ranged_attack)
+
+    if (ranged_attack && !changed)
     {
         // If we're doing short time movement and the monster has a
         // ranged attack (missile or spell), then the monster will
