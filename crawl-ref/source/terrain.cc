@@ -186,12 +186,12 @@ command_type grid_stair_direction(dungeon_feature_type grid)
 
 bool grid_is_opaque(dungeon_feature_type grid)
 {
-    return (grid < DNGN_MINSEE);
+    return (grid <= DNGN_MAXOPAQUE);
 }
 
 bool grid_is_solid(dungeon_feature_type grid)
 {
-    return (grid < DNGN_MINMOVE);
+    return (grid <= DNGN_MAXSOLID);
 }
 
 bool grid_is_solid(int x, int y)

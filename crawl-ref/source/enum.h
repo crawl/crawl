@@ -1018,6 +1018,9 @@ enum dungeon_feature_type
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED,
 
+    // Highest solid grid value.
+    DNGN_MAXSOLID = DNGN_STATUE_RESERVED,
+
     // Lowest grid value which can be passed by walking etc.
     DNGN_MINMOVE = 31,
 
