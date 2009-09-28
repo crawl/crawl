@@ -4065,6 +4065,11 @@ bool god_hates_item_handling(const item_def &item)
             return (true);
         break;
 
+    case GOD_FEAWN:
+        if (item_type_known(item) && is_evil_item(item))
+            return (true);
+        break;
+
     case GOD_SHINING_ONE:
     {
         if (!item_type_known(item))
