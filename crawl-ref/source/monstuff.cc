@@ -2788,6 +2788,24 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
     return (swap);
 }
 
+// Given an adjacent monster, returns true if the monster can hit it
+// (the monster should not be submerged, be submerged in shallow water
+// if the monster has a polearm, or be submerged in anything if the
+// monster has tentacles).
+bool monster_can_hit_monster(monsters *monster, const monsters *targ)
+{
+    if (!mons_is_submerged(targ))
+        return (true);
+
+    if (grd(targ->pos()) == DNGN_SHALLOW_WATER)
+    {
+        item_def *weapon = monster->weapon();
+        return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+    }
+
+    return (monster->has_damage_type(DVORP_TENTACLE));
+}
+
 void mons_get_damage_level(const monsters* monster, std::string& desc,
                            mon_dam_level_type& dam_level)
 {
@@ -7802,13 +7820,11 @@ static void _handle_monster_move(monsters *monster)
             }
 
             // See if we move into (and fight) an unfriendly monster.
-            // FIXME: looks like the lack of a check on 'submerged' here
-            // is the reason monsters can attack submerged monsters they
-            // happen to walk into. -cao
             monsters* targ = monster_at(monster->pos() + mmov);
             if (targ
                 && targ != monster
-                && !mons_aligned(monster->mindex(), targ->mindex()))
+                && !mons_aligned(monster->mindex(), targ->mindex())
+                && monster_can_hit_monster(monster, targ))
             {
                 // Maybe they can swap places?
                 if (_swap_monsters(monster, targ))

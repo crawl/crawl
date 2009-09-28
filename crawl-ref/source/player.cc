@@ -771,13 +771,13 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 // eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
 item_def *player_slot_item(equipment_type eq)
 {
-    return you.slot_item(eq);
+    return (you.slot_item(eq));
 }
 
 // Returns the item in the player's weapon slot.
 item_def *player_weapon()
 {
-    return you.weapon();
+    return (you.weapon());
 }
 
 bool player_weapon_wielded()
@@ -1093,11 +1093,13 @@ bool player_can_hit_monster(const monsters *mon)
     if (!mons_is_submerged(mon))
         return (true);
 
-    if (grd(mon->pos()) != DNGN_SHALLOW_WATER)
-        return (false);
+    if (grd(mon->pos()) == DNGN_SHALLOW_WATER)
+    {
+        const item_def *weapon = you.weapon();
+        return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+    }
 
-    const item_def *weapon = you.weapon();
-    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+    return (false);
 }
 
 int player_teleport(bool calc_unid)
@@ -6441,13 +6443,13 @@ item_def *player::slot_item(equipment_type eq)
     ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
 
     const int item = equip[eq];
-    return (item == -1? NULL : &inv[item]);
+    return (item == -1 ? NULL : &inv[item]);
 }
 
 // Returns the item in the player's weapon slot.
 item_def *player::weapon(int /* which_attack */)
 {
-    return slot_item(EQ_WEAPON);
+    return (slot_item(EQ_WEAPON));
 }
 
 bool actor::can_wield(const item_def* item, bool ignore_curse,
@@ -6510,7 +6512,7 @@ item_def *player::shield()
     if (!you_tran_can_wear(EQ_SHIELD))
         return (NULL);
 
-    return slot_item(EQ_SHIELD);
+    return (slot_item(EQ_SHIELD));
 }
 
 std::string player::name(description_level_type type, bool) const

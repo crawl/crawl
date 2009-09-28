@@ -442,6 +442,8 @@ bool rot_player(int amount);
 bool player_has_spell(spell_type spell);
 size_type player_size(int psize = PSIZE_TORSO, bool base = false);
 
+item_def *player_slot_item(equipment_type eq);
+
 bool player_weapon_wielded();
 item_def *player_weapon();
 item_def *player_shield();

@@ -720,6 +720,7 @@ void define_monster(monsters &mons);
  * *********************************************************************** */
 void mons_pacify(monsters *mon);
 
+
 // last updated 4jan2001 (gdl)
 /* ***********************************************************************
  * called from: monstuff

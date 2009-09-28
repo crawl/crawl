@@ -174,6 +174,8 @@ bool message_current_target(void);
 
 unsigned int monster_index(const monsters *monster);
 
+bool monster_can_hit_monster(monsters *monster, const monsters *targ);
+
 void mons_get_damage_level(const monsters*, std::string& desc,
                            mon_dam_level_type&);
 

@@ -3972,6 +3972,7 @@ int monsters::missile_count()
 {
     if (const item_def *missile = missiles())
         return (missile->quantity);
+
     return (0);
 }
 
@@ -3991,7 +3992,7 @@ item_def *monsters::weapon(int which_attack)
     if (attk.type != AT_HIT)
         return (NULL);
 
-    // Even/odd attacks use main/offhand weapon
+    // Even/odd attacks use main/offhand weapon.
     if (which_attack > 1)
         which_attack &= 1;
 
@@ -5411,7 +5412,7 @@ void monsters::wield_melee_weapon(int near)
 
 item_def *monsters::slot_item(equipment_type eq)
 {
-    return mslot_item(equip_slot_to_mslot(eq));
+    return (mslot_item(equip_slot_to_mslot(eq)));
 }
 
 item_def *monsters::mslot_item(mon_inv_type mslot) const
@@ -5919,6 +5920,18 @@ bool monsters::has_attack_flavour(int flavour) const
     {
         const int attk_flavour = mons_attack_spec(this, i).flavour;
         if (attk_flavour == flavour)
+            return (true);
+    }
+
+    return (false);
+}
+
+bool monsters::has_damage_type(int dam_type)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        const int dmg_type = damage_type(i);
+        if (dmg_type == dam_type)
             return (true);
     }
 

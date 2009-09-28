@@ -1044,8 +1044,8 @@ public:
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
-    int       damage_brand(int attk = -1);
-    int       damage_type(int attk = -1);
+    int       damage_brand(int which_attack = -1);
+    int       damage_type(int which_attack = -1);
     int       has_claws(bool allow_tran = true) const;
     bool      has_usable_claws(bool allow_tran = true) const;
     item_def *weapon(int which_attack = -1);
@@ -1390,8 +1390,8 @@ public:
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
-    int       damage_brand(int attk = -1);
-    int       damage_type(int attk = -1);
+    int       damage_brand(int which_attack = -1);
+    int       damage_type(int which_attack = -1);
 
     item_def *slot_item(equipment_type eq);
     item_def *mslot_item(mon_inv_type sl) const;
@@ -1503,6 +1503,7 @@ public:
     bool has_spell(spell_type spell) const;
 
     bool has_attack_flavour(int flavour) const;
+    bool has_damage_type(int dam_type);
 
     bool can_throw_large_rocks() const;
 
