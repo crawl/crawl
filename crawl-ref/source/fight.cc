@@ -411,7 +411,11 @@ void melee_attack::init_attack()
     }
 
     if (defender && defender->submerged())
+    {
+        // Unarmed attacks from tentacles are the only ones that can
+        // reach submerged monsters.
         unarmed_ok = (attacker->damage_type() == DVORP_TENTACLE);
+    }
 
     miscast_level  = -1;
     miscast_type   = SPTYP_NONE;
@@ -4050,6 +4054,11 @@ bool melee_attack::mons_attack_mons()
 
     mons_perform_attack();
 
+    // If a hydra was attacking it may have switched targets and started
+    // hitting the player. -cao
+    if (defender->atype() == ACT_PLAYER)
+        return (did_hit);
+
     if (perceived_attack
         && (defender_as_monster()->foe == MHITNOT || one_chance_in(3))
         && attacker->alive() && defender->alive())
@@ -4959,7 +4968,42 @@ void melee_attack::mons_perform_attack_rounds()
     {
         // Monster went away?
         if (!defender->alive() || defender->pos() != pos)
-            break;
+        {
+            if (attacker == defender
+               || !attacker_as_monster()->has_hydra_multi_attack())
+            {
+                break;
+            }
+
+            // Hydras can try and pick up a new monster to attack to
+            // finish out their round. -cao
+            bool end = true;
+            for (adjacent_iterator i(attacker->pos()); i; ++i)
+            {
+                if (*i == you.pos() && !mons_friendly(attacker_as_monster()))
+                {
+                    attacker_as_monster()->foe = MHITYOU;
+                    attacker_as_monster()->target = you.pos();
+                    defender = &you;
+                    end = false;
+                    break;
+                }
+
+                monsters *mons = monster_at(*i);
+                if (mons
+                    && !mons_aligned(attacker_as_monster()->mindex(),
+                                     mons->mindex()))
+                {
+                    defender = mons;
+                    end = false;
+                    break;
+                }
+            }
+
+            // No adjacent hostiles.
+            if (end)
+                break;
+        }
 
         // Monsters hitting themselves get just one round.
         if (attack_number > 0 && attacker == defender)
@@ -5114,7 +5158,7 @@ void melee_attack::mons_perform_attack_rounds()
                     chaos_affects_attacker();
 
                 do_miscast();
-                break;
+                continue;
             }
 
             // Yredelemnul's injury mirroring can kill the attacker.
@@ -5153,7 +5197,7 @@ void melee_attack::mons_perform_attack_rounds()
                     chaos_affects_attacker();
 
                 do_miscast();
-                break;
+                continue;
             }
 
             if (chaos_attack && attacker->alive())
