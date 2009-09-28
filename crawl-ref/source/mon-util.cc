@@ -4768,7 +4768,9 @@ static bool _item_race_matches_monster(const item_def &item, monsters *mons)
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
-    const bool dual_wielding = mons_wields_two_weapons(this);
+    // Throwable weapons may be picked up as though dual-wielding.
+    const bool dual_wielding = (mons_wields_two_weapons(this)
+                                   || is_throwable(this, item));
     if (dual_wielding)
     {
         // If we have either weapon slot free, pick up the weapon.
