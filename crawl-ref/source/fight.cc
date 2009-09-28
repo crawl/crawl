@@ -573,8 +573,6 @@ bool melee_attack::attack()
     identify_mimic(attacker);
     identify_mimic(defender);
 
-    const coord_def def_pos = defender->pos();
-
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
         if (stop_attack_prompt(defender_as_monster(), false, attacker->pos()))
@@ -614,8 +612,8 @@ bool melee_attack::attack()
 
         return (false);
     }
-    // Non-fumbled self-attacks due to confusion are still pretty
-    // funny, though.
+    // Non-fumbled self-attacks due to confusion are still pretty funny,
+    // though.
     else if (attacker == defender && attacker->confused())
     {
         // And is still hilarious if it's the player.
@@ -625,8 +623,8 @@ bool melee_attack::attack()
             xom_is_stimulated(128);
     }
 
-    // Defending monster protects itself from attacks using the
-    // wall it's in.
+    // Defending monster protects itself from attacks using the wall
+    // it's in.
     if (defender->atype() == ACT_MONSTER && grid_is_solid(defender->pos())
         && mons_wall_shielded(defender_as_monster()))
     {
@@ -650,8 +648,8 @@ bool melee_attack::attack()
         }
         else if (you.can_see(attacker))
         {
-            // Make sure the monster uses up some energy, even though
-            // it didn't actually land a blow.
+            // Make sure the monster uses up some energy, even though it
+            // didn't actually land a blow.
             attacker->lose_energy(EUT_ATTACK);
 
             if (!mons_near(defender_as_monster()))
@@ -715,7 +713,7 @@ bool melee_attack::attack()
 
     enable_attack_conducts(conducts);
 
-    return retval;
+    return (retval);
 }
 
 static int _modify_blood_amount(const int damage, const int dam_type)

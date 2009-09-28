@@ -3982,14 +3982,14 @@ item_def *monsters::launcher()
         return (weap);
 
     weap = mslot_item(MSLOT_ALT_WEAPON);
-    return (weap && is_range_weapon(*weap)? weap : NULL);
+    return (weap && is_range_weapon(*weap) ? weap : NULL);
 }
 
 item_def *monsters::weapon(int which_attack)
 {
     const mon_attack_def attk = mons_attack_spec(this, which_attack);
-    if ( attk.type != AT_HIT )
-        return NULL;
+    if (attk.type != AT_HIT)
+        return (NULL);
 
     // Even/odd attacks use main/offhand weapon
     if (which_attack > 1)
@@ -4010,7 +4010,7 @@ item_def *monsters::weapon(int which_attack)
         }
     }
 
-    return (weap == NON_ITEM) ? NULL : &mitm[weap];
+    return (weap == NON_ITEM ? NULL : &mitm[weap]);
 }
 
 bool monsters::can_wield(const item_def& item, bool ignore_curse,
