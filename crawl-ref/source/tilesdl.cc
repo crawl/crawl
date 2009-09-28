@@ -1052,7 +1052,7 @@ void TilesFramework::do_layout()
             crawl_view.viewsz.x -= 2;
             m_region_tile->mx = crawl_view.viewsz.x;
             m_region_tile->place(0, 0, margin);
-            m_region_msg->place(0, m_region_tile->ex, margin);
+            m_region_msg->place(0, m_region_tile->ey, margin);
         }
 
         // Shrink viewsz if too tall:
