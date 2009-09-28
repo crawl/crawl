@@ -374,6 +374,7 @@
 		B0B5DF6B1066EE1A0020B21F /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
 		B0B5DF6C1066EE1A0020B21F /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
 		B0B5E1DC106706FD0020B21F /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
+		B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0CFB313106DF67F005F9CC3 /* ctest.cc */; };
 		D274AC550FE66EEC00C9C1AE /* crash-u.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC530FE66EEC00C9C1AE /* crash-u.cc */; };
 		D274AC5A0FE66EFC00C9C1AE /* spl-mis.cc in Sources */ = {isa = PBXBuildFile; fileRef = D274AC580FE66EFC00C9C1AE /* spl-mis.cc */; };
 		D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
@@ -841,6 +842,8 @@
 		B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-unrand.cc"; path = "rltiles/tiledef-unrand.cc"; sourceTree = "<group>"; };
 		B0B5DFDC1066FA240020B21F /* tiledef-unrand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-unrand.h"; path = "rltiles/tiledef-unrand.h"; sourceTree = "<group>"; };
 		B0B5E17B106706E40020B21F /* Freetype2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Freetype2.framework; path = /Library/Frameworks/Freetype2.framework; sourceTree = "<absolute>"; };
+		B0CFB313106DF67F005F9CC3 /* ctest.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ctest.cc; sourceTree = "<group>"; };
+		B0CFB314106DF67F005F9CC3 /* ctest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ctest.h; sourceTree = "<group>"; };
 		D25C91860FF0368E00D9E8AD /* main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cc; path = rltiles/tool/main.cc; sourceTree = "<group>"; };
 		D25C91870FF0368E00D9E8AD /* tile.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile.cc; path = rltiles/tool/tile.cc; sourceTree = "<group>"; };
 		D25C91880FF0368E00D9E8AD /* tile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tile.h; path = rltiles/tool/tile.h; sourceTree = "<group>"; };
@@ -1057,6 +1060,8 @@
 				7B237E440A8EC9D000580F30 /* command.h */,
 				D274AC530FE66EEC00C9C1AE /* crash-u.cc */,
 				D274AC540FE66EEC00C9C1AE /* crash.h */,
+				B0CFB313106DF67F005F9CC3 /* ctest.cc */,
+				B0CFB314106DF67F005F9CC3 /* ctest.h */,
 				7B973FFB0BE3AA8400AAE35B /* database.cc */,
 				7B973FFC0BE3AA8400AAE35B /* database.h */,
 				7B237E680A8EC9D000580F30 /* debug.cc */,
@@ -1782,6 +1787,7 @@
 				B032D6F8106C02150002D70D /* tilereg.cc in Sources */,
 				B032D6F9106C02150002D70D /* tiletex.cc in Sources */,
 				B032D6FA106C02150002D70D /* artefact.cc in Sources */,
+				B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
