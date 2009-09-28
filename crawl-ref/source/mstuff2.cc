@@ -1765,7 +1765,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     // Sandblast is different, and gets range updated later
     if (spell_cast != SPELL_SANDBLAST)
-        beam.range = spell_range(spell_cast, power, true);
+        beam.range = spell_range(spell_cast, power, true, false);
 
     const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
                             ? draco_subspecies(mons) : mons->type;
