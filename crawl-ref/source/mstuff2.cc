@@ -2450,7 +2450,7 @@ bool ugly_thing_proximity_mutate(monsters *ugly)
     {
         int mutate_chance = 0;
 
-        for (radius_iterator ri(ugly->pos(), 1); ri; ++ri)
+        for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
         {
             monsters *ugly_near = monster_at(*ri);
 
