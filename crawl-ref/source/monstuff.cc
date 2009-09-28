@@ -7802,9 +7802,9 @@ static void _handle_monster_move(monsters *monster)
             }
 
             // See if we move into (and fight) an unfriendly monster.
-            // FIXME: looks like the lack of a check on 'submerged' here is the
-            // reason monsters can attack submerged monsters they happen to
-            // walk into -cao
+            // FIXME: looks like the lack of a check on 'submerged' here
+            // is the reason monsters can attack submerged monsters they
+            // happen to walk into. -cao
             monsters* targ = monster_at(monster->pos() + mmov);
             if (targ
                 && targ != monster
@@ -7842,9 +7842,11 @@ static void _handle_monster_move(monsters *monster)
             if (mons_cannot_move(monster) || !_monster_move(monster))
                 monster->speed_increment -= non_move_energy;
             else if (monster->pos() == old_pos)
-                // There was nowhere the monster could move to, so it did
-                // nothing.
+            {
+                // There was nowhere the monster could move to, so it
+                // did nothing.
                 monster->speed_increment -= non_move_energy;
+            }
         }
         update_beholders(monster);
 

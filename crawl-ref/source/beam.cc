@@ -1922,16 +1922,16 @@ void bolt::affect_cell(bool avoid_self)
     const bool still_wall = (was_solid && old_pos == pos());
 
     bool hit_player = false;
-    // If the player can ever walk through walls, this will
-    // need special-casing too.
+    // If the player can ever walk through walls, this will need
+    // special-casing too.
     if (found_player() && !avoid_player)
     {
         affect_player();
         hit_player = true;
     }
 
-    // We don't want to hit a monster in a wall square twice.
-    // Also stop single target beams from affecting a monster if they already
+    // We don't want to hit a monster in a wall square twice.  Also,
+    // stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
     if ((!hit_player || this->is_beam || this->is_explosion)
          && !still_wall && !avoid_monster)
