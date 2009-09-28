@@ -28,47 +28,6 @@ If, however, you're having trouble getting a precompiled binary to run:
 2) Try removing/renaming your saves/ directory in case older saves aren't
    recognized anymore.
 
-3) If you're playing on a Mac, maybe the following instructions (provided
-   by atastypie) will help you:
-
-   * Download Stone Soup 0.5.x Tiles binaries for OS X.
-   * Extract to your Desktop.
-   * Download Fink 0.9.0.
-     (http://www.finkproject.org/download/index.php?phpLang=en)
-   * Mount the Fink image.
-   * Run the Fink installer from the image.
-   * It will ask for your administrator password. Type it and hit Enter.
-   * Start Terminal.
-   * Type "sudo apt-get install libpng3 freetype2 sdl sdl-image".
-   * It will ask for your administrator password. Type it and hit Enter.
-   * Type "cd Desktop/ston" => Tab => Enter. Hitting Tab will auto-complete
-     the folder name.
-     (This is again assuming you extracted Crawl 0.5.x onto your Desktop.)
-   * Type "./crawl_tiles".
-
-   Edit: This all assumes you have developer tools / xcode installed off of
-         your OSX cd like I do. If you don't, and you get through all this and
-         it still doesn't work, install it. It will be in the Tools directory
-         of your Leopard install disc. This shouldn't be a requirement to just
-         run the game, though.
-
-   Also, some players reported error message like the following:
-
-      dyld: Library not loaded: /sw/lib/libpng12.0.dylib
-      Referenced from:
-      /PATH/stone_soup-0.5-tiles-osx/crawl_tiles
-      Reason: image not found
-      Trace/BPT trap
-      logout
-
-      [Process completed]
-
-   ... to which atastypie (again!) replied:
-
-   The missing PNG error occurs if you try and run the tiles version by
-   double clicking on it. You actually need to run X11 -> open a terminal
-   -> go to the crawl directory -> ./crawl_tiles
-
 
 If you still can't get Crawl to run, you can ask for further help on
 rec.games.roguelike.misc. Please try to be as detailed as possible about any
@@ -235,15 +194,38 @@ can use Xcode.
 
 Note that the Unix instructions will build Crawl assuming that your
 terminal can display 16 colours. If you're planning to use
-Terminal.app (which supports only 8 colours), you should follow the
-Mac build instructions below.
+Terminal.app (which supports only 8 colours), or you want a tiles
+build, you should follow the Mac build instructions below.
 
-* Crawl has been tested with Xcode 2.4 under OS X 10.4.7 on both PPC
-  and Intel machines, but is likely to be buildable with earlier
-  versions.
+* Crawl has been tested to build under Xcode 3.2 on OS X 10.6.1, but
+  is likely to be buildable with earlier versions.
 
 * Make sure Xcode is installed. Xcode should be available on the OS X
   install DVD if you haven't already installed it.
+
+* You need to get the appropriate frameworks for libpng, SDL, SDL_image
+  and Freetype2 installed to /Library/Frameworks.
+
+  - SDL and SDL_image frameworks can be downloaded from libsdl.org:
+      http://www.libsdl.org/download-1.2.php
+      http://www.libsdl.org/projects/SDL_image
+
+  - libpng and Freetype2 need to be built from source to be compiled
+    as frameworks. Let's start with libpng. Check out the source from
+      git://git.uplinklabs.net/pub/scm/git/tycho/libpng.git
+    and build it using the Xcode project in projects/xcode.
+
+  - Once libpng finishes compiling, move the libpng.framework folder
+    from projects/xcode/build/Release to /Library/Frameworks.
+
+  - Now get Freetype2:
+      git://git.uplinklabs.net/pub/scm/git/tycho/freetype.git
+    and build it using the Xcode project in builds/mac/Xcode.
+
+  - Move the compiled Freetype framework to /Library/Frameworks
+
+  - You've now got the necessary dependencies installed and you can
+    proceed to build Crawl.
 
 * Open the Xcode project (Crawl.xcodeproj) under the "source"
   directory.
@@ -251,7 +233,7 @@ Mac build instructions below.
 * Hit Build in Xcode.
 
 * The default build configuration, Release, will build a ppc/i386
-  Universal binary suitable for play on all OS X 10.3.9 or newer
+  Universal binary suitable for play on all OS X 10.4 or newer
   systems. The other build configurations are intended for development
   and may not result in a binary that can be distributed to others.
 
@@ -360,10 +342,14 @@ Building Tiles versions
     * libpng (http://www.libpng.org/pub/png/libpng.html)
     * Freetype 2 (http://www.freetype.org/download.html)
 
-  On Mac OS X, these are expected to be installed via fink in /sw.  On Linux,
-  these can be installed via a package manager.  On Windows, they should be
-  installed, compiled, and the headers and libs placed in a location that the
-  compiler can find them via its default include and library paths.
+  On Mac OS X, these are expected to be installed as frameworks to
+  /Library/Frameworks.
+
+  On Linux, these can be installed via a package manager.
+
+  On Windows, they should be installed, compiled, and the headers and libs
+  placed in a location that the compiler can find them via its default include
+  and library paths.
 
 * If you want both ASCII and Tiles binaries you need to compile them
   separately, rename one of them, and copy them into the same Crawl
