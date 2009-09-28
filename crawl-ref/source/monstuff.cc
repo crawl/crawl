@@ -7709,7 +7709,7 @@ static void _handle_monster_move(monsters *monster)
                 }
             }
         }
-        _handle_nearby_ability( monster );
+        _handle_nearby_ability(monster);
 
         if (!mons_is_sleeping(monster) && !mons_is_wandering(monster)
             // Berserking monsters are limited to running up and

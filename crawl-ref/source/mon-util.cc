@@ -3933,21 +3933,6 @@ int monsters::total_weight() const
     return (body_weight() + burden);
 }
 
-int monsters::damage_type(int which_attack)
-{
-    const item_def *mweap = weapon(which_attack);
-
-    if (!mweap)
-    {
-        const mon_attack_def atk = mons_attack_spec(this, which_attack);
-        return ((atk.type == AT_CLAW)          ? DVORP_CLAWING :
-                (atk.type == AT_TENTACLE_SLAP) ? DVORP_TENTACLE
-                                               : DVORP_CRUSHING);
-    }
-
-    return (get_vorpal_type(*mweap));
-}
-
 int monsters::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
@@ -3961,6 +3946,21 @@ int monsters::damage_brand(int which_attack)
     }
 
     return (!is_range_weapon(*mweap) ? get_weapon_brand(*mweap) : SPWPN_NORMAL);
+}
+
+int monsters::damage_type(int which_attack)
+{
+    const item_def *mweap = weapon(which_attack);
+
+    if (!mweap)
+    {
+        const mon_attack_def atk = mons_attack_spec(this, which_attack);
+        return ((atk.type == AT_CLAW)          ? DVORP_CLAWING :
+                (atk.type == AT_TENTACLE_SLAP) ? DVORP_TENTACLE
+                                               : DVORP_CRUSHING);
+    }
+
+    return (get_vorpal_type(*mweap));
 }
 
 item_def *monsters::missiles()

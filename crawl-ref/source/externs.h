@@ -269,8 +269,8 @@ public:
     virtual int       body_weight() const = 0;
     virtual int       total_weight() const = 0;
 
-    virtual int       damage_type(int which_attack = -1) = 0;
     virtual int       damage_brand(int which_attack = -1) = 0;
+    virtual int       damage_type(int which_attack = -1) = 0;
     virtual item_def *weapon(int which_attack = -1) = 0;
     virtual item_def *shield() = 0;
     virtual item_def *slot_item(equipment_type eq) = 0;
@@ -1044,8 +1044,8 @@ public:
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
-    int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
+    int       damage_type(int attk = -1);
     int       has_claws(bool allow_tran = true) const;
     bool      has_usable_claws(bool allow_tran = true) const;
     item_def *weapon(int which_attack = -1);
@@ -1390,8 +1390,8 @@ public:
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
-    int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
+    int       damage_type(int attk = -1);
 
     item_def *slot_item(equipment_type eq);
     item_def *mslot_item(mon_inv_type sl) const;

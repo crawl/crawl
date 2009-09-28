@@ -378,24 +378,9 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     return (true);
 }
 
-// Given an adjacent monster, returns true if the player can hit it (the
-// monster should either not be submerged or submerged in shallow water,
-// if the player has a polearm).
-bool player_can_hit_monster(const monsters *mon)
-{
-    if (!mons_is_submerged(mon))
-        return (true);
-
-    if (grd(mon->pos()) != DNGN_SHALLOW_WATER)
-        return (false);
-
-    const item_def *weapon = you.weapon();
-    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
-}
-
 bool player_can_swim()
 {
-    return you.can_swim();
+    return (you.can_swim());
 }
 
 bool is_grid_dangerous(int grid)
@@ -1090,15 +1075,29 @@ bool player_equip_unrand(int unrand_index)
     return (false);
 }
 
+int player_damage_brand(void)
+{
+    return (you.damage_brand());
+}
 
 int player_damage_type(void)
 {
     return (you.damage_type());
 }
 
-int player_damage_brand(void)
+// Given an adjacent monster, returns true if the player can hit it (the
+// monster should not be submerged, or be submerged in shallow water if
+// the player has a polearm).
+bool player_can_hit_monster(const monsters *mon)
 {
-    return (you.damage_brand());
+    if (!mons_is_submerged(mon))
+        return (true);
+
+    if (grd(mon->pos()) != DNGN_SHALLOW_WATER)
+        return (false);
+
+    const item_def *weapon = you.weapon();
+    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
 }
 
 int player_teleport(bool calc_unid)
