@@ -325,7 +325,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
         init_player_doll();
 #endif
 
-    viewwindow( true, false );
+    viewwindow(true, false);
 
     // Other Effects:
     // Clouds -- do we need this? (always seems to double up with acr.cc call)
@@ -381,12 +381,12 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 // Given an adjacent monster, returns true if the player can hit it (the
 // monster should either not be submerged or submerged in shallow water,
 // if the player has a polearm).
-bool player_can_hit_monster(const monsters *mons)
+bool player_can_hit_monster(const monsters *mon)
 {
-    if (!mons_is_submerged(mons))
+    if (!mons_is_submerged(mon))
         return (true);
 
-    if (grd(mons->pos()) != DNGN_SHALLOW_WATER)
+    if (grd(mon->pos()) != DNGN_SHALLOW_WATER)
         return (false);
 
     const item_def *weapon = you.weapon();
@@ -1091,15 +1091,14 @@ bool player_equip_unrand(int unrand_index)
 }
 
 
-int player_damage_type( void )
+int player_damage_type(void)
 {
-    return you.damage_type();
+    return (you.damage_type());
 }
 
-// returns band of player's melee damage
-int player_damage_brand( void )
+int player_damage_brand(void)
 {
-    return you.damage_brand();
+    return (you.damage_brand());
 }
 
 int player_teleport(bool calc_unid)

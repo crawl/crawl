@@ -5437,7 +5437,7 @@ bool monster_attack(monsters* attacker, bool allow_unarmed)
 
     // In case the monster hasn't noticed you, bumping into it will
     // change that.
-    behaviour_event( attacker, ME_ALERT, MHITYOU );
+    behaviour_event(attacker, ME_ALERT, MHITYOU);
     melee_attack attk(attacker, &you, allow_unarmed);
     attk.attack();
 
@@ -5449,7 +5449,7 @@ bool monsters_fight(monsters* attacker, monsters* defender,
                     bool allow_unarmed)
 {
     melee_attack attk(attacker, defender, allow_unarmed);
-    return attk.attack();
+    return (attk.attack());
 }
 
 
