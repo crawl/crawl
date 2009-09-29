@@ -545,12 +545,11 @@ COLOUR: o = blue
 COLOUR: = = blue
 MONS:  shining eye
 # 28 items, 'cos this one is *nasty*. The extra items are potions of cure mutation.
-ITEM:   any good_item w:10 / any 
+ITEM:   any good_item w:10 / any
 ITEM:   any jewellery good_item / any good_item w:2
 ITEM:   acquire weapon / acquire armour / any good_item w:2
 ITEM:   potion of cure mutation
 : trove_setup_features(_G)
-
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
