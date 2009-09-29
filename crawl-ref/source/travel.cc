@@ -1989,7 +1989,7 @@ void find_travel_pos(const coord_def& youpos,
     // ?#@      --> Pick x instead.
 
     // Only applies to diagonal moves.
-    if (rmode == RMODE_TRAVEL && move_x != 0 && move_y != 0)
+    if (rmode == RMODE_TRAVEL && *move_x != 0 && *move_y != 0)
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
