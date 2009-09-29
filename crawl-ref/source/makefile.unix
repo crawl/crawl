@@ -243,10 +243,10 @@ clean:
 	$(DELETE) *.ixx
 
 clean-lua:
-	cd $(LUASRC) && $(MAKE) clean
+	+$(MAKE) -C $(LUASRC) clean
 
 clean-sql:
-	cd $(SQLSRC) && $(MAKE) clean
+	+$(MAKE) -C $(SQLSRC) clean
 
 distclean: clean clean-lua clean-sql
 	$(DELETE) bones.*
@@ -283,14 +283,14 @@ $(UTIL)%.o: $(UTIL)%.cc
 
 $(LUASRC)$(LUALIBA):
 	echo Building Lua...
-	cd $(LUASRC) && $(MAKE) crawl_unix
+	+$(MAKE) -C $(LUASRC) crawl_unix
 
 #############################################################################
 # Build SQLite
 
 $(FSQLLIBA):
 	echo Building SQLite
-	cd $(SQLSRC) && $(MAKE)
+	+$(MAKE) -C $(SQLSRC)
 
 #############################################################################
 # Build unrandart data
