@@ -743,7 +743,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "freeze those struck by it, causing "
                 "extra injury to most foes and "
                 "up to double damage against "
-                "particularly susceptible opponents.";
+                "particularly susceptible opponents. "
+                "It can also slow down cold-blooded creatures.";
             break;
         case SPWPN_HOLY_WRATH:
             description += "It has been blessed by the Shining One "
