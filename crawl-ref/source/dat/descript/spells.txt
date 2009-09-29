@@ -492,7 +492,7 @@ This spell releases electric charges against those next to the caster. These may
 %%%%
 Statue Form
 
-This spell temporarily transforms the caster into a slow-moving (but extremely robust) stone statue.
+This spell temporarily transforms the caster into a slow-moving (but extremely robust) stone statue, capable of dealing monstrous blows with bare hands.
 %%%%
 Sticks to Snakes
 
