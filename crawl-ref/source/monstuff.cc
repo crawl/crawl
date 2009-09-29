@@ -2794,16 +2794,14 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
 // monster has tentacles).
 bool monster_can_hit_monster(monsters *monster, const monsters *targ)
 {
-    if (!mons_is_submerged(targ))
+    if (!mons_is_submerged(targ) || monster->has_damage_type(DVORP_TENTACLE))
         return (true);
 
-    if (grd(targ->pos()) == DNGN_SHALLOW_WATER)
-    {
-        item_def *weapon = monster->weapon();
-        return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
-    }
+    if (grd(targ->pos()) != DNGN_SHALLOW_WATER)
+        return (false);
 
-    return (monster->has_damage_type(DVORP_TENTACLE));
+    const item_def *weapon = monster->weapon();
+    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
 }
 
 void mons_get_damage_level(const monsters* monster, std::string& desc,

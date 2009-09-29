@@ -1093,13 +1093,11 @@ bool player_can_hit_monster(const monsters *mon)
     if (!mons_is_submerged(mon))
         return (true);
 
-    if (grd(mon->pos()) == DNGN_SHALLOW_WATER)
-    {
-        const item_def *weapon = you.weapon();
-        return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
-    }
+    if (grd(mon->pos()) != DNGN_SHALLOW_WATER)
+        return (false);
 
-    return (false);
+    const item_def *weapon = you.weapon();
+    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
 }
 
 int player_teleport(bool calc_unid)
