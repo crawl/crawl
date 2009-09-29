@@ -3714,12 +3714,28 @@ void bolt::affect_player_enchantment()
             break;
         }
 
-        mpr("Pain shoots through your body!");
-
         if (aux_source.empty())
             aux_source = "by nerve-wracking pain";
 
-        internal_ouch(damage.roll());
+        if (name.find("agony") != std::string::npos)
+        {
+            if (you.res_negative_energy()) // Agony has no effect with rN.
+            {
+                mpr("You are unaffected.");
+                break;
+            }
+
+            mpr("Your body is wracked with pain!");
+
+            // On the player, Agony acts like single-target torment.
+            internal_ouch(std::max(0, you.hp / 2 - 1));
+        }
+        else
+        {
+            mpr("Pain shoots through your body!");
+
+            internal_ouch(damage.roll());
+        }
         obvious_effect = true;
         break;
 
@@ -5056,7 +5072,7 @@ int bolt::range_used_on_hit(const actor* victim) const
         used = 1;
 
     // Assume we didn't hit, after all.
-    if (is_tracer && used == BEAM_STOP)
+    if (is_tracer && beam_source == NON_MONSTER && used == BEAM_STOP)
         return 1;
 
     if (in_explosion_phase)

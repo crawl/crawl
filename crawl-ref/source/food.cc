@@ -571,8 +571,7 @@ bool butchery(int which_corpse)
 
         if (butcher_tool == -1 && gloved_butcher)
             removed_gloves = true;
-
-        if (you.equip[EQ_WEAPON] != butcher_tool)
+        else if (you.equip[EQ_WEAPON] != butcher_tool)
             wpn_switch = true;
     }
 

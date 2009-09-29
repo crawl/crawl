@@ -59,11 +59,12 @@ gameplay and design, to be accessed by pressing '?Q' in the game.
 
 While Dungeon Crawl is a strict single player game, you can play on a
 server together with many others. These are the relevant webpage and
-telnet addresses (akrasiac.org is situated in Northern America, while
-develz.org is located in Europe):
+telnet and ssh addresses (akrasiac.org is situated in Northern America, 
+while develz.org is located in Europe):
 
     http://crawl.akrasiac.org
     telnet://crawl.akrasiac.org
+    ssh joshua@crawl.akrasiac.org (password joshua)
 
     http://crawl.develz.org
     telnet://crawl.develz.org:345
@@ -77,6 +78,10 @@ This has several interesting consequences. You can:
 The server carries no guarantees, though it is pretty much always
 running and no one has lost their save file yet. :) More information
 is available at the URLs above.
+
+There is also a lively IRC channel dedicated to Crawl at ##crawl on
+freenode. You can ask for help and there will always be someone to 
+supervise your game and give hints if you happen to play on a server.
 
 
 ------------------------------------------------------------------------

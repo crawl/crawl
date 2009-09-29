@@ -55,6 +55,10 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Add missing tiles options to the options guide (docs/, '?&' command).
 * Improve tiles for escape hatches and disturbances in shallow water.
 * Document tiles lags in tiles_help.txt and in the in-game FAQ ('?Q' command).
+* Fixed friendly fire among monsters.
+* Fixed insane damage dealt by Pain card.
+* Fixed clawed butchering both removing gloves and unwielding weapon.
+* Fixed submerged shapeshifters not unsubmerging properly.
 
 Stone Soup 0.5.0 (20090612)
 ---------------------------
