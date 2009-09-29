@@ -3341,6 +3341,13 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_DUVESSA:
+        item_race = MAKE_ITEM_ELVEN;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(30, WPN_SHORT_SWORD,
+                                               10, WPN_SABRE,
+                                               0);
+        break;
+
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
@@ -4098,7 +4105,6 @@ void give_shield(monsters *mon, int level)
                               level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
         break;
 
-    case MONS_DUVESSA:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
         if (one_chance_in(6))
