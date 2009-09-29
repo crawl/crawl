@@ -103,7 +103,10 @@ bool grid_sealable_portal(dungeon_feature_type grid)
 {
     switch (grid)
     {
-    case DNGN_ENTER_HELL:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_TARTARUS:
     case DNGN_ENTER_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_LABYRINTH:
