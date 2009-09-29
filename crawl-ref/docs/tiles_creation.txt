@@ -39,21 +39,13 @@ rest of the tile, so we can easily remove it later.
 3.) For items and monsters don't forget to add a shadow. You can use standard
     black for this.
 
-4.) New randart weapons and armour items need not only a tile for the item
+4.) You'll need to add the tile to the relevant dc-xxxx.txt file and use the
+    same (uppercase) definition in the matching tileidx_xxxx() function in
+    tilepick.cc.
+    New randart weapons and armour items need not only a tile for the item
     itself but also a smaller variant for the player doll to wield or wear.
-    To define the new artefact tiles, you'll need to modify two files:
-    source/art-data.txt, and rltiles/dc-player.txt, with the details nicely
-    described in art-data.txt.
-    If you have perl installed, run "perl art-data.pl" from source/util. If you
-    made any mistakes in modifying the two files the script will complain.
-
-    If an artefact doesn't get a special equipment tile the base type's tile
-    will be used instead.
-
-5.) Otherwise, add the tile to the relevant dc-xxxx.txt file and use the same
-    (uppercase) definition in the matching tileidx_xxxx() function in
-    tilepick.cc. Note that the latter is not necessary if you are adding tiles
-    for the player doll.
+    For the former, add the tile definition to dc-unrand.txt; the latter (which
+    does not require changes to tilepick.cc) needs to be set in dc-player.txt.
 
     Tiles are assumed to have been placed within the rltiles/ directory
     structure. You can use a relative path for the tile definition, or you can
@@ -66,11 +58,11 @@ rest of the tile, so we can easily remove it later.
         new_tile NEW_TILE
         %rim 0
 
-6.) For humanoid monsters' tiles you may want to add a line in
+5.) For humanoid monsters' tiles you may want to add a line in
     get_weapon_offset() in tilemcache.cc to allow it to be drawn with a wielded
     weapon.
 
-7.) New monsters may also need a unique corpse tile. In that case you'll also
+6.) New monsters may also need a unique corpse tile. In that case you'll also
     need to modify dc-corpse.txt and add a tile in _tileidx_corpse() of
     tilepick.cc.
 
