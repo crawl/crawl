@@ -72,7 +72,7 @@ static monster_type _pick_random_wraith()
         MONS_SPECTRAL_WARRIOR
     };
 
-    return wraiths[random2(sizeof(wraiths) / sizeof(*wraiths))];
+    return (RANDOM_ELEMENT(wraiths));
 }
 
 static monster_type _pick_horrible_thing()
@@ -93,7 +93,7 @@ static monster_type _pick_undead_summon()
         MONS_SIMULACRUM_LARGE, MONS_SHADOW
     };
 
-    return undead[random2(sizeof(undead) / sizeof(*undead))];
+    return (RANDOM_ELEMENT(undead));
 }
 
 static void _do_high_level_summon(monsters *monster, bool monsterNearby,

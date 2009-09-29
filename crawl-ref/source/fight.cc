@@ -4282,12 +4282,9 @@ static const char *klown_attack[] =
 std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 {
     if (attacker->id() == MONS_KILLER_KLOWN && attk.type == AT_HIT)
-    {
-        const int num_attacks = sizeof(klown_attack) / sizeof(*klown_attack);
-        return (klown_attack[random2(num_attacks)]);
-    }
+        return (RANDOM_ELEMENT(klown_attack));
 
-    if (attacker->id() == MONS_KRAKEN_TENTACLE)
+    if (attacker->id() == MONS_KRAKEN_TENTACLE && attk.type == AT_TENTACLE_SLAP)
         return ("slap");
 
     static const char *attack_types[] =

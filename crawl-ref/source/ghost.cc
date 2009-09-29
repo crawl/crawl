@@ -410,7 +410,7 @@ static unsigned char _ugly_thing_random_colour(unsigned char not_colour)
     unsigned char colour;
 
     do
-        colour = (colours[random2(sizeof(colours) / sizeof(*colours))]);
+        colour = RANDOM_ELEMENT(colours);
     while (colour == not_colour);
 
     return (colour);
@@ -518,7 +518,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate)
         AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE
     };
 
-    att_type = att_types[random2(sizeof(att_types) / sizeof(*att_types))];
+    att_type = RANDOM_ELEMENT(att_types);
 
     // An ugly thing always gets a low-intensity colour.  If we're
     // mutating it, it always gets a different colour from what it had
