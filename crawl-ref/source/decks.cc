@@ -3052,7 +3052,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         else
             set_hunger(12000, true);
         break;
-    
+
     case CARD_SWINE:
         if (!transform(random2(power), TRAN_PIG, true))
         {

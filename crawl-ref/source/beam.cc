@@ -1283,7 +1283,7 @@ const zap_info zap_data[] = {
         false,
         false
     },
-    
+
     {
         ZAP_PORKALATOR,
         "porkalator",
