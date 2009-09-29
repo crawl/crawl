@@ -734,7 +734,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "It emits flame when wielded, "
                 "causing extra injury to most foes "
                 "and up to double damage against "
-                "particularly susceptible opponents.";
+                "particularly susceptible opponents. "
+                "Big, fiery blades are also staple "
+                "armaments of hydra-hunters.";
             break;
         case SPWPN_FREEZING:
             description += "It has been specially enchanted to "
