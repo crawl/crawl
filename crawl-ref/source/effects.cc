@@ -765,6 +765,7 @@ void direct_effect(monsters *source, spell_type spell,
         break;
 
     case SPELL_AIRSTRIKE:
+        // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD.
         if (def)
             simple_monster_message(def, " is struck by the twisting air!");
         else
@@ -773,16 +774,22 @@ void direct_effect(monsters *source, spell_type spell,
         pbolt.name       = "airstrike";
         pbolt.flavour    = BEAM_MISSILE;
         pbolt.aux_source = "by the air";
-        damage_taken     = 8 + random2(random2(4) + (random2(source->hit_dice*5) / 6)
-                             + (random2(source->hit_dice*5) / 7));
 
+        damage_taken     = 8 + random2(random2(4)
+                                       + (random2(12 * source->hit_dice) / 6)
+                                       + (random2(12 * source->hit_dice) / 7));
+
+        // Apply "bonus" against flying/levitating characters after AC
+        // has been checked.
         if (defender->flight_mode() != FL_NONE)
         {
             damage_taken *= 3;
             damage_taken /= 2;
         }
 
-        damage_taken -= defender->armour_class();
+        // Previous method of damage calculation (in line with player
+        // airstrike) favoured high-AC player characters.
+        damage_taken -= random2(defender->armour_class());
         break;
 
     case SPELL_BRAIN_FEED:
