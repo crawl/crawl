@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 mkdir -p NORMAL
 mkdir -p WIZARD
