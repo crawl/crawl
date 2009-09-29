@@ -3,7 +3,7 @@
 # Treasure Trove (by due)
 #
 # Troves are once-only (tolled) and timed portals to a treasure chamber, most
-# of which are weighted acquirement-esque towards your skills. Of course, 
+# of which are weighted acquirement-esque towards your skills. Of course,
 # there's a chance that you'll get rubbish (casters in an weapon/armour room
 # and melee fighters in a library), but that's kind of the point.
 #
@@ -17,7 +17,7 @@ function trove_portal(e)
     local d = crawl.roll_dice
     local entry_fee = 5 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
     local desc_long = [[ Once upon a time, an enterprising thief and wizard, terrified of being caught committing an act of burglary, created a system of portals leading into the secret treasure troves and chambers of the rich. Too scared to loot them himself, he instead charged an extortionate fee for entry to anyone who wanted to rifle through them.
-    
+
 The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered.
 ]]
     local timeout_turns = crawl.random_range(1600, 2800)
@@ -69,14 +69,14 @@ function trove_setup_features(e)
 end
 
 -- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc
--- so let's limit it to the enchant/recharge scrolls, tloc scrolls, identify scrolls, 
+-- so let's limit it to the enchant/recharge scrolls, tloc scrolls, identify scrolls,
 -- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
 function good_scroll (e)
-    e.item([[scroll of enchant weapon i / scroll of enchant weapon ii / 
+    e.item([[scroll of enchant weapon i / scroll of enchant weapon ii /
              scroll of enchant weapon iii w:5 / scroll of vorpalise weapon w:3 /
              scroll of enchant armour / scroll of identify w:20 /
              scroll of magic mapping w:5 / scroll of blinking / scroll of silence w:2 /
-             scroll of recharging / scroll of acquirement w:1 / scroll of teleportation w:20 / 
+             scroll of recharging / scroll of acquirement w:1 / scroll of teleportation w:20 /
              scroll of vulnerability w:2 / scroll of holy word w:8 / scroll of fog w:8]])
 end
 
@@ -194,14 +194,17 @@ ccc+ccc
 ENDMAP
 
 ##############################################################################
-# 
+#
 # The portal vaults:
 #
 # Most of the vaults have 16 items of loot. Usually weighted 'd', 'e', 'f', from
-# good to "worse". Some vaults have more than 16 items: the hunter vault has 15, 
+# good to "worse". Some vaults have more than 16 items: the hunter vault has 15,
 # and the two 'nasty' vaults have 24 and 28 items respectively.
 #
 ##############################################################################
+
+# Reset default depth to prevent random generation of portal vaults.
+default-depth:
 
 NAME:    trove_simple
 WEIGHT:  60
@@ -233,7 +236,7 @@ WEIGHT:  40
 ORIENT:  encompass
 TAGS:    trove no_item_gen no_monster_gen allow_dup
 # Loot: 16 items, spread out a bit.
-KFEAT:   x = X 
+KFEAT:   x = X
 COLOUR:  o = blue
 #
 # Plants come in two pattern: regular or random. Vegetation can be thin or thick.
@@ -244,7 +247,7 @@ SUBST:   " = . 1:20
 SUBST:   1 = . 1:1
 SUBST:   ' = .
 :else
-SUBST:   1 = . 
+SUBST:   1 = .
 SUBST:   " = '
 SUBST:   w = w 1:2
 NSUBST:  . = 12:M / 12:1 / *:.
@@ -514,9 +517,9 @@ COLOUR: x = blue
 COLOUR: m = blue
 COLOUR: = = blue
 # Rock is actually diggable for those people driven made by hatred.
-MONS:   vampire 
+MONS:   vampire
 # 24 items, just because we're feeling generous.
-ITEM:   any good_item w:10 / any 
+ITEM:   any good_item w:10 / any
 ITEM:   any jewellery good_item / any good_item w:2
 ITEM:   acquire weapon / acquire armour / any good_item w:2
 : trove_setup_features(_G)
