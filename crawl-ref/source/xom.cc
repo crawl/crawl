@@ -1052,8 +1052,9 @@ static bool _xom_do_potion()
     {
         pot = static_cast<potion_type>(
                 random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_MAGIC,
-                              POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE, POT_INVISIBILITY,
-                              POT_BERSERK_RAGE, POT_EXPERIENCE, -1));
+                              POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
+                              POT_INVISIBILITY, POT_BERSERK_RAGE,
+                              POT_EXPERIENCE, -1));
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
