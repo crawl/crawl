@@ -1105,10 +1105,10 @@
       {
        SPELL_AIRSTRIKE,
        SPELL_SLOW,
-       SPELL_CANTRIP,
-       SPELL_MAGIC_DART,
-       SPELL_CANTRIP,
+       SPELL_AIRSTRIKE,
        SPELL_SUMMON_SMALL_MAMMALS,
+       SPELL_CANTRIP,
+       SPELL_AIRSTRIKE,
       }
     },
 
