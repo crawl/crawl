@@ -123,4 +123,6 @@ const char *spelltype_name(unsigned int which_spelltype);
 int spell_type2skill (unsigned int which_spelltype);
 int spell_skill2type (unsigned int which_skill);
 
+bool vehumet_supports_spell(spell_type spell);
+
 #endif

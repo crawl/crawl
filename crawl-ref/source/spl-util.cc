@@ -388,7 +388,7 @@ bool spell_sanctuary_castable(spell_type spell)
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    if(spell_typematch(which_spell, SPTYP_CONJURATION | SPTYP_SUMMONING)
+    if(vehumet_supports_spell(which_spell)
        && you.religion == GOD_VEHUMET
        && !player_under_penance()
        && you.piety >= piety_breakpoint(3)
@@ -1003,7 +1003,7 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     ASSERT(maxrange >= minrange);
 
      if(player_spell
-        && spell_typematch(spell, SPTYP_CONJURATION)
+        && vehumet_supports_spell(spell)
         && you.religion == GOD_VEHUMET
         && !player_under_penance()
         && you.piety >= piety_breakpoint(2))

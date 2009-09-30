@@ -150,6 +150,8 @@ bool god_hates_spell_type(spell_type spell, god_type god = you.religion);
 bool god_dislikes_spell_type(spell_type spell, god_type god = you.religion);
 bool god_dislikes_spell_discipline(int discipline, god_type god = you.religion);
 
+bool vehumet_supports_spell(spell_type spell);
+
 bool trog_burn_spellbooks();
 bool ely_destroy_weapons();
 
