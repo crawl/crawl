@@ -880,7 +880,7 @@
 		D2A72B28101173C000E1A883 /* artefact.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = artefact.cc; sourceTree = "<group>"; };
 		D2A72B29101173C000E1A883 /* artefact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = artefact.h; sourceTree = "<group>"; };
 		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
-		D2F271F60DA1C58C00445FE9 /* Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2F271F60DA1C58C00445FE9 /* Dungeon Crawl Stone Soup - ASCII.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dungeon Crawl Stone Soup - ASCII.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
 		D2F271FE0DA1C5AD00445FE9 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = "<group>"; };
 		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
@@ -955,7 +955,7 @@
 			children = (
 				8DD76FB20486AB0100D96B5E /* crawl */,
 				7B0EFD420BD12E9200002671 /* liblua.a */,
-				D2F271F60DA1C58C00445FE9 /* Crawl.app */,
+				D2F271F60DA1C58C00445FE9 /* Dungeon Crawl Stone Soup - ASCII.app */,
 				B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */,
 			);
 			name = Products;
@@ -1441,9 +1441,9 @@
 			productReference = B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D2F271F50DA1C58C00445FE9 /* Crawl */ = {
+		D2F271F50DA1C58C00445FE9 /* Crawl ASCII */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D2F271FD0DA1C58C00445FE9 /* Build configuration list for PBXNativeTarget "Crawl" */;
+			buildConfigurationList = D2F271FD0DA1C58C00445FE9 /* Build configuration list for PBXNativeTarget "Crawl ASCII" */;
 			buildPhases = (
 				D2F271F20DA1C58C00445FE9 /* Resources */,
 				B090C2DB10671E3200AE855D /* Copy Crawl Executable */,
@@ -1457,9 +1457,9 @@
 				B032D521106C019C0002D70D /* PBXTargetDependency */,
 				D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */,
 			);
-			name = Crawl;
+			name = "Crawl ASCII";
 			productName = Crawl;
-			productReference = D2F271F60DA1C58C00445FE9 /* Crawl.app */;
+			productReference = D2F271F60DA1C58C00445FE9 /* Dungeon Crawl Stone Soup - ASCII.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1475,7 +1475,7 @@
 			projectRoot = "";
 			targets = (
 				B032D526106C01AF0002D70D /* Crawl Tiles */,
-				D2F271F50DA1C58C00445FE9 /* Crawl */,
+				D2F271F50DA1C58C00445FE9 /* Crawl ASCII */,
 				8DD76FA90486AB0100D96B5E /* Crawl-cmd */,
 				7B0EFD410BD12E9200002671 /* Lua */,
 			);
@@ -2285,7 +2285,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = Crawl;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup - ASCII";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Development;
@@ -2305,7 +2305,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = Crawl;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup - ASCII";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2324,7 +2324,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = Crawl;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup - ASCII";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2342,7 +2342,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = Crawl;
+				PRODUCT_NAME = "Dungeon Crawl Stone Soup - ASCII";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Wizard;
@@ -2394,7 +2394,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		D2F271FD0DA1C58C00445FE9 /* Build configuration list for PBXNativeTarget "Crawl" */ = {
+		D2F271FD0DA1C58C00445FE9 /* Build configuration list for PBXNativeTarget "Crawl ASCII" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D2F271F90DA1C58C00445FE9 /* Development */,
