@@ -90,6 +90,6 @@ tutorial.o \
 version.o \
 view.o \
 xom.o \
-Kills.o \
+kills.o \
 mt19937ar.o \
 clua.o
