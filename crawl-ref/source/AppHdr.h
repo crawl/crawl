@@ -70,10 +70,6 @@
     #endif
     #define USE_8_COLOUR_TERM_MAP
     #define COL_TO_REPLACE_DARKGREY     BLUE
-
-    #ifndef DB_NDBM
-    #define DB_NDBM
-    #endif
 #endif
 
 // FreeBSD

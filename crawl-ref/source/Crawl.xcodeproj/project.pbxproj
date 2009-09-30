@@ -366,6 +366,8 @@
 		B032D705106C029D0002D70D /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
 		B032D706106C029D0002D70D /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
 		B032D707106C029D0002D70D /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
+		B082657810731AB5006EEC5A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B082657610731AB5006EEC5A /* sqlite3.c */; };
+		B082657910731B5B006EEC5A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B082657610731AB5006EEC5A /* sqlite3.c */; };
 		B090C2F210671F8900AE855D /* dngn.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EE10671F8900AE855D /* dngn.png */; };
 		B090C2F310671F8900AE855D /* gui.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EF10671F8900AE855D /* gui.png */; };
 		B090C2F410671F8900AE855D /* main.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F010671F8900AE855D /* main.png */; };
@@ -405,6 +407,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7B0EFD410BD12E9200002671;
 			remoteInfo = Lua;
+		};
+		B082658510731C1C006EEC5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B082656E10731A95006EEC5A;
+			remoteInfo = SQLite;
+		};
+		B082658710731C22006EEC5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B082656E10731A95006EEC5A;
+			remoteInfo = SQLite;
 		};
 		D2F272360DA1C5BC00445FE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -822,6 +838,9 @@
 		B02C576010670ED2006AC96D /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
 		B02C57901067129A006AC96D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dungeon Crawl Stone Soup.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B082656F10731A95006EEC5A /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSQLite.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B082657610731AB5006EEC5A /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = util/sqlite/sqlite3.c; sourceTree = "<group>"; };
+		B082657710731AB5006EEC5A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = util/sqlite/sqlite3.h; sourceTree = "<group>"; };
 		B090C2EE10671F8900AE855D /* dngn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dngn.png; path = rltiles/dngn.png; sourceTree = "<group>"; };
 		B090C2EF10671F8900AE855D /* gui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gui.png; path = rltiles/gui.png; sourceTree = "<group>"; };
 		B090C2F010671F8900AE855D /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = rltiles/main.png; sourceTree = "<group>"; };
@@ -920,6 +939,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B082656D10731A95006EEC5A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -940,6 +966,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				B082657410731AA1006EEC5A /* SQLite */,
 				7B352EF00B001F5B00CABB32 /* Crawl */,
 				7B352E950B0017CF00CABB32 /* Levcomp */,
 				7B0EFD4B0BD12EEA00002671 /* Lua */,
@@ -957,6 +984,7 @@
 				7B0EFD420BD12E9200002671 /* liblua.a */,
 				D2F271F60DA1C58C00445FE9 /* Dungeon Crawl Stone Soup - ASCII.app */,
 				B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */,
+				B082656F10731A95006EEC5A /* libSQLite.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1253,6 +1281,15 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
+		B082657410731AA1006EEC5A /* SQLite */ = {
+			isa = PBXGroup;
+			children = (
+				B082657610731AB5006EEC5A /* sqlite3.c */,
+				B082657710731AB5006EEC5A /* sqlite3.h */,
+			);
+			name = SQLite;
+			sourceTree = "<group>";
+		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -1413,6 +1450,7 @@
 			);
 			dependencies = (
 				7B0EFD450BD12E9E00002671 /* PBXTargetDependency */,
+				B082658810731C22006EEC5A /* PBXTargetDependency */,
 			);
 			name = "Crawl-cmd";
 			productInstallPath = "$(HOME)/bin";
@@ -1435,11 +1473,28 @@
 			);
 			dependencies = (
 				B032D530106C01DB0002D70D /* PBXTargetDependency */,
+				B082658610731C1C006EEC5A /* PBXTargetDependency */,
 			);
 			name = "Crawl Tiles";
 			productName = "Crawl Tiles";
 			productReference = B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B082656E10731A95006EEC5A /* SQLite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B082657510731AA1006EEC5A /* Build configuration list for PBXNativeTarget "SQLite" */;
+			buildPhases = (
+				B082656C10731A95006EEC5A /* Sources */,
+				B082656D10731A95006EEC5A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SQLite;
+			productName = SQLite;
+			productReference = B082656F10731A95006EEC5A /* libSQLite.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 		D2F271F50DA1C58C00445FE9 /* Crawl ASCII */ = {
 			isa = PBXNativeTarget;
@@ -1478,6 +1533,7 @@
 				D2F271F50DA1C58C00445FE9 /* Crawl ASCII */,
 				8DD76FA90486AB0100D96B5E /* Crawl-cmd */,
 				7B0EFD410BD12E9200002671 /* Lua */,
+				B082656E10731A95006EEC5A /* SQLite */,
 			);
 		};
 /* End PBXProject section */
@@ -1788,6 +1844,15 @@
 				B032D6F9106C02150002D70D /* tiletex.cc in Sources */,
 				B032D6FA106C02150002D70D /* artefact.cc in Sources */,
 				B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */,
+				B082657810731AB5006EEC5A /* sqlite3.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B082656C10731A95006EEC5A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B082657910731B5B006EEC5A /* sqlite3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1808,6 +1873,16 @@
 			isa = PBXTargetDependency;
 			target = 7B0EFD410BD12E9200002671 /* Lua */;
 			targetProxy = B032D52F106C01DB0002D70D /* PBXContainerItemProxy */;
+		};
+		B082658610731C1C006EEC5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B082656E10731A95006EEC5A /* SQLite */;
+			targetProxy = B082658510731C1C006EEC5A /* PBXContainerItemProxy */;
+		};
+		B082658810731C22006EEC5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B082656E10731A95006EEC5A /* SQLite */;
+			targetProxy = B082658710731C22006EEC5A /* PBXContainerItemProxy */;
 		};
 		D2F272370DA1C5BC00445FE9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2271,6 +2346,163 @@
 			};
 			name = Wizard;
 		};
+		B082657010731A95006EEC5A /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					SQLITE_OMIT_AUTHORIZATION,
+					SQLITE_OMIT_AUTOVACUUM,
+					SQLITE_OMIT_COMPLETE,
+					SQLITE_OMIT_BLOB_LITERAL,
+					SQLITE_OMIT_COMPOUND_SELECT,
+					SQLITE_OMIT_CONFLICT_CLAUSE,
+					SQLITE_OMIT_DATETIME_FUNCS,
+					SQLITE_OMIT_EXPLAIN,
+					SQLITE_OMIT_INTEGRITY_CHECK,
+					SQLITE_OMIT_PAGER_PRAGMAS,
+					SQLITE_OMIT_PROGRESS_CALLBACK,
+					SQLITE_OMIT_SCHEMA_PRAGMAS,
+					SQLITE_OMIT_SCHEMA_VERSION_PRAGMAS,
+					SQLITE_OMIT_TCL_VARIABLE,
+					SQLITE_OMIT_LOAD_EXTENSION,
+					"THREADSAFE=0",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SQLite;
+			};
+			name = Development;
+		};
+		B082657110731A95006EEC5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					SQLITE_OMIT_AUTHORIZATION,
+					SQLITE_OMIT_AUTOVACUUM,
+					SQLITE_OMIT_COMPLETE,
+					SQLITE_OMIT_BLOB_LITERAL,
+					SQLITE_OMIT_COMPOUND_SELECT,
+					SQLITE_OMIT_CONFLICT_CLAUSE,
+					SQLITE_OMIT_DATETIME_FUNCS,
+					SQLITE_OMIT_EXPLAIN,
+					SQLITE_OMIT_INTEGRITY_CHECK,
+					SQLITE_OMIT_PAGER_PRAGMAS,
+					SQLITE_OMIT_PROGRESS_CALLBACK,
+					SQLITE_OMIT_SCHEMA_PRAGMAS,
+					SQLITE_OMIT_SCHEMA_VERSION_PRAGMAS,
+					SQLITE_OMIT_TCL_VARIABLE,
+					SQLITE_OMIT_LOAD_EXTENSION,
+					"THREADSAFE=0",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SQLite;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		B082657210731A95006EEC5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					SQLITE_OMIT_AUTHORIZATION,
+					SQLITE_OMIT_AUTOVACUUM,
+					SQLITE_OMIT_COMPLETE,
+					SQLITE_OMIT_BLOB_LITERAL,
+					SQLITE_OMIT_COMPOUND_SELECT,
+					SQLITE_OMIT_CONFLICT_CLAUSE,
+					SQLITE_OMIT_DATETIME_FUNCS,
+					SQLITE_OMIT_EXPLAIN,
+					SQLITE_OMIT_INTEGRITY_CHECK,
+					SQLITE_OMIT_PAGER_PRAGMAS,
+					SQLITE_OMIT_PROGRESS_CALLBACK,
+					SQLITE_OMIT_SCHEMA_PRAGMAS,
+					SQLITE_OMIT_SCHEMA_VERSION_PRAGMAS,
+					SQLITE_OMIT_TCL_VARIABLE,
+					SQLITE_OMIT_LOAD_EXTENSION,
+					"THREADSAFE=0",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SQLite;
+			};
+			name = Debug;
+		};
+		B082657310731A95006EEC5A /* Wizard */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					SQLITE_OMIT_AUTHORIZATION,
+					SQLITE_OMIT_AUTOVACUUM,
+					SQLITE_OMIT_COMPLETE,
+					SQLITE_OMIT_BLOB_LITERAL,
+					SQLITE_OMIT_COMPOUND_SELECT,
+					SQLITE_OMIT_CONFLICT_CLAUSE,
+					SQLITE_OMIT_DATETIME_FUNCS,
+					SQLITE_OMIT_EXPLAIN,
+					SQLITE_OMIT_INTEGRITY_CHECK,
+					SQLITE_OMIT_PAGER_PRAGMAS,
+					SQLITE_OMIT_PROGRESS_CALLBACK,
+					SQLITE_OMIT_SCHEMA_PRAGMAS,
+					SQLITE_OMIT_SCHEMA_VERSION_PRAGMAS,
+					SQLITE_OMIT_TCL_VARIABLE,
+					SQLITE_OMIT_LOAD_EXTENSION,
+					"THREADSAFE=0",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SQLite;
+			};
+			name = Wizard;
+		};
 		D2F271F90DA1C58C00445FE9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2390,6 +2622,17 @@
 				B032D52B106C01AF0002D70D /* Release */,
 				B032D52C106C01AF0002D70D /* Debug */,
 				B032D52D106C01AF0002D70D /* Wizard */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		B082657510731AA1006EEC5A /* Build configuration list for PBXNativeTarget "SQLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B082657010731A95006EEC5A /* Development */,
+				B082657110731A95006EEC5A /* Release */,
+				B082657210731A95006EEC5A /* Debug */,
+				B082657310731A95006EEC5A /* Wizard */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
