@@ -12,7 +12,7 @@ include makefile.obj
 
 OBJECTS += libunix.o crash-u.o
 
-CXX ?= g++
+CXX = g++
 DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX

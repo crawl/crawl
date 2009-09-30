@@ -153,6 +153,36 @@ std::string make_stringf(const char *s, ...)
     return (buf);
 }
 
+std::string &escape_path_spaces(std::string &s)
+{
+    std::string result;
+    result.clear();
+#ifdef UNIX
+    for (const char* ch = s.c_str(); *ch != '\0'; ++ch)
+    {
+        if (*ch == ' ')
+        {
+            result += '\\';
+        }
+        result += *ch;
+    }
+#elif defined(WIN32CONSOLE) || defined(WIN32TILES)
+    if (s.find(" ") != std::string::npos &&
+        s.find("\"") == std::string::npos)
+    {
+        result = "\"" + s + "\"";
+    } else {
+        return s;
+    }
+#else
+	// Not implemented for this platform. Assume that
+	// escaping isn't necessary.
+	return s;
+#endif
+    s = result;
+	return s;
+}
+
 std::string &uppercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
