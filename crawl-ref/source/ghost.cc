@@ -427,7 +427,7 @@ static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
         break;
 
     case GREEN:
-        u_att_flav = AF_POISON;
+        u_att_flav = AF_POISON_NASTY;
         break;
 
     case RED:
@@ -457,7 +457,7 @@ static mon_attack_flavour _ugly_thing_flavour_upgrade(mon_attack_flavour u_att_f
 {
     switch (u_att_flav)
     {
-    case AF_POISON:
+    case AF_POISON_NASTY:
         u_att_flav = AF_POISON_MEDIUM;
         break;
 
