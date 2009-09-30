@@ -984,25 +984,20 @@ int spell_power_cap(spell_type spell)
     return (_seekspell(spell)->power_cap);
 }
 
-// Sandblast range is 1 if not wielding rocks, 2 if you are.
-static int _sandblast_range(int pow, bool real_cast)
-{
-    int res = 1;
-
-    if (wielding_rocks())
-        res = 2;
-
-    return (res);
-}
-
-
 int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
     ASSERT(maxrange >= minrange);
 
-     if(player_spell
+    // Sandblast is a special case.
+    if ((spell == SPELL_SANDBLAST) && wielding_rocks())
+    {
+        minrange++;
+        maxrange++;
+    }
+
+    if(player_spell
         && vehumet_supports_spell(spell)
         && you.religion == GOD_VEHUMET
         && !player_under_penance()
@@ -1014,10 +1009,6 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
         if(minrange < LOS_RADIUS)
             minrange++;
     }
-
-    // Some cases need to be handled specially.
-    if (spell == SPELL_SANDBLAST)
-        return _sandblast_range(pow, real_cast);
 
     if (minrange == maxrange)
         return minrange;
