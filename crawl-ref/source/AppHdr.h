@@ -25,10 +25,14 @@
 // For a list of predefined macros, see
 //   http://predef.sourceforge.net/
 #if defined(__MACH__)
+    #ifndef OSX
     #define OSX
+    #endif
 #endif
 #if defined(__FreeBSD__)
+    #ifndef FREEBSD
     #define FREEBSD
+    #endif
 #endif
 
 // The maximum memory that the user-script Lua interpreter can
