@@ -22,6 +22,7 @@ arena.result
 source/dat/tiles/dngn.png
 source/dat/tiles/main.png
 source/dat/tiles/player.png
+source/dat/tiles/gui.png
 
 # The Crawl executable.
 source/crawl
