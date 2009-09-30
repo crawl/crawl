@@ -1,5 +1,5 @@
 /*
- *  File:       Kills.h
+ *  File:       kills.h
  *  Summary:    Tracks monsters the player has killed.
  *  Written by: Darshan Shaligram
  *

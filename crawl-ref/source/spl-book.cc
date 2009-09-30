@@ -34,7 +34,7 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "items.h"
 #include "it_use3.h"
-#include "Kills.h"
+#include "kills.h"
 #include "macro.h"
 #include "message.h"
 #include "player.h"

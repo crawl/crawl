@@ -23,7 +23,7 @@ REVISION("$Rev$");
 #include "files.h"
 #include "invent.h"
 #include "items.h"
-#include "Kills.h"
+#include "kills.h"
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"

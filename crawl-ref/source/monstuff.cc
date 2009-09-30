@@ -38,7 +38,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
-#include "Kills.h"
+#include "kills.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"

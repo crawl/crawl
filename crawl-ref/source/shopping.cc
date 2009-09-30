@@ -31,7 +31,7 @@ REVISION("$Rev$");
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "Kills.h"
+#include "kills.h"
 #include "macro.h"
 #include "notes.h"
 #include "overmap.h"

@@ -19,7 +19,7 @@ REVISION("$Rev$");
 #include "cloud.h"
 #include "effects.h"
 #include "it_use2.h"
-#include "Kills.h"
+#include "kills.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"

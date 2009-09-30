@@ -56,7 +56,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "Kills.h"
+#include "kills.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"

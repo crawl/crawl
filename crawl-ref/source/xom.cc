@@ -19,7 +19,7 @@ REVISION("$Rev$");
 #include "effects.h"
 #include "it_use2.h"
 #include "items.h"
-#include "Kills.h"
+#include "kills.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"

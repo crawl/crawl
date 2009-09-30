@@ -19,7 +19,7 @@ REVISION("$Rev$");
 #include "cio.h"
 #include "describe.h"
 #include "files.h"
-#include "Kills.h"
+#include "kills.h"
 #include "hiscores.h"
 #include "message.h"
 #include "mon-pick.h"

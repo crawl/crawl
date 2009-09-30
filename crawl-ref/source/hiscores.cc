@@ -43,7 +43,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "Kills.h"
+#include "kills.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"

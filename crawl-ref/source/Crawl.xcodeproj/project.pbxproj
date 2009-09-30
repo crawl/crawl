@@ -163,7 +163,7 @@
 		7B237ED20A8EC9D000580F30 /* monspeak.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4B0A8EC9D000580F30 /* monspeak.cc */; };
 		7B237ED30A8EC9D000580F30 /* monplace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E4C0A8EC9D000580F30 /* monplace.h */; };
 		7B237ED40A8EC9D000580F30 /* monplace.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4D0A8EC9D000580F30 /* monplace.cc */; };
-		7B237ED50A8EC9D000580F30 /* Kills.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E4E0A8EC9D000580F30 /* Kills.h */; };
+		7B237ED50A8EC9D000580F30 /* kills.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E4E0A8EC9D000580F30 /* kills.h */; };
 		7B237ED60A8EC9D000580F30 /* Kills.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4F0A8EC9D000580F30 /* Kills.cc */; };
 		7B237ED70A8EC9D000580F30 /* files.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E500A8EC9D000580F30 /* files.h */; };
 		7B237ED80A8EC9D000580F30 /* fight.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E510A8EC9D000580F30 /* fight.h */; };
@@ -472,7 +472,7 @@
 				7B237ECC0A8EC9D000580F30 /* spells1.h in CopyFiles */,
 				7B237ECE0A8EC9D000580F30 /* skills2.h in CopyFiles */,
 				7B237ED30A8EC9D000580F30 /* monplace.h in CopyFiles */,
-				7B237ED50A8EC9D000580F30 /* Kills.h in CopyFiles */,
+				7B237ED50A8EC9D000580F30 /* kills.h in CopyFiles */,
 				7B237ED70A8EC9D000580F30 /* files.h in CopyFiles */,
 				7B237ED80A8EC9D000580F30 /* fight.h in CopyFiles */,
 				7B237EDC0A8EC9D000580F30 /* food.h in CopyFiles */,
@@ -737,7 +737,7 @@
 		7B237E4B0A8EC9D000580F30 /* monspeak.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = monspeak.cc; sourceTree = "<group>"; };
 		7B237E4C0A8EC9D000580F30 /* monplace.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = monplace.h; sourceTree = "<group>"; };
 		7B237E4D0A8EC9D000580F30 /* monplace.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = monplace.cc; sourceTree = "<group>"; };
-		7B237E4E0A8EC9D000580F30 /* Kills.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Kills.h; sourceTree = "<group>"; };
+		7B237E4E0A8EC9D000580F30 /* kills.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = kills.h; sourceTree = "<group>"; };
 		7B237E4F0A8EC9D000580F30 /* Kills.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Kills.cc; sourceTree = "<group>"; };
 		7B237E500A8EC9D000580F30 /* files.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = files.h; sourceTree = "<group>"; };
 		7B237E510A8EC9D000580F30 /* fight.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fight.h; sourceTree = "<group>"; };
@@ -1108,7 +1108,7 @@
 				7B237E5A0A8EC9D000580F30 /* items.cc */,
 				7B237DF80A8EC9D000580F30 /* items.h */,
 				7B237E4F0A8EC9D000580F30 /* Kills.cc */,
-				7B237E4E0A8EC9D000580F30 /* Kills.h */,
+				7B237E4E0A8EC9D000580F30 /* kills.h */,
 				7B237DF70A8EC9D000580F30 /* lev-pand.cc */,
 				7B237DF60A8EC9D000580F30 /* lev-pand.h */,
 				7B237E640A8EC9D000580F30 /* libunix.cc */,

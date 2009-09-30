@@ -1,5 +1,5 @@
 /*
- *  File:       Kills.cc
+ *  File:       kills.cc
  *  Summary:    Player kill tracking
  *  Written by: Darshan Shaligram
  *
@@ -21,7 +21,7 @@ REVISION("$Rev$");
 #include "place.h"
 #include "travel.h"
 #include "tags.h"
-#include "Kills.h"
+#include "kills.h"
 #include "clua.h"
 
 #define KILLS_MAJOR_VERSION 4

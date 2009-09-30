@@ -31,7 +31,7 @@ extern char **NXArgv;
 #include "luadgn.h"
 #include "delay.h"
 #include "directn.h"
-#include "Kills.h"
+#include "kills.h"
 #include "files.h"
 #include "defines.h"
 #ifdef USE_TILE
