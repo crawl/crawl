@@ -21,6 +21,16 @@
 #ifndef APPHDR_H
 #define APPHDR_H
 
+// Very simple OS detection, done via predefined macros
+// For a list of predefined macros, see
+//   http://predef.sourceforge.net/
+#if defined(__MACH__)
+    #define OSX
+#endif
+#if defined(__FreeBSD__)
+    #define FREEBSD
+#endif
+
 // The maximum memory that the user-script Lua interpreter can
 // allocate, in kilobytes. This limit is enforced to prevent
 // badly-written or malicious user scripts from consuming too much
@@ -51,13 +61,24 @@
 // especially bad, so we'll want to remap that. OS X is otherwise
 // Unix-ish, so we shouldn't need other special handling.
 #if defined(OSX)
+    #ifndef UNIX
     #define UNIX
+    #endif
     #define USE_8_COLOUR_TERM_MAP
     #define COL_TO_REPLACE_DARKGREY     BLUE
 
     #ifndef DB_NDBM
     #define DB_NDBM
     #endif
+#endif
+
+// FreeBSD
+// There's no /usr/bin/zip in FreeBSD.
+#if defined(FREEBSD)
+    #ifndef UNIX
+    #define UNIX
+    #endif
+    #define SAVE_PACKAGE_NONE
 #endif
 
 // =========================================================================
