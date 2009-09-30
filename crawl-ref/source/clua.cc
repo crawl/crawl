@@ -591,7 +591,7 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
     return !err;
 }
 
-// Defined in Kills.cc because the kill bindings refer to Kills.cc local
+// Defined in kills.cc because the kill bindings refer to kills.cc local
 // structs
 extern void luaopen_kills(lua_State *ls);
 
