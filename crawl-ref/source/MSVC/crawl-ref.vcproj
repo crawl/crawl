@@ -388,11 +388,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\FixAry.h"
+			RelativePath="..\fixary.h"
 			>
 		</File>
 		<File
-			RelativePath="..\FixVec.h"
+			RelativePath="..\fixvec.h"
 			>
 		</File>
 		<File

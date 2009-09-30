@@ -12,7 +12,7 @@
 
 #include "enum.h"
 #include "dungeon.h"
-#include "FixVec.h"
+#include "fixvec.h"
 
 enum band_type
 {

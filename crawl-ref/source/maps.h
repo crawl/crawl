@@ -10,7 +10,7 @@
 #ifndef MAPS_H
 #define MAPS_H
 
-#include "FixVec.h"
+#include "fixvec.h"
 #include "dungeon.h"
 
 #include <vector>

@@ -12,7 +12,7 @@
 
 #include <set>
 
-#include "FixVec.h"
+#include "fixvec.h"
 #include "enum.h"
 
 enum transformation_type

@@ -22,7 +22,7 @@
 
 #include "defines.h"
 #include "enum.h"
-#include "FixAry.h"
+#include "fixary.h"
 #include "libutil.h"
 #include "mpr.h"
 #include "store.h"

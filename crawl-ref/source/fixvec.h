@@ -1,5 +1,5 @@
 /*
- *  File:       FixVec.h
+ *  File:       fixvec.h
  *  Summary:    Fixed size vector class that asserts if you do something bad.
  *  Written by: Jesse Jones
  *

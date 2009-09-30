@@ -10,8 +10,8 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
-#include "FixVec.h"
-#include "FixAry.h"
+#include "fixvec.h"
+#include "fixary.h"
 #include "externs.h"
 #include "terrain.h"
 #include "travel.h"

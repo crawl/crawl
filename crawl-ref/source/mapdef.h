@@ -22,7 +22,7 @@
 #include "externs.h"
 #include "makeitem.h"
 #include "travel.h"
-#include "FixAry.h"
+#include "fixary.h"
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.

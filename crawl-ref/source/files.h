@@ -11,7 +11,7 @@
 #define FILES_H
 
 #include "externs.h"
-#include "FixAry.h"
+#include "fixary.h"
 #include "player.h"
 #include <stdio.h>
 #include <string>

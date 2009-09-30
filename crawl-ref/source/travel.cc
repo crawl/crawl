@@ -13,7 +13,7 @@
 REVISION("$Rev$");
 
 #include "files.h"
-#include "FixAry.h"
+#include "fixary.h"
 #include "branch.h"
 #include "command.h"
 #include "cio.h"
