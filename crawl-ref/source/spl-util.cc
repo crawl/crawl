@@ -31,13 +31,13 @@ REVISION("$Rev$");
 #include "monstuff.h"
 #include "notes.h"
 #include "player.h"
+#include "religion.h"
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "terrain.h"
 #include "view.h"
-#include "religion.h"
 
 
 #ifdef DOS
@@ -388,13 +388,13 @@ bool spell_sanctuary_castable(spell_type spell)
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    if(vehumet_supports_spell(which_spell)
-       && you.religion == GOD_VEHUMET
-       && !player_under_penance()
-       && you.piety >= piety_breakpoint(3)
-       && _seekspell(which_spell)->level >= 5)
+    if (vehumet_supports_spell(which_spell)
+        && you.religion == GOD_VEHUMET
+        && !player_under_penance()
+        && you.piety >= piety_breakpoint(3)
+        && _seekspell(which_spell)->level >= 5)
     {
-        return _seekspell(which_spell)->level -1;
+        return (_seekspell(which_spell)->level - 1);
     }
 
     return (_seekspell(which_spell)->level);
