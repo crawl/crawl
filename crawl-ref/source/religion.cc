@@ -334,7 +334,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Vehumet
     { "gain magical power from killing",
       "Vehumet will no longer aid your destructive magics.",
-      "Vehumet will no extend the range of your conjurations.",
+      "Vehumet will no longer extend the range of your conjurations.",
       "Vehumet will no longer reduce the cost of your destructive magics.",
       "" },
     // Okawaru
