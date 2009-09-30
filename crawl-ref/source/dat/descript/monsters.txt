@@ -459,7 +459,7 @@ A dreadful undead cob of maize.  Look, this one was probably a mistake.  We're s
 %%%%
 death drake
 
-A small dragon, radiating evil.
+A small dragon, radiating pestilence.
 %%%%
 death ooze
 
