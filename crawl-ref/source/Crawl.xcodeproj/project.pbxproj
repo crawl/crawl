@@ -841,6 +841,7 @@
 		B082656F10731A95006EEC5A /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSQLite.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B082657610731AB5006EEC5A /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = util/sqlite/sqlite3.c; sourceTree = "<group>"; };
 		B082657710731AB5006EEC5A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = util/sqlite/sqlite3.h; sourceTree = "<group>"; };
+		B0826648107333BB006EEC5A /* AppHdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHdr.h; sourceTree = "<group>"; };
 		B090C2EE10671F8900AE855D /* dngn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dngn.png; path = rltiles/dngn.png; sourceTree = "<group>"; };
 		B090C2EF10671F8900AE855D /* gui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gui.png; path = rltiles/gui.png; sourceTree = "<group>"; };
 		B090C2F010671F8900AE855D /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = rltiles/main.png; sourceTree = "<group>"; };
@@ -1064,6 +1065,7 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				B0826648107333BB006EEC5A /* AppHdr.h */,
 				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
 				7B237E290A8EC9D000580F30 /* abl-show.h */,
 				7B237E280A8EC9D000580F30 /* abyss.cc */,
