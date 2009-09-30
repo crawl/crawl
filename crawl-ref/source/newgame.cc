@@ -635,8 +635,10 @@ static bool _check_saved_game(void)
         // Create command.
         char cmd_buff[1024];
 
-        const std::string directory = get_savedir();
+        std::string directory = get_savedir();
 
+        escape_path_spaces(basename);
+        escape_path_spaces(directory);
         snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
                   basename.c_str(), directory.c_str() );
 

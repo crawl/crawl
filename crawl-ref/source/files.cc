@@ -693,12 +693,15 @@ std::vector<player_save_info> find_saved_characters()
         if (!is_packed_save(filename))
             continue;
 
-        const std::string zipname = get_savedir_path(basename);
+        std::string zipname = get_savedir_path(basename);
+        escape_path_spaces(zipname);
 
         // This is the filename we actually read ourselves.
         filename = basename + ".sav";
+        escape_path_spaces(filename);
 
-        const std::string dir = get_savedir();
+        std::string dir = get_savedir();
+        escape_path_spaces(dir);
 
         char cmd_buff[1024];
         snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
@@ -723,8 +726,10 @@ std::vector<player_save_info> find_saved_characters()
             filename.substr(0,
                             filename.length() - strlen(".sav"));
  #endif
-                    const std::string dollname = basename + ".tdl";
+                    std::string dollname = basename + ".tdl";
+                    const std::string dollpath = get_savedir_path(dollname);
  #ifdef LOAD_UNPACKAGE_CMD
+                    escape_path_spaces(dollname);
                     snprintf( cmd_buff, sizeof(cmd_buff),
                               UNPACK_SPECIFIC_FILE_CMD,
                               zipname.c_str(),
@@ -732,7 +737,6 @@ std::vector<player_save_info> find_saved_characters()
                               dollname.c_str() );
                     system(cmd_buff);
  #endif
-                    const std::string dollpath = get_savedir_path(dollname);
                     _fill_player_doll(p, dollpath);
  #ifdef LOAD_UNPACKAGE_CMD
                     // Throw away doll file.
@@ -1653,6 +1657,8 @@ void save_game(bool leave_game, const char *farewellmsg)
 
 #ifdef SAVE_PACKAGE_CMD
     std::string basename = get_savedir_filename(you.your_name, "", "");
+    escape_path_spaces(basename);
+
     char cmd_buff[1024];
 
     snprintf( cmd_buff, sizeof(cmd_buff),
