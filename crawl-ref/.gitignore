@@ -14,9 +14,12 @@ map.dump
 mapgen.log
 \#*
 .#*
+*~
 TAGS
 
 arena.result
+
+makefile.dep
 
 # Tile copied files
 source/dat/tiles/dngn.png
