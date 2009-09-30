@@ -1712,6 +1712,17 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     return (rp);
 }
 
+int player_res_rotting()
+{
+    if (you.is_undead
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
+    {
+        return (1);
+    }
+
+    return (0);
+}
+
 int player_res_asphyx()
 {
     int ra = 0;
@@ -5039,7 +5050,7 @@ void inc_hp(int hp_gain, bool max_too)
     you.redraw_hit_points = true;
 }
 
-void rot_hp( int hp_loss )
+void rot_hp(int hp_loss)
 {
     you.base_hp -= hp_loss;
     calc_hp();
@@ -5050,7 +5061,7 @@ void rot_hp( int hp_loss )
     you.redraw_hit_points = true;
 }
 
-void unrot_hp( int hp_recovered )
+void unrot_hp(int hp_recovered)
 {
     if (hp_recovered >= 5000 - you.base_hp)
         you.base_hp = 5000;
@@ -5062,12 +5073,12 @@ void unrot_hp( int hp_recovered )
     you.redraw_hit_points = true;
 }
 
-int player_rotted( void )
+int player_rotted()
 {
     return (5000 - you.base_hp);
 }
 
-void rot_mp( int mp_loss )
+void rot_mp(int mp_loss)
 {
     you.base_magic_points -= mp_loss;
     calc_mp();
@@ -5502,6 +5513,30 @@ void reduce_poison_player(int amount)
     }
 }
 
+bool miasma_player()
+{
+    ASSERT(!crawl_state.arena);
+
+    if (player_res_rotting())
+        return (false);
+
+    bool success = poison_player(1);
+
+    if (you.hp_max > 4 && coinflip())
+    {
+        rot_hp(1);
+        success = true;
+    }
+
+    if (one_chance_in(3))
+    {
+        potion_effect(POT_SLOWING, 5);
+        success = true;
+    }
+
+    return (success);
+}
+
 bool napalm_player(int amount)
 {
     ASSERT(!crawl_state.arena);
@@ -5707,7 +5742,7 @@ bool rot_player(int amount)
     if (amount <= 0)
         return (false);
 
-    if (you.res_rotting() > 0)
+    if (player_res_rotting())
     {
         mpr("You feel terrible.");
         return (false);
@@ -6973,6 +7008,11 @@ int player::res_poison() const
     return (player_res_poison());
 }
 
+int player::res_rotting() const
+{
+    return (player_res_rotting());
+}
+
 int player::res_sticky_flame() const
 {
     return (player_res_sticky_flame());
@@ -6995,17 +7035,6 @@ int player::res_holy_energy(const actor *attacker) const
 int player::res_negative_energy() const
 {
     return (player_prot_life());
-}
-
-int player::res_rotting() const
-{
-    if (you.is_undead
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
-    {
-        return (1);
-    }
-
-    return (0);
 }
 
 int player::res_torment() const
@@ -7143,7 +7172,7 @@ void player::drain_stat(int stat, int amount, actor *attacker)
 
 bool player::rot(actor *who, int amount, int immediate, bool quiet)
 {
-    if (res_rotting() > 0 || amount <= 0)
+    if (player_res_rotting() || amount <= 0)
         return (false);
 
     if (immediate > 0)

@@ -2359,7 +2359,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_MIASMA:
-        if (mons_res_negative_energy(monster) == 3)
+        if (mons_res_rotting(monster))
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " completely resists.");
@@ -2372,15 +2372,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (!doFlavouredEffects)
                 return (hurted);
 
-            if (mons_res_poison(monster) <= 0)
-                poison_monster(monster, pbolt.whose_kill());
-
-            if (one_chance_in(3 + 2 * mons_res_negative_energy(monster)))
-            {
-                bolt beam;
-                beam.flavour = BEAM_SLOW;
-                beam.apply_enchantment_to_monster(monster);
-            }
+            miasma_monster(monster, pbolt.whose_kill());
         }
         break;
 
@@ -2661,8 +2653,6 @@ bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
 {
     poison_monster(monster, who, levels, false);
 
-    const bool res_poison = mons_res_poison(monster) > 0;
-
     int hurted = 0;
 
     if (!mons_res_asphyx(monster))
@@ -2670,7 +2660,7 @@ bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
         hurted = roll_dice(2, 6);
 
         // Note that the hurtage is halved by poison resistance.
-        if (res_poison)
+        if (mons_res_poison(monster) > 0)
             hurted /= 2;
 
         if (hurted)
@@ -2721,6 +2711,37 @@ bool poison_monster(monsters *monster, kill_category who, int levels,
         did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (new_pois.degree > old_pois.degree);
+}
+
+// Actually poisons, rots, and/or slows a monster with miasma (with
+// message).
+bool miasma_monster(monsters *monster, kill_category who)
+{
+    if (!monster->alive())
+        return (false);
+
+    if (mons_res_rotting(monster))
+        return (false);
+
+    bool success = poison_monster(monster, who);
+
+    if (monster->max_hit_points > 4 && coinflip())
+    {
+        monster->max_hit_points--;
+        monster->hit_points = std::min(monster->max_hit_points,
+                                       monster->hit_points);
+        success = true;
+    }
+
+    if (one_chance_in(3))
+    {
+        bolt beam;
+        beam.flavour = BEAM_SLOW;
+        beam.apply_enchantment_to_monster(monster);
+        success = true;
+    }
+
+    return (success);
 }
 
 // Actually napalms a monster (with message).
@@ -3364,6 +3385,8 @@ bool bolt::is_harmless(const monsters *mon) const
         return (mons_res_cold(mon) >= 3);
 
     case BEAM_MIASMA:
+        return (mons_res_rotting(mon));
+
     case BEAM_NEG:
         return (mons_res_negative_energy(mon) == 3);
 
@@ -3406,6 +3429,8 @@ bool bolt::harmless_to_player() const
         return (player_res_steam(false) >= 3);
 
     case BEAM_MIASMA:
+        return (player_res_rotting());
+
     case BEAM_NEG:
         return (player_prot_life(false) >= 3);
 
@@ -3993,19 +4018,7 @@ void bolt::affect_player()
     hurted = check_your_resists(hurted, flavour);
 
     if (flavour == BEAM_MIASMA && hurted > 0)
-    {
-        if (player_res_poison() <= 0)
-        {
-            poison_player(1);
-            was_affected = true;
-        }
-
-        if (one_chance_in(3 + 2 * player_prot_life()))
-        {
-            potion_effect(POT_SLOWING, 5);
-            was_affected = true;
-        }
-    }
+        was_affected = miasma_player();
 
     // Confusion effect for spore explosions
     if (flavour == BEAM_SPORE && hurted && you.holiness() != MH_UNDEAD)

@@ -288,6 +288,7 @@ bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
                          int levels = 1);
 bool poison_monster(monsters *monster, kill_category who, int levels = 1,
                     bool force = false, bool verbose = true);
+bool miasma_monster(monsters *monster, kill_category who);
 bool napalm_monster(monsters *monster, kill_category who, int levels = 1,
                     bool verbose = true);
 void fire_tracer( const monsters *monster, struct bolt &pbolt,

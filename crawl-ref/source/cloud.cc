@@ -511,12 +511,12 @@ int max_cloud_damage(cloud_type cl_type, int power)
     }
 
     case CLOUD_MIASMA:
-        if (player_prot_life() >= 3)
+        if (player_res_rotting())
             return (0);
 
         dam += 11 * speed / 10;
-
         break;
+
     default:
         break;
     }
@@ -666,10 +666,10 @@ void in_a_cloud()
     case CLOUD_MIASMA:
         mpr("You are engulfed in a dark miasma.");
 
-        if (x_chance_in_y(player_prot_life(), 3))
+        if (player_res_rotting())
             return;
 
-        poison_player(1);
+        miasma_player();
 
         hurted += (random2avg(12, 3) * you.time_taken) / 10;    // 3
 
@@ -677,12 +677,8 @@ void in_a_cloud()
             hurted = 0;
 
         ouch(hurted, cl, KILLED_BY_CLOUD, "foul pestilence");
-        potion_effect(POT_SLOWING, 5);
-
-        if (you.hp_max > 4 && coinflip())
-            rot_hp(1);
-
         break;
+
     default:
         break;
     }
@@ -712,7 +708,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     case CLOUD_STEAM:
         return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:
-        return (player_prot_life(false, temp) <= 2);
+        return (player_res_rotting());
 
     default:
         // Smoke, never harmful.

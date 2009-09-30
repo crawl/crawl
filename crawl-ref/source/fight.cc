@@ -2010,7 +2010,7 @@ static bool is_boolean_resist(beam_type flavour)
     switch (flavour)
     {
     case BEAM_ELECTRICITY:
-    case BEAM_MIASMA:
+    case BEAM_MIASMA: // rotting
     case BEAM_NAPALM:
         return (true);
     default:

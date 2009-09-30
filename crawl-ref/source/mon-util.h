@@ -625,7 +625,6 @@ int mons_res_sticky_flame(const monsters *mon);
 int mons_res_rotting(const monsters *mon);
 int mons_res_acid(const monsters *mon);
 int mons_res_negative_energy(const monsters *mon);
-int mons_res_miasma(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}

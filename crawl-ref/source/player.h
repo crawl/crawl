@@ -239,6 +239,7 @@ int player_res_steam(bool calc_unid = true, bool temp = true,
  * *********************************************************************** */
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
+int player_res_rotting();
 
 bool player_control_teleport(bool calc_unid = true, bool temp = true,
                              bool items = true);
@@ -394,10 +395,10 @@ void dec_mp(int mp_loss);
 void inc_mp(int mp_gain, bool max_too);
 void inc_hp(int hp_gain, bool max_too);
 
-void rot_hp( int hp_loss );
-void unrot_hp( int hp_recovered );
+void rot_hp(int hp_loss);
+void unrot_hp(int hp_recovered);
 int player_rotted();
-void rot_mp( int mp_loss );
+void rot_mp(int mp_loss);
 
 void inc_max_hp( int hp_gain );
 void dec_max_hp( int hp_loss );
@@ -424,6 +425,7 @@ bool curare_hits_player(int death_source, int amount);
 bool poison_player(int amount, bool force = false);
 void dec_poison_player();
 void reduce_poison_player(int amount);
+bool miasma_player();
 
 bool napalm_player(int amount);
 void dec_napalm_player();

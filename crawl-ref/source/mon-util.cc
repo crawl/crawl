@@ -1480,17 +1480,6 @@ int mons_res_cold(const monsters *mon)
     return (u);
 }
 
-int mons_res_miasma(const monsters *mon)
-{
-    if (mons_holiness(mon) != MH_NATURAL
-        || mon->type == MONS_DEATH_DRAKE)
-    {
-        return (1);
-    }
-
-    return (0);
-}
-
 int mons_res_negative_energy(const monsters *mon)
 {
     if (mons_holiness(mon) != MH_NATURAL
@@ -3045,7 +3034,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those
-    // handled here as well. -- bwr
+    // handled here as well. - bwr
     switch (monspell)
     {
     case SPELL_BRAIN_FEED:
@@ -3053,7 +3042,6 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         break;
 
     case SPELL_BOLT_OF_DRAINING:
-    case SPELL_MIASMA:
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
     {
@@ -3081,6 +3069,10 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
                 || holiness == MH_NONLIVING || holiness == MH_PLANT);
         break;
     }
+
+    case SPELL_MIASMA:
+        ret = (!foe || foe->res_rotting());
+        break;
 
     case SPELL_DISPEL_UNDEAD:
         // [ds] How is dispel undead intended to interact with vampires?

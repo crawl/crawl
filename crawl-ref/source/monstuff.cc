@@ -5423,7 +5423,7 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
     {
     case CLOUD_MIASMA:
         // Even the dumbest monsters will avoid miasma if they can.
-        return (mons_res_miasma(monster) <= 0);
+        return (!mons_res_rotting(monster));
 
     case CLOUD_FIRE:
         if (mons_res_fire(monster) > 1)
@@ -9370,18 +9370,10 @@ static void _mons_in_cloud(monsters *monster)
     case CLOUD_MIASMA:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
 
-        if (mons_res_miasma(monster) > 0)
+        if (mons_res_rotting(monster))
             return;
 
-        poison_monster(monster, cloud.whose);
-
-        if (monster->max_hit_points > 4 && coinflip())
-            monster->max_hit_points--;
-
-        beam.flavour = BEAM_SLOW;
-
-        if (one_chance_in(3))
-            beam.apply_enchantment_to_monster(monster);
+        miasma_monster(monster, cloud.whose);
 
         hurted += (10 * random2avg(12, 3)) / speed;    // 3
         break;
