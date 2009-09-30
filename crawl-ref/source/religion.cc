@@ -4283,6 +4283,16 @@ static bool _destroyed_valuable_weapon(int value, int type)
     return (false);
 }
 
+bool vehumet_supports_spell(spell_type spell)
+{
+    if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
+        return (true);
+    if (spell == SPELL_SHATTER || spell == SPELL_FRAGMENTATION)
+        return (true);
+
+    return (false);
+}
+
 bool ely_destroy_weapons()
 {
     if (you.religion != GOD_ELYVILON)
