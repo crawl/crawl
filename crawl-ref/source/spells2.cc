@@ -1723,8 +1723,8 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
 }
 
 // Turns corpses in LOS into skeletons and grows toadstools on them.
-// Can also turn zombies into skeletons and destroy ghouls/rotting hulks
-// returns the number of corpses consumed
+// Can also turn zombies into skeletons and destroy ghoul-type monsters.
+// Returns the number of corpses consumed.
 int fungal_bloom()
 {
     int seen_mushrooms  = 0;
@@ -1758,26 +1758,18 @@ int fungal_bloom()
                     if (mons_zombie_size(mons_zombie_base(mons)) == Z_SMALL)
                         skele_type = MONS_SKELETON_SMALL;
 
-                    if (mons->visible())
-                    {
-                        mprf("%s flesh rots away.",
-                        mons->name(DESC_NOCAP_ITS).c_str());
-                    }
+                    simple_monster_message(mons, "'s flesh rots away.");
 
-                    mons->upgrade_type(skele_type,true,true);
+                    mons->upgrade_type(skele_type, true, true);
                     behaviour_event(mons, ME_ALERT, MHITYOU);
 
                     continue;
                 }
                 // Else fall through and destroy the zombie.
-                // Ghoul type monsters are always destroyed.
+                // Ghoul-type monsters are always destroyed.
             case MONS_GHOUL:
             {
-                if (mons->visible())
-                {
-                    mprf("The %s rots away and dies.",
-                         mons->name(DESC_PLAIN).c_str());
-                }
+                simple_monster_message(mons, " rots away and dies.");
 
                 coord_def pos = mons->pos();
                 int colour    = mons->colour;
