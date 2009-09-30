@@ -11,7 +11,7 @@ endif
 
 # need .exe so make will find the right file
 APPNAME = $(OPATH)\crawl.exe
-CXX ?= g++
+CXX = g++
 DELETE = del
 COPY = copy
 OS_TYPE = WIN32TILES

@@ -14,7 +14,7 @@ OBJECTS += libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o 
 
 SDL_CFLAGS := $(shell sdl-config --cflags)
 
-CXX ?= g++
+CXX = g++
 DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
