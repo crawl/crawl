@@ -14,7 +14,7 @@ OBJECTS += libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o 
 
 SDL_CFLAGS := $(shell sdl-config --cflags)
 
-CXX = g++
+CXX ?= g++
 DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
@@ -29,7 +29,6 @@ UNICODE_GLYPHS = n
 # OSX vs. Linux differences:
 ifeq ($(strip $(OSX)),y)
 PNG_INCLUDE := -I/sw/include
-PNG_LIB := -L/sw/lib
 FREETYPE_INCLUDE := -I/sw/include/freetype2
 
 # Note: gcc on OS X will *always* include the dynamic library
@@ -50,11 +49,12 @@ EXTRA_LIBS := $(FRAMEWORK_LIST:%=-Wl,-framework,%) $(LIB_LIST) -lz
 
 EXTRA_INCLUDES += -I/sw/include
 else
-PNG_INCLUDE :=
-PNG_LIB :=
-FREETYPE_INCLUDE := -I/usr/include/freetype2
+PNG_INCLUDE := $(shell pkg-config libpng --cflags)
+PNG_LDFLAGS := $(shell pkg-config libpng --libs)
+FREETYPE_INCLUDE := $(shell pkg-config freetype2 --cflags)
+FREETYPE_LDFLAGS := $(shell pkg-config freetype2 --libs)
 SDL_LDFLAGS := $(shell sdl-config --libs) -lSDLmain
-EXTRA_LIBS := -lpng $(SDL_LDFLAGS) -lGL -lGLU -lSDL_image -lfreetype
+EXTRA_LIBS := $(PNG_LDFLAGS) $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS) -lGL -lGLU -lSDL_image
 endif
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
@@ -225,7 +225,7 @@ endif
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 
 makerltiles:
-	cd $(RLTILES) && make -f makefile.unix all
+	+$(MAKE) -C rltiles -f makefile.unix all
 
 $(TILEDEFSRCS): makerltiles
 
@@ -237,7 +237,7 @@ dat/tiles/%.png: $(RLTILES)/%.png
 	$(COPY) $< $@
 
 clean-rltiles:
-	cd $(RLTILES) && make -f makefile.unix distclean && cd ..
+	+$(MAKE) -C $(RLTILES) -f makefile.unix distclean && cd ..
 
 ##########################################################################
 
@@ -285,10 +285,10 @@ clean:
 	$(DELETE) *.ixx
 
 clean-lua:
-	cd $(LUASRC) && $(MAKE) clean
+	+$(MAKE) -C $(LUASRC) clean
 
 clean-sql:
-	cd $(SQLSRC) && $(MAKE) clean
+	+$(MAKE) -C $(SQLSRC) clean
 
 distclean: clean clean-lua clean-sql clean-rltiles
 	$(DELETE) bones.*
@@ -329,14 +329,14 @@ $(UTIL)%.o: $(UTIL)%.cc $(TILEDEFHDRS)
 
 $(LUASRC)$(LUALIBA):
 	echo Building Lua...
-	cd $(LUASRC) && $(MAKE) crawl_unix
+	+$(MAKE) -C $(LUASRC) crawl_unix
 
 #############################################################################
 # Build SQLite
 
 $(FSQLLIBA):
 	echo Building SQLite
-	cd $(SQLSRC) && $(MAKE)
+	+$(MAKE) -C $(SQLSRC)
 
 #############################################################################
 # Build unrandart data

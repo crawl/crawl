@@ -16,48 +16,43 @@ MAKEFILE ?= makefile.unix
 #MAKEFILE ?= makefile.mgw_unix
 #MAKEFILE ?= makefile_tiles.mgw_unix
 
-# number of concurrent jobs -- good value is (#_of_CPUs * 2) + 1
-#     cuts build time a lot on multi-cpu machines
-# Note: do not use enable this for builds of the tiles version.
-#OTHER=-j2
-
 all:
-	$(MAKE) $(OTHER) -f $(MAKEFILE)
+	+$(MAKE) -f $(MAKEFILE)
 
 profile:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-pg'
+	+$(MAKE) -f $(MAKEFILE) EXTRA_FLAGS='-pg'
 
 noopt:
-	$(MAKE) $(OTHER) -f $(MAKEFILE)
+	+$(MAKE) -f $(MAKEFILE)
 
 install:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) install
+	+$(MAKE) -f $(MAKEFILE) install
 
 clean:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) clean
+	+$(MAKE) -f $(MAKEFILE) clean
 
 distclean:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) distclean
+	+$(MAKE) -f $(MAKEFILE) distclean
 
 depend:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) depend
+	+$(MAKE) -f $(MAKEFILE) depend
 
 # WIZARD mode currently includes asserts, bounds checking, item checking and
 # monster checking.
 wizard:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) debug EXTRA_FLAGS='-g -DWIZARD -DDEBUG -DDEBUG_ITEM_SCAN -DDEBUG_MONS_SCAN'
+	+$(MAKE) -f $(MAKEFILE) debug EXTRA_FLAGS='-g -DWIZARD -DDEBUG -DDEBUG_ITEM_SCAN -DDEBUG_MONS_SCAN'
 
 # DEBUG mode includes WIZARD mode as well as copious debugging input
 debug:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) DEBUG_CRAWL=y debug EXTRA_FLAGS='-g -DFULLDEBUG -DWIZARD'
+	+$(MAKE) -f $(MAKEFILE) DEBUG_CRAWL=y debug EXTRA_FLAGS='-g -DFULLDEBUG -DWIZARD'
 
 # [dshaligram] The individual makefile need not necessarily support
 # package-source; only makefile.unix does at the moment.
 package-source:
-	$(MAKE) -f $(MAKEFILE) package-source
+	+$(MAKE) -f $(MAKEFILE) package-source
 
 prebuildyacc:
-	$(MAKE) -f $(MAKEFILE) prebuildyacc
+	+$(MAKE) -f $(MAKEFILE) prebuildyacc
 
 # DO NOT DELETE THIS LINE -- $(MAKE) depend depends on it.
 
