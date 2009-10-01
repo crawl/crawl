@@ -156,7 +156,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 #endif
 
     if (spell_cast == SPELL_CANTRIP)
-        do_noise = false;       // Spell itself does the messaging
+        do_noise = false;       // Spell itself does the messaging.
 
     if (_los_free_spell(spell_cast) && !spell_is_direct_explosion(spell_cast))
     {
@@ -375,7 +375,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(monster, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1);
+        sumcount2 = 1 + random2(3) + random2(monster->hit_dice / 5 + 1);
 
         duration  = std::min(2 + monster->hit_dice / 5, 6);
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
