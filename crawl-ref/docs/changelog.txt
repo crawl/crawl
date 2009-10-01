@@ -39,6 +39,7 @@ Stone Soup 0.6
 * Add some tiles "animations" whenever the screen is redrawn.
 * Tiles: re-added doll editing screen ('-' command).
 * Tiles: added clickable spells display (toggle with '_' command).
+* All spectral things can use stairs again.
 
 Stone Soup 0.5.1 (20090728)
 ---------------------------
