@@ -226,6 +226,16 @@
     //
     #define DGL_CLEAR_SCREEN "\033[2J"
 
+#   ifndef USE_MORE_SECURE_SEED
+#   error DGAMELAUNCH builds should define USE_MORE_SECURE_SEED
+#   endif
+
+    // This secures the PRNG itself by hashing the values with SHA256.
+    // It doesn't have much point if USE_MORE_SECURE_SEED is not used.
+    // PRNG will be about 15 times slower when this is turned on, but
+    // even with that the cpu time used by the PRNG is relatively small.
+    #define MORE_HARDENED_PRNG
+
     // Startup preferences are saved by player name rather than uid,
     // since all players use the same uid in dgamelaunch.
     #ifndef DGL_NO_STARTUP_PREFS_BY_NAME

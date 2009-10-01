@@ -108,7 +108,6 @@ void init_genrand(unsigned long s)
     }
 }
 
-#if 0
 /* initialize by an array with array-length */
 /* init_key is the array for initializing keys */
 /* key_length is its length */
@@ -137,7 +136,6 @@ void init_by_array(unsigned long init_key[], int key_length)
 
     mt[0] = 0x80000000UL; /* MSB is 1; assuring non-zero initial array */
 }
-#endif
 
 /* generates a random number on [0,0xffffffff]-interval */
 unsigned long genrand_int32(void)

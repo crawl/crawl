@@ -65,6 +65,7 @@ place.o \
 player.o \
 quiver.o \
 religion.o \
+sha256.o \
 shopping.o \
 skills.o \
 skills2.o \

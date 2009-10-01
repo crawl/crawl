@@ -44,6 +44,9 @@
 /* initializes mt[N] with a seed */
 void init_genrand( unsigned long s );
 
+/* initializes mt[N] with an array of keys */
+void init_by_array( unsigned long init_key[], int key_length );
+
 /* generates a random number on [0,0xffffffff]-interval */
 unsigned long genrand_int32( void );
 

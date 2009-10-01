@@ -45,6 +45,10 @@ REVISION("$Rev$");
 
 #endif
 
+#ifdef MORE_HARDENED_PRNG
+#include "sha256.h"
+#endif
+
 #ifdef DOS
  #include <conio.h>
 #endif
@@ -470,6 +474,12 @@ unsigned char get_ch()
     return gotched;
 }
 
+void seed_rng(unsigned long* seed_key, size_t num_keys)
+{
+    // MT19937 -- see mt19937ar.cc for details/licence
+    init_by_array(seed_key, num_keys);
+}
+
 void seed_rng(long seed)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
@@ -480,17 +490,43 @@ void seed_rng()
 {
     unsigned long seed = time( NULL );
 #ifdef USE_MORE_SECURE_SEED
+
+    /* (at least) 256-bit wide seed */
+    unsigned long seed_key[8];
+
     struct tms  buf;
     seed += times( &buf ) + getpid();
-#endif
+    seed_key[0] = seed;
 
+    /* Try opening from various system provided (hopefully) CSPRNGs */
+    FILE* seed_f = fopen("/dev/urandom", "rb");
+    if (!seed_f)
+        seed_f = fopen("/dev/random", "rb");
+    if (!seed_f)
+        seed_f = fopen("/dev/srandom", "rb");
+    if (!seed_f)
+        seed_f = fopen("/dev/arandom", "rb");
+    if (seed_f)
+    {
+        fread(&seed_key[1], sizeof(unsigned long), 7, seed_f);
+        fclose(seed_f);
+    }
+
+    seed_rng(seed_key, 8);
+
+#else
     seed_rng(seed);
+#endif
 }
 
 // MT19937 -- see mt19937ar.cc for details
 unsigned long random_int( void )
 {
+#ifndef MORE_HARDENED_PRNG
     return (genrand_int32());
+#else
+    return (sha256_genrand());
+#endif
 }
 
 int random_range(int low, int high)
@@ -586,7 +622,11 @@ int random2(int max)
     if (max <= 1)
         return (0);
 
+    #ifdef MORE_HARDENED_PRNG
+    return (static_cast<int>(sha256_genrand() / (0xFFFFFFFFUL / max + 1)));
+    #else
     return (static_cast<int>(genrand_int32() / (0xFFFFFFFFUL / max + 1)));
+    #endif
 }
 
 bool coinflip(void)
