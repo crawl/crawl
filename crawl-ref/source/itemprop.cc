@@ -379,7 +379,7 @@ static missile_def Missile_prop[NUM_MISSILES] =
     { MI_DART,          "dart",          5,    3, true  },
     { MI_ARROW,         "arrow",         7,    5, false },
     { MI_BOLT,          "bolt",          9,    5, false },
-    { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
+    { MI_LARGE_ROCK,    "large rock",   20,  400, true  },
     { MI_SLING_BULLET,  "sling bullet",  6,    4, false },
     { MI_JAVELIN,       "javelin",      10,   80, true  },
     { MI_THROWING_NET,  "throwing net",  0,   30, true  },
