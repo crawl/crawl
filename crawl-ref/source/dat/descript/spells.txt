@@ -145,7 +145,7 @@ This spell removes poison from the caster's system.
 %%%%
 Death Channel
 
-This spell raises living creatures slain by the caster into a state of unliving slavery as spectral things. Note that spectral things are incapable of leaving the level they were created on.
+This spell raises living creatures slain by the caster into a state of unliving slavery as spectral things. Note that spectral things can follow you beyond the level they were created on.
 %%%%
 Death's Door
 

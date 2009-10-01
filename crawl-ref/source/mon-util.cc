@@ -1038,12 +1038,12 @@ bool mons_can_be_zombified(const monsters *mon)
 
 bool mons_class_can_use_stairs(int mc)
 {
-    return (!mons_class_is_zombified(mc));
+    return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING);
 }
 
 bool mons_can_use_stairs(const monsters *mon)
 {
-    return (!mons_is_zombified(mon) || mons_enslaved_intact_soul(mon));
+    return (mons_class_can_use_stairs(mon->type));
 }
 
 bool mons_enslaved_body_and_soul(const monsters *mon)
@@ -3491,8 +3491,8 @@ bool monster_shover(const monsters *m)
         return (false);
     }
 
-    // Monsters too stupid to use stairs (e.g. zombified undead) are also
-    // disqualified.
+    // Monsters too stupid to use stairs (e.g. non-spectral zombified undead)
+    // are also disqualified.
     if (!mons_can_use_stairs(m))
         return (false);
 
@@ -3535,7 +3535,8 @@ bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
 
     // If they're the same holiness, monsters smart enough to use stairs can
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
-    // undead can push past zombified undead).
+    // or spectral zombified undead can push past non-spectral zombified
+    // undead).
     if (m1->holiness() == m2->holiness() && mons_can_use_stairs(m1)
         && !mons_can_use_stairs(m2))
     {
