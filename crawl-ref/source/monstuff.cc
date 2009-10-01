@@ -1185,7 +1185,7 @@ static void _hogs_to_humans()
     else if (any > 1)
     {
         mpr("No longer under Kirke's spell, all hogs revert to their human "
-            "form!");
+            "forms!");
     }
 
     // Revert the player as well.
