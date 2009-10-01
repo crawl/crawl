@@ -3,7 +3,9 @@
 #jmf: N.B.: requires symlink directories; run ./dolinks.sh to make
 
 MAKE=make
-if [ "$(uname -s)" == "FreeBSD" ]; then
+make --version &> /dev/null
+if [ $? != 0 ]; then
+	# BSD make returns an error code if you try '--version'. GNU make doesn't.
 	MAKE=gmake
 fi
 
