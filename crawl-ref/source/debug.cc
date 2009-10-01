@@ -105,8 +105,7 @@ static void _dump_levgen();
 #if DEBUG
 static void _BreakStrToDebugger(const char *mesg)
 {
-
-#if OSX || defined(__MINGW32__)
+#if defined(OSX) || defined(__MINGW32__)
     fprintf(stderr, mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
