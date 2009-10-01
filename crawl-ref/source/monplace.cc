@@ -1290,6 +1290,74 @@ static monster_type _pick_random_zombie()
     return (zombifiable[random2(zombifiable.size())]);
 }
 
+monster_type pick_local_zombifiable_monster_type(int power)
+{
+    // Generates a dummy zombie likely to be found
+    // Ripped wholly from _define_zombie().
+
+    power = std::min(27, power);
+    // How OOD this zombie can be.
+    int relax = 5;
+
+    // Pick an appropriate creature to make a zombie out of,
+    // levelwise.  The old code was generating absolutely
+    // incredible OOD zombies.
+    int cls;
+    while (true)
+    {
+        cls = _pick_random_zombie();
+
+        bool ignore_rarity = false;
+        // On certain branches, zombie creation will fail if we use
+        // the mons_rarity() functions, because (for example) there
+        // are NO zombifiable "native" abyss creatures. Other branches
+        // where this is a problem are hell levels and the crypt.
+        // we have to watch for summoned zombies on other levels, too,
+        // such as the Temple, HoB, and Slime Pits.
+        if (you.level_type != LEVEL_DUNGEON
+            || player_in_hell()
+            || player_in_branch(BRANCH_HALL_OF_ZOT)
+            || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+            || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+            || player_in_branch(BRANCH_CRYPT)
+            || player_in_branch(BRANCH_TOMB)
+            || player_in_branch(BRANCH_HALL_OF_BLADES)
+            || player_in_branch(BRANCH_SNAKE_PIT)
+            || player_in_branch(BRANCH_SLIME_PITS)
+            || one_chance_in(1000))
+        {
+            ignore_rarity = true;
+        }
+
+        // Don't make out-of-rarity zombies when we don't have to.
+        if (!ignore_rarity && mons_rarity(cls) == 0)
+            continue;
+
+        // Check for rarity.. and OOD - identical to mons_place()
+        int level, diff, chance;
+
+        level = mons_level(cls) - 4;
+        diff  = level - power;
+
+        chance = (ignore_rarity) ? 100
+                                 : mons_rarity(cls) - (diff * diff) / 2;
+
+        if (power > level - relax && power < level + relax
+            && random2avg(100, 2) <= chance)
+        {
+            break;
+        }
+
+        // Every so often, we'll relax the OOD restrictions.  Avoids
+        // infinite loops (if we don't do this, things like creating
+        // a large skeleton on level 1 may hang the game!).
+        if (one_chance_in(5))
+            relax++;
+    }
+
+    return (monster_type)cls;
+}
+
 static void _define_zombie(int mid, monster_type ztype, monster_type cs,
                            int power, coord_def pos)
 {

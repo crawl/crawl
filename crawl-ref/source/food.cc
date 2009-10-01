@@ -29,6 +29,7 @@ REVISION("$Rev$");
 #include "command.h"
 #include "debug.h"
 #include "delay.h"
+#include "effects.h"
 #include "initfile.h"
 #include "invent.h"
 #include "items.h"
@@ -360,7 +361,18 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
                          && god_likes_butchery(you.religion);
 
     if (can_sac && !rotten)
+    {
         start_delay(DELAY_OFFER_CORPSE, 0, corpse_id);
+
+        // Kiku torments if you butcher a corpse while praying
+        bool kiku_torments = (you.religion == GOD_KIKUBAAQUDGHA && you.piety > 120);
+        if (kiku_torments)
+        {
+            simple_god_message(" inflicts torment against the living!");
+            torment(TORMENT_GENERIC, you.pos());
+            you.piety -= 8 + random2(4); // 8 to 12
+        }
+    }
     else
     {
         if (can_sac && rotten)

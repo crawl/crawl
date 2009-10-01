@@ -258,6 +258,12 @@ int mons_place(mgen_data mg);
  * *********************************************************************** */
 int place_monster(mgen_data mg, bool force_pos = false);
 
+/* ***********************************************************************
+ * Returns a monster class type of a zombie that would be generated
+ * on the player's current level.
+ * *********************************************************************** */
+monster_type pick_local_zombifiable_monster_type(int power);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr - debug - decks - effects - fight - it_use3 - item_use -

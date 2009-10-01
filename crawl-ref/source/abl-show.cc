@@ -107,8 +107,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DIVINE_WARRIOR },
     // Kikubaaqudgha
-    { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
-      ABIL_KIKU_ENSLAVE_UNDEAD, ABIL_NON_ABILITY, ABIL_KIKU_INVOKE_DEATH },
+    { ABIL_KIKU_RECEIVE_CORPSE, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Yredelemnul
     { ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_RECALL_UNDEAD_SLAVES,
       ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
@@ -242,10 +242,7 @@ static const ability_def Ability_List[] =
       8, 0, 150, 4, ABFLAG_NONE },
 
     // Kikubaaqudgha
-    { ABIL_KIKU_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
-      2, 0, 50, 0, ABFLAG_NONE },
-    { ABIL_KIKU_ENSLAVE_UNDEAD, "Enslave Undead", 4, 0, 150, 3, ABFLAG_NONE },
-    { ABIL_KIKU_INVOKE_DEATH, "Invoke Death", 4, 0, 250, 3, ABFLAG_NONE },
+    { ABIL_KIKU_RECEIVE_CORPSE, "Recieve Corpses", 5, 0, 1000, 2, ABFLAG_NONE },
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY },
@@ -677,7 +674,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_ZIN_RECITE:
-    case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_OKAWARU_MIGHT:
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
@@ -727,7 +723,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
-    case ABIL_KIKU_ENSLAVE_UNDEAD:
+    case ABIL_KIKU_RECEIVE_CORPSE:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
@@ -774,7 +770,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_SANCTUARY:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-    case ABIL_KIKU_INVOKE_DEATH:
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
@@ -1625,33 +1620,9 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
-    case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
-        recall(1);
-        exercise(SK_INVOCATIONS, 1);
-        break;
-
-    case ABIL_KIKU_ENSLAVE_UNDEAD:
-    {
-        god_acting gdact;
-        beam.range = LOS_RADIUS;
-        if (!spell_direction(spd, beam))
-            return (false);
-
-        if (!zapping(ZAP_ENSLAVE_UNDEAD, you.skills[SK_INVOCATIONS] * 8, beam,
-                     true))
-        {
-            return (false);
-        }
-
-        exercise(SK_INVOCATIONS, 5 + random2(5));
-        break;
-    }
-
-    case ABIL_KIKU_INVOKE_DEATH:
-        summon_demon_type(MONS_REAPER,
-                          20 + you.skills[SK_INVOCATIONS] * 3,
-                          GOD_KIKUBAAQUDGHA);
-        exercise(SK_INVOCATIONS, 10 + random2(14));
+    case ABIL_KIKU_RECEIVE_CORPSE:
+        receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
+        exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
     case ABIL_YRED_INJURY_MIRROR:

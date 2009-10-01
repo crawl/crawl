@@ -645,6 +645,91 @@ bool cast_summon_horrible_things(int pow, god_type god)
     return (count > 0);
 }
 
+bool receive_corpses(int pow, coord_def where)
+{
+    // pow = invocations * 4, ranges from 0 to 108
+    mprf(MSGCH_DIAGNOSTICS, "Receive_corpses power: %d", pow);
+    // Kiku gives branch-appropriate corpses (like shadow creatures)
+    int expected_extra_corpses = (pow / 36);	// 1 at 0 inv, 7 at 7 inv
+	int corpse_delivery_radius = 3;
+
+    // We should get the same # of corpses in a hallway as in an open room.
+    int spaces_for_corpses = 0;
+    for (radius_iterator ri(where, corpse_delivery_radius, true, true, true); ri; ++ri)
+        if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
+            spaces_for_corpses++;
+
+    int percent_chance_a_square_receives_extra_corpse = // can be > 100
+        (int)(
+            ((float) expected_extra_corpses) /
+            ((float) spaces_for_corpses)
+            * 100.0
+        );
+
+    int corpses_generated = 0;
+
+    for (radius_iterator ri(where, corpse_delivery_radius, false, true, false); ri; ++ri)
+    {
+
+        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
+        bool square_is_player_square = (*ri == where);
+        bool square_gets_corpse =
+            (random2(100) < percent_chance_a_square_receives_extra_corpse) ||
+            (square_is_player_square && random2(100) < 97);
+        if (!square_is_walkable || !square_gets_corpse)
+            continue;
+
+        corpses_generated++;
+
+        // Find an appropriate monster corpse
+        monster_type mon_type = MONS_PROGRAM_BUG;
+        int adjusted_power = 0;
+        for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); i++)
+        {
+            adjusted_power = std::min(pow/4,random2(random2(pow)));
+            mon_type = pick_local_zombifiable_monster_type(adjusted_power);
+        }
+
+        // Create corpse object
+        monsters dummy;
+        dummy.type = mon_type;
+        int index_of_corpse_created = get_item_slot();
+        if (mons_genus(mon_type) == MONS_HYDRA)
+            dummy.number = random2(20) + 1;
+        int valid_corpse = fill_out_corpse(&dummy, mitm[index_of_corpse_created], false);
+        if (!valid_corpse)
+        {
+            mitm[index_of_corpse_created].clear();
+            continue;
+        }
+        mitm[index_of_corpse_created].props["DoNotDropHide"] = true;
+
+        ASSERT(valid_corpse >= 0);
+
+        // Higher power means fresher corpses.
+        // One out of ten corpses will always be rotten.
+        // (Perhaps this should be different for ghouls.)
+        int rottedness = 200 -
+            ((random2(10) == 5) ?
+            random2(175 - pow) :
+            random2(100 + random2(75)));
+        mitm[index_of_corpse_created].special = rottedness;
+
+        // Place the corpse.
+        move_item_to_grid( &index_of_corpse_created, *ri );
+    }
+
+    if (corpses_generated)
+    {
+        simple_god_message(" delivers you corpses!");
+        maybe_update_stashes();
+        return true;
+    } else {
+        simple_god_message(" can find no living being to slaughter for you!");
+        return false;
+    }
+}
+
 static bool _animatable_remains(const item_def& item)
 {
     return (item.base_type == OBJ_CORPSES

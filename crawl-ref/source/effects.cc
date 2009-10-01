@@ -203,6 +203,30 @@ int torment_player(int pow, int caster)
         hploss = std::max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
     }
 
+    // Kiku protects you from torment to a degree.
+    bool kiku_shielding_player =
+        (you.religion == GOD_KIKUBAAQUDGHA
+        && !player_res_torment()
+        && !player_under_penance()
+        && you.piety > 80
+        && you.gift_timeout == 0); // no protection during pain branding weapon
+
+    if (kiku_shielding_player)
+    {
+        if(!player_res_torment())
+        {
+            if (random2(600) < you.piety) // 13.33% to 33.33% chance
+            {
+                hploss = 0;
+                simple_god_message(" shields you entirely from torment!");
+            } else if (random2(250) < you.piety) { // 24% to 80% chance
+                hploss -= random2(hploss - 1);
+                simple_god_message(" shields you from torment!");
+            }
+        }
+    }
+
+
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");

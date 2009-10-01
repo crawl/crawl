@@ -123,9 +123,9 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Kikubaaqudgha
     {
-        " slowly rot% away.",
-        " rot% away.",
-        " rot% away in an instant.",
+        " convulse% and rot% away.",
+        " convulse% madly and rot% away.",
+        " convulse% furiously and rot% away.",
     },
     // Yredelemnul
     {
@@ -218,11 +218,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "channel blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha
-    { "recall your undead slaves",
-      "Kikubaaqudgha is protecting you from some side-effects of death magic.",
-      "permanently enslave the undead",
+    { "receive cadavers from Kikubaaqudgha",
       "",
-      "summon an emissary of Death" },
+      "",
+      "Kikubaaqudgha is protecting you from unholy torment.",
+      "invoke torment by butchering corpses during prayer" },
     // Yredelemnul
     { "animate remains",
       "recall your undead slaves",
@@ -318,11 +318,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "channel blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha
-    { "recall your undead slaves",
-      "Kikubaaqudgha is no longer shielding you from miscast death magic.",
-      "permanently enslave the undead",
+    { "receive cadavers from Kikubaaqudgha",
       "",
-      "summon an emissary of Death" },
+      "",
+      "Kikubaaqudgha will no longer protect you from unholy torment.",
+      "invoke torment by butchering corpses during prayer" },
     // Yredelemnul
     { "animate remains",
       "recall your undead slaves",
@@ -620,7 +620,6 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_KIKUBAAQUDGHA:
         likes.push_back("you kill living beings");
-        likes.push_back("your god-given allies kill living beings");
         likes.push_back("your undead slaves kill living beings");
         break;
 
@@ -699,7 +698,6 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_KIKUBAAQUDGHA:
         likes.push_back("you kill holy beings");
-        likes.push_back("your god-given allies kill holy beings");
         likes.push_back("your undead slaves kill holy beings");
         break;
 
@@ -2213,7 +2211,6 @@ static void _do_god_gift(bool prayed_for)
             }
             break;
 
-        case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
             if (you.piety > 160 && random2(you.piety) > 100)
@@ -2222,17 +2219,6 @@ static void _do_god_gift(bool prayed_for)
 
                 switch (you.religion)
                 {
-                case GOD_KIKUBAAQUDGHA:     // gives death books
-                    if (!you.had_book[BOOK_NECROMANCY])
-                        gift = BOOK_NECROMANCY;
-                    else if (!you.had_book[BOOK_DEATH])
-                        gift = BOOK_DEATH;
-                    else if (!you.had_book[BOOK_UNLIFE])
-                        gift = BOOK_UNLIFE;
-                    else if (!you.had_book[BOOK_NECRONOMICON])
-                        gift = BOOK_NECRONOMICON;
-                    break;
-
                 case GOD_SIF_MUNA:
                     gift = OBJ_RANDOM;      // Sif Muna - gives any
                     break;
@@ -3767,15 +3753,22 @@ void gain_piety(int pgn)
 
         if (!you.num_gifts[you.religion])
         {
-            if (you.religion == GOD_ZIN)
-                simple_god_message(" will now cure all your mutations... once.");
-            else if (you.religion == GOD_SHINING_ONE
-                    || you.religion == GOD_LUGONU)
+            switch (you.religion)
             {
-                mprf("%s will now %s your weapon at an altar... once.",
-                     god_name(you.religion).c_str(),
-                     you.religion == GOD_SHINING_ONE ? "bless" : "corrupt",
-                     MSGCH_GOD, you.religion);
+                case GOD_ZIN:
+                    simple_god_message(" will now cure all your mutations... once.");
+                    break;
+                case GOD_SHINING_ONE:
+                    simple_god_message(" will now bless your weapon at an altar... once.");
+                    break;
+                case GOD_KIKUBAAQUDGHA:
+                    simple_god_message(" will now enhance your necromancy at an altar... once.");
+                    break;
+                case GOD_LUGONU:
+                    simple_god_message(" will now corrupt your weapon at an altar... once.");
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -6891,9 +6884,10 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     you.wield_change = true;
     you.num_gifts[god]++;
     std::string desc  = old_name + " ";
-                desc += (god == GOD_SHINING_ONE ? "blessed by the Shining One" :
-                         god == GOD_LUGONU      ? "corrupted by Lugonu"
-                                                : "touched by the gods");
+            desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
+                     god == GOD_LUGONU        ? "corrupted by Lugonu" :
+                     god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
+                                              : "touched by the gods");
 
     take_note(Note(NOTE_ID_ITEM, 0, 0,
               wpn.name(DESC_NOCAP_A).c_str(), desc.c_str()));
@@ -6914,6 +6908,16 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
             if (is_bloodcovered(*ri))
                 env.map(*ri).property &= ~(FPROP_BLOODY);
+    }
+
+    if (god == GOD_KIKUBAAQUDGHA)
+    {
+        torment(TORMENT_GENERIC, you.pos());
+
+        // Bloodify surrounding squares.
+        for (radius_iterator ri(you.pos(), 2, true, true); ri; ++ri)
+            if (random2(4) != 2) // 75% of tiles will get bloodied
+                env.map(*ri).property |= FPROP_BLOODY;
     }
 
 #ifndef USE_TILE
@@ -7027,6 +7031,56 @@ static bool _altar_prayer()
         if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_DISTORTION)
             did_bless = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
+
+    // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon
+    if (you.religion == GOD_KIKUBAAQUDGHA
+        && !you.num_gifts[GOD_KIKUBAAQUDGHA]
+        && !player_under_penance()
+        && you.piety > 160)
+    {
+        simple_god_message(
+        " will bless your weapon with pain or grant you the Necronomicon.");
+
+        bool kiku_did_bless_weapon = false;
+
+        const int wpn = get_player_wielded_weapon();
+
+        // Does the player want a pain branding?
+        if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_PAIN)
+        {
+            kiku_did_bless_weapon =
+                _bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED);
+            did_bless = kiku_did_bless_weapon;
+        }
+        else mpr("You have no weapon to bloody with pain.");
+
+        // If not, ask if the player wants a Necronomicon
+        if (!kiku_did_bless_weapon)
+        {
+            if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
+                return(false);
+
+            int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
+                                      MAKE_ITEM_RANDOM_RACE,
+                                      0, 0, you.religion);
+            if (thing_created == NON_ITEM)
+                return(false);
+
+            move_item_to_grid( &thing_created, you.pos() );
+
+            if (thing_created != NON_ITEM)
+            {
+                simple_god_message(" grants you a gift!");
+                more();
+
+                you.num_gifts[you.religion]++;
+                did_bless = true;
+                take_note(Note(NOTE_GOD_GIFT, you.religion));
+                mitm[thing_created].inscription = "god gift";
+            }
+        }
+	return(did_bless); // Return early so we don't offer our Necronomicon to Kiku
+    } // end kiku gifting
 
     offer_items();
 
@@ -7654,7 +7708,8 @@ bool god_likes_butchery(god_type god)
     return (god == GOD_OKAWARU
             || god == GOD_MAKHLEB
             || god == GOD_TROG
-            || god == GOD_LUGONU);
+            || god == GOD_LUGONU
+            || (god == GOD_KIKUBAAQUDGHA && you.piety > 120));
 }
 
 bool god_hates_butchery(god_type god)
