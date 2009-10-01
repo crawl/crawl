@@ -15,29 +15,29 @@ Lawrence Ramsey, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              R. Dan Henry              Stefan O'Rear
-Juha Arpiainen               Benoit Hudson             Yuuma Oohara
-Roy Axenov                   Iainuki                   Charles Otto
-Max Bane                     Ilyak                     Erik Piper
-Bill Beher                   Mitsuhiro Itakura         Lemuel Pitkin
-Alexander Beisig             Jarmo Kielosto            Derek Ray
-Erik Inge Bolsø              Kornel Kisielewicz        Remsleep
-Peter Borgmann               Vambola Kotkas            David Rose
-Adam Borowski                Vsevolod Kozlov           Sebastian Salman
-Jude Brown                   Ryan Kusnery              Brett Scarborough
-Trent W. Buck                Jukka Kuusisto            Darshan Shaligram
-Terje Bø                     Maciej Lapinski           Robert Shimmin
-Aaron Curtis                 Jordan Lewis              Sigurd
-Denzi                        Icy Lich                  Edgar Simo
-Rachel Elizabeth Dillon      Jesse Luehrs              Solf
-Mike Drinen                  Markus Maier              Johan Strandell
-Kieron Dunbar                Arien Malec               Roman Sêk
-Christopher Evenstar         Shawn M Moore             Marc H. Thoben
-Ben Goetter                  Eva Myers                 Matt Titus
-Rob Grant                    Wille Mäntylä             Robert Vollmert
-John Greenberg               Onia Ninara               Steven Wheeler
-GreyKnight                   Erkki Nurmi               Jeremey Wilson
-Shayne Halvorson             Mattias Nyberg            Yelve Yakut
-Ciaran Hamilton              nyra                      Zooko
-Chris Hamons                                           Dylan O'Donnell
+Warwick Allison              R. Dan Henry              Dylan O'Donnell
+Juha Arpiainen               Benoit Hudson             Stefan O'Rear
+Roy Axenov                   Iainuki                   Yuuma Oohara
+Max Bane                     Ilyak                     Charles Otto
+Bill Beher                   Mitsuhiro Itakura         Erik Piper
+Alexander Beisig             Mikko Juola               Lemuel Pitkin
+Erik Inge Bolsø              Jarmo Kielosto            Derek Ray
+Peter Borgmann               Kornel Kisielewicz        Remsleep
+Adam Borowski                Vambola Kotkas            David Rose
+Jude Brown                   Vsevolod Kozlov           Sebastian Salman
+Trent W. Buck                Ryan Kusnery              Brett Scarborough
+Terje Bø                     Jukka Kuusisto            Darshan Shaligram
+Aaron Curtis                 Maciej Lapinski           Robert Shimmin
+Denzi                        Jordan Lewis              Sigurd
+Rachel Elizabeth Dillon      Icy Lich                  Edgar Simo
+Mike Drinen                  Jesse Luehrs              Solf
+Kieron Dunbar                Markus Maier              Johan Strandell
+Christopher Evenstar         Arien Malec               Roman Sêk
+Ben Goetter                  Shawn M Moore             Marc H. Thoben
+Rob Grant                    Eva Myers                 Matt Titus
+John Greenberg               Wille Mäntylä             Robert Vollmert
+GreyKnight                   Onia Ninara               Steven Wheeler
+Shayne Halvorson             Erkki Nurmi               Jeremey Wilson
+Ciaran Hamilton              Mattias Nyberg            Yelve Yakut
+Chris Hamons                 nyra                      Zooko
 
