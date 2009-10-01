@@ -968,7 +968,7 @@ bool is_valid_spell(spell_type spell)
 static bool _cloud_helper(cloud_func func, const coord_def& where,
                           int pow, int spread_rate,
                           cloud_type ctype, kill_category whose,
-                          killer_type killer )
+                          killer_type killer)
 {
     if (!grid_is_solid(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
     {
@@ -991,22 +991,22 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     ASSERT(maxrange >= minrange);
 
     // Sandblast is a special case.
-    if ((spell == SPELL_SANDBLAST) && wielding_rocks())
+    if (spell == SPELL_SANDBLAST && wielding_rocks())
     {
         minrange++;
         maxrange++;
     }
 
-    if(player_spell
+    if (player_spell
         && vehumet_supports_spell(spell)
         && you.religion == GOD_VEHUMET
         && !player_under_penance()
         && you.piety >= piety_breakpoint(2))
     {
-        if(maxrange < LOS_RADIUS)
+        if (maxrange < LOS_RADIUS)
             maxrange++;
 
-        if(minrange < LOS_RADIUS)
+        if (minrange < LOS_RADIUS)
             minrange++;
     }
 
@@ -1019,7 +1019,7 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
         return maxrange;
 
     // Round appropriately.
-    return ((pow*(maxrange - minrange) + powercap/2) / powercap + minrange);
+    return ((pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
 int spell_noise(spell_type spell)

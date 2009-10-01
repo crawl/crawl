@@ -4287,10 +4287,13 @@ bool vehumet_supports_spell(spell_type spell)
 {
     if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
         return (true);
+
     if (spell == SPELL_SHATTER
-        || spell == SPELL_FRAGMENTATION 
+        || spell == SPELL_FRAGMENTATION
         || spell == SPELL_SANDBLAST)
+    {
         return (true);
+    }
 
     return (false);
 }
