@@ -437,7 +437,7 @@ ENDMAP
 #
 NAME:   bailey_axe_2
 ORIENT: encompass
-TAGS:   bailey_axe
+TAGS:   bailey_axe no_rotate
 MONS:   generate_awake kobold ; hand axe ego:returning /\
         generate_awake goblin ; hand axe ego:returning
 MONS:   gnoll ; halberd ego:reaching | halberd ego:electrocution
@@ -618,7 +618,7 @@ ENDMAP
 NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   bailey_polearm
+TAGS:   bailey_polearm no_rotate
 LFLAGS: no_tele_control
 NSUBST: D = 1:= / *:c
 NSUBST: E = 1:= / *:c
@@ -672,7 +672,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_2
 ORIENT: encompass
-TAGS:   bailey_polearm
+TAGS:   bailey_polearm no_rotate
 MONS:   orc warrior ; crossbow . bolt w:5 / orc ; crossbow . bolt
 : orc_with_reaching(_G)
 : orc_warrior_with_reaching(_G)
