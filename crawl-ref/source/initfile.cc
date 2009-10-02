@@ -3459,7 +3459,10 @@ std::string find_executable_path()
 #if defined ( _MSC_VER )
     GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
 #elif defined ( __linux__ )
-    readlink ( "/proc/self/exe", tempPath, sizeof(tempPath) );
+    const ssize_t rsize =
+        readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
+    if (rsize > 0)
+        tempPath[rsize] = 0;
 #elif defined ( __MACH__ )
     strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
 #else
