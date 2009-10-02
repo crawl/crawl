@@ -171,16 +171,18 @@ std::string &escape_path_spaces(std::string &s)
         s.find("\"") == std::string::npos)
     {
         result = "\"" + s + "\"";
-    } else {
+    }
+    else
+    {
         return s;
     }
 #else
-	// Not implemented for this platform. Assume that
-	// escaping isn't necessary.
-	return s;
+    // Not implemented for this platform.  Assume that escaping isn't
+    // necessary.
+    return s;
 #endif
     s = result;
-	return s;
+    return s;
 }
 
 std::string &uppercase(std::string &s)

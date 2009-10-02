@@ -3446,15 +3446,15 @@ bool arg_seen[num_cmd_ops];
 
 std::string find_executable_path()
 {
-	char tempPath[2048];
+    char tempPath[2048];
 
-	// A lot of OSes give ways to find the location of the running app's
-	// binary executable. This is useful, because argv[0] can be relative
-	// when we really need an absolute path in order to locate the game's
-	// resources.
+    // A lot of OSes give ways to find the location of the running app's
+    // binary executable. This is useful, because argv[0] can be relative
+    // when we really need an absolute path in order to locate the game's
+    // resources.
 
-	// Faster than a memset, and counts as a null-terminated string!
-	tempPath[0] = 0;
+    // Faster than a memset, and counts as a null-terminated string!
+    tempPath[0] = 0;
 
 #if defined ( _MSC_VER )
     GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
@@ -3463,21 +3463,21 @@ std::string find_executable_path()
 #elif defined ( __MACH__ )
     strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
 #else
-	// We don't know how to find the executable's path on this OS.
+    // We don't know how to find the executable's path on this OS.
 #endif
-	return std::string(tempPath);
+    return std::string(tempPath);
 }
 
 bool parse_args( int argc, char **argv, bool rc_only )
 {
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS, c1);
 
-	std::string exe_path = find_executable_path();
+    std::string exe_path = find_executable_path();
 
-	if (!exe_path.empty())
-		set_crawl_base_dir(exe_path.c_str());
-	else
-		set_crawl_base_dir(argv[0]);
+    if (!exe_path.empty())
+        set_crawl_base_dir(exe_path.c_str());
+    else
+        set_crawl_base_dir(argv[0]);
 
     SysEnv.rcdirs.clear();
 

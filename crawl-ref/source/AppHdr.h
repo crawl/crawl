@@ -339,10 +339,10 @@
 
 
 #ifdef USE_TILE
-	#ifdef __cplusplus
+    #ifdef __cplusplus
     #include "libgui.h"
     #include "tilesdl.h"
-	#endif
+    #endif
 #endif
 
 // =========================================================================

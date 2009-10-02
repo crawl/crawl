@@ -7081,7 +7081,7 @@ static bool _altar_prayer()
         }
 
         // Return early so we don't offer our Necronomicon to Kiku.
-	return (did_bless);
+        return (did_bless);
     }
 
     offer_items();
