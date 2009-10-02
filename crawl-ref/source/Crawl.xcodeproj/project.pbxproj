@@ -366,6 +366,8 @@
 		B032D705106C029D0002D70D /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
 		B032D706106C029D0002D70D /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
 		B032D707106C029D0002D70D /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
+		B07818DE1075D979008C3B64 /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = B07818DC1075D979008C3B64 /* sqldbm.cc */; };
+		B07818DF1075D979008C3B64 /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = B07818DC1075D979008C3B64 /* sqldbm.cc */; };
 		B082657810731AB5006EEC5A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B082657610731AB5006EEC5A /* sqlite3.c */; };
 		B082657910731B5B006EEC5A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B082657610731AB5006EEC5A /* sqlite3.c */; };
 		B090C2F210671F8900AE855D /* dngn.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EE10671F8900AE855D /* dngn.png */; };
@@ -838,6 +840,8 @@
 		B02C576010670ED2006AC96D /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
 		B02C57901067129A006AC96D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dungeon Crawl Stone Soup.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B07818DC1075D979008C3B64 /* sqldbm.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sqldbm.cc; sourceTree = "<group>"; };
+		B07818DD1075D979008C3B64 /* sqldbm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqldbm.h; sourceTree = "<group>"; };
 		B082656F10731A95006EEC5A /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSQLite.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B082657610731AB5006EEC5A /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = util/sqlite/sqlite3.c; sourceTree = "<group>"; };
 		B082657710731AB5006EEC5A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = util/sqlite/sqlite3.h; sourceTree = "<group>"; };
@@ -1065,6 +1069,8 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				B07818DC1075D979008C3B64 /* sqldbm.cc */,
+				B07818DD1075D979008C3B64 /* sqldbm.h */,
 				B0826648107333BB006EEC5A /* AppHdr.h */,
 				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
 				7B237E290A8EC9D000580F30 /* abl-show.h */,
@@ -1730,6 +1736,7 @@
 				D274AC550FE66EEC00C9C1AE /* crash-u.cc in Sources */,
 				D274AC5A0FE66EFC00C9C1AE /* spl-mis.cc in Sources */,
 				D2A72B2A101173C000E1A883 /* artefact.cc in Sources */,
+				B07818DF1075D979008C3B64 /* sqldbm.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1847,6 +1854,7 @@
 				B032D6FA106C02150002D70D /* artefact.cc in Sources */,
 				B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */,
 				B082657810731AB5006EEC5A /* sqlite3.c in Sources */,
+				B07818DE1075D979008C3B64 /* sqldbm.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1924,7 +1932,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OSX,
+					DEBUG,
+					FULLDEBUG,
+					DEBUG_ITEM_SCAN,
+					WIZARD,
+				);
 				GCC_VERSION_i386 = 4.0;
 				GCC_VERSION_ppc = 4.0;
 				GCC_VERSION_x86_64 = 4.2;
@@ -2047,6 +2062,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					DEBUG,
@@ -2183,6 +2199,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
 				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
 				GCC_VERSION_i386 = 4.0;
 				GCC_VERSION_ppc = 4.0;
@@ -2224,14 +2241,12 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
+					"$(inherited)",
 					USE_TILE,
 					CLUA_BINDINGS,
-					DB_NDBM,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
@@ -2259,10 +2274,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
+					"$(inherited)",
 					USE_TILE,
 					CLUA_BINDINGS,
-					DB_NDBM,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
@@ -2287,18 +2301,12 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
+					"$(inherited)",
 					USE_TILE,
 					CLUA_BINDINGS,
-					DB_NDBM,
-					WIZARD,
-					DEBUG,
-					DEBUG_ITEM_SCAN,
-					FULLDEBUG,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
@@ -2324,13 +2332,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
+					"$(inherited)",
 					USE_TILE,
 					CLUA_BINDINGS,
-					DB_NDBM,
-					WIZARD,
-					DEBUG,
-					DEBUG_ITEM_SCAN,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
