@@ -33,6 +33,14 @@
 # Individual spells.
 #####################################################
 %%%%
+Airstrike cast
+
+@The_monster@ waves @possessive@ @arms@ in wide circles.
+%%%%
+unseen Airstrike cast
+
+You hear blowing wind.
+%%%%
 unseen Animate Dead cast real
 
 You hear @something@ calling out to the dead.
