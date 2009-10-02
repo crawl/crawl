@@ -3126,7 +3126,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_YREDELEMNUL:
-            case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
+            case GOD_KIKUBAAQUDGHA:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -3161,7 +3161,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 break;
 
-            case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -3201,7 +3200,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_LIVING_KILLED_BY_SERVANT:
             switch (you.religion)
             {
-            case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
@@ -6914,9 +6912,9 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     {
         torment(TORMENT_GENERIC, you.pos());
 
-        // Bloodify surrounding squares.
+        // Bloodify surrounding squares (75% chance).
         for (radius_iterator ri(you.pos(), 2, true, true); ri; ++ri)
-            if (random2(4) != 2) // 75% of tiles will get bloodied
+            if (!is_bloodcovered(*ri) && !one_chance_in(4))
                 env.map(*ri).property |= FPROP_BLOODY;
     }
 
@@ -7032,7 +7030,7 @@ static bool _altar_prayer()
             did_bless = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
 
-    // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon
+    // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
     if (you.religion == GOD_KIKUBAAQUDGHA
         && !you.num_gifts[GOD_KIKUBAAQUDGHA]
         && !player_under_penance()
@@ -7052,21 +7050,23 @@ static bool _altar_prayer()
                 _bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED);
             did_bless = kiku_did_bless_weapon;
         }
-        else mpr("You have no weapon to bloody with pain.");
+        else
+            mpr("You have no weapon to bloody with pain.");
 
-        // If not, ask if the player wants a Necronomicon
+        // If not, ask if the player wants a Necronomicon.
         if (!kiku_did_bless_weapon)
         {
             if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
-                return(false);
+                return (false);
 
             int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
                                       MAKE_ITEM_RANDOM_RACE,
                                       0, 0, you.religion);
-            if (thing_created == NON_ITEM)
-                return(false);
 
-            move_item_to_grid( &thing_created, you.pos() );
+            if (thing_created == NON_ITEM)
+                return (false);
+
+            move_item_to_grid(&thing_created, you.pos());
 
             if (thing_created != NON_ITEM)
             {
@@ -7079,8 +7079,10 @@ static bool _altar_prayer()
                 mitm[thing_created].inscription = "god gift";
             }
         }
-	return(did_bless); // Return early so we don't offer our Necronomicon to Kiku
-    } // end kiku gifting
+
+        // Return early so we don't offer our Necronomicon to Kiku.
+	return (did_bless);
+    }
 
     offer_items();
 
@@ -7709,7 +7711,7 @@ bool god_likes_butchery(god_type god)
             || god == GOD_MAKHLEB
             || god == GOD_TROG
             || god == GOD_LUGONU
-            || (god == GOD_KIKUBAAQUDGHA && you.piety > 120));
+            || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4));
 }
 
 bool god_hates_butchery(god_type god)
@@ -8033,9 +8035,9 @@ int piety_breakpoint(int i)
 {
     int breakpoints[MAX_GOD_ABILITIES] = { 30, 50, 75, 100, 120 };
     if (i >= MAX_GOD_ABILITIES || i < 0)
-        return 255;
+        return (255);
     else
-        return breakpoints[i];
+        return (breakpoints[i]);
 }
 
 // Returns true if the Shining One doesn't mind your using unchivalric

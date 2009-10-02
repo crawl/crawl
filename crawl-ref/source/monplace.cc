@@ -1292,28 +1292,27 @@ static monster_type _pick_random_zombie()
 
 monster_type pick_local_zombifiable_monster_type(int power)
 {
-    // Generates a dummy zombie likely to be found
+    // Generates a dummy zombie likely to be found.
     // Ripped wholly from _define_zombie().
 
     power = std::min(27, power);
     // How OOD this zombie can be.
     int relax = 5;
 
-    // Pick an appropriate creature to make a zombie out of,
-    // levelwise.  The old code was generating absolutely
-    // incredible OOD zombies.
+    // Pick an appropriate creature to make a zombie out of, levelwise.
+    // The old code was generating absolutely incredible OOD zombies.
     int cls;
     while (true)
     {
         cls = _pick_random_zombie();
 
         bool ignore_rarity = false;
-        // On certain branches, zombie creation will fail if we use
-        // the mons_rarity() functions, because (for example) there
-        // are NO zombifiable "native" abyss creatures. Other branches
-        // where this is a problem are hell levels and the crypt.
-        // we have to watch for summoned zombies on other levels, too,
-        // such as the Temple, HoB, and Slime Pits.
+        // On certain branches, zombie creation will fail if we use the
+        // mons_rarity() functions, because (for example) there are NO
+        // zombifiable "native" abyss creatures.  Other branches where
+        // this is a problem are Hell levels and the Crypt.  We have to
+        // watch for summoned zombies on other levels, too, such as the
+        // Temple, the Hall of Blades and the Slime Pits.
         if (you.level_type != LEVEL_DUNGEON
             || player_in_hell()
             || player_in_branch(BRANCH_HALL_OF_ZOT)
@@ -1333,7 +1332,7 @@ monster_type pick_local_zombifiable_monster_type(int power)
         if (!ignore_rarity && mons_rarity(cls) == 0)
             continue;
 
-        // Check for rarity.. and OOD - identical to mons_place()
+        // Check for rarity.. and OOD - identical to mons_place().
         int level, diff, chance;
 
         level = mons_level(cls) - 4;
@@ -1348,9 +1347,9 @@ monster_type pick_local_zombifiable_monster_type(int power)
             break;
         }
 
-        // Every so often, we'll relax the OOD restrictions.  Avoids
-        // infinite loops (if we don't do this, things like creating
-        // a large skeleton on level 1 may hang the game!).
+        // Every so often, we'll relax the OOD restrictions.  This
+        // avoids infinite loops.  If we don't do this, things like
+        // creating a large skeleton on level 1 may hang the game!
         if (one_chance_in(5))
             relax++;
     }

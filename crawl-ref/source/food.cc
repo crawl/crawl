@@ -364,9 +364,9 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
     {
         start_delay(DELAY_OFFER_CORPSE, 0, corpse_id);
 
-        // Kiku torments if you butcher a corpse while praying
-        bool kiku_torments = (you.religion == GOD_KIKUBAAQUDGHA && you.piety > 120);
-        if (kiku_torments)
+        // Kiku torments if you butcher a corpse while praying.
+        if (you.religion == GOD_KIKUBAAQUDGHA
+            && you.piety >= piety_breakpoint(4)))
         {
             simple_god_message(" inflicts torment against the living!");
             torment(TORMENT_GENERIC, you.pos());
