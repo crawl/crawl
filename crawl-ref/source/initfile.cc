@@ -3452,21 +3452,16 @@ std::string find_executable_path()
 	tempPath[0] = 0;
 
 #if defined ( _MSC_VER )
-
-    int retval = GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
-
+    GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
 #elif defined ( __linux__ )
-
-    int retval = readlink ( "/proc/self/exe", tempPath, sizeof(tempPath) );
-
+    const ssize_t rsize =
+        readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
+    if (rsize > 0)
+        tempPath[rsize] = 0;
 #elif defined ( __MACH__ )
-
     strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
-
 #else
-
 	// We don't know how to find the executable's path on this OS.
-
 #endif
 
 	return std::string(tempPath);
