@@ -7711,11 +7711,7 @@ bool god_likes_butchery(god_type god)
             || god == GOD_MAKHLEB
             || god == GOD_TROG
             || god == GOD_LUGONU
-<<<<<<< HEAD
             || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
-=======
-            || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4));
->>>>>>> 38a99d5fb299818a3fa0dc79c9ddc5d0379aeb0a
 }
 
 bool god_hates_butchery(god_type god)
