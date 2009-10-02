@@ -2844,7 +2844,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
 
     if (!mons_has_blood(corpse.plus))
     {
-        mpr( "There is no blood in this body!" );
+        mpr("There is no blood in this body!");
         return (false);
     }
 
@@ -2857,13 +2857,14 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     // The delay for eating a chunk (mass 1000) is 2
     // Here the base nutrition value equals that of chunks,
     // but the delay should be smaller.
-    const int max_chunks = mons_weight(corpse.plus)/150;
-    int duration = 1 + max_chunks/3;
-        duration = stepdown_value( duration, 6, 6, 12, 12 );
+    const int max_chunks = mons_weight(corpse.plus) / 150;
+    int duration = 1 + max_chunks / 3;
+    duration = stepdown_value(duration, 6, 6, 12, 12);
 
     // Get some nutrition right away, in case we're interrupted.
     // (-1 for the starting message.)
     vampire_nutrition_per_turn(corpse, -1);
+
     // The draining delay doesn't have a start action, and we only need
     // the continue/finish messages if it takes longer than 1 turn.
     start_delay(DELAY_FEED_VAMPIRE, duration, (int)invent, slot);
