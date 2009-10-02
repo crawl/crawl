@@ -1006,7 +1006,7 @@ void TilesFramework::do_layout()
     crawl_view.viewsz.y = Options.view_max_height;
     crawl_view.msgsz.x  = crt_width;
     // What *does* msgsz.y get set to? (jpeg)
-    crawl_view.msgsz.y  = crt_height - crawl_view.viewsz.y;
+    crawl_view.msgsz.y  = std::max(5, crt_height - crawl_view.viewsz.y);
 
     // Initial sizes.
     m_region_tile->dx = m_viewsc.x;
