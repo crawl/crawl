@@ -1321,6 +1321,7 @@ public:
 
     // Has a hydra-like variable number of attacks based on mons->number.
     bool has_hydra_multi_attack() const;
+    bool has_multitargeting() const;
 
     bool has_ench(enchant_type ench) const;
     bool has_ench(enchant_type ench, enchant_type ench2) const;

@@ -6566,6 +6566,17 @@ bool monsters::has_hydra_multi_attack() const
             || mons_is_zombified(this) && base_monster == MONS_HYDRA);
 }
 
+bool monsters::has_multitargeting() const
+{
+    // Hacky little list for now. evk
+    return (mons_species() == MONS_HYDRA
+            || mons_species() == MONS_ETTIN
+            || mons_species() == MONS_TWO_HEADED_OGRE
+            || mons_species() == MONS_DEEP_ELF_BLADEMASTER
+            || mons_species() == MONS_TENTACLED_MONSTROSITY
+            || mons_species() == MONS_ELECTRIC_GOLEM);
+}
+
 bool monsters::has_ench(enchant_type ench) const
 {
     return (enchantments.find(ench) != enchantments.end());

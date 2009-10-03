@@ -4965,7 +4965,7 @@ void melee_attack::mons_perform_attack_rounds()
         if (!defender->alive() || defender->pos() != pos)
         {
             if (attacker == defender
-               || !attacker_as_monster()->has_hydra_multi_attack())
+               || !attacker_as_monster()->has_multitargeting())
             {
                 break;
             }
