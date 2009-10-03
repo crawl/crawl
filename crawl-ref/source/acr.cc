@@ -2018,6 +2018,7 @@ static void _prep_input()
 }
 
 // Decrement a single duration. Print the message if the duration runs out.
+// Returns true if the duration ended.
 // At midpoint (defined by get_expiration_threshold() in player.cc)
 // print midmsg and decrease duration by midloss (a randomised amount so as
 // to make it impossible to know the exact remaining duration for sure).
@@ -2031,34 +2032,25 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
     if (you.duration[dur] < 1)
         return (false);
 
-    bool rc = false;
     const int midpoint = get_expiration_threshold(dur);
 
-    if (you.duration[dur] > 1)
+    you.duration[dur]--;
+    if (you.duration[dur] == midpoint)
     {
-        you.duration[dur]--;
-        if (you.duration[dur] == midpoint)
-        {
-            if (midmsg)
-                mpr(midmsg, chan);
-
-            you.duration[dur] -= midloss;
-        }
+        if (midmsg)
+            mpr(midmsg, chan);
+        you.duration[dur] -= midloss;
     }
 
-    // No "else", in case midloss caused the duration to end prematurely.
-    // (This really shouldn't happen, else the whole point of the
-    //  "begins to time out" message is lost!)
-    if (you.duration[dur] <= 1)
+    // allow fall-through in case midloss ended the duration (it shouldn't)
+    if (you.duration[dur] == 0)
     {
         if (endmsg)
             mpr(endmsg, chan);
-
-        rc = true;
-        you.duration[dur] = 0;
+        return true;
     }
 
-    return rc;
+    return false;
 }
 
 //  Perhaps we should write functions like: update_liquid_flames(), etc.
