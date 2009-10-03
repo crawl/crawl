@@ -64,6 +64,16 @@ function TollStair:property(marker, pname)
   return self.super.property(self, marker, pname)
 end
 
+function TollStair:feature_description_long(marker)
+  local desc = self:unmangle(self.props.desc_long)
+  if desc then
+    desc = desc .. "\n\n"
+  else
+    desc = ""
+  end
+  return desc .. "The portal charges " .. self.props.amount .. " for entry.\n"
+end
+
 function TollStair:read(marker, th)
   TollStair.super.read(self, marker, th)
   setmetatable(self, TollStair)
