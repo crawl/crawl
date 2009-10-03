@@ -5544,6 +5544,7 @@ static inline int player_weapon_dex_weight( void )
     return (10 - player_weapon_str_weight());
 }
 
+// weighted average of strength and dex, between (str+dex)/2 and dex
 static inline int calc_stat_to_hit_base( void )
 {
 #ifdef USE_NEW_COMBAT_STATS
@@ -5562,7 +5563,7 @@ static inline int calc_stat_to_hit_base( void )
 #endif
 }
 
-
+// weighted average of strength and dex, between str and (str+dex)/2
 static inline int calc_stat_to_dam_base( void )
 {
 #ifdef USE_NEW_COMBAT_STATS
