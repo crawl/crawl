@@ -6568,13 +6568,20 @@ bool monsters::has_hydra_multi_attack() const
 
 bool monsters::has_multitargeting() const
 {
+    if (has_hydra_multi_attack())
+        return (true);
+
+    if (mons_wields_two_weapons(this))
+        return (true);
+
     // Hacky little list for now. evk
-    return (mons_species() == MONS_HYDRA
-            || mons_species() == MONS_ETTIN
-            || mons_species() == MONS_TWO_HEADED_OGRE
-            || mons_species() == MONS_DEEP_ELF_BLADEMASTER
-            || mons_species() == MONS_TENTACLED_MONSTROSITY
-            || mons_species() == MONS_ELECTRIC_GOLEM);
+    if (mons_species() == MONS_TENTACLED_MONSTROSITY
+        || mons_species() == MONS_ELECTRIC_GOLEM)
+    {
+        return (true);
+    }
+
+    return (false);
 }
 
 bool monsters::has_ench(enchant_type ench) const
