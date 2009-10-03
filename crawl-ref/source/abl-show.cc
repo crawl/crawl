@@ -75,7 +75,8 @@ enum ability_flag_type
     ABFLAG_INSTANT      = 0x00000020, // doesn't take time to use
     ABFLAG_PERMANENT_HP = 0x00000040, // costs permanent HPs
     ABFLAG_PERMANENT_MP = 0x00000080, // costs permanent MPs
-    ABFLAG_CONF_OK      = 0x00000100  // can use even if confused
+    ABFLAG_CONF_OK      = 0x00000100, // can use even if confused
+    ABFLAG_FRUIT        = 0x00000200  // ability requires fruit
 };
 
 static void _lugonu_bends_space();
@@ -332,10 +333,10 @@ static const ability_def Ability_List[] =
     { ABIL_FEAWN_PLANTWALK, "Plant Walking", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_FEAWN_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_FEAWN_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_FEAWN_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_NONE},
+    { ABIL_FEAWN_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_FRUIT},
     { ABIL_FEAWN_RAIN, "Rain", 4, 0, 100, 2, ABFLAG_NONE},
     { ABIL_FEAWN_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
-    { ABIL_FEAWN_EVOLUTION, "Evolution", 4, 0, 50, 2, ABFLAG_NONE},
+    { ABIL_FEAWN_EVOLUTION, "Evolution", 4, 0, 0, 2, ABFLAG_FRUIT},
 
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
@@ -479,6 +480,13 @@ const std::string make_cost_description(ability_type ability)
             ret << ", ";
 
         ret << "Instant"; // not really a cost, more of a bonus -bwr
+    }
+    if (abil.flags & ABFLAG_FRUIT)
+    {
+        if(!ret.str().empty())
+            ret << ", ";
+
+        ret << "Fruit";
     }
 
     // If we haven't output anything so far, then the effect has no cost
@@ -1968,7 +1976,12 @@ static bool _do_ability(const ability_def& abil)
         //  where level = 10
         // so the chance of gaining 1 piety from a corpse sacrifice to a blood
         // god is (14/20 == 70/100)
-        int piety_gain = binomial_generator(count, 70);
+        //
+        // Doubling the expected value per sacrifice to approximate the
+        // extra piety gain blood god worshipers get for the initial kill.
+        // -cao
+
+        int piety_gain = binomial_generator(count*2, 70);
         gain_piety(piety_gain);
         break;
     }
