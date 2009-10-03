@@ -87,7 +87,6 @@ public:
 
     int       to_hit;
     int       base_damage;
-    int       potential_damage;
     int       damage_done;
     int       special_damage;
     int       aux_damage;
