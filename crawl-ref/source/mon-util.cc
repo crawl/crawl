@@ -6568,14 +6568,12 @@ bool monsters::has_hydra_multi_attack() const
 
 bool monsters::has_multitargeting() const
 {
-    if (has_hydra_multi_attack())
-        return (true);
-
-    if (mons_wields_two_weapons(this))
+    if (mons_class_wields_two_weapons(type))
         return (true);
 
     // Hacky little list for now. evk
-    return (type == MONS_TENTACLED_MONSTROSITY
+    return (type == MONS_HYDRA
+            || type == MONS_TENTACLED_MONSTROSITY
             || type == MONS_ELECTRIC_GOLEM);
 }
 
