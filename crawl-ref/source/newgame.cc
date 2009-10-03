@@ -1579,11 +1579,9 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_VAMPIRE:
             return (CC_BANNED);
         case SP_DEEP_ELF:
-        case SP_MERFOLK:
         case SP_HALFLING:
         case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_TROLL:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
@@ -5278,9 +5276,8 @@ bool _give_items_skills()
             _newgame_clear_item(0);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
-                              ARM_ROBE);
-        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
-                              ARM_BUCKLER);
+                           ARM_ROBE);
+        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
@@ -5301,11 +5298,10 @@ bool _give_items_skills()
         if (!_choose_weapon())
             return (false);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                              ARM_LEATHER_ARMOUR, ARM_ANIMAL_SKIN);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                           ARM_ANIMAL_SKIN);
 
-        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
-                              ARM_BUCKLER);
+        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
 
         int curr = 3;
         if (you_can_wear(EQ_HELMET))
@@ -5316,9 +5312,7 @@ bool _give_items_skills()
 
         // Small races get stones, the others nets.
         if (player_size(PSIZE_BODY) < SIZE_MEDIUM)
-        {
             _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
-        }
         else
         {
             _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
@@ -5340,10 +5334,10 @@ bool _give_items_skills()
 
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        you.skills[SK_FIGHTING] = 3;
+        you.skills[SK_FIGHTING]       = 3;
         you.skills[SK_UNARMED_COMBAT] = 4;
-        you.skills[SK_DODGING] = 3;
-        you.skills[SK_STEALTH] = 2;
+        you.skills[SK_DODGING]        = 3;
+        you.skills[SK_STEALTH]        = 2;
         break;
 
     case JOB_BERSERKER:
@@ -5380,14 +5374,14 @@ bool _give_items_skills()
         // Equipment.
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_RING_MAIL,
-                              ARM_ROBE);
+                           ARM_ROBE);
         _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
         _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
 
         // Skills.
         you.skills[(player_light_armour() ? SK_DODGING : SK_ARMOUR)] = 2;
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_SHIELDS]  = 2;
+        you.skills[SK_FIGHTING]    = 2;
+        you.skills[SK_SHIELDS]     = 2;
         you.skills[SK_LONG_BLADES] = 3;
         you.skills[SK_INVOCATIONS] = 2;
         break;
@@ -5410,7 +5404,7 @@ bool _give_items_skills()
                 Options.priest = GOD_NO_GOD;
 
             if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
-                ng_pr = you.religion = static_cast<god_type>( Options.priest );
+                ng_pr = you.religion = static_cast<god_type>(Options.priest);
             else if (Options.random_pick || Options.priest == GOD_RANDOM)
             {
                 bool did_chose = false;
@@ -5580,8 +5574,8 @@ bool _give_items_skills()
 
     case JOB_CHAOS_KNIGHT:
     {
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1,
-                           1, 2);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
+                           2);
 
         if (!_choose_weapon())
             return (false);
@@ -5744,8 +5738,11 @@ bool _give_items_skills()
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
-        if (species_skills( SK_ARMOUR, you.species ) > species_skills( SK_DODGING, you.species ))
+        if (species_skills(SK_ARMOUR, you.species) >
+            species_skills(SK_DODGING, you.species))
+        {
             you.skills[SK_DODGING]++;
+        }
         else
             you.skills[SK_ARMOUR]++;
         weap_skill = 2;
@@ -5948,15 +5945,16 @@ bool _give_items_skills()
         you.religion = GOD_ELYVILON;
         you.piety = 55;
 
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
-        _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
+        you.equip[EQ_WEAPON] = -1; // Healers fight unarmed.
 
-        you.skills[SK_FIGHTING]    = 2;
-        you.skills[SK_STAVES]      = 3;
-        you.skills[SK_DODGING]     = 1;
-        you.skills[SK_INVOCATIONS] = 4;
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
+
+        you.skills[SK_FIGHTING]       = 2;
+        you.skills[SK_UNARMED_COMBAT] = 3;
+        you.skills[SK_DODGING]        = 1;
+        you.skills[SK_INVOCATIONS]    = 4;
         break;
 
     case JOB_CRUSADER:
@@ -5969,7 +5967,7 @@ bool _give_items_skills()
             _newgame_clear_item(0);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ROBE);
+                           ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
 
         you.skills[SK_FIGHTING]     = 3;
@@ -5982,6 +5980,7 @@ bool _give_items_skills()
 
     case JOB_REAVER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+
         if (!_choose_weapon())
             return (false);
 
@@ -5989,9 +5988,9 @@ bool _give_items_skills()
             _newgame_clear_item(0);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ROBE);
+                           ARM_ROBE);
 
-        if (!_choose_book(2, BOOK_CONJURATIONS_I, 2 ))
+        if (!_choose_book(2, BOOK_CONJURATIONS_I, 2))
             return (false);
 
         you.skills[SK_FIGHTING]     = 2;
@@ -6004,6 +6003,7 @@ bool _give_items_skills()
 
     case JOB_WARPER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+
         if (!_choose_weapon())
             return (false);
 
@@ -6031,11 +6031,11 @@ bool _give_items_skills()
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
 
-        if (!_choose_book(2, BOOK_MINOR_MAGIC_I, 3 ))
+        if (!_choose_book(2, BOOK_MINOR_MAGIC_I, 3))
             return (false);
 
-        you.skills[SK_DODGING] = 2;
-        you.skills[SK_STEALTH] = 2;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_STEALTH]        = 2;
         you.skills[SK_SPELLCASTING]   = 3;
         // All three starting books contain Translocations spells.
         you.skills[SK_TRANSLOCATIONS] = 1;
@@ -6061,7 +6061,7 @@ bool _give_items_skills()
     case JOB_CONJURER:
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        if (!_choose_book(1, BOOK_CONJURATIONS_I, 2 ))
+        if (!_choose_book(1, BOOK_CONJURATIONS_I, 2))
             return (false);
 
         you.skills[SK_CONJURATIONS] = 4;
@@ -6071,16 +6071,14 @@ bool _give_items_skills()
         break;
 
     case JOB_ENCHANTER:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1,
-                              1, 1, 1);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1,
+                           1);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
-                              1, 1);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
 
         // Gets some darts - this class is difficult to start off with.
-        _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                              16, 1);
+        _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
 
         // Spriggans used to get a rod of striking, but now that anyone
         // can get one when playing an Artificer, this is no longer
@@ -6117,7 +6115,7 @@ bool _give_items_skills()
         break;
 
     case JOB_TRANSMUTER:
-        you.equip[EQ_WEAPON] = -1;
+        you.equip[EQ_WEAPON] = -1; // Transmuters fight unarmed.
 
         // Some sticks for sticks to snakes.
         _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 12);
@@ -6125,7 +6123,7 @@ bool _give_items_skills()
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
         // A little bit of starting ammo for evaporate... don't need too
-        // much now that the character can make their own. -- bwr
+        // much now that the character can make their own. - bwr
         _newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
         _newgame_make_item(5, EQ_NONE, OBJ_POTIONS, POT_POISON);
 
@@ -6198,18 +6196,17 @@ bool _give_items_skills()
         break;
 
     case JOB_STALKER:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
-                           1, 2, 2);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 2, 2);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
-        you.skills[SK_FIGHTING] = 1;
+        you.skills[SK_FIGHTING]     = 1;
         you.skills[SK_SHORT_BLADES] = 1;
         you.skills[SK_POISON_MAGIC] = 1;
-        you.skills[SK_DODGING]  = 2;
-        you.skills[SK_STEALTH]  = 2;
-        you.skills[SK_STABBING] = 2;
+        you.skills[SK_DODGING]      = 2;
+        you.skills[SK_STEALTH]      = 2;
+        you.skills[SK_STABBING]     = 2;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_ENCHANTMENTS] = 1;
         break;
@@ -6239,11 +6236,12 @@ bool _give_items_skills()
         break;
 
     case JOB_ASSASSIN:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
-                           1, 2, 2);
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 2, 2);
         _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
+
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+
         _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 10);
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
         _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 3);
@@ -6284,18 +6282,21 @@ bool _give_items_skills()
         case SP_HILL_ORC:
         case SP_MERFOLK:
             _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                               2);
             break;
         case SP_TROLL:
         case SP_OGRE:
             _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                               3);
             break;
 
         case SP_HALFLING:
         case SP_KOBOLD:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 30);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
+                               30);
 
             // Wield the sling instead.
             you.equip[EQ_WEAPON] = 1;
@@ -6320,7 +6321,7 @@ bool _give_items_skills()
         }
 
         _newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ANIMAL_SKIN);
+                           ARM_ANIMAL_SKIN);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -6342,7 +6343,7 @@ bool _give_items_skills()
         // Equipment. Dagger, and armour or robe.
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                              ARM_LEATHER_ARMOUR, ARM_ROBE);
+                           ARM_LEATHER_ARMOUR, ARM_ROBE);
 
         // Choice of lesser wands, 15 charges plus wand of random
         // effects: confusion, enslavement, slowing, magic dart, frost,
