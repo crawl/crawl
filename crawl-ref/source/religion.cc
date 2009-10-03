@@ -2166,7 +2166,7 @@ static void _do_god_gift(bool prayed_for)
             }
             break;
 
-       case GOD_JIYVA:
+        case GOD_JIYVA:
             if (prayed_for && jiyva_grant_jelly())
             {
                 int jelly_count = 0;
@@ -2211,26 +2211,38 @@ static void _do_god_gift(bool prayed_for)
             }
             break;
 
+        case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
-            if (you.piety > 160 && random2(you.piety) > 100)
+
+            unsigned int gift = NUM_BOOKS;
+
+            // Kikubaaqudgha gives the lesser Necromancy books in a quick
+            // succession.
+            if (you.religion == GOD_KIKUBAAQUDGHA)
             {
-                unsigned int gift = NUM_BOOKS;
-
-                switch (you.religion)
+                if (you.piety >= piety_breakpoint(0)
+                    && !you.had_book[BOOK_NECROMANCY])
+                    gift = BOOK_NECROMANCY;
+                else if (you.piety >= piety_breakpoint(2)
+                    && !you.had_book[BOOK_DEATH])
+                    gift = BOOK_DEATH;
+                else if (you.piety >= piety_breakpoint(3)
+                    && !you.had_book[BOOK_UNLIFE])
+                    gift = BOOK_UNLIFE;
+            }
+            else if (you.piety > 160 && random2(you.piety) > 100)
+            {
+                if (you.religion == GOD_SIF_MUNA)
+                    gift = OBJ_RANDOM;
+                else if (you.religion == GOD_VEHUMET)
                 {
-                case GOD_SIF_MUNA:
-                    gift = OBJ_RANDOM;      // Sif Muna - gives any
-                    break;
-
-                // Vehumet - gives conj/summ. books (higher skill first)
-                case GOD_VEHUMET:
                     if (!you.had_book[BOOK_CONJURATIONS_I])
                         gift = give_first_conjuration_book();
                     else if (!you.had_book[BOOK_POWER])
                         gift = BOOK_POWER;
                     else if (!you.had_book[BOOK_ANNIHILATIONS])
-                        gift = BOOK_ANNIHILATIONS;  // conj books
+                        gift = BOOK_ANNIHILATIONS;  // Conjuration books.
 
                     if (you.skills[SK_CONJURATIONS] < you.skills[SK_SUMMONINGS]
                         || gift == NUM_BOOKS)
@@ -2240,57 +2252,60 @@ static void _do_god_gift(bool prayed_for)
                         else if (!you.had_book[BOOK_SUMMONINGS])
                             gift = BOOK_SUMMONINGS;
                         else if (!you.had_book[BOOK_DEMONOLOGY])
-                            gift = BOOK_DEMONOLOGY; // summoning bks
+                            gift = BOOK_DEMONOLOGY; // Summoning books.
                     }
-                    break;
-                default:
-                    break;
+                }
+            }
+
+            if (gift != NUM_BOOKS
+                && !grid_destroys_items(grd(you.pos())))
+            {
+                if (gift == OBJ_RANDOM)
+                {
+                    // Sif Muna special: Keep quiet if acquirement fails
+                    // because the player already has seen all spells.
+                    success = acquirement(OBJ_BOOKS, you.religion, true);
+                }
+                else
+                {
+                    int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
+                                              MAKE_ITEM_RANDOM_RACE,
+                                              0, 0, you.religion);
+                    if (thing_created == NON_ITEM)
+                        return;
+
+                    move_item_to_grid( &thing_created, you.pos() );
+
+                    if (thing_created != NON_ITEM)
+                    {
+                        success = true;
+                        mitm[thing_created].inscription = "god gift";
+                    }
                 }
 
-                if (gift != NUM_BOOKS
-                    && !grid_destroys_items(grd(you.pos())))
+                if (success)
                 {
-                    if (gift == OBJ_RANDOM)
+                    simple_god_message(" grants you a gift!");
+                    more();
+
+                    // HACK: you.num_gifts keeps track of Necronomicon
+                    // and weapon blessing for Kiku, so don't increase
+                    // it. Also, timeouts are meaningles for Kiku. evk
+                    if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
-                        // Sif Muna special: Keep quiet if acquirement fails
-                        // because the player already has seen all spells.
-                        success = acquirement(OBJ_BOOKS, you.religion, true);
-                    }
-                    else
-                    {
-                        int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
-                                                  MAKE_ITEM_RANDOM_RACE,
-                                                  0, 0, you.religion);
-                        if (thing_created == NON_ITEM)
-                            return;
-
-                        move_item_to_grid( &thing_created, you.pos() );
-
-                        if (thing_created != NON_ITEM)
-                        {
-                            success = true;
-                            mitm[thing_created].inscription = "god gift";
-                        }
-                    }
-
-                    if (success)
-                    {
-                        simple_god_message(" grants you a gift!");
-                        more();
-
                         _inc_gift_timeout(40 + random2avg(19, 2));
                         you.num_gifts[you.religion]++;
-                        take_note(Note(NOTE_GOD_GIFT, you.religion));
                     }
+                    take_note(Note(NOTE_GOD_GIFT, you.religion));
+                }
 
-                    // Vehumet gives books less readily
-                    if (you.religion == GOD_VEHUMET && success)
-                        _inc_gift_timeout(10 + random2(10));
-                }                   // end of giving book
-            }                       // end of book gods
-            break;
-        }
-    }                           // end of gift giving
+                // Vehumet gives books less readily
+                if (you.religion == GOD_VEHUMET && success)
+                    _inc_gift_timeout(10 + random2(10));
+            }                   // End of giving books.
+            break;              // End of book gods.
+        }                       // switch (you.religion)
+    }                           // End of gift giving.
 
 #if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
     if (old_gifts < you.num_gifts[you.religion])
