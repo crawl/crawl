@@ -6575,13 +6575,8 @@ bool monsters::has_multitargeting() const
         return (true);
 
     // Hacky little list for now. evk
-    if (mons_species() == MONS_TENTACLED_MONSTROSITY
-        || mons_species() == MONS_ELECTRIC_GOLEM)
-    {
-        return (true);
-    }
-
-    return (false);
+    return (type == MONS_TENTACLED_MONSTROSITY
+            || type == MONS_ELECTRIC_GOLEM);
 }
 
 bool monsters::has_ench(enchant_type ench) const
