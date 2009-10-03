@@ -30,6 +30,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed insane damage dealt by Pain card.
 * Fixed clawed butchering both removing gloves and unwielding weapon.
 * Fixed submerged shapeshifters not unsubmerging properly.
+* Removed entry vaults with lethal fog generators for now.
 
 Stone Soup 0.5.1 (20090728)
 ---------------------------
