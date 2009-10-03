@@ -576,6 +576,8 @@ void in_a_cloud()
         if (1 + random2(27) >= you.experience_level)
         {
             mpr("You choke on the stench!");
+            // effectively one or two turns, since it will be
+            // decremented right away
             confuse_player( (coinflip() ? 3 : 2) );
         }
         break;
