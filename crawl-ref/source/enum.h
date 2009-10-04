@@ -1256,34 +1256,37 @@ enum duration_type
 
 // This list must match the enchant_names array in mon-util.cc or Crawl
 // will CRASH, we kid you not.
+// Enchantments that imply other enchantments should come first
+// to avoid timeout message confusion. Currently:
+//     berserk -> haste, might; fatigue -> slow
 enum enchant_type
 {
     ENCH_NONE = 0,                     //    0
-    ENCH_SLOW,
+    ENCH_BERSERK,
     ENCH_HASTE,
     ENCH_MIGHT,
+    ENCH_FATIGUE,        // Post-berserk fatigue.
+    ENCH_SLOW,                         //    5
     ENCH_FEAR,
-    ENCH_CONFUSION,                    //    5
+    ENCH_CONFUSION,
     ENCH_INVIS,
     ENCH_POISON,
-    ENCH_BERSERK,
-    ENCH_ROT,
-    ENCH_SUMMON,                       //   10
+    ENCH_ROT,                          //   10
+    ENCH_SUMMON,
     ENCH_ABJ,
     ENCH_BACKLIGHT,
     ENCH_CHARM,
-    ENCH_STICKY_FLAME,
-    ENCH_GLOWING_SHAPESHIFTER,         //   15
+    ENCH_STICKY_FLAME,                 //   15
+    ENCH_GLOWING_SHAPESHIFTER,
     ENCH_SHAPESHIFTER,
     ENCH_TP,
     ENCH_SLEEP_WARY,
-    ENCH_SUBMERGED,
-    ENCH_SHORT_LIVED,                  //   20
+    ENCH_SUBMERGED,                    //   20
+    ENCH_SHORT_LIVED,
     ENCH_PARALYSIS,
     ENCH_SICK,
-    ENCH_SLEEPY,         // Monster can't wake until this wears off.
-    ENCH_FATIGUE,        // Post-berserk fatigue.
-    ENCH_HELD,           // 25 -- Caught in a net.
+    ENCH_SLEEPY,         //   Monster can't wake until this wears off.
+    ENCH_HELD,           //   25 -- Caught in a net.
     ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy
     ENCH_NEUTRAL,
     ENCH_PETRIFYING,

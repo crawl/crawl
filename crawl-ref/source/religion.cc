@@ -8176,7 +8176,11 @@ int get_tension(god_type god, bool count_travelling)
         }
 
         if (mons->has_ench(ENCH_BERSERK))
-            exper *= 2;
+        {
+            // in addition to haste and might bonuses above
+            exper *= 3;
+            exper /= 2;
+        }
 
         total += exper;
     }
