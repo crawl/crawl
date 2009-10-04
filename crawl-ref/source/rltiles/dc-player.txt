@@ -779,6 +779,7 @@ pj PJ
 %parts_ctg HELM
 %sdir player/head
 
+bear BEAR
 cone_blue HAT_OFS
 cone_red CORN_RED
 straw STRAW

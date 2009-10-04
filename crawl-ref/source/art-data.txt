@@ -767,6 +767,18 @@ METAB:   1
 BOOL:    elec, seeinv
 DESC:    A large crown of dull bronze, set with a dazzling array of gemstones.
 
+NAME:     hat of the Bear Spirit
+APPEAR:   fur hat
+OBJ:      OBJ_ARMOUR/ARM_CAP
+PLUS:     +2
+COLOUR:   DARKGREY
+TILE:     urand_bear
+TILE_EQ:  bear
+BOOL:     life, berserk, spirit
+MAGIC:    50
+DESC_END: Once owned by Ukta, a powerful ogre shaman, this fur hat houses
+          the spirit of an especially mighty bear.
+
 NAME:     robe of Misfortune
 APPEAR:   fabulously ornate robe
 OBJ:      OBJ_ARMOUR/ARM_ROBE
