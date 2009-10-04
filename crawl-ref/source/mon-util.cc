@@ -6910,6 +6910,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         break;
 
+    case ENCH_MIGHT:
+        if (!quiet)
+            simple_monster_message(this, " no longer looks unusually strong.");
+        break;
+
     case ENCH_SLOW:
         if (!quiet)
             simple_monster_message(this, " is no longer moving slowly.");
@@ -7214,7 +7219,7 @@ void monsters::timeout_enchantments(int levels)
         {
         case ENCH_POISON: case ENCH_ROT: case ENCH_BACKLIGHT:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
-        case ENCH_SLOW:  case ENCH_HASTE:  case ENCH_FEAR:
+        case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED:
@@ -7349,6 +7354,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SLOW:
     case ENCH_HASTE:
+    case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
     case ENCH_NEUTRAL:
@@ -8302,6 +8308,7 @@ bool monsters::can_drink_potion(potion_type ptype) const
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
         case POT_SPEED:
+        case POT_MIGHT:
         case POT_INVISIBILITY:
             // If there are any item using monsters that are permanently
             // invisible, this might have to be restricted.
@@ -8330,6 +8337,8 @@ bool monsters::should_drink_potion(potion_type ptype) const
         return (hit_points <= max_hit_points / 2);
     case POT_SPEED:
         return (!has_ench(ENCH_HASTE));
+    case POT_MIGHT:
+        return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
@@ -8389,6 +8398,11 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
 
     case POT_INVISIBILITY:
         if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+            ident = ID_KNOWN_TYPE;
+        break;
+
+    case POT_MIGHT:
+        if (enchant_monster_with_flavour(this, this, BEAM_MIGHT))
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -8472,7 +8486,7 @@ void monsters::react_to_damage(int damage, beam_type flavour)
 
 static const char *enchant_names[] =
 {
-    "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
+    "none", "slow", "haste", "might", "fear", "conf", "inv", "pois", "bers",
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
@@ -8578,8 +8592,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     switch (ench)
     {
     case ENCH_HASTE:
-        cturn = 1000 / _mod_speed(25, mons->speed);
-        break;
+    case ENCH_MIGHT:
     case ENCH_INVIS:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;

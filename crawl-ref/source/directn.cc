@@ -3000,7 +3000,8 @@ static std::string _describe_mons_enchantment(const monsters &mons,
         return "";
     }
 
-    if ((ench.ench == ENCH_HASTE || ench.ench == ENCH_BATTLE_FRENZY)
+    if ((ench.ench == ENCH_HASTE || ench.ench == ENCH_BATTLE_FRENZY
+         || ench.ench == ENCH_MIGHT)
         && mons.has_ench(ENCH_BERSERK))
     {
         return "";
@@ -3025,6 +3026,7 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     case ENCH_BERSERK:       return "berserk";
     case ENCH_BATTLE_FRENZY: return "consumed by blood-lust";
     case ENCH_HASTE:         return "moving very quickly";
+    case ENCH_MIGHT:         return "unusually strong";
     case ENCH_CONFUSION:     return "bewildered and confused";
     case ENCH_INVIS:         return "slightly transparent";
     case ENCH_CHARM:         return "in your thrall";

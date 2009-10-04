@@ -224,26 +224,27 @@ enum beam_type                  // beam[].flavour
     BEAM_SLOW,
     BEAM_FIRST_ENCHANTMENT = BEAM_SLOW,
     BEAM_HASTE,                   // 25
+    BEAM_MIGHT,
     BEAM_HEALING,
     BEAM_PARALYSIS,
     BEAM_CONFUSION,
-    BEAM_INVISIBILITY,
-    BEAM_DIGGING,                 // 30
+    BEAM_INVISIBILITY,            // 30
+    BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
     BEAM_CHARM,
-    BEAM_BANISH,
-    BEAM_DEGENERATE,              // 35
+    BEAM_BANISH,                 // 35
+    BEAM_DEGENERATE,
     BEAM_ENSLAVE_UNDEAD,
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
-    BEAM_DISPEL_UNDEAD,
-    BEAM_DISINTEGRATION,          // 40
+    BEAM_DISPEL_UNDEAD,         // 40
+    BEAM_DISINTEGRATION,
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
     BEAM_PETRIFY,
-    BEAM_BACKLIGHT,
-    BEAM_PORKALATOR,              // 45
+    BEAM_BACKLIGHT,            // 45
+    BEAM_PORKALATOR,
     BEAM_SLIME,
     BEAM_SLEEP,
     BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
@@ -1260,42 +1261,43 @@ enum enchant_type
     ENCH_NONE = 0,                     //    0
     ENCH_SLOW,
     ENCH_HASTE,
+    ENCH_MIGHT,
     ENCH_FEAR,
-    ENCH_CONFUSION,
-    ENCH_INVIS,                        //    5
+    ENCH_CONFUSION,                    //    5
+    ENCH_INVIS,
     ENCH_POISON,
     ENCH_BERSERK,
     ENCH_ROT,
-    ENCH_SUMMON,
-    ENCH_ABJ,                          //   10
+    ENCH_SUMMON,                       //   10
+    ENCH_ABJ,
     ENCH_BACKLIGHT,
     ENCH_CHARM,
     ENCH_STICKY_FLAME,
-    ENCH_GLOWING_SHAPESHIFTER,
-    ENCH_SHAPESHIFTER,                 //   15
+    ENCH_GLOWING_SHAPESHIFTER,         //   15
+    ENCH_SHAPESHIFTER,
     ENCH_TP,
     ENCH_SLEEP_WARY,
     ENCH_SUBMERGED,
-    ENCH_SHORT_LIVED,
-    ENCH_PARALYSIS,                    //   20
+    ENCH_SHORT_LIVED,                  //   20
+    ENCH_PARALYSIS,
     ENCH_SICK,
     ENCH_SLEEPY,         // Monster can't wake until this wears off.
     ENCH_FATIGUE,        // Post-berserk fatigue.
-    ENCH_HELD,           // Caught in a net.
-    ENCH_BATTLE_FRENZY,                //   25 -- Monster is in a battle frenzy
+    ENCH_HELD,           // 25 -- Caught in a net.
+    ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy
     ENCH_NEUTRAL,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
-    ENCH_LOWERED_MR,
-    ENCH_SOUL_RIPE,                    //   30
+    ENCH_LOWERED_MR,                   //   30
+    ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
     ENCH_EAT_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
-    ENCH_SPORE_PRODUCTION,
+    ENCH_SPORE_PRODUCTION,             //   35
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
-    NUM_ENCHANTMENTS                   //    35
+    NUM_ENCHANTMENTS                   //   36
 };
 
 enum enchant_retval

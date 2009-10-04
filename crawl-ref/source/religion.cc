@@ -8169,6 +8169,12 @@ int get_tension(god_type god, bool count_travelling)
             exper /= 2;
         }
 
+        if (mons->has_ench(ENCH_MIGHT))
+        {
+            exper *= 5;
+            exper /= 4;
+        }
+
         if (mons->has_ench(ENCH_BERSERK))
             exper *= 2;
 

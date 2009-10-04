@@ -2553,6 +2553,7 @@ bool orc_battle_cry(monsters *chief)
                 && mons_aligned(boss_index, i)
                 && mon->hit_dice < chief->hit_dice
                 && !mon->has_ench(ENCH_BERSERK)
+                && !mon->has_ench(ENCH_MIGHT)
                 && !mon->cannot_move()
                 && !mon->confused()
                 && chief->can_see(mon))

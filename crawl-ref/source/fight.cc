@@ -4186,8 +4186,9 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     damage_max += attk.damage;
     damage     += 1 + random2(attk.damage);
 
-    // Berserk monsters get bonus damage.
-    if (attacker_as_monster()->has_ench(ENCH_BERSERK))
+    // Berserk/mighted/frenzied monsters get bonus damage.
+    if (attacker_as_monster()->has_ench(ENCH_BERSERK)
+        || attacker_as_monster()->has_ench(ENCH_MIGHT))
         damage = damage * 3 / 2;
     else if (attacker_as_monster()->has_ench(ENCH_BATTLE_FRENZY))
     {

@@ -1393,6 +1393,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_NAPALM,
             10, BEAM_SLOW,
             10, BEAM_HASTE,
+            10, BEAM_MIGHT,
             10, BEAM_HEALING,
             10, BEAM_PARALYSIS,
             10, BEAM_CONFUSION,
@@ -4824,6 +4825,7 @@ bool bolt::has_saving_throw() const
     switch (flavour)
     {
     case BEAM_HASTE:
+    case BEAM_MIGHT:
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
@@ -5174,6 +5176,18 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         {
             if (!mons_is_paralysed(mon) && !mons_is_petrified(mon)
                 && simple_monster_message(mon, " seems to speed up."))
+            {
+                obvious_effect = true;
+            }
+        }
+        return (MON_AFFECTED);
+
+    case BEAM_MIGHT:
+        if (!mon->has_ench(ENCH_MIGHT)
+            && !mons_is_stationary(mon)
+            && mon->add_ench(ENCH_MIGHT))
+        {
+            if (simple_monster_message(mon, " seems to grow stronger."))
             {
                 obvious_effect = true;
             }
@@ -5967,6 +5981,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_CHAOS:                return("chaos");
     case BEAM_SLOW:                 return("slow");
     case BEAM_HASTE:                return("haste");
+    case BEAM_MIGHT:                return("might");
     case BEAM_HEALING:              return("healing");
     case BEAM_PARALYSIS:            return("paralysis");
     case BEAM_CONFUSION:            return("confusion");
