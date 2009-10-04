@@ -29,13 +29,15 @@ The contents of this text are:
                 pickup_mode, drop_filter, default_friendly_pickup
 4-b     Targeting.
                 target_zero_exp, target_oos, target_los_first,
-                default_target, target_unshifted_dirs
+                default_target, target_unshifted_dirs, 
+                darken_beyond_range
 4-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour, colour_map, clean_map
 4-d     Branding (Item and Monster Highlighting).
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
-                heap_brand, feature_item_brand, trap_item_brand
+                heap_brand, feature_item_brand, trap_item_brand,
+                verbose_monster_panel
 4-e     Level Map Functions.
                 level_map_cursor_step, level_map_title, item_colour
 4-f     Viewport Display Options.
@@ -47,8 +49,7 @@ The contents of this text are:
                 travel_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_improved,
                 tc_reachable, tc_dangerous, tc_disconnected,
-                tc_excluded, tc_exclude_circle,
-                travel_stop_message, force_more_message,
+                tc_excluded, tc_exclude_circle, travel_stop_message, 
                 runrest_ignore_message, runrest_ignore_poison,
                 runrest_ignore_monster, trapwalk_safe_hp,
                 trap_prompt, rest_wait_both, auto_exclude
@@ -56,16 +57,17 @@ The contents of this text are:
                 stash_filter, annotate_item_class,
                 annotate_item_dropped
 4-i     Command Enhancements.
-                auto_list, easy_open, easy_unequip, easy_confirm,
-                allow_self_target, easy_butcher, always_confirm_butcher,
-                prefer_safe_chunks, easy_eat_chunks, easy_eat_gourmand,
-                easy_eat_contaminated, prompt_for_swap,
-                easy_quit_item_prompts, easy_exit_menu, sort_menus
+                auto_list, easy_open, easy_unequip, equip_unequip,
+                easy_confirm, allow_self_target, 
+                easy_butcher, always_confirm_butcher, prefer_safe_chunks,
+                easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
+                prompt_for_swap, easy_quit_item_prompts,
+                easy_exit_menu, sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, delay_message_clear,
-                message_colour, show_inventory_weights, show_gold_turns,
-                show_beam, item_stack_summary_minimum, list_rotten,
+                show_inventory_weights, show_gold_turns, show_beam,
+                item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_max_height,
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
@@ -679,8 +681,8 @@ trap_item_brand = reverse
         symbol (^) and the trap symbol is branded.
 
 verbose_monster_pane = true
-        If set to true false using the console version of Crawl (rather than
-        the tiles version), the pane listing the monsters in sight will give
+        If set to false using the console version of Crawl (rather than the 
+        tiles version), the pane listing the monsters in sight will give
         the older, less detailed information like "distracted" or "resting"
         rather than "fleeing", "sleeping", "unaware", etc.
 

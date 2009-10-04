@@ -136,6 +136,7 @@ drop_filter = useless_item
 # heap_brand         = reverse
 # feature_item_brand = reverse
 # trap_item_brand    = reverse
+# verbose_monster_pane = false
 
 ##### 4-e	Level Map Functions ###################
 #
@@ -155,8 +156,6 @@ drop_filter = useless_item
 # scroll_margin_x  = 2
 # scroll_margin_y  = 2
 # scroll_margin    = 2
-#
-# verbose_monster_pane = false
 
 ##### 4-g	Travel and Exploration #################
 #
@@ -230,7 +229,6 @@ stash_filter = ring of hunger, amulet of inaccuracy
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
-# msg_condense_repeats   = false
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
 
@@ -255,8 +253,8 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
 # list_rotten                = false
-
 # show_beam                  = false
+# msg_condense_repeats   = false
 
 #####          Colours (messages and menus) #####
 #
