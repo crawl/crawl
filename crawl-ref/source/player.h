@@ -206,6 +206,7 @@ int player_res_torment(bool calc_unid = true);
 
 bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
+int player_spirit_shield(bool calc_unid = true);
 
 bool player_can_smell();
 bool player_likes_chunks(bool permanently = false);

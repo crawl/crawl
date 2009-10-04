@@ -1058,6 +1058,13 @@ void static _get_randart_properties(const item_def &item,
         power_level++;
     }
 
+    if (!done_powers && one_chance_in(10) && aclass == OBJ_ARMOUR
+        && (atype == ARM_CAP || atype == ARM_SHIELD))
+    {
+        proprt[ARTP_SPIRIT_SHIELD] = 1;
+        power_level++;
+    }
+
     // Armours get fewer powers, and are also less likely to be
     // cursed than weapons
     if (aclass == OBJ_ARMOUR)

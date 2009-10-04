@@ -2550,6 +2550,7 @@ enum artefact_prop_type
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,                 //   30
+    ARTP_SPIRIT_SHIELD,
     ARTP_NUM_PROPERTIES
 };
 

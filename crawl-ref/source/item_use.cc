@@ -3249,6 +3249,16 @@ void jewellery_wear_effects(item_def &item)
             ident = ID_KNOWN_TYPE;
         }
         break;
+
+    case AMU_GUARDIAN_SPIRIT:
+        if (player_spirit_shield()<2)
+        {
+            set_mp(0, false);
+            mpr("You feel your power drawn to a protective spirit.");
+            ident = ID_KNOWN_TYPE;
+        }
+        break;
+
     }
 
     // Artefacts have completely different appearance than base types
@@ -5364,6 +5374,13 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
+
+    if (proprt[ARTP_SPIRIT_SHIELD])
+    {
+        set_mp(0, false);
+        mpr("You feel the spirits watch over you.");
+        artefact_wpn_learn_prop(item, ARTP_SPIRIT_SHIELD);
+    }
 
     if (!alreadyknown && Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(item));

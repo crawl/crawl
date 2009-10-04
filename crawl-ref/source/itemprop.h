@@ -191,6 +191,7 @@ enum jewellery_type
     AMU_CONTROLLED_FLIGHT,
     AMU_INACCURACY,
     AMU_RESIST_MUTATION,
+    AMU_GUARDIAN_SPIRIT,
 
     NUM_JEWELLERY
 };
@@ -336,7 +337,8 @@ enum special_armour_type
     SPARM_ARCHMAGI,
     SPARM_PRESERVATION,
     SPARM_REFLECTION,
-    NUM_SPECIAL_ARMOURS                //   20
+    SPARM_SPIRIT_SHIELD,               //   20
+    NUM_SPECIAL_ARMOURS                //   21
 };
 
 enum special_missile_type // to separate from weapons in general {dlb}

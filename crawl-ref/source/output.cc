@@ -2108,6 +2108,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rlife = player_prot_life(calc_unid);
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
+    const int rspir = player_spirit_shield(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
@@ -2120,7 +2121,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sLife Prot.: %s\n"
              "%sRes.Poison: %s\n"
              "%sRes.Elec. : %s\n"
-             "\n"
+             "%sSpirit.Shd: %s\n"
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
              "%sRes.Slow  : %s\n",
@@ -2129,6 +2130,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rlife, 3), itosym3(rlife),
              _determine_colour_string(rpois, 1), itosym1(rpois),
              _determine_colour_string(relec, 1), itosym1(relec),
+             _determine_colour_string(rspir, 1), itosym1(rspir),
              _determine_colour_string(rsust, 1), itosym1(rsust),
              _determine_colour_string(rmuta, 1), itosym1(rmuta),
              _determine_colour_string(rslow, 1), itosym1(rslow));

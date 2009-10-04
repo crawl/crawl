@@ -4495,6 +4495,13 @@ int player_mental_clarity(bool calc_unid, bool items)
     return ((ret > 3) ? 3 : ret);
 }
 
+int player_spirit_shield(bool calc_unid)
+{
+    return player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid)
+           + player_equip_ego_type(EQ_HELMET, SPARM_SPIRIT_SHIELD)
+           + scan_artefacts(ARTP_SPIRIT_SHIELD);
+}
+
 // Returns whether the player has the effect of the amulet from a
 // non-amulet source.
 bool extrinsic_amulet_effect(jewellery_type amulet)

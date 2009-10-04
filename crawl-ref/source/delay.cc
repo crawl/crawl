@@ -1597,6 +1597,14 @@ void armour_wear_effects(const int item_slot)
             else
                 mpr("You feel extremely powerful.");
             break;
+
+        case SPARM_SPIRIT_SHIELD:
+            if (player_spirit_shield()<2)
+            {
+                set_mp(0, false);
+                mpr("You feel spirits watching over you.");
+            }
+            break;
         }
     }
 

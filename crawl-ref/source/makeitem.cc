@@ -2033,8 +2033,13 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         }
         break;
 
-    case ARM_HELMET:
     case ARM_CAP:
+        if (one_chance_in(10))
+        {
+            rc = SPARM_SPIRIT_SHIELD;
+            break;
+        }
+    case ARM_HELMET:
         rc = coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
         break;
 

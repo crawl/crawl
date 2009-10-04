@@ -380,6 +380,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
         case SPARM_ARCHMAGI:          return "the Archmagi";
         case SPARM_PRESERVATION:      return "preservation";
         case SPARM_REFLECTION:        return "reflection";
+        case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         default:                      return "bugginess";
         }
     }
@@ -406,6 +407,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
         case SPARM_ARCHMAGI:          return " {Archmagi}";
         case SPARM_PRESERVATION:      return " {rCorr, Cons}";
         case SPARM_REFLECTION:        return " {rflct}";
+        case SPARM_SPIRIT_SHIELD:     return " {Spirit}";
         default:                      return " {buggy}";
         }
     }
@@ -592,6 +594,7 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_CONTROLLED_FLIGHT: return "amulet of controlled flight";
     case AMU_INACCURACY:        return "amulet of inaccuracy";
     case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
+    case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
     default: return "buggy jewellery";
     }
 }

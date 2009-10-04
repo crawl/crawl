@@ -23,6 +23,12 @@ motion. This allows the descent of staircases and the retrieval of
 items lying on the ground, for example, but does not deprive the
 wearer of the benefits of levitation.
 %%%%
+amulet of guardian spirit
+
+This amulet makes its wearer immune to damage, draining magical power
+instead.  Should the reserves of magic be depleted, the spirit will
+fail to provide its protection until more power is available.
+%%%%
 amulet of inaccuracy
 
 This amulet makes its wearer less accurate in hand combat and when
