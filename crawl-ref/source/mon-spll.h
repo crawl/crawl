@@ -403,7 +403,7 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_PAIN,
-       SPELL_NO_SPELL,
+       SPELL_SYMBOL_OF_TORMENT,
        SPELL_SYMBOL_OF_TORMENT
       }
     },
