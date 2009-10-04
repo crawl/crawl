@@ -15,7 +15,7 @@
 class bolt;
 
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
-#define NO_UNRANDARTS 76
+#define NO_UNRANDARTS 77
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -83,6 +83,7 @@ enum unrand_type
     UNRAND_THIEF,            // cloak of the Thief
     UNRAND_BULLSEYE,         // shield "Bullseye"
     UNRAND_DYROVEPREVA,      // crown of Dyrovepreva
+    UNRAND_BEAR_SPIRIT,      // hat of the Bear Spirit
     UNRAND_MISFORTUNE,       // robe of Misfortune
     UNRAND_FLASH,            // cloak of Flash
     UNRAND_BOOTS_ASSASSIN,   // boots of the Assassin

@@ -563,7 +563,7 @@ sub write_data
  * Summary:    Definitions for unrandom artefacts.
  * Written by: ????
  *
- *  Modified for Crawl Reference by \$Author: dploog \$ on \$Date: 2009-06-17 22:29:07 -0700 (Wed, 17 Jun 2009) \$
+ *  Modified for Crawl Reference by \$Author\$ on \$Date\$
  */
 
 /*

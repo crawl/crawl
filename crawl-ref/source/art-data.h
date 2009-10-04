@@ -37,7 +37,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -56,7 +56,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 1, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "This blessed weapon loves nothing more than to sing to its owner, whether they want it to or not.", 
@@ -75,7 +75,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "This was the favourite weapon of the old god Trog, before it was lost one day. It induces a bloodthirsty berserker rage in anyone who uses it to strike another.", 
@@ -94,7 +94,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "It is rather unreliable.", 
@@ -113,7 +113,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "It is the creation of a mad god, and carries a curse which transforms anyone possessing it into a prune. Fortunately, the curse works very slowly, and one can use it briefly with no consequences worse than slightly purple skin and a few wrinkles.", 
@@ -132,7 +132,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "It rewards the powerful with power and the meek with weakness.", 
@@ -151,7 +151,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "It was the magical weapon wielded by the mighty wizard Olgreb before he met his fate somewhere within these dungeons. It increases the ability of its wielder to use venomous magic, and carries magical powers which can be evoked.", 
@@ -170,7 +170,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "Its power varies in proportion to its wielder's intelligence. Using it can be a bit risky.", 
@@ -189,7 +189,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "It is lethally vampiric.", 
@@ -208,7 +208,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        3, 0, 0, 
+        3, 0, 0, 0, 
     },
     "", 
     "This weapon carries a terrible and highly irritating curse.", 
@@ -227,7 +227,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "This truly accursed weapon is an instrument of Hell.", 
@@ -246,7 +246,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "This dreadful weapon is used at the user's peril.", 
@@ -265,7 +265,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        -1, 0, 0, 
+        -1, 0, 0, 0, 
     },
     "Eerie flames cover its twisted blade.", 
     "", 
@@ -284,7 +284,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "This legendary item can unleash the fury of Hell.", 
@@ -303,7 +303,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "It carries some of the powers of the arch-fiend Asmodeus.", 
@@ -322,7 +322,7 @@
         0, 0, 0, 0, 0, 1, 
         0, 0, 0, 0, 0, 
         1, 0, 0, 0, 0, 
-        0, -20, 0, 
+        0, -20, 0, 0, 
     },
     "", 
     "", 
@@ -341,7 +341,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -360,7 +360,7 @@
         1, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, -20, 0, 
+        0, -20, 0, 0, 
     },
     "", 
     "", 
@@ -379,7 +379,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        4, 0, 0, 
+        4, 0, 0, 0, 
     },
     "", 
     "", 
@@ -398,7 +398,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A dagger made of one huge piece of sapphire.", 
     "", 
@@ -417,7 +417,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "An ugly rusty dagger.", 
     "", 
@@ -436,7 +436,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        -1, 0, 0, 
+        -1, 0, 0, 0, 
     },
     "A long and sharp scythe, specially modified for combat purposes.", 
     "", 
@@ -455,7 +455,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A sling made of weird blue leather.", 
     "", 
@@ -474,7 +474,7 @@
         1, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A wonderful golden bow.", 
     "", 
@@ -493,7 +493,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -512,7 +512,7 @@
         1, 0, 0, 0, 0, 1, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -531,7 +531,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         1, 0, 0, 0, 0, 
-        0, -50, 0, 
+        0, -50, 0, 0, 
     },
     "A long sword made of one huge piece of crystal.", 
     "", 
@@ -550,7 +550,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A flaming crossbow, forged in the fires of the Hells.", 
     "", 
@@ -569,7 +569,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 1, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "An adamantine great sword.", 
     "", 
@@ -588,7 +588,7 @@
         1, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 1, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -607,7 +607,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 1, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, -30, 0, 
+        0, -30, 0, 0, 
     },
     "", 
     "", 
@@ -626,7 +626,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -645,7 +645,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A beautiful mithril axe, probably lost by some dwarven hero.", 
     "", 
@@ -664,7 +664,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 1, 0, 0, 0, 
         0, 2, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -683,7 +683,7 @@
         1, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A hand crossbow made of some black material.", 
     "", 
@@ -702,7 +702,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "An exceptionally large metal longbow.", 
     "", 
@@ -721,7 +721,7 @@
         0, 1, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 60, 0, 
+        0, 60, 0, 0, 
     },
     "It is designed for easy concealment, but still packs a nasty punch.", 
     "", 
@@ -740,7 +740,7 @@
         0, 0, 0, 0, 0, 1, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -759,7 +759,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 50, 0, 
+        0, 50, 0, 0, 
     },
     "A dainty little knife.", 
     "", 
@@ -778,7 +778,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 6, 0, 0, 
-        1, -20, 0, 
+        1, -20, 0, 0, 
     },
     "A long sword made of weird glowing metal.", 
     "", 
@@ -797,7 +797,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -816,7 +816,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "A double-ended whip made from the cured hides of the Lair of Beasts' deadly grey snakes.", 
@@ -835,7 +835,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -854,7 +854,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -873,7 +873,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        3, 0, 0, 
+        3, 0, 0, 0, 
     },
     "", 
     "", 
@@ -892,7 +892,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A robe made of the finest silk.", 
     "", 
@@ -911,7 +911,7 @@
         1, 1, 1, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, -3, 
-        0, 60, 0, 
+        0, 60, 0, 0, 
     },
     "", 
     "", 
@@ -930,7 +930,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -949,7 +949,7 @@
         1, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 1, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A large crown of dull bronze, set with a dazzling array of gemstones.", 
     "", 
@@ -957,7 +957,26 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 50: UNRAND_MISFORTUNE */
+/* 50: UNRAND_BEAR_SPIRIT */
+{
+    "hat of the Bear Spirit", "fur hat", 
+    OBJ_ARMOUR, ARM_CAP, +2, 0, DARKGREY, 0, 
+    UNRAND_FLAG_NONE, 
+    {
+        SPARM_NORMAL, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 1, 50, 
+        0, 0, 0, 0, 0, 1, 
+        0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 
+        0, 0, 0, 1, 
+    },
+    "", 
+    "", 
+    "Once owned by Ukta, a powerful ogre shaman, this fur hat houses the spirit of an especially mighty bear.", 
+    NULL, NULL, NULL, { NULL }, NULL, 
+},
+
+/* 51: UNRAND_MISFORTUNE */
 {
     "robe of Misfortune", "fabulously ornate robe", 
     OBJ_ARMOUR, ARM_ROBE, -5, 0, MAGENTA, 0, 
@@ -968,7 +987,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 1, 1, 0, 
         0, 0, 5, 0, 0, 
-        1, -80, 0, 
+        1, -80, 0, 0, 
     },
     "A splendid flowing robe of fur and silk.", 
     "", 
@@ -976,7 +995,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 51: UNRAND_FLASH */
+/* 52: UNRAND_FLASH */
 {
     "cloak of Flash", "vibrating cloak", 
     OBJ_ARMOUR, ARM_CLOAK, +3, 0, ETC_GILA, 0, 
@@ -987,7 +1006,7 @@
         0, 0, 1, 0, 1, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A vibrating cloak.", 
     "", 
@@ -995,7 +1014,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 52: UNRAND_BOOTS_ASSASSIN */
+/* 53: UNRAND_BOOTS_ASSASSIN */
 {
     "boots of the Assassin", "soft boots", 
     OBJ_ARMOUR, ARM_BOOTS, +2, 0, BROWN, 0, 
@@ -1006,7 +1025,7 @@
         0, 1, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 80, 0, 
+        0, 80, 0, 0, 
     },
     "Some soft boots.", 
     "", 
@@ -1014,7 +1033,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 53: UNRAND_LEAR */
+/* 54: UNRAND_LEAR */
 {
     "Lear's chain mail", "golden chain mail", 
     OBJ_ARMOUR, ARM_CHAIN_MAIL, -1, 0, ETC_GOLD, 0, 
@@ -1025,7 +1044,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 1, 0, 0, 
         0, 0, 0, 0, 0, 
-        -1, 0, 0, 
+        -1, 0, 0, 0, 
     },
     "A chain mail made of pure gold.", 
     "", 
@@ -1033,7 +1052,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 54: UNRAND_ZHOR */
+/* 55: UNRAND_ZHOR */
 {
     "skin of Zhor", "smelly skin", 
     OBJ_ARMOUR, ARM_ANIMAL_SKIN, +4, 0, BROWN, 0, 
@@ -1044,7 +1063,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "The skin of some strange animal.", 
     "", 
@@ -1052,7 +1071,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 55: UNRAND_SALAMANDER */
+/* 56: UNRAND_SALAMANDER */
 {
     "salamander hide armour", "red leather armour", 
     OBJ_ARMOUR, ARM_LEATHER_ARMOUR, +3, 0, ETC_FIRE, 0, 
@@ -1063,7 +1082,7 @@
         0, 0, 0, 0, 0, 1, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A leather armour made of a salamander's skin.", 
     "", 
@@ -1071,7 +1090,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 56: UNRAND_WAR */
+/* 57: UNRAND_WAR */
 {
     "gauntlets of War", "thick gauntlets", 
     OBJ_ARMOUR, ARM_GLOVES, +3, 0, BROWN, 0, 
@@ -1082,7 +1101,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 3, 3, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1090,7 +1109,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 57: UNRAND_RESISTANCE */
+/* 58: UNRAND_RESISTANCE */
 {
     "shield of Resistance", "bronze shield", 
     OBJ_ARMOUR, ARM_SHIELD, +3, 0, LIGHTRED, 0, 
@@ -1101,7 +1120,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A bronze shield.", 
     "", 
@@ -1109,7 +1128,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 58: UNRAND_FOLLY */
+/* 59: UNRAND_FOLLY */
 {
     "robe of Folly", "dull robe", 
     OBJ_ARMOUR, ARM_ROBE, -1, 0, LIGHTGREY, 0, 
@@ -1120,7 +1139,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 1, 0, 0, 
         0, 0, 0, 0, 0, 
-        2, 0, 0, 
+        2, 0, 0, 0, 
     },
     "A dull grey robe.", 
     "", 
@@ -1128,7 +1147,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 59: UNRAND_MAXWELL */
+/* 60: UNRAND_MAXWELL */
 {
     "Maxwell's patent armour", "weird-looking armour", 
     OBJ_ARMOUR, ARM_PLATE_MAIL, +10, 0, LIGHTGREEN, 0, 
@@ -1139,7 +1158,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 1, 0, 1, 
         0, 0, 0, 0, 0, 
-        -1, 0, 0, 
+        -1, 0, 0, 0, 
     },
     "A weird-looking armour.", 
     "", 
@@ -1147,7 +1166,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 60: UNRAND_DRAGONMASK */
+/* 61: UNRAND_DRAGONMASK */
 {
     "mask of the Dragon", "blue mask", 
     OBJ_ARMOUR, ARM_CAP, 0, 0, ETC_SHIMMER_BLUE, 0, 
@@ -1158,7 +1177,7 @@
         1, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 2, 2, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A blue mask.", 
     "", 
@@ -1166,7 +1185,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 61: UNRAND_NIGHT */
+/* 62: UNRAND_NIGHT */
 {
     "robe of Night", "black robe", 
     OBJ_ARMOUR, ARM_ROBE, +4, 0, ETC_DARK, 0, 
@@ -1177,7 +1196,7 @@
         1, 1, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 50, 0, 
+        0, 50, 0, 0, 
     },
     "A long black robe made of strange glossy material.", 
     "", 
@@ -1185,7 +1204,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 62: UNRAND_DRAGON_KING */
+/* 63: UNRAND_DRAGON_KING */
 {
     "armour of the Dragon King", "shiny dragon armour", 
     OBJ_ARMOUR, ARM_GOLD_DRAGON_ARMOUR, +5, 0, ETC_GOLD, 0, 
@@ -1196,7 +1215,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1204,7 +1223,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 63: UNRAND_ALCHEMIST */
+/* 64: UNRAND_ALCHEMIST */
 {
     "hat of the Alchemist", "dirty hat", 
     OBJ_ARMOUR, ARM_WIZARD_HAT, +2, 0, MAGENTA, 0, 
@@ -1215,7 +1234,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A dirty hat.", 
     "", 
@@ -1223,7 +1242,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 64: UNRAND_FENCERS_GLOVES */
+/* 65: UNRAND_FENCERS_GLOVES */
 {
     "Fencer's gloves", "silk gloves", 
     OBJ_ARMOUR, ARM_GLOVES, +2, 0, WHITE, 0, 
@@ -1234,7 +1253,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 5, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A pair of gloves made of white silk.", 
     "", 
@@ -1242,7 +1261,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 65: UNRAND_STARLIGHT */
+/* 66: UNRAND_STARLIGHT */
 {
     "cloak of Starlight", "phosphorescent cloak", 
     OBJ_ARMOUR, ARM_CLOAK, 0, 0, ETC_ICE, 0, 
@@ -1253,7 +1272,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, -30, 0, 
+        0, -30, 0, 0, 
     },
     "A phosphorescent cloak.", 
     "", 
@@ -1261,7 +1280,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 66: UNRAND_RATSKIN_CLOAK */
+/* 67: UNRAND_RATSKIN_CLOAK */
 {
     "ratskin cloak", "motley cloak", 
     OBJ_ARMOUR, ARM_CLOAK, +1, 0, ETC_BEOGH, 0, 
@@ -1272,7 +1291,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1280,7 +1299,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 67: UNRAND_AIR */
+/* 68: UNRAND_AIR */
 {
     "amulet of the Air", "sky-blue amulet", 
     OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT, 0, 0, ETC_ELECTRICITY, 0, 
@@ -1291,7 +1310,7 @@
         0, 0, 1, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 50, 0, 
+        0, 50, 0, 0, 
     },
     "A sky-blue amulet.", 
     "", 
@@ -1299,7 +1318,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 68: UNRAND_SHADOWS */
+/* 69: UNRAND_SHADOWS */
 {
     "ring of Shadows", "black ring", 
     OBJ_JEWELLERY, RING_INVISIBILITY, 0, 0, ETC_DARK, 0, 
@@ -1310,7 +1329,7 @@
         1, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, -3, 0, 
-        0, 40, 0, 
+        0, 40, 0, 0, 
     },
     "", 
     "", 
@@ -1318,7 +1337,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 69: UNRAND_CEKUGOB */
+/* 70: UNRAND_CEKUGOB */
 {
     "amulet of Cekugob", "crystal amulet", 
     OBJ_JEWELLERY, AMU_WARDING, 0, 0, LIGHTGREY, 0, 
@@ -1329,7 +1348,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 1, 
         0, 2, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1337,7 +1356,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 70: UNRAND_FOUR_WINDS */
+/* 71: UNRAND_FOUR_WINDS */
 {
     "amulet of the Four Winds", "jade amulet", 
     OBJ_JEWELLERY, AMU_CLARITY, 0, 0, ETC_POISON, 0, 
@@ -1348,7 +1367,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1356,7 +1375,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 71: UNRAND_BLOODLUST */
+/* 72: UNRAND_BLOODLUST */
 {
     "necklace of Bloodlust", "blood-stained necklace", 
     OBJ_JEWELLERY, AMU_RAGE, 0, 0, ETC_BLOOD, 0, 
@@ -1367,7 +1386,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         1, 0, 0, 0, 3, 
-        3, -20, 0, 
+        3, -20, 0, 0, 
     },
     "", 
     "", 
@@ -1375,7 +1394,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 72: UNRAND_SHAOLIN */
+/* 73: UNRAND_SHAOLIN */
 {
     "ring of Shaolin", "jade ring", 
     OBJ_JEWELLERY, RING_EVASION, +8, 0, ETC_POISON, 0, 
@@ -1386,7 +1405,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1394,7 +1413,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 73: UNRAND_ROBUSTNESS */
+/* 74: UNRAND_ROBUSTNESS */
 {
     "ring of Robustness", "steel ring", 
     OBJ_JEWELLERY, RING_PROTECTION, +8, 0, LIGHTGREY, 0, 
@@ -1405,7 +1424,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1413,7 +1432,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 74: UNRAND_MAGE */
+/* 75: UNRAND_MAGE */
 {
     "ring of the Mage", "sapphire ring", 
     OBJ_JEWELLERY, RING_WIZARDRY, 0, 0, ETC_ENCHANT, 0, 
@@ -1424,7 +1443,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 
@@ -1432,7 +1451,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 75: UNRAND_SHIELDING */
+/* 76: UNRAND_SHIELDING */
 {
     "brooch of Shielding", "shield-shaped amulet", 
     OBJ_JEWELLERY, AMU_WARDING, 0, 0, ETC_MAGIC, 0, 
@@ -1443,7 +1462,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "A shield-shaped amulet.", 
     "", 
@@ -1451,7 +1470,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 76: UNRAND_DUMMY2 */
+/* 77: UNRAND_DUMMY2 */
 {
     "DUMMY UNRANDART 2", "DUMMY UNRANDART 2", 
     OBJ_UNASSIGNED, 250, 250, 250, BLACK, 0, 
@@ -1462,7 +1481,7 @@
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
-        0, 0, 0, 
+        0, 0, 0, 0, 
     },
     "", 
     "", 

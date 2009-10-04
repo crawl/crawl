@@ -8,6 +8,7 @@ urand_augmentation UNRAND_AUGMENTATION
 urand_thief UNRAND_THIEF
 urand_bullseye UNRAND_BULLSEYE
 urand_dyrovepreva UNRAND_DYROVEPREVA
+urand_bear UNRAND_BEAR_SPIRIT
 urand_misfortune UNRAND_MISFORTUNE
 urand_flash UNRAND_FLASH
 urand_assassin UNRAND_BOOTS_ASSASSIN

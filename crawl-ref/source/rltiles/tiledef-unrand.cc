@@ -62,6 +62,7 @@ int unrandart_to_tile(int unrand)
     case UNRAND_THIEF:             return TILE_UNRAND_THIEF;
     case UNRAND_BULLSEYE:          return TILE_UNRAND_BULLSEYE;
     case UNRAND_DYROVEPREVA:       return TILE_UNRAND_DYROVEPREVA;
+    case UNRAND_BEAR_SPIRIT:       return TILE_UNRAND_BEAR_SPIRIT;
     case UNRAND_MISFORTUNE:        return TILE_UNRAND_MISFORTUNE;
     case UNRAND_FLASH:             return TILE_UNRAND_FLASH;
     case UNRAND_BOOTS_ASSASSIN:    return TILE_UNRAND_BOOTS_ASSASSIN;
@@ -166,6 +167,7 @@ int unrandart_to_doll_tile(int unrand)
     case UNRAND_RESISTANCE:        return TILEP_HAND2_SHIELD_OF_RESISTANCE;
     // HELM
     case UNRAND_DYROVEPREVA:       return TILEP_HELM_DYROVEPREVA;
+    case UNRAND_BEAR_SPIRIT:       return TILEP_HELM_BEAR;
     case UNRAND_DRAGONMASK:        return TILEP_HELM_ART_DRAGONHELM;
     case UNRAND_ALCHEMIST:         return TILEP_HELM_TURBAN_PURPLE;
     default: return -1;
