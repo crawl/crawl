@@ -15,6 +15,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed mummy monsters drinking potions.
 * Fixed stationary monsters floundering in shallow water.
 * Fixed minivaults sometimes being placed without overlapping floor squares.
+* Fixed segfault with certain resolutions.
 * Fixed several OSX specific bugs.
 * OSX executables no longer require installation of fink.
 * Get rid of out of depth eels in fountains.
