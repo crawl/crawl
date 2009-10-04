@@ -1986,6 +1986,30 @@ _Jozef_rare_
 @The_monster@ screams @at_foe@, "Die!  I've got more contracts today."
 ## END Jozef ##
 %%%%
+############ KHUFU ### mummy emperor with delusions of godhood
+Khufu
+
+@The_monster@ booms, "Everyone will worship Khufu but you!"
+
+SPELL:@The_monster@ smites.
+
+@The_monster@ declares, "When I'm finished with you, I will take on the gods!"
+
+@The_monster@ queries, "My people built me a pyramid -- what did your people build for you?"
+
+@The_monster@ says, "This hit and run is way beneath me."
+
+@The_monster@ says, "I am transcendence, you are transpiration."
+
+@The_monster@ says @to_foe@, "Your corpse would blemish any mausoleum."
+
+@The_monster@ says @to_foe@, "You'll be the most ugly mummy ever seen."
+
+@The_monster@ says, "I follow the Polar star."
+
+@The_monster@ yells @to_foe@, "Into the Nile with you!"
+## END Khufu ##
+%%%%
 ############ KIRKE ### an enchantress, lover of Odysseus
 Kirke
 

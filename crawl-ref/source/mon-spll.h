@@ -1232,6 +1232,17 @@
       }
     },
 
+    {  MST_KHUFU,
+      {
+       SPELL_SUMMON_DEMON,
+       SPELL_SMITING,
+       SPELL_SMITING,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_SUMMON_UNDEAD,
+       SPELL_TOMB_OF_DOROKLOHE
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

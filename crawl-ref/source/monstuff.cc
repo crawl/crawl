@@ -965,6 +965,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
         case MONS_GUARDIAN_MUMMY: pow = 3; break;
         case MONS_MUMMY_PRIEST:   pow = 8; break;
         case MONS_GREATER_MUMMY:  pow = 11; break;
+        case MONS_KHUFU:          pow = 15; break;
 
         default:
             mpr("Unknown mummy type.", MSGCH_DIAGNOSTICS);
@@ -6794,6 +6795,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass(monster->spells);
 
+        // 1KB: the following code is never used for unfriendlies!
         if (!mon_enemies_around(monster))
         {
             // Force the casting of dig when the player is not visible -
@@ -7406,6 +7408,28 @@ static void _swim_or_move_energy(monsters *mon)
                                             : EUT_MOVE );
 }
 
+static void _khufu_drop_tomb(monsters *monster)
+{
+    int count = 0;
+
+    monster->behaviour = BEH_SEEK; // don't wander on duty!
+    for(adjacent_iterator ai(monster->pos()); ai; ++ai)
+    {
+        if (grd(*ai) == DNGN_ROCK_WALL)
+        {
+            grd(*ai) = DNGN_FLOOR;
+            count++;
+        }
+    }
+    if (count)
+        if (mons_near(monster))
+            mpr("The walls disappear!");
+        else
+            mpr("You hear a deep rumble.");
+    monster->number = 0;
+    monster->lose_energy(EUT_SPELL);
+}
+
 #if DEBUG
 #    define DEBUG_ENERGY_USE(problem) \
     if (monster->speed_increment == old_energy && monster->alive()) \
@@ -7724,6 +7748,10 @@ static void _handle_monster_move(monsters *monster)
             }
         }
         _handle_nearby_ability(monster);
+
+        if (monster->type == MONS_KHUFU && monster->number
+            && monster->hit_points==monster->max_hit_points)
+            _khufu_drop_tomb(monster);
 
         if (!mons_is_sleeping(monster) && !mons_is_wandering(monster)
             // Berserking monsters are limited to running up and

@@ -2082,6 +2082,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DOWAN,
     MONS_GASTRONOK,
     MONS_MAURICE,
+    MONS_KHUFU,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2292,7 +2293,7 @@ enum mon_spellbook_type
     MST_KIRKE,
     MST_MENKAURE,
     MST_DOWAN,
-    MST_GERYON = 150,
+    MST_GERYON,
     MST_DISPATER,
     MST_ASMODEUS,
     MST_ERESHKIGAL,
@@ -2305,6 +2306,7 @@ enum mon_spellbook_type
     MST_BERSERK_ESCAPE,               // 165
     MST_GASTRONOK,
     MST_MAURICE,
+    MST_KHUFU,
 
     MST_TEST_SPAWNER = 170,
     NUM_MSTYPES,
@@ -2885,8 +2887,9 @@ enum spell_type
     SPELL_WATER_ELEMENTALS,
     SPELL_PORKALATOR,                  //  198
     SPELL_KRAKEN_TENTACLES,
+    SPELL_TOMB_OF_DOROKLOHE,
 
-    NUM_SPELLS                         //  200
+    NUM_SPELLS                         //  201
 };
 
 enum slot_select_mode

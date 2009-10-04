@@ -621,6 +621,53 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             mons_speaks_msg(monster, msg, MSGCH_TALK,
                             silenced(you.pos()) || silenced(monster->pos()));
         }
+        break;
+    }
+    case SPELL_TOMB_OF_DOROKLOHE:
+    {
+        sumcount = 0;
+        for(adjacent_iterator ai(monster->pos()); ai; ++ai)
+        {
+            // we can blink away the crowd, but only our allies
+            if (mgrd(*ai) != NON_MONSTER
+                && monster_at(*ai)->attitude != monster->attitude)
+                sumcount++;
+            if (grd(*ai) != DNGN_FLOOR && grd(*ai) > DNGN_MAX_NONREACH
+                && !grid_is_trap(grd(*ai)))
+                sumcount++;
+        }
+        if (abs(you.pos().x-monster->pos().x)<=1 &&
+            abs(you.pos().y-monster->pos().y)<=1)
+            sumcount++;
+        if (sumcount)
+        {
+            monster->blink();
+            return;
+        }
+
+        sumcount = 0;
+        for(adjacent_iterator ai(monster->pos()); ai; ++ai)
+        {
+            if (mgrd(*ai) != NON_MONSTER && monster_at(*ai) != monster)
+            {
+                monster_at(*ai)->blink();
+                if (mgrd(*ai) != NON_MONSTER)
+                {
+                    monster_at(*ai)->teleport(true);
+                    if (mgrd(*ai) != NON_MONSTER)
+                        continue;
+                }
+            }
+            if (grd(*ai) == DNGN_FLOOR || grid_is_trap(grd(*ai)))
+            {
+                grd(*ai) = DNGN_ROCK_WALL;
+                sumcount++;
+            }
+        }
+        if (sumcount)
+            mpr("Walls emerge from the floor!");
+        monster->number = 1; // mark Khufu as entombed
+        return;
     }
     }
 
@@ -1100,6 +1147,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
+    case SPELL_TOMB_OF_DOROKLOHE:
         return;
     default:
         break;

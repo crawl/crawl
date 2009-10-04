@@ -4273,7 +4273,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 31              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 156          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 200             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 201             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c7);
