@@ -273,8 +273,13 @@ ENDMAP
 # III  Special altars
 ######################################
 
+# XXX - The WEIGHTs and PLACE of these Feawn vaults are temporary.
+#       Remove once the Ecumenical Temple is updated to cater for
+#       more than 12 gods.
+
 NAME:   feawn_altar_1
 DEPTH:  D:2-7
+PLACE:  D:8
 WEIGHT: 100
 KFEAT:  C = altar_feawn
 MONS:   plant
@@ -288,6 +293,7 @@ ENDMAP
 
 NAME:   feawn_altar_2
 DEPTH:  D:2-7
+PLACE:  D:8
 WEIGHT: 100
 KFEAT:  C = altar_feawn
 NSUBST: w = 2:W / *:w
@@ -304,6 +310,7 @@ ENDMAP
 NAME:   feawn_altar_3
 DEPTH:  D:2-7
 WEIGHT: 100
+PLACE:  D:8
 KFEAT:  C = altar_feawn
 NSUBST: b = 1:. / *:1
 MONS:   plant w:5 / fungus / nothing w:3
