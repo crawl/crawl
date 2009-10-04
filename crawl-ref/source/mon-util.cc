@@ -7780,7 +7780,7 @@ kill_category monsters::kill_alignment() const
 
 bool monsters::sicken(int amount)
 {
-    if (holiness() != MH_NATURAL || (amount /= 2) < 1)
+    if (res_rotting() || (amount /= 2) < 1)
         return (false);
 
     if (!has_ench(ENCH_SICK) && you.can_see(this))

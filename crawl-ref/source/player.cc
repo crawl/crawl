@@ -7269,7 +7269,7 @@ bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.arena);
 
-    if (is_undead || amount <= 0)
+    if (player_res_rotting() || amount <= 0)
         return (false);
 
     mpr( "You feel ill." );
