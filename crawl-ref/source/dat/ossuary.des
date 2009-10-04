@@ -67,32 +67,37 @@ default-depth: D:4-8
 
 NAME:   enter_ossuary_1
 TAGS:   uniq_ossuary no_monster_gen
-SUBST:  . = . Y:7
-COLOUR: Y = yellow
-FTILE:  Y = floor_tomb
-SUBST:  Y = .
-: ossuary_portal(_G)
-MAP
-.....
-.....
-..O..
-.....
-.....
-ENDMAP
-
-NAME:   enter_ossuary_2
-TAGS:   uniq_ossuary no_monster_gen
+SUBST:  . = . ':7
 COLOUR: ' = yellow
 FTILE:  ' = floor_tomb
 SUBST:  ' = .
 : ossuary_portal(_G)
 MAP
+.....
+.'''.
+.'O'.
+.'''.
+.....
+ENDMAP
+
+NAME:    enter_ossuary_2
+TAGS:    uniq_ossuary no_monster_gen
+SHUFFLE: CD / c=
+COLOUR:  ' = yellow
+COLOUR:  C = yellow
+COLOUR:  D = yellow
+SUBST:   D = =
+SUBST:   C = c
+FTILE:   ' = floor_tomb
+SUBST:   ' = .
+: ossuary_portal(_G)
+MAP
 .......
-.cc=cc.
+.ccDcc.
 .c'''c.
-.c'O'c.
+.C'O'C.
 .c'''c.
-.ccccc.
+.ccCcc.
 .......
 ENDMAP
 
@@ -131,14 +136,33 @@ MAP
 ....'....
 ENDMAP
 
+NAME:   enter_ossuary_5
+TAGS:   uniq_ossuary no_monster_gen
+COLOUR: ' = yellow
+FTILE:  ' = floor_tomb
+NSUBST: = = 1:= / *:c
+SUBST:  c : cx
+: ossuary_portal(_G)
+MAP
+   ...   
+  ..c..  
+ ..=c=.. 
+..=c'c=..
+.cc'O'cc.
+..=c'c=..
+ ..=c=.. 
+  ..c..  
+   ...
+ENDMAP
+
 
 #### The portal vaults ####################################
 
 # Reset default depth to prevent random generation of portal vaults.
 default-depth:
 
-NAME:    ossuary_1
-WEIGHT:  60
+NAME:    ossuary_tomb_1
+WEIGHT:  40
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate
 SHUFFLE: dwyz
@@ -179,7 +203,7 @@ x....................x
 xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    ossuary_the_hunt_dp
+NAME:    ossuary_the_hunt_dpeg
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen
@@ -233,7 +257,7 @@ cc1.....WW~~~~~~~~~~~~~~~~^.....cc
 ENDMAP
 
 NAME:    ossuary_crypta
-WEIGHT:  30
+WEIGHT:  20
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    mummy
@@ -290,11 +314,11 @@ ccc.c   ccc+ccc   c.ccc
          ccccc
 ENDMAP
 
-NAME:    ossuary_2
+NAME:    ossuary_tomb_2
 # Generally have rooms full of either monsters or traps. To protect the
 # monsters, all doors are secret, no alarm traps, and mostly needle
 # traps.
-WEIGHT:  30
+WEIGHT:  40
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate
 KFEAT:   ~ = dart trap w:1 / arrow trap w:1 / needle trap
@@ -350,8 +374,8 @@ c~~~c...cddddc...c.z<c
 cccccccccccccccccccccc
 ENDMAP
 
-NAME:    ossuary_3
-WEIGHT:  10
+NAME:    ossuary_tomb_3
+WEIGHT:  40
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
 # zombies should be awake, so they march downwards in a line
@@ -389,13 +413,13 @@ ENDMAP
 
 # Guardian mummies are a clue, and actually quite a scary threat.
 NAME:    ossuary_due_mausoleum
-WEIGHT:  5
+WEIGHT:  10
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    orc skeleton / kobold skeleton / gnoll skeleton / orc skeleton
 MONS:    mummy
 MONS:    patrolling guardian mummy
-# Loot: 22-30 items, now with added early loot!
+# Loot: 22-30 items, with early loot!
 ITEM:    any scroll / any potion
 ITEM:    any scroll / any potion / nothing
 KITEM:   x = any scroll / any potion
@@ -531,4 +555,130 @@ MAP
     cc''cccccccccccccccccccccccccccccccccccccc''cc''cc
    cc''''''''''''''''''''''''''''''''''''''''''''=c<Acc
   cccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   ossuary_zaba_two_paths
+# There is no way up in the end.  This is to give the zombies in the beginning
+# more time to go for a walk and another chance to meet the player.
+ORIENT: encompass
+WEIGHT: 10
+TAGS:   ossuary no_item_gen no_monster_gen no_rotate
+#
+# Standard monsters: small zombies, large zombies, boss:
+MONS:   kobold zombie / goblin zombie / orc zombie / hobgoblin zombie
+MONS:   big kobold zombie / gnoll zombie
+MONS:   mummy
+#
+KFEAT:  F = floor
+COLOUR: F = cyan
+KMONS:  F = rat simulacrum / goblin simulacrum / kobold simulacrum /\
+            giant bat simulacrum / nothing w:80
+KFEAT:  S = floor
+COLOUR: S = green
+KMONS:  S = spectral rat / spectral goblin / spectral kobold /\
+            spectral giant bat / nothing w:80
+# Loot.
+ITEM:   any potion / any scroll / nothing w:1
+#
+# There are not always traps in corridors but they are guaranteed near the loot:
+KFEAT:  ' = arrow trap w:3 / dart trap w:5 / alarm trap w:7 / floor w:85
+KFEAT:  " = bolt trap w:1 / net trap w:3 / arrow trap w:5 / dart trap w:10
+#
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+ccccccccccccccccccccccccccc
+c2c2c2cc...........cc2c2c2c
+c+c+c+c.............c+c+c+c
+c..........G...G..........c
+c.........................c
+c+c=ccccccccc+ccccccccc=c+c
+bScc'ccG2=.......=2Gcc'ccFv
+bSScc'ccGc.......cGcc'ccFFv
+bSSScc'ccc.12321.ccc'ccFFFv
+bSSSScc'cc.......cc'ccFFFFv
+bSSSSScc'c.......c'ccFFFFFv
+bSSSSSS+'c...G...c'+FFFFFFv
+bSSSSScc'c.......c'ccFFFFFv
+bSSSScc'cc.""""".cc'ccFFFFv
+bSSScc'ccc."ddd".ccc'ccFFFv
+bSScc'ccGc."ddd".cGcc'ccFFv
+bScc'ccG2=."ddd".=2Gcc'ccFv
+ccc+ccccccccccccccccccc+ccc
+c11111cc1c1c1c1c1c1cc11111c
+c......c+c+c+c+c+c+c......c
+c.........................c
+c..........<.A.<..........c
+ccccccccccccccccccccccccccc
+ENDMAP
+
+# A larger ossuary than usual: there is a corridor with some monsters (and 
+# chances of wights) to get past, and then a little treasure room at the end.
+#
+# A hidden door in the treasure room leads to another corridor this one flanked
+# with a guardian mummy (a hint of what's to come) on one side, and a flying 
+# skull on the other: the flying skull is basically an intelligent alarm trap,
+# both behind glass.
+#
+# At the end of the corridor is a second treasure room, this one also 
+# containing more flying skeleton alarm traps, plus guardian mummies inside
+# 3x3 rooms with secret doors.
+#
+# The intent is that someone with a relatively high stealth skill (at least
+# for early) will be able to sneak past all of the flying skulls and grab the
+# loot, and escape out before waking anyone up. Whereas someone with 0 stealth
+# skill will wake up the mummies immediately.
+#
+# XXX: Should be looked at when noise/stealth is redone.
+#
+NAME:    ossuary_due_cavern
+WEIGHT:  10
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen
+MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
+         kobold zombie / snake zombie / orc skeleton / hobgoblin skeleton /\
+         small snake skeleton / nothing w:5
+MONS:    wight 
+MONS:    flying skull
+MONS:    guardian mummy / mummy w:2
+ITEM:    any scroll / any potion 
+ITEM:    any scroll / any potion / any wand w:4
+KMONS:   V = guardian mummy
+KMONS:   X = flying skull
+SHUFFLE: VX
+SUBST:   x = c:20 o:8
+SUBST:   z = c:20 o:4
+SUBST:   y = c:20 o:1
+SUBST:   $ = 1:10 2:1
+KFEAT:   L = =
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+  ccccccccc
+ cc.......cc
+cc.........c
+c...<..A..cc
+cc.......cc
+ ccc.....cc
+   cc...cc
+    cc.ccc
+     cc.cc
+     cc.cc
+     cc.cc
+    cc.cc 
+   cc.cc                          ccccccccccccccccc
+   cc..ccc                        c...............c
+    cc...cc                       c.=cc..xxx..cc=.c
+  ccc...ccc                       c.c4c..x3x..c4c.c
+ cc......cccccccccccccccccccccccccc.ccc..yzy..ccc.c
+cc........cc$c$c$c$c$cc.....cccVccc...............c
+c..........c+c+c+c+c+cc.GdG.cccoccc.cxy..eee..yxx.c
+c..c.......+..........+..d..L.....+.c3z..eee..z3x.c
+cc.cc......c+c+c+c+c+cc.GdG.cccoccc.cxy..eee..yxx.c
+cc.c......cc$c$c$c$c$cc.....cccXccc...............c
+cc.cc....cccccccccccccccccccccccccc.ccc..yzy..ccc.c
+ cc.....cc                        c.c4c..x3x..c4c.c
+  cc...cc                         c.=cc..xxx..cc=.c
+   ccccc                          c...............c
+                                  ccccccccccccccccc
 ENDMAP
