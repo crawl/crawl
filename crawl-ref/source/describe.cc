@@ -3511,7 +3511,10 @@ void describe_god( god_type which_god, bool give_title )
                 which_god_penance = 2; // == "Come back to the one true church!"
         }
 
-        cprintf( (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
+        cprintf( (which_god == GOD_NEMELEX_XOBEH
+                     && which_god_penance > 0 && which_god_penance <= 100)
+                                             ? "%s doesn't play fair with you." :
+                 (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
                  (which_god_penance >= 20)   ? "%s is annoyed with you." :
                  (which_god_penance >=  5)   ? "%s well remembers your sins." :
                  (which_god_penance >   0)   ? "%s is ready to forgive your sins." :

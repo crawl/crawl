@@ -920,6 +920,17 @@ void dec_penance(god_type god, int val)
             if (is_good_god(you.religion))
                 _holy_beings_attitude_change();
         }
+        else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
+        { // Nemelex' penance works actively only until 100
+            if ((you.penance[god] -= val) > 100)
+                return;
+#ifdef DGL_MILESTONES
+            mark_milestone("god.mollify",
+                           "partially mollified " + god_name(god) + ".");
+#endif
+            simple_god_message(" seems mollified... mostly.", god);
+            take_note(Note(NOTE_MOLLIFY_GOD, god));
+        }
         else
             you.penance[god] -= val;
     }
