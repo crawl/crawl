@@ -2979,6 +2979,13 @@ LUAFN(dgn_dbg_dump_map)
     return (0);
 }
 
+LUAFN(dgn_grid_see_grid)
+{
+    COORDS(p, 1, 2);
+    COORDS(q, 3, 4);
+    return grid_see_grid(p, q);
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "dbg_goto_place", dgn_dbg_goto_place },
@@ -3125,6 +3132,8 @@ static const struct luaL_reg dgn_lib[] =
     { "change_floor_tile", dgn_change_floor_tile },
     { "lev_floortile", dgn_lev_floortile },
     { "lev_rocktile", dgn_lev_rocktile },
+
+    { "grid_see_grid", dgn_grid_see_grid },
 
     { NULL, NULL }
 };
