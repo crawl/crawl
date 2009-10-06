@@ -6587,8 +6587,7 @@ bool feawn_passthrough(const monsters * target)
             && mons_is_stationary(target));
 }
 
-// Feawn worshipers are on the hook for most plants and fungi, but not
-// toadstools and giant spores because they die too easily.
+// Feawn worshipers are on the hook for most plants and fungi
 //
 // If feawn worshipers kill a protected monster they lose piety,
 // if they attack a friendly one they get penance,
@@ -6596,7 +6595,6 @@ bool feawn_passthrough(const monsters * target)
 bool feawn_protects_species(int mc)
 {
     return (mons_class_is_plant(mc)
-            && mc != MONS_TOADSTOOL
             && mc != MONS_GIANT_SPORE);
 }
 
@@ -6605,12 +6603,10 @@ bool feawn_protects(const monsters * target)
     return target && feawn_protects_species(target->mons_species());
 }
 
-// Feawn neutralises most plants and fungi but skips toadstools to prevent
-// message spam (and killing them doesn't even cause piety loss).
+// Feawn neutralises most plants and fungi
 bool feawn_neutralises(const monsters * target)
 {
-    return (target && mons_is_plant(target)
-            && target->mons_species() != MONS_TOADSTOOL);
+    return (target && mons_is_plant(target));
 }
 
 void jiyva_convert_slime(monsters* slime)
