@@ -65,6 +65,7 @@ enum band_type
     BAND_ILSUIW,
     BAND_AZRAEL,
     BAND_DUVESSA,               // 50
+    BAND_KHUFU,
     NUM_BANDS                   // always last
 };
 

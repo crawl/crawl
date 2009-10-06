@@ -1895,6 +1895,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band = BAND_DUVESSA;
         band_size = 1;
         break;
+
+    case MONS_KHUFU:
+        band = BAND_KHUFU;
+        band_size = 3;
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2195,6 +2200,10 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_DUVESSA:
         mon_type = MONS_DOWAN;
+        break;
+
+    case BAND_KHUFU:
+        mon_type = coinflip()? MONS_GREATER_MUMMY : MONS_MUMMY;
         break;
 
     default:
