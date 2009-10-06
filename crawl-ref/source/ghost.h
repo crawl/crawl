@@ -44,7 +44,8 @@ public:
     void reset();
     void init_random_demon();
     void init_player_ghost();
-    void init_ugly_thing(bool very_ugly, bool only_mutate = false);
+    void init_ugly_thing(bool very_ugly, bool only_mutate = false,
+                         unsigned char force_colour = BLACK);
     void ugly_thing_to_very_ugly_thing();
 
 public:
@@ -62,6 +63,7 @@ private:
     void ugly_thing_add_resistance();
 };
 
+unsigned char ugly_thing_random_colour();
 bool debug_check_ghosts();
 
 extern std::vector<ghost_demon> ghosts;

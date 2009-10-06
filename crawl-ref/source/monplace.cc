@@ -757,6 +757,9 @@ int place_monster(mgen_data mg, bool force_pos)
     monster_type band_monsters[BIG_BAND];        // band monster types
     band_monsters[0] = mg.cls;
 
+    // The (very) ugly thing band colour.
+    static unsigned char ugly_colour = BLACK;
+
     if (mg.permit_bands())
     {
 #ifdef DEBUG_MON_CREATION
@@ -765,9 +768,24 @@ int place_monster(mgen_data mg, bool force_pos)
         const band_type band = _choose_band(mg.cls, mg.power, band_size);
         band_size++;
 
-        for (int i = 1; i < band_size; i++)
-            band_monsters[i] = _band_member( band, mg.power );
+        for (int i = 1; i < band_size; ++i)
+        {
+            band_monsters[i] = _band_member(band, mg.power);
+
+            // Get the (very) ugly thing band colour, so that all (very)
+            // ugly things in a band will start with it.
+            if ((band_monsters[i] == MONS_UGLY_THING
+                || band_monsters[i] == MONS_VERY_UGLY_THING)
+                    && ugly_colour == BLACK)
+            {
+                ugly_colour = ugly_thing_random_colour();
+            }
+        }
     }
+
+    // Set the (very) ugly thing band colour.
+    if (ugly_colour != BLACK)
+        mg.colour = ugly_colour;
 
     // Returns 2 if the monster is placed near player-occupied stairs.
     int pval = _is_near_stairs(mg.pos);
@@ -889,6 +907,9 @@ int place_monster(mgen_data mg, bool force_pos)
     }
 
     id = _place_monster_aux(mg, true, force_pos);
+
+    // Reset the (very) ugly thing band colour.
+    ugly_colour = BLACK;
 
     // Bail out now if we failed.
     if (id == -1)
@@ -1235,8 +1256,8 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (summoned)
     {
-        menv[id].mark_summoned( mg.abjuration_duration, true,
-                                mg.summon_type );
+        menv[id].mark_summoned(mg.abjuration_duration, true,
+                               mg.summon_type);
     }
     menv[id].foe = mg.foe;
 
@@ -1245,7 +1266,8 @@ static int _place_monster_aux(const mgen_data &mg,
         || menv[id].type == MONS_VERY_UGLY_THING)
     {
         ghost_demon ghost;
-        ghost.init_ugly_thing(menv[id].type == MONS_VERY_UGLY_THING);
+        ghost.init_ugly_thing(menv[id].type == MONS_VERY_UGLY_THING, false,
+                              menv[id].colour);
         menv[id].set_ghost(ghost, false);
         menv[id].uglything_init();
     }

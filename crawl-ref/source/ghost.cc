@@ -398,18 +398,29 @@ void ghost_demon::init_player_ghost()
     add_spells();
 }
 
-static unsigned char _ugly_thing_random_colour(unsigned char not_colour)
+unsigned char ugly_thing_random_colour()
 {
     const unsigned char colours[] =
     {
         CYAN, GREEN, RED, LIGHTGREY, BROWN, MAGENTA
     };
 
+    return (RANDOM_ELEMENT(colours));
+}
+
+static unsigned char _ugly_thing_assign_colour(unsigned char force_colour,
+                                               unsigned char force_not_colour)
+{
     unsigned char colour;
 
-    do
-        colour = RANDOM_ELEMENT(colours);
-    while (colour == not_colour);
+    if (force_colour != BLACK)
+        colour = force_colour;
+    else
+    {
+        do
+            colour = ugly_thing_random_colour();
+        while (force_not_colour != BLACK && colour == force_not_colour);
+    }
 
     return (colour);
 }
@@ -474,7 +485,8 @@ static mon_attack_flavour _ugly_thing_flavour_upgrade(mon_attack_flavour u_att_f
     return (u_att_flav);
 }
 
-void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate)
+void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
+                                  unsigned char force_colour)
 {
     // Midpoint: 10, as in mon-data.h.
     speed = 9 + random2(3);
@@ -521,7 +533,8 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate)
     // An ugly thing always gets a low-intensity colour.  If we're
     // mutating it, it always gets a different colour from what it had
     // before.
-    colour = _ugly_thing_random_colour(only_mutate ? make_low_colour(colour)
+    colour = _ugly_thing_assign_colour(make_low_colour(force_colour),
+                                       only_mutate ? make_low_colour(colour)
                                                    : BLACK);
 
     // Pick a compatible attack flavour for this colour.
