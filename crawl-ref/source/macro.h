@@ -2,8 +2,6 @@
  *  File:       macro.cc
  *  Summary:    Crude macro-capability
  *  Written by: Juho Snellman <jsnell@lyseo.edu.ouka.fi>
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef MACRO_H

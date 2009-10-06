@@ -2,8 +2,6 @@
  *  File:       traps.h
  *  Summary:    Traps related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef TRAPS_H

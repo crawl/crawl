@@ -1,9 +1,6 @@
 /*
  *  File: version.h
  *  Summary: Contains version information
- *  Written by: ??
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 /* Crawl versioning:

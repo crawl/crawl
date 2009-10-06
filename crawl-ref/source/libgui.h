@@ -2,8 +2,6 @@
  *  File:       libgui.cc
  *  Summary:    Functions for x11
  *  Written by: M.Itakura (?)
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 // TODO enne - slowly morph this into tilesdl.h

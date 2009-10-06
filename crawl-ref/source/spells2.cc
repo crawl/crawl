@@ -3,8 +3,6 @@
  *  Summary:    Implementations of some additional spells.
  *              Mostly Necromancy and Summoning.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

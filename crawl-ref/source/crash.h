@@ -2,8 +2,6 @@
  *  File:       crash.h
  *  Summary:    Platform specific crash handling functions.
  *  Written by: Matthew cline
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef CRASH_H

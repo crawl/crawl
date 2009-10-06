@@ -2,8 +2,6 @@
  *  File:       spl-util.cc                                          *
  *  Summary:    data handlers for player-available spell list        *
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
- *                                                                   *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

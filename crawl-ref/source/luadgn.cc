@@ -2,8 +2,6 @@
  *  File:       luadgn.cc
  *  Summary:    Dungeon-builder Lua interface.
  *  Created by: dshaligram on Sat Jun 23 20:02:09 2007 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

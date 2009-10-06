@@ -3,8 +3,6 @@
  *  Summary:    Vertex buffer implementaions
  *
  *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

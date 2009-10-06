@@ -2,9 +2,6 @@
  *  File:       spl-mis.cc
  *  Summary:    Spell miscast class.
  *  Written by: Matthew Cline
- *
- *  Modified for Crawl Reference by $Author$ on $Date: 2008-06-28 22:
-16:39 -0700 (Sat, 28 Jun 2008) $
  */
 
 #include "AppHdr.h"

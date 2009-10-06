@@ -1,9 +1,6 @@
 /*
  *  File:       crash-d.cc
  *  Summary:    Dos specific crash handling functions.
- *  Written by: ??
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

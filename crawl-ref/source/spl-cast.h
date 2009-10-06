@@ -2,8 +2,6 @@
  *  File:       spl-cast.h
  *  Summary:    Spell casting functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

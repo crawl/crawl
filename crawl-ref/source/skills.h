@@ -2,8 +2,6 @@
  *  File:       skills.h
  *  Summary:    Skill exercising functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

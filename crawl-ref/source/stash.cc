@@ -2,8 +2,6 @@
  *  File:       stash.cc
  *  Summary:    Classes tracking player stashes
  *  Written by: Darshan Shaligram
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

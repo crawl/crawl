@@ -1,9 +1,6 @@
 /*
  *  File:       libutil.cc
  *  Summary:    Functions that may be missing from some systems
- *  Written by: ?
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

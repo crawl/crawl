@@ -2,8 +2,6 @@
  *  File:       notes.h
  *  Summary:    Notetaking stuff
  *  Written by: Haran Pilpel
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef NOTES_H

@@ -2,8 +2,6 @@
  *  File:       mapdef.cc
  *  Summary:    Support code for Crawl des files.
  *  Created by: dshaligram on Wed Nov 22 08:41:20 2006 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

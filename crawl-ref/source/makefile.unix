@@ -1,9 +1,5 @@
 # -*- Makefile -*- for Dungeon Crawl (unix)
 
-#
-# Modified for Crawl Reference by $Author$ on $Date$
-#
-
 GAME = crawl
 
 # this file contains a list of the libraries.

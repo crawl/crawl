@@ -3,8 +3,6 @@
  *  Summary:    Crawl Lua test cases
  *  Written by: Darshan Shaligram
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
- *
  *  ctest runs Lua tests found in the test directory. The intent here
  *  is to test parts of Crawl that can be easily tested from within Crawl
  *  itself (such as LOS). As a side-effect, writing Lua bindings to support

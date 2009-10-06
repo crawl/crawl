@@ -2,8 +2,6 @@
  *  File:       items.h
  *  Summary:    Misc (mostly) inventory related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

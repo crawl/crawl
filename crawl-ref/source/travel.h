@@ -2,8 +2,6 @@
  *  File:       travel.h
  *  Summary:    Travel stuff
  *  Written by: Darshan Shaligram
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 #ifndef TRAVEL_H
 #define TRAVEL_H

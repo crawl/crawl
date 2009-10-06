@@ -3,8 +3,6 @@
  *  Summary:    Functions related to clouds.
  *  Written by: Brent Ross
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
- *
  *  Creating a cloud module so all the cloud stuff can be isolated.
  */
 

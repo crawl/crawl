@@ -2,8 +2,6 @@
  *  File:       state.h
  *  Summary:    Game state.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef STATE_H

@@ -2,8 +2,6 @@
  *  database.h
  *
  *  Created by Peter Berger on 4/15/07.
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

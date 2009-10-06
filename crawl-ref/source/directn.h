@@ -2,8 +2,6 @@
  *  File:       directn.h
  *  Summary:    Functions used when picking squares.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

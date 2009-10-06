@@ -3,8 +3,6 @@
  *  File:       describe.h
  *  Summary:    Functions used to print information about various game objects.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef DESCRIBE_H

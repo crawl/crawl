@@ -2,8 +2,6 @@
  *  File:       maps.cc
  *  Summary:    Functions used to create vaults.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

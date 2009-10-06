@@ -2,8 +2,6 @@
  *  File:       monplace.cc
  *  Summary:    Functions used when placing monsters in the dungeon.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

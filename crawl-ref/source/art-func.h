@@ -2,8 +2,6 @@
  * File:       art-func.h
  * Summary:    Functions non-standard unrandarts uses.
  * Written by: Matthew Cline
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 /*

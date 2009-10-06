@@ -3,8 +3,6 @@
  *  Summary:    Functions that any display port needs to implement.
  *              Needed by makefile_tiles.mgw and makefile_tiles.unix.
  *  Written by: M.Itakura
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

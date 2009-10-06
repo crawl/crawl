@@ -2,8 +2,6 @@
  *  File:       food.h
  *  Summary:    Functions for eating and butchering.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

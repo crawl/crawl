@@ -2,8 +2,6 @@
  *  File:       mutation.cc
  *  Summary:    Functions for handling player mutations.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

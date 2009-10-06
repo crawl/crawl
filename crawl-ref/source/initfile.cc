@@ -2,8 +2,6 @@
  *  File:       initfile.cc
  *  Summary:    Simple reading of an init file and system variables
  *  Written by: David Loewenstern
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

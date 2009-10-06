@@ -2,8 +2,6 @@
  *  File:       ouch.h
  *  Summary:    Functions used when Bad Things happen to the player.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

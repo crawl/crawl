@@ -2,8 +2,6 @@
  *  File:       enum.h
  *  Summary:    Global (ick) enums.
  *  Written by: Daniel Ligon
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

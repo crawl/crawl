@@ -2,8 +2,6 @@
  * File:       mtransit.h
  * Summary:    Tracking monsters in transit between levels.
  * Written by: Darshan Shaligram
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef MTRANSIT_H

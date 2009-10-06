@@ -561,9 +561,6 @@ sub write_data
 /*
  * File:       art-data.h
  * Summary:    Definitions for unrandom artefacts.
- * Written by: ????
- *
- *  Modified for Crawl Reference by \$Author\$ on \$Date\$
  */
 
 /*

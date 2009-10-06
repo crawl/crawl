@@ -12,9 +12,7 @@
  *      that we shouldn't run into any problems on systems without precompiled
  *      headers.
  *
- *  Copyright � 1999 Jesse Jones.
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
+ *  Copyright © 1999 Jesse Jones.
  */
 
 

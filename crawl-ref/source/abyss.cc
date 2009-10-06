@@ -2,8 +2,6 @@
  *  File:       abyss.cc
  *  Summary:    Misc abyss specific functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

@@ -2,8 +2,6 @@
  *  File:       newgame.cc
  *  Summary:    Functions used when starting a new game.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

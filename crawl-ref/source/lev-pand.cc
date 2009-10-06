@@ -2,8 +2,6 @@
  *  File:       lev-pand.cc
  *  Summary:    Functions used in Pandemonium.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

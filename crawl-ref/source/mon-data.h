@@ -1,8 +1,5 @@
 /*
  *  File:       mon-data.h
- *  Written by: ??
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef MONDATA_H

@@ -1,6 +1,4 @@
 # -*- Makefile -*- for Dungeon Crawl (dos)
-#
-# Modified for Crawl Reference by $Author$ on $Date$
 
 # this file contains a list of the libraries.
 # it will make a variable called OBJECTS that contains all the libraries

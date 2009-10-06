@@ -2,8 +2,6 @@
  * File:       mtransit.cc
  * Summary:    Tracks monsters that are in suspended animation between levels.
  * Written by: Darshan Shaligram
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

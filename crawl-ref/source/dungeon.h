@@ -2,8 +2,6 @@
  *  File:       dungeon.h
  *  Summary:    Functions used when building new levels.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

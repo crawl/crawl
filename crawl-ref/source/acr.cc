@@ -2,8 +2,6 @@
  *  File:       acr.cc
  *  Summary:    Main entry point, event loop, and some initialization functions
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

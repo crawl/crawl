@@ -2,8 +2,6 @@
  *  File:       menu.cc
  *  Summary:    Menus and associated malarkey.
  *  Written by: Darshan Shaligram
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

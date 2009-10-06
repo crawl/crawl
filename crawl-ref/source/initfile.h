@@ -2,8 +2,6 @@
  *  File:       initfile.h
  *  Summary:    Simple reading of init file.
  *  Written by: David Loewenstern
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

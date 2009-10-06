@@ -2,8 +2,6 @@
  *  File:       mon-util.cc
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 // $pellbinder: (c) D.G.S.E 1998

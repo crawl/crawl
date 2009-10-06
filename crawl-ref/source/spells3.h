@@ -2,8 +2,6 @@
  *  File:       spells3.h
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

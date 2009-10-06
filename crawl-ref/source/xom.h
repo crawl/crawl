@@ -2,8 +2,6 @@
  *  File:       xom.h
  *  Summary:    Misc Xom related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef XOM_H

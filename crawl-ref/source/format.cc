@@ -1,8 +1,6 @@
 /*
  *  File:       format.cc
  *  Created by: haranp on Sat Feb 17 13:35:54 2007 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

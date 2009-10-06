@@ -2,8 +2,6 @@
  *  File:       chardump.cc
  *  Summary:    Dumps character info out to the morgue file.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

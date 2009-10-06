@@ -3,8 +3,6 @@
  *  Summary:    Implementations of some additional spells.
  *              Mostly Translocations.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

@@ -2,8 +2,6 @@
  *  File:       command.cc
  *  Summary:    Misc commands.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

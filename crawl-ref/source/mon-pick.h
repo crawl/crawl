@@ -2,8 +2,6 @@
  *  File:       mon-pick.h
  *  Summary:    Functions used to help determine which monsters should appear.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

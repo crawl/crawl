@@ -2,8 +2,6 @@
  *  File:       fight.h
  *  Summary:    Functions used during combat.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

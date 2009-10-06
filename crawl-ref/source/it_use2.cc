@@ -2,8 +2,6 @@
  *  File:       it_use2.cc
  *  Summary:    Functions for using wands, potions, and weapon/armour removal.4\3
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

@@ -2,8 +2,6 @@
  *  File:       itemprop.h
  *  Summary:    Misc functions.
  *  Written by: Brent Ross
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

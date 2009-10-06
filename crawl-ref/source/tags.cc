@@ -2,8 +2,6 @@
  *  File:       tags.cc
  *  Summary:    Auxilary functions to make savefile versioning simpler.
  *  Written by: Gordon Lipford
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 /* ------------------------- how tags work ----------------------------------

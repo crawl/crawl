@@ -2,8 +2,6 @@
  *  File: highscore.cc
  *  Summary: deal with reading and writing of highscore file
  *  Written by: Gordon Lipford
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 /*

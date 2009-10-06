@@ -2,8 +2,6 @@
  *  File:       version.cc
  *  Summary:    Version (and revision) functionality.
  *  Written by: Enne Walker
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

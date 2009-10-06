@@ -8,8 +8,6 @@ REVISION("$Rev$");
  *  Summary:    Functions for windows32 console mode support.
  *              Needed by makefile.mgw.
  *  Written by: Gordon Lipford
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 // WINDOWS INCLUDES GO HERE

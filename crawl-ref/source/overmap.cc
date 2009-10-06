@@ -5,8 +5,6 @@
  *              memory management thing). - LH
  *  Summary:    Records location of stairs etc
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

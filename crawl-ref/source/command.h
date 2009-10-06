@@ -2,8 +2,6 @@
  *  File:       command.h
  *  Summary:    Misc commands.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

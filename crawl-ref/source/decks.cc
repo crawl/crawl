@@ -1,8 +1,6 @@
 /*
  *  File:       decks.cc
  *  Summary:    Functions with decks of cards.
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

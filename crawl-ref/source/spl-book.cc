@@ -2,8 +2,6 @@
  *  File:       spl-book.cc
  *  Summary:    Spellbook/Staff contents array and management functions
  *  Written by: Josh Fishman
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

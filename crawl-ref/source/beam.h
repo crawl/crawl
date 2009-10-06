@@ -2,8 +2,6 @@
  *  File:       beam.h
  *  Summary:    Functions related to ranged attacks.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

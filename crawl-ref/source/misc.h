@@ -2,8 +2,6 @@
  *  File:       misc.h
  *  Summary:    Misc functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef MISC_H

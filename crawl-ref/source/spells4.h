@@ -2,8 +2,6 @@
  *  File:       spells4.h
  *  Summary:    Yet More Spell Function Declarations
  *  Written by: Josh Fishman
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

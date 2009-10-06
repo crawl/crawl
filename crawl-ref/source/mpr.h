@@ -2,8 +2,6 @@
  *  File:       mpr.h
  *  Summary:    Functions used to print simple messages.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef MPR_H

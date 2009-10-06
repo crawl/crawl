@@ -1,8 +1,4 @@
 /*
- *  Modified for Crawl Reference by $Author$ on $Date$
- */
-
-/*
    XXX: Some of these notes are obsolete now!
 
    In case anyone ever wants to add new spells, or just understand my reasons

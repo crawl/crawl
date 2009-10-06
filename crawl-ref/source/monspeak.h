@@ -1,8 +1,6 @@
 /*
  *  File:       monspeak.h
  *  Summary:    Functions to handle speaking monsters
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef MONSPEAK_H

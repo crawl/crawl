@@ -2,9 +2,6 @@
  *  File:       mapmark.cc
  *  Summary:    Level markers (annotations).
  *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
- *
  */
 
 #include "AppHdr.h"

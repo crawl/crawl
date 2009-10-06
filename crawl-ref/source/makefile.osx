@@ -1,9 +1,5 @@
 # -*- Makefile -*- for Dungeon Crawl
 
-#
-# Modified for Crawl Reference by $Author$ on $Date$
-#
-
 PROJECT = Crawl.xcodeproj
 GAME = Crawl
 

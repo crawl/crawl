@@ -2,8 +2,6 @@
  *  File:       fixvec.h
  *  Summary:    Fixed size vector class that asserts if you do something bad.
  *  Written by: Jesse Jones
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef FIXVEC_H

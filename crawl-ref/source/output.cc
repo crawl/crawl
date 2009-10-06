@@ -2,8 +2,6 @@
  *  File:       output.cc
  *  Summary:    Functions used to print player related info.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

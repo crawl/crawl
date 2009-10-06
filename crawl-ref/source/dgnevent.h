@@ -2,9 +2,6 @@
  *  File:       dgnevent.h
  *  Summary:    General dungeon events.
  *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
- *
  */
 
 #ifndef __DGNEVENT_H__

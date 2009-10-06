@@ -2,8 +2,6 @@
  *  File:       state.cc
  *  Summary:    Game state functions.
  *  Written by: Matthew Cline
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

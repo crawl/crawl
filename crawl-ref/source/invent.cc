@@ -2,8 +2,6 @@
  *  File:       invent.cc
  *  Summary:    Functions for inventory related commands.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

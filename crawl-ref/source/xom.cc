@@ -2,8 +2,6 @@
  *  File:       xom.cc
  *  Summary:    All things Xomly
  *  Written by: Zooko
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

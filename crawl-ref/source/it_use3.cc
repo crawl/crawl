@@ -2,8 +2,6 @@
  *  File:       it_use3.cc
  *  Summary:    Functions for using some of the wackier inventory items.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

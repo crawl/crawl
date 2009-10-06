@@ -1,8 +1,6 @@
 /*
  *  File:       monspeak.cc
  *  Summary:    Functions to handle speaking monsters
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

@@ -2,8 +2,6 @@
  *  File:       stuff.h
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

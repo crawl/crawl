@@ -2,9 +2,6 @@
  *  File:       libunix.cc
  *  Summary:    Functions for unix and curses support
  *              Needed by makefile.unix.
- *  Written by: ?
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 /* Some replacement routines missing in gcc

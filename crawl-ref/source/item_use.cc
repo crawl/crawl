@@ -2,8 +2,6 @@
  *  File:       item_use.cc
  *  Summary:    Functions for making use of inventory items.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

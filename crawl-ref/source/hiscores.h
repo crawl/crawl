@@ -2,8 +2,6 @@
  *  File:       hiscores.h
  *  Summary:    Scorefile manipulation functions
  *  Written by: Gordon Lipford
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

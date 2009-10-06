@@ -3,8 +3,6 @@
  * Header for map structures used by the level compiler.
  * Created by: dshaligram on Wed Nov 22 08:41:20 2006 UTC
  *
- * Modified for Crawl Reference by $Author$ on $Date$
- *
  * NOTE: When we refer to map, this could be a full map, filling an entire
  * level or a minivault that occupies just a portion of the level.
  */

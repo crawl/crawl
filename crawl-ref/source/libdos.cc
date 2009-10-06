@@ -5,8 +5,6 @@
  *  Written by: Darshan Shaligram
  *
  *  Added for Crawl Reference by dshaligram on Wed Nov 22 08:41:20 2006 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 // Every .cc must include AppHdr or bad things happen.

@@ -2,8 +2,6 @@
  *  File:       abyss.h
  *  Summary:    Misc abyss specific functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

@@ -2,9 +2,6 @@
  *  File:       branch.h
  *  Summary:    Dungeon branch classes
  *  Written by: Haran Pilpel
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
- *
  */
 
 #ifndef BRANCH_H

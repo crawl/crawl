@@ -2,8 +2,6 @@
  *  File:       abl-show.h
  *  Summary:    Functions related to special abilities.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

@@ -2,8 +2,6 @@
  *  File:       quiver.cc
  *  Summary:    Player quiver functionality
  *
- *  Modified for Crawl Reference by $Author$ on $Date$
- *
  *  - Only change last_used when actually using
  *  - Not changing Qv; nobody knows about internals
  *  - Track last_used of each type so each weapon can do the right thing

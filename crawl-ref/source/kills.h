@@ -2,8 +2,6 @@
  *  File:       kills.h
  *  Summary:    Tracks monsters the player has killed.
  *  Written by: Darshan Shaligram
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef KILLS_H

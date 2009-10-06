@@ -2,8 +2,6 @@
  *  File:       mgrow.cc
  *  Summary:    Monster level-up code.
  *  Written by: dshaligram on Fri Oct 26 08:33:37 2007 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

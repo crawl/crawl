@@ -1,7 +1,5 @@
 # -*- Makefile -*- for stripped down SQLite 3 static lib.
 
-# Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-04-20T22:29:34.263715Z $
-
 LIBSQL = libsqlite3.a
 AR     = ar rcu
 CC     = gcc

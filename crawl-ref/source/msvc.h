@@ -2,8 +2,6 @@
  *  File:       msvc.h
  *  Summary:    Header file for MSVC compiles
  *  Written by: Paul Du Bois
- *
- *  $Author$ on $Date$
  */
 
 #if defined(_MSC_VER)

@@ -1,7 +1,3 @@
-#
-# Modified for Crawl Reference by $Author$ on $Date$
-#
-
 #Makefile chooser.  Choose one:
 
 MAKEFILE ?= makefile.unix

@@ -2,8 +2,6 @@
  *  File:       items.cc
  *  Summary:    Misc (mostly) inventory related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

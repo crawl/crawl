@@ -2,8 +2,6 @@
  *  File:       spl-book.h
  *  Summary:    Some spellbook related functions.
  *  Written by: Josh Fishman
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

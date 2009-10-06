@@ -2,8 +2,6 @@
  *  File:       stuff.cc
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

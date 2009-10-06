@@ -2,8 +2,6 @@
  *  File:       message.cc
  *  Summary:    Functions used to print messages.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

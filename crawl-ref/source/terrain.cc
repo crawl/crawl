@@ -2,8 +2,6 @@
  *  File:       terrain.cc
  *  Summary:    Terrain related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

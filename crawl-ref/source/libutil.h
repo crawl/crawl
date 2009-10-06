@@ -1,8 +1,6 @@
 /*
  *  File:       libutil.h
  *  Summary:    System independent functions
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef LIBUTIL_H

@@ -2,8 +2,6 @@
  *  File:       religion.h
  *  Summary:    Misc religion related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

@@ -2,8 +2,6 @@
  *  File:       ray.h
  *  Summary:    Ray definition
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef RAY_H

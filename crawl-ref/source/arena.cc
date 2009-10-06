@@ -1,9 +1,6 @@
 /*
  *  File:       arena.cc
  *  Summary:    Functions related to the monster arena (stage and watch fights).
- *  Written by: ?
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

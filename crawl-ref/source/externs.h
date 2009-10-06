@@ -2,8 +2,6 @@
  *  File:       externs.h
  *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef EXTERNS_H

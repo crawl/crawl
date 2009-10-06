@@ -2,8 +2,6 @@
  *  File:       notes.cc
  *  Summary:    Notetaking stuff
  *  Written by: Haran Pilpel
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

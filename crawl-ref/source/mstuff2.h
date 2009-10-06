@@ -2,8 +2,6 @@
  *  File:       mstuff2.h
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 

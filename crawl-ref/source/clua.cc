@@ -1,8 +1,6 @@
 /*
  *  File:       clua.cc
  *  Created by: dshaligram on Wed Aug 2 12:54:15 2006 UTC
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

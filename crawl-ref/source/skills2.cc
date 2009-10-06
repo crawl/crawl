@@ -2,8 +2,6 @@
  *  File:       skills2.cc
  *  Summary:    More skill related functions.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

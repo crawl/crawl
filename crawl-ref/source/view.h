@@ -2,8 +2,6 @@
  *  File:       view.h
  *  Summary:    Misc function used to render the dungeon.
  *  Written by: Linley Henzell
- *
- *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 
