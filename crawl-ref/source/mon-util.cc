@@ -2005,17 +2005,17 @@ void define_monster(monsters &mons)
 }
 
 static const char *drac_colour_names[] = {
-    "black", "mottled", "yellow", "green", "purple",
-    "red", "white", "pale"
+    "black", "mottled", "yellow", "green", "purple", "red", "white", "pale"
 };
 
-std::string draconian_colour_name(monster_type mtype)
+static std::string _draconian_colour_name(monster_type mtype)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names) ==
                   MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
 
     if (mtype < MONS_BLACK_DRACONIAN || mtype > MONS_PALE_DRACONIAN)
-        return "buggy";
+        return ("buggy");
+
     return (drac_colour_names[mtype - MONS_BLACK_DRACONIAN]);
 }
 
@@ -2026,7 +2026,7 @@ monster_type draconian_colour_by_name(const std::string &name)
 
     for (unsigned i = 0; i < ARRAYSZ(drac_colour_names); ++i)
         if (name == drac_colour_names[i])
-            return static_cast<monster_type>(i + MONS_BLACK_DRACONIAN);
+            return (static_cast<monster_type>(i + MONS_BLACK_DRACONIAN));
 
     return (MONS_PROGRAM_BUG);
 }
@@ -2156,7 +2156,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     switch (mon.type)
     {
     case MONS_SPECTRAL_THING:
-        result  += "spectral ";
+        result += "spectral ";
         break;
 
     case MONS_DRACONIAN_CALLER:
@@ -2167,7 +2167,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     case MONS_DRACONIAN_KNIGHT:
     case MONS_DRACONIAN_SCORCHER:
         if (mon.base_monster != MONS_PROGRAM_BUG) // database search
-            result += draconian_colour_name(mon.base_monster) + " ";
+            result += _draconian_colour_name(mon.base_monster) + " ";
         break;
 
     default:
