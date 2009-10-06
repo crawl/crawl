@@ -2933,7 +2933,6 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
 
 bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 {
-    bool ret        = false;
     bool targ_adj   = false;
     bool targ_sanct = false;
 
@@ -2955,43 +2954,24 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     switch (monspell)
     {
     case SPELL_TELEPORT_OTHER:
-        ret = !targ_sanct;
-        break;
-
+        return !targ_sanct;
     case SPELL_TELEPORT_SELF:
         // Don't cast again if already about to teleport.
-        if (mon->has_ench(ENCH_TP))
-            return (false);
-        // intentional fall-through
+        return !mon->has_ench(ENCH_TP);
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
-        ret = true;
-        break;
-
+        return true;
     case SPELL_BLINK_OTHER:
-        if (targ_sanct)
-            return (false);
-        // intentional fall-through
+        return !targ_sanct && targ_adj;
     case SPELL_BLINK:
-        if (targ_adj)
-            ret = true;
-        break;
-
+        return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
-        ret = true;
-        break;
-
+        return true;
     case SPELL_NO_SPELL:
-        ret = false;
-        break;
-
+        return false;
     default:
-        if (!targ_adj && spell_typematch(monspell, SPTYP_SUMMONING))
-            ret = true;
-        break;
+        return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
     }
-
-    return (ret);
 }
 
 // Spells for a quick get-away.
