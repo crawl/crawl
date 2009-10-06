@@ -3225,7 +3225,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         }
 
         text << "If the spellcasting success chance is high (which can be "
-                "checked by entering <w>Z\?</w> or <w>I</w>) then a miscast "
+                "checked by entering <w>z\?</w> or <w>I</w>) then a miscast "
                 "merely means the spell is not working, along with a harmless "
                 "side effect. "
                 "However, for spells with a low success rate, there's a chance "
@@ -3241,7 +3241,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     }
     case TUT_SPELL_HUNGER:
         text << "The spell you just cast made you hungrier; you can see how "
-                "hungry spells make you by entering <w>Z\?!</w> or <w>II</w>. "
+                "hungry spells make you by entering <w>z\?!</w> or <w>II</w>. "
                 "The amount of nutrition consumed increases with the level of "
                 "the spell and decreases depending on your intelligence stat "
                 "and your Spellcasting skill. If both of these are high "
@@ -3329,7 +3329,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         std::vector<std::string> listed;
         if (Options.tutorial_type == TUT_MAGIC_CHAR)
-            listed.push_back("your spells (<w>Z?</w>)");
+            listed.push_back("your spells (<w>z?</w>)");
         if (!your_talents(false).empty())
             listed.push_back("your <w>a</w>bilities");
         if (Options.tutorial_type != TUT_MAGIC_CHAR || how_mutated())
