@@ -990,6 +990,10 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     int maxrange = _seekspell(spell)->max_range;
     ASSERT(maxrange >= minrange);
 
+    // spells with no range have maxrange == minrange == -1
+    if (maxrange < 0)
+        return maxrange;
+
     // Sandblast is a special case.
     if (spell == SPELL_SANDBLAST && wielding_rocks())
     {
