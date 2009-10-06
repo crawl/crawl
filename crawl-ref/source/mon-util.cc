@@ -1712,6 +1712,7 @@ int exper_value(const monsters *monster)
             case SPELL_BOLT_OF_IRON:
             case SPELL_TELEPORT_SELF:
             case SPELL_TELEPORT_OTHER:
+            case SPELL_PORKALATOR:
                 diff += 10;
                 break;
 
@@ -2974,6 +2975,10 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     case SPELL_BLINK:
         if (targ_adj)
             ret = true;
+        break;
+
+    case SPELL_TOMB_OF_DOROKLOHE:
+        ret = true;
         break;
 
     case SPELL_NO_SPELL:

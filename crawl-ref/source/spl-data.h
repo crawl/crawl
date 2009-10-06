@@ -2484,6 +2484,19 @@
 },
 
 {
+    SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
+     SPTYP_EARTH,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

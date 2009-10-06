@@ -3287,7 +3287,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 }
 
 // Doesn't include Polyphemus or Ilsuiw (only appear in the Shoals),
-// Dissolution (Slime), Murray (Hell), or Tiamat (Zot).
+// Dissolution (Slime), Murray (Hell), Khufu(Tomb/Crypt) or Tiamat (Zot).
 // NOTE: The Lernaean hydra should *never* be randomly generated.
 //       The Royal jelly likewise is only placed via Slime end vault.
 //       Dowan is automatically placed together with Duvessa.
@@ -3386,6 +3386,11 @@ static monster_type _pick_unique(int lev)
             which_unique = MONS_POLYPHEMUS;
         else if (player_branch_depth() > 2 && coinflip())
             which_unique = MONS_ILSUIW;
+    }
+    else if (player_in_branch(BRANCH_TOMB) || player_in_branch(BRANCH_CRYPT))
+    {
+        if (one_chance_in(10))
+            which_unique = MONS_KHUFU;
     }
 
     return static_cast<monster_type>(which_unique);
