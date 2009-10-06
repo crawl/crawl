@@ -1304,7 +1304,7 @@ unsigned long ident_flags(const item_def &item)
     return (flags);
 }
 
-bool items_similar(const item_def &item1, const item_def &item2)
+bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ident)
 {
     // Base and sub-types must always be the same to stack.
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
@@ -1327,7 +1327,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     }
 
     // Check the ID flags.
-    if (ident_flags(item1) != ident_flags(item2))
+    if (!ignore_ident && ident_flags(item1) != ident_flags(item2))
         return (false);
 
     // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
@@ -1364,7 +1364,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
 }
 
 bool items_stack( const item_def &item1, const item_def &item2,
-                  bool force_merge )
+                  bool force_merge, bool ignore_ident )
 {
     // Both items must be stackable.
     if (!force_merge
@@ -1373,7 +1373,7 @@ bool items_stack( const item_def &item1, const item_def &item2,
         return (false);
     }
 
-    return items_similar(item1, item2);
+    return items_similar(item1, item2, ignore_ident);
 }
 
 void merge_item_stacks(item_def &source, item_def &dest, int quant)
@@ -1542,7 +1542,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     {
         for (int m = 0; m < ENDOFPACK; m++)
         {
-            if (items_stack( you.inv[m], mitm[obj] ))
+            if (items_stack( you.inv[m], mitm[obj], false, true ))
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
@@ -1575,6 +1575,18 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
                     you.inv[m].inscription
                         = replace_all(you.inv[m].inscription,
                                       "god gift", "");
+                }
+
+                // If only one of the stacks is identified,
+                // identify the other to a similar extent.
+                if (ident_flags(mitm[obj]) != ident_flags(you.inv[m]))
+                {
+                    if (!quiet)
+                        mpr("These items seem quite similar!");
+                    mitm[obj].flags |=
+                        ident_flags(you.inv[m]) & you.inv[m].flags;
+                    you.inv[m].flags |=
+                        ident_flags(mitm[obj]) & mitm[obj].flags;
                 }
 
                 merge_item_stacks(mitm[obj], you.inv[m], quant_got);
