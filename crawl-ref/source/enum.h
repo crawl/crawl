@@ -259,6 +259,7 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_GREY_SMOKE,
     BEAM_POTION_BLUE_SMOKE,       // 55
     BEAM_POTION_PURP_SMOKE,
+    BEAM_POTION_MUTAGENIC,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -266,9 +267,9 @@ enum beam_type                  // beam[].flavour
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
 
-    BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
+    BEAM_TORMENT_DAMAGE,          // 60: Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
-    BEAM_STEAL_FOOD,              // 60: Pseudo-beam for harpies stealing food.
+    BEAM_STEAL_FOOD,              // Pseudo-beam for harpies stealing food.
 
     NUM_BEAMS
 };
@@ -432,6 +433,7 @@ enum cloud_type
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
+    CLOUD_MUTAGENIC,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };

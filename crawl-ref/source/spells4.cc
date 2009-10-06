@@ -1131,6 +1131,15 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         break;
 
     case POT_MUTATION:
+        // Maybe we'll get a mutagenic cloud.
+        if (coinflip())
+        {
+            beem.effect_known = true;
+            tracer_flavour = beem.flavour = BEAM_POTION_MUTAGENIC;
+            break;
+        }
+        // if not, deliberate fall through for something random
+
     case POT_GAIN_STRENGTH:
     case POT_GAIN_DEXTERITY:
     case POT_GAIN_INTELLIGENCE:

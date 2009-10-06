@@ -1701,6 +1701,10 @@ inline static void _update_cloud_grid(int cloudno)
         which_colour = ETC_RANDOM;
         break;
 
+    case CLOUD_MUTAGENIC:
+        which_colour = ETC_MUTAGENIC;
+        break;
+
     default:
         which_colour = LIGHTGREY;
         break;
