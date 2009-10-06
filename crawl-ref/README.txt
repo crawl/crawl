@@ -100,13 +100,14 @@ on Linux, Windows, OS X, and, to a lesser extent, on DOS. The source should
 compile and run on any reasonably modern Unix.
 Stone Soup features both ASCII and graphical (Tiles) display.
 
-Crawl gladly and gratuitously uses the following open source packages:
-* The Lua script language, see docs/lualicense.txt.
-* The PCRE library for regular expressions, see docs/pcre_license.txt.
-* The Mersenne Twister for random number generation, docs/mt19937.txt.
-* The SQLite library as database engine; it is properly public domain.
-* The SDL and SDL_image libraries under the LGPL 2.1 license: docs/lgpl.txt.
-* The libpng library, see docs/libpng-LICENSE.txt
+Crawl gladly and gratuitously uses the following open source packages; the
+text files mentioned can be found in the docs/license/ folder:
+* The Lua script language, see lualicense.txt.
+* The PCRE library for regular expressions, see pcre_license.txt.
+* The Mersenne Twister for random number generation, mt19937.txt.
+* The SQLite library as database engine; it is properly in the public domain.
+* The SDL and SDL_image libraries under the LGPL 2.1 license: lgpl.txt.
+* The libpng library, see libpng-LICENSE.txt
 
 
 5. How you can help
