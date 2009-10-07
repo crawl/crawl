@@ -299,7 +299,6 @@ static void _clear_pending_delays()
 void start_delay( delay_type type, int turns, int parm1, int parm2 )
 {
     ASSERT(!crawl_state.arena);
-    ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
 
     _interrupts_blocked = 0; // Just to be safe
 
@@ -809,8 +808,6 @@ void handle_delay()
         }
         delay.started = true;
     }
-
-    ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
     // Run delays and Lua delays don't have a specific end time.
     if (is_run_delay(delay.type))
