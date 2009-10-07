@@ -1349,8 +1349,8 @@ static std::string _verbose_info(const monsters* m)
     return ("");
 }
 
-void monster_pane_info::to_string( int count, std::string& desc,
-                                   int& desc_color) const
+void monster_pane_info::to_string(int count, std::string& desc,
+                                  int& desc_color) const
 {
     std::ostringstream out;
 
@@ -1371,11 +1371,13 @@ void monster_pane_info::to_string( int count, std::string& desc,
             out << count << " "
                 << m_mon->name(DESC_PLAIN);
         }
-        // Don't differentiate between dancing weapons, mimics or draconians
-        // of different types.
+        // Don't differentiate between dancing weapons, mimics, (very)
+        // ugly things or draconians of different types.
         else if (m_fullname
             && m_mon->type != MONS_DANCING_WEAPON
             && mons_genus(m_mon->type) != MONS_DRACONIAN
+            && m_mon->type != MONS_UGLY_THING
+            && m_mon->type != MONS_VERY_UGLY_THING
             && !mons_is_mimic(m_mon->type)
             && m_mon->mname.empty())
         {
@@ -1512,7 +1514,7 @@ static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
             if (glyph == '%')
                 cprintf("%%");
             else
-                cprintf( stringize_glyph(glyph).c_str() );
+                cprintf(stringize_glyph(glyph).c_str());
             ++printed;
 
             // Printing too many looks pretty bad, though.
@@ -1653,7 +1655,8 @@ int update_monster_pane()
 #endif
 
     // Print the monsters!
-    std::string blank; blank.resize(crawl_view.mlistsz.x, ' ');
+    std::string blank;
+    blank.resize(crawl_view.mlistsz.x, ' ');
     int i_mons = 0;
     for (int i_print = 0; i_print < max_print; ++i_print)
     {
@@ -1669,7 +1672,7 @@ int update_monster_pane()
             cprintf("%s", blank.c_str());
     }
 
-    if (i_mons < (int) mons.size())
+    if (i_mons < (int)mons.size())
     {
         // Didn't get to all of them.
         cgotoxy(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
@@ -1679,7 +1682,7 @@ int update_monster_pane()
     if (mons.empty())
         return (-1);
 
-    return full_info;
+    return (full_info);
 }
 #else
 // FIXME: Implement this for Tiles!

@@ -2005,6 +2005,30 @@ void define_monster(monsters &mons)
     mons.ench_countdown = 0;
 }
 
+static std::string _ugly_thing_colour_name(const monsters *mon)
+{
+    if (mons_genus(mon->type) != MONS_UGLY_THING)
+        return ("buggy");
+
+    switch (make_low_colour(mon->colour))
+    {
+        case CYAN:
+            return ("turquoise");
+        case GREEN:
+            return ("green");
+        case RED:
+            return ("red");
+        case LIGHTGREY:
+            return ("white");
+        case BROWN:
+            return ("brown");
+        case MAGENTA:
+            return ("purple");
+        default:
+            return ("buggy");
+    }
+}
+
 static const char *drac_colour_names[] = {
     "black", "mottled", "yellow", "green", "purple", "red", "white", "pale"
 };
@@ -2049,11 +2073,11 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         switch (desc)
         {
         case DESC_CAP_THE: case DESC_CAP_A:
-            return "It";
+            return ("It");
         case DESC_NOCAP_THE: case DESC_NOCAP_A: case DESC_PLAIN:
-            return "it";
+            return ("it");
         default:
-            return "it (buggy)";
+            return ("it (buggy)");
         }
     }
 
@@ -2064,8 +2088,8 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (mons_is_mimic(mon.type) && mon.type != MONS_GOLD_MIMIC)
     {
         item_def item;
-        get_mimic_item( &mon, item );
-        return item.name(desc);
+        get_mimic_item(&mon, item);
+        return (item.name(desc));
     }
 
     if (mon.type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
@@ -2080,14 +2104,15 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         }
 
         const item_def& item = mitm[mon.inv[MSLOT_WEAPON]];
-        return item.name(desc, false, false, use_inscrip, false, ignore_flags);
+        return (item.name(desc, false, false, use_inscrip, false,
+                          ignore_flags));
     }
 
     if (desc == DESC_DBNAME)
-        return get_monster_data(mon.type)->name;
+        return (get_monster_data(mon.type)->name);
 
     if (mon.type == MONS_PLAYER_GHOST)
-        return apostrophise(mon.mname) + " ghost";
+        return (apostrophise(mon.mname) + " ghost");
 
     // Some monsters might want the name of a different creature.
     int nametype = mon.type;
@@ -2111,7 +2136,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (desc != DESC_BASENAME && !mon.mname.empty()
         && mons_genus(nametype) != MONS_HYDRA)
     {
-        return mon.mname;
+        return (mon.mname);
     }
 
     std::string result;
@@ -2156,6 +2181,11 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     // Tack on other prefixes.
     switch (mon.type)
     {
+    case MONS_UGLY_THING:
+    case MONS_VERY_UGLY_THING:
+        result += _ugly_thing_colour_name(&mon) + " ";
+        break;
+
     case MONS_SPECTRAL_THING:
         result += "spectral ";
         break;
@@ -2261,10 +2291,10 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     // All done.
-    return result;
+    return (result);
 }
 
-std::string mons_type_name(int type, description_level_type desc )
+std::string mons_type_name(int type, description_level_type desc)
 {
     std::string result;
 
@@ -2320,7 +2350,7 @@ std::string mons_type_name(int type, description_level_type desc )
         result.insert(1, "n");
     }
 
-    return result;
+    return (result);
 }
 
 static std::string _get_proper_monster_name(const monsters *mon)
@@ -2331,16 +2361,16 @@ static std::string _get_proper_monster_name(const monsters *mon)
 
     std::string name = getRandNameString(me->name, " name");
     if (!name.empty())
-        return name;
+        return (name);
 
     name = getRandNameString(get_monster_data(mons_genus(mon->type))->name,
                              " name");
 
     if (!name.empty())
-        return name;
+        return (name);
 
     name = getRandNameString("generic_monster_name");
-    return name;
+    return (name);
 }
 
 // Names a previously unnamed monster.
