@@ -1304,8 +1304,8 @@ static bool _do_ability(const ability_def& abil)
             const int pow = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
             const int fake_range = spell_range(SPELL_FIREBALL, pow, false);
 
-            if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY, fake_range))
-                return (false);
+            if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, fake_range))
+              return (false);
 
             beam.range = spell_range(SPELL_FIREBALL, pow, true);
             if (!fireball(pow, beam))

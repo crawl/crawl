@@ -1801,7 +1801,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
 
     bolt beam;
     beam.range = LOS_RADIUS;
-    if (spell_direction(target, beam, DIR_NONE, TARG_ENEMY,
+    if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
                         LOS_RADIUS, true, true, false, info)
         && player_tracer(ZAP_DEBUGGING_RAY, power/4, beam))
     {

@@ -1175,7 +1175,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     if ((flags & SPFLAG_TARGETTING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
-            (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
+              (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_HOSTILE);
 
         if (testbits(flags, SPFLAG_NEUTRAL))
             targ = TARG_ANY;

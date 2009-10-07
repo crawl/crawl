@@ -419,7 +419,9 @@ static void _direction_again(dist& moves, targetting_type restricts,
         moves.target = you.pos();
 
         // Discard 'Y' player gave to yesno()
-        if (mode == TARG_ENEMY)
+        // Changed this, was that necessary? -cao
+        //if (mode == TARG_ENEMY)
+        if (mode == TARG_ENEMY || mode == TARG_HOSTILE)
             getchm();
     }
     else
@@ -932,7 +934,8 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
                 return (false);
             }
 
-            if (!may_target_self && mode == TARG_ENEMY)
+            if (!may_target_self && (mode == TARG_ENEMY
+                                     || mode == TARG_HOSTILE))
             {
                 if (Options.allow_self_target == CONFIRM_CANCEL)
                 {
