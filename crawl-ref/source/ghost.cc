@@ -462,7 +462,7 @@ static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
     return (u_att_flav);
 }
 
-static mon_attack_flavour _ugly_thing_flavour_upgrade(mon_attack_flavour u_att_flav)
+static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_att_flav)
 {
     switch (u_att_flav)
     {
@@ -557,7 +557,7 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     colour = make_high_colour(colour);
 
     // A very ugly thing sometimes gets an upgraded attack flavour.
-    att_flav = _ugly_thing_flavour_upgrade(att_flav);
+    att_flav = _very_ugly_thing_flavour_upgrade(att_flav);
 }
 
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
