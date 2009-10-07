@@ -2598,10 +2598,12 @@ static std::string _monster_stat_description(const monsters& mon)
     std::ostringstream result;
 
     // Don't leak or duplicate resistance information for ghost demon
-    // monsters.
+    // monsters, except for (very) ugly things.
     const mon_resist_def resist =
-        mons_is_ghost_demon(mon.type) ? get_mons_class_resists(mon.type)
-                                      : get_mons_resists(&mon);
+        (mons_is_ghost_demon(mon.type)
+                && mon.type != MONS_UGLY_THING
+                && mon.type != MONS_VERY_UGLY_THING)
+            ? get_mons_class_resists(mon.type) : get_mons_resists(&mon);
 
     const mon_resist_flags resists[] = {
         MR_RES_ELEC,  MR_RES_POISON, MR_RES_FIRE,

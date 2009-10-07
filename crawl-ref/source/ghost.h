@@ -60,7 +60,8 @@ private:
 private:
     void add_spells();
     spell_type translate_spell(spell_type playerspell) const;
-    void ugly_thing_add_resistance();
+    void ugly_thing_add_resistance(bool very_ugly,
+                                   mon_attack_flavour u_att_flav);
 };
 
 unsigned char ugly_thing_random_colour();

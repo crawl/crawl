@@ -511,17 +511,6 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
         max_hp = hit_points(xl, 3, 5);
     }
 
-    resists.elec = 0;
-    resists.poison = 0;
-    resists.fire = 0;
-    resists.cold = 0;
-    resists.acid = 0;
-    resists.sticky_flame = false;
-    resists.rotting = false;
-
-    // An ugly thing gets one random resistance.
-    ugly_thing_add_resistance();
-
     const mon_attack_type att_types[] =
     {
         AT_BITE, AT_STING, AT_CLAW, AT_PECK, AT_HEADBUTT, AT_PUNCH, AT_KICK,
@@ -543,6 +532,9 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     // If this is a very ugly thing, upgrade it properly.
     if (very_ugly)
         ugly_thing_to_very_ugly_thing();
+
+    // Pick a compatible resistance for this attack flavour.
+    ugly_thing_add_resistance(very_ugly, att_flav);
 }
 
 void ghost_demon::ugly_thing_to_very_ugly_thing()
@@ -565,73 +557,60 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     colour = make_high_colour(colour);
 
     // A very ugly thing sometimes gets an upgraded attack flavour.
-    if (one_chance_in(3))
-        att_flav = _ugly_thing_flavour_upgrade(att_flav);
-
-    // A very ugly thing gets one more random resistance, and another
-    // possible resistance based on its upgraded attack flavour.
-    ugly_thing_add_resistance();
+    att_flav = _ugly_thing_flavour_upgrade(att_flav);
 }
 
-void ghost_demon::ugly_thing_add_resistance()
+void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
+                                            mon_attack_flavour u_att_flav)
 {
-    int res = 0;
+    resists.elec = 0;
+    resists.poison = 0;
+    resists.fire = 0;
+    resists.sticky_flame = false;
+    resists.cold = 0;
+    resists.acid = 0;
+    resists.rotting = false;
 
-    do
+    switch (u_att_flav)
     {
-        switch (random2(7))
-        {
-            case 0:
-                resists.elec++;
-                res++;
-                break;
+    case AF_ELEC:
+        resists.elec = (very_ugly ? 2 : 1);
+        break;
 
-            case 1:
-                resists.poison++;
-                res++;
-                break;
+    case AF_POISON_NASTY:
+        resists.poison = 1;
+        break;
 
-            case 2:
-                resists.fire++;
-                res++;
-                break;
+    case AF_POISON_MEDIUM:
+        resists.poison = 2;
+        break;
 
-            case 3:
-                resists.cold++;
-                res++;
-                break;
-
-            case 4:
-                resists.acid++;
-                res++;
-                break;
-
-            case 5:
-                if (!resists.sticky_flame)
-                {
-                    resists.sticky_flame = true;
-                    res++;
-                }
-                break;
-
-            case 6:
-                if (!resists.rotting)
-                {
-                    resists.rotting = true;
-                    res++;
-                }
-                break;
-        }
-    }
-    while (res == 0);
-
-    // Guarantee certain resistances for upgraded attack flavours.
-    if (att_flav == AF_POISON_MEDIUM && !resists.poison)
-        resists.poison++;
-    else if (att_flav == AF_NAPALM && !resists.sticky_flame)
+    case AF_FIRE:
+        resists.fire = 1;
         resists.sticky_flame = true;
-    else if (att_flav == AF_ROT && !resists.rotting)
+        break;
+
+    case AF_NAPALM:
+        resists.fire = 2;
+        resists.sticky_flame = true;
+        break;
+
+    case AF_COLD:
+        resists.cold = (very_ugly ? 2 : 1);
+        break;
+
+    case AF_DISEASE:
+    case AF_ROT:
         resists.rotting = true;
+        break;
+
+    case AF_ACID:
+        resists.acid = (very_ugly ? 2 : 1);
+        break;
+
+    default:
+        break;
+    }
 }
 
 static spell_type search_first_list(int ignore_spell)
