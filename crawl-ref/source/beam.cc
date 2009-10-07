@@ -2093,7 +2093,7 @@ void bolt::do_fire()
                 break;
         }
 
-        ASSERT(!grid_is_solid(grd(pos()))
+        ASSERT((!grid_is_solid(grd(pos())) || avoid_self)
                || is_tracer && affects_wall(grd(pos())));
 
         const bool was_seen = seen;
