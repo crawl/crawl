@@ -1823,6 +1823,7 @@ static int crawl_formatted_mpr(lua_State *ls)
     return (0);
 }
 
+LUAWRAP(crawl_more, more())
 LUAWRAP(crawl_mesclr, mesclr())
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
@@ -2283,6 +2284,7 @@ static const struct luaL_reg crawl_lib[] =
 {
     { "mpr",            crawl_mpr },
     { "formatted_mpr",  crawl_formatted_mpr },
+    { "more",           crawl_more },
     { "mesclr",         crawl_mesclr },
     { "random2",        crawl_random2 },
     { "one_chance_in",  crawl_one_chance_in },
