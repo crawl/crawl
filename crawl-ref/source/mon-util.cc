@@ -5887,10 +5887,8 @@ void monsters::go_berserk(bool /* intentional */)
     add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
     add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
     add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
-    simple_monster_message( this, " goes berserk!" );
-
-    // Xom likes monsters going berserk.
-    if (mons_near(this))
+    if (simple_monster_message( this, " goes berserk!" ))
+        // Xom likes monsters going berserk.
         xom_is_stimulated(mons_friendly(this) ? 32 : 128);
 }
 
@@ -8315,6 +8313,7 @@ bool monsters::can_drink_potion(potion_type ptype) const
             return (mons_species() == MONS_VAMPIRE);
         case POT_SPEED:
         case POT_MIGHT:
+        case POT_BERSERK_RAGE:
         case POT_INVISIBILITY:
             // If there are any item using monsters that are permanently
             // invisible, this might have to be restricted.
@@ -8345,6 +8344,10 @@ bool monsters::should_drink_potion(potion_type ptype) const
         return (!has_ench(ENCH_HASTE));
     case POT_MIGHT:
         return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
+    case POT_BERSERK_RAGE:
+        // this implies !has_ench(ENCH_BERSERK_RAGE)
+        return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
+                && needs_berserk());
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
@@ -8409,6 +8412,11 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
 
     case POT_MIGHT:
         if (enchant_monster_with_flavour(this, this, BEAM_MIGHT))
+            ident = ID_KNOWN_TYPE;
+        break;
+
+    case POT_BERSERK_RAGE:
+        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
             ident = ID_KNOWN_TYPE;
         break;
 

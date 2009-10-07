@@ -233,34 +233,35 @@ enum beam_type                  // beam[].flavour
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
     BEAM_CHARM,
-    BEAM_BANISH,                 // 35
+    BEAM_BANISH,                  // 35
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_UNDEAD,
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
-    BEAM_DISPEL_UNDEAD,         // 40
+    BEAM_DISPEL_UNDEAD,           // 40
     BEAM_DISINTEGRATION,
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
     BEAM_PETRIFY,
-    BEAM_BACKLIGHT,            // 45
+    BEAM_BACKLIGHT,               // 45
     BEAM_PORKALATOR,
     BEAM_SLIME,
     BEAM_SLEEP,
-    BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
+    BEAM_BERSERK,
+    BEAM_LAST_ENCHANTMENT = BEAM_BERSERK,
 
     // new beams for evaporate
-    BEAM_POTION_STINKING_CLOUD,
+    BEAM_POTION_STINKING_CLOUD,   // 50
     BEAM_POTION_POISON,
     BEAM_POTION_MIASMA,
-    BEAM_POTION_STEAM,            // 50
+    BEAM_POTION_STEAM,
     BEAM_POTION_FIRE,
-    BEAM_POTION_COLD,
+    BEAM_POTION_COLD,             // 55
     BEAM_POTION_BLACK_SMOKE,
     BEAM_POTION_GREY_SMOKE,
-    BEAM_POTION_BLUE_SMOKE,       // 55
-    BEAM_POTION_PURP_SMOKE,
     BEAM_POTION_MUTAGENIC,
+    BEAM_POTION_BLUE_SMOKE,
+    BEAM_POTION_PURP_SMOKE,       // 60
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -268,7 +269,7 @@ enum beam_type                  // beam[].flavour
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
 
-    BEAM_TORMENT_DAMAGE,          // 60: Pseudo-beam for damage flavour.
+    BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
     BEAM_STEAL_FOOD,              // Pseudo-beam for harpies stealing food.
 

@@ -1394,6 +1394,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_SLOW,
             10, BEAM_HASTE,
             10, BEAM_MIGHT,
+            10, BEAM_BERSERK,
             10, BEAM_HEALING,
             10, BEAM_PARALYSIS,
             10, BEAM_CONFUSION,
@@ -4826,6 +4827,7 @@ bool bolt::has_saving_throw() const
     {
     case BEAM_HASTE:
     case BEAM_MIGHT:
+    case BEAM_BERSERK:
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
@@ -5191,6 +5193,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             {
                 obvious_effect = true;
             }
+        }
+        return (MON_AFFECTED);
+
+    case BEAM_BERSERK:
+        if (!mon->has_ench(ENCH_BERSERK)) {
+            // currently from potion, hence voluntary
+            mon->go_berserk(true);
+            // can't return this from go_berserk, unfortunately
+            obvious_effect = mons_near(mon);
         }
         return (MON_AFFECTED);
 
