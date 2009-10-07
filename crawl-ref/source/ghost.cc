@@ -529,12 +529,12 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
 
+    // Pick a compatible resistance for this attack flavour.
+    ugly_thing_add_resistance(false, att_flav);
+
     // If this is a very ugly thing, upgrade it properly.
     if (very_ugly)
         ugly_thing_to_very_ugly_thing();
-
-    // Pick a compatible resistance for this attack flavour.
-    ugly_thing_add_resistance(very_ugly, att_flav);
 }
 
 void ghost_demon::ugly_thing_to_very_ugly_thing()
@@ -558,6 +558,9 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
 
     // A very ugly thing sometimes gets an upgraded attack flavour.
     att_flav = _very_ugly_thing_flavour_upgrade(att_flav);
+
+    // Pick a compatible resistance for this attack flavour.
+    ugly_thing_add_resistance(true, att_flav);
 }
 
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
