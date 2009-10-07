@@ -1337,7 +1337,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 
     // XXX: This stuff should be done by direction()!
     message_current_target();
-    direction( target, DIR_NONE, TARG_ENEMY, -1, false, !teleport, true, false,
+    direction( target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
                NULL, &beh );
 
     if (beh.m_slot == -1)
@@ -2231,7 +2231,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     else
     {
         message_current_target();
-        direction( thr, DIR_NONE, TARG_ENEMY );
+        direction( thr, DIR_NONE, TARG_HOSTILE);
 
         if (!thr.isValid)
         {
@@ -3864,7 +3864,7 @@ void zap_wand(int slot)
 
     // Unless the character knows the type of the wand, the targetting
     // system will default to enemies. -- [ds]
-    targ_mode_type targ_mode = TARG_ENEMY;
+    targ_mode_type targ_mode = TARG_HOSTILE;
 
     beam.obvious_effect = false;
 
@@ -3947,7 +3947,7 @@ void zap_wand(int slot)
             break;
 
         default:
-            targ_mode = TARG_ENEMY;
+            targ_mode = TARG_HOSTILE;
             break;
         }
     }

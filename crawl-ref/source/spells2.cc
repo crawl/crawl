@@ -1884,7 +1884,7 @@ bool sunlight()
     bolt temp_bolt;
 
     temp_bolt.colour = YELLOW;
-    direction(spelld, DIR_TARGET, TARG_ENEMY, LOS_RADIUS, false, false,
+    direction(spelld, DIR_TARGET, TARG_HOSTILE, LOS_RADIUS, false, false,
               false, true, "Select sunlight destination", NULL,
               true);
 
