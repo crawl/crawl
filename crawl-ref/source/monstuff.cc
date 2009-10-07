@@ -9404,6 +9404,20 @@ static void _mons_in_cloud(monsters *monster)
         hurted += (10 * random2avg(12, 3)) / speed;    // 3
         break;
 
+    case CLOUD_MUTAGENIC:
+        simple_monster_message(monster, " is engulfed in a mutagenic fog!");
+
+        // Will only polymorph a monster if they're not magic immune, can
+        // mutate, aren't res asphyx, and pass the same check as meph cloud.
+        if (monster->can_mutate() && !mons_immune_magic(monster)
+                && 1 + random2(27) >= monster->hit_dice
+                && !mons_res_asphyx(monster))
+        {
+            if (monster->mutate())
+                wake = true;
+        }
+        break;
+
     default:                // 'harmless' clouds -- colored smoke, etc {dlb}.
         return;
     }

@@ -24,6 +24,7 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "mutation.h"
 
 static int _actual_spread_rate(cloud_type type, int spread_rate)
 {
@@ -405,6 +406,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_MIASMA;
     case BEAM_CHAOS:
         return CLOUD_CHAOS;
+    case BEAM_POTION_MUTAGENIC:
+        return CLOUD_MUTAGENIC;
     case BEAM_RANDOM:
         return CLOUD_RANDOM;
     }
@@ -427,6 +430,7 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_STEAM:       return BEAM_STEAM;
     case CLOUD_MIASMA:      return BEAM_MIASMA;
     case CLOUD_CHAOS:       return BEAM_CHAOS;
+    case CLOUD_MUTAGENIC:   return BEAM_POTION_MUTAGENIC;
     case CLOUD_RANDOM:      return BEAM_RANDOM;
     }
 }
@@ -679,6 +683,20 @@ void in_a_cloud()
         ouch(hurted, cl, KILLED_BY_CLOUD, "foul pestilence");
         break;
 
+    case CLOUD_MUTAGENIC:
+        mpr("You are engulfed in a mutagenic fog!");
+
+        if (coinflip()) {
+            mpr("Strange energies course through your body.");
+            if (one_chance_in(3))
+                you.mutate();
+            else
+            {
+                give_bad_mutation();
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -709,6 +727,8 @@ bool is_damaging_cloud(cloud_type type, bool temp)
         return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:
         return (player_res_rotting());
+    case CLOUD_MUTAGENIC:
+        return (you.can_mutate());
 
     default:
         // Smoke, never harmful.
@@ -761,6 +781,8 @@ std::string cloud_name(cloud_type type)
         return "thin mist";
     case CLOUD_CHAOS:
         return "seething chaos";
+    case CLOUD_MUTAGENIC:
+        return "mutagenic fog";
     default:
         return "buggy goodness";
     }
