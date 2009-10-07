@@ -3350,6 +3350,15 @@ static monster_type _pick_unique(int lev)
 
         return MONS_PROGRAM_BUG;
     }
+    else if (player_in_branch(BRANCH_LAIR))
+    {
+        if (player_branch_depth() > 5 && one_chance_in(3))
+            return MONS_GASTRONOK;
+        else if (player_branch_depth() < 3 && one_chance_in(4))
+            return MONS_PRINCE_RIBBIT;
+        else
+            return MONS_PROGRAM_BUG;
+    }
 
     // First, pick generic unique depending on depth.
     int which_unique =
