@@ -2474,9 +2474,9 @@ bool orange_statue_effects(monsters *mons)
                      foe->name(DESC_NOCAP_THE).c_str());
         }
 
-        MiscastEffect( foe, monster_index(mons), SPTYP_DIVINATION,
-                       random2(15), random2(150),
-                       "an orange crystal statue");
+        MiscastEffect(foe, monster_index(mons), SPTYP_DIVINATION,
+                      random2(15), random2(150),
+                      "an orange crystal statue");
         return (true);
     }
 
