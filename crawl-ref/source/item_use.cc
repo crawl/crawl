@@ -2231,7 +2231,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     else
     {
         message_current_target();
-        direction( thr, DIR_NONE, TARG_HOSTILE);
+        direction(thr, DIR_NONE, TARG_HOSTILE);
 
         if (!thr.isValid)
         {
