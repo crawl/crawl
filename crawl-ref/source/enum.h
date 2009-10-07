@@ -723,6 +723,7 @@ enum command_type
 
 enum conduct_type
 {
+    DID_NOTHING,
     DID_NECROMANCY = 1,                 // vamp/drain/pain wpns, Zong/Curses
     DID_HOLY,                           // holy wrath wpns, holy word scrolls
     DID_UNHOLY,                         // demon wpns, demon spells

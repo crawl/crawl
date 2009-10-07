@@ -4065,30 +4065,35 @@ bool god_hates_rod(const item_def& item)
     return (is_spellbook_type(item, true, god_hates_spell_type));
 }
 
-bool good_god_hates_item_handling(const item_def &item)
+conduct_type good_god_hates_item_handling(const item_def &item)
 {
-    return (is_good_god(you.religion) && is_evil_item(item)
-            && (is_demonic(item) || item_type_known(item)));
+    if (!is_good_god(you.religion) || !is_evil_item(item))
+        return DID_NOTHING;
+    if (is_demonic(item))
+        return DID_UNHOLY;
+    if (item_type_known(item))
+        return DID_NECROMANCY;
+    return DID_NOTHING;
 }
 
-bool god_hates_item_handling(const item_def &item)
+conduct_type god_hates_item_handling(const item_def &item)
 {
     switch (you.religion)
     {
     case GOD_ZIN:
         if (item_type_known(item) && is_chaotic_item(item))
-            return (true);
+            return (DID_CHAOS);
         break;
 
     case GOD_FEAWN:
         if (item_type_known(item) && is_evil_item(item))
-            return (true);
+            return (DID_NECROMANCY);
         break;
 
     case GOD_SHINING_ONE:
     {
         if (!item_type_known(item))
-            return (false);
+            return (DID_NOTHING);
 
         switch (item.base_type)
         {
@@ -4096,7 +4101,7 @@ bool god_hates_item_handling(const item_def &item)
         {
             const int item_brand = get_weapon_brand(item);
             if (item_brand == SPWPN_VENOM)
-                return (true);
+                return (DID_POISON);
             break;
         }
 
@@ -4104,13 +4109,13 @@ bool god_hates_item_handling(const item_def &item)
         {
             const int item_brand = get_ammo_brand(item);
             if (item_brand == SPMSL_POISONED || item_brand == SPMSL_CURARE)
-                return (true);
+                return (DID_POISON);
             break;
         }
 
         case OBJ_STAVES:
             if (item.sub_type == STAFF_POISON)
-                return (true);
+                return (DID_POISON);
             break;
 
         default:
@@ -4121,7 +4126,7 @@ bool god_hates_item_handling(const item_def &item)
 
     case GOD_YREDELEMNUL:
         if (item_type_known(item) && is_holy_item(item))
-            return (true);
+            return (DID_HOLY);
         break;
 
     case GOD_TROG:
@@ -4129,7 +4134,7 @@ bool god_hates_item_handling(const item_def &item)
             && item.sub_type != BOOK_MANUAL
             && item.sub_type != BOOK_DESTRUCTION)
         {
-            return (true);
+            return (DID_SPELL_MEMORISE);
         }
         break;
 
@@ -4140,10 +4145,10 @@ bool god_hates_item_handling(const item_def &item)
     if (item_type_known(item)
         && (god_hates_spellbook(item) || god_hates_rod(item)))
     {
-        return (true);
-    }
+        return (NUM_CONDUCTS); // FIXME: get the specific reason, if it
+    }                          // will ever be needed for spellbooks.
 
-    return (false);
+    return (DID_NOTHING);
 }
 
 bool god_hates_spell_type(spell_type spell, god_type god)

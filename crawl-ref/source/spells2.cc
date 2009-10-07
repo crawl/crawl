@@ -1582,6 +1582,7 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
 bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 {
     bool success = true;
+    conduct_type why;
 
     const int dur = std::min(2 + (random2(pow) / 5), 6);
 
@@ -1662,13 +1663,19 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     mitm[i].flags |= ISFLAG_THROWN;
 
     mprf("%s dances into the air!", you.inv[wpn].name(DESC_CAP_YOUR).c_str());
-
     you.inv[wpn].quantity = 0;
 
     destroy_item(menv[monster].inv[MSLOT_WEAPON]);
     menv[monster].inv[MSLOT_WEAPON] = i;
     menv[monster].colour = mitm[i].colour;
     burden_change();
+
+    if ((why = god_hates_item_handling(you.inv[wpn]))
+        || (why = good_god_hates_item_handling(you.inv[wpn])))
+    {
+        simple_god_message(" booms: How dare you animate that foul thing!");
+        did_god_conduct(why, 10, true, &menv[monster]);
+    }
 
     return (true);
 }
