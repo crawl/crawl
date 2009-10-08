@@ -187,9 +187,9 @@ Branch branches[] = {
       "Lair", "the Lair of Beasts", "Lair",
       NULL,
       true, true, GREEN, BROWN,         // HACK to allow placement of
-      mons_lair_rare, mons_lair_level,  // MONS_GASTRONOK. All other
-      NULL, NULL, NULL, NULL,           // uniques are ignored.
-      5, 'L', false, false },
+      mons_lair_rare, mons_lair_level,  // MONS_PRINCE_RIBBIT and
+      NULL, NULL, NULL, NULL,           // MONS_GASTRONOK.  All other
+      5, 'L', false, false },           // uniques are ignored.
 
     { BRANCH_SWAMP, BRANCH_LAIR, 5, 3, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
