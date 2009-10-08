@@ -2006,7 +2006,7 @@ void define_monster(monsters &mons)
 }
 
 static const char *ugly_colour_names[] = {
-    "green", "cyan", "red", "purple", "brown", "white"
+    "red", "brown", "green", "cyan", "purple", "white"
 };
 
 int ugly_thing_colour_offset(const monsters *mon)
@@ -2016,15 +2016,15 @@ int ugly_thing_colour_offset(const monsters *mon)
 
     switch (make_low_colour(mon->colour))
     {
-        case GREEN:
-            return (0);
-        case CYAN:
-            return (1);
         case RED:
-            return (2);
-        case MAGENTA:
-            return (3);
+            return (0);
         case BROWN:
+            return (1);
+        case GREEN:
+            return (2);
+        case CYAN:
+            return (3);
+        case MAGENTA:
             return (4);
         case LIGHTGREY:
             return (5);

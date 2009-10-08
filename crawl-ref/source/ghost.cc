@@ -402,7 +402,7 @@ unsigned char ugly_thing_random_colour()
 {
     const unsigned char colours[] =
     {
-        GREEN, CYAN, RED, MAGENTA, BROWN, LIGHTGREY
+        RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
     };
 
     return (RANDOM_ELEMENT(colours));
@@ -431,6 +431,14 @@ static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
 
     switch (u_colour)
     {
+    case RED:
+        u_att_flav = AF_FIRE;
+        break;
+
+    case BROWN:
+        u_att_flav = AF_ACID;
+        break;
+
     case GREEN:
         u_att_flav = AF_POISON_NASTY;
         break;
@@ -439,16 +447,8 @@ static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
         u_att_flav = AF_ELEC;
         break;
 
-    case RED:
-        u_att_flav = AF_FIRE;
-        break;
-
     case MAGENTA:
         u_att_flav = AF_DISEASE;
-        break;
-
-    case BROWN:
-        u_att_flav = AF_ACID;
         break;
 
     case LIGHTGREY:
@@ -466,12 +466,12 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
 {
     switch (u_att_flav)
     {
-    case AF_POISON_NASTY:
-        u_att_flav = AF_POISON_MEDIUM;
-        break;
-
     case AF_FIRE:
         u_att_flav = AF_NAPALM;
+        break;
+
+    case AF_POISON_NASTY:
+        u_att_flav = AF_POISON_MEDIUM;
         break;
 
     case AF_DISEASE:
@@ -576,6 +576,20 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
 
     switch (u_att_flav)
     {
+    case AF_FIRE:
+        resists.fire = 1;
+        resists.sticky_flame = true;
+        break;
+
+    case AF_NAPALM:
+        resists.fire = 2;
+        resists.sticky_flame = true;
+        break;
+
+    case AF_ACID:
+        resists.acid = (very_ugly ? 2 : 1);
+        break;
+
     case AF_POISON_NASTY:
         resists.poison = 1;
         break;
@@ -588,23 +602,9 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
         resists.elec = (very_ugly ? 2 : 1);
         break;
 
-    case AF_FIRE:
-        resists.fire = 1;
-        resists.sticky_flame = true;
-        break;
-
-    case AF_NAPALM:
-        resists.fire = 2;
-        resists.sticky_flame = true;
-        break;
-
     case AF_DISEASE:
     case AF_ROT:
         resists.rotting = true;
-        break;
-
-    case AF_ACID:
-        resists.acid = (very_ugly ? 2 : 1);
         break;
 
     case AF_COLD:
