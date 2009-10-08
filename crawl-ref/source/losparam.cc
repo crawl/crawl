@@ -13,6 +13,9 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 
+
+/* los_param_trans */
+
 los_param_trans::los_param_trans(const coord_def& c)
     : center(c)
 {
@@ -27,6 +30,27 @@ bool los_param_trans::map_bounds(const coord_def& p) const
 {
     return ::map_bounds(trans(p));
 }
+
+
+/* los_param_permissive */
+
+los_param_permissive::los_param_permissive(const coord_def& c)
+    : los_param_trans(c)
+{
+}
+
+unsigned los_param_permissive::appearance(const coord_def& p) const
+{
+    return env.grid(trans(p));
+}
+
+opacity_type los_param_permissive::opacity(const coord_def& p) const
+{
+    return OPC_CLEAR;
+}
+
+
+/* los_param_base */
 
 los_param_base::los_param_base(const coord_def& c)
     : los_param_trans(c)
@@ -58,6 +82,9 @@ opacity_type los_param_base::opacity(const coord_def& p) const
     else
         return OPC_CLEAR;
 }
+
+
+/* los_param_compat */
 
 los_param_compat::los_param_compat(const feature_grid& gr, const coord_def& c,
                                    bool sb, bool ic)

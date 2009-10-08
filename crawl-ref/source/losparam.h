@@ -45,6 +45,15 @@ struct los_param_trans : los_param
     bool map_bounds(const coord_def& p) const;
 };
 
+// Everything is visible.
+struct los_param_permissive : los_param_trans
+{
+    los_param_permissive(const coord_def& c);
+
+    unsigned appearance(const coord_def& p) const;
+    opacity_type opacity(const coord_def& p) const;
+};
+
 // A complete base implementation that does standard visibility
 // based on env.grid.
 struct los_param_base : los_param_trans
