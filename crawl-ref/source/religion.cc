@@ -1503,17 +1503,17 @@ bool is_good_follower(const monsters* mon)
 bool is_follower(const monsters* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
-        return is_undead_slave(mon);
+        return (is_undead_slave(mon));
     else if (you.religion == GOD_BEOGH)
-        return is_orcish_follower(mon);
+        return (is_orcish_follower(mon));
     else if (you.religion == GOD_JIYVA)
-        return is_fellow_slime(mon);
+        return (is_fellow_slime(mon));
     else if (you.religion == GOD_FEAWN)
-        return is_neutral_plant(mon);
+        return (is_neutral_plant(mon));
     else if (you.religion == GOD_ZIN)
-        return is_good_lawful_follower(mon);
+        return (is_good_lawful_follower(mon));
     else if (is_good_god(you.religion))
-        return is_good_follower(mon);
+        return (is_good_follower(mon));
     else
         return (mon->alive() && mons_friendly(mon));
 }
@@ -3470,6 +3470,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_NOTHING:
         case DID_STABBING:                          // unused
         case DID_STIMULANTS:                        // unused
         case DID_EAT_MEAT:                          // unused
@@ -4068,12 +4069,19 @@ bool god_hates_rod(const item_def& item)
 conduct_type good_god_hates_item_handling(const item_def &item)
 {
     if (!is_good_god(you.religion) || !is_evil_item(item))
-        return DID_NOTHING;
+        return (DID_NOTHING);
+
     if (is_demonic(item))
-        return DID_UNHOLY;
-    if (item_type_known(item))
-        return DID_NECROMANCY;
-    return DID_NOTHING;
+        return (DID_UNHOLY);
+
+    if (item_type_known(item)
+        || item.base_type == OBJ_WEAPONS
+            && get_weapon_brand(item) == SPWPN_CHAOS)
+    {
+        return (DID_NECROMANCY);
+    }
+
+    return (DID_NOTHING);
 }
 
 conduct_type god_hates_item_handling(const item_def &item)
@@ -4086,13 +4094,15 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_FEAWN:
-        if(!item_type_known(item))
-            return DID_NOTHING;
+        if (!item_type_known(item))
+            return (DID_NOTHING);
 
         if (is_evil_item(item)
             || item.base_type == OBJ_WEAPONS
                 && get_weapon_brand(item) == SPWPN_CHAOS)
+        {
             return (DID_NECROMANCY);
+        }
         break;
 
     case GOD_SHINING_ONE:
