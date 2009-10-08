@@ -909,7 +909,8 @@ int place_monster(mgen_data mg, bool force_pos)
     id = _place_monster_aux(mg, true, force_pos);
 
     // Reset the (very) ugly thing band colour.
-    ugly_colour = BLACK;
+    if (ugly_colour != BLACK)
+        ugly_colour = BLACK;
 
     // Bail out now if we failed.
     if (id == -1)
