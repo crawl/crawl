@@ -15,6 +15,7 @@ REVISION("$Rev$");
 #include "debug.h"
 #include "directn.h"
 #include "externs.h"
+#include "losparam.h"
 #include "ray.h"
 #include "state.h"
 #include "stuff.h"
@@ -35,6 +36,7 @@ REVISION("$Rev$");
 
 const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
+const coord_def sh_o = coord_def(sh_xo, sh_yo);
 
 unsigned long* los_blockrays = NULL;
 unsigned long* dead_rays     = NULL;
@@ -738,118 +740,111 @@ bool grid_see_grid(const coord_def& p1, const coord_def& p2,
 // IMPROVEMENTS:
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
-void losight(env_show_grid &sh,
-             feature_grid &gr, const coord_def& center,
-             bool clear_walls_block, bool ignore_clouds)
+
+void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
 {
-    raycast();
-    const int x_p = center.x;
-    const int y_p = center.y;
-    // go quadrant by quadrant
-    const int quadrant_x[4] = {  1, -1, -1,  1 };
-    const int quadrant_y[4] = {  1,  1, -1, -1 };
-
-    // clear out sh
-    sh.init(0);
-
-    if (crawl_state.arena || crawl_state.arena_suspended)
-    {
-        for (int y = -ENV_SHOW_OFFSET; y <= ENV_SHOW_OFFSET; ++y)
-            for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
-            {
-                const coord_def pos = center + coord_def(x, y);
-                if (map_bounds(pos))
-                    sh[x + sh_xo][y + sh_yo] = gr(pos);
-            }
-        return;
-    }
-
     const unsigned int num_cellrays = compressed_ray_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
-    for (int quadrant = 0; quadrant < 4; ++quadrant)
-    {
-        const int xmult = quadrant_x[quadrant];
-        const int ymult = quadrant_y[quadrant];
+    // clear out the dead rays array
+    memset( (void*)dead_rays,  0, sizeof(unsigned long) * num_words);
+    memset( (void*)smoke_rays, 0, sizeof(unsigned long) * num_words);
 
-        // clear out the dead rays array
-        memset( (void*)dead_rays,  0, sizeof(unsigned long) * num_words);
-        memset( (void*)smoke_rays, 0, sizeof(unsigned long) * num_words);
+    // kill all blocked rays
+    const unsigned long* inptr = los_blockrays;
 
-        // kill all blocked rays
-        const unsigned long* inptr = los_blockrays;
-
-        for (int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff)
-            for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
-                 ++ydiff, inptr += num_words)
-            {
-
-                const int realx = x_p + xdiff * xmult;
-                const int realy = y_p + ydiff * ymult;
-
-                if (!map_bounds(realx, realy))
-                    continue;
-
-                coord_def real(realx, realy);
-                dungeon_feature_type dfeat = grid_appearance(gr, real);
-
-                // if this cell is opaque...
-                // ... or something you can see but not walk through ...
-                if (grid_is_opaque(dfeat)
-                    || clear_walls_block && dfeat < DNGN_MINMOVE)
-                {
-                    // then block the appropriate rays
-                    for (unsigned int i = 0; i < num_words; ++i)
-                        dead_rays[i] |= inptr[i];
-                }
-                else if (!ignore_clouds
-                         && is_opaque_cloud(env.cgrid[realx][realy]))
-                {
-                    // block rays which have already seen a cloud
-                    for (unsigned int i = 0; i < num_words; ++i)
-                    {
-                        dead_rays[i]  |= (smoke_rays[i] & inptr[i]);
-                        smoke_rays[i] |= inptr[i];
-                    }
-                }
-            }
-
-        // ray calculation done, now work out which cells in this
-        // quadrant are visible
-        unsigned int rayidx = 0;
-        for (unsigned int wordloc = 0; wordloc < num_words; ++wordloc)
+    for (int x = 0; x <= LOS_MAX_RANGE_X; ++x)
+        for (int y = 0; y <= LOS_MAX_RANGE_Y; ++y, inptr += num_words)
         {
-            const unsigned long curword = dead_rays[wordloc];
-            // Note: the last word may be incomplete
-            for (unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc)
+            coord_def p = coord_def(sx*x, sy*y);
+            if (!dat.map_bounds(p))
+                continue;
+
+            // if this cell is opaque...
+            switch (dat.opacity(p))
             {
-                // make the cells seen by this ray at this point visible
-                if ( ((curword >> bitloc) & 1UL) == 0 )
+            case OPC_OPAQUE:
+                // then block the appropriate rays
+                for (unsigned int i = 0; i < num_words; ++i)
+                    dead_rays[i] |= inptr[i];
+                break;
+            case OPC_HALF:
+                // block rays which have already seen a cloud
+                for (unsigned int i = 0; i < num_words; ++i)
                 {
-                    // this ray is alive!
-                    const int realx = xmult * compressed_ray_x[rayidx];
-                    const int realy = ymult * compressed_ray_y[rayidx];
-                    // update shadow map
-                    if (x_p + realx >= 0 && x_p + realx < GXM
-                        && y_p + realy >= 0 && y_p + realy < GYM
-                        && realx * realx + realy * realy <= _los_radius_squared)
-                    {
-                        sh[sh_xo+realx][sh_yo+realy] = gr[x_p+realx][y_p+realy];
-                    }
+                    dead_rays[i]  |= (smoke_rays[i] & inptr[i]);
+                    smoke_rays[i] |= inptr[i];
                 }
-                ++rayidx;
-                if (rayidx == num_cellrays)
-                    break;
+                break;
+            default:
+                break;
             }
         }
+
+    // ray calculation done, now work out which cells in this
+    // quadrant are visible
+    unsigned int rayidx = 0;
+    for (unsigned int wordloc = 0; wordloc < num_words; ++wordloc)
+    {
+        const unsigned long curword = dead_rays[wordloc];
+        // Note: the last word may be incomplete
+        for (unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc)
+        {
+            // make the cells seen by this ray at this point visible
+            if ( ((curword >> bitloc) & 1UL) == 0 )
+            {
+                // this ray is alive!
+                const coord_def p = coord_def(sx * compressed_ray_x[rayidx],
+                                              sy * compressed_ray_y[rayidx]);
+                // update shadow map
+                if (dat.map_bounds(p) && p.abs() <= _los_radius_squared)
+                {
+                    sh(p+sh_o) = dat.appearance(p);
+                }
+            }
+            ++rayidx;
+            if (rayidx == num_cellrays)
+                break;
+        }
+    }
+}
+
+void losight(env_show_grid& sh, const los_param& dat)
+{
+    sh.init(0);
+
+    // ensure precomputations are done
+    raycast();
+
+    const int quadrant_x[4] = {  1, -1, -1,  1 };
+    const int quadrant_y[4] = {  1,  1, -1, -1 };
+
+    for (int q = 0; q < 4; ++q)
+    {
+        _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
     }
 
-    // [dshaligram] The player's current position is always visible.
-    sh[sh_xo][sh_yo] = gr[x_p][y_p];
+    // center is always visible
+    const coord_def o = coord_def(0,0);
+    sh(o+sh_o) = dat.appearance(o);
+}
 
-    *dead_rays     = NULL;
-    *smoke_rays    = NULL;
-    *los_blockrays = NULL;
+void losight(env_show_grid &sh, feature_grid &gr,
+             const coord_def& center, bool clear_walls_block,
+             bool ignore_clouds)
+{
+    losight(sh, los_param_compat(gr, center, clear_walls_block, ignore_clouds));
+}
+
+void losight_permissive(env_show_grid &sh, const coord_def& center)
+{
+    for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
+        for (int y = -ENV_SHOW_OFFSET; y <= ENV_SHOW_OFFSET; ++y)
+        {
+            const coord_def pos = center + coord_def(x, y);
+            if (map_bounds(pos))
+                sh[x + sh_xo][y + sh_yo] = env.grid(pos);
+        }
 }
 
 void calc_show_los()
@@ -865,7 +860,7 @@ void calc_show_los()
     }
     else
     {
-        losight(env.show, grd, crawl_view.glosc());
+        losight_permissive(env.show, crawl_view.glosc());
     }
 }
 

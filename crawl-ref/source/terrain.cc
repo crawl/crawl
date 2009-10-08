@@ -368,7 +368,7 @@ dungeon_feature_type grid_appearance(const coord_def &gc)
     return grid_appearance(grd, gc);
 }
 
-dungeon_feature_type grid_appearance(feature_grid &gr, const coord_def &gc)
+dungeon_feature_type grid_appearance(const feature_grid &gr, const coord_def &gc)
 {
     dungeon_feature_type grid = gr(gc);
     if (grid == DNGN_SECRET_DOOR)

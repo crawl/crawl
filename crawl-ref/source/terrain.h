@@ -53,7 +53,7 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
 void get_door_description(int door_size, const char** adjective, const char** noun);
 dungeon_feature_type grid_secret_door_appearance(const coord_def &where);
 dungeon_feature_type grid_appearance(const coord_def &gc);
-dungeon_feature_type grid_appearance(feature_grid &gr, const coord_def &gc);
+dungeon_feature_type grid_appearance(const feature_grid &gr, const coord_def &gc);
 unsigned int show_appearance(const coord_def &ep);
 bool grid_destroys_items(dungeon_feature_type grid);
 

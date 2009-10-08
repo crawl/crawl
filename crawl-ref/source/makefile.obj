@@ -37,6 +37,7 @@ items.o \
 lev-pand.o \
 libutil.o \
 los.o \
+losparam.o \
 luadgn.o \
 macro.o \
 makeitem.o \
