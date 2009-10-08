@@ -36,6 +36,7 @@ itemprop.o \
 items.o \
 lev-pand.o \
 libutil.o \
+los.o \
 luadgn.o \
 macro.o \
 makeitem.o \
@@ -46,6 +47,7 @@ menu.o \
 message.o \
 mgrow.o \
 misc.o \
+mon-los.o \
 monplace.o \
 mon-pick.o \
 monstuff.o \
@@ -62,6 +64,7 @@ overmap.o \
 place.o \
 player.o \
 quiver.o \
+ray.o \
 religion.o \
 sha256.o \
 shopping.o \

@@ -69,12 +69,6 @@ bool mon_enemies_around(const monsters *monster);
 void find_features(const std::vector<coord_def>& features,
         unsigned char feature, std::vector<coord_def> *found);
 
-void clear_rays_on_exit();
-void losight(env_show_grid &sh, feature_grid &gr,
-             const coord_def& center, bool clear_walls_block = false,
-             bool ignore_clouds = false);
-
-
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false);
 
@@ -179,30 +173,7 @@ void add_feature_override(const std::string &text);
 void clear_cset_overrides();
 void add_cset_override(char_set_type set, const std::string &overrides);
 
-bool see_grid( const env_show_grid &show,
-               const coord_def &c,
-               const coord_def &pos );
-bool see_grid(const coord_def &p);
-bool see_grid_no_trans( const coord_def &p );
-bool trans_wall_blocking( const coord_def &p );
-bool grid_see_grid(const coord_def& p1, const coord_def& p2,
-                   dungeon_feature_type allowed = DNGN_UNSEEN);
 unsigned grid_character_at(const coord_def &c);
-
-inline bool see_grid( int grx, int gry )
-{
-    return see_grid(coord_def(grx, gry));
-}
-
-inline bool see_grid_no_trans(int x, int y)
-{
-    return see_grid_no_trans(coord_def(x, y));
-}
-
-inline bool trans_wall_blocking(int x, int y)
-{
-    return trans_wall_blocking(coord_def(x, y));
-}
 
 std::string screenshot(bool fullscreen = false);
 
@@ -217,22 +188,10 @@ void view_update_at(const coord_def &pos);
 void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
                           int fmc_delay);
 #endif
-void calc_show_los();
 void viewwindow(bool draw_it, bool do_updates);
 void update_monsters_in_view();
 void handle_seen_interrupt(monsters* monster);
 void flush_comes_into_view();
-
-struct ray_def;
-bool find_ray( const coord_def& source, const coord_def& target,
-               bool allow_fallback, ray_def& ray, int cycle_dir = 0,
-               bool find_shortest = false, bool ignore_solid = false );
-
-int num_feats_between(const coord_def& source, const coord_def& target,
-                      dungeon_feature_type min_feat,
-                      dungeon_feature_type max_feat,
-                      bool exclude_endpoints = true,
-                      bool just_check = false);
 
 dungeon_char_type dchar_by_name(const std::string &name);
 
@@ -242,60 +201,5 @@ void handle_terminal_resize(bool redraw = true);
 unsigned short dos_brand( unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif
-
-#define _monster_los_LSIZE (2 * LOS_RADIUS + 1)
-
-// This class can be used to fill the entire surroundings (los_range)
-// of a monster or other position with seen/unseen values, so as to be able
-// to compare several positions within this range.
-class monster_los
-{
-public:
-    monster_los();
-    virtual ~monster_los();
-
-    // public methods
-    void set_monster(monsters *mon);
-    void set_los_centre(int x, int y);
-    void set_los_centre(const coord_def& p) { this->set_los_centre(p.x, p.y); }
-    void set_los_range(int r);
-    void fill_los_field(void);
-    bool in_sight(int x, int y);
-    bool in_sight(const coord_def& p) { return this->in_sight(p.x, p.y); }
-
-protected:
-    // protected methods
-    coord_def pos_to_index(coord_def &p);
-    coord_def index_to_pos(coord_def &i);
-
-    void set_los_value(int x, int y, bool blocked, bool override = false);
-    int get_los_value(int x, int y);
-    bool is_blocked(int x, int y);
-    bool is_unknown(int x, int y);
-
-    void check_los_beam(int dx, int dy);
-
-    // The (fixed) size of the array.
-    static const int LSIZE;
-
-    static const int L_VISIBLE;
-    static const int L_UNKNOWN;
-    static const int L_BLOCKED;
-
-    // The centre of our los field.
-    int gridx, gridy;
-
-    // Habitat checks etc. should be done for this monster.
-    // Usually the monster whose LOS we're trying to calculate
-    // (if mon->x == gridx, mon->y == gridy).
-    // Else, any monster trying to move around within this los field.
-    monsters *mons;
-
-    // Range may never be greater than LOS_RADIUS!
-    int range;
-
-    // The array to store the LOS values.
-    int los_field[_monster_los_LSIZE][_monster_los_LSIZE];
-};
 
 #endif

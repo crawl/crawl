@@ -28,6 +28,7 @@ REVISION("$Rev$");
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "los.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"

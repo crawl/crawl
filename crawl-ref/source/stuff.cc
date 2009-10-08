@@ -11,6 +11,7 @@ REVISION("$Rev$");
 #include "cio.h"
 #include "database.h"
 #include "directn.h"
+#include "los.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"

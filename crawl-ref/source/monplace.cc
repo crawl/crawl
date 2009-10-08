@@ -17,6 +17,7 @@ REVISION("$Rev$");
 #include "externs.h"
 #include "ghost.h"
 #include "lev-pand.h"
+#include "los.h"
 #include "makeitem.h"
 #include "message.h"
 #include "monstuff.h"

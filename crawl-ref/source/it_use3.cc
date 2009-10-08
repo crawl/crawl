@@ -30,6 +30,7 @@ REVISION("$Rev$");
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "los.h"
 #include "mapmark.h"
 #include "message.h"
 #include "monplace.h"

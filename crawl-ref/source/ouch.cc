@@ -45,6 +45,7 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "los.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"

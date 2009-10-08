@@ -37,6 +37,7 @@ REVISION("$Rev$");
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "los.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"

@@ -25,6 +25,7 @@ REVISION("$Rev$");
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "los.h"
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
