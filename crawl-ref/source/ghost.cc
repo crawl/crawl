@@ -402,7 +402,7 @@ unsigned char ugly_thing_random_colour()
 {
     const unsigned char colours[] =
     {
-        CYAN, GREEN, RED, LIGHTGREY, BROWN, MAGENTA
+        GREEN, CYAN, RED, MAGENTA, BROWN, LIGHTGREY
     };
 
     return (RANDOM_ELEMENT(colours));
@@ -431,28 +431,28 @@ static mon_attack_flavour _ugly_thing_colour_to_flavour(unsigned char u_colour)
 
     switch (u_colour)
     {
-    case CYAN:
-        u_att_flav = AF_ELEC;
-        break;
-
     case GREEN:
         u_att_flav = AF_POISON_NASTY;
+        break;
+
+    case CYAN:
+        u_att_flav = AF_ELEC;
         break;
 
     case RED:
         u_att_flav = AF_FIRE;
         break;
 
-    case LIGHTGREY:
-        u_att_flav = AF_COLD;
+    case MAGENTA:
+        u_att_flav = AF_DISEASE;
         break;
 
     case BROWN:
         u_att_flav = AF_ACID;
         break;
 
-    case MAGENTA:
-        u_att_flav = AF_DISEASE;
+    case LIGHTGREY:
+        u_att_flav = AF_COLD;
         break;
 
     default:
@@ -576,16 +576,16 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
 
     switch (u_att_flav)
     {
-    case AF_ELEC:
-        resists.elec = (very_ugly ? 2 : 1);
-        break;
-
     case AF_POISON_NASTY:
         resists.poison = 1;
         break;
 
     case AF_POISON_MEDIUM:
         resists.poison = 2;
+        break;
+
+    case AF_ELEC:
+        resists.elec = (very_ugly ? 2 : 1);
         break;
 
     case AF_FIRE:
@@ -598,10 +598,6 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
         resists.sticky_flame = true;
         break;
 
-    case AF_COLD:
-        resists.cold = (very_ugly ? 2 : 1);
-        break;
-
     case AF_DISEASE:
     case AF_ROT:
         resists.rotting = true;
@@ -609,6 +605,10 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
 
     case AF_ACID:
         resists.acid = (very_ugly ? 2 : 1);
+        break;
+
+    case AF_COLD:
+        resists.cold = (very_ugly ? 2 : 1);
         break;
 
     default:

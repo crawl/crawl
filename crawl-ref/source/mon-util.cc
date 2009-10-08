@@ -2012,18 +2012,18 @@ static std::string _ugly_thing_colour_name(const monsters *mon)
 
     switch (make_low_colour(mon->colour))
     {
-        case CYAN:
-            return ("cyan");
         case GREEN:
             return ("green");
+        case CYAN:
+            return ("cyan");
         case RED:
             return ("red");
-        case LIGHTGREY:
-            return ("white");
-        case BROWN:
-            return ("brown");
         case MAGENTA:
             return ("purple");
+        case BROWN:
+            return ("brown");
+        case LIGHTGREY:
+            return ("white");
         default:
             return ("buggy");
     }
