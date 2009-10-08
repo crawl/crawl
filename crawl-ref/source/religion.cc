@@ -4086,7 +4086,12 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_FEAWN:
-        if (item_type_known(item) && is_evil_item(item))
+        if(!item_type_known(item))
+            return DID_NOTHING;
+
+        if (is_evil_item(item)
+            || item.base_type == OBJ_WEAPONS
+                && get_weapon_brand(item) == SPWPN_CHAOS)
             return (DID_NECROMANCY);
         break;
 
