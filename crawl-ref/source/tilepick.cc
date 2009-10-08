@@ -101,7 +101,7 @@ static int _bow_offset(const monsters *mon)
 {
     int mon_wep = mon->inv[MSLOT_WEAPON];
     if (mon_wep == NON_ITEM)
-        return 1;
+        return (1);
 
     switch (mitm[mon_wep].sub_type)
     {
@@ -109,33 +109,9 @@ static int _bow_offset(const monsters *mon)
     case WPN_LONGBOW:
     case WPN_CROSSBOW:
     case WPN_HAND_CROSSBOW:
-        return 0;
-    default:
-        return 1;
-    }
-}
-
-static int _ugly_thing_colour_offset(const monsters *mon)
-{
-    if (mon->type != MONS_UGLY_THING && mon->type != MONS_VERY_UGLY_THING)
         return (0);
-
-    switch (make_low_colour(mon->colour))
-    {
-        case GREEN:
-            return (0);
-        case CYAN:
-            return (1);
-        case RED:
-            return (2);
-        case MAGENTA:
-            return (3);
-        case BROWN:
-            return (4);
-        case LIGHTGREY:
-            return (5);
-        default:
-            return (0);
+    default:
+        return (1);
     }
 }
 
@@ -376,9 +352,19 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // ugly things ('u')
     case MONS_UGLY_THING:
-        return TILEP_MONS_UGLY_THING + _ugly_thing_colour_offset(mon);
+    {
+        const int colour_offset = ugly_thing_colour_offset(mon);
+        if (colour_offset == -1)
+            colour_offset = 0;
+        return TILEP_MONS_UGLY_THING + colour_offset;
+    }
     case MONS_VERY_UGLY_THING:
-        return TILEP_MONS_VERY_UGLY_THING + _ugly_thing_colour_offset(mon);
+    {
+        const int colour_offset = ugly_thing_colour_offset(mon);
+        if (colour_offset == -1)
+            colour_offset = 0;
+        return TILEP_MONS_VERY_UGLY_THING + colour_offset;
+    }
 
     // vortices ('v')
     case MONS_FIRE_VORTEX:

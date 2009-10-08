@@ -848,8 +848,8 @@ bool mons_cannot_move(const monsters *m);
 
 bool monster_senior(const monsters *first, const monsters *second,
                     bool fleeing = false);
-monster_type draco_subspecies( const monsters *mon );
-std::string draconian_colour_name(monster_type mtype);
+monster_type draco_subspecies(const monsters *mon);
+int ugly_thing_colour_offset(const monsters *mon);
 monster_type draconian_colour_by_name(const std::string &colour);
 
 monster_type random_monster_at_grid(const coord_def& p);

@@ -2005,28 +2005,42 @@ void define_monster(monsters &mons)
     mons.ench_countdown = 0;
 }
 
-static std::string _ugly_thing_colour_name(const monsters *mon)
+static const char *ugly_colour_names[] = {
+    "green", "cyan", "red", "purple", "brown", "white"
+};
+
+int ugly_thing_colour_offset(const monsters *mon)
 {
     if (mon->type != MONS_UGLY_THING && mon->type != MONS_VERY_UGLY_THING)
-        return ("buggy");
+        return (-1);
 
     switch (make_low_colour(mon->colour))
     {
         case GREEN:
-            return ("green");
+            return (0);
         case CYAN:
-            return ("cyan");
+            return (1);
         case RED:
-            return ("red");
+            return (2);
         case MAGENTA:
-            return ("purple");
+            return (3);
         case BROWN:
-            return ("brown");
+            return (4);
         case LIGHTGREY:
-            return ("white");
+            return (5);
         default:
-            return ("buggy");
+            return (-1);
     }
+}
+
+static std::string _ugly_thing_colour_name(const monsters *mon)
+{
+    const int colour_offset = ugly_thing_colour_offset(mon);
+
+    if (colour_offset == -1)
+        return ("buggy");
+
+    return (ugly_colour_names[colour_offset]);
 }
 
 static const char *drac_colour_names[] = {
