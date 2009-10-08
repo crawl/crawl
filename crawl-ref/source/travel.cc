@@ -275,44 +275,43 @@ bool is_traversable(dungeon_feature_type grid)
     return (traversable_terrain[grid] == TRAVERSABLE);
 }
 
-static feature_grid _map_to_grid(coord_def &pos)
+struct los_param_excl : los_param_trans
 {
-    feature_grid fgrid = env.grid;
+    los_param_excl(const coord_def& c) : los_param_trans(c) {}
 
-    for (int x = pos.x - LOS_RADIUS; x < pos.x + LOS_RADIUS; x++)
-        for (int y = pos.y - LOS_RADIUS; y < pos.y + LOS_RADIUS; y++)
+    unsigned appearance(const coord_def& p) const
+    {
+        return 1;
+    }
+
+    opacity_type _feat_opacity(dungeon_feature_type feat) const
+    {
+        return grid_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR;
+    }
+
+    // A cell is considered clear unless the player knows it's
+    // opaque.
+    opacity_type opacity(const coord_def& p) const
+    {
+        const coord_def& q = trans(p);
+        if (!is_terrain_seen(q))
+            return OPC_CLEAR;
+        else if (!is_terrain_changed(q))
+            return _feat_opacity(env.grid(q));
+        else if (env.map(q).object < NUM_REAL_FEATURES)
+            return _feat_opacity((dungeon_feature_type) env.map(q).object);
+        else
         {
-            if (!in_bounds(x,y))
-                continue;
-
-            // For unseen terrain, assume transparency.
-            if (!is_terrain_seen(x,y))
-            {
-                fgrid[x][y] = DNGN_FLOOR;
-                continue;
-            }
-
-            if (!is_terrain_changed(x,y))
-                continue;
-
-            if (env.map[x][y].object < NUM_REAL_FEATURES)
-                fgrid[x][y] = (dungeon_feature_type) env.map[x][y].object;
-            else
-            {
-                // If you have seen monsters, items or clouds there,
-                // it must have been passable.
-                fgrid[x][y] = DNGN_FLOOR;
-            }
+            // If you have seen monsters, items or clouds there,
+            // it must have been passable.
+            return OPC_CLEAR;
         }
-
-    return fgrid;
-}
+    }
+};
 
 void travel_exclude::set_exclude_show()
 {
-    // ignores clouds
-    feature_grid fgrid = _map_to_grid(pos);
-    losight(show, fgrid, pos, false, true);
+    losight(show, los_param_excl(pos));
     uptodate = true;
 }
 
