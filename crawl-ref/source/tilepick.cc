@@ -352,18 +352,16 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // ugly things ('u')
     case MONS_UGLY_THING:
-    {
-        const int colour_offset = ugly_thing_colour_offset(mon);
-        if (colour_offset == -1)
-            colour_offset = 0;
-        return TILEP_MONS_UGLY_THING + colour_offset;
-    }
     case MONS_VERY_UGLY_THING:
     {
+        const int ugly_tile = (type == MONS_VERY_UGLY_THING) ?
+            TILEP_MONS_VERY_UGLY_THING : TILEP_MONS_UGLY_THING;
         const int colour_offset = ugly_thing_colour_offset(mon);
-        if (colour_offset == -1)
+
+        if (colour_offset == -1 || detected)
             colour_offset = 0;
-        return TILEP_MONS_VERY_UGLY_THING + colour_offset;
+
+        return (ugly_tile + colour_offset);
     }
 
     // vortices ('v')
