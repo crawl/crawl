@@ -73,6 +73,7 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "items.h"
 #include "lev-pand.h"
+#include "los.h"
 #include "luadgn.h"
 #include "macro.h"
 #include "makeitem.h"

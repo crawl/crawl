@@ -23,6 +23,7 @@ REVISION("$Rev$");
 #include "hiscores.h"
 #include "initfile.h"
 #include "items.h"
+#include "los.h"
 #include "luadgn.h"
 #include "mapdef.h"
 #include "mapmark.h"

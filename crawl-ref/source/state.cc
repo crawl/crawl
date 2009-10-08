@@ -11,6 +11,7 @@ REVISION("$Rev$");
 
 #include "delay.h"
 #include "directn.h"
+#include "los.h"
 #include "macro.h"
 #include "misc.h"
 #include "menu.h" // For print_formatted_paragraph()

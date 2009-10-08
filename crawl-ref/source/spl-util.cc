@@ -24,6 +24,7 @@ REVISION("$Rev$");
 #include "debug.h"
 #include "stuff.h"
 #include "itemname.h"
+#include "los.h"
 #include "macro.h"
 #include "misc.h"
 #include "monstuff.h"

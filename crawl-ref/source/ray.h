@@ -7,6 +7,9 @@
 #ifndef RAY_H
 #define RAY_H
 
+int shoot_ray(double accx, double accy, const double slope,
+                int maxrange, int xpos[], int ypos[]);
+
 struct ray_def
 {
 public:
