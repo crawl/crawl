@@ -115,6 +115,30 @@ static int _bow_offset(const monsters *mon)
     }
 }
 
+static int _ugly_thing_colour_offset(const monsters *mon)
+{
+    if (mon->type != MONS_UGLY_THING && mon->type != MONS_VERY_UGLY_THING)
+        return (0);
+
+    switch (make_low_colour(mon->colour))
+    {
+        case GREEN:
+            return (0);
+        case CYAN:
+            return (1);
+        case RED:
+            return (2);
+        case MAGENTA:
+            return (3);
+        case BROWN:
+            return (4);
+        case LIGHTGREY:
+            return (5);
+        default:
+            return (0);
+    }
+}
+
 int tileidx_monster_base(const monsters *mon, bool detected)
 {
     bool in_water = grid_is_water(grd(mon->pos()));
@@ -352,9 +376,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // ugly things ('u')
     case MONS_UGLY_THING:
-        return TILEP_MONS_UGLY_THING;
+        return TILEP_MONS_UGLY_THING + _ugly_thing_colour_offset(mon);
     case MONS_VERY_UGLY_THING:
-        return TILEP_MONS_VERY_UGLY_THING;
+        return TILEP_MONS_VERY_UGLY_THING + _ugly_thing_colour_offset(mon);
 
     // vortices ('v')
     case MONS_FIRE_VORTEX:
@@ -671,7 +695,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // large abominations ('X')
     case MONS_ABOMINATION_LARGE:
-        return TILEP_MONS_ABOMINATION_LARGE + ((mon->colour)%7);
+        return TILEP_MONS_ABOMINATION_LARGE + ((mon->colour) % 7);
     case MONS_TENTACLED_MONSTROSITY:
         return TILEP_MONS_TENTACLED_MONSTROSITY;
     case MONS_ORB_GUARDIAN:
@@ -3044,32 +3068,32 @@ static int _draconian_colour(int race, int level)
     {
         switch (race)
         {
-        case MONS_DRACONIAN:        return 0;
-        case MONS_BLACK_DRACONIAN:  return 1;
-        case MONS_YELLOW_DRACONIAN: return 2;
-        case MONS_GREEN_DRACONIAN:  return 4;
-        case MONS_MOTTLED_DRACONIAN:return 5;
-        case MONS_PALE_DRACONIAN:   return 6;
-        case MONS_PURPLE_DRACONIAN: return 7;
-        case MONS_RED_DRACONIAN:    return 8;
-        case MONS_WHITE_DRACONIAN:  return 9;
+        case MONS_DRACONIAN:        return (0);
+        case MONS_BLACK_DRACONIAN:  return (1);
+        case MONS_YELLOW_DRACONIAN: return (2);
+        case MONS_GREEN_DRACONIAN:  return (4);
+        case MONS_MOTTLED_DRACONIAN:return (5);
+        case MONS_PALE_DRACONIAN:   return (6);
+        case MONS_PURPLE_DRACONIAN: return (7);
+        case MONS_RED_DRACONIAN:    return (8);
+        case MONS_WHITE_DRACONIAN:  return (9);
         }
     }
     if (level < 7)
-        return 0;
+        return (0);
     switch (race)
     {
-    case SP_BLACK_DRACONIAN:   return 1;
-    case SP_YELLOW_DRACONIAN:  return 2;
-    case SP_GREY_DRACONIAN:    return 3;
-    case SP_GREEN_DRACONIAN:   return 4;
-    case SP_MOTTLED_DRACONIAN: return 5;
-    case SP_PALE_DRACONIAN:    return 6;
-    case SP_PURPLE_DRACONIAN:  return 7;
-    case SP_RED_DRACONIAN:     return 8;
-    case SP_WHITE_DRACONIAN:   return 9;
+    case SP_BLACK_DRACONIAN:   return (1);
+    case SP_YELLOW_DRACONIAN:  return (2);
+    case SP_GREY_DRACONIAN:    return (3);
+    case SP_GREEN_DRACONIAN:   return (4);
+    case SP_MOTTLED_DRACONIAN: return (5);
+    case SP_PALE_DRACONIAN:    return (6);
+    case SP_PURPLE_DRACONIAN:  return (7);
+    case SP_RED_DRACONIAN:     return (8);
+    case SP_WHITE_DRACONIAN:   return (9);
     }
-    return 0;
+    return (0);
 }
 
 int get_gender_from_tile(int parts[])

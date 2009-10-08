@@ -246,7 +246,17 @@ tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 
 ## Ugly things ('u')
 ugly_thing MONS_UGLY_THING
+ugly_thing1
+ugly_thing2
+ugly_thing3
+ugly_thing4
+ugly_thing5
 very_ugly_thing MONS_VERY_UGLY_THING
+very_ugly_thing1
+very_ugly_thing2
+very_ugly_thing3
+very_ugly_thing4
+very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
