@@ -75,20 +75,4 @@ struct los_param_solid : los_param_base
     opacity_type opacity(const coord_def& p) const;
 };
 
-// Provides a compatible set of parameters for use with the
-// legacy losight() function.
-struct los_param_compat : los_param_base
-{
-    feature_grid grid;
-    bool solid_blocks;
-    bool ignore_clouds;
-
-    los_param_compat(const feature_grid& gr, const coord_def& c,
-                     bool sb, bool ic);
-
-    dungeon_feature_type feature(const coord_def& p) const;
-    unsigned appearance(const coord_def& p) const;
-    opacity_type opacity(const coord_def& p) const;
-};
-
 #endif

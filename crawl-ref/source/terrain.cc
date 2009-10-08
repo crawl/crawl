@@ -365,16 +365,11 @@ unsigned int show_appearance(const coord_def &ep)
 
 dungeon_feature_type grid_appearance(const coord_def &gc)
 {
-    return grid_appearance(grd, gc);
-}
+    dungeon_feature_type feat = env.grid(gc);
+    if (feat == DNGN_SECRET_DOOR)
+        feat = grid_secret_door_appearance(gc);
 
-dungeon_feature_type grid_appearance(const feature_grid &gr, const coord_def &gc)
-{
-    dungeon_feature_type grid = gr(gc);
-    if (grid == DNGN_SECRET_DOOR)
-        grid = grid_secret_door_appearance(gc);
-
-    return grid;
+    return feat;
 }
 
 dungeon_feature_type grid_secret_door_appearance(const coord_def &where)

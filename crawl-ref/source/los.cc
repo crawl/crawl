@@ -829,13 +829,6 @@ void losight(env_show_grid& sh, const los_param& dat)
     sh(o+sh_o) = dat.appearance(o);
 }
 
-void losight(env_show_grid &sh, feature_grid &gr,
-             const coord_def& center, bool clear_walls_block,
-             bool ignore_clouds)
-{
-    losight(sh, los_param_compat(gr, center, clear_walls_block, ignore_clouds));
-}
-
 void losight_permissive(env_show_grid &sh, const coord_def& center)
 {
     for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)

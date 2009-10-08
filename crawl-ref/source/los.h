@@ -31,9 +31,6 @@ bool grid_see_grid(const coord_def& p1, const coord_def& p2,
                    dungeon_feature_type allowed = DNGN_UNSEEN);
 
 void clear_rays_on_exit();
-void losight(env_show_grid &sh, feature_grid &gr,
-             const coord_def& center, bool clear_walls_block = false,
-             bool ignore_clouds = false);
 void losight(env_show_grid& sh, const los_param& dat);
 void calc_show_los();
 
