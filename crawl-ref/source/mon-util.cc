@@ -850,8 +850,8 @@ static bool _shout_fits_monster(int type, int shout)
     }
 }
 
-// If demon_shout is true, we're trying to find a random verb and loudness
-// for a pandemonium lord trying to shout.
+// If demon_shout is true, we're trying to find a random verb and
+// loudness for a Pandemonium lord trying to shout.
 shout_type mons_shouts(int mc, bool demon_shout)
 {
     ASSERT(smc);
