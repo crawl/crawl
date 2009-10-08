@@ -1268,7 +1268,7 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         ghost_demon ghost;
         ghost.init_ugly_thing(menv[id].type == MONS_VERY_UGLY_THING, false,
-                              menv[id].colour);
+                              mg.colour);
         menv[id].set_ghost(ghost, false);
         menv[id].uglything_init();
     }
