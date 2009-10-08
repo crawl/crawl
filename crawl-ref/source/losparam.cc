@@ -10,6 +10,7 @@ REVISION("$Rev$");
 
 #include "cloud.h"
 #include "externs.h"
+#include "los.h"
 #include "stuff.h"
 #include "terrain.h"
 
@@ -23,12 +24,12 @@ los_param_trans::los_param_trans(const coord_def& c)
 
 coord_def los_param_trans::trans(const coord_def& p) const
 {
-    return p + center;
+    return (p + center);
 }
 
-bool los_param_trans::map_bounds(const coord_def& p) const
+bool los_param_trans::los_bounds(const coord_def& p) const
 {
-    return ::map_bounds(trans(p));
+    return (map_bounds(trans(p)) && p.abs() <= get_los_radius_squared());
 }
 
 

@@ -745,10 +745,8 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
     for (int x = 0; x <= LOS_MAX_RANGE_X; ++x)
         for (int y = 0; y <= LOS_MAX_RANGE_Y; ++y, inptr += num_words)
         {
-            if (x == 0 && y == 0)
-                continue;
             coord_def p = coord_def(sx*x, sy*y);
-            if (!dat.map_bounds(p))
+            if (!dat.los_bounds(p))
                 continue;
 
             // if this cell is opaque...
@@ -788,7 +786,7 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
                 const coord_def p = coord_def(sx * compressed_ray_x[rayidx],
                                               sy * compressed_ray_y[rayidx]);
                 // update shadow map
-                if (dat.map_bounds(p) && p.abs() <= _los_radius_squared)
+                if (dat.los_bounds(p))
                 {
                     sh(p+sh_o) = dat.appearance(p);
                 }

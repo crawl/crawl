@@ -24,10 +24,11 @@ struct los_param
 {
     virtual ~los_param() {}
 
-    // Whether the translated coordinate lies in the map (including boundary)
-    virtual bool map_bounds(const coord_def& p) const = 0;
+    // Whether the translated coordinate lies within the map
+    // (including boundary) and within the LOS area
+    virtual bool los_bounds(const coord_def& p) const = 0;
 
-    // appearance(p) will be copied to show(p) for visible p.
+    // appearance(p) will be copied to show(sh_o+p) for visible p.
     virtual unsigned appearance(const coord_def& p) const = 0;
 
     virtual opacity_type opacity(const coord_def& p) const = 0;
@@ -42,7 +43,7 @@ struct los_param_trans : los_param
 
     coord_def trans(const coord_def& p) const;
 
-    bool map_bounds(const coord_def& p) const;
+    bool los_bounds(const coord_def& p) const;
 };
 
 // Everything is visible.
