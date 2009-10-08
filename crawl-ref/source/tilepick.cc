@@ -356,7 +356,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     {
         const int ugly_tile = (type == MONS_VERY_UGLY_THING) ?
             TILEP_MONS_VERY_UGLY_THING : TILEP_MONS_UGLY_THING;
-        const int colour_offset = ugly_thing_colour_offset(mon);
+        int colour_offset = ugly_thing_colour_offset(mon);
 
         if (colour_offset == -1 || detected)
             colour_offset = 0;
