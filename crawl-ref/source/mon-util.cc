@@ -2007,7 +2007,7 @@ void define_monster(monsters &mons)
 
 static std::string _ugly_thing_colour_name(const monsters *mon)
 {
-    if (mons_genus(mon->type) != MONS_UGLY_THING)
+    if (mon->type != MONS_UGLY_THING && mon->type != MONS_VERY_UGLY_THING)
         return ("buggy");
 
     switch (make_low_colour(mon->colour))
