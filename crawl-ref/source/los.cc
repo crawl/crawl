@@ -682,14 +682,23 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     return (count);
 }
 
-// Usually calculates whether from one grid someone could see the other.
-// Depending on the viewer's habitat, 'allowed' can be set to DNGN_FLOOR,
-// DNGN_SHALLOW_WATER or DNGN_DEEP_WATER.
-// Yes, this ignores lava-loving monsters.
-// XXX: It turns out the beams are not symmetrical, i.e. switching
-// pos1 and pos2 may result in small variations.
-bool grid_see_grid(const coord_def& p1, const coord_def& p2,
-                   dungeon_feature_type allowed)
+// Is p2 visible from p1, disregarding clouds?
+// XXX: Horribly inefficient since we do an entire LOS calculation;
+//      needs to be rewritten if it is used more.
+bool cell_see_cell(const coord_def& p1, const coord_def& p2)
+{
+    env_show_grid show;
+    losight(show, los_param_nocloud(p1));
+    return see_grid(show, p1, p2);
+}
+
+// Checks whether there is a straight path from p1 to p2 that passes
+// through features >= allowed.
+// If it exists, such a path may be missed; on the other hand, it
+// is not guaranteed that p2 is visible from p1 according to LOS rules.
+// Not symmetric.
+bool can_go_straight(const coord_def& p1, const coord_def& p2,
+                     dungeon_feature_type allowed)
 {
     if (distance(p1, p2) > _los_radius_squared)
         return (false);
@@ -698,7 +707,6 @@ bool grid_see_grid(const coord_def& p1, const coord_def& p2,
     if (allowed != DNGN_UNSEEN)
         max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
 
-    // XXX: Ignoring clouds for now.
     return (!num_feats_between(p1, p2, DNGN_UNSEEN, max_disallowed,
                                true, true));
 }
@@ -756,6 +764,8 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
     for (int x = 0; x <= LOS_MAX_RANGE_X; ++x)
         for (int y = 0; y <= LOS_MAX_RANGE_Y; ++y, inptr += num_words)
         {
+            if (x == 0 && y == 0)
+                continue;
             coord_def p = coord_def(sx*x, sy*y);
             if (!dat.map_bounds(p))
                 continue;

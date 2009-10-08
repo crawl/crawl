@@ -54,14 +54,21 @@ struct los_param_permissive : los_param_trans
     opacity_type opacity(const coord_def& p) const;
 };
 
-// A complete base implementation that does standard visibility
-// based on env.grid.
-struct los_param_base : los_param_trans
+// Standard visibility disregarding clouds.
+struct los_param_nocloud : los_param_trans
 {
-    los_param_base(const coord_def& c);
+    los_param_nocloud(const coord_def& c);
 
     dungeon_feature_type feature(const coord_def& p) const;
     unsigned appearance(const coord_def& p) const;
+    opacity_type opacity(const coord_def& p) const;
+};
+
+// Standard visibility.
+struct los_param_base : los_param_nocloud
+{
+    los_param_base(const coord_def& c);
+
     unsigned short cloud_idx(const coord_def& p) const;
     opacity_type opacity(const coord_def& p) const;
 };

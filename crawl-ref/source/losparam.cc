@@ -50,21 +50,38 @@ opacity_type los_param_permissive::opacity(const coord_def& p) const
 }
 
 
-/* los_param_base */
+/* los_param_nocloud */
 
-los_param_base::los_param_base(const coord_def& c)
+los_param_nocloud::los_param_nocloud(const coord_def& c)
     : los_param_trans(c)
 {
 }
 
-dungeon_feature_type los_param_base::feature(const coord_def& p) const
+dungeon_feature_type los_param_nocloud::feature(const coord_def& p) const
 {
     return env.grid(trans(p));
 }
 
-unsigned los_param_base::appearance(const coord_def& p) const
+unsigned los_param_nocloud::appearance(const coord_def& p) const
 {
     return grid_appearance(trans(p));
+}
+
+opacity_type los_param_nocloud::opacity(const coord_def& p) const
+{
+    dungeon_feature_type f = feature(p);
+    if (grid_is_opaque(f))
+        return OPC_OPAQUE;
+    else
+        return OPC_CLEAR;
+}
+
+
+/* los_param_base */
+
+los_param_base::los_param_base(const coord_def& c)
+    : los_param_nocloud(c)
+{
 }
 
 unsigned short los_param_base::cloud_idx(const coord_def& p) const

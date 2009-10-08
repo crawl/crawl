@@ -3562,7 +3562,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
     }
 
     if (!potentially_blocking
-        || grid_see_grid(mon->pos(), you.pos(), can_move))
+        || can_go_straight(mon->pos(), you.pos(), can_move))
     {
         // The player is easily reachable.
         // Clear travel path and target, if necessary.
@@ -3591,7 +3591,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
             const coord_def targ = mon->travel_path[len - 1];
 
             // Current target still valid?
-            if (grid_see_grid(targ, you.pos(), can_move))
+            if (can_go_straight(targ, you.pos(), can_move))
             {
                 // Did we reach the target?
                 if (mon->pos() == mon->travel_path[0])
@@ -3605,7 +3605,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
                         return (true);
                     }
                 }
-                else if (grid_see_grid(mon->pos(), mon->travel_path[0],
+                else if (can_go_straight(mon->pos(), mon->travel_path[0],
                                        can_move))
                 {
                     mon->target = mon->travel_path[0];
@@ -3944,7 +3944,7 @@ static bool _handle_monster_travelling(monsters *mon,
     }
 
     // Can we still see our next waypoint?
-    if (!grid_see_grid(mon->pos(), mon->travel_path[0], can_move))
+    if (!can_go_straight(mon->pos(), mon->travel_path[0], can_move))
     {
 #ifdef DEBUG_PATHFIND
         mpr("Can't see waypoint grid.");
@@ -3962,7 +3962,7 @@ static bool _handle_monster_travelling(monsters *mon,
         const int size = mon->travel_path.size();
         for (int i = size - 1; i >= 0; --i)
         {
-            if (grid_see_grid(mon->pos(), mon->travel_path[i], can_move))
+            if (can_go_straight(mon->pos(), mon->travel_path[i], can_move))
             {
                 mon->target = mon->travel_path[i];
                 erase = i;

@@ -3159,7 +3159,7 @@ std::vector<coord_def> monster_pathfind::backtrack()
 // Reduces the path coordinates to only a couple of key waypoints needed
 // to reach the target. Waypoints are chosen such that from one waypoint you
 // can see (and, more importantly, reach) the next one. Note that
-// grid_see_grid() is probably rather too conservative in these estimates.
+// can_go_straight() is probably rather too conservative in these estimates.
 // This is done because Crawl's pathfinding - once a target is in sight and easy
 // reach - is both very robust and natural, especially if we want to flexibly
 // avoid plants and other monsters in the way.
@@ -3185,7 +3185,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (grid_see_grid(pos, path[i], can_move))
+        if (can_go_straight(pos, path[i], can_move))
             continue;
         else
         {

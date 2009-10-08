@@ -60,7 +60,7 @@ static bool _place_feature_near(const coord_def &centre,
         if (cp == centre || (cp - centre).abs() > radius2 || !in_bounds(cp))
             continue;
 
-        if (not_seen && grid_see_grid(cp, centre))
+        if (not_seen && cell_see_cell(cp, centre))
             continue;
 
         if (grd(cp) == candidate)

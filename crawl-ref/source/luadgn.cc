@@ -2980,11 +2980,11 @@ LUAFN(dgn_dbg_dump_map)
     return (0);
 }
 
-LUAFN(dgn_grid_see_grid)
+LUAFN(dgn_cell_see_cell)
 {
     COORDS(p, 1, 2);
     COORDS(q, 3, 4);
-    return grid_see_grid(p, q);
+    PLUARET(number, cell_see_cell(p, q));
 }
 
 static const struct luaL_reg dgn_lib[] =
@@ -3005,7 +3005,6 @@ static const struct luaL_reg dgn_lib[] =
     { "chance", dgn_chance },
     { "weight", dgn_weight },
     { "welcome", dgn_welcome },
-    { "weight", dgn_weight },
     { "orient", dgn_orient },
     { "shuffle", dgn_shuffle },
     { "shuffle_remove", dgn_shuffle_remove },
@@ -3134,7 +3133,7 @@ static const struct luaL_reg dgn_lib[] =
     { "lev_floortile", dgn_lev_floortile },
     { "lev_rocktile", dgn_lev_rocktile },
 
-    { "grid_see_grid", dgn_grid_see_grid },
+    { "cell_see_cell", dgn_cell_see_cell },
 
     { NULL, NULL }
 };
