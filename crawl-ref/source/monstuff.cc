@@ -3497,6 +3497,25 @@ static bool _target_is_unreachable(monsters *mon)
             || mon->travel_target == MTRAV_KNOWN_UNREACHABLE);
 }
 
+// Checks whether there is a straight path from p1 to p2 that passes
+// through features >= allowed.
+// If it exists, such a path may be missed; on the other hand, it
+// is not guaranteed that p2 is visible from p1 according to LOS rules.
+// Not symmetric.
+bool can_go_straight(const coord_def& p1, const coord_def& p2,
+                     dungeon_feature_type allowed)
+{
+    if (distance(p1, p2) > get_los_radius_squared())
+        return (false);
+
+    dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
+    if (allowed != DNGN_UNSEEN)
+        max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
+
+    return (!num_feats_between(p1, p2, DNGN_UNSEEN, max_disallowed,
+                               true, true));
+}
+
 // The monster is trying to get to the player (MHITYOU).
 // Check whether there's an unobstructed path to the player (in sight!),
 // either by using an existing travel_path or calculating a new one.

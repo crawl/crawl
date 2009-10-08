@@ -201,4 +201,8 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
                        cloud_type *cl_type = NULL, bool placement = false);
 
 void mons_relocated(monsters *mons);
+
+bool can_go_straight(const coord_def& p1, const coord_def& p2,
+                     dungeon_feature_type allowed);
+
 #endif

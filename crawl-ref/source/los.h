@@ -28,8 +28,6 @@ int num_feats_between(const coord_def& source, const coord_def& target,
                       bool exclude_endpoints = true,
                       bool just_check = false);
 bool cell_see_cell(const coord_def& p1, const coord_def& p2);
-bool can_go_straight(const coord_def& p1, const coord_def& p2,
-                     dungeon_feature_type allowed);
 
 void clear_rays_on_exit();
 void losight(env_show_grid& sh, const los_param& dat);

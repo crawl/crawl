@@ -692,25 +692,6 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
     return see_grid(show, p1, p2);
 }
 
-// Checks whether there is a straight path from p1 to p2 that passes
-// through features >= allowed.
-// If it exists, such a path may be missed; on the other hand, it
-// is not guaranteed that p2 is visible from p1 according to LOS rules.
-// Not symmetric.
-bool can_go_straight(const coord_def& p1, const coord_def& p2,
-                     dungeon_feature_type allowed)
-{
-    if (distance(p1, p2) > _los_radius_squared)
-        return (false);
-
-    dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
-    if (allowed != DNGN_UNSEEN)
-        max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
-
-    return (!num_feats_between(p1, p2, DNGN_UNSEEN, max_disallowed,
-                               true, true));
-}
-
 // The rule behind LOS is:
 // Two cells can see each other if there is any line from some point
 // of the first to some point of the second ("generous" LOS.)
