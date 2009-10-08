@@ -9,6 +9,7 @@ REVISION("$Rev$");
 #include "los.h"
 
 #include <cmath>
+#include <algorithm>
 
 #include "cloud.h"
 #include "debug.h"
