@@ -7,7 +7,6 @@
 #ifndef LUADGN_H
 #define LUADGN_H
 
-#include "AppHdr.h"
 #include "clua.h"
 
 // Defined in acr.cc

@@ -7,7 +7,6 @@
 #ifndef STASH_H
 #define STASH_H
 
-#include "AppHdr.h"
 #include "shopping.h"
 #include <string>
 

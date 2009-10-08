@@ -11,7 +11,6 @@
 #include <vector>
 #include <algorithm>
 #include <time.h>
-#include "AppHdr.h"
 #include "externs.h"
 #include "format.h"
 #include "defines.h"

@@ -7,8 +7,6 @@
 #ifndef __CLUA_H__
 #define __CLUA_H__
 
-#include "AppHdr.h"
-
 extern "C" {
 #include <lua.h>
 #include <lauxlib.h>

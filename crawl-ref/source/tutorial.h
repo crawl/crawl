@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "AppHdr.h"
 #include "externs.h"
 
 class formatted_string;

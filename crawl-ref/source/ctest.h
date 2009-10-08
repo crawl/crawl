@@ -1,8 +1,6 @@
 #ifndef CTEST_H
 #define CTEST_H
 
-#include "AppHdr.h"
-
 #ifdef DEBUG_DIAGNOSTICS
 
 namespace crawl_tests
