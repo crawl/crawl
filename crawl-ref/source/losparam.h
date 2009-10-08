@@ -66,6 +66,15 @@ struct los_param_base : los_param_trans
     opacity_type opacity(const coord_def& p) const;
 };
 
+// Like los_param_base, but any solid object blocks.
+// This includes clear walls and statues.
+struct los_param_solid : los_param_base
+{
+    los_param_solid(const coord_def& c);
+
+    opacity_type opacity(const coord_def& p) const;
+};
+
 // Provides a compatible set of parameters for use with the
 // legacy losight() function.
 struct los_param_compat : los_param_base

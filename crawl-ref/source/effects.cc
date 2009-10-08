@@ -4344,9 +4344,9 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
     std::vector<std::vector<coord_def> > radius_points;
 
     env_show_grid losgrid;
-    losight(losgrid, grd, corpse.pos, true);
+    losight(losgrid, los_param_solid(corpse.pos));
 
-    collect_radius_points(radius_points,corpse.pos, losgrid);
+    collect_radius_points(radius_points, corpse.pos, losgrid);
 
     // So what we have done so far is collect the set of points at each radius
     // reachable from the origin with (somewhat constrained) 8 connectivity,

@@ -84,6 +84,25 @@ opacity_type los_param_base::opacity(const coord_def& p) const
 }
 
 
+/* los_param_solid */
+
+los_param_solid::los_param_solid(const coord_def& c)
+    : los_param_base(c)
+{
+}
+
+opacity_type los_param_solid::opacity(const coord_def& p) const
+{
+    dungeon_feature_type f = feature(p);
+    if (grid_is_solid(f))
+        return OPC_OPAQUE;
+    else if (is_opaque_cloud(cloud_idx(p)))
+        return OPC_HALF;
+    else
+        return OPC_CLEAR;
+}
+
+
 /* los_param_compat */
 
 los_param_compat::los_param_compat(const feature_grid& gr, const coord_def& c,

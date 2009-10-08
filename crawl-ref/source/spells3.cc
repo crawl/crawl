@@ -1058,7 +1058,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     // Use an alternate LOS grid, based on the caster's LOS.
     env_show_grid losgrid;
     if (caster->atype() != ACT_PLAYER)
-        losight(losgrid, grd, caster->pos(), true);
+        losight(losgrid, los_param_solid(caster->pos()));
 
     int number_raised = 0;
     int number_seen   = 0;

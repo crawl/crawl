@@ -852,11 +852,11 @@ void calc_show_los()
     if (!crawl_state.arena && !crawl_state.arena_suspended)
     {
         // Must be done first.
-        losight(env.show, grd, you.pos());
+        losight(env.show, los_param_base(you.pos()));
 
         // What would be visible, if all of the translucent walls were
         // made opaque.
-        losight(env.no_trans_show, grd, you.pos(), true);
+        losight(env.no_trans_show, los_param_solid(you.pos()));
     }
     else
     {
