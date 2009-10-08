@@ -3477,6 +3477,16 @@ bool parse_args( int argc, char **argv, bool rc_only )
 	else
 		set_crawl_base_dir(argv[0]);
 
+    // chdir to the location of the exe
+    exe_path = get_parent_directory(exe_path);
+#ifdef OSX
+    // in an app bundle, move to the App bundle's parent
+    if (exe_path.rfind("Contents/MacOS") != std::string::npos ||
+        exe_path.rfind("Contents/Resources") != std::string::npos)
+        exe_path += "/../../..";
+#endif
+    chdir(exe_path.c_str());
+
     SysEnv.rcdirs.clear();
 
     if (argc < 2)           // no args!
