@@ -2211,7 +2211,7 @@ void describe_item( item_def &item, bool allow_inscribe, bool shopping )
             if (item.base_type == OBJ_BOOKS && in_inventory(item))
             {
                 cprintf("Select a spell to read its description or to "
-                        "memorize it.");
+                        "memorise it.");
             }
             else
                 cprintf("Select a spell to read its description.");

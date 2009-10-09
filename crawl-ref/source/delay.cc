@@ -2136,7 +2136,7 @@ delay_type get_delay(const std::string &name)
     if (name == "armor_off")
         return (DELAY_ARMOUR_OFF);
 
-    if (name == "memorize")
+    if (name == "memorise")
         return (DELAY_MEMORISE);
 
     if (name == "jewelry_on")
