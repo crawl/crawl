@@ -20,12 +20,12 @@ REVISION("$Rev$");
 typedef int (*backtrace_t)(void * *, int);
 typedef char **(*backtrace_symbols_t)(void * const *, int);
 
-// used to convert from void* to function pointer (without a
+// Used to convert from void* to function pointer (without a
 // compiler warning).
 template <typename TO, typename FROM> TO nasty_cast(FROM f) {
-	union {
-		FROM f; TO t;
-	} u; u.f = f; return u.t;
+    union {
+        FROM f; TO t;
+    } u; u.f = f; return u.t;
 }
 #endif
 
@@ -154,16 +154,16 @@ void write_stack_trace(FILE* file, int ignore_count)
     void* frames[50];
 
 #if defined (OSX)
-	backtrace_t backtrace;
-	backtrace_symbols_t backtrace_symbols;
-	backtrace = nasty_cast<backtrace_t, void*>(dlsym(RTLD_DEFAULT, "backtrace"));
-	backtrace_symbols = nasty_cast<backtrace_symbols_t, void*>(dlsym(RTLD_DEFAULT, "backtrace_symbols"));
-	if (!backtrace || !backtrace_symbols)
-	{
-		fprintf(stderr, "Couldn't get a stack trace." EOL);
-		fprintf(file, "Couldn't get a stack trace." EOL);
-		return;
-	}
+    backtrace_t backtrace;
+    backtrace_symbols_t backtrace_symbols;
+    backtrace = nasty_cast<backtrace_t, void*>(dlsym(RTLD_DEFAULT, "backtrace"));
+    backtrace_symbols = nasty_cast<backtrace_symbols_t, void*>(dlsym(RTLD_DEFAULT, "backtrace_symbols"));
+    if (!backtrace || !backtrace_symbols)
+    {
+        fprintf(stderr, "Couldn't get a stack trace." EOL);
+        fprintf(file, "Couldn't get a stack trace." EOL);
+        return;
+    }
 #endif
 
     int num_frames = backtrace(frames, ARRAYSZ(frames));
@@ -182,53 +182,54 @@ void write_stack_trace(FILE* file, int ignore_count)
     }
 #endif
 
-	fprintf(file, "Obtained %d stack frames." EOL, num_frames);
+    fprintf(file, "Obtained %d stack frames." EOL, num_frames);
 
-	// Now we prettify the printout to even show demangled C++ function names.
-	std::string bt = "";
-	for (int i = 0; i < num_frames; i++) {
+    // Now we prettify the printout to even show demangled C++ function names.
+    std::string bt = "";
+    for (int i = 0; i < num_frames; i++) {
 #if defined (OSX)
-		char *addr = ::strstr(symbols[i], "0x");
-		char *mangled = ::strchr(addr, ' ') + 1;
-		char *offset = ::strchr(addr, '+');
-		char *postmangle = ::strchr(mangled, ' ');
-		if (mangled) *(mangled - 1) = 0;
-		bt += addr;
-		int status;
-		bt += ": ";
-		if (addr && mangled) {
-			if (postmangle)
-				*postmangle = '\0';
-			char *realname = abi::__cxa_demangle(mangled, 0, 0, &status);
-			if (realname) {
-				bt += realname;
-			} else {
-				bt += mangled;
-			}
-			bt += " ";
-			bt += offset;
-			free(realname);
-		}
+        char *addr = ::strstr(symbols[i], "0x");
+        char *mangled = ::strchr(addr, ' ') + 1;
+        char *offset = ::strchr(addr, '+');
+        char *postmangle = ::strchr(mangled, ' ');
+        if (mangled)
+            *(mangled - 1) = 0;
+        bt += addr;
+        int status;
+        bt += ": ";
+        if (addr && mangled)
+        {
+            if (postmangle)
+                *postmangle = '\0';
+            char *realname = abi::__cxa_demangle(mangled, 0, 0, &status);
+            if (realname)
+                bt += realname;
+            else
+                bt += mangled;
+            bt += " ";
+            bt += offset;
+            free(realname);
+        }
 #else // OSX
-		bt += symbols[i];
-		int status;
-		/* extract the identifier from symbols[i].  It's inside of parens. */
-		char * firstparen = ::strchr(symbols[i], '(');
-		char * lastparen = ::strchr(symbols[i], '+');
-		if (firstparen != 0 && lastparen != 0 && firstparen < lastparen) {
-			bt += ": ";
-			*lastparen = '\0';
-			char * realname = abi::__cxa_demangle(firstparen + 1, 0, 0, &status);
-			if (realname != NULL) {
-				bt += realname;
-			}
-			free(realname);
-		}
+        bt += symbols[i];
+        int status;
+        // Extract the identifier from symbols[i].  It's inside of parens.
+        char *firstparen = ::strchr(symbols[i], '(');
+        char *lastparen = ::strchr(symbols[i], '+');
+        if (firstparen != 0 && lastparen != 0 && firstparen < lastparen)
+        {
+            bt += ": ";
+            *lastparen = '\0';
+            char *realname = abi::__cxa_demangle(firstparen + 1, 0, 0, &status);
+            if (realname != NULL)
+                bt += realname;
+            free(realname);
+        }
 #endif
-		bt += EOL;
-	}
+        bt += EOL;
+    }
 
-	fprintf(file, "%s", bt.c_str());
+    fprintf(file, "%s", bt.c_str());
 
     free(symbols);
 }
