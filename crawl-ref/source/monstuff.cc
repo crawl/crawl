@@ -5811,9 +5811,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     {
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
-        // A (very) ugly thing's proximity to others of its kind can
-        // mutate it into a different (very) ugly thing.
-        used = ugly_thing_proximity_mutate(monster);
+        // A (very) ugly thing's proximity to you if you're glowing, or
+        // to others of its kind, can mutate it into a different (very)
+        // ugly thing.
+        used = ugly_thing_mutate(monster, true);
         break;
 
     case MONS_ORC_KNIGHT:

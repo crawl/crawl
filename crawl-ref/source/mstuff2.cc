@@ -2484,48 +2484,75 @@ bool orange_statue_effects(monsters *mons)
     return (false);
 }
 
-void ugly_thing_energy_mutate(monsters *ugly)
+bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {
-    simple_monster_message(ugly,
-        " basks in the mutagenic energy and changes!");
-    ugly->uglything_mutate();
-}
+    bool success = false;
 
-bool ugly_thing_proximity_mutate(monsters *ugly)
-{
-    if (one_chance_in(9))
+    std::string src = "";
+
+    if (!proximity)
+        success = true;
+    else if (one_chance_in(9))
     {
-        int mutate_chance = 0;
+        int you_mutate_chance = 0;
+        int mon_mutate_chance = 0;
 
         for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
         {
-            monsters *ugly_near = monster_at(*ri);
-
-            if (ugly_near == NULL)
-                continue;
-
-            if (ugly_near->type == MONS_UGLY_THING
-                || ugly_near->type == MONS_VERY_UGLY_THING)
+            if (you.pos() == *ri)
             {
-                if (coinflip())
-                    mutate_chance++;
+                if (you.magic_contamination <= 5)
+                    continue;
 
-                if (ugly_near->type == MONS_VERY_UGLY_THING)
+                you_mutate_chance = you.magic_contamination * 8 / 25;
+            }
+            else
+            {
+                monsters *ugly_near = monster_at(*ri);
+
+                if (ugly_near == NULL)
+                    continue;
+
+                if (ugly_near->type == MONS_UGLY_THING
+                    || ugly_near->type == MONS_VERY_UGLY_THING)
                 {
                     if (coinflip())
-                        mutate_chance++;
+                        mon_mutate_chance++;
+
+                    if (ugly_near->type == MONS_VERY_UGLY_THING)
+                    {
+                        if (coinflip())
+                            mon_mutate_chance++;
+                    }
                 }
             }
         }
 
-        if (!one_chance_in(mutate_chance + 1))
-        {
-            simple_monster_message(ugly,
-                " basks in the mutagenic energy from its kin and changes!");
-            ugly->uglything_mutate();
+        you_mutate_chance = std::min(16, you_mutate_chance);
+        mon_mutate_chance = std::min(16, mon_mutate_chance);
 
-            return (true);
+        if (!one_chance_in(you_mutate_chance + mon_mutate_chance + 1))
+        {
+            const bool proximity_you =
+                (you_mutate_chance  > mon_mutate_chance) ? true :
+                (you_mutate_chance == mon_mutate_chance) ? coinflip()
+                                                         : false;
+
+            src = proximity_you ? " from you" : " from its kin";
+
+            success = true;
         }
+    }
+
+    if (success)
+    {
+        simple_monster_message(ugly,
+            make_stringf(" basks in the mutagenic energy%s and changes!",
+                         src.c_str()).c_str());
+
+        ugly->uglything_mutate();
+
+        return (true);
     }
 
     return (false);
