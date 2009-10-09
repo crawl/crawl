@@ -22,7 +22,7 @@ REVISION("$Rev$");
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
-#include "monstuff.h"
+#include "mon-util.h"
 #include "mstuff2.h"
 #include "ouch.h"
 #include "overmap.h"
