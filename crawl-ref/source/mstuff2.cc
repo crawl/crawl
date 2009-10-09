@@ -2500,12 +2500,7 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
         for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
         {
             if (you.pos() == *ri)
-            {
-                if (you.magic_contamination == 0)
-                    continue;
-
                 you_mutate_chance = get_contamination_level();
-            }
             else
             {
                 monsters *ugly_near = monster_at(*ri);
