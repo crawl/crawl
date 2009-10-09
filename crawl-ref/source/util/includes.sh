@@ -105,7 +105,8 @@ cleanup ()
             /^quiver.h it_use2.cc$/d;
             /^quiver.h output.cc$/d;
             /^ghost.h kills.cc$/d;
-            /^cmd-\(name\|keys\)\.h macro.cc$/d;
+            /^cmd-name.h macro.cc$/d;
+            /^cmd-keys.h macro.cc$/d;
             /^mon-spll.h mon-util.cc$/d;
             /^AppHdr.h /d;
             / artefact.cc/d'
