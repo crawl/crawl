@@ -17,6 +17,7 @@ REVISION("$Rev$");
 #include "items.h"
 #include "itemprop.h"
 #include "kills.h"
+#include "los.h"
 #include "macro.h"
 #include "monstuff.h"
 #include "mon-util.h"
