@@ -11,8 +11,22 @@ REVISION("$Rev$");
 #include <signal.h>
 #endif
 
-#ifdef __GLIBC__
+#include <cxxabi.h>
 #include <execinfo.h>
+
+#ifdef OSX
+#include <dlfcn.h>
+
+typedef int (*backtrace_t)(void * *, int);
+typedef char **(*backtrace_symbols_t)(void * const *, int);
+
+// used to convert from void* to function pointer (without a
+// compiler warning).
+template <typename TO, typename FROM> TO nasty_cast(FROM f) {
+	union {
+		FROM f; TO t;
+	} u; u.f = f; return u.t;
+}
 #endif
 
 #include "crash.h"
@@ -134,18 +148,28 @@ void dump_crash_info(FILE* file)
             name);
 }
 
-#ifdef __GLIBC__
-// NOTE: This should work on OS X, according to
-// http://developer.apple.com/DOCUMENTATION/DARWIN/Reference/ManPages/man3/backtrace_symbols.3.html
-
+#if (defined(UNIX) || defined(OSX))
 void write_stack_trace(FILE* file, int ignore_count)
 {
     void* frames[50];
 
-    int num_frames = backtrace(frames, ARRAYSZ(frames));
+#if defined (OSX)
+	backtrace_t backtrace;
+	backtrace_symbols_t backtrace_symbols;
+	backtrace = nasty_cast<backtrace_t, void*>(dlsym(RTLD_DEFAULT, "backtrace"));
+	backtrace_symbols = nasty_cast<backtrace_symbols_t, void*>(dlsym(RTLD_DEFAULT, "backtrace_symbols"));
+	if (!backtrace || !backtrace_symbols)
+	{
+		fprintf(stderr, "Couldn't get a stack trace." EOL);
+		fprintf(file, "Couldn't get a stack trace." EOL);
+		return;
+	}
+#endif
 
+    int num_frames = backtrace(frames, ARRAYSZ(frames));
     char **symbols = backtrace_symbols(frames, num_frames);
 
+#ifndef OSX
     if (symbols == NULL)
     {
         fprintf(stderr, "Out of memory." EOL);
@@ -156,15 +180,59 @@ void write_stack_trace(FILE* file, int ignore_count)
         backtrace_symbols_fd(frames, num_frames, fileno(file));
         return;
     }
+#endif
 
-    for (int i = ignore_count; i < num_frames; i++)
-    {
-        fprintf(file, "%s" EOL, symbols[i]);
-    }
+	fprintf(file, "Obtained %d stack frames." EOL, num_frames);
+
+	// Now we prettify the printout to even show demangled C++ function names.
+	std::string bt = "";
+	for (int i = 0; i < num_frames; i++) {
+#if defined (OSX)
+		char *addr = ::strstr(symbols[i], "0x");
+		char *mangled = ::strchr(addr, ' ') + 1;
+		char *offset = ::strchr(addr, '+');
+		char *postmangle = ::strchr(mangled, ' ');
+		if (mangled) *(mangled - 1) = 0;
+		bt += addr;
+		int status;
+		bt += ": ";
+		if (addr && mangled) {
+			if (postmangle)
+				*postmangle = '\0';
+			char *realname = abi::__cxa_demangle(mangled, 0, 0, &status);
+			if (realname) {
+				bt += realname;
+			} else {
+				bt += mangled;
+			}
+			bt += " ";
+			bt += offset;
+			free(realname);
+		}
+#else // OSX
+		bt += symbols[i];
+		int status;
+		/* extract the identifier from symbols[i].  It's inside of parens. */
+		char * firstparen = ::strchr(symbols[i], '(');
+		char * lastparen = ::strchr(symbols[i], '+');
+		if (firstparen != 0 && lastparen != 0 && firstparen < lastparen) {
+			bt += ": ";
+			*lastparen = '\0';
+			char * realname = abi::__cxa_demangle(firstparen + 1, 0, 0, &status);
+			if (realname != NULL) {
+				bt += realname;
+			}
+			free(realname);
+		}
+#endif
+		bt += EOL;
+	}
+
+	fprintf(file, "%s", bt.c_str());
 
     free(symbols);
 }
-#else // ifdef __GLIBC__
+#else // defined(UNIX) || defined(OSX)
 void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform." EOL;
