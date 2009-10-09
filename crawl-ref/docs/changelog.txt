@@ -41,6 +41,48 @@ Stone Soup 0.6
 * Tiles: added clickable spells display (toggle with '_' command).
 * All spectral things can use stairs again.
 
+
+Stone Soup 0.5.2 (20091008)
+---------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+
+* Fixed tiles crashes with certain resolutions.
+* Fixed Mac build sometimes not finding the graphics files.
+* Fixed NSLayoutManager crash with OSX.
+* OSX executables no longer require installation of fink.
+* DCSS now builds on FreeBSD straight out of the box.
+* DCSS now uses git for version control.
+* Fixed Lee's Rapid Deconstruction having no effect at low levels.
+* Fixed weird beam tiles for unknown beam types.
+* Fixed Xom's infinite teleportation journeys.
+* Fixed disconnected pan vaults.
+* Fixed missile +1 enchantment not reducing mulch rate.
+* Fixed some issues with melded equipment.
+* Fixed casting of spells on slot 'I' being impossible.
+* Fixed temporary unlinked item bug.
+* Fixed monsters being unable to pick up or carry healing potions.
+* Fixed mummy monsters drinking potions.
+* Fixed stationary monsters floundering in shallow water.
+* Fixed minivaults sometimes being placed without overlapping floor squares.
+* Fixed friendly fire among monsters.
+* Fixed insane damage dealt by Pain card.
+* Fixed clawed butchering both removing gloves and unwielding weapon.
+* Fixed submerged shapeshifters not unsubmerging properly.
+* Fixed monster mephitic cloud not working against the player properly.
+* Removed entry vaults with lethal fog generators for now.
+* Get rid of out of depth eels in fountains.
+* Greatly tweak ice cave vaults.
+* Some other vault tweaks.
+* All worms except brain worm and all wasps are now mindless.
+* Demonspawn Troggies don't get Channeling anymore.
+* Z does not show spell list automatically anymore.
+* Added an option "darken_beyond_range" (defaults to true) for spell ranges.
+* Default "force_more_message = You fall through a shaft" to true.
+* Reintroduced out of sight mouseover descriptions for Tiles.
+* Replaced post-explosion -More- prompt with a delay.
+* In the ASCII version, colour silenced grids cyan.
+
 Stone Soup 0.5.1 (20090728)
 ---------------------------
 
