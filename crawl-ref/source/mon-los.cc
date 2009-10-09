@@ -364,7 +364,6 @@ void monster_los::check_los_beam(int dx, int dy)
                 continue;
 
             dist = 0;
-            ray.fullray_idx = -1; // to quiet valgrind
             find_ray( coord_def(gridx, gridy), coord_def(tx, ty),
                       true, ray, 0, true, true );
 

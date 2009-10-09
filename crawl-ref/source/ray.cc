@@ -102,9 +102,8 @@ int shoot_ray(double accx, double accy, const double slope,
     return cellnum;
 }
 
-
-ray_def::ray_def() : accx(0.0), accy(0.0), slope(0.0), quadrant(0),
-                     fullray_idx(0)
+ray_def::ray_def()
+    : accx(0.0), accy(0.0), slope(0.0), quadrant(0), fullray_idx(-1)
 {
 }
 

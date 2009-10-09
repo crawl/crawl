@@ -1598,10 +1598,7 @@ void bolt::apply_beam_conducts()
 void bolt::choose_ray()
 {
     if (!chose_ray || reflections > 0)
-    {
-        ray.fullray_idx = -1;   // to quiet valgrind
         find_ray( source, target, true, ray, 0, true );
-    }
 }
 
 

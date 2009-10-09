@@ -16,12 +16,8 @@ public:
     double accx;
     double accy;
     double slope;
-    // Quadrant 1: down-right
-    // Quadrant 2: down-left
-    // Quadrant 3: up-left
-    // Quadrant 4: up-right
-    int quadrant;
-    int fullray_idx;            // for cycling: where did we come from?
+    int quadrant;      // 0 down-right, 1 down-left, 2 up-left, 3 up-right
+    int fullray_idx;   // for cycling: where did we come from?
 
 public:
     ray_def();

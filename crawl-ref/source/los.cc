@@ -202,7 +202,7 @@ static std::vector<int> _find_nonduped_cellrays()
 static bool _register_ray( double accx, double accy, double slope )
 {
     int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
-    int raylen = shoot_ray( accx, accy, slope, LOS_MAX_RANGE, xpos, ypos );
+    int raylen = shoot_ray(accx, accy, slope, LOS_MAX_RANGE, xpos, ypos);
 
     // Early out if ray already exists.
     if (_is_duplicate_ray(raylen, xpos, ypos))
@@ -643,8 +643,6 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     ray_def ray;
     int     count    = 0;
     int     max_dist = grid_distance(source, target);
-
-    ray.fullray_idx = -1; // to quiet valgrind
 
     // We don't need to find the shortest beam, any beam will suffice.
     find_ray( source, target, true, ray, 0, false, true );
