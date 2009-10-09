@@ -386,6 +386,11 @@
 		D2AE25F90DA262DD00E15489 /* crawl in Copy Wrapper Script */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
 		D2F272350DA1C5AD00445FE9 /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
 		D2F2725B0DA1C61600445FE9 /* docs in Resources */ = {isa = PBXBuildFile; fileRef = D2F2723F0DA1C61600445FE9 /* docs */; };
+		E1424F74107FAE1100E2A9CD /* ctest.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0CFB313106DF67F005F9CC3 /* ctest.cc */; };
+		E1424F75107FAE4900E2A9CD /* los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930A107FA77200E3F5FE /* los.cc */; };
+		E1424F7E107FAEC700E2A9CD /* losparam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930B107FA77200E3F5FE /* losparam.cc */; };
+		E1424F7F107FAEC700E2A9CD /* mon-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930C107FA77200E3F5FE /* mon-los.cc */; };
+		E1424F80107FAEC700E2A9CD /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930D107FA77200E3F5FE /* ray.cc */; };
 		E14D930F107FA77200E3F5FE /* los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930A107FA77200E3F5FE /* los.cc */; };
 		E14D9310107FA77200E3F5FE /* losparam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930B107FA77200E3F5FE /* losparam.cc */; };
 		E14D9311107FA77200E3F5FE /* mon-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930C107FA77200E3F5FE /* mon-los.cc */; };
@@ -967,11 +972,6 @@
 		08FB7794FE84155DC02AAC07 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				E14D930A107FA77200E3F5FE /* los.cc */,
-				E14D930B107FA77200E3F5FE /* losparam.cc */,
-				E14D930C107FA77200E3F5FE /* mon-los.cc */,
-				E14D930D107FA77200E3F5FE /* ray.cc */,
-				E14D930E107FA77200E3F5FE /* sha256.cc */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
 				D25C91990FF037A000D9E8AD /* Frameworks */,
 				7B3B07610BD13B1700F2980E /* Libraries */,
@@ -1084,6 +1084,11 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				E14D930A107FA77200E3F5FE /* los.cc */,
+				E14D930B107FA77200E3F5FE /* losparam.cc */,
+				E14D930C107FA77200E3F5FE /* mon-los.cc */,
+				E14D930D107FA77200E3F5FE /* ray.cc */,
+				E14D930E107FA77200E3F5FE /* sha256.cc */,
 				B07818DC1075D979008C3B64 /* sqldbm.cc */,
 				B07818DD1075D979008C3B64 /* sqldbm.h */,
 				B0826648107333BB006EEC5A /* AppHdr.h */,
@@ -1657,6 +1662,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E14D9310107FA77200E3F5FE /* losparam.cc in Sources */,
+				E14D9311107FA77200E3F5FE /* mon-los.cc in Sources */,
+				E14D9312107FA77200E3F5FE /* ray.cc in Sources */,
+				E1424F74107FAE1100E2A9CD /* ctest.cc in Sources */,
 				7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */,
 				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
 				7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */,
@@ -1753,9 +1762,6 @@
 				D2A72B2A101173C000E1A883 /* artefact.cc in Sources */,
 				B07818DF1075D979008C3B64 /* sqldbm.cc in Sources */,
 				E14D930F107FA77200E3F5FE /* los.cc in Sources */,
-				E14D9310107FA77200E3F5FE /* losparam.cc in Sources */,
-				E14D9311107FA77200E3F5FE /* mon-los.cc in Sources */,
-				E14D9312107FA77200E3F5FE /* ray.cc in Sources */,
 				E14D9313107FA77200E3F5FE /* sha256.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1764,6 +1770,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1424F7E107FAEC700E2A9CD /* losparam.cc in Sources */,
+				E1424F7F107FAEC700E2A9CD /* mon-los.cc in Sources */,
+				E1424F80107FAEC700E2A9CD /* ray.cc in Sources */,
+				E1424F75107FAE4900E2A9CD /* los.cc in Sources */,
 				B032D68F106C02150002D70D /* levcomp.ypp in Sources */,
 				B032D690106C02150002D70D /* levcomp.lpp in Sources */,
 				B032D691106C02150002D70D /* SDLMain.m in Sources */,
@@ -1951,6 +1961,7 @@
 		1DEB928A08733DD80010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1960,9 +1971,6 @@
 					DEBUG_ITEM_SCAN,
 					WIZARD,
 				);
-				GCC_VERSION_i386 = 4.0;
-				GCC_VERSION_ppc = 4.0;
-				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1981,14 +1989,8 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Development;
@@ -2081,6 +2083,7 @@
 		7B97C0200A8ECFD700CE8936 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2090,9 +2093,6 @@
 					DEBUG_ITEM_SCAN,
 					WIZARD,
 				);
-				GCC_VERSION_i386 = 4.0;
-				GCC_VERSION_ppc = 4.0;
-				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2111,14 +2111,8 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -2151,6 +2145,8 @@
 		7B97C0250A8ED2AB00CE8936 /* Wizard */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
@@ -2158,9 +2154,6 @@
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
-				GCC_VERSION_i386 = 4.0;
-				GCC_VERSION_ppc = 4.0;
-				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2179,14 +2172,8 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Wizard;
@@ -2221,9 +2208,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
-				GCC_VERSION_i386 = 4.0;
-				GCC_VERSION_ppc = 4.0;
-				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2242,14 +2226,8 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET_i386 = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.5;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.5.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Release;
