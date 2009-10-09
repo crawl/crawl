@@ -5284,15 +5284,15 @@ int get_contamination_level()
     if (glow > 60)
         return (glow / 20 + 2);
     if (glow > 40)
-        return 4;
+        return (4);
     if (glow > 25)
-        return 3;
+        return (3);
     if (glow > 15)
-        return 2;
+        return (2);
     if (glow > 5)
-        return 1;
+        return (1);
 
-    return 0;
+    return (0);
 }
 
 // controlled is true if the player actively did something to cause
@@ -7320,7 +7320,7 @@ bool player::can_see(const actor *target) const
 
 bool player::backlit(bool check_haloed) const
 {
-    return (get_contamination_level() >= 1 || duration[DUR_BACKLIGHT]
+    return (get_contamination_level() > 0 || duration[DUR_BACKLIGHT]
             || (check_haloed ? haloed() : false));
 }
 
