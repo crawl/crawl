@@ -156,6 +156,7 @@ Terrain
  v - metal wall - grounds electricity                    (DNGN_METAL_WALL)
  b - crystal wall - reflects cold and fire       (DNGN_GREEN_CRYSTAL_WALL)
  a - wax wall - can melt                                   (DNGN_WAX_WALL)
+ t - trees - a single square doesn't block LOS                (DNGN_TREES)
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)

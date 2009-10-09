@@ -25,6 +25,7 @@ REVISION("$Rev$");
 #include "terrain.h"
 #include "view.h"
 #include "mutation.h"
+#include "los.h"
 
 static int _actual_spread_rate(cloud_type type, int spread_rate)
 {
@@ -130,13 +131,45 @@ static int _spread_cloud(const cloud_struct &cloud)
     return (extra_decay);
 }
 
+static void _spread_fire(const cloud_struct &cloud)
+{
+    int make_flames = one_chance_in(5);
+
+    for ( adjacent_iterator ai(cloud.pos); ai; ++ai )
+    {
+        if (!in_bounds(*ai)
+            || env.cgrid(*ai) != EMPTY_CLOUD
+            || is_sanctuary(*ai))
+            continue;
+
+        // burning trees produce flames all around
+        if (!grid_is_solid(*ai) && make_flames)
+            _place_new_cloud( CLOUD_FIRE, *ai, cloud.decay/2+1, cloud.whose,
+                              cloud.killer, cloud.spread_rate );
+
+        // forest fire doesn't spread in all directions at once,
+        // every neighbouring square gets a separate roll
+        if (grd(*ai) == DNGN_TREES && one_chance_in(20))
+        {
+            if (see_grid(*ai))
+                mpr("The forest fire spreads!");
+            grd(*ai) = DNGN_FLOOR;
+            _place_new_cloud( cloud.type, *ai, random2(30)+25, cloud.whose,
+                              cloud.killer, cloud.spread_rate );
+        }
+
+    }
+}
+
 static void _dissipate_cloud(int cloudidx, int dissipate)
 {
     cloud_struct &cloud = env.cloud[cloudidx];
     // Apply calculated rate to the actual cloud.
     cloud.decay -= dissipate;
 
-    if (x_chance_in_y(cloud.spread_rate, 100))
+    if (cloud.type == CLOUD_FOREST_FIRE)
+        _spread_fire(cloud);
+    else if (x_chance_in_y(cloud.spread_rate, 100))
     {
         cloud.spread_rate -= div_rand_round(cloud.spread_rate, 10);
         cloud.decay       -= _spread_cloud(cloud);
@@ -349,8 +382,7 @@ bool is_opaque_cloud(unsigned char cloud_idx)
         return (false);
 
     const int ctype = env.cloud[cloud_idx].type;
-    return (ctype == CLOUD_BLACK_SMOKE
-            || ctype >= CLOUD_GREY_SMOKE && ctype <= CLOUD_STEAM);
+    return (ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST);
 }
 
 cloud_type cloud_type_at(const coord_def &c)
@@ -420,6 +452,7 @@ beam_type cloud2beam(cloud_type flavour)
     default:
     case CLOUD_NONE:        return BEAM_NONE;
     case CLOUD_FIRE:        return BEAM_FIRE;
+    case CLOUD_FOREST_FIRE: return BEAM_FIRE;
     case CLOUD_STINK:       return BEAM_POTION_STINKING_CLOUD;
     case CLOUD_COLD:        return BEAM_COLD;
     case CLOUD_POISON:      return BEAM_POISON;
@@ -456,6 +489,7 @@ int max_cloud_damage(cloud_type cl_type, int power)
     switch (cl_type)
     {
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         if (you.duration[DUR_FIRE_SHIELD])
             return (0);
         resist = player_res_fire();
@@ -542,6 +576,7 @@ void in_a_cloud()
     switch (env.cloud[cl].type)
     {
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         if (you.duration[DUR_FIRE_SHIELD])
             return;
 
@@ -710,6 +745,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     {
     // always harmful...
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         // ... unless a Ring of Flames is up and it's a fire cloud.
         if (temp && you.duration[DUR_FIRE_SHIELD])
             return (false);
@@ -759,6 +795,8 @@ std::string cloud_name(cloud_type type)
     {
     case CLOUD_FIRE:
         return "flame";
+    case CLOUD_FOREST_FIRE:
+        return "fire";
     case CLOUD_STINK:
         return "noxious fumes";
     case CLOUD_COLD:

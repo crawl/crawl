@@ -5446,6 +5446,7 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
         return (!mons_res_rotting(monster));
 
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         if (mons_res_fire(monster) > 1)
             return (false);
 
@@ -8822,6 +8823,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     if (monster->type == MONS_WATER_ELEMENTAL
         && (target_grid == DNGN_LAVA
             || targ_cloud_type == CLOUD_FIRE
+            || targ_cloud_type == CLOUD_FOREST_FIRE
             || targ_cloud_type == CLOUD_STEAM))
     {
         return (false);
@@ -9329,6 +9331,7 @@ static void _mons_in_cloud(monsters *monster)
         return;
 
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         if (monster->type == MONS_FIRE_VORTEX
             || monster->type == MONS_EFREET
             || monster->type == MONS_FIRE_ELEMENTAL)
