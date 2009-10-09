@@ -41,7 +41,6 @@ REVISION("$Rev$");
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
-#include "view.h"
 
 #include <cctype>
 #include <cstdio>

@@ -61,7 +61,6 @@ REVISION("$Rev$");
 #include "tiles.h"
 #include "tutorial.h"
 #include "version.h"
-#include "view.h"
 
 extern std::string init_file_error;
 

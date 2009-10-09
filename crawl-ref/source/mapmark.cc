@@ -17,7 +17,6 @@ REVISION("$Rev$");
 #include "luadgn.h"
 #include "stuff.h"
 #include "tags.h"
-#include "view.h"
 
 ////////////////////////////////////////////////////////////////////////
 // Dungeon markers

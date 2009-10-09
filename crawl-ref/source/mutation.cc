@@ -41,7 +41,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
-#include "view.h"
 #include "xom.h"
 
 static int _body_covered();

@@ -37,7 +37,6 @@ REVISION("$Rev$");
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
-#include "view.h"
 
 static bool _purchase( int shop, int item_got, int cost, bool id);
 

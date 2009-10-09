@@ -45,7 +45,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "transfor.h"
 #include "travel.h"
-#include "view.h"
 
 #include <cstring>
 #include <map>

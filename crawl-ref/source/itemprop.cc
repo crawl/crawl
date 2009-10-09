@@ -36,7 +36,6 @@ REVISION("$Rev$");
 #include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
-#include "view.h"
 #include "xom.h"
 
 

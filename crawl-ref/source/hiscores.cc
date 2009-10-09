@@ -55,7 +55,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "tags.h"
 #include "version.h"
-#include "view.h"
 
 #include "skills2.h"
 #define SCORE_VERSION "0.1"

@@ -36,7 +36,6 @@ REVISION("$Rev$");
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "terrain.h"
-#include "view.h"
 
 
 #ifdef DOS

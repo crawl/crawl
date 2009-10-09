@@ -32,7 +32,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
-#include "view.h"
 
 typedef std::string (*string_fn)();
 typedef std::map<std::string, string_fn> skill_op_map;
