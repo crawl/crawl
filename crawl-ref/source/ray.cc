@@ -13,6 +13,7 @@ REVISION("$Rev$");
 #include "los.h"
 #include "terrain.h"
 
+// Advance a ray in quadrant 0.
 // note that slope must be nonnegative!
 // returns 0 if the advance was in x, 1 if it was in y, 2 if it was
 // the diagonal
@@ -80,29 +81,26 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
 }
 
 // Shoot a ray from the given start point (accx, accy) with the given
-// slope, with a maximum distance (in either x or y coordinate) of
-// maxrange. Store the visited cells in xpos[] and ypos[], and
-// return the number of cells visited.
-int shoot_ray( double accx, double accy, const double slope,
-                int maxrange, int xpos[], int ypos[] )
+// slope, bounded by LOS radius. Store the visited cells in
+// xpos[] and ypos[], and return the number of cells visited.
+int shoot_ray(double accx, double accy, const double slope,
+              int maxrange, int xpos[], int ypos[])
 {
     int curx, cury;
     int cellnum;
     for (cellnum = 0; true; ++cellnum)
     {
-        _find_next_intercept( &accx, &accy, slope );
+        _find_next_intercept(&accx, &accy, slope);
         curx = static_cast<int>(accx);
         cury = static_cast<int>(accy);
         if (curx*curx + cury*cury > get_los_radius_squared())
             break;
 
-        // Work with the new square.
         xpos[cellnum] = curx;
         ypos[cellnum] = cury;
     }
     return cellnum;
 }
-
 
 
 ray_def::ray_def() : accx(0.0), accy(0.0), slope(0.0), quadrant(0),
@@ -117,7 +115,7 @@ double ray_def::reflect(double p, double c) const
 
 double ray_def::reflect(bool rx, double oldx, double newx) const
 {
-    if (rx? fabs(slope) > 1.0 : fabs(slope) < 1.0)
+    if (rx ? fabs(slope) > 1.0 : fabs(slope) < 1.0)
         return (reflect(oldx, floor(oldx) + 0.5));
 
     const double flnew = floor(newx);
@@ -312,30 +310,30 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
 int ray_def::raw_advance()
 {
     int rc;
-    switch ( quadrant )
+    switch (quadrant)
     {
     case 0:
         // going down-right
-        rc = _find_next_intercept( &accx, &accy, slope );
+        rc = _find_next_intercept(&accx, &accy, slope);
         return rc;
     case 1:
         // going down-left
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        rc   = _find_next_intercept( &accx, &accy, slope );
+        rc   = _find_next_intercept(&accx, &accy, slope);
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         return rc;
     case 2:
         // going up-left
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc   = _find_next_intercept( &accx, &accy, slope );
+        rc   = _find_next_intercept(&accx, &accy, slope);
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
         return rc;
     case 3:
         // going up-right
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc   = _find_next_intercept( &accx, &accy, slope );
+        rc   = _find_next_intercept(&accx, &accy, slope);
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
         return rc;
     default:
