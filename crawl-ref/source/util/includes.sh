@@ -38,19 +38,43 @@ includes ()
 check ()
 {
     if includes $1 $2 > /dev/null && ! mightuse $1 $2 > /dev/null; then
-        echo $hdr $src;
+        echo $1 $2;
     fi
 }
 
-# run check on all pairs -- should really cache the result of "names"
+# run check on all source for a given header
+# should really cache the result of "names"
+checkhdr ()
+{
+    for src in *.cc; do
+        check $1 $src
+    done
+}
+
+# run check on all pairs
 checkall ()
 {
     for hdr in *.h; do
         if [ $hdr = AppHdr.h ]; then
             continue;
         fi
-        for src in *.cc; do
-            check $hdr $src
-        done
+        checkhdr $hdr
     done
 }
+
+# remove #include of $1 from $2
+remove ()
+{
+    b=$(basename $1 .h)
+    sed -e '/^#include "'$b'\.h"$/d' < $2 > $2.rmincl
+    mv $2.rmincl $2
+}
+
+# remove doubtful includes for a list as output by checkall.
+removelst ()
+{
+    while read hdr src; do
+        remove $hdr $src
+    done
+}
+
