@@ -2501,10 +2501,10 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
         {
             if (you.pos() == *ri)
             {
-                if (you.magic_contamination <= 5)
+                if (you.magic_contamination == 0)
                     continue;
 
-                you_mutate_chance = you.magic_contamination * 8 / 25;
+                you_mutate_chance = get_contamination_level();
             }
             else
             {
