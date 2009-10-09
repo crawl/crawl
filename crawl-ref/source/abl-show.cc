@@ -1299,22 +1299,23 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_DELAYED_FIREBALL:
-        {
-            // Note: power level of ball calculated at release -- bwr
-            const int pow = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
-            const int fake_range = spell_range(SPELL_FIREBALL, pow, false);
+    {
+        // Note: Power level of ball calculated at release. - bwr
+        const int pow = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
+        const int fake_range = spell_range(SPELL_FIREBALL, pow, false);
 
-            if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, fake_range))
-              return (false);
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, fake_range))
+            return (false);
 
-            beam.range = spell_range(SPELL_FIREBALL, pow, true);
-            if (!fireball(pow, beam))
-                return (false);
-        }
+        beam.range = spell_range(SPELL_FIREBALL, pow, true);
 
-        // only one allowed since this is instantaneous -- bwr
+        if (!fireball(pow, beam))
+            return (false);
+
+        // Only one allowed, since this is instantaneous. - bwr
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
         break;
+    }
 
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation
     {
@@ -1703,8 +1704,8 @@ static bool _do_ability(const ability_def& abil)
             return (false);
 
         power = you.skills[SK_INVOCATIONS]
-                    + random2( 1 + you.skills[SK_INVOCATIONS] )
-                    + random2( 1 + you.skills[SK_INVOCATIONS] );
+                    + random2(1 + you.skills[SK_INVOCATIONS])
+                    + random2(1 + you.skills[SK_INVOCATIONS]);
 
         // Since the actual beam is random, check with BEAM_MMISSILE and the
         // highest range possible (electricity).
@@ -1964,8 +1965,8 @@ static bool _do_ability(const ability_def& abil)
 
         if (count)
         {
-            simple_god_message(" appreciates your contribution to the ecosystem.",
-                               GOD_FEAWN);
+            simple_god_message(" appreciates your contribution to the "
+                               "ecosystem.", GOD_FEAWN);
         }
 
         // We are following the blood god sacrifice piety gain model, given as:
@@ -1983,6 +1984,7 @@ static bool _do_ability(const ability_def& abil)
         gain_piety(piety_gain);
         break;
     }
+
     case ABIL_FEAWN_SUNLIGHT:
         if (!sunlight())
             return (false);
