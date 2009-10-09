@@ -11,7 +11,6 @@ REVISION("$Rev$");
 #include <cmath>
 #include <algorithm>
 
-#include "cloud.h"
 #include "debug.h"
 #include "directn.h"
 #include "externs.h"

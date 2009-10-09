@@ -32,7 +32,6 @@ REVISION("$Rev$");
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
-#include "initfile.h"
 #include "state.h"
 #include "stuff.h"
 #include "view.h"

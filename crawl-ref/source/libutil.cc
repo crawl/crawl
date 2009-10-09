@@ -8,7 +8,6 @@ REVISION("$Rev$");
 
 #include "defines.h"
 #include "directn.h"
-#include "initfile.h"
 #include "itemname.h" // is_vowel()
 #include "libutil.h"
 #include "externs.h"

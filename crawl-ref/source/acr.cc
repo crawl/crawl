@@ -67,7 +67,6 @@ REVISION("$Rev$");
 #include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "it_use3.h"
 #include "itemname.h"
 #include "itemprop.h"

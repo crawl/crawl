@@ -28,7 +28,6 @@ REVISION("$Rev$");
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
-#include "initfile.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"

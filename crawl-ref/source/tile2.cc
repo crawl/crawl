@@ -12,20 +12,10 @@ REVISION("$Rev$");
 #include <string.h>
 
 #include "branch.h"
-#include "describe.h"
-#include "directn.h"
-#include "dungeon.h"
-#include "files.h"
-#include "ghost.h"
-#include "tilereg.h"
 #include "itemprop.h"
-#include "it_use2.h"
-#include "place.h"
 #include "player.h"
-#include "spells3.h"
 #include "stuff.h"
 #include "tiles.h"
-#include "transfor.h"
 
 void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 {

@@ -16,7 +16,6 @@ REVISION("$Rev$");
 #include "items.h"
 #include "monplace.h"
 #include "mon-util.h"
-#include "monstuff.h"
 #include "stuff.h"
 
 #define MAX_LOST 100

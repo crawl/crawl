@@ -15,10 +15,8 @@ REVISION("$Rev$");
 
 #include "branch.h"
 #include "cloud.h"
-#include "it_use2.h"
 #include "mapmark.h"
 #include "ouch.h"
-#include "place.h"
 #include "player.h"
 #include "spells4.h"
 #include "stuff.h"

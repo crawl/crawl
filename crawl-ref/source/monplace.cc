@@ -27,7 +27,6 @@ REVISION("$Rev$");
 #include "religion.h"
 #include "state.h"
 #include "stuff.h"
-#include "spells4.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"

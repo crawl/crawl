@@ -27,7 +27,6 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"

@@ -30,7 +30,6 @@ REVISION("$Rev$");
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
-#include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
 #include "spl-book.h"

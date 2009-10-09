@@ -26,7 +26,6 @@ REVISION("$Rev$");
 #endif
 #include "tutorial.h"
 #include "view.h"
-#include "initfile.h"
 
 MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
 {

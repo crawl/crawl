@@ -2,7 +2,6 @@
 REVISION("$Rev$");
 
 #include "files.h"
-#include "tiles.h"
 #include "tiletex.h"
 
 #include <SDL.h>

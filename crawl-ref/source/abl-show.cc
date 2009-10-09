@@ -45,7 +45,6 @@ REVISION("$Rev$");
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "spells1.h"

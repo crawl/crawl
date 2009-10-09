@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
-#include "chardump.h"
 #include "shopping.h"
 #include "message.h"
 
@@ -25,7 +24,6 @@ REVISION("$Rev$");
 #include "describe.h"
 #include "food.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"

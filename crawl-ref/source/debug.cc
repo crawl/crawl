@@ -58,7 +58,6 @@ REVISION("$Rev$");
 #include "monspeak.h"
 #include "monstuff.h"
 #include "mon-util.h"
-#include "mstuff2.h"
 #include "mutation.h"
 #include "newgame.h"
 #include "ouch.h"

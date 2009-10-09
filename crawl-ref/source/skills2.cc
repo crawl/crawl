@@ -30,7 +30,6 @@ REVISION("$Rev$");
 #include "menu.h"
 #include "player.h"
 #include "stuff.h"
-#include "transfor.h"
 #include "tutorial.h"
 
 typedef std::string (*string_fn)();

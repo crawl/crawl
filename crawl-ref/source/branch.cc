@@ -7,7 +7,6 @@
 REVISION("$Rev$");
 
 #include "branch.h"
-#include "cloud.h"
 #include "externs.h"
 #include "mon-pick.h"
 #include "place.h"

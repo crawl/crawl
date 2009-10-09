@@ -40,7 +40,6 @@ REVISION("$Rev$");
 #include "religion.h"
 #include "spells1.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"

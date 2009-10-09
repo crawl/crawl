@@ -72,7 +72,6 @@ REVISION("$Rev$");
 #include "output.h"
 #include "player.h"
 #include "religion.h"
-#include "skills2.h"
 #include "tutorial.h"
 #include "view.h"
 

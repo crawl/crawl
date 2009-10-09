@@ -25,7 +25,6 @@ REVISION("$Rev$");
 
 #include "artefact.h"
 #include "branch.h"
-#include "cio.h"
 #include "cloud.h"
 #include "clua.h"
 #include "delay.h"
@@ -48,7 +47,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"
-#include "place.h"
 #include "quiver.h"
 #include "religion.h"
 #include "skills.h"

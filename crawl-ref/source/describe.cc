@@ -31,7 +31,6 @@ REVISION("$Rev$");
 #include "food.h"
 #include "ghost.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"

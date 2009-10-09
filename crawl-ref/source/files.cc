@@ -51,7 +51,6 @@ REVISION("$Rev$");
 #include "effects.h"
 #include "ghost.h"
 #include "initfile.h"
-#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "kills.h"
@@ -70,7 +69,6 @@ REVISION("$Rev$");
 #include "overmap.h"
 #include "place.h"
 #include "player.h"
-#include "skills2.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -80,7 +78,6 @@ REVISION("$Rev$");
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
-#include "xom.h"
 
 #if _MSC_VER
 #include <direct.h>

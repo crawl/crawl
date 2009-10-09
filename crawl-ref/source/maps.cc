@@ -24,7 +24,6 @@ REVISION("$Rev$");
 #include "message.h"
 #include "monplace.h"
 #include "mapdef.h"
-#include "misc.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"

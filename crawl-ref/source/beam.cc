@@ -57,7 +57,6 @@ REVISION("$Rev$");
 #include "terrain.h"
 #include "transfor.h"
 #include "traps.h"
-#include "tutorial.h"
 #include "view.h"
 #include "xom.h"
 

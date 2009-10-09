@@ -31,7 +31,6 @@ REVISION("$Rev$");
 #include "los.h"
 #include "message.h"
 #include "misc.h"
-#include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"

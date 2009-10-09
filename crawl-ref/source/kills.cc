@@ -9,13 +9,11 @@ REVISION("$Rev$");
 
 #include <algorithm>
 
-#include "chardump.h"
 #include "describe.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "files.h"
 #include "ghost.h"
-#include "itemname.h"
 #include "place.h"
 #include "travel.h"
 #include "tags.h"

@@ -28,7 +28,6 @@ REVISION("$Rev$");
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "items.h"
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
@@ -44,7 +43,6 @@ REVISION("$Rev$");
 #include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
-#include "tiles.h"
 #include "travel.h"
 #include "view.h"
 

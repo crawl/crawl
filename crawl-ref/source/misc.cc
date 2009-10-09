@@ -46,7 +46,6 @@ REVISION("$Rev$");
 #include "fight.h"
 #include "files.h"
 #include "food.h"
-#include "format.h"
 #include "hiscores.h"
 #include "itemprop.h"
 #include "items.h"

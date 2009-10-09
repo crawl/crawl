@@ -18,8 +18,6 @@ REVISION("$Rev$");
 #include "describe.h"
 #include "dungeon.h"
 #include "food.h"
-#include "it_use2.h"
-#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "misc.h"

@@ -23,11 +23,9 @@ REVISION("$Rev$");
 
 #include "artefact.h"
 #include "decks.h"
-#include "describe.h"
 #include "food.h"
 #include "initfile.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"

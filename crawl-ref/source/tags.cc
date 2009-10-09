@@ -60,7 +60,6 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
-#include "abl-show.h"
 #include "artefact.h"
 #include "branch.h"
 #include "describe.h"
@@ -72,7 +71,6 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "mapmark.h"
-#include "monstuff.h"
 #include "mon-util.h"
 #include "mtransit.h"
 #include "quiver.h"

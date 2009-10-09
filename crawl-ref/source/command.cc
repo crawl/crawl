@@ -29,7 +29,6 @@ REVISION("$Rev$");
 #include "initfile.h"
 #include "invent.h"
 #include "itemname.h"
-#include "item_use.h"
 #include "items.h"
 #include "libutil.h"
 #include "menu.h"

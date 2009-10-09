@@ -44,7 +44,6 @@ REVISION("$Rev$");
 #include "shopping.h"
 #include "state.h"
 #include "stuff.h"
-#include "spells4.h"
 #include "stash.h"
 #ifdef USE_TILE
  #include "tiles.h"

@@ -14,7 +14,6 @@ REVISION("$Rev$");
 #include "files.h"
 #include "food.h"
 #include "itemname.h"
-#include "it_use2.h"
 #include "item_use.h"
 #include "items.h"
 #include "los.h"

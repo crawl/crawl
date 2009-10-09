@@ -46,7 +46,6 @@ REVISION("$Rev$");
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
-#include "xom.h"
 
 int detect_traps(int pow)
 {
