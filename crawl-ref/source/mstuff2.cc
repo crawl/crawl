@@ -2492,7 +2492,7 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
 
     if (!proximity)
         success = true;
-    else if (one_chance_in(9))
+    else if (one_chance_in(8))
     {
         int you_mutate_chance = 0;
         int mon_mutate_chance = 0;
