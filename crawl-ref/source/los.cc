@@ -169,6 +169,8 @@ static std::vector<int> _find_nonduped_cellrays()
             // proper subsets.
             const int curx = ray_coord_x[curidx + cellnum];
             const int cury = ray_coord_y[curidx + cellnum];
+
+            // Test against all previous fullrays.
             for (testidx = 0, testray = 0; testray < raynum;
                  testidx += raylengths[testray++])
             {
