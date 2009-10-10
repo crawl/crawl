@@ -505,7 +505,7 @@ inline void UNUSED(const volatile T &)
 }
 
 // And now headers we want precompiled
-#include <externs.h>
+#include "externs.h"
 #include "version.h"
 
 #endif
