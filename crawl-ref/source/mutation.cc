@@ -1307,6 +1307,12 @@ formatted_string describe_mutations()
         // Breathe poison replaces spit poison.
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison." EOL;
+        if (you.experience_level > 2)
+        {
+            std::ostringstream num;
+            num << you.experience_level/3;
+            result += "Your serpentine skin is tough (AC +" + num.str() + ")." EOL;
+        }
         have_any = true;
         break;
 
@@ -1465,6 +1471,17 @@ formatted_string describe_mutations()
     {
         result += "Your body does not fit into most forms of armour." EOL;
         have_any = true;
+    }
+
+    if (player_genus(GENPC_DRACONIAN))
+    {
+        int ac = (you.experience_level < 8) ? 2 :
+                 (you.species == SP_GREY_DRACONIAN)
+                     ? (you.experience_level - 4) / 2 + 1 :
+                       you.experience_level / 4 + 1;
+        std::ostringstream num;
+        num << ac;
+        result += "Your scales are hard (AC +" + num.str() + ")." EOL;
     }
 
     result += "</lightblue>";
