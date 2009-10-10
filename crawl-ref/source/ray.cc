@@ -80,30 +80,8 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
     return rc;
 }
 
-// Shoot a ray from the given start point (accx, accy) with the given
-// slope, bounded by LOS radius. Store the visited cells in
-// xpos[] and ypos[], and return the number of cells visited.
-int shoot_ray(double accx, double accy, const double slope,
-              int maxrange, int xpos[], int ypos[])
-{
-    int curx, cury;
-    int cellnum;
-    for (cellnum = 0; true; ++cellnum)
-    {
-        _find_next_intercept(&accx, &accy, slope);
-        curx = static_cast<int>(accx);
-        cury = static_cast<int>(accy);
-        if (curx*curx + cury*cury > get_los_radius_squared())
-            break;
-
-        xpos[cellnum] = curx;
-        ypos[cellnum] = cury;
-    }
-    return cellnum;
-}
-
-ray_def::ray_def()
-    : accx(0.0), accy(0.0), slope(0.0), quadrant(0), fullray_idx(-1)
+ray_def::ray_def(double ax, double ay, double s, int q, int idx)
+    : accx(ax), accy(ay), slope(s), quadrant(q), fullray_idx(idx)
 {
 }
 
@@ -338,5 +316,27 @@ int ray_def::raw_advance()
     default:
         return -1;
     }
+}
+
+// Shoot a ray from the given start point (accx, accy) with the given
+// slope, bounded by the given pre-squared LOS radius.
+// Store the visited cells in xpos[] and ypos[], and
+// return the number of cells visited.
+int ray_def::footprint(int radius2, int xpos[], int ypos[])
+{
+    int curx, cury;
+    int cellnum;
+    for (cellnum = 0; true; ++cellnum)
+    {
+        _find_next_intercept(&accx, &accy, slope);
+        curx = static_cast<int>(accx);
+        cury = static_cast<int>(accy);
+        if (curx*curx + cury*cury > radius2)
+            break;
+
+        xpos[cellnum] = curx;
+        ypos[cellnum] = cury;
+    }
+    return cellnum;
 }
 

@@ -54,7 +54,10 @@ void clear_rays_on_exit()
     delete[] los_blockrays;
 }
 
-int _los_radius_squared = LOS_RADIUS * LOS_RADIUS + 1;
+// pre-squared LOS radius
+#define LOS_RADIUS2 (LOS_RADIUS * LOS_RADIUS + 1)
+
+int _los_radius_squared = LOS_RADIUS2;
 
 void setLOSRadius(int newLR)
 {
@@ -201,7 +204,9 @@ static std::vector<int> _find_nonduped_cellrays()
 static bool _register_ray( double accx, double accy, double slope )
 {
     int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
-    int raylen = shoot_ray(accx, accy, slope, LOS_MAX_RANGE, xpos, ypos);
+    ray_def ray = ray_def(accx, accy, slope, 0);
+    // find out which cells the ray passes through
+    int raylen = ray.footprint(LOS_RADIUS2, xpos, ypos);
 
     // Early out if ray already exists.
     if (_is_duplicate_ray(raylen, xpos, ypos))
@@ -217,11 +222,6 @@ static bool _register_ray( double accx, double accy, double slope )
 
     // Register the fullray.
     raylengths.push_back(raylen);
-    ray_def ray;
-    ray.accx = accx;
-    ray.accy = accy;
-    ray.slope = slope;
-    ray.quadrant = 0;
     fullrays.push_back(ray);
 
     return (true);
