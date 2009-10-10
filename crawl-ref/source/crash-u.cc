@@ -43,6 +43,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f) {
 /////////////////////////////////////////////////////////////////////////////
 // Code for printing out debugging info on a crash.
 ////////////////////////////////////////////////////////////////////////////
+#ifdef USE_UNIX_SIGNALS
 static int _crash_signal    = 0;
 static int _recursion_depth = 0;
 
@@ -95,6 +96,7 @@ static void _crash_signal_handler(int sig_num)
     signal(sig_num, SIG_DFL);
     raise(sig_num);
 }
+#endif
 
 void init_crash_handler()
 {
