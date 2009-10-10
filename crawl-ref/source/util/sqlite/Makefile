@@ -1,5 +1,13 @@
 # -*- Makefile -*- for stripped down SQLite 3 static lib.
 
+ifneq ($(findstring $(MAKEFLAGS),s),s)
+ifndef V
+        QUIET_CC       = @echo '   ' CC $@;
+        QUIET_AR       = @echo '   ' AR $@;
+        export V
+endif
+endif
+
 LIBSQL = libsqlite3.a
 AR     = ar rcu
 CC     = gcc
@@ -22,7 +30,8 @@ CFLAGS = -DSQLITE_OMIT_AUTHORIZATION \
 		 -DSQLITE_OMIT_SCHEMA_VERSION_PRAGMAS \
 		 -DSQLITE_OMIT_TCL_VARIABLE \
 	     -DSQLITE_OMIT_LOAD_EXTENSION \
-		 -DTHREADSAFE=0
+		 -DTHREADSAFE=0 \
+		 -w
 
 all: $(LIBSQL)
 
@@ -31,8 +40,8 @@ clean:
 	$(RM_F) *.a
 
 $(LIBSQL): sqlite3.o
-	$(AR) $@ $^
-	$(RANLIB) $@
+	$(QUIET_AR)$(AR) $@ $^
+	@$(RANLIB) $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(QUIET_CC)$(CC) $(CFLAGS) -o $@ -c $<

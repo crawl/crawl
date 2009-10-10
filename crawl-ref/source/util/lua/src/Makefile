@@ -9,6 +9,15 @@
 # Your platform. See PLATS for possible values.
 PLAT= none
 
+ifneq ($(findstring $(MAKEFLAGS),s),s)
+ifndef V
+        QUIET_CC       = @echo '   ' CC $@;
+        QUIET_AR       = @echo '   ' AR $@;
+        QUIET_LINK     = @echo '   ' LINK $@;
+        export V
+endif
+endif
+
 CC= gcc
 CFLAGS= -O2 -Wall $(MYCFLAGS)
 AR= ar rcu
@@ -46,19 +55,22 @@ default: $(PLAT)
 
 all:	$(ALL_T)
 
+%.o: %.c
+	$(QUIET_CC)$(CC) -c $(CFLAGS) -o $@ $<
+
 o:	$(ALL_O)
 
 a:	$(ALL_A)
 
 $(LUA_A): $(CORE_O) $(LIB_O)
-	$(AR) $@ $?
-	$(RANLIB) $@
+	$(QUIET_AR)$(AR) $@ $?
+	@$(RANLIB) $@
 
 $(LUA_T): $(LUA_O) $(LUA_A)
-	$(CC) -o $@ $(MYLDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
+	$(QUIET_LINK)$(CC) -o $@ $(MYLDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
 
 $(LUAC_T): $(LUAC_O) $(LUA_A)
-	$(CC) -o $@ $(MYLDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
+	$(QUIET_LINK)$(CC) -o $@ $(MYLDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
 
 clean:
 	$(RM) $(ALL_T) $(ALL_O)
@@ -116,7 +128,7 @@ mingw:
 	$(MAKE) "LUAC_T=luac.exe" luac.exe
 
 crawl_unix:
-	$(MAKE) "LUA_A=liblua.a" \
+	@$(MAKE) "LUA_A=liblua.a" \
 	"MYCFLAGS=" "MYLIBS=" "MYLDFLAGS=" liblua.a
 
 crawl_mingw: crawl_unix
