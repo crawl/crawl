@@ -16,7 +16,6 @@ REVISION("$Rev$");
 #include <cxxabi.h>
 
 #ifdef OSX
-#include <cxxabi.h>
 #include <dlfcn.h>
 
 typedef int (*backtrace_t)(void * *, int);
