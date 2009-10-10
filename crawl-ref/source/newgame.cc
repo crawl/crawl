@@ -3468,24 +3468,28 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     // Now fill in the type according to the random wpn_skill.
     switch (wpn_skill)
     {
-    case SK_MACES_FLAILS:
-        you.inv[slot].sub_type = WPN_MACE;
-        break;
-
-    case SK_POLEARMS:
-        you.inv[slot].sub_type = WPN_SPEAR;
-        break;
-
     case SK_SHORT_BLADES:
         you.inv[slot].sub_type = WPN_SHORT_SWORD;
+        break;
+
+    case SK_MACES_FLAILS:
+        you.inv[slot].sub_type = WPN_MACE;
         break;
 
     case SK_AXES:
         you.inv[slot].sub_type = WPN_HAND_AXE;
         break;
 
+    case SK_POLEARMS:
+        you.inv[slot].sub_type = WPN_SPEAR;
+        break;
+
     case SK_STAVES:
         you.inv[slot].sub_type = WPN_QUARTERSTAFF;
+        break;
+
+    case SK_DARTS:
+        you.inv[slot].sub_type = WPN_BLOWGUN;
         break;
 
     case SK_BOWS:
@@ -3494,10 +3498,6 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
 
     case SK_CROSSBOWS:
         you.inv[slot].sub_type = WPN_HAND_CROSSBOW;
-        break;
-
-    case SK_DARTS:
-        you.inv[slot].sub_type = WPN_BLOWGUN;
         break;
     }
 
