@@ -54,7 +54,10 @@ void clear_rays_on_exit()
     delete[] los_blockrays;
 }
 
-int _los_radius_squared = LOS_RADIUS * LOS_RADIUS + 1;
+// pre-squared LOS radius
+#define LOS_RADIUS2 (LOS_RADIUS * LOS_RADIUS + 1)
+
+int _los_radius_squared = LOS_RADIUS2;
 
 void setLOSRadius(int newLR)
 {
@@ -166,6 +169,8 @@ static std::vector<int> _find_nonduped_cellrays()
             // proper subsets.
             const int curx = ray_coord_x[curidx + cellnum];
             const int cury = ray_coord_y[curidx + cellnum];
+
+            // Test against all previous fullrays.
             for (testidx = 0, testray = 0; testray < raynum;
                  testidx += raylengths[testray++])
             {
@@ -197,15 +202,16 @@ static std::vector<int> _find_nonduped_cellrays()
 }
 
 // Create and register the ray defined by the arguments.
-// Return true if the ray was actually registered (i.e., not a duplicate.)
-static bool _register_ray( double accx, double accy, double slope )
+static void _register_ray(double accx, double accy, double slope)
 {
     int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
-    int raylen = shoot_ray(accx, accy, slope, LOS_MAX_RANGE, xpos, ypos);
+    ray_def ray = ray_def(accx, accy, slope, 0);
+    // find out which cells the ray passes through
+    int raylen = ray.footprint(LOS_RADIUS2, xpos, ypos);
 
     // Early out if ray already exists.
     if (_is_duplicate_ray(raylen, xpos, ypos))
-        return (false);
+        return;
 
     // Not duplicate, register.
     for (int i = 0; i < raylen; ++i)
@@ -217,14 +223,7 @@ static bool _register_ray( double accx, double accy, double slope )
 
     // Register the fullray.
     raylengths.push_back(raylen);
-    ray_def ray;
-    ray.accx = accx;
-    ray.accy = accy;
-    ray.slope = slope;
-    ray.quadrant = 0;
     fullrays.push_back(ray);
-
-    return (true);
 }
 
 static void _create_blockrays()
@@ -336,8 +335,8 @@ void raycast()
 
     // register perpendiculars FIRST, to make them top choice
     // when selecting beams
-    _register_ray( 0.5, 0.5, 1000.0 );
-    _register_ray( 0.5, 0.5, 0.0 );
+    _register_ray(0.5, 0.5, 1000.0);
+    _register_ray(0.5, 0.5, 0.0);
 
     // For a slope of M = y/x, every x we move on the X axis means
     // that we move y on the y axis. We want to look at the resolution
@@ -348,15 +347,15 @@ void raycast()
     // Changing the order a bit. We want to order by the complexity
     // of the beam, which is log(x) + log(y) ~ xy.
     std::vector<std::pair<int,int> > xyangles;
-    for ( int xangle = 1; xangle <= 2*LOS_MAX_RANGE; ++xangle )
-        for ( int yangle = 1; yangle <= 2*LOS_MAX_RANGE; ++yangle )
+    for (int xangle = 1; xangle <= 2*LOS_MAX_RANGE; ++xangle)
+        for (int yangle = 1; yangle <= 2*LOS_MAX_RANGE; ++yangle)
         {
-            if ( _gcd(xangle, yangle) == 1 )
+            if (_gcd(xangle, yangle) == 1)
                 xyangles.push_back(std::pair<int,int>(xangle, yangle));
         }
 
-    std::sort( xyangles.begin(), xyangles.end(), complexity_lt );
-    for ( unsigned int i = 0; i < xyangles.size(); ++i )
+    std::sort(xyangles.begin(), xyangles.end(), complexity_lt);
+    for (unsigned int i = 0; i < xyangles.size(); ++i)
     {
         const int xangle = xyangles[i].first;
         const int yangle = xyangles[i].second;
@@ -373,9 +372,9 @@ void raycast()
             xstart -= EPSILON_VALUE * xangle;
             ystart -= EPSILON_VALUE * yangle;
 
-            _register_ray( xstart, ystart, slope );
+            _register_ray(xstart, ystart, slope);
             // also draw the identical ray in octant 2
-            _register_ray( ystart, xstart, rslope );
+            _register_ray(ystart, xstart, rslope);
         }
     }
 
@@ -383,7 +382,7 @@ void raycast()
     _create_blockrays();
 }
 
-static void _set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
+static void _set_ray_quadrant(ray_def& ray, int sx, int sy, int tx, int ty)
 {
     if ( tx >= sx && ty >= sy )
         ray.quadrant = 0;
@@ -397,13 +396,13 @@ static void _set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
         mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
 }
 
-static int _cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
-                           int maxvalue )
+static int _cyclic_offset(unsigned int ui, int cycle_dir, int startpoint,
+                          int maxvalue)
 {
     const int i = (int)ui;
-    if ( startpoint < 0 )
+    if (startpoint < 0)
         return i;
-    switch ( cycle_dir )
+    switch (cycle_dir)
     {
     case 1:
         return (i + startpoint + 1) % maxvalue;
@@ -460,9 +459,9 @@ static bool _superior_ray(int shortest, int imbalance,
 // If find_shortest is true, examine all rays that hit the target and
 // take the shortest (starting at ray.fullray_idx).
 
-bool find_ray( const coord_def& source, const coord_def& target,
-               bool allow_fallback, ray_def& ray, int cycle_dir,
-               bool find_shortest, bool ignore_solid )
+bool find_ray(const coord_def& source, const coord_def& target,
+              bool allow_fallback, ray_def& ray, int cycle_dir,
+              bool find_shortest, bool ignore_solid)
 {
     int cellray, inray;
 
@@ -483,7 +482,7 @@ bool find_ray( const coord_def& source, const coord_def& target,
     double slope_diff       = VERTICAL_SLOPE * 10.0;
     std::vector<coord_def> unaliased_ray;
 
-    for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
+    for (unsigned int fray = 0; fray < fullrays.size(); ++fray)
     {
         const int fullray = _cyclic_offset( fray, cycle_dir, ray.fullray_idx,
                                             fullrays.size() );

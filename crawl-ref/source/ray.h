@@ -20,7 +20,8 @@ public:
     int fullray_idx;   // for cycling: where did we come from?
 
 public:
-    ray_def();
+    ray_def(double accx = 0.0, double accy = 0.0, double slope = 0.0,
+            int quadrant = 0, int fullray_idx = -1);
     int x() const { return static_cast<int>(accx); }
     int y() const { return static_cast<int>(accy); }
     coord_def pos() const { return coord_def(x(), y()); }
@@ -30,6 +31,8 @@ public:
     int advance_through(const coord_def &point);
     void advance_and_bounce();
     void regress();
+
+    int footprint(int radius2, int xpos[], int ypos[]);
 
     // Gets/sets the slope in terms of degrees, with 0 = east, 90 = north,
     // 180 = west, 270 = south, 360 = east, -90 = south, etc
