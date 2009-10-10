@@ -818,8 +818,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     case GOD_ZIN:
         dislikes.push_back("you deliberately mutate yourself");
         dislikes.push_back("you polymorph monsters");
-        dislikes.push_back("you eat the flesh of sentient beings");
         dislikes.push_back("you use chaotic magic or items");
+        dislikes.push_back("you eat the flesh of sentient beings");
         break;
 
     case GOD_SHINING_ONE:
