@@ -280,7 +280,7 @@ ENDMAP
 
 # The destination vaults ############
 #
-# Currently, there are five cave vaults (each of weight 6) and three
+# Currently, there are four cave vaults (each of weight 8) and three
 # cavern vaults (each of weight 5).
 
 ############################################################################
@@ -298,7 +298,7 @@ ENDMAP
 NAME:    ice_cave_small_01
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-WEIGHT:  6
+WEIGHT:  8
 # Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
@@ -378,7 +378,7 @@ ENDMAP
 NAME:    ice_cave_small_02
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-WEIGHT:  6
+WEIGHT:  8
 # Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
@@ -440,7 +440,7 @@ ENDMAP
 NAME:    ice_cave_small_03
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-WEIGHT:  6
+WEIGHT:  8
 KFEAT:   _ = altar_kikubaaqudgha
 SUBST:   - = ........-
 KFEAT:   - = alarm trap
@@ -516,7 +516,7 @@ ENDMAP
 NAME:    ice_cave_small_04
 TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-WEIGHT:  6
+WEIGHT:  8
 NSUBST:  . = 9:1 / 1:2 / *:.
 SHUFFLE: Qq / Zz / Nn / Bb / Mm
 SUBST:   Q=2, Z=2, N=., B=., M=.
@@ -597,79 +597,6 @@ xxxxxx--<--xxwwwwc.e.........f.cxxxxxxxxx
 xxxxxxx---xxwwwwwc...cc*|*cc...cxxxxxxxxx
 xxxxxxxxxxxxxxxxxcccccccccccccccxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME: ice_cave_tombish
-# This is an ice cave which is also a tomb of a necromancer who likes staying
-# alive and simulacrums, or just a chillout of an ice fiend. By Zaba.
-# Weighted as a small cave, although this is pretty tough. --Eino
-TAGS: ice_cave no_item_gen no_monster_gen
-ORIENT: encompass
-WEIGHT: 6
-# S is either an ice statue or a granite statue.
-SUBST: S = GGS
-KMONS: S = ice statue
-# I is an ice statue with loot underneath.
-KITEM: I = any scroll q:3
-KMONS: I = ice statue
-MONS: ice devil / blue devil / nothing w:7
-# FIXME: I can't quite make up more simulacrums
-MONS: grizzly bear simulacrum / bear simulacrum / dragon simulacrum /\
-      human simulacrum / golden dragon simulacrum w:1
-MONS: Ice Fiend w:2 / necromancer
-ITEM: any potion / any scroll / any weapon good_item / any armour good_item
-KFEAT: ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
-: ice_cave_colours(_G)
-: ice_cave_milestone(_G)
-: ice_cave_random_monster_list_undead_demon(_G)
-MAP
-      xxxxx
-     xx...xx
-    xx.....xx
-    x...A...x
-    x...<...x
-    xx.....xx
-     xx...xx
-      x...xx
-      xx...x
-      xx...x
-      x...xx
-   xxxx...xxxx
-  xxIx.....xIxx
- xx...........xx
- x.............x
-xx.............xx
-x.......1.......x
-x....1.....1....x
-x.......U.......x
-x....1.....1....x
-x.......1.......x
-xx.............xx
- x.cnnc...cnnc.x
- xxc11c...c11cxx
-  xc11cc+cc11cx
-  ccc+c...c+ccc
-  c...c...c...c
-ccc.ccc...ccc.ccc
-c...c2c...c2c...c
-c+ccc+c...c+ccc+c
-c'c2+.......+2c'c
-c'ccc.G...G.ccc'c
-c'c2+.......+2c'c
-c'ccc.G...G.ccc'c
-c'c2+.......+2c'c
-c'ccc.G...G.ccc'c
-c'c2+.......+2c'c
-c+cccccc+cccccc+c
-c...............c
-ccccS.ccccc.Scccc
-   cc.cd3dc.cc
-    c.cdUdc.c
-    c.cdddc.c
-    c.cc+cc.c
-    c.'''''.c
-    ccccScccc
-       ccc
 ENDMAP
 
 ############################################################################
