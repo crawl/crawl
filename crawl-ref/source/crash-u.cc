@@ -11,10 +11,12 @@ REVISION("$Rev$");
 #include <signal.h>
 #endif
 
+#if (defined(UNIX) || defined(OSX))
+
 #include <cxxabi.h>
-#include <execinfo.h>
 
 #ifdef OSX
+#include <cxxabi.h>
 #include <dlfcn.h>
 
 typedef int (*backtrace_t)(void * *, int);
@@ -27,7 +29,11 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f) {
         FROM f; TO t;
     } u; u.f = f; return u.t;
 }
-#endif
+#else
+#include <execinfo.h>
+#endif // OSX
+
+#endif // defined(UNIX) || defined(OSX)
 
 #include "crash.h"
 
