@@ -15,7 +15,7 @@ REVISION("$Rev$");
 #include <termios.h>
 #include <conio.h>
 
-#if defined(DOS)
+#if defined(TARGET_OS_DOS)
 
 static bool cursor_is_enabled = true;
 
@@ -138,4 +138,4 @@ void putwch(unsigned c)
     putch(static_cast<char>(c));
 }
 
-#endif /* #if defined(DOS) */
+#endif /* #if defined(TARGET_OS_DOS) */

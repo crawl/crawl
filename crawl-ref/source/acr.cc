@@ -29,7 +29,7 @@ REVISION("$Rev$");
 #include <sstream>
 #include <iostream>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <dos.h>
 #include <conio.h>
 #include <file.h>

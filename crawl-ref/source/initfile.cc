@@ -655,17 +655,17 @@ void game_options::reset_options()
 #if defined(SAVE_DIR_PATH)
     save_dir   = SAVE_DIR_PATH "/saves/";
     morgue_dir = SAVE_DIR_PATH "/morgue/";
-#elif defined(OSX)
+#elif defined(TARGET_OS_MACOSX)
     std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
-#elif !defined(DOS)
+#elif !defined(TARGET_OS_DOS)
     save_dir   = "saves/";
 #else
     save_dir.clear();
 #endif
 
-#if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(OSX)
+#if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
     morgue_dir = "morgue/";
 #endif
 
@@ -813,7 +813,7 @@ void game_options::reset_options()
 #endif
 
     easy_exit_menu         = true;
-#ifdef DOS
+#ifdef TARGET_OS_DOS
     dos_use_background_intensity = false;
 #else
     dos_use_background_intensity = true;
@@ -3248,7 +3248,7 @@ std::string game_options::resolve_include(
     // favoured file separator.
     parent_file   = canonicalise_file_separator(parent_file);
     included_file = canonicalise_file_separator(included_file);
-#if defined(DOS)
+#if defined(TARGET_OS_DOS)
     get_dos_compatible_file_name(&included_file);
 #endif
 

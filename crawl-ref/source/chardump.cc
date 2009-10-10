@@ -20,7 +20,7 @@ REVISION("$Rev$");
 #endif
 #include <ctype.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 

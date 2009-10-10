@@ -15,7 +15,7 @@ REVISION("$Rev$");
 #include <ctype.h>
 #include <time.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #include <file.h>
 #endif
@@ -28,7 +28,7 @@ REVISION("$Rev$");
 
 #include "ouch.h"
 
-#ifdef __MINGW32__
+#ifdef TARGET_COMPILER_MINGW
 #include <io.h>
 #endif
 

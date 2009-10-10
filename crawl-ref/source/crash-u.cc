@@ -11,11 +11,17 @@ REVISION("$Rev$");
 #include <signal.h>
 #endif
 
-#if (defined(UNIX) || defined(OSX))
+#if defined(UNIX)
 
 #include <cxxabi.h>
 
-#ifdef OSX
+#if !defined(TARGET_OS_MACOSX) && \
+    !defined(TARGET_OS_WINDOWS) && \
+    !defined(TARGET_COMPILER_CYGWIN)
+#include <execinfo.h>
+#endif
+
+#ifdef TARGET_OS_MACOSX
 #include <dlfcn.h>
 
 typedef int (*backtrace_t)(void * *, int);
@@ -28,11 +34,9 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f) {
         FROM f; TO t;
     } u; u.f = f; return u.t;
 }
-#else
-#include <execinfo.h>
-#endif // OSX
+#endif // TARGET_OS_MACOSX
 
-#endif // defined(UNIX) || defined(OSX)
+#endif // defined(UNIX) || defined(TARGET_OS_MACOSX)
 
 #include "crash.h"
 
@@ -147,20 +151,22 @@ void init_crash_handler()
 
 void dump_crash_info(FILE* file)
 {
+#if defined(UNIX)
     const char *name = strsignal(_crash_signal);
     if (name == NULL)
         name = "INVALID";
 
     fprintf(file, "Crash caused by signal #%d: %s" EOL EOL, _crash_signal,
             name);
+#endif
 }
 
-#if (defined(UNIX) || defined(OSX))
+#if defined(UNIX) && !defined(TARGET_COMPILER_CYGWIN)
 void write_stack_trace(FILE* file, int ignore_count)
 {
     void* frames[50];
 
-#if defined (OSX)
+#if defined (TARGET_OS_MACOSX)
     backtrace_t backtrace;
     backtrace_symbols_t backtrace_symbols;
     backtrace = nasty_cast<backtrace_t, void*>(dlsym(RTLD_DEFAULT, "backtrace"));
@@ -176,7 +182,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     int num_frames = backtrace(frames, ARRAYSZ(frames));
     char **symbols = backtrace_symbols(frames, num_frames);
 
-#ifndef OSX
+#if !defined(TARGET_OS_MACOSX)
     if (symbols == NULL)
     {
         fprintf(stderr, "Out of memory." EOL);
@@ -194,7 +200,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     // Now we prettify the printout to even show demangled C++ function names.
     std::string bt = "";
     for (int i = 0; i < num_frames; i++) {
-#if defined (OSX)
+#if defined (TARGET_OS_MACOSX)
         char *addr = ::strstr(symbols[i], "0x");
         char *mangled = ::strchr(addr, ' ') + 1;
         char *offset = ::strchr(addr, '+');
@@ -217,7 +223,7 @@ void write_stack_trace(FILE* file, int ignore_count)
             bt += offset;
             free(realname);
         }
-#else // OSX
+#else // TARGET_OS_MACOSX
         bt += symbols[i];
         int status;
         // Extract the identifier from symbols[i].  It's inside of parens.
@@ -240,7 +246,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     free(symbols);
 }
-#else // defined(UNIX) || defined(OSX)
+#else // defined(UNIX)
 void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform." EOL;

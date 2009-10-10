@@ -16,7 +16,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <cmath>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <dos.h>
 #endif
 

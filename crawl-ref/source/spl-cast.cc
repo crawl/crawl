@@ -50,7 +50,7 @@ REVISION("$Rev$");
 #include "tutorial.h"
 #include "view.h"
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
