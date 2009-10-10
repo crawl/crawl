@@ -30,6 +30,7 @@ source/dat/tiles/gui.png
 
 # The Crawl executable.
 source/crawl
+source/crawl.exe
 
 # Level-compiler generated files.
 source/util/*.cc
