@@ -37,15 +37,31 @@ const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
 const coord_def sh_o = coord_def(sh_xo, sh_yo);
 
-unsigned long* los_blockrays = NULL;
-unsigned long* dead_rays     = NULL;
-unsigned long* smoke_rays    = NULL;
+// These store all unique (in terms of footprint) full rays.
+// Fullrays and raylengths are of equal size. The footprint
+// of fullray[i] consists of raylengths[i] cells, whose
+// coordinates are stored in ray_coord_{x,y} after the
+// coordinates of fullray[i-1].
+// These are filled during precomputation (_register_ray).
+std::vector<ray_def> fullrays;
+std::vector<int> raylengths;
 std::vector<short> ray_coord_x;
 std::vector<short> ray_coord_y;
+
+// These store certain unique subsequences of ray_coord_{x,y}.
+// Filled during precomputation (_create_blockrays)
 std::vector<short> compressed_ray_x;
 std::vector<short> compressed_ray_y;
-std::vector<int> raylengths;
-std::vector<ray_def> fullrays;
+// 3D bit array indexed by x coord, y coord, cellray index.
+// Bit los_blockrays[x][y][i] is set iff a wall at (x,y) blocks
+// the cellray starting at compressed_ray_{x,y}[i].
+unsigned long* los_blockrays = NULL;
+
+// Temporary arrays used in losight() to track which rays
+// are blocked or have seen a smoke cloud.
+// Allocated when doing the precomputations.
+unsigned long* dead_rays     = NULL;
+unsigned long* smoke_rays    = NULL;
 
 void clear_rays_on_exit()
 {
@@ -70,21 +86,21 @@ int get_los_radius_squared()
     return _los_radius_squared;
 }
 
-bool _get_bit_in_long_array( const unsigned long* data, int where )
+bool _get_bit_in_long_array(const unsigned long* data, int where)
 {
     int wordloc = where / LONGSIZE;
     int bitloc = where % LONGSIZE;
     return ((data[wordloc] & (1UL << bitloc)) != 0);
 }
 
-static void _set_bit_in_long_array( unsigned long* data, int where )
+static void _set_bit_in_long_array(unsigned long* data, int where)
 {
     int wordloc = where / LONGSIZE;
     int bitloc = where % LONGSIZE;
     data[wordloc] |= (1UL << bitloc);
 }
 
-bool double_is_zero( const double x )
+bool double_is_zero(const double x)
 {
     return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
 }
@@ -256,7 +272,7 @@ static void _create_blockrays()
 
             // ...all following cellrays
             for (int j = i+1; j < raylengths[ray]; ++j)
-                _set_bit_in_long_array( inptr, j + cur_offset );
+                _set_bit_in_long_array(inptr, j + cur_offset);
 
         }
         cur_offset += raylengths[ray];

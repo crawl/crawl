@@ -324,13 +324,16 @@ int ray_def::raw_advance()
 // return the number of cells visited.
 int ray_def::footprint(int radius2, int xpos[], int ypos[])
 {
+    // copy starting point
+    double ax = accx;
+    double ay = accy;
     int curx, cury;
     int cellnum;
     for (cellnum = 0; true; ++cellnum)
     {
-        _find_next_intercept(&accx, &accy, slope);
-        curx = static_cast<int>(accx);
-        cury = static_cast<int>(accy);
+        _find_next_intercept(&ax, &ay, slope);
+        curx = static_cast<int>(ax);
+        cury = static_cast<int>(ay);
         if (curx*curx + cury*cury > radius2)
             break;
 
@@ -339,4 +342,3 @@ int ray_def::footprint(int radius2, int xpos[], int ypos[])
     }
     return cellnum;
 }
-
