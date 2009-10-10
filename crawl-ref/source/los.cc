@@ -1,6 +1,6 @@
 /*
- *  File:       los.cc
- *  Summary:    Line-of-sight algorithm.
+ *  File:        los.cc
+ *  Summary:     Line-of-sight algorithm.
  */
 
 #include "AppHdr.h"
@@ -11,6 +11,7 @@ REVISION("$Rev$");
 #include <cmath>
 #include <algorithm>
 
+#include "bitary.h"
 #include "debug.h"
 #include "directn.h"
 #include "externs.h"
@@ -54,22 +55,22 @@ std::vector<short> compressed_ray_y;
 // 3D bit array indexed by x coord, y coord, cellray index.
 // Bit los_blockrays[x][y][i] is set iff a wall at (x,y) blocks
 // the cellray starting at compressed_ray_{x,y}[i].
-typedef FixedArray<unsigned long*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
+typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
 blockrays_t los_blockrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
 // Allocated when doing the precomputations.
-unsigned long* dead_rays     = NULL;
-unsigned long* smoke_rays    = NULL;
+bit_array *dead_rays     = NULL;
+bit_array *smoke_rays    = NULL;
 
 void clear_rays_on_exit()
 {
-    delete[] dead_rays;
-    delete[] smoke_rays;
-    for (int x = 0; x <= LOS_MAX_RANGE; x++)
-        for (int y = 0; y <= LOS_MAX_RANGE; y++)
-            delete[] los_blockrays[x][y];
+   delete dead_rays;
+   delete smoke_rays;
+   for (int x = 0; x <= LOS_MAX_RANGE; x++)
+       for (int y = 0; y <= LOS_MAX_RANGE; y++)
+           delete los_blockrays[x][y];
 }
 
 // pre-squared LOS radius
@@ -86,20 +87,6 @@ void setLOSRadius(int newLR)
 int get_los_radius_squared()
 {
     return _los_radius_squared;
-}
-
-bool _get_bit_in_long_array(const unsigned long* data, int where)
-{
-    int wordloc = where / LONGSIZE;
-    int bitloc = where % LONGSIZE;
-    return ((data[wordloc] & (1UL << bitloc)) != 0);
-}
-
-static void _set_bit_in_long_array(unsigned long* data, int where)
-{
-    int wordloc = where / LONGSIZE;
-    int bitloc = where % LONGSIZE;
-    data[wordloc] |= (1UL << bitloc);
 }
 
 bool double_is_zero(const double x)
@@ -250,20 +237,14 @@ static void _create_blockrays()
     // determine nonduplicated rays
     std::vector<int> nondupe_cellrays    = _find_nonduped_cellrays();
     const int num_nondupe_rays  = nondupe_cellrays.size();
-    const int num_nondupe_words =
-        (num_nondupe_rays + LONGSIZE - 1) / LONGSIZE;
     const int num_cellrays = ray_coord_x.size();
-    const int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
     blockrays_t full_los_blockrays;
 
-    // allocate and initialize
     for (int x = 0; x <= LOS_MAX_RANGE; ++x)
         for (int y = 0; y <= LOS_MAX_RANGE; ++y)
         {
-            full_los_blockrays[x][y] = new unsigned long[num_words];
-            memset((void*)full_los_blockrays[x][y], 0, sizeof(unsigned long) * num_words);
-            los_blockrays[x][y] = new unsigned long[num_nondupe_words];
-            memset((void*)los_blockrays[x][y], 0, sizeof(unsigned long) * num_nondupe_words);
+            full_los_blockrays[x][y] = new bit_array(num_cellrays);
+            los_blockrays[x][y] = new bit_array(num_nondupe_rays);
         }
 
     // first build all the rays: easier to do blocking calculations there
@@ -277,7 +258,7 @@ static void _create_blockrays()
             int y = ray_coord_y[cur_offset + i];
             // every cell blocks all following cellrays
             for (int j = i+1; j < raylengths[ray]; ++j)
-                _set_bit_in_long_array(full_los_blockrays[x][y], cur_offset+j);
+                full_los_blockrays[x][y]->set(cur_offset+j);
         }
         cur_offset += raylengths[ray];
     }
@@ -296,20 +277,17 @@ static void _create_blockrays()
 
     for (int x = 0; x <= LOS_MAX_RANGE; ++x)
         for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-        {
             for (int i = 0; i < num_nondupe_rays; ++i)
-                if (_get_bit_in_long_array(full_los_blockrays[x][y],
-                                           nondupe_cellrays[i]))
-                    _set_bit_in_long_array(los_blockrays[x][y], i);
-        }
+                los_blockrays[x][y]->set(i,
+                    full_los_blockrays[x][y]->get(nondupe_cellrays[i]));
 
     // we can throw away full_los_blockrays now
     for (int x = 0; x <= LOS_MAX_RANGE; ++x)
         for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-            delete[] full_los_blockrays[x][y];
+            delete full_los_blockrays[x][y];
 
-    dead_rays  = new unsigned long[num_nondupe_words];
-    smoke_rays = new unsigned long[num_nondupe_words];
+    dead_rays  = new bit_array(num_nondupe_rays);
+    smoke_rays = new bit_array(num_nondupe_rays);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
@@ -742,11 +720,10 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
 void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
 {
     const unsigned int num_cellrays = compressed_ray_x.size();
-    const int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
     // clear out the dead rays array
-    memset((void*)dead_rays,  0, sizeof(unsigned long) * num_words);
-    memset((void*)smoke_rays, 0, sizeof(unsigned long) * num_words);
+    dead_rays->reset();
+    smoke_rays->reset();
 
     for (int x = 0; x <= LOS_MAX_RANGE; ++x)
         for (int y = 0; y <= LOS_MAX_RANGE; ++y)
@@ -760,16 +737,12 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
             {
             case OPC_OPAQUE:
                 // then block the appropriate rays
-                for (int i = 0; i < num_words; ++i)
-                    dead_rays[i] |= los_blockrays[x][y][i];
+                *dead_rays |= *los_blockrays[x][y];
                 break;
             case OPC_HALF:
                 // block rays which have already seen a cloud
-                for (int i = 0; i < num_words; ++i)
-                {
-                    dead_rays[i]  |= (smoke_rays[i] & los_blockrays[x][y][i]);
-                    smoke_rays[i] |= los_blockrays[x][y][i];
-                }
+                *dead_rays  |= (*smoke_rays & *los_blockrays[x][y]);
+                *smoke_rays |= *los_blockrays[x][y];
                 break;
             default:
                 break;
@@ -778,25 +751,17 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
 
     // Ray calculation done. Now work out which cells in this
     // quadrant are visible.
-    unsigned int rayidx = 0;
-    for (int wordloc = 0; wordloc < num_words; ++wordloc)
+    for (unsigned int rayidx = 0; rayidx < num_cellrays; ++rayidx)
     {
-        const unsigned long curword = dead_rays[wordloc];
-        for (unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc)
+        // make the cells seen by this ray at this point visible
+        if (!dead_rays->get(rayidx))
         {
-            // make the cells seen by this ray at this point visible
-            if ( ((curword >> bitloc) & 1UL) == 0 )
-            {
-                // this ray is alive!
-                const coord_def p = coord_def(sx * compressed_ray_x[rayidx],
-                                              sy * compressed_ray_y[rayidx]);
-                // update shadow map
-                if (dat.los_bounds(p))
-                    sh(p+sh_o) = dat.appearance(p);
-            }
-            ++rayidx;
-            if (rayidx == num_cellrays)
-                break;
+            // this ray is alive!
+            const coord_def p = coord_def(sx * compressed_ray_x[rayidx],
+                                          sy * compressed_ray_y[rayidx]);
+            // update shadow map
+            if (dat.los_bounds(p))
+                sh(p+sh_o) = dat.appearance(p);
         }
     }
 }
