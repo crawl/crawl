@@ -7,6 +7,7 @@ Stone Soup 0.6
 * Added potions of brilliance and agility.
 * Several new uniques.
 * Overhaul Wanderers.
+* Healers now start unarmed.
 * Starting stats and equipment, and hp gain, are no longer assigned randomly.
 * Round all aptitudes to multiples of 10.
 * New memorisation interface.
@@ -20,6 +21,7 @@ Stone Soup 0.6
 * Let toadstools grow on corpses.
 * All worms apart from brain worms are mindless and cannot be pacified.
 * Hungry ghosts eat corpses.
+* All spectral things can use stairs again.
 * (Very) ugly things get random resistances and attack flavours.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Weapons of holy wrath cannot be cursed.
@@ -39,7 +41,6 @@ Stone Soup 0.6
 * Add some tiles "animations" whenever the screen is redrawn.
 * Tiles: re-added doll editing screen ('-' command).
 * Tiles: added clickable spells display (toggle with '_' command).
-* All spectral things can use stairs again.
 
 
 Stone Soup 0.5.2 (20091008)
