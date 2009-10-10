@@ -200,8 +200,7 @@ static std::vector<int> _find_nonduped_cellrays()
 }
 
 // Create and register the ray defined by the arguments.
-// Return true if the ray was actually registered (i.e., not a duplicate.)
-static bool _register_ray(double accx, double accy, double slope)
+static void _register_ray(double accx, double accy, double slope)
 {
     int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
     ray_def ray = ray_def(accx, accy, slope, 0);
@@ -210,7 +209,7 @@ static bool _register_ray(double accx, double accy, double slope)
 
     // Early out if ray already exists.
     if (_is_duplicate_ray(raylen, xpos, ypos))
-        return (false);
+        return;
 
     // Not duplicate, register.
     for (int i = 0; i < raylen; ++i)
@@ -223,8 +222,6 @@ static bool _register_ray(double accx, double accy, double slope)
     // Register the fullray.
     raylengths.push_back(raylen);
     fullrays.push_back(ray);
-
-    return (true);
 }
 
 static void _create_blockrays()
