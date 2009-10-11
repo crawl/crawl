@@ -22,9 +22,9 @@ public:
 public:
     ray_def(double accx = 0.0, double accy = 0.0, double slope = 0.0,
             int quadrant = 0, int fullray_idx = -1);
-    int x() const { return static_cast<int>(accx); }
-    int y() const { return static_cast<int>(accy); }
-    coord_def pos() const { return coord_def(x(), y()); }
+    int x() const;
+    int y() const;
+    coord_def pos() const;
 
     // returns the direction taken (0,1,2)
     int advance(bool shorten = false, const coord_def *p = NULL);

@@ -8,14 +8,34 @@ REVISION("$Rev$");
 
 #include "ray.h"
 
-#include <cmath>
+#include <math.h>
 
 #include "los.h"
 #include "terrain.h"
 
+int ifloor(double d)
+{
+    return static_cast<int>(floor(d));
+}
+
 ray_def::ray_def(double ax, double ay, double s, int q, int idx)
     : accx(ax), accy(ay), slope(s), quadrant(q), fullray_idx(idx)
 {
+}
+
+int ray_def::x() const
+{
+    return ifloor(accx);
+}
+
+int ray_def::y() const
+{
+    return ifloor(accy);
+}
+
+coord_def ray_def::pos() const
+{
+    return coord_def(x(), y());
 }
 
 double ray_def::reflect(double p, double c) const
@@ -195,7 +215,7 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
     // If we want to minimise the number of moves on the ray, look one
     // step ahead and see if we can get a diagonal.
 
-    const coord_def old(static_cast<int>(accx), static_cast<int>(accy));
+    const coord_def old = pos();
     const int ret = raw_advance();
 
     if (ret == 2 || (target && pos() == *target))
@@ -204,7 +224,7 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
     const double maccx = accx, maccy = accy;
     if (raw_advance() != 2)
     {
-        const coord_def second(static_cast<int>(accx), static_cast<int>(accy));
+        const coord_def second = pos();
         // If we can convert to a diagonal, do so.
         if ((second - old).abs() == 2)
             return (2);
@@ -235,8 +255,8 @@ int ray_def::_find_next_intercept()
         return 1;
     }
 
-    const double xtarget = static_cast<int>(accx) + 1;
-    const double ytarget = static_cast<int>(accy) + 1;
+    const double xtarget = ifloor(accx) + 1;
+    const double ytarget = ifloor(accy) + 1;
     const double xdistance = xtarget - accx;
     const double ydistance = ytarget - accy;
     double distdiff = xdistance * slope - ydistance;
