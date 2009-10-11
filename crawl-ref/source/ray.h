@@ -53,7 +53,7 @@ public:
     double get_degrees() const;
     void   set_degrees(double deg);
 
-private:
+protected:
     adv_type raw_advance_0();
     void flip();
     adv_type raw_advance();

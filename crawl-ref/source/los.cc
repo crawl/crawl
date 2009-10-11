@@ -37,16 +37,15 @@ const int sh_yo = 9;
 const coord_def sh_o = coord_def(sh_xo, sh_yo);
 
 // These store all unique (in terms of footprint) full rays.
-// Fullrays and raylengths are of equal size. The footprint
-// of fullray[i] consists of raylengths[i] cells, whose
-// coordinates are stored in ray_coord after the
-// coordinates of fullray[i-1].
+// The footprint of fullray[i] consists of fullray[i].length cells,
+// whose coordinates are stored in ray_coords after the
+//  coordinates of fullray[i-1].
 // These are filled during precomputation (_register_ray).
-std::vector<ray_def> fullrays;
-std::vector<int> raylengths;
-std::vector<coord_def> ray_coord;
+struct los_ray;
+std::vector<los_ray> fullrays;
+std::vector<coord_def> ray_coords;
 
-// These store certain unique subsequences of ray_coord.
+// These store certain unique subsequences of ray_coords.
 // Filled during precomputation (_create_blockrays)
 std::vector<coord_def> compressed_ray;
 
@@ -92,96 +91,121 @@ bool double_is_zero(const double x)
     return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
 }
 
-// Check if the passed ray has already been created.
-static bool _is_duplicate_ray(int len, coord_def pos[])
+struct los_ray : ray_def
 {
-    int cur_offset = 0;
-    for (unsigned int i = 0; i < raylengths.size(); ++i)
+    unsigned int start;
+    unsigned int length;
+
+    los_ray(double ax, double ay, double s)
+        : ray_def(ax, ay, s, QUAD_SE), length(0)
     {
-        // Only compare equal-length rays.
-        if (raylengths[i] != len)
-        {
-            cur_offset += raylengths[i];
-            continue;
-        }
-
-        int j;
-        for (j = 0; j < len; ++j)
-            if (ray_coord[j + cur_offset] != pos[j])
-                break;
-
-        // Exact duplicate?
-        if (j == len)
-            return (true);
-
-        // Move to beginning of next ray.
-        cur_offset += raylengths[i];
     }
-    return (false);
+
+    // Shoot a ray from the given start point (accx, accy) with the given
+    // slope, bounded by the given pre-squared LOS radius.
+    std::vector<coord_def> footprint(int radius2)
+    {
+        std::vector<coord_def> cs;
+        los_ray copy = *this;
+        coord_def c;
+        int cellnum;
+        for (cellnum = 0; true; ++cellnum)
+        {
+            copy.raw_advance_0();
+            c = copy.pos();
+            if (c.abs() > radius2)
+                break;
+            cs.push_back(c);
+        }
+        return cs;
+    }
+
+    coord_def operator[](unsigned int i)
+    {
+        ASSERT(0 <= i && i < length);
+        return ray_coords[start+i];
+    }
+};
+
+// Check if the passed rays have identical footprint.
+static bool _is_same_ray(los_ray ray, std::vector<coord_def> newray)
+{
+    if (ray.length != newray.size())
+        return false;
+    for (unsigned int i = 0; i < ray.length; i++)
+        if (ray[i] != newray[i])
+            return false;
+    return true;
+}
+
+// Check if the passed ray has already been created.
+static bool _is_duplicate_ray(std::vector<coord_def> newray)
+{
+    for (unsigned int i = 0; i < fullrays.size(); ++i)
+        if (_is_same_ray(fullrays[i], newray))
+            return true;
+    return false;
 }
 
 // Is starta...lengtha a subset of startb...lengthb?
-static bool _is_subset( int starta, int startb, int lengtha, int lengthb )
+static bool _is_subset(int starta, int startb, int lengtha, int lengthb)
 {
     int cura = starta, curb = startb;
     int enda = starta + lengtha, endb = startb + lengthb;
 
     while (cura < enda && curb < endb)
     {
-        if (ray_coord[curb].x > ray_coord[cura].x)
+        if (ray_coords[curb].x > ray_coords[cura].x)
             return (false);
-        if (ray_coord[curb].y > ray_coord[cura].y)
+        if (ray_coords[curb].y > ray_coords[cura].y)
             return (false);
 
-        if (ray_coord[cura] == ray_coord[curb])
-            ++cura;
+        if (ray_coords[cura] == ray_coords[curb])
+             ++cura;
 
-        ++curb;
+         ++curb;
     }
 
     return (cura == enda);
 }
 
 // Returns a vector which lists all the nonduped cellrays (by index).
+// A cellray c in a fullray f is duped if there is a fullray g
+// such that g contains c and g[:c] is a subset of f[:c].
 static std::vector<int> _find_nonduped_cellrays()
 {
-    // A cellray c in a fullray f is duped if there is a fullray g
-    // such that g contains c and g[:c] is a subset of f[:c].
-    unsigned int raynum, testray;
-    int cellnum, curidx, testidx, testcell;
     bool is_duplicate;
-
     std::vector<int> result;
-    for (curidx = 0, raynum = 0;
-         raynum < raylengths.size();
-         curidx += raylengths[raynum++])
+
+    for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
-        for (cellnum = 0; cellnum < raylengths[raynum]; ++cellnum)
+        los_ray ray = fullrays[r];
+        for (unsigned int i = 0; i < ray.length; ++i)
         {
-            // Is the cellray raynum[cellnum] duplicated?
+            // Is the cellray ray[0..i] duplicated?
             is_duplicate = false;
+
             // XXX: We should really check everything up to now
             // completely, and all further rays to see if they're
             // proper subsets.
-            const coord_def cur = ray_coord[curidx + cellnum];
 
             // Test against all previous fullrays.
-            for (testidx = 0, testray = 0; testray < raynum;
-                 testidx += raylengths[testray++])
+            for (unsigned int s = 0; s < r; ++s)
             {
+                los_ray prev = fullrays[s];
+
                 // Scan ahead to see if there's an intersect.
-                for (testcell = 0; testcell < raylengths[raynum]; ++testcell)
+                for (unsigned int j = 0; j < prev.length; ++j)
                 {
-                    const coord_def test = ray_coord[testidx + testcell];
-                    // We can short-circuit sometimes.
-                    if (test.x > cur.x || test.y > cur.y)
+                    // Short-circuit if we've passed ray[i]
+                    // in either coordinate.
+                    if (prev[j].x > ray[i].x || prev[j].y > ray[i].y)
                         break;
 
-                    // Bingo!
-                    if (test == cur)
+                    if (prev[j] == ray[i])
                     {
-                        is_duplicate = _is_subset(testidx, curidx,
-                                                  testcell, cellnum);
+                        is_duplicate = _is_subset(prev.start, ray.start,
+                                                  j, i);
                         break;
                     }
                 }
@@ -189,7 +213,7 @@ static std::vector<int> _find_nonduped_cellrays()
                     break;      // No point in checking further rays.
             }
             if (!is_duplicate)
-                result.push_back(curidx + cellnum);
+                result.push_back(ray.start + i);
         }
     }
     return result;
@@ -198,33 +222,24 @@ static std::vector<int> _find_nonduped_cellrays()
 // Create and register the ray defined by the arguments.
 static void _register_ray(double accx, double accy, double slope)
 {
-    coord_def pos[LOS_MAX_RANGE * 2 + 1];
-    ray_def ray = ray_def(accx, accy, slope, QUAD_SE);
-    // find out which cells the ray passes through
-    int raylen = ray.footprint(LOS_RADIUS2, pos);
+    los_ray ray = los_ray(accx, accy, slope);
+    std::vector<coord_def> coords = ray.footprint(LOS_RADIUS2);
 
-    // Early out if ray already exists.
-    if (_is_duplicate_ray(raylen, pos))
+    if (_is_duplicate_ray(coords))
         return;
 
-    // Not duplicate, register.
-    for (int i = 0; i < raylen; ++i)
-    {
-        // Create the cellrays.
-        ray_coord.push_back(pos[i]);
-    }
-
-    // Register the fullray.
-    raylengths.push_back(raylen);
-    fullrays.push_back(ray);
+    ray.start = ray_coords.size();
+    ray.length = coords.size();
+    for (unsigned int i = 0; i < coords.size(); i++)
+        ray_coords.push_back(coords[i]);
 }
 
 static void _create_blockrays()
 {
     // determine nonduplicated rays
-    std::vector<int> nondupe_cellrays    = _find_nonduped_cellrays();
-    const int num_nondupe_rays  = nondupe_cellrays.size();
-    const int num_cellrays = ray_coord.size();
+    std::vector<int> nondupe_cellrays = _find_nonduped_cellrays();
+    const int num_nondupe_rays        = nondupe_cellrays.size();
+    const int num_cellrays            = ray_coords.size();
     blockrays_t full_los_blockrays;
 
     for (int x = 0; x <= LOS_MAX_RANGE; ++x)
@@ -235,18 +250,16 @@ static void _create_blockrays()
         }
 
     // first build all the rays: easier to do blocking calculations there
-
-    int cur_offset = 0;
-    for (unsigned int ray = 0; ray < raylengths.size(); ++ray)
+    for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
-        for (int i = 0; i < raylengths[ray]; ++i)
+        los_ray ray = fullrays[r];
+        for (unsigned int i = 0; i < ray.length; ++i)
         {
-            coord_def p = ray_coord[cur_offset + i];
+            coord_def p = ray[i];
             // every cell blocks all following cellrays
-            for (int j = i+1; j < raylengths[ray]; ++j)
-                full_los_blockrays(p)->set(cur_offset+j);
+            for (unsigned int j = i + 1; j < ray.length; ++j)
+                full_los_blockrays(p)->set(ray.start+j);
         }
-        cur_offset += raylengths[ray];
     }
 
     // we've built the basic blockray array; now compress it, keeping
@@ -255,7 +268,7 @@ static void _create_blockrays()
     // we want to only keep the cellrays from nondupe_cellrays.
     compressed_ray.resize(num_nondupe_rays);
     for (int i = 0; i < num_nondupe_rays; ++i)
-        compressed_ray[i] = ray_coord[nondupe_cellrays[i]];
+        compressed_ray[i] = ray_coords[nondupe_cellrays[i]];
 
     for (int x = 0; x <= LOS_MAX_RANGE; ++x)
         for (int y = 0; y <= LOS_MAX_RANGE; ++y)
@@ -436,7 +449,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
               bool allow_fallback, ray_def& ray, int cycle_dir,
               bool find_shortest, bool ignore_solid)
 {
-    int cellray, inray;
+    unsigned int cellray, inray;
 
     const int sourcex = source.x;
     const int sourcey = source.y;
@@ -460,14 +473,11 @@ bool find_ray(const coord_def& source, const coord_def& target,
     {
         const int fullray = _cyclic_offset(fray, cycle_dir, ray.fullray_idx,
                                            fullrays.size());
-        // Yeah, yeah, this is O(n^2). I know.
-        cur_offset = 0;
-        for (int i = 0; i < fullray; ++i)
-            cur_offset += raylengths[i];
+        los_ray lray = fullrays[fullray];
 
-        for (cellray = 0; cellray < raylengths[fullray]; ++cellray)
+        for (cellray = 0; cellray < lray.length; ++cellray)
         {
-            if (ray_coord[cellray + cur_offset] == abs)
+            if (lray[cellray] == abs)
             {
                 if (find_shortest)
                 {
@@ -481,8 +491,8 @@ bool find_ray(const coord_def& source, const coord_def& target,
                 int real_length = 0;
                 for (inray = 0; inray <= cellray; ++inray)
                 {
-                    const int xi = signx * ray_coord[inray + cur_offset].x;
-                    const int yi = signy * ray_coord[inray + cur_offset].y;
+                    const int xi = signx * ray_coords[inray + cur_offset].x;
+                    const int yi = signy * ray_coords[inray + cur_offset].y;
                     if (inray < cellray && !ignore_solid
                         && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
                     {
@@ -546,7 +556,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
                 }
 
                 const double ray_slope_diff = find_shortest ?
-                    fabs(_slope_factor(fullrays[fullray]) - want_slope) : 0.0;
+                    fabs(_slope_factor(lray) - want_slope) : 0.0;
 
                 if (!blocked
                     &&  (!find_shortest
@@ -555,7 +565,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
                                           slope_diff, ray_slope_diff)))
                 {
                     // Success!
-                    ray             = fullrays[fullray];
+                    ray             = lray;
                     ray.fullray_idx = fullray;
 
                     shortest   = real_length;
