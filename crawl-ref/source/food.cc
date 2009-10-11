@@ -366,7 +366,7 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
             && you.piety >= piety_breakpoint(4))
         {
             simple_god_message(" inflicts torment against the living!");
-            torment(TORMENT_GENERIC, you.pos());
+            torment(TORMENT_KIKUBAAQUDGHA, you.pos());
             you.piety -= 8 + random2(4); // 8 to 12
         }
     }

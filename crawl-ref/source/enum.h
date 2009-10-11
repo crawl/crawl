@@ -2932,12 +2932,13 @@ enum targetting_type
 
 enum torment_source_type
 {
-    TORMENT_GENERIC = -1,
-    TORMENT_CARDS   = -2,         // Symbol of torment
-    TORMENT_SPWLD   = -3,         // Special wield torment
-    TORMENT_SCROLL  = -4,
-    TORMENT_SPELL   = -5,         // SPELL_SYMBOL_OF_TORMENT
-    TORMENT_XOM     = -6          // Xom effect
+    TORMENT_GENERIC       = -1,
+    TORMENT_CARDS         = -2,   // Symbol of torment
+    TORMENT_SPWLD         = -3,   // Special wield torment
+    TORMENT_SCROLL        = -4,
+    TORMENT_SPELL         = -5,   // SPELL_SYMBOL_OF_TORMENT
+    TORMENT_XOM           = -6,   // Xom effect
+    TORMENT_KIKUBAAQUDGHA = -7    // Kikubaaqudgha effect
 };
 
 enum trap_type                         // env.trap_type[]

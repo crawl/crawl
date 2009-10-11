@@ -210,15 +210,17 @@ int torment_player(int pow, int caster)
 
     if (kiku_shielding_player)
     {
-        if(!player_res_torment())
+        if (!player_res_torment())
         {
             if (random2(600) < you.piety) // 13.33% to 33.33% chance
             {
                 hploss = 0;
-                simple_god_message(" shields you entirely from torment!");
-            } else if (random2(250) < you.piety) { // 24% to 80% chance
-                hploss -= random2(hploss - 1);
                 simple_god_message(" shields you from torment!");
+            }
+            else if (random2(250) < you.piety) // 24% to 80% chance
+            {
+                hploss -= random2(hploss - 1);
+                simple_god_message(" partially shields you from torment!");
             }
         }
     }
@@ -260,7 +262,11 @@ int torment_player(int pow, int caster)
 
         case TORMENT_XOM:
             type = KILLED_BY_XOM;
-            aux  = "Xom's torment";
+            aux = "Xom's torment";
+            break;
+
+        case TORMENT_KIKUBAAQUDGHA:
+            aux = "Kikubaaqudgha's torment";
             break;
         }
     }
