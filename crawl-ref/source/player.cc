@@ -2880,7 +2880,7 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity(burden_state_type bs)
 {
-    int cap = (2 * you.body_weight) + (you.strength * 200)
+    int cap = (2 * you.body_weight()) + (you.strength * 200)
               + (player_is_airborne() ? 1000 : 0);
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
