@@ -105,8 +105,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DIVINE_WARRIOR },
     // Kikubaaqudgha
-    { ABIL_KIKU_RECEIVE_CORPSE, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    { ABIL_KIKU_RECEIVE_CORPSES, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Yredelemnul
     { ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_RECALL_UNDEAD_SLAVES,
       ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
@@ -240,7 +240,7 @@ static const ability_def Ability_List[] =
       8, 0, 150, 4, ABFLAG_NONE },
 
     // Kikubaaqudgha
-    { ABIL_KIKU_RECEIVE_CORPSE, "Recieve Corpses", 5, 0, 1000, 2, ABFLAG_NONE },
+    { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses", 5, 0, 1000, 2, ABFLAG_NONE },
 
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY },
@@ -728,7 +728,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
-    case ABIL_KIKU_RECEIVE_CORPSE:
+    case ABIL_KIKU_RECEIVE_CORPSES:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
@@ -1626,7 +1626,7 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
-    case ABIL_KIKU_RECEIVE_CORPSE:
+    case ABIL_KIKU_RECEIVE_CORPSES:
         receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
         exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;

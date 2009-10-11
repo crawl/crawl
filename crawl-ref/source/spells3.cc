@@ -728,7 +728,8 @@ bool receive_corpses(int pow, coord_def where)
 
     if (corpses_generated)
     {
-        simple_god_message(" delivers you corpses!");
+        simple_god_message(corpses_generated > 1 ? " delivers you corpses!"
+                                                 : " delivers you a corpse!");
         maybe_update_stashes();
         return (true);
     }

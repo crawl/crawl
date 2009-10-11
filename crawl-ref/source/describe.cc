@@ -3127,7 +3127,7 @@ std::string describe_favour(god_type which_god)
                                   : _describe_favour_generic(which_god);
 }
 
-static std::string _religion_help( god_type god )
+static std::string _religion_help(god_type god)
 {
     std::string result = "";
 
@@ -3182,6 +3182,12 @@ static std::string _religion_help( god_type god )
         }
         break;
 
+    case GOD_BEOGH:
+        result += "You can pray to sacrifice all orcish remains on your "
+                  "square. Inscribe orcish remains with !p, !* or =p to avoid "
+                  "sacrificing them accidentally.";
+        break;
+
     case GOD_NEMELEX_XOBEH:
         result += "You can pray to sacrifice all items on your square. "
                   "Inscribe items with !p, !* or =p to avoid sacrificing "
@@ -3200,13 +3206,14 @@ static std::string _religion_help( god_type god )
         break;
     }
 
-    if (god_likes_butchery(god))
+    if (god_likes_fresh_corpses(god))
     {
         if (!result.empty())
             result += " ";
 
-        result += "You can sacrifice corpses by dissecting"
-                  " them during prayer.";
+        result += "You can pray to sacrifice all fresh corpses on your "
+                  "square. Inscribe fresh corpses with !p, !* or =p to avoid "
+                  "sacrificing them accidentally.";
     }
 
     return result;

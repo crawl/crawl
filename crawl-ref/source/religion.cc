@@ -595,10 +595,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (god_likes_butchery(which_god))
+    if (god_likes_fresh_corpses(which_god))
     {
-        snprintf(info, INFO_SIZE, "you butcher corpses while praying%s",
-                 verbose ? " (press <w>pc</w> to do so)" : "");
+        snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
+                 verbose ? " (by standing over them and <w>p</w>raying)" : "");
 
         likes.push_back(info);
     }
@@ -1390,7 +1390,7 @@ static void _give_nemelex_gift()
             deck.colour  = deck_rarity_to_color(rarity);
             deck.inscription = "god gift";
 
-            move_item_to_grid( &thing_created, you.pos() );
+            move_item_to_grid(&thing_created, you.pos());
 
             simple_god_message(" grants you a gift!");
             more();
@@ -2387,7 +2387,7 @@ static bool _god_accepts_prayer(god_type god)
         return (true);
     }
 
-    if (god_likes_butchery(god))
+    if (god_likes_fresh_corpses(god) || god_likes_butchery(god))
         return (true);
 
     switch (god)
@@ -2519,9 +2519,11 @@ void pray()
     else if (you.religion == GOD_YREDELEMNUL || you.religion == GOD_ELYVILON)
         you.duration[DUR_PRAYER] = 20;
 
-    // Beoghites and Nemelexites offer the items they're standing on.
+    // Gods that like fresh corpses, Beoghites and Nemelexites offer the
+    // items they're standing on.
     if (altar_god == GOD_NO_GOD
-        && (you.religion == GOD_BEOGH ||  you.religion == GOD_NEMELEX_XOBEH))
+        && (god_likes_fresh_corpses(you.religion)
+            || you.religion == GOD_BEOGH || you.religion == GOD_NEMELEX_XOBEH))
     {
         offer_items();
     }
@@ -2938,25 +2940,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_DEDICATED_BUTCHERY:  // a.k.a. field sacrifice
+        case DID_DEDICATED_BUTCHERY:
             switch (you.religion)
             {
             case GOD_ELYVILON:
                 simple_god_message(" does not appreciate your butchering the "
                                    "dead during prayer!");
                 retval = true;
-                piety_change = -10;
-                penance = 10;
-                break;
-
-            case GOD_OKAWARU:
-            case GOD_MAKHLEB:
-            case GOD_TROG:
-            case GOD_LUGONU:
-                simple_god_message(" accepts your offering.");
-                retval = true;
-                if (random2(level + 10) > 5)
-                    piety_change = 1;
+                piety_change = -level;
+                penance = level;
                 break;
 
             default:
@@ -2968,7 +2960,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_ELYVILON:
-                // killing only disapproved during prayer
+                // Killing is only disapproved of during prayer.
                 if (you.duration[DUR_PRAYER])
                 {
                     simple_god_message(" does not appreciate your shedding "
@@ -3015,7 +3007,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 simple_god_message(" accepts your kill.");
                 retval = true;
-                // Holy gods are easier to please this way
+                // Holy gods are easier to please this way.
                 if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
                                           you.experience_level / 2)) > 4)
                     piety_change = 1;
@@ -3039,7 +3031,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 simple_god_message(" accepts your kill.");
                 retval = true;
-                // Holy gods are easier to please this way
+                // Holy gods are easier to please this way.
                 if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
                                           you.experience_level / 2)) > 3)
                 {
@@ -7160,6 +7152,9 @@ bool god_hates_attacking_friend(god_type god, int species)
 
 bool god_likes_items(god_type god)
 {
+    if (god_likes_fresh_corpses(god))
+        return (true);
+
     switch (god)
     {
     case GOD_ZIN: case GOD_SHINING_ONE: case GOD_BEOGH: case GOD_NEMELEX_XOBEH:
@@ -7167,6 +7162,7 @@ bool god_likes_items(god_type god)
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
         mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god) );
+
     default:
         return (false);
     }
@@ -7176,6 +7172,13 @@ static bool _god_likes_item(god_type god, const item_def& item)
 {
     if (!god_likes_items(god))
         return (false);
+
+    if (god_likes_fresh_corpses(god))
+    {
+        return (item.base_type == OBJ_CORPSES
+                    && item.sub_type == CORPSE_BODY
+                    && !food_is_rotten(item));
+    }
 
     switch (god)
     {
@@ -7224,93 +7227,107 @@ static void _give_sac_group_feedback(int which)
 }
 
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
-// out of 20 arrows, etc.) Does not modify the actual item in any way.
+// out of 20 arrows, etc.).  Does not modify the actual item in any way.
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
 
-    // item_value() multiplies by quantity.
-    const int value = item_value(item) / item.quantity;
-
-    switch (you.religion)
+    if (god_likes_fresh_corpses(you.religion))
     {
-    case GOD_SHINING_ONE:
-        gain_piety(1);
-        relative_piety_gain = PIETY_SOME;
-        break;
-
-    case GOD_BEOGH:
-    {
-        const int item_orig = item.orig_monnum - 1;
-
-        int chance = 4;
-
-        if (item_orig == MONS_SAINT_ROKA)
-            chance += 12;
-        else if (item_orig == MONS_ORC_HIGH_PRIEST)
-            chance += 8;
-        else if (item_orig == MONS_ORC_PRIEST)
-            chance += 4;
-
-        if (food_is_rotten(item))
-            chance--;
-        else if (item.sub_type == CORPSE_SKELETON)
-            chance -= 2;
-
-        if (x_chance_in_y(chance, 20))
+        if (x_chance_in_y(13, 19))
         {
             gain_piety(1);
             relative_piety_gain = PIETY_SOME;
         }
-        break;
     }
+    else
+    {
+        switch (you.religion)
+        {
+        case GOD_SHINING_ONE:
+            gain_piety(1);
+            relative_piety_gain = PIETY_SOME;
+            break;
 
-    case GOD_NEMELEX_XOBEH:
-        if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
+        case GOD_BEOGH:
         {
-            you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
-            mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                 you.attribute[ATTR_CARD_COUNTDOWN]);
-#endif
-        }
-        // Nemelex piety gain is fairly fast... at least
-        // when you have low piety.
-        if (item.base_type == OBJ_CORPSES && one_chance_in(2 + you.piety/50)
-            || x_chance_in_y(value/2 + 1, 30 + you.piety/2))
-        {
-            if (is_artefact(item))
-            {
-                gain_piety(2);
-                relative_piety_gain = PIETY_LOTS;
-            }
-            else
+            const int item_orig = item.orig_monnum - 1;
+
+            int chance = 4;
+
+            if (item_orig == MONS_SAINT_ROKA)
+                chance += 12;
+            else if (item_orig == MONS_ORC_HIGH_PRIEST)
+                chance += 8;
+            else if (item_orig == MONS_ORC_PRIEST)
+                chance += 4;
+
+            if (food_is_rotten(item))
+                chance--;
+            else if (item.sub_type == CORPSE_SKELETON)
+                chance -= 2;
+
+            if (x_chance_in_y(chance, 20))
             {
                 gain_piety(1);
                 relative_piety_gain = PIETY_SOME;
             }
+            break;
         }
 
-        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
-            || is_blood_potion(item))
+        case GOD_NEMELEX_XOBEH:
         {
-            // Count chunks and blood potions towards decks of Summoning.
-            you.sacrifice_value[OBJ_CORPSES] += value;
-        }
-        else if (item.base_type == OBJ_CORPSES)
-        {
-#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
-            mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
-                 item_mass(item));
+            // item_value() multiplies by quantity.
+            const int value = item_value(item) / item.quantity;
+
+            if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
+            {
+                you.attribute[ATTR_CARD_COUNTDOWN]--;
+#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
+                mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
+                     you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
-            you.sacrifice_value[item.base_type] += item_mass(item);
-        }
-        else
-            you.sacrifice_value[item.base_type] += value;
-        break;
+            }
+            // Nemelex piety gain is fairly fast... at least when you
+            // have low piety.
+            if (item.base_type == OBJ_CORPSES && one_chance_in(2 + you.piety/50)
+                || x_chance_in_y(value/2 + 1, 30 + you.piety/2))
+            {
+                if (is_artefact(item))
+                {
+                    gain_piety(2);
+                    relative_piety_gain = PIETY_LOTS;
+                }
+                else
+                {
+                    gain_piety(1);
+                    relative_piety_gain = PIETY_SOME;
+                }
+            }
 
-    default:
-        break;
+            if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
+                || is_blood_potion(item))
+            {
+                // Count chunks and blood potions towards decks of
+                // Summoning.
+                you.sacrifice_value[OBJ_CORPSES] += value;
+            }
+            else if (item.base_type == OBJ_CORPSES)
+            {
+#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
+                mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
+                     item_mass(item));
+#endif
+                you.sacrifice_value[item.base_type] += item_mass(item);
+            }
+            else
+                you.sacrifice_value[item.base_type] += value;
+            break;
+        }
+
+        default:
+            break;
+        }
     }
 
     return (relative_piety_gain);
@@ -7490,7 +7507,9 @@ void offer_items()
     {
         // Zin was handled above, and the other gods don't care about
         // sacrifices.
-        if (you.religion == GOD_SHINING_ONE)
+        if (god_likes_fresh_corpses(you.religion))
+            simple_god_message(" only cares about fresh corpses!");
+        else if (you.religion == GOD_SHINING_ONE)
             simple_god_message(" only cares about evil items!");
         else if (you.religion == GOD_BEOGH)
             simple_god_message(" only cares about orcish remains!");
@@ -7746,13 +7765,17 @@ bool god_hates_killing(god_type god, const monsters* mon)
     return (retval);
 }
 
-bool god_likes_butchery(god_type god)
+bool god_likes_fresh_corpses(god_type god)
 {
     return (god == GOD_OKAWARU
             || god == GOD_MAKHLEB
             || god == GOD_TROG
-            || god == GOD_LUGONU
-            || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
+            || god == GOD_LUGONU);
+}
+
+bool god_likes_butchery(god_type god)
+{
+    return (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4));
 }
 
 bool god_hates_butchery(god_type god)
@@ -7850,10 +7873,10 @@ static void _god_smites_you(god_type god, const char *message,
     }
 }
 
-void offer_corpse(int corpse)
+void offer_and_butcher_corpse(int corpse)
 {
     // We always give the "good" (piety-gain) message when doing
-    // dedicated butchery. Uh, call it a feature.
+    // dedicated butchery.  Uh, call it a feature.
     _print_sacrifice_message(you.religion, mitm[corpse], PIETY_SOME);
 
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);

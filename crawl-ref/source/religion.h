@@ -77,7 +77,7 @@ void excommunication(god_type new_god = GOD_NO_GOD);
 void gain_piety(int pgn);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
-void offer_corpse(int corpse);
+void offer_and_butcher_corpse(int corpse);
 std::string god_prayer_reaction();
 void pray();
 void end_prayer();
@@ -93,6 +93,7 @@ std::string god_hates_your_god_reaction(god_type god,
                                         god_type your_god = you.religion);
 bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monsters* mon);
+bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);

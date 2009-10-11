@@ -357,36 +357,32 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
     const bool can_sac = you.duration[DUR_PRAYER]
                          && god_likes_butchery(you.religion);
 
-    if (can_sac && !rotten)
+    if (can_sac)
     {
-        start_delay(DELAY_OFFER_CORPSE, 0, corpse_id);
-
-        // Kiku torments if you butcher a corpse while praying.
-        if (you.religion == GOD_KIKUBAAQUDGHA
-            && you.piety >= piety_breakpoint(4))
+        if (!rotten)
         {
-            simple_god_message(" inflicts torment against the living!");
-            torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-            you.piety -= 8 + random2(4); // 8 to 12
+            offer_and_butcher_corpse(corpse_id);
+
+            // Kikubaaqudgha torments if you butcher a fresh corpse
+            // while praying.
+            if (you.religion == GOD_KIKUBAAQUDGHA
+                && you.piety >= piety_breakpoint(4))
+            {
+                simple_god_message(" inflicts torment against the living!");
+                torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+                you.piety -= 8 + random2(4); // 8 to 12
+            }
         }
+        else
+            simple_god_message(" refuses to accept that mouldy sacrifice!");
     }
     else
     {
-        if (can_sac && rotten)
-        {
-            simple_god_message(coinflip() ? " refuses to accept that"
-                                            " mouldy sacrifice!"
-                                          : " demands fresh blood!",
-                               you.religion);
-        }
-
         // Start work on the first corpse we butcher.
         if (first_corpse)
             mitm[corpse_id].plus2++;
 
-        int work_req = 4 - mitm[corpse_id].plus2;
-        if (work_req < 0)
-            work_req = 0;
+        int work_req = std::max(0, 4 - mitm[corpse_id].plus2);
 
         delay_type dtype = DELAY_BUTCHER;
         if (!force_butcher && !rotten
