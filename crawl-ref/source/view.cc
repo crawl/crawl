@@ -1682,6 +1682,7 @@ inline static void _update_cloud_grid(int cloudno)
         which_colour = DARKGREY;
         break;
 
+    case CLOUD_RAIN:
     case CLOUD_MIST:
         which_colour = ETC_MIST;
         break;

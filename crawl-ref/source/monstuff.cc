@@ -5429,10 +5429,11 @@ static bool _is_player_or_mon_sanct(const monsters* monster)
             || is_sanctuary(monster->pos()));
 }
 
-bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
+bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
                        bool placement)
 {
     bool extra_careful = placement;
+    cloud_type cl_type = cloud.type;
 
     if (placement)
         extra_careful = true;
@@ -5517,6 +5518,28 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
             return (false);
         break;
 
+    case CLOUD_RAIN:
+        // Fiery monsters dislike the rain.
+        if (monster->is_fiery() && extra_careful)
+            return (true);
+
+        // We don't care about what's underneath the rain cloud if we can fly.
+        if (monster->flight_mode() != FL_NONE)
+            return (false);
+
+        // These don't care about deep water. 
+        if (monster_habitable_grid(monster, DNGN_DEEP_WATER))
+            return (false);
+
+        // This position could become deep water, and they might drown.
+        if (grd(cloud.pos) == DNGN_SHALLOW_WATER) 
+            return (true);
+
+        // Otherwise, it's safe for everyone else.
+        return (false);
+
+        break;
+
     default:
         break;
     }
@@ -5551,7 +5574,7 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
         *cl_type = cloud.type;
 
     // Is the target cloud okay?
-    if (!mons_avoids_cloud(monster, cloud.type, placement))
+    if (!mons_avoids_cloud(monster, cloud, placement))
         return (false);
 
     // If we're already in a cloud that we'd want to avoid then moving
@@ -5566,7 +5589,7 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
 
     const cloud_struct &our_cloud = env.cloud[our_cloud_num];
 
-    return (!mons_avoids_cloud(monster, our_cloud.type, true));
+    return (!mons_avoids_cloud(monster, our_cloud, true));
 }
 
 //---------------------------------------------------------------
@@ -9423,6 +9446,20 @@ static void _mons_in_cloud(monsters *monster)
 
         hurted += (10 * random2avg(12, 3)) / speed;    // 3
         break;
+
+    case CLOUD_RAIN:
+        if (monster->is_fiery())
+        {
+            if (!silenced(monster->pos()))
+                simple_monster_message(monster, " sizzles in the rain!");
+            else
+                simple_monster_message(monster, " steams in the rain!");
+
+            hurted += ((4 * random2(3)) - random2(monster->ac));
+            wake = true;
+        }
+
+        break;       
 
     case CLOUD_MUTAGENIC:
         simple_monster_message(monster, " is engulfed in a mutagenic fog!");
