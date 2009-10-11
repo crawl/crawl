@@ -10,7 +10,7 @@ endif
 
 LIBSQL = libsqlite3.a
 AR     = ar rcu
-CC     = gcc
+CC    ?= gcc
 RANLIB = ranlib
 RM_F   = rm -f
 

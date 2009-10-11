@@ -18,12 +18,12 @@ ifndef V
 endif
 endif
 
-CC= gcc
-CFLAGS= -O2 -Wall $(MYCFLAGS)
-AR= ar rcu
-RANLIB= ranlib
-RM= rm -f
-LIBS= -lm $(MYLIBS)
+CC ?= gcc
+CFLAGS = -O2 -Wall $(MYCFLAGS)
+AR = ar rcu
+RANLIB = ranlib
+RM = rm -f
+LIBS = -lm $(MYLIBS)
 
 MYCFLAGS=
 MYLDFLAGS=

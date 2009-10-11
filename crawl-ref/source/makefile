@@ -13,6 +13,9 @@ CXX = g++
 DELETE = rm -f
 COPY = cp
 
+export CC
+export CXX
+
 #
 # Platform Detection
 #

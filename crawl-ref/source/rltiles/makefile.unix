@@ -8,7 +8,8 @@ PNG_LIB := $(shell pkg-config libpng --libs)
 CFLAGS := $(SDL_CFLAGS) $(PNG_INCLUDE)
 LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_image -lpng
 
-CXX = g++
+CXX ?= g++
+
 DELETE = rm -f
 
 TOOLDIR := tool
