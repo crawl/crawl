@@ -240,7 +240,7 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
 // note that slope must be nonnegative!
 // returns 0 if the advance was in x, 1 if it was in y, 2 if it was
 // the diagonal
-int ray_def::_find_next_intercept()
+int ray_def::raw_advance_0()
 {
     // handle perpendiculars
     if (double_is_zero(slope))
@@ -302,44 +302,30 @@ int ray_def::_find_next_intercept()
     return rc;
 }
 
+/*
+ * Mirror ray into quadrant 0 or back.
+ * this.quadrant itself is not touched (used for the flip back).
+ */
+void ray_def::flip()
+{
+    int signx[] = {1, -1, -1,  1};
+    int signy[] = {1,  1, -1, -1};
+    accx *= signx[quadrant];
+    accy *= signy[quadrant];
+}
+
 int ray_def::raw_advance()
 {
     int rc;
-    switch (quadrant)
-    {
-    case 0:
-        // going down-right
-        rc = _find_next_intercept();
-        break;
-    case 1:
-        // going down-left
-        accx *= -1;
-        rc   = _find_next_intercept();
-        accx *= -1;
-        break;
-    case 2:
-        // going up-left
-        accx *= -1;
-        accy *= -1;
-        rc   = _find_next_intercept();
-        accx *= -1;
-        accy *= -1;
-        break;
-    case 3:
-        // going up-right
-        accy *= -1;
-        rc   = _find_next_intercept();
-        accy *= -1;
-        break;
-    default:
-        rc = -1;
-    }
+    flip();
+    rc = raw_advance_0();
+    flip();
     return rc;
 }
 
 // Shoot a ray from the given start point (accx, accy) with the given
 // slope, bounded by the given pre-squared LOS radius.
-// Store the visited cells in xpos[] and ypos[], and
+// Store the visited cells in pos[], and
 // return the number of cells visited.
 int ray_def::footprint(int radius2, coord_def cpos[]) const
 {
@@ -348,7 +334,7 @@ int ray_def::footprint(int radius2, coord_def cpos[]) const
     int cellnum;
     for (cellnum = 0; true; ++cellnum)
     {
-        copy._find_next_intercept();
+        copy.raw_advance();
         c = copy.pos();
         if (c.abs() > radius2)
             break;
