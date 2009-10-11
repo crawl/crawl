@@ -396,6 +396,9 @@ std::string apostrophise(const std::string &name)
     if (name.empty())
         return (name);
 
+    if (name == "it" || name == "It")
+        return (name + "s");
+
     const char lastc = name[name.length() - 1];
     return (name + (lastc == 's' ? "'" : "'s"));
 }

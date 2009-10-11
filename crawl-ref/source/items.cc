@@ -1475,6 +1475,13 @@ static void _got_item(item_def& item, int quant)
     _check_note_item(item);
 }
 
+void note_inscribe_item(item_def &item)
+{
+    _autoinscribe_item(item);
+    _origin_freeze(item, you.pos());
+    _check_note_item(item);
+}
+
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet,
@@ -1637,10 +1644,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
-    _autoinscribe_item( item );
-
-    _origin_freeze(item, you.pos());
-    _check_note_item(item);
+    note_inscribe_item(item);
 
     item.quantity = quant_got;
     if (is_blood_potion(mitm[obj]))
