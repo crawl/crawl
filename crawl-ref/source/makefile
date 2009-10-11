@@ -133,15 +133,102 @@ LIB := -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 
 INCLUDES += -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
-
+#
+# Tiles build stuff
+#
 ifneq ($(TILES),n)
+
 RLTILES = rltiles
+
+EXTRA_FLAGS += -DUSE_TILE
+INCLUDES += -I$(RLTILES)
+
+ifeq ($(OSNAME),MacOS)
+
+# Compatibility level for Mac OS X
+#
+SDK_VER=10.4
+GCC_VER=4.0
+
+# FIXME: The '-arch i386' is only here until
+#   SDL 1.2.14 is available
+#
+ARCHS=-arch i386
+
+# Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
+# else is much easier to predict the name of.
+ifeq ($(SDK_VER),10.4)
+SDKROOT=/Developer/SDKs/MacOSX$(SDK_VER)u.sdk
+else
+SDKROOT=/Developer/SDKs/MacOSX$(SDK_VER).sdk
+endif
+
+ifneq ($(GCC_VER),)
+GCC = gcc-$(GCC_VER)
+GCXX = g++-$(GCC_VER)
+else
+GCC = gcc
+GCXX = g++
+endif
+
+CC = $(GCC) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+CXX = $(GCXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+
+# Handle the tile build dependencies for Mac a bit
+# differently than other platforms.
+
+LIB += -framework OpenGL -framework AppKit
+
+# SDL has a goof in the stock SDL_config.h which checks whether
+# __MACOSX__ is defined. It's not one of Apple's stock markers,
+# so we define it ourselves here.
+#
+EXTRA_FLAGS += -D__MACOSX__
+
+EXTRA_OBJECTS += SDLMain.o
+
+# If the /Library/Frameworks folder exists, add a -F flag
+#
+ifneq ($(shell ls -a /Library/Frameworks 2> /dev/null),)
+LIB += -F/Library/Frameworks/
+endif
+
+# Check if our dependencies exist as frameworks. If so, use their
+# headers and link to them.
+#
+ifneq ($(shell ls /Library/Frameworks/SDL.framework 2> /dev/null),)
+INCLUDES += -I/Library/Frameworks/SDL.framework/Headers
+LIB += -framework SDL
+endif
+ifneq ($(shell ls /Library/Frameworks/SDL_image.framework 2> /dev/null),)
+INCLUDES += -I/Library/Frameworks/SDL_image.framework/Headers
+LIB += -framework SDL_image
+endif
+ifneq ($(shell ls /Library/Frameworks/Freetype2.framework 2> /dev/null),)
+INCLUDES += -I/Library/Frameworks/Freetype2.framework/Headers
+LIB += -framework Freetype2
+endif
+ifneq ($(shell ls /Library/Frameworks/libpng.framework 2> /dev/null),)
+INCLUDES += -I/Library/Frameworks/libpng.framework/Headers
+LIB += -framework libpng
+endif
+
+else # MacOS
+
+# Okay, we have to assume we're on something else that
+# uses standard UNIX-like methods for finding libs.
+#
+# For instance, on Linux and most other UNIX-likes,
+# the app pkg-config can provide the appropriate
+# CFLAGS and LDFLAGS.
+#
 
 ifneq ($(shell which pkg-config 2> /dev/null),)
 
 # If pkg-config is available, it's the surest way to find where
 # the contributing libraries are located.
 #
+
 PNG_INCLUDE := $(shell pkg-config libpng --cflags-only-I)
 PNG_CFLAGS  := $(shell pkg-config libpng --cflags-only-other)
 PNG_LDFLAGS := $(shell pkg-config libpng --libs)
@@ -160,6 +247,7 @@ else # pkg-config
 # or some other stupid platform. We've got to assume that the
 # libraries are either in the standard paths or are in /opt/<lib>/.
 #
+
 PNG_INCLUDE := -I/opt/libpng/include
 PNG_CFLAGS  :=
 PNG_LDFLAGS := -L/opt/libpng/lib -lpng
@@ -188,14 +276,13 @@ endif # sdl-config
 endif # pkg-config
 
 LIB += $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS) $(SDL_LDFLAGS) -lSDL_image
-ifeq ($(OSNAME),MacOS)
-LIB += -framework OpenGL -framework AppKit
-else
 LIB += -lGL -lGLU
-endif
 
-EXTRA_FLAGS += -DUSE_TILE $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
-INCLUDES += -I$(RLTILES) $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
+EXTRA_FLAGS += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
+INCLUDES += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
+
+endif # MacOS
+
 endif # TILES
 
 
@@ -365,7 +452,7 @@ EXTRA_DEPENDS += $(DESTTILEFILES)
 OBJECTS += $(TILEDEFOBJS)
 endif
 
-GAME_DEPENDS := $(LUASRC)$(LUALIBA) $(EXTRA_DEPENDS) $(OBJECTS)
+GAME_DEPENDS := $(LUASRC)$(LUALIBA) $(EXTRA_DEPENDS) $(OBJECTS) $(EXTRA_OBJECTS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | cut -d'"' -f2)
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
@@ -404,7 +491,7 @@ else
 depend: $(DEPENDENCY_MKF)
 
 %.dep: $(OBJECTS:.o=.cc)
-	$(QUIET_DEPEND)fastdep $(INCLUDES) *.h $(OBJECTS:.o=.cc) > $@
+	$(QUIET_DEPEND)fastdep $(EXTRA_FLAGS) $(INCLUDES) *.h $(OBJECTS:.o=.cc) > $@
 endif
 
 -include $(DEPENDENCY_MKF)
@@ -496,7 +583,7 @@ distclean: clean clean-lua clean-sql clean-rltiles
 	$(DELETE) $(DEPENDENCY_MKF)
 
 $(GAME): $(GAME_DEPENDS)
-	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIB)
 
 .PHONY : debug profile wizard
 
