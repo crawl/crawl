@@ -1676,9 +1676,7 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype,
 unrand_special_type get_unrand_specialness(int unrand_index)
 {
     if (unrand_index < UNRAND_START || unrand_index > UNRAND_LAST)
-    {
         return (UNRANDSPEC_NORMAL);
-    }
 
     if (unranddata[unrand_index].flags & UNRAND_FLAG_SPECIAL)
         return (UNRANDSPEC_SPECIAL);
