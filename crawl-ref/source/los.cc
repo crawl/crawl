@@ -199,7 +199,7 @@ static std::vector<int> _find_nonduped_cellrays()
 static void _register_ray(double accx, double accy, double slope)
 {
     coord_def pos[LOS_MAX_RANGE * 2 + 1];
-    ray_def ray = ray_def(accx, accy, slope, 0);
+    ray_def ray = ray_def(accx, accy, slope, QUAD_SE);
     // find out which cells the ray passes through
     int raylen = ray.footprint(LOS_RADIUS2, pos);
 
@@ -359,13 +359,13 @@ void raycast()
 static void _set_ray_quadrant(ray_def& ray, int sx, int sy, int tx, int ty)
 {
     if ( tx >= sx && ty >= sy )
-        ray.quadrant = 0;
+        ray.quadrant = QUAD_SE;
     else if ( tx < sx && ty >= sy )
-        ray.quadrant = 1;
+        ray.quadrant = QUAD_SW;
     else if ( tx < sx && ty < sy )
-        ray.quadrant = 2;
+        ray.quadrant = QUAD_NW;
     else if ( tx >= sx && ty < sy )
-        ray.quadrant = 3;
+        ray.quadrant = QUAD_NE;
     else
         mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
 }

@@ -7,8 +7,22 @@
 #ifndef RAY_H
 #define RAY_H
 
-int shoot_ray(double accx, double accy, const double slope,
-                int maxrange, int xpos[], int ypos[]);
+// quadrant
+enum quad_type
+{
+    QUAD_SE = 0,
+    QUAD_SW = 1,
+    QUAD_NW = 2,
+    QUAD_NE = 3
+};
+
+// direction of advance:
+enum adv_type
+{
+    ADV_X  = 0, // changed x
+    ADV_Y  = 1, // changed y
+    ADV_XY = 2  // changed x and y (diagonal)
+};
 
 struct ray_def
 {
@@ -16,19 +30,19 @@ public:
     double accx;
     double accy;
     double slope;
-    int quadrant;      // 0 down-right, 1 down-left, 2 up-left, 3 up-right
+    quad_type quadrant;
     int fullray_idx;   // for cycling: where did we come from?
 
 public:
     ray_def(double accx = 0.0, double accy = 0.0, double slope = 0.0,
-            int quadrant = 0, int fullray_idx = -1);
+            quad_type quadrant = QUAD_SE, int fullray_idx = -1);
     int x() const;
     int y() const;
     coord_def pos() const;
 
-    // returns the direction taken (0,1,2)
-    int advance(bool shorten = false, const coord_def *p = NULL);
-    int advance_through(const coord_def &point);
+    // returns the direction taken
+    adv_type advance(bool shorten = false, const coord_def *p = NULL);
+    adv_type advance_through(const coord_def &point);
     void advance_and_bounce();
     void regress();
 
@@ -40,9 +54,9 @@ public:
     void   set_degrees(double deg);
 
 private:
-    int raw_advance_0();
+    adv_type raw_advance_0();
     void flip();
-    int raw_advance();
+    adv_type raw_advance();
     double reflect(bool x, double oldc, double newc) const;
     void set_reflect_point(const double oldx, const double oldy,
                            bool blocked_x, bool blocked_y);
