@@ -331,7 +331,7 @@ void cast_chain_lightning(int pow)
             if (invalid_monster(monster))
                 continue;
 
-            dist = grid_distance( source, monster->pos() );
+            dist = grid_distance(source, monster->pos());
 
             // check for the source of this arc
             if (!dist)
@@ -344,7 +344,7 @@ void cast_chain_lightning(int pow)
             if (dist > min_dist)
                 continue;
 
-            if (!check_line_of_sight( source, monster->pos() ))
+            if (!check_line_of_sight(source, monster->pos()))
                 continue;
 
             count++;
