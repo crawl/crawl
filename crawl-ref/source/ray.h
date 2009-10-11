@@ -40,6 +40,7 @@ public:
     void   set_degrees(double deg);
 
 private:
+    int _find_next_intercept();
     int raw_advance();
     double reflect(bool x, double oldc, double newc) const;
     double reflect(double x, double c) const;

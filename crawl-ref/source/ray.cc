@@ -13,73 +13,6 @@ REVISION("$Rev$");
 #include "los.h"
 #include "terrain.h"
 
-// Advance a ray in quadrant 0.
-// note that slope must be nonnegative!
-// returns 0 if the advance was in x, 1 if it was in y, 2 if it was
-// the diagonal
-static int _find_next_intercept(double* accx, double* accy, const double slope)
-{
-
-    // handle perpendiculars
-    if (double_is_zero(slope))
-    {
-        *accx += 1.0;
-        return 0;
-    }
-    if (slope > 100.0)
-    {
-        *accy += 1.0;
-        return 1;
-    }
-
-    const double xtarget = static_cast<int>(*accx) + 1;
-    const double ytarget = static_cast<int>(*accy) + 1;
-    const double xdistance = xtarget - *accx;
-    const double ydistance = ytarget - *accy;
-    double distdiff = xdistance * slope - ydistance;
-
-    // exact corner
-    if (double_is_zero(distdiff))
-    {
-        // move somewhat away from the corner
-        if (slope > 1.0)
-        {
-            *accx = xtarget + EPSILON_VALUE * 2;
-            *accy = ytarget + EPSILON_VALUE * 2 * slope;
-        }
-        else
-        {
-            *accx = xtarget + EPSILON_VALUE * 2 / slope;
-            *accy = ytarget + EPSILON_VALUE * 2;
-        }
-        return 2;
-    }
-
-    // move to the boundary
-    double traveldist;
-    int rc = -1;
-    if (distdiff > 0.0)
-    {
-        traveldist = ydistance / slope;
-        rc = 1;
-    }
-    else
-    {
-        traveldist = xdistance;
-        rc = 0;
-    }
-
-    // and a little into the next cell, taking care
-    // not to go too far
-    if (distdiff < 0.0)
-        distdiff = -distdiff;
-    traveldist += std::min(EPSILON_VALUE * 10.0, 0.5 * distdiff / slope);
-
-    *accx += traveldist;
-    *accy += traveldist * slope;
-    return rc;
-}
-
 ray_def::ray_def(double ax, double ay, double s, int q, int idx)
     : accx(ax), accy(ay), slope(s), quadrant(q), fullray_idx(idx)
 {
@@ -284,6 +217,72 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
     return (ret);
 }
 
+// Advance a ray in quadrant 0.
+// note that slope must be nonnegative!
+// returns 0 if the advance was in x, 1 if it was in y, 2 if it was
+// the diagonal
+int ray_def::_find_next_intercept()
+{
+    // handle perpendiculars
+    if (double_is_zero(slope))
+    {
+        accx += 1.0;
+        return 0;
+    }
+    if (slope > 100.0)
+    {
+        accy += 1.0;
+        return 1;
+    }
+
+    const double xtarget = static_cast<int>(accx) + 1;
+    const double ytarget = static_cast<int>(accy) + 1;
+    const double xdistance = xtarget - accx;
+    const double ydistance = ytarget - accy;
+    double distdiff = xdistance * slope - ydistance;
+
+    // exact corner
+    if (double_is_zero(distdiff))
+    {
+        // move somewhat away from the corner
+        if (slope > 1.0)
+        {
+            accx = xtarget + EPSILON_VALUE * 2;
+            accy = ytarget + EPSILON_VALUE * 2 * slope;
+        }
+        else
+        {
+            accx = xtarget + EPSILON_VALUE * 2 / slope;
+            accy = ytarget + EPSILON_VALUE * 2;
+        }
+        return 2;
+    }
+
+    // move to the boundary
+    double traveldist;
+    int rc = -1;
+    if (distdiff > 0.0)
+    {
+        traveldist = ydistance / slope;
+        rc = 1;
+    }
+    else
+    {
+        traveldist = xdistance;
+        rc = 0;
+    }
+
+    // and a little into the next cell, taking care
+    // not to go too far
+    if (distdiff < 0.0)
+        distdiff = -distdiff;
+    traveldist += std::min(EPSILON_VALUE * 10.0, 0.5 * distdiff / slope);
+
+    accx += traveldist;
+    accy += traveldist * slope;
+    return rc;
+}
+
 int ray_def::raw_advance()
 {
     int rc;
@@ -291,31 +290,32 @@ int ray_def::raw_advance()
     {
     case 0:
         // going down-right
-        rc = _find_next_intercept(&accx, &accy, slope);
-        return rc;
+        rc = _find_next_intercept();
+        break;
     case 1:
         // going down-left
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        rc   = _find_next_intercept(&accx, &accy, slope);
+        rc   = _find_next_intercept();
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        return rc;
+        break;
     case 2:
         // going up-left
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc   = _find_next_intercept(&accx, &accy, slope);
+        rc   = _find_next_intercept();
         accx = 100.0 - EPSILON_VALUE/10.0 - accx;
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        return rc;
+        break;
     case 3:
         // going up-right
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        rc   = _find_next_intercept(&accx, &accy, slope);
+        rc   = _find_next_intercept();
         accy = 100.0 - EPSILON_VALUE/10.0 - accy;
-        return rc;
+        break;
     default:
-        return -1;
+        rc = -1;
     }
+    return rc;
 }
 
 // Shoot a ray from the given start point (accx, accy) with the given
@@ -324,20 +324,17 @@ int ray_def::raw_advance()
 // return the number of cells visited.
 int ray_def::footprint(int radius2, coord_def cpos[]) const
 {
-    // copy starting point
-    double ax = accx;
-    double ay = accy;
-    int curx, cury;
+    ray_def copy = *this;
+    coord_def c;
     int cellnum;
     for (cellnum = 0; true; ++cellnum)
     {
-        _find_next_intercept(&ax, &ay, slope);
-        curx = static_cast<int>(ax);
-        cury = static_cast<int>(ay);
-        if (curx*curx + cury*cury > radius2)
+        copy._find_next_intercept();
+        c = copy.pos();
+        if (c.abs() > radius2)
             break;
 
-        cpos[cellnum] = coord_def(curx, cury);
+        cpos[cellnum] = c;
     }
     return cellnum;
 }

@@ -338,7 +338,7 @@ void raycast()
         const double rslope = ((double)(xangle)) / yangle;
         for (int intercept = 1; intercept <= 2*yangle; ++intercept )
         {
-            double xstart = ((double)(intercept)) / (2*yangle);
+            double xstart = ((double)intercept) / (2*yangle);
             double ystart = 1;
 
             // now move back just inside the cell
