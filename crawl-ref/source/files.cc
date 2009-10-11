@@ -22,7 +22,7 @@ REVISION("$Rev$");
 #include <algorithm>
 #include <functional>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #include <file.h>
 #endif
@@ -32,7 +32,7 @@ REVISION("$Rev$");
 #include <unistd.h>
 #endif
 
-#ifdef __MINGW32__
+#ifdef TARGET_COMPILER_MINGW
 #include <io.h>
 #endif
 
@@ -88,7 +88,7 @@ REVISION("$Rev$");
 #endif
 
 #ifndef HAVE_STAT
-#if defined(UNIX) || defined(__MINGW32__) || defined(DOS)
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_DOS)
 #define HAVE_STAT
 #endif
 #endif
@@ -142,7 +142,7 @@ static bool _is_uid_file(const std::string &name, const std::string &ext)
 {
     std::string save_suffix = get_savedir_filename("", "", "");
     save_suffix += ext;
-#ifdef DOS
+#ifdef TARGET_OS_DOS
     // Grumble grumble. Hang all retarded operating systems.
     uppercase(save_suffix);
 #endif
@@ -198,7 +198,7 @@ static inline bool _is_good_filename(const std::string &s)
     return (s != "." && s != "..");
 }
 
-#if defined(DOS)
+#if defined(TARGET_OS_DOS)
 // Abbreviates a given file name to DOS style "xxxxxx~1.txt".
 // Does not take into account files with differing suffixes or files
 // with a prepended path with more than one separator.
@@ -409,7 +409,7 @@ static int _create_directory(const char *dir)
 {
 #if defined(MULTIUSER)
     return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
-#elif defined(DOS)
+#elif defined(TARGET_OS_DOS)
     return mkdir(dir, 0755);
 #elif defined(_MSC_VER)
     return _mkdir(dir);
@@ -514,7 +514,7 @@ std::string datafile_path(std::string basename,
 #else
         !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "",
 #endif
-#ifdef OSX
+#ifdef TARGET_OS_MACOSX
         SysEnv.crawl_base + "../Resources/",
 #endif
     };
@@ -786,7 +786,7 @@ std::string get_savedir_filename(const std::string &prefix,
         result += extension;
     }
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
     uppercase(result);
 #endif
     return result;

@@ -9,7 +9,7 @@ REVISION("$Rev$");
 
 #include "player.h"
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 

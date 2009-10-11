@@ -19,19 +19,7 @@
 #ifndef APPHDR_H
 #define APPHDR_H
 
-// Very simple OS detection, done via predefined macros
-// For a list of predefined macros, see
-//   http://predef.sourceforge.net/
-#if defined(__MACH__)
-    #ifndef OSX
-    #define OSX
-    #endif
-#endif
-#if defined(__FreeBSD__)
-    #ifndef FREEBSD
-    #define FREEBSD
-    #endif
-#endif
+#include "platform.h"
 
 // The maximum memory that the user-script Lua interpreter can
 // allocate, in kilobytes. This limit is enforced to prevent
@@ -59,24 +47,43 @@
 //
 // #define DISABLE_STICKY_STARTUP_OPTIONS
 
-// OS X's Terminal.app has color handling problems; dark grey is
-// especially bad, so we'll want to remap that. OS X is otherwise
-// Unix-ish, so we shouldn't need other special handling.
-#if defined(OSX)
+//
+// Define 'UNIX' if the target OS is UNIX-like.
+//
+#if defined(TARGET_OS_MACOSX) || defined(TARGET_OS_LINUX) || \
+    defined(TARGET_OS_FREEBSD) || defined(TARGET_OS_NETBSD) || \
+    defined(TARGET_OS_OPENBSD) || defined(TARGET_COMPILER_CYGWIN) || \
+    defined(TARGET_OS_SOLARIS)
     #ifndef UNIX
     #define UNIX
     #endif
+#endif
+
+//
+// OS X's Terminal.app has color handling problems; dark grey is
+// especially bad, so we'll want to remap that. OS X is otherwise
+// Unix-ish, so we shouldn't need other special handling.
+//
+#if defined(TARGET_OS_MACOSX)
     #define USE_8_COLOUR_TERM_MAP
     #define COL_TO_REPLACE_DARKGREY     BLUE
 #endif
 
+//
 // FreeBSD
-// There's no /usr/bin/zip in FreeBSD.
-#if defined(FREEBSD)
-    #ifndef UNIX
-    #define UNIX
-    #endif
+//
+#if defined(TARGET_OS_FREEBSD)
+
+    // There's no /usr/bin/zip in FreeBSD.
     #define SAVE_PACKAGE_NONE
+
+#endif
+
+//
+// MinGW
+//
+#if defined(TARGET_COMPILER_MINGW)
+    #define REGEX_PCRE
 #endif
 
 // =========================================================================
@@ -91,8 +98,10 @@
     //
     // #define DGAMELAUNCH
 
+#ifndef TARGET_COMPILER_MINGW
     #define MULTIUSER
     #define USE_UNIX_SIGNALS
+#endif
 
     // If this is defined, Crawl will attempt to save and exit when it
     // receives a hangup signal.
@@ -128,7 +137,9 @@
     //
     // For now, we'll make it default to on for Linux (who should have
     // no problems with compiling this).
+#ifndef TARGET_COMPILER_MINGW
     #define USE_MORE_SECURE_SEED
+#endif
 
     // Use POSIX regular expressions
     #ifndef REGEX_PCRE
@@ -159,7 +170,7 @@
 
     #include "libunix.h"
 
-#elif defined(DOS)
+#elif defined(TARGET_OS_DOS)
     #define SHORT_FILE_NAMES
     #define EOL "\r\n"
     #define CHARACTER_SET           A_ALTCHARSET
@@ -183,7 +194,7 @@
     // linked in.  This is optional.
     #define REGEX_PCRE
 
-#elif defined(WIN32CONSOLE) || defined(WIN32TILES)
+#elif defined(TARGET_OS_WINDOWS)
     #if defined(WIN32CONSOLE)
         #include "libw32c.h"
     #endif

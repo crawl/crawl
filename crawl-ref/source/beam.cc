@@ -18,7 +18,7 @@ REVISION("$Rev$");
 #include <algorithm>
 #include <cmath>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <dos.h>
 #include <conio.h>
 #endif

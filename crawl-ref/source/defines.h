@@ -177,7 +177,7 @@ const int MAX_SEC_ENCHANT = 2;
 #define igrd   env.igrid
 
 // colors, such pretty colors ...
-#ifndef DOS
+#ifndef TARGET_OS_DOS
     #define BLACK 0
     #define BLUE 1
     #define GREEN 2

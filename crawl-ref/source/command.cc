@@ -227,7 +227,7 @@ static void _print_version(void)
     // Read in information about changes in comparison to the latest version.
     FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
 
-#if defined(DOS)
+#if defined(TARGET_OS_DOS)
     if (!fp)
     {
  #ifdef DEBUG_FILES
@@ -1976,7 +1976,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             std::string fname = canonicalise_file_separator(help_files[i].name);
             FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
 
-#if defined(DOS)
+#if defined(TARGET_OS_DOS)
             if (!fp)
             {
  #ifdef DEBUG_FILES

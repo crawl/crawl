@@ -156,7 +156,7 @@ void get_input_line( char *const buff, int len )
 #else
 
     // [dshaligram] Turn on the cursor for DOS.
-#ifdef DOS
+#ifdef TARGET_OS_DOS
     _setcursortype(_NORMALCURSOR);
 #endif
 
@@ -186,7 +186,7 @@ void get_input_line( char *const buff, int len )
 // we want to use in cancelable_get_line() and menus.
 int c_getch()
 {
-#if defined(DOS) || defined(UNIX) || defined(WIN32CONSOLE)
+#if defined(TARGET_OS_DOS) || defined(UNIX) || defined(WIN32CONSOLE)
     return getch_ck();
 #else
     return m_getch();
