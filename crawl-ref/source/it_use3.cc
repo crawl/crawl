@@ -439,6 +439,15 @@ static bool _disc_of_storms(void)
             zapping(which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam);
 
         }
+
+        for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
+        {
+            if (grd(*ri) < DNGN_MAXWALL)
+                continue;
+
+            if (one_chance_in(60 - you.skills[SK_EVOCATIONS]))
+                place_cloud(CLOUD_RAIN, *ri, random2(you.skills[SK_EVOCATIONS]), KC_YOU);
+        }
     }
 
     return (rc);
