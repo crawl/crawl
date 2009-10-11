@@ -21,28 +21,28 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
 {
 
     // handle perpendiculars
-    if ( double_is_zero(slope) )
+    if (double_is_zero(slope))
     {
         *accx += 1.0;
         return 0;
     }
-    if ( slope > 100.0 )
+    if (slope > 100.0)
     {
         *accy += 1.0;
         return 1;
     }
 
-    const double xtarget = (static_cast<int>(*accx) + 1);
-    const double ytarget = (static_cast<int>(*accy) + 1);
+    const double xtarget = static_cast<int>(*accx) + 1;
+    const double ytarget = static_cast<int>(*accy) + 1;
     const double xdistance = xtarget - *accx;
     const double ydistance = ytarget - *accy;
-    double distdiff = (xdistance * slope - ydistance);
+    double distdiff = xdistance * slope - ydistance;
 
     // exact corner
-    if ( double_is_zero( distdiff ) )
+    if (double_is_zero(distdiff))
     {
         // move somewhat away from the corner
-        if ( slope > 1.0 )
+        if (slope > 1.0)
         {
             *accx = xtarget + EPSILON_VALUE * 2;
             *accy = ytarget + EPSILON_VALUE * 2 * slope;
@@ -58,7 +58,7 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
     // move to the boundary
     double traveldist;
     int rc = -1;
-    if ( distdiff > 0.0 )
+    if (distdiff > 0.0)
     {
         traveldist = ydistance / slope;
         rc = 1;
@@ -71,7 +71,7 @@ static int _find_next_intercept(double* accx, double* accy, const double slope)
 
     // and a little into the next cell, taking care
     // not to go too far
-    if ( distdiff < 0.0 )
+    if (distdiff < 0.0)
         distdiff = -distdiff;
     traveldist += std::min(EPSILON_VALUE * 10.0, 0.5 * distdiff / slope);
 

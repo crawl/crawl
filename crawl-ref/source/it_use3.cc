@@ -446,7 +446,8 @@ static bool _disc_of_storms(void)
                 continue;
 
             if (one_chance_in(60 - you.skills[SK_EVOCATIONS]))
-                place_cloud(CLOUD_RAIN, *ri, random2(you.skills[SK_EVOCATIONS]), KC_YOU);
+                place_cloud(CLOUD_RAIN, *ri,
+                            random2(you.skills[SK_EVOCATIONS]), KC_YOU);
         }
     }
 
