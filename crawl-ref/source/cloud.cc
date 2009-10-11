@@ -42,6 +42,7 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
+#ifdef DEBUG
 static bool _killer_whose_match(kill_category whose, killer_type killer)
 {
     switch (whose)
@@ -60,6 +61,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
     }
     return (false);
 }
+#endif
 
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,

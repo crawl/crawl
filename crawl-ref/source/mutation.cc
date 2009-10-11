@@ -1920,6 +1920,7 @@ static mutation_type _get_random_mutation(bool prefer_good,
     return (chosen);
 }
 
+#ifdef DEBUG
 static bool _is_random(mutation_type which_mutation)
 {
     return (which_mutation == RANDOM_MUTATION
@@ -1927,6 +1928,7 @@ static bool _is_random(mutation_type which_mutation)
             || which_mutation == RANDOM_GOOD_MUTATION
             || which_mutation == RANDOM_BAD_MUTATION);
 }
+#endif
 
 // Tries to give you the mutation by deleting a conflicting
 // one, or clears out conflicting mutations if we should give
