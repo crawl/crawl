@@ -43,9 +43,7 @@ private:
     int _find_next_intercept();
     int raw_advance();
     double reflect(bool x, double oldc, double newc) const;
-    double reflect(double x, double c) const;
     void set_reflect_point(const double oldx, const double oldy,
-                           double *newx, double *newy,
                            bool blocked_x, bool blocked_y);
 };
 

@@ -38,7 +38,7 @@ coord_def ray_def::pos() const
     return coord_def(x(), y());
 }
 
-double ray_def::reflect(double p, double c) const
+double _reflect(double p, double c)
 {
     return (c + c - p);
 }
@@ -46,39 +46,38 @@ double ray_def::reflect(double p, double c) const
 double ray_def::reflect(bool rx, double oldx, double newx) const
 {
     if (rx ? fabs(slope) > 1.0 : fabs(slope) < 1.0)
-        return (reflect(oldx, floor(oldx) + 0.5));
+        return (_reflect(oldx, floor(oldx) + 0.5));
 
     const double flnew = floor(newx);
     const double flold = floor(oldx);
-    return (reflect(oldx,
-                    flnew > flold? flnew :
-                    flold > flnew? flold :
-                    (newx + oldx) / 2));
+    return (_reflect(oldx,
+                     flnew > flold ? flnew :
+                     flold > flnew ? flold :
+                     (newx + oldx) / 2));
 }
 
 void ray_def::set_reflect_point(const double oldx, const double oldy,
-                                double *newx, double *newy,
                                 bool blocked_x, bool blocked_y)
 {
     if (blocked_x == blocked_y)
     {
         // What to do?
-        *newx = oldx;
-        *newy = oldy;
+        accx = oldx;
+        accy = oldy;
         return;
     }
 
     if (blocked_x)
     {
-        ASSERT(int(oldy) != int(*newy));
-        *newy = oldy;
-        *newx = reflect(true, oldx, *newx);
+        ASSERT(int(oldy) != int(accy));
+        accy = oldy;
+        accx = reflect(true, oldx, accx);
     }
     else
     {
-        ASSERT(int(oldx) != int(*newx));
-        *newx = oldx;
-        *newy = reflect(false, oldy, *newy);
+        ASSERT(int(oldx) != int(accx));
+        accx = oldx;
+        accy = reflect(false, oldy, accy);
     }
 }
 
@@ -93,18 +92,18 @@ void ray_def::advance_and_bounce()
     const double oldaccx = accx, oldaccy = accy;
     int rc = advance(false);
     int newx = x(), newy = y();
-    ASSERT( grid_is_solid(grd[newx][newy]) );
+    ASSERT(grid_is_solid(grd[newx][newy]));
 
     const bool blocked_x = grid_is_solid(grd[oldx][newy]);
     const bool blocked_y = grid_is_solid(grd[newx][oldy]);
 
-    if ( double_is_zero(slope) || slope > 100.0 )
+    if (double_is_zero(slope) || slope > 100.0)
         quadrant = bouncequad[quadrant][2];
     else if ( rc != 2 )
         quadrant = bouncequad[quadrant][rc];
     else
     {
-        ASSERT( (oldx != newx) && (oldy != newy) );
+        ASSERT((oldx != newx) && (oldy != newy));
         if ( blocked_x && blocked_y )
             quadrant = bouncequad[quadrant][rc];
         else if ( blocked_x )
@@ -113,7 +112,7 @@ void ray_def::advance_and_bounce()
             quadrant = bouncequad[quadrant][0];
     }
 
-    set_reflect_point(oldaccx, oldaccy, &accx, &accy, blocked_x, blocked_y);
+    set_reflect_point(oldaccx, oldaccy, blocked_x, blocked_y);
 }
 
 double ray_def::get_degrees() const
