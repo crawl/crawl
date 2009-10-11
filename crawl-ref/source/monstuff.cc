@@ -7924,12 +7924,6 @@ static void _handle_monster_move(monsters *monster)
 
             if (mons_cannot_move(monster) || !_monster_move(monster))
                 monster->speed_increment -= non_move_energy;
-            else if (monster->pos() == old_pos)
-            {
-                // There was nowhere the monster could move to, so it
-                // did nothing.
-                monster->speed_increment -= non_move_energy;
-            }
         }
         update_beholders(monster);
 
