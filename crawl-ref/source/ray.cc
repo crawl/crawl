@@ -314,23 +314,23 @@ int ray_def::raw_advance()
         break;
     case 1:
         // going down-left
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
+        accx *= -1;
         rc   = _find_next_intercept();
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
+        accx *= -1;
         break;
     case 2:
         // going up-left
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
+        accx *= -1;
+        accy *= -1;
         rc   = _find_next_intercept();
-        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
+        accx *= -1;
+        accy *= -1;
         break;
     case 3:
         // going up-right
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
+        accy *= -1;
         rc   = _find_next_intercept();
-        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
+        accy *= -1;
         break;
     default:
         rc = -1;
