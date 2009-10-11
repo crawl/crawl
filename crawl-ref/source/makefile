@@ -133,16 +133,6 @@ LIB := -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 
 INCLUDES += -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
-#
-# Tiles build stuff
-#
-ifneq ($(TILES),n)
-
-RLTILES = rltiles
-
-EXTRA_FLAGS += -DUSE_TILE
-INCLUDES += -I$(RLTILES)
-
 ifeq ($(OSNAME),MacOS)
 
 # Compatibility level for Mac OS X
@@ -173,6 +163,21 @@ endif
 
 CC = $(GCC) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 CXX = $(GCXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+
+endif # MacOS
+
+
+#
+# Tiles build stuff
+#
+ifneq ($(TILES),n)
+
+RLTILES = rltiles
+
+EXTRA_FLAGS += -DUSE_TILE
+INCLUDES += -I$(RLTILES)
+
+ifeq ($(OSNAME),MacOS)
 
 # Handle the tile build dependencies for Mac a bit
 # differently than other platforms.
