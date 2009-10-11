@@ -174,7 +174,7 @@ ifneq ($(TILES),n)
 
 RLTILES = rltiles
 
-EXTRA_FLAGS += -DUSE_TILE
+DEFINES += -DUSE_TILE
 INCLUDES += -I$(RLTILES)
 
 ifeq ($(OSNAME),MacOS)
@@ -188,7 +188,7 @@ LIB += -framework OpenGL -framework AppKit
 # __MACOSX__ is defined. It's not one of Apple's stock markers,
 # so we define it ourselves here.
 #
-EXTRA_FLAGS += -D__MACOSX__
+DEFINES += -D__MACOSX__
 
 EXTRA_OBJECTS += SDLMain.o
 
@@ -283,7 +283,7 @@ endif # pkg-config
 LIB += $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS) $(SDL_LDFLAGS) -lSDL_image
 LIB += -lGL -lGLU
 
-EXTRA_FLAGS += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
+DEFINES += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
 INCLUDES += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
 endif # MacOS
@@ -292,7 +292,7 @@ endif # TILES
 
 
 CFWARN := -Wall -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
-CFOTHERS = -fno-strict-aliasing -fsigned-char $(EXTRA_FLAGS) -DCLUA_BINDINGS -pipe $(SDL_CFLAGS)
+CFOTHERS = -fno-strict-aliasing -fsigned-char $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS -pipe $(SDL_CFLAGS)
 
 #
 # Figure out the build settings for this type of build
@@ -333,13 +333,13 @@ OPTIMIZE=y
 endif
 
 ifeq ($(FULLDEBUG),y)
-EXTRA_FLAGS += -DFULLDEBUG
+DEFINES += -DFULLDEBUG
 endif
 ifeq ($(DEBUG),y)
 EXTRA_FLAGS += -ggdb
 endif
 ifeq ($(WIZARD),y)
-EXTRA_FLAGS += -DWIZARD
+DEFINES += -DWIZARD
 endif
 ifeq ($(OPTIMIZE),y)
 CFOPTIMIZE  := -O2
@@ -496,7 +496,7 @@ else
 depend: $(DEPENDENCY_MKF)
 
 %.dep: $(OBJECTS:.o=.cc)
-	$(QUIET_DEPEND)fastdep $(EXTRA_FLAGS) $(INCLUDES) *.h $(OBJECTS:.o=.cc) > $@
+	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) *.h $(OBJECTS:.o=.cc) > $@
 endif
 
 -include $(DEPENDENCY_MKF)
