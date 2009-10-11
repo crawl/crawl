@@ -2603,6 +2603,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
+            // Spriggans could argue, but it's too small gain for possible
+            // player confusion.
             return (player_res_poison(false));
         }
 
@@ -2623,7 +2625,7 @@ bool is_useless_item(const item_def &item, bool temp)
         {
         case AMU_RAGE:
             return (you.is_undead
-                        && (!temp || you.species == SP_VAMPIRE
+                        && (you.species != SP_VAMPIRE || temp
                                      && you.hunger_state <= HS_SATIATED)
                     || you.religion == GOD_TROG);
 
