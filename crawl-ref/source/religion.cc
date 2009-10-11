@@ -2504,14 +2504,8 @@ void pray()
             you.duration[DUR_PRAYER] *= 2;
     }
 
-    // Assume for now that gods who like fresh corpses and/or butchery
-    // don't use prayer for anything else.
-    if (you.religion == GOD_ZIN
-        || you.religion == GOD_BEOGH
-        || you.religion == GOD_NEMELEX_XOBEH
-        || you.religion == GOD_JIYVA
-        || god_likes_fresh_corpses(you.religion)
-        || god_likes_butchery(you.religion))
+    if (you.religion == GOD_ZIN || you.religion == GOD_BEOGH
+        || you.religion == GOD_NEMELEX_XOBEH || you.religion == GOD_JIYVA)
     {
         you.duration[DUR_PRAYER] = 1;
     }
