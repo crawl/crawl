@@ -77,6 +77,11 @@ endif
 # Change this to y (case-sensitive!) if you want to use Unicode glyphs
 # in the map, and you have libncursesw available.
 UNICODE_GLYPHS = n
+# Usually, it can be autodetected for you:
+ifneq ($(shell ls /usr/include/ncursesw 2> /dev/null),)
+UNICODE_GLYPHS = y
+endif
+
 
 # If you're using UNICODE_GLYPHS=y, and have a preferred Unicode
 # (UTF-8) locale you want Crawl to use, you can set it here. The
