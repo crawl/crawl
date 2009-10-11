@@ -322,7 +322,7 @@ int ray_def::raw_advance()
 // slope, bounded by the given pre-squared LOS radius.
 // Store the visited cells in xpos[] and ypos[], and
 // return the number of cells visited.
-int ray_def::footprint(int radius2, int xpos[], int ypos[]) const
+int ray_def::footprint(int radius2, coord_def cpos[]) const
 {
     // copy starting point
     double ax = accx;
@@ -337,8 +337,7 @@ int ray_def::footprint(int radius2, int xpos[], int ypos[]) const
         if (curx*curx + cury*cury > radius2)
             break;
 
-        xpos[cellnum] = curx;
-        ypos[cellnum] = cury;
+        cpos[cellnum] = coord_def(curx, cury);
     }
     return cellnum;
 }
