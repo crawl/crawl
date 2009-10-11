@@ -31,7 +31,7 @@ REVISION("$Rev$");
 
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
-    #if defined(WIN32CONSOLE) || defined(WIN32TILES) || defined(DOS)
+    #if defined(WIN32CONSOLE) || defined(WIN32TILES) || defined(TARGET_OS_DOS)
         #define PCRE_STATIC
     #endif
 

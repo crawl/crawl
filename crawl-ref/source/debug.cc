@@ -19,7 +19,7 @@ REVISION("$Rev$");
 #include <algorithm>
 #include <errno.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -102,7 +102,7 @@ static void _dump_levgen();
 #if DEBUG
 static void _BreakStrToDebugger(const char *mesg)
 {
-#if defined(OSX) || defined(__MINGW32__)
+#if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
     fprintf(stderr, mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...

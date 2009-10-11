@@ -17,7 +17,7 @@ REVISION("$Rev$");
 #include <unistd.h>
 #endif
 
-#ifdef __MINGW32__
+#ifdef TARGET_COMPILER_MINGW
 #include <io.h>
 #endif
 
@@ -25,7 +25,7 @@ REVISION("$Rev$");
 #include <cstdio>
 #include <cmath>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 

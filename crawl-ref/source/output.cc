@@ -12,7 +12,7 @@ REVISION("$Rev$");
 #include <stdlib.h>
 #include <sstream>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 

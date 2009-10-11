@@ -1463,6 +1463,12 @@ void cast_teleport_control(int power)
 
 void cast_ring_of_flames(int power)
 {
+    // You shouldn't be able to cast this in the rain. {due}
+    if (in_what_cloud(CLOUD_RAIN))
+    {
+        mpr("Your spell sizzles in the rain.");
+        return;
+    }
     _increase_duration(DUR_FIRE_SHIELD,
                        5 + (power / 10) + (random2(power) / 5), 50,
                        "The air around you leaps into flame!");

@@ -9,7 +9,7 @@ REVISION("$Rev$");
 
 #include "player.h"
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -1804,6 +1804,10 @@ int player_spec_fire()
 
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
+
+    // if it's raining... {due}
+    if (in_what_cloud(CLOUD_RAIN))
+        sf--;
 
     return sf;
 }

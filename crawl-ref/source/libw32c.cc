@@ -58,7 +58,7 @@ REVISION("$Rev$");
 
 // END -- WINDOWS INCLUDES
 
-#ifdef __MINGW32__
+#ifdef TARGET_COMPILER_MINGW
 #include <signal.h>
 #endif
 
@@ -289,7 +289,7 @@ static void init_colors(char *windowTitle)
    // if not found, quit.
 }
 
-#ifdef __MINGW32__
+#ifdef TARGET_COMPILER_MINGW
 static void install_sighandlers()
 {
     signal(SIGINT, SIG_IGN);
@@ -369,7 +369,7 @@ void init_libw32c(void)
     // TODO: Respect changing cursor size manually while Crawl is running.
     have_initial_cci = GetConsoleCursorInfo( outbuf, &initial_cci );
 
-#ifdef __MINGW32__
+#ifdef TARGET_COMPILER_MINGW
     install_sighandlers();
 #endif
 

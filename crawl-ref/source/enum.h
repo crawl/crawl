@@ -262,6 +262,7 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_MUTAGENIC,
     BEAM_POTION_BLUE_SMOKE,
     BEAM_POTION_PURP_SMOKE,       // 60
+    BEAM_POTION_RAIN,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -435,6 +436,7 @@ enum cloud_type
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
+    CLOUD_RAIN,
     CLOUD_MUTAGENIC,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}

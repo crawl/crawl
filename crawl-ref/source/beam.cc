@@ -18,7 +18,7 @@ REVISION("$Rev$");
 #include <algorithm>
 #include <cmath>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <dos.h>
 #include <conio.h>
 #endif
@@ -3208,6 +3208,7 @@ void bolt::affect_place_explosion_clouds()
         case BEAM_POTION_GREY_SMOKE:
         case BEAM_POTION_BLUE_SMOKE:
         case BEAM_POTION_PURP_SMOKE:
+        case BEAM_POTION_RAIN:
         case BEAM_POTION_MUTAGENIC:
             cl_type = beam2cloud(flavour);
             break;
@@ -6017,6 +6018,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_POTION_GREY_SMOKE:    return ("grey smoke");
     case BEAM_POTION_BLUE_SMOKE:    return ("blue smoke");
     case BEAM_POTION_PURP_SMOKE:    return ("purple smoke");
+    case BEAM_POTION_RAIN:          return ("rain");
     case BEAM_POTION_RANDOM:        return ("random potion");
     case BEAM_POTION_MUTAGENIC:     return ("mutagenic fog");
     case BEAM_VISUAL:               return ("visual effects");
