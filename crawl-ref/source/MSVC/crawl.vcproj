@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="crawl-ref"
+	Name="crawl"
 	ProjectGUID="{3189AF12-90EF-4D3E-BFEC-4AB90D7D32DA}"
 	RootNamespace="crawlref"
 	Keyword="Win32Proj"
@@ -16,11 +16,12 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			Name="Debug Console|Win32"
+			OutputDirectory="$(SolutionDir)\.."
 			ConfigurationType="1"
+			InheritedPropertySheets=".\Debug.vsprops;.\Console.vsprops;.\Common.vsprops"
 			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,11 +41,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..;../util/lua/src;../util/sqlite"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WIN32CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H"
+				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
@@ -94,12 +94,12 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			Name="Release Console|Win32"
+			OutputDirectory="$(SolutionDir)\.."
 			ConfigurationType="1"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
+			InheritedPropertySheets=".\Release.vsprops;.\Console.vsprops;.\Common.vsprops"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -118,9 +118,163 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..;../util/lua/src;../util/sqlite"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H"
-				RuntimeLibrary="2"
+				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="AppHdr.h"
+				WarningLevel="3"
+				WarnAsError="false"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug Tiles|Win32"
+			OutputDirectory="$(SolutionDir)\.."
+			ConfigurationType="1"
+			InheritedPropertySheets=".\Debug.vsprops;.\Common.vsprops;.\Tiles.vsprops"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="AppHdr.h"
+				WarningLevel="3"
+				WarnAsError="false"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release Tiles|Win32"
+			OutputDirectory="$(SolutionDir)\.."
+			ConfigurationType="1"
+			InheritedPropertySheets=".\Release.vsprops;.\Common.vsprops;.\Tiles.vsprops"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"
 				WarningLevel="3"
@@ -194,8 +348,12 @@
 		<File
 			RelativePath="..\acr.cc"
 			>
+		</File>
+		<File
+			RelativePath="..\AppHdr.cc"
+			>
 			<FileConfiguration
-				Name="Debug|Win32"
+				Name="Debug Console|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -203,7 +361,23 @@
 				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release|Win32"
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -216,11 +390,35 @@
 			>
 		</File>
 		<File
+			RelativePath="..\arena.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\arena.h"
+			>
+		</File>
+		<File
+			RelativePath="..\artefact.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\artefact.h"
+			>
+		</File>
+		<File
 			RelativePath="..\beam.cc"
 			>
 		</File>
 		<File
 			RelativePath="..\beam.h"
+			>
+		</File>
+		<File
+			RelativePath="..\bitary.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\bitary.h"
 			>
 		</File>
 		<File
@@ -272,10 +470,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\crash-w.cc"
+			>
+		</File>
+		<File
 			RelativePath="..\database.cc"
 			>
 			<FileConfiguration
-				Name="Debug|Win32"
+				Name="Debug Console|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -283,7 +485,23 @@
 				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release|Win32"
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -508,6 +726,90 @@
 			>
 		</File>
 		<File
+			RelativePath="..\prebuilt\levcomp.lex.cc"
+			>
+			<FileConfiguration
+				Name="Debug Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\prebuilt\levcomp.tab.cc"
+			>
+			<FileConfiguration
+				Name="Debug Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\prebuilt\levcomp.tab.h"
+			>
+		</File>
+		<File
+			RelativePath="..\libgui.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\libgui.h"
+			>
+		</File>
+		<File
 			RelativePath="..\libutil.cc"
 			>
 		</File>
@@ -519,7 +821,7 @@
 			RelativePath="..\libw32c.cc"
 			>
 			<FileConfiguration
-				Name="Debug|Win32"
+				Name="Debug Console|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -527,7 +829,23 @@
 				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release|Win32"
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="2"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="2"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -537,6 +855,22 @@
 		</File>
 		<File
 			RelativePath="..\libw32c.h"
+			>
+		</File>
+		<File
+			RelativePath="..\los.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\los.h"
+			>
+		</File>
+		<File
+			RelativePath="..\losparam.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\losparam.h"
 			>
 		</File>
 		<File
@@ -624,6 +958,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\mon-los.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-los.h"
+			>
+		</File>
+		<File
 			RelativePath="..\mon-pick.cc"
 			>
 		</File>
@@ -680,10 +1022,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\msvc.h"
+			>
+		</File>
+		<File
 			RelativePath="..\mt19937ar.cc"
 			>
 			<FileConfiguration
-				Name="Debug|Win32"
+				Name="Debug Console|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -691,7 +1037,23 @@
 				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release|Win32"
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
@@ -776,11 +1138,15 @@
 			>
 		</File>
 		<File
-			RelativePath="..\randart.cc"
+			RelativePath="..\quiver.cc"
 			>
 		</File>
 		<File
-			RelativePath="..\randart.h"
+			RelativePath="..\quiver.h"
+			>
+		</File>
+		<File
+			RelativePath="..\ray.cc"
 			>
 		</File>
 		<File
@@ -872,6 +1238,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\spl-mis.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\spl-mis.h"
+			>
+		</File>
+		<File
 			RelativePath="..\spl-util.cc"
 			>
 		</File>
@@ -886,28 +1260,6 @@
 		<File
 			RelativePath="..\sqldbm.h"
 			>
-		</File>
-		<File
-			RelativePath="..\util\sqlite\sqlite3.c"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="0"
-					WarningLevel="0"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="0"
-					WarningLevel="0"
-				/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\stash.cc"
@@ -958,15 +1310,263 @@
 			>
 		</File>
 		<File
-			RelativePath="..\tile1.cc"
-			>
-		</File>
-		<File
 			RelativePath="..\tile2.cc"
 			>
 		</File>
 		<File
+			RelativePath="..\tilebuf.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\tilebuf.h"
+			>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-dngn.cc"
+			>
+			<FileConfiguration
+				Name="Debug Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-dngn.h"
+			>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-gui.cc"
+			>
+			<FileConfiguration
+				Name="Debug Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-gui.h"
+			>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-main.cc"
+			>
+			<FileConfiguration
+				Name="Debug Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-main.h"
+			>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-player.cc"
+			>
+			<FileConfiguration
+				Name="Debug Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-player.h"
+			>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-unrand.cc"
+			>
+			<FileConfiguration
+				Name="Debug Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Console|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release Tiles|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\rltiles\tiledef-unrand.h"
+			>
+		</File>
+		<File
+			RelativePath="..\tilefont.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\tilefont.h"
+			>
+		</File>
+		<File
+			RelativePath="..\tilemcache.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\tilemcache.h"
+			>
+		</File>
+		<File
+			RelativePath="..\tilepick.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\tilereg.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\tilereg.h"
+			>
+		</File>
+		<File
 			RelativePath="..\tiles.h"
+			>
+		</File>
+		<File
+			RelativePath="..\tilesdl.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\tilesdl.h"
+			>
+		</File>
+		<File
+			RelativePath="..\tiletex.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\tiletex.h"
 			>
 		</File>
 		<File
@@ -1003,6 +1603,10 @@
 		</File>
 		<File
 			RelativePath="..\unrand.h"
+			>
+		</File>
+		<File
+			RelativePath="..\version.cc"
 			>
 		</File>
 		<File

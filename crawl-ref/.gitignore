@@ -31,6 +31,7 @@ source/dat/tiles/gui.png
 # The Crawl executable.
 source/crawl
 source/crawl.exe
+source/crawl.pdb
 
 # Level-compiler generated files.
 source/util/*.cc

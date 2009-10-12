@@ -28,11 +28,9 @@ REVISION("$Rev$");
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
-#ifdef WIZARD
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "output.h"   // for the monster list
 #include "quiver.h"   // to update the quiver if necessary
-#endif
 #include "player.h"
 #include "religion.h"
 #include "spells2.h"
@@ -3841,7 +3839,7 @@ void debug_xom_effects()
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
     fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
-    fprintf(ostat, screenshot().c_str());
+    fprintf(ostat, "%s", screenshot().c_str());
     fprintf(ostat, "\n%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 

@@ -6,6 +6,8 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#ifdef USE_TILE
+
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "defines.h"
@@ -759,3 +761,5 @@ void FTFont::store(FontBuffer &buf, float &x, float &y,
 
     x += m_glyphs[c].advance;
 }
+
+#endif

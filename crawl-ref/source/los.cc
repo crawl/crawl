@@ -232,6 +232,7 @@ static void _register_ray(double accx, double accy, double slope)
     ray.length = coords.size();
     for (unsigned int i = 0; i < coords.size(); i++)
         ray_coords.push_back(coords[i]);
+    fullrays.push_back(ray);
 }
 
 static void _create_blockrays()
@@ -286,7 +287,7 @@ static void _create_blockrays()
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
-          num_cellrays, raylengths.size(), num_nondupe_rays );
+          num_cellrays, fullrays.size(), num_nondupe_rays );
 #endif
 }
 

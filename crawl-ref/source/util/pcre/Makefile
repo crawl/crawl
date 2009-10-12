@@ -1,5 +1,13 @@
 # -*- Makefile -*- for PCRE (Win32, MinGW)
 
+ifneq ($(findstring $(MAKEFLAGS),s),s)
+ifndef V
+        QUIET_CC       = @echo '   ' CC $@;
+        QUIET_AR       = @echo '   ' AR $@;
+        export V
+endif
+endif
+
 OBJECTS := \
 	pcre_chartables.o \
 	pcre_compile.o \
@@ -22,12 +30,12 @@ OBJECTS := \
 	pcre_version.o \
 	pcre_xclass.o
 
-CXX ?= g++
+CC ?= gcc
 AR := ar rcu
 RANLIB := ranlib
-DEL := del
+DEL := rm -f
 
-CFLAGS := -I. -DHAVE_CONFIG_H
+CFLAGS += -I. -DHAVE_CONFIG_H
 LDFLAGS :=
 
 LIBNAME := libpcre.a
@@ -39,9 +47,9 @@ clean:
 	$(DEL) $(OBJECTS)
 
 $(LIBNAME) : $(OBJECTS)
-	$(AR) $@ $?
-	$(RANLIB) $@
+	$(QUIET_AR)$(AR) $@ $?
+	@$(RANLIB) $@
 
 %.o: %.c
-	$(CXX) $(CFLAGS) -o $@ -c $<
+	$(QUIET_CC)$(CC) $(CFLAGS) -o $@ -c $<
 

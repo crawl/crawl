@@ -1,5 +1,12 @@
 
-ifeq ($(shell uname -s),Darwin)
+ifeq ($(OSNAME),MacOS)
+APPLE_GCC=y
+else
+APPLE_GCC=n
+endif
+
+ifneq ($(APPLE_GCC),n)
+
 SDL_CFLAGS := -I/Library/Frameworks/SDL.framework/Headers -I/Library/Frameworks/SDL_image.framework/Headers
 SDL_LDFLAGS := -framework SDL -framework SDL_image
 
@@ -8,9 +15,6 @@ PNG_LDFLAGS := -framework libpng
 
 CFLAGS := -F/Library/Frameworks $(SDL_CFLAGS) $(PNG_CFLAGS)
 LDFLAGS := -F/Library/Frameworks $(SDL_LDFLAGS) $(PNG_LDFLAGS)
-
-# FIXME: We need 32-bit until SDL 1.2.14 comes out
-CXX ?= g++ -m32
 
 else
 
@@ -23,9 +27,9 @@ PNG_LIB := $(shell pkg-config libpng --libs)
 CFLAGS := $(SDL_CFLAGS) $(PNG_INCLUDE)
 LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_image -lpng
 
-CXX ?= g++
-
 endif
+
+CXX = g++
 
 DELETE = rm -f
 

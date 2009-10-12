@@ -1,6 +1,7 @@
 #include "tile_list_processor.h"
 
 #include <cassert>
+#include <cctype>
 #include <iostream>
 #include <fstream>
 #include <string.h>

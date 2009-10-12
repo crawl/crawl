@@ -1,6 +1,8 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#ifdef USE_TILE
+
 #include "artefact.h"
 #include "cio.h"
 #include "itemname.h"
@@ -1758,3 +1760,5 @@ bool TilesFramework::need_redraw() const
 {
     return m_need_redraw;
 }
+
+#endif

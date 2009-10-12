@@ -2252,7 +2252,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         return (make_item_randart(book));
     }
 
-    // Being called from make_item_randart()
+    // Being called from make_item_randart().
     ASSERT(book.sub_type == BOOK_RANDART_LEVEL);
 
     // Re-read owner, if applicable.

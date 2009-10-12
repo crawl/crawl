@@ -519,6 +519,10 @@ inline void UNUSED(const volatile T &)
 #include "externs.h"
 #include "version.h"
 
+#ifdef TARGET_COMPILER_VC
+#include "libw32c.h"
+#endif
+
 #endif
 
 #endif

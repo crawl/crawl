@@ -9,16 +9,6 @@ REVISION("$Rev$");
 
 #include "initfile.h"
 
-// For finding the executable's path
-#if defined ( WIN32CONSOLE ) || defined ( WIN32TILES )
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#elif defined ( __linux__ )
-#include <unistd.h>
-#elif defined ( __MACH__ )
-extern char **NXArgv;
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -51,6 +41,16 @@ extern char **NXArgv;
 #include "travel.h"
 #include "items.h"
 #include "view.h"
+
+// For finding the executable's path
+#if defined ( WIN32CONSOLE ) || defined ( WIN32TILES )
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#elif defined ( __linux__ )
+#include <unistd.h>
+#elif defined ( __MACH__ )
+extern char **NXArgv;
+#endif
 
 const std::string game_options::interrupt_prefix = "interrupt_";
 game_options Options;
