@@ -4591,6 +4591,13 @@ void bolt::affect_monster(monsters* mon)
         return;
     }
 
+    // Missiles go past bushes.
+    if (!is_beam && mon->type == MONS_BUSH)
+    {
+        apply_hit_funcs(mon, 0);
+        return;
+    }
+
     // Fire storm creates these, so we'll avoid affecting them
     if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
     {

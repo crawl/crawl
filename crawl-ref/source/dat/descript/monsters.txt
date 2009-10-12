@@ -414,7 +414,7 @@ A viscous liquid, flowing along the floor in search of organic matter to corrode
 %%%%
 bush
 
-A woody plant that, unlike trees, can be removed even with bare hands.  It looks dry enough to be easily set on fire.
+A woody plant that, unlike trees, can be removed even with bare hands.  It looks dry enough to be easily set on fire, and it isn't very dense so arrows are likely to go past it.
 %%%%
 water moccasin
 
