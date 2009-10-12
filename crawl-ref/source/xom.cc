@@ -28,11 +28,9 @@ REVISION("$Rev$");
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
-#ifdef WIZARD
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "output.h"   // for the monster list
 #include "quiver.h"   // to update the quiver if necessary
-#endif
 #include "player.h"
 #include "religion.h"
 #include "spells2.h"
