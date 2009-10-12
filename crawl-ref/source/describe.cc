@@ -2688,6 +2688,9 @@ static std::string _monster_stat_description(const monsters& mon)
     if (mons_immune_magic(&mon))
         result << pronoun << " is immune to magical enchantments.$";
 
+    if (mons_class_flag(mon.type, M_STATIONARY))
+        result << pronoun << " cannot move.$";
+
     // These differ between ghost demon monsters, so would be spoily.
     if (!mons_is_ghost_demon(mon.type))
     {
@@ -2699,7 +2702,7 @@ static std::string _monster_stat_description(const monsters& mon)
 
         // Unusual monster speed.
         const int speed = mons_base_speed(&mon);
-        if (speed != 10)
+        if (speed != 10 && speed != 0)
         {
             result << pronoun << " is ";
             if (speed < 7)
