@@ -171,13 +171,12 @@ CXX = $(GCXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 
 endif # MacOS
 
+RLTILES = rltiles
 
 #
 # Tiles build stuff
 #
 ifneq ($(TILES),n)
-
-RLTILES = rltiles
 
 DEFINES += -DUSE_TILE
 INCLUDES += -I$(RLTILES)
