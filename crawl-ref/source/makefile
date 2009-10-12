@@ -519,7 +519,11 @@ depend: $(DEPENDENCY_MKF)
 	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) *.h $(OBJECTS:.o=.cc) > $@
 endif
 
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),distclean)
 -include $(DEPENDENCY_MKF)
+endif
+endif
 
 ##########################################################################
 # The level compiler
