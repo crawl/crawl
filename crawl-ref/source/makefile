@@ -8,8 +8,11 @@
 
 GAME = crawl
 
-CC = gcc
-CXX = g++
+#
+# The GCC and GXX variables are set later.
+#
+CC = $(GCC)
+CXX = $(GXX)
 DELETE = rm -f
 COPY = cp
 
@@ -139,37 +142,46 @@ LIB := -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 INCLUDES += -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
 ifeq ($(OSNAME),MacOS)
+APPLE_GCC=y
+else
+APPLE_GCC=n
+endif
+export APPLE_GCC
+
+GCC_VER=
+
+ifneq ($(APPLE_GCC),n)
 
 # Compatibility level for Mac OS X
 #
-SDK_VER=10.4
-GCC_VER=4.0
+SDK_VER := 10.4
+GCC_VER := 4.0
 
 # FIXME: The '-arch i386' is only here until
 #   SDL 1.2.14 is available
 #
-ARCHS=-arch i386
+ARCHS := -arch i386
 
 # Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
 # else is much easier to predict the name of.
 ifeq ($(SDK_VER),10.4)
-SDKROOT=/Developer/SDKs/MacOSX$(SDK_VER)u.sdk
+SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER)u.sdk
 else
-SDKROOT=/Developer/SDKs/MacOSX$(SDK_VER).sdk
-endif
-
-ifneq ($(GCC_VER),)
-GCC = gcc-$(GCC_VER)
-GCXX = g++-$(GCC_VER)
-else
-GCC = gcc
-GCXX = g++
+SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
 CC = $(GCC) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-CXX = $(GCXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+CXX = $(GXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 
 endif # MacOS
+
+ifneq ($(GCC_VER),)
+GCC := gcc-$(GCC_VER)
+GXX := g++-$(GCC_VER)
+else
+GCC := gcc
+GXX := g++
+endif
 
 RLTILES = rltiles
 
@@ -182,11 +194,13 @@ DEFINES += -DUSE_TILE
 INCLUDES += -I$(RLTILES)
 
 ifeq ($(OSNAME),MacOS)
-
 # Handle the tile build dependencies for Mac a bit
 # differently than other platforms.
 
 LIB += -framework OpenGL -framework AppKit
+endif
+
+ifneq ($(APPLE_GCC),n)
 
 # SDL has a goof in the stock SDL_config.h which checks whether
 # __MACOSX__ is defined. It's not one of Apple's stock markers,
