@@ -1,0 +1,259 @@
+################################################################################
+# shoals.des: All vaults for the Shoals.
+################################################################################
+
+##############################################################################
+# Non-ending vaults
+##############################################################################
+
+
+###########################
+# Shoal Ruins - nothing special, just some flavor (Enne)
+# Appear rarely.
+#
+NAME:   overgrown_hall
+DEPTH:  Shoal
+WEIGHT: 2
+MONS:   plant, fungus
+MONS:   cyclops / stone giant w:2
+SUBST:  x = x:20 .
+SUBST:  G = G:40 .
+SUBST:  . = .:90 1:19 x:1
+SUBST:  1 = 1 2:1
+MAP
+xxxxxxxxxxx
+x.........x
+x.G.G.G.G.x
++....3....+
+x.G.G.G.G.x
+x.........x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   overgrown_tower
+DEPTH:  Shoal
+WEIGHT: 2
+MONS:   plant, fungus
+SUBST:  + = x +
+SUBST:  x = x:60 . '
+SUBST:  ' = ' 1:5
+SUBST:  . = . 2:1
+SUBST:  ' = .
+MAP
+ '''''''''
+'''xx+xx'''
+''xx...xx''
+'xx.....xx'
+'x.......x'
+'x...<...x'
+'x.......x'
+'xx.....xx'
+''xx...xx''
+'''xxxxx'''
+ '''''''''
+ENDMAP
+
+NAME:   overgrown_statue
+DEPTH:  Shoal
+WEIGHT: 1
+MONS:   plant
+MONS:   ice statue / orange crystal statue / silver statue
+SUBST:  . = 1:1 .:30
+SUBST:  p = 1:2 .
+SUBST:  P = 1:20 .
+SUBST:  G = G 2
+MAP
+  ........
+ ..........
+....ppp.....
+...ppppp....
+..ppPPPpp...
+..ppPGPpp...
+..ppPPPpp...
+...ppppp....
+....ppp.....
+ ..........
+  ........
+ENDMAP
+
+NAME:   shoals_oasis
+DEPTH:  Shoal
+WEIGHT: 1
+MONS:   plant
+SUBST:  . = 1:1 .
+SUBST:  W = W .
+SUBST:  w = W w
+SUBST:  _ = w
+MAP
+  ...
+ ..W..
+..WwW..
+.Ww_wW.
+..WwW..
+ ..W..
+  ...
+ENDMAP
+
+
+##############################################################################
+# Branch ends.
+# Note that the Shoals usually have a randomised end map; predrawn maps
+# (which need not be encompassing) are sometimes used, though.
+##############################################################################
+
+##############################################################################
+# Shoals: ranged attackers
+#
+NAME:   Shoal_1
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+MONS:   cyclops, yaktaur, yaktaur captain
+MAP
+wwwwwwwwcccccccccccccwwwwwww
+wwwwwcccc...wwwwwwwwcccwwwww
+wwwccc......wwwwwwwwwwcccwww
+wwcc.......wwwwwwwwwwwwwccww
+wwc........wwwwwwwwwwwwwwcww
+wcc........wwwwwwwwwwwwwwccw
+wc........wwwwwwwwwwwwwwwwcw
+wc........wwwwwwwwwwwwwwwwcw
+cc.2.2.2.2wwwwwwwwwwwwwwwwcc
+c.2.2.2.2.cwwwwwwwwwwwwwwwwc
+c2.3.3.2.ccwwwwwwwwwwwwwwwwc
+c.2.3.2.ccwwwwwwwwwwwwwwww.c
+c2.3.3.ccwwwwwww...wwwwww..c
+ccccccccwwwwwww..1..wwwww..c
+wwwwwwwwwwwwwww..1..wwwww.Oc
+ccccccccwwwwwww..1..wwwww..c
+c..3.3.ccwwwwwww...wwwwww..c
+c.2.3.2.ccwwwwwwwwwwwwwwww.c
+c2.3.3.2.ccwwwwwwwwwwwwwwwwc
+c.2.2.2.2.cwwwwwwwwwwwwwwwwc
+cc.2.2.2.2wwwwwwwwwwwwwwwwcc
+wc........wwwwwwwwwwwwwwwwcw
+wc........wwwwwwwwwwwwwwwwcw
+wcc........wwwwwwwwwwwwwwccw
+wwc........wwwwwwwwwwwwwwcww
+wwcc.......wwwwwwwwwwwwwccww
+wwwccc......wwwwwwwwwwwccwww
+wwwwwcccc...wwwwwwwwcccwwwww
+wwwwwwwwcccccccccccccwwwwwww
+ENDMAP
+
+##############################################################################
+# Shoals: fish
+#
+NAME:   Shoal_2
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+MONS:   cyclops,stone giant
+SUBST:  1 = 1.
+SUBST:  W = W:2 w
+SUBST:  . = . w:3
+KMONS:  W = giant goldfish/big fish/electric eel
+KFEAT:  W = w
+MAP
+wwwww......11......wwwww
+www.....1WWWWWW1.....www
+ww....WWWWWWWWWWWW....ww
+w..1WWWWWWWWWWWWWWWW1..w
+w..WWWWWWWWWWWWWWWWWW..w
+...WWWWWWWWWWWWWWWWWW...
+..WWWWWWWWWWWWWWWWWWWW..
+..WWWWWWWWWWWWWWWWWWWW..
+.1WWWWWWWWWWWWWWWWWWWW1.
+.WWWWWWWWWWWWWWWWWWWWWW.
+.WWWWWWWWWWWWWWWWWWWWWW.
+1WWWWWWWWWWO2WWWWWWWWWW1
+1WWWWWWWWWW22WWWWWWWWWW1
+.WWWWWWWWWWWWWWWWWWWWWW.
+.WWWWWWWWWWWWWWWWWWWWWW.
+.1WWWWWWWWWWWWWWWWWWWW1.
+..WWWWWWWWWWWWWWWWWWWW..
+..WWWWWWWWWWWWWWWWWWWW..
+w..WWWWWWWWWWWWWWWWWW..w
+w..1WWWWWWWWWWWWWWWW1..w
+ww....WWWWWWWWWWWW....ww
+www.....1WWWWWW1.....www
+wwwww......11......wwwww
+ENDMAP
+
+##############################################################################
+# Shoals: statue on rune
+#
+NAME:   Shoal_3
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+KMONS:  x : ice statue / orange crystal statue / silver statue
+KFEAT:  x : O
+MAP
+x
+ENDMAP
+
+##############################################################################
+# Shoals: swimming rune
+#
+# You may need controlled flight or apportation to get the liquid rune
+#
+NAME:   Shoal_4
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+KFEAT:  O = w
+### KITEM: O = liquid rune of Zot
+MAP
+....wwwww....
+..wwwwwww..
+.wwwwwwww.
+.wwwwwwww.
+wwwwwwwww
+wwwwwwwww
+wwwwOwwww
+wwwwwwwww
+wwwwwwwww
+.wwwwwwww.
+.wwwwwwww.
+..wwwwwww..
+....wwwww....
+ENDMAP
+
+################################################################################
+# Shoal hut with rune inside
+#
+# Shoal:$ is hand-hacked to force lots of minivaults.
+NAME:      shoalhut_rune
+TAGS:      shoal_rune water_ok
+SHUFFLE:   ABCD
+SUBST:     A:x, B:x, C:x=, D=+
+LROCKTILE:  wall_vines
+MAP
+.xxCxx.
+xx...xx
+x.....x
+B..O..D
+x.....x
+xx...xx
+.xxAxx
+ENDMAP
+
+################################################################################
+# Shoal hut with no rune inside
+#
+# Shoal:$ is hand-hacked to force lots of minivaults.
+NAME:    shoalhut_norune
+DEPTH:   Shoal:$
+TAGS:    allow_dup water_ok shoal
+SHUFFLE: ABCD
+SUBST:   A:x, B:x, C:x=, D=+
+MAP
+.xxCxx.
+xx...xx
+x.....x
+B..|..D
+x.....x
+xx...xx
+.xxAxx
+ENDMAP

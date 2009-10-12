@@ -64,10 +64,7 @@
 // especially bad, so we'll want to remap that. OS X is otherwise
 // Unix-ish, so we shouldn't need other special handling.
 //
-#if defined(TARGET_OS_MACOSX)
-    #define USE_8_COLOUR_TERM_MAP
-    #define COL_TO_REPLACE_DARKGREY     BLUE
-#endif
+#define COL_TO_REPLACE_DARKGREY     BLUE
 
 //
 // FreeBSD
@@ -518,6 +515,10 @@ inline void UNUSED(const volatile T &)
 // And now headers we want precompiled
 #include "externs.h"
 #include "version.h"
+
+#ifdef TARGET_COMPILER_VC
+#include "libw32c.h"
+#endif
 
 #endif
 

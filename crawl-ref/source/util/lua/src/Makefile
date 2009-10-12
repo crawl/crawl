@@ -19,7 +19,7 @@ endif
 endif
 
 CC ?= gcc
-CFLAGS = -O2 -Wall $(MYCFLAGS)
+CFLAGS ?= -O2 -Wall
 AR = ar rcu
 RANLIB = ranlib
 RM = rm -f

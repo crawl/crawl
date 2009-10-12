@@ -2106,7 +2106,7 @@ void set_feature_desc_long(const std::string &raw_name,
     if (!props.exists(LONG_DESC_KEY))
         props[LONG_DESC_KEY].new_table(SV_STR);
 
-    CrawlHashTable &desc_table = props[LONG_DESC_KEY];
+    CrawlHashTable &desc_table = props[LONG_DESC_KEY].get_table();
 
     if (desc.empty())
         desc_table.erase(raw_name);

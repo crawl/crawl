@@ -375,6 +375,9 @@
 		B090C2F310671F8900AE855D /* gui.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EF10671F8900AE855D /* gui.png */; };
 		B090C2F410671F8900AE855D /* main.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F010671F8900AE855D /* main.png */; };
 		B090C2F510671F8900AE855D /* player.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F110671F8900AE855D /* player.png */; };
+		B09CCE3110830F1A00623CFA /* Crawl-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B09CCE3010830F1A00623CFA /* Crawl-Info.plist */; };
+		B09CCE671083159100623CFA /* settings in Resources */ = {isa = PBXBuildFile; fileRef = B09CCE5A1083159100623CFA /* settings */; };
+		B09CCE6C108315B300623CFA /* settings in Resources */ = {isa = PBXBuildFile; fileRef = B09CCE5A1083159100623CFA /* settings */; };
 		B0B5DF6A1066EE1A0020B21F /* libpng.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
 		B0B5DF6B1066EE1A0020B21F /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
 		B0B5DF6C1066EE1A0020B21F /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
@@ -873,6 +876,8 @@
 		B090C2EF10671F8900AE855D /* gui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gui.png; path = rltiles/gui.png; sourceTree = "<group>"; };
 		B090C2F010671F8900AE855D /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = rltiles/main.png; sourceTree = "<group>"; };
 		B090C2F110671F8900AE855D /* player.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = player.png; path = rltiles/player.png; sourceTree = "<group>"; };
+		B09CCE3010830F1A00623CFA /* Crawl-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Crawl-Info.plist"; path = "mac/Crawl-Info.plist"; sourceTree = "<group>"; };
+		B09CCE5A1083159100623CFA /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; name = settings; path = ../settings; sourceTree = SOURCE_ROOT; };
 		B0B5DF201066ED0E0020B21F /* libpng.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng.framework; path = /Library/Frameworks/libpng.framework; sourceTree = "<absolute>"; };
 		B0B5DF221066ED0E0020B21F /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = /Library/Frameworks/SDL_image.framework; sourceTree = "<absolute>"; };
 		B0B5DF241066ED0E0020B21F /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = /Library/Frameworks/SDL.framework; sourceTree = "<absolute>"; };
@@ -928,7 +933,6 @@
 		D2A72B29101173C000E1A883 /* artefact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = artefact.h; sourceTree = "<group>"; };
 		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
 		D2F271F60DA1C58C00445FE9 /* Dungeon Crawl Stone Soup - ASCII.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dungeon Crawl Stone Soup - ASCII.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
 		D2F271FE0DA1C5AD00445FE9 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = "<group>"; };
 		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
 		E14D930A107FA77200E3F5FE /* los.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = los.cc; sourceTree = "<group>"; };
@@ -1315,12 +1319,13 @@
 		7B352F1B0B0022C900CABB32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D2F271FE0DA1C5AD00445FE9 /* dat */,
 				B090C2EE10671F8900AE855D /* dngn.png */,
+				D2F2723F0DA1C61600445FE9 /* docs */,
 				B090C2EF10671F8900AE855D /* gui.png */,
 				B090C2F010671F8900AE855D /* main.png */,
 				B090C2F110671F8900AE855D /* player.png */,
-				D2F2723F0DA1C61600445FE9 /* docs */,
-				D2F271FE0DA1C5AD00445FE9 /* dat */,
+				B09CCE5A1083159100623CFA /* settings */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1431,7 +1436,7 @@
 		D2AE25EC0DA2621100E15489 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */,
+				B09CCE3010830F1A00623CFA /* Crawl-Info.plist */,
 				D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */,
 				D2AE25EE0DA2624E00E15489 /* crawl */,
 			);
@@ -1596,9 +1601,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B09CCE3110830F1A00623CFA /* Crawl-Info.plist in Resources */,
+				B032D6FD106C02540002D70D /* Crawl.icns in Resources */,
 				B032D6FB106C02540002D70D /* dat in Resources */,
 				B032D6FC106C02540002D70D /* docs in Resources */,
-				B032D6FD106C02540002D70D /* Crawl.icns in Resources */,
+				B09CCE671083159100623CFA /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1606,9 +1613,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */,
 				D2F272350DA1C5AD00445FE9 /* dat in Resources */,
 				D2F2725B0DA1C61600445FE9 /* docs in Resources */,
-				D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */,
+				B09CCE6C108315B300623CFA /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2338,7 +2346,7 @@
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				INFOPLIST_FILE = "Crawl-Info.plist";
+				INFOPLIST_FILE = "mac/Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
@@ -2588,7 +2596,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_VERSION = 4.0;
-				INFOPLIST_FILE = "Crawl-Info.plist";
+				INFOPLIST_FILE = "mac/Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = (
 					"-framework",

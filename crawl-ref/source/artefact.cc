@@ -1214,7 +1214,7 @@ static bool _init_artefact_book(item_def &book)
     god_type god;
     bool redo = (!origin_is_god_gift(book, &god) || god != GOD_XOM);
 
-    // Plus and plus2 contain parameters to make_book_foo_randart()
+    // Plus and plus2 contain parameters to make_book_foo_randart(),
     // which might get changed after the book has been made into a
     // randart, so reset them on each iteration of the loop.
     int  plus  = book.plus;
@@ -1226,7 +1226,7 @@ static bool _init_artefact_book(item_def &book)
         book.plus2 = plus2;
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
-            // The parameters to this call are encoded in book.plus and plus2
+            // The parameters to this call are in book.plus and plus2.
             book_good = make_book_level_randart(book, book.plus, book.plus2);
         else
             book_good = make_book_theme_randart(book);
@@ -1250,7 +1250,7 @@ static bool _init_artefact_properties(item_def &item)
     if (!props.exists( ARTEFACT_PROPS_KEY ))
         props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
 
-    CrawlVector &rap = props[ARTEFACT_PROPS_KEY];
+    CrawlVector &rap = props[ARTEFACT_PROPS_KEY].get_vector();
     rap.set_max_size(ART_PROPERTIES);
 
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
@@ -1901,14 +1901,14 @@ bool make_item_blessed_blade( item_def &item )
 
     ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
     item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
-    CrawlVector &known = item.props[KNOWN_PROPS_KEY];
+    CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
     known.set_max_size(ART_PROPERTIES);
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         known[i] = (bool) false;
 
     ASSERT(!item.props.exists( ARTEFACT_PROPS_KEY ));
     item.props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
-    CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY];
+    CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     rap.set_max_size(ART_PROPERTIES);
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = (short) 0;
@@ -1964,7 +1964,7 @@ bool make_item_randart( item_def &item )
     ASSERT(!item.props.exists( ARTEFACT_NAME_KEY ));
     ASSERT(!item.props.exists( ARTEFACT_APPEAR_KEY ));
     item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
-    CrawlVector &known = item.props[KNOWN_PROPS_KEY];
+    CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
     known.set_max_size(ART_PROPERTIES);
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         known[i] = (bool) false;
@@ -2017,7 +2017,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     if (!item.props.exists( KNOWN_PROPS_KEY ))
     {
         item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
-        CrawlVector &known = item.props[KNOWN_PROPS_KEY];
+        CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
         known.set_max_size(ART_PROPERTIES);
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
             known[i] = (bool) false;

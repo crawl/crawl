@@ -9,16 +9,6 @@ REVISION("$Rev$");
 
 #include "initfile.h"
 
-// For finding the executable's path
-#if defined ( WIN32CONSOLE ) || defined ( WIN32TILES )
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#elif defined ( __linux__ )
-#include <unistd.h>
-#elif defined ( __MACH__ )
-extern char **NXArgv;
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -51,6 +41,16 @@ extern char **NXArgv;
 #include "travel.h"
 #include "items.h"
 #include "view.h"
+
+// For finding the executable's path
+#if defined ( WIN32CONSOLE ) || defined ( WIN32TILES )
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#elif defined ( __linux__ )
+#include <unistd.h>
+#elif defined ( __MACH__ )
+extern char **NXArgv;
+#endif
 
 const std::string game_options::interrupt_prefix = "interrupt_";
 game_options Options;
@@ -961,14 +961,21 @@ void game_options::reset_options()
 #endif
 
     // map each colour to itself as default
-#ifdef USE_8_COLOUR_TERM_MAP
-    for (int i = 0; i < 16; i++)
-        colour[i] = i % 8;
+    // If USE_8_COLOUR_TERM_MAP is defined, then we force 8 colors.
+    // Otherwise, do a check to see if we're using Apple_Terminal.
+#ifndef USE_8_COLOUR_TERM_MAP
+	const char *term_program = getenv("TERM_PROGRAM");
+    if (term_program && strcmp(term_program, "Apple_Terminal") == 0) {
+#endif
+        for (int i = 0; i < 16; i++)
+            colour[i] = i % 8;
 
-    colour[ DARKGREY ] = COL_TO_REPLACE_DARKGREY;
-#else
-    for (int i = 0; i < 16; i++)
-        colour[i] = i;
+        colour[ DARKGREY ] = COL_TO_REPLACE_DARKGREY;
+#ifndef USE_8_COLOUR_TERM_MAP
+	} else {
+        for (int i = 0; i < 16; i++)
+            colour[i] = i;
+	}
 #endif
 
     // map each channel to plain (well, default for now since I'm testing)

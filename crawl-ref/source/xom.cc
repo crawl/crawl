@@ -3839,7 +3839,7 @@ void debug_xom_effects()
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
     fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
-    fprintf(ostat, screenshot().c_str());
+    fprintf(ostat, "%s", screenshot().c_str());
     fprintf(ostat, "\n%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 
