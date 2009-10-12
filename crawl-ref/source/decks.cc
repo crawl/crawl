@@ -205,9 +205,9 @@ static void _shuffle_deck(item_def &deck)
     CrawlHashTable &props = deck.props;
     ASSERT(props.exists("cards"));
 
-    CrawlVector &cards = props["cards"];
+    CrawlVector &cards = props["cards"].get_vector();
 
-    CrawlVector &flags = props["card_flags"];
+    CrawlVector &flags = props["card_flags"].get_vector();
     ASSERT(flags.size() == cards.size());
 
     // Don't use std::shuffle(), since we want to apply exactly the
@@ -243,8 +243,8 @@ static void _set_card_and_flags(item_def& deck, int idx, card_type card,
                                 unsigned char _flags)
 {
     CrawlHashTable &props = deck.props;
-    CrawlVector    &cards = props["cards"];
-    CrawlVector    &flags = props["card_flags"];
+    CrawlVector    &cards = props["cards"].get_vector();
+    CrawlVector    &flags = props["card_flags"].get_vector();
 
     if (idx == -1)
         idx = static_cast<int>(cards.size()) - 1;
@@ -783,7 +783,7 @@ bool deck_peek()
         mpr("A card falls out of the deck.");
     }
 
-    CrawlVector &cards     = deck.props["cards"];
+    CrawlVector &cards     = deck.props["cards"].get_vector();
     const int    num_cards = cards.size();
 
     card_type card1, card2;
@@ -3195,7 +3195,7 @@ static void _unmark_deck(item_def& deck)
     if (!props.exists("card_flags"))
         return;
 
-    CrawlVector &flags = props["card_flags"];
+    CrawlVector &flags = props["card_flags"].get_vector();
 
     for (unsigned int i = 0; i < flags.size(); ++i)
     {
