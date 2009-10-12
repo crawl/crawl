@@ -61,13 +61,23 @@ blockrays_t los_blockrays;
 bit_array *dead_rays     = NULL;
 bit_array *smoke_rays    = NULL;
 
+class quadrant_iterator : public rectangle_iterator
+{
+public:
+    quadrant_iterator()
+        : rectangle_iterator(coord_def(0,0),
+                             coord_def(LOS_MAX_RANGE, LOS_MAX_RANGE))
+    {
+    }
+};
+
 void clear_rays_on_exit()
 {
    delete dead_rays;
    delete smoke_rays;
-   for (int x = 0; x <= LOS_MAX_RANGE; x++)
-       for (int y = 0; y <= LOS_MAX_RANGE; y++)
-           delete los_blockrays[x][y];
+
+   for (quadrant_iterator qi; qi; qi++)
+       delete los_blockrays(*qi);
 }
 
 // pre-squared LOS radius
@@ -243,12 +253,11 @@ static void _create_blockrays()
     const int num_cellrays            = ray_coords.size();
     blockrays_t full_los_blockrays;
 
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-        {
-            full_los_blockrays[x][y] = new bit_array(num_cellrays);
-            los_blockrays[x][y] = new bit_array(num_nondupe_rays);
-        }
+    for (quadrant_iterator qi; qi; qi++)
+    {
+        full_los_blockrays(*qi) = new bit_array(num_cellrays);
+        los_blockrays(*qi) = new bit_array(num_nondupe_rays);
+    }
 
     // first build all the rays: easier to do blocking calculations there
     for (unsigned int r = 0; r < fullrays.size(); ++r)
@@ -271,16 +280,14 @@ static void _create_blockrays()
     for (int i = 0; i < num_nondupe_rays; ++i)
         compressed_ray[i] = ray_coords[nondupe_cellrays[i]];
 
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-            for (int i = 0; i < num_nondupe_rays; ++i)
-                los_blockrays[x][y]->set(i,
-                    full_los_blockrays[x][y]->get(nondupe_cellrays[i]));
+    for (quadrant_iterator qi; qi; qi++)
+        for (int i = 0; i < num_nondupe_rays; ++i)
+            los_blockrays(*qi)->set(i, full_los_blockrays(*qi)
+                                       ->get(nondupe_cellrays[i]));
 
     // we can throw away full_los_blockrays now
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-            delete full_los_blockrays[x][y];
+    for (quadrant_iterator qi; qi; qi++)
+        delete full_los_blockrays(*qi);
 
     dead_rays  = new bit_array(num_nondupe_rays);
     smoke_rays = new bit_array(num_nondupe_rays);
@@ -718,29 +725,28 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
     dead_rays->reset();
     smoke_rays->reset();
 
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-        {
-            coord_def p = coord_def(sx*x, sy*y);
-            if (!dat.los_bounds(p))
-                continue;
+    for (quadrant_iterator qi; qi; qi++)
+    {
+        coord_def p = coord_def(sx*(qi->x), sy*(qi->y));
+        if (!dat.los_bounds(p))
+            continue;
 
-            // if this cell is opaque...
-            switch (dat.opacity(p))
-            {
-            case OPC_OPAQUE:
-                // then block the appropriate rays
-                *dead_rays |= *los_blockrays[x][y];
-                break;
-            case OPC_HALF:
-                // block rays which have already seen a cloud
-                *dead_rays  |= (*smoke_rays & *los_blockrays[x][y]);
-                *smoke_rays |= *los_blockrays[x][y];
-                break;
-            default:
-                break;
-            }
+        // if this cell is opaque...
+        switch (dat.opacity(p))
+        {
+        case OPC_OPAQUE:
+            // then block the appropriate rays
+            *dead_rays |= *los_blockrays(*qi);
+            break;
+        case OPC_HALF:
+            // block rays which have already seen a cloud
+            *dead_rays  |= (*smoke_rays & *los_blockrays(*qi));
+            *smoke_rays |= *los_blockrays(*qi);
+            break;
+        default:
+            break;
         }
+    }
 
     // Ray calculation done. Now work out which cells in this
     // quadrant are visible.
