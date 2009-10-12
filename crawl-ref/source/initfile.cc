@@ -961,10 +961,11 @@ void game_options::reset_options()
 #endif
 
     // map each colour to itself as default
-	// If USE_8_COLOUR_TERM_MAP is defined, then we force 8 colors.
-	// Otherwise, do a check to see if we're using Apple_Terminal.
+    // If USE_8_COLOUR_TERM_MAP is defined, then we force 8 colors.
+    // Otherwise, do a check to see if we're using Apple_Terminal.
 #ifndef USE_8_COLOUR_TERM_MAP
-    if (strcmp(getenv("TERM_PROGRAM"), "Apple_Terminal") == 0) {
+	const char *term_program = getenv("TERM_PROGRAM");
+    if (term_program && strcmp(term_program, "Apple_Terminal") == 0) {
 #endif
         for (int i = 0; i < 16; i++)
             colour[i] = i % 8;
