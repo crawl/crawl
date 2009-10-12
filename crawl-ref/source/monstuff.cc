@@ -1032,7 +1032,8 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = monster->pos();
     beam.target       = monster->pos();
-    beam.thrower      = (monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON);
+    beam.thrower      = crawl_state.arena ? KILL_MON
+      : monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON;
     beam.aux_source.clear();
 
     if (YOU_KILL(killer))
@@ -1270,6 +1271,8 @@ int monster_die(monsters *monster, killer_type killer,
 
     crawl_state.inc_mon_acting(monster);
 
+    ASSERT(!( YOU_KILL(killer) && crawl_state.arena ));
+
     mons_clear_trapping_net(monster);
 
     // Update list of monsters beholding player.
@@ -1306,10 +1309,16 @@ int monster_die(monsters *monster, killer_type killer,
     if (MON_KILL(killer) && monster_killed == killer_index)
     {
         if (monster->confused_by_you())
+        {
+            ASSERT(!crawl_state.arena);
             killer = KILL_YOU_CONF;
+        }
     }
     else if (MON_KILL(killer) && monster->has_ench(ENCH_CHARM))
+    {
+        ASSERT(!crawl_state.arena);
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
+    }
 
     // Take note!
     if (!mons_reset && !crawl_state.arena && MONST_INTERESTING(monster))
@@ -1464,9 +1473,6 @@ int monster_die(monsters *monster, killer_type killer,
                 if ((created_friendly || was_neutral) && gives_xp)
                     mpr("That felt strangely unrewarding.");
             }
-
-            if (crawl_state.arena)
-                break;
 
             // Killing triggers tutorial lesson.
             if (gives_xp)
