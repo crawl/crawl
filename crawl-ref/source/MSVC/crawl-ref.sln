@@ -1,12 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crawl-ref", "crawl-ref.vcproj", "{3189AF12-90EF-4D3E-BFEC-4AB90D7D32DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crawl", "crawl.vcproj", "{3189AF12-90EF-4D3E-BFEC-4AB90D7D32DA}"
 	ProjectSection(ProjectDependencies) = postProject
+		{5783572B-479A-4EE8-8F16-1FDB24DDD1A0} = {5783572B-479A-4EE8-8F16-1FDB24DDD1A0}
+		{A0FDC72E-0BE5-4542-B381-6A482DAC2125} = {A0FDC72E-0BE5-4542-B381-6A482DAC2125}
 		{A61349B6-4099-4688-AA1A-00D91397857D} = {A61349B6-4099-4688-AA1A-00D91397857D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "lua.vcproj", "{A61349B6-4099-4688-AA1A-00D91397857D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "sqlite.vcproj", "{5783572B-479A-4EE8-8F16-1FDB24DDD1A0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcre", "pcre.vcproj", "{A0FDC72E-0BE5-4542-B381-6A482DAC2125}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +28,14 @@ Global
 		{A61349B6-4099-4688-AA1A-00D91397857D}.Debug|Win32.Build.0 = Debug|Win32
 		{A61349B6-4099-4688-AA1A-00D91397857D}.Release|Win32.ActiveCfg = Release|Win32
 		{A61349B6-4099-4688-AA1A-00D91397857D}.Release|Win32.Build.0 = Release|Win32
+		{5783572B-479A-4EE8-8F16-1FDB24DDD1A0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5783572B-479A-4EE8-8F16-1FDB24DDD1A0}.Debug|Win32.Build.0 = Debug|Win32
+		{5783572B-479A-4EE8-8F16-1FDB24DDD1A0}.Release|Win32.ActiveCfg = Release|Win32
+		{5783572B-479A-4EE8-8F16-1FDB24DDD1A0}.Release|Win32.Build.0 = Release|Win32
+		{A0FDC72E-0BE5-4542-B381-6A482DAC2125}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A0FDC72E-0BE5-4542-B381-6A482DAC2125}.Debug|Win32.Build.0 = Debug|Win32
+		{A0FDC72E-0BE5-4542-B381-6A482DAC2125}.Release|Win32.ActiveCfg = Release|Win32
+		{A0FDC72E-0BE5-4542-B381-6A482DAC2125}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
