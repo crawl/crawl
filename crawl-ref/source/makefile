@@ -254,15 +254,15 @@ ifneq ($(shell which pkg-config 2> /dev/null),)
 
 PNG_INCLUDE := $(shell pkg-config libpng --cflags-only-I)
 PNG_CFLAGS  := $(shell pkg-config libpng --cflags-only-other)
-PNG_LDFLAGS := $(shell pkg-config libpng --libs)
+PNG_LDFLAGS := $(shell pkg-config libpng --libs-only-L) $(shell pkg-config libpng --libs-only-l)
 
 FREETYPE_INCLUDE := $(shell pkg-config freetype2 --cflags-only-I)
 FREETYPE_CFLAGS  := $(shell pkg-config freetype2 --cflags-only-other)
-FREETYPE_LDFLAGS := $(shell pkg-config freetype2 --libs)
+FREETYPE_LDFLAGS := $(shell pkg-config freetype2 --libs-only-L) $(shell pkg-config freetype2 --libs-only-l)
 
 SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
-SDL_LDFLAGS := $(shell pkg-config sdl --libs)
+SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
 
 else # pkg-config
 
@@ -299,7 +299,9 @@ endif # sdl-config
 endif # pkg-config
 
 LIB += $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS) $(SDL_LDFLAGS) -lSDL_image
+ifneq ($(OSNAME),MacOS)
 LIB += -lGL -lGLU
+endif
 
 DEFINES += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
 INCLUDES += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
