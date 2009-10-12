@@ -1917,16 +1917,13 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     // Being called from make_item_randart()
     ASSERT(book.sub_type == BOOK_RANDART_LEVEL);
-    ASSERT(level == -1 && num_spells == -1);
 
     // Re-read owner, if applicable.
     if (owner.empty() && book.props.exists("owner"))
         owner = book.props["owner"].get_string();
 
-    level = book.plus;
     ASSERT(level > 0 && level <= 9);
 
-    num_spells = book.plus2;
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
     int god_discard        = 0;
