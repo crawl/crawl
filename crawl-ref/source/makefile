@@ -569,7 +569,7 @@ prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
 		+@$(MAKE) -C $(UTIL) levcomp.tab.cc
 
-$(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp
+$(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp $(UTIL)levcomp.tab.cc
 		+@$(MAKE) -C $(UTIL) levcomp.lex.cc
 
 else
