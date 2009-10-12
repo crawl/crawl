@@ -645,6 +645,7 @@ bool mons_is_slime(const monsters *mon)
 bool mons_class_is_plant(int mc)
 {
     return (mons_genus(mc) == MONS_PLANT
+            || mons_genus(mc) == MONS_BUSH
             || mons_genus(mc) == MONS_FUNGUS);
 }
 
