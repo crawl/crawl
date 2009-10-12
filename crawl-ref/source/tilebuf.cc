@@ -8,6 +8,8 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#ifdef USE_TILE
+
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "tilesdl.h"
@@ -323,3 +325,5 @@ void LineBuffer::add_square(float sx, float sy, float ex, float ey,
     add(ex, ey, sx, ey, col);
     add(sx, ey, sx, sy, col);
 }
+
+#endif

@@ -8,6 +8,8 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#ifdef USE_TILE
+
 #include "cio.h"
 #include "debug.h"
 #include "describe.h"
@@ -4167,3 +4169,5 @@ void ImageManager::unload_textures()
     for (int i = 0; i < TEX_MAX; i++)
         m_textures[i].unload_texture();
 }
+
+#endif

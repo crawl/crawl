@@ -1,6 +1,8 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#ifdef USE_TILE
+
 #include "files.h"
 #include "tiletex.h"
 
@@ -270,3 +272,4 @@ void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
     m_info_func = info_func;
 }
 
+#endif

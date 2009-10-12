@@ -4196,7 +4196,7 @@ struct greater_second
 // out which arc the input point pos falls on.
 static int _arc_decomposition(const coord_def & pos, int n_arcs)
 {
-    float theta = atan2(pos.y, pos.x);
+    float theta = atan2((float)pos.y, (float)pos.x);
 
     if (pos.x == 0 && pos.y != 0)
         theta = pos.y > 0 ? PI / 2 : -PI / 2;

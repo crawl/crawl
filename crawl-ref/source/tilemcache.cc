@@ -1,6 +1,8 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#ifdef USE_TILE
+
 #include "tilemcache.h"
 #include "tags.h"
 #include "ghost.h"
@@ -865,3 +867,5 @@ void mcache_demon::construct(writer &th)
 
     marshallDemon(th, m_demon);
 }
+
+#endif

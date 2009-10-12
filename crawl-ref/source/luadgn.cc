@@ -669,8 +669,8 @@ static int dgn_set_random_mon_list(lua_State *ls)
     }
     else if (nargs == 2)
     {
-        map_def **_map(
-                clua_get_userdata<map_def*>(ls, MAP_METATABLE, 1));
+        map_def **_map =
+                clua_get_userdata<map_def*>(ls, MAP_METATABLE, 1);
         map = *_map;
     }
 
@@ -3466,8 +3466,8 @@ static mons_list _lua_get_mlist(lua_State *ls, int ndx)
     }
     else
     {
-        mons_list **mlist(
-            clua_get_userdata<mons_list*>(ls, MONSLIST_METATABLE, ndx));
+        mons_list **mlist =
+            clua_get_userdata<mons_list*>(ls, MONSLIST_METATABLE, ndx);
         if (mlist)
             return (**mlist);
 
@@ -3491,8 +3491,8 @@ static item_list _lua_get_ilist(lua_State *ls, int ndx)
     }
     else
     {
-        item_list **ilist(
-            clua_get_userdata<item_list*>(ls, ITEMLIST_METATABLE, ndx));
+        item_list **ilist =
+            clua_get_userdata<item_list*>(ls, ITEMLIST_METATABLE, ndx);
         if (ilist)
             return (**ilist);
 

@@ -482,7 +482,7 @@ bool is_read_safe_path(const std::string &path)
     {
         assert_read_safe_path(path);
     }
-    catch (const std::string &err)
+    catch (const std::string &)
     {
         return (false);
     }
