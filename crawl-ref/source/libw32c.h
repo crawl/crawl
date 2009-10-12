@@ -1,6 +1,8 @@
 #ifndef LIBW32C_H
 #define LIBW32C_H
 
+#ifndef USE_TILE
+
 #include <string>
 #include <stdarg.h>
 #include <stdio.h>
@@ -56,5 +58,7 @@ inline void put_colour_ch(int colour, unsigned ch)
     textattr(colour);
     putwch(ch);
 }
+
+#endif
 
 #endif

@@ -48,6 +48,14 @@ REVISION("$Rev$");
 #include <sys/stat.h>
 #include <SDL_opengl.h>
 
+/* These aren't defined on Win32 */
+#ifndef S_IWUSR
+#define S_IWUSR (unsigned int)-1
+#endif
+#ifndef S_IRUSR
+#define S_IRUSR (unsigned int)-1
+#endif
+
 coord_def Region::NO_CURSOR(-1, -1);
 
 int TextRegion::print_x;

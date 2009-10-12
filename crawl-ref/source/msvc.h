@@ -4,18 +4,24 @@
  *  Written by: Paul Du Bois
  */
 
-#if defined(_MSC_VER)
+#ifndef __msvc_h
+#define __msvc_h
 
+#if defined(TARGET_COMPILER_VC)
+
+#include <io.h>
 
 #define fileno _fileno
 #define itoa _itoa
 #define snprintf _snprintf
 #define strcasecmp _stricmp
+#define strdup _strdup
 #define stricmp _stricmp
 #define strlwr _strlwr
 #define strncasecmp _strnicmp
 #define strnicmp _strnicmp
 #define unlink _unlink
+#define ftruncate _chsize
 
 // No va_copy in MSVC
 #if !defined(va_copy)
@@ -55,7 +61,8 @@ struct dirent
 DIR* opendir(const char* path);
 dirent* readdir(DIR*);
 int closedir(DIR*);
-int ftruncate(int fp, int size);
 
 
 #endif /* defined(_MSC_VER) */
+
+#endif
