@@ -371,10 +371,12 @@ CFWARN += -Winvalid-pch
 endif
 
 # Cygwin has a panic attack if we do this...
+ifneq ($(OPTIMIZE),n)
 ifneq ($(UNAME_S),CYGWIN)
 CFWARN += -Wuninitialized
 else
 CFWARN += -Wno-uninitialized
+endif
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
