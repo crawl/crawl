@@ -412,6 +412,10 @@ brown ooze
 
 A viscous liquid, flowing along the floor in search of organic matter to corrode.
 %%%%
+bush
+
+A woody plant that, unlike trees, can be removed even with bare hands.  It looks dry enough to be easily set on fire.
+%%%%
 water moccasin
 
 A largish venomous brown snake. It usually lives near water, and is an able swimmer.

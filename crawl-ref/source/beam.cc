@@ -2229,25 +2229,16 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (doFlavouredEffects)
                 simple_monster_message(monster, " resists.");
         }
-        else if (original < hurted)
+        else if (original < hurted && doFlavouredEffects)
         {
             if (mons_is_icy(monster->type))
-            {
-                if (doFlavouredEffects)
-                    simple_monster_message(monster, " melts!");
-            }
+                simple_monster_message(monster, " melts!");
+            else if (monster->type == MONS_BUSH)
+                simple_monster_message(monster, " is on fire!");
+            else if (pbolt.flavour == BEAM_FIRE)
+                simple_monster_message(monster, " is burned terribly!");
             else
-            {
-                if (doFlavouredEffects)
-                {
-                    if (pbolt.flavour == BEAM_FIRE)
-                        simple_monster_message(monster,
-                                               " is burned terribly!");
-                    else
-                        simple_monster_message(monster,
-                                               " is scalded terribly!");
-                }
-            }
+                simple_monster_message(monster, " is scalded terribly!");
         }
         break;
 

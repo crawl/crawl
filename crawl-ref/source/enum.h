@@ -1870,6 +1870,7 @@ enum monster_type                      // (int) menv[].type
     MONS_FLAMING_CORPSE,
     MONS_HARPY,
     MONS_TOADSTOOL,                    //  198
+    MONS_BUSH,
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,

@@ -1335,7 +1335,7 @@ public:
     void scale_hp(int num, int den);
     bool gain_exp(int exp);
 
-    void react_to_damage(int damage, beam_type flavour);
+    void react_to_damage(int damage, beam_type flavour, kill_category whose);
 
     void forget_random_spell();
 

@@ -92,12 +92,15 @@ unsigned short los_param_base::cloud_idx(const coord_def& p) const
 
 opacity_type los_param_base::opacity(const coord_def& p) const
 {
+    int m;
     dungeon_feature_type f = feature(p);
     if (grid_is_opaque(f))
         return OPC_OPAQUE;
     else if (is_opaque_cloud(cloud_idx(p)))
         return OPC_HALF;
     else if (f == DNGN_TREES)
+        return OPC_HALF;
+    else if ((m = mgrd(trans(p))) && menv[m].type == MONS_BUSH)
         return OPC_HALF;
     else
         return OPC_CLEAR;
