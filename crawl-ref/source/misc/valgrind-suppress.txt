@@ -17,8 +17,20 @@
 	obj:*libstdc++*
 	obj:*libstdc++*
 	obj:*libstdc++*
-	obj:*libstdc++*
 	fun:*get_savedir_filename*
+	fun:*save_game*
+}
+
+# Not sure what causes escape_path_spaces() in save_game() to leak, but
+# since we're going to be exiting right away it doesn't really matter.
+{
+	save_game_escape_path_leak
+	Memcheck:Leak
+	obj:*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	fun:*escape_path_spaces*
 	fun:*save_game*
 }
 
