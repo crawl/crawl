@@ -17,7 +17,6 @@ REVISION("$Rev$");
 #include "menu.h" // For print_formatted_paragraph()
 #include "message.h"
 #include "mon-util.h"
-#include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "state.h"

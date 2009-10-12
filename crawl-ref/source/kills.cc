@@ -9,13 +9,11 @@ REVISION("$Rev$");
 
 #include <algorithm>
 
-#include "chardump.h"
 #include "describe.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "files.h"
 #include "ghost.h"
-#include "itemname.h"
 #include "place.h"
 #include "travel.h"
 #include "tags.h"
@@ -397,6 +395,9 @@ std::string apostrophise(const std::string &name)
 {
     if (name.empty())
         return (name);
+
+    if (name == "it" || name == "It")
+        return (name + "s");
 
     const char lastc = name[name.length() - 1];
     return (name + (lastc == 's' ? "'" : "'s"));

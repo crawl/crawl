@@ -1,19 +1,32 @@
 
+ifeq ($(shell uname -s),Darwin)
+SDL_CFLAGS := -I/Library/Frameworks/SDL.framework/Headers -I/Library/Frameworks/SDL_image.framework/Headers
+SDL_LDFLAGS := -framework SDL -framework SDL_image
+
+PNG_CFLAGS := -I/Library/Frameworks/libpng.framework/Headers
+PNG_LDFLAGS := -framework libpng
+
+CFLAGS := -F/Library/Frameworks $(SDL_CFLAGS) $(PNG_CFLAGS)
+LDFLAGS := -F/Library/Frameworks $(SDL_LDFLAGS) $(PNG_LDFLAGS)
+
+# FIXME: We need 32-bit until SDL 1.2.14 comes out
+CXX ?= g++ -m32
+
+else
+
 SDL_CFLAGS := $(shell sdl-config --cflags)
 SDL_LDFLAGS := $(shell sdl-config --libs)
 
-ifeq ($(strip $(OSX)),y)
-PNG_INCLUDE := -I/sw/include
-PNG_LIB := -L/sw/lib
-else
-PNG_INCLUDE :=
-PNG_LIB :=
-endif
+PNG_INCLUDE := $(shell pkg-config libpng --cflags)
+PNG_LIB := $(shell pkg-config libpng --libs)
 
 CFLAGS := $(SDL_CFLAGS) $(PNG_INCLUDE)
 LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_image -lpng
 
-CXX = g++
+CXX ?= g++
+
+endif
+
 DELETE = rm -f
 
 TOOLDIR := tool
@@ -25,21 +38,30 @@ HEADERS := $(INPUTS:%=tiledef-%.h)
 SOURCE := $(INPUTS:%=tiledef-%.cc)
 IMAGES := $(INPUTS:%=%.png)
 
+ifneq ($(findstring $(MAKEFLAGS),s),s)
+ifndef V
+        QUIET_CXX      = @echo '   ' CXX $@;
+        QUIET_GEN      = @echo '   ' GEN $*;
+        QUIET_LINK     = @echo '   ' LINK $@;
+        export V
+endif
+endif
+
 BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
 OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
 all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 
 tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
-	$(TILEGEN) $<
+	$(QUIET_GEN)$(TILEGEN) $<
 
 clean:
 	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES)
 
 distclean: clean
 
-.cc.o:
-	${CXX} ${CFLAGS} -c $< -o $@
+%.o: %.cc
+	$(QUIET_CXX)$(CXX) $(CFLAGS) -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
-	${CXX} ${LDFLAGS} $(OBJECTS) -o $@
+	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) -o $@

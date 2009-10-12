@@ -8,7 +8,6 @@ REVISION("$Rev$");
 
 #include "defines.h"
 #include "directn.h"
-#include "initfile.h"
 #include "itemname.h" // is_vowel()
 #include "libutil.h"
 #include "externs.h"
@@ -32,7 +31,7 @@ REVISION("$Rev$");
 
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
-    #if defined(WIN32CONSOLE) || defined(WIN32TILES) || defined(DOS)
+    #if defined(WIN32CONSOLE) || defined(WIN32TILES) || defined(TARGET_OS_DOS)
         #define PCRE_STATIC
     #endif
 

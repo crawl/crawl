@@ -15,7 +15,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <ctype.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -28,7 +28,6 @@ REVISION("$Rev$");
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
-#include "initfile.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -358,36 +357,32 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
     const bool can_sac = you.duration[DUR_PRAYER]
                          && god_likes_butchery(you.religion);
 
-    if (can_sac && !rotten)
+    if (can_sac)
     {
-        start_delay(DELAY_OFFER_CORPSE, 0, corpse_id);
-
-        // Kiku torments if you butcher a corpse while praying.
-        if (you.religion == GOD_KIKUBAAQUDGHA
-            && you.piety >= piety_breakpoint(4))
+        if (!rotten)
         {
-            simple_god_message(" inflicts torment against the living!");
-            torment(TORMENT_GENERIC, you.pos());
-            you.piety -= 8 + random2(4); // 8 to 12
+            offer_and_butcher_corpse(corpse_id);
+
+            // Kikubaaqudgha torments if you butcher a fresh corpse
+            // while praying.
+            if (you.religion == GOD_KIKUBAAQUDGHA
+                && you.piety >= piety_breakpoint(4))
+            {
+                simple_god_message(" inflicts torment against the living!");
+                torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+                you.piety -= 8 + random2(4); // 8 to 12
+            }
         }
+        else
+            simple_god_message(" refuses to accept that mouldy sacrifice!");
     }
     else
     {
-        if (can_sac && rotten)
-        {
-            simple_god_message(coinflip() ? " refuses to accept that"
-                                            " mouldy sacrifice!"
-                                          : " demands fresh blood!",
-                               you.religion);
-        }
-
         // Start work on the first corpse we butcher.
         if (first_corpse)
             mitm[corpse_id].plus2++;
 
-        int work_req = 4 - mitm[corpse_id].plus2;
-        if (work_req < 0)
-            work_req = 0;
+        int work_req = std::max(0, 4 - mitm[corpse_id].plus2);
 
         delay_type dtype = DELAY_BUTCHER;
         if (!force_butcher && !rotten
@@ -2270,10 +2265,10 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             break;
 
         case MONS_ELF:
-            food_value += random2avg((you.experience_level * 10)/duration, 2);
+            food_value += random2avg((you.experience_level * 10) / duration, 2);
 
-            // Elven blood gives a bit of mana at the end of feeding, but
-            // only from fairly fresh corpses.
+            // Elven blood gives a bit of mana at the end of feeding,
+            // but only from fairly fresh corpses.
             if (corpse.special > 150)
             {
                 if (end_feeding)
@@ -2298,7 +2293,6 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
                 case CE_CONTAMINATED:
                     food_value /= 2;
-
                     if (start_feeding)
                         mpr("Somehow this blood was not very filling!");
                     else if (end_feeding && corpse.special > 150)
@@ -2306,11 +2300,11 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     break;
 
                 case CE_POISONOUS:
-                    make_hungry(food_value/2, false);
-                    // Always print this message - maybe you lost poison res.
-                    // due to feeding.
+                    make_hungry(food_value / 2, false);
+                    // Always print this message - maybe you lost poison
+                    // resistance due to feeding.
                     mpr("Blech - this blood tastes nasty!");
-                    if (poison_player( 1 + random2(3) ))
+                    if (poison_player(1 + random2(3)))
                         xom_is_stimulated(random2(128));
                     stop_delay();
                     return;
@@ -2320,7 +2314,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     if (start_feeding)
                         mpr("This blood tastes really weird!");
                     mutate(RANDOM_MUTATION);
-                    did_god_conduct( DID_DELIBERATE_MUTATING, 10);
+                    did_god_conduct(DID_DELIBERATE_MUTATING, 10);
                     xom_is_stimulated(100);
                     // Sometimes heal by one hp.
                     if (end_feeding && corpse.special > 150 && coinflip())
@@ -2332,14 +2326,14 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     if (start_feeding)
                         mpr("This blood tastes *really* weird.");
                     give_bad_mutation();
-                    did_god_conduct( DID_DELIBERATE_MUTATING, 10);
+                    did_god_conduct(DID_DELIBERATE_MUTATING, 10);
                     xom_is_stimulated(random2(200));
                     // No healing from bad mutagenic blood.
                     break;
 
                 case CE_HCL:
-                    rot_player( 5 + random2(5) );
-                    if (disease_player( 50 + random2(100) ))
+                    rot_player(5 + random2(5));
+                    if (disease_player(50 + random2(100)))
                         xom_is_stimulated(random2(100));
                     stop_delay();
                     break;

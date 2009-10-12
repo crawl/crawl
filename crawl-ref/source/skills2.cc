@@ -17,7 +17,7 @@ REVISION("$Rev$");
 #include <stdlib.h>
 #include <ctype.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
  #include <conio.h>
 #endif
 
@@ -30,9 +30,7 @@ REVISION("$Rev$");
 #include "menu.h"
 #include "player.h"
 #include "stuff.h"
-#include "transfor.h"
 #include "tutorial.h"
-#include "view.h"
 
 typedef std::string (*string_fn)();
 typedef std::map<std::string, string_fn> skill_op_map;

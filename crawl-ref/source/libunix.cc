@@ -32,7 +32,6 @@ REVISION("$Rev$");
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
-#include "initfile.h"
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
@@ -627,7 +626,7 @@ void unixcurses_shutdown()
 
 
 /* Convert value to string */
-int itoa(int value, char *strptr, int radix)
+extern "C" char *itoa(int value, char *strptr, int radix)
 {
     unsigned int bitmask = 32768;
     int ctr = 0;
@@ -662,7 +661,7 @@ int itoa(int value, char *strptr, int radix)
 
         strptr[ctr] = (char) NULL;
     }
-    return (OK);                /* Me? Fail? Nah. */
+    return strptr;
 }
 
 int cprintf(const char *format,...)
@@ -1132,7 +1131,7 @@ int wherey()
 }
 
 
-int stricmp( const char *str1, const char *str2 )
+extern "C" int stricmp( const char *str1, const char *str2 )
 {
     return (strcmp(str1, str2));
 }

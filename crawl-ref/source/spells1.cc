@@ -31,7 +31,6 @@ REVISION("$Rev$");
 #include "los.h"
 #include "message.h"
 #include "misc.h"
-#include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
@@ -332,7 +331,7 @@ void cast_chain_lightning(int pow)
             if (invalid_monster(monster))
                 continue;
 
-            dist = grid_distance( source, monster->pos() );
+            dist = grid_distance(source, monster->pos());
 
             // check for the source of this arc
             if (!dist)
@@ -345,7 +344,7 @@ void cast_chain_lightning(int pow)
             if (dist > min_dist)
                 continue;
 
-            if (!check_line_of_sight( source, monster->pos() ))
+            if (!check_line_of_sight(source, monster->pos()))
                 continue;
 
             count++;
@@ -1464,6 +1463,12 @@ void cast_teleport_control(int power)
 
 void cast_ring_of_flames(int power)
 {
+    // You shouldn't be able to cast this in the rain. {due}
+    if (in_what_cloud(CLOUD_RAIN))
+    {
+        mpr("Your spell sizzles in the rain.");
+        return;
+    }
     _increase_duration(DUR_FIRE_SHIELD,
                        5 + (power / 10) + (random2(power) / 5), 50,
                        "The air around you leaps into flame!");

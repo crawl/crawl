@@ -58,7 +58,7 @@ enum ability_type
     ABIL_TSO_DIVINE_SHIELD = 120,           //  120
     ABIL_TSO_CLEANSING_FLAME,
     ABIL_TSO_SUMMON_DIVINE_WARRIOR,
-    ABIL_KIKU_RECEIVE_CORPSE = 130,         //  130
+    ABIL_KIKU_RECEIVE_CORPSES = 130,        //  130
     ABIL_YRED_INJURY_MIRROR = 139,
     ABIL_YRED_ANIMATE_REMAINS,              //  140
     ABIL_YRED_RECALL_UNDEAD_SLAVES,
@@ -262,6 +262,7 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_MUTAGENIC,
     BEAM_POTION_BLUE_SMOKE,
     BEAM_POTION_PURP_SMOKE,       // 60
+    BEAM_POTION_RAIN,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -440,6 +441,7 @@ enum cloud_type
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
+    CLOUD_RAIN,
     CLOUD_MUTAGENIC,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
@@ -837,7 +839,6 @@ enum delay_type
     DELAY_MEMORISE,
     DELAY_BUTCHER,
     DELAY_BOTTLE_BLOOD,
-    DELAY_OFFER_CORPSE,
     DELAY_WEAPON_SWAP,                 // for easy_butcher
     DELAY_PASSWALL,
     DELAY_DROP_ITEM,
@@ -2937,12 +2938,13 @@ enum targetting_type
 
 enum torment_source_type
 {
-    TORMENT_GENERIC = -1,
-    TORMENT_CARDS   = -2,         // Symbol of torment
-    TORMENT_SPWLD   = -3,         // Special wield torment
-    TORMENT_SCROLL  = -4,
-    TORMENT_SPELL   = -5,         // SPELL_SYMBOL_OF_TORMENT
-    TORMENT_XOM     = -6          // Xom effect
+    TORMENT_GENERIC       = -1,
+    TORMENT_CARDS         = -2,   // Symbol of torment
+    TORMENT_SPWLD         = -3,   // Special wield torment
+    TORMENT_SCROLL        = -4,
+    TORMENT_SPELL         = -5,   // SPELL_SYMBOL_OF_TORMENT
+    TORMENT_XOM           = -6,   // Xom effect
+    TORMENT_KIKUBAAQUDGHA = -7    // Kikubaaqudgha effect
 };
 
 enum trap_type                         // env.trap_type[]

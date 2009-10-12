@@ -1,6 +1,6 @@
 /*
- *  File:       los.cc
- *  Summary:    Line-of-sight algorithm.
+ *  File:        los.cc
+ *  Summary:     Line-of-sight algorithm.
  */
 
 #include "AppHdr.h"
@@ -11,7 +11,7 @@ REVISION("$Rev$");
 #include <cmath>
 #include <algorithm>
 
-#include "cloud.h"
+#include "bitary.h"
 #include "debug.h"
 #include "directn.h"
 #include "externs.h"
@@ -24,8 +24,6 @@ REVISION("$Rev$");
 // The LOS code now uses raycasting -- haranp
 
 #define LONGSIZE (sizeof(unsigned long)*8)
-#define LOS_MAX_RANGE_X 9
-#define LOS_MAX_RANGE_Y 9
 #define LOS_MAX_RANGE 9
 
 // the following two constants represent the 'middle' of the sh array.
@@ -38,24 +36,44 @@ const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
 const coord_def sh_o = coord_def(sh_xo, sh_yo);
 
-unsigned long* los_blockrays = NULL;
-unsigned long* dead_rays     = NULL;
-unsigned long* smoke_rays    = NULL;
-std::vector<short> ray_coord_x;
-std::vector<short> ray_coord_y;
-std::vector<short> compressed_ray_x;
-std::vector<short> compressed_ray_y;
-std::vector<int> raylengths;
-std::vector<ray_def> fullrays;
+// These store all unique (in terms of footprint) full rays.
+// The footprint of fullray[i] consists of fullray[i].length cells,
+// whose coordinates are stored in ray_coords after the
+//  coordinates of fullray[i-1].
+// These are filled during precomputation (_register_ray).
+struct los_ray;
+std::vector<los_ray> fullrays;
+std::vector<coord_def> ray_coords;
+
+// These store certain unique subsequences of ray_coords.
+// Filled during precomputation (_create_blockrays)
+std::vector<coord_def> compressed_ray;
+
+// 3D bit array indexed by x coord, y coord, cellray index.
+// Bit los_blockrays[x][y][i] is set iff a wall at (x,y) blocks
+// the cellray starting at compressed_ray[i].
+typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
+blockrays_t los_blockrays;
+
+// Temporary arrays used in losight() to track which rays
+// are blocked or have seen a smoke cloud.
+// Allocated when doing the precomputations.
+bit_array *dead_rays     = NULL;
+bit_array *smoke_rays    = NULL;
 
 void clear_rays_on_exit()
 {
-    delete[] dead_rays;
-    delete[] smoke_rays;
-    delete[] los_blockrays;
+   delete dead_rays;
+   delete smoke_rays;
+   for (int x = 0; x <= LOS_MAX_RANGE; x++)
+       for (int y = 0; y <= LOS_MAX_RANGE; y++)
+           delete los_blockrays[x][y];
 }
 
-int _los_radius_squared = LOS_RADIUS * LOS_RADIUS + 1;
+// pre-squared LOS radius
+#define LOS_RADIUS2 (LOS_RADIUS * LOS_RADIUS + 1)
+
+int _los_radius_squared = LOS_RADIUS2;
 
 void setLOSRadius(int newLR)
 {
@@ -68,122 +86,126 @@ int get_los_radius_squared()
     return _los_radius_squared;
 }
 
-bool _get_bit_in_long_array( const unsigned long* data, int where )
-{
-    int wordloc = where / LONGSIZE;
-    int bitloc = where % LONGSIZE;
-    return ((data[wordloc] & (1UL << bitloc)) != 0);
-}
-
-static void _set_bit_in_long_array( unsigned long* data, int where )
-{
-    int wordloc = where / LONGSIZE;
-    int bitloc = where % LONGSIZE;
-    data[wordloc] |= (1UL << bitloc);
-}
-
-bool double_is_zero( const double x )
+bool double_is_zero(const double x)
 {
     return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
 }
 
-// Check if the passed ray has already been created.
-static bool _is_duplicate_ray( int len, int xpos[], int ypos[] )
+struct los_ray : ray_def
 {
-    int cur_offset = 0;
-    for (unsigned int i = 0; i < raylengths.size(); ++i)
+    unsigned int start;
+    unsigned int length;
+
+    los_ray(double ax, double ay, double s)
+        : ray_def(ax, ay, s, QUAD_SE), length(0)
     {
-        // Only compare equal-length rays.
-        if (raylengths[i] != len)
-        {
-            cur_offset += raylengths[i];
-            continue;
-        }
-
-        int j;
-        for (j = 0; j < len; ++j)
-        {
-            if (ray_coord_x[j + cur_offset] != xpos[j]
-                || ray_coord_y[j + cur_offset] != ypos[j])
-            {
-                break;
-            }
-        }
-
-        // Exact duplicate?
-        if (j == len)
-            return (true);
-
-        // Move to beginning of next ray.
-        cur_offset += raylengths[i];
     }
-    return (false);
+
+    // Shoot a ray from the given start point (accx, accy) with the given
+    // slope, bounded by the given pre-squared LOS radius.
+    std::vector<coord_def> footprint(int radius2)
+    {
+        std::vector<coord_def> cs;
+        los_ray copy = *this;
+        coord_def c;
+        int cellnum;
+        for (cellnum = 0; true; ++cellnum)
+        {
+            copy.raw_advance_0();
+            c = copy.pos();
+            if (c.abs() > radius2)
+                break;
+            cs.push_back(c);
+        }
+        return cs;
+    }
+
+    coord_def operator[](unsigned int i)
+    {
+        ASSERT(0 <= i && i < length);
+        return ray_coords[start+i];
+    }
+};
+
+// Check if the passed rays have identical footprint.
+static bool _is_same_ray(los_ray ray, std::vector<coord_def> newray)
+{
+    if (ray.length != newray.size())
+        return false;
+    for (unsigned int i = 0; i < ray.length; i++)
+        if (ray[i] != newray[i])
+            return false;
+    return true;
+}
+
+// Check if the passed ray has already been created.
+static bool _is_duplicate_ray(std::vector<coord_def> newray)
+{
+    for (unsigned int i = 0; i < fullrays.size(); ++i)
+        if (_is_same_ray(fullrays[i], newray))
+            return true;
+    return false;
 }
 
 // Is starta...lengtha a subset of startb...lengthb?
-static bool _is_subset( int starta, int startb, int lengtha, int lengthb )
+static bool _is_subset(int starta, int startb, int lengtha, int lengthb)
 {
     int cura = starta, curb = startb;
     int enda = starta + lengtha, endb = startb + lengthb;
 
     while (cura < enda && curb < endb)
     {
-        if (ray_coord_x[curb] > ray_coord_x[cura])
+        if (ray_coords[curb].x > ray_coords[cura].x)
             return (false);
-        if (ray_coord_y[curb] > ray_coord_y[cura])
+        if (ray_coords[curb].y > ray_coords[cura].y)
             return (false);
 
-        if (ray_coord_x[cura] == ray_coord_x[curb]
-            && ray_coord_y[cura] == ray_coord_y[curb])
-        {
-            ++cura;
-        }
+        if (ray_coords[cura] == ray_coords[curb])
+             ++cura;
 
-        ++curb;
+         ++curb;
     }
 
     return (cura == enda);
 }
 
 // Returns a vector which lists all the nonduped cellrays (by index).
+// A cellray c in a fullray f is duped if there is a fullray g
+// such that g contains c and g[:c] is a subset of f[:c].
 static std::vector<int> _find_nonduped_cellrays()
 {
-    // A cellray c in a fullray f is duped if there is a fullray g
-    // such that g contains c and g[:c] is a subset of f[:c].
-    int raynum, cellnum, curidx, testidx, testray, testcell;
     bool is_duplicate;
-
     std::vector<int> result;
-    for (curidx = 0, raynum = 0;
-         raynum < static_cast<int>(raylengths.size());
-         curidx += raylengths[raynum++])
+
+    for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
-        for (cellnum = 0; cellnum < raylengths[raynum]; ++cellnum)
+        los_ray ray = fullrays[r];
+        for (unsigned int i = 0; i < ray.length; ++i)
         {
-            // Is the cellray raynum[cellnum] duplicated?
+            // Is the cellray ray[0..i] duplicated?
             is_duplicate = false;
+
             // XXX: We should really check everything up to now
             // completely, and all further rays to see if they're
             // proper subsets.
-            const int curx = ray_coord_x[curidx + cellnum];
-            const int cury = ray_coord_y[curidx + cellnum];
-            for (testidx = 0, testray = 0; testray < raynum;
-                 testidx += raylengths[testray++])
+
+            // Test against all previous fullrays.
+            for (unsigned int s = 0; s < r; ++s)
             {
+                los_ray prev = fullrays[s];
+
                 // Scan ahead to see if there's an intersect.
-                for (testcell = 0; testcell < raylengths[raynum]; ++testcell)
+                for (unsigned int j = 0; j < prev.length; ++j)
                 {
-                    const int testx = ray_coord_x[testidx + testcell];
-                    const int testy = ray_coord_y[testidx + testcell];
-                    // We can short-circuit sometimes.
-                    if (testx > curx || testy > cury)
+                    // Short-circuit if we've passed ray[i]
+                    // in either coordinate.
+                    if (prev[j].x > ray[i].x || prev[j].y > ray[i].y)
                         break;
 
-                    // Bingo!
-                    if (testx == curx && testy == cury)
+                    if (prev[j] == ray[i])
                     {
-                        is_duplicate = _is_subset(testidx, curidx,
-                                                  testcell, cellnum);
+                        is_duplicate = _is_subset(prev.start, ray.start,
+                                                  j, i);
                         break;
                     }
                 }
@@ -191,117 +213,81 @@ static std::vector<int> _find_nonduped_cellrays()
                     break;      // No point in checking further rays.
             }
             if (!is_duplicate)
-                result.push_back(curidx + cellnum);
+                result.push_back(ray.start + i);
         }
     }
     return result;
 }
 
 // Create and register the ray defined by the arguments.
-// Return true if the ray was actually registered (i.e., not a duplicate.)
-static bool _register_ray( double accx, double accy, double slope )
+static void _register_ray(double accx, double accy, double slope)
 {
-    int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
-    int raylen = shoot_ray(accx, accy, slope, LOS_MAX_RANGE, xpos, ypos);
+    los_ray ray = los_ray(accx, accy, slope);
+    std::vector<coord_def> coords = ray.footprint(LOS_RADIUS2);
 
-    // Early out if ray already exists.
-    if (_is_duplicate_ray(raylen, xpos, ypos))
-        return (false);
+    if (_is_duplicate_ray(coords))
+        return;
 
-    // Not duplicate, register.
-    for (int i = 0; i < raylen; ++i)
-    {
-        // Create the cellrays.
-        ray_coord_x.push_back(xpos[i]);
-        ray_coord_y.push_back(ypos[i]);
-    }
-
-    // Register the fullray.
-    raylengths.push_back(raylen);
-    ray_def ray;
-    ray.accx = accx;
-    ray.accy = accy;
-    ray.slope = slope;
-    ray.quadrant = 0;
+    ray.start = ray_coords.size();
+    ray.length = coords.size();
+    for (unsigned int i = 0; i < coords.size(); i++)
+        ray_coords.push_back(coords[i]);
     fullrays.push_back(ray);
-
-    return (true);
 }
 
 static void _create_blockrays()
 {
     // determine nonduplicated rays
-    std::vector<int> nondupe_cellrays    = _find_nonduped_cellrays();
-    const unsigned int num_nondupe_rays  = nondupe_cellrays.size();
-    const unsigned int num_nondupe_words =
-        (num_nondupe_rays + LONGSIZE - 1) / LONGSIZE;
-    const unsigned int num_cellrays = ray_coord_x.size();
-    const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
+    std::vector<int> nondupe_cellrays = _find_nonduped_cellrays();
+    const int num_nondupe_rays        = nondupe_cellrays.size();
+    const int num_cellrays            = ray_coords.size();
+    blockrays_t full_los_blockrays;
+
+    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
+        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
+        {
+            full_los_blockrays[x][y] = new bit_array(num_cellrays);
+            los_blockrays[x][y] = new bit_array(num_nondupe_rays);
+        }
 
     // first build all the rays: easier to do blocking calculations there
-    unsigned long* full_los_blockrays;
-    full_los_blockrays = new unsigned long[num_words * (LOS_MAX_RANGE_X+1) *
-                                           (LOS_MAX_RANGE_Y+1)];
-    memset((void*)full_los_blockrays, 0, sizeof(unsigned long) * num_words *
-           (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
-
-    int cur_offset = 0;
-
-    for (unsigned int ray = 0; ray < raylengths.size(); ++ray)
+    for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
-        for (int i = 0; i < raylengths[ray]; ++i)
+        los_ray ray = fullrays[r];
+        for (unsigned int i = 0; i < ray.length; ++i)
         {
-            // every cell blocks...
-            unsigned long* const inptr = full_los_blockrays +
-                (ray_coord_x[i + cur_offset] * (LOS_MAX_RANGE_Y + 1) +
-                 ray_coord_y[i + cur_offset]) * num_words;
-
-            // ...all following cellrays
-            for (int j = i+1; j < raylengths[ray]; ++j)
-                _set_bit_in_long_array( inptr, j + cur_offset );
-
+            coord_def p = ray[i];
+            // every cell blocks all following cellrays
+            for (unsigned int j = i + 1; j < ray.length; ++j)
+                full_los_blockrays(p)->set(ray.start+j);
         }
-        cur_offset += raylengths[ray];
     }
 
     // we've built the basic blockray array; now compress it, keeping
     // only the nonduplicated cellrays.
 
-    // allocate and clear memory
-    los_blockrays = new unsigned long[num_nondupe_words * (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y + 1)];
-    memset((void*)los_blockrays, 0, sizeof(unsigned long) * num_nondupe_words *
-           (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
-
     // we want to only keep the cellrays from nondupe_cellrays.
-    compressed_ray_x.resize(num_nondupe_rays);
-    compressed_ray_y.resize(num_nondupe_rays);
-    for (unsigned int i = 0; i < num_nondupe_rays; ++i)
-    {
-        compressed_ray_x[i] = ray_coord_x[nondupe_cellrays[i]];
-        compressed_ray_y[i] = ray_coord_y[nondupe_cellrays[i]];
-    }
-    unsigned long* oldptr = full_los_blockrays;
-    unsigned long* newptr = los_blockrays;
-    for (int x = 0; x <= LOS_MAX_RANGE_X; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE_Y; ++y)
-        {
-            for (unsigned int i = 0; i < num_nondupe_rays; ++i)
-                if (_get_bit_in_long_array(oldptr, nondupe_cellrays[i]))
-                    _set_bit_in_long_array(newptr, i);
+    compressed_ray.resize(num_nondupe_rays);
+    for (int i = 0; i < num_nondupe_rays; ++i)
+        compressed_ray[i] = ray_coords[nondupe_cellrays[i]];
 
-            oldptr += num_words;
-            newptr += num_nondupe_words;
-        }
+    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
+        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
+            for (int i = 0; i < num_nondupe_rays; ++i)
+                los_blockrays[x][y]->set(i,
+                    full_los_blockrays[x][y]->get(nondupe_cellrays[i]));
 
     // we can throw away full_los_blockrays now
-    delete[] full_los_blockrays;
+    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
+        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
+            delete full_los_blockrays[x][y];
 
-    dead_rays  = new unsigned long[num_nondupe_words];
-    smoke_rays = new unsigned long[num_nondupe_words];
+    dead_rays  = new bit_array(num_nondupe_rays);
+    smoke_rays = new bit_array(num_nondupe_rays);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
-          num_cellrays, raylengths.size(), num_nondupe_rays );
+          num_cellrays, fullrays.size(), num_nondupe_rays );
 #endif
 }
 
@@ -337,8 +323,8 @@ void raycast()
 
     // register perpendiculars FIRST, to make them top choice
     // when selecting beams
-    _register_ray( 0.5, 0.5, 1000.0 );
-    _register_ray( 0.5, 0.5, 0.0 );
+    _register_ray(0.5, 0.5, 1000.0);
+    _register_ray(0.5, 0.5, 0.0);
 
     // For a slope of M = y/x, every x we move on the X axis means
     // that we move y on the y axis. We want to look at the resolution
@@ -349,24 +335,24 @@ void raycast()
     // Changing the order a bit. We want to order by the complexity
     // of the beam, which is log(x) + log(y) ~ xy.
     std::vector<std::pair<int,int> > xyangles;
-    for ( int xangle = 1; xangle <= 2*LOS_MAX_RANGE; ++xangle )
-        for ( int yangle = 1; yangle <= 2*LOS_MAX_RANGE; ++yangle )
+    for (int xangle = 1; xangle <= 2*LOS_MAX_RANGE; ++xangle)
+        for (int yangle = 1; yangle <= 2*LOS_MAX_RANGE; ++yangle)
         {
-            if ( _gcd(xangle, yangle) == 1 )
+            if (_gcd(xangle, yangle) == 1)
                 xyangles.push_back(std::pair<int,int>(xangle, yangle));
         }
 
-    std::sort( xyangles.begin(), xyangles.end(), complexity_lt );
-    for ( unsigned int i = 0; i < xyangles.size(); ++i )
+    std::sort(xyangles.begin(), xyangles.end(), complexity_lt);
+    for (unsigned int i = 0; i < xyangles.size(); ++i)
     {
         const int xangle = xyangles[i].first;
         const int yangle = xyangles[i].second;
 
         const double slope = ((double)(yangle)) / xangle;
         const double rslope = ((double)(xangle)) / yangle;
-        for ( int intercept = 1; intercept <= 2*yangle; ++intercept )
+        for (int intercept = 1; intercept <= 2*yangle; ++intercept )
         {
-            double xstart = ((double)(intercept)) / (2*yangle);
+            double xstart = ((double)intercept) / (2*yangle);
             double ystart = 1;
 
             // now move back just inside the cell
@@ -374,9 +360,9 @@ void raycast()
             xstart -= EPSILON_VALUE * xangle;
             ystart -= EPSILON_VALUE * yangle;
 
-            _register_ray( xstart, ystart, slope );
+            _register_ray(xstart, ystart, slope);
             // also draw the identical ray in octant 2
-            _register_ray( ystart, xstart, rslope );
+            _register_ray(ystart, xstart, rslope);
         }
     }
 
@@ -384,27 +370,26 @@ void raycast()
     _create_blockrays();
 }
 
-static void _set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
+static void _set_ray_quadrant(ray_def& ray, int sx, int sy, int tx, int ty)
 {
     if ( tx >= sx && ty >= sy )
-        ray.quadrant = 0;
+        ray.quadrant = QUAD_SE;
     else if ( tx < sx && ty >= sy )
-        ray.quadrant = 1;
+        ray.quadrant = QUAD_SW;
     else if ( tx < sx && ty < sy )
-        ray.quadrant = 2;
+        ray.quadrant = QUAD_NW;
     else if ( tx >= sx && ty < sy )
-        ray.quadrant = 3;
+        ray.quadrant = QUAD_NE;
     else
         mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
 }
 
-static int _cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
-                           int maxvalue )
+static int _cyclic_offset(int i, int cycle_dir, int startpoint,
+                          int maxvalue)
 {
-    const int i = (int)ui;
-    if ( startpoint < 0 )
+    if (startpoint < 0)
         return i;
-    switch ( cycle_dir )
+    switch (cycle_dir)
     {
     case 1:
         return (i + startpoint + 1) % maxvalue;
@@ -461,11 +446,11 @@ static bool _superior_ray(int shortest, int imbalance,
 // If find_shortest is true, examine all rays that hit the target and
 // take the shortest (starting at ray.fullray_idx).
 
-bool find_ray( const coord_def& source, const coord_def& target,
-               bool allow_fallback, ray_def& ray, int cycle_dir,
-               bool find_shortest, bool ignore_solid )
+bool find_ray(const coord_def& source, const coord_def& target,
+              bool allow_fallback, ray_def& ray, int cycle_dir,
+              bool find_shortest, bool ignore_solid)
 {
-    int cellray, inray;
+    unsigned int cellray, inray;
 
     const int sourcex = source.x;
     const int sourcey = source.y;
@@ -476,6 +461,7 @@ bool find_ray( const coord_def& source, const coord_def& target,
     const int signy = ((targety - sourcey >= 0) ? 1 : -1);
     const int absx  = signx * (targetx - sourcex);
     const int absy  = signy * (targety - sourcey);
+    const coord_def abs = coord_def(absx, absy);
 
     int cur_offset  = 0;
     int shortest    = INFINITE_DISTANCE;
@@ -484,19 +470,15 @@ bool find_ray( const coord_def& source, const coord_def& target,
     double slope_diff       = VERTICAL_SLOPE * 10.0;
     std::vector<coord_def> unaliased_ray;
 
-    for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
+    for (unsigned int fray = 0; fray < fullrays.size(); ++fray)
     {
-        const int fullray = _cyclic_offset( fray, cycle_dir, ray.fullray_idx,
-                                            fullrays.size() );
-        // Yeah, yeah, this is O(n^2). I know.
-        cur_offset = 0;
-        for (int i = 0; i < fullray; ++i)
-            cur_offset += raylengths[i];
+        const int fullray = _cyclic_offset(fray, cycle_dir, ray.fullray_idx,
+                                           fullrays.size());
+        los_ray lray = fullrays[fullray];
 
-        for (cellray = 0; cellray < raylengths[fullray]; ++cellray)
+        for (cellray = 0; cellray < lray.length; ++cellray)
         {
-            if (ray_coord_x[cellray + cur_offset] == absx
-                && ray_coord_y[cellray + cur_offset] == absy)
+            if (lray[cellray] == abs)
             {
                 if (find_shortest)
                 {
@@ -510,8 +492,8 @@ bool find_ray( const coord_def& source, const coord_def& target,
                 int real_length = 0;
                 for (inray = 0; inray <= cellray; ++inray)
                 {
-                    const int xi = signx * ray_coord_x[inray + cur_offset];
-                    const int yi = signy * ray_coord_y[inray + cur_offset];
+                    const int xi = signx * ray_coords[inray + cur_offset].x;
+                    const int yi = signy * ray_coords[inray + cur_offset].y;
                     if (inray < cellray && !ignore_solid
                         && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
                     {
@@ -575,7 +557,7 @@ bool find_ray( const coord_def& source, const coord_def& target,
                 }
 
                 const double ray_slope_diff = find_shortest ?
-                    fabs(_slope_factor(fullrays[fullray]) - want_slope) : 0.0;
+                    fabs(_slope_factor(lray) - want_slope) : 0.0;
 
                 if (!blocked
                     &&  (!find_shortest
@@ -584,7 +566,7 @@ bool find_ray( const coord_def& source, const coord_def& target,
                                           slope_diff, ray_slope_diff)))
                 {
                     // Success!
-                    ray             = fullrays[fullray];
+                    ray             = lray;
                     ray.fullray_idx = fullray;
 
                     shortest   = real_length;
@@ -730,18 +712,14 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
 
 void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
 {
-    const unsigned int num_cellrays = compressed_ray_x.size();
-    const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
+    const unsigned int num_cellrays = compressed_ray.size();
 
     // clear out the dead rays array
-    memset( (void*)dead_rays,  0, sizeof(unsigned long) * num_words);
-    memset( (void*)smoke_rays, 0, sizeof(unsigned long) * num_words);
+    dead_rays->reset();
+    smoke_rays->reset();
 
-    // kill all blocked rays
-    const unsigned long* inptr = los_blockrays;
-
-    for (int x = 0; x <= LOS_MAX_RANGE_X; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE_Y; ++y, inptr += num_words)
+    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
+        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
         {
             coord_def p = coord_def(sx*x, sy*y);
             if (!dat.los_bounds(p))
@@ -752,46 +730,31 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
             {
             case OPC_OPAQUE:
                 // then block the appropriate rays
-                for (unsigned int i = 0; i < num_words; ++i)
-                    dead_rays[i] |= inptr[i];
+                *dead_rays |= *los_blockrays[x][y];
                 break;
             case OPC_HALF:
                 // block rays which have already seen a cloud
-                for (unsigned int i = 0; i < num_words; ++i)
-                {
-                    dead_rays[i]  |= (smoke_rays[i] & inptr[i]);
-                    smoke_rays[i] |= inptr[i];
-                }
+                *dead_rays  |= (*smoke_rays & *los_blockrays[x][y]);
+                *smoke_rays |= *los_blockrays[x][y];
                 break;
             default:
                 break;
             }
         }
 
-    // ray calculation done, now work out which cells in this
-    // quadrant are visible
-    unsigned int rayidx = 0;
-    for (unsigned int wordloc = 0; wordloc < num_words; ++wordloc)
+    // Ray calculation done. Now work out which cells in this
+    // quadrant are visible.
+    for (unsigned int rayidx = 0; rayidx < num_cellrays; ++rayidx)
     {
-        const unsigned long curword = dead_rays[wordloc];
-        // Note: the last word may be incomplete
-        for (unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc)
+        // make the cells seen by this ray at this point visible
+        if (!dead_rays->get(rayidx))
         {
-            // make the cells seen by this ray at this point visible
-            if ( ((curword >> bitloc) & 1UL) == 0 )
-            {
-                // this ray is alive!
-                const coord_def p = coord_def(sx * compressed_ray_x[rayidx],
-                                              sy * compressed_ray_y[rayidx]);
-                // update shadow map
-                if (dat.los_bounds(p))
-                {
-                    sh(p+sh_o) = dat.appearance(p);
-                }
-            }
-            ++rayidx;
-            if (rayidx == num_cellrays)
-                break;
+            // this ray is alive!
+            const coord_def p = coord_def(sx * compressed_ray[rayidx].x,
+                                          sy * compressed_ray[rayidx].y);
+            // update shadow map
+            if (dat.los_bounds(p))
+                sh(p+sh_o) = dat.appearance(p);
         }
     }
 }
@@ -807,9 +770,7 @@ void losight(env_show_grid& sh, const los_param& dat)
     const int quadrant_y[4] = {  1,  1, -1, -1 };
 
     for (int q = 0; q < 4; ++q)
-    {
         _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
-    }
 
     // center is always visible
     const coord_def o = coord_def(0,0);
@@ -844,9 +805,9 @@ void calc_show_los()
     }
 }
 
-bool see_grid( const env_show_grid &show,
-               const coord_def &c,
-               const coord_def &pos )
+bool see_grid(const env_show_grid &show,
+              const coord_def &c,
+              const coord_def &pos)
 {
     if (c == pos)
         return (true);
@@ -862,7 +823,7 @@ bool see_grid( const env_show_grid &show,
 }
 
 // Answers the question: "Is a grid within character's line of sight?"
-bool see_grid( const coord_def &p )
+bool see_grid(const coord_def &p)
 {
     return ((crawl_state.arena || crawl_state.arena_suspended)
                 && crawl_view.in_grid_los(p))
@@ -871,14 +832,13 @@ bool see_grid( const coord_def &p )
 
 // Answers the question: "Would a grid be within character's line of sight,
 // even if all translucent/clear walls were made opaque?"
-bool see_grid_no_trans( const coord_def &p )
+bool see_grid_no_trans(const coord_def &p)
 {
     return see_grid(env.no_trans_show, you.pos(), p);
 }
 
 // Is the grid visible, but a translucent wall is in the way?
-bool trans_wall_blocking( const coord_def &p )
+bool trans_wall_blocking(const coord_def &p)
 {
     return see_grid(p) && !see_grid_no_trans(p);
 }
-

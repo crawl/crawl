@@ -29,7 +29,6 @@ REVISION("$Rev$");
 #include "initfile.h"
 #include "invent.h"
 #include "itemname.h"
-#include "item_use.h"
 #include "items.h"
 #include "libutil.h"
 #include "menu.h"
@@ -228,7 +227,7 @@ static void _print_version(void)
     // Read in information about changes in comparison to the latest version.
     FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
 
-#if defined(DOS)
+#if defined(TARGET_OS_DOS)
     if (!fp)
     {
  #ifdef DEBUG_FILES
@@ -1977,7 +1976,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             std::string fname = canonicalise_file_separator(help_files[i].name);
             FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
 
-#if defined(DOS)
+#if defined(TARGET_OS_DOS)
             if (!fp)
             {
  #ifdef DEBUG_FILES
@@ -2381,7 +2380,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>s</w>      : gain 20000 skill points\n"
                        "<w>S</w>      : set skill to level\n"
                        "<w>x</w>      : gain an experience level\n"
-                       "<w>Ctrl-X</w> : change experience level\n"
+                       "<w>Ctrl-L</w> : change experience level\n"
                        "<w>$</w>      : get 1000 gold\n"
                        "<w>]</w>      : get a mutation\n"
                        "<w>[</w>      : get a demonspawn mutation\n"
@@ -2443,6 +2442,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>F</w>      : combat stats with fsim_kit\n"
                        "<w>Ctrl-F</w> : combat stats (monster vs PC)\n"
                        "<w>Ctrl-I</w> : item generation stats\n"
+                       "<w>Ctrl-X</w> : Xom effect stats\n"
                        "<w>O</w>      : measure exploration time\n"
                        "\n"
                        "<w>?</w>      : list wizard commands\n",

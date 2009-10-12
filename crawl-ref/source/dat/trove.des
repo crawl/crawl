@@ -18,9 +18,9 @@ function trove_portal(e)
     local entry_fee = 5 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
     local desc_long = [[ Once upon a time, an enterprising thief and wizard, terrified of being caught committing an act of burglary, created a system of portals leading into the secret treasure troves and chambers of the rich. Too scared to loot them himself, he instead charged an extortionate fee for entry to anyone who wanted to rifle through them.
 
-The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered.
+The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered. With his death, the now-uncontrolled portals began moving rapidly from one dimension to the next, stopping only long enough to absorb magical energy.
 ]]
-    local timeout_turns = crawl.random_range(1600, 2800)
+    local timeout_turns = crawl.random_range(1600, 3000)
     local messager =
         timed_msg {
             visible = true,
@@ -87,7 +87,7 @@ function place_fog(e, type, strength)
 end
 }}
 
-default-depth: D:7-, Elf:1-, Vault:1- 
+default-depth: D:14-, Elf:1-, Vault:1- 
 
 ##############################################################################
 #

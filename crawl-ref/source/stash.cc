@@ -8,7 +8,6 @@
 REVISION("$Rev$");
 
 #include "artefact.h"
-#include "branch.h"
 #include "chardump.h"
 #include "cio.h"
 #include "clua.h"
@@ -30,7 +29,6 @@ REVISION("$Rev$");
 #include "mon-util.h"
 #include "monstuff.h"
 #include "notes.h"
-#include "overmap.h"
 #include "place.h"
 #include "shopping.h"
 #include "spl-book.h"
@@ -41,7 +39,6 @@ REVISION("$Rev$");
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
-#include "view.h"
 
 #include <cctype>
 #include <cstdio>

@@ -48,7 +48,7 @@ REVISION("$Rev$");
 #include "sha256.h"
 #endif
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
  #include <conio.h>
 #endif
 
@@ -72,7 +72,6 @@ REVISION("$Rev$");
 #include "output.h"
 #include "player.h"
 #include "religion.h"
-#include "skills2.h"
 #include "tutorial.h"
 #include "view.h"
 
@@ -755,7 +754,7 @@ void cio_init()
     init_libw32c();
 #endif
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
     init_libdos();
 #endif
 
@@ -828,7 +827,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
         error.clear();
     }
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(DGL_PAUSE_AFTER_ERROR)
+#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(DGL_PAUSE_AFTER_ERROR)
     if (exit_code && !crawl_state.arena
         && !crawl_state.seen_hups && !crawl_state.test)
     {

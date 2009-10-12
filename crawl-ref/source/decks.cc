@@ -33,7 +33,6 @@ REVISION("$Rev$");
 #include "monstuff.h"
 #include "mutation.h"
 #include "ouch.h"
-#include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "skills2.h"

@@ -27,7 +27,6 @@ REVISION("$Rev$");
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
@@ -45,7 +44,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "transfor.h"
 #include "travel.h"
-#include "view.h"
 
 #include <cstring>
 #include <map>
@@ -769,6 +767,10 @@ LUARET1(you_good_god, boolean,
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+LUARET1(you_god_likes_fresh_corpses, boolean,
+        lua_isstring(ls, 1) ?
+        god_likes_fresh_corpses(str_to_god(lua_tostring(ls, 1))) :
+        god_likes_fresh_corpses(you.religion))
 LUARET1(you_god_likes_butchery, boolean,
         lua_isstring(ls, 1) ?
         god_likes_butchery(str_to_god(lua_tostring(ls, 1))) :
@@ -909,8 +911,9 @@ static const struct luaL_reg you_lib[] =
     { "flying",       you_flying },
     { "transform",    you_transform },
 
-    { "god_likes_butchery",  you_god_likes_butchery  },
-    { "can_consume_corpses", you_can_consume_corpses },
+    { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
+    { "god_likes_butchery",       you_god_likes_butchery },
+    { "can_consume_corpses",      you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },
     { "taking_stairs", you_taking_stairs },
@@ -2527,14 +2530,14 @@ MDEF(hd)
 
 static const char *_monuse_names[] =
 {
-    "nothing", "open_doors", "starting_equipment",
-    "weapons_armour", "magic_items"
+    "nothing", "open_doors", "starting_equipment", "weapons_armour",
+    "magic_items"
 };
 
-static const char *_monuse_to_str(mon_itemuse_type ityp)
+static const char *_monuse_to_str(mon_itemuse_type utyp)
 {
     COMPILE_CHECK(ARRAYSZ(_monuse_names) == NUM_MONUSE, c1);
-    return _monuse_names[ityp];
+    return _monuse_names[utyp];
 }
 
 MDEF(muse)
@@ -2542,6 +2545,26 @@ MDEF(muse)
     if (const monsterentry *me = mons->find_monsterentry())
     {
         PLUARET(string, _monuse_to_str(me->gmon_use));
+    }
+    return (0);
+}
+
+static const char *_moneat_names[] =
+{
+    "nothing", "items", "corpses", "food"
+};
+
+static const char *_moneat_to_str(mon_itemeat_type etyp)
+{
+    COMPILE_CHECK(ARRAYSZ(_moneat_names) == NUM_MONEAT, c1);
+    return _moneat_names[etyp];
+}
+
+MDEF(meat)
+{
+    if (const monsterentry *me = mons->find_monsterentry())
+    {
+        PLUARET(string, _moneat_to_str(me->gmon_eat));
     }
     return (0);
 }
@@ -2582,6 +2605,7 @@ static MonsAccessor mons_attrs[] =
     { "y"   , l_mons_y    },
     { "hd"  , l_mons_hd   },
     { "muse", l_mons_muse },
+    { "meat", l_mons_meat },
     { "dismiss", l_mons_dismiss },
     { "experience", l_mons_experience },
 };

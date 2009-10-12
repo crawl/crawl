@@ -15,10 +15,8 @@ REVISION("$Rev$");
 
 #include "branch.h"
 #include "cloud.h"
-#include "it_use2.h"
 #include "mapmark.h"
 #include "ouch.h"
-#include "place.h"
 #include "player.h"
 #include "spells4.h"
 #include "stuff.h"
@@ -38,11 +36,14 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
         return 22;
+    case CLOUD_RAIN:
+        return 11;
     default:
         return 0;
     }
 }
 
+#ifdef DEBUG
 static bool _killer_whose_match(kill_category whose, killer_type killer)
 {
     switch (whose)
@@ -61,6 +62,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
     }
     return (false);
 }
+#endif
 
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
@@ -192,10 +194,10 @@ void manage_clouds()
         int dissipate = you.time_taken;
 
         // Fire clouds dissipate faster over water,
-        // cold clouds dissipate faster over lava.
+        // rain and cold clouds dissipate faster over lava.
         if (cloud.type == CLOUD_FIRE && grd(cloud.pos) == DNGN_DEEP_WATER)
             dissipate *= 4;
-        else if (cloud.type == CLOUD_COLD && grd(cloud.pos) == DNGN_LAVA)
+        else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN) && grd(cloud.pos) == DNGN_LAVA)
             dissipate *= 4;
 
         expose_items_to_element(cloud2beam(cloud.type), cloud.pos, 2);
@@ -209,6 +211,34 @@ void delete_cloud( int cloud )
     cloud_struct& c = env.cloud[cloud];
     if (c.type != CLOUD_NONE)
     {
+        if (c.type == CLOUD_RAIN)
+        {
+            // Rain clouds can occasionally leave shallow water or deepen it:
+            // If we're near lava, chance of leaving water is lower;
+            // if we're near deep water already, chance of leaving water
+            // is slightly higher.
+            if (one_chance_in((5 + count_neighbours(c.pos, DNGN_LAVA)) -
+                                   count_neighbours(c.pos, DNGN_DEEP_WATER)))
+            {
+                dungeon_feature_type feat;
+
+                if (grd(c.pos) == DNGN_FLOOR)
+                    feat = DNGN_SHALLOW_WATER;
+                else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
+                        && one_chance_in(3))
+                    // Don't drown the player!
+                    feat = DNGN_DEEP_WATER;
+                else 
+                    feat = grd(c.pos);
+
+                if (grd(c.pos) != feat)
+                {
+                    if (you.pos() == c.pos)
+                        mpr("The rain has left you waist-deep in water!");
+                    dungeon_terrain_changed(c.pos, feat);
+                }
+            }
+        }
         c.type        = CLOUD_NONE;
         c.decay       = 0;
         c.whose       = KC_OTHER;
@@ -438,6 +468,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_MIASMA;
     case BEAM_CHAOS:
         return CLOUD_CHAOS;
+    case BEAM_POTION_RAIN:
+        return CLOUD_RAIN;
     case BEAM_POTION_MUTAGENIC:
         return CLOUD_MUTAGENIC;
     case BEAM_RANDOM:
@@ -463,6 +495,7 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_STEAM:       return BEAM_STEAM;
     case CLOUD_MIASMA:      return BEAM_MIASMA;
     case CLOUD_CHAOS:       return BEAM_CHAOS;
+    case CLOUD_RAIN:        return BEAM_POTION_RAIN;
     case CLOUD_MUTAGENIC:   return BEAM_POTION_MUTAGENIC;
     case CLOUD_RANDOM:      return BEAM_RANDOM;
     }
@@ -718,6 +751,13 @@ void in_a_cloud()
         ouch(hurted, cl, KILLED_BY_CLOUD, "foul pestilence");
         break;
 
+    case CLOUD_RAIN:
+        if (you.duration[DUR_FIRE_SHIELD])
+            you.duration[DUR_FIRE_SHIELD] = 1;
+
+        mpr("You are standing in the rain.");
+        break;
+
     case CLOUD_MUTAGENIC:
         mpr("You are engulfed in a mutagenic fog!");
 
@@ -782,11 +822,35 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_BLUE_SMOKE:
     case CLOUD_PURP_SMOKE:
     case CLOUD_MIST:
+    case CLOUD_RAIN:
     case CLOUD_DEBUGGING:
         return (true);
     default:
         return (false);
     }
+}
+
+bool in_what_cloud(cloud_type type)
+{
+    int cl = env.cgrid(you.pos());
+
+    if (env.cgrid(you.pos()) == EMPTY_CLOUD)
+        return (false);
+
+    if (env.cloud[cl].type == type)
+        return (true);
+
+    return (false);
+}
+
+cloud_type in_what_cloud()
+{
+    int cl = env.cgrid(you.pos());
+
+    if (env.cgrid(you.pos()) == EMPTY_CLOUD)
+        return (CLOUD_NONE);
+
+    return (env.cloud[cl].type);
 }
 
 std::string cloud_name(cloud_type type)
@@ -819,6 +883,8 @@ std::string cloud_name(cloud_type type)
         return "thin mist";
     case CLOUD_CHAOS:
         return "seething chaos";
+    case CLOUD_RAIN:
+        return "rain";
     case CLOUD_MUTAGENIC:
         return "mutagenic fog";
     default:

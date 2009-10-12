@@ -27,7 +27,6 @@ REVISION("$Rev$");
 #include "files.h"
 #include "initfile.h"
 #include "menu.h"
-#include "misc.h"
 #include "religion.h"
 #include "shopping.h"
 #include "state.h"

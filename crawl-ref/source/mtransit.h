@@ -7,7 +7,6 @@
 #ifndef MTRANSIT_H
 #define MTRANSIT_H
 
-#include "AppHdr.h"
 #include "travel.h"
 #include <map>
 #include <list>

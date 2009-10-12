@@ -9,7 +9,7 @@ REVISION("$Rev$");
 
 #include "player.h"
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -25,7 +25,6 @@ REVISION("$Rev$");
 
 #include "artefact.h"
 #include "branch.h"
-#include "cio.h"
 #include "cloud.h"
 #include "clua.h"
 #include "delay.h"
@@ -48,7 +47,6 @@ REVISION("$Rev$");
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"
-#include "place.h"
 #include "quiver.h"
 #include "religion.h"
 #include "skills.h"
@@ -1807,6 +1805,10 @@ int player_spec_fire()
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
 
+    // if it's raining... {due}
+    if (in_what_cloud(CLOUD_RAIN))
+        sf--;
+
     return sf;
 }
 
@@ -2878,7 +2880,10 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity(burden_state_type bs)
 {
-    int cap = 3500 + (you.strength * 100) + (player_is_airborne() ? 1000 : 0);
+    int cap = (2 * you.body_weight()) + (you.strength * 200)
+              + (player_is_airborne() ? 1000 : 0);
+    // We are nice to the lighter species in that strength adds absolutely
+    // instead of relatively to body weight. --dpeg
 
     if (bs == BS_UNENCUMBERED)
         return ((cap * 5) / 6);
@@ -5284,15 +5289,15 @@ int get_contamination_level()
     if (glow > 60)
         return (glow / 20 + 2);
     if (glow > 40)
-        return 4;
+        return (4);
     if (glow > 25)
-        return 3;
+        return (3);
     if (glow > 15)
-        return 2;
+        return (2);
     if (glow > 5)
-        return 1;
+        return (1);
 
-    return 0;
+    return (0);
 }
 
 // controlled is true if the player actively did something to cause
@@ -7320,7 +7325,7 @@ bool player::can_see(const actor *target) const
 
 bool player::backlit(bool check_haloed) const
 {
-    return (get_contamination_level() >= 1 || duration[DUR_BACKLIGHT]
+    return (get_contamination_level() > 0 || duration[DUR_BACKLIGHT]
             || (check_haloed ? haloed() : false));
 }
 

@@ -16,7 +16,7 @@ REVISION("$Rev$");
 #include <time.h>
 #include <algorithm>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #include <dos.h>
 #endif
@@ -37,11 +37,8 @@ REVISION("$Rev$");
 #include "describe.h"
 #include "dungeon.h"
 #include "files.h"
-#include "fight.h"
 #include "food.h"
 #include "initfile.h"
-#include "it_use2.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -49,7 +46,6 @@ REVISION("$Rev$");
 #include "makeitem.h"
 #include "menu.h"
 #include "misc.h"
-#include "place.h"
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
@@ -58,10 +54,8 @@ REVISION("$Rev$");
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "tiles.h"
 #include "tutorial.h"
 #include "version.h"
-#include "view.h"
 
 extern std::string init_file_error;
 
@@ -536,12 +530,12 @@ int give_first_conjuration_book()
     }
     else if (you.skills[SK_FIRE_MAGIC] == 0 && you.skills[SK_EARTH_MAGIC] == 0)
     {
-        // If we're here its because we were going to default to the
+        // If we're here it's because we were going to default to the
         // fire/earth book... but we don't have those skills.  So we
         // choose randomly based on the species weighting, again
-        // ignoring air/earth which are secondary in these books.  -- bwr
-        if (random2( species_skills( SK_ICE_MAGIC, you.species ) )
-                < random2( species_skills( SK_FIRE_MAGIC, you.species ) ))
+        // ignoring air/earth which are secondary in these books. - bwr
+        if (random2(species_skills(SK_ICE_MAGIC, you.species)) <
+            random2(species_skills(SK_FIRE_MAGIC, you.species)))
         {
             book = BOOK_CONJURATIONS_II;
         }
@@ -2391,8 +2385,8 @@ static bool _choose_weapon()
 
     if (claws_allowed)
     {
-        for (int i = 3; i >= 0; i--)
-            startwep[i+1] = startwep[i];
+        for (int i = 3; i >= 0; --i)
+            startwep[i + 1] = startwep[i];
 
         startwep[0] = WPN_UNARMED;
     }
@@ -3328,7 +3322,7 @@ static bool _validate_player_name(bool verbose)
 
 bool validate_player_name(const char* name, bool verbose)
 {
-#if defined(DOS) || defined(WIN32CONSOLE) || defined(WIN32TILES)
+#if defined(TARGET_OS_DOS) || defined(WIN32CONSOLE) || defined(WIN32TILES)
     // Quick check for CON -- blows up real good under DOS/Windows.
     if (stricmp(name, "con") == 0
         || stricmp(name, "nul") == 0
@@ -3474,24 +3468,28 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     // Now fill in the type according to the random wpn_skill.
     switch (wpn_skill)
     {
-    case SK_MACES_FLAILS:
-        you.inv[slot].sub_type = WPN_MACE;
-        break;
-
-    case SK_POLEARMS:
-        you.inv[slot].sub_type = WPN_SPEAR;
-        break;
-
     case SK_SHORT_BLADES:
         you.inv[slot].sub_type = WPN_SHORT_SWORD;
+        break;
+
+    case SK_MACES_FLAILS:
+        you.inv[slot].sub_type = WPN_MACE;
         break;
 
     case SK_AXES:
         you.inv[slot].sub_type = WPN_HAND_AXE;
         break;
 
+    case SK_POLEARMS:
+        you.inv[slot].sub_type = WPN_SPEAR;
+        break;
+
     case SK_STAVES:
         you.inv[slot].sub_type = WPN_QUARTERSTAFF;
+        break;
+
+    case SK_DARTS:
+        you.inv[slot].sub_type = WPN_BLOWGUN;
         break;
 
     case SK_BOWS:
@@ -3500,10 +3498,6 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
 
     case SK_CROSSBOWS:
         you.inv[slot].sub_type = WPN_HAND_CROSSBOW;
-        break;
-
-    case SK_DARTS:
-        you.inv[slot].sub_type = WPN_BLOWGUN;
         break;
     }
 
@@ -4174,7 +4168,7 @@ void _wanderer_decent_equipment(skill_type & skill,
 
     // If we already gave an item for this type, just give the player
     // a consumable.
-    if((skill == SK_DODGING || skill == SK_STEALTH)
+    if ((skill == SK_DODGING || skill == SK_STEALTH)
         && gift_skills.find(SK_ARMOUR) != gift_skills.end())
     {
         skill = SK_TRAPS_DOORS;
@@ -4200,7 +4194,7 @@ void _wanderer_decent_equipment(skill_type & skill,
         int max_sklev = 0;
         skill_type max_skill = SK_NONE;
 
-        for (int i = 0;i < total_weapons; ++i)
+        for (int i = 0; i < total_weapons; ++i)
         {
             if (you.skills[combined_weapon_skills[i]] >= max_sklev)
             {
@@ -5346,7 +5340,17 @@ bool _give_items_skills()
         if (you.has_claws())
             you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls fight unarmed.
         else
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
+        {
+            // Races skilled with maces/flails get one, the others axes.
+            weapon_type startwep = WPN_HAND_AXE;
+            if (species_skills(SK_MACES_FLAILS, you.species) <
+                species_skills(SK_AXES, you.species))
+            {
+                startwep = (player_genus(GENPC_OGRE)) ? WPN_ANKUS : WPN_MACE;
+            }
+
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
+        }
 
         // ARMOUR
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);

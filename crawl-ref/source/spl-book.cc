@@ -15,7 +15,7 @@ REVISION("$Rev$");
 #include <algorithm>
 #include <iomanip>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
  #include <conio.h>
 #endif
 
@@ -31,13 +31,11 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "it_use3.h"
 #include "kills.h"
 #include "macro.h"
 #include "message.h"
 #include "player.h"
 #include "religion.h"
-#include "skills2.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -2256,16 +2254,13 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     // Being called from make_item_randart()
     ASSERT(book.sub_type == BOOK_RANDART_LEVEL);
-    ASSERT(level == -1 && num_spells == -1);
 
     // Re-read owner, if applicable.
     if (owner.empty() && book.props.exists("owner"))
         owner = book.props["owner"].get_string();
 
-    level = book.plus;
     ASSERT(level > 0 && level <= 9);
 
-    num_spells = book.plus2;
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
     int god_discard        = 0;

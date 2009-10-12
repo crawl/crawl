@@ -23,23 +23,19 @@ REVISION("$Rev$");
 #include "directn.h"
 #include "debug.h"
 #include "stuff.h"
-#include "itemname.h"
 #include "los.h"
 #include "macro.h"
-#include "misc.h"
 #include "monstuff.h"
 #include "notes.h"
 #include "player.h"
 #include "religion.h"
 #include "spells4.h"
-#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "terrain.h"
-#include "view.h"
 
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 

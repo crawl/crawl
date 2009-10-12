@@ -29,7 +29,7 @@ REVISION("$Rev$");
 #include <sstream>
 #include <iostream>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <dos.h>
 #include <conio.h>
 #include <file.h>
@@ -67,7 +67,6 @@ REVISION("$Rev$");
 #include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "it_use3.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -465,7 +464,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('G'): save_ghost(true); break;
     case CONTROL('H'): wizard_set_hunger_state(); break;
     case CONTROL('I'): debug_item_statistics(); break;
-    case CONTROL('X'): wizard_set_xl(); break;
+    case CONTROL('L'): wizard_set_xl(); break;
 
     case 'O': debug_test_explore();                  break;
     case 'S': wizard_set_skill_level();              break;

@@ -30,6 +30,7 @@ source/dat/tiles/gui.png
 
 # The Crawl executable.
 source/crawl
+source/crawl.exe
 
 # Level-compiler generated files.
 source/util/*.cc
@@ -44,3 +45,4 @@ dat
 source/build
 *.pbxuser
 *.perspectivev3
+*.mode1v3

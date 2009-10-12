@@ -18,7 +18,7 @@ REVISION("$Rev$");
 #include <algorithm>
 #include <cmath>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <dos.h>
 #include <conio.h>
 #endif
@@ -57,7 +57,6 @@ REVISION("$Rev$");
 #include "terrain.h"
 #include "transfor.h"
 #include "traps.h"
-#include "tutorial.h"
 #include "view.h"
 #include "xom.h"
 
@@ -2836,9 +2835,15 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     pbolt.is_tracer = false;
 }
 
-bool check_line_of_sight( const coord_def& source, const coord_def& target )
+/**
+ * Checks whether target is in sight of source.
+ *
+ * Only used from cast_chain_lightning currently.
+ * XXX: Move to los.cc; integrate with other LOS code.
+ */
+bool check_line_of_sight(const coord_def& source, const coord_def& target)
 {
-    const int dist = grid_distance( source, target );
+    const int dist = grid_distance(source, target);
 
     // Can always see one square away.
     if (dist <= 1)
@@ -2851,7 +2856,7 @@ bool check_line_of_sight( const coord_def& source, const coord_def& target )
     // Note that we are guaranteed to be within the player LOS range,
     // so fallback is unnecessary.
     ray_def ray;
-    return find_ray( source, target, false, ray );
+    return find_ray(source, target, false, ray);
 }
 
 // When a mimic is hit by a ranged attack, it teleports away (the slow
@@ -3225,6 +3230,7 @@ void bolt::affect_place_explosion_clouds()
         case BEAM_POTION_GREY_SMOKE:
         case BEAM_POTION_BLUE_SMOKE:
         case BEAM_POTION_PURP_SMOKE:
+        case BEAM_POTION_RAIN:
         case BEAM_POTION_MUTAGENIC:
             cl_type = beam2cloud(flavour);
             break;
@@ -6034,6 +6040,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_POTION_GREY_SMOKE:    return ("grey smoke");
     case BEAM_POTION_BLUE_SMOKE:    return ("blue smoke");
     case BEAM_POTION_PURP_SMOKE:    return ("purple smoke");
+    case BEAM_POTION_RAIN:          return ("rain");
     case BEAM_POTION_RANDOM:        return ("random potion");
     case BEAM_POTION_MUTAGENIC:     return ("mutagenic fog");
     case BEAM_VISUAL:               return ("visual effects");

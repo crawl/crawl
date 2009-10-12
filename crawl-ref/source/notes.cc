@@ -19,8 +19,6 @@ REVISION("$Rev$");
 #include "files.h"
 #include "kills.h"
 #include "hiscores.h"
-#include "message.h"
-#include "mon-pick.h"
 #include "mutation.h"
 #include "place.h"
 #include "religion.h"

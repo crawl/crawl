@@ -38,6 +38,7 @@ void inc_mitm_item_quantity(int obj, int amount);
 
 bool move_item_to_grid( int *const obj, const coord_def& p );
 void move_item_stack_to_grid( const coord_def& from, const coord_def& to );
+void note_inscribe_item(item_def &item);
 int  move_item_to_player( int obj, int quant_got, bool quiet = false,
                           bool ignore_burden = false );
 void mark_items_non_pickup_at(const coord_def &pos);

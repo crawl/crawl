@@ -17,7 +17,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <algorithm>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
  #include <conio.h>
 #endif
 
@@ -44,7 +44,6 @@ REVISION("$Rev$");
 #include "shopping.h"
 #include "state.h"
 #include "stuff.h"
-#include "spells4.h"
 #include "stash.h"
 #ifdef USE_TILE
  #include "tiles.h"

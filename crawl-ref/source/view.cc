@@ -14,7 +14,7 @@ REVISION("$Rev$");
 #include <sstream>
 #include <algorithm>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -33,10 +33,8 @@ REVISION("$Rev$");
 #include "dungeon.h"
 #include "format.h"
 #include "ghost.h"
-#include "initfile.h"
 #include "itemprop.h"
 #include "los.h"
-#include "luadgn.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -51,10 +49,8 @@ REVISION("$Rev$");
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
-#include "skills2.h"
 #include "stuff.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "stash.h"
 #include "tiles.h"
 #include "state.h"
@@ -322,7 +318,7 @@ bool is_notable_terrain(dungeon_feature_type ftype)
     return (Feature[ftype].is_notable());
 }
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
+#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 static unsigned _colflag2brand(int colflag)
 {
     switch (colflag)
@@ -358,7 +354,7 @@ unsigned real_colour(unsigned raw_colour)
     if (is_element_colour( raw_colour ))
         raw_colour = colflags | element_colour( raw_colour );
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
+#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(USE_TILE)
     if (colflags)
     {
         unsigned brand = _colflag2brand(colflags);
@@ -616,7 +612,7 @@ static char _get_travel_colour( const coord_def& p )
                                         Options.tc_disconnected;
 }
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
+#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 static unsigned short _dos_reverse_brand(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)
@@ -1699,6 +1695,7 @@ inline static void _update_cloud_grid(int cloudno)
         which_colour = DARKGREY;
         break;
 
+    case CLOUD_RAIN:
     case CLOUD_MIST:
         which_colour = ETC_MIST;
         break;

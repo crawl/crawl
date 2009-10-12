@@ -30,15 +30,12 @@ REVISION("$Rev$");
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
 #include "los.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
-#include "mon-pick.h"
 #include "monstuff.h"
 #include "mon-util.h"
-#include "place.h"
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
@@ -731,7 +728,8 @@ bool receive_corpses(int pow, coord_def where)
 
     if (corpses_generated)
     {
-        simple_god_message(" delivers you corpses!");
+        simple_god_message(corpses_generated > 1 ? " delivers you corpses!"
+                                                 : " delivers you a corpse!");
         maybe_update_stashes();
         return (true);
     }

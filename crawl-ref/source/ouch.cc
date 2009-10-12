@@ -15,7 +15,7 @@ REVISION("$Rev$");
 #include <ctype.h>
 #include <time.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #include <file.h>
 #endif
@@ -28,7 +28,7 @@ REVISION("$Rev$");
 
 #include "ouch.h"
 
-#ifdef __MINGW32__
+#ifdef TARGET_COMPILER_MINGW
 #include <io.h>
 #endif
 
@@ -887,7 +887,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
 }
 
 
-
+#ifdef WIZARD
 static void _wizard_restore_life()
 {
     if (you.hp <= 0)
@@ -909,6 +909,7 @@ static void _wizard_restore_life()
         you.redraw_intelligence = true;
     }
 }
+#endif
 
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,

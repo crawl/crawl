@@ -50,7 +50,6 @@ REVISION("$Rev$");
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "tiles.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -8037,7 +8036,7 @@ bool monsters::mutate()
     // (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        ugly_thing_energy_mutate(this);
+        ugly_thing_mutate(this);
         return (true);
     }
 

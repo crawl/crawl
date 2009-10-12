@@ -55,7 +55,7 @@ REVISION("$Rev$");
 #include <memory>
 #include <sstream>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <dos.h>
 #endif
 

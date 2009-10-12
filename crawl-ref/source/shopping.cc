@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
-#include "chardump.h"
 #include "shopping.h"
 #include "message.h"
 
@@ -15,7 +14,7 @@ REVISION("$Rev$");
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
  #include <conio.h>
 #endif
 
@@ -25,7 +24,6 @@ REVISION("$Rev$");
 #include "describe.h"
 #include "food.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -37,7 +35,6 @@ REVISION("$Rev$");
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
-#include "view.h"
 
 static bool _purchase( int shop, int item_got, int cost, bool id);
 

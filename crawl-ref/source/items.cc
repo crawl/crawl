@@ -16,7 +16,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <ctype.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -26,7 +26,6 @@ REVISION("$Rev$");
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
-#include "cloud.h"
 #include "debug.h"
 #include "delay.h"
 #include "dgnevent.h"
@@ -44,11 +43,9 @@ REVISION("$Rev$");
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
-#include "mstuff2.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
-#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "quiver.h"
@@ -56,14 +53,11 @@ REVISION("$Rev$");
 #include "shopping.h"
 #include "skills2.h"
 #include "spl-book.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "stash.h"
-#include "tiles.h"
 #include "state.h"
 #include "terrain.h"
-#include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -1481,6 +1475,13 @@ static void _got_item(item_def& item, int quant)
     _check_note_item(item);
 }
 
+void note_inscribe_item(item_def &item)
+{
+    _autoinscribe_item(item);
+    _origin_freeze(item, you.pos());
+    _check_note_item(item);
+}
+
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet,
@@ -1643,10 +1644,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     if (!item.slot)
         item.slot = index_to_letter(item.link);
 
-    _autoinscribe_item( item );
-
-    _origin_freeze(item, you.pos());
-    _check_note_item(item);
+    note_inscribe_item(item);
 
     item.quantity = quant_got;
     if (is_blood_potion(mitm[obj]))

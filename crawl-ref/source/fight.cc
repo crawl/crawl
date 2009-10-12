@@ -14,7 +14,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <algorithm>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -29,7 +29,6 @@ REVISION("$Rev$");
 #include "effects.h"
 #include "food.h"
 #include "invent.h"
-#include "it_use2.h"
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -40,7 +39,6 @@ REVISION("$Rev$");
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
-#include "mon-pick.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mstuff2.h"
@@ -52,7 +50,6 @@ REVISION("$Rev$");
 #include "skills.h"
 #include "spells1.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"

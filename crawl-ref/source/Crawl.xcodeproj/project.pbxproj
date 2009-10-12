@@ -366,6 +366,7 @@
 		B032D705106C029D0002D70D /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
 		B032D706106C029D0002D70D /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
 		B032D707106C029D0002D70D /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5E17B106706E40020B21F /* Freetype2.framework */; };
+		B06FC50E1081D287008347BD /* bitary.cc in Sources */ = {isa = PBXBuildFile; fileRef = B06FC50C1081D287008347BD /* bitary.cc */; };
 		B07818DE1075D979008C3B64 /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = B07818DC1075D979008C3B64 /* sqldbm.cc */; };
 		B07818DF1075D979008C3B64 /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = B07818DC1075D979008C3B64 /* sqldbm.cc */; };
 		B082657810731AB5006EEC5A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B082657610731AB5006EEC5A /* sqlite3.c */; };
@@ -386,6 +387,16 @@
 		D2AE25F90DA262DD00E15489 /* crawl in Copy Wrapper Script */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
 		D2F272350DA1C5AD00445FE9 /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
 		D2F2725B0DA1C61600445FE9 /* docs in Resources */ = {isa = PBXBuildFile; fileRef = D2F2723F0DA1C61600445FE9 /* docs */; };
+		E1424F74107FAE1100E2A9CD /* ctest.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0CFB313106DF67F005F9CC3 /* ctest.cc */; };
+		E1424F75107FAE4900E2A9CD /* los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930A107FA77200E3F5FE /* los.cc */; };
+		E1424F7E107FAEC700E2A9CD /* losparam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930B107FA77200E3F5FE /* losparam.cc */; };
+		E1424F7F107FAEC700E2A9CD /* mon-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930C107FA77200E3F5FE /* mon-los.cc */; };
+		E1424F80107FAEC700E2A9CD /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930D107FA77200E3F5FE /* ray.cc */; };
+		E14D930F107FA77200E3F5FE /* los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930A107FA77200E3F5FE /* los.cc */; };
+		E14D9310107FA77200E3F5FE /* losparam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930B107FA77200E3F5FE /* losparam.cc */; };
+		E14D9311107FA77200E3F5FE /* mon-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930C107FA77200E3F5FE /* mon-los.cc */; };
+		E14D9312107FA77200E3F5FE /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930D107FA77200E3F5FE /* ray.cc */; };
+		E14D9313107FA77200E3F5FE /* sha256.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930E107FA77200E3F5FE /* sha256.cc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -840,6 +851,18 @@
 		B02C576010670ED2006AC96D /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
 		B02C57901067129A006AC96D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dungeon Crawl Stone Soup.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B06FC50C1081D287008347BD /* bitary.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitary.cc; sourceTree = "<group>"; };
+		B06FC50D1081D287008347BD /* bitary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitary.h; sourceTree = "<group>"; };
+		B06FC5101081D2C0008347BD /* arena.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arena.h; sourceTree = "<group>"; };
+		B06FC5111081D2C0008347BD /* defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
+		B06FC5121081D2C0008347BD /* fixary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixary.h; sourceTree = "<group>"; };
+		B06FC5131081D2C0008347BD /* fixvec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixvec.h; sourceTree = "<group>"; };
+		B06FC5141081D2C0008347BD /* ghost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghost.h; sourceTree = "<group>"; };
+		B06FC5151081D2C0008347BD /* los.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = los.h; sourceTree = "<group>"; };
+		B06FC5161081D2C0008347BD /* losparam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = losparam.h; sourceTree = "<group>"; };
+		B06FC5171081D2C0008347BD /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha256.h; sourceTree = "<group>"; };
+		B06FC5181081D2C0008347BD /* spl-data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-data.h"; sourceTree = "<group>"; };
+		B06FC5191081D2C0008347BD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		B07818DC1075D979008C3B64 /* sqldbm.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sqldbm.cc; sourceTree = "<group>"; };
 		B07818DD1075D979008C3B64 /* sqldbm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqldbm.h; sourceTree = "<group>"; };
 		B082656F10731A95006EEC5A /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSQLite.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -908,6 +931,11 @@
 		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
 		D2F271FE0DA1C5AD00445FE9 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = "<group>"; };
 		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
+		E14D930A107FA77200E3F5FE /* los.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = los.cc; sourceTree = "<group>"; };
+		E14D930B107FA77200E3F5FE /* losparam.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = losparam.cc; sourceTree = "<group>"; };
+		E14D930C107FA77200E3F5FE /* mon-los.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-los.cc"; sourceTree = "<group>"; };
+		E14D930D107FA77200E3F5FE /* ray.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ray.cc; sourceTree = "<group>"; };
+		E14D930E107FA77200E3F5FE /* sha256.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha256.cc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1069,19 +1097,20 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				B07818DC1075D979008C3B64 /* sqldbm.cc */,
-				B07818DD1075D979008C3B64 /* sqldbm.h */,
-				B0826648107333BB006EEC5A /* AppHdr.h */,
 				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
 				7B237E290A8EC9D000580F30 /* abl-show.h */,
 				7B237E280A8EC9D000580F30 /* abyss.cc */,
 				7B237E650A8EC9D000580F30 /* abyss.h */,
+				7B237E270A8EC9D000580F30 /* acr.cc */,
+				B0826648107333BB006EEC5A /* AppHdr.h */,
 				93B134C20F256113007DB230 /* arena.cc */,
+				B06FC5101081D2C0008347BD /* arena.h */,
 				D2A72B28101173C000E1A883 /* artefact.cc */,
 				D2A72B29101173C000E1A883 /* artefact.h */,
-				7B237E270A8EC9D000580F30 /* acr.cc */,
 				7B237E2C0A8EC9D000580F30 /* beam.cc */,
 				7B237E2D0A8EC9D000580F30 /* beam.h */,
+				B06FC50C1081D287008347BD /* bitary.cc */,
+				B06FC50D1081D287008347BD /* bitary.h */,
 				7BA3DBB90B3D90A700B5B3D7 /* branch.cc */,
 				7BA3DBBA0B3D90A700B5B3D7 /* branch.h */,
 				7B237E2A0A8EC9D000580F30 /* chardump.cc */,
@@ -1104,6 +1133,7 @@
 				7B237E1A0A8EC9D000580F30 /* debug.h */,
 				7B237E490A8EC9D000580F30 /* decks.cc */,
 				7B237E1C0A8EC9D000580F30 /* decks.h */,
+				B06FC5111081D2C0008347BD /* defines.h */,
 				7B237E660A8EC9D000580F30 /* delay.cc */,
 				7B237E430A8EC9D000580F30 /* delay.h */,
 				7B237E4A0A8EC9D000580F30 /* describe.cc */,
@@ -1120,11 +1150,14 @@
 				7B237E510A8EC9D000580F30 /* fight.h */,
 				7B237E0E0A8EC9D000580F30 /* files.cc */,
 				7B237E500A8EC9D000580F30 /* files.h */,
+				B06FC5121081D2C0008347BD /* fixary.h */,
+				B06FC5131081D2C0008347BD /* fixvec.h */,
 				7B237E540A8EC9D000580F30 /* food.cc */,
 				7B237E550A8EC9D000580F30 /* food.h */,
 				7BDEBB340BB4CB93008DF39F /* format.cc */,
 				7BDEBB350BB4CB93008DF39F /* format.h */,
 				7BDEBB2A0BB4CB1D008DF39F /* ghost.cc */,
+				B06FC5141081D2C0008347BD /* ghost.h */,
 				7B237DF30A8EC9D000580F30 /* hiscores.cc */,
 				7B237DF20A8EC9D000580F30 /* hiscores.h */,
 				7B237DF10A8EC9D000580F30 /* initfile.cc */,
@@ -1151,6 +1184,10 @@
 				7B237E630A8EC9D000580F30 /* libunix.h */,
 				7B237E620A8EC9D000580F30 /* libutil.cc */,
 				7B237E250A8EC9D000580F30 /* libutil.h */,
+				E14D930A107FA77200E3F5FE /* los.cc */,
+				B06FC5151081D2C0008347BD /* los.h */,
+				E14D930B107FA77200E3F5FE /* losparam.cc */,
+				B06FC5161081D2C0008347BD /* losparam.h */,
 				7BF8556E0C9C919100B7C520 /* luadgn.cc */,
 				7BF8556F0C9C919100B7C520 /* luadgn.h */,
 				7B237E380A8EC9D000580F30 /* macro.cc */,
@@ -1169,6 +1206,7 @@
 				7B4896610CD3A5D2004A5F43 /* mgrow.h */,
 				7B237DFC0A8EC9D000580F30 /* misc.cc */,
 				7B237DE90A8EC9D000580F30 /* misc.h */,
+				E14D930C107FA77200E3F5FE /* mon-los.cc */,
 				7B237DE80A8EC9D000580F30 /* mon-pick.cc */,
 				7B237DE70A8EC9D000580F30 /* mon-pick.h */,
 				7B237DFF0A8EC9D000580F30 /* mon-util.cc */,
@@ -1204,9 +1242,12 @@
 				7B237E0A0A8EC9D000580F30 /* player.h */,
 				6232EBE00DACA55C004F7E9C /* quiver.cc */,
 				6232EBE10DACA55C004F7E9C /* quiver.h */,
+				E14D930D107FA77200E3F5FE /* ray.cc */,
 				7B6164270C9CA8E80054B3D9 /* ray.h */,
 				7B237E3B0A8EC9D000580F30 /* religion.cc */,
 				7B237E3A0A8EC9D000580F30 /* religion.h */,
+				E14D930E107FA77200E3F5FE /* sha256.cc */,
+				B06FC5171081D2C0008347BD /* sha256.h */,
 				7B237E390A8EC9D000580F30 /* shopping.cc */,
 				7B237E5E0A8EC9D000580F30 /* shopping.h */,
 				7B237E5D0A8EC9D000580F30 /* skills.cc */,
@@ -1225,16 +1266,19 @@
 				7B237E300A8EC9D000580F30 /* spl-book.h */,
 				7B237E2F0A8EC9D000580F30 /* spl-cast.cc */,
 				7B237E2E0A8EC9D000580F30 /* spl-cast.h */,
+				B06FC5181081D2C0008347BD /* spl-data.h */,
 				D274AC580FE66EFC00C9C1AE /* spl-mis.cc */,
 				D274AC590FE66EFC00C9C1AE /* spl-mis.h */,
 				7B237E070A8EC9D000580F30 /* spl-util.cc */,
 				7B237E060A8EC9D000580F30 /* spl-util.h */,
+				B07818DC1075D979008C3B64 /* sqldbm.cc */,
+				B07818DD1075D979008C3B64 /* sqldbm.h */,
 				7B237E200A8EC9D000580F30 /* stash.cc */,
 				7B237E1F0A8EC9D000580F30 /* stash.h */,
 				7B54B51A0CA8217900612805 /* state.cc */,
 				7B6164280C9CA8E80054B3D9 /* state.h */,
-				7BD2221E0CC2D51300B475D8 /* store.h */,
 				7BD2221F0CC2D51300B475D8 /* store.cc */,
+				7BD2221E0CC2D51300B475D8 /* store.h */,
 				7B237E1E0A8EC9D000580F30 /* stuff.cc */,
 				7B237E1D0A8EC9D000580F30 /* stuff.h */,
 				7B237E240A8EC9D000580F30 /* tags.cc */,
@@ -1247,9 +1291,10 @@
 				7B61642C0C9CA8E80054B3D9 /* traps.h */,
 				7B237DF50A8EC9D000580F30 /* travel.cc */,
 				7B237DF40A8EC9D000580F30 /* travel.h */,
-				93B134610F255926007DB230 /* version.cc */,
 				7BDEBB2F0BB4CB5C008DF39F /* tutorial.cc */,
 				7BDEBB300BB4CB5C008DF39F /* tutorial.h */,
+				93B134610F255926007DB230 /* version.cc */,
+				B06FC5191081D2C0008347BD /* version.h */,
 				7B237E140A8EC9D000580F30 /* view.cc */,
 				7B237E130A8EC9D000580F30 /* view.h */,
 				4CEF15890C128CA5002C7D7A /* xom.cc */,
@@ -1308,10 +1353,10 @@
 		D25C91790FF035AF00D9E8AD /* Tiles */ = {
 			isa = PBXGroup;
 			children = (
-				B02C575F10670ED2006AC96D /* SDLMain.h */,
-				B02C576010670ED2006AC96D /* SDLMain.m */,
 				B02C574310670C63006AC96D /* libgui.cc */,
 				B02C574410670C63006AC96D /* libgui.h */,
+				B02C575F10670ED2006AC96D /* SDLMain.h */,
+				B02C576010670ED2006AC96D /* SDLMain.m */,
 				D2660E070FF0868B00986331 /* tile2.cc */,
 				D2660E080FF0868B00986331 /* tilebuf.cc */,
 				D2660E090FF0868B00986331 /* tilebuf.h */,
@@ -1334,7 +1379,9 @@
 		D25C917A0FF035D100D9E8AD /* rltiles */ = {
 			isa = PBXGroup;
 			children = (
-				B0B5DFD21066FA240020B21F /* tiledef_defines.h */,
+				D2660C000FF0749200986331 /* dc-dngn.txt */,
+				D2660C010FF0749200986331 /* dc-main.txt */,
+				D2660C020FF0749200986331 /* dc-player.txt */,
 				B0B5DFD31066FA240020B21F /* tiledef-dngn.cc */,
 				B0B5DFD41066FA240020B21F /* tiledef-dngn.h */,
 				B0B5DFD51066FA240020B21F /* tiledef-gui.cc */,
@@ -1345,9 +1392,7 @@
 				B0B5DFDA1066FA240020B21F /* tiledef-player.h */,
 				B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */,
 				B0B5DFDC1066FA240020B21F /* tiledef-unrand.h */,
-				D2660C000FF0749200986331 /* dc-dngn.txt */,
-				D2660C010FF0749200986331 /* dc-main.txt */,
-				D2660C020FF0749200986331 /* dc-player.txt */,
+				B0B5DFD21066FA240020B21F /* tiledef_defines.h */,
 				D25C91840FF0366F00D9E8AD /* tool */,
 			);
 			name = rltiles;
@@ -1642,101 +1687,107 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */,
-				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
-				7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */,
-				93B134C30F256113007DB230 /* arena.cc in Sources */,
-				7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */,
-				7B237E750A8EC9D000580F30 /* overmap.cc in Sources */,
-				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
-				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
-				7B237E7C0A8EC9D000580F30 /* travel.cc in Sources */,
-				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
-				7B237E800A8EC9D000580F30 /* newgame.cc in Sources */,
-				7B237E820A8EC9D000580F30 /* mutation.cc in Sources */,
-				7B237E830A8EC9D000580F30 /* misc.cc in Sources */,
-				7B237E860A8EC9D000580F30 /* mon-util.cc in Sources */,
-				7B237E880A8EC9D000580F30 /* it_use3.cc in Sources */,
-				7B237E8A0A8EC9D000580F30 /* itemname.cc in Sources */,
-				7B237E8B0A8EC9D000580F30 /* command.cc in Sources */,
-				7B237E8E0A8EC9D000580F30 /* spl-util.cc in Sources */,
-				7B237E920A8EC9D000580F30 /* player.cc in Sources */,
 				7B237E940A8EC9D000580F30 /* abl-show.cc in Sources */,
-				7B237E950A8EC9D000580F30 /* files.cc in Sources */,
-				7B237E960A8EC9D000580F30 /* directn.cc in Sources */,
-				7B237E9B0A8EC9D000580F30 /* view.cc in Sources */,
-				7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */,
-				7B237E9E0A8EC9D000580F30 /* spells4.cc in Sources */,
-				7B237EA50A8EC9D000580F30 /* stuff.cc in Sources */,
-				7B237EA70A8EC9D000580F30 /* stash.cc in Sources */,
-				7B237EA90A8EC9D000580F30 /* transfor.cc in Sources */,
-				7B237EAB0A8EC9D000580F30 /* tags.cc in Sources */,
-				7B237EAD0A8EC9D000580F30 /* item_use.cc in Sources */,
-				7B237EAE0A8EC9D000580F30 /* acr.cc in Sources */,
 				7B237EAF0A8EC9D000580F30 /* abyss.cc in Sources */,
-				7B237EB10A8EC9D000580F30 /* chardump.cc in Sources */,
+				7B237EAE0A8EC9D000580F30 /* acr.cc in Sources */,
+				93B134C30F256113007DB230 /* arena.cc in Sources */,
+				D2A72B2A101173C000E1A883 /* artefact.cc in Sources */,
 				7B237EB30A8EC9D000580F30 /* beam.cc in Sources */,
-				7B237EB60A8EC9D000580F30 /* spl-cast.cc in Sources */,
-				7B237EB80A8EC9D000580F30 /* output.cc in Sources */,
-				7B237EBA0A8EC9D000580F30 /* ouch.cc in Sources */,
-				7B237EBC0A8EC9D000580F30 /* message.cc in Sources */,
-				7B237EBE0A8EC9D000580F30 /* menu.cc in Sources */,
-				7B237EBF0A8EC9D000580F30 /* macro.cc in Sources */,
-				7B237EC00A8EC9D000580F30 /* shopping.cc in Sources */,
-				7B237EC20A8EC9D000580F30 /* religion.cc in Sources */,
-				7B237EC30A8EC9D000580F30 /* spells3.cc in Sources */,
-				7B237EC50A8EC9D000580F30 /* spells2.cc in Sources */,
-				7B237EC60A8EC9D000580F30 /* mstuff2.cc in Sources */,
-				7B237EC80A8EC9D000580F30 /* monstuff.cc in Sources */,
-				7B237ECD0A8EC9D000580F30 /* spells1.cc in Sources */,
-				7B237ECF0A8EC9D000580F30 /* skills2.cc in Sources */,
+				7BA3DBBB0B3D90A700B5B3D7 /* branch.cc in Sources */,
+				7B237EB10A8EC9D000580F30 /* chardump.cc in Sources */,
+				7BF855620C9C912B00B7C520 /* cio.cc in Sources */,
+				7B237EE00A8EC9D000580F30 /* cloud.cc in Sources */,
+				7B237EDE0A8EC9D000580F30 /* clua.cc in Sources */,
+				7B237E8B0A8EC9D000580F30 /* command.cc in Sources */,
+				D274AC550FE66EEC00C9C1AE /* crash-u.cc in Sources */,
+				E1424F74107FAE1100E2A9CD /* ctest.cc in Sources */,
+				7B973FFD0BE3AA8400AAE35B /* database.cc in Sources */,
+				7B237EEF0A8EC9D000580F30 /* debug.cc in Sources */,
 				7B237ED00A8EC9D000580F30 /* decks.cc in Sources */,
+				7B237EED0A8EC9D000580F30 /* delay.cc in Sources */,
 				7B237ED10A8EC9D000580F30 /* describe.cc in Sources */,
-				7B237ED20A8EC9D000580F30 /* monspeak.cc in Sources */,
-				7B237ED40A8EC9D000580F30 /* monplace.cc in Sources */,
-				7B237ED60A8EC9D000580F30 /* kills.cc in Sources */,
+				7BF8556B0C9C916800B7C520 /* dgnevent.cc in Sources */,
+				7B237E960A8EC9D000580F30 /* directn.cc in Sources */,
+				7B237EEE0A8EC9D000580F30 /* dungeon.cc in Sources */,
 				7B237ED90A8EC9D000580F30 /* effects.cc in Sources */,
 				7B237EDA0A8EC9D000580F30 /* fight.cc in Sources */,
+				7B237E950A8EC9D000580F30 /* files.cc in Sources */,
 				7B237EDB0A8EC9D000580F30 /* food.cc in Sources */,
-				7B237EDE0A8EC9D000580F30 /* clua.cc in Sources */,
-				7B237EE00A8EC9D000580F30 /* cloud.cc in Sources */,
-				7B237EE10A8EC9D000580F30 /* items.cc in Sources */,
-				7B237EE40A8EC9D000580F30 /* skills.cc in Sources */,
-				7B237EE60A8EC9D000580F30 /* it_use2.cc in Sources */,
-				7B237EE80A8EC9D000580F30 /* invent.cc in Sources */,
-				7B237EE90A8EC9D000580F30 /* libutil.cc in Sources */,
-				7B237EEB0A8EC9D000580F30 /* libunix.cc in Sources */,
-				7B237EED0A8EC9D000580F30 /* delay.cc in Sources */,
-				7B237EEE0A8EC9D000580F30 /* dungeon.cc in Sources */,
-				7B237EEF0A8EC9D000580F30 /* debug.cc in Sources */,
-				7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */,
-				7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */,
-				7BD75A350AC214A200B74F6E /* notes.cc in Sources */,
-				7B352EA00B00183400CABB32 /* mapdef.cc in Sources */,
-				7BA3DBBB0B3D90A700B5B3D7 /* branch.cc in Sources */,
-				7BDEBB290BB4CB0B008DF39F /* mtransit.cc in Sources */,
-				7BDEBB2B0BB4CB1D008DF39F /* ghost.cc in Sources */,
-				7BDEBB310BB4CB5C008DF39F /* tutorial.cc in Sources */,
 				7BDEBB360BB4CB93008DF39F /* format.cc in Sources */,
-				7B973FFD0BE3AA8400AAE35B /* database.cc in Sources */,
-				7B9740070BE3AC8000AAE35B /* makeitem.cc in Sources */,
-				4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */,
-				7BF855620C9C912B00B7C520 /* cio.cc in Sources */,
-				7BF855670C9C914D00B7C520 /* mapmark.cc in Sources */,
-				7BF8556B0C9C916800B7C520 /* dgnevent.cc in Sources */,
+				7BDEBB2B0BB4CB1D008DF39F /* ghost.cc in Sources */,
+				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
+				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
+				7B237EE80A8EC9D000580F30 /* invent.cc in Sources */,
+				7B237EE60A8EC9D000580F30 /* it_use2.cc in Sources */,
+				7B237E880A8EC9D000580F30 /* it_use3.cc in Sources */,
+				7B237EAD0A8EC9D000580F30 /* item_use.cc in Sources */,
+				7B237E8A0A8EC9D000580F30 /* itemname.cc in Sources */,
+				7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */,
+				7B237EE10A8EC9D000580F30 /* items.cc in Sources */,
+				7B237ED60A8EC9D000580F30 /* kills.cc in Sources */,
+				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
+				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
+				7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */,
+				7B237EEB0A8EC9D000580F30 /* libunix.cc in Sources */,
+				7B237EE90A8EC9D000580F30 /* libutil.cc in Sources */,
+				E14D930F107FA77200E3F5FE /* los.cc in Sources */,
+				E14D9310107FA77200E3F5FE /* losparam.cc in Sources */,
 				7BF855700C9C919100B7C520 /* luadgn.cc in Sources */,
+				7B237EBF0A8EC9D000580F30 /* macro.cc in Sources */,
+				7B9740070BE3AC8000AAE35B /* makeitem.cc in Sources */,
+				7B352EA00B00183400CABB32 /* mapdef.cc in Sources */,
+				7BF855670C9C914D00B7C520 /* mapmark.cc in Sources */,
+				7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */,
+				7B237EBE0A8EC9D000580F30 /* menu.cc in Sources */,
+				7B237EBC0A8EC9D000580F30 /* message.cc in Sources */,
+				7B4896620CD3A5D2004A5F43 /* mgrow.cc in Sources */,
+				7B237E830A8EC9D000580F30 /* misc.cc in Sources */,
+				E14D9311107FA77200E3F5FE /* mon-los.cc in Sources */,
+				7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */,
+				7B237E860A8EC9D000580F30 /* mon-util.cc in Sources */,
+				7B237ED40A8EC9D000580F30 /* monplace.cc in Sources */,
+				7B237ED20A8EC9D000580F30 /* monspeak.cc in Sources */,
+				7B237EC80A8EC9D000580F30 /* monstuff.cc in Sources */,
+				7B237EC60A8EC9D000580F30 /* mstuff2.cc in Sources */,
+				7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */,
+				7BDEBB290BB4CB0B008DF39F /* mtransit.cc in Sources */,
+				7B237E820A8EC9D000580F30 /* mutation.cc in Sources */,
+				7B237E800A8EC9D000580F30 /* newgame.cc in Sources */,
+				7BD75A350AC214A200B74F6E /* notes.cc in Sources */,
+				7B237EBA0A8EC9D000580F30 /* ouch.cc in Sources */,
+				7B237EB80A8EC9D000580F30 /* output.cc in Sources */,
+				7B237E750A8EC9D000580F30 /* overmap.cc in Sources */,
 				7B61642E0C9CA8E80054B3D9 /* place.cc in Sources */,
-				7B6164320C9CA8E80054B3D9 /* terrain.cc in Sources */,
-				7B6164340C9CA8E80054B3D9 /* traps.cc in Sources */,
+				7B237E920A8EC9D000580F30 /* player.cc in Sources */,
+				6232EBE20DACA55C004F7E9C /* quiver.cc in Sources */,
+				E14D9312107FA77200E3F5FE /* ray.cc in Sources */,
+				7B237EC20A8EC9D000580F30 /* religion.cc in Sources */,
+				E14D9313107FA77200E3F5FE /* sha256.cc in Sources */,
+				7B237EC00A8EC9D000580F30 /* shopping.cc in Sources */,
+				7B237EE40A8EC9D000580F30 /* skills.cc in Sources */,
+				7B237ECF0A8EC9D000580F30 /* skills2.cc in Sources */,
+				7B237ECD0A8EC9D000580F30 /* spells1.cc in Sources */,
+				7B237EC50A8EC9D000580F30 /* spells2.cc in Sources */,
+				7B237EC30A8EC9D000580F30 /* spells3.cc in Sources */,
+				7B237E9E0A8EC9D000580F30 /* spells4.cc in Sources */,
+				7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */,
+				7B237EB60A8EC9D000580F30 /* spl-cast.cc in Sources */,
+				D274AC5A0FE66EFC00C9C1AE /* spl-mis.cc in Sources */,
+				7B237E8E0A8EC9D000580F30 /* spl-util.cc in Sources */,
+				B07818DF1075D979008C3B64 /* sqldbm.cc in Sources */,
+				7B237EA70A8EC9D000580F30 /* stash.cc in Sources */,
 				7B54B51B0CA8217900612805 /* state.cc in Sources */,
 				7BD222200CC2D51300B475D8 /* store.cc in Sources */,
-				7B4896620CD3A5D2004A5F43 /* mgrow.cc in Sources */,
-				6232EBE20DACA55C004F7E9C /* quiver.cc in Sources */,
+				7B237EA50A8EC9D000580F30 /* stuff.cc in Sources */,
+				7B237EAB0A8EC9D000580F30 /* tags.cc in Sources */,
+				7B6164320C9CA8E80054B3D9 /* terrain.cc in Sources */,
+				7B237EA90A8EC9D000580F30 /* transfor.cc in Sources */,
+				7B6164340C9CA8E80054B3D9 /* traps.cc in Sources */,
+				7B237E7C0A8EC9D000580F30 /* travel.cc in Sources */,
+				7BDEBB310BB4CB5C008DF39F /* tutorial.cc in Sources */,
 				93B134650F25595F007DB230 /* version.cc in Sources */,
-				D274AC550FE66EEC00C9C1AE /* crash-u.cc in Sources */,
-				D274AC5A0FE66EFC00C9C1AE /* spl-mis.cc in Sources */,
-				D2A72B2A101173C000E1A883 /* artefact.cc in Sources */,
-				B07818DF1075D979008C3B64 /* sqldbm.cc in Sources */,
+				7B237E9B0A8EC9D000580F30 /* view.cc in Sources */,
+				4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1744,117 +1795,122 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B032D68F106C02150002D70D /* levcomp.ypp in Sources */,
+				B032D6AA106C02150002D70D /* abl-show.cc in Sources */,
+				B032D6B6106C02150002D70D /* abyss.cc in Sources */,
+				B032D6B5106C02150002D70D /* acr.cc in Sources */,
+				B032D69A106C02150002D70D /* arena.cc in Sources */,
+				B032D6FA106C02150002D70D /* artefact.cc in Sources */,
+				B032D6B8106C02150002D70D /* beam.cc in Sources */,
+				B06FC50E1081D287008347BD /* bitary.cc in Sources */,
+				B032D6DD106C02150002D70D /* branch.cc in Sources */,
+				B032D6B7106C02150002D70D /* chardump.cc in Sources */,
+				B032D6E5106C02150002D70D /* cio.cc in Sources */,
+				B032D6D0106C02150002D70D /* cloud.cc in Sources */,
+				B032D6CF106C02150002D70D /* clua.cc in Sources */,
+				B032D6A7106C02150002D70D /* command.cc in Sources */,
+				B032D6F1106C02150002D70D /* crash-u.cc in Sources */,
+				B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */,
+				B032D6E2106C02150002D70D /* database.cc in Sources */,
+				B032D6D8106C02150002D70D /* debug.cc in Sources */,
+				B032D6C7106C02150002D70D /* decks.cc in Sources */,
+				B032D6D6106C02150002D70D /* delay.cc in Sources */,
+				B032D6C8106C02150002D70D /* describe.cc in Sources */,
+				B032D6E7106C02150002D70D /* dgnevent.cc in Sources */,
+				B032D6AC106C02150002D70D /* directn.cc in Sources */,
+				B032D6D7106C02150002D70D /* dungeon.cc in Sources */,
+				B032D6CC106C02150002D70D /* effects.cc in Sources */,
+				B032D6CD106C02150002D70D /* fight.cc in Sources */,
+				B032D6AB106C02150002D70D /* files.cc in Sources */,
+				B032D6CE106C02150002D70D /* food.cc in Sources */,
+				B032D6E1106C02150002D70D /* format.cc in Sources */,
+				B032D6DF106C02150002D70D /* ghost.cc in Sources */,
+				B032D69E106C02150002D70D /* hiscores.cc in Sources */,
+				B032D69D106C02150002D70D /* initfile.cc in Sources */,
+				B032D6D4106C02150002D70D /* invent.cc in Sources */,
+				B032D6D3106C02150002D70D /* it_use2.cc in Sources */,
+				B032D6A5106C02150002D70D /* it_use3.cc in Sources */,
+				B032D6B4106C02150002D70D /* item_use.cc in Sources */,
+				B032D6A6106C02150002D70D /* itemname.cc in Sources */,
+				B032D6DA106C02150002D70D /* itemprop.cc in Sources */,
+				B032D6D1106C02150002D70D /* items.cc in Sources */,
+				B032D6CB106C02150002D70D /* kills.cc in Sources */,
+				B032D6A0106C02150002D70D /* lev-pand.cc in Sources */,
 				B032D690106C02150002D70D /* levcomp.lpp in Sources */,
+				B032D68F106C02150002D70D /* levcomp.ypp in Sources */,
+				B032D697106C02150002D70D /* libgui.cc in Sources */,
+				B032D6D5106C02150002D70D /* libutil.cc in Sources */,
+				E1424F75107FAE4900E2A9CD /* los.cc in Sources */,
+				E1424F7E107FAEC700E2A9CD /* losparam.cc in Sources */,
+				B032D6E8106C02150002D70D /* luadgn.cc in Sources */,
+				B032D6BE106C02150002D70D /* macro.cc in Sources */,
+				B032D6E3106C02150002D70D /* makeitem.cc in Sources */,
+				B032D6DC106C02150002D70D /* mapdef.cc in Sources */,
+				B032D6E6106C02150002D70D /* mapmark.cc in Sources */,
+				B032D699106C02150002D70D /* maps.cc in Sources */,
+				B032D6BD106C02150002D70D /* menu.cc in Sources */,
+				B032D6BC106C02150002D70D /* message.cc in Sources */,
+				B032D6EE106C02150002D70D /* mgrow.cc in Sources */,
+				B032D6A3106C02150002D70D /* misc.cc in Sources */,
+				E1424F7F107FAEC700E2A9CD /* mon-los.cc in Sources */,
+				B032D69B106C02150002D70D /* mon-pick.cc in Sources */,
+				B032D6A4106C02150002D70D /* mon-util.cc in Sources */,
+				B032D6CA106C02150002D70D /* monplace.cc in Sources */,
+				B032D6C9106C02150002D70D /* monspeak.cc in Sources */,
+				B032D6C4106C02150002D70D /* monstuff.cc in Sources */,
+				B032D6C3106C02150002D70D /* mstuff2.cc in Sources */,
+				B032D6D9106C02150002D70D /* mt19937ar.cc in Sources */,
+				B032D6DE106C02150002D70D /* mtransit.cc in Sources */,
+				B032D6A2106C02150002D70D /* mutation.cc in Sources */,
+				B032D6A1106C02150002D70D /* newgame.cc in Sources */,
+				B032D6DB106C02150002D70D /* notes.cc in Sources */,
+				B032D6BB106C02150002D70D /* ouch.cc in Sources */,
+				B032D6BA106C02150002D70D /* output.cc in Sources */,
+				B032D69C106C02150002D70D /* overmap.cc in Sources */,
+				B032D6E9106C02150002D70D /* place.cc in Sources */,
+				B032D6A9106C02150002D70D /* player.cc in Sources */,
+				B032D6EF106C02150002D70D /* quiver.cc in Sources */,
+				E1424F80107FAEC700E2A9CD /* ray.cc in Sources */,
+				B032D6C0106C02150002D70D /* religion.cc in Sources */,
 				B032D691106C02150002D70D /* SDLMain.m in Sources */,
+				B032D6BF106C02150002D70D /* shopping.cc in Sources */,
+				B032D6D2106C02150002D70D /* skills.cc in Sources */,
+				B032D6C6106C02150002D70D /* skills2.cc in Sources */,
+				B032D6C5106C02150002D70D /* spells1.cc in Sources */,
+				B032D6C2106C02150002D70D /* spells2.cc in Sources */,
+				B032D6C1106C02150002D70D /* spells3.cc in Sources */,
+				B032D6AF106C02150002D70D /* spells4.cc in Sources */,
+				B032D6AE106C02150002D70D /* spl-book.cc in Sources */,
+				B032D6B9106C02150002D70D /* spl-cast.cc in Sources */,
+				B032D6F2106C02150002D70D /* spl-mis.cc in Sources */,
+				B032D6A8106C02150002D70D /* spl-util.cc in Sources */,
+				B07818DE1075D979008C3B64 /* sqldbm.cc in Sources */,
+				B082657810731AB5006EEC5A /* sqlite3.c in Sources */,
+				B032D6B1106C02150002D70D /* stash.cc in Sources */,
+				B032D6EC106C02150002D70D /* state.cc in Sources */,
+				B032D6ED106C02150002D70D /* store.cc in Sources */,
+				B032D6B0106C02150002D70D /* stuff.cc in Sources */,
+				B032D6B3106C02150002D70D /* tags.cc in Sources */,
+				B032D6EA106C02150002D70D /* terrain.cc in Sources */,
+				B032D6F3106C02150002D70D /* tile2.cc in Sources */,
+				B032D6F4106C02150002D70D /* tilebuf.cc in Sources */,
 				B032D692106C02150002D70D /* tiledef-dngn.cc in Sources */,
 				B032D693106C02150002D70D /* tiledef-gui.cc in Sources */,
 				B032D694106C02150002D70D /* tiledef-main.cc in Sources */,
 				B032D695106C02150002D70D /* tiledef-player.cc in Sources */,
 				B032D696106C02150002D70D /* tiledef-unrand.cc in Sources */,
-				B032D697106C02150002D70D /* libgui.cc in Sources */,
-				B032D698106C02150002D70D /* tilesdl.cc in Sources */,
-				B032D699106C02150002D70D /* maps.cc in Sources */,
-				B032D69A106C02150002D70D /* arena.cc in Sources */,
-				B032D69B106C02150002D70D /* mon-pick.cc in Sources */,
-				B032D69C106C02150002D70D /* overmap.cc in Sources */,
-				B032D69D106C02150002D70D /* initfile.cc in Sources */,
-				B032D69E106C02150002D70D /* hiscores.cc in Sources */,
-				B032D69F106C02150002D70D /* travel.cc in Sources */,
-				B032D6A0106C02150002D70D /* lev-pand.cc in Sources */,
-				B032D6A1106C02150002D70D /* newgame.cc in Sources */,
-				B032D6A2106C02150002D70D /* mutation.cc in Sources */,
-				B032D6A3106C02150002D70D /* misc.cc in Sources */,
-				B032D6A4106C02150002D70D /* mon-util.cc in Sources */,
-				B032D6A5106C02150002D70D /* it_use3.cc in Sources */,
-				B032D6A6106C02150002D70D /* itemname.cc in Sources */,
-				B032D6A7106C02150002D70D /* command.cc in Sources */,
-				B032D6A8106C02150002D70D /* spl-util.cc in Sources */,
-				B032D6A9106C02150002D70D /* player.cc in Sources */,
-				B032D6AA106C02150002D70D /* abl-show.cc in Sources */,
-				B032D6AB106C02150002D70D /* files.cc in Sources */,
-				B032D6AC106C02150002D70D /* directn.cc in Sources */,
-				B032D6AD106C02150002D70D /* view.cc in Sources */,
-				B032D6AE106C02150002D70D /* spl-book.cc in Sources */,
-				B032D6AF106C02150002D70D /* spells4.cc in Sources */,
-				B032D6B0106C02150002D70D /* stuff.cc in Sources */,
-				B032D6B1106C02150002D70D /* stash.cc in Sources */,
-				B032D6B2106C02150002D70D /* transfor.cc in Sources */,
-				B032D6B3106C02150002D70D /* tags.cc in Sources */,
-				B032D6B4106C02150002D70D /* item_use.cc in Sources */,
-				B032D6B5106C02150002D70D /* acr.cc in Sources */,
-				B032D6B6106C02150002D70D /* abyss.cc in Sources */,
-				B032D6B7106C02150002D70D /* chardump.cc in Sources */,
-				B032D6B8106C02150002D70D /* beam.cc in Sources */,
-				B032D6B9106C02150002D70D /* spl-cast.cc in Sources */,
-				B032D6BA106C02150002D70D /* output.cc in Sources */,
-				B032D6BB106C02150002D70D /* ouch.cc in Sources */,
-				B032D6BC106C02150002D70D /* message.cc in Sources */,
-				B032D6BD106C02150002D70D /* menu.cc in Sources */,
-				B032D6BE106C02150002D70D /* macro.cc in Sources */,
-				B032D6BF106C02150002D70D /* shopping.cc in Sources */,
-				B032D6C0106C02150002D70D /* religion.cc in Sources */,
-				B032D6C1106C02150002D70D /* spells3.cc in Sources */,
-				B032D6C2106C02150002D70D /* spells2.cc in Sources */,
-				B032D6C3106C02150002D70D /* mstuff2.cc in Sources */,
-				B032D6C4106C02150002D70D /* monstuff.cc in Sources */,
-				B032D6C5106C02150002D70D /* spells1.cc in Sources */,
-				B032D6C6106C02150002D70D /* skills2.cc in Sources */,
-				B032D6C7106C02150002D70D /* decks.cc in Sources */,
-				B032D6C8106C02150002D70D /* describe.cc in Sources */,
-				B032D6C9106C02150002D70D /* monspeak.cc in Sources */,
-				B032D6CA106C02150002D70D /* monplace.cc in Sources */,
-				B032D6CB106C02150002D70D /* kills.cc in Sources */,
-				B032D6CC106C02150002D70D /* effects.cc in Sources */,
-				B032D6CD106C02150002D70D /* fight.cc in Sources */,
-				B032D6CE106C02150002D70D /* food.cc in Sources */,
-				B032D6CF106C02150002D70D /* clua.cc in Sources */,
-				B032D6D0106C02150002D70D /* cloud.cc in Sources */,
-				B032D6D1106C02150002D70D /* items.cc in Sources */,
-				B032D6D2106C02150002D70D /* skills.cc in Sources */,
-				B032D6D3106C02150002D70D /* it_use2.cc in Sources */,
-				B032D6D4106C02150002D70D /* invent.cc in Sources */,
-				B032D6D5106C02150002D70D /* libutil.cc in Sources */,
-				B032D6D6106C02150002D70D /* delay.cc in Sources */,
-				B032D6D7106C02150002D70D /* dungeon.cc in Sources */,
-				B032D6D8106C02150002D70D /* debug.cc in Sources */,
-				B032D6D9106C02150002D70D /* mt19937ar.cc in Sources */,
-				B032D6DA106C02150002D70D /* itemprop.cc in Sources */,
-				B032D6DB106C02150002D70D /* notes.cc in Sources */,
-				B032D6DC106C02150002D70D /* mapdef.cc in Sources */,
-				B032D6DD106C02150002D70D /* branch.cc in Sources */,
-				B032D6DE106C02150002D70D /* mtransit.cc in Sources */,
-				B032D6DF106C02150002D70D /* ghost.cc in Sources */,
-				B032D6E0106C02150002D70D /* tutorial.cc in Sources */,
-				B032D6E1106C02150002D70D /* format.cc in Sources */,
-				B032D6E2106C02150002D70D /* database.cc in Sources */,
-				B032D6E3106C02150002D70D /* makeitem.cc in Sources */,
-				B032D6E4106C02150002D70D /* xom.cc in Sources */,
-				B032D6E5106C02150002D70D /* cio.cc in Sources */,
-				B032D6E6106C02150002D70D /* mapmark.cc in Sources */,
-				B032D6E7106C02150002D70D /* dgnevent.cc in Sources */,
-				B032D6E8106C02150002D70D /* luadgn.cc in Sources */,
-				B032D6E9106C02150002D70D /* place.cc in Sources */,
-				B032D6EA106C02150002D70D /* terrain.cc in Sources */,
-				B032D6EB106C02150002D70D /* traps.cc in Sources */,
-				B032D6EC106C02150002D70D /* state.cc in Sources */,
-				B032D6ED106C02150002D70D /* store.cc in Sources */,
-				B032D6EE106C02150002D70D /* mgrow.cc in Sources */,
-				B032D6EF106C02150002D70D /* quiver.cc in Sources */,
-				B032D6F0106C02150002D70D /* version.cc in Sources */,
-				B032D6F1106C02150002D70D /* crash-u.cc in Sources */,
-				B032D6F2106C02150002D70D /* spl-mis.cc in Sources */,
-				B032D6F3106C02150002D70D /* tile2.cc in Sources */,
-				B032D6F4106C02150002D70D /* tilebuf.cc in Sources */,
 				B032D6F5106C02150002D70D /* tilefont.cc in Sources */,
 				B032D6F6106C02150002D70D /* tilemcache.cc in Sources */,
 				B032D6F7106C02150002D70D /* tilepick.cc in Sources */,
 				B032D6F8106C02150002D70D /* tilereg.cc in Sources */,
+				B032D698106C02150002D70D /* tilesdl.cc in Sources */,
 				B032D6F9106C02150002D70D /* tiletex.cc in Sources */,
-				B032D6FA106C02150002D70D /* artefact.cc in Sources */,
-				B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */,
-				B082657810731AB5006EEC5A /* sqlite3.c in Sources */,
-				B07818DE1075D979008C3B64 /* sqldbm.cc in Sources */,
+				B032D6B2106C02150002D70D /* transfor.cc in Sources */,
+				B032D6EB106C02150002D70D /* traps.cc in Sources */,
+				B032D69F106C02150002D70D /* travel.cc in Sources */,
+				B032D6E0106C02150002D70D /* tutorial.cc in Sources */,
+				B032D6F0106C02150002D70D /* version.cc in Sources */,
+				B032D6AD106C02150002D70D /* view.cc in Sources */,
+				B032D6E4106C02150002D70D /* xom.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1913,7 +1969,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
@@ -1931,10 +1986,10 @@
 		1DEB928A08733DD80010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
 					DEBUG,
 					FULLDEBUG,
 					DEBUG_ITEM_SCAN,
@@ -1963,12 +2018,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.6;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.6.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Development;
@@ -2039,7 +2094,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
 					CLUA_BINDINGS,
 					DB_NDBM,
 					WIZARD,
@@ -2061,10 +2115,10 @@
 		7B97C0200A8ECFD700CE8936 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
 					DEBUG,
 					FULLDEBUG,
 					DEBUG_ITEM_SCAN,
@@ -2093,12 +2147,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.6;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.6.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -2112,7 +2166,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
 					CLUA_BINDINGS,
 					DB_NDBM,
 					WIZARD,
@@ -2131,9 +2184,9 @@
 		7B97C0250A8ED2AB00CE8936 /* Wizard */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
 					WIZARD,
 					DEBUG,
 					DEBUG_ITEM_SCAN,
@@ -2161,12 +2214,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.6;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.6.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Wizard;
@@ -2180,7 +2233,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/AppHdr.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					OSX,
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
@@ -2196,8 +2248,8 @@
 		7B97C0270A8ED34400CE8936 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
@@ -2224,12 +2276,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.6;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.6.sdk;
 				WARNING_CFLAGS = "";
 			};
 			name = Release;
@@ -2360,7 +2412,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					SQLITE_OMIT_AUTHORIZATION,
@@ -2389,6 +2440,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = SQLite;
+				WARNING_CFLAGS = "-w";
 			};
 			name = Development;
 		};
@@ -2428,6 +2480,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = SQLite;
+				WARNING_CFLAGS = "-w";
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -2440,7 +2493,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					SQLITE_OMIT_AUTHORIZATION,
@@ -2469,6 +2521,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = SQLite;
+				WARNING_CFLAGS = "-w";
 			};
 			name = Debug;
 		};
@@ -2506,6 +2559,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = SQLite;
+				WARNING_CFLAGS = "-w";
 			};
 			name = Wizard;
 		};

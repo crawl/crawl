@@ -176,6 +176,21 @@ Xom tricks other gods for their servants.
 
 Xom momentarily opens a gate.
 %%%%
+# changing the scenery
+Xom scenery
+
+Xom briefly touches your surroundings.
+
+Xom adds some personal touches to your environment.
+
+Xom complains about the scenery!
+
+Xom alters the dungeon around you.
+
+"There, this looks better."
+
+"Just a minor improvement..."
+%%%%
 ##################
 # Xom nastiness
 ##################
@@ -238,6 +253,10 @@ Xom decides to rearrange the pieces.
 
 "This might be better!"
 %%%%
+Xom swap weapons
+
+@Xom rearrange the pieces@
+%%%%
 Xom teleportation journey
 
 "Whee!"
@@ -277,6 +296,10 @@ Xom hostile monster
 "Let's see if it's strong enough to survive yet."
 
 You hear Xom's maniacal laughter.
+%%%%
+Xom animate monster weapon
+
+@Xom hostile monster@
 %%%%
 Xom banishment
 

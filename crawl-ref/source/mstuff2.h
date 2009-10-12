@@ -27,8 +27,7 @@ bool monster_random_space(const monsters *monster, coord_def& target,
 bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
 void monster_teleport(monsters *monster, bool instan, bool silent = false);
-void ugly_thing_energy_mutate(monsters *ugly);
-bool ugly_thing_proximity_mutate(monsters *ugly);
+bool ugly_thing_mutate(monsters *ugly, bool proximity = false);
 bool orc_battle_cry(monsters *chief);
 bool orange_statue_effects(monsters *mons);
 bool silver_statue_effects(monsters *mons);

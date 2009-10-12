@@ -7,7 +7,6 @@
 #ifndef CIO_H
 #define CIO_H
 
-#include "AppHdr.h"
 #include "enum.h"
 #include "externs.h"
 #include "defines.h"

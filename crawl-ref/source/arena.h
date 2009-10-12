@@ -6,7 +6,6 @@
 #ifndef ARENA_H
 #define ARENA_H
 
-#include "AppHdr.h"
 #include "enum.h"
 
 class level_id;

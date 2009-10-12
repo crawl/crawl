@@ -66,6 +66,8 @@ std::string cloud_name(cloud_type type);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);
+bool in_what_cloud (cloud_type type);
+cloud_type in_what_cloud ();
 
 // fog generator
 void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,

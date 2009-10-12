@@ -16,7 +16,6 @@ REVISION("$Rev$");
 #include "externs.h"
 
 #include "itemprop.h"
-#include "macro.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"

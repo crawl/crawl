@@ -61,7 +61,6 @@ REVISION("$Rev$");
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "tiles.h"
 #include "transfor.h"
 #include "traps.h"
 #include "tutorial.h"

@@ -27,7 +27,6 @@ REVISION("$Rev$");
 #include "invent.h"
 #include "items.h"
 #include "item_use.h"
-#include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "los.h"
@@ -35,7 +34,6 @@ REVISION("$Rev$");
 #include "message.h"
 #include "monplace.h"
 #include "misc.h"
-#include "overmap.h"
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
@@ -44,7 +42,6 @@ REVISION("$Rev$");
 #include "spells2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
@@ -441,6 +438,16 @@ static bool _disc_of_storms(void)
             // Non-controlleable, so no player tracer.
             zapping(which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam);
 
+        }
+
+        for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
+        {
+            if (grd(*ri) < DNGN_MAXWALL)
+                continue;
+
+            if (one_chance_in(60 - you.skills[SK_EVOCATIONS]))
+                place_cloud(CLOUD_RAIN, *ri,
+                            random2(you.skills[SK_EVOCATIONS]), KC_YOU);
         }
     }
 

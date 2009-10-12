@@ -5,6 +5,7 @@ artefact.o \
 acr.o \
 arena.o \
 beam.o \
+bitary.o \
 branch.o \
 chardump.o \
 cio.o \

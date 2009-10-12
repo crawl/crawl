@@ -39,7 +39,6 @@ REVISION("$Rev$");
 #include <cstdlib>
 
 #include "cio.h"
-#include "delay.h"
 #include "externs.h"
 #include "message.h"
 #include "state.h"

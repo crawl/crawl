@@ -13,7 +13,7 @@ REVISION("$Rev$");
 #include <stdio.h>
 #include <algorithm>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -22,20 +22,13 @@ REVISION("$Rev$");
 #include "beam.h"
 #include "database.h"
 #include "debug.h"
-#include "fight.h"
 #include "ghost.h"
-#include "itemname.h"
 #include "message.h"
-#include "misc.h"
-#include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
-#include "mstuff2.h"
 #include "newgame.h"
 #include "player.h"
 #include "religion.h"
-#include "spells2.h"
-#include "spells4.h"
 #include "state.h"
 #include "stuff.h"
 #include "view.h"

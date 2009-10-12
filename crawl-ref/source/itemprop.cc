@@ -14,7 +14,7 @@ REVISION("$Rev$");
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
  #include <conio.h>
 #endif
 
@@ -26,17 +26,14 @@ REVISION("$Rev$");
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
-#include "it_use2.h"
 #include "macro.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "notes.h"
 #include "player.h"
 #include "quiver.h"
-#include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
-#include "view.h"
 #include "xom.h"
 
 

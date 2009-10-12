@@ -26,7 +26,6 @@ REVISION("$Rev$");
 #endif
 #include "tutorial.h"
 #include "view.h"
-#include "initfile.h"
 
 MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
 {
@@ -1321,7 +1320,7 @@ int slider_menu::item_colour(int index, const MenuEntry *me) const
     int colour = Menu::item_colour(index, me);
     if (index == selected && selected != -1)
     {
-#if defined(WIN32CONSOLE) || defined(DOS)
+#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS)
         colour = dos_brand(colour, CHATTR_REVERSE);
 #elif defined(USE_TILE)
         colour = (colour == WHITE ? YELLOW : WHITE);

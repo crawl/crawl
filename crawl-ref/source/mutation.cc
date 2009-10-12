@@ -14,7 +14,7 @@ REVISION("$Rev$");
 
 #include <sstream>
 
-#ifdef DOS
+#ifdef TARGET_OS_DOS
 #include <conio.h>
 #endif
 
@@ -41,7 +41,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
-#include "view.h"
 #include "xom.h"
 
 static int _body_covered();
@@ -1308,6 +1307,12 @@ formatted_string describe_mutations()
         // Breathe poison replaces spit poison.
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison." EOL;
+        if (you.experience_level > 2)
+        {
+            std::ostringstream num;
+            num << you.experience_level/3;
+            result += "Your serpentine skin is tough (AC +" + num.str() + ")." EOL;
+        }
         have_any = true;
         break;
 
@@ -1466,6 +1471,17 @@ formatted_string describe_mutations()
     {
         result += "Your body does not fit into most forms of armour." EOL;
         have_any = true;
+    }
+
+    if (player_genus(GENPC_DRACONIAN))
+    {
+        int ac = (you.experience_level < 8) ? 2 :
+                 (you.species == SP_GREY_DRACONIAN)
+                     ? (you.experience_level - 4) / 2 + 1 :
+                       you.experience_level / 4 + 1;
+        std::ostringstream num;
+        num << ac;
+        result += "Your scales are hard (AC +" + num.str() + ")." EOL;
     }
 
     result += "</lightblue>";
@@ -1904,6 +1920,7 @@ static mutation_type _get_random_mutation(bool prefer_good,
     return (chosen);
 }
 
+#ifdef DEBUG
 static bool _is_random(mutation_type which_mutation)
 {
     return (which_mutation == RANDOM_MUTATION
@@ -1911,6 +1928,7 @@ static bool _is_random(mutation_type which_mutation)
             || which_mutation == RANDOM_GOOD_MUTATION
             || which_mutation == RANDOM_BAD_MUTATION);
 }
+#endif
 
 // Tries to give you the mutation by deleting a conflicting
 // one, or clears out conflicting mutations if we should give

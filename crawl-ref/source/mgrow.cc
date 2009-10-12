@@ -8,7 +8,6 @@
 REVISION("$Rev$");
 
 #include "enum.h"
-#include "ghost.h"
 #include "mgrow.h"
 #include "mon-util.h"
 #include "monstuff.h"

@@ -553,6 +553,7 @@ i-conservation AMU_CONSERVATION
 i-c-flight AMU_CONTROLLED_FLIGHT
 i-inaccuracy AMU_INACCURACY
 i-r-mutation AMU_RESIST_MUTATION
+i-spirit AMU_SPIRIT_SHIELD
 %rim 1
 %shrink 1
 

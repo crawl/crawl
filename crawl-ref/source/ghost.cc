@@ -22,7 +22,6 @@ REVISION("$Rev$");
 #include "place.h"
 #include "player.h"
 #include "religion.h"
-#include "view.h"
 #include <vector>
 
 #define MAX_GHOST_DAMAGE     50
