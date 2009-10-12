@@ -232,6 +232,7 @@ static void _register_ray(double accx, double accy, double slope)
     ray.length = coords.size();
     for (unsigned int i = 0; i < coords.size(); i++)
         ray_coords.push_back(coords[i]);
+    fullrays.push_back(ray);
 }
 
 static void _create_blockrays()
