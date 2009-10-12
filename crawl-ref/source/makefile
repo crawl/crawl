@@ -336,7 +336,7 @@ endif # MacOS
 endif # TILES
 
 CFWARN_L := -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
-CFOTHERS_L = $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
+CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
 
 #
 # Figure out the build settings for this type of build
@@ -385,6 +385,7 @@ DEFINES += -DFULLDEBUG
 endif
 ifeq ($(DEBUG),y)
 EXTRA_FLAGS += -ggdb
+DEFINES += -DDEBUG
 endif
 ifeq ($(WIZARD),y)
 DEFINES += -DWIZARD
