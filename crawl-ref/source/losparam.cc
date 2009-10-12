@@ -100,7 +100,7 @@ opacity_type los_param_base::opacity(const coord_def& p) const
         return OPC_HALF;
     else if (f == DNGN_TREES)
         return OPC_HALF;
-    else if ((m = mgrd(trans(p))) && menv[m].type == MONS_BUSH)
+    else if ((m = mgrd(trans(p))) != NON_MONSTER && menv[m].type == MONS_BUSH)
         return OPC_HALF;
     else
         return OPC_CLEAR;
