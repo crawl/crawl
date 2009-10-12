@@ -286,7 +286,7 @@ static void _create_blockrays()
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
-          num_cellrays, raylengths.size(), num_nondupe_rays );
+          num_cellrays, fullrays.size(), num_nondupe_rays );
 #endif
 }
 
