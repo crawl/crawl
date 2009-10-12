@@ -27,7 +27,7 @@ AR := ar rcu
 RANLIB := ranlib
 DEL := del
 
-CFLAGS := -I. -DHAVE_CONFIG_H
+CFLAGS += -I. -DHAVE_CONFIG_H
 LDFLAGS :=
 
 LIBNAME := libpcre.a
