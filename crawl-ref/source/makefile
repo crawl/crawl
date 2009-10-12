@@ -26,6 +26,8 @@ GAME = crawl
 #
 # These are good optimizations for a Pentium M or better:
 #CFOPTIMIZE := -O2 -march=i686 -mtune=i686 -mmmx -msse -msse2 -mfpmath=sse -funroll-all-loops
+# These are really good options for the Intel C++ compiler:
+#CFOPTIMIZE := -O3 -parallel
 CFOPTIMIZE := -O2 -funroll-all-loops
 CFOTHERS := -fno-strict-aliasing -pipe
 CFOTHERS_L := -fsigned-char
