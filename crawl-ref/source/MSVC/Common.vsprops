@@ -6,4 +6,8 @@
 	OutputDirectory="$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)"
 	IntermediateDirectory="$(SolutionDir)\obj\$(ProjectName)\$(ConfigurationName)"
 	>
+	<Tool
+		Name="VCCLCompilerTool"
+		MinimalRebuild="true"
+	/>
 </VisualStudioPropertySheet>
