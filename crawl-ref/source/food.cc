@@ -353,11 +353,9 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
 {
     ASSERT(corpse_id != -1);
 
-    const bool rotten  = food_is_rotten(mitm[corpse_id]);
-    const bool can_sac = you.duration[DUR_PRAYER]
-                         && god_likes_butchery(you.religion);
+    const bool rotten = food_is_rotten(mitm[corpse_id]);
 
-    if (can_sac)
+    if (you.duration[DUR_PRAYER] && god_likes_butchery(you.religion))
     {
         if (!rotten)
         {
