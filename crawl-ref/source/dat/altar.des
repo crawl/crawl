@@ -504,3 +504,36 @@ Cnef'fen...ngh'hgnC
 Cnnnnnnn...nnnnnnnC
 CCCCCCCC+++CCCCCCCC
 ENDMAP
+
+###################################################################
+# Distorted kobolds (Jude)
+NAME:   due_chaos_kobolds
+DEPTH:  D:13-27, Vault, Elf, Crypt
+ORIENT: float
+KFEAT:  L = altar_lugonu
+KFEAT:  P = enter_abyss
+KFEAT:  e = .
+KFEAT:  1 = .
+COLOUR: . = random
+COLOUR: 1 = random
+MARKER: e = lua:fog_machine { cloud_type="purple smoke", walk_dist=1, size=9, \
+            pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+            spread_rate=3, start_clouds=1 }
+: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion w:6 |" ..
+:       "                  sabre ego:distortion | short sword ego:distortion" ..
+:       "  / kobold w:80 ; short sword | sabre | quick blade w:3")
+MAP
+  ccccc
+ cc...cc
+cc.eP..cc
+ cc...cc
+ ccc.cccc
+cc......ccc
+c...111...c
+cc..1L1..cc
+c...111...c
+ccc......cc
+  ccc..ccc
+    c++c
+     @@
+ENDMAP
