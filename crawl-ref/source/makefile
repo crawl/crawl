@@ -9,6 +9,27 @@
 GAME = crawl
 
 #
+# Compiler Flags
+#
+# The compiler flag variables are separated into their individual
+# purposes, making it easier to deal with the various tools involved
+# in a compile.
+#
+# These are also divided into global vs. local flags. So for instance,
+# CFOPTIMIZE affects Crawl, Lua, and SQLite, while CFOPTIMIZE_L only
+# affects Crawl.
+#
+# The variables are as follows:
+# CFOPTIMIZE(_L) - Optimization flags
+# CFWARN(_L) - Warning flags
+# CFOTHERS(_L) - Anything else
+#
+CFOPTIMIZE := -O2 -march=i686 -mtune=i686 -mmmx -msse -msse2 -mfpmath=sse -funroll-all-loops
+CFOTHERS := -fno-strict-aliasing -pipe
+CFOTHERS_L := -fsigned-char
+CFWARN := -Wall
+
+#
 # The GCC and GXX variables are set later.
 #
 CC = $(GCC)
@@ -18,6 +39,7 @@ COPY = cp
 
 export CC
 export CXX
+export CFLAGS
 
 #
 # Platform Detection
@@ -50,6 +72,7 @@ GAME = crawl.exe
 endif
 
 TILES = n
+HURRY = n
 
 #
 # Set up object file dependencies for $(GAME) target.
@@ -139,7 +162,7 @@ EXTRA_DEPENDS  += $(FSQLLIBA)
 
 LIB := -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 
-INCLUDES += -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
+INCLUDES_L += -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
 ifeq ($(OSNAME),MacOS)
 APPLE_GCC=y
@@ -190,8 +213,8 @@ RLTILES = rltiles
 #
 ifneq ($(TILES),n)
 
-DEFINES += -DUSE_TILE
-INCLUDES += -I$(RLTILES)
+DEFINES_L += -DUSE_TILE
+INCLUDES_L += -I$(RLTILES)
 
 ifeq ($(OSNAME),MacOS)
 # Handle the tile build dependencies for Mac a bit
@@ -220,19 +243,19 @@ endif
 # headers and link to them.
 #
 ifneq ($(shell ls /Library/Frameworks/SDL.framework 2> /dev/null),)
-INCLUDES += -I/Library/Frameworks/SDL.framework/Headers
+INCLUDES_L += -I/Library/Frameworks/SDL.framework/Headers
 LIB += -framework SDL
 endif
 ifneq ($(shell ls /Library/Frameworks/SDL_image.framework 2> /dev/null),)
-INCLUDES += -I/Library/Frameworks/SDL_image.framework/Headers
+INCLUDES_L += -I/Library/Frameworks/SDL_image.framework/Headers
 LIB += -framework SDL_image
 endif
 ifneq ($(shell ls /Library/Frameworks/Freetype2.framework 2> /dev/null),)
-INCLUDES += -I/Library/Frameworks/Freetype2.framework/Headers
+INCLUDES_L += -I/Library/Frameworks/Freetype2.framework/Headers
 LIB += -framework Freetype2
 endif
 ifneq ($(shell ls /Library/Frameworks/libpng.framework 2> /dev/null),)
-INCLUDES += -I/Library/Frameworks/libpng.framework/Headers
+INCLUDES_L += -I/Library/Frameworks/libpng.framework/Headers
 LIB += -framework libpng
 endif
 
@@ -303,16 +326,15 @@ ifneq ($(OSNAME),MacOS)
 LIB += -lGL -lGLU
 endif
 
-DEFINES += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
-INCLUDES += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
+DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
+INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
 endif # MacOS
 
 endif # TILES
 
-
-CFWARN := -Wall -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
-CFOTHERS = -fno-strict-aliasing -fsigned-char $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS -pipe $(SDL_CFLAGS)
+CFWARN_L := -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
+CFOTHERS_L = $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
 
 #
 # Figure out the build settings for this type of build
@@ -352,6 +374,10 @@ DEBUG=y
 OPTIMIZE=y
 endif
 
+ifneq ($(HURRY),n)
+OPTIMIZE=n
+endif
+
 ifeq ($(FULLDEBUG),y)
 DEFINES += -DFULLDEBUG
 endif
@@ -361,46 +387,44 @@ endif
 ifeq ($(WIZARD),y)
 DEFINES += -DWIZARD
 endif
-ifeq ($(OPTIMIZE),y)
-CFOPTIMIZE  := -O2
-else
+ifeq ($(OPTIMIZE),n)
 CFOPTIMIZE  := -O0
 endif
 ifneq ($(PCH),n)
-CFWARN += -Winvalid-pch
+CFWARN_L += -Winvalid-pch
 endif
 
 # Cygwin has a panic attack if we do this...
 ifneq ($(OPTIMIZE),n)
 ifneq ($(UNAME_S),CYGWIN)
-CFWARN += -Wuninitialized
+CFWARN_L += -Wuninitialized
 else
-CFWARN += -Wno-uninitialized
+CFWARN_L += -Wno-uninitialized
 endif
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-CFOTHERS += '-DSAVE_DIR_PATH="$(strip $(SAVEDIR))"'
+CFOTHERS_L += '-DSAVE_DIR_PATH="$(strip $(SAVEDIR))"'
 endif
 
 ifneq ($(strip $(DATADIR)),)
-CFOTHERS += '-DDATA_DIR_PATH="$(strip $(DATADIR))"'
+CFOTHERS_L += '-DDATA_DIR_PATH="$(strip $(DATADIR))"'
 endif
 
 ifeq ($(strip $(UNICODE_GLYPHS)),y)
 # Include path for (n)curses with Unicode support.
-INCLUDES += -I/usr/include/ncursesw
+INCLUDES_L += -I/usr/include/ncursesw
 
 # Your ncurses library may include Unicode support, and you may not have a
 # separate libncursesw; in that case, change this line accordingly.
 LIBCURS  = ncursesw
-CFOTHERS += -DUNICODE_GLYPHS
+CFOTHERS_L += -DUNICODE_GLYPHS
 
 ifneq ($(strip $(UNICODE_LOCALE)),)
 ifneq ($(strip $(UNICODE_LOCALE)),.)
-CFOTHERS += -DUNICODE_LOCALE=\"$(strip $(UNICODE_LOCALE))\"
+CFOTHERS_L += -DUNICODE_LOCALE=\"$(strip $(UNICODE_LOCALE))\"
 else
-CFOTHERS += -DUNICODE_LOCALE=\"\"
+CFOTHERS_L += -DUNICODE_LOCALE=\"\"
 endif
 endif
 
@@ -411,7 +435,7 @@ endif
 
 else
 # Include path for curses or ncurses (non-Unicode).
-INCLUDES += -I/usr/include/ncurses
+INCLUDES_L += -I/usr/include/ncurses
 LIBCURS  = ncurses
 endif
 
@@ -424,14 +448,15 @@ endif
 endif
 
 ifeq ($(OSNAME),WIN32)
-INCLUDES += -Iutil/pcre
+INCLUDES_L += -Iutil/pcre
 LIB += $(FPCRELIBA)
 else
 LIB += -l$(LIBCURS)
 endif
 
-CFLAGS  := $(CFOPTIMIZE) $(CFWARN) $(INCLUDES) $(CFOTHERS)
-YCFLAGS := $(CFOPTIMIZE) $(CFOTHERS) $(INCLUDES)
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
+CFLAGS_L := $(CFOPTIMIZE_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
+YCFLAGS  := -w
 
 UTIL = util/
 
@@ -627,7 +652,7 @@ wizard: $(GAME)
 # test.
 
 $(UTIL)%.o: $(UTIL)%.cc
-	$(QUIET_CXX)$(CXX) $(YCFLAGS) -o $@ -c $<
+	$(QUIET_CXX)$(CXX) $(CFLAGS) $(CFLAGS_L) $(YCFLAGS) -o $@ -c $<
 
 ifneq ($(PCH),n)
 %.h.gch: %.h
@@ -639,10 +664,10 @@ endif
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS)
 
 %.o: %.m
-	$(QUIET_CXX)$(CC) $(CFLAGS) -c $< -o $@
+	$(QUIET_CXX)$(CC) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
 
 %.o: %.cc
-	$(QUIET_CXX)$(CXX) $(CFLAGS) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
 
 #############################################################################
 # Build PCRE
