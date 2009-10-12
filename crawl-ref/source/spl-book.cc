@@ -2363,7 +2363,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     props.erase(SPELL_LIST_KEY);
     props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
 
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY];
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
     spell_vec.set_max_size(SPELLBOOK_SIZE);
 
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -2808,7 +2808,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     props.erase(SPELL_LIST_KEY);
     props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
 
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY];
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
     spell_vec.set_max_size(SPELLBOOK_SIZE);
 
     // Count how often each spell school appears in the book.

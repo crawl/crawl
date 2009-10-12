@@ -3382,9 +3382,9 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
     props[VAULT_MON_BASES_KEY].new_vector(SV_LONG).resize(size);
     props[VAULT_MON_WEIGHTS_KEY].new_vector(SV_LONG).resize(size);
 
-    CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY];
-    CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY];
-    CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY];
+    CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
+    CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
+    CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY].get_vector();
 
     for (unsigned int i = 0; i < size; i++)
     {
@@ -3422,9 +3422,9 @@ void get_vault_mon_list(std::vector<mons_spec> &list)
     ASSERT(props.exists(VAULT_MON_BASES_KEY));
     ASSERT(props.exists(VAULT_MON_WEIGHTS_KEY));
 
-    CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY];
-    CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY];
-    CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY];
+    CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
+    CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
+    CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY].get_vector();
 
     ASSERT(type_vec.size() == base_vec.size());
     ASSERT(type_vec.size() == weight_vec.size());
