@@ -164,7 +164,16 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 #endif
 
         update_screen();
-        delay(50);
+
+        int zap_delay = 50;
+        // Scale delay to match change in arena_delay.
+        if (crawl_state.arena)
+        {
+            zap_delay *= Options.arena_delay;
+            zap_delay /= 600;
+        }
+
+        delay(zap_delay);
     }
 }
 
@@ -5552,7 +5561,16 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
                     explosion_draw_cell(delta + pos());
             }
             update_screen();
-            delay(50);
+
+            int explode_delay = 50;
+            // Scale delay to match change in arena_delay.
+            if (crawl_state.arena)
+            {
+                explode_delay *= Options.arena_delay;
+                explode_delay /= 600;
+            }
+
+            delay(explode_delay);
         }
     }
 
@@ -5584,7 +5602,17 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     // Delay after entire explosion has been drawn.
     if (!is_tracer && cells_seen > 0 && show_more)
-        delay(150);
+    {
+        int explode_delay = 150;
+        // Scale delay to match change in arena_delay.
+        if (crawl_state.arena)
+        {
+            explode_delay *= Options.arena_delay;
+            explode_delay /= 600;
+        }
+
+        delay(explode_delay);
+    }
 
     return (cells_seen > 0);
 }
