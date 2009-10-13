@@ -184,24 +184,19 @@ Summon Divine Warrior
 
 Summon an Angel or Daeva, powerful warriors against evil. They may be blessed by the Shining One to stay longer or even permanently in this world.
 %%%%
-# Both Kikubaaqudgha and Yredelemnul.
-Recall Undead Slaves
-
-Recall your undead followers from anywhere on the level to your immediate surroundings.
-%%%%
 # Kikubaaqudgha
-Enslave Undead
+Receive Corpses
 
-Permanently enslave undead monsters.
-%%%%
-Invoke Death
-
-Summon a personification of Death, which, depending on your Invocations skill, may be hostile.
+Create one or more reanimatable monster corpses near yourself. The number and freshness of these are dependent on Invocations skill.
 %%%%
 # Yredelemnul
 Animate Remains
 
 Reanimate a single corpse or skeleton as a follower. Note that zombies and skeletons cannot leave the level they were created on.
+%%%%
+Recall Undead Slaves
+
+Recall your undead followers from anywhere on the level to your immediate surroundings.
 %%%%
 Animate Dead ability
 
@@ -363,10 +358,10 @@ Recall Orcish Followers
 
 Recall your orcish followers from anywhere on the level to your immediate surroundings.
 %%%%
-#Feawn
+# Feawn
 Decomposition
 
-This ability causes corpses in your field of vision to rapidly decay. Corpses with a monster (or you) on top of them will not be affected.
+Cause corpses in your field of vision to rapidly decay. Corpses with a monster (or you) on top of them will not be affected.
 %%%%
 Sunlight
 
@@ -374,19 +369,19 @@ Call sunlight down over a small area of the dungeon. Monsters illuminated by the
 %%%%
 Growth
 
-This ability uses fruit to grow a ring of plants around you. If a complete ring cannot be formed (because you do not have enough fruit), plants will grow on squares adjacent to you that are close to monsters.
+Use fruit to grow a ring of plants around yourself. If a complete ring cannot be formed (because you do not have enough fruit), plants will grow on squares adjacent to you that are close to monsters.
 %%%%
 Rain
 
-This ability causes rain to fall around you, turning the dungeon floor into shallow water, and shallow water into deep water.
+Cause rain to fall around yourself, turning the dungeon floor into shallow water and shallow water into deep water.
 %%%%
 Reproduction
 
-This ability creates giant spores from corpses in your line of sight. The spores will explode, causing damage to you or your enemies.
+Create giant spores from corpses in your line of sight. The spores will explode, causing damage to you or your enemies.
 %%%%
 Evolution
 
-This ability requires two pieces of fruit to use. It causes some plants and fungi in your sight to turn into stronger species.
+Use fruit to turn some plants and fungi in your line of sight into stronger species.
 %%%%
 Renounce Religion
 
