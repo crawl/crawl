@@ -576,7 +576,6 @@ bool find_ray(const coord_def& source, const coord_def& target,
     const int absy  = signy * (targety - sourcey);
     const coord_def abs = coord_def(absx, absy);
 
-    int cur_offset  = 0;
     int shortest    = INFINITE_DISTANCE;
     int imbalance   = INFINITE_DISTANCE;
     const double want_slope = _calc_slope(absx, absy);
@@ -605,8 +604,8 @@ bool find_ray(const coord_def& source, const coord_def& target,
                 int real_length = 0;
                 for (inray = 0; inray <= cellray; ++inray)
                 {
-                    const int xi = signx * ray_coords[inray + cur_offset].x;
-                    const int yi = signy * ray_coords[inray + cur_offset].y;
+                    const int xi = signx * ray_coords[inray + fullrays[fray].start].x;
+                    const int yi = signy * ray_coords[inray + fullrays[fray].start].y;
                     if (inray < cellray && !ignore_solid
                         && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
                     {
