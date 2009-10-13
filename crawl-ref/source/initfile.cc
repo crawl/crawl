@@ -475,7 +475,7 @@ static unsigned curses_attribute(const std::string &field)
         int colour = str_to_colour(field.substr(col + 1));
         if (colour == -1)
         {
-            crawl_state.add_startup_error(
+            Options.report_error(
                 make_stringf("Bad highlight string -- %s\n", field.c_str()));
         }
         else
@@ -483,7 +483,7 @@ static unsigned curses_attribute(const std::string &field)
     }
     else if (field != "none")
     {
-        crawl_state.add_startup_error(
+        Options.report_error(
             make_stringf( "Bad colour -- %s\n", field.c_str() ) );
     }
     return CHATTR_NORMAL;
@@ -579,7 +579,7 @@ void game_options::set_activity_interrupt(
         delay_type delay = get_delay(delay_name);
         if (delay == NUM_DELAYS)
         {
-            crawl_state.add_startup_error(
+            report_error (
                 make_stringf("Unknown delay: %s\n", delay_name.c_str()));
             return;
         }
@@ -597,7 +597,7 @@ void game_options::set_activity_interrupt(
     activity_interrupt_type ai = get_activity_interrupt(interrupt);
     if (ai == NUM_AINTERRUPTS)
     {
-        crawl_state.add_startup_error(
+        report_error (
             make_stringf("Delay interrupt name \"%s\" not recognised.\n",
                          interrupt.c_str()));
         return;
@@ -614,7 +614,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     const delay_type delay = get_delay(activity_name);
     if (delay == NUM_DELAYS)
     {
-        crawl_state.add_startup_error(
+        report_error (
             make_stringf("Unknown delay: %s\n", activity_name.c_str()));
         return;
     }
@@ -647,6 +647,10 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
 
 void game_options::reset_options()
 {
+    filename     = "unkown";
+    basefilename = "unknown";
+    line_num     = -1;
+
     set_default_activity_interrupts();
 
     reset_startup_options();
@@ -1120,7 +1124,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         }
     }
     if (!found)
-        crawl_state.add_startup_error(
+        report_error (
             make_stringf("Unknown monster: \"%s\"", mons.c_str()));
 }
 
@@ -1302,8 +1306,19 @@ std::string read_init_file(bool runscript)
     }
 
     Options.filename = init_file_name;
+    Options.line_num = 0;
+#ifdef MULTIUSER
+    Options.basefilename = "~/.crawlrc";
+#else
+    Options.basefilename = "init.txt";
+#endif
     read_options(f, runscript);
     fclose(f);
+
+    Options.filename    = "unknown";
+    Options.basefilename = "unknown";
+    Options.line_num    = -1;
+
     return ("");
 }
 
@@ -1448,6 +1463,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
 
     while (!il.eof())
     {
+        line_num++;
         std::string s   = il.getline();
         std::string str = s;
         line++;
@@ -1925,7 +1941,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             this->_opt_var = col;                                       \
         } else {                                                        \
             /*fprintf( stderr, "Bad %s -- %s\n", key, field.c_str() );*/ \
-            crawl_state.add_startup_error(                              \
+            report_error (                                              \
                 make_stringf("Bad %s -- %s\n",                          \
                     key.c_str(), field.c_str()));                       \
         }                                                               \
@@ -1944,11 +1960,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         const int max_val = (_max_val);                                 \
         int val = atoi(field.c_str());                                  \
         if (val < min_val) {                                            \
-            crawl_state.add_startup_error(                              \
+            report_error (                                              \
                 make_stringf("Bad %s: %d < %d", _opt_str, val, min_val)); \
             val = min_val;                                              \
         } else if (val > max_val) {                                     \
-            crawl_state.add_startup_error(                              \
+            report_error (                                              \
                 make_stringf("Bad %s: %d > %d", _opt_str, val, max_val)); \
             val = max_val;                                              \
         }                                                               \
@@ -2092,7 +2108,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 autopickups |= (1L << j);
             else
             {
-                crawl_state.add_startup_error(
+                report_error (
                     make_stringf("Bad object type '%c' for autopickup.\n",
                                  type));
             }
@@ -2540,7 +2556,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             wiz_mode = WIZ_YES;
         else
         {
-            crawl_state.add_startup_error(
+            report_error (
                 make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
         }
 #endif
@@ -2581,7 +2597,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         if (field.empty())
         {
-            crawl_state.add_startup_error("Autoinscirbe string is empty");
+            report_error("Autoinscirbe string is empty");
             return;
         }
 
@@ -2589,7 +2605,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         const size_t last  = field.find_last_of(':');
         if (first == std::string::npos || first != last)
         {
-            crawl_state.add_startup_error(
+            report_error (
                 make_stringf("Autoinscribe string must have exactly "
                              "one colon: %s\n", field.c_str()));
             return;
@@ -2597,7 +2613,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
         if (first == 0)
         {
-            crawl_state.add_startup_error(
+            report_error (
                 make_stringf("Autoinscribe pattern is empty: %s\n",
                              field.c_str()));
             return;
@@ -2605,7 +2621,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
         if (last == field.length() - 1)
         {
-            crawl_state.add_startup_error(
+            report_error (
                 make_stringf("Autoinscribe result is empty: %s\n",
                              field.c_str()));
             return;
@@ -2615,7 +2631,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
         if (thesplit.size() != 2)
         {
-            crawl_state.add_startup_error(
+            report_error (
                 make_stringf("Error parsing autoinscribe string: %s\n",
                              field.c_str()));
             return;
@@ -2641,7 +2657,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if ( insplit.size() == 0 || insplit.size() > 2
                  || insplit.size() == 1 && i != 0 )
             {
-                crawl_state.add_startup_error(
+                report_error (
                     make_stringf("Bad hp_colour string: %s\n", field.c_str()));
                 break;
             }
@@ -2665,7 +2681,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if ( insplit.size() == 0 || insplit.size() > 2
                  || insplit.size() == 1 && i != 0 )
             {
-                crawl_state.add_startup_error(
+                report_error (
                     make_stringf("Bad mp_colour string: %s\n", field.c_str()));
                 break;
             }
@@ -2688,8 +2704,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if (insplit.size() == 0 || insplit.size() > 2
                 || insplit.size() == 1 && i != 0)
             {
-                crawl_state.add_startup_error(
-                    make_stringf("Bad stat_colour string: %s\n", field.c_str()));
+                report_error (
+                    make_stringf("Bad stat_colour string: %s\n",
+                                 field.c_str()));
                 break;
             }
 
@@ -2711,7 +2728,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 note_skill_levels.push_back(num);
             else
             {
-                crawl_state.add_startup_error(
+                report_error (
                     make_stringf("Bad skill level to note -- %s\n",
                                  thesplit[i].c_str()));
                 continue;
@@ -3387,6 +3404,10 @@ void game_options::include(const std::string &rawfilename,
 
     // Change this->filename to the included filename while we're reading it.
     unwind_var<std::string> optfile(this->filename, include_file);
+    unwind_var<std::string> basefile(this->basefilename, rawfilename);
+
+    // Save current line number
+    unwind_var<int> currlinenum(this->line_num, 0);
 
     // Also unwind any aliases defined in included files.
     unwind_var<string_map> unwalias(aliases);
@@ -3405,9 +3426,17 @@ void game_options::report_error(const std::string &error)
     // If called before game starts, log a startup error,
     // otherwise spam the warning channel.
     if (crawl_state.need_save)
-        mprf(MSGCH_ERROR, "Warning: %s", error.c_str());
+    {
+        mprf(MSGCH_ERROR, "Warning: %s (%s:%d)", error.c_str(),
+             basefilename.c_str(), line_num);
+    }
     else
-        crawl_state.add_startup_error(error);
+    {
+        crawl_state.add_startup_error(make_stringf("%s (%s:%d)",
+                                                   error.c_str(),
+                                                   basefilename.c_str(),
+                                                   line_num));
+    }
 }
 
 static std::string check_string(const char *s)
