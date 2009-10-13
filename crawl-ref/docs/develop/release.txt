@@ -6,7 +6,7 @@ for those the list begins with step 2.
 
 0.  Delay branching as long as possible
     Try to delay additions that forseeably won't make it into the next version
-    until the release is not too far off. Once trunk has been branched, you
+    until the release is not too far off. Once master has been branched, you
     have to commit all important changes twice, and it's easy to forget one
     of them.
 
@@ -15,9 +15,8 @@ for those the list begins with step 2.
     branch before the release.
     Thus, you'll need to branch as early as necessary and as late as possible.
 
-1.  Branch trunk into the new version
-    svn cp https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/trunk
-    https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/branches/stone_soup-0.X
+1.  Branch master into the new version
+    git push origin origin:refs/heads/stone_soup.0.X
 
 2.  Update version information
     version.h: Set VER_NUM = 0.X, VER_QUAL = empty.
@@ -44,7 +43,7 @@ for those the list begins with step 2.
     compiles correctly, then run some basic sanity tests including at least
     the following:
         * start a new game (both prechosen and random)
-        * saving/loading
+        * saving/loading (including loading from previous minor version)
         * being killed
         * level creation for all branches/portal vaults (using &~, &L)
         * accessing all help screens (including the ? submenus)
@@ -61,8 +60,11 @@ for those the list begins with step 2.
     the doc, settings and dat subfolders contain all relevant files.
 
 7.  Tag the release
-    svn cp https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/branches/stone_soup-0.X
-    https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/tags/stone_soup-0.X
+    In the branch you're about to tag:
+    git tag -a release-0.X.y
+
+    You'll need to push the tag into repository:
+    git push --tags
 
     The tags are some sort of frozen state of the source for all releases, so
     this is the last step you take before the actual release. All further
@@ -71,12 +73,12 @@ for those the list begins with step 2.
     merged into trunk AND branch AND the corresponding tag.
 
 8.  Checkout the release tag
-    svn co https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/tags/stone_soup-0.X
+    git checkout -b stone_soup-0.X release-0.X.y
 
-    Do a clean checkout into a new folder, so you don't get any compilation
-    stuff into the distribution. Package the source (as described in 6.) and
-    build the binaries. If you want you can do some more sanity testing but it
-    shouldn't be necessary anymore.
+    You may want to make a new shallow clone into a new folder, to make sure you    don't get any compilation stuff into the distribution.
+
+    Package the source (as described in 6.) and build the binaries. If you want
+    you can do some more sanity testing but it shouldn't be necessary anymore.
 
 9.  Upload the files to Sourceforge
     Probably requires SF permissions for file releases.
@@ -105,7 +107,7 @@ for those the list begins with step 2.
     for some more detailed explanations.
 
 11. Update the homepage
-    ssh -t username,crawl-ref@shell.sourceforge.net create
+    ssh -t username,crawl-ref@web.sourceforge.net create
 
     Go to /home/groups/c/cr/crawl-ref/htdocs.
     Paste the changelog into a newly created 0.X.txt
