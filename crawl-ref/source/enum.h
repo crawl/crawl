@@ -245,7 +245,6 @@ enum beam_type                  // beam[].flavour
     BEAM_PETRIFY,
     BEAM_BACKLIGHT,               // 45
     BEAM_PORKALATOR,
-    BEAM_SLIME,
     BEAM_SLEEP,
     BEAM_BERSERK,
     BEAM_LAST_ENCHANTMENT = BEAM_BERSERK,
@@ -1253,6 +1252,7 @@ enum duration_type
     DUR_LOWERED_MR,
     DUR_REPEL_STAIRS_MOVE,
     DUR_REPEL_STAIRS_CLIMB,
+    DUR_SLIMIFY,
 
     NUM_DURATIONS
 };

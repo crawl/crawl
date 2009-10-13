@@ -195,7 +195,7 @@ void delete_cloud( int cloud )
                         && one_chance_in(3))
                     // Don't drown the player!
                     feat = DNGN_DEEP_WATER;
-                else 
+                else
                     feat = grd(c.pos);
 
                 if (grd(c.pos) != feat)

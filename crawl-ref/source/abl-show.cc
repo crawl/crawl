@@ -322,7 +322,7 @@ static const ability_def Ability_List[] =
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, ABFLAG_NONE },
     { ABIL_JIYVA_JELLY_SHIELD, "Jelly Shield", 0, 0, 0, 0, ABFLAG_PIETY },
-    { ABIL_JIYVA_SLIMIFY, "Slimify", 4, 0, 100, 3, ABFLAG_NONE },
+    { ABIL_JIYVA_SLIMIFY, "Slimify", 4, 0, 100, 8, ABFLAG_NONE },
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       8, 0, 200, 15, ABFLAG_NONE },
 
@@ -2042,22 +2042,27 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_JIYVA_SLIMIFY:
-        beam.range = LOS_RADIUS;
-        if (!spell_direction(spd, beam))
-            return (false);
+    {
+        std::string msg;
+        int has_weapon = you.equip[EQ_WEAPON];
 
-        if (beam.target == you.pos())
+        if (has_weapon == -1)
+            msg = "your " + you.hand_name(true);
+        else
         {
-            mpr("You cannot slimify yourself!");
-            return (false);
+            item_def& weapon = *you.weapon();
+            msg = weapon.name(DESC_NOCAP_YOUR);
         }
-        if (!zapping(ZAP_SLIME, 16 + you.skills[SK_INVOCATIONS] * 8, beam,
-                     true))
-        {
-            return (false);
-        }
+
+        mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
+        you.duration[DUR_SLIMIFY] += you.skills[SK_INVOCATIONS] * 3 / 2 + 3;
+
+        if (you.duration[DUR_SLIMIFY] > 100)
+            you.duration[DUR_SLIMIFY] = 100;
+
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
+    }
 
     case ABIL_JIYVA_CURE_BAD_MUTATION:
         if (jiyva_remove_bad_mutation())
@@ -2349,8 +2354,12 @@ std::vector<talent> your_talents(bool check_confused)
     if (player_mutation_level(MUT_SMITE))
         _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused);
 
-    if (you.duration[DUR_TRANSFORMATION] && you.attribute[ATTR_TRANSFORMATION]!=TRAN_PIG)
+    if (you.duration[DUR_TRANSFORMATION]
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_PIG
+        && you.transform_cancellable)
+    {
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
+    }
 
     if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);

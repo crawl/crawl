@@ -74,6 +74,7 @@ REVISION("$Rev$");
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -1087,6 +1088,11 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_DIVINE_VIGOUR])
                 remove_divine_vigour();
+        }
+        else if (god == GOD_JIYVA)
+        {
+            if (you.duration[DUR_SLIMIFY])
+                you.duration[DUR_SLIMIFY] = 0;
         }
 
         if (you.religion == god)
@@ -5376,7 +5382,73 @@ static bool _jiyva_retribution()
 {
     const god_type god = GOD_JIYVA;
 
-    if (!you.can_safely_mutate() || one_chance_in(4))
+    if (you.can_safely_mutate() && one_chance_in(7))
+    {
+        const int mutat = 1 + random2(3);
+
+        god_speaks(god, "You feel Jiyva alter your body.");
+
+        for (int i = 0; i < mutat; ++i)
+            mutate(RANDOM_BAD_MUTATION, true, false, true);
+    }
+    else if (there_are_monsters_nearby() && coinflip())
+    {
+        int tries = 0;
+        bool found_one = false;
+        monsters *mon;
+
+        while (tries < 10)
+        {
+            mon = choose_random_nearby_monster(0);
+
+            if (!mon || !mon_can_be_slimified(mon)
+                || mon->attitude != ATT_HOSTILE)
+            {
+                tries++;
+                continue;
+            }
+            else
+            {
+                found_one = true;
+                break;
+            }
+        }
+
+        if (found_one)
+        {
+            mprf(MSGCH_GOD, "Jiyva's putrescence saturates the %s!",
+                 mon->name(DESC_NOCAP_THE).c_str());
+
+            slimify_monster(mon, true);
+        }
+    }
+    else if (!one_chance_in(3))
+    {
+            god_speaks(god, "Mutagenic energy floods into your body!");
+            contaminate_player(random2(you.penance[GOD_JIYVA]) / 2);
+
+            if (coinflip())
+            {
+                transformation_type form = TRAN_NONE;
+
+                switch (random2(3))
+                {
+                    case 0:
+                        form = TRAN_BAT;
+                        break;
+                    case 1:
+                        form = TRAN_STATUE;
+                        break;
+                    case 2:
+                        form = TRAN_SPIDER;
+                        break;
+                }
+
+                if (transform(random2(you.penance[GOD_JIYVA]) * 2, form, true))
+                    you.transform_cancellable = false;
+            }
+    }
+    else
     {
         const monster_type slimes[] = {
                 MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
@@ -5391,10 +5463,10 @@ static bool _jiyva_retribution()
         bool success = false;
         for (int i = 0; i < how_many; ++i)
         {
-            const monster_type mon = RANDOM_ELEMENT(slimes);
+            const monster_type slime = RANDOM_ELEMENT(slimes);
 
             if (create_monster(
-                    mgen_data::hostile_at(static_cast<monster_type>(mon),
+                    mgen_data::hostile_at(static_cast<monster_type>(slime),
                     you.pos(), 0, 0, true, god)) != -1)
             {
                 success = true;
@@ -5403,15 +5475,6 @@ static bool _jiyva_retribution()
 
         god_speaks(god, success ? "Some slimes ooze up out of the ground!"
                                 : "The ground quivers slightly.");
-    }
-    else
-    {
-        const int mutat = 1 + random2(4);
-
-        god_speaks(god, "You feel Jiyva alter your body.");
-
-        for (int i = 0; i < mutat; ++i)
-            mutate(RANDOM_BAD_MUTATION, true, false, true);
     }
 
     return (true);
@@ -6834,11 +6897,14 @@ void excommunication(god_type new_god)
     case GOD_JIYVA:
         _jiyva_slimes_abandon_you();
 
+        if (you.duration[DUR_SLIMIFY])
+            you.duration[DUR_SLIMIFY] = 0;
+
         if (you.can_safely_mutate())
         {
             god_speaks(old_god, "You feel Jiyva alter your body.");
 
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < 2; ++i)
                 mutate(RANDOM_BAD_MUTATION, true, false, true);
         }
 
