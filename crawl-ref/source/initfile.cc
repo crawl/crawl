@@ -3501,14 +3501,14 @@ std::string find_executable_path()
     // Faster than a memset, and counts as a null-terminated string!
     tempPath[0] = 0;
 
-#if defined ( _MSC_VER )
+#if defined ( TARGET_OS_WINDOWS )
     GetModuleFileName ( NULL, tempPath, sizeof(tempPath) );
-#elif defined ( __linux__ )
+#elif defined ( TARGET_OS_LINUX )
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
     if (rsize > 0)
         tempPath[rsize] = 0;
-#elif defined ( __MACH__ )
+#elif defined ( TARGET_OS_MACOSX )
     strncpy ( tempPath, NXArgv[0], sizeof(tempPath) );
 #else
     // We don't know how to find the executable's path on this OS.
