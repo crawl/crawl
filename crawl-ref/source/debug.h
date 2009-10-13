@@ -20,8 +20,10 @@
 #endif
 
 // Synch with MSL definitions.
+#ifdef __MSL__
 #if __MSL__ && DEBUG != defined(MSIPL_DEBUG_MODE)
 #error DEBUG and MSIPL_DEBUG_MODE are out of sync!
+#endif
 #endif
 
 // Synch with MSVC.
