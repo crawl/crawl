@@ -565,15 +565,10 @@ bool find_ray(const coord_def& source, const coord_def& target,
 {
     unsigned int cellray, inray;
 
-    const int sourcex = source.x;
-    const int sourcey = source.y;
-    const int targetx = target.x;
-    const int targety = target.y;
-
-    const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
-    const int signy = ((targety - sourcey >= 0) ? 1 : -1);
-    const int absx  = signx * (targetx - sourcex);
-    const int absy  = signy * (targety - sourcey);
+    const int signx = ((target.x - source.x >= 0) ? 1 : -1);
+    const int signy = ((target.y - source.y >= 0) ? 1 : -1);
+    const int absx  = signx * (target.x - source.x);
+    const int absy  = signy * (target.y - source.y);
     const coord_def abs = coord_def(absx, absy);
 
     int shortest    = INFINITE_DISTANCE;
@@ -590,90 +585,91 @@ bool find_ray(const coord_def& source, const coord_def& target,
 
         for (cellray = 0; cellray < lray.length; ++cellray)
         {
-            if (lray[cellray] == abs)
+            if (lray[cellray] != abs)
+                continue;
+
+            if (find_shortest)
             {
+                unaliased_ray.clear();
+                unaliased_ray.push_back(coord_def(0, 0));
+            }
+
+            // Check if we're blocked so far.
+            bool blocked = false;
+            coord_def c1, c3;
+            int real_length = 0;
+            for (inray = 0; inray <= cellray; ++inray)
+            {
+                const int xi = signx * ray_coords[inray + fullrays[fray].start].x;
+                const int yi = signy * ray_coords[inray + fullrays[fray].start].y;
+                if (inray < cellray && !ignore_solid
+                    && grid_is_solid(grd[source.x + xi][source.y + yi]))
+                {
+                    blocked = true;
+                    break;
+                }
+
                 if (find_shortest)
                 {
-                    unaliased_ray.clear();
-                    unaliased_ray.push_back(coord_def(0, 0));
-                }
+                    c3 = coord_def(xi, yi);
 
-                // Check if we're blocked so far.
-                bool blocked = false;
-                coord_def c1, c3;
-                int real_length = 0;
-                for (inray = 0; inray <= cellray; ++inray)
-                {
-                    const int xi = signx * ray_coords[inray + fullrays[fray].start].x;
-                    const int yi = signy * ray_coords[inray + fullrays[fray].start].y;
-                    if (inray < cellray && !ignore_solid
-                        && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
+                    // We've moved at least two steps if inray > 0.
+                    if (inray)
                     {
-                        blocked = true;
-                        break;
-                    }
-
-                    if (find_shortest)
-                    {
-                        c3 = coord_def(xi, yi);
-
-                        // We've moved at least two steps if inray > 0.
-                        if (inray)
-                        {
-                            // Check for a perpendicular corner on the ray and
-                            // pretend that it's a diagonal.
-                            if ((c3 - c1).abs() != 2)
-                                ++real_length;
-                            else
-                            {
-                                // c2 was a dud move, pop it off
-                                unaliased_ray.pop_back();
-                            }
-                        }
-                        else
+                        // Check for a perpendicular corner on the ray and
+                        // pretend that it's a diagonal.
+                        if ((c3 - c1).abs() != 2)
                             ++real_length;
-
-                        unaliased_ray.push_back(c3);
-                        c1 = unaliased_ray[real_length - 1];
+                        else
+                        {
+                            // c2 was a dud move, pop it off
+                            unaliased_ray.pop_back();
+                        }
                     }
-                }
+                    else
+                        ++real_length;
 
-                // If this ray is a candidate for shortest, calculate
-                // the imbalance.
-                int cimbalance = 0;
-                if (!blocked && find_shortest && shortest >= real_length)
-                    cimbalance = _imbalance(unaliased_ray);
-
-                const double ray_slope_diff = find_shortest ?
-                    fabs(_slope_factor(lray) - want_slope) : 0.0;
-
-                if (!blocked
-                    &&  (!find_shortest
-                         || _superior_ray(shortest, imbalance,
-                                          real_length, cimbalance,
-                                          slope_diff, ray_slope_diff)))
-                {
-                    // Success!
-                    ray             = lray;
-                    ray.fullray_idx = fullray;
-
-                    shortest   = real_length;
-                    imbalance  = cimbalance;
-                    slope_diff = ray_slope_diff;
-
-                    if (sourcex > targetx)
-                        ray.accx = 1.0 - ray.accx;
-                    if (sourcey > targety)
-                        ray.accy = 1.0 - ray.accy;
-
-                    ray.accx += sourcex;
-                    ray.accy += sourcey;
-
-                    _set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
-                    if (!find_shortest)
-                        return (true);
+                    unaliased_ray.push_back(c3);
+                    c1 = unaliased_ray[real_length - 1];
                 }
             }
+
+            // If this ray is a candidate for shortest, calculate
+            // the imbalance.
+            int cimbalance = 0;
+            if (!blocked && find_shortest && shortest >= real_length)
+                cimbalance = _imbalance(unaliased_ray);
+
+            const double ray_slope_diff = find_shortest ?
+                fabs(_slope_factor(lray) - want_slope) : 0.0;
+
+            if (blocked || (find_shortest &&
+                            _superior_ray(shortest, imbalance,
+                                          real_length, cimbalance,
+                                          slope_diff, ray_slope_diff)))
+            {
+                continue;
+            }
+
+            // Success!
+            ray             = lray;
+            ray.fullray_idx = fullray;
+
+            shortest   = real_length;
+            imbalance  = cimbalance;
+            slope_diff = ray_slope_diff;
+
+            if (source.x > target.x)
+                ray.accx = 1.0 - ray.accx;
+            if (source.y > target.y)
+                ray.accy = 1.0 - ray.accy;
+
+            ray.accx += source.x;
+            ray.accy += source.y;
+
+            _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
+            if (!find_shortest)
+                return (true);
         }
     }
 
@@ -682,18 +678,18 @@ bool find_ray(const coord_def& source, const coord_def& target,
 
     if (allow_fallback)
     {
-        ray.accx = sourcex + 0.5;
-        ray.accy = sourcey + 0.5;
-        if (targetx == sourcex)
+        ray.accx = source.x + 0.5;
+        ray.accy = source.y + 0.5;
+        if (target.x == source.x)
             ray.slope = VERTICAL_SLOPE;
         else
         {
-            ray.slope  = targety - sourcey;
-            ray.slope /= targetx - sourcex;
+            ray.slope  = target.y - source.y;
+            ray.slope /= target.x - source.x;
             if (ray.slope < 0)
                 ray.slope = -ray.slope;
         }
-        _set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
+        _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
         ray.fullray_idx = -1;
         return (true);
     }
