@@ -300,7 +300,7 @@ void hiscores_print_list( int display_count, int format )
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
-static const char *const _range_type_verb( const char *const aux )
+static const char *_range_type_verb( const char *const aux )
 {
     if (strncmp( aux, "Shot ", 5 ) == 0)                // launched
         return ("shot");
