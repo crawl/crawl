@@ -385,10 +385,9 @@ ENDMAP
 # Dispater - new map by Mu, featuring iron golems and iron trolls
 ##############################################################################
 
-NAME:   castle_dis_2_mu
+NAME:   castle_dis_mu
 PLACE:  Dis:7
 TAGS:   dis
-WEIGHT: 1000
 ORIENT: north
 TAGS:   no_rotate
 LFLAGS: no_tele_control
