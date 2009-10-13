@@ -276,7 +276,7 @@ bool is_traversable(dungeon_feature_type grid)
     return (traversable_terrain[grid] == TRAVERSABLE);
 }
 
-struct los_param_excl : los_param_trans
+struct los_param_excl : public los_param_trans
 {
     los_param_excl(const coord_def& c) : los_param_trans(c) {}
 
