@@ -2987,7 +2987,9 @@ LUAFN(dgn_dbg_dump_map)
 
 LUAFN(dgn_dbg_test_explore)
 {
+#ifdef WIZARD
     debug_test_explore();
+#endif
     return (0);
 }
 
