@@ -3508,6 +3508,10 @@ static bool _initialise(void)
     if (crawl_state.test)
     {
 #ifdef DEBUG_DIAGNOSTICS
+#ifdef USE_TILE
+        init_player_doll();
+        tiles.initialise_items();
+#endif
         Options.show_more_prompt = false;
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
