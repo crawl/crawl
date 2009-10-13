@@ -11,7 +11,7 @@ enum opacity_type
     OPC_CLEAR,
     OPC_HALF,    // for opaque clouds; two or more block
     OPC_OPAQUE,
-     
+
     NUM_OPACITIES
 };
 

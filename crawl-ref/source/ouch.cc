@@ -953,7 +953,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             dam -= you.magic_points;
             dec_mp(you.magic_points);
         }
-        
+
         if (dam >= you.hp)
         {
             if (harm_protection_type hpt = god_protects_from_harm(you.religion))
