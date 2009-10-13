@@ -21,7 +21,7 @@
  * and slope. A ray determines its _footprint_: the sequence of
  * cells whose interiour it meets.
  *
- * The footprint of a ray and any prefix is called a _cellray_.
+ * Any prefix of the footprint of a ray is called a _cellray_.
  *
  * For the purposes of LOS calculation, only the footprints
  * are relevant, but rays are also used for shooting beams,
@@ -79,15 +79,14 @@ struct los_ray;
 std::vector<los_ray> fullrays;
 std::vector<coord_def> ray_coords;
 
-// These store certain unique subsequences of ray_coords.
-// Filled during precomputation (_create_blockrays)
-std::vector<coord_def> compressed_ray;
-
-// 3D bit array indexed by coordinate and cellray index.
-// Bit los_blockrays[x][y][i] is set iff a wall at (x,y) blocks
-// the cellray starting at compressed_ray[i].
+// These store all unique minimal cellrays. For each i,
+// cellray i ends in cellray_ends[i] and passes through
+// thoses cells p that have blockrays(p)[i] set. In other
+// words, blockrays(p)[i] is set iff an opaque cell p blocks
+// the cellray with index i.
+std::vector<coord_def> cellray_ends;
 typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
-blockrays_t los_blockrays;
+blockrays_t blockrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
@@ -109,9 +108,8 @@ void clear_rays_on_exit()
 {
    delete dead_rays;
    delete smoke_rays;
-
    for (quadrant_iterator qi; qi; qi++)
-       delete los_blockrays(*qi);
+       delete blockrays(*qi);
 }
 
 // pre-squared LOS radius
@@ -281,54 +279,55 @@ static void _register_ray(double accx, double accy, double slope)
 
 static void _create_blockrays()
 {
-    // determine nonduplicated rays
-    std::vector<int> nondupe_cellrays = _find_nonduped_cellrays();
-    const int num_nondupe_rays        = nondupe_cellrays.size();
-    const int num_cellrays            = ray_coords.size();
-    blockrays_t full_los_blockrays;
-
+    // First, we calculate blocking information for all cell rays.
+    // Cellrays are numbered according to the index of their end
+    // cell in ray_coords.
+    const int n_cellrays = ray_coords.size();
+    blockrays_t all_blockrays;
     for (quadrant_iterator qi; qi; qi++)
-    {
-        full_los_blockrays(*qi) = new bit_array(num_cellrays);
-        los_blockrays(*qi) = new bit_array(num_nondupe_rays);
-    }
+        all_blockrays(*qi) = new bit_array(n_cellrays);
 
-    // first build all the rays: easier to do blocking calculations there
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
         los_ray ray = fullrays[r];
         for (unsigned int i = 0; i < ray.length; ++i)
         {
-            coord_def p = ray[i];
-            // every cell blocks all following cellrays
+            // Every cell is contained in (thus blocks)
+            // all following cellrays.
             for (unsigned int j = i + 1; j < ray.length; ++j)
-                full_los_blockrays(p)->set(ray.start+j);
+                all_blockrays(ray[i])->set(ray.start + j);
         }
     }
 
-    // we've built the basic blockray array; now compress it, keeping
+    // We've built the basic blockray array; now compress it, keeping
     // only the nonduplicated cellrays.
 
-    // we want to only keep the cellrays from nondupe_cellrays.
-    compressed_ray.resize(num_nondupe_rays);
-    for (int i = 0; i < num_nondupe_rays; ++i)
-        compressed_ray[i] = ray_coords[nondupe_cellrays[i]];
+    // Determine nonduplicated rays and store their end points.
+    std::vector<int> nondupe_cellrays = _find_nonduped_cellrays();
+    const int n_nondupe_rays          = nondupe_cellrays.size();
+    cellray_ends.resize(n_nondupe_rays);
+    for (int i = 0; i < n_nondupe_rays; ++i)
+        cellray_ends[i] = ray_coords[nondupe_cellrays[i]];
 
+    // Compress blockrays accordingly.
     for (quadrant_iterator qi; qi; qi++)
-        for (int i = 0; i < num_nondupe_rays; ++i)
-            los_blockrays(*qi)->set(i, full_los_blockrays(*qi)
-                                       ->get(nondupe_cellrays[i]));
+    {
+        blockrays(*qi) = new bit_array(n_nondupe_rays);
+        for (int i = 0; i < n_nondupe_rays; ++i)
+            blockrays(*qi)->set(i, all_blockrays(*qi)
+                                   ->get(nondupe_cellrays[i]));
+    }
 
-    // we can throw away full_los_blockrays now
+    // We can throw away all_blockrays now.
     for (quadrant_iterator qi; qi; qi++)
-        delete full_los_blockrays(*qi);
+        delete all_blockrays(*qi);
 
-    dead_rays  = new bit_array(num_nondupe_rays);
-    smoke_rays = new bit_array(num_nondupe_rays);
+    dead_rays  = new bit_array(n_nondupe_rays);
+    smoke_rays = new bit_array(n_nondupe_rays);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
-          num_cellrays, fullrays.size(), num_nondupe_rays );
+          n_cellrays, fullrays.size(), n_nondupe_rays );
 #endif
 }
 
@@ -713,10 +712,6 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
     return see_grid(show, p1, p2);
 }
 
-// The rule behind LOS is:
-// Two cells can see each other if there is any line from some point
-// of the first to some point of the second ("generous" LOS.)
-//
 // We use raycasting. The algorithm:
 // PRECOMPUTATION:
 // Create a large bundle of rays and cast them.
@@ -753,9 +748,8 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
 
 void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
 {
-    const unsigned int num_cellrays = compressed_ray.size();
+    const unsigned int num_cellrays = cellray_ends.size();
 
-    // clear out the dead rays array
     dead_rays->reset();
     smoke_rays->reset();
 
@@ -765,17 +759,16 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
         if (!dat.los_bounds(p))
             continue;
 
-        // if this cell is opaque...
         switch (dat.opacity(p))
         {
         case OPC_OPAQUE:
-            // then block the appropriate rays
-            *dead_rays |= *los_blockrays(*qi);
+            // Block the appropriate rays.
+            *dead_rays |= *blockrays(*qi);
             break;
         case OPC_HALF:
-            // block rays which have already seen a cloud
-            *dead_rays  |= (*smoke_rays & *los_blockrays(*qi));
-            *smoke_rays |= *los_blockrays(*qi);
+            // Block rays which have already seen a cloud.
+            *dead_rays  |= (*smoke_rays & *blockrays(*qi));
+            *smoke_rays |= *blockrays(*qi);
             break;
         default:
             break;
@@ -789,10 +782,9 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
         // make the cells seen by this ray at this point visible
         if (!dead_rays->get(rayidx))
         {
-            // this ray is alive!
-            const coord_def p = coord_def(sx * compressed_ray[rayidx].x,
-                                          sy * compressed_ray[rayidx].y);
-            // update shadow map
+            // This ray is alive, thus the end cell is visible.
+            const coord_def p = coord_def(sx * cellray_ends[rayidx].x,
+                                          sy * cellray_ends[rayidx].y);
             if (dat.los_bounds(p))
                 sh(p+sh_o) = dat.appearance(p);
         }
@@ -803,7 +795,7 @@ void losight(env_show_grid& sh, const los_param& dat)
 {
     sh.init(0);
 
-    // ensure precomputations are done
+    // Do precomputations if necessary.
     raycast();
 
     const int quadrant_x[4] = {  1, -1, -1,  1 };
@@ -812,7 +804,7 @@ void losight(env_show_grid& sh, const los_param& dat)
     for (int q = 0; q < 4; ++q)
         _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
 
-    // center is always visible
+    // Center is always visible.
     const coord_def o = coord_def(0,0);
     sh(o+sh_o) = dat.appearance(o);
 }
