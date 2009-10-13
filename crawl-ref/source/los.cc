@@ -61,12 +61,17 @@ REVISION("$Rev$");
 #define LONGSIZE (sizeof(unsigned long)*8)
 #define LOS_MAX_RANGE 9
 
+// These determine what rays are cast in the precomputation,
+// and affect start-up time significantly.
+// XXX: Argue that these values are sufficient.
+#define LOS_MAX_ANGLE (2*LOS_MAX_RANGE-2)
+#define LOS_INTERCEPT_MULT (2)
+
 // the following two constants represent the 'middle' of the sh array.
 // since the current shown area is 19x19, centering the view at (9,9)
 // means it will be exactly centered.
 // This is done to accomodate possible future changes in viewable screen
 // area - simply change sh_xo and sh_yo to the new view center.
-
 const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
 const coord_def sh_o = coord_def(sh_xo, sh_yo);
@@ -189,49 +194,16 @@ static bool _is_duplicate_ray(std::vector<coord_def> newray)
     return false;
 }
 
-
-// Is starta...lengtha a subset of startb...lengthb?
-static bool _is_subset(int starta, int startb, int lengtha, int lengthb)
-{
-    int cura = starta, curb = startb;
-    int enda = starta + lengtha, endb = startb + lengthb;
-
-    while (cura < enda && curb < endb)
-    {
-        if (ray_coords[curb].x > ray_coords[cura].x)
-            return (false);
-        if (ray_coords[curb].y > ray_coords[cura].y)
-            return (false);
-
-        if (ray_coords[cura] == ray_coords[curb])
-             ++cura;
-
-         ++curb;
-    }
-
-    return (cura == enda);
-}
-
 // A cellray given by fullray and length.
 struct cellray
 {
     los_ray ray;
     int length;
 
-    cellray(const los_ray& r, int l)
-        : ray(r), length(l)
-    {
-    }
+    cellray(const los_ray& r, int l) : ray(r), length(l) {}
 
-    int index() const
-    {
-        return ray.start + length;
-    }
-
-    coord_def end() const
-    {
-        return ray_coords[index()];
-    }
+    int index() const { return ray.start + length; }
+    coord_def end() const { return ray_coords[index()]; }
 };
 
 enum compare_type
@@ -241,13 +213,46 @@ enum compare_type
     C_NEITHER
 };
 
+// Check whether one of the passed cellrays is a subray of the
+// other in terms of footprint.
 compare_type _compare_cellrays(const cellray& a, const cellray& b)
 {
     if (a.end() != b.end())
         return C_NEITHER;
-    if (_is_subset(a.ray.start, b.ray.start, a.length, b.length))
-        return C_SUBRAY;
-    if (_is_subset(b.ray.start, a.ray.start, b.length, a.length))
+
+    int cura = a.ray.start;
+    int curb = b.ray.start;
+    int enda = cura + a.length;
+    int endb = curb + b.length;
+    bool maybe_sub = true;
+    bool maybe_super = true;
+
+    while (cura < enda && curb < endb && (maybe_sub || maybe_super))
+    {
+        coord_def pa = ray_coords[cura];
+        coord_def pb = ray_coords[curb];
+        if (pa.x > pb.x || pa.y > pb.y)
+        {
+            maybe_super = false;
+            curb++;
+        }
+        if (pa.x < pb.x || pa.y < pb.y)
+        {
+            maybe_sub = false;
+            cura++;
+        }
+        if (pa == pb)
+        {
+            cura++;
+            curb++;
+        }
+    }
+    maybe_sub = maybe_sub && (cura == enda);
+    maybe_super = maybe_super && (curb == endb);
+
+    if (maybe_sub)
+        return C_SUBRAY;    // includes equality
+    else if (maybe_super)
         return C_SUPERRAY;
     else
         return C_NEITHER;
@@ -413,8 +418,8 @@ void raycast()
     // Changing the order a bit. We want to order by the complexity
     // of the beam, which is log(x) + log(y) ~ xy.
     std::vector<std::pair<int,int> > xyangles;
-    for (int xangle = 1; xangle <= 2*LOS_MAX_RANGE; ++xangle)
-        for (int yangle = 1; yangle <= 2*LOS_MAX_RANGE; ++yangle)
+    for (int xangle = 1; xangle <= LOS_MAX_ANGLE; ++xangle)
+        for (int yangle = 1; yangle <= LOS_MAX_ANGLE; ++yangle)
         {
             if (_gcd(xangle, yangle) == 1)
                 xyangles.push_back(std::pair<int,int>(xangle, yangle));
@@ -428,9 +433,9 @@ void raycast()
 
         const double slope = ((double)(yangle)) / xangle;
         const double rslope = ((double)(xangle)) / yangle;
-        for (int intercept = 1; intercept <= 2*yangle; ++intercept )
+        for (int intercept = 1; intercept <= LOS_INTERCEPT_MULT*yangle; ++intercept )
         {
-            double xstart = ((double)intercept) / (2*yangle);
+            double xstart = ((double)intercept) / (LOS_INTERCEPT_MULT*yangle);
             double ystart = 1;
 
             // now move back just inside the cell
