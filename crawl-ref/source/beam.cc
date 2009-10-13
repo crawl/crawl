@@ -1693,8 +1693,9 @@ void bolt::digging_wall_effect()
 
 void bolt::fire_wall_effect()
 {
-    // Fire only affects wax walls.
-    if (grd(pos()) != DNGN_WAX_WALL)
+    dungeon_feature_type feat;
+    // Fire only affects wax walls and trees.
+    if ((feat=grd(pos())) != DNGN_WAX_WALL && (feat != DNGN_TREES))
     {
         finish_beam();
         return;
@@ -1703,7 +1704,7 @@ void bolt::fire_wall_effect()
     if (!is_superhot())
     {
         // No actual effect.
-        if (flavour != BEAM_HELLFIRE)
+        if (flavour != BEAM_HELLFIRE && feat == DNGN_WAX_WALL)
         {
             if (see_grid(pos()))
             {
@@ -1718,12 +1719,27 @@ void bolt::fire_wall_effect()
     {
         // Destroy the wall.
         grd(pos()) = DNGN_FLOOR;
-        if (see_grid(pos()))
-            emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
-        else if (player_can_smell())
-            emit_message(MSGCH_PLAIN, "You smell burning wax.");
+        if (feat == DNGN_WAX_WALL)
+        {
+            if (see_grid(pos()))
+                emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
+            else if (player_can_smell())
+                emit_message(MSGCH_PLAIN, "You smell burning wax.");
+            place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
+        }
+        else
+        {
+            if (see_grid(pos()))
+                emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
+            else if (player_can_smell())
+                emit_message(MSGCH_PLAIN, "You smell burning wood.");
+            if (whose_kill() == KC_YOU)
+                did_god_conduct(DID_KILL_PLANT, 1, effect_known, 0);
+            else if (whose_kill() == KC_FRIENDLY)
+                did_god_conduct(DID_ALLY_KILLED_PLANT, 1, effect_known, 0);
+            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, whose_kill(), killer(), 5);
+        }
 
-        place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
 
         obvious_effect = true;
     }
@@ -2198,25 +2214,16 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (doFlavouredEffects)
                 simple_monster_message(monster, " resists.");
         }
-        else if (original < hurted)
+        else if (original < hurted && doFlavouredEffects)
         {
             if (mons_is_icy(monster->type))
-            {
-                if (doFlavouredEffects)
-                    simple_monster_message(monster, " melts!");
-            }
+                simple_monster_message(monster, " melts!");
+            else if (monster->type == MONS_BUSH)
+                simple_monster_message(monster, " is on fire!");
+            else if (pbolt.flavour == BEAM_FIRE)
+                simple_monster_message(monster, " is burned terribly!");
             else
-            {
-                if (doFlavouredEffects)
-                {
-                    if (pbolt.flavour == BEAM_FIRE)
-                        simple_monster_message(monster,
-                                               " is burned terribly!");
-                    else
-                        simple_monster_message(monster,
-                                               " is scalded terribly!");
-                }
-            }
+                simple_monster_message(monster, " is scalded terribly!");
         }
         break;
 
@@ -3092,7 +3099,7 @@ bool bolt::affects_wall(dungeon_feature_type wall) const
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3)
         return (true);
 
-    if (is_fiery() && wall == DNGN_WAX_WALL)
+    if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREES))
         return (true);
 
     // eye of devastation?
@@ -4564,6 +4571,13 @@ void bolt::affect_monster(monsters* mon)
 
     // Digging doesn't affect monsters (should it harm earth elementals?)
     if (flavour == BEAM_DIGGING)
+    {
+        apply_hit_funcs(mon, 0);
+        return;
+    }
+
+    // Missiles go past bushes.
+    if (!is_beam && mon->type == MONS_BUSH)
     {
         apply_hit_funcs(mon, 0);
         return;

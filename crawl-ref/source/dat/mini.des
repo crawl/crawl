@@ -2425,3 +2425,33 @@ xxxxx"x........x+xxxxx........x"xxxxx
 ........xx'x...xm+++mx...x'xx........
 ..................@..................
 ENDMAP
+
+#################################################################
+# And for now, something woody (1KB)
+#
+NAME: forest_paths
+DEPTH: D, Lair
+MAP
+tttttttttttttttttttttttttt@tttttttttttttttttttttt
+tttttttttttttttttttttttttt...tttttttttttttttttttt
+tttttttttttttttttttttttttttt..tttttttttttttt0}ttt
+ttttttttt.tt......ttttttttttt..tttttttttttt..tttt
+tttttttt.t...ttt.0.tttttttttt.tttttttttt...tttttt
+tt......tttttttt...ttttttttttt.tttttt...ttttttttt
+t.ttttttttttttttt....tttttttttt.tttt.tttttttttttt
+@ttttttttttttttt..tttttttttttt..tt...tttttttttttt
+ttttttttttttttt..tttttttttttttt....tttttttttttttt
+tttttttttttttttt..ttttttttttttttt.ttttttttttttttt
+tttttttttttttttt....tttttttttttt.tttttttttt...ttt
+tttttttttttttttttt.....tttttttttt..ttttttt..*..tt
+ttttttttttttttttttttt....ttttttttt.ttttttt.000.tt
+ttttttttttttttttttttttt...tttttttt.ttttt......ttt
+ttttttttttttttttttttttttt....tttt.ttttttt.tt.t0tt
+tttttttttttttttttttttttttttt.....tttttttt.ttttttt
+....ttttttttttttttttttttttt...tttttttttt.tttttttt
+@....tttttttt...ttttttttttt...tttttttt..ttttttttt
+ttttt..ttt....tt...tt........0.ttttt..ttttttttttt
+ttttttt....ttttttt....ttttttt..ttt..ttttttttttttt
+tttttttttttttttttttttttttttttt....ttttttttttttttt
+ttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP

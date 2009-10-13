@@ -94,6 +94,19 @@ MAP
   ...
 ENDMAP
 
+NAME:   yaktaur_hedge
+DEPTH:  Shoal
+MONS:   bush
+MONS:   yaktaur
+MAP
+.......
+.11111.
+.1...1.
+.1.1.1.
+.1.121.
+.1.111.
+.......
+ENDMAP
 
 ##############################################################################
 # Branch ends.

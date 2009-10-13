@@ -843,7 +843,7 @@ int map_lines::glyph(const coord_def &c) const
 
 bool map_lines::is_solid(int gly) const
 {
-    return (gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v');
+    return (gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v' || gly == 't');
 }
 
 void map_lines::check_borders()
