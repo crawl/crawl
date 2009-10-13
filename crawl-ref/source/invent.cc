@@ -105,12 +105,12 @@ const std::string &InvEntry::get_fullname() const
     return (text);
 }
 
-const bool InvEntry::is_item_cursed() const
+bool InvEntry::is_item_cursed() const
 {
     return (item_ident(*item, ISFLAG_KNOW_CURSE) && item_cursed(*item));
 }
 
-const bool InvEntry::is_item_glowing() const
+bool InvEntry::is_item_glowing() const
 {
     return (!item_ident(*item, ISFLAG_KNOW_TYPE)
             && (get_equip_desc(*item)
@@ -121,7 +121,7 @@ const bool InvEntry::is_item_glowing() const
                         || item->base_type == OBJ_BOOKS))));
 }
 
-const bool InvEntry::is_item_ego() const
+bool InvEntry::is_item_ego() const
 {
     return (item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
             && item->special != 0
@@ -130,12 +130,12 @@ const bool InvEntry::is_item_ego() const
                 || item->base_type == OBJ_ARMOUR));
 }
 
-const bool InvEntry::is_item_art() const
+bool InvEntry::is_item_art() const
 {
     return (item_ident(*item, ISFLAG_KNOW_TYPE) && is_artefact(*item));
 }
 
-const bool InvEntry::is_item_equipped() const
+bool InvEntry::is_item_equipped() const
 {
     if (item->link == -1 || item->pos.x != -1 || item->pos.y != -1)
         return(false);
@@ -149,7 +149,7 @@ const bool InvEntry::is_item_equipped() const
 
 // Returns values < 0 for edible chunks (non-rotten except for Saprovores),
 // 0 for non-chunks, and values > 0 for rotten chunks for non-Saprovores.
-const int InvEntry::item_freshness() const
+int InvEntry::item_freshness() const
 {
     if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
         return 0;
