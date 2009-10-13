@@ -189,6 +189,7 @@ static bool _is_duplicate_ray(std::vector<coord_def> newray)
     return false;
 }
 
+
 // Is starta...lengtha a subset of startb...lengthb?
 static bool _is_subset(int starta, int startb, int lengtha, int lengthb)
 {
@@ -211,53 +212,90 @@ static bool _is_subset(int starta, int startb, int lengtha, int lengthb)
     return (cura == enda);
 }
 
-// Returns a vector which lists all the nonduped cellrays (by index).
-// A cellray c in a fullray f is duped if there is a fullray g
-// such that g contains c and g[:c] is a subset of f[:c].
-static std::vector<int> _find_nonduped_cellrays()
+// A cellray given by fullray and length.
+struct cellray
 {
-    bool is_duplicate;
-    std::vector<int> result;
+    los_ray ray;
+    int length;
+
+    cellray(const los_ray& r, int l)
+        : ray(r), length(l)
+    {
+    }
+
+    int index() const
+    {
+        return ray.start + length;
+    }
+
+    coord_def end() const
+    {
+        return ray_coords[index()];
+    }
+};
+
+enum compare_type
+{
+    C_SUBRAY,
+    C_SUPERRAY,
+    C_NEITHER
+};
+
+compare_type _compare_cellrays(const cellray& a, const cellray& b)
+{
+    if (a.end() != b.end())
+        return C_NEITHER;
+    if (_is_subset(a.ray.start, b.ray.start, a.length, b.length))
+        return C_SUBRAY;
+    if (_is_subset(b.ray.start, a.ray.start, b.length, a.length))
+        return C_SUPERRAY;
+    else
+        return C_NEITHER;
+}
+
+// Returns a vector which lists all minimal cellrays (by index).
+static std::vector<int> _find_minimal_cellrays()
+{
+    FixedArray<std::list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
+    std::list<cellray>::iterator min_it;
 
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
         los_ray ray = fullrays[r];
         for (unsigned int i = 0; i < ray.length; ++i)
         {
-            // Is the cellray ray[0..i] duplicated?
-            is_duplicate = false;
+            // Is the cellray ray[0..i] duplicated so far?
+            bool dup = false;
+            cellray c(ray, i);
+            std::list<cellray>& min = minima(c.end());
 
-            // XXX: We should really check everything up to now
-            // completely, and all further rays to see if they're
-            // proper subsets.
-
-            // Test against all previous fullrays.
-            for (unsigned int s = 0; s < r; ++s)
+            for (min_it = min.begin();
+                 min_it != min.end() && !dup; min_it++)
             {
-                los_ray prev = fullrays[s];
-
-                // Scan ahead to see if there's an intersect.
-                for (unsigned int j = 0; j < prev.length; ++j)
+                switch(_compare_cellrays(*min_it, c))
                 {
-                    // Short-circuit if we've passed ray[i]
-                    // in either coordinate.
-                    if (prev[j].x > ray[i].x || prev[j].y > ray[i].y)
-                        break;
-
-                    if (prev[j] == ray[i])
-                    {
-                        is_duplicate = _is_subset(prev.start, ray.start,
-                                                  j, i);
-                        break;
-                    }
+                case C_SUBRAY:
+                    dup = true;
+                    break;
+                case C_SUPERRAY:
+                    min_it = min.erase(min_it);
+                    // clear this should be added, but might have
+                    // to erase more
+                    break;
+                case C_NEITHER:
+                default:
+                    break;
                 }
-                if (is_duplicate)
-                    break;      // No point in checking further rays.
             }
-            if (!is_duplicate)
-                result.push_back(ray.start + i);
+            if (!dup)
+                min.push_back(c);
         }
     }
+
+    std::vector<int> result;
+    for (quadrant_iterator qi; qi; qi++)
+        for (min_it = minima(*qi).begin(); min_it != minima(*qi).end(); min_it++)
+            result.push_back(min_it->index());
     return result;
 }
 
@@ -303,31 +341,31 @@ static void _create_blockrays()
     // only the nonduplicated cellrays.
 
     // Determine nonduplicated rays and store their end points.
-    std::vector<int> nondupe_cellrays = _find_nonduped_cellrays();
-    const int n_nondupe_rays          = nondupe_cellrays.size();
-    cellray_ends.resize(n_nondupe_rays);
-    for (int i = 0; i < n_nondupe_rays; ++i)
-        cellray_ends[i] = ray_coords[nondupe_cellrays[i]];
+    std::vector<int> min_cellrays = _find_minimal_cellrays();
+    const int n_min_rays          = min_cellrays.size();
+    cellray_ends.resize(n_min_rays);
+    for (int i = 0; i < n_min_rays; ++i)
+        cellray_ends[i] = ray_coords[min_cellrays[i]];
 
     // Compress blockrays accordingly.
     for (quadrant_iterator qi; qi; qi++)
     {
-        blockrays(*qi) = new bit_array(n_nondupe_rays);
-        for (int i = 0; i < n_nondupe_rays; ++i)
+        blockrays(*qi) = new bit_array(n_min_rays);
+        for (int i = 0; i < n_min_rays; ++i)
             blockrays(*qi)->set(i, all_blockrays(*qi)
-                                   ->get(nondupe_cellrays[i]));
+                                   ->get(min_cellrays[i]));
     }
 
     // We can throw away all_blockrays now.
     for (quadrant_iterator qi; qi; qi++)
         delete all_blockrays(*qi);
 
-    dead_rays  = new bit_array(n_nondupe_rays);
-    smoke_rays = new bit_array(n_nondupe_rays);
+    dead_rays  = new bit_array(n_min_rays);
+    smoke_rays = new bit_array(n_min_rays);
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
-          n_cellrays, fullrays.size(), n_nondupe_rays );
+    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Minimal cellrays: %u",
+          n_cellrays, fullrays.size(), n_min_rays );
 #endif
 }
 
