@@ -7528,7 +7528,7 @@ static void _khufu_drop_tomb(monsters *monster)
     monster->lose_energy(EUT_SPELL);
 }
 
-#if DEBUG
+#ifdef DEBUG
 #    define DEBUG_ENERGY_USE(problem) \
     if (monster->speed_increment == old_energy && monster->alive()) \
              mprf(MSGCH_DIAGNOSTICS, \
@@ -7649,7 +7649,7 @@ static void _handle_monster_move(monsters *monster)
 
         if (monster->speed_increment >= old_energy)
         {
-#if DEBUG
+#ifdef DEBUG
             if (monster->speed_increment == old_energy)
             {
                 mprf(MSGCH_DIAGNOSTICS, "'%s' has same energy as last loop",

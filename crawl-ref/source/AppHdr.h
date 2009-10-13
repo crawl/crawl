@@ -333,7 +333,7 @@
 //  #define DEBUG   0 // leave this undefined for those lamers who use #ifdef
 #endif
 
-#if DEBUG
+#ifdef DEBUG
     #if __MWERKS__
         #define MSIPL_DEBUG_MODE
     #endif

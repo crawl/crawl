@@ -92,7 +92,7 @@ void init_spell_descs(void)
     {
         spell_desc &data = spelldata[i];
 
-#if DEBUG
+#ifdef DEBUG
         if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
             end(1, false, "spell #%d has invalid id %d", i, data.id);
 

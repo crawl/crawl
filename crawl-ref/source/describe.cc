@@ -2398,7 +2398,7 @@ bool _get_spell_description(const spell_type spell, std::string &description,
     {
         description += "This spell has no description. "
                        "Casting it may therefore be unwise. "
-#if DEBUG
+#ifdef DEBUG
                        "Instead, go fix it. ";
 #else
                        "Please file a bug report.";

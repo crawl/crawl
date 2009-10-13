@@ -11,11 +11,11 @@
 #include "enum.h"
 
 // Synch with ANSI definitions.
-#if DEBUG && defined(NDEBUG)
+#if defined(DEBUG) && defined(NDEBUG)
 #error DEBUG and NDEBUG are out of sync!
 #endif
 
-#if !DEBUG && !defined(NDEBUG)
+#if !defined(DEBUG) && !defined(NDEBUG)
 #error DEBUG and NDEBUG are out of sync!
 #endif
 
@@ -36,7 +36,7 @@
 #define COMPILE_CHECK(expr, tag)
 #endif
 
-#if DEBUG
+#ifdef DEBUG
 
 void AssertFailed(const char *expr, const char *file, int line);
 

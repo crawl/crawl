@@ -99,7 +99,7 @@ static void _dump_levgen();
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-#if DEBUG
+#ifdef DEBUG
 static void _BreakStrToDebugger(const char *mesg)
 {
 #if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
@@ -124,7 +124,7 @@ static void _BreakStrToDebugger(const char *mesg)
 // AssertFailed
 //
 //---------------------------------------------------------------
-#if DEBUG
+#ifdef DEBUG
 static std::string _assert_msg;
 
 void AssertFailed(const char *expr, const char *file, int line)
@@ -151,7 +151,7 @@ void AssertFailed(const char *expr, const char *file, int line)
 // DEBUGSTR
 //
 //---------------------------------------------------------------
-#if DEBUG
+#ifdef DEBUG
 void DEBUGSTR(const char *format, ...)
 {
     char mesg[2048];
@@ -6568,7 +6568,7 @@ void do_crash_dump()
 
     set_msg_dump_file(file);
 
-#if DEBUG
+#ifdef DEBUG
     if (!_assert_msg.empty())
         fprintf(file, "%s" EOL EOL, _assert_msg.c_str());
 #endif

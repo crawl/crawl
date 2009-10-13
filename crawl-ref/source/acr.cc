@@ -15,7 +15,7 @@ REVISION("$Rev$");
 #include <limits.h>
 #endif
 
-#if DEBUG
+#ifdef DEBUG
   // this contains the DBL_MAX constant
   #include <float.h>
 #endif

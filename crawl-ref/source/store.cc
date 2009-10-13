@@ -518,7 +518,7 @@ CrawlHashTable &CrawlStoreValue::new_table(store_flags _flags)
 CrawlHashTable &CrawlStoreValue::new_table(store_val_type _type,
                                           store_flags _flags)
 {
-#if DEBUG
+#ifdef DEBUG
     CrawlHashTable* old_table = static_cast<CrawlHashTable*>(val.ptr);
 
     ASSERT(flags & SFLAG_UNSET);
@@ -553,7 +553,7 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
                                          store_flags _flags,
                                          vec_size _max_size)
 {
-#if DEBUG
+#ifdef DEBUG
     CrawlVector* old_vector = static_cast<CrawlVector*>(val.ptr);
 
     ASSERT(flags & SFLAG_UNSET);
@@ -1139,7 +1139,7 @@ bool CrawlHashTable::exists(const std::string &key) const
 
 void CrawlHashTable::assert_validity() const
 {
-#if DEBUG
+#ifdef DEBUG
     ASSERT(!(default_flags & SFLAG_UNSET));
 
     hash_map_type::const_iterator i = hash_map.begin();
@@ -1255,7 +1255,7 @@ void CrawlHashTable::erase(const std::string key)
 
     if (i != hash_map.end())
     {
-#if DEBUG
+#ifdef DEBUG
         CrawlStoreValue &val = i->second;
         ASSERT(!(val.flags & SFLAG_NO_ERASE));
 #endif
@@ -1422,7 +1422,7 @@ store_val_type CrawlVector::get_type() const
 
 void CrawlVector::assert_validity() const
 {
-#if DEBUG
+#ifdef DEBUG
     ASSERT(!(default_flags & SFLAG_UNSET));
     ASSERT(max_size > 0);
     ASSERT(max_size >= size());

@@ -1494,7 +1494,7 @@ void bolt::initialise_fire()
 
     if (range == -1)
     {
-#if DEBUG
+#ifdef DEBUG
         if (is_tracer)
         {
             mpr("Tracer with range == -1, skipping.", MSGCH_ERROR);

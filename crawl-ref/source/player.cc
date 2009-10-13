@@ -2818,7 +2818,7 @@ void check_beholders()
         if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
             || mons_is_submerged(mon))
         {
-#if DEBUG
+#ifdef DEBUG
             if (!mon->alive())
                 mpr("Dead mermaid/siren still mesmerising?", MSGCH_DIAGNOSTICS);
             else if (mons_genus(mon->type) != MONS_MERMAID)
@@ -2843,7 +2843,7 @@ void check_beholders()
 
         if (walls > 0)
         {
-#if DEBUG
+#ifdef DEBUG
             mprf(MSGCH_DIAGNOSTICS, "%d walls between mesmerising '%s' "
                  "and player", walls, mon->name(DESC_PLAIN, true).c_str());
 #endif
@@ -2860,7 +2860,7 @@ void check_beholders()
 
     if (you.duration[DUR_MESMERISED] > 0 && you.mesmerised_by.empty())
     {
-#if DEBUG
+#ifdef DEBUG
         mpr("Mesmerised with no mermaids/sirens left?", MSGCH_DIAGNOSTICS);
 #endif
 

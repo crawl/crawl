@@ -410,7 +410,7 @@ void unlink_item( int dest )
         }
     }
 
-#if DEBUG
+#ifdef DEBUG
     // Okay, the sane ways are gone... let's warn the player:
     mprf(MSGCH_ERROR, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
           mitm[dest].name(DESC_PLAIN).c_str(),
