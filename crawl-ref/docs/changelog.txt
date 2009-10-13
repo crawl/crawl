@@ -20,7 +20,6 @@ Stone Soup 0.6
 * Added wands as an acquirement option.
 * Detected secret doors are still unknown to stupid monsters.
 * Let toadstools grow on corpses.
-* All worms apart from brain worms are mindless and cannot be pacified.
 * Hungry ghosts eat corpses.
 * All spectral things can use stairs again.
 * (Very) ugly things get random resistances and attack flavours.
@@ -34,7 +33,7 @@ Stone Soup 0.6
 * Reduce the chances for artefacts with only one stat property.
 * Add !a inscription to prompt when attacking with this wielded item.
 * Upgrade equipment of Sonja, Psyche and Terence.
-* Jessica casts Pain and is considered evil.
+* Jessica casts Pain and is considered evil by the good gods.
 * Unrandarts and fixedarts share the same, cleaner coding structure.
 * More vaults.
 * Limit Summon Small Mammals to a maximum of two mammals per casting.
