@@ -218,7 +218,9 @@ ifneq ($(USE_ICC),n)
 GCC := icc
 GXX := icpc
 AR  := xiar rcu
-CFWARN += -wd981
+LIB += -lguide
+CFWARN += -wd383,810,869,981,1418 -we14,193,304
+CFWARN_L :=
 endif
 
 RLTILES = rltiles
