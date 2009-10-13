@@ -1,6 +1,43 @@
 /*
  *  File:        los.cc
  *  Summary:     Line-of-sight algorithm.
+ *
+ *
+ *
+ * == Definition of visibility ==
+ *
+ * Two cells are in view of each other if there is any straight
+ * line that meets both cells and that doesn't meet any opaque
+ * cell in between, and if the cells are in LOS range of each
+ * other.
+ *
+ * Here, to "meet" a cell means to intersect the interiour. In
+ * particular, rays can pass between to diagonally adjacent
+ * walls (as can the player).
+ *
+ * == Terminology ==
+ *
+ * A _ray_ is a line, specified by starting point (accx, accy)
+ * and slope. A ray determines its _footprint_: the sequence of
+ * cells whose interiour it meets.
+ *
+ * The footprint of a ray and any prefix is called a _cellray_.
+ *
+ * For the purposes of LOS calculation, only the footprints
+ * are relevant, but rays are also used for shooting beams,
+ * which may travel beyond LOS and which can be reflected.
+ * See ray.cc.
+ *
+ * == Overview ==
+ *
+ * At first use, the LOS code makes some precomputations,
+ * filling a list of all relevant rays in one quadrant,
+ * and filling data structures that allow calculating LOS
+ * in a quadrant without checking each ray.
+ *
+ * The code provides functions for filling LOS information
+ * around a given center efficiently, and for querying rays
+ * between two given cells.
  */
 
 #include "AppHdr.h"
@@ -21,8 +58,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 
-// The LOS code now uses raycasting -- haranp
-
 #define LONGSIZE (sizeof(unsigned long)*8)
 #define LOS_MAX_RANGE 9
 
@@ -37,9 +72,8 @@ const int sh_yo = 9;
 const coord_def sh_o = coord_def(sh_xo, sh_yo);
 
 // These store all unique (in terms of footprint) full rays.
-// The footprint of fullray[i] consists of fullray[i].length cells,
-// whose coordinates are stored in ray_coords after the
-//  coordinates of fullray[i-1].
+// The footprint of ray=fullray[i] consists of ray.length cells,
+// stored in ray_coords[ray.start..ray.length-1].
 // These are filled during precomputation (_register_ray).
 struct los_ray;
 std::vector<los_ray> fullrays;
@@ -49,7 +83,7 @@ std::vector<coord_def> ray_coords;
 // Filled during precomputation (_create_blockrays)
 std::vector<coord_def> compressed_ray;
 
-// 3D bit array indexed by x coord, y coord, cellray index.
+// 3D bit array indexed by coordinate and cellray index.
 // Bit los_blockrays[x][y][i] is set iff a wall at (x,y) blocks
 // the cellray starting at compressed_ray[i].
 typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
