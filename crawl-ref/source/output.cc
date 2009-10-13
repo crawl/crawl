@@ -711,6 +711,12 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "RoF"));
     }
 
+    if (you.duration[DUR_SLIMIFY])
+    {
+        int color = _dur_colour(GREEN, dur_expiring(DUR_SLIMIFY));
+        out.push_back(status_light(color, "Slime"));
+    }
+
     if (you.duration[DUR_SURE_BLADE])
         out.push_back(status_light(BLUE, "Blade"));
 
@@ -2522,6 +2528,9 @@ std::string _status_mut_abilities()
         status.push_back(_get_expiration_string(DUR_CONFUSING_TOUCH,
                                                 "confusing touch"));
     }
+
+    if (you.duration[DUR_SLIMIFY])
+        status.push_back(_get_expiration_string(DUR_SLIMIFY, "slimy"));
 
     if (you.duration[DUR_SURE_BLADE])
         status.push_back("bonded with blade");

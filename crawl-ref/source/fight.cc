@@ -858,6 +858,17 @@ bool melee_attack::player_attack()
             player_calc_hit_damage();
         }
 
+        if (you.duration[DUR_SLIMIFY]
+            && mon_can_be_slimified(defender_as_monster()))
+        {
+            // Bail out after sliming so we don't get aux unarmed and
+            // attack a fellow slime.
+            damage_done = 0;
+            slimify_monster(defender_as_monster());
+            you.duration[DUR_SLIMIFY] = 0;
+            return (true);
+        }
+
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH
             && defender->mons_species() == MONS_ORC
