@@ -491,7 +491,7 @@ static double _calc_slope(double x, double y)
         return (VERTICAL_SLOPE);
 
     const double slope = y / x;
-    return (slope > VERTICAL_SLOPE? VERTICAL_SLOPE : slope);
+    return (slope > VERTICAL_SLOPE ? VERTICAL_SLOPE : slope);
 }
 
 static double _slope_factor(const ray_def &ray)
@@ -516,6 +516,36 @@ static bool _superior_ray(int shortest, int imbalance,
         return (imbalance > rayimbalance);
 
     return (slope_diff > ray_slope_diff);
+}
+
+// Compute the imbalance, defined as the
+// number of consecutive diagonal or orthogonal moves
+// in the ray. This is a reasonable measure of deviation from
+// the Bresenham line between our selected source and
+// destination.
+int _imbalance(const std::vector<coord_def>& ray)
+{
+    int imb = 0;
+    int diags = 0, straights = 0;
+    for (int i = 1, size = ray.size(); i < size; ++i)
+    {
+        const int dist =
+           (ray[i] - ray[i - 1]).abs();
+
+        if (dist == 2)
+        {
+            straights = 0;
+            if (++diags > imb)
+                imb = diags;
+        }
+        else
+        {
+            diags = 0;
+            if (++straights > imb)
+                imb = straights;
+        }
+    }
+    return imb;
 }
 
 // Find a nonblocked ray from source to target. Return false if no
@@ -609,35 +639,11 @@ bool find_ray(const coord_def& source, const coord_def& target,
                     }
                 }
 
-                int cimbalance = 0;
                 // If this ray is a candidate for shortest, calculate
-                // the imbalance. I'm defining 'imbalance' as the
-                // number of consecutive diagonal or orthogonal moves
-                // in the ray. This is a reasonable measure of deviation from
-                // the Bresenham line between our selected source and
-                // destination.
+                // the imbalance.
+                int cimbalance = 0;
                 if (!blocked && find_shortest && shortest >= real_length)
-                {
-                    int diags = 0, straights = 0;
-                    for (int i = 1, size = unaliased_ray.size(); i < size; ++i)
-                    {
-                        const int dist =
-                            (unaliased_ray[i] - unaliased_ray[i - 1]).abs();
-
-                        if (dist == 2)
-                        {
-                            straights = 0;
-                            if (++diags > cimbalance)
-                                cimbalance = diags;
-                        }
-                        else
-                        {
-                            diags = 0;
-                            if (++straights > cimbalance)
-                                cimbalance = straights;
-                        }
-                    }
-                }
+                    cimbalance = _imbalance(unaliased_ray);
 
                 const double ray_slope_diff = find_shortest ?
                     fabs(_slope_factor(lray) - want_slope) : 0.0;
