@@ -27,7 +27,7 @@
 #include <ctype.h>
 #include <algorithm>
 #include <memory>
-#if !_MSC_VER
+#ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 

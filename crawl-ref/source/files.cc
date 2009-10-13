@@ -79,7 +79,7 @@ REVISION("$Rev$");
 #include "tutorial.h"
 #include "view.h"
 
-#if _MSC_VER
+#ifdef TARGET_COMPILER_VC
 #include <direct.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -227,7 +227,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
 {
     std::vector<std::string> files;
 
-#ifdef _MSC_VER
+#ifdef TARGET_COMPILER_VC
     WIN32_FIND_DATA lData;
     std::string dir = dirname;
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
@@ -387,7 +387,7 @@ bool file_exists(const std::string &name)
 // Low-tech existence check.
 bool dir_exists(const std::string &dir)
 {
-#ifdef _MSC_VER
+#ifdef TARGET_COMPILER_VC
     DWORD lAttr = GetFileAttributes(dir.c_str());
     return (lAttr != INVALID_FILE_ATTRIBUTES
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
@@ -411,7 +411,7 @@ static int _create_directory(const char *dir)
     return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
 #elif defined(TARGET_OS_DOS)
     return mkdir(dir, 0755);
-#elif defined(_MSC_VER)
+#elif defined(TARGET_COMPILER_VC)
     return _mkdir(dir);
 #else
     return mkdir(dir);

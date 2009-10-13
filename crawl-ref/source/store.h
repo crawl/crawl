@@ -166,7 +166,7 @@ public:
     const CrawlStoreValue &operator [] (const vec_size &index)  const;
 
     // Typecast operators
-#if _MSC_VER
+#ifdef TARGET_COMPILER_VC
     operator bool&();
     operator char&();
     operator short&();

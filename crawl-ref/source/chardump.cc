@@ -15,7 +15,7 @@ REVISION("$Rev$");
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#if !defined(__IBMCPP__) && !defined(_MSC_VER)
+#if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif
 #include <ctype.h>

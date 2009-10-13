@@ -63,6 +63,6 @@ dirent* readdir(DIR*);
 int closedir(DIR*);
 
 
-#endif /* defined(_MSC_VER) */
+#endif /* defined(TARGET_COMPILER_VC) */
 
 #endif

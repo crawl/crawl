@@ -1051,7 +1051,7 @@ int get_number_of_cols()
     return (screensize.X);
 }
 
-#if _MSC_VER
+#ifdef TARGET_COMPILER_VC
 struct DIR
 {
  public:
@@ -1157,6 +1157,6 @@ int ftruncate(int fp, int size)
     return 0;
 }
 
-#endif /* #if _MSC_VER */
+#endif /* #ifdef TARGET_COMPILER_VC */
 
 #endif /* #if defined(WIN32CONSOLE) */

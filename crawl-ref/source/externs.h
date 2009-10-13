@@ -2335,8 +2335,6 @@ private:
 
 extern game_options  Options;
 
-#if _MSC_VER
-# include "msvc.h"
-#endif
+#include "msvc.h"
 
 #endif // EXTERNS_H

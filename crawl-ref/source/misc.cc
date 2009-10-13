@@ -13,7 +13,7 @@ REVISION("$Rev$");
 #include <string.h>
 #include <algorithm>
 
-#if !defined(__IBMCPP__) && !defined(_MSC_VER)
+#if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif
 

@@ -14,7 +14,7 @@ REVISION("$Rev$");
 #include <cstdlib>
 #include <algorithm>
 
-#if !_MSC_VER
+#ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 

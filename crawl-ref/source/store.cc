@@ -777,7 +777,7 @@ const CrawlStoreValue &CrawlStoreValue::operator
 
 /////////////////////
 // Typecast operators
-#if _MSC_VER
+#ifdef TARGET_COMPILER_VC
 CrawlStoreValue::operator bool&()                       { return get_bool();   }
 CrawlStoreValue::operator char&()                       { return get_byte();   }
 CrawlStoreValue::operator short&()                      { return get_short();  }
