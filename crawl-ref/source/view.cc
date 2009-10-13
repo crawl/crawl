@@ -419,6 +419,16 @@ static bool _show_bloodcovered(const coord_def& where)
     return (!is_critical_feature(grid) && !grid_is_trap(grid));
 }
 
+static unsigned short _tree_colour(const coord_def& where)
+{
+    uint32_t h = where.x;
+    h+=h<<10; h^=h>>6;
+    h += where.y;
+    h+=h<<10; h^=h>>6;
+    h+=h<<3; h^=h>>11; h+=h<<15;
+    return (h>>30) ? GREEN : LIGHTGREEN;
+}
+
 static void _get_symbol( const coord_def& where,
                          int object, unsigned *ch,
                          unsigned short *colour,
@@ -499,6 +509,8 @@ static void _get_symbol( const coord_def& where,
                 // already set.
                 if (fdef.colour != BLACK)
                     *colour = fdef.colour | colmask;
+                else if (object == DNGN_TREES)
+                    *colour = _tree_colour(where) | colmask;
 
                 if (fdef.em_colour != fdef.colour && fdef.em_colour)
                 {
@@ -1636,6 +1648,7 @@ inline static void _update_cloud_grid(int cloudno)
     switch (env.cloud[cloudno].type)
     {
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         if (env.cloud[cloudno].decay <= 20)
             which_colour = RED;
         else if (env.cloud[cloudno].decay <= 40)
@@ -3001,7 +3014,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '_', '\\', '}', '{', '8', '~', '~',            // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '}', '%', '$', '"', '#',             // book .. cloud
+        ':', '|', '}', '%', '$', '"', '#', '@',        // book .. trees
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -3011,7 +3024,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall .. stairs up
         220, 239, 244, 247, '8', '~', '~',             // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        '+', '\\', '}', '%', '$', '"', '#',            // book .. cloud
+        '+', '\\', '}', '%', '$', '"', '#', 234,       // book .. trees
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -3021,7 +3034,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall .. stairs up
         251, 182, 167, 187, '8', 171, 168,             // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        '+', '\\', '}', '%', '$', '"', '#',            // book .. cloud
+        '+', '\\', '}', '%', '$', '"', '#', '@',       // book .. trees
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -3031,7 +3044,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         0x2592, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
         '_', 0x2229, 0x2320, 0x2248, '8', '~', '~',
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
-        '+', '|', '}', '%', '$', '"', '#',
+        '+', '|', '}', '%', '$', '"', '#', 0x2663,
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -3047,7 +3060,7 @@ dungeon_char_type dchar_by_name(const std::string &name)
         "item_orb", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
         "item_stave", "item_miscellany", "item_corpse", "item_gold",
-        "item_amulet", "cloud"
+        "item_amulet", "cloud", "trees",
     };
 
     for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
@@ -3140,6 +3153,13 @@ void init_feature_table( void )
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             Feature[i].colour       = LIGHTCYAN;
+            Feature[i].minimap      = MF_WALL;
+            break;
+
+        case DNGN_TREES:
+            Feature[i].dchar        = DCHAR_TREES;
+            Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            Feature[i].colour       = BLACK; // overridden later
             Feature[i].minimap      = MF_WALL;
             break;
 

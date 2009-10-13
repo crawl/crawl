@@ -524,6 +524,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
     if (!force && crawl_state.is_god_acting())
         force = true;
 
+    if (!force && !you.transform_cancellable)
+    {
+        // Jiyva's wrath-induced transformation is blocking the attempt.
+        // May need to be updated if transform_cancellable is used for
+        // other uses.
+        return (false);
+    }
+
     if (you.species == SP_MERFOLK && player_is_swimming()
         && which_trans != TRAN_DRAGON && which_trans != TRAN_BAT)
     {
@@ -961,6 +969,8 @@ void untransform(bool skip_wielding)
         handle_interrupted_swap(true, false, true);
 
     you.turn_is_over = true;
+    if (!you.transform_cancellable)
+        you.transform_cancellable = true;
 }
 
 // XXX: This whole system is a mess as it still relies on special

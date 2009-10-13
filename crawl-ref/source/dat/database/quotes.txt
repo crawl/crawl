@@ -52,6 +52,18 @@ A one-way gate to the infinite horrors of the Abyss
  the abyss gazes also into you."
     -Friedrich Nietzsche, "Beyond Good and Evil"
 %%%%
+A portal to a secret trove of treasure
+
+"'Stop thief! Stop thief!' There is a magic in the sound. The tradesman
+ leaves his counter, and the car-man his waggon; the butcher throws down
+ his tray; the baker his basket; the milkman his pail; the errand-boy
+ his parcels; the school-boy his marbles; the paviour his pickaxe; the
+ child his battledore. Away they run, pell-mell, helter-skelter, slap-dash:
+ tearing, yelling, screaming, knocking down the passengers as they turn
+ the corners, rousing up the dogs, and astonishing the fowls: and streets,
+ squares, and courts, re-echo with the sound."
+    -Charles Dickens, "Oliver Twist"
+%%%%
 A rock wall
 
 "I know not whether Laws be right,
@@ -74,6 +86,11 @@ imparting vividness to all ideas, without the power of selecting or
 controlling them; then pray that your grieves may slumber, and the
 brotherhood of remorse not break their chain."
     -Nathaniel Hawthorne
+%%%%
+Trees
+
+"Only YOU can prevent forest fires!"
+    -Smokey the Bear
 %%%%
 ####################################################
 # Items
@@ -528,6 +545,13 @@ bumblebee
  And gather Honey all the day
      From every opening Flower!"
     -Isaac Watts.  1715.
+%%%%
+bush
+
+"And the angel of the LORD appeared unto him in a flame of fire out of the
+ midst of a bush: and he looked, and, behold, the bush burned with fire, and
+ the bush was not consumed."
+    -KJV Bible, Ex3:2.
 %%%%
 butterfly
 

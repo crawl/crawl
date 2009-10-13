@@ -1900,7 +1900,8 @@ Berserkers:
 Berserkers are hardy warriors who worship Trog the Wrathful, from whom
 they get the power to go berserk (as well as a number of other powers,
 should they prove worthy), but who forbids the use of spell magic. They
-usually enter the dungeon with an axe and dressed in animal skins.
+usually enter the dungeon with a mace or axe, and dressed in animal
+skins.
 
 Paladins:
 ---------
@@ -1913,7 +1914,7 @@ Priests:
 Priests serve either Zin, the ancient and revered God of Law, or
 Yredelemnul, the rather less pleasant God of Death. In addition, Hill
 Orcs may choose to follow the Orc god Beogh instead. Priests enter the
-dungeon with a traditional weapon, and a priestly robe. Those who serve
+dungeon with a traditional weapon and a priestly robe. Those who serve
 Zin also get a few healing potions.
 
 Healers:

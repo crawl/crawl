@@ -310,7 +310,7 @@ static std::string _replace_name_parts(const std::string name_in,
 // Functions defined in art-func.h are referenced in art-data.h
 #include "art-func.h"
 
-static unrandart_entry unranddata[] = {
+static unrandart_entry unranddata[UNRAND_LAST] = {
 #include "art-data.h"
 };
 

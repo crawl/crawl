@@ -2273,6 +2273,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, "You feel less confused.");
     _decrement_a_duration(DUR_LOWERED_MR, "You feel more resistant to magic.");
+    _decrement_a_duration(DUR_SLIMIFY, "You feel less slimy.",
+                          coinflip(), "Your slime is starting to congeal.");
 
     if (you.duration[DUR_PARALYSIS] || you.duration[DUR_PETRIFIED])
     {

@@ -25,6 +25,7 @@ REVISION("$Rev$");
 
 #include "artefact.h"
 #include "beam.h"
+#include "cloud.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"
@@ -644,6 +645,7 @@ bool mons_is_slime(const monsters *mon)
 bool mons_class_is_plant(int mc)
 {
     return (mons_genus(mc) == MONS_PLANT
+            || mons_genus(mc) == MONS_BUSH
             || mons_genus(mc) == MONS_FUNGUS);
 }
 
@@ -6292,7 +6294,11 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Allow the victim to exhibit passive damage behaviour (royal
         // jelly).
-        react_to_damage(amount, flavour);
+        kill_category whose = (agent == NULL) ? KC_OTHER :
+                              (agent->atype() == ACT_PLAYER) ? KC_YOU :
+                               mons_friendly_real((monsters*)agent) ? KC_FRIENDLY :
+                                                KC_OTHER;
+        react_to_damage(amount, flavour, whose);
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
@@ -8441,7 +8447,7 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
     return (ident);
 }
 
-void monsters::react_to_damage(int damage, beam_type flavour)
+void monsters::react_to_damage(int damage, beam_type flavour, kill_category whose)
 {
     if (!alive())
         return;
@@ -8506,6 +8512,11 @@ void monsters::react_to_damage(int damage, beam_type flavour)
         {
             menv[number].hurt(&you, damage, flavour);
         }
+    }
+    else if (type == MONS_BUSH && flavour == BEAM_FIRE
+             && damage>8 && x_chance_in_y(damage, 20))
+    {
+        place_cloud(CLOUD_FIRE, pos(), 20+random2(15), whose, 5);
     }
 }
 

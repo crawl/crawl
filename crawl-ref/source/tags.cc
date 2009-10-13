@@ -837,6 +837,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.char_direction);
     marshallByte(th, you.opened_zot);
     marshallByte(th, you.royal_jelly_dead);
+    marshallByte(th, you.transform_cancellable);
     marshallByte(th, you.your_level);
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
@@ -1260,6 +1261,9 @@ static void tag_read_you(reader &th, char minorVersion)
 
     if (minorVersion >= TAG_MINOR_JELLY)
         you.royal_jelly_dead = (bool) unmarshallByte(th);
+
+     if (minorVersion >= TAG_MINOR_TRANS)
+         you.transform_cancellable = (bool) unmarshallByte(th);
 
     you.your_level        = unmarshallByte(th);
     you.is_undead         = static_cast<undead_state_type>(unmarshallByte(th));

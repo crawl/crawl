@@ -1268,21 +1268,6 @@ const zap_info zap_data[] = {
     },
 
     {
-        ZAP_SLIME,
-        "0",
-        100,
-        NULL,
-        NULL,
-        GREEN,
-        true,
-        BEAM_SLIME,
-        DCHAR_SPACE,
-        false,
-        false,
-        false
-    },
-
-    {
         ZAP_PORKALATOR,
         "porkalator",
         100,
@@ -1708,8 +1693,9 @@ void bolt::digging_wall_effect()
 
 void bolt::fire_wall_effect()
 {
-    // Fire only affects wax walls.
-    if (grd(pos()) != DNGN_WAX_WALL)
+    dungeon_feature_type feat;
+    // Fire only affects wax walls and trees.
+    if ((feat=grd(pos())) != DNGN_WAX_WALL && (feat != DNGN_TREES))
     {
         finish_beam();
         return;
@@ -1718,7 +1704,7 @@ void bolt::fire_wall_effect()
     if (!is_superhot())
     {
         // No actual effect.
-        if (flavour != BEAM_HELLFIRE)
+        if (flavour != BEAM_HELLFIRE && feat == DNGN_WAX_WALL)
         {
             if (see_grid(pos()))
             {
@@ -1733,12 +1719,27 @@ void bolt::fire_wall_effect()
     {
         // Destroy the wall.
         grd(pos()) = DNGN_FLOOR;
-        if (see_grid(pos()))
-            emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
-        else if (player_can_smell())
-            emit_message(MSGCH_PLAIN, "You smell burning wax.");
+        if (feat == DNGN_WAX_WALL)
+        {
+            if (see_grid(pos()))
+                emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
+            else if (player_can_smell())
+                emit_message(MSGCH_PLAIN, "You smell burning wax.");
+            place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
+        }
+        else
+        {
+            if (see_grid(pos()))
+                emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
+            else if (player_can_smell())
+                emit_message(MSGCH_PLAIN, "You smell burning wood.");
+            if (whose_kill() == KC_YOU)
+                did_god_conduct(DID_KILL_PLANT, 1, effect_known, 0);
+            else if (whose_kill() == KC_FRIENDLY)
+                did_god_conduct(DID_ALLY_KILLED_PLANT, 1, effect_known, 0);
+            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, whose_kill(), killer(), 5);
+        }
 
-        place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
 
         obvious_effect = true;
     }
@@ -2213,25 +2214,16 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (doFlavouredEffects)
                 simple_monster_message(monster, " resists.");
         }
-        else if (original < hurted)
+        else if (original < hurted && doFlavouredEffects)
         {
             if (mons_is_icy(monster->type))
-            {
-                if (doFlavouredEffects)
-                    simple_monster_message(monster, " melts!");
-            }
+                simple_monster_message(monster, " melts!");
+            else if (monster->type == MONS_BUSH)
+                simple_monster_message(monster, " is on fire!");
+            else if (pbolt.flavour == BEAM_FIRE)
+                simple_monster_message(monster, " is burned terribly!");
             else
-            {
-                if (doFlavouredEffects)
-                {
-                    if (pbolt.flavour == BEAM_FIRE)
-                        simple_monster_message(monster,
-                                               " is burned terribly!");
-                    else
-                        simple_monster_message(monster,
-                                               " is scalded terribly!");
-                }
-            }
+                simple_monster_message(monster, " is scalded terribly!");
         }
         break;
 
@@ -3107,7 +3099,7 @@ bool bolt::affects_wall(dungeon_feature_type wall) const
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3)
         return (true);
 
-    if (is_fiery() && wall == DNGN_WAX_WALL)
+    if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREES))
         return (true);
 
     // eye of devastation?
@@ -4584,6 +4576,13 @@ void bolt::affect_monster(monsters* mon)
         return;
     }
 
+    // Missiles go past bushes.
+    if (!is_beam && mon->type == MONS_BUSH)
+    {
+        apply_hit_funcs(mon, 0);
+        return;
+    }
+
     // Fire storm creates these, so we'll avoid affecting them
     if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
     {
@@ -4889,11 +4888,6 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
               || (mons_holiness(mon) == MH_NATURAL && mon->type != MONS_HOG);
         break;
 
-    case BEAM_SLIME:
-        rc = (mons_holiness(mon) == MH_NATURAL
-              || mons_holiness(mon) == MH_UNDEAD);
-        break;
-
     default:
         break;
     }
@@ -5072,46 +5066,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         else
             mon->add_ench(ENCH_CHARM);
         behaviour_event(mon, ME_ALERT, MHITNOT);
-        return (MON_AFFECTED);
-
-    case BEAM_SLIME:
-        if (mon->hit_dice * 8 / 2 >= random2(ench_power))
-            return (MON_RESIST);
-
-        obvious_effect = true;
-
-        if (mons_holiness(mon) == MH_UNDEAD)
-            monster_polymorph(mon, MONS_DEATH_OOZE);
-        else
-        {
-            const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
-
-            if (x < 3)
-                monster_polymorph(mon, MONS_OOZE);
-            else if (x >= 3 && x < 5)
-                monster_polymorph(mon, MONS_JELLY);
-            else if (x >= 5 && x < 7)
-                monster_polymorph(mon, MONS_BROWN_OOZE);
-            else if (x >= 7 && x <= 11)
-            {
-                if (coinflip())
-                    monster_polymorph(mon, MONS_SLIME_CREATURE);
-                else
-                    monster_polymorph(mon, MONS_GIANT_AMOEBA);
-            }
-            else
-            {
-                if (coinflip())
-                    monster_polymorph(mon, MONS_ACID_BLOB);
-                else
-                    monster_polymorph(mon, MONS_AZURE_JELLY);
-            }
-        }
-
-        if (!mons_eats_items(mon))
-            mon->add_ench(ENCH_EAT_ITEMS);
-
-        mon->attitude = ATT_STRICT_NEUTRAL;
         return (MON_AFFECTED);
 
     case BEAM_PAIN:             // pain/agony
@@ -6017,7 +5971,6 @@ std::string beam_type_name(beam_type type)
     case BEAM_PETRIFY:              return ("petrify");
     case BEAM_BACKLIGHT:            return ("backlight");
     case BEAM_PORKALATOR:           return ("porkalator");
-    case BEAM_SLIME:                return ("slime");
     case BEAM_SLEEP:                return ("sleep");
     case BEAM_BERSERK:              return ("berserk");
     case BEAM_POTION_BLACK_SMOKE:   return ("black smoke");

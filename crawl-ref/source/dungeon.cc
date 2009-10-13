@@ -4831,6 +4831,7 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
             (rawfeat == 'm') ? DNGN_CLEAR_ROCK_WALL :
             (rawfeat == 'n') ? DNGN_CLEAR_STONE_WALL :
             (rawfeat == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
+            (rawfeat == 't') ? DNGN_TREES :
             (rawfeat == '+') ? DNGN_CLOSED_DOOR :
             (rawfeat == '=') ? DNGN_SECRET_DOOR :
             (rawfeat == 'w') ? DNGN_DEEP_WATER :
@@ -4918,6 +4919,7 @@ static void _vault_grid( vault_placement &place,
                    (vgrid == 'm') ? DNGN_CLEAR_ROCK_WALL :
                    (vgrid == 'n') ? DNGN_CLEAR_STONE_WALL :
                    (vgrid == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
+                   (vgrid == 't') ? DNGN_TREES :
                    (vgrid == '+') ? DNGN_CLOSED_DOOR :
                    (vgrid == '=') ? DNGN_SECRET_DOOR :
                    (vgrid == 'w') ? DNGN_DEEP_WATER :

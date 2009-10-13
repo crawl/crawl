@@ -382,6 +382,77 @@ ENDMAP
 
 
 ##############################################################################
+# Dispater - new map by Mu, featuring iron golems and iron trolls
+##############################################################################
+
+NAME:   castle_dis_mu
+PLACE:  Dis:7
+TAGS:   dis
+ORIENT: north
+TAGS:   no_rotate
+LFLAGS: no_tele_control
+
+### make granite statues into iron statues
+{{
+  dgn.set_feature_desc_short("granite statue", "iron statue")
+  dgn.set_feature_desc_long("granite statue", "A heavy-looking iron statue. You " ..
+                            "can't help but feel like it's watching you.")
+}}
+KFEAT:  o = granite_statue
+MARKER: O = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="iron rune of Zot" \
+        }
+MONS:   Dispater
+MONS:   fiend
+MONS:   ice fiend
+MONS:   iron devil
+MONS:   metal gargoyle
+MONS:   iron dragon
+MONS:   iron troll
+KMONS:  8 = iron golem
+KFEAT:  8 = .
+SHUFFLE: 23
+SUBST:  4 = 4:20 7
+SUBST:  8 = 8o
+COLOUR: o : cyan
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxx
+xxxxxxv..................................................................vxxxxxx
+xxxxxxv..............................................v5v..v5v............vxxxxxx
+xxxxxxv..............................................vvvvvvvv............vxxxxxx
+xxxxxxv..........v5v5v...v5v5v...v5v5v...v5v5v.....vvv...4..vvv..........vxxxxxx
+xxxxxxv..........vvvvv...vvvvv...vvvvv...vvvvv...vvv.+..88..+.vvv........vxxxxxx
+xxxxxxv..........v||3v...v2||v...v$$$v...v$$$v..vv...v...4..v...vv.......vxxxxxx
+xxxxxxv..........v|..v...v..|v...v$|$v...v$|$v.vv..vvvvvvvvvvvv..vv......vxxxxxx
+xxxxxxv..........v...vvvvv...vvvvv.6.vvvvv.6.vvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
+xxxxxxv........vvvv+vvW8Wvv+vvvvvv...+...+...vv..vvv.........vvvv..v.....vxxxxxx
+xxxxxxv.......vv.v...........vvvvvvvvv...vvvvvv.vvvv$$$$$vv...vvvv.vv....vxxxxxx
+xxxxxxv.....vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$$vvv....vvvv..v....vxxxxxx
+xxxxxxv....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vv.......vvvv+vvv..vxxxxxx
+xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v...v.v...v...vvvv|vv..v4v4v.vvv...v5..vxxxxxx
+xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv.........vv...vv..vxxxxxx
+xxxxxxv..vvv.WW..+................+..v...v..v...vvvvOv1...2.....+....v...vxxxxxx
+xxxxxxv..vvv.WW..+................+..5.W.5..v...vvvv|v6...3.....+....v...vxxxxxx
+xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv.........vv...vv..vxxxxxx
+xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v...vvvv|vv..v4v4v.vvv...v5..vxxxxxx
+xxxxxxv....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vv.......vvvv+vvv..vxxxxxx
+xxxxxxv.....vv...+.......+...vv|$|v.........vv..vvvv$$$vvv....vvvv..v....vxxxxxx
+xxxxxxv......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$$vv...vvvv.vv....vxxxxxx
+xxxxxxv........vvvv+vvW8Wv$$$vvvvvv..v...v..vvv..vvv.........vvvv..v.....vxxxxxx
+xxxxxxv..........v...vvvvv$$$vvvvvvvvv...vvvvvvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
+xxxxxxv..........v$2$v...v$3$v...vvvvv...vvvvv.vv..vvvvvvvvvvvv..vv......vxxxxxx
+xxxxxxv..........v|||v...v|||v...vvvvv...vvvvv..vv...v...4..v...vv.......vxxxxxx
+xxxxxxv..........vvvvv...vvvvv...vvv8v+++v8vvv...vvv.+..88..+.vvv........vxxxxxx
+xxxxxxv..........v5v5v...v5v5v...v.v.v...v.v.v.....vvv...4..vvv..........vxxxxxx
+xxxxxxv..............................................vvvvvvvv............vxxxxxx
+xxxxxxv...........................7...........7......v5v..v5v............vxxxxxx
+xxxxxxv..........................7....{.[.(....7.........................vxxxxxx
+xxxxxxv...........................7...........7..........................vxxxxxx
+ENDMAP
+
+
+##############################################################################
 # Asmodeus
 ##############################################################################
 

@@ -11,7 +11,7 @@ enum opacity_type
     OPC_CLEAR,
     OPC_HALF,    // for opaque clouds; two or more block
     OPC_OPAQUE,
-     
+
     NUM_OPACITIES
 };
 
@@ -35,7 +35,7 @@ struct los_param
 };
 
 // Provides translation to given center and bounds checking.
-struct los_param_trans : los_param
+struct los_param_trans : public los_param
 {
     coord_def center;
 
@@ -47,7 +47,7 @@ struct los_param_trans : los_param
 };
 
 // Everything is visible.
-struct los_param_permissive : los_param_trans
+struct los_param_permissive : public los_param_trans
 {
     los_param_permissive(const coord_def& c);
 
@@ -56,7 +56,7 @@ struct los_param_permissive : los_param_trans
 };
 
 // Standard visibility disregarding clouds.
-struct los_param_nocloud : los_param_trans
+struct los_param_nocloud : public los_param_trans
 {
     los_param_nocloud(const coord_def& c);
 
@@ -66,7 +66,7 @@ struct los_param_nocloud : los_param_trans
 };
 
 // Standard visibility.
-struct los_param_base : los_param_nocloud
+struct los_param_base : public los_param_nocloud
 {
     los_param_base(const coord_def& c);
 
@@ -76,7 +76,7 @@ struct los_param_base : los_param_nocloud
 
 // Like los_param_base, but any solid object blocks.
 // This includes clear walls and statues.
-struct los_param_solid : los_param_base
+struct los_param_solid : public los_param_base
 {
     los_param_solid(const coord_def& c);
 

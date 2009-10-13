@@ -2531,6 +2531,54 @@ bool monster_blink(monsters *monster, bool quiet)
     return (true);
 }
 
+bool mon_can_be_slimified(monsters *monster)
+{
+    return (mons_holiness(monster) == MH_UNDEAD
+            || mons_holiness(monster) == MH_NATURAL
+                && !mons_is_slime(monster));
+}
+
+void slimify_monster(monsters *mon, bool hostile)
+{
+        if (mons_holiness(mon) == MH_UNDEAD)
+            monster_polymorph(mon, MONS_DEATH_OOZE);
+        else
+        {
+            const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
+
+            if (x < 3)
+                monster_polymorph(mon, MONS_OOZE);
+            else if (x >= 3 && x < 5)
+                monster_polymorph(mon, MONS_JELLY);
+            else if (x >= 5 && x < 7)
+                monster_polymorph(mon, MONS_BROWN_OOZE);
+            else if (x >= 7 && x <= 11)
+            {
+                if (coinflip())
+                    monster_polymorph(mon, MONS_SLIME_CREATURE);
+                else
+                    monster_polymorph(mon, MONS_GIANT_AMOEBA);
+            }
+            else
+            {
+                if (coinflip())
+                    monster_polymorph(mon, MONS_ACID_BLOB);
+                else
+                    monster_polymorph(mon, MONS_AZURE_JELLY);
+            }
+        }
+
+    if (!mons_eats_items(mon))
+        mon->add_ench(ENCH_EAT_ITEMS);
+
+    if (!hostile)
+        mon->attitude = ATT_STRICT_NEUTRAL;
+    else
+        mon->attitude = ATT_HOSTILE;
+
+    mons_make_god_gift(mon, GOD_JIYVA);
+}
+
 static void _set_random_target(monsters* mon)
 {
     mon->target = random_in_bounds(); // If we don't find anything better
@@ -5451,6 +5499,7 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
         return (!mons_res_rotting(monster));
 
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         if (mons_res_fire(monster) > 1)
             return (false);
 
@@ -5533,12 +5582,12 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
         if (monster->flight_mode() != FL_NONE)
             return (false);
 
-        // These don't care about deep water. 
+        // These don't care about deep water.
         if (monster_habitable_grid(monster, DNGN_DEEP_WATER))
             return (false);
 
         // This position could become deep water, and they might drown.
-        if (grd(cloud.pos) == DNGN_SHALLOW_WATER) 
+        if (grd(cloud.pos) == DNGN_SHALLOW_WATER)
             return (true);
 
         // Otherwise, it's safe for everyone else.
@@ -8844,6 +8893,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     if (monster->type == MONS_WATER_ELEMENTAL
         && (target_grid == DNGN_LAVA
             || targ_cloud_type == CLOUD_FIRE
+            || targ_cloud_type == CLOUD_FOREST_FIRE
             || targ_cloud_type == CLOUD_STEAM))
     {
         return (false);
@@ -9351,6 +9401,7 @@ static void _mons_in_cloud(monsters *monster)
         return;
 
     case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
         if (monster->type == MONS_FIRE_VORTEX
             || monster->type == MONS_EFREET
             || monster->type == MONS_FIRE_ELEMENTAL)
@@ -9458,8 +9509,7 @@ static void _mons_in_cloud(monsters *monster)
             hurted += ((4 * random2(3)) - random2(monster->ac));
             wake = true;
         }
-
-        break;       
+        break;
 
     case CLOUD_MUTAGENIC:
         simple_monster_message(monster, " is engulfed in a mutagenic fog!");

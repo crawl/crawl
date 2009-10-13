@@ -245,7 +245,6 @@ enum beam_type                  // beam[].flavour
     BEAM_PETRIFY,
     BEAM_BACKLIGHT,               // 45
     BEAM_PORKALATOR,
-    BEAM_SLIME,
     BEAM_SLEEP,
     BEAM_BERSERK,
     BEAM_LAST_ENCHANTMENT = BEAM_BERSERK,
@@ -432,6 +431,11 @@ enum cloud_type
     CLOUD_GREY_SMOKE,
     CLOUD_BLUE_SMOKE,
     CLOUD_PURP_SMOKE,
+    CLOUD_FOREST_FIRE,
+
+    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
+    CLOUD_OPAQUE_LAST  = CLOUD_FOREST_FIRE,
+
     CLOUD_STEAM,
     CLOUD_MIASMA,
     CLOUD_MIST,
@@ -946,6 +950,7 @@ enum dungeon_char_type
     DCHAR_ITEM_GOLD,
     DCHAR_ITEM_AMULET,          // 30
     DCHAR_CLOUD,                // 31
+    DCHAR_TREES,
 
     DCHAR_SPACE,
     DCHAR_FIRED_FLASK,
@@ -1017,6 +1022,7 @@ enum dungeon_feature_type
     // Highest grid value which can't be reached through.
     DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
 
+    DNGN_TREES,
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
     // Can be seen through and reached past.
@@ -1253,6 +1259,7 @@ enum duration_type
     DUR_LOWERED_MR,
     DUR_REPEL_STAIRS_MOVE,
     DUR_REPEL_STAIRS_CLIMB,
+    DUR_SLIMIFY,
 
     NUM_DURATIONS
 };
@@ -1863,6 +1870,7 @@ enum monster_type                      // (int) menv[].type
     MONS_FLAMING_CORPSE,
     MONS_HARPY,
     MONS_TOADSTOOL,                    //  198
+    MONS_BUSH,
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,

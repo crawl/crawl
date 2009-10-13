@@ -139,18 +139,6 @@ A one-way gate to the infinite horrors of the Abyss
 
 A one-way gate to a demon-haunted realm, riven by chaos, its very substance impermanent and whimsical, filled with creatures out of nightmare.
 %%%%
-A portal to a secret trove of treasure
-
-"'Stop thief! Stop thief!' There is a magic in the sound. The tradesman
- leaves his counter, and the car-man his waggon; the butcher throws down
- his tray; the baker his basket; the milkman his pail; the errand-boy
- his parcels; the school-boy his marbles; the paviour his pickaxe; the
- child his battledore. Away they run, pell-mell, helter-skelter, slap-dash:
- tearing, yelling, screaming, knocking down the passengers as they turn
- the corners, rousing up the dogs, and astonishing the fowls: and streets,
- squares, and courts, re-echo with the sound."
-    -Charles Dickens, "Oliver Twist"
-%%%%
 A rock wall
 
 This wall consists of simple rock.
@@ -346,4 +334,8 @@ An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
 Some shallow water
 
 This waist-deep, misty water makes movement and combat cumbersome for landlubbers - sometimes dangerous, but never directly fatal.
+%%%%
+Trees
+
+While the dungeon is filled with dim magic light, in most places it is not bright enough to sustain any larger plants.  It is uneven, though, and there are spots where, with the grace of Feawn, trees as big as those on the surface can grow underground.
 %%%%

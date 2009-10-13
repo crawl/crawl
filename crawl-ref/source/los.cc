@@ -91,7 +91,7 @@ bool double_is_zero(const double x)
     return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
 }
 
-struct los_ray : ray_def
+struct los_ray : public ray_def
 {
     unsigned int start;
     unsigned int length;
