@@ -686,9 +686,9 @@ bool receive_corpses(int pow, coord_def where)
         // Find an appropriate monster corpse.
         monster_type mon_type = MONS_PROGRAM_BUG;
         int adjusted_power = 0;
-        for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); i++)
+        for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); ++i)
         {
-            adjusted_power = std::min(pow/4,random2(random2(pow)));
+            adjusted_power = std::min(pow / 4, random2(random2(pow)));
             mon_type = pick_local_zombifiable_monster_type(adjusted_power);
         }
 
