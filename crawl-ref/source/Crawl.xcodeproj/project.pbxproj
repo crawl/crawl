@@ -365,6 +365,18 @@
 		B090C2F210671F8900AE855D /* dngn.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EE10671F8900AE855D /* dngn.png */; };
 		B090C2F410671F8900AE855D /* main.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F010671F8900AE855D /* main.png */; };
 		B090C2F510671F8900AE855D /* player.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F110671F8900AE855D /* player.png */; };
+		B0B59CDD107ED1510030A02B /* CREDITS.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCB107ED1510030A02B /* CREDITS.txt */; };
+		B0B59CDE107ED1510030A02B /* INSTALL.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCC107ED1510030A02B /* INSTALL.txt */; };
+		B0B59CDF107ED1510030A02B /* licence.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCD107ED1510030A02B /* licence.txt */; };
+		B0B59CE0107ED1510030A02B /* README.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCE107ED1510030A02B /* README.pdf */; };
+		B0B59CE1107ED1510030A02B /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCF107ED1510030A02B /* README.txt */; };
+		B0B59CE2107ED1510030A02B /* settings in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CD0107ED1510030A02B /* settings */; };
+		B0B59CE3107ED1510030A02B /* CREDITS.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCB107ED1510030A02B /* CREDITS.txt */; };
+		B0B59CE4107ED1510030A02B /* INSTALL.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCC107ED1510030A02B /* INSTALL.txt */; };
+		B0B59CE5107ED1510030A02B /* licence.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCD107ED1510030A02B /* licence.txt */; };
+		B0B59CE6107ED1510030A02B /* README.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCE107ED1510030A02B /* README.pdf */; };
+		B0B59CE7107ED1510030A02B /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CCF107ED1510030A02B /* README.txt */; };
+		B0B59CE8107ED1510030A02B /* settings in Resources */ = {isa = PBXBuildFile; fileRef = B0B59CD0107ED1510030A02B /* settings */; };
 		B0B5DF6A1066EE1A0020B21F /* libpng.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF201066ED0E0020B21F /* libpng.framework */; };
 		B0B5DF6B1066EE1A0020B21F /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF221066ED0E0020B21F /* SDL_image.framework */; };
 		B0B5DF6C1066EE1A0020B21F /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0B5DF241066ED0E0020B21F /* SDL.framework */; };
@@ -818,6 +830,12 @@
 		B090C2EE10671F8900AE855D /* dngn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dngn.png; path = rltiles/dngn.png; sourceTree = "<group>"; };
 		B090C2F010671F8900AE855D /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = rltiles/main.png; sourceTree = "<group>"; };
 		B090C2F110671F8900AE855D /* player.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = player.png; path = rltiles/player.png; sourceTree = "<group>"; };
+		B0B59CCB107ED1510030A02B /* CREDITS.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CREDITS.txt; path = ../CREDITS.txt; sourceTree = SOURCE_ROOT; };
+		B0B59CCC107ED1510030A02B /* INSTALL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = INSTALL.txt; path = ../INSTALL.txt; sourceTree = SOURCE_ROOT; };
+		B0B59CCD107ED1510030A02B /* licence.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = licence.txt; path = ../licence.txt; sourceTree = SOURCE_ROOT; };
+		B0B59CCE107ED1510030A02B /* README.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = README.pdf; path = ../README.pdf; sourceTree = SOURCE_ROOT; };
+		B0B59CCF107ED1510030A02B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.txt; path = ../README.txt; sourceTree = SOURCE_ROOT; };
+		B0B59CD0107ED1510030A02B /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; name = settings; path = ../settings; sourceTree = SOURCE_ROOT; };
 		B0B5DF201066ED0E0020B21F /* libpng.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng.framework; path = /Library/Frameworks/libpng.framework; sourceTree = "<absolute>"; };
 		B0B5DF221066ED0E0020B21F /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = /Library/Frameworks/SDL_image.framework; sourceTree = "<absolute>"; };
 		B0B5DF241066ED0E0020B21F /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = /Library/Frameworks/SDL.framework; sourceTree = "<absolute>"; };
@@ -1218,6 +1236,12 @@
 		7B352F1B0B0022C900CABB32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B0B59CCB107ED1510030A02B /* CREDITS.txt */,
+				B0B59CCC107ED1510030A02B /* INSTALL.txt */,
+				B0B59CCD107ED1510030A02B /* licence.txt */,
+				B0B59CCE107ED1510030A02B /* README.pdf */,
+				B0B59CCF107ED1510030A02B /* README.txt */,
+				B0B59CD0107ED1510030A02B /* settings */,
 				B090C2EE10671F8900AE855D /* dngn.png */,
 				B090C2F010671F8900AE855D /* main.png */,
 				B090C2F110671F8900AE855D /* player.png */,
@@ -1469,6 +1493,12 @@
 				B032D6FB106C02540002D70D /* dat in Resources */,
 				B032D6FC106C02540002D70D /* docs in Resources */,
 				B032D6FD106C02540002D70D /* Crawl.icns in Resources */,
+				B0B59CDD107ED1510030A02B /* CREDITS.txt in Resources */,
+				B0B59CDE107ED1510030A02B /* INSTALL.txt in Resources */,
+				B0B59CDF107ED1510030A02B /* licence.txt in Resources */,
+				B0B59CE0107ED1510030A02B /* README.pdf in Resources */,
+				B0B59CE1107ED1510030A02B /* README.txt in Resources */,
+				B0B59CE2107ED1510030A02B /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1479,6 +1509,12 @@
 				D2F272350DA1C5AD00445FE9 /* dat in Resources */,
 				D2F2725B0DA1C61600445FE9 /* docs in Resources */,
 				D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */,
+				B0B59CE3107ED1510030A02B /* CREDITS.txt in Resources */,
+				B0B59CE4107ED1510030A02B /* INSTALL.txt in Resources */,
+				B0B59CE5107ED1510030A02B /* licence.txt in Resources */,
+				B0B59CE6107ED1510030A02B /* README.pdf in Resources */,
+				B0B59CE7107ED1510030A02B /* README.txt in Resources */,
+				B0B59CE8107ED1510030A02B /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
