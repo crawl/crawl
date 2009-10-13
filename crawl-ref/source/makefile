@@ -212,17 +212,6 @@ GCC := gcc
 GXX := g++
 endif
 
-USE_ICC := n
-
-ifneq ($(USE_ICC),n)
-GCC := icc
-GXX := icpc
-AR  := xiar rcu
-LIB += -lguide
-CFWARN += -wd383,810,869,981,1418 -we14,193,304
-CFWARN_L :=
-endif
-
 RLTILES = rltiles
 
 #
@@ -353,10 +342,6 @@ endif # TILES
 CFWARN_L := -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
 CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
 
-ifneq ($(USE_ICC),n)
-LIB += -lguide -lpthread
-endif
-
 #
 # Figure out the build settings for this type of build
 #
@@ -476,9 +461,20 @@ else
 LIB += -l$(LIBCURS)
 endif
 
+USE_ICC := n
+
+ifneq ($(USE_ICC),n)
+GCC := icc
+GXX := icpc
+AR  := xiar rcu
+LIB += -lguide -lpthread
+CFWARN := -wd383,810,869,981,1418 -we14,193,304
+CFWARN_L :=
+endif
+
 CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
 CFLAGS_L := $(CFOPTIMIZE_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
-YCFLAGS  := -w
+YCFLAGS  := -w -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
 
 UTIL = util/
 
