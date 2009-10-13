@@ -33,6 +33,7 @@ bool orange_statue_effects(monsters *mons);
 bool silver_statue_effects(monsters *mons);
 bool moth_incite_monsters(const monsters *mon);
 void mons_clear_trapping_net(monsters *mon);
+void mons_cast_haunt(monsters *monster);
 
 bool mons_clonable(const monsters* orig, bool needs_adjacent = true);
 int  clone_mons(const monsters* orig, bool quiet = false,

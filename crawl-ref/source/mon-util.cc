@@ -1695,6 +1695,7 @@ int exper_value(const monsters *monster)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
+            case SPELL_SUMMON_WRAITHS:
             case SPELL_HELLFIRE_BURST:
             case SPELL_HELLFIRE:
             case SPELL_SYMBOL_OF_TORMENT:
@@ -3237,6 +3238,7 @@ static bool _ms_los_spell(spell_type monspell)
         return (false);
 
     if (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE
+        || monspell == SPELL_SUMMON_WRAITHS
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return (true);

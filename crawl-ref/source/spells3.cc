@@ -1259,34 +1259,60 @@ bool cast_twisted_resurrection(int pow, god_type god)
     return (true);
 }
 
-bool cast_summon_wraiths(int pow, god_type god)
+bool cast_summon_wraiths(int pow, const coord_def& where, god_type god)
 {
-    bool success = false;
+    monsters *m = monster_at(where);
 
-    const int chance = random2(25);
-    monster_type mon = ((chance > 8) ? MONS_WRAITH :           // 64%
-                        (chance > 3) ? MONS_FREEZING_WRAITH    // 20%
-                                     : MONS_SPECTRAL_WARRIOR); // 16%
-
-    bool friendly = (random2(pow) > 5);
-
-    const int monster =
-        create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      5, SPELL_SUMMON_WRAITHS,
-                      you.pos(), MHITYOU, MG_FORCE_BEH, god));
-
-    if (monster != -1)
+    if (m == NULL)
     {
-        success = true;
+        mpr("An evil force gathers but it quickly dissipates.");
+        return (true);
+    }
+    int mi = monster_index(m);
+    ASSERT(!(invalid_monster_index(mi)));
 
-        if (player_angers_monster(&menv[monster]))
-            friendly = false;
+    if (stop_attack_prompt(m, false, you.pos()))
+        return false;
 
+    bool friendly = true;
+    int success = 0;
+    int to_summon = stepdown_value(2 + (random2(pow) / 10) + (random2(pow) / 10),
+                                   2, 2, 6, -1);
+
+    while(to_summon--)
+    {
+        const int chance = random2(25);
+        monster_type mon = ((chance > 22) ? MONS_PHANTOM :         //  8%
+                            (chance > 20) ? MONS_HUNGRY_GHOST :    //  8%
+                            (chance > 18) ? MONS_FLAYED_GHOST :    //  8%
+                            (chance > 7) ? MONS_WRAITH :           // 44%/40%
+                            (chance > 2) ? MONS_FREEZING_WRAITH    // 20%/16%
+                                         : MONS_SPECTRAL_WARRIOR); // 12%
+        if ((chance == 3 || chance == 8) && player_see_invis())
+            mon = MONS_SHADOW_WRAITH;				   //  0%/8%
+
+        const int monster =
+            create_monster(
+                mgen_data(mon,
+                          BEH_FRIENDLY,
+                          5, SPELL_SUMMON_WRAITHS,
+                          where, mi, MG_FORCE_BEH, god));
+
+        if (monster != -1)
+        {
+            success++;
+
+            if (player_angers_monster(&menv[monster]))
+                friendly = false;
+        }
+    }
+
+    if (success > 1)
+        mpr(friendly ? "Insubstantial figures form in the air."
+                     : "You sense hostile presences.");
+    else if (success)
         mpr(friendly ? "An insubstantial figure forms in the air."
                      : "You sense a hostile presence.");
-    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 

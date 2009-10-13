@@ -67,7 +67,8 @@ static monster_type _pick_random_wraith()
     static monster_type wraiths[] =
     {
         MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
-        MONS_SPECTRAL_WARRIOR
+        MONS_SPECTRAL_WARRIOR, MONS_PHANTOM, MONS_HUNGRY_GHOST,
+        MONS_FLAYED_GHOST
     };
 
     return (RANDOM_ELEMENT(wraiths));
@@ -97,7 +98,7 @@ static monster_type _pick_undead_summon()
 static void _do_high_level_summon(monsters *monster, bool monsterNearby,
                                   spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
-                                  god_type god)
+                                  god_type god, coord_def *target = NULL)
 {
     if (_mons_abjured(monster, monsterNearby))
         return;
@@ -113,8 +114,8 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
 
         create_monster(
             mgen_data(which_mons, SAME_ATTITUDE(monster),
-                      duration, spell_cast, monster->pos(), monster->foe, 0,
-                      god));
+                      duration, spell_cast, target ? *target : monster->pos(),
+                      monster->foe, 0, god));
     }
 }
 
@@ -123,6 +124,7 @@ static bool _los_free_spell(spell_type spell_cast)
     return (spell_cast == SPELL_HELLFIRE_BURST
         || spell_cast == SPELL_BRAIN_FEED
         || spell_cast == SPELL_SMITING
+        || spell_cast == SPELL_SUMMON_WRAITHS
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE);
 }
@@ -132,6 +134,23 @@ static bool _legs_msg_applicable()
 {
     return (you.species != SP_NAGA
             && (you.species != SP_MERFOLK || !player_is_swimming()));
+}
+
+void mons_cast_haunt(monsters *monster)
+{
+    coord_def fpos;
+    switch (monster->foe)
+    {
+    case MHITNOT:
+        return;
+    case MHITYOU:
+        fpos = you.pos();
+        break;
+    default:
+        fpos = menv[monster->foe].pos();
+    }
+    _do_high_level_summon(monster, mons_near(monster), SPELL_SUMMON_WRAITHS,
+                          _pick_random_wraith, random_range(3, 6), GOD_NO_GOD, &fpos);
 }
 
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
@@ -425,11 +444,6 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                           duration, spell_cast, monster->pos(), monster->foe, 0,
                           god));
         }
-        return;
-
-    case SPELL_SUMMON_WRAITHS:
-        _do_high_level_summon(monster, monsterNearby, spell_cast,
-                              _pick_random_wraith, random_range(3, 6), god);
         return;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:

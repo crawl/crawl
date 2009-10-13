@@ -41,6 +41,7 @@ REVISION("$Rev$");
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
+#include "mstuff2.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -832,6 +833,14 @@ void direct_effect(monsters *source, spell_type spell,
             else
                 mpr("Something tries to feed on your intellect!");
         }
+        break;
+
+    case SPELL_SUMMON_WRAITHS:
+        if (!def)
+            mpr("You feel haunted.");
+        else
+            mpr("You sense an evil presence.");
+        mons_cast_haunt(source);
         break;
 
     default:

@@ -856,12 +856,12 @@
 },
 
 {
-    SPELL_SUMMON_WRAITHS, "Summon Wraiths",
-     SPTYP_NECROMANCY | SPTYP_SUMMONING,
-     SPFLAG_BATTLE,
+    SPELL_SUMMON_WRAITHS, "Haunt",
+     SPTYP_NECROMANCY,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF,
      7,
      200,
-     -1, -1,
+     LOS_RADIUS, LOS_RADIUS,
      0,
      NULL,
      false,

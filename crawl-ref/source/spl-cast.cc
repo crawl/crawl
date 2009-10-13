@@ -1726,7 +1726,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SUMMON_WRAITHS:
-        cast_summon_wraiths(powc, god);
+        cast_summon_wraiths(powc, beam.target, god);
         break;
 
     case SPELL_DEATH_CHANNEL:

@@ -61,7 +61,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 
 bool cast_simulacrum(int pow, god_type god = GOD_NO_GOD);
 bool cast_twisted_resurrection(int pow, god_type god = GOD_NO_GOD);
-bool cast_summon_wraiths(int pow, god_type god = GOD_NO_GOD);
+bool cast_summon_wraiths(int pow, const coord_def& where, god_type god = GOD_NO_GOD);
 bool cast_death_channel(int pow, god_type god = GOD_NO_GOD);
 
 void you_teleport();
