@@ -1,6 +1,43 @@
 /*
  *  File:        los.cc
  *  Summary:     Line-of-sight algorithm.
+ *
+ *
+ *
+ * == Definition of visibility ==
+ *
+ * Two cells are in view of each other if there is any straight
+ * line that meets both cells and that doesn't meet any opaque
+ * cell in between, and if the cells are in LOS range of each
+ * other.
+ *
+ * Here, to "meet" a cell means to intersect the interiour. In
+ * particular, rays can pass between to diagonally adjacent
+ * walls (as can the player).
+ *
+ * == Terminology ==
+ *
+ * A _ray_ is a line, specified by starting point (accx, accy)
+ * and slope. A ray determines its _footprint_: the sequence of
+ * cells whose interiour it meets.
+ *
+ * Any prefix of the footprint of a ray is called a _cellray_.
+ *
+ * For the purposes of LOS calculation, only the footprints
+ * are relevant, but rays are also used for shooting beams,
+ * which may travel beyond LOS and which can be reflected.
+ * See ray.cc.
+ *
+ * == Overview ==
+ *
+ * At first use, the LOS code makes some precomputations,
+ * filling a list of all relevant rays in one quadrant,
+ * and filling data structures that allow calculating LOS
+ * in a quadrant without checking each ray.
+ *
+ * The code provides functions for filling LOS information
+ * around a given center efficiently, and for querying rays
+ * between two given cells.
  */
 
 #include "AppHdr.h"
@@ -21,39 +58,40 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 
-// The LOS code now uses raycasting -- haranp
-
 #define LONGSIZE (sizeof(unsigned long)*8)
 #define LOS_MAX_RANGE 9
+
+// These determine what rays are cast in the precomputation,
+// and affect start-up time significantly.
+// XXX: Argue that these values are sufficient.
+#define LOS_MAX_ANGLE (2*LOS_MAX_RANGE-2)
+#define LOS_INTERCEPT_MULT (2)
 
 // the following two constants represent the 'middle' of the sh array.
 // since the current shown area is 19x19, centering the view at (9,9)
 // means it will be exactly centered.
 // This is done to accomodate possible future changes in viewable screen
 // area - simply change sh_xo and sh_yo to the new view center.
-
 const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
 const coord_def sh_o = coord_def(sh_xo, sh_yo);
 
 // These store all unique (in terms of footprint) full rays.
-// The footprint of fullray[i] consists of fullray[i].length cells,
-// whose coordinates are stored in ray_coords after the
-//  coordinates of fullray[i-1].
+// The footprint of ray=fullray[i] consists of ray.length cells,
+// stored in ray_coords[ray.start..ray.length-1].
 // These are filled during precomputation (_register_ray).
 struct los_ray;
 std::vector<los_ray> fullrays;
 std::vector<coord_def> ray_coords;
 
-// These store certain unique subsequences of ray_coords.
-// Filled during precomputation (_create_blockrays)
-std::vector<coord_def> compressed_ray;
-
-// 3D bit array indexed by x coord, y coord, cellray index.
-// Bit los_blockrays[x][y][i] is set iff a wall at (x,y) blocks
-// the cellray starting at compressed_ray[i].
+// These store all unique minimal cellrays. For each i,
+// cellray i ends in cellray_ends[i] and passes through
+// thoses cells p that have blockrays(p)[i] set. In other
+// words, blockrays(p)[i] is set iff an opaque cell p blocks
+// the cellray with index i.
+std::vector<coord_def> cellray_ends;
 typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
-blockrays_t los_blockrays;
+blockrays_t blockrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
@@ -61,13 +99,22 @@ blockrays_t los_blockrays;
 bit_array *dead_rays     = NULL;
 bit_array *smoke_rays    = NULL;
 
+class quadrant_iterator : public rectangle_iterator
+{
+public:
+    quadrant_iterator()
+        : rectangle_iterator(coord_def(0,0),
+                             coord_def(LOS_MAX_RANGE, LOS_MAX_RANGE))
+    {
+    }
+};
+
 void clear_rays_on_exit()
 {
    delete dead_rays;
    delete smoke_rays;
-   for (int x = 0; x <= LOS_MAX_RANGE; x++)
-       for (int y = 0; y <= LOS_MAX_RANGE; y++)
-           delete los_blockrays[x][y];
+   for (quadrant_iterator qi; qi; qi++)
+       delete blockrays(*qi);
 }
 
 // pre-squared LOS radius
@@ -147,75 +194,113 @@ static bool _is_duplicate_ray(std::vector<coord_def> newray)
     return false;
 }
 
-// Is starta...lengtha a subset of startb...lengthb?
-static bool _is_subset(int starta, int startb, int lengtha, int lengthb)
+// A cellray given by fullray and length.
+struct cellray
 {
-    int cura = starta, curb = startb;
-    int enda = starta + lengtha, endb = startb + lengthb;
+    los_ray ray;
+    int length;
 
-    while (cura < enda && curb < endb)
+    cellray(const los_ray& r, int l) : ray(r), length(l) {}
+
+    int index() const { return ray.start + length; }
+    coord_def end() const { return ray_coords[index()]; }
+};
+
+enum compare_type
+{
+    C_SUBRAY,
+    C_SUPERRAY,
+    C_NEITHER
+};
+
+// Check whether one of the passed cellrays is a subray of the
+// other in terms of footprint.
+compare_type _compare_cellrays(const cellray& a, const cellray& b)
+{
+    if (a.end() != b.end())
+        return C_NEITHER;
+
+    int cura = a.ray.start;
+    int curb = b.ray.start;
+    int enda = cura + a.length;
+    int endb = curb + b.length;
+    bool maybe_sub = true;
+    bool maybe_super = true;
+
+    while (cura < enda && curb < endb && (maybe_sub || maybe_super))
     {
-        if (ray_coords[curb].x > ray_coords[cura].x)
-            return (false);
-        if (ray_coords[curb].y > ray_coords[cura].y)
-            return (false);
-
-        if (ray_coords[cura] == ray_coords[curb])
-             ++cura;
-
-         ++curb;
+        coord_def pa = ray_coords[cura];
+        coord_def pb = ray_coords[curb];
+        if (pa.x > pb.x || pa.y > pb.y)
+        {
+            maybe_super = false;
+            curb++;
+        }
+        if (pa.x < pb.x || pa.y < pb.y)
+        {
+            maybe_sub = false;
+            cura++;
+        }
+        if (pa == pb)
+        {
+            cura++;
+            curb++;
+        }
     }
+    maybe_sub = maybe_sub && (cura == enda);
+    maybe_super = maybe_super && (curb == endb);
 
-    return (cura == enda);
+    if (maybe_sub)
+        return C_SUBRAY;    // includes equality
+    else if (maybe_super)
+        return C_SUPERRAY;
+    else
+        return C_NEITHER;
 }
 
-// Returns a vector which lists all the nonduped cellrays (by index).
-// A cellray c in a fullray f is duped if there is a fullray g
-// such that g contains c and g[:c] is a subset of f[:c].
-static std::vector<int> _find_nonduped_cellrays()
+// Returns a vector which lists all minimal cellrays (by index).
+static std::vector<int> _find_minimal_cellrays()
 {
-    bool is_duplicate;
-    std::vector<int> result;
+    FixedArray<std::list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
+    std::list<cellray>::iterator min_it;
 
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
         los_ray ray = fullrays[r];
         for (unsigned int i = 0; i < ray.length; ++i)
         {
-            // Is the cellray ray[0..i] duplicated?
-            is_duplicate = false;
+            // Is the cellray ray[0..i] duplicated so far?
+            bool dup = false;
+            cellray c(ray, i);
+            std::list<cellray>& min = minima(c.end());
 
-            // XXX: We should really check everything up to now
-            // completely, and all further rays to see if they're
-            // proper subsets.
-
-            // Test against all previous fullrays.
-            for (unsigned int s = 0; s < r; ++s)
+            for (min_it = min.begin();
+                 min_it != min.end() && !dup; min_it++)
             {
-                los_ray prev = fullrays[s];
-
-                // Scan ahead to see if there's an intersect.
-                for (unsigned int j = 0; j < prev.length; ++j)
+                switch(_compare_cellrays(*min_it, c))
                 {
-                    // Short-circuit if we've passed ray[i]
-                    // in either coordinate.
-                    if (prev[j].x > ray[i].x || prev[j].y > ray[i].y)
-                        break;
-
-                    if (prev[j] == ray[i])
-                    {
-                        is_duplicate = _is_subset(prev.start, ray.start,
-                                                  j, i);
-                        break;
-                    }
+                case C_SUBRAY:
+                    dup = true;
+                    break;
+                case C_SUPERRAY:
+                    min_it = min.erase(min_it);
+                    // clear this should be added, but might have
+                    // to erase more
+                    break;
+                case C_NEITHER:
+                default:
+                    break;
                 }
-                if (is_duplicate)
-                    break;      // No point in checking further rays.
             }
-            if (!is_duplicate)
-                result.push_back(ray.start + i);
+            if (!dup)
+                min.push_back(c);
         }
     }
+
+    std::vector<int> result;
+    for (quadrant_iterator qi; qi; qi++)
+        for (min_it = minima(*qi).begin(); min_it != minima(*qi).end(); min_it++)
+            result.push_back(min_it->index());
     return result;
 }
 
@@ -237,57 +322,55 @@ static void _register_ray(double accx, double accy, double slope)
 
 static void _create_blockrays()
 {
-    // determine nonduplicated rays
-    std::vector<int> nondupe_cellrays = _find_nonduped_cellrays();
-    const int num_nondupe_rays        = nondupe_cellrays.size();
-    const int num_cellrays            = ray_coords.size();
-    blockrays_t full_los_blockrays;
+    // First, we calculate blocking information for all cell rays.
+    // Cellrays are numbered according to the index of their end
+    // cell in ray_coords.
+    const int n_cellrays = ray_coords.size();
+    blockrays_t all_blockrays;
+    for (quadrant_iterator qi; qi; qi++)
+        all_blockrays(*qi) = new bit_array(n_cellrays);
 
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-        {
-            full_los_blockrays[x][y] = new bit_array(num_cellrays);
-            los_blockrays[x][y] = new bit_array(num_nondupe_rays);
-        }
-
-    // first build all the rays: easier to do blocking calculations there
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
         los_ray ray = fullrays[r];
         for (unsigned int i = 0; i < ray.length; ++i)
         {
-            coord_def p = ray[i];
-            // every cell blocks all following cellrays
+            // Every cell is contained in (thus blocks)
+            // all following cellrays.
             for (unsigned int j = i + 1; j < ray.length; ++j)
-                full_los_blockrays(p)->set(ray.start+j);
+                all_blockrays(ray[i])->set(ray.start + j);
         }
     }
 
-    // we've built the basic blockray array; now compress it, keeping
+    // We've built the basic blockray array; now compress it, keeping
     // only the nonduplicated cellrays.
 
-    // we want to only keep the cellrays from nondupe_cellrays.
-    compressed_ray.resize(num_nondupe_rays);
-    for (int i = 0; i < num_nondupe_rays; ++i)
-        compressed_ray[i] = ray_coords[nondupe_cellrays[i]];
+    // Determine nonduplicated rays and store their end points.
+    std::vector<int> min_cellrays = _find_minimal_cellrays();
+    const int n_min_rays          = min_cellrays.size();
+    cellray_ends.resize(n_min_rays);
+    for (int i = 0; i < n_min_rays; ++i)
+        cellray_ends[i] = ray_coords[min_cellrays[i]];
 
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-            for (int i = 0; i < num_nondupe_rays; ++i)
-                los_blockrays[x][y]->set(i,
-                    full_los_blockrays[x][y]->get(nondupe_cellrays[i]));
+    // Compress blockrays accordingly.
+    for (quadrant_iterator qi; qi; qi++)
+    {
+        blockrays(*qi) = new bit_array(n_min_rays);
+        for (int i = 0; i < n_min_rays; ++i)
+            blockrays(*qi)->set(i, all_blockrays(*qi)
+                                   ->get(min_cellrays[i]));
+    }
 
-    // we can throw away full_los_blockrays now
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-            delete full_los_blockrays[x][y];
+    // We can throw away all_blockrays now.
+    for (quadrant_iterator qi; qi; qi++)
+        delete all_blockrays(*qi);
 
-    dead_rays  = new bit_array(num_nondupe_rays);
-    smoke_rays = new bit_array(num_nondupe_rays);
+    dead_rays  = new bit_array(n_min_rays);
+    smoke_rays = new bit_array(n_min_rays);
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
-          num_cellrays, fullrays.size(), num_nondupe_rays );
+    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Minimal cellrays: %u",
+          n_cellrays, fullrays.size(), n_min_rays );
 #endif
 }
 
@@ -335,8 +418,8 @@ void raycast()
     // Changing the order a bit. We want to order by the complexity
     // of the beam, which is log(x) + log(y) ~ xy.
     std::vector<std::pair<int,int> > xyangles;
-    for (int xangle = 1; xangle <= 2*LOS_MAX_RANGE; ++xangle)
-        for (int yangle = 1; yangle <= 2*LOS_MAX_RANGE; ++yangle)
+    for (int xangle = 1; xangle <= LOS_MAX_ANGLE; ++xangle)
+        for (int yangle = 1; yangle <= LOS_MAX_ANGLE; ++yangle)
         {
             if (_gcd(xangle, yangle) == 1)
                 xyangles.push_back(std::pair<int,int>(xangle, yangle));
@@ -350,9 +433,9 @@ void raycast()
 
         const double slope = ((double)(yangle)) / xangle;
         const double rslope = ((double)(xangle)) / yangle;
-        for (int intercept = 1; intercept <= 2*yangle; ++intercept )
+        for (int intercept = 1; intercept <= LOS_INTERCEPT_MULT*yangle; ++intercept )
         {
-            double xstart = ((double)intercept) / (2*yangle);
+            double xstart = ((double)intercept) / (LOS_INTERCEPT_MULT*yangle);
             double ystart = 1;
 
             // now move back just inside the cell
@@ -408,7 +491,7 @@ static double _calc_slope(double x, double y)
         return (VERTICAL_SLOPE);
 
     const double slope = y / x;
-    return (slope > VERTICAL_SLOPE? VERTICAL_SLOPE : slope);
+    return (slope > VERTICAL_SLOPE ? VERTICAL_SLOPE : slope);
 }
 
 static double _slope_factor(const ray_def &ray)
@@ -433,6 +516,36 @@ static bool _superior_ray(int shortest, int imbalance,
         return (imbalance > rayimbalance);
 
     return (slope_diff > ray_slope_diff);
+}
+
+// Compute the imbalance, defined as the
+// number of consecutive diagonal or orthogonal moves
+// in the ray. This is a reasonable measure of deviation from
+// the Bresenham line between our selected source and
+// destination.
+int _imbalance(const std::vector<coord_def>& ray)
+{
+    int imb = 0;
+    int diags = 0, straights = 0;
+    for (int i = 1, size = ray.size(); i < size; ++i)
+    {
+        const int dist =
+           (ray[i] - ray[i - 1]).abs();
+
+        if (dist == 2)
+        {
+            straights = 0;
+            if (++diags > imb)
+                imb = diags;
+        }
+        else
+        {
+            diags = 0;
+            if (++straights > imb)
+                imb = straights;
+        }
+    }
+    return imb;
 }
 
 // Find a nonblocked ray from source to target. Return false if no
@@ -526,35 +639,11 @@ bool find_ray(const coord_def& source, const coord_def& target,
                     }
                 }
 
-                int cimbalance = 0;
                 // If this ray is a candidate for shortest, calculate
-                // the imbalance. I'm defining 'imbalance' as the
-                // number of consecutive diagonal or orthogonal moves
-                // in the ray. This is a reasonable measure of deviation from
-                // the Bresenham line between our selected source and
-                // destination.
+                // the imbalance.
+                int cimbalance = 0;
                 if (!blocked && find_shortest && shortest >= real_length)
-                {
-                    int diags = 0, straights = 0;
-                    for (int i = 1, size = unaliased_ray.size(); i < size; ++i)
-                    {
-                        const int dist =
-                            (unaliased_ray[i] - unaliased_ray[i - 1]).abs();
-
-                        if (dist == 2)
-                        {
-                            straights = 0;
-                            if (++diags > cimbalance)
-                                cimbalance = diags;
-                        }
-                        else
-                        {
-                            diags = 0;
-                            if (++straights > cimbalance)
-                                cimbalance = straights;
-                        }
-                    }
-                }
+                    cimbalance = _imbalance(unaliased_ray);
 
                 const double ray_slope_diff = find_shortest ?
                     fabs(_slope_factor(lray) - want_slope) : 0.0;
@@ -672,10 +761,6 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
     return see_grid(show, p1, p2);
 }
 
-// The rule behind LOS is:
-// Two cells can see each other if there is any line from some point
-// of the first to some point of the second ("generous" LOS.)
-//
 // We use raycasting. The algorithm:
 // PRECOMPUTATION:
 // Create a large bundle of rays and cast them.
@@ -712,35 +797,32 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
 
 void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
 {
-    const unsigned int num_cellrays = compressed_ray.size();
+    const unsigned int num_cellrays = cellray_ends.size();
 
-    // clear out the dead rays array
     dead_rays->reset();
     smoke_rays->reset();
 
-    for (int x = 0; x <= LOS_MAX_RANGE; ++x)
-        for (int y = 0; y <= LOS_MAX_RANGE; ++y)
-        {
-            coord_def p = coord_def(sx*x, sy*y);
-            if (!dat.los_bounds(p))
-                continue;
+    for (quadrant_iterator qi; qi; qi++)
+    {
+        coord_def p = coord_def(sx*(qi->x), sy*(qi->y));
+        if (!dat.los_bounds(p))
+            continue;
 
-            // if this cell is opaque...
-            switch (dat.opacity(p))
-            {
-            case OPC_OPAQUE:
-                // then block the appropriate rays
-                *dead_rays |= *los_blockrays[x][y];
-                break;
-            case OPC_HALF:
-                // block rays which have already seen a cloud
-                *dead_rays  |= (*smoke_rays & *los_blockrays[x][y]);
-                *smoke_rays |= *los_blockrays[x][y];
-                break;
-            default:
-                break;
-            }
+        switch (dat.opacity(p))
+        {
+        case OPC_OPAQUE:
+            // Block the appropriate rays.
+            *dead_rays |= *blockrays(*qi);
+            break;
+        case OPC_HALF:
+            // Block rays which have already seen a cloud.
+            *dead_rays  |= (*smoke_rays & *blockrays(*qi));
+            *smoke_rays |= *blockrays(*qi);
+            break;
+        default:
+            break;
         }
+    }
 
     // Ray calculation done. Now work out which cells in this
     // quadrant are visible.
@@ -749,10 +831,9 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
         // make the cells seen by this ray at this point visible
         if (!dead_rays->get(rayidx))
         {
-            // this ray is alive!
-            const coord_def p = coord_def(sx * compressed_ray[rayidx].x,
-                                          sy * compressed_ray[rayidx].y);
-            // update shadow map
+            // This ray is alive, thus the end cell is visible.
+            const coord_def p = coord_def(sx * cellray_ends[rayidx].x,
+                                          sy * cellray_ends[rayidx].y);
             if (dat.los_bounds(p))
                 sh(p+sh_o) = dat.appearance(p);
         }
@@ -763,7 +844,7 @@ void losight(env_show_grid& sh, const los_param& dat)
 {
     sh.init(0);
 
-    // ensure precomputations are done
+    // Do precomputations if necessary.
     raycast();
 
     const int quadrant_x[4] = {  1, -1, -1,  1 };
@@ -772,7 +853,7 @@ void losight(env_show_grid& sh, const los_param& dat)
     for (int q = 0; q < 4; ++q)
         _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
 
-    // center is always visible
+    // Center is always visible.
     const coord_def o = coord_def(0,0);
     sh(o+sh_o) = dat.appearance(o);
 }
