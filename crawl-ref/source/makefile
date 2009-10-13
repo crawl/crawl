@@ -27,8 +27,8 @@ GAME = crawl
 # These are good optimizations for a Pentium M or better:
 #CFOPTIMIZE := -O2 -march=i686 -mtune=i686 -mmmx -msse -msse2 -mfpmath=sse -funroll-all-loops
 # These are really good options for the Intel C++ compiler:
-#CFOPTIMIZE := -O3 -parallel
-CFOPTIMIZE := -O2 -funroll-all-loops
+#CFOPTIMIZE := -O2 -parallel
+CFOPTIMIZE := -O2
 CFOTHERS := -fno-strict-aliasing -pipe
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
@@ -36,11 +36,13 @@ CFWARN := -Wall
 #
 # The GCC and GXX variables are set later.
 #
+AR = ar rcu
 CC = $(GCC)
 CXX = $(GXX)
 DELETE = rm -f
 COPY = cp
 
+export AR
 export CC
 export CXX
 export CFLAGS
@@ -210,6 +212,15 @@ GCC := gcc
 GXX := g++
 endif
 
+USE_ICC := n
+
+ifneq ($(USE_ICC),n)
+GCC := icc
+GXX := icpc
+AR  := xiar rcu
+CFWARN += -wd981
+endif
+
 RLTILES = rltiles
 
 #
@@ -339,6 +350,10 @@ endif # TILES
 
 CFWARN_L := -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
 CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
+
+ifneq ($(USE_ICC),n)
+LIB += -lguide -lpthread
+endif
 
 #
 # Figure out the build settings for this type of build
