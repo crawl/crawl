@@ -2985,6 +2985,12 @@ LUAFN(dgn_dbg_dump_map)
     return (0);
 }
 
+LUAFN(dgn_dbg_test_explore)
+{
+    debug_test_explore();
+    return (0);
+}
+
 LUAFN(dgn_cell_see_cell)
 {
     COORDS(p, 1, 2);
@@ -2998,6 +3004,7 @@ static const struct luaL_reg dgn_lib[] =
     { "dbg_flush_map_memory", dgn_dbg_flush_map_memory },
     { "dbg_generate_level", dgn_dbg_generate_level },
     { "dbg_dump_map", dgn_dbg_dump_map },
+    { "dbg_test_explore", dgn_dbg_test_explore },
 
     { "default_depth", dgn_default_depth },
     { "name", dgn_name },
