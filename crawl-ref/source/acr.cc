@@ -3508,6 +3508,7 @@ static bool _initialise(void)
     if (crawl_state.test)
     {
 #ifdef DEBUG_DIAGNOSTICS
+        Options.show_more_prompt = false;
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.
