@@ -2579,7 +2579,48 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "autoinscribe")
     {
+        if (field.empty())
+        {
+            crawl_state.add_startup_error("Autoinscirbe string is empty");
+            return;
+        }
+
+        const size_t first = field.find_first_of(':');
+        const size_t last  = field.find_last_of(':');
+        if (first == std::string::npos || first != last)
+        {
+            crawl_state.add_startup_error(
+                make_stringf("Autoinscribe string must have exactly "
+                             "one colon: %s\n", field.c_str()));
+            return;
+        }
+
+        if (first == 0)
+        {
+            crawl_state.add_startup_error(
+                make_stringf("Autoinscribe pattern is empty: %s\n",
+                             field.c_str()));
+            return;
+        }
+
+        if (last == field.length() - 1)
+        {
+            crawl_state.add_startup_error(
+                make_stringf("Autoinscribe result is empty: %s\n",
+                             field.c_str()));
+            return;
+        }
+
         std::vector<std::string> thesplit = split_string(":", field);
+
+        if (thesplit.size() != 2)
+        {
+            crawl_state.add_startup_error(
+                make_stringf("Error parsing autoinscribe string: %s\n",
+                             field.c_str()));
+            return;
+        }
+
         autoinscriptions.push_back(
             std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
