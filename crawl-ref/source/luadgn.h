@@ -8,6 +8,7 @@
 #define LUADGN_H
 
 #include "clua.h"
+#include "stuff.h" // for COORDS macro
 
 // Defined in acr.cc
 extern CLua dlua;
@@ -87,6 +88,30 @@ inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
 }
 
 void print_dlua_stack();
+
+
+void luaopen_setmeta(lua_State *ls,
+                     const char *global,
+                     const luaL_reg *lua_lib,
+                     const char *meta);
+
+#define LUAFN(name) static int name(lua_State *ls)
+
+#define GETCOORD(c, p1, p2, boundfn)                      \
+    coord_def c;                                          \
+    c.x = luaL_checkint(ls, p1);                          \
+    c.y = luaL_checkint(ls, p2);                          \
+    if (!boundfn(c))                                        \
+        luaL_error(                                             \
+            ls,                                                 \
+            make_stringf("Point (%d,%d) is out of bounds",      \
+                         c.x, c.y).c_str());                    \
+    else ;
+
+
+#define COORDS(c, p1, p2)                                \
+    GETCOORD(c, p1, p2, in_bounds)
+
 
 //////////////////////////////////////////////////////////////////////////
 

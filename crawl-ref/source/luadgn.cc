@@ -23,6 +23,7 @@ REVISION("$Rev$");
 #include "hiscores.h"
 #include "initfile.h"
 #include "items.h"
+#include "l_los.h"
 #include "los.h"
 #include "luadgn.h"
 #include "mapdef.h"
@@ -342,8 +343,6 @@ std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
 #define MAPMARKER(ls, n, var) \
     map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
 
-#define LUAFN(name) static int name(lua_State *ls)
-
 static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
 {
     dungeon_feature_type feat = (dungeon_feature_type)0;
@@ -369,20 +368,6 @@ static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
 {
     return lua_isnone(ls, ndx)? defval : lua_toboolean(ls, ndx);
 }
-
-#define GETCOORD(c, p1, p2, boundfn)                      \
-    coord_def c;                                          \
-    c.x = luaL_checkint(ls, p1);                          \
-    c.y = luaL_checkint(ls, p2);                          \
-    if (!boundfn(c))                                        \
-        luaL_error(                                             \
-            ls,                                                 \
-            make_stringf("Point (%d,%d) is out of bounds",      \
-                         c.x, c.y).c_str());                    \
-    else ;                                                      \
-
-#define COORDS(c, p1, p2)                                \
-    GETCOORD(c, p1, p2, in_bounds)
 
 #define FEAT(f, pos) \
     dungeon_feature_type f = _check_lua_feature(ls, pos)
@@ -2389,6 +2374,13 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
     return 0;
 }
 
+LUAFN(_dgn_is_opaque)
+{
+    COORDS(c, 1, 2);
+    lua_pushboolean(ls, grid_is_opaque(grd(c)));
+    return (1);
+}
+
 static int _dgn_is_passable(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -3099,6 +3091,7 @@ static const struct luaL_reg dgn_lib[] =
     { "join_the_dots", dgn_join_the_dots },
     { "fill_disconnected_zones", dgn_fill_disconnected_zones },
 
+    { "is_opaque", _dgn_is_opaque },
     { "is_passable", _dgn_is_passable },
 
     { "register_feature_marker", dgn_register_feature_marker },
@@ -3430,10 +3423,10 @@ static const struct luaL_reg dgnevent_lib[] =
     { NULL, NULL }
 };
 
-static void luaopen_setmeta(lua_State *ls,
-                            const char *global,
-                            const luaL_reg *lua_lib,
-                            const char *meta)
+void luaopen_setmeta(lua_State *ls,
+                     const char *global,
+                     const luaL_reg *lua_lib,
+                     const char *meta)
 {
     luaL_newmetatable(ls, meta);
     lua_setglobal(ls, global);
@@ -3544,6 +3537,7 @@ void init_dungeon_lua()
     luaL_openlib(dlua, "crawl", crawl_lib, 0);
     luaL_openlib(dlua, "file", file_lib, 0);
     luaL_openlib(dlua, "you", you_lib, 0);
+    luaL_openlib(dlua, "los", los_lib, 0);
 
     dlua.execfile("clua/dungeon.lua", true, true);
     dlua.execfile("clua/luamark.lua", true, true);
@@ -3554,6 +3548,7 @@ void init_dungeon_lua()
 
     luaopen_dgnevent(dlua);
     luaopen_mapmarker(dlua);
+    luaopen_ray(dlua);
 
     _register_mapdef_tables(dlua);
 }
