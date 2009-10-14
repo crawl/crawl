@@ -708,6 +708,20 @@ COLOUR:   . = green / blue:5 / red / none
           If you apply COLOUR to a glyph and then apply a SUBST,
           the COLOUR will transfer to the resulting transformed glyph.
 
+          There are two types of colour available: base and "elemental".
+          Available base colours are as follows: blue, green, cyan, 
+          red, magenta, brown, lightgrey, darkgrey, lightblue, lightgreen, 
+          lightcyan, lightred, lightmagenta, yellow and white. 
+          
+          Elemental colours are: fire, ice, earth, electricity, air, poison,
+          water, magic, mutagenic, warp, enchant, heal, holy, dark, death,
+          necro, unholy, vehumet, beogh, crystal, blood, smoke, slime, jewel,
+          elven, dwarven, orcish, gila, mist, shimmer_blue, decay, silver,
+          gold, iron, bone, random. See view.h for comments on each.
+
+          Even more so than base colours, elemental colours should be used
+          very, very, very sparingly.
+
 FTILE:    . = floor_grass:20 / floor_dirt / none
           Similar to COLOUR, FTILE allows you to attach explicit floor
           tiles to any glyph.  In non-tiles builds, this does nothing.
