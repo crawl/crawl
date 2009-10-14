@@ -85,7 +85,7 @@ static const spell_type _xom_tension_spells[] =
     SPELL_RECALL, SPELL_SUMMON_BUTTERFLIES, SPELL_SUMMON_SMALL_MAMMALS,
     SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM, SPELL_FLY, SPELL_SPIDER_FORM,
     SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_ANIMATE_DEAD,
-    SPELL_SUMMON_WRAITHS, SPELL_SHADOW_CREATURES, SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SHADOW_CREATURES, SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_CALL_CANINE_FAMILIAR, SPELL_SUMMON_ICE_BEAST, SPELL_SUMMON_UGLY_THING,
     SPELL_CONJURE_BALL_LIGHTNING, SPELL_SUMMON_DRAGON, SPELL_DEATH_CHANNEL,
     SPELL_NECROMUTATION
@@ -173,12 +173,12 @@ bool xom_is_nice(int tension)
 
     if (you.religion == GOD_XOM)
     {
-        // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
+        // If you.gift_timeout is 0, then Xom is BORED.  He HATES that.
         if (you.gift_timeout == 0)
             return (false);
 
-        // At high tension Xom is more likely to be nice,
-        // at zero tension the opposite.
+        // At high tension Xom is more likely to be nice, at zero
+        // tension the opposite.
         const int tension_bonus
             = (tension == -1 ? 0 :
                tension ==  0 ? -std::min(abs(HALF_MAX_PIETY - you.piety) / 2,
@@ -282,13 +282,13 @@ void xom_tick()
     if (old_xom_favour != new_xom_favour)
     {
         // If we entered another favour state, take a big step into
-        // the new territory to avoid oscillating favour announcements
+        // the new territory, to avoid oscillating favour announcements
         // every few turns.
         size += delta * 8;
         if (size > HALF_MAX_PIETY)
             size = HALF_MAX_PIETY;
 
-        // If size was 0 to begin with it may become negative but that
+        // If size was 0 to begin with, it may become negative, but that
         // doesn't really matter.
         you.piety = HALF_MAX_PIETY + (good ? size : -size);
     }
@@ -322,7 +322,7 @@ void xom_tick()
                             tension <= 20 ? 4
                                           : 5);
 
-        // If Xom is bored the chances for Xom acting are reversed.
+        // If Xom is bored, the chances for Xom acting are reversed.
         if (you.gift_timeout == 0 && x_chance_in_y(5-chance,5))
         {
             xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
@@ -355,17 +355,19 @@ void xom_tick()
 }
 
 // Picks 100 random grids from the level and checks whether they've been
-// marked as seen (explored) or known (mapped). If seen_only is true
-// grids only "seen" via magic mapping don't count.
-// Returns the estimated percentage value of exploration.
+// marked as seen (explored) or known (mapped).  If seen_only is true,
+// grids only "seen" via magic mapping don't count.  Returns the
+// estimated percentage value of exploration.
 static int _exploration_estimate(bool seen_only = false)
 {
     int seen  = 0;
     int total = 0;
     int tries = 0;
+
     do
     {
         tries++;
+
         coord_def pos = random_in_bounds();
         if (!seen_only && is_terrain_known(pos) || is_terrain_seen(pos))
         {
@@ -388,6 +390,7 @@ static int _exploration_estimate(bool seen_only = false)
                 }
             }
         }
+
         if (open)
             total++;
     }
@@ -402,10 +405,10 @@ static int _exploration_estimate(bool seen_only = false)
     // If we didn't get any qualifying grids, there are probably so few
     // of them you've already seen them all.
     if (total == 0)
-        return 100;
+        return (100);
 
     if (total < 100)
-        seen *= 100/total;
+        seen *= 100 / total;
 
     return (seen);
 }
@@ -429,7 +432,8 @@ static bool _spell_weapon_check(const spell_type spell)
         if (!player_weapon_wielded())
             return (false);
 
-        // The wielded weapon must be a non-branded non-launcher non-artefact!
+        // The wielded weapon must be a non-branded non-launcher
+        // non-artefact!
         const item_def& weapon = *you.weapon();
         return (!is_artefact(weapon) && !is_range_weapon(weapon)
                 && get_weapon_brand(weapon) == SPWPN_NORMAL);
@@ -466,9 +470,10 @@ static bool _transformation_check(const spell_type spell)
     if (tran == TRAN_NONE)
         return (true);
 
-    // Check whether existing enchantments/transformations, cursed equipment,
-    // or potential stat loss interfere with this transformation.
-    return transform(0, tran, true, true);
+    // Check whether existing enchantments/transformations, cursed
+    // equipment or potential stat loss interfere with this
+    // transformation.
+    return (transform(0, tran, true, true));
 }
 
 static int _xom_makes_you_cast_random_spell(int sever, int tension,
@@ -530,7 +535,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
                   true);
 
         const int power = stepdown_value( sever, 10, 10, 40, 45 );
-        magic_mapping( 5 + power, 50 + random2avg( power * 2, 2 ), false );
+        magic_mapping(5 + power, 50 + random2avg(power * 2, 2), false);
 
         return (XOM_GOOD_MAPPING);
     }
@@ -848,13 +853,13 @@ static bool _choose_mutatable_monster(const monsters* mon)
 static bool _is_chaos_upgradeable(const item_def &item,
                                   const monsters* mon)
 {
-    // Since Xom is a god he is capable of changing randarts, but not
-    // other artifacts.
+    // Since Xom is a god, he is capable of changing randarts, but not
+    // other artefacts.
     if (is_unrandom_artefact(item))
        return (false);
 
     // Only upgrade permanent items, since the player should get a
-    // chance to use the item if s/he can defeat the monster.
+    // chance to use the item if he or she can defeat the monster.
     if (item.flags & ISFLAG_SUMMONED)
         return (false);
 
