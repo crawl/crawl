@@ -1793,6 +1793,11 @@ int melee_attack::player_weapon_type_modify(int damage)
             attack_verb = "slash";
         else if (damage < HIT_STRONG)
             attack_verb = "slice";
+        else if (mons_genus(defender_as_monster()->type) == MONS_OGRE)
+        {
+            attack_verb = "dice";
+            verb_degree = " like an onion";
+        }
         else
         {
             attack_verb = "open";
