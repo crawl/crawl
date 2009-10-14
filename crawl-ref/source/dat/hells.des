@@ -466,6 +466,18 @@ MARKER: O = lua:item_pickup_change_flags { \
         }
 MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
 MONS:   Serpent of Hell, random, random
+
+COLOUR:	v : red
+COLOUR: . : darkgrey
+COLOUR: c : darkgrey
+COLOUR: x : brown
+{{
+  dgn.set_feature_desc_short("Floor", "Ashen ground")
+  dgn.set_feature_desc_long("Floor", "Ashen ground.")
+  dgn.set_feature_desc_short("metal wall", "tempered metal wall")
+  dgn.set_feature_desc_long("metal wall", "A tempered metal wall.")
+}}
+
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -531,7 +543,105 @@ ENDMAP
 
 
 ##############################################################################
-# Antaeus; bottom of Cocytus. David's Improved Demon Lairs, episode I.
+# Asmodeus (Gehenna) by Mu
+##############################################################################
+NAME:   asmodeus_mu
+PLACE:  Geh:7
+WEIGHT: 10000
+ORIENT: encompass
+TAGS:   no_rotate
+LFLAGS: no_tele_control
+MARKER: O = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="obsidian rune of Zot" \
+        }
+MONS:   Asmodeus, Fiend
+MONS:   Balrug, sun demon, hellion, Serpent of Hell, fire giant
+KMONS:  8 = molten gargoyle
+KMONS:  9 = imp
+
+NSUBST: X = 1:6 / *:4
+SUBST:  4 = 344578899
+SUBST:  % = $ |
+SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
+SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
+
+COLOUR:	v : red
+COLOUR: . : darkgrey
+COLOUR: c : darkgrey
+COLOUR: x : brown
+{{
+  dgn.set_feature_desc_short("Floor", "Ashen ground")
+  dgn.set_feature_desc_long("Floor", "Ashen ground.")
+  dgn.set_feature_desc_short("metal wall", "tempered metal wall")
+  dgn.set_feature_desc_long("metal wall", "A tempered metal wall.")
+}}
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
+x.(.."llv......v......................................v......vllll".{x
+x..."lllv.vvvv.v....4....llllllllllllllllllll.........v.vvvv.vllll".'x
+x..."lllv.v2|v.v.......llllllllllllllllllllllll...4...v.v|2v.vlll"..'x
+x'."llllv.v+vv.v.....llllllllllllllllllllllllllll.....v.vv+v.vll"..'xx
+x'."llllv.v....v...lllllllllcccccclccccccccccllllll...v....v.vll".'xxx
+x'."llllv.vvvvvv..llllllllllcc..ccccccccccccclllllll..vvvvvv.vll".'xxx
+x'."llllv.v......lllllllllllc....cc...c....ccllllllll......v.vll".'xxx
+x'.."lllv.v.4...llllllllllllc.X..++.X.+.XX.cccccccllll.....v.vll"..'xx
+x'.."lllv.v.....llllllllllllc....cc...c....cccccccllll..4..v.vlll".'xx
+x'."llllv.v....llllccccccccccc....ccccccc+cccccccclllll....v.vlll".'xx
+x'."llllv.v....llllc%%%%%.cccccc..ccccccc+cccccccclllll....v.vlll"..'x
+x'."llllv.v...lllllc%%%%%.c.%%%c..c..........cccccllllll...v.vllll".'x
+x'.."lllv.v...lllllc%%%%%.+.%%%c..c.vvvv.....+...cllllll...v.vllll".[x
+xx."llllv.v...lllllc%%%%%.c.%%%c..c.=||n..X..ccc.cllllll...v.vllll".'x
+x'.."lllv.v...lllllc%%%%%.c....c..c.=||n.....ccc.cllllll...v.vllll".'x
+x'.."lllv.v...lllllc......cc++cc..c.vvvv..X..+.c+cccclll...v.vlll"..'x
+x'.."lllv.v...lllllcln.|||c....c..c..........+.c...$clll...v.vll"...'x
+x'."llllv.v...lllllc.n.|||c....c..cccccccccccc.c..2$clll...v.vll"...'x
+x'.."lllv.v...lllllcOn.|||c.2.2c..c..........c.c$$$$clll...v.vll"...'x
+x'.."lllv.v...lllllcccccccc....c..c..........+.c$$$$clll...v.vll"...'x
+xx.."lllv.v....lllllllllccc.1..+..c.....XX...+.ccccccll....v.vll"...'x
+xx.."lllv.v....lllllllllccc....c..c..........ccclllllll....v.vll"...'x
+xx.."lllv.v.....llllllllccccccccccc......XX..cccllllll.....v.vl"...'xx
+x'.."lllv.v.....llllllllccccccccccc..........cccllllll.....v.vl".4.'xx
+x'.."lllv.v......llllllllllllllllcc+cccccccccccclllll......v.vl"...'xx
+x'.."lllv.v.4.....lllllllllllllllc...cllllllllllllll.......v.vll"...'x
+x'4."lllv.v........llllllllllllllc.X.clllllllllllll........v.vll"..4'x
+x'.."lllv.v..........llllllllllllc...clllllllllll......4...v.vlll"..'x
+xx.."lllv.v.....4......llllllllllcc+cclllllllll............v.vlll"..'x
+xx.4"lllv.v..............llllllllllllllllllll......4.......v.vllll".'x
+x'.."llvv+vv..............................................vv+vvlll".'x
+x'.."lvvv+vvv............................................vvv+vvvll".'x
+x'.."lvv...vvvvvvvvvvvvvvvvvvvvvvv+++vvvvvvvvvvvvvvvvvvvvvv...vvll".'x
+x'.."lvv.4.vvvvvvvvvvvvvvvvvvvvvvv+++vvvvvvvvvvvvvvvvvvvvvv.4.vvl"..'x
+x'.."lvv.4.++............................................++.4.vvl"..'x
+x'."llvv.4.vvvvvnnnvvvvvvnnnvvvvvv+++vvvvvvnnnvvvvvvnnnvvvv.4.vvll".'x
+x'."llvv...vvvvvnnnvvvvvvnnnvvvvvv+++vvvvvvnnnvvvvvvnnnvvvv...vvll".'x
+x'.."lvvvvvvvllllllllllllllllllll.....lllllllllllllllllllvvvvvvvll".'x
+x'.."llvvvvvlllllllllllllllllllll.4.4.llllllllllllllllllllvvvvvll"..'x
+x'.."llllllllllllllllllllllllllll.....llllllllllllllllllllllllll"".'xx
+x'..."lllllllllllllllllllllllllll.....lllllllllllllllllllllllll"..'xxx
+x'..."lllllllllllllllllllllllllll.....lllllllllllllllllllllllll".'xxxx
+x'..."lllllllllllllllllllllllllll.4.4.llllllllllllllllllllllll".'xxxxx
+xx'..."llllllllllllllllllllllllll.....llllllllllllllllllllll""..'xxxxx
+xxx'..."""lllllllllllllllllllllll.....llllllllllllllllllll""...'xxxxxx
+xxx'......""""lllllllllllllllllll.....llllllllllllllll"""".....'xxxxxx
+xxx'.........."""llllllllllllllll.4.4.llllllllllll""""........'xxxxxxx
+xxx'............."""lllllllllll"l.....l""lllllll""...........'xxxxxxxx
+xxxx'..............."""lllll""".8.....8..""lll""............'xxxxxxxxx
+xxxxx'................."""""..............."""..............'xxxxxxxxx
+xxxxx'...''.............................................''.'xxxxxxxxxx
+xxxxxx''..''............................................'xxxxxxxxxxxxx
+xxxxxxxx''''.........'''.................''''''......'''xxxxxxxxxxxxxx
+xxxxxxxxxxxxx'....'''xx'''...'''......'''xxxxxx'.......'xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx'.'''xxxxxxx''.'xx''...'xxxxxxxxxx'''...'xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxx'''xxxxxxxxxxxxxx'''xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Antaeus; bottom of Cocytus.
 ##############################################################################
 # To do: this level has much shorter distances to travel, hence should
 #        come up with harder resistance.
@@ -550,6 +660,18 @@ MARKER:  O = lua:item_pickup_change_flags { \
 KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
 KITEM:   d = any
 SUBST:   ' = w .
+{{
+  dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
+  dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
+  dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
+  dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
+  dgn.set_feature_desc_short("Floor", "Frost-covered floor")
+  dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
+				"satisfyingly underfoot.")
+}}
+COLOUR:  c : lightcyan
+COLOUR:  x : lightgrey
+COLOUR:  . : white
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxx
@@ -613,8 +735,9 @@ xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+
 ##############################################################################
-# Old Antaeus level
+# Original Antaeus level
 ##############################################################################
 
 NAME:    antaeus_in_days_of_yore
@@ -628,6 +751,18 @@ LFLAGS:  no_tele_control
 MARKER:  O = lua:item_pickup_change_flags { \
             level_flags="!no_tele_control", item="icy rune of Zot" \
          }
+{{
+  dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
+  dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
+  dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
+  dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
+  dgn.set_feature_desc_short("Floor", "Frost-covered floor")
+  dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
+				"satisfyingly underfoot.")
+}}
+COLOUR:  c : lightcyan
+COLOUR:  x : lightgrey
+COLOUR:  . : white
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -693,6 +828,107 @@ ENDMAP
 
 
 ##############################################################################
+# Antaeus (Cocytus) by Mu
+##############################################################################
+NAME:    antaeus_mu
+PLACE:   Coc:7
+WEIGHT: 10000
+ORIENT:  encompass
+TAGS:    no_rotate
+LFLAGS:  no_tele_control
+MONS:    Antaeus, ice fiend
+MONS:    ice devil, blue devil, white imp, ice dragon, freezing wraith
+KMONS:   8 = ice statue
+KMONS:   9 = frost giant
+SUBST:   3 = 3333344445555666779
+KMONS:   E = water elemental
+KFEAT:   E = w
+MARKER:  O = lua:item_pickup_change_flags { \
+             level_flags="!no_tele_control", item="icy rune of Zot" \
+         }
+{{
+  dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
+  dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
+  dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
+  dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
+  dgn.set_feature_desc_short("Floor", "Frost-covered floor")
+  dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
+				"satisfyingly underfoot.")
+}}
+SUBST:	 ^ : ^^^W. , ^ = W.
+SUBST:	 X : XXXc. , X = c.
+SUBST:   " = 8:1 .:10
+SUBST:   ' = .cc
+SUBST:   ; : ;;;;w , ; = wc
+NSUBST:  - = 1:= / *:c
+COLOUR:  c : lightcyan
+COLOUR:  x : lightgrey
+COLOUR:  . : white
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......ccccccx
+xcccc..............wwwwwwwwwwwwwwwwxxxxxxxwwwwwwww.3.3......c...cccccx
+xccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwxxxwwwwwwww....3....cccc....'.ccx
+xccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwww...3..3...cccccc..c..cx
+xccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwww......ccccccc...cc.cx
+xccc..ww$O$....1..............8..Ewwwwwwwwwwwwwwww...ccccc"c"c.cccc.'x
+xccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwwww.cccccc....c.cccc.'x
+xccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwwwwwwccccc...cc...."cc.cx
+xccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwwwwwwwwwwwwccccccc...ccccccccc.cx
+xcccc..............wwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccc......cccccc"...x
+xccccc............wwwwwwwwwwwwwwwwwwwwwwwwwwwwccccc..........ccccc"c.x
+xcccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwccccc.....333......ccccc.x
+xccccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwcccc........333.......cc..x
+xcccccccccccccccccc;wwwwwwwwwwwwwwwwwwwwwwcccc..................ccc.cx
+xcccccc"c$.....ccc;cccwwwwwwwwwwwwwwwwwwccccc....................cc.cx
+xccccc$$$$........cccccccwwwwwwwwwwwwwcccccc....cccccc..........ccc..x
+xccc"$$$$...........ccccccccwwwwwwwcccccccc....cccccccc.......cccc...x
+xcccc$$$$.............ccccccccccccccccccc.....cccccwwwcc....cccccc...x
+xccccc$$................ccccccccccccccc.....cccccccwwwwwwwcccccccc...x
+xcccccc$...........wwwwwwwccccccccccc......ccccc.cwwcwwwwccccccccc..cx
+xccccccc.........wwwwwwwwwwww.............cccc333333cccwccccX.-....ccx
+xccccccccc.....wwwwwwwwwwwwwwww........ccccccc.2....cccc-XXX..cc...ccx
+xccccccccccccwwwwwwwwwwwwwwwwwwww.......cccccc333333ccccX....ccccX..cx
+xccccccccccwwwwww..wwwwwwwwwwwwwww........ccccc$$$$$cccX....cccccX...x
+xcccccccccwwwwww..wwwwwwwwwwwwwwwww........cccc|||ccccc|.....ccc.....x
+xccccccccwwwwww..www...wwwwwwwwwwwwwww......ccccccccccc|......-......x
+xccccc..cwwww....ww....www..wwwwwwwwwwww.....ccccccccccX.2..Xcc......x
+xccccc..www..ccccww...www..wwwwwwwwwwwwwwww..cccccccccccXXXXcccc.....x
+xcccc...ww..cc...ww...ww...ww..wwwwwwwwwwwwwwwcccccccccccccccccww...cx
+xcccc..www.cc....www...www.ww.wwwwwwwwwwwwwwwwwwccccccccccccwwwwwwwccx
+xccc...ww..c|..3..www..wwwwwwww^^^wwwwwwwwwwwwwwwccccccwwwccwwwwwwcccx
+xccc...ww..c|233..cwwwwwwwwwwwcc+ccccccccccccwwwwwccccwwwwwwwwwwwwcccx
+xccc..www..c|.33..c.wwwwwwwwwcc...2.$$$$$|||ccwwwwwwwwwwwwwwwwwwwccccx
+xccc..www..cc..3.cc....wwwww.cc..33.$$$$$|||cc..wwwwwwwwwwwwwwwwcccccx
+xccc..wwww..cc$$cc....wwwwww.cc2333.$$$$$|||cc...wwwwwww^^wwwwwwcccccx
+xccc..wwww...cccc....wwwwww...ccccccccccccccc.....wwwww^..^wwwwwwccccx
+xccc..wwwww........wwwwww......................c.wwwww^.6..^wwwwwccccx
+xccc..wwwwwww....wwwwwww......................cccwwwww^....^wwwwwwcccx
+xccc..wwwwwwwwwwwwwwww........................cccwwwwww^..^wwwwwwwcccx
+xccc...wwwwwwwwwwwww.........333.3...........ccc.wwwwwww^^wwwwwwwwcccx
+xcccc..wwwwwwwwwwww.............3............ccc.wwwwwwwwwwwwwwwww.ccx
+xcccc...wwwwwwwww.........ccc....333........cccc..wwwwwwwwwwwwwwww.ccx
+xcwccc....wwwww........cccccccc.....3......ccccc..wwwwwwwwwwwwwww..ccx
+xcwwc;ccc...........ccccccccccccc....333..ccccccc..wwww^wwwwwwww..cccx
+xccwwwcccccc.....cccccccccccccccccccc...ccccccccc..www^.wwwwww....cccx
+xccwwwwwcccccccccccccccccccccccccccccc;ccccccccccc..wwwwwwwww...3ccccx
+xcc.wwwwwcccccccccccccccccccccccccccccc;cccccccccccwwwwwwwwww..3cccccx
+xc...wwwwwww..ccccccccccccc...........wwXXXXXccccccXwwwwwwwww...3ccccx
+xc....wwwww.....cccccccc...3.....wwwwwwwwwwwwXXccccXwwwwwwwwww....cccx
+x..{..wwww...333...............wwwwwwwwwwwwwwwwXcccXwwwwwwwwwwww..cccx
+x......www....333...........wwwwwwwwwwwwwwwwwwwwXccXwwwwwwwwwwwww..ccx
+x.[....wwww.............wwwwwwwwwwwwwwwwwwwwwwwwwXXwwwwwwwwwwwwwww.ccx
+x.......wwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.^www.ccx
+x..(....wwwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww^.wwwwcccx
+xc.......wwwwwwwwwwwwwwwwwwwwwwwwww..........wwwwwwwwwwwwwwww^wwwwcccx
+xcc.......wwwwwwwwwwwwwwwwwwwww........333......wwwwwwwwwww^wwwwwwcccx
+xcc.........wwwwwwwwwwwwwwwww.........33.33.......wwwwwww^...wwwwccccx
+xccccc.........wwwwwwwwwww............................wwww^^^wwwwccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ENDMAP
+
+
+##############################################################################
 # Ereshkigal (Tartarus)
 ##############################################################################
 
@@ -706,6 +942,7 @@ MARKER: O = lua:item_pickup_change_flags { \
         }
 MONS:   Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS:   small skeleton, Shadow Fiend
+COLOUR: x : darkgrey
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -766,5 +1003,106 @@ xxxx..............................{...............................xxxx
 xxxx..............................................................xxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Ereshkigal (Tartarus) by Mu
+##############################################################################
+NAME:    ereshkigal_mu
+PLACE:   Tar:7
+WEIGHT: 10000
+ORIENT:  encompass
+TAGS:    no_rotate
+LFLAGS:  no_tele_control
+MARKER:  O = lua:item_pickup_change_flags { \
+             level_flags="!no_tele_control", item="bone rune of Zot" \
+         }
+MONS:    Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
+MONS:    shadow dragon, shadow wraith
+KMONS:   8 = shadow imp
+ ## Randomising the secret doors to get into the pyramid.
+ ## There may be secret doors that lead nowhere.
+SHUFFLE: FfGgHh
+SUBST:   F = =
+SUBST:   f : fff=c, f = =c
+SUBST:   G : Gcc,   G = =cc
+SUBST:   g : gcccc, g = =cc
+SUBST:   H = c
+SUBST:   h = c
+ ## position of the loot chamber varies
+SHUFFLE: AB
+SUBST:   A = %
+SUBST:   B = x
+
+NSUBST: " = 1:= / *:x
+KFEAT:  % = .
+KMONS:  % = soul eater / shadow demon / shadow wraith / nothing w:20
+KITEM:  % = | / $
+SUBST:  4 = 3333444455566778
+COLOUR: x : darkgrey
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
+xxxx..............................................................xxxx  
+xxxx..............................................................xxxx  
+xxxx..cccccccccccccccccccccccccccccc..............................xxxx  
+xxxx..cccccccccccccccccccccccccccccc..............................xxxx  
+xxxx..cc..c.......................cc..............................xxxx  
+xxxx..cc..F.......................cc..............................xxxx  
+xxxx..cc..ccGcccccccccccccccccccGFcc..............................xxxx  
+xxxx..cc..H.................f..c..cc..............ccccccc.........xxxx  
+xxxx..cc..f.................h..H..cc............ccccccccccc.......xxxx  
+xxxx..cc..chgccccHccccccccGgc..c..cc...........ccccc$$$ccccc......xxxx  
+xxxx..cc..c..F.G............c..c..cc..........cccc$$$$$$$cccc.....xxxx  
+xxxx..cc..f..c.ccgcccccccccHc..c..cc..........ccc$$$$$$$$$ccc.....xxxx  
+xxxx..cc..c..c.c..........c.c..c..cc.........ccc$$$$$$$$$$$ccc....xxxx  
+xxxx..cc..c..c.h...xnnx...f.c..c..cc.........ccc.2.$$$$$.2.ccc....xxxx  
+xxxx..cc..c..c.c...x$$x...c.c..c..cc........ccc....xxxxx....ccc...xxxx  
+xxxx..cc..c..c.c...x||x...c.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx  
+xxxx..cc..c..h.c.xxx..xxx.c.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx  
+xxxx..cc..c..c.c.nO..2.1n.c.c..c..cc........cc=cxxxxxxxxxxxc=cc...xxxx  
+xxxx..cc..c..c.c.xxx..xxx.c.c..c..cc........cc.c...........c.cc...xxxx  
+xxxx..cc..c..c.c...x||x...c.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx  
+xxxx..cc..c..c.c...x$$x...c.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx  
+xxxx..cc..c..G.c...xnnx...c.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx  
+xxxx..cc..c..c.c..........c.c..c..cc........cc.c.cx.444.xc.c.cc...xxxx  
+xxxx..cc..c..cFccHccccGcFcc.H..f..cc........cc.c.cxxxxxxxc.c.cc...xxxx  
+xxxx..cc..c..G............c.c..c..cc........cc.c.cccxxxccc.c.cc...xxxx  
+xxxx..cc..c..cccccccccccHccfcgcc..cc........cc.c...cxxxc...c.cc...xxxx  
+xxxx..cc..F..c.................c..cc........cc.c.cccxxxccc.c.cc...xxxx  
+xxxx..cc..c..g.................c..cc........cc.c.cx|2.2|xc.c.cc...xxxx  
+xxxx..cccHcfcccHcccccccccccccfcc==cc........cc.c.cx|$$$|xc.c.cc...xxxx  
+xxxx..cc.......................c..cc........cc.c.ccccxcccc.c.cc...xxxx  
+xxxx..cc.......................c..cc........cc.c....cxc....c.cc...xxxx  
+xxxx..cccccccccccccccccccccccccc++cc........cc.c.ccccxcccc.c.cc...xxxx  
+xxxx..cccccccccccccccccccccccccc++cc........cc.c.cxx|||xxc.c.cc...xxxx  
+xxxx........................................cc.c.cxx|||xxc.c.cc...xxxx  
+xxxx.........................xx....xx.......cc=c.ccccccccc.c=cc...xxxx  
+xxxx.........................xx....xx........c.c.....c.....c.c....xxxx  
+xxxx...........................................c...........c......xxxx  
+xxxx..............................................................xxxx  
+xxxx..............4..........xx....xx.............................xxxx  
+xxxx...4..4..................xx....xx.............................xxxx  
+xxxx....44...................................xx.................xxxxxx  
+xxxx..........4..............................xxx...............xxxxxxx  
+xxxx.........................xx....xx.......xxxxxx"xxxxxxxxx"xxxxxxxxx  
+xxxx.........................xx....xx.......xxxxxx.xxx.2.xxx.xxxxxxxxx  
+xxxx........44..............................xxxxxx.xxx2.2xxx.xxxAAAAxx  
+xxxx.......................................xxxxxxx.xxxxxxxxx.xxxAAAAxx  
+xxxx......4...................x....x.......xxxxxxx..xxxxxxx..xxxAAAAxx  
+xxxx.......................................xxxxxxxx.........xxxxAAAAxx  
+xxxx......................................xxxxxxxxxx.......xxxxxxxxxxx  
+xxxx..........................x....x......xxxxxxxxxxx.....xxAAAAAAAAxx  
+xxxx.....................................xxBBBBBBBxxxx...xxxAAAAAAAAxx  
+xxxx.....................................xxBBBBBBBxxxxx.xxxxAAAAAAAAxx  
+xxxx..........................x....x....xxxBBBBBBBxxxxx=xxxxxxxxxxxxxx  
+xxxx....................................xxxxxxxxxxxx..............$$xx  
+xxxx...................................xxxBBBBxBBBBx.4...4.......$$$xx  
+xxxx..........................x....x...xxxBBBBxBBBBx...4..4.....$$$$xx  
+xxxx.................................{xxxxBBBBxBBBBx.2..4..4...$$$$$xx  
+xxxx................................[xxxxxBBBBxBBBBx..........$$$$$$xx  
+xxxx...............................(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
