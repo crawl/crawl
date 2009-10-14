@@ -1,9 +1,9 @@
 -- Check basic find_ray functionality.
 
-local FAILMAP = 'losfail.map'
+local FAILMAP = 'rayfail.map'
 local checks = 0
 
-local function test_losight_symmetry()
+local function test_findray()
   -- Clear messages to prevent them accumulating and forcing a --more--
   crawl.mesclr()
   -- Send the player to a random spot on the level.
@@ -12,7 +12,6 @@ local function test_losight_symmetry()
   -- Forcibly redo LOS.
   you.losight()
 
-  checks = checks + 1
   local you_x, you_y = you.pos()
   local you_p = dgn.point(you_x, you_y)
 
@@ -21,7 +20,7 @@ local function test_losight_symmetry()
     for x = -8, 8 do
       if x ~= 0 or y ~= 0 then
         local px, py = x + you_x, y + you_y
-        if you.see_grid(px, py) then
+        if you.see_grid_no_trans(px, py) then
           table.insert(visible_spots, { px, py })
         end
       end
@@ -31,6 +30,7 @@ local function test_losight_symmetry()
   -- For each position in LOS, shoot a ray there
   -- and make sure it doesn't go through an opaque cell.
   for _, spot in ipairs(visible_spots) do
+    checks = checks + 1
     local x, y = unpack(spot)
     local p = dgn.point(x, y)
     local ray = los.findray(you_x, you_y, x, y)
@@ -38,7 +38,8 @@ local function test_losight_symmetry()
       dgn.grid(x, y, "floor_special")
       dgn.dbg_dump_map(FAILMAP)
       assert(false, "Can't find ray to " .. p ..
-                    " although it's in view.")
+                    " although it's in unobstructed view. (#" .. 
+                    checks .. ")")
     end
     local rx, ry = ray:pos()
     local ray_p = dgn.point(rx, ry)
@@ -64,20 +65,20 @@ local function test_losight_symmetry()
   end
 end
 
-local function run_los_tests(depth, nlevels, tests_per_level)
+local function run_findray_tests(depth, nlevels, tests_per_level)
   local place = "D:" .. depth
-  crawl.mpr("Running LOS tests on " .. place)
+  crawl.mpr("Running find_ray tests on " .. place)
   dgn.dbg_goto_place(place)
 
   for lev_i = 1, nlevels do
     dgn.dbg_flush_map_memory()
     dgn.dbg_generate_level()
     for t_i = 1, tests_per_level do
-      test_losight_symmetry()
+      test_findray()
     end
   end
 end
 
 for depth = 1, 27 do
-  run_los_tests(depth, 1, 10)
+  run_findray_tests(depth, 1, 10)
 end

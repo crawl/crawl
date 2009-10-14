@@ -22,10 +22,10 @@ void lua_push_ray(lua_State *ls, ray_def *ray)
 
 LUAFN(los_find_ray)
 {
-    COORDS(a, 1, 2);
-    COORDS(b, 3, 4);
+    GETCOORD(a, 1, 2, map_bounds);
+    GETCOORD(b, 3, 4, map_bounds);
     ray_def *ray = new ray_def;
-    if (find_ray(a, b, false, *ray, 0, true))
+    if (find_ray(a, b, false, *ray))
     {
         lua_push_ray(ls, ray);
         return (1);
