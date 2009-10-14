@@ -40,8 +40,18 @@ my $min_major = $1;
 my $min_minor = $2;
 my $min_patch = $3;
 
+if ($local_major > $min_major) {
+	print "Yes\n";
+	exit 0;
+}
+
 if ($local_major < $min_major) {
 	print "No\n";
+	exit 0;
+}
+
+if ($local_minor > $min_minor) {
+	print "Yes\n";
 	exit 0;
 }
 
