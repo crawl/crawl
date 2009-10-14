@@ -1483,8 +1483,7 @@ int mons_res_cold(const monsters *mon)
 int mons_res_negative_energy(const monsters *mon)
 {
     if (mons_holiness(mon) != MH_NATURAL
-        || mon->type == MONS_SHADOW_DRAGON
-        || mon->type == MONS_DEATH_DRAKE)
+        || mon->type == MONS_SHADOW_DRAGON)
     {
         return (3);
     }
