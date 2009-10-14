@@ -7737,17 +7737,17 @@ void monsters::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    case ENCH_GLOWING_SHAPESHIFTER:     // This ench never runs out!
+    case ENCH_GLOWING_SHAPESHIFTER:    // This ench never runs out!
         // Number of actions is fine for shapeshifters.
         // Don't change shape while taking the stairs because
-        // monster_polymorph has an assert about it  -cao
+        // monster_polymorph has an assert about it. -cao
         if (!(this->flags & MF_TAKING_STAIRS)
             && (type == MONS_GLOWING_SHAPESHIFTER
                 || one_chance_in(4)))
             monster_polymorph(this, RANDOM_MONSTER);
         break;
 
-    case ENCH_SHAPESHIFTER:     // This ench never runs out!
+    case ENCH_SHAPESHIFTER:    // This ench never runs out!
         if (!(this->flags & MF_TAKING_STAIRS)
             && (type == MONS_SHAPESHIFTER
                 || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000)))
@@ -7758,7 +7758,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_TP:
         if (decay_enchantment(me, true))
-            monster_teleport( this, true );
+            monster_teleport(this, true);
         break;
 
     case ENCH_SLEEPY:
