@@ -13,7 +13,7 @@ REVISION("$Rev$");
 #include "los.h"
 #include "terrain.h"
 
-int ifloor(double d)
+static int ifloor(double d)
 {
     return static_cast<int>(floor(d));
 }
@@ -38,7 +38,7 @@ coord_def ray_def::pos() const
     return coord_def(x(), y());
 }
 
-double _reflect(double p, double c)
+static double _reflect(double p, double c)
 {
     return (c + c - p);
 }
@@ -309,8 +309,8 @@ void ray_def::flip()
 {
     int signx[] = {1, -1, -1,  1};
     int signy[] = {1,  1, -1, -1};
-    accx *= signx[quadrant];
-    accy *= signy[quadrant];
+    accx = 0.5 + signx[quadrant] * (accx - 0.5);
+    accy = 0.5 + signy[quadrant] * (accy - 0.5);
 }
 
 adv_type ray_def::raw_advance()

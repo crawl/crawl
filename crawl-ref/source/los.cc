@@ -523,7 +523,7 @@ static bool _superior_ray(int shortest, int imbalance,
 // in the ray. This is a reasonable measure of deviation from
 // the Bresenham line between our selected source and
 // destination.
-int _imbalance(const std::vector<coord_def>& ray)
+static int _imbalance(const std::vector<coord_def>& ray)
 {
     int imb = 0;
     int diags = 0, straights = 0;
