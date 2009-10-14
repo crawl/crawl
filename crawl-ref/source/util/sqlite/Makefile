@@ -9,10 +9,10 @@ endif
 endif
 
 LIBSQL = libsqlite3.a
-AR     = ar rcu
+AR    ?= ar rcu
 CC    ?= gcc
 RANLIB = ranlib
-RM_F   = rm -f
+RM    ?= rm -f
 
 # Omit SQLite features we don't need.
 CFLAGS ?= -O2
@@ -38,8 +38,7 @@ CFLAGS +=-DSQLITE_OMIT_AUTHORIZATION \
 all: $(LIBSQL)
 
 clean:
-	$(RM_F) *.o
-	$(RM_F) *.a
+	$(RM) *.o *.a
 
 $(LIBSQL): sqlite3.o
 	$(QUIET_AR)$(AR) $@ $^

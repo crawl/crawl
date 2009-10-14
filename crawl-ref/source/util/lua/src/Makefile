@@ -20,9 +20,9 @@ endif
 
 CC ?= gcc
 CFLAGS ?= -O2 -Wall
-AR = ar rcu
+AR ?= ar rcu
 RANLIB = ranlib
-RM = rm -f
+RM ?= rm -f
 LIBS = -lm $(MYLIBS)
 
 MYCFLAGS=

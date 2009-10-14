@@ -39,10 +39,11 @@ CFWARN := -Wall
 AR = ar rcu
 CC = $(GCC)
 CXX = $(GXX)
-DELETE = rm -f
+RM = rm -f
 COPY = cp
 
 export AR
+export RM
 export CC
 export CXX
 export CFLAGS
@@ -644,8 +645,7 @@ endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
-	$(DELETE) *.o
-	$(DELETE) *.ixx
+	$(RM) *.o *.ixx
 
 clean-lua:
 	+$(MAKE) -C $(LUASRC) clean
@@ -654,15 +654,7 @@ clean-sql:
 	+$(MAKE) -C $(SQLSRC) clean
 
 distclean: clean clean-lua clean-sql clean-rltiles
-	$(DELETE) bones.*
-	$(DELETE) morgue.txt
-	$(DELETE) scores
-	$(DELETE) $(GAME)
-	$(DELETE) *.sav
-	$(DELETE) core
-	$(DELETE) *.0*
-	$(DELETE) *.lab
-	$(DELETE) $(DEPENDENCY_MKF)
+	$(RM) bones.* morgue.txt scores $(GAME) *.sav core *.0* *.lab $(DEPENDENCY_MKF)
 
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIB)
@@ -746,11 +738,11 @@ package-source: distclean prebuildyacc pkgtidy depend removeold vlink \
 				pkgtarbz2 pkgzip
 
 pkgtidy:
-	$(DELETE) $(PKG_TIDY_LIST)
+	$(RM) $(PKG_TIDY_LIST)
 
 removeold:
-	if [ -f ../../$(SRC_PKG_TAR) ]; then $(DELETE) ../../$(SRC_PKG_TAR); fi
-	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(DELETE) ../../$(SRC_PKG_ZIP); fi
+	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
+	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
 
 # [ds] Existing directory names could produce a bad package!
 vlink:

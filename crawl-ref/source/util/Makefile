@@ -1,5 +1,6 @@
 YACC := bison -y
-LEX := flex
+LEX  := flex
+RM   ?= rm -f
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
@@ -12,9 +13,7 @@ endif
 all: levcomp.tab.cc levcomp.lex.cc
 
 clean:
-	rm -f levcomp.tab.cc levcomp.tab.h
-	rm -f levcomp.lex.cc
-	rm -f *.o
+	$(RM) levcomp.tab.cc levcomp.tab.h levcomp.lex.cc *.o
 
 %.tab.cc: %.tab.c
 	@mv $< $@
