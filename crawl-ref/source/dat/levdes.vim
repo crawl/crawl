@@ -86,8 +86,8 @@ syn match desMapEntry /@/ contained
 syn match desMapTrap  /\^/ contained
 syn match desMapTree /t/ contained
 
-syn match desMapValuable /[R%*|]/ contained
-syn match desMapRune /[PO]/ contained
+syn match desMapValuable /[%*|]/ contained
+syn match desMapRune /O/ contained
 syn match desMapOrb /Z/ contained
 
 syn cluster desMapElements contains=desMapBookend,desMapWall,desMapFloor
