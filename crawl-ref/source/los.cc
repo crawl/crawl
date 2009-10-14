@@ -559,21 +559,27 @@ int _imbalance(const std::vector<coord_def>& ray)
 // If find_shortest is true, examine all rays that hit the target and
 // take the shortest (starting at ray.fullray_idx).
 
-bool find_ray(const coord_def& source, const coord_def& target,
-              bool allow_fallback, ray_def& ray, int cycle_dir,
-              bool find_shortest, bool ignore_solid)
+struct trans
 {
-    unsigned int cellray, inray;
+    coord_def source;
+    int signx, signy;
 
-    const int signx = ((target.x - source.x >= 0) ? 1 : -1);
-    const int signy = ((target.y - source.y >= 0) ? 1 : -1);
-    const int absx  = signx * (target.x - source.x);
-    const int absy  = signy * (target.y - source.y);
-    const coord_def abs = coord_def(absx, absy);
+    coord_def transform(coord_def l)
+    {
+        return coord_def(source.x + signx*l.x, source.y + signy*l.y);
+    }
+};
+
+// Find ray in positive quadrant.
+bool _find_ray_se(const coord_def& target, bool allow_fallback,
+                  ray_def& ray, int cycle_dir, bool find_shortest,
+                  bool ignore_solid, trans t)
+{
+    ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
 
     int shortest    = INFINITE_DISTANCE;
     int imbalance   = INFINITE_DISTANCE;
-    const double want_slope = _calc_slope(absx, absy);
+    const double want_slope = _calc_slope(target.x, target.y);
     double slope_diff       = VERTICAL_SLOPE * 10.0;
     std::vector<coord_def> unaliased_ray;
 
@@ -583,9 +589,9 @@ bool find_ray(const coord_def& source, const coord_def& target,
                                            fullrays.size());
         los_ray lray = fullrays[fullray];
 
-        for (cellray = 0; cellray < lray.length; ++cellray)
+        for (unsigned int cellray = 0; cellray < lray.length; ++cellray)
         {
-            if (lray[cellray] != abs)
+            if (lray[cellray] != target)
                 continue;
 
             if (find_shortest)
@@ -598,12 +604,11 @@ bool find_ray(const coord_def& source, const coord_def& target,
             bool blocked = false;
             coord_def c1, c3;
             int real_length = 0;
-            for (inray = 0; inray <= cellray; ++inray)
+            for (unsigned int inray = 0; inray <= cellray; ++inray)
             {
-                const int xi = signx * ray_coords[inray + fullrays[fray].start].x;
-                const int yi = signy * ray_coords[inray + fullrays[fray].start].y;
+                c3 = ray_coords[inray + fullrays[fray].start];
                 if (inray < cellray && !ignore_solid
-                    && grid_is_solid(grd[source.x + xi][source.y + yi]))
+                    && grid_is_solid(grd(t.transform(c3))))
                 {
                     blocked = true;
                     break;
@@ -611,7 +616,6 @@ bool find_ray(const coord_def& source, const coord_def& target,
 
                 if (find_shortest)
                 {
-                    c3 = coord_def(xi, yi);
 
                     // We've moved at least two steps if inray > 0.
                     if (inray)
@@ -659,15 +663,6 @@ bool find_ray(const coord_def& source, const coord_def& target,
             imbalance  = cimbalance;
             slope_diff = ray_slope_diff;
 
-            if (source.x > target.x)
-                ray.accx = 1.0 - ray.accx;
-            if (source.y > target.y)
-                ray.accy = 1.0 - ray.accy;
-
-            ray.accx += source.x;
-            ray.accy += source.y;
-
-            _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
             if (!find_shortest)
                 return (true);
         }
@@ -678,22 +673,57 @@ bool find_ray(const coord_def& source, const coord_def& target,
 
     if (allow_fallback)
     {
-        ray.accx = source.x + 0.5;
-        ray.accy = source.y + 0.5;
-        if (target.x == source.x)
+        ray.accx = 0.5;
+        ray.accy = 0.5;
+        if (target.x == 0)
             ray.slope = VERTICAL_SLOPE;
         else
-        {
-            ray.slope  = target.y - source.y;
-            ray.slope /= target.x - source.x;
-            if (ray.slope < 0)
-                ray.slope = -ray.slope;
-        }
-        _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
+            ray.slope  = target.y / target.x;
         ray.fullray_idx = -1;
         return (true);
     }
     return (false);
+}
+
+bool find_ray(const coord_def& source, const coord_def& target,
+              bool allow_fallback, ray_def& ray, int cycle_dir,
+              bool find_shortest, bool ignore_solid)
+{
+    const int signx = ((target.x - source.x >= 0) ? 1 : -1);
+    const int signy = ((target.y - source.y >= 0) ? 1 : -1);
+    const int absx  = signx * (target.x - source.x);
+    const int absy  = signy * (target.y - source.y);
+    const coord_def abs = coord_def(absx, absy);
+    trans t;
+    t.source = source;
+    t.signx = signx;
+    t.signy = signy;
+
+    ray.accx -= source.x;
+    ray.accy -= source.y;
+
+    if (signx < 0)
+        ray.accx = 1.0 - ray.accx;
+    if (signy < 0)
+        ray.accy = 1.0 - ray.accy;
+
+    ray.quadrant = QUAD_SE;
+
+    if (!_find_ray_se(abs, allow_fallback, ray, cycle_dir,
+                      find_shortest, ignore_solid, t))
+        return false;
+
+    if (signx < 0)
+        ray.accx = 1.0 - ray.accx;
+    if (signy < 0)
+        ray.accy = 1.0 - ray.accy;
+
+    ray.accx += source.x;
+    ray.accy += source.y;
+
+    _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
+
+    return true;
 }
 
 // Count the number of matching features between two points along
