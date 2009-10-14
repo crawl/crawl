@@ -4885,6 +4885,9 @@ NAME:   exit_the_forest
 TAGS:   entry no_rotate no_pool_fixup
 ORIENT: northwest
 MONS:   plant
+FTILE:  . = floor_lair
+FTILE:  t = floor_lair
+FTILE:  1 = floor_lair
 MAP
 ttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttt1ttttttwwtttttttttttttttttttttt

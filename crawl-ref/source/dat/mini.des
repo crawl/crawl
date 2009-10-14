@@ -2431,6 +2431,11 @@ ENDMAP
 #
 NAME: forest_paths
 DEPTH: D, Lair
+FTILE:  . = floor_lair
+FTILE:  t = floor_lair
+FTILE:  0 = floor_lair
+FTILE:  @ = floor_lair
+FTILE:  * = floor_lair
 MAP
 tttttttttttttttttttttttttt@tttttttttttttttttttttt
 tttttttttttttttttttttttttt...tttttttttttttttttttt

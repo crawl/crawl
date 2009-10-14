@@ -327,6 +327,8 @@ DEPTH:  D:2-7
 WEIGHT: 75
 PLACE:  D:8
 KFEAT:  C = altar_feawn
+FTILE:  . = floor_lair
+FTILE:  t = floor_lair
 MAP
   ttttttt     
  ttttttttt    
