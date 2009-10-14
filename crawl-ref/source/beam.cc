@@ -1709,34 +1709,40 @@ void bolt::fire_wall_effect()
         return;
     }
 
-    if (!is_superhot())
+    if (feat == DNGN_WAX_WALL)
     {
-        // No actual effect.
-        if (flavour != BEAM_HELLFIRE && feat == DNGN_WAX_WALL)
+        if (!is_superhot())
         {
-            if (see_grid(pos()))
+            // No actual effect.
+            if (flavour != BEAM_HELLFIRE && feat == DNGN_WAX_WALL)
             {
-                emit_message(MSGCH_PLAIN,
-                             "The wax appears to soften slightly.");
+                if (see_grid(pos()))
+                {
+                    emit_message(MSGCH_PLAIN,
+                                 "The wax appears to soften slightly.");
+                }
+                else if (player_can_smell())
+                    emit_message(MSGCH_PLAIN, "You smell warm wax.");
             }
-            else if (player_can_smell())
-                emit_message(MSGCH_PLAIN, "You smell warm wax.");
         }
-    }
-    else
-    {
-        // Destroy the wall.
-        grd(pos()) = DNGN_FLOOR;
-        if (feat == DNGN_WAX_WALL)
+        else
         {
+            // Destroy the wall.
+            grd(pos()) = DNGN_FLOOR;
             if (see_grid(pos()))
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (player_can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wax.");
             place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
+            obvious_effect = true;
         }
-        else
+    }
+    else
+    {
+        if (is_superhot() || name == "fireball")
         {
+            // Destroy the wall.
+            grd(pos()) = DNGN_FLOOR;
             if (see_grid(pos()))
                 emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
             else if (player_can_smell())
@@ -1746,10 +1752,8 @@ void bolt::fire_wall_effect()
             else if (whose_kill() == KC_FRIENDLY)
                 did_god_conduct(DID_ALLY_KILLED_PLANT, 1, effect_known, 0);
             place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, whose_kill(), killer(), 5);
+            obvious_effect = true;
         }
-
-
-        obvious_effect = true;
     }
     finish_beam();
 }
