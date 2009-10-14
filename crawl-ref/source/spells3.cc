@@ -1614,10 +1614,10 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     }
 #endif
 
-    return !is_controlled;
+    return (!is_controlled);
 }
 
-void you_teleport_now( bool allow_control, bool new_abyss_area )
+void you_teleport_now(bool allow_control, bool new_abyss_area)
 {
     const bool randtele = _teleport_player(allow_control, new_abyss_area);
 
