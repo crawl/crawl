@@ -96,7 +96,7 @@ def path_prefix(prefix)
 end
 
 def clean_objects
-  [ '.', 'rel', 'dbg', 'util', 'util/lua/src', 'util/sqlite' ].each do |dir|
+  [ '.', 'rel', 'dbg', 'util', 'contrib/lua/src', 'contrib/sqlite' ].each do |dir|
     if File.directory? dir
       FileUtils.rm( Dir[dir + '/*.o'], :force => true )
       FileUtils.rm( Dir[dir + '/*.a'], :force => true )
@@ -155,7 +155,7 @@ def build_dos
   setup_dosmake_env
 
   puts "\nBuilding stone_soup (ndebug) for #{release_version} DOS"
-  ENV['LIB'] = "-static -Lutil\\lua\\src -llua -lpcre -Lutil\\sqlite -lsql3"
+  ENV['LIB'] = "-static -Lcontrib\\lua\\src -llua -lpcre -Lcontrib\\sqlite -lsql3"
   ENV['EXTRA_FLAGS'] = "-O2 -DCLUA_BINDINGS -DREGEX_PCRE -DDEBUG -DWIZARD"
 
   puts %{ #{DOSMAKE} -e -f makefile.dos DOYACC=y }
@@ -171,7 +171,7 @@ def build_win32
   puts "\nBuilding stone_soup (non-debug) for #{release_version} release!"
   system( %{#{W32MAKE} -f makefile.mgw DOYACC=y "EXTRA_FLAGS=-O2 } +
          %{-DCLUA_BINDINGS -DREGEX_PCRE -DDEBUG -DWIZARD" } +
-         %{"LIB=-lwinmm -static -Lutil/lua/src -llua -lpcre -Lutil/sqlite -lsqlite3"} ) or
+         %{"LIB=-lwinmm -static -Lcontrib/lua/src -llua -lpcre -Lcontrib/sqlite -lsqlite3"} ) or
             raise "#{W32MAKE} failed: #$?"
 
   clean_w32build_area

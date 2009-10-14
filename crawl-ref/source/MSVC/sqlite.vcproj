@@ -138,11 +138,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\util\sqlite\sqlite3.c"
+			RelativePath="..\contrib\sqlite\sqlite3.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\sqlite\sqlite3.h"
+			RelativePath="..\contrib\sqlite\sqlite3.h"
 			>
 		</File>
 	</Files>

@@ -869,8 +869,8 @@
 		B07818DC1075D979008C3B64 /* sqldbm.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sqldbm.cc; sourceTree = "<group>"; };
 		B07818DD1075D979008C3B64 /* sqldbm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqldbm.h; sourceTree = "<group>"; };
 		B082656F10731A95006EEC5A /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSQLite.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B082657610731AB5006EEC5A /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = util/sqlite/sqlite3.c; sourceTree = "<group>"; };
-		B082657710731AB5006EEC5A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = util/sqlite/sqlite3.h; sourceTree = "<group>"; };
+		B082657610731AB5006EEC5A /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = contrib/sqlite/sqlite3.c; sourceTree = "<group>"; };
+		B082657710731AB5006EEC5A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = contrib/sqlite/sqlite3.h; sourceTree = "<group>"; };
 		B0826648107333BB006EEC5A /* AppHdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHdr.h; sourceTree = "<group>"; };
 		B090C2EE10671F8900AE855D /* dngn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dngn.png; path = rltiles/dngn.png; sourceTree = "<group>"; };
 		B090C2EF10671F8900AE855D /* gui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gui.png; path = rltiles/gui.png; sourceTree = "<group>"; };
@@ -1086,7 +1086,7 @@
 				7B0EFD830BD12EEB00002671 /* print.c */,
 			);
 			name = Lua;
-			path = util/lua/src;
+			path = contrib/lua/src;
 			sourceTree = "<group>";
 		};
 		7B352E950B0017CF00CABB32 /* Levcomp */ = {

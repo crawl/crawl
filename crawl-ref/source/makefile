@@ -32,6 +32,7 @@ CFOPTIMIZE := -O2
 CFOTHERS := -fno-strict-aliasing -pipe
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
+MAKEFLAGS := --no-print-directory
 
 #
 # The GCC and GXX variables are set later.
@@ -47,6 +48,7 @@ export RM
 export CC
 export CXX
 export CFLAGS
+export MAKEFLAGS
 
 #
 # Platform Detection
@@ -146,19 +148,19 @@ INSTALLDIR   := /usr/games/crawl
 PCH := n
 
 # libpcre
-PCRESRC := util/pcre/
+PCRESRC := contrib/pcre/
 PCRELIB := pcre
 PCRELIBA := lib$(PCRELIB).a
 FPCRELIBA := $(PCRESRC)$(PCRELIBA)
 
 # LUA
-LUASRC := util/lua/src/
+LUASRC := contrib/lua/src/
 LUALIB := lua
 LUALIBA := lib$(LUALIB).a
 FLUALIBA := $(LUASRC)$(LUALIBA)
 
 # SQLite
-SQLSRC   := util/sqlite/
+SQLSRC   := contrib/sqlite/
 SQLLIB   := sqlite3
 SQLLIBA  := lib$(SQLLIB).a
 FSQLLIBA := $(SQLSRC)$(SQLLIBA)
@@ -553,6 +555,8 @@ PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
 		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
+.PHONY: install clean clean-lua clean-sql distclean debug profile wizard
+
 ##########################################################################
 
 all: $(GAME)
@@ -576,6 +580,8 @@ depend: $(OBJECTS:.o=.cc)
 else
 depend: $(DEPENDENCY_MKF)
 
+makefile.dep: .contrib-ok
+
 %.dep: $(OBJECTS:.o=.cc)
 	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) *.h $(OBJECTS:.o=.cc) > $@
 endif
@@ -594,6 +600,9 @@ ifeq ($(strip $(DOYACC)),y)
 
 prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
 		$(QUIET_COPY)$(COPY) $^ prebuilt/
+
+$(UTIL)levcomp.tab.cc: .contrib-ok
+$(UTIL)levcomp.lex.cc: .contrib-ok
 
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
 		+@$(MAKE) -C $(UTIL) levcomp.tab.cc
@@ -620,7 +629,6 @@ endif
 ##########################################################################
 # The actual build targets
 #
-
 install: $(GAME)
 ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
@@ -663,10 +671,17 @@ clean-sql:
 distclean: clean clean-lua clean-sql clean-rltiles
 	$(RM) bones.* morgue.txt scores $(GAME) *.sav core *.0* *.lab $(DEPENDENCY_MKF)
 
+.contrib-ok:
+	@for a in $(LUASRC)Makefile $(SQLSRC)Makefile $(PCRESRC)Makefile; do \
+	    if [ ! -f $$a ]; then \
+	        echo "The '$$a' file is missing. Have you run 'git submodule update --init'?"; \
+			exit 1; \
+	    fi \
+	done
+	@touch .contrib-ok
+
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIB)
-
-.PHONY : debug profile wizard
 
 debug: $(GAME)
 profile: $(GAME)
@@ -697,19 +712,19 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS)
 #############################################################################
 # Build PCRE
 
-$(FPCRELIBA):
+$(FPCRELIBA): .contrib-ok
 	+@$(MAKE) -C $(PCRESRC)
 
 #############################################################################
 # Build Lua
 
-$(FLUALIBA):
+$(FLUALIBA): .contrib-ok
 	+@$(MAKE) -C $(LUASRC) crawl_unix
 
 #############################################################################
 # Build SQLite
 
-$(FSQLLIBA):
+$(FSQLLIBA): .contrib-ok
 	+@$(MAKE) -C $(SQLSRC)
 
 #############################################################################

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				AdditionalIncludeDirectories=".;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				AdditionalIncludeDirectories=".;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"
@@ -196,7 +196,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				AdditionalIncludeDirectories=".;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -273,7 +273,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".;..;../util/lua/src;../util/sqlite;../util/pcre;../rltiles"
+				AdditionalIncludeDirectories=".;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;YY_NO_UNISTD_H;_USE_MATH_DEFINES"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AppHdr.h"

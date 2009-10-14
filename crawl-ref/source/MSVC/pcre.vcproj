@@ -138,95 +138,95 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\util\pcre\pcre.h"
+			RelativePath="..\contrib\pcre\pcre.h"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_chartables.c"
+			RelativePath="..\contrib\pcre\pcre_chartables.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_compile.c"
+			RelativePath="..\contrib\pcre\pcre_compile.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_config.c"
+			RelativePath="..\contrib\pcre\pcre_config.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_dfa_exec.c"
+			RelativePath="..\contrib\pcre\pcre_dfa_exec.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_exec.c"
+			RelativePath="..\contrib\pcre\pcre_exec.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_fullinfo.c"
+			RelativePath="..\contrib\pcre\pcre_fullinfo.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_get.c"
+			RelativePath="..\contrib\pcre\pcre_get.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_globals.c"
+			RelativePath="..\contrib\pcre\pcre_globals.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_info.c"
+			RelativePath="..\contrib\pcre\pcre_info.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_internal.h"
+			RelativePath="..\contrib\pcre\pcre_internal.h"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_maketables.c"
+			RelativePath="..\contrib\pcre\pcre_maketables.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_newline.c"
+			RelativePath="..\contrib\pcre\pcre_newline.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_ord2utf8.c"
+			RelativePath="..\contrib\pcre\pcre_ord2utf8.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_refcount.c"
+			RelativePath="..\contrib\pcre\pcre_refcount.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_scanner.h"
+			RelativePath="..\contrib\pcre\pcre_scanner.h"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_study.c"
+			RelativePath="..\contrib\pcre\pcre_study.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_tables.c"
+			RelativePath="..\contrib\pcre\pcre_tables.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_try_flipped.c"
+			RelativePath="..\contrib\pcre\pcre_try_flipped.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_ucp_searchfuncs.c"
+			RelativePath="..\contrib\pcre\pcre_ucp_searchfuncs.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_valid_utf8.c"
+			RelativePath="..\contrib\pcre\pcre_valid_utf8.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_version.c"
+			RelativePath="..\contrib\pcre\pcre_version.c"
 			>
 		</File>
 		<File
-			RelativePath="..\util\pcre\pcre_xclass.c"
+			RelativePath="..\contrib\pcre\pcre_xclass.c"
 			>
 		</File>
 	</Files>

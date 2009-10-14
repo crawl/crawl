@@ -28,6 +28,9 @@ source/dat/tiles/main.png
 source/dat/tiles/player.png
 source/dat/tiles/gui.png
 
+# Makefile-generated junk
+source/.contrib-ok
+
 # The Crawl executable.
 source/crawl
 source/crawl.exe

@@ -19,18 +19,18 @@ YACC := bison -y
 INSTALLDIR ?= package
 
 ifeq ($(LUASRC),)
-LUASRC := util\lua\src
+LUASRC := contrib\lua\src
 endif
 
 LUALIB = lua
 LUALIBA = lib$(LUALIB).a
 
-SQLSRC := util\sqlite
+SQLSRC := contrib\sqlite
 SQLLIB := sql3
 SQLLIBA := lib$(SQLLIB).a
 FSQLLIBA := $(SQLSRC)\$(SQLLIBA)
 
-PCRESRC := util\pcre
+PCRESRC := contrib\pcre
 PCRELIB := pcre
 PCRELIBA := lib$(PCRELIB).a
 

@@ -1,0 +1,9 @@
+[submodule "crawl-ref/source/contrib/sqlite"]
+	path = crawl-ref/source/contrib/sqlite
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/sqlite
+[submodule "crawl-ref/source/contrib/lua"]
+	path = crawl-ref/source/contrib/lua
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/lua
+[submodule "crawl-ref/source/contrib/pcre"]
+	path = crawl-ref/source/contrib/pcre
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/pcre
