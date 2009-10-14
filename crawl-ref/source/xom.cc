@@ -443,6 +443,18 @@ static bool _spell_weapon_check(const spell_type spell)
     }
 }
 
+static bool _teleportation_check(const spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_BLINK:
+    case SPELL_TELEPORT_SELF:
+        return (!scan_artefacts(ARTP_PREVENT_TELEPORTATION));
+    default:
+        return (true);
+    }
+}
+
 static bool _transformation_check(const spell_type spell)
 {
     transformation_type tran = TRAN_NONE;
@@ -544,7 +556,13 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
     if (you_cannot_memorise(spell))
         return (XOM_DID_NOTHING);
 
-    // Don't attempt to transform the player if the transformation will fail.
+    // Don't attempt to teleport the player if the teleportation will
+    // fail.
+    if (!_teleportation_check(spell))
+        return (XOM_DID_NOTHING);
+
+    // Don't attempt to transform the player if the transformation will
+    // fail.
     if (!_transformation_check(spell))
         return (XOM_DID_NOTHING);
 
@@ -2180,12 +2198,12 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     else if (x_chance_in_y(13, sever) && you.level_type != LEVEL_ABYSS)
     {
         // Try something else if teleportation is impossible.
-        if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
+        if (!_teleportation_check(SPELL_TELEPORT_SELF))
             return (XOM_DID_NOTHING);
 
         // This is not very interesting if the level is already fully
-        // explored (presumably cleared). Even then, it may occasionally
-        // happen.
+        // explored (presumably cleared).  Even then, it may
+        // occasionally happen.
         const int explored = _exploration_estimate(true);
         if (explored >= 80 && x_chance_in_y(explored, 120))
             return (XOM_DID_NOTHING);
@@ -2193,9 +2211,9 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         if (debug)
             return (XOM_GOOD_TELEPORT);
 
-        // The Xom teleportation train takes you on instant teleportation
-        // to a few random areas, stopping randomly but most likely in
-        // an area that is not dangerous to you.
+        // The Xom teleportation train takes you on instant
+        // teleportation to a few random areas, stopping randomly but
+        // most likely in an area that is not dangerous to you.
         god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
         int count = 0;
         do
@@ -3255,7 +3273,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         else if (x_chance_in_y(10, sever) && you.level_type != LEVEL_ABYSS)
         {
             // Try something else if teleportation is impossible.
-            if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
+            if (!_teleportation_check(SPELL_TELEPORT_SELF))
                 return (XOM_DID_NOTHING);
 
             // This is not particularly exciting if the level is already
@@ -3485,7 +3503,7 @@ static void _handle_accidental_death(const int orig_hp,
     you.max_dex      = std::max(you.max_dex, you.dex);
 
     if (_feat_is_deadly(feat))
-        you.teleport(true);
+        you_teleport_now(false);
 }
 
 int xom_acts(bool niceness, int sever, int tension, bool debug)
