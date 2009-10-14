@@ -342,13 +342,13 @@ endif # MacOS
 
 endif # TILES
 
-CFWARN_L := -D_FORTIFY_SOURCE=0 -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
-CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
 
 ifeq ($(GCC_GTE_4_3_0),Yes)
 CFWARN_L += -Wno-array-bounds
 endif
 
+CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic -D_FORTIFY_SOURCE=0
+CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
 
 #
 # Figure out the build settings for this type of build
