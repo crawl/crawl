@@ -454,10 +454,18 @@ CFOTHERS_L += -DWIN32CONSOLE
 endif
 endif
 
+USE_PCRE := n
 ifeq ($(OSNAME),WIN32)
-INCLUDES_L += -Iutil/pcre
+USE_PCRE := y
+endif
+
+ifneq ($(USE_PCRE),n)
+INCLUDES_L += -I$(PCRESRC)
+DEFINES += -DREGEX_PCRE
 LIB += $(FPCRELIBA)
-else
+endif
+
+ifneq ($(UNAME_S),MINGW32)
 LIB += -l$(LIBCURS)
 endif
 
@@ -529,7 +537,7 @@ PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
 
-ifeq ($(UNAME_S),MINGW32)
+ifneq ($(USE_PCRE),n)
 GAME_DEPENDS += $(FPCRELIBA)
 endif
 
