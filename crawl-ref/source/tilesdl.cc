@@ -249,7 +249,7 @@ bool TilesFramework::initialise()
             "dat/tiles/stone_soup_icon-32x32.png";
 #endif
 
-    SDL_Surface *icon = IMG_Load(datafile_path(icon_name).c_str());
+    SDL_Surface *icon = IMG_Load(datafile_path(icon_name, true, true).c_str());
     if (!icon)
     {
         printf("Failed to load icon: %s\n", SDL_GetError());
