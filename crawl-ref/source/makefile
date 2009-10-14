@@ -213,6 +213,8 @@ GCC := gcc
 GXX := g++
 endif
 
+GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
+
 RLTILES = rltiles
 
 #
@@ -340,8 +342,13 @@ endif # MacOS
 
 endif # TILES
 
-CFWARN_L := -D_FORTIFY_SOURCE=0 -Wno-array-bounds -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
+CFWARN_L := -D_FORTIFY_SOURCE=0 -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
 CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
+
+ifeq ($(GCC_GTE_4_3_0),Yes)
+CFWARN_L += -Wno-array-bounds
+endif
+
 
 #
 # Figure out the build settings for this type of build
