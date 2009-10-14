@@ -787,7 +787,6 @@ LUARET1(you_exp_points, number, you.experience)
 LUARET1(you_skill, number,
         lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
                             : 0)
-LUARET1(you_uniques, boolean, lua_isstring(ls, 1) ? you.unique_creatures[get_monster_by_name(lua_tostring(ls, 1))] : 0)
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -813,6 +812,19 @@ LUARET1(you_taking_stairs, boolean,
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_can_smell, boolean, player_can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
+
+static int _you_uniques(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    bool unique_found = false;
+
+    if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
+        unique_found = you.unique_creatures[get_monster_by_name(lua_tostring(ls, 1))];
+
+    lua_pushboolean(ls, unique_found);
+    return (1);
+}
 
 static int _you_gold(lua_State *ls)
 {
@@ -896,7 +908,7 @@ static const struct luaL_reg you_lib[] =
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
-    { "uniques"     , you_uniques },
+    { "uniques"     , _you_uniques },
     { "xl"          , you_exp },
     { "exp"         , you_exp_points },
     { "res_poison"  , you_res_poison },
