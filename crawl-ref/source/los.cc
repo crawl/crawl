@@ -644,9 +644,9 @@ bool find_ray(const coord_def& source, const coord_def& target,
                 fabs(_slope_factor(lray) - want_slope) : 0.0;
 
             if (blocked || (find_shortest &&
-                            _superior_ray(shortest, imbalance,
-                                          real_length, cimbalance,
-                                          slope_diff, ray_slope_diff)))
+                            !_superior_ray(shortest, imbalance,
+                                           real_length, cimbalance,
+                                           slope_diff, ray_slope_diff)))
             {
                 continue;
             }
