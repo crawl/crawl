@@ -1720,6 +1720,7 @@ int mons_shoals_level(int mcls)
     case MONS_STONE_GIANT:
     case MONS_OKLOB_PLANT:
     case MONS_SHARK:
+    case MONS_KRAKEN:
         mlev += 4;
         break;
 
@@ -1766,6 +1767,7 @@ int mons_shoals_rare(int mcls)
     case MONS_STONE_GIANT:
     case MONS_YAKTAUR_CAPTAIN:
     case MONS_SHARK:
+    case MONS_KRAKEN:
         return 10;
 
     case MONS_OKLOB_PLANT:
