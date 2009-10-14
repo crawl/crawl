@@ -338,6 +338,7 @@ LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_magenta
+KITEM:      Z = Orb of Zot
 
 #traps
 SUBST:    C = c:1000 =

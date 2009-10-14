@@ -4984,7 +4984,6 @@ static void _vault_grid( vault_placement &place,
         case '*':
         case '|':
         case 'O':                   // definite rune
-        case 'Z':                   // definite orb
         {
             int item_made = NON_ITEM;
             object_class_type which_class = OBJ_RANDOM;
@@ -5001,11 +5000,6 @@ static void _vault_grid( vault_placement &place,
             {
                 which_class = OBJ_RANDOM;
                 which_type = OBJ_RANDOM;
-            }
-            else if (vgrid == 'Z')
-            {
-                which_class = OBJ_ORBS;
-                which_type = ORB_ZOT;
             }
             else if (vgrid == '|' || (vgrid == 'O' && place.num_runes > 0))
             {
@@ -5045,7 +5039,7 @@ static void _vault_grid( vault_placement &place,
             }
 
             which_depth = place.level_number;
-            if (vgrid == '|' || vgrid == 'O' || vgrid == 'Z')
+            if (vgrid == '|' || vgrid == 'O')
                 which_depth = MAKE_GOOD_ITEM;
             else if (vgrid == '*')
                 which_depth = 5 + (place.level_number * 2);
@@ -5064,16 +5058,6 @@ static void _vault_grid( vault_placement &place,
     // defghijk - items
     if (vgrid >= 'd' && vgrid <= 'k')
         _dgn_place_item_explicit(vgrid - 'd', where, place, place.level_number);
-
-    if (vgrid == 'S' || vgrid == 'H')
-    {
-        const monster_type mtype = ((vgrid == 'H') ? MONS_ORANGE_STATUE
-                                                   : MONS_SILVER_STATUE);
-
-        grd(where) = DNGN_FLOOR;
-
-        create_monster(mgen_data::hostile_at(mtype, where));
-    }
 
     // Finally, handle grids that place monsters {dlb}:
     if (vgrid >= '0' && vgrid <= '9')

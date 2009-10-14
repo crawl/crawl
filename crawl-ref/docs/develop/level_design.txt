@@ -216,7 +216,6 @@ Items
  * - higher level item (good)
  | - acquirement-level item (almost guaranteed excellent)
  O - place an appropriate rune here. For portal vaults, place the portal here.
- Z - the Orb of Zot
  d-k - item array item. See section below on ITEM: arrays for more info.
 
 NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
