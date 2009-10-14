@@ -9,6 +9,7 @@ REVISION("$Rev$");
 
 #include "view.h"
 
+#include <stdint.h>
 #include <string.h>
 #include <cmath>
 #include <sstream>
