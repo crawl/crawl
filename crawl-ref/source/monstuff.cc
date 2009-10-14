@@ -1711,10 +1711,10 @@ int monster_die(monsters *monster, killer_type killer,
                     }
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs. Summoning
-                    // (ignoring Summon Wraith here)... at least we're
-                    // being nice and putting the natural creature
-                    // summons together with the demonic ones.  Note
-                    // that Vehumet gets a free pass here since those
+                    // (ignoring Haunt here)... at least we're being
+                    // nice and putting the natural creature summons
+                    // together with the demonic ones.  Note that
+                    // Vehumet gets a free pass here since those
                     // followers are assumed to come from summoning
                     // spells...  the others are from invocations (TSO,
                     // Makhleb, Kiku). - bwr

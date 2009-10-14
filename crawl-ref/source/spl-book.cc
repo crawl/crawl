@@ -137,7 +137,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_CALL_CANINE_FAMILIAR,
      SPELL_SUMMON_UGLY_THING,
      SPELL_SHADOW_CREATURES,
-     SPELL_SUMMON_WRAITHS,
      SPELL_SUMMON_HORRIBLE_THINGS,
      SPELL_NO_SPELL,
      },
@@ -542,7 +541,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // 44 - Necronomicon - Kikubaaqudgha special
     {SPELL_SYMBOL_OF_TORMENT,
      SPELL_CONTROL_UNDEAD,
-     SPELL_SUMMON_WRAITHS,
+     SPELL_HAUNT,
      SPELL_DEATHS_DOOR,
      SPELL_NECROMUTATION,
      SPELL_DEATH_CHANNEL,

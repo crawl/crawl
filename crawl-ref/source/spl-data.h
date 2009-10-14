@@ -856,7 +856,7 @@
 },
 
 {
-    SPELL_SUMMON_WRAITHS, "Haunt",
+    SPELL_HAUNT, "Haunt",
      SPTYP_NECROMANCY,
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      7,

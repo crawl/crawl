@@ -10,7 +10,7 @@ necromancy SPELL_NECROMANCY
 poison SPELL_POISON
 summoning SPELL_SUMMONING
 translocation SPELL_TRANSLOCATION
-transmigration SPELL_TRANSMIGRATION
+transmutation SPELL_TRANSMUTATION
 
 %sdir spells/air
 airstrike AIRSTRIKE
@@ -117,6 +117,7 @@ deaths_door DEATHS_DOOR
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
 fulsome_distillation FULSOME_DISTILLATION
+haunt HAUNT
 lethal_infusion LETHAL_INFUSION
 necromutation NECROMUTATION
 pain PAIN
@@ -158,7 +159,6 @@ summon_scorpions SUMMON_SCORPIONS
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammals SUMMON_SMALL_MAMMALS
 summon_ugly_thing SUMMON_UGLY_THING
-summon_wraiths SUMMON_WRAITHS
 
 %sdir spells/translocation
 apportation APPORTATION
@@ -174,7 +174,7 @@ teleport TELEPORT
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
 
-%sdir spells/transmigration
+%sdir spells/transmutation
 alter_self ALTER_SELF
 blade_hands BLADE_HANDS
 polymorph_other POLYMORPH_OTHER

@@ -1695,7 +1695,7 @@ int exper_value(const monsters *monster)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
-            case SPELL_SUMMON_WRAITHS:
+            case SPELL_HAUNT:
             case SPELL_HELLFIRE_BURST:
             case SPELL_HELLFIRE:
             case SPELL_SYMBOL_OF_TORMENT:
@@ -3232,13 +3232,15 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
 static bool _ms_los_spell(spell_type monspell)
 {
-    // True, the tentacles _are_ summoned but they are restricted to water
-    // just like the kraken is, so it makes more sense not to count them here.
+    // True, the tentacles _are_ summoned, but they are restricted to
+    // water just like the kraken is, so it makes more sense not to
+    // count them here.
     if (SPELL_KRAKEN_TENTACLES)
         return (false);
 
-    if (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE
-        || monspell == SPELL_SUMMON_WRAITHS
+    if (monspell == SPELL_SMITING
+        || monspell == SPELL_AIRSTRIKE
+        || monspell == SPELL_HAUNT
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return (true);

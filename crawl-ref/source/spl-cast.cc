@@ -781,7 +781,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         random_uselessness();
     else
     {
-        const spret_type cast_result = your_spells( spell );
+        const spret_type cast_result = your_spells(spell);
         if (cast_result == SPRET_ABORT)
         {
             crawl_state.zero_turns_taken();
@@ -1166,10 +1166,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     int potion = -1;
 
-    // XXX: This handles only some of the cases where spells need targetting...
-    // there are others that do their own that will be missed by this
-    // (and thus will not properly ESC without cost because of it).
-    // Hopefully, those will eventually be fixed. -- bwr
+    // XXX: This handles only some of the cases where spells need
+    // targetting.  There are others that do their own that will be
+    // missed by this (and thus will not properly ESC without cost
+    // because of it).  Hopefully, those will eventually be fixed. - bwr
     if ((flags & SPFLAG_TARGETTING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
@@ -1179,11 +1179,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             targ = TARG_ANY;
 
         targetting_type dir  =
-            ( (spell == SPELL_APPORTATION)   ? DIR_TARGET_OBJECT :
-              testbits(flags, SPFLAG_TARGET) ? DIR_TARGET        :
-              testbits(flags, SPFLAG_GRID)   ? DIR_TARGET        :
-              testbits(flags, SPFLAG_DIR)    ? DIR_DIR           :
-                                               DIR_NONE          );
+            ((spell == SPELL_APPORTATION)   ? DIR_TARGET_OBJECT :
+             testbits(flags, SPFLAG_TARGET) ? DIR_TARGET        :
+             testbits(flags, SPFLAG_GRID)   ? DIR_TARGET        :
+             testbits(flags, SPFLAG_DIR)    ? DIR_DIR           :
+                                              DIR_NONE          );
 
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_EVAPORATE)
@@ -1239,10 +1239,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     if (powc == 0 || allow_fail)
         _surge_power(spell);
 
-    // Added this so that the passed in powc can have meaning -- bwr
+    // Added this so that the passed in powc can have meaning. - bwr
     // Remember that most holy spells don't yet use powc!
     if (powc == 0)
-        powc = calc_spell_power( spell, true );
+        powc = calc_spell_power(spell, true);
 
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
@@ -1253,7 +1253,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     // Make some noise if it's actually the player casting.
     if (god == GOD_NO_GOD)
-        noisy( spell_noise(spell), you.pos() );
+        noisy(spell_noise(spell), you.pos());
 
     if (allow_fail)
     {
@@ -1268,7 +1268,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             spfl = -you.penance[GOD_SIF_MUNA];
 
             // Reduced penance reduction here because casting spells
-            // is a player controllable act.  -- bwr
+            // is a player controllable act. - bwr
             if (one_chance_in(12))
                 dec_penance(GOD_SIF_MUNA, 1);
         }
@@ -1288,9 +1288,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         {
             _spellcasting_side_effects(spell, true);
 
-            mpr( "You miscast the spell." );
-            flush_input_buffer( FLUSH_ON_FAILURE );
-            learned_something_new( TUT_SPELL_MISCAST );
+            mpr("You miscast the spell.");
+            flush_input_buffer(FLUSH_ON_FAILURE);
+            learned_something_new(TUT_SPELL_MISCAST);
 
             if (you.religion == GOD_SIF_MUNA
                 && !player_under_penance()
@@ -1300,21 +1300,21 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
                 return (SPRET_FAIL);
             }
 
-            // all spell failures give a bit of magical radiation..
-            // failure is a function of power squared multiplied
-            // by how badly you missed the spell.  High power
-            // spells can be quite nasty: 9 * 9 * 90 / 500 = 15
-            // points of contamination!
+            // All spell failures give a bit of magical radiation.
+            // Failure is a function of power squared multiplied by how
+            // badly you missed the spell.  High power spells can be
+            // quite nasty: 9 * 9 * 90 / 500 = 15 points of
+            // contamination!
             int nastiness = spell_mana(spell) * spell_mana(spell)
                                               * (spfail_chance - spfl) + 250;
 
             const int cont_points = div_rand_round(nastiness, 500);
 
             // miscasts are uncontrolled
-            contaminate_player( cont_points );
+            contaminate_player(cont_points);
 
-            MiscastEffect( &you, NON_MONSTER, spell, spell_mana(spell),
-                           spfail_chance - spfl );
+            MiscastEffect(&you, NON_MONSTER, spell, spell_mana(spell),
+                          spfail_chance - spfl);
 
             return (SPRET_FAIL);
         }
@@ -1495,8 +1495,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_HELLFIRE:
-        // Should only be available from
-        // staff of Dispater & Sceptre of Asmodeus
+        // Should only be available from Staff of Dispater and Sceptre
+        // of Asmodeus.
         if (!zapping(ZAP_HELLFIRE, powc, beam, true))
             return (SPRET_ABORT);
         break;
@@ -1561,16 +1561,16 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         //     casting Fireball in their standard equipment.  However,
         //     the power level for the actual fireball is determined at
         //     release, so if you do swap out your enhancers you'll
-        //     get a less powerful ball when its released. -- bwr
+        //     get a less powerful ball when it's released. - bwr
         //
-        if (!you.attribute[ ATTR_DELAYED_FIREBALL ])
+        if (!you.attribute[ATTR_DELAYED_FIREBALL])
         {
-            // okay, this message is weak but functional -- bwr
-            mpr( "You feel magically charged." );
-            you.attribute[ ATTR_DELAYED_FIREBALL ] = 1;
+            // Okay, this message is weak but functional. - bwr
+            mpr("You feel magically charged.");
+            you.attribute[ATTR_DELAYED_FIREBALL] = 1;
         }
         else
-            canned_msg( MSG_NOTHING_HAPPENS );
+            canned_msg(MSG_NOTHING_HAPPENS);
         break;
 
     // LOS spells
@@ -1725,8 +1725,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_twisted_resurrection(powc, god);
         break;
 
-    case SPELL_SUMMON_WRAITHS:
-        cast_summon_wraiths(powc, beam.target, god);
+    case SPELL_HAUNT:
+        cast_haunt(powc, beam.target, god);
         break;
 
     case SPELL_DEATH_CHANNEL:

@@ -835,7 +835,7 @@ void direct_effect(monsters *source, spell_type spell,
         }
         break;
 
-    case SPELL_SUMMON_WRAITHS:
+    case SPELL_HAUNT:
         if (!def)
             mpr("You feel haunted.");
         else

@@ -2866,7 +2866,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_SUMMON_ICE_BEAST:         return TILEG_SUMMON_ICE_BEAST;
     case SPELL_DEMONIC_HORDE:            return TILEG_DEMONIC_HORDE;
     case SPELL_SUMMON_GREATER_DEMON:     return TILEG_SUMMON_GREATER_DEMON;
-    case SPELL_SUMMON_WRAITHS:           return TILEG_SUMMON_WRAITHS;
     case SPELL_SUMMON_HORRIBLE_THINGS:   return TILEG_SUMMON_HORRIBLE_THINGS;
 
     // Necromancy
@@ -2881,6 +2880,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_REGENERATION:             return TILEG_REGENERATION;
     case SPELL_ANIMATE_DEAD:             return TILEG_ANIMATE_DEAD;
     case SPELL_DISPEL_UNDEAD:            return TILEG_DISPEL_UNDEAD;
+    case SPELL_HAUNT:                    return TILEG_HAUNT;
     case SPELL_BORGNJORS_REVIVIFICATION: return TILEG_BORGNJORS_REVIVIFICATION;
     case SPELL_CIGOTUVIS_DEGENERATION:   return TILEG_CIGOTUVIS_DEGENERATION;
     case SPELL_AGONY:                    return TILEG_AGONY;
@@ -2892,7 +2892,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_DEATHS_DOOR:              return TILEG_DEATHS_DOOR;
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
 
-    // Transformation
+    // Transmutation
     case SPELL_STICKS_TO_SNAKES:         return TILEG_STICKS_TO_SNAKES;
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;

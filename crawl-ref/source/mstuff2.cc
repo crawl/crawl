@@ -124,7 +124,7 @@ static bool _los_free_spell(spell_type spell_cast)
     return (spell_cast == SPELL_HELLFIRE_BURST
         || spell_cast == SPELL_BRAIN_FEED
         || spell_cast == SPELL_SMITING
-        || spell_cast == SPELL_SUMMON_WRAITHS
+        || spell_cast == SPELL_HAUNT
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE);
 }
@@ -139,17 +139,21 @@ static bool _legs_msg_applicable()
 void mons_cast_haunt(monsters *monster)
 {
     coord_def fpos;
+
     switch (monster->foe)
     {
     case MHITNOT:
         return;
+
     case MHITYOU:
         fpos = you.pos();
         break;
+
     default:
         fpos = menv[monster->foe].pos();
     }
-    _do_high_level_summon(monster, mons_near(monster), SPELL_SUMMON_WRAITHS,
+
+    _do_high_level_summon(monster, mons_near(monster), SPELL_HAUNT,
                           _pick_random_wraith, random_range(3, 6), GOD_NO_GOD, &fpos);
 }
 
@@ -1152,7 +1156,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     case SPELL_CONJURE_BALL_LIGHTNING:
     case SPELL_SUMMON_DRAKES:
     case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_SUMMON_WRAITHS:
+    case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_CANTRIP:
