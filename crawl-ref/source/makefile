@@ -339,7 +339,7 @@ endif # MacOS
 
 endif # TILES
 
-CFWARN_L := -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
+CFWARN_L := -Wno-array-bounds -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
 CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
 
 #
