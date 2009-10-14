@@ -3015,7 +3015,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '_', '\\', '}', '{', '8', '~', '~',            // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '}', '%', '$', '"', '#', '@',        // book .. trees
+        ':', '|', '}', '%', '$', '"', '#', 't',        // book .. trees
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -3035,7 +3035,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall .. stairs up
         251, 182, 167, 187, '8', 171, 168,             // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        '+', '\\', '}', '%', '$', '"', '#', '@',       // book .. trees
+        '+', '\\', '}', '%', '$', '"', '#', 't',       // book .. trees
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },

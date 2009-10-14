@@ -280,7 +280,7 @@ ENDMAP
 NAME:   feawn_altar_1
 DEPTH:  D:2-7
 PLACE:  D:8
-WEIGHT: 100
+WEIGHT: 75
 KFEAT:  C = altar_feawn
 MONS:   plant
 MAP
@@ -294,7 +294,7 @@ ENDMAP
 NAME:   feawn_altar_2
 DEPTH:  D:2-7
 PLACE:  D:8
-WEIGHT: 100
+WEIGHT: 75
 KFEAT:  C = altar_feawn
 NSUBST: w = 2:W / *:w
 SUBST:  . = ..wW
@@ -309,7 +309,7 @@ ENDMAP
 
 NAME:   feawn_altar_3
 DEPTH:  D:2-7
-WEIGHT: 100
+WEIGHT: 75
 PLACE:  D:8
 KFEAT:  C = altar_feawn
 NSUBST: b = 1:. / *:1
@@ -320,6 +320,23 @@ MAP
 11C11
 1b1b1
 .111.
+ENDMAP
+
+NAME:   feawn_altar_4
+DEPTH:  D:2-7
+WEIGHT: 75
+PLACE:  D:8
+KFEAT:  C = altar_feawn
+MAP
+  ttttttt     
+ ttttttttt    
+tttt.tttttt   
+tttt.C.ttttttt
+ tttt...ttttt.
+ tttttt.......
+   ttttttttt..
+     tttttttt 
+      ttttttt 
 ENDMAP
 
 NAME:  lemuel_angel_altar
