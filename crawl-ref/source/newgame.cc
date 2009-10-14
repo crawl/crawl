@@ -6287,6 +6287,7 @@ bool _give_items_skills()
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
                                2);
             break;
+
         case SP_TROLL:
         case SP_OGRE:
             _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
