@@ -518,15 +518,15 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
 
         if (spell == FAKE_SPELL_MAGIC_MAPPING || spell == SPELL_DETECT_ITEMS)
         {
-            // If the level is already mostly explored, there's
-            // a chance we might try something else.
+            // If the level is already mostly explored, there's a chance
+            // we might try something else.
             const int explored = _exploration_estimate();
             if (explored > 80 && x_chance_in_y(explored, 100))
                 return (XOM_DID_NOTHING);
         }
     }
 
-    // Handle magic mapping specially, now it's no longer a spell.
+    // Handle magic mapping specially, now that it's no longer a spell.
     if (spell == FAKE_SPELL_MAGIC_MAPPING)
     {
         if (you.level_type == LEVEL_PANDEMONIUM)

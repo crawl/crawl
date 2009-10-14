@@ -71,7 +71,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return(1);
+        return (1);
     }
 
     // yes, there is a logic to this ordering {dlb}:
