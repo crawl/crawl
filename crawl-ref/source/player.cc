@@ -5581,6 +5581,12 @@ void dec_napalm_player()
 {
     if (you.duration[DUR_LIQUID_FLAMES] > 1)
     {
+        if (grid_is_watery(grd(you.pos())))
+        {
+            mpr("The flames go out!", MSGCH_WARN);
+            you.duration[DUR_LIQUID_FLAMES] = 0;
+            return;
+        }
         you.duration[DUR_LIQUID_FLAMES]--;
 
         mpr("You are covered in liquid flames!", MSGCH_WARN);

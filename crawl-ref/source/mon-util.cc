@@ -7652,6 +7652,14 @@ void monsters::apply_enchantment(const mon_enchant &me)
     // Assumption: mons_res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
+        if (grid_is_watery(grd(pos())))
+        {
+            if (mons_near(this) && player_monster_visible(this))
+                mprf("The flames covering %s go out.",
+                     this->name(DESC_NOCAP_THE, false).c_str());
+            del_ench(ENCH_STICKY_FLAME);
+            break;
+        }
         int dam = resist_adjust_damage(this, BEAM_FIRE, res_fire(),
                                        roll_dice(2, 4) - 1);
 
