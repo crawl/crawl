@@ -84,6 +84,7 @@ syn match desMapWater /w/ contained
 syn match desMapShallow /W/ contained
 syn match desMapEntry /@/ contained
 syn match desMapTrap  /\^/ contained
+syn match desMapTree /t/ contained
 
 syn match desMapValuable /[R%*|]/ contained
 syn match desMapRune /[PO]/ contained
@@ -93,7 +94,7 @@ syn cluster desMapElements contains=desMapBookend,desMapWall,desMapFloor
 syn cluster desMapElements add=desMapMonst,desMapCrystalWall,desMapGold
 syn cluster desMapElements add=desMapLava,desMapMetalWall,desMapDoor
 syn cluster desMapElements add=desMapStoneWall,desMapWater,desMapShallow
-syn cluster desMapElements add=desMapTrap,desMapEntry,desMapWaxWall
+syn cluster desMapElements add=desMapTrap,desMapEntry,desMapWaxWall,desMapTree
 
 syn cluster desMapElements add=desMapRune,desMapOrb,desMapValuable
 
@@ -142,6 +143,7 @@ if &bg == "dark"
   hi desMapGold guifg=#c09000 ctermfg=yellow
   hi desMapDoor guifg=brown gui=bold ctermfg=white
   hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
+  hi desMapTree guifg=#00aa00 ctermfg=darkgreen
 
   hi desMapValuable guifg=darkgreen gui=bold ctermfg=yellow
   hi desMapRune     guifg=orange gui=bold ctermfg=magenta
@@ -161,6 +163,7 @@ else
   hi desMapGold guifg=#c09000 ctermfg=yellow
   hi desMapDoor guifg=brown gui=bold ctermfg=black ctermbg=brown
   hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
+  hi desMapTree guifg=#00aa00 ctermfg=darkgreen
 
   hi desMapValuable guifg=darkgreen gui=bold ctermfg=lightgreen
   hi desMapRune     guifg=orange gui=bold ctermfg=white
