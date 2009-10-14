@@ -1739,7 +1739,7 @@ void bolt::fire_wall_effect()
     }
     else
     {
-        if (is_superhot() || name == "fireball")
+        if (is_superhot())
         {
             // Destroy the wall.
             grd(pos()) = DNGN_FLOOR;
@@ -3096,6 +3096,7 @@ bool bolt::is_superhot() const
 
     return (name == "bolt of fire"
             || name == "bolt of magma"
+            || name == "fireball"
             || name.find("hellfire") != std::string::npos
                && in_explosion_phase);
 }
