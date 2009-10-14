@@ -144,7 +144,7 @@ struct los_ray : public ray_def
     unsigned int length;
 
     los_ray(double ax, double ay, double s)
-        : ray_def(ax, ay, s, QUAD_SE), length(0)
+        : ray_def(ax, ay, s), length(0)
     {
     }
 
@@ -158,7 +158,7 @@ struct los_ray : public ray_def
         int cellnum;
         for (cellnum = 0; true; ++cellnum)
         {
-            copy.raw_advance_0();
+            copy.raw_advance_pos();
             c = copy.pos();
             if (c.abs() > radius2)
                 break;
@@ -455,16 +455,8 @@ void raycast()
 
 static void _set_ray_quadrant(ray_def& ray, int sx, int sy, int tx, int ty)
 {
-    if ( tx >= sx && ty >= sy )
-        ray.quadrant = QUAD_SE;
-    else if ( tx < sx && ty >= sy )
-        ray.quadrant = QUAD_SW;
-    else if ( tx < sx && ty < sy )
-        ray.quadrant = QUAD_NW;
-    else if ( tx >= sx && ty < sy )
-        ray.quadrant = QUAD_NE;
-    else
-        mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
+    ray.quadx = tx >= sx ? 1 : -1;
+    ray.quady = ty >= sy ? 1 : -1;
 }
 
 static int _cyclic_offset(int i, int cycle_dir, int startpoint,
@@ -689,6 +681,9 @@ bool find_ray(const coord_def& source, const coord_def& target,
               bool allow_fallback, ray_def& ray, int cycle_dir,
               bool find_shortest, bool ignore_solid)
 {
+    if (target == source)
+        return false;
+
     const int signx = ((target.x - source.x >= 0) ? 1 : -1);
     const int signy = ((target.y - source.y >= 0) ? 1 : -1);
     const int absx  = signx * (target.x - source.x);
@@ -707,7 +702,8 @@ bool find_ray(const coord_def& source, const coord_def& target,
     if (signy < 0)
         ray.accy = 1.0 - ray.accy;
 
-    ray.quadrant = QUAD_SE;
+    ray.quadx = 1;
+    ray.quady = 1;
 
     if (!_find_ray_se(abs, allow_fallback, ray, cycle_dir,
                       find_shortest, ignore_solid, t))
@@ -874,7 +870,6 @@ void losight(env_show_grid& sh, const los_param& dat)
 
     const int quadrant_x[4] = {  1, -1, -1,  1 };
     const int quadrant_y[4] = {  1,  1, -1, -1 };
-
     for (int q = 0; q < 4; ++q)
         _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
 

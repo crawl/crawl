@@ -18,8 +18,8 @@ static int ifloor(double d)
     return static_cast<int>(floor(d));
 }
 
-ray_def::ray_def(double ax, double ay, double s, quad_type q, int idx)
-    : accx(ax), accy(ay), slope(s), quadrant(q), fullray_idx(idx)
+ray_def::ray_def(double ax, double ay, double s, int qx, int qy, int idx)
+    : accx(ax), accy(ay), slope(s), quadx(qx), quady(qy), fullray_idx(idx)
 {
 }
 
@@ -83,14 +83,6 @@ void ray_def::set_reflect_point(const double oldx, const double oldy,
 
 void ray_def::advance_and_bounce()
 {
-    quad_type bouncequad[4][3] =
-    {
-    //    ADV_X    ADV_Y    ADV_XY
-        { QUAD_SW, QUAD_NE, QUAD_NW }, // QUAD_SE
-        { QUAD_SE, QUAD_NW, QUAD_NE }, // QUAD_SW
-        { QUAD_NE, QUAD_SW, QUAD_SE }, // QUAD_NW
-        { QUAD_NW, QUAD_SE, QUAD_SW }  // QUAD_NE
-    };
     int oldx = x(), oldy = y();
     const double oldaccx = accx, oldaccy = accy;
     adv_type rc = advance(false);
@@ -101,18 +93,26 @@ void ray_def::advance_and_bounce()
     const bool blocked_y = grid_is_solid(grd[newx][oldy]);
 
     if (double_is_zero(slope) || slope > 100.0)
-        quadrant = bouncequad[quadrant][ADV_XY];
-    else if (rc != ADV_XY)
-        quadrant = bouncequad[quadrant][rc];
-    else
+    {
+        quadx = -quadx;
+        quady = -quady;
+    }
+    else if (rc == ADV_X)
+        quadx = -quadx;
+    else if (rc == ADV_Y)
+        quady = -quady;
+    else // rc == ADV_XY
     {
         ASSERT((oldx != newx) && (oldy != newy));
         if (blocked_x && blocked_y)
-            quadrant = bouncequad[quadrant][rc];
+        {
+            quadx = -quadx;
+            quady = -quady;
+        }
         else if (blocked_x)
-            quadrant = bouncequad[quadrant][ADV_Y];
+            quady = -quady;
         else
-            quadrant = bouncequad[quadrant][ADV_X];
+            quadx = -quadx;
     }
 
     set_reflect_point(oldaccx, oldaccy, blocked_x, blocked_y);
@@ -121,34 +121,17 @@ void ray_def::advance_and_bounce()
 double ray_def::get_degrees() const
 {
     if (slope > 100.0)
-    {
-        if (quadrant == QUAD_NW || quadrant == QUAD_NE)
-            return (90.0);
-        else
-            return (270.0);
-    }
+        return (quadx < 0 ? 90.0 : 270.0);
     else if (double_is_zero(slope))
-    {
-        if (quadrant == QUAD_SE || quadrant == QUAD_NE)
-            return (0.0);
-        else
-            return (180.0);
-    }
+        return (quady > 0 ? 0.0  : 180.0);
 
-    double deg = atan(slope) * 180.0 / M_PI; // 0 < deg < 90
-
-    switch (quadrant)
-    {
-    case QUAD_SE:
-        return (360.0 - deg);
-    case QUAD_SW:
-        return (180.0 + deg);
-    case QUAD_NW:
-        return (180.0 - deg);
-    case QUAD_NE:
-    default:
-        return (deg);
-    }
+    // 0 < deg < 90
+    double deg = atan(slope) * 180.0 / M_PI;
+    if (quadx < 0)
+        deg = 180.0 - deg;
+    if (quady < 0)
+        deg = 360.0 - deg;
+    return (deg);
 }
 
 void ray_def::set_degrees(double deg)
@@ -158,46 +141,29 @@ void ray_def::set_degrees(double deg)
     while (deg >= 360.0)
         deg -= 360.0;
 
-    double _slope = tan(deg / 180.0 * M_PI);
-
-    if (double_is_zero(_slope))
+    if (deg > 180.0)
     {
+        quady = -1;
+        deg = 360 - deg;
+    }
+    if (deg > 90.0)
+    {
+        quadx = -1;
+        deg = 180 - deg;
+    }
+
+    slope = tan(deg / 180.0 * M_PI);
+    if (double_is_zero(slope))
         slope = 0.0;
-
-        if (deg < 90.0 || deg > 270.0)
-            quadrant = QUAD_SE;
-        else
-            quadrant = QUAD_SW;
-    }
-    else if (_slope > 0)
-    {
-        slope = _slope;
-
-        if (deg >= 180.0 && deg <= 270.0)
-            quadrant = QUAD_SW;
-        else
-            quadrant = QUAD_NE;
-    }
-    else
-    {
-        slope = -_slope;
-
-        if (deg >= 90 && deg <= 180)
-            quadrant = QUAD_NW;
-        else
-            quadrant = QUAD_SE;
-    }
-
     if (slope > 1000.0)
         slope = 1000.0;
 }
 
 void ray_def::regress()
 {
-    quad_type opp_quadrant[4] = { QUAD_NW, QUAD_NE, QUAD_SE, QUAD_SW };
-    quadrant = opp_quadrant[quadrant];
+    quadx = -quadx; quady= -quady;
     advance(false);
-    quadrant = opp_quadrant[quadrant];
+    quadx = -quadx; quady= -quady;
 }
 
 adv_type ray_def::advance_through(const coord_def &target)
@@ -235,11 +201,11 @@ adv_type ray_def::advance(bool shortest_possible, const coord_def *target)
     return (ret);
 }
 
-// Advance a ray in quadrant 0.
+// Advance a ray in the positive quadrant.
 // note that slope must be nonnegative!
 // returns 0 if the advance was in x, 1 if it was in y, 2 if it was
 // the diagonal
-adv_type ray_def::raw_advance_0()
+adv_type ray_def::raw_advance_pos()
 {
     // handle perpendiculars
     if (double_is_zero(slope))
@@ -302,22 +268,20 @@ adv_type ray_def::raw_advance_0()
 }
 
 /*
- * Mirror ray into quadrant 0 or back.
- * this.quadrant itself is not touched (used for the flip back).
+ * Mirror ray into positive quadrant or back.
+ * this.quad{x,y} are not touched (used for the flip back).
  */
 void ray_def::flip()
 {
-    int signx[] = {1, -1, -1,  1};
-    int signy[] = {1,  1, -1, -1};
-    accx = 0.5 + signx[quadrant] * (accx - 0.5);
-    accy = 0.5 + signy[quadrant] * (accy - 0.5);
+    accx = 0.5 + quadx * (accx - 0.5);
+    accy = 0.5 + quady * (accy - 0.5);
 }
 
 adv_type ray_def::raw_advance()
 {
     adv_type rc;
     flip();
-    rc = raw_advance_0();
+    rc = raw_advance_pos();
     flip();
     return rc;
 }

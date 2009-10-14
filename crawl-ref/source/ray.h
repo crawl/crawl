@@ -7,15 +7,6 @@
 #ifndef RAY_H
 #define RAY_H
 
-// quadrant
-enum quad_type
-{
-    QUAD_SE = 0,
-    QUAD_SW = 1,
-    QUAD_NW = 2,
-    QUAD_NE = 3
-};
-
 // direction of advance:
 enum adv_type
 {
@@ -30,12 +21,13 @@ public:
     double accx;
     double accy;
     double slope;
-    quad_type quadrant;
+    int quadx;
+    int quady;
     int fullray_idx;   // for cycling: where did we come from?
 
 public:
     ray_def(double accx = 0.0, double accy = 0.0, double slope = 0.0,
-            quad_type quadrant = QUAD_SE, int fullray_idx = -1);
+            int quadx = 1, int quady = 1, int fullray_idx = -1);
     int x() const;
     int y() const;
     coord_def pos() const;
@@ -54,7 +46,7 @@ public:
     void   set_degrees(double deg);
 
 protected:
-    adv_type raw_advance_0();
+    adv_type raw_advance_pos();
     void flip();
     adv_type raw_advance();
     double reflect(bool x, double oldc, double newc) const;
