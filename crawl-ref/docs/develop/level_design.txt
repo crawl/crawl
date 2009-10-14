@@ -818,17 +818,17 @@ NSUBST:   ? = 3:w / *:l
           omit the initial N: or N=, then 1= is assumed, except for the
           last spec where *= is assumed.
 
-KFEAT:    Z = C / needle trap / antique armour shop / altar_zin
+KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           The KFEAT: directive allows you to specify a placeholder symbol
           that is replaced with another symbol, named feature, trap, or
-          shop. For example, the line above will replace occurrences of Z
+          shop. For example, the line above will replace occurrences of G
           with C (random altar), a needle trap, an antique armour shop, or
-          an altar of Zin. Different instances of Z may receive different
-          replacements. To force a single replacement for all Z,  use:
+          an altar of Zin. Different instances of G may receive different
+          replacements. To force a single replacement for all G,  use:
 
-          KFEAT: Z : C / needle trap / antique armour shop
+          KFEAT: G : C / needle trap / antique armour shop
 
-          You'll notice that 'Z' is the symbol of the Orb of Zot. Kxxx
+          You'll notice that 'G' is the symbol of a granite statue. Kxxx
           directives allow you to assign arbitrary definitions to any symbol.
 
           KFEAT features are specified as a feature name (see section I
