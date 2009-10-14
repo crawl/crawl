@@ -47,8 +47,8 @@ Stone Soup 0.6
 * Tiles: re-added doll editing screen ('-' command).
 * Tiles: added clickable spells display (toggle with '_' command).
 * Added option explore_delay, which can be used to make the delay
-  between auto-explore moves different than the delay between other
-  types of of travel moves.
+  between auto-explore moves different from the delay between other
+  types of travel moves.
 
 
 Stone Soup 0.5.2 (20091008)
