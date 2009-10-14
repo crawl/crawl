@@ -130,8 +130,6 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
         {
             simple_monster_message(mons, " goes into a battle-frenzy!");
         }
-        else if (mons->can_go_berserk())
-            mons->go_berserk(true);
         else
             return (0); // nothing happens
 
