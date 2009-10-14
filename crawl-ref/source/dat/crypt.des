@@ -617,13 +617,12 @@ ENDMAP
 
 ##############################################################################
 #       Four quadrants (by mu)
-#       burial horde (NE), chapel of kikubaaqudgha (NW), catacombs (SE), crematory (SW)
+#       burial hoard (NE), chapel of kikubaaqudgha (NW), catacombs (SE), crematory (SW)
 #
 NAME:   quadcrypt_mu
 ORIENT: encompass
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_hmirror
 PLACE:  Crypt:5
-WEIGHT: 10000
 ####### chapel garden
 SUBST:  F = f ?
 SUBST:  f = p:1 .:1
@@ -634,6 +633,7 @@ KFEAT:  ! = .
 KMONS:  ! = skeletal warrior ; w:2 dagger ego:pain | short sword ego:draining |\
                                w:2 sabre ego:pain | w:1 quick blade ego:pain
 KFEAT:  A = .
+KFEAT:  b = .
 KFEAT:  D = .
 KFEAT:  E = .
 KFEAT:  G = .
@@ -641,13 +641,12 @@ KFEAT:  H = .
 KFEAT:  I = .
 KFEAT:  J = .
 KFEAT:  P = .
-KFEAT:  Z = .
 KFEAT:  Q = .
 KFEAT:  R = .
 KFEAT:  S = .
 KFEAT:  t = .
 KFEAT:  X = .
-KFEAT:  b = .
+KFEAT:  Z = .
 KFEAT:  8 = .
 KFEAT:  o = granite_statue
 KFEAT:  _ = altar_kikubaaqudgha
@@ -664,7 +663,7 @@ KMONS:  A = ancient lich / w:2 mummy priest
 KMONS:  D = lich / w:5 ancient lich
 KMONS:  E = iron golem
 KMONS:  G = flayed ghost / hungry ghost / phantom
-####### NE monsters (horde). On a coinflip, either vampires or mummies.
+####### NE monsters (hoard). On a coinflip, either vampires or mummies.
 : if crawl.coinflip() == 0 then
 KMONS:  H = vampire mage
 KMONS:  I = vampire knight
