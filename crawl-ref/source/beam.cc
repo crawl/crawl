@@ -1591,9 +1591,8 @@ void bolt::apply_beam_conducts()
 void bolt::choose_ray()
 {
     if (!chose_ray || reflections > 0)
-        find_ray( source, target, true, ray, 0, true );
+        find_ray(source, target, true, ray, 0, true);
 }
-
 
 // Draw the bolt at p if needed.
 void bolt::draw(const coord_def& p)
