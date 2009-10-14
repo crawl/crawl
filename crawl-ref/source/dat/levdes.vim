@@ -88,7 +88,6 @@ syn match desMapTree /t/ contained
 
 syn match desMapValuable /[%*|]/ contained
 syn match desMapRune /O/ contained
-syn match desMapOrb /Z/ contained
 
 syn cluster desMapElements contains=desMapBookend,desMapWall,desMapFloor
 syn cluster desMapElements add=desMapMonst,desMapCrystalWall,desMapGold
@@ -96,7 +95,7 @@ syn cluster desMapElements add=desMapLava,desMapMetalWall,desMapDoor
 syn cluster desMapElements add=desMapStoneWall,desMapWater,desMapShallow
 syn cluster desMapElements add=desMapTrap,desMapEntry,desMapWaxWall,desMapTree
 
-syn cluster desMapElements add=desMapRune,desMapOrb,desMapValuable
+syn cluster desMapElements add=desMapRune,desMapValuable
 
 syn match desSubstArg /\S/ contained nextgroup=desSubstSep skipwhite
 syn match desSubstSep /[:=]/ contained nextgroup=desMapFrag skipwhite
@@ -147,7 +146,6 @@ if &bg == "dark"
 
   hi desMapValuable guifg=darkgreen gui=bold ctermfg=yellow
   hi desMapRune     guifg=orange gui=bold ctermfg=magenta
-  hi desMapOrb      guibg=gold guifg=black ctermfg=magenta
 else
   hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=brown
   hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green
@@ -167,7 +165,6 @@ else
 
   hi desMapValuable guifg=darkgreen gui=bold ctermfg=lightgreen
   hi desMapRune     guifg=orange gui=bold ctermfg=white
-  hi desMapOrb      guibg=gold guifg=black ctermfg=white
 endif
 
 syn sync minlines=45
