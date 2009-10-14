@@ -1899,7 +1899,9 @@ public:
                throw (std::string);
 
 public:
-    std::string filename;  // The name of the file containing options.
+    std::string filename;     // The name of the file containing options.
+    std::string basefilename; // Base (pathless) file name
+    int         line_num;     // Current line number being processed.
 
     // View options
     std::vector<feature_override> feature_overrides;
