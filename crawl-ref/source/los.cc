@@ -682,7 +682,10 @@ bool find_ray(const coord_def& source, const coord_def& target,
               bool find_shortest, bool ignore_solid)
 {
     if (target == source)
-        return false;
+    {
+        // XXX: directn expects true, even if the ray is invalid
+        return true;
+    }
 
     const int signx = ((target.x - source.x >= 0) ? 1 : -1);
     const int signy = ((target.y - source.y >= 0) ? 1 : -1);
