@@ -91,7 +91,7 @@ boulder_beetle CORPSE_BOULDER_BEETLE
 ## Frogs ('F')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_frog CORPSE_GIANT_FROG
-giant_brown_frog CORPSE_GIANT_BROWN_FROG
+giant_toad CORPSE_GIANT_TOAD
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 

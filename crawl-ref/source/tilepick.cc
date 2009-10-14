@@ -499,8 +499,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // frogs ('F')
     case MONS_GIANT_FROG:
         return TILEP_MONS_GIANT_FROG;
-    case MONS_GIANT_BROWN_FROG:
-        return TILEP_MONS_GIANT_BROWN_FROG;
+    case MONS_GIANT_TOAD:
+        return TILEP_MONS_GIANT_TOAD;
     case MONS_SPINY_FROG:
         return TILEP_MONS_SPINY_FROG;
     case MONS_BLINK_FROG:
@@ -1817,8 +1817,8 @@ static int _tileidx_corpse(int mon)
     // frogs ('F')
     case MONS_GIANT_FROG:
         return TILE_CORPSE_GIANT_FROG;
-    case MONS_GIANT_BROWN_FROG:
-        return TILE_CORPSE_GIANT_BROWN_FROG;
+    case MONS_GIANT_TOAD:
+        return TILE_CORPSE_GIANT_TOAD;
     case MONS_SPINY_FROG:
         return TILE_CORPSE_SPINY_FROG;
     case MONS_BLINK_FROG:

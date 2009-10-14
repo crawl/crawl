@@ -67,7 +67,7 @@ MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 giant iguana / w:20 giant lizard /\
          gila monster / komodo dragon
 MONS:    green rat / grey rat / orange rat / quokka / rat
-MONS:    w:90 nothing / w:30 giant frog / blink frog / giant brown frog /\
+MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
          spiny frog
 SHUFFLE: 12345
 MAP

@@ -2014,10 +2014,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_GIANT_BROWN_FROG, 'F', BROWN, "giant brown frog",
+    MONS_GIANT_TOAD, 'F', BROWN, "giant toad",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
-    890, 10, MONS_GIANT_FROG, MONS_GIANT_BROWN_FROG, MH_NATURAL, -3,
+    890, 10, MONS_GIANT_FROG, MONS_GIANT_TOAD, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     2, 11, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_CROAK, I_ANIMAL,

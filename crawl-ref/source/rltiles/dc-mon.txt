@@ -113,7 +113,7 @@ prince_ribbit MONS_PRINCE_RIBBIT
 %rim 1
 %sdir dc-mon/animals
 giant_frog MONS_GIANT_FROG
-giant_brown_frog MONS_GIANT_BROWN_FROG
+giant_toad MONS_GIANT_TOAD
 %rim 0
 blink_frog MONS_BLINK_FROG
 %rim 1

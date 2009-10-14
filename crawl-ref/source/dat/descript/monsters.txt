@@ -685,9 +685,9 @@ giant blowfly
 
 A huge and irritating fly.
 %%%%
-giant brown frog
+giant toad
 
-A very large and vicious-looking carnivorous frog. Its knobbly brown skin blends in with the rough rock of your surroundings.
+A very large and vicious-looking carnivorous toad. Its knobbly brown skin blends in with the rough rock of your surroundings.
 %%%%
 giant centipede
 
@@ -1355,7 +1355,7 @@ A large creature with a human head, the body of a lion, and the wings of a huge 
 %%%%
 spiny frog
 
-Although slightly smaller than its cousin, the giant brown frog, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs.
+Although slightly smaller than the giant toad, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs.
 %%%%
 spiny worm
 

@@ -1849,7 +1849,7 @@ enum monster_type                      // (int) menv[].type
     MONS_QUEEN_ANT,
     MONS_ANT_LARVA,
     MONS_GIANT_FROG,
-    MONS_GIANT_BROWN_FROG,
+    MONS_GIANT_TOAD,
     MONS_SPINY_FROG,                   //  180
     MONS_BLINK_FROG,
     MONS_GIANT_COCKROACH,
