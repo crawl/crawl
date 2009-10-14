@@ -4125,7 +4125,9 @@ void viewwindow(bool draw_it, bool do_updates)
 #ifdef USE_TILE
             !is_resting() &&
 #endif
-            (!you.running || Options.travel_delay > -1) && !you.asleep();
+            (!you.running || Options.travel_delay > -1
+             || you.running.is_explore() && Options.explore_delay > -1)
+            && !you.asleep();
 
         int bufcount = 0;
 

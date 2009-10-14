@@ -1611,6 +1611,8 @@ static command_type _get_running_command()
         }
         return CMD_MOVE_NOWHERE;
     }
+    else if (you.running.is_explore() && Options.explore_delay > -1)
+        delay(Options.explore_delay);
     else if (Options.travel_delay > 0)
         delay(Options.travel_delay);
 

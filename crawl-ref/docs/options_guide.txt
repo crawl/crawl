@@ -46,7 +46,7 @@ The contents of this text are:
                 symmetric_scroll, scroll_margin_x, scroll_margin_y,
                 scroll_margin
 4-g     Travel and Exploration.
-                travel_delay, travel_avoid_terrain,
+                travel_delay, explore_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_improved,
                 tc_reachable, tc_dangerous, tc_disconnected,
                 tc_excluded, tc_exclude_circle, travel_stop_message, 
@@ -775,9 +775,18 @@ scroll_margin = 2
 -------------------------------
 
 travel_delay = 20
-        How long travel waits after each move (milliseconds). Depends on
-        platform. Setting to -1 will jump to end of travel - you will
-        not see the individual moves.
+        How long travel waits after each move (milliseconds), and also
+        how long auto-explore waits after each move unless explore_delay
+        is set. Depends on platform. Setting to -1 will jump to end of
+        travel - you will not see the individual moves.
+
+explore_delay = -1
+        How long auto-explore waits after each move (milliseconds). Depends on
+        platform.  In particular, setting travel_delay = -1 and
+        explore_delay = 20 means you will see the invividual moves of
+        autoexplore, but not the invidivual moves of other forms of travel.
+        Setting to -1 means the auto-explore delay will be the same as
+        travel_delay.
 
 travel_avoid_terrain = (shallow water | deep water)
         Prevent travel from routing through shallow water. By default,

@@ -1423,12 +1423,17 @@ command_type travel()
                 stop_running();
             }
         }
+        else if (you.running.is_explore() && Options.explore_delay > -1)
+            delay(Options.explore_delay);
         else if (Options.travel_delay > 0)
             delay(Options.travel_delay);
     }
 
-    if (!you.running && Options.travel_delay == -1)
+    if (!you.running && Options.travel_delay == -1
+        && (!you.running.is_explore() || Options.explore_delay == -1))
+    {
         viewwindow(true, false);
+    }
 
     if (!you.running)
         return CMD_NO_CMD;

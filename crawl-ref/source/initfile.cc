@@ -780,6 +780,7 @@ void game_options::reset_options()
     pickup_thrown          = true;
 
     travel_delay           = 20;
+    explore_delay          = -1;
     travel_stair_cost      = 500;
 
     arena_delay            = 600;
@@ -2790,6 +2791,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             travel_delay = -1;
         if (travel_delay > 2000)
             travel_delay = 2000;
+    }
+    else if (key == "explore_delay")
+    {
+        // Read explore delay in milliseconds.
+        explore_delay = atoi( field.c_str() );
+        if (explore_delay < -1)
+            explore_delay = -1;
+        if (explore_delay > 2000)
+            explore_delay = 2000;
     }
     else if (key == "level_map_cursor_step")
     {

@@ -160,6 +160,7 @@ drop_filter = useless_item
 ##### 4-g	Travel and Exploration #################
 #
 # travel_delay = 20
+# explore_delay = -1
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy   = false

@@ -2061,6 +2061,7 @@ public:
     bool        pickup_thrown;  // Pickup thrown missiles
     bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves
+    int         explore_delay;  // How long to pause between explore moves
 
     int         arena_delay;
     bool        arena_dump_msgs;
