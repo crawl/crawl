@@ -55,7 +55,7 @@ int spell_enhancement( unsigned int typeflags );
 /* ***********************************************************************
  * called from: it_use3 - spell
  * *********************************************************************** */
-void exercise_spell( spell_type spell_ex, bool spc, bool divide );
+void exercise_spell(spell_type spell_ex, bool spc, bool divide);
 
 
 // last updaetd 12may2000 {dlb}

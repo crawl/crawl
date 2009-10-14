@@ -2065,7 +2065,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     // Escape spells.
     case SPELL_BLINK:
-        random_blink(true);
+        random_blink(god != GOD_XOM);
         break;
 
     case SPELL_TELEPORT_SELF:
@@ -2191,7 +2191,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     return (SPRET_SUCCESS);
 }
 
-void exercise_spell( spell_type spell, bool spc, bool success )
+void exercise_spell(spell_type spell, bool spc, bool success)
 {
     // (!success) reduces skill increase for miscast spells
     int skill;
