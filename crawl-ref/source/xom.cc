@@ -443,7 +443,7 @@ static bool _spell_weapon_check(const spell_type spell)
     }
 }
 
-static bool _teleportation_check(const spell_type spell)
+static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
 {
     switch (spell)
     {
@@ -2198,7 +2198,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     else if (x_chance_in_y(13, sever) && you.level_type != LEVEL_ABYSS)
     {
         // Try something else if teleportation is impossible.
-        if (!_teleportation_check(SPELL_TELEPORT_SELF))
+        if (!_teleportation_check())
             return (XOM_DID_NOTHING);
 
         // This is not very interesting if the level is already fully
@@ -3273,7 +3273,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         else if (x_chance_in_y(10, sever) && you.level_type != LEVEL_ABYSS)
         {
             // Try something else if teleportation is impossible.
-            if (!_teleportation_check(SPELL_TELEPORT_SELF))
+            if (!_teleportation_check())
                 return (XOM_DID_NOTHING);
 
             // This is not particularly exciting if the level is already
