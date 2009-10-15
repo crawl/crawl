@@ -497,13 +497,9 @@ static double _slope_factor(const ray_def &ray)
     return (slope + ray.slope) / 2.0;
 }
 
-static bool _superior_ray(int shortest, int imbalance,
-                          int raylen, int rayimbalance,
+static bool _superior_ray(int imbalance, int rayimbalance,
                           double slope_diff, double ray_slope_diff)
 {
-    if (shortest != raylen)
-        return (shortest > raylen);
-
     if (imbalance != rayimbalance)
         return (imbalance > rayimbalance);
 
@@ -564,15 +560,16 @@ struct trans
 
 // Find ray in positive quadrant.
 bool _find_ray_se(const coord_def& target, bool allow_fallback,
-                  ray_def& ray, int cycle_dir, bool find_shortest,
+                  ray_def& ray, int cycle_dir, bool find_best,
                   bool ignore_solid, trans t)
 {
     ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
 
-    int shortest    = INFINITE_DISTANCE;
+    bool found = false;
     int imbalance   = INFINITE_DISTANCE;
     const double want_slope = _calc_slope(target.x, target.y);
     double slope_diff       = VERTICAL_SLOPE * 10.0;
+    double ray_slope_diff;
     std::vector<coord_def> unaliased_ray;
 
     for (unsigned int fray = 0; fray < fullrays.size(); ++fray)
@@ -586,7 +583,7 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
             if (lray[cellray] != target)
                 continue;
 
-            if (find_shortest)
+            if (find_best)
             {
                 unaliased_ray.clear();
                 unaliased_ray.push_back(coord_def(0, 0));
@@ -595,7 +592,6 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
             // Check if we're blocked so far.
             bool blocked = false;
             coord_def c1, c3;
-            int real_length = 0;
             for (unsigned int inray = 0; inray <= cellray; ++inray)
             {
                 c3 = ray_coords[inray + fullrays[fray].start];
@@ -606,7 +602,7 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
                     break;
                 }
 
-                if (find_shortest)
+                if (find_best)
                 {
 
                     // We've moved at least two steps if inray > 0.
@@ -614,59 +610,49 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
                     {
                         // Check for a perpendicular corner on the ray and
                         // pretend that it's a diagonal.
-                        if ((c3 - c1).abs() != 2)
-                            ++real_length;
-                        else
+                        if ((c3 - c1).abs() == 2)
                         {
                             // c2 was a dud move, pop it off
                             unaliased_ray.pop_back();
                         }
                     }
-                    else
-                        ++real_length;
 
                     unaliased_ray.push_back(c3);
-                    c1 = unaliased_ray[real_length - 1];
+                    c1 = unaliased_ray[unaliased_ray.size() - 2];
                 }
             }
 
             // If this ray is a candidate for shortest, calculate
             // the imbalance.
             int cimbalance = 0;
-            if (!blocked && find_shortest && shortest >= real_length)
-                cimbalance = _imbalance(unaliased_ray);
-
-            const double ray_slope_diff = find_shortest ?
-                fabs(_slope_factor(lray) - want_slope) : 0.0;
-
-            if (!blocked && find_shortest)
+            if (!blocked && find_best)
             {
-                // any unaliased ray should have the same length
-                ASSERT(real_length == target.rdist());
+                cimbalance = _imbalance(unaliased_ray);
+                ray_slope_diff = fabs(_slope_factor(lray) - want_slope);
             }
 
-            if (blocked || (find_shortest &&
-                            !_superior_ray(shortest, imbalance,
-                                           real_length, cimbalance,
+            if (blocked || (find_best &&
+                            !_superior_ray(imbalance, cimbalance,
                                            slope_diff, ray_slope_diff)))
             {
                 continue;
             }
 
             // Success!
+            found = true;
+
             ray             = lray;
             ray.fullray_idx = fullray;
 
-            shortest   = real_length;
             imbalance  = cimbalance;
             slope_diff = ray_slope_diff;
 
-            if (!find_shortest)
+            if (!find_best)
                 return (true);
         }
     }
 
-    if (find_shortest && shortest != INFINITE_DISTANCE)
+    if (find_best && found)
         return (true);
 
     if (allow_fallback)
