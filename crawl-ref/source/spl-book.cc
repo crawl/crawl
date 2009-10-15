@@ -137,6 +137,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_CALL_CANINE_FAMILIAR,
      SPELL_SUMMON_UGLY_THING,
      SPELL_SHADOW_CREATURES,
+     SPELL_HAUNT,
      SPELL_SUMMON_HORRIBLE_THINGS,
      SPELL_NO_SPELL,
      },
