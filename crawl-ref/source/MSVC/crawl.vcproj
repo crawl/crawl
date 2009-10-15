@@ -718,6 +718,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\l_los.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_los.h"
+			>
+		</File>
+		<File
 			RelativePath="..\lev-pand.cc"
 			>
 		</File>
