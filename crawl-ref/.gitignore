@@ -1,6 +1,7 @@
 *.[oa]
 *.ann
 *.diff
+*.DS_Store
 saves
 morgue
 *.orig
