@@ -17,7 +17,7 @@
 # after the Mines until I realized the Halls are significantly harder. A
 # welcoming party on the other side will hopefully warn the player about this.
 #
-# Honor this intention. For instance, put lots of space between the monsters
+# Honour this intention. For instance, put lots of space between the monsters
 # and the stairs, so the players have many turns to realize their mistake.
 # Note that designing can be a challenge with the eight space LOS. What might
 # make the player realize it's better to flee: facing a nasty summon, taking
@@ -48,22 +48,22 @@ ENDMAP
 NAME:    elf_arrival_001
 PLACE:   Elf:1
 ORIENT:  west
+TAGS:    patrolling
 SHUFFLE: asd/x$=
 SHUFFLE: fgh/x$=
 SUBST:   a = x, s = x, d = x, f = x, g = x, h = x
 MONS:    deep elf soldier
-MONS:    deep elf mage, deep elf conjurer / deep elf priest / deep elf fighter
-MONS:    deep elf summoner / deep elf knight w:2
+MONS:    deep elf mage / deep elf priest / deep elf summoner w:5
 MAP
-xxxxxxxxxxxxxxxxxxxaaa
-xxxxxxxxxxxxxxxxxxxasa
-xxxxxxxxxxxxxxxxxxxxdx
-x...xxxxx..12..3.....@
-x.{........m12..m.4..x
-x...xxxxx..12..3.....@
-xxxxxxxxxxxxxxxxxxxxhx
-xxxxxxxxxxxxxxxxxxxfgf
-xxxxxxxxxxxxxxxxxxxfff
+xxxxxxxxxxxxxxxaaa
+xxxxxxxxxxxxxxxasa
+xxxxxxxxxxxxxxxxdx
+x...xxxxx..1.....@
+x.{........G1.G2.x
+x...xxxxx..1.....@
+xxxxxxxxxxxxxxxxhx
+xxxxxxxxxxxxxxxfgf
+xxxxxxxxxxxxxxxfff
 ENDMAP
 
 ##############################################################################
@@ -71,15 +71,14 @@ ENDMAP
 NAME:    elf_arrival_002
 PLACE:   Elf:1
 ORIENT:  south
+TAGS:    patrolling
 MONS:    deep elf soldier, deep elf mage
-MONS:    deep elf conjurer / deep elf priest / deep elf fighter
-MONS:    deep elf summoner / deep elf knight w:2
 MAP
 xxxxx@xxx@xxx@xxxxx
 xxxx...........xxxx
-xx....G.3.3.G....xx
+xx....G..2..G....xx
 x...1.........1...x
-x.G...2..4..2...G.x
+x.G.............G.x
 x.................x
 x.......G.G.......x
 x........[........x
@@ -94,8 +93,9 @@ ENDMAP
 NAME:    eino_elf_arrival_customs
 ORIENT:  southwest
 PLACE:   Elf:1
-MONS:    deep elf soldier / deep elf mage / deep elf conjurer w:2
-MONS:    deep elf summoner
+TAGS:    patrolling
+MONS:    deep elf soldier / deep elf mage w:5
+MONS:    deep elf summoner / nothing
 MAP
 xxxxxxxxx
 x.+.....x
@@ -104,9 +104,9 @@ x.m.xxx.x
 x.x..x..x
 x.m1..1.x
 x.x.2x..x
-x.m1xxx1x
-x.x.1x1.x
-x{m.1.2.+
+x.m1xxx.x
+x.x.1x..x
+x{m...2.+
 xxxxxxxxx
 ENDMAP
 
@@ -115,12 +115,13 @@ ENDMAP
 NAME:    eino_elf_arrival_shootout
 PLACE:   Elf:1
 ORIENT:  float
-MONS:    deep elf soldier / deep elf mage
-MONS:    deep elf conjurer / deep elf priest / w:2 deep elf summoner
+TAGS:    patrolling
+MONS:    deep elf soldier / deep elf mage w:3 / nothing w:6
+MONS:    deep elf mage / deep elf priest w:3 / nothing w:6
 MAP
 xxxxxxxx@@@xxxxxxxx
 xxxx...........xxxx
-xx......2.1......xx
+xx.......2.......xx
 x.....1.....1.....x
 xxxx.....G.....xxxx
 xxxxxxxx...xxxxxxxx
@@ -128,18 +129,19 @@ xxx[.....{.....(xxx
 xxxxxxxx...xxxxxxxx
 xxxx.....G.....xxxx
 x.....1.....1.....x
-xx......1.2......xx
+xx.......2.......xx
 xxxx...........xxxx
 xxxxxxxx@@@xxxxxxxx
 ENDMAP
 
 ##############################################################################
 
-NAME:   eino_elf_arrival_pack_of_fighters_taking_a_sip
+NAME:   eino_elf_arrival_sip
 PLACE:  Elf:1
 ORIENT: south
+TAGS:   patrolling
 TAGS:   no_monster_gen
-KMONS:  Z = deep elf fighter / deep elf soldier w:5
+KMONS:  Z = deep elf soldier / nothing w:7
 KFEAT:  Z = W
 MAP
  .........
@@ -160,15 +162,15 @@ ENDMAP
 NAME:   eino_elf_arrival_the_gate
 PLACE:  Elf:1
 ORIENT: south
-MONS:   deep elf soldier / deep elf mage
-MONS:   deep elf conjurer / deep elf priest / deep elf fighter
-MONS:   deep elf summoner / deep elf priest
+TAGS:   patrolling
+MONS:   deep elf soldier / deep elf mage w:5
+MONS:   deep elf mage / deep elf priest w:3
 MAP
 x.........x
 @.........@
-x...3..2..x
-x..2.1.1..x
-x.G.1.1.G.x
+x....2....x
+x...1.1...x
+x.G..1..G.x
 x.........x
 xxx+++++xxx
 xxx.....xxx
@@ -185,22 +187,22 @@ ENDMAP
 NAME:    eino_elf_arrival_altar
 ORIENT:  west
 PLACE:   Elf:1
-SHUFFLE: 1/2, 4/5
+TAGS:    patrolling
+SHUFFLE: 1/2
 KFEAT:   C = altar_vehumet
 MONS:    deep elf soldier, deep elf mage
 MONS:    deep elf priest
-MONS:    deep elf conjurer, deep elf summoner
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
 xxxxxxxxxxxxx...xxxxxx.....xxx
 xxxxxxxxxxx.22x...xx.........x
-xxxxxxxxx...xxxxx.x..1.5.....x
-x...xxxxx.xxxxxxx.m...3......x
+xxxxxxxxx...xxxxx.x..........x
+x...xxxxx.xxxxxxx.m..........x
 x.[.......xxxxxx....1..GmG...@
-x....xxxxxxxxxxx..m..C.mbm...@
-x.{.......xxxxxx....23.GmG...@
-x...xxxxx.xxxxxxx.m...4......x
-xxxxxxxxx...xxxxx.x.2........x
+x....xxxxxxxxxxx..m..C3mbm...@
+x.{.......xxxxxx....2..GmG...@
+x...xxxxx.xxxxxxx.m..........x
+xxxxxxxxx...xxxxx.x..........x
 xxxxxxxxxxx.11x...xx.........x
 xxxxxxxxxxxxx...xxxxxx.....xxx
 xxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
