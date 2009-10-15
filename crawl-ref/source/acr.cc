@@ -3245,12 +3245,7 @@ static void _open_door(coord_def move, bool check_confused)
             excludes.push_back(dc);
     }
 
-    if (!excludes.empty())
-    {
-        mark_all_excludes_non_updated();
-        for (unsigned int i = 0; i < excludes.size(); ++i)
-            update_exclusion_los(excludes[i]);
-    }
+    update_exclusion_los(excludes);
 
     you.turn_is_over = true;
 }
@@ -3407,12 +3402,9 @@ static void _close_door(coord_def move)
             if (is_excluded(dc))
                 excludes.push_back(dc);
         }
-        if (!excludes.empty())
-        {
-            mark_all_excludes_non_updated();
-            for (unsigned int i = 0; i < excludes.size(); ++i)
-                update_exclusion_los(excludes[i]);
-        }
+
+        update_exclusion_los(excludes);
+
         you.turn_is_over = true;
     }
     else if (you.confused())

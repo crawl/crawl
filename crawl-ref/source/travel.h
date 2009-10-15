@@ -58,8 +58,8 @@ void init_travel_terrain_check(bool check_race_equip = true);
 void stop_running(void);
 void travel_init_new_level();
 void cycle_exclude_radius(const coord_def &p);
-void toggle_exclude(const coord_def &p, bool autoexcl = false);
-void set_exclude(const coord_def &p, int radius2, bool autoexcl = false);
+void del_exclude(const coord_def &p);
+void set_exclude(const coord_def &p, int radius = LOS_RADIUS, bool autoexcl = false);
 void maybe_remove_autoexclusion(const coord_def &p);
 std::string get_exclusion_desc();
 void clear_excludes();
@@ -347,8 +347,7 @@ public:
 };
 
 void init_exclusion_los();
-void update_exclusion_los(const coord_def &p);
-void mark_all_excludes_non_updated();
+void update_exclusion_los(std::vector<coord_def> changed);
 
 struct travel_exclude
 {
@@ -359,18 +358,15 @@ struct travel_exclude
     env_show_grid show;        // los from exclusion centre
     bool          uptodate;    // Is show up to date?
 
+    int radius_sq() const;
     void set_exclude_show();
+    bool affects(const coord_def& p) const;
 
     travel_exclude(const coord_def &p, int r = LOS_RADIUS,
                    bool autoexcl = false, int mons = NON_MONSTER)
         : pos(p), radius(r), autoexclude(autoexcl), mon(mons)
     {
         set_exclude_show();
-    }
-
-    int radius_sq() const
-    {
-        return (radius * radius + 1);
     }
 };
 

@@ -2780,7 +2780,7 @@ void set_auto_exclude(const monsters *mon)
 {
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
-        toggle_exclude(mon->pos(), true);
+        set_exclude(mon->pos(), true);
 #ifdef USE_TILE
         viewwindow(true, false);
 #endif
@@ -2792,9 +2792,9 @@ void set_auto_exclude(const monsters *mon)
 // player in sight. If sleepy is true, stationary monsters are ignored.
 void remove_auto_exclude(const monsters *mon, bool sleepy)
 {
-    if (need_auto_exclude(mon, sleepy) && is_exclude_root(mon->pos()))
+    if (need_auto_exclude(mon, sleepy))
     {
-        toggle_exclude(mon->pos());
+        del_exclude(mon->pos());
 #ifdef USE_TILE
         viewwindow(true, false);
 #endif

@@ -2560,10 +2560,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
         case CMD_MAP_EXCLUDE_AREA:
         {
             const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
-            if (is_exclude_root(p))
-                cycle_exclude_radius(p);
-            else
-                toggle_exclude(p);
+            cycle_exclude_radius(p);
 
             _reset_travel_colours(features);
             break;
@@ -4150,7 +4147,7 @@ void viewwindow(bool draw_it, bool do_updates)
                 const coord_def sep = ep - coord_def(1,1);
 #endif
 
-                if (in_bounds(gc) && see_grid(gc) && is_exclude_root(gc))
+                if (in_bounds(gc) && see_grid(gc))
                     maybe_remove_autoexclusion(gc);
 
                 // Print tutorial messages for features in LOS.
@@ -4367,13 +4364,7 @@ void viewwindow(bool draw_it, bool do_updates)
             }
         }
 
-        if (!update_excludes.empty())
-        {
-            mark_all_excludes_non_updated();
-
-            for (unsigned int k = 0; k < update_excludes.size(); k++)
-                update_exclusion_los(update_excludes[k]);
-        }
+        update_exclusion_los(update_excludes);
 
         // Leaving it this way because short flashes can occur in long ones,
         // and this simply works without requiring a stack.

@@ -278,7 +278,18 @@ bool is_traversable(dungeon_feature_type grid)
 
 struct los_param_excl : public los_param_trans
 {
-    los_param_excl(const coord_def& c) : los_param_trans(c) {}
+    int radius_sq;
+
+    los_param_excl(const coord_def& c, int r)
+        : los_param_trans(c), radius_sq(r)
+    {
+    }
+
+    bool los_bounds(const coord_def& p) const
+    {
+        return (p.abs() <= radius_sq &&
+                los_param_trans::los_bounds(p));
+    }
 
     unsigned appearance(const coord_def& p) const
     {
@@ -310,10 +321,23 @@ struct los_param_excl : public los_param_trans
     }
 };
 
+int travel_exclude::radius_sq() const
+{
+    return (radius > 0 ? radius*radius + 1 : 0);
+}
+
 void travel_exclude::set_exclude_show()
 {
-    losight(show, los_param_excl(pos));
+    losight(show, los_param_excl(pos, radius_sq()));
     uptodate = true;
+}
+
+bool travel_exclude::affects(const coord_def& p) const
+{
+    if (!uptodate)
+        mprf(MSGCH_ERROR, "exclusion not up-to-date: e (%d,%d) p (%d,%d)",
+             pos.x, pos.y, p.x, p.y);
+    return (see_grid(show, pos, p));
 }
 
 void init_exclusion_los()
@@ -322,32 +346,42 @@ void init_exclusion_los()
         curr_excludes[i].set_exclude_show();
 }
 
-void update_exclusion_los(const coord_def &p)
+void _mark_excludes_non_updated(const coord_def &p)
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        if (!curr_excludes[i].uptodate
-            && (curr_excludes[i].pos - p).abs() <= LOS_RADIUS * LOS_RADIUS + 1)
-        {
-            curr_excludes[i].set_exclude_show();
-        }
+        curr_excludes[i].uptodate = curr_excludes[i].uptodate &&
+            (curr_excludes[i].pos - p).abs() <= curr_excludes[i].radius_sq();
 }
 
-void mark_all_excludes_non_updated()
+void _update_exclusion_los()
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        curr_excludes[i].uptodate = false;
+        if (!curr_excludes[i].uptodate)
+            curr_excludes[i].set_exclude_show();
+}
+
+/*
+ * Update exclusions' LOS to reflect changes within their range.
+ * "changed" is a list of coordinates that have been changed.
+ * Only exclusions that might have one of the changed points
+ * in view are updated.
+ */
+void update_exclusion_los(std::vector<coord_def> changed)
+{
+    if (changed.empty())
+        return;
+
+    for (unsigned int i = 0; i < changed.size(); ++i)
+        _mark_excludes_non_updated(changed[i]);
+    _update_exclusion_los();
 }
 
 static bool _is_excluded(const coord_def &p,
                          const std::vector<travel_exclude> &exc)
 {
-    for (int i = 0, count = exc.size(); i < count; ++i)
-        if ((exc[i].pos - p).abs() < exc[i].radius_sq()
-            && see_grid(exc[i].show, exc[i].pos, p))
-        {
+    for (unsigned int i = 0; i < exc.size(); ++i)
+        if (exc[i].affects(p))
             return (true);
-        }
-
     return (false);
 }
 
@@ -358,10 +392,9 @@ bool is_excluded(const coord_def &p)
 
 static travel_exclude *_find_exclude_root(const coord_def &p)
 {
-    for (int i = 0, count = curr_excludes.size(); i < count; ++i)
+    for (unsigned int i = 0; i < curr_excludes.size(); ++i)
         if (curr_excludes[i].pos == p)
             return (&curr_excludes[i]);
-
     return (NULL);
 }
 
@@ -372,7 +405,7 @@ bool is_exclude_root(const coord_def &p)
 
 #ifdef USE_TILE
 // update Gmap for squares surrounding exclude centre
-static void _tile_exclude_gmap_update(const coord_def p)
+static void _tile_exclude_gmap_update(const coord_def &p)
 {
     for (int x = -8; x <= 8; x++)
         for (int y = -8; y <= 8; y++)
@@ -385,6 +418,24 @@ static void _tile_exclude_gmap_update(const coord_def p)
         }
 }
 #endif
+
+static void _exclude_update()
+{
+    if (can_travel_interlevel())
+    {
+        LevelInfo &li = travel_cache.get_level_info(level_id::current());
+        li.update();
+    }
+    set_level_exclusion_annotation(get_exclusion_desc());
+}
+
+static void _exclude_update(const coord_def &p)
+{
+#ifdef USE_TILE
+    _tile_exclude_gmap_update(p);
+#endif
+    _exclude_update();
+}
 
 const char *run_mode_name(int runmode)
 {
@@ -420,55 +471,46 @@ void clear_excludes()
 
 #ifdef USE_TILE
     for (int i = curr_excludes.size()-1; i >= 0; i--)
-         toggle_exclude(curr_excludes[i].pos);
+        _tile_exclude_gmap_update(curr_excludes[i].pos);
 #endif
+
     curr_excludes.clear();
     clear_level_exclusion_annotation();
 
-    if (can_travel_interlevel())
-    {
-        LevelInfo &li = travel_cache.get_level_info(level_id::current());
-        li.update();
-    }
+    _exclude_update();
 }
 
+// Cycles the radius of an exclusion, including "off" state.
 void cycle_exclude_radius(const coord_def &p)
 {
+    // XXX: scanning through curr_excludes twice
     if (travel_exclude *exc = _find_exclude_root(p))
     {
-        int &curr_radius = exc->radius;
-
-        switch (curr_radius)
+        if (exc->radius == LOS_RADIUS)
+            set_exclude(p, 0);
+        else
         {
-        case LOS_RADIUS: curr_radius = 1; break;
-        case 1         : set_exclude(p, 0); break;
-        }
-
-#ifdef USE_TILE
-        _tile_exclude_gmap_update(p);
-#endif
-
-        if (can_travel_interlevel())
-        {
-            LevelInfo &li = travel_cache.get_level_info(level_id::current());
-            li.update();
+            ASSERT(exc->radius == 0);
+            del_exclude(p);
         }
     }
-}
-
-void toggle_exclude(const coord_def &p, bool autoexcl)
-{
-    if (is_exclude_root(p))
-        set_exclude(p, 0);
     else
-        set_exclude(p, LOS_RADIUS, autoexcl);
-
-#ifdef USE_TILE
-    _tile_exclude_gmap_update(p);
-#endif
-    set_level_exclusion_annotation(get_exclusion_desc());
+        set_exclude(p, LOS_RADIUS);
 }
 
+// Remove a possible exclude.
+void del_exclude(const coord_def &p)
+{
+    for (unsigned int i = 0; i < curr_excludes.size(); ++i)
+        if (curr_excludes[i].pos == p)
+        {
+            curr_excludes.erase(curr_excludes.begin() + i);
+            break;
+        }
+    _exclude_update(p);
+}
+
+// Set or update an exclude.
 void set_exclude(const coord_def &p, int radius, bool autoexcl)
 {
     // Sanity checks; excludes can be set in Pan and regular dungeon
@@ -479,24 +521,10 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl)
     if (!in_bounds(p))
         return;
 
-    if (is_exclude_root(p))
+    if (travel_exclude *exc = _find_exclude_root(p))
     {
-        for (int i = 0, count = curr_excludes.size(); i < count; ++i)
-        {
-            if (curr_excludes[i].pos == p)
-            {
-                if (!radius)
-                {
-                    curr_excludes.erase( curr_excludes.begin() + i );
-                    break ;
-                }
-                else
-                {
-                    curr_excludes[i].radius = radius;
-                    return;
-                }
-            }
-        }
+        exc->radius = radius;
+        exc->set_exclude_show();
     }
     else
     {
@@ -508,38 +536,22 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl)
         curr_excludes.push_back(travel_exclude(p, radius, autoexcl, montype));
     }
 
-    if (can_travel_interlevel())
-    {
-        LevelInfo &li = travel_cache.get_level_info(level_id::current());
-        li.update();
-    }
+    _exclude_update(p);
 }
 
 // If a grid that was placed automatically no longer contains the original
 // monster (or it is invisible), remove the exclusion.
 void maybe_remove_autoexclusion(const coord_def &p)
 {
-    ASSERT(in_bounds(p) && see_grid(p) && is_exclude_root(p));
-
-    for (int i = 0, count = curr_excludes.size(); i < count; ++i)
+    if (travel_exclude *exc = _find_exclude_root(p))
     {
-        if (curr_excludes[i].pos == p)
-        {
-            if (curr_excludes[i].autoexclude)
-            {
-                const monsters *m = monster_at(p);
-                if (!m || !you.can_see(m) || m->type != curr_excludes[i].mon)
-                {
-                    set_exclude(p, 0);
-                    set_level_exclusion_annotation(get_exclusion_desc());
-                }
-            }
-            break;
-        }
+        const monsters *m = monster_at(p);
+        if (exc->autoexclude && (!m || !you.can_see(m) || m->type != exc->mon))
+            del_exclude(p);
     }
 }
 
-// Lists alls exclusions on the current level.
+// Lists all exclusions on the current level.
 std::string get_exclusion_desc()
 {
     std::vector<std::string> monsters;
