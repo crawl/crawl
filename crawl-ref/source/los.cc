@@ -539,7 +539,6 @@ static int _imbalance(const std::vector<coord_def>& ray)
 // Find a nonblocked ray from source to target. Return false if no
 // such ray could be found, otherwise return true and fill ray
 // appropriately.
-// If allow_fallback is true, fall back to a center-to-center ray
 // if range is too great or all rays are blocked.
 // If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
 // assume that ray is appropriately filled in, and look for the next
