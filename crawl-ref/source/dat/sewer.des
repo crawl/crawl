@@ -420,13 +420,13 @@ SUBST:    - = W..
 : sewer_milestone(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
-SHUFFLE:  23/32
+SHUFFLE:  23
 MONS:     giant bat / giant mosquito w:2 / nothing w:2
 MONS:     patrolling jackal
 MONS:     worm / nothing w:3
 MONS:     ooze / nothing w:2
 # chances are good you'll find something to cross the deep water
-SHUFFLE:  de/ed
+SHUFFLE:  de
 ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
           scroll of blinking / scroll of identify / nothing
 ITEM:     potion of levitation w:50 / potion of invisibility / \
