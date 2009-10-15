@@ -559,8 +559,8 @@ struct trans
 };
 
 // Find ray in positive quadrant.
-bool _find_ray_se(const coord_def& target, bool allow_fallback,
-                  ray_def& ray, int cycle_dir, bool find_best,
+bool _find_ray_se(const coord_def& target, ray_def& ray,
+                  int cycle_dir, bool find_best,
                   bool ignore_solid, trans t)
 {
     ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
@@ -569,7 +569,7 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
     int imbalance   = INFINITE_DISTANCE;
     const double want_slope = _calc_slope(target.x, target.y);
     double slope_diff       = VERTICAL_SLOPE * 10.0;
-    double ray_slope_diff;
+    double ray_slope_diff = slope_diff;
     std::vector<coord_def> unaliased_ray;
 
     for (unsigned int fray = 0; fray < fullrays.size(); ++fray)
@@ -652,33 +652,12 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
         }
     }
 
-    if (find_best && found)
-        return (true);
-
-    if (allow_fallback)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        coord_def src = t.transform(coord_def(0,0));
-        coord_def trg = t.transform(target);
-        mprf(MSGCH_DIAGNOSTICS,
-             "falling back in ray search: (%d,%d) to (%d,%d)",
-             src.x, src.y, trg.x, trg.y);
-#endif
-        ray.accx = 0.5;
-        ray.accy = 0.5;
-        if (target.x == 0)
-            ray.slope = VERTICAL_SLOPE;
-        else
-            ray.slope  = target.y / target.x;
-        ray.fullray_idx = -1;
-        return (true);
-    }
-    return (false);
+    return (found);
 }
 
 bool find_ray(const coord_def& source, const coord_def& target,
-              bool allow_fallback, ray_def& ray, int cycle_dir,
-              bool find_shortest, bool ignore_solid)
+              ray_def& ray, int cycle_dir,
+              bool find_best, bool ignore_solid)
 {
     if (target == source)
     {
@@ -707,8 +686,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     ray.quadx = 1;
     ray.quady = 1;
 
-    if (!_find_ray_se(abs, allow_fallback, ray, cycle_dir,
-                      find_shortest, ignore_solid, t))
+    if (!_find_ray_se(abs, ray, cycle_dir, find_best, ignore_solid, t))
         return false;
 
     if (signx < 0)
@@ -722,6 +700,16 @@ bool find_ray(const coord_def& source, const coord_def& target,
     _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
 
     return true;
+}
+
+void fallback_ray(const coord_def& source, const coord_def& target,
+                  ray_def& ray)
+{
+    ray.accx = source.x + 0.5;
+    ray.accy = source.y + 0.5;
+    coord_def diff = target - source;
+    ray.slope = _calc_slope(std::abs(diff.x), std::abs(diff.y));
+    _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
 }
 
 // Count the number of matching features between two points along
@@ -739,7 +727,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     int     max_dist = grid_distance(source, target);
 
     // We don't need to find the shortest beam, any beam will suffice.
-    find_ray( source, target, true, ray, 0, false, true );
+    fallback_ray(source, target, ray);
 
     if (exclude_endpoints && ray.pos() == source)
     {

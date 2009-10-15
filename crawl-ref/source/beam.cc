@@ -1591,7 +1591,10 @@ void bolt::apply_beam_conducts()
 void bolt::choose_ray()
 {
     if (!chose_ray || reflections > 0)
-        find_ray(source, target, true, ray, 0, true);
+    {
+        if (!find_ray(source, target, ray, 0, true))
+            fallback_ray(source, target, ray);
+    }
 }
 
 // Draw the bolt at p if needed.
@@ -2844,7 +2847,7 @@ bool check_line_of_sight(const coord_def& source, const coord_def& target)
     // Note that we are guaranteed to be within the player LOS range,
     // so fallback is unnecessary.
     ray_def ray;
-    return find_ray(source, target, false, ray);
+    return find_ray(source, target, ray);
 }
 
 // When a mimic is hit by a ranged attack, it teleports away (the slow

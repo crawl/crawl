@@ -410,7 +410,8 @@ static void _direction_again(dist& moves, targetting_type restricts,
         moves.target = you.prev_grd_targ;
 
         ray_def ray;
-        find_ray(you.pos(), moves.target, true, ray, 0, true);
+        if (!find_ray(you.pos(), moves.target, ray, 0, true))
+            fallback_ray(you.pos(), moves.target, ray);
         moves.ray = ray;
     }
     else if (you.prev_targ == MHITYOU)
@@ -446,7 +447,8 @@ static void _direction_again(dist& moves, targetting_type restricts,
         moves.target = montarget->pos();
 
         ray_def ray;
-        find_ray(you.pos(), moves.target, true, ray, 0, true);
+        if (!find_ray(you.pos(), moves.target, ray, 0, true))
+            fallback_ray(you.pos(), moves.target, ray);
         moves.ray = ray;
     }
 
@@ -968,7 +970,8 @@ static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
     ray_def ray;
-    find_ray(you.pos(), where, true, ray, 0, true);
+    if (!find_ray(you.pos(), where, ray, 0, true))
+        fallback_ray(you.pos(), where, ray);
     ray.advance_through(where);
 
     while (ray.pos() != where)
@@ -1048,7 +1051,8 @@ void direction(dist& moves, targetting_type restricts,
 
     // If we show the beam on startup, we have to initialise it.
     if (show_beam)
-        find_ray(you.pos(), moves.target, true, ray);
+        if (!find_ray(you.pos(), moves.target, ray))
+            fallback_ray(you.pos(), moves.target, ray);
 
     bool skip_iter = false;
     bool found_autotarget = false;
@@ -1319,8 +1323,12 @@ void direction(dist& moves, targetting_type restricts,
 
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
-            show_beam = find_ray(you.pos(), moves.target,
-                                 true, ray, (show_beam ? 1 : 0));
+            // XXX: show_beam was conditional on find_ray
+            //      with fallback succeeding.
+            if (!find_ray(you.pos(), moves.target,
+                          ray, (show_beam ? 1 : 0)))
+                fallback_ray(you.pos(), moves.target, ray);
+            show_beam = true;
             need_beam_redraw = true;
             break;
 #endif
@@ -1340,8 +1348,12 @@ void direction(dist& moves, targetting_type restricts,
                     break;
                 }
 
-                show_beam = find_ray(you.pos(), moves.target,
-                                     true, ray, 0, true);
+                // XXX: show_beam was conditional on find_ray
+                //      with fallback succeeding.
+                if (!find_ray(you.pos(), moves.target,
+                              ray, 0, true))
+                    fallback_ray(you.pos(), moves.target, ray);
+                show_beam = true;
                 need_beam_redraw = show_beam;
             }
             break;
@@ -1693,8 +1705,10 @@ void direction(dist& moves, targetting_type restricts,
 
             if (show_beam)
             {
-                show_beam = find_ray(you.pos(), moves.target,
-                                     true, ray, 0, true);
+                // XXX: show_beam was conditional on find_ray
+                //      with fallback succeeding.
+                if (!find_ray(you.pos(), moves.target, ray, 0, true))
+                    fallback_ray(you.pos(), moves.target, ray);
             }
         }
 
@@ -1720,10 +1734,12 @@ void direction(dist& moves, targetting_type restricts,
         // Tiles always need a beam redraw if show_beam is true (and valid...)
         if (!need_beam_redraw)
         {
-            need_beam_redraw = show_beam
-                               && find_ray(you.pos(), moves.target, true, ray,
-                                           0, true)
-                               && !_blocked_ray(moves.target);
+            if (show_beam)
+            {
+                if (!find_ray(you.pos(), moves.target, ray, 0, true))
+                    fallback_ray(you.pos(), moves.target, ray);
+                need_beam_redraw = !_blocked_ray(moves.target);
+            }
         }
 #endif
         if (need_beam_redraw)

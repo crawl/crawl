@@ -25,7 +25,7 @@ LUAFN(los_find_ray)
     GETCOORD(a, 1, 2, map_bounds);
     GETCOORD(b, 3, 4, map_bounds);
     ray_def *ray = new ray_def;
-    if (find_ray(a, b, false, *ray, 0, true))
+    if (find_ray(a, b, *ray, 0, true))
     {
         lua_push_ray(ls, ray);
         return (1);

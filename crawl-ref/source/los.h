@@ -18,9 +18,11 @@ void setLOSRadius(int newLR);
 int get_los_radius_squared(); // XXX
 
 struct ray_def;
-bool find_ray( const coord_def& source, const coord_def& target,
-               bool allow_fallback, ray_def& ray, int cycle_dir = 0,
-               bool find_shortest = false, bool ignore_solid = false );
+bool find_ray(const coord_def& source, const coord_def& target,
+              ray_def& ray, int cycle_dir = 0, bool find_shortest = false,
+              bool ignore_solid = false);
+void fallback_ray(const coord_def& source, const coord_def& target,
+                  ray_def& ray);
 
 int num_feats_between(const coord_def& source, const coord_def& target,
                       dungeon_feature_type min_feat,

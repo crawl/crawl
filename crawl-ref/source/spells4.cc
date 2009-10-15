@@ -1369,7 +1369,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     const char *what = NULL;
 
     ray_def ray;
-    if (!find_ray(you.pos(), spd.target, false, ray))
+    if (!find_ray(you.pos(), spd.target, ray))
     {
         mpr("There's a wall in the way!");
         return (false);
