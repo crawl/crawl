@@ -38,13 +38,14 @@ REVISION("$Rev$");
 // From an actual potion, pow == 40 -- bwr
 bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 {
+
     bool effect = true;  // current behaviour is all potions id on quaffing
 
     pow = std::min(pow, 150);
 
-    const int factor = (you.species == SP_VAMPIRE
-                        && you.hunger_state < HS_SATIATED
-                        && drank_it ? 2 : 1);
+    int factor = (you.species == SP_VAMPIRE
+                  && you.hunger_state < HS_SATIATED
+                  && drank_it ? 2 : 1);
 
     // Knowingly drinking bad potions is much less amusing.
     int xom_factor = factor;
