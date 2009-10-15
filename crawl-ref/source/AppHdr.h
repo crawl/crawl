@@ -21,6 +21,11 @@
 
 #include "platform.h"
 
+#ifdef TARGET_COMPILER_VC
+/* Disable warning about the way VC handles the throw() specifier */
+#pragma warning (disable: 4290)
+#endif
+
 // The maximum memory that the user-script Lua interpreter can
 // allocate, in kilobytes. This limit is enforced to prevent
 // badly-written or malicious user scripts from consuming too much
@@ -522,7 +527,6 @@ inline void UNUSED(const volatile T &)
 
 #ifdef TARGET_COMPILER_VC
 #include "libw32c.h"
-#pragma warning (disable: 4290)
 #endif
 
 #endif
