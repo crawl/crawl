@@ -522,6 +522,7 @@ inline void UNUSED(const volatile T &)
 
 #ifdef TARGET_COMPILER_VC
 #include "libw32c.h"
+#pragma warning (disable: 4290)
 #endif
 
 #endif
