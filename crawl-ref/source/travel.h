@@ -370,7 +370,7 @@ struct travel_exclude
 
     int radius_sq() const
     {
-        return (radius * radius * 17 / 16);
+        return (radius * radius + 1);
     }
 };
 
