@@ -1635,7 +1635,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nmake -f makefile.mac -j2\n";
+			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nmake -f makefile.unix -j2 APPLE_GCC=y\n";
 		};
 		B090C2DB10671E3200AE855D /* Copy Crawl Executable */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2316,7 +2316,7 @@
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				INFOPLIST_FILE = "Crawl-Info.plist";
+				INFOPLIST_FILE = "mac/Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
@@ -2376,7 +2376,7 @@
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				INFOPLIST_FILE = "Crawl-Info.plist";
+				INFOPLIST_FILE = "mac/Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
@@ -2404,7 +2404,7 @@
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/libpng.framework/Headers,
 				);
-				INFOPLIST_FILE = "Crawl-Info.plist";
+				INFOPLIST_FILE = "mac/Crawl-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Dungeon Crawl Stone Soup";
