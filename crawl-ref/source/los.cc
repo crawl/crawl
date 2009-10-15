@@ -639,6 +639,12 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
             const double ray_slope_diff = find_shortest ?
                 fabs(_slope_factor(lray) - want_slope) : 0.0;
 
+            if (!blocked && find_shortest)
+            {
+                // any unaliased ray should have the same length
+                ASSERT(real_length == target.rdist());
+            }
+
             if (blocked || (find_shortest &&
                             !_superior_ray(shortest, imbalance,
                                            real_length, cimbalance,
