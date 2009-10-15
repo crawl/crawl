@@ -2460,3 +2460,28 @@ ttttttt....ttttttt....ttttttt..ttt..ttttttttttttt
 tttttttttttttttttttttttttttttt....ttttttttttttttt
 ttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
+
+#################################################################
+# A poor man's Radiant Cavern (1KB)
+#
+# Without an amulet of rMut, in my tests, the cost was 4-6 bad
+# mutations -- certainly not worth most of the loot.  With rMut,
+# it's still a gamble.
+#
+NAME:  mutagenic_chamber
+DEPTH: D:15-, Elf, Vault
+MARKER:     U = lua:fog_machine { cloud_type = "mutagenic fog", \
+                pow_min = 10, pow_max = 30, delay = 5, \
+                size = 4, walk_dist = 0, spread_rate= 0 }
+MAP
+ccccccccc
+cvvvvvvvc
+cv.|||.vc
+cv.nnn.vc
+cv.U.U.vc
+cvn...nvc
+cv.....vc
+cv.nnn.vc
+cv.....vc
+cvvv+vvvc
+ENDMAP
