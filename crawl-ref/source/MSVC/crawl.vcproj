@@ -50,7 +50,7 @@
 				WarningLevel="3"
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -205,7 +205,7 @@
 				WarningLevel="3"
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -715,6 +715,14 @@
 		</File>
 		<File
 			RelativePath="..\kills.h"
+			>
+		</File>
+		<File
+			RelativePath="..\l_los.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_los.h"
 			>
 		</File>
 		<File

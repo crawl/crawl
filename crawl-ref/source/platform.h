@@ -285,4 +285,11 @@
 #error "Could not detect 32-bit/64-bit architecture."
 #endif
 
+/* ICC on Windows uses VC includes, etc */
+#ifdef TARGET_OS_WINDOWS
+#ifdef TARGET_COMPILER_ICC
+#define TARGET_COMPILER_VC
+#endif
+#endif
+
 #endif

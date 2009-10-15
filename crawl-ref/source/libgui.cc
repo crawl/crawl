@@ -8,6 +8,8 @@
 #include "AppHdr.h"
 REVISION("$Rev$");
 
+#ifdef USE_TILE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -411,3 +413,4 @@ int stricmp(const char *str1, const char *str2)
 }
 
 #endif // #ifdef UNIX
+#endif // #ifdef USE_TILE

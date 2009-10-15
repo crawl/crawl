@@ -943,6 +943,7 @@ HEADER_END
 
 #include "artefact.h"
 #include "tiledef-main.h"
+#include "tiledef-player.h"
 
 int unrandart_to_tile(int unrand)
 {

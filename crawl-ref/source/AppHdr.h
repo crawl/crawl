@@ -80,7 +80,9 @@
 // MinGW
 //
 #if defined(TARGET_COMPILER_MINGW)
+    #ifndef REGEX_PCRE
     #define REGEX_PCRE
+    #endif
 #endif
 
 // =========================================================================
@@ -208,7 +210,9 @@
 
     // Use Perl-compatible regular expressions. libpcre must be available and
     // linked in.  This is optional.
+    #ifndef REGEX_PCRE
     #define REGEX_PCRE
+    #endif
 #else
     #error Missing platform #define or unsupported compiler.
 #endif
@@ -518,6 +522,7 @@ inline void UNUSED(const volatile T &)
 
 #ifdef TARGET_COMPILER_VC
 #include "libw32c.h"
+#pragma warning (disable: 4290)
 #endif
 
 #endif
