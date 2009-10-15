@@ -274,8 +274,9 @@ static std::vector<int> _find_minimal_cellrays()
             cellray c(ray, i);
             std::list<cellray>& min = minima(c.end());
 
+            bool erased = false;
             for (min_it = min.begin();
-                 min_it != min.end() && !dup; min_it++)
+                 min_it != min.end() && !dup; )
             {
                 switch(_compare_cellrays(*min_it, c))
                 {
@@ -284,6 +285,7 @@ static std::vector<int> _find_minimal_cellrays()
                     break;
                 case C_SUPERRAY:
                     min_it = min.erase(min_it);
+                    erased = true;
                     // clear this should be added, but might have
                     // to erase more
                     break;
@@ -291,6 +293,10 @@ static std::vector<int> _find_minimal_cellrays()
                 default:
                     break;
                 }
+                if (!erased)
+                    min_it++;
+                else
+                    erased = false;
             }
             if (!dup)
                 min.push_back(c);
