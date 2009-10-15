@@ -1289,10 +1289,7 @@ void direction(dist& moves, targetting_type restricts,
             {
                 // Direction not allowed, so just move in that direction.
                 // Maybe make this a bigger jump?
-                if (restricts == DIR_TARGET)
-                    moves.target += Compass[i] * 3;
-                else
-                    moves.target += Compass[i];
+                moves.target += Compass[i] * 3;
             }
             break;
 
