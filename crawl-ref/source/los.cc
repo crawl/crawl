@@ -657,6 +657,13 @@ bool _find_ray_se(const coord_def& target, bool allow_fallback,
 
     if (allow_fallback)
     {
+#ifdef DEBUG_DIAGNOSTICS
+        coord_def src = t.transform(coord_def(0,0));
+        coord_def trg = t.transform(target);
+        mprf(MSGCH_DIAGNOSTICS,
+             "falling back in ray search: (%d,%d) to (%d,%d)",
+             src.x, src.y, trg.x, trg.y);
+#endif
         ray.accx = 0.5;
         ray.accy = 0.5;
         if (target.x == 0)
