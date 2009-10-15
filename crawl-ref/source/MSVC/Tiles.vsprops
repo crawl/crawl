@@ -6,12 +6,12 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="C:\SDKs\SDL\include;C:\SDKs\SDL_image\include;C:\SDKs\libpng\include;C:\SDKs\zlib\include;C:\SDKs\freetype\include"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\..\contrib\sdl\include&quot;;&quot;$(SolutionDir)\..\contrib\sdl-image&quot;;&quot;$(SolutionDir)\..\contrib\libpng&quot;;&quot;$(SolutionDir)\..\contrib\freetype\include&quot;;&quot;$(SolutionDir)\..\contrib\zlib&quot;"
 		PreprocessorDefinitions="WIN32TILES;USE_TILE"
 	/>
 	<Tool
 		Name="VCLinkerTool"
 		AdditionalDependencies="SDL.lib SDL_image.lib SDLmain.lib libpng.lib zlib.lib freetype.lib opengl32.lib glu32.lib"
-		AdditionalLibraryDirectories="C:\SDKs\SDL\lib;C:\SDKs\SDL_image\lib;C:\SDKs\libpng\lib;C:\SDKs\zlib\lib;C:\SDKs\freetype\lib"
+		AdditionalLibraryDirectories="&quot;$(SolutionDir)\..\contrib\bin\8.0\$(PlatformName)&quot;"
 	/>
 </VisualStudioPropertySheet>

@@ -17,6 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)\.."
 			ConfigurationType="1"
 			InheritedPropertySheets=".\Common.vsprops;.\Tiles.vsprops;.\Debug.vsprops"
 			CharacterSet="1"
@@ -39,13 +40,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="$(SolutionDir)\..\contrib\sdl\include;$(SolutionDir)\..\contrib\sdl-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -58,7 +58,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="SDL.lib SDL_image.lib libpng.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(ProjectDir)\..\contrib\bin\8.0"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -86,11 +88,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\"
+				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)\.."
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets=".\Common.vsprops;.\Tiles.vsprops;.\Release.vsprops"
 			CharacterSet="1"
@@ -113,10 +117,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="$(SolutionDir)\..\contrib\sdl\include;$(SolutionDir)\..\contrib\sdl-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -130,7 +134,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="SDL.lib SDL_image.lib libpng.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\..\contrib\bin\8.0\$(PlatformName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -160,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\"
+				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

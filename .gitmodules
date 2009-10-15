@@ -19,3 +19,6 @@
 [submodule "crawl-ref/source/contrib/libpng"]
 	path = crawl-ref/source/contrib/libpng
 	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/libpng
+[submodule "crawl-ref/source/contrib/zlib"]
+	path = crawl-ref/source/contrib/zlib
+	url = git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/zlib

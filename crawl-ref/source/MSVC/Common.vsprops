@@ -8,6 +8,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
 		MinimalRebuild="true"
 	/>
 </VisualStudioPropertySheet>

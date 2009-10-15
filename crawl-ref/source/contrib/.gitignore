@@ -1,2 +1,6 @@
 # Xcode build outputs
 Frameworks
+
+# Visual C++ outputs
+bin
+obj

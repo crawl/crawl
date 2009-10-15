@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Dynamic Link Library"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="__DYNAMIC__"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		OutputFile="$(SolutionDir)\..\$(ProjectName).dll"
+		ImportLibrary="$(SolutionDir)\bin\8.0\$(PlatformName)\$(ProjectName).lib"
+	/>
+</VisualStudioPropertySheet>

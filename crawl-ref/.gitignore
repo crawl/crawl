@@ -42,8 +42,6 @@ makefile.dep
 
 # The Crawl executable.
 /source/crawl
-/source/crawl.exe
-/source/crawl.pdb
 
 # Level-compiler generated files.
 /source/util/*.cc
@@ -59,3 +57,13 @@ makefile.dep
 *.pbxuser
 *.perspectivev3
 *.mode1v3
+
+# Visual C++ cruft
+*.suo
+*.ncb
+*.vcproj.*.user
+
+# Visual C++ outputs
+/source/*.exe
+/source/*.[pi]db
+/source/*.dll

@@ -22,6 +22,7 @@
 #define strnicmp _strnicmp
 #define unlink _unlink
 #define ftruncate _chsize
+#define putenv _putenv
 
 // No va_copy in MSVC
 #if !defined(va_copy)
