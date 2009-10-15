@@ -74,7 +74,7 @@ end
 {{
 function sewer_random_monster_list(e)
   e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
-                         ooze / worm / snake / giant mosquito w:15")
+                         ooze / worm / snake / giant mosquito")
 end
 }}
 
@@ -420,20 +420,23 @@ SUBST:    - = W..
 : sewer_milestone(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
+SHUFFLE:  23/32
 MONS:     giant bat / giant mosquito w:2 / nothing w:2
 MONS:     patrolling jackal
 MONS:     worm / nothing w:3
 MONS:     ooze / nothing w:2
 # chances are good you'll find something to cross the deep water
+SHUFFLE:  de/ed
 ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
           scroll of blinking / scroll of identify / nothing
 ITEM:     potion of levitation w:50 / potion of invisibility / \
-          potion of might / nothing
+          potion of might w:3 / potion of agility w:4 / \
+	  potion of brilliance w:3 / nothing
 # possibly rather generous loot, if you get to the center
 ITEM:     scroll of vulnerability / scroll of identify / wizard hat / \
-          potion of magic / potion of gain intelligence / potion of resistance
+          potion of magic / potion of brilliance / potion of resistance
 ITEM:     scroll of identify / scroll of recharging / potion of invisibility / \
-          pair of gloves w:5 / pair of boots w:5 / nothing
+          pair of gloves w:5 / pair of boots w:5 / potion of agility / nothing
 ITEM:     scroll of identify / scroll of recharging / \
           potion of resistance / potion of might / potion of berserk rage / \
           buckler / nothing
@@ -457,13 +460,13 @@ xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxx-wWxxxxxxxxx.<xxx
 xxxxxxxxxxxx-wWxxxxEEEExxxSSSSxxxxxxxx-w-xxxxxWw--xxxxxxxxxxxxx
 xxxxxxxxxxxx-wWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWw-xxxxxxxxxxxxxx
 xxxx.d..dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWxxxxxxxxx.exxx
-xx.....d.dxxWwWWWWWW---WW-W-WW-W-WWWW--wWxxxxxWwWxxxxxxxx-22exx
-x..2...dxxxx-w-wwwwwwwwwwwwwwwwwwwwwww-w-xxxxxWwWWWWWWWWWW-2.ex
-xx2222xxxxxxWwWW-W-WWW-W-W-WWWWW-WWWWWWw-xxxxxWw-wwwwwwwwWW-2.x
-xxWW2..-xxxx-w-xxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWWWWWWWWWW-W..x
-xxxxWW----xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx-.exx
-xxxxxxW-----WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
-xwwwwwwW-WWwwwWWWW-W-W-W-W-WWWW-W-W-W-W-WW---WWwwwwwwwwwwwwwxxx
+xx.3...d.dxxWwWWWWWW---WW-W-WW-W-WWWW--wWxxxxxWwWxxxxxxxx-22exx
+x.3....dxxxx-w-wwwwwwwwwwwwwwwwwwwwwww-w-xxxxxWwWWWWWWWW---2.ex
+xx3...xxxxxxWwWW-W-WWW-W-W-WWWWW-WWWWWWw-xxxxxWw-wwwwwwww---2.x
+xx3-...-xxxx-w-xxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWWWWWWW-----..x
+xxxx------xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx-.exx
+xxxxxx------WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
+xwwwwww--WWwwwWWWW-W-W-W-W-WWWW-W-W-W-W-WW---WWwwwwwwwwwwwwwxxx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
