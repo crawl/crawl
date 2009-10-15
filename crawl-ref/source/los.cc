@@ -563,6 +563,8 @@ bool _find_ray_se(const coord_def& target, ray_def& ray,
                   bool ignore_solid, trans t)
 {
     ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
+    if (target.abs() > LOS_RADIUS2)
+        return false;
 
     bool found = false;
     int imbalance   = INFINITE_DISTANCE;
@@ -658,7 +660,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
               ray_def& ray, int cycle_dir,
               bool find_best, bool ignore_solid)
 {
-    if (target == source)
+    if (target == source || !map_bounds(source) || !map_bounds(target))
         return false;
 
     const int signx = ((target.x - source.x >= 0) ? 1 : -1);
