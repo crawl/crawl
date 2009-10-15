@@ -1255,7 +1255,7 @@ int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_STICKY_FLAME: return 5;
     case ABIL_BREATHE_STEAM:        return 7;
     default:
-        ASSERT("Bad breath type!");
+        ASSERT(!"Bad breath type!");
         break;
     }
     return (-2);
