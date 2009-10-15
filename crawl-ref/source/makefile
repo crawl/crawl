@@ -555,7 +555,8 @@ PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
 		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
-.PHONY: install clean clean-lua clean-sql distclean debug profile wizard
+.PHONY: install clean clean-contrib clean-lua clean-sql clean-prce distclean \
+	debug profile wizard
 
 ##########################################################################
 
@@ -668,7 +669,12 @@ clean-lua:
 clean-sql:
 	+$(MAKE) -C $(SQLSRC) clean
 
-distclean: clean clean-lua clean-sql clean-rltiles
+clean-pcre:
+	+$(MAKE) -C $(PCRESRC) clean
+
+clean-contrib: clean-lua clean-sql clean-pcre
+
+distclean: clean clean-contrib clean-rltiles
 	$(RM) bones.* morgue.txt scores $(GAME) *.sav core *.0* *.lab $(DEPENDENCY_MKF)
 
 .contrib-ok:
