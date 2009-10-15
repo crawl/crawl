@@ -214,7 +214,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\contrib\pcre\pcre_ucp_searchfuncs.c"
+			RelativePath="..\contrib\pcre\pcre_ucd.c"
 			>
 		</File>
 		<File
