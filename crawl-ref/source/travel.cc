@@ -353,10 +353,10 @@ void _mark_excludes_non_updated(const coord_def &p)
             (curr_excludes[i].pos - p).abs() <= curr_excludes[i].radius_sq();
 }
 
-void _update_exclusion_los()
+void _update_exclusion_los(bool all=false)
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        if (!curr_excludes[i].uptodate)
+        if (all || !curr_excludes[i].uptodate)
             curr_excludes[i].set_exclude_show();
 }
 
@@ -3387,13 +3387,7 @@ std::string stair_info::describe() const
 void LevelInfo::set_level_excludes()
 {
     curr_excludes = excludes;
-/*
-    for (unsigned int i = 0; i < curr_excludes.size(); i++)
-    {
-        curr_excludes[i] = travel_exclude(curr_excludes[i].pos,
-                                          curr_excludes[i].radius);
-    }
-*/
+    _update_exclusion_los(true);
 }
 
 bool LevelInfo::empty() const
