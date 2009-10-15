@@ -3,6 +3,69 @@
 #            hell vaults, hell end levels
 ##############################################################################
 
+{{
+function dis_setup(e)
+   e.tags(dis)
+   e.place("Dis:7")
+   e.tags(no_rotate)
+   e.lflags("no_tele_control")
+   e.lua_marker('O', item_pickup_change_flags {
+                     level_flags="!no_tele_control", item="iron rune of Zot" } )
+-- turn granite statues into iron statues
+-- you still have to colour the statues, if desired
+   dgn.set_feature_desc_short("granite statue", "iron statue")
+   dgn.set_feature_desc_long("granite statue", "A heavy-looking iron statue. " ..
+                             "You can't help but feel like it's watching you.")
+end
+
+function geh_setup(e)
+   e.place("Geh:7")
+   e.tags(no_rotate)
+   e.lflags("no_tele_control")
+   e.lua_marker('O', item_pickup_change_flags {
+                     level_flags="!no_tele_control", item="obsidian rune of Zot" } )
+   e.lrockcol("brown")
+   e.lfloorcol("darkgrey")
+--   e.lrocktile("???")
+--   e.lfloortile("???")
+   e.colour("v = red")
+   e.colour("c = darkgrey")
+   dgn.set_feature_desc_short("Floor", "Ashen ground")
+   dgn.set_feature_desc_long("Floor", "With every step, you walk on ash. " ..
+                             "It is warm and almost comfortable.")
+   dgn.set_feature_desc_short("metal wall", "tempered metal wall")
+   dgn.set_feature_desc_long("metal wall", "These metal walls emit heat.")
+end
+
+function coc_setup(e)
+   e.place("Coc:7")
+   e.tags(no_rotate)
+   e.lflags("no_tele_control")
+   e.lua_marker('O', item_pickup_change_flags {
+                     level_flags="!no_tele_control", item="icy rune of Zot" } )
+   e.lrockcol("lightgrey")
+   e.lfloorcol("white")
+--   e.lrocktile("???")
+   e.lfloortile("floor_ice")
+   dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
+   dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
+   dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
+   dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
+   dgn.set_feature_desc_short("Floor", "Frost-covered floor")
+   dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
+				"satisfyingly underfoot.")
+end
+
+function tar_setup(e)
+   e.place("Tar:7")
+   e.tags(no_rotate)
+   e.lflags("no_tele_control")
+   e.lua_marker('O', item_pickup_change_flags {
+             level_flags="!no_tele_control", item="bone rune of Zot" } )
+end
+}}
+
+
 ##############################################################################
 # Vestibule entries
 ##############################################################################
@@ -328,19 +391,12 @@ ENDMAP
 # Dispater's castle - rest of level filled up with plan_4 (irregular city)
 ##############################################################################
 
-NAME:   castle_dis
-PLACE:  Dis:7
-TAGS:   dis
-ORIENT: north
-TAGS:   no_rotate
-LFLAGS: no_tele_control
-MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="iron rune of Zot" \
-        }
-MONS:   Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
-MONS:   iron dragon
+NAME:    dis_old
+ORIENT:  north
+MONS:    Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
 SHUFFLE: 23
-SUBST:  4 = 4:30 6
+SUBST:   4 = 4446
+: dis_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -385,36 +441,18 @@ ENDMAP
 # Dispater - new map by Mu, featuring iron golems and iron trolls
 ##############################################################################
 
-NAME:   castle_dis_mu
-PLACE:  Dis:7
-TAGS:   dis
-ORIENT: north
-TAGS:   no_rotate
-LFLAGS: no_tele_control
-
-### make granite statues into iron statues
-{{
-  dgn.set_feature_desc_short("granite statue", "iron statue")
-  dgn.set_feature_desc_long("granite statue", "A heavy-looking iron statue. You " ..
-                            "can't help but feel like it's watching you.")
-}}
-KFEAT:  o = granite_statue
-MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="iron rune of Zot" \
-        }
-MONS:   Dispater
-MONS:   fiend
-MONS:   ice fiend
-MONS:   iron devil
-MONS:   metal gargoyle
-MONS:   iron dragon
-MONS:   iron troll
-KMONS:  8 = iron golem
-KFEAT:  8 = .
+NAME:    dis_mu
+ORIENT:  north
+KFEAT:   o = granite_statue
+MONS:    Dispater, fiend, ice fiend, iron devil, metal gargoyle, iron dragon
+MONS:    iron troll
+KMONS:   8 = iron golem
+KFEAT:   8 = .
 SHUFFLE: 23
-SUBST:  4 = 4:20 7
-SUBST:  8 = 8o
-COLOUR: o : cyan
+SUBST:   4 = 4:20 7
+SUBST:   8 = 8o
+COLOUR:  o : cyan
+: dis_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxx
@@ -456,28 +494,11 @@ ENDMAP
 # Asmodeus
 ##############################################################################
 
-NAME:   asmodeus
-PLACE:  Geh:7
+NAME:   geh_old
 ORIENT: encompass
-TAGS:   no_rotate
-LFLAGS: no_tele_control
-MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="obsidian rune of Zot" \
-        }
 MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
 MONS:   Serpent of Hell, random, random
-
-COLOUR:	v : red
-COLOUR: . : darkgrey
-COLOUR: c : darkgrey
-COLOUR: x : brown
-{{
-  dgn.set_feature_desc_short("Floor", "Ashen ground")
-  dgn.set_feature_desc_long("Floor", "Ashen ground.")
-  dgn.set_feature_desc_short("metal wall", "tempered metal wall")
-  dgn.set_feature_desc_long("metal wall", "A tempered metal wall.")
-}}
-
+: geh_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -545,37 +566,20 @@ ENDMAP
 ##############################################################################
 # Asmodeus (Gehenna) by Mu
 ##############################################################################
-NAME:   asmodeus_mu
-PLACE:  Geh:7
-WEIGHT: 10000
+
+NAME:   geh_mu
 ORIENT: encompass
-TAGS:   no_rotate
-LFLAGS: no_tele_control
-MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="obsidian rune of Zot" \
-        }
 MONS:   Asmodeus, Fiend
 MONS:   Balrug, sun demon, hellion, Serpent of Hell, fire giant
 KMONS:  8 = molten gargoyle
 KMONS:  9 = imp
-
+# Place one Serpent in the inner circle.
 NSUBST: X = 1:6 / *:4
 SUBST:  4 = 344578899
 SUBST:  % = $ |
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
 SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
-
-COLOUR:	v : red
-COLOUR: . : darkgrey
-COLOUR: c : darkgrey
-COLOUR: x : brown
-{{
-  dgn.set_feature_desc_short("Floor", "Ashen ground")
-  dgn.set_feature_desc_long("Floor", "Ashen ground.")
-  dgn.set_feature_desc_short("metal wall", "tempered metal wall")
-  dgn.set_feature_desc_long("metal wall", "A tempered metal wall.")
-}}
-
+: geh_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
@@ -646,32 +650,15 @@ ENDMAP
 # To do: this level has much shorter distances to travel, hence should
 #        come up with harder resistance.
 
-NAME:    antaeus_david_1
-PLACE:   Coc:7
+NAME:    coc_dpeg
 ORIENT:  encompass
-TAGS:    no_rotate
-LFLAGS:  no_tele_control
 MONS:    Antaeus, Ice Fiend, ice dragon / nothing
 ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1d / e0% / f9* / g8|
-MARKER:  O = lua:item_pickup_change_flags { \
-             level_flags="!no_tele_control", item="icy rune of Zot" \
-         }
 KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
 KITEM:   d = any
 SUBST:   ' = w .
-{{
-  dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-  dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
-  dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-  dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
-  dgn.set_feature_desc_short("Floor", "Frost-covered floor")
-  dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
-				"satisfyingly underfoot.")
-}}
-COLOUR:  c : lightcyan
-COLOUR:  x : lightgrey
-COLOUR:  . : white
+: coc_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxx
@@ -740,29 +727,12 @@ ENDMAP
 # Original Antaeus level
 ##############################################################################
 
-NAME:    antaeus_in_days_of_yore
-TAGS:    no_rotate
-PLACE:   Coc:7
+NAME:    coc_old
 ORIENT:  encompass
 SHUFFLE: $|, 2X
 SUBST:   X=., 3=3.
 MONS:    Antaeus, Ice Fiend, ice dragon, Ice Fiend
-LFLAGS:  no_tele_control
-MARKER:  O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="icy rune of Zot" \
-         }
-{{
-  dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-  dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
-  dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-  dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
-  dgn.set_feature_desc_short("Floor", "Frost-covered floor")
-  dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
-				"satisfyingly underfoot.")
-}}
-COLOUR:  c : lightcyan
-COLOUR:  x : lightgrey
-COLOUR:  . : white
+: coc_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -830,12 +800,9 @@ ENDMAP
 ##############################################################################
 # Antaeus (Cocytus) by Mu
 ##############################################################################
-NAME:    antaeus_mu
-PLACE:   Coc:7
-WEIGHT: 10000
+
+NAME:    coc_mu
 ORIENT:  encompass
-TAGS:    no_rotate
-LFLAGS:  no_tele_control
 MONS:    Antaeus, ice fiend
 MONS:    ice devil, blue devil, white imp, ice dragon, freezing wraith
 KMONS:   8 = ice statue
@@ -843,27 +810,13 @@ KMONS:   9 = frost giant
 SUBST:   3 = 3333344445555666779
 KMONS:   E = water elemental
 KFEAT:   E = w
-MARKER:  O = lua:item_pickup_change_flags { \
-             level_flags="!no_tele_control", item="icy rune of Zot" \
-         }
-{{
-  dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-  dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
-  dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-  dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
-  dgn.set_feature_desc_short("Floor", "Frost-covered floor")
-  dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
-				"satisfyingly underfoot.")
-}}
 SUBST:	 ^ : ^^^W. , ^ = W.
 SUBST:	 X : XXXc. , X = c.
 SUBST:   " = 8:1 .:10
 SUBST:   ' = .cc
 SUBST:   ; : ;;;;w , ; = wc
 NSUBST:  - = 1:= / *:c
-COLOUR:  c : lightcyan
-COLOUR:  x : lightgrey
-COLOUR:  . : white
+: coc_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......ccccccx
@@ -932,17 +885,11 @@ ENDMAP
 # Ereshkigal (Tartarus)
 ##############################################################################
 
-NAME:   ereshkigal
-PLACE:  Tar:7
+NAME:   tar_old
 ORIENT: encompass
-TAGS:   no_rotate
-LFLAGS: no_tele_control
-MARKER: O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="bone rune of Zot" \
-        }
 MONS:   Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS:   small skeleton, Shadow Fiend
-COLOUR: x : darkgrey
+: tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1010,15 +957,9 @@ ENDMAP
 ##############################################################################
 # Ereshkigal (Tartarus) by Mu
 ##############################################################################
-NAME:    ereshkigal_mu
-PLACE:   Tar:7
-WEIGHT: 10000
+
+NAME:    tar_mu
 ORIENT:  encompass
-TAGS:    no_rotate
-LFLAGS:  no_tele_control
-MARKER:  O = lua:item_pickup_change_flags { \
-             level_flags="!no_tele_control", item="bone rune of Zot" \
-         }
 MONS:    Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
 MONS:    shadow dragon, shadow wraith
 KMONS:   8 = shadow imp
@@ -1035,14 +976,12 @@ SUBST:   h = c
 SHUFFLE: AB
 SUBST:   A = %
 SUBST:   B = x
-
-NSUBST: " = 1:= / *:x
-KFEAT:  % = .
-KMONS:  % = soul eater / shadow demon / shadow wraith / nothing w:20
-KITEM:  % = | / $
-SUBST:  4 = 3333444455566778
-COLOUR: x : darkgrey
-
+NSUBST:  " = 1:= / *:x
+KFEAT:   % = .
+KMONS:   % = soul eater / shadow demon / shadow wraith / nothing w:20
+KITEM:   % = | / $
+SUBST:   4 = 3333444455566778
+: tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
 xxxx..............................................................xxxx  
