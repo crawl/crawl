@@ -409,10 +409,8 @@ static void _direction_again(dist& moves, targetting_type restricts,
 
         moves.target = you.prev_grd_targ;
 
-        ray_def ray;
-        if (!find_ray(you.pos(), moves.target, ray, 0, true))
-            fallback_ray(you.pos(), moves.target, ray);
-        moves.ray = ray;
+        moves.choseRay = find_ray(you.pos(), moves.target,
+                                  moves.ray, 0, true);
     }
     else if (you.prev_targ == MHITYOU)
     {
@@ -446,10 +444,8 @@ static void _direction_again(dist& moves, targetting_type restricts,
 
         moves.target = montarget->pos();
 
-        ray_def ray;
-        if (!find_ray(you.pos(), moves.target, ray, 0, true))
-            fallback_ray(you.pos(), moves.target, ray);
-        moves.ray = ray;
+        moves.choseRay = find_ray(you.pos(), moves.target,
+                                  moves.ray, 0, true);
     }
 
     moves.isValid  = true;
@@ -966,6 +962,7 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
     return (true);
 }
 
+// XXX: fold this into generalized find_ray.
 static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
@@ -1030,7 +1027,7 @@ void direction(dist& moves, targetting_type restricts,
 
     if (restricts == DIR_DIR)
     {
-        direction_choose_compass( moves, beh );
+        direction_choose_compass(moves, beh);
         return;
     }
 
@@ -1041,6 +1038,7 @@ void direction(dist& moves, targetting_type restricts,
 
     int dir = 0;
     bool show_beam = Options.show_beam && !just_looking && needs_path;
+    bool have_beam = false;
     ray_def ray;
 
     coord_def objfind_pos, monsfind_pos;
@@ -1051,8 +1049,7 @@ void direction(dist& moves, targetting_type restricts,
 
     // If we show the beam on startup, we have to initialise it.
     if (show_beam)
-        if (!find_ray(you.pos(), moves.target, ray))
-            fallback_ray(you.pos(), moves.target, ray);
+        have_beam = find_ray(you.pos(), moves.target, ray);
 
     bool skip_iter = false;
     bool found_autotarget = false;
@@ -1320,17 +1317,14 @@ void direction(dist& moves, targetting_type restricts,
 
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
-            // XXX: show_beam was conditional on find_ray
-            //      with fallback succeeding.
-            if (!find_ray(you.pos(), moves.target,
-                          ray, (show_beam ? 1 : 0)))
-                fallback_ray(you.pos(), moves.target, ray);
             show_beam = true;
+            have_beam = find_ray(you.pos(), moves.target,
+                                 ray, (show_beam ? 1 : 0));
             need_beam_redraw = true;
             break;
 #endif
 
-        case CMD_TARGET_HIDE_BEAM:
+        case CMD_TARGET_TOGGLE_BEAM:
             if (show_beam)
             {
                 show_beam = false;
@@ -1345,13 +1339,10 @@ void direction(dist& moves, targetting_type restricts,
                     break;
                 }
 
-                // XXX: show_beam was conditional on find_ray
-                //      with fallback succeeding.
-                if (!find_ray(you.pos(), moves.target,
-                              ray, 0, true))
-                    fallback_ray(you.pos(), moves.target, ray);
+                have_beam = find_ray(you.pos(), moves.target,
+                                     ray, 0, true);
                 show_beam = true;
-                need_beam_redraw = show_beam;
+                need_beam_redraw = true;
             }
             break;
 
@@ -1416,13 +1407,7 @@ void direction(dist& moves, targetting_type restricts,
                     moves.target   = montarget->pos();
                     if (!just_looking)
                     {
-                        // We have to turn off show_beam, because
-                        // when jumping to a previous target we don't
-                        // care about the beam; otherwise Bad Things
-                        // will happen because the ray is invalid,
-                        // and we don't get a chance to update it before
-                        // breaking from the loop.
-                        show_beam = false;
+                        have_beam = false;
                         loop_done = true;
                     }
                 }
@@ -1678,14 +1663,12 @@ void direction(dist& moves, targetting_type restricts,
             {
                 // Finalise whatever is inside the loop
                 // (moves-internal finalizations can be done later).
-                moves.choseRay = show_beam;
+                moves.choseRay = have_beam;
                 moves.ray = ray;
                 break;
             }
             else
-            {
                 show_prompt = true;
-            }
         }
 
         // We'll go on looping. Redraw whatever is necessary.
@@ -1702,22 +1685,14 @@ void direction(dist& moves, targetting_type restricts,
 
             if (show_beam)
             {
-                // XXX: show_beam was conditional on find_ray
-                //      with fallback succeeding.
-                if (!find_ray(you.pos(), moves.target, ray, 0, true))
-                    fallback_ray(you.pos(), moves.target, ray);
+                 have_beam = find_ray(you.pos(), moves.target,
+                                      ray, 0, true);
+                 need_beam_redraw = true;
             }
         }
 
-        if (force_redraw)
-            have_moved = true;
-
-        if (have_moved)
+        if (have_moved || force_redraw)
         {
-            // If the target x,y has changed, the beam must have changed.
-            if (show_beam)
-                need_beam_redraw = true;
-
             if (!skip_iter)     // Don't clear before we get a chance to see.
                 mesclr(true);   // Maybe not completely necessary.
 
@@ -1729,24 +1704,15 @@ void direction(dist& moves, targetting_type restricts,
 
 #ifdef USE_TILE
         // Tiles always need a beam redraw if show_beam is true (and valid...)
-        if (!need_beam_redraw)
-        {
-            if (show_beam)
-            {
-                if (!find_ray(you.pos(), moves.target, ray, 0, true))
-                    fallback_ray(you.pos(), moves.target, ray);
-                need_beam_redraw = !_blocked_ray(moves.target);
-            }
-        }
+        if (show_beam)
+            need_beam_redraw = true;
 #endif
         if (need_beam_redraw)
         {
 #ifndef USE_TILE
             viewwindow(true, false);
 #endif
-            if (show_beam
-                && in_vlos(grid2view(moves.target))
-                && moves.target != you.pos() )
+            if (show_beam && have_beam)
             {
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
@@ -1756,9 +1722,7 @@ void direction(dist& moves, targetting_type restricts,
                 {
                     if (raycopy.pos() != you.pos())
                     {
-                        // Sanity: don't loop forever if the ray is problematic
-                        if (!in_los(raycopy.pos()))
-                            break;
+                        ASSERT(in_los(raycopy.pos()));
 
                         const bool in_range = (range < 0)
                             || grid_distance(raycopy.pos(), you.pos()) <= range;
@@ -2019,8 +1983,8 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
 }
 
 #ifndef USE_TILE
-static bool _find_mlist( const coord_def& where, int idx, bool need_path,
-                         int range = -1)
+static bool _find_mlist(const coord_def& where, int idx, bool need_path,
+                        int range = -1)
 {
     if (static_cast<int>(mlist.size()) <= idx)
         return (false);
