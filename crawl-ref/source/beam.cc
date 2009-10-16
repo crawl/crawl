@@ -1592,7 +1592,7 @@ void bolt::choose_ray()
 {
     if (!chose_ray || reflections > 0)
     {
-        if (!find_ray(source, target, ray, 0, true))
+        if (!find_ray(source, target, ray))
             fallback_ray(source, target, ray);
     }
 }

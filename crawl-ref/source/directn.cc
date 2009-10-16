@@ -409,8 +409,7 @@ static void _direction_again(dist& moves, targetting_type restricts,
 
         moves.target = you.prev_grd_targ;
 
-        moves.choseRay = find_ray(you.pos(), moves.target,
-                                  moves.ray, 0, true);
+        moves.choseRay = find_ray(you.pos(), moves.target, moves.ray);
     }
     else if (you.prev_targ == MHITYOU)
     {
@@ -444,8 +443,7 @@ static void _direction_again(dist& moves, targetting_type restricts,
 
         moves.target = montarget->pos();
 
-        moves.choseRay = find_ray(you.pos(), moves.target,
-                                  moves.ray, 0, true);
+        moves.choseRay = find_ray(you.pos(), moves.target, moves.ray);
     }
 
     moves.isValid  = true;
@@ -967,7 +965,7 @@ static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
     ray_def ray;
-    if (!find_ray(you.pos(), where, ray, 0, true))
+    if (!find_ray(you.pos(), where, ray))
         fallback_ray(you.pos(), where, ray);
     ray.advance_through(where);
 
@@ -1318,8 +1316,7 @@ void direction(dist& moves, targetting_type restricts,
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
             show_beam = true;
-            have_beam = find_ray(you.pos(), moves.target,
-                                 ray, (show_beam ? 1 : 0));
+            have_beam = find_ray(you.pos(), moves.target, ray, show_beam);
             need_beam_redraw = true;
             break;
 #endif
@@ -1339,8 +1336,7 @@ void direction(dist& moves, targetting_type restricts,
                     break;
                 }
 
-                have_beam = find_ray(you.pos(), moves.target,
-                                     ray, 0, true);
+                have_beam = find_ray(you.pos(), moves.target, ray);
                 show_beam = true;
                 need_beam_redraw = true;
             }
@@ -1685,8 +1681,7 @@ void direction(dist& moves, targetting_type restricts,
 
             if (show_beam)
             {
-                 have_beam = find_ray(you.pos(), moves.target,
-                                      ray, 0, true);
+                 have_beam = find_ray(you.pos(), moves.target, ray);
                  need_beam_redraw = true;
             }
         }

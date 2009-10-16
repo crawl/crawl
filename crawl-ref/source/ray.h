@@ -21,9 +21,11 @@ public:
     double accx;
     double accy;
     double slope;
+    // Quadrant by sign of x/y coordinate.
     int quadx;
     int quady;
-    int fullray_idx;   // for cycling: where did we come from?
+    // For cycling: where did we come from?
+    int cycle_idx;
 
 public:
     ray_def(double accx = 0.0, double accy = 0.0, double slope = 0.0,

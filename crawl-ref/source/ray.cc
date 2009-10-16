@@ -19,7 +19,7 @@ static int ifloor(double d)
 }
 
 ray_def::ray_def(double ax, double ay, double s, int qx, int qy, int idx)
-    : accx(ax), accy(ay), slope(s), quadx(qx), quady(qy), fullray_idx(idx)
+    : accx(ax), accy(ay), slope(s), quadx(qx), quady(qy), cycle_idx(idx)
 {
 }
 

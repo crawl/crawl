@@ -80,6 +80,7 @@ const coord_def sh_o = coord_def(sh_xo, sh_yo);
 // The footprint of ray=fullray[i] consists of ray.length cells,
 // stored in ray_coords[ray.start..ray.length-1].
 // These are filled during precomputation (_register_ray).
+// XXX: fullrays is not needed anymore after precomputation.
 struct los_ray;
 std::vector<los_ray> fullrays;
 std::vector<coord_def> ray_coords;
@@ -92,6 +93,12 @@ std::vector<coord_def> ray_coords;
 std::vector<coord_def> cellray_ends;
 typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
 blockrays_t blockrays;
+
+// We also store the minimal cellrays by target position
+// for efficient retrieval by find_ray.
+// XXX: Consider condensing this representation.
+struct cellray;
+FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
@@ -117,7 +124,7 @@ void clear_rays_on_exit()
        delete blockrays(*qi);
 }
 
-// pre-squared LOS radius
+// Pre-squared LOS radius.
 #define LOS_RADIUS2 (LOS_RADIUS * LOS_RADIUS + 1)
 
 int _los_radius_squared = LOS_RADIUS2;
@@ -140,6 +147,8 @@ bool double_is_zero(const double x)
 
 struct los_ray : public ray_def
 {
+    // The footprint of this ray is stored in
+    // ray_coords[start..start+length-1].
     unsigned int start;
     unsigned int length;
 
@@ -150,6 +159,7 @@ struct los_ray : public ray_def
 
     // Shoot a ray from the given start point (accx, accy) with the given
     // slope, bounded by the given pre-squared LOS radius.
+    // Returns the cells it travels through, excluding the origin.
     std::vector<coord_def> footprint(int radius2)
     {
         std::vector<coord_def> cs;
@@ -194,17 +204,56 @@ static bool _is_duplicate_ray(std::vector<coord_def> newray)
     return false;
 }
 
-// A cellray given by fullray and length.
+// A cellray given by fullray and index of end-point.
 struct cellray
 {
+    // A cellray passes through cells ray_coords[ray.start..ray.start+end].
     los_ray ray;
-    int length;
+    unsigned int end; // Relative index (inside ray) of end cell.
 
-    cellray(const los_ray& r, int l) : ray(r), length(l) {}
+    cellray(const los_ray& r, unsigned int e)
+        : ray(r), end(e), imbalance(-1), slope_diff(-1)
+    {
+    }
 
-    int index() const { return ray.start + length; }
-    coord_def end() const { return ray_coords[index()]; }
+    // The end-point's index inside ray_coord.
+    int index() const { return (ray.start + end); }
+
+    // The end-point.
+    coord_def target() const { return ray_coords[index()]; }
+
+    // XXX: Currently ray/cellray[0] is the first point outside the origin.
+    coord_def operator[](unsigned int i)
+    {
+        ASSERT(0 <= i && i <= end);
+        return ray_coords[ray.start+i];
+    }
+
+    // Parameters used in find_ray. These need to be calculated
+    // only for the minimal cellrays.
+    int imbalance;
+    double slope_diff;
+
+    void calc_params();
 };
+
+// Compare two cellrays to the same target.
+// This determines which ray is considered better by find_ray,
+// used with list::sort.
+// Returns true if a is strictly better than b, false else.
+bool _is_better(const cellray& a, const cellray& b)
+{
+    // Only compare cellrays with equal target.
+    ASSERT(a.target() == b.target());
+    // calc_params() has been called.
+    ASSERT(a.imbalance >= 0 && b.imbalance >= 0);
+    if (a.imbalance < b.imbalance)
+        return (true);
+    else if (a.imbalance > b.imbalance)
+        return (false);
+    else
+        return (a.slope_diff < b.slope_diff);
+}
 
 enum compare_type
 {
@@ -217,13 +266,13 @@ enum compare_type
 // other in terms of footprint.
 compare_type _compare_cellrays(const cellray& a, const cellray& b)
 {
-    if (a.end() != b.end())
+    if (a.target() != b.target())
         return C_NEITHER;
 
     int cura = a.ray.start;
     int curb = b.ray.start;
-    int enda = cura + a.length;
-    int endb = curb + b.length;
+    int enda = cura + a.end;
+    int endb = curb + b.end;
     bool maybe_sub = true;
     bool maybe_super = true;
 
@@ -258,7 +307,9 @@ compare_type _compare_cellrays(const cellray& a, const cellray& b)
         return C_NEITHER;
 }
 
-// Returns a vector which lists all minimal cellrays (by index).
+// Determine all minimal cellrays.
+// They're stored globally by target in min_cellrays,
+// and returned as a list of indices into ray_coords.
 static std::vector<int> _find_minimal_cellrays()
 {
     FixedArray<std::list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
@@ -272,7 +323,7 @@ static std::vector<int> _find_minimal_cellrays()
             // Is the cellray ray[0..i] duplicated so far?
             bool dup = false;
             cellray c(ray, i);
-            std::list<cellray>& min = minima(c.end());
+            std::list<cellray>& min = minima(c.target());
 
             bool erased = false;
             for (min_it = min.begin();
@@ -305,8 +356,17 @@ static std::vector<int> _find_minimal_cellrays()
 
     std::vector<int> result;
     for (quadrant_iterator qi; qi; qi++)
-        for (min_it = minima(*qi).begin(); min_it != minima(*qi).end(); min_it++)
+    {
+        std::list<cellray>& min = minima(*qi);
+        for (min_it = min.begin(); min_it != min.end(); min_it++)
+        {
+            // Calculate imbalance and slope difference for sorting.
+            min_it->calc_params();
             result.push_back(min_it->index());
+        }
+        min.sort(_is_better);
+        min_cellrays(*qi) = std::vector<cellray>(min.begin(), min.end());
+    }
     return result;
 }
 
@@ -351,12 +411,12 @@ static void _create_blockrays()
     // We've built the basic blockray array; now compress it, keeping
     // only the nonduplicated cellrays.
 
-    // Determine nonduplicated rays and store their end points.
-    std::vector<int> min_cellrays = _find_minimal_cellrays();
-    const int n_min_rays          = min_cellrays.size();
+    // Determine minimal cellrays and store their indices in ray_coords.
+    std::vector<int> min_indices = _find_minimal_cellrays();
+    const int n_min_rays         = min_indices.size();
     cellray_ends.resize(n_min_rays);
     for (int i = 0; i < n_min_rays; ++i)
-        cellray_ends[i] = ray_coords[min_cellrays[i]];
+        cellray_ends[i] = ray_coords[min_indices[i]];
 
     // Compress blockrays accordingly.
     for (quadrant_iterator qi; qi; qi++)
@@ -364,7 +424,7 @@ static void _create_blockrays()
         blockrays(*qi) = new bit_array(n_min_rays);
         for (int i = 0; i < n_min_rays; ++i)
             blockrays(*qi)->set(i, all_blockrays(*qi)
-                                   ->get(min_cellrays[i]));
+                                   ->get(min_indices[i]));
     }
 
     // We can throw away all_blockrays now.
@@ -465,23 +525,6 @@ static void _set_ray_quadrant(ray_def& ray, int sx, int sy, int tx, int ty)
     ray.quady = ty >= sy ? 1 : -1;
 }
 
-static int _cyclic_offset(int i, int cycle_dir, int startpoint,
-                          int maxvalue)
-{
-    if (startpoint < 0)
-        return i;
-    switch (cycle_dir)
-    {
-    case 1:
-        return (i + startpoint + 1) % maxvalue;
-    case -1:
-        return (i - 1 - startpoint + maxvalue) % maxvalue;
-    case 0:
-    default:
-        return i;
-    }
-}
-
 static const double VERTICAL_SLOPE = 10000.0;
 static double _calc_slope(double x, double y)
 {
@@ -503,34 +546,19 @@ static double _slope_factor(const ray_def &ray)
     return (slope + ray.slope) / 2.0;
 }
 
-static bool _superior_ray(int imbalance, int rayimbalance,
-                          double slope_diff, double ray_slope_diff)
-{
-    if (imbalance != rayimbalance)
-        return (imbalance > rayimbalance);
-
-    return (slope_diff > ray_slope_diff);
-}
-
-// Compute the imbalance, defined as the
-// number of consecutive diagonal or orthogonal moves
-// in the ray. This is a reasonable measure of deviation from
-// the Bresenham line between our selected source and
-// destination.
-static int _imbalance(const std::vector<coord_def>& ray)
+static int _imbalance(ray_def ray, const coord_def& target)
 {
     int imb = 0;
     int diags = 0, straights = 0;
-    for (int i = 1, size = ray.size(); i < size; ++i)
+    while (ray.pos() != target)
     {
-        const int dist =
-           (ray[i] - ray[i - 1]).abs();
-
-        if (dist == 2)
+        adv_type adv = ray.advance_through(target);
+        if (adv == ADV_XY)
         {
             straights = 0;
             if (++diags > imb)
                 imb = diags;
+            diags++;
         }
         else
         {
@@ -540,6 +568,13 @@ static int _imbalance(const std::vector<coord_def>& ray)
         }
     }
     return imb;
+}
+
+void cellray::calc_params()
+{
+    coord_def trg = target();
+    imbalance = _imbalance(ray, trg);
+    slope_diff = _slope_factor(ray) - _calc_slope(trg.x, trg.y);
 }
 
 // Coordinate transformation so we can find_ray quadrant-by-quadrant.
@@ -557,115 +592,65 @@ struct trans
 
 // Find ray in positive quadrant.
 bool _find_ray_se(const coord_def& target, ray_def& ray,
-                  int cycle_dir, bool find_best,
-                  bool ignore_solid, trans t)
+                  bool cycle, bool ignore_solid, trans t)
 {
     ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
     if (target.abs() > LOS_RADIUS2)
         return false;
 
-    bool found = false;
-    int imbalance   = INFINITE_DISTANCE;
-    const double want_slope = _calc_slope(target.x, target.y);
-    double slope_diff       = VERTICAL_SLOPE * 10.0;
-    double ray_slope_diff = slope_diff;
-    std::vector<coord_def> unaliased_ray;
+    const std::vector<cellray> &min = min_cellrays(target);
+    ASSERT(min.size() > 0);
+    cellray c = min[0]; // XXX: const cellray &c ?
+    unsigned int index = 0;
 
-    for (unsigned int fray = 0; fray < fullrays.size(); ++fray)
+#ifdef DEBUG_DIAGNOSTICS
+    if (cycle)
+        mprf(MSGCH_DIAGNOSTICS, "cycling from %d (total %d), ignores_solid=%d",
+             ray.cycle_idx, min.size(), ignore_solid);
+#endif
+
+    unsigned int start = cycle ? ray.cycle_idx + 1 : 0;
+    ASSERT(0 <= start && start <= min.size());
+
+    if (ignore_solid)
     {
-        const int fullray = _cyclic_offset(fray, cycle_dir, ray.fullray_idx,
-                                           fullrays.size());
-        los_ray lray = fullrays[fullray];
-
-        for (unsigned int cellray = 0; cellray < lray.length; ++cellray)
+        index = start % min.size();
+        c = min[index];
+    }
+    else
+    {
+        bool blocked = true;
+        for (unsigned int i = start; blocked && (i < start + min.size()); i++)
         {
-            if (lray[cellray] != target)
-                continue;
-
-            if (find_best)
+            index = i % min.size();
+            c = min[index];
+            blocked = false;
+            // Check all inner points.
+            for (unsigned int j = 0; j < c.end && !blocked; j++)
             {
-                unaliased_ray.clear();
-                unaliased_ray.push_back(coord_def(0, 0));
+                coord_def cur = t.transform(c[j]);
+                blocked = grid_is_solid(grd(cur));
             }
-
-            // Check if we're blocked so far.
-            bool blocked = false;
-            coord_def c1, c3;
-            for (unsigned int inray = 0; inray <= cellray; ++inray)
-            {
-                c3 = ray_coords[inray + fullrays[fray].start];
-                if (inray < cellray && !ignore_solid
-                    && grid_is_solid(grd(t.transform(c3))))
-                {
-                    blocked = true;
-                    break;
-                }
-
-                if (find_best)
-                {
-
-                    // We've moved at least two steps if inray > 0.
-                    if (inray)
-                    {
-                        // Check for a perpendicular corner on the ray and
-                        // pretend that it's a diagonal.
-                        if ((c3 - c1).abs() == 2)
-                        {
-                            // c2 was a dud move, pop it off
-                            unaliased_ray.pop_back();
-                        }
-                    }
-
-                    unaliased_ray.push_back(c3);
-                    c1 = unaliased_ray[unaliased_ray.size() - 2];
-                }
-            }
-
-            // If this ray is a candidate for shortest, calculate
-            // the imbalance.
-            int cimbalance = 0;
-            if (!blocked && find_best)
-            {
-                cimbalance = _imbalance(unaliased_ray);
-                ray_slope_diff = fabs(_slope_factor(lray) - want_slope);
-            }
-
-            if (blocked || (find_best &&
-                            !_superior_ray(imbalance, cimbalance,
-                                           slope_diff, ray_slope_diff)))
-            {
-                continue;
-            }
-
-            // Success!
-            found = true;
-
-            ray             = lray;
-            ray.fullray_idx = fullray;
-
-            imbalance  = cimbalance;
-            slope_diff = ray_slope_diff;
-
-            if (!find_best)
-                return (true);
         }
+        if (blocked)
+            return (false);
     }
 
-    return (found);
+    ray = c.ray;
+    ray.cycle_idx = index;
+
+    return (true);
 }
 
 // Find a nonblocked ray from source to target. Return false if no
 // such ray could be found, otherwise return true and fill ray
 // appropriately.
 // if range is too great or all rays are blocked.
-// If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
+// If cycle is false, find the first fitting ray. If it is true,
 // assume that ray is appropriately filled in, and look for the next
-// ray in that cycle direction.
-// If find_shortest is true, examine all rays that hit the target and
-// take the shortest (starting at ray.fullray_idx).
+// ray.
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, int cycle_dir,
-              bool find_best, bool ignore_solid)
+              ray_def& ray, bool cycle, bool ignore_solid)
 {
     if (target == source || !map_bounds(source) || !map_bounds(target))
         return false;
@@ -691,7 +676,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     ray.quadx = 1;
     ray.quady = 1;
 
-    if (!_find_ray_se(abs, ray, cycle_dir, find_best, ignore_solid, t))
+    if (!_find_ray_se(abs, ray, cycle, ignore_solid, t))
         return false;
 
     if (signx < 0)

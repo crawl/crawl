@@ -364,8 +364,7 @@ void monster_los::check_los_beam(int dx, int dy)
                 continue;
 
             dist = 0;
-            if (!find_ray(coord_def(gridx, gridy), coord_def(tx, ty),
-                          ray, 0, true, true))
+            if (!find_ray(coord_def(gridx, gridy), coord_def(tx, ty), ray))
                 fallback_ray(coord_def(gridx, gridy), coord_def(tx, ty), ray);
 
             if (ray.x() == gridx && ray.y() == gridy)
