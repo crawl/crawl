@@ -1559,120 +1559,6 @@ static void _minefield_card(int power, deck_rarity_type rarity)
 
 static int stair_draw_count = 0;
 
-static void _move_stair(coord_def stair_pos, bool away)
-{
-    ASSERT(stair_pos != you.pos());
-
-    dungeon_feature_type feat = grd(stair_pos);
-    ASSERT(grid_stair_direction(feat) != CMD_NO_CMD);
-
-    coord_def begin, towards;
-
-    if (away)
-    {
-        begin   = you.pos();
-        towards = stair_pos;
-    }
-    else
-    {
-        // Can't move towards player if it's already adjacent.
-        if (adjacent(you.pos(), stair_pos))
-            return;
-
-        begin   = stair_pos;
-        towards = you.pos();
-    }
-
-    ray_def ray;
-    if (!find_ray(begin, towards, ray))
-    {
-        mpr("Couldn't find ray between player and stairs.", MSGCH_ERROR);
-        return;
-    }
-
-    // Don't start off under the player.
-    if (away)
-        ray.advance();
-
-    bool found_stairs = false;
-    int  past_stairs  = 0;
-    while ( in_bounds(ray.pos()) && see_grid(ray.pos())
-            && !grid_is_solid(ray.pos()) && ray.pos() != you.pos() )
-    {
-        if (ray.pos() == stair_pos)
-            found_stairs = true;
-        if (found_stairs)
-            past_stairs++;
-        ray.advance();
-    }
-    past_stairs--;
-
-    if (!away && grid_is_solid(ray.pos()))
-        // Transparent wall between stair and player.
-        return;
-
-    if (away && !found_stairs)
-    {
-        if (grid_is_solid(ray.pos()))
-            // Transparent wall between stair and player.
-            return;
-
-        mpr("Ray didn't cross stairs.", MSGCH_ERROR);
-    }
-
-    if (away && past_stairs <= 0)
-        // Stairs already at edge, can't move further away.
-        return;
-
-    if (!in_bounds(ray.pos()) || ray.pos() == you.pos())
-        ray.regress();
-
-    while (!see_grid(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
-    {
-        ray.regress();
-        if (!in_bounds(ray.pos()) || ray.pos() == you.pos()
-            || ray.pos() == stair_pos)
-        {
-            // No squares in path are a plain floor.
-            return;
-        }
-    }
-
-    ASSERT(stair_pos != ray.pos());
-
-    std::string stair_str =
-        feature_description(stair_pos, false, DESC_CAP_THE, false);
-
-    mprf("%s slides %s you!", stair_str.c_str(),
-         away ? "away from" : "towards");
-
-    // Animate stair moving.
-    const feature_def &feat_def = get_feature_def(feat);
-
-    bolt beam;
-
-    beam.range   = INFINITE_DISTANCE;
-    beam.flavour = BEAM_VISUAL;
-    beam.type    = feat_def.symbol;
-    beam.colour  = feat_def.colour;
-    beam.source  = stair_pos;
-    beam.target  = ray.pos();
-    beam.name    = "STAIR BEAM";
-    beam.draw_delay = 50; // Make beam animation slower than normal.
-
-    beam.aimed_at_spot = true;
-    beam.fire();
-
-    // Clear out "missile trails"
-    viewwindow(true, false);
-
-    if (!swap_features(stair_pos, ray.pos(), false, false))
-    {
-        mprf(MSGCH_ERROR, "_move_stair(): failed to move %s",
-             stair_str.c_str());
-    }
-}
-
 // This does not describe an actual card. Instead, it only exists to test
 // the stair movement effect in wizard mode ("&c stairs").
 static void _stairs_card(int power, deck_rarity_type rarity)
@@ -1709,7 +1595,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     std::random_shuffle(stairs_avail.begin(), stairs_avail.end());
 
     for (unsigned int i = 0; i < stairs_avail.size(); ++i)
-        _move_stair(stairs_avail[i], stair_draw_count % 2);
+        move_stair(stairs_avail[i], stair_draw_count % 2, false);
 
     stair_draw_count++;
 }

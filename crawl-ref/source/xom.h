@@ -90,4 +90,6 @@ void xom_death_message(const kill_method_type killed_by);
 void debug_xom_effects();
 #endif
 
+bool move_stair(coord_def stair_pos, bool away, bool allow_under);
+
 #endif

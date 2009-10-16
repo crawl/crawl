@@ -2877,8 +2877,11 @@ static bool _valid_floor_grid(coord_def pos)
     return (grd(pos) == DNGN_FLOOR);
 }
 
-static bool _move_stair(coord_def stair_pos, bool away)
+bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 {
+    if (!allow_under)
+        ASSERT(stair_pos != you.pos());
+
     dungeon_feature_type feat = grd(stair_pos);
     ASSERT(grid_stair_direction(feat) != CMD_NO_CMD);
 
@@ -2889,7 +2892,7 @@ static bool _move_stair(coord_def stair_pos, bool away)
     {
         // If the staircase starts out under the player, first shove it
         // onto a neighbouring grid.
-        if (stair_pos == you.pos())
+        if (allow_under && stair_pos == you.pos())
         {
             coord_def new_pos(stair_pos);
             // Loop twice through all adjacent grids. In the first round,
@@ -3094,7 +3097,7 @@ static int _xom_repel_stairs(bool debug = false)
     std::random_shuffle(stairs_avail.begin(), stairs_avail.end());
     int count_moved = 0;
     for (unsigned int i = 0; i < stairs_avail.size(); i++)
-        if (_move_stair(stairs_avail[i], true))
+        if (move_stair(stairs_avail[i], true, true))
             count_moved++;
 
     if (!count_moved)
