@@ -23,9 +23,8 @@ bool vampiric_drain(int pow, const dist &vmove);
 int detect_creatures(int pow, bool telepathic = false);
 int detect_items(int pow);
 int detect_traps(int pow);
-void cast_refrigeration(int pow, bool monster_cast = false,
-                        int caster = NON_MONSTER);
-void cast_toxic_radiance(bool monster_cast = false);
+void cast_refrigeration(int pow);
+void cast_toxic_radiance(void);
 void drain_life(int pow);
 
 int fungal_bloom();
