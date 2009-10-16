@@ -486,7 +486,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (!monsterNearby || mons_friendly(monster))
             return;
 
-        cast_refrigeration(random2(12 * monster->hit_dice), true);
+        cast_refrigeration(random2(12 * monster->hit_dice), true,
+                           monster->mindex());
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
