@@ -2299,6 +2299,16 @@ int rain(coord_def & target)
             if (mon && mon->has_ench(ENCH_AQUATIC_LAND))
                 mon->del_ench(ENCH_AQUATIC_LAND);
         }
+        // We can also turn shallow water into deep water, but we're
+        // just going to skip cases where there is something on the
+        // shallow water.  Destroying items will probably be annoying,
+        // and insta-killing monsters is clearly out of the question.
+        else if (!actor_at(*rad)
+                 && igrd(*rad) == NON_ITEM
+                 && ftype == DNGN_SHALLOW_WATER)
+        {
+            grd(*rad) = DNGN_DEEP_WATER;
+        }
 
         if (ftype >= DNGN_MINMOVE)
         {
@@ -2317,16 +2327,6 @@ int rain(coord_def & target)
         }
 
 
-        // We can also turn shallow water into deep water, but we're
-        // just going to skip cases where there is something on the
-        // shallow water.  Destroying items will probably be annoying,
-        // and insta-killing monsters is clearly out of the question.
-        else if (!actor_at(*rad)
-                 && igrd(*rad) == NON_ITEM
-                 && ftype == DNGN_SHALLOW_WATER)
-        {
-            grd(*rad) = DNGN_DEEP_WATER;
-        }
     }
 
     if (spawned_count > 0)
