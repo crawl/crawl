@@ -511,10 +511,19 @@ static std::string _describe_monsters(const counted_monster_list &list)
 // assumes only you can cast this spell (or would want to).
 void cast_toxic_radiance(bool monster_cast)
 {
+    kill_category kc;
+
     if (monster_cast)
+    {
         mpr("Sickly green light fills the air!");
+        // Friendlies will never cast this.
+        kc = KC_OTHER;
+    }
     else
+    {
         mpr("You radiate a sickly green light!");
+        kc = KC_YOU;
+    }
 
     you.flash_colour = GREEN;
     viewwindow(true, false);
@@ -546,9 +555,9 @@ void cast_toxic_radiance(bool monster_cast)
             if (!monster->has_ench(ENCH_INVIS))
             {
                 bool affected =
-                    poison_monster(monster, KC_YOU, 1, false, false);
+                    poison_monster(monster, kc, 1, false, false);
 
-                if (coinflip() && poison_monster(monster, KC_YOU, false, false))
+                if (coinflip() && poison_monster(monster, kc, false, false))
                     affected = true;
 
                 if (affected)
@@ -580,7 +589,7 @@ void cast_toxic_radiance(bool monster_cast)
     }
 }
 
-void cast_refrigeration(int pow)
+void cast_refrigeration(int pow, bool monster_cast)
 {
     mpr("The heat is drained from your surroundings.");
 
@@ -637,7 +646,10 @@ void cast_refrigeration(int pow)
     // Set up the cold attack.
     bolt beam;
     beam.flavour = BEAM_COLD;
-    beam.thrower = KILL_YOU;
+    if (monster_cast)
+        beam.thrower = KILL_MON;
+    else
+        beam.thrower = KILL_YOU;
 
     for (int i = 0; i < MAX_MONSTERS; i++)
     {
@@ -649,7 +661,10 @@ void cast_refrigeration(int pow)
         {
             // Calculate damage and apply.
             int hurt = mons_adjust_flavoured(monster, beam, dam_dice.roll());
-            monster->hurt(&you, hurt, BEAM_COLD);
+            if (monster_cast)
+                monster->hurt(NULL, hurt, BEAM_COLD);
+            else
+                monster->hurt(&you, hurt, BEAM_COLD);
 
             // Cold-blooded creatures can be slowed.
             if (monster->alive()
