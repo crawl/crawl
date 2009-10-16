@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "tile_list_processor.h"
 
+#include <SDL_main.h>
+
 int main(int argc, char **argv)
 {
     if (argc != 2)
