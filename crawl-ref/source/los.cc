@@ -542,16 +542,8 @@ static int _imbalance(const std::vector<coord_def>& ray)
     return imb;
 }
 
-// Find a nonblocked ray from source to target. Return false if no
-// such ray could be found, otherwise return true and fill ray
-// appropriately.
-// if range is too great or all rays are blocked.
-// If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
-// assume that ray is appropriately filled in, and look for the next
-// ray in that cycle direction.
-// If find_shortest is true, examine all rays that hit the target and
-// take the shortest (starting at ray.fullray_idx).
-
+// Coordinate transformation so we can find_ray quadrant-by-quadrant.
+// TODO: Unify with los_params.
 struct trans
 {
     coord_def source;
@@ -662,6 +654,15 @@ bool _find_ray_se(const coord_def& target, ray_def& ray,
     return (found);
 }
 
+// Find a nonblocked ray from source to target. Return false if no
+// such ray could be found, otherwise return true and fill ray
+// appropriately.
+// if range is too great or all rays are blocked.
+// If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
+// assume that ray is appropriately filled in, and look for the next
+// ray in that cycle direction.
+// If find_shortest is true, examine all rays that hit the target and
+// take the shortest (starting at ray.fullray_idx).
 bool find_ray(const coord_def& source, const coord_def& target,
               ray_def& ray, int cycle_dir,
               bool find_best, bool ignore_solid)
@@ -706,6 +707,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     return true;
 }
 
+// Returns a straight ray from source to target.
 void fallback_ray(const coord_def& source, const coord_def& target,
                   ray_def& ray)
 {
