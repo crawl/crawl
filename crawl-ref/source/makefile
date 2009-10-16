@@ -37,7 +37,7 @@ MAKEFLAGS := --no-print-directory
 #
 # The GCC and GXX variables are set later.
 #
-AR = ar rcu
+AR = ar
 CC = $(GCC)
 CXX = $(GXX)
 RM = rm -f
@@ -50,6 +50,13 @@ export CXX
 export CFLAGS
 export MAKEFLAGS
 
+LIBPCRE := contrib/install/lib/libpcre.a
+LIBSDL := contrib/install/lib/libSDL.a
+LIBSDLIMAGE := contrib/install/lib/libSDL_image.a
+LIBFREETYPE := contrib/install/lib/libfreetype.a
+LIBSQLITE := contrib/install/lib/libsqlite3.a
+LIBLUA := contrib/install/lib/liblua.a
+
 #
 # Platform Detection
 #
@@ -61,12 +68,12 @@ export MAKEFLAGS
 # and non-translated values from other platforms (values from
 # 'uname -s' call). So Linux is simply 'Linux', etc.
 #
-UNAME_S := $(shell uname -s | cut -d'_' -f1)
+UNAME_S := $(shell uname -s)
 OSNAME =
-ifeq ($(UNAME_S),MINGW32)
+ifneq (,$(findstring MINGW,$(UNAME_S)))
 OSNAME = WIN32
 endif
-ifeq ($(UNAME_S),CYGWIN)
+ifneq (,$(findstring CYGWIN,$(UNAME_S)))
 OSNAME = WIN32
 endif
 ifeq ($(UNAME_S),Darwin)
@@ -94,7 +101,7 @@ OBJECTS += crash-u.o
 ifneq ($(TILES),n)
 OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
 else
-ifneq ($(UNAME_S),MINGW32)
+ifeq (,$(findstring MINGW,$(UNAME_S)))
 OBJECTS += libunix.o
 else
 OBJECTS += libw32c.o
@@ -147,31 +154,14 @@ INSTALLDIR   := /usr/games/crawl
 
 PCH := n
 
-# libpcre
-PCRESRC := contrib/pcre/
-PCRELIB := pcre
-PCRELIBA := lib$(PCRELIB).a
-FPCRELIBA := $(PCRESRC)$(PCRELIBA)
+LIBDBM := sqlite3
 
-# LUA
-LUASRC := contrib/lua/src/
-LUALIB := lua
-LUALIBA := lib$(LUALIB).a
-FLUALIBA := $(LUASRC)$(LUALIBA)
+INCLUDES_L += -Icontrib/install/include
+LIB += -Lcontrib/install/lib
 
-# SQLite
-SQLSRC   := contrib/sqlite/
-SQLLIB   := sqlite3
-SQLLIBA  := lib$(SQLLIB).a
-FSQLLIBA := $(SQLSRC)$(SQLLIBA)
+LIB += -llua -l$(LIBDBM)
 
-LIBDBM         := $(FSQLLIBA)
-EXTRA_INCLUDES += -I$(SQLSRC)
-EXTRA_DEPENDS  += $(FSQLLIBA)
-
-LIB := -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
-
-INCLUDES_L += -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
+INCLUDES_L += -Iutil -I.
 
 ifeq ($(OSNAME),MacOS)
 APPLE_GCC=y
@@ -280,6 +270,10 @@ else # MacOS
 # CFLAGS and LDFLAGS.
 #
 
+ifneq (,$(findstring MINGW,$(UNAME_S)))
+CONTRIB_DEPENDS += $(LIBSDL) $(LIBSDLIMAGE) $(LIBFREETYPE)
+endif
+
 ifneq ($(shell which pkg-config 2> /dev/null),)
 
 # If pkg-config is available, it's the surest way to find where
@@ -309,17 +303,22 @@ PNG_INCLUDE := -I/opt/libpng/include
 PNG_CFLAGS  :=
 PNG_LDFLAGS := -L/opt/libpng/lib -lpng
 
-FREETYPE_INCLUDE := -I/opt/freetype/include
+FREETYPE_INCLUDE := -I/opt/freetype/include -Icontrib/install/include/freetype2
 FREETYPE_CFLAGS  :=
 FREETYPE_LDFLAGS := -L/opt/freetype/lib -lfreetype
 
-ifneq ($(which sdl-config 2> /dev/null),)
+SDLCONFIG := $(which sdl-config)
+ifeq ($(SDLCONFIG),)
+SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
+endif
+
+ifneq ($(SDLCONFIG),)
 
 # sdl-config is our second best bet...
 #
-SDL_INCLUDE := $(shell sdl-config --cflags | tr ' ' '\n' | grep ^[-]I | tr '\n' ' ')
-SDL_CFLAGS  := $(shell sdl-config --cflags | tr ' ' '\n' | grep -v ^[-]I | tr '\n' ' ')
-SDL_LDFLAGS := $(shell sdl-config --libs)
+SDL_INCLUDE := $(shell $(SDLCONFIG) --cflags | tr ' ' '\n' | grep ^[-]I | tr '\n' ' ')
+SDL_CFLAGS  := $(shell $(SDLCONFIG) --cflags | tr ' ' '\n' | grep -v ^[-]I | tr '\n' ' ')
+SDL_LDFLAGS := $(shell $(SDLCONFIG) --libs)
 
 else # sdl-config
 
@@ -332,9 +331,13 @@ SDL_LDFLAGS := -L/opt/sdl/lib -lSDL -lSDLmain
 endif # sdl-config
 endif # pkg-config
 
-LIB += $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS) $(SDL_LDFLAGS) -lSDL_image
+LIB += $(SDL_LDFLAGS) -lSDL_image $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS) -lz
 ifneq ($(OSNAME),MacOS)
+ifeq (,$(findstring MINGW,$(UNAME_S)))
 LIB += -lGL -lGLU
+else
+LIB += -lopengl32 -lglu32
+endif
 endif
 
 DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
@@ -343,7 +346,6 @@ INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 endif # MacOS
 
 endif # TILES
-
 
 ifeq ($(GCC_GTE_4_3_0),Yes)
 CFWARN_L += -Wno-array-bounds
@@ -413,7 +415,7 @@ endif
 
 # Cygwin has a panic attack if we do this...
 ifneq ($(OPTIMIZE),n)
-ifneq ($(UNAME_S),CYGWIN)
+ifneq (,$(findstring CYGWIN,$(UNAME_S)))
 CFWARN_L += -Wuninitialized
 else
 CFWARN_L += -Wno-uninitialized
@@ -470,12 +472,11 @@ USE_PCRE := y
 endif
 
 ifneq ($(USE_PCRE),n)
-INCLUDES_L += -I$(PCRESRC)
 DEFINES += -DREGEX_PCRE
-LIB += $(FPCRELIBA)
+LIB += -lpcre
 endif
 
-ifneq ($(UNAME_S),MINGW32)
+ifeq (,$(findstring MINGW,$(UNAME_S)))
 LIB += -l$(LIBCURS)
 endif
 
@@ -540,27 +541,27 @@ TILEFILES = \
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
-EXTRA_DEPENDS += $(DESTTILEFILES)
 OBJECTS += $(TILEDEFOBJS)
 endif
 
-GAME_DEPENDS := $(LUASRC)$(LUALIBA) $(EXTRA_DEPENDS) $(OBJECTS) $(EXTRA_OBJECTS)
+ifneq ($(USE_PCRE),n)
+CONTRIB_DEPENDS += $(LIBPCRE)
+endif
+
+CONTRIB_DEPENDS += $(LIBLUA) $(LIBSQLITE)
+
+GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_DEPENDS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | cut -d'"' -f2)
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
 
-ifneq ($(USE_PCRE),n)
-GAME_DEPENDS += $(FPCRELIBA)
-endif
-
 PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
 		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
-.PHONY: install clean clean-contrib clean-lua clean-sql clean-prce distclean \
-	debug profile wizard
+.PHONY: all install clean clean-contrib distclean debug profile wizard
 
 ##########################################################################
 
@@ -601,13 +602,13 @@ endif
 # The level compiler
 #
 
+$(UTIL)levcomp.tab.cc: $(CONTRIB_DEPENDS)
+$(UTIL)levcomp.lex.cc: $(CONTRIB_DEPENDS)
+
 ifeq ($(strip $(DOYACC)),y)
 
 prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
 		$(QUIET_COPY)$(COPY) $^ prebuilt/
-
-$(UTIL)levcomp.tab.cc: .contrib-ok
-$(UTIL)levcomp.lex.cc: .contrib-ok
 
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
 		+@$(MAKE) -C $(UTIL) levcomp.tab.cc
@@ -667,22 +668,14 @@ clean:
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) *.o *.ixx
 
-clean-lua:
-	+$(MAKE) -C $(LUASRC) clean
-
-clean-sql:
-	+$(MAKE) -C $(SQLSRC) clean
-
-clean-pcre:
-	+$(MAKE) -C $(PCRESRC) clean
-
-clean-contrib: clean-lua clean-sql clean-pcre
+clean-contrib:
+	+$(MAKE) -C contrib clean
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) bones.* morgue.txt scores $(GAME) *.sav core *.0* *.lab $(DEPENDENCY_MKF)
 
 .contrib-ok:
-	@for a in $(LUASRC)Makefile $(SQLSRC)Makefile $(PCRESRC)Makefile; do \
+	@for a in contrib/lua/src/Makefile contrib/sqlite/Makefile contrib/pcre/Makefile; do \
 	    if [ ! -f $$a ]; then \
 	        echo "The '$$a' file is missing. Have you run 'git submodule update --init'?"; \
 			exit 1; \
@@ -711,7 +704,7 @@ ifneq ($(PCH),n)
 CC_DEP := AppHdr.h.gch
 endif
 
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS)
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_DEPENDS)
 
 %.o: %.m
 	$(QUIET_CXX)$(CC) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
@@ -719,23 +712,35 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS)
 %.o: %.cc
 	$(QUIET_CXX)$(CXX) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
 
-#############################################################################
-# Build PCRE
+#
+# Contribs
+#
+.PHONY: pcre lua sqlite sdl sdl-image freetype
 
-$(FPCRELIBA): .contrib-ok
-	+@$(MAKE) -C $(PCRESRC)
+$(LIBPCRE): .contrib-ok
+	+@$(MAKE) -C contrib pcre
+pcre: $(LIBPCRE)
 
-#############################################################################
-# Build Lua
+$(LIBLUA): .contrib-ok
+	+@$(MAKE) -C contrib lua
+lua: $(LIBLUA)
 
-$(FLUALIBA): .contrib-ok
-	+@$(MAKE) -C $(LUASRC) crawl_unix
+$(LIBSQLITE): .contrib-ok
+	+@$(MAKE) -C contrib sqlite
+sqlite: $(LIBSQLITE)
 
-#############################################################################
-# Build SQLite
+$(LIBFREETYPE): .contrib-ok
+	+@$(MAKE) -C contrib freetype
+freetype: $(LIBFREETYPE)
 
-$(FSQLLIBA): .contrib-ok
-	+@$(MAKE) -C $(SQLSRC)
+$(LIBSDL): .contrib-ok
+	+@$(MAKE) -C contrib sdl
+sdl: $(LIBSDL)
+
+$(LIBSDLIMAGE): .contrib-ok
+	+@$(MAKE) -C contrib sdl-image
+sdl-image: $(LIBSDLIMAGE)
+
 
 #############################################################################
 # Build unrandart data
@@ -747,7 +752,7 @@ art-data.h: art-data.txt util/art-data.pl art-func.h
 #
 
 .PHONY: rltile-build
-rltile-build:
+rltile-build: $(CONTRIB_DEPENDS)
 	$(MAKE) -C $(RLTILES) -f makefile.unix all
 
 $(TILEDEFSRCS): rltile-build

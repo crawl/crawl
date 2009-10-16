@@ -1,6 +1,9 @@
 # Xcode build outputs
-Frameworks
+/Frameworks
 
 # Visual C++ outputs
-bin
-obj
+/bin
+/obj
+
+# Locally built contribs
+/install

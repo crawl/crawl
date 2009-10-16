@@ -18,14 +18,19 @@ LDFLAGS := -F/Library/Frameworks $(SDL_LDFLAGS) $(PNG_LDFLAGS)
 
 else
 
-SDL_CFLAGS := $(shell sdl-config --cflags)
-SDL_LDFLAGS := $(shell sdl-config --libs)
+SDLCONFIG := $(shell which sdl-config 2> /dev/null)
+ifeq ($(SDLCONFIG),)
+SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
+endif
 
-PNG_INCLUDE := $(shell pkg-config libpng --cflags)
-PNG_LIB := $(shell pkg-config libpng --libs)
+SDL_CFLAGS := $(shell $(SDLCONFIG) --cflags 2> /dev/null)
+SDL_LDFLAGS := $(shell $(SDLCONFIG) --libs 2> /dev/null)
 
-CFLAGS := $(SDL_CFLAGS) $(PNG_INCLUDE)
-LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_image -lpng
+PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null)
+PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null)
+
+CFLAGS := -I../contrib/install/include $(SDL_CFLAGS) $(PNG_INCLUDE)
+LDFLAGS := -L../contrib/install/lib $(SDL_LDFLAGS) -lSDL_image $(PNG_LIB) -lz
 
 endif
 
@@ -68,4 +73,4 @@ distclean: clean
 	$(QUIET_CXX)$(CXX) $(CFLAGS) -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
-	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) -o $@
+	$(QUIET_LINK)$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
