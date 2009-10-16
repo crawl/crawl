@@ -15,6 +15,12 @@ enum opacity_type
     NUM_OPACITIES
 };
 
+typedef opacity_type (*opacity_func)(const coord_def&);
+typedef bool (*bounds_func)(const coord_def&);
+
+opacity_type opc_default(const coord_def&);
+bool bounds_los_radius(const coord_def& p);
+
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between
 // relative coordinates (-8,-8)..(8,8) and real coordinates,

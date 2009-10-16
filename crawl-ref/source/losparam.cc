@@ -14,6 +14,26 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 
+opacity_type opc_default(const coord_def& p)
+{
+    int m;
+    dungeon_feature_type f = env.grid(p);
+    if (grid_is_opaque(f))
+        return OPC_OPAQUE;
+    else if (is_opaque_cloud(env.cgrid(p)))
+        return OPC_HALF;
+    else if (f == DNGN_TREES)
+        return OPC_HALF;
+    else if ((m = mgrd(p)) != NON_MONSTER && menv[m].type == MONS_BUSH)
+        return OPC_HALF;
+    else
+        return OPC_CLEAR;
+}
+
+bool bounds_los_radius(const coord_def& p)
+{
+    return (p.abs() <= get_los_radius_squared());
+}
 
 /* los_param_trans */
 

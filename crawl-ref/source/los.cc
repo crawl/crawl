@@ -859,6 +859,40 @@ void losight(env_show_grid& sh, const los_param& dat)
     sh(o+sh_o) = dat.appearance(o);
 }
 
+struct los_param_funcs : public los_param
+{
+    coord_def center;
+    opacity_func opc;
+    bounds_func bounds;
+
+    los_param_funcs(const coord_def& c,
+                    opacity_func o, bounds_func b)
+        : center(c), opc(o), bounds(b)
+    {
+    }
+
+    bool los_bounds(const coord_def& p) const
+    {
+        return (map_bounds(p + center) && bounds(p));
+    }
+
+    unsigned appearance(const coord_def& p) const
+    {
+        return (grid_appearance(p + center));
+    }
+
+    opacity_type opacity(const coord_def& p) const
+    {
+        return (opc(p + center));
+    }
+};
+
+void losight(env_show_grid& sh, const coord_def& center,
+             opacity_func opc, bounds_func bounds)
+{
+    losight(sh, los_param_funcs(center, opc, bounds));
+}
+
 void losight_permissive(env_show_grid &sh, const coord_def& center)
 {
     for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
@@ -875,7 +909,7 @@ void calc_show_los()
     if (!crawl_state.arena && !crawl_state.arena_suspended)
     {
         // Must be done first.
-        losight(env.show, los_param_base(you.pos()));
+        losight(env.show, you.pos());
 
         // What would be visible, if all of the translucent walls were
         // made opaque.

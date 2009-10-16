@@ -31,7 +31,10 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 bool cell_see_cell(const coord_def& p1, const coord_def& p2);
 
 void clear_rays_on_exit();
-void losight(env_show_grid& sh, const los_param& dat);
+void losight(env_show_grid& sh, const coord_def& center,
+             opacity_func opc = &opc_default,
+             bounds_func bounds = &bounds_los_radius);
+void losight(env_show_grid& sh, const los_param& param);
 void calc_show_los();
 
 bool see_grid( const env_show_grid &show,
