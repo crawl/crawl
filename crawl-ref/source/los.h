@@ -19,7 +19,10 @@ int get_los_radius_squared(); // XXX
 
 struct ray_def;
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, bool cycle = false, bool ignore_solid = false);
+              ray_def& ray, bool cycle = false,
+              const opacity_func &opc = opc_solid,
+              const bounds_func &bds = bds_default);
+
 void fallback_ray(const coord_def& source, const coord_def& target,
                   ray_def& ray);
 

@@ -6,11 +6,13 @@
 #ifndef LOSPARAM_H
 #define LOSPARAM_H
 
+// Note: find_ray relies on the fact that 2*OPC_HALF == OPC_OPAQUE.
+// On the other hand, losight tracks this explicitly.
 enum opacity_type
 {
-    OPC_CLEAR,
-    OPC_HALF,    // for opaque clouds; two or more block
-    OPC_OPAQUE,
+    OPC_CLEAR  = 0,
+    OPC_HALF   = 1,    // for opaque clouds; two or more block
+    OPC_OPAQUE = 2,
 
     NUM_OPACITIES
 };

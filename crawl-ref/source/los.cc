@@ -577,25 +577,15 @@ void cellray::calc_params()
     slope_diff = _slope_factor(ray) - _calc_slope(trg.x, trg.y);
 }
 
-// Coordinate transformation so we can find_ray quadrant-by-quadrant.
-// TODO: Unify with los_params.
-struct trans
-{
-    coord_def source;
-    int signx, signy;
-
-    coord_def transform(coord_def l)
-    {
-        return coord_def(source.x + signx*l.x, source.y + signy*l.y);
-    }
-};
-
 // Find ray in positive quadrant.
+// opc has been translated for this quadrant.
+// XXX: Allow finding ray of minimum opacity.
 bool _find_ray_se(const coord_def& target, ray_def& ray,
-                  bool cycle, bool ignore_solid, trans t)
+                  bool cycle, const opacity_func& opc,
+                  const bounds_func& bds)
 {
     ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
-    if (target.abs() > LOS_RADIUS2)
+    if (!bds(target))
         return false;
 
     const std::vector<cellray> &min = min_cellrays(target);
@@ -605,36 +595,26 @@ bool _find_ray_se(const coord_def& target, ray_def& ray,
 
 #ifdef DEBUG_DIAGNOSTICS
     if (cycle)
-        mprf(MSGCH_DIAGNOSTICS, "cycling from %d (total %d), ignores_solid=%d",
-             ray.cycle_idx, min.size(), ignore_solid);
+        mprf(MSGCH_DIAGNOSTICS, "cycling from %d (total %d)",
+             ray.cycle_idx, min.size());
 #endif
 
     unsigned int start = cycle ? ray.cycle_idx + 1 : 0;
     ASSERT(0 <= start && start <= min.size());
 
-    if (ignore_solid)
+    int blocked = OPC_OPAQUE;
+    for (unsigned int i = start;
+         (blocked >= OPC_OPAQUE) && (i < start + min.size()); i++)
     {
-        index = start % min.size();
+        index = i % min.size();
         c = min[index];
+        blocked = OPC_CLEAR;
+        // Check all inner points.
+        for (unsigned int j = 0; j < c.end && blocked < OPC_OPAQUE; j++)
+            blocked += opc(c[j]);
     }
-    else
-    {
-        bool blocked = true;
-        for (unsigned int i = start; blocked && (i < start + min.size()); i++)
-        {
-            index = i % min.size();
-            c = min[index];
-            blocked = false;
-            // Check all inner points.
-            for (unsigned int j = 0; j < c.end && !blocked; j++)
-            {
-                coord_def cur = t.transform(c[j]);
-                blocked = grid_is_solid(grd(cur));
-            }
-        }
-        if (blocked)
-            return (false);
-    }
+    if (blocked >= OPC_OPAQUE)
+        return (false);
 
     ray = c.ray;
     ray.cycle_idx = index;
@@ -642,15 +622,39 @@ bool _find_ray_se(const coord_def& target, ray_def& ray,
     return (true);
 }
 
+// Coordinate transformation so we can find_ray quadrant-by-quadrant.
+struct opacity_trans : opacity_func
+{
+    const coord_def& source;
+    int signx, signy;
+    const opacity_func& orig;
+
+    opacity_trans(const opacity_func& opc, const coord_def& s, int sx, int sy)
+        : source(s), signx(sx), signy(sy), orig(opc)
+    {
+    }
+
+    opacity_type operator()(const coord_def &l) const
+    {
+        return orig(transform(l));
+    }
+
+    coord_def transform(const coord_def &l) const
+    {
+        return coord_def(source.x + signx*l.x, source.y + signy*l.y);
+    }
+};
+
 // Find a nonblocked ray from source to target. Return false if no
 // such ray could be found, otherwise return true and fill ray
 // appropriately.
 // if range is too great or all rays are blocked.
 // If cycle is false, find the first fitting ray. If it is true,
 // assume that ray is appropriately filled in, and look for the next
-// ray.
+// ray. We only ever use ray.cycle_idx.
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, bool cycle, bool ignore_solid)
+              ray_def& ray, bool cycle,
+              const opacity_func& opc, const bounds_func &bds)
 {
     if (target == source || !map_bounds(source) || !map_bounds(target))
         return false;
@@ -660,24 +664,10 @@ bool find_ray(const coord_def& source, const coord_def& target,
     const int absx  = signx * (target.x - source.x);
     const int absy  = signy * (target.y - source.y);
     const coord_def abs = coord_def(absx, absy);
-    trans t;
-    t.source = source;
-    t.signx = signx;
-    t.signy = signy;
+    opacity_trans opc_trans = opacity_trans(opc, source, signx, signy);
 
-    ray.accx -= source.x;
-    ray.accy -= source.y;
-
-    if (signx < 0)
-        ray.accx = 1.0 - ray.accx;
-    if (signy < 0)
-        ray.accy = 1.0 - ray.accy;
-
-    ray.quadx = 1;
-    ray.quady = 1;
-
-    if (!_find_ray_se(abs, ray, cycle, ignore_solid, t))
-        return false;
+    if (!_find_ray_se(abs, ray, cycle, opc_trans, bds))
+        return (false);
 
     if (signx < 0)
         ray.accx = 1.0 - ray.accx;
@@ -689,7 +679,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
 
     _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
 
-    return true;
+    return (true);
 }
 
 // Returns a straight ray from source to target.
