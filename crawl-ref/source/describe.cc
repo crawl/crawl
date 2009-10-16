@@ -3222,77 +3222,78 @@ static std::string _religion_help(god_type god)
     return result;
 }
 
-// The various titles granted by the god of your choice.
-// Note that Xom doesn't use piety the same way as the other gods, so
-// these are just placeholders.
+// The various titles granted by the god of your choice.  Note that Xom
+// doesn't use piety the same way as the other gods, so these are just
+// placeholders.
 const char *divine_title[NUM_GODS][8] =
 {
-    //  No god
+    // No god.
     {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger",
      "Bugbear",            "Bugged One",            "Giant Bug",                "Lord of the Bugs"},
 
-    //  Zin
+    // Zin.
     {"Sinner",             "Anchorite",             "Apologist",                "Pious",
      "Devout",             "Orthodox",              "Immaculate",               "Bringer of Law"},
 
-    //  the Shining One
+    // The Shining One.
     {"Sinner",             "Acolyte",               "Righteous",                "Unflinching",
      "Holy Warrior",       "Exorcist",              "Demon Slayer",             "Bringer of Light"},
 
-    //  Kikubaaqudgha -- scholarly death
+    // Kikubaaqudgha -- scholarly death.
     {"Sinner",             "Purveyor of Pain",      "Death's Scholar",          "Merchant of Misery",
      "Death's Artisan",    "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
-    //  Yredelemnul -- zombie death
+    // Yredelemnul -- zombie death.
     {"Sinner",             "Zealot",                "Exhumer",                  "Fey %s",
      "Soul Tainter",       "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
 
-    //  Xom
+    // Xom.
     {"Toy",                "Toy",                   "Toy",                      "Toy",
      "Toy",                "Toy",                   "Toy",                      "Toy"},
 
-    //  Vehumet -- battle mage theme
+    // Vehumet -- battle mage theme.
     {"Meek",               "Sorcerer's Apprentice", "Scholar of Destruction",   "Caster of Ruination",
      "Battle Magician",    "Warlock",               "Annihilator",              "Luminary of Lethal Lore"},
 
-    //  Okawaru -- battle theme
+    // Okawaru -- battle theme.
     {"Coward",             "Struggler",             "Combatant",                "Warrior",
      "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
 
-    //  Makhleb -- chaos theme
+    // Makhleb -- chaos theme.
     {"Orderly",            "Spawn of Chaos",        "Disciple of Annihilation", "Fanfare of Bloodshed",
      "Fiendish",           "Demolition %s",         "Pandemonic",               "Champion of Chaos"},
 
-    //  Sif Muna -- scholarly theme
+    // Sif Muna -- scholarly theme.
     {"Ignorant",           "Disciple",              "Student",                  "Adept",
      "Scribe",             "Scholar",               "Sage",                     "Genius of the Arcane"},
 
-    //  Trog -- anger theme
+    // Trog -- anger theme.
     {"Faithless",          "Troglodyte",            "Angry Troglodyte",         "Frenzied",
      "%s of Prey",         "Rampant",               "Wild %s",                  "Bane of Scribes"},
 
-    //  Nemelex Xobeh -- alluding to Tarot and cards
+    // Nemelex Xobeh -- alluding to Tarot and cards.
     {"Unlucky %s",         "Pannier",               "Jester",                   "Fortune-Teller",
      "Soothsayer",         "Magus",                 "Cardsharp",                "Hand of Fortune"},
 
-    //  Elyvilon
+    // Elyvilon.
     {"Sinner",             "Comforter",             "Caregiver",                "Practitioner",
      "Pacifier",           "Purifying %s",          "Faith Healer",             "Bringer of Life"},
 
-    //  Lugonu -- distortion theme
+    // Lugonu -- distortion theme.
     {"Faithless",          "Abyss-Baptised",        "Unweaver",                 "Distorting %s",
      "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
-    //  Beogh -- messiah theme
+    // Beogh -- messiah theme.
     {"Apostate",           "Messenger",             "Proselytiser",             "Priest",
      "Missionary",         "Evangelist",            "Apostle",                  "Messiah"},
 
-    //  Jiyva -- slime and jelly theme
+    // Jiyva -- slime and jelly theme.
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
      "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
 
-    // Feawn -- nature theme, titles could use some work but the progression
-    // is generally from nature lover to walking disaster. -CAO
+    // Feawn -- nature theme.  Titles could use some work, but the
+    // progression is generally from nature lover to walking disaster.
+    // -cao
     {"Walking Fertiliser", "Green %s",              "Photosynthesist",          "Planter",
      "Nimbus",             "Sporadic Warrior",      "Green Death",              "Force of Nature"}
 };
