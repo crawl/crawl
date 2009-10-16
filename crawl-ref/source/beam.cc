@@ -1763,6 +1763,12 @@ void bolt::fire_wall_effect()
 
 void bolt::nuke_wall_effect()
 {
+    if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
+    {
+        finish_beam();
+        return;
+    }
+
     const dungeon_feature_type feat = grd(pos());
 
     if (feat == DNGN_ROCK_WALL

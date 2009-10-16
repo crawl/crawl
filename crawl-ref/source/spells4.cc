@@ -213,6 +213,9 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
     if (!in_bounds(where))
         return 0;
 
+    if (env.markers.property_at(where, MAT_ANY, "veto_shatter") == "veto")
+        return 0;
+
     const dungeon_feature_type grid = grd(where);
 
     switch (grid)
@@ -1538,6 +1541,15 @@ bool cast_fragmentation(int pow, const dist& spd)
 
         mprf("%s shatters!", name_cap_the.c_str());
         goto all_done;
+    }
+
+    if (env.markers.property_at(spd.target, MAT_ANY,
+                                "veto_fragmentation") == "veto")
+    {
+        mprf("%s seems to be unnaturally hard.",
+             feature_description(spd.target, false, DESC_CAP_THE, false).c_str());
+        canned_msg(MSG_SPELL_FIZZLES);
+        return (true);
     }
 
   do_terrain:
