@@ -1980,11 +1980,16 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     if (!found)
         return(0);
 
-    // Leave a purple cloud.
-    place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+    coord_def origin = you.pos();
+    int res = move_player_to_grid(target, false, true, true);
 
-    you.moveto(target);
-    return 1;
+    if(res)
+    {
+        // Leave a purple cloud.
+        place_cloud(CLOUD_PURP_SMOKE, origin, 1 + random2(3), KC_YOU);
+    }
+
+    return res;
 }
 
 int cast_semi_controlled_blink(int pow)

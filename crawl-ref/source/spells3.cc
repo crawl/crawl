@@ -1511,25 +1511,24 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
             if (!see_grid(pos))
                 large_change = true;
 
-            // Leave a purple cloud.
-            place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
-
-            you.moveto(pos);
-
             // Merfolk should be able to control-tele into deep water.
-            if (grd(you.pos()) != DNGN_FLOOR
-                    && grd(you.pos()) != DNGN_SHALLOW_WATER
+            if (grd(pos) != DNGN_FLOOR
+                    && grd(pos) != DNGN_SHALLOW_WATER
                     && (you.species != SP_MERFOLK
-                        || grd(you.pos()) != DNGN_DEEP_WATER)
-                || monster_at(you.pos())
-                || env.cgrid(you.pos()) != EMPTY_CLOUD)
+                        || grd(pos) != DNGN_DEEP_WATER)
+                || monster_at(pos)
+                || env.cgrid(pos) != EMPTY_CLOUD)
             {
                 is_controlled = false;
                 large_change  = false;
             }
             else
             {
+                // Leave a purple cloud.
+                place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+
                 // Controlling teleport contaminates the player. - bwr
+                move_player_to_grid(pos, false, true, true);
                 contaminate_player(1, true);
             }
         }
@@ -1574,7 +1573,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
         while (grd(newpos) != DNGN_FLOOR
                    && grd(newpos) != DNGN_SHALLOW_WATER
                    && (you.species != SP_MERFOLK
-                       || grd(you.pos()) != DNGN_DEEP_WATER)
+                       || grd(newpos) != DNGN_DEEP_WATER)
                || monster_at(newpos)
                || env.cgrid(newpos) != EMPTY_CLOUD
                || need_distance_check && (newpos - centre).abs() < 34*34);
@@ -1592,7 +1591,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
         // Leave a purple cloud.
         place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
 
-        you.moveto(newpos);
+        move_player_to_grid(newpos, false, true, true);
     }
 
     if (large_change)
