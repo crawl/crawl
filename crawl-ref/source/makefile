@@ -60,35 +60,33 @@ LIBLUA := contrib/install/lib/liblua.a
 #
 # Platform Detection
 #
-# Use the variable OSNAME if you need to add something that's
-# platform-specific.
-# The valid OSNAME values are currently:
-#    'WIN32': alias for MinGW and Cygwin
-#    'MacOS': alias for Darwin (Mac OS X)
-# and non-translated values from other platforms (values from
-# 'uname -s' call). So Linux is simply 'Linux', etc.
-#
-UNAME_S := $(shell uname -s)
-OSNAME =
-ifneq (,$(findstring MINGW,$(UNAME_S)))
-OSNAME = WIN32
-endif
-ifneq (,$(findstring CYGWIN,$(UNAME_S)))
-OSNAME = WIN32
-endif
-ifeq ($(UNAME_S),Darwin)
-OSNAME = MacOS
-endif
-ifeq ($(OSNAME),)
-OSNAME = $(UNAME_S)
-endif
+uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not')
+uname_O := $(shell sh -c 'uname -o 2>/dev/null || echo not')
+uname_R := $(shell sh -c 'uname -r 2>/dev/null || echo not')
+uname_P := $(shell sh -c 'uname -p 2>/dev/null || echo not')
+uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
-ifeq ($(OSNAME),WIN32)
-GAME = crawl.exe
+ifneq (,$(findstring MINGW,$(uname_S)))
+	GAME = crawl.exe
+	WIN32 = Yes
+	NO_RDYNAMIC = YesPlease
+	NO_NCURSES = YesPlease
+	NEEDS_LIBW32C = YesPlease
+	NEEDS_PCRE = YesPlease
 endif
-
-TILES = n
-HURRY = n
+ifneq (,$(findstring CYGWIN,$(uname_S)))
+	GAME = crawl.exe
+	NO_RDYNAMIC = YesPlease
+	NEEDS_PCRE = YesPlease
+endif
+ifeq ($(uname_S),Darwin)
+ifndef NO_APPLE_GCC
+	APPLE_GCC = YesPlease
+endif
+	NEED_APPKIT = YesPlease
+	LIBNCURSES_IS_UNICODE = Yes
+endif
 
 #
 # Set up object file dependencies for $(GAME) target.
@@ -98,38 +96,22 @@ include makefile.obj
 # Works for Mac OS X and Linux.
 OBJECTS += crash-u.o
 
-ifneq ($(TILES),n)
+ifdef TILES
 OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
 else
-ifeq (,$(findstring MINGW,$(UNAME_S)))
-OBJECTS += libunix.o
-else
+ifdef NEEDS_LIBW32C
 OBJECTS += libw32c.o
+else
+OBJECTS += libunix.o
 endif
 endif
 
 # To get stack trace symbols.
 # Note that MinGW doesn't support -rdynamic.
-ifeq ($(OSNAME),WIN32)
-LDFLAGS :=
-else
+ifndef NO_RDYNAMIC
 LDFLAGS := -rdynamic
 endif
 
-# Change this to y (case-sensitive!) if you want to use Unicode glyphs
-# in the map, and you have libncursesw available.
-UNICODE_GLYPHS = n
-# Usually, it can be autodetected for you:
-ifneq ($(shell ls /usr/include/ncursesw 2> /dev/null),)
-UNICODE_GLYPHS = y
-endif
-
-
-# If you're using UNICODE_GLYPHS=y, and have a preferred Unicode
-# (UTF-8) locale you want Crawl to use, you can set it here. The
-# default is en_US.UTF-8. If you'd prefer that Crawl use the locale
-# as set in your environment LC_* variables, use UNICODE_LOCALE = .
-UNICODE_LOCALE =
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
 DOYACC := y
@@ -152,25 +134,12 @@ INSTALLDIR   := /usr/games/crawl
 # SAVEDIR := /usr/games/crawl/saves/
 # DATADIR := /usr/games/crawl/data/
 
-PCH := n
-
-LIBDBM := sqlite3
-
 INCLUDES_L += -Icontrib/install/include
 LIB += -Lcontrib/install/lib
 
 INCLUDES_L += -Iutil -I.
 
-ifeq ($(OSNAME),MacOS)
-APPLE_GCC=y
-else
-APPLE_GCC=n
-endif
-export APPLE_GCC
-
-GCC_VER=
-
-ifneq ($(APPLE_GCC),n)
+ifdef APPLE_GCC
 
 # Compatibility level for Mac OS X
 #
@@ -202,7 +171,6 @@ else
 GCC := gcc
 GXX := g++
 endif
-
 GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
 
 RLTILES = rltiles
@@ -210,19 +178,16 @@ RLTILES = rltiles
 #
 # Tiles build stuff
 #
-ifneq ($(TILES),n)
+ifdef TILES
 
 DEFINES_L += -DUSE_TILE
 INCLUDES_L += -I$(RLTILES)
 
-ifeq ($(OSNAME),MacOS)
-# Handle the tile build dependencies for Mac a bit
-# differently than other platforms.
-
+ifdef NEED_APPKIT
 LIB += -framework OpenGL -framework AppKit
 endif
 
-ifneq ($(APPLE_GCC),n)
+ifdef APPLE_GCC
 
 # SDL has a goof in the stock SDL_config.h which checks whether
 # __MACOSX__ is defined. It's not one of Apple's stock markers,
@@ -235,7 +200,7 @@ EXTRA_OBJECTS += SDLMain.o
 # If the /Library/Frameworks folder exists, add a -F flag
 #
 ifneq ($(shell ls -a /Library/Frameworks 2> /dev/null),)
-LIB += -F/Library/Frameworks/
+LIB += -F/Library/Frameworks/ -Fcontrib/Frameworks
 endif
 
 # Check if our dependencies exist as frameworks. If so, use their
@@ -268,7 +233,7 @@ else # MacOS
 # CFLAGS and LDFLAGS.
 #
 
-ifneq (,$(findstring MINGW,$(UNAME_S)))
+ifneq (,$(findstring MINGW,$(uname_S)))
 CONTRIB_DEPENDS += $(LIBSDL) $(LIBSDLIMAGE) $(LIBFREETYPE)
 endif
 
@@ -331,7 +296,7 @@ endif # pkg-config
 
 LIB += $(SDL_LDFLAGS) -lSDL_image $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS) -lz
 ifneq ($(OSNAME),MacOS)
-ifeq (,$(findstring MINGW,$(UNAME_S)))
+ifeq (,$(findstring MINGW,$(uname_S)))
 LIB += -lGL -lGLU
 else
 LIB += -lopengl32 -lglu32
@@ -356,64 +321,54 @@ CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_C
 # Figure out the build settings for this type of build
 #
 
-# Crawl defaults
-# Optimized, no debugging.
-FULLDEBUG=n
-WIZARD=n
-DEBUG=n
-OPTIMIZE=y
-
 # Debug
 # No optimization, full debugging.
 ifeq ($(MAKECMDGOALS),debug)
-FULLDEBUG=y
-WIZARD=y
-DEBUG=y
-OPTIMIZE=n
+	FULLDEBUG=YesPlease
+	WIZARD=YesPlease
+	DEBUG=YesPlease
+	NO_OPTIMIZE=YesPlease
 endif
 
 # Wizard
 # Optimized, with wizard mode.
 ifeq ($(MAKECMDGOALS),wizard)
-FULLDEBUG=n
-WIZARD=y
-DEBUG=y
-OPTIMIZE=y
+	WIZARD=YesPlease
+	DEBUG=YesPlease
 endif
 
 # Profile
 # Optimized, with full debugging.
 ifeq ($(MAKECMDGOALS),profile)
-FULLDEBUG=y
-WIZARD=y
-DEBUG=y
-OPTIMIZE=y
+	FULLDEBUG=YesPlease
+	WIZARD=YesPlease
+	DEBUG=YesPlease
 endif
 
-ifneq ($(HURRY),n)
-OPTIMIZE=n
+ifdef HURRY
+	NO_OPTIMIZE=YesPlease
 endif
 
-ifeq ($(FULLDEBUG),y)
+ifdef FULLDEBUG
 DEFINES += -DFULLDEBUG
 endif
-ifeq ($(DEBUG),y)
+ifdef DEBUG
 EXTRA_FLAGS += -ggdb
 DEFINES += -DDEBUG
 endif
-ifeq ($(WIZARD),y)
+ifdef WIZARD
 DEFINES += -DWIZARD
 endif
-ifeq ($(OPTIMIZE),n)
+ifdef NO_OPTIMIZE
 CFOPTIMIZE  := -O0
 endif
-ifneq ($(PCH),n)
+ifdef PCH
 CFWARN_L += -Winvalid-pch
 endif
 
 # Cygwin has a panic attack if we do this...
-ifneq ($(OPTIMIZE),n)
-ifneq (,$(findstring CYGWIN,$(UNAME_S)))
+ifndef NO_OPTIMIZE
+ifeq (,$(findstring CYGWIN,$(uname_S)))
 CFWARN_L += -Wuninitialized
 else
 CFWARN_L += -Wno-uninitialized
@@ -428,7 +383,19 @@ ifneq ($(strip $(DATADIR)),)
 CFOTHERS_L += '-DDATA_DIR_PATH="$(strip $(DATADIR))"'
 endif
 
-ifeq ($(strip $(UNICODE_GLYPHS)),y)
+ifndef NO_NCURSES
+# Usually, it can be autodetected for you:
+ifneq ($(shell ls /usr/include/ncursesw 2> /dev/null),)
+UNICODE_GLYPHS = YesPlease
+endif
+
+# If you're using UNICODE_GLYPHS=y, and have a preferred Unicode
+# (UTF-8) locale you want Crawl to use, you can set it here. The
+# default is en_US.UTF-8. If you'd prefer that Crawl use the locale
+# as set in your environment LC_* variables, use UNICODE_LOCALE = .
+UNICODE_LOCALE =
+
+ifdef UNICODE_GLYPHS
 # Include path for (n)curses with Unicode support.
 INCLUDES_L += -I/usr/include/ncursesw
 
@@ -446,40 +413,33 @@ endif
 endif
 
 # The standard ncurses library also supports Unicode on Mac OS/Darwin.
-ifeq ($(shell uname),Darwin)
+ifdef LIBNCURSES_IS_UNICODE
 LIBCURS = ncurses
 endif
+
+LIB += -l$(LIBCURS)
 
 else
 # Include path for curses or ncurses (non-Unicode).
 INCLUDES_L += -I/usr/include/ncurses
-LIBCURS  = ncurses
+LIB += -lncurses
+endif
 endif
 
-ifeq ($(OSNAME),WIN32)
-ifneq ($(TILES),n)
+ifdef WIN32
+ifdef TILES
 CFOTHERS_L += -DWIN32TILES
 else
 CFOTHERS_L += -DWIN32CONSOLE
 endif
 endif
 
-USE_PCRE := n
-ifeq ($(OSNAME),WIN32)
-USE_PCRE := y
-endif
-
-ifneq ($(USE_PCRE),n)
+ifdef NEEDS_PCRE
 DEFINES += -DREGEX_PCRE
 LIB += -lpcre
 endif
 
-ifeq (,$(findstring MINGW,$(UNAME_S)))
-LIB += -l$(LIBCURS)
-endif
-
-USE_ICC := n
-ifneq ($(USE_ICC),n)
+ifdef USE_ICC
 GCC := icc
 GXX := icpc
 AR  := xiar rcu
@@ -488,8 +448,7 @@ CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
 endif
 
-REPORT := n
-ifneq ($(REPORT),n)
+ifdef REPORT
 CFOTHERS += -ftime-report
 endif
 
@@ -523,7 +482,7 @@ ifndef V
 endif
 endif
 
-ifneq ($(TILES),n)
+ifdef TILES
 TILEDEFS = dngn main player gui unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
 TILEDEFTXTS = $(TILEDEFPRES:%=%.txt)
@@ -542,7 +501,7 @@ DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 OBJECTS += $(TILEDEFOBJS)
 endif
 
-ifneq ($(USE_PCRE),n)
+ifdef NEEDS_PCRE
 CONTRIB_DEPENDS += $(LIBPCRE)
 endif
 
@@ -696,9 +655,9 @@ wizard: $(GAME)
 $(UTIL)%.o: $(UTIL)%.cc
 	$(QUIET_CXX)$(CXX) $(CFLAGS) $(CFLAGS_L) $(YCFLAGS) -o $@ -c $<
 
-ifneq ($(PCH),n)
+ifdef PCH
 %.h.gch: %.h
-	$(QUIET_PCH)$(CXX) $(CFLAGS) -c $< -o $@
+	$(QUIET_PCH)$(CXX) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
@@ -769,7 +728,7 @@ clean-rltiles:
 #
 
 # To package, you *must* have lex and yacc to generate the intermediates.
-ifeq ($(DOYACC),y)
+ifdef DOYACC
 package-source: distclean prebuildyacc pkgtidy depend removeold vlink \
 				pkgtarbz2 pkgzip
 

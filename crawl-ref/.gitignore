@@ -43,6 +43,9 @@ makefile.dep
 # The Crawl executable.
 /source/crawl
 
+# Precompiled header
+/source/AppHdr.h.gch
+
 # Level-compiler generated files.
 /source/util/*.cc
 /source/util/*.h
