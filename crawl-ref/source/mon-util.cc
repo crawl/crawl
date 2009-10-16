@@ -3492,6 +3492,8 @@ bool mons_has_smite_attack(const monsters *monster)
             || hspell_pass[i] == SPELL_SMITING
             || hspell_pass[i] == SPELL_HELLFIRE_BURST
             || hspell_pass[i] == SPELL_FIRE_STORM
+            || hspell_pass[i] == SPELL_OZOCUBUS_REFRIGERATION
+            || hspell_pass[i] == SPELL_OLGREBS_TOXIC_RADIANCE
             || hspell_pass[i] == SPELL_AIRSTRIKE)
         {
             return (true);

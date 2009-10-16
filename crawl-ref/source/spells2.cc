@@ -509,9 +509,12 @@ static std::string _describe_monsters(const counted_monster_list &list)
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
-void cast_toxic_radiance()
+void cast_toxic_radiance(bool monster_cast)
 {
-    mpr("You radiate a sickly green light!");
+    if (monster_cast)
+        mpr("Sickly green light fills the air!");
+    else
+        mpr("You radiate a sickly green light!");
 
     you.flash_colour = GREEN;
     viewwindow(true, false);

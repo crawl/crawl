@@ -47,6 +47,7 @@ static spell_type search_order_conj[] = {
     SPELL_STICKY_FLAME,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
 // 10
+    SPELL_OZOCUBUS_REFRIGERTION,
     SPELL_BOLT_OF_MAGMA,
     SPELL_ICE_BOLT,
     SPELL_BOLT_OF_FIRE,
@@ -56,8 +57,8 @@ static spell_type search_order_conj[] = {
     SPELL_VENOM_BOLT,
     SPELL_BOLT_OF_IRON,
     SPELL_STONE_ARROW,
-    SPELL_THROW_FLAME,
 // 20
+    SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
     SPELL_PAIN,
     SPELL_STING,
@@ -66,6 +67,7 @@ static spell_type search_order_conj[] = {
     SPELL_MAGIC_DART,
     SPELL_SLEEP,
     SPELL_BACKLIGHT,
+    SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_NO_SPELL,                        // end search
 };
 

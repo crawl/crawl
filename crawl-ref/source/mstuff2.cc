@@ -39,6 +39,7 @@ REVISION("$Rev$");
 #include "player.h"
 #include "religion.h"
 #include "spells1.h"
+#include "spells2.h"
 #include "spells3.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
@@ -479,6 +480,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             return;
 
         torment(monster_index(monster), monster->pos());
+        return;
+
+    case SPELL_OZOCUBUS_REFRIGERATION:
+        if (!monsterNearby || mons_friendly(monster))
+            return;
+
+        cast_refrigeration(random2(12 * monster->hit_dice));
+        return;
+
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        if (!monsterNearby || mons_friendly(monster))
+            return;
+
+        cast_toxic_radiance(true);
         return;
 
     case SPELL_SUMMON_GREATER_DEMON:
@@ -1158,6 +1173,8 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_CANTRIP:
     case SPELL_BERSERKER_RAGE:
