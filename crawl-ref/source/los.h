@@ -32,8 +32,8 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2);
 
 void clear_rays_on_exit();
 void losight(env_show_grid& sh, const coord_def& center,
-             opacity_func opc = &opc_default,
-             bounds_func bounds = &bounds_los_radius);
+             const opacity_func &opc = opc_default,
+             const bounds_func &bds = bds_default);
 void losight(env_show_grid& sh, const los_param& param);
 void calc_show_los();
 

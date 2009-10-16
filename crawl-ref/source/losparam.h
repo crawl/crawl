@@ -15,11 +15,48 @@ enum opacity_type
     NUM_OPACITIES
 };
 
-typedef opacity_type (*opacity_func)(const coord_def&);
-typedef bool (*bounds_func)(const coord_def&);
+struct opacity_func
+{
+    virtual ~opacity_func() {}
+    virtual opacity_type operator()(const coord_def& p) const = 0;
+};
 
-opacity_type opc_default(const coord_def&);
-bool bounds_los_radius(const coord_def& p);
+struct bounds_func
+{
+    virtual ~bounds_func() {}
+    virtual bool operator()(const coord_def& p) const = 0;
+};
+
+// Default LOS rules.
+struct opacity_default : opacity_func
+{
+    opacity_type operator()(const coord_def& p) const;
+};
+static opacity_default opc_default = opacity_default();
+
+// Make anything solid block in addition to normal LOS.
+// XXX: Are trees, bushes solid?
+struct opacity_solid : opacity_func
+{
+    opacity_type operator()(const coord_def& p) const;
+};
+static opacity_solid opc_solid = opacity_solid();
+
+// LOS bounded by fixed presquared radius.
+struct bounds_radius_sq : bounds_func
+{
+    int radius_sq;
+    bounds_radius_sq(int r_sq)
+        : radius_sq(r_sq) {}
+    bool operator()(const coord_def& p) const;
+};
+
+// LOS bounded by current global LOS radius.
+struct bounds_los_radius : bounds_func
+{
+    bool operator()(const coord_def& p) const;
+};
+static bounds_los_radius bds_default = bounds_los_radius();
 
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between
@@ -38,55 +75,6 @@ struct los_param
     virtual unsigned appearance(const coord_def& p) const = 0;
 
     virtual opacity_type opacity(const coord_def& p) const = 0;
-};
-
-// Provides translation to given center and bounds checking.
-struct los_param_trans : public los_param
-{
-    coord_def center;
-
-    los_param_trans(const coord_def& c);
-
-    coord_def trans(const coord_def& p) const;
-
-    bool los_bounds(const coord_def& p) const;
-};
-
-// Everything is visible.
-struct los_param_permissive : public los_param_trans
-{
-    los_param_permissive(const coord_def& c);
-
-    unsigned appearance(const coord_def& p) const;
-    opacity_type opacity(const coord_def& p) const;
-};
-
-// Standard visibility disregarding clouds.
-struct los_param_nocloud : public los_param_trans
-{
-    los_param_nocloud(const coord_def& c);
-
-    dungeon_feature_type feature(const coord_def& p) const;
-    unsigned appearance(const coord_def& p) const;
-    opacity_type opacity(const coord_def& p) const;
-};
-
-// Standard visibility.
-struct los_param_base : public los_param_nocloud
-{
-    los_param_base(const coord_def& c);
-
-    unsigned short cloud_idx(const coord_def& p) const;
-    opacity_type opacity(const coord_def& p) const;
-};
-
-// Like los_param_base, but any solid object blocks.
-// This includes clear walls and statues.
-struct los_param_solid : public los_param_base
-{
-    los_param_solid(const coord_def& c);
-
-    opacity_type opacity(const coord_def& p) const;
 };
 
 #endif

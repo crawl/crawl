@@ -4357,7 +4357,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
     std::vector<std::vector<coord_def> > radius_points;
 
     env_show_grid losgrid;
-    losight(losgrid, los_param_solid(corpse.pos));
+    losight(losgrid, corpse.pos, opc_solid);
 
     collect_radius_points(radius_points, corpse.pos, losgrid);
 

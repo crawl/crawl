@@ -276,42 +276,23 @@ bool is_traversable(dungeon_feature_type grid)
     return (traversable_terrain[grid] == TRAVERSABLE);
 }
 
-struct los_param_excl : public los_param_trans
+opacity_type _feat_opacity(dungeon_feature_type feat)
 {
-    int radius_sq;
+    return (grid_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR);
+}
 
-    los_param_excl(const coord_def& c, int r)
-        : los_param_trans(c), radius_sq(r)
+// A cell is considered clear unless the player knows it's
+// opaque.
+struct opacity_excl : opacity_func
+{
+    opacity_type operator()(const coord_def& p) const
     {
-    }
-
-    bool los_bounds(const coord_def& p) const
-    {
-        return (p.abs() <= radius_sq &&
-                los_param_trans::los_bounds(p));
-    }
-
-    unsigned appearance(const coord_def& p) const
-    {
-        return 1;
-    }
-
-    opacity_type _feat_opacity(dungeon_feature_type feat) const
-    {
-        return grid_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR;
-    }
-
-    // A cell is considered clear unless the player knows it's
-    // opaque.
-    opacity_type opacity(const coord_def& p) const
-    {
-        const coord_def& q = trans(p);
-        if (!is_terrain_seen(q))
+        if (!is_terrain_seen(p))
             return OPC_CLEAR;
-        else if (!is_terrain_changed(q))
-            return _feat_opacity(env.grid(q));
-        else if (env.map(q).object < NUM_REAL_FEATURES)
-            return _feat_opacity((dungeon_feature_type) env.map(q).object);
+        else if (!is_terrain_changed(p))
+            return _feat_opacity(env.grid(p));
+        else if (env.map(p).object < NUM_REAL_FEATURES)
+            return _feat_opacity((dungeon_feature_type) env.map(p).object);
         else
         {
             // If you have seen monsters, items or clouds there,
@@ -320,6 +301,7 @@ struct los_param_excl : public los_param_trans
         }
     }
 };
+opacity_excl opc_excl;
 
 int travel_exclude::radius_sq() const
 {
@@ -328,7 +310,7 @@ int travel_exclude::radius_sq() const
 
 void travel_exclude::set_exclude_show()
 {
-    losight(show, los_param_excl(pos, radius_sq()));
+    losight(show, pos, opc_excl, bounds_radius_sq(radius_sq()));
     uptodate = true;
 }
 

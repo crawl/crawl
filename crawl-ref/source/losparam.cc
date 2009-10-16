@@ -14,7 +14,7 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 
-opacity_type opc_default(const coord_def& p)
+opacity_type opacity_default::operator()(const coord_def& p) const
 {
     int m;
     dungeon_feature_type f = env.grid(p);
@@ -30,117 +30,32 @@ opacity_type opc_default(const coord_def& p)
         return OPC_CLEAR;
 }
 
-bool bounds_los_radius(const coord_def& p)
-{
-    return (p.abs() <= get_los_radius_squared());
-}
-
-/* los_param_trans */
-
-los_param_trans::los_param_trans(const coord_def& c)
-    : center(c)
-{
-}
-
-coord_def los_param_trans::trans(const coord_def& p) const
-{
-    return (p + center);
-}
-
-bool los_param_trans::los_bounds(const coord_def& p) const
-{
-    return (map_bounds(trans(p)) && p.abs() <= get_los_radius_squared());
-}
-
-
-/* los_param_permissive */
-
-los_param_permissive::los_param_permissive(const coord_def& c)
-    : los_param_trans(c)
-{
-}
-
-unsigned los_param_permissive::appearance(const coord_def& p) const
-{
-    return env.grid(trans(p));
-}
-
-opacity_type los_param_permissive::opacity(const coord_def& p) const
-{
-    return OPC_CLEAR;
-}
-
-
-/* los_param_nocloud */
-
-los_param_nocloud::los_param_nocloud(const coord_def& c)
-    : los_param_trans(c)
-{
-}
-
-dungeon_feature_type los_param_nocloud::feature(const coord_def& p) const
-{
-    return env.grid(trans(p));
-}
-
-unsigned los_param_nocloud::appearance(const coord_def& p) const
-{
-    return grid_appearance(trans(p));
-}
-
-opacity_type los_param_nocloud::opacity(const coord_def& p) const
-{
-    dungeon_feature_type f = feature(p);
-    if (grid_is_opaque(f))
-        return OPC_OPAQUE;
-    else
-        return OPC_CLEAR;
-}
-
-
-/* los_param_base */
-
-los_param_base::los_param_base(const coord_def& c)
-    : los_param_nocloud(c)
-{
-}
-
-unsigned short los_param_base::cloud_idx(const coord_def& p) const
-{
-    return env.cgrid(trans(p));
-}
-
-opacity_type los_param_base::opacity(const coord_def& p) const
+// Make anything solid block in addition to normal LOS.
+// XXX: Are trees, bushes solid?
+opacity_type opacity_solid::operator()(const coord_def& p) const
 {
     int m;
-    dungeon_feature_type f = feature(p);
-    if (grid_is_opaque(f))
+    dungeon_feature_type f = env.grid(p);
+    if (grid_is_solid(f))
         return OPC_OPAQUE;
-    else if (is_opaque_cloud(cloud_idx(p)))
+    else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
     else if (f == DNGN_TREES)
         return OPC_HALF;
-    else if ((m = mgrd(trans(p))) != NON_MONSTER && menv[m].type == MONS_BUSH)
+    else if ((m = mgrd(p)) != NON_MONSTER && menv[m].type == MONS_BUSH)
         return OPC_HALF;
     else
         return OPC_CLEAR;
 }
 
-
-/* los_param_solid */
-
-los_param_solid::los_param_solid(const coord_def& c)
-    : los_param_base(c)
+// LOS bounded by fixed presquared radius.
+bool bounds_radius_sq::operator()(const coord_def& p) const
 {
+    return (p.abs() <= radius_sq);
 }
 
-opacity_type los_param_solid::opacity(const coord_def& p) const
+// LOS bounded by current global LOS radius.
+bool bounds_los_radius::operator()(const coord_def& p) const
 {
-    dungeon_feature_type f = feature(p);
-    if (grid_is_solid(f))
-        return OPC_OPAQUE;
-    else if (is_opaque_cloud(cloud_idx(p)))
-        return OPC_HALF;
-    else
-        return OPC_CLEAR;
+    return (p.abs() <= get_los_radius_squared());
 }

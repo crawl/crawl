@@ -1694,7 +1694,7 @@ bool is_trap_square(dungeon_feature_type grid)
 // applied to new games.
 void zap_los_monsters()
 {
-    losight(env.show, los_param_base(you.pos()));
+    losight(env.show, you.pos());
 
     for (rectangle_iterator ri(crawl_view.vlos1, crawl_view.vlos2); ri; ++ri )
     {
