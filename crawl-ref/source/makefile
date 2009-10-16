@@ -480,7 +480,6 @@ LIB += -l$(LIBCURS)
 endif
 
 USE_ICC := n
-
 ifneq ($(USE_ICC),n)
 GCC := icc
 GXX := icpc
@@ -488,6 +487,11 @@ AR  := xiar rcu
 LIB += -lguide -lpthread
 CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
+endif
+
+REPORT := n
+ifneq ($(REPORT),n)
+CFOTHERS += -ftime-report
 endif
 
 CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
