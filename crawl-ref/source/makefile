@@ -159,8 +159,6 @@ LIBDBM := sqlite3
 INCLUDES_L += -Icontrib/install/include
 LIB += -Lcontrib/install/lib
 
-LIB += -llua -l$(LIBDBM)
-
 INCLUDES_L += -Iutil -I.
 
 ifeq ($(OSNAME),MacOS)
@@ -549,6 +547,7 @@ CONTRIB_DEPENDS += $(LIBPCRE)
 endif
 
 CONTRIB_DEPENDS += $(LIBLUA) $(LIBSQLITE)
+LIB += $(LIBLUA) $(LIBSQLITE)
 
 GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_DEPENDS)
 SRC_PKG_BASE := stone_soup
@@ -567,7 +566,7 @@ PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
 all: $(GAME)
 
-test: $(GAME)
+test: profile
 	$(PWD)/$(GAME) -test
 
 ##########################################################################
