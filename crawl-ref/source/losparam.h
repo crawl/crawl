@@ -34,7 +34,15 @@ struct opacity_default : opacity_func
 {
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_default opc_default = opacity_default();
+static opacity_default opc_default;
+
+// Default LOS rules, but only consider fully opaque features blocking.
+// In particular, clouds don't affect the result.
+struct opacity_fullyopaque : opacity_func
+{
+    opacity_type operator()(const coord_def& p) const;
+};
+static opacity_fullyopaque opc_fullyopaque;
 
 // Make anything solid block in addition to normal LOS.
 // XXX: Are trees, bushes solid?
@@ -42,7 +50,7 @@ struct opacity_solid : opacity_func
 {
     opacity_type operator()(const coord_def& p) const;
 };
-static opacity_solid opc_solid = opacity_solid();
+static opacity_solid opc_solid;
 
 // LOS bounded by fixed presquared radius.
 struct bounds_radius_sq : bounds_func
@@ -58,7 +66,7 @@ struct bounds_los_radius : bounds_func
 {
     bool operator()(const coord_def& p) const;
 };
-static bounds_los_radius bds_default = bounds_los_radius();
+static bounds_los_radius bds_default;
 
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between

@@ -30,6 +30,14 @@ opacity_type opacity_default::operator()(const coord_def& p) const
         return OPC_CLEAR;
 }
 
+opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
+{
+    if (grid_is_opaque(env.grid(p)))
+        return OPC_OPAQUE;
+    else
+        return OPC_CLEAR;
+}
+
 // Make anything solid block in addition to normal LOS.
 // XXX: Are trees, bushes solid?
 opacity_type opacity_solid::operator()(const coord_def& p) const
