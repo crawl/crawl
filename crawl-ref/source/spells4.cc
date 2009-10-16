@@ -1982,7 +1982,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     coord_def origin = you.pos();
     int res = move_player_to_grid(target, false, true, true);
 
-    if(res)
+    if (res)
     {
         // Leave a purple cloud.
         place_cloud(CLOUD_PURP_SMOKE, origin, 1 + random2(3), KC_YOU);

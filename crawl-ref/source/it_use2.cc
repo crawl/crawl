@@ -1,6 +1,6 @@
 /*
  *  File:       it_use2.cc
- *  Summary:    Functions for using wands, potions, and weapon/armour removal.4\3
+ *  Summary:    Functions for using wands, potions, and weapon/armour removal.
  *  Written by: Linley Henzell
  */
 
@@ -245,9 +245,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             }
         }
 
-        // Merfolk boots unmeld if levitation takes us out of water
-        if(!player_is_airborne() && you.species == SP_MERFOLK
-           && grid_is_water(grd(you.pos())))
+        // Merfolk boots unmeld if levitation takes us out of water.
+        if (!player_is_airborne() && you.species == SP_MERFOLK
+            && grid_is_water(grd(you.pos())))
         {
             unmeld_one_equip(EQ_BOOTS);
         }

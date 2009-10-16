@@ -1503,7 +1503,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
 
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "Scattered target square (%d,%d)", pos.x, pos.y );
+             "Scattered target square (%d, %d)", pos.x, pos.y);
 #endif
 
         if (is_controlled)

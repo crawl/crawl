@@ -3662,7 +3662,7 @@ static void _specr_2(spec_room &sr)
         return;
 
     bool is_ok = false;
-    for ( int tries = 0; tries < 100 && !is_ok; ++tries )
+    for (int tries = 0; tries < 100 && !is_ok; ++tries)
     {
         is_ok = true;
 
@@ -3671,23 +3671,23 @@ static void _specr_2(spec_room &sr)
         {
         case 0:
             // go up from north edge
-            c.set( random_range(sr.tl.x, sr.br.x - 1), sr.tl.y );
+            c.set(random_range(sr.tl.x, sr.br.x - 1), sr.tl.y);
             delta.set(0, -1);
             break;
         case 1:
             // go down from south edge
-            c.set( random_range(sr.tl.x, sr.br.x - 1), sr.br.y );
-            delta.set(0,  1);
+            c.set(random_range(sr.tl.x, sr.br.x - 1), sr.br.y);
+            delta.set(0, 1);
             break;
         case 2:
             // go left from west edge
-            c.set( sr.tl.x, random_range(sr.tl.y, sr.br.y - 1) );
+            c.set(sr.tl.x, random_range(sr.tl.y, sr.br.y - 1));
             delta.set(-1, 0);
             break;
         case 3:
             // go right from east edge
-            c.set( sr.br.x, random_range(sr.tl.y, sr.br.y - 1) );
-            delta.set( 1, 0);
+            c.set(sr.br.x, random_range(sr.tl.y, sr.br.y - 1));
+            delta.set(1, 0);
             break;
         }
 
@@ -6217,8 +6217,8 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
     if (forbid_x1 == 0 && one_chance_in(4))     // a market square
     {
         spec_room sr;
-        sr.tl.set(25,25);
-        sr.br.set(55,45);
+        sr.tl.set(25, 25);
+        sr.br.set(55, 45);
 
         int oblique_max = 0;
         if (!one_chance_in(4))
@@ -7179,22 +7179,22 @@ static void _diamond_rooms(int level_number)
         type_floor = DNGN_LAVA;
 
     if (level_number > 10 && one_chance_in(15))
-        type_floor = (coinflip()? DNGN_STONE_WALL : DNGN_ROCK_WALL);
+        type_floor = (coinflip() ? DNGN_STONE_WALL : DNGN_ROCK_WALL);
 
     if (level_number > 12 && one_chance_in(20))
         type_floor = DNGN_METAL_WALL;
 
-    if (player_in_branch( BRANCH_GEHENNA ))
+    if (player_in_branch(BRANCH_GEHENNA))
         type_floor = DNGN_LAVA;
-    else if (player_in_branch( BRANCH_COCYTUS ))
+    else if (player_in_branch(BRANCH_COCYTUS))
         type_floor = DNGN_DEEP_WATER;
 
     for (i = 0; i < numb_diam; i++)
     {
         spec_room sr;
 
-        sr.tl.set(8 + random2(43), 8 + random2(35) );
-        sr.br.set(5 + random2(15), 5 + random2(10) );
+        sr.tl.set(8 + random2(43), 8 + random2(35));
+        sr.br.set(5 + random2(15), 5 + random2(10));
         sr.br += sr.tl;
 
         oblique_max = (sr.br.x - sr.tl.x) / 2;

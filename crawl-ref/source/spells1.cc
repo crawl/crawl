@@ -234,15 +234,15 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 #endif
     else
     {
-        // Going to assume that move_player_to_grid works, (it should
-        // because terrain type etc. was already checked). could result
-        // in awkward messaging if it cancels for some reason but it's
-        // probably better than getting the blink message after any Mf
-        // transform messages all the time -cao
+        // Going to assume that move_player_to_grid() works.  (It should
+        // because terrain type, etc. was already checked.)  This could
+        // result in awkward messaging if it cancels for some reason,
+        // but it's probably better than getting the blink message after
+        // any Mf transform messages all the time. -cao
         mpr("You blink.");
         coord_def origin = you.pos();
         success = move_player_to_grid(target, false, true, true);
-        if(success)
+        if (success)
         {
             // Leave a purple cloud.
             place_cloud(CLOUD_PURP_SMOKE, origin, 1 + random2(3), KC_YOU);
@@ -1445,12 +1445,9 @@ void cast_fly(int power)
         else
             mpr("You fly up into the air.");
 
-        // Merfolk boots unmeld if flight takes us out of water
-        if(you.species == SP_MERFOLK && grid_is_water(grd(you.pos())))
-        {
+        // Merfolk boots unmeld if flight takes us out of water.
+        if (you.species == SP_MERFOLK && grid_is_water(grd(you.pos())))
             unmeld_one_equip(EQ_BOOTS);
-        }
-
     }
     else
         mpr("You feel more buoyant.");
