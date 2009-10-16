@@ -809,7 +809,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
     {
         va_list arg;
         va_start(arg, format);
-        char buffer[100];
+        char buffer[1024];
         vsnprintf(buffer, sizeof buffer, format, arg);
         va_end(arg);
 
