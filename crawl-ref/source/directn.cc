@@ -960,26 +960,17 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
     return (true);
 }
 
-// XXX: fold this into generalized find_ray.
+// Assuming the target is in view, is line-of-fire
+// blocked, and by what?
 static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
-    ray_def ray;
-    if (!find_ray(you.pos(), where, ray))
-        fallback_ray(you.pos(), where, ray);
-    ray.advance_through(where);
-
-    while (ray.pos() != where)
-    {
-        if (grd(ray.pos()) <= DNGN_MINMOVE)
-        {
-            if (feat != NULL)
-                *feat = grd(ray.pos());
-            return (true);
-        }
-        ray.advance_through(where);
-    }
-    return (false);
+    if (exists_ray(you.pos(), where))
+        return (false);
+    if (feat == NULL)
+        return (true);
+    *feat = ray_blocker(you.pos(), where);
+    return (true);
 }
 
 void direction(dist& moves, targetting_type restricts,
@@ -1316,7 +1307,8 @@ void direction(dist& moves, targetting_type restricts,
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
             show_beam = true;
-            have_beam = find_ray(you.pos(), moves.target, ray, show_beam);
+            have_beam = find_ray(you.pos(), moves.target, ray,
+                                 opc_solid, bds_default, show_beam);
             need_beam_redraw = true;
             break;
 #endif
@@ -3353,6 +3345,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     return desc;
 }
 
+// Describe a cell, guaranteed to be in view.
 static void _describe_cell(const coord_def& where, bool in_range)
 {
     bool mimic_item = false;

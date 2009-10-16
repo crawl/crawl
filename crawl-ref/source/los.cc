@@ -581,8 +581,8 @@ void cellray::calc_params()
 // opc has been translated for this quadrant.
 // XXX: Allow finding ray of minimum opacity.
 bool _find_ray_se(const coord_def& target, ray_def& ray,
-                  bool cycle, const opacity_func& opc,
-                  const bounds_func& bds)
+                  const opacity_func& opc, const bounds_func& bds,
+                  bool cycle)
 {
     ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
     if (!bds(target))
@@ -653,8 +653,8 @@ struct opacity_trans : opacity_func
 // assume that ray is appropriately filled in, and look for the next
 // ray. We only ever use ray.cycle_idx.
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, bool cycle,
-              const opacity_func& opc, const bounds_func &bds)
+              ray_def& ray, const opacity_func& opc, const bounds_func &bds,
+              bool cycle)
 {
     if (target == source || !map_bounds(source) || !map_bounds(target))
         return false;
@@ -666,7 +666,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     const coord_def abs = coord_def(absx, absy);
     opacity_trans opc_trans = opacity_trans(opc, source, signx, signy);
 
-    if (!_find_ray_se(abs, ray, cycle, opc_trans, bds))
+    if (!_find_ray_se(abs, ray, opc_trans, bds, cycle))
         return (false);
 
     if (signx < 0)
@@ -680,6 +680,38 @@ bool find_ray(const coord_def& source, const coord_def& target,
     _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
 
     return (true);
+}
+
+bool exists_ray(const coord_def& source, const coord_def& target,
+                const opacity_func& opc, const bounds_func &bds)
+{
+    ray_def ray;
+    return (find_ray(source, target, ray, opc, bds));
+}
+
+// Assuming that target is in view of source, but line of
+// fire is blocked, what is it blocked by?
+dungeon_feature_type ray_blocker(const coord_def& source,
+                                 const coord_def& target)
+{
+    ray_def ray;
+    if (!find_ray(source, target, ray, opc_default))
+    {
+        ASSERT (false);
+        return (NUM_REAL_FEATURES);
+    }
+
+    ray.advance(false); // Must not cut corners!
+    int blocked = 0;
+    while (ray.pos() != target)
+    {
+        blocked += opc_solid(ray.pos());
+        if (blocked >= OPC_OPAQUE)
+            return (env.grid(ray.pos()));
+        ray.advance(false);
+    }
+    ASSERT (false);
+    return (NUM_REAL_FEATURES);
 }
 
 // Returns a straight ray from source to target.

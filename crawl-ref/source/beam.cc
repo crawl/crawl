@@ -2852,8 +2852,7 @@ bool check_line_of_sight(const coord_def& source, const coord_def& target)
 
     // Note that we are guaranteed to be within the player LOS range,
     // so fallback is unnecessary.
-    ray_def ray;
-    return find_ray(source, target, ray);
+    return exists_ray(source, target);
 }
 
 // When a mimic is hit by a ranged attack, it teleports away (the slow

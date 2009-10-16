@@ -19,9 +19,12 @@ int get_los_radius_squared(); // XXX
 
 struct ray_def;
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, bool cycle = false,
-              const opacity_func &opc = opc_solid,
-              const bounds_func &bds = bds_default);
+              ray_def& ray, const opacity_func &opc = opc_solid,
+              const bounds_func &bds = bds_default, bool cycle = false);
+bool exists_ray(const coord_def& source, const coord_def& target,
+                const opacity_func &opc = opc_solid,
+                const bounds_func &bds = bds_default);
+dungeon_feature_type ray_blocker(const coord_def& source, const coord_def& target);
 
 void fallback_ray(const coord_def& source, const coord_def& target,
                   ray_def& ray);

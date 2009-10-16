@@ -1371,8 +1371,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     bool hole    = true;
     const char *what = NULL;
 
-    ray_def ray;
-    if (!find_ray(you.pos(), spd.target, ray))
+    if (!exists_ray(you.pos(), spd.target))
     {
         mpr("There's a wall in the way!");
         return (false);
