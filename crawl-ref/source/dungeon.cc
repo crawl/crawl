@@ -4679,7 +4679,7 @@ int dgn_place_monster(mons_spec &mspec,
             const habitat_type habitat = mons_class_primary_habitat(montype);
 
             if (!monster_habitable_grid(montype, grd(where)))
-                grd(where) = habitat2grid(habitat);
+                dungeon_terrain_changed(where, habitat2grid(habitat));
         }
 
         mgen_data mg(static_cast<monster_type>(mid));
