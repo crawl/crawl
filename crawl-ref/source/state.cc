@@ -207,9 +207,9 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         formatted_string fs( channel_to_colour(MSGCH_WARN) );
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
         fs.add_glyph( mon );
-        fs.cprintf(") in view: (%d,%d), see_grid: %s",
+        fs.cprintf(") in view: (%d,%d), see_cell: %s",
                    mon->pos().x, mon->pos().y,
-                   see_grid(mon->pos())? "yes" : "no");
+                   see_cell(mon->pos())? "yes" : "no");
         formatted_mpr(fs, MSGCH_WARN);
 #endif
 

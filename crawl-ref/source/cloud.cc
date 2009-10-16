@@ -153,7 +153,7 @@ static void _spread_fire(const cloud_struct &cloud)
         // every neighbouring square gets a separate roll
         if (grd(*ai) == DNGN_TREES && one_chance_in(20))
         {
-            if (see_grid(*ai))
+            if (see_cell(*ai))
                 mpr("The forest fire spreads!");
             grd(*ai) = DNGN_FLOOR;
             _place_new_cloud( cloud.type, *ai, random2(30)+25, cloud.whose,

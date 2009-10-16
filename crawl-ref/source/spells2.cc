@@ -147,7 +147,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
 
             // If the player would be able to see a monster at this location
             // don't place it there.
-            if (see_grid(place))
+            if (see_cell(place))
                 continue;
 
             // Try not to overwrite another detected monster.
@@ -220,7 +220,7 @@ void corpse_rot()
 {
     for (radius_iterator ri(you.pos(), 6); ri; ++ri)
     {
-        if (see_grid_no_trans(*ri) && !is_sanctuary(*ri)
+        if (see_cell_no_trans(*ri) && !is_sanctuary(*ri)
             && env.cgrid(*ri) == EMPTY_CLOUD)
         {
             for (stack_iterator si(*ri); si; ++si)
@@ -1838,7 +1838,7 @@ int fungal_bloom()
                     destroy_item(j->index());
             }
 
-            if (corpse_on_pos && see_grid(*i))
+            if (corpse_on_pos && see_cell(*i))
                 seen_corpses++;
         }
     }
@@ -1872,7 +1872,7 @@ int create_plant(coord_def & target)
     if (plant != -1)
     {
         env.mons[plant].flags |= MF_ATT_CHANGE_ATTEMPT;
-        if (see_grid(target))
+        if (see_cell(target))
             mpr("A plant grows up from the ground.");
     }
 
@@ -1941,7 +1941,7 @@ bool sunlight()
         if (grd(target) != ftype)
         {
             grd(target) = ftype;
-            if (see_grid(target))
+            if (see_cell(target))
                 evap_count++;
         }
 
@@ -1976,7 +1976,7 @@ bool sunlight()
                                                        MG_FORCE_PLACE,
                                                        GOD_FEAWN));
 
-            if (plant != -1 && see_grid(target))
+            if (plant != -1 && see_cell(target))
                 plant_count++;
         }
     }
@@ -2037,7 +2037,7 @@ void path_distance(coord_def & origin,
         for (adjacent_iterator adj_it(current.first); adj_it; ++adj_it)
         {
             idx = adj_it->x + adj_it->y * X_WIDTH;
-            if (see_grid(*adj_it)
+            if (see_cell(*adj_it)
                 && !grid_is_solid(env.grid(*adj_it))
                 && exclusion.insert(idx).second)
             {

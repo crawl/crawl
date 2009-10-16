@@ -902,7 +902,7 @@ bool mons_see_invis(const monsters *mon)
 
 bool mon_can_see_monster(const monsters *mon, const monsters *targ)
 {
-    if (!mon->mon_see_grid(targ->pos()))
+    if (!mon->mon_see_cell(targ->pos()))
         return (false);
 
     return (mons_monster_visible(mon, targ));
@@ -7696,7 +7696,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(me))
         {
-            if (see_grid(this->position))
+            if (see_cell(this->position))
             {
                 mprf("A nearby %s withers and dies.",
                      this->name(DESC_PLAIN, false).c_str());
@@ -7736,7 +7736,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
 
-                        if (see_grid(adjacent) && see_grid(pos()))
+                        if (see_cell(adjacent) && see_cell(pos()))
                             mpr("A nearby fungus spawns a giant spore.");
                     }
                     break;
@@ -8006,7 +8006,7 @@ bool monsters::visible_to(const actor *looker) const
     }
 }
 
-bool monsters::mon_see_grid(const coord_def& p, bool reach) const
+bool monsters::mon_see_cell(const coord_def& p, bool reach) const
 {
     if (distance(pos(), p) > LOS_RADIUS * LOS_RADIUS + 1)
         return (false);
@@ -8031,7 +8031,7 @@ bool monsters::can_see(const actor *targ) const
     if (targ->atype() == ACT_PLAYER)
         return (mons_near(this));
 
-    return (mon_see_grid(targ->pos()));
+    return (mon_see_cell(targ->pos()));
 }
 
 bool monsters::can_mutate() const
@@ -8104,8 +8104,8 @@ bool monsters::has_action_energy() const
 
 void monsters::check_redraw(const coord_def &old) const
 {
-    const bool see_new = see_grid(pos());
-    const bool see_old = see_grid(old);
+    const bool see_new = see_cell(pos());
+    const bool see_old = see_cell(old);
     if ((see_new || see_old) && !view_update())
     {
         if (see_new)
@@ -8159,7 +8159,7 @@ void monsters::apply_location_effects(const coord_def &oldpos)
         if (genus == MONS_JELLY || genus == MONS_GIANT_SLUG)
         {
             prop &= ~FPROP_BLOODY;
-            if (see_grid(pos()) && !visible_to(&you))
+            if (see_cell(pos()) && !visible_to(&you))
             {
                std::string desc =
                    feature_description(pos(), false, DESC_NOCAP_THE, false);
@@ -8916,7 +8916,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
     }
 
-    if (see_grid(monster->pos()))
+    if (see_cell(monster->pos()))
     {
         dungeon_feature_type feat = grd(monster->pos());
         if (feat < DNGN_MINMOVE || feat >= NUM_REAL_FEATURES)

@@ -425,7 +425,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't
     // stack).
     move_item_to_grid(&o, monster->pos());
-    if (see_grid(monster->pos()))
+    if (see_cell(monster->pos()))
     {
         if (force && !silent)
         {
@@ -774,7 +774,7 @@ static bool _slime_vault_in_los()
         {
             if ((grd[x][y] == DNGN_STONE_WALL
                     || grd[x][y] == DNGN_CLEAR_STONE_WALL)
-                && see_grid(x, y))
+                && see_cell(x, y))
             {
                 in_los = true;
                 break;
@@ -1873,7 +1873,7 @@ int monster_die(monsters *monster, killer_type killer,
             monster->foe = killer_index;
     }
 
-    if (!silent && !wizard && see_grid(monster->pos()))
+    if (!silent && !wizard && see_cell(monster->pos()))
     {
         // Make sure that the monster looks dead.
         if (monster->alive() && !in_transit && (!summoned || duration > 0))
@@ -1976,7 +1976,7 @@ int monster_die(monsters *monster, killer_type killer,
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.
-    if (see_grid(mwhere))
+    if (see_cell(mwhere))
     {
         view_update_at(mwhere);
         update_screen();
@@ -2489,7 +2489,7 @@ static coord_def _random_monster_nearby_habitable_space(const monsters& mon,
             continue;
         }
 
-        if (respect_los && !mon.mon_see_grid(target))
+        if (respect_los && !mon.mon_see_cell(target))
             continue;
 
         // Survived everything, break out (with a good value of target.)
@@ -2666,7 +2666,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         tried(delta) = true;
 
         if (!in_bounds(target)
-            || restrict_LOS && !see_grid(target)
+            || restrict_LOS && !see_cell(target)
             || grd(target) < DNGN_SHALLOW_WATER
             || actor_at(target)
             || !allow_adjacent && distance(origin, target) <= 2
@@ -2700,13 +2700,13 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         // away from the player, since in the absence of translucent
         // walls monsters can blink to places which are not in either
         // the monster's nor the player's LOS.
-        if (!origin_is_player && !see_grid(target))
+        if (!origin_is_player && !see_cell(target))
             return (true);
 
         // Player can't randomly pass through translucent walls.
         if (origin_is_player)
         {
-            if (see_grid_no_trans(target))
+            if (see_cell_no_trans(target))
                 return (true);
 
             continue;
@@ -3091,7 +3091,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
             // XXX: Should this be done in _handle_behaviour()?
             if (src == MHITYOU && src_pos == you.pos()
-                && !see_grid(mon->pos()))
+                && !see_cell(mon->pos()))
             {
                 const dungeon_feature_type can_move =
                     (mons_amphibious(mon)) ? DNGN_DEEP_WATER
@@ -3142,7 +3142,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         else if (mons_friendly(mon))
             mon->foe = MHITYOU;
 
-        if (see_grid(mon->pos()))
+        if (see_cell(mon->pos()))
             learned_something_new(TUT_FLEEING_MONSTER);
         break;
 
@@ -3240,7 +3240,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
         return (false);
 
     // Can the monster see the patrol point from its current position?
-    const bool patrol_seen = mon->mon_see_grid(mon->patrol_point,
+    const bool patrol_seen = mon->mon_see_cell(mon->patrol_point,
                                  habitat2grid(mons_primary_habitat(mon)));
 
     if (intel == I_PLANT && !patrol_seen)
@@ -3397,7 +3397,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 
         // Don't alert monsters out of sight (e.g. on the other side of
         // a wall).
-        if (!mon->mon_see_grid(*ri))
+        if (!mon->mon_see_cell(*ri))
             continue;
 
         monsters* const m = monster_at(*ri);
@@ -4392,7 +4392,7 @@ static void _handle_behaviour(monsters *mon)
         if (!mons_player_visible( mon ))
             proxPlayer = false;
         // Must be able to see each other.
-        else if (!see_grid(mon->pos()))
+        else if (!see_cell(mon->pos()))
             proxPlayer = false;
 
         const int intel = mons_intel(mon);
@@ -5170,7 +5170,7 @@ static void _handle_movement(monsters *monster)
             // always pathfind to their targets.
             if (delta.abs() > 2
                 && (!ranged
-                    || !monster->mon_see_grid(monster->target, !glass_ok)))
+                    || !monster->mon_see_cell(monster->target, !glass_ok)))
             {
                 monster_pathfind mp;
                 if (mp.init_pathfind(monster, monster->target))
@@ -5439,7 +5439,7 @@ static void _handle_movement(monsters *monster)
     }
 
     // We're already staying in the player's LOS.
-    if (see_grid(old_pos + mmov))
+    if (see_cell(old_pos + mmov))
         return;
 
     // Try to find a move that brings us closer to the player while
@@ -5457,7 +5457,7 @@ static void _handle_movement(monsters *monster)
             delta.set(i - 1, j - 1);
             coord_def tmp = old_pos + delta;
 
-            if (grid_distance(you.pos(), tmp) < old_dist && see_grid(tmp))
+            if (grid_distance(you.pos(), tmp) < old_dist && see_cell(tmp))
             {
                 if (one_chance_in(++matches))
                     mmov = delta;
@@ -6461,7 +6461,7 @@ static bool _handle_reaching(monsters *monster)
             // This check isn't redundant -- player may be invisible.
             if (monster->target == you.pos()
                 && grid_distance(monster->pos(), you.pos()) == 2
-                && (see_grid_no_trans(monster->pos())
+                && (see_cell_no_trans(monster->pos())
                     || grd(middle) > DNGN_MAX_NONREACH))
             {
                 ret = true;
@@ -6474,7 +6474,7 @@ static bool _handle_reaching(monsters *monster)
             coord_def foepos = mfoe.pos();
             // Same comments as to invisibility as above.
             if (monster->target == foepos
-                && monster->mon_see_grid(foepos, true)
+                && monster->mon_see_cell(foepos, true)
                 && grid_distance(monster->pos(), foepos) == 2)
             {
                 ret = true;
@@ -8521,10 +8521,10 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
-    if (monster->seen_context == _just_seen && !see_grid(f))
+    if (monster->seen_context == _just_seen && !see_cell(f))
         simple_monster_message(monster, " moves out of view.");
     else if (Options.tutorial_left && (monster->flags & MF_WAS_IN_VIEW)
-             && !see_grid(f))
+             && !see_cell(f))
     {
         learned_something_new(TUT_MONSTER_LEFT_LOS, monster->pos());
     }
@@ -8749,13 +8749,13 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
          i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
-        if (grd(dc) == DNGN_SECRET_DOOR && see_grid(dc))
+        if (grd(dc) == DNGN_SECRET_DOOR && see_cell(dc))
         {
             grid = grid_secret_door_appearance(dc);
             was_secret = true;
         }
 
-        if (see_grid(dc))
+        if (see_cell(dc))
             was_seen = true;
         else
             set_terrain_changed(dc);
@@ -8886,7 +8886,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     }
 
     // Wandering mushrooms don't move while you are looking.
-    if (monster->type == MONS_WANDERING_MUSHROOM && see_grid(targ))
+    if (monster->type == MONS_WANDERING_MUSHROOM && see_cell(targ))
         return (false);
 
     // Water elementals avoid fire and heat.
@@ -9219,7 +9219,7 @@ static bool _monster_move(monsters *monster)
 
         _jelly_grows(monster);
 
-        if (see_grid(newpos))
+        if (see_cell(newpos))
         {
             viewwindow(true, false);
 

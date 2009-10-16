@@ -4454,7 +4454,7 @@ static bool _water_is_disturbed(int x, int y)
     const coord_def c(x,y);
     const monsters *mon = monster_at(c);
 
-    if (mon == NULL || grd(c) != DNGN_SHALLOW_WATER || !see_grid(c))
+    if (mon == NULL || grd(c) != DNGN_SHALLOW_WATER || !see_cell(c))
         return (false);
 
     return (!player_monster_visible(mon) && !mons_flies(mon));

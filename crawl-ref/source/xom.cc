@@ -1540,7 +1540,7 @@ static int _xom_swap_weapons(bool debug = false)
         if (!m->alive())
             continue;
 
-        if (!see_grid(m->pos()))
+        if (!see_cell(m->pos()))
             continue;
 
         if (!wpn || mons_wont_attack(m) || mons_is_summoned(m)
@@ -1676,7 +1676,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
         if (!m->alive())
             continue;
 
-        if (!see_grid(m->pos()))
+        if (!see_cell(m->pos()))
             continue;
 
         mons.push_back(m);
@@ -1740,7 +1740,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
         if (!m->alive())
             continue;
 
-        if (!see_grid(m->pos()))
+        if (!see_cell(m->pos()))
             continue;
 
         if (mons_wont_attack(m) || mons_is_summoned(m)
@@ -1985,7 +1985,7 @@ static int _xom_change_scenery(bool debug = false)
     std::vector<coord_def> candidates;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true); ri; ++ri)
     {
-        if (!in_bounds(*ri) || !see_grid(*ri))
+        if (!in_bounds(*ri) || !see_cell(*ri))
             continue;
 
         dungeon_feature_type feat = grd(*ri);
@@ -2012,7 +2012,7 @@ static int _xom_change_scenery(bool debug = false)
         {
             if ((random_near_space(you.pos(), place)
                     || random_near_space(you.pos(), place, true))
-                 && grd(place) == DNGN_FLOOR && see_grid(place))
+                 && grd(place) == DNGN_FLOOR && see_cell(place))
             {
                 if (debug)
                     return (XOM_GOOD_SCENERY);
@@ -2950,7 +2950,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     bool found_stairs = false;
     int  past_stairs  = 0;
-    while (in_bounds(ray.pos()) && see_grid(ray.pos())
+    while (in_bounds(ray.pos()) && see_cell(ray.pos())
            && !grid_is_solid(ray.pos()) && ray.pos() != you.pos())
     {
         if (ray.pos() == stair_pos)
@@ -2987,7 +2987,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     if (!in_bounds(ray.pos()) || ray.pos() == you.pos())
         ray.regress();
 
-    while (!see_grid(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
+    while (!see_cell(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
     {
         ray.regress();
         if (!in_bounds(ray.pos()) || ray.pos() == you.pos()

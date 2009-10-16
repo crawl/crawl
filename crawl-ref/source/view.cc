@@ -707,7 +707,7 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
 #endif
 
     dungeon_feature_type grid_value = grd(p);
-    if (!see_grid(p))
+    if (!see_cell(p))
     {
         const int remembered = get_envmap_obj(p);
         if (remembered < NUM_REAL_FEATURES)
@@ -763,7 +763,7 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
                 const int olddist = grid_distance(you.pos(), mon.pos());
                 const int newdist = grid_distance(p, mon.pos());
 
-                if (olddist < newdist || !see_grid(env.show, p, mon.pos()))
+                if (olddist < newdist || !see_cell(env.show, p, mon.pos()))
                 {
                     blocked_movement = true;
                     break;
@@ -1738,7 +1738,7 @@ void cloud_grid(void)
         if (env.cloud[s].type != CLOUD_NONE)
         {
             mnc++;
-            if (see_grid(env.cloud[s].pos))
+            if (see_cell(env.cloud[s].pos))
                 _update_cloud_grid(s);
         }
     }
@@ -1857,7 +1857,7 @@ void blood_smell( int strength, const coord_def& where )
 #endif
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.
-                if (!see_grid(where))
+                if (!see_cell(where))
                 {
                     mprf("You smell fresh blood%s.",
                          _player_vampire_smells_blood(player_distance));
@@ -1950,7 +1950,7 @@ void blood_smell( int strength, const coord_def& where )
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(int feature, const coord_def& where)
 {
-    if (!env.map(where).object && !see_grid(where))
+    if (!env.map(where).object && !see_cell(where))
         return (false);
 
     dungeon_feature_type grid = grd(where);
@@ -2950,7 +2950,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 }
 
 // Realise that this is simply a repackaged version of
-// stuff::see_grid() -- make certain they correlate {dlb}:
+// stuff::see_cell() -- make certain they correlate {dlb}:
 bool mons_near(const monsters *monster, unsigned short foe)
 {
     // Early out -- no foe!
@@ -2974,7 +2974,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
     // Must be a monster.
     const monsters *myFoe = &menv[foe];
     if (myFoe->alive())
-        return (monster->mon_see_grid(myFoe->pos()));
+        return (monster->mon_see_cell(myFoe->pos()));
 
     return (false);
 }
@@ -4147,7 +4147,7 @@ void viewwindow(bool draw_it, bool do_updates)
                 const coord_def sep = ep - coord_def(1,1);
 #endif
 
-                if (in_bounds(gc) && see_grid(gc))
+                if (in_bounds(gc) && see_cell(gc))
                     maybe_remove_autoexclusion(gc);
 
                 // Print tutorial messages for features in LOS.
@@ -4346,16 +4346,16 @@ void viewwindow(bool draw_it, bool do_updates)
                 if (flash_colour && buffy[bufcount])
                 {
                     buffy[bufcount + 1] =
-                        see_grid(gc) ? real_colour(flash_colour)
+                        see_cell(gc) ? real_colour(flash_colour)
                                      : DARKGREY;
                 }
                 else if (Options.target_range > 0 && buffy[bufcount]
                          && (grid_distance(you.pos(), gc) > Options.target_range
-                             || !see_grid(gc)))
+                             || !see_cell(gc)))
                 {
                     buffy[bufcount + 1] = DARKGREY;
 #ifdef USE_TILE
-                    if (see_grid(gc))
+                    if (see_cell(gc))
                         tileb[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
                 }

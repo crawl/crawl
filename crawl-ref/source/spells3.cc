@@ -943,7 +943,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // Headless hydras cannot be raised, sorry.
     if (zombie_type == MONS_HYDRA && number == 0)
     {
-        if (see_grid(pos))
+        if (see_cell(pos))
         {
             mpr("The zero-headed hydra corpse sways and immediately "
                 "collapses!");
@@ -1028,7 +1028,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                                               : "attack");
                 }
 
-                if (!quiet && see_grid(a))
+                if (!quiet && see_cell(a))
                     mpr("The dead are walking!");
 
                 if (was_butchering)
@@ -1074,7 +1074,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                             actual, true) > 0)
         {
             number_raised++;
-            if (see_grid(*ri))
+            if (see_cell(*ri))
                 number_seen++;
         }
     }
@@ -1508,7 +1508,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
 
         if (is_controlled)
         {
-            if (!see_grid(pos))
+            if (!see_cell(pos))
                 large_change = true;
 
             // Merfolk should be able to control-tele into deep water.
@@ -1580,7 +1580,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
 
         if ( newpos == you.pos() )
             mpr("Your surroundings flicker for a moment.");
-        else if ( see_grid(newpos) )
+        else if ( see_cell(newpos) )
             mpr("Your surroundings seem slightly different.");
         else
         {
@@ -1765,7 +1765,7 @@ bool remove_sanctuary(bool did_attack)
         if (is_sanctuary(*ri))
         {
             _remove_sanctuary_property(*ri);
-            if (see_grid(*ri))
+            if (see_cell(*ri))
                 seen_change = true;
         }
     }
@@ -1826,7 +1826,7 @@ void decrease_sanctuary_radius()
     if (!size)
     {
         _remove_sanctuary_property(env.sanctuary_pos);
-        if (see_grid(env.sanctuary_pos))
+        if (see_cell(env.sanctuary_pos))
             mpr("The sanctuary disappears.", MSGCH_DURATION);
     }
 }
@@ -1877,7 +1877,7 @@ bool cast_sanctuary(const int power)
             continue;
 
         const coord_def pos = *ri;
-        if (testbits(env.map(pos).property, FPROP_BLOODY) && see_grid(pos))
+        if (testbits(env.map(pos).property, FPROP_BLOODY) && see_cell(pos))
             blood_count++;
 
         if (trap_def* ptrap = find_trap(pos))
@@ -1958,7 +1958,7 @@ bool cast_sanctuary(const int power)
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {
             delete_cloud(env.cgrid(pos));
-            if (see_grid(pos))
+            if (see_cell(pos))
                 cloud_count++;
         }
     } // radius loop
@@ -2074,7 +2074,7 @@ bool project_noise(void)
             if (success)
             {
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
-                     (!see_grid( pos ) ? "distant " : "") );
+                     (!see_cell( pos ) ? "distant " : "") );
             }
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");

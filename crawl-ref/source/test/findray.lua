@@ -20,7 +20,7 @@ local function test_findray()
     for x = -8, 8 do
       if x ~= 0 or y ~= 0 then
         local px, py = x + you_x, y + you_y
-        if you.see_grid_no_trans(px, py) then
+        if you.see_cell_no_trans(px, py) then
           table.insert(visible_spots, { px, py })
         end
       end

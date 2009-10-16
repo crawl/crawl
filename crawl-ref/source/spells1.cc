@@ -141,7 +141,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 mesclr();
                 mpr("You can't blink into the sea!");
             }
-            else if (see_grid_no_trans(beam.target))
+            else if (see_cell_no_trans(beam.target))
             {
                 // Grid in los, no problem.
                 break;
@@ -393,8 +393,8 @@ void cast_chain_lightning(int pow)
             }
         }
 
-        const bool see_source = see_grid( source );
-        const bool see_targ   = see_grid( target );
+        const bool see_source = see_cell( source );
+        const bool see_targ   = see_cell( target );
 
         if (target.x == -1)
         {
@@ -414,7 +414,7 @@ void cast_chain_lightning(int pow)
         else if (!see_source && see_targ)
             mpr("The lightning arc suddenly appears!");
 
-        if (!see_grid_no_trans( target ))
+        if (!see_cell_no_trans( target ))
         {
             // It's no longer in the caster's LOS and influence.
             pow = pow / 2 + 1;

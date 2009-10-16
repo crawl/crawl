@@ -299,7 +299,7 @@ static bool _mon_submerged_in_water(const monsters *mon)
         return (false);
 
     return (grd(mon->pos()) == DNGN_SHALLOW_WATER
-            && see_grid(mon->pos())
+            && see_cell(mon->pos())
             && !player_monster_visible(mon)
             && !mons_flies(mon));
 }
@@ -381,7 +381,7 @@ static void _direction_again(dist& moves, targetting_type restricts,
 
     if (you.prev_grd_targ != coord_def(0, 0))
     {
-        if (!see_grid(you.prev_grd_targ))
+        if (!see_cell(you.prev_grd_targ))
         {
             moves.isCancel = true;
 
@@ -909,7 +909,7 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
 {
     if (!moves.isCancel && moves.isTarget)
     {
-        if (!see_grid(moves.target))
+        if (!see_cell(moves.target))
         {
             mpr("Sorry, you can't target what you can't see.",
                 MSGCH_EXAMINE_FILTER);
@@ -1758,7 +1758,7 @@ std::string get_terse_square_desc(const coord_def &gc)
         desc = you.your_name;
     else if (!map_bounds(gc))
         desc = unseen_desc;
-    else if (!see_grid(gc))
+    else if (!see_cell(gc))
     {
         if (is_terrain_seen(gc))
         {
@@ -1794,7 +1794,7 @@ std::string get_terse_square_desc(const coord_def &gc)
 
 void terse_describe_square(const coord_def &c, bool in_range)
 {
-    if (!see_grid(c))
+    if (!see_cell(c))
         _describe_oos_square(c);
     else if (in_bounds(c) )
         _describe_cell(c, in_range);
@@ -1806,7 +1806,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     // NOTE: Keep this function in sync with full_describe_square.
 
     // Don't give out information for things outside LOS
-    if (!see_grid(c))
+    if (!see_cell(c))
         return;
 
     const monsters* mons = monster_at(c);
@@ -1849,7 +1849,7 @@ void full_describe_square(const coord_def &c)
     // NOTE: Keep this function in sync with get_square_desc.
 
     // Don't give out information for things outside LOS
-    if (!see_grid(c))
+    if (!see_cell(c))
         return;
 
     const monsters* mons = monster_at(c);
@@ -2049,7 +2049,7 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
-    if (need_path && !see_grid_no_trans(where))
+    if (need_path && !see_cell_no_trans(where))
         return (false);
 
     if (!_mons_is_valid_target(mon, mode, range))

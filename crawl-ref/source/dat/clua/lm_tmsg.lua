@@ -73,7 +73,7 @@ function TimedMessaging:perceptible(cm)
   end
 
   if self.visible then
-    return you.see_grid(cm:pos())
+    return you.see_cell(cm:pos())
   else
     return you.hear_pos(cm:pos())
   end

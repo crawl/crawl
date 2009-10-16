@@ -939,7 +939,7 @@ void calc_show_los()
     }
 }
 
-bool see_grid(const env_show_grid &show,
+bool see_cell(const env_show_grid &show,
               const coord_def &c,
               const coord_def &pos)
 {
@@ -956,23 +956,23 @@ bool see_grid(const env_show_grid &show,
     return (false);
 }
 
-// Answers the question: "Is a grid within character's line of sight?"
-bool see_grid(const coord_def &p)
+// Answers the question: "Is a cell within character's line of sight?"
+bool see_cell(const coord_def &p)
 {
     return ((crawl_state.arena || crawl_state.arena_suspended)
                 && crawl_view.in_grid_los(p))
-            || see_grid(env.show, you.pos(), p);
+            || see_cell(env.show, you.pos(), p);
 }
 
-// Answers the question: "Would a grid be within character's line of sight,
+// Answers the question: "Would a cell be within character's line of sight,
 // even if all translucent/clear walls were made opaque?"
-bool see_grid_no_trans(const coord_def &p)
+bool see_cell_no_trans(const coord_def &p)
 {
-    return see_grid(env.no_trans_show, you.pos(), p);
+    return see_cell(env.no_trans_show, you.pos(), p);
 }
 
-// Is the grid visible, but a translucent wall is in the way?
+// Is the cell visible, but a translucent wall is in the way?
 bool trans_wall_blocking(const coord_def &p)
 {
-    return see_grid(p) && !see_grid_no_trans(p);
+    return see_cell(p) && !see_cell_no_trans(p);
 }

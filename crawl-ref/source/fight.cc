@@ -390,11 +390,11 @@ void melee_attack::init_attack()
 
     water_attack       = is_water_attack(attacker, defender);
     attacker_visible   = attacker->visible() || crawl_state.arena;
-    attacker_invisible = (!attacker_visible && see_grid(attacker->pos()));
+    attacker_invisible = (!attacker_visible && see_cell(attacker->pos()));
     defender_visible   = (defender && (defender->visible()
                                        || crawl_state.arena));
     defender_invisible = (!defender_visible && defender
-                          && see_grid(defender->pos()));
+                          && see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);
 
     if (defender && defender->atype() == ACT_MONSTER)
@@ -2323,7 +2323,7 @@ void melee_attack::chaos_affects_defender()
         miscast_chance *= 2;
 
         // Inform player that something is up.
-        if (see_grid(defender->pos()))
+        if (see_cell(defender->pos()))
         {
             if (defender->atype() == ACT_PLAYER)
                 mpr("You give off a flash of multicoloured light!");
@@ -2559,7 +2559,7 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
     // Don't move around notable terrain the player is aware of if it's
     // out of sight.
     if (is_notable_terrain(stair_feat)
-        && is_terrain_known(orig_pos.x, orig_pos.y) && !see_grid(orig_pos))
+        && is_terrain_known(orig_pos.x, orig_pos.y) && !see_cell(orig_pos))
     {
         return (false);
     }

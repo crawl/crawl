@@ -1486,7 +1486,7 @@ public:
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;
-    bool mon_see_grid(const coord_def& pos, bool reach = false) const;
+    bool mon_see_cell(const coord_def& pos, bool reach = false) const;
     bool can_see(const actor *target) const;
     bool is_icy() const;
     bool is_fiery() const;

@@ -98,13 +98,13 @@ function MonsterOnTrigger:event(marker, ev)
     -- command, since then no turns will have been taken and the LOS info
     -- won't have been updated.
     you.losight()
-    local see_grid = you.see_grid(x, y)
+    local see_cell = you.see_cell(x, y)
 
     if (not dgn.create_monster(x, y, self.new_monster)) then
       return
-    elseif self.message_seen ~= "" and see_grid then
+    elseif self.message_seen ~= "" and see_cell then
       crawl.mpr(self.message_seen)
-    elseif self.message_unseen ~= "" and not see_grid then
+    elseif self.message_unseen ~= "" and not see_cell then
       crawl.mpr(self.message_unseen)
     end
 

@@ -221,7 +221,7 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
     switch (grid)
     {
     case DNGN_SECRET_DOOR:
-        if (see_grid(where))
+        if (see_cell(where))
             mpr("A secret door shatters!");
         chance = 100;
         break;
@@ -229,7 +229,7 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
     case DNGN_CLOSED_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
     case DNGN_OPEN_DOOR:
-        if (see_grid(where))
+        if (see_cell(where))
             mpr("A door shatters!");
         chance = 100;
         break;
@@ -1969,7 +1969,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
         if (distance(base, target) > 10 || distance(you.pos(), target) < 8)
             continue;
 
-        if (!see_grid_no_trans(target))
+        if (!see_cell_no_trans(target))
             continue;
 
         found = true;

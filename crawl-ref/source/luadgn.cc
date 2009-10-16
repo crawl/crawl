@@ -3329,14 +3329,14 @@ LUARET1(you_x_pos, number, you.pos().x)
 LUARET1(you_y_pos, number, you.pos().y)
 LUARET2(you_pos, number, you.pos().x, you.pos().y)
 
-// see_grid should not be exposed to user scripts. The game should
+// see_cell should not be exposed to user scripts. The game should
 // never disclose grid coordinates to the player. Therefore we load it
 // only into the core Lua interpreter (dlua), never into the user
 // script interpreter (clua).
-LUARET1(you_see_grid, boolean,
-        see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
-LUARET1(you_see_grid_no_trans, boolean,
-        see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(you_see_cell, boolean,
+        see_cell(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(you_see_cell_no_trans, boolean,
+        see_cell_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 
 LUAFN(you_moveto)
 {
@@ -3365,8 +3365,8 @@ static const struct luaL_reg you_lib[] =
     { "y_pos", you_y_pos },
     { "pos",   you_pos },
     { "moveto", you_moveto },
-    { "see_grid",          you_see_grid },
-    { "see_grid_no_trans", you_see_grid_no_trans },
+    { "see_cell",          you_see_cell },
+    { "see_cell_no_trans", you_see_cell_no_trans },
     { "random_teleport", you_random_teleport },
     { "losight", you_losight },
     { NULL, NULL }

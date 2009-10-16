@@ -4248,7 +4248,7 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
                 for (int i = 0, size = markers.size(); i < size; ++i)
                     markers[i]->activate();
 
-                if (!see_grid(x, y))
+                if (!see_cell(x, y))
                     set_terrain_changed(x, y);
             }
 

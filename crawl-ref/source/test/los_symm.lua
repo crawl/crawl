@@ -20,7 +20,7 @@ local function test_losight_symmetry()
     for x = -8, 8 do
       if x ~= 0 or y ~= 0 then
         local px, py = x + you_x, y + you_y
-        if you.see_grid(px, py) then
+        if you.see_cell(px, py) then
           table.insert(visible_spots, { px, py })
         end
       end
@@ -33,7 +33,7 @@ local function test_losight_symmetry()
     local x, y = unpack(spot)
     you.moveto(x, y)
     you.losight()
-    if not you.see_grid(you_x, you_y) then
+    if not you.see_cell(you_x, you_y) then
       -- Draw the view to show the problem.
       crawl.redraw_view()
       local this_p = dgn.point(x, y)

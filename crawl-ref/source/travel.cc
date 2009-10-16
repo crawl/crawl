@@ -319,7 +319,7 @@ bool travel_exclude::affects(const coord_def& p) const
     if (!uptodate)
         mprf(MSGCH_ERROR, "exclusion not up-to-date: e (%d,%d) p (%d,%d)",
              pos.x, pos.y, p.x, p.y);
-    return (see_grid(show, pos, p));
+    return (see_cell(show, pos, p));
 }
 
 void init_exclusion_los()
@@ -1991,7 +1991,7 @@ void find_travel_pos(const coord_def& youpos,
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
-            if (!see_grid(*ai)
+            if (!see_cell(*ai)
                 && (!is_terrain_seen(*ai) || !grid_is_wall(grd(*ai))))
             {
                 unseen = *ai;

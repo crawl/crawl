@@ -2998,7 +2998,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
                                                                      : 25*25;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!see_grid(*ri)
+        if (!see_cell(*ri)
             && (force || x_chance_in_y(chance_forgotten, 100)
                 || use_lab_check && (you.pos()-*ri).abs() > radius))
         {

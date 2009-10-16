@@ -264,9 +264,9 @@ bool radius_iterator::on_valid_square() const
         return (false);
     if (require_los)
     {
-        if (!losgrid && !see_grid(location))
+        if (!losgrid && !see_cell(location))
             return (false);
-        if (losgrid && !see_grid(*losgrid, center, location))
+        if (losgrid && !see_cell(*losgrid, center, location))
             return (false);
     }
     if (exclude_center && location == center)

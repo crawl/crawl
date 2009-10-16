@@ -850,7 +850,7 @@ int place_monster(mgen_data mg, bool force_pos)
             case PROX_CLOSE_TO_PLAYER:
             case PROX_AWAY_FROM_PLAYER:
                 // If this is supposed to measure los vs not los,
-                // then see_grid(mg.pos) should be used instead. (jpeg)
+                // then see_cell(mg.pos) should be used instead. (jpeg)
                 close_to_player = (distance(you.pos(), mg.pos) < 64);
 
                 if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
@@ -927,7 +927,7 @@ int place_monster(mgen_data mg, bool force_pos)
     }
 
     // Message to player from stairwell/gate appearance.
-    if (see_grid(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
+    if (see_cell(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
     {
         std::string msg;
 
@@ -2667,7 +2667,7 @@ int create_monster(mgen_data mg, bool fail_msg)
 
     // Determine whether creating a monster is successful (summd != -1) {dlb}:
     // then handle the outcome. {dlb}:
-    if (fail_msg && summd == -1 && see_grid(mg.pos))
+    if (fail_msg && summd == -1 && see_cell(mg.pos))
         mpr("You see a puff of smoke.");
 
     // The return value is either -1 (failure of some sort)
@@ -2692,7 +2692,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
             continue;
 
         // Players won't summon out of LOS, or past transparent walls.
-        if (!see_grid_no_trans(*ri) && playerSummon)
+        if (!see_cell_no_trans(*ri) && playerSummon)
             continue;
 
         success =

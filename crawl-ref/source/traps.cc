@@ -307,7 +307,7 @@ void check_net_will_hold_monster(monsters *mons)
         if (net != NON_ITEM)
             destroy_item(net);
 
-        if (see_grid(mons->pos()))
+        if (see_cell(mons->pos()))
         {
             if (player_monster_visible(mons))
             {
@@ -347,7 +347,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool trig_knows = !flat_footed && this->is_known(&triggerer);
 
     const bool you_trigger = (triggerer.atype() == ACT_PLAYER);
-    const bool in_sight = see_grid(this->pos);
+    const bool in_sight = see_cell(this->pos);
 
     // If set, the trap will be removed at the end of the
     // triggering process.
@@ -1121,7 +1121,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     {
         if (was_known && act.atype() == ACT_PLAYER)
             mpr("The trap is out of ammunition!");
-        else if (player_can_hear(this->pos) && see_grid(this->pos))
+        else if (player_can_hear(this->pos) && see_cell(this->pos))
             mpr("You hear a soft click.");
 
         this->disarm();
@@ -1210,7 +1210,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             // Determine whether projectile hits.
             bool hit = (trap_hit >= act.melee_evasion(NULL));
 
-            if (see_grid(act.pos()))
+            if (see_cell(act.pos()))
             {
                 mprf("%s %s %s%s!",
                      shot.name(DESC_CAP_A).c_str(),

@@ -484,7 +484,7 @@ int apply_area_visible(cell_func cf, int power,
     int rv = 0;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        if (pass_through_trans || see_grid_no_trans(*ri))
+        if (pass_through_trans || see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
 
     return (rv);

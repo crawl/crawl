@@ -30,7 +30,7 @@ local function test_los_map(map)
       local should_see = ((x == 0 and y == 0) or
                           dgn.grid(xa, ya) == rock_wall or
                           dgn.grid(xa, ya) == floor)
-      local can_see = you.see_grid(xa, ya)
+      local can_see = you.see_cell(xa, ya)
       if can_see and (not should_see) then
         assert(false, "los error in " .. name .."(iter #" .. checks ..
                       "): can see " .. p .. " but shouldn't.")
