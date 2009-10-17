@@ -13,8 +13,8 @@
 
 bool double_is_zero(const double x);
 
-void setLOSRadius(int newLR);
-int get_los_radius_squared(); // XXX
+void set_los_radius(int r);
+int get_los_radius_sq(); // XXX
 
 struct ray_def;
 bool find_ray(const coord_def& source, const coord_def& target,

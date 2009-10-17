@@ -77,8 +77,8 @@ const bounds_func& bds_precalc = bds_maxlos;
 // means it will be exactly centered.
 // This is done to accomodate possible future changes in viewable screen
 // area - simply change sh_xo and sh_yo to the new view center.
-const int sh_xo = 9;            // X and Y origins for the sh array
-const int sh_yo = 9;
+const int sh_xo = ENV_SHOW_OFFSET;            // X and Y origins for the sh array
+const int sh_yo = ENV_SHOW_OFFSET;
 const coord_def sh_o = coord_def(sh_xo, sh_yo);
 
 // These store all unique (in terms of footprint) full rays.
@@ -130,17 +130,18 @@ void clear_rays_on_exit()
 }
 
 // Pre-squared LOS radius.
-int _los_radius_squared = LOS_RADIUS_SQ;
+int _los_radius_sq = LOS_RADIUS_SQ;
 
-void setLOSRadius(int newLR)
+void set_los_radius(int r)
 {
-    _los_radius_squared = newLR * newLR + 1*1;
+    ASSERT(r <= LOS_MAX_RADIUS);
+    _los_radius_sq = r * r + 1;
 }
 
 // XXX: just for monster_los
-int get_los_radius_squared()
+int get_los_radius_sq()
 {
-    return _los_radius_squared;
+    return _los_radius_sq;
 }
 
 bool double_is_zero(const double x)

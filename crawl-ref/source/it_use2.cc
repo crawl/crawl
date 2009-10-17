@@ -21,6 +21,7 @@ REVISION("$Rev$");
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "los.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
@@ -472,7 +473,7 @@ bool unwield_item(bool showMsgs)
         && item.sub_type == MISC_LANTERN_OF_SHADOWS )
     {
         you.current_vision += 2;
-        setLOSRadius(you.current_vision);
+        set_los_radius(you.current_vision);
         you.attribute[ATTR_SHADOWS] = 0;
     }
     else if (item.base_type == OBJ_WEAPONS)

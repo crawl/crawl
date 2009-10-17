@@ -1297,8 +1297,8 @@ game_start:
 
     // Before we get into the inventory init, set light radius based
     // on species vision. Currently, all species see out to 8 squares.
-    you.normal_vision  = 8;
-    you.current_vision = 8;
+    you.normal_vision  = LOS_RADIUS;
+    you.current_vision = LOS_RADIUS;
 
     _jobs_stat_init( you.char_class );
     _give_last_paycheck( you.char_class );

@@ -89,7 +89,7 @@ void monster_los::set_los_value(int x, int y, bool blocked, bool override)
 int monster_los::get_los_value(int x, int y)
 {
     // Too far away -> definitely out of sight!
-    if (distance(x, y, gridx, gridy) > get_los_radius_squared())
+    if (distance(x, y, gridx, gridy) > get_los_radius_sq())
         return (L_BLOCKED);
 
     coord_def c(x,y);

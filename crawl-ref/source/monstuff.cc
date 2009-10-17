@@ -3557,7 +3557,7 @@ static bool _target_is_unreachable(monsters *mon)
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed)
 {
-    if (distance(p1, p2) > get_los_radius_squared())
+    if (distance(p1, p2) > get_los_radius_sq())
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;

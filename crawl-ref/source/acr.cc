@@ -3620,7 +3620,7 @@ static bool _initialise(void)
     you.lava_in_sight = you.water_in_sight = -1;
 
     // Set vision radius to player's current vision.
-    setLOSRadius(you.current_vision);
+    set_los_radius(you.current_vision);
     init_exclusion_los();
 
     if (newc) // start a new game

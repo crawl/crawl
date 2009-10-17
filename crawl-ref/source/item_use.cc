@@ -36,6 +36,7 @@ REVISION("$Rev$");
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "los.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -459,7 +460,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 mpr("The area is filled with flickering shadows.");
 
             you.current_vision -= 2;
-            setLOSRadius(you.current_vision);
+            set_los_radius(you.current_vision);
             you.attribute[ATTR_SHADOWS] = 1;
         }
         else if (item.sub_type == MISC_HORN_OF_GERYON)

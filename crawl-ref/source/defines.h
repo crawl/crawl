@@ -106,18 +106,23 @@ const int LABYRINTH_BORDER = 4;
 #define Y_ABYSS_WIDTH           (Y_ABYSS_2 - Y_ABYSS_1 + 1)
 #define Y_ABYSS_CENTER          (Y_ABYSS_1 + Y_ABYSS_WIDTH / 2)
 
-#define LOS_RADIUS 8
+// default LOS radius
+#define LOS_RADIUS 10
+// default LOS radius squared, for comparison with distance()
 #define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
+// maximal LOS radius
 #define LOS_MAX_RADIUS LOS_RADIUS
 #define LOS_MAX_RADIUS_SQ (LOS_MAX_RADIUS * LOS_MAX_RADIUS + 1)
-#define LOS_MAX_RADIUS LOS_RADIUS
+// maximal horizontal or vertical LOS range:
+//   a quadrant needs to fit inside an 2D array with
+//     0 <= x, y <= LOS_MAX_RANGE
 #define LOS_MAX_RANGE LOS_MAX_RADIUS
-#define ENV_SHOW_OFFSET (LOS_MAX_RANGE + 1)
+#define ENV_SHOW_OFFSET LOS_MAX_RANGE
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
 #define VIEW_BASE_WIDTH 33      // FIXME: never used
-#define VIEW_MIN_WIDTH  17
-#define VIEW_MIN_HEIGHT 17
+#define VIEW_MIN_WIDTH  ENV_SHOW_DIAMETER
+#define VIEW_MIN_HEIGHT ENV_SHOW_DIAMETER
 #define MSG_MIN_HEIGHT  7
 
 // max traps per level
@@ -143,7 +148,7 @@ const int MAX_SKILL_LEVEL = 27;
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 
 // grids that monsters can see
-const int MONSTER_LOS_RANGE = 8;
+const int MONSTER_LOS_RANGE = LOS_RADIUS;
 
 // Maximum charge level for rods
 const int MAX_ROD_CHARGE  = 17;

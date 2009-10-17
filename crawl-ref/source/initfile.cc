@@ -684,8 +684,8 @@ void game_options::reset_options()
 
     mouse_input = false;
 
-    view_max_width   = 33;
-    view_max_height  = 21;
+    view_max_width   = std::max(33, VIEW_MIN_WIDTH);
+    view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 5;
     msg_max_height   = 10;
     mlist_allow_alternate_layout = false;

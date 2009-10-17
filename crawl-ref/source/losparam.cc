@@ -65,5 +65,5 @@ bool bounds_radius_sq::operator()(const coord_def& p) const
 // LOS bounded by current global LOS radius.
 bool bounds_cur_los_radius::operator()(const coord_def& p) const
 {
-    return (p.abs() <= get_los_radius_squared());
+    return (p.abs() <= get_los_radius_sq());
 }
