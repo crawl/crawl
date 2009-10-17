@@ -227,7 +227,7 @@ static const ability_def Ability_List[] =
     // INVOCATIONS:
     // Zin
     { ABIL_ZIN_SUSTENANCE, "Sustenance", 0, 0, 0, 0, ABFLAG_PIETY },
-    { ABIL_ZIN_RECITE, "Recite", 3, 0, 120, 0, ABFLAG_DELAY },
+    { ABIL_ZIN_RECITE, "Recite", 3, 0, 0, 0, ABFLAG_DELAY },
     { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
     { ABIL_ZIN_CURE_ALL_MUTATIONS, "Cure All Mutations",
