@@ -38,12 +38,14 @@ MAKEFLAGS := --no-print-directory
 # The GCC and GXX variables are set later.
 #
 AR = ar
+RANLIB = ranlib
 CC = $(GCC)
 CXX = $(GXX)
 RM = rm -f
 COPY = cp
 
 export AR
+export RANLIB
 export RM
 export CC
 export CXX
@@ -68,6 +70,10 @@ uname_R := $(shell sh -c 'uname -r 2>/dev/null || echo not')
 uname_P := $(shell sh -c 'uname -p 2>/dev/null || echo not')
 uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
+ifdef CROSSHOST
+	NO_PKGCONFIG = YesPlease
+	CONFIGURE_FLAGS += --host=$(CROSSHOST)
+endif
 ifneq (,$(findstring MINGW,$(uname_S)))
 	GAME = crawl.exe
 	WIN32 = Yes
@@ -168,12 +174,19 @@ CXX = $(GXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 
 endif # MacOS
 
+ifndef CROSSHOST
 ifneq ($(GCC_VER),)
 GCC := gcc-$(GCC_VER)
 GXX := g++-$(GCC_VER)
 else
 GCC := gcc
 GXX := g++
+endif
+else
+GCC := $(CROSSHOST)-gcc
+GXX := $(CROSSHOST)-g++
+AR := $(CROSSHOST)-ar
+RANLIB := $(CROSSHOST)-ranlib
 endif
 GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
 
