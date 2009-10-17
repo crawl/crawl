@@ -1241,8 +1241,10 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
         {
             monsters *targ = &menv[target];
             pbolt.target = targ->pos();
+#if DEBUG_DIAGNOSTICS
             mprf("Porkalator: targetting %s instead",
                  targ->name(DESC_PLAIN).c_str());
+#endif
             monster_polymorph(targ, hog_type);
         }
         // else target remains as specified
