@@ -54,6 +54,7 @@ REVISION("$Rev$");
 #include "spells3.h"
 #include "stash.h"
 #include "tiles.h"
+#include "travel.h"
 #include "state.h"
 #include "terrain.h"
 #include "tilemcache.h"
@@ -398,13 +399,11 @@ static int _view_emphasised_colour(const coord_def& where,
                                    dungeon_feature_type feat,
                                    int oldcolour, int newcolour)
 {
-    if (feat_is_travelable_stair(feat) && !travel_cache.know_stair(where))
+    if (is_unknown_stair(where, feat)
+        && (you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+        && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
     {
-        if ((you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
-        {
             return (newcolour);
-        }
     }
     return (oldcolour);
 }
@@ -682,8 +681,8 @@ unsigned short dos_brand( unsigned short colour,
 
 // FIXME: Rework this function to use the new terrain known/seen checks
 // These are still env.map coordinates, NOT grid coordinates!
-screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
-                                 bool travel_colour )
+screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
+                                bool travel_colour)
 {
     const unsigned short map_flags = env.map(p).flags;
     if (!(map_flags & MAP_GRID_KNOWN))
@@ -727,7 +726,7 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     int feature_colour = DARKGREY;
     const bool terrain_seen = is_terrain_seen(p);
     const feature_def &fdef = Feature[feat_value];
-    feature_colour = terrain_seen? fdef.seen_colour : fdef.map_colour;
+    feature_colour = terrain_seen ? fdef.seen_colour : fdef.map_colour;
 
     if (terrain_seen && feature_colour != fdef.seen_em_colour
         && fdef.seen_em_colour)

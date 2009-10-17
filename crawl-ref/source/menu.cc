@@ -833,7 +833,7 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     tileset.push_back(tile_def(tileidx_feature(grd(pos), pos.x, pos.y),
                                TEX_DUNGEON));
-    if (feat_is_travelable_stair(grd(pos)) && !travel_cache.know_stair(pos))
+    if (is_unknown_stair(pos))
         tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
 
     return (true);

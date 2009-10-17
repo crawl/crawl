@@ -67,15 +67,8 @@ void TileNewLevel(bool first_time)
             unsigned int tile = env.tile_bk_bg[x][y];
             if (!(tile & TILE_FLAG_NEW_STAIR))
                 continue;
-
-            const coord_def gc(x,y);
-            int object = grd(gc);
-
-            if (!feat_is_travelable_stair((dungeon_feature_type)object)
-                || travel_cache.know_stair(gc))
-            {
+            if (!is_unkown_stair(coord_def(x,y)))
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
-            }
         }
 }
 
@@ -4544,11 +4537,8 @@ void tile_draw_floor()
                 {
                     if (object == DNGN_DETECTED_SECRET_DOOR)
                         bg |= TILE_FLAG_WAS_SECRET;
-                    else if (feat_is_travelable_stair((dungeon_feature_type)object)
-                             && !travel_cache.know_stair(gc))
-                    {
+                    else if (is_unkown_stair(gc))
                         bg |= TILE_FLAG_NEW_STAIR;
-                    }
                 }
             }
 

@@ -693,7 +693,7 @@ void full_describe_view()
             desc += "</" + colour_str +">) ";
 #endif
             desc += feature_description(c);
-            if (feat_is_travelable_stair(grd(c)) && !travel_cache.know_stair(c))
+            if (is_unknown_stair(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
             me->tag        = "description";
