@@ -51,6 +51,7 @@ export CC
 export CXX
 export CFLAGS
 export MAKEFLAGS
+export CONFIGURE_FLAGS
 
 LIBPCRE := contrib/install/lib/libpcre.a
 LIBSDL := contrib/install/lib/libSDL.a
