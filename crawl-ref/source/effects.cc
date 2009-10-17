@@ -2219,11 +2219,11 @@ bool acquirement(object_class_type class_wanted, int agent,
         }
     }
 
-    if (grid_destroys_items(grd(you.pos())))
+    if (feat_destroys_items(grd(you.pos())))
     {
         // How sad (and stupid).
         if (!silenced(you.pos()) && !quiet)
-            mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
+            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(you.pos())));
 
         if (agent > GOD_NO_GOD && agent < NUM_GODS)
         {
@@ -2818,7 +2818,7 @@ static void _hell_effects()
 
 static bool _is_floor(const dungeon_feature_type feat)
 {
-    return (!grid_is_solid(feat) && !grid_destroys_items(feat));
+    return (!feat_is_solid(feat) && !feat_destroys_items(feat));
 }
 
 // This function checks whether we can turn a wall into a floor space and
@@ -2829,7 +2829,7 @@ static bool _is_floor(const dungeon_feature_type feat)
 //   .        #          2
 //  #x#  or  .x.   ->   0x1
 //   .        #          3
-static bool _grid_is_flanked_by_walls(const coord_def &p)
+static bool _feat_is_flanked_by_walls(const coord_def &p)
 {
     const coord_def adjs[] = { coord_def(p.x-1,p.y),
                                coord_def(p.x+1,p.y),
@@ -2841,10 +2841,10 @@ static bool _grid_is_flanked_by_walls(const coord_def &p)
         if (!in_bounds(adjs[i]))
             return (false);
 
-    return (grid_is_wall(grd(adjs[0])) && grid_is_wall(grd(adjs[1]))
+    return (feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
                && _is_floor(grd(adjs[2])) && _is_floor(grd(adjs[3]))
             || _is_floor(grd(adjs[0])) && _is_floor(grd(adjs[1]))
-               && grid_is_wall(grd(adjs[2])) && grid_is_wall(grd(adjs[3])));
+               && feat_is_wall(grd(adjs[2])) && feat_is_wall(grd(adjs[3])));
 }
 
 // Sometimes if a floor is turned into a wall, a dead-end will be created.
@@ -2875,7 +2875,7 @@ static bool _deadend_check_wall(const coord_def &p)
     // The grids to the left and right of p are walls. (We already know that
     // they are symmetric, so only need to check one side. We also know that
     // the other direction, here up/down must then be non-walls.)
-    if (grid_is_wall(grd[p.x-1][p.y]))
+    if (feat_is_wall(grd[p.x-1][p.y]))
     {
         // Run the check twice, once in either direction.
         for (int i = -1; i <= 1; i++)
@@ -2889,9 +2889,9 @@ static bool _deadend_check_wall(const coord_def &p)
             const coord_def d(p.x+1, p.y+2*i);
 
             if (in_bounds(a) && in_bounds(b)
-                && grid_is_wall(grd(a)) && grid_is_wall(grd(b))
+                && feat_is_wall(grd(a)) && feat_is_wall(grd(b))
                 && (!in_bounds(c) || !in_bounds(d)
-                    || !grid_is_wall(grd(c)) || !grid_is_wall(grd(d))))
+                    || !feat_is_wall(grd(c)) || !feat_is_wall(grd(d))))
             {
                 return (false);
             }
@@ -2910,9 +2910,9 @@ static bool _deadend_check_wall(const coord_def &p)
             const coord_def d(p.x+2*i, p.y+1);
 
             if (in_bounds(a) && in_bounds(b)
-                && grid_is_wall(grd(a)) && grid_is_wall(grd(b))
+                && feat_is_wall(grd(a)) && feat_is_wall(grd(b))
                 && (!in_bounds(c) || !in_bounds(d)
-                    || !grid_is_wall(grd(c)) || !grid_is_wall(grd(d))))
+                    || !feat_is_wall(grd(c)) || !feat_is_wall(grd(d))))
             {
                 return (false);
             }
@@ -2940,7 +2940,7 @@ static bool _deadend_check_wall(const coord_def &p)
 // as well.
 static bool _deadend_check_floor(const coord_def &p)
 {
-    if (grid_is_wall(grd[p.x-1][p.y]))
+    if (feat_is_wall(grd[p.x-1][p.y]))
     {
         for (int i = -1; i <= 1; i++)
         {
@@ -3028,7 +3028,7 @@ void change_labyrinth(bool msg)
         // directions, and by floor on the two remaining sides.
         for (rectangle_iterator ri(c1, c2); ri; ++ri)
         {
-            if (is_terrain_seen(*ri) || !grid_is_wall(grd(*ri)))
+            if (is_terrain_seen(*ri) || !feat_is_wall(grd(*ri)))
                 continue;
 
             // Skip on grids inside vaults so as not to disrupt them.
@@ -3036,7 +3036,7 @@ void change_labyrinth(bool msg)
                 continue;
 
             // Make sure we don't accidentally create "ugly" dead-ends.
-            if (_grid_is_flanked_by_walls(*ri) && _deadend_check_floor(*ri))
+            if (_feat_is_flanked_by_walls(*ri) && _deadend_check_floor(*ri))
                 targets.push_back(*ri);
         }
 
@@ -3090,7 +3090,7 @@ void change_labyrinth(bool msg)
     {
         const coord_def c(targets[count]);
         // Maybe not valid anymore...
-        if (!grid_is_wall(grd(c)) || !_grid_is_flanked_by_walls(c))
+        if (!feat_is_wall(grd(c)) || !_feat_is_flanked_by_walls(c))
             continue;
 
         // Use the adjacent floor grids as source and destination.
@@ -3152,7 +3152,7 @@ void change_labyrinth(bool msg)
             if (std::abs(p.x-c.x) + std::abs(p.y-c.y) <= 1)
                 continue;
 
-            if (_grid_is_flanked_by_walls(p) && _deadend_check_wall(p))
+            if (_feat_is_flanked_by_walls(p) && _deadend_check_wall(p))
                 points.push_back(p);
         }
 
@@ -3186,7 +3186,7 @@ void change_labyrinth(bool msg)
                 int wall_count = 0;
                 coord_def old_adj(c);
                 for (adjacent_iterator ai(c); ai; ++ai)
-                    if (grid_is_wall(grd(*ai)) && one_chance_in(++wall_count))
+                    if (feat_is_wall(grd(*ai)) && one_chance_in(++wall_count))
                         old_adj = *ai;
 
                 if (old_adj != c && !is_bloodcovered(old_adj))
@@ -3205,10 +3205,10 @@ void change_labyrinth(bool msg)
         // Rather than use old_grid directly, replace with an adjacent
         // wall type, preferably stone, rock, or metal.
         old_grid = grd[p.x-1][p.y];
-        if (!grid_is_wall(old_grid))
+        if (!feat_is_wall(old_grid))
         {
             old_grid = grd[p.x][p.y-1];
-            if (!grid_is_wall(old_grid))
+            if (!feat_is_wall(old_grid))
             {
                 if (msg)
                 {
@@ -3272,7 +3272,7 @@ void change_labyrinth(bool msg)
     // and move them to a random adjacent non-wall grid.
     for (rectangle_iterator ri(c1, c2); ri; ++ri)
     {
-        if (!grid_is_wall(grd(*ri)) || igrd(*ri) == NON_ITEM)
+        if (!feat_is_wall(grd(*ri)) || igrd(*ri) == NON_ITEM)
             continue;
 
         if (msg)
@@ -4041,7 +4041,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
 
         const coord_def next(pos + inc);
         const dungeon_feature_type feat = grd(next);
-        if (grid_is_solid(feat)
+        if (feat_is_solid(feat)
             || monster_at(next)
             || !monster_habitable_grid(mon, feat))
         {
@@ -4335,7 +4335,7 @@ void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
 
             if (visited_indices.find(idx) == visited_indices.end()
                 && in_bounds(temp.first)
-                && !grid_is_solid(temp.first))
+                && !cell_is_solid(temp.first))
             {
                 fringe.push(temp);
             }

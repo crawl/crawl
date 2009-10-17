@@ -400,7 +400,7 @@ static int _view_emphasised_colour(const coord_def& where,
 {
     if (is_travelable_stair(feat) && !travel_cache.know_stair(where))
     {
-        if ((you.your_level || grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+        if ((you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
         {
             return (newcolour);
@@ -417,7 +417,7 @@ static bool _show_bloodcovered(const coord_def& where)
     dungeon_feature_type grid = grd(where);
 
     // Altars, stairs (of any kind) and traps should not be coloured red.
-    return (!is_critical_feature(grid) && !grid_is_trap(grid));
+    return (!is_critical_feature(grid) && !feat_is_trap(grid));
 }
 
 static unsigned short _tree_colour(const coord_def& where)
@@ -706,12 +706,12 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     }
 #endif
 
-    dungeon_feature_type grid_value = grd(p);
+    dungeon_feature_type feat_value = grd(p);
     if (!see_cell(p))
     {
         const int remembered = get_envmap_obj(p);
         if (remembered < NUM_REAL_FEATURES)
-            grid_value = static_cast<dungeon_feature_type>(remembered);
+            feat_value = static_cast<dungeon_feature_type>(remembered);
     }
 
     unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
@@ -735,14 +735,14 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
 
     int feature_colour = DARKGREY;
     const bool terrain_seen = is_terrain_seen(p);
-    const feature_def &fdef = Feature[grid_value];
+    const feature_def &fdef = Feature[feat_value];
     feature_colour = terrain_seen? fdef.seen_colour : fdef.map_colour;
 
     if (terrain_seen && feature_colour != fdef.seen_em_colour
         && fdef.seen_em_colour)
     {
         feature_colour =
-            _view_emphasised_colour(p, grid_value, feature_colour,
+            _view_emphasised_colour(p, feat_value, feature_colour,
                                     fdef.seen_em_colour);
     }
 
@@ -775,13 +775,13 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     }
 
     if (Options.feature_item_brand
-        && is_critical_feature(grid_value)
+        && is_critical_feature(feat_value)
         && igrd(p) != NON_ITEM)
     {
         tc |= COLFLAG_FEATURE_ITEM;
     }
     else if (Options.trap_item_brand
-             && grid_is_trap(grid_value) && igrd(p) != NON_ITEM)
+             && feat_is_trap(feat_value) && igrd(p) != NON_ITEM)
     {
         // FIXME: this uses the real igrd, which the player shouldn't
         // be aware of.
@@ -850,13 +850,13 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         {
             unsigned int feature = grd(p);
 
-            unsigned int grid_symbol;
-            unsigned short grid_colour;
-            get_item_symbol(feature, &grid_symbol, &grid_colour);
+            unsigned int feat_symbol;
+            unsigned short feat_colour;
+            get_item_symbol(feature, &feat_symbol, &feat_colour);
 
             unsigned int fg;
             unsigned int bg;
-            tileidx_unseen(fg, bg, grid_symbol, p);
+            tileidx_unseen(fg, bg, feat_symbol, p);
             env.tile_bk_bg(p) = bg;
             env.tile_bk_fg(p) = fg;
         }
@@ -900,7 +900,7 @@ int get_mons_colour(const monsters *mons)
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
             && is_critical_feature(grd(mons->pos()))
-            && grid_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
+            && feat_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
         {
             col |= COLFLAG_FEATURE_ITEM;
         }
@@ -1590,7 +1590,7 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
     const dungeon_feature_type grid = grd(gp);
     if (Options.feature_item_brand && is_critical_feature(grid))
         ecol |= COLFLAG_FEATURE_ITEM;
-    else if (Options.trap_item_brand && grid_is_trap(grid))
+    else if (Options.trap_item_brand && feat_is_trap(grid))
         ecol |= COLFLAG_TRAP_ITEM;
     else
     {
@@ -1940,7 +1940,7 @@ void blood_smell( int strength, const coord_def& where )
 }
 
 
-// Determines if the given feature is present at (x, y) in _grid_ coordinates.
+// Determines if the given feature is present at (x, y) in _feat_ coordinates.
 // If you have map coords, add (1, 1) to get grid coords.
 // Use one of
 // 1. '<' and '>' to look for stairs
@@ -2904,13 +2904,13 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         bool open = true;
 
-        if (grid_is_solid(grd(*ri)) && !grid_is_closed_door(grd(*ri)))
+        if (feat_is_solid(grd(*ri)) && !feat_is_closed_door(grd(*ri)))
         {
             open = false;
             for (adjacent_iterator ai(*ri); ai; ++ai)
             {
-                if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
-                                        || grid_is_closed_door(grd(*ai))))
+                if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
+                                        || feat_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;

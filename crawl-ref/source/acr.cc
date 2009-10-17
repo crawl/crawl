@@ -1204,7 +1204,7 @@ static void _go_upstairs()
             shop();
         return;
     }
-    else if (grid_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
+    else if (feat_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
     {
         if (ygrd == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -1243,7 +1243,7 @@ static void _go_downstairs()
         return;
     }
 
-    if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS
+    if (feat_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS
         && !shaft)
     {
         if (grd(you.pos()) == DNGN_STONE_ARCH)
@@ -3041,7 +3041,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     }
 
     const dungeon_feature_type feat = grd(target);
-    if (!grid_is_closed_door(feat) || you.confused())
+    if (!feat_is_closed_door(feat) || you.confused())
     {
         switch (feat)
         {
@@ -3053,7 +3053,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             bool do_msg = true;
 
             // Press trigger/switch/button in wall.
-            if (grid_is_solid(feat))
+            if (feat_is_solid(feat))
             {
                 dgn_event event(DET_WALL_HIT, target);
                 event.arg1  = NON_MONSTER;
@@ -3160,7 +3160,7 @@ static void _open_door(coord_def move, bool check_confused)
     const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
                                                           : DNGN_UNSEEN);
 
-    if (!grid_is_closed_door(feat))
+    if (!feat_is_closed_door(feat))
     {
         if (you.confused())
         {
@@ -3740,7 +3740,7 @@ static void _move_player(coord_def move)
         dungeon_feature_type dangerous = DNGN_FLOOR;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
-            if (is_grid_dangerous(grd(*ai))
+            if (is_feat_dangerous(grd(*ai))
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
@@ -3871,7 +3871,7 @@ static void _move_player(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if (Options.easy_open && !attacking && grid_is_closed_door(targ_grid))
+    if (Options.easy_open && !attacking && feat_is_closed_door(targ_grid))
     {
         _open_door(move.x, move.y, false);
         you.prev_move = move;

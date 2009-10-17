@@ -164,10 +164,10 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.
-        if (wizard_blink && grid_is_solid(grd(beam.target)))
+        if (wizard_blink && feat_is_solid(grd(beam.target)))
             grd(beam.target) = DNGN_FLOOR;
 
-        if (grid_is_solid(grd(beam.target)) || monster_at(beam.target))
+        if (feat_is_solid(grd(beam.target)) || monster_at(beam.target))
         {
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
@@ -522,7 +522,7 @@ bool conjure_flame(int pow, const coord_def& where)
         return (false);
     }
 
-    if (grid_is_solid(where))
+    if (cell_is_solid(where))
     {
         if (grd(where) == DNGN_WAX_WALL)
             mpr("The flames aren't hot enough to melt wax walls!");
@@ -1446,7 +1446,7 @@ void cast_fly(int power)
             mpr("You fly up into the air.");
 
         // Merfolk boots unmeld if flight takes us out of water.
-        if (you.species == SP_MERFOLK && grid_is_water(grd(you.pos())))
+        if (you.species == SP_MERFOLK && feat_is_water(grd(you.pos())))
             unmeld_one_equip(EQ_BOOTS);
     }
     else
@@ -1536,6 +1536,6 @@ void manage_fire_shield()
 
     // Place fire clouds all around you
     for ( adjacent_iterator ai; ai; ++ai )
-        if (!grid_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
+        if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
             place_cloud( CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU );
 }

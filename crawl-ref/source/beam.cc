@@ -1433,7 +1433,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
         // is shot into an inside corner.
         ray_def test_ray = temp_ray;
         test_ray.advance(true);
-        if (in_bounds(test_ray.pos()) && !grid_is_solid(test_ray.pos()))
+        if (in_bounds(test_ray.pos()) && !cell_is_solid(test_ray.pos()))
             break;
 
         shift    = 0.0;
@@ -1651,15 +1651,15 @@ void bolt::bounce()
     {
         do
             ray.regress();
-        while (grid_is_solid(grd(ray.pos())));
+        while (feat_is_solid(grd(ray.pos())));
 
         bounce_pos = ray.pos();
         ray.advance_and_bounce();
         range_used += 2;
     }
-    while (range_used < range && grid_is_solid(grd(ray.pos())));
+    while (range_used < range && feat_is_solid(grd(ray.pos())));
 
-    if (!grid_is_solid(grd(ray.pos())))
+    if (!feat_is_solid(grd(ray.pos())))
         _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
 }
 
@@ -1698,7 +1698,7 @@ void bolt::digging_wall_effect()
             msg_generated = true;
         }
     }
-    else if (grid_is_wall(feat))
+    else if (feat_is_wall(feat))
         finish_beam();
 }
 
@@ -1832,7 +1832,7 @@ void bolt::affect_wall()
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
         nuke_wall_effect();
 
-    if (grid_is_solid(pos()))
+    if (cell_is_solid(pos()))
         finish_beam();
 }
 
@@ -1847,13 +1847,13 @@ coord_def bolt::pos() const
 void bolt::hit_wall()
 {
     const dungeon_feature_type feat = grd(pos());
-    ASSERT( grid_is_solid(feat) );
+    ASSERT( feat_is_solid(feat) );
 
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
         && pos() != target  && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
         && bounces == 0 && reflections == 0 && see_cell(target)
-        && !grid_is_solid(grd(target)))
+        && !feat_is_solid(grd(target)))
     {
         // Okay, with all those tests passed, this is probably an instance
         // of the player manually targetting something whose line of fire
@@ -1909,7 +1909,7 @@ void bolt::hit_wall()
         {
             do
                 ray.regress();
-            while (ray.pos() != source && grid_is_solid(ray.pos()));
+            while (ray.pos() != source && cell_is_solid(ray.pos()));
 
             // target is where the explosion is centered, so update it.
             if (is_explosion && !is_tracer)
@@ -1928,7 +1928,7 @@ void bolt::affect_cell(bool avoid_self)
     fake_flavour();
 
     const coord_def old_pos = pos();
-    const bool was_solid = grid_is_solid(grd(pos()));
+    const bool was_solid = feat_is_solid(grd(pos()));
 
     bool avoid_monster = (avoid_self && this->thrower == KILL_MON_MISSILE);
     bool avoid_player  = (avoid_self && this->thrower != KILL_MON_MISSILE);
@@ -1974,7 +1974,7 @@ void bolt::affect_cell(bool avoid_self)
             affect_monster(m);
     }
 
-    if (!grid_is_solid(grd(pos())))
+    if (!feat_is_solid(grd(pos())))
         affect_ground();
 }
 
@@ -2112,7 +2112,7 @@ void bolt::do_fire()
                 break;
         }
 
-        ASSERT((!grid_is_solid(grd(pos())) || avoid_self)
+        ASSERT((!feat_is_solid(grd(pos())) || avoid_self)
                || is_tracer && affects_wall(grd(pos())));
 
         const bool was_seen = seen;
@@ -2886,7 +2886,7 @@ void mimic_alert(monsters *mimic)
 
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
-    if (real_flavour == BEAM_CHAOS && grid_is_solid(feat))
+    if (real_flavour == BEAM_CHAOS && feat_is_solid(feat))
         return (true);
 
     if (is_enchantment())
@@ -3172,12 +3172,12 @@ void bolt::affect_place_clouds()
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
-        || grid_is_watery(feat) && is_fiery())
+        || feat_is_watery(feat) && is_fiery())
     {
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
     }
 
-    if (grid_is_watery(feat) && flavour == BEAM_COLD
+    if (feat_is_watery(feat) && flavour == BEAM_COLD
         && damage.num * damage.size > 35)
     {
         place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1,
@@ -3204,7 +3204,7 @@ void bolt::affect_place_explosion_clouds()
 
     // First check: fire/cold over water/lava.
     if (grd(p) == DNGN_LAVA && flavour == BEAM_COLD
-        || grid_is_watery(grd(p)) && is_fiery())
+        || feat_is_watery(grd(p)) && is_fiery())
     {
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
         return;
@@ -5684,9 +5684,9 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     const dungeon_feature_type dngn_feat = grd(loc);
 
     // Check to see if we're blocked by a wall.
-    if (grid_is_wall(dngn_feat)
+    if (feat_is_wall(dngn_feat)
         || dngn_feat == DNGN_SECRET_DOOR
-        || grid_is_closed_door(dngn_feat))
+        || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue
         // (e.g. Lee's Rapid Deconstruction) - in this case, ignore
@@ -5695,7 +5695,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
             return;
     }
 
-    if (grid_is_solid(dngn_feat) && !grid_is_wall(dngn_feat) && stop_at_statues)
+    if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat) && stop_at_statues)
         return;
 
     // Hmm, I think we're OK.

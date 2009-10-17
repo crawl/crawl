@@ -1659,7 +1659,7 @@ int near_stairs(const coord_def &p, int max_dist,
         if (is_stair(feat))
         {
             // Shouldn't happen for escape hatches.
-            if (grid_is_escape_hatch(feat))
+            if (feat_is_escape_hatch(feat))
                 continue;
 
             stair_type = get_feature_dchar(feat);

@@ -1960,7 +1960,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     const dungeon_feature_type my_grid = grd(you.pos());
 
-    if (!grid_destroys_items(my_grid)
+    if (!feat_destroys_items(my_grid)
         && !copy_item_to_grid( you.inv[item_dropped],
                                you.pos(), quant_drop, true ))
     {
@@ -1971,10 +1971,10 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
 
-    if (grid_destroys_items(my_grid))
+    if (feat_destroys_items(my_grid))
     {
         if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
+            mprf(MSGCH_SOUND, feat_item_destruction_message(my_grid));
 
         item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
     }
@@ -1994,7 +1994,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     if (try_offer
         && you.religion != GOD_NO_GOD
         && you.duration[DUR_PRAYER]
-        && grid_altar_god(grd(you.pos())) == you.religion)
+        && feat_altar_god(grd(you.pos())) == you.religion)
     {
         offer_items();
     }

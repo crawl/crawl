@@ -1605,8 +1605,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
     if (you.species == SP_MERFOLK)
     {
         const dungeon_feature_type new_grid = grd(you.pos());
-        if (grid_is_water(old_grid) && !grid_is_water(new_grid)
-            || !grid_is_water(old_grid) && grid_is_water(new_grid))
+        if (feat_is_water(old_grid) && !feat_is_water(new_grid)
+            || !feat_is_water(old_grid) && feat_is_water(new_grid))
         {
             init_player_doll();
         }
@@ -2063,7 +2063,7 @@ bool project_noise(void)
 
     if (!silenced( pos ))
     {
-        if (in_bounds(pos) && !grid_is_solid(grd(pos)))
+        if (in_bounds(pos) && !feat_is_solid(grd(pos)))
         {
             noisy(30, pos);
             success = true;

@@ -114,7 +114,7 @@ static int _spread_cloud(const cloud_struct &cloud)
 
         if (!in_bounds(*ai)
             || env.cgrid(*ai) != EMPTY_CLOUD
-            || grid_is_solid(grd(*ai))
+            || feat_is_solid(grd(*ai))
             || is_sanctuary(*ai) && !is_harmless_cloud(cloud.type))
         {
             continue;
@@ -145,7 +145,7 @@ static void _spread_fire(const cloud_struct &cloud)
             continue;
 
         // burning trees produce flames all around
-        if (!grid_is_solid(*ai) && make_flames)
+        if (!cell_is_solid(*ai) && make_flames)
             _place_new_cloud( CLOUD_FIRE, *ai, cloud.decay/2+1, cloud.whose,
                               cloud.killer, cloud.spread_rate );
 

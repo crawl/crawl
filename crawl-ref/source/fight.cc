@@ -621,7 +621,7 @@ bool melee_attack::attack()
 
     // Defending monster protects itself from attacks using the wall
     // it's in.
-    if (defender->atype() == ACT_MONSTER && grid_is_solid(defender->pos())
+    if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
         && mons_wall_shielded(defender_as_monster()))
     {
         std::string feat_name = raw_feature_description(grd(defender->pos()));
@@ -2549,7 +2549,7 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
     const coord_def orig_pos  = attacker->pos();
     const dungeon_feature_type stair_feat = grd(orig_pos);
 
-    if (grid_stair_direction(stair_feat) == CMD_NO_CMD)
+    if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
         return (false);
 
     // The player can't use shops to escape, so don't bother.

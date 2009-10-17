@@ -233,11 +233,11 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
         bool merfolk_check = false;
         if (you.species == SP_MERFOLK)
         {
-            if (grid_is_water(new_grid))
+            if (feat_is_water(new_grid))
                 merfolk_check = true;
 
             // Safer water effects.
-            if (grid_is_water(new_grid) && !grid_is_water(old_grid))
+            if (feat_is_water(new_grid) && !feat_is_water(old_grid))
             {
                 // Check for fatal stat loss due to transforming.
                 // Also handles the warning message.
@@ -258,8 +258,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 need_doll_update = true;
 #endif
             }
-            else if (!grid_is_water(new_grid) && grid_is_water(old_grid)
-                     && !is_grid_dangerous(new_grid))
+            else if (!feat_is_water(new_grid) && feat_is_water(old_grid)
+                     && !is_feat_dangerous(new_grid))
             {
                 unmeld_one_equip(EQ_BOOTS);
                 you.redraw_evasion = true;
@@ -273,7 +273,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
         {
             // XXX: at some point we're going to need to fix the swimming
             // code to handle burden states.
-            if (is_grid_dangerous(new_grid))
+            if (is_feat_dangerous(new_grid))
             {
                 // Lava and dangerous deep water (ie not merfolk).
                 const coord_def entry = (stepped) ? you.pos() : p;
@@ -337,7 +337,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     if (trap_def* ptrap = find_trap(you.pos()))
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
-    command_type stair_dir = grid_stair_direction(new_grid);
+    command_type stair_dir = feat_stair_direction(new_grid);
 
     if (stepped && stair_dir != CMD_NO_CMD
         && new_grid != DNGN_ENTER_SHOP
@@ -361,7 +361,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 std::string stair_str =
                     feature_description(new_grid, NUM_TRAPS, false,
                                         DESC_CAP_THE, false);
-                std::string prep = grid_preposition(new_grid, true, &you);
+                std::string prep = feat_preposition(new_grid, true, &you);
 
                 mprf("%s slides away as you move %s it!", stair_str.c_str(),
                      prep.c_str());
@@ -380,7 +380,7 @@ bool player_can_swim()
     return (you.can_swim());
 }
 
-bool is_grid_dangerous(int grid)
+bool is_feat_dangerous(dungeon_feature_type grid)
 {
     return (!player_is_airborne()
             && (grid == DNGN_LAVA
@@ -5581,7 +5581,7 @@ void dec_napalm_player()
 {
     if (you.duration[DUR_LIQUID_FLAMES] > 1)
     {
-        if (grid_is_watery(grd(you.pos())))
+        if (feat_is_watery(grd(you.pos())))
         {
             mpr("The flames go out!", MSGCH_WARN);
             you.duration[DUR_LIQUID_FLAMES] = 0;
@@ -6260,7 +6260,7 @@ bool player::is_levitating() const
 bool player::in_water() const
 {
     return (!airborne() && !beogh_water_walk()
-            && grid_is_water(grd(you.pos())));
+            && feat_is_water(grd(you.pos())));
 }
 
 bool player::can_swim() const
@@ -6303,7 +6303,7 @@ bool player::floundering() const
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return !grid_is_solid(grid);
+    return !feat_is_solid(grid);
 }
 
 size_type player::body_size(int psize, bool base) const

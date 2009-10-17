@@ -999,7 +999,7 @@ static void _close_level_gates()
         if (you.char_direction == GDT_ASCENDING
             && you.level_type != LEVEL_PANDEMONIUM)
         {
-            if (grid_sealable_portal(grd(*ri)))
+            if (feat_sealable_portal(grd(*ri)))
             {
                 grd(*ri) = DNGN_STONE_ARCH;
                 env.markers.remove_markers_at(*ri, MAT_ANY);
@@ -1464,8 +1464,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         {
             dungeon_feature_type feat = grd(you.pos());
             if (feat != DNGN_ENTER_SHOP
-                && grid_stair_direction(feat) != CMD_NO_CMD
-                && grid_stair_direction(stair_taken) != CMD_NO_CMD)
+                && feat_stair_direction(feat) != CMD_NO_CMD
+                && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
                 std::string stair_str =
                     feature_description(feat, NUM_TRAPS, false,

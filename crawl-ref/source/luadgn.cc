@@ -1149,7 +1149,7 @@ static int dgn_grid(lua_State *ls)
 }
 
 LUARET1(_dgn_is_wall, boolean,
-        grid_is_wall(static_cast<dungeon_feature_type>(luaL_checkint(ls, 1))))
+        feat_is_wall(static_cast<dungeon_feature_type>(luaL_checkint(ls, 1))))
 
 static int dgn_max_bounds(lua_State *ls)
 {
@@ -1747,11 +1747,11 @@ static int dgn_fixup_stairs(lua_State *ls)
         for (int x = 0; x < GXM; ++x)
         {
             const dungeon_feature_type feat = grd[x][y];
-            if (grid_is_stone_stair(feat) || grid_is_escape_hatch(feat))
+            if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
             {
                 dungeon_feature_type new_feat = DNGN_UNSEEN;
 
-                if (grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+                if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
                     new_feat = down_feat;
                 else
                     new_feat = up_feat;
@@ -2377,7 +2377,7 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
 LUAFN(_dgn_is_opaque)
 {
     COORDS(c, 1, 2);
-    lua_pushboolean(ls, grid_is_opaque(grd(c)));
+    lua_pushboolean(ls, feat_is_opaque(grd(c)));
     return (1);
 }
 

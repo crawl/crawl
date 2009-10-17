@@ -191,9 +191,9 @@ static void _populate_stair_distances(const level_pos &target);
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c);
 
-bool is_player_seen(int grid_x, int grid_y)
+bool is_player_seen(int feat_x, int feat_y)
 {
-    return (is_terrain_seen(grid_x, grid_y));
+    return (is_terrain_seen(feat_x, feat_y));
 }
 
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
@@ -201,16 +201,16 @@ bool is_player_seen(int grid_x, int grid_y)
 //
 inline bool is_trap(const coord_def& c)
 {
-    return grid_is_trap(grd(c));
+    return feat_is_trap(grd(c));
 }
 
 // Returns an estimate for the time needed to cross this feature.
 // This is done, so traps etc. will usually be circumvented where possible.
 inline int feature_traverse_cost(dungeon_feature_type feature)
 {
-    if (feature == DNGN_SHALLOW_WATER || grid_is_closed_door(feature))
+    if (feature == DNGN_SHALLOW_WATER || feat_is_closed_door(feature))
         return 2;
-    else if (grid_is_trap(feature))
+    else if (feat_is_trap(feature))
         return 3;
 
     return 1;
@@ -219,7 +219,7 @@ inline int feature_traverse_cost(dungeon_feature_type feature)
 // Returns true if the dungeon feature supplied is an altar.
 bool is_altar(dungeon_feature_type grid)
 {
-    return grid_altar_god(grid) != GOD_NO_GOD;
+    return feat_altar_god(grid) != GOD_NO_GOD;
 }
 
 bool is_altar(const coord_def &c)
@@ -231,7 +231,7 @@ inline bool is_player_altar(dungeon_feature_type grid)
 {
     // An ugly hack, but that's what religion.cc does.
     return (you.religion != GOD_NO_GOD
-            && grid_altar_god(grid) == you.religion);
+            && feat_altar_god(grid) == you.religion);
 }
 
 inline bool is_player_altar(const coord_def &c)
@@ -278,7 +278,7 @@ bool is_traversable(dungeon_feature_type grid)
 
 opacity_type _feat_opacity(dungeon_feature_type feat)
 {
-    return (grid_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR);
+    return (feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR);
 }
 
 // A cell is considered clear unless the player knows it's
@@ -594,7 +594,7 @@ static bool _is_reseedable(const coord_def& c)
         return (true);
 
     const dungeon_feature_type grid = grd(c);
-    return (grid_is_water(grid)
+    return (feat_is_water(grid)
                || grid == DNGN_LAVA
                || is_trap(c)
                || _is_monster_blocked(c));
@@ -1896,7 +1896,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
             if (dc != start
                 && (feature != DNGN_FLOOR
-                       && !grid_is_water(feature)
+                       && !feat_is_water(feature)
                        && feature != DNGN_LAVA
                     || is_waypoint(dc)
                     || is_stash(ls, dc.x, dc.y)))
@@ -1992,7 +1992,7 @@ void find_travel_pos(const coord_def& youpos,
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
             if (!see_cell(*ai)
-                && (!is_terrain_seen(*ai) || !grid_is_wall(grd(*ai))))
+                && (!is_terrain_seen(*ai) || !feat_is_wall(grd(*ai))))
             {
                 unseen = *ai;
                 break;
@@ -2733,7 +2733,7 @@ void start_translevel_travel(bool prompt_for_destination)
 
 command_type _trans_negotiate_stairs()
 {
-    return grid_stair_direction(grd(you.pos()));
+    return feat_stair_direction(grd(you.pos()));
 }
 
 static int _target_distance_from(const coord_def &pos)
@@ -2884,7 +2884,7 @@ static int _find_transtravel_stair( const level_id &cur,
             // that will leave the player unable to retrace their path.
             // This does not apply if we have a destination with a specific
             // position on the target level travel wants to get to.
-            if (grid_is_escape_hatch(si.grid)
+            if (feat_is_escape_hatch(si.grid)
                 && target.pos.x == -1
                 && dest.id == target.id)
             {
@@ -4131,7 +4131,7 @@ const runrest &runrest::operator = (int newrunmode)
     return (*this);
 }
 
-static dungeon_feature_type _base_grid_type( dungeon_feature_type grid )
+static dungeon_feature_type _base_feat_type( dungeon_feature_type grid )
 {
     // Don't stop for undiscovered traps:
     if ((grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
@@ -4141,7 +4141,7 @@ static dungeon_feature_type _base_grid_type( dungeon_feature_type grid )
     }
 
     // Merge walls and secret doors.
-    if (grid_is_wall(grid) || grid == DNGN_SECRET_DOOR)
+    if (feat_is_wall(grid) || grid == DNGN_SECRET_DOOR)
         return (DNGN_ROCK_WALL);
 
     return (grid);
@@ -4153,7 +4153,7 @@ void runrest::set_run_check(int index, int dir)
 
     const coord_def targ = you.pos() + Compass[dir];
 
-    run_check[index].grid = _base_grid_type( grd(targ) );
+    run_check[index].grid = _base_feat_type( grd(targ) );
 }
 
 bool runrest::check_stop_running()
@@ -4179,7 +4179,7 @@ bool runrest::run_grids_changed() const
     for (int i = 0; i < 3; i++)
     {
         const coord_def targ = you.pos() + run_check[i].delta;
-        const dungeon_feature_type targ_grid = _base_grid_type(grd(targ));
+        const dungeon_feature_type targ_grid = _base_feat_type(grd(targ));
 
         if (run_check[i].grid != targ_grid)
             return (true);
@@ -4295,7 +4295,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         add_stair(stair);
         es_flags |= ES_STAIR;
     }
-    else if (grid_is_portal(grid) && ES_portal)
+    else if (feat_is_portal(grid) && ES_portal)
     {
         const named_thing<int> portal(cleaned_feature_description(pos), 1);
         add_stair(portal);

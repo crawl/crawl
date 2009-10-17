@@ -1041,7 +1041,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
 
     // Only bother creating a distinct stack of potions
     // if it won't get destroyed right away.
-    if (!grid_destroys_items(grd(you.pos())))
+    if (!feat_destroys_items(grd(you.pos())))
     {
         item_def potion2;
         potion2.base_type = OBJ_POTIONS;
@@ -1080,7 +1080,7 @@ static bool allow_bleeding_on_square(const coord_def& where)
     }
 
     // The good gods like to keep their altars pristine.
-    if (is_good_god(grid_altar_god(grd(where))))
+    if (is_good_god(feat_altar_god(grd(where))))
         return (false);
 
     return (true);
@@ -1221,7 +1221,7 @@ void search_around(bool only_adjacent)
         // Must have LOS, with no translucent walls in the way.
         if (see_cell_no_trans(*ri))
         {
-            // Maybe we want distance() instead of grid_distance()?
+            // Maybe we want distance() instead of feat_distance()?
             int dist = grid_distance(*ri, you.pos());
 
             // Don't exclude own square; may be levitating.
@@ -1267,7 +1267,7 @@ void search_around(bool only_adjacent)
 bool merfolk_change_is_safe(bool quiet)
 {
     // If already transformed, no subsequent transformation necessary.
-    if (!player_is_airborne() && grid_is_water(grd(you.pos())))
+    if (!player_is_airborne() && feat_is_water(grd(you.pos())))
         return (true);
 
     std::set<equipment_type> r;
@@ -1290,7 +1290,7 @@ void merfolk_start_swimming()
 
 static void exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
 {
-    if (grid_is_escape_hatch(stair))
+    if (feat_is_escape_hatch(stair))
         mpr("The hatch slams shut behind you.");
 }
 
@@ -1300,9 +1300,9 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
     if (old_level_type != LEVEL_DUNGEON)
         return;
 
-    if (grid_is_portal(stair))
+    if (feat_is_portal(stair))
         mpr("The world spins around you as you enter the gateway.");
-    else if (grid_is_escape_hatch(stair))
+    else if (feat_is_escape_hatch(stair))
     {
         if (going_up)
             mpr("A mysterious force pulls you upwards.");
@@ -1668,7 +1668,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     if (stair != grd(you.pos()))
         return (false);
 
-    if (grid_stair_direction(stair) == CMD_NO_CMD)
+    if (feat_stair_direction(stair) == CMD_NO_CMD)
         return (false);
 
     if (!you.duration[DUR_REPEL_STAIRS_CLIMB])
@@ -1739,7 +1739,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     // Probably still need this check here (teleportation) -- bwr
-    if (grid_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
+    if (feat_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
     {
         if (stair_find == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -1759,15 +1759,15 @@ void up_stairs(dungeon_feature_type force_stair,
     if (!player_is_airborne()
         && you.confused()
         && old_level_type == LEVEL_DUNGEON
-        && !grid_is_escape_hatch(stair_find)
+        && !feat_is_escape_hatch(stair_find)
         && coinflip())
     {
         const char* fall_where = "down the stairs";
-        if (!grid_is_staircase(stair_find))
+        if (!feat_is_staircase(stair_find))
             fall_where = "through the gate";
 
         mprf("In your confused state, you trip and fall back %s.", fall_where);
-        if (!grid_is_staircase(stair_find))
+        if (!feat_is_staircase(stair_find))
             ouch(1, NON_MONSTER, KILLED_BY_FALLING_THROUGH_GATE);
         else
             ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
@@ -1775,7 +1775,7 @@ void up_stairs(dungeon_feature_type force_stair,
         return;
     }
 
-    if (you.burden_state == BS_OVERLOADED && !grid_is_escape_hatch(stair_find)
+    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(stair_find)
         && !is_gate(stair_find))
     {
         mpr("You are carrying too much to climb upwards.");
@@ -2004,7 +2004,7 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
         && (you.level_type != LEVEL_PANDEMONIUM
             || stair_find != DNGN_TRANSIT_PANDEMONIUM)
         && (you.level_type != LEVEL_PORTAL_VAULT
-            || !grid_is_stone_stair(stair_find)))
+            || !feat_is_stone_stair(stair_find)))
     {
         you.level_type = LEVEL_DUNGEON;
     }
@@ -2065,7 +2065,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     int      shaft_level = -1;
 
     // Probably still need this check here (teleportation) -- bwr
-    if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
+    if (feat_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
     {
         if (stair_find == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -2284,18 +2284,18 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (!player_is_airborne()
         && you.confused()
-        && !grid_is_escape_hatch(stair_find)
+        && !feat_is_escape_hatch(stair_find)
         && force_stair != DNGN_ENTER_ABYSS
         && coinflip())
     {
         const char* fall_where = "down the stairs";
-        if (!grid_is_staircase(stair_find))
+        if (!feat_is_staircase(stair_find))
             fall_where = "through the gate";
 
         mprf("In your confused state, you trip and fall %s.", fall_where);
         // Note that this only does damage; it doesn't cancel the level
         // transition.
-        if (!grid_is_staircase(stair_find))
+        if (!feat_is_staircase(stair_find))
             ouch(1, NON_MONSTER, KILLED_BY_FALLING_THROUGH_GATE);
         else
             ouch(1, NON_MONSTER, KILLED_BY_FALLING_DOWN_STAIRS);
@@ -2388,7 +2388,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         case LEVEL_DUNGEON:
             // Xom thinks it's funny if you enter a new level via shaft
             // or escape hatch, for shafts it's funnier the deeper you fell.
-            if (shaft || grid_is_escape_hatch(stair_find))
+            if (shaft || feat_is_escape_hatch(stair_find))
                 xom_is_stimulated(shaft_depth * 50);
             else
                 xom_is_stimulated(14);
@@ -3097,7 +3097,7 @@ void reveal_secret_door(const coord_def& p)
     dungeon_feature_type door = grid_secret_door_appearance(p);
     // Former secret doors become known but are still hidden to monsters
     // until opened.
-    grd(p) = grid_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
+    grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
                                   : DNGN_OPEN_DOOR;
     viewwindow(true, false);
     learned_something_new(TUT_SEEN_SECRET_DOOR, p);

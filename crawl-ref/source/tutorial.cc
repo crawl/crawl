@@ -2211,7 +2211,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
             std::string altar = "An altar to ";
-            altar += god_name(grid_altar_god(grd(gc)));
+            altar += god_name(feat_altar_god(grd(gc)));
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
 #endif
@@ -4294,7 +4294,7 @@ static void _tutorial_describe_feature(int x, int y)
        default:
             if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
             {
-                god_type altar_god = grid_altar_god(feat);
+                god_type altar_god = feat_altar_god(feat);
 
                 if (you.religion == GOD_NO_GOD)
                 {
@@ -4595,9 +4595,9 @@ void tutorial_describe_monster(const monsters *mons)
 
 void tutorial_observe_cell(const coord_def& gc)
 {
-    if (grid_is_escape_hatch(grd(gc)))
+    if (feat_is_escape_hatch(grd(gc)))
         learned_something_new(TUT_SEEN_ESCAPE_HATCH, gc);
-    else if (grid_is_branch_stairs(grd(gc)))
+    else if (feat_is_branch_stairs(grd(gc)))
         learned_something_new(TUT_SEEN_BRANCH, gc);
     else if (is_feature('>', gc))
         learned_something_new(TUT_SEEN_STAIRS, gc);
@@ -4605,7 +4605,7 @@ void tutorial_observe_cell(const coord_def& gc)
         learned_something_new(TUT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(TUT_SEEN_TRAP, gc);
-    else if (grid_is_closed_door(grd(gc)))
+    else if (feat_is_closed_door(grd(gc)))
         learned_something_new(TUT_SEEN_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(TUT_SEEN_SHOP, gc);

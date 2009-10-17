@@ -247,7 +247,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
         // Merfolk boots unmeld if levitation takes us out of water.
         if (!player_is_airborne() && you.species == SP_MERFOLK
-            && grid_is_water(grd(you.pos())))
+            && feat_is_water(grd(you.pos())))
         {
             unmeld_one_equip(EQ_BOOTS);
         }

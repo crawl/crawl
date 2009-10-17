@@ -1569,7 +1569,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
 
-    if (grid_stair_direction(grd(you.pos())) == CMD_NO_CMD)
+    if (feat_stair_direction(grd(you.pos())) == CMD_NO_CMD)
         you.duration[DUR_REPEL_STAIRS_MOVE]  = 1000;
     else
         you.duration[DUR_REPEL_STAIRS_CLIMB] =  500; // more annoying
@@ -1579,7 +1579,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true, true); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
-        if (grid_stair_direction(feat) != CMD_NO_CMD
+        if (feat_stair_direction(feat) != CMD_NO_CMD
             && feat != DNGN_ENTER_SHOP)
         {
             stairs_avail.push_back(*ri);

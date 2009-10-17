@@ -2118,8 +2118,8 @@ void MiscastEffect::_ice(int severity)
     const dungeon_feature_type feat = grd(target->pos());
 
     const bool frostable_feat =
-        (feat == DNGN_FLOOR || grid_altar_god(feat) != GOD_NO_GOD
-         || grid_is_staircase(feat) || grid_is_water(feat));
+        (feat == DNGN_FLOOR || feat_altar_god(feat) != GOD_NO_GOD
+         || feat_is_staircase(feat) || feat_is_water(feat));
 
     const std::string feat_name = (feat == DNGN_FLOOR ? "the " : "") +
         feature_description(target->pos(), false, DESC_NOCAP_THE);
@@ -2180,7 +2180,7 @@ void MiscastEffect::_ice(int severity)
                 you_msg = "A snowflake lands on your nose.";
             break;
         case 10:
-            if (grid_is_water(feat))
+            if (feat_is_water(feat))
                 all_msg  = "A thin layer of ice forms on " + feat_name;
             else
                 all_msg  = "Frost spreads across " + feat_name;

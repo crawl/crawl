@@ -965,7 +965,7 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
                           cloud_type ctype, kill_category whose,
                           killer_type killer)
 {
-    if (!grid_is_solid(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
+    if (!feat_is_solid(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
     {
         func(where, pow, spread_rate, ctype, whose, killer);
         return (true);

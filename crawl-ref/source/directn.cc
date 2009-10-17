@@ -472,7 +472,7 @@ void full_describe_view()
     // Grab all items known (or thought) to be in the stashes in view.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        if (grid_stair_direction(grd(*ri)) != CMD_NO_CMD
+        if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
             || is_altar(grd(*ri)))
         {
             list_features.push_back(*ri);
@@ -2492,7 +2492,7 @@ void describe_floor()
     msg_channel_type channel = MSGCH_EXAMINE;
 
     // Water is not terribly important if you don't mind it.
-    if (grid_is_water(grid) && player_likes_water())
+    if (feat_is_water(grid) && player_likes_water())
         channel = MSGCH_EXAMINE_FILTER;
 
     mpr((prefix + feat + suffix).c_str(), channel);
@@ -2549,13 +2549,13 @@ std::string feature_description(dungeon_feature_type grid,
     if (bloody)
         desc += ", spattered with blood";
 
-    return thing_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
+    return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
 
 static std::string _base_feature_desc(dungeon_feature_type grid,
                                       trap_type trap)
 {
-    if (grid_is_trap(grid) && trap != NUM_TRAPS)
+    if (feat_is_trap(grid) && trap != NUM_TRAPS)
     {
         switch (trap)
         {
@@ -2901,7 +2901,7 @@ std::string feature_description(const coord_def& where, bool bloody,
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
 
-    if (grid == DNGN_OPEN_DOOR || grid_is_closed_door(grid))
+    if (grid == DNGN_OPEN_DOOR || feat_is_closed_door(grid))
     {
         std::set<coord_def> all_door;
         find_connected_identical(where, grd(where), all_door);
@@ -3522,7 +3522,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         msg_channel_type channel = MSGCH_EXAMINE;
         if (feat == DNGN_FLOOR
             || feat == DNGN_FLOOR_SPECIAL
-            || grid_is_water(feat))
+            || feat_is_water(feat))
         {
             channel = MSGCH_EXAMINE_FILTER;
         }

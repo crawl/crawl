@@ -18,7 +18,7 @@ opacity_type opacity_default::operator()(const coord_def& p) const
 {
     int m;
     dungeon_feature_type f = env.grid(p);
-    if (grid_is_opaque(f))
+    if (feat_is_opaque(f))
         return OPC_OPAQUE;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
@@ -32,7 +32,7 @@ opacity_type opacity_default::operator()(const coord_def& p) const
 
 opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
 {
-    if (grid_is_opaque(env.grid(p)))
+    if (feat_is_opaque(env.grid(p)))
         return OPC_OPAQUE;
     else
         return OPC_CLEAR;
@@ -44,7 +44,7 @@ opacity_type opacity_solid::operator()(const coord_def& p) const
 {
     int m;
     dungeon_feature_type f = env.grid(p);
-    if (grid_is_solid(f))
+    if (feat_is_solid(f))
         return OPC_OPAQUE;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
