@@ -439,6 +439,8 @@ static void _get_symbol( const coord_def& where,
 
     if (object < NUM_FEATURES)
     {
+        const dungeon_feature_type feat =
+            static_cast<dungeon_feature_type>(object);
         const feature_def &fdef = Feature[object];
 
         *ch = magic_mapped? fdef.magic_symbol
@@ -448,13 +450,14 @@ static void _get_symbol( const coord_def& where,
         {
             const int colmask = *colour & COLFLAG_MASK;
 
-            bool excluded_stairs = (object >= DNGN_STONE_STAIRS_DOWN_I
-                                    && object <= DNGN_ESCAPE_HATCH_UP
+            // TODO: consolidate with feat_is_stair etc.
+            bool excluded_stairs = (feat >= DNGN_STONE_STAIRS_DOWN_I
+                                    && feat <= DNGN_ESCAPE_HATCH_UP
                                     && is_exclude_root(where));
 
             bool blocked_movement = false;
             if (!excluded_stairs
-                && object < NUM_FEATURES && object >= DNGN_MINMOVE
+                && feat >= DNGN_MINMOVE
                 && you.duration[DUR_MESMERISED])
             {
                 // Colour grids that cannot be reached due to beholders
@@ -474,15 +477,10 @@ static void _get_symbol( const coord_def& where,
             }
 
             if (excluded_stairs)
-            {
                 *colour = Options.tc_excluded | colmask;
-            }
             else if (blocked_movement)
-            {
                 *colour = DARKGREY | colmask;
-            }
-            else if (object < NUM_REAL_FEATURES && object >= DNGN_MINMOVE
-                     && is_sanctuary(where) )
+            else if (feat >= DNGN_MINMOVE && is_sanctuary(where))
             {
                 if (testbits(env.map(where).property, FPROP_SANCTUARY_1))
                     *colour = YELLOW | colmask;
@@ -496,35 +494,29 @@ static void _get_symbol( const coord_def& where,
                         *colour = LIGHTGREY | colmask; // 1/12
                 }
             }
-            else if (object < NUM_REAL_FEATURES && _show_bloodcovered(where))
-            {
+            else if (_show_bloodcovered(where))
                 *colour = RED | colmask;
-            }
-            else if (object < NUM_REAL_FEATURES && env.grid_colours(where))
-            {
+            else if (env.grid_colours(where))
                 *colour = env.grid_colours(where) | colmask;
-            }
             else
             {
                 // Don't clobber with BLACK, because the colour should be
                 // already set.
                 if (fdef.colour != BLACK)
                     *colour = fdef.colour | colmask;
-                else if (object == DNGN_TREES)
+                else if (feat == DNGN_TREES)
                     *colour = _tree_colour(where) | colmask;
 
                 if (fdef.em_colour != fdef.colour && fdef.em_colour)
                 {
-                    *colour =
-                        _view_emphasised_colour(
-                            where, static_cast<dungeon_feature_type>(object),
-                            *colour, fdef.em_colour | colmask);
+                    *colour = _view_emphasised_colour(where, feat,
+                                  *colour, fdef.em_colour | colmask);
                 }
             }
 
-            if (object < NUM_REAL_FEATURES
-                && (object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX
-                    || object == DNGN_UNDISCOVERED_TRAP))
+            // TODO: should be a feat_is_whatever(feat)
+            if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
+                || feat == DNGN_UNDISCOVERED_TRAP)
             {
                 if (inside_halo(where))
                 {
@@ -541,14 +533,13 @@ static void _get_symbol( const coord_def& where,
         // Note anything we see that's notable
         if (!where.origin() && fdef.is_notable())
         {
-            seen_notable_thing( static_cast<dungeon_feature_type>(object),
-                                where );
+            seen_notable_thing(feat, where);
         }
     }
     else
     {
-        ASSERT( object >= DNGN_START_OF_MONSTERS );
-        *ch = mons_char( object - DNGN_START_OF_MONSTERS );
+        ASSERT(object >= DNGN_START_OF_MONSTERS);
+        *ch = mons_char(object - DNGN_START_OF_MONSTERS);
     }
 
     if (colour)
