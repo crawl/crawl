@@ -2928,8 +2928,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     return (did_map);
 }
 
-// Realise that this is simply a repackaged version of
-// stuff::see_cell() -- make certain they correlate {dlb}:
 bool mons_near(const monsters *monster, unsigned short foe)
 {
     // Early out -- no foe!
@@ -2940,14 +2938,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
     {
         if (crawl_state.arena || crawl_state.arena_suspended)
             return (true);
-
-        if (grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS)
-        {
-            const coord_def diff = grid2show(monster->pos());
-            if (show_bounds(diff) && env.show(diff))
-                return (true);
-        }
-        return (false);
+        return (see_cell(monster->pos()));
     }
 
     // Must be a monster.
