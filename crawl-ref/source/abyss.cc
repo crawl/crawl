@@ -788,7 +788,7 @@ static bool _is_crowded_square(const coord_def &c)
                 continue;
 
             const coord_def n(c.x + xi, c.y + yi);
-            if (!in_bounds(n) || !is_traversable(grd(n)))
+            if (!in_bounds(n) || !feat_is_traversable(grd(n)))
                 continue;
 
             if (++neighbours > 4)
@@ -829,13 +829,13 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
         return;
     }
 
-    if (is_traversable(grd(c)) && !is_traversable(feat)
+    if (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
         && _is_crowded_square(c))
     {
         return;
     }
 
-    if (!is_traversable(grd(c)) && is_traversable(feat) && _is_sealed_square(c))
+    if (!feat_is_traversable(grd(c)) && feat_is_traversable(feat) && _is_sealed_square(c))
         return;
 
     // What's this supposed to achieve? (jpeg)

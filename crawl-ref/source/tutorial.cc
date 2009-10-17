@@ -4220,7 +4220,7 @@ static void _tutorial_describe_feature(int x, int y)
                     "<w>Shift</w>. ";
 #endif
 
-            if (is_travelable_stair(feat) && !travel_cache.know_stair(where))
+            if (feat_is_travelable_stair(feat) && !travel_cache.know_stair(where))
             {
                 ostr << "\n\nYou have not yet passed through this particular "
                         "set of stairs. ";
@@ -4253,7 +4253,7 @@ static void _tutorial_describe_feature(int x, int y)
                         "clicking the <w>left mouse button</w> while pressing "
                         "<w>Shift</w> instead. ";
 #endif
-                if (is_travelable_stair(feat)
+                if (feat_is_travelable_stair(feat)
                     && !travel_cache.know_stair(where))
                 {
                     ostr << "\n\nYou have not yet passed through this "

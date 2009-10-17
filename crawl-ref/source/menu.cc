@@ -21,6 +21,7 @@ REVISION("$Rev$");
 #include "player.h"
 #ifdef USE_TILE
  #include "stuff.h"
+ #include "terrain.h"
  #include "tiles.h"
  #include "travel.h"
 #endif
@@ -832,7 +833,7 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     tileset.push_back(tile_def(tileidx_feature(grd(pos), pos.x, pos.y),
                                TEX_DUNGEON));
-    if (is_travelable_stair(grd(pos)) && !travel_cache.know_stair(pos))
+    if (feat_is_travelable_stair(grd(pos)) && !travel_cache.know_stair(pos))
         tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
 
     return (true);

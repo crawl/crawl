@@ -5243,10 +5243,10 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
         join_count++;
 
         const dungeon_feature_type feat = grd(at);
-        if (early_exit && at != from && is_traversable(feat))
+        if (early_exit && at != from && feat_is_traversable(feat))
             return (true);
 
-        if (unforbidden(at, MMT_VAULT) && !is_traversable(feat))
+        if (unforbidden(at, MMT_VAULT) && !feat_is_traversable(feat))
             grd(at) = DNGN_FLOOR;
 
         if (join_count > 10000) // just insurance
@@ -7698,7 +7698,7 @@ struct nearest_point
 inline static bool _dgn_square_travel_ok(const coord_def &c)
 {
     const dungeon_feature_type feat = grd(c);
-    return (is_traversable(feat) || feat_is_trap(feat)
+    return (feat_is_traversable(feat) || feat_is_trap(feat)
             || feat == DNGN_SECRET_DOOR);
 }
 

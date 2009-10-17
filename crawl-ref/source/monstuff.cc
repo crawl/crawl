@@ -3429,7 +3429,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 static bool _is_level_exit(const coord_def& pos)
 {
     // All types of stairs.
-    if (is_stair(grd(pos)))
+    if (feat_is_stair(grd(pos)))
         return (true);
 
     // Teleportation and shaft traps.
@@ -3493,21 +3493,21 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
 // types, this should be expanded along with it.
 static void _mons_indicate_level_exit(const monsters *mon)
 {
-    const dungeon_feature_type gridc = grd(mon->pos());
+    const dungeon_feature_type feat = grd(mon->pos());
     const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
 
-    if (is_gate(gridc))
+    if (feat_is_gate(feat))
         simple_monster_message(mon, " passes through the gate.");
-    else if (is_travelable_stair(gridc))
+    else if (feat_is_travelable_stair(feat))
     {
-        command_type dir = feat_stair_direction(gridc);
+        command_type dir = feat_stair_direction(feat);
         simple_monster_message(mon,
             make_stringf(" %s the %s.",
-                dir == CMD_GO_UPSTAIRS   ? "goes up" :
-                dir == CMD_GO_DOWNSTAIRS ? "goes down"
-                                         : "takes",
-                is_escape_hatch(gridc)   ? "escape hatch"
-                                         : "stairs").c_str());
+                dir == CMD_GO_UPSTAIRS     ? "goes up" :
+                dir == CMD_GO_DOWNSTAIRS   ? "goes down"
+                                           : "takes",
+                feat_is_escape_hatch(feat) ? "escape hatch"
+                                           : "stairs").c_str());
     }
     else if (is_shaft)
     {

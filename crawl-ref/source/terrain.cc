@@ -93,11 +93,6 @@ bool feat_is_staircase(dungeon_feature_type feat)
                && feat <= DNGN_RETURN_FROM_LAST_BRANCH);
 }
 
-bool feat_is_escape_hatch(dungeon_feature_type feat)
-{
-    return (feat == DNGN_ESCAPE_HATCH_UP || feat == DNGN_ESCAPE_HATCH_DOWN);
-}
-
 bool feat_sealable_portal(dungeon_feature_type feat)
 {
     switch (feat)
@@ -120,6 +115,125 @@ bool feat_is_portal(dungeon_feature_type feat)
 {
     return (feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_EXIT_PORTAL_VAULT);
 }
+
+// Returns true if the given dungeon feature is a stair, i.e., a level
+// exit.
+bool feat_is_stair(dungeon_feature_type gridc)
+{
+    return (feat_is_travelable_stair(gridc) || feat_is_gate(gridc));
+}
+
+// Returns true if the given dungeon feature is a travelable stair, i.e.,
+// it's a level exit with a consistent endpoint.
+bool feat_is_travelable_stair(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_ENTER_HELL:
+    case DNGN_EXIT_HELL:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_TARTARUS:
+    case DNGN_ENTER_ORCISH_MINES:
+    case DNGN_ENTER_HIVE:
+    case DNGN_ENTER_LAIR:
+    case DNGN_ENTER_SLIME_PITS:
+    case DNGN_ENTER_VAULTS:
+    case DNGN_ENTER_CRYPT:
+    case DNGN_ENTER_HALL_OF_BLADES:
+    case DNGN_ENTER_ZOT:
+    case DNGN_ENTER_TEMPLE:
+    case DNGN_ENTER_SNAKE_PIT:
+    case DNGN_ENTER_ELVEN_HALLS:
+    case DNGN_ENTER_TOMB:
+    case DNGN_ENTER_SWAMP:
+    case DNGN_ENTER_SHOALS:
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_RETURN_FROM_HIVE:
+    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_RETURN_FROM_SLIME_PITS:
+    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_SNAKE_PIT:
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_RETURN_FROM_SHOALS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+// Returns true if the given dungeon feature is an escape hatch.
+bool feat_is_escape_hatch(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_ESCAPE_HATCH_UP:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+// Returns true if the given dungeon feature can be considered a gate.
+bool feat_is_gate(dungeon_feature_type feat)
+{
+    // Make up staircases in hell appear as gates.
+    if (player_in_hell())
+    {
+        switch (feat)
+        {
+        case DNGN_STONE_STAIRS_UP_I:
+        case DNGN_STONE_STAIRS_UP_II:
+        case DNGN_STONE_STAIRS_UP_III:
+            return (true);
+        default:
+            break;
+        }
+    }
+
+    switch (feat)
+    {
+    case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_ABYSS:
+    case DNGN_ENTER_LABYRINTH:
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_ENTER_PORTAL_VAULT:
+    case DNGN_EXIT_PORTAL_VAULT:
+    case DNGN_ENTER_ZOT:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_ENTER_HELL:
+    case DNGN_EXIT_HELL:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_TARTARUS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+
+
+
 
 command_type feat_stair_direction(dungeon_feature_type feat)
 {
@@ -272,6 +386,19 @@ dungeon_feature_type altar_for_god(god_type god)
         return (DNGN_FLOOR);  // Yeah, lame. Tell me about it.
 
     return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
+}
+
+// Returns true if the dungeon feature supplied is an altar.
+bool feat_is_altar(dungeon_feature_type grid)
+{
+    return feat_altar_god(grid) != GOD_NO_GOD;
+}
+
+bool feat_is_player_altar(dungeon_feature_type grid)
+{
+    // An ugly hack, but that's what religion.cc does.
+    return (you.religion != GOD_NO_GOD
+            && feat_altar_god(grid) == you.religion);
 }
 
 bool feat_is_branch_stairs(dungeon_feature_type feat)
@@ -455,7 +582,7 @@ static coord_def _dgn_find_nearest_square(
 static bool _item_safe_square(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
-    return (is_traversable(feat) && !feat_destroys_items(feat));
+    return (feat_is_traversable(feat) && !feat_destroys_items(feat));
 }
 
 // Moves an item on the floor to the nearest adjacent floor-space.

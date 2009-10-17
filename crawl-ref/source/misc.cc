@@ -1313,7 +1313,7 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
                      (player_is_airborne() ? "float" : "slide"));
         }
     }
-    else if (is_gate(stair))
+    else if (feat_is_gate(stair))
     {
         mprf("You %s %s through the gate.",
              you.flight_mode() == FL_FLY ? "fly" :
@@ -1776,7 +1776,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(stair_find)
-        && !is_gate(stair_find))
+        && !feat_is_gate(stair_find))
     {
         mpr("You are carrying too much to climb upwards.");
         you.turn_is_over = true;
@@ -1858,9 +1858,9 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const dungeon_feature_type stair_taken = stair_find;
 
-    if (you.flight_mode() == FL_LEVITATE && !is_gate(stair_find))
+    if (you.flight_mode() == FL_LEVITATE && !feat_is_gate(stair_find))
         mpr("You float upwards... And bob straight up to the ceiling!");
-    else if (you.flight_mode() == FL_FLY && !is_gate(stair_find))
+    else if (you.flight_mode() == FL_FLY && !feat_is_gate(stair_find))
         mpr("You fly upwards.");
     else
         climb_message(stair_find, true, old_level_type);
@@ -2090,7 +2090,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     if (!force_stair && you.flight_mode() == FL_LEVITATE
-        && !is_gate(stair_find))
+        && !feat_is_gate(stair_find))
     {
         mpr("You're floating high up above the floor!");
         return;

@@ -669,7 +669,7 @@ static int _is_near_stairs(coord_def &p)
                 continue;
 
             const dungeon_feature_type feat = grd(p);
-            if (is_stair(feat))
+            if (feat_is_stair(feat))
             {
                 // Shouldn't matter for escape hatches.
                 if (feat_is_escape_hatch(feat))

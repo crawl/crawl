@@ -398,7 +398,7 @@ static int _view_emphasised_colour(const coord_def& where,
                                    dungeon_feature_type feat,
                                    int oldcolour, int newcolour)
 {
-    if (is_travelable_stair(feat) && !travel_cache.know_stair(where))
+    if (feat_is_travelable_stair(feat) && !travel_cache.know_stair(where))
     {
         if ((you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
@@ -1587,15 +1587,15 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
     const item_def &eitem = mitm[igrd(gp)];
     unsigned short &ecol  = env.show_col(ep);
 
-    const dungeon_feature_type grid = grd(gp);
-    if (Options.feature_item_brand && is_critical_feature(grid))
+    const dungeon_feature_type feat = grd(gp);
+    if (Options.feature_item_brand && is_critical_feature(feat))
         ecol |= COLFLAG_FEATURE_ITEM;
-    else if (Options.trap_item_brand && feat_is_trap(grid))
+    else if (Options.trap_item_brand && feat_is_trap(feat))
         ecol |= COLFLAG_TRAP_ITEM;
     else
     {
         const unsigned short gcol = env.grid_colours(gp);
-        ecol = (grid == DNGN_SHALLOW_WATER) ?
+        ecol = (feat == DNGN_SHALLOW_WATER) ?
                (gcol != BLACK ? gcol : CYAN) : eitem.colour;
         if (eitem.link != NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
@@ -1604,7 +1604,7 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 
 #ifdef USE_TILE
     int idx = igrd(gp);
-    if (is_stair(grid))
+    if (feat_is_stair(feat))
         tile_place_item_marker(ep.x, ep.y, idx);
     else
         tile_place_item(ep.x, ep.y, idx);

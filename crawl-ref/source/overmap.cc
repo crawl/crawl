@@ -772,7 +772,7 @@ void annotate_level()
     level_id li  = level_id::current();
     level_id li2 = level_id::current();
 
-    if (is_stair(grd(you.pos())))
+    if (feat_is_stair(grd(you.pos())))
     {
         li2 = level_id::get_next_level_id(you.pos());
 

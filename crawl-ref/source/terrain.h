@@ -18,12 +18,12 @@ actor* actor_at(const coord_def& c);
 bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
                        unsigned char terrain );
 
+bool cell_is_solid(int x, int y);
+bool cell_is_solid(const coord_def &c);
 
 bool feat_is_wall(dungeon_feature_type feat);
 bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
-bool cell_is_solid(int x, int y);
-bool cell_is_solid(const coord_def &c);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_secret_door(dungeon_feature_type feat);
 bool feat_is_rock(dungeon_feature_type feat);
@@ -36,6 +36,11 @@ command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_sealable_portal(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 
+bool feat_is_stair(dungeon_feature_type feat);
+bool feat_is_travelable_stair(dungeon_feature_type feat);
+bool feat_is_escape_hatch(dungeon_feature_type feat);
+bool feat_is_gate(dungeon_feature_type feat);
+
 std::string feat_preposition(dungeon_feature_type feat, bool active = false,
                              const actor* who = NULL);
 std::string stair_climb_verb(dungeon_feature_type feat);
@@ -44,6 +49,9 @@ bool feat_is_water(dungeon_feature_type feat);
 bool feat_is_watery(dungeon_feature_type feat);
 god_type feat_altar_god(dungeon_feature_type feat);
 dungeon_feature_type altar_for_god(god_type god);
+bool feat_is_altar(dungeon_feature_type feat);
+bool feat_is_player_altar(dungeon_feature_type grid);
+
 bool feat_is_branch_stairs(dungeon_feature_type feat);
 void find_connected_identical(coord_def d, dungeon_feature_type ft,
                               std::set<coord_def>& out);

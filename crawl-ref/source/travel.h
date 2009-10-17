@@ -66,19 +66,14 @@ void clear_excludes();
 
 unsigned char is_waypoint(const coord_def &p);
 bool is_exclude_root(const coord_def &p);
-bool is_stair(dungeon_feature_type feat);
-bool is_travelable_stair(dungeon_feature_type feat);
-bool is_escape_hatch(dungeon_feature_type feat);
-bool is_gate(dungeon_feature_type feat);
 command_type direction_to_command(char x, char y);
-bool is_altar(dungeon_feature_type feat);
 bool is_resting(void);
 #ifdef CLUA_BINDINGS
 const char *trap_name(const coord_def &p);
 #endif
-bool is_traversable(dungeon_feature_type feat);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool is_excluded(const coord_def &p);
+bool feat_is_traversable(dungeon_feature_type feat);
 
 void find_travel_pos(const coord_def& youpos, char *move_x, char *move_y,
                      std::vector<coord_def>* coords = NULL);

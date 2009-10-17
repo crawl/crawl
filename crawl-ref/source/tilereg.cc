@@ -1222,7 +1222,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             case CMD_GO_UPSTAIRS:
                 return ('<');
             default:
-                if (is_altar(feat)
+                if (feat_is_altar(feat)
                     && player_can_join_god(feat_altar_god(feat)))
                 {
                     return ('p');
@@ -1350,7 +1350,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
             tip += "\n[Shift-L-Click] ";
             if (feat == DNGN_ENTER_SHOP)
                 tip += "enter shop";
-            else if (is_gate(feat))
+            else if (feat_is_gate(feat))
                 tip += "enter gate";
             else
                 tip += "use stairs";
@@ -1360,7 +1360,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
             else
                 tip += " (<)";
         }
-        else if (is_altar(feat) && player_can_join_god(feat_altar_god(feat)))
+        else if (feat_is_altar(feat) && player_can_join_god(feat_altar_god(feat)))
             tip += "\n[Shift-L-Click] pray on altar (p)";
 
         // Character overview.

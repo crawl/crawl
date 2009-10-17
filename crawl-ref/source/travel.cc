@@ -216,27 +216,14 @@ inline int feature_traverse_cost(dungeon_feature_type feature)
     return 1;
 }
 
-// Returns true if the dungeon feature supplied is an altar.
-bool is_altar(dungeon_feature_type grid)
-{
-    return feat_altar_god(grid) != GOD_NO_GOD;
-}
-
 bool is_altar(const coord_def &c)
 {
-    return is_altar(grd(c));
-}
-
-inline bool is_player_altar(dungeon_feature_type grid)
-{
-    // An ugly hack, but that's what religion.cc does.
-    return (you.religion != GOD_NO_GOD
-            && feat_altar_god(grid) == you.religion);
+    return feat_is_altar(grd(c));
 }
 
 inline bool is_player_altar(const coord_def &c)
 {
-    return is_player_altar(grd(c));
+    return feat_is_player_altar(grd(c));
 }
 
 #ifdef CLUA_BINDINGS
@@ -271,7 +258,7 @@ const char *trap_name(const coord_def& c)
 #endif
 
 // Returns true if the character can cross this dungeon feature.
-bool is_traversable(dungeon_feature_type grid)
+bool feat_is_traversable(dungeon_feature_type grid)
 {
     return (traversable_terrain[grid] == TRAVERSABLE);
 }
@@ -635,7 +622,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         return (true);
     }
 
-    return (is_traversable(static_cast<dungeon_feature_type>(grid))
+    return (feat_is_traversable(static_cast<dungeon_feature_type>(grid))
 #ifdef CLUA_BINDINGS
                 || (is_trap(c)
                     && clua.callbooleanfn(false, "ch_cross_trap",
@@ -790,121 +777,6 @@ bool is_branch_stair(const coord_def& pos)
     const level_id next = level_id::get_next_level_id(pos);
 
     return (next.branch != curr.branch);
-}
-
-// Returns true if the given dungeon feature is a stair, i.e., a level
-// exit.
-bool is_stair(dungeon_feature_type gridc)
-{
-    return (is_travelable_stair(gridc) || is_gate(gridc));
-}
-
-// Returns true if the given dungeon feature is a travelable stair, i.e.,
-// it's a level exit with a consistent endpoint.
-bool is_travelable_stair(dungeon_feature_type gridc)
-{
-    switch (gridc)
-    {
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ESCAPE_HATCH_UP:
-    case DNGN_ENTER_HELL:
-    case DNGN_EXIT_HELL:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS:
-    case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_HIVE:
-    case DNGN_ENTER_LAIR:
-    case DNGN_ENTER_SLIME_PITS:
-    case DNGN_ENTER_VAULTS:
-    case DNGN_ENTER_CRYPT:
-    case DNGN_ENTER_HALL_OF_BLADES:
-    case DNGN_ENTER_ZOT:
-    case DNGN_ENTER_TEMPLE:
-    case DNGN_ENTER_SNAKE_PIT:
-    case DNGN_ENTER_ELVEN_HALLS:
-    case DNGN_ENTER_TOMB:
-    case DNGN_ENTER_SWAMP:
-    case DNGN_ENTER_SHOALS:
-    case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_SLIME_PITS:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_HALL_OF_BLADES:
-    case DNGN_RETURN_FROM_ZOT:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_SNAKE_PIT:
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
-    case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_SHOALS:
-        return (true);
-    default:
-        return (false);
-    }
-}
-
-// Returns true if the given dungeon feature is an escape hatch.
-bool is_escape_hatch(dungeon_feature_type gridc)
-{
-    switch (gridc)
-    {
-    case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_ESCAPE_HATCH_UP:
-        return (true);
-    default:
-        return (false);
-    }
-}
-
-// Returns true if the given dungeon feature can be considered a gate.
-bool is_gate(dungeon_feature_type gridc)
-{
-    // Make up staircases in hell appear as gates.
-    if (player_in_hell())
-    {
-        switch (gridc)
-        {
-        case DNGN_STONE_STAIRS_UP_I:
-        case DNGN_STONE_STAIRS_UP_II:
-        case DNGN_STONE_STAIRS_UP_III:
-            return (true);
-        default:
-            break;
-        }
-    }
-
-    switch (gridc)
-    {
-    case DNGN_ENTER_ABYSS:
-    case DNGN_EXIT_ABYSS:
-    case DNGN_ENTER_LABYRINTH:
-    case DNGN_ENTER_PANDEMONIUM:
-    case DNGN_EXIT_PANDEMONIUM:
-    case DNGN_TRANSIT_PANDEMONIUM:
-    case DNGN_ENTER_PORTAL_VAULT:
-    case DNGN_EXIT_PORTAL_VAULT:
-    case DNGN_ENTER_ZOT:
-    case DNGN_RETURN_FROM_ZOT:
-    case DNGN_ENTER_HELL:
-    case DNGN_EXIT_HELL:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS:
-        return (true);
-    default:
-        return (false);
-    }
 }
 
 // Prompts the user to stop explore if necessary for the given
@@ -1112,7 +984,7 @@ static void _explore_find_target_square()
                 feature = grd(target);
             }
             while (is_travelsafe_square(target)
-                   && is_traversable(feature)
+                   && feat_is_traversable(feature)
                    && feature_traverse_cost(feature) == 1);
 
             target -= delta;
@@ -2013,7 +1885,7 @@ void find_travel_pos(const coord_def& youpos,
             // happen by manual movement, so I don't think we need to worry
             // about this. (jpeg)
             if (!is_travelsafe_square(new_dest)
-                || !is_traversable(grd(new_dest)))
+                || !feat_is_traversable(grd(new_dest)))
             {
                 new_dest = dest;
             }
@@ -3651,11 +3523,11 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        const dungeon_feature_type grid = grd(*ri);
+        const dungeon_feature_type feat = grd(*ri);
         const int envc = env.map(*ri).object;
 
         if ((*ri == you.pos() || envc)
-            && is_travelable_stair(grid)
+            && feat_is_travelable_stair(feat)
             && (is_terrain_seen(*ri) || !is_branch_stair(*ri)))
         {
             st.push_back(*ri);
@@ -4282,26 +4154,26 @@ bool explore_discoveries::merge_feature(
 }
 
 void explore_discoveries::found_feature(const coord_def &pos,
-                                        dungeon_feature_type grid)
+                                        dungeon_feature_type feat)
 {
-    if (grid == DNGN_ENTER_SHOP && ES_shop)
+    if (feat == DNGN_ENTER_SHOP && ES_shop)
     {
-        shops.push_back( named_thing<int>( shop_name(pos), grid ) );
+        shops.push_back(named_thing<int>( shop_name(pos), feat));
         es_flags |= ES_SHOP;
     }
-    else if (is_stair(grid) && ES_stair)
+    else if (feat_is_stair(feat) && ES_stair)
     {
         const named_thing<int> stair(cleaned_feature_description(pos), 1);
         add_stair(stair);
         es_flags |= ES_STAIR;
     }
-    else if (feat_is_portal(grid) && ES_portal)
+    else if (feat_is_portal(feat) && ES_portal)
     {
         const named_thing<int> portal(cleaned_feature_description(pos), 1);
         add_stair(portal);
         es_flags |= ES_PORTAL;
     }
-    else if (is_altar(grid)
+    else if (feat_is_altar(feat)
              && ES_altar
              && !player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {

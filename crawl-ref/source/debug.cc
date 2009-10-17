@@ -6909,7 +6909,7 @@ static bool _mg_region_flood(const coord_def &c, int region, bool flag)
     }
 
     const dungeon_feature_type ft = grd(c);
-    if (is_travelable_stair(ft))
+    if (feat_is_travelable_stair(ft))
         found_exit = true;
 
     for (int yi = -1; yi <= 1; ++yi)

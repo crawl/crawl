@@ -473,7 +473,7 @@ void full_describe_view()
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
-            || is_altar(grd(*ri)))
+            || feat_is_altar(grd(*ri)))
         {
             list_features.push_back(*ri);
         }
@@ -693,7 +693,7 @@ void full_describe_view()
             desc += "</" + colour_str +">) ";
 #endif
             desc += feature_description(c);
-            if (is_travelable_stair(grd(c)) && !travel_cache.know_stair(c))
+            if (feat_is_travelable_stair(grd(c)) && !travel_cache.know_stair(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
             me->tag        = "description";
@@ -3058,7 +3058,7 @@ static std::string _stair_destination_description(const coord_def &pos)
         const stair_info *si = linf->get_stair(pos);
         if (si)
             return (" " + si->describe());
-        else if (is_stair(grd(pos)))
+        else if (feat_is_stair(grd(pos)))
             return (" (unknown stair)");
     }
     return ("");
