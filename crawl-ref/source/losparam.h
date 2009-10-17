@@ -60,14 +60,15 @@ struct bounds_radius_sq : bounds_func
         : radius_sq(r_sq) {}
     bool operator()(const coord_def& p) const;
 };
-static bounds_radius_sq bds_maxlos(LOS_RADIUS);
+static bounds_radius_sq bds_deflos = bounds_radius_sq(LOS_RADIUS_SQ);
+static bounds_radius_sq bds_maxlos = bounds_radius_sq(LOS_MAX_RADIUS_SQ);
 
 // LOS bounded by current global LOS radius.
-struct bounds_los_radius : bounds_func
+struct bounds_cur_los_radius : bounds_func
 {
     bool operator()(const coord_def& p) const;
 };
-static bounds_los_radius bds_default;
+static bounds_cur_los_radius bds_default;
 
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between

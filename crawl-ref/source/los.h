@@ -13,7 +13,6 @@
 
 bool double_is_zero(const double x);
 
-
 void setLOSRadius(int newLR);
 int get_los_radius_squared(); // XXX
 

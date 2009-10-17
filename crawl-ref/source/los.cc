@@ -58,8 +58,13 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 
-#define LONGSIZE (sizeof(unsigned long)*8)
-#define LOS_MAX_RANGE 9
+// This determines which cells are considered out of range during
+// precalculations (only positive quadrant used).
+// For the LOS code to work correctly, any bounds function that
+// is used needs to satisfy
+//     bds_func(p) == true  ==>  bds_precalc(p) == true
+// This used to be the entire LOS_MAX_RANGE rectangle.
+const bounds_func& bds_precalc = bds_maxlos;
 
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.
@@ -125,9 +130,7 @@ void clear_rays_on_exit()
 }
 
 // Pre-squared LOS radius.
-#define LOS_RADIUS2 (LOS_RADIUS * LOS_RADIUS + 1)
-
-int _los_radius_squared = LOS_RADIUS2;
+int _los_radius_squared = LOS_RADIUS_SQ;
 
 void setLOSRadius(int newLR)
 {
@@ -158,9 +161,9 @@ struct los_ray : public ray_def
     }
 
     // Shoot a ray from the given start point (accx, accy) with the given
-    // slope, bounded by the given pre-squared LOS radius.
+    // slope, bounded by the pre-calc bounds function.
     // Returns the cells it travels through, excluding the origin.
-    std::vector<coord_def> footprint(int radius2)
+    std::vector<coord_def> footprint()
     {
         std::vector<coord_def> cs;
         los_ray copy = *this;
@@ -170,7 +173,7 @@ struct los_ray : public ray_def
         {
             copy.raw_advance_pos();
             c = copy.pos();
-            if (c.abs() > radius2)
+            if (!bds_precalc(c))
                 break;
             cs.push_back(c);
         }
@@ -374,7 +377,7 @@ static std::vector<int> _find_minimal_cellrays()
 static void _register_ray(double accx, double accy, double slope)
 {
     los_ray ray = los_ray(accx, accy, slope);
-    std::vector<coord_def> coords = ray.footprint(LOS_RADIUS2);
+    std::vector<coord_def> coords = ray.footprint();
 
     if (_is_duplicate_ray(coords))
         return;
