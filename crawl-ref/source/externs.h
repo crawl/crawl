@@ -1724,8 +1724,8 @@ public:
     FixedArray<unsigned int, GXM, GYM> tile_bk_bg;
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
-    FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_fg;
-    FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_bg;
+    FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
+    FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
     tile_flavour tile_default;
 #endif
 

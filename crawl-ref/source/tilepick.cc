@@ -4524,7 +4524,7 @@ void tile_draw_floor()
     for (int cy = 0; cy < env.tile_fg.height(); cy++)
         for (int cx = 0; cx < env.tile_fg.width(); cx++)
         {
-            const coord_def ep(cx+1, cy+1);
+            const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
@@ -4543,8 +4543,8 @@ void tile_draw_floor()
             }
 
             // init tiles
-            env.tile_bg[ep.x-1][ep.y-1] = bg;
-            env.tile_fg[ep.x-1][ep.y-1] = 0;
+            env.tile_bg[ep.x][ep.y] = bg;
+            env.tile_fg[ep.x][ep.y] = 0;
         }
 }
 
@@ -4555,19 +4555,19 @@ void tile_place_item(int x, int y, int idx)
     if (mitm[idx].link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
 
-    env.tile_fg[x-1][y-1] = t;
+    env.tile_fg[x][y] = t;
 
     if (item_needs_autopickup(mitm[idx]))
-        env.tile_bg[x-1][y-1] |= TILE_FLAG_CURSOR3;
+        env.tile_bg[x][y] |= TILE_FLAG_CURSOR3;
 }
 
 // Called from item() in view.cc
 void tile_place_item_marker(int x, int y, int idx)
 {
-    env.tile_fg[x-1][y-1] |= TILE_FLAG_S_UNDER;
+    env.tile_fg[x][y] |= TILE_FLAG_S_UNDER;
 
     if (item_needs_autopickup(mitm[idx]))
-        env.tile_bg[x-1][y-1] |= TILE_FLAG_CURSOR3;
+        env.tile_bg[x][y] |= TILE_FLAG_CURSOR3;
 }
 
 // Called from monster_grid() in view.cc
@@ -4602,7 +4602,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
             if (item_needs_autopickup(item))
             {
                 if (foreground)
-                    env.tile_bg[ep.x-1][ep.y-1] |= TILE_FLAG_CURSOR3;
+                    env.tile_bg[ep.x][ep.y] |= TILE_FLAG_CURSOR3;
                 else
                     env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
             }
@@ -4627,7 +4627,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 
     if (foreground)
     {
-        env.tile_fg[ep.x-1][ep.y-1] = t;
+        env.tile_fg[ep.x][ep.y] = t;
         const monsters *mon = &menv[idx];
 
         if (!player_monster_visible(mon)
@@ -4685,7 +4685,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 
 void tile_place_cloud(int x, int y, int type, int decay)
 {
-    env.tile_fg[x-1][y-1] = _tileidx_cloud(type, decay);
+    env.tile_fg[x][y] = _tileidx_cloud(type, decay);
 }
 
 unsigned int num_tile_rays = 0;
@@ -4714,7 +4714,7 @@ void tile_draw_rays(bool reset_count)
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
         int flag = tile_ray_vec[i].in_range ? TILE_FLAG_RAY : TILE_FLAG_RAY_OOR;
-        env.tile_bg[tile_ray_vec[i].ep.x-1][tile_ray_vec[i].ep.y-1] |= flag;
+        env.tile_bg[tile_ray_vec[i].ep.x][tile_ray_vec[i].ep.y] |= flag;
     }
 
     if (reset_count)

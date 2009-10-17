@@ -4122,9 +4122,6 @@ void viewwindow(bool draw_it, bool do_updates)
                 // in grid coords
                 const coord_def gc(view2grid(coord_def(count_x, count_y)));
                 const coord_def ep = view2show(grid2view(gc));
-#ifdef USE_TILE
-                const coord_def sep = ep - coord_def(1,1);
-#endif
 
                 if (in_bounds(gc) && see_cell(gc))
                     maybe_remove_autoexclusion(gc);
@@ -4191,13 +4188,13 @@ void viewwindow(bool draw_it, bool do_updates)
 #ifdef USE_TILE
                     if (map)
                     {
-                        env.tile_bk_bg(gc) = env.tile_bg(sep);
-                        env.tile_bk_fg(gc) = env.tile_fg(sep);
+                        env.tile_bk_bg(gc) = env.tile_bg(ep);
+                        env.tile_bk_fg(gc) = env.tile_fg(ep);
                     }
 
-                    tileb[bufcount] = env.tile_fg(sep) =
+                    tileb[bufcount] = env.tile_fg(ep) =
                         tileidx_player(you.char_class);
-                    tileb[bufcount+1] = env.tile_bg(sep);
+                    tileb[bufcount+1] = env.tile_bg(ep);
 #endif
 
                     // Player overrides everything in cell.
@@ -4223,8 +4220,8 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount]     = ch;
                     buffy[bufcount + 1] = colour;
 #ifdef USE_TILE
-                    tileb[bufcount]   = env.tile_fg(sep);
-                    tileb[bufcount+1] = env.tile_bg(sep);
+                    tileb[bufcount]   = env.tile_fg(ep);
+                    tileb[bufcount+1] = env.tile_bg(ep);
 #endif
 
                     if (map)
@@ -4250,13 +4247,13 @@ void viewwindow(bool draw_it, bool do_updates)
                             if (Options.clean_map)
                             {
                                 env.tile_bk_fg(gc) =
-                                    get_clean_map_idx(env.tile_fg(sep));
+                                    get_clean_map_idx(env.tile_fg(ep));
                             }
                             else
                             {
-                                env.tile_bk_fg(gc) = env.tile_fg(sep);
+                                env.tile_bk_fg(gc) = env.tile_fg(ep);
                             }
-                            env.tile_bk_bg(gc) = env.tile_bg(sep);
+                            env.tile_bk_bg(gc) = env.tile_bg(ep);
 #endif
                         }
 
