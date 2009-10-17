@@ -454,8 +454,8 @@ void TilesFramework::load_dungeon(const coord_def &cen)
             }
             else
             {
-                fg = env.tile_fg[ep.x-1][ep.y-1];
-                bg = env.tile_bg[ep.x-1][ep.y-1];
+                fg = env.tile_fg[ep.x][ep.y];
+                bg = env.tile_bg[ep.x][ep.y];
             }
 
             if (gc == cen)
