@@ -2832,29 +2832,6 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     pbolt.is_tracer = false;
 }
 
-/**
- * Checks whether target is in sight of source.
- *
- * Only used from cast_chain_lightning currently.
- * XXX: Move to los.cc; integrate with other LOS code.
- */
-bool check_line_of_sight(const coord_def& source, const coord_def& target)
-{
-    const int dist = grid_distance(source, target);
-
-    // Can always see one square away.
-    if (dist <= 1)
-        return (true);
-
-    // Currently we limit the range to 8.
-    if (dist > MONSTER_LOS_RANGE)
-        return (false);
-
-    // Note that we are guaranteed to be within the player LOS range,
-    // so fallback is unnecessary.
-    return exists_ray(source, target);
-}
-
 // When a mimic is hit by a ranged attack, it teleports away (the slow
 // way) and changes its appearance - the appearance change is in
 // monster_teleport() in mstuff2.cc.

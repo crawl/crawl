@@ -297,6 +297,13 @@ void cast_fire_storm(int pow, bolt &beam)
     viewwindow(true, false);
 }
 
+bool _lightning_los(const coord_def& source, const coord_def& target)
+{
+    // XXX: currently bounded by circular LOS radius;
+    // XXX: adapt opacity -- allow passing clouds.
+    return (exists_ray(source, target, opc_solid, bds_maxlos));
+}
+
 void cast_chain_lightning(int pow)
 {
     bolt beam;
@@ -350,7 +357,7 @@ void cast_chain_lightning(int pow)
             if (dist > min_dist)
                 continue;
 
-            if (!check_line_of_sight(source, monster->pos()))
+            if (_lightning_los(source, monster->pos()))
                 continue;
 
             count++;
@@ -387,7 +394,7 @@ void cast_chain_lightning(int pow)
             if ((target.x == -1
                     || dist < min_dist
                     || (dist == min_dist && one_chance_in(count + 1)))
-                && check_line_of_sight(source, you.pos()))
+                && _lightning_los(source, you.pos()))
             {
                 target = you.pos();
             }

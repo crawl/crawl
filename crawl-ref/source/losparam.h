@@ -60,6 +60,7 @@ struct bounds_radius_sq : bounds_func
         : radius_sq(r_sq) {}
     bool operator()(const coord_def& p) const;
 };
+static bounds_radius_sq bds_maxlos(LOS_RADIUS);
 
 // LOS bounded by current global LOS radius.
 struct bounds_los_radius : bounds_func

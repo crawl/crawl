@@ -291,7 +291,6 @@ bool napalm_monster(monsters *monster, kill_category who, int levels = 1,
                     bool verbose = true);
 void fire_tracer( const monsters *monster, struct bolt &pbolt,
                   bool explode_only = false );
-bool check_line_of_sight( const coord_def& source, const coord_def& target );
 void mimic_alert( monsters *mimic );
 bool zapping(zap_type ztype, int power, bolt &pbolt,
              bool needs_tracer = false, const char* msg = NULL);
