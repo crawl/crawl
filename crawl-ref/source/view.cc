@@ -395,17 +395,11 @@ static unsigned _get_symbol(int object, unsigned short *colour,
     return (ch);
 }
 
-static int _view_emphasised_colour(const coord_def& where,
-                                   dungeon_feature_type feat,
-                                   int oldcolour, int newcolour)
+static bool _emphasise(const coord_def& where, dungeon_feature_type feat)
 {
-    if (is_unknown_stair(where, feat)
-        && (you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-        && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
-    {
-            return (newcolour);
-    }
-    return (oldcolour);
+    return (is_unknown_stair(where, feat)
+            && (you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
 static bool _show_bloodcovered(const coord_def& where)
@@ -506,10 +500,10 @@ static void _get_symbol( const coord_def& where,
                 else if (feat == DNGN_TREES)
                     *colour = _tree_colour(where) | colmask;
 
-                if (fdef.em_colour != fdef.colour && fdef.em_colour)
+                if (fdef.em_colour && fdef.em_colour != fdef.colour &&
+                    _emphasise(where, feat))
                 {
-                    *colour = _view_emphasised_colour(where, feat,
-                                  *colour, fdef.em_colour | colmask);
+                    *colour = (fdef.em_colour | colmask);
                 }
             }
 
@@ -728,13 +722,8 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
     const feature_def &fdef = Feature[feat_value];
     feature_colour = terrain_seen ? fdef.seen_colour : fdef.map_colour;
 
-    if (terrain_seen && feature_colour != fdef.seen_em_colour
-        && fdef.seen_em_colour)
-    {
-        feature_colour =
-            _view_emphasised_colour(p, feat_value, feature_colour,
-                                    fdef.seen_em_colour);
-    }
+    if (terrain_seen && fdef.seen_em_colour && _emphasise(p, feat_value))
+        feature_colour = fdef.seen_em_colour;
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
