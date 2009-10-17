@@ -96,7 +96,7 @@ libpng: $(PREFIX)/lib/libpng.a
 # SDL
 #
 sdl/build/.libs/libSDL.a:
-	cd sdl && ./configure --prefix=$(PREFIX) --enable-static --disable-shared
+	cd sdl && ./configure --prefix=$(PREFIX) --enable-static --disable-shared $(CONFIGURE_FLAGS)
 	@+$(MAKE) -C sdl
 
 $(PREFIX)/lib/libSDL.a: sdl/build/.libs/libSDL.a
