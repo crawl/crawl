@@ -73,7 +73,9 @@ uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
 ifdef CROSSHOST
 	NO_PKGCONFIG = YesPlease
+	NO_SDLCONFIG = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
+	SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
 endif
 ifneq (,$(findstring MINGW,$(uname_S)))
 	GAME = crawl.exe
