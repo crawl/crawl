@@ -179,7 +179,7 @@ you can use Xcode, as described below.
 For graphical builds, we do not support the use of the Unix build process for
 various reasons.
 
-* Crawl is officially build and tested under Xcode 3.2 on OS X 10.6.1, but
+* Crawl is officially built and tested under Xcode 3.2 on OS X 10.6.1, but
   it's highly likely that other versions of Xcode will work fine.
 
 * Make sure Xcode is installed. Xcode should be available on the Mac OS X
