@@ -107,7 +107,7 @@ const int LABYRINTH_BORDER = 4;
 #define Y_ABYSS_CENTER          (Y_ABYSS_1 + Y_ABYSS_WIDTH / 2)
 
 // default LOS radius
-#define LOS_RADIUS 10
+#define LOS_RADIUS 8
 // default LOS radius squared, for comparison with distance()
 #define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
 // maximal LOS radius
