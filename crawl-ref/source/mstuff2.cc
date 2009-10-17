@@ -651,7 +651,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 && monster_at(*ai)->attitude != monster->attitude)
                 sumcount++;
             if (grd(*ai) != DNGN_FLOOR && grd(*ai) > DNGN_MAX_NONREACH
-                && !grid_is_trap(grd(*ai)))
+                && !feat_is_trap(grd(*ai)))
                 sumcount++;
         }
         if (abs(you.pos().x-monster->pos().x)<=1 &&
@@ -676,7 +676,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                         continue;
                 }
             }
-            if (grd(*ai) == DNGN_FLOOR || grid_is_trap(grd(*ai)))
+            if (grd(*ai) == DNGN_FLOOR || feat_is_trap(grd(*ai)))
             {
                 grd(*ai) = DNGN_ROCK_WALL;
                 sumcount++;

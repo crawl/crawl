@@ -1467,7 +1467,7 @@ static bool _branch_entrances_are_connected()
         for (int x = 0; x < GXM; ++x)
         {
             coord_def gc(x,y);
-            if (!grid_is_branch_stairs(grd(gc)))
+            if (!feat_is_branch_stairs(grd(gc)))
                 continue;
             if (!_has_connected_stone_stairs_from(gc))
                 return (false);
@@ -1732,21 +1732,21 @@ static void _check_doors()
     for (int x = 1; x < GXM-1; x++)
         for (int y = 1; y < GYM-1; y++)
         {
-            if (!grid_is_closed_door(grd[x][y]))
+            if (!feat_is_closed_door(grd[x][y]))
                 continue;
 
             int solid_count = 0;
 
-            if (grid_is_solid( grd[x - 1][y] ))
+            if (feat_is_solid( grd[x - 1][y] ))
                 solid_count++;
 
-            if (grid_is_solid( grd[x + 1][y] ))
+            if (feat_is_solid( grd[x + 1][y] ))
                 solid_count++;
 
-            if (grid_is_solid( grd[x][y - 1] ))
+            if (feat_is_solid( grd[x][y - 1] ))
                 solid_count++;
 
-            if (grid_is_solid( grd[x][y + 1] ))
+            if (feat_is_solid( grd[x][y + 1] ))
                 solid_count++;
 
             grd[x][y] = (solid_count < 2 ? DNGN_FLOOR
@@ -1859,7 +1859,7 @@ static int _count_connected(int margin)
 
     for (int i = margin; i < GXM - margin; ++i)
         for (int j = margin; j < GYM - margin; ++j)
-            taken[i][j] = grid_is_water(grd[i][j]);
+            taken[i][j] = feat_is_water(grd[i][j]);
 
     int count = 0;
 
@@ -3181,8 +3181,8 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
 static int _good_door_spot(int x, int y)
 {
-    if (!grid_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM
-        || grid_is_closed_door(grd[x][y]))
+    if (!feat_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM
+        || feat_is_closed_door(grd[x][y]))
     {
         return 1;
     }
@@ -3240,8 +3240,8 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     {
         // left side
         if (grd[sx-1][ry] == DNGN_FLOOR
-            && grid_is_solid(grd[sx-1][ry-1])
-            && grid_is_solid(grd[sx-1][ry+1]))
+            && feat_is_solid(grd[sx-1][ry-1])
+            && feat_is_solid(grd[sx-1][ry+1]))
         {
             if (x_chance_in_y(doorlevel, 10))
                 grd[sx-1][ry] = DNGN_CLOSED_DOOR;
@@ -3249,8 +3249,8 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
         // right side
         if (grd[ex+1][ry] == DNGN_FLOOR
-            && grid_is_solid(grd[ex+1][ry-1])
-            && grid_is_solid(grd[ex+1][ry+1]))
+            && feat_is_solid(grd[ex+1][ry-1])
+            && feat_is_solid(grd[ex+1][ry+1]))
         {
             if (x_chance_in_y(doorlevel, 10))
                 grd[ex+1][ry] = DNGN_CLOSED_DOOR;
@@ -3262,8 +3262,8 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     {
         // top
         if (grd[rx][sy-1] == DNGN_FLOOR
-            && grid_is_solid(grd[rx-1][sy-1])
-            && grid_is_solid(grd[rx+1][sy-1]))
+            && feat_is_solid(grd[rx-1][sy-1])
+            && feat_is_solid(grd[rx+1][sy-1]))
         {
             if (x_chance_in_y(doorlevel, 10))
                 grd[rx][sy-1] = DNGN_CLOSED_DOOR;
@@ -3271,8 +3271,8 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
         // bottom
         if (grd[rx][ey+1] == DNGN_FLOOR
-            && grid_is_solid(grd[rx-1][ey+1])
-            && grid_is_solid(grd[rx+1][ey+1]))
+            && feat_is_solid(grd[rx-1][ey+1])
+            && feat_is_solid(grd[rx+1][ey+1]))
         {
             if (x_chance_in_y(doorlevel, 10))
                 grd[rx][ey+1] = DNGN_CLOSED_DOOR;
@@ -3493,7 +3493,7 @@ static void _place_aquatic_monsters(int level_number, char level_type)
             if (grd[x][y] == DNGN_LAVA)
                 lava_spaces++;
 
-            if (grid_is_water(grd[x][y]))
+            if (feat_is_water(grd[x][y]))
                 water_spaces++;
         }
 
@@ -3983,7 +3983,7 @@ static void _dig_away_from(vault_placement &place, const coord_def &pos)
                 {
                     if (!xi && !yi)
                         continue;
-                    if (!grid_is_solid(dig_at + coord_def(xi, yi))
+                    if (!cell_is_solid(dig_at + coord_def(xi, yi))
                         && ++adjacent_count >= 2)
                     {
                         return;
@@ -4002,12 +4002,12 @@ static void _dig_vault_loose( vault_placement &place,
 
 static bool _grid_needs_exit(int x, int y)
 {
-    return (!grid_is_solid(x, y)
-            || grid_is_closed_door(grd[x][y])
+    return (!cell_is_solid(x, y)
+            || feat_is_closed_door(grd[x][y])
             || grd[x][y] == DNGN_SECRET_DOOR);
 }
 
-static bool _map_grid_is_on_edge(const vault_placement &place,
+static bool _map_feat_is_on_edge(const vault_placement &place,
                                  const coord_def &c)
 {
     for (int xi = c.x - 1; xi <= c.x + 1; ++xi)
@@ -4026,7 +4026,7 @@ static void _pick_internal_float_exits(const vault_placement &place,
     for (int y = place.pos.y + 1; y < place.pos.y + place.size.y - 1; ++y)
         for (int x = place.pos.x + 1; x < place.pos.x + place.size.x - 1; ++x)
             if (_grid_needs_exit(x, y)
-                && _map_grid_is_on_edge(place, coord_def(x, y)))
+                && _map_feat_is_on_edge(place, coord_def(x, y)))
             {
                 exits.push_back( coord_def(x, y) );
             }
@@ -5243,10 +5243,10 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
         join_count++;
 
         const dungeon_feature_type feat = grd(at);
-        if (early_exit && at != from && is_traversable(feat))
+        if (early_exit && at != from && feat_is_traversable(feat))
             return (true);
 
-        if (unforbidden(at, MMT_VAULT) && !is_traversable(feat))
+        if (unforbidden(at, MMT_VAULT) && !feat_is_traversable(feat))
             grd(at) = DNGN_FLOOR;
 
         if (join_count > 10000) // just insurance
@@ -6328,7 +6328,7 @@ bool octa_room(spec_room &sr, int oblique_max,
             if (grd[x][y] == DNGN_FLOOR && type_floor == DNGN_SHALLOW_WATER)
                 grd[x][y] = DNGN_SHALLOW_WATER;
 
-            if (grd[x][y] == DNGN_CLOSED_DOOR && !grid_is_solid(type_floor))
+            if (grd[x][y] == DNGN_CLOSED_DOOR && !feat_is_solid(type_floor))
                 grd[x][y] = DNGN_FLOOR;       // ick
         }
 
@@ -6475,7 +6475,7 @@ static void _change_labyrinth_border(const dgn_region &region,
             if (!in_bounds(c)) // paranoia
                 continue;
 
-            if (grd(c) == wall || !grid_is_wall(grd(c)))
+            if (grd(c) == wall || !feat_is_wall(grd(c)))
                 continue;
 
             // All border grids have neighbours without any access to floor.
@@ -6886,7 +6886,7 @@ static void _labyrinth_level(int level_number)
 
 static bool _is_wall(int x, int y)
 {
-    return grid_is_wall(grd[x][y]);
+    return feat_is_wall(grd[x][y]);
 }
 
 static int _box_room_door_spot(int x, int y)
@@ -7698,7 +7698,7 @@ struct nearest_point
 inline static bool _dgn_square_travel_ok(const coord_def &c)
 {
     const dungeon_feature_type feat = grd(c);
-    return (is_traversable(feat) || grid_is_trap(feat)
+    return (feat_is_traversable(feat) || feat_is_trap(feat)
             || feat == DNGN_SECRET_DOOR);
 }
 
@@ -7711,7 +7711,7 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
         {
-            if (!travel_point_distance[x][y] && grid_is_stone_stair(grd[x][y]))
+            if (!travel_point_distance[x][y] && feat_is_stone_stair(grd[x][y]))
                 _dgn_fill_zone(coord_def(x, y), 1, np, _dgn_square_travel_ok);
         }
 

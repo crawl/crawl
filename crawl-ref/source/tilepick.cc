@@ -67,15 +67,8 @@ void TileNewLevel(bool first_time)
             unsigned int tile = env.tile_bk_bg[x][y];
             if (!(tile & TILE_FLAG_NEW_STAIR))
                 continue;
-
-            const coord_def gc(x,y);
-            int object = grd(gc);
-
-            if (!is_travelable_stair((dungeon_feature_type)object)
-                || travel_cache.know_stair(gc))
-            {
+            if (!is_unkown_stair(coord_def(x,y)))
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
-            }
         }
 }
 
@@ -118,7 +111,7 @@ static int _bow_offset(const monsters *mon)
 
 int tileidx_monster_base(const monsters *mon, bool detected)
 {
-    bool in_water = grid_is_water(grd(mon->pos()));
+    bool in_water = feat_is_water(grd(mon->pos()));
 
     int type = mon->type;
 
@@ -2364,7 +2357,7 @@ int tileidx_feature(int object, int gx, int gy)
     {
         const dungeon_feature_type appear
                 = grid_secret_door_appearance(coord_def(gx, gy));
-        ASSERT(!grid_is_secret_door(appear));
+        ASSERT(!feat_is_secret_door(appear));
         return tileidx_feature((int) appear, gx, gy);
     }
     case DNGN_CLEAR_ROCK_WALL:
@@ -4243,7 +4236,7 @@ void tile_init_flavour(const coord_def &gc)
         env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
     }
 
-    if (grd(gc) == DNGN_OPEN_DOOR || grid_is_closed_door(grd(gc)))
+    if (grd(gc) == DNGN_OPEN_DOOR || feat_is_closed_door(grd(gc)))
     {
         // Check for horizontal gates.
 
@@ -4271,7 +4264,7 @@ void tile_init_flavour(const coord_def &gc)
         else
             env.tile_flv(gc).special = 0;
     }
-    else if (grid_is_secret_door(grd(gc)))
+    else if (feat_is_secret_door(grd(gc)))
         env.tile_flv(gc).special = 0;
     else if (!env.tile_flv(gc).special)
         env.tile_flv(gc).special = random2(256);
@@ -4544,11 +4537,8 @@ void tile_draw_floor()
                 {
                     if (object == DNGN_DETECTED_SECRET_DOOR)
                         bg |= TILE_FLAG_WAS_SECRET;
-                    else if (is_travelable_stair((dungeon_feature_type)object)
-                             && !travel_cache.know_stair(gc))
-                    {
+                    else if (is_unkown_stair(gc))
                         bg |= TILE_FLAG_NEW_STAIR;
-                    }
                 }
             }
 

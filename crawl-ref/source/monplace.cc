@@ -70,38 +70,38 @@ static band_type _choose_band(int mon_type, int power, int &band_size);
 static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
                               bool force_pos = false);
 
-// Returns whether actual_grid is compatible with grid_wanted for monster
+// Returns whether actual_feat is compatible with feat_wanted for monster
 // movement and generation.
-bool grid_compatible(dungeon_feature_type grid_wanted,
-                     dungeon_feature_type actual_grid)
+bool feat_compatible(dungeon_feature_type feat_wanted,
+                     dungeon_feature_type actual_feat)
 {
-    if (grid_wanted == DNGN_FLOOR)
+    if (feat_wanted == DNGN_FLOOR)
     {
-        return (actual_grid >= DNGN_FLOOR
-                    && actual_grid != DNGN_BUILDER_SPECIAL_WALL
-                || actual_grid == DNGN_SHALLOW_WATER);
+        return (actual_feat >= DNGN_FLOOR
+                    && actual_feat != DNGN_BUILDER_SPECIAL_WALL
+                || actual_feat == DNGN_SHALLOW_WATER);
     }
 
-    if (grid_wanted >= DNGN_ROCK_WALL
-        && grid_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
+    if (feat_wanted >= DNGN_ROCK_WALL
+        && feat_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
     {
         // A monster can only move through or inhabit permanent rock if that's
         // exactly what it's asking for.
-        if (actual_grid == DNGN_PERMAROCK_WALL
-            || actual_grid == DNGN_CLEAR_PERMAROCK_WALL)
+        if (actual_feat == DNGN_PERMAROCK_WALL
+            || actual_feat == DNGN_CLEAR_PERMAROCK_WALL)
         {
-            return (grid_wanted == DNGN_PERMAROCK_WALL
-                    || grid_wanted == DNGN_CLEAR_PERMAROCK_WALL);
+            return (feat_wanted == DNGN_PERMAROCK_WALL
+                    || feat_wanted == DNGN_CLEAR_PERMAROCK_WALL);
         }
 
-        return (actual_grid >= DNGN_ROCK_WALL
-                && actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
+        return (actual_feat >= DNGN_ROCK_WALL
+                && actual_feat <= DNGN_CLEAR_PERMAROCK_WALL);
     }
 
-    return (grid_wanted == actual_grid
-            || (grid_wanted == DNGN_DEEP_WATER
-                && (actual_grid == DNGN_SHALLOW_WATER
-                    || actual_grid == DNGN_FOUNTAIN_BLUE)));
+    return (feat_wanted == actual_feat
+            || (feat_wanted == DNGN_DEEP_WATER
+                && (actual_feat == DNGN_SHALLOW_WATER
+                    || actual_feat == DNGN_FOUNTAIN_BLUE)));
 }
 
 // Can this monster survive on actual_grid?
@@ -142,23 +142,23 @@ bool monster_habitable_grid(int monster_class,
     if (actual_grid == DNGN_OPEN_SEA)
         return (false);
 
-    const dungeon_feature_type grid_preferred =
+    const dungeon_feature_type feat_preferred =
         habitat2grid(mons_class_primary_habitat(monster_class));
-    const dungeon_feature_type grid_nonpreferred =
+    const dungeon_feature_type feat_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(monster_class));
 
     // Special check for fire elementals since their habitat is floor which
     // is generally considered compatible with shallow water.
-    if (monster_class == MONS_FIRE_ELEMENTAL && grid_is_watery(actual_grid))
+    if (monster_class == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
     // Krakens are too large for shallow water.
     if (monster_class == MONS_KRAKEN && actual_grid == DNGN_SHALLOW_WATER)
         return (false);
 
-    if (grid_compatible(grid_preferred, actual_grid)
-        || (grid_nonpreferred != grid_preferred
-            && grid_compatible(grid_nonpreferred, actual_grid)))
+    if (feat_compatible(feat_preferred, actual_grid)
+        || (feat_nonpreferred != feat_preferred
+            && feat_compatible(feat_nonpreferred, actual_grid)))
     {
         return (true);
     }
@@ -185,7 +185,7 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     {
     case HT_WATER:
         // Monsters can submerge in shallow water - this is intentional.
-        return (grid_is_watery(grid));
+        return (feat_is_watery(grid));
 
     case HT_LAVA:
         return (grid == DNGN_LAVA);
@@ -669,10 +669,10 @@ static int _is_near_stairs(coord_def &p)
                 continue;
 
             const dungeon_feature_type feat = grd(p);
-            if (is_stair(feat))
+            if (feat_is_stair(feat))
             {
                 // Shouldn't matter for escape hatches.
-                if (grid_is_escape_hatch(feat))
+                if (feat_is_escape_hatch(feat))
                     continue;
 
                 // Should there be several stairs, don't overwrite the
@@ -694,9 +694,9 @@ static bool _valid_monster_location(const mgen_data &mg,
 {
     const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                          : mg.cls);
-    const dungeon_feature_type grid_preferred =
+    const dungeon_feature_type feat_preferred =
         habitat2grid(mons_class_primary_habitat(montype));
-    const dungeon_feature_type grid_nonpreferred =
+    const dungeon_feature_type feat_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(montype));
 
     if (!in_bounds(mg_pos))
@@ -707,9 +707,9 @@ static bool _valid_monster_location(const mgen_data &mg,
         return (false);
 
     // Is the monster happy where we want to put it?
-    if (!grid_compatible(grid_preferred, grd(mg_pos))
-        && (grid_nonpreferred == grid_preferred
-            || !grid_compatible(grid_nonpreferred, grd(mg_pos))))
+    if (!feat_compatible(feat_preferred, grd(mg_pos))
+        && (feat_nonpreferred == feat_preferred
+            || !feat_compatible(feat_nonpreferred, grd(mg_pos))))
     {
         return (false);
     }
@@ -2425,7 +2425,7 @@ static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
 class newmons_square_find : public travel_pathfind
 {
 private:
-    dungeon_feature_type grid_wanted;
+    dungeon_feature_type feat_wanted;
     coord_def start;
     int maxdistance;
 
@@ -2438,7 +2438,7 @@ public:
     newmons_square_find(dungeon_feature_type grdw,
                         const coord_def &pos,
                         int maxdist = 0)
-        :  grid_wanted(grdw), start(pos), maxdistance(maxdist),
+        :  feat_wanted(grdw), start(pos), maxdistance(maxdist),
            best_distance(0), nfound(0)
     {
     }
@@ -2459,7 +2459,7 @@ public:
         {
             return (false);
         }
-        if (!grid_compatible(grid_wanted, grd(dc)))
+        if (!feat_compatible(feat_wanted, grd(dc)))
         {
             if (passable.find(grd(dc)) != passable.end())
                 good_square(dc);
@@ -2487,18 +2487,18 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 {
     coord_def p;
 
-    const dungeon_feature_type grid_preferred =
+    const dungeon_feature_type feat_preferred =
         _monster_primary_habitat_feature(mons_class);
-    const dungeon_feature_type grid_nonpreferred =
+    const dungeon_feature_type feat_nonpreferred =
         _monster_secondary_habitat_feature(mons_class);
 
-    newmons_square_find nmpfind(grid_preferred, start, distance);
+    newmons_square_find nmpfind(feat_preferred, start, distance);
     const coord_def pp = nmpfind.pathfind();
     p = pp;
 
-    if (grid_nonpreferred != grid_preferred && !in_bounds(pp))
+    if (feat_nonpreferred != feat_preferred && !in_bounds(pp))
     {
-        newmons_square_find nmsfind(grid_nonpreferred, start, distance);
+        newmons_square_find nmsfind(feat_nonpreferred, start, distance);
         const coord_def ps = nmsfind.pathfind();
         p = ps;
     }
@@ -2514,19 +2514,19 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
 
-    const dungeon_feature_type grid_preferred =
+    const dungeon_feature_type feat_preferred =
         _monster_primary_habitat_feature(mons_class);
-    const dungeon_feature_type grid_nonpreferred =
+    const dungeon_feature_type feat_nonpreferred =
         _monster_secondary_habitat_feature(mons_class);
 
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water or lava this function would work.  -- bwr
-    if (empty_surrounds(p, grid_preferred, 2, true, empty))
+    if (empty_surrounds(p, feat_preferred, 2, true, empty))
         pos = empty;
 
-    if (grid_nonpreferred != grid_preferred && !in_bounds(pos)
-        && empty_surrounds(p, grid_nonpreferred, 2, true, empty))
+    if (feat_nonpreferred != feat_preferred && !in_bounds(pos)
+        && empty_surrounds(p, feat_nonpreferred, 2, true, empty))
     {
         pos = empty;
     }
@@ -2696,7 +2696,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
             continue;
 
         success =
-            (grd(*ri) == spc_wanted) || grid_compatible(spc_wanted, grd(*ri));
+            (grd(*ri) == spc_wanted) || feat_compatible(spc_wanted, grd(*ri));
 
         if (success && one_chance_in(++good_count))
             empty = *ri;
@@ -3213,7 +3213,7 @@ bool monster_pathfind::traversable(const coord_def p)
     if (mons)
         return mons_traversable(p);
 
-    return (!grid_is_solid(grd(p)) && !grid_destroys_items(grd(p)));
+    return (!feat_is_solid(grd(p)) && !feat_destroys_items(grd(p)));
 }
 
 // Checks whether a given monster can pass over a certain position, respecting
@@ -3227,7 +3227,7 @@ bool monster_pathfind::mons_traversable(const coord_def p)
         return (false);
 
     // Monsters that can't open doors won't be able to pass them.
-    if (grid_is_closed_door(grd(p)) || grd(p) == DNGN_SECRET_DOOR)
+    if (feat_is_closed_door(grd(p)) || grd(p) == DNGN_SECRET_DOOR)
     {
         if (mons_is_zombified(mons))
         {
@@ -3282,7 +3282,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (grid_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR)
+    if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR)
         return 2;
 
     const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)

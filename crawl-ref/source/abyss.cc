@@ -688,7 +688,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         const coord_def p( pos.x + random2avg(4, 3) + random2(3),
                            pos.y + random2avg(4, 3) + random2(3) );
         if (!in_bounds(p) || actor_at(p)
-            || !grid_compatible(DNGN_FLOOR, grd(p)))
+            || !feat_compatible(DNGN_FLOOR, grd(p)))
         {
             continue;
         }
@@ -754,7 +754,7 @@ static bool _is_grid_corruptible(const coord_def &c)
     const dungeon_feature_type feat = grd(c);
 
     // Stairs and portals cannot be corrupted.
-    if (grid_stair_direction(feat) != CMD_NO_CMD)
+    if (feat_stair_direction(feat) != CMD_NO_CMD)
         return (false);
 
     switch (feat)
@@ -788,7 +788,7 @@ static bool _is_crowded_square(const coord_def &c)
                 continue;
 
             const coord_def n(c.x + xi, c.y + yi);
-            if (!in_bounds(n) || !is_traversable(grd(n)))
+            if (!in_bounds(n) || !feat_is_traversable(grd(n)))
                 continue;
 
             if (++neighbours > 4)
@@ -802,7 +802,7 @@ static bool _is_crowded_square(const coord_def &c)
 static bool _is_sealed_square(const coord_def &c)
 {
     for (adjacent_iterator ai(c); ai; ++ai)
-        if ( !grid_is_opaque(grd(*ai)) )
+        if ( !feat_is_opaque(grd(*ai)) )
             return (false);
 
     return (true);
@@ -813,7 +813,7 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
     // To prevent the destruction of, say, branch entries.
     bool preserve_feat = true;
     dungeon_feature_type feat = DNGN_UNSEEN;
-    if (grid_altar_god(grd(c)) != GOD_NO_GOD)
+    if (feat_altar_god(grd(c)) != GOD_NO_GOD)
     {
         // altars may be safely overwritten, ha!
         preserve_feat = false;
@@ -823,19 +823,19 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
     else
         feat = oenv.grid(c);
 
-    if (grid_is_trap(feat, true)
+    if (feat_is_trap(feat, true)
         || feat == DNGN_SECRET_DOOR || feat == DNGN_UNSEEN)
     {
         return;
     }
 
-    if (is_traversable(grd(c)) && !is_traversable(feat)
+    if (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
         && _is_crowded_square(c))
     {
         return;
     }
 
-    if (!is_traversable(grd(c)) && is_traversable(feat) && _is_sealed_square(c))
+    if (!feat_is_traversable(grd(c)) && feat_is_traversable(feat) && _is_sealed_square(c))
         return;
 
     // What's this supposed to achieve? (jpeg)

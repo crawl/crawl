@@ -87,10 +87,10 @@ void ray_def::advance_and_bounce()
     const double oldaccx = accx, oldaccy = accy;
     adv_type rc = advance(false);
     int newx = x(), newy = y();
-    ASSERT(grid_is_solid(grd[newx][newy]));
+    ASSERT(feat_is_solid(grd[newx][newy]));
 
-    const bool blocked_x = grid_is_solid(grd[oldx][newy]);
-    const bool blocked_y = grid_is_solid(grd[newx][oldy]);
+    const bool blocked_x = feat_is_solid(grd[oldx][newy]);
+    const bool blocked_y = feat_is_solid(grd[newx][oldy]);
 
     if (double_is_zero(slope) || slope > 100.0)
     {

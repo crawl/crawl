@@ -1241,7 +1241,7 @@ static bool _need_missile_gift()
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
     return (you.piety > 80
             && random2( you.piety ) > 70
-            && !grid_destroys_items( grd(you.pos()) )
+            && !feat_destroys_items( grd(you.pos()) )
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_DARTS)
@@ -1330,7 +1330,7 @@ static void _show_pure_deck_chances()
 
 static void _give_nemelex_gift()
 {
-    if (grid_destroys_items(grd(you.pos())))
+    if (feat_destroys_items(grd(you.pos())))
         return;
 
     // Nemelex will give at least one gift early.
@@ -2127,7 +2127,7 @@ static void _do_god_gift(bool prayed_for)
         case GOD_TROG:
             if (you.piety > 130
                 && random2(you.piety) > 120
-                && !grid_destroys_items(grd(you.pos()))
+                && !feat_destroys_items(grd(you.pos()))
                 && one_chance_in(4))
             {
                 if (you.religion == GOD_TROG
@@ -2274,7 +2274,7 @@ static void _do_god_gift(bool prayed_for)
             }
 
             if (gift != NUM_BOOKS
-                && !grid_destroys_items(grd(you.pos())))
+                && !feat_destroys_items(grd(you.pos())))
             {
                 if (gift == OBJ_RANDOM)
                 {
@@ -2433,7 +2433,7 @@ void pray()
     const bool was_praying = !!you.duration[DUR_PRAYER];
 
     bool something_happened = false;
-    const god_type altar_god = grid_altar_god(grd(you.pos()));
+    const god_type altar_god = feat_altar_god(grd(you.pos()));
     if (altar_god != GOD_NO_GOD)
     {
         if (you.flight_mode() == FL_LEVITATE)
@@ -2456,7 +2456,7 @@ void pray()
                 return;
             }
 
-            god_pitch(grid_altar_god(grd(you.pos())));
+            god_pitch(feat_altar_god(grd(you.pos())));
             return;
         }
     }
@@ -4433,7 +4433,7 @@ bool trog_burn_spellbooks()
         // If a grid is blocked, books lying there will be ignored.
         // Allow bombing of monsters.
         const unsigned short cloud = env.cgrid(*ri);
-        if (grid_is_solid(grd(*ri))
+        if (feat_is_solid(grd(*ri))
             || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
         {
             continue;

@@ -1307,7 +1307,7 @@ bool cast_summon_elemental(int pow, god_type god,
     {
         mon = MONS_FIRE_ELEMENTAL;
     }
-    else if (grid_is_watery(grd(targ))
+    else if (feat_is_watery(grd(targ))
              && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
     {
         mon = MONS_WATER_ELEMENTAL;
@@ -1914,7 +1914,7 @@ bool sunlight()
         target.x += x_offset[i];
         target.y += y_offset[i];
 
-        if (!in_bounds(target) || grid_is_solid(grd(target)))
+        if (!in_bounds(target) || feat_is_solid(grd(target)))
             continue;
 
         temp_bolt.explosion_draw_cell(target);
@@ -2038,7 +2038,7 @@ void path_distance(coord_def & origin,
         {
             idx = adj_it->x + adj_it->y * X_WIDTH;
             if (see_cell(*adj_it)
-                && !grid_is_solid(env.grid(*adj_it))
+                && !feat_is_solid(env.grid(*adj_it))
                 && exclusion.insert(idx).second)
             {
                 monsters * temp = monster_at(*adj_it);

@@ -59,26 +59,24 @@ void stop_running(void);
 void travel_init_new_level();
 void cycle_exclude_radius(const coord_def &p);
 void del_exclude(const coord_def &p);
-void set_exclude(const coord_def &p, int radius = LOS_RADIUS, bool autoexcl = false);
+void set_exclude(const coord_def &p, int radius = LOS_RADIUS,
+                 bool autoexcl = false);
 void maybe_remove_autoexclusion(const coord_def &p);
 std::string get_exclusion_desc();
 void clear_excludes();
 
 unsigned char is_waypoint(const coord_def &p);
 bool is_exclude_root(const coord_def &p);
-bool is_stair(dungeon_feature_type gridc);
-bool is_travelable_stair(dungeon_feature_type gridc);
-bool is_escape_hatch(dungeon_feature_type gridc);
-bool is_gate(dungeon_feature_type gridc);
-command_type direction_to_command( char x, char y );
-bool is_altar(dungeon_feature_type gridc);
-bool is_resting( void );
+command_type direction_to_command(char x, char y);
+bool is_resting(void);
 #ifdef CLUA_BINDINGS
 const char *trap_name(const coord_def &p);
 #endif
-bool is_traversable(dungeon_feature_type grid);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool is_excluded(const coord_def &p);
+bool feat_is_traversable(dungeon_feature_type feat);
+bool is_unknown_stair(const coord_def &p,
+    dungeon_feature_type remembered_feat = NUM_REAL_FEATURES);
 
 void find_travel_pos(const coord_def& youpos, char *move_x, char *move_y,
                      std::vector<coord_def>* coords = NULL);

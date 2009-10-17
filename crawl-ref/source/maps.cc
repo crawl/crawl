@@ -184,17 +184,17 @@ static bool _may_overwrite_feature(const dungeon_feature_type grid,
         return (water_ok);
 
     // Handle all other non-LOS blocking grids here.
-    if (!grid_is_opaque(grid)
+    if (!feat_is_opaque(grid)
         && grid != DNGN_FLOOR
         && grid != DNGN_SHALLOW_WATER
         && grid != DNGN_OPEN_DOOR
         && grid != DNGN_SECRET_DOOR
-        && !grid_is_closed_door(grid))
+        && !feat_is_closed_door(grid))
     {
         return (false);
     }
 
-    if (grid_is_wall(grid))
+    if (feat_is_wall(grid))
         return (wall_ok);
 
     // Otherwise, feel free to clobber this feature.

@@ -934,7 +934,7 @@ static int _passwall(coord_def where, int pow, int, actor *)
         switch (grd(n))
         {
         default:
-            if (grid_is_solid(grd(n)))
+            if (feat_is_solid(grd(n)))
                 non_rock_barriers = true;
             done = true;
             break;
@@ -1733,7 +1733,7 @@ bool cast_portal_projectile(int pow)
     if (item == -1)
         return (false);
 
-    if (grid_is_solid(target.target))
+    if (cell_is_solid(target.target))
     {
         mpr("You can't shoot at gazebos.");
         return (false);
@@ -1758,7 +1758,7 @@ bool cast_portal_projectile(int pow)
 bool cast_apportation(int pow, const coord_def& where)
 {
     // Protect the player from destroying the item.
-    if (grid_destroys_items(grd(you.pos())))
+    if (feat_destroys_items(grd(you.pos())))
     {
         mpr( "That would be silly while over this terrain!" );
         return (false);

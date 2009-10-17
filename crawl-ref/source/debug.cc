@@ -738,7 +738,7 @@ bool _take_portal_vault_stairs( const bool down )
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (grid_stair_direction(grd(*ri)) == cmd)
+        if (feat_stair_direction(grd(*ri)) == cmd)
         {
             stair_pos = *ri;
             break;
@@ -774,7 +774,7 @@ void wizard_level_travel( bool down )
 
     // This lets us, for example, use &U to exit from Pandemonium and
     // &D to go to the next level.
-    command_type real_dir = grid_stair_direction(stairs);
+    command_type real_dir = feat_stair_direction(stairs);
     if (down && real_dir == CMD_GO_UPSTAIRS
         || !down && real_dir == CMD_GO_DOWNSTAIRS)
     {
@@ -3247,7 +3247,7 @@ void debug_mons_scan()
 #ifdef WIZARD
 static void _debug_acquirement_stats(FILE *ostat)
 {
-    if (grid_destroys_items(grd(you.pos())))
+    if (feat_destroys_items(grd(you.pos())))
     {
         mpr("You must stand on a square which doesn't destroy items "
             "in order to do this.");
@@ -5204,7 +5204,7 @@ void wizard_dismiss_all_monsters(bool force_all)
 static void _debug_kill_traps()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (grid_is_trap(grd(*ri), true))
+        if (feat_is_trap(grd(*ri), true))
             destroy_trap(*ri);
 }
 
@@ -5244,7 +5244,7 @@ static void _debug_destroy_doors()
         for (int x = 0; x < GXM; ++x)
         {
             const dungeon_feature_type feat = grd[x][y];
-            if (feat == DNGN_SECRET_DOOR || grid_is_closed_door(feat))
+            if (feat == DNGN_SECRET_DOOR || feat_is_closed_door(feat))
                 grd[x][y] = DNGN_FLOOR;
         }
 }
@@ -6909,7 +6909,7 @@ static bool _mg_region_flood(const coord_def &c, int region, bool flag)
     }
 
     const dungeon_feature_type ft = grd(c);
-    if (is_travelable_stair(ft))
+    if (feat_is_travelable_stair(ft))
         found_exit = true;
 
     for (int yi = -1; yi <= 1; ++yi)

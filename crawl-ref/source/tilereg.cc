@@ -1214,16 +1214,16 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             if (!(event.mod & MOD_SHIFT))
                 return 'g';
 
-            const dungeon_feature_type grid = grd(gc);
-            switch (grid_stair_direction(grid))
+            const dungeon_feature_type feat = grd(gc);
+            switch (feat_stair_direction(feat))
             {
             case CMD_GO_DOWNSTAIRS:
                 return ('>');
             case CMD_GO_UPSTAIRS:
                 return ('<');
             default:
-                if (is_altar(grid)
-                    && player_can_join_god(grid_altar_god(grid)))
+                if (feat_is_altar(feat)
+                    && player_can_join_god(feat_altar_god(feat)))
                 {
                     return ('p');
                 }
@@ -1343,14 +1343,14 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         if (igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
             tip += "\n[L-Click] Pick up items (g)";
 
-        const dungeon_feature_type grid = grd(m_cursor[CURSOR_MOUSE]);
-        const command_type dir = grid_stair_direction(grid);
+        const dungeon_feature_type feat = grd(m_cursor[CURSOR_MOUSE]);
+        const command_type dir = feat_stair_direction(feat);
         if (dir != CMD_NO_CMD)
         {
             tip += "\n[Shift-L-Click] ";
-            if (grid == DNGN_ENTER_SHOP)
+            if (feat == DNGN_ENTER_SHOP)
                 tip += "enter shop";
-            else if (is_gate(grid))
+            else if (feat_is_gate(feat))
                 tip += "enter gate";
             else
                 tip += "use stairs";
@@ -1360,7 +1360,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
             else
                 tip += " (<)";
         }
-        else if (is_altar(grid) && player_can_join_god(grid_altar_god(grid)))
+        else if (feat_is_altar(feat) && player_can_join_god(feat_altar_god(feat)))
             tip += "\n[Shift-L-Click] pray on altar (p)";
 
         // Character overview.
@@ -1375,7 +1375,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     {
         tip = "";
 
-        if (!grid_is_solid(m_cursor[CURSOR_MOUSE]))
+        if (!cell_is_solid(m_cursor[CURSOR_MOUSE]))
         {
             int mon_num = mgrd(m_cursor[CURSOR_MOUSE]);
             if (mon_num == NON_MONSTER || mons_friendly(&menv[mon_num]))
@@ -1393,7 +1393,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     }
     else
     {
-        if (i_feel_safe() && !grid_is_solid(m_cursor[CURSOR_MOUSE]))
+        if (i_feel_safe() && !cell_is_solid(m_cursor[CURSOR_MOUSE]))
             tip = "[L-Click] Travel\n";
 
         tip += "[R-Click] Describe";

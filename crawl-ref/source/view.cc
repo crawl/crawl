@@ -54,6 +54,7 @@ REVISION("$Rev$");
 #include "spells3.h"
 #include "stash.h"
 #include "tiles.h"
+#include "travel.h"
 #include "state.h"
 #include "terrain.h"
 #include "tilemcache.h"
@@ -394,19 +395,11 @@ static unsigned _get_symbol(int object, unsigned short *colour,
     return (ch);
 }
 
-static int _view_emphasised_colour(const coord_def& where,
-                                   dungeon_feature_type feat,
-                                   int oldcolour, int newcolour)
+static bool _emphasise(const coord_def& where, dungeon_feature_type feat)
 {
-    if (is_travelable_stair(feat) && !travel_cache.know_stair(where))
-    {
-        if ((you.your_level || grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
-        {
-            return (newcolour);
-        }
-    }
-    return (oldcolour);
+    return (is_unknown_stair(where, feat)
+            && (you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
 static bool _show_bloodcovered(const coord_def& where)
@@ -417,7 +410,7 @@ static bool _show_bloodcovered(const coord_def& where)
     dungeon_feature_type grid = grd(where);
 
     // Altars, stairs (of any kind) and traps should not be coloured red.
-    return (!is_critical_feature(grid) && !grid_is_trap(grid));
+    return (!is_critical_feature(grid) && !feat_is_trap(grid));
 }
 
 static unsigned short _tree_colour(const coord_def& where)
@@ -439,6 +432,8 @@ static void _get_symbol( const coord_def& where,
 
     if (object < NUM_FEATURES)
     {
+        const dungeon_feature_type feat =
+            static_cast<dungeon_feature_type>(object);
         const feature_def &fdef = Feature[object];
 
         *ch = magic_mapped? fdef.magic_symbol
@@ -448,13 +443,14 @@ static void _get_symbol( const coord_def& where,
         {
             const int colmask = *colour & COLFLAG_MASK;
 
-            bool excluded_stairs = (object >= DNGN_STONE_STAIRS_DOWN_I
-                                    && object <= DNGN_ESCAPE_HATCH_UP
+            // TODO: consolidate with feat_is_stair etc.
+            bool excluded_stairs = (feat >= DNGN_STONE_STAIRS_DOWN_I
+                                    && feat <= DNGN_ESCAPE_HATCH_UP
                                     && is_exclude_root(where));
 
             bool blocked_movement = false;
             if (!excluded_stairs
-                && object < NUM_FEATURES && object >= DNGN_MINMOVE
+                && feat >= DNGN_MINMOVE
                 && you.duration[DUR_MESMERISED])
             {
                 // Colour grids that cannot be reached due to beholders
@@ -474,15 +470,10 @@ static void _get_symbol( const coord_def& where,
             }
 
             if (excluded_stairs)
-            {
                 *colour = Options.tc_excluded | colmask;
-            }
             else if (blocked_movement)
-            {
                 *colour = DARKGREY | colmask;
-            }
-            else if (object < NUM_REAL_FEATURES && object >= DNGN_MINMOVE
-                     && is_sanctuary(where) )
+            else if (feat >= DNGN_MINMOVE && is_sanctuary(where))
             {
                 if (testbits(env.map(where).property, FPROP_SANCTUARY_1))
                     *colour = YELLOW | colmask;
@@ -496,35 +487,29 @@ static void _get_symbol( const coord_def& where,
                         *colour = LIGHTGREY | colmask; // 1/12
                 }
             }
-            else if (object < NUM_REAL_FEATURES && _show_bloodcovered(where))
-            {
+            else if (_show_bloodcovered(where))
                 *colour = RED | colmask;
-            }
-            else if (object < NUM_REAL_FEATURES && env.grid_colours(where))
-            {
+            else if (env.grid_colours(where))
                 *colour = env.grid_colours(where) | colmask;
-            }
             else
             {
                 // Don't clobber with BLACK, because the colour should be
                 // already set.
                 if (fdef.colour != BLACK)
                     *colour = fdef.colour | colmask;
-                else if (object == DNGN_TREES)
+                else if (feat == DNGN_TREES)
                     *colour = _tree_colour(where) | colmask;
 
-                if (fdef.em_colour != fdef.colour && fdef.em_colour)
+                if (fdef.em_colour && fdef.em_colour != fdef.colour &&
+                    _emphasise(where, feat))
                 {
-                    *colour =
-                        _view_emphasised_colour(
-                            where, static_cast<dungeon_feature_type>(object),
-                            *colour, fdef.em_colour | colmask);
+                    *colour = (fdef.em_colour | colmask);
                 }
             }
 
-            if (object < NUM_REAL_FEATURES
-                && (object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX
-                    || object == DNGN_UNDISCOVERED_TRAP))
+            // TODO: should be a feat_is_whatever(feat)
+            if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
+                || feat == DNGN_UNDISCOVERED_TRAP)
             {
                 if (inside_halo(where))
                 {
@@ -541,14 +526,13 @@ static void _get_symbol( const coord_def& where,
         // Note anything we see that's notable
         if (!where.origin() && fdef.is_notable())
         {
-            seen_notable_thing( static_cast<dungeon_feature_type>(object),
-                                where );
+            seen_notable_thing(feat, where);
         }
     }
     else
     {
-        ASSERT( object >= DNGN_START_OF_MONSTERS );
-        *ch = mons_char( object - DNGN_START_OF_MONSTERS );
+        ASSERT(object >= DNGN_START_OF_MONSTERS);
+        *ch = mons_char(object - DNGN_START_OF_MONSTERS);
     }
 
     if (colour)
@@ -691,8 +675,8 @@ unsigned short dos_brand( unsigned short colour,
 
 // FIXME: Rework this function to use the new terrain known/seen checks
 // These are still env.map coordinates, NOT grid coordinates!
-screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
-                                 bool travel_colour )
+screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
+                                bool travel_colour)
 {
     const unsigned short map_flags = env.map(p).flags;
     if (!(map_flags & MAP_GRID_KNOWN))
@@ -706,12 +690,12 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     }
 #endif
 
-    dungeon_feature_type grid_value = grd(p);
+    dungeon_feature_type feat_value = grd(p);
     if (!see_cell(p))
     {
         const int remembered = get_envmap_obj(p);
         if (remembered < NUM_REAL_FEATURES)
-            grid_value = static_cast<dungeon_feature_type>(remembered);
+            feat_value = static_cast<dungeon_feature_type>(remembered);
     }
 
     unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
@@ -735,16 +719,11 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
 
     int feature_colour = DARKGREY;
     const bool terrain_seen = is_terrain_seen(p);
-    const feature_def &fdef = Feature[grid_value];
-    feature_colour = terrain_seen? fdef.seen_colour : fdef.map_colour;
+    const feature_def &fdef = Feature[feat_value];
+    feature_colour = terrain_seen ? fdef.seen_colour : fdef.map_colour;
 
-    if (terrain_seen && feature_colour != fdef.seen_em_colour
-        && fdef.seen_em_colour)
-    {
-        feature_colour =
-            _view_emphasised_colour(p, grid_value, feature_colour,
-                                    fdef.seen_em_colour);
-    }
+    if (terrain_seen && fdef.seen_em_colour && _emphasise(p, feat_value))
+        feature_colour = fdef.seen_em_colour;
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
@@ -775,13 +754,13 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     }
 
     if (Options.feature_item_brand
-        && is_critical_feature(grid_value)
+        && is_critical_feature(feat_value)
         && igrd(p) != NON_ITEM)
     {
         tc |= COLFLAG_FEATURE_ITEM;
     }
     else if (Options.trap_item_brand
-             && grid_is_trap(grid_value) && igrd(p) != NON_ITEM)
+             && feat_is_trap(feat_value) && igrd(p) != NON_ITEM)
     {
         // FIXME: this uses the real igrd, which the player shouldn't
         // be aware of.
@@ -850,13 +829,13 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         {
             unsigned int feature = grd(p);
 
-            unsigned int grid_symbol;
-            unsigned short grid_colour;
-            get_item_symbol(feature, &grid_symbol, &grid_colour);
+            unsigned int feat_symbol;
+            unsigned short feat_colour;
+            get_item_symbol(feature, &feat_symbol, &feat_colour);
 
             unsigned int fg;
             unsigned int bg;
-            tileidx_unseen(fg, bg, grid_symbol, p);
+            tileidx_unseen(fg, bg, feat_symbol, p);
             env.tile_bk_bg(p) = bg;
             env.tile_bk_fg(p) = fg;
         }
@@ -900,7 +879,7 @@ int get_mons_colour(const monsters *mons)
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
             && is_critical_feature(grd(mons->pos()))
-            && grid_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
+            && feat_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
         {
             col |= COLFLAG_FEATURE_ITEM;
         }
@@ -1587,15 +1566,15 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
     const item_def &eitem = mitm[igrd(gp)];
     unsigned short &ecol  = env.show_col(ep);
 
-    const dungeon_feature_type grid = grd(gp);
-    if (Options.feature_item_brand && is_critical_feature(grid))
+    const dungeon_feature_type feat = grd(gp);
+    if (Options.feature_item_brand && is_critical_feature(feat))
         ecol |= COLFLAG_FEATURE_ITEM;
-    else if (Options.trap_item_brand && grid_is_trap(grid))
+    else if (Options.trap_item_brand && feat_is_trap(feat))
         ecol |= COLFLAG_TRAP_ITEM;
     else
     {
         const unsigned short gcol = env.grid_colours(gp);
-        ecol = (grid == DNGN_SHALLOW_WATER) ?
+        ecol = (feat == DNGN_SHALLOW_WATER) ?
                (gcol != BLACK ? gcol : CYAN) : eitem.colour;
         if (eitem.link != NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
@@ -1604,7 +1583,7 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 
 #ifdef USE_TILE
     int idx = igrd(gp);
-    if (is_stair(grid))
+    if (feat_is_stair(feat))
         tile_place_item_marker(ep.x, ep.y, idx);
     else
         tile_place_item(ep.x, ep.y, idx);
@@ -1940,7 +1919,7 @@ void blood_smell( int strength, const coord_def& where )
 }
 
 
-// Determines if the given feature is present at (x, y) in _grid_ coordinates.
+// Determines if the given feature is present at (x, y) in _feat_ coordinates.
 // If you have map coords, add (1, 1) to get grid coords.
 // Use one of
 // 1. '<' and '>' to look for stairs
@@ -2904,13 +2883,13 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         bool open = true;
 
-        if (grid_is_solid(grd(*ri)) && !grid_is_closed_door(grd(*ri)))
+        if (feat_is_solid(grd(*ri)) && !feat_is_closed_door(grd(*ri)))
         {
             open = false;
             for (adjacent_iterator ai(*ri); ai; ++ai)
             {
-                if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
-                                        || grid_is_closed_door(grd(*ai))))
+                if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
+                                        || feat_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;

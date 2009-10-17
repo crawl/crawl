@@ -288,9 +288,9 @@ bool flood_find<fgrd, bound_check>::path_flood(
         }
     }
 
-    const dungeon_feature_type grid = fgrid(dc);
+    const dungeon_feature_type feat = fgrid(dc);
 
-    if (grid == NUM_FEATURES)
+    if (feat == NUM_FEATURES)
     {
         if (want_exit)
         {
@@ -301,16 +301,16 @@ bool flood_find<fgrd, bound_check>::path_flood(
         return (false);
     }
 
-    if (needed_features[ grid ])
+    if (needed_features[ feat ])
     {
         unexplored_place = dc;
         unexplored_dist  = traveled_distance;
         return (true);
     }
 
-    if (!is_traversable(grid)
-        && grid != DNGN_SECRET_DOOR
-        && !grid_is_trap(grid))
+    if (!feat_is_traversable(feat)
+        && feat != DNGN_SECRET_DOOR
+        && !feat_is_trap(feat))
     {
         return (false);
     }

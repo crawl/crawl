@@ -277,7 +277,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
 void monster_drop_ething(monsters *monster, bool mark_item_origins,
                          int owner_id)
 {
-    const bool hostile_grid = grid_destroys_items(grd(monster->pos()));
+    const bool hostile_grid = feat_destroys_items(grd(monster->pos()));
 
     bool destroyed = false;
 
@@ -313,7 +313,7 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
     }
 
     if (destroyed)
-        mprf(MSGCH_SOUND, grid_item_destruction_message(grd(monster->pos())));
+        mprf(MSGCH_SOUND, feat_item_destruction_message(grd(monster->pos())));
 }
 
 int fill_out_corpse(const monsters* monster, item_def& corpse,
@@ -395,7 +395,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
 
     // Don't attempt to place corpses within walls, either.
     // Currently, this only applies to (shapeshifter) rock worms.
-    if (grid_is_wall(grd(monster->pos())))
+    if (feat_is_wall(grd(monster->pos())))
         return (-1);
 
     item_def corpse;
@@ -409,7 +409,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
     if (corpse_class == -1 || (!force && coinflip()))
         return (-1);
 
-    if (grid_destroys_items(grd(monster->pos())))
+    if (feat_destroys_items(grd(monster->pos())))
     {
         item_was_destroyed(corpse);
         return (-1);
@@ -2797,7 +2797,7 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
     loc = you.pos();
 
     // Don't move onto dangerous terrain.
-    if (is_grid_dangerous(grd(monster->pos())))
+    if (is_feat_dangerous(grd(monster->pos())))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return (false);
@@ -3429,7 +3429,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 static bool _is_level_exit(const coord_def& pos)
 {
     // All types of stairs.
-    if (is_stair(grd(pos)))
+    if (feat_is_stair(grd(pos)))
         return (true);
 
     // Teleportation and shaft traps.
@@ -3493,21 +3493,21 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
 // types, this should be expanded along with it.
 static void _mons_indicate_level_exit(const monsters *mon)
 {
-    const dungeon_feature_type gridc = grd(mon->pos());
+    const dungeon_feature_type feat = grd(mon->pos());
     const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
 
-    if (is_gate(gridc))
+    if (feat_is_gate(feat))
         simple_monster_message(mon, " passes through the gate.");
-    else if (is_travelable_stair(gridc))
+    else if (feat_is_travelable_stair(feat))
     {
-        command_type dir = grid_stair_direction(gridc);
+        command_type dir = feat_stair_direction(feat);
         simple_monster_message(mon,
             make_stringf(" %s the %s.",
-                dir == CMD_GO_UPSTAIRS   ? "goes up" :
-                dir == CMD_GO_DOWNSTAIRS ? "goes down"
-                                         : "takes",
-                is_escape_hatch(gridc)   ? "escape hatch"
-                                         : "stairs").c_str());
+                dir == CMD_GO_UPSTAIRS     ? "goes up" :
+                dir == CMD_GO_DOWNSTAIRS   ? "goes down"
+                                           : "takes",
+                feat_is_escape_hatch(feat) ? "escape hatch"
+                                           : "stairs").c_str());
     }
     else if (is_shaft)
     {
@@ -3804,7 +3804,7 @@ static bool _find_siren_water_target(monsters *mon)
         for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false);
              ri; ++ri)
         {
-            if (!grid_is_water(grd(*ri)))
+            if (!feat_is_water(grd(*ri)))
                 continue;
 
             // In the first iteration only count water grids that are
@@ -3895,7 +3895,7 @@ static bool _find_wall_target(monsters *mon)
 
         // Target grid might have changed since we started, like if the
         // player destroys the wall the monster wants to hide in.
-        if (grid_is_solid(targ_pos)
+        if (cell_is_solid(targ_pos)
             && monster_habitable_grid(mon, grd(targ_pos)))
         {
             // Wall is still good.
@@ -3923,7 +3923,7 @@ static bool _find_wall_target(monsters *mon)
     for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false);
          ri; ++ri)
     {
-        if (!grid_is_solid(*ri)
+        if (!cell_is_solid(*ri)
             || !monster_habitable_grid(mon, grd(*ri)))
         {
             continue;
@@ -4362,7 +4362,7 @@ static void _handle_behaviour(monsters *mon)
             mon->foe = MHITNOT;
     }
 
-    if (mons_wall_shielded(mon) && grid_is_solid(mon->pos()))
+    if (mons_wall_shielded(mon) && cell_is_solid(mon->pos()))
     {
         // Monster is safe, so its behaviour can be simplified to fleeing.
         if (mon->behaviour == BEH_CORNERED || mon->behaviour == BEH_PANIC
@@ -4815,7 +4815,7 @@ static void _handle_behaviour(monsters *mon)
         mon->foe = new_foe;
     }
 
-    if (mon->travel_target == MTRAV_WALL && grid_is_solid(mon->pos()))
+    if (mon->travel_target == MTRAV_WALL && cell_is_solid(mon->pos()))
     {
         if (mon->behaviour == BEH_FLEE)
         {
@@ -5263,11 +5263,11 @@ static void _handle_movement(monsters *monster)
             bool leftright = false;
 
             coord_def t = monster->pos() + coord_def(mmov.x, 0);
-            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
                 updown = true;
 
             t = monster->pos() + coord_def(0, mmov.y);
-            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
                 leftright = true;
 
             if (updown && (!leftright || coinflip()))
@@ -5280,11 +5280,11 @@ static void _handle_movement(monsters *monster)
             bool left  = false;
             bool right = false;
             coord_def t = monster->pos() + coord_def(-1, mmov.y);
-            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
                 left = true;
 
             t = monster->pos() + coord_def(1, mmov.y);
-            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
                 right = true;
 
             if (left && (!right || coinflip()))
@@ -5297,11 +5297,11 @@ static void _handle_movement(monsters *monster)
             bool up   = false;
             bool down = false;
             coord_def t = monster->pos() + coord_def(mmov.x, -1);
-            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
                 up = true;
 
             t = monster->pos() + coord_def(mmov.x, 1);
-            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+            if (in_bounds(t) && feat_is_rock(grd(t)) && !feat_is_permarock(grd(t)))
                 down = true;
 
             if (up && (!down || coinflip()))
@@ -5798,7 +5798,7 @@ static bool _siren_movement_effect(const monsters *monster)
 
         const coord_def newpos = you.pos() + dir;
 
-        if (!in_bounds(newpos) || is_grid_dangerous(grd(newpos))
+        if (!in_bounds(newpos) || is_feat_dangerous(grd(newpos))
             || !you.can_pass_through_feat(grd(newpos)))
         {
             do_resist = true;
@@ -5949,7 +5949,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             if (!inside_level_bounds(t))
                 continue;
 
-            if (!grid_is_solid(grd(t)))
+            if (!feat_is_solid(grd(t)))
             {
                 monster->hit_points = -1;
                 used = true;
@@ -7423,7 +7423,7 @@ static void _monster_regenerate(monsters *monster)
                 || cloud_type_at(monster->pos()) == CLOUD_FIRE))
 
         || (monster->type == MONS_WATER_ELEMENTAL
-            && grid_is_watery(grd(monster->pos())))
+            && feat_is_watery(grd(monster->pos())))
 
         || (monster->type == MONS_AIR_ELEMENTAL
             && env.cgrid(monster->pos()) == EMPTY_CLOUD
@@ -8868,7 +8868,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false);
     }
     else if (!monster->can_pass_through_feat(target_grid)
-             || no_water && grid_is_water(target_grid))
+             || no_water && feat_is_water(target_grid))
     {
         return (false);
     }
@@ -8901,7 +8901,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // Fire elementals avoid water and cold.
     if (monster->type == MONS_FIRE_ELEMENTAL
-        && (grid_is_watery(target_grid)
+        && (feat_is_watery(target_grid)
             || targ_cloud_type == CLOUD_COLD))
     {
         return (false);
@@ -9124,10 +9124,10 @@ static bool _monster_move(monsters *monster)
         std::vector<coord_def> adj_move;
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
-            if (!grid_is_solid(*ai))
+            if (!cell_is_solid(*ai))
             {
                 adj_move.push_back(*ai);
-                if (grid_is_watery(grd(*ai)))
+                if (feat_is_watery(grd(*ai)))
                     adj_water.push_back(*ai);
             }
         }
@@ -9190,7 +9190,7 @@ static bool _monster_move(monsters *monster)
     // Normal/smart monsters know about secret doors, since they live in
     // the dungeon.
     if (grd(newpos) == DNGN_CLOSED_DOOR
-        || grid_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
+        || feat_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
     {
         if (mons_is_zombified(monster))
         {

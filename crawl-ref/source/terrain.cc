@@ -43,14 +43,14 @@ actor* actor_at(const coord_def& c)
     return (monster_at(c));
 }
 
-bool grid_is_wall(dungeon_feature_type grid)
+bool feat_is_wall(dungeon_feature_type feat)
 {
-    return (grid >= DNGN_MINWALL && grid <= DNGN_MAXWALL);
+    return (feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL);
 }
 
-bool grid_is_stone_stair(dungeon_feature_type grid)
+bool feat_is_stone_stair(dungeon_feature_type feat)
 {
-    switch (grid)
+    switch (feat)
     {
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
@@ -64,14 +64,14 @@ bool grid_is_stone_stair(dungeon_feature_type grid)
     }
 }
 
-bool grid_is_staircase(dungeon_feature_type grid)
+bool feat_is_staircase(dungeon_feature_type feat)
 {
-    if (grid_is_stone_stair(grid))
+    if (feat_is_stone_stair(feat))
     {
         // Make up staircases in hell appear as gates.
         if (player_in_hell())
         {
-            switch (grid)
+            switch (feat)
             {
                 case DNGN_STONE_STAIRS_UP_I:
                 case DNGN_STONE_STAIRS_UP_II:
@@ -85,22 +85,17 @@ bool grid_is_staircase(dungeon_feature_type grid)
     }
 
     // All branch entries/exits are staircases, except for Zot.
-    if (grid == DNGN_ENTER_ZOT || grid == DNGN_RETURN_FROM_ZOT)
+    if (feat == DNGN_ENTER_ZOT || feat == DNGN_RETURN_FROM_ZOT)
         return (false);
 
-    return (grid >= DNGN_ENTER_FIRST_BRANCH && grid <= DNGN_ENTER_LAST_BRANCH
-            || grid >= DNGN_RETURN_FROM_FIRST_BRANCH
-               && grid <= DNGN_RETURN_FROM_LAST_BRANCH);
+    return (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
+            || feat >= DNGN_RETURN_FROM_FIRST_BRANCH
+               && feat <= DNGN_RETURN_FROM_LAST_BRANCH);
 }
 
-bool grid_is_escape_hatch(dungeon_feature_type grid)
+bool feat_sealable_portal(dungeon_feature_type feat)
 {
-    return (grid == DNGN_ESCAPE_HATCH_UP || grid == DNGN_ESCAPE_HATCH_DOWN);
-}
-
-bool grid_sealable_portal(dungeon_feature_type grid)
-{
-    switch (grid)
+    switch (feat)
     {
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_DIS:
@@ -116,14 +111,133 @@ bool grid_sealable_portal(dungeon_feature_type grid)
     }
 }
 
-bool grid_is_portal(dungeon_feature_type grid)
+bool feat_is_portal(dungeon_feature_type feat)
 {
-    return (grid == DNGN_ENTER_PORTAL_VAULT || grid == DNGN_EXIT_PORTAL_VAULT);
+    return (feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_EXIT_PORTAL_VAULT);
 }
 
-command_type grid_stair_direction(dungeon_feature_type grid)
+// Returns true if the given dungeon feature is a stair, i.e., a level
+// exit.
+bool feat_is_stair(dungeon_feature_type gridc)
 {
-    switch (grid)
+    return (feat_is_travelable_stair(gridc) || feat_is_gate(gridc));
+}
+
+// Returns true if the given dungeon feature is a travelable stair, i.e.,
+// it's a level exit with a consistent endpoint.
+bool feat_is_travelable_stair(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_ENTER_HELL:
+    case DNGN_EXIT_HELL:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_TARTARUS:
+    case DNGN_ENTER_ORCISH_MINES:
+    case DNGN_ENTER_HIVE:
+    case DNGN_ENTER_LAIR:
+    case DNGN_ENTER_SLIME_PITS:
+    case DNGN_ENTER_VAULTS:
+    case DNGN_ENTER_CRYPT:
+    case DNGN_ENTER_HALL_OF_BLADES:
+    case DNGN_ENTER_ZOT:
+    case DNGN_ENTER_TEMPLE:
+    case DNGN_ENTER_SNAKE_PIT:
+    case DNGN_ENTER_ELVEN_HALLS:
+    case DNGN_ENTER_TOMB:
+    case DNGN_ENTER_SWAMP:
+    case DNGN_ENTER_SHOALS:
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_RETURN_FROM_HIVE:
+    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_RETURN_FROM_SLIME_PITS:
+    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_SNAKE_PIT:
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_RETURN_FROM_SHOALS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+// Returns true if the given dungeon feature is an escape hatch.
+bool feat_is_escape_hatch(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_ESCAPE_HATCH_UP:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+// Returns true if the given dungeon feature can be considered a gate.
+bool feat_is_gate(dungeon_feature_type feat)
+{
+    // Make up staircases in hell appear as gates.
+    if (player_in_hell())
+    {
+        switch (feat)
+        {
+        case DNGN_STONE_STAIRS_UP_I:
+        case DNGN_STONE_STAIRS_UP_II:
+        case DNGN_STONE_STAIRS_UP_III:
+            return (true);
+        default:
+            break;
+        }
+    }
+
+    switch (feat)
+    {
+    case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_ABYSS:
+    case DNGN_ENTER_LABYRINTH:
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_ENTER_PORTAL_VAULT:
+    case DNGN_EXIT_PORTAL_VAULT:
+    case DNGN_ENTER_ZOT:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_ENTER_HELL:
+    case DNGN_EXIT_HELL:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_TARTARUS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+
+
+
+
+command_type feat_stair_direction(dungeon_feature_type feat)
+{
+    switch (feat)
     {
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
@@ -185,81 +299,81 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     }
 }
 
-bool grid_is_opaque(dungeon_feature_type grid)
+bool feat_is_opaque(dungeon_feature_type feat)
 {
-    return (grid <= DNGN_MAXOPAQUE);
+    return (feat <= DNGN_MAXOPAQUE);
 }
 
-bool grid_is_solid(dungeon_feature_type grid)
+bool feat_is_solid(dungeon_feature_type feat)
 {
-    return (grid <= DNGN_MAXSOLID);
+    return (feat <= DNGN_MAXSOLID);
 }
 
-bool grid_is_solid(int x, int y)
+bool cell_is_solid(int x, int y)
 {
-    return (grid_is_solid(grd[x][y]));
+    return (feat_is_solid(grd[x][y]));
 }
 
-bool grid_is_solid(const coord_def &c)
+bool cell_is_solid(const coord_def &c)
 {
-    return (grid_is_solid(grd(c)));
+    return (feat_is_solid(grd(c)));
 }
 
-bool grid_is_closed_door(dungeon_feature_type grid)
+bool feat_is_closed_door(dungeon_feature_type feat)
 {
-    return (grid == DNGN_CLOSED_DOOR || grid == DNGN_DETECTED_SECRET_DOOR);
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
 }
 
-bool grid_is_secret_door(dungeon_feature_type grid)
+bool feat_is_secret_door(dungeon_feature_type feat)
 {
-    return (grid == DNGN_SECRET_DOOR || grid == DNGN_DETECTED_SECRET_DOOR);
+    return (feat == DNGN_SECRET_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
 }
 
-bool grid_is_rock(dungeon_feature_type grid)
+bool feat_is_rock(dungeon_feature_type feat)
 {
-    return (grid == DNGN_ORCISH_IDOL
-            || grid == DNGN_GRANITE_STATUE
-            || grid == DNGN_SECRET_DOOR
-            || grid >= DNGN_ROCK_WALL
-               && grid <= DNGN_CLEAR_PERMAROCK_WALL);
+    return (feat == DNGN_ORCISH_IDOL
+            || feat == DNGN_GRANITE_STATUE
+            || feat == DNGN_SECRET_DOOR
+            || feat >= DNGN_ROCK_WALL
+               && feat <= DNGN_CLEAR_PERMAROCK_WALL);
 }
 
-bool grid_is_permarock(dungeon_feature_type grid)
+bool feat_is_permarock(dungeon_feature_type feat)
 {
-    return (grid == DNGN_PERMAROCK_WALL || grid == DNGN_CLEAR_PERMAROCK_WALL);
+    return (feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL);
 }
 
-bool grid_is_trap(dungeon_feature_type grid, bool undiscovered_too)
+bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
 {
-    return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
-            || grid == DNGN_TRAP_NATURAL
-            || undiscovered_too && grid == DNGN_UNDISCOVERED_TRAP);
+    return (feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_MAGICAL
+            || feat == DNGN_TRAP_NATURAL
+            || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP);
 }
 
-bool grid_is_water(dungeon_feature_type grid)
+bool feat_is_water(dungeon_feature_type feat)
 {
-    return (grid == DNGN_SHALLOW_WATER
-            || grid == DNGN_DEEP_WATER
-            || grid == DNGN_OPEN_SEA
-            || grid == DNGN_WATER_RESERVED);
+    return (feat == DNGN_SHALLOW_WATER
+            || feat == DNGN_DEEP_WATER
+            || feat == DNGN_OPEN_SEA
+            || feat == DNGN_WATER_RESERVED);
 }
 
-bool grid_is_watery(dungeon_feature_type grid)
+bool feat_is_watery(dungeon_feature_type feat)
 {
-    return (grid_is_water(grid) || grid == DNGN_FOUNTAIN_BLUE);
+    return (feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE);
 }
 
-bool grid_destroys_items(dungeon_feature_type grid)
+bool feat_destroys_items(dungeon_feature_type feat)
 {
-    return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
+    return (feat == DNGN_LAVA || feat == DNGN_DEEP_WATER);
 }
 
-// Returns GOD_NO_GOD if grid is not an altar, otherwise returns the
+// Returns GOD_NO_GOD if feat is not an altar, otherwise returns the
 // GOD_* type.
-god_type grid_altar_god(dungeon_feature_type grid)
+god_type feat_altar_god(dungeon_feature_type feat)
 {
-    if (grid >= DNGN_ALTAR_FIRST_GOD && grid <= DNGN_ALTAR_LAST_GOD)
-        return (static_cast<god_type>(grid - DNGN_ALTAR_FIRST_GOD + 1));
+    if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
+        return (static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1));
 
     return (GOD_NO_GOD);
 }
@@ -274,10 +388,23 @@ dungeon_feature_type altar_for_god(god_type god)
     return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
 }
 
-bool grid_is_branch_stairs(dungeon_feature_type grid)
+// Returns true if the dungeon feature supplied is an altar.
+bool feat_is_altar(dungeon_feature_type grid)
 {
-    return ((grid >= DNGN_ENTER_FIRST_BRANCH && grid <= DNGN_ENTER_LAST_BRANCH)
-            || (grid >= DNGN_ENTER_DIS && grid <= DNGN_ENTER_TARTARUS));
+    return feat_altar_god(grid) != GOD_NO_GOD;
+}
+
+bool feat_is_player_altar(dungeon_feature_type grid)
+{
+    // An ugly hack, but that's what religion.cc does.
+    return (you.religion != GOD_NO_GOD
+            && feat_altar_god(grid) == you.religion);
+}
+
+bool feat_is_branch_stairs(dungeon_feature_type feat)
+{
+    return ((feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
+            || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
 }
 
 // Find all connected cells containing ft, starting at d.
@@ -379,13 +506,13 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
     for (int dx = -1; dx <= 1; dx++)
         for (int dy = -1; dy <= 1; dy++)
         {
-            // only considering orthogonal grids
+            // only considering orthogonal cells
             if ((abs(dx) + abs(dy)) % 2 == 0)
                 continue;
 
             const dungeon_feature_type targ = grd[where.x + dx][where.y + dy];
 
-            if (!grid_is_wall( targ ))
+            if (!feat_is_wall(targ))
                 continue;
 
             if (ret == DNGN_FLOOR)
@@ -398,10 +525,10 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
                                 : ret);
 }
 
-const char *grid_item_destruction_message(dungeon_feature_type grid)
+const char *feat_item_destruction_message(dungeon_feature_type feat)
 {
-    return (grid == DNGN_DEEP_WATER ? "You hear a splash." :
-            grid == DNGN_LAVA       ? "You hear a sizzling splash."
+    return (feat == DNGN_DEEP_WATER ? "You hear a splash." :
+            feat == DNGN_LAVA       ? "You hear a sizzling splash."
                                     : "You hear a crunching noise.");
 }
 
@@ -455,7 +582,7 @@ static coord_def _dgn_find_nearest_square(
 static bool _item_safe_square(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
-    return (is_traversable(feat) && !grid_destroys_items(feat));
+    return (feat_is_traversable(feat) && !feat_destroys_items(feat));
 }
 
 // Moves an item on the floor to the nearest adjacent floor-space.
@@ -473,8 +600,8 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 
 bool is_critical_feature(dungeon_feature_type feat)
 {
-    return (grid_stair_direction(feat) != CMD_NO_CMD
-            || grid_altar_god(feat) != GOD_NO_GOD);
+    return (feat_stair_direction(feat) != CMD_NO_CMD
+            || feat_altar_god(feat) != GOD_NO_GOD);
 }
 
 static bool _is_feature_shift_target(const coord_def &pos)
@@ -507,8 +634,8 @@ static bool _dgn_shift_feature(const coord_def &pos)
 
 static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 {
-    const dungeon_feature_type grid = grd(pos);
-    if (grid_is_solid(grid) || grid_destroys_items(grid))
+    const dungeon_feature_type feat = grd(pos);
+    if (feat_is_solid(feat) || feat_destroys_items(feat))
     {
         int item = igrd(pos);
         bool did_destroy = false;
@@ -528,7 +655,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
             }
         }
         if (did_destroy && player_can_hear(pos))
-            mprf(MSGCH_SOUND, grid_item_destruction_message(grid));
+            mprf(MSGCH_SOUND, feat_item_destruction_message(feat));
     }
 }
 
@@ -552,13 +679,13 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
     {
         // Caller has already changed the grid, and old_feat is actually
         // the new feat.
-        if (old_feat != DNGN_FLOOR && !grid_is_solid(old_feat))
+        if (old_feat != DNGN_FLOOR && !feat_is_solid(old_feat))
             env.map(pos).property &= ~(FPROP_BLOODY);
     }
     else
     {
-        if (grid_is_solid(old_feat) != grid_is_solid(new_feat)
-            || grid_is_water(new_feat) || grid_destroys_items(new_feat)
+        if (feat_is_solid(old_feat) != feat_is_solid(new_feat)
+            || feat_is_water(new_feat) || feat_destroys_items(new_feat)
             || is_critical_feature(new_feat))
         {
             env.map(pos).property &= ~(FPROP_BLOODY);
@@ -630,7 +757,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
                             see_cell(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
                             false);
 
-    std::string prep = grid_preposition(orig_feat, false);
+    std::string prep = feat_preposition(orig_feat, false);
 
     std::string orig_actor, dest_actor;
     if (orig_pos == you.pos())
@@ -870,7 +997,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     return (true);
 }
 
-static bool _ok_dest_grid(const actor* orig_actor,
+static bool _ok_dest_cell(const actor* orig_actor,
                           const dungeon_feature_type orig_feat,
                           const coord_def dest_pos)
 {
@@ -901,7 +1028,7 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     const actor* orig_actor = actor_at(src);
 
     if (in_bounds(prefered_dest)
-        && _ok_dest_grid(orig_actor, orig_feat, prefered_dest))
+        && _ok_dest_cell(orig_actor, orig_feat, prefered_dest))
     {
         ASSERT(prefered_dest != src);
     }
@@ -910,7 +1037,7 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
         int squares = 0;
         for (adjacent_iterator ai(src); ai; ++ai)
         {
-            if (_ok_dest_grid(orig_actor, orig_feat, *ai)
+            if (_ok_dest_cell(orig_actor, orig_feat, *ai)
                 && one_chance_in(++squares))
             {
                 prefered_dest = *ai;
@@ -1003,7 +1130,7 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        if (in_bounds(empty) && !is_grid_dangerous(grd(empty)))
+        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)))
         {
             mpr("You manage to scramble free!");
             move_player_to_grid( empty, false, false, true );
@@ -1032,12 +1159,12 @@ void init_feat_desc_cache()
 {
     for (int i = 0; i < NUM_FEATURES; i++)
     {
-        dungeon_feature_type grid = static_cast<dungeon_feature_type>(i);
-        std::string          desc = feature_description(grid);
+        dungeon_feature_type feat = static_cast<dungeon_feature_type>(i);
+        std::string          desc = feature_description(feat);
 
         lowercase(desc);
         if (feat_desc_cache.find(desc) == feat_desc_cache.end())
-            feat_desc_cache[desc] = grid;
+            feat_desc_cache[desc] = feat;
     }
 }
 
@@ -1056,21 +1183,21 @@ dungeon_feature_type feat_by_desc(std::string desc)
     return (DNGN_UNSEEN);
 }
 
-// If active is true, the player is just stepping onto the grid, with the
+// If active is true, the player is just stepping onto the feature, with the
 // message: "<feature> slides away as you move <prep> it!"
-// Else, the actor is already on the grid:
+// Else, the actor is already on the feature:
 // "<feature> moves from <prep origin> to <prep destination>!"
-std::string grid_preposition(dungeon_feature_type grid, bool active,
+std::string feat_preposition(dungeon_feature_type feat, bool active,
                              const actor* who)
 {
     const bool         airborne = !who || who->airborne();
-    const command_type dir      = grid_stair_direction(grid);
+    const command_type dir      = feat_stair_direction(feat);
 
     if (dir == CMD_NO_CMD)
     {
-        if (grid == DNGN_STONE_ARCH)
+        if (feat == DNGN_STONE_ARCH)
             return "beside";
-        else if (grid_is_solid(grid)) // Passwall?
+        else if (feat_is_solid(feat)) // Passwall?
         {
             if (active)
                 return "inside";
@@ -1079,7 +1206,7 @@ std::string grid_preposition(dungeon_feature_type grid, bool active,
         }
         else if (!airborne)
         {
-            if (grid == DNGN_LAVA || grid_is_water(grid))
+            if (feat == DNGN_LAVA || feat_is_water(feat))
             {
                 if (active)
                     return "into";
@@ -1096,7 +1223,7 @@ std::string grid_preposition(dungeon_feature_type grid, bool active,
         }
     }
 
-    if (dir == CMD_GO_UPSTAIRS && grid_is_escape_hatch(grid))
+    if (dir == CMD_GO_UPSTAIRS && feat_is_escape_hatch(feat))
     {
         if (active)
             return "under";
@@ -1113,7 +1240,7 @@ std::string grid_preposition(dungeon_feature_type grid, bool active,
     }
 
     if (dir == CMD_GO_DOWNSTAIRS
-        && (grid_is_staircase(grid) || grid_is_escape_hatch(grid)))
+        && (feat_is_staircase(feat) || feat_is_escape_hatch(feat)))
     {
         if (active)
             return "onto";
@@ -1124,13 +1251,13 @@ std::string grid_preposition(dungeon_feature_type grid, bool active,
         return "beside";
 }
 
-std::string stair_climb_verb(dungeon_feature_type grid)
+std::string stair_climb_verb(dungeon_feature_type feat)
 {
-    ASSERT(grid_stair_direction(grid) != CMD_NO_CMD);
+    ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
-    if (grid_is_staircase(grid))
+    if (feat_is_staircase(feat))
         return "climb";
-    else if (grid_is_escape_hatch(grid))
+    else if (feat_is_escape_hatch(feat))
         return "use";
     else
         return "pass through";

@@ -377,13 +377,13 @@ static int _exploration_estimate(bool seen_only = false)
         }
 
         bool open = true;
-        if (grid_is_solid(grd(pos)) && !grid_is_closed_door(grd(pos)))
+        if (feat_is_solid(grd(pos)) && !feat_is_closed_door(grd(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
-                if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
-                                        || grid_is_closed_door(grd(*ai))))
+                if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
+                                        || feat_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;
@@ -639,10 +639,10 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE,
               0, 0, GOD_XOM);
 
-    if (grid_destroys_items(grd(you.pos())))
+    if (feat_destroys_items(grd(you.pos())))
     {
         if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
+            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(you.pos())));
 
         simple_god_message(" snickers.", GOD_XOM);
         destroy_item(thing_created, true);
@@ -2383,8 +2383,8 @@ static void _xom_zero_miscast()
 
     const dungeon_feature_type feat = grd(you.pos());
 
-    if (!grid_is_solid(feat) && grid_stair_direction(feat) == CMD_NO_CMD
-        && !grid_is_trap(feat) && feat != DNGN_STONE_ARCH
+    if (!feat_is_solid(feat) && feat_stair_direction(feat) == CMD_NO_CMD
+        && !feat_is_trap(feat) && feat != DNGN_STONE_ARCH
         && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
     {
         const std::string feat_name =
@@ -2405,13 +2405,13 @@ static void _xom_zero_miscast()
             vec->push_back(feat_name
                            + " seems to rush up at you!");
 
-            if (grid_is_water(feat))
+            if (feat_is_water(feat))
             {
                 priority.push_back("Something invisible splashes into the "
                                    "water beneath you!");
             }
         }
-        else if (grid_is_water(feat))
+        else if (feat_is_water(feat))
         {
             priority.push_back("The water briefly recedes away from you.");
             priority.push_back("Something invisible splashes into the water "
@@ -2419,7 +2419,7 @@ static void _xom_zero_miscast()
         }
     }
 
-    if (!grid_destroys_items(feat) && !grid_is_solid(feat)
+    if (!feat_destroys_items(feat) && !feat_is_solid(feat)
         && inv_items.size() > 0)
     {
         int idx = inv_items[random2(inv_items.size())];
@@ -2816,7 +2816,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     {
         // Don't confuse the player if standing next to lava or deep water.
         for (adjacent_iterator ai; ai; ++ai)
-            if (in_bounds(*ai) && is_grid_dangerous(grd(*ai)))
+            if (in_bounds(*ai) && is_feat_dangerous(grd(*ai)))
                 return (XOM_DID_NOTHING);
     }
 
@@ -2883,7 +2883,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
         ASSERT(stair_pos != you.pos());
 
     dungeon_feature_type feat = grd(stair_pos);
-    ASSERT(grid_stair_direction(feat) != CMD_NO_CMD);
+    ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
     coord_def begin, towards;
 
@@ -2951,7 +2951,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     bool found_stairs = false;
     int  past_stairs  = 0;
     while (in_bounds(ray.pos()) && see_cell(ray.pos())
-           && !grid_is_solid(ray.pos()) && ray.pos() != you.pos())
+           && !cell_is_solid(ray.pos()) && ray.pos() != you.pos())
     {
         if (ray.pos() == stair_pos)
             found_stairs = true;
@@ -2961,7 +2961,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     }
     past_stairs--;
 
-    if (!away && grid_is_solid(ray.pos()))
+    if (!away && cell_is_solid(ray.pos()))
     {
         // Transparent wall between stair and player.
         return (stairs_moved);
@@ -2969,7 +2969,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     if (away && !found_stairs)
     {
-        if (grid_is_solid(ray.pos()))
+        if (cell_is_solid(ray.pos()))
         {
             // Transparent wall between stair and player.
             return (stairs_moved);
@@ -3050,11 +3050,11 @@ static int _xom_repel_stairs(bool debug = false)
     for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
-        if (grid_stair_direction(feat) != CMD_NO_CMD
+        if (feat_stair_direction(feat) != CMD_NO_CMD
             && feat != DNGN_ENTER_SHOP)
         {
             stairs_avail.push_back(*ri);
-            if (grid_is_staircase(feat))
+            if (feat_is_staircase(feat))
                 real_stairs = true;
         }
     }
@@ -3073,7 +3073,7 @@ static int _xom_repel_stairs(bool debug = false)
         std::string feat_name;
         if (!real_stairs)
         {
-            if (grid_is_escape_hatch(grd(stairs_avail[0])))
+            if (feat_is_escape_hatch(grd(stairs_avail[0])))
                 feat_name = "escape hatch";
             else
                 feat_name = "gate";
@@ -3088,7 +3088,7 @@ static int _xom_repel_stairs(bool debug = false)
     you.duration[DUR_REPEL_STAIRS_MOVE] = 1000;
 
     if (one_chance_in(5)
-        || grid_stair_direction(grd(you.pos())) != CMD_NO_CMD
+        || feat_stair_direction(grd(you.pos())) != CMD_NO_CMD
            && grd(you.pos()) != DNGN_ENTER_SHOP)
     {
         you.duration[DUR_REPEL_STAIRS_CLIMB] = 500;

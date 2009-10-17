@@ -450,7 +450,7 @@ item_def *player_weapon();
 item_def *player_shield();
 
 // Determines if the given grid is dangerous for the player to enter.
-bool is_grid_dangerous(int grid);
+bool is_feat_dangerous(dungeon_feature_type feat);
 
 void run_macro(const char *macroname = NULL);
 

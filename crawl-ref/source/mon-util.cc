@@ -89,10 +89,10 @@ static int _mons_real_base_speed(int mc);
 
 habitat_type grid2habitat(dungeon_feature_type grid)
 {
-    if (grid_is_watery(grid))
+    if (feat_is_watery(grid))
         return (HT_WATER);
 
-    if (grid_is_rock(grid) && !grid_is_permarock(grid))
+    if (feat_is_rock(grid) && !feat_is_permarock(grid))
         return (HT_ROCK);
 
     switch (grid)
@@ -3699,7 +3699,7 @@ void monsters::init_with(const monsters &mon)
 bool monsters::swimming() const
 {
     const dungeon_feature_type grid = grd(pos());
-    return (grid_is_watery(grid) && mons_primary_habitat(this) == HT_WATER);
+    return (feat_is_watery(grid) && mons_primary_habitat(this) == HT_WATER);
 }
 
 bool monsters::wants_submerge() const
@@ -3752,7 +3752,7 @@ bool monsters::extra_balanced() const
 bool monsters::floundering() const
 {
     const dungeon_feature_type grid = grd(pos());
-    return (grid_is_water(grid)
+    return (feat_is_water(grid)
             && !cannot_fight()
             // Can't use monster_habitable_grid() because that'll return
             // true for non-water monsters in shallow water.
@@ -3767,11 +3767,11 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
     if (mons_class_wall_shielded(mc))
     {
         // Permanent walls can't be passed through.
-        return (!grid_is_solid(grid)
-                || grid_is_rock(grid) && !grid_is_permarock(grid));
+        return (!feat_is_solid(grid)
+                || feat_is_rock(grid) && !feat_is_permarock(grid));
     }
 
-    return !grid_is_solid(grid);
+    return !feat_is_solid(grid);
 }
 
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
@@ -4667,10 +4667,10 @@ bool monsters::drop_item(int eslot, int near)
         }
 
         dungeon_feature_type feat = grd(pos());
-        if (grid_destroys_items(feat))
+        if (feat_destroys_items(feat))
         {
             if ( player_can_hear(pos()) )
-                mprf(MSGCH_SOUND, grid_item_destruction_message(feat));
+                mprf(MSGCH_SOUND, feat_item_destruction_message(feat));
 
             item_was_destroyed(*pitem, mindex());
             unlink_item(item_index);
@@ -7145,7 +7145,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             }
         }
         else if (mons_near(this)
-                 && grid_compatible(grd(pos()), DNGN_DEEP_WATER))
+                 && feat_compatible(grd(pos()), DNGN_DEEP_WATER))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity(AI_FORCE_INTERRUPT);
@@ -7402,7 +7402,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_AQUATIC_LAND:
         // Aquatic monsters lose hit points every turn they spend on dry land.
         ASSERT(mons_habitat(this) == HT_WATER
-               && !grid_is_watery( grd(pos()) ));
+               && !feat_is_watery( grd(pos()) ));
 
         // Zombies don't take damage from flopping about on land.
         if (mons_is_zombified(this))
@@ -7652,7 +7652,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     // Assumption: mons_res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (grid_is_watery(grd(pos())))
+        if (feat_is_watery(grd(pos())))
         {
             if (mons_near(this) && player_monster_visible(this))
                 mprf("The flames covering %s go out.",
@@ -8123,9 +8123,9 @@ void monsters::apply_location_effects(const coord_def &oldpos)
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
-        if (!grid_is_watery( grd(pos()) ))
+        if (!feat_is_watery( grd(pos()) ))
             simple_monster_message(this, " flops around on dry land!");
-        else if (!grid_is_watery( grd(oldpos) ))
+        else if (!feat_is_watery( grd(oldpos) ))
         {
             simple_monster_message(this, " dives back into the water!");
             del_ench(ENCH_AQUATIC_LAND);
@@ -8923,7 +8923,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
             msg = replace_all(msg, "@surface@", "lava");
-        else if (grid_is_water(feat))
+        else if (feat_is_water(feat))
             msg = replace_all(msg, "@surface@", "water");
         else if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
             msg = replace_all(msg, "@surface@", "altar");

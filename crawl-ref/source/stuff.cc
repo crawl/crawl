@@ -1656,10 +1656,10 @@ int near_stairs(const coord_def &p, int max_dist,
     for (radius_iterator ri(p, max_dist, true, false); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
-        if (is_stair(feat))
+        if (feat_is_stair(feat))
         {
             // Shouldn't happen for escape hatches.
-            if (grid_is_escape_hatch(feat))
+            if (feat_is_escape_hatch(feat))
                 continue;
 
             stair_type = get_feature_dchar(feat);

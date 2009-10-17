@@ -72,10 +72,10 @@ void seen_notable_thing( dungeon_feature_type which_thing,
     if (you.level_type != LEVEL_DUNGEON)
         return;
 
-    const god_type god = grid_altar_god(which_thing);
+    const god_type god = feat_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         _seen_altar( god, pos );
-    else if (grid_is_branch_stairs( which_thing ))
+    else if (feat_is_branch_stairs( which_thing ))
         _seen_staircase( which_thing, pos );
     else
         _seen_other_thing( which_thing, pos );
@@ -567,7 +567,7 @@ static bool _unnotice_shop(const level_pos &pos)
 static bool _unnotice_stair(const level_pos &pos)
 {
     const dungeon_feature_type feat = grd(pos.pos);
-    if (grid_is_branch_stairs(feat))
+    if (feat_is_branch_stairs(feat))
     {
         for (int i = 0; i < NUM_BRANCHES; ++i)
         {
@@ -772,7 +772,7 @@ void annotate_level()
     level_id li  = level_id::current();
     level_id li2 = level_id::current();
 
-    if (is_stair(grd(you.pos())))
+    if (feat_is_stair(grd(you.pos())))
     {
         li2 = level_id::get_next_level_id(you.pos());
 

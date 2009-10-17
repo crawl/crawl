@@ -312,7 +312,7 @@ bool Stash::is_boring_feature(dungeon_feature_type feat)
     case DNGN_UNDISCOVERED_TRAP:
         return (true);
     default:
-        return (grid_is_solid(feat));
+        return (feat_is_solid(feat));
     }
 }
 
@@ -349,7 +349,7 @@ void Stash::update()
     if (is_boring_feature(feat))
         feat = DNGN_FLOOR;
 
-    if (grid_is_trap(feat))
+    if (feat_is_trap(feat))
         trap = get_trap_type(p);
 
     // If this is your position, you know what's on this square
