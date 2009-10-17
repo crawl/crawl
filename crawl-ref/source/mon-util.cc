@@ -3702,8 +3702,21 @@ bool monsters::swimming() const
     return (feat_is_watery(grid) && mons_primary_habitat(this) == HT_WATER);
 }
 
+static bool _player_near_water()
+{
+    for(adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (feat_is_water(grd(*ai)))
+            return true;
+    return false;
+}
+
 bool monsters::wants_submerge() const
 {
+    // Krakens never retreat when food (the player) is in range.
+    if (type == MONS_KRAKEN)
+        if (_player_near_water())
+            return (false);
+
     // If we're in distress, we usually want to submerge.
     if (env.cgrid(pos()) != EMPTY_CLOUD
         || (hit_points < max_hit_points / 2
