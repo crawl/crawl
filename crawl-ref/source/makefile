@@ -74,6 +74,7 @@ uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 ifdef CROSSHOST
 	NO_PKGCONFIG = YesPlease
 	NO_SDLCONFIG = YesPlease
+	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
 	SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
 endif
@@ -127,6 +128,9 @@ endif
 # Note that MinGW doesn't support -rdynamic.
 ifndef NO_RDYNAMIC
 LDFLAGS := -rdynamic
+endif
+ifdef NEED_STATIC
+LDFLAGS += -static
 endif
 
 # Permissions to set on the game executable.
