@@ -34,7 +34,7 @@ endif
 # FreeType 2
 #
 freetype/objs/.libs/libfreetype.a: $(PREFIX)/lib/libz.a
-	cd freetype && ./configure --prefix=$(PREFIX) --with-zlib=$(PREFIX) --enable-static --disable-shared
+	cd freetype && ./configure --prefix=$(PREFIX) --with-zlib=$(PREFIX) --enable-static --disable-shared $(CONFIGURE_FLAGS)
 	@+$(MAKE) -C freetype
 
 $(PREFIX)/lib/libfreetype.a: freetype/objs/.libs/libfreetype.a
@@ -83,7 +83,7 @@ pcre: $(PREFIX)/lib/libpcre.a
 # libpng
 #
 libpng/.libs/libpng.a: $(PREFIX)/lib/libz.a
-	cd libpng && ./configure --prefix=$(PREFIX) --enable-static --disable-shared LDFLAGS="-L$(PREFIX)/lib"
+	cd libpng && ./configure --prefix=$(PREFIX) --enable-static --disable-shared $(CONFIGURE_FLAGS) CPPFLAGS="-I$(PREFIX)/include" LDFLAGS="-L$(PREFIX)/lib"
 	@+$(MAKE) -C libpng
 
 $(PREFIX)/lib/libpng.a: libpng/.libs/libpng.a
@@ -116,7 +116,7 @@ sdl: $(PREFIX)/lib/libSDL.a
 # SDL_image
 #
 sdl-image/.libs/libSDL_image.a: $(PREFIX)/lib/libpng.a
-	cd sdl-image && ./configure --prefix=$(PREFIX) --with-sdl-prefix=$(PREFIX) --enable-static --disable-shared --enable-bmp --enable-png LDFLAGS="-L$(PREFIX)/lib -lpng -lz" CPPFLAGS="-I$(PREFIX)/include"
+	cd sdl-image && ./configure --prefix=$(PREFIX) --with-sdl-prefix=$(PREFIX) --enable-static --disable-shared --enable-bmp --enable-png $(CONFIGURE_FLAGS) LDFLAGS="-L$(PREFIX)/lib -lpng -lz" CPPFLAGS="-I$(PREFIX)/include"
 	@+$(MAKE) -C sdl-image
 
 $(PREFIX)/lib/libSDL_image.a: sdl-image/.libs/libSDL_image.a
