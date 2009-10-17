@@ -189,6 +189,7 @@ AR := $(CROSSHOST)-ar
 RANLIB := $(CROSSHOST)-ranlib
 endif
 GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
+GCC_GTE_4_0_0 := $(shell util/gcc-gte.pl $(GCC) 4.0.0)
 
 RLTILES = rltiles
 
@@ -362,7 +363,7 @@ endif
 
 # Cygwin has a panic attack if we do this...
 ifndef NO_OPTIMIZE
-ifeq (,$(findstring CYGWIN,$(uname_S)))
+ifneq ($(GCC_GTE_4_0_0),No)
 CFWARN_L += -Wuninitialized
 else
 CFWARN_L += -Wno-uninitialized
