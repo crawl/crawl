@@ -5,16 +5,16 @@ all: lua sqlite sdl sdl-image freetype libpng pcre zlib
 
 .PHONY: lua sqlite sdl sdl-image freetype libpng pcre zlib
 
+# Only clean submodules we actually posses.  Some makefiles don't have
+# 'distclean' target, so try both 'clean' and 'distclean', and discard
+# any errors.
 clean:
 	rm -rf $(PREFIX)
-	-make -C freetype distclean
-	-make -C libpng distclean
-	-make -C lua clean
-	-make -C sdl distclean
-	-make -C sdl-image distclean
-	-make -C sqlite clean
-	-make -C pcre clean
-	-make -C zlib distclean
+	@for a in freetype libpng lua sdl sdl-image sqlite pcre zlib; do \
+		if [ -f $$a/Makefile ] || [ -f $$a/makefile ] ; then \
+			make -k -C $$a clean distclean 2> /dev/null; \
+		fi \
+	done
 
 #
 # Check for GNU Make >=3.80
