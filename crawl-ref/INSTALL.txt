@@ -89,20 +89,6 @@ supported on Windows or DOS. Some systems, such as Mac OS X, may have Unicode
 support available in libncurses itself (i.e., without a separate libncursesw).
 
 
-Makefile system
----------------
-
-Crawl uses a selector makefile (under source/makefile) to control what platform
-it's building for. Your first step in building Crawl should be to edit
-source/makefile and point it at the correct platform makefile. For instance, if
-you're building for Windows, you'd use MAKEFILE=makefile.mgw to build with MinGW
-for Windows (# is used for comments in makefiles).
-
-Consult the operating-system specific sections for detailed information on
-building Crawl. When you're done building Crawl, look at the section "Data
-files" for important information on what files Crawl needs as it starts up.
-
-
 Building on Unix (Linux, *BSD, Solaris, etc.)
 ---------------------------------------------
 
@@ -135,7 +121,7 @@ If you want to use Unicode, you need to link with a curses library that
 understands Unicode characters, usually named libncursesw (the development
 headers for libncursesw are usually in /usr/include/ncursesw.) You also need to
 have a UTF-8 locale installed. You can then build Crawl with support for Unicode
-by setting UNICODE_GLYPHS = y in makefile.unix.
+by setting USE_UNICODE on the 'make' command line.
 
 Building:
 
@@ -225,10 +211,9 @@ various reasons.
 Building on Windows (MinGW)
 ---------------------------
 
-NOTE: You cannot build Windows binaries on Windows 9x/ME using the MinGW
-makefile supplied (which needs the cmd.exe shell of the Windows NT family). If
-you're on 9x/ME, you can use the Cygwin build instructions, or build a binary on
-a Windows NT/2k/XP system (the binary will run on 9x), or build a DOS binary.
+NOTE: You cannot build Windows binaries on Windows 9x/ME using MinGW. On 9x/ME, 
+you can use the Cygwin build instructions, or build a binary on a Windows 
+NT/2k/XP system (the binary will run on 9x), or build a DOS binary.
 
 * To install MinGW, you have two options. You can install via the installer
   provided by the MinGW project (http://www.mingw.org), but this is not
@@ -409,9 +394,10 @@ user-scripts is to uncomment CLUA_BINDINGS in AppHdr.h.
 
 PCRE
 ----
-As of 0.4.2, PCRE 7.7 source is included with Crawl.  It is enabled by default.
-The sources in pcre/util are identical to the 7.7 distro except for removed
-cmake, doc, and testdata folders (unused by Crawl) and a hand-rolled Makefile.
+As of 0.6.0, PCRE 7.9 source is included with Crawl.  It is enabled by default.
+The sources in contrib/pcre are identical to the 7.9 distro except for the use 
+of a custom-made Makefile instead of the automake system that was in place 
+previously.
 
 On Unixes, you're better served by the existing POSIX regular expression
 support. If you want PCRE, your package management system is again your best
