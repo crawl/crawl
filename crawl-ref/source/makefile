@@ -56,6 +56,7 @@ LIBSDLIMAGE := contrib/install/lib/libSDL_image.a
 LIBFREETYPE := contrib/install/lib/libfreetype.a
 LIBSQLITE := contrib/install/lib/libsqlite3.a
 LIBLUA := contrib/install/lib/liblua.a
+LIBZ := contrib/install/lib/libz.a
 
 #
 # Platform Detection
@@ -74,6 +75,13 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	NO_NCURSES = YesPlease
 	NEEDS_LIBW32C = YesPlease
 	NEEDS_PCRE = YesPlease
+	ifdef TILES
+		NEEDS_FREETYPE = YesPlease
+		NEEDS_SDL = YesPlease
+		NEEDS_SDLIMAGE = YesPlease
+		NEEDS_LIBPNG = YesPlease
+		NEEDS_ZLIB = YesPlease
+	endif
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
@@ -112,10 +120,6 @@ ifndef NO_RDYNAMIC
 LDFLAGS := -rdynamic
 endif
 
-
-# If you have lex and yacc, set DOYACC to y (lowercase y).
-DOYACC := y
-
 # Permissions to set on the game executable.
 MCHMOD := 2755
 
@@ -125,14 +129,14 @@ MCHMOD_SAVEDIR := 775
 # The user:group to install the game as.
 INSTALL_UGRP := games:games
 
-INSTALLDIR   := /usr/games/crawl
+prefix   := /usr/games/crawl
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
 # Crawl for a single user.
 
-# SAVEDIR := /usr/games/crawl/saves/
-# DATADIR := /usr/games/crawl/data/
+# SAVEDIR := saves/
+# DATADIR := data/
 
 INCLUDES_L += -Icontrib/install/include
 LIB += -Lcontrib/install/lib
@@ -180,50 +184,17 @@ RLTILES = rltiles
 #
 ifdef TILES
 
+ifeq ($(uname_S),Darwin)
+ifndef UNSUPPORTED_BUILD
+$(warning Using this makefile to build a tiles build on Mac OS X is NOT OFFICIALLY SUPPORTED.)
+$(warning You should have no expectation of stability if you choose to continue anyway!)
+$(warning Please use the Xcode project instead.)
+$(error To build anyway, add the flag UNSUPPORTED_BUILD=y to the command-line)
+endif
+endif
+
 DEFINES_L += -DUSE_TILE
 INCLUDES_L += -I$(RLTILES)
-
-ifdef NEED_APPKIT
-LIB += -framework OpenGL -framework AppKit
-endif
-
-ifdef APPLE_GCC
-
-# SDL has a goof in the stock SDL_config.h which checks whether
-# __MACOSX__ is defined. It's not one of Apple's stock markers,
-# so we define it ourselves here.
-#
-DEFINES += -D__MACOSX__
-
-EXTRA_OBJECTS += SDLMain.o
-
-# If the /Library/Frameworks folder exists, add a -F flag
-#
-ifneq ($(shell ls -a /Library/Frameworks 2> /dev/null),)
-LIB += -F/Library/Frameworks/ -Fcontrib/Frameworks
-endif
-
-# Check if our dependencies exist as frameworks. If so, use their
-# headers and link to them.
-#
-ifneq ($(shell ls /Library/Frameworks/SDL.framework 2> /dev/null),)
-INCLUDES_L += -I/Library/Frameworks/SDL.framework/Headers
-LIB += -framework SDL
-endif
-ifneq ($(shell ls /Library/Frameworks/SDL_image.framework 2> /dev/null),)
-INCLUDES_L += -I/Library/Frameworks/SDL_image.framework/Headers
-LIB += -framework SDL_image
-endif
-ifneq ($(shell ls /Library/Frameworks/Freetype2.framework 2> /dev/null),)
-INCLUDES_L += -I/Library/Frameworks/Freetype2.framework/Headers
-LIB += -framework Freetype2
-endif
-ifneq ($(shell ls /Library/Frameworks/libpng.framework 2> /dev/null),)
-INCLUDES_L += -I/Library/Frameworks/libpng.framework/Headers
-LIB += -framework libpng
-endif
-
-else # MacOS
 
 # Okay, we have to assume we're on something else that
 # uses standard UNIX-like methods for finding libs.
@@ -237,7 +208,13 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 CONTRIB_DEPENDS += $(LIBSDL) $(LIBSDLIMAGE) $(LIBFREETYPE)
 endif
 
+ifndef NO_PKGCONFIG
 ifneq ($(shell which pkg-config 2> /dev/null),)
+PKGCONFIG = YesPlease
+endif
+endif
+
+ifdef PKGCONFIG
 
 # If pkg-config is available, it's the surest way to find where
 # the contributing libraries are located.
@@ -264,15 +241,17 @@ else # pkg-config
 
 PNG_INCLUDE := -I/opt/libpng/include
 PNG_CFLAGS  :=
-PNG_LDFLAGS := -L/opt/libpng/lib -lpng
+PNG_LDFLAGS := -L/opt/libpng/lib -lpng -lz
 
 FREETYPE_INCLUDE := -I/opt/freetype/include -Icontrib/install/include/freetype2
 FREETYPE_CFLAGS  :=
 FREETYPE_LDFLAGS := -L/opt/freetype/lib -lfreetype
 
+ifndef NO_SDLCONFIG
 SDLCONFIG := $(which sdl-config)
 ifeq ($(SDLCONFIG),)
 SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
+endif
 endif
 
 ifneq ($(SDLCONFIG),)
@@ -306,8 +285,6 @@ endif
 DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
 INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
-endif # MacOS
-
 endif # TILES
 
 ifeq ($(GCC_GTE_4_3_0),Yes)
@@ -315,7 +292,11 @@ CFWARN_L += -Wno-array-bounds
 endif
 
 CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic -D_FORTIFY_SOURCE=0
-CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) -DCLUA_BINDINGS $(SDL_CFLAGS)
+CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
+
+ifndef NO_LUA_BINDINGS
+CFOTHERS_L += -DCLUA_BINDINGS
+endif
 
 #
 # Figure out the build settings for this type of build
@@ -376,26 +357,26 @@ endif
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-CFOTHERS_L += '-DSAVE_DIR_PATH="$(strip $(SAVEDIR))"'
+CFOTHERS_L += '-DSAVE_DIR_PATH="$(strip $(prefix))/$(strip $(SAVEDIR))"'
 endif
 
 ifneq ($(strip $(DATADIR)),)
-CFOTHERS_L += '-DDATA_DIR_PATH="$(strip $(DATADIR))"'
+CFOTHERS_L += '-DDATA_DIR_PATH="$(strip $(prefix))/$(strip $(DATADIR))"'
 endif
 
 ifndef NO_NCURSES
 # Usually, it can be autodetected for you:
 ifneq ($(shell ls /usr/include/ncursesw 2> /dev/null),)
-UNICODE_GLYPHS = YesPlease
+USE_UNICODE = YesPlease
 endif
 
-# If you're using UNICODE_GLYPHS=y, and have a preferred Unicode
+# If you have USE_UNICODE set, and have a preferred Unicode
 # (UTF-8) locale you want Crawl to use, you can set it here. The
 # default is en_US.UTF-8. If you'd prefer that Crawl use the locale
 # as set in your environment LC_* variables, use UNICODE_LOCALE = .
 UNICODE_LOCALE =
 
-ifdef UNICODE_GLYPHS
+ifdef USE_UNICODE
 # Include path for (n)curses with Unicode support.
 INCLUDES_L += -I/usr/include/ncursesw
 
@@ -464,10 +445,10 @@ LEX := $(shell which flex 2> /dev/null)
 YACC := $(shell which bison 2> /dev/null)
 
 ifeq ($(strip $(LEX)),)
-DOYACC := n
+NO_YACC = YesPlease
 endif
 ifeq ($(strip $(YACC)),)
-DOYACC := n
+NO_YACC = YesPlease
 endif
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
@@ -503,6 +484,21 @@ endif
 
 ifdef NEEDS_PCRE
 CONTRIB_DEPENDS += $(LIBPCRE)
+endif
+ifdef NEEDS_FREETYPE
+CONTRIB_DEPENDS += $(LIBFREETYPE)
+endif
+ifdef NEEDS_SDL
+CONTRIB_DEPENDS += $(LIBSDL)
+endif
+ifdef NEEDS_SDLIMAGE
+CONTRIB_DEPENDS += $(LIBSDLIMAGE)
+endif
+ifdef NEEDS_LIBPNG
+CONTRIB_DEPENDS += $(LIBPNG)
+endif
+ifdef NEEDS_ZLIB
+CONTRIB_DEPENDS += $(LIBZ)
 endif
 
 CONTRIB_DEPENDS += $(LIBLUA) $(LIBSQLITE)
@@ -563,7 +559,7 @@ endif
 $(UTIL)levcomp.tab.cc: $(CONTRIB_DEPENDS)
 $(UTIL)levcomp.lex.cc: $(CONTRIB_DEPENDS)
 
-ifeq ($(strip $(DOYACC)),y)
+ifndef NO_YACC
 
 prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
 		$(QUIET_COPY)$(COPY) $^ prebuilt/
@@ -597,29 +593,28 @@ install: $(GAME)
 ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
 endif
-	[ -d $(INSTALLDIR) ] || mkdir -p $(INSTALLDIR)
-	$(COPY) $(GAME) $(INSTALLDIR)
-	chown $(INSTALL_UGRP) $(INSTALLDIR)/$(GAME)
-	chmod $(MCHMOD) $(INSTALLDIR)/$(GAME)
-	mkdir -p $(DATADIR)/dat
-	mkdir -p $(DATADIR)/dat/lua
-	mkdir -p $(DATADIR)/dat/clua
-	mkdir -p $(DATADIR)/dat/descript
-	mkdir -p $(DATADIR)/dat/database
-	$(COPY) dat/*.des $(DATADIR)/dat
-	$(COPY) dat/lua/*.lua $(DATADIR)/dat/lua
-	$(COPY) dat/clua/*.lua $(DATADIR)/dat/clua
-	$(COPY) dat/descript/*.txt $(DATADIR)/dat/descript
-	$(COPY) dat/database/*.txt $(DATADIR)/dat/database
+	[ -d $(prefix) ] || mkdir -p $(prefix)
+	$(COPY) $(GAME) $(prefix)
+	chown $(INSTALL_UGRP) $(prefix)/$(GAME)
+	chmod $(MCHMOD) $(prefix)/$(GAME)
+	mkdir -p $(prefix)/$(DATADIR)/dat/lua
+	mkdir -p $(prefix)/$(DATADIR)/dat/clua
+	mkdir -p $(prefix)/$(DATADIR)/dat/descript
+	mkdir -p $(prefix)/$(DATADIR)/dat/database
+	$(COPY) dat/*.des $(prefix)/$(DATADIR)/dat
+	$(COPY) dat/lua/*.lua $(prefix)/$(DATADIR)/dat/lua
+	$(COPY) dat/clua/*.lua $(prefix)/$(DATADIR)/dat/clua
+	$(COPY) dat/descript/*.txt $(prefix)/$(DATADIR)/dat/descript
+	$(COPY) dat/database/*.txt $(prefix)/$(DATADIR)/dat/database
 	mkdir -p $(DATADIR)/settings
-	$(COPY) ../settings/* $(DATADIR)/settings/
+	$(COPY) ../settings/* $(prefix)/$(DATADIR)/settings/
 	mkdir -p $(DATADIR)/docs
-	$(COPY) ../docs/*.txt $(DATADIR)/docs
-	chown -R $(INSTALL_UGRP) $(DATADIR)
+	$(COPY) ../docs/*.txt $(prefix)/$(DATADIR)/docs
+	chown -R $(INSTALL_UGRP) $(prefix)/$(DATADIR)
 ifneq ($(SAVEDIR),)
-	mkdir -p $(SAVEDIR)
-	chown $(INSTALL_UGRP) $(SAVEDIR)
-	chmod $(MCHMOD_SAVEDIR) $(SAVEDIR)
+	mkdir -p $(prefix)/$(SAVEDIR)
+	chown $(INSTALL_UGRP) $(prefix)/$(SAVEDIR)
+	chmod $(MCHMOD_SAVEDIR) $(prefix)/$(SAVEDIR)
 endif
 
 clean:
