@@ -67,7 +67,7 @@ void TileNewLevel(bool first_time)
             unsigned int tile = env.tile_bk_bg[x][y];
             if (!(tile & TILE_FLAG_NEW_STAIR))
                 continue;
-            if (!is_unkown_stair(coord_def(x,y)))
+            if (!is_unknown_stair(coord_def(x,y)))
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
         }
 }
@@ -4537,7 +4537,7 @@ void tile_draw_floor()
                 {
                     if (object == DNGN_DETECTED_SECRET_DOOR)
                         bg |= TILE_FLAG_WAS_SECRET;
-                    else if (is_unkown_stair(gc))
+                    else if (is_unknown_stair(gc))
                         bg |= TILE_FLAG_NEW_STAIR;
                 }
             }
