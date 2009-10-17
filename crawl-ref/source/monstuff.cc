@@ -44,7 +44,6 @@ REVISION("$Rev$");
 #include "misc.h"
 #include "monplace.h"
 #include "monspeak.h"
-#include "mon-los.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "mstuff2.h"
@@ -3256,19 +3255,14 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 5;
     const bool is_smart = (intel >= I_NORMAL);
 
-    monster_los patrol;
-    // Set monster to make monster_los respect habitat restrictions.
-    patrol.set_monster(mon);
-    patrol.set_los_centre(mon->patrol_point);
-    patrol.set_los_range(rad);
-    patrol.fill_los_field();
+    env_show_grid patrol;
+    losight(patrol, mon->patrol_point, opacity_monmove(*mon), bounds_radius(rad));
 
-    monster_los lm;
+    env_show_grid lm;
     if (is_smart || !patrol_seen)
     {
         // For stupid monsters, don't bother if the patrol point is in sight.
-        lm.set_monster(mon);
-        lm.fill_los_field();
+        losight(lm, mon->pos(), opacity_monmove(*mon));
     }
 
     int count_grids = 0;
@@ -3304,8 +3298,11 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             // and the patrol point is out of sight, too. Such a case
             // will be handled below, though it might take a while until
             // a monster gets out of a deadlock. (5% chance per turn.)
-            if (!patrol.in_sight(*ri) && (!is_smart || !lm.in_sight(*ri)))
+            if (!see_cell(patrol, mon->patrol_point, *ri) &&
+                (!is_smart || !see_cell(lm, mon->pos(), *ri)))
+            {
                 continue;
+            }
         }
         else
         {
@@ -3313,8 +3310,11 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             // make sure the new target brings us into reach of it.
             // This means that the target must be reachable BOTH from
             // the patrol point AND the current position.
-            if (!patrol.in_sight(*ri) || !lm.in_sight(*ri))
+            if (!see_cell(patrol, mon->patrol_point, *ri) ||
+                !see_cell(lm, mon->pos(), *ri))
+            {
                 continue;
+            }
 
             // If this fails for all surrounding squares (probably because
             // we're too far away), we fall back to heading directly for
@@ -3789,11 +3789,6 @@ static bool _find_siren_water_target(monsters *mon)
             return (true);
     }
 
-    monster_los lm;
-    lm.set_monster(mon);
-    lm.set_los_range(LOS_RADIUS);
-    lm.fill_los_field();
-
     int best_water_count = 0;
     coord_def best_target;
     bool first = true;
@@ -3910,11 +3905,6 @@ static bool _find_wall_target(monsters *mon)
         mon->travel_path.clear();
         mon->travel_target = MTRAV_NONE;
     }
-
-    monster_los lm;
-    lm.set_monster(mon);
-    lm.set_los_range(LOS_RADIUS);
-    lm.fill_los_field();
 
     int       best_dist             = INT_MAX;
     bool      best_closer_to_player = false;

@@ -50,7 +50,6 @@ menu.o \
 message.o \
 mgrow.o \
 misc.o \
-mon-los.o \
 monplace.o \
 mon-pick.o \
 monstuff.o \

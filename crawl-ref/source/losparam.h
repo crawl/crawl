@@ -52,6 +52,19 @@ struct opacity_solid : opacity_func
 };
 static opacity_solid opc_solid;
 
+// Opacity for monster movement, based on the late monster_los.
+struct opacity_monmove : opacity_func
+{
+    const monsters& mon;
+
+    opacity_monmove(const monsters& m)
+        : mon(m)
+    {
+    }
+
+    opacity_type operator()(const coord_def& p) const;
+};
+
 // LOS bounded by fixed presquared radius.
 struct bounds_radius_sq : bounds_func
 {
@@ -60,8 +73,18 @@ struct bounds_radius_sq : bounds_func
         : radius_sq(r_sq) {}
     bool operator()(const coord_def& p) const;
 };
-static bounds_radius_sq bds_deflos = bounds_radius_sq(LOS_RADIUS_SQ);
-static bounds_radius_sq bds_maxlos = bounds_radius_sq(LOS_MAX_RADIUS_SQ);
+
+// LOS bounded by fixed radius.
+struct bounds_radius : bounds_radius_sq
+{
+    bounds_radius(int r)
+        : bounds_radius_sq(r * r + 1)
+    {
+    }
+};
+
+static bounds_radius bds_deflos = bounds_radius(LOS_RADIUS);
+static bounds_radius bds_maxlos = bounds_radius(LOS_MAX_RADIUS);
 
 // LOS bounded by current global LOS radius.
 struct bounds_cur_los_radius : bounds_func

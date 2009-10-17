@@ -56,6 +56,15 @@ opacity_type opacity_solid::operator()(const coord_def& p) const
         return OPC_CLEAR;
 }
 
+opacity_type opacity_monmove::operator()(const coord_def& p) const
+{
+    dungeon_feature_type feat = env.grid(p);
+    if (feat < DNGN_MINMOVE || !mon.can_pass_through_feat(feat))
+        return (OPC_OPAQUE);
+    else
+        return (OPC_CLEAR);
+}
+
 // LOS bounded by fixed presquared radius.
 bool bounds_radius_sq::operator()(const coord_def& p) const
 {
