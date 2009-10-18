@@ -28,7 +28,7 @@ my $arch = `uname -m`;
 #
 # Matches ix86, i386, i486, i586, i686
 #
-my $pattern = "i([x3-6])86";
+my $pattern = "i([x3-6])86|x86_64";
 if ($arch =~ $pattern) {
 	system("util/gcc-opt-x86.pl $gcc");
 	exit 0
