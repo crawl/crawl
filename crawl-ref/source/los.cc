@@ -592,6 +592,9 @@ bool _find_ray_se(const coord_def& target, ray_def& ray,
     if (!bds(target))
         return false;
 
+    // Ensure the precalculations have been done.
+    raycast();
+
     const std::vector<cellray> &min = min_cellrays(target);
     ASSERT(min.size() > 0);
     cellray c = min[0]; // XXX: const cellray &c ?
