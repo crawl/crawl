@@ -302,6 +302,7 @@ static void _show_commandline_options_help()
     puts("  -rcdir <dir>     directory that contains (included) rc files");
     puts("  -morgue <dir>    directory to save character dumps");
     puts("  -macro <dir>     directory to save/find macro.txt");
+    puts("  -version         Crawl version (and compilation info)");
     puts("");
     puts("Command line options override init file options, which override");
     puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");

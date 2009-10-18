@@ -6040,6 +6040,18 @@ static void _dump_levgen()
     mpr("");
 }
 
+static void _dump_compilation_info(FILE* file)
+{
+    std::string comp_info = compilation_info();
+    if (!comp_info.empty())
+    {
+        fprintf(file, "Compilation info:" EOL);
+        fprintf(file, "<<<<<<<<<<<" EOL);
+        fprintf(file, "%s", comp_info.c_str());
+        fprintf(file, ">>>>>>>>>>>" EOL EOL);
+    }
+}
+
 static void _dump_level_info(FILE* file)
 {
     CrawlHashTable &props = env.properties;
@@ -6506,8 +6518,23 @@ void do_crash_dump()
 
     fprintf(file, "Version: %s %s" EOL, CRAWL, Version::Long().c_str());
 #if defined(UNIX)
-    fprintf(file, "Platform: unix" EOL);
+    fprintf(file, "Platform: unix");
+#   if defined(TARGET_OS_MACOSX)
+    fprintf(file, " (OS X)");
+#   endif
+    fprintf(file, EOL);
+#elif defined(TARGET_OS_WINDOWS)
+    fprintf(file, "Platform: Windows" EOL);
+#elif defined(TARGET_OS_DOS)
+    fprintf(file, "Platform: DOS" EOL);
+#endif // UNIX
+
+#if TARGET_CPU_BITS == 64
+    fprintf(file, "Bits: 64" EOL);
+#else
+    fprintf(file, "Bits: 32" EOL);
 #endif
+
 #ifdef USE_TILE
     fprintf(file, "Tiles: yes" EOL EOL);
 #else
@@ -6521,6 +6548,9 @@ void do_crash_dump()
     write_stack_trace(file, 0);
 
     fprintf(file, EOL);
+
+    // Next information on how the binary was compiled
+    _dump_compilation_info(file);
 
     // Next information about the level the player is on, plus level
     // generation info if the crash happened during level generation.

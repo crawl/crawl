@@ -39,6 +39,8 @@ mapgen.log
 # Makefile-generated junk
 makefile.dep
 /source/.contrib-ok
+/source/compflag.h
+/source/.compflag.h
 
 # The Crawl executable.
 /source/crawl

@@ -106,6 +106,14 @@ if ( $verstring ne $tag || !$pretyp ) {
 	}
 }
 
+my $OS        = `uname -o`;
+my $machine   = `uname -m`;
+my $processor = `uname -p`;
+
+chomp($OS);
+chomp($machine);
+chomp($processor);
+
 unlink("$outfile.tmp");
 
 my $prefix   = "CRAWL";
@@ -127,6 +135,10 @@ print OUT <<__eof__;
 
 #define ${prefix}_RESOURCE_VERSION ${major},${minor},${revis},${build}
 #define ${prefix}_RESOURCE_VERSION_STRING "${major}, ${minor}, ${revis}, ${build}"
+
+#define ${prefix}_BUILD_OS "${OS}"
+#define ${prefix}_BUILD_MACHINE "${machine}"
+#define ${prefix}_BUILD_PROCESSOR "${processor}"
 
 #endif
 

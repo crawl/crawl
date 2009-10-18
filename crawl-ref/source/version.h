@@ -85,6 +85,53 @@ namespace Version
      * will return the alpha/beta/rc number. Otherwise, this returns 0.
      */
     int ReleaseID();
+
+    //! The compiler used.
+    /*!
+     * Names the compiler used to genrate the executable.
+     */
+    std::string Compiler();
+
+    //! The operating system.
+    /*!
+     * Names the operating system that the executable was compiled on.
+     */
+    std::string BuildOS();
+
+    //! The machine type.
+    /*!
+     * Names the machine type (e.g., "i686") the executable was compiled on.
+     */
+    std::string BuildMachine();
+
+    //! The processor type.
+    /*!
+     * Names the processor type the executable was compiled on.
+     */
+    std::string BuildProcessor();
+
+    //! The CFLAGS.
+    /*!
+     * Returns the CFLAGS the executable was compiled with.
+     */
+    std::string CFLAGS();
+
+    //! The CFLAGS_L.
+    /*!
+     * Returns the CFLAGS_L the executable was compiled with.
+     */
+    std::string CFLAGS_L();
+
+    //! The LDFLAGS.
+    /*!
+     * Returns the flags the executable was linked with.
+     */
+    std::string LDFLAGS();
 }
+
+/* ***********************************************************************
+ * called from: initfile debug
+ * *********************************************************************** */
+std::string compilation_info();
 
 #endif

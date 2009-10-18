@@ -3514,6 +3514,7 @@ enum commandline_option_type {
     CLO_ARENA,
     CLO_TEST,
     CLO_HELP,
+    CLO_VERSION,
 
     CLO_NOPS
 };
@@ -3521,7 +3522,7 @@ enum commandline_option_type {
 static const char *cmd_ops[] = {
     "scores", "name", "species", "job", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "test", "help"
+    "mapstat", "arena", "test", "help", "version"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3552,6 +3553,13 @@ std::string find_executable_path()
     // We don't know how to find the executable's path on this OS.
 #endif
     return std::string(tempPath);
+}
+
+static void _print_version()
+{
+    printf("Crawl version %s" EOL, Version::Long().c_str());
+
+    printf("%s", compilation_info().c_str());
 }
 
 bool parse_args( int argc, char **argv, bool rc_only )
@@ -3798,6 +3806,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_HELP:
             // Shouldn't happen.
             return (false);
+
+        case CLO_VERSION:
+            _print_version();
+            end(0);
         }
 
         // Update position.
