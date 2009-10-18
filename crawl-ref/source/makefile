@@ -198,7 +198,6 @@ AR := $(CROSSHOST)-ar
 RANLIB := $(CROSSHOST)-ranlib
 endif
 GCC_GTE_4_0_0 := $(shell util/gcc-gte.pl $(GCC) 4.0.0)
-GCC_GTE_4_2_0 := $(shell util/gcc-gte.pl $(GCC) 4.2.0)
 GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
 
 # Define this to automatically generate code optimized for your machine
@@ -326,7 +325,7 @@ INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
 endif # TILES
 
-ifeq ($(GCC_GTE_4_3_0),Yes)
+ifeq ($(GCC_GTE_4_3_0),1)
 CFWARN_L += -Wno-array-bounds
 endif
 
@@ -388,7 +387,7 @@ endif
 
 # Cygwin has a panic attack if we do this...
 ifndef NO_OPTIMIZE
-ifneq ($(GCC_GTE_4_0_0),No)
+ifneq ($(GCC_GTE_4_0_0),0)
 CFWARN_L += -Wuninitialized
 else
 CFWARN_L += -Wno-uninitialized
