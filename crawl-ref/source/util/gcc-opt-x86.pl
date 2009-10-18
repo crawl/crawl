@@ -28,7 +28,7 @@ if ( ! $cpuinfo ) {
 }
 
 my %features;
-my $family;
+my ($family, $model);
 my $uname_M = `uname -m`;
 my $uname_P = `uname -p`;
 my $uname_S = `uname -s`;
@@ -43,9 +43,13 @@ if ( -e $cpuinfo ) {
 	my @cpuinfo = <FH>;
 	close FH;
 
-	my @familyline = grep(/^cpu family/, @cpuinfo);
-	$familyline[0] =~ s/^cpu[ ]family[ \t]*[:][ ]*//;
-	$family = $familyline[0];
+	my @line = grep(/^cpu family/, @cpuinfo);
+	$line[0] =~ /([0-9]*)$/;
+	$family = $1;
+
+	@line = grep(/^model/, @cpuinfo);
+	$line[0] =~ /([0-9]*)$/;
+	$model = $1;
 
 	my @flags = grep(/^flags/, @cpuinfo);
 	$flags[0] =~ s/^flags[ \t]*[:][ \t]*//;
@@ -74,6 +78,10 @@ if ( $uname_S =~ /^Darwin/ ) {
 # * k8-sse3, opteron-sse3, athlon64-sse3
 # * winchip-c6, winchip2
 
+my $gcc_gte_4_2_0 = `util/gcc-gte.pl $gcc 4.2.0`;
+my $gcc_gte_4_3_0 = `util/gcc-gte.pl $gcc 4.2.0`;
+my $gcc_gte_4_5_0 = `util/gcc-gte.pl $gcc 4.5.0`;
+
 #
 # Check the minimum march/mtune value
 #
@@ -99,8 +107,18 @@ if ( $features{"sse"} ) {
 if ( $features{"sse2"} ) {
 	$march = "pentium-m";
 }
-if ( $features{"pni"} ) {
+if ( $features{"pni"} ) { # a.k.a. SSE3
 	$march = "prescott";
+}
+if ( $features{"ssse3"} ) {
+	if ( $gcc_gte_4_3_0 ) {
+		$march = "core2";
+	} else {
+		$march = "nocona";
+	}
+}
+if ( $gcc_gte_4_5_0 && $features{"movbe"} ) {
+	$march = "atom";
 }
 if ( $uname_P =~ /Athlon/ )
 {
