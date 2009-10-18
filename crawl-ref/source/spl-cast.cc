@@ -370,7 +370,8 @@ int spell_fail(spell_type spell)
     int chance = 60;
     int chance2 = 0, armour = 0;
 
-    chance -= 6 * calc_spell_power( spell, false, true );
+    // Don't cap power for failure rate purposes.
+    chance -= 6 * calc_spell_power(spell, false, true, false);
     chance -= (you.intel * 2);
 
     //chance -= (you.intel - 10) * abs(you.intel - 10);
@@ -514,7 +515,8 @@ int spell_fail(spell_type spell)
 }                               // end spell_fail()
 
 
-int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
+int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
+                     bool cap_power)
 {
     // When checking failure rates, wizardry is handled after the various
     // stepping calulations.
@@ -563,7 +565,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
     power = stepdown_value( power, 50, 50, 150, 200 );
 
     const int cap = spell_power_cap(spell);
-    if (cap > 0)
+    if (cap > 0 && cap_power)
         power = std::min(power, cap);
 
     return (power);

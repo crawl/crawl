@@ -48,7 +48,7 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 int minRange = -1);
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
-                     bool fail_rate_chk = false);
+                     bool fail_rate_chk = false, bool cap_power = true);
 int spell_enhancement( unsigned int typeflags );
 
 // last updaetd 12may2000 {dlb}
