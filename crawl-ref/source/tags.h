@@ -71,7 +71,8 @@ enum tag_minor_version
     TAG_MINOR_UGLY     = 21,     // More ghost bits for (very) ugly things.
     TAG_MINOR_ROTTING  = 22,     // Added monster-specific rotting resistance.
     TAG_MINOR_TRANS    = 23,     // Keep track of cancellable transformations.
-    TAG_MINOR_VERSION  = 23      // Current version.  (Keep equal to max.)
+	TAG_MINOR_GITREV   = 24,     // Removed SVN revision and added Git revision.
+    TAG_MINOR_VERSION  = 24      // Current version.  (Keep equal to max.)
 };
 
 

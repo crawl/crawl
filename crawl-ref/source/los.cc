@@ -41,7 +41,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "los.h"
 

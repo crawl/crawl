@@ -4,7 +4,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #ifdef USE_TILE
 

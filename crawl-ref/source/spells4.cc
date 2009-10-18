@@ -6,7 +6,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include <string>
 #include <iostream>

@@ -32,7 +32,6 @@
 #endif
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "branch.h"
 #include "files.h"
@@ -633,7 +632,7 @@ void scorefile_entry::set_base_xlog_fields() const
     if (!fields.get())
         fields.reset(new xlog_fields);
 
-    fields->add_field("v", "%s", version.empty()? VER_NUM : version.c_str());
+    fields->add_field("v", "%s", Version::Short().c_str());
     fields->add_field("lv", SCORE_VERSION);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid",  "%d", uid);
@@ -940,7 +939,7 @@ void scorefile_entry::init()
     // 4.1      - added real_time and num_turn fields
     // 4.2      - stats and god info
 
-    version = VER_NUM;
+    version = Version::Short();
     name    = you.your_name;
 
 #ifdef MULTIUSER

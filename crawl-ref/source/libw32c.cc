@@ -1,5 +1,4 @@
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #if defined(WIN32CONSOLE)
 
@@ -90,7 +89,6 @@ static CHAR_INFO *screen = NULL;
 static COORD screensize;
 #define SCREENINDEX(x,y) ((x)+screensize.X*(y))
 static bool buffering = false;
-// static const char *windowTitle = "Crawl " VERSION;
 static unsigned InputCP, OutputCP;
 static const unsigned PREFERRED_CODEPAGE = 437;
 
@@ -361,8 +359,10 @@ void init_libw32c(void)
         exit(0);
     }
 
+	std::string title = CRAWL " " + Version::Long();
+
     GetConsoleTitle( oldTitle, 78 );
-    SetConsoleTitle( CRAWL " " VERSION );
+    SetConsoleTitle( title.c_str() );
 
     // Use the initial Windows setting for cursor size if it exists.
     // TODO: Respect changing cursor size manually while Crawl is running.

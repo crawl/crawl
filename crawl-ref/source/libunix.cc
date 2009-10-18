@@ -15,7 +15,6 @@
    Jan 1998 Svante Gerhard <svante@algonet.se>                          */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include <stdio.h>
 #include <stdlib.h>

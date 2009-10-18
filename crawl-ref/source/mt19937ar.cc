@@ -42,7 +42,6 @@
 */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include <stdio.h>
 #include <string.h>

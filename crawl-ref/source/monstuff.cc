@@ -5,7 +5,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 #include "monstuff.h"
 
 #include <stdlib.h>

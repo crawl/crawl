@@ -58,7 +58,6 @@
 #endif
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "artefact.h"
 #include "branch.h"
@@ -1017,15 +1016,12 @@ static void tag_construct_you(writer &th)
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
-    // minorVersion TAG_MINOR_SVNREV starts here
+    // minorVersion TAG_MINOR_GITREV starts here
     // Write a human-readable string out on the off chance that
     // we fail to be able to read this file back in using some later version.
-    std::string revision = "SVN:";
-    revision += number_to_string(svn_revision());
-    revision += ":";
-    revision += VERSION_DETAIL;
+    std::string revision = "Git:";
+    revision += Version::Long();
     marshallString(th, revision);
-    marshallLong(th, svn_revision());
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1460,7 +1456,8 @@ static void tag_read_you(reader &th, char minorVersion)
                  dlua.error.c_str());
     }
 
-    if (minorVersion >= TAG_MINOR_SVNREV)
+    if (minorVersion >= TAG_MINOR_SVNREV &&
+        minorVersion <  TAG_MINOR_GITREV)
     {
         std::string rev_str = unmarshallString(th);
         int rev_int = unmarshallLong(th);
@@ -1468,6 +1465,12 @@ static void tag_read_you(reader &th, char minorVersion)
         UNUSED(rev_str);
         UNUSED(rev_int);
     }
+
+	if (minorVersion >= TAG_MINOR_GITREV)
+	{
+		std::string rev_str = unmarshallString(th);
+		UNUSED(rev_str);
+	}
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)

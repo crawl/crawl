@@ -5,7 +5,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "directn.h"
 #include "format.h"

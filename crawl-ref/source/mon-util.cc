@@ -8,7 +8,6 @@
 // some routines snatched from former monsstat.cc
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "enum.h"
 #include "mon-util.h"

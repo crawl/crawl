@@ -5,7 +5,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>

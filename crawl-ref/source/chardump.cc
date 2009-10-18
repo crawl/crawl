@@ -5,7 +5,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "chardump.h"
 #include "clua.h"
@@ -179,10 +178,7 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
 
 static void _sdump_header(dump_params &par)
 {
-    par.text += " " CRAWL " version " VERSION;
-#ifdef DISPLAY_BUILD_REVISION
-    par.text += " r" + number_to_string(svn_revision());
-#endif
+    par.text += " " CRAWL " version " + Version::Long();
     par.text += " character file.\n\n";
 }
 

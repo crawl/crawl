@@ -5,7 +5,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "command.h"
 
@@ -94,11 +93,7 @@ static const char *features[] = {
 
 static std::string _get_version_information(void)
 {
-    std::string result  = "This is <w>" CRAWL " " VERSION "</w> (";
-#ifdef DISPLAY_BUILD_REVISION
-                result += "r" + number_to_string(svn_revision()) + ", ";
-#endif
-                result += VERSION_DETAIL ").";
+    std::string result  = "This is <w>" CRAWL " " + Version::Long() + "</w>";
 
     result += "\n";
 

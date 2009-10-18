@@ -5,7 +5,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "newgame.h"
 
@@ -3075,7 +3074,7 @@ static void _opening_screen(void)
 #endif
 
     std::string msg =
-        "<yellow>Hello, welcome to " CRAWL " " VERSION "!</yellow>" EOL
+        "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>" EOL
         "<brown>(c) Copyright 1997-2002 Linley Henzell, "
         "2002-2009 Crawl DevTeam" EOL
         "Please consult crawl_manual.txt for instructions and legal details."

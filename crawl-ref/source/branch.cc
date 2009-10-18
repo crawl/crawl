@@ -4,7 +4,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "branch.h"
 #include "externs.h"

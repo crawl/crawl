@@ -495,6 +495,7 @@ ifndef V
         QUIET_CXX      = @echo '   ' CXX $@;
         QUIET_PCH      = @echo '   ' PCH $@;
         QUIET_LINK     = @echo '   ' LINK $@;
+        QUIET_GEN      = @echo '   ' GEN $@;
         QUIET_COPY     = @echo '   ' COPY $@;
         QUIET_DEPEND   = @echo '   ' DEPEND $@;
         export V
@@ -544,7 +545,7 @@ LIB += $(LIBLUA) $(LIBSQLITE)
 
 GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_DEPENDS)
 SRC_PKG_BASE := stone_soup
-SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | cut -d'"' -f2)
+SRC_VERSION  := $(shell git describe --tags --long)
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
@@ -589,6 +590,13 @@ ifneq ($(MAKECMDGOALS),distclean)
 -include $(DEPENDENCY_MKF)
 endif
 endif
+
+.INTERMEDIATE: build.h
+
+build.h:
+	$(QUIET_GEN)util/gen_ver.pl $@
+
+version.cc: build.h
 
 ##########################################################################
 # The level compiler

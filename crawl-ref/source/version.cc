@@ -1,27 +1,53 @@
 /*
  *  File:       version.cc
  *  Summary:    Version (and revision) functionality.
- *  Written by: Enne Walker
+ *  Written by: Steven Noonan
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
-int check_revision::max_rev = 0;
+#include "build.h"
 
-check_revision::check_revision(const char *rev_str)
+namespace Version
 {
-    ASSERT(!strncmp("$Rev:", rev_str, 4));
+    std::string Short()
+    {
+        return std::string(CRAWL_VERSION_TAG);
+    }
 
-    int rev = atoi(&rev_str[5]);
-    max_rev = std::max(rev, max_rev);
+    std::string Long()
+    {
+        return std::string(CRAWL_VERSION_LONG);
+    }
+
+    int Major()
+    {
+        return CRAWL_VERSION_MAJOR;
+    }
+
+    int Minor()
+    {
+        return CRAWL_VERSION_MINOR;
+    }
+
+    int Revision()
+    {
+        return CRAWL_VERSION_REVISION;
+    }
+
+    int Build()
+    {
+        return CRAWL_VERSION_BUILD;
+    }
+
+    Class ReleaseType()
+    {
+        return CRAWL_VERSION_PREREL_TYPE;
+    }
+
+    int ReleaseID()
+    {
+        return CRAWL_VERSION_PREREL_NUM;
+    }
 }
 
-int svn_revision()
-{
-#if BUILD_REVISION
-    return BUILD_REVISION;
-#else
-    return check_revision::max_rev;
-#endif
-}

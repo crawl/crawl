@@ -8,7 +8,6 @@
  *   refactor.
  */
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "files.h"
 #include "fixary.h"

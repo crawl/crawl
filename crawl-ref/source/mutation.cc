@@ -5,7 +5,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 #include "mutation.h"
 
 #include <stdio.h>

@@ -1,5 +1,4 @@
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #ifdef USE_TILE
 
@@ -249,7 +248,8 @@ bool TilesFramework::initialise()
 
     SDL_EnableUNICODE(true);
 
-    SDL_WM_SetCaption(CRAWL " " VERSION, CRAWL);
+	std::string title = CRAWL " " + Version::Long();
+    SDL_WM_SetCaption(title.c_str(), CRAWL);
     const char *icon_name =
 #ifdef DATA_DIR_PATH
             DATA_DIR_PATH

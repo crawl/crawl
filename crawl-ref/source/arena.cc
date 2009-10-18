@@ -4,7 +4,6 @@
  */
 
 #include "AppHdr.h"
-REVISION("$Rev$");
 
 #include "externs.h"
 #include "arena.h"
@@ -424,8 +423,7 @@ namespace arena
 
         cgotoxy(1, line++, GOTO_STAT);
         textcolor(WHITE);
-        center_print(crawl_view.hudsz.x,
-                     "Crawl " VER_NUM VER_QUAL " " VERSION_DETAIL);
+        center_print(crawl_view.hudsz.x, "Crawl " + Version::Long());
         line++;
 
         cgotoxy(1, line++, GOTO_STAT);
