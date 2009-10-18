@@ -25,6 +25,8 @@ Stone Soup 0.6
 * (Very) ugly things get random resistances and attack flavours.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Weapons of holy wrath cannot be cursed.
+* Miasma resistance is no longer tied to negative energy resistance; rotting
+  resistance now implies both disease and miasma resistance.
 * Post-berserk exhaustion cancels Haste, even with an amulet of remove slowing.
 * Controlled blink causes glowing.
 * Lowered gold dragon armour's AC value.
