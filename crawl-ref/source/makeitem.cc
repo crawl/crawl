@@ -2010,6 +2010,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
                                    120, SPARM_POISON_RESISTANCE,
                                    120, SPARM_POSITIVE_ENERGY,
                                    480, SPARM_PROTECTION,
+				   1000, SPARM_REFLECTION, //XXX: Testing
                                    0));
         break;
 
