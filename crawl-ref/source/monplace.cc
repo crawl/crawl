@@ -689,33 +689,21 @@ static int _is_near_stairs(coord_def &p)
 // is true, then we'll be less rigorous in our checks, in particular
 // allowing land monsters to be placed in shallow water and water
 // creatures in fountains.
-static bool _valid_monster_location(const mgen_data &mg,
-                                    const coord_def &mg_pos)
+static bool _valid_monster_generation_location(
+    const mgen_data &mg,
+    const coord_def &mg_pos)
 {
+    if (!in_bounds(mg_pos) || actor_at(mg_pos))
+        return (false);
+
     const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                          : mg.cls);
-    const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(montype));
-    const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(montype));
-
-    if (!in_bounds(mg_pos))
-        return (false);
-
-    // Occupied?
-    if (actor_at(mg_pos))
-        return (false);
-
-    // Is the monster happy where we want to put it?
-    if (!feat_compatible(feat_preferred, grd(mg_pos))
-        && (feat_nonpreferred == feat_preferred
-            || !feat_compatible(feat_nonpreferred, grd(mg_pos))))
+    if (!monster_habitable_grid(montype, grd(mg_pos),
+                                mons_class_flies(montype), false)
+        || (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos)))
     {
         return (false);
     }
-
-    if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos))
-        return (false);
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
@@ -726,9 +714,9 @@ static bool _valid_monster_location(const mgen_data &mg,
     return (true);
 }
 
-static bool _valid_monster_location(mgen_data &mg)
+static bool _valid_monster_generation_location(mgen_data &mg)
 {
-    return _valid_monster_location(mg, mg.pos);
+    return _valid_monster_generation_location(mg, mg.pos);
 }
 
 int place_monster(mgen_data mg, bool force_pos)
@@ -829,7 +817,7 @@ int place_monster(mgen_data mg, bool force_pos)
             if (mg.proximity != PROX_NEAR_STAIRS)
                 mg.pos = random_in_bounds();
 
-            if (!_valid_monster_location(mg))
+            if (!_valid_monster_generation_location(mg))
                 continue;
 
             // Is the grid verboten?
@@ -900,7 +888,7 @@ int place_monster(mgen_data mg, bool force_pos)
             break;
         } // end while... place first monster
     }
-    else if (!_valid_monster_location(mg))
+    else if (!_valid_monster_generation_location(mg))
     {
         // Sanity check that the specified position is valid.
         return (-1);
@@ -1046,7 +1034,7 @@ static int _place_monster_aux(const mgen_data &mg,
             fpos = mg.pos + coord_def( random_range(-3, 3),
                                        random_range(-3, 3) );
 
-            if (_valid_monster_location(mg, fpos))
+            if (_valid_monster_generation_location(mg, fpos))
                 break;
         }
 
