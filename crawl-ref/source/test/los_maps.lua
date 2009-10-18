@@ -27,16 +27,24 @@ local function test_los_map(map)
       local xa = 30 + x
       local ya = 30 + y
       local p = dgn.point(x, y)
+      local feat = dgn.grid(xa, ya)
       local should_see = ((x == 0 and y == 0) or
-                          dgn.grid(xa, ya) == rock_wall or
-                          dgn.grid(xa, ya) == floor)
+                          feat == rock_wall or
+                          feat == floor)
+      local should_not_see = (x ~= 0 or y ~= 0) and
+                              (feat == stone_wall or feat == water)
+      if (not (should_see or should_not_see)) then
+        assert(false, "Illegal feature " .. dgn.feature_name(feat) .. " (" ..
+                      feat .. ") at " .. p .. " in " .. name .. ".")
+      end
       local can_see = you.see_cell(xa, ya)
-      if can_see and (not should_see) then
-        assert(false, "los error in " .. name .."(iter #" .. checks ..
-                      "): can see " .. p .. " but shouldn't.")
-      elseif (not can_see) and should_see then
-        assert(false, "los error in " .. name .. "(iter #" .. checks ..
-                      "): should see " .. p .. " but can't.")
+      local err = can_see and (not should_see) or (not can_see) and should_see
+      if err then
+        local cans = can_see and "can" or "can't"
+        local shoulds = should_see and "should" or "shouldn't"
+        local errstr = "LOS error in " .. name .. ": " .. shoulds ..
+                       " see " .. p .. " (" .. feat .. ") but " .. cans .. "."
+        assert(false, errstr)
       end
     end
   end
