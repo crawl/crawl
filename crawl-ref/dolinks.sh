@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source/util/gen_ver.pl source/build.h
-
 mkdir -p NORMAL
 mkdir -p WIZARD
 
