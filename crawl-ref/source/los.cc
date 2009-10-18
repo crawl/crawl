@@ -951,7 +951,7 @@ bool see_cell(const env_show_grid &show,
         return (true);
 
     const coord_def ip = pos - c;
-    if (ip.rdist() < ENV_SHOW_OFFSET)
+    if (ip.rdist() <= ENV_SHOW_OFFSET)
     {
         const coord_def sp(ip + coord_def(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET));
         if (show(sp))
@@ -963,9 +963,9 @@ bool see_cell(const env_show_grid &show,
 // Answers the question: "Is a cell within character's line of sight?"
 bool see_cell(const coord_def &p)
 {
-    return ((crawl_state.arena || crawl_state.arena_suspended)
+    return (((crawl_state.arena || crawl_state.arena_suspended)
                 && crawl_view.in_grid_los(p))
-            || see_cell(env.show, you.pos(), p);
+             || see_cell(env.show, you.pos(), p));
 }
 
 // Answers the question: "Would a cell be within character's line of sight,
