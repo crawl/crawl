@@ -531,7 +531,7 @@ std::string get_exclusion_desc()
 {
     std::vector<std::string> monsters;
     int count_other = 0;
-    for (int i = 0, count = curr_excludes.size(); i < count; ++i)
+    for (unsigned int i = 0; i < curr_excludes.size(); ++i)
     {
         if (curr_excludes[i].mon != NON_MONSTER)
             monsters.push_back(get_monster_data(curr_excludes[i].mon)->name);
