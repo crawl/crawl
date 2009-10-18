@@ -40,8 +40,6 @@ public:
     void advance_and_bounce();
     void regress();
 
-    int footprint(int radius2, coord_def pos[]) const;
-
     // Gets/sets the slope in terms of degrees, with 0 = east, 90 = north,
     // 180 = west, 270 = south, 360 = east, -90 = south, etc
     double get_degrees() const;

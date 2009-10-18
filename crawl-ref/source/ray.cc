@@ -285,24 +285,3 @@ adv_type ray_def::raw_advance()
     flip();
     return rc;
 }
-
-// Shoot a ray from the given start point (accx, accy) with the given
-// slope, bounded by the given pre-squared LOS radius.
-// Store the visited cells in pos[], and
-// return the number of cells visited.
-int ray_def::footprint(int radius2, coord_def cpos[]) const
-{
-    ray_def copy = *this;
-    coord_def c;
-    int cellnum;
-    for (cellnum = 0; true; ++cellnum)
-    {
-        copy.raw_advance();
-        c = copy.pos();
-        if (c.abs() > radius2)
-            break;
-
-        cpos[cellnum] = c;
-    }
-    return cellnum;
-}
