@@ -4344,7 +4344,7 @@ static void _fsim_mon_stats(FILE *o, const monsters &mon)
 
 static void _fsim_title(FILE *o, int mon, int ms)
 {
-    fprintf(o, CRAWL " version %s\n\n", Version::Long());
+    fprintf(o, CRAWL " version %s\n\n", Version::Long().c_str());
     fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
             species_name(you.species, you.experience_level).c_str(),
             you.class_name,
@@ -4370,7 +4370,7 @@ static void _fsim_title(FILE *o, int mon, int ms)
 
 static void _fsim_defence_title(FILE *o, int mon)
 {
-    fprintf(o, CRAWL " version %s\n\n", Version::Long());
+    fprintf(o, CRAWL " version %s\n\n", Version::Long().c_str());
     fprintf(o, "Combat simulation: %s vs. %s %s (%ld rounds) (%s)\n",
             menv[mon].name(DESC_PLAIN).c_str(),
             species_name(you.species, you.experience_level).c_str(),
@@ -6504,7 +6504,7 @@ void do_crash_dump()
         fprintf(file, "%s" EOL EOL, _assert_msg.c_str());
 #endif
 
-    fprintf(file, "Version: %s %s" EOL, CRAWL, Version::Long().c_str() );
+    fprintf(file, "Version: %s %s" EOL, CRAWL, Version::Long().c_str());
 #if defined(UNIX)
     fprintf(file, "Platform: unix" EOL);
 #endif
