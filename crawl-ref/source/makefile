@@ -28,25 +28,7 @@ GAME = crawl
 # These are really good options for the Intel C++ compiler:
 #CFOPTIMIZE := -O2 -parallel
 
-# Define this to automatically generate code optimized for your machine
-# (GCC only as of now).
-#
-# NOTE: Don't use this with a release build, since the generated code
-# won't work for all machines.
-ifdef AUTO_OPT_GCC
-
-ifdef CROSSHOST
-error Can not do AUTO_OPT_GCC with CROSSHOST
-endif
-
-ifdef HURRY
-error Can not do AUTO_OPT_GCC with HURRY
-endif
-
-AUTO_OPT_FLAGS := $(shell util/auto-opt.sh)
-endif
-
-CFOPTIMIZE := -O2 $(AUTO_OPT_FLAGS)
+CFOPTIMIZE := -O2
 CFOTHERS := -fno-strict-aliasing -pipe
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
@@ -93,6 +75,7 @@ uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 ifdef CROSSHOST
 	NO_PKGCONFIG = YesPlease
 	NO_SDLCONFIG = YesPlease
+	NO_AUTO_OPT = YesPlease
 	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
 	SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
@@ -214,8 +197,24 @@ GXX := $(CROSSHOST)-g++
 AR := $(CROSSHOST)-ar
 RANLIB := $(CROSSHOST)-ranlib
 endif
-GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
 GCC_GTE_4_0_0 := $(shell util/gcc-gte.pl $(GCC) 4.0.0)
+GCC_GTE_4_2_0 := $(shell util/gcc-gte.pl $(GCC) 4.2.0)
+GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
+
+# Define this to automatically generate code optimized for your machine
+# (GCC only as of now).
+#
+# NOTE: Don't use this with a release build, since the generated code
+# won't work for all machines.
+ifdef HURRY
+NO_AUTO_OPT = YesPlease
+endif
+
+ifdef AUTO_OPT
+ifndef NO_AUTO_OPT
+CFOPTIMIZE += $(shell util/gcc-opt.pl $(GCC))
+endif
+endif
 
 RLTILES = rltiles
 
