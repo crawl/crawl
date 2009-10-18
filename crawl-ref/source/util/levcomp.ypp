@@ -589,7 +589,7 @@ map_lines       : map_lines map_line
 
 map_line        : MAP_LINE
                 {
-                    lc_map.main.add(
+                    lc_map.mapchunk.add(
                         yylineno,
                         make_stringf("map(\"%s\")",
                                      quote_lua_string($1).c_str()));

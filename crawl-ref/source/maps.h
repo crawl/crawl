@@ -62,7 +62,7 @@ typedef std::vector<coord_def> point_vector;
 extern map_place_check_t map_place_valid;
 extern point_vector      map_anchor_points;
 
-const int              MAP_CACHE_VERSION = 1010;
+const int              MAP_CACHE_VERSION = 1011;
 
 
 #ifdef DEBUG_DIAGNOSTICS

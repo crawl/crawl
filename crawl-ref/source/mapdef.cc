@@ -335,17 +335,10 @@ int level_range::span() const
 }
 
 ////////////////////////////////////////////////////////////////////////
-// map_transformer
-
-map_transformer::~map_transformer()
-{
-}
-
-////////////////////////////////////////////////////////////////////////
 // map_lines
 
 map_lines::map_lines()
-    : transforms(), markers(), lines(), overlay(),
+    : markers(), lines(), overlay(),
       map_width(0), solid_north(false), solid_east(false),
       solid_south(false), solid_west(false), solid_checked(false)
 {
@@ -356,7 +349,22 @@ map_lines::map_lines(const map_lines &map)
     init_from(map);
 }
 
-int map_lines::operator () (const coord_def &c) const
+rectangle_iterator map_lines::get_iter() const
+{
+    ASSERT(width() > 0);
+    ASSERT(height() > 0);
+
+    coord_def tl(0, 0);
+    coord_def br(width() - 1, height() - 1);
+    return rectangle_iterator(tl, br);
+}
+
+char map_lines::operator () (const coord_def &c) const
+{
+    return lines[c.y][c.x];
+}
+
+char& map_lines::operator () (const coord_def &c)
 {
     return lines[c.y][c.x];
 }
@@ -375,14 +383,12 @@ map_lines &map_lines::operator = (const map_lines &map)
 
 map_lines::~map_lines()
 {
-    clear_transforms();
     clear_markers();
 }
 
 void map_lines::init_from(const map_lines &map)
 {
-    // Transforms and markers have to be regenerated, they will not be copied.
-    clear_transforms();
+    // Markers have to be regenerated, they will not be copied.
     clear_markers();
     overlay.reset(NULL);
     lines         = map.lines;
@@ -400,11 +406,6 @@ void map_lines::clear_vector(V &vect)
     for (int i = 0, vsize = vect.size(); i < vsize; ++i)
         delete vect[i];
     vect.clear();
-}
-
-void map_lines::clear_transforms()
-{
-    clear_vector(transforms);
 }
 
 void map_lines::clear_markers()
@@ -425,14 +426,17 @@ std::string map_lines::add_feature_marker(const std::string &s)
     if (!err.empty())
         return (err);
 
-    transforms.push_back(new map_marker_spec(key[0], arg));
+    map_marker_spec spec(key[0], arg);
+    spec.apply_transform(*this);
+
     return ("");
 }
 
 std::string map_lines::add_lua_marker(const std::string &key,
                                       const lua_datum &function)
 {
-    transforms.push_back(new map_marker_spec(key[0], function));
+    map_marker_spec spec(key[0], function);
+    spec.apply_transform(*this);
     return ("");
 }
 
@@ -452,6 +456,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
 {
     if (!overlay.get())
         return;
+
     for (int y = height() - 1; y >= 0; --y)
         for (int x = width() - 1; x >= 0; --x)
         {
@@ -624,7 +629,9 @@ std::string map_lines::add_colour(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    transforms.push_back( new colour_spec( key[0], sep == ':', colours ) );
+    colour_spec spec(key[0], sep == ':', colours);
+    overlay_colours(spec);
+
     return ("");
 }
 
@@ -648,7 +655,8 @@ std::string map_lines::add_subst(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    transforms.push_back( new subst_spec( key[0], sep == ':', repl ) );
+    subst_spec spec(key[0], sep == ':', repl); 
+    subst(spec);
 
     return ("");
 }
@@ -705,7 +713,9 @@ std::string map_lines::add_nsubst(const std::string &s)
         substs.push_back(spec);
     }
 
-    transforms.push_back( new nsubst_spec(key[0], substs) );
+    nsubst_spec spec(key[0], substs);
+    nsubst(spec);
+
     return ("");
 }
 
@@ -715,104 +725,9 @@ std::string map_lines::add_shuffle(const std::string &raws)
     const std::string err = check_shuffle(s);
 
     if (err.empty())
-        transforms.push_back( new shuffle_spec(s) );
+        resolve_shuffle(s);
 
     return (err);
-}
-
-void map_lines::remove_shuffle(const std::string &raw)
-{
-    std::string s = raw;
-    const std::string err = check_shuffle(s);
-    if (err.empty())
-    {
-        const shuffle_spec ss(s);
-        for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
-        {
-            if (transforms[i]->type() == map_transformer::TT_SHUFFLE)
-            {
-                const shuffle_spec *other =
-                    dynamic_cast<shuffle_spec*>(transforms[i]);
-                if (ss == *other)
-                {
-                    delete transforms[i];
-                    transforms.erase( transforms.begin() + i );
-                    return;
-                }
-            }
-        }
-    }
-}
-
-void map_lines::remove_subst(const std::string &raw)
-{
-    // Parsing subst specs is a pain, so we just let add_subst do the
-    // work, then pop the subst off the end of the vector.
-    if (add_subst(raw).empty())
-    {
-        map_transformer *sub = *transforms.rbegin();
-        subst_spec spec = *dynamic_cast<subst_spec*>(sub);
-        delete sub;
-        transforms.pop_back();
-
-        for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
-        {
-            if (transforms[i]->type() == map_transformer::TT_SUBST)
-            {
-                subst_spec *cand = dynamic_cast<subst_spec*>(transforms[i]);
-                if (spec == *cand)
-                {
-                    delete cand;
-                    transforms.erase( transforms.begin() + i );
-                    return;
-                }
-            }
-        }
-    }
-}
-
-void map_lines::clear_transforms(map_transformer::transform_type tt)
-{
-    if (transforms.empty())
-        return;
-    for (int i = transforms.size() - 1; i >= 0; --i)
-        if (transforms[i]->type() == tt)
-        {
-            delete transforms[i];
-            transforms.erase( transforms.begin() + i );
-        }
-}
-
-void map_lines::clear_colours()
-{
-    clear_transforms(map_transformer::TT_COLOUR);
-}
-
-#ifdef USE_TILE
-void map_lines::clear_rocktiles()
-{
-    clear_transforms(map_transformer::TT_ROCKTILE);
-}
-
-void map_lines::clear_floortiles()
-{
-    clear_transforms(map_transformer::TT_FLOORTILE);
-}
-#endif
-
-void map_lines::clear_shuffles()
-{
-    clear_transforms(map_transformer::TT_SHUFFLE);
-}
-
-void map_lines::clear_nsubsts()
-{
-    clear_transforms(map_transformer::TT_NSUBST);
-}
-
-void map_lines::clear_substs()
-{
-    clear_transforms(map_transformer::TT_SUBST);
 }
 
 int map_lines::width() const
@@ -823,6 +738,48 @@ int map_lines::width() const
 int map_lines::height() const
 {
     return lines.size();
+}
+
+void map_lines::extend(int min_width, int min_height, char fill)
+{
+    min_width = std::max(1, min_width);
+    min_height = std::max(1, min_height);
+
+    bool dirty = false;
+    int old_width = width();
+    int old_height = height();
+
+    if (static_cast<int>(lines.size()) < min_height)
+    {
+        dirty = true;
+        while (static_cast<int>(lines.size()) < min_height)
+            add_line(std::string(min_width, fill));
+    }
+
+    if (width() < min_width)
+    {
+        dirty = true;
+        lines[0] += std::string(min_width - width(), fill);
+        map_width = std::max(map_width, min_width);
+    }
+
+    if (!dirty)
+        return;
+
+    normalise(fill);
+
+    // Extend overlay matrix as well.
+    if (overlay.get())
+    {
+        std::auto_ptr<overlay_matrix> new_overlay(
+            new overlay_matrix(width(), height()));
+
+        for (int y = 0; y < old_height; ++y)
+            for (int x = 0; x < old_width; ++x)
+                (*new_overlay)(x, y) = (*overlay)(x, y);
+
+        overlay = new_overlay;
+    }
 }
 
 coord_def map_lines::size() const
@@ -892,7 +849,6 @@ bool map_lines::solid_borders(map_section_type border)
 
 void map_lines::clear()
 {
-    clear_transforms();
     clear_markers();
     lines.clear();
     overlay.reset(NULL);
@@ -938,7 +894,7 @@ void map_lines::overlay_tiles(tile_spec &spec)
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
     {
         std::string::size_type pos = 0;
-        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+        while ((pos = lines[y].find_first_of(spec.key, pos)) != std::string::npos)
         {
             if (spec.floor)
                 (*overlay)(pos, y).floortile = spec.get_tile();
@@ -1034,21 +990,6 @@ void map_lines::resolve_shuffle(const std::string &shufflage)
                 s[j] = shuffled[pos];
         }
     }
-}
-
-std::string map_lines::apply_transforms()
-{
-    std::string error;
-    for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
-    {
-        error = transforms[i]->apply_transform(*this);
-        if (!error.empty())
-            return (error);
-    }
-
-    // Release the transforms so we don't try them again.
-    clear_transforms();
-    return ("");
 }
 
 void map_lines::normalise(char fillch)
@@ -1196,24 +1137,6 @@ void map_lines::hmirror()
     solid_checked = false;
 }
 
-std::vector<std::string> map_lines::get_shuffle_strings() const
-{
-    std::vector<std::string> shuffles;
-    for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
-        if (transforms[i]->type() == map_transformer::TT_SHUFFLE)
-            shuffles.push_back( transforms[i]->describe() );
-    return (shuffles);
-}
-
-std::vector<std::string> map_lines::get_subst_strings() const
-{
-    std::vector<std::string> substs;
-    for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
-        if (transforms[i]->type() == map_transformer::TT_SUBST)
-            substs.push_back( transforms[i]->describe() );
-    return (substs);
-}
-
 std::vector<coord_def> map_lines::find_glyph(int gly) const
 {
     std::vector<coord_def> points;
@@ -1252,6 +1175,58 @@ coord_def map_lines::find_first_glyph(const std::string &glyphs) const
     return coord_def(-1, -1);
 }
 
+bool map_lines::find_bounds(int gly, coord_def &tl, coord_def &br) const
+{
+    tl = coord_def(width(), height());
+    br = coord_def(-1, -1);
+
+    if (width() == 0 || height() == 0)
+        return false;
+
+    for (rectangle_iterator ri(get_iter()); ri; ++ri)
+    {
+        const coord_def mc = *ri;
+        if ((*this)(mc) != gly)
+            continue;
+
+        tl.x = std::min(tl.x, mc.x);
+        tl.y = std::min(tl.y, mc.y);
+        br.x = std::max(br.x, mc.x);
+        br.y = std::max(br.y, mc.y);
+    }
+
+    return (br.x >= 0);
+}
+
+bool map_lines::find_bounds(const char *str, coord_def &tl, coord_def &br) const
+{
+    tl = coord_def(width(), height());
+    br = coord_def(-1, -1);
+
+    if (width() == 0 || height() == 0)
+        return false;
+
+    for (rectangle_iterator ri(get_iter()); ri; ++ri)
+    {
+        ASSERT(ri);
+        const coord_def &mc = *ri;
+        const size_t len = strlen(str);
+        for (size_t i = 0; i < len; ++i)
+        {
+            if ((*this)(mc) == str[i])
+            {
+                tl.x = std::min(tl.x, mc.x);
+                tl.y = std::min(tl.y, mc.y);
+                br.x = std::max(br.x, mc.x);
+                br.y = std::max(br.y, mc.y);
+                break;
+            }
+        }
+    }
+
+    return (br.x >= 0);
+}
+
 #ifdef USE_TILE
 bool map_tile_list::parse(const std::string &s, int weight)
 {
@@ -1274,7 +1249,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor)
     std::string key;
     std::string substitute;
 
-    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
         return (err);
 
@@ -1283,7 +1258,9 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor)
     if (!err.empty())
         return (err);
 
-    transforms.push_back(new tile_spec(key[0], sep == ':', is_floor, list));
+    tile_spec spec(key, sep == ':', is_floor, list);
+    overlay_tiles(spec);
+
     return ("");
 }
 
@@ -1299,17 +1276,6 @@ std::string map_lines::add_floortile(const std::string &sub)
 
 //////////////////////////////////////////////////////////////////////////
 // tile_spec
-
-std::string tile_spec::apply_transform(map_lines &map)
-{
-    map.overlay_tiles(*this);
-    return ("");
-}
-
-std::string tile_spec::describe() const
-{
-    return ("");
-}
 
 int tile_spec::get_tile()
 {
@@ -1353,7 +1319,8 @@ map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(), weight(),
       weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
       mons(), items(), random_mons(), keyspecs(), prelude("dlprelude"),
-      main("dlmain"), validate("dlvalidate"), veto("dlveto"),
+      mapchunk("dlmapchunk"), main("dlmain"),
+      validate("dlvalidate"), veto("dlveto"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
       index_only(false), cache_offset(0L)
 {
@@ -1368,6 +1335,7 @@ void map_def::init()
     place.clear();
     depths.clear();
     prelude.clear();
+    mapchunk.clear();
     main.clear();
     validate.clear();
     veto.clear();
@@ -1436,6 +1404,7 @@ void map_def::write_full(writer& outf)
     marshallShort(outf, MAP_CACHE_VERSION);   // Level indicator.
     marshallString4(outf, name);
     prelude.write(outf);
+    mapchunk.write(outf);
     main.write(outf);
     validate.write(outf);
     veto.write(outf);
@@ -1463,6 +1432,7 @@ void map_def::read_full(reader& inf)
     }
 
     prelude.read(inf);
+    mapchunk.read(inf);
     main.read(inf);
     validate.read(inf);
     veto.read(inf);
@@ -1558,6 +1528,7 @@ void map_def::read_depth_ranges(reader& inf)
 void map_def::set_file(const std::string &s)
 {
     prelude.set_file(s);
+    mapchunk.set_file(s);
     main.set_file(s);
     validate.set_file(s);
     veto.set_file(s);
@@ -1575,9 +1546,18 @@ std::string map_def::run_lua(bool run_main)
         return (prelude.orig_error());
 
     if (!run_main)
+    {
         lua_pushnil(dlua);
+        lua_pushnil(dlua);
+    }
     else
     {
+        err = mapchunk.load(dlua);
+        if (err == -1000)
+            lua_pushnil(dlua);
+        else if (err)
+            return (mapchunk.orig_error());
+
         err = main.load(dlua);
         if (err == -1000)
             lua_pushnil(dlua);
@@ -1585,7 +1565,7 @@ std::string map_def::run_lua(bool run_main)
             return (main.orig_error());
     }
 
-    if (!dlua.callfn("dgn_run_map", 2, 0))
+    if (!dlua.callfn("dgn_run_map", 3, 0))
         return rewrite_chunk_errors(dlua.error);
 
     return (dlua.error);
@@ -1635,6 +1615,8 @@ std::string map_def::rewrite_chunk_errors(const std::string &s) const
 {
     std::string res = s;
     if (prelude.rewrite_chunk_errors(res))
+        return (res);
+    if (mapchunk.rewrite_chunk_errors(res))
         return (res);
     if (main.rewrite_chunk_errors(res))
         return (res);
@@ -1704,7 +1686,7 @@ std::string map_def::validate_map_def()
     }
 
     dlua_set_map dl(this);
-    return (map.apply_transforms());
+    return ("");
 }
 
 bool map_def::is_usable_in(const level_id &lid) const
@@ -1993,7 +1975,7 @@ void map_def::normalise()
 std::string map_def::resolve()
 {
     dlua_set_map dl(this);
-    return map.apply_transforms();
+    return ("");
 }
 
 void map_def::fixup()
@@ -2077,16 +2059,6 @@ std::string map_def::add_key_mons(const std::string &s)
 std::string map_def::add_key_mask(const std::string &s)
 {
     return add_key_field(s, &keyed_mapspec::set_mask);
-}
-
-std::vector<std::string> map_def::get_shuffle_strings() const
-{
-    return map.get_shuffle_strings();
-}
-
-std::vector<std::string> map_def::get_subst_strings() const
-{
-    return map.get_subst_strings();
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -3147,48 +3119,6 @@ int subst_spec::value()
     return (chosen);
 }
 
-std::string subst_spec::apply_transform(map_lines &map)
-{
-    map.subst(*this);
-    return ("");
-}
-
-map_transformer::transform_type subst_spec::type() const
-{
-    return (TT_SUBST);
-}
-
-std::string subst_spec::describe() const
-{
-    std::string subst(1, foo);
-    subst += std::string(" ") + (fix? ':' : '=');
-    for (int i = 0, size = repl.size(); i < size; ++i)
-    {
-        const glyph_weighted_replacement_t &gly = repl[i];
-        subst += " ";
-        subst += static_cast<char>(gly.first);
-        if (gly.second != 10)
-            subst += make_stringf(":%d", gly.second);
-    }
-    return (subst);
-}
-
-bool subst_spec::operator == (const subst_spec &other) const
-{
-    if (foo != other.foo || fix != other.fix)
-        return (false);
-
-    if (repl.size() != other.repl.size())
-        return (false);
-
-    for (int i = 0, size = repl.size(); i < size; ++i)
-    {
-        if (repl[i] != other.repl[i])
-            return (false);
-    }
-    return (true);
-}
-
 //////////////////////////////////////////////////////////////////////////
 // nsubst_spec
 
@@ -3197,30 +3127,8 @@ nsubst_spec::nsubst_spec(int _key, const std::vector<subst_spec> &_specs)
 {
 }
 
-std::string nsubst_spec::apply_transform(map_lines &map)
-{
-    map.nsubst(*this);
-    return ("");
-}
-
-std::string nsubst_spec::describe() const
-{
-    return ("");
-}
-
 //////////////////////////////////////////////////////////////////////////
 // colour_spec
-
-std::string colour_spec::apply_transform(map_lines &map)
-{
-    map.overlay_colours(*this);
-    return ("");
-}
-
-std::string colour_spec::describe() const
-{
-    return ("");
-}
 
 int colour_spec::get_colour()
 {
@@ -3235,25 +3143,6 @@ int colour_spec::get_colour()
     if (fix)
         fixed_colour = chosen;
     return (chosen);
-}
-
-//////////////////////////////////////////////////////////////////////////
-// shuffle_spec
-
-std::string shuffle_spec::apply_transform(map_lines &map)
-{
-    map.resolve_shuffle(shuffle);
-    return ("");
-}
-
-map_transformer::transform_type shuffle_spec::type() const
-{
-    return (TT_SHUFFLE);
-}
-
-std::string shuffle_spec::describe() const
-{
-    return (shuffle);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3291,16 +3180,6 @@ map_marker *map_marker_spec::create_marker()
     return lua_fn.get()
         ? new map_lua_marker(*lua_fn.get())
         : map_marker::parse_marker(marker);
-}
-
-map_transformer::transform_type map_marker_spec::type() const
-{
-    return (TT_MARKER);
-}
-
-std::string map_marker_spec::describe() const
-{
-    return ("unimplemented");
 }
 
 //////////////////////////////////////////////////////////////////////////

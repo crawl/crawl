@@ -15,12 +15,13 @@
 #include <cstdio>
 #include <memory>
 
-#include "luadgn.h"
 #include "enum.h"
 #include "externs.h"
-#include "makeitem.h"
-#include "travel.h"
 #include "fixary.h"
+#include "luadgn.h"
+#include "makeitem.h"
+#include "stuff.h"
+#include "travel.h"
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.
@@ -100,28 +101,8 @@ typedef std::pair<int,int> glyph_weighted_replacement_t;
 typedef std::vector<glyph_weighted_replacement_t> glyph_replacements_t;
 
 class map_lines;
-class map_transformer
-{
-public:
-    enum transform_type
-    {
-        TT_SHUFFLE,
-        TT_SUBST,
-        TT_NSUBST,
-        TT_MARKER,
-        TT_COLOUR,
-        TT_ROCKTILE,
-        TT_FLOORTILE
-    };
 
-public:
-    virtual ~map_transformer() = 0;
-    virtual std::string apply_transform(map_lines &map) = 0;
-    virtual transform_type type() const = 0;
-    virtual std::string describe() const = 0;
-};
-
-class subst_spec : public map_transformer
+class subst_spec
 {
 public:
     subst_spec(int torepl, bool fix, const glyph_replacements_t &repls);
@@ -134,12 +115,6 @@ public:
 
     int value();
 
-    std::string apply_transform(map_lines &map);
-    transform_type type() const;
-    std::string describe() const;
-
-    bool operator == (const subst_spec &other) const;
-
 private:
     int foo;        // The thing to replace.
     bool fix;       // If true, the first replacement fixes the value.
@@ -148,14 +123,10 @@ private:
     glyph_replacements_t repl;
 };
 
-class nsubst_spec : public map_transformer
+class nsubst_spec
 {
 public:
     nsubst_spec(int key, const std::vector<subst_spec> &specs);
-    std::string apply_transform(map_lines &map);
-    transform_type type() const { return TT_NSUBST; }
-    std::string describe() const;
-
 public:
     int key;
     std::vector<subst_spec> specs;
@@ -167,16 +138,13 @@ class map_colour_list : public std::vector<map_weighted_colour>
 public:
     bool parse(const std::string &s, int weight);
 };
-class colour_spec : public map_transformer
+class colour_spec
 {
 public:
     colour_spec(int _key, bool _fix, const map_colour_list &clist)
         : key(_key), fix(_fix), fixed_colour(BLACK), colours(clist)
     {
     }
-    std::string apply_transform(map_lines &map);
-    transform_type type() const { return TT_COLOUR; }
-    std::string describe() const;
 
     int get_colour();
 
@@ -194,23 +162,20 @@ class map_tile_list : public std::vector<map_weighted_colour>
 public:
     bool parse(const std::string &s, int weight);
 };
-class tile_spec : public map_transformer
+
+class tile_spec
 {
 public:
-    tile_spec(int _key, bool _fix, bool _floor, const map_tile_list &_tiles)
+    tile_spec(const std::string &_key, bool _fix, bool _floor, const map_tile_list &_tiles)
         : key(_key), fix(_fix), chose_fixed(false), floor(_floor),
           fixed_tile(0), tiles(_tiles)
     {
     }
 
-    std::string apply_transform(map_lines &map);
-    transform_type type() const { return (floor ? TT_FLOORTILE : TT_ROCKTILE); }
-    std::string describe() const;
-
     int get_tile();
 
 public:
-    int key;
+    std::string key;
     bool fix;
     bool chose_fixed;
     bool floor;
@@ -219,26 +184,7 @@ public:
 };
 #endif
 
-class shuffle_spec : public map_transformer
-{
- public:
-    std::string shuffle;
-
-    shuffle_spec(const std::string &spec)
-        : shuffle(spec)
-    {
-    }
-
-    std::string apply_transform(map_lines &map);
-    transform_type type() const;
-    std::string describe() const;
-    bool operator == (const shuffle_spec &other) const
-    {
-        return (shuffle == other.shuffle);
-    }
-};
-
-class map_marker_spec : public map_transformer
+class map_marker_spec
 {
 public:
     int key;
@@ -254,8 +200,6 @@ public:
         : key(_key), marker(), lua_fn(new lua_datum(fn)) { }
 
     std::string apply_transform(map_lines &map);
-    transform_type type() const;
-    std::string describe() const;
 
 private:
     map_marker *create_marker();
@@ -278,24 +222,22 @@ public:
     std::string add_subst(const std::string &st);
     std::string add_shuffle(const std::string &s);
     std::string add_colour(const std::string &col);
-    void remove_shuffle(const std::string &s);
-    void remove_subst(const std::string &s);
-    void clear_shuffles();
-    void clear_substs();
-    void clear_nsubsts();
     void clear_markers();
-    void clear_colours();
 
 #ifdef USE_TILE
     std::string add_floortile(const std::string &s);
     std::string add_rocktile(const std::string &s);
-    void clear_rocktiles();
-    void clear_floortiles();
 #endif
 
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
     coord_def find_first_glyph(const std::string &glyphs) const;
+
+    // Find rectangular bounds (inclusive) for uses of the glyph in the map.
+    // Returns false if glyph could not be found.
+    bool find_bounds(int glyph, coord_def &tl, coord_def &br) const;
+    // Same as above, but for any of the glyphs in glyph_str.
+    bool find_bounds(const char *glyph_str, coord_def &tl, coord_def &br) const;
 
     void set_orientation(const std::string &s);
 
@@ -308,8 +250,6 @@ public:
     bool is_solid(int gly) const;
 
     bool solid_borders(map_section_type border);
-
-    std::string apply_transforms();
 
     // Make all lines the same length.
     void normalise(char fillc = ' ');
@@ -332,14 +272,16 @@ public:
 
     const std::vector<std::string> &get_lines() const;
     std::vector<std::string> &get_lines();
-    std::vector<std::string> get_shuffle_strings() const;
-    std::vector<std::string> get_subst_strings() const;
 
-    int operator () (const coord_def &c) const;
+    rectangle_iterator get_iter() const;
+    char operator () (const coord_def &c) const;
+    char& operator () (const coord_def &c);
+
+    // Extend map dimensions with glyph 'fill' to minimum width and height.
+    void extend(int min_width, int min_height, char fill);
 
 private:
     void init_from(const map_lines &map);
-    void clear_transforms();
     template <typename V> void clear_vector(V &vect);
     void vmirror_markers();
     void hmirror_markers();
@@ -359,7 +301,6 @@ private:
     void overlay_tiles(tile_spec &);
 #endif
     void check_borders();
-    void clear_transforms(map_transformer::transform_type);
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
     std::string check_shuffle(std::string &s);
@@ -386,7 +327,6 @@ private:
     friend class tile_spec;
 
 private:
-    std::vector<map_transformer *> transforms;
     std::vector<map_marker *> markers;
     std::vector<std::string> lines;
     struct overlay_def
@@ -713,7 +653,7 @@ public:
 
     keyed_specs     keyspecs;
 
-    dlua_chunk      prelude, main, validate, veto;
+    dlua_chunk      prelude, mapchunk, main, validate, veto;
 
     map_file_place  place_loaded_from;
 

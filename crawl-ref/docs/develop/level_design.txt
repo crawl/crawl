@@ -736,6 +736,9 @@ FTILE:    . = floor_grass:20 / floor_dirt / none
           destroyed, this floor tile will be used in place of the normal floor.
           Thus, it can be useful even for non-floor features.
 
+          For convenience, multiple glyphs can be specified together as a
+          group, e.g. ".[{( = floor_orc".
+
           Like COLOUR, this should be used sparingly.
 
 RTILE:    x = wall_hive:15 / wall_lair / none
@@ -1845,6 +1848,17 @@ dgn_event_type, register_listener, remove_listener, remove_marker,
 num_matching_markers, feature_desc, feature_desc_at, item_from_index,
 mons_from_index, change_level_flags, change_branch_flags,
 set_random_mon_list
+
+
+Additionally, the dgn module provides a global "grd" variable that
+can access the current map glyphs.  The top left symbol in the map
+can be assigned like this:
+
+ grd[1][1] = 'x'
+
+The bottom right symbol can be assigned like this:
+
+ grd[width()][height()] = "."
 
 
 Lua API - global game state

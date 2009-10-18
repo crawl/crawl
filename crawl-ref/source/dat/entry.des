@@ -2484,7 +2484,7 @@ ORIENT:  float
 MONS:    plant
 SHUFFLE: 1x
 SUBST:   x = '
-FTILE:   ' = floor_grass, 1 = floor_grass, { = floor_grass
+FTILE:   '1{ = floor_grass
 FTILE:   . = floor_grass / floor_normal
 COLOUR:  ' = green
 COLOUR:  . = green / none
@@ -3495,9 +3495,7 @@ MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
 # There is a very slight chance that a jelly or an intelligent monster
 # (hobgoblin) might spawn inside near the door. This is okay; added an exit.
 ORIENT:  float
-FTILE:   1=floor_dirt, 2=floor_dirt, 3=floor_dirt, 4=floor_dirt, +=floor_dirt
-FTILE:   A=floor_dirt, B=floor_dirt, C=floor_dirt, D=floor_dirt, E=floor_dirt
-FTILE:   a=floor_dirt, b=floor_dirt, c=floor_dirt, d=floor_dirt, e=floor_dirt
+FTILE:   1234+ABCDEabcde = floor_dirt
 SHUFFLE: abcde / fghij
 SUBST:   f=A, g=B, h=C, i=D, j=E
 SUBST:   a=mx, b=mx, c=mx, d=mx, e=mx
@@ -4822,7 +4820,7 @@ ENDMAP
 NAME:   misc_entry_001
 TAGS:   entry no_monster_gen
 RTILE:  x = wall_hall
-FTILE:  . = floor_hall, ( = floor_hall, [ = floor_hall, { = floor_hall
+FTILE:  .([{ = floor_hall
 ORIENT: float
 
 MAP
@@ -4885,9 +4883,7 @@ NAME:   exit_the_forest
 TAGS:   entry no_rotate no_pool_fixup
 ORIENT: northwest
 MONS:   plant
-FTILE:  . = floor_lair
-FTILE:  t = floor_lair
-FTILE:  1 = floor_lair
+FTILE:  .t1 = floor_lair
 MAP
 ttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttt1ttttttwwtttttttttttttttttttttt
@@ -4915,4 +4911,42 @@ ttt..............
 tt....
 t..
 t.
+ENDMAP
+
+###########################################################
+# Basic island, with variations
+#
+NAME:   enne_octagon_isle
+ORIENT: float
+TAGS:   entry
+FTILE:  '[({ = floor_sand_stone
+SUBST:  ' = .
+{{
+    map_octa_room({
+        oblique = crawl.random_range(3,7),
+        replace = '.',
+        outside = 'W',
+        inside  = '.'
+    })
+    if crawl.coinflip() then
+        map_smear({iterations=20, smear='x', onto='.W', boxy = true})
+    end
+}}
+SUBST: W:xw
+MAP
+ xxxxxxxxxxxxx 
+x.............x
+x.............x
+x.............x
+x.............x
+......www......
+.....w[''w.....
+@....w'{'w....@
+.....w''(w.....
+......www......
+x.............x
+x.............x
+x.............x
+x.............x
+ xxxxxxxxxxxxx 
 ENDMAP

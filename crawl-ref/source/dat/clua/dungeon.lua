@@ -75,6 +75,10 @@ function dgn_map_meta_wrap(map, tab)
                     return crawl.err_trace(val, map, ...)
                  end
    end
+
+   -- Convenience global variable, e.g. grd[x][y] = 'x'
+   meta['grd'] = dgn.grd_table(map)
+
    meta['_G'] = meta
    meta.wrapped_instance = map
    return meta
@@ -89,19 +93,21 @@ function dgn_set_map(map)
    g_dgn_curr_map = map
 end
 
-function dgn_run_map(prelude, main)
-   if prelude or main then
+function dgn_run_map(prelude, map, main)
+   if prelude or map or main then
       local env = dgn_map_meta_wrap(g_dgn_curr_map, dgn)
+      local ret
       if prelude then
-         local fn = setfenv(prelude, env)
-         if not main then
-            return fn()
-         end
-         fn()
+         ret = setfenv(prelude, env)()
+      end
+      if map then
+         ret = setfenv(map, env)()
+         dgn.normalise(g_dgn_curr_map)
       end
       if main then
-         return setfenv(main, env)()
+         ret = setfenv(main, env)()
       end
+      return ret
    end
 end
 
