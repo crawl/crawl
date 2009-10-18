@@ -52,7 +52,6 @@ REVISION("$Rev$");
 #include "stash.h"
 #include "stuff.h"
 #include "transfor.h"
-#include "version.h"
 #include "view.h"
 #include "xom.h"
 

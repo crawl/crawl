@@ -80,7 +80,6 @@ REVISION("$Rev$");
 #include "tiles.h"
 #include "traps.h"
 #include "travel.h"
-#include "version.h"
 #include "view.h"
 
 #ifdef WIZARD

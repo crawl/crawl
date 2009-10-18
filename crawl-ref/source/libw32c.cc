@@ -70,7 +70,6 @@ REVISION("$Rev$");
 #include "message.h"
 #include "state.h"
 #include "stuff.h"
-#include "version.h"
 #include "view.h"
 
 char oldTitle[80];

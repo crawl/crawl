@@ -27,7 +27,6 @@ REVISION("$Rev$");
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
-#include "version.h"
 #include "view.h"
 
 #define DEBUG_DIAGNOSTICS 1

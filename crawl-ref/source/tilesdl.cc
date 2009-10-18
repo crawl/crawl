@@ -20,7 +20,6 @@ REVISION("$Rev$");
 #include "tiles.h"
 #include "tilesdl.h"
 #include "travel.h"
-#include "version.h"
 #include "view.h"
 
 #include "tiledef-dngn.h"

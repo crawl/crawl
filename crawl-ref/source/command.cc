@@ -48,7 +48,6 @@ REVISION("$Rev$");
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
-#include "version.h"
 #include "view.h"
 
 static void _adjust_item(void);

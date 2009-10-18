@@ -55,7 +55,6 @@ REVISION("$Rev$");
 #include "state.h"
 #include "stuff.h"
 #include "tutorial.h"
-#include "version.h"
 
 extern std::string init_file_error;
 

@@ -10,7 +10,6 @@ REVISION("$Rev$");
 #include "delay.h"
 #include "files.h"
 #include "monplace.h"
-#include "version.h"
 
 #include <errno.h>
 #include <string.h>
