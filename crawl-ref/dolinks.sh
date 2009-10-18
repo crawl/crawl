@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [ -f source/build.h ]; then
+	true
+else
+	source/util/gen_ver.pl source/build.h
+fi
+
 mkdir -p NORMAL
 mkdir -p WIZARD
 
