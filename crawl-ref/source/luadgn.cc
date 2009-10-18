@@ -33,6 +33,7 @@ REVISION("$Rev$");
 #include "misc.h"
 #include "mon-util.h"
 #include "monplace.h"
+#include "monstuff.h"
 #include "place.h"
 #include "spells3.h"
 #include "spl-util.h"
@@ -2985,6 +2986,13 @@ LUAFN(dgn_dbg_test_explore)
     return (0);
 }
 
+LUAFN(dgn_dismiss_monsters)
+{
+    PLUARET(number,
+            dismiss_monsters(lua_gettop(ls) == 0 ? "" :
+                             luaL_checkstring(ls, 1)));
+}
+
 LUAFN(dgn_cell_see_cell)
 {
     COORDS(p, 1, 2);
@@ -2999,6 +3007,8 @@ static const struct luaL_reg dgn_lib[] =
     { "dbg_generate_level", dgn_dbg_generate_level },
     { "dbg_dump_map", dgn_dbg_dump_map },
     { "dbg_test_explore", dgn_dbg_test_explore },
+
+    { "dismiss_monsters", dgn_dismiss_monsters },
 
     { "default_depth", dgn_default_depth },
     { "name", dgn_name },

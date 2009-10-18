@@ -109,6 +109,7 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
    * *********************************************************************** */
 void monster_cleanup(monsters *monster);
 
+int dismiss_monsters(std::string pattern);
 
 void behaviour_event(monsters *mon, mon_event_type event_type,
                      int src = MHITNOT, coord_def src_pos = coord_def(),

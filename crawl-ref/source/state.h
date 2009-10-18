@@ -58,6 +58,7 @@ struct game_state
                             // suspended.
 
     bool test;              // Set if we want to run self-tests and exit.
+    std::vector<std::string> tests_selected; // Tests to be run.
 
     bool unicode_ok;        // Is unicode support available?
 

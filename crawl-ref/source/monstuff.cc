@@ -9775,3 +9775,52 @@ bool shift_monster(monsters *mon, coord_def p)
 
     return (count > 0);
 }
+
+// Make all of the monster's original equipment disappear, unless it's a fixed
+// artefact or unrand artefact.
+static void _vanish_orig_eq(monsters* mons)
+{
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    {
+        if (mons->inv[i] == NON_ITEM)
+            continue;
+
+        item_def &item(mitm[mons->inv[i]]);
+
+        if (!is_valid_item(item))
+            continue;
+
+        if (item.orig_place != 0 || item.orig_monnum != 0
+            || !item.inscription.empty()
+            || is_unrandom_artefact(item)
+            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN | ISFLAG_NOTED_GET
+                              | ISFLAG_BEEN_IN_INV) ) )
+        {
+            continue;
+        }
+        item.flags |= ISFLAG_SUMMONED;
+    }
+}
+
+int dismiss_monsters(std::string pattern) {
+    // Make all of the monsters' original equipment disappear unless "keepitem"
+    // is found in the regex (except for fixed arts and unrand arts).
+    const bool keep_item = strip_tag(pattern, "keepitem");
+
+    // Dismiss by regex
+    text_pattern tpat(pattern);
+    int ndismissed = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+    {
+        monsters *monster = &menv[mon];
+        if (monster->alive() &&
+            (tpat.empty() || tpat.matches(monster->name(DESC_PLAIN, true))))
+        {
+            if (!keep_item)
+                _vanish_orig_eq(monster);
+            monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
+            ++ndismissed;
+        }
+    }
+    return (ndismissed);
+}

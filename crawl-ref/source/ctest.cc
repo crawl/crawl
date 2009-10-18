@@ -20,6 +20,7 @@
 #include "files.h"
 #include "luadgn.h"
 #include "maps.h"
+#include "state.h"
 #include "stuff.h"
 
 #include <algorithm>
@@ -73,8 +74,25 @@ namespace crawl_tests
         luaL_openlib(dlua, "crawl", crawl_test_lib, 0);
     }
 
+    bool is_test_selected(const std::string &testname)
+    {
+        if (crawl_state.tests_selected.empty())
+            return (true);
+        for (int i = 0, size = crawl_state.tests_selected.size();
+             i < size; ++i)
+        {
+            const std::string &phrase(crawl_state.tests_selected[i]);
+            if (testname.find(phrase) != std::string::npos)
+                return (true);
+        }
+        return (false);
+    }
+
     void run_test(const std::string &file)
     {
+        if (!is_test_selected(file))
+            return;
+
         ++ntests;
         const std::string path(catpath(test_dir, file));
         dlua.execfile(path.c_str(), true, false);

@@ -5097,32 +5097,6 @@ void debug_place_map()
     debug_load_map_by_name(what);
 }
 
-// Make all of the monster's original equipment disappear, unless it's a fixed
-// artefact or unrand artefact.
-static void _vanish_orig_eq(monsters* mons)
-{
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-    {
-        if (mons->inv[i] == NON_ITEM)
-            continue;
-
-        item_def &item(mitm[mons->inv[i]]);
-
-        if (!is_valid_item(item))
-            continue;
-
-        if (item.orig_place != 0 || item.orig_monnum != 0
-            || !item.inscription.empty()
-            || is_unrandom_artefact(item)
-            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN | ISFLAG_NOTED_GET
-                              | ISFLAG_BEEN_IN_INV) ) )
-        {
-            continue;
-        }
-        item.flags |= ISFLAG_SUMMONED;
-    }
-}
-
 // Detects all monsters on the level, using their exact positions.
 void wizard_detect_creatures()
 {
@@ -5141,7 +5115,7 @@ void wizard_detect_creatures()
 // specified regex.
 void wizard_dismiss_all_monsters(bool force_all)
 {
-    char buf[80];
+    char buf[80] = "";
     if (!force_all)
     {
         mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
@@ -5154,51 +5128,10 @@ void wizard_dismiss_all_monsters(bool force_all)
         }
     }
 
-    // Make all of the monsters' original equipment disappear unless "keepitem"
-    // is found in the regex (except for fixed arts and unrand arts).
-    bool keep_item = false;
-    if (strstr(buf, "keepitem") != NULL)
-    {
-        std::string str = replace_all(buf, "keepitem", "");
-        trim_string(str);
-        strcpy(buf, str.c_str());
-
-        keep_item = true;
-    }
-
-    // Dismiss all
-    if (buf[0] == '\0' || force_all)
-    {
-        // Genocide... "unsummon" all the monsters from the level.
-        for (int mon = 0; mon < MAX_MONSTERS; mon++)
-        {
-            monsters *monster = &menv[mon];
-
-            if (monster->alive())
-            {
-                if (!keep_item)
-                    _vanish_orig_eq(monster);
-                monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
-            }
-        }
-        // If it was turned off turn autopickup back on.
+    dismiss_monsters(buf);
+    // If it was turned off turn autopickup back on if all monsters went away.
+    if (!*buf)
         autotoggle_autopickup(false);
-        return;
-    }
-
-    // Dismiss by regex
-    text_pattern tpat(buf);
-    for (int mon = 0; mon < MAX_MONSTERS; mon++)
-    {
-        monsters *monster = &menv[mon];
-
-        if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN, true)))
-        {
-            if (!keep_item)
-                _vanish_orig_eq(monster);
-            monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
-        }
-    }
 }
 
 static void _debug_kill_traps()

@@ -3703,6 +3703,11 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
         case CLO_TEST:
             crawl_state.test = true;
+            if (next_is_param)
+            {
+                crawl_state.tests_selected = split_string(",", next_arg);
+                nextUsed = true;
+            }
             break;
 
         case CLO_MACRO:
