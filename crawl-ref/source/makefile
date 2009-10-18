@@ -29,7 +29,7 @@ GAME = crawl
 #CFOPTIMIZE := -O2 -parallel
 
 CFOPTIMIZE := -O2
-CFOTHERS := -fno-strict-aliasing -pipe
+CFOTHERS := -fno-strict-aliasing -pipe $(EXTERNAL_FLAGS)
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
 MAKEFLAGS := --no-print-directory
@@ -329,7 +329,7 @@ CFWARN_L += -Wno-array-bounds
 endif
 
 CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic -D_FORTIFY_SOURCE=0
-CFOTHERS_L = $(EXTERNAL_FLAGS) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
+CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
 
 ifndef NO_LUA_BINDINGS
 CFOTHERS_L += -DCLUA_BINDINGS
