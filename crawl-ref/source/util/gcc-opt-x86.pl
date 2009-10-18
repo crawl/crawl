@@ -29,6 +29,8 @@ if ( ! $cpuinfo ) {
 
 my %features;
 my $family;
+my $uname_M = `uname -m`;
+my $uname_P = `uname -p`;
 my $uname_S = `uname -s`;
 
 #
@@ -66,12 +68,27 @@ if ( $uname_S =~ /^Darwin/ ) {
 	$features{"ssse3"} = `sysctl -n hw.optional.supplementalsse3`;
 }
 
+# TODO architectures:
+# * athlon-4, athlon-xp, athlon-mp
+# * k8, opteron, athlon64, athlon-fx
+# * k8-sse3, opteron-sse3, athlon64-sse3
+# * winchip-c6, winchip2
+
 #
 # Check the minimum march/mtune value
 #
 my $march = "i386";
 my $fpmath;
 
+if ($uname_M eq "i586" || $uname_M eq "i686")
+{
+	# Pentium and PentiumPro
+	$march = $uname_M;
+}
+if ( $uname_M eq "i586" && $features{"mmx"} )
+{
+	$march = "pentium-mmx";
+}
 if ( $features{"cmov"} && $features{"mmx"} ) {
 	$march = "pentium2";
 }
@@ -84,6 +101,15 @@ if ( $features{"sse2"} ) {
 }
 if ( $features{"pni"} ) {
 	$march = "prescott";
+}
+if ( $uname_P =~ /Athlon/ )
+{
+	$march = "athlon";
+
+	if ( $features{"abm"} && $features{"sse4a"} )
+	{
+		$march = "amdfam10";
+	}
 }
 
 # It's important to specify 'march=pentium4' for the
