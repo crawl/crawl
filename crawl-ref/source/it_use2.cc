@@ -33,6 +33,8 @@ REVISION("$Rev$");
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -198,6 +200,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                 mprf("You are wearing: %s",
                      amu.name(DESC_INVENTORY_EQUIP).c_str());
             }
+        }
+
+        // Merfolk boots unmeld if levitation takes us out of water
+        if(!player_is_airborne() && you.species == SP_MERFOLK
+           && grid_is_water(grd(you.pos())))
+        {
+            unmeld_one_equip(EQ_BOOTS);
         }
 
         you.duration[DUR_LEVITATION] += 25 + random2(pow);

@@ -1387,10 +1387,8 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             if (!see_grid(pos))
                 large_change = true;
 
-            you.moveto(pos);
-
-            if (grd(you.pos()) != DNGN_FLOOR
-                    && grd(you.pos()) != DNGN_SHALLOW_WATER
+            if (grd(pos) != DNGN_FLOOR
+                    && grd(pos) != DNGN_SHALLOW_WATER
                 || monster_at(you.pos())
                 || env.cgrid(you.pos()) != EMPTY_CLOUD)
             {
@@ -1400,6 +1398,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             else
             {
                 // Controlling teleport contaminates the player. -- bwr
+                move_player_to_grid(pos, false, true, true);
                 contaminate_player(1, true);
             }
         }
@@ -1457,7 +1456,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             large_change = true;
         }
 
-        you.moveto(newpos);
+        move_player_to_grid(newpos, false, true, true);
     }
 
     if (large_change)

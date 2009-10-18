@@ -227,16 +227,23 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 #endif
     else
     {
+        // Going to assume that move_player_to_grid works, (it should
+        // because terrain type etc. was already checked). could result
+        // in awkward messaging if it cancels for some reason but it's
+        // probably better than getting the blink message after any Mf
+        // transform messages all the time -cao
         mpr("You blink.");
-
-        success = true;
-        you.moveto(target);
-
-        if (you.level_type == LEVEL_ABYSS)
+        coord_def origin = you.pos();
+        success = move_player_to_grid(target, false, true, true);
+        if(success)
         {
-            abyss_teleport(false);
-            if (you.pet_target != MHITYOU)
-                you.pet_target = MHITNOT;
+
+            if (you.level_type == LEVEL_ABYSS)
+            {
+                abyss_teleport(false);
+                if (you.pet_target != MHITYOU)
+                    you.pet_target = MHITNOT;
+            }
         }
     }
 
@@ -1416,6 +1423,13 @@ void cast_fly(int power)
             mpr("You swoop lightly up into the air.");
         else
             mpr("You fly up into the air.");
+
+        // Merfolk boots unmeld if flight takes us out of water
+        if(you.species == SP_MERFOLK && grid_is_water(grd(you.pos())))
+        {
+            unmeld_one_equip(EQ_BOOTS);
+        }
+
     }
     else
         mpr("You feel more buoyant.");
