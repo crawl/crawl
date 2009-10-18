@@ -2989,13 +2989,6 @@ LUAFN(dgn_dismiss_monsters)
                              luaL_checkstring(ls, 1)));
 }
 
-LUAFN(dgn_cell_see_cell)
-{
-    COORDS(p, 1, 2);
-    COORDS(q, 3, 4);
-    PLUARET(number, cell_see_cell(p, q));
-}
-
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
 static const struct luaL_reg dgn_lib[] =
@@ -3150,8 +3143,6 @@ static const struct luaL_reg dgn_lib[] =
     { "change_floor_tile", dgn_change_floor_tile },
     { "lev_floortile", dgn_lev_floortile },
     { "lev_rocktile", dgn_lev_rocktile },
-
-    { "cell_see_cell", dgn_cell_see_cell },
 
     { NULL, NULL }
 };

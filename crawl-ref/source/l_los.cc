@@ -34,9 +34,17 @@ LUAFN(los_find_ray)
     return (0);
 }
 
+LUAFN(los_cell_see_cell)
+{
+    COORDS(p, 1, 2);
+    COORDS(q, 3, 4);
+    PLUARET(number, cell_see_cell(p, q));
+}
+
 const struct luaL_reg los_lib[] =
 {
     { "findray", los_find_ray },
+    { "cell_see_cell", los_cell_see_cell },
     { NULL, NULL }
 };
 
