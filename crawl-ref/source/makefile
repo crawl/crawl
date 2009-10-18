@@ -24,15 +24,34 @@ GAME = crawl
 # CFWARN(_L) - Warning flags
 # CFOTHERS(_L) - Anything else
 #
-# These are good optimizations for a Pentium M or better:
-#CFOPTIMIZE := -O2 -march=i686 -mtune=i686 -mmmx -msse -msse2 -mfpmath=sse -funroll-all-loops
+
 # These are really good options for the Intel C++ compiler:
 #CFOPTIMIZE := -O2 -parallel
-CFOPTIMIZE := -O2
+
+# Define this to automatically generate code optimized for your machine
+# (GCC only as of now).
+#
+# NOTE: Don't use this with a release build, since the generated code
+# won't work for all machines.
+ifdef AUTO_OPT_GCC
+
+ifdef CROSSHOST
+error Can not do AUTO_OPT_GCC with CROSSHOST
+endif
+
+ifdef HURRY
+error Can not do AUTO_OPT_GCC with HURRY
+endif
+
+AUTO_OPT_FLAGS := $(shell util/auto-opt.sh)
+endif
+
+CFOPTIMIZE := -O2 $(AUTO_OPT_FLAGS)
 CFOTHERS := -fno-strict-aliasing -pipe
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
 MAKEFLAGS := --no-print-directory
+
 
 #
 # The GCC and GXX variables are set later.
