@@ -592,6 +592,8 @@ bool _find_ray_se(const coord_def& target, ray_def& ray,
     if (!bds(target))
         return false;
 
+    ASSERT(bds_precalc(target));
+
     // Ensure the precalculations have been done.
     raycast();
 
