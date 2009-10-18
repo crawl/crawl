@@ -106,6 +106,9 @@ void trap_def::prepare_ammo()
     case TRAP_AXE:
         this->ammo_qty = 2 + random2avg(6, 3);
         break;
+    case TRAP_ALARM:
+        this->ammo_qty = 1 + random2(3);
+        break;
     default:
         this->ammo_qty = 0;
         break;
@@ -389,7 +392,15 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_ALARM:
-        if (silenced(this->pos))
+        if (!ammo_qty--)
+        {
+            if (you_trigger)
+                mpr("You trigger an alarm trap, but it seems broken.");
+            else if (in_sight && you_know)
+                mpr("The alarm trap gives no sound.");
+            trap_destroyed = true;
+        }
+        else if (silenced(this->pos))
         {
             if (you_know && in_sight)
                 mpr("The alarm trap is silent.");
