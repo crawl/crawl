@@ -2627,12 +2627,15 @@ static void _set_random_slime_target(monsters* mon)
 // allow_adjacent:  allow target to be adjacent to origin.
 // restrict_LOS:    restrict target to be within PLAYER line of sight.
 bool random_near_space(const coord_def& origin, coord_def& target,
-                       bool allow_adjacent, bool restrict_LOS,
+                       bool allow_adjacent, bool restrict_los,
                        bool forbid_dangerous, bool forbid_sanctuary)
 {
     // This might involve ray tracing (via num_feats_between()), so
     // cache results to avoid duplicating ray traces.
-    FixedArray<bool, 13, 13> tried;
+#define RNS_OFFSET 6
+#define RNS_WIDTH (2*RNS_OFFSET + 1)
+    FixedArray<bool, RNS_WIDTH, RNS_WIDTH> tried;
+    const coord_def tried_o = coord_def(RNS_OFFSET, RNS_OFFSET);
     tried.init(false);
 
     // Is the monster on the other side of a transparent wall?
@@ -2648,24 +2651,22 @@ bool random_near_space(const coord_def& origin, coord_def& target,
                                               DNGN_CLEAR_PERMAROCK_WALL);
     }
 
-    int tries = 0;
-    while (tries++ < 150)
+    for (int tries = 0; tries < 150; tries++)
     {
-        coord_def delta(random2(13), random2(13));
+        coord_def p = coord_def(random2(RNS_WIDTH), random2(RNS_WIDTH));
+        if (tried(p))
+            continue;
+        else
+            tried(p) = true;
 
-        target = origin - coord_def(6, 6) + delta;
+        target = origin + (p - tried_o);
 
         // Origin is not 'near'.
         if (target == origin)
             continue;
 
-        if (tried(delta))
-            continue;
-
-        tried(delta) = true;
-
         if (!in_bounds(target)
-            || restrict_LOS && !see_cell(target)
+            || restrict_los && !see_cell(target)
             || grd(target) < DNGN_SHALLOW_WATER
             || actor_at(target)
             || !allow_adjacent && distance(origin, target) <= 2
@@ -3352,7 +3353,9 @@ static void _check_lava_water_in_sight()
     you.lava_in_sight = you.water_in_sight = 0;
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        const coord_def ep = *ri - you.pos() + coord_def(9, 9);
+        // XXX: remove explicit coordinate translation.
+        const coord_def ep = *ri - you.pos() + coord_def(ENV_SHOW_OFFSET,
+                                                         ENV_SHOW_OFFSET);
         if (env.show(ep))
         {
             const dungeon_feature_type feat = grd(*ri);
