@@ -1960,8 +1960,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     if (!found)
         return(0);
 
-    you.moveto(target);
-    return 1;
+    return move_player_to_grid(target, false, true, true);
 }
 
 int cast_semi_controlled_blink(int pow)

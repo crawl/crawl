@@ -15,6 +15,7 @@ REVISION("$Rev$");
 #if defined ( WIN32CONSOLE ) || defined ( WIN32TILES )
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <direct.h>
 #elif defined ( __linux__ )
 #include <unistd.h>
 #elif defined ( __MACH__ )
