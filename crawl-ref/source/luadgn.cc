@@ -3000,6 +3000,8 @@ LUAFN(dgn_cell_see_cell)
     PLUARET(number, cell_see_cell(p, q));
 }
 
+LUAWRAP(_dgn_reset_level, dgn_reset_level())
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "dbg_goto_place", dgn_dbg_goto_place },
@@ -3008,6 +3010,7 @@ static const struct luaL_reg dgn_lib[] =
     { "dbg_dump_map", dgn_dbg_dump_map },
     { "dbg_test_explore", dgn_dbg_test_explore },
 
+    { "reset_level", _dgn_reset_level },
     { "dismiss_monsters", dgn_dismiss_monsters },
 
     { "default_depth", dgn_default_depth },

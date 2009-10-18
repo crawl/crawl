@@ -11,6 +11,7 @@ local water = dgn.find_feature_number("deep_water")
 
 local function test_los_map(map)
   crawl.mesclr()
+  dgn.reset_level()
   -- choose random debug map; better choose all
   dgn.tags(map, "no_rotate no_vmirror no_hmirror no_pool_fixup")
   local name = dgn.name(map)
@@ -61,4 +62,3 @@ local function test_los_maps()
 end
 
 test_los_maps()
-
