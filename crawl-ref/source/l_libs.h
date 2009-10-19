@@ -2,6 +2,7 @@
 
 extern const struct luaL_reg crawl_lib[];
 extern const struct luaL_reg dgn_lib[];
+extern const struct luaL_reg dgnevent_lib[];
 extern const struct luaL_reg file_lib[];
 extern const struct luaL_reg los_lib[];
 extern const struct luaL_reg you_lib[];
