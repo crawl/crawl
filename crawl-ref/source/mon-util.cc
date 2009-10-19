@@ -7955,7 +7955,7 @@ int monsters::foe_distance() const
 
 bool monsters::can_go_berserk() const
 {
-    if (holiness() != MH_NATURAL)
+    if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE)
         return (false);
 
     if (has_ench(ENCH_FATIGUE) || has_ench(ENCH_BERSERK))
