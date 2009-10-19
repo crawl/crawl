@@ -42,6 +42,7 @@ l_crawl.o \
 l_dgn.o \
 l_file.o \
 l_los.o \
+l_you.o \
 los.o \
 losparam.o \
 macro.o \
