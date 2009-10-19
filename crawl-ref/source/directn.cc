@@ -3179,7 +3179,8 @@ static std::string _get_monster_desc(const monsters *mon)
         text += pronoun + " is a disembodied soul.\n";
 
     dungeon_feature_type blocking_feat;
-    if (_blocked_ray(mon->pos(), &blocking_feat))
+    if (!crawl_state.arena_suspended
+        && _blocked_ray(mon->pos(), &blocking_feat))
     {
         text += "Your line of fire to " + mon->pronoun(PRONOUN_OBJECTIVE)
               + " is blocked by "
