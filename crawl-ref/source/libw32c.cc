@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#if defined(WIN32CONSOLE)
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
 
 /*
  *  File:       libw32c.cc
@@ -1158,4 +1158,4 @@ int ftruncate(int fp, int size)
 
 #endif /* #ifdef TARGET_COMPILER_VC */
 
-#endif /* #if defined(WIN32CONSOLE) */
+#endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE) */

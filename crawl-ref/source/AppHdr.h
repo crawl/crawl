@@ -199,7 +199,7 @@
     #define REGEX_PCRE
 
 #elif defined(TARGET_OS_WINDOWS)
-    #if defined(WIN32CONSOLE)
+    #if !defined(USE_TILE)
         #include "libw32c.h"
     #endif
     #define EOL "\n"

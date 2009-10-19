@@ -6,6 +6,6 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		PreprocessorDefinitions="WIN32CONSOLE"
+		PreprocessorDefinitions=""
 	/>
 </VisualStudioPropertySheet>

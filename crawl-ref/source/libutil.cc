@@ -18,7 +18,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#if defined(WIN32CONSOLE) || defined(WIN32TILES)
+#ifdef TARGET_OS_WINDOWS
     #undef ARRAYSZ
     #include <windows.h>
     #undef max
@@ -30,7 +30,7 @@
 
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
-    #if defined(WIN32CONSOLE) || defined(WIN32TILES) || defined(TARGET_OS_DOS)
+    #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS)
         #define PCRE_STATIC
     #endif
 
@@ -161,7 +161,7 @@ std::string &escape_path_spaces(std::string &s)
         }
         result += *ch;
     }
-#elif defined(WIN32CONSOLE) || defined(WIN32TILES)
+#elif defined(TARGET_OS_WINDOWS)
     if (s.find(" ") != std::string::npos &&
         s.find("\"") == std::string::npos)
     {

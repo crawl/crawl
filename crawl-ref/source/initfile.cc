@@ -42,7 +42,7 @@
 #include "view.h"
 
 // For finding the executable's path
-#if defined ( WIN32CONSOLE ) || defined ( WIN32TILES )
+#ifdef TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #elif defined ( __linux__ )

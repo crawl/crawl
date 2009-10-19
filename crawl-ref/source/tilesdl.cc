@@ -117,7 +117,7 @@ TilesFramework::~TilesFramework()
 
 static void _init_consoles()
 {
-#ifdef WIN32TILES
+#ifdef TARGET_OS_WINDOWS
     typedef BOOL (WINAPI *ac_func)(DWORD);
     ac_func attach_console = (ac_func)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "AttachConsole");
@@ -134,7 +134,7 @@ static void _init_consoles()
 
 static void _shutdown_console()
 {
-#ifdef WIN32TILES
+#ifdef TARGET_OS_WINDOWS
     typedef BOOL (WINAPI *fc_func)(void);
     fc_func free_console = (fc_func)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "FreeConsole");
@@ -227,7 +227,7 @@ void TilesFramework::calculate_default_options()
 
 bool TilesFramework::initialise()
 {
-#ifdef WIN32TILES
+#ifdef TARGET_OS_WINDOWS
     putenv("SDL_VIDEO_WINDOW_POS=center");
     putenv("SDL_VIDEO_CENTERED=1");
 #endif
@@ -254,7 +254,7 @@ bool TilesFramework::initialise()
 #ifdef DATA_DIR_PATH
             DATA_DIR_PATH
 #endif
-#ifdef WIN32TILES
+#ifdef TARGET_OS_WINDOWS
             "dat/tiles/stone_soup_icon-win32.png";
 #else
             "dat/tiles/stone_soup_icon-32x32.png";

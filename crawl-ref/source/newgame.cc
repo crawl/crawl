@@ -3320,7 +3320,7 @@ static bool _validate_player_name(bool verbose)
 
 bool validate_player_name(const char* name, bool verbose)
 {
-#if defined(TARGET_OS_DOS) || defined(WIN32CONSOLE) || defined(WIN32TILES)
+#if defined(TARGET_OS_DOS) || defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.
     if (stricmp(name, "con") == 0
         || stricmp(name, "nul") == 0

@@ -302,7 +302,7 @@ bool is_absolute_path(const std::string &path)
 {
     return (!path.empty()
             && (path[0] == FILE_SEPARATOR
-#if defined(WIN32CONSOLE) || defined(WIN32TILES)
+#ifdef TARGET_OS_WINDOWS
                 || path.find(':') != std::string::npos
 #endif
                 ));

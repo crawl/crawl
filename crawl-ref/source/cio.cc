@@ -150,7 +150,7 @@ void get_input_line( char *const buff, int len )
     get_input_line_gui( buff, len );
 #elif defined(UNIX)
     get_input_line_from_curses( buff, len ); // implemented in libunix.cc
-#elif defined(WIN32CONSOLE)
+#elif defined(TARGET_OS_WINDOWS)
     getstr( buff, len );
 #else
 
@@ -185,7 +185,7 @@ void get_input_line( char *const buff, int len )
 // we want to use in cancelable_get_line() and menus.
 int c_getch()
 {
-#if defined(TARGET_OS_DOS) || defined(UNIX) || defined(WIN32CONSOLE)
+#if defined(TARGET_OS_DOS) || defined(UNIX) || (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE))
     return getch_ck();
 #else
     return m_getch();

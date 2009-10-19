@@ -319,7 +319,7 @@ bool is_notable_terrain(dungeon_feature_type ftype)
     return (Feature[ftype].is_notable());
 }
 
-#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 static unsigned _colflag2brand(int colflag)
 {
     switch (colflag)
@@ -355,7 +355,7 @@ unsigned real_colour(unsigned raw_colour)
     if (is_element_colour( raw_colour ))
         raw_colour = colflags | element_colour( raw_colour );
 
-#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
     if (colflags)
     {
         unsigned brand = _colflag2brand(colflags);
@@ -596,7 +596,7 @@ static char _get_travel_colour( const coord_def& p )
                                         Options.tc_disconnected;
 }
 
-#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 static unsigned short _dos_reverse_brand(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)

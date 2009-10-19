@@ -749,7 +749,7 @@ void cio_init()
     unixcurses_startup();
 #endif
 
-#ifdef WIN32CONSOLE
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
     init_libw32c();
 #endif
 
@@ -782,7 +782,7 @@ void cio_cleanup()
     unixcurses_shutdown();
 #endif
 
-#ifdef WIN32CONSOLE
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
     deinit_libw32c();
 #endif
 
@@ -826,7 +826,9 @@ void end(int exit_code, bool print_error, const char *format, ...)
         error.clear();
     }
 
-#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(DGL_PAUSE_AFTER_ERROR)
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) || \
+     defined(TARGET_OS_DOS) || \
+     defined(DGL_PAUSE_AFTER_ERROR)
     if (exit_code && !crawl_state.arena
         && !crawl_state.seen_hups && !crawl_state.test)
     {

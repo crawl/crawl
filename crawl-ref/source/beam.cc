@@ -2081,7 +2081,7 @@ void bolt::do_fire()
         choose_ray();
     }
 
-#ifdef WIN32CONSOLE
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
     // Before we start drawing the beam, turn buffering off.
     bool oldValue = true;
     if (!is_tracer)
@@ -2193,7 +2193,7 @@ void bolt::do_fire()
     }
 
     // That's it!
-#ifdef WIN32CONSOLE
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
     set_buffering(oldValue);
 #endif
 }
@@ -5518,7 +5518,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     exp_map.init(INT_MAX);
     determine_affected_cells(exp_map, coord_def(), 0, r, true, true);
 
-#ifdef WIN32CONSOLE
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
     // turn buffering off
     bool oldValue = true;
     if (!is_tracer)
@@ -5583,7 +5583,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         }
     }
 
-#ifdef WIN32CONSOLE
+#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
     if (!is_tracer)
         set_buffering(oldValue);
 #endif

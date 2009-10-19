@@ -7,7 +7,7 @@
 	<Tool
 		Name="VCCLCompilerTool"
 		AdditionalIncludeDirectories="&quot;$(SolutionDir)\..\contrib\sdl\include&quot;;&quot;$(SolutionDir)\..\contrib\sdl-image&quot;;&quot;$(SolutionDir)\..\contrib\libpng&quot;;&quot;$(SolutionDir)\..\contrib\freetype\include&quot;;&quot;$(SolutionDir)\..\contrib\zlib&quot;"
-		PreprocessorDefinitions="WIN32TILES;USE_TILE"
+		PreprocessorDefinitions="USE_TILE"
 	/>
 	<Tool
 		Name="VCLinkerTool"

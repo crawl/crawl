@@ -196,7 +196,7 @@ dungeon_char_type dchar_by_name(const std::string &name);
 
 void handle_terminal_resize(bool redraw = true);
 
-#if defined(WIN32CONSOLE) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
 unsigned short dos_brand( unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif

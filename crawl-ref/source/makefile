@@ -461,14 +461,6 @@ LIB += -lncurses
 endif
 endif
 
-ifdef WIN32
-ifdef TILES
-CFOTHERS_L += -DWIN32TILES
-else
-CFOTHERS_L += -DWIN32CONSOLE
-endif
-endif
-
 ifdef NEEDS_PCRE
 DEFINES += -DREGEX_PCRE
 LIB += -lpcre
