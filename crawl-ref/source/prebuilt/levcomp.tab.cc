@@ -166,8 +166,8 @@
 
 #include "AppHdr.h"
 #include "clua.h"
+#include "dlua.h"
 #include "libutil.h"
-#include "luadgn.h"
 #include "mapdef.h"
 #include "maps.h"
 #include "stuff.h"
