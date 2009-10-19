@@ -34,7 +34,16 @@ LDFLAGS := $(SDL_LDFLAGS) -lSDL_image $(PNG_LIB)
 
 endif
 
-CXX = g++
+# Attempt to use a full compiler name, to make
+# distcc builds work nicely.
+LMACH := $(shell gcc -dumpmachine)-
+ifeq ($(LMACH),-)
+LMACH :=
+endif
+ifeq ($(shell which $(LMACH)gcc 2> /dev/null),)
+LMACH :=
+endif
+CXX = $(LMACH)g++
 
 DELETE = rm -f
 
