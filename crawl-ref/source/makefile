@@ -559,6 +559,8 @@ endif
 CONTRIB_DEPENDS += $(LIBLUA) $(LIBSQLITE)
 LIB += $(LIBLUA) $(LIBSQLITE)
 
+EXTRA_OBJECTS += version.o
+
 GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_DEPENDS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell git describe --tags --long)
@@ -595,7 +597,7 @@ depend: $(OBJECTS:.o=.cc)
 else
 depend: $(DEPENDENCY_MKF)
 
-makefile.dep: .contrib-ok build.h compflag.h
+makefile.dep: .contrib-ok
 
 %.dep: $(OBJECTS:.o=.cc)
 	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) $(OBJECTS:.o=.cc) > $@
@@ -607,6 +609,8 @@ ifneq ($(MAKECMDGOALS),distclean)
 endif
 endif
 
+.PHONY: compflag.h build.h version.cc
+
 # This information is included in crash reports, and is printed with
 # "crawl -version"
 compflag.h:
@@ -615,7 +619,7 @@ compflag.h:
 build.h:
 	$(QUIET_GEN)util/gen_ver.pl $@
 
-version.o: build.h compflag.h
+version.cc: build.h compflag.h
 
 ##########################################################################
 # The level compiler
@@ -684,7 +688,7 @@ endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
-	$(RM) *.o *.ixx
+	$(RM) *.o *.ixx build.h compflag.h
 
 clean-contrib:
 	+$(MAKE) -C contrib clean

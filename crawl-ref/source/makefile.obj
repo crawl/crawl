@@ -100,7 +100,6 @@ transfor.o \
 traps.o \
 travel.o \
 tutorial.o \
-version.o \
 view.o \
 xom.o \
 kills.o \
