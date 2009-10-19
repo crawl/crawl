@@ -920,6 +920,44 @@ void losight(env_show_grid& sh, const coord_def& center,
     losight(sh, los_param_funcs(center, opc, bounds));
 }
 
+
+// class los
+// TODO: lazy update?
+
+los_def::los_def() {}
+
+los_def::los_def(const coord_def& c, const opacity_func &o,
+                             const bounds_func &b)
+{
+    init(c, o, b);
+}
+
+void los_def::init(const coord_def& c, const opacity_func &o,
+                                   const bounds_func &b)
+{
+    center = &c;
+    opc = &o;
+    bds = &b;
+    update();
+}
+
+void los_def::update()
+{
+    losight(show, *center, *opc, *bds);
+}
+
+void los_def::set_center(const coord_def& c)
+{
+    center = &c;
+    update();
+}
+
+bool los_def::see_cell(const coord_def& p) const
+{
+    return (::see_cell(show, *center, p));
+}
+
+
 void losight_permissive(env_show_grid &sh, const coord_def& center)
 {
     for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
@@ -930,6 +968,7 @@ void losight_permissive(env_show_grid &sh, const coord_def& center)
                 sh[x + sh_xo][y + sh_yo] = env.grid(pos);
         }
 }
+
 
 void calc_show_los()
 {

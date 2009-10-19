@@ -40,8 +40,27 @@ void losight(env_show_grid& sh, const coord_def& center,
              const opacity_func &opc = opc_default,
              const bounds_func &bds = bds_default);
 void losight(env_show_grid& sh, const los_param& param);
-void calc_show_los();
 
+class los_def
+{
+    env_show_grid show;
+    coord_def const * center;
+    opacity_func const * opc;
+    const bounds_func * bds;
+
+public:
+    los_def();
+    los_def(const coord_def& c, const opacity_func &o = opc_default,
+                                const bounds_func &b = bds_default);
+    void init(const coord_def& c, const opacity_func &o = opc_default,
+                                  const bounds_func &b = bds_default);
+    void update();
+    void set_center(const coord_def& center);
+    bool see_cell(const coord_def& p) const;
+};
+
+
+void calc_show_los();
 bool see_cell(const env_show_grid &show,
               const coord_def &c,
               const coord_def &pos );
