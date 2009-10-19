@@ -699,7 +699,7 @@ compflag.h:
 	@echo "\"" >> compflag.h
 	@echo "#endif" >> compflag.h
 
-$(GAME): $(GAME_DEPENDS) compile-flags
+$(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIB)
 
 debug: $(GAME)
