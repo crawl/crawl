@@ -7,46 +7,12 @@
 #include "AppHdr.h"
 
 #include <sstream>
-#include <algorithm>
-#include <memory>
-#include <cmath>
 
 #include "dlua.h"
 #include "l_libs.h"
 
-#include "branch.h"
-#include "chardump.h"
-#include "clua.h"
-#include "cloud.h"
-#include "describe.h"
-#include "directn.h"
-#include "dungeon.h"
-#include "files.h"
-#include "hiscores.h"
-#include "initfile.h"
-#include "items.h"
-#include "los.h"
 #include "mapdef.h"
-#include "mapmark.h"
-#include "maps.h"
-#include "message.h"
-#include "misc.h"
-#include "mon-util.h"
-#include "monplace.h"
-#include "monstuff.h"
-#include "place.h"
-#include "spells3.h"
-#include "spl-util.h"
-#include "state.h"
-#include "stuff.h"
 #include "tags.h"
-#include "terrain.h"
-#include "view.h"
-
-#ifdef UNIX
-#include <sys/time.h>
-#include <time.h>
-#endif
 
 template <typename list, typename lpush>
 static int dlua_gentable(lua_State *ls, const list &strings, lpush push)

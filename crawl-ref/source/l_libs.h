@@ -1,3 +1,8 @@
+/*
+ * File:     l_libs.h
+ * Summary:  Library definitions for dlua.
+ */
+
 #include "clua.h"
 
 extern const struct luaL_reg crawl_lib[];

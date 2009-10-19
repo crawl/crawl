@@ -2,9 +2,13 @@
 
 #include "dlua.h"
 #include "l_libs.h"
-
 #include "initfile.h"
 #include "view.h"
+
+#ifdef UNIX
+#include <sys/time.h>
+#include <time.h>
+#endif
 
 LUAFN(_crawl_args)
 {
