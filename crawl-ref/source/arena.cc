@@ -659,6 +659,14 @@ namespace arena
         if (a_spawners.size() == 0 || b_spawners.size() == 0)
             return;
 
+        if (faction_a.active_members == 0 || faction_b.active_members == 0)
+        {
+            mpr("ERROR: Both sides have spawners, but the active member "
+                "count of one side has been reduced to zero!", MSGCH_ERROR);
+            more();
+            return;
+        }
+
         for (unsigned int i = 0; i < a_spawners.size(); i++)
         {
             int idx = a_spawners[i];
