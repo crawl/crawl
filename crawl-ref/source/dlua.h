@@ -119,14 +119,6 @@ dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
 #define MAPMARKER(ls, n, var) \
 map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
 
-extern const struct luaL_reg crawl_lib[];
-extern const struct luaL_reg dgn_lib[];
-extern const struct luaL_reg los_lib[];
-
-void luaopen_ray(lua_State *ls);
-
-void register_mapdef_tables(lua_State *ls);
-
 //////////////////////////////////////////////////////////////////////////
 
 #endif
