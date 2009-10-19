@@ -108,9 +108,9 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	NEEDS_PCRE = YesPlease
 endif
 ifeq ($(uname_S),Darwin)
-ifndef NO_APPLE_GCC
-	APPLE_GCC = YesPlease
-endif
+	ifndef NO_APPLE_GCC
+		APPLE_GCC = YesPlease
+	endif
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
 endif
