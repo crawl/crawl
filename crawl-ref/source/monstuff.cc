@@ -8067,7 +8067,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         return (false);
 
     // Friendly jellies won't eat (unless worshipping Jiyva).
-    if (monster->attitude != ATT_HOSTILE && you.religion != GOD_JIYVA)
+    if (mons_friendly(monster) && you.religion != GOD_JIYVA)
         return (false);
 
     int hps_gained = 0;
