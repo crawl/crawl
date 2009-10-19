@@ -106,7 +106,7 @@ if ( $verstring ne $tag || !$pretyp ) {
 	}
 }
 
-my $OS        = `uname -o`;
+my $OS        = `uname -s`;
 my $machine   = `uname -m`;
 my $processor = `uname -p`;
 
