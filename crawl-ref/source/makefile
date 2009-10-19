@@ -578,10 +578,10 @@ depend: $(OBJECTS:.o=.cc)
 else
 depend: $(DEPENDENCY_MKF)
 
-makefile.dep: .contrib-ok
+makefile.dep: .contrib-ok build.h compflag.h
 
 %.dep: $(OBJECTS:.o=.cc)
-	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) *.h $(OBJECTS:.o=.cc) > $@
+	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) $(OBJECTS:.o=.cc) > $@
 endif
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -689,13 +689,13 @@ compflag.h:
 	@echo "#ifndef __included_crawl_compiler_flags_h" >> compflag.h
 	@echo "#define __included_crawl_compiler_flags_h" >> compflag.h
 	@echo -n "#define CRAWL_CFLAGS \"" >> compflag.h
-	@echo -n $(CFLAGS) | sed s/\"/\\\"/g >> compflag.h
+	@echo -n $(CFLAGS) | sed 's/\"/\\"/g' >> compflag.h
 	@echo "\"" >> compflag.h
 	@echo -n "#define CRAWL_CFLAGS_L \"" >> compflag.h
-	@echo -n $(CFLAGS_L) | sed s/\"/\\\"/g >> compflag.h
+	@echo -n $(CFLAGS_L) | sed 's/\"/\\"/g' >> compflag.h
 	@echo "\"" >> compflag.h
 	@echo -n "#define CRAWL_LDFLAGS \"" >> compflag.h
-	@echo -n $(LDFLAGS) | sed s/\"/\\\"/g >> compflag.h
+	@echo -n $(LDFLAGS) | sed 's/\"/\\"/g' >> compflag.h
 	@echo "\"" >> compflag.h
 	@echo "#endif" >> compflag.h
 
