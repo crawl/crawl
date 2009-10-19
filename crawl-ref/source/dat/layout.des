@@ -6,6 +6,17 @@
 #
 ###############################################################################
 
+{{
+    function dgn.random_room_point(room)
+      return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
+                       room.y1 + crawl.random2(room.y2 - room.y1))
+    end
+
+    function dgn.join_the_dots_p(start, finish)
+      return dgn.join_the_dots(start.x, start.y, finish.x, finish.y)
+    end
+}}
+
 ##############################################################
 # layout_forbidden_doughnut
 #
@@ -246,6 +257,60 @@ TAGS:    layout allow_dup
 
     if smear then
         dgn.fill_disconnected_zones(0, 0, gxm - 1, gym - 1, wall)
+    end
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_rooms
+#
+# This replaces dungeon.cc:_plan_3().
+#
+NAME: layout_rooms
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    local wall = dgn.feature_number("rock_wall")
+    local floor = dgn.feature_number("floor")
+
+    local num_rooms = 30 + crawl.random2(90)
+    local exclusive = not crawl.one_chance_in(10)
+    local exclusive2 = crawl.coinflip()
+
+    local rooms = {}
+
+    for i = 0, num_rooms do
+      local new_room = {
+        x1 = 10 + crawl.random2(50),
+        y1 = 10 + crawl.random2(40)
+      }
+      new_room.x2 = new_room.x1 + 2 + crawl.random2(8)
+      new_room.y2 = new_room.y1 + 2 + crawl.random2(8)
+
+      local not_walls = dgn.count_antifeature_in_box(new_room.x1 - 1,
+                    new_room.y1 - 1, new_room.x2 + 1, new_room.y2 + 1, wall)
+      if (not exclusive or not_walls == 0) then
+        dgn.replace_area(new_room.x1, new_room.y1, new_room.x2,
+                         new_room.y2, wall, floor);
+
+        if #rooms > 0 and not exclusive2 then
+          dgn.join_the_dots_p(dgn.random_room_point(new_room),
+                              dgn.random_room_point(rooms[#rooms]))
+        end
+
+        table.insert(rooms, new_room)
+        if #rooms >= 30 then
+          break
+        end
+      end
+    end
+
+    if exclusive2 then
+      for i = 2, #rooms do
+        dgn.join_the_dots_p(dgn.random_room_point(rooms[i]),
+                            dgn.random_room_point(rooms[i - 1]))
+      end
     end
 }}
 MAP

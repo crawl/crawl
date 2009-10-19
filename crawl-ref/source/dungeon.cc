@@ -148,7 +148,7 @@ static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
 static char _plan_1(int level_number);
 static char _plan_2(int level_number);
-static char _plan_3();
+static char _plan_3(int level_number);
 static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                     char forbid_y2, dungeon_feature_type force_wall);
 static char _plan_5();
@@ -5981,12 +5981,12 @@ static void _plan_main(int level_number, int force_plan)
 
     do_stairs = ((force_plan == 1) ? _plan_1(level_number) :
                  (force_plan == 2) ? _plan_2(level_number) :
-                 (force_plan == 3) ? _plan_3() :
+                 (force_plan == 3) ? _plan_3(level_number) :
                  (force_plan == 4) ? _plan_4(0, 0, 0, 0, NUM_FEATURES) :
                  (force_plan == 5) ? (one_chance_in(9) ? _plan_5()
-                                                       : _plan_3()) :
+                                                       : _plan_3(level_number)) :
                  (force_plan == 6) ? _plan_6(level_number)
-                                   : _plan_3());
+                                   : _plan_3(level_number));
 
     if (do_stairs == 3 || do_stairs == 1)
         spotty_level(true, 0, coinflip());
@@ -6036,93 +6036,16 @@ static char _plan_2(int level_number)
     return 0;
 }
 
-static char _plan_3()
+static char _plan_3(int level_number)
 {
     dgn_Build_Method += " plan_3";
     dgn_Layout_Type   = "rooms";
 
-    // Draws a room, then another and links them together, then another and etc.
-    // Of course, this can easily end up looking just like a make_trail level.
-    int i;
-    int roomsss = 30 + random2(90);
+    const map_def *vault = find_map_by_name("layout_rooms");
+    ASSERT(vault);
 
-    bool exclusive = (one_chance_in(10) ? false : true);
-    bool exclusive2 = coinflip();
-
-    char romx1[30], romy1[30], romx2[30], romy2[30];
-
-    int which_room = 0;
-
-    for (i = 0; i < roomsss; i++)
-    {
-        romx1[which_room] = 10 + random2(50);
-        romy1[which_room] = 10 + random2(40);
-        romx2[which_room] = romx1[which_room] + 2 + random2(8);
-        romy2[which_room] = romy1[which_room] + 2 + random2(8);
-
-        if (exclusive && count_antifeature_in_box(romx1[which_room] - 1,
-                                                  romy1[which_room] - 1,
-                                                  romx2[which_room] + 1,
-                                                  romy2[which_room] + 1,
-                                                  DNGN_ROCK_WALL))
-        {
-            continue;
-        }
-
-        _replace_area(romx1[which_room], romy1[which_room], romx2[which_room],
-                      romy2[which_room], DNGN_ROCK_WALL, DNGN_FLOOR);
-
-        if (which_room > 0 && !exclusive2)
-        {
-            const int rx1 = romx1[which_room];
-            const int rx2 = romx2[which_room];
-            const int prev_rx1 = romx1[which_room - 1];
-            const int prev_rx2 = romx2[which_room - 1];
-
-            const int ry1 = romy1[which_room];
-            const int ry2 = romy2[which_room];
-            const int prev_ry1 = romy1[which_room - 1];
-            const int prev_ry2 = romy2[which_room - 1];
-
-            join_the_dots( coord_def(rx1 + random2( rx2 - rx1 ),
-                                     ry1 + random2( ry2 - ry1 )),
-                            coord_def(prev_rx1 + random2(prev_rx2 - prev_rx1),
-                                      prev_ry1 + random2(prev_ry2 - prev_ry1)),
-                            MMT_VAULT );
-        }
-
-        which_room++;
-
-        if (which_room >= 29)
-            break;
-
-    }
-
-    if (exclusive2)
-    {
-        for (i = 0; i < which_room; i++)
-        {
-            if (i > 0)
-            {
-                const int rx1 = romx1[i];
-                const int rx2 = romx2[i];
-                const int prev_rx1 = romx1[i - 1];
-                const int prev_rx2 = romx2[i - 1];
-
-                const int ry1 = romy1[i];
-                const int ry2 = romy2[i];
-                const int prev_ry1 = romy1[i - 1];
-                const int prev_ry2 = romy2[i - 1];
-
-                join_the_dots( coord_def( rx1 + random2( rx2 - rx1 ),
-                                          ry1 + random2( ry2 - ry1 ) ),
-                                coord_def(
-                                    prev_rx1 + random2( prev_rx2 - prev_rx1 ),
-                                    prev_ry1 + random2( prev_ry2 - prev_ry1 ) ),
-                                MMT_VAULT );
-            }
-        }
-    }
+    bool success = _build_vaults(level_number, vault);
+    _ensure_vault_placed(success, false);
 
     return 2;
 }
