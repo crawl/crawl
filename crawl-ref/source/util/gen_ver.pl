@@ -114,12 +114,12 @@ chomp($OS);
 chomp($machine);
 chomp($processor);
 
-unlink("$outfile.tmp");
+unlink("$outfile");
 
 my $prefix   = "CRAWL";
 my $smprefix = "crawl";
 
-open OUT, ">", "$outfile.tmp" or die $!;
+open OUT, ">", "$outfile" or die $!;
 print OUT <<__eof__;
 #ifndef __included_${smprefix}_build_number_h
 #define __included_${smprefix}_build_number_h
@@ -144,32 +144,3 @@ print OUT <<__eof__;
 
 __eof__
 close OUT or die $!;
-
-use Digest::MD5;
-
-my $ctx = Digest::MD5->new;
-
-my $md5old = ""; my $md5new = "";
-
-if (-e $outfile) {
-	open OUT, "$outfile" or die $!;
-	$ctx->addfile(*OUT);
-	$md5old = $ctx->hexdigest;
-	close OUT
-}
-
-open OUT, "$outfile.tmp" or die $!;
-$ctx->addfile(*OUT);
-$md5new = $ctx->hexdigest;
-close OUT;
-
-use File::Copy;
-
-if ($md5old ne $md5new) {
-	if (-e $outfile) {
-		unlink($outfile) or die $!;
-	}
-	move "$outfile.tmp", $outfile or die $!;
-} else {
-	unlink ("$outfile.tmp");
-}
