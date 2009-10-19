@@ -56,3 +56,7 @@ const struct luaL_reg dgnevent_lib[] =
 { NULL, NULL }
 };
 
+void luaopen_dgnevent(lua_State *ls)
+{
+    luaopen_setmeta(ls, "dgnevent", dgnevent_lib, DEVENT_METATABLE);
+}
