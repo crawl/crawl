@@ -43,6 +43,7 @@ l_dgn.o \
 l_dgnevt.o \
 l_file.o \
 l_los.o \
+l_mapmrk.o \
 l_you.o \
 los.o \
 losparam.o \
