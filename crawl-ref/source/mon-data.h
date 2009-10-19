@@ -3016,7 +3016,7 @@ static monsterentry mondata[] = {
 
 // A kraken and its tentacles get a random colour at creation.
 {
-    MONS_KRAKEN, 'X', DARKGREY, "kraken",
+    MONS_KRAKEN, 'X', BLACK, "kraken",
     M_COLD_BLOOD | M_SPELLCASTER,
     MR_NO_FLAGS,
     1500, 20, MONS_KRAKEN, MONS_KRAKEN, MH_NATURAL, -3,
@@ -3027,7 +3027,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_KRAKEN_TENTACLE, 'w', DARKGREY, "tentacle",
+    MONS_KRAKEN_TENTACLE, 'w', BLACK, "tentacle",
     M_COLD_BLOOD | M_NO_EXP_GAIN,
     MR_RES_ASPHYX,
     0, 10, MONS_KRAKEN_TENTACLE, MONS_KRAKEN_TENTACLE, MH_NATURAL, MAG_IMMUNE,
