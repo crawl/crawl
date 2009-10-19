@@ -17,8 +17,8 @@
 #if DEBUG_DIAGNOSTICS
 
 #include "clua.h"
+#include "dlua.h"
 #include "files.h"
-#include "luadgn.h"
 #include "maps.h"
 #include "state.h"
 #include "stuff.h"

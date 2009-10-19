@@ -6,10 +6,8 @@
 
 #include "AppHdr.h"
 
-#include "l_los.h"
-
 #include "los.h"
-#include "luadgn.h"
+#include "dlua.h"
 #include "ray.h"
 
 #define RAY_METATABLE "dgn.ray"

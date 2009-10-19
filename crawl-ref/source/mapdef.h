@@ -15,10 +15,10 @@
 #include <cstdio>
 #include <memory>
 
+#include "dlua.h"
 #include "enum.h"
 #include "externs.h"
 #include "fixary.h"
-#include "luadgn.h"
 #include "makeitem.h"
 #include "stuff.h"
 #include "travel.h"

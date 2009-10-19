@@ -1,5 +1,5 @@
 /*
- *  File:       luadgn.h
+ *  File:       dlua.h
  *  Summary:    Dungeon-builder Lua interface.
  *  Created by: dshaligram on Sat Jun 23 20:02:09 2007 UTC
  */
@@ -112,6 +112,17 @@ void luaopen_setmeta(lua_State *ls,
 #define COORDS(c, p1, p2)                                \
     GETCOORD(c, p1, p2, in_bounds)
 
+#define MAP(ls, n, var)                             \
+map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)
+#define DEVENT(ls, n, var) \
+dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
+#define MAPMARKER(ls, n, var) \
+map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
+
+extern const struct luaL_reg dgn_lib[];
+extern const struct luaL_reg los_lib[];
+
+void register_mapdef_tables(lua_State *ls);
 
 //////////////////////////////////////////////////////////////////////////
 

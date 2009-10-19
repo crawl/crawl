@@ -8,6 +8,7 @@
 #ifndef MAPS_H
 #define MAPS_H
 
+#include "dlua.h"
 #include "fixvec.h"
 #include "dungeon.h"
 

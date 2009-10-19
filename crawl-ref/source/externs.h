@@ -462,7 +462,7 @@ struct delay_queue_item
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
-// stack in luadgn.cc)
+// stack in l_dgn.cc)
 class level_id
 {
 public:

@@ -63,7 +63,7 @@ void get_feature_desc(const coord_def &gc, describe_info &inf);
 
 // last updated 24 Dec 2008 {mpc}
 /* ***********************************************************************
- * called from: luadgn
+ * called from: l_dgn
  * *********************************************************************** */
 void set_feature_desc_long(const std::string &raw_name,
                            const std::string &desc);

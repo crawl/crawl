@@ -10,7 +10,7 @@
 #include "externs.h"
 #include <list>
 
-// Keep event names in luadgn.cc in sync.
+// Keep event names in l_dgn.cc in sync.
 enum dgn_event_type
 {
     DET_NONE            = 0x0000,

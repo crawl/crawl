@@ -10,7 +10,7 @@
 #include "dungeon.h"
 #include "dgnevent.h"
 #include "clua.h"
-#include "luadgn.h"
+#include "dlua.h"
 #include <map>
 #include <string>
 #include <memory>

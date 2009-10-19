@@ -17,6 +17,7 @@ debug.o \
 decks.o \
 delay.o \
 describe.o \
+dlua.o \
 dgnevent.o \
 directn.o \
 dungeon.o \
@@ -37,10 +38,10 @@ itemprop.o \
 items.o \
 lev-pand.o \
 libutil.o \
+l_dgn.o \
 l_los.o \
 los.o \
 losparam.o \
-luadgn.o \
 macro.o \
 makeitem.o \
 mapdef.o \

@@ -15,7 +15,7 @@
 
 #include "chardump.h"
 #include "clua.h"
-#include "luadgn.h"
+#include "dlua.h"
 #include "delay.h"
 #include "directn.h"
 #include "kills.h"
