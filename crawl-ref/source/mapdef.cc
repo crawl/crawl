@@ -2268,6 +2268,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
         }
 
+        std::string name = strip_tag_prefix(mon_str, "name:");
+        if (!name.empty())
+        {
+            name = replace_all_of(name, "_", " ");
+            mspec.monname = name;
+        }
+
         trim_string(mon_str);
 
         if (mon_str == "8")

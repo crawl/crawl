@@ -1124,6 +1124,11 @@ static int _place_monster_aux(const mgen_data &mg,
                                         LIGHTBLUE, RED, LIGHTRED, MAGENTA, -1);
     }
 
+    if (mg.mname != "")
+    {
+        menv[id].mname = mg.mname;
+    }
+
     // The return of Boris is now handled in monster_die()...
     // not setting this for Boris here allows for multiple Borises in
     // the dungeon at the same time. -- bwr

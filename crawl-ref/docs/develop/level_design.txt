@@ -683,6 +683,21 @@ MONS:     (list of monsters)
           Items given to an orc or an elf will be made orcish or elven
           unless the item's race type is explicitly set otherwise.
 
+          Individual monsters can be given names as follows:
+              MONS: kobold name:Durwent
+
+          This will cause the monster to appear as "Durwent the kobold".
+          Spaces can be placed in the name by substituting them with the _
+          symbol. It is worth noting that "the <race>" will be appended
+          to all names, which should be considered when coming up with them.
+
+          The name tag is also useable in KMONS. It should be used carefully
+          to avoid having multiple monsters named the same (ie, as above,
+          and then using the glyph '1' multiple times will result in multiple
+          "Durwent the Kobold"s).
+
+          Monster names should be used very, very, very sparingly.
+
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters dervied from that monster
           spec to choose the same alternative.  If a monster is given

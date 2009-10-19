@@ -180,6 +180,9 @@ struct mgen_data
     // be available (vault metadata is not preserved across game saves).
     unsigned        map_mask;
 
+    // XXX: Rather hackish.
+    std::string     mname;
+
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
               int abj = 0,
@@ -193,12 +196,14 @@ struct mgen_data
               int moncolour = BLACK,
               int monpower = you.your_level,
               proximity_type prox = PROX_ANYWHERE,
-              level_area_type ltype = you.level_type)
+              level_area_type ltype = you.level_type,
+              std::string monname = "")
 
         : cls(mt), base_type(base), behaviour(beh),
           abjuration_duration(abj), summon_type(st), pos(p), foe(mfoe),
           flags(monflags), god(which_god), number(monnumber), colour(moncolour),
-          power(monpower), proximity(prox), level_type(ltype), map_mask(0)
+          power(monpower), proximity(prox), level_type(ltype), map_mask(0),
+          mname(monname)
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING);

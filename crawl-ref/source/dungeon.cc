@@ -4730,6 +4730,7 @@ int dgn_place_monster(mons_spec &mspec,
         mg.base_type = mspec.monbase;
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
+        mg.mname     = mspec.monname;
 
         coord_def place(where);
         if (!force_pos && mgrd(place) != NON_MONSTER
