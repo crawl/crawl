@@ -92,11 +92,17 @@ namespace Version
      */
     std::string Compiler();
 
-    //! The operating system.
+    //! The compiling operating system.
     /*!
      * Names the operating system that the executable was compiled on.
      */
     std::string BuildOS();
+
+    //! The compiling operating system's version.
+    /*!
+     * Specifies the version of the OS that the executable was compiled on.
+     */
+    std::string BuildOSVersion();
 
     //! The machine type.
     /*!

@@ -75,6 +75,11 @@ namespace Version
         return CRAWL_BUILD_OS;
     }
 
+    std::string BuildOSVersion()
+    {
+        return CRAWL_BUILD_OS_VER;
+    }
+
     std::string BuildMachine()
     {
         return CRAWL_BUILD_MACHINE;
@@ -107,8 +112,9 @@ std::string compilation_info()
 
     out += make_stringf("Compiled with %s on %s at %s" EOL,
                         Version::Compiler().c_str(), __DATE__, __TIME__);
-    out += make_stringf("Compiled on OS: %s" EOL,
-                        Version::BuildOS().c_str());
+    out += make_stringf("Compiled on OS: %s %s" EOL,
+                        Version::BuildOS().c_str(),
+                        Version::BuildOSVersion().c_str());
     out += make_stringf("Compiled on machine type: %s" EOL,
                         Version::BuildMachine().c_str());
     out += make_stringf("Compiled on processor type: %s" EOL,
