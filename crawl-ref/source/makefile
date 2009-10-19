@@ -183,18 +183,35 @@ CXX = $(GXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 endif # MacOS
 
 ifndef CROSSHOST
+
 ifneq ($(GCC_VER),)
-GCC := gcc-$(GCC_VER)
-GXX := g++-$(GCC_VER)
-else
-GCC := gcc
-GXX := g++
+# We do this in a separate variable because if we
+# specify GCC_VER on the make command-line, the
+# variable is immutable, and we can't add the dash.
+GCC_VER_SUFFIX:=-$(GCC_VER)
 endif
+
+# Attempt to use a full compiler name, to make
+# distcc builds work nicely.
+LMACH := $(shell gcc -dumpmachine)-
+ifeq ($(LMACH),-)
+LMACH :=
+endif
+ifeq ($(shell which $(LMACH)gcc$(GCC_VER_SUFFIX) 2> /dev/null),)
+LMACH :=
+endif
+
+GCC := $(LMACH)gcc$(GCC_VER_SUFFIX)
+GXX := $(LMACH)g++$(GCC_VER_SUFFIX)
+
 else
+
+# Cross-compiling is a weird case.
 GCC := $(CROSSHOST)-gcc
 GXX := $(CROSSHOST)-g++
 AR := $(CROSSHOST)-ar
 RANLIB := $(CROSSHOST)-ranlib
+
 endif
 GCC_GTE_4_0_0 := $(shell util/gcc-gte.pl $(GCC) 4.0.0)
 GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
