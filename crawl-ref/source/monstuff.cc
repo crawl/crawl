@@ -3263,14 +3263,13 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 5;
     const bool is_smart = (intel >= I_NORMAL);
 
-    env_show_grid patrol;
-    losight(patrol, mon->patrol_point, opacity_monmove(*mon), bounds_radius(rad));
-
-    env_show_grid lm;
+    los_def patrol = los_def(mon->patrol_point, opacity_monmove(*mon),
+                                                bounds_radius(rad));
+    los_def lm;
     if (is_smart || !patrol_seen)
     {
         // For stupid monsters, don't bother if the patrol point is in sight.
-        losight(lm, mon->pos(), opacity_monmove(*mon));
+        lm.init(mon->pos(), opacity_monmove(*mon));
     }
 
     int count_grids = 0;
@@ -3306,8 +3305,8 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             // and the patrol point is out of sight, too. Such a case
             // will be handled below, though it might take a while until
             // a monster gets out of a deadlock. (5% chance per turn.)
-            if (!see_cell(patrol, mon->patrol_point, *ri) &&
-                (!is_smart || !see_cell(lm, mon->pos(), *ri)))
+            if (!patrol.see_cell(*ri) &&
+                (!is_smart || !lm.see_cell(*ri)))
             {
                 continue;
             }
@@ -3318,8 +3317,8 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             // make sure the new target brings us into reach of it.
             // This means that the target must be reachable BOTH from
             // the patrol point AND the current position.
-            if (!see_cell(patrol, mon->patrol_point, *ri) ||
-                !see_cell(lm, mon->pos(), *ri))
+            if (!patrol.see_cell(*ri) ||
+                !lm.see_cell(*ri))
             {
                 continue;
             }
