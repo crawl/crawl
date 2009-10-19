@@ -301,9 +301,9 @@ int travel_exclude::radius_sq() const
     return (radius > 0 ? radius*radius + 1 : 0);
 }
 
-void travel_exclude::set_exclude_show()
+void travel_exclude::set_los()
 {
-    losight(show, pos, opc_excl, bounds_radius_sq(radius_sq()));
+    los.init(pos, opc_excl, bounds_radius_sq(radius_sq()));
     uptodate = true;
 }
 
@@ -312,13 +312,13 @@ bool travel_exclude::affects(const coord_def& p) const
     if (!uptodate)
         mprf(MSGCH_ERROR, "exclusion not up-to-date: e (%d,%d) p (%d,%d)",
              pos.x, pos.y, p.x, p.y);
-    return (see_cell(show, pos, p));
+    return (los.see_cell(p));
 }
 
 void init_exclusion_los()
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        curr_excludes[i].set_exclude_show();
+        curr_excludes[i].set_los();
 }
 
 void _mark_excludes_non_updated(const coord_def &p)
@@ -332,7 +332,7 @@ void _update_exclusion_los(bool all=false)
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
         if (all || !curr_excludes[i].uptodate)
-            curr_excludes[i].set_exclude_show();
+            curr_excludes[i].set_los();
 }
 
 /*
@@ -503,7 +503,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl)
     if (travel_exclude *exc = _find_exclude_root(p))
     {
         exc->radius = radius;
-        exc->set_exclude_show();
+        exc->set_los();
     }
     else
     {
