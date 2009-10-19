@@ -10,6 +10,8 @@
 
 #include "externs.h"
 #include "enum.h"
+#include "player.h"
+#include "monster.h"
 
 enum corpse_effect_type
 {

@@ -16,6 +16,7 @@
 
 #include "externs.h"
 #include "travel.h"
+#include "player.h"
 
 class input_history;
 class reader;

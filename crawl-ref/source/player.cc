@@ -20,8 +20,6 @@
 #include <sstream>
 #include <algorithm>
 
-#include "externs.h"
-
 #include "artefact.h"
 #include "branch.h"
 #include "cloud.h"

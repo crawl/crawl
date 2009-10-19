@@ -8,6 +8,7 @@
 #define __DGNEVENT_H__
 
 #include "externs.h"
+#include "player.h"
 #include <list>
 
 // Keep event names in l_dgn.cc in sync.

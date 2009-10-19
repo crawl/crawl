@@ -8,6 +8,7 @@
 #define STATE_H
 
 #include "enum.h"
+#include "player.h"
 #include <vector>
 
 class monsters;

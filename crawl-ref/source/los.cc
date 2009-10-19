@@ -52,6 +52,7 @@
 #include "directn.h"
 #include "externs.h"
 #include "losparam.h"
+#include "player.h"
 #include "ray.h"
 #include "state.h"
 #include "stuff.h"

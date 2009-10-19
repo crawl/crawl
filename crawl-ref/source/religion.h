@@ -9,8 +9,9 @@
 #define RELIGION_H
 
 #include "enum.h"
-#include "ouch.h"
 #include "externs.h"
+#include "ouch.h"
+#include "player.h"
 
 #define MAX_PIETY      200
 #define HALF_MAX_PIETY (MAX_PIETY / 2)

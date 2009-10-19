@@ -7,6 +7,7 @@
 #ifndef MTRANSIT_H
 #define MTRANSIT_H
 
+#include "monster.h"
 #include "travel.h"
 #include <map>
 #include <list>

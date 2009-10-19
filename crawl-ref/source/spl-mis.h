@@ -17,6 +17,7 @@
 #include "enum.h"
 
 #include "beam.h"
+#include "monster.h"
 #include "mpr.h"
 #include "spl-util.h"
 

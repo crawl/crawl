@@ -6,7 +6,7 @@
 #ifndef LOS_H
 #define LOS_H
 
-#include "externs.h"
+#include "env.h"
 #include "losparam.h"
 
 #define EPSILON_VALUE 0.00001

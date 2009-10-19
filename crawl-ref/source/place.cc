@@ -7,9 +7,10 @@
 #include "AppHdr.h"
 
 #include "externs.h"
-#include "place.h"
 
 #include "branch.h"
+#include "place.h"
+#include "player.h"
 #include "travel.h"
 
 // Do not attempt to use level_id if level_type != LEVEL_DUNGEON

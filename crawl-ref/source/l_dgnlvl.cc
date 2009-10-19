@@ -9,6 +9,7 @@
 #include "l_libs.h"
 
 #include "branch.h"
+#include "player.h"
 
 #define BRANCH(br, pos)                                                 \
 const char *branch_name = luaL_checkstring(ls, pos);                \

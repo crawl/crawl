@@ -8,7 +8,8 @@
 #ifndef STUFF_H
 #define STUFF_H
 
-#include "externs.h"
+#include "env.h"
+#include "player.h"
 #include <map>
 
 std::string make_time_string(time_t abs_time, bool terse = false);

@@ -11,11 +11,11 @@
 #include "externs.h"
 #include "itemname.h"
 
-int artefact_value( const item_def &item );
+int artefact_value(const item_def &item);
 
 // ident == true overrides the item ident level and gives the price
 // as if the item was fully id'd
-unsigned int item_value( item_def item, bool ident = false );
+unsigned int item_value(item_def item, bool ident = false);
 void shop();
 
 shop_struct *get_shop(const coord_def& where);
