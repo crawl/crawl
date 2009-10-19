@@ -107,10 +107,12 @@ if ( $verstring ne $tag || !$pretyp ) {
 }
 
 my $OS        = `uname -s`;
+my $OS_ver    = `uname -r`;
 my $machine   = `uname -m`;
 my $processor = `uname -p`;
 
 chomp($OS);
+chomp($OS_ver);
 chomp($machine);
 chomp($processor);
 
@@ -137,6 +139,7 @@ print OUT <<__eof__;
 #define ${prefix}_RESOURCE_VERSION_STRING "${major}, ${minor}, ${revis}, ${build}"
 
 #define ${prefix}_BUILD_OS "${OS}"
+#define ${prefix}_BUILD_OS_VER "${OS_ver}"
 #define ${prefix}_BUILD_MACHINE "${machine}"
 #define ${prefix}_BUILD_PROCESSOR "${processor}"
 
