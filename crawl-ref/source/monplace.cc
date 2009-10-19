@@ -1125,13 +1125,11 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
     if (mg.mname != "")
-    {
         menv[id].mname = mg.mname;
-    }
 
-    // The return of Boris is now handled in monster_die()...
-    // not setting this for Boris here allows for multiple Borises in
-    // the dungeon at the same time. -- bwr
+    // The return of Boris is now handled in monster_die().  Not setting
+    // this for Boris here allows for multiple Borises in the dungeon at
+    // the same time. - bwr
     if (mons_is_unique(mg.cls))
         you.unique_creatures[mg.cls] = true;
 
