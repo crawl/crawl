@@ -1,4 +1,4 @@
-uname_S := $(shell uname -s)
+uname_S ?= $(shell uname -s)
 PREFIX:=$(shell pwd)/install
 
 all: lua sqlite sdl sdl-image freetype libpng pcre zlib

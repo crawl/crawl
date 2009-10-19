@@ -52,6 +52,7 @@ export CXX
 export CFLAGS
 export MAKEFLAGS
 export CONFIGURE_FLAGS
+export uname_S
 
 LIBPCRE := contrib/install/lib/libpcre.a
 LIBSDL := contrib/install/lib/libSDL.a
@@ -78,6 +79,13 @@ ifdef CROSSHOST
 	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
 	SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
+
+	# If needed, override uname_S so we get the appropriate
+	# things compiled.
+	ifneq (,$(findstring mingw,$(CROSSHOST)))
+		uname_S=MINGW32
+	endif
+
 endif
 ifneq (,$(findstring MINGW,$(uname_S)))
 	GAME = crawl.exe
