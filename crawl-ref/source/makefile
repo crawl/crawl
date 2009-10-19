@@ -607,7 +607,10 @@ ifneq ($(MAKECMDGOALS),distclean)
 endif
 endif
 
-.INTERMEDIATE: build.h compflag.h
+# This information is included in crash reports, and is printed with
+# "crawl -version"
+compflag.h:
+	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(CFLAGS)" "$(CFLAGS_L)" "$(LDFLAGS)"
 
 build.h:
 	$(QUIET_GEN)util/gen_ver.pl $@
@@ -697,11 +700,6 @@ distclean: clean clean-contrib clean-rltiles
 	    fi \
 	done
 	@touch .contrib-ok
-
-# This information is included in crash reports, and is printed with
-# "crawl -version"
-compflag.h:
-	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(CFLAGS)" "$(CFLAGS_L)" "$(LDFLAGS)"
 
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIB)
