@@ -1200,56 +1200,6 @@ static int dgn_feature_name(lua_State *ls)
             dungeon_feature_name(static_cast<dungeon_feature_type>(feat)));
 }
 
-static const char *dgn_event_type_names[] =
-{
-"none", "turn", "mons_move", "player_move", "leave_level",
-"entering_level", "entered_level", "player_los", "player_climb",
-"monster_dies", "item_pickup", "item_moved", "feat_change",
-"wall_hit"
-};
-
-static dgn_event_type dgn_event_type_by_name(const std::string &name)
-{
-    for (unsigned i = 0; i < ARRAYSZ(dgn_event_type_names); ++i)
-        if (dgn_event_type_names[i] == name)
-            return static_cast<dgn_event_type>(i? 1 << (i - 1) : 0);
-    return (DET_NONE);
-}
-
-static const char *dgn_event_type_name(unsigned evmask)
-{
-    if (evmask == 0)
-        return (dgn_event_type_names[0]);
-    
-    for (unsigned i = 1; i < ARRAYSZ(dgn_event_type_names); ++i)
-        if (evmask & (1 << (i - 1)))
-            return (dgn_event_type_names[i]);
-    
-    return (dgn_event_type_names[0]);
-}
-
-static void dgn_push_event_type(lua_State *ls, int n)
-{
-    if (lua_isstring(ls, n))
-        lua_pushnumber(ls, dgn_event_type_by_name(lua_tostring(ls, n)));
-    else if (lua_isnumber(ls, n))
-        lua_pushstring(ls, dgn_event_type_name(luaL_checkint(ls, n)));
-    else
-        lua_pushnil(ls);
-}
-
-static int dgn_dgn_event(lua_State *ls)
-{
-    const int start = lua_isuserdata(ls, 1)? 2 : 1;
-    int retvals = 0;
-    for (int i = start, nargs = lua_gettop(ls); i <= nargs; ++i)
-    {
-        dgn_push_event_type(ls, i);
-        retvals++;
-    }
-    return (retvals);
-}
-
 static int dgn_register_listener(lua_State *ls)
 {
     unsigned mask = luaL_checkint(ls, 1);
@@ -2793,7 +2743,6 @@ const struct luaL_reg dgn_lib[] =
 { "load_des_file", dgn_load_des_file },
 { "feature_number", dgn_feature_number },
 { "feature_name", dgn_feature_name },
-{ "dgn_event_type", dgn_dgn_event },
 { "register_listener", dgn_register_listener },
 { "remove_listener", dgn_remove_listener },
 { "remove_marker", dgn_remove_marker },

@@ -307,6 +307,7 @@ void init_dungeon_lua()
     lua_stack_cleaner clean(dlua);
 
     luaL_openlib(dlua, "dgn", dgn_lib, 0);
+    luaL_openlib(dlua, "dgn", dgn_event_lib, 0);
     // Add additional function to the Crawl module.
     luaL_openlib(dlua, "crawl", crawl_lib, 0);
     luaL_openlib(dlua, "file", file_lib, 0);
