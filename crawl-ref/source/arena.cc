@@ -46,6 +46,9 @@ namespace arena
         int         active_members;
         bool        won;
 
+        std::vector<int>       respawn_list;
+        std::vector<coord_def> respawn_pos;
+
         faction(bool fr) : members(), friendly(fr), active_members(0),
                            won(false) { }
 
@@ -55,6 +58,9 @@ namespace arena
         {
             active_members = 0;
             won            = false;
+
+            respawn_list.clear();
+            respawn_pos.clear();
         }
 
         void clear()
@@ -84,6 +90,7 @@ namespace arena
     bool random_uniques      = false;
     bool real_summons        = false;
     bool move_summons        = false;
+    bool respawn             = false;
 
     bool miscasts            = false;
 
@@ -92,6 +99,7 @@ namespace arena
     std::vector<int> uniques_list;
     std::vector<int> a_spawners;
     std::vector<int> b_spawners;
+    char             to_respawn[MAX_MONSTERS];
 
     int item_drop_times[MAX_ITEMS];
 
@@ -195,6 +203,7 @@ namespace arena
                     end(1, false, "Failed to create monster at (%d,%d) grd: %s",
                         loc.x, loc.y, dungeon_feature_name(grd(loc)));
                 list_eq(imon);
+                to_respawn[imon] = i;
             }
         }
     }
@@ -307,7 +316,12 @@ namespace arena
         real_summons    =  strip_tag(spec, "real_summons");
         move_summons    =  strip_tag(spec, "move_summons");
         miscasts        =  strip_tag(spec, "miscasts");
+        respawn         =  strip_tag(spec, "respawn");
         summon_throttle = strip_number_tag(spec, "summon_throttle:");
+
+        if (real_summons && respawn)
+            throw (std::string("Can't set real_summons and respawn at "
+                               "same time."));
 
         if (summon_throttle <= 0)
             summon_throttle = INT_MAX;
@@ -393,6 +407,9 @@ namespace arena
     {
         faction_a.reset();
         faction_b.reset();
+
+        for (int i = 0; i < MAX_MONSTERS; i++)
+            to_respawn[i] = -1;
 
         unwind_var< FixedVector<bool, NUM_MONSTERS> >
             uniq(you.unique_creatures);
@@ -737,6 +754,26 @@ namespace arena
         process_command(cmd);
     }
 
+    void do_respawn(faction &fac)
+    {
+        for (unsigned int i = 0; i < fac.respawn_list.size(); i++)
+        {
+            coord_def pos      = fac.respawn_pos[i];
+            int       spec_idx = fac.respawn_list[i];
+            mons_spec spec     = fac.members.get_monster(spec_idx);
+
+            if (fac.friendly)
+                spec.attitude = ATT_FRIENDLY;
+
+            int idx = dgn_place_monster(spec, 0, pos, false, true);
+
+            if (idx != -1)
+                to_respawn[idx] = spec_idx;
+        }
+        fac.respawn_list.clear();
+        fac.respawn_pos.clear();
+    }
+
     void do_fight()
     {
         viewwindow(true, false);
@@ -772,6 +809,8 @@ namespace arena
                 //report_foes();
                 world_reacts();
                 do_miscasts();
+                do_respawn(faction_a);
+                do_respawn(faction_b);
                 balance_spawners();
                 delay(Options.arena_delay);
                 mesclr();
@@ -1156,6 +1195,26 @@ void arena_monster_died(monsters *monster, killer_type killer,
                 arena::faction_a.won = true;
             else if (monster->attitude == ATT_HOSTILE)
                 arena::faction_b.won = true;
+        }
+    }
+
+    // Only respawn those monsers which were initally placed in the
+    // arena.
+    const int midx = monster->mindex();
+    if (arena::respawn && arena::to_respawn[midx] != -1)
+    {
+        arena::faction *fac = NULL;
+        if (monster->attitude == ATT_FRIENDLY)
+            fac = &arena::faction_a;
+        else if (monster->attitude == ATT_HOSTILE)
+            fac = &arena::faction_b;
+
+        if (fac)
+        {
+            fac->respawn_list.push_back(arena::to_respawn[midx]);
+            fac->respawn_pos.push_back(monster->pos());
+
+            arena::to_respawn[midx] = -1;
         }
     }
 

@@ -162,3 +162,8 @@ The parameters include:
 
 * miscasts: Every turn each monster (besides test spawners) will have a
       random miscast happen to it.
+
+* respawn: When one of the originally replaced monsters is killed it will
+      be replaced by the same type of monster.  This allows for an endless
+      fight between exactly specified factions, rather than the random
+      kind you get by pitting two test spawners against each other.
