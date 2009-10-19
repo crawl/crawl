@@ -9,82 +9,12 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "initfile.h"
-#include "items.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
-#include "mon-util.h"
-#include "monplace.h"
-#include "monstuff.h"
 #include "place.h"
 #include "spl-util.h"
 #include "view.h"
-
-#define MONSLIST_METATABLE "crawldgn.monster_list"
-#define ITEMLIST_METATABLE "crawldgn.item_list"
-
-static mons_list _lua_get_mlist(lua_State *ls, int ndx)
-{
-    if (lua_isstring(ls, ndx))
-    {
-        const char *spec = lua_tostring(ls, ndx);
-        mons_list mlist;
-        const std::string err = mlist.add_mons(spec);
-        if (!err.empty())
-            luaL_error(ls, err.c_str());
-        return (mlist);
-    }
-    else
-    {
-        mons_list **mlist =
-            clua_get_userdata<mons_list*>(ls, MONSLIST_METATABLE, ndx);
-        if (mlist)
-            return (**mlist);
-
-        luaL_argerror(ls, ndx, "Expected monster list object or string");
-        return mons_list();
-    }
-}
-
-static item_list _lua_get_ilist(lua_State *ls, int ndx)
-{
-    if (lua_isstring(ls, ndx))
-    {
-        const char *spec = lua_tostring(ls, ndx);
-
-        item_list ilist;
-        const std::string err = ilist.add_item(spec);
-        if (!err.empty())
-            luaL_error(ls, err.c_str());
-    
-        return (ilist);
-    }
-    else
-    {
-        item_list **ilist =
-            clua_get_userdata<item_list*>(ls, ITEMLIST_METATABLE, ndx);
-        if (ilist)
-            return (**ilist);
-
-        luaL_argerror(ls, ndx, "Expected item list object or string");
-        return item_list();
-    }
-}
-
-void register_mapdef_tables(lua_State *ls)
-{
-    clua_register_metatable(ls, MONSLIST_METATABLE, NULL,
-                            lua_object_gc<mons_list>);
-    clua_register_metatable(ls, ITEMLIST_METATABLE, NULL,
-                            lua_object_gc<item_list>);
-}
-
-template <class T>
-static void _push_object_type(lua_State *ls, const char *meta, const T &data)
-{
-    T **ptr = clua_new_userdata<T*>(ls, meta);
-    *ptr = new T(data);
-}
 
 ///////////////////////////////////////////////////////////////////////////
 // Lua dungeon bindings (in the dgn table).
@@ -377,151 +307,6 @@ static int dgn_change_branch_flags(lua_State *ls)
     lua_pushboolean(ls, changed1 || changed2);
     
     return (1);
-}
-
-static int dgn_set_random_mon_list(lua_State *ls)
-{
-    // Don't complain if we're being called when the map is being loaded
-    // and validated.
-    if (you.level_type != LEVEL_PORTAL_VAULT &&
-        !(you.start_time == 0 && !you.entering_level && !Generating_Level))
-    {
-        luaL_error(ls, "Can only be used in portal vaults.");
-        return (0);
-    }
-    
-    const int nargs = lua_gettop(ls);
-    
-    map_def *map = NULL;
-    if (nargs > 2)
-    {
-        luaL_error(ls, "Too many arguments.");
-        return (0);
-    }
-    else if (nargs == 0)
-    {
-        luaL_error(ls, "Too few arguments.");
-        return (0);
-    }
-    else if (nargs == 2)
-    {
-        map_def **_map =
-        clua_get_userdata<map_def*>(ls, MAP_METATABLE, 1);
-        map = *_map;
-    }
-    
-    if (map)
-    {
-        if (map->orient != MAP_ENCOMPASS || map->place.is_valid()
-            || !map->depths.empty())
-        {
-            luaL_error(ls, "Can only be used in portal vaults.");
-            return (0);
-        }
-    }
-    
-    int       list_pos = (map != NULL) ? 2 : 1;
-    mons_list mlist    = _lua_get_mlist(ls, list_pos);
-    
-    if (mlist.size() == 0)
-    {
-        luaL_argerror(ls, list_pos, "Mon list is empty.");
-        return (0);
-    }
-    
-    if (mlist.size() > 1)
-    {
-        luaL_argerror(ls, list_pos, "Mon list must contain only one slot.");
-        return (0);
-    }
-    
-    const int num_mons = mlist.slot_size(0);
-    
-    if (num_mons == 0)
-    {
-        luaL_argerror(ls, list_pos, "Mon list is empty.");
-        return (0);
-    }
-    
-    std::vector<mons_spec> mons;
-    int num_lords = 0;
-    for (int i = 0; i < num_mons; i++)
-    {
-        mons_spec mon = mlist.get_monster(0, i);
-        
-        // Pandemonium lords are pseudo-unique, so don't randomly generate
-        // them.
-        if (mon.mid == MONS_PANDEMONIUM_DEMON)
-        {
-            num_lords++;
-            continue;
-        }
-        
-        std::string name;
-        if (mon.place.is_valid())
-        {
-            if (mon.place.level_type == LEVEL_LABYRINTH
-                || mon.place.level_type == LEVEL_PORTAL_VAULT)
-            {
-                std::string err;
-                err = make_stringf("mon #%d: Can't use Lab or Portal as a "
-                                   "monster place.", i + 1);
-                luaL_argerror(ls, list_pos, err.c_str());
-                return(0);
-            }
-            name = mon.place.describe();
-        }
-        else
-        {
-            if (mon.mid == RANDOM_MONSTER || mon.monbase == RANDOM_MONSTER)
-            {
-                std::string err;
-                err = make_stringf("mon #%d: can't use random monster in "
-                                   "list specifying random monsters", i + 1);
-                luaL_argerror(ls, list_pos, err.c_str());
-                return(0);
-            }
-            if (mon.mid == -1)
-                mon.mid = MONS_PROGRAM_BUG;
-            name = mons_type_name(mon.mid, DESC_PLAIN);
-        }
-        
-        mons.push_back(mon);
-        
-        if (mon.number != 0)
-            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : number for %s "
-                 "being discarded.",
-                 name.c_str());
-        
-        if (mon.band)
-            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : band request for "
-                 "%s being ignored.",
-                 name.c_str());
-        
-        if (mon.colour != BLACK)
-            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : colour for "
-                 "%s being ignored.",
-                 name.c_str());
-        
-        if (mon.items.size() > 0)
-            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : items for "
-                 "%s being ignored.",
-                 name.c_str());
-    } // for (int i = 0; i < num_mons; i++)
-    
-    if (mons.size() == 0 && num_lords > 0)
-    {
-        luaL_argerror(ls, list_pos,
-                      "Mon list contains only pandemonium lords.");
-        return (0);
-    }
-    
-    if (map)
-        map->random_mons = mons;
-    else
-        set_vault_mon_list(mons);
-    
-    return (0);
 }
 
 static int dgn_chance(lua_State *ls)
@@ -1337,53 +1122,6 @@ static int dgn_terrain_changed(lua_State *ls)
     return (0);
 }
 
-static int dgn_item_from_index(lua_State *ls)
-{
-    const int index = luaL_checkint(ls, 1);
-    
-    item_def *item = &mitm[index];
-    
-    if (is_valid_item(*item))
-        lua_pushlightuserdata(ls, item);
-    else
-        lua_pushnil(ls);
-    
-    return (1);
-}
-
-static int dgn_mons_from_index(lua_State *ls)
-{
-    const int index = luaL_checkint(ls, 1);
-    
-    monsters *mons = &menv[index];
-    
-    if (mons->type != -1)
-        push_monster(ls, mons);
-    else
-        lua_pushnil(ls);
-    
-    return (1);
-}
-
-static int dgn_mons_at(lua_State *ls)
-{
-    COORDS(c, 1, 2);
-    
-    monsters *mon = monster_at(c);
-    if (mon && mon->alive())
-        push_monster(ls, mon);
-    else
-        lua_pushnil(ls);
-    return (1);
-}
-
-static int dgn_items_at(lua_State *ls)
-{
-    COORDS(c, 1, 2);
-    lua_push_items(ls, env.igrid(c));
-    return (1);
-}
-
 static int lua_dgn_set_lt_callback(lua_State *ls)
 {
     const char *level_type = luaL_checkstring(ls, 1);
@@ -2106,55 +1844,6 @@ static int dgn_register_lua_marker(lua_State *ls)
     return (0);
 }
 
-static int dgn_create_monster(lua_State *ls)
-{
-    COORDS(c, 1, 2);
-    
-    mons_list mlist = _lua_get_mlist(ls, 3);
-    for (int i = 0, size = mlist.size(); i < size; ++i)
-    {
-        mons_spec mspec = mlist.get_monster(i);
-        const int mid = dgn_place_monster(mspec, you.your_level, c,
-                                          false, false, false);
-        if (mid != -1)
-        {
-            push_monster(ls, &menv[mid]);
-            return (1);
-        }
-    }
-    lua_pushnil(ls);
-    return (1);
-}
-
-static int _dgn_monster_spec(lua_State *ls)
-{
-    const mons_list mlist = _lua_get_mlist(ls, 1);
-    _push_object_type<mons_list>(ls, MONSLIST_METATABLE, mlist);
-    return (1);
-}
-
-static int _dgn_item_spec(lua_State *ls)
-{
-    const item_list ilist = _lua_get_ilist(ls, 1);
-    _push_object_type<item_list>(ls, ITEMLIST_METATABLE, ilist);
-    return (1);
-}
-
-LUARET1(_dgn_max_monsters, number, MAX_MONSTERS)
-
-static int dgn_create_item(lua_State *ls)
-{
-    COORDS(c, 1, 2);
-    
-    item_list ilist = _lua_get_ilist(ls, 3);
-    const int level =
-    lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : you.your_level;
-    
-    dgn_place_multiple_items(ilist, c, level);
-    link_items();
-    return (0);
-}
-
 static std::auto_ptr<lua_datum> _dgn_map_safe_bounds_fn;
 
 static bool _lua_map_place_valid(const map_def &map,
@@ -2678,13 +2367,6 @@ LUAFN(dgn_dbg_test_explore)
     return (0);
 }
 
-LUAFN(dgn_dismiss_monsters)
-{
-    PLUARET(number,
-            dismiss_monsters(lua_gettop(ls) == 0 ? "" :
-                             luaL_checkstring(ls, 1)));
-}
-
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
 const struct luaL_reg dgn_lib[] =
@@ -2696,7 +2378,6 @@ const struct luaL_reg dgn_lib[] =
 { "dbg_test_explore", dgn_dbg_test_explore },
 
 { "reset_level", _dgn_reset_level },
-{ "dismiss_monsters", dgn_dismiss_monsters },
 
 { "default_depth", dgn_default_depth },
 { "name", dgn_name },
@@ -2751,13 +2432,8 @@ const struct luaL_reg dgn_lib[] =
 { "feature_desc_at", dgn_feature_desc_at },
 { "set_feature_desc_short", dgn_set_feature_desc_short },
 { "set_feature_desc_long", dgn_set_feature_desc_long },
-{ "item_from_index", dgn_item_from_index },
-{ "mons_from_index", dgn_mons_from_index },
-{ "mons_at", dgn_mons_at },
-{ "items_at", dgn_items_at },
 { "change_level_flags", dgn_change_level_flags },
 { "change_branch_flags", dgn_change_branch_flags },
-{ "set_random_mon_list", dgn_set_random_mon_list },
 { "get_floor_colour", dgn_get_floor_colour },
 { "get_rock_colour",  dgn_get_rock_colour },
 { "change_floor_colour", dgn_change_floor_colour },
@@ -2795,14 +2471,6 @@ const struct luaL_reg dgn_lib[] =
 
 { "register_feature_marker", dgn_register_feature_marker },
 { "register_lua_marker", dgn_register_lua_marker },
-
-{ "create_monster", dgn_create_monster },
-{ "create_item", dgn_create_item },
-
-{ "monster_spec", _dgn_monster_spec },
-{ "item_spec", _dgn_item_spec },
-
-{ "max_monsters", _dgn_max_monsters },
 
 { "with_map_bounds_fn", dgn_with_map_bounds_fn },
 { "with_map_anchors", dgn_with_map_anchors },
