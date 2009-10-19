@@ -38,6 +38,7 @@ itemprop.o \
 items.o \
 lev-pand.o \
 libutil.o \
+l_crawl.o \
 l_dgn.o \
 l_los.o \
 los.o \
