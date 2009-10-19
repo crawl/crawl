@@ -595,7 +595,7 @@ endif
 build.h:
 	$(QUIET_GEN)util/gen_ver.pl $@
 
-version.cc: build.h compflag.h
+version.o: build.h compflag.h
 
 ##########################################################################
 # The level compiler
