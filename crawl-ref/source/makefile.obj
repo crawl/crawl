@@ -43,6 +43,7 @@ l_dgn.o \
 l_dgnevt.o \
 l_dgnit.o \
 l_dgnmon.o \
+l_dgntil.o \
 l_dgn_bf.o \
 l_file.o \
 l_los.o \

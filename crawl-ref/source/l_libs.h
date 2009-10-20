@@ -8,11 +8,16 @@
 
 #include "clua.h"
 
+/*
+ * Libraries and loaders, accessed from init_dungeon_lua().
+ */
+
 extern const struct luaL_reg crawl_lib[];
 extern const struct luaL_reg dgn_lib[];
 extern const struct luaL_reg dgn_event_lib[];
 extern const struct luaL_reg dgn_item_lib[];
 extern const struct luaL_reg dgn_mons_lib[];
+extern const struct luaL_reg dgn_tile_lib[];
 extern const struct luaL_reg file_lib[];
 extern const struct luaL_reg los_lib[];
 extern const struct luaL_reg mapmarker_lib[];
@@ -26,5 +31,48 @@ void register_monslist(lua_State *ls);
 void register_itemlist(lua_State *ls);
 void register_builder_funcs(lua_State *ls);
     
-#endif
+/*
+ * Macros for processing object arguments.
+ */
+#define GETCOORD(c, p1, p2, boundfn)                      \
+    coord_def c;                                          \
+    c.x = luaL_checkint(ls, p1);                          \
+    c.y = luaL_checkint(ls, p2);                          \
+    if (!boundfn(c))                                        \
+        luaL_error(                                             \
+            ls,                                                 \
+            make_stringf("Point (%d,%d) is out of bounds",      \
+                         c.x, c.y).c_str());                    \
+    else ;
 
+
+#define COORDS(c, p1, p2)                                \
+    GETCOORD(c, p1, p2, in_bounds)
+
+#define LEVEL(lev, br, pos)                                             \
+const char *level_name = luaL_checkstring(ls, pos);                 \
+level_area_type lev = str_to_level_area_type(level_name);           \
+if (lev == NUM_LEVEL_AREA_TYPES)                                    \
+luaL_error(ls, "Expected level name");                          \
+const char *branch_name = luaL_checkstring(ls, pos);                \
+branch_type br = str_to_branch(branch_name);                        \
+if (lev == LEVEL_DUNGEON && br == NUM_BRANCHES)                     \
+luaL_error(ls, "Expected branch name");
+
+#define MAP(ls, n, var)                             \
+map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)
+#define DEVENT(ls, n, var) \
+dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
+#define MAPMARKER(ls, n, var) \
+map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
+
+
+/*
+ * Some shared helper functions.
+ */
+class map_lines;
+int dgn_map_add_transform(lua_State *ls,
+          std::string (map_lines::*add)(const std::string &s));
+unsigned int get_tile_idx(lua_State *ls, int arg);
+
+#endif
