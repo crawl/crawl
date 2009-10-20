@@ -116,7 +116,7 @@ sdl: $(PREFIX)/lib/libSDL.a
 #
 # SDL_image
 #
-sdl-image/.libs/libSDL_image.a: $(PREFIX)/lib/libpng.a
+sdl-image/.libs/libSDL_image.a: $(PREFIX)/lib/libpng.a $(PREFIX)/lib/libSDL.a
 	-cd sdl-image && autoreconf
 	cd sdl-image && ./configure --prefix=$(PREFIX) --with-sdl-prefix=$(PREFIX) --enable-static --disable-shared --enable-bmp --enable-png $(CONFIGURE_FLAGS) LDFLAGS="-L$(PREFIX)/lib -lpng -lz" CPPFLAGS="-I$(PREFIX)/include"
 	@+$(MAKE) -C sdl-image
