@@ -654,6 +654,16 @@ namespace arena
             std::string prefix;
             switch (chan)
             {
+                // Ignore messages generated while the user examines
+                // the arnea.
+                case MSGCH_PROMPT:
+                case MSGCH_MONSTER_DAMAGE:
+                case MSGCH_MONSTER_TARGET:
+                case MSGCH_FLOOR_ITEMS:
+                case MSGCH_EXAMINE:
+                case MSGCH_EXAMINE_FILTER:
+                    continue;
+
                 case MSGCH_ERROR: prefix = "ERROR: "; break;
                 case MSGCH_WARN: prefix = "WARN: "; break;
                 case MSGCH_DIAGNOSTICS: prefix = "DIAG: "; break;
