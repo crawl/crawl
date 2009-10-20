@@ -20,7 +20,7 @@ static int _table_int(lua_State *ls, int idx, const char *name, int defval)
     bool valid = lua_isnumber(ls, idx);
     if (!nil && !valid)
         luaL_error(ls, "'%s' in table, but not an int.", name);
-    int ret = (!nil && valid ? lua_tonumber(ls, idx) : defval);
+    int ret = (!nil && valid ? luaL_checkint(ls, idx) : defval);
     lua_pop(ls, 1);
     return (ret);
 }
