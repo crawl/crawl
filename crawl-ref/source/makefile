@@ -302,7 +302,7 @@ SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
 
-LIB += $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIB += -lSDL_image $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
