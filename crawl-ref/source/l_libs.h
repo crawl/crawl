@@ -15,7 +15,6 @@
 void cluaopen_crawl(lua_State *ls);
 void cluaopen_you(lua_State *ls);
 
-
 /*
  * Libraries and loaders, accessed from init_dungeon_lua().
  */
@@ -42,7 +41,9 @@ void register_itemlist(lua_State *ls);
 void register_builder_funcs(lua_State *ls);
 
 void dluaopen_crawl(lua_State *ls);
-void dluaopen_you(lua_State *ls);    
+void dluaopen_mapgrd(lua_State *ls);
+void dluaopen_you(lua_State *ls);
+ 
 /*
  * Macros for processing object arguments.
  */

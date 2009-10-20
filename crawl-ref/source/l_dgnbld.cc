@@ -17,7 +17,7 @@ static int dgn_grd_table(lua_State *ls)
 {
     MAP(ls, 1, map);
     
-    map_def **mapref = clua_new_userdata<map_def *>(ls, GRD_METATABLE);
+    map_def **mapref = clua_new_userdata<map_def *>(ls, MAPGRD_METATABLE);
     *mapref = map;
     
     return (1);
