@@ -4571,7 +4571,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_MAURICE, '@', DARKGREY, "Maurice",
+    MONS_MAURICE, '@', GREEN, "Maurice",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     550, 20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -4,
