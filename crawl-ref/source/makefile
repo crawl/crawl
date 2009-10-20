@@ -92,20 +92,20 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	WIN32 = Yes
 	NO_RDYNAMIC = YesPlease
 	NO_NCURSES = YesPlease
-	NEEDS_LIBW32C = YesPlease
-	NEEDS_PCRE = YesPlease
+	NEED_LIBW32C = YesPlease
+	NEED_PCRE = YesPlease
 	ifdef TILES
-		NEEDS_FREETYPE = YesPlease
-		NEEDS_SDL = YesPlease
-		NEEDS_SDLIMAGE = YesPlease
-		NEEDS_LIBPNG = YesPlease
-		NEEDS_ZLIB = YesPlease
+		NEED_FREETYPE = YesPlease
+		NEED_SDL = YesPlease
+		NEED_SDLIMAGE = YesPlease
+		NEED_LIBPNG = YesPlease
+		NEED_ZLIB = YesPlease
 	endif
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
-	NEEDS_PCRE = YesPlease
+	NEED_PCRE = YesPlease
 endif
 ifeq ($(uname_S),Darwin)
 	ifndef NO_APPLE_GCC
@@ -126,7 +126,7 @@ OBJECTS += crash-u.o
 ifdef TILES
 OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
 else
-ifdef NEEDS_LIBW32C
+ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
 else
 OBJECTS += libunix.o
@@ -469,7 +469,7 @@ LIB += -lncurses
 endif
 endif
 
-ifdef NEEDS_PCRE
+ifdef NEED_PCRE
 DEFINES += -DREGEX_PCRE
 LIB += -lpcre
 endif
@@ -537,22 +537,22 @@ DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 OBJECTS += $(TILEDEFOBJS)
 endif
 
-ifdef NEEDS_PCRE
+ifdef NEED_PCRE
 CONTRIB_DEPENDS += $(LIBPCRE)
 endif
-ifdef NEEDS_FREETYPE
+ifdef NEED_FREETYPE
 CONTRIB_DEPENDS += $(LIBFREETYPE)
 endif
-ifdef NEEDS_SDL
+ifdef NEED_SDL
 CONTRIB_DEPENDS += $(LIBSDL)
 endif
-ifdef NEEDS_SDLIMAGE
+ifdef NEED_SDLIMAGE
 CONTRIB_DEPENDS += $(LIBSDLIMAGE)
 endif
-ifdef NEEDS_LIBPNG
+ifdef NEED_LIBPNG
 CONTRIB_DEPENDS += $(LIBPNG)
 endif
-ifdef NEEDS_ZLIB
+ifdef NEED_ZLIB
 CONTRIB_DEPENDS += $(LIBZ)
 endif
 
