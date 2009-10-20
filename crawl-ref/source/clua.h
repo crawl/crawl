@@ -320,7 +320,7 @@ void print_clua_stack();
 #define MAP_METATABLE "dgn.mtmap"
 #define DEVENT_METATABLE "dgn.devent"
 #define MAPMARK_METATABLE "dgn.mapmark"
-#define GRD_METATABLE "dgn.grd"
-#define GRD_COL_METATABLE "dgn.grdcol"
+#define MAPGRD_METATABLE "dgn.mapgrd"
+#define MAPGRD_COL_METATABLE "dgn.mapgrdcol"
 
 #endif

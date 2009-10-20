@@ -30,7 +30,7 @@ local function test_cellseecell_symmetry()
         end
         if (forward and backward) or (not forward and not backward) then
           dgn.grid(other_p.x, other_p.y, "floor_special")
-          dgn.dbg_dump_map(FAILMAP)
+          debug.dump_map(FAILMAP)
           assert(false,
                  "cell_see_cell asymmetry detected (iter #" .. checks .. "): "
                    .. this_p .. " sees " .. other_p .. ", but not vice versa."
@@ -44,11 +44,11 @@ end
 local function run_los_tests(depth, nlevels, tests_per_level)
   local place = "D:" .. depth
   crawl.mpr("Running LOS tests on " .. place)
-  dgn.dbg_goto_place(place)
+  debug.goto_place(place)
 
   for lev_i = 1, nlevels do
-    dgn.dbg_flush_map_memory()
-    dgn.dbg_generate_level()
+    debug.flush_map_memory()
+    debug.generate_level()
     for t_i = 1, tests_per_level do
       test_cellseecell_symmetry()
     end

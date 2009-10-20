@@ -234,8 +234,6 @@
 		7BF855680C9C914D00B7C520 /* mapmark.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF855660C9C914D00B7C520 /* mapmark.h */; };
 		7BF8556B0C9C916800B7C520 /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855690C9C916800B7C520 /* dgnevent.cc */; };
 		7BF8556C0C9C916800B7C520 /* dgnevent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556A0C9C916800B7C520 /* dgnevent.h */; };
-		7BF855700C9C919100B7C520 /* luadgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8556E0C9C919100B7C520 /* luadgn.cc */; };
-		7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
 		93B134650F25595F007DB230 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134610F255926007DB230 /* version.cc */; };
 		93B134C30F256113007DB230 /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134C20F256113007DB230 /* arena.cc */; };
 		B032D686106C02070002D70D /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0EFD420BD12E9200002671 /* liblua.a */; };
@@ -332,7 +330,6 @@
 		B032D6E5106C02150002D70D /* cio.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855600C9C912B00B7C520 /* cio.cc */; };
 		B032D6E6106C02150002D70D /* mapmark.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855650C9C914D00B7C520 /* mapmark.cc */; };
 		B032D6E7106C02150002D70D /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855690C9C916800B7C520 /* dgnevent.cc */; };
-		B032D6E8106C02150002D70D /* luadgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8556E0C9C919100B7C520 /* luadgn.cc */; };
 		B032D6E9106C02150002D70D /* place.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164250C9CA8E80054B3D9 /* place.cc */; };
 		B032D6EA106C02150002D70D /* terrain.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164290C9CA8E80054B3D9 /* terrain.cc */; };
 		B032D6EB106C02150002D70D /* traps.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B61642B0C9CA8E80054B3D9 /* traps.cc */; };
@@ -361,16 +358,57 @@
 		B06FC50E1081D287008347BD /* bitary.cc in Sources */ = {isa = PBXBuildFile; fileRef = B06FC50C1081D287008347BD /* bitary.cc */; };
 		B07818DE1075D979008C3B64 /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = B07818DC1075D979008C3B64 /* sqldbm.cc */; };
 		B07818DF1075D979008C3B64 /* sqldbm.cc in Sources */ = {isa = PBXBuildFile; fileRef = B07818DC1075D979008C3B64 /* sqldbm.cc */; };
-		B082657810731AB5006EEC5A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B082657610731AB5006EEC5A /* sqlite3.c */; };
 		B082657910731B5B006EEC5A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B082657610731AB5006EEC5A /* sqlite3.c */; };
 		B090C2F210671F8900AE855D /* dngn.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EE10671F8900AE855D /* dngn.png */; };
 		B090C2F310671F8900AE855D /* gui.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2EF10671F8900AE855D /* gui.png */; };
 		B090C2F410671F8900AE855D /* main.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F010671F8900AE855D /* main.png */; };
 		B090C2F510671F8900AE855D /* player.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = B090C2F110671F8900AE855D /* player.png */; };
-		B09CCE3110830F1A00623CFA /* Crawl-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B09CCE3010830F1A00623CFA /* Crawl-Info.plist */; };
 		B09CCE671083159100623CFA /* settings in Resources */ = {isa = PBXBuildFile; fileRef = B09CCE5A1083159100623CFA /* settings */; };
 		B09CCE6C108315B300623CFA /* settings in Resources */ = {isa = PBXBuildFile; fileRef = B09CCE5A1083159100623CFA /* settings */; };
+		B0C9CF51108DF1F900E7FA35 /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C91860FF0368E00D9E8AD /* main.cc */; };
+		B0C9CF52108DF1F900E7FA35 /* tile.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C91870FF0368E00D9E8AD /* tile.cc */; };
+		B0C9CF53108DF1F900E7FA35 /* tile_colour.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C91890FF0368E00D9E8AD /* tile_colour.cc */; };
+		B0C9CF56108DF1F900E7FA35 /* tile_page.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C918E0FF0368E00D9E8AD /* tile_page.cc */; };
+		B0C9CF57108DF20100E7FA35 /* tile_list_processor.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C918C0FF0368E00D9E8AD /* tile_list_processor.cc */; };
+		B0C9CF58108DF20F00E7FA35 /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DFEE1086F4EA008FFA70 /* libpng.framework */; };
+		B0C9CF59108DF21300E7FA35 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DF091086EE7A008FFA70 /* SDL.framework */; };
+		B0C9CF5A108DF21700E7FA35 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DF861086F0CB008FFA70 /* SDL_image.framework */; };
+		B0C9CF5E108DF23400E7FA35 /* libpng.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DFEE1086F4EA008FFA70 /* libpng.framework */; };
+		B0C9CF5F108DF23700E7FA35 /* SDL_image.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DF861086F0CB008FFA70 /* SDL_image.framework */; };
+		B0C9CF60108DF23900E7FA35 /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DF091086EE7A008FFA70 /* SDL.framework */; };
+		B0C9CF87108DF38200E7FA35 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = B02C576010670ED2006AC96D /* SDLMain.m */; };
+		B0C9CFE0108E014800E7FA35 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B082656F10731A95006EEC5A /* libSQLite.a */; };
 		B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0CFB313106DF67F005F9CC3 /* ctest.cc */; };
+		B0F01D31108DDEBF00A53656 /* dlua.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D20108DDEBF00A53656 /* dlua.cc */; };
+		B0F01D32108DDEBF00A53656 /* l_crawl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D22108DDEBF00A53656 /* l_crawl.cc */; };
+		B0F01D33108DDEBF00A53656 /* l_debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D23108DDEBF00A53656 /* l_debug.cc */; };
+		B0F01D34108DDEBF00A53656 /* l_dgn_bf.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */; };
+		B0F01D35108DDEBF00A53656 /* l_dgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D25108DDEBF00A53656 /* l_dgn.cc */; };
+		B0F01D36108DDEBF00A53656 /* l_dgnbld.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */; };
+		B0F01D37108DDEBF00A53656 /* l_dgnevt.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */; };
+		B0F01D38108DDEBF00A53656 /* l_dgngrd.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D28108DDEBF00A53656 /* l_dgngrd.cc */; };
+		B0F01D39108DDEBF00A53656 /* l_dgnit.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D29108DDEBF00A53656 /* l_dgnit.cc */; };
+		B0F01D3A108DDEBF00A53656 /* l_dgnlvl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2A108DDEBF00A53656 /* l_dgnlvl.cc */; };
+		B0F01D3B108DDEBF00A53656 /* l_dgnmon.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2B108DDEBF00A53656 /* l_dgnmon.cc */; };
+		B0F01D3C108DDEBF00A53656 /* l_dgntil.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2C108DDEBF00A53656 /* l_dgntil.cc */; };
+		B0F01D3D108DDEBF00A53656 /* l_file.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2D108DDEBF00A53656 /* l_file.cc */; };
+		B0F01D3E108DDEBF00A53656 /* l_mapmrk.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2F108DDEBF00A53656 /* l_mapmrk.cc */; };
+		B0F01D3F108DDEBF00A53656 /* l_you.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D30108DDEBF00A53656 /* l_you.cc */; };
+		B0F01D40108DDEBF00A53656 /* dlua.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D20108DDEBF00A53656 /* dlua.cc */; };
+		B0F01D41108DDEBF00A53656 /* l_crawl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D22108DDEBF00A53656 /* l_crawl.cc */; };
+		B0F01D42108DDEBF00A53656 /* l_debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D23108DDEBF00A53656 /* l_debug.cc */; };
+		B0F01D43108DDEBF00A53656 /* l_dgn_bf.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */; };
+		B0F01D44108DDEBF00A53656 /* l_dgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D25108DDEBF00A53656 /* l_dgn.cc */; };
+		B0F01D45108DDEBF00A53656 /* l_dgnbld.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */; };
+		B0F01D46108DDEBF00A53656 /* l_dgnevt.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */; };
+		B0F01D47108DDEBF00A53656 /* l_dgngrd.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D28108DDEBF00A53656 /* l_dgngrd.cc */; };
+		B0F01D48108DDEBF00A53656 /* l_dgnit.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D29108DDEBF00A53656 /* l_dgnit.cc */; };
+		B0F01D49108DDEBF00A53656 /* l_dgnlvl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2A108DDEBF00A53656 /* l_dgnlvl.cc */; };
+		B0F01D4A108DDEBF00A53656 /* l_dgnmon.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2B108DDEBF00A53656 /* l_dgnmon.cc */; };
+		B0F01D4B108DDEBF00A53656 /* l_dgntil.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2C108DDEBF00A53656 /* l_dgntil.cc */; };
+		B0F01D4C108DDEBF00A53656 /* l_file.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2D108DDEBF00A53656 /* l_file.cc */; };
+		B0F01D4D108DDEBF00A53656 /* l_mapmrk.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2F108DDEBF00A53656 /* l_mapmrk.cc */; };
+		B0F01D4E108DDEBF00A53656 /* l_you.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D30108DDEBF00A53656 /* l_you.cc */; };
 		B0F7DEF81086EDFE008FFA70 /* Freetype2.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DEF51086EDE5008FFA70 /* Freetype2.framework */; };
 		B0F7DF181086EEBC008FFA70 /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DF091086EE7A008FFA70 /* SDL.framework */; };
 		B0F7DF191086EEC6008FFA70 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DF091086EE7A008FFA70 /* SDL.framework */; };
@@ -390,11 +428,9 @@
 		E1424F74107FAE1100E2A9CD /* ctest.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0CFB313106DF67F005F9CC3 /* ctest.cc */; };
 		E1424F75107FAE4900E2A9CD /* los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930A107FA77200E3F5FE /* los.cc */; };
 		E1424F7E107FAEC700E2A9CD /* losparam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930B107FA77200E3F5FE /* losparam.cc */; };
-		E1424F7F107FAEC700E2A9CD /* mon-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930C107FA77200E3F5FE /* mon-los.cc */; };
 		E1424F80107FAEC700E2A9CD /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930D107FA77200E3F5FE /* ray.cc */; };
 		E14D930F107FA77200E3F5FE /* los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930A107FA77200E3F5FE /* los.cc */; };
 		E14D9310107FA77200E3F5FE /* losparam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930B107FA77200E3F5FE /* losparam.cc */; };
-		E14D9311107FA77200E3F5FE /* mon-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930C107FA77200E3F5FE /* mon-los.cc */; };
 		E14D9312107FA77200E3F5FE /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930D107FA77200E3F5FE /* ray.cc */; };
 		E14D9313107FA77200E3F5FE /* sha256.cc in Sources */ = {isa = PBXBuildFile; fileRef = E14D930E107FA77200E3F5FE /* sha256.cc */; };
 /* End PBXBuildFile section */
@@ -434,6 +470,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = B082656E10731A95006EEC5A;
 			remoteInfo = SQLite;
+		};
+		B0C9CF63108DF24C00E7FA35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0F7DEF91086EE79008FFA70 /* SDL.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BECDF5FE0761BA81005FE872 /* Framework */;
+			remoteInfo = Framework;
+		};
+		B0C9CF65108DF24C00E7FA35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0F7DFE61086F4EA008FFA70 /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D07F2BC0486CC7A007CD1D0 /* libpng */;
+			remoteInfo = libpng;
+		};
+		B0C9CF67108DF24C00E7FA35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0F7DF7B1086F0CB008FFA70 /* SDL_image.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BE1FA71807AF4C44004B6283 /* Framework */;
+			remoteInfo = Framework;
+		};
+		B0C9CF69108DF26100E7FA35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0C9CF45108DF1AF00E7FA35 /* tilegen */;
+			remoteInfo = tilegen;
 		};
 		B0F7DEF21086EDE5008FFA70 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -490,20 +554,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = BECDF6C30761BA81005FE872;
 			remoteInfo = "Developer Extras Package";
-		};
-		B0F7DF121086EE7A008FFA70 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B0F7DEF91086EE79008FFA70 /* SDL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0014B9A809C0E585003A99D5;
-			remoteInfo = "Framework Without X11 Stuff (for those who didn't install the X11 headers with Xcode)";
-		};
-		B0F7DF141086EE7A008FFA70 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B0F7DEF91086EE79008FFA70 /* SDL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 002F327609CA02D800EBEB88;
-			remoteInfo = "Static Library Without X11 Stuff (for those who didn't install the X11 headers with Xcode)";
 		};
 		B0F7DF161086EEB0008FFA70 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -646,7 +696,6 @@
 				7BF855630C9C912B00B7C520 /* cio.h in CopyFiles */,
 				7BF855680C9C914D00B7C520 /* mapmark.h in CopyFiles */,
 				7BF8556C0C9C916800B7C520 /* dgnevent.h in CopyFiles */,
-				7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */,
 				7B61642D0C9CA8E80054B3D9 /* mpr.h in CopyFiles */,
 				7B61642F0C9CA8E80054B3D9 /* place.h in CopyFiles */,
 				7B6164300C9CA8E80054B3D9 /* ray.h in CopyFiles */,
@@ -705,6 +754,19 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0C9CF7A108DF28700E7FA35 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B0C9CF5E108DF23400E7FA35 /* libpng.framework in Copy Frameworks */,
+				B0C9CF5F108DF23700E7FA35 /* SDL_image.framework in Copy Frameworks */,
+				B0C9CF60108DF23900E7FA35 /* SDL.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -955,8 +1017,6 @@
 		7BF855660C9C914D00B7C520 /* mapmark.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mapmark.h; sourceTree = SOURCE_ROOT; };
 		7BF855690C9C916800B7C520 /* dgnevent.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = dgnevent.cc; sourceTree = SOURCE_ROOT; };
 		7BF8556A0C9C916800B7C520 /* dgnevent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dgnevent.h; sourceTree = SOURCE_ROOT; };
-		7BF8556E0C9C919100B7C520 /* luadgn.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = luadgn.cc; sourceTree = SOURCE_ROOT; };
-		7BF8556F0C9C919100B7C520 /* luadgn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = luadgn.h; sourceTree = SOURCE_ROOT; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B134610F255926007DB230 /* version.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = version.cc; sourceTree = SOURCE_ROOT; };
 		93B134C20F256113007DB230 /* arena.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arena.cc; sourceTree = "<group>"; };
@@ -1002,20 +1062,37 @@
 		B0B5DFDA1066FA240020B21F /* tiledef-player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-player.h"; path = "rltiles/tiledef-player.h"; sourceTree = "<group>"; };
 		B0B5DFDB1066FA240020B21F /* tiledef-unrand.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-unrand.cc"; path = "rltiles/tiledef-unrand.cc"; sourceTree = "<group>"; };
 		B0B5DFDC1066FA240020B21F /* tiledef-unrand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-unrand.h"; path = "rltiles/tiledef-unrand.h"; sourceTree = "<group>"; };
+		B0C9CF46108DF1AF00E7FA35 /* tilegen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tilegen.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0C9CFD6108DFF0F00E7FA35 /* tilegen-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "tilegen-Info.plist"; path = "rltiles/tilegen-Info.plist"; sourceTree = "<group>"; };
 		B0CFB313106DF67F005F9CC3 /* ctest.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ctest.cc; sourceTree = "<group>"; };
 		B0CFB314106DF67F005F9CC3 /* ctest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ctest.h; sourceTree = "<group>"; };
+		B0F01D20108DDEBF00A53656 /* dlua.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlua.cc; sourceTree = "<group>"; };
+		B0F01D21108DDEBF00A53656 /* dlua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlua.h; sourceTree = "<group>"; };
+		B0F01D22108DDEBF00A53656 /* l_crawl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_crawl.cc; sourceTree = "<group>"; };
+		B0F01D23108DDEBF00A53656 /* l_debug.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_debug.cc; sourceTree = "<group>"; };
+		B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgn_bf.cc; sourceTree = "<group>"; };
+		B0F01D25108DDEBF00A53656 /* l_dgn.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgn.cc; sourceTree = "<group>"; };
+		B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgnbld.cc; sourceTree = "<group>"; };
+		B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgnevt.cc; sourceTree = "<group>"; };
+		B0F01D28108DDEBF00A53656 /* l_dgngrd.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgngrd.cc; sourceTree = "<group>"; };
+		B0F01D29108DDEBF00A53656 /* l_dgnit.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgnit.cc; sourceTree = "<group>"; };
+		B0F01D2A108DDEBF00A53656 /* l_dgnlvl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgnlvl.cc; sourceTree = "<group>"; };
+		B0F01D2B108DDEBF00A53656 /* l_dgnmon.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgnmon.cc; sourceTree = "<group>"; };
+		B0F01D2C108DDEBF00A53656 /* l_dgntil.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgntil.cc; sourceTree = "<group>"; };
+		B0F01D2D108DDEBF00A53656 /* l_file.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_file.cc; sourceTree = "<group>"; };
+		B0F01D2E108DDEBF00A53656 /* l_libs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = l_libs.h; sourceTree = "<group>"; };
+		B0F01D2F108DDEBF00A53656 /* l_mapmrk.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_mapmrk.cc; sourceTree = "<group>"; };
+		B0F01D30108DDEBF00A53656 /* l_you.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_you.cc; sourceTree = "<group>"; };
 		B0F7DEEA1086EDE4008FFA70 /* Freetype2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Freetype2.xcodeproj; path = contrib/freetype/builds/mac/Xcode/Freetype2.xcodeproj; sourceTree = "<group>"; };
 		B0F7DEF91086EE79008FFA70 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = contrib/sdl/Xcode/SDL/SDL.xcodeproj; sourceTree = "<group>"; };
 		B0F7DF7B1086F0CB008FFA70 /* SDL_image.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_image.xcodeproj; path = "contrib/sdl-image/Xcode/SDL_image.xcodeproj"; sourceTree = "<group>"; };
 		B0F7DFE61086F4EA008FFA70 /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = contrib/libpng/projects/xcode/libpng.xcodeproj; sourceTree = "<group>"; };
 		B0F7E17710876503008FFA70 /* l_los.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_los.cc; sourceTree = "<group>"; };
-		B0F7E17810876503008FFA70 /* l_los.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = l_los.h; sourceTree = "<group>"; };
 		D25C91860FF0368E00D9E8AD /* main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cc; path = rltiles/tool/main.cc; sourceTree = "<group>"; };
 		D25C91870FF0368E00D9E8AD /* tile.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile.cc; path = rltiles/tool/tile.cc; sourceTree = "<group>"; };
 		D25C91880FF0368E00D9E8AD /* tile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tile.h; path = rltiles/tool/tile.h; sourceTree = "<group>"; };
 		D25C91890FF0368E00D9E8AD /* tile_colour.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile_colour.cc; path = rltiles/tool/tile_colour.cc; sourceTree = "<group>"; };
 		D25C918A0FF0368E00D9E8AD /* tile_colour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tile_colour.h; path = rltiles/tool/tile_colour.h; sourceTree = "<group>"; };
-		D25C918B0FF0368E00D9E8AD /* tile_convert.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile_convert.cc; path = rltiles/tool/tile_convert.cc; sourceTree = "<group>"; };
 		D25C918C0FF0368E00D9E8AD /* tile_list_processor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile_list_processor.cc; path = rltiles/tool/tile_list_processor.cc; sourceTree = "<group>"; };
 		D25C918D0FF0368E00D9E8AD /* tile_list_processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tile_list_processor.h; path = rltiles/tool/tile_list_processor.h; sourceTree = "<group>"; };
 		D25C918E0FF0368E00D9E8AD /* tile_page.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tile_page.cc; path = rltiles/tool/tile_page.cc; sourceTree = "<group>"; };
@@ -1051,7 +1128,6 @@
 		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
 		E14D930A107FA77200E3F5FE /* los.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = los.cc; sourceTree = "<group>"; };
 		E14D930B107FA77200E3F5FE /* losparam.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = losparam.cc; sourceTree = "<group>"; };
-		E14D930C107FA77200E3F5FE /* mon-los.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-los.cc"; sourceTree = "<group>"; };
 		E14D930D107FA77200E3F5FE /* ray.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ray.cc; sourceTree = "<group>"; };
 		E14D930E107FA77200E3F5FE /* sha256.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha256.cc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1078,6 +1154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0C9CFE0108E014800E7FA35 /* libSQLite.a in Frameworks */,
 				B032D68E106C02070002D70D /* AppKit.framework in Frameworks */,
 				B032D686106C02070002D70D /* liblua.a in Frameworks */,
 				B032D688106C02070002D70D /* libncurses.dylib in Frameworks */,
@@ -1094,6 +1171,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0C9CF44108DF1AF00E7FA35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0C9CF5A108DF21700E7FA35 /* SDL_image.framework in Frameworks */,
+				B0C9CF59108DF21300E7FA35 /* SDL.framework in Frameworks */,
+				B0C9CF58108DF20F00E7FA35 /* libpng.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1121,12 +1208,12 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B082657410731AA1006EEC5A /* SQLite */,
 				7B352EF00B001F5B00CABB32 /* Crawl */,
 				7B352E950B0017CF00CABB32 /* Levcomp */,
 				7B0EFD4B0BD12EEA00002671 /* Lua */,
-				7B352EF30B001FA700CABB32 /* Shared */,
 				D25C917A0FF035D100D9E8AD /* rltiles */,
+				7B352EF30B001FA700CABB32 /* Shared */,
+				B082657410731AA1006EEC5A /* SQLite */,
 				D25C91790FF035AF00D9E8AD /* Tiles */,
 			);
 			name = Source;
@@ -1140,6 +1227,7 @@
 				D2F271F60DA1C58C00445FE9 /* Dungeon Crawl Stone Soup - ASCII.app */,
 				B032D527106C01AF0002D70D /* Dungeon Crawl Stone Soup.app */,
 				B082656F10731A95006EEC5A /* libSQLite.a */,
+				B0C9CF46108DF1AF00E7FA35 /* tilegen.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1264,6 +1352,8 @@
 				7BF8556A0C9C916800B7C520 /* dgnevent.h */,
 				7B237E0F0A8EC9D000580F30 /* directn.cc */,
 				7B237E1B0A8EC9D000580F30 /* directn.h */,
+				B0F01D20108DDEBF00A53656 /* dlua.cc */,
+				B0F01D21108DDEBF00A53656 /* dlua.h */,
 				7B237E670A8EC9D000580F30 /* dungeon.cc */,
 				7B237E100A8EC9D000580F30 /* dungeon.h */,
 				7B237E520A8EC9D000580F30 /* effects.cc */,
@@ -1300,8 +1390,22 @@
 				7B237DF80A8EC9D000580F30 /* items.h */,
 				7B237E4F0A8EC9D000580F30 /* kills.cc */,
 				7B237E4E0A8EC9D000580F30 /* kills.h */,
+				B0F01D22108DDEBF00A53656 /* l_crawl.cc */,
+				B0F01D23108DDEBF00A53656 /* l_debug.cc */,
+				B0F01D25108DDEBF00A53656 /* l_dgn.cc */,
+				B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */,
+				B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */,
+				B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */,
+				B0F01D28108DDEBF00A53656 /* l_dgngrd.cc */,
+				B0F01D29108DDEBF00A53656 /* l_dgnit.cc */,
+				B0F01D2A108DDEBF00A53656 /* l_dgnlvl.cc */,
+				B0F01D2B108DDEBF00A53656 /* l_dgnmon.cc */,
+				B0F01D2C108DDEBF00A53656 /* l_dgntil.cc */,
+				B0F01D2D108DDEBF00A53656 /* l_file.cc */,
+				B0F01D2E108DDEBF00A53656 /* l_libs.h */,
 				B0F7E17710876503008FFA70 /* l_los.cc */,
-				B0F7E17810876503008FFA70 /* l_los.h */,
+				B0F01D2F108DDEBF00A53656 /* l_mapmrk.cc */,
+				B0F01D30108DDEBF00A53656 /* l_you.cc */,
 				7B237DF70A8EC9D000580F30 /* lev-pand.cc */,
 				7B237DF60A8EC9D000580F30 /* lev-pand.h */,
 				7B237E640A8EC9D000580F30 /* libunix.cc */,
@@ -1312,8 +1416,6 @@
 				B06FC5151081D2C0008347BD /* los.h */,
 				E14D930B107FA77200E3F5FE /* losparam.cc */,
 				B06FC5161081D2C0008347BD /* losparam.h */,
-				7BF8556E0C9C919100B7C520 /* luadgn.cc */,
-				7BF8556F0C9C919100B7C520 /* luadgn.h */,
 				7B237E380A8EC9D000580F30 /* macro.cc */,
 				7B237E190A8EC9D000580F30 /* macro.h */,
 				7B9740050BE3AC8000AAE35B /* makeitem.cc */,
@@ -1330,7 +1432,6 @@
 				7B4896610CD3A5D2004A5F43 /* mgrow.h */,
 				7B237DFC0A8EC9D000580F30 /* misc.cc */,
 				7B237DE90A8EC9D000580F30 /* misc.h */,
-				E14D930C107FA77200E3F5FE /* mon-los.cc */,
 				7B237DE80A8EC9D000580F30 /* mon-pick.cc */,
 				7B237DE70A8EC9D000580F30 /* mon-pick.h */,
 				7B237DFF0A8EC9D000580F30 /* mon-util.cc */,
@@ -1485,8 +1586,6 @@
 				B0F7DF0D1086EE7A008FFA70 /* libSDLmain.a */,
 				B0F7DF0F1086EE7A008FFA70 /* Standard DMG */,
 				B0F7DF111086EE7A008FFA70 /* Developer Extras Package */,
-				B0F7DF131086EE7A008FFA70 /* SDL.framework */,
-				B0F7DF151086EE7A008FFA70 /* libSDL.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1567,12 +1666,12 @@
 		D25C91840FF0366F00D9E8AD /* tool */ = {
 			isa = PBXGroup;
 			children = (
+				B0C9CFD6108DFF0F00E7FA35 /* tilegen-Info.plist */,
 				D25C91860FF0368E00D9E8AD /* main.cc */,
 				D25C91870FF0368E00D9E8AD /* tile.cc */,
 				D25C91880FF0368E00D9E8AD /* tile.h */,
 				D25C91890FF0368E00D9E8AD /* tile_colour.cc */,
 				D25C918A0FF0368E00D9E8AD /* tile_colour.h */,
-				D25C918B0FF0368E00D9E8AD /* tile_convert.cc */,
 				D25C918C0FF0368E00D9E8AD /* tile_list_processor.cc */,
 				D25C918D0FF0368E00D9E8AD /* tile_list_processor.h */,
 				D25C918E0FF0368E00D9E8AD /* tile_page.cc */,
@@ -1677,7 +1776,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B032D52E106C01AF0002D70D /* Build configuration list for PBXNativeTarget "Crawl Tiles" */;
 			buildPhases = (
-				B032D532106C01F10002D70D /* Generate Tiles */,
+				B0C9CFB4108DFA1200E7FA35 /* Generate Headers */,
 				B032D523106C01AF0002D70D /* Resources */,
 				B032D70E106C03000002D70D /* Copy Dungeon Tiles */,
 				B032D524106C01AF0002D70D /* Sources */,
@@ -1693,6 +1792,7 @@
 				B0F7DF171086EEB0008FFA70 /* PBXTargetDependency */,
 				B0F7DF9D1086F107008FFA70 /* PBXTargetDependency */,
 				B0F7E171108764C7008FFA70 /* PBXTargetDependency */,
+				B0C9CF6A108DF26100E7FA35 /* PBXTargetDependency */,
 			);
 			name = "Crawl Tiles";
 			productName = "Crawl Tiles";
@@ -1714,6 +1814,27 @@
 			productName = SQLite;
 			productReference = B082656F10731A95006EEC5A /* libSQLite.a */;
 			productType = "com.apple.product-type.library.static";
+		};
+		B0C9CF45108DF1AF00E7FA35 /* tilegen */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0C9CF4D108DF1B000E7FA35 /* Build configuration list for PBXNativeTarget "tilegen" */;
+			buildPhases = (
+				B0C9CF43108DF1AF00E7FA35 /* Sources */,
+				B0C9CF44108DF1AF00E7FA35 /* Frameworks */,
+				B0C9CF7A108DF28700E7FA35 /* Copy Frameworks */,
+				B0C9CF6C108DF27000E7FA35 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B0C9CF64108DF24C00E7FA35 /* PBXTargetDependency */,
+				B0C9CF66108DF24C00E7FA35 /* PBXTargetDependency */,
+				B0C9CF68108DF24C00E7FA35 /* PBXTargetDependency */,
+			);
+			name = tilegen;
+			productName = tilegen;
+			productReference = B0C9CF46108DF1AF00E7FA35 /* tilegen.app */;
+			productType = "com.apple.product-type.application";
 		};
 		D2F271F50DA1C58C00445FE9 /* Crawl ASCII */ = {
 			isa = PBXNativeTarget;
@@ -1768,6 +1889,7 @@
 			targets = (
 				B032D526106C01AF0002D70D /* Crawl Tiles */,
 				D2F271F50DA1C58C00445FE9 /* Crawl ASCII */,
+				B0C9CF45108DF1AF00E7FA35 /* tilegen */,
 				8DD76FA90486AB0100D96B5E /* Crawl-cmd */,
 				7B0EFD410BD12E9200002671 /* Lua */,
 				B082656E10731A95006EEC5A /* SQLite */,
@@ -1825,20 +1947,6 @@
 			remoteRef = B0F7DF101086EE7A008FFA70 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B0F7DF131086EE7A008FFA70 /* SDL.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SDL.framework;
-			remoteRef = B0F7DF121086EE7A008FFA70 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B0F7DF151086EE7A008FFA70 /* libSDL.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSDL.a;
-			remoteRef = B0F7DF141086EE7A008FFA70 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		B0F7DF861086F0CB008FFA70 /* SDL_image.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1874,7 +1982,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B09CCE3110830F1A00623CFA /* Crawl-Info.plist in Resources */,
 				B032D6FD106C02540002D70D /* Crawl.icns in Resources */,
 				B032D6FB106C02540002D70D /* dat in Resources */,
 				B032D6FC106C02540002D70D /* docs in Resources */,
@@ -1896,20 +2003,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		B032D532106C01F10002D70D /* Generate Tiles */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Generate Tiles";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nmake -f makefile.unix -j2 APPLE_GCC=y\n";
-		};
 		B090C2DB10671E3200AE855D /* Copy Crawl Executable */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1923,6 +2016,33 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp \"$BUILT_PRODUCTS_DIR/crawl\" \"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/\"";
+		};
+		B0C9CF6C108DF27000E7FA35 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\ndone";
+		};
+		B0C9CFB4108DFA1200E7FA35 /* Generate Headers */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Headers";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1989,6 +2109,7 @@
 				7B237ED10A8EC9D000580F30 /* describe.cc in Sources */,
 				7BF8556B0C9C916800B7C520 /* dgnevent.cc in Sources */,
 				7B237E960A8EC9D000580F30 /* directn.cc in Sources */,
+				B0F01D40108DDEBF00A53656 /* dlua.cc in Sources */,
 				7B237EEE0A8EC9D000580F30 /* dungeon.cc in Sources */,
 				7B237ED90A8EC9D000580F30 /* effects.cc in Sources */,
 				7B237EDA0A8EC9D000580F30 /* fight.cc in Sources */,
@@ -2006,6 +2127,20 @@
 				7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */,
 				7B237EE10A8EC9D000580F30 /* items.cc in Sources */,
 				7B237ED60A8EC9D000580F30 /* kills.cc in Sources */,
+				B0F01D41108DDEBF00A53656 /* l_crawl.cc in Sources */,
+				B0F01D42108DDEBF00A53656 /* l_debug.cc in Sources */,
+				B0F01D44108DDEBF00A53656 /* l_dgn.cc in Sources */,
+				B0F01D43108DDEBF00A53656 /* l_dgn_bf.cc in Sources */,
+				B0F01D45108DDEBF00A53656 /* l_dgnbld.cc in Sources */,
+				B0F01D46108DDEBF00A53656 /* l_dgnevt.cc in Sources */,
+				B0F01D47108DDEBF00A53656 /* l_dgngrd.cc in Sources */,
+				B0F01D48108DDEBF00A53656 /* l_dgnit.cc in Sources */,
+				B0F01D49108DDEBF00A53656 /* l_dgnlvl.cc in Sources */,
+				B0F01D4A108DDEBF00A53656 /* l_dgnmon.cc in Sources */,
+				B0F01D4B108DDEBF00A53656 /* l_dgntil.cc in Sources */,
+				B0F01D4C108DDEBF00A53656 /* l_file.cc in Sources */,
+				B0F01D4D108DDEBF00A53656 /* l_mapmrk.cc in Sources */,
+				B0F01D4E108DDEBF00A53656 /* l_you.cc in Sources */,
 				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
 				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
 				7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */,
@@ -2013,7 +2148,6 @@
 				7B237EE90A8EC9D000580F30 /* libutil.cc in Sources */,
 				E14D930F107FA77200E3F5FE /* los.cc in Sources */,
 				E14D9310107FA77200E3F5FE /* losparam.cc in Sources */,
-				7BF855700C9C919100B7C520 /* luadgn.cc in Sources */,
 				7B237EBF0A8EC9D000580F30 /* macro.cc in Sources */,
 				7B9740070BE3AC8000AAE35B /* makeitem.cc in Sources */,
 				7B352EA00B00183400CABB32 /* mapdef.cc in Sources */,
@@ -2023,7 +2157,6 @@
 				7B237EBC0A8EC9D000580F30 /* message.cc in Sources */,
 				7B4896620CD3A5D2004A5F43 /* mgrow.cc in Sources */,
 				7B237E830A8EC9D000580F30 /* misc.cc in Sources */,
-				E14D9311107FA77200E3F5FE /* mon-los.cc in Sources */,
 				7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */,
 				7B237E860A8EC9D000580F30 /* mon-util.cc in Sources */,
 				7B237ED40A8EC9D000580F30 /* monplace.cc in Sources */,
@@ -2098,6 +2231,7 @@
 				B032D6C8106C02150002D70D /* describe.cc in Sources */,
 				B032D6E7106C02150002D70D /* dgnevent.cc in Sources */,
 				B032D6AC106C02150002D70D /* directn.cc in Sources */,
+				B0F01D31108DDEBF00A53656 /* dlua.cc in Sources */,
 				B032D6D7106C02150002D70D /* dungeon.cc in Sources */,
 				B032D6CC106C02150002D70D /* effects.cc in Sources */,
 				B032D6CD106C02150002D70D /* fight.cc in Sources */,
@@ -2115,6 +2249,21 @@
 				B032D6DA106C02150002D70D /* itemprop.cc in Sources */,
 				B032D6D1106C02150002D70D /* items.cc in Sources */,
 				B032D6CB106C02150002D70D /* kills.cc in Sources */,
+				B0F01D32108DDEBF00A53656 /* l_crawl.cc in Sources */,
+				B0F01D33108DDEBF00A53656 /* l_debug.cc in Sources */,
+				B0F01D35108DDEBF00A53656 /* l_dgn.cc in Sources */,
+				B0F01D34108DDEBF00A53656 /* l_dgn_bf.cc in Sources */,
+				B0F01D36108DDEBF00A53656 /* l_dgnbld.cc in Sources */,
+				B0F01D37108DDEBF00A53656 /* l_dgnevt.cc in Sources */,
+				B0F01D38108DDEBF00A53656 /* l_dgngrd.cc in Sources */,
+				B0F01D39108DDEBF00A53656 /* l_dgnit.cc in Sources */,
+				B0F01D3A108DDEBF00A53656 /* l_dgnlvl.cc in Sources */,
+				B0F01D3B108DDEBF00A53656 /* l_dgnmon.cc in Sources */,
+				B0F01D3C108DDEBF00A53656 /* l_dgntil.cc in Sources */,
+				B0F01D3D108DDEBF00A53656 /* l_file.cc in Sources */,
+				B0F7E17910876503008FFA70 /* l_los.cc in Sources */,
+				B0F01D3E108DDEBF00A53656 /* l_mapmrk.cc in Sources */,
+				B0F01D3F108DDEBF00A53656 /* l_you.cc in Sources */,
 				B032D6A0106C02150002D70D /* lev-pand.cc in Sources */,
 				B032D690106C02150002D70D /* levcomp.lpp in Sources */,
 				B032D68F106C02150002D70D /* levcomp.ypp in Sources */,
@@ -2122,7 +2271,6 @@
 				B032D6D5106C02150002D70D /* libutil.cc in Sources */,
 				E1424F75107FAE4900E2A9CD /* los.cc in Sources */,
 				E1424F7E107FAEC700E2A9CD /* losparam.cc in Sources */,
-				B032D6E8106C02150002D70D /* luadgn.cc in Sources */,
 				B032D6BE106C02150002D70D /* macro.cc in Sources */,
 				B032D6E3106C02150002D70D /* makeitem.cc in Sources */,
 				B032D6DC106C02150002D70D /* mapdef.cc in Sources */,
@@ -2132,7 +2280,6 @@
 				B032D6BC106C02150002D70D /* message.cc in Sources */,
 				B032D6EE106C02150002D70D /* mgrow.cc in Sources */,
 				B032D6A3106C02150002D70D /* misc.cc in Sources */,
-				E1424F7F107FAEC700E2A9CD /* mon-los.cc in Sources */,
 				B032D69B106C02150002D70D /* mon-pick.cc in Sources */,
 				B032D6A4106C02150002D70D /* mon-util.cc in Sources */,
 				B032D6CA106C02150002D70D /* monplace.cc in Sources */,
@@ -2165,7 +2312,6 @@
 				B032D6F2106C02150002D70D /* spl-mis.cc in Sources */,
 				B032D6A8106C02150002D70D /* spl-util.cc in Sources */,
 				B07818DE1075D979008C3B64 /* sqldbm.cc in Sources */,
-				B082657810731AB5006EEC5A /* sqlite3.c in Sources */,
 				B032D6B1106C02150002D70D /* stash.cc in Sources */,
 				B032D6EC106C02150002D70D /* state.cc in Sources */,
 				B032D6ED106C02150002D70D /* store.cc in Sources */,
@@ -2192,7 +2338,6 @@
 				B032D6F0106C02150002D70D /* version.cc in Sources */,
 				B032D6AD106C02150002D70D /* view.cc in Sources */,
 				B032D6E4106C02150002D70D /* xom.cc in Sources */,
-				B0F7E17910876503008FFA70 /* l_los.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2201,6 +2346,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				B082657910731B5B006EEC5A /* sqlite3.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0C9CF43108DF1AF00E7FA35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0C9CF87108DF38200E7FA35 /* SDLMain.m in Sources */,
+				B0C9CF51108DF1F900E7FA35 /* main.cc in Sources */,
+				B0C9CF52108DF1F900E7FA35 /* tile.cc in Sources */,
+				B0C9CF53108DF1F900E7FA35 /* tile_colour.cc in Sources */,
+				B0C9CF57108DF20100E7FA35 /* tile_list_processor.cc in Sources */,
+				B0C9CF56108DF1F900E7FA35 /* tile_page.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2231,6 +2389,26 @@
 			isa = PBXTargetDependency;
 			target = B082656E10731A95006EEC5A /* SQLite */;
 			targetProxy = B082658710731C22006EEC5A /* PBXContainerItemProxy */;
+		};
+		B0C9CF64108DF24C00E7FA35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Framework;
+			targetProxy = B0C9CF63108DF24C00E7FA35 /* PBXContainerItemProxy */;
+		};
+		B0C9CF66108DF24C00E7FA35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libpng;
+			targetProxy = B0C9CF65108DF24C00E7FA35 /* PBXContainerItemProxy */;
+		};
+		B0C9CF68108DF24C00E7FA35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Framework;
+			targetProxy = B0C9CF67108DF24C00E7FA35 /* PBXContainerItemProxy */;
+		};
+		B0C9CF6A108DF26100E7FA35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0C9CF45108DF1AF00E7FA35 /* tilegen */;
+			targetProxy = B0C9CF69108DF26100E7FA35 /* PBXContainerItemProxy */;
 		};
 		B0F7DEF71086EDF2008FFA70 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2301,7 +2479,6 @@
 				GCC_VERSION_ppc = 4.0;
 				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
@@ -2430,7 +2607,6 @@
 				GCC_VERSION_ppc = 4.0;
 				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
@@ -2497,7 +2673,6 @@
 				GCC_VERSION_ppc = 4.0;
 				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
@@ -2550,8 +2725,8 @@
 		7B97C0270A8ED34400CE8936 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
@@ -2559,7 +2734,6 @@
 				GCC_VERSION_ppc = 4.0;
 				GCC_VERSION_x86_64 = 4.2;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
@@ -2897,6 +3071,132 @@
 			};
 			name = Wizard;
 		};
+		B0C9CF49108DF1AF00E7FA35 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/libpng.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/libpng.framework/Headers",
+				);
+				INFOPLIST_FILE = "rltiles/tilegen-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = tilegen;
+			};
+			name = Profile;
+		};
+		B0C9CF4A108DF1AF00E7FA35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/libpng.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/libpng.framework/Headers",
+				);
+				INFOPLIST_FILE = "rltiles/tilegen-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = tilegen;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		B0C9CF4B108DF1AF00E7FA35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/libpng.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/libpng.framework/Headers",
+				);
+				INFOPLIST_FILE = "rltiles/tilegen-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = tilegen;
+			};
+			name = Debug;
+		};
+		B0C9CF4C108DF1AF00E7FA35 /* Wizard */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Release/libpng.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/Freetype2.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/SDL_image.framework/Headers",
+					"$(PROJECT_DIR)/contrib/Frameworks/Debug/libpng.framework/Headers",
+				);
+				INFOPLIST_FILE = "rltiles/tilegen-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = tilegen;
+			};
+			name = Wizard;
+		};
 		D2F271F90DA1C58C00445FE9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3027,6 +3327,17 @@
 				B082657110731A95006EEC5A /* Release */,
 				B082657210731A95006EEC5A /* Debug */,
 				B082657310731A95006EEC5A /* Wizard */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Profile;
+		};
+		B0C9CF4D108DF1B000E7FA35 /* Build configuration list for PBXNativeTarget "tilegen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0C9CF49108DF1AF00E7FA35 /* Profile */,
+				B0C9CF4A108DF1AF00E7FA35 /* Release */,
+				B0C9CF4B108DF1AF00E7FA35 /* Debug */,
+				B0C9CF4C108DF1AF00E7FA35 /* Wizard */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Profile;

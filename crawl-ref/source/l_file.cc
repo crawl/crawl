@@ -126,7 +126,7 @@ static int file_unmarshall_meta(lua_State *ls)
     return (0);
 }
 
-const struct luaL_reg file_lib[] =
+const struct luaL_reg file_dlib[] =
 {
 { "marshall",   file_marshall },
 { "marshall_meta", file_marshall_meta },

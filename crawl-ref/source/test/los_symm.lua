@@ -39,7 +39,7 @@ local function test_losight_symmetry()
       local this_p = dgn.point(x, y)
       local you_p = dgn.point(you_x, you_y)
       dgn.grid(you_x, you_y, "floor_special")
-      dgn.dbg_dump_map(FAILMAP)
+      debug.dump_map(FAILMAP)
       assert(false,
              "LOS asymmetry detected (iter #" .. checks .. "): " .. you_p ..
                " sees " .. this_p .. ", but not vice versa." ..
@@ -51,11 +51,11 @@ end
 local function run_los_tests(depth, nlevels, tests_per_level)
   local place = "D:" .. depth
   crawl.mpr("Running LOS tests on " .. place)
-  dgn.dbg_goto_place(place)
+  debug.goto_place(place)
 
   for lev_i = 1, nlevels do
-    dgn.dbg_flush_map_memory()
-    dgn.dbg_generate_level()
+    debug.flush_map_memory()
+    debug.generate_level()
     for t_i = 1, tests_per_level do
       test_losight_symmetry()
     end

@@ -6,47 +6,20 @@
 #include <cmath>
 
 #include "branch.h"
-#include "chardump.h"
 #include "cloud.h"
 #include "initfile.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "message.h"
-#include "place.h"
 #include "spl-util.h"
 #include "view.h"
 
 ///////////////////////////////////////////////////////////////////////////
 // Lua dungeon bindings (in the dgn table).
 
-static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
-{
-    dungeon_feature_type feat = (dungeon_feature_type)0;
-    if (lua_isnumber(ls, idx))
-        feat = (dungeon_feature_type)luaL_checkint(ls, idx);
-    else if (lua_isstring(ls, idx))
-        feat = dungeon_feature_by_name(luaL_checkstring(ls, idx));
-    else
-        luaL_argerror(ls, idx, "Feature must be a string or a feature index.");
-    
-    return feat;
-}
-
-static dungeon_feature_type _check_lua_feature(lua_State *ls, int idx)
-{
-    const dungeon_feature_type f = _get_lua_feature(ls, idx);
-    if (!f)
-        luaL_argerror(ls, idx, "Invalid dungeon feature");
-    return (f);
-}
-
 static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
 {
     return lua_isnone(ls, ndx)? defval : lua_toboolean(ls, ndx);
 }
-
-#define FEAT(f, pos) \
-dungeon_feature_type f = _check_lua_feature(ls, pos)
 
 void dgn_reset_default_depth()
 {
@@ -122,47 +95,6 @@ static int dgn_depth(lua_State *ls)
 {
     MAP(ls, 1, map);
     return dgn_depth_proc(ls, map->depths, 2);
-}
-
-// WARNING: This is a very low-level call.
-LUAFN(dgn_dbg_goto_place)
-{
-    try
-    {
-        const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
-        you.level_type = id.level_type;
-        if (id.level_type == LEVEL_DUNGEON)
-        {
-            you.where_are_you = static_cast<branch_type>(id.branch);
-            you.your_level = absdungeon_depth(id.branch, id.depth);
-        }
-    }
-    catch (const std::string &err)
-    {
-        luaL_error(ls, err.c_str());
-    }
-    return (0);
-}
-
-LUAFN(dgn_dbg_flush_map_memory)
-{
-    dgn_flush_map_memory();
-    init_level_connectivity();
-    return (0);
-}
-
-LUAFN(dgn_dbg_generate_level)
-{
-    no_messages mx;
-    env.show.init(0);
-    env.map.init(map_cell());
-#ifdef USE_TILE
-    tile_init_default_flavour();
-    tile_clear_flavour();
-    TileNewLevel(true);
-#endif
-    builder(you.your_level, you.level_type);
-    return (0);
 }
 
 static int dgn_place(lua_State *ls)
@@ -363,9 +295,8 @@ static int dgn_orient(lua_State *ls)
     PLUARET(string, map_section_name(map->orient));
 }
 
-static int dgn_map_add_transform(
-                                 lua_State *ls,
-                                 std::string (map_lines::*add)(const std::string &s))
+int dgn_map_add_transform(lua_State *ls,
+                          std::string (map_lines::*add)(const std::string &s))
 {
     MAP(ls, 1, map);
     if (lua_gettop(ls) == 1)
@@ -640,29 +571,6 @@ static int dgn_welcome(lua_State *ls)
     return (0);
 }
 
-static int dgn_grid(lua_State *ls)
-{
-    GETCOORD(c, 1, 2, map_bounds);
-    
-    if (!lua_isnone(ls, 3))
-    {
-        const dungeon_feature_type feat = _get_lua_feature(ls, 3);
-        if (feat)
-            grd(c) = feat;
-    }
-    PLUARET(number, grd(c));
-}
-
-LUARET1(_dgn_is_wall, boolean,
-        feat_is_wall(static_cast<dungeon_feature_type>(luaL_checkint(ls, 1))))
-
-static int dgn_max_bounds(lua_State *ls)
-{
-    lua_pushnumber(ls, GXM);
-    lua_pushnumber(ls, GYM);
-    return (2);
-}
-
 typedef
     flood_find<map_def::map_feature_finder, map_def::map_bounds_check>
     map_flood_finder;
@@ -886,105 +794,6 @@ static int dgn_colour_at(lua_State *ls)
     PLUARET(string, colour_to_str(env.grid_colours(c)).c_str());
 }
 
-const char *dngn_feature_names[] =
-{
-"unseen", "closed_door", "detected_secret_door", "secret_door",
-"wax_wall", "metal_wall", "green_crystal_wall", "rock_wall", "stone_wall",
-"permarock_wall",
-"clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "trees",
-"open_sea", "orcish_idol", "", "", "", "", "",
-"granite_statue", "statue_reserved_1", "statue_reserved_2",
-"", "", "", "", "", "", "", "",
-"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-"", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
-"deep_water", "", "", "shallow_water", "water_stuck", "floor",
-"floor_special", "floor_reserved", "exit_hell", "enter_hell",
-"open_door", "", "", "trap_mechanical", "trap_magical", "trap_natural",
-"undiscovered_trap", "", "enter_shop", "enter_labyrinth",
-"stone_stairs_down_i", "stone_stairs_down_ii",
-"stone_stairs_down_iii", "escape_hatch_down", "stone_stairs_up_i",
-"stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up", "",
-"", "enter_dis", "enter_gehenna", "enter_cocytus",
-"enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
-"enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"", "", "", "builder_special_wall", "builder_special_floor", "",
-"", "", "enter_orcish_mines", "enter_hive", "enter_lair",
-"enter_slime_pits", "enter_vaults", "enter_crypt",
-"enter_hall_of_blades", "enter_zot", "enter_temple",
-"enter_snake_pit", "enter_elven_halls", "enter_tomb",
-"enter_swamp", "enter_shoals", "enter_reserved_2",
-"enter_reserved_3", "enter_reserved_4", "", "", "",
-"return_from_orcish_mines", "return_from_hive",
-"return_from_lair", "return_from_slime_pits",
-"return_from_vaults", "return_from_crypt",
-"return_from_hall_of_blades", "return_from_zot",
-"return_from_temple", "return_from_snake_pit",
-"return_from_elven_halls", "return_from_tomb",
-"return_from_swamp", "return_from_shoals", "return_reserved_2",
-"return_reserved_3", "return_reserved_4", "", "", "", "", "", "",
-"", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
-"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-"", "", "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",
-"altar_yredelemnul", "altar_xom", "altar_vehumet",
-"altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
-"altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
-"altar_beogh", "altar_jiyva", "altar_feawn", "", "", "", "",
-"fountain_blue", "fountain_sparkling", "fountain_blood",
-"dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
-"permadry_fountain", "abandoned_shop"
-};
-
-dungeon_feature_type dungeon_feature_by_name(const std::string &name)
-{
-    COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_REAL_FEATURES, c1);
-    if (name.empty())
-        return (DNGN_UNSEEN);
-    
-    for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
-        if (dngn_feature_names[i] == name)
-            return static_cast<dungeon_feature_type>(i);
-    
-    return (DNGN_UNSEEN);
-}
-
-std::vector<std::string> dungeon_feature_matches(const std::string &name)
-{
-    std::vector<std::string> matches;
-    
-    COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_REAL_FEATURES, c1);
-    if (name.empty())
-        return (matches);
-    
-    for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
-        if (strstr(dngn_feature_names[i], name.c_str()))
-            matches.push_back(dngn_feature_names[i]);
-    
-    return (matches);
-}
-
-const char *dungeon_feature_name(dungeon_feature_type rfeat)
-{
-    const unsigned feat = rfeat;
-    
-    if (feat >= ARRAYSZ(dngn_feature_names))
-        return (NULL);
-    
-    return dngn_feature_names[feat];
-}
-
-static int dgn_feature_number(lua_State *ls)
-{
-    const std::string &name = luaL_checkstring(ls, 1);
-    PLUARET(number, dungeon_feature_by_name(name));
-}
-
-static int dgn_feature_name(lua_State *ls)
-{
-    const unsigned feat = luaL_checkint(ls, 1);
-    PLUARET(string,
-            dungeon_feature_name(static_cast<dungeon_feature_type>(feat)));
-}
-
 static int dgn_register_listener(lua_State *ls)
 {
     unsigned mask = luaL_checkint(ls, 1);
@@ -1038,68 +847,6 @@ static int dgn_num_matching_markers(lua_State *ls)
     std::vector<map_marker*> markers = env.markers.get_all(key, val);
     
     PLUARET(number, markers.size());
-}
-
-static int dgn_feature_desc(lua_State *ls)
-{
-    const dungeon_feature_type feat =
-    static_cast<dungeon_feature_type>(luaL_checkint(ls, 1));
-    const description_level_type dtype =
-    lua_isnumber(ls, 2)?
-    static_cast<description_level_type>(luaL_checkint(ls, 2)) :
-    description_type_by_name(lua_tostring(ls, 2));
-    const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
-    const std::string s =
-    feature_description(feat, NUM_TRAPS, false, dtype, need_stop);
-    lua_pushstring(ls, s.c_str());
-    return (1);
-}
-
-static int dgn_feature_desc_at(lua_State *ls)
-{
-    const description_level_type dtype =
-    lua_isnumber(ls, 3)?
-    static_cast<description_level_type>(luaL_checkint(ls, 3)) :
-    description_type_by_name(lua_tostring(ls, 3));
-    const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
-    const std::string s =
-    feature_description(coord_def(luaL_checkint(ls, 1),
-                                  luaL_checkint(ls, 2)),
-                        false, dtype, need_stop);
-    lua_pushstring(ls, s.c_str());
-    return (1);
-}
-
-static int dgn_set_feature_desc_short(lua_State *ls)
-{
-    const std::string base_name = luaL_checkstring(ls, 1);
-    const std::string desc      = luaL_checkstring(ls, 2);
-    
-    if (base_name.empty())
-    {
-        luaL_argerror(ls, 1, "Base name can't be empty");
-        return (0);
-    }
-    
-    set_feature_desc_short(base_name, desc);
-    
-    return (0);
-}
-
-static int dgn_set_feature_desc_long(lua_State *ls)
-{
-    const std::string raw_name = luaL_checkstring(ls, 1);
-    const std::string desc     = luaL_checkstring(ls, 2);
-    
-    if (raw_name.empty())
-    {
-        luaL_argerror(ls, 1, "Raw name can't be empty");
-        return (0);
-    }
-    
-    set_feature_desc_long(raw_name, desc);
-    
-    return (0);
 }
 
 static int dgn_terrain_changed(lua_State *ls)
@@ -1167,9 +914,7 @@ static int dgn_fixup_stairs(lua_State *ls)
                 if (new_feat != DNGN_UNSEEN)
                 {
                     grd[x][y] = new_feat;
-                    env.markers.add(
-                                    new map_feature_marker(
-                                                           coord_def(x, y),
+                    env.markers.add(new map_feature_marker(coord_def(x, y),
                                                            new_feat));
                 }
             }
@@ -1178,31 +923,6 @@ static int dgn_fixup_stairs(lua_State *ls)
     
     return (0);
 }
-
-#ifdef USE_TILE
-static unsigned int _get_tile_idx(lua_State *ls, int arg)
-{
-    if (!lua_isstring(ls, arg))
-    {
-        luaL_argerror(ls, arg, "Expected string for tile name");
-        return 0;
-    }
-    
-    const char *tile_name = luaL_checkstring(ls, arg);
-    
-    unsigned int idx;
-    if (!tile_dngn_index(tile_name, idx))
-    {
-        std::string error = "Couldn't find tile '";
-        error += tile_name;
-        error += "'";
-        luaL_argerror(ls, arg, error.c_str());
-        return 0;
-    }
-    
-    return idx;
-}
-#endif
 
 static int dgn_floor_halo(lua_State *ls)
 {
@@ -1261,7 +981,7 @@ static int dgn_floor_halo(lua_State *ls)
         }
     
 #ifdef USE_TILE
-    unsigned int tile = _get_tile_idx(ls, 3);
+    unsigned int tile = get_tile_idx(ls, 3);
     if (!tile)
         return (0);
     if (tile_dngn_count(tile) != 9)
@@ -1483,339 +1203,6 @@ static int dgn_apply_area_cloud(lua_State *ls)
     return (0);
 }
 
-static void _clamp_to_bounds(int &x, int &y, bool edge_ok = false)
-{
-    const int edge_offset = edge_ok ? 0 : 1;
-    x = std::min(std::max(x, X_BOUND_1 + edge_offset), X_BOUND_2 - edge_offset);
-    y = std::min(std::max(y, Y_BOUND_1 + edge_offset), Y_BOUND_2 - edge_offset);
-}
-
-// Return a metatable for a point on the map_lines grid.
-static int dgn_grd_table(lua_State *ls)
-{
-    MAP(ls, 1, map);
-    
-    map_def **mapref = clua_new_userdata<map_def *>(ls, GRD_METATABLE);
-    *mapref = map;
-    
-    return (1);
-}
-
-static int dgn_width(lua_State *ls)
-{
-    MAP(ls, 1, map);
-    
-    lua_pushnumber(ls, map->map.width());
-    return (1);
-}
-
-static int dgn_height(lua_State *ls)
-{
-    MAP(ls, 1, map);
-    
-    lua_pushnumber(ls, map->map.height());
-    return (1);
-}
-
-static int dgn_fill_area(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = _check_lua_feature(ls, 5);
-    
-    _clamp_to_bounds(x1, y1);
-    _clamp_to_bounds(x2, y2);
-    if (x2 < x1)
-        std::swap(x1, x2);
-    if (y2 < y1)
-        std::swap(y1, y2);
-    
-    for (int y = y1; y <= y2; y++)
-        for (int x = x1; x <= x2; x++)
-            grd[x][y] = feat;
-    
-    return 0;
-}
-
-static int dgn_replace_area(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type search = _check_lua_feature(ls, 5);
-    dungeon_feature_type replace = _check_lua_feature(ls, 6);
-    
-    // gracefully handle out of bound areas by truncating them.
-    _clamp_to_bounds(x1, y1);
-    _clamp_to_bounds(x2, y2);
-    if (x2 < x1)
-        std::swap(x1, x2);
-    if (y2 < y1)
-        std::swap(y1, y2);
-    
-    for (int y = y1; y <= y2; y++)
-        for (int x = x1; x <= x2; x++)
-            if (grd[x][y] == search)
-                grd[x][y] = replace;
-    
-    return 0;
-}
-
-static int dgn_octa_room(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    int oblique = luaL_checkint(ls, 5);
-    dungeon_feature_type fill = _check_lua_feature(ls, 6);
-    
-    spec_room sr;
-    sr.tl.x = x1;
-    sr.br.x = x2;
-    sr.tl.y = y1;
-    sr.br.y = y2;
-    
-    octa_room(sr, oblique, fill);
-    
-    return 0;
-}
-
-static int dgn_make_pillars(lua_State *ls)
-{
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int num = luaL_checkint(ls, 3);
-    int scale_x = luaL_checkint(ls, 4);
-    int big_radius = luaL_checkint(ls, 5);
-    int pillar_radius = luaL_checkint(ls, 6);
-    dungeon_feature_type fill = _check_lua_feature(ls, 8);
-    
-    // [enne] The underscore is for DJGPP's brain damage.
-    const float _PI = 3.14159265f;
-    for (int n = 0; n < num; n++)
-    {
-        float angle = n * 2 * _PI / (float)num;
-        int x = (int)std::floor(std::cos(angle) * big_radius * scale_x + 0.5f);
-        int y = (int)std::floor(std::sin(angle) * big_radius + 0.5f);
-        
-        lua_pushvalue(ls, 7);
-        lua_pushnumber(ls, center_x + x);
-        lua_pushnumber(ls, center_y + y);
-        lua_pushnumber(ls, pillar_radius);
-        lua_pushnumber(ls, fill);
-        
-        lua_call(ls, 4, 0);
-    }
-    
-    return 0;
-}
-
-static int dgn_make_square(lua_State *ls)
-{
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = _check_lua_feature(ls, 4);
-    
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-            grd[center_x + x][center_y + y] = fill;
-    
-    return 0;
-}
-
-static int dgn_make_rounded_square(lua_State *ls)
-{
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = _check_lua_feature(ls, 4);
-    
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-            if (std::abs(x) != radius || std::abs(y) != radius)
-                grd[center_x + x][center_y + y] = fill;
-    
-    return 0;
-}
-
-static int dgn_make_circle(lua_State *ls)
-{
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = _check_lua_feature(ls, 4);
-    
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-            if (x * x + y * y < radius * radius)
-                grd[center_x + x][center_y + y] = fill;
-    
-    return 0;
-}
-
-static int dgn_in_bounds(lua_State *ls)
-{
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
-    
-    lua_pushboolean(ls, in_bounds(x, y));
-    return 1;
-}
-
-static int dgn_replace_first(lua_State *ls)
-{
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
-    int dx = luaL_checkint(ls, 3);
-    int dy = luaL_checkint(ls, 4);
-    dungeon_feature_type search = _check_lua_feature(ls, 5);
-    dungeon_feature_type replace = _check_lua_feature(ls, 6);
-    
-    _clamp_to_bounds(x, y);
-    bool found = false;
-    while (in_bounds(x, y))
-    {
-        if (grd[x][y] == search)
-        {
-            grd[x][y] = replace;
-            found = true;
-            break;
-        }
-        
-        x += dx;
-        y += dy;
-    }
-    
-    lua_pushboolean(ls, found);
-    return 1;
-}
-
-static int dgn_replace_random(lua_State *ls)
-{
-    dungeon_feature_type search = _check_lua_feature(ls, 1);
-    dungeon_feature_type replace = _check_lua_feature(ls, 2);
-    
-    int x, y;
-    do
-    {
-        x = random2(GXM);
-        y = random2(GYM);
-    }
-    while (grd[x][y] != search);
-    
-    grd[x][y] = replace;
-    
-    return 0;
-}
-
-static int dgn_spotty_level(lua_State *ls)
-{
-    bool seeded = lua_toboolean(ls, 1);
-    int iterations = luaL_checkint(ls, 2);
-    bool boxy = lua_toboolean(ls, 3);
-    
-    spotty_level(seeded, iterations, boxy);
-    return 0;
-}
-
-static int dgn_smear_feature(lua_State *ls)
-{
-    int iterations = luaL_checkint(ls, 1);
-    bool boxy = lua_toboolean(ls, 2);
-    dungeon_feature_type feat = _check_lua_feature(ls, 3);
-    
-    int x1 = luaL_checkint(ls, 4);
-    int y1 = luaL_checkint(ls, 5);
-    int x2 = luaL_checkint(ls, 6);
-    int y2 = luaL_checkint(ls, 7);
-    
-    _clamp_to_bounds(x1, y1, true);
-    _clamp_to_bounds(x2, y2, true);
-    
-    smear_feature(iterations, boxy, feat, x1, y1, x2, y2);
-    
-    return 0;
-}
-
-static int dgn_count_feature_in_box(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = _check_lua_feature(ls, 5);
-    
-    lua_pushnumber(ls, count_feature_in_box(x1, y1, x2, y2, feat));
-    return 1;
-}
-
-static int dgn_count_antifeature_in_box(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = _check_lua_feature(ls, 5);
-    
-    lua_pushnumber(ls, count_antifeature_in_box(x1, y1, x2, y2, feat));
-    return 1;
-}
-
-static int dgn_count_neighbours(lua_State *ls)
-{
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
-    dungeon_feature_type feat = _check_lua_feature(ls, 3);
-    
-    lua_pushnumber(ls, count_neighbours(x, y, feat));
-    return 1;
-}
-
-static int dgn_join_the_dots(lua_State *ls)
-{
-    int from_x = luaL_checkint(ls, 1);
-    int from_y = luaL_checkint(ls, 2);
-    int to_x = luaL_checkint(ls, 3);
-    int to_y = luaL_checkint(ls, 4);
-    // TODO enne - push map masks to lua?
-    unsigned map_mask = MMT_VAULT;
-    bool early_exit = lua_toboolean(ls, 5);
-    
-    coord_def from(from_x, from_y);
-    coord_def to(to_x, to_y);
-    
-    bool ret = join_the_dots(from, to, map_mask, early_exit);
-    lua_pushboolean(ls, ret);
-    
-    return 1;
-}
-
-static int dgn_fill_disconnected_zones(lua_State *ls)
-{
-    int from_x = luaL_checkint(ls, 1);
-    int from_y = luaL_checkint(ls, 2);
-    int to_x = luaL_checkint(ls, 3);
-    int to_y = luaL_checkint(ls, 4);
-    
-    dungeon_feature_type feat = _check_lua_feature(ls, 5);
-    
-    process_disconnected_zones(from_x, from_y, to_x, to_y, true, feat);
-    
-    return 0;
-}
-
-LUAFN(_dgn_is_opaque)
-{
-    COORDS(c, 1, 2);
-    lua_pushboolean(ls, feat_is_opaque(grd(c)));
-    return (1);
-}
-
 static int _dgn_is_passable(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -1942,147 +1329,6 @@ LUAFN(dgn_with_map_anchors)
     return (1);
 }
 
-#define BRANCH(br, pos)                                                 \
-const char *branch_name = luaL_checkstring(ls, pos);                \
-branch_type req_branch_type = str_to_branch(branch_name);           \
-if (req_branch_type == NUM_BRANCHES)                                \
-luaL_error(ls, "Expected branch name");                         \
-Branch &br = branches[req_branch_type]
-
-#define BRANCHFN(name, type, expr)   \
-LUAFN(dgn_br_##name) {           \
-BRANCH(br, 1);                   \
-PLUARET(type, expr);             \
-}
-
-BRANCHFN(floorcol, number, br.floor_colour)
-BRANCHFN(rockcol, number, br.rock_colour)
-BRANCHFN(has_shops, boolean, br.has_shops)
-BRANCHFN(has_uniques, boolean, br.has_uniques)
-BRANCHFN(parent_branch, string,
-         br.parent_branch == NUM_BRANCHES ? ""
-         : branches[br.parent_branch].abbrevname)
-
-#define LEVEL(lev, br, pos)                                             \
-const char *level_name = luaL_checkstring(ls, pos);                 \
-level_area_type lev = str_to_level_area_type(level_name);           \
-if (lev == NUM_LEVEL_AREA_TYPES)                                    \
-luaL_error(ls, "Expected level name");                          \
-const char *branch_name = luaL_checkstring(ls, pos);                \
-branch_type br = str_to_branch(branch_name);                        \
-if (lev == LEVEL_DUNGEON && br == NUM_BRANCHES)                     \
-luaL_error(ls, "Expected branch name");
-
-static void push_level_id(lua_State *ls, const level_id &lid)
-{
-    // We're skipping the constructor; naughty, but level_id has no
-    // virtual methods and no dynamically allocated memory.
-    level_id *nlev =
-    static_cast<level_id*>(lua_newuserdata(ls, sizeof(level_id)));
-    *nlev = lid;
-}
-
-static level_id _lua_level_id(lua_State *ls, int ndx)
-{
-    if (lua_isstring(ls, ndx))
-    {
-        const char *s = lua_tostring(ls, 1);
-        try
-        {
-            return level_id::parse_level_id(s);
-        }
-        catch (const std::string &err)
-        {
-            luaL_error(ls, err.c_str());
-        }
-    }
-    else if (lua_isuserdata(ls, ndx))
-    {
-        const level_id *lid = static_cast<level_id*>(lua_touserdata(ls, ndx));
-        return (*lid);
-    }
-    
-    luaL_argerror(ls, ndx, "Expected level_id");
-    // Never gets here.
-    return level_id();
-}
-
-LUAFN(dgn_level_id)
-{
-    const int nargs = lua_gettop(ls);
-    if (!nargs)
-        push_level_id(ls, level_id::current());
-    else if (nargs == 1)
-        push_level_id(ls, _lua_level_id(ls, 1));
-    return (1);
-}
-
-LUAFN(dgn_level_name)
-{
-    const level_id lid(_lua_level_id(ls, 1));
-    lua_pushstring(ls, lid.describe().c_str());
-    return (1);
-}
-
-LUAFN(dgn_set_level_type_name)
-{
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-    {
-        luaL_error(ls, "Can only set level type name on portal vaults");
-        return(0);
-    }
-    
-    if (!lua_isstring(ls, 1))
-    {
-        luaL_argerror(ls, 1, "Expected string for level type name");
-        return(0);
-    }
-    
-    you.level_type_name = luaL_checkstring(ls, 1);
-    
-    return(0);
-}
-
-LUAFN(dgn_set_level_type_name_abbrev)
-{
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-    {
-        luaL_error(ls, "Can only set level type name abbreviation on "
-                   "portal vaults");
-        return(0);
-    }
-    
-    if (!lua_isstring(ls, 1))
-    {
-        luaL_argerror(ls, 1, "Expected string for level type name "
-                      "abbreviation");
-        return(0);
-    }
-    
-    you.level_type_name_abbrev = luaL_checkstring(ls, 1);
-    
-    return(0);
-}
-
-LUAFN(dgn_set_level_type_origin)
-{
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-    {
-        luaL_error(ls, "Can only set level type origin on portal vaults");
-        return(0);
-    }
-    
-    if (!lua_isstring(ls, 1))
-    {
-        luaL_argerror(ls, 1, "Expected string for level type origin");
-        return(0);
-    }
-    
-    you.level_type_origin = luaL_checkstring(ls, 1);
-    
-    return(0);
-}
-
 static int _lua_push_map(lua_State *ls, const map_def *map)
 {
     if (map)
@@ -2104,17 +1350,17 @@ LUAFN(dgn_map_by_tag)
 
 LUAFN(dgn_map_in_depth)
 {
-    const level_id lid = _lua_level_id(ls, 1);
+    const level_id lid = dlua_level_id(ls, 1);
     const bool mini = _lua_boolean(ls, 2, true);
     return _lua_push_map(ls, random_map_in_depth(lid, mini));
 }
 
 LUAFN(dgn_map_by_place)
 {
-    const level_id lid = _lua_level_id(ls, 1);
+    const level_id lid = dlua_level_id(ls, 1);
     const bool mini = _lua_boolean(ls, 2, false);
     return _lua_push_map(ls, random_map_for_place(lid, mini));
-}
+}          
 
 LUAFN(_dgn_place_map)
 {
@@ -2243,140 +1489,10 @@ LUAFN(_dgn_reuse_map)
     return (0);
 }
 
-LUAFN(dgn_lev_floortile)
-{
-#ifdef USE_TILE
-    LEVEL(lev, br, 1);
-    
-    tile_flavour flv;
-    tile_default_flv(lev, br, flv);
-    
-    const char *tile_name = tile_dngn_name(flv.floor);
-    PLUARET(string, tile_name);
-#else
-    PLUARET(string, "invalid");
-#endif
-}
-
-LUAFN(dgn_lev_rocktile)
-{
-#ifdef USE_TILE
-    LEVEL(lev, br, 1);
-    
-    tile_flavour flv;
-    tile_default_flv(lev, br, flv);
-    
-    const char *tile_name = tile_dngn_name(flv.wall);
-    PLUARET(string, tile_name);
-#else
-    PLUARET(string, "invalid");
-#endif
-}
-
-LUAFN(dgn_lrocktile)
-{
-    MAP(ls, 1, map);
-    
-#ifdef USE_TILE
-    unsigned short tile = _get_tile_idx(ls, 2);
-    map->rock_tile = tile;
-    
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
-#else
-    UNUSED(map);
-    PLUARET(string, "invalid");
-#endif
-}
-
-LUAFN(dgn_lfloortile)
-{
-    MAP(ls, 1, map);
-    
-#ifdef USE_TILE
-    unsigned short tile = _get_tile_idx(ls, 2);
-    map->floor_tile = tile;
-    
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
-#else
-    UNUSED(map);
-    PLUARET(string, "invalid");
-#endif
-}
-
-LUAFN(dgn_change_rock_tile)
-{
-#ifdef USE_TILE
-    unsigned short tile = _get_tile_idx(ls, 1);
-    if (tile)
-        env.tile_default.wall = tile;
-    
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
-#else
-    PLUARET(string, "invalid");
-#endif
-}
-
-LUAFN(dgn_change_floor_tile)
-{
-#ifdef USE_TILE
-    unsigned short tile = _get_tile_idx(ls, 1);
-    if (tile)
-        env.tile_default.floor = tile;
-    
-    const char *tile_name = tile_dngn_name(tile);
-    PLUARET(string, tile_name);
-#else
-    PLUARET(string, "invalid");
-#endif
-}
-
-LUAFN(dgn_ftile)
-{
-#ifdef USE_TILE
-    return dgn_map_add_transform(ls, &map_lines::add_floortile);
-#else
-    return 0;
-#endif
-}
-
-LUAFN(dgn_rtile)
-{
-#ifdef USE_TILE
-    return dgn_map_add_transform(ls, &map_lines::add_rocktile);
-#else
-    return 0;
-#endif
-}
-
-LUAFN(dgn_dbg_dump_map)
-{
-    const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
-    if (lua_isstring(ls, pos))
-        dump_map(lua_tostring(ls, pos), true);
-    return (0);
-}
-
-LUAFN(dgn_dbg_test_explore)
-{
-#ifdef WIZARD
-    debug_test_explore();
-#endif
-    return (0);
-}
-
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
-const struct luaL_reg dgn_lib[] =
+const struct luaL_reg dgn_dlib[] =
 {
-{ "dbg_goto_place", dgn_dbg_goto_place },
-{ "dbg_flush_map_memory", dgn_dbg_flush_map_memory },
-{ "dbg_generate_level", dgn_dbg_generate_level },
-{ "dbg_dump_map", dgn_dbg_dump_map },
-{ "dbg_test_explore", dgn_dbg_test_explore },
-
 { "reset_level", _dgn_reset_level },
 
 { "default_depth", dgn_default_depth },
@@ -2409,9 +1525,6 @@ const struct luaL_reg dgn_lib[] =
 { "kmask", dgn_kmask },
 { "mapsize", dgn_map_size },
 
-{ "grid", dgn_grid },
-{ "is_wall", _dgn_is_wall },
-{ "max_bounds", dgn_max_bounds },
 { "colour_at", dgn_colour_at },
 
 { "terrain_changed", dgn_terrain_changed },
@@ -2422,16 +1535,10 @@ const struct luaL_reg dgn_lib[] =
 { "gly_points", dgn_gly_points },
 { "original_map", dgn_original_map },
 { "load_des_file", dgn_load_des_file },
-{ "feature_number", dgn_feature_number },
-{ "feature_name", dgn_feature_name },
 { "register_listener", dgn_register_listener },
 { "remove_listener", dgn_remove_listener },
 { "remove_marker", dgn_remove_marker },
 { "num_matching_markers", dgn_num_matching_markers },
-{ "feature_desc", dgn_feature_desc },
-{ "feature_desc_at", dgn_feature_desc_at },
-{ "set_feature_desc_short", dgn_set_feature_desc_short },
-{ "set_feature_desc_long", dgn_set_feature_desc_long },
 { "change_level_flags", dgn_change_level_flags },
 { "change_branch_flags", dgn_change_branch_flags },
 { "get_floor_colour", dgn_get_floor_colour },
@@ -2444,29 +1551,6 @@ const struct luaL_reg dgn_lib[] =
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },
 
-// building routines
-{ "grd_table", dgn_grd_table },
-{ "width", dgn_width },
-{ "height", dgn_height },
-{ "fill_area", dgn_fill_area },
-{ "replace_area", dgn_replace_area },
-{ "octa_room", dgn_octa_room },
-{ "make_pillars", dgn_make_pillars },
-{ "make_square", dgn_make_square },
-{ "make_rounded_square", dgn_make_rounded_square },
-{ "make_circle", dgn_make_circle },
-{ "in_bounds", dgn_in_bounds },
-{ "replace_first", dgn_replace_first },
-{ "replace_random", dgn_replace_random },
-{ "spotty_level", dgn_spotty_level },
-{ "smear_feature", dgn_smear_feature },
-{ "count_feature_in_box", dgn_count_feature_in_box },
-{ "count_antifeature_in_box", dgn_count_antifeature_in_box },
-{ "count_neighbours", dgn_count_neighbours },
-{ "join_the_dots", dgn_join_the_dots },
-{ "fill_disconnected_zones", dgn_fill_disconnected_zones },
-
-{ "is_opaque", _dgn_is_opaque },
 { "is_passable", _dgn_is_passable },
 
 { "register_feature_marker", dgn_register_feature_marker },
@@ -2475,17 +1559,6 @@ const struct luaL_reg dgn_lib[] =
 { "with_map_bounds_fn", dgn_with_map_bounds_fn },
 { "with_map_anchors", dgn_with_map_anchors },
 
-{ "br_floorcol", dgn_br_floorcol },
-{ "br_rockcol", dgn_br_rockcol },
-{ "br_has_shops", dgn_br_has_shops },
-{ "br_has_uniques", dgn_br_has_uniques },
-{ "br_parent_branch", dgn_br_parent_branch },
-
-{ "level_id", dgn_level_id },
-{ "level_name", dgn_level_name },
-{ "set_level_type_name", dgn_set_level_type_name },
-{ "set_level_type_name_abbrev", dgn_set_level_type_name_abbrev },
-{ "set_level_type_origin", dgn_set_level_type_origin },
 { "map_by_tag", dgn_map_by_tag },
 { "map_in_depth", dgn_map_in_depth },
 { "map_by_place", dgn_map_by_place },
@@ -2497,15 +1570,6 @@ const struct luaL_reg dgn_lib[] =
 { "find_marker_prop", _dgn_find_marker_prop },
 
 { "get_special_room_info", dgn_get_special_room_info },
-
-{ "lrocktile", dgn_lrocktile },
-{ "lfloortile", dgn_lfloortile },
-{ "rtile", dgn_rtile },
-{ "ftile", dgn_ftile },
-{ "change_rock_tile", dgn_change_rock_tile },
-{ "change_floor_tile", dgn_change_floor_tile },
-{ "lev_floortile", dgn_lev_floortile },
-{ "lev_rocktile", dgn_lev_rocktile },
 
 { NULL, NULL }
 };

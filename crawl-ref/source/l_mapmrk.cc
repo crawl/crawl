@@ -21,7 +21,7 @@ static int mapmarker_move(lua_State *ls)
     return (0);
 }
 
-const struct luaL_reg mapmarker_lib[] =
+const struct luaL_reg mapmarker_dlib[] =
 {
 { "pos", mapmarker_pos },
 { "move", mapmarker_move },
@@ -30,5 +30,5 @@ const struct luaL_reg mapmarker_lib[] =
 
 void luaopen_mapmarker(lua_State *ls)
 {
-    luaopen_setmeta(ls, "mapmarker", mapmarker_lib, MAPMARK_METATABLE);
+    luaopen_setmeta(ls, "mapmarker", mapmarker_dlib, MAPMARK_METATABLE);
 }

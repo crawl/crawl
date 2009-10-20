@@ -41,7 +41,7 @@ LUAFN(los_cell_see_cell)
     PLUARET(number, cell_see_cell(p, q));
 }
 
-const struct luaL_reg los_lib[] =
+const struct luaL_reg los_dlib[] =
 {
     { "findray", los_find_ray },
     { "cell_see_cell", los_cell_see_cell },
@@ -88,7 +88,7 @@ LUAFN(ray_pos)
     return (2);
 }
 
-static const struct luaL_reg ray_lib[] =
+static const struct luaL_reg ray_dlib[] =
 {
     { "accx", ray_accx },
     { "accy", ray_accy },
@@ -100,6 +100,5 @@ static const struct luaL_reg ray_lib[] =
 
 void luaopen_ray(lua_State *ls)
 {
-//    luaopen_setmeta(ls, "ray", ray_lib, RAY_METATABLE);
-    clua_register_metatable(ls, RAY_METATABLE, ray_lib, lua_object_gc<ray_def>);
+    clua_register_metatable(ls, RAY_METATABLE, ray_dlib, lua_object_gc<ray_def>);
 }
