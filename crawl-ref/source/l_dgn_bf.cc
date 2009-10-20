@@ -1,5 +1,5 @@
 /*
- * File:      l_dgnbf.cc
+ * File:      l_dgn_bf.cc
  * Summary:   Dungeon lua builder functions.
  */
 

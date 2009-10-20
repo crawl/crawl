@@ -14,6 +14,7 @@
 
 extern const struct luaL_reg crawl_lib[];
 extern const struct luaL_reg dgn_lib[];
+extern const struct luaL_reg dgn_build_lib[];
 extern const struct luaL_reg dgn_event_lib[];
 extern const struct luaL_reg dgn_item_lib[];
 extern const struct luaL_reg dgn_level_lib[];
@@ -76,5 +77,6 @@ int dgn_map_add_transform(lua_State *ls,
           std::string (map_lines::*add)(const std::string &s));
 unsigned int get_tile_idx(lua_State *ls, int arg);
 level_id dlua_level_id(lua_State *ls, int ndx);
+dungeon_feature_type check_lua_feature(lua_State *ls, int idx);
 
 #endif
