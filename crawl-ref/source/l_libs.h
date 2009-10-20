@@ -16,6 +16,7 @@ extern const struct luaL_reg crawl_lib[];
 extern const struct luaL_reg dgn_lib[];
 extern const struct luaL_reg dgn_build_lib[];
 extern const struct luaL_reg dgn_event_lib[];
+extern const struct luaL_reg dgn_grid_lib[];
 extern const struct luaL_reg dgn_item_lib[];
 extern const struct luaL_reg dgn_level_lib[];
 extern const struct luaL_reg dgn_mons_lib[];
@@ -51,6 +52,9 @@ void register_builder_funcs(lua_State *ls);
 #define COORDS(c, p1, p2)                                \
     GETCOORD(c, p1, p2, in_bounds)
 
+#define FEAT(f, pos) \
+dungeon_feature_type f = check_lua_feature(ls, pos)
+  
 #define LEVEL(lev, br, pos)                                             \
 const char *level_name = luaL_checkstring(ls, pos);                 \
 level_area_type lev = str_to_level_area_type(level_name);           \
