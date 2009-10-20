@@ -3620,7 +3620,12 @@ void handle_time(long time_delta)
     }
     else
     {
-        if (one_chance_in(30))
+        // If Chronos has slowed your biology, disease might
+        // not actually do anything.
+        if (one_chance_in(30)
+            && !(you.religion == GOD_CHRONOS
+                 && piety_rank(you.piety) >= 1
+                 && coinflip()))
         {
             mpr("Your disease is taking its toll.", MSGCH_WARN);
             lose_stat(STAT_RANDOM, 1, false, "disease");

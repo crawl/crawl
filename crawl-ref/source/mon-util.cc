@@ -510,6 +510,10 @@ bool mons_is_stationary(const monsters *mon)
     return (mons_class_is_stationary(mon->type));
 }
 
+bool mons_is_fast(const monsters *mon){
+    return (mon->speed > 10);
+}
+
 bool mons_is_insubstantial(int mc)
 {
     return (mons_class_flag(mc, M_INSUBSTANTIAL));
@@ -8558,7 +8562,8 @@ static const char *enchant_names[] =
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "soul-ripe", "decay", "hungry", "flopping", "spore-producing", "bug"
+    "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
+    "downtrodden", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

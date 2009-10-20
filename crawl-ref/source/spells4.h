@@ -47,4 +47,7 @@ void cast_stoneskin(int pow);
 int cast_semi_controlled_blink(int pow);
 bool cast_portal_projectile(int pow);
 
+//returns true if it slowed the monster
+bool do_slow_monster(monsters* mon, kill_category whose_kill);
+
 #endif

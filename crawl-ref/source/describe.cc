@@ -3294,7 +3294,11 @@ const char *divine_title[NUM_GODS][8] =
     // progression is generally from nature lover to walking disaster.
     // -cao
     {"Walking Fertiliser", "Green %s",              "Photosynthesist",          "Planter",
-     "Nimbus",             "Sporadic Warrior",      "Green Death",              "Force of Nature"}
+     "Nimbus",             "Sporadic Warrior",      "Green Death",              "Force of Nature"},
+
+    // Chronos -- slow theme
+    {"Chrononaut",  "Slackmaster",  "Time Lord",    "Watchdog",
+     "Ticktocktomancer", "Just Fill in the Array", "The End All And Be All", "Alpha Omega"}
 };
 
 static int _piety_level()

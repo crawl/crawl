@@ -2041,3 +2041,29 @@ void cast_stoneskin(int pow)
     if (you.duration[DUR_STONESKIN] > 50)
         you.duration[DUR_STONESKIN] = 50;
 }
+
+bool do_slow_monster(monsters* mon, kill_category whose_kill)
+{
+	// Try to remove haste, if monster is hasted.
+	if (mon->del_ench(ENCH_HASTE, true))
+	{
+		if (simple_monster_message(mon, " is no longer moving quickly."))
+		{
+			return true;
+		}
+	}
+
+	// Not hasted, slow it.
+	if (!mon->has_ench(ENCH_SLOW)
+		&& !mons_is_stationary(mon)
+		&& mon->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill)))
+	{
+		if (!mons_is_paralysed(mon) && !mons_is_petrified(mon)
+			&& simple_monster_message(mon, " seems to slow down."))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

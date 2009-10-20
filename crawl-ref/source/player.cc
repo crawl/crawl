@@ -1196,6 +1196,13 @@ int player_hunger_rate(void)
     if (you.duration[DUR_REGENERATION])
         hunger += 4;
 
+    // If Chronos has slowed your life processes, there's a
+    // chance you'll hunger a bit less.
+    if (GOD_CHRONOS == you.religion
+        && piety_rank(you.piety) >= 1
+        && coinflip())
+        hunger--;
+
     // Moved here from acr.cc... maintaining the >= 40 behaviour.
     if (you.hunger >= 40)
     {
@@ -5437,7 +5444,7 @@ bool curare_hits_player(int death_source, int amount)
 
     if (player_res_asphyx())
     {
-        hurted = roll_dice(2, 6);
+      hurted = roll_dice(2, 6);
 
         // Note that the hurtage is halved by poison resistance.
         if (res_poison)
@@ -5482,6 +5489,14 @@ bool poison_player(int amount, bool force)
 
 void dec_poison_player()
 {
+    // If Chronos has slowed your life processes, there's a
+    // chance that your poison level is simply unaffected and
+    // you aren't hurt by poison.
+    if (GOD_CHRONOS == you.religion
+        && piety_rank(you.piety) >= 1
+        && coinflip())
+        return;
+
     if (you.duration[DUR_POISONING] > 0)
     {
         if (x_chance_in_y(you.duration[DUR_POISONING], 5))
@@ -5745,6 +5760,15 @@ void dec_disease_player()
 {
     if (you.disease > 0)
     {
+        // If Chronos has slowed your life processes, there's a
+        // chance that your disease level is unaffected.
+        if (GOD_CHRONOS == you.religion
+            && piety_rank(you.piety) >= 1
+            && coinflip())
+        {
+          return;
+        }
+
         you.disease--;
 
         // kobolds and regenerators recuperate quickly

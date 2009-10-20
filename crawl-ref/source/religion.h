@@ -74,6 +74,9 @@ void enable_attack_conducts(god_conduct_trigger conduct[3]);
 void disable_attack_conducts(god_conduct_trigger conduct[3]);
 
 void excommunication(god_type new_god = GOD_NO_GOD);
+bool ponderousify_armour();
+int chronos_slouch(int);
+
 void gain_piety(int pgn);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
