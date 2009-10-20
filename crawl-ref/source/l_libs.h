@@ -9,13 +9,14 @@
 #include "clua.h"
 
 /*
- * Loaders for clua.
+ * Library loaders for clua.
  */
 
 void cluaopen_crawl(lua_State *ls);
 void cluaopen_file(lua_State *ls);
 void cluaopen_food(lua_State *ls);
 void cluaopen_item(lua_State *ls);
+void cluaopen_kills(lua_State *ls);     // defined in kills.cc
 void cluaopen_monsters(lua_State *ls);
 void cluaopen_options(lua_State *ls);
 void cluaopen_you(lua_State *ls);
@@ -23,7 +24,8 @@ void cluaopen_you(lua_State *ls);
 void cluaopen_globals(lua_State *ls);
 
 /*
- * Libraries and loaders, accessed from init_dungeon_lua().
+ * Libraries and loaders for dlua, accessed from init_dungeon_lua().
+ * TODO: Move these to dluaopen_*.
  */
 
 extern const struct luaL_reg debug_dlib[];

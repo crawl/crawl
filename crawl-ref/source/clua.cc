@@ -587,10 +587,6 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
     return !err;
 }
 
-// Defined in kills.cc because the kill bindings refer to kills.cc local
-// structs
-extern void luaopen_kills(lua_State *ls);
-
 void CLua::init_lua()
 {
     if (_state)
@@ -610,7 +606,7 @@ void CLua::init_lua()
     luaopen_math(_state);
 
     // Open Crawl bindings
-    luaopen_kills(_state);
+    cluaopen_kills(_state);
     cluaopen_you(_state);
     cluaopen_item(_state);
     cluaopen_food(_state);
