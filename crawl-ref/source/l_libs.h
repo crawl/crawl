@@ -13,10 +13,14 @@
  */
 
 void cluaopen_crawl(lua_State *ls);
+void cluaopen_file(lua_State *ls);
+void cluaopen_food(lua_State *ls);
 void cluaopen_item(lua_State *ls);
 void cluaopen_monsters(lua_State *ls);
 void cluaopen_options(lua_State *ls);
 void cluaopen_you(lua_State *ls);
+
+void cluaopen_globals(lua_State *ls);
 
 /*
  * Libraries and loaders, accessed from init_dungeon_lua().
@@ -31,7 +35,6 @@ extern const struct luaL_reg dgn_item_dlib[];
 extern const struct luaL_reg dgn_level_dlib[];
 extern const struct luaL_reg dgn_mons_dlib[];
 extern const struct luaL_reg dgn_tile_dlib[];
-extern const struct luaL_reg file_dlib[];
 extern const struct luaL_reg los_dlib[];
 extern const struct luaL_reg mapmarker_dlib[];
 
@@ -44,6 +47,7 @@ void register_itemlist(lua_State *ls);
 void register_builder_funcs(lua_State *ls);
 
 void dluaopen_crawl(lua_State *ls);
+void dluaopen_file(lua_State *ls);
 void dluaopen_mapgrd(lua_State *ls);
 void dluaopen_you(lua_State *ls);
  

@@ -50,6 +50,8 @@ l_dgnmon.o \
 l_dgntil.o \
 l_dgn_bf.o \
 l_file.o \
+l_food.o \
+l_global.o \
 l_item.o \
 l_los.o \
 l_mapgrd.o \

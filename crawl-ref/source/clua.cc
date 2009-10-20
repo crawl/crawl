@@ -591,10 +591,6 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
 // structs
 extern void luaopen_kills(lua_State *ls);
 
-void luaopen_food(lua_State *ls);
-void luaopen_file(lua_State *ls);
-void luaopen_globals(lua_State *ls);
-
 void CLua::init_lua()
 {
     if (_state)
@@ -617,13 +613,13 @@ void CLua::init_lua()
     luaopen_kills(_state);
     cluaopen_you(_state);
     cluaopen_item(_state);
-    luaopen_food(_state);
+    cluaopen_food(_state);
     cluaopen_crawl(_state);
-    luaopen_file(_state);
+    cluaopen_file(_state);
     cluaopen_options(_state);
     cluaopen_monsters(_state);
 
-    luaopen_globals(_state);
+    cluaopen_globals(_state);
 
     load_cmacro();
     load_chooks();
@@ -721,185 +717,6 @@ void clua_register_metatable(lua_State *ls, const char *tn,
     }
 }
 
-/////////////////////////////////////////////////////////////////////
-// Food information.
-
-static int food_do_eat(lua_State *ls)
-{
-    bool eaten = false;
-    if (!you.turn_is_over)
-        eaten = eat_food(-1);
-    lua_pushboolean(ls, eaten);
-    return (1);
-}
-
-static int food_prompt_eat_chunks(lua_State *ls)
-{
-    int eaten = 0;
-    if (!you.turn_is_over)
-        eaten = prompt_eat_chunks();
-
-    lua_pushboolean(ls, (eaten != 0));
-    return (1);
-}
-
-static int food_prompt_floor(lua_State *ls)
-{
-    int eaten = 0;
-    if (!you.turn_is_over)
-    {
-        eaten = eat_from_floor();
-        if (eaten == 1)
-            burden_change();
-    }
-    lua_pushboolean(ls, (eaten != 0));
-    return (1);
-}
-
-static int food_prompt_inventory(lua_State *ls)
-{
-    bool eaten = false;
-    if (!you.turn_is_over)
-        eaten = eat_from_inventory();
-    lua_pushboolean(ls, eaten);
-    return (1);
-}
-
-static int food_prompt_inventory_menu(lua_State *ls)
-{
-    bool eaten = false;
-    if (!you.turn_is_over)
-        eaten = prompt_eat_inventory_item();
-    lua_pushboolean(ls, eaten);
-    return (1);
-}
-
-static int food_can_eat(lua_State *ls)
-{
-    LUA_ITEM(item, 1);
-    bool hungercheck = true;
-
-    if (lua_isboolean(ls, 2))
-        hungercheck = lua_toboolean(ls, 2);
-
-    bool edible = item && can_ingest(item->base_type,
-                                     item->sub_type,
-                                     true,
-                                     true,
-                                     hungercheck);
-    lua_pushboolean(ls, edible);
-    return (1);
-}
-
-static bool eat_item(const item_def &item)
-{
-    if (in_inventory(item))
-    {
-        eat_inventory_item(item.link);
-        return (true);
-    }
-    else
-    {
-        int ilink = item_on_floor(item, you.pos());
-
-        if (ilink != NON_ITEM)
-        {
-            eat_floor_item(ilink);
-            return (true);
-        }
-        return (false);
-    }
-}
-
-static int food_eat(lua_State *ls)
-{
-    LUA_ITEM(item, 1);
-
-    bool eaten = false;
-    if (!you.turn_is_over)
-    {
-        // When we get down to eating, we don't care if the eating is courtesy
-        // an un-ided amulet of the gourmand.
-        bool edible = item && can_ingest(item->base_type,
-                                         item->sub_type,
-                                         false,
-                                         false);
-        if (edible)
-            eaten = eat_item(*item);
-    }
-    lua_pushboolean(ls, eaten);
-    return (1);
-}
-
-static int food_rotting(lua_State *ls)
-{
-    LUA_ITEM(item, 1);
-
-    bool rotting = false;
-    if (item && item->base_type == OBJ_FOOD && item->sub_type == FOOD_CHUNK)
-        rotting = food_is_rotten(*item);
-
-    lua_pushboolean(ls, rotting);
-    return (1);
-}
-
-static int food_dangerous(lua_State *ls)
-{
-    LUA_ITEM(item, 1);
-
-    bool dangerous = false;
-    if (item)
-    {
-        dangerous = (is_poisonous(*item) || is_mutagenic(*item)
-                     || causes_rot(*item) || is_forbidden_food(*item));
-    }
-    lua_pushboolean(ls, dangerous);
-    return (1);
-}
-
-static int food_ischunk(lua_State *ls)
-{
-    LUA_ITEM(item, 1);
-    lua_pushboolean(ls,
-            item && item->base_type == OBJ_FOOD
-                 && item->sub_type == FOOD_CHUNK);
-    return (1);
-}
-
-static const struct luaL_reg food_lib[] =
-{
-    { "do_eat",            food_do_eat },
-    { "prompt_eat_chunks", food_prompt_eat_chunks },
-    { "prompt_floor",      food_prompt_floor },
-    { "prompt_inventory",  food_prompt_inventory },
-    { "prompt_inv_menu",   food_prompt_inventory_menu },
-    { "can_eat",           food_can_eat },
-    { "eat",               food_eat },
-    { "rotting",           food_rotting },
-    { "dangerous",         food_dangerous },
-    { "ischunk",           food_ischunk },
-    { NULL, NULL },
-};
-
-void luaopen_food(lua_State *ls)
-{
-    luaL_openlib(ls, "food", food_lib, 0);
-}
-
-
-///////////////////////////////////////////////////////////
-// File operations
-
-static const struct luaL_reg file_lib[] =
-{
-    { "write", CLua::file_write },
-    { NULL, NULL },
-};
-
-void luaopen_file(lua_State *ls)
-{
-    luaL_openlib(ls, "file", file_lib, 0);
-}
 
 
 // Pushing various objects.
@@ -958,51 +775,6 @@ void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
 }
 
 
-//////////////////////////////////////////////////////////////////////
-// Miscellaneous globals
-
-#define PATTERN_FLUSH_CEILING 100
-
-typedef std::map<std::string, text_pattern> pattern_map;
-static pattern_map pattern_cache;
-
-static text_pattern &get_text_pattern(const std::string &s, bool checkcase)
-{
-    pattern_map::iterator i = pattern_cache.find(s);
-    if (i != pattern_cache.end())
-        return i->second;
-
-    if (pattern_cache.size() > PATTERN_FLUSH_CEILING)
-        pattern_cache.clear();
-
-    pattern_cache[s] = text_pattern(s, !checkcase);
-    return (pattern_cache[s]);
-}
-
-static int lua_pmatch(lua_State *ls)
-{
-    const char *pattern = luaL_checkstring(ls, 1);
-    if (!pattern)
-        return (0);
-
-    const char *text = luaL_checkstring(ls, 2);
-    if (!text)
-        return (0);
-
-    bool checkcase = true;
-    if (lua_isboolean(ls, 3))
-        checkcase = lua_toboolean(ls, 3);
-
-    text_pattern &tp = get_text_pattern(pattern, checkcase);
-    lua_pushboolean( ls, tp.matches(text) );
-    return (1);
-}
-
-void luaopen_globals(lua_State *ls)
-{
-    lua_pushcfunction(ls, lua_pmatch);
-    lua_setglobal(ls, "pmatch");
-}
 
 ////////////////////////////////////////////////////////////////////////
 // lua_text_pattern
