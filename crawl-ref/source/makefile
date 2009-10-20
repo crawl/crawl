@@ -56,6 +56,7 @@ export uname_S
 
 LIBPCRE := contrib/install/lib/libpcre.a
 LIBSDL := contrib/install/lib/libSDL.a
+LIBPNG := contrib/install/lib/libpng.a
 LIBSDLIMAGE := contrib/install/lib/libSDL_image.a
 LIBFREETYPE := contrib/install/lib/libfreetype.a
 LIBSQLITE := contrib/install/lib/libsqlite3.a
@@ -78,7 +79,6 @@ ifdef CROSSHOST
 	NO_AUTO_OPT = YesPlease
 	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
-	SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
 
 	# If needed, override uname_S so we get the appropriate
 	# things compiled.
@@ -93,19 +93,20 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	NO_RDYNAMIC = YesPlease
 	NO_NCURSES = YesPlease
 	NEED_LIBW32C = YesPlease
-	NEED_PCRE = YesPlease
+	BUILD_PCRE = YesPlease
 	ifdef TILES
-		NEED_FREETYPE = YesPlease
-		NEED_SDL = YesPlease
-		NEED_SDLIMAGE = YesPlease
-		NEED_LIBPNG = YesPlease
-		NEED_ZLIB = YesPlease
+		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/lib/libSDLmain.a -mwindows
+		BUILD_FREETYPE = YesPlease
+		BUILD_SDL = YesPlease
+		BUILD_SDLIMAGE = YesPlease
+		BUILD_LIBPNG = YesPlease
+		BUILD_ZLIB = YesPlease
 	endif
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
-	NEED_PCRE = YesPlease
+	BUILD_PCRE = YesPlease
 endif
 ifeq ($(uname_S),Darwin)
 	ifndef NO_APPLE_GCC
@@ -258,6 +259,13 @@ endif
 DEFINES_L += -DUSE_TILE
 INCLUDES_L += -I$(RLTILES)
 
+ifdef BUILD_SDL
+INCLUDES_L += -Icontrib/install/include/SDL
+endif
+ifdef BUILD_FREETYPE
+INCLUDES_L += -Icontrib/install/include/freetype2
+endif
+
 # Okay, we have to assume we're on something else that
 # uses standard UNIX-like methods for finding libs.
 #
@@ -294,48 +302,10 @@ SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
 
-else # pkg-config
+LIB += $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
 
-# Ugh, pkg-config isn't available. We're probably on MinGW, Cygwin,
-# or some other stupid platform. We've got to assume that the
-# libraries are either in the standard paths or are in /opt/<lib>/.
-#
-
-PNG_INCLUDE := -I/opt/libpng/include
-PNG_CFLAGS  :=
-PNG_LDFLAGS := -L/opt/libpng/lib -lpng -lz
-
-FREETYPE_INCLUDE := -I/opt/freetype/include -Icontrib/install/include/freetype2
-FREETYPE_CFLAGS  :=
-FREETYPE_LDFLAGS := -L/opt/freetype/lib -lfreetype
-
-ifndef NO_SDLCONFIG
-SDLCONFIG := $(which sdl-config)
-ifeq ($(SDLCONFIG),)
-SDLCONFIG := $(shell pwd)/contrib/install/bin/sdl-config
-endif
-endif
-
-ifneq ($(SDLCONFIG),)
-
-# sdl-config is our second best bet...
-#
-SDL_INCLUDE := $(shell $(SDLCONFIG) --cflags | tr ' ' '\n' | grep ^[-]I | tr '\n' ' ')
-SDL_CFLAGS  := $(shell $(SDLCONFIG) --cflags | tr ' ' '\n' | grep -v ^[-]I | tr '\n' ' ')
-SDL_LDFLAGS := $(shell $(SDLCONFIG) --libs)
-
-else # sdl-config
-
-# Fine, we have to make some REALLY ugly assumptions...
-#
-SDL_INCLUDE := -I/opt/sdl/include/SDL
-SDL_CFLAGS  :=
-SDL_LDFLAGS := -L/opt/sdl/lib -lSDL -lSDLmain
-
-endif # sdl-config
 endif # pkg-config
 
-LIB += $(SDL_LDFLAGS) -lSDL_image $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS) -lz
 ifneq ($(OSNAME),MacOS)
 ifeq (,$(findstring MINGW,$(uname_S)))
 LIB += -lGL -lGLU
@@ -469,7 +439,7 @@ LIB += -lncurses
 endif
 endif
 
-ifdef NEED_PCRE
+ifdef BUILD_PCRE
 DEFINES += -DREGEX_PCRE
 LIB += -lpcre
 endif
@@ -537,23 +507,29 @@ DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 OBJECTS += $(TILEDEFOBJS)
 endif
 
-ifdef NEED_PCRE
+ifdef BUILD_PCRE
 CONTRIB_DEPENDS += $(LIBPCRE)
+LIB += $(LIBPCRE)
 endif
-ifdef NEED_FREETYPE
+ifdef BUILD_FREETYPE
 CONTRIB_DEPENDS += $(LIBFREETYPE)
+LIB += $(LIBFREETYPE)
 endif
-ifdef NEED_SDL
-CONTRIB_DEPENDS += $(LIBSDL)
-endif
-ifdef NEED_SDLIMAGE
+ifdef BUILD_SDLIMAGE
 CONTRIB_DEPENDS += $(LIBSDLIMAGE)
+LIB += $(LIBSDLIMAGE)
 endif
-ifdef NEED_LIBPNG
+ifdef BUILD_SDL
+CONTRIB_DEPENDS += $(LIBSDL)
+LIB += $(LIBSDL)
+endif
+ifdef BUILD_LIBPNG
 CONTRIB_DEPENDS += $(LIBPNG)
+LIB += $(LIBPNG)
 endif
-ifdef NEED_ZLIB
+ifdef BUILD_ZLIB
 CONTRIB_DEPENDS += $(LIBZ)
+LIB += $(LIBZ)
 endif
 
 CONTRIB_DEPENDS += $(LIBLUA) $(LIBSQLITE)
@@ -561,6 +537,7 @@ LIB += $(LIBLUA) $(LIBSQLITE)
 
 EXTRA_OBJECTS += version.o
 
+LIB += $(EXTRA_LIBS)
 GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_DEPENDS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell git describe --tags --long)
@@ -762,6 +739,10 @@ sdl: $(LIBSDL)
 $(LIBSDLIMAGE): .contrib-ok
 	+@$(MAKE) -C contrib sdl-image
 sdl-image: $(LIBSDLIMAGE)
+
+$(LIBPNG): .contrib-ok
+	+@$(MAKE) -C contrib libpng
+libpng: $(LIBPNG)
 
 
 #############################################################################
