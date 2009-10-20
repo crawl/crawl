@@ -54,6 +54,7 @@ l_los.o \
 l_mapgrd.o \
 l_mapmrk.o \
 l_mons.o \
+l_option.o \
 l_you.o \
 los.o \
 losparam.o \

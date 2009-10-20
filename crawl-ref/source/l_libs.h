@@ -14,6 +14,7 @@
 
 void cluaopen_crawl(lua_State *ls);
 void cluaopen_monsters(lua_State *ls);
+void cluaopen_options(lua_State *ls);
 void cluaopen_you(lua_State *ls);
 
 /*
