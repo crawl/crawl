@@ -766,8 +766,10 @@ namespace arena
 
     void do_respawn(faction &fac)
     {
-        for (unsigned int i = 0; i < fac.respawn_list.size(); i++)
+        for (unsigned int _i = fac.respawn_list.size(); _i > 0; _i--)
         {
+            unsigned int i = _i - 1;
+
             coord_def pos      = fac.respawn_pos[i];
             int       spec_idx = fac.respawn_list[i];
             mons_spec spec     = fac.members.get_monster(spec_idx);
@@ -777,11 +779,52 @@ namespace arena
 
             int idx = dgn_place_monster(spec, 0, pos, false, true);
 
+            if (idx == -1 && fac.active_members == 0
+                && mgrd(pos) != NON_MONSTER)
+            {
+                // We have no members left, so to prevent the round
+                // from ending attempt to displace whatever is in
+                // our position.
+                int       midx  = mgrd(pos);
+                monsters* other = &menv[midx];
+
+                if (to_respawn[midx] == -1)
+                {
+                    // The other monster isn't a respawner itself, so
+                    // just get rid of it.
+                    mprf(MSGCH_DIAGNOSTICS,
+                         "Dismissing non-repsawner %s to make room "
+                         "respawner whose side has 0 active members.",
+                         other->name(DESC_PLAIN, true).c_str());
+                    monster_die(other, KILL_DISMISSED, NON_MONSTER);
+                }
+                else
+                {
+                    // Other monster is a respawner, try to move it.
+                    mprf(MSGCH_DIAGNOSTICS,
+                         "Teleporting respawner %s to make room "
+                         "other respawner whose side has 0 active members.",
+                         other->name(DESC_PLAIN, true).c_str());
+                    monster_teleport(other, true);
+                }
+
+                idx = dgn_place_monster(spec, 0, pos, false, true);
+            }
+
             if (idx != -1)
+            {
+                // We succeeded, so remove from list.
+                fac.respawn_list.erase(fac.respawn_list.begin() + i);
+                fac.respawn_pos.erase(fac.respawn_pos.begin() + i);
+
                 to_respawn[idx] = spec_idx;
+            }
+            else
+            {
+                // Couldn't respawn, so leave it on the list; hopefully
+                // space will open up later.
+            }
         }
-        fac.respawn_list.clear();
-        fac.respawn_pos.clear();
     }
 
     void do_fight()
@@ -1225,6 +1268,9 @@ void arena_monster_died(monsters *monster, killer_type killer,
             fac->respawn_pos.push_back(monster->pos());
 
             arena::to_respawn[midx] = -1;
+
+            arena::faction_a.won = false;
+            arena::faction_b.won = false;
         }
     }
 
