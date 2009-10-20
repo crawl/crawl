@@ -3197,7 +3197,7 @@ static void _describe_monster(const monsters *mon)
 {
     // First print type and equipment.
     std::string text = get_monster_equipment_desc(mon) + ".";
-    print_formatted_paragraph(text);
+    print_formatted_paragraph(text, MSGCH_EXAMINE);
 
     print_wounds(mon);
 
@@ -3382,7 +3382,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 get_mimic_item( mon, item );
                 std::string name = get_menu_colour_prefix_tags(item,
                                                                DESC_NOCAP_A);
-                mprf("You see %s here.", name.c_str());
+                mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
             }
             mimic_item = true;
             item_described = true;
