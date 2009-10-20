@@ -13,6 +13,7 @@
  */
 
 void cluaopen_crawl(lua_State *ls);
+void cluaopen_item(lua_State *ls);
 void cluaopen_monsters(lua_State *ls);
 void cluaopen_options(lua_State *ls);
 void cluaopen_you(lua_State *ls);
@@ -67,6 +68,9 @@ void dluaopen_you(lua_State *ls);
 #define FEAT(f, pos) \
 dungeon_feature_type f = check_lua_feature(ls, pos)
   
+#define LUA_ITEM(name, n) \
+    item_def *name = clua_check_item(ls, n);
+
 #define LEVEL(lev, br, pos)                                             \
 const char *level_name = luaL_checkstring(ls, pos);                 \
 level_area_type lev = str_to_level_area_type(level_name);           \
@@ -94,5 +98,6 @@ int dgn_map_add_transform(lua_State *ls,
 unsigned int get_tile_idx(lua_State *ls, int arg);
 level_id dlua_level_id(lua_State *ls, int ndx);
 dungeon_feature_type check_lua_feature(lua_State *ls, int idx);
+item_def *clua_check_item(lua_State *ls, int n);
 
 #endif

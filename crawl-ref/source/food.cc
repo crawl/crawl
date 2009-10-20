@@ -730,27 +730,6 @@ bool butchery(int which_corpse)
     return (success);
 }
 
-void lua_push_floor_items(lua_State *ls)
-{
-    lua_push_items(ls, igrd(you.pos()));
-}
-
-void lua_push_inv_items(lua_State *ls = NULL)
-{
-    if (!ls)
-        ls = clua.state();
-    lua_newtable(ls);
-    int index = 0;
-    for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
-    {
-        if (is_valid_item(you.inv[slot]))
-        {
-            lua_pushlightuserdata(ls, &you.inv[slot]);
-            lua_rawseti(ls, -2, ++index);
-        }
-    }
-}
-
 bool prompt_eat_inventory_item(int slot)
 {
     if (inv_count() < 1)
