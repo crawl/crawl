@@ -104,35 +104,6 @@ LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_can_smell, boolean, player_can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 
-static int _you_uniques(lua_State *ls)
-{
-    ASSERT_DLUA;
-
-    bool unique_found = false;
-
-    if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
-        unique_found = you.unique_creatures[get_monster_by_name(lua_tostring(ls, 1))];
-
-    lua_pushboolean(ls, unique_found);
-    return (1);
-}
-
-static int _you_gold(lua_State *ls)
-{
-    if (lua_gettop(ls) >= 1)
-    {
-        ASSERT_DLUA;
-        const int new_gold = luaL_checkint(ls, 1);
-        const int old_gold = you.gold;
-        you.gold = std::max(new_gold, 0);
-        if (new_gold > old_gold)
-            you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
-        else if (old_gold > new_gold)
-            you.attribute[ATTR_MISC_SPENDING] += old_gold - new_gold;
-    }
-    PLUARET(number, you.gold);
-}
-
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
 {
@@ -188,7 +159,6 @@ static const struct luaL_reg you_clib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "god"         , you_god },
-    { "gold"        , _you_gold },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
     { "hp"          , you_hp },
@@ -198,7 +168,6 @@ static const struct luaL_reg you_clib[] =
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
-    { "uniques"     , _you_uniques },
     { "xl"          , you_exp },
     { "exp"         , you_exp_points },
     { "res_poison"  , you_res_poison },
@@ -275,17 +244,46 @@ LUAFN(you_losight)
     return (0);
 }
 
+static int _you_uniques(lua_State *ls)
+{
+    bool unique_found = false;
+
+    if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
+        unique_found = you.unique_creatures[get_monster_by_name(lua_tostring(ls, 1))];
+
+    lua_pushboolean(ls, unique_found);
+    return (1);
+}
+
+static int _you_gold(lua_State *ls)
+{
+    if (lua_gettop(ls) >= 1)
+    {
+        const int new_gold = luaL_checkint(ls, 1);
+        const int old_gold = you.gold;
+        you.gold = std::max(new_gold, 0);
+        if (new_gold > old_gold)
+            you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
+        else if (old_gold > new_gold)
+            you.attribute[ATTR_MISC_SPENDING] += old_gold - new_gold;
+    }
+    PLUARET(number, you.gold);
+}
+
 static const struct luaL_reg you_dlib[] =
 {
-{ "hear_pos", you_can_hear_pos },
-{ "x_pos", you_x_pos },
-{ "y_pos", you_y_pos },
-{ "pos",   you_pos },
-{ "moveto", you_moveto },
-{ "see_cell",          you_see_cell },
-{ "see_cell_no_trans", you_see_cell_no_trans },
-{ "random_teleport", you_random_teleport },
-{ "losight", you_losight },
+{ "hear_pos",           you_can_hear_pos },
+{ "x_pos",              you_x_pos },
+{ "y_pos",              you_y_pos },
+{ "pos",                you_pos },
+{ "moveto",             you_moveto },
+{ "see_cell",           you_see_cell },
+{ "see_cell_no_trans",  you_see_cell_no_trans },
+{ "random_teleport",    you_random_teleport },
+{ "losight",            you_losight },
+{ "gold",               _you_gold },
+{ "uniques",            _you_uniques },
+
 { NULL, NULL }
 };
 
