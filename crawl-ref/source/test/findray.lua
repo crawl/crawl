@@ -36,7 +36,7 @@ local function test_findray()
     local ray = los.findray(you_x, you_y, x, y)
     if not ray then
       dgn.grid(x, y, "floor_special")
-      dgn.dbg_dump_map(FAILMAP)
+      debug.dump_map(FAILMAP)
       assert(false, "Can't find ray to " .. p ..
                     " although it's in unobstructed view. (#" .. 
                     checks .. ")")
@@ -52,7 +52,7 @@ local function test_findray()
     while(ray_p ~= p) do
       if dgn.is_opaque(rx, ry) then
         dgn.grid(x, y, "floor_special")
-        dgn.dbg_dump_map(FAILMAP)
+        debug.dump_map(FAILMAP)
         assert(false,
                "Ray from " .. you_p .. " to " .. p ..
                " passes through opaque cell " .. ray_p
@@ -68,11 +68,11 @@ end
 local function run_findray_tests(depth, nlevels, tests_per_level)
   local place = "D:" .. depth
   crawl.mpr("Running find_ray tests on " .. place)
-  dgn.dbg_goto_place(place)
+  debug.goto_place(place)
 
   for lev_i = 1, nlevels do
-    dgn.dbg_flush_map_memory()
-    dgn.dbg_generate_level()
+    debug.flush_map_memory()
+    debug.generate_level()
     for t_i = 1, tests_per_level do
       test_findray()
     end

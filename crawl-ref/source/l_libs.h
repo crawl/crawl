@@ -13,6 +13,7 @@
  */
 
 extern const struct luaL_reg crawl_lib[];
+extern const struct luaL_reg debug_lib[];
 extern const struct luaL_reg dgn_lib[];
 extern const struct luaL_reg dgn_build_lib[];
 extern const struct luaL_reg dgn_event_lib[];

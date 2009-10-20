@@ -6,13 +6,10 @@
 #include <cmath>
 
 #include "branch.h"
-#include "chardump.h"
 #include "cloud.h"
 #include "initfile.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "message.h"
-#include "place.h"
 #include "spl-util.h"
 #include "view.h"
 
@@ -98,47 +95,6 @@ static int dgn_depth(lua_State *ls)
 {
     MAP(ls, 1, map);
     return dgn_depth_proc(ls, map->depths, 2);
-}
-
-// WARNING: This is a very low-level call.
-LUAFN(dgn_dbg_goto_place)
-{
-    try
-    {
-        const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
-        you.level_type = id.level_type;
-        if (id.level_type == LEVEL_DUNGEON)
-        {
-            you.where_are_you = static_cast<branch_type>(id.branch);
-            you.your_level = absdungeon_depth(id.branch, id.depth);
-        }
-    }
-    catch (const std::string &err)
-    {
-        luaL_error(ls, err.c_str());
-    }
-    return (0);
-}
-
-LUAFN(dgn_dbg_flush_map_memory)
-{
-    dgn_flush_map_memory();
-    init_level_connectivity();
-    return (0);
-}
-
-LUAFN(dgn_dbg_generate_level)
-{
-    no_messages mx;
-    env.show.init(0);
-    env.map.init(map_cell());
-#ifdef USE_TILE
-    tile_init_default_flavour();
-    tile_clear_flavour();
-    TileNewLevel(true);
-#endif
-    builder(you.your_level, you.level_type);
-    return (0);
 }
 
 static int dgn_place(lua_State *ls)
@@ -1533,32 +1489,10 @@ LUAFN(_dgn_reuse_map)
     return (0);
 }
 
-LUAFN(dgn_dbg_dump_map)
-{
-    const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
-    if (lua_isstring(ls, pos))
-        dump_map(lua_tostring(ls, pos), true);
-    return (0);
-}
-
-LUAFN(dgn_dbg_test_explore)
-{
-#ifdef WIZARD
-    debug_test_explore();
-#endif
-    return (0);
-}
-
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
 const struct luaL_reg dgn_lib[] =
 {
-{ "dbg_goto_place", dgn_dbg_goto_place },
-{ "dbg_flush_map_memory", dgn_dbg_flush_map_memory },
-{ "dbg_generate_level", dgn_dbg_generate_level },
-{ "dbg_dump_map", dgn_dbg_dump_map },
-{ "dbg_test_explore", dgn_dbg_test_explore },
-
 { "reset_level", _dgn_reset_level },
 
 { "default_depth", dgn_default_depth },

@@ -39,6 +39,7 @@ items.o \
 lev-pand.o \
 libutil.o \
 l_crawl.o \
+l_debug.o \
 l_dgn.o \
 l_dgnbld.o \
 l_dgnevt.o \
