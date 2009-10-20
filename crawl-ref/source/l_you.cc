@@ -12,10 +12,6 @@ LUARET1(you_x_pos, number, you.pos().x)
 LUARET1(you_y_pos, number, you.pos().y)
 LUARET2(you_pos, number, you.pos().x, you.pos().y)
 
-// see_cell should not be exposed to user scripts. The game should
-// never disclose grid coordinates to the player. Therefore we load it
-// only into the core Lua interpreter (dlua), never into the user
-// script interpreter (clua).
 LUARET1(you_see_cell, boolean,
         see_cell(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(you_see_cell_no_trans, boolean,
@@ -41,7 +37,7 @@ LUAFN(you_losight)
     return (0);
 }
 
-const struct luaL_reg you_dlib[] =
+static const struct luaL_reg you_dlib[] =
 {
 { "hear_pos", you_can_hear_pos },
 { "x_pos", you_x_pos },
@@ -54,3 +50,8 @@ const struct luaL_reg you_dlib[] =
 { "losight", you_losight },
 { NULL, NULL }
 };
+
+void dluaopen_you(lua_State *ls)
+{
+    luaL_openlib(ls, "you", you_dlib, 0);
+}

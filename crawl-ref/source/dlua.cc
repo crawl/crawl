@@ -307,6 +307,7 @@ void init_dungeon_lua()
     lua_stack_cleaner clean(dlua);
 
     dluaopen_crawl(dlua);
+    dluaopen_you(dlua);
 
     luaL_openlib(dlua, "dgn", dgn_dlib, 0);
     luaL_openlib(dlua, "dgn", dgn_build_dlib, 0);
@@ -319,7 +320,6 @@ void init_dungeon_lua()
 
     luaL_openlib(dlua, "debug", debug_dlib, 0);
     luaL_openlib(dlua, "file", file_dlib, 0);
-    luaL_openlib(dlua, "you", you_dlib, 0);
     luaL_openlib(dlua, "los", los_dlib, 0);
 
     dlua.execfile("clua/dungeon.lua", true, true);

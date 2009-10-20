@@ -31,7 +31,6 @@ extern const struct luaL_reg dgn_tile_dlib[];
 extern const struct luaL_reg file_dlib[];
 extern const struct luaL_reg los_dlib[];
 extern const struct luaL_reg mapmarker_dlib[];
-extern const struct luaL_reg you_dlib[];
 
 void luaopen_dgnevent(lua_State *ls);
 void luaopen_mapmarker(lua_State *ls);
@@ -42,7 +41,7 @@ void register_itemlist(lua_State *ls);
 void register_builder_funcs(lua_State *ls);
 
 void dluaopen_crawl(lua_State *ls);
-    
+void dluaopen_you(lua_State *ls);    
 /*
  * Macros for processing object arguments.
  */
