@@ -91,6 +91,7 @@ namespace arena
     bool real_summons        = false;
     bool move_summons        = false;
     bool respawn             = false;
+    bool move_respawns       = false;
 
     bool miscasts            = false;
 
@@ -317,6 +318,7 @@ namespace arena
         move_summons    =  strip_tag(spec, "move_summons");
         miscasts        =  strip_tag(spec, "miscasts");
         respawn         =  strip_tag(spec, "respawn");
+        move_respawns   =  strip_tag(spec, "move_respawns");
         summon_throttle = strip_number_tag(spec, "summon_throttle:");
 
         if (real_summons && respawn)
@@ -657,12 +659,19 @@ namespace arena
                 // Ignore messages generated while the user examines
                 // the arnea.
                 case MSGCH_PROMPT:
-                case MSGCH_MONSTER_DAMAGE:
                 case MSGCH_MONSTER_TARGET:
                 case MSGCH_FLOOR_ITEMS:
                 case MSGCH_EXAMINE:
                 case MSGCH_EXAMINE_FILTER:
                     continue;
+
+                // If a monster-damage message ends with '!' it's a
+                // death message, otherwise it's an examination message
+                // and should be skipped.
+                case MSGCH_MONSTER_DAMAGE:
+                    if (msg[msg.length() - 1] != '!')
+                        continue;
+                    break;
 
                 case MSGCH_ERROR: prefix = "ERROR: "; break;
                 case MSGCH_WARN: prefix = "WARN: "; break;
@@ -777,7 +786,8 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            int idx = dgn_place_monster(spec, 0, pos, false, true);
+            int idx = dgn_place_monster(spec, you.your_level, pos, false,
+                                        true);
 
             if (idx == -1 && fac.active_members == 0
                 && mgrd(pos) != NON_MONSTER)
@@ -808,7 +818,8 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                idx = dgn_place_monster(spec, 0, pos, false, true);
+                idx = dgn_place_monster(spec, you.your_level, pos, false,
+                                        true);
             }
 
             if (idx != -1)
@@ -818,6 +829,9 @@ namespace arena
                 fac.respawn_pos.erase(fac.respawn_pos.begin() + i);
 
                 to_respawn[idx] = spec_idx;
+
+                if (move_respawns)
+                    monster_teleport(&menv[idx], true, true);
             }
             else
             {
@@ -1268,9 +1282,6 @@ void arena_monster_died(monsters *monster, killer_type killer,
             fac->respawn_pos.push_back(monster->pos());
 
             arena::to_respawn[midx] = -1;
-
-            arena::faction_a.won = false;
-            arena::faction_b.won = false;
         }
     }
 

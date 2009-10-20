@@ -65,6 +65,14 @@ and summon monsters with the Shadow Creatures spell:
 
     crawl -arena "test spawner v test spawner"
 
+If you want a *specific* set of monsters to fight each other endlessly,
+you can use the "respawn" tag, which will cause the initally placed
+monsters to be replaced when they die.  For example,
+
+    crawl -arena "respawn rat v rat"
+
+will make it so that when one rat dies another takes it's place,
+resulting in an endless fight between two rats.
 
                                    Commands
 ------------------------------------------------------------------------------
@@ -79,7 +87,7 @@ There are a very limited number of command you can issue to the arena:
 
 * You can suspended the arena like in a normal game (Control-Z).
 
-If the arena has lots of monsters it might take a few second before it
+If the arena has lots of monsters it might take a few seconds before it
 responds.
 
                            Options and parameters
@@ -132,6 +140,8 @@ The parameters include:
 * "arena_place:place" sets the place used when determining which monsters the
       spell Shadow Creatures uses.  So "arena:Lair:5" would make it
       summon the types of monsters you'd find on the 5th lair of the Lair.
+      It also controls what type of monster "random" places, assuming
+      that "random_uniques" isn't used.
       (This defaults to the 20th level of the main dungeon).
 
 * real_summons: Summoned monsters are made real as soon as they're placed in
@@ -167,3 +177,7 @@ The parameters include:
       be replaced by the same type of monster.  This allows for an endless
       fight between exactly specified factions, rather than the random
       kind you get by pitting two test spawners against each other.
+
+* move_respawns: Moves respawned monsters to a new, random location as
+      soon as they're placed, to avoid monsters clumping up in a massive
+      brawl at the center of the arena.
