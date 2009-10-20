@@ -9,23 +9,29 @@
 #include "clua.h"
 
 /*
+ * Loaders for clua.
+ */
+
+void cluaopen_crawl(lua_State *ls);
+
+
+/*
  * Libraries and loaders, accessed from init_dungeon_lua().
  */
 
-extern const struct luaL_reg crawl_lib[];
-extern const struct luaL_reg debug_lib[];
-extern const struct luaL_reg dgn_lib[];
-extern const struct luaL_reg dgn_build_lib[];
-extern const struct luaL_reg dgn_event_lib[];
-extern const struct luaL_reg dgn_grid_lib[];
-extern const struct luaL_reg dgn_item_lib[];
-extern const struct luaL_reg dgn_level_lib[];
-extern const struct luaL_reg dgn_mons_lib[];
-extern const struct luaL_reg dgn_tile_lib[];
-extern const struct luaL_reg file_lib[];
-extern const struct luaL_reg los_lib[];
-extern const struct luaL_reg mapmarker_lib[];
-extern const struct luaL_reg you_lib[];
+extern const struct luaL_reg debug_dlib[];
+extern const struct luaL_reg dgn_dlib[];
+extern const struct luaL_reg dgn_build_dlib[];
+extern const struct luaL_reg dgn_event_dlib[];
+extern const struct luaL_reg dgn_grid_dlib[];
+extern const struct luaL_reg dgn_item_dlib[];
+extern const struct luaL_reg dgn_level_dlib[];
+extern const struct luaL_reg dgn_mons_dlib[];
+extern const struct luaL_reg dgn_tile_dlib[];
+extern const struct luaL_reg file_dlib[];
+extern const struct luaL_reg los_dlib[];
+extern const struct luaL_reg mapmarker_dlib[];
+extern const struct luaL_reg you_dlib[];
 
 void luaopen_dgnevent(lua_State *ls);
 void luaopen_mapmarker(lua_State *ls);
@@ -34,6 +40,8 @@ void luaopen_ray(lua_State *ls);
 void register_monslist(lua_State *ls);
 void register_itemlist(lua_State *ls);
 void register_builder_funcs(lua_State *ls);
+
+void dluaopen_crawl(lua_State *ls);
     
 /*
  * Macros for processing object arguments.

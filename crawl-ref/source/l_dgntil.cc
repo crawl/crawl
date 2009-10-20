@@ -144,7 +144,7 @@ LUAFN(dgn_rtile)
 #endif
 }
 
-const struct luaL_reg dgn_tile_lib[] =
+const struct luaL_reg dgn_tile_dlib[] =
 {
 { "lrocktile", dgn_lrocktile },
 { "lfloortile", dgn_lfloortile },

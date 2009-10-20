@@ -49,7 +49,7 @@ static int dgnevent_arg2(lua_State *ls)
     PLUARET(number, dev->arg2);
 }
 
-static const struct luaL_reg dgnevent_lib[] =
+static const struct luaL_reg dgnevent_dlib[] =
 {
 { "type",  dgnevent_type },
 { "pos",   dgnevent_place },
@@ -62,7 +62,7 @@ static const struct luaL_reg dgnevent_lib[] =
 
 void luaopen_dgnevent(lua_State *ls)
 {
-    luaopen_setmeta(ls, "dgnevent", dgnevent_lib, DEVENT_METATABLE);
+    luaopen_setmeta(ls, "dgnevent", dgnevent_dlib, DEVENT_METATABLE);
 }
 
 /*
@@ -119,7 +119,7 @@ static int dgn_dgn_event(lua_State *ls)
     return (retvals);
 }
 
-const struct luaL_reg dgn_event_lib[] =
+const struct luaL_reg dgn_event_dlib[] =
 {
 { "dgn_event_type", dgn_dgn_event },
 

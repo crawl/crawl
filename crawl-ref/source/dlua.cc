@@ -306,20 +306,21 @@ void init_dungeon_lua()
 {
     lua_stack_cleaner clean(dlua);
 
-    luaL_openlib(dlua, "dgn", dgn_lib, 0);
-    luaL_openlib(dlua, "dgn", dgn_build_lib, 0);
-    luaL_openlib(dlua, "dgn", dgn_event_lib, 0);
-    luaL_openlib(dlua, "dgn", dgn_grid_lib, 0);
-    luaL_openlib(dlua, "dgn", dgn_item_lib, 0);
-    luaL_openlib(dlua, "dgn", dgn_level_lib, 0);
-    luaL_openlib(dlua, "dgn", dgn_mons_lib, 0);
-    luaL_openlib(dlua, "dgn", dgn_tile_lib, 0);
+    dluaopen_crawl(dlua);
 
-    luaL_openlib(dlua, "crawl", crawl_lib, 0);
-    luaL_openlib(dlua, "debug", debug_lib, 0);
-    luaL_openlib(dlua, "file", file_lib, 0);
-    luaL_openlib(dlua, "you", you_lib, 0);
-    luaL_openlib(dlua, "los", los_lib, 0);
+    luaL_openlib(dlua, "dgn", dgn_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_build_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_event_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_grid_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_item_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_level_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_mons_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_tile_dlib, 0);
+
+    luaL_openlib(dlua, "debug", debug_dlib, 0);
+    luaL_openlib(dlua, "file", file_dlib, 0);
+    luaL_openlib(dlua, "you", you_dlib, 0);
+    luaL_openlib(dlua, "los", los_dlib, 0);
 
     dlua.execfile("clua/dungeon.lua", true, true);
     dlua.execfile("clua/luamark.lua", true, true);

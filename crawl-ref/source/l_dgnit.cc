@@ -86,7 +86,7 @@ static int dgn_create_item(lua_State *ls)
     return (0);
 }
 
-const struct luaL_reg dgn_item_lib[] =
+const struct luaL_reg dgn_item_dlib[] =
 {
 { "item_from_index", dgn_item_from_index },
 { "items_at", dgn_items_at },

@@ -1491,7 +1491,7 @@ LUAFN(_dgn_reuse_map)
 
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
-const struct luaL_reg dgn_lib[] =
+const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
 

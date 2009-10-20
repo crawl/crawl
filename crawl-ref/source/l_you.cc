@@ -41,7 +41,7 @@ LUAFN(you_losight)
     return (0);
 }
 
-const struct luaL_reg you_lib[] =
+const struct luaL_reg you_dlib[] =
 {
 { "hear_pos", you_can_hear_pos },
 { "x_pos", you_x_pos },

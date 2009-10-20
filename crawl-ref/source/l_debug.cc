@@ -70,7 +70,7 @@ LUAFN(_debug_test_explore)
     return (0);
 }
              
-const struct luaL_reg debug_lib[] =
+const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
 { "flush_map_memory", debug_flush_map_memory },

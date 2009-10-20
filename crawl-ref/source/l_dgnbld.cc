@@ -338,7 +338,7 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
     return 0;
 }
 
-const struct luaL_reg dgn_build_lib[] =
+const struct luaL_reg dgn_build_dlib[] =
 {
 { "grd_table", dgn_grd_table },
 { "width", dgn_width },

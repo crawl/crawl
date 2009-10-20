@@ -227,7 +227,7 @@ LUAFN(_dgn_is_opaque)
     return (1);
 }
 
-const struct luaL_reg dgn_grid_lib[] =
+const struct luaL_reg dgn_grid_dlib[] =
 {
 { "feature_number", dgn_feature_number },
 { "feature_name", dgn_feature_name },

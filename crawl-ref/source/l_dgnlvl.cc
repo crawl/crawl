@@ -142,7 +142,7 @@ LUAFN(dgn_set_level_type_origin)
     return(0);
 }
 
-const struct luaL_reg dgn_level_lib[] =
+const struct luaL_reg dgn_level_dlib[] =
 {
 { "br_floorcol", dgn_br_floorcol },
 { "br_rockcol", dgn_br_rockcol },
