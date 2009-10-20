@@ -16,6 +16,7 @@ extern const struct luaL_reg crawl_lib[];
 extern const struct luaL_reg dgn_lib[];
 extern const struct luaL_reg dgn_event_lib[];
 extern const struct luaL_reg dgn_item_lib[];
+extern const struct luaL_reg dgn_level_lib[];
 extern const struct luaL_reg dgn_mons_lib[];
 extern const struct luaL_reg dgn_tile_lib[];
 extern const struct luaL_reg file_lib[];
@@ -74,5 +75,6 @@ class map_lines;
 int dgn_map_add_transform(lua_State *ls,
           std::string (map_lines::*add)(const std::string &s));
 unsigned int get_tile_idx(lua_State *ls, int arg);
+level_id dlua_level_id(lua_State *ls, int ndx);
 
 #endif
