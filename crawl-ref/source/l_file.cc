@@ -1,9 +1,27 @@
 #include "AppHdr.h"
 
+#include "clua.h"
 #include "dlua.h"
 #include "l_libs.h"
 
 #include "tags.h"
+
+///////////////////////////////////////////////////////////
+// User-accessible file operations
+
+static const struct luaL_reg file_clib[] =
+{
+    { "write", CLua::file_write },
+    { NULL, NULL },
+};
+
+void cluaopen_file(lua_State *ls)
+{
+    luaL_openlib(ls, "file", file_clib, 0);
+}
+
+///////////////////////////////////////////////////////////
+// Non-user-accessible file operations
 
 static int file_marshall(lua_State *ls)
 {
@@ -77,9 +95,9 @@ static int file_marshall_meta(lua_State *ls)
 {
     if (lua_gettop(ls) != 2)
         luaL_error(ls, "Need two arguments: tag header and value");
-    
+
     writer &th(*static_cast<writer*>( lua_touserdata(ls, 1) ));
-    
+
     lua_persist_type ptype = LPT_NONE;
     if (lua_isnumber(ls, 2))
         ptype = LPT_NUMBER;
@@ -126,7 +144,7 @@ static int file_unmarshall_meta(lua_State *ls)
     return (0);
 }
 
-const struct luaL_reg file_dlib[] =
+static const struct luaL_reg file_dlib[] =
 {
 { "marshall",   file_marshall },
 { "marshall_meta", file_marshall_meta },
@@ -137,3 +155,7 @@ const struct luaL_reg file_dlib[] =
 { NULL, NULL }
 };
 
+void dluaopen_file(lua_State *ls)
+{
+    luaL_openlib(ls, "file", file_dlib, 0);
+}

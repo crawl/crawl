@@ -59,8 +59,8 @@ static int grd_col_get(lua_State *ls)
     char buf[2];
     buf[0] = *gly;
     buf[1] = '\0';
-    
-    lua_pushstring(ls, buf); 
+
+    lua_pushstring(ls, buf);
 
     return (1);
 }
@@ -95,7 +95,7 @@ void dluaopen_mapgrd(lua_State *ls)
 
     lua_pop(ls, 1);
 
-    // grd col table    
+    // grd col table
     luaL_newmetatable(ls, MAPGRD_COL_METATABLE);
     lua_pushstring(ls, "__index");
     lua_pushcfunction(ls, grd_col_get);

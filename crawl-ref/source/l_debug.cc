@@ -61,7 +61,7 @@ LUAFN(debug_dump_map)
         dump_map(lua_tostring(ls, pos), true);
     return (0);
 }
-         
+
 LUAFN(_debug_test_explore)
 {
 #ifdef WIZARD
@@ -69,7 +69,7 @@ LUAFN(_debug_test_explore)
 #endif
     return (0);
 }
-             
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },

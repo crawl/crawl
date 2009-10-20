@@ -655,7 +655,7 @@ std::string map_lines::add_subst(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    subst_spec spec(key[0], sep == ':', repl); 
+    subst_spec spec(key[0], sep == ':', repl);
     subst(spec);
 
     return ("");

@@ -50,9 +50,14 @@ l_dgnmon.o \
 l_dgntil.o \
 l_dgn_bf.o \
 l_file.o \
+l_food.o \
+l_global.o \
+l_item.o \
 l_los.o \
 l_mapgrd.o \
 l_mapmrk.o \
+l_mons.o \
+l_option.o \
 l_you.o \
 los.o \
 losparam.o \

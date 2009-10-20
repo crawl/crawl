@@ -9,14 +9,23 @@
 #include "clua.h"
 
 /*
- * Loaders for clua.
+ * Library loaders for clua.
  */
 
 void cluaopen_crawl(lua_State *ls);
+void cluaopen_file(lua_State *ls);
+void cluaopen_food(lua_State *ls);
+void cluaopen_item(lua_State *ls);
+void cluaopen_kills(lua_State *ls);     // defined in kills.cc
+void cluaopen_monsters(lua_State *ls);
+void cluaopen_options(lua_State *ls);
 void cluaopen_you(lua_State *ls);
 
+void cluaopen_globals(lua_State *ls);
+
 /*
- * Libraries and loaders, accessed from init_dungeon_lua().
+ * Libraries and loaders for dlua, accessed from init_dungeon_lua().
+ * TODO: Move these to dluaopen_*.
  */
 
 extern const struct luaL_reg debug_dlib[];
@@ -28,7 +37,6 @@ extern const struct luaL_reg dgn_item_dlib[];
 extern const struct luaL_reg dgn_level_dlib[];
 extern const struct luaL_reg dgn_mons_dlib[];
 extern const struct luaL_reg dgn_tile_dlib[];
-extern const struct luaL_reg file_dlib[];
 extern const struct luaL_reg los_dlib[];
 extern const struct luaL_reg mapmarker_dlib[];
 
@@ -41,9 +49,10 @@ void register_itemlist(lua_State *ls);
 void register_builder_funcs(lua_State *ls);
 
 void dluaopen_crawl(lua_State *ls);
+void dluaopen_file(lua_State *ls);
 void dluaopen_mapgrd(lua_State *ls);
 void dluaopen_you(lua_State *ls);
- 
+
 /*
  * Macros for processing object arguments.
  */
@@ -64,7 +73,10 @@ void dluaopen_you(lua_State *ls);
 
 #define FEAT(f, pos) \
 dungeon_feature_type f = check_lua_feature(ls, pos)
-  
+
+#define LUA_ITEM(name, n) \
+    item_def *name = clua_check_item(ls, n);
+
 #define LEVEL(lev, br, pos)                                             \
 const char *level_name = luaL_checkstring(ls, pos);                 \
 level_area_type lev = str_to_level_area_type(level_name);           \
@@ -92,5 +104,6 @@ int dgn_map_add_transform(lua_State *ls,
 unsigned int get_tile_idx(lua_State *ls, int arg);
 level_id dlua_level_id(lua_State *ls, int ndx);
 dungeon_feature_type check_lua_feature(lua_State *ls, int idx);
+item_def *clua_check_item(lua_State *ls, int n);
 
 #endif

@@ -21,7 +21,7 @@ unsigned int get_tile_idx(lua_State *ls, int arg)
     }
 
     const char *tile_name = luaL_checkstring(ls, arg);
- 
+
     unsigned int idx;
     if (!tile_dngn_index(tile_name, idx))
     {
@@ -40,10 +40,10 @@ LUAFN(dgn_lev_floortile)
 {
 #ifdef USE_TILE
     LEVEL(lev, br, 1);
-    
+
     tile_flavour flv;
     tile_default_flv(lev, br, flv);
-    
+
     const char *tile_name = tile_dngn_name(flv.floor);
     PLUARET(string, tile_name);
 #else
@@ -55,10 +55,10 @@ LUAFN(dgn_lev_rocktile)
 {
 #ifdef USE_TILE
     LEVEL(lev, br, 1);
-    
+
     tile_flavour flv;
     tile_default_flv(lev, br, flv);
-    
+
     const char *tile_name = tile_dngn_name(flv.wall);
     PLUARET(string, tile_name);
 #else
@@ -69,11 +69,11 @@ LUAFN(dgn_lev_rocktile)
 LUAFN(dgn_lrocktile)
 {
     MAP(ls, 1, map);
-    
+
 #ifdef USE_TILE
     unsigned short tile = get_tile_idx(ls, 2);
     map->rock_tile = tile;
-    
+
     const char *tile_name = tile_dngn_name(tile);
     PLUARET(string, tile_name);
 #else
@@ -85,11 +85,11 @@ LUAFN(dgn_lrocktile)
 LUAFN(dgn_lfloortile)
 {
     MAP(ls, 1, map);
-    
+
 #ifdef USE_TILE
     unsigned short tile = get_tile_idx(ls, 2);
     map->floor_tile = tile;
-    
+
     const char *tile_name = tile_dngn_name(tile);
     PLUARET(string, tile_name);
 #else
@@ -104,7 +104,7 @@ LUAFN(dgn_change_rock_tile)
     unsigned short tile = get_tile_idx(ls, 1);
     if (tile)
         env.tile_default.wall = tile;
-    
+
     const char *tile_name = tile_dngn_name(tile);
     PLUARET(string, tile_name);
 #else
@@ -118,7 +118,7 @@ LUAFN(dgn_change_floor_tile)
     unsigned short tile = get_tile_idx(ls, 1);
     if (tile)
         env.tile_default.floor = tile;
-    
+
     const char *tile_name = tile_dngn_name(tile);
     PLUARET(string, tile_name);
 #else
