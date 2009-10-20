@@ -48,7 +48,7 @@ void lua_push_floor_items(lua_State *ls)
 {
     lua_push_items(ls, igrd(you.pos()));
 }
-                    
+
 void lua_push_inv_items(lua_State *ls = NULL)
 {
     if (!ls)

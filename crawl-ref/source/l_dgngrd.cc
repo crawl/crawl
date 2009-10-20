@@ -64,36 +64,36 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name)
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_REAL_FEATURES, c1);
     if (name.empty())
         return (DNGN_UNSEEN);
-    
+
     for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
         if (dngn_feature_names[i] == name)
             return static_cast<dungeon_feature_type>(i);
-    
+
     return (DNGN_UNSEEN);
 }
 
 std::vector<std::string> dungeon_feature_matches(const std::string &name)
 {
     std::vector<std::string> matches;
-    
+
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_REAL_FEATURES, c1);
     if (name.empty())
         return (matches);
-    
+
     for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
         if (strstr(dngn_feature_names[i], name.c_str()))
             matches.push_back(dngn_feature_names[i]);
-    
+
     return (matches);
 }
 
 const char *dungeon_feature_name(dungeon_feature_type rfeat)
 {
     const unsigned feat = rfeat;
-    
+
     if (feat >= ARRAYSZ(dngn_feature_names))
         return (NULL);
-    
+
     return dngn_feature_names[feat];
 }
 
@@ -119,7 +119,7 @@ static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
         feat = dungeon_feature_by_name(luaL_checkstring(ls, idx));
     else
         luaL_argerror(ls, idx, "Feature must be a string or a feature index.");
-    
+
     return feat;
 }
 
@@ -168,15 +168,15 @@ static int dgn_set_feature_desc_short(lua_State *ls)
 {
     const std::string base_name = luaL_checkstring(ls, 1);
     const std::string desc      = luaL_checkstring(ls, 2);
-    
+
     if (base_name.empty())
     {
         luaL_argerror(ls, 1, "Base name can't be empty");
         return (0);
     }
-    
+
     set_feature_desc_short(base_name, desc);
-    
+
     return (0);
 }
 
@@ -184,15 +184,15 @@ static int dgn_set_feature_desc_long(lua_State *ls)
 {
     const std::string raw_name = luaL_checkstring(ls, 1);
     const std::string desc     = luaL_checkstring(ls, 2);
-    
+
     if (raw_name.empty())
     {
         luaL_argerror(ls, 1, "Raw name can't be empty");
         return (0);
     }
-    
+
     set_feature_desc_long(raw_name, desc);
-    
+
     return (0);
 }
 
@@ -206,7 +206,7 @@ static int dgn_max_bounds(lua_State *ls)
 static int dgn_grid(lua_State *ls)
 {
     GETCOORD(c, 1, 2, map_bounds);
-    
+
     if (!lua_isnone(ls, 3))
     {
         const dungeon_feature_type feat = _get_lua_feature(ls, 3);

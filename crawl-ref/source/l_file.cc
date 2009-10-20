@@ -95,9 +95,9 @@ static int file_marshall_meta(lua_State *ls)
 {
     if (lua_gettop(ls) != 2)
         luaL_error(ls, "Need two arguments: tag header and value");
-    
+
     writer &th(*static_cast<writer*>( lua_touserdata(ls, 1) ));
-    
+
     lua_persist_type ptype = LPT_NONE;
     if (lua_isnumber(ls, 2))
         ptype = LPT_NUMBER;

@@ -52,7 +52,7 @@ void dluaopen_crawl(lua_State *ls);
 void dluaopen_file(lua_State *ls);
 void dluaopen_mapgrd(lua_State *ls);
 void dluaopen_you(lua_State *ls);
- 
+
 /*
  * Macros for processing object arguments.
  */
@@ -73,7 +73,7 @@ void dluaopen_you(lua_State *ls);
 
 #define FEAT(f, pos) \
 dungeon_feature_type f = check_lua_feature(ls, pos)
-  
+
 #define LUA_ITEM(name, n) \
     item_def *name = clua_check_item(ls, n);
 

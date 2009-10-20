@@ -28,7 +28,7 @@
 #endif
 
 /////////////////////////////////////////////////////////////////////
-// User accessible 
+// User accessible
 //
 
 static int crawl_mpr(lua_State *ls)
@@ -628,7 +628,7 @@ LUAFN(_crawl_millis)
     if (error)
         luaL_error(ls, make_stringf("Failed to get time: %s",
                                     strerror(error)).c_str());
-    
+
     lua_pushnumber(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
     return (1);
 }
