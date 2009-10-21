@@ -2077,8 +2077,8 @@ static std::vector<formatted_string> _get_overview_stats()
 
             // Careful about overflow. We erase some of the god's name
             // if necessary.
-            godpowers = godpowers.substr(0, 29 - prank)
-                         + " " + std::string(prank, '*');
+            godpowers = godpowers.substr(0, 20)
+                         + " [" + std::string(prank, '*') + std::string(6 - prank, '.') + "]";
         }
     }
 
