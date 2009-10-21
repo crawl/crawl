@@ -466,6 +466,11 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             const int colour = (*overlay)(x, y).colour;
             if (colour)
                 dgn_set_grid_colour_at(gc, colour);
+
+            const int property = (*overlay)(x, y).property;
+            if (property >= FPROP_BLOODY)
+                // Over-ride whatever property is already there.
+               env.map(gc).property |= property;
 #ifdef USE_TILE
             const int floor = (*overlay)(x, y).floortile;
             if (floor)
@@ -632,6 +637,42 @@ std::string map_lines::add_colour(const std::string &sub)
 
     colour_spec spec(key[0], sep == ':', colours);
     overlay_colours(spec);
+
+    return ("");
+}
+
+bool map_fprop_list::parse(const std::string &fp, int weight)
+{
+    const int fprop = fp == "none" ? FPROP_NONE : str_to_fprop(fp);
+    if (fprop == -1)
+        return false;
+
+    push_back(map_weighted_fprop(fprop, weight));
+    return true;
+}
+
+std::string map_lines::add_fproperty(const std::string &sub)
+{
+    std::string s = trimmed_string(sub);
+
+    if (s.empty())
+        return ("");
+
+    int sep = 0;
+    std::string key;
+    std::string substitute;
+
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
+    if (!err.empty())
+        return (err);
+
+    map_fprop_list fprops;
+    err = parse_weighted_str<map_fprop_list>(substitute, fprops);
+    if (!err.empty())
+        return (err);
+
+    fprop_spec spec(key[0], sep == ':', fprops);
+    overlay_fprops(spec);
 
     return ("");
 }
@@ -881,6 +922,22 @@ void map_lines::overlay_colours(colour_spec &spec)
         while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
         {
             (*overlay)(pos, y).colour = spec.get_colour();
+            ++pos;
+        }
+    }
+}
+
+void map_lines::overlay_fprops(fprop_spec &spec)
+{
+    if (!overlay.get())
+        overlay.reset(new overlay_matrix(width(), height()));
+
+    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
+    {
+        std::string::size_type pos = 0;
+        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+        {
+            (*overlay)(pos, y).property |= spec.get_property();
             ++pos;
         }
     }
@@ -3150,6 +3207,24 @@ int colour_spec::get_colour()
             chosen = colours[i].first;
     if (fix)
         fixed_colour = chosen;
+    return (chosen);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// fprop_spec
+
+int fprop_spec::get_property()
+{
+    if (fixed_prop != FPROP_NONE)
+        return (fixed_prop);
+
+    int chosen = FPROP_NONE;
+    int cweight = 0;
+    for (int i = 0, size = fprops.size(); i < size; ++i)
+        if (x_chance_in_y(fprops[i].second, cweight += fprops[i].second))
+            chosen = fprops[i].first;
+    if (fix)
+        fixed_prop = chosen;
     return (chosen);
 }
 

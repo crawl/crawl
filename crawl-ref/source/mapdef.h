@@ -155,6 +155,29 @@ public:
     map_colour_list colours;
 };
 
+typedef std::pair<int, int> map_weighted_fprop;
+class map_fprop_list : public std::vector<map_weighted_fprop>
+{
+public:
+    bool parse(const std::string &fp, int weight);
+};
+class fprop_spec
+{
+public:
+    fprop_spec(int _key, bool _fix, const map_fprop_list &flist)
+        : key(_key), fix(_fix), fixed_prop(FPROP_NONE), fprops(flist)
+    {
+    }
+
+    int get_property();
+
+public:
+    int key;
+    bool fix;
+    int fixed_prop;
+    map_fprop_list fprops;
+};
+
 #ifdef USE_TILE
 typedef std::pair<int, int> map_weighted_tile;
 class map_tile_list : public std::vector<map_weighted_colour>
@@ -222,6 +245,7 @@ public:
     std::string add_subst(const std::string &st);
     std::string add_shuffle(const std::string &s);
     std::string add_colour(const std::string &col);
+    std::string add_fproperty(const std::string &sub);
     void clear_markers();
 
 #ifdef USE_TILE
@@ -297,6 +321,7 @@ private:
     void subst(subst_spec &);
     void nsubst(nsubst_spec &);
     void overlay_colours(colour_spec &);
+    void overlay_fprops(fprop_spec &);
 #ifdef USE_TILE
     void overlay_tiles(tile_spec &);
 #endif
@@ -331,10 +356,11 @@ private:
     std::vector<std::string> lines;
     struct overlay_def
     {
-        overlay_def() : colour(0), rocktile(0), floortile(0) {}
+        overlay_def() : colour(0), rocktile(0), floortile(0), property(0) {}
         int colour;
         int rocktile;
         int floortile;
+        int property;
     };
     typedef Matrix<overlay_def> overlay_matrix;
     std::auto_ptr<overlay_matrix> overlay;

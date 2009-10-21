@@ -22,6 +22,7 @@ enum drop_mode_type
 god_type str_to_god(std::string god);
 int str_to_colour(const std::string &str, int default_colour = -1,
                   bool accept_number = true);
+int str_to_fprop (const std::string &str);
 const std::string colour_to_str(unsigned char colour);
 
 // last updated 12may2000 {dlb}

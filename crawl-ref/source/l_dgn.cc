@@ -551,6 +551,11 @@ static int dgn_kmask(lua_State *ls)
     return (0);
 }
 
+static int dgn_kprop(lua_State *ls)
+{
+    return dgn_map_add_transform(ls, &map_lines::add_fproperty);
+}
+
 static int dgn_map_size(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1523,6 +1528,7 @@ const struct luaL_reg dgn_dlib[] =
 { "kfeat", dgn_kfeat },
 { "kitem", dgn_kitem },
 { "kmons", dgn_kmons },
+{ "kprop", dgn_kprop },
 { "kmask", dgn_kmask },
 { "mapsize", dgn_map_size },
 
