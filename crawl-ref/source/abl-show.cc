@@ -2099,6 +2099,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_CHRONOS_TIME_STEP:
         _chronos_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
+        exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
     case ABIL_CHRONOS_TIME_BEND:
@@ -2116,7 +2117,7 @@ static bool _do_ability(const ability_def& abil)
             if (mon != NULL)
             {
                 simple_god_message(
-                    make_stringf("rebukes %s.",
+                    make_stringf(" rebukes %s.",
                                  mon->name(DESC_NOCAP_THE).c_str()).c_str(),
                                  GOD_CHRONOS);
                 do_slow_monster(mon, KC_YOU);
