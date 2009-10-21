@@ -167,6 +167,8 @@ bool is_hasty_item(const item_def& item)
         const int item_brand = get_weapon_brand(item);
         if (item_brand == SPWPN_SPEED)
             return (true);
+        if (item.sub_type == WPN_QUICK_BLADE)
+            return (true);
         }
         break;
     case OBJ_ARMOUR:
