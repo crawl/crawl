@@ -142,6 +142,8 @@ public:
 
     static bool is_managed_vm(lua_State *ls);
 
+    void print_stack();
+
 public:
     std::string error;
 
@@ -233,7 +235,5 @@ extern CLua clua;
 void lua_set_exclusive_item(const item_def *item = NULL);
 
 std::string quote_lua_string(const std::string &s);
-
-void print_clua_stack();
 
 #endif

@@ -300,29 +300,3 @@ void init_dungeon_lua()
     register_itemlist(dlua);
     register_monslist(dlua);
 }
-
-// Can be called from within a debugger to look at the current Lua
-// call stack.  (Borrowed from ToME 3)
-void print_dlua_stack(void)
-{
-    struct lua_Debug dbg;
-    int              i = 0;
-    lua_State       *L = dlua.state();
-
-    fprintf(stderr, EOL);
-    while (lua_getstack(L, i++, &dbg) == 1)
-    {
-        lua_getinfo(L, "lnuS", &dbg);
-
-        char* file = strrchr(dbg.short_src, '/');
-        if (file == NULL)
-            file = dbg.short_src;
-        else
-            file++;
-
-        fprintf(stderr, "%s, function %s, line %d" EOL, file,
-                dbg.name, dbg.currentline);
-    }
-
-    fprintf(stderr, EOL);
-}
