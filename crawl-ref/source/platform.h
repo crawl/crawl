@@ -103,6 +103,19 @@
 #endif
 #endif
 
+/* MIPS */
+#if !defined (PROCESSOR_DETECTED)
+#if defined (__MIPSEL__)
+#define PROCESSOR_DETECTED
+#define TARGET_CPU_MIPS
+#define TARGET_LIDDLE_ENDIAN
+#elif defined (__mips__)
+#define PROCESSOR_DETECTED
+#define TARGET_CPU_MIPS
+#define TARGET_BIG_ENDIAN
+#endif
+#endif
+
 /* PowerPC */
 #if !defined (PROCESSOR_DETECTED)
 #if defined (_ARCH_PPC) || defined (__ppc__) || defined (__ppc64__) || defined (__PPC) || defined (powerpc) || defined (__PPC__) || defined (__powerpc64__) || defined (__powerpc64)
