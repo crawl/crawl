@@ -1423,11 +1423,11 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             else if (tmp < 500)
                 rc = SPWPN_FROST;
             else if (tmp < 650)
-	        rc = SPWPN_PENETRATION;
-	    else if (tmp < 800)
-	        rc = SPWPN_SHADOW;
-	    else if (tmp < 920)
-	        rc = SPWPN_PROTECTION;
+                rc = SPWPN_PENETRATION;
+            else if (tmp < 800)
+                rc = SPWPN_SHADOW;
+            else if (tmp < 920)
+                rc = SPWPN_PROTECTION;
             else if (tmp < 980)
                 rc = SPWPN_VORPAL;
             else
@@ -2010,7 +2010,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
                                    120, SPARM_POISON_RESISTANCE,
                                    120, SPARM_POSITIVE_ENERGY,
                                    480, SPARM_PROTECTION,
-				   1000, SPARM_REFLECTION, //XXX: Testing
+                                   1000, SPARM_REFLECTION, //XXX: Testing
                                    0));
         break;
 

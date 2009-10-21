@@ -968,22 +968,24 @@ void game_options::reset_options()
     // If USE_8_COLOUR_TERM_MAP is defined, then we force 8 colors.
     // Otherwise, do a check to see if we're using Apple_Terminal.
 #ifndef USE_8_COLOUR_TERM_MAP
-	const char *term_program = getenv("TERM_PROGRAM");
+    const char *term_program = getenv("TERM_PROGRAM");
     if (term_program && strcmp(term_program, "Apple_Terminal") == 0) {
 #endif
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < 16; ++i)
             colour[i] = i % 8;
 
         colour[ DARKGREY ] = COL_TO_REPLACE_DARKGREY;
 #ifndef USE_8_COLOUR_TERM_MAP
-	} else {
-        for (int i = 0; i < 16; i++)
+    }
+    else
+    {
+        for (int i = 0; i < 16; ++i)
             colour[i] = i;
-	}
+    }
 #endif
 
     // map each channel to plain (well, default for now since I'm testing)
-    for (int i = 0; i < NUM_MESSAGE_CHANNELS; i++)
+    for (int i = 0; i < NUM_MESSAGE_CHANNELS; ++i)
         channels[i] = MSGCOL_DEFAULT;
 
     // Clear vector options.

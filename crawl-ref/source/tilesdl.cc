@@ -248,7 +248,7 @@ bool TilesFramework::initialise()
 
     SDL_EnableUNICODE(true);
 
-	std::string title = CRAWL " " + Version::Long();
+    std::string title = CRAWL " " + Version::Long();
     SDL_WM_SetCaption(title.c_str(), CRAWL);
     const char *icon_name =
 #ifdef DATA_DIR_PATH

@@ -359,7 +359,7 @@ void init_libw32c(void)
         exit(0);
     }
 
-	std::string title = CRAWL " " + Version::Long();
+    std::string title = CRAWL " " + Version::Long();
 
     GetConsoleTitle( oldTitle, 78 );
     SetConsoleTitle( title.c_str() );
