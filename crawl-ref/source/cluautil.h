@@ -15,7 +15,36 @@ extern "C" {
 /*
  * Function definitions.
  */
+
 #define LUAFN(name) static int name(lua_State *ls)
+#define LUAWRAP(name, wrapexpr) \
+    static int name(lua_State *ls) \
+    {   \
+        wrapexpr; \
+        return (0); \
+    }
+#define PLUARET(type, val) \
+        lua_push##type(ls, val); \
+        return (1);
+#define LUARET1(name, type, val) \
+    static int name(lua_State *ls) \
+    { \
+        lua_push##type(ls, val); \
+        return (1); \
+    }
+#define LUARET2(name, type, val1, val2)  \
+    static int name(lua_State *ls) \
+    { \
+        lua_push##type(ls, val1); \
+        lua_push##type(ls, val2); \
+        return (2); \
+    }
+
+#define ASSERT_DLUA \
+    do {                                                            \
+        if (CLua::get_vm(ls).managed_vm)                            \
+            luaL_error(ls, "Operation forbidden in end-user script");   \
+    } while (false)
 
 
 // FIXME: remove one of these.
@@ -29,9 +58,59 @@ void clua_register_metatable(lua_State *ls, const char *tn,
                              int (*gcfn)(lua_State *ls) = NULL);
 
 /*
- * Passing objects from and to Lua.
+ * User-data templates.
+ * TODO: Consolidate these.
  */
 
+template <class T>
+inline static T *util_get_userdata(lua_State *ls, int ndx)
+{
+    return (lua_islightuserdata(ls, ndx))?
+            static_cast<T *>( lua_touserdata(ls, ndx) )
+          : NULL;
+}
+
+template <class T>
+inline static T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
+{
+    return static_cast<T*>( luaL_checkudata( ls, ndx, mt ) );
+}
+
+template <class T>
+static int lua_object_gc(lua_State *ls)
+{
+    T **pptr = static_cast<T**>( lua_touserdata(ls, 1) );
+    if (pptr)
+        delete *pptr;
+    return (0);
+}
+
+template <class T> T *clua_new_userdata(
+        lua_State *ls, const char *mt)
+{
+    void *udata = lua_newuserdata( ls, sizeof(T) );
+    luaL_getmetatable(ls, mt);
+    lua_setmetatable(ls, -2);
+    return static_cast<T*>( udata );
+}
+
+template <typename T>
+inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
+{
+    T *de = clua_new_userdata<T>(ls, meta);
+    *de = udata;
+}
+
+template <class T>
+static void dlua_push_object_type(lua_State *ls, const char *meta, const T &data)
+{
+    T **ptr = clua_new_userdata<T*>(ls, meta);
+    *ptr = new T(data);
+}
+
+/*
+ * Passing objects from and to Lua.
+ */
 struct activity_interrupt_data;
 int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 

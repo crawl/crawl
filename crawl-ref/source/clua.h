@@ -232,71 +232,7 @@ extern CLua clua;
 
 void lua_set_exclusive_item(const item_def *item = NULL);
 
-#define LUAWRAP(name, wrapexpr) \
-    static int name(lua_State *ls) \
-    {   \
-        wrapexpr; \
-        return (0); \
-    }
-
-#define PLUARET(type, val) \
-        lua_push##type(ls, val); \
-        return (1);
-
-#define LUARET1(name, type, val) \
-    static int name(lua_State *ls) \
-    { \
-        lua_push##type(ls, val); \
-        return (1); \
-    }
-
-#define LUARET2(name, type, val1, val2)  \
-    static int name(lua_State *ls) \
-    { \
-        lua_push##type(ls, val1); \
-        lua_push##type(ls, val2); \
-        return (2); \
-    }
-
-#define ASSERT_DLUA \
-    do {                                                            \
-        if (CLua::get_vm(ls).managed_vm)                            \
-            luaL_error(ls, "Operation forbidden in end-user script");   \
-    } while (false)
-
-template <class T>
-inline static T *util_get_userdata(lua_State *ls, int ndx)
-{
-    return (lua_islightuserdata(ls, ndx))?
-            static_cast<T *>( lua_touserdata(ls, ndx) )
-          : NULL;
-}
-
-template <class T>
-inline static T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
-{
-    return static_cast<T*>( luaL_checkudata( ls, ndx, mt ) );
-}
-
-template <class T>
-static int lua_object_gc(lua_State *ls)
-{
-    T **pptr = static_cast<T**>( lua_touserdata(ls, 1) );
-    if (pptr)
-        delete *pptr;
-    return (0);
-}
-
 std::string quote_lua_string(const std::string &s);
-
-template <class T> T *clua_new_userdata(
-        lua_State *ls, const char *mt)
-{
-    void *udata = lua_newuserdata( ls, sizeof(T) );
-    luaL_getmetatable(ls, mt);
-    lua_setmetatable(ls, -2);
-    return static_cast<T*>( udata );
-}
 
 void print_clua_stack();
 

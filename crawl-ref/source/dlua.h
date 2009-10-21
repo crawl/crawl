@@ -79,20 +79,6 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name);
 std::vector<std::string> dungeon_feature_matches(const std::string &name);
 const char *dungeon_feature_name(dungeon_feature_type feat);
 
-template <typename T>
-inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
-{
-    T *de = clua_new_userdata<T>(ls, meta);
-    *de = udata;
-}
-
-template <class T>
-static void dlua_push_object_type(lua_State *ls, const char *meta, const T &data)
-{
-    T **ptr = clua_new_userdata<T*>(ls, meta);
-    *ptr = new T(data);
-}
-
 void print_dlua_stack();
 
 //////////////////////////////////////////////////////////////////////////
