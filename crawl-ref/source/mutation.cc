@@ -2254,6 +2254,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     for (int i = 0; i < 3; ++i)
         modifiers[i] = stat_modifier(stats[i]);
 
+    bool modified_eq = false;
+
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
@@ -2270,7 +2272,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
         // Hooves and talons force boots off.
         if (you_tran_can_wear(EQ_BOOTS))
+        {
             remove_one_equip(EQ_BOOTS, false, true);
+            modified_eq = true;
+        }
         break;
 
     case MUT_CLAWS:
@@ -2281,7 +2286,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // mutation yet, so we have to check for level 2 or higher claws
         // here.
         if (you.mutation[mutat] >= 2 && you_tran_can_wear(EQ_GLOVES))
+        {
             remove_one_equip(EQ_GLOVES, false, true);
+            modified_eq = true;
+        }
         break;
 
     case MUT_HORNS:
@@ -2295,6 +2303,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             && you_tran_can_wear(EQ_HELMET))
         {
             remove_one_equip(EQ_HELMET, false, true);
+            modified_eq = true;
         }
         break;
 
@@ -2314,13 +2323,21 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
-    for (int i = 0; i < 3; ++i)
+    // Don't run this loop if we lost some equipment slots since
+    // removing armour with stat modifiers makes the value of new_modifier
+    // below different from the previously recorded value, and the
+    // remove_one_equip call chain already does stat change from
+    // removing items correctly. -cao
+    if(!modified_eq)
     {
-        const int new_modifier = stat_modifier(stats[i]);
-        if (new_modifier != modifiers[i])
+        for (int i = 0; i < 3; ++i)
         {
-            modify_stat(stats[i], new_modifier - modifiers[i],
-                        !stat_msg, "losing a mutation");
+            const int new_modifier = stat_modifier(stats[i]);
+            if (new_modifier != modifiers[i])
+            {
+                modify_stat(stats[i], new_modifier - modifiers[i],
+                            !stat_msg, "losing a mutation");
+            }
         }
     }
 
