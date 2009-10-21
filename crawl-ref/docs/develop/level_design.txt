@@ -1865,15 +1865,15 @@ mons_from_index, change_level_flags, change_branch_flags,
 set_random_mon_list
 
 
-Additionally, the dgn module provides a global "grd" variable that
+Additionally, the dgn module provides a global "mapgrd" variable that
 can access the current map glyphs.  The top left symbol in the map
 can be assigned like this:
 
- grd[1][1] = 'x'
+ mapgrd[1][1] = 'x'
 
 The bottom right symbol can be assigned like this:
 
- grd[width()][height()] = "."
+ mapgrd[width()][height()] = "."
 
 
 Lua API - global game state

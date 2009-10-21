@@ -76,8 +76,8 @@ function dgn_map_meta_wrap(map, tab)
                  end
    end
 
-   -- Convenience global variable, e.g. grd[x][y] = 'x'
-   meta['grd'] = dgn.grd_table(map)
+   -- Convenience global variable, e.g. mapgrd[x][y] = 'x'
+   meta['mapgrd'] = dgn.mapgrd_table(map)
 
    meta['_G'] = meta
    meta.wrapped_instance = map

@@ -6,7 +6,7 @@
 #include "mapdef.h"
 
 /////////////////////////////////////////////////////////////////////
-// grd and grd_col handling (i.e. map_lines in a metatable)
+// mapgrd and mapgrd_col handling (i.e. map_lines in a metatable)
 
 struct mapcolumn
 {
@@ -14,7 +14,7 @@ struct mapcolumn
     int col;
 };
 
-static int grd_get(lua_State *ls)
+static int mapgrd_get(lua_State *ls)
 {
     // Return a metatable for this column in the map grid.
     map_def *map = *(map_def **) luaL_checkudata(ls, 1, MAPGRD_METATABLE);
@@ -28,12 +28,12 @@ static int grd_get(lua_State *ls)
     return (1);
 }
 
-static int grd_set(lua_State *ls)
+static int mapgrd_set(lua_State *ls)
 {
     return (luaL_error(ls, "%s", "Cannot assign to read-only table."));
 }
 
-static char* grd_glyph(lua_State *ls, int &col, int &row)
+static char* mapgrd_glyph(lua_State *ls, int &col, int &row)
 {
     mapcolumn *mapc = (mapcolumn *)luaL_checkudata(ls, 1, MAPGRD_COL_METATABLE);
     row = luaL_checkint(ls, 2);
@@ -49,10 +49,10 @@ static char* grd_glyph(lua_State *ls, int &col, int &row)
     return (&lines(mc));
 }
 
-static int grd_col_get(lua_State *ls)
+static int mapgrd_col_get(lua_State *ls)
 {
     int col, row;
-    char *gly = grd_glyph(ls, col, row);
+    char *gly = mapgrd_glyph(ls, col, row);
     if (!gly)
         return (luaL_error(ls, "Invalid coords: %d, %d", col, row));
 
@@ -65,16 +65,16 @@ static int grd_col_get(lua_State *ls)
     return (1);
 }
 
-static int grd_col_set(lua_State *ls)
+static int mapgrd_col_set(lua_State *ls)
 {
     int col, row;
-    char *gly = grd_glyph(ls, col, row);
+    char *gly = mapgrd_glyph(ls, col, row);
     if (!gly)
         return (luaL_error(ls, "Invalid coords: %d, %d", col, row));
 
     const char *str = luaL_checkstring(ls, 3);
     if (!str[0] || str[1])
-        return (luaL_error(ls, "%s", "grd must be set to a single char."));
+        return (luaL_error(ls, "%s", "mapgrd must be set to a single char."));
 
     (*gly) = str[0];
 
@@ -83,26 +83,26 @@ static int grd_col_set(lua_State *ls)
 
 void dluaopen_mapgrd(lua_State *ls)
 {
-    // grd table
+    // mapgrd table
     luaL_newmetatable(ls, MAPGRD_METATABLE);
     lua_pushstring(ls, "__index");
-    lua_pushcfunction(ls, grd_get);
+    lua_pushcfunction(ls, mapgrd_get);
     lua_settable(ls, -3);
 
     lua_pushstring(ls, "__newindex");
-    lua_pushcfunction(ls, grd_set);
+    lua_pushcfunction(ls, mapgrd_set);
     lua_settable(ls, -3);
 
     lua_pop(ls, 1);
 
-    // grd col table
+    // mapgrd col table
     luaL_newmetatable(ls, MAPGRD_COL_METATABLE);
     lua_pushstring(ls, "__index");
-    lua_pushcfunction(ls, grd_col_get);
+    lua_pushcfunction(ls, mapgrd_col_get);
     lua_settable(ls, -3);
 
     lua_pushstring(ls, "__newindex");
-    lua_pushcfunction(ls, grd_col_set);
+    lua_pushcfunction(ls, mapgrd_col_set);
     lua_settable(ls, -3);
 
     lua_pop(ls, 1);

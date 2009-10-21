@@ -13,7 +13,7 @@
 #include "dungeon.h"
 
 // Return a metatable for a point on the map_lines grid.
-static int dgn_grd_table(lua_State *ls)
+static int dgn_mapgrd_table(lua_State *ls)
 {
     MAP(ls, 1, map);
 
@@ -340,7 +340,7 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
 
 const struct luaL_reg dgn_build_dlib[] =
 {
-{ "grd_table", dgn_grd_table },
+{ "mapgrd_table", dgn_mapgrd_table },
 { "width", dgn_width },
 { "height", dgn_height },
 { "fill_area", dgn_fill_area },
