@@ -936,6 +936,9 @@ KPROP:    x = bloody
           * "force_exclude": Forces a single grid square or feature to be an 
              exclusion in auto-explore and automatic travel. Will be coloured
              red in the overmap.
+          * "no_cloud_gen": Prevents clouds from being generated over this
+             feature (usually lava).  Does not stop fog generators or clouds
+             entering from nearby squares.
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the
