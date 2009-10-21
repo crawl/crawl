@@ -869,6 +869,11 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you kill slimes");
         break;
 
+    case GOD_CHRONOS:
+        dislikes.push_back("you hasten yourself");
+        dislikes.push_back("use unnaturally quick items");
+        break;
+
     default:
         break;
     }
