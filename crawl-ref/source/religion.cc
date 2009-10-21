@@ -8334,6 +8334,9 @@ int god_colour(god_type god) // mv - added
     case GOD_JIYVA:
         return (GREEN);
 
+    case GOD_CHRONOS:
+        return (LIGHTCYAN);
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
