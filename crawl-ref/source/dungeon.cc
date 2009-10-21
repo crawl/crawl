@@ -29,6 +29,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "l_defs.h"
 #include "los.h"
 #include "makeitem.h"
 #include "mapdef.h"

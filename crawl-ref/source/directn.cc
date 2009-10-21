@@ -32,6 +32,7 @@
 #include "invent.h"
 #include "itemname.h"
 #include "items.h"
+#include "l_defs.h"
 #include "los.h"
 #include "mapmark.h"
 #include "message.h"

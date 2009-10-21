@@ -47,6 +47,7 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
+#include "l_defs.h"
 #include "makeitem.h"
 #include "mapdef.h"
 #include "mapmark.h"

@@ -22,6 +22,7 @@
 #include "initfile.h"
 #include "invent.h"
 #include "items.h"
+#include "l_defs.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "mapmark.h"

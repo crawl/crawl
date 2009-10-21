@@ -14,6 +14,7 @@
 #include "initfile.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
+#include "l_defs.h"
 #include "libutil.h"
 #include "macro.h"
 #include "maps.h"

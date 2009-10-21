@@ -7,6 +7,7 @@
 
 #include "branch.h"
 #include "cloud.h"
+#include "l_defs.h"
 #include "initfile.h"
 #include "mapmark.h"
 #include "maps.h"

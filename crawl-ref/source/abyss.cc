@@ -25,6 +25,7 @@
 #include "player.h"
 #include "dungeon.h"
 #include "items.h"
+#include "l_defs.h"
 #include "lev-pand.h"
 #include "los.h"
 #include "religion.h"
