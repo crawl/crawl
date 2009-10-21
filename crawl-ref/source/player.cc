@@ -5647,6 +5647,7 @@ bool slow_player(int amount)
 
         // Identify amulet.
         item_def *amulet = you.slot_item(EQ_AMULET);
+        did_god_conduct(DID_HASTY, 5, !amulet || item_type_known(*amulet));
         if (amulet && !item_type_known(*amulet))
             set_ident_type(*amulet, ID_KNOWN_TYPE);
 

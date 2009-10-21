@@ -187,8 +187,7 @@ bool is_hasty_item(const item_def& item)
             return (true);
         break;
     case OBJ_JEWELLERY:
-        // should this include AMU_RESIST_SLOWING?
-        if (item.sub_type == AMU_RAGE)
+        if (item.sub_type == AMU_RAGE || item.sub_type == AMU_RESIST_SLOW)
             return (true);
         break;
     default:

@@ -2391,6 +2391,7 @@ static void _decrement_durations()
                         mpr("You feel yourself slow down.", MSGCH_DURATION);
                         you.duration[DUR_HASTE] = 0;
                     }
+                    did_god_conduct(DID_HASTY, 3, true);
                 }
                 else
                 {
