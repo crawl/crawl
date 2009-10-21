@@ -3652,9 +3652,8 @@ int melee_attack::player_to_hit(bool random_factor)
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
 
-    const bool see_invis = player_see_invis();
     // If you can't see yourself, you're a little less accurate.
-    if (you.invisible() && !see_invis)
+    if (!you.visible_to(&you))
         your_to_hit -= 5;
 
     // fighting contribution
@@ -3785,7 +3784,7 @@ int melee_attack::player_to_hit(bool random_factor)
         if (defender->backlit())
             your_to_hit += 2 + random2(8);
         // Invisible monsters are hard to hit.
-        else if (defender->invisible() && !see_invis)
+        else if (!defender->visible_to(&you))
             your_to_hit -= 6;
     }
 
@@ -4148,7 +4147,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
                                   + defender->shield_block_penalty());
     int pro_block = defender->shield_bonus();
 
-    if (attacker->invisible() && !defender->can_see_invisible())
+    if (!attacker->visible_to(defender))
         pro_block /= 3;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -5322,7 +5321,7 @@ int melee_attack::mons_to_hit()
     // that this applies only to monsters vs monster and monster vs
     // player. Does not apply to a player fighting an invisible
     // monster.
-    if (defender->invisible() && !attacker->can_see_invisible())
+    if (!defender->visible_to(attacker))
         mhit = mhit * 65 / 100;
 
 #ifdef DEBUG_DIAGNOSTICS
