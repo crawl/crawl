@@ -15,6 +15,8 @@
 #include "state.h"
 #include "stuff.h"
 
+#include <algorithm>
+
 #define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
 
