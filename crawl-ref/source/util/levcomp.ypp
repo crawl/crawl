@@ -4,8 +4,7 @@
 #include <algorithm>
 
 #include "AppHdr.h"
-#include "clua.h"
-#include "dlua.h"
+#include "l_defs.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "maps.h"
