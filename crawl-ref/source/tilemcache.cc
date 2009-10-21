@@ -2,6 +2,7 @@
 
 #ifdef USE_TILE
 
+#include "env.h"
 #include "tilemcache.h"
 #include "tags.h"
 #include "ghost.h"
