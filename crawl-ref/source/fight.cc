@@ -27,6 +27,7 @@
 #include "delay.h"
 #include "effects.h"
 #include "food.h"
+#include "goditem.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"

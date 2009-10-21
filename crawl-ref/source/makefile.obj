@@ -29,6 +29,7 @@ files.o \
 food.o \
 format.o \
 ghost.o \
+goditem.o \
 hiscores.o \
 initfile.o \
 invent.o \

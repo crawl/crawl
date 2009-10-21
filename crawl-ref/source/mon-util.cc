@@ -31,6 +31,7 @@
 #include "dgnevent.h"
 #include "fight.h"
 #include "ghost.h"
+#include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
