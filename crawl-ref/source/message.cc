@@ -238,6 +238,10 @@ static char god_message_altar_colour( god_type god )
     case GOD_LUGONU:
         return (LIGHTRED);
 
+    /* FIXME: This isn't the final decision for this one. */
+    case GOD_CHRONOS:
+        return (DARKGREY);
+
     case GOD_JIYVA:
         return (coinflip() ? GREEN : LIGHTGREEN);
 

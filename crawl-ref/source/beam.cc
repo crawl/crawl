@@ -5096,25 +5096,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_UNAFFECTED);
 
     case BEAM_SLOW:
-        // Try to remove haste, if monster is hasted.
-        if (mon->del_ench(ENCH_HASTE, true))
-        {
-            if (simple_monster_message(mon, " is no longer moving quickly."))
-                obvious_effect = true;
-            return (MON_AFFECTED);
-        }
-
-        // Not hasted, slow it.
-        if (!mon->has_ench(ENCH_SLOW)
-            && !mons_is_stationary(mon)
-            && mon->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill())))
-        {
-            if (!mons_is_paralysed(mon) && !mons_is_petrified(mon)
-                && simple_monster_message(mon, " seems to slow down."))
-            {
-                obvious_effect = true;
-            }
-        }
+		obvious_effect = do_slow_monster(mon, whose_kill());
         return (MON_AFFECTED);
 
     case BEAM_HASTE:

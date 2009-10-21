@@ -1961,6 +1961,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_ALTAR_BEOGH:
         case DNGN_ALTAR_JIYVA:
         case DNGN_ALTAR_FEAWN:
+        case DNGN_ALTAR_CHRONOS:
             return (true);
         default:
             return (false);
@@ -2981,7 +2982,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '_', '\\', '}', '{', '8', '~', '~',            // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '}', '%', '$', '"', '#', 't',        // book .. trees
+        ':', '|', '}', '%', '$', '"', '#', '7',        // book .. trees
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -3001,7 +3002,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall .. stairs up
         251, 182, 167, 187, '8', 171, 168,             // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        '+', '\\', '}', '%', '$', '"', '#', 't',       // book .. trees
+        '+', '\\', '}', '%', '$', '"', '#', '7',       // book .. trees
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -3628,6 +3629,15 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = GREEN;
+            Feature[i].minimap     = MF_FEATURE;
+            break;
+
+        case DNGN_ALTAR_CHRONOS:
+            Feature[i].colour      = DARKGREY;
+            Feature[i].dchar       = DCHAR_ALTAR;
+            Feature[i].flags      |= FFT_NOTABLE;
+            Feature[i].map_colour  = DARKGREY;
+            Feature[i].seen_colour = DARKGREY;
             Feature[i].minimap     = MF_FEATURE;
             break;
 

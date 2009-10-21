@@ -28,13 +28,6 @@
 #include "stuff.h"
 #include "view.h" // Elemental colours for unrandarts
 
-#define KNOWN_PROPS_KEY     "artefact_known_props"
-#define ARTEFACT_PROPS_KEY  "artefact_props"
-#define ARTEFACT_NAME_KEY   "artefact_name"
-#define ARTEFACT_APPEAR_KEY "artefact_appearance"
-
-static int _artefact_num_props( const artefact_properties_t &proprt );
-
 // The initial generation of a randart is very simple - it occurs in
 // dungeon.cc and consists of giving it a few random things - plus &
 // plus2 mainly.

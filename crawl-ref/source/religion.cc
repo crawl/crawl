@@ -32,6 +32,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "effects.h"
+#include "enum.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -297,6 +298,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather",
       "spawn explosive spores",
       "induce evolution"
+    },
+    // Chronos
+    { "make your items ponderous",
+      "Chronos slows your biology",
+      "",
+      "",
+      ""
     }
 };
 
@@ -397,6 +405,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather",
       "spawn explosive spores",
       "induce evolution"
+    },
+	// Chronos
+	{ "make your items ponderous",
+	  "Chronos slows your biology",
+	  "",
+	  "",
+	  ""
     }
 };
 
@@ -554,7 +569,13 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_JIYVA:
         snprintf(info, INFO_SIZE, "you sacrifice items%s",
                  verbose ? " by allowing slimes to consume them" : "");
+        likes.push_back(info);
+        break;
 
+    case GOD_CHRONOS:
+        snprintf(info, INFO_SIZE, "you kill fast things%s",
+                 verbose ? ", relative to your current speed"
+                         : "");
         likes.push_back(info);
         break;
 
@@ -2574,6 +2595,7 @@ std::string god_name(god_type which_god, bool long_name)
                           : god_name_jiyva(false));
     }
     case GOD_FEAWN:    return (long_name ? "Feawn the Arboreal" : "Feawn");
+    case GOD_CHRONOS:  return (long_name ? "Chronos the Contemplative" : "Chronos");
     case GOD_XOM:
         if (!long_name)
             return "Xom";
@@ -3091,6 +3113,17 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                                    "user.");
                 retval = true;
                 if (random2(level + 10) > 5)
+                    piety_change = 1;
+            }
+            break;
+
+        case DID_KILL_FAST:
+            if (you.religion == GOD_CHRONOS
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" appreciates the change of pace.");
+                retval = true;
+                if (random2(level+18) > 3)
                     piety_change = 1;
             }
             break;
@@ -4867,6 +4900,36 @@ static bool _elyvilon_retribution()
     return (true);
 }
 
+static bool _chronos_retribution()
+{
+    // time god/slowness theme
+    const god_type god = GOD_CHRONOS;
+    simple_god_message(" bends time around you.", god);
+    switch (random2(5))
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        mpr("You lose track of time.");
+        you.put_to_sleep();
+        break;
+    case 4:
+        if (you.duration[DUR_SLOW] < 90)
+        {
+            dec_penance(god, 1);
+            mpr( "You feel the world leave you behind!", MSGCH_WARN );
+            you.duration[DUR_EXHAUSTED] = 100;
+            slow_player(100);
+        }
+        break;
+
+
+    }
+
+    return (true);
+}
+
 static bool _makhleb_retribution()
 {
     // demonic servant theme
@@ -5627,6 +5690,7 @@ bool divine_retribution(god_type god)
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEAWN:         do_more = _feawn_retribution(); break;
+    case GOD_CHRONOS:       do_more = _chronos_retribution(); break;
 
     default:
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION
@@ -6930,6 +6994,66 @@ void excommunication(god_type new_god)
                           coord_def((int)new_god, old_piety));
 }
 
+bool ponderousify_armour(){
+    int item_slot = -1;
+    do
+    {
+        if (item_slot == -1)
+        {
+            item_slot = prompt_invent_item("Make which item ponderous?", MT_INVLIST,
+                                           OSEL_ENCH_ARM, true, true, false);
+        }
+        if (prompt_failed(item_slot))
+            return (false);
+
+        item_def& arm(you.inv[item_slot]);
+
+        if (!is_enchantable_armour(arm, true, true) ||
+			get_armour_ego_type(arm) != SPARM_NORMAL)
+        {
+            mpr("Choose some type of armour to enchant, or Esc to abort.");
+            if (Options.auto_list)
+                more();
+
+            item_slot = -1;
+			mpr("You can't enchant that."); //does not appear
+            continue;
+        }
+
+		//make item desc runed if desc was vanilla?
+
+        set_item_ego_type(arm, OBJ_ARMOUR, SPARM_PONDEROUSNESS);
+
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+
+		simple_god_message(" says: Dude, use this wisely!");
+
+        return true;
+    }
+    while(true);
+
+    return true;
+}
+
+int _slouch_monsters(coord_def where, int pow, int, actor* agent)
+{
+    monsters* mon = monster_at(where);
+    if (NULL == mon){
+        return (0);
+    }
+
+    int dmg = (mon->speed - player_movement_speed());
+        dmg = (dmg > 0 ? dmg * dmg : 0);
+
+    mon->hurt(agent, dmg, BEAM_MMISSILE, true);
+    return 1;
+}
+
+int chronos_slouch(int pow){
+    return apply_area_visible(_slouch_monsters, pow);
+}
+
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     item_def& wpn = *you.weapon();
@@ -7066,7 +7190,7 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     const char *tag_start, *tag_end;
     switch (piety_gain)
     {
-    case PIETY_NONE:
+		case PIETY_NONE:
         tag_start = "<lightgrey>";
         tag_end = "</lightgrey>";
         break;
@@ -8024,6 +8148,7 @@ void handle_god_time()
                 gain_piety(1);
             return;
 
+        case GOD_CHRONOS:
         case GOD_SHINING_ONE:
             if (_need_free_piety() && one_chance_in(15))
                 gain_piety(1);

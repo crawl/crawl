@@ -110,11 +110,15 @@ enum ability_type
     ABIL_FEAWN_PLANT_RING,
     ABIL_FEAWN_SPAWN_SPORES,
     ABIL_FEAWN_EVOLUTION,
+    ABIL_CHRONOS_PONDEROUSIFY,              // 250
+    ABIL_CHRONOS_TIME_STEP,
+    ABIL_CHRONOS_TIME_BEND,
+    ABIL_CHRONOS_SLOUCH,
 
-    ABIL_TRAN_BAT = 250,
+    ABIL_TRAN_BAT = 260,
     ABIL_HARM_PROTECTION,
-    ABIL_HARM_PROTECTION_II,                //  252
-    ABIL_RENOUNCE_RELIGION = 260            //  260
+    ABIL_HARM_PROTECTION_II,                //  262
+    ABIL_RENOUNCE_RELIGION = 270            //  270
 };
 
 enum activity_interrupt_type
@@ -750,6 +754,7 @@ enum conduct_type
     DID_KILL_WIZARD,
     DID_KILL_PRIEST,
     DID_KILL_HOLY,
+    DID_KILL_FAST,                      // Chronos
     DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
     DID_LIVING_KILLED_BY_SERVANT,
     DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE,
@@ -1149,7 +1154,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_BEOGH,
     DNGN_ALTAR_JIYVA,
     DNGN_ALTAR_FEAWN,
-    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_FEAWN,
+    DNGN_ALTAR_CHRONOS,
+    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_CHRONOS,
 
     DNGN_FOUNTAIN_BLUE = 200,          //  200
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1307,6 +1313,7 @@ enum enchant_type
     ENCH_EAT_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,             //   35
+    ENCH_SLOUCH,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -1400,6 +1407,7 @@ enum god_type
     GOD_BEOGH,
     GOD_JIYVA,                         //   15
     GOD_FEAWN,
+    GOD_CHRONOS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

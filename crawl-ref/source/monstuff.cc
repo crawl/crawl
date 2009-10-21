@@ -1540,6 +1540,12 @@ int monster_die(monsters *monster, killer_type killer,
                     did_god_conduct(DID_KILL_SLIME, monster->hit_dice,
                                     true, monster);
                 }
+
+                // Chronos hates fast monsters
+                if( monster->speed > player_movement_speed()){
+                    did_god_conduct(DID_KILL_FAST, monster->hit_dice,
+                                    true, monster);
+                }
             }
 
             // Divine health and mana restoration doesn't happen when

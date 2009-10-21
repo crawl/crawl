@@ -391,6 +391,9 @@ static void _god_greeting_message(bool game_start)
     case GOD_FEAWN:
         simple_god_message(" says: Spread life and death.");
         break;
+    case GOD_CHRONOS:
+        simple_god_message(" says: Take it easy.");
+        break;
 
     case GOD_NO_GOD:
     case NUM_GODS:

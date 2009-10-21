@@ -78,6 +78,10 @@ Feawn
 
 Feawn is the god of plant and fungal life.
 %%%%
+Chronos
+
+Chronos is a god who meditates on the mystery of time. Those who choose to follow his path will learn to step outside the flow of time, punish those who are too hasty, force creatures to move more slowly, and bless their weapons in his name.
+%%%%
 Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses. With sufficient piety, a starving follower can pray for nutrition. Later, followers will gain powers to purify and strengthen their bodies, and can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from mutations. Apart from that, Zin may occasionally directly intervene to save a follower's life.
@@ -135,4 +139,8 @@ Beogh encourages followers to make use of orcish gear found in the dungeon. Foll
 Feawn powers
 
 Feawn encourages followers to promote the growth of plant life.
+%%%%
+Chronos powers
+
+Followers are rewarded for spending time resting in the dungeon, moving slowly, and killing creatures which are faster than they are. Moving too quickly or traveling instantaneously are frowned upon. He rewards his faithful with a slowed metabolism and the power to slow other creatures and harm those who move more quickly than you do.
 %%%%
