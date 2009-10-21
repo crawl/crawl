@@ -8043,18 +8043,19 @@ bool monsters::mon_see_cell(const coord_def& p, bool reach) const
                                true, true));
 }
 
+bool monsters::see_cell(const coord_def &c) const
+{
+    // XXX: using env.show since that's been filled anywa.
+    if (c == you.pos())
+        return (you.see_cell(pos()));
+
+    // TODO: Proper monster LOS.
+    return (mon_see_cell(c));
+}
+
 bool monsters::can_see(const actor *targ) const
 {
-    if (this == targ)
-        return (visible_to(targ));
-
-    if (!targ->visible_to(this))
-        return (false);
-
-    if (targ->atype() == ACT_PLAYER)
-        return (mons_near(this));
-
-    return (mon_see_cell(targ->pos()));
+    return (targ->visible_to(this) && see_cell(targ->pos()));
 }
 
 bool monsters::can_mutate() const

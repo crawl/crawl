@@ -102,6 +102,7 @@ public:
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
     virtual bool visible_to(const actor *looker) const = 0;
+    virtual bool see_cell(const coord_def &c) const = 0;
     virtual bool can_see(const actor *target) const = 0;
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;

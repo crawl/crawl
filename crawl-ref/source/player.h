@@ -301,6 +301,7 @@ public:
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;
+    bool see_cell(const coord_def &c) const;
     bool can_see(const actor *target) const;
     bool is_icy() const;
     bool is_fiery() const;
