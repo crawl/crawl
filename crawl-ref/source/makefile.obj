@@ -1,15 +1,17 @@
 OBJECTS = \
 abl-show.o \
 abyss.o \
-artefact.o \
 acr.o \
 arena.o \
+artefact.o \
 beam.o \
 bitary.o \
 branch.o \
 chardump.o \
 cio.o \
 cloud.o \
+clua.o \
+cluautil.o \
 command.o \
 ctest.o \
 database.o \
@@ -17,9 +19,9 @@ debug.o \
 decks.o \
 delay.o \
 describe.o \
-dlua.o \
 dgnevent.o \
 directn.o \
+dlua.o \
 dungeon.o \
 effects.o \
 fight.o \
@@ -36,11 +38,11 @@ item_use.o \
 itemname.o \
 itemprop.o \
 items.o \
-lev-pand.o \
-libutil.o \
+kills.o \
 l_crawl.o \
 l_debug.o \
 l_dgn.o \
+l_dgn_bf.o \
 l_dgnbld.o \
 l_dgnevt.o \
 l_dgngrd.o \
@@ -48,7 +50,6 @@ l_dgnit.o \
 l_dgnlvl.o \
 l_dgnmon.o \
 l_dgntil.o \
-l_dgn_bf.o \
 l_file.o \
 l_food.o \
 l_global.o \
@@ -59,6 +60,8 @@ l_mapmrk.o \
 l_mons.o \
 l_option.o \
 l_you.o \
+lev-pand.o \
+libutil.o \
 los.o \
 losparam.o \
 macro.o \
@@ -70,12 +73,13 @@ menu.o \
 message.o \
 mgrow.o \
 misc.o \
-monplace.o \
 mon-pick.o \
-monstuff.o \
-monspeak.o \
 mon-util.o \
+monplace.o \
+monspeak.o \
+monstuff.o \
 mstuff2.o \
+mt19937ar.o \
 mtransit.o \
 mutation.o \
 newgame.o \
@@ -97,12 +101,12 @@ spells2.o \
 spells3.o \
 spells4.o \
 spl-book.o \
-spl-mis.o \
 spl-cast.o \
+spl-mis.o \
 spl-util.o \
 sqldbm.o \
-state.o \
 stash.o \
+state.o \
 store.o \
 stuff.o \
 tags.o \
@@ -112,8 +116,4 @@ traps.o \
 travel.o \
 tutorial.o \
 view.o \
-xom.o \
-kills.o \
-mt19937ar.o \
-clua.o \
-cluautil.o
+xom.o
