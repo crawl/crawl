@@ -5,8 +5,8 @@
 
 #include "AppHdr.h"
 
-#include "clua.h"
 #include "dlua.h"
+#include "cluautil.h"
 #include "l_libs.h"
 
 #include "cio.h"

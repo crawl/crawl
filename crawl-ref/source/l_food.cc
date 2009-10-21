@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#include "clua.h"
+#include "cluautil.h"
 #include "l_libs.h"
 
 #include "food.h"

@@ -7,7 +7,7 @@
 
 #include <cmath>
 
-#include "dlua.h"
+#include "cluautil.h"
 #include "l_libs.h"
 
 #include "dungeon.h"

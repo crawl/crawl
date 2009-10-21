@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#include "dlua.h"
+#include "cluautil.h"
 #include "l_libs.h"
 
 #include "abl-show.h"

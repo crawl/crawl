@@ -95,13 +95,6 @@ static void dlua_push_object_type(lua_State *ls, const char *meta, const T &data
 
 void print_dlua_stack();
 
-void luaopen_setmeta(lua_State *ls,
-                     const char *global,
-                     const luaL_reg *lua_lib,
-                     const char *meta);
-
-#define LUAFN(name) static int name(lua_State *ls)
-
 //////////////////////////////////////////////////////////////////////////
 
 #endif

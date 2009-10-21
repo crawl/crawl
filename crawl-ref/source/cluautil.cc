@@ -58,3 +58,20 @@ void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
         clua_new_userdata<const dgn_event *>(ls, DEVENT_METATABLE);
     *de = devent;
 }
+
+
+void luaopen_setmeta(lua_State *ls,
+                     const char *global,
+                     const luaL_reg *lua_lib,
+                     const char *meta)
+{
+    luaL_newmetatable(ls, meta);
+    lua_setglobal(ls, global);
+ 
+    luaL_openlib(ls, global, lua_lib, 0);
+
+    // Do <global>.__index = <global>
+    lua_pushstring(ls, "__index");
+    lua_pushvalue(ls, -2);
+    lua_settable(ls, -3);
+}
