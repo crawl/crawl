@@ -5096,7 +5096,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_UNAFFECTED);
 
     case BEAM_SLOW:
-		obvious_effect = do_slow_monster(mon, whose_kill());
+        obvious_effect = do_slow_monster(mon, whose_kill());
         return (MON_AFFECTED);
 
     case BEAM_HASTE:

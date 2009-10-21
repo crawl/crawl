@@ -406,12 +406,12 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "spawn explosive spores",
       "induce evolution"
     },
-	// Chronos
-	{ "make your items ponderous",
-	  "Chronos slows your biology",
-	  "",
-	  "",
-	  ""
+    // Chronos
+    { "make your items ponderous",
+      "Chronos slows your biology",
+      "",
+      "",
+      ""
     }
 };
 
@@ -4914,17 +4914,16 @@ static bool _chronos_retribution()
         mpr("You lose track of time.");
         you.put_to_sleep();
         break;
+
     case 4:
         if (you.duration[DUR_SLOW] < 90)
         {
             dec_penance(god, 1);
-            mpr( "You feel the world leave you behind!", MSGCH_WARN );
+            mpr("You feel the world leave you behind!", MSGCH_WARN);
             you.duration[DUR_EXHAUSTED] = 100;
             slow_player(100);
         }
         break;
-
-
     }
 
     return (true);
@@ -7000,38 +6999,39 @@ bool ponderousify_armour(){
     {
         if (item_slot == -1)
         {
-            item_slot = prompt_invent_item("Make which item ponderous?", MT_INVLIST,
-                                           OSEL_ENCH_ARM, true, true, false);
+            item_slot = prompt_invent_item("Make which item ponderous?",
+                            MT_INVLIST, OSEL_ENCH_ARM, true, true, false);
         }
+
         if (prompt_failed(item_slot))
             return (false);
 
         item_def& arm(you.inv[item_slot]);
 
-        if (!is_enchantable_armour(arm, true, true) ||
-			get_armour_ego_type(arm) != SPARM_NORMAL)
+        if (!is_enchantable_armour(arm, true, true)
+            || get_armour_ego_type(arm) != SPARM_NORMAL)
         {
             mpr("Choose some type of armour to enchant, or Esc to abort.");
             if (Options.auto_list)
                 more();
 
             item_slot = -1;
-			mpr("You can't enchant that."); //does not appear
+            mpr("You can't enchant that."); //does not appear
             continue;
         }
 
-		//make item desc runed if desc was vanilla?
+        //make item desc runed if desc was vanilla?
 
         set_item_ego_type(arm, OBJ_ARMOUR, SPARM_PONDEROUSNESS);
 
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
 
-		simple_god_message(" says: Dude, use this wisely!");
+        simple_god_message(" says: Dude, use this wisely!");
 
-        return true;
+        return (true);
     }
-    while(true);
+    while (true);
 
     return true;
 }
@@ -7039,19 +7039,19 @@ bool ponderousify_armour(){
 int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 {
     monsters* mon = monster_at(where);
-    if (NULL == mon){
+    if (mon == NULL)
         return (0);
-    }
 
     int dmg = (mon->speed - player_movement_speed());
-        dmg = (dmg > 0 ? dmg * dmg : 0);
+    dmg = (dmg > 0 ? dmg * dmg : 0);
 
     mon->hurt(agent, dmg, BEAM_MMISSILE, true);
-    return 1;
+    return (1);
 }
 
-int chronos_slouch(int pow){
-    return apply_area_visible(_slouch_monsters, pow);
+int chronos_slouch(int pow)
+{
+    return (apply_area_visible(_slouch_monsters, pow));
 }
 
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
@@ -7190,7 +7190,7 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     const char *tag_start, *tag_end;
     switch (piety_gain)
     {
-		case PIETY_NONE:
+    case PIETY_NONE:
         tag_start = "<lightgrey>";
         tag_end = "</lightgrey>";
         break;

@@ -148,7 +148,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     {ABIL_FEAWN_SUNLIGHT, ABIL_FEAWN_PLANT_RING, ABIL_FEAWN_RAIN,
      ABIL_FEAWN_SPAWN_SPORES, ABIL_FEAWN_EVOLUTION },
     // Chronos
-    { ABIL_CHRONOS_PONDEROUSIFY, ABIL_CHRONOS_TIME_STEP, ABIL_CHRONOS_TIME_BEND, ABIL_CHRONOS_SLOUCH },
+    { ABIL_CHRONOS_PONDEROUSIFY, ABIL_CHRONOS_TIME_STEP,
+      ABIL_CHRONOS_TIME_BEND, ABIL_CHRONOS_SLOUCH },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -2099,26 +2100,29 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CHRONOS_TIME_BEND:
-	{
+    {
         mpr("The flow of time bends around you.");
 
-		// TODO perhaps make power dependent on invocation?
-		// if so, this spell must train invocations too
-		// currently, has one-size-fits-all power level and duration,
-		// as if a wand of slow monster was zapped at each target
-		for ( adjacent_iterator ai; ai; ++ai )
-		{
-			// Tile occupied by monster
-			monsters* mon = monster_at(*ai);
-			if(mon != NULL) {
-				mprf(MSGCH_GOD, "%s rebukes %s.",
-					 god_name(you.religion).c_str(),
-					 mon->name(DESC_NOCAP_THE).c_str());
-				do_slow_monster(mon, KC_YOU);
-			}
-		}
+        // TODO perhaps make power dependent on invocation?
+        // if so, this spell must train invocations too
+        // currently, has one-size-fits-all power level and duration,
+        // as if a wand of slow monster was zapped at each target
+        for (adjacent_iterator ai; ai; ++ai)
+        {
+            // Tile occupied by monster
+            monsters* mon = monster_at(*ai);
+            if (mon != NULL)
+            {
+                simple_god_message(
+                    make_stringf("rebukes %s.",
+                                 mon->name(DESC_NOCAP_THE).c_str()).c_str(),
+                                 GOD_CHRONOS);
+                do_slow_monster(mon, KC_YOU);
+            }
+        }
         break;
-	}
+    }
+
     case ABIL_CHRONOS_SLOUCH:
         mpr("You can feel time thicken.");
         mprf(MSGCH_GOD, "your speed is %d", player_movement_speed());

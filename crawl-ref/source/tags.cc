@@ -1466,11 +1466,11 @@ static void tag_read_you(reader &th, char minorVersion)
         UNUSED(rev_int);
     }
 
-	if (minorVersion >= TAG_MINOR_GITREV)
-	{
-		std::string rev_str = unmarshallString(th);
-		UNUSED(rev_str);
-	}
+    if (minorVersion >= TAG_MINOR_GITREV)
+    {
+        std::string rev_str = unmarshallString(th);
+        UNUSED(rev_str);
+    }
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)
