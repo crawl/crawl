@@ -3297,8 +3297,8 @@ const char *divine_title[NUM_GODS][8] =
      "Nimbus",             "Sporadic Warrior",      "Green Death",              "Force of Nature"},
 
     // Chronos -- slow theme
-    {"Chrononaut",  "Slackmaster",  "Time Lord",    "Watchdog",
-     "Ticktocktomancer", "Just Fill in the Array", "The End All And Be All", "Alpha Omega"}
+    {"Hurried",            "Slacker",               "Procrastinator",           "Watchdog",
+     "Ticktocktomancer",   "Time Lord",             "The End All And Be All",   "Alpha Omega"}
 };
 
 static int _piety_level()
