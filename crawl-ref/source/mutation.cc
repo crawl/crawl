@@ -2323,12 +2323,12 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
-    // Don't run this loop if we lost some equipment slots since
-    // removing armour with stat modifiers makes the value of new_modifier
-    // below different from the previously recorded value, and the
-    // remove_one_equip call chain already does stat change from
-    // removing items correctly. -cao
-    if(!modified_eq)
+    // Don't run this loop if we lost some equipment slots, since
+    // removing armour with stat modifiers makes the value of
+    // new_modifier below different from the previously recorded value,
+    // and the remove_one_equip() call chain already does stat change
+    // from removing items correctly. -cao
+    if (!modified_eq)
     {
         for (int i = 0; i < 3; ++i)
         {
